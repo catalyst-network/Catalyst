@@ -21,7 +21,6 @@
 
 #endregion
 
-using System;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.IO.Messaging;
@@ -37,7 +36,7 @@ namespace Catalyst.Node.Core.P2P.Messaging.Handlers
     {
         public GetNeighbourResponseHandler(ILogger logger) : base(logger) { }
         
-        protected override void Handler(IChanneledMessage<AnySigned> message)
+        protected override void Handler(IChanneledMessage<ProtocolMessage> message)
         {
             Logger.Debug("received peer NeighbourResponse");
         }

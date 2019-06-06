@@ -42,9 +42,14 @@ namespace Catalyst.Node.Core.Modules.Consensus.Delta
 {
     public class DeltaVoter : IDeltaVoter
     {
-        public static string GetCandidateCacheKey(CandidateDeltaBroadcast candidate) => nameof(DeltaVoter) + "-" + candidate.Hash.ToByteArray().ToHex();
-        public static string GetCandidateListCacheKey(CandidateDeltaBroadcast candidate) => nameof(DeltaVoter) + "-" + candidate.PreviousDeltaDfsHash.ToByteArray().ToHex();
-        public static string GetCandidateListCacheKey(byte[] previousDeltaHash) => nameof(DeltaVoter) + "-" + previousDeltaHash.ToHex();
+        public static string GetCandidateCacheKey(CandidateDeltaBroadcast candidate) => 
+            nameof(DeltaVoter) + "-" + candidate.Hash.ToByteArray().ToHex();
+
+        public static string GetCandidateListCacheKey(CandidateDeltaBroadcast candidate) => 
+            nameof(DeltaVoter) + "-" + candidate.PreviousDeltaDfsHash.ToByteArray().ToHex();
+
+        public static string GetCandidateListCacheKey(byte[] previousDeltaHash) => 
+            nameof(DeltaVoter) + "-" + previousDeltaHash.ToHex();
 
         /// <summary>
         /// This cache is used to maintain the candidates with their scores, and for each previous delta hash we found,
@@ -121,27 +126,27 @@ namespace Catalyst.Node.Core.Modules.Consensus.Delta
             candidatesByPreviousHash.Add(candidateCacheKey);
         }
 
-        public CandidateDeltaBroadcast GetFavoriteDelta(byte[] previousDeltaDfsHash)
+        public CandidateDeltaBroadcast GetFavouriteDelta(byte[] previousDeltaDfsHash)
         {
             Guard.Argument(previousDeltaDfsHash, nameof(previousDeltaDfsHash)).NotNull().NotEmpty();
-            Log.Debug("Retrieving favorite candidate delta for the successor of delta {0}", 
+            Log.Debug("Retrieving favourite candidate delta for the successor of delta {0}", 
                 previousDeltaDfsHash.ToHex());
 
             var cacheKey = GetCandidateListCacheKey(previousDeltaDfsHash);
             if (!_candidatesCache.TryGetValue(cacheKey, out ConcurrentBag<string> candidates))
             {
-                _logger.Debug("Failed to retrieve any scored candidates with previous delta {0}",
+                _logger.Debug("Failed to retrieve any scored candidate with previous delta {0}",
                     previousDeltaDfsHash.ToHex());
                 return null;
             }
 
-            var favorite = candidates.Select(c => _candidatesCache.Get(c) as IScoredCandidateDelta)
+            var favourite = candidates.Select(c => _candidatesCache.Get(c) as IScoredCandidateDelta)
                .Where(c => c != null)
                .OrderByDescending(c => c.Score)
                .ThenBy(c => c.Candidate.Hash.ToByteArray(), ByteUtil.ByteListMinSizeComparer.Default)
                .First();
 
-            return favorite.Candidate;
+            return favourite.Candidate;
         }
 
         private int GetProducerRankFactor(CandidateDeltaBroadcast candidate)

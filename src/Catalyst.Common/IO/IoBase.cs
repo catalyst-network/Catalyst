@@ -22,41 +22,27 @@
 #endregion
 
 using System;
+using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Common.Interfaces.IO;
 using DotNetty.Transport.Channels;
+using Nito.AsyncEx.Synchronous;
 using Serilog;
 
 namespace Catalyst.Common.IO
 {
-    public class IoBase : ISocket, IDisposable
+    public class IoBase : ISocket
     {
-        protected const int BackLogValue = 100;
         protected readonly ILogger Logger;
         protected readonly IEventLoopGroup WorkerEventLoop;
 
-        public IChannel Channel { get; set; }
+        public IChannel Channel { get; protected set; }
 
         protected IoBase(ILogger logger)
         {
             Logger = logger;
             WorkerEventLoop = new MultithreadEventLoopGroup();
-        }
-
-        public virtual async Task Shutdown()
-        {
-            if (Channel != null)
-            {
-                await Channel.CloseAsync().ConfigureAwait(false);
-            }
-
-            if (WorkerEventLoop != null)
-            {
-                var quietPeriod = TimeSpan.FromMilliseconds(100);
-                await WorkerEventLoop
-                   .ShutdownGracefullyAsync(quietPeriod, 2 * quietPeriod)
-                   .ConfigureAwait(false);
-            }
         }
 
         public void Dispose()
@@ -70,9 +56,28 @@ namespace Catalyst.Common.IO
             {
                 return;
             }
-            
-            Logger.Information($"Disposing {GetType().Name}");
-            Task.WaitAll(Shutdown());
+
+            Logger.Debug($"Disposing {GetType().Name}");
+
+            var quietPeriod = TimeSpan.FromMilliseconds(100);
+            Logger?.Information($"Disposing {GetType().Name}");
+
+            try
+            {
+                Channel?.Flush();
+                var closeChannelTask = Channel?.CloseAsync();
+                var closeWorkerLoopTask = WorkerEventLoop?.ShutdownGracefullyAsync(quietPeriod, quietPeriod);
+
+                Task.WaitAll(new[]
+                    {
+                        closeChannelTask, closeWorkerLoopTask
+                    }.Where(t => t != null).ToArray(),
+                    quietPeriod * 3);
+            }
+            catch (Exception e)
+            {
+                Logger?.Error(e, "Dispose failed to complete.");
+            }
         }
     }
 }

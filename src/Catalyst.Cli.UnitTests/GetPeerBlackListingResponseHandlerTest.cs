@@ -22,12 +22,10 @@
 #endregion
 
 using System;
-using Catalyst.Cli.Handlers;
+using System.Threading.Tasks;
 using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.Cli;
-using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.IO.Messaging;
-using Catalyst.Common.Rpc;
 using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Protocol.Rpc.Node;
 using DotNetty.Transport.Channels;
@@ -36,6 +34,7 @@ using Serilog;
 using Xunit;
 using Nethereum.RLP;
 using Catalyst.Common.Util;
+using Catalyst.Node.Core.RPC.Handlers;
 
 namespace Catalyst.Cli.UnitTests
 {
@@ -49,7 +48,6 @@ namespace Catalyst.Cli.UnitTests
 
         private readonly ILogger _logger;
         private PeerBlackListingResponseHandler _handler;
-        private readonly IRpcCorrelationCache _subbedCorrelationCache;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GetPeerBlackListingResponseHandlerTest"/> class. </summary>
@@ -58,7 +56,6 @@ namespace Catalyst.Cli.UnitTests
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
             _output = Substitute.For<IUserOutput>();
-            _subbedCorrelationCache = Substitute.For<IRpcCorrelationCache>();
         }
 
         /// <summary>
@@ -70,9 +67,9 @@ namespace Catalyst.Cli.UnitTests
         [Theory]
         [InlineData("true", "198.51.100.22", "cne2+eRandomValuebeingusedherefprtestingIOp")]
         [InlineData("false", "198.51.100.14", "uebeingusedhere44j6jhdhdhandomValfprtestingItn")]
-        public void RpcClient_Can_Handle_GetBlackListingResponse(bool blacklist, string publicKey, string ip)
+        public async Task RpcClient_Can_Handle_GetBlackListingResponse(bool blacklist, string publicKey, string ip)
         {
-            TestGetBlackListResponse(blacklist, publicKey, ip);
+            await TestGetBlackListResponse(blacklist, publicKey, ip);
 
             _output.Received(1).WriteLine($"Peer Blacklisting Successful : {blacklist}, {publicKey}, {ip}");
         }
@@ -81,18 +78,16 @@ namespace Catalyst.Cli.UnitTests
         /// RPCs the client can handle get peer blacklisting response non existent peers.
         /// </summary>
         [Fact]
-        public void RpcClient_Can_Handle_GetBlackListingResponseNonExistentPeers()
+        public async Task RpcClient_Can_Handle_GetBlackListingResponseNonExistentPeers()
         { 
-            TestGetBlackListResponse(false, string.Empty, string.Empty);
+            await TestGetBlackListResponse(false, string.Empty, string.Empty);
 
             _output.Received(1).WriteLine("Peer not found");
         }
 
-        private void TestGetBlackListResponse(bool blacklist, string publicKey, string ip)
+        private async Task TestGetBlackListResponse(bool blacklist, string publicKey, string ip)
         {
-            var correlationCache = Substitute.For<IRpcCorrelationCache>();
-
-            var response = new RpcMessageFactory(_subbedCorrelationCache).GetMessage(new MessageDto(
+            var response = new MessageFactory().GetMessage(new MessageDto(
                     new SetPeerBlackListResponse
                     {
                         Blacklist = blacklist,
@@ -106,14 +101,15 @@ namespace Catalyst.Cli.UnitTests
 
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, response);
 
-            _handler = new PeerBlackListingResponseHandler(_output, correlationCache, _logger);
+            _handler = new PeerBlackListingResponseHandler(_output, _logger);
             _handler.StartObserving(messageStream);
+
+            await messageStream.WaitForEndOfDelayedStreamOnTaskPoolScheduler();
         }
 
         public void Dispose()
         {
             _handler?.Dispose();
-            _subbedCorrelationCache.Dispose();
         }
     }
 }

@@ -30,7 +30,7 @@ namespace Catalyst.Common.Cryptography
     /// The Isaac Random
     /// See www.rosettacode.org/wiki/The_ISAAC_Cipher
     /// </summary>
-    public class IsaacRandom : IDeterministicRandom
+    public sealed class IsaacRandom : IDeterministicRandom
     {
         // external results 
         readonly uint[] _randRsl = new uint[256];

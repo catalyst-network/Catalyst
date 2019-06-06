@@ -23,25 +23,23 @@
 
 using System;
 using Catalyst.Common.Extensions;
-using Catalyst.Common.IO.Messaging.Handlers;
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
-using Catalyst.Common.Interfaces.Rpc;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
-using ILogger = Serilog.ILogger;
 using Dawn;
+using ILogger = Serilog.ILogger;
 
-namespace Catalyst.Cli.Handlers
+namespace Catalyst.Node.Core.RPC.Handlers
 {
     /// <summary>
     /// Handles the Peer reputation response
     /// </summary>
-    /// <seealso cref="CorrelatableMessageHandlerBase{GetPeerReputationResponse, IRpcCorrelationCache}" />
     /// <seealso cref="IRpcResponseHandler" />
     public sealed class PeerBlackListingResponseHandler
-        : CorrelatableMessageHandlerBase<SetPeerBlackListResponse, IRpcCorrelationCache>,
+        : MessageHandlerBase<SetPeerBlackListResponse>,
             IRpcResponseHandler
     {
         private readonly IUserOutput _output;
@@ -50,12 +48,10 @@ namespace Catalyst.Cli.Handlers
         /// Initializes a new instance of the <see cref="PeerBlackListingResponseHandler"/> class.
         /// </summary>
         /// <param name="output">The output.</param>
-        /// <param name="messageCorrelationCache">The message correlation cache.</param>
         /// <param name="logger">The logger.</param>
         public PeerBlackListingResponseHandler(IUserOutput output,
-            IRpcCorrelationCache messageCorrelationCache,
             ILogger logger)
-            : base(messageCorrelationCache, logger)
+            : base(logger)
         {
             _output = output;
         }
@@ -64,7 +60,7 @@ namespace Catalyst.Cli.Handlers
         /// Handles the peer reputation response.
         /// </summary>
         /// <param name="message">The GetPeerReputationResponse message.</param>
-        protected override void Handler(IChanneledMessage<AnySigned> message)
+        protected override void Handler(IChanneledMessage<ProtocolMessage> message)
         {
             Logger.Debug("Handling GetPeerBlackList response");
             Guard.Argument(message).NotNull("Received message cannot be null");

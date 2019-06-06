@@ -28,7 +28,7 @@ using DotNetty.Transport.Channels;
 
 namespace Catalyst.Common.IO.Messaging.Handlers
 {
-    public sealed class CorrelationHandler : ChannelHandlerAdapter
+    public sealed class CorrelationHandler : SimpleChannelInboundHandler<ProtocolMessage>
     {
         private readonly ICorrelationManager _correlationManager;
 
@@ -37,9 +37,15 @@ namespace Catalyst.Common.IO.Messaging.Handlers
             _correlationManager = correlationManager;
         }
 
-        public void ChannelRead0(IChannelHandlerContext ctx, AnySigned message)
+        protected override void ChannelRead0(IChannelHandlerContext ctx, ProtocolMessage message)
         {
-            if (message.CheckIfMessageIsGossip() || _correlationManager.TryMatchResponse(message))
+            if (message.CheckIfMessageIsGossip())
+            {
+                ctx.FireChannelRead(message);
+            }
+            
+            //@TODO should not negate try match response but currently not storing in cache when sent
+            else if (!_correlationManager.TryMatchResponse(message))
             {
                 ctx.FireChannelRead(message);                
             }

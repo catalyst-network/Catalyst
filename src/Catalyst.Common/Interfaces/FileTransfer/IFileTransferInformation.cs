@@ -22,9 +22,7 @@
 #endregion
 
 using System;
-using System.IO.Abstractions;
 using System.Threading;
-using System.Threading.Tasks;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;
@@ -121,7 +119,7 @@ namespace Catalyst.Common.Interfaces.FileTransfer
         /// <summary>Gets the upload message.</summary>
         /// <param name="chunkId">The chunk identifier.</param>
         /// <returns></returns>
-        AnySigned GetUploadMessageDto(uint chunkId);
+        ProtocolMessage GetUploadMessageDto(uint chunkId);
     }
 
     public interface IDownloadFileInformation : IFileTransferInformation

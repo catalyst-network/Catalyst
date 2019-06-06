@@ -26,20 +26,19 @@ using Catalyst.Common.Interfaces.Modules.Consensus.Delta;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Node.Core.Modules.Consensus.Delta;
-using Catalyst.Protocol.Common;
-using Nethereum.RLP;
 using NSubstitute;
 using Serilog;
 using Xunit;
 
 namespace Catalyst.Node.Core.UnitTests.Modules.Consensus.Delta
 {
-    public class DeltaHubTests
+    public sealed class DeltaHubTests
     {
         private readonly IGossipManager _gossipManager;
         private readonly ILogger _logger;
         private readonly IPeerIdentifier _peerIdentifier;
         private readonly IDeltaVoter _deltaVoter;
+        private readonly IDeltaElector _deltaElector;
 
         public DeltaHubTests()
         {
@@ -47,12 +46,13 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Consensus.Delta
             _logger = Substitute.For<ILogger>();
             _peerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("me");
             _deltaVoter = Substitute.For<IDeltaVoter>();
+            _deltaElector = Substitute.For<IDeltaElector>();
         }
 
         [Fact]
         public void BroadcastCandidate_should_only_gossip_round_nodes_own_candidate()
         {
-            var hub = new DeltaHub(_gossipManager, _peerIdentifier, _deltaVoter, _logger);
+            var hub = new DeltaHub(_gossipManager, _peerIdentifier, _deltaVoter, _deltaElector, _logger);
 
             var notMyCandidate = CandidateDeltaHelper.GetCandidateDelta(
                 producerId: PeerIdHelper.GetPeerId("not me"));
@@ -65,12 +65,6 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Consensus.Delta
 
             hub.BroadcastCandidate(myCandidate);
             _gossipManager.Received(1).Broadcast(null);
-        }
-
-        [Fact]
-        public void BroadcastFavoriteCandidateDelta()
-        {
-
         }
     }
 }

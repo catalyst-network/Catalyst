@@ -24,14 +24,12 @@
 using System;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
-using Catalyst.Common.IO.Messaging.Handlers;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.P2P;
-using Catalyst.Common.Rpc;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
@@ -47,19 +45,19 @@ namespace Catalyst.Node.Core.RPC.Handlers
     {
         private readonly IPeerIdentifier _peerIdentifier;
         private readonly IRpcServerSettings _config;
-        private readonly IRpcMessageFactory _rpcMessageFactory;
+        private readonly IMessageFactory _messageFactory;
 
         public GetInfoRequestHandler(IPeerIdentifier peerIdentifier,
             IRpcServerSettings config,
-            IRpcMessageFactory rpcMessageFactory,
+            IMessageFactory messageFactory,
             ILogger logger) : base(logger)
         {
-            _rpcMessageFactory = rpcMessageFactory;
+            _messageFactory = messageFactory;
             _peerIdentifier = peerIdentifier;
             _config = config;
         }
 
-        protected override void Handler(IChanneledMessage<AnySigned> message)
+        protected override void Handler(IChanneledMessage<ProtocolMessage> message)
         {
             Guard.Argument(message).NotNull();
             
@@ -76,7 +74,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
                     _config.NodeConfig.GetSection("CatalystNodeConfiguration").AsEnumerable(), 
                     Formatting.Indented);
 
-                var response = _rpcMessageFactory.GetMessage(new MessageDto(
+                var response = _messageFactory.GetMessage(new MessageDto(
                         new GetInfoResponse
                         {
                             Query = serializedList

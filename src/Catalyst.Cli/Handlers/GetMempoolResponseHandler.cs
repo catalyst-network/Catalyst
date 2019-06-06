@@ -23,12 +23,10 @@
 
 using System;
 using Catalyst.Common.Extensions;
-using Catalyst.Common.IO.Messaging.Handlers;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.Cli;
-using Catalyst.Common.Interfaces.Rpc;
-using Catalyst.Node.Core.RPC.Handlers;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
@@ -41,23 +39,22 @@ namespace Catalyst.Cli.Handlers
     /// The handler reads the response's payload and formats it in user readable format and writes it to the console.
     /// </summary>
     public sealed class GetMempoolResponseHandler
-        : CorrelatableMessageHandlerBase<GetMempoolResponse, IRpcCorrelationCache>,
+        : MessageHandlerBase<GetMempoolResponse>,
             IRpcResponseHandler
     {
         private readonly IUserOutput _output;
 
         /// <summary>
-        /// Constructor. Calls the base class <see cref="CorrelatableMessageHandlerBase{TProto,TCorrelator}"/> constructor.
-        /// <param name="output">A service used to output the result of the messages handling to the user.</param>
-        /// <param name="logger">Logger to log debug related information.</param>
+        /// <param name="output">
+        ///     A service used to output the result of the messages handling to the user.
+        /// </param>
+        /// <param name="logger">
+        ///     Logger to log debug related information.
+        /// </param>
         /// </summary>
-        /// <param name="output"></param>
-        /// <param name="messageCorrelationCache"></param>
-        /// <param name="logger">Logger to log debug related information.</param>
         public GetMempoolResponseHandler(IUserOutput output,
-            IRpcCorrelationCache messageCorrelationCache,
             ILogger logger)
-            : base(messageCorrelationCache, logger)
+            : base(logger)
         {
             _output = output;
         }
@@ -66,7 +63,7 @@ namespace Catalyst.Cli.Handlers
         /// Handles the VersionResponse message sent from the <see cref="GetMempoolRequestHandler" />.
         /// </summary>
         /// <param name="message">An object of GetMempoolResponse</param>
-        protected override void Handler(IChanneledMessage<AnySigned> message)
+        protected override void Handler(IChanneledMessage<ProtocolMessage> message)
         {
             Guard.Argument(message).NotNull("The message cannot be null");
             

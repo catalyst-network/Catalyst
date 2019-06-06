@@ -22,17 +22,13 @@
 #endregion
 
 using System.IO;
-using System.Linq;
 using System.Threading;
-using System.Threading.Tasks;
 using Catalyst.Common.Config;
-using Catalyst.Common.Enumerator;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.FileTransfer;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
-using Catalyst.Common.Interfaces.Rpc;
-using Catalyst.Common.IO.Messaging.Handlers;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
@@ -43,28 +39,25 @@ namespace Catalyst.Cli.Handlers
     /// <summary>
     /// Handles Get file from DFS response
     /// </summary>
-    /// <seealso cref="CorrelatableMessageHandlerBase{GetFileFromDfsResponse, IRpcCorrelationCache}" />
     /// <seealso cref="IRpcResponseHandler" />
-    public class GetFileFromDfsResponseHandler : CorrelatableMessageHandlerBase<GetFileFromDfsResponse, IRpcCorrelationCache>,
+    public sealed class GetFileFromDfsResponseHandler : MessageHandlerBase<GetFileFromDfsResponse>,
         IRpcResponseHandler
     {
         /// <summary>The file transfer factory</summary>
         private readonly IDownloadFileTransferFactory _fileTransferFactory;
 
         /// <summary>Initializes a new instance of the <see cref="GetFileFromDfsResponseHandler"/> class.</summary>
-        /// <param name="correlationCache">The correlation cache.</param>
         /// <param name="logger">The logger.</param>
         /// <param name="fileTransferFactory">The file transfer.</param>
-        public GetFileFromDfsResponseHandler(IRpcCorrelationCache correlationCache,
-            ILogger logger,
-            IDownloadFileTransferFactory fileTransferFactory) : base(correlationCache, logger)
+        public GetFileFromDfsResponseHandler(ILogger logger,
+            IDownloadFileTransferFactory fileTransferFactory) : base(logger)
         {
             _fileTransferFactory = fileTransferFactory;
         }
 
         /// <summary>Handles the specified message.</summary>
         /// <param name="message">The message.</param>
-        protected override void Handler(IChanneledMessage<AnySigned> message)
+        protected override void Handler(IChanneledMessage<ProtocolMessage> message)
         {
             var deserialised = message.Payload.FromAnySigned<GetFileFromDfsResponse>();
 

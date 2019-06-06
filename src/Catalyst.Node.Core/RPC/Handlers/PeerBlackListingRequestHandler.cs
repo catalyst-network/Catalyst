@@ -23,16 +23,14 @@
 
 using System.Linq;
 using Catalyst.Common.Extensions;
-using Catalyst.Common.IO.Messaging.Handlers;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.Interfaces.Rpc;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.P2P;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using ILogger = Serilog.ILogger;
-using Dawn;
 using Google.Protobuf;
 using Nethereum.RLP;
 using SharpRepository.Repository;
@@ -40,7 +38,7 @@ using SharpRepository.Repository;
 namespace Catalyst.Node.Core.RPC.Handlers
 {
     public sealed class PeerBlackListingRequestHandler
-        : CorrelatableMessageHandlerBase<SetPeerBlackListRequest, IRpcCorrelationCache>,
+        : MessageHandlerBase<SetPeerBlackListRequest>,
             IRpcRequestHandler
     {
         /// <summary>
@@ -48,15 +46,14 @@ namespace Catalyst.Node.Core.RPC.Handlers
         /// </summary>
         private readonly IRepository<Peer> _peerRepository;
 
-        private IChanneledMessage<AnySigned> _message;
+        private IChanneledMessage<ProtocolMessage> _message;
         
         private readonly PeerId _peerId;
 
         public PeerBlackListingRequestHandler(IPeerIdentifier peerIdentifier,
             ILogger logger,
-            IRpcCorrelationCache messageCorrelationCache,
             IRepository<Peer> peerRepository)
-            : base(messageCorrelationCache, logger)
+            : base(logger)
         {
             _peerId = peerIdentifier.PeerId;
             _peerRepository = peerRepository;
@@ -66,7 +63,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
         /// Handlers the specified message.
         /// </summary>
         /// <param name="message">The message.</param>
-        protected override void Handler(IChanneledMessage<AnySigned> message)
+        protected override void Handler(IChanneledMessage<ProtocolMessage> message)
         {
             _message = message;
 
@@ -87,6 +84,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
             {
                 ReturnResponse(false, string.Empty.ToUtf8ByteString(), string.Empty.ToUtf8ByteString(), message);
             }
+
             Logger.Debug("received message of type PeerBlackListingRequest");
         }
 
@@ -97,7 +95,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
         /// <param name="publicKey">The public key.</param>
         /// <param name="ip">The ip.</param>
         /// <param name="message">The message.</param>
-        private void ReturnResponse(bool blacklist, ByteString publicKey, ByteString ip, IChanneledMessage<AnySigned> message)
+        private void ReturnResponse(bool blacklist, ByteString publicKey, ByteString ip, IChanneledMessage<ProtocolMessage> message)
         {
             var response = new SetPeerBlackListResponse
             {

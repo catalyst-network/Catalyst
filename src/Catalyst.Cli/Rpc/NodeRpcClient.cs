@@ -30,7 +30,9 @@ using Catalyst.Common.IO.Outbound;
 using Catalyst.Common.Network;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
+using Catalyst.Common.Interfaces.IO.Messaging.Handlers;
 using Catalyst.Common.Interfaces.Rpc;
+using Catalyst.Common.IO.Messaging.Handlers;
 using Catalyst.Protocol.Common;
 using DotNetty.Codecs.Protobuf;
 using DotNetty.Transport.Channels;
@@ -40,40 +42,28 @@ using Serilog;
 namespace Catalyst.Cli.Rpc
 {
     /// <summary>
-    /// This class provides a command line interface (CLI) application to connect to Catalyst Node.
-    /// Through the CLI the node operator will be able to connect to any number of running nodes and run commands.
+    ///     This class provides a command line interface (CLI) application to connect to Catalyst Node.
+    ///     Through the CLI the node operator will be able to connect to any number of running nodes and run commands.
     /// </summary>
-    public sealed class NodeRpcClient : TcpClient<TcpSocketChannel>, INodeRpcClient
+    internal sealed class NodeRpcClient
+        : TcpClient<TcpSocketChannel>,
+            INodeRpcClient
     {
-        public IObservable<IChanneledMessage<AnySigned>> MessageStream { get; }
-
         /// <summary>
-        ///     Initialize a new instance of RPClient by doing the following:
-        /// 1- Get the settings from the config file
-        /// 2- Create/Read the SSL Certificate
-        /// 3- Start the client
+        ///     Initialize a new instance of RPClient
         /// </summary>
         /// <param name="certificate"></param>
         /// <param name="nodeConfig">rpc node config</param>
-        /// <param name="responseHandlers">the collection of handlers used to process incoming response</param>
         public NodeRpcClient(X509Certificate certificate, 
-            IRpcNodeConfig nodeConfig, 
-            IEnumerable<IRpcResponseHandler> responseHandlers) 
+            IRpcNodeConfig nodeConfig) 
             : base(Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType))
         {
-            var anySignedTypeClientHandler = new AnySignedTypeClientHandlerBase();
-            MessageStream = anySignedTypeClientHandler.MessageStream;
-
-            responseHandlers.ToList()
-               .ForEach(h => h.StartObserving(MessageStream));
-
             IList<IChannelHandler> channelHandlers = new List<IChannelHandler>
             {
                 new ProtobufVarint32LengthFieldPrepender(),
                 new ProtobufEncoder(),
                 new ProtobufVarint32FrameDecoder(),
-                new ProtobufDecoder(AnySigned.Parser),
-                anySignedTypeClientHandler
+                new ProtobufDecoder(ProtocolMessage.Parser)
             };
 
             Bootstrap(

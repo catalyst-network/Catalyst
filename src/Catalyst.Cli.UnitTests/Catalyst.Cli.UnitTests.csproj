@@ -2,31 +2,12 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
   </PropertyGroup>
+  <PropertyGroup>
+    <RootNamespace>Catalyst.Cli.UnitTests</RootNamespace>
+  </PropertyGroup>
   <Import Project="../Common.UnitTests.props" />
   <ItemGroup>
-    <Content Include="..\Catalyst.Node.Core\Config\components.json" Link="Config\components.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\Catalyst.Node.Core\Config\devnet.json" Link="Config\devnet.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\Catalyst.Node.Core\Config\mainnet.json" Link="Config\mainnet.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\Catalyst.Node.Core\Config\messageHandlers.json" Link="Config\messageHandlers.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\Catalyst.Node.Core\Config\testnet.json" Link="Config\testnet.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\Catalyst.Cli\Catalyst.Cli.csproj" />
-    <ProjectReference Include="..\Catalyst.Common.UnitTests\Catalyst.Common.UnitTests.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Update="Microsoft.NET.Test.Sdk" Version="16.0.1" />
-    <PackageReference Include="Moq" Version="4.10.1" />
-    <PackageReference Include="Serilog.Extensions.Logging" Version="2.0.4" />
+    <ProjectReference Include="..\Catalyst.TestUtils\Catalyst.TestUtils.csproj" />
   </ItemGroup>
 </Project>

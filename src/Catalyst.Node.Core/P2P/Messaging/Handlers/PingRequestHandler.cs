@@ -21,7 +21,6 @@
 
 #endregion
 
-using System;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Inbound;
@@ -40,24 +39,21 @@ namespace Catalyst.Node.Core.P2P.Messaging.Handlers
             IP2PMessageHandler
     {
         private readonly IPeerIdentifier _peerIdentifier;
-        private readonly IReputableCache _reputableCache;
 
         public PingRequestHandler(IPeerIdentifier peerIdentifier,
-            IReputableCache reputableCache,
             ILogger logger)
             : base(logger)
         {
-            _reputableCache = reputableCache;
             _peerIdentifier = peerIdentifier;
         }
 
-        protected override void Handler(IChanneledMessage<AnySigned> message)
+        protected override void Handler(IChanneledMessage<ProtocolMessage> message)
         {
             Logger.Information("Ping Message Received");
             var deserialised = message.Payload.FromAnySigned<PingRequest>();
             Logger.Debug("message content is {0}", deserialised);
 
-            var datagramEnvelope = new P2PMessageFactory(_reputableCache).GetMessageInDatagramEnvelope(new MessageDto(
+            var datagramEnvelope = new MessageFactory().GetDatagramMessage(new MessageDto(
                     new PingResponse(),
                     MessageTypes.Tell,
                     new PeerIdentifier(message.Payload.PeerId),

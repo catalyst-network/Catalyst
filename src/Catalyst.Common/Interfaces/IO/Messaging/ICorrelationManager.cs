@@ -23,7 +23,6 @@
 
 using Catalyst.Common.IO.Outbound;
 using Catalyst.Protocol.Common;
-using Google.Protobuf;
 
 namespace Catalyst.Common.Interfaces.IO.Messaging
 {
@@ -31,6 +30,6 @@ namespace Catalyst.Common.Interfaces.IO.Messaging
     {
         void AddPendingRequest(PendingRequest pendingRequest);
 
-        bool TryMatchResponse(AnySigned response);
+        bool TryMatchResponse(ProtocolMessage response);
     }
 }

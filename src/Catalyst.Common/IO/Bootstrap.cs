@@ -21,11 +21,36 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.IO;
+using System;
+using System.Net;
+using System.Net.Sockets;
+using System.Threading.Tasks;
+using Catalyst.Common.Interfaces.IO.Inbound;
+using DotNetty.Transport.Channels;
+using Polly;
+using Polly.Retry;
 
 namespace Catalyst.Common.IO
 {
-    internal sealed class Bootstrap 
+    internal sealed class Bootstrap
         : DotNetty.Transport.Bootstrapping.Bootstrap,
-            IBootstrap { }
+            IServerBootstrap
+    {
+        private readonly AsyncRetryPolicy _exponentialBackOffRetryPolicy;
+
+        public Bootstrap()
+        {
+            _exponentialBackOffRetryPolicy = Policy.Handle<SocketException>()
+               .WaitAndRetryAsync(10, retryAttempt =>
+                    TimeSpan.FromMilliseconds(Math.Pow(2, retryAttempt))
+                );
+        }
+
+        public new Task<IChannel> BindAsync(IPAddress ipAddress, int port)
+        {
+            return _exponentialBackOffRetryPolicy.ExecuteAsync(
+                () => base.BindAsync(ipAddress, port)
+            );
+        }
+    }
 }

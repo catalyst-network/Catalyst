@@ -23,11 +23,10 @@
 
 using System;
 using Catalyst.Common.Extensions;
-using Catalyst.Common.IO.Messaging.Handlers;
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
-using Catalyst.Common.Interfaces.Rpc;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
@@ -40,7 +39,7 @@ namespace Catalyst.Cli.Handlers
     /// The handler reads the response's payload and formats it in user readable format and writes it to the console.
     /// </summary>
     public sealed class VerifyMessageResponseHandler
-        : CorrelatableMessageHandlerBase<VerifyMessageResponse, IRpcCorrelationCache>,
+        : MessageHandlerBase<VerifyMessageResponse>,
             IRpcResponseHandler
     {
         private readonly IUserOutput _output;
@@ -49,12 +48,10 @@ namespace Catalyst.Cli.Handlers
         /// </summary>
         /// receive the response from the server.
         /// <param name="output"></param>
-        /// <param name="messageCorrelationCache"></param>
         /// <param name="logger">Logger to log debug related information.</param>
         public VerifyMessageResponseHandler(IUserOutput output,
-            IRpcCorrelationCache messageCorrelationCache,
             ILogger logger)
-            : base(messageCorrelationCache, logger)
+            : base(logger)
         {
             _output = output;
         }
@@ -63,7 +60,7 @@ namespace Catalyst.Cli.Handlers
         /// Handles the VersionResponse message sent from the <see />.
         /// </summary>
         /// <param name="message">An object of GetMempoolResponse</param>
-        protected override void Handler(IChanneledMessage<AnySigned> message)
+        protected override void Handler(IChanneledMessage<ProtocolMessage> message)
         {   
             Logger.Debug("Handling VerifyMessageResponse");
 

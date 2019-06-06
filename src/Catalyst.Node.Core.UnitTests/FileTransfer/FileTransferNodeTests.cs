@@ -29,16 +29,17 @@ using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.FileTransfer;
 using Catalyst.Common.Interfaces.FileTransfer;
+using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.Modules.Dfs;
 using Catalyst.Common.Interfaces.Rpc;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.P2P;
-using Catalyst.Common.Rpc;
 using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Node.Core.Modules.Dfs;
 using Catalyst.Node.Core.P2P;
 using Catalyst.Node.Core.RPC.Handlers;
-using Catalyst.Node.Core.UnitTests.TestUtils;
 using Catalyst.Protocol.Rpc.Node;
+using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using Microsoft.Extensions.Configuration;
 using NSubstitute;
@@ -56,9 +57,8 @@ namespace Catalyst.Node.Core.UnitTests.FileTransfer
         private readonly IChannelHandlerContext _fakeContext;
         private readonly IDownloadFileTransferFactory _nodeFileTransferFactory;
         private readonly IDfs _dfs;
-        private readonly IRpcCorrelationCache _cache;
         private readonly IpfsAdapter _ipfsEngine;
-        private readonly IRpcMessageFactory _rpcMessageFactory;
+        private readonly IMessageFactory _messageFactory;
 
         public FileTransferNodeTests(ITestOutputHelper testOutput) : base(testOutput)
         {
@@ -71,8 +71,7 @@ namespace Catalyst.Node.Core.UnitTests.FileTransfer
             var peerSettings = new PeerSettings(config);
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
-            _cache = Substitute.For<IRpcCorrelationCache>();
-            _rpcMessageFactory = Substitute.For<IRpcMessageFactory>();
+            _messageFactory = Substitute.For<IMessageFactory>();
             _nodeFileTransferFactory = new DownloadFileTransferFactory();
 
             var passwordReader = new TestPasswordReader("abcd");
@@ -87,7 +86,7 @@ namespace Catalyst.Node.Core.UnitTests.FileTransfer
         {
             var sender = PeerIdHelper.GetPeerId("sender");
             var handler = new AddFileToDfsRequestHandler(new Dfs(_ipfsEngine, _logger), new PeerIdentifier(sender),
-                _nodeFileTransferFactory, _rpcMessageFactory, _logger);
+                _nodeFileTransferFactory, _messageFactory, _logger);
 
             //Create a response object and set its return value
             var request = new AddFileToDfsRequest
@@ -162,9 +161,9 @@ namespace Catalyst.Node.Core.UnitTests.FileTransfer
             var recipientPeerId = new PeerIdentifier(recipient);
             var fileToTransfer = FileHelper.CreateRandomTempFile(byteSize);
             var addFileToDfsRequestHandler = new AddFileToDfsRequestHandler(_dfs, senderPeerId, _nodeFileTransferFactory,
-                _rpcMessageFactory, _logger);
+                _messageFactory, _logger);
             var transferBytesRequestHandler =
-                new TransferFileBytesRequestHandler(_nodeFileTransferFactory, senderPeerId, _logger, _rpcMessageFactory);
+                new TransferFileBytesRequestHandler(_nodeFileTransferFactory, senderPeerId, _logger, _messageFactory);
             var uniqueFileKey = Guid.NewGuid();
             crcValue = FileHelper.GetCrcValue(fileToTransfer);
             
@@ -186,7 +185,7 @@ namespace Catalyst.Node.Core.UnitTests.FileTransfer
             using (var fs = File.Open(fileToTransfer, FileMode.Open))
             {
                 var fileUploadInformation = new UploadFileTransferInformation(fs, senderPeerId, recipientPeerId,
-                    fakeNode.Channel, uniqueFileKey, new RpcMessageFactory(_cache));
+                    fakeNode.Channel, uniqueFileKey, new MessageFactory());
                 for (uint i = 0; i < fileTransferInformation.MaxChunk; i++)
                 {
                     fileUploadInformation.GetUploadMessageDto(i)

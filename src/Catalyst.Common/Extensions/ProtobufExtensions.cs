@@ -26,12 +26,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Security.Cryptography;
-using Catalyst.Common.Config;
-using Catalyst.Common.Enumerator;
 using Catalyst.Common.Util;
-using Catalyst.Protocol;
 using Catalyst.Protocol.Common;
-using Catalyst.Protocol.Transaction;
 using Dawn;
 using Google.Protobuf;
 using Google.Protobuf.Reflection;
@@ -42,20 +38,19 @@ namespace Catalyst.Common.Extensions
     public static class ProtobufExtensions
     {
         private const string CatalystProtocol = "Catalyst.Protocol";
-        private static readonly string RequestSuffix = "Request";
-        private static readonly string ResponseSuffix = "Response";
-        private static readonly string BroadcastSuffix = "Broadcast";
+        private const string RequestSuffix = "Request";
+        private const string ResponseSuffix = "Response";
+        private const string BroadcastSuffix = "Broadcast";
 
-        private static readonly Dictionary<string, string> ProtoToClrNameMapper;
         private static readonly List<string> ProtoGossipAllowedMessages;
 
         static ProtobufExtensions()
         {
-            ProtoToClrNameMapper = typeof(AnySigned).Assembly.ExportedTypes
+            var protoToClrNameMapper = typeof(ProtocolMessage).Assembly.ExportedTypes
                .Where(t => typeof(IMessage).IsAssignableFrom(t))
                .Select(t => ((IMessage) Activator.CreateInstance(t)).Descriptor)
                .ToDictionary(d => d.ShortenedFullName(), d => d.ClrType.FullName);
-            ProtoGossipAllowedMessages = ProtoToClrNameMapper.Keys
+            ProtoGossipAllowedMessages = protoToClrNameMapper.Keys
                .Where(t => t.EndsWith(BroadcastSuffix))
                .ToList();
         }
@@ -77,7 +72,7 @@ namespace Catalyst.Common.Extensions
             return ShortenedFullName(descriptor);
         }
 
-        public static AnySigned ToAnySigned(this IMessage protobufObject,
+        public static ProtocolMessage ToAnySigned(this IMessage protobufObject,
             PeerId senderId,
             Guid correlationId = default)
         {
@@ -87,30 +82,34 @@ namespace Catalyst.Common.Extensions
                .Require(c => !typeUrl.EndsWith(ResponseSuffix) || c != default,
                     g => $"{typeUrl} is a response type and needs a correlationId");
 
-            var anySigned = new AnySigned
+            var protocolMessage = new ProtocolMessage
             {
                 PeerId = senderId,
                 CorrelationId = (correlationId == default ? Guid.NewGuid() : correlationId).ToByteString(),
 
                 //todo: sign the `correlationId` and `value` bytes with publicKey instead
-                Signature = senderId.PublicKey,
+                // Signature = senderId.PublicKey,
                 TypeUrl = typeUrl,
                 Value = protobufObject.ToByteString()
             };
-            return anySigned;
+            return protocolMessage;
         }
 
-        public static bool CheckIfMessageIsGossip(this AnySigned message)
+        public static bool CheckIfMessageIsGossip(this ProtocolMessage message)
         {
-            return message.TypeUrl.EndsWith(nameof(AnySigned)) &&
-                ProtoGossipAllowedMessages.Contains(AnySigned.Parser.ParseFrom(message.Value).TypeUrl);
+            return message.TypeUrl.EndsWith(nameof(ProtocolMessage)) &&
+                ProtoGossipAllowedMessages.Contains(ProtocolMessage.Parser.ParseFrom(message.Value).TypeUrl);
         }
 
-        public static T FromAnySigned<T>(this AnySigned message) where T : IMessage<T>
+        public static T FromAnySigned<T>(this ProtocolMessage message) where T : IMessage<T>
         {
-            //todo check the message signature with the PeerId.PublicKey and value fields
-            if (message.PeerId.PublicKey != message.Signature)
-                throw new CryptographicException("Signature of the message doesn't match with sender's public Key");
+            // Should need to do this as we do it in handler
+            // //todo check the message signature with the PeerId.PublicKey and value fields
+            // if (message.PeerId.PublicKey != message.Signature)
+            // {
+            //     throw new CryptographicException("Signature of the message doesn't match with sender's public Key");
+            // }
+    
             var empty = (T) Activator.CreateInstance(typeof(T));
             var typed = (T) empty.Descriptor.Parser.ParseFrom(message.Value);
             return typed;

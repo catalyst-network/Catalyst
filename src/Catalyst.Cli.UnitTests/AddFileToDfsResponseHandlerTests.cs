@@ -29,7 +29,6 @@ using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.FileTransfer;
 using Catalyst.Common.Interfaces.IO.Inbound;
-using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.IO.Inbound;
 using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Protocol.Common;
@@ -43,7 +42,7 @@ using Xunit;
 
 namespace Catalyst.Cli.UnitTests
 {
-    public class AddFileToDfsResponseHandlerTests
+    public sealed class AddFileToDfsResponseHandlerTests
     {
         private readonly IUserOutput _userOutput;
         private readonly IUploadFileTransferFactory _uploadFileTransferFactory;
@@ -57,7 +56,6 @@ namespace Catalyst.Cli.UnitTests
             _channelHandlerContext = Substitute.For<IChannelHandlerContext>();
 
             _addFileToDfsResponseHandler = new AddFileToDfsResponseHandler(
-                Substitute.For<IRpcCorrelationCache>(),
                 Substitute.For<ILogger>(),
                 _uploadFileTransferFactory,
                 _userOutput
@@ -87,7 +85,7 @@ namespace Catalyst.Cli.UnitTests
             _uploadFileTransferFactory.Received(Quantity.Exactly(1)).Remove(Arg.Any<Guid>());
         }
 
-        private IChanneledMessage<AnySigned> GetAddFileToDfsResponse(FileTransferResponseCodes responseCode)
+        private IChanneledMessage<ProtocolMessage> GetAddFileToDfsResponse(FileTransferResponseCodes responseCode)
         {
             AddFileToDfsResponse addFileResponse = new AddFileToDfsResponse
             {
@@ -95,8 +93,8 @@ namespace Catalyst.Cli.UnitTests
                 ResponseCode = ByteString.CopyFrom((byte) responseCode)
             };
 
-            AnySigned anySigned = addFileResponse.ToAnySigned(PeerIdHelper.GetPeerId("Test"), Guid.NewGuid());
-            return new ChanneledAnySigned(_channelHandlerContext, anySigned);
+            var protocolMessage = addFileResponse.ToAnySigned(PeerIdHelper.GetPeerId("Test"), Guid.NewGuid());
+            return new ProtocolMessageDto(_channelHandlerContext, protocolMessage);
         }
     }
 }

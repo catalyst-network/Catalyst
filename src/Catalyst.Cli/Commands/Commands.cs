@@ -30,11 +30,11 @@ using Catalyst.Cli.Rpc;
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Common.Interfaces.FileTransfer;
-using Catalyst.Common.Interfaces.IO;
 using Catalyst.Common.Interfaces.IO.Messaging;
+using Catalyst.Common.Interfaces.IO.Outbound;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Rpc;
-using Catalyst.Common.IO;
+using Catalyst.Common.IO.Outbound;
 using Catalyst.Common.Network;
 using Catalyst.Common.P2P;
 using Catalyst.Common.Shell;
@@ -58,11 +58,11 @@ namespace Catalyst.Cli.Commands
         private readonly IUploadFileTransferFactory _uploadFileTransferFactory;
         private readonly ILogger _logger;
         private readonly IUserOutput _userOutput;
-        private readonly IRpcMessageFactory _rpcMessageFactory;
+        private readonly IMessageFactory _messageFactory;
 
         /// <summary>
         /// </summary>
-        public Commands(IRpcMessageFactory rpcMessageFactory,
+        public Commands(IMessageFactory messageFactory,
             INodeRpcClientFactory nodeRpcClientFactory,
             IConfigurationRoot config,
             ILogger logger,
@@ -71,7 +71,7 @@ namespace Catalyst.Cli.Commands
             IUploadFileTransferFactory uploadFileTransferFactory,
             IUserOutput userOutput) : base(userOutput)
         {
-            _rpcMessageFactory = rpcMessageFactory;
+            _messageFactory = messageFactory;
             _certificateStore = certificateStore;
             _nodeRpcClientFactory = nodeRpcClientFactory;
             _logger = logger;
@@ -180,7 +180,8 @@ namespace Catalyst.Cli.Commands
             var node = _socketClientRegistry.GetClientFromRegistry(registryId);
             Guard.Argument(node, nameof(node)).Require(IsSocketChannelActive(node));
 
-            node.Shutdown().GetAwaiter().OnCompleted(() => { _socketClientRegistry.RemoveClientFromRegistry(registryId); });
+            node.Dispose();
+            _socketClientRegistry.RemoveClientFromRegistry(registryId);
 
             return true;
         }

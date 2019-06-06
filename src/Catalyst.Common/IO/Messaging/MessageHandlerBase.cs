@@ -23,6 +23,7 @@
 
 using System;
 using System.Data;
+using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Util;
@@ -44,7 +45,7 @@ namespace Catalyst.Common.IO.Messaging
             Logger = logger;
         }
 
-        public void StartObserving(IObservable<IChanneledMessage<AnySigned>> messageStream)
+        public void StartObserving(IObservable<IChanneledMessage<ProtocolMessage>> messageStream)
         {
             if (_messageSubscription != null)
             {
@@ -55,11 +56,12 @@ namespace Catalyst.Common.IO.Messaging
             _messageSubscription = messageStream
                .Where(m => m != null
                  && m.Payload?.TypeUrl == filterMessageType
-                 && !m.Equals(NullObjects.ChanneledAnySigned))
+                 && !m.Equals(NullObjects.ProtocolMessageDto))
+               .SubscribeOn(TaskPoolScheduler.Default)
                .Subscribe(HandleMessage, HandleError, HandleCompleted);
         }
-
-        public virtual void HandleMessage(IChanneledMessage<AnySigned> message)
+        
+        public void HandleMessage(IChanneledMessage<ProtocolMessage> message)
         {
             Logger.Debug("Pre Handle Message Called");
             Handler(message);
@@ -75,9 +77,9 @@ namespace Catalyst.Common.IO.Messaging
             Logger.Error(exception, "Failed to process message.");
         }
 
-        protected abstract void Handler(IChanneledMessage<AnySigned> message);
+        protected abstract void Handler(IChanneledMessage<ProtocolMessage> message);
 
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (disposing)
             {

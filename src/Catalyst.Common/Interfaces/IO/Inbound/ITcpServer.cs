@@ -21,16 +21,7 @@
 
 #endregion
 
-using System.Net;
-using System.Threading.Tasks;
-using DotNetty.Transport.Channels;
-
 namespace Catalyst.Common.Interfaces.IO.Inbound
 {
-    public interface ITcpServer
-    {
-        void Bootstrap(IChannelHandler channelInitializer, IPAddress listenAddress, int port);
-        Task Shutdown();
-        IChannel Channel { get; set; }
-    }
+    internal interface ITcpServer : ISocketServer { }
 }

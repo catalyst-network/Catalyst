@@ -26,7 +26,7 @@ using Catalyst.Common.Interfaces.P2P;
 
 namespace Catalyst.Common.IO.Messaging
 {
-    public sealed class MessageEvictionEvent : IMessageEvictionEvent
+    internal sealed class MessageEvictionEvent : IMessageEvictionEvent
     {
         public object EvictedContent { get; }
         public IPeerIdentifier PeerIdentifier { get; }

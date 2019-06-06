@@ -24,13 +24,14 @@
 using System;
 using System.Linq;
 using System.Net;
+using System.Reactive.Concurrency;
+using System.Reactive.Linq;
+using System.Threading.Tasks;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
-using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.Network;
 using Catalyst.Common.P2P;
-using Catalyst.Common.Rpc;
 using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Common.Util;
 using Catalyst.Node.Core.RPC.Handlers;
@@ -56,15 +57,12 @@ namespace Catalyst.Node.Core.UnitTests.RPC
 
         /// <summary>The fake channel context</summary>
         private readonly IChannelHandlerContext _fakeContext;
-
-        private readonly IRpcCorrelationCache _subbedCorrelationCache;
-
+        
         /// <summary>
         /// Initializes a new instance of the <see cref="PeerBlackListingRequestHandlerTest"/> class.
         /// </summary>
         public PeerBlackListingRequestHandlerTest()
         {
-            _subbedCorrelationCache = Substitute.For<IRpcCorrelationCache>();
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
             
@@ -82,9 +80,9 @@ namespace Catalyst.Node.Core.UnitTests.RPC
         [Theory]
         [InlineData("highscored-14\0\0\0\0\0\0\0", "198.51.100.14", "true")]
         [InlineData("highscored-22\0\0\0\0\0\0\0", "198.51.100.22", "true")]
-        public void TestPeerBlackListingRequestResponse(string publicKey, string ipAddress, string blackList)
+        public async Task TestPeerBlackListingRequestResponse(string publicKey, string ipAddress, string blackList)
         {
-            var responseContent = ApplyBlackListingToPeerTest(publicKey, ipAddress, blackList);
+            var responseContent = await ApplyBlackListingToPeerTest(publicKey, ipAddress, blackList);
 
             responseContent.Blacklist.Should().BeTrue();
             responseContent.Ip.ToStringUtf8().Should().Be(ipAddress);
@@ -101,16 +99,16 @@ namespace Catalyst.Node.Core.UnitTests.RPC
         [Theory]
         [InlineData("cne2+eRandomValuebeingusedherefprtestingIOp", "198.51.100.11", "true")]
         [InlineData("cne2+e5gIfEdfhDWUxkUfr886YuiZnhEj3om5AXmWVXJK7d47/ESkjhbkJsrbzIbuWm8EPSjJ2YicTIcXvfzIOp", "198.51.100.5", "true")]
-        public void TestPeerBlackListingRequestResponseForNonExistantPeers(string publicKey, string ipAddress, string blackList)
+        public async Task TestPeerBlackListingRequestResponseForNonExistantPeers(string publicKey, string ipAddress, string blackList)
         {
-            var responseContent = ApplyBlackListingToPeerTest(publicKey, ipAddress, blackList);
+            var responseContent = await ApplyBlackListingToPeerTest(publicKey, ipAddress, blackList);
 
             responseContent.Blacklist.Should().Be(false);
             responseContent.Ip.Should().BeNullOrEmpty();
             responseContent.PublicKey.Should().BeNullOrEmpty();
         }
 
-        private SetPeerBlackListResponse ApplyBlackListingToPeerTest(string publicKey, string ipAddress, string blacklist)
+        private async Task<SetPeerBlackListResponse> ApplyBlackListingToPeerTest(string publicKey, string ipAddress, string blacklist)
         {
             var peerRepository = Substitute.For<IRepository<Peer>>();
 
@@ -133,7 +131,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC
 
             var sendPeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("sender");
 
-            var rpcMessageFactory = new RpcMessageFactory(_subbedCorrelationCache);
+            var messageFactory = new MessageFactory();
             var request = new SetPeerBlackListRequest
             {
                 PublicKey = publicKey.ToBytesForRLPEncoding().ToByteString(),
@@ -141,7 +139,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC
                 Blacklist = Convert.ToBoolean(blacklist)
             };
 
-            var requestMessage = rpcMessageFactory.GetMessage(new MessageDto(
+            var requestMessage = messageFactory.GetMessage(new MessageDto(
                 request,
                 MessageTypes.Ask,
                 PeerIdentifierHelper.GetPeerIdentifier("recipient"),
@@ -149,15 +147,16 @@ namespace Catalyst.Node.Core.UnitTests.RPC
             ));
 
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, requestMessage);
-            var subbedCache = Substitute.For<IRpcCorrelationCache>();
 
-            var handler = new PeerBlackListingRequestHandler(sendPeerIdentifier, _logger, subbedCache, peerRepository);
+            var handler = new PeerBlackListingRequestHandler(sendPeerIdentifier, _logger, peerRepository);
             handler.StartObserving(messageStream);
+
+            await messageStream.WaitForEndOfDelayedStreamOnTaskPoolScheduler();
 
             var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();
             receivedCalls.Count.Should().Be(1);
 
-            var sentResponse = (AnySigned) receivedCalls[0].GetArguments().Single();
+            var sentResponse = (ProtocolMessage) receivedCalls[0].GetArguments().Single();
             sentResponse.TypeUrl.Should().Be(SetPeerBlackListResponse.Descriptor.ShortenedFullName());
 
             return sentResponse.FromAnySigned<SetPeerBlackListResponse>();

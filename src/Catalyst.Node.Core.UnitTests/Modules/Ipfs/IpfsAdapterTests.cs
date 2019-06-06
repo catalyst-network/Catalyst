@@ -85,7 +85,7 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Ipfs
             using (var ipfs = new IpfsAdapter(_passwordReader, _peerSettings, FileSystem, _logger))
             {
                 ipfs.Options.Repository.Folder.Should()
-                   .Be(Path.Combine(FileSystem.GetCatalystHomeDir().FullName, Constants.DfsDataSubDir));
+                   .Be(Path.Combine(FileSystem.GetCatalystDataDir().FullName, Constants.DfsDataSubDir));
             }
         }
 

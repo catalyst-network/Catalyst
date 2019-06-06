@@ -25,16 +25,13 @@ using System;
 using System.Text;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
-using Catalyst.Common.IO.Messaging.Handlers;
 using Catalyst.Common.Util;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.P2P;
-using Catalyst.Common.Rpc;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
@@ -48,20 +45,20 @@ namespace Catalyst.Node.Core.RPC.Handlers
     {
         private readonly IKeySigner _keySigner;
         private readonly IPeerIdentifier _peerIdentifier;
-        private readonly IRpcMessageFactory _rpcMessageFactory;
+        private readonly IMessageFactory _messageFactory;
 
         public SignMessageRequestHandler(IPeerIdentifier peerIdentifier,
             ILogger logger,
             IKeySigner keySigner,
-            IRpcMessageFactory rpcMessageFactory)
+            IMessageFactory messageFactory)
             : base(logger)
         {
-            _rpcMessageFactory = rpcMessageFactory;
+            _messageFactory = messageFactory;
             _keySigner = keySigner;
             _peerIdentifier = peerIdentifier;
         }
 
-        protected override void Handler(IChanneledMessage<AnySigned> message)
+        protected override void Handler(IChanneledMessage<ProtocolMessage> message)
         {
             Guard.Argument(message).NotNull();
 
@@ -87,7 +84,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
 
                 Logger.Debug("message content is {0}", deserialised.Message);
                 
-                var response = _rpcMessageFactory.GetMessage(new MessageDto(
+                var response = _messageFactory.GetMessage(new MessageDto(
                         new SignMessageResponse
                         {
                             OriginalMessage = deserialised.Message,

@@ -39,7 +39,7 @@ namespace Catalyst.Node.Core.P2P.Messaging.Gossip
     /// The Gossip Manager used to broadcast and receive gossip messages
     /// </summary>
     /// <seealso cref="IGossipManager" />
-    public class GossipManager : IGossipManager
+    public sealed class GossipManager : IGossipManager
     {
         /// <summary>The gossip cache</summary>
         private readonly IGossipCache _gossipCache;
@@ -48,46 +48,45 @@ namespace Catalyst.Node.Core.P2P.Messaging.Gossip
         private readonly IPeerIdentifier _peerIdentifier;
 
         /// <summary>The message factory</summary>
-        private readonly P2PMessageFactory _messageFactory;
+        private readonly IMessageFactory _messageFactory;
 
         /// <summary>Initializes a new instance of the <see cref="GossipManager"/> class.</summary>
         /// <param name="peerIdentifier">The peer identifier.</param>
-        /// <param name="reputableCache">The reputable cache.</param>
         /// <param name="gossipCache">The gossip cache.</param>
-        public GossipManager(IPeerIdentifier peerIdentifier, IReputableCache reputableCache, IGossipCache gossipCache)
+        public GossipManager(IPeerIdentifier peerIdentifier, IGossipCache gossipCache)
         {
             _gossipCache = gossipCache;
             _peerIdentifier = peerIdentifier;
-            _messageFactory = new P2PMessageFactory(reputableCache);
+            _messageFactory = new MessageFactory();
         }
 
         /// <inheritdoc/>
-        public void Broadcast(IChanneledMessage<AnySigned> anySigned)
+        public void Broadcast(IChanneledMessage<ProtocolMessage> protocolMessage)
         {
-            Gossip(anySigned);
+            Gossip(protocolMessage);
         }
 
         /// <inheritdoc/>
-        public void IncomingGossip(IChanneledMessage<AnySigned> anySigned)
+        public void IncomingGossip(IChanneledMessage<ProtocolMessage> protocolMessage)
         {
-            if (!anySigned.Payload.CheckIfMessageIsGossip())
+            if (!protocolMessage.Payload.CheckIfMessageIsGossip())
             {
                 throw new NotSupportedException("The Message is not a gossip type");
             }
 
             // TODO: Check Gossip inner signature and outer signature
-            AnySigned originalGossipedMessage = AnySigned.Parser.ParseFrom(anySigned.Payload.Value);
+            var originalGossipedMessage = ProtocolMessage.Parser.ParseFrom(protocolMessage.Payload.Value);
             _gossipCache.IncrementReceivedCount(originalGossipedMessage.CorrelationId.ToGuid(), 1);
         }
 
         /// <summary>Gossips the specified message.</summary>
         /// <param name="message">The message.</param>
-        private void Gossip(IChanneledMessage<AnySigned> message)
+        private void Gossip(IChanneledMessage<ProtocolMessage> message)
         {
             var correlationId = message.Payload.CorrelationId.ToGuid();
             var gossipCount = _gossipCache.GetGossipCount(correlationId);
             var canGossip = _gossipCache.CanGossip(correlationId);
-            bool isInCache = gossipCount != -1;
+            var isInCache = gossipCount != -1;
 
             if (!canGossip)
             {
@@ -101,7 +100,7 @@ namespace Catalyst.Node.Core.P2P.Messaging.Gossip
                     SentAt = DateTime.Now,
                     Recipient = new PeerIdentifier(message.Payload.PeerId),
                     Content = message.Payload,
-                    ReceivedCount = 1,
+                    ReceivedCount = 1
                 };
                 _gossipCache.AddPendingRequest(request);
             }
@@ -111,7 +110,7 @@ namespace Catalyst.Node.Core.P2P.Messaging.Gossip
 
         /// <summary>Sends gossips to random peers.</summary>
         /// <param name="message">The message.</param>
-        private void SendGossipMessages(IChanneledMessage<AnySigned> message)
+        private void SendGossipMessages(IChanneledMessage<ProtocolMessage> message)
         {
             var peersToGossip = _gossipCache.GetRandomPeers(Constants.MaxGossipPeersPerRound);
             var correlationId = message.Payload.CorrelationId.ToGuid();
@@ -119,7 +118,7 @@ namespace Catalyst.Node.Core.P2P.Messaging.Gossip
 
             foreach (var peerIdentifier in peersToGossip)
             {
-                var datagramEnvelope = _messageFactory.GetMessageInDatagramEnvelope(new MessageDto(message.Payload,
+                var datagramEnvelope = _messageFactory.GetDatagramMessage(new MessageDto(message.Payload,
                     MessageTypes.Gossip, peerIdentifier, _peerIdentifier), correlationId);
                 channel.WriteAndFlushAsync(datagramEnvelope);
             }

@@ -33,9 +33,11 @@ namespace Catalyst.Common.IO.Inbound
     /// Channel Gossip Pipeline
     /// Handles gossip messages
     /// </summary>
-    /// <seealso cref="ObservableHandlerBase{AnySigned}" />
+    /// <seealso cref="ObservableServiceHandler" />
     /// <seealso cref="IGossipHandler" />
-    public class GossipHandler : ObservableHandlerBase<AnySigned>, IGossipHandler
+    public sealed class GossipHandler 
+        : SimpleChannelInboundHandler<ProtocolMessage>,
+            IGossipHandler
     {
         private readonly IGossipManager _gossipManager;
 
@@ -43,19 +45,15 @@ namespace Catalyst.Common.IO.Inbound
         /// <param name="gossipManager">The gossip manager.</param>
         public GossipHandler(IGossipManager gossipManager) { _gossipManager = gossipManager; }
 
-        protected override void ChannelRead0(IChannelHandlerContext ctx, AnySigned msg)
+        protected override void ChannelRead0(IChannelHandlerContext ctx, ProtocolMessage msg)
         {
-            var channeledAnySigned = new ChanneledAnySigned(ctx, msg);
-
-            // TODO Check sig
-            if (channeledAnySigned.Payload.CheckIfMessageIsGossip())
+            if (msg.CheckIfMessageIsGossip())
             {
-                _gossipManager.IncomingGossip(channeledAnySigned);
-                AnySigned originalGossipedMessage = AnySigned.Parser.ParseFrom(msg.Value);
-                MessageSubject.OnNext(new ChanneledAnySigned(ctx, originalGossipedMessage));
+                var protocolMessageDto = new ProtocolMessageDto(ctx, msg);
+                _gossipManager.IncomingGossip(protocolMessageDto);
             }
 
-            ctx.FireChannelRead(ctx);
+            ctx.FireChannelRead(msg);
         }
     }
 }

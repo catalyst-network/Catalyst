@@ -27,9 +27,7 @@ using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.IO.Messaging;
-using Catalyst.Common.IO.Messaging.Handlers;
 using Catalyst.Common.P2P;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
@@ -41,7 +39,6 @@ namespace Catalyst.Node.Core.RPC.Handlers
     /// <summary>
     /// Peer count request handler
     /// </summary>
-    /// <seealso cref="CorrelatableMessageHandlerBase{GetPeerCountRequest, IRpcCorrelationCache}" />
     /// <seealso cref="IRpcRequestHandler" />
     public sealed class PeerCountRequestHandler
         : MessageHandlerBase<GetPeerCountRequest>,
@@ -51,31 +48,30 @@ namespace Catalyst.Node.Core.RPC.Handlers
         private readonly IRepository<Peer> _peerRepository;
 
         /// <summary>The RPC message base</summary>
-        private readonly IRpcMessageFactory _rpcMessageBase;
+        private readonly IMessageFactory _messageFactory;
 
         /// <summary>The peer identifier</summary>
         private readonly IPeerIdentifier _peerIdentifier;
 
         /// <summary>Initializes a new instance of the <see cref="PeerCountRequestHandler"/> class.</summary>
         /// <param name="peerIdentifier">The peer identifier.</param>
-        /// <param name="correlationCache">The correlation cache.</param>
         /// <param name="peerRepository">The peer discovery.</param>
-        /// <param name="rpcMessageFactory"></param>
+        /// <param name="messageFactory"></param>
         /// <param name="logger">The logger.</param>
         public PeerCountRequestHandler(IPeerIdentifier peerIdentifier,
             IRepository<Peer> peerRepository,
-            IRpcMessageFactory rpcMessageFactory,
+            IMessageFactory messageFactory,
             ILogger logger) :
             base(logger)
         {
             _peerRepository = peerRepository;
-            _rpcMessageBase = rpcMessageFactory;
+            _messageFactory = messageFactory;
             _peerIdentifier = peerIdentifier;
         }
 
         /// <summary>Handles the specified message.</summary>
         /// <param name="message">The message.</param>
-        protected override void Handler(IChanneledMessage<AnySigned> message)
+        protected override void Handler(IChanneledMessage<ProtocolMessage> message)
         {
             var peerCount = _peerRepository.GetAll().Count();
 
@@ -84,7 +80,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
                 PeerCount = peerCount
             };
 
-            var responseMessage = _rpcMessageBase.GetMessage(new MessageDto(
+            var responseMessage = _messageFactory.GetMessage(new MessageDto(
                     response,
                     MessageTypes.Tell,
                     new PeerIdentifier(message.Payload.PeerId),
