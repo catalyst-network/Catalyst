@@ -54,7 +54,7 @@ namespace Catalyst.Common.IO
                 return;
             }
             
-            Logger.Information($"Disposing {GetType().Name}");
+            Logger.Debug($"Disposing {GetType().Name}");
 
             if (Channel != null)
             {
@@ -66,9 +66,7 @@ namespace Catalyst.Common.IO
             }
 
             WorkerEventLoop?
-               .ShutdownGracefullyAsync()
-               .GetAwaiter()
-               .GetResult();
+               .ShutdownGracefullyAsync().Wait(100);
         }
     }
 }
