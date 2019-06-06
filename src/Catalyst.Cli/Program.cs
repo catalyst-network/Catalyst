@@ -126,7 +126,6 @@ namespace Catalyst.Cli
                 using (container.BeginLifetimeScope(LifetimeTag, b => { b.Populate(serviceCollection, LifetimeTag); }))
                 {
                     var shell = container.Resolve<ICatalystCli>();
-
                     shell.AdvancedShell.RunConsole(_cancellationSource.Token);
                 }
 

@@ -45,6 +45,7 @@ namespace Catalyst.Common.IO
             TlsHandler tlsHandler)
         {
             Guard.Argument(initializationAction, nameof(initializationAction)).NotNull();
+            Guard.Argument(handlers, nameof(handlers)).NotNull().NotEmpty();
             _initializationAction = initializationAction;
             _handlers = handlers.ToImmutableList();
             _tlsHandler = tlsHandler;
@@ -61,11 +62,7 @@ namespace Catalyst.Common.IO
             }
 
             pipeline.AddLast(new LoggingHandler(LogLevel.TRACE));
-
-            if (_handlers.Count > 0)
-            {
-                pipeline.AddLast(_handlers.ToArray());
-            }
+            pipeline.AddLast(_handlers.ToArray());
         }
     }
 }
