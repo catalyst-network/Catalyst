@@ -22,9 +22,10 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
+using System.Reactive.Concurrency;
 using System.Reactive.Linq;
+using System.Threading.Tasks;
 using Catalyst.Common.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.IO.Messaging;
@@ -36,11 +37,6 @@ namespace Catalyst.Common.UnitTests.TestUtils
 {
     public static class MessageStreamHelper
     {
-        public static void SendToHandler<T>(this AnySigned[] messages, IChannelHandlerContext fakeContext, MessageHandlerBase<T> handler) where T : IMessage
-        {
-            CreateChanneledMessage(fakeContext, messages).ForEach(handler.HandleMessage);
-        }
-
         public static void SendToHandler<T>(this AnySigned messages, IChannelHandlerContext fakeContext, MessageHandlerBase<T> handler) where T : IMessage
         {
             handler.HandleMessage(CreateChanneledMessage(fakeContext, messages));
@@ -67,16 +63,20 @@ namespace Catalyst.Common.UnitTests.TestUtils
             return new ChanneledAnySigned(fakeContext, responseMessage);
         }
 
-        private static List<ChanneledAnySigned> CreateChanneledMessage(IChannelHandlerContext fakeContext, params AnySigned[] responseMessages)
+        public static IObservable<T> DelayAndSubscribeOnTaskPool<T>(this IObservable<T> messageStream, TimeSpan customDelay = default)
         {
-            List<ChanneledAnySigned> stream = new List<ChanneledAnySigned>();
-            foreach (var message in responseMessages)
-            {
-                var channeledAny = new ChanneledAnySigned(fakeContext, message);
-                stream.Add(channeledAny);
-            }
+            var delay = customDelay == default ? TimeSpan.FromMilliseconds(30) : customDelay;
+            return messageStream.Delay(delay).SubscribeOn(TaskPoolScheduler.Default);
+        }
 
-            return stream;
+        public static async Task<T> WaitForEndOfDelayedStreamOnTaskPoolScheduler<T>(this IObservable<T> messageStream, TimeSpan customDelay = default)
+        {
+            return await messageStream.DelayAndSubscribeOnTaskPool(customDelay).LastAsync();
+        }
+
+        public static async Task<T> WaitForItemsOnDelayedStreamOnTaskPoolScheduler<T>(this IObservable<T> messageStream, int numberOfItemsToWaitFor = 1, TimeSpan customDelay = default)
+        {
+            return await messageStream.Take(numberOfItemsToWaitFor).DelayAndSubscribeOnTaskPool(customDelay).LastAsync();
         }
     }
 }

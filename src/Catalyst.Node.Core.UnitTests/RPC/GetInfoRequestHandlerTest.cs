@@ -21,9 +21,13 @@
 
 #endregion
 
+using System;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Reactive.Concurrency;
+using System.Reactive.Linq;
+using System.Threading.Tasks;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Rpc;
@@ -47,7 +51,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC
     public sealed class GetInfoRequestHandlerTest : ConfigFileBasedTest
     {
         private readonly ILogger _logger;
-        private IChannelHandlerContext _fakeContext;
+        private readonly IChannelHandlerContext _fakeContext;
         private readonly IConfigurationRoot _config;
         private readonly IRpcServerSettings _rpcServerSettings;
 
@@ -74,7 +78,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC
         }
 
         [Fact]
-        public void GetInfoMessageRequest_UsingValidRequest_ShouldSendGetInfoResponse()
+        public async Task GetInfoMessageRequest_UsingValidRequest_ShouldSendGetInfoResponse()
         {
             var messageFactory = new MessageFactory();
             var request = messageFactory.GetMessage(new MessageDto(
@@ -90,6 +94,8 @@ namespace Catalyst.Node.Core.UnitTests.RPC
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, request);
             var handler = new GetInfoRequestHandler(PeerIdentifierHelper.GetPeerIdentifier("sender"), _rpcServerSettings, messageFactory, _logger);
             handler.StartObserving(messageStream);
+
+            await messageStream.WaitForEndOfDelayedStreamOnTaskPoolScheduler();
 
             var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();
             receivedCalls.Count.Should().Be(1);
