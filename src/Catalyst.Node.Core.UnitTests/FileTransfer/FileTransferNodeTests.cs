@@ -51,179 +51,179 @@ using TransferFileBytesRequestHandler = Catalyst.Node.Core.RPC.Handlers.Transfer
 
 namespace Catalyst.Node.Core.UnitTests.FileTransfer
 {
-    public sealed class FileTransferNodeTests
+    public sealed class FileTransferNodeTests : FileSystemBasedTest
     {
-        //private readonly ILogger _logger;
-        //private readonly IChannelHandlerContext _fakeContext;
-        //private readonly IDownloadFileTransferFactory _nodeFileTransferFactory;
-        //private readonly IDfs _dfs;
-        //private readonly IpfsAdapter _ipfsEngine;
-        //private readonly IMessageFactory _messageFactory;
+        private readonly ILogger _logger;
+        private readonly IChannelHandlerContext _fakeContext;
+        private readonly IDownloadFileTransferFactory _nodeFileTransferFactory;
+        private readonly IDfs _dfs;
+        private readonly IpfsAdapter _ipfsEngine;
+        private readonly IMessageFactory _messageFactory;
 
-        //public FileTransferNodeTests(ITestOutputHelper testOutput) : base(testOutput)
-        //{
-        //    var config = SocketPortHelper.AlterConfigurationToGetUniquePort(new ConfigurationBuilder()
-        //       .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile))
-        //       .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile))
-        //       .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Network.Dev)))
-        //       .Build(), "FileTransferNodeTests");
+        public FileTransferNodeTests(ITestOutputHelper testOutput) : base(testOutput)
+        {
+            var config = SocketPortHelper.AlterConfigurationToGetUniquePort(new ConfigurationBuilder()
+               .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile))
+               .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile))
+               .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Network.Dev)))
+               .Build(), "FileTransferNodeTests");
 
-        //    var peerSettings = new PeerSettings(config);
-        //    _logger = Substitute.For<ILogger>();
-        //    _fakeContext = Substitute.For<IChannelHandlerContext>();
-        //    _messageFactory = Substitute.For<IMessageFactory>();
-        //    _nodeFileTransferFactory = new DownloadFileTransferFactory();
+            var peerSettings = new PeerSettings(config);
+            _logger = Substitute.For<ILogger>();
+            _fakeContext = Substitute.For<IChannelHandlerContext>();
+            _messageFactory = Substitute.For<IMessageFactory>();
+            _nodeFileTransferFactory = new DownloadFileTransferFactory();
 
-        //    var passwordReader = new TestPasswordReader("abcd");
+            var passwordReader = new TestPasswordReader("abcd");
 
-        //    _ipfsEngine = new IpfsAdapter(passwordReader, peerSettings, FileSystem, _logger);
-        //    _logger = Substitute.For<ILogger>();
-        //    _dfs = new Dfs(_ipfsEngine, _logger);
-        //}
+            _ipfsEngine = new IpfsAdapter(passwordReader, peerSettings, FileSystem, _logger);
+            _logger = Substitute.For<ILogger>();
+            _dfs = new Dfs(_ipfsEngine, _logger);
+        }
 
-        //[Fact]
-        //public void Node_Initialize_File_Transfer()
-        //{
-        //    var sender = PeerIdHelper.GetPeerId("sender");
-        //    var handler = new AddFileToDfsRequestHandler(new Dfs(_ipfsEngine, _logger), new PeerIdentifier(sender),
-        //        _nodeFileTransferFactory, _messageFactory, _logger);
+        [Fact]
+        public void Node_Initialize_File_Transfer()
+        {
+            var sender = PeerIdHelper.GetPeerId("sender");
+            var handler = new AddFileToDfsRequestHandler(new Dfs(_ipfsEngine, _logger), new PeerIdentifier(sender),
+                _nodeFileTransferFactory, _messageFactory, _logger);
 
-        //    //Create a response object and set its return value
-        //    var request = new AddFileToDfsRequest
-        //    {
-        //        Node = "node1",
-        //        FileName = "Test.dat",
-        //        FileSize = 10000
-        //    }.ToAnySigned(sender, Guid.NewGuid());
-        //    request.SendToHandler(_fakeContext, handler);
+            //Create a response object and set its return value
+            var request = new AddFileToDfsRequest
+            {
+                Node = "node1",
+                FileName = "Test.dat",
+                FileSize = 10000
+            }.ToAnySigned(sender, Guid.NewGuid());
+            request.SendToHandler(_fakeContext, handler);
 
-        //    Assert.Equal(1, _nodeFileTransferFactory.Keys.Length);
-        //}
+            Assert.Equal(1, _nodeFileTransferFactory.Keys.Length);
+        }
 
-        //[Fact]
-        //public void Cancel_File_Transfer()
-        //{
-        //    var sender = new PeerIdentifier(PeerIdHelper.GetPeerId("sender"));
+        [Fact]
+        public void Cancel_File_Transfer()
+        {
+            var sender = new PeerIdentifier(PeerIdHelper.GetPeerId("sender"));
 
-        //    IDownloadFileInformation fileTransferInformation = new DownloadFileTransferInformation(
-        //        sender,
-        //        sender, 
-        //        _fakeContext.Channel, 
-        //        Guid.NewGuid(), 
-        //        string.Empty, 
-        //        555);
+            IDownloadFileInformation fileTransferInformation = new DownloadFileTransferInformation(
+                sender,
+                sender, 
+                _fakeContext.Channel, 
+                Guid.NewGuid(), 
+                string.Empty, 
+                555);
 
-        //    var cancellationTokenSource = new CancellationTokenSource();
-        //    _nodeFileTransferFactory.RegisterTransfer(fileTransferInformation);
-        //    _nodeFileTransferFactory.FileTransferAsync(fileTransferInformation.CorrelationGuid, cancellationTokenSource.Token);
-        //    Assert.Equal(1, _nodeFileTransferFactory.Keys.Length);
-        //    cancellationTokenSource.Cancel();
+            var cancellationTokenSource = new CancellationTokenSource();
+            _nodeFileTransferFactory.RegisterTransfer(fileTransferInformation);
+            _nodeFileTransferFactory.FileTransferAsync(fileTransferInformation.CorrelationGuid, cancellationTokenSource.Token);
+            Assert.Equal(1, _nodeFileTransferFactory.Keys.Length);
+            cancellationTokenSource.Cancel();
 
-        //    var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
-        //    var linearBackOffRetryPolicy = Policy.Handle<TaskCanceledException>()
-        //       .WaitAndRetryAsync(5, retryAttempt =>
-        //        {
-        //            var timeSpan = TimeSpan.FromSeconds(retryAttempt + 5);
-        //            cts = new CancellationTokenSource(timeSpan);
-        //            return timeSpan;
-        //        });
+            var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
+            var linearBackOffRetryPolicy = Policy.Handle<TaskCanceledException>()
+               .WaitAndRetryAsync(5, retryAttempt =>
+                {
+                    var timeSpan = TimeSpan.FromSeconds(retryAttempt + 5);
+                    cts = new CancellationTokenSource(timeSpan);
+                    return timeSpan;
+                });
 
-        //    linearBackOffRetryPolicy.ExecuteAsync(() =>
-        //    {
-        //        return Task.Run(() =>
-        //        {
-        //            while (!fileTransferInformation.IsCompleted)
-        //            {
-        //                Task.Delay(1000, cts.Token).GetAwaiter().GetResult();
-        //            }
-        //        }, cts.Token);
-        //    }).GetAwaiter().GetResult();
+            linearBackOffRetryPolicy.ExecuteAsync(() =>
+            {
+                return Task.Run(() =>
+                {
+                    while (!fileTransferInformation.IsCompleted)
+                    {
+                        Task.Delay(1000, cts.Token).GetAwaiter().GetResult();
+                    }
+                }, cts.Token);
+            }).GetAwaiter().GetResult();
 
-        //    var fileCleanedUp = !File.Exists(fileTransferInformation.TempPath);
+            var fileCleanedUp = !File.Exists(fileTransferInformation.TempPath);
 
-        //    Assert.Equal(true, fileTransferInformation.IsExpired());
-        //    Assert.Equal(true, fileCleanedUp);
-        //    Assert.Equal(0, _nodeFileTransferFactory.Keys.Length);
-        //}
+            Assert.Equal(true, fileTransferInformation.IsExpired());
+            Assert.Equal(true, fileCleanedUp);
+            Assert.Equal(0, _nodeFileTransferFactory.Keys.Length);
+        }
 
-        //[Theory]
-        //[InlineData(1000L)]
-        //[InlineData(82000L)]
-        //[InlineData(100000L)]
-        //public void Verify_File_Integrity_On_Transfer(long byteSize) { AddFileToDfs(byteSize, out _); }
+        [Theory]
+        [InlineData(1000L)]
+        [InlineData(82000L)]
+        [InlineData(100000L)]
+        public void Verify_File_Integrity_On_Transfer(long byteSize) { AddFileToDfs(byteSize, out _); }
 
-        //private void AddFileToDfs(long byteSize, out long crcValue)
-        //{
-        //    var fakeNode = Substitute.For<INodeRpcClient>();
-        //    var sender = PeerIdHelper.GetPeerId("sender");
-        //    var recipient = PeerIdHelper.GetPeerId("recipient");
-        //    var senderPeerId = new PeerIdentifier(sender);
-        //    var recipientPeerId = new PeerIdentifier(recipient);
-        //    var fileToTransfer = FileHelper.CreateRandomTempFile(byteSize);
-        //    var addFileToDfsRequestHandler = new AddFileToDfsRequestHandler(_dfs, senderPeerId, _nodeFileTransferFactory,
-        //        _messageFactory, _logger);
-        //    var transferBytesRequestHandler =
-        //        new TransferFileBytesRequestHandler(_nodeFileTransferFactory, senderPeerId, _logger, _messageFactory);
-        //    var uniqueFileKey = Guid.NewGuid();
-        //    crcValue = FileHelper.GetCrcValue(fileToTransfer);
+        private void AddFileToDfs(long byteSize, out long crcValue)
+        {
+            var fakeNode = Substitute.For<INodeRpcClient>();
+            var sender = PeerIdHelper.GetPeerId("sender");
+            var recipient = PeerIdHelper.GetPeerId("recipient");
+            var senderPeerId = new PeerIdentifier(sender);
+            var recipientPeerId = new PeerIdentifier(recipient);
+            var fileToTransfer = FileHelper.CreateRandomTempFile(byteSize);
+            var addFileToDfsRequestHandler = new AddFileToDfsRequestHandler(_dfs, senderPeerId, _nodeFileTransferFactory,
+                _messageFactory, _logger);
+            var transferBytesRequestHandler =
+                new TransferFileBytesRequestHandler(_nodeFileTransferFactory, senderPeerId, _logger, _messageFactory);
+            var uniqueFileKey = Guid.NewGuid();
+            crcValue = FileHelper.GetCrcValue(fileToTransfer);
             
-        //    //Create a response object and set its return value
-        //    var request = new AddFileToDfsRequest
-        //    {
-        //        Node = "node1",
-        //        FileName = fileToTransfer,
-        //        FileSize = (ulong) byteSize
-        //    }.ToAnySigned(sender, uniqueFileKey);
-        //    request.SendToHandler(_fakeContext, addFileToDfsRequestHandler);
+            //Create a response object and set its return value
+            var request = new AddFileToDfsRequest
+            {
+                Node = "node1",
+                FileName = fileToTransfer,
+                FileSize = (ulong) byteSize
+            }.ToAnySigned(sender, uniqueFileKey);
+            request.SendToHandler(_fakeContext, addFileToDfsRequestHandler);
             
-        //    Assert.Equal(1, _nodeFileTransferFactory.Keys.Length);
+            Assert.Equal(1, _nodeFileTransferFactory.Keys.Length);
 
-        //    var fileTransferInformation =
-        //        _nodeFileTransferFactory.GetFileTransferInformation(uniqueFileKey);
-        //    Assert.True(fileTransferInformation.Initialised, "File transfer not initialised");
+            var fileTransferInformation =
+                _nodeFileTransferFactory.GetFileTransferInformation(uniqueFileKey);
+            Assert.True(fileTransferInformation.Initialised, "File transfer not initialised");
 
-        //    using (var fs = File.Open(fileToTransfer, FileMode.Open))
-        //    {
-        //        var fileUploadInformation = new UploadFileTransferInformation(fs, senderPeerId, recipientPeerId,
-        //            fakeNode.Channel, uniqueFileKey, new MessageFactory());
-        //        for (uint i = 0; i < fileTransferInformation.MaxChunk; i++)
-        //        {
-        //            fileUploadInformation.GetUploadMessageDto(i)
-        //               .SendToHandler(_fakeContext, transferBytesRequestHandler);
-        //        }
-        //    }
+            using (var fs = File.Open(fileToTransfer, FileMode.Open))
+            {
+                var fileUploadInformation = new UploadFileTransferInformation(fs, senderPeerId, recipientPeerId,
+                    fakeNode.Channel, uniqueFileKey, new MessageFactory());
+                for (uint i = 0; i < fileTransferInformation.MaxChunk; i++)
+                {
+                    fileUploadInformation.GetUploadMessageDto(i)
+                       .SendToHandler(_fakeContext, transferBytesRequestHandler);
+                }
+            }
 
-        //    Assert.True(fileTransferInformation.ChunkIndicatorsTrue());
+            Assert.True(fileTransferInformation.ChunkIndicatorsTrue());
             
-        //    var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
-        //    var linearBackOffRetryPolicy = Policy.Handle<TaskCanceledException>()
-        //       .WaitAndRetryAsync(5, retryAttempt =>
-        //        {
-        //            var timeSpan = TimeSpan.FromSeconds(retryAttempt + 5);
-        //            cts = new CancellationTokenSource(timeSpan);
-        //            return timeSpan;
-        //        });
+            var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
+            var linearBackOffRetryPolicy = Policy.Handle<TaskCanceledException>()
+               .WaitAndRetryAsync(5, retryAttempt =>
+                {
+                    var timeSpan = TimeSpan.FromSeconds(retryAttempt + 5);
+                    cts = new CancellationTokenSource(timeSpan);
+                    return timeSpan;
+                });
 
-        //    linearBackOffRetryPolicy.ExecuteAsync(() =>
-        //    {
-        //        return Task.Run(() =>
-        //        {
-        //            while (fileTransferInformation.DfsHash == null)
-        //            {
-        //                Task.Delay(1000, cts.Token).GetAwaiter().GetResult();
-        //            }
-        //        }, cts.Token);
-        //    }).GetAwaiter().GetResult();
+            linearBackOffRetryPolicy.ExecuteAsync(() =>
+            {
+                return Task.Run(() =>
+                {
+                    while (fileTransferInformation.DfsHash == null)
+                    {
+                        Task.Delay(1000, cts.Token).GetAwaiter().GetResult();
+                    }
+                }, cts.Token);
+            }).GetAwaiter().GetResult();
 
-        //    Assert.NotNull(fileTransferInformation.DfsHash);
+            Assert.NotNull(fileTransferInformation.DfsHash);
             
-        //    long ipfsCrcValue;
-        //    using (var ipfsStream = _dfs.ReadAsync(fileTransferInformation.DfsHash).GetAwaiter().GetResult())
-        //    {
-        //        ipfsCrcValue = FileHelper.GetCrcValue(ipfsStream);
-        //    }
+            long ipfsCrcValue;
+            using (var ipfsStream = _dfs.ReadAsync(fileTransferInformation.DfsHash).GetAwaiter().GetResult())
+            {
+                ipfsCrcValue = FileHelper.GetCrcValue(ipfsStream);
+            }
 
-        //    Assert.Equal(crcValue, ipfsCrcValue);
-        //}
+            Assert.Equal(crcValue, ipfsCrcValue);
+        }
     }
 }
