@@ -25,7 +25,6 @@
 using Autofac;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
-using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Inbound;
 using Catalyst.Common.IO.Messaging;
@@ -35,7 +34,6 @@ using Catalyst.Common.Util;
 using Catalyst.Node.Core.P2P;
 using Catalyst.Node.Core.P2P.Messaging.Handlers;
 using Catalyst.Node.Core.UnitTests.TestUtils;
-using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
 using DotNetty.Transport.Channels;
 using FluentAssertions;
@@ -93,7 +91,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
         }
 
         [Fact]
-        public void CanReceiveEventsFromSubscribedStream()
+        public async Task CanReceiveEventsFromSubscribedStream()
         {
             using (_container.BeginLifetimeScope(CurrentTestName))
             {
@@ -106,14 +104,16 @@ namespace Catalyst.Node.Core.UnitTests.P2P
                 var handler = new PingRequestHandler(_pid, _logger);
                 handler.StartObserving(observableStream);
 
-                fakeContext.Channel.ReceivedWithAnyArgs(1)
+                await observableStream.WaitForEndOfDelayedStreamOnTaskPoolScheduler();
+
+                await fakeContext.Channel.ReceivedWithAnyArgs(1)
                    .WriteAndFlushAsync(new PingResponse().ToAnySigned(_pid.PeerId, _guid));
             }
         }
 
         [Fact]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
-        public void CanReceivePingRequests()
+        public async Task CanReceivePingRequests()
         {
             using (_container.BeginLifetimeScope(CurrentTestName))
             {
@@ -122,8 +122,8 @@ namespace Catalyst.Node.Core.UnitTests.P2P
 
                 using (peerService.MessageStream.Subscribe(serverObserver))
                 {
-                    var peerSettings = new PeerSettings(_config);
-                    var targetHost = new IPEndPoint(peerSettings.BindAddress, peerSettings.Port + new Random().Next(0, 5000));
+                    var peerSettings = _container.Resolve<IPeerSettings>();
+                    var targetHost = new IPEndPoint(peerSettings.BindAddress, peerSettings.Port);
 
                     var datagramEnvelope = new MessageFactory().GetDatagramMessage(new MessageDto(
                             new PingRequest(),
@@ -140,16 +140,9 @@ namespace Catalyst.Node.Core.UnitTests.P2P
                     {
                         peerClient.SendMessage(datagramEnvelope);
                     }
-
-                    var tasks = new IChanneledMessageStreamer<AnySigned>[]
-                        {
-                            peerService
-                        }
-                       .Select(async p => await p.MessageStream.FirstAsync(a => a != null && a != NullObjects.ChanneledAnySigned))
-                       .ToArray();
-
-                    Task.WaitAll(tasks, TimeSpan.FromMilliseconds(2000));
-
+                    
+                    await peerService.MessageStream.WaitForItemsOnDelayedStreamOnTaskPoolScheduler();
+                    
                     serverObserver.Received.LastOrDefault().Should().NotBeNull();
                     serverObserver.Received.Last().Payload.TypeUrl.Should().Be(PingRequest.Descriptor.ShortenedFullName());
                     peerService.Dispose();
@@ -159,7 +152,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
 
         [Fact]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
-        public void CanReceiveNeighbourRequests()
+        public async Task CanReceiveNeighbourRequests()
         {
             using (_container.BeginLifetimeScope(CurrentTestName))
             {
@@ -181,22 +174,10 @@ namespace Catalyst.Node.Core.UnitTests.P2P
                         ),
                         Guid.NewGuid()
                     );
+                    
+                    peerClient.SendMessage(datagramEnvelope);
 
-
-                    using (var peerClient = new PeerClient(targetHost))
-                    {
-                        peerClient.SendMessage(datagramEnvelope);
-                    }
-
-                    var tasks = new IChanneledMessageStreamer<AnySigned>[]
-                        {
-                            peerService
-                        }
-                       .Select(async p =>
-                            await p.MessageStream.FirstAsync(a => a != null && a != NullObjects.ChanneledAnySigned))
-                       .ToArray();
-
-                    Task.WaitAll(tasks, TimeSpan.FromMilliseconds(2000));
+                    await peerService.MessageStream.WaitForItemsOnDelayedStreamOnTaskPoolScheduler();
 
                     serverObserver.Received.FirstOrDefault().Should().NotBeNull();
                     serverObserver.Received.First().Payload.TypeUrl.Should()
