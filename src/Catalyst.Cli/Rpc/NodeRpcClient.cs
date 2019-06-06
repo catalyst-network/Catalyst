@@ -63,7 +63,7 @@ namespace Catalyst.Cli.Rpc
                 new ProtobufVarint32LengthFieldPrepender(),
                 new ProtobufEncoder(),
                 new ProtobufVarint32FrameDecoder(),
-                new ProtobufDecoder(AnySigned.Parser)
+                new ProtobufDecoder(ProtocolMessage.Parser)
             };
 
             Bootstrap(

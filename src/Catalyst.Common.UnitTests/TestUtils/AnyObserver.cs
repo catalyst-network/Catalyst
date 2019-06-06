@@ -31,19 +31,19 @@ using Serilog;
 
 namespace Catalyst.Common.UnitTests.TestUtils
 {
-    public sealed class AnySignedMessageObserver : IObserver<IChanneledMessage<AnySigned>>
+    public sealed class ProtocolMessageObserver : IObserver<IChanneledMessage<ProtocolMessage>>
     {
         private readonly ILogger _logger;
-        private readonly ConcurrentStack<IChanneledMessage<AnySigned>> _received;
+        private readonly ConcurrentStack<IChanneledMessage<ProtocolMessage>> _received;
 
-        public AnySignedMessageObserver(int index, ILogger logger)
+        public ProtocolMessageObserver(int index, ILogger logger)
         {
             _logger = logger;
             Index = index;
-            _received = new ConcurrentStack<IChanneledMessage<AnySigned>>();
+            _received = new ConcurrentStack<IChanneledMessage<ProtocolMessage>>();
         }
 
-        public IReadOnlyCollection<IChanneledMessage<AnySigned>> Received =>
+        public IReadOnlyCollection<IChanneledMessage<ProtocolMessage>> Received =>
             Array.AsReadOnly(_received.ToArray());
 
         public int Index { get; }
@@ -51,9 +51,9 @@ namespace Catalyst.Common.UnitTests.TestUtils
         public void OnCompleted() { _logger.Debug($"observer {Index} done"); }
         public void OnError(Exception error) { _logger.Debug($"observer {Index} received error : {error.Message}"); }
 
-        public void OnNext(IChanneledMessage<AnySigned> value)
+        public void OnNext(IChanneledMessage<ProtocolMessage> value)
         {
-            if (value == NullObjects.ChanneledAnySigned)
+            if (value == NullObjects.ProtocolMessageDto)
             {
                 return;
             }
