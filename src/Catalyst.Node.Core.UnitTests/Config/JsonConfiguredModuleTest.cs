@@ -72,7 +72,7 @@ namespace Catalyst.Node.Core.UnitTests.Config
 
             var peerSettings = Substitute.For<IPeerSettings>();
             peerSettings.SeedServers.Returns(new[] {"seed1.seedservers.bogus", "seed2.seedservers.bogus"});
-            peerSettings.BindAddress.Returns(IPAddress.Parse("127.0.0.1"));
+            peerSettings.BindAddress.Returns(IPAddress.Parse("124.220.98.2"));
             peerSettings.Port.Returns(12);
             builder.RegisterInstance(peerSettings).As<IPeerSettings>();
         }
