@@ -39,8 +39,8 @@ using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Common.Util;
 using Catalyst.Node.Core.P2P;
 using Catalyst.Node.Core.P2P.Messaging.Handlers;
-using Catalyst.Node.Core.UnitTests.TestUtils;
 using Catalyst.Protocol.IPPN;
+using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using FluentAssertions;
 using Microsoft.Extensions.Configuration;
@@ -49,9 +49,9 @@ using Serilog;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Catalyst.Node.Core.UnitTests.P2P
+namespace Catalyst.Node.Core.IntergrationTests.P2P
 {
-    public sealed class PeerServiceTests : ConfigFileBasedTest
+    public sealed class PeerServiceIntergrationTest : ConfigFileBasedTest
     {
         private readonly Guid _guid;
         private readonly ILogger _logger;
@@ -60,7 +60,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
         private readonly PingRequest _pingRequest;
         private readonly IConfigurationRoot _config;
 
-        public PeerServiceTests(ITestOutputHelper output) : base(output)
+        public PeerServiceIntergrationTest(ITestOutputHelper output) : base(output)
         {
             _config = SocketPortHelper.AlterConfigurationToGetUniquePort(new ConfigurationBuilder()
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile))
