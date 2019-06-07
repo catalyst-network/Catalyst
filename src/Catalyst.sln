@@ -21,7 +21,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		..\.gitignore = ..\.gitignore
 		..\addLicenseHeader.sh = ..\addLicenseHeader.sh
 		Catalyst.sln.DotSettings = Catalyst.sln.DotSettings
+		Common.IntergrationTests.props = Common.IntergrationTests.props
 		Common.Projects.props = Common.Projects.props
+		Common.TestProjects.props = Common.TestProjects.props
 		Common.UnitTests.props = Common.UnitTests.props
 		..\COPYING = ..\COPYING
 		..\devnet_dnszone.txt = ..\devnet_dnszone.txt
@@ -30,15 +32,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		..\entrypoint.sh = ..\entrypoint.sh
 		..\README.md = ..\README.md
 		..\testnet-docker-compose.yml = ..\testnet-docker-compose.yml
-		Common.IntergrationTests.props = Common.IntergrationTests.props
-		Common.TestProjects.props = Common.TestProjects.props
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Node.Core.IntergrationTests", "Catalyst.Node.Core.IntergrationTests\Catalyst.Node.Core.IntergrationTests.csproj", "{A60E36E4-A382-456B-86A0-038FACA58B3C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Node.Core.IntegrationTests", "Catalyst.Node.Core.IntergrationTests\Catalyst.Node.Core.IntegrationTests.csproj", "{A60E36E4-A382-456B-86A0-038FACA58B3C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Common.IntergrationTests", "Catalyst.Common.IntergrationTests\Catalyst.Common.IntergrationTests.csproj", "{6FEFA6E7-A026-4B68-9FA7-1D3E73E80B5D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Common.IntergrationTests", "Catalyst.Common.IntergrationTests\Catalyst.Common.IntergrationTests.csproj", "{6FEFA6E7-A026-4B68-9FA7-1D3E73E80B5D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.TestUtils", "Catalyst.TestUtils\Catalyst.TestUtils.csproj", "{8039B2AC-8F36-463D-963C-774D021CD464}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.TestUtils", "Catalyst.TestUtils\Catalyst.TestUtils.csproj", "{8039B2AC-8F36-463D-963C-774D021CD464}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Cli.IntegrationTests", "Catalyst.Cli.IntegrationTests\Catalyst.Cli.IntegrationTests.csproj", "{5365F424-4DFC-490C-B64A-0E3084EF7332}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -86,6 +88,10 @@ Global
 		{8039B2AC-8F36-463D-963C-774D021CD464}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8039B2AC-8F36-463D-963C-774D021CD464}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8039B2AC-8F36-463D-963C-774D021CD464}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5365F424-4DFC-490C-B64A-0E3084EF7332}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5365F424-4DFC-490C-B64A-0E3084EF7332}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5365F424-4DFC-490C-B64A-0E3084EF7332}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5365F424-4DFC-490C-B64A-0E3084EF7332}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
