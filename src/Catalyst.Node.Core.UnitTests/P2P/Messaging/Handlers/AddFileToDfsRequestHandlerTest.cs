@@ -27,26 +27,25 @@ using Catalyst.Common.Interfaces.FileTransfer;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.P2P;
 using Catalyst.Common.UnitTests.TestUtils;
-using Catalyst.Node.Core.Modules.Dfs;
 using Catalyst.Node.Core.RPC.Handlers;
 using Catalyst.Protocol.Rpc.Node;
 using DotNetty.Transport.Channels;
 using NSubstitute;
 using Serilog;
 using System;
+using Catalyst.Common.Interfaces.Modules.Dfs;
 using Xunit;
 
-namespace Catalyst.Node.Core.UnitTests.FileTransfer
+namespace Catalyst.Node.Core.UnitTests.P2P.Messaging.Handlers
 {
-    public class NodeFileTransferTest
+    public class AddFileToDfsRequestHandlerTest
     {
         private readonly ILogger _logger;
         private readonly IChannelHandlerContext _fakeContext;
         private readonly IDownloadFileTransferFactory _nodeFileTransferFactory;
-        private readonly IpfsAdapter _ipfsEngine;
         private readonly IMessageFactory _messageFactory;
 
-        public NodeFileTransferTest()
+        public AddFileToDfsRequestHandlerTest()
         {
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
@@ -56,10 +55,10 @@ namespace Catalyst.Node.Core.UnitTests.FileTransfer
         }
 
         [Fact]
-        public void Node_Initialize_File_Transfer()
+        public void AddFileToDfsHandlerAddsTransferToDownloadFactory()
         {
             var sender = PeerIdHelper.GetPeerId("sender");
-            var handler = new AddFileToDfsRequestHandler(new Dfs(_ipfsEngine, _logger), new PeerIdentifier(sender),
+            var handler = new AddFileToDfsRequestHandler(Substitute.For<IDfs>(), new PeerIdentifier(sender),
                 _nodeFileTransferFactory, _messageFactory, _logger);
 
             //Create a response object and set its return value
