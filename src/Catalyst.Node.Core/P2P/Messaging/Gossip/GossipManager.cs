@@ -79,7 +79,7 @@ namespace Catalyst.Node.Core.P2P.Messaging.Gossip
         }
 
         /// <inheritdoc/>
-        public void Broadcast(AnySigned anySigned)
+        public void Broadcast(ProtocolMessage anySigned)
         {
             if (anySigned.CheckIfMessageIsGossip())
             {
@@ -90,7 +90,7 @@ namespace Catalyst.Node.Core.P2P.Messaging.Gossip
         }
 
         /// <inheritdoc/>
-        public void IncomingGossip(AnySigned anySigned)
+        public void IncomingGossip(ProtocolMessage anySigned)
         {
             if (!anySigned.CheckIfMessageIsGossip())
             {
@@ -98,13 +98,13 @@ namespace Catalyst.Node.Core.P2P.Messaging.Gossip
             }
 
             // TODO: Check Gossip inner signature and outer signature
-            AnySigned originalGossipedMessage = AnySigned.Parser.ParseFrom(anySigned.Value);
+            ProtocolMessage originalGossipedMessage = ProtocolMessage.Parser.ParseFrom(anySigned.Value);
             IncrementReceivedCount(originalGossipedMessage.CorrelationId.ToGuid(), 1);
         }
 
         /// <summary>Gossips the specified message.</summary>
         /// <param name="message">The message.</param>
-        private void Gossip(AnySigned message)
+        private void Gossip(ProtocolMessage message)
         {
             var correlationId = message.CorrelationId.ToGuid();
             var gossipCount = GetGossipCount(correlationId);
@@ -133,7 +133,7 @@ namespace Catalyst.Node.Core.P2P.Messaging.Gossip
 
         /// <summary>Sends gossips to random peers.</summary>
         /// <param name="message">The message.</param>
-        private void SendGossipMessages(AnySigned message)
+        private void SendGossipMessages(ProtocolMessage message)
         {
             var peersToGossip = GetRandomPeers(Constants.MaxGossipPeersPerRound);
             var correlationId = message.CorrelationId.ToGuid();

@@ -83,7 +83,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
         /// Handlers the specified message.
         /// </summary>
         /// <param name="message">The message.</param>
-        protected override void Handler(IChanneledMessage<AnySigned> message)
+        protected override void Handler(IChanneledMessage<ProtocolMessage> message)
         {
             Guard.Argument(message).NotNull("Received message cannot be null");
 
@@ -97,7 +97,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
         /// </summary>
         /// <param name="peers">The peers list</param>
         /// <param name="message"></param>
-        private void ReturnResponse(IEnumerable<PeerId> peers, IChanneledMessage<AnySigned> message)
+        private void ReturnResponse(IEnumerable<PeerId> peers, IChanneledMessage<ProtocolMessage> message)
         {
             var response = new GetPeerListResponse();
             response.Peers.AddRange(peers);

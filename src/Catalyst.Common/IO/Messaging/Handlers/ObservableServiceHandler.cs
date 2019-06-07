@@ -40,13 +40,13 @@ namespace Catalyst.Common.IO.Messaging.Handlers
     ///     This handler terminates dotnetty involvement and passes service messages into rx land,
     ///     by this point all messages should be treated as genuine and sanitised.
     /// </summary>
-    public sealed class ObservableServiceHandler : SimpleChannelInboundHandler<AnySigned>, IObservableServiceHandler
+    public sealed class ObservableServiceHandler : SimpleChannelInboundHandler<ProtocolMessage>, IObservableServiceHandler
     {
         private readonly ILogger _logger;
-        public IObservable<IChanneledMessage<AnySigned>> MessageStream => _messageSubject.AsObservable();
+        public IObservable<IChanneledMessage<ProtocolMessage>> MessageStream => _messageSubject.AsObservable();
 
-        private readonly ReplaySubject<IChanneledMessage<AnySigned>> _messageSubject 
-            = new ReplaySubject<IChanneledMessage<AnySigned>>(0);
+        private readonly ReplaySubject<IChanneledMessage<ProtocolMessage>> _messageSubject 
+            = new ReplaySubject<IChanneledMessage<ProtocolMessage>>(0);
         
         public ObservableServiceHandler(ILogger logger)
         {
@@ -58,9 +58,9 @@ namespace Catalyst.Common.IO.Messaging.Handlers
         /// </summary>
         /// <param name="ctx"></param>
         /// <param name="msg"></param>
-        protected override void ChannelRead0(IChannelHandlerContext ctx, AnySigned message)
+        protected override void ChannelRead0(IChannelHandlerContext ctx, ProtocolMessage message)
         {
-            var contextAny = new ChanneledAnySigned(ctx, message);
+            var contextAny = new ProtocolMessageDto(ctx, message);
             _messageSubject.OnNext(contextAny);
         }
         

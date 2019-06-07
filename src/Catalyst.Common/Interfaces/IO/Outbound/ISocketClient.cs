@@ -29,7 +29,6 @@ namespace Catalyst.Common.Interfaces.IO.Outbound
 {
     public interface ISocketClient : ISocket
     {
-        IChannel Channel { get; set; }
-        void SendMessage(AnySigned message);
+        void SendMessage(ProtocolMessage message);
     }
 }

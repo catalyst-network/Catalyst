@@ -35,8 +35,8 @@ namespace Catalyst.Node.Core.P2P.Messaging.Gossip
     /// </summary>
     /// <seealso cref="ObservableServiceHandler" />
     /// <seealso cref="IGossipHandler" />
-    public sealed class GossipHandler
-        : SimpleChannelInboundHandler<AnySigned>,
+    public sealed class GossipHandler 
+        : SimpleChannelInboundHandler<ProtocolMessage>,
             IGossipHandler
     {
         private readonly IGossipManager _gossipManager;
@@ -48,14 +48,14 @@ namespace Catalyst.Node.Core.P2P.Messaging.Gossip
             _gossipManager = gossipManager;
         }
 
-        protected override void ChannelRead0(IChannelHandlerContext ctx, AnySigned msg)
+        protected override void ChannelRead0(IChannelHandlerContext ctx, ProtocolMessage msg)
         {
             // TODO Check sig
             if (msg.CheckIfMessageIsGossip())
             {
                 _gossipManager.IncomingGossip(msg);
 
-                AnySigned originalGossipedMessage = AnySigned.Parser.ParseFrom(msg.Value);
+                ProtocolMessage originalGossipedMessage = ProtocolMessage.Parser.ParseFrom(msg.Value);
                 ctx.FireChannelRead(originalGossipedMessage);
             }
             else

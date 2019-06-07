@@ -57,7 +57,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
             _config = config;
         }
 
-        protected override void Handler(IChanneledMessage<AnySigned> message)
+        protected override void Handler(IChanneledMessage<ProtocolMessage> message)
         {
             Guard.Argument(message).NotNull();
             

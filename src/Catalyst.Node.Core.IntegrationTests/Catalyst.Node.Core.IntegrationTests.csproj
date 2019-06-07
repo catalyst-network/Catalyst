@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>netcoreapp2.2</TargetFramework>
+        <AssemblyName>Catalyst.Node.Core.IntegrationTests</AssemblyName>
+        <Title>James Kirby (nshcore@protonmail.com)</Title>
+        <SignAssembly>true</SignAssembly>
+        <AssemblyOriginatorKeyFile>Catalyst.Node.Core.integrationTests.snk</AssemblyOriginatorKeyFile>
+        <PublicSign>true</PublicSign>
+    </PropertyGroup>
+    <PropertyGroup>
+        <RootNamespace>Catalyst.Node.Core.IntegrationTests</RootNamespace>
+    </PropertyGroup>
+    <Import Project="../Common.IntegrationTests.props" />
+    <ItemGroup>
+        <Folder Include="P2P" />
+        <Folder Include="Rpc" />
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\Catalyst.Node.Rpc.Client\Catalyst.Node.Rpc.Client.csproj" />
+        <ProjectReference Include="..\Catalyst.TestUtils\Catalyst.TestUtils.csproj" />
+        <ProjectReference Include="..\Catalyst.Cli\Catalyst.Cli.csproj" />
+        <ProjectReference Include="..\Catalyst.Node.Core\Catalyst.Node.Core.csproj" />
+        <ProjectReference Include="..\Catalyst.TestUtils\Catalyst.TestUtils.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+      <PackageReference Include="Nethereum.RLP" Version="3.3.0" />
+    </ItemGroup>
+</Project>
