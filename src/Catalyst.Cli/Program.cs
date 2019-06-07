@@ -128,6 +128,7 @@ namespace Catalyst.Cli
                 using (container.BeginLifetimeScope(LifetimeTag, b => { b.Populate(serviceCollection, LifetimeTag); }))
                 {
                     var shell = container.Resolve<ICatalystCli>();
+
                     shell.AdvancedShell.RunConsole(_cancellationSource.Token);
                 }
 
@@ -143,7 +144,7 @@ namespace Catalyst.Cli
 
             return Environment.ExitCode;
         }
-        
+
         static void CurrentDomain_ProcessExit(object sender, EventArgs e)
         {
             _cancellationSource.Cancel();
