@@ -27,7 +27,7 @@ using System.Threading.Tasks;
 
 namespace Catalyst.TestUtils
 {
-    public class TaskHelper
+    public static class TaskHelper
     {
         public static async Task WaitFor(Func<bool> condition, TimeSpan timespan)
         {

@@ -48,7 +48,7 @@ namespace Catalyst.Cli.IntegrationTests.Commands
 
         [Theory]
         [MemberData(nameof(GetFileData))]
-        public async void Cli_Can_Send_Get_File_Request(string fileHash, string outputPath, bool expectedResult)
+        public async Task Cli_Can_Send_Get_File_Request(string fileHash, string outputPath, bool expectedResult)
         {
             var container = ContainerBuilder.Build();
 
