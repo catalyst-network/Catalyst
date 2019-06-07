@@ -21,25 +21,45 @@
 
 #endregion
 
+using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Security.Cryptography.X509Certificates;
 using Autofac;
-using Catalyst.Common.Config;
+using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.UnitTests.TestUtils;
+using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Rpc.Node;
 using DotNetty.Transport.Channels;
 using FluentAssertions;
 using Microsoft.Extensions.Configuration;
 using NSubstitute;
 using Xunit;
 using Xunit.Abstractions;
+using Constants = Catalyst.Common.Config.Constants;
 
-namespace Catalyst.Node.Rpc.Client.UnitTests.Handlers
+namespace Catalyst.Cli.IntegrationTests
 {
     public sealed class CliCommandsTests : ConfigFileBasedTest
     {
+        private readonly INodeRpcClient _nodeRpcClient;
+
+        public static IEnumerable<object[]> AddFileData =>
+            new List<object[]>
+            {
+                new object[] {"/fake_file_path", false},
+                new object[] {AppDomain.CurrentDomain.BaseDirectory + "/Config/addfile_test.json", true}
+            };
+        
+        public static IEnumerable<object[]> GetFileData =>
+            new List<object[]>
+            {
+                new object[] {"/fake_file_hash", AppDomain.CurrentDomain.BaseDirectory + "/Config/addfile_test.json", true}
+            };
+
         public CliCommandsTests(ITestOutputHelper output) : base(output)
         {
             var config = new ConfigurationBuilder()
@@ -52,14 +72,14 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.Handlers
             var channel = Substitute.For<IChannel>();
             channel.Active.Returns(true);
 
-            var nodeRpcClient = Substitute.For<INodeRpcClient>();
-            nodeRpcClient.Channel.Returns(channel);
-            nodeRpcClient.Channel.RemoteAddress.Returns(new IPEndPoint(IPAddress.Loopback, IPEndPoint.MaxPort));
+            _nodeRpcClient = Substitute.For<INodeRpcClient>();
+            _nodeRpcClient.Channel.Returns(channel);
+            _nodeRpcClient.Channel.RemoteAddress.Returns(new IPEndPoint(IPAddress.Loopback, IPEndPoint.MaxPort));
 
             var nodeRpcClientFactory = Substitute.For<INodeRpcClientFactory>();
             nodeRpcClientFactory
                .GetClient(Arg.Any<X509Certificate>(), Arg.Is<IRpcNodeConfig>(c => c.NodeId == "node1"))
-               .Returns(nodeRpcClient);
+               .Returns(_nodeRpcClient);
 
             ConfigureContainerBuilder(config);
 
@@ -190,6 +210,142 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.Handlers
                         "verify", "-m", "test message", "-k", "public_key", "-s", "signature", "-n", "node1");
                     result.Should().BeTrue();
                 }   
+            }
+        }
+        
+        [Fact] 
+        public void Cli_Can_Send_List_Peers_Request()
+        {
+            var container = ContainerBuilder.Build();
+
+            using (container.BeginLifetimeScope(CurrentTestName))
+            {
+                var shell = container.Resolve<ICatalystCli>();
+                var hasConnected = shell.AdvancedShell.ParseCommand("connect", "-n", "node1");
+                hasConnected.Should().BeTrue();
+
+                var node1 = shell.AdvancedShell.GetConnectedNode("node1");
+                node1.Should().NotBeNull("we've just connected it");
+
+                var result = shell.AdvancedShell.ParseCommand(
+                    "listpeers", "-n", "node1");
+                result.Should().BeTrue();
+                _nodeRpcClient.Received(1).SendMessage(Arg.Is<ProtocolMessage>(x => x.TypeUrl.Equals(GetPeerListRequest.Descriptor.ShortenedFullName())));
+            }
+        }
+        
+        [Fact] 
+        public void Cli_Can_Send_Peers_Count_Request()
+        {
+            var container = ContainerBuilder.Build();
+
+            using (container.BeginLifetimeScope(CurrentTestName))
+            {
+                var shell = container.Resolve<ICatalystCli>();
+                var hasConnected = shell.AdvancedShell.ParseCommand("connect", "-n", "node1");
+                hasConnected.Should().BeTrue();
+
+                var node1 = shell.AdvancedShell.GetConnectedNode("node1");
+                node1.Should().NotBeNull("we've just connected it");
+
+                var result = shell.AdvancedShell.ParseCommand(
+                    "peercount", "-n", "node1");
+                result.Should().BeTrue();
+                _nodeRpcClient.Received(1).SendMessage(Arg.Is<ProtocolMessage>(x => x.TypeUrl.Equals(GetPeerCountRequest.Descriptor.ShortenedFullName())));
+            }
+        }
+        
+        [Fact] 
+        public void Cli_Can_Send_Remove_Peer_Request()
+        {
+            var container = ContainerBuilder.Build();
+
+            using (container.BeginLifetimeScope(CurrentTestName))
+            {
+                var shell = container.Resolve<ICatalystCli>();
+                var hasConnected = shell.AdvancedShell.ParseCommand("connect", "-n", "node1");
+                hasConnected.Should().BeTrue();
+
+                var node1 = shell.AdvancedShell.GetConnectedNode("node1");
+                node1.Should().NotBeNull("we've just connected it");
+
+                var result = shell.AdvancedShell.ParseCommand(
+                    "removepeer", "-n", "node1", "-k", "fake_public_key", "-i", "127.0.0.1");
+                result.Should().BeTrue();
+                _nodeRpcClient.Received(1).SendMessage(Arg.Is<ProtocolMessage>(x => x.TypeUrl.Equals(RemovePeerRequest.Descriptor.ShortenedFullName())));
+            }
+        }
+        
+        [Fact] 
+        public void Cli_Can_Send_Peer_Reputation_Request()
+        {
+            var container = ContainerBuilder.Build();
+
+            using (container.BeginLifetimeScope(CurrentTestName))
+            {
+                var shell = container.Resolve<ICatalystCli>();
+                var hasConnected = shell.AdvancedShell.ParseCommand("connect", "-n", "node1");
+                hasConnected.Should().BeTrue();
+
+                var node1 = shell.AdvancedShell.GetConnectedNode("node1");
+                node1.Should().NotBeNull("we've just connected it");
+
+                var result = shell.AdvancedShell.ParseCommand(
+                    "peerrep", "-n", "node1", "-l", "127.0.0.1", "-p", "fake_public_key");
+                result.Should().BeTrue();
+                _nodeRpcClient.Received(1).SendMessage(Arg.Is<ProtocolMessage>(x => x.TypeUrl.Equals(GetPeerReputationRequest.Descriptor.ShortenedFullName())));
+            }
+        }
+        
+        [Theory]
+        [MemberData(nameof(AddFileData))]
+        public void Cli_Can_Send_Add_File_Request(string fileName, bool expectedResult)
+        {
+            var container = ContainerBuilder.Build();
+
+            using (container.BeginLifetimeScope(CurrentTestName))
+            {
+                var shell = container.Resolve<ICatalystCli>();
+                var hasConnected = shell.AdvancedShell.ParseCommand("connect", "-n", "node1");
+                hasConnected.Should().BeTrue();
+
+                var node1 = shell.AdvancedShell.GetConnectedNode("node1");
+                node1.Should().NotBeNull("we've just connected it");
+
+                var result = shell.AdvancedShell.ParseCommand(
+                    "addfile", "-n", "node1", "-f", fileName);
+                result.Should().Be(expectedResult);
+
+                if (expectedResult)
+                {
+                    _nodeRpcClient.Received(1).SendMessage(Arg.Is<ProtocolMessage>(x => x.TypeUrl.Equals(AddFileToDfsRequest.Descriptor.ShortenedFullName())));
+                }
+            }
+        }
+        
+        [Theory]
+        [MemberData(nameof(GetFileData))]
+        public void Cli_Can_Send_Get_File_Request(string fileHash, string outputPath, bool expectedResult)
+        {
+            var container = ContainerBuilder.Build();
+
+            using (container.BeginLifetimeScope(CurrentTestName))
+            {
+                var shell = container.Resolve<ICatalystCli>();
+                var hasConnected = shell.AdvancedShell.ParseCommand("connect", "-n", "node1");
+                hasConnected.Should().BeTrue();
+
+                var node1 = shell.AdvancedShell.GetConnectedNode("node1");
+                node1.Should().NotBeNull("we've just connected it");
+
+                var result = shell.AdvancedShell.ParseCommand(
+                    "getfile", "-n", "node1", "-f", fileHash, "-o", outputPath);
+                result.Should().Be(expectedResult);
+
+                if (expectedResult)
+                {
+                    _nodeRpcClient.Received(1).SendMessage(Arg.Is<ProtocolMessage>(x => x.TypeUrl.Equals(GetFileFromDfsRequest.Descriptor.ShortenedFullName())));
+                }
             }
         }
     }

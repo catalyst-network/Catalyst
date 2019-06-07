@@ -40,8 +40,8 @@ namespace Catalyst.Cli.Commands
 {
     internal sealed partial class Commands
     {
-        /// <inheritdoc cref="DfsAddFile" />
-        public bool DfsAddFile(IAddFileOnDfsOptions opts)
+        /// <inheritdoc cref="AddFile" />
+        public bool AddFile(IAddFileOnDfsOptions opts)
         {
             Guard.Argument(opts, nameof(opts)).NotNull().Compatible<IAddFileOnDfsOptions>();
 

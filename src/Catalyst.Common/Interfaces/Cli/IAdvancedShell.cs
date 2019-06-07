@@ -102,7 +102,7 @@ namespace Catalyst.Common.Interfaces.Cli
 
         /// <param name="opts">The options.</param>
         /// <returns></returns>
-        bool DfsAddFile(IAddFileOnDfsOptions opts);
+        bool AddFile(IAddFileOnDfsOptions opts);
 
         INodeRpcClient GetConnectedNode(string nodeId);
     }

@@ -32,7 +32,7 @@ namespace Catalyst.Cli.Options
     /// Add file onto DFS CLI options
     /// </summary>
     [Verb("addfile", HelpText = "Adds a file onto the DFS")]
-    public sealed class AddFileOnDfsOptions : IAddFileOnDfsOptions
+    public sealed class AddFileOptions : IAddFileOnDfsOptions
     {
         /// <inheritdoc />
         [Option('n', "node", HelpText = "A valid node ID as listed in the nodes.json config file.")]
@@ -52,7 +52,7 @@ namespace Catalyst.Cli.Options
         public static IEnumerable<Example> Examples =>
             new List<Example>
             {
-                new Example("Adds a file to the DFS.", new AddFileOnDfsOptions {Node = "node1", File = "AFile.txt"})
+                new Example("Adds a file to the DFS.", new AddFileOptions {Node = "node1", File = "AFile.txt"})
             };
     }
 }

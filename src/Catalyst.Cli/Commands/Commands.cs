@@ -99,7 +99,7 @@ namespace Catalyst.Cli.Commands
                     RemovePeerOptions,
                     PeerReputationOptions,
                     PeerBlackListingOptions,
-                    AddFileOnDfsOptions,
+                    AddFileOptions,
                     GetFileOptions>(args)
                .MapResult(
                     (GetInfoOptions opts) => GetInfoCommand(opts),
@@ -112,10 +112,10 @@ namespace Catalyst.Cli.Commands
                     (RemovePeerOptions opts) => PeerRemoveCommand(opts),
                     (PeerReputationOptions opts) => PeerReputationCommand(opts),
                     (PeerBlackListingOptions opts) => PeerBlackListingCommand(opts),
-                    (AddFileOnDfsOptions opts) => DfsAddFile(opts),
+                    (AddFileOptions opts) => AddFile(opts),
                     (ConnectOptions opts) => OnConnectNode(opts.NodeId),
                     (ConnectOptions opts) => DisconnectNode(opts.NodeId),
-                    (GetFileOptions opts) => OnGetFileOptions(opts),
+                    (GetFileOptions opts) => GetFileOptions(opts),
                     errs => false);
         }
 
