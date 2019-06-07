@@ -36,7 +36,7 @@ using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.Rpc;
 using DotNetty.Transport.Channels;
 
-namespace Catalyst.Cli.UnitTests
+namespace Catalyst.Cli.IntegrationTests
 {
     public sealed class CliCommandsTests : ConfigFileBasedTest
     {
