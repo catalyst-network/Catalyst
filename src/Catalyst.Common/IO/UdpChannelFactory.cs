@@ -21,21 +21,15 @@
 
 #endregion
 
-using System.Security.Cryptography.X509Certificates;
-using Catalyst.Common.Interfaces.IO.Outbound;
-using Catalyst.Common.Interfaces.Rpc;
-using Catalyst.Common.IO.Outbound;
+using System.Net.Sockets;
+using Catalyst.Common.Interfaces.IO;
+using DotNetty.Transport.Channels;
+using DotNetty.Transport.Channels.Sockets;
 
-namespace Catalyst.Cli.Rpc
+namespace Catalyst.Common.IO
 {
-    public sealed class NodeRpcClientFactory : INodeRpcClientFactory
+    public class UdpChannelFactory : IUdpChannelFactory
     {
-        private readonly ITcpClientChannelFactory _channelFactory;
-        public NodeRpcClientFactory(ITcpClientChannelFactory channelFactory) { _channelFactory = channelFactory; }
-
-        public INodeRpcClient GetClient(X509Certificate certificate, IRpcNodeConfig nodeConfig)
-        {
-            return new NodeRpcClient(_channelFactory, certificate, nodeConfig);
-        }
+        public IChannel BuildChannel() => new SocketDatagramChannel(AddressFamily.InterNetwork);
     }
 }

@@ -25,24 +25,21 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Catalyst.Common.Interfaces.IO;
 using Catalyst.Common.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Messaging.Gossip;
-using Catalyst.Common.Interfaces.IO.Outbound;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Messaging.Handlers;
 using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;
 using Serilog;
-using Serilog.Extensions.Logging;
 
 namespace Catalyst.Node.Core.P2P
 {
-    public sealed class PeerService
-        : UdpServer,
-            IPeerService
+    public sealed class PeerService : UdpServer, IPeerService
     {
         public IPeerDiscovery Discovery { get; }
         public IObservable<IChanneledMessage<ProtocolMessage>> MessageStream { get; }

@@ -28,6 +28,6 @@ namespace Catalyst.Common.Interfaces.IO.Inbound
 {
     public interface ISocketServer : ISocket
     {
-        void Bootstrap(IChannelHandler channelInitializer, IPAddress listenAddress, int port);
+        void Bootstrap(IChannelHandler channelHandler, IPAddress listenAddress, int port);
     }
 }

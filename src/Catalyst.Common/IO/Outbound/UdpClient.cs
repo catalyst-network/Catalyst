@@ -23,20 +23,14 @@
 
 using System;
 using System.Net;
-using System.Net.Sockets;
+using Catalyst.Common.Interfaces.IO;
 using Catalyst.Common.Interfaces.IO.Outbound;
 using DotNetty.Handlers.Logging;
 using DotNetty.Transport.Channels;
-using DotNetty.Transport.Channels.Sockets;
 using Serilog;
 
 namespace Catalyst.Common.IO.Outbound
 {
-    public class UdpChannelFactory : IUdpChannelFactory
-    {
-        public IChannel BuildChannel() => new SocketDatagramChannel(AddressFamily.InterNetwork);
-    }
-
     public class UdpClient : ClientBase, IUdpClient
     {
         protected UdpClient(IUdpChannelFactory channelFactory, ILogger logger) 

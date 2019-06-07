@@ -22,24 +22,16 @@
 #endregion
 
 using System.Net;
-using System.Net.Sockets;
+using Catalyst.Common.Interfaces.IO;
 using Catalyst.Common.Interfaces.IO.Inbound;
-using Catalyst.Common.Interfaces.IO.Outbound;
 using DotNetty.Handlers.Logging;
 using DotNetty.Transport.Channels;
-using DotNetty.Transport.Channels.Sockets;
 using Serilog;
 
 namespace Catalyst.Common.IO.Inbound
 {
-    public class UdpServer
-        : IoBase,
-            IUdpServer
+    public class UdpServer : SocketBase<IChannel>, IUdpServer
     {
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="logger"></param>
         protected UdpServer(IUdpChannelFactory channelFactory, ILogger logger)
             : base(channelFactory, logger) { }
 

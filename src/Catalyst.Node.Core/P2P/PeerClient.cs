@@ -25,9 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Reflection;
-using System.Threading.Tasks;
 using Catalyst.Common.Interfaces.IO;
-using Catalyst.Common.Interfaces.IO.Outbound;
 using Catalyst.Common.IO.Outbound;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Messaging.Handlers;
@@ -37,18 +35,13 @@ using Serilog;
 
 namespace Catalyst.Node.Core.P2P
 {
-    public sealed class PeerClient
-        : UdpClient,
-            IPeerClient
+    public sealed class PeerClient : UdpClient, IPeerClient
     {
-        public PeerClient(IPeerIdentifier peerIdentifier) : this(peerIdentifier.IpEndPoint) { }
-            
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="ipEndPoint"></param>
-        public PeerClient(IPEndPoint ipEndPoint)
-            : base((IUdpChannelFactory) null, Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType))
+        public PeerClient(IUdpChannelFactory channelFactory, IPeerIdentifier peerIdentifier) 
+            : this(channelFactory, peerIdentifier.IpEndPoint) { }
+        
+        public PeerClient(IUdpChannelFactory channelFactory, IPEndPoint ipEndPoint)
+            : base(channelFactory, Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType))
         {
             Bootstrap(new OutboundChannelInitializerBase<IChannel>(
                 new List<IChannelHandler>

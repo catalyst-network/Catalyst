@@ -23,29 +23,26 @@
 
 using System;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Common.Interfaces.IO;
 using DotNetty.Transport.Channels;
-using Nito.AsyncEx.Synchronous;
 using Serilog;
 
 namespace Catalyst.Common.IO
 {
-    public class IoBase : ISocket
+    public class SocketBase<TChannel> : ISocket where TChannel : IChannel
     {
-        protected readonly IChannelFactory ChannelFactory;
+        protected readonly IChannelFactory<TChannel> ChannelFactory;
         protected readonly ILogger Logger;
         protected readonly IEventLoopGroup WorkerEventLoop;
 
         public IChannel Channel { get; protected set; }
 
-        protected IoBase(IChannelFactory channelFactory, ILogger logger)
+        protected SocketBase(IChannelFactory<TChannel> channelFactory, ILogger logger)
         {
             ChannelFactory = channelFactory;
             Logger = logger;
             WorkerEventLoop = new MultithreadEventLoopGroup();
-            Channel = channelFactory.BuildChannel();
         }
 
         public void Dispose()
@@ -60,10 +57,9 @@ namespace Catalyst.Common.IO
                 return;
             }
 
-            Logger.Debug($"Disposing {GetType().Name}");
+            Logger.Debug($"Disposing {0}", GetType().Name);
 
             var quietPeriod = TimeSpan.FromMilliseconds(100);
-            Logger?.Information($"Disposing {GetType().Name}");
 
             try
             {
@@ -71,7 +67,7 @@ namespace Catalyst.Common.IO
                 var closeChannelTask = Channel?.CloseAsync();
                 var closeWorkerLoopTask = WorkerEventLoop?.ShutdownGracefullyAsync(quietPeriod, quietPeriod);
 
-                Task.WaitAll(new[] { closeChannelTask, closeWorkerLoopTask }.Where(t => t != null).ToArray(),
+                Task.WaitAll(new[] {closeChannelTask, closeWorkerLoopTask}.Where(t => t != null).ToArray(),
                     quietPeriod * 3);
             }
             catch (Exception e)

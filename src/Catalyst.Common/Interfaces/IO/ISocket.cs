@@ -31,8 +31,10 @@ namespace Catalyst.Common.Interfaces.IO
         IChannel Channel { get; }
     }
 
-    public interface IChannelFactory
+    public interface IChannelFactory<out TChannel> where TChannel : IChannel
     {
-        IChannel BuildChannel();
+        TChannel BuildChannel();
     }
+
+    public interface IUdpChannelFactory : IChannelFactory<IChannel> { }
 }

@@ -18,6 +18,30 @@
             ]
         },
         {
+            "type": "Catalyst.Common.IO.Inbound.TcpServerChannelFactory, Catalyst.Common",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.IO.Inbound.ITcpServerChannelFactory, Catalyst.Common"
+                }
+            ]
+        },
+        {
+            "type": "Catalyst.Common.IO.Outbound.TcpClientChannelFactory, Catalyst.Common",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.IO.Outbound.ITcpClientChannelFactory, Catalyst.Common"
+                }
+            ]
+        },
+        {
+            "type": "Catalyst.Common.IO.UdpChannelFactory, Catalyst.Common",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.IO.IUdpChannelFactory, Catalyst.Common"
+                }
+            ]
+        },
+        {
             "type": "Catalyst.Node.Core.RPC.NodeRpcServer",
             "services": [
                 {

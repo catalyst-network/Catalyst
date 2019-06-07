@@ -22,25 +22,31 @@
 #endregion
 
 using System.Net;
-using Catalyst.Common.Interfaces.IO;
 using Catalyst.Common.Interfaces.IO.Outbound;
 using DotNetty.Handlers.Logging;
 using DotNetty.Transport.Channels;
+using DotNetty.Transport.Channels.Sockets;
 using Serilog;
 
 namespace Catalyst.Common.IO.Outbound
 {
-    public class TcpClient<TChannel> : ClientBase, ITcpClient where TChannel : IChannel, new()
+    public class TcpClientChannelFactory : ITcpClientChannelFactory
+    {
+        public IChannel BuildChannel() => new TcpSocketChannel();
+    }
+
+    public class TcpClient : ClientBase, ITcpClient
     {
         private const int BackLogValue = 100;
 
-        protected TcpClient(ILogger logger) : base((IChannelFactory) null, logger) { }
+        protected TcpClient(ITcpClientChannelFactory channelFactory, ILogger logger) 
+            : base(channelFactory, logger) { }
 
         protected sealed override void Bootstrap(IChannelHandler channelHandler, IPEndPoint ipEndPoint)
         {
             Channel = new Bootstrap()
                .Group(WorkerEventLoop)
-               .Channel<TChannel>()
+               .ChannelFactory(ChannelFactory.BuildChannel)
                .Option(ChannelOption.SoBacklog, BackLogValue)
                .Handler(new LoggingHandler(LogLevel.DEBUG))
                .Handler(channelHandler)

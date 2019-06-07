@@ -21,7 +21,6 @@
 
 #endregion
 
-using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
@@ -36,7 +35,6 @@ namespace Catalyst.Common.IO
         : ChannelInitializer<T>
         where T : IChannel
     {
-        private readonly Action<T> _initializationAction;
         private readonly IImmutableList<IChannelHandler> _handlers;
         private readonly TlsHandler _tlsHandler;
 
