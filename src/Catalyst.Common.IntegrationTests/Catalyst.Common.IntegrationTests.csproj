@@ -10,4 +10,8 @@
         <ProjectReference Include="..\Catalyst.Common\Catalyst.Common.csproj" />
         <ProjectReference Include="..\Catalyst.TestUtils\Catalyst.TestUtils.csproj" />
     </ItemGroup>
+    <ItemGroup>
+      <PackageReference Include="Nethereum.KeyStore" Version="3.3.0" />
+      <PackageReference Include="Nethereum.RLP" Version="3.3.0" />
+    </ItemGroup>
 </Project>

@@ -7,6 +7,7 @@
     </PropertyGroup>
     <Import Project="../Common.UnitTests.props" />
     <ItemGroup>
+        <PackageReference Include="Nethereum.RLP" Version="3.3.0" />
         <PackageReference Include="SharpRepository.XmlRepository" Version="2.0.1-alpha3" />
     </ItemGroup>
     <ItemGroup>
@@ -21,9 +22,6 @@
         </None>
         <None Update="Config\peerConfigSection.json">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="xunit.runner.json">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
     </ItemGroup>
     <ItemGroup>

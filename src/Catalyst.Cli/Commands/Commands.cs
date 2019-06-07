@@ -24,7 +24,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using Catalyst.Cli.Options;
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.Cryptography;
@@ -41,7 +40,6 @@ using Catalyst.Node.Rpc.Client;
 using CommandLine;
 using Dawn;
 using Microsoft.Extensions.Configuration;
-using Nethereum.RLP;
 using ILogger = Serilog.ILogger;
 
 namespace Catalyst.Cli.Commands

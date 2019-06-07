@@ -10,5 +10,8 @@
       <ProjectReference Include="..\Catalyst.Node.Rpc.Client\Catalyst.Node.Rpc.Client.csproj" />
       <ProjectReference Include="..\Catalyst.TestUtils\Catalyst.TestUtils.csproj" />
     </ItemGroup>
+    <ItemGroup>
+      <PackageReference Include="Nethereum.RLP" Version="3.3.0" />
+    </ItemGroup>
     <Import Project="../Common.UnitTests.props" />
 </Project>

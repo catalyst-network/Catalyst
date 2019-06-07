@@ -27,7 +27,7 @@ using Nethereum.KeyStore;
 
 namespace Catalyst.Common.KeyStore
 {
-    public class KeyStoreServiceWrapped : IKeyStoreService
+    public sealed class KeyStoreServiceWrapped : IKeyStoreService
     {
         private readonly KeyStoreService _keyStoreService;
         
@@ -44,11 +44,6 @@ namespace Catalyst.Common.KeyStore
         public string GenerateUTCFileName(string address)
         {
             return _keyStoreService.GenerateUTCFileName(address);
-        }
-
-        public byte[] DecryptKeyStoreFromFile(string password, string filePath)
-        {
-            return _keyStoreService.DecryptKeyStoreFromFile(password, filePath);
         }
 
         public byte[] DecryptKeyStoreFromJson(string password, string json)

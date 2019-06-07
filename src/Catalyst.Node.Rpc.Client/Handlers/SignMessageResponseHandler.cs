@@ -67,7 +67,7 @@ namespace Catalyst.Node.Rpc.Client.Handlers
             {
                 var deserialised = message.Payload.FromAnySigned<SignMessageResponse>();
 
-                var decodeResult = RLP.Decode(deserialised.OriginalMessage.ToByteArray())[0].RLPData;
+                var decodeResult = RLP.Decode(deserialised.OriginalMessage.ToByteArray()).RLPData;
 
                 Guard.Argument(decodeResult).NotNull("The sign message response cannot be null.");
 

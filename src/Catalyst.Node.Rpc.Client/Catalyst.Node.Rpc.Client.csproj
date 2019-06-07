@@ -11,5 +11,6 @@
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="DotNetty.Codecs.Protobuf" Version="0.6.0" />
+        <PackageReference Include="Nethereum.RLP" Version="3.3.0" />
     </ItemGroup>
 </Project>

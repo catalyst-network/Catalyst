@@ -1,5 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
+        <IsTestProject>True</IsTestProject>
+        <IsPackable>false</IsPackable>
+    </PropertyGroup>
+    <PropertyGroup>
         <TargetFramework>netcoreapp2.2</TargetFramework>
     </PropertyGroup>
     <PropertyGroup>
@@ -9,5 +13,8 @@
     <ItemGroup>
         <ProjectReference Include="..\Catalyst.Cli\Catalyst.Cli.csproj" />
         <ProjectReference Include="..\Catalyst.TestUtils\Catalyst.TestUtils.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+      <PackageReference Include="Nethereum.RLP" Version="3.3.0" />
     </ItemGroup>
 </Project>
