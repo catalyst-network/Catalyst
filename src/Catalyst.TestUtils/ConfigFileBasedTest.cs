@@ -45,7 +45,7 @@ namespace Catalyst.Common.UnitTests.TestUtils
 
         protected LogEventLevel LogEventLevel { get; set; } = LogEventLevel.Verbose;
 
-        protected virtual void ConfigureContainerBuilder(IConfigurationRoot config,
+        protected void ConfigureContainerBuilder(IConfigurationRoot config,
             bool writeLogsToTestOutput = false,
             bool writeLogsToFile = false)
         {

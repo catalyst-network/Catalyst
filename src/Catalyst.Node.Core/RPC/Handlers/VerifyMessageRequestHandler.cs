@@ -75,7 +75,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
             var deserialised = message.Payload.FromAnySigned<VerifyMessageRequest>();
             Guard.Argument(deserialised).NotNull("The verify message request cannot be null");
 
-            var decodedMessage = RLP.Decode(deserialised.Message.ToByteArray())[0].RLPData.ToStringFromRLPDecoded();
+            var decodedMessage = RLP.Decode(deserialised.Message.ToByteArray()).RLPData.ToStringFromRLPDecoded();
             var publicKey = deserialised.PublicKey;
             var signature = deserialised.Signature;
             var correlationGuid = message.Payload.CorrelationId.ToGuid();
