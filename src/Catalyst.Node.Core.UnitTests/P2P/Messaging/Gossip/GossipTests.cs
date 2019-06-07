@@ -143,7 +143,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Messaging.Gossip
                .ToAnySigned(PeerIdHelper.GetPeerId(Guid.NewGuid().ToString()));
             
             channel.WriteInbound(anySignedGossip);
-            bool hasHitHandler = waitHandle.WaitOne(TimeSpan.FromSeconds(1));
+            bool hasHitHandler = waitHandle.WaitOne(TimeSpan.FromSeconds(5));
             hasHitHandler.Should().BeTrue();
             waitHandle.Dispose();
         }
