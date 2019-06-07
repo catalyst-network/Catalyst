@@ -118,6 +118,7 @@ namespace Catalyst.Node.Core.IntegrationTests.P2P
             {
                 var peerService = _container.Resolve<IPeerService>();
                 var serverObserver = new ProtocolMessageObserver(0, _logger);
+                var peerClient = _container.Resolve<IPeerClient>();
 
                 using (peerService.MessageStream.Subscribe(serverObserver))
                 {
@@ -135,14 +136,12 @@ namespace Catalyst.Node.Core.IntegrationTests.P2P
                         Guid.NewGuid()
                     );
 
-                    var peerClient = new PeerClient(targetHost);
-                    peerClient.SendMessage(datagramEnvelope);
+                    await peerClient.SendMessageAsync(datagramEnvelope);
                     await peerService.MessageStream.WaitForItemsOnDelayedStreamOnTaskPoolScheduler();
                     
                     serverObserver.Received.LastOrDefault().Should().NotBeNull();
                     serverObserver.Received.Last().Payload.TypeUrl.Should()
                        .Be(PingRequest.Descriptor.ShortenedFullName());
-                    peerService.Dispose();
                 }
             }
         }
@@ -154,6 +153,8 @@ namespace Catalyst.Node.Core.IntegrationTests.P2P
             using (_container.BeginLifetimeScope(CurrentTestName))
             {
                 var peerService = _container.Resolve<IPeerService>();
+                var peerClient = _container.Resolve<IPeerClient>();
+
                 var serverObserver = new ProtocolMessageObserver(0, _logger);
 
                 using (peerService.MessageStream.Subscribe(serverObserver))
@@ -170,8 +171,7 @@ namespace Catalyst.Node.Core.IntegrationTests.P2P
                         Guid.NewGuid()
                     );
 
-                    var peerClient = new PeerClient(targetHost);
-                    peerClient.SendMessage(datagramEnvelope);
+                    await peerClient.SendMessageAsync(datagramEnvelope);
                     await peerService.MessageStream.WaitForItemsOnDelayedStreamOnTaskPoolScheduler();
 
                     serverObserver.Received.FirstOrDefault().Should().NotBeNull();
