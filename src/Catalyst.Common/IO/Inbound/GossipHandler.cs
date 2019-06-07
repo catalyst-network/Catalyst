@@ -36,7 +36,7 @@ namespace Catalyst.Common.IO.Inbound
     /// <seealso cref="ObservableServiceHandler" />
     /// <seealso cref="IGossipHandler" />
     public sealed class GossipHandler 
-        : SimpleChannelInboundHandler<AnySigned>,
+        : SimpleChannelInboundHandler<ProtocolMessage>,
             IGossipHandler
     {
         private readonly IGossipManager _gossipManager;
@@ -45,12 +45,12 @@ namespace Catalyst.Common.IO.Inbound
         /// <param name="gossipManager">The gossip manager.</param>
         public GossipHandler(IGossipManager gossipManager) { _gossipManager = gossipManager; }
 
-        protected override void ChannelRead0(IChannelHandlerContext ctx, AnySigned msg)
+        protected override void ChannelRead0(IChannelHandlerContext ctx, ProtocolMessage msg)
         {
             if (msg.CheckIfMessageIsGossip())
             {
-                var channeledAnySigned = new ChanneledAnySigned(ctx, msg);
-                _gossipManager.IncomingGossip(channeledAnySigned);
+                var protocolMessageDto = new ProtocolMessageDto(ctx, msg);
+                _gossipManager.IncomingGossip(protocolMessageDto);
             }
 
             ctx.FireChannelRead(msg);

@@ -47,7 +47,7 @@ namespace Catalyst.Node.Core.P2P.Messaging.Handlers
             _peerIdentifier = peerIdentifier;
         }
 
-        protected override void Handler(IChanneledMessage<AnySigned> message)
+        protected override void Handler(IChanneledMessage<ProtocolMessage> message)
         {
             Logger.Information("Ping Message Received");
             var deserialised = message.Payload.FromAnySigned<PingRequest>();

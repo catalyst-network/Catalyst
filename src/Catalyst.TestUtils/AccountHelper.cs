@@ -21,14 +21,28 @@
 
 #endregion
 
-using System.Net;
-using System.Threading.Tasks;
-using DotNetty.Transport.Channels;
+using Catalyst.Common.Config;
+using Catalyst.Common.Enumerator;
+using Catalyst.Common.Util;
+using Catalyst.Node.Core.Modules.Ledger;
 
-namespace Catalyst.Common.Interfaces.IO
+namespace Catalyst.TestUtils
 {
-    public interface IServerBootstrap
+    public static class AccountHelper
     {
-        Task<IChannel> BindAsync(IPAddress ipAddress, int port);
+        public static Account GetAccount(BigDecimal balance,
+            uint coinType = 0,
+            string accountType = "NonConfidentialAccount",
+            string publicAddress = "0x32Be343B94f860124dC4fEe278FDCBD38C102D88")
+        {
+            var account = new Account
+            {
+                CoinType = coinType,
+                AccountType = Enumeration.Parse<AccountTypes>(accountType),
+                PublicAddress = publicAddress,
+                Balance = balance
+            };
+            return account;
+        }
     }
 }

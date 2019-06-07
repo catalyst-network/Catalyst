@@ -32,8 +32,8 @@ using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Common.Util;
 using Catalyst.Node.Core.Modules.Consensus.Delta;
-using Catalyst.Node.Core.UnitTests.TestUtils;
 using Catalyst.Protocol.Delta;
+using Catalyst.TestUtils;
 using FluentAssertions;
 using Microsoft.Extensions.Caching.Memory;
 using Nethereum.Hex.HexConvertors.Extensions;
@@ -227,7 +227,10 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Consensus.Delta
                 realCache.TryGetValue(firstKey, out IScoredCandidateDelta firstRetrieved).Should().BeTrue();
                 realCache.TryGetValue(secondKey, out IScoredCandidateDelta secondRetrieved).Should().BeTrue();
 
-                return new List<IScoredCandidateDelta> { firstRetrieved, secondRetrieved };
+                return new List<IScoredCandidateDelta>
+                {
+                    firstRetrieved, secondRetrieved
+                };
             }
         }
 

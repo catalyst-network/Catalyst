@@ -49,7 +49,7 @@ namespace Catalyst.Node.Core.RPC
         private readonly X509Certificate2 _certificate;
 
         public IRpcServerSettings Settings { get; }
-        public IObservable<IChanneledMessage<AnySigned>> MessageStream { get; }
+        public IObservable<IChanneledMessage<ProtocolMessage>> MessageStream { get; }
 
         public NodeRpcServer(IRpcServerSettings settings,
             ILogger logger,
@@ -71,7 +71,7 @@ namespace Catalyst.Node.Core.RPC
                     new List<IChannelHandler>
                     {
                         new ProtobufVarint32FrameDecoder(),
-                        new ProtobufDecoder(AnySigned.Parser),
+                        new ProtobufDecoder(ProtocolMessage.Parser),
                         new ProtobufVarint32LengthFieldPrepender(),
                         new ProtobufEncoder(),
                         new CorrelationHandler(correlationManager),

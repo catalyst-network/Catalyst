@@ -30,9 +30,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		..\entrypoint.sh = ..\entrypoint.sh
 		..\README.md = ..\README.md
 		..\testnet-docker-compose.yml = ..\testnet-docker-compose.yml
+		Common.IntergrationTests.props = Common.IntergrationTests.props
+		Common.TestProjects.props = Common.TestProjects.props
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Cli.IntegrationTests", "Catalyst.Cli.IntegrationTests\Catalyst.Cli.IntegrationTests.csproj", "{5D860E6E-2CFC-42A6-8E19-AA90A0F00820}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Node.Core.IntergrationTests", "Catalyst.Node.Core.IntergrationTests\Catalyst.Node.Core.IntergrationTests.csproj", "{A60E36E4-A382-456B-86A0-038FACA58B3C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Common.IntergrationTests", "Catalyst.Common.IntergrationTests\Catalyst.Common.IntergrationTests.csproj", "{6FEFA6E7-A026-4B68-9FA7-1D3E73E80B5D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.TestUtils", "Catalyst.TestUtils\Catalyst.TestUtils.csproj", "{8039B2AC-8F36-463D-963C-774D021CD464}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -68,10 +74,18 @@ Global
 		{93E23E42-2699-4265-B6D0-EEE61612ADE7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{93E23E42-2699-4265-B6D0-EEE61612ADE7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{93E23E42-2699-4265-B6D0-EEE61612ADE7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5D860E6E-2CFC-42A6-8E19-AA90A0F00820}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5D860E6E-2CFC-42A6-8E19-AA90A0F00820}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5D860E6E-2CFC-42A6-8E19-AA90A0F00820}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5D860E6E-2CFC-42A6-8E19-AA90A0F00820}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A60E36E4-A382-456B-86A0-038FACA58B3C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A60E36E4-A382-456B-86A0-038FACA58B3C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A60E36E4-A382-456B-86A0-038FACA58B3C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A60E36E4-A382-456B-86A0-038FACA58B3C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6FEFA6E7-A026-4B68-9FA7-1D3E73E80B5D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6FEFA6E7-A026-4B68-9FA7-1D3E73E80B5D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6FEFA6E7-A026-4B68-9FA7-1D3E73E80B5D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6FEFA6E7-A026-4B68-9FA7-1D3E73E80B5D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8039B2AC-8F36-463D-963C-774D021CD464}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8039B2AC-8F36-463D-963C-774D021CD464}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8039B2AC-8F36-463D-963C-774D021CD464}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8039B2AC-8F36-463D-963C-774D021CD464}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

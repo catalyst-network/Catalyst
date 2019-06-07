@@ -28,7 +28,7 @@ using DotNetty.Transport.Channels;
 
 namespace Catalyst.Common.IO.Messaging.Handlers
 {
-    public sealed class CorrelationHandler : SimpleChannelInboundHandler<AnySigned>
+    public sealed class CorrelationHandler : SimpleChannelInboundHandler<ProtocolMessage>
     {
         private readonly ICorrelationManager _correlationManager;
 
@@ -37,7 +37,7 @@ namespace Catalyst.Common.IO.Messaging.Handlers
             _correlationManager = correlationManager;
         }
 
-        protected override void ChannelRead0(IChannelHandlerContext ctx, AnySigned message)
+        protected override void ChannelRead0(IChannelHandlerContext ctx, ProtocolMessage message)
         {
             if (message.CheckIfMessageIsGossip())
             {
