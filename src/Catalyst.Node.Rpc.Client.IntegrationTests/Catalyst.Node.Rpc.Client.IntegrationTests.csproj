@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+<PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+  </PropertyGroup>
+  <PropertyGroup>
+    <RootNamespace>Catalyst.Node.Rpc.Client.IntegrationTests</RootNamespace>
+  </PropertyGroup>
+  <Import Project="../Common.IntegrationTests.props" />
+  <ItemGroup>
+    <ProjectReference Include="..\Catalyst.Common\Catalyst.Common.csproj" />
+    <ProjectReference Include="..\Catalyst.Node.Rpc.Client\Catalyst.Node.Rpc.Client.csproj" />
+    <ProjectReference Include="..\Catalyst.TestUtils\Catalyst.TestUtils.csproj" />
+  </ItemGroup>
+</Project>

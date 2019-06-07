@@ -1,0 +1,13 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>netcoreapp2.2</TargetFramework>
+    </PropertyGroup>
+    <PropertyGroup>
+        <RootNamespace>Catalyst.TestUtils</RootNamespace>
+    </PropertyGroup>
+    <Import Project="../Common.TestProjects.props" />
+    <ItemGroup>
+        <ProjectReference Include="..\Catalyst.Common\Catalyst.Common.csproj" />
+        <ProjectReference Include="..\Catalyst.Node.Core\Catalyst.Node.Core.csproj" />
+    </ItemGroup>
+</Project>
