@@ -22,7 +22,6 @@
 #endregion
 
 using System.Net;
-using System.Threading.Tasks;
 using Catalyst.Common.Interfaces.IO.Outbound;
 using DotNetty.Handlers.Logging;
 using DotNetty.Transport.Channels;
