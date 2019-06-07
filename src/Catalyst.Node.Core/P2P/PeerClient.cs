@@ -21,12 +21,7 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.IO.Outbound;
-using DotNetty.Buffers;
-using DotNetty.Transport.Channels;
-using Serilog;
-using Serilog.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Reflection;
@@ -39,17 +34,13 @@ namespace Catalyst.Node.Core.P2P
         : UdpClient,
             IPeerClient
     {
-        public PeerClient(IPeerIdentifier peerIdentifier) : this(peerIdentifier.IpEndPoint) { }
-            
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="ipEndPoint"></param>
-        public PeerClient(IPEndPoint ipEndPoint)
+        public PeerClient()
             : base(Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType))
         {
-            Logger.Debug("P2P client starting");
-
+            IPEndPoint ipEndPoint = new IPEndPoint(IPAddress.Loopback, IPEndPoint.MinPort);
             Bootstrap(new OutboundChannelInitializerBase<IChannel>(channel => { },
                 new List<IChannelHandler>
                 {
@@ -59,7 +50,7 @@ namespace Catalyst.Node.Core.P2P
             ), ipEndPoint);
         }
 
-        public Task SendMessage(IByteBufferHolder datagramPacket)
+        public Task SendMessageAsync(IByteBufferHolder datagramPacket)
         {
             return Channel.WriteAndFlushAsync(datagramPacket);
         }
