@@ -78,7 +78,7 @@ namespace Catalyst.Node.Core.IntegrationTests.FileTransfer
 
             _ipfsEngine = new IpfsAdapter(passwordReader, peerSettings, FileSystem, _logger);
             _logger = Substitute.For<ILogger>();
-            _dfs = new Dfs(_ipfsEngine, _logger);
+            _dfs = new Catalyst.Node.Core.Modules.Dfs.Dfs(_ipfsEngine, _logger);
         }
         
         [Fact]
