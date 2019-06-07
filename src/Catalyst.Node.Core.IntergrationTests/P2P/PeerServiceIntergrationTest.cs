@@ -53,7 +53,7 @@ using Xunit.Abstractions;
 
 namespace Catalyst.Node.Core.IntergrationTests.P2P
 {
-    public sealed class PeerServiceTests : 
+    public sealed class PeerServiceIntergrationTests : 
         ConfigFileBasedTest,
         IClassFixture<PeerClientFixture>
     {
@@ -65,7 +65,7 @@ namespace Catalyst.Node.Core.IntergrationTests.P2P
         private readonly IConfigurationRoot _config;
         private readonly PeerClientFixture _peerClientFixture;
 
-        public PeerServiceTests(ITestOutputHelper output, PeerClientFixture peerClientFixture) : base(output)
+        public PeerServiceIntergrationTests(ITestOutputHelper output, PeerClientFixture peerClientFixture) : base(output)
         {
             _config = SocketPortHelper.AlterConfigurationToGetUniquePort(new ConfigurationBuilder()
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile))
