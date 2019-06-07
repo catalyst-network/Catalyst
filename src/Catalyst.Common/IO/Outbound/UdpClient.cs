@@ -23,6 +23,7 @@
 
 using System.Net;
 using System.Net.Sockets;
+using System.Threading.Tasks;
 using Catalyst.Common.Interfaces.IO.Outbound;
 using DotNetty.Handlers.Logging;
 using DotNetty.Transport.Channels;
@@ -49,4 +50,3 @@ namespace Catalyst.Common.IO.Outbound
         }
     }
 }
-
