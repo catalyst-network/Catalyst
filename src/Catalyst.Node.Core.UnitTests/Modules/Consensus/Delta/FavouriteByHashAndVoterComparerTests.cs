@@ -55,34 +55,52 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Consensus.Delta
 
                 Add(new FavouriteDeltaBroadcast
                     {
-                        Candidate = new CandidateDeltaBroadcast { Hash = hash1, ProducerId = producer1, PreviousDeltaDfsHash = previousHash1 },
+                        Candidate = new CandidateDeltaBroadcast
+                        {
+                            Hash = hash1, ProducerId = producer1, PreviousDeltaDfsHash = previousHash1
+                        },
                         VoterId = voter1
                     },
                     new FavouriteDeltaBroadcast
                     {
-                        Candidate = new CandidateDeltaBroadcast { Hash = hash2, ProducerId = producer1, PreviousDeltaDfsHash = previousHash1 },
+                        Candidate = new CandidateDeltaBroadcast
+                        {
+                            Hash = hash2, ProducerId = producer1, PreviousDeltaDfsHash = previousHash1
+                        },
                         VoterId = voter1
                     }, false);
 
                 Add(new FavouriteDeltaBroadcast
                     {
-                        Candidate = new CandidateDeltaBroadcast { Hash = hash1, ProducerId = producer1, PreviousDeltaDfsHash = previousHash1 },
+                        Candidate = new CandidateDeltaBroadcast
+                        {
+                            Hash = hash1, ProducerId = producer1, PreviousDeltaDfsHash = previousHash1
+                        },
                         VoterId = voter1
                     },
                     new FavouriteDeltaBroadcast
                     {
-                        Candidate = new CandidateDeltaBroadcast { Hash = hash1, ProducerId = producer1, PreviousDeltaDfsHash = previousHash1 },
+                        Candidate = new CandidateDeltaBroadcast
+                        {
+                            Hash = hash1, ProducerId = producer1, PreviousDeltaDfsHash = previousHash1
+                        },
                         VoterId = voter2
                     }, false);
 
                 Add(new FavouriteDeltaBroadcast
                     {
-                        Candidate = new CandidateDeltaBroadcast {Hash = hash1, ProducerId = producer1, PreviousDeltaDfsHash = previousHash1},
+                        Candidate = new CandidateDeltaBroadcast
+                        {
+                            Hash = hash1, ProducerId = producer1, PreviousDeltaDfsHash = previousHash1
+                        },
                         VoterId = voter1
                     }, 
                     new FavouriteDeltaBroadcast
                     {
-                        Candidate = new CandidateDeltaBroadcast {Hash = hash1, ProducerId = producer2, PreviousDeltaDfsHash = previousHash2},
+                        Candidate = new CandidateDeltaBroadcast
+                        {
+                            Hash = hash1, ProducerId = producer2, PreviousDeltaDfsHash = previousHash2
+                        },
                         VoterId = voter1
                     }, true);
             }

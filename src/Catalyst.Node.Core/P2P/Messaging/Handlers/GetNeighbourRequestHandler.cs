@@ -53,7 +53,7 @@ namespace Catalyst.Node.Core.P2P.Messaging.Handlers
             _repository = repository;
         }
 
-        protected override void Handler(IChanneledMessage<AnySigned> message)
+        protected override void Handler(IChanneledMessage<ProtocolMessage> message)
         {
             Logger.Debug("PeerNeighborsRequest Message Received");
 

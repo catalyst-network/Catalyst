@@ -27,7 +27,6 @@ using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.IO.Messaging;
-using Catalyst.Node.Core.RPC.Handlers;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
@@ -64,7 +63,7 @@ namespace Catalyst.Cli.Handlers
         /// Handles the VersionResponse message sent from the <see cref="GetMempoolRequestHandler" />.
         /// </summary>
         /// <param name="message">An object of GetMempoolResponse</param>
-        protected override void Handler(IChanneledMessage<AnySigned> message)
+        protected override void Handler(IChanneledMessage<ProtocolMessage> message)
         {
             Guard.Argument(message).NotNull("The message cannot be null");
             

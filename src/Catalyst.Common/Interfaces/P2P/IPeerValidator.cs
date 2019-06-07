@@ -32,7 +32,7 @@ namespace Catalyst.Common.Interfaces.P2P
     /// <summary>
     /// This class is used to validate peers by carrying out a peer challenge response
     /// </summary>
-    public interface IPeerValidator : IObserver<IChanneledMessage<AnySigned>>
+    public interface IPeerValidator : IObserver<IChanneledMessage<ProtocolMessage>>
     {
         /// <summary>
         /// Used to challenge a peer for a response based on the provided public key, ip and port chunks 

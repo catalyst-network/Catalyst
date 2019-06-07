@@ -21,9 +21,22 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.IO.Outbound;
+using Catalyst.Common.Interfaces.IO.Inbound;
+using Catalyst.Protocol.Common;
+using DotNetty.Transport.Channels;
 
-namespace Catalyst.Common.Interfaces.IO
+namespace Catalyst.Common.IO.Inbound
 {
-    public interface IUdpClient : ISocketClient { }
+    public sealed class ProtocolMessageDto
+        : IChanneledMessage<ProtocolMessage>
+    {
+        public ProtocolMessage Payload { get; }
+        public IChannelHandlerContext Context { get; }
+
+        public ProtocolMessageDto(IChannelHandlerContext context, ProtocolMessage message)
+        {
+            Payload = message;
+            Context = context;
+        }
+    }
 }

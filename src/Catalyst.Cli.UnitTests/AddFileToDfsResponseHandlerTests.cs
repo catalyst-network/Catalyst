@@ -42,7 +42,7 @@ using Xunit;
 
 namespace Catalyst.Cli.UnitTests
 {
-    public class AddFileToDfsResponseHandlerTests
+    public sealed class AddFileToDfsResponseHandlerTests
     {
         private readonly IUserOutput _userOutput;
         private readonly IUploadFileTransferFactory _uploadFileTransferFactory;
@@ -85,7 +85,7 @@ namespace Catalyst.Cli.UnitTests
             _uploadFileTransferFactory.Received(Quantity.Exactly(1)).Remove(Arg.Any<Guid>());
         }
 
-        private IChanneledMessage<AnySigned> GetAddFileToDfsResponse(FileTransferResponseCodes responseCode)
+        private IChanneledMessage<ProtocolMessage> GetAddFileToDfsResponse(FileTransferResponseCodes responseCode)
         {
             AddFileToDfsResponse addFileResponse = new AddFileToDfsResponse
             {
@@ -93,8 +93,8 @@ namespace Catalyst.Cli.UnitTests
                 ResponseCode = ByteString.CopyFrom((byte) responseCode)
             };
 
-            AnySigned anySigned = addFileResponse.ToAnySigned(PeerIdHelper.GetPeerId("Test"), Guid.NewGuid());
-            return new ChanneledAnySigned(_channelHandlerContext, anySigned);
+            var protocolMessage = addFileResponse.ToAnySigned(PeerIdHelper.GetPeerId("Test"), Guid.NewGuid());
+            return new ProtocolMessageDto(_channelHandlerContext, protocolMessage);
         }
     }
 }

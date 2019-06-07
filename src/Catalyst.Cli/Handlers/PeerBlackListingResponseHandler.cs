@@ -60,7 +60,7 @@ namespace Catalyst.Cli.Handlers
         /// Handles the peer reputation response.
         /// </summary>
         /// <param name="message">The GetPeerReputationResponse message.</param>
-        protected override void Handler(IChanneledMessage<AnySigned> message)
+        protected override void Handler(IChanneledMessage<ProtocolMessage> message)
         {
             Logger.Debug("Handling GetPeerBlackList response");
             Guard.Argument(message).NotNull("Received message cannot be null");

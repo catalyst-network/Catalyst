@@ -50,7 +50,7 @@ namespace Catalyst.Node.Core.P2P
         private readonly ILogger _logger;
 
         private readonly IDisposable _incomingPingResponseSubscription;
-        private readonly ConcurrentStack<IChanneledMessage<AnySigned>> _receivedResponses;
+        private readonly ConcurrentStack<IChanneledMessage<ProtocolMessage>> _receivedResponses;
 
         private readonly IPeerClient _peerClient;
 
@@ -65,22 +65,22 @@ namespace Catalyst.Node.Core.P2P
             _hostEndPoint = hostEndPoint;
 
             _logger = logger;
-            _receivedResponses = new ConcurrentStack<IChanneledMessage<AnySigned>>();
+            _receivedResponses = new ConcurrentStack<IChanneledMessage<ProtocolMessage>>();
             _incomingPingResponseSubscription = peerService.MessageStream.Subscribe(this);
 
             _peerClient = peerClient;
         }
 
-        public void OnCompleted() { _logger.Information("End of {0} stream.", nameof(AnySigned)); }
+        public void OnCompleted() { _logger.Information("End of {0} stream.", nameof(ProtocolMessage)); }
 
         public void OnError(Exception error)
         {
-            _logger.Error(error, "Error occured in {0} stream.", nameof(AnySigned));
+            _logger.Error(error, "Error occured in {0} stream.", nameof(ProtocolMessage));
         }
 
-        public void OnNext(IChanneledMessage<AnySigned> response)
+        public void OnNext(IChanneledMessage<ProtocolMessage> response)
         {
-            if (response == NullObjects.ChanneledAnySigned)
+            if (response.Payload == NullObjects.ProtocolMessage) //fix this
             {
                 return;
             }
@@ -109,12 +109,12 @@ namespace Catalyst.Node.Core.P2P
 
                 ((PeerClient)_peerClient).SendMessage(datagramEnvelope);
 
-                var tasks = new IChanneledMessageStreamer<AnySigned>[]
+                var tasks = new IChanneledMessageStreamer<ProtocolMessage>[]
                     {
                         _peerService 
                     }
                    .Select(async p =>
-                        await p.MessageStream.FirstAsync(a => a != null && a != NullObjects.ChanneledAnySigned))
+                        await p.MessageStream.FirstAsync(a => a != null && a != NullObjects.ProtocolMessageDto))
                    .ToArray();
 
                 Task.WaitAll(tasks, TimeSpan.FromMilliseconds(2500));

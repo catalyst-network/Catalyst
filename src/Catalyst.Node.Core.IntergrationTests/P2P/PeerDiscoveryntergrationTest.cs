@@ -50,9 +50,9 @@ using Xunit.Abstractions;
 using Constants = Catalyst.Common.Config.Constants;
 using Peer = Catalyst.Common.P2P.Peer;
 
-namespace Catalyst.Node.Core.UnitTests.P2P
+namespace Catalyst.Node.Core.IntergrationTests.P2P
 {
-    public sealed class PeerDiscoveryUnitTest : ConfigFileBasedTest
+    public sealed class PeerDiscoveryntergrationTest : ConfigFileBasedTest
     {
         private readonly IConfigurationRoot _config;
         private readonly IDns _dns;
@@ -62,7 +62,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
         private readonly List<string> _dnsDomains;
         private readonly string _seedPid;
 
-        public PeerDiscoveryUnitTest(ITestOutputHelper output) : base(output)
+        public PeerDiscoveryntergrationTest(ITestOutputHelper output) : base(output)
         {
             _peerRepository = Substitute.For<IRepository<Peer>>();
             _logger = Substitute.For<ILogger>();
@@ -154,7 +154,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
             var fakeContext = Substitute.For<IChannelHandlerContext>();
             var pingRequest = new PingResponse();
             var pid = PeerIdentifierHelper.GetPeerIdentifier("im_a_key");
-            var channeledAny = new ChanneledAnySigned(fakeContext, 
+            var channeledAny = new ProtocolMessageDto(fakeContext, 
                 pingRequest.ToAnySigned(pid.PeerId, Guid.NewGuid()));
             
             var observableStream = new[] {channeledAny}.ToObservable();

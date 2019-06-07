@@ -40,9 +40,10 @@ using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Common.Util;
 using Catalyst.Node.Core.P2P;
 using Catalyst.Node.Core.P2P.Messaging.Handlers;
-using Catalyst.Node.Core.UnitTests.TestUtils;
+//using Catalyst.Node.Core.UnitTests.TestUtils;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
+using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using FluentAssertions;
 using Microsoft.Extensions.Configuration;
@@ -51,7 +52,7 @@ using Serilog;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Catalyst.Node.Core.UnitTests.P2P
+namespace Catalyst.Node.Core.IntergrationTests.P2P
 {
     public sealed class PeerServiceTests : ConfigFileBasedTest,
          IClassFixture<PeerClientFixture>
@@ -104,7 +105,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
                 var fakeContext = Substitute.For<IChannelHandlerContext>();
                 var fakeChannel = Substitute.For<IChannel>();
                 fakeContext.Channel.Returns(fakeChannel);
-                var channeledAny = new ChanneledAnySigned(fakeContext, _pingRequest.ToAnySigned(_pid.PeerId, _guid));
+                var channeledAny = new ProtocolMessageDto(fakeContext, _pingRequest.ToAnySigned(_pid.PeerId, _guid));
                 var observableStream = new[] {channeledAny}.ToObservable();
             
                 var handler = new PingRequestHandler(_pid, _logger);
@@ -124,7 +125,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
             using (_container.BeginLifetimeScope(CurrentTestName))
             {
                 var peerService = _container.Resolve<IPeerService>();
-                var serverObserver = new AnySignedMessageObserver(0, _logger);
+                var serverObserver = new ProtocolMessageObserver(0, _logger);
 
                 using (peerService.MessageStream.Subscribe(serverObserver))
                 {
@@ -152,18 +153,19 @@ namespace Catalyst.Node.Core.UnitTests.P2P
                     //await peerService.MessageStream.WaitForItemsOnDelayedStreamOnTaskPoolScheduler();
 
 
-                    var tasks = new IChanneledMessageStreamer<AnySigned>[]
+                    var tasks = new IChanneledMessageStreamer<ProtocolMessage>[]
                         {
                             peerService
                         }
                        .Select(async p =>
-                            await p.MessageStream.FirstAsync(a => a != null && a != NullObjects.ChanneledAnySigned))
+                            await p.MessageStream.FirstAsync(a => a != null && a.Payload != NullObjects.ProtocolMessage))
                        .ToArray();
 
                     Task.WaitAll(tasks, TimeSpan.FromMilliseconds(2500));
 
                     serverObserver.Received.LastOrDefault().Should().NotBeNull();
-                    serverObserver.Received.Last().Payload.TypeUrl.Should().Be(PingRequest.Descriptor.ShortenedFullName());
+                    serverObserver.Received.Last().Payload.TypeUrl.Should()
+                       .Be(PingRequest.Descriptor.ShortenedFullName());
                     peerService.Dispose();
                 }
             }
@@ -176,7 +178,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
             using (_container.BeginLifetimeScope(CurrentTestName))
             {
                 var peerService = _container.Resolve<IPeerService>();
-                var serverObserver = new AnySignedMessageObserver(0, _logger);
+                var serverObserver = new ProtocolMessageObserver(0, _logger);
 
                 using (peerService.MessageStream.Subscribe(serverObserver))
                 {
@@ -202,12 +204,12 @@ namespace Catalyst.Node.Core.UnitTests.P2P
 
                     //await peerService.MessageStream.WaitForItemsOnDelayedStreamOnTaskPoolScheduler();
 
-                    var tasks = new IChanneledMessageStreamer<AnySigned>[]
+                    var tasks = new IChanneledMessageStreamer<ProtocolMessage>[]
                         {
                             peerService
                         }
                        .Select(async p =>
-                            await p.MessageStream.FirstAsync(a => a != null && a != NullObjects.ChanneledAnySigned))
+                            await p.MessageStream.FirstAsync(a => a != null && a.Payload != NullObjects.ProtocolMessage))
                        .ToArray();
 
                     Task.WaitAll(tasks, TimeSpan.FromMilliseconds(2500));

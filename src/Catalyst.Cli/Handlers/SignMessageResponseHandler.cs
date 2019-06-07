@@ -61,7 +61,7 @@ namespace Catalyst.Cli.Handlers
         /// Handles the VersionResponse message sent from the <see />.
         /// </summary>
         /// <param name="message">An object of GetMempoolResponse</param>
-        protected override void Handler(IChanneledMessage<AnySigned> message)
+        protected override void Handler(IChanneledMessage<ProtocolMessage> message)
         {
             try
             {
