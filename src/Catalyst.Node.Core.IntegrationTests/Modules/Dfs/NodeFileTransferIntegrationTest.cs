@@ -49,7 +49,7 @@ using Xunit;
 using Xunit.Abstractions;
 using TransferFileBytesRequestHandler = Catalyst.Node.Core.RPC.Handlers.TransferFileBytesRequestHandler;
 
-namespace Catalyst.Node.Core.IntegrationTests.FileTransfer
+namespace Catalyst.Node.Core.IntegrationTests.Modules.Dfs
 {
     public sealed class NodeFileTransferIntegrationTest : FileSystemBasedTest
     {
@@ -78,7 +78,7 @@ namespace Catalyst.Node.Core.IntegrationTests.FileTransfer
 
             _ipfsEngine = new IpfsAdapter(passwordReader, peerSettings, FileSystem, _logger);
             _logger = Substitute.For<ILogger>();
-            _dfs = new Dfs(_ipfsEngine, _logger);
+            _dfs = new Core.Modules.Dfs.Dfs(_ipfsEngine, _logger);
         }
         
         [Fact]

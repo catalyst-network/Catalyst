@@ -37,9 +37,9 @@ using System;
 using Ipfs.CoreApi;
 using Xunit;
 
-namespace Catalyst.Node.Core.UnitTests.FileTransfer
+namespace Catalyst.Node.Core.UnitTests.P2P.Messaging.Handlers
 {
-    public sealed class NodeFileTransferTest
+    public sealed class AddFileToDfsRequestHandlerTest
     {
         private readonly ILogger _logger;
         private readonly IChannelHandlerContext _fakeContext;
@@ -47,7 +47,7 @@ namespace Catalyst.Node.Core.UnitTests.FileTransfer
         private readonly IMessageFactory _messageFactory;
         private ICoreApi _ipfsEngine;
 
-        public NodeFileTransferTest()
+        public AddFileToDfsRequestHandlerTest()
         {
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
@@ -57,7 +57,7 @@ namespace Catalyst.Node.Core.UnitTests.FileTransfer
         }
 
         [Fact]
-        public void Node_Initialize_File_Transfer()
+        public void HandlerCanInitializeDownloadFileTransfer()
         {
             var sender = PeerIdHelper.GetPeerId("sender");
             var handler = new AddFileToDfsRequestHandler(new Dfs(_ipfsEngine, _logger), new PeerIdentifier(sender),
