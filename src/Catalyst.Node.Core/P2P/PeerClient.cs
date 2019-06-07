@@ -21,10 +21,10 @@
 
 #endregion
 
-using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Reflection;
+using System.Threading.Tasks;
 using Catalyst.Common.Interfaces.IO;
 using Catalyst.Common.IO.Outbound;
 using Catalyst.Common.Interfaces.P2P;
@@ -52,9 +52,9 @@ namespace Catalyst.Node.Core.P2P
             ), ipEndPoint);
         }
 
-        public void SendMessage(IByteBufferHolder datagramPacket)
+        public Task SendMessageAsync(IByteBufferHolder datagramPacket)
         {
-            Channel.WriteAndFlushAsync(datagramPacket).ConfigureAwait(false);
+            return Channel.WriteAndFlushAsync(datagramPacket);
         }
     }
 }

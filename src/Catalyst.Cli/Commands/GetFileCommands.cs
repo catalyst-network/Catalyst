@@ -42,7 +42,7 @@ namespace Catalyst.Cli.Commands
         /// <summary>Called when [get file options].</summary>
         /// <param name="opts">The opts.</param>
         /// <returns></returns>
-        private bool OnGetFileOptions(IGetFileOptions opts)
+        private bool GetFileOptions(IGetFileOptions opts)
         {
             INodeRpcClient node;
             try
