@@ -53,8 +53,9 @@ using Xunit.Abstractions;
 
 namespace Catalyst.Node.Core.IntergrationTests.P2P
 {
-    public sealed class PeerServiceTests : ConfigFileBasedTest,
-         IClassFixture<PeerClientFixture>
+    public sealed class PeerServiceTests : 
+        ConfigFileBasedTest,
+        IClassFixture<PeerClientFixture>
     {
         private readonly Guid _guid;
         private readonly ILogger _logger;
@@ -62,8 +63,7 @@ namespace Catalyst.Node.Core.IntergrationTests.P2P
         private readonly IContainer _container;
         private readonly PingRequest _pingRequest;
         private readonly IConfigurationRoot _config;
-
-        private PeerClientFixture _peerClientFixture;
+        private readonly PeerClientFixture _peerClientFixture;
 
         public PeerServiceTests(ITestOutputHelper output, PeerClientFixture peerClientFixture) : base(output)
         {
@@ -117,7 +117,7 @@ namespace Catalyst.Node.Core.IntergrationTests.P2P
             }
         }
 
-        [Fact(Skip = "hold")]
+        [Fact]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public async Task CanReceivePingRequests()
         {
@@ -162,7 +162,7 @@ namespace Catalyst.Node.Core.IntergrationTests.P2P
             }
         }
 
-        [Fact(Skip = "hold")]
+        [Fact]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public async Task CanReceiveNeighbourRequests()
         {
@@ -208,7 +208,7 @@ namespace Catalyst.Node.Core.IntergrationTests.P2P
             }
         }
 
-        [Fact(Skip = "hold")]
+        [Fact]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void PeerChallenge_PeerIdentifiers_Expect_To_Succeed_Valid_IP_Port_PublicKey()
         {
@@ -258,22 +258,4 @@ namespace Catalyst.Node.Core.IntergrationTests.P2P
             }
         }
     }
-
-    public class PeerClientFixture : IDisposable
-    {
-        public PeerClientFixture()
-        {
-            var targetHost = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 8827);
-
-            UniversalPeerClient = new PeerClient(targetHost);
-        }
-
-        public void Dispose()
-        {
-            UniversalPeerClient.Dispose();
-        }
-
-        public PeerClient UniversalPeerClient { get; private set; }
-    }
-
 }
