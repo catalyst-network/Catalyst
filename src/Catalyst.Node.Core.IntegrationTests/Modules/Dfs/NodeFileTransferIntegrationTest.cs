@@ -49,7 +49,7 @@ using Xunit;
 using Xunit.Abstractions;
 using TransferFileBytesRequestHandler = Catalyst.Node.Core.RPC.Handlers.TransferFileBytesRequestHandler;
 
-namespace Catalyst.Node.Core.IntegrationTests.Dfs
+namespace Catalyst.Node.Core.IntegrationTests.Modules.Dfs
 {
     public sealed class NodeFileTransferIntegrationTest : FileSystemBasedTest
     {
