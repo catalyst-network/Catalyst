@@ -39,15 +39,13 @@ namespace Catalyst.Node.Core.P2P
         : UdpClient,
             IPeerClient
     {
-        public PeerClient(IPeerIdentifier peerIdentifier) : this(peerIdentifier.IpEndPoint) { }
-            
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="ipEndPoint"></param>
-        public PeerClient(IPEndPoint ipEndPoint)
+        public PeerClient()
             : base(Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType))
         {
+            IPEndPoint ipEndPoint = new IPEndPoint(IPAddress.Loopback, IPEndPoint.MinPort);
             Bootstrap(new OutboundChannelInitializerBase<IChannel>(channel => { },
                 new List<IChannelHandler>
                 {
@@ -57,9 +55,9 @@ namespace Catalyst.Node.Core.P2P
             ), ipEndPoint);
         }
 
-        public void SendMessage(IByteBufferHolder datagramPacket)
+        public Task SendMessageAsync(IByteBufferHolder datagramPacket)
         {
-            Channel.WriteAndFlushAsync(datagramPacket).ConfigureAwait(false);
+            return Channel.WriteAndFlushAsync(datagramPacket);
         }
     }
 }
