@@ -34,17 +34,18 @@ using DotNetty.Transport.Channels;
 using NSubstitute;
 using Serilog;
 using System;
+using Ipfs.CoreApi;
 using Xunit;
 
 namespace Catalyst.Node.Core.UnitTests.FileTransfer
 {
-    public class NodeFileTransferTest
+    public sealed class NodeFileTransferTest
     {
         private readonly ILogger _logger;
         private readonly IChannelHandlerContext _fakeContext;
         private readonly IDownloadFileTransferFactory _nodeFileTransferFactory;
-        private readonly IpfsAdapter _ipfsEngine;
         private readonly IMessageFactory _messageFactory;
+        private ICoreApi _ipfsEngine;
 
         public NodeFileTransferTest()
         {

@@ -30,7 +30,7 @@ using Xunit.Abstractions;
 
 namespace Catalyst.Cli.IntegrationTests.Commands
 {
-    public sealed class GetVersionCommandTest : CliCommandsTests
+    public sealed class GetVersionCommandTest : CliCommandTestBase
     {
         //This test is the base to all other tests.  If the Cli cannot connect to a node than all other commands
         //will fail

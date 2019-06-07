@@ -30,14 +30,12 @@ using Xunit.Abstractions;
 
 namespace Catalyst.Cli.IntegrationTests.Commands
 {
-    public sealed class GetInfoCommandTest : CliCommandTestBase
+    public sealed class ConnectNodeTest : CliCommandTestBase
     {
-        //This test is the base to all other tests.  If the Cli cannot connect to a node than all other commands
-        //will fail
-        public GetInfoCommandTest(ITestOutputHelper output) : base(output) { }
-        
+        public ConnectNodeTest(ITestOutputHelper output) : base(output) { }
+
         [Fact]
-        public void Cli_Can_Request_Node_Info()
+        public void Cli_Can_Connect_To_Node()
         {
             using (var container = ContainerBuilder.Build())
             {
@@ -46,9 +44,23 @@ namespace Catalyst.Cli.IntegrationTests.Commands
                     var shell = container.Resolve<ICatalystCli>();
                     var hasConnected = shell.AdvancedShell.ParseCommand("connect", "-n", "node1");
                     hasConnected.Should().BeTrue();
-
-                    var result = shell.AdvancedShell.ParseCommand("getinfo", "-i", "node1");
-                    result.Should().BeTrue();
+                }   
+            }
+        }
+        
+        [Fact]
+        public void Cli_Can_Handle_Multiple_Connection_Attempts()
+        {
+            using (var container = ContainerBuilder.Build())
+            {
+                using (container.BeginLifetimeScope(CurrentTestName))
+                {
+                    var shell = container.Resolve<ICatalystCli>();
+                    for (var i = 0; i < 10; i++)
+                    {
+                        var canConnect = shell.AdvancedShell.ParseCommand("connect", "-n", "node1");
+                        canConnect.Should().BeTrue();
+                    }
                 }   
             }
         }
