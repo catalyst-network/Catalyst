@@ -34,6 +34,7 @@ using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Protocol.Common;
 using Dawn;
 using Google.Protobuf;
+using Microsoft.Extensions.Configuration;
 using Nethereum.Hex.HexConvertors.Extensions;
 using Nethereum.RLP;
 
@@ -64,6 +65,17 @@ namespace Catalyst.Common.P2P
         {
             Guard.Argument(peerId, nameof(peerId)).Require(ValidatePeerId);
             PeerId = peerId;
+        }
+        
+        public static IPeerIdentifier BuildPeerIdFromConfig(IConfiguration configuration)
+        {
+            //TODO: Handle different scenarios to get the IPAddress and Port depending
+            //on you whether you are connecting to a local node, or a remote one.
+            //https://github.com/catalyst-network/Catalyst.Node/issues/307
+
+            return new PeerIdentifier(configuration.GetSection("CatalystCliConfig")
+                   .GetSection("PublicKey").Value.ToBytesForRLPEncoding(),
+                IPAddress.Loopback, IPEndPoint.MaxPort);
         }
 
         /// <summary>
