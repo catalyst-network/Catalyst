@@ -22,11 +22,15 @@
 #endregion
 
 using System;
+using System.Linq;
+using System.Threading.Tasks;
 using Autofac;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Cli;
+using Catalyst.Common.Interfaces.FileTransfer;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
+using Catalyst.TestUtils;
 using FluentAssertions;
 using NSubstitute;
 using Xunit;
@@ -42,9 +46,10 @@ namespace Catalyst.Cli.IntegrationTests.Commands
         
         [Theory]
         [MemberData(nameof(AddFileData))]
-        public void Cli_Can_Send_Add_File_Request(string fileName, bool expectedResult)
+        public async void Cli_Can_Send_Add_File_Request(string fileName, bool expectedResult)
         {
             var container = ContainerBuilder.Build();
+            var uploadFileTransferFactory = container.Resolve<IUploadFileTransferFactory>();
 
             using (container.BeginLifetimeScope(CurrentTestName))
             {
@@ -55,8 +60,20 @@ namespace Catalyst.Cli.IntegrationTests.Commands
                 var node1 = shell.AdvancedShell.GetConnectedNode("node1");
                 node1.Should().NotBeNull("we've just connected it");
 
-                var result = shell.AdvancedShell.ParseCommand(
-                    "addfile", "-n", "node1", "-f", fileName);
+
+                var task = Task.Run(() => 
+                    shell.AdvancedShell.ParseCommand(
+                    "addfile", "-n", "node1", "-f", fileName));
+
+                if (expectedResult)
+                {
+                    await TaskHelper.WaitFor(() => uploadFileTransferFactory.Keys.Length > 0, TimeSpan.FromSeconds(5));
+
+                    uploadFileTransferFactory.GetFileTransferInformation(uploadFileTransferFactory.Keys.First())
+                       .Expire();
+                }
+
+                var result = await task;
                 result.Should().Be(expectedResult);
 
                 if (expectedResult)
