@@ -21,12 +21,16 @@
 
 #endregion
 
-using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Reflection;
 using System.Threading.Tasks;
+using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Messaging.Handlers;
+using Catalyst.Common.IO.Outbound;
+using DotNetty.Buffers;
+using DotNetty.Transport.Channels;
+using Serilog;
 
 namespace Catalyst.Node.Core.P2P
 {

@@ -28,8 +28,8 @@ namespace Catalyst.Common.Interfaces.P2P.Messaging.Gossip
     public interface IGossipManager
     {
         /// <summary>Broadcasts a message.</summary>
-        /// <param name="anySigned">Any signed message.</param>
-        void Broadcast(ProtocolMessage anySigned);
+        /// <param name="protocolMessage">Any signed message.</param>
+        void Broadcast(ProtocolMessage protocolMessage);
 
         /// <summary>Handles Incoming gossip.</summary>
         /// <param name="anySigned">Any signed message.</param>
