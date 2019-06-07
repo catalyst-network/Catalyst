@@ -59,7 +59,7 @@ namespace Catalyst.Common.IO
 
             Logger.Debug($"Disposing {GetType().Name}");
 
-            var quietPeriod = TimeSpan.FromMilliseconds(100);
+            var quietPeriod = TimeSpan.FromMilliseconds(2000);
             Logger?.Information($"Disposing {GetType().Name}");
 
             try

@@ -43,7 +43,6 @@ namespace Catalyst.Node.Core.P2P
     public sealed class PeerValidator : IPeerValidator,
         IDisposable
     {
-        private readonly IPEndPoint _hostEndPoint;
         private readonly IPeerSettings _peerSettings;
         private readonly IPeerService _peerService;
         private readonly ILogger _logger;
@@ -61,7 +60,6 @@ namespace Catalyst.Node.Core.P2P
         {
             _peerSettings = peerSettings;
             _peerService = peerService;
-            _hostEndPoint = hostEndPoint;
 
             _logger = logger;
             _receivedResponses = new ConcurrentStack<IChanneledMessage<ProtocolMessage>>();
