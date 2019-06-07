@@ -110,7 +110,7 @@ namespace Catalyst.Node.Core.IntergrationTests.P2P
             }
         }
 
-        [Fact(Skip = "build hanging, refactoring is being done")]
+        [Fact]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public async Task CanReceivePingRequests()
         {
@@ -147,7 +147,7 @@ namespace Catalyst.Node.Core.IntergrationTests.P2P
             }
         }
 
-        [Fact(Skip = "build hanging, refactoring is being done")]
+        [Fact]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public async Task CanReceiveNeighbourRequests()
         {
