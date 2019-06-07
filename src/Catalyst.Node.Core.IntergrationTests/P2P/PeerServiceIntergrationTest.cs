@@ -136,7 +136,7 @@ namespace Catalyst.Node.Core.IntergrationTests.P2P
                         Guid.NewGuid()
                     );
 
-                    await peerClient.SendMessage(datagramEnvelope);
+                    await peerClient.SendMessageAsync(datagramEnvelope);
                     await peerService.MessageStream.WaitForItemsOnDelayedStreamOnTaskPoolScheduler();
                     
                     serverObserver.Received.LastOrDefault().Should().NotBeNull();
@@ -171,7 +171,7 @@ namespace Catalyst.Node.Core.IntergrationTests.P2P
                         Guid.NewGuid()
                     );
 
-                    await peerClient.SendMessage(datagramEnvelope);
+                    await peerClient.SendMessageAsync(datagramEnvelope);
                     await peerService.MessageStream.WaitForItemsOnDelayedStreamOnTaskPoolScheduler();
 
                     serverObserver.Received.FirstOrDefault().Should().NotBeNull();
