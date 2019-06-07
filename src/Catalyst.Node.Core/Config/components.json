@@ -10,6 +10,15 @@
             ]
         },
         {
+            "type": "Catalyst.Node.Core.P2P.PeerClient",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.P2P.IPeerClient, Catalyst.Common"
+                }
+            ],
+            "instanceScope": "singleinstance"
+        },
+        {
             "type": "Catalyst.Common.IO.Messaging.MessageFactory, Catalyst.Common",
             "services": [
                 {

@@ -26,11 +26,9 @@ using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.IO.Messaging.Handlers;
 using Catalyst.Common.UnitTests.TestUtils;
-using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
 using DotNetty.Transport.Channels;
 using NSubstitute;
-using Serilog;
 using Xunit;
 
 namespace Catalyst.Common.UnitTests.IO.Messaging

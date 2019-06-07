@@ -24,9 +24,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using Catalyst.Cli.Options;
-using Catalyst.Cli.Rpc;
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Common.Interfaces.FileTransfer;
@@ -38,10 +36,10 @@ using Catalyst.Common.IO.Outbound;
 using Catalyst.Common.Network;
 using Catalyst.Common.P2P;
 using Catalyst.Common.Shell;
+using Catalyst.Node.Rpc.Client;
 using CommandLine;
 using Dawn;
 using Microsoft.Extensions.Configuration;
-using Nethereum.RLP;
 using ILogger = Serilog.ILogger;
 
 namespace Catalyst.Cli.Commands
@@ -79,7 +77,7 @@ namespace Catalyst.Cli.Commands
             _rpcNodeConfigs = NodeRpcConfig.BuildRpcNodeSettingList(config);
             _downloadFileTransferFactory = downloadFileTransferFactory;
             _uploadFileTransferFactory = uploadFileTransferFactory;
-            _peerIdentifier = BuildCliPeerId(config);
+            _peerIdentifier = PeerIdentifier.BuildPeerIdFromConfig(config);
             _userOutput = userOutput;
             _userOutput.WriteLine(@"Koopa Shell Start");
         }
@@ -101,7 +99,7 @@ namespace Catalyst.Cli.Commands
                     RemovePeerOptions,
                     PeerReputationOptions,
                     PeerBlackListingOptions,
-                    AddFileOnDfsOptions,
+                    AddFileOptions,
                     GetFileOptions>(args)
                .MapResult(
                     (GetInfoOptions opts) => GetInfoCommand(opts),
@@ -114,22 +112,11 @@ namespace Catalyst.Cli.Commands
                     (RemovePeerOptions opts) => PeerRemoveCommand(opts),
                     (PeerReputationOptions opts) => PeerReputationCommand(opts),
                     (PeerBlackListingOptions opts) => PeerBlackListingCommand(opts),
-                    (AddFileOnDfsOptions opts) => DfsAddFile(opts),
+                    (AddFileOptions opts) => AddFile(opts),
                     (ConnectOptions opts) => OnConnectNode(opts.NodeId),
                     (ConnectOptions opts) => DisconnectNode(opts.NodeId),
-                    (GetFileOptions opts) => OnGetFileOptions(opts),
+                    (GetFileOptions opts) => GetFileOptions(opts),
                     errs => false);
-        }
-        
-        public static IPeerIdentifier BuildCliPeerId(IConfiguration configuration)
-        {
-            //TODO: Handle different scenarios to get the IPAddress and Port depending
-            //on you whether you are connecting to a local node, or a remote one.
-            //https://github.com/catalyst-network/Catalyst.Node/issues/307
-
-            return new PeerIdentifier(configuration.GetSection("CatalystCliConfig")
-                   .GetSection("PublicKey").Value.ToBytesForRLPEncoding(),
-                IPAddress.Loopback, IPEndPoint.MaxPort);
         }
 
         /// <summary>
