@@ -135,7 +135,7 @@ namespace Catalyst.Node.Core.IntergrationTests.P2P
                         Guid.NewGuid()
                     );
 
-                    var peerClient = new PeerClient(targetHost);
+                    var peerClient = new PeerClient();
                     peerClient.SendMessage(datagramEnvelope);
                     await peerService.MessageStream.WaitForItemsOnDelayedStreamOnTaskPoolScheduler();
                     
@@ -170,7 +170,7 @@ namespace Catalyst.Node.Core.IntergrationTests.P2P
                         Guid.NewGuid()
                     );
 
-                    var peerClient = new PeerClient(targetHost);
+                    var peerClient = new PeerClient();
                     peerClient.SendMessage(datagramEnvelope);
                     await peerService.MessageStream.WaitForItemsOnDelayedStreamOnTaskPoolScheduler();
 
