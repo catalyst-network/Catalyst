@@ -36,7 +36,7 @@ namespace Catalyst.TestUtils
             {
                 while (!tokenSource.IsCancellationRequested)
                 {
-                    if (condition() == true)
+                    if (condition())
                     {
                         break;
                     }
@@ -45,7 +45,7 @@ namespace Catalyst.TestUtils
                         Task.Delay(100).ConfigureAwait(false).GetAwaiter().GetResult();
                     }
                 }
-            }, tokenSource.Token);
+            }, tokenSource.Token).ConfigureAwait(false);
         }
 
 

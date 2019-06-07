@@ -46,7 +46,7 @@ namespace Catalyst.Cli.IntegrationTests.Commands
         
         [Theory]
         [MemberData(nameof(AddFileData))]
-        public async void Cli_Can_Send_Add_File_Request(string fileName, bool expectedResult)
+        public async Task Cli_Can_Send_Add_File_Request(string fileName, bool expectedResult)
         {
             var container = ContainerBuilder.Build();
             var uploadFileTransferFactory = container.Resolve<IUploadFileTransferFactory>();
@@ -73,7 +73,7 @@ namespace Catalyst.Cli.IntegrationTests.Commands
                        .Expire();
                 }
 
-                var result = await task;
+                var result = await task.ConfigureAwait(false);
                 result.Should().Be(expectedResult);
 
                 if (expectedResult)

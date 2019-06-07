@@ -71,7 +71,7 @@ namespace Catalyst.Cli.IntegrationTests.Commands
 
                 downloadFileFactory.GetFileTransferInformation(downloadFileFactory.Keys.First()).Expire();
 
-                var result = await task;
+                var result = await task.ConfigureAwait(false);
                 result.Should().Be(expectedResult);
 
                 if (expectedResult)
