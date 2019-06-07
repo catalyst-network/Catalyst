@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+<PropertyGroup>
+        <TargetFramework>netcoreapp2.2</TargetFramework>
+    </PropertyGroup>
+    <PropertyGroup>
+        <RootNamespace>Catalyst.Node.Rpc.Client</RootNamespace>
+    </PropertyGroup>
+    <Import Project="../Common.Projects.props" />
+    <ItemGroup>
+        <ProjectReference Include="..\Catalyst.Common\Catalyst.Common.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="DotNetty.Codecs.Protobuf" Version="0.6.0" />
+    </ItemGroup>
+</Project>
