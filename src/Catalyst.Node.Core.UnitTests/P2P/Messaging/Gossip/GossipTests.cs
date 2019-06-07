@@ -46,6 +46,7 @@ using SharpRepository.Repository;
 using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Threading;
 using Xunit;
 
 namespace Catalyst.Node.Core.UnitTests.P2P.Messaging.Gossip
@@ -126,9 +127,9 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Messaging.Gossip
         [Fact]
         public void Gossip_Can_Execute_Proto_Handler()
         {
-            bool hasHitHandler = false;
             var peerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("Test");
-            var handler = new TransactionBroadcastTestHandler(_logger, () => hasHitHandler = true);
+            var waitHandle = new ManualResetEvent(false);
+            var handler = new TransactionBroadcastTestHandler(_logger, () => waitHandle.Set());
             var manager = new GossipManager(peerIdentifier, _peers, Substitute.For<IMemoryCache>(), Substitute.For<IPeerClient>());
             var gossipHandler = new GossipHandler(manager);
 
@@ -140,9 +141,11 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Messaging.Gossip
             var anySignedGossip = new TransactionBroadcast()
                .ToAnySigned(PeerIdHelper.GetPeerId(Guid.NewGuid().ToString()))
                .ToAnySigned(PeerIdHelper.GetPeerId(Guid.NewGuid().ToString()));
-
+            
             channel.WriteInbound(anySignedGossip);
+            bool hasHitHandler = waitHandle.WaitOne(TimeSpan.FromSeconds(1));
             hasHitHandler.Should().BeTrue();
+            waitHandle.Dispose();
         }
 
         [Fact]
