@@ -60,7 +60,6 @@ namespace Catalyst.Cli.IntegrationTests.Commands
                 var node1 = shell.AdvancedShell.GetConnectedNode("node1");
                 node1.Should().NotBeNull("we've just connected it");
 
-
                 var task = Task.Run(() => 
                     shell.AdvancedShell.ParseCommand(
                     "addfile", "-n", "node1", "-f", fileName));
