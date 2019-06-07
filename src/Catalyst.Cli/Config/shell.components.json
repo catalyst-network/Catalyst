@@ -10,7 +10,7 @@
             ]
         },
         {
-            "type": "Catalyst.Cli.Rpc.NodeRpcClientFactory",
+            "type": "Catalyst.Node.Rpc.Client.NodeRpcClientFactory, Catalyst.Node.Rpc.Client",
             "services": [
                 {
                     "type": "Catalyst.Common.Interfaces.Rpc.INodeRpcClientFactory, Catalyst.Common"
@@ -92,7 +92,7 @@
         },
         // Rpc response handlers
         {
-            "type": "Catalyst.Cli.Handlers.GetInfoResponseHandler, Catalyst.Cli",
+            "type": "Catalyst.Node.Rpc.Client.Handlers.GetInfoResponseHandler, Catalyst.Node.Rpc.Client",
             "services": [
                 {
                     "type": "Catalyst.Common.Interfaces.IO.Messaging.IRpcResponseHandler, Catalyst.Common"
@@ -100,7 +100,7 @@
             ]
         },
         {
-            "type": "Catalyst.Cli.Handlers.GetMempoolResponseHandler, Catalyst.Cli",
+            "type": "Catalyst.Node.Rpc.Client.Handlers.GetMempoolResponseHandler, Catalyst.Node.Rpc.Client",
             "services": [
                 {
                     "type": "Catalyst.Common.Interfaces.IO.Messaging.IRpcResponseHandler, Catalyst.Common"
@@ -108,7 +108,7 @@
             ]
         },
         {
-            "type": "Catalyst.Cli.Handlers.GetVersionResponseHandler, Catalyst.Cli",
+            "type": "Catalyst.Node.Rpc.Client.Handlers.GetVersionResponseHandler, Catalyst.Node.Rpc.Client",
             "services": [
                 {
                     "type": "Catalyst.Common.Interfaces.IO.Messaging.IRpcResponseHandler, Catalyst.Common"
@@ -116,7 +116,7 @@
             ]
         },
         {
-            "type": "Catalyst.Cli.Handlers.SignMessageResponseHandler, Catalyst.Cli",
+            "type": "Catalyst.Node.Rpc.Client.Handlers.SignMessageResponseHandler, Catalyst.Node.Rpc.Client",
             "services": [
                 {
                     "type": "Catalyst.Common.Interfaces.IO.Messaging.IRpcResponseHandler, Catalyst.Common"
@@ -124,7 +124,7 @@
             ]
         },
         {
-            "type": "Catalyst.Cli.Handlers.VerifyMessageResponseHandler, Catalyst.Cli",
+            "type": "Catalyst.Node.Rpc.Client.Handlers.VerifyMessageResponseHandler, Catalyst.Node.Rpc.Client",
             "services": [
                 {
                     "type": "Catalyst.Common.Interfaces.IO.Messaging.IRpcResponseHandler, Catalyst.Common"
@@ -132,7 +132,7 @@
             ]
         },
         {
-            "type": "Catalyst.Cli.Handlers.AddFileToDfsResponseHandler, Catalyst.Cli",
+            "type": "Catalyst.Node.Rpc.Client.Handlers.AddFileToDfsResponseHandler, Catalyst.Node.Rpc.Client",
             "services": [
                 {
                     "type": "Catalyst.Common.Interfaces.IO.Messaging.IRpcResponseHandler, Catalyst.Common"
@@ -140,7 +140,7 @@
             ]
         },
         {
-            "type": "Catalyst.Cli.Handlers.TransferFileBytesResponseHandler, Catalyst.Cli",
+            "type": "Catalyst.Node.Rpc.Client.Handlers.TransferFileBytesResponseHandler, Catalyst.Node.Rpc.Client",
             "services": [
                 {
                     "type": "Catalyst.Common.Interfaces.IO.Messaging.IRpcResponseHandler, Catalyst.Common"
@@ -148,7 +148,7 @@
             ]
         },
         {
-            "type": "Catalyst.Cli.Handlers.PeerListResponseHandler, Catalyst.Cli",
+            "type": "Catalyst.Node.Rpc.Client.Handlers.PeerListResponseHandler, Catalyst.Node.Rpc.Client",
             "services": [
                 {
                     "type": "Catalyst.Common.Interfaces.IO.Messaging.IRpcResponseHandler, Catalyst.Common"
@@ -156,7 +156,7 @@
             ]
         },
         {
-            "type": "Catalyst.Cli.Handlers.PeerCountResponseHandler, Catalyst.Cli",
+            "type": "Catalyst.Node.Rpc.Client.Handlers.PeerCountResponseHandler, Catalyst.Node.Rpc.Client",
             "services": [
                 {
                     "type": "Catalyst.Common.Interfaces.IO.Messaging.IRpcResponseHandler, Catalyst.Common"
@@ -164,7 +164,7 @@
             ]
         },
         {
-            "type": "Catalyst.Cli.Handlers.RemovePeerResponseHandler, Catalyst.Cli",
+            "type": "Catalyst.Node.Rpc.Client.Handlers.RemovePeerResponseHandler, Catalyst.Node.Rpc.Client",
             "services": [
                 {
                     "type": "Catalyst.Common.Interfaces.IO.Messaging.IRpcResponseHandler, Catalyst.Common"
@@ -172,7 +172,7 @@
             ]
         },
         {
-            "type": "Catalyst.Cli.Handlers.GetFileFromDfsResponseHandler, Catalyst.Cli",
+            "type": "Catalyst.Node.Rpc.Client.Handlers.GetFileFromDfsResponseHandler, Catalyst.Node.Rpc.Client",
             "services": [
                 {
                     "type": "Catalyst.Common.Interfaces.IO.Messaging.IRpcResponseHandler, Catalyst.Common"
@@ -180,7 +180,7 @@
             ]
         },
         {
-            "type": "Catalyst.Cli.Handlers.TransferFileBytesRequestHandler, Catalyst.Cli",
+            "type": "Catalyst.Node.Rpc.Client.Handlers.TransferFileBytesRequestHandler, Catalyst.Node.Rpc.Client",
             "services": [
                 {
                     "type": "Catalyst.Common.Interfaces.IO.Messaging.IRpcResponseHandler, Catalyst.Common"
