@@ -36,7 +36,7 @@ using Serilog;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Catalyst.Node.Core.UnitTests.Modules.Dfs
+namespace Catalyst.Node.Core.IntegrationTests.Modules.Dfs
 {
     public sealed class IpfsDfsLiveTests : FileSystemBasedTest
     {
