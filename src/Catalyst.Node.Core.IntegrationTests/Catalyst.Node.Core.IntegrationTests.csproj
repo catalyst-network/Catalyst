@@ -2,6 +2,10 @@
     <PropertyGroup>
         <TargetFramework>netcoreapp2.2</TargetFramework>
         <AssemblyName>Catalyst.Node.Core.IntegrationTests</AssemblyName>
+        <Title>James Kirby (nshcore@protonmail.com)</Title>
+        <SignAssembly>true</SignAssembly>
+        <AssemblyOriginatorKeyFile>Catalyst.Node.Core.integrationTests.snk</AssemblyOriginatorKeyFile>
+        <PublicSign>true</PublicSign>
     </PropertyGroup>
     <PropertyGroup>
         <RootNamespace>Catalyst.Node.Core.IntegrationTests</RootNamespace>

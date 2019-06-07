@@ -2,10 +2,13 @@
     <PropertyGroup>
         <TargetFramework>netcoreapp2.2</TargetFramework>
         <Title>Catalyst CLI</Title>
-        <Authors>James Kirkby (james.kirby@atlascity.io)</Authors>
+        <Authors>James Kirby (nshcore@protonmail.com)</Authors>
         <PackageDescription>CLI tool to interact with Catalyst Nodes via RPC</PackageDescription>
         <AssemblyCopyrightAttribute>Copyright © 2019 AtlasCity.io</AssemblyCopyrightAttribute>
         <OutputType>Exe</OutputType>
+        <SignAssembly>true</SignAssembly>
+        <AssemblyOriginatorKeyFile>Ctalyst.Cli.snk</AssemblyOriginatorKeyFile>
+        <PublicSign>true</PublicSign>
     </PropertyGroup>
     <Import Project="../Common.Projects.props" />
     <ItemGroup>

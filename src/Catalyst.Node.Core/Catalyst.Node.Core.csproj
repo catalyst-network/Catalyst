@@ -1,10 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFramework>netcoreapp2.2</TargetFramework>
-        <Title>Catalyst Node</Title>
+        <Title>Catalyst CLI</Title>
         <Authors>James Kirby (nshcore@protonmail.com)</Authors>
-        <PackageDescription>Catalyst Core Node</PackageDescription>
+        <PackageDescription>CLI tool to interact with Catalyst Nodes via RPC</PackageDescription>
+        <AssemblyCopyrightAttribute>Copyright © 2019 AtlasCity.io</AssemblyCopyrightAttribute>
         <OutputType>Exe</OutputType>
+        <SignAssembly>true</SignAssembly>
+        <AssemblyOriginatorKeyFile>Catalyst.Node.Core.snk</AssemblyOriginatorKeyFile>
+        <PublicSign>true</PublicSign>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     </PropertyGroup>
     <Import Project="../Common.Projects.props" />
     <ItemGroup>
