@@ -32,7 +32,6 @@ using Catalyst.Common.IO.Messaging.Handlers;
 using Catalyst.Common.IO.Outbound;
 using Catalyst.Common.P2P;
 using Catalyst.Common.UnitTests.TestUtils;
-using Catalyst.Node.Core.P2P;
 using Catalyst.Node.Core.P2P.Messaging.Gossip;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
@@ -121,7 +120,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
             channel.WriteInbound(anySigned);
 
             gossipMessageHandler.Received(Quantity.Exactly(1))
-               .IncomingGossip(Arg.Any<AnySigned>());
+               .IncomingGossip(Arg.Any<ProtocolMessage>());
         }
 
         [Fact]
@@ -248,7 +247,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
                 _action = action;
             }
 
-            protected override void Handler(IChanneledMessage<AnySigned> message)
+            protected override void Handler(IChanneledMessage<ProtocolMessage> message)
             {
                 _action();
             }
