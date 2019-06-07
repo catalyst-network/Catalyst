@@ -29,10 +29,10 @@ namespace Catalyst.Common.Interfaces.P2P.Messaging.Gossip
     {
         /// <summary>Broadcasts a message.</summary>
         /// <param name="anySigned">Any signed message.</param>
-        void Broadcast(AnySigned anySigned);
+        void Broadcast(ProtocolMessage anySigned);
 
         /// <summary>Handles Incoming gossip.</summary>
         /// <param name="anySigned">Any signed message.</param>
-        void IncomingGossip(AnySigned anySigned);
+        void IncomingGossip(ProtocolMessage anySigned);
     }
 }

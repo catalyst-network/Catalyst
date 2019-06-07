@@ -25,7 +25,7 @@ using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading.Tasks;
-using Catalyst.Common.Interfaces.IO;
+using Catalyst.Common.Interfaces.IO.Inbound;
 using DotNetty.Transport.Channels;
 using Polly;
 using Polly.Retry;
@@ -34,7 +34,7 @@ namespace Catalyst.Common.IO
 {
     internal sealed class Bootstrap
         : DotNetty.Transport.Bootstrapping.Bootstrap,
-            IBootstrap
+            IServerBootstrap
     {
         private readonly AsyncRetryPolicy _exponentialBackOffRetryPolicy;
 

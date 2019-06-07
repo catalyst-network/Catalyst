@@ -29,6 +29,8 @@ using System.Reflection;
 using Catalyst.Common.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
+using Catalyst.Common.Interfaces.IO.Messaging.Gossip;
+using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Messaging.Handlers;
 using Catalyst.Protocol.Common;
@@ -44,25 +46,26 @@ namespace Catalyst.Node.Core.P2P
             IPeerService
     {
         public IPeerDiscovery Discovery { get; }
-        public IObservable<IChanneledMessage<AnySigned>> MessageStream { get; }
+        public IObservable<IChanneledMessage<ProtocolMessage>> MessageStream { get; }
 
         public PeerService(IPeerSettings settings,
             IPeerDiscovery peerDiscovery,
             IEnumerable<IP2PMessageHandler> messageHandlers,
             ICorrelationManager correlationManager,
-            IGossipManager gossipManager)
+            IGossipManager gossipManager,
+            IKeySigner keySigner)
             : base(Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType))
         {
             Discovery = peerDiscovery;
             var peerServiceHandler = new ObservableServiceHandler(Logger);
-            var gossipHandler = new GossipHandler(gossipManager);
-
+            
             Bootstrap(new InboundChannelInitializerBase<IChannel>(channel => { },
                 new List<IChannelHandler>
                 {
                     new ProtoDatagramHandler(),
                     new CorrelationHandler(correlationManager),
-                    gossipHandler, 
+                    new GossipHandler(gossipManager),
+                    new SignatureHandler(keySigner),
                     peerServiceHandler
                 }
             ), settings.BindAddress, settings.Port);

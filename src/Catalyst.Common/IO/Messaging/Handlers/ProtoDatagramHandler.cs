@@ -41,7 +41,7 @@ namespace Catalyst.Common.IO.Messaging.Handlers
                 memoryStream.Write(packet.Content.Array, 0, packet.Content.ReadableBytes);
                 memoryStream.Seek(0, SeekOrigin.Begin);
 
-                var message = AnySigned.Parser.ParseFrom(memoryStream);
+                var message = ProtocolMessage.Parser.ParseFrom(memoryStream);
                 context.FireChannelRead(message);
             }
         }

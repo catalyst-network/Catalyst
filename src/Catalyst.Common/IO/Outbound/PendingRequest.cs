@@ -29,7 +29,7 @@ namespace Catalyst.Common.IO.Outbound
 {
     public class PendingRequest
     {
-        public AnySigned Content { get; set; }
+        public ProtocolMessage Content { get; set; }
         public IPeerIdentifier Recipient { get; set; }
         public DateTimeOffset SentAt { get; set; }
     }
