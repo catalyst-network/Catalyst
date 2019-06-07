@@ -22,19 +22,32 @@
 #endregion
 
 using System;
-using DotNetty.Transport.Channels;
+using System.Net;
+using System.Security.Cryptography.X509Certificates;
+using Catalyst.Common.Interfaces.IO.Inbound;
+using Catalyst.Protocol.Common;
+using IChannel = DotNetty.Transport.Channels.IChannel;
 
 namespace Catalyst.Common.Interfaces.IO
 {
-    public interface ISocket : IDisposable
+    public interface ISocket
     {
         IChannel Channel { get; }
     }
 
-    public interface IChannelFactory<out TChannel> where TChannel : IChannel
+    public interface IObservableSocket : ISocket, IDisposable
     {
-        TChannel BuildChannel();
+        IObservable<IChanneledMessage<ProtocolMessage>> MessageStream { get; }
     }
 
-    public interface IUdpChannelFactory : IChannelFactory<IChannel> { }
+    public interface IChannelFactory
+    {
+        IObservableSocket BuildChannel(IPAddress targetAddress = null,
+            int targetPort = 0,
+            X509Certificate2 certificate = null);
+    }
+
+    public interface IUdpServerChannelFactory : IChannelFactory { }
+
+    public interface IUdpClientChannelFactory : IChannelFactory { }
 }

@@ -37,19 +37,14 @@ namespace Catalyst.Node.Core.P2P
 {
     public sealed class PeerClient : UdpClient, IPeerClient
     {
-        public PeerClient(IUdpChannelFactory channelFactory, IPeerIdentifier peerIdentifier) 
-            : this(channelFactory, peerIdentifier.IpEndPoint) { }
+        public PeerClient(IUdpClientChannelFactory serverChannelFactory,
+            IPeerIdentifier peerIdentifier) 
+            : this(serverChannelFactory, peerIdentifier.IpEndPoint) { }
         
-        public PeerClient(IUdpChannelFactory channelFactory, IPEndPoint ipEndPoint)
-            : base(channelFactory, Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType))
+        public PeerClient(IUdpClientChannelFactory serverChannelFactory, IPEndPoint ipEndPoint)
+            : base(serverChannelFactory, Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType))
         {
-            Bootstrap(new OutboundChannelInitializerBase<IChannel>(
-                new List<IChannelHandler>
-                {
-                    new ProtoDatagramHandler()
-                },
-                ipEndPoint.Address
-            ), ipEndPoint);
+            Channel = ChannelFactory.BuildChannel(ipEndPoint.Address).Channel;
         }
 
         public Task SendMessageAsync(IByteBufferHolder datagramPacket)

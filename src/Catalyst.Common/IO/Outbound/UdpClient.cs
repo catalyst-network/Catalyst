@@ -33,21 +33,8 @@ namespace Catalyst.Common.IO.Outbound
 {
     public class UdpClient : ClientBase, IUdpClient
     {
-        protected UdpClient(IUdpChannelFactory channelFactory, ILogger logger) 
-            : base(channelFactory, logger) { }
-
-        protected sealed override void Bootstrap(IChannelHandler channelHandler, IPEndPoint ipEndPoint)
-        {
-            Channel = new Bootstrap()
-               .Group(WorkerEventLoop)
-               .ChannelFactory(ChannelFactory.BuildChannel)
-               .Option(ChannelOption.SoBroadcast, true)
-               .Handler(new LoggingHandler(LogLevel.DEBUG))
-               .Handler(channelHandler)
-               .BindAsync(ipEndPoint.Address, IPEndPoint.MinPort)
-               .GetAwaiter()
-               .GetResult();
-        }
+        protected UdpClient(IUdpClientChannelFactory serverChannelFactory, ILogger logger) 
+            : base(serverChannelFactory, logger) { }
     }
 }
 

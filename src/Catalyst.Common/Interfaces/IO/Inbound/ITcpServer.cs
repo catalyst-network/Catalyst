@@ -27,5 +27,5 @@ namespace Catalyst.Common.Interfaces.IO.Inbound
 {
     internal interface ITcpServer : ISocketServer { }
 
-    public interface ITcpServerChannelFactory : IChannelFactory<IServerChannel> { }
+    public interface ITcpServerChannelFactory : IChannelFactory { }
 }

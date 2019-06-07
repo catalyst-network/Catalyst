@@ -30,29 +30,10 @@ using Serilog;
 
 namespace Catalyst.Common.IO.Inbound
 {
-    public class UdpServer : SocketBase<IChannel>, IUdpServer
+    public class UdpServer : SocketBase, IUdpServer
     {
-        protected UdpServer(IUdpChannelFactory channelFactory, ILogger logger)
-            : base(channelFactory, logger) { }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="channelInitializer"></param>
-        /// <param name="listenAddress"></param>
-        /// <param name="port"></param>
-        /// <returns></returns>
-        public void Bootstrap(IChannelHandler channelInitializer, IPAddress listenAddress, int port)
-        {
-            Channel = new Bootstrap()
-               .Group(WorkerEventLoop)
-               .ChannelFactory(ChannelFactory.BuildChannel)
-               .Option(ChannelOption.SoBroadcast, true)
-               .Handler(new LoggingHandler(LogLevel.DEBUG))
-               .Handler(channelInitializer)
-               .BindAsync(listenAddress, port)
-               .GetAwaiter()
-               .GetResult();
-        }
+        protected UdpServer(IUdpServerChannelFactory serverChannelFactory, 
+            ILogger logger)
+            : base(serverChannelFactory, logger) { }
     }
 }

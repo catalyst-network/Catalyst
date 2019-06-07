@@ -21,12 +21,32 @@
 
 #endregion
 
-using System.Security.Cryptography.X509Certificates;
+using System;
+using Catalyst.Common.Interfaces.IO;
+using Catalyst.Common.Interfaces.IO.Inbound;
+using Catalyst.Protocol.Common;
+using Dawn;
+using DotNetty.Transport.Channels;
 
-namespace Catalyst.Common.Interfaces.Rpc
+namespace Catalyst.Common.IO
 {
-    public interface INodeRpcClientFactory
+    public class ObservableSocket : IObservableSocket
     {
-        INodeRpcClient GetClient(X509Certificate2 certificate, IRpcNodeConfig nodeConfig);
+        public ObservableSocket(IObservable<IChanneledMessage<ProtocolMessage>> messageStream, IChannel channel)
+        {
+            Guard.Argument(messageStream, nameof(messageStream)).NotNull();
+
+            MessageStream = messageStream;
+            Channel = channel;
+        }
+
+        public IChannel Channel { get; }
+        public IObservable<IChanneledMessage<ProtocolMessage>> MessageStream { get; }
+
+        public void Dispose()
+        {
+            Channel?.CloseAsync();
+        }
     }
+
 }

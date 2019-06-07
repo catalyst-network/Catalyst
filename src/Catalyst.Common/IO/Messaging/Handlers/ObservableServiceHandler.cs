@@ -24,6 +24,7 @@
 using System;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
+using System.Reflection;
 using Catalyst.Common.Util;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
@@ -48,9 +49,9 @@ namespace Catalyst.Common.IO.Messaging.Handlers
         private readonly ReplaySubject<IChanneledMessage<ProtocolMessage>> _messageSubject 
             = new ReplaySubject<IChanneledMessage<ProtocolMessage>>(0);
         
-        public ObservableServiceHandler(ILogger logger)
+        public ObservableServiceHandler()
         {
-            _logger = logger;
+            _logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
         }
 
         /// <summary>

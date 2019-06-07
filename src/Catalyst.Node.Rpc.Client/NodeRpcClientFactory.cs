@@ -33,7 +33,7 @@ namespace Catalyst.Node.Rpc.Client
         private readonly ITcpClientChannelFactory _channelFactory;
         public NodeRpcClientFactory(ITcpClientChannelFactory channelFactory) { _channelFactory = channelFactory; }
 
-        public INodeRpcClient GetClient(X509Certificate certificate, IRpcNodeConfig nodeConfig)
+        public INodeRpcClient GetClient(X509Certificate2 certificate, IRpcNodeConfig nodeConfig)
         {
             return new NodeRpcClient(_channelFactory, certificate, nodeConfig);
         }

@@ -16,6 +16,7 @@
         <Folder Include="Rpc" />
     </ItemGroup>
     <ItemGroup>
+        <ProjectReference Include="..\Catalyst.Common.UnitTests\Catalyst.Common.UnitTests.csproj" />
         <ProjectReference Include="..\Catalyst.Node.Rpc.Client\Catalyst.Node.Rpc.Client.csproj" />
         <ProjectReference Include="..\Catalyst.TestUtils\Catalyst.TestUtils.csproj" />
         <ProjectReference Include="..\Catalyst.Cli\Catalyst.Cli.csproj" />

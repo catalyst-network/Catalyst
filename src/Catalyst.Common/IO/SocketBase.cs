@@ -30,15 +30,15 @@ using Serilog;
 
 namespace Catalyst.Common.IO
 {
-    public class SocketBase<TChannel> : ISocket where TChannel : IChannel
+    public class SocketBase : ISocket
     {
-        protected readonly IChannelFactory<TChannel> ChannelFactory;
+        protected readonly IChannelFactory ChannelFactory;
         protected readonly ILogger Logger;
         protected readonly IEventLoopGroup WorkerEventLoop;
 
         public IChannel Channel { get; protected set; }
 
-        protected SocketBase(IChannelFactory<TChannel> channelFactory, ILogger logger)
+        protected SocketBase(IChannelFactory channelFactory, ILogger logger)
         {
             ChannelFactory = channelFactory;
             Logger = logger;

@@ -49,24 +49,11 @@ namespace Catalyst.Node.Rpc.Client
         /// <param name="certificate"></param>
         /// <param name="nodeConfig">rpc node config</param>
         public NodeRpcClient(ITcpClientChannelFactory channelFactory,
-            X509Certificate certificate, 
+            X509Certificate2 certificate, 
             IRpcNodeConfig nodeConfig) 
             : base(channelFactory, Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType))
         {
-            IList<IChannelHandler> channelHandlers = new List<IChannelHandler>
-            {
-                new ProtobufVarint32LengthFieldPrepender(),
-                new ProtobufEncoder(),
-                new ProtobufVarint32FrameDecoder(),
-                new ProtobufDecoder(ProtocolMessage.Parser)
-            };
-
-            Bootstrap(
-                new OutboundChannelInitializerBase<ISocketChannel>(channelHandlers,
-                    nodeConfig.HostAddress,
-                    certificate
-                ), EndpointBuilder.BuildNewEndPoint(nodeConfig.HostAddress, nodeConfig.Port)
-            );
+            Channel = channelFactory.BuildChannel(nodeConfig.HostAddress, nodeConfig.Port, certificate).Channel;
         }
     }
 }

@@ -27,15 +27,14 @@ using Catalyst.Common.Interfaces.IO.Outbound;
 using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;
 using Serilog;
+using IChannel = DotNetty.Transport.Channels.IChannel;
 
 namespace Catalyst.Common.IO.Outbound
 {
-    public abstract class ClientBase : SocketBase<IChannel>, ISocketClient
+    public abstract class ClientBase : SocketBase, ISocketClient
     {
-        protected ClientBase(IChannelFactory<IChannel> channelFactory, ILogger logger) 
+        protected ClientBase(IChannelFactory channelFactory, ILogger logger) 
             : base(channelFactory, logger) { }
-
-        protected abstract void Bootstrap(IChannelHandler channelHandler, IPEndPoint ipEndPoint);
 
         public void SendMessage(ProtocolMessage message)
         {

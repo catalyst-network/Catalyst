@@ -1,4 +1,3 @@
-
 #region LICENSE
 
 /**
@@ -23,26 +22,24 @@
 #endregion
 
 using System;
-using System.IO;
-using System.Linq;
+using System.Collections.Generic;
 using System.Net;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
-using Autofac;
-using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
+using Catalyst.Common.Interfaces.IO;
+using Catalyst.Common.Interfaces.IO.Inbound;
+using Catalyst.Common.Interfaces.IO.Messaging;
+using Catalyst.Common.Interfaces.IO.Messaging.Gossip;
+using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.IO.Inbound;
-using Catalyst.Common.IO.Messaging;
-using Catalyst.Common.P2P;
+using Catalyst.Common.IO;
 using Catalyst.Common.UnitTests.TestUtils;
-using Catalyst.Common.Util;
 using Catalyst.Node.Core.P2P;
-using Catalyst.Node.Core.P2P.Messaging.Handlers;
+using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
-using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
-using FluentAssertions;
+using DotNetty.Transport.Channels.Embedded;
 using Microsoft.Extensions.Configuration;
 using NSubstitute;
 using Serilog;
@@ -51,134 +48,143 @@ using Xunit.Abstractions;
 
 namespace Catalyst.Node.Core.IntegrationTests.P2P
 {
-    public sealed class PeerServiceIntegrationTest : ConfigFileBasedTest
+    public sealed class PeerServiceIntegrationTest : SelfAwareTestBase, IDisposable
     {
         private readonly Guid _guid;
         private readonly ILogger _logger;
         private readonly IPeerIdentifier _pid;
-        private readonly IContainer _container;
         private readonly PingRequest _pingRequest;
         private readonly IConfigurationRoot _config;
+        private readonly IUdpServerChannelFactory _udpServerServerChannelFactory;
+        private readonly IUdpServerChannelFactory _udpClientChannelFactory;
+        private readonly IPeerSettings _peerSettings;
+        private readonly IKeySigner _keySigner;
+        private readonly IPeerDiscovery _peerDiscovery;
+        private readonly List<IP2PMessageHandler> _p2PMessageHandlers;
+        private readonly ICorrelationManager _correlationManager;
+        private readonly IGossipManager _gossipManager;
+        private readonly IChannel _serverChannel;
+        private readonly IChannel _clientChannel;
+        private PeerService _peerService;
 
         public PeerServiceIntegrationTest(ITestOutputHelper output) : base(output)
         {
-            _config = SocketPortHelper.AlterConfigurationToGetUniquePort(new ConfigurationBuilder()
-               .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile))
-               .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile))
-               .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Network.Test)))
-               .Build(), CurrentTestName);
             _pid = PeerIdentifierHelper.GetPeerIdentifier("im_a_key");
             _guid = Guid.NewGuid();
             _logger = Substitute.For<ILogger>();
             _pingRequest = new PingRequest();
 
-            ConfigureContainerBuilder(_config, true, true);
-            
-            _container = ContainerBuilder.Build();
+            _serverChannel = GetChannel($"Server:{CurrentTestName}");
+            _udpServerServerChannelFactory = GetUdpChannelFactory(_serverChannel);
+
+            _clientChannel = GetChannel($"Client:{CurrentTestName}");
+            _udpClientChannelFactory = GetUdpChannelFactory(_clientChannel);
+
+            _keySigner = Substitute.For<IKeySigner>();
+            _peerSettings = Substitute.For<IPeerSettings>();
+            _peerSettings.BindAddress.Returns(IPAddress.Parse("127.0.0.1"));
+            _peerSettings.Port.Returns(1234);
+
+            _peerDiscovery = Substitute.For<IPeerDiscovery>();
+            _p2PMessageHandlers = new List<IP2PMessageHandler>();
+            _correlationManager = Substitute.For<ICorrelationManager>();
+            _gossipManager = Substitute.For<IGossipManager>();
+        }
+
+        private IChannel GetChannel(string channelName)
+        {
+            var channelId = Substitute.For<IChannelId>();
+            channelId.AsLongText().Returns(channelName);
+            return new EmbeddedChannel(channelId);
+        }
+
+        public IUdpServerChannelFactory GetUdpChannelFactory(IChannel channel)
+        {
+            var udpChannelFactory = Substitute.For<IUdpServerChannelFactory>();
+            var observableSocket =
+                new ObservableSocket(Observable.Never<IChanneledMessage<ProtocolMessage>>(), channel);
+            udpChannelFactory.BuildChannel().Returns(observableSocket);
+            return udpChannelFactory;
         }
 
         [Fact]
-        public void DoesResolveIPeerServiceCorrectly()
+        public async Task Can_receive_incoming_ping_responses()
         {
-            using (var scope = _container.BeginLifetimeScope(CurrentTestName))
-            {
-                var peerService = _container.Resolve<IPeerService>();
-                Assert.NotNull(peerService);
-                peerService.Should().BeOfType(typeof(PeerService));
-                peerService.Dispose();
-            }
-        }
+            var observer = new TestMessageHandler<PingResponse>(_logger);
+            _p2PMessageHandlers.Add(observer);
 
-        [Fact]
-        public async Task CanReceiveEventsFromSubscribedStream()
-        {
-            using (_container.BeginLifetimeScope(CurrentTestName))
-            {
-                var fakeContext = Substitute.For<IChannelHandlerContext>();
-                var fakeChannel = Substitute.For<IChannel>();
-                fakeContext.Channel.Returns(fakeChannel);
-                var channeledAny = new ProtocolMessageDto(fakeContext, _pingRequest.ToAnySigned(_pid.PeerId, _guid));
-                var observableStream = new[] {channeledAny}.ToObservable();
+            _peerService = new PeerService(_udpServerServerChannelFactory,
+                _peerDiscovery,
+                _p2PMessageHandlers, 
+                _logger);
+
+            var fakeContext = Substitute.For<IChannelHandlerContext>();
+            fakeContext.Channel.Returns(_serverChannel);
+
+            var protocolMessage = new PingResponse().ToAnySigned(_pid.PeerId, _guid);
+
+            await _serverChannel.WriteAndFlushAsync(protocolMessage);
+
+            await _peerService.MessageStream.WaitForEndOfDelayedStreamOnTaskPoolScheduler();
             
-                var handler = new PingRequestHandler(_pid, _logger);
-                handler.StartObserving(observableStream);
-
-                await observableStream.WaitForEndOfDelayedStreamOnTaskPoolScheduler();
-
-                await fakeContext.Channel.ReceivedWithAnyArgs(1)
-                   .WriteAndFlushAsync(new PingResponse().ToAnySigned(_pid.PeerId, _guid));
-            }
+            observer.SubstituteObserver.Received().OnNext(Arg.Any<PingResponse>());
         }
 
-        [Fact(Skip = "build hanging, refactoring is being done")]
-        [Trait(Traits.TestType, Traits.IntegrationTest)]
-        public async Task CanReceivePingRequests()
+        //[Fact]
+        //[Trait(Traits.TestType, Traits.IntegrationTest)]
+        //public async Task CanReceivePingRequests()
+        //{
+        //        var targetHost = new IPEndPoint(peerSettings.BindAddress, peerSettings.Port);
+
+        //        var datagramEnvelope = new MessageFactory().GetDatagramMessage(new MessageDto(
+        //                new PingRequest(),
+        //                MessageTypes.Ask,
+        //                new PeerIdentifier(ByteUtil.InitialiseEmptyByteArray(20), peerSettings.BindAddress,
+        //                    peerSettings.Port),
+        //                new PeerIdentifier(ByteUtil.InitialiseEmptyByteArray(20), peerSettings.BindAddress,
+        //                    peerSettings.Port)
+        //            ),
+        //            Guid.NewGuid()
+        //        );
+
+        //        var peerClient = new PeerClient(_udpClientChannelFactory, targetHost);
+        //        peerClient.SendMessage(datagramEnvelope);
+        //        await peerService.MessageStream.WaitForItemsOnDelayedStreamOnTaskPoolScheduler();
+                
+        //        serverObserver.Received.LastOrDefault().Should().NotBeNull();
+        //        serverObserver.Received.Last().Payload.TypeUrl.Should()
+        //           .Be(PingRequest.Descriptor.ShortenedFullName());
+        //        peerService.Dispose();
+        //}
+
+        //[Fact]
+        //[Trait(Traits.TestType, Traits.IntegrationTest)]
+        //public async Task CanReceiveNeighbourRequests()
+        //{
+        //    var peerSettings = new PeerSettings(_config);
+        //    var targetHost = new IPEndPoint(peerSettings.BindAddress, peerSettings.Port);
+
+        //    var datagramEnvelope = new MessageFactory().GetDatagramMessage(new MessageDto(
+        //            new PeerNeighborsResponse(),
+        //            MessageTypes.Tell,
+        //            new PeerIdentifier(ByteUtil.InitialiseEmptyByteArray(20), peerSettings.BindAddress, peerSettings.Port),
+        //            new PeerIdentifier(ByteUtil.InitialiseEmptyByteArray(20), peerSettings.BindAddress, peerSettings.Port)
+        //        ),
+        //        Guid.NewGuid()
+        //    );
+
+        //    var peerClient = new PeerClient(_udpClientChannelFactory, targetHost);
+        //    peerClient.SendMessage(datagramEnvelope);
+        //    await peerService.MessageStream.WaitForItemsOnDelayedStreamOnTaskPoolScheduler();
+
+        //    serverObserver.Received.FirstOrDefault().Should().NotBeNull();
+        //    serverObserver.Received.First().Payload.TypeUrl.Should().Be(PeerNeighborsResponse.Descriptor.ShortenedFullName());
+        //    peerService.Dispose();
+        //}
+
+        public void Dispose()
         {
-            using (_container.BeginLifetimeScope(CurrentTestName))
-            {
-                var peerService = _container.Resolve<IPeerService>();
-                var serverObserver = new ProtocolMessageObserver(0, _logger);
-                var peerClient = _container.Resolve<IPeerClient>();
-
-                using (peerService.MessageStream.Subscribe(serverObserver))
-                {
-                    var peerSettings = _container.Resolve<IPeerSettings>();
-                    var targetHost = new IPEndPoint(peerSettings.BindAddress, peerSettings.Port);
-
-                    var datagramEnvelope = new MessageFactory().GetDatagramMessage(new MessageDto(
-                            new PingRequest(),
-                            MessageTypes.Ask,
-                            new PeerIdentifier(ByteUtil.InitialiseEmptyByteArray(20), peerSettings.BindAddress,
-                                peerSettings.Port),
-                            new PeerIdentifier(ByteUtil.InitialiseEmptyByteArray(20), peerSettings.BindAddress,
-                                peerSettings.Port)
-                        ),
-                        Guid.NewGuid()
-                    );
-
-                    await peerClient.SendMessageAsync(datagramEnvelope);
-                    await peerService.MessageStream.WaitForItemsOnDelayedStreamOnTaskPoolScheduler();
-                    
-                    serverObserver.Received.LastOrDefault().Should().NotBeNull();
-                    serverObserver.Received.Last().Payload.TypeUrl.Should()
-                       .Be(PingRequest.Descriptor.ShortenedFullName());
-                }
-            }
-        }
-
-        [Fact(Skip = "build hanging, refactoring is being done")]
-        [Trait(Traits.TestType, Traits.IntegrationTest)]
-        public async Task CanReceiveNeighbourRequests()
-        {
-            using (_container.BeginLifetimeScope(CurrentTestName))
-            {
-                var peerService = _container.Resolve<IPeerService>();
-                var peerClient = _container.Resolve<IPeerClient>();
-
-                var serverObserver = new ProtocolMessageObserver(0, _logger);
-
-                using (peerService.MessageStream.Subscribe(serverObserver))
-                {
-                    var peerSettings = new PeerSettings(_config);
-                    var targetHost = new IPEndPoint(peerSettings.BindAddress, peerSettings.Port);
-
-                    var datagramEnvelope = new MessageFactory().GetDatagramMessage(new MessageDto(
-                            new PeerNeighborsResponse(),
-                            MessageTypes.Tell,
-                            new PeerIdentifier(ByteUtil.InitialiseEmptyByteArray(20), peerSettings.BindAddress, peerSettings.Port),
-                            new PeerIdentifier(ByteUtil.InitialiseEmptyByteArray(20), peerSettings.BindAddress, peerSettings.Port)
-                        ),
-                        Guid.NewGuid()
-                    );
-
-                    await peerClient.SendMessageAsync(datagramEnvelope);
-                    await peerService.MessageStream.WaitForItemsOnDelayedStreamOnTaskPoolScheduler();
-
-                    serverObserver.Received.FirstOrDefault().Should().NotBeNull();
-                    serverObserver.Received.First().Payload.TypeUrl.Should().Be(PeerNeighborsResponse.Descriptor.ShortenedFullName());
-                    peerService.Dispose();
-                }
-            }
+            _peerService?.Dispose();
         }
     }
 }

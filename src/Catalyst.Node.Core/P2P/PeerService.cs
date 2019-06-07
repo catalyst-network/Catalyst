@@ -44,30 +44,17 @@ namespace Catalyst.Node.Core.P2P
         public IPeerDiscovery Discovery { get; }
         public IObservable<IChanneledMessage<ProtocolMessage>> MessageStream { get; }
 
-        public PeerService(IUdpChannelFactory channelFactory,
-            IPeerSettings settings,
+        public PeerService(IUdpServerChannelFactory serverChannelFactory,
             IPeerDiscovery peerDiscovery,
             IEnumerable<IP2PMessageHandler> messageHandlers,
-            ICorrelationManager correlationManager,
-            IGossipManager gossipManager,
-            IKeySigner keySigner)
-            : base(channelFactory, Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType))
+            ILogger logger)
+            : base(serverChannelFactory, logger)
         {
             Discovery = peerDiscovery;
-            var peerServiceHandler = new ObservableServiceHandler(Logger);
-            
-            Bootstrap(new InboundChannelInitializerBase<IChannel>(
-                new List<IChannelHandler>
-                {
-                    new ProtoDatagramHandler(),
-                    new CorrelationHandler(correlationManager),
-                    new GossipHandler(gossipManager),
-                    new SignatureHandler(keySigner),
-                    peerServiceHandler
-                }
-            ), settings.BindAddress, settings.Port);
-            
-            MessageStream = peerServiceHandler.MessageStream;
+            var observableChannel = ChannelFactory.BuildChannel();
+            Channel = observableChannel.Channel;
+
+            MessageStream = observableChannel.MessageStream;
             messageHandlers.ToList()
                .ForEach(h => h.StartObserving(MessageStream));
 

@@ -67,12 +67,12 @@ namespace Catalyst.Cli.IntegrationTests.Commands
             channel.Active.Returns(true);
 
             NodeRpcClient = Substitute.For<INodeRpcClient>();
-            NodeRpcClient.Channel.Returns(channel);
-            NodeRpcClient.Channel.RemoteAddress.Returns(new IPEndPoint(IPAddress.Loopback, IPEndPoint.MaxPort));
+            NodeRpcClient.Returns(channel);
+            NodeRpcClient.RemoteAddress.Returns(new IPEndPoint(IPAddress.Loopback, IPEndPoint.MaxPort));
 
             var nodeRpcClientFactory = Substitute.For<INodeRpcClientFactory>();
             nodeRpcClientFactory
-               .GetClient(Arg.Any<X509Certificate>(), Arg.Is<IRpcNodeConfig>(c => c.NodeId == "node1"))
+               .GetClient(Arg.Any<X509Certificate2>(), Arg.Is<IRpcNodeConfig>(c => c.NodeId == "node1"))
                .Returns(NodeRpcClient);
 
             ConfigureContainerBuilder(config);

@@ -72,7 +72,7 @@ namespace Catalyst.Cli.Commands
             IDownloadFileInformation fileTransfer = new DownloadFileTransferInformation(
                 _peerIdentifier,
                 new PeerIdentifier(messageDto.PeerId),
-                node.Channel,
+                node,
                 messageDto.CorrelationId.ToGuid(),
                 opts.FileOutput,
                 0

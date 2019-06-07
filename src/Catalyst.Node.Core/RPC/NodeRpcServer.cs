@@ -64,22 +64,9 @@ namespace Catalyst.Node.Core.RPC
             MessageStream = observableServiceHandler.MessageStream;
             
             requestHandlers.ToList().ForEach(h => h.StartObserving(MessageStream));
-           
-            Bootstrap(
-                new InboundChannelInitializerBase<ISocketChannel>(
-                    new List<IChannelHandler>
-                    {
-                        new ProtobufVarint32FrameDecoder(),
-                        new ProtobufDecoder(ProtocolMessage.Parser),
-                        new ProtobufVarint32LengthFieldPrepender(),
-                        new ProtobufEncoder(),
-                        new CorrelationHandler(correlationManager),
-                        observableServiceHandler
-                    },
-                    _certificate
-                ),
-                Settings.BindAddress, Settings.Port
-            );
+
+            var observableSocket = ChannelFactory.BuildChannel(certificate: _certificate);
+            Channel = observableSocket.Channel;
         }
 
         /// <summary>
