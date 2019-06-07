@@ -30,6 +30,6 @@ namespace Catalyst.Common.Interfaces.P2P
 {
     public interface IPeerClient : IDisposable, ISocketClient
     {
-        Task SendMessage(IByteBufferHolder datagramPacket);
+        Task SendMessageAsync(IByteBufferHolder datagramPacket);
     }
 }
