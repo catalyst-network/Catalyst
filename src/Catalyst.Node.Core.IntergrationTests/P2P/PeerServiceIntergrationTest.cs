@@ -40,7 +40,6 @@ using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Common.Util;
 using Catalyst.Node.Core.P2P;
 using Catalyst.Node.Core.P2P.Messaging.Handlers;
-//using Catalyst.Node.Core.UnitTests.TestUtils;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
 using Catalyst.TestUtils;
@@ -118,7 +117,7 @@ namespace Catalyst.Node.Core.IntergrationTests.P2P
             }
         }
 
-        [Fact]
+        [Fact(Skip = "hold")]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public async Task CanReceivePingRequests()
         {
@@ -145,14 +144,6 @@ namespace Catalyst.Node.Core.IntergrationTests.P2P
 
                     _peerClientFixture.UniversalPeerClient.SendMessage(datagramEnvelope);
 
-                    //using (var peerClient = new PeerClient(targetHost))
-                    //{
-                    //    peerClient.SendMessage(datagramEnvelope);
-                    //}
-
-                    //await peerService.MessageStream.WaitForItemsOnDelayedStreamOnTaskPoolScheduler();
-
-
                     var tasks = new IChanneledMessageStreamer<ProtocolMessage>[]
                         {
                             peerService
@@ -171,7 +162,7 @@ namespace Catalyst.Node.Core.IntergrationTests.P2P
             }
         }
 
-        [Fact]
+        [Fact(Skip = "hold")]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public async Task CanReceiveNeighbourRequests()
         {
@@ -199,17 +190,12 @@ namespace Catalyst.Node.Core.IntergrationTests.P2P
 
                     _peerClientFixture.UniversalPeerClient.SendMessage(datagramEnvelope);
 
-
-                    //peerClient.SendMessage(datagramEnvelope);
-
-                    //await peerService.MessageStream.WaitForItemsOnDelayedStreamOnTaskPoolScheduler();
-
                     var tasks = new IChanneledMessageStreamer<ProtocolMessage>[]
                         {
                             peerService
                         }
                        .Select(async p =>
-                            await p.MessageStream.FirstAsync(a => a != null && a.Payload != NullObjects.ProtocolMessage))
+                            await p.MessageStream.FirstAsync(a => a != null && a.Payload.Equals(NullObjects.ProtocolMessage) == false))
                        .ToArray();
 
                     Task.WaitAll(tasks, TimeSpan.FromMilliseconds(2500));
@@ -222,7 +208,7 @@ namespace Catalyst.Node.Core.IntergrationTests.P2P
             }
         }
 
-        [Fact]
+        [Fact(Skip = "hold")]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void PeerChallenge_PeerIdentifiers_Expect_To_Succeed_Valid_IP_Port_PublicKey()
         {
@@ -280,13 +266,10 @@ namespace Catalyst.Node.Core.IntergrationTests.P2P
             var targetHost = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 8827);
 
             UniversalPeerClient = new PeerClient(targetHost);
-
-            // ... initialize data in the test database ...
         }
 
         public void Dispose()
         {
-            // ... clean up test data from the database ...
             UniversalPeerClient.Dispose();
         }
 

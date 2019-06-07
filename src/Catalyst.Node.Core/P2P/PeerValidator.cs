@@ -34,7 +34,6 @@ using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.P2P;
 using Catalyst.Common.Util;
-using Catalyst.Node.Core.P2P.Messaging.Handlers;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
 using Serilog;
@@ -80,7 +79,7 @@ namespace Catalyst.Node.Core.P2P
 
         public void OnNext(IChanneledMessage<ProtocolMessage> response)
         {
-            if (response.Payload == NullObjects.ProtocolMessage) //fix this
+            if (response.Payload.Equals(NullObjects.ProtocolMessage)) 
             {
                 return;
             }
@@ -102,12 +101,7 @@ namespace Catalyst.Node.Core.P2P
                     Guid.NewGuid()
                 );
 
-                //using (var peerClient = new PeerClient(_hostEndPoint))
-                //{
-                //    peerClient.SendMessage(datagramEnvelope);
-                //}
-
-                ((PeerClient)_peerClient).SendMessage(datagramEnvelope);
+                ((PeerClient) _peerClient).SendMessage(datagramEnvelope);
 
                 var tasks = new IChanneledMessageStreamer<ProtocolMessage>[]
                     {
