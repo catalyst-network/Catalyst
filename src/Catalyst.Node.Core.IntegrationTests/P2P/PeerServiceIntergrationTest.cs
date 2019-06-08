@@ -24,23 +24,20 @@
 using System;
 using System.Collections.Generic;
 using System.Net;
-using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
-using Catalyst.Common.Interfaces.IO.Messaging.Gossip;
-using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.IO;
+using Catalyst.Common.IO.Messaging.Handlers;
 using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Node.Core.P2P;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Embedded;
-using Microsoft.Extensions.Configuration;
+using FluentAssertions;
 using NSubstitute;
 using Serilog;
 using Xunit;
@@ -48,23 +45,43 @@ using Xunit.Abstractions;
 
 namespace Catalyst.Node.Core.IntegrationTests.P2P
 {
+    public sealed class EmbeddedObservableChannel : IObservableSocket
+    {
+        private readonly EmbeddedChannel _channel;
+
+        public EmbeddedObservableChannel(string channelName)
+        {
+            var channelId = Substitute.For<IChannelId>();
+            channelId.AsLongText().Returns(channelName);
+            channelId.AsShortText().Returns(channelName);
+
+            var observableServiceHandler = new ObservableServiceHandler();
+            var embeddedChannel = new EmbeddedChannel(channelId, false, true, observableServiceHandler);
+            _channel = embeddedChannel;
+            MessageStream = observableServiceHandler.MessageStream;
+        }
+
+        public async Task SimulateReceivingMessages(params object[] messages)
+        {
+            await Task.Run(() => _channel.WriteInbound(messages));
+            await MessageStream.WaitForItemsOnDelayedStreamOnTaskPoolScheduler();
+        }
+            
+        public void Dispose() { Channel.CloseAsync().GetAwaiter().GetResult(); }
+        public IChannel Channel => _channel;
+        public IObservable<IChanneledMessage<ProtocolMessage>> MessageStream { get; }
+    }
+
     public sealed class PeerServiceIntegrationTest : SelfAwareTestBase, IDisposable
     {
         private readonly Guid _guid;
         private readonly ILogger _logger;
         private readonly IPeerIdentifier _pid;
-        private readonly PingRequest _pingRequest;
-        private readonly IConfigurationRoot _config;
         private readonly IUdpServerChannelFactory _udpServerServerChannelFactory;
-        private readonly IUdpServerChannelFactory _udpClientChannelFactory;
         private readonly IPeerSettings _peerSettings;
-        private readonly IKeySigner _keySigner;
         private readonly IPeerDiscovery _peerDiscovery;
         private readonly List<IP2PMessageHandler> _p2PMessageHandlers;
-        private readonly ICorrelationManager _correlationManager;
-        private readonly IGossipManager _gossipManager;
-        private readonly IChannel _serverChannel;
-        private readonly IChannel _clientChannel;
+        private readonly EmbeddedObservableChannel _serverChannel;
         private PeerService _peerService;
 
         public PeerServiceIntegrationTest(ITestOutputHelper output) : base(output)
@@ -72,62 +89,35 @@ namespace Catalyst.Node.Core.IntegrationTests.P2P
             _pid = PeerIdentifierHelper.GetPeerIdentifier("im_a_key");
             _guid = Guid.NewGuid();
             _logger = Substitute.For<ILogger>();
-            _pingRequest = new PingRequest();
 
-            _serverChannel = GetChannel($"Server:{CurrentTestName}");
-            _udpServerServerChannelFactory = GetUdpChannelFactory(_serverChannel);
+            _serverChannel = new EmbeddedObservableChannel($"Server:{CurrentTestName}");
+            _udpServerServerChannelFactory = Substitute.For<IUdpServerChannelFactory>();
+            _udpServerServerChannelFactory.BuildChannel().Returns(_serverChannel);
 
-            _clientChannel = GetChannel($"Client:{CurrentTestName}");
-            _udpClientChannelFactory = GetUdpChannelFactory(_clientChannel);
-
-            _keySigner = Substitute.For<IKeySigner>();
             _peerSettings = Substitute.For<IPeerSettings>();
             _peerSettings.BindAddress.Returns(IPAddress.Parse("127.0.0.1"));
             _peerSettings.Port.Returns(1234);
 
             _peerDiscovery = Substitute.For<IPeerDiscovery>();
             _p2PMessageHandlers = new List<IP2PMessageHandler>();
-            _correlationManager = Substitute.For<ICorrelationManager>();
-            _gossipManager = Substitute.For<IGossipManager>();
-        }
-
-        private IChannel GetChannel(string channelName)
-        {
-            var channelId = Substitute.For<IChannelId>();
-            channelId.AsLongText().Returns(channelName);
-            return new EmbeddedChannel(channelId);
-        }
-
-        public IUdpServerChannelFactory GetUdpChannelFactory(IChannel channel)
-        {
-            var udpChannelFactory = Substitute.For<IUdpServerChannelFactory>();
-            var observableSocket =
-                new ObservableSocket(Observable.Never<IChanneledMessage<ProtocolMessage>>(), channel);
-            udpChannelFactory.BuildChannel().Returns(observableSocket);
-            return udpChannelFactory;
         }
 
         [Fact]
         public async Task Can_receive_incoming_ping_responses()
         {
-            var observer = new TestMessageHandler<PingResponse>(_logger);
-            _p2PMessageHandlers.Add(observer);
+            var pingHandler = new TestMessageHandler<PingResponse>(_logger);
+            _p2PMessageHandlers.Add(pingHandler);
 
             _peerService = new PeerService(_udpServerServerChannelFactory,
                 _peerDiscovery,
                 _p2PMessageHandlers, 
                 _logger);
 
-            var fakeContext = Substitute.For<IChannelHandlerContext>();
-            fakeContext.Channel.Returns(_serverChannel);
-
             var protocolMessage = new PingResponse().ToAnySigned(_pid.PeerId, _guid);
 
-            await _serverChannel.WriteAndFlushAsync(protocolMessage);
+            await _serverChannel.SimulateReceivingMessages(protocolMessage);
 
-            await _peerService.MessageStream.WaitForEndOfDelayedStreamOnTaskPoolScheduler();
-            
-            observer.SubstituteObserver.Received().OnNext(Arg.Any<PingResponse>());
+            pingHandler.SubstituteObserver.Received().OnNext(Arg.Any<PingResponse>());
         }
 
         //[Fact]

@@ -28,7 +28,6 @@ using System.Security.Cryptography.X509Certificates;
 using Catalyst.Common.Interfaces.IO;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Outbound;
-using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Protocol.Common;
 using DotNetty.Codecs.Protobuf;
 using DotNetty.Handlers.Logging;
@@ -69,15 +68,13 @@ namespace Catalyst.Common.IO.Outbound
                .GetResult();
 
             return new ObservableSocket(
-                Observable.Never<IChanneledMessage<ProtocolMessage>>(), 
+                Observable.Empty<IChanneledMessage<ProtocolMessage>>(), 
                 channel);
         }
     }
 
     public class TcpClient : ClientBase, ITcpClient
     {
-        private const int BackLogValue = 100;
-
         protected TcpClient(ITcpClientChannelFactory channelFactory, ILogger logger) 
             : base(channelFactory, logger) { }
     }

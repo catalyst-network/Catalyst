@@ -168,7 +168,7 @@ namespace Catalyst.Node.Core.IntegrationTests.Modules.Dfs
             using (var fs = File.Open(fileToTransfer, FileMode.Open))
             {
                 var fileUploadInformation = new UploadFileTransferInformation(fs, senderPeerId, recipientPeerId,
-                    fakeNode, uniqueFileKey, new MessageFactory());
+                    fakeNode.Channel, uniqueFileKey, new MessageFactory());
                 for (uint i = 0; i < fileTransferInformation.MaxChunk; i++)
                 {
                     fileUploadInformation.GetUploadMessageDto(i)

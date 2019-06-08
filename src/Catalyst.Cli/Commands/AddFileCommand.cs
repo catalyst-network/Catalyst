@@ -89,7 +89,7 @@ namespace Catalyst.Cli.Commands
                 File.Open(opts.File, FileMode.Open),
                 _peerIdentifier,
                 nodePeerIdentifier,
-                node,
+                node.Channel,
                 requestMessage.CorrelationId.ToGuid(),
                 _messageFactory);
 

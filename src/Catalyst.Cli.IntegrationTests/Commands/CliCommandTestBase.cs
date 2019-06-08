@@ -67,8 +67,8 @@ namespace Catalyst.Cli.IntegrationTests.Commands
             channel.Active.Returns(true);
 
             NodeRpcClient = Substitute.For<INodeRpcClient>();
-            NodeRpcClient.Returns(channel);
-            NodeRpcClient.RemoteAddress.Returns(new IPEndPoint(IPAddress.Loopback, IPEndPoint.MaxPort));
+            NodeRpcClient.Channel.Returns(channel);
+            NodeRpcClient.Channel.RemoteAddress.Returns(new IPEndPoint(IPAddress.Loopback, IPEndPoint.MaxPort));
 
             var nodeRpcClientFactory = Substitute.For<INodeRpcClientFactory>();
             nodeRpcClientFactory

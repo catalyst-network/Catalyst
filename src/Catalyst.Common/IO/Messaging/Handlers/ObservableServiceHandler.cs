@@ -47,7 +47,7 @@ namespace Catalyst.Common.IO.Messaging.Handlers
         public IObservable<IChanneledMessage<ProtocolMessage>> MessageStream => _messageSubject.AsObservable();
 
         private readonly ReplaySubject<IChanneledMessage<ProtocolMessage>> _messageSubject 
-            = new ReplaySubject<IChanneledMessage<ProtocolMessage>>(0);
+            = new ReplaySubject<IChanneledMessage<ProtocolMessage>>(1);
         
         public ObservableServiceHandler()
         {

@@ -21,20 +21,15 @@
 
 #endregion
 
-using System;
-using System.Net;
-using Catalyst.Common.Interfaces.IO;
 using Catalyst.Common.Interfaces.IO.Outbound;
-using DotNetty.Handlers.Logging;
-using DotNetty.Transport.Channels;
 using Serilog;
 
 namespace Catalyst.Common.IO.Outbound
 {
     public class UdpClient : ClientBase, IUdpClient
     {
-        protected UdpClient(IUdpClientChannelFactory serverChannelFactory, ILogger logger) 
-            : base(serverChannelFactory, logger) { }
+        protected UdpClient(IUdpClientChannelFactory clientChannelFactory, ILogger logger) 
+            : base(clientChannelFactory, logger) { }
     }
 }
 

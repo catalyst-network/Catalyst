@@ -21,28 +21,25 @@
 
 #endregion
 
-using System.Collections.Generic;
 using System.Net;
 using System.Reflection;
 using System.Threading.Tasks;
-using Catalyst.Common.Interfaces.IO;
+using Catalyst.Common.Interfaces.IO.Outbound;
 using Catalyst.Common.IO.Outbound;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.IO.Messaging.Handlers;
 using DotNetty.Buffers;
-using DotNetty.Transport.Channels;
 using Serilog;
 
 namespace Catalyst.Node.Core.P2P
 {
     public sealed class PeerClient : UdpClient, IPeerClient
     {
-        public PeerClient(IUdpClientChannelFactory serverChannelFactory,
+        public PeerClient(IUdpClientChannelFactory clientChannelFactory,
             IPeerIdentifier peerIdentifier) 
-            : this(serverChannelFactory, peerIdentifier.IpEndPoint) { }
+            : this(clientChannelFactory, peerIdentifier.IpEndPoint) { }
         
-        public PeerClient(IUdpClientChannelFactory serverChannelFactory, IPEndPoint ipEndPoint)
-            : base(serverChannelFactory, Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType))
+        public PeerClient(IUdpClientChannelFactory clientChannelFactory, IPEndPoint ipEndPoint)
+            : base(clientChannelFactory, Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType))
         {
             Channel = ChannelFactory.BuildChannel(ipEndPoint.Address).Channel;
         }

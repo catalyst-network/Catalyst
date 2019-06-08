@@ -52,7 +52,7 @@ namespace Catalyst.Common.IO.Outbound
         {
             Guard.Argument(socket, nameof(socket)).NotNull();
             Guard.Argument(socketHashCode, nameof(socketHashCode)).NotZero();
-            Guard.Argument(socket.Active, nameof(socket))
+            Guard.Argument(socket.Channel.Active, nameof(socket))
                .True("Unable to add inactive client to the registry.");
             return Registry.TryAdd(socketHashCode, socket);
         }

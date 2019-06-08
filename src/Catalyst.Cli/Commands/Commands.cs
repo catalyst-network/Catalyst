@@ -216,7 +216,7 @@ namespace Catalyst.Cli.Commands
             Guard.Argument(node, nameof(node)).Compatible<INodeRpcClient>();
             try
             {
-                Guard.Argument(node.Active, nameof(node.Active)).True();
+                Guard.Argument(node.Channel.Active, nameof(node.Channel.Active)).True();
                 return true;
             }
             catch (Exception e)

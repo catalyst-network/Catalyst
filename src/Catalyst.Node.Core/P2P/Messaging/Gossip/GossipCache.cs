@@ -23,7 +23,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;

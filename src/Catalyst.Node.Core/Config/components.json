@@ -43,10 +43,18 @@
             ]
         },
         {
-            "type": "Catalyst.Common.IO.UdpChannelFactory, Catalyst.Common",
+            "type": "Catalyst.Common.IO.Outbound.UdpClientChannelFactory, Catalyst.Common",
             "services": [
                 {
-                    "type": "Catalyst.Common.Interfaces.IO.IUdpChannelFactory, Catalyst.Common"
+                    "type": "Catalyst.Common.Interfaces.IO.Outbound.IUdpClientChannelFactory, Catalyst.Common"
+                }
+            ]
+        },
+        {
+            "type": "Catalyst.Common.IO.Inbound.UdpServerChannelFactory, Catalyst.Common",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.IO.Inbound.IUdpServerChannelFactory, Catalyst.Common"
                 }
             ]
         },

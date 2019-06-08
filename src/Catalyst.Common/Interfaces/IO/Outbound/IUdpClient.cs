@@ -25,6 +25,7 @@ namespace Catalyst.Common.Interfaces.IO.Outbound
 {
     public interface IUdpClient : ISocketClient { }
 
+    public interface IUdpClientChannelFactory : IChannelFactory { }
 } 
 
 

@@ -81,7 +81,7 @@ namespace Catalyst.Common.UnitTests.IO.Outbound
         {
             var clientSocketRegistry = new SocketClientRegistry<ISocketClient>();
             var socket = Substitute.For<ISocketClient>();
-            socket.Active.Returns(false);
+            socket.Channel.Active.Returns(false);
             var hashcode = new IPEndPoint(IPAddress.Loopback, IPEndPoint.MaxPort).GetHashCode();
 
             new Action(() => clientSocketRegistry.AddClientToRegistry(hashcode, socket)).Should()
@@ -91,7 +91,7 @@ namespace Catalyst.Common.UnitTests.IO.Outbound
         private static ISocketClient GetSubstituteForActiveSocketClient()
         {
             var substitute = Substitute.For<ISocketClient>();
-            substitute.Active.Returns(true);
+            substitute.Channel.Active.Returns(true);
             return substitute;
         }
 

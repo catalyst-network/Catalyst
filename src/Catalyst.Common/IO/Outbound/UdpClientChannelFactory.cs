@@ -21,29 +21,29 @@
 
 #endregion
 
-using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Security.Cryptography.X509Certificates;
-using Catalyst.Common.Interfaces.IO.Inbound;
-using Catalyst.Protocol.Common;
-using IChannel = DotNetty.Transport.Channels.IChannel;
+using Catalyst.Common.Interfaces.IO;
+using Catalyst.Common.Interfaces.IO.Outbound;
+using Catalyst.Common.IO.Messaging.Handlers;
+using DotNetty.Transport.Channels;
 
-namespace Catalyst.Common.Interfaces.IO
+namespace Catalyst.Common.IO.Outbound
 {
-    public interface ISocket : IDisposable
+    public class UdpClientChannelFactory : UdpChannelFactoryBase, IUdpClientChannelFactory
     {
-        IChannel Channel { get; }
-    }
+        protected override List<IChannelHandler> Handlers =>
+            new List<IChannelHandler>
+            {
+                new ProtoDatagramHandler()
+            };
 
-    public interface IObservableSocket : ISocket
-    {
-        IObservable<IChanneledMessage<ProtocolMessage>> MessageStream { get; }
-    }
-
-    public interface IChannelFactory
-    {
-        IObservableSocket BuildChannel(IPAddress targetAddress = null,
+        public IObservableSocket BuildChannel(IPAddress targetAddress = null,
             int targetPort = 0,
-            X509Certificate2 certificate = null);
+            X509Certificate2 certificate = null)
+        {
+            return BootStrapChannel(targetAddress);
+        }
     }
 }
