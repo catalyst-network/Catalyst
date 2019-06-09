@@ -54,8 +54,7 @@ using Xunit.Abstractions;
 namespace Catalyst.Node.Core.IntegrationTests.P2P
 {
     public sealed class PeerServiceIntergrationTests : 
-        ConfigFileBasedTest,
-        IClassFixture<PeerClientFixture>
+        ConfigFileBasedTest
     {
         private readonly Guid _guid;
         private readonly ILogger _logger;
@@ -63,9 +62,8 @@ namespace Catalyst.Node.Core.IntegrationTests.P2P
         private readonly IContainer _container;
         private readonly PingRequest _pingRequest;
         private readonly IConfigurationRoot _config;
-        private readonly PeerClientFixture _peerClientFixture;
 
-        public PeerServiceIntergrationTests(ITestOutputHelper output, PeerClientFixture peerClientFixture) : base(output)
+        public PeerServiceIntergrationTests(ITestOutputHelper output) : base(output)
         {
             _config = SocketPortHelper.AlterConfigurationToGetUniquePort(new ConfigurationBuilder()
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile))
@@ -76,8 +74,6 @@ namespace Catalyst.Node.Core.IntegrationTests.P2P
             _guid = Guid.NewGuid();
             _logger = Substitute.For<ILogger>();
             _pingRequest = new PingRequest();
-
-            this._peerClientFixture = peerClientFixture;
 
             ConfigureContainerBuilder(_config, true, true);
             
@@ -130,9 +126,8 @@ namespace Catalyst.Node.Core.IntegrationTests.P2P
                 using (peerService.MessageStream.Subscribe(serverObserver))
                 {
                     var peerSettings = _container.Resolve<IPeerSettings>();
-                    var targetHost = new IPEndPoint(peerSettings.BindAddress, peerSettings.Port);
 
-                    var datagramEnvelope = new MessageFactory().GetDatagramMessage(new MessageDto(
+                    var datagramEnvelope = new MessageFactory().GetMessage(new MessageDto(
                             new PingRequest(),
                             MessageTypes.Ask,
                             new PeerIdentifier(ByteUtil.InitialiseEmptyByteArray(20), peerSettings.BindAddress,
@@ -143,7 +138,7 @@ namespace Catalyst.Node.Core.IntegrationTests.P2P
                         Guid.NewGuid()
                     );
 
-                    _peerClientFixture.UniversalPeerClient.SendMessage(datagramEnvelope);
+                    peerClient.SendMessage(datagramEnvelope);
 
                     var tasks = new IChanneledMessageStreamer<ProtocolMessage>[]
                         {
@@ -177,9 +172,8 @@ namespace Catalyst.Node.Core.IntegrationTests.P2P
                 {
                     var peerSettings = new PeerSettings(_config);
                     var targetHost = new IPEndPoint(peerSettings.BindAddress, peerSettings.Port);
-                    var peerClient = new PeerClient(targetHost);
 
-                    var datagramEnvelope = new MessageFactory().GetDatagramMessage(new MessageDto(
+                    var datagramEnvelope = new MessageFactory().GetMessage(new MessageDto(
                             new PeerNeighborsResponse(),
                             MessageTypes.Tell,
                             new PeerIdentifier(ByteUtil.InitialiseEmptyByteArray(20), peerSettings.BindAddress,
@@ -190,7 +184,7 @@ namespace Catalyst.Node.Core.IntegrationTests.P2P
                         Guid.NewGuid()
                     );
 
-                    _peerClientFixture.UniversalPeerClient.SendMessage(datagramEnvelope);
+                    peerClient.SendMessage(datagramEnvelope);
 
                     var tasks = new IChanneledMessageStreamer<ProtocolMessage>[]
                         {
@@ -216,13 +210,15 @@ namespace Catalyst.Node.Core.IntegrationTests.P2P
         {
             using (_container.BeginLifetimeScope(CurrentTestName))
             {
+                var peerClient = _container.Resolve<IPeerClient>();
+
                 using (var peerService = _container.Resolve<IPeerService>())
                 {
                     var peerSettings = new PeerSettings(_config);
                     var targetHost = new IPEndPoint(peerSettings.BindAddress,
                         peerSettings.Port + new Random().Next(0, 5000));
 
-                    using (var peerValidator = new PeerValidator(targetHost, peerSettings, peerService, _logger, _peerClientFixture.UniversalPeerClient))
+                    using (var peerValidator = new PeerValidator(targetHost, peerSettings, peerService, _logger, peerClient))
                     {
                         var valid = peerValidator.PeerChallengeResponse(new PeerIdentifier(peerSettings));
 
@@ -240,13 +236,15 @@ namespace Catalyst.Node.Core.IntegrationTests.P2P
         {
             using (_container.BeginLifetimeScope(CurrentTestName))
             {
+                var peerClient = _container.Resolve<IPeerClient>();
+
                 using (var peerService = _container.Resolve<IPeerService>())
                 {
                     var peerSettings = new PeerSettings(_config);
                     var targetHost = new IPEndPoint(peerSettings.BindAddress,
                         peerSettings.Port + new Random().Next(0, 5000));
 
-                    using (var peerValidator = new PeerValidator(targetHost, peerSettings, peerService, _logger, _peerClientFixture.UniversalPeerClient))
+                    using (var peerValidator = new PeerValidator(targetHost, peerSettings, peerService, _logger, peerClient))
                     {
                         var peerActiveId = new PeerIdentifier(publicKey.ToUtf8ByteString().ToByteArray(),
                             IPAddress.Parse(ip),

@@ -89,7 +89,7 @@ namespace Catalyst.Node.Core.P2P
         {
             try
             {
-                var datagramEnvelope = new MessageFactory().GetDatagramMessage(
+                var datagramEnvelope = new MessageFactory().GetMessage(
                     new MessageDto(
                         new PingRequest(),
                         MessageTypes.Ask,
