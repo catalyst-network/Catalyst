@@ -142,7 +142,7 @@ namespace Catalyst.Node.Core.IntegrationTests.P2P
                         Guid.NewGuid()
                     );
 
-                    _peerClientFixture.UniversalPeerClient.SendMessage(datagramEnvelope);
+                    await _peerClientFixture.UniversalPeerClient.SendMessageAsync(datagramEnvelope);
                     WaitForPeerServiceStream(peerService);
 
                     serverObserver.Received.LastOrDefault().Should().NotBeNull();
@@ -176,7 +176,7 @@ namespace Catalyst.Node.Core.IntegrationTests.P2P
                         Guid.NewGuid()
                     );
 
-                    _peerClientFixture.UniversalPeerClient.SendMessage(datagramEnvelope);
+                    await _peerClientFixture.UniversalPeerClient.SendMessageAsync(datagramEnvelope);
                     WaitForPeerServiceStream(peerService);
 
                     serverObserver.Received.FirstOrDefault().Should().NotBeNull();

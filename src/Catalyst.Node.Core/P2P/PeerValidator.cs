@@ -101,7 +101,7 @@ namespace Catalyst.Node.Core.P2P
                     Guid.NewGuid()
                 );
 
-                ((PeerClient)_peerClient).SendMessage(datagramEnvelope);
+                ((PeerClient)_peerClient).SendMessageAsync(datagramEnvelope);
 
                 var tasks = new IChanneledMessageStreamer<ProtocolMessage>[]
                     {

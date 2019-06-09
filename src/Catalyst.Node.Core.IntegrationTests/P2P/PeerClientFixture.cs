@@ -32,10 +32,7 @@ namespace Catalyst.Node.Core.IntegrationTests.P2P
     {
         public PeerClientFixture()
         {
-            //read from testnet.json
-            var targetHost = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 8827);
-
-            UniversalPeerClient = new PeerClient(targetHost);
+            UniversalPeerClient = new PeerClient();
         }
 
         public void Dispose()
@@ -45,5 +42,4 @@ namespace Catalyst.Node.Core.IntegrationTests.P2P
 
         public PeerClient UniversalPeerClient { get; private set; }
     }
-
 }
