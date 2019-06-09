@@ -110,7 +110,7 @@ namespace Catalyst.Node.Core.IntegrationTests.P2P
             }
         }
 
-        [Fact(Skip = "build hanging, refactoring is being done")]
+        [Fact]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public async Task CanReceivePingRequests()
         {
@@ -136,6 +136,7 @@ namespace Catalyst.Node.Core.IntegrationTests.P2P
                     );
 
                     var peerClient = new PeerClient(targetHost);
+
                     peerClient.SendMessage(datagramEnvelope);
                     await peerService.MessageStream.WaitForItemsOnDelayedStreamOnTaskPoolScheduler();
                     
@@ -147,7 +148,7 @@ namespace Catalyst.Node.Core.IntegrationTests.P2P
             }
         }
 
-        [Fact(Skip = "build hanging, refactoring is being done")]
+        [Fact]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public async Task CanReceiveNeighbourRequests()
         {
