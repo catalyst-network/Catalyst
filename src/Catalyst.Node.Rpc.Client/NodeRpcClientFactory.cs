@@ -22,15 +22,20 @@
 #endregion
 
 using System.Security.Cryptography.X509Certificates;
+using Catalyst.Common.Interfaces.IO.Outbound;
 using Catalyst.Common.Interfaces.Rpc;
+using Catalyst.Common.IO.Outbound;
 
 namespace Catalyst.Node.Rpc.Client
 {
     public sealed class NodeRpcClientFactory : INodeRpcClientFactory
     {
-        public INodeRpcClient GetClient(X509Certificate certificate, IRpcNodeConfig nodeConfig)
+        private readonly ITcpClientChannelFactory _channelFactory;
+        public NodeRpcClientFactory(ITcpClientChannelFactory channelFactory) { _channelFactory = channelFactory; }
+
+        public INodeRpcClient GetClient(X509Certificate2 certificate, IRpcNodeConfig nodeConfig)
         {
-            return new NodeRpcClient(certificate, nodeConfig);
+            return new NodeRpcClient(_channelFactory, certificate, nodeConfig);
         }
     }
 }

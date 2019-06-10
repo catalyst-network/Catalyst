@@ -21,7 +21,11 @@
 
 #endregion
 
+using DotNetty.Transport.Channels;
+
 namespace Catalyst.Common.Interfaces.IO.Outbound
 {
     public interface ITcpClient : ISocketClient { }
+
+    public interface ITcpClientChannelFactory : IChannelFactory { } 
 }

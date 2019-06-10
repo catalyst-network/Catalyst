@@ -22,37 +22,34 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using Catalyst.Common.IO.Inbound;
+using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
-using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Protocol.Common;
+using Google.Protobuf;
+using NSubstitute;
 using Serilog;
 
-namespace Catalyst.Node.Core.P2P
+namespace Catalyst.TestUtils
 {
-    public sealed class PeerService : UdpServer, IPeerService
+    public class TestMessageHandler<TProto> : MessageHandlerBase<TProto>,
+        IP2PMessageHandler, IRpcResponseHandler, IRpcRequestHandler
+        where TProto : IMessage, IMessage<TProto>
     {
-        public IPeerDiscovery Discovery { get; }
-        public IObservable<IChanneledMessage<ProtocolMessage>> MessageStream { get; }
+        public IObserver<TProto> SubstituteObserver { get; }
 
-        public PeerService(IUdpServerChannelFactory serverChannelFactory,
-            IPeerDiscovery peerDiscovery,
-            IEnumerable<IP2PMessageHandler> messageHandlers,
-            ILogger logger)
-            : base(serverChannelFactory, logger)
+        public TestMessageHandler(ILogger logger) : base(logger)
         {
-            Discovery = peerDiscovery;
-            var observableChannel = ChannelFactory.BuildChannel();
-            Channel = observableChannel.Channel;
-
-            MessageStream = observableChannel.MessageStream;
-            messageHandlers.ToList()
-               .ForEach(h => h.StartObserving(MessageStream));
-
-            // peerDiscovery.StartObserving(MessageStream);
+            SubstituteObserver = Substitute.For<IObserver<TProto>>();
         }
+        
+        protected override void Handler(IChanneledMessage<ProtocolMessage> message)
+        {
+            SubstituteObserver.OnNext(message.Payload.FromAnySigned<TProto>());
+        }
+
+        public override void HandleError(Exception exception) { SubstituteObserver.OnError(exception); }
+        public override void HandleCompleted() { SubstituteObserver.OnCompleted(); }
     }
 }

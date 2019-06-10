@@ -21,7 +21,6 @@
 
 #endregion
 
-using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Security;
@@ -35,12 +34,10 @@ namespace Catalyst.Common.IO.Outbound
     public sealed class OutboundChannelInitializerBase<T> : ChannelInitializerBase<T> where T : IChannel
     {
         /// <inheritdoc />
-        public OutboundChannelInitializerBase(Action<T> initializationAction,
-            IList<IChannelHandler> handlers,
+        public OutboundChannelInitializerBase(IList<IChannelHandler> handlers,
             IPAddress targetHost = default,
             X509Certificate certificate = null)
-            : base(initializationAction,
-                handlers,
+            : base(handlers,
                 certificate == null || targetHost == null
                     ? null
                     : new TlsHandler(stream =>
