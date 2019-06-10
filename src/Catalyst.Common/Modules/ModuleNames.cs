@@ -30,6 +30,7 @@ namespace Catalyst.Common.Modules
         public static readonly ModuleName Consensus = new ConsensusType();
         public static readonly ModuleName Contract = new ContractType();
         public static readonly ModuleName Dfs = new DfsType();
+        public static readonly ModuleName DfsHttp = new DfsHttpType();
         public static readonly ModuleName Ledger = new LedgerType();
         public static readonly ModuleName KeySigner = new KeySignerType();
         public static readonly ModuleName Mempool = new MempoolType();
@@ -48,6 +49,11 @@ namespace Catalyst.Common.Modules
         private sealed class DfsType : ModuleName
         {
             public DfsType() : base(1, "Dfs") { }
+        }
+
+        private sealed class DfsHttpType : ModuleName
+        {
+            public DfsHttpType() : base(1, "DfsHttp") { }
         }
 
         private sealed class LedgerType : ModuleName

@@ -125,6 +125,8 @@ namespace Catalyst.Node.Core.Modules.Dfs
 
         public IBlockApi Block => Start().Block;
 
+        public IBlockRepositoryApi BlockRepository => Start().BlockRepository;
+
         public IBootstrapApi Bootstrap => Start().Bootstrap;
 
         public IConfigApi Config => _ipfs.Config;

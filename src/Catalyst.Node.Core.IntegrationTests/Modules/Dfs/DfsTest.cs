@@ -38,12 +38,12 @@ using Xunit.Abstractions;
 
 namespace Catalyst.Node.Core.IntegrationTests.Modules.Dfs
 {
-    public sealed class IpfsDfsLiveTests : FileSystemBasedTest
+    public sealed class DfsTest : FileSystemBasedTest
     {
         private readonly IpfsAdapter _ipfs;
         private readonly ILogger _logger;
 
-        public IpfsDfsLiveTests(ITestOutputHelper output) : base(output)
+        public DfsTest(ITestOutputHelper output) : base(output)
         {
             var peerSettings = Substitute.For<IPeerSettings>();
             peerSettings.SeedServers.Returns(new[]

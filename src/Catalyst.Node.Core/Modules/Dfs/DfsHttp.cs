@@ -21,28 +21,32 @@
 
 #endregion
 
-using System.Collections.Generic;
-using System.Linq;
-using Catalyst.Common.Enumerator;
-using Catalyst.Common.Modules;
-using FluentAssertions;
-using Xunit;
+using Catalyst.Common.Interfaces.Modules.Dfs;
+using Ipfs.HttpGateway;
+using Ipfs.CoreApi;
+using System;
 
-namespace Catalyst.Common.UnitTests.Modules
+namespace Catalyst.Node.Core.Modules.Dfs
 {
-    public static class ModuleNamesTests
+    public sealed class DfsHttp : IDfsHttp, IDisposable
     {
-        [Fact]
-        public static void All_should_return_all_declared_names()
+        public GatewayHost Gateway { get; }
+
+        public DfsHttp(ICoreApi ipfs)
         {
-            var allModuleNames = Enumeration.GetAll<ModuleName>().Select(m => m.Name);
+            // Make sure IPFS and the gateway are started.
+            ipfs.Generic.IdAsync().Wait();
+            Gateway = new GatewayHost(ipfs, "http://127.0.0.1:8181");
+        }
 
-            var expectedList = new List<string>
-            {
-                "Consensus", "Contract", "Dfs", "DfsHttp", "Ledger", "Mempool", "KeySigner"
-            };
+        public string ContentUrl(string id)
+        {
+            return Gateway.IpfsUrl(id);
+        }
 
-            allModuleNames.Should().BeEquivalentTo(expectedList);
+        public void Dispose()
+        {
+            Gateway?.Dispose();
         }
     }
 }
