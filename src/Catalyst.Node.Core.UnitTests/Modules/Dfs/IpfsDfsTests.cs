@@ -39,8 +39,8 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Dfs
 {
     public sealed class IpfsDfsTests : IDisposable
     {
-        private const int DelayInMs = 300;
-        private const int DelayMultiplier = 4;
+        private const int DelayInMs = 100;
+        private const int DelayMultiplier = 2;
         private readonly ICoreApi _ipfsEngine;
         private readonly ILogger _logger;
         private readonly Cid _expectedCid;
@@ -120,6 +120,7 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Dfs
             _ipfsEngine.FileSystem.AddTextAsync(Arg.Any<string>(), Arg.Any<AddFileOptions>(), Arg.Any<CancellationToken>())
                .Returns(c =>
                 {
+                    Task.Yield().GetAwaiter().GetResult();
                     Task.Delay(DelayInMs * DelayMultiplier, (CancellationToken) c[2]).GetAwaiter().GetResult();
                     return Task.FromResult(_addedRecord);
                 });
@@ -136,6 +137,7 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Dfs
             _ipfsEngine.FileSystem.AddAsync(Arg.Any<Stream>(), Arg.Any<string>(), Arg.Any<AddFileOptions>(), Arg.Any<CancellationToken>())
                .Returns(c =>
                 {
+                    Task.Yield().GetAwaiter().GetResult();
                     Task.Delay(DelayInMs * DelayMultiplier, (CancellationToken) c[3]).GetAwaiter().GetResult();
                     return Task.FromResult(_addedRecord);
                 });
@@ -152,6 +154,7 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Dfs
             _ipfsEngine.FileSystem.ReadAllTextAsync(Arg.Any<string>(), Arg.Any<CancellationToken>())
                .Returns(c =>
                 {
+                    Task.Yield().GetAwaiter().GetResult();
                     Task.Delay(DelayInMs * DelayMultiplier, (CancellationToken) c[1]).GetAwaiter().GetResult();
                     return Task.FromResult("some content");
                 });
@@ -168,6 +171,7 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Dfs
             _ipfsEngine.FileSystem.ReadFileAsync(Arg.Any<string>(), Arg.Any<CancellationToken>())
                .Returns(c =>
                 {
+                    Task.Yield().GetAwaiter().GetResult();
                     Task.Delay(DelayInMs * DelayMultiplier, (CancellationToken) c[1]).GetAwaiter().GetResult();
                     return Task.FromResult(Stream.Null);
                 });
