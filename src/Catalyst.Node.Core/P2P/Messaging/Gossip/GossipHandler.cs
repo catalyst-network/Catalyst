@@ -54,7 +54,6 @@ namespace Catalyst.Node.Core.P2P.Messaging.Gossip
             {
                 _gossipManager.IncomingGossip(msg);
 
-                // @TODO Check sig of originalGossipedMessage
                 ProtocolMessage originalGossipedMessage = ProtocolMessage.Parser.ParseFrom(msg.Value);
                 ctx.FireChannelRead(originalGossipedMessage);
             }
