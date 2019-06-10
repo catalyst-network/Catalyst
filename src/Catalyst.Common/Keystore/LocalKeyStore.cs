@@ -28,13 +28,13 @@ using System.Security.Authentication;
 using System.Threading.Tasks;
 using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Common.Interfaces.FileSystem;
-using Catalyst.Common.Interfaces.KeyStore;
+using Catalyst.Common.Interfaces.Keystore;
 using Catalyst.Common.Interfaces.Util;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
 using Nethereum.KeyStore.Crypto;
 using Serilog;
 
-namespace Catalyst.Common.KeyStore
+namespace Catalyst.Common.Keystore
 {
     public sealed class LocalKeyStore : IKeyStore
     {

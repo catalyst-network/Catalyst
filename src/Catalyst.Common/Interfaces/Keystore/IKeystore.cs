@@ -24,7 +24,7 @@
 using System.Threading.Tasks;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
 
-namespace Catalyst.Common.Interfaces.KeyStore
+namespace Catalyst.Common.Interfaces.Keystore
 {
     public interface IKeyStore
     {

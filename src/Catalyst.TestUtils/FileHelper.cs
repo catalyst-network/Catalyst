@@ -25,7 +25,7 @@ using System;
 using System.IO;
 using ICSharpCode.SharpZipLib.Checksum;
 
-namespace Catalyst.Common.UnitTests.TestUtils
+namespace Catalyst.TestUtils
 {
     public static class FileHelper
     {

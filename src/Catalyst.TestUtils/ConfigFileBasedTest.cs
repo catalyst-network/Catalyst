@@ -33,7 +33,7 @@ using SharpRepository.Ioc.Autofac;
 using SharpRepository.Repository;
 using Xunit.Abstractions;
 
-namespace Catalyst.Common.UnitTests.TestUtils
+namespace Catalyst.TestUtils
 {
     public class ConfigFileBasedTest : FileSystemBasedTest
     {

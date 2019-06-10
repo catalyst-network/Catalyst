@@ -25,7 +25,7 @@ using Catalyst.Common.Util;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Delta;
 
-namespace Catalyst.Common.UnitTests.TestUtils
+namespace Catalyst.TestUtils
 {
     public static class CandidateDeltaHelper
     {

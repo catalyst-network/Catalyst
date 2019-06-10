@@ -28,7 +28,7 @@ using Autofac;
 using Catalyst.Common.Config;
 using Catalyst.Common.Enumerator;
 using Catalyst.Common.Interfaces.Cli;
-using Catalyst.Common.UnitTests.TestUtils;
+using Catalyst.TestUtils;
 using Microsoft.Extensions.Configuration;
 using Xunit;
 using Xunit.Abstractions;

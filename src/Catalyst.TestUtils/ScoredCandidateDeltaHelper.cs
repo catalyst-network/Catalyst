@@ -21,7 +21,6 @@
 
 #endregion
 
-using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Node.Core.Modules.Consensus.Delta;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Delta;

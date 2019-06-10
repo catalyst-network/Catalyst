@@ -21,7 +21,7 @@
 
 #endregion
 
-namespace Catalyst.Common.UnitTests.TestUtils
+namespace Catalyst.TestUtils
 {
     public static class Traits
     {

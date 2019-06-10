@@ -24,7 +24,7 @@
 using Catalyst.Common.Extensions;
 using Catalyst.Protocol.Transaction;
 
-namespace Catalyst.Common.UnitTests.TestUtils
+namespace Catalyst.TestUtils
 {
     public static class TransactionHelper
     {
