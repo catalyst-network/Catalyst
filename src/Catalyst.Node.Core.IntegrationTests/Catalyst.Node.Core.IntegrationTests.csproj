@@ -12,7 +12,6 @@
     </PropertyGroup>
     <Import Project="../Common.IntegrationTests.props" />
     <ItemGroup>
-        <Folder Include="P2P" />
         <Folder Include="Rpc" />
     </ItemGroup>
     <ItemGroup>

@@ -25,7 +25,7 @@ using System;
 using System.Reflection;
 using Xunit.Abstractions;
 
-namespace Catalyst.Common.UnitTests.TestUtils
+namespace Catalyst.TestUtils
 {
     /// <summary>
     /// A test that is aware of its name, and has a reference to the test output

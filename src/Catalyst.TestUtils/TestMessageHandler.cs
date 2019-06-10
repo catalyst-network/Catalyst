@@ -31,7 +31,7 @@ using Google.Protobuf;
 using NSubstitute;
 using Serilog;
 
-namespace Catalyst.Common.UnitTests.TestUtils
+namespace Catalyst.TestUtils
 {
     public class TestMessageHandler<TProto> : MessageHandlerBase<TProto>,
         IP2PMessageHandler, IRpcResponseHandler, IRpcRequestHandler

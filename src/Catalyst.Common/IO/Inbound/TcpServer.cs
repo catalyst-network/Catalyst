@@ -95,8 +95,6 @@ namespace Catalyst.Common.IO.Inbound
 
     public class TcpServer : SocketBase, ITcpServer
     {
-        private const int BackLogValue = 100;
-
         private readonly IEventLoopGroup _supervisorEventLoop;
 
         protected TcpServer(ITcpServerChannelFactory tcpChannelFactory,
