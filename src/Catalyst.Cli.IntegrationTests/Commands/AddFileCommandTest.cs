@@ -66,7 +66,7 @@ namespace Catalyst.Cli.IntegrationTests.Commands
 
                 if (expectedResult)
                 {
-                    await TaskHelper.WaitFor(() => uploadFileTransferFactory.Keys.Length > 0, TimeSpan.FromSeconds(5));
+                    await TaskHelper.WaitForAsync(() => uploadFileTransferFactory.Keys.Length > 0, TimeSpan.FromSeconds(5));
 
                     uploadFileTransferFactory.GetFileTransferInformation(uploadFileTransferFactory.Keys.First())
                        .Expire();

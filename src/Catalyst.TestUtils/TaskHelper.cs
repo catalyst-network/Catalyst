@@ -29,23 +29,25 @@ namespace Catalyst.TestUtils
 {
     public static class TaskHelper
     {
-        public static async Task WaitFor(Func<bool> condition, TimeSpan timespan)
+        public static async Task WaitForAsync(Func<bool> condition, TimeSpan timespan)
         {
-            CancellationTokenSource tokenSource = new CancellationTokenSource(timespan);
-            await Task.Run(() =>
+            using (CancellationTokenSource tokenSource = new CancellationTokenSource(timespan))
             {
-                while (!tokenSource.IsCancellationRequested)
+                await Task.Run(() =>
                 {
-                    if (!condition())
+                    while (!tokenSource.IsCancellationRequested)
                     {
-                        Task.Delay(100).ConfigureAwait(false).GetAwaiter().GetResult();
+                        if (!condition())
+                        {
+                            Task.Delay(100).ConfigureAwait(false).GetAwaiter().GetResult();
+                        }
+                        else
+                        {
+                            return;
+                        }
                     }
-                    else
-                    {
-                        return;
-                    }
-                }
-            }, tokenSource.Token).ConfigureAwait(false);
+                }, tokenSource.Token).ConfigureAwait(false);
+            }
         }
 
 

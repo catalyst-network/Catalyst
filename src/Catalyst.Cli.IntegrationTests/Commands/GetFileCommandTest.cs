@@ -67,7 +67,7 @@ namespace Catalyst.Cli.IntegrationTests.Commands
                     shell.AdvancedShell.ParseCommand("getfile", "-n", "node1", "-f", fileHash, "-o", outputPath)
                 );
 
-                await TaskHelper.WaitFor(() => downloadFileFactory.Keys.Length > 0, TimeSpan.FromSeconds(5));
+                await TaskHelper.WaitForAsync(() => downloadFileFactory.Keys.Length > 0, TimeSpan.FromSeconds(5));
 
                 downloadFileFactory.GetFileTransferInformation(downloadFileFactory.Keys.First()).Expire();
 
