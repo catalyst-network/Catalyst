@@ -24,13 +24,11 @@
 using System;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
-using Catalyst.Common.Util;
+using System.Reflection;
 using Catalyst.Common.Interfaces.IO.Inbound;
-using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Messaging.Handlers;
 using Catalyst.Common.IO.Inbound;
 using Catalyst.Protocol.Common;
-using DotNetty.Common.Utilities;
 using DotNetty.Transport.Channels;
 using Serilog;
 
@@ -46,11 +44,11 @@ namespace Catalyst.Common.IO.Messaging.Handlers
         public IObservable<IChanneledMessage<ProtocolMessage>> MessageStream => _messageSubject.AsObservable();
 
         private readonly ReplaySubject<IChanneledMessage<ProtocolMessage>> _messageSubject 
-            = new ReplaySubject<IChanneledMessage<ProtocolMessage>>(0);
+            = new ReplaySubject<IChanneledMessage<ProtocolMessage>>(1);
         
-        public ObservableServiceHandler(ILogger logger)
+        public ObservableServiceHandler()
         {
-            _logger = logger;
+            _logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
         }
 
         /// <summary>
