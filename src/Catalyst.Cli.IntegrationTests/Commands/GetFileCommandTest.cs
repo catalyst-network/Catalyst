@@ -22,13 +22,19 @@
 #endregion
 
 using System;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Autofac;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Cli;
+using Catalyst.Common.Interfaces.FileTransfer;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
+using Catalyst.TestUtils;
 using FluentAssertions;
 using NSubstitute;
+using Polly;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -39,29 +45,39 @@ namespace Catalyst.Cli.IntegrationTests.Commands
         //This test is the base to all other tests.  If the Cli cannot connect to a node than all other commands
         //will fail
         public GetFileCommandTest(ITestOutputHelper output) : base(output) { }
-        
+
         [Theory]
         [MemberData(nameof(GetFileData))]
-        public void Cli_Can_Send_Get_File_Request(string fileHash, string outputPath, bool expectedResult)
+        public async Task Cli_Can_Send_Get_File_Request(string fileHash, string outputPath, bool expectedResult)
         {
             var container = ContainerBuilder.Build();
 
             using (container.BeginLifetimeScope(CurrentTestName))
             {
                 var shell = container.Resolve<ICatalystCli>();
+                var downloadFileFactory = container.Resolve<IDownloadFileTransferFactory>();
+
                 var hasConnected = shell.AdvancedShell.ParseCommand("connect", "-n", "node1");
                 hasConnected.Should().BeTrue();
 
                 var node1 = shell.AdvancedShell.GetConnectedNode("node1");
                 node1.Should().NotBeNull("we've just connected it");
 
-                var result = shell.AdvancedShell.ParseCommand(
-                    "getfile", "-n", "node1", "-f", fileHash, "-o", outputPath);
+                var task = Task.Run(() =>
+                    shell.AdvancedShell.ParseCommand("getfile", "-n", "node1", "-f", fileHash, "-o", outputPath)
+                );
+
+                await TaskHelper.WaitForAsync(() => downloadFileFactory.Keys.Length > 0, TimeSpan.FromSeconds(5));
+
+                downloadFileFactory.GetFileTransferInformation(downloadFileFactory.Keys.First()).Expire();
+
+                var result = await task.ConfigureAwait(false);
                 result.Should().Be(expectedResult);
 
                 if (expectedResult)
                 {
-                    NodeRpcClient.Received(1).SendMessage(Arg.Is<ProtocolMessage>(x => x.TypeUrl.Equals(GetFileFromDfsRequest.Descriptor.ShortenedFullName())));
+                    NodeRpcClient.Received(1).SendMessage(Arg.Is<ProtocolMessage>(x =>
+                        x.TypeUrl.Equals(GetFileFromDfsRequest.Descriptor.ShortenedFullName())));
                 }
             }
         }
