@@ -23,21 +23,18 @@
 
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.P2P.Messaging.Gossip;
-using Catalyst.Common.IO.Messaging.Handlers;
 using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;
 
-namespace Catalyst.Node.Core.P2P.Messaging.Gossip
+namespace Catalyst.Common.IO.Messaging.Handlers
 {
     /// <summary>
     /// Channel Gossip Pipeline
     /// Handles gossip messages
     /// </summary>
     /// <seealso cref="ObservableServiceHandler" />
-    /// <seealso cref="IGossipHandler" />
     public sealed class GossipHandler
-        : SimpleChannelInboundHandler<ProtocolMessage>,
-            IGossipHandler
+        : SimpleChannelInboundHandler<ProtocolMessage>
     {
         private readonly IGossipManager _gossipManager;
 
