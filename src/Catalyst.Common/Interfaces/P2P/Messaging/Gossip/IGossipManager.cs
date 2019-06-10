@@ -21,6 +21,7 @@
 
 #endregion
 
+using System.Threading.Tasks;
 using Catalyst.Protocol.Common;
 
 namespace Catalyst.Common.Interfaces.P2P.Messaging.Gossip
@@ -29,10 +30,10 @@ namespace Catalyst.Common.Interfaces.P2P.Messaging.Gossip
     {
         /// <summary>Broadcasts a message.</summary>
         /// <param name="protocolMessage">Any signed message.</param>
-        void Broadcast(ProtocolMessage protocolMessage);
+        Task BroadcastAsync(ProtocolMessage protocolMessage);
 
         /// <summary>Handles Incoming gossip.</summary>
         /// <param name="anySigned">Any signed message.</param>
-        void IncomingGossip(ProtocolMessage anySigned);
+        Task IncomingGossipAsync(ProtocolMessage anySigned);
     }
 }
