@@ -21,7 +21,6 @@
 
 #endregion
 
-using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
@@ -36,24 +35,19 @@ namespace Catalyst.Common.IO
         : ChannelInitializer<T>
         where T : IChannel
     {
-        private readonly Action<T> _initializationAction;
         private readonly IImmutableList<IChannelHandler> _handlers;
         private readonly TlsHandler _tlsHandler;
 
-        protected ChannelInitializerBase(Action<T> initializationAction,
-            IList<IChannelHandler> handlers,
+        protected ChannelInitializerBase(IList<IChannelHandler> handlers,
             TlsHandler tlsHandler)
         {
-            Guard.Argument(initializationAction, nameof(initializationAction)).NotNull();
             Guard.Argument(handlers, nameof(handlers)).NotNull().NotEmpty();
-            _initializationAction = initializationAction;
             _handlers = handlers.ToImmutableList();
             _tlsHandler = tlsHandler;
         }
 
         protected override void InitChannel(T channel)
         {
-            _initializationAction(channel);
             var pipeline = channel.Pipeline;
 
             if (_tlsHandler != null)

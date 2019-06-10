@@ -21,21 +21,29 @@
 
 #endregion
 
+using System.Collections.Generic;
+using System.Net;
+using System.Security.Cryptography.X509Certificates;
 using Catalyst.Common.Interfaces.IO;
 using Catalyst.Common.Interfaces.IO.Outbound;
-using Catalyst.Protocol.Common;
-using Serilog;
+using Catalyst.Common.IO.Messaging.Handlers;
+using DotNetty.Transport.Channels;
 
 namespace Catalyst.Common.IO.Outbound
 {
-    public class ClientBase : SocketBase, ISocketClient
+    public class UdpClientChannelFactory : UdpChannelFactoryBase, IUdpClientChannelFactory
     {
-        protected ClientBase(IChannelFactory channelFactory, ILogger logger) 
-            : base(channelFactory, logger) { }
+        protected override List<IChannelHandler> Handlers =>
+            new List<IChannelHandler>
+            {
+                new ProtoDatagramHandler()
+            };
 
-        public void SendMessage(ProtocolMessage message)
+        public IObservableSocket BuildChannel(IPAddress targetAddress = null,
+            int targetPort = 0,
+            X509Certificate2 certificate = null)
         {
-            Channel.WriteAndFlushAsync(message).ConfigureAwait(false);
+            return BootStrapChannel(targetAddress);
         }
     }
 }
