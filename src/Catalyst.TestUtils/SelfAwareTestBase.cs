@@ -30,7 +30,7 @@ namespace Catalyst.TestUtils
     /// <summary>
     /// A test that is aware of its name, and has a reference to the test output
     /// </summary>
-    public abstract class SelfAwareTestBase
+    public class SelfAwareTestBase
     {
         protected ITest CurrentTest;
         protected string CurrentTestName;

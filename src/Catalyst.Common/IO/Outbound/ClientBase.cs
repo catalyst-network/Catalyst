@@ -28,7 +28,7 @@ using Serilog;
 
 namespace Catalyst.Common.IO.Outbound
 {
-    public abstract class ClientBase : SocketBase, ISocketClient
+    public class ClientBase : SocketBase, ISocketClient
     {
         protected ClientBase(IChannelFactory channelFactory, ILogger logger) 
             : base(channelFactory, logger) { }
