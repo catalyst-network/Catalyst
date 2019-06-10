@@ -80,7 +80,7 @@ namespace Catalyst.Node.Core.IntegrationTests.Modules.Dfs
             _logger = Substitute.For<ILogger>();
             _dfs = new Core.Modules.Dfs.Dfs(_ipfsEngine, _logger);
         }
-        
+
         [Fact]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void Cancel_File_Transfer()
@@ -89,10 +89,10 @@ namespace Catalyst.Node.Core.IntegrationTests.Modules.Dfs
 
             IDownloadFileInformation fileTransferInformation = new DownloadFileTransferInformation(
                 sender,
-                sender, 
-                _fakeContext.Channel, 
-                Guid.NewGuid(), 
-                string.Empty, 
+                sender,
+                _fakeContext.Channel,
+                Guid.NewGuid(),
+                string.Empty,
                 555);
 
             var cancellationTokenSource = new CancellationTokenSource();
@@ -104,11 +104,11 @@ namespace Catalyst.Node.Core.IntegrationTests.Modules.Dfs
             var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
             var linearBackOffRetryPolicy = Policy.Handle<TaskCanceledException>()
                .WaitAndRetryAsync(5, retryAttempt =>
-                {
-                    var timeSpan = TimeSpan.FromSeconds(retryAttempt + 5);
-                    cts = new CancellationTokenSource(timeSpan);
-                    return timeSpan;
-                });
+               {
+                   var timeSpan = TimeSpan.FromSeconds(retryAttempt + 5);
+                   cts = new CancellationTokenSource(timeSpan);
+                   return timeSpan;
+               });
 
             linearBackOffRetryPolicy.ExecuteAsync(() =>
             {
@@ -149,16 +149,16 @@ namespace Catalyst.Node.Core.IntegrationTests.Modules.Dfs
                 new TransferFileBytesRequestHandler(_nodeFileTransferFactory, senderPeerId, _logger, _messageFactory);
             var uniqueFileKey = Guid.NewGuid();
             crcValue = FileHelper.GetCrcValue(fileToTransfer);
-            
+
             //Create a response object and set its return value
             var request = new AddFileToDfsRequest
             {
                 Node = "node1",
                 FileName = fileToTransfer,
-                FileSize = (ulong) byteSize
+                FileSize = (ulong)byteSize
             }.ToAnySigned(sender, uniqueFileKey);
             request.SendToHandler(_fakeContext, addFileToDfsRequestHandler);
-            
+
             Assert.Single(_nodeFileTransferFactory.Keys);
 
             var fileTransferInformation =
@@ -177,15 +177,15 @@ namespace Catalyst.Node.Core.IntegrationTests.Modules.Dfs
             }
 
             Assert.True(fileTransferInformation.ChunkIndicatorsTrue());
-            
+
             var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
             var linearBackOffRetryPolicy = Policy.Handle<TaskCanceledException>()
                .WaitAndRetryAsync(5, retryAttempt =>
-                {
-                    var timeSpan = TimeSpan.FromSeconds(retryAttempt + 5);
-                    cts = new CancellationTokenSource(timeSpan);
-                    return timeSpan;
-                });
+               {
+                   var timeSpan = TimeSpan.FromSeconds(retryAttempt + 5);
+                   cts = new CancellationTokenSource(timeSpan);
+                   return timeSpan;
+               });
 
             linearBackOffRetryPolicy.ExecuteAsync(() =>
             {
@@ -199,7 +199,7 @@ namespace Catalyst.Node.Core.IntegrationTests.Modules.Dfs
             }).GetAwaiter().GetResult();
 
             Assert.NotNull(fileTransferInformation.DfsHash);
-            
+
             long ipfsCrcValue;
             using (var ipfsStream = _dfs.ReadAsync(fileTransferInformation.DfsHash).GetAwaiter().GetResult())
             {

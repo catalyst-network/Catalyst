@@ -22,13 +22,10 @@
 #endregion
 
 using System;
-using System.Collections.Concurrent;
 using System.Linq;
-using System.Net;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Catalyst.Common.Config;
-using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.P2P;
@@ -36,6 +33,9 @@ using Catalyst.Common.P2P;
 using Catalyst.Common.Util;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
+using System.Collections.Concurrent;
+using System.Net;
+using Catalyst.Common.Interfaces.IO.Inbound;
 using Serilog;
 
 namespace Catalyst.Node.Core.P2P
@@ -43,6 +43,7 @@ namespace Catalyst.Node.Core.P2P
     public sealed class PeerValidator : IPeerValidator,
         IDisposable
     {
+        private readonly IPEndPoint _hostEndPoint;
         private readonly IPeerSettings _peerSettings;
         private readonly IPeerService _peerService;
         private readonly ILogger _logger;
@@ -60,6 +61,7 @@ namespace Catalyst.Node.Core.P2P
         {
             _peerSettings = peerSettings;
             _peerService = peerService;
+            _hostEndPoint = hostEndPoint;
 
             _logger = logger;
             _receivedResponses = new ConcurrentStack<IChanneledMessage<ProtocolMessage>>();
@@ -89,7 +91,7 @@ namespace Catalyst.Node.Core.P2P
         {
             try
             {
-                var datagramEnvelope = new MessageFactory().GetMessage(
+                var datagramEnvelope = new MessageFactory().GetDatagramMessage(
                     new MessageDto(
                         new PingRequest(),
                         MessageTypes.Ask,
@@ -99,11 +101,11 @@ namespace Catalyst.Node.Core.P2P
                     Guid.NewGuid()
                 );
 
-                ((PeerClient) _peerClient).SendMessage(datagramEnvelope);
+                ((PeerClient)_peerClient).SendMessageAsync(datagramEnvelope);
 
                 var tasks = new IChanneledMessageStreamer<ProtocolMessage>[]
                     {
-                        _peerService 
+                        _peerService
                     }
                    .Select(async p =>
                         await p.MessageStream.FirstAsync(a => a != null && a != NullObjects.ProtocolMessageDto))

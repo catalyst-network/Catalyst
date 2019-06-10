@@ -32,4 +32,7 @@
         <ProjectReference Include="..\Catalyst.Node.Core\Catalyst.Node.Core.csproj" />
         <ProjectReference Include="..\Catalyst.TestUtils\Catalyst.TestUtils.csproj" />
     </ItemGroup>
+    <ItemGroup>
+      <Folder Include="FileTransfer\" />
+    </ItemGroup>
 </Project>

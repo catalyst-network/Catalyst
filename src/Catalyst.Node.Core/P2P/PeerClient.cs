@@ -39,9 +39,6 @@ namespace Catalyst.Node.Core.P2P
         : UdpClient,
             IPeerClient
     {
-        /// <summary>
-        /// 
-        /// </summary>
         public PeerClient()
             : base(Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType))
         {
