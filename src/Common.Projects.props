@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+<Project>
     <PropertyGroup>
         <Company>AtlasCity.io</Company>
         <Copyright>Copyright © 2019 AtlasCity.io</Copyright>

@@ -89,6 +89,5 @@ namespace Catalyst.Node.Core.Modules.Dfs
             _logger.Debug("Reading content at path {0} from Ipfs", id);
             return _ipfs.FileSystem.ReadFileAsync(id, cancellationToken);
         }
-
     }
 }

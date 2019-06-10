@@ -32,47 +32,23 @@ namespace Catalyst.Node.Core.Modules.Dfs
 {
     public sealed class DfsHttp : IDfsHttp, IDisposable
     {
-        private readonly GatewayHost _gateway;
+        public GatewayHost Gateway { get; }
 
         public DfsHttp(ICoreApi ipfs)
         {
             // Make sure IPFS and the gateway are started.
             ipfs.Generic.IdAsync().Wait();
-            _gateway = new GatewayHost(ipfs);
+            Gateway = new GatewayHost(ipfs);
         }
 
         public string ContentUrl(string id)
         {
-            return _gateway.IpfsUrl(id);
+            return Gateway.IpfsUrl(id);
         }
 
         public void Dispose()
         {
-            _gateway?.Dispose();
-        }
-
-        /// <inheritdoc />
-        public void OpenInBrowser(string id)
-        {
-            var url = ContentUrl(id);
-
-            // thanks to mellinoe https://github.com/dotnet/corefx/issues/10361#issuecomment-235502080
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-            {
-                Process.Start(new ProcessStartInfo("cmd", $"/c start {url}"));
-            }
-            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-            {
-                Process.Start("xdg-open", url);
-            }
-            else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-            {
-                Process.Start("open", url);
-            }
-            else
-            {
-                throw new PlatformNotSupportedException($"Browsing on the platform '{RuntimeInformation.OSDescription}' is not supported.");
-            }
+            Gateway?.Dispose();
         }
     }
 }

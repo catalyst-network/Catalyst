@@ -119,7 +119,7 @@ namespace Catalyst.Common.Interfaces.FileTransfer
         /// <summary>Gets the upload message.</summary>
         /// <param name="chunkId">The chunk identifier.</param>
         /// <returns></returns>
-        AnySigned GetUploadMessageDto(uint chunkId);
+        ProtocolMessage GetUploadMessageDto(uint chunkId);
     }
 
     public interface IDownloadFileInformation : IFileTransferInformation

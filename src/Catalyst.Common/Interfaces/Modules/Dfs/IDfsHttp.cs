@@ -21,6 +21,8 @@
 
 #endregion
 
+using Ipfs.HttpGateway;
+
 namespace Catalyst.Common.Interfaces.Modules.Dfs
 {
     /// <summary>
@@ -29,6 +31,8 @@ namespace Catalyst.Common.Interfaces.Modules.Dfs
     /// <seealso cref="IDfs"/>
     public interface IDfsHttp
     {
+        GatewayHost Gateway { get; }
+        
         /// <summary>
         ///   Gets the URL of DFS content.
         /// </summary>
@@ -37,11 +41,5 @@ namespace Catalyst.Common.Interfaces.Modules.Dfs
         ///   The URL of the DFS <paramref name="id"/>.
         /// </returns>
         string ContentUrl(string id);
-
-        /// <summary>
-        ///   Opens a web browser on the DFS content.
-        /// </summary>
-        /// <param name="id">The unique ID of the content in the DFS.</param>
-        void OpenInBrowser(string id);
     }
 }

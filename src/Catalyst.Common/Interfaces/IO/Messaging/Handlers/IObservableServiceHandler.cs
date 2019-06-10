@@ -27,5 +27,5 @@ using DotNetty.Transport.Channels;
 
 namespace Catalyst.Common.Interfaces.IO.Messaging.Handlers
 {
-    public interface IObservableServiceHandler : IChannelHandler, IChanneledMessageStreamer<AnySigned>, IDisposable { }
+    public interface IObservableServiceHandler : IChannelHandler, IChanneledMessageStreamer<ProtocolMessage>, IDisposable { }
 }
