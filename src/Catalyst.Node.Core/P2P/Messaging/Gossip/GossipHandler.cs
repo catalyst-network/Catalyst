@@ -50,11 +50,11 @@ namespace Catalyst.Node.Core.P2P.Messaging.Gossip
 
         protected override void ChannelRead0(IChannelHandlerContext ctx, ProtocolMessage msg)
         {
-            // TODO Check sig
             if (msg.CheckIfMessageIsGossip())
             {
                 _gossipManager.IncomingGossip(msg);
 
+                // @TODO Check sig of originalGossipedMessage
                 ProtocolMessage originalGossipedMessage = ProtocolMessage.Parser.ParseFrom(msg.Value);
                 ctx.FireChannelRead(originalGossipedMessage);
             }
