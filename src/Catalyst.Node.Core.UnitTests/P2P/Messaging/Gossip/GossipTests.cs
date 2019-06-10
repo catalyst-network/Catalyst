@@ -136,14 +136,14 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Messaging.Gossip
             var protoDatagramChannelHandler = new ObservableServiceHandler(_logger);
             handler.StartObserving(protoDatagramChannelHandler.MessageStream);
 
-            EmbeddedChannel channel = new EmbeddedChannel(gossipHandler, protoDatagramChannelHandler);
+            var channel = new EmbeddedChannel(gossipHandler, protoDatagramChannelHandler);
 
             var anySignedGossip = new TransactionBroadcast()
                .ToAnySigned(PeerIdHelper.GetPeerId(Guid.NewGuid().ToString()))
                .ToAnySigned(PeerIdHelper.GetPeerId(Guid.NewGuid().ToString()));
             
             channel.WriteInbound(anySignedGossip);
-            bool hasHitHandler = waitHandle.WaitOne(TimeSpan.FromSeconds(5));
+            bool hasHitHandler = waitHandle.WaitOne(TimeSpan.FromSeconds(10));
             hasHitHandler.Should().BeTrue();
             waitHandle.Dispose();
         }
