@@ -41,6 +41,9 @@ namespace Catalyst.Common.IO.Messaging.Handlers
                 memoryStream.Write(packet.Content.Array, 0, packet.Content.ReadableBytes);
                 memoryStream.Seek(0, SeekOrigin.Begin);
 
+                System.Console.WriteLine("ByteArray Length :: {0}", memoryStream.Length);
+                System.Diagnostics.Debug.WriteLine("ByteArray Length :: {0}", memoryStream.Length);
+
                 var message = ProtocolMessage.Parser.ParseFrom(memoryStream);
                 context.FireChannelRead(message);
             }
