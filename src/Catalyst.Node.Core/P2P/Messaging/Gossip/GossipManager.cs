@@ -37,6 +37,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace Catalyst.Node.Core.P2P.Messaging.Gossip
 {
@@ -81,61 +82,44 @@ namespace Catalyst.Node.Core.P2P.Messaging.Gossip
         }
 
         /// <inheritdoc/>
-        public void Broadcast(ProtocolMessage protocolMessage)
+        public async Task BroadcastAsync(ProtocolMessage protocolMessage)
         {
             if (protocolMessage.CheckIfMessageIsGossip())
             {
                 throw new NotSupportedException("Cannot broadcast a message which is already a gossip type");
             }
 
-            Gossip(protocolMessage);
+            var correlationId = protocolMessage.CorrelationId.ToGuid();
+            var gossipRequest = await GetOrCreateAsync(correlationId);
+            var canGossip = await CanGossipAsync(correlationId, gossipRequest);
+
+            if (canGossip)
+            {
+                return;
+            }
+
+            await SendGossipMessagesAsync(protocolMessage, gossipRequest);
         }
 
         /// <inheritdoc/>
-        public void IncomingGossip(ProtocolMessage protocolMessage)
+        public async Task IncomingGossipAsync(ProtocolMessage protocolMessage)
         {
             if (!protocolMessage.CheckIfMessageIsGossip())
             {
                 throw new NotSupportedException("The Message is not a gossip type");
             }
 
-            // TODO: Check Gossip inner signature and outer signature
-            ProtocolMessage originalGossipedMessage = ProtocolMessage.Parser.ParseFrom(protocolMessage.Value);
-            IncrementReceivedCount(originalGossipedMessage.CorrelationId.ToGuid(), 1);
-        }
-
-        /// <summary>Gossips the specified message.</summary>
-        /// <param name="message">The message.</param>
-        private void Gossip(ProtocolMessage message)
-        {
-            var correlationId = message.CorrelationId.ToGuid();
-            var gossipCount = GetGossipCount(correlationId);
-            var canGossip = CanGossip(correlationId);
-            bool isInCache = gossipCount != -1;
-
-            if (!canGossip)
-            {
-                return;
-            }
-
-            if (!isInCache)
-            {
-                var request = new GossipRequest
-                {
-                    SentAt = DateTime.Now,
-                    Recipient = new PeerIdentifier(message.PeerId),
-                    Content = message,
-                    ReceivedCount = 1,
-                };
-                AddPendingRequest(correlationId, request);
-            }
-
-            SendGossipMessages(message);
+            var originalGossipedMessage = ProtocolMessage.Parser.ParseFrom(protocolMessage.Value);
+            var correlationId = originalGossipedMessage.CorrelationId.ToGuid();
+            var gossipRequest = await GetOrCreateAsync(correlationId);
+            gossipRequest.ReceivedCount += 1;
+            UpdatePendingRequest(correlationId, gossipRequest);
         }
 
         /// <summary>Sends gossips to random peers.</summary>
         /// <param name="message">The message.</param>
-        private void SendGossipMessages(ProtocolMessage message)
+        /// <param name="gossipRequest">The gossip request</param>
+        private async Task SendGossipMessagesAsync(ProtocolMessage message, GossipRequest gossipRequest)
         {
             var peersToGossip = GetRandomPeers(Constants.MaxGossipPeersPerRound);
             var correlationId = message.CorrelationId.ToGuid();
@@ -144,13 +128,14 @@ namespace Catalyst.Node.Core.P2P.Messaging.Gossip
             {
                 var datagramEnvelope = _messageFactory.GetDatagramMessage(new MessageDto(message,
                     MessageTypes.Gossip, peerIdentifier, _peerIdentifier), correlationId);
-                _peerClient.SendMessageAsync(datagramEnvelope);
+                await _peerClient.SendMessageAsync(datagramEnvelope);
             }
 
-            var updateCount = (uint)peersToGossip.Count;
+            var updateCount = (uint) peersToGossip.Count;
             if (updateCount > 0)
             {
-                IncrementGossipCount(correlationId, updateCount);
+                gossipRequest.GossipCount += updateCount;
+                UpdatePendingRequest(correlationId, gossipRequest);
             }
         }
 
@@ -166,89 +151,58 @@ namespace Catalyst.Node.Core.P2P.Messaging.Gossip
 
         /// <summary>Determines whether this instance can gossip the specified correlation identifier.</summary>
         /// <param name="correlationId">The correlation identifier.</param>
+        /// <param name="request">The gossip request</param>
         /// <returns><c>true</c> if this instance can gossip the specified correlation identifier; otherwise, <c>false</c>.</returns>
-        private bool CanGossip(Guid correlationId)
+        private async Task<bool> CanGossipAsync(Guid correlationId, GossipRequest request)
         {
-            var request = GetPendingRequestValue(correlationId);
-
-            // Request does not exist, we can gossip this message
-            if (request == null)
-            {
-                return true;
-            }
-
-            return request.GossipCount < GetMaxGossipCycles(correlationId);
+            return request.GossipCount < await GetMaxGossipCyclesAsync(request, correlationId);
         }
 
         /// <summary>Gets the amount of times a message has been gossiped</summary>
         /// <param name="correlationId">The message correlation identifier.</param>
         /// <returns></returns>
-        public int GetGossipCount(Guid correlationId)
+        public async Task<uint> GetGossipCountAsync(Guid correlationId)
         {
-            var gossipCount = (int?)GetPendingRequestValue(correlationId)?.GossipCount;
-            return gossipCount ?? -1;
+            var pendingRequest = await GetOrCreateAsync(correlationId);
+            return pendingRequest.GossipCount;
         }
-
-        /// <summary>Increments the gossip count.</summary>
-        /// <param name="correlationId">The correlation identifier.</param>
-        /// <param name="updateCount">The update count.</param>
-        private void IncrementGossipCount(Guid correlationId, uint updateCount)
-        {
-            var request = GetPendingRequestValue(correlationId);
-            request.GossipCount += updateCount;
-            AddPendingRequest(correlationId, request);
-        }
-
+        
         /// <summary>Adds the gossip request.</summary>
         /// <param name="gossipRequest">The gossip request.</param>
         /// <param name="correlationId">The message correlation ID</param>
-        private void AddPendingRequest(Guid correlationId, GossipRequest gossipRequest)
+        private void UpdatePendingRequest(Guid correlationId, GossipRequest gossipRequest)
         {
-            if (GetGossipCount(correlationId) == -1)
-            {
-                gossipRequest.PeerNetworkSize = _peers.GetAll().Count();
-            }
-
             _pendingRequests.Set(correlationId, gossipRequest, _entryOptions);
         }
 
+        /// <summary>Gets the maximum gossip cycles.</summary>
+        /// <param name="gossipRequest"></param>
+        /// <param name="guid">The unique identifier.</param>
+        /// <returns></returns>
+        private async Task<uint> GetMaxGossipCyclesAsync(GossipRequest gossipRequest, Guid guid)
+        {
+            var peerNetworkSize = gossipRequest.PeerNetworkSize;
+            return (uint) (Math.Log(peerNetworkSize / (double) Constants.MaxGossipPeersPerRound) /
+                Math.Max(1, await GetGossipCountAsync(guid) / Constants.MaxGossipPeersPerRound));
+        }
+        
         /// <summary>Increments the received count.</summary>
         /// <param name="correlationId">The correlation identifier.</param>
-        /// <param name="updateCount">The amount to increment by.</param>
-        private void IncrementReceivedCount(Guid correlationId, uint updateCount)
+        private async Task<GossipRequest> GetOrCreateAsync(Guid correlationId)
         {
-            var request = GetPendingRequestValue(correlationId);
-            if (request == null)
+            var request = await _pendingRequests.GetOrCreateAsync(correlationId, async entry =>
             {
-                request = new GossipRequest
+                entry.SetOptions(_entryOptions);
+                var gossipRequest = await Task.FromResult(new GossipRequest
                 {
-                    ReceivedCount = updateCount
-                };
-            }
-            else
-            {
-                request.ReceivedCount += updateCount;
-            }
+                    ReceivedCount = 0,
+                    GossipCount = 0,
+                    PeerNetworkSize = _peers.GetAll(_ => _).Count()
+                });
+                entry.Value = gossipRequest;
+                return gossipRequest;
+            });
 
-            AddPendingRequest(correlationId, request);
-        }
-
-        /// <summary>Gets the maximum gossip cycles.</summary>
-        /// <param name="guid">The unique identifier.</param>
-        /// <returns></returns>
-        private uint GetMaxGossipCycles(Guid guid)
-        {
-            var peerNetworkSize = GetPendingRequestValue(guid)?.PeerNetworkSize ?? _peers.GetAll().Count();
-            return (uint)(Math.Log(peerNetworkSize / (double)Constants.MaxGossipPeersPerRound) /
-                Math.Max(1, GetGossipCount(guid) / Constants.MaxGossipPeersPerRound));
-        }
-
-        /// <summary>Gets the pending request value.</summary>
-        /// <param name="guid">The unique identifier.</param>
-        /// <returns></returns>
-        private GossipRequest GetPendingRequestValue(Guid guid)
-        {
-            _pendingRequests.TryGetValue(guid, out GossipRequest request);
             return request;
         }
     }

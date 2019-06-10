@@ -48,11 +48,18 @@ namespace Catalyst.Node.Core.P2P.Messaging.Gossip
             _gossipManager = gossipManager;
         }
 
+        /// <summary>
+        /// Any gossip message which is handled by this handler has already been signature checked.
+        /// The GossipHandler will get the original inner message and pass it onto the handler
+        /// in-charge of executing the RX handlers.
+        /// </summary>
+        /// <param name="ctx">The Channel handler context.</param>
+        /// <param name="msg">The gossip message.</param>
         protected override void ChannelRead0(IChannelHandlerContext ctx, ProtocolMessage msg)
         {
             if (msg.CheckIfMessageIsGossip())
             {
-                _gossipManager.IncomingGossip(msg);
+                _gossipManager.IncomingGossipAsync(msg).ConfigureAwait(false).GetAwaiter().GetResult();
 
                 ProtocolMessage originalGossipedMessage = ProtocolMessage.Parser.ParseFrom(msg.Value);
                 ctx.FireChannelRead(originalGossipedMessage);

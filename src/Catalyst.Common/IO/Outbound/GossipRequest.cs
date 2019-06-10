@@ -27,7 +27,7 @@ namespace Catalyst.Common.IO.Outbound
     /// Represents a gossip request to the gossip cache
     /// </summary>
     /// <seealso cref="Catalyst.Common.IO.Outbound.PendingRequest" />
-    public sealed class GossipRequest : PendingRequest
+    public sealed class GossipRequest
     {
         /// <summary>Gets or sets the gossip count.</summary>
         /// <value>The amount of messages sent due to gossiping.</value>

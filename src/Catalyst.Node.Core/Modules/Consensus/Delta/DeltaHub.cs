@@ -73,7 +73,7 @@ namespace Catalyst.Node.Core.Modules.Consensus.Delta
             }
 
             var protocolMessage = candidate.ToAnySigned(_peerIdentifier.PeerId, Guid.NewGuid());
-            _gossipManager.Broadcast(null);
+            _gossipManager.BroadcastAsync(null);
 
             _logger.Debug("Started gossiping candidate {0}", candidate);
         }
@@ -90,7 +90,7 @@ namespace Catalyst.Node.Core.Modules.Consensus.Delta
                 }
 
                 // https://github.com/catalyst-network/Catalyst.Node/pull/448
-                _gossipManager.Broadcast(null);
+                _gossipManager.BroadcastAsync(null);
             }
         }
 
