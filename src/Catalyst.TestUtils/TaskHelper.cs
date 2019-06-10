@@ -36,13 +36,13 @@ namespace Catalyst.TestUtils
             {
                 while (!tokenSource.IsCancellationRequested)
                 {
-                    if (condition())
+                    if (!condition())
                     {
-                        break;
+                        Task.Delay(100).ConfigureAwait(false).GetAwaiter().GetResult();
                     }
                     else
                     {
-                        Task.Delay(100).ConfigureAwait(false).GetAwaiter().GetResult();
+                        return;
                     }
                 }
             }, tokenSource.Token).ConfigureAwait(false);
