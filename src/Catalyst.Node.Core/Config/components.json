@@ -261,14 +261,6 @@
                 }
             ],
             "instanceScope": "singleinstance"
-        },
-        {
-            "type": "Catalyst.Node.Core.P2P.Messaging.Gossip.GossipHandler",
-            "services": [
-                {
-                    "type": "Catalyst.Common.Interfaces.P2P.Messaging.Gossip.IGossipHandler, Catalyst.Common"
-                }
-            ]
         }
     ],
     "modules": [

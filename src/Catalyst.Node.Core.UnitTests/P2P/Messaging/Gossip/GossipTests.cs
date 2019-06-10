@@ -47,9 +47,9 @@ using SharpRepository.Repository;
 using System;
 using System.Collections.Generic;
 using System.Net;
-using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
+using TransactionBroadcast = Catalyst.Protocol.Transaction.TransactionBroadcast;
 
 namespace Catalyst.Node.Core.UnitTests.P2P.Messaging.Gossip
 {
@@ -125,9 +125,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Messaging.Gossip
         public async Task Gossip_Can_Execute_Proto_Handler()
         {
             var peerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("Test");
-            var hasHitHandler = false;
-
-            var handler = new TransactionBroadcastTestHandler(_logger, () => hasHitHandler = true);
+            var handler = new TestMessageHandler<TransactionBroadcast>(_logger);
             var manager = new GossipManager(peerIdentifier, _peers, Substitute.For<IMemoryCache>(), Substitute.For<IPeerClient>());
             var gossipHandler = new GossipHandler(manager);
 
@@ -141,24 +139,23 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Messaging.Gossip
                .ToAnySigned(PeerIdHelper.GetPeerId(Guid.NewGuid().ToString()));
 
             channel.WriteInbound(anySignedGossip);
-            await TaskHelper.WaitForAsync(() => hasHitHandler, TimeSpan.FromSeconds(10));
-            hasHitHandler.Should().BeTrue();
-        }
+            void CheckHandlerTestAction() => handler.SubstituteObserver.Received(1).OnNext(Arg.Any<TransactionBroadcast>());
 
-        [Fact]
-        public void Can_Recognize_Gossip_Message()
-        {
-            var peerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("1");
-            var gossipMessage = new TransactionBroadcast().ToAnySigned(peerIdentifier.PeerId, Guid.NewGuid())
-               .ToAnySigned(peerIdentifier.PeerId, Guid.NewGuid());
-            gossipMessage.CheckIfMessageIsGossip().Should().BeTrue();
+            await TaskHelper.WaitForAsync(() =>
+            {
+                try
+                {
+                    CheckHandlerTestAction();
+                    return true;
+                }
+                catch (Exception)
+                {
+                    // ignored
+                }
 
-            var nonGossipMessage = new PingRequest().ToAnySigned(peerIdentifier.PeerId, Guid.NewGuid());
-            nonGossipMessage.CheckIfMessageIsGossip().Should().BeFalse();
-
-            var secondNonGossipMessage = new PingRequest().ToAnySigned(peerIdentifier.PeerId, Guid.NewGuid())
-               .ToAnySigned(peerIdentifier.PeerId, Guid.NewGuid());
-            secondNonGossipMessage.CheckIfMessageIsGossip().Should().BeFalse();
+                return false;
+            }, TimeSpan.FromSeconds(5));
+            CheckHandlerTestAction();
         }
 
         [Theory]
@@ -239,22 +236,6 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Messaging.Gossip
         public void Dispose()
         {
             _cache.Dispose();
-        }
-
-        internal class TransactionBroadcastTestHandler : MessageHandlerBase<TransactionBroadcast>,
-            IP2PMessageHandler
-        {
-            private readonly Action _action;
-
-            public TransactionBroadcastTestHandler(ILogger logger, Action action) : base(logger)
-            {
-                _action = action;
-            }
-
-            protected override void Handler(IChanneledMessage<ProtocolMessage> message)
-            {
-                _action();
-            }
         }
     }
 }

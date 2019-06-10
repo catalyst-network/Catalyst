@@ -103,5 +103,21 @@ namespace Catalyst.Common.UnitTests.Extensions
             new Action(() => response.ToAnySigned(peerId))
                .Should().Throw<ArgumentException>();
         }
+
+        [Fact]
+        public void Can_Recognize_Gossip_Message()
+        {
+            var peerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("1");
+            var gossipMessage = new TransactionBroadcast().ToAnySigned(peerIdentifier.PeerId, Guid.NewGuid())
+               .ToAnySigned(peerIdentifier.PeerId, Guid.NewGuid());
+            gossipMessage.CheckIfMessageIsGossip().Should().BeTrue();
+
+            var nonGossipMessage = new PingRequest().ToAnySigned(peerIdentifier.PeerId, Guid.NewGuid());
+            nonGossipMessage.CheckIfMessageIsGossip().Should().BeFalse();
+
+            var secondNonGossipMessage = new PingRequest().ToAnySigned(peerIdentifier.PeerId, Guid.NewGuid())
+               .ToAnySigned(peerIdentifier.PeerId, Guid.NewGuid());
+            secondNonGossipMessage.CheckIfMessageIsGossip().Should().BeFalse();
+        }
     }
 }
