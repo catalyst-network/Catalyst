@@ -40,7 +40,6 @@ namespace Catalyst.Node.Core.IntegrationTests.Modules.Dfs
     {
         private readonly IpfsAdapter _ipfs;
         private readonly Core.Modules.Dfs.Dfs _dfs;
-        private readonly ILogger _logger;
         private readonly DfsHttp _dfsHttp;
 
         public DfsHttpTest(ITestOutputHelper output) : base(output)
@@ -54,9 +53,9 @@ namespace Catalyst.Node.Core.IntegrationTests.Modules.Dfs
             
             var passwordReader = Substitute.For<IPasswordReader>();
             passwordReader.ReadSecurePassword().ReturnsForAnyArgs(TestPasswordReader.BuildSecureStringPassword("abcd"));
-            _logger = Substitute.For<ILogger>();
-            _ipfs = new IpfsAdapter(passwordReader, peerSettings, FileSystem, _logger);
-            _dfs = new Core.Modules.Dfs.Dfs(_ipfs, _logger);
+            var logger = Substitute.For<ILogger>();
+            _ipfs = new IpfsAdapter(passwordReader, peerSettings, FileSystem, logger);
+            _dfs = new Core.Modules.Dfs.Dfs(_ipfs, logger);
             _dfsHttp = new DfsHttp(_ipfs);
         }
 
@@ -83,16 +82,16 @@ namespace Catalyst.Node.Core.IntegrationTests.Modules.Dfs
             // The gateway takes some time to startup.
             var end = DateTime.Now.AddSeconds(10);
             string content = null;
-            while (content != null && DateTime.Now < end)
+            
+            // while (content != null && DateTime.Now < end)
+            
+            try
             {
-                try
-                {
-                    content = await httpClient.GetStringAsync(url);
-                }
-                catch (Exception)
-                {
-                    await Task.Delay(200);
-                }
+                content = await httpClient.GetStringAsync(url);
+            }
+            catch (Exception)
+            {
+                await Task.Delay(200).ConfigureAwait(false);
             }
 
             content.Should().Equals(text);
