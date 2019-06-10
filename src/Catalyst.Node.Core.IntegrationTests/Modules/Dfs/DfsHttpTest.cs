@@ -79,15 +79,19 @@ namespace Catalyst.Node.Core.IntegrationTests.Modules.Dfs
 
             var httpClient = new HttpClient();
 
+            // The gateway takes some time to startup.
+            var end = DateTime.Now.AddSeconds(10);
             string content = null;
-            
-            try
+            while (content != null && DateTime.Now < end)
             {
-                content = await httpClient.GetStringAsync(url);
-            }
-            catch (Exception)
-            {
-                await Task.Delay(200).ConfigureAwait(false);
+                try
+                {
+                    content = await httpClient.GetStringAsync(url);
+                }
+                catch (Exception)
+                {
+                    await Task.Delay(200);
+                }
             }
 
             content.Should().Equals(text);
