@@ -108,7 +108,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Messaging.Gossip
 
             EmbeddedChannel channel = new EmbeddedChannel(
                 new GossipHandler(gossipMessageHandler),
-                new ObservableServiceHandler(_logger)
+                new ObservableServiceHandler()
             );
 
             var transaction = new TransactionBroadcast();
@@ -131,7 +131,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Messaging.Gossip
             var manager = new GossipManager(peerIdentifier, _peers, Substitute.For<IMemoryCache>(), Substitute.For<IPeerClient>());
             var gossipHandler = new GossipHandler(manager);
 
-            var protoDatagramChannelHandler = new ObservableServiceHandler(_logger);
+            var protoDatagramChannelHandler = new ObservableServiceHandler();
             handler.StartObserving(protoDatagramChannelHandler.MessageStream);
 
             var channel = new EmbeddedChannel(gossipHandler, protoDatagramChannelHandler);

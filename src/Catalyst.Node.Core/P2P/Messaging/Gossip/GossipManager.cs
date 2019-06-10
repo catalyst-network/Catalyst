@@ -90,15 +90,15 @@ namespace Catalyst.Node.Core.P2P.Messaging.Gossip
             }
 
             var correlationId = protocolMessage.CorrelationId.ToGuid();
-            var gossipRequest = await GetOrCreateAsync(correlationId);
-            var canGossip = await CanGossipAsync(correlationId, gossipRequest);
+            var gossipRequest = await GetOrCreateAsync(correlationId).ConfigureAwait(false);
+            var canGossip = await CanGossipAsync(correlationId, gossipRequest).ConfigureAwait(false);
 
             if (canGossip)
             {
                 return;
             }
 
-            await SendGossipMessagesAsync(protocolMessage, gossipRequest);
+            await SendGossipMessagesAsync(protocolMessage, gossipRequest).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
@@ -111,7 +111,7 @@ namespace Catalyst.Node.Core.P2P.Messaging.Gossip
 
             var originalGossipedMessage = ProtocolMessage.Parser.ParseFrom(protocolMessage.Value);
             var correlationId = originalGossipedMessage.CorrelationId.ToGuid();
-            var gossipRequest = await GetOrCreateAsync(correlationId);
+            var gossipRequest = await GetOrCreateAsync(correlationId).ConfigureAwait(false);
             gossipRequest.ReceivedCount += 1;
             UpdatePendingRequest(correlationId, gossipRequest);
         }
@@ -128,7 +128,7 @@ namespace Catalyst.Node.Core.P2P.Messaging.Gossip
             {
                 var datagramEnvelope = _messageFactory.GetDatagramMessage(new MessageDto(message,
                     MessageTypes.Gossip, peerIdentifier, _peerIdentifier), correlationId);
-                await _peerClient.SendMessageAsync(datagramEnvelope);
+                await _peerClient.SendMessageAsync(datagramEnvelope).ConfigureAwait(false);
             }
 
             var updateCount = (uint) peersToGossip.Count;
@@ -155,7 +155,7 @@ namespace Catalyst.Node.Core.P2P.Messaging.Gossip
         /// <returns><c>true</c> if this instance can gossip the specified correlation identifier; otherwise, <c>false</c>.</returns>
         private async Task<bool> CanGossipAsync(Guid correlationId, GossipRequest request)
         {
-            return request.GossipCount < await GetMaxGossipCyclesAsync(request, correlationId);
+            return request.GossipCount < await GetMaxGossipCyclesAsync(request, correlationId).ConfigureAwait(false);
         }
 
         /// <summary>Gets the amount of times a message has been gossiped</summary>
@@ -163,7 +163,7 @@ namespace Catalyst.Node.Core.P2P.Messaging.Gossip
         /// <returns></returns>
         public async Task<uint> GetGossipCountAsync(Guid correlationId)
         {
-            var pendingRequest = await GetOrCreateAsync(correlationId);
+            var pendingRequest = await GetOrCreateAsync(correlationId).ConfigureAwait(false);
             return pendingRequest.GossipCount;
         }
         
@@ -183,7 +183,7 @@ namespace Catalyst.Node.Core.P2P.Messaging.Gossip
         {
             var peerNetworkSize = gossipRequest.PeerNetworkSize;
             return (uint) (Math.Log(peerNetworkSize / (double) Constants.MaxGossipPeersPerRound) /
-                Math.Max(1, await GetGossipCountAsync(guid) / Constants.MaxGossipPeersPerRound));
+                Math.Max(1, await GetGossipCountAsync(guid).ConfigureAwait(false) / Constants.MaxGossipPeersPerRound));
         }
         
         /// <summary>Increments the received count.</summary>
@@ -198,10 +198,10 @@ namespace Catalyst.Node.Core.P2P.Messaging.Gossip
                     ReceivedCount = 0,
                     GossipCount = 0,
                     PeerNetworkSize = _peers.GetAll(_ => _).Count()
-                });
+                }).ConfigureAwait(false);
                 entry.Value = gossipRequest;
                 return gossipRequest;
-            });
+            }).ConfigureAwait(false);
 
             return request;
         }
