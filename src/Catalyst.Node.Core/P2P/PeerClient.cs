@@ -38,10 +38,14 @@ namespace Catalyst.Node.Core.P2P
             IPeerIdentifier peerIdentifier) 
             : this(clientChannelFactory, peerIdentifier.IpEndPoint) { }
         
-        public PeerClient(IUdpClientChannelFactory clientChannelFactory, IPEndPoint ipEndPoint)
+        /// <param name="clientChannelFactory">A factory used to build the appropriate kind of channel for a udp client.</param>
+        /// <param name="ipEndPoint">The endpoint to which the client will be bound. This will default to
+        /// the loopback IP Address, and port 0.</param>
+        public PeerClient(IUdpClientChannelFactory clientChannelFactory, IPEndPoint ipEndPoint = null)
             : base(clientChannelFactory, Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType))
         {
-            Channel = ChannelFactory.BuildChannel(ipEndPoint.Address).Channel;
+            var bindingEndpoint = ipEndPoint ?? new IPEndPoint(IPAddress.Loopback, IPEndPoint.MinPort);
+            Channel = ChannelFactory.BuildChannel(bindingEndpoint.Address, bindingEndpoint.Port).Channel;
         }
 
         public Task SendMessageAsync(IByteBufferHolder datagramPacket)
