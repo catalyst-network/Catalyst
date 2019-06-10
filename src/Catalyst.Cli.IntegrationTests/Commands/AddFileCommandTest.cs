@@ -62,7 +62,7 @@ namespace Catalyst.Cli.IntegrationTests.Commands
 
                 var task = Task.Run(() => 
                     shell.AdvancedShell.ParseCommand(
-                    "addfile", "-n", "node1", "-f", fileName));
+                        "addfile", "-n", "node1", "-f", fileName));
 
                 if (expectedResult)
                 {

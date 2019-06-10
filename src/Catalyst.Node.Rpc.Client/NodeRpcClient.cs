@@ -24,9 +24,10 @@
 using System.Collections.Generic;
 using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
-using Catalyst.Common.Interfaces.Rpc;
+using Catalyst.Common.Interfaces.IO.Outbound;
 using Catalyst.Common.IO.Outbound;
 using Catalyst.Common.Network;
+using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Protocol.Common;
 using DotNetty.Codecs.Protobuf;
 using DotNetty.Transport.Channels;
@@ -39,34 +40,20 @@ namespace Catalyst.Node.Rpc.Client
     ///     This class provides a command line interface (CLI) application to connect to Catalyst Node.
     ///     Through the CLI the node operator will be able to connect to any number of running nodes and run commands.
     /// </summary>
-    internal sealed class NodeRpcClient
-        : TcpClient<TcpSocketChannel>,
-            INodeRpcClient
+    internal sealed class NodeRpcClient : TcpClient, INodeRpcClient
     {
         /// <summary>
         ///     Initialize a new instance of RPClient
         /// </summary>
+        /// <param name="channelFactory"></param>
         /// <param name="certificate"></param>
         /// <param name="nodeConfig">rpc node config</param>
-        public NodeRpcClient(X509Certificate certificate, 
+        public NodeRpcClient(ITcpClientChannelFactory channelFactory,
+            X509Certificate2 certificate, 
             IRpcNodeConfig nodeConfig) 
-            : base(Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType))
+            : base(channelFactory, Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType))
         {
-            IList<IChannelHandler> channelHandlers = new List<IChannelHandler>
-            {
-                new ProtobufVarint32LengthFieldPrepender(),
-                new ProtobufEncoder(),
-                new ProtobufVarint32FrameDecoder(),
-                new ProtobufDecoder(ProtocolMessage.Parser)
-            };
-
-            Bootstrap(
-                new OutboundChannelInitializerBase<ISocketChannel>(channel => { },
-                    channelHandlers,
-                    nodeConfig.HostAddress,
-                    certificate
-                ), EndpointBuilder.BuildNewEndPoint(nodeConfig.HostAddress, nodeConfig.Port)
-            );
+            Channel = channelFactory.BuildChannel(nodeConfig.HostAddress, nodeConfig.Port, certificate).Channel;
         }
     }
 }

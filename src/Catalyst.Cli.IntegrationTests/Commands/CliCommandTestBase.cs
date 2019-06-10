@@ -72,7 +72,7 @@ namespace Catalyst.Cli.IntegrationTests.Commands
 
             var nodeRpcClientFactory = Substitute.For<INodeRpcClientFactory>();
             nodeRpcClientFactory
-               .GetClient(Arg.Any<X509Certificate>(), Arg.Is<IRpcNodeConfig>(c => c.NodeId == "node1"))
+               .GetClient(Arg.Any<X509Certificate2>(), Arg.Is<IRpcNodeConfig>(c => c.NodeId == "node1"))
                .Returns(NodeRpcClient);
 
             ConfigureContainerBuilder(config);

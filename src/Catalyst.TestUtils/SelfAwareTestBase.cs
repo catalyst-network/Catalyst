@@ -22,33 +22,34 @@
 #endregion
 
 using System;
-using System.Threading;
-using System.Threading.Tasks;
+using System.Reflection;
+using Xunit.Abstractions;
 
 namespace Catalyst.TestUtils
 {
-    public static class TaskHelper
+    /// <summary>
+    /// A test that is aware of its name, and has a reference to the test output
+    /// </summary>
+    public class SelfAwareTestBase
     {
-        public static async Task WaitForAsync(Func<bool> condition, TimeSpan timespan)
+        protected ITest CurrentTest;
+        protected string CurrentTestName;
+        protected ITestOutputHelper Output;
+
+        protected SelfAwareTestBase(ITestOutputHelper output)
         {
-            CancellationTokenSource tokenSource;
-            using (tokenSource = new CancellationTokenSource(timespan))
+            Output = output;
+            CurrentTest = Output.GetType()
+               .GetField("test", BindingFlags.Instance | BindingFlags.NonPublic)
+               .GetValue(Output) as ITest;
+
+            if (CurrentTest == null)
             {
-                await Task.Run(() =>
-                {
-                    while (!tokenSource.IsCancellationRequested)
-                    {
-                        if (!condition())
-                        {
-                            Task.Delay(100).ConfigureAwait(false).GetAwaiter().GetResult();
-                        }
-                        else
-                        {
-                            return;
-                        }
-                    }
-                }, tokenSource.Token).ConfigureAwait(false);
+                throw new ArgumentNullException(
+                    $"Failed to reflect current test as {nameof(ITest)} from {nameof(output)}");
             }
+
+            CurrentTestName = CurrentTest.TestCase.TestMethod.Method.Name;
         }
     }
 }

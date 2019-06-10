@@ -21,21 +21,32 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.IO;
-using Catalyst.Common.Interfaces.IO.Outbound;
-using Catalyst.Protocol.Common;
-using Serilog;
+using Catalyst.Common.Interfaces.Modules.Dfs;
+using Ipfs.HttpGateway;
+using Ipfs.CoreApi;
+using System;
 
-namespace Catalyst.Common.IO.Outbound
+namespace Catalyst.Node.Core.Modules.Dfs
 {
-    public class ClientBase : SocketBase, ISocketClient
+    public sealed class DfsHttp : IDfsHttp, IDisposable
     {
-        protected ClientBase(IChannelFactory channelFactory, ILogger logger) 
-            : base(channelFactory, logger) { }
+        public GatewayHost Gateway { get; }
 
-        public void SendMessage(ProtocolMessage message)
+        public DfsHttp(ICoreApi ipfs)
         {
-            Channel.WriteAndFlushAsync(message).ConfigureAwait(false);
+            // Make sure IPFS and the gateway are started.
+            ipfs.Generic.IdAsync().Wait();
+            Gateway = new GatewayHost(ipfs, "http://127.0.0.1:8181");
+        }
+
+        public string ContentUrl(string id)
+        {
+            return Gateway.IpfsUrl(id);
+        }
+
+        public void Dispose()
+        {
+            Gateway?.Dispose();
         }
     }
 }

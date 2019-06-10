@@ -21,21 +21,32 @@
 
 #endregion
 
+using System;
 using Catalyst.Common.Interfaces.IO;
-using Catalyst.Common.Interfaces.IO.Outbound;
+using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Protocol.Common;
-using Serilog;
+using Dawn;
+using DotNetty.Transport.Channels;
 
-namespace Catalyst.Common.IO.Outbound
+namespace Catalyst.Common.IO
 {
-    public class ClientBase : SocketBase, ISocketClient
+    public class ObservableSocket : IObservableSocket
     {
-        protected ClientBase(IChannelFactory channelFactory, ILogger logger) 
-            : base(channelFactory, logger) { }
-
-        public void SendMessage(ProtocolMessage message)
+        public ObservableSocket(IObservable<IChanneledMessage<ProtocolMessage>> messageStream, IChannel channel)
         {
-            Channel.WriteAndFlushAsync(message).ConfigureAwait(false);
+            Guard.Argument(messageStream, nameof(messageStream)).NotNull();
+
+            MessageStream = messageStream;
+            Channel = channel;
+        }
+
+        public IChannel Channel { get; }
+        public IObservable<IChanneledMessage<ProtocolMessage>> MessageStream { get; }
+
+        void IDisposable.Dispose()
+        {
+            Channel?.CloseAsync();
         }
     }
+
 }
