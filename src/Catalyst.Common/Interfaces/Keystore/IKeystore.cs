@@ -28,10 +28,6 @@ namespace Catalyst.Common.Interfaces.Keystore
 {
     public interface IKeyStore
     {
-        /// <summary>Gets the password.</summary>
-        /// <value>The password.</value>
-        string Password { get; }
-
         byte[] KeyStoreDecrypt(string password, string json);
 
         Task<string> KeyStoreGenerate(IPrivateKey privateKey, string password);

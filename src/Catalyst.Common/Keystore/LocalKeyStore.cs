@@ -36,7 +36,7 @@ using Serilog;
 
 namespace Catalyst.Common.Keystore
 {
-    public sealed class LocalKeyStore : IKeyStore
+    public sealed class LocalKeyStore : IKeyStore, IDisposable
     {
         private readonly ILogger _logger;
         private readonly IAddressHelper _addressHelper;
@@ -128,6 +128,11 @@ namespace Catalyst.Common.Keystore
             }
             
             return json;
+        }
+
+        public void Dispose()
+        {
+            _password?.Dispose();
         }
     }
 }
