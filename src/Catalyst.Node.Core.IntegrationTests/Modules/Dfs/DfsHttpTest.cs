@@ -79,11 +79,7 @@ namespace Catalyst.Node.Core.IntegrationTests.Modules.Dfs
 
             var httpClient = new HttpClient();
 
-            // The gateway takes some time to startup.
-            var end = DateTime.Now.AddSeconds(10);
             string content = null;
-            
-            // while (content != null && DateTime.Now < end)
             
             try
             {
