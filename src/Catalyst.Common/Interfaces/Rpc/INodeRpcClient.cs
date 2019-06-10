@@ -21,6 +21,7 @@
 
 #endregion
 
+using System;
 using Catalyst.Common.Interfaces.IO.Outbound;
 
 namespace Catalyst.Common.Interfaces.Rpc

@@ -21,9 +21,7 @@
 
 #endregion
 
-using System.Threading.Tasks;
 using Catalyst.Protocol.Common;
-using DotNetty.Transport.Channels;
 
 namespace Catalyst.Common.Interfaces.IO.Outbound
 {

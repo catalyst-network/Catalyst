@@ -41,9 +41,7 @@ using Serilog;
 
 namespace Catalyst.Node.Core.RPC
 {
-    public class NodeRpcServer
-        : TcpServer,
-            INodeRpcServer
+    public class NodeRpcServer : TcpServer, INodeRpcServer
     {
         private readonly CancellationTokenSource _cancellationSource;
         private readonly X509Certificate2 _certificate;
@@ -53,10 +51,11 @@ namespace Catalyst.Node.Core.RPC
 
         public NodeRpcServer(IRpcServerSettings settings,
             ILogger logger,
+            ITcpServerChannelFactory channelFactory,
             ICertificateStore certificateStore,
             IEnumerable<IRpcRequestHandler> requestHandlers,
             ICorrelationManager correlationManager,
-            IObservableServiceHandler observableServiceHandler) : base(logger)
+            IObservableServiceHandler observableServiceHandler) : base(channelFactory, logger)
         {
             Settings = settings;
             _cancellationSource = new CancellationTokenSource();
@@ -65,22 +64,9 @@ namespace Catalyst.Node.Core.RPC
             MessageStream = observableServiceHandler.MessageStream;
             
             requestHandlers.ToList().ForEach(h => h.StartObserving(MessageStream));
-           
-            Bootstrap(
-                new InboundChannelInitializerBase<ISocketChannel>(channel => { },
-                    new List<IChannelHandler>
-                    {
-                        new ProtobufVarint32FrameDecoder(),
-                        new ProtobufDecoder(ProtocolMessage.Parser),
-                        new ProtobufVarint32LengthFieldPrepender(),
-                        new ProtobufEncoder(),
-                        new CorrelationHandler(correlationManager),
-                        observableServiceHandler
-                    },
-                    _certificate
-                ),
-                Settings.BindAddress, Settings.Port
-            );
+
+            var observableSocket = ChannelFactory.BuildChannel(certificate: _certificate);
+            Channel = observableSocket.Channel;
         }
 
         /// <summary>
