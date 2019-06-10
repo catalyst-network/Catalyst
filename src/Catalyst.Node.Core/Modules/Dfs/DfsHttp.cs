@@ -24,8 +24,6 @@
 using Catalyst.Common.Interfaces.Modules.Dfs;
 using Ipfs.HttpGateway;
 using Ipfs.CoreApi;
-using System.Runtime.InteropServices;
-using System.Diagnostics;
 using System;
 
 namespace Catalyst.Node.Core.Modules.Dfs
@@ -38,7 +36,7 @@ namespace Catalyst.Node.Core.Modules.Dfs
         {
             // Make sure IPFS and the gateway are started.
             ipfs.Generic.IdAsync().Wait();
-            Gateway = new GatewayHost(ipfs);
+            Gateway = new GatewayHost(ipfs, "http://127.0.0.1:8181");
         }
 
         public string ContentUrl(string id)
