@@ -38,14 +38,17 @@ namespace Catalyst.Common.IO.Messaging.Handlers
 
             using (var memoryStream = new MemoryStream())
             {
-                memoryStream.Write(packet.Content.Array, 0, packet.Content.ReadableBytes);
-                memoryStream.Seek(0, SeekOrigin.Begin);
+                //memoryStream.Write(packet.Content.Array, 0, 256);
 
-                System.Console.WriteLine("ByteArray Length :: {0}", memoryStream.Length);
-                System.Diagnostics.Debug.WriteLine("ByteArray Length :: {0}", memoryStream.Length);
+                memoryStream.Write(packet.Content.Array, 0, packet.Content.ReadableBytes);
+                var pos = memoryStream.Seek(0, SeekOrigin.Begin);
+
+                System.Console.WriteLine("ByteArray Length :: {0} Packet Len :: {1}", memoryStream.Length, packet.Content.ReadableBytes);
+                System.Diagnostics.Debug.WriteLine("ByteArray Length :: {0}  Packet Len :: {1}", memoryStream.Length, packet.Content.ReadableBytes);
 
                 //var messageP = ProtocolMessage.Parser.WithDiscardUnknownFields(true);
-                var errorRepeat = memoryStream.GetBuffer();
+                //var errorRepeat = memoryStream.GetBuffer();
+
                 var testData = memoryStream.ToArray();
 
                 var message = ProtocolMessage.Parser.ParseFrom(testData);
