@@ -44,7 +44,11 @@ namespace Catalyst.Common.IO.Messaging.Handlers
                 System.Console.WriteLine("ByteArray Length :: {0}", memoryStream.Length);
                 System.Diagnostics.Debug.WriteLine("ByteArray Length :: {0}", memoryStream.Length);
 
-                var message = ProtocolMessage.Parser.ParseFrom(memoryStream);
+                //var messageP = ProtocolMessage.Parser.WithDiscardUnknownFields(true);
+                var errorRepeat = memoryStream.GetBuffer();
+                var testData = memoryStream.ToArray();
+
+                var message = ProtocolMessage.Parser.ParseFrom(testData);
                 context.FireChannelRead(message);
             }
         }
