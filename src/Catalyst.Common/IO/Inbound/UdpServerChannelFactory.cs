@@ -65,14 +65,16 @@ namespace Catalyst.Common.IO.Inbound
             _observableServiceHandler = new ObservableServiceHandler();
         }
 
+        private List<IChannelHandler> _handlers;
+
         protected override List<IChannelHandler> Handlers => 
-            new List<IChannelHandler>
+            _handlers ?? (_handlers = new List<IChannelHandler>
             {
                 new ProtoDatagramHandler(),
                 new CorrelationHandler(_correlationManager),
                 new GossipHandler(_gossipManager),
                 new SignatureHandler(_keySigner),
                 _observableServiceHandler
-            };
+            });
     }
 }

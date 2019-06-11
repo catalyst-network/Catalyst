@@ -29,14 +29,13 @@ using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging;
-using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.Interfaces.P2P.Messaging.Gossip;
 using Catalyst.Common.IO.Inbound;
 using Catalyst.Common.IO.Messaging.Handlers;
 using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Protocol.IPPN;
 using Catalyst.TestUtils;
+using DotNetty.Codecs.Protobuf;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Embedded;
 using FluentAssertions;
@@ -46,54 +45,47 @@ using Xunit;
 
 namespace Catalyst.Common.UnitTests.IO.Inbound
 {
-    public class UdpServerChannelFactoryTests
+    public class TcpServerChannelFactoryTests
     {
-        private sealed class TestUdpServerChannelFactory : UdpServerChannelFactory
+        private sealed class TestTcpServerChannelFactory : TcpServerChannelFactory
         {
-            public TestUdpServerChannelFactory(ICorrelationManager correlationManager,
-                IGossipManager gossipManager,
-                IKeySigner keySigner,
+            public TestTcpServerChannelFactory(ICorrelationManager correlationManager,
                 IPeerSettings peerSettings)
-                : base(correlationManager, gossipManager, keySigner, peerSettings) { }
+                : base(correlationManager, peerSettings) { }
 
             public IReadOnlyCollection<IChannelHandler> InheritedHandlers => Handlers;
         }
 
         private readonly ICorrelationManager _correlationManager;
-        private readonly IGossipManager _gossipManager;
-        private readonly IKeySigner _keySigner;
-        private readonly TestUdpServerChannelFactory _factory;
+        private readonly TestTcpServerChannelFactory _factory;
 
-        public UdpServerChannelFactoryTests()
+        public TcpServerChannelFactoryTests()
         {
             _correlationManager = Substitute.For<ICorrelationManager>();
-            _gossipManager = Substitute.For<IGossipManager>();
-            _keySigner = Substitute.For<IKeySigner>();
 
             var peerSettings = Substitute.For<IPeerSettings>();
             peerSettings.BindAddress.Returns(IPAddress.Parse("127.0.0.1"));
             peerSettings.Port.Returns(1234);
-            _factory = new TestUdpServerChannelFactory(
+            _factory = new TestTcpServerChannelFactory(
                 _correlationManager,
-                _gossipManager,
-                _keySigner,
                 peerSettings);
         }
 
         [Fact]
-        public void UdpServerChannelFactory_should_have_correct_handlers()
+        public void TcpServerChannelFactory_should_have_correct_handlers()
         {
-            _factory.InheritedHandlers.Count(h => h != null).Should().Be(5);
+            _factory.InheritedHandlers.Count(h => h != null).Should().Be(6);
             var handlers = _factory.InheritedHandlers.ToArray();
-            handlers[0].Should().BeOfType<ProtoDatagramHandler>();
-            handlers[1].Should().BeOfType<CorrelationHandler>();
-            handlers[2].Should().BeOfType<GossipHandler>();
-            handlers[3].Should().BeOfType<SignatureHandler>();
-            handlers[4].Should().BeOfType<ObservableServiceHandler>();
+            handlers[0].Should().BeOfType<ProtobufVarint32FrameDecoder>();
+            handlers[1].Should().BeOfType<ProtobufDecoder>();
+            handlers[2].Should().BeOfType<ProtobufVarint32LengthFieldPrepender>();
+            handlers[3].Should().BeOfType<ProtobufEncoder>();
+            handlers[4].Should().BeOfType<CorrelationHandler>();
+            handlers[5].Should().BeOfType<ObservableServiceHandler>();
         }
 
         [Fact]
-        public async Task UdpServerChannelFactory_should_put_the_correct_handlers_on_the_pipeline()
+        public async Task TcpServerChannelFactory_should_put_the_correct_handlers_on_the_pipeline()
         {
             var testingChannel = new EmbeddedChannel("test".ToChannelId(),
                 true, _factory.InheritedHandlers.ToArray());
@@ -101,7 +93,6 @@ namespace Catalyst.Common.UnitTests.IO.Inbound
             var senderId = PeerIdHelper.GetPeerId("sender");
             var correlationId = Guid.NewGuid();
             var protocolMessage = new PingRequest().ToAnySigned(senderId, correlationId);
-            var datagram = protocolMessage.ToDatagram(new IPEndPoint(IPAddress.Loopback, 0));
 
             var observer = new ProtocolMessageObserver(0, Substitute.For<ILogger>());
            
@@ -109,11 +100,9 @@ namespace Catalyst.Common.UnitTests.IO.Inbound
             using (messageStream.Subscribe(observer))
             {
                 messageStream.Publish().Connect();
-                testingChannel.WriteInbound(datagram);
+                testingChannel.WriteInbound(protocolMessage);
                 _correlationManager.Received(1).TryMatchResponse(protocolMessage);
-                await _gossipManager.DidNotReceiveWithAnyArgs().BroadcastAsync(null);
-                _keySigner.DidNotReceiveWithAnyArgs().Verify(null, null, null);
-
+                
                 await messageStream.WaitForItemsOnDelayedStreamOnTaskPoolScheduler();
 
                 observer.Received.Count.Should().Be(1);
