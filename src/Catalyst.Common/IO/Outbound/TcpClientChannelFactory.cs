@@ -26,7 +26,10 @@ using System.Net;
 using System.Security.Cryptography.X509Certificates;
 using Catalyst.Common.Interfaces.IO;
 using Catalyst.Common.Interfaces.IO.Outbound;
+using Catalyst.Common.Interfaces.Modules.KeySigner;
+using Catalyst.Common.IO.Duplex;
 using Catalyst.Common.IO.Inbound.Handlers;
+using Catalyst.Common.IO.Outbound.Handlers;
 using Catalyst.Protocol.Common;
 using DotNetty.Codecs.Protobuf;
 using DotNetty.Handlers.Logging;
@@ -37,6 +40,9 @@ namespace Catalyst.Common.IO.Outbound
 {
     public class TcpClientChannelFactory : ITcpClientChannelFactory
     {
+        private readonly IKeySigner _keySigner;
+        public TcpClientChannelFactory(IKeySigner keySigner) { _keySigner = keySigner; }
+        
         private const int BackLogValue = 100;
         
         public IObservableSocket BuildChannel(IPAddress targetAddress = null, 
@@ -51,6 +57,7 @@ namespace Catalyst.Common.IO.Outbound
                 new ProtobufEncoder(),
                 new ProtobufVarint32FrameDecoder(),
                 new ProtobufDecoder(ProtocolMessage.Parser),
+                new MessageSignerDuplex(new ProtocolMessageVerifyHandler(_keySigner), new ProtocolMessageSignHandler(_keySigner)),
                 observableServiceHandler
             };
 
