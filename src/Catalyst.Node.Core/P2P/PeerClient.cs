@@ -21,35 +21,31 @@
 
 #endregion
 
-using System;
-using System.Collections.Generic;
 using System.Net;
 using System.Reflection;
 using System.Threading.Tasks;
+using Catalyst.Common.Interfaces.IO.Outbound;
 using Catalyst.Common.IO.Outbound;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.IO.Messaging.Handlers;
 using DotNetty.Buffers;
-using DotNetty.Transport.Channels;
 using Serilog;
 
 namespace Catalyst.Node.Core.P2P
 {
-    public sealed class PeerClient
-        : UdpClient,
-            IPeerClient
+    public sealed class PeerClient : UdpClient, IPeerClient
     {
-        public PeerClient()
-            : base(Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType))
+        public PeerClient(IUdpClientChannelFactory clientChannelFactory,
+            IPeerIdentifier peerIdentifier) 
+            : this(clientChannelFactory, peerIdentifier.IpEndPoint) { }
+        
+        /// <param name="clientChannelFactory">A factory used to build the appropriate kind of channel for a udp client.</param>
+        /// <param name="ipEndPoint">The endpoint to which the client will be bound. This will default to
+        /// the loopback IP Address, and port 0.</param>
+        public PeerClient(IUdpClientChannelFactory clientChannelFactory, IPEndPoint ipEndPoint = null)
+            : base(clientChannelFactory, Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType))
         {
-            IPEndPoint ipEndPoint = new IPEndPoint(IPAddress.Loopback, IPEndPoint.MinPort);
-            Bootstrap(new OutboundChannelInitializerBase<IChannel>(channel => { },
-                new List<IChannelHandler>
-                {
-                    new ProtoDatagramHandler()
-                },
-                ipEndPoint.Address
-            ), ipEndPoint);
+            var bindingEndpoint = ipEndPoint ?? new IPEndPoint(IPAddress.Loopback, IPEndPoint.MinPort);
+            Channel = ChannelFactory.BuildChannel(bindingEndpoint.Address, bindingEndpoint.Port).Channel;
         }
 
         public Task SendMessageAsync(IByteBufferHolder datagramPacket)

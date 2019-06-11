@@ -53,7 +53,7 @@ using Xunit.Abstractions;
 
 namespace Catalyst.Node.Core.IntegrationTests.P2P
 {
-    public sealed class PeerServiceIntergrationTests :
+    public sealed class PeerServiceIntegrationTests :
         ConfigFileBasedTest,
         IClassFixture<PeerClientFixture>
     {
@@ -65,13 +65,13 @@ namespace Catalyst.Node.Core.IntegrationTests.P2P
         private readonly IConfigurationRoot _config;
         private readonly PeerClientFixture _peerClientFixture;
 
-        public PeerServiceIntergrationTests(ITestOutputHelper output, PeerClientFixture peerClientFixture) : base(output)
+        public PeerServiceIntegrationTests(ITestOutputHelper output, PeerClientFixture peerClientFixture) : base(output)
         {
-            _config = SocketPortHelper.AlterConfigurationToGetUniquePort(new ConfigurationBuilder()
+            _config = new ConfigurationBuilder()
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile))
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile))
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Network.Test)))
-               .Build(), CurrentTestName);
+               .Build();
             _pid = PeerIdentifierHelper.GetPeerIdentifier("im_a_key");
             _guid = Guid.NewGuid();
             _logger = Substitute.For<ILogger>();
@@ -129,7 +129,6 @@ namespace Catalyst.Node.Core.IntegrationTests.P2P
                 using (peerService.MessageStream.Subscribe(serverObserver))
                 {
                     var peerSettings = _container.Resolve<IPeerSettings>();
-                    var targetHost = new IPEndPoint(peerSettings.BindAddress, peerSettings.Port);
 
                     var datagramEnvelope = new MessageFactory().GetDatagramMessage(new MessageDto(
                             new PingRequest(),
@@ -196,7 +195,7 @@ namespace Catalyst.Node.Core.IntegrationTests.P2P
                 {
                     var peerSettings = new PeerSettings(_config);
                     var targetHost = new IPEndPoint(peerSettings.BindAddress,
-                        peerSettings.Port + new Random().Next(0, 5000));
+                        peerSettings.Port);
 
                     using (var peerValidator = new PeerValidator(targetHost, peerSettings, peerService, _logger, _peerClientFixture.UniversalPeerClient))
                     {

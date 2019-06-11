@@ -1,4 +1,3 @@
-
 #region LICENSE
 
 /**
@@ -23,7 +22,7 @@
 #endregion
 
 using System;
-using System.Net;
+using Catalyst.Common.IO.Outbound;
 using Catalyst.Node.Core.P2P;
 
 namespace Catalyst.Node.Core.IntegrationTests.P2P
@@ -32,11 +31,11 @@ namespace Catalyst.Node.Core.IntegrationTests.P2P
     {
         public PeerClientFixture()
         {
-            UniversalPeerClient = new PeerClient();
+            UniversalPeerClient = new PeerClient(new UdpClientChannelFactory());
         }
 
         public void Dispose()
-        {
+        { 
             UniversalPeerClient.Dispose();
         }
 

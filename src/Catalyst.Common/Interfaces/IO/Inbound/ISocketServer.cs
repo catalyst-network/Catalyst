@@ -21,13 +21,7 @@
 
 #endregion
 
-using System.Net;
-using DotNetty.Transport.Channels;
-
 namespace Catalyst.Common.Interfaces.IO.Inbound
 {
-    public interface ISocketServer : ISocket
-    {
-        void Bootstrap(IChannelHandler channelInitializer, IPAddress listenAddress, int port);
-    }
+    public interface ISocketServer : ISocket { }
 }

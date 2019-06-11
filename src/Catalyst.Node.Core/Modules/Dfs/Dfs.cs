@@ -41,7 +41,6 @@ namespace Catalyst.Node.Core.Modules.Dfs
         };
 
         private readonly ICoreApi _ipfs;
-
         private readonly ILogger _logger;
 
         public Dfs(ICoreApi ipfsAdapter, ILogger logger)
