@@ -257,7 +257,7 @@
             "type": "Catalyst.Node.Core.P2P.Messaging.Gossip.GossipManager",
             "services": [
                 {
-                    "type": "Catalyst.Common.Interfaces.IO.Messaging.Gossip.IGossipManager, Catalyst.Common"
+                    "type": "Catalyst.Common.Interfaces.P2P.Messaging.Gossip.IGossipManager, Catalyst.Common"
                 }
             ]
         },

@@ -21,19 +21,19 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.IO.Inbound;
+using System.Threading.Tasks;
 using Catalyst.Protocol.Common;
 
-namespace Catalyst.Common.Interfaces.IO.Messaging.Gossip
+namespace Catalyst.Common.Interfaces.P2P.Messaging.Gossip
 { 
     public interface IGossipManager
     {
         /// <summary>Broadcasts a message.</summary>
-        /// <param name="anySigned">Any signed message.</param>
-        void Broadcast(IChanneledMessage<ProtocolMessage> anySigned);
+        /// <param name="protocolMessage">Any signed message.</param>
+        Task BroadcastAsync(ProtocolMessage protocolMessage);
 
         /// <summary>Handles Incoming gossip.</summary>
         /// <param name="anySigned">Any signed message.</param>
-        void IncomingGossip(IChanneledMessage<ProtocolMessage> anySigned);
+        Task ReceiveAsync(ProtocolMessage anySigned);
     }
 }
