@@ -98,7 +98,7 @@ namespace Catalyst.Cli
                 containerBuilder.RegisterModule(configurationModule);
 
                 var loggerConfiguration = new LoggerConfiguration();
-                var loggingSwitch = new AppLoggingLevelSwitch(config, loggerConfiguration);
+                IAppLoggingLevelSwitch loggingSwitch = new AppLoggingLevelSwitch(config, loggerConfiguration);
 
                 loggerConfiguration.ReadFrom.Configuration(configurationModule.Configuration);
                 loggerConfiguration.MinimumLevel.ControlledBy(loggingSwitch.LoggingLevelSwitch);
@@ -111,7 +111,7 @@ namespace Catalyst.Cli
                    .CreateLogger().ForContext(DeclaringType);
 
                 containerBuilder.RegisterLogger(_logger);
-                containerBuilder.RegisterInstance(loggingSwitch).SingleInstance();
+                containerBuilder.RegisterInstance(loggingSwitch);
                 containerBuilder.RegisterInstance(config);
 
                 var container = containerBuilder.Build();
