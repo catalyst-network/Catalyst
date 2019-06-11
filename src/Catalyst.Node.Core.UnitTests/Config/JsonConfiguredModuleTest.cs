@@ -91,12 +91,11 @@ namespace Catalyst.Node.Core.UnitTests.Config
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         private void ComponentsJsonFile_should_configure_modules(Type interfaceType, Type resolutionType)
         {
-            var resolvedType = _container.Resolve(interfaceType);
-            resolvedType.Should().NotBeNull();
-            resolvedType.Should().BeOfType(resolutionType);
-            if (typeof(IDisposable).IsAssignableFrom(resolutionType))
+            using (_container.BeginLifetimeScope(Guid.NewGuid()))
             {
-                ((IDisposable) resolvedType).Dispose();
+                var resolvedType = _container.Resolve(interfaceType);
+                resolvedType.Should().NotBeNull();
+                resolvedType.Should().BeOfType(resolutionType);
             }
         }
     }

@@ -23,9 +23,9 @@
 
 using System;
 using Catalyst.Common.Extensions;
-using Catalyst.Common.Interfaces.IO.Messaging.Gossip;
 using Catalyst.Common.Interfaces.Modules.Consensus.Delta;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.Interfaces.P2P.Messaging.Gossip;
 using Catalyst.Common.Protocol;
 using Catalyst.Protocol.Delta;
 using Dawn;
@@ -73,7 +73,7 @@ namespace Catalyst.Node.Core.Modules.Consensus.Delta
             }
 
             var protocolMessage = candidate.ToAnySigned(_peerIdentifier.PeerId, Guid.NewGuid());
-            _gossipManager.Broadcast(null);
+            _gossipManager.BroadcastAsync(null);
 
             _logger.Debug("Started gossiping candidate {0}", candidate);
         }
@@ -90,7 +90,7 @@ namespace Catalyst.Node.Core.Modules.Consensus.Delta
                 }
 
                 // https://github.com/catalyst-network/Catalyst.Node/pull/448
-                _gossipManager.Broadcast(null);
+                _gossipManager.BroadcastAsync(null);
             }
         }
 
