@@ -63,6 +63,7 @@
         </None>
     </ItemGroup>
     <ItemGroup>
+        <Folder Include="Interfaces\IO\Messaging\Handlers" />
         <Folder Include="Interfaces\Util" />
     </ItemGroup>
     <ItemGroup>

@@ -26,7 +26,7 @@ using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Reflection;
 using Catalyst.Common.Interfaces.IO.Inbound;
-using Catalyst.Common.Interfaces.IO.Messaging.Handlers;
+using Catalyst.Common.Interfaces.IO.Inbound.Handlers;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;

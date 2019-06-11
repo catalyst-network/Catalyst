@@ -22,10 +22,11 @@
 #endregion
 
 using System;
+using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;
 
-namespace Catalyst.Common.Interfaces.IO.Messaging.Handlers
+namespace Catalyst.Common.Interfaces.IO.Inbound.Handlers
 {
     public interface IObservableServiceHandler : IChannelHandler, IChanneledMessageStreamer<ProtocolMessage>, IDisposable { }
 }
