@@ -71,7 +71,6 @@ namespace Catalyst.Common.IO.Inbound
                 new MessageSignerDuplex(new ProtocolMessageVerifyHandler(_keySigner), new ProtocolMessageSignHandler(_keySigner)),
                 new CorrelationHandler(_messageCorrelationManager),
                 new GossipHandler(_gossipManager),
-                new ProtocolMessageSignHandler(_keySigner),
                 new ObservableServiceHandler()
             };
     }
