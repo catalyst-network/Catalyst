@@ -90,7 +90,8 @@ namespace Catalyst.Common.IO.Messaging
                 return;
             }
 
-            _pendingRequests?.Dispose();   
+            _pendingRequests?.Dispose();
+            _evictionEvent?.Dispose();
         }
 
         public void Dispose()
