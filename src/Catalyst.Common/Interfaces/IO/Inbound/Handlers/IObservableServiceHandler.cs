@@ -21,22 +21,12 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.IO.Inbound;
+using System;
+using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;
 
-namespace Catalyst.Common.IO.Inbound
+namespace Catalyst.Common.Interfaces.IO.Inbound.Handlers
 {
-    public sealed class ProtocolMessageDto
-        : IChanneledMessage<ProtocolMessage>
-    {
-        public ProtocolMessage Payload { get; }
-        public IChannelHandlerContext Context { get; }
-
-        public ProtocolMessageDto(IChannelHandlerContext context, ProtocolMessage message)
-        {
-            Payload = message;
-            Context = context;
-        }
-    }
+    public interface IObservableServiceHandler : IChannelHandler, IChanneledMessageStreamer<ProtocolMessage>, IDisposable { }
 }

@@ -21,15 +21,22 @@
 
 #endregion
 
-using Catalyst.Common.IO.Inbound;
-using Catalyst.Common.IO.Messaging;
+using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Protocol.Common;
+using DotNetty.Transport.Channels;
 
-namespace Catalyst.Common.Util
+namespace Catalyst.Common.IO.Messaging
 {
-    public static class NullObjects
+    public sealed class ProtocolMessageDto
+        : IChanneledMessage<ProtocolMessage>
     {
-        public static readonly ProtocolMessage ProtocolMessage = new ProtocolMessage();
-        public static readonly ProtocolMessageDto ProtocolMessageDto = new ProtocolMessageDto(null, new ProtocolMessage());
+        public ProtocolMessage Payload { get; }
+        public IChannelHandlerContext Context { get; }
+
+        public ProtocolMessageDto(IChannelHandlerContext context, ProtocolMessage message)
+        {
+            Payload = message;
+            Context = context;
+        }
     }
 }

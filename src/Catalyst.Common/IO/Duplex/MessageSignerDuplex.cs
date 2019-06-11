@@ -21,29 +21,15 @@
 
 #endregion
 
-using System.IO;
-using Catalyst.Protocol.Common;
-using Dawn;
+using Catalyst.Common.IO.Inbound.Handlers;
+using Catalyst.Common.IO.Outbound.Handlers;
 using DotNetty.Transport.Channels;
-using DotNetty.Transport.Channels.Sockets;
 
-namespace Catalyst.Common.IO.Messaging.Handlers
+namespace Catalyst.Common.IO.Duplex
 {
-    public sealed class ProtoDatagramHandler : SimpleChannelInboundHandler<DatagramPacket>
+    public sealed class MessageSignerDuplex : CombinedChannelDuplexHandler<ProtocolMessageVerifyHandler, ProtocolMessageSignHandler>
     {
-        protected override void ChannelRead0(IChannelHandlerContext context, DatagramPacket packet)
-        {
-            Guard.Argument(context).NotNull();
-            Guard.Argument(packet.Content.ReadableBytes).NotZero().NotNegative();
-
-            using (var memoryStream = new MemoryStream())
-            {
-                memoryStream.Write(packet.Content.Array, 0, packet.Content.ReadableBytes);
-                memoryStream.Seek(0, SeekOrigin.Begin);
-
-                var message = ProtocolMessage.Parser.ParseFrom(memoryStream);
-                context.FireChannelRead(message);
-            }
-        }
+        public MessageSignerDuplex(ProtocolMessageVerifyHandler inboundHandler, ProtocolMessageSignHandler outboundHandler)
+            : base(inboundHandler, outboundHandler) { }
     }
 }

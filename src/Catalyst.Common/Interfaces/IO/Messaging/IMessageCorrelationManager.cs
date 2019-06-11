@@ -26,7 +26,7 @@ using Catalyst.Protocol.Common;
 
 namespace Catalyst.Common.Interfaces.IO.Messaging
 {
-    public interface ICorrelationManager
+    public interface IMessageCorrelationManager
     {
         void AddPendingRequest(PendingRequest pendingRequest);
 
