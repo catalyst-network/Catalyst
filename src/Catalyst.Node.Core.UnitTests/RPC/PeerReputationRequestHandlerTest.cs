@@ -77,8 +77,8 @@ namespace Catalyst.Node.Core.UnitTests.RPC
         /// <param name="publicKey">Public key of the peer whose reputation is of interest</param>
         /// <param name="ipAddress">Ip address of the peer whose reputation is of interest</param>
         [Theory]
-        [InlineData("highscored-125\0\0\0\0\0\0", "192.168.0.125")]
-        [InlineData("highscored-126\0\0\0\0\0\0", "192.168.0.126")]
+        [InlineData("highscored-125\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0", "192.168.0.125")]
+        [InlineData("highscored-126\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0", "192.168.0.126")]
         public async Task TestPeerReputationRequestResponse(string publicKey, string ipAddress)
         {
             var responseContent = await GetPeerReputationTest(publicKey, ipAddress);

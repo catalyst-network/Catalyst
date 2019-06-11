@@ -22,8 +22,10 @@
 #endregion
 
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
+using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Outbound;
 using Catalyst.Common.IO.Outbound;
 using Catalyst.Common.Network;
@@ -48,12 +50,16 @@ namespace Catalyst.Node.Rpc.Client
         /// <param name="channelFactory"></param>
         /// <param name="certificate"></param>
         /// <param name="nodeConfig">rpc node config</param>
+        /// <param name="handlers"></param>
         public NodeRpcClient(ITcpClientChannelFactory channelFactory,
             X509Certificate2 certificate, 
-            IRpcNodeConfig nodeConfig) 
+            IRpcNodeConfig nodeConfig,
+            IEnumerable<IRpcResponseHandler> handlers) 
             : base(channelFactory, Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType))
         {
-            Channel = channelFactory.BuildChannel(nodeConfig.HostAddress, nodeConfig.Port, certificate).Channel;
+            var socket = channelFactory.BuildChannel(nodeConfig.HostAddress, nodeConfig.Port, certificate);
+            handlers.ToList().ForEach(handler => handler.StartObserving(socket.MessageStream));
+            Channel = socket.Channel;
         }
     }
 }

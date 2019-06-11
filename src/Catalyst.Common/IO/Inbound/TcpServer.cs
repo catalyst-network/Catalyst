@@ -46,8 +46,7 @@ namespace Catalyst.Common.IO.Inbound
         private const int BackLogValue = 100;
 
         public TcpServerChannelFactory(ICorrelationManager correlationManger, 
-            IPeerSettings peerSettings, 
-            X509Certificate2 certificate)
+            IPeerSettings peerSettings)
         {
             _correlationManger = correlationManger;
             _peerSettings = peerSettings;
@@ -76,7 +75,7 @@ namespace Catalyst.Common.IO.Inbound
                 new CorrelationHandler(_correlationManger),
                 observableServiceHandler
             };
-
+            
             var channelHandler = new InboundChannelInitializerBase<IChannel>(handlers, certificate);
 
             var channel = new ServerBootstrap()

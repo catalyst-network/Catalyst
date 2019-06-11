@@ -64,10 +64,9 @@ namespace Catalyst.Common.Modules.KeySigner
         }
 
         /// <inheritdoc/>
-        public bool Verify(IPublicKey key, IEnumerable<byte> message, ISignature signature)
+        public bool Verify(IPublicKey key, byte[] message, ISignature signature)
         {
-            var span = new ReadOnlySpan<byte>(message.ToArray());
-            return _cryptoContext.Verify(key, span, signature);
+            return _cryptoContext.Verify(key, message, signature);
         }
 
         /// <inheritdoc/>
