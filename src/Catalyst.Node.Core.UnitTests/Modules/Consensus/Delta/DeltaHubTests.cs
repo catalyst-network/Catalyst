@@ -21,7 +21,7 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.IO.Messaging.Gossip;
+using Catalyst.Common.Interfaces.P2P.Messaging.Gossip;
 using Catalyst.Common.Interfaces.Modules.Consensus.Delta;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.UnitTests.TestUtils;
@@ -58,13 +58,13 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Consensus.Delta
                 producerId: PeerIdHelper.GetPeerId("not me"));
 
             hub.BroadcastCandidate(notMyCandidate);
-            _gossipManager.Received(0).Broadcast(null);
+            _gossipManager.Received(0).BroadcastAsync(null);
 
             var myCandidate = CandidateDeltaHelper.GetCandidateDelta(
                 producerId: _peerIdentifier.PeerId);
 
             hub.BroadcastCandidate(myCandidate);
-            _gossipManager.Received(1).Broadcast(null);
+            _gossipManager.Received(1).BroadcastAsync(null);
         }
     }
 }
