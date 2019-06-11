@@ -268,15 +268,6 @@
                     "type": "Catalyst.Common.Interfaces.IO.Inbound.Handlers.IGossipHandler, Catalyst.Common"
                 }
             ]
-        },
-        {
-            "type": "Catalyst.Node.Core.P2P.Messaging.Gossip.GossipCache",
-            "services": [
-                {
-                    "type": "Catalyst.Common.Interfaces.IO.Messaging.Gossip.IGossipCache, Catalyst.Common"
-                }
-            ],
-            "instanceScope": "singleinstance"
         }
     ],
     "modules": [
