@@ -54,7 +54,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
             _validPeerId.ClientVersion.ToByteArray().Length.Should().Be(2);
             _validPeerId.Ip.ToByteArray().Length.Should().Be(16);
             _validPeerId.Port.ToByteArray().Length.Should().Be(2);
-            _validPeerId.PublicKey.ToByteArray().Length.Should().Be(20);
+            _validPeerId.PublicKey.ToByteArray().Length.Should().Be(32);
 
             _output.WriteLine(string.Join(" ", _validPeerId.ToByteArray()));
             var fieldsInBytes = new[]

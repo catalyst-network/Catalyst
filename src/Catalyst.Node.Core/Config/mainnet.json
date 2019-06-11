@@ -9,7 +9,7 @@
         "Peer": {
             "Network": "mainnet",
             "PayoutAddress": "Some_cool_payout_address",
-            "PublicKey": "302a300506032b65700321001783421742816abf",
+            "PublicKey": "32kssh5iflgk3jfmcjs03ldj4hfgs8gn",
             "Announce": true,
             "AnnounceServer": "127.0.0.1:21420",
             "Port": 42069,

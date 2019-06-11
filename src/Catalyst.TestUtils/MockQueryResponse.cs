@@ -26,7 +26,7 @@ using Catalyst.Common.Network;
 using DnsClient;
 using NSubstitute;
 
-namespace Catalyst.Common.UnitTests.TestUtils
+namespace Catalyst.TestUtils
 {
     public static class MockQueryResponse
     {

@@ -48,5 +48,4 @@ namespace Catalyst.Common.IO
             Channel?.CloseAsync();
         }
     }
-
 }
