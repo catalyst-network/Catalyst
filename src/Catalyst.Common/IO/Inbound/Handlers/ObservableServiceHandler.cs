@@ -26,13 +26,13 @@ using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Reflection;
 using Catalyst.Common.Interfaces.IO.Inbound;
-using Catalyst.Common.Interfaces.IO.Messaging.Handlers;
-using Catalyst.Common.IO.Inbound;
+using Catalyst.Common.Interfaces.IO.Inbound.Handlers;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;
 using Serilog;
 
-namespace Catalyst.Common.IO.Messaging.Handlers
+namespace Catalyst.Common.IO.Inbound.Handlers
 {
     /// <summary>
     ///     This handler terminates dotnetty involvement and passes service messages into rx land,
