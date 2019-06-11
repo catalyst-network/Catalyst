@@ -21,11 +21,8 @@
 
 #endregion
 
-using System.Net;
-using Catalyst.Common.Interfaces.IO;
+using System;
 using Catalyst.Common.Interfaces.IO.Inbound;
-using DotNetty.Handlers.Logging;
-using DotNetty.Transport.Channels;
 using Serilog;
 
 namespace Catalyst.Common.IO.Inbound

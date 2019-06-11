@@ -35,7 +35,6 @@ using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Messaging.Handlers;
 using Catalyst.Protocol.Common;
 using Catalyst.Common.Interfaces.Rpc;
-using Catalyst.Common.IO.Messaging.Handlers;
 using DotNetty.Codecs.Protobuf;
 using Serilog;
 
@@ -54,7 +53,7 @@ namespace Catalyst.Node.Core.RPC
             ITcpServerChannelFactory channelFactory,
             ICertificateStore certificateStore,
             IEnumerable<IRpcRequestHandler> requestHandlers,
-            ICorrelationManager correlationManager,
+            IMessageCorrelationManager messageCorrelationManager,
             IObservableServiceHandler observableServiceHandler) : base(channelFactory, logger)
         {
             Settings = settings;

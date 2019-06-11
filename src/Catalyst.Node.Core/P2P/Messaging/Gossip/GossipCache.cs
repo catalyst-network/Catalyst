@@ -29,15 +29,15 @@ using Catalyst.Common.Extensions;
 using Catalyst.Common.IO.Outbound;
 using Catalyst.Common.Interfaces.IO.Messaging.Gossip;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.P2P;
 using Microsoft.Extensions.Caching.Memory;
 using Serilog;
 using SharpRepository.Repository;
-using CorrelationManager = Catalyst.Common.IO.Messaging.CorrelationManager;
 
 namespace Catalyst.Node.Core.P2P.Messaging.Gossip
 {
-    public sealed class GossipCache : CorrelationManager, IGossipCache
+    public sealed class GossipCache : MessageCorrelationManager, IGossipCache
     {
         /// <summary>The peers</summary>
         private readonly IRepository<Peer> _peers;

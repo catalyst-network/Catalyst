@@ -30,14 +30,17 @@ using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Messaging.Gossip;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.IO.Messaging.Handlers;
+using Catalyst.Common.IO.Duplex;
+using Catalyst.Common.IO.Inbound.Handlers;
+using Catalyst.Common.IO.Outbound;
+using Catalyst.Common.IO.Outbound.Handlers;
 using DotNetty.Transport.Channels;
 
 namespace Catalyst.Common.IO.Inbound
 {
     public class UdpServerChannelFactory : UdpChannelFactoryBase, IUdpServerChannelFactory
     {
-        private readonly ICorrelationManager _correlationManager;
+        private readonly IMessageCorrelationManager _messageCorrelationManager;
         private readonly IGossipManager _gossipManager;
         private readonly IKeySigner _keySigner;
         private readonly IPeerSettings _peerSettings;
@@ -51,12 +54,12 @@ namespace Catalyst.Common.IO.Inbound
             X509Certificate2 certificate = null) =>
             BootStrapChannel(_peerSettings.BindAddress, _peerSettings.Port);
 
-        public UdpServerChannelFactory(ICorrelationManager correlationManager,
+        public UdpServerChannelFactory(IMessageCorrelationManager messageCorrelationManager,
             IGossipManager gossipManager,
             IKeySigner keySigner,
             IPeerSettings peerSettings)
         {
-            _correlationManager = correlationManager;
+            _messageCorrelationManager = messageCorrelationManager;
             _gossipManager = gossipManager;
             _keySigner = keySigner;
             _peerSettings = peerSettings;
@@ -66,9 +69,10 @@ namespace Catalyst.Common.IO.Inbound
             new List<IChannelHandler>
             {
                 new ProtoDatagramHandler(),
-                new CorrelationHandler(_correlationManager),
+                new MessageSignerDuplex(new ProtocolMessageVerifyHandler(_keySigner), new ProtocolMessageSignHandler(_keySigner)),
+                new CorrelationHandler(_messageCorrelationManager),
                 new GossipHandler(_gossipManager),
-                new SignatureHandler(_keySigner),
+                new ProtocolMessageSignHandler(_keySigner),
                 new ObservableServiceHandler()
             };
     }

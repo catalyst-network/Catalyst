@@ -21,10 +21,9 @@
 
 #endregion
 
-using System;
-using System.Linq;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
-using Catalyst.Common.IO.Messaging.Handlers;
+using Catalyst.Common.IO.Inbound.Handlers;
+using Catalyst.Common.IO.Outbound.Handlers;
 using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Common.Util;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Types;
@@ -33,15 +32,15 @@ using DotNetty.Transport.Channels;
 using NSubstitute;
 using Xunit;
 
-namespace Catalyst.Common.UnitTests.IO.Messaging
+namespace Catalyst.Common.UnitTests.IO.Inbound.Handlers
 {
-    public sealed class SignatureHandlerTests
+    public sealed class ProtocolMessageVerifyHandlerTest
     {
         private readonly IChannelHandlerContext _fakeContext;
         private readonly ProtocolMessageSigned _protocolMessageSigned;
         private readonly IKeySigner _keySigner;
 
-        public SignatureHandlerTests()
+        public ProtocolMessageVerifyHandlerTest()
         {
             _fakeContext = Substitute.For<IChannelHandlerContext>();
             _keySigner = Substitute.For<IKeySigner>();
@@ -62,7 +61,7 @@ namespace Catalyst.Common.UnitTests.IO.Messaging
             _keySigner.Verify(Arg.Any<PublicKey>(), Arg.Any<byte[]>(), Arg.Any<Signature>())
                .Returns(true);
 
-            var signatureHandler = new SignatureHandler(_keySigner);
+            var signatureHandler = new ProtocolMessageVerifyHandler(_keySigner);
 
             signatureHandler.ChannelRead(_fakeContext, _protocolMessageSigned);
 
@@ -76,7 +75,7 @@ namespace Catalyst.Common.UnitTests.IO.Messaging
             _keySigner.Verify(Arg.Any<PublicKey>(), Arg.Any<byte[]>(), Arg.Any<Signature>())
                .Returns(false);
 
-            var signatureHandler = new SignatureHandler(_keySigner);
+            var signatureHandler = new ProtocolMessageVerifyHandler(_keySigner);
 
             signatureHandler.ChannelRead(_fakeContext, _protocolMessageSigned);
 

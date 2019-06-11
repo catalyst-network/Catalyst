@@ -21,15 +21,13 @@
 
 #endregion
 
-using Catalyst.Common.IO.Outbound;
-using Catalyst.Protocol.Common;
+using DotNetty.Transport.Channels;
 
-namespace Catalyst.Common.Interfaces.IO.Messaging
+namespace Catalyst.Common.Interfaces.IO.Inbound.Handlers
 {
-    public interface ICorrelationManager
-    {
-        void AddPendingRequest(PendingRequest pendingRequest);
-
-        bool TryMatchResponse(ProtocolMessage response);
-    }
+    /// <summary>
+    /// The Gossip Handler interface
+    /// </summary>
+    /// <seealso cref="DotNetty.Transport.Channels.IChannelHandler" />
+    public interface IGossipHandler : IChannelHandler { }
 }

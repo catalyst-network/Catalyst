@@ -75,10 +75,10 @@
             ]
         },
         {
-            "type": "Catalyst.Common.IO.Messaging.CorrelationManager, Catalyst.Common",
+            "type": "Catalyst.Common.IO.Messaging.MessageCorrelationManager, Catalyst.Common",
             "services": [
                 {
-                    "type": "Catalyst.Common.Interfaces.IO.Messaging.ICorrelationManager, Catalyst.Common"
+                    "type": "Catalyst.Common.Interfaces.IO.Messaging.IMessageCorrelationManager, Catalyst.Common"
                 }
             ]
         },
@@ -262,10 +262,10 @@
             ]
         },
         {
-            "type": "Catalyst.Common.IO.Inbound.GossipHandler, Catalyst.Common",
+            "type": "Catalyst.Common.IO.Inbound.Handlers.GossipHandler, Catalyst.Common",
             "services": [
                 {
-                    "type": "Catalyst.Common.Interfaces.IO.Messaging.Gossip.IGossipHandler, Catalyst.Common"
+                    "type": "Catalyst.Common.Interfaces.IO.Inbound.Handlers.IGossipHandler, Catalyst.Common"
                 }
             ]
         },

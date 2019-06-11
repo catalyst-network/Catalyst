@@ -36,7 +36,7 @@ using Microsoft.Extensions.Primitives;
 
 namespace Catalyst.Common.IO.Messaging
 {
-    public class CorrelationManager : ICorrelationManager, IDisposable
+    public class MessageCorrelationManager : IMessageCorrelationManager, IDisposable
     {
         private TimeSpan CacheTtl { get; }
         protected internal readonly IMemoryCache _pendingRequests;
@@ -44,7 +44,7 @@ namespace Catalyst.Common.IO.Messaging
         private readonly ReplaySubject<IMessageEvictionEvent> _evictionEvent;
         public IObservable<IMessageEvictionEvent> EvictionEvents => _evictionEvent.AsObservable();
         
-        public CorrelationManager(IMemoryCache cache,
+        public MessageCorrelationManager(IMemoryCache cache,
             TimeSpan cacheTtl = default)
         {
             CacheTtl = cacheTtl == default ? Constants.CorrelationTtl : cacheTtl;

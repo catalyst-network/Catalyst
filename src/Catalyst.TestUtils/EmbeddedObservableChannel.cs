@@ -25,7 +25,7 @@ using System;
 using System.Threading.Tasks;
 using Catalyst.Common.Interfaces.IO;
 using Catalyst.Common.Interfaces.IO.Inbound;
-using Catalyst.Common.IO.Messaging.Handlers;
+using Catalyst.Common.IO.Inbound.Handlers;
 using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;

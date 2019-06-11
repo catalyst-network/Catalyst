@@ -21,32 +21,33 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.Modules.KeySigner;
-using Catalyst.Cryptography.BulletProofs.Wrapper.Types;
+using Catalyst.Common.Extensions;
+using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;
-using Google.Protobuf;
 
-namespace Catalyst.Common.IO.Messaging.Handlers
+namespace Catalyst.Common.IO.Inbound.Handlers
 {
-    public sealed class SignatureHandler : SimpleChannelInboundHandler<ProtocolMessageSigned>
+    public sealed class CorrelationHandler : SimpleChannelInboundHandler<ProtocolMessage>
     {
-        private readonly IKeySigner _keySigner;
+        private readonly IMessageCorrelationManager _messageCorrelationManager;
 
-        public SignatureHandler(IKeySigner keySigner)
+        public CorrelationHandler(IMessageCorrelationManager messageCorrelationManager)
         {
-            _keySigner = keySigner;
+            _messageCorrelationManager = messageCorrelationManager;
         }
 
-        protected override void ChannelRead0(IChannelHandlerContext ctx, ProtocolMessageSigned signedMessage)
+        protected override void ChannelRead0(IChannelHandlerContext ctx, ProtocolMessage message)
         {
-            if (_keySigner.Verify(
-                new PublicKey(signedMessage.Message.PeerId.PublicKey.ToByteArray()),
-                signedMessage.Message.ToByteString().ToByteArray(),
-                new Signature(signedMessage.Signature.ToByteArray()))
-            )
+            if (message.CheckIfMessageIsGossip())
             {
-                ctx.FireChannelRead(signedMessage.Message);                
+                ctx.FireChannelRead(message);
+            }
+            
+            //@TODO should not negate try match response but currently not storing in cache when sent
+            else if (!_messageCorrelationManager.TryMatchResponse(message))
+            {
+                ctx.FireChannelRead(message);                
             }
             else
             {
