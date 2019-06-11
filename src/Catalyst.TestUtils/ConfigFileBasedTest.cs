@@ -26,6 +26,8 @@ using Autofac;
 using Autofac.Configuration;
 using AutofacSerilogIntegration;
 using Catalyst.Common.Interfaces.Cryptography;
+using Catalyst.Common.Interfaces.Cli;
+using Catalyst.Common.Shell;
 using Microsoft.Extensions.Configuration;
 using Serilog;
 using Serilog.Events;
@@ -71,7 +73,10 @@ namespace Catalyst.Common.UnitTests.TestUtils
 
         {
             var loggerConfiguration = new LoggerConfiguration().ReadFrom.Configuration(config).MinimumLevel.Verbose();
+            config["Serilog:MinimumLevel"] = "Debug";
 
+            IAppLoggingLevelSwitch loggingLevelSwitch = new AppLoggingLevelSwitch(config, loggerConfiguration);
+            
             if (writeLogsToTestOutput)
             {
                 loggerConfiguration.WriteTo.TestOutput(Output, LogEventLevel, LogOutputTemplate);
@@ -83,6 +88,7 @@ namespace Catalyst.Common.UnitTests.TestUtils
                     LogOutputTemplate);
             }
 
+            ContainerBuilder.RegisterInstance(loggingLevelSwitch);
             ContainerBuilder.RegisterLogger(loggerConfiguration.CreateLogger());
         }
     }

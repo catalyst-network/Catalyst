@@ -28,7 +28,7 @@ using Serilog;
 using Serilog.Core;
 using Serilog.Events;
 
-namespace Catalyst.Cli
+namespace Catalyst.Common.Shell
 {
     /// <summary>
     /// Handles CLI application minimum logging level
