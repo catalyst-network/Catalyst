@@ -50,7 +50,8 @@ namespace Catalyst.Common.IO.Inbound
         public IObservableSocket BuildChannel(IPAddress targetAddress = null,
             int targetPort = 0,
             X509Certificate2 certificate = null) =>
-            BootStrapChannel(_peerSettings.BindAddress, _peerSettings.Port);
+            BootStrapChannel(_observableServiceHandler.MessageStream,
+                _peerSettings.BindAddress, _peerSettings.Port);
 
         public UdpServerChannelFactory(ICorrelationManager correlationManager,
             IGossipManager gossipManager,
