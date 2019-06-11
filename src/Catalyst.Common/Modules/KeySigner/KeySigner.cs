@@ -22,6 +22,8 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
 using Catalyst.Common.Interfaces.KeyStore;
@@ -62,9 +64,10 @@ namespace Catalyst.Common.Modules.KeySigner
         }
 
         /// <inheritdoc/>
-        public bool Verify(IPublicKey key, ReadOnlySpan<byte> message, ISignature signature)
+        public bool Verify(IPublicKey key, IEnumerable<byte> message, ISignature signature)
         {
-            return _cryptoContext.Verify(key, message, signature);
+            var span = new ReadOnlySpan<byte>(message.ToArray());
+            return _cryptoContext.Verify(key, span, signature);
         }
 
         /// <inheritdoc/>

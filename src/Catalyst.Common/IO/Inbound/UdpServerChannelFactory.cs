@@ -41,6 +41,7 @@ namespace Catalyst.Common.IO.Inbound
         private readonly IGossipManager _gossipManager;
         private readonly IKeySigner _keySigner;
         private readonly IPeerSettings _peerSettings;
+        private readonly ObservableServiceHandler _observableServiceHandler;
 
         /// <param name="targetAddress">Ignored</param>
         /// <param name="targetPort">Ignored</param>
@@ -60,6 +61,7 @@ namespace Catalyst.Common.IO.Inbound
             _gossipManager = gossipManager;
             _keySigner = keySigner;
             _peerSettings = peerSettings;
+            _observableServiceHandler = new ObservableServiceHandler();
         }
 
         protected override List<IChannelHandler> Handlers => 
@@ -69,7 +71,7 @@ namespace Catalyst.Common.IO.Inbound
                 new CorrelationHandler(_correlationManager),
                 new GossipHandler(_gossipManager),
                 new SignatureHandler(_keySigner),
-                new ObservableServiceHandler()
+                _observableServiceHandler
             };
     }
 }

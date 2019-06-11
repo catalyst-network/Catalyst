@@ -34,15 +34,24 @@ using NSubstitute;
 
 namespace Catalyst.TestUtils
 {
+    public static class DotNettyExtensions
+    {
+        public static IChannelId ToChannelId(this string channelName)
+        {
+            var channelId = Substitute.For<IChannelId>();
+            channelId.AsLongText().Returns(channelName);
+            channelId.AsShortText().Returns(channelName);
+            return channelId;
+        }
+    }
+
     public sealed class EmbeddedObservableChannel : IObservableSocket
     {
         private readonly EmbeddedChannel _channel;
 
         public EmbeddedObservableChannel(string channelName)
         {
-            var channelId = Substitute.For<IChannelId>();
-            channelId.AsLongText().Returns(channelName);
-            channelId.AsShortText().Returns(channelName);
+            var channelId = channelName.ToChannelId();
 
             var observableServiceHandler = new ObservableServiceHandler();
             var embeddedChannel = new EmbeddedChannel(channelId, false, true, observableServiceHandler);

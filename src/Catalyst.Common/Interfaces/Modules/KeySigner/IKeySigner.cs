@@ -22,6 +22,7 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Common.Interfaces.KeyStore;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
@@ -44,7 +45,7 @@ namespace Catalyst.Common.Interfaces.Modules.KeySigner
 
         /// <summary>Verifies a message signature.</summary>
         /// <returns></returns>
-        bool Verify(IPublicKey key, ReadOnlySpan<byte> message, ISignature signature);
+        bool Verify(IPublicKey key, IEnumerable<byte> message, ISignature signature);
 
         /// <summary>Exports the key.</summary>
         void ExportKey();
