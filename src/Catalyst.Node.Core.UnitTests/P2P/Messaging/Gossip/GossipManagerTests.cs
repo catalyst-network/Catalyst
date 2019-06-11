@@ -50,13 +50,13 @@ using TransactionBroadcast = Catalyst.Protocol.Transaction.TransactionBroadcast;
 
 namespace Catalyst.Node.Core.UnitTests.P2P.Messaging.Gossip
 {
-    public sealed class GossipTests : IDisposable
+    public sealed class GossipManagerTests : IDisposable
     {
         private readonly IRepository<Peer> _peers;
         private readonly ILogger _logger;
         private readonly IMemoryCache _cache;
 
-        public GossipTests()
+        public GossipManagerTests()
         {
             _logger = Substitute.For<ILogger>();
             _peers = Substitute.For<IRepository<Peer>>();
