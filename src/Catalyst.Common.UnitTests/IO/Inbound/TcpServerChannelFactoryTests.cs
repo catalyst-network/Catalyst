@@ -29,9 +29,11 @@ using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging;
+using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.IO.Duplex;
 using Catalyst.Common.IO.Inbound;
-using Catalyst.Common.IO.Messaging.Handlers;
+using Catalyst.Common.IO.Inbound.Handlers;
 using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Protocol.IPPN;
 using Catalyst.TestUtils;
@@ -49,39 +51,44 @@ namespace Catalyst.Common.UnitTests.IO.Inbound
     {
         private sealed class TestTcpServerChannelFactory : TcpServerChannelFactory
         {
-            public TestTcpServerChannelFactory(ICorrelationManager correlationManager,
-                IPeerSettings peerSettings)
-                : base(correlationManager, peerSettings) { }
+            public TestTcpServerChannelFactory(IMessageCorrelationManager correlationManager,
+                IPeerSettings peerSettings,
+                IKeySigner keySigner)
+                : base(correlationManager, peerSettings, keySigner) { }
 
             public IReadOnlyCollection<IChannelHandler> InheritedHandlers => Handlers;
         }
 
-        private readonly ICorrelationManager _correlationManager;
+        private readonly IMessageCorrelationManager _correlationManager;
         private readonly TestTcpServerChannelFactory _factory;
+        private readonly IKeySigner _keySigner;
 
         public TcpServerChannelFactoryTests()
         {
-            _correlationManager = Substitute.For<ICorrelationManager>();
+            _correlationManager = Substitute.For<IMessageCorrelationManager>();
+            _keySigner = Substitute.For<IKeySigner>();
 
             var peerSettings = Substitute.For<IPeerSettings>();
             peerSettings.BindAddress.Returns(IPAddress.Parse("127.0.0.1"));
             peerSettings.Port.Returns(1234);
             _factory = new TestTcpServerChannelFactory(
                 _correlationManager,
-                peerSettings);
+                peerSettings, 
+                _keySigner);
         }
 
         [Fact]
         public void TcpServerChannelFactory_should_have_correct_handlers()
         {
-            _factory.InheritedHandlers.Count(h => h != null).Should().Be(6);
+            _factory.InheritedHandlers.Count(h => h != null).Should().Be(7);
             var handlers = _factory.InheritedHandlers.ToArray();
             handlers[0].Should().BeOfType<ProtobufVarint32FrameDecoder>();
             handlers[1].Should().BeOfType<ProtobufDecoder>();
             handlers[2].Should().BeOfType<ProtobufVarint32LengthFieldPrepender>();
             handlers[3].Should().BeOfType<ProtobufEncoder>();
-            handlers[4].Should().BeOfType<CorrelationHandler>();
-            handlers[5].Should().BeOfType<ObservableServiceHandler>();
+            handlers[4].Should().BeOfType<MessageSignerDuplex>();
+            handlers[5].Should().BeOfType<CorrelationHandler>();
+            handlers[6].Should().BeOfType<ObservableServiceHandler>();
         }
 
         [Fact]
@@ -99,10 +106,10 @@ namespace Catalyst.Common.UnitTests.IO.Inbound
             var messageStream = ((ObservableServiceHandler) _factory.InheritedHandlers.Last()).MessageStream;
             using (messageStream.Subscribe(observer))
             {
-                messageStream.Publish().Connect();
                 testingChannel.WriteInbound(protocolMessage);
                 _correlationManager.Received(1).TryMatchResponse(protocolMessage);
-                
+                _keySigner.DidNotReceiveWithAnyArgs().Verify(null, null, null);
+
                 await messageStream.WaitForItemsOnDelayedStreamOnTaskPoolScheduler();
 
                 observer.Received.Count.Should().Be(1);

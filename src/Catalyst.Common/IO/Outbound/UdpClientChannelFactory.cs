@@ -26,17 +26,24 @@ using System.Net;
 using System.Security.Cryptography.X509Certificates;
 using Catalyst.Common.Interfaces.IO;
 using Catalyst.Common.Interfaces.IO.Outbound;
-using Catalyst.Common.IO.Messaging.Handlers;
+using Catalyst.Common.Interfaces.Modules.KeySigner;
+using Catalyst.Common.IO.Duplex;
+using Catalyst.Common.IO.Inbound.Handlers;
+using Catalyst.Common.IO.Outbound.Handlers;
 using DotNetty.Transport.Channels;
 
 namespace Catalyst.Common.IO.Outbound
 {
     public class UdpClientChannelFactory : UdpChannelFactoryBase, IUdpClientChannelFactory
     {
+        private readonly IKeySigner _keySigner;
+        public UdpClientChannelFactory(IKeySigner keySigner) { _keySigner = keySigner; }
+
         protected override List<IChannelHandler> Handlers =>
             new List<IChannelHandler>
             {
-                new ProtoDatagramHandler()
+                new ProtoDatagramHandler(),
+                new MessageSignerDuplex(new ProtocolMessageVerifyHandler(_keySigner), new ProtocolMessageSignHandler(_keySigner))
             };
 
         /// <param name="targetAddress"></param>

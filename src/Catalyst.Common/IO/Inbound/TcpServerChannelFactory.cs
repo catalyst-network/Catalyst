@@ -27,8 +27,11 @@ using System.Security.Cryptography.X509Certificates;
 using Catalyst.Common.Interfaces.IO;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
+using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.IO.Messaging.Handlers;
+using Catalyst.Common.IO.Duplex;
+using Catalyst.Common.IO.Inbound.Handlers;
+using Catalyst.Common.IO.Outbound.Handlers;
 using Catalyst.Protocol.Common;
 using DotNetty.Codecs.Protobuf;
 using DotNetty.Handlers.Logging;
@@ -39,16 +42,19 @@ namespace Catalyst.Common.IO.Inbound
 {
     public class TcpServerChannelFactory : ITcpServerChannelFactory
     {
-        private readonly ICorrelationManager _correlationManger;
+        private readonly IMessageCorrelationManager _correlationManger;
         private readonly IPeerSettings _peerSettings;
+        private readonly IKeySigner _keySigner;
         private readonly ObservableServiceHandler _observableServiceHandler;
         private const int BackLogValue = 100;
 
-        public TcpServerChannelFactory(ICorrelationManager correlationManger, 
-            IPeerSettings peerSettings)
+        public TcpServerChannelFactory(IMessageCorrelationManager correlationManger,
+            IPeerSettings peerSettings,
+            IKeySigner keySigner)
         {
             _correlationManger = correlationManger;
             _peerSettings = peerSettings;
+            _keySigner = keySigner;
             _observableServiceHandler = new ObservableServiceHandler();
         }
 
@@ -88,6 +94,7 @@ namespace Catalyst.Common.IO.Inbound
                 new ProtobufDecoder(ProtocolMessage.Parser),
                 new ProtobufVarint32LengthFieldPrepender(),
                 new ProtobufEncoder(),
+                new MessageSignerDuplex(new ProtocolMessageVerifyHandler(_keySigner), new ProtocolMessageSignHandler(_keySigner)),
                 new CorrelationHandler(_correlationManger),
                 _observableServiceHandler
             });

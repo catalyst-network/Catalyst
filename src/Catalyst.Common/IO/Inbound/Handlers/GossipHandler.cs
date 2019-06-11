@@ -26,7 +26,7 @@ using Catalyst.Common.Interfaces.P2P.Messaging.Gossip;
 using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;
 
-namespace Catalyst.Common.IO.Messaging.Handlers
+namespace Catalyst.Common.IO.Inbound.Handlers
 {
     /// <summary>
     /// Channel Gossip Pipeline

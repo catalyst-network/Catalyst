@@ -35,7 +35,7 @@ using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Sockets;
 using IChannel = DotNetty.Transport.Channels.IChannel;
 
-namespace Catalyst.Common.IO
+namespace Catalyst.Common.IO.Duplex
 {
     public abstract class UdpChannelFactoryBase
     {
