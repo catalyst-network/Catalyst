@@ -73,7 +73,7 @@ namespace Catalyst.Common.IO.Inbound
             var handlers = new List<IChannelHandler>
             {
                 new ProtobufVarint32FrameDecoder(),
-                new ProtobufDecoder(ProtocolMessage.Parser),
+                new ProtobufDecoder(ProtocolMessageSigned.Parser),
                 new ProtobufVarint32LengthFieldPrepender(),
                 new ProtobufEncoder(),
                 new MessageSignerDuplex(new ProtocolMessageVerifyHandler(_keySigner), new ProtocolMessageSignHandler(_keySigner)),

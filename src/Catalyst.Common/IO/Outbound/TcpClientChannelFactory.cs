@@ -56,7 +56,7 @@ namespace Catalyst.Common.IO.Outbound
                 new ProtobufVarint32LengthFieldPrepender(),
                 new ProtobufEncoder(),
                 new ProtobufVarint32FrameDecoder(),
-                new ProtobufDecoder(ProtocolMessage.Parser),
+                new ProtobufDecoder(ProtocolMessageSigned.Parser),
                 new MessageSignerDuplex(new ProtocolMessageVerifyHandler(_keySigner), new ProtocolMessageSignHandler(_keySigner)),
                 observableServiceHandler
             };
