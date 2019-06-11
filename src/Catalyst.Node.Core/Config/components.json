@@ -267,7 +267,8 @@
                 {
                     "type": "Catalyst.Common.Interfaces.P2P.Messaging.Gossip.IGossipManager, Catalyst.Common"
                 }
-            ]
+            ],
+            "instanceScope": "singleinstance"
         }
     ],
     "modules": [
