@@ -23,8 +23,6 @@
 
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
-using Catalyst.Common.Interfaces.IO.Inbound;
-using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.Messaging.Gossip;
 using Catalyst.Common.IO.Messaging;
@@ -35,7 +33,6 @@ using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Node.Core.P2P.Messaging.Gossip;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
-using Catalyst.Protocol.Transaction;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels.Embedded;
 using FluentAssertions;
@@ -90,6 +87,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Messaging.Gossip
             var correlationId = await Get_Gossip_Correlation_Id(peerIdentifier);
 
             _cache.TryGetValue(correlationId, out GossipRequest value);
+            
             value.GossipCount.Should().Be((uint) Constants.MaxGossipPeersPerRound - 1);
             value.ReceivedCount.Should().Be(0);
         }
@@ -118,7 +116,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Messaging.Gossip
             channel.WriteInbound(anySigned);
 
             await gossipMessageHandler.Received(Quantity.Exactly(1))
-               .IncomingGossipAsync(Arg.Any<ProtocolMessage>());
+               .ReceivedAsync(Arg.Any<ProtocolMessage>());
         }
 
         [Fact]
@@ -185,13 +183,16 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Messaging.Gossip
 
             var gossipDto = messageDto.ToAnySigned(senderIdentifier.PeerId, correlationId);
 
-            await gossipMessageHandler.IncomingGossipAsync(gossipDto);
+            await gossipMessageHandler.ReceivedAsync(gossipDto);
+            await gossipMessageHandler.BroadcastAsync(messageDto);
+
             _cache.TryGetValue(correlationId, out GossipRequest value);
+            value.GossipCount.Should().Be((uint) Constants.MaxGossipPeersPerRound);
             value.ReceivedCount.Should().Be(1);
 
             for (var i = 0; i < receivedCount; i++)
             {
-                await gossipMessageHandler.IncomingGossipAsync(gossipDto);
+                await gossipMessageHandler.ReceivedAsync(gossipDto);
             }
 
             _cache.TryGetValue(correlationId, out value);
