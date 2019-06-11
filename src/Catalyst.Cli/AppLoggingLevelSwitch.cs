@@ -21,14 +21,43 @@
 
 #endregion
 
+using System;
+using Catalyst.Common.Interfaces.Cli;
+using Microsoft.Extensions.Configuration;
+using Serilog;
 using Serilog.Core;
+using Serilog.Events;
 
 namespace Catalyst.Cli
 {
-    internal static class AppLoggingLevelSwitch
+    /// <summary>
+    /// Handles CLI application minimum logging level
+    /// </summary>
+    /// <seealso cref="IAppLoggingLevelSwitch" />
+    public sealed class AppLoggingLevelSwitch : IAppLoggingLevelSwitch
     {
-        private static LoggingLevelSwitch _loggingLevelSwitch;
+        private readonly IConfigurationRoot _configurationRoot;
 
-        public static LoggingLevelSwitch LoggingLevelSwitch => _loggingLevelSwitch ?? (_loggingLevelSwitch = new LoggingLevelSwitch());
+        /// <summary>Initializes a new instance of the <see cref="AppLoggingLevelSwitch"/> class.</summary>
+        /// <param name="configuration">The configuration.</param>
+        /// <param name="loggerConfiguration">The logger configuration.</param>
+        public AppLoggingLevelSwitch(IConfigurationRoot configuration, LoggerConfiguration loggerConfiguration)
+        {
+            _configurationRoot = configuration;
+            Configure(loggerConfiguration);
+        }
+
+        /// <summary>Configures the specified logger.</summary>
+        /// <param name="loggerConfiguration">The logger configuration.</param>
+        private void Configure(LoggerConfiguration loggerConfiguration)
+        {
+            var minimumLevel = Enum.Parse<LogEventLevel>(_configurationRoot["Serilog:MinimumLevel"]);
+            LoggingLevelSwitch = new LoggingLevelSwitch(minimumLevel);
+            loggerConfiguration.MinimumLevel.ControlledBy(LoggingLevelSwitch);
+        }
+
+        /// <summary>Gets the logging level switch.</summary>
+        /// <value>The logging level switch.</value>
+        public LoggingLevelSwitch LoggingLevelSwitch { get; private set; }
     }
 }

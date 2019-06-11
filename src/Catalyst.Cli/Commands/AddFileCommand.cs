@@ -97,9 +97,9 @@ namespace Catalyst.Cli.Commands
 
             node.SendMessage(requestMessage);
 
-            var originalLogLevel = Program.LogLevelSwitch.MinimumLevel;
-            
-            Program.LogLevelSwitch.MinimumLevel = LogEventLevel.Error;
+            var originalLogLevel = _loggingLevelSwitch.LoggingLevelSwitch.MinimumLevel;
+
+            _loggingLevelSwitch.LoggingLevelSwitch.MinimumLevel = LogEventLevel.Error;
 
             while (!fileTransfer.ChunkIndicatorsTrue() && !fileTransfer.IsExpired())
             {
@@ -116,7 +116,7 @@ namespace Catalyst.Cli.Commands
                 _userOutput.WriteLine("\nFile transfer expired.");
             }
 
-            Program.LogLevelSwitch.MinimumLevel = originalLogLevel;
+            _loggingLevelSwitch.LoggingLevelSwitch.MinimumLevel = originalLogLevel;
             return true;
         }
     }
