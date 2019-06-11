@@ -56,7 +56,7 @@ namespace Catalyst.Common.IO.Messaging.Handlers
         {
             if (msg.CheckIfMessageIsGossip())
             {
-                _gossipManager.ReceivedAsync(msg).ConfigureAwait(false).GetAwaiter().GetResult();
+                _gossipManager.ReceiveAsync(msg).ConfigureAwait(false).GetAwaiter().GetResult();
 
                 ProtocolMessage originalGossipedMessage = ProtocolMessage.Parser.ParseFrom(msg.Value);
                 ctx.FireChannelRead(originalGossipedMessage);

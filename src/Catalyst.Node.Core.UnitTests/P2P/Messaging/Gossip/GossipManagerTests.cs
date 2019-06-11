@@ -116,7 +116,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Messaging.Gossip
             channel.WriteInbound(anySigned);
 
             await gossipMessageHandler.Received(Quantity.Exactly(1))
-               .ReceivedAsync(Arg.Any<ProtocolMessage>());
+               .ReceiveAsync(Arg.Any<ProtocolMessage>());
         }
 
         [Fact]
@@ -183,7 +183,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Messaging.Gossip
 
             var gossipDto = messageDto.ToAnySigned(senderIdentifier.PeerId, correlationId);
 
-            await gossipMessageHandler.ReceivedAsync(gossipDto);
+            await gossipMessageHandler.ReceiveAsync(gossipDto);
             await gossipMessageHandler.BroadcastAsync(messageDto);
 
             _cache.TryGetValue(correlationId, out GossipRequest value);
@@ -192,7 +192,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Messaging.Gossip
 
             for (var i = 0; i < receivedCount; i++)
             {
-                await gossipMessageHandler.ReceivedAsync(gossipDto);
+                await gossipMessageHandler.ReceiveAsync(gossipDto);
             }
 
             _cache.TryGetValue(correlationId, out value);
