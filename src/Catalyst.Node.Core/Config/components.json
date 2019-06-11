@@ -260,14 +260,6 @@
                     "type": "Catalyst.Common.Interfaces.P2P.Messaging.Gossip.IGossipManager, Catalyst.Common"
                 }
             ]
-        },
-        {
-            "type": "Catalyst.Common.IO.Inbound.Handlers.GossipHandler, Catalyst.Common",
-            "services": [
-                {
-                    "type": "Catalyst.Common.Interfaces.IO.Inbound.Handlers.IGossipHandler, Catalyst.Common"
-                }
-            ]
         }
     ],
     "modules": [

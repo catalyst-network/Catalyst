@@ -26,7 +26,6 @@ using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.Messaging.Gossip;
 using Catalyst.Common.IO.Messaging;
-using Catalyst.Common.IO.Messaging.Handlers;
 using Catalyst.Common.IO.Outbound;
 using Catalyst.Common.P2P;
 using Catalyst.Common.UnitTests.TestUtils;
@@ -45,6 +44,7 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
+using Catalyst.Common.IO.Inbound.Handlers;
 using Xunit;
 using TransactionBroadcast = Catalyst.Protocol.Transaction.TransactionBroadcast;
 

@@ -29,9 +29,9 @@ using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.Interfaces.P2P.Messaging.Gossip;
 using Catalyst.Common.IO.Duplex;
 using Catalyst.Common.IO.Inbound.Handlers;
-using Catalyst.Common.IO.Outbound;
 using Catalyst.Common.IO.Outbound.Handlers;
 using DotNetty.Transport.Channels;
 
