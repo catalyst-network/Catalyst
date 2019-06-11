@@ -54,19 +54,16 @@ namespace Catalyst.Node.Core.RPC
             ITcpServerChannelFactory channelFactory,
             ICertificateStore certificateStore,
             IEnumerable<IRpcRequestHandler> requestHandlers,
-            ICorrelationManager correlationManager,
-            IObservableServiceHandler observableServiceHandler) : base(channelFactory, logger)
+            ICorrelationManager correlationManager) : base(channelFactory, logger)
         {
             Settings = settings;
             _cancellationSource = new CancellationTokenSource();
             _certificate = certificateStore.ReadOrCreateCertificateFile(settings.PfxFileName);
 
-            MessageStream = observableServiceHandler.MessageStream;
-            
-            requestHandlers.ToList().ForEach(h => h.StartObserving(MessageStream));
-
             var observableSocket = ChannelFactory.BuildChannel(certificate: _certificate);
             Channel = observableSocket.Channel;
+            MessageStream = observableSocket.MessageStream;
+            requestHandlers.ToList().ForEach(h => h.StartObserving(MessageStream));
         }
 
         /// <summary>

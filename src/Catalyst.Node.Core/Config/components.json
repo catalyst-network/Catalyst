@@ -67,6 +67,14 @@
             ]
         },
         {
+            "type": "Catalyst.Common.IO.Messaging.Handlers.ObservableServiceHandler, Catalyst.Common",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.IO.Messaging.Handlers.IObservableServiceHandler, Catalyst.Common"
+                }
+            ]
+        },
+        {
             "type": "Catalyst.Node.Core.RPC.RpcServerSettings",
             "services": [
                 {

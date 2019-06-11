@@ -28,6 +28,7 @@ using System.Security.Cryptography.X509Certificates;
 using Catalyst.Common.Interfaces.IO;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Outbound;
+using Catalyst.Common.IO.Messaging.Handlers;
 using Catalyst.Protocol.Common;
 using DotNetty.Codecs.Protobuf;
 using DotNetty.Handlers.Logging;
@@ -45,12 +46,15 @@ namespace Catalyst.Common.IO.Outbound
             int targetPort = 0,
             X509Certificate2 certificate = null)
         {
+            var observableServiceHandler = new ObservableServiceHandler();
+
             var channelHandlers = new List<IChannelHandler>
             {
                 new ProtobufVarint32LengthFieldPrepender(),
                 new ProtobufEncoder(),
                 new ProtobufVarint32FrameDecoder(),
-                new ProtobufDecoder(ProtocolMessage.Parser)
+                new ProtobufDecoder(ProtocolMessage.Parser),
+                observableServiceHandler
             };
 
             var channelHandler = new OutboundChannelInitializerBase<ISocketChannel>(channelHandlers,
@@ -68,7 +72,7 @@ namespace Catalyst.Common.IO.Outbound
                .GetResult();
 
             return new ObservableSocket(
-                Observable.Empty<IChanneledMessage<ProtocolMessage>>(), 
+                observableServiceHandler.MessageStream, 
                 channel);
         }
     }
