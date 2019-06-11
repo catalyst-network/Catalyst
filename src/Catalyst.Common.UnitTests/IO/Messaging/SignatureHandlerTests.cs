@@ -22,11 +22,13 @@
 #endregion
 
 using System;
-using Catalyst.Common.Extensions;
+using System.Linq;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.IO.Messaging.Handlers;
 using Catalyst.Common.UnitTests.TestUtils;
-using Catalyst.Protocol.IPPN;
+using Catalyst.Common.Util;
+using Catalyst.Cryptography.BulletProofs.Wrapper.Types;
+using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;
 using NSubstitute;
 using Xunit;
@@ -36,27 +38,50 @@ namespace Catalyst.Common.UnitTests.IO.Messaging
     public sealed class SignatureHandlerTests
     {
         private readonly IChannelHandlerContext _fakeContext;
-        private readonly SignatureHandler _signatureHandler;
+        private readonly ProtocolMessageSigned _protocolMessageSigned;
+        private readonly IKeySigner _keySigner;
 
         public SignatureHandlerTests()
         {
             _fakeContext = Substitute.For<IChannelHandlerContext>();
-            _signatureHandler = new SignatureHandler(Substitute.For<IKeySigner>());
+            _keySigner = Substitute.For<IKeySigner>();
+
+            _protocolMessageSigned = new ProtocolMessageSigned
+            {
+                Signature = new Signature(ByteUtil.GenerateRandomByteArray(64)).Bytes.RawBytes.ToByteString(),
+                Message = new ProtocolMessage
+                {
+                    PeerId = PeerIdentifierHelper.GetPeerIdentifier(ByteUtil.GenerateRandomByteArray(32).ToString()).PeerId
+                }
+            };
         }
 
-        [Fact(Skip = "INCOMPLETE")]
+        [Fact]
         private void CanFireNextPipelineOnValidSignature()
         {
-            var pingRequest = new PingRequest();
-            var pid = PeerIdentifierHelper.GetPeerIdentifier("im_a_key");
-            var signedPingMessage = pingRequest.ToAnySigned(pid.PeerId, Guid.NewGuid());
-            _signatureHandler.ChannelRead(_fakeContext, signedPingMessage);
-        }
+            _keySigner.Verify(Arg.Any<PublicKey>(), Arg.Any<byte[]>(), Arg.Any<Signature>())
+               .Returns(true);
 
-        // [Fact]
-        // private void ClosesChannelOnInvalidSignature()
-        // {
-        //     
-        // }
+            var signatureHandler = new SignatureHandler(_keySigner);
+
+            signatureHandler.ChannelRead(_fakeContext, _protocolMessageSigned);
+
+            _fakeContext.ReceivedWithAnyArgs().FireChannelRead(_protocolMessageSigned).Received(1);
+            _fakeContext.DidNotReceiveWithAnyArgs().CloseAsync();
+        }
+        
+        [Fact]
+        private void CanFireNextPipelineOnInvalidSignature()
+        {
+            _keySigner.Verify(Arg.Any<PublicKey>(), Arg.Any<byte[]>(), Arg.Any<Signature>())
+               .Returns(false);
+
+            var signatureHandler = new SignatureHandler(_keySigner);
+
+            signatureHandler.ChannelRead(_fakeContext, _protocolMessageSigned);
+
+            _fakeContext.DidNotReceiveWithAnyArgs().FireChannelRead(_protocolMessageSigned).Received(0);
+            _fakeContext.ReceivedWithAnyArgs().CloseAsync();
+        }
     }
 }
