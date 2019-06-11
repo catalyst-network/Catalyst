@@ -21,13 +21,19 @@
 
 #endregion
 
-using DotNetty.Transport.Channels;
+using System.Threading.Tasks;
+using Catalyst.Protocol.Common;
 
-namespace Catalyst.Common.Interfaces.IO.Messaging.Gossip
-{
-    /// <summary>
-    /// The Gossip Handler interface
-    /// </summary>
-    /// <seealso cref="DotNetty.Transport.Channels.IChannelHandler" />
-    public interface IGossipHandler : IChannelHandler { }
+namespace Catalyst.Common.Interfaces.P2P.Messaging.Gossip
+{ 
+    public interface IGossipManager
+    {
+        /// <summary>Broadcasts a message.</summary>
+        /// <param name="protocolMessage">Any signed message.</param>
+        Task BroadcastAsync(ProtocolMessage protocolMessage);
+
+        /// <summary>Handles Incoming gossip.</summary>
+        /// <param name="anySigned">Any signed message.</param>
+        Task ReceiveAsync(ProtocolMessage anySigned);
+    }
 }
