@@ -36,6 +36,7 @@ using Catalyst.Common.Network;
 using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Node.Core.P2P;
 using Catalyst.Protocol.IPPN;
+using Catalyst.TestUtils;
 using DnsClient;
 using DotNetty.Transport.Channels;
 using FluentAssertions;
@@ -84,7 +85,7 @@ namespace Catalyst.Node.Core.IntegrationTests.P2P
                 "seed5.catalystnetwork.io"
             };
             
-            _seedPid = "0x41437c30317c39322e3230372e3137382e3139387c34323036397c3031323334353637383930313233343536373839";
+            _seedPid = "0x41437c30317c39322e3230372e3137382e3139387c34323036397c3031323334353637383930313233343536373839323232323232323232323232";
         }
 
         [Fact]
