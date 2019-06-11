@@ -91,7 +91,7 @@ namespace Catalyst.Node.Core.P2P.Messaging.Gossip
 
             var correlationId = protocolMessage.CorrelationId.ToGuid();
             var gossipRequest = await GetOrCreateAsync(correlationId).ConfigureAwait(false);
-            var canGossip = CanGossipAsync(gossipRequest);
+            var canGossip = CanGossip(gossipRequest);
 
             if (!canGossip)
             {
@@ -102,7 +102,7 @@ namespace Catalyst.Node.Core.P2P.Messaging.Gossip
         }
 
         /// <inheritdoc/>
-        public async Task ReceivedAsync(ProtocolMessage protocolMessage)
+        public async Task ReceiveAsync(ProtocolMessage protocolMessage)
         {
             if (!protocolMessage.CheckIfMessageIsGossip())
             {
@@ -152,9 +152,9 @@ namespace Catalyst.Node.Core.P2P.Messaging.Gossip
         /// <summary>Determines whether this instance can gossip the specified correlation identifier.</summary>
         /// <param name="request">The gossip request</param>
         /// <returns><c>true</c> if this instance can gossip the specified correlation identifier; otherwise, <c>false</c>.</returns>
-        private bool CanGossipAsync(GossipRequest request)
+        private bool CanGossip(GossipRequest request)
         {
-            return request.GossipCount < GetMaxGossipCyclesAsync(request);
+            return request.GossipCount < GetMaxGossipCycles(request);
         }
         
         /// <summary>Adds the gossip request.</summary>
@@ -167,9 +167,8 @@ namespace Catalyst.Node.Core.P2P.Messaging.Gossip
 
         /// <summary>Gets the maximum gossip cycles.</summary>
         /// <param name="gossipRequest"></param>
-        /// <param name="guid">The unique identifier.</param>
         /// <returns></returns>
-        private uint GetMaxGossipCyclesAsync(GossipRequest gossipRequest)
+        private uint GetMaxGossipCycles(GossipRequest gossipRequest)
         {
             var peerNetworkSize = gossipRequest.PeerNetworkSize;
             return (uint) (Math.Log(Math.Max(10, peerNetworkSize) / (double) Constants.MaxGossipPeersPerRound) /

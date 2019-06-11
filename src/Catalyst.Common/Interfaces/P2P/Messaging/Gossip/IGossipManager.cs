@@ -34,6 +34,6 @@ namespace Catalyst.Common.Interfaces.P2P.Messaging.Gossip
 
         /// <summary>Handles Incoming gossip.</summary>
         /// <param name="anySigned">Any signed message.</param>
-        Task ReceivedAsync(ProtocolMessage anySigned);
+        Task ReceiveAsync(ProtocolMessage anySigned);
     }
 }
