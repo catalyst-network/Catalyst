@@ -32,18 +32,14 @@ using DotNetty.Transport.Channels.Sockets;
 using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
-using Catalyst.Common.Interfaces.IO.Messaging.Handlers;
 using Catalyst.Protocol.Common;
 using Catalyst.Common.Interfaces.Rpc;
-using Catalyst.Common.IO.Messaging.Handlers;
 using DotNetty.Codecs.Protobuf;
 using Serilog;
 
 namespace Catalyst.Node.Core.RPC
 {
-    public class NodeRpcServer
-        : TcpServer,
-            INodeRpcServer
+    public class NodeRpcServer : TcpServer, INodeRpcServer
     {
         private readonly CancellationTokenSource _cancellationSource;
         private readonly X509Certificate2 _certificate;
@@ -53,34 +49,18 @@ namespace Catalyst.Node.Core.RPC
 
         public NodeRpcServer(IRpcServerSettings settings,
             ILogger logger,
+            ITcpServerChannelFactory channelFactory,
             ICertificateStore certificateStore,
-            IEnumerable<IRpcRequestHandler> requestHandlers,
-            ICorrelationManager correlationManager,
-            IObservableServiceHandler observableServiceHandler) : base(logger)
+            IEnumerable<IRpcRequestHandler> requestHandlers) : base(channelFactory, logger)
         {
             Settings = settings;
             _cancellationSource = new CancellationTokenSource();
             _certificate = certificateStore.ReadOrCreateCertificateFile(settings.PfxFileName);
 
-            MessageStream = observableServiceHandler.MessageStream;
-            
+            var observableSocket = ChannelFactory.BuildChannel(certificate: _certificate);
+            Channel = observableSocket.Channel;
+            MessageStream = observableSocket.MessageStream;
             requestHandlers.ToList().ForEach(h => h.StartObserving(MessageStream));
-           
-            Bootstrap(
-                new InboundChannelInitializerBase<ISocketChannel>(channel => { },
-                    new List<IChannelHandler>
-                    {
-                        new ProtobufVarint32FrameDecoder(),
-                        new ProtobufDecoder(ProtocolMessage.Parser),
-                        new ProtobufVarint32LengthFieldPrepender(),
-                        new ProtobufEncoder(),
-                        new CorrelationHandler(correlationManager),
-                        observableServiceHandler
-                    },
-                    _certificate
-                ),
-                Settings.BindAddress, Settings.Port
-            );
         }
 
         /// <summary>

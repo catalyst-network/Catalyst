@@ -64,7 +64,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC
             var messageFactory = new MessageFactory();
             var request = new MessageFactory().GetMessage(new MessageDto(
                 new VersionRequest(),
-                MessageTypes.Ask,
+                MessageTypes.Request,
                 PeerIdentifierHelper.GetPeerIdentifier("recepient"),
                 PeerIdentifierHelper.GetPeerIdentifier("sender")));
 
@@ -80,7 +80,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC
             var sentResponse = (ProtocolMessage) receivedCalls.Single().GetArguments().Single();
             sentResponse.TypeUrl.Should().Be(VersionResponse.Descriptor.ShortenedFullName());
 
-            var responseContent = sentResponse.FromAnySigned<VersionResponse>();
+            var responseContent = sentResponse.FromProtocolMessage<VersionResponse>();
             responseContent.Version.Should().Be(NodeUtil.GetVersion());
         }
     }

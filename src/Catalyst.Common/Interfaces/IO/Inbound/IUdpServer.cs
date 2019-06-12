@@ -23,5 +23,7 @@
 
 namespace Catalyst.Common.Interfaces.IO.Inbound
 {
-    internal interface IUdpServer { }
+    internal interface IUdpServer : ISocket { }
+
+    public interface IUdpServerChannelFactory : IChannelFactory { }
 }

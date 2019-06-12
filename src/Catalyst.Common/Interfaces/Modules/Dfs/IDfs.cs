@@ -27,6 +27,9 @@ using System.Threading.Tasks;
 
 namespace Catalyst.Common.Interfaces.Modules.Dfs
 {
+    /// <summary>
+    ///   Provides read-write access to a distributed file system.
+    /// </summary>
     public interface IDfs
     {
         /// <summary>

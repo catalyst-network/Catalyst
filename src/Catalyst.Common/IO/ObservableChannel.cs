@@ -22,10 +22,30 @@
 #endregion
 
 using System;
+using Catalyst.Common.Interfaces.IO;
+using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Protocol.Common;
+using Dawn;
 using DotNetty.Transport.Channels;
 
-namespace Catalyst.Common.Interfaces.IO.Messaging.Handlers
+namespace Catalyst.Common.IO
 {
-    public interface IObservableServiceHandler : IChannelHandler, IChanneledMessageStreamer<ProtocolMessage>, IDisposable { }
+    public sealed class ObservableSocket : IObservableSocket
+    {
+        public ObservableSocket(IObservable<IChanneledMessage<ProtocolMessage>> messageStream, IChannel channel)
+        {
+            Guard.Argument(messageStream, nameof(messageStream)).NotNull();
+
+            MessageStream = messageStream;
+            Channel = channel;
+        }
+
+        public IChannel Channel { get; }
+        public IObservable<IChanneledMessage<ProtocolMessage>> MessageStream { get; }
+
+        public void Dispose()
+        {
+            Channel?.CloseAsync();
+        }
+    }
 }

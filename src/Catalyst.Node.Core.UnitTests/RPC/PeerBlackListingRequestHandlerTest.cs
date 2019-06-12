@@ -78,8 +78,8 @@ namespace Catalyst.Node.Core.UnitTests.RPC
         /// <param name="ipAddress">Ip address of the peer whose black listing flag we wish to adjust</param>
         /// <param name="blackList">Black listing flag</param>
         [Theory]
-        [InlineData("highscored-14\0\0\0\0\0\0\0", "198.51.100.14", "true")]
-        [InlineData("highscored-22\0\0\0\0\0\0\0", "198.51.100.22", "true")]
+        [InlineData("highscored-14\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0", "198.51.100.14", "true")]
+        [InlineData("highscored-22\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0", "198.51.100.22", "true")]
         public async Task TestPeerBlackListingRequestResponse(string publicKey, string ipAddress, string blackList)
         {
             var responseContent = await ApplyBlackListingToPeerTest(publicKey, ipAddress, blackList);
@@ -141,7 +141,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC
 
             var requestMessage = messageFactory.GetMessage(new MessageDto(
                 request,
-                MessageTypes.Ask,
+                MessageTypes.Request,
                 PeerIdentifierHelper.GetPeerIdentifier("recipient"),
                 sendPeerIdentifier
             ));
@@ -159,7 +159,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC
             var sentResponse = (ProtocolMessage) receivedCalls[0].GetArguments().Single();
             sentResponse.TypeUrl.Should().Be(SetPeerBlackListResponse.Descriptor.ShortenedFullName());
 
-            return sentResponse.FromAnySigned<SetPeerBlackListResponse>();
+            return sentResponse.FromProtocolMessage<SetPeerBlackListResponse>();
         }
     }
 }

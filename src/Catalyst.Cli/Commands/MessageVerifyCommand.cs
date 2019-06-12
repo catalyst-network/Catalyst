@@ -66,7 +66,7 @@ namespace Catalyst.Cli.Commands
                         PublicKey = opts.Address.ToBytesForRLPEncoding().ToByteString(),
                         Signature = opts.Signature.ToBytesForRLPEncoding().ToByteString()
                     },
-                    MessageTypes.Ask,
+                    MessageTypes.Request,
                     new PeerIdentifier(Encoding.ASCII.GetBytes(nodeConfig.PublicKey), nodeConfig.HostAddress,
                         nodeConfig.Port),
                     _peerIdentifier

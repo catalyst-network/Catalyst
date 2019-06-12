@@ -71,7 +71,7 @@ namespace Catalyst.Node.Rpc.Client.Handlers
             
             try
             {
-                var deserialised = message.Payload.FromAnySigned<GetMempoolResponse>();
+                var deserialised = message.Payload.FromProtocolMessage<GetMempoolResponse>();
                 
                 Guard.Argument(deserialised, nameof(deserialised)).NotNull("The GetMempoolResponse cannot be null")
                    .Require(d => d.Mempool != null,

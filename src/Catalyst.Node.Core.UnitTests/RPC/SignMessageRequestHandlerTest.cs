@@ -86,7 +86,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC
                 {
                     Message = ByteString.CopyFrom(message.Trim('\"'), Encoding.UTF8)
                 },
-                MessageTypes.Ask,
+                MessageTypes.Request,
                 PeerIdentifierHelper.GetPeerIdentifier("recipient_key"),
                 PeerIdentifierHelper.GetPeerIdentifier("sender_key")
             ));
@@ -103,7 +103,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC
             var sentResponse = (ProtocolMessage) receivedCalls.Single().GetArguments().Single();
             sentResponse.TypeUrl.Should().Be(SignMessageResponse.Descriptor.ShortenedFullName());
             
-            var responseContent = sentResponse.FromAnySigned<SignMessageResponse>();
+            var responseContent = sentResponse.FromProtocolMessage<SignMessageResponse>();
             
             responseContent.OriginalMessage.Should().Equal(message);
             

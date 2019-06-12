@@ -24,51 +24,31 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using Catalyst.Common.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
-using Catalyst.Common.Interfaces.IO.Messaging.Gossip;
-using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.IO.Messaging.Handlers;
 using Catalyst.Protocol.Common;
-using DotNetty.Transport.Channels;
 using Serilog;
-using Serilog.Extensions.Logging;
 
 namespace Catalyst.Node.Core.P2P
 {
-    public sealed class PeerService
-        : UdpServer,
-            IPeerService
+    public sealed class PeerService : UdpServer, IPeerService
     {
         public IPeerDiscovery Discovery { get; }
         public IObservable<IChanneledMessage<ProtocolMessage>> MessageStream { get; }
 
-        public PeerService(IPeerSettings settings,
+        public PeerService(IUdpServerChannelFactory serverChannelFactory,
             IPeerDiscovery peerDiscovery,
             IEnumerable<IP2PMessageHandler> messageHandlers,
-            ICorrelationManager correlationManager,
-            IGossipManager gossipManager,
-            IKeySigner keySigner)
-            : base(Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType))
+            ILogger logger)
+            : base(serverChannelFactory, logger)
         {
             Discovery = peerDiscovery;
-            var peerServiceHandler = new ObservableServiceHandler(Logger);
-            
-            Bootstrap(new InboundChannelInitializerBase<IChannel>(channel => { },
-                new List<IChannelHandler>
-                {
-                    new ProtoDatagramHandler(),
-                    new CorrelationHandler(correlationManager),
-                    new GossipHandler(gossipManager),
-                    new SignatureHandler(keySigner),
-                    peerServiceHandler
-                }
-            ), settings.BindAddress, settings.Port);
-            
-            MessageStream = peerServiceHandler.MessageStream;
+            var observableChannel = ChannelFactory.BuildChannel();
+            Channel = observableChannel.Channel;
+
+            MessageStream = observableChannel.MessageStream;
             messageHandlers.ToList()
                .ForEach(h => h.StartObserving(MessageStream));
         }

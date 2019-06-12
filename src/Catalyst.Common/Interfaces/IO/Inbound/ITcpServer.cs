@@ -21,7 +21,11 @@
 
 #endregion
 
+using DotNetty.Transport.Channels;
+
 namespace Catalyst.Common.Interfaces.IO.Inbound
 {
     internal interface ITcpServer : ISocketServer { }
+
+    public interface ITcpServerChannelFactory : IChannelFactory { }
 }

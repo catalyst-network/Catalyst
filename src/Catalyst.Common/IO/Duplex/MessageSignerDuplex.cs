@@ -21,15 +21,15 @@
 
 #endregion
 
-using Catalyst.Common.IO.Outbound;
-using Catalyst.Protocol.Common;
+using Catalyst.Common.IO.Inbound.Handlers;
+using Catalyst.Common.IO.Outbound.Handlers;
+using DotNetty.Transport.Channels;
 
-namespace Catalyst.Common.Interfaces.IO.Messaging
+namespace Catalyst.Common.IO.Duplex
 {
-    public interface ICorrelationManager
+    public sealed class MessageSignerDuplex : CombinedChannelDuplexHandler<ProtocolMessageVerifyHandler, ProtocolMessageSignHandler>
     {
-        void AddPendingRequest(PendingRequest pendingRequest);
-
-        bool TryMatchResponse(ProtocolMessage response);
+        public MessageSignerDuplex(ProtocolMessageVerifyHandler inboundHandler, ProtocolMessageSignHandler outboundHandler)
+            : base(inboundHandler, outboundHandler) { }
     }
 }

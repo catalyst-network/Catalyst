@@ -21,20 +21,17 @@
 
 #endregion
 
-using System.Net;
-using System.Threading.Tasks;
+using Catalyst.Common.Interfaces.IO;
 using Catalyst.Common.Interfaces.IO.Outbound;
 using Catalyst.Protocol.Common;
-using DotNetty.Transport.Channels;
 using Serilog;
 
 namespace Catalyst.Common.IO.Outbound
 {
-    public abstract class ClientBase : IoBase, ISocketClient
+    public class ClientBase : SocketBase, ISocketClient
     {
-        protected ClientBase(ILogger logger) : base(logger) { }
-
-        protected abstract void Bootstrap(IChannelHandler channelInitializer, IPEndPoint ipEndPoint);
+        protected ClientBase(IChannelFactory channelFactory, ILogger logger) 
+            : base(channelFactory, logger) { }
 
         public void SendMessage(ProtocolMessage message)
         {

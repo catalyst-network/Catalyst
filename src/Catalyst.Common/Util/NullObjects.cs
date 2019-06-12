@@ -22,6 +22,7 @@
 #endregion
 
 using Catalyst.Common.IO.Inbound;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Protocol.Common;
 
 namespace Catalyst.Common.Util

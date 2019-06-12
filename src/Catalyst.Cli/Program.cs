@@ -144,7 +144,7 @@ namespace Catalyst.Cli
 
             return Environment.ExitCode;
         }
-        
+
         static void CurrentDomain_ProcessExit(object sender, EventArgs e)
         {
             _cancellationSource.Cancel();

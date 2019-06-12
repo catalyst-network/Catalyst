@@ -22,57 +22,39 @@
 #endregion
 
 using System;
-using System.Net;
-using System.Threading.Tasks;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using DotNetty.Transport.Channels;
-using DotNetty.Transport.Channels.Sockets;
-using DotNetty.Handlers.Logging;
 using Serilog;
 
 namespace Catalyst.Common.IO.Inbound
 {
-    public class TcpServer
-        : IoBase,
-            ITcpServer
+    public class TcpServer : SocketBase, ITcpServer
     {
-        private const int BackLogValue = 100;
-
         private readonly IEventLoopGroup _supervisorEventLoop;
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="logger"></param>
-        protected TcpServer(ILogger logger)
-            : base(logger)
+        protected TcpServer(ITcpServerChannelFactory tcpChannelFactory,
+            ILogger logger)
+            : base(tcpChannelFactory, logger)
         {
             _supervisorEventLoop = new MultithreadEventLoopGroup();
         }
 
-        public void Bootstrap(IChannelHandler channelInitializer, IPAddress listenAddress, int port)
-        {
-            Channel = new ServerBootstrap()
-               .Group(_supervisorEventLoop, childGroup: WorkerEventLoop)
-               .ChannelFactory(() => new TcpServerSocketChannel())
-               .Option(ChannelOption.SoBacklog, BackLogValue)
-               .Handler(new LoggingHandler(LogLevel.DEBUG))
-               .ChildHandler(channelInitializer)
-               .BindAsync(listenAddress, port)
-               .GetAwaiter()
-               .GetResult();
-        }
-
         protected override void Dispose(bool disposing)
         {
-            if (_supervisorEventLoop != null)
+            base.Dispose(true);
+            if (!disposing)
             {
-                var quietPeriod = TimeSpan.FromMilliseconds(100);
-                _supervisorEventLoop
-                   .ShutdownGracefullyAsync(quietPeriod, 2 * quietPeriod);
+                return;
             }
 
-            base.Dispose(true);
+            if (_supervisorEventLoop == null)
+            {
+                return;
+            }
+
+            var quietPeriod = TimeSpan.FromMilliseconds(100);
+            _supervisorEventLoop
+               .ShutdownGracefullyAsync(quietPeriod, 2 * quietPeriod);
         }
     }
 }

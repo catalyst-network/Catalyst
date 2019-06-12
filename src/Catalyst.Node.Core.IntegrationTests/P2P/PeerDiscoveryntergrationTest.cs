@@ -31,11 +31,12 @@ using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Network;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.IO.Inbound;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.Network;
 using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Node.Core.P2P;
 using Catalyst.Protocol.IPPN;
+using Catalyst.TestUtils;
 using DnsClient;
 using DotNetty.Transport.Channels;
 using FluentAssertions;
@@ -84,7 +85,7 @@ namespace Catalyst.Node.Core.IntegrationTests.P2P
                 "seed5.catalystnetwork.io"
             };
             
-            _seedPid = "0x41437c30317c39322e3230372e3137382e3139387c34323036397c3031323334353637383930313233343536373839";
+            _seedPid = "0x41437c30317c39322e3230372e3137382e3139387c34323036397c3031323334353637383930313233343536373839323232323232323232323232";
         }
 
         [Fact]
@@ -155,7 +156,7 @@ namespace Catalyst.Node.Core.IntegrationTests.P2P
             var pingRequest = new PingResponse();
             var pid = PeerIdentifierHelper.GetPeerIdentifier("im_a_key");
             var channeledAny = new ProtocolMessageDto(fakeContext, 
-                pingRequest.ToAnySigned(pid.PeerId, Guid.NewGuid()));
+                pingRequest.ToProtocolMessage(pid.PeerId, Guid.NewGuid()));
             
             var observableStream = new[] {channeledAny}.ToObservable();
 

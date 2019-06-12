@@ -27,6 +27,6 @@ namespace Catalyst.Common.Interfaces.Rpc
 {
     public interface INodeRpcClientFactory
     {
-        INodeRpcClient GetClient(X509Certificate certificate, IRpcNodeConfig nodeConfig);
+        INodeRpcClient GetClient(X509Certificate2 certificate, IRpcNodeConfig nodeConfig);
     }
 }

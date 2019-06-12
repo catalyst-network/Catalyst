@@ -93,7 +93,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC
             var messageFactory = new MessageFactory();
             var request = messageFactory.GetMessage(new MessageDto(
                 new GetMempoolRequest(),
-                MessageTypes.Ask,
+                MessageTypes.Request,
                 PeerIdentifierHelper.GetPeerIdentifier("recipient_key"),
                 PeerIdentifierHelper.GetPeerIdentifier("sender_key")
             ));
@@ -109,7 +109,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC
             
             var sentResponse = (ProtocolMessage) receivedCalls.Single().GetArguments().Single();
             sentResponse.TypeUrl.Should().Be(GetMempoolResponse.Descriptor.ShortenedFullName());
-            var responseContent = sentResponse.FromAnySigned<GetMempoolResponse>();
+            var responseContent = sentResponse.FromProtocolMessage<GetMempoolResponse>();
 
             if (expectedTxs == 0)
             {

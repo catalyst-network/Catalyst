@@ -21,19 +21,15 @@
 
 #endregion
 
-using System.Net;
+using Catalyst.Common.IO.Outbound;
 using Catalyst.Protocol.Common;
-using DotNetty.Buffers;
-using DotNetty.Transport.Channels.Sockets;
-using Google.Protobuf;
 
-namespace Catalyst.Common.Extensions
+namespace Catalyst.Common.Interfaces.IO.Messaging
 {
-    public static class DatagramExtensions
+    public interface IMessageCorrelationManager
     {
-        public static DatagramPacket ToDatagram(this ProtocolMessage anySignedMessage, IPEndPoint recipient)
-        {
-            return new DatagramPacket(Unpooled.WrappedBuffer(anySignedMessage.ToByteArray()), recipient);
-        }
+        void AddPendingRequest(PendingRequest pendingRequest);
+
+        bool TryMatchResponse(ProtocolMessage response);
     }
 }

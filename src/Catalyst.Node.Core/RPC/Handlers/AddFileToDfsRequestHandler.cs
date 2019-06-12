@@ -84,7 +84,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
         /// <param name="message">The message.</param>
         protected override void Handler(IChanneledMessage<ProtocolMessage> message)
         {
-            var deserialised = message.Payload.FromAnySigned<AddFileToDfsRequest>();
+            var deserialised = message.Payload.FromProtocolMessage<AddFileToDfsRequest>();
 
             Guard.Argument(deserialised).NotNull("Message cannot be null");
             
@@ -184,7 +184,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
             // Send Response
             var responseMessage = _messageFactory.GetMessage(new MessageDto(
                     response,
-                    MessageTypes.Tell,
+                    MessageTypes.Response,
                     fileTransferInformation.RecipientIdentifier,
                     _peerIdentifier
                 ),

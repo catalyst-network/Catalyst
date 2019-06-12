@@ -23,8 +23,10 @@
 #endregion
 
 using System;
-using System.Net;
 using Catalyst.Node.Core.P2P;
+using Catalyst.Common.IO.Outbound;
+using NSubstitute;
+using Catalyst.Common.Interfaces.Modules.KeySigner;
 
 namespace Catalyst.Node.Core.IntegrationTests.P2P
 {
@@ -32,7 +34,7 @@ namespace Catalyst.Node.Core.IntegrationTests.P2P
     {
         public PeerClientFixture()
         {
-            UniversalPeerClient = new PeerClient();
+            UniversalPeerClient = new PeerClient(new UdpClientChannelFactory(Substitute.For<IKeySigner>()));
         }
 
         public void Dispose()

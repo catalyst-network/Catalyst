@@ -21,13 +21,12 @@
 
 #endregion
 
+using System;
+using Catalyst.Common.Interfaces.IO.Messaging;
+using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;
 
-namespace Catalyst.Common.Interfaces.IO.Messaging.Gossip
+namespace Catalyst.Common.Interfaces.IO.Inbound.Handlers
 {
-    /// <summary>
-    /// The Gossip Handler interface
-    /// </summary>
-    /// <seealso cref="DotNetty.Transport.Channels.IChannelHandler" />
-    public interface IGossipHandler : IChannelHandler { }
+    public interface IObservableServiceHandler : IChannelHandler, IChanneledMessageStreamer<ProtocolMessage>, IDisposable { }
 }

@@ -21,45 +21,16 @@
 
 #endregion
 
-using System.Net;
-using System.Net.Sockets;
+using System;
 using Catalyst.Common.Interfaces.IO.Inbound;
-using DotNetty.Handlers.Logging;
-using DotNetty.Transport.Channels;
-using DotNetty.Transport.Channels.Sockets;
 using Serilog;
 
 namespace Catalyst.Common.IO.Inbound
 {
-    public class UdpServer
-        : IoBase,
-            IUdpServer
+    public class UdpServer : SocketBase, IUdpServer
     {
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="logger"></param>
-        protected UdpServer(ILogger logger)
-            : base(logger) { }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="channelInitializer"></param>
-        /// <param name="listenAddress"></param>
-        /// <param name="port"></param>
-        /// <returns></returns>
-        public void Bootstrap(IChannelHandler channelInitializer, IPAddress listenAddress, int port)
-        {
-            Channel = new Bootstrap()
-               .Group(WorkerEventLoop)
-               .ChannelFactory(() => new SocketDatagramChannel(AddressFamily.InterNetwork))
-               .Option(ChannelOption.SoBroadcast, true)
-               .Handler(new LoggingHandler(LogLevel.DEBUG))
-               .Handler(channelInitializer)
-               .BindAsync(listenAddress, port)
-               .GetAwaiter()
-               .GetResult();
-        }
+        protected UdpServer(IUdpServerChannelFactory serverChannelFactory, 
+            ILogger logger)
+            : base(serverChannelFactory, logger) { }
     }
 }

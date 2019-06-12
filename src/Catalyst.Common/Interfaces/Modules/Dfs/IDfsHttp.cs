@@ -21,19 +21,25 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.IO.Inbound;
-using Catalyst.Protocol.Common;
+using Ipfs.HttpGateway;
 
-namespace Catalyst.Common.Interfaces.IO.Messaging.Gossip
-{ 
-    public interface IGossipManager
+namespace Catalyst.Common.Interfaces.Modules.Dfs
+{
+    /// <summary>
+    ///   Provides read-only access to the distribute files system via HTTP.
+    /// </summary>
+    /// <seealso cref="IDfs"/>
+    public interface IDfsHttp
     {
-        /// <summary>Broadcasts a message.</summary>
-        /// <param name="anySigned">Any signed message.</param>
-        void Broadcast(IChanneledMessage<ProtocolMessage> anySigned);
-
-        /// <summary>Handles Incoming gossip.</summary>
-        /// <param name="anySigned">Any signed message.</param>
-        void IncomingGossip(IChanneledMessage<ProtocolMessage> anySigned);
+        GatewayHost Gateway { get; }
+        
+        /// <summary>
+        ///   Gets the URL of DFS content.
+        /// </summary>
+        /// <param name="id">The unique ID of the content in the DFS.</param>
+        /// <returns>
+        ///   The URL of the DFS <paramref name="id"/>.
+        /// </returns>
+        string ContentUrl(string id);
     }
 }
