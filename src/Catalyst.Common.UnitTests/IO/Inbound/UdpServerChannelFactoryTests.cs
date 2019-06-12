@@ -101,7 +101,7 @@ namespace Catalyst.Common.UnitTests.IO.Inbound
 
             var senderId = PeerIdHelper.GetPeerId("sender");
             var correlationId = Guid.NewGuid();
-            var protocolMessage = new PingRequest().ToAnySigned(senderId, correlationId);
+            var protocolMessage = new PingRequest().ToProtocolMessage(senderId, correlationId);
             var datagram = protocolMessage.ToDatagram(new IPEndPoint(IPAddress.Loopback, 0));
 
             var observer = new ProtocolMessageObserver(0, Substitute.For<ILogger>());

@@ -25,7 +25,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging;
@@ -99,7 +98,7 @@ namespace Catalyst.Common.UnitTests.IO.Inbound
 
             var senderId = PeerIdHelper.GetPeerId("sender");
             var correlationId = Guid.NewGuid();
-            var protocolMessage = new PingRequest().ToAnySigned(senderId, correlationId);
+            var protocolMessage = new PingRequest().ToProtocolMessage(senderId, correlationId);
 
             var observer = new ProtocolMessageObserver(0, Substitute.For<ILogger>());
            
