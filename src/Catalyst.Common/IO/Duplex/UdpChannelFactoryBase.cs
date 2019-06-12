@@ -42,11 +42,11 @@ namespace Catalyst.Common.IO.Duplex
     {
         protected abstract List<IChannelHandler> Handlers { get; }
 
-        protected IObservableSocket BootStrapChannel(IPAddress address = null, int port = 0)
+        protected IObservableSocket BootStrapChannel(IPAddress address = null, int port = 0, IEventLoopGroup handlerEventLoopGroup = null)
         {
             var observableServiceHandler = Handlers.Last() as ObservableServiceHandler;
 
-            var channelHandler = new InboundChannelInitializerBase<IChannel>(Handlers);
+            var channelHandler = new InboundChannelInitializerBase<IChannel>(Handlers, handlerEventLoopGroup: handlerEventLoopGroup);
 
             var channel = new Bootstrap()
                .Group(new MultithreadEventLoopGroup())

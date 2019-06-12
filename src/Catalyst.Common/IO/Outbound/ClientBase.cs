@@ -24,14 +24,17 @@
 using Catalyst.Common.Interfaces.IO;
 using Catalyst.Common.Interfaces.IO.Outbound;
 using Catalyst.Protocol.Common;
+using DotNetty.Transport.Channels;
 using Serilog;
 
 namespace Catalyst.Common.IO.Outbound
 {
     public class ClientBase : SocketBase, ISocketClient
     {
-        protected ClientBase(IChannelFactory channelFactory, ILogger logger) 
-            : base(channelFactory, logger) { }
+        protected ClientBase(IChannelFactory channelFactory,
+            ILogger logger, 
+            MultithreadEventLoopGroup handlerEventLoopGroup) 
+            : base(channelFactory, logger, handlerEventLoopGroup) { }
 
         public void SendMessage(ProtocolMessage message)
         {

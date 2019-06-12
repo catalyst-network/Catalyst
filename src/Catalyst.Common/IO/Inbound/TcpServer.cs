@@ -21,23 +21,11 @@
 
 #endregion
 
-using System;
-using System.Collections.Generic;
-using System.Net;
-using System.Security.Cryptography.X509Certificates;
-using Catalyst.Common.Interfaces.IO;
 using Catalyst.Common.Interfaces.IO.Inbound;
-using Catalyst.Common.Interfaces.IO.Messaging;
-using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.IO.Duplex;
-using Catalyst.Common.IO.Inbound.Handlers;
-using Catalyst.Common.IO.Outbound.Handlers;
-using Catalyst.Protocol.Common;
-using DotNetty.Codecs.Protobuf;
 using DotNetty.Transport.Channels;
-using DotNetty.Transport.Channels.Sockets;
-using DotNetty.Handlers.Logging;
 using Serilog;
+using System;
+using Catalyst.Common.Interfaces.IO;
 
 namespace Catalyst.Common.IO.Inbound
 {
@@ -46,8 +34,9 @@ namespace Catalyst.Common.IO.Inbound
         private readonly IEventLoopGroup _supervisorEventLoop;
 
         protected TcpServer(ITcpServerChannelFactory tcpChannelFactory,
-            ILogger logger)
-            : base(tcpChannelFactory, logger)
+            ILogger logger,
+            IHandlerWorkerEventLoopGroupFactory handlerWorkerEventLoopGroupFactory)
+            : base(tcpChannelFactory, logger, handlerWorkerEventLoopGroupFactory.NewTcpServerLoopGroup())
         {
             _supervisorEventLoop = new MultithreadEventLoopGroup();
         }

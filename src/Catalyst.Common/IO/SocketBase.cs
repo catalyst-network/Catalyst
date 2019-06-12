@@ -35,14 +35,16 @@ namespace Catalyst.Common.IO
         protected readonly IChannelFactory ChannelFactory;
         protected readonly ILogger Logger;
         protected readonly IEventLoopGroup WorkerEventLoop;
+        protected readonly IEventLoopGroup HandlerWorkerEventLoopGroup;
 
         public IChannel Channel { get; protected set; }
 
-        protected SocketBase(IChannelFactory channelFactory, ILogger logger)
+        protected SocketBase(IChannelFactory channelFactory, ILogger logger, MultithreadEventLoopGroup handlerWorkerEventLoopGroup)
         {
             ChannelFactory = channelFactory;
             Logger = logger;
             WorkerEventLoop = new MultithreadEventLoopGroup();
+            HandlerWorkerEventLoopGroup = handlerWorkerEventLoopGroup;
         }
 
         public void Dispose()
@@ -66,8 +68,9 @@ namespace Catalyst.Common.IO
                 Channel?.Flush();
                 var closeChannelTask = Channel?.CloseAsync();
                 var closeWorkerLoopTask = WorkerEventLoop?.ShutdownGracefullyAsync(quietPeriod, quietPeriod);
-
-                Task.WaitAll(new[] {closeChannelTask, closeWorkerLoopTask}.Where(t => t != null).ToArray(),
+                var handlerWorkerLoopTask =
+                    HandlerWorkerEventLoopGroup?.ShutdownGracefullyAsync(quietPeriod, quietPeriod);
+                Task.WaitAll(new[] {closeChannelTask, closeWorkerLoopTask, handlerWorkerLoopTask}.Where(t => t != null).ToArray(),
                     quietPeriod * 3);
             }
             catch (Exception e)

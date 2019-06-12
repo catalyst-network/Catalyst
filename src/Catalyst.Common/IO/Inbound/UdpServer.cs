@@ -22,6 +22,7 @@
 #endregion
 
 using System;
+using Catalyst.Common.Interfaces.IO;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Serilog;
 
@@ -30,7 +31,8 @@ namespace Catalyst.Common.IO.Inbound
     public class UdpServer : SocketBase, IUdpServer
     {
         protected UdpServer(IUdpServerChannelFactory serverChannelFactory, 
-            ILogger logger)
-            : base(serverChannelFactory, logger) { }
+            ILogger logger,
+            IHandlerWorkerEventLoopGroupFactory handlerWorkerEventLoopGroupFactory)
+            : base(serverChannelFactory, logger, handlerWorkerEventLoopGroupFactory.NewUdpServerLoopGroup()) { }
     }
 }

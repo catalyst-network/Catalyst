@@ -36,13 +36,15 @@ namespace Catalyst.Common.IO.Outbound
         /// <inheritdoc />
         public OutboundChannelInitializerBase(IList<IChannelHandler> handlers,
             IPAddress targetHost = default,
-            X509Certificate certificate = null)
+            X509Certificate certificate = null,
+            IEventLoopGroup handlerEventLoopGroup = null)
             : base(handlers,
                 certificate == null || targetHost == null
                     ? null
                     : new TlsHandler(stream =>
                             new SslStream(stream, true, (sender, cert, chain, errors) => true),
-                        new ClientTlsSettings(targetHost.ToString()))
+                        new ClientTlsSettings(targetHost.ToString())),
+                handlerEventLoopGroup
             ) { }
 
         public override string ToString()

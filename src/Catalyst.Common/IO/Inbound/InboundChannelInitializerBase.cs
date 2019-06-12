@@ -35,9 +35,10 @@ namespace Catalyst.Common.IO.Inbound
     {
         /// <inheritdoc />
         public InboundChannelInitializerBase(IList<IChannelHandler> handlers,
-            X509Certificate certificate = null)
+            X509Certificate certificate = null, 
+            IEventLoopGroup handlerEventLoopGroup = null)
             : base(handlers,
-                certificate == null ? null : TlsHandler.Server(certificate)) { }
+                certificate == null ? null : TlsHandler.Server(certificate), handlerEventLoopGroup) { }
 
         public override string ToString()
         {

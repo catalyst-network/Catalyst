@@ -48,9 +48,10 @@ namespace Catalyst.Common.IO.Outbound
 
         public IObservableSocket BuildChannel(IPAddress targetAddress = null,
             int targetPort = 0,
-            X509Certificate2 certificate = null)
+            X509Certificate2 certificate = null,
+            IEventLoopGroup handlerEventLoopGroup = null)
         {
-            return BootStrapChannel(targetAddress);
+            return BootStrapChannel(targetAddress, handlerEventLoopGroup: handlerEventLoopGroup);
         }
     }
 }

@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
+using Catalyst.Common.Interfaces.IO;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Outbound;
 using Catalyst.Common.IO.Outbound;
@@ -50,14 +51,16 @@ namespace Catalyst.Node.Rpc.Client
         /// <param name="channelFactory"></param>
         /// <param name="certificate"></param>
         /// <param name="nodeConfig">rpc node config</param>
+        /// <param name="handlerWorkerEventLoopGroupFactory"></param>
         /// <param name="handlers"></param>
         public NodeRpcClient(ITcpClientChannelFactory channelFactory,
             X509Certificate2 certificate, 
             IRpcNodeConfig nodeConfig,
+            IHandlerWorkerEventLoopGroupFactory handlerWorkerEventLoopGroupFactory,
             IEnumerable<IRpcResponseHandler> handlers) 
-            : base(channelFactory, Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType))
+            : base(channelFactory, Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType), handlerWorkerEventLoopGroupFactory)
         {
-            var socket = channelFactory.BuildChannel(nodeConfig.HostAddress, nodeConfig.Port, certificate);
+            var socket = channelFactory.BuildChannel(nodeConfig.HostAddress, nodeConfig.Port, certificate, HandlerWorkerEventLoopGroup);
             handlers.ToList().ForEach(handler => handler.StartObserving(socket.MessageStream));
             Channel = socket.Channel;
         }

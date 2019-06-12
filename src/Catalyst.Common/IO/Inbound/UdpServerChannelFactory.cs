@@ -47,11 +47,13 @@ namespace Catalyst.Common.IO.Inbound
         /// <param name="targetAddress">Ignored</param>
         /// <param name="targetPort">Ignored</param>
         /// <param name="certificate">Ignored</param>
+        /// <param name="handlerEventLoopGroup"></param>
         /// <returns></returns>
         public IObservableSocket BuildChannel(IPAddress targetAddress = null,
             int targetPort = 0,
-            X509Certificate2 certificate = null) =>
-            BootStrapChannel(_peerSettings.BindAddress, _peerSettings.Port);
+            X509Certificate2 certificate = null,
+            IEventLoopGroup handlerEventLoopGroup = null) =>
+            BootStrapChannel(_peerSettings.BindAddress, _peerSettings.Port, handlerEventLoopGroup);
 
         public UdpServerChannelFactory(IMessageCorrelationManager messageCorrelationManager,
             IGossipManager gossipManager,

@@ -47,7 +47,8 @@ namespace Catalyst.Common.IO.Outbound
         
         public IObservableSocket BuildChannel(IPAddress targetAddress = null, 
             int targetPort = 0,
-            X509Certificate2 certificate = null)
+            X509Certificate2 certificate = null,
+            IEventLoopGroup handlerEventLoopGroup = null)
         {
             var observableServiceHandler = new ObservableServiceHandler();
 
@@ -63,7 +64,8 @@ namespace Catalyst.Common.IO.Outbound
 
             var channelHandler = new OutboundChannelInitializerBase<ISocketChannel>(channelHandlers,
                 targetAddress,
-                certificate);
+                certificate,
+                handlerEventLoopGroup);
 
             var channel = new Bootstrap()
                .Group(new MultithreadEventLoopGroup())

@@ -24,6 +24,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Catalyst.Common.Interfaces.IO;
 using Catalyst.Common.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
@@ -40,12 +41,13 @@ namespace Catalyst.Node.Core.P2P
 
         public PeerService(IUdpServerChannelFactory serverChannelFactory,
             IPeerDiscovery peerDiscovery,
+            IHandlerWorkerEventLoopGroupFactory handlerWorkerEventLoopGroupFactory,
             IEnumerable<IP2PMessageHandler> messageHandlers,
             ILogger logger)
-            : base(serverChannelFactory, logger)
+            : base(serverChannelFactory, logger, handlerWorkerEventLoopGroupFactory)
         {
             Discovery = peerDiscovery;
-            var observableChannel = ChannelFactory.BuildChannel();
+            var observableChannel = ChannelFactory.BuildChannel(handlerEventLoopGroup: HandlerWorkerEventLoopGroup);
             Channel = observableChannel.Channel;
 
             MessageStream = observableChannel.MessageStream;

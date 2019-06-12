@@ -26,6 +26,7 @@ using System.Net;
 using System.Security.Cryptography.X509Certificates;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Protocol.Common;
+using DotNetty.Transport.Channels;
 using IChannel = DotNetty.Transport.Channels.IChannel;
 
 namespace Catalyst.Common.Interfaces.IO
@@ -44,6 +45,7 @@ namespace Catalyst.Common.Interfaces.IO
     {
         IObservableSocket BuildChannel(IPAddress targetAddress = null,
             int targetPort = 0,
-            X509Certificate2 certificate = null);
+            X509Certificate2 certificate = null,
+            IEventLoopGroup handlerEventLoopGroup = null);
     }
 }

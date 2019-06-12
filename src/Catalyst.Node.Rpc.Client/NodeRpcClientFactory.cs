@@ -21,12 +21,12 @@
 
 #endregion
 
-using System.Collections.Generic;
-using System.Security.Cryptography.X509Certificates;
+using Catalyst.Common.Interfaces.IO;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Outbound;
 using Catalyst.Common.Interfaces.Rpc;
-using Catalyst.Common.IO.Outbound;
+using System.Collections.Generic;
+using System.Security.Cryptography.X509Certificates;
 
 namespace Catalyst.Node.Rpc.Client
 {
@@ -34,16 +34,20 @@ namespace Catalyst.Node.Rpc.Client
     {
         private readonly ITcpClientChannelFactory _channelFactory;
         private readonly IEnumerable<IRpcResponseHandler> _handlers;
+        private readonly IHandlerWorkerEventLoopGroupFactory _handlerWorkerEventLoopGroupFactory;
 
-        public NodeRpcClientFactory(ITcpClientChannelFactory channelFactory, IEnumerable<IRpcResponseHandler> handlers)
+        public NodeRpcClientFactory(ITcpClientChannelFactory channelFactory,
+            IEnumerable<IRpcResponseHandler> handlers,
+            IHandlerWorkerEventLoopGroupFactory handlerWorkerEventLoopGroupFactory)
         {
             _channelFactory = channelFactory;
+            _handlerWorkerEventLoopGroupFactory = handlerWorkerEventLoopGroupFactory;
             _handlers = handlers;
         }
 
         public INodeRpcClient GetClient(X509Certificate2 certificate, IRpcNodeConfig nodeConfig)
         {
-            return new NodeRpcClient(_channelFactory, certificate, nodeConfig, _handlers);
+            return new NodeRpcClient(_channelFactory, certificate, nodeConfig, _handlerWorkerEventLoopGroupFactory, _handlers);
         }
     }
 }

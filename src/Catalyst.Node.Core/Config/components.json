@@ -10,6 +10,19 @@
             ]
         },
         {
+            "parameters": {
+                "tcpServerThreads": 4,
+                "udpClientThreads": 2,
+                "udpServerThreads": 8
+            },
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.IO.IHandlerWorkerEventLoopGroupFactory, Catalyst.Common"
+                }
+            ],
+            "type": "Catalyst.Common.IO.HandlerWorkerEventLoopGroupFactory, Catalyst.Common"
+        },
+        {
             "type": "Catalyst.Node.Core.P2P.PeerClient",
             "services": [
                 {

@@ -27,6 +27,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Catalyst.Common.Extensions;
+using Catalyst.Common.Interfaces.IO;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.P2P;
@@ -129,6 +130,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
 
             _peerService = new PeerService(_udpServerServerChannelFactory,
                 _peerDiscovery,
+                Substitute.For<IHandlerWorkerEventLoopGroupFactory>(),
                 _p2PMessageHandlers,
                 _logger);
 

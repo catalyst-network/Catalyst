@@ -21,6 +21,7 @@
 
 #endregion
 
+using Catalyst.Common.Interfaces.IO;
 using Catalyst.Common.Interfaces.IO.Outbound;
 using Serilog;
 
@@ -28,7 +29,7 @@ namespace Catalyst.Common.IO.Outbound
 {
     public class TcpClient : ClientBase, ITcpClient
     {
-        protected TcpClient(ITcpClientChannelFactory channelFactory, ILogger logger) 
-            : base(channelFactory, logger) { }
+        protected TcpClient(ITcpClientChannelFactory channelFactory, ILogger logger, IHandlerWorkerEventLoopGroupFactory handlerWorkerEventLoopGroupFactory) 
+            : base(channelFactory, logger, handlerWorkerEventLoopGroupFactory.NewTcpClientLoopGroup()) { }
     }
 }
