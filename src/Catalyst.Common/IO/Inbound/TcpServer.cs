@@ -22,21 +22,8 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
-using System.Net;
-using System.Security.Cryptography.X509Certificates;
-using Catalyst.Common.Interfaces.IO;
 using Catalyst.Common.Interfaces.IO.Inbound;
-using Catalyst.Common.Interfaces.IO.Messaging;
-using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.IO.Duplex;
-using Catalyst.Common.IO.Inbound.Handlers;
-using Catalyst.Common.IO.Outbound.Handlers;
-using Catalyst.Protocol.Common;
-using DotNetty.Codecs.Protobuf;
 using DotNetty.Transport.Channels;
-using DotNetty.Transport.Channels.Sockets;
-using DotNetty.Handlers.Logging;
 using Serilog;
 
 namespace Catalyst.Common.IO.Inbound

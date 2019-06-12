@@ -23,6 +23,7 @@
 
 using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.IO.Inbound.Handlers;
+using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Common.Util;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Types;
 using Catalyst.Protocol.Common;
