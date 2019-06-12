@@ -31,6 +31,7 @@ using Catalyst.Common.Interfaces.IO;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.IO;
 using Catalyst.Node.Core.P2P;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
@@ -119,7 +120,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
 
             pingRequestHandler.SubstituteObserver.Received(1).OnNext(Arg.Any<PeerNeighborsResponse>());
             var call = pingRequestHandler.SubstituteObserver.ReceivedCalls().Single();
-            ((PeerNeighborsResponse) call.GetArguments()[0]).Peers
+            ((PeerNeighborsResponse)call.GetArguments()[0]).Peers
                .Should().BeEquivalentTo(responseContent.Peers);
         }
 
@@ -129,7 +130,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
 
             _peerService = new PeerService(_udpServerServerChannelFactory,
                 _peerDiscovery,
-                Substitute.For<IHandlerWorkerEventLoopGroupFactory>(),
+                new HandlerWorkerEventLoopGroupFactory(1, 1, 1, 1),
                 _p2PMessageHandlers,
                 _logger);
 
