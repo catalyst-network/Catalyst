@@ -78,7 +78,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.Handlers
                     {
                         IsSignedByKey = isSignedByNode
                     },
-                    MessageTypes.Tell,
+                    MessageTypes.Response,
                     PeerIdentifierHelper.GetPeerIdentifier("recipient"),
                     PeerIdentifierHelper.GetPeerIdentifier("sender")
                 ),

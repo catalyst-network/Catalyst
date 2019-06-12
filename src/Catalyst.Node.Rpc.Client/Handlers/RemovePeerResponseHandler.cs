@@ -64,7 +64,7 @@ namespace Catalyst.Node.Rpc.Client.Handlers
 
             try
             {
-                var deserialised = message.Payload.FromAnySigned<RemovePeerResponse>();
+                var deserialised = message.Payload.FromProtocolMessage<RemovePeerResponse>();
                 var deletedCount = deserialised.DeletedCount;
 
                 _userOutput.WriteLine($"Deleted {deletedCount.ToString()} peers");

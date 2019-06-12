@@ -93,7 +93,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC
                     PublicKey = publicKey.ToBytesForRLPEncoding().ToByteString(),
                     Signature = signature.ToBytesForRLPEncoding().ToByteString()
                 },
-                MessageTypes.Ask,
+                MessageTypes.Request,
                 PeerIdentifierHelper.GetPeerIdentifier("recipient_key"),
                 PeerIdentifierHelper.GetPeerIdentifier("sender_key")
             ));
@@ -108,7 +108,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC
             var sentResponse = (ProtocolMessage) receivedCalls.Single().GetArguments().Single();
             sentResponse.TypeUrl.Should().Be(VerifyMessageResponse.Descriptor.ShortenedFullName());
 
-            var responseContent = sentResponse.FromAnySigned<VerifyMessageResponse>();
+            var responseContent = sentResponse.FromProtocolMessage<VerifyMessageResponse>();
 
             responseContent.IsSignedByKey.Should().Be(expectedResult);
         }

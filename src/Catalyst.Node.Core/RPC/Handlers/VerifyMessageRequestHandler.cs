@@ -72,7 +72,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
             
             Logger.Debug("received message of type VerifyMessageRequest");
             
-            var deserialised = message.Payload.FromAnySigned<VerifyMessageRequest>();
+            var deserialised = message.Payload.FromProtocolMessage<VerifyMessageRequest>();
             Guard.Argument(deserialised).NotNull("The verify message request cannot be null");
 
             var decodedMessage = RLP.Decode(deserialised.Message.ToByteArray()).RLPData.ToStringFromRLPDecoded();
@@ -134,7 +134,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
                     {
                         IsSignedByKey = result
                     },
-                    MessageTypes.Tell,
+                    MessageTypes.Response,
                     new PeerIdentifier(_message.Payload.PeerId),
                     _peerIdentifier),
                 correlationGuid);

@@ -156,7 +156,7 @@ namespace Catalyst.Node.Core.IntegrationTests.P2P
             var pingRequest = new PingResponse();
             var pid = PeerIdentifierHelper.GetPeerIdentifier("im_a_key");
             var channeledAny = new ProtocolMessageDto(fakeContext, 
-                pingRequest.ToAnySigned(pid.PeerId, Guid.NewGuid()));
+                pingRequest.ToProtocolMessage(pid.PeerId, Guid.NewGuid()));
             
             var observableStream = new[] {channeledAny}.ToObservable();
 

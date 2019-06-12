@@ -54,7 +54,7 @@ namespace Catalyst.Common.IO.Inbound.Handlers
         /// <param name="msg">The gossip message.</param>
         protected override void ChannelRead0(IChannelHandlerContext ctx, ProtocolMessage msg)
         {
-            if (msg.CheckIfMessageIsGossip())
+            if (msg.CheckIfMessageIsBroadcast())
             {
                 _gossipManager.ReceiveAsync(msg).ConfigureAwait(false).GetAwaiter().GetResult();
 

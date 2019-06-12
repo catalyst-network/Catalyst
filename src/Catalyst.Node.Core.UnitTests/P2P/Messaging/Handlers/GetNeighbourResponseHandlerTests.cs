@@ -82,7 +82,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Messaging.Handlers
             var peerNeighbourResponseMessage = new PeerNeighborsResponse();
             
             var fakeContext = Substitute.For<IChannelHandlerContext>();
-            var channeledAny = new ProtocolMessageDto(fakeContext, peerNeighbourResponseMessage.ToAnySigned(PeerIdHelper.GetPeerId(), Guid.NewGuid()));
+            var channeledAny = new ProtocolMessageDto(fakeContext, peerNeighbourResponseMessage.ToProtocolMessage(PeerIdHelper.GetPeerId(), Guid.NewGuid()));
             var observableStream = new[] {channeledAny}.ToObservable();
             neighbourResponseHandler.StartObserving(observableStream);
 
@@ -96,7 +96,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Messaging.Handlers
             var peerNeighbourResponseMessage = new PeerNeighborsResponse();
             
             var fakeContext = Substitute.For<IChannelHandlerContext>();
-            var channeledAny = new ProtocolMessageDto(fakeContext, peerNeighbourResponseMessage.ToAnySigned(PeerIdHelper.GetPeerId(), Guid.NewGuid()));
+            var channeledAny = new ProtocolMessageDto(fakeContext, peerNeighbourResponseMessage.ToProtocolMessage(PeerIdHelper.GetPeerId(), Guid.NewGuid()));
             var observableStream = new[] {channeledAny}.ToObservable();
             subbedPeerDiscovery.StartObserving(observableStream);
             subbedPeerDiscovery.GetNeighbourResponseStream.ReceivedWithAnyArgs(1);

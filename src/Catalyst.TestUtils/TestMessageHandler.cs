@@ -46,7 +46,7 @@ namespace Catalyst.TestUtils
         
         protected override void Handler(IChanneledMessage<ProtocolMessage> message)
         {
-            SubstituteObserver.OnNext(message.Payload.FromAnySigned<TProto>());
+            SubstituteObserver.OnNext(message.Payload.FromProtocolMessage<TProto>());
         }
 
         public override void HandleError(Exception exception) { SubstituteObserver.OnError(exception); }
