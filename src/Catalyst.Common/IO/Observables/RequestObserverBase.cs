@@ -76,6 +76,8 @@ namespace Catalyst.Common.IO.Observables
             
             ChannelHandlerContext = messageDto.Context;
             
+            //@TODO HandleRequest in try catch if catch send error message.
+            
             SendChannelContextResponse(new MessageDto(
                 HandleRequest(messageDto),
                 MessageTypes.Response,

@@ -40,7 +40,7 @@ namespace Catalyst.Node.Rpc.Client.Observables
     /// The handler reads the response's payload and formats it in user readable format and writes it to the console.
     /// </summary>
     public sealed class GetInfoResponseObserver
-        : ObserverBase,
+        : ResponseObserverBase<GetInfoResponse>,
             IRpcResponseObserver
     {
         private readonly IUserOutput _output;
@@ -61,15 +61,15 @@ namespace Catalyst.Node.Rpc.Client.Observables
         /// Handles the GetInfoResponse message.
         /// </summary>
         /// <param name="messageDto">An object of GetInfoResponse</param>
-        protected override void Handler(IProtocolMessageDto<ProtocolMessage> messageDto)
+        public override void HandleResponse(IProtocolMessageDto<ProtocolMessage> messageDto)
         {
-            Guard.Argument(messageDto).NotNull("The message cannot be null");
-            
             Logger.Debug("Handling GetInfoResponse");
+
+            Guard.Argument(messageDto, nameof(messageDto)).NotNull("Message cannot be null");
             
             try
             {
-                var deserialised = messageDto.Payload.FromProtocolMessage<GetInfoResponse>();
+                var deserialised = messageDto.Payload.FromProtocolMessage<GetInfoResponse>() ?? throw new ArgumentNullException(nameof(messageDto));
                 
                 Guard.Argument(deserialised).NotNull().Require(d => d.Query != null, d => $"{nameof(deserialised)} must have a valid configuration response.");
                 

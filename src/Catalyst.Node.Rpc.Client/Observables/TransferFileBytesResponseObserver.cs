@@ -21,11 +21,11 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Observables;
 using Catalyst.Common.IO.Observables;
 using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Rpc.Node;
 using Serilog;
 
 namespace Catalyst.Node.Rpc.Client.Observables
@@ -35,7 +35,7 @@ namespace Catalyst.Node.Rpc.Client.Observables
     /// </summary>
     /// <seealso cref="IRpcResponseObserver" />
     public class TransferFileBytesResponseObserver
-        : ObserverBase,
+        : ResponseObserverBase<TransferFileBytesResponse>,
             IRpcResponseObserver
     {
         /// <summary>Initializes a new instance of the <see cref="TransferFileBytesResponseObserver"/> class.</summary>
@@ -44,7 +44,7 @@ namespace Catalyst.Node.Rpc.Client.Observables
 
         /// <summary>Handles the specified message.</summary>
         /// <param name="messageDto">The message.</param>
-        protected override void Handler(IProtocolMessageDto<ProtocolMessage> messageDto)
+        public override void HandleResponse(IProtocolMessageDto<ProtocolMessage> messageDto)
         {
             // Response for a node writing a chunk via bytes transfer.
             // Future logic if an error occurs via chunk transfer then preferably we want to stop file transfer

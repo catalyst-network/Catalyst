@@ -40,7 +40,7 @@ namespace Catalyst.Node.Rpc.Client.Observables
     /// </summary>
     /// <seealso cref="IRpcResponseObserver" />
     public sealed class RemovePeerResponseObserver
-        : ObserverBase,
+        : ResponseObserverBase<RemovePeerResponse>,
             IRpcResponseObserver
     {
         /// <summary>The user output</summary>
@@ -57,18 +57,18 @@ namespace Catalyst.Node.Rpc.Client.Observables
 
         /// <summary>Handles the specified message.</summary>
         /// <param name="messageDto">The message.</param>
-        protected override void Handler(IProtocolMessageDto<ProtocolMessage> messageDto)
+        public override void HandleResponse(IProtocolMessageDto<ProtocolMessage> messageDto)
         {
-            Logger.Debug("Handling Remove Peer Response");
+            Logger.Debug($@"Handling Remove Peer Response");
 
-            Guard.Argument(messageDto).NotNull("Received message cannot be null");
+            Guard.Argument(messageDto, nameof(messageDto)).NotNull($@"Received message cannot be null");
 
             try
             {
-                var deserialised = messageDto.Payload.FromProtocolMessage<RemovePeerResponse>();
+                var deserialised = messageDto.Payload.FromProtocolMessage<RemovePeerResponse>() ?? throw new ArgumentNullException(nameof(messageDto));
                 var deletedCount = deserialised.DeletedCount;
 
-                _userOutput.WriteLine($"Deleted {deletedCount.ToString()} peers");
+                _userOutput.WriteLine($@"Deleted {deletedCount.ToString()} peers");
             }
             catch (Exception ex)
             {

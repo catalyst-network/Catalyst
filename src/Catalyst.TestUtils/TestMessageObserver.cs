@@ -45,13 +45,15 @@ namespace Catalyst.TestUtils
         {
             SubstituteObserver = Substitute.For<IObserver<TProto>>();
         }
-        
-        protected override void Handler(IProtocolMessageDto<ProtocolMessage> messageDto)
+
+        public override void OnError(Exception exception) { SubstituteObserver.OnError(exception); }
+        public override void StartObserving(IObservable<IProtocolMessageDto<ProtocolMessage>> messageStream) { throw new NotImplementedException(); }
+
+        public override void OnNext(IProtocolMessageDto<ProtocolMessage> messageDto)
         {
             SubstituteObserver.OnNext(messageDto.Payload.FromProtocolMessage<TProto>());
         }
-
-        public override void OnError(Exception exception) { SubstituteObserver.OnError(exception); }
+        
         public override void OnCompleted() { SubstituteObserver.OnCompleted(); }
     }
 }

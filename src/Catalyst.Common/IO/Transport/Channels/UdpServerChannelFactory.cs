@@ -68,7 +68,7 @@ namespace Catalyst.Common.IO.Transport.Channels
             {
                 new ProtoDatagramHandler(),
                 new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(new ProtocolMessageVerifyHandler(_keySigner), new ProtocolMessageSignHandler(_keySigner)),
-                new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(new CorrelationHandler(_messageCorrelationManager), new CorrelationHandler(_messageCorrelationManager)),
+                new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(new CorrelationHandler(_messageCorrelationManager), new CorrelatableHandler(_messageCorrelationManager)),
                 new BroadcastHandler(_broadcastManager),
                 new ObservableServiceHandler()
             };

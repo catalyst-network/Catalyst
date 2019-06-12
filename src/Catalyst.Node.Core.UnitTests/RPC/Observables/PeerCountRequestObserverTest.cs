@@ -105,7 +105,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
 
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, requestMessage);
 
-            var handler = new PeerCountRequestObserver(sendPeerIdentifier, peerRepository, messageFactory, _logger);
+            var handler = new PeerCountRequestObserver(sendPeerIdentifier, peerRepository, _logger);
             handler.StartObserving(messageStream);
 
             await messageStream.WaitForEndOfDelayedStreamOnTaskPoolScheduler();

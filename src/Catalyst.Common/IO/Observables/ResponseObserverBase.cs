@@ -28,6 +28,8 @@ using System.Reactive.Linq;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
+using Catalyst.Common.Interfaces.IO.Observables;
+using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.Messaging.Dto;
 using Catalyst.Common.Util;
 using Catalyst.Protocol.Common;
@@ -36,11 +38,13 @@ using Serilog;
 
 namespace Catalyst.Common.IO.Observables
 {
-    public abstract class ResponseObserverBase<TProto> : ObserverBase where TProto : IMessage
+    public abstract class ResponseObserverBase<TProto> : ObserverBase, IResponseObserver where TProto : IMessage
     {
+        public IPeerIdentifier PeerIdentifier { get; }
+
         protected ResponseObserverBase(ILogger logger) : base(logger) { }
         
-        protected abstract void HandleResponse(IProtocolMessageDto<ProtocolMessage> messageDto);
+        public abstract void HandleResponse(IProtocolMessageDto<ProtocolMessage> messageDto);
 
         public override void StartObserving(IObservable<IProtocolMessageDto<ProtocolMessage>> messageStream)
         {
@@ -66,11 +70,6 @@ namespace Catalyst.Common.IO.Observables
             Logger.Debug("Pre Handle Message Called");
             ChannelHandlerContext = messageDto.Context;
             HandleResponse(messageDto);
-        }
-        
-        private void SendChannelContextResponse(IMessageDto messageDto)
-        {
-            ChannelHandlerContext.Channel.WriteAndFlushAsync(messageDto);
         }
     }
 }

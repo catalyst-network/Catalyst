@@ -144,6 +144,7 @@ namespace Catalyst.Node.Core.P2P.Messaging.Broadcast
         /// <returns></returns>
         private List<IPeerIdentifier> GetRandomPeers(int count)
         {
+            //@TODO random element extension
             var peers = _peers.GetAll().Shuffle();
             var peerAmount = Math.Min(peers.Count, count);
             return peers.Select(x => x.PeerIdentifier).Take(peerAmount).ToList();

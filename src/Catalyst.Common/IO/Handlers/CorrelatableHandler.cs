@@ -23,6 +23,7 @@
 
 using System;
 using System.Threading.Tasks;
+using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.P2P.Messaging.Dto;
@@ -43,31 +44,25 @@ namespace Catalyst.Common.IO.Handlers
 
         public override Task WriteAsync(IChannelHandlerContext context, object message)
         {
-            if (!CanCorrelate(message))
+            // https://stackoverflow.com/questions/686412/c-sharp-is-operator-performance#686431
+            if (!(message is IMessageDto messageDto))
             {
                 return context.Channel.CloseAsync();
             }
-            
-            IMessageDto messageDto = (IMessageDto) message;
 
-            var protocolMessage = new ProtocolProtocolMessageFactory().GetMessage(
-                messageDto,
-                messageDto. .Payload.CorrelationId.ToGuid()
-            );
+            var protocolMessage = new ProtocolProtocolMessageFactory().GetMessage(messageDto);
             
-            _messageCorrelationManager.AddPendingRequest(new CorrelatableMessage
+            if (protocolMessage.TypeUrl.EndsWith(MessageTypes.Request.Name))
             {
-                Recipient = messageDto.Recipient,
-                Content = messageDto.Message.ToProtocolMessage(),
-                SentAt = DateTimeOffset.UtcNow
-            });
-
+                _messageCorrelationManager.AddPendingRequest(new CorrelatableMessage
+                {
+                    Recipient = messageDto.Recipient,
+                    Content = protocolMessage,
+                    SentAt = DateTimeOffset.UtcNow
+                });
+            }
+            
             return context.Channel.WriteAndFlushAsync(protocolMessage);
-        }
-        
-        private bool CanCorrelate(object msg)
-        {
-            return msg is IMessageDto;
         }
     }
 }
