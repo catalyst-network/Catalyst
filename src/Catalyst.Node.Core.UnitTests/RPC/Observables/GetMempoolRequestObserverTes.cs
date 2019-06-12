@@ -83,7 +83,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
             var mempool = Substitute.For<IMempool>();
             mempool.GetMemPoolContentEncoded().Returns(x =>
                 {
-var txEncodedLst = txLst.Select(tx => tx.ToString().ToBytesForRLPEncoding()).ToList();
+                    var txEncodedLst = txLst.Select(tx => tx.ToString().ToBytesForRLPEncoding()).ToList();
                     return txEncodedLst;
                 }
             );

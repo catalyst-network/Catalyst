@@ -36,7 +36,7 @@ using SharpRepository.Repository;
 
 namespace Catalyst.Common.Interfaces.P2P
 {
-    public interface IPeerDiscovery : IObserver
+    public interface IPeerDiscovery : IMessageObserver
     {
         IDisposable PingResponseMessageStream { get; }
         IDisposable GetNeighbourResponseStream { get; }
