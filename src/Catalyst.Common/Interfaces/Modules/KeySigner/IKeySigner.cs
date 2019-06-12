@@ -21,8 +21,6 @@
 
 #endregion
 
-using System;
-using System.Collections.Generic;
 using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Common.Interfaces.KeyStore;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
