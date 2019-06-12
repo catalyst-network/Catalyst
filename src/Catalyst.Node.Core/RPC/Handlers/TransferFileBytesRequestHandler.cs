@@ -71,7 +71,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
         /// <param name="message">The message.</param>
         protected override void Handler(IChanneledMessage<ProtocolMessage> message)
         {
-            var deserialised = message.Payload.FromAnySigned<TransferFileBytesRequest>();
+            var deserialised = message.Payload.FromProtocolMessage<TransferFileBytesRequest>();
             FileTransferResponseCodes responseCode;
             try
             {

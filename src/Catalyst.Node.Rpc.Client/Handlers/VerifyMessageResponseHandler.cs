@@ -66,7 +66,7 @@ namespace Catalyst.Node.Rpc.Client.Handlers
 
             try
             {
-                var deserialised = message.Payload.FromAnySigned<VerifyMessageResponse>();
+                var deserialised = message.Payload.FromProtocolMessage<VerifyMessageResponse>();
                 Guard.Argument(deserialised).NotNull("The verify message response cannot be null");
 
                 //decode the received message

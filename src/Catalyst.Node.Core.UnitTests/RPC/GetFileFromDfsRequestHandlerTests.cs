@@ -96,7 +96,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC
                 DfsHash = "test"
             };
             var protocolMessage = getFileFromDfsRequestMessage
-               .ToAnySigned(PeerIdHelper.GetPeerId("TestMan"), Guid.NewGuid());
+               .ToProtocolMessage(PeerIdHelper.GetPeerId("TestMan"), Guid.NewGuid());
             return new ProtocolMessageDto(Substitute.For<IChannelHandlerContext>(), protocolMessage);
         }
     }

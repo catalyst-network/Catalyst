@@ -108,7 +108,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC
             var sentResponse = (ProtocolMessage) receivedCalls.Single().GetArguments().Single();
             sentResponse.TypeUrl.Should().Be(VerifyMessageResponse.Descriptor.ShortenedFullName());
 
-            var responseContent = sentResponse.FromAnySigned<VerifyMessageResponse>();
+            var responseContent = sentResponse.FromProtocolMessage<VerifyMessageResponse>();
 
             responseContent.IsSignedByKey.Should().Be(expectedResult);
         }

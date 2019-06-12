@@ -47,7 +47,7 @@ namespace Catalyst.Common.UnitTests.IO.Outbound.Handlers
             _fakeContext = Substitute.For<IChannelHandlerContext>();
             _keySigner = Substitute.For<IKeySigner>();
 
-            _protocolMessage = new PingRequest().ToAnySigned(
+            _protocolMessage = new PingRequest().ToProtocolMessage(
                 PeerIdentifierHelper.GetPeerIdentifier(
                     ByteUtil.GenerateRandomByteArray(32).ToString()
                 ).PeerId
