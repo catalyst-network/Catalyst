@@ -23,10 +23,10 @@
 
 using System;
 using Catalyst.Common.Extensions;
-using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
 using Catalyst.Protocol.Transaction;
+using Catalyst.TestUtils;
 using FluentAssertions;
 using Xunit;
 

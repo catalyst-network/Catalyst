@@ -24,11 +24,11 @@
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.IO.Outbound.Handlers;
-using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Common.Util;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Types;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
+using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using NSubstitute;
 using Xunit;

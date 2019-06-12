@@ -24,12 +24,12 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using Catalyst.Common.Util;
 using Catalyst.Common.Interfaces.IO.Inbound;
+using Catalyst.Common.Util;
 using Catalyst.Protocol.Common;
 using Serilog;
 
-namespace Catalyst.Common.UnitTests.TestUtils
+namespace Catalyst.TestUtils
 {
     public sealed class ProtocolMessageObserver : IObserver<IChanneledMessage<ProtocolMessage>>
     {

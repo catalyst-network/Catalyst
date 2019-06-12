@@ -30,7 +30,7 @@ using FluentAssertions.Collections;
 using FluentAssertions.Execution;
 using Xunit;
 
-namespace Catalyst.Common.UnitTests.TestUtils
+namespace Catalyst.TestUtils
 {
     public static class FluentAssertionsExtensions
     {

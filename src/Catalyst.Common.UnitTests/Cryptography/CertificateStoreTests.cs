@@ -26,7 +26,7 @@ using System.IO;
 using System.Security.Cryptography.X509Certificates;
 using Catalyst.Common.Cryptography;
 using Catalyst.Common.Interfaces.Cryptography;
-using Catalyst.Common.UnitTests.TestUtils;
+using Catalyst.TestUtils;
 using FluentAssertions;
 using NSubstitute;
 using Xunit;
