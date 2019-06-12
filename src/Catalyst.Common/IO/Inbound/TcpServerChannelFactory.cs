@@ -45,15 +45,17 @@ namespace Catalyst.Common.IO.Inbound
         private readonly IMessageCorrelationManager _correlationManger;
         private readonly IPeerSettings _peerSettings;
         private readonly IKeySigner _keySigner;
+        private readonly ObservableServiceHandler _observableServiceHandler;
         private const int BackLogValue = 100;
 
-        public TcpServerChannelFactory(IMessageCorrelationManager correlationManger, 
+        public TcpServerChannelFactory(IMessageCorrelationManager correlationManger,
             IPeerSettings peerSettings,
             IKeySigner keySigner)
         {
             _correlationManger = correlationManger;
             _peerSettings = peerSettings;
             _keySigner = keySigner;
+            _observableServiceHandler = new ObservableServiceHandler();
         }
 
         /// <param name="targetAddress">Ignored</param>
@@ -68,20 +70,7 @@ namespace Catalyst.Common.IO.Inbound
         {
             var supervisorEventLoop = new MultithreadEventLoopGroup();
 
-            var observableServiceHandler = new ObservableServiceHandler();
-
-            var handlers = new List<IChannelHandler>
-            {
-                new ProtobufVarint32FrameDecoder(),
-                new ProtobufDecoder(ProtocolMessageSigned.Parser),
-                new ProtobufVarint32LengthFieldPrepender(),
-                new ProtobufEncoder(),
-                new MessageSignerDuplex(new ProtocolMessageVerifyHandler(_keySigner), new ProtocolMessageSignHandler(_keySigner)),
-                new CorrelationHandler(_correlationManger),
-                observableServiceHandler
-            };
-            
-            var channelHandler = new InboundChannelInitializerBase<IChannel>(handlers, certificate);
+            var channelHandler = new InboundChannelInitializerBase<IChannel>(Handlers, certificate);
 
             var channel = new ServerBootstrap()
                .Group(supervisorEventLoop, childGroup: new MultithreadEventLoopGroup())
@@ -93,7 +82,21 @@ namespace Catalyst.Common.IO.Inbound
                .GetAwaiter()
                .GetResult();
 
-            return new ObservableSocket(observableServiceHandler.MessageStream, channel);
+            return new ObservableSocket(_observableServiceHandler.MessageStream, channel);
         }
+
+        private List<IChannelHandler> _handlers;
+
+        protected List<IChannelHandler> Handlers =>
+            _handlers ?? (_handlers = new List<IChannelHandler>
+            {
+                new ProtobufVarint32FrameDecoder(),
+                new ProtobufDecoder(ProtocolMessage.Parser),
+                new ProtobufVarint32LengthFieldPrepender(),
+                new ProtobufEncoder(),
+                new MessageSignerDuplex(new ProtocolMessageVerifyHandler(_keySigner), new ProtocolMessageSignHandler(_keySigner)),
+                new CorrelationHandler(_correlationManger),
+                _observableServiceHandler
+            });
     }
 }
