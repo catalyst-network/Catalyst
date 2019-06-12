@@ -26,6 +26,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Security.Cryptography;
+using Catalyst.Common.Config;
 using Catalyst.Common.Util;
 using Catalyst.Protocol.Common;
 using Dawn;
@@ -38,9 +39,6 @@ namespace Catalyst.Common.Extensions
     public static class ProtobufExtensions
     {
         private const string CatalystProtocol = "Catalyst.Protocol";
-        private const string RequestSuffix = "Request";
-        private const string ResponseSuffix = "Response";
-        private const string BroadcastSuffix = "Broadcast";
 
         private static readonly List<string> ProtoGossipAllowedMessages;
 
@@ -51,7 +49,7 @@ namespace Catalyst.Common.Extensions
                .Select(t => ((IMessage) Activator.CreateInstance(t)).Descriptor)
                .ToDictionary(d => d.ShortenedFullName(), d => d.ClrType.FullName);
             ProtoGossipAllowedMessages = protoToClrNameMapper.Keys
-               .Where(t => t.EndsWith(BroadcastSuffix))
+               .Where(t => t.EndsWith(MessageTypes.Broadcast.Name))
                .ToList();
         }
 
@@ -79,7 +77,7 @@ namespace Catalyst.Common.Extensions
             var typeUrl = protobufObject.Descriptor.ShortenedFullName();
             Guard.Argument(senderId, nameof(senderId)).NotNull();
             Guard.Argument(correlationId, nameof(correlationId))
-               .Require(c => !typeUrl.EndsWith(ResponseSuffix) || c != default,
+               .Require(c => !typeUrl.EndsWith(MessageTypes.Response.Name) || c != default,
                     g => $"{typeUrl} is a response type and needs a correlationId");
 
             var protocolMessage = new ProtocolMessage
@@ -132,12 +130,12 @@ namespace Catalyst.Common.Extensions
 
         public static string GetRequestType(this string responseTypeUrl)
         {
-            return SwapSuffixes(responseTypeUrl, ResponseSuffix, RequestSuffix);
+            return SwapSuffixes(responseTypeUrl, MessageTypes.Response.Name, MessageTypes.Request.Name);
         }
 
         public static string GetResponseType(this string requestTypeUrl)
         {
-            return SwapSuffixes(requestTypeUrl, RequestSuffix, ResponseSuffix);
+            return SwapSuffixes(requestTypeUrl, MessageTypes.Request.Name, MessageTypes.Response.Name);
         }
 
         private static string SwapSuffixes(string requestTypeUrl, string originalSuffix, string targetSuffix)
