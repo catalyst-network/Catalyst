@@ -94,7 +94,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.Handlers
                         Ip = ip.ToBytesForRLPEncoding().ToByteString(),
                         PublicKey = publicKey.ToBytesForRLPEncoding().ToByteString()
                     },
-                    MessageTypes.Ask,
+                    MessageTypes.Request,
                     PeerIdentifierHelper.GetPeerIdentifier("recipient"),
                     PeerIdentifierHelper.GetPeerIdentifier("sender")),
                 Guid.NewGuid());

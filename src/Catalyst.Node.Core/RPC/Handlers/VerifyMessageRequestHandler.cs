@@ -134,7 +134,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
                     {
                         IsSignedByKey = result
                     },
-                    MessageTypes.Tell,
+                    MessageTypes.Response,
                     new PeerIdentifier(_message.Payload.PeerId),
                     _peerIdentifier),
                 correlationGuid);

@@ -77,7 +77,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
                         {
                             Mempool = {GetMempoolContent()}
                         },
-                        MessageTypes.Tell,
+                        MessageTypes.Response,
                         new PeerIdentifier(message.Payload.PeerId),
                         _peerIdentifier),
                     message.Payload.CorrelationId.ToGuid());

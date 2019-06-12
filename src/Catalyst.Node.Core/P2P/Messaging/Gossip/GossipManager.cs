@@ -127,7 +127,7 @@ namespace Catalyst.Node.Core.P2P.Messaging.Gossip
             foreach (var peerIdentifier in peersToGossip)
             {
                 var datagramEnvelope = _messageFactory.GetDatagramMessage(new MessageDto(message,
-                    MessageTypes.Gossip, peerIdentifier, _peerIdentifier), correlationId);
+                    MessageTypes.Broadcast, peerIdentifier, _peerIdentifier), correlationId);
                 await _peerClient.SendMessageAsync(datagramEnvelope).ConfigureAwait(false);
             }
 

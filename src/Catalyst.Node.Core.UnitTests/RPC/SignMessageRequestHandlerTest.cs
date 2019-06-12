@@ -86,7 +86,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC
                 {
                     Message = ByteString.CopyFrom(message.Trim('\"'), Encoding.UTF8)
                 },
-                MessageTypes.Ask,
+                MessageTypes.Request,
                 PeerIdentifierHelper.GetPeerIdentifier("recipient_key"),
                 PeerIdentifierHelper.GetPeerIdentifier("sender_key")
             ));

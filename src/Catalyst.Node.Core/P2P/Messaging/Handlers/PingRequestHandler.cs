@@ -55,7 +55,7 @@ namespace Catalyst.Node.Core.P2P.Messaging.Handlers
 
             var datagramEnvelope = new MessageFactory().GetDatagramMessage(new MessageDto(
                     new PingResponse(),
-                    MessageTypes.Tell,
+                    MessageTypes.Response,
                     new PeerIdentifier(message.Payload.PeerId),
                     _peerIdentifier),
                 message.Payload.CorrelationId.ToGuid()

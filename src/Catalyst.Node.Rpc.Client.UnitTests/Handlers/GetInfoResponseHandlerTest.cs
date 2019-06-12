@@ -98,7 +98,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.Handlers
                     {
                         Query = query
                     },
-                    MessageTypes.Tell,
+                    MessageTypes.Response,
                     PeerIdentifierHelper.GetPeerIdentifier("recipient"),
                     PeerIdentifierHelper.GetPeerIdentifier("sender")
                 ),

@@ -118,7 +118,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC
                     PeerIp = peerToDelete.PeerIdentifier.Ip.To16Bytes().ToByteString(),
                     PublicKey = withPublicKey ? peerToDelete.PeerIdentifier.PublicKey.ToByteString() : ByteString.Empty
                 },
-                MessageTypes.Ask,
+                MessageTypes.Request,
                 PeerIdentifierHelper.GetPeerIdentifier("recipient"),
                 sendPeerIdentifier
             ));

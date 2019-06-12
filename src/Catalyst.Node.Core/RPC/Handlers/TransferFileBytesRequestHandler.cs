@@ -94,7 +94,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
 
             var responseDto = _messageFactory.GetMessage(new MessageDto(
                     responseMessage,
-                    MessageTypes.Tell,
+                    MessageTypes.Response,
                     new PeerIdentifier(message.Payload.PeerId),
                     _peerIdentifier),
                 message.Payload.CorrelationId.ToGuid()

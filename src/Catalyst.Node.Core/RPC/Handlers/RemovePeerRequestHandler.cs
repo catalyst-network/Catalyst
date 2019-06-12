@@ -107,7 +107,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
 
                 var removePeerMessage = _messageFactory.GetMessage(new MessageDto(
                         removePeerResponse,
-                        MessageTypes.Tell,
+                        MessageTypes.Response,
                         new PeerIdentifier(message.Payload.PeerId),
                         _peerIdentifier),
                     message.Payload.CorrelationId.ToGuid()
