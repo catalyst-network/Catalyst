@@ -72,7 +72,7 @@ namespace Catalyst.Common.Extensions
             return ShortenedFullName(descriptor);
         }
 
-        public static ProtocolMessage ToAnySigned(this IMessage protobufObject,
+        public static ProtocolMessage ToProtocolMessage(this IMessage protobufObject,
             PeerId senderId,
             Guid correlationId = default)
         {
@@ -86,30 +86,21 @@ namespace Catalyst.Common.Extensions
             {
                 PeerId = senderId,
                 CorrelationId = (correlationId == default ? Guid.NewGuid() : correlationId).ToByteString(),
-
-                //todo: sign the `correlationId` and `value` bytes with publicKey instead
-                // Signature = senderId.PublicKey,
+                
                 TypeUrl = typeUrl,
                 Value = protobufObject.ToByteString()
             };
             return protocolMessage;
         }
 
-        public static bool CheckIfMessageIsGossip(this ProtocolMessage message)
+        public static bool CheckIfMessageIsBroadcast(this ProtocolMessage message)
         {
             return message.TypeUrl.EndsWith(nameof(ProtocolMessage)) &&
                 ProtoGossipAllowedMessages.Contains(ProtocolMessage.Parser.ParseFrom(message.Value).TypeUrl);
         }
 
-        public static T FromAnySigned<T>(this ProtocolMessage message) where T : IMessage<T>
+        public static T FromProtocolMessage<T>(this ProtocolMessage message) where T : IMessage<T>
         {
-            // Should need to do this as we do it in handler
-            // //todo check the message signature with the PeerId.PublicKey and value fields
-            // if (message.PeerId.PublicKey != message.Signature)
-            // {
-            //     throw new CryptographicException("Signature of the message doesn't match with sender's public Key");
-            // }
-    
             var empty = (T) Activator.CreateInstance(typeof(T));
             var typed = (T) empty.Descriptor.Parser.ParseFrom(message.Value);
             return typed;

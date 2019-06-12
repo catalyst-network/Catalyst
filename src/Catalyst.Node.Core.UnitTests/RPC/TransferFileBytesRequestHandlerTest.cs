@@ -67,7 +67,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC
                 ChunkBytes = ByteString.Empty,
                 ChunkId = 1,
                 CorrelationFileName = Guid.NewGuid().ToByteString()
-            }.ToAnySigned(PeerIdHelper.GetPeerId("Test"), guid);
+            }.ToProtocolMessage(PeerIdHelper.GetPeerId("Test"), guid);
             request.SendToHandler(_context, _handler);
 
             _downloadFileTransferFactory.Received(1).DownloadChunk(Arg.Any<Guid>(), Arg.Any<uint>(), Arg.Any<byte[]>());
@@ -82,11 +82,11 @@ namespace Catalyst.Node.Core.UnitTests.RPC
                 ChunkBytes = ByteString.Empty,
                 ChunkId = 1,
                 CorrelationFileName = ByteString.Empty
-            }.ToAnySigned(PeerIdHelper.GetPeerId("Test"), guid);
+            }.ToProtocolMessage(PeerIdHelper.GetPeerId("Test"), guid);
             request.SendToHandler(_context, _handler);
             _context.Channel.Received().WriteAndFlushAsync(
                 Arg.Is<ProtocolMessage>(signed =>
-                    signed.FromAnySigned<TransferFileBytesResponse>().ResponseCode[0] == 
+                    signed.FromProtocolMessage<TransferFileBytesResponse>().ResponseCode[0] == 
                     (byte) FileTransferResponseCodes.Error));
         }
     }

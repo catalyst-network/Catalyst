@@ -67,7 +67,7 @@ namespace Catalyst.Node.Rpc.Client.Handlers
 
             try
             {
-                var deserialised = message.Payload.FromAnySigned<GetPeerReputationResponse>();
+                var deserialised = message.Payload.FromProtocolMessage<GetPeerReputationResponse>();
                 var msg = deserialised.Reputation == int.MinValue ? "Peer not found" : deserialised.Reputation.ToString();
                 _output.WriteLine("Peer Reputation: " + msg);
             }

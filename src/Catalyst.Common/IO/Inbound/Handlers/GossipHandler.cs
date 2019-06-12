@@ -26,7 +26,7 @@ using Catalyst.Common.Interfaces.P2P.Messaging.Gossip;
 using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;
 
-namespace Catalyst.Common.IO.Messaging.Handlers
+namespace Catalyst.Common.IO.Inbound.Handlers
 {
     /// <summary>
     /// Channel Gossip Pipeline
@@ -54,7 +54,7 @@ namespace Catalyst.Common.IO.Messaging.Handlers
         /// <param name="msg">The gossip message.</param>
         protected override void ChannelRead0(IChannelHandlerContext ctx, ProtocolMessage msg)
         {
-            if (msg.CheckIfMessageIsGossip())
+            if (msg.CheckIfMessageIsBroadcast())
             {
                 _gossipManager.ReceiveAsync(msg).ConfigureAwait(false).GetAwaiter().GetResult();
 

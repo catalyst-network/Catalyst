@@ -103,7 +103,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC
             var sentResponse = (ProtocolMessage) receivedCalls.Single().GetArguments().Single();
             sentResponse.TypeUrl.Should().Be(GetInfoResponse.Descriptor.ShortenedFullName());
 
-            var responseContent = sentResponse.FromAnySigned<GetInfoResponse>();
+            var responseContent = sentResponse.FromProtocolMessage<GetInfoResponse>();
             responseContent.Query.Should()
                .Match(JsonConvert.SerializeObject(_config.GetSection("CatalystNodeConfiguration").AsEnumerable(),
                     Formatting.Indented));

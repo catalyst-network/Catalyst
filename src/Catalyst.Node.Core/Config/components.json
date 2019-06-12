@@ -67,10 +67,10 @@
             ]
         },
         {
-            "type": "Catalyst.Common.IO.Messaging.Handlers.ObservableServiceHandler, Catalyst.Common",
+            "type": "Catalyst.Common.IO.Inbound.Handlers.ObservableServiceHandler, Catalyst.Common",
             "services": [
                 {
-                    "type": "Catalyst.Common.Interfaces.IO.Messaging.Handlers.IObservableServiceHandler, Catalyst.Common"
+                    "type": "Catalyst.Common.Interfaces.IO.Inbound.Handlers.IObservableServiceHandler, Catalyst.Common"
                 }
             ]
         },
@@ -83,10 +83,10 @@
             ]
         },
         {
-            "type": "Catalyst.Common.IO.Messaging.CorrelationManager, Catalyst.Common",
+            "type": "Catalyst.Common.IO.Messaging.MessageCorrelationManager, Catalyst.Common",
             "services": [
                 {
-                    "type": "Catalyst.Common.Interfaces.IO.Messaging.ICorrelationManager, Catalyst.Common"
+                    "type": "Catalyst.Common.Interfaces.IO.Messaging.IMessageCorrelationManager, Catalyst.Common"
                 }
             ]
         },

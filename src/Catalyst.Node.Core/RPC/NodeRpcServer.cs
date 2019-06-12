@@ -32,10 +32,8 @@ using DotNetty.Transport.Channels.Sockets;
 using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
-using Catalyst.Common.Interfaces.IO.Messaging.Handlers;
 using Catalyst.Protocol.Common;
 using Catalyst.Common.Interfaces.Rpc;
-using Catalyst.Common.IO.Messaging.Handlers;
 using DotNetty.Codecs.Protobuf;
 using Serilog;
 
@@ -53,8 +51,7 @@ namespace Catalyst.Node.Core.RPC
             ILogger logger,
             ITcpServerChannelFactory channelFactory,
             ICertificateStore certificateStore,
-            IEnumerable<IRpcRequestHandler> requestHandlers,
-            ICorrelationManager correlationManager) : base(channelFactory, logger)
+            IEnumerable<IRpcRequestHandler> requestHandlers) : base(channelFactory, logger)
         {
             Settings = settings;
             _cancellationSource = new CancellationTokenSource();

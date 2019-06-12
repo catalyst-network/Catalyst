@@ -26,7 +26,6 @@ using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.Messaging.Gossip;
 using Catalyst.Common.IO.Messaging;
-using Catalyst.Common.IO.Messaging.Handlers;
 using Catalyst.Common.IO.Outbound;
 using Catalyst.Common.P2P;
 using Catalyst.Common.UnitTests.TestUtils;
@@ -45,6 +44,7 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
+using Catalyst.Common.IO.Inbound.Handlers;
 using Xunit;
 using TransactionBroadcast = Catalyst.Protocol.Transaction.TransactionBroadcast;
 
@@ -110,8 +110,8 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Messaging.Gossip
             );
 
             var transaction = new TransactionBroadcast();
-            var anySigned = transaction.ToAnySigned(peerIdentifier.PeerId, guid)
-               .ToAnySigned(peerIdentifier.PeerId, Guid.NewGuid());
+            var anySigned = transaction.ToProtocolMessage(peerIdentifier.PeerId, guid)
+               .ToProtocolMessage(peerIdentifier.PeerId, Guid.NewGuid());
 
             channel.WriteInbound(anySigned);
 
@@ -133,8 +133,8 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Messaging.Gossip
             var channel = new EmbeddedChannel(gossipHandler, protoDatagramChannelHandler);
 
             var anySignedGossip = new TransactionBroadcast()
-               .ToAnySigned(PeerIdHelper.GetPeerId(Guid.NewGuid().ToString()))
-               .ToAnySigned(PeerIdHelper.GetPeerId(Guid.NewGuid().ToString()));
+               .ToProtocolMessage(PeerIdHelper.GetPeerId(Guid.NewGuid().ToString()))
+               .ToProtocolMessage(PeerIdHelper.GetPeerId(Guid.NewGuid().ToString()));
 
             channel.WriteInbound(anySignedGossip);
             void CheckHandlerTestAction() => handler.SubstituteObserver.Received(1).OnNext(Arg.Any<TransactionBroadcast>());
@@ -181,7 +181,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Messaging.Gossip
                 correlationId
             );
 
-            var gossipDto = messageDto.ToAnySigned(senderIdentifier.PeerId, correlationId);
+            var gossipDto = messageDto.ToProtocolMessage(senderIdentifier.PeerId, correlationId);
 
             await gossipMessageHandler.ReceiveAsync(gossipDto);
             await gossipMessageHandler.BroadcastAsync(messageDto);

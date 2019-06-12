@@ -31,7 +31,7 @@ using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Network;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.IO.Inbound;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.Network;
 using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Node.Core.P2P;
@@ -156,7 +156,7 @@ namespace Catalyst.Node.Core.IntegrationTests.P2P
             var pingRequest = new PingResponse();
             var pid = PeerIdentifierHelper.GetPeerIdentifier("im_a_key");
             var channeledAny = new ProtocolMessageDto(fakeContext, 
-                pingRequest.ToAnySigned(pid.PeerId, Guid.NewGuid()));
+                pingRequest.ToProtocolMessage(pid.PeerId, Guid.NewGuid()));
             
             var observableStream = new[] {channeledAny}.ToObservable();
 

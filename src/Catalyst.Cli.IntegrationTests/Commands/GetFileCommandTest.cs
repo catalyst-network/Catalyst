@@ -23,7 +23,6 @@
 
 using System;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using Autofac;
 using Catalyst.Common.Extensions;
@@ -34,7 +33,6 @@ using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using NSubstitute;
-using Polly;
 using Xunit;
 using Xunit.Abstractions;
 

@@ -67,7 +67,7 @@ namespace Catalyst.Node.Rpc.Client.Handlers
 
             try
             {
-                var deserialised = message.Payload.FromAnySigned<GetPeerCountResponse>();
+                var deserialised = message.Payload.FromProtocolMessage<GetPeerCountResponse>();
                 _output.WriteLine("Peer count: " + deserialised.PeerCount.ToString());
             }
             catch (Exception ex)

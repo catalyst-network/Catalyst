@@ -65,7 +65,7 @@ namespace Catalyst.Node.Rpc.Client.Handlers
         {
             try
             {
-                var deserialised = message.Payload.FromAnySigned<SignMessageResponse>();
+                var deserialised = message.Payload.FromProtocolMessage<SignMessageResponse>();
 
                 var decodeResult = RLP.Decode(deserialised.OriginalMessage.ToByteArray()).RLPData;
 

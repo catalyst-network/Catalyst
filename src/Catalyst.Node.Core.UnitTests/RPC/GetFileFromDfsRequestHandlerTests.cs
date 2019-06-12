@@ -31,6 +31,7 @@ using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.Modules.Dfs;
 using Catalyst.Common.IO.Inbound;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Node.Core.RPC.Handlers;
 using Catalyst.Protocol.Common;
@@ -95,7 +96,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC
                 DfsHash = "test"
             };
             var protocolMessage = getFileFromDfsRequestMessage
-               .ToAnySigned(PeerIdHelper.GetPeerId("TestMan"), Guid.NewGuid());
+               .ToProtocolMessage(PeerIdHelper.GetPeerId("TestMan"), Guid.NewGuid());
             return new ProtocolMessageDto(Substitute.For<IChannelHandlerContext>(), protocolMessage);
         }
     }
