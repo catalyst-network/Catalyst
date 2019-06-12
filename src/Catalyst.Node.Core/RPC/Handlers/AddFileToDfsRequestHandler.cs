@@ -184,7 +184,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
             // Send Response
             var responseMessage = _messageFactory.GetMessage(new MessageDto(
                     response,
-                    MessageTypes.Tell,
+                    MessageTypes.Response,
                     fileTransferInformation.RecipientIdentifier,
                     _peerIdentifier
                 ),

@@ -43,7 +43,7 @@ namespace Catalyst.Common.UnitTests.IO.Messaging
             var pingRequest = Substitute.For<IMessage<PingRequest>>();
             _messageDto = new MessageDto(
                 pingRequest,
-                MessageTypes.Ask,
+                MessageTypes.Request,
                 PeerIdentifierHelper.GetPeerIdentifier("im_a_recipient"), 
                 peerIdentifier
             );

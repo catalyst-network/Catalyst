@@ -63,7 +63,7 @@ namespace Catalyst.Cli.Commands
                 DfsHash = opts.FileHash
             };
 
-            var dto = new MessageDto(message, MessageTypes.Ask, new PeerIdentifier(
+            var dto = new MessageDto(message, MessageTypes.Request, new PeerIdentifier(
                 Encoding.ASCII.GetBytes(nodeConfig.PublicKey),
                 nodeConfig.HostAddress, nodeConfig.Port), _peerIdentifier);
 

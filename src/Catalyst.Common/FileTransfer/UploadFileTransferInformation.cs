@@ -100,7 +100,7 @@ namespace Catalyst.Common.FileTransfer
             
             return _uploadMessageFactory.GetMessage(new MessageDto(
                 transferMessage,
-                MessageTypes.Ask,
+                MessageTypes.Request,
                 PeerIdentifier,
                 RecipientIdentifier
             ));

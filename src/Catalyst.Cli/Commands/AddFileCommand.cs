@@ -80,7 +80,7 @@ namespace Catalyst.Cli.Commands
             
             var requestMessage = _messageFactory.GetMessage(new MessageDto(
                 message: request,
-                messageTypes: MessageTypes.Ask,
+                messageTypes: MessageTypes.Request,
                 recipient: nodePeerIdentifier,
                 sender: _peerIdentifier
             ));
