@@ -57,7 +57,7 @@ namespace Catalyst.Cli.Commands
             try
             {
                 var dto = new MessageDto(new GetMempoolRequest(),
-                    MessageTypes.Ask,
+                    MessageTypes.Request,
                     new PeerIdentifier(Encoding.ASCII.GetBytes(nodeConfig.PublicKey),
                         nodeConfig.HostAddress,
                         nodeConfig.Port),

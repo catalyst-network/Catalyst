@@ -31,7 +31,7 @@ using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Network;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.IO.Inbound;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.Network;
 using Catalyst.Node.Core.P2P;
 using Catalyst.Protocol.IPPN;
@@ -52,7 +52,7 @@ using Peer = Catalyst.Common.P2P.Peer;
 
 namespace Catalyst.Node.Core.IntegrationTests.P2P
 {
-    public sealed class PeerDiscoveryntergrationTest : ConfigFileBasedTest
+    public sealed class PeerDiscoveryIntegrationTest : ConfigFileBasedTest
     {
         private readonly IConfigurationRoot _config;
         private readonly IDns _dns;
@@ -62,7 +62,7 @@ namespace Catalyst.Node.Core.IntegrationTests.P2P
         private readonly List<string> _dnsDomains;
         private readonly string _seedPid;
 
-        public PeerDiscoveryntergrationTest(ITestOutputHelper output) : base(output)
+        public PeerDiscoveryIntegrationTest(ITestOutputHelper output) : base(output)
         {
             _peerRepository = Substitute.For<IRepository<Peer>>();
             _logger = Substitute.For<ILogger>();
@@ -84,7 +84,7 @@ namespace Catalyst.Node.Core.IntegrationTests.P2P
                 "seed5.catalystnetwork.io"
             };
             
-            _seedPid = "0x41437c30317c39322e3230372e3137382e3139387c34323036397c3031323334353637383930313233343536373839";
+            _seedPid = "0x41437c30317c39322e3230372e3137382e3139387c34323036397c3031323334353637383930313233343536373839323232323232323232323232";
         }
 
         [Fact]
@@ -155,7 +155,7 @@ namespace Catalyst.Node.Core.IntegrationTests.P2P
             var pingRequest = new PingResponse();
             var pid = PeerIdentifierHelper.GetPeerIdentifier("im_a_key");
             var channeledAny = new ProtocolMessageDto(fakeContext, 
-                pingRequest.ToAnySigned(pid.PeerId, Guid.NewGuid()));
+                pingRequest.ToProtocolMessage(pid.PeerId, Guid.NewGuid()));
             
             var observableStream = new[] {channeledAny}.ToObservable();
 

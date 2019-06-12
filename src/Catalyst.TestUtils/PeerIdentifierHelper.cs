@@ -38,8 +38,8 @@ namespace Catalyst.TestUtils
             int port = 12345)
         {
             var publicKeyBytes = Encoding.UTF8.GetBytes(publicKeySeed)
-               .Concat(Enumerable.Repeat(default(byte), 20))
-               .Take(20).ToArray();
+               .Concat(Enumerable.Repeat(default(byte), 32))
+               .Take(32).ToArray();
             var peerIdentifier = PeerIdHelper.GetPeerId(publicKeyBytes, clientId, clientVersion, ipAddress, port);
             return new PeerIdentifier(peerIdentifier);
         }

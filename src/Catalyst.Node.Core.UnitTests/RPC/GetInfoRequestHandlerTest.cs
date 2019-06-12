@@ -25,8 +25,6 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Reactive.Concurrency;
-using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
@@ -85,7 +83,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC
                 {
                     Query = true
                 },
-                MessageTypes.Ask,
+                MessageTypes.Request,
                 PeerIdentifierHelper.GetPeerIdentifier("recipient"),
                 PeerIdentifierHelper.GetPeerIdentifier("sender")
             ));
@@ -102,7 +100,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC
             var sentResponse = (ProtocolMessage) receivedCalls.Single().GetArguments().Single();
             sentResponse.TypeUrl.Should().Be(GetInfoResponse.Descriptor.ShortenedFullName());
 
-            var responseContent = sentResponse.FromAnySigned<GetInfoResponse>();
+            var responseContent = sentResponse.FromProtocolMessage<GetInfoResponse>();
             responseContent.Query.Should()
                .Match(JsonConvert.SerializeObject(_config.GetSection("CatalystNodeConfiguration").AsEnumerable(),
                     Formatting.Indented));

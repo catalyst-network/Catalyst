@@ -32,4 +32,3 @@ namespace Catalyst.Common.IO.Outbound
             : base(clientChannelFactory, logger) { }
     }
 }
-

@@ -4,18 +4,18 @@
             {
                 "nodeId": "node1",
                 "host": "127.0.0.1",
-                "port": 42042,
+                "port": 42069,
                 "PfxFileName": "mycert.pfx",
                 "SslCertPassword": "test",
-                "PublicKey": "302a300506032b650321"
+                "PublicKey": "32kssh5iflgk3jfmcjs03ldj4hfgs8gn"
             },
             {
                 "nodeId": "node2",
                 "host": "127.0.0.2",
-                "port": 42042,
+                "port": 42069,
                 "PfxFileName": "mycert.pfx",
                 "SslCertPassword": "test",
-                "PublicKey": "302a300506032b650321"
+                "PublicKey": "32kssh5iflgk3jfmcjs03ldj4hfgs8gn"
             }
         ]
     }

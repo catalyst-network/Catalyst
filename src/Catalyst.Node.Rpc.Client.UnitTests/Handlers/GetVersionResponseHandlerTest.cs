@@ -74,7 +74,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.Handlers
                     {
                         Version = version
                     },
-                    MessageTypes.Tell,
+                    MessageTypes.Response,
                     PeerIdentifierHelper.GetPeerIdentifier("recpient"),
                     PeerIdentifierHelper.GetPeerIdentifier("sender")
                 ),

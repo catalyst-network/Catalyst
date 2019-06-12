@@ -21,15 +21,12 @@
 
 #endregion
 
-using Catalyst.Common.IO.Outbound;
+using System;
+using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Protocol.Common;
+using DotNetty.Transport.Channels;
 
-namespace Catalyst.Common.Interfaces.IO.Messaging
+namespace Catalyst.Common.Interfaces.IO.Inbound.Handlers
 {
-    public interface ICorrelationManager
-    {
-        void AddPendingRequest(PendingRequest pendingRequest);
-
-        bool TryMatchResponse(ProtocolMessage response);
-    }
+    public interface IObservableServiceHandler : IChannelHandler, IChanneledMessageStreamer<ProtocolMessage>, IDisposable { }
 }

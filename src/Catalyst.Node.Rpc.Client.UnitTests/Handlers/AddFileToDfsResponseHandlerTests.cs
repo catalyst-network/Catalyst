@@ -29,6 +29,7 @@ using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.FileTransfer;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.IO.Inbound;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Node.Rpc.Client.Handlers;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
@@ -93,7 +94,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.Handlers
                 ResponseCode = ByteString.CopyFrom((byte) responseCode)
             };
 
-            var protocolMessage = addFileResponse.ToAnySigned(PeerIdHelper.GetPeerId("Test"), Guid.NewGuid());
+            var protocolMessage = addFileResponse.ToProtocolMessage(PeerIdHelper.GetPeerId("Test"), Guid.NewGuid());
             return new ProtocolMessageDto(_channelHandlerContext, protocolMessage);
         }
     }

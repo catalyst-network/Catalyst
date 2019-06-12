@@ -35,7 +35,7 @@ using Xunit.Abstractions;
 
 namespace Catalyst.Cli.UnitTests.Config
 {
-    public class GlobalConfigTests : ConfigFileBasedTest
+    public sealed class GlobalConfigTests : ConfigFileBasedTest
     {
         public static readonly List<object[]> Networks =
             Enumeration.GetAll<Network>().Select(n => new object[] {n}).ToList();

@@ -39,7 +39,7 @@ namespace Catalyst.Common.UnitTests.Modules
 
             var expectedList = new List<string>
             {
-                "Consensus", "Contract", "Dfs", "Ledger", "Mempool", "KeySigner"
+                "Consensus", "Contract", "Dfs", "DfsHttp", "Ledger", "Mempool", "KeySigner"
             };
 
             allModuleNames.Should().BeEquivalentTo(expectedList);

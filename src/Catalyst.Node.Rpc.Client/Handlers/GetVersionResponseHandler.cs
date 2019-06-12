@@ -64,7 +64,7 @@ namespace Catalyst.Node.Rpc.Client.Handlers
             
             try
             {
-                var deserialised = message.Payload.FromAnySigned<VersionResponse>();
+                var deserialised = message.Payload.FromProtocolMessage<VersionResponse>();
                 
                 Guard.Argument(deserialised, nameof(deserialised)).NotNull("The VersionResponse cannot be null")
                    .Require(d => d.Version != null,

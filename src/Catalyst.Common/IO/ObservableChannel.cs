@@ -30,7 +30,7 @@ using DotNetty.Transport.Channels;
 
 namespace Catalyst.Common.IO
 {
-    public class ObservableSocket : IObservableSocket
+    public sealed class ObservableSocket : IObservableSocket
     {
         public ObservableSocket(IObservable<IChanneledMessage<ProtocolMessage>> messageStream, IChannel channel)
         {
@@ -48,5 +48,4 @@ namespace Catalyst.Common.IO
             Channel?.CloseAsync();
         }
     }
-
 }

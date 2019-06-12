@@ -38,12 +38,12 @@ using Xunit.Abstractions;
 
 namespace Catalyst.Node.Core.IntegrationTests.Modules.Dfs
 {
-    public sealed class IpfsDfsLiveTests : FileSystemBasedTest
+    public sealed class DfsTest : FileSystemBasedTest
     {
         private readonly IpfsAdapter _ipfs;
         private readonly ILogger _logger;
 
-        public IpfsDfsLiveTests(ITestOutputHelper output) : base(output)
+        public DfsTest(ITestOutputHelper output) : base(output)
         {
             var peerSettings = Substitute.For<IPeerSettings>();
             peerSettings.SeedServers.Returns(new[]
@@ -56,30 +56,23 @@ namespace Catalyst.Node.Core.IntegrationTests.Modules.Dfs
             passwordReader.ReadSecurePassword().ReturnsForAnyArgs(TestPasswordReader.BuildSecureStringPassword("abcd"));
             _logger = Substitute.For<ILogger>();
             _ipfs = new IpfsAdapter(passwordReader, peerSettings, FileSystem, _logger);
+
+            // Starting IPFS takes a few seconds.  Do it here, so that individual
+            // test times are not affected.
+            _ipfs.Generic.IdAsync().Wait();
         }
 
         [Fact]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public async Task DFS_should_add_and_read_text()
         {
-            var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
-
-            var linearBackOffRetryPolicy = Policy.Handle<TaskCanceledException>()
-               .WaitAndRetryAsync(5, retryAttempt =>
-                {
-                    var timeSpan = TimeSpan.FromMilliseconds(retryAttempt + 5);
-                    cts = new CancellationTokenSource(timeSpan);
-                    return timeSpan;
-                });
+            var cts = new CancellationTokenSource(TimeSpan.FromSeconds(15));
 
             const string text = "good morning";
             var dfs = new Core.Modules.Dfs.Dfs(_ipfs, _logger);
-            var id = await linearBackOffRetryPolicy.ExecuteAsync(
-                () => dfs.AddTextAsync(text, cts.Token)
-            );
-            var content = await linearBackOffRetryPolicy.ExecuteAsync(
-                () => dfs.ReadTextAsync(id, cts.Token)
-            );
+            var id = await dfs.AddTextAsync(text, cts.Token);
+            var content = await dfs.ReadTextAsync(id, cts.Token);
+
             content.Should().Be(text);
         }
 
@@ -87,7 +80,7 @@ namespace Catalyst.Node.Core.IntegrationTests.Modules.Dfs
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public async Task DFS_should_add_and_read_binary()
         {
-            var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
+            var cts = new CancellationTokenSource(TimeSpan.FromSeconds(15));
             var binary = new byte[]
             {
                 1, 2, 3

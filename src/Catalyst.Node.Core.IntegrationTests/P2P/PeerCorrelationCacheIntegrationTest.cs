@@ -76,7 +76,7 @@ namespace Catalyst.Node.Core.IntegrationTests.P2P
                 })
                .Select(c => new PendingRequest
                 {
-                    Content = new PingRequest().ToAnySigned(senderPeerId, c.CorrelationId),
+                    Content = new PingRequest().ToProtocolMessage(senderPeerId, c.CorrelationId),
                     Recipient = c.PeerIdentifier,
                     SentAt = DateTimeOffset.MinValue
                 }).ToList();

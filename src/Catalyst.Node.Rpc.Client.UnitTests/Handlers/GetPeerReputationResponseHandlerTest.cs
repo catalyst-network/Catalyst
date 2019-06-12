@@ -105,7 +105,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.Handlers
                     {
                         Reputation = rep
                     },
-                    MessageTypes.Ask,
+                    MessageTypes.Request,
                     PeerIdentifierHelper.GetPeerIdentifier("recpient"),
                     PeerIdentifierHelper.GetPeerIdentifier("sender")),
                 Guid.NewGuid());

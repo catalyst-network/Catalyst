@@ -31,7 +31,8 @@ namespace Catalyst.TestUtils
     {
         public static async Task WaitForAsync(Func<bool> condition, TimeSpan timespan)
         {
-            using (CancellationTokenSource tokenSource = new CancellationTokenSource(timespan))
+            CancellationTokenSource tokenSource;
+            using (tokenSource = new CancellationTokenSource(timespan))
             {
                 await Task.Run(() =>
                 {
@@ -49,7 +50,5 @@ namespace Catalyst.TestUtils
                 }, tokenSource.Token).ConfigureAwait(false);
             }
         }
-
-
     }
 }

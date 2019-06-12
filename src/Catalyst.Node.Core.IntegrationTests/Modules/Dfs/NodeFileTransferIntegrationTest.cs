@@ -155,7 +155,7 @@ namespace Catalyst.Node.Core.IntegrationTests.Modules.Dfs
                 Node = "node1",
                 FileName = fileToTransfer,
                 FileSize = (ulong) byteSize
-            }.ToAnySigned(sender, uniqueFileKey);
+            }.ToProtocolMessage(sender, uniqueFileKey);
             request.SendToHandler(_fakeContext, addFileToDfsRequestHandler);
             
             Assert.Single(_nodeFileTransferFactory.Keys);

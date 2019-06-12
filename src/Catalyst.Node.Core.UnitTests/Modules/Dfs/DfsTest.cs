@@ -37,7 +37,7 @@ using Xunit;
 
 namespace Catalyst.Node.Core.UnitTests.Modules.Dfs
 {
-    public sealed class IpfsDfsTests : IDisposable
+    public sealed class DfsTest : IDisposable
     {
         private const int DelayInMs = 100;
         private const int DelayMultiplier = 2;
@@ -47,7 +47,7 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Dfs
         private readonly IFileSystemNode _addedRecord;
         private readonly CancellationTokenSource _cancellationTokenSource;
 
-        public IpfsDfsTests()
+        public DfsTest()
         {
             _ipfsEngine = Substitute.For<ICoreApi>();
             var fileSystem = Substitute.For<IFileSystemApi>();

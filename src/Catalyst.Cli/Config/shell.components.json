@@ -18,6 +18,14 @@
             ]
         },
         {
+            "type": "Catalyst.Common.IO.Outbound.TcpClientChannelFactory, Catalyst.Common",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.IO.Outbound.ITcpClientChannelFactory, Catalyst.Common"
+                }
+            ]
+        },
+        {
             "type": "Catalyst.Common.IO.Messaging.MessageFactory, Catalyst.Common",
             "services": [
                 {
@@ -42,10 +50,10 @@
             ]
         },
         {
-            "type": "Catalyst.Common.IO.Messaging.CorrelationManager, Catalyst.Common",
+            "type": "Catalyst.Common.IO.Messaging.MessageCorrelationManager, Catalyst.Common",
             "services": [
                 {
-                    "type": "Catalyst.Common.Interfaces.IO.Messaging.ICorrelationManager, Catalyst.Common"
+                    "type": "Catalyst.Common.Interfaces.IO.Messaging.IMessageCorrelationManager, Catalyst.Common"
                 }
             ],
             "instanceScope": "singleinstance"

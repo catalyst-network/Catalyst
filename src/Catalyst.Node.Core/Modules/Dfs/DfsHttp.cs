@@ -21,22 +21,32 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.IO.Inbound;
-using Catalyst.Protocol.Common;
-using DotNetty.Transport.Channels;
+using Catalyst.Common.Interfaces.Modules.Dfs;
+using Ipfs.HttpGateway;
+using Ipfs.CoreApi;
+using System;
 
-namespace Catalyst.Common.IO.Inbound
+namespace Catalyst.Node.Core.Modules.Dfs
 {
-    public sealed class ProtocolMessageDto
-        : IChanneledMessage<ProtocolMessage>
+    public sealed class DfsHttp : IDfsHttp, IDisposable
     {
-        public ProtocolMessage Payload { get; }
-        public IChannelHandlerContext Context { get; }
+        public GatewayHost Gateway { get; }
 
-        public ProtocolMessageDto(IChannelHandlerContext context, ProtocolMessage message)
+        public DfsHttp(ICoreApi ipfs)
         {
-            Payload = message;
-            Context = context;
+            // Make sure IPFS and the gateway are started.
+            ipfs.Generic.IdAsync().Wait();
+            Gateway = new GatewayHost(ipfs, "http://127.0.0.1:8181");
+        }
+
+        public string ContentUrl(string id)
+        {
+            return Gateway.IpfsUrl(id);
+        }
+
+        public void Dispose()
+        {
+            Gateway?.Dispose();
         }
     }
 }

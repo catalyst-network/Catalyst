@@ -70,7 +70,7 @@ namespace Catalyst.Common.UnitTests.Extensions
         public static void ToAnySigned_should_happen_new_guid_to_request_if_not_specified()
         {
             //this ensures we won't get Guid.Empty and then a risk of mismatch;
-            var wrapped = new PingRequest().ToAnySigned(PeerIdHelper.GetPeerId("you"));
+            var wrapped = new PingRequest().ToProtocolMessage(PeerIdHelper.GetPeerId("you"));
             wrapped.CorrelationId.Should().NotBeEquivalentTo(Guid.Empty.ToByteString());
         }
 
@@ -83,12 +83,12 @@ namespace Catalyst.Common.UnitTests.Extensions
             var wrapped = new PeerId()
             {
                 ClientId = expectedContent.ToUtf8ByteString()
-            }.ToAnySigned(peerId, guid);
+            }.ToProtocolMessage(peerId, guid);
 
             wrapped.CorrelationId.ToGuid().Should().Be(guid);
             wrapped.PeerId.Should().Be(peerId);
             wrapped.TypeUrl.Should().Be(PeerId.Descriptor.ShortenedFullName());
-            wrapped.FromAnySigned<PeerId>().ClientId.Should().Equal(expectedContent.ToUtf8ByteString());
+            wrapped.FromProtocolMessage<PeerId>().ClientId.Should().Equal(expectedContent.ToUtf8ByteString());
         }
 
         [Fact(Skip = "fail")]
@@ -100,8 +100,24 @@ namespace Catalyst.Common.UnitTests.Extensions
             {
                 ClientId = expectedContent.ToUtf8ByteString()
             };
-            new Action(() => response.ToAnySigned(peerId))
+            new Action(() => response.ToProtocolMessage(peerId))
                .Should().Throw<ArgumentException>();
+        }
+
+        [Fact]
+        public void Can_Recognize_Gossip_Message()
+        {
+            var peerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("1");
+            var gossipMessage = new TransactionBroadcast().ToProtocolMessage(peerIdentifier.PeerId, Guid.NewGuid())
+               .ToProtocolMessage(peerIdentifier.PeerId, Guid.NewGuid());
+            gossipMessage.CheckIfMessageIsBroadcast().Should().BeTrue();
+
+            var nonGossipMessage = new PingRequest().ToProtocolMessage(peerIdentifier.PeerId, Guid.NewGuid());
+            nonGossipMessage.CheckIfMessageIsBroadcast().Should().BeFalse();
+
+            var secondNonGossipMessage = new PingRequest().ToProtocolMessage(peerIdentifier.PeerId, Guid.NewGuid())
+               .ToProtocolMessage(peerIdentifier.PeerId, Guid.NewGuid());
+            secondNonGossipMessage.CheckIfMessageIsBroadcast().Should().BeFalse();
         }
     }
 }
