@@ -43,6 +43,7 @@ namespace Catalyst.Common.IO.Inbound
         private readonly IGossipManager _gossipManager;
         private readonly IKeySigner _keySigner;
         private readonly IPeerSettings _peerSettings;
+        private readonly ObservableServiceHandler _observableServiceHandler;
 
         /// <param name="targetAddress">Ignored</param>
         /// <param name="targetPort">Ignored</param>
@@ -51,7 +52,8 @@ namespace Catalyst.Common.IO.Inbound
         public IObservableSocket BuildChannel(IPAddress targetAddress = null,
             int targetPort = 0,
             X509Certificate2 certificate = null) =>
-            BootStrapChannel(_peerSettings.BindAddress, _peerSettings.Port);
+            BootStrapChannel(_observableServiceHandler.MessageStream,
+                _peerSettings.BindAddress, _peerSettings.Port);
 
         public UdpServerChannelFactory(IMessageCorrelationManager messageCorrelationManager,
             IGossipManager gossipManager,
@@ -62,16 +64,19 @@ namespace Catalyst.Common.IO.Inbound
             _gossipManager = gossipManager;
             _keySigner = keySigner;
             _peerSettings = peerSettings;
+            _observableServiceHandler = new ObservableServiceHandler();
         }
 
+        private List<IChannelHandler> _handlers;
+
         protected override List<IChannelHandler> Handlers => 
-            new List<IChannelHandler>
+            _handlers ?? (_handlers = new List<IChannelHandler>
             {
                 new ProtoDatagramHandler(),
                 new MessageSignerDuplex(new ProtocolMessageVerifyHandler(_keySigner), new ProtocolMessageSignHandler(_keySigner)),
                 new CorrelationHandler(_messageCorrelationManager),
                 new GossipHandler(_gossipManager),
-                new ObservableServiceHandler()
-            };
+                _observableServiceHandler
+            });
     }
 }
