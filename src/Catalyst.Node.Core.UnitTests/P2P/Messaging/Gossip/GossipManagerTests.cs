@@ -174,7 +174,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Messaging.Gossip
             var messageDto = messageFactory.GetMessage(
                 new MessageDto(
                     new TransactionBroadcast(),
-                    MessageTypes.Tell,
+                    MessageTypes.Response,
                     peerIdentifier,
                     senderIdentifier
                 ),
@@ -210,7 +210,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Messaging.Gossip
             var messageDto = messageFactory.GetMessage(
                 new MessageDto(
                     new PingRequest(),
-                    MessageTypes.Ask,
+                    MessageTypes.Request,
                     peerIdentifier,
                     senderPeerIdentifier
                 )

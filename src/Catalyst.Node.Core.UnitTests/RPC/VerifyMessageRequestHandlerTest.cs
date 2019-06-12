@@ -93,7 +93,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC
                     PublicKey = publicKey.ToBytesForRLPEncoding().ToByteString(),
                     Signature = signature.ToBytesForRLPEncoding().ToByteString()
                 },
-                MessageTypes.Ask,
+                MessageTypes.Request,
                 PeerIdentifierHelper.GetPeerIdentifier("recipient_key"),
                 PeerIdentifierHelper.GetPeerIdentifier("sender_key")
             ));

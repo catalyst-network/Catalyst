@@ -93,7 +93,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC
             var messageFactory = new MessageFactory();
             var request = messageFactory.GetMessage(new MessageDto(
                 new GetMempoolRequest(),
-                MessageTypes.Ask,
+                MessageTypes.Request,
                 PeerIdentifierHelper.GetPeerIdentifier("recipient_key"),
                 PeerIdentifierHelper.GetPeerIdentifier("sender_key")
             ));

@@ -27,25 +27,25 @@ namespace Catalyst.Common.Config
 {
     public class MessageTypes : Enumeration
     {
-        public static readonly MessageTypes Ask = new AskMessage();
-        public static readonly MessageTypes Tell = new TellMessage();
-        public static readonly MessageTypes Gossip = new GossipMessage();
+        public static readonly MessageTypes Request = new RequestMessage();
+        public static readonly MessageTypes Response = new ResponseMessage();
+        public static readonly MessageTypes Broadcast = new BroadcastMessage();
 
         private MessageTypes(int id, string name) : base(id, name) { }
         
-        private sealed class AskMessage : MessageTypes
+        private sealed class RequestMessage : MessageTypes
         {
-            public AskMessage() : base(1, "ask") { }
+            public RequestMessage() : base(1, "Request") { }
         }
         
-        private sealed class TellMessage : MessageTypes
+        private sealed class ResponseMessage : MessageTypes
         {
-            public TellMessage() : base(2, "tell") { }
+            public ResponseMessage() : base(2, "Response") { }
         }
         
-        private sealed class GossipMessage : MessageTypes
+        private sealed class BroadcastMessage : MessageTypes
         {
-            public GossipMessage() : base(3, "gossip") { }
+            public BroadcastMessage() : base(3, "Broadcast") { }
         }
     }
 }
