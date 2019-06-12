@@ -66,7 +66,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
 
             try
             {
-                var deserialised = message.Payload.FromAnySigned<SignMessageRequest>();
+                var deserialised = message.Payload.FromProtocolMessage<SignMessageRequest>();
 
                 Guard.Argument(message).NotNull("The request cannot be null");
 
@@ -91,7 +91,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
                             PublicKey = publicKey.Bytes.RawBytes.ToByteString(),
                             Signature = signature.Bytes.RawBytes.ToByteString()
                         },
-                        MessageTypes.Tell,
+                        MessageTypes.Response,
                         new PeerIdentifier(message.Payload.PeerId),
                         _peerIdentifier),
                     message.Payload.CorrelationId.ToGuid());

@@ -50,12 +50,12 @@ namespace Catalyst.Node.Core.P2P.Messaging.Handlers
         protected override void Handler(IChanneledMessage<ProtocolMessage> message)
         {
             Logger.Information("Ping Message Received");
-            var deserialised = message.Payload.FromAnySigned<PingRequest>();
+            var deserialised = message.Payload.FromProtocolMessage<PingRequest>();
             Logger.Debug("message content is {0}", deserialised);
 
             var datagramEnvelope = new MessageFactory().GetDatagramMessage(new MessageDto(
                     new PingResponse(),
-                    MessageTypes.Tell,
+                    MessageTypes.Response,
                     new PeerIdentifier(message.Payload.PeerId),
                     _peerIdentifier),
                 message.Payload.CorrelationId.ToGuid()

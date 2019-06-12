@@ -62,13 +62,13 @@ namespace Catalyst.Cli.Commands
                     {
                         Query = true
                     },
-                    MessageTypes.Ask,
+                    MessageTypes.Request,
                     new PeerIdentifier(Encoding.ASCII.GetBytes(nodeConfig.PublicKey), nodeConfig.HostAddress,
                         nodeConfig.Port),
                     _peerIdentifier
                 ));
 
-                node.SendMessage(request.ToAnySigned(_peerIdentifier.PeerId, Guid.NewGuid()));
+                node.SendMessage(request.ToProtocolMessage(_peerIdentifier.PeerId, Guid.NewGuid()));
             }
             catch (Exception e)
             {

@@ -64,7 +64,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
             Logger.Debug("received message of type GetInfoRequest");
             try
             {
-                var deserialised = message.Payload.FromAnySigned<GetInfoRequest>();
+                var deserialised = message.Payload.FromProtocolMessage<GetInfoRequest>();
                 
                 Guard.Argument(deserialised).NotNull();
                 
@@ -79,7 +79,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
                         {
                             Query = serializedList
                         },
-                        MessageTypes.Tell,
+                        MessageTypes.Response,
                         new PeerIdentifier(message.Payload.PeerId), 
                         _peerIdentifier
                     ),

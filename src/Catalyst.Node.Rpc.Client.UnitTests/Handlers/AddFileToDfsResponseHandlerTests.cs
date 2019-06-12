@@ -94,7 +94,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.Handlers
                 ResponseCode = ByteString.CopyFrom((byte) responseCode)
             };
 
-            var protocolMessage = addFileResponse.ToAnySigned(PeerIdHelper.GetPeerId("Test"), Guid.NewGuid());
+            var protocolMessage = addFileResponse.ToProtocolMessage(PeerIdHelper.GetPeerId("Test"), Guid.NewGuid());
             return new ProtocolMessageDto(_channelHandlerContext, protocolMessage);
         }
     }

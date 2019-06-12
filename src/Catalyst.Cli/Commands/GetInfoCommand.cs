@@ -58,7 +58,7 @@ namespace Catalyst.Cli.Commands
             {
                 var message = new GetInfoRequest {Query = true};
                 var request = _messageFactory.GetMessage(new MessageDto(message,
-                    MessageTypes.Ask,
+                    MessageTypes.Request,
                     new PeerIdentifier(Encoding.ASCII.GetBytes(nodeConfig.PublicKey), nodeConfig.HostAddress, nodeConfig.Port), 
                     _peerIdentifier
                 ));

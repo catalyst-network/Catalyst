@@ -84,7 +84,7 @@ namespace Catalyst.Node.Core.P2P.Messaging.Gossip
         /// <inheritdoc/>
         public async Task BroadcastAsync(ProtocolMessage protocolMessage)
         {
-            if (protocolMessage.CheckIfMessageIsGossip())
+            if (protocolMessage.CheckIfMessageIsBroadcast())
             {
                 throw new NotSupportedException("Cannot broadcast a message which is already a gossip type");
             }
@@ -104,7 +104,7 @@ namespace Catalyst.Node.Core.P2P.Messaging.Gossip
         /// <inheritdoc/>
         public async Task ReceiveAsync(ProtocolMessage protocolMessage)
         {
-            if (!protocolMessage.CheckIfMessageIsGossip())
+            if (!protocolMessage.CheckIfMessageIsBroadcast())
             {
                 throw new NotSupportedException("The Message is not a gossip type");
             }
@@ -127,7 +127,7 @@ namespace Catalyst.Node.Core.P2P.Messaging.Gossip
             foreach (var peerIdentifier in peersToGossip)
             {
                 var datagramEnvelope = _messageFactory.GetDatagramMessage(new MessageDto(message,
-                    MessageTypes.Gossip, peerIdentifier, _peerIdentifier), correlationId);
+                    MessageTypes.Broadcast, peerIdentifier, _peerIdentifier), correlationId);
                 await _peerClient.SendMessageAsync(datagramEnvelope).ConfigureAwait(false);
             }
 

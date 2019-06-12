@@ -118,7 +118,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC
                     PeerIp = peerToDelete.PeerIdentifier.Ip.To16Bytes().ToByteString(),
                     PublicKey = withPublicKey ? peerToDelete.PeerIdentifier.PublicKey.ToByteString() : ByteString.Empty
                 },
-                MessageTypes.Ask,
+                MessageTypes.Request,
                 PeerIdentifierHelper.GetPeerIdentifier("recipient"),
                 sendPeerIdentifier
             ));
@@ -136,7 +136,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC
             var sentResponse = (ProtocolMessage) receivedCalls[0].GetArguments().Single();
             sentResponse.TypeUrl.Should().Be(RemovePeerResponse.Descriptor.ShortenedFullName());
 
-            var responseContent = sentResponse.FromAnySigned<RemovePeerResponse>();
+            var responseContent = sentResponse.FromProtocolMessage<RemovePeerResponse>();
 
             responseContent.DeletedCount.Should().Be(withPublicKey ? 1 : (uint) fakePeers.Count);
         }

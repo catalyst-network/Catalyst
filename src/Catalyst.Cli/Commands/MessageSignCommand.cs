@@ -64,7 +64,7 @@ namespace Catalyst.Cli.Commands
                         Message = ByteString.CopyFrom(opts.Message.Trim('\"'), Encoding.UTF8)
                            .ToByteString()
                     },
-                    MessageTypes.Ask,
+                    MessageTypes.Request,
                     new PeerIdentifier(Encoding.ASCII.GetBytes(nodeConfig.PublicKey), nodeConfig.HostAddress,
                         nodeConfig.Port),
                     _peerIdentifier
