@@ -32,8 +32,8 @@ namespace Catalyst.Common.IO.Outbound
     public class ClientBase : SocketBase, ISocketClient
     {
         protected ClientBase(IChannelFactory channelFactory,
-            ILogger logger, 
-            MultithreadEventLoopGroup handlerEventLoopGroup) 
+            ILogger logger,
+            IEventLoopGroup handlerEventLoopGroup) 
             : base(channelFactory, logger, handlerEventLoopGroup) { }
 
         public void SendMessage(ProtocolMessage message)

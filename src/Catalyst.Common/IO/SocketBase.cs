@@ -39,7 +39,7 @@ namespace Catalyst.Common.IO
 
         public IChannel Channel { get; protected set; }
 
-        protected SocketBase(IChannelFactory channelFactory, ILogger logger, MultithreadEventLoopGroup handlerWorkerEventLoopGroup)
+        protected SocketBase(IChannelFactory channelFactory, ILogger logger, IEventLoopGroup handlerWorkerEventLoopGroup)
         {
             ChannelFactory = channelFactory;
             Logger = logger;

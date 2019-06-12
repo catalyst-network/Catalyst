@@ -45,25 +45,25 @@ namespace Catalyst.Common.IO
             _udpServerThreads = udpServerThreads;
         }
 
-        public MultithreadEventLoopGroup NewTcpClientLoopGroup()
+        public IEventLoopGroup NewTcpClientLoopGroup()
         {
             Guard.Argument(_tcpClientThreads).Positive();
             return new MultithreadEventLoopGroup(_tcpClientThreads);
         }
 
-        public MultithreadEventLoopGroup NewTcpServerLoopGroup()
+        public IEventLoopGroup NewTcpServerLoopGroup()
         {
             Guard.Argument(_tcpServerThreads).Positive();
             return new MultithreadEventLoopGroup(_tcpServerThreads);
         }
 
-        public MultithreadEventLoopGroup NewUdpServerLoopGroup()
+        public IEventLoopGroup NewUdpServerLoopGroup()
         {
             Guard.Argument(_udpServerThreads).Positive();
             return new MultithreadEventLoopGroup(_udpServerThreads);
         }
 
-        public MultithreadEventLoopGroup NewUdpClientLoopGroup()
+        public IEventLoopGroup NewUdpClientLoopGroup()
         {
             Guard.Argument(_udpClientThreads).Positive();
             return new MultithreadEventLoopGroup(_udpClientThreads);

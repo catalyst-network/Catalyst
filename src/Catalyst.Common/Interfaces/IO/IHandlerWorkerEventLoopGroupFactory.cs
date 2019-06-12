@@ -32,18 +32,18 @@ namespace Catalyst.Common.Interfaces.IO
     {
         /// <summary>Creates new multi-threaded tcp client worker group.</summary>
         /// <returns></returns>
-        MultithreadEventLoopGroup NewTcpClientLoopGroup();
+        IEventLoopGroup NewTcpClientLoopGroup();
 
         /// <summary>Creates new multi-threaded tcp server worker group.</summary>
         /// <returns></returns>
-        MultithreadEventLoopGroup NewTcpServerLoopGroup();
+        IEventLoopGroup NewTcpServerLoopGroup();
 
         /// <summary>Creates new multi-threaded udp server worker group.</summary>
         /// <returns></returns>
-        MultithreadEventLoopGroup NewUdpServerLoopGroup();
+        IEventLoopGroup NewUdpServerLoopGroup();
 
-        /// <summary>Creates new multi-threaded udp server worker group.</summary>
+        /// <summary>Creates new multi-threaded udp client worker group.</summary>
         /// <returns></returns>
-        MultithreadEventLoopGroup NewUdpClientLoopGroup();
+        IEventLoopGroup NewUdpClientLoopGroup();
     }
 }
