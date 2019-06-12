@@ -33,7 +33,7 @@ using NSubstitute;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Catalyst.Common.UnitTests.TestUtils
+namespace Catalyst.TestUtils
 {
     /// <inheritdoc />
     /// <summary>

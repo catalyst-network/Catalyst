@@ -24,9 +24,10 @@
 using System;
 using Catalyst.Common.Config;
 using Catalyst.Common.IO.Messaging;
-using Catalyst.Common.UnitTests.TestUtils;
+using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Protocol.IPPN;
 using Catalyst.Protocol.Transaction;
+using Catalyst.TestUtils;
 using DotNetty.Buffers;
 using FluentAssertions;
 using Xunit;

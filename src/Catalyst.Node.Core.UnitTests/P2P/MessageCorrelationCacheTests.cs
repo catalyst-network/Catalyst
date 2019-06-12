@@ -27,13 +27,12 @@ using System.Linq;
 using System.Reactive.Linq;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.IO.Inbound;
 using Catalyst.Common.IO.Messaging;
+using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.P2P;
-using Catalyst.Common.UnitTests.TestUtils;
-using Catalyst.Node.Core.P2P.Messaging;
-using Catalyst.Node.Core.P2P.Messaging.Handlers;
+using Catalyst.Node.Core.P2P.Observables;
 using Catalyst.Protocol.IPPN;
+using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using FluentAssertions;
 using Google.Protobuf;
@@ -42,14 +41,13 @@ using NSubstitute;
 using Serilog;
 using Xunit;
 using Xunit.Abstractions;
-using PendingRequest = Catalyst.Common.IO.Outbound.PendingRequest;
 
 namespace Catalyst.Node.Core.UnitTests.P2P
 {
     public sealed class MessageCorrelationCacheTests
     {
         private readonly IPeerIdentifier[] _peerIds;
-        private readonly IList<PendingRequest> _pendingRequests;
+        private readonly IList<CorrelatableMessage> _pendingRequests;
         
         // private readonly P2PCorrelationCache _cache;
         private readonly Dictionary<IPeerIdentifier, int> _reputationByPeerIdentifier;
@@ -66,7 +64,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
             }.Select(p => new PeerIdentifier(p) as IPeerIdentifier).ToArray();
 
             _reputationByPeerIdentifier = _peerIds.ToDictionary(p => p, p => 0);
-            _pendingRequests = _peerIds.Select((p, i) => new PendingRequest
+            _pendingRequests = _peerIds.Select((p, i) => new CorrelatableMessage
             {
                 Content = new PingRequest().ToProtocolMessage(senderPeerId, Guid.NewGuid()),
                 Recipient = p,
@@ -74,7 +72,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
             }).ToList();
 
             var responseStore = Substitute.For<IMemoryCache>();
-            responseStore.TryGetValue(Arg.Any<ByteString>(), out Arg.Any<PendingRequest>())
+            responseStore.TryGetValue(Arg.Any<ByteString>(), out Arg.Any<CorrelatableMessage>())
                .Returns(ci =>
                 {
                     output.WriteLine("");
@@ -141,7 +139,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
             var channeledAny = new ProtocolMessageDto(fakeContext, nonCorrelatedMessage);
             var observableStream = new[] {channeledAny}.ToObservable();
 
-            var handler = new PingResponseHandler(_logger);
+            var handler = new PingResponseObserver(_logger);
             handler.StartObserving(observableStream);
 
             // Assert.False(handler.CanExecuteNextHandler(channeledAny));

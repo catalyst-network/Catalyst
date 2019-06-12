@@ -26,7 +26,7 @@ using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.P2P.Messaging;
-using Catalyst.Common.IO.Outbound;
+using Catalyst.Common.Interfaces.P2P.Messaging.Dto;
 using Catalyst.Protocol.Common;
 using DotNetty.Buffers;
 
@@ -89,7 +89,7 @@ namespace Catalyst.Common.IO.Messaging
         private ProtocolMessage BuildAskMessage(IMessageDto dto)
         {
             var messageContent = dto.Message.ToProtocolMessage(dto.Sender.PeerId, Guid.NewGuid());
-            var correlatableRequest = new PendingRequest
+            var correlatableRequest = new CorrelatableMessage
             {
                 Content = messageContent,
                 Recipient = dto.Recipient,

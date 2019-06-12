@@ -34,10 +34,9 @@ using Catalyst.Common.Interfaces.Modules.Dfs;
 using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.P2P;
-using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Node.Core.Modules.Dfs;
 using Catalyst.Node.Core.P2P;
-using Catalyst.Node.Core.RPC.Handlers;
+using Catalyst.Node.Core.RPC.Observables;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
@@ -47,7 +46,6 @@ using Polly;
 using Serilog;
 using Xunit;
 using Xunit.Abstractions;
-using TransferFileBytesRequestHandler = Catalyst.Node.Core.RPC.Handlers.TransferFileBytesRequestHandler;
 
 namespace Catalyst.Node.Core.IntegrationTests.Modules.Dfs
 {
@@ -143,10 +141,10 @@ namespace Catalyst.Node.Core.IntegrationTests.Modules.Dfs
             var senderPeerId = new PeerIdentifier(sender);
             var recipientPeerId = new PeerIdentifier(recipient);
             var fileToTransfer = FileHelper.CreateRandomTempFile(byteSize);
-            var addFileToDfsRequestHandler = new AddFileToDfsRequestHandler(_dfs, senderPeerId, _nodeFileTransferFactory,
+            var addFileToDfsRequestHandler = new AddFileToDfsRequestObserver(_dfs, senderPeerId, _nodeFileTransferFactory,
                 _messageFactory, _logger);
             var transferBytesRequestHandler =
-                new TransferFileBytesRequestHandler(_nodeFileTransferFactory, senderPeerId, _logger, _messageFactory);
+                new TransferFileBytesRequestObserver(_nodeFileTransferFactory, senderPeerId, _logger, _messageFactory);
             var uniqueFileKey = Guid.NewGuid();
             crcValue = FileHelper.GetCrcValue(fileToTransfer);
             

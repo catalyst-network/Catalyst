@@ -26,7 +26,7 @@ using System.IO;
 using System.Threading.Tasks;
 using Autofac;
 using Catalyst.Common.Config;
-using Catalyst.Common.UnitTests.TestUtils;
+using Catalyst.TestUtils;
 using FluentAssertions;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;

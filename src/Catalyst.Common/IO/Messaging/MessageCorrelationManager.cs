@@ -28,7 +28,6 @@ using System.Threading;
 using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.IO.Outbound;
 using Catalyst.Protocol.Common;
 using Dawn;
 using Microsoft.Extensions.Caching.Memory;
@@ -65,9 +64,9 @@ namespace Catalyst.Common.IO.Messaging
             _evictionEvent.OnNext(new MessageEvictionEvent((IPeerIdentifier) key, value));
         }
         
-        public void AddPendingRequest(PendingRequest pendingRequest)
+        public void AddPendingRequest(CorrelatableMessage correlatableMessage)
         {
-            _pendingRequests.Set(pendingRequest.Content.CorrelationId, pendingRequest, _entryOptions);
+            _pendingRequests.Set(correlatableMessage.Content.CorrelationId, correlatableMessage, _entryOptions);
         }
 
         /// <summary>

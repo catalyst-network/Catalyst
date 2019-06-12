@@ -26,30 +26,30 @@ using System.Linq;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
-using Catalyst.Common.IO.Inbound;
-using Catalyst.Common.Interfaces.IO.Inbound;
-using Catalyst.Common.IO.Messaging;
+using Catalyst.Common.Interfaces.IO.Messaging.Dto;
+using Catalyst.Common.IO.Messaging.Dto;
+using Catalyst.Common.IO.Observables;
 using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;
 using Google.Protobuf;
 
-namespace Catalyst.Common.UnitTests.TestUtils 
+namespace Catalyst.TestUtils 
 {
     public static class MessageStreamHelper
     {
-        public static void SendToHandler<T>(this ProtocolMessage messages, IChannelHandlerContext fakeContext, MessageHandlerBase<T> handler) where T : IMessage
+        public static void SendToHandler<T>(this ProtocolMessage messages, IChannelHandlerContext fakeContext, ObserverBase<T> handler) where T : IMessage
         {
             handler.HandleMessage(CreateChanneledMessage(fakeContext, messages));
         }
 
-        public static IObservable<IChanneledMessage<ProtocolMessage>> CreateStreamWithMessage(IChannelHandlerContext fakeContext, ProtocolMessage response)
+        public static IObservable<IProtocolMessageDto<ProtocolMessage>> CreateStreamWithMessage(IChannelHandlerContext fakeContext, ProtocolMessage response)
         {   
             var channeledAny = new ProtocolMessageDto(fakeContext, response);
             var messageStream = new[] {channeledAny}.ToObservable();
             return messageStream;
         }
 
-        public static IObservable<IChanneledMessage<ProtocolMessage>> CreateStreamWithMessages(IChannelHandlerContext fakeContext, params ProtocolMessage[] responseMessages)
+        public static IObservable<IProtocolMessageDto<ProtocolMessage>> CreateStreamWithMessages(IChannelHandlerContext fakeContext, params ProtocolMessage[] responseMessages)
         {
             var stream = responseMessages
                .Select(message => new ProtocolMessageDto(fakeContext, message));

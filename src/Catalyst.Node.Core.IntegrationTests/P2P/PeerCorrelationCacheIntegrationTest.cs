@@ -28,8 +28,9 @@ using System.Threading.Tasks;
 using Autofac;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
-using Catalyst.Common.UnitTests.TestUtils;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Protocol.IPPN;
+using Catalyst.TestUtils;
 using FluentAssertions;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
@@ -37,7 +38,6 @@ using NSubstitute;
 using Serilog;
 using Xunit;
 using Xunit.Abstractions;
-using PendingRequest = Catalyst.Common.IO.Outbound.PendingRequest;
 
 namespace Catalyst.Node.Core.IntegrationTests.P2P
 {
@@ -74,7 +74,7 @@ namespace Catalyst.Node.Core.IntegrationTests.P2P
                 {
                     CorrelationId = c, PeerIdentifier = p
                 })
-               .Select(c => new PendingRequest
+               .Select(c => new CorrelatableMessage
                 {
                     Content = new PingRequest().ToProtocolMessage(senderPeerId, c.CorrelationId),
                     Recipient = c.PeerIdentifier,

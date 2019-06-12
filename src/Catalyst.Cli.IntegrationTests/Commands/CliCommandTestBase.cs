@@ -28,7 +28,7 @@ using System.Net;
 using System.Security.Cryptography.X509Certificates;
 using Autofac;
 using Catalyst.Common.Interfaces.Rpc;
-using Catalyst.Common.UnitTests.TestUtils;
+using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using Microsoft.Extensions.Configuration;
 using NSubstitute;

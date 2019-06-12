@@ -28,7 +28,7 @@ using System.Net;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Catalyst.Common.Network;
-using Catalyst.Common.UnitTests.TestUtils;
+using Catalyst.TestUtils;
 using FluentAssertions;
 using Xunit;
 

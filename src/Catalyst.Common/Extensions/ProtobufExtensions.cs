@@ -25,7 +25,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Security.Cryptography;
 using Catalyst.Common.Config;
 using Catalyst.Common.Util;
 using Catalyst.Protocol.Common;

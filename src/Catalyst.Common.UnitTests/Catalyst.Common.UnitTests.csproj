@@ -24,4 +24,7 @@
         <ProjectReference Include="..\Catalyst.Common\Catalyst.Common.csproj" />
         <ProjectReference Include="..\Catalyst.TestUtils\Catalyst.TestUtils.csproj" />
     </ItemGroup>
+    <ItemGroup>
+      <Compile Remove="IO\Outbound\SocketClientRegistryTests.cs" />
+    </ItemGroup>
 </Project>
