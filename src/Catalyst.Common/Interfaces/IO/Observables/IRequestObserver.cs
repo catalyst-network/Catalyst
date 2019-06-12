@@ -21,30 +21,18 @@
 
 #endregion
 
-using Catalyst.Common.Extensions;
-using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
-using Catalyst.Common.Interfaces.IO.Observables;
-using Catalyst.Common.IO.Messaging;
-using Catalyst.Common.IO.Observables;
+using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.Interfaces.P2P.Messaging.Dto;
 using Catalyst.Protocol.Common;
-using Catalyst.Protocol.Transaction;
-using Serilog;
+using Google.Protobuf;
 
-namespace Catalyst.Node.Core.P2P.Observables
+namespace Catalyst.Common.Interfaces.IO.Observables
 {
-    public sealed class TransactionBroadcastObserver
-        : ObserverBase,
-            IP2PMessageObserver
+    internal interface IRequestObserver : IObserver
     {
-        public TransactionBroadcastObserver(ILogger logger)
-            : base(logger) { }
-
-        protected override void Handler(IProtocolMessageDto<ProtocolMessage> messageDto)
-        {
-            Logger.Debug("received pong");
-            var deserialised = messageDto.Payload.FromProtocolMessage<TransactionBroadcast>();
-            Logger.Debug("transaction pong is {0}", deserialised.Signature);
-        }
+        IPeerIdentifier PeerIdentifier { get; }
+        IMessage HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto);
+        void SendChannelContextResponse(IMessageDto messageDto);
     }
 }

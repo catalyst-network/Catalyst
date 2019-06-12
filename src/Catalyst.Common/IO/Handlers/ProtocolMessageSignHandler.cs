@@ -49,7 +49,7 @@ namespace Catalyst.Common.IO.Handlers
         {
             if (!CanSign(message))
             {
-                return context.WriteAndFlushAsync(message);
+                return context.CloseAsync();
             }
             
             ProtocolMessage protocolMessage = (ProtocolMessage) message;

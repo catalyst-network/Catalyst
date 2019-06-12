@@ -41,7 +41,7 @@ namespace Catalyst.Node.Rpc.Client.Observables
     /// Add File to DFS Response handler
     /// </summary>
     /// <seealso cref="IRpcResponseObserver" />
-    public sealed class AddFileToDfsResponseObserver : ObserverBase<AddFileToDfsResponse>,
+    public sealed class AddFileToDfsResponseObserver : ObserverBase,
         IRpcResponseObserver
     {
         /// <summary>The upload file transfer factory</summary>

@@ -41,7 +41,7 @@ using SharpRepository.Repository;
 namespace Catalyst.Node.Core.P2P.Observables
 {
     public sealed class GetNeighbourRequestObserver
-        : ObserverBase<PeerNeighborsRequest>,
+        : ObserverBase,
             IP2PMessageObserver
     {
         private readonly IRepository<Peer> _repository;
@@ -72,7 +72,7 @@ namespace Catalyst.Node.Core.P2P.Observables
                 peerNeighborsResponseMessage.Peers.Add(activePeersList.RandomElement().PeerIdentifier.PeerId);
             }
 
-            var datagramEnvelope = new MessageFactory().GetDatagramMessage(new MessageDto(
+            var datagramEnvelope = new ProtocolProtocolMessageFactory().GetDatagramMessage(new MessageDto(
                     peerNeighborsResponseMessage,
                     MessageTypes.Response,
                     new PeerIdentifier(messageDto.Payload.PeerId),

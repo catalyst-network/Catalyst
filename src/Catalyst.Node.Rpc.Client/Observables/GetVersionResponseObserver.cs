@@ -40,7 +40,7 @@ namespace Catalyst.Node.Rpc.Client.Observables
     /// The handler reads the response's payload and formats it in user readable format and writes it to the console.
     /// </summary>
     public sealed class GetVersionResponseObserver
-        : ObserverBase<VersionResponse>,
+        : ObserverBase,
             IRpcResponseObserver
     {
         private readonly IUserOutput _output;

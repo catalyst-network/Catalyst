@@ -29,63 +29,49 @@ using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Observables;
+using Catalyst.Common.Interfaces.P2P.Messaging.Dto;
 using Catalyst.Common.Util;
 using Catalyst.Protocol.Common;
-using Google.Protobuf;
+using DotNetty.Transport.Channels;
 using Serilog;
 
 namespace Catalyst.Common.IO.Observables
 {
-    public abstract class ObserverBase<TProto> : IObserver, IDisposable where TProto : IMessage
+    public abstract class ObserverBase : IObserver, IDisposable
     {
-        private IDisposable _messageSubscription;
         protected readonly ILogger Logger;
+        public IDisposable MessageSubscription { get; set; }
+        public IChannelHandlerContext ChannelHandlerContext { get; protected set; }
 
         protected ObserverBase(ILogger logger)
         {
             Logger = logger;
         }
 
-        public void StartObserving(IObservable<IProtocolMessageDto<ProtocolMessage>> messageStream)
-        {
-            if (_messageSubscription != null)
-            {
-                throw new ReadOnlyException($"{GetType()} is already listening to a message stream");
-            }
+        public abstract void StartObserving(IObservable<IProtocolMessageDto<ProtocolMessage>> messageStream);
 
-            var filterMessageType = typeof(TProto).ShortenedProtoFullName();
-            _messageSubscription = messageStream
-               .Where(m => m != null
-                 && m.Payload?.TypeUrl == filterMessageType
-                 && !m.Equals(NullObjects.ProtocolMessageDto))
-               .SubscribeOn(TaskPoolScheduler.Default)
-               .Subscribe(HandleMessage, HandleError, HandleCompleted);
-        }
-        
-        public void HandleMessage(IProtocolMessageDto<ProtocolMessage> messageDto)
-        {
-            Logger.Debug("Pre Handle Message Called");
-            Handler(messageDto);
-        }
+        public abstract void OnNext(IProtocolMessageDto<ProtocolMessage> messageDto);
 
-        public virtual void HandleCompleted()
+        public virtual void OnCompleted()
         {
             Logger.Debug("Message stream ended.");
         }
 
-        public virtual void HandleError(Exception exception)
+        public virtual void OnError(Exception exception)
         {
             Logger.Error(exception, "Failed to process message.");
+            ChannelHandlerContext.CloseAsync().ConfigureAwait(false);
         }
-
-        protected abstract void Handler(IProtocolMessageDto<ProtocolMessage> messageDto);
 
         private void Dispose(bool disposing)
         {
-            if (disposing)
+            if (!disposing)
             {
-                _messageSubscription?.Dispose();
+                return;
             }
+            
+            MessageSubscription?.Dispose();
+            ChannelHandlerContext?.CloseAsync().ConfigureAwait(false);
         }
 
         public void Dispose()

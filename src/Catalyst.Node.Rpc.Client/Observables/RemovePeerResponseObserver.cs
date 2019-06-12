@@ -40,7 +40,7 @@ namespace Catalyst.Node.Rpc.Client.Observables
     /// </summary>
     /// <seealso cref="IRpcResponseObserver" />
     public sealed class RemovePeerResponseObserver
-        : ObserverBase<RemovePeerResponse>,
+        : ObserverBase,
             IRpcResponseObserver
     {
         /// <summary>The user output</summary>

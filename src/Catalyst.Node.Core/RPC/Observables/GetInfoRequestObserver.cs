@@ -43,19 +43,19 @@ using ILogger = Serilog.ILogger;
 namespace Catalyst.Node.Core.RPC.Observables
 {
     public sealed class GetInfoRequestObserver
-        : ObserverBase<GetInfoRequest>,
+        : ObserverBase,
             IRpcRequestObserver
     {
         private readonly IPeerIdentifier _peerIdentifier;
         private readonly IRpcServerSettings _config;
-        private readonly IMessageFactory _messageFactory;
+        private readonly IProtocolMessageFactory _protocolMessageFactory;
 
         public GetInfoRequestObserver(IPeerIdentifier peerIdentifier,
             IRpcServerSettings config,
-            IMessageFactory messageFactory,
+            IProtocolMessageFactory protocolMessageFactory,
             ILogger logger) : base(logger)
         {
-            _messageFactory = messageFactory;
+            _protocolMessageFactory = protocolMessageFactory;
             _peerIdentifier = peerIdentifier;
             _config = config;
         }
@@ -77,7 +77,7 @@ namespace Catalyst.Node.Core.RPC.Observables
                     _config.NodeConfig.GetSection("CatalystNodeConfiguration").AsEnumerable(), 
                     Formatting.Indented);
 
-                var response = _messageFactory.GetMessage(new MessageDto(
+                var response = _protocolMessageFactory.GetMessage(new MessageDto(
                         new GetInfoResponse
                         {
                             Query = serializedList

@@ -35,7 +35,7 @@ using Serilog;
 
 namespace Catalyst.TestUtils
 {
-    public class TestMessageObserver<TProto> : ObserverBase<TProto>,
+    public class TestMessageObserver<TProto> : ObserverBase,
         IP2PMessageObserver, IRpcResponseObserver, IRpcRequestObserver
         where TProto : IMessage, IMessage<TProto>
     {
@@ -51,7 +51,7 @@ namespace Catalyst.TestUtils
             SubstituteObserver.OnNext(messageDto.Payload.FromProtocolMessage<TProto>());
         }
 
-        public override void HandleError(Exception exception) { SubstituteObserver.OnError(exception); }
-        public override void HandleCompleted() { SubstituteObserver.OnCompleted(); }
+        public override void OnError(Exception exception) { SubstituteObserver.OnError(exception); }
+        public override void OnCompleted() { SubstituteObserver.OnCompleted(); }
     }
 }

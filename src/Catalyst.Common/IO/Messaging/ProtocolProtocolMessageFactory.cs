@@ -35,7 +35,7 @@ namespace Catalyst.Common.IO.Messaging
     /// <summary>
     /// The base class to handle building of ProtocolMessage messages
     /// </summary>
-    public sealed class MessageFactory : IMessageFactory
+    public sealed class ProtocolProtocolMessageFactory : IProtocolMessageFactory
     {
         /// <summary>Gets the message.</summary>
         /// <param name="messageDto">The message.</param>
@@ -46,37 +46,27 @@ namespace Catalyst.Common.IO.Messaging
         {
             if (messageDto.MessageType == MessageTypes.Request)
             {
-                return BuildAskMessage(messageDto);
+                return BuildRequestMessage(messageDto);
             }
             
             if (messageDto.MessageType == MessageTypes.Response)
             {
-                return BuildTellMessage(messageDto, correlationId);   
+                return BuildResponseMessage(messageDto, correlationId);   
             }
 
             if (messageDto.MessageType == MessageTypes.Broadcast)
             {
-                return BuildGossipMessage(messageDto);
+                return BuildBroadcastMessage(messageDto);
             }
 
             throw new ArgumentException();
-        }
-        
-        /// <summary>Gets the message in datagram envelope.</summary>
-        /// <param name="messageDto">Message Dto wrapper with all params required to send message.</param>
-        /// <param name="correlationId">The correlation identifier.</param>
-        /// <returns></returns>
-        public IByteBufferHolder GetDatagramMessage(IMessageDto messageDto,
-            Guid correlationId = default)
-        {
-            return GetMessage(messageDto, correlationId).ToDatagram(messageDto.Recipient.IpEndPoint);
         }
 
         /// <summary>Builds the tell message.</summary>
         /// <param name="dto">The dto.</param>
         /// <param name="correlationId">The correlation identifier.</param>
         /// <returns>ProtocolMessage message</returns>
-        private ProtocolMessage BuildTellMessage(IMessageDto dto, Guid correlationId)
+        private ProtocolMessage BuildResponseMessage(IMessageDto dto, Guid correlationId)
         {
             return correlationId == default
                 ? throw new ArgumentException("Correlation ID cannot be null for a tell message")
@@ -86,23 +76,16 @@ namespace Catalyst.Common.IO.Messaging
         /// <summary>Builds the ask message.</summary>
         /// <param name="dto">The dto.</param>
         /// <returns>ProtocolMessage message</returns>
-        private ProtocolMessage BuildAskMessage(IMessageDto dto)
+        private ProtocolMessage BuildRequestMessage(IMessageDto dto)
         {
             var messageContent = dto.Message.ToProtocolMessage(dto.Sender.PeerId, Guid.NewGuid());
-            var correlatableRequest = new CorrelatableMessage
-            {
-                Content = messageContent,
-                Recipient = dto.Recipient,
-                SentAt = DateTimeOffset.MinValue
-            };
-
             return messageContent;
         }
 
         /// <summary>Builds the gossip message.</summary>
         /// <param name="dto">The dto.</param>
         /// <returns>ProtocolMessage message</returns>
-        private ProtocolMessage BuildGossipMessage(IMessageDto dto)
+        private ProtocolMessage BuildBroadcastMessage(IMessageDto dto)
         {
             return dto.Message.ToProtocolMessage(dto.Sender.PeerId, Guid.NewGuid());
         }

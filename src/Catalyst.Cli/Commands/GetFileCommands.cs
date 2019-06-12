@@ -68,7 +68,7 @@ namespace Catalyst.Cli.Commands
                 Encoding.ASCII.GetBytes(nodeConfig.PublicKey),
                 nodeConfig.HostAddress, nodeConfig.Port), _peerIdentifier);
 
-            var messageDto = _messageFactory.GetMessage(dto);
+            var messageDto = _protocolMessageFactory.GetMessage(dto);
 
             IDownloadFileInformation fileTransfer = new DownloadFileTransferInformation(
                 _peerIdentifier,

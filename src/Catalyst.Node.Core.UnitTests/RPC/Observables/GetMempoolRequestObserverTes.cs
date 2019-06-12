@@ -88,7 +88,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
                 }
             );
 
-            var messageFactory = new MessageFactory();
+            var messageFactory = new ProtocolProtocolMessageFactory();
             var request = messageFactory.GetMessage(new MessageDto(
                 new GetMempoolRequest(),
                 MessageTypes.Request,

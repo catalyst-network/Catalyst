@@ -88,7 +88,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.Observables
 
         private async Task TestGetBlackListResponse(bool blacklist, string publicKey, string ip)
         {
-            var response = new MessageFactory().GetMessage(new MessageDto(
+            var response = new ProtocolProtocolMessageFactory().GetMessage(new MessageDto(
                     new SetPeerBlackListResponse
                     {
                         Blacklist = blacklist,

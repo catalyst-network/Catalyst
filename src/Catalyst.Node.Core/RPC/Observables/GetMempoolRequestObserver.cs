@@ -43,20 +43,20 @@ using ILogger = Serilog.ILogger;
 namespace Catalyst.Node.Core.RPC.Observables
 {
     public sealed class GetMempoolRequestObserver
-        : ObserverBase<GetMempoolRequest>,
+        : ObserverBase,
             IRpcRequestObserver
     {
         private readonly IMempool _mempool;
         private readonly IPeerIdentifier _peerIdentifier;
-        private readonly IMessageFactory _messageFactory;
+        private readonly IProtocolMessageFactory _protocolMessageFactory;
 
         public GetMempoolRequestObserver(IPeerIdentifier peerIdentifier,
             IMempool mempool,
-            IMessageFactory messageFactory,
+            IProtocolMessageFactory protocolMessageFactory,
             ILogger logger)
             : base(logger)
         {
-            _messageFactory = messageFactory;
+            _protocolMessageFactory = protocolMessageFactory;
             _mempool = mempool;
             _peerIdentifier = peerIdentifier;
         }
@@ -75,7 +75,7 @@ namespace Catalyst.Node.Core.RPC.Observables
                 
                 Logger.Debug("Received GetMempoolRequest message with content {0}", deserialised);
 
-                var response = _messageFactory.GetMessage(new MessageDto(
+                var response = _protocolMessageFactory.GetMessage(new MessageDto(
                         new GetMempoolResponse
                         {
                             Mempool = {GetMempoolContent()}

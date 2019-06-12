@@ -47,7 +47,7 @@ namespace Catalyst.Node.Core.RPC.Observables
     /// </summary>
     /// <seealso cref="IRpcRequestObserver" />
     public sealed class RemovePeerRequestObserver
-        : ObserverBase<RemovePeerRequest>,
+        : ObserverBase,
             IRpcRequestObserver
     {
         /// <summary>The peer identifier</summary>
@@ -57,21 +57,21 @@ namespace Catalyst.Node.Core.RPC.Observables
         private readonly IRepository<Peer> _peerRepository;
 
         /// <summary>The RPC message factory</summary>
-        private readonly IMessageFactory _messageFactory;
+        private readonly IProtocolMessageFactory _protocolMessageFactory;
 
         /// <summary>Initializes a new instance of the <see cref="RemovePeerRequestObserver"/> class.</summary>
         /// <param name="peerIdentifier">The peer identifier.</param>
         /// <param name="peerRepository">The peer discovery.</param>
         /// <param name="logger">The logger.</param>
-        /// <param name="messageFactory"></param>
+        /// <param name="protocolMessageFactory"></param>
         public RemovePeerRequestObserver(IPeerIdentifier peerIdentifier,
             IRepository<Peer> peerRepository,
             ILogger logger,
-            IMessageFactory messageFactory) : base(logger)
+            IProtocolMessageFactory protocolMessageFactory) : base(logger)
         {
             _peerIdentifier = peerIdentifier;
             _peerRepository = peerRepository;
-            _messageFactory = messageFactory;
+            _protocolMessageFactory = protocolMessageFactory;
         }
 
         /// <summary>Handles the specified message.</summary>
@@ -108,7 +108,7 @@ namespace Catalyst.Node.Core.RPC.Observables
                     DeletedCount = peerDeletedCount
                 };
 
-                var removePeerMessage = _messageFactory.GetMessage(new MessageDto(
+                var removePeerMessage = _protocolMessageFactory.GetMessage(new MessageDto(
                         removePeerResponse,
                         MessageTypes.Response,
                         new PeerIdentifier(messageDto.Payload.PeerId),

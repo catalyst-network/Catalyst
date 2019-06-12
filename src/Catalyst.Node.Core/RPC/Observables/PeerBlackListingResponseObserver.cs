@@ -41,7 +41,7 @@ namespace Catalyst.Node.Core.RPC.Observables
     /// </summary>
     /// <seealso cref="IRpcResponseObserver" />
     public sealed class PeerBlackListingResponseObserver
-        : ObserverBase<SetPeerBlackListResponse>,
+        : ObserverBase,
             IRpcResponseObserver
     {
         private readonly IUserOutput _output;

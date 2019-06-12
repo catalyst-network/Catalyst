@@ -44,13 +44,13 @@ using ILogger = Serilog.ILogger;
 namespace Catalyst.Node.Core.RPC.Observables
 {
     public sealed class VerifyMessageRequestObserver
-        : ObserverBase<VerifyMessageRequest>,
+        : ObserverBase,
             IRpcRequestObserver
     {
         private readonly IKeySigner _keySigner;
         private readonly IPeerIdentifier _peerIdentifier;
         private IProtocolMessageDto<ProtocolMessage> _messageDto;
-        private readonly IMessageFactory _messageFactory;
+        private readonly IProtocolMessageFactory _protocolMessageFactory;
 
         private const string PublicKeyEncodingInvalid = "Invalid PublicKey encoding";
         private const string PublicKeyNotProvided = "PublicKey not provided";
@@ -61,10 +61,10 @@ namespace Catalyst.Node.Core.RPC.Observables
         public VerifyMessageRequestObserver(IPeerIdentifier peerIdentifier,
             ILogger logger,
             IKeySigner keySigner,
-            IMessageFactory messageFactory)
+            IProtocolMessageFactory protocolMessageFactory)
             : base(logger)
         {
-            _messageFactory = messageFactory;
+            _protocolMessageFactory = protocolMessageFactory;
             _keySigner = keySigner;
             _peerIdentifier = peerIdentifier;
         }
@@ -132,7 +132,7 @@ namespace Catalyst.Node.Core.RPC.Observables
 
         private void ReturnResponse(bool result, Guid correlationGuid)
         {
-            var response = _messageFactory.GetMessage(new MessageDto(
+            var response = _protocolMessageFactory.GetMessage(new MessageDto(
                     new VerifyMessageResponse
                     {
                         IsSignedByKey = result

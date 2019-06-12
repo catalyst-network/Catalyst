@@ -40,7 +40,7 @@ namespace Catalyst.Common.FileTransfer
     public sealed class UploadFileTransferInformation : BaseFileTransferInformation, IUploadFileInformation
     {
         /// <summary>The upload message factory</summary>
-        private readonly IMessageFactory _uploadMessageFactory;
+        private readonly IProtocolMessageFactory _uploadProtocolMessageFactory;
         
         /// <summary>Initializes a new instance of the <see cref="UploadFileTransferInformation"/> class.</summary>
         /// <param name="stream">The stream.</param>
@@ -48,18 +48,18 @@ namespace Catalyst.Common.FileTransfer
         /// <param name="recipientIdentifier">The recipient identifier.</param>
         /// <param name="recipientChannel">The recipient channel.</param>
         /// <param name="correlationGuid">The correlation unique identifier.</param>
-        /// <param name="uploadMessageFactory">The upload message factory.</param>
+        /// <param name="uploadProtocolMessageFactory">The upload message factory.</param>
         public UploadFileTransferInformation(Stream stream,
             IPeerIdentifier peerIdentifier,
             IPeerIdentifier recipientIdentifier,
             IChannel recipientChannel,
             Guid correlationGuid,
-            IMessageFactory uploadMessageFactory) :
+            IProtocolMessageFactory uploadProtocolMessageFactory) :
             base(peerIdentifier, recipientIdentifier, recipientChannel,
                 correlationGuid, string.Empty, (ulong) stream.Length)
         {
             RandomAccessStream = stream;
-            _uploadMessageFactory = uploadMessageFactory;
+            _uploadProtocolMessageFactory = uploadProtocolMessageFactory;
             RetryCount = 0;
         }
 
@@ -99,7 +99,7 @@ namespace Catalyst.Common.FileTransfer
                 CorrelationFileName = CorrelationGuid.ToByteString()
             };
             
-            return _uploadMessageFactory.GetMessage(new MessageDto(
+            return _uploadProtocolMessageFactory.GetMessage(new MessageDto(
                 transferMessage,
                 MessageTypes.Request,
                 PeerIdentifier,

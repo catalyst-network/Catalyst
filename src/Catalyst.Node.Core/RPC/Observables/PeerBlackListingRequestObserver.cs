@@ -40,7 +40,7 @@ using ILogger = Serilog.ILogger;
 namespace Catalyst.Node.Core.RPC.Observables
 {
     public sealed class PeerBlackListingRequestObserver
-        : ObserverBase<SetPeerBlackListRequest>,
+        : ObserverBase,
             IRpcRequestObserver
     {
         /// <summary>

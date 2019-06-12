@@ -32,7 +32,7 @@ using Serilog;
 namespace Catalyst.Node.Core.P2P.Observables
 {
     public sealed class PingResponseObserver
-        : ObserverBase<PingResponse>,
+        : ObserverBase,
             IP2PMessageObserver
     {
         public PingResponseObserver(ILogger logger)

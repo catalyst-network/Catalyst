@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Security.Cryptography.X509Certificates;
 using Catalyst.Common.Interfaces.IO;
+using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Transport;
 using Catalyst.Common.Interfaces.IO.Transport.Channels;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
@@ -36,13 +37,20 @@ namespace Catalyst.Common.IO.Transport.Channels
     public class UdpClientChannelFactory : UdpChannelFactoryBase, IUdpClientChannelFactory
     {
         private readonly IKeySigner _keySigner;
-        public UdpClientChannelFactory(IKeySigner keySigner) { _keySigner = keySigner; }
+        private readonly IMessageCorrelationManager _correlationManager;
+        
+        public UdpClientChannelFactory(IKeySigner keySigner, IMessageCorrelationManager correlationManager)
+        {
+            _keySigner = keySigner;
+            _correlationManager = correlationManager;
+        }
 
         protected override List<IChannelHandler> Handlers =>
             new List<IChannelHandler>
             {
                 new ProtoDatagramHandler(),
-                new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(new ProtocolMessageVerifyHandler(_keySigner), new ProtocolMessageSignHandler(_keySigner))
+                new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(new ProtocolMessageVerifyHandler(_keySigner), new ProtocolMessageSignHandler(_keySigner)),
+                new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(new CorrelationHandler(_correlationManager), new CorrelationHandler(_correlationManager))
             };
 
         public IObservableChannel BuildChannel(IPAddress targetAddress = null,

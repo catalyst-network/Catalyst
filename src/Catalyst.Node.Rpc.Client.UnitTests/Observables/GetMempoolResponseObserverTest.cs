@@ -101,7 +101,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.Observables
         { 
             var txList = mempoolContent.ToList();
 
-            var response = new MessageFactory().GetMessage(new MessageDto(
+            var response = new ProtocolProtocolMessageFactory().GetMessage(new MessageDto(
                     new GetMempoolResponse
                     {
                         Mempool = {txList}

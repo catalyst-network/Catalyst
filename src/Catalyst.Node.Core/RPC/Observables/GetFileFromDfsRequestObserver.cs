@@ -51,11 +51,11 @@ namespace Catalyst.Node.Core.RPC.Observables
     /// The request handler to get a file from the DFS
     /// </summary>
     /// <seealso cref="IRpcRequestObserver" />
-    public sealed class GetFileFromDfsRequestObserver : ObserverBase<GetFileFromDfsRequest>,
+    public sealed class GetFileFromDfsRequestObserver : ObserverBase,
         IRpcRequestObserver
     {
         /// <summary>The RPC message factory</summary>
-        private readonly IMessageFactory _messageFactory;
+        private readonly IProtocolMessageFactory _protocolMessageFactory;
 
         /// <summary>The upload file transfer factory</summary>
         private readonly IUploadFileTransferFactory _fileTransferFactory;
@@ -70,15 +70,15 @@ namespace Catalyst.Node.Core.RPC.Observables
         /// <param name="dfs">The DFS.</param>
         /// <param name="peerIdentifier">The peer identifier.</param>
         /// <param name="fileTransferFactory">The upload file transfer factory.</param>
-        /// <param name="messageFactory"></param>
+        /// <param name="protocolMessageFactory"></param>
         /// <param name="logger">The logger.</param>
         public GetFileFromDfsRequestObserver(IDfs dfs,
             IPeerIdentifier peerIdentifier,
             IUploadFileTransferFactory fileTransferFactory,
-            IMessageFactory messageFactory,
+            IProtocolMessageFactory protocolMessageFactory,
             ILogger logger) : base(logger)
         {
-            _messageFactory = messageFactory;
+            _protocolMessageFactory = protocolMessageFactory;
             _fileTransferFactory = fileTransferFactory;
             _dfs = dfs;
             _peerIdentifier = peerIdentifier;
@@ -112,7 +112,7 @@ namespace Catalyst.Node.Core.RPC.Observables
                         recipientPeerIdentifier,
                         messageDto.Context.Channel,
                         correlationGuid,
-                        _messageFactory
+                        _protocolMessageFactory
                     );
                     responseCode = _fileTransferFactory.RegisterTransfer(fileTransferInformation);
                 }
@@ -154,7 +154,7 @@ namespace Catalyst.Node.Core.RPC.Observables
             };
 
             // Send Response
-            var responseMessage = _messageFactory.GetMessage(new MessageDto(
+            var responseMessage = _protocolMessageFactory.GetMessage(new MessageDto(
                     response,
                     MessageTypes.Response,
                     recipientIdentifier,

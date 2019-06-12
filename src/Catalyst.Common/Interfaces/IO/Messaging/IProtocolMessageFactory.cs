@@ -29,16 +29,13 @@ using DotNetty.Buffers;
 
 namespace Catalyst.Common.Interfaces.IO.Messaging
 {
-    public interface IMessageFactory
+    public interface IProtocolMessageFactory
     {
         /// <summary>Gets the message.</summary>
         /// <param name="messageDto">The message.</param>
         /// <param name="correlationId">The correlation identifier.</param>
         /// <returns>ProtocolMessage message</returns>
         ProtocolMessage GetMessage(IMessageDto messageDto,
-            Guid correlationId = default);
-        
-        IByteBufferHolder GetDatagramMessage(IMessageDto messageDto,
             Guid correlationId = default);
     }
 }

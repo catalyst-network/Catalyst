@@ -26,7 +26,6 @@ using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Observables;
 using Catalyst.Common.IO.Observables;
 using Catalyst.Protocol.Common;
-using Catalyst.Protocol.Rpc.Node;
 using Serilog;
 
 namespace Catalyst.Node.Rpc.Client.Observables
@@ -36,7 +35,7 @@ namespace Catalyst.Node.Rpc.Client.Observables
     /// </summary>
     /// <seealso cref="IRpcResponseObserver" />
     public class TransferFileBytesResponseObserver
-        : ObserverBase<TransferFileBytesResponse>,
+        : ObserverBase,
             IRpcResponseObserver
     {
         /// <summary>Initializes a new instance of the <see cref="TransferFileBytesResponseObserver"/> class.</summary>

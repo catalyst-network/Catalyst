@@ -50,11 +50,11 @@ namespace Catalyst.Node.Core.RPC.Observables
     /// The request handler to add a file to the DFS
     /// </summary>
     /// <seealso cref="IRpcRequestObserver" />
-    public sealed class AddFileToDfsRequestObserver : ObserverBase<AddFileToDfsRequest>,
+    public sealed class AddFileToDfsRequestObserver : ObserverBase,
         IRpcRequestObserver
     {
         /// <summary>The RPC message factory</summary>
-        private readonly IMessageFactory _messageFactory;
+        private readonly IProtocolMessageFactory _protocolMessageFactory;
 
         /// <summary>The download file transfer factory</summary>
         private readonly IDownloadFileTransferFactory _fileTransferFactory;
@@ -69,15 +69,15 @@ namespace Catalyst.Node.Core.RPC.Observables
         /// <param name="dfs">The DFS.</param>
         /// <param name="peerIdentifier">The peer identifier.</param>
         /// <param name="fileTransferFactory">The download file transfer factory.</param>
-        /// <param name="messageFactory"></param>
+        /// <param name="protocolMessageFactory"></param>
         /// <param name="logger">The logger.</param>
         public AddFileToDfsRequestObserver(IDfs dfs,
             IPeerIdentifier peerIdentifier,
             IDownloadFileTransferFactory fileTransferFactory,
-            IMessageFactory messageFactory,
+            IProtocolMessageFactory protocolMessageFactory,
             ILogger logger) : base(logger)
         {
-            _messageFactory = messageFactory;
+            _protocolMessageFactory = protocolMessageFactory;
             _fileTransferFactory = fileTransferFactory;
             _dfs = dfs;
             _peerIdentifier = peerIdentifier;
@@ -185,7 +185,7 @@ namespace Catalyst.Node.Core.RPC.Observables
             };
 
             // Send Response
-            var responseMessage = _messageFactory.GetMessage(new MessageDto(
+            var responseMessage = _protocolMessageFactory.GetMessage(new MessageDto(
                     response,
                     MessageTypes.Response,
                     fileTransferInformation.RecipientIdentifier,
