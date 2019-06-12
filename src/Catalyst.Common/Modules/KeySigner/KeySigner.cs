@@ -23,8 +23,8 @@
 
 using System;
 using Catalyst.Common.Interfaces.Cryptography;
+using Catalyst.Common.Interfaces.Keystore;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
-using Catalyst.Common.Interfaces.KeyStore;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Types;
 

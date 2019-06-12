@@ -35,7 +35,6 @@ using Catalyst.Common.Interfaces.P2P.Messaging.Gossip;
 using Catalyst.Common.IO.Duplex;
 using Catalyst.Common.IO.Inbound;
 using Catalyst.Common.IO.Inbound.Handlers;
-using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Common.Util;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
 using Catalyst.Protocol.Common;
