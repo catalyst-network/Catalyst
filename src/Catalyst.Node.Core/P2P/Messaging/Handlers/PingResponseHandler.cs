@@ -41,7 +41,7 @@ namespace Catalyst.Node.Core.P2P.Messaging.Handlers
         protected override void Handler(IChanneledMessage<ProtocolMessage> message)
         {
             Logger.Debug("received ping response");
-            var deserialised = message.Payload.FromAnySigned<PingResponse>();
+            var deserialised = message.Payload.FromProtocolMessage<PingResponse>();
         }
     }
 }

@@ -68,7 +68,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
             _reputationByPeerIdentifier = _peerIds.ToDictionary(p => p, p => 0);
             _pendingRequests = _peerIds.Select((p, i) => new PendingRequest
             {
-                Content = new PingRequest().ToAnySigned(senderPeerId, Guid.NewGuid()),
+                Content = new PingRequest().ToProtocolMessage(senderPeerId, Guid.NewGuid()),
                 Recipient = p,
                 SentAt = DateTimeOffset.MinValue.Add(TimeSpan.FromMilliseconds(100 * i))
             }).ToList();
@@ -96,7 +96,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
         [Fact]
         public void TryMatchResponseAsync_should_match_existing_records_with_matching_correlation_id()
         {
-            var responseMatchingIndex1 = new PingResponse().ToAnySigned(
+            var responseMatchingIndex1 = new PingResponse().ToProtocolMessage(
                 _peerIds[1].PeerId,
                 _pendingRequests[1].Content.CorrelationId.ToGuid());
 
@@ -120,7 +120,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
         public void UncorrelatedMessage_should_decrease_reputation()
         {
             var reputationBefore = _reputationByPeerIdentifier[_peerIds[1]];
-            var responseMatchingIndex1 = new PingResponse().ToAnySigned(
+            var responseMatchingIndex1 = new PingResponse().ToProtocolMessage(
                 _peerIds[1].PeerId,
                 Guid.NewGuid());
 
@@ -134,7 +134,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
         {
             var fakeContext = Substitute.For<IChannelHandlerContext>();
             var fakeChannel = Substitute.For<IChannel>();
-            var nonCorrelatedMessage = new PingResponse().ToAnySigned(_peerIds[0].PeerId, Guid.NewGuid());
+            var nonCorrelatedMessage = new PingResponse().ToProtocolMessage(_peerIds[0].PeerId, Guid.NewGuid());
 
             fakeContext.Channel.Returns(fakeChannel);
 
@@ -150,7 +150,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
         [Fact]
         public void TryMatchResponseAsync_should_not_match_existing_records_with_non_matching_correlation_id()
         {
-            var responseMatchingNothing = new PingResponse().ToAnySigned(_peerIds[1].PeerId, Guid.NewGuid());
+            var responseMatchingNothing = new PingResponse().ToProtocolMessage(_peerIds[1].PeerId, Guid.NewGuid());
          
             // var request = _cache.TryMatchResponse<PingRequest, PingResponse>(responseMatchingNothing);
             // request.Should().BeNull();

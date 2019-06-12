@@ -66,7 +66,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
 
             try
             {
-                var deserialised = message.Payload.FromAnySigned<SignMessageRequest>();
+                var deserialised = message.Payload.FromProtocolMessage<SignMessageRequest>();
 
                 Guard.Argument(message).NotNull("The request cannot be null");
 

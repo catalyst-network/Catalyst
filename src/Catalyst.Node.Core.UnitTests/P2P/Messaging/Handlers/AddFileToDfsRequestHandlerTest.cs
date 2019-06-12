@@ -69,7 +69,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Messaging.Handlers
                 Node = "node1",
                 FileName = "Test.dat",
                 FileSize = 10000
-            }.ToAnySigned(sender, Guid.NewGuid());
+            }.ToProtocolMessage(sender, Guid.NewGuid());
             request.SendToHandler(_fakeContext, handler);
 
             Assert.Equal(1, _nodeFileTransferFactory.Keys.Length);

@@ -39,7 +39,7 @@ namespace Catalyst.Common.IO.Inbound.Handlers
 
         protected override void ChannelRead0(IChannelHandlerContext ctx, ProtocolMessage message)
         {
-            if (message.CheckIfMessageIsGossip())
+            if (message.CheckIfMessageIsBroadcast())
             {
                 ctx.FireChannelRead(message);
             }

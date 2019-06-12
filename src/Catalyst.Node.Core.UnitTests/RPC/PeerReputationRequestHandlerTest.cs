@@ -152,7 +152,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC
             var sentResponse = (ProtocolMessage) receivedCalls[0].GetArguments().Single();
             sentResponse.TypeUrl.Should().Be(GetPeerReputationResponse.Descriptor.ShortenedFullName());
 
-            return sentResponse.FromAnySigned<GetPeerReputationResponse>();
+            return sentResponse.FromProtocolMessage<GetPeerReputationResponse>();
         }
     }
 }

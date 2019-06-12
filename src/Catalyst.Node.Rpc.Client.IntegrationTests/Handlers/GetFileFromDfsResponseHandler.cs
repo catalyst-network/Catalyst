@@ -114,7 +114,7 @@ namespace Catalyst.Node.Rpc.Client.IntegrationTests.Handlers
                 {
                     FileSize = (ulong) byteSize,
                     ResponseCode = ByteString.CopyFrom((byte) FileTransferResponseCodes.Successful.Id)
-                }.ToAnySigned(nodePeer.PeerId, correlationGuid);
+                }.ToProtocolMessage(nodePeer.PeerId, correlationGuid);
 
                 getFileResponse.SendToHandler(_fakeContext, getFileFromDfsResponseHandler);
 

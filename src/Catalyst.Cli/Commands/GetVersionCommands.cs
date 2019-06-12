@@ -68,7 +68,7 @@ namespace Catalyst.Cli.Commands
                     _peerIdentifier
                 ));
 
-                node.SendMessage(request.ToAnySigned(_peerIdentifier.PeerId, Guid.NewGuid()));
+                node.SendMessage(request.ToProtocolMessage(_peerIdentifier.PeerId, Guid.NewGuid()));
             }
             catch (Exception e)
             {
