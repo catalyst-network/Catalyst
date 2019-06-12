@@ -22,7 +22,7 @@
 #endregion
 
 using System;
-using Catalyst.Common.IO.Outbound;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Protocol.Common;
 using Google.Protobuf;
 
@@ -47,6 +47,6 @@ namespace Catalyst.Common.Interfaces.IO.Messaging
             where TRequest : class, IMessage<TRequest>
             where TResponse : class, IMessage<TResponse>;
 
-        void AddPendingRequest(PendingRequest pendingRequest);
+        void AddPendingRequest(CorrelatableMessage correlatableMessage);
     }
 }

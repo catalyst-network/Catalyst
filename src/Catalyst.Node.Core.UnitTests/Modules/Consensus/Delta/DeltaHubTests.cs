@@ -21,9 +21,9 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.P2P.Messaging.Gossip;
 using Catalyst.Common.Interfaces.Modules.Consensus.Delta;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.Interfaces.P2P.Messaging.Broadcast;
 using Catalyst.Node.Core.Modules.Consensus.Delta;
 using Catalyst.TestUtils;
 using NSubstitute;
@@ -34,7 +34,7 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Consensus.Delta
 {
     public sealed class DeltaHubTests
     {
-        private readonly IGossipManager _gossipManager;
+        private readonly IBroadcastManager _broadcastManager;
         private readonly ILogger _logger;
         private readonly IPeerIdentifier _peerIdentifier;
         private readonly IDeltaVoter _deltaVoter;
@@ -42,7 +42,7 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Consensus.Delta
 
         public DeltaHubTests()
         {
-            _gossipManager = Substitute.For<IGossipManager>();
+            _broadcastManager = Substitute.For<IBroadcastManager>();
             _logger = Substitute.For<ILogger>();
             _peerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("me");
             _deltaVoter = Substitute.For<IDeltaVoter>();
@@ -52,19 +52,19 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Consensus.Delta
         [Fact]
         public void BroadcastCandidate_should_only_gossip_round_nodes_own_candidate()
         {
-            var hub = new DeltaHub(_gossipManager, _peerIdentifier, _deltaVoter, _deltaElector, _logger);
+            var hub = new DeltaHub(_broadcastManager, _peerIdentifier, _deltaVoter, _deltaElector, _logger);
 
             var notMyCandidate = CandidateDeltaHelper.GetCandidateDelta(
                 producerId: PeerIdHelper.GetPeerId("not me"));
 
             hub.BroadcastCandidate(notMyCandidate);
-            _gossipManager.Received(0).BroadcastAsync(null);
+            _broadcastManager.Received(0).BroadcastAsync(null);
 
             var myCandidate = CandidateDeltaHelper.GetCandidateDelta(
                 producerId: _peerIdentifier.PeerId);
 
             hub.BroadcastCandidate(myCandidate);
-            _gossipManager.Received(1).BroadcastAsync(null);
+            _broadcastManager.Received(1).BroadcastAsync(null);
         }
     }
 }

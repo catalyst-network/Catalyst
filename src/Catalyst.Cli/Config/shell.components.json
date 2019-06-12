@@ -18,10 +18,10 @@
             ]
         },
         {
-            "type": "Catalyst.Common.IO.Outbound.TcpClientChannelFactory, Catalyst.Common",
+            "type": "Catalyst.Common.IO.Transport.Channels.TcpClientChannelFactory, Catalyst.Common",
             "services": [
                 {
-                    "type": "Catalyst.Common.Interfaces.IO.Outbound.ITcpClientChannelFactory, Catalyst.Common"
+                    "type": "Catalyst.Common.Interfaces.IO.Transport.Channels.ITcpClientChannelFactory, Catalyst.Common"
                 }
             ]
         },
@@ -100,98 +100,98 @@
         },
         // Rpc response handlers
         {
-            "type": "Catalyst.Node.Rpc.Client.Handlers.GetInfoResponseHandler, Catalyst.Node.Rpc.Client",
+            "type": "Catalyst.Node.Rpc.Client.Observables.GetInfoResponseObserver, Catalyst.Node.Rpc.Client",
             "services": [
                 {
-                    "type": "Catalyst.Common.Interfaces.IO.Messaging.IRpcResponseHandler, Catalyst.Common"
+                    "type": "Catalyst.Common.Interfaces.IO.Observables.IRpcResponseObserver, Catalyst.Common"
                 }
             ]
         },
         {
-            "type": "Catalyst.Node.Rpc.Client.Handlers.GetMempoolResponseHandler, Catalyst.Node.Rpc.Client",
+            "type": "Catalyst.Node.Rpc.Client.Observables.GetMempoolResponseObserver, Catalyst.Node.Rpc.Client",
             "services": [
                 {
-                    "type": "Catalyst.Common.Interfaces.IO.Messaging.IRpcResponseHandler, Catalyst.Common"
+                    "type": "Catalyst.Common.Interfaces.IO.Observables.IRpcResponseObserver, Catalyst.Common"
                 }
             ]
         },
         {
-            "type": "Catalyst.Node.Rpc.Client.Handlers.GetVersionResponseHandler, Catalyst.Node.Rpc.Client",
+            "type": "Catalyst.Node.Rpc.Client.Observables.GetVersionResponseObserver, Catalyst.Node.Rpc.Client",
             "services": [
                 {
-                    "type": "Catalyst.Common.Interfaces.IO.Messaging.IRpcResponseHandler, Catalyst.Common"
+                    "type": "Catalyst.Common.Interfaces.IO.Observables.IRpcResponseObserver, Catalyst.Common"
                 }
             ]
         },
         {
-            "type": "Catalyst.Node.Rpc.Client.Handlers.SignMessageResponseHandler, Catalyst.Node.Rpc.Client",
+            "type": "Catalyst.Node.Rpc.Client.Observables.SignMessageResponseObserver, Catalyst.Node.Rpc.Client",
             "services": [
                 {
-                    "type": "Catalyst.Common.Interfaces.IO.Messaging.IRpcResponseHandler, Catalyst.Common"
+                    "type": "Catalyst.Common.Interfaces.IO.Observables.IRpcResponseObserver, Catalyst.Common"
                 }
             ]
         },
         {
-            "type": "Catalyst.Node.Rpc.Client.Handlers.VerifyMessageResponseHandler, Catalyst.Node.Rpc.Client",
+            "type": "Catalyst.Node.Rpc.Client.Observables.VerifyMessageResponseObserver, Catalyst.Node.Rpc.Client",
             "services": [
                 {
-                    "type": "Catalyst.Common.Interfaces.IO.Messaging.IRpcResponseHandler, Catalyst.Common"
+                    "type": "Catalyst.Common.Interfaces.IO.Observables.IRpcResponseObserver, Catalyst.Common"
                 }
             ]
         },
         {
-            "type": "Catalyst.Node.Rpc.Client.Handlers.AddFileToDfsResponseHandler, Catalyst.Node.Rpc.Client",
+            "type": "Catalyst.Node.Rpc.Client.Observables.AddFileToDfsResponseObserver, Catalyst.Node.Rpc.Client",
             "services": [
                 {
-                    "type": "Catalyst.Common.Interfaces.IO.Messaging.IRpcResponseHandler, Catalyst.Common"
+                    "type": "Catalyst.Common.Interfaces.IO.Observables.IRpcResponseObserver, Catalyst.Common"
                 }
             ]
         },
         {
-            "type": "Catalyst.Node.Rpc.Client.Handlers.TransferFileBytesResponseHandler, Catalyst.Node.Rpc.Client",
+            "type": "Catalyst.Node.Rpc.Client.Observables.TransferFileBytesResponseObserver, Catalyst.Node.Rpc.Client",
             "services": [
                 {
-                    "type": "Catalyst.Common.Interfaces.IO.Messaging.IRpcResponseHandler, Catalyst.Common"
+                    "type": "Catalyst.Common.Interfaces.IO.Observables.IRpcResponseObserver, Catalyst.Common"
                 }
             ]
         },
         {
-            "type": "Catalyst.Node.Rpc.Client.Handlers.PeerListResponseHandler, Catalyst.Node.Rpc.Client",
+            "type": "Catalyst.Node.Rpc.Client.Observables.PeerListResponseObserver, Catalyst.Node.Rpc.Client",
             "services": [
                 {
-                    "type": "Catalyst.Common.Interfaces.IO.Messaging.IRpcResponseHandler, Catalyst.Common"
+                    "type": "Catalyst.Common.Interfaces.IO.Observables.IRpcResponseObserver, Catalyst.Common"
                 }
             ]
         },
         {
-            "type": "Catalyst.Node.Rpc.Client.Handlers.PeerCountResponseHandler, Catalyst.Node.Rpc.Client",
+            "type": "Catalyst.Node.Rpc.Client.Observables.PeerCountResponseObserver, Catalyst.Node.Rpc.Client",
             "services": [
                 {
-                    "type": "Catalyst.Common.Interfaces.IO.Messaging.IRpcResponseHandler, Catalyst.Common"
+                    "type": "Catalyst.Common.Interfaces.IO.Observables.IRpcResponseObserver, Catalyst.Common"
                 }
             ]
         },
         {
-            "type": "Catalyst.Node.Rpc.Client.Handlers.RemovePeerResponseHandler, Catalyst.Node.Rpc.Client",
+            "type": "Catalyst.Node.Rpc.Client.Observables.RemovePeerResponseObserver, Catalyst.Node.Rpc.Client",
             "services": [
                 {
-                    "type": "Catalyst.Common.Interfaces.IO.Messaging.IRpcResponseHandler, Catalyst.Common"
+                    "type": "Catalyst.Common.Interfaces.IO.Observables.IRpcResponseObserver, Catalyst.Common"
                 }
             ]
         },
         {
-            "type": "Catalyst.Node.Rpc.Client.Handlers.GetFileFromDfsResponseHandler, Catalyst.Node.Rpc.Client",
+            "type": "Catalyst.Node.Rpc.Client.Observables.GetFileFromDfsResponseObserver, Catalyst.Node.Rpc.Client",
             "services": [
                 {
-                    "type": "Catalyst.Common.Interfaces.IO.Messaging.IRpcResponseHandler, Catalyst.Common"
+                    "type": "Catalyst.Common.Interfaces.IO.Observables.IRpcResponseObserver, Catalyst.Common"
                 }
             ]
         },
         {
-            "type": "Catalyst.Node.Rpc.Client.Handlers.TransferFileBytesRequestHandler, Catalyst.Node.Rpc.Client",
+            "type": "Catalyst.Node.Rpc.Client.Observables.TransferFileBytesRequestObserver, Catalyst.Node.Rpc.Client",
             "services": [
                 {
-                    "type": "Catalyst.Common.Interfaces.IO.Messaging.IRpcResponseHandler, Catalyst.Common"
+                    "type": "Catalyst.Common.Interfaces.IO.Observables.IRpcResponseObserver, Catalyst.Common"
                 }
             ]
         },
