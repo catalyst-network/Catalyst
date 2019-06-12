@@ -73,7 +73,7 @@ namespace Catalyst.Cli.Commands
                         Ip = peerIp.ToBytesForRLPEncoding().ToByteString(),
                         Blacklist = blackListFlag
                     },
-                    MessageTypes.Ask,
+                    MessageTypes.Request,
                     new PeerIdentifier(Encoding.ASCII.GetBytes(nodeConfig.PublicKey), nodeConfig.HostAddress,
                         nodeConfig.Port),
                     _peerIdentifier

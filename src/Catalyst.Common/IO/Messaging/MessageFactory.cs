@@ -44,17 +44,17 @@ namespace Catalyst.Common.IO.Messaging
         public ProtocolMessage GetMessage(IMessageDto messageDto,
             Guid correlationId = default)
         {
-            if (messageDto.MessageType == MessageTypes.Ask)
+            if (messageDto.MessageType == MessageTypes.Request)
             {
                 return BuildAskMessage(messageDto);
             }
             
-            if (messageDto.MessageType == MessageTypes.Tell)
+            if (messageDto.MessageType == MessageTypes.Response)
             {
                 return BuildTellMessage(messageDto, correlationId);   
             }
 
-            if (messageDto.MessageType == MessageTypes.Gossip)
+            if (messageDto.MessageType == MessageTypes.Broadcast)
             {
                 return BuildGossipMessage(messageDto);
             }

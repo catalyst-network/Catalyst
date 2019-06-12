@@ -86,7 +86,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC
                 {
                     Query = true
                 },
-                MessageTypes.Ask,
+                MessageTypes.Request,
                 PeerIdentifierHelper.GetPeerIdentifier("recipient"),
                 PeerIdentifierHelper.GetPeerIdentifier("sender")
             ));

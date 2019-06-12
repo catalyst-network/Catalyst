@@ -105,7 +105,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.Handlers
                     {
                         Mempool = {txList}
                     },
-                    MessageTypes.Tell,
+                    MessageTypes.Response,
                     PeerIdentifierHelper.GetPeerIdentifier("recipient_key"),
                     PeerIdentifierHelper.GetPeerIdentifier("sender_key")
                 ),

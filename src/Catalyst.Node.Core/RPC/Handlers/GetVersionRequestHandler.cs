@@ -66,7 +66,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
                         {
                             Version = NodeUtil.GetVersion()
                         },
-                        MessageTypes.Tell,
+                        MessageTypes.Response,
                         new PeerIdentifier(message.Payload.PeerId),
                         _peerIdentifier),
                     message.Payload.CorrelationId.ToGuid());
