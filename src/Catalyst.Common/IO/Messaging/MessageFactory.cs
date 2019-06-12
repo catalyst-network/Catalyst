@@ -46,17 +46,17 @@ namespace Catalyst.Common.IO.Messaging
         {
             if (messageDto.MessageType == MessageTypes.Request)
             {
-                return BuildAskMessage(messageDto);
+                return BuildRequestMessage(messageDto);
             }
             
             if (messageDto.MessageType == MessageTypes.Response)
             {
-                return BuildTellMessage(messageDto, correlationId);   
+                return BuildResponseMessage(messageDto, correlationId);   
             }
 
             if (messageDto.MessageType == MessageTypes.Broadcast)
             {
-                return BuildGossipMessage(messageDto);
+                return BuildBroadcastMessage(messageDto);
             }
 
             throw new ArgumentException();
@@ -76,7 +76,7 @@ namespace Catalyst.Common.IO.Messaging
         /// <param name="dto">The dto.</param>
         /// <param name="correlationId">The correlation identifier.</param>
         /// <returns>ProtocolMessage message</returns>
-        private ProtocolMessage BuildTellMessage(IMessageDto dto, Guid correlationId)
+        private ProtocolMessage BuildResponseMessage(IMessageDto dto, Guid correlationId)
         {
             return correlationId == default
                 ? throw new ArgumentException("Correlation ID cannot be null for a tell message")
@@ -86,7 +86,7 @@ namespace Catalyst.Common.IO.Messaging
         /// <summary>Builds the ask message.</summary>
         /// <param name="dto">The dto.</param>
         /// <returns>ProtocolMessage message</returns>
-        private ProtocolMessage BuildAskMessage(IMessageDto dto)
+        private ProtocolMessage BuildRequestMessage(IMessageDto dto)
         {
             var messageContent = dto.Message.ToProtocolMessage(dto.Sender.PeerId, Guid.NewGuid());
             var correlatableRequest = new CorrelatableMessage
@@ -102,7 +102,7 @@ namespace Catalyst.Common.IO.Messaging
         /// <summary>Builds the gossip message.</summary>
         /// <param name="dto">The dto.</param>
         /// <returns>ProtocolMessage message</returns>
-        private ProtocolMessage BuildGossipMessage(IMessageDto dto)
+        private ProtocolMessage BuildBroadcastMessage(IMessageDto dto)
         {
             return dto.Message.ToProtocolMessage(dto.Sender.PeerId, Guid.NewGuid());
         }

@@ -35,7 +35,7 @@ using Serilog;
 
 namespace Catalyst.Common.IO.Observables
 {
-    public abstract class ObserverBase<TProto> : IObserver, IDisposable where TProto : IMessage
+    public abstract class ObserverBase<TProto> : IMessageObserver, IDisposable where TProto : IMessage
     {
         private IDisposable _messageSubscription;
         protected readonly ILogger Logger;

@@ -46,14 +46,14 @@ using Xunit.Abstractions;
 
 namespace Catalyst.Node.Core.UnitTests.RPC.Observables
 {
-    public sealed class GetInfoRequestObserverTes : ConfigFileBasedTest
+    public sealed class GetInfoRequestObserverTest : ConfigFileBasedTest
     {
         private readonly ILogger _logger;
         private readonly IChannelHandlerContext _fakeContext;
         private readonly IConfigurationRoot _config;
         private readonly IRpcServerSettings _rpcServerSettings;
 
-        public GetInfoRequestObserverTes(ITestOutputHelper output) : base(output)
+        public GetInfoRequestObserverTest(ITestOutputHelper output) : base(output)
         {
             _config = SocketPortHelper.AlterConfigurationToGetUniquePort(new ConfigurationBuilder()
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile))

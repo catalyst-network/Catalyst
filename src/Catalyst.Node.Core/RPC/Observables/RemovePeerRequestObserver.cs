@@ -91,7 +91,7 @@ namespace Catalyst.Node.Core.RPC.Observables
                 Guard.Argument(deserialised).NotNull();
                 
                 var peersToDelete = _peerRepository.GetAll().TakeWhile(peer =>
-                    Ip.To16Bytes(peer.PeerIdentifier.Ip).SequenceEqual(deserialised.PeerIp.ToByteArray()) &&
+                    peer.PeerIdentifier.Ip.To16Bytes().SequenceEqual(deserialised.PeerIp.ToByteArray()) &&
                     (publicKeyIsEmpty || peer.PeerIdentifier.PublicKey.SequenceEqual(deserialised.PublicKey.ToByteArray()))).ToArray();
                 
                 if (peersToDelete.Length > 0)

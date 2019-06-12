@@ -23,5 +23,5 @@
 
 namespace Catalyst.Common.Interfaces.IO.Observables
 {
-    public interface IP2PMessageObserver : IObserver { }
+    public interface IP2PMessageObserver : IMessageObserver { }
 }

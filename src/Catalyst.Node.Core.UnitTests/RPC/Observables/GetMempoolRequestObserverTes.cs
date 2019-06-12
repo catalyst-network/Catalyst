@@ -44,12 +44,12 @@ using Xunit;
 
 namespace Catalyst.Node.Core.UnitTests.RPC.Observables 
 {
-    public sealed class GetMempoolRequestObserverTes
+    public sealed class GetMempoolRequestObserverTest
     {
         private readonly ILogger _logger;
         private readonly IChannelHandlerContext _fakeContext;
 
-        public GetMempoolRequestObserverTes()
+        public GetMempoolRequestObserverTest()
         {
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
@@ -83,7 +83,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
             var mempool = Substitute.For<IMempool>();
             mempool.GetMemPoolContentEncoded().Returns(x =>
                 {
-                    var txEncodedLst = txLst.Select(tx => ConvertorForRLPEncodingExtensions.ToBytesForRLPEncoding((string) tx.ToString())).ToList();
+                    var txEncodedLst = txLst.Select(tx => tx.ToString().ToBytesForRLPEncoding()).ToList();
                     return txEncodedLst;
                 }
             );

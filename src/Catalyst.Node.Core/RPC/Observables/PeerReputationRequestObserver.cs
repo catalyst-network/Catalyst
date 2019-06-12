@@ -76,7 +76,7 @@ namespace Catalyst.Node.Core.RPC.Observables
             var ip = deserialised.Ip.ToStringUtf8();
 
             ReturnResponse(_peerRepository.GetAll().Where(m => m.PeerIdentifier.Ip.ToString() == ip.ToString()
-                 && ConvertorForRLPEncodingExtensions.ToStringFromRLPDecoded(m.PeerIdentifier.PublicKey) == publicKey)
+                 && m.PeerIdentifier.PublicKey.ToStringFromRLPDecoded() == publicKey)
                .Select(x => x.Reputation).DefaultIfEmpty(int.MinValue).First(), messageDto);
 
             Logger.Debug("received message of type PeerReputationRequest");
