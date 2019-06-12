@@ -46,12 +46,16 @@ namespace Catalyst.Common.IO.Outbound
                 new MessageSignerDuplex(new ProtocolMessageVerifyHandler(_keySigner), new ProtocolMessageSignHandler(_keySigner))
             };
 
+        /// <param name="targetAddress"></param>
+        /// <param name="targetPort">Ignored</param>
+        /// <param name="certificate">Ignored</param>
+        /// <returns></returns>
         public IObservableSocket BuildChannel(IPAddress targetAddress = null,
-            int targetPort = 0,
+            int targetPort = IPEndPoint.MinPort,
             X509Certificate2 certificate = null,
             IEventLoopGroup handlerEventLoopGroup = null)
         {
-            return BootStrapChannel(targetAddress, handlerEventLoopGroup: handlerEventLoopGroup);
+            return BootStrapChannel(address: targetAddress, handlerEventLoopGroup: handlerEventLoopGroup);
         }
     }
 }

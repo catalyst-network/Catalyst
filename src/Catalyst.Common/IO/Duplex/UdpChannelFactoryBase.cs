@@ -21,15 +21,14 @@
 
 #endregion
 
+using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Reactive.Linq;
 using Catalyst.Common.Interfaces.IO;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.IO.Inbound;
-using Catalyst.Common.IO.Inbound.Handlers;
 using Catalyst.Protocol.Common;
 using DotNetty.Handlers.Logging;
 using DotNetty.Transport.Channels;
@@ -42,10 +41,11 @@ namespace Catalyst.Common.IO.Duplex
     {
         protected abstract List<IChannelHandler> Handlers { get; }
 
-        protected IObservableSocket BootStrapChannel(IPAddress address = null, int port = 0, IEventLoopGroup handlerEventLoopGroup = null)
+        protected IObservableSocket BootStrapChannel(IObservable<IChanneledMessage<ProtocolMessage>> messageStream = null, 
+            IPAddress address = null,
+            int port = 0,
+            IEventLoopGroup handlerEventLoopGroup = null)
         {
-            var observableServiceHandler = Handlers.Last() as ObservableServiceHandler;
-
             var channelHandler = new InboundChannelInitializerBase<IChannel>(Handlers, handlerEventLoopGroup: handlerEventLoopGroup);
 
             var channel = new Bootstrap()
@@ -58,7 +58,7 @@ namespace Catalyst.Common.IO.Duplex
                .GetAwaiter()
                .GetResult();
 
-            return new ObservableSocket(observableServiceHandler?.MessageStream 
+            return new ObservableSocket(messageStream
              ?? Observable.Never<IChanneledMessage<ProtocolMessage>>(), channel);
         }
     }

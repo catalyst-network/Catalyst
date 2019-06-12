@@ -21,6 +21,7 @@
 
 #endregion
 
+using System;
 using Catalyst.Common.Interfaces.IO.Inbound;
 using DotNetty.Transport.Channels;
 using Serilog;
