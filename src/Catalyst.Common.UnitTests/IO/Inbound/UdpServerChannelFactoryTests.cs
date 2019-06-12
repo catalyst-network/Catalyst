@@ -36,6 +36,9 @@ using Catalyst.Common.IO.Duplex;
 using Catalyst.Common.IO.Inbound;
 using Catalyst.Common.IO.Inbound.Handlers;
 using Catalyst.Common.UnitTests.TestUtils;
+using Catalyst.Common.Util;
+using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
+using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
@@ -93,7 +96,7 @@ namespace Catalyst.Common.UnitTests.IO.Inbound
             handlers[4].Should().BeOfType<ObservableServiceHandler>();
         }
 
-        [Fact(Skip = "Reproduces the invalid message, will fix it soon")]
+        [Fact]
         public async Task UdpServerChannelFactory_should_put_the_correct_handlers_on_the_pipeline()
         {
             var testingChannel = new EmbeddedChannel("test".ToChannelId(),
@@ -102,7 +105,18 @@ namespace Catalyst.Common.UnitTests.IO.Inbound
             var senderId = PeerIdHelper.GetPeerId("sender");
             var correlationId = Guid.NewGuid();
             var protocolMessage = new PingRequest().ToProtocolMessage(senderId, correlationId);
-            var datagram = protocolMessage.ToDatagram(new IPEndPoint(IPAddress.Loopback, 0));
+            var signature = ByteUtil.GenerateRandomByteArray(64);
+
+            var signedMessage = new ProtocolMessageSigned
+            {
+                Message = protocolMessage,
+                Signature = signature.ToByteString()
+            };
+
+            _keySigner.Verify(Arg.Any<IPublicKey>(), Arg.Any<byte[]>(), Arg.Any<ISignature>())
+               .Returns(true);
+
+            var datagram = signedMessage.ToDatagram(new IPEndPoint(IPAddress.Loopback, 0));
 
             var observer = new ProtocolMessageObserver(0, Substitute.For<ILogger>());
            
@@ -110,9 +124,9 @@ namespace Catalyst.Common.UnitTests.IO.Inbound
             using (messageStream.Subscribe(observer))
             {
                 testingChannel.WriteInbound(datagram);
-                _correlationManager.DidNotReceiveWithAnyArgs().TryMatchResponse(null);
+                _correlationManager.Received(1).TryMatchResponse(protocolMessage);
                 await _gossipManager.DidNotReceiveWithAnyArgs().BroadcastAsync(null);
-                _keySigner.DidNotReceiveWithAnyArgs().Verify(null, null, null);
+                _keySigner.ReceivedWithAnyArgs(1).Verify(null, null, null);
 
                 await messageStream.WaitForItemsOnDelayedStreamOnTaskPoolScheduler();
 
