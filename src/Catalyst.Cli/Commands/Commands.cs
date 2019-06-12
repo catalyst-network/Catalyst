@@ -56,7 +56,6 @@ namespace Catalyst.Cli.Commands
         private readonly IUploadFileTransferFactory _uploadFileTransferFactory;
         private readonly ILogger _logger;
         private readonly IUserOutput _userOutput;
-        private readonly IAppLoggingLevelSwitch _loggingLevelSwitch;
         private readonly IMessageFactory _messageFactory;
 
         /// <summary>
@@ -68,7 +67,6 @@ namespace Catalyst.Cli.Commands
             ICertificateStore certificateStore,
             IDownloadFileTransferFactory downloadFileTransferFactory,
             IUploadFileTransferFactory uploadFileTransferFactory,
-            IAppLoggingLevelSwitch loggingLevelSwitch,
             IUserOutput userOutput) : base(userOutput)
         {
             _messageFactory = messageFactory;
@@ -81,7 +79,6 @@ namespace Catalyst.Cli.Commands
             _uploadFileTransferFactory = uploadFileTransferFactory;
             _peerIdentifier = PeerIdentifier.BuildPeerIdFromConfig(config);
             _userOutput = userOutput;
-            _loggingLevelSwitch = loggingLevelSwitch;
             _userOutput.WriteLine(@"Koopa Shell Start");
         }
 

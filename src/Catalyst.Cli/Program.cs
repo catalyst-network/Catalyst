@@ -99,10 +99,7 @@ namespace Catalyst.Cli
                 containerBuilder.RegisterModule(configurationModule);
 
                 var loggerConfiguration = new LoggerConfiguration();
-                IAppLoggingLevelSwitch loggingSwitch = new AppLoggingLevelSwitch(config, loggerConfiguration);
-
                 loggerConfiguration.ReadFrom.Configuration(configurationModule.Configuration);
-                loggerConfiguration.MinimumLevel.ControlledBy(loggingSwitch.LoggingLevelSwitch);
 
                 _logger = loggerConfiguration.WriteTo
                    .File(Path.Combine(targetConfigFolder, LogFileName),
@@ -112,7 +109,6 @@ namespace Catalyst.Cli
                    .CreateLogger().ForContext(DeclaringType);
 
                 containerBuilder.RegisterLogger(_logger);
-                containerBuilder.RegisterInstance(loggingSwitch);
                 containerBuilder.RegisterInstance(config);
 
                 var container = containerBuilder.Build();
