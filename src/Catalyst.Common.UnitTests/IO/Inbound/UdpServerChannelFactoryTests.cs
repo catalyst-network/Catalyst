@@ -91,8 +91,8 @@ namespace Catalyst.Common.UnitTests.IO.Inbound
             var handlers = _factory.InheritedHandlers.ToArray();
             handlers[0].Should().BeOfType<ProtoDatagramHandler>();
             handlers[1].Should().BeOfType<MessageSignerDuplex>();
-            handlers[2].Should().BeOfType<GossipHandler>();
-            handlers[3].Should().BeOfType<CorrelationHandler>();
+            handlers[2].Should().BeOfType<CorrelationHandler>();
+            handlers[3].Should().BeOfType<GossipHandler>();
             handlers[4].Should().BeOfType<ObservableServiceHandler>();
         }
 

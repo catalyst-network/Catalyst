@@ -74,8 +74,8 @@ namespace Catalyst.Common.IO.Inbound
             {
                 new ProtoDatagramHandler(),
                 new MessageSignerDuplex(new ProtocolMessageVerifyHandler(_keySigner), new ProtocolMessageSignHandler(_keySigner)),
-                new GossipHandler(_gossipManager),
                 new CorrelationHandler(_messageCorrelationManager),
+                new GossipHandler(_gossipManager),
                 _observableServiceHandler
             });
     }
