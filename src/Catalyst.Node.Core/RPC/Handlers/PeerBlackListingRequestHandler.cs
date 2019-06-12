@@ -67,7 +67,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
         {
             _message = message;
 
-            var deserialised = message.Payload.FromAnySigned<SetPeerBlackListRequest>();
+            var deserialised = message.Payload.FromProtocolMessage<SetPeerBlackListRequest>();
             var publicKey = deserialised.PublicKey.ToStringUtf8(); 
             var ip = deserialised.Ip.ToStringUtf8();
             var blackList = deserialised.Blacklist;
@@ -104,7 +104,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
                 PublicKey = publicKey
             };
 
-            var anySignedResponse = response.ToAnySigned(_peerId, _message.Payload.CorrelationId.ToGuid());
+            var anySignedResponse = response.ToProtocolMessage(_peerId, _message.Payload.CorrelationId.ToGuid());
 
             message.Context.Channel.WriteAndFlushAsync(anySignedResponse).GetAwaiter().GetResult();
         }

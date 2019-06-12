@@ -109,7 +109,7 @@ namespace Catalyst.Node.Core.P2P
         private void PingSubscriptionHandler(IChanneledMessage<ProtocolMessage> message)
         {
             Logger.Information("processing ping message stream");
-            var pingResponse = message.Payload.FromAnySigned<PingResponse>();
+            var pingResponse = message.Payload.FromProtocolMessage<PingResponse>();
             PeerRepository.Add(new Peer
             {
                 LastSeen = DateTime.Now,
@@ -123,7 +123,7 @@ namespace Catalyst.Node.Core.P2P
         public void PeerNeighbourSubscriptionHandler(IChanneledMessage<ProtocolMessage> message)
         {
             Logger.Information("processing peer neighbour message stream");
-            var peerNeighborsResponse = message.Payload.FromAnySigned<PeerNeighborsResponse>();
+            var peerNeighborsResponse = message.Payload.FromProtocolMessage<PeerNeighborsResponse>();
         }
 
         private async Task PeerCrawler()

@@ -67,7 +67,7 @@ namespace Catalyst.Node.Rpc.Client.Handlers
 
             try
             {
-                var deserialised = message.Payload.FromAnySigned<GetPeerListResponse>();
+                var deserialised = message.Payload.FromProtocolMessage<GetPeerListResponse>();
                 var result = string.Join(", ", deserialised.Peers);
                 _output.WriteLine(result);
             }

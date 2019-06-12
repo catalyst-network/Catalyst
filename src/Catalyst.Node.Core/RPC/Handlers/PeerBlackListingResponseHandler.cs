@@ -67,7 +67,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
 
             try
             {
-                var deserialised = message.Payload.FromAnySigned<SetPeerBlackListResponse>();
+                var deserialised = message.Payload.FromProtocolMessage<SetPeerBlackListResponse>();
 
                 var msg = deserialised.PublicKey.ToStringUtf8() == string.Empty
                     ? "Peer not found"

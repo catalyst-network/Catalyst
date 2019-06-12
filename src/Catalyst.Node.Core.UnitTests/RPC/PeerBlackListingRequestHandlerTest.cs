@@ -159,7 +159,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC
             var sentResponse = (ProtocolMessage) receivedCalls[0].GetArguments().Single();
             sentResponse.TypeUrl.Should().Be(SetPeerBlackListResponse.Descriptor.ShortenedFullName());
 
-            return sentResponse.FromAnySigned<SetPeerBlackListResponse>();
+            return sentResponse.FromProtocolMessage<SetPeerBlackListResponse>();
         }
     }
 }

@@ -76,7 +76,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.Handlers
             {
                 FileSize = 10,
                 ResponseCode = ByteString.CopyFrom((byte) FileTransferResponseCodes.Error.Id)
-            }.ToAnySigned(PeerIdHelper.GetPeerId("Test"), guid);
+            }.ToProtocolMessage(PeerIdHelper.GetPeerId("Test"), guid);
             getFileResponse.SendToHandler(_fakeContext, getFileFromDfsResponseHandler);
 
             fakeFileTransfer.Received(1).Expire();
