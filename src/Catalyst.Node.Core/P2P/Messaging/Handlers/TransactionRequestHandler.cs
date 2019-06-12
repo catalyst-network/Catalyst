@@ -41,7 +41,7 @@ namespace Catalyst.Node.Core.P2P.Messaging.Handlers
         protected override void Handler(IChanneledMessage<ProtocolMessage> message)
         {
             Logger.Debug("received pong");
-            var deserialised = message.Payload.FromAnySigned<TransactionBroadcast>();
+            var deserialised = message.Payload.FromProtocolMessage<TransactionBroadcast>();
             Logger.Debug("transaction pong is {0}", deserialised.Signature);
         }
     }

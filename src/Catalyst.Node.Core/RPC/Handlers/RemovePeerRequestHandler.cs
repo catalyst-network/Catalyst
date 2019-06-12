@@ -82,7 +82,7 @@ namespace Catalyst.Node.Core.RPC.Handlers
             {
                 UInt32 peerDeletedCount = 0;
 
-                var deserialised = message.Payload.FromAnySigned<RemovePeerRequest>();
+                var deserialised = message.Payload.FromProtocolMessage<RemovePeerRequest>();
                 var publicKeyIsEmpty = deserialised.PublicKey.IsEmpty;
 
                 Guard.Argument(deserialised).NotNull();

@@ -115,7 +115,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC
             var sentResponse = (ProtocolMessage) receivedCalls[0].GetArguments().Single();
             sentResponse.TypeUrl.Should().Be(GetPeerCountResponse.Descriptor.ShortenedFullName());
 
-            var responseContent = sentResponse.FromAnySigned<GetPeerCountResponse>();
+            var responseContent = sentResponse.FromProtocolMessage<GetPeerCountResponse>();
 
             responseContent.PeerCount.Should().Be(fakePeers);
         }

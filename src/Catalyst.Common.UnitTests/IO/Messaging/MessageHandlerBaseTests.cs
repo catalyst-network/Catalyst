@@ -61,7 +61,7 @@ namespace Catalyst.Common.UnitTests.IO.Messaging
             _responseMessages = Enumerable.Range(0, 10).Select(i =>
             {
                 var message = new GetInfoResponse {Query = i.ToString()};
-                return message.ToAnySigned(
+                return message.ToProtocolMessage(
                     PeerIdentifierHelper.GetPeerIdentifier(i.ToString()).PeerId,
                     Guid.NewGuid());
             }).ToArray();
@@ -89,7 +89,7 @@ namespace Catalyst.Common.UnitTests.IO.Messaging
 
             foreach (var payload in _responseMessages)
             {
-                if (payload.FromAnySigned<GetInfoResponse>().Query == 5.ToString())
+                if (payload.FromProtocolMessage<GetInfoResponse>().Query == 5.ToString())
                 {
                     erroringStream.OnError(new DataMisalignedException("5 erred"));
                 }
@@ -107,11 +107,11 @@ namespace Catalyst.Common.UnitTests.IO.Messaging
         [Fact]
         public async Task MessageHandler_should_not_receive_messages_of_the_wrong_type()
         {
-            _responseMessages[3] = new PingResponse().ToAnySigned(
+            _responseMessages[3] = new PingResponse().ToProtocolMessage(
                 _responseMessages[3].PeerId, 
                 _responseMessages[3].CorrelationId.ToGuid());
 
-            _responseMessages[7] = new PingRequest().ToAnySigned(
+            _responseMessages[7] = new PingRequest().ToProtocolMessage(
                 _responseMessages[7].PeerId,
                 _responseMessages[7].CorrelationId.ToGuid());
 

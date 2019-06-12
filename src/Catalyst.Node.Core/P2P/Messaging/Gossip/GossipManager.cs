@@ -84,7 +84,7 @@ namespace Catalyst.Node.Core.P2P.Messaging.Gossip
         /// <inheritdoc/>
         public async Task BroadcastAsync(ProtocolMessage protocolMessage)
         {
-            if (protocolMessage.CheckIfMessageIsGossip())
+            if (protocolMessage.CheckIfMessageIsBroadcast())
             {
                 throw new NotSupportedException("Cannot broadcast a message which is already a gossip type");
             }
@@ -104,7 +104,7 @@ namespace Catalyst.Node.Core.P2P.Messaging.Gossip
         /// <inheritdoc/>
         public async Task ReceiveAsync(ProtocolMessage protocolMessage)
         {
-            if (!protocolMessage.CheckIfMessageIsGossip())
+            if (!protocolMessage.CheckIfMessageIsBroadcast())
             {
                 throw new NotSupportedException("The Message is not a gossip type");
             }

@@ -68,7 +68,7 @@ namespace Catalyst.Node.Rpc.Client.Handlers
             
             try
             {
-                var deserialised = message.Payload.FromAnySigned<GetInfoResponse>();
+                var deserialised = message.Payload.FromProtocolMessage<GetInfoResponse>();
                 
                 Guard.Argument(deserialised).NotNull().Require(d => d.Query != null, d => $"{nameof(deserialised)} must have a valid configuration response.");
                 

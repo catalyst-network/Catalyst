@@ -80,7 +80,7 @@ namespace Catalyst.Common.IO.Messaging
         {
             return correlationId == default
                 ? throw new ArgumentException("Correlation ID cannot be null for a tell message")
-                : dto.Message.ToAnySigned(dto.Sender.PeerId, correlationId);
+                : dto.Message.ToProtocolMessage(dto.Sender.PeerId, correlationId);
         }
 
         /// <summary>Builds the ask message.</summary>
@@ -88,7 +88,7 @@ namespace Catalyst.Common.IO.Messaging
         /// <returns>ProtocolMessage message</returns>
         private ProtocolMessage BuildAskMessage(IMessageDto dto)
         {
-            var messageContent = dto.Message.ToAnySigned(dto.Sender.PeerId, Guid.NewGuid());
+            var messageContent = dto.Message.ToProtocolMessage(dto.Sender.PeerId, Guid.NewGuid());
             var correlatableRequest = new PendingRequest
             {
                 Content = messageContent,
@@ -104,7 +104,7 @@ namespace Catalyst.Common.IO.Messaging
         /// <returns>ProtocolMessage message</returns>
         private ProtocolMessage BuildGossipMessage(IMessageDto dto)
         {
-            return dto.Message.ToAnySigned(dto.Sender.PeerId, Guid.NewGuid());
+            return dto.Message.ToProtocolMessage(dto.Sender.PeerId, Guid.NewGuid());
         }
     }
 }
