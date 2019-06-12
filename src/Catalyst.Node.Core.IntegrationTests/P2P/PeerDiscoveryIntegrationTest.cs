@@ -33,7 +33,6 @@ using Catalyst.Common.Interfaces.Network;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.Network;
-using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Node.Core.P2P;
 using Catalyst.Protocol.IPPN;
 using Catalyst.TestUtils;
@@ -53,7 +52,7 @@ using Peer = Catalyst.Common.P2P.Peer;
 
 namespace Catalyst.Node.Core.IntegrationTests.P2P
 {
-    public sealed class PeerDiscoveryntergrationTest : ConfigFileBasedTest
+    public sealed class PeerDiscoveryIntegrationTest : ConfigFileBasedTest
     {
         private readonly IConfigurationRoot _config;
         private readonly IDns _dns;
@@ -63,7 +62,7 @@ namespace Catalyst.Node.Core.IntegrationTests.P2P
         private readonly List<string> _dnsDomains;
         private readonly string _seedPid;
 
-        public PeerDiscoveryntergrationTest(ITestOutputHelper output) : base(output)
+        public PeerDiscoveryIntegrationTest(ITestOutputHelper output) : base(output)
         {
             _peerRepository = Substitute.For<IRepository<Peer>>();
             _logger = Substitute.For<ILogger>();

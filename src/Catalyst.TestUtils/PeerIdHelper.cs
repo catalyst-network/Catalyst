@@ -1,4 +1,4 @@
-﻿#region LICENSE
+#region LICENSE
 
 /**
 * Copyright (c) 2019 Catalyst Network
@@ -30,7 +30,7 @@ using Catalyst.Common.Network;
 using Catalyst.Common.Util;
 using Catalyst.Protocol.Common;
 
-namespace Catalyst.Common.UnitTests.TestUtils
+namespace Catalyst.TestUtils
 {
     public static class PeerIdHelper
     {

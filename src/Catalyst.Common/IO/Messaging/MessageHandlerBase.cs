@@ -63,7 +63,7 @@ namespace Catalyst.Common.IO.Messaging
         
         public void HandleMessage(IChanneledMessage<ProtocolMessage> message)
         {
-            Logger.Debug("Pre Handle Message Called");
+            Logger.Verbose("Pre Handle Message Called");
             Handler(message);
         }
 

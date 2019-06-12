@@ -28,7 +28,7 @@ using System.Net;
 using System.Security.Cryptography.X509Certificates;
 using Autofac;
 using Catalyst.Common.Interfaces.Rpc;
-using Catalyst.Common.UnitTests.TestUtils;
+using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using Microsoft.Extensions.Configuration;
 using NSubstitute;
@@ -54,7 +54,7 @@ namespace Catalyst.Cli.IntegrationTests.Commands
                 new object[] {"/fake_file_hash", AppDomain.CurrentDomain.BaseDirectory + "/Config/addfile_test.json", true}
             };
 
-        public CliCommandTestBase(ITestOutputHelper output) : base(output)
+        protected CliCommandTestBase(ITestOutputHelper output) : base(output)
         {
             var config = new ConfigurationBuilder()
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ShellComponentsJsonConfigFile))
