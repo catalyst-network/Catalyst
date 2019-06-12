@@ -38,7 +38,7 @@ using Xunit;
 
 namespace Catalyst.Node.Rpc.Client.UnitTests.Observables
 {
-    public sealed class VerifyMessageResponseObserverTest : IDisposable
+    public sealed class VerifyMessageResponseObserverTests : IDisposable
     {
         private readonly ILogger _logger;
         private readonly IChannelHandlerContext _fakeContext;
@@ -48,7 +48,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.Observables
 
         private VerifyMessageResponseObserver _observer;
 
-        static VerifyMessageResponseObserverTest()
+        static VerifyMessageResponseObserverTests()
         {
             QueryContents = new List<object[]>
             {
@@ -63,7 +63,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.Observables
             };
         }
 
-        public VerifyMessageResponseObserverTest()
+        public VerifyMessageResponseObserverTests()
         {
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();

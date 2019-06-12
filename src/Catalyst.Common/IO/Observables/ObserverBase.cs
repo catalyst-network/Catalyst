@@ -26,7 +26,6 @@ using System.Data;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using Catalyst.Common.Extensions;
-using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Observables;
 using Catalyst.Common.Util;
@@ -80,7 +79,7 @@ namespace Catalyst.Common.IO.Observables
 
         protected abstract void Handler(IProtocolMessageDto<ProtocolMessage> messageDto);
 
-        private void Dispose(bool disposing)
+        protected void Dispose(bool disposing)
         {
             if (disposing)
             {

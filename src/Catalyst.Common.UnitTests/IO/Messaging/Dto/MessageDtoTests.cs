@@ -33,11 +33,11 @@ using Xunit;
 
 namespace Catalyst.Common.UnitTests.IO.Messaging.Dto
 {
-    public sealed class MessageDtoTest
+    public sealed class MessageDtoTests
     {
         private readonly MessageDto _messageDto;
 
-        public MessageDtoTest()
+        public MessageDtoTests()
         {
             var peerIdentifier = Substitute.For<IPeerIdentifier>();
             var pingRequest = Substitute.For<IMessage<PingRequest>>();
