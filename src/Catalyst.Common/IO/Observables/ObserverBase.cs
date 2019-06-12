@@ -64,7 +64,7 @@ namespace Catalyst.Common.IO.Observables
         
         public void HandleMessage(IProtocolMessageDto<ProtocolMessage> messageDto)
         {
-            Logger.Debug("Pre Handle Message Called");
+            Logger.Verbose("Pre Handle Message Called");
             Handler(messageDto);
         }
 

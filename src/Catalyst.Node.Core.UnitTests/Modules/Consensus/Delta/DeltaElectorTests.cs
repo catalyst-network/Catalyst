@@ -22,7 +22,6 @@
 #endregion
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Linq;
@@ -32,10 +31,8 @@ using Catalyst.Node.Core.Modules.Consensus.Delta;
 using Catalyst.Protocol.Delta;
 using Catalyst.TestUtils;
 using FluentAssertions;
-using FluentAssertions.Common;
 using Microsoft.Extensions.Caching.Memory;
 using NSubstitute;
-using PeerTalk.PubSub;
 using Serilog;
 using Xunit;
 

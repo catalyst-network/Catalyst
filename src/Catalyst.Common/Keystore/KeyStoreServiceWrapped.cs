@@ -21,11 +21,11 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.KeyStore;
+using Catalyst.Common.Interfaces.Keystore;
 using Dawn;
 using Nethereum.KeyStore;
 
-namespace Catalyst.Common.KeyStore
+namespace Catalyst.Common.Keystore
 {
     public sealed class KeyStoreServiceWrapped : IKeyStoreService
     {

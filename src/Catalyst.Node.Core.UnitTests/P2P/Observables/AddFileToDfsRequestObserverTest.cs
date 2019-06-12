@@ -35,6 +35,8 @@ using DotNetty.Transport.Channels;
 using Ipfs.CoreApi;
 using NSubstitute;
 using Serilog;
+using System;
+using Ipfs.CoreApi;
 using Xunit;
 
 namespace Catalyst.Node.Core.UnitTests.P2P.Observables

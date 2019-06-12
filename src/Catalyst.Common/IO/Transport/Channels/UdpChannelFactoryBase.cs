@@ -21,8 +21,8 @@
 
 #endregion
 
+using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Reactive.Linq;
@@ -44,10 +44,10 @@ namespace Catalyst.Common.IO.Transport.Channels
     {
         protected abstract List<IChannelHandler> Handlers { get; }
 
-        protected IObservableChannel BootStrapChannel(IPAddress address = null, int port = 0)
+        protected IObservableChannel BootStrapChannel(IObservable<IProtocolMessageDto<ProtocolMessage>> messageStream = null, 
+            IPAddress address = null,
+            int port = 0)
         {
-            var observableServiceHandler = Handlers.Last() as ObservableServiceHandler;
-
             var channelHandler = new ServerChannelInitializerBase<IChannel>(Handlers);
 
             var channel = new Bootstrap()
@@ -60,7 +60,7 @@ namespace Catalyst.Common.IO.Transport.Channels
                .GetAwaiter()
                .GetResult();
 
-            return new ObservableChannel(observableServiceHandler?.MessageStream 
+            return new ObservableChannel(messageStream
              ?? Observable.Never<IProtocolMessageDto<ProtocolMessage>>(), channel);
         }
     }
