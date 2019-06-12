@@ -23,10 +23,10 @@
 
 using Catalyst.Common.Cryptography;
 using Catalyst.Common.Interfaces.Cryptography;
-using Catalyst.Common.Interfaces.KeyStore;
-using Catalyst.Common.KeyStore;
-using Catalyst.Common.UnitTests.TestUtils;
+using Catalyst.Common.Interfaces.Keystore;
+using Catalyst.Common.Keystore;
 using Catalyst.Common.Util;
+using Catalyst.TestUtils;
 using Multiformats.Hash.Algorithms;
 using Nethereum.Hex.HexConvertors.Extensions;
 using NSubstitute;

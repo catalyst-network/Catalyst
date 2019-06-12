@@ -25,7 +25,7 @@ using System.Linq;
 using System.Security;
 using Catalyst.Common.Interfaces.Cryptography;
 
-namespace Catalyst.Common.UnitTests.TestUtils
+namespace Catalyst.TestUtils
 {
     public sealed class TestPasswordReader : IPasswordReader
     {

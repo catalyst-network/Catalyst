@@ -1,4 +1,4 @@
-﻿#region LICENSE
+#region LICENSE
 
 /**
 * Copyright (c) 2019 Catalyst Network
@@ -27,7 +27,7 @@ using System.Text;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.P2P;
 
-namespace Catalyst.Common.UnitTests.TestUtils
+namespace Catalyst.TestUtils
 {
     public static class PeerIdentifierHelper
     {

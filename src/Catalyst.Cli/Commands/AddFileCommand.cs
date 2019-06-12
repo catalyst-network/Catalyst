@@ -97,10 +97,6 @@ namespace Catalyst.Cli.Commands
 
             node.SendMessage(requestMessage);
 
-            var originalLogLevel = Program.LogLevelSwitch.MinimumLevel;
-            
-            Program.LogLevelSwitch.MinimumLevel = LogEventLevel.Error;
-
             while (!fileTransfer.ChunkIndicatorsTrue() && !fileTransfer.IsExpired())
             {
                 _userOutput.Write($"\rUploaded: {fileTransfer.GetPercentage().ToString()}%");
@@ -116,7 +112,6 @@ namespace Catalyst.Cli.Commands
                 _userOutput.WriteLine("\nFile transfer expired.");
             }
 
-            Program.LogLevelSwitch.MinimumLevel = originalLogLevel;
             return true;
         }
     }

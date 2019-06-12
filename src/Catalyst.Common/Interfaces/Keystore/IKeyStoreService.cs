@@ -21,7 +21,7 @@
 
 #endregion
 
-namespace Catalyst.Common.Interfaces.KeyStore
+namespace Catalyst.Common.Interfaces.Keystore
 {
     public interface IKeyStoreService
     {

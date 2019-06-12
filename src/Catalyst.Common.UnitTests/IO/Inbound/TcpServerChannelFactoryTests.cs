@@ -33,7 +33,6 @@ using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Duplex;
 using Catalyst.Common.IO.Inbound;
 using Catalyst.Common.IO.Inbound.Handlers;
-using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Protocol.IPPN;
 using Catalyst.TestUtils;
 using DotNetty.Codecs.Protobuf;

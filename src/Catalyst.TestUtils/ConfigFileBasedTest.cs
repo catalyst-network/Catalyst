@@ -33,7 +33,7 @@ using SharpRepository.Ioc.Autofac;
 using SharpRepository.Repository;
 using Xunit.Abstractions;
 
-namespace Catalyst.Common.UnitTests.TestUtils
+namespace Catalyst.TestUtils
 {
     public class ConfigFileBasedTest : FileSystemBasedTest
     {
@@ -68,10 +68,9 @@ namespace Catalyst.Common.UnitTests.TestUtils
         }
 
         private void ConfigureLogging(IConfigurationRoot config, bool writeLogsToTestOutput, bool writeLogsToFile)
-
         {
             var loggerConfiguration = new LoggerConfiguration().ReadFrom.Configuration(config).MinimumLevel.Verbose();
-
+            
             if (writeLogsToTestOutput)
             {
                 loggerConfiguration.WriteTo.TestOutput(Output, LogEventLevel, LogOutputTemplate);
