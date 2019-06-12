@@ -1,4 +1,3 @@
-
 #region LICENSE
 
 /**
@@ -23,6 +22,7 @@
 #endregion
 
 using System;
+using System.Net;
 using Catalyst.Node.Core.P2P;
 using Catalyst.Common.IO.Outbound;
 using NSubstitute;
@@ -38,7 +38,7 @@ namespace Catalyst.Node.Core.IntegrationTests.P2P
         }
 
         public void Dispose()
-        {
+        { 
             UniversalPeerClient.Dispose();
         }
 
