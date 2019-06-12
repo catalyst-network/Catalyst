@@ -25,7 +25,7 @@ using System;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Modules.Consensus.Delta;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.Interfaces.P2P.Messaging.Gossip;
+using Catalyst.Common.Interfaces.P2P.Messaging.Broadcast;
 using Catalyst.Common.Protocol;
 using Catalyst.Protocol.Delta;
 using Dawn;
@@ -38,7 +38,7 @@ namespace Catalyst.Node.Core.Modules.Consensus.Delta
     /// <inheritdoc cref="IDisposable" />
     public class DeltaHub : IDeltaHub, IDisposable
     {
-        private readonly IGossipManager _gossipManager;
+        private readonly IBroadcastManager _broadcastManager;
         private readonly IPeerIdentifier _peerIdentifier;
         private readonly IDeltaVoter _deltaVoter;
         private readonly IDeltaElector _deltaElector;
@@ -46,13 +46,13 @@ namespace Catalyst.Node.Core.Modules.Consensus.Delta
         private IDisposable _incomingCandidateSubscription;
         private IDisposable _incomingFavouriteCandidateSubscription;
 
-        public DeltaHub(IGossipManager gossipManager,
+        public DeltaHub(IBroadcastManager broadcastManager,
             IPeerIdentifier peerIdentifier,
             IDeltaVoter deltaVoter,
             IDeltaElector deltaElector,
             ILogger logger)
         {
-            _gossipManager = gossipManager;
+            _broadcastManager = broadcastManager;
             _peerIdentifier = peerIdentifier;
             _deltaVoter = deltaVoter;
             _deltaElector = deltaElector;
@@ -73,7 +73,7 @@ namespace Catalyst.Node.Core.Modules.Consensus.Delta
             }
 
             var protocolMessage = candidate.ToProtocolMessage(_peerIdentifier.PeerId, Guid.NewGuid());
-            _gossipManager.BroadcastAsync(null);
+            _broadcastManager.BroadcastAsync(null);
 
             _logger.Debug("Started gossiping candidate {0}", candidate);
         }
@@ -90,7 +90,7 @@ namespace Catalyst.Node.Core.Modules.Consensus.Delta
                 }
 
                 // https://github.com/catalyst-network/Catalyst.Node/pull/448
-                _gossipManager.BroadcastAsync(null);
+                _broadcastManager.BroadcastAsync(null);
             }
         }
 

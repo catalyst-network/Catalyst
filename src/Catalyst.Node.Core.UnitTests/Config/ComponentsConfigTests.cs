@@ -28,8 +28,10 @@ using Autofac;
 using Autofac.Configuration;
 using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.IO.Messaging;
+using Catalyst.Common.Interfaces.IO.Observables;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Node.Core.P2P.Messaging.Handlers;
+using Catalyst.Common.IO.Observables;
+using Catalyst.Node.Core.P2P.Observables;
 using FluentAssertions;
 using Microsoft.Extensions.Configuration;
 using Nethereum.RLP;
@@ -94,13 +96,13 @@ namespace Catalyst.Node.Core.UnitTests.Config
         {
             var container = ConfigureAndBuildContainer(_componentsConfig);
 
-            var handlers = container.Resolve<IEnumerable<IP2PMessageHandler>>();
+            var handlers = container.Resolve<IEnumerable<IP2PMessageObserver>>();
             handlers.Select(h => h.GetType()).Should().BeEquivalentTo(
-                typeof(PingRequestHandler),
-                typeof(PingResponseHandler),
-                typeof(GetNeighbourRequestHandler),
-                typeof(GetNeighbourResponseHandler),
-                typeof(TransactionRequestHandler)
+                typeof(PingRequestObserver),
+                typeof(PingResponseObserver),
+                typeof(GetNeighbourRequestObserver),
+                typeof(GetNeighbourResponseObserver),
+                typeof(TransactionBroadcastObserver)
             );
         }
     }

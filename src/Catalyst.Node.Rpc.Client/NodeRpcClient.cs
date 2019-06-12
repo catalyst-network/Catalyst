@@ -26,10 +26,12 @@ using System.Linq;
 using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
 using Catalyst.Common.Interfaces.IO.Messaging;
-using Catalyst.Common.Interfaces.IO.Outbound;
-using Catalyst.Common.IO.Outbound;
+using Catalyst.Common.Interfaces.IO.Observables;
+using Catalyst.Common.Interfaces.IO.Transport;
+using Catalyst.Common.Interfaces.IO.Transport.Channels;
 using Catalyst.Common.Network;
 using Catalyst.Common.Interfaces.Rpc;
+using Catalyst.Common.IO.Transport;
 using Catalyst.Protocol.Common;
 using DotNetty.Codecs.Protobuf;
 using DotNetty.Transport.Channels;
@@ -54,7 +56,7 @@ namespace Catalyst.Node.Rpc.Client
         public NodeRpcClient(ITcpClientChannelFactory channelFactory,
             X509Certificate2 certificate, 
             IRpcNodeConfig nodeConfig,
-            IEnumerable<IRpcResponseHandler> handlers) 
+            IEnumerable<IRpcResponseObserver> handlers) 
             : base(channelFactory, Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType))
         {
             var socket = channelFactory.BuildChannel(nodeConfig.HostAddress, nodeConfig.Port, certificate);
