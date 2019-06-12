@@ -104,7 +104,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Observables
             }
         }
 
-        [Fact(skip="quick merge")]
+        [Fact(Skip = "quick merge")]
         public async Task CanHandlerGetNeighbourRequestHandlerCorrectly()
         {
             // mock a random set of peers
