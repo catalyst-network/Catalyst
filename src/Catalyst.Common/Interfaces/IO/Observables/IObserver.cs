@@ -27,7 +27,7 @@ using Catalyst.Protocol.Common;
 
 namespace Catalyst.Common.Interfaces.IO.Observables
 {
-    public interface IObserver
+    public interface IMessageObserver
     {
         void StartObserving(IObservable<IProtocolMessageDto<ProtocolMessage>> messageStream);
     }
