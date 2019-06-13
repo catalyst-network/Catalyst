@@ -31,13 +31,12 @@ using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.IO.Observables;
 using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;
-using Google.Protobuf;
 
 namespace Catalyst.TestUtils 
 {
     public static class MessageStreamHelper
     {
-        public static void SendToHandler<T>(this ProtocolMessage messages, IChannelHandlerContext fakeContext, MessageObserverBase handler) where T : IMessage
+        public static void SendToHandler(this ProtocolMessage messages, IChannelHandlerContext fakeContext, MessageObserverBase handler)
         {
             handler.OnNext(CreateChanneledMessage(fakeContext, messages));
         }

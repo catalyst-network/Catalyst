@@ -37,6 +37,7 @@ using Catalyst.Common.P2P;
 using Catalyst.Node.Core.Modules.Dfs;
 using Catalyst.Node.Core.P2P;
 using Catalyst.Node.Core.RPC.Observables;
+using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
@@ -148,7 +149,7 @@ namespace Catalyst.Node.Core.IntegrationTests.Modules.Dfs
             crcValue = FileHelper.GetCrcValue(fileToTransfer);
             
             //Create a response object and set its return value
-            var request = new AddFileToDfsRequest
+            ProtocolMessage request = new AddFileToDfsRequest
             {
                 Node = "node1",
                 FileName = fileToTransfer,
