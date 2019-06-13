@@ -86,33 +86,38 @@ namespace Catalyst.Node.Core.RPC.Observables
 
             Guard.Argument(deserialised).NotNull("Message cannot be null");
 
-            using (var fileTransferInformation = new DownloadFileTransferInformation(PeerIdentifier, new PeerIdentifier(messageDto.Payload.PeerId), messageDto.Context.Channel, messageDto.Payload.CorrelationId.ToGuid(), deserialised.FileName, deserialised.FileSize))
+            var fileTransferInformation = new DownloadFileTransferInformation(PeerIdentifier,
+                new PeerIdentifier(messageDto.Payload.PeerId), messageDto.Context.Channel,
+                messageDto.Payload.CorrelationId.ToGuid(), deserialised.FileName, deserialised.FileSize);
+
+            FileTransferResponseCodes responseCode;
+            try
             {
-                FileTransferResponseCodes responseCode;
-                try
-                {
-                    responseCode = _fileTransferFactory.RegisterTransfer(fileTransferInformation);
-                }
-                catch (Exception e)
-                {
-                    Logger.Error(e,
-                        "Failed to handle AddFileToDfsRequestHandler after receiving message {0}", messageDto);
-                    responseCode = FileTransferResponseCodes.Error;
-                }
-
-                ReturnResponse(fileTransferInformation, responseCode, fileTransferInformation.CorrelationGuid);
-
-                if (responseCode == FileTransferResponseCodes.Successful)
-                {
-                    _fileTransferFactory.FileTransferAsync(fileTransferInformation.CorrelationGuid, CancellationToken.None).ContinueWith(task =>
-                    {
-                        if (fileTransferInformation.ChunkIndicatorsTrue())
-                        {
-                            OnSuccess(fileTransferInformation);
-                        }
-                    });
-                }
+                responseCode = _fileTransferFactory.RegisterTransfer(fileTransferInformation);
             }
+            catch (Exception e)
+            {
+                Logger.Error(e,
+                    "Failed to handle AddFileToDfsRequestHandler after receiving message {0}", messageDto);
+                responseCode = FileTransferResponseCodes.Error;
+            }
+
+            IMessage message = ReturnResponse(fileTransferInformation, responseCode);
+
+            if (responseCode == FileTransferResponseCodes.Successful)
+            {
+                _fileTransferFactory.FileTransferAsync(fileTransferInformation.CorrelationGuid, CancellationToken.None).ContinueWith(task =>
+                {
+                    if (fileTransferInformation.ChunkIndicatorsTrue())
+                    {
+                        OnSuccess(fileTransferInformation);
+                    }
+
+                    fileTransferInformation.Dispose();
+                });
+            }
+
+            return message;
         }
 
         /// <summary>Called when [success] on file transfer.</summary>
@@ -126,7 +131,7 @@ namespace Catalyst.Node.Core.RPC.Observables
                 try
                 {
                     string fileHash;
-                    
+
                     using (var fileStream = File.Open(fileTransferInformation.TempPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                     {
                         fileHash = await _dfs.AddAsync(fileStream, fileTransferInformation.FileOutputPath).ConfigureAwait(false);
@@ -149,13 +154,24 @@ namespace Catalyst.Node.Core.RPC.Observables
                 return responseCode;
             }).ConfigureAwait(false);
 
-            ReturnResponse(fileTransferInformation, await addFileResponseCode, fileTransferInformation.CorrelationGuid);
+            IMessage message = ReturnResponse(fileTransferInformation, await addFileResponseCode);
+
+            // Send Response
+            var responseMessage = _protocolMessageFactory.GetMessage(new MessageDto(
+                    message,
+                    MessageTypes.Response,
+                    fileTransferInformation.RecipientIdentifier,
+                    PeerIdentifier
+                ),
+                fileTransferInformation.CorrelationGuid
+            );
+
+            await fileTransferInformation.RecipientChannel.WriteAndFlushAsync(responseMessage).ConfigureAwait(false);
         }
 
         /// <param name="fileTransferInformation">The file transfer information.</param>
         /// <param name="responseCode">The response code.</param>
-        /// <param name="correlationGuid"></param>
-        private void ReturnResponse(IFileTransferInformation fileTransferInformation, FileTransferResponseCodes responseCode, Guid correlationGuid)
+        private IMessage ReturnResponse(IFileTransferInformation fileTransferInformation, FileTransferResponseCodes responseCode)
         {
             Logger.Information("File transfer response code: " + responseCode);
             if (responseCode == FileTransferResponseCodes.Successful)
@@ -172,17 +188,7 @@ namespace Catalyst.Node.Core.RPC.Observables
                 DfsHash = dfsHash
             };
 
-            // Send Response
-            var responseMessage = _protocolMessageFactory.GetMessage(new MessageDto(
-                    response,
-                    MessageTypes.Response,
-                    fileTransferInformation.RecipientIdentifier,
-                    PeerIdentifier
-                ),
-                correlationGuid
-            );
-
-            fileTransferInformation.RecipientChannel.WriteAndFlushAsync(responseMessage).ConfigureAwait(false);
+            return response;
         }
     }
 }
