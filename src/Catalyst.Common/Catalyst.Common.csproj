@@ -14,7 +14,7 @@
         <PackageReference Include="DotNetty.Codecs.Protobuf" Version="0.6.0" />
         <PackageReference Include="Ipfs.Api" Version="0.23.6" />
         <PackageReference Include="Ipfs.Core" Version="0.51.1" />
-        <PackageReference Include="Ipfs.Engine" Version="0.9.1" />
+        <PackageReference Include="Ipfs.Engine" Version="0.10.1" />
         <PackageReference Include="Ipfs.HttpGateway" Version="0.3.0" />
         <PackageReference Include="Microsoft.AspNetCore.App" />
         <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="2.2.0" />
