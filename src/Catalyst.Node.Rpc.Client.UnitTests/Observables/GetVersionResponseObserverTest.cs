@@ -70,7 +70,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.Observables
         [MemberData(nameof(QueryContents))]
         public async Task RpcClient_Can_Handle_GetVersionResponse(string version)
         {
-            var response = new MessageFactory().GetMessage(new MessageDto(
+            var response = new ProtocolMessageFactory().GetMessage(new MessageDto(
                     new VersionResponse
                     {
                         Version = version

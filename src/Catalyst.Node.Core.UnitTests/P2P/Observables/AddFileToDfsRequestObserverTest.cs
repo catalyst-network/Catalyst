@@ -46,14 +46,14 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Observables
         private readonly ILogger _logger;
         private readonly IChannelHandlerContext _fakeContext;
         private readonly IDownloadFileTransferFactory _nodeFileTransferFactory;
-        private readonly IMessageFactory _messageFactory;
+        private readonly IProtocolMessageFactory _protocolMessageFactory;
         private ICoreApi _ipfsEngine;
 
         public AddFileToDfsRequestObserverTest()
         {
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
-            _messageFactory = Substitute.For<IMessageFactory>();
+            _protocolMessageFactory = Substitute.For<IProtocolMessageFactory>();
             _nodeFileTransferFactory = new DownloadFileTransferFactory();
             _logger = Substitute.For<ILogger>();
         }
@@ -63,7 +63,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Observables
         {
             var sender = PeerIdHelper.GetPeerId("sender");
             var handler = new AddFileToDfsRequestObserver(new Dfs(_ipfsEngine, _logger), new PeerIdentifier(sender),
-                _nodeFileTransferFactory, _messageFactory, _logger);
+                _nodeFileTransferFactory, _protocolMessageFactory, _logger);
 
             //Create a response object and set its return value
             var request = new AddFileToDfsRequest

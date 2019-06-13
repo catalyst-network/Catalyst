@@ -50,7 +50,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
 
         public GetFileFromDfsRequestObserverTest()
         {
-            var messageFactory = Substitute.For<IMessageFactory>();
+            var messageFactory = Substitute.For<IProtocolMessageFactory>();
             _fileTransferFactory = Substitute.For<IUploadFileTransferFactory>();
             _dfs = Substitute.For<IDfs>();
             var peerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("test");

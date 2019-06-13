@@ -79,7 +79,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
         [InlineData("Hello&?!1253Catalyst")]
         public async Task RpcServer_Can_Handle_SignMessageRequest(string message)
         {
-            var messageFactory = new MessageFactory();
+            var messageFactory = new ProtocolMessageFactory();
             var request = messageFactory.GetMessage(new MessageDto(
                 new SignMessageRequest
                 {
