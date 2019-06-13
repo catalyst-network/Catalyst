@@ -21,6 +21,7 @@
 
 #endregion
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -62,7 +63,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
             new List<object[]>
             {
                 new object[] {CreateTestTransactions(), 2},
-                new object[] {new List<TransactionBroadcast>(), 0},
+                new object[] {new List<TransactionBroadcast>(), 0}
             };
 
         private static List<TransactionBroadcast> CreateTestTransactions()
@@ -83,7 +84,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
             var mempool = Substitute.For<IMempool>();
             mempool.GetMemPoolContentEncoded().Returns(x =>
                 {
-                    var txEncodedLst = txLst.Select(tx => ConvertorForRLPEncodingExtensions.ToBytesForRLPEncoding((string) tx.ToString())).ToList();
+                    var txEncodedLst = txLst.Select(tx => ConvertorForRLPEncodingExtensions.ToBytesForRLPEncoding(tx.ToString())).ToList();
                     return txEncodedLst;
                 }
             );
@@ -104,9 +105,14 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
 
             var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();
             receivedCalls.Count.Should().Be(1);
+
+            var getMempoolResponse = new GetMempoolResponse();
             
-            var sentResponse = (ProtocolMessage) receivedCalls.Single().GetArguments().Single();
+            // getMempoolResponse.Mempool.AddEntriesFrom(txLst);
+
+            var sentResponse = getMempoolResponse.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("recipient_key").PeerId, Guid.NewGuid());
             sentResponse.TypeUrl.Should().Be(GetMempoolResponse.Descriptor.ShortenedFullName());
+            
             var responseContent = sentResponse.FromProtocolMessage<GetMempoolResponse>();
 
             if (expectedTxs == 0)

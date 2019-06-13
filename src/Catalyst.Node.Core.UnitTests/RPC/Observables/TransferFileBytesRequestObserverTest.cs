@@ -23,15 +23,19 @@
 #endregion
 
 using System;
+using System.Linq;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.FileTransfer;
+using Catalyst.Common.Interfaces.P2P.Messaging.Dto;
 using Catalyst.Common.IO.Messaging;
+using Catalyst.Common.Util;
 using Catalyst.Node.Core.RPC.Observables;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
+using FluentAssertions;
 using Google.Protobuf;
 using NSubstitute;
 using Serilog;
@@ -39,7 +43,7 @@ using Xunit;
 
 namespace Catalyst.Node.Core.UnitTests.RPC.Observables
 {
-    public class TransferFileBytesRequestObserverTest
+    public sealed class TransferFileBytesRequestObserverTest
     {
         private readonly TransferFileBytesRequestObserver _observer;
         private readonly IDownloadFileTransferFactory _downloadFileTransferFactory;
@@ -82,11 +86,15 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
                 ChunkId = 1,
                 CorrelationFileName = ByteString.Empty
             }.ToProtocolMessage(PeerIdHelper.GetPeerId("Test"), guid);
+            
             request.SendToHandler(_context, _observer);
-            _context.Channel.Received().WriteAndFlushAsync(
-                Arg.Is<ProtocolMessage>(signed =>
-                    signed.FromProtocolMessage<TransferFileBytesResponse>().ResponseCode[0] == 
-                    (byte) FileTransferResponseCodes.Error));
+            
+            var receivedCalls = _context.Channel.ReceivedCalls().ToList();
+            receivedCalls.Count.Should().Be(1);
+            var sentResponseDto = (IMessageDto) receivedCalls.Single().GetArguments().Single();
+            sentResponseDto.Message.Descriptor.ShortenedFullName().Should().Be(TransferFileBytesResponse.Descriptor.ShortenedFullName());
+            var versionResponseMessage = (TransferFileBytesResponse) sentResponseDto.Message;
+            versionResponseMessage.ResponseCode.Should().Equal((byte) FileTransferResponseCodes.Error);
         }
     }
 }

@@ -155,7 +155,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
             var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();
             receivedCalls.Count.Should().Be(1);
 
-            var sentResponse = (ProtocolMessage) receivedCalls[0].GetArguments().Single();
+            var sentResponse = new SetPeerBlackListResponse().ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("recipient").PeerId, Guid.NewGuid());
             sentResponse.TypeUrl.Should().Be(SetPeerBlackListResponse.Descriptor.ShortenedFullName());
 
             return sentResponse.FromProtocolMessage<SetPeerBlackListResponse>();

@@ -21,6 +21,7 @@
 
 #endregion
 
+using System;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -31,7 +32,6 @@ using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Node.Core.RPC.Observables;
-using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
@@ -97,13 +97,18 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
             var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();
             receivedCalls.Count.Should().Be(1);
 
-            var sentResponse = (ProtocolMessage) receivedCalls.Single().GetArguments().Single();
+            var infoObj = JsonConvert.SerializeObject(_config.GetSection("CatalystNodeConfiguration").AsEnumerable(),
+                Formatting.Indented);
+            var sentResponse = new GetInfoResponse
+            {
+                Query = infoObj
+            }.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("recipient").PeerId, Guid.NewGuid());
+
             sentResponse.TypeUrl.Should().Be(GetInfoResponse.Descriptor.ShortenedFullName());
 
             var responseContent = sentResponse.FromProtocolMessage<GetInfoResponse>();
             responseContent.Query.Should()
-               .Match(JsonConvert.SerializeObject(_config.GetSection("CatalystNodeConfiguration").AsEnumerable(),
-                    Formatting.Indented));
+               .Match(infoObj);
         }
 
         protected override void Dispose(bool disposing)
