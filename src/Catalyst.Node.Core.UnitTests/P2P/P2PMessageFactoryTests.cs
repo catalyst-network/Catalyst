@@ -39,7 +39,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
         [Fact]
         public void CanProduceAValidPingRequestMessage()
         {
-            var pingRequestDatagram = new MessageFactory().GetDatagramMessage(new MessageDto( 
+            var pingRequestDatagram = new ProtocolMessageFactory().GetDatagramMessage(new MessageDto( 
                 new PingRequest(),
                 MessageTypes.Request,
                 PeerIdentifierHelper.GetPeerIdentifier("im_a_recipient"),
@@ -53,7 +53,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
         [Fact]
         public void CanProduceAValidPingResponseMessage()
         {
-            var pingResponseDatagram = new MessageFactory().GetDatagramMessage(new MessageDto(
+            var pingResponseDatagram = new ProtocolMessageFactory().GetDatagramMessage(new MessageDto(
                     new PingResponse(),
                     MessageTypes.Response,
                     PeerIdentifierHelper.GetPeerIdentifier("im_a_recipient"),
@@ -69,7 +69,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
         [Fact]
         public void CanProduceAValidTransactionMessage()
         {
-            var transactionDatagram = new MessageFactory().GetDatagramMessage(new MessageDto(
+            var transactionDatagram = new ProtocolMessageFactory().GetDatagramMessage(new MessageDto(
                 new TransactionBroadcast(),
                 MessageTypes.Request,
                 PeerIdentifierHelper.GetPeerIdentifier("im_a_recipient"),

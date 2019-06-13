@@ -52,7 +52,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
         private readonly ILogger _logger;
         private readonly IKeySigner _keySigner;
         private readonly IChannelHandlerContext _fakeContext;
-        private readonly IMessageFactory _messageFactory;
+        private readonly IProtocolMessageFactory _protocolMessageFactory;
 
         public VerifyMessageRequestObserverTests(ITestOutputHelper output) : base(output)
         {
@@ -69,7 +69,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
             _scope = container.BeginLifetimeScope(CurrentTestName);
             
             _keySigner = container.Resolve<IKeySigner>();
-            _messageFactory = Substitute.For<IMessageFactory>();
+            _protocolMessageFactory = Substitute.For<IProtocolMessageFactory>();
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
             
@@ -86,7 +86,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
         [InlineData("", "", "", false)]
         public void VerifyMessageRequest_UsingValidRequest_ShouldSendVerifyMessageResponse(string message, string signature, string publicKey, bool expectedResult)
         {
-            var request = new MessageFactory().GetMessage(new MessageDto(
+            var request = new ProtocolMessageFactory().GetMessage(new MessageDto(
                 new VerifyMessageRequest
                 {
                     Message = RLP.EncodeElement(message.Trim('\"').ToBytesForRLPEncoding()).ToByteString(),
@@ -99,7 +99,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
             ));
             
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, request);
-            var handler = new VerifyMessageRequestObserver(PeerIdentifierHelper.GetPeerIdentifier("sender"), _logger, _keySigner, _messageFactory);
+            var handler = new VerifyMessageRequestObserver(PeerIdentifierHelper.GetPeerIdentifier("sender"), _logger, _keySigner, _protocolMessageFactory);
             handler.StartObserving(messageStream);
             
             var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();

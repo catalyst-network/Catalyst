@@ -51,7 +51,7 @@ namespace Catalyst.Node.Core.RPC.Observables
         private readonly IRepository<Peer> _peerRepository;
 
         /// <summary>The RPC message base</summary>
-        private readonly IMessageFactory _messageFactory;
+        private readonly IProtocolMessageFactory _protocolMessageFactory;
 
         /// <summary>The peer identifier</summary>
         private readonly IPeerIdentifier _peerIdentifier;
@@ -59,16 +59,16 @@ namespace Catalyst.Node.Core.RPC.Observables
         /// <summary>Initializes a new instance of the <see cref="PeerCountRequestObserver"/> class.</summary>
         /// <param name="peerIdentifier">The peer identifier.</param>
         /// <param name="peerRepository">The peer discovery.</param>
-        /// <param name="messageFactory"></param>
+        /// <param name="protocolMessageFactory"></param>
         /// <param name="logger">The logger.</param>
         public PeerCountRequestObserver(IPeerIdentifier peerIdentifier,
             IRepository<Peer> peerRepository,
-            IMessageFactory messageFactory,
+            IProtocolMessageFactory protocolMessageFactory,
             ILogger logger) :
             base(logger)
         {
             _peerRepository = peerRepository;
-            _messageFactory = messageFactory;
+            _protocolMessageFactory = protocolMessageFactory;
             _peerIdentifier = peerIdentifier;
         }
 
@@ -83,7 +83,7 @@ namespace Catalyst.Node.Core.RPC.Observables
                 PeerCount = peerCount
             };
 
-            var responseMessage = _messageFactory.GetMessage(new MessageDto(
+            var responseMessage = _protocolMessageFactory.GetMessage(new MessageDto(
                     response,
                     MessageTypes.Response,
                     new PeerIdentifier(messageDto.Payload.PeerId),

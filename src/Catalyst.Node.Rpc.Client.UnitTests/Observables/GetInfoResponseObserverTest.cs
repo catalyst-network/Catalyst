@@ -93,7 +93,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.Observables
         [MemberData(nameof(QueryContents))]
         public void RpcClient_Can_Handle_GetInfoResponse(string query)
         {
-            var response = new MessageFactory().GetMessage(new MessageDto(
+            var response = new ProtocolMessageFactory().GetMessage(new MessageDto(
                     new GetInfoResponse
                     {
                         Query = query
