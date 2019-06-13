@@ -32,11 +32,13 @@ using Catalyst.Common.Interfaces.IO.Observables;
 using Catalyst.Common.Interfaces.IO.Transport;
 using Catalyst.Common.Interfaces.IO.Transport.Channels;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.IO;
 using Catalyst.Common.IO.Observables;
 using Catalyst.Node.Core.P2P;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
 using Catalyst.TestUtils;
+using DotNetty.Transport.Channels;
 using FluentAssertions;
 using NSubstitute;
 using Serilog;
@@ -64,7 +66,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
 
             _serverChannel = new EmbeddedObservableChannel($"Server:{CurrentTestName}");
             _udpServerServerChannelFactory = Substitute.For<IUdpServerChannelFactory>();
-            _udpServerServerChannelFactory.BuildChannel().Returns(_serverChannel);
+            _udpServerServerChannelFactory.BuildChannel(Arg.Any<IEventLoopGroup>()).Returns(_serverChannel);
 
             var peerSettings = Substitute.For<IPeerSettings>();
             peerSettings.BindAddress.Returns(IPAddress.Parse("127.0.0.1"));
@@ -129,7 +131,8 @@ namespace Catalyst.Node.Core.UnitTests.P2P
         {
             _p2PMessageHandlers.Add(pingRequestHandler);
 
-            _peerService = new PeerService(_udpServerServerChannelFactory,
+            _peerService = new PeerService(new HandlerWorkerEventLoopGroupFactory(), 
+                _udpServerServerChannelFactory,
                 _peerDiscovery,
                 _p2PMessageHandlers,
                 _logger);

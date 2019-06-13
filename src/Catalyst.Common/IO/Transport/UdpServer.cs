@@ -23,6 +23,7 @@
 
 using Catalyst.Common.Interfaces.IO.Transport;
 using Catalyst.Common.Interfaces.IO.Transport.Channels;
+using DotNetty.Transport.Channels;
 using Serilog;
 
 namespace Catalyst.Common.IO.Transport
@@ -30,7 +31,7 @@ namespace Catalyst.Common.IO.Transport
     public class UdpServer : SocketBase, IUdpServer
     {
         protected UdpServer(IUdpServerChannelFactory serverChannelFactory, 
-            ILogger logger)
-            : base(serverChannelFactory, logger) { }
+            ILogger logger, IEventLoopGroup handlerEventLoopGroup)
+            : base(serverChannelFactory, logger, handlerEventLoopGroup) { }
     }
 }

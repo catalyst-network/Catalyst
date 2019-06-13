@@ -44,11 +44,12 @@ namespace Catalyst.Common.IO.Transport.Channels
     {
         protected abstract List<IChannelHandler> Handlers { get; }
 
-        protected IObservableChannel BootStrapChannel(IObservable<IProtocolMessageDto<ProtocolMessage>> messageStream = null, 
+        protected IObservableChannel BootStrapChannel(IEventLoopGroup handlerEventLoopGroup,
+            IObservable<IProtocolMessageDto<ProtocolMessage>> messageStream = null, 
             IPAddress address = null,
             int port = 0)
         {
-            var channelHandler = new ServerChannelInitializerBase<IChannel>(Handlers);
+            var channelHandler = new ServerChannelInitializerBase<IChannel>(Handlers, handlerEventLoopGroup);
 
             var channel = new Bootstrap()
                .Group(new MultithreadEventLoopGroup())

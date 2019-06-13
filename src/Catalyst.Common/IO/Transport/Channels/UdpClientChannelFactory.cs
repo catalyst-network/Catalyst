@@ -45,15 +45,17 @@ namespace Catalyst.Common.IO.Transport.Channels
                 new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(new ProtocolMessageVerifyHandler(_keySigner), new ProtocolMessageSignHandler(_keySigner))
             };
 
+        /// <param name="handlerEventLoopGroup"></param>
         /// <param name="targetAddress"></param>
         /// <param name="targetPort">Ignored</param>
         /// <param name="certificate">Ignored</param>
         /// <returns></returns>
-        public IObservableChannel BuildChannel(IPAddress targetAddress = null,
+        public IObservableChannel BuildChannel(IEventLoopGroup handlerEventLoopGroup,
+            IPAddress targetAddress = null,
             int targetPort = IPEndPoint.MinPort,
             X509Certificate2 certificate = null)
         {
-            return BootStrapChannel(address: targetAddress);
+            return BootStrapChannel(handlerEventLoopGroup, address: targetAddress);
         }
     }
 }

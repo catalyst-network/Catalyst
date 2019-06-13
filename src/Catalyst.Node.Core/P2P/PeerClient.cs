@@ -24,6 +24,7 @@
 using System.Net;
 using System.Reflection;
 using System.Threading.Tasks;
+using Catalyst.Common.Interfaces.IO;
 using Catalyst.Common.Interfaces.IO.Transport;
 using Catalyst.Common.Interfaces.IO.Transport.Channels;
 using Catalyst.Common.Interfaces.P2P;
@@ -36,12 +37,19 @@ namespace Catalyst.Node.Core.P2P
     public sealed class PeerClient : UdpClient, IPeerClient
     {
         /// <param name="clientChannelFactory">A factory used to build the appropriate kind of channel for a udp client.</param>
+        /// <param name="handlerWorkerEventLoopGroupFactory"></param>
         /// <param name="ipAddress">The Peer client NIC binding</param>
-        public PeerClient(IUdpClientChannelFactory clientChannelFactory, IPAddress ipAddress = null)
-            : base(clientChannelFactory, Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType))
+        public PeerClient(IUdpClientChannelFactory clientChannelFactory, 
+            IHandlerWorkerEventLoopGroupFactory handlerWorkerEventLoopGroupFactory, 
+            IPAddress ipAddress = null)
+            : base(clientChannelFactory, 
+                Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType),
+                handlerWorkerEventLoopGroupFactory.NewUdpClientLoopGroup())
         {
             var bindingEndpoint = new IPEndPoint(ipAddress ?? IPAddress.Loopback, IPEndPoint.MinPort);
-            Channel = ChannelFactory.BuildChannel(bindingEndpoint.Address, bindingEndpoint.Port).Channel;
+            Channel = ChannelFactory.BuildChannel(HandlerEventLoopGroup, 
+                bindingEndpoint.Address, 
+                bindingEndpoint.Port).Channel;
         }
 
         public Task SendMessageAsync(IByteBufferHolder datagramPacket)

@@ -23,6 +23,7 @@
 
 using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
+using Catalyst.Common.Interfaces.IO;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Observables;
 using Catalyst.Common.Interfaces.IO.Transport;
@@ -35,16 +36,20 @@ namespace Catalyst.Node.Rpc.Client
     {
         private readonly ITcpClientChannelFactory _channelFactory;
         private readonly IEnumerable<IRpcResponseObserver> _handlers;
+        private readonly IHandlerWorkerEventLoopGroupFactory _handlerWorkerEventLoopGroupFactory;
 
-        public NodeRpcClientFactory(ITcpClientChannelFactory channelFactory, IEnumerable<IRpcResponseObserver> handlers)
+        public NodeRpcClientFactory(ITcpClientChannelFactory channelFactory,
+            IHandlerWorkerEventLoopGroupFactory handlerWorkerEventLoopGroupFactory,
+            IEnumerable<IRpcResponseObserver> handlers)
         {
+            _handlerWorkerEventLoopGroupFactory = handlerWorkerEventLoopGroupFactory;
             _channelFactory = channelFactory;
             _handlers = handlers;
         }
 
         public INodeRpcClient GetClient(X509Certificate2 certificate, IRpcNodeConfig nodeConfig)
         {
-            return new NodeRpcClient(_channelFactory, certificate, nodeConfig, _handlers);
+            return new NodeRpcClient(_channelFactory, certificate, nodeConfig, _handlers, _handlerWorkerEventLoopGroupFactory);
         }
     }
 }

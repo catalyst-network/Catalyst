@@ -10,6 +10,17 @@
             ]
         },
         {
+            "type": "Catalyst.Common.IO.HandlerWorkerEventLoopGroupFactory, Catalyst.Common",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.IO.IHandlerWorkerEventLoopGroupFactory, Catalyst.Common"
+                }
+            ],
+            "parameters": {
+                "tcpClientThreads": 2
+            }
+        },
+        {
             "type": "Catalyst.Node.Rpc.Client.NodeRpcClientFactory, Catalyst.Node.Rpc.Client",
             "services": [
                 {

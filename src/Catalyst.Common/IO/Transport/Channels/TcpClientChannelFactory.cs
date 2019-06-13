@@ -45,7 +45,8 @@ namespace Catalyst.Common.IO.Transport.Channels
         
         private const int BackLogValue = 100;
         
-        public IObservableChannel BuildChannel(IPAddress targetAddress = null, 
+        public IObservableChannel BuildChannel(IEventLoopGroup handlerEventLoopGroup,
+            IPAddress targetAddress = null, 
             int targetPort = 0,
             X509Certificate2 certificate = null)
         {
@@ -62,6 +63,7 @@ namespace Catalyst.Common.IO.Transport.Channels
             };
 
             var channelHandler = new ClientChannelInitializerBase<ISocketChannel>(channelHandlers,
+                handlerEventLoopGroup,
                 targetAddress,
                 certificate);
 

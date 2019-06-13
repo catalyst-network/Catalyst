@@ -29,6 +29,7 @@ using System.Threading;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Sockets;
 using Catalyst.Common.Interfaces.Cryptography;
+using Catalyst.Common.Interfaces.IO;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Observables;
@@ -55,13 +56,15 @@ namespace Catalyst.Node.Core.RPC
             ILogger logger,
             ITcpServerChannelFactory channelFactory,
             ICertificateStore certificateStore,
-            IEnumerable<IRpcRequestObserver> requestHandlers) : base(channelFactory, logger)
+            IEnumerable<IRpcRequestObserver> requestHandlers,
+            IHandlerWorkerEventLoopGroupFactory handlerWorkerEventLoopGroupFactory) 
+            : base(channelFactory, logger, handlerWorkerEventLoopGroupFactory.NewTcpServerLoopGroup())
         {
             Settings = settings;
             _cancellationSource = new CancellationTokenSource();
             _certificate = certificateStore.ReadOrCreateCertificateFile(settings.PfxFileName);
 
-            var observableSocket = ChannelFactory.BuildChannel(certificate: _certificate);
+            var observableSocket = ChannelFactory.BuildChannel(HandlerEventLoopGroup, certificate: _certificate);
             Channel = observableSocket.Channel;
             MessageStream = observableSocket.MessageStream;
             requestHandlers.ToList().ForEach(h => h.StartObserving(MessageStream));

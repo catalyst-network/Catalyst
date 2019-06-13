@@ -35,6 +35,7 @@ namespace Catalyst.Common.IO.Transport.Channels
     {
         /// <inheritdoc />
         public ClientChannelInitializerBase(IList<IChannelHandler> handlers,
+            IEventLoopGroup handlerEventLoopGroup,
             IPAddress targetHost = default,
             X509Certificate certificate = null)
             : base(handlers,
@@ -42,7 +43,8 @@ namespace Catalyst.Common.IO.Transport.Channels
                     ? null
                     : new TlsHandler(stream =>
                             new SslStream(stream, true, (sender, cert, chain, errors) => true),
-                        new ClientTlsSettings(targetHost.ToString()))
+                        new ClientTlsSettings(targetHost.ToString())),
+                handlerEventLoopGroup
             ) { }
 
         public override string ToString()

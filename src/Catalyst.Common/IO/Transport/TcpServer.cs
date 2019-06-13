@@ -34,8 +34,9 @@ namespace Catalyst.Common.IO.Transport
         private readonly IEventLoopGroup _supervisorEventLoop;
 
         protected TcpServer(ITcpServerChannelFactory tcpChannelFactory,
-            ILogger logger)
-            : base(tcpChannelFactory, logger)
+            ILogger logger,
+            IEventLoopGroup handlerEventLoopGroup)
+            : base(tcpChannelFactory, logger, handlerEventLoopGroup)
         {
             _supervisorEventLoop = new MultithreadEventLoopGroup();
         }

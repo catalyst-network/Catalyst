@@ -21,27 +21,29 @@
 
 #endregion
 
-using System.Collections.Generic;
-using System.Security.Cryptography.X509Certificates;
-using DotNetty.Common.Utilities;
-using DotNetty.Handlers.Tls;
 using DotNetty.Transport.Channels;
 
-namespace Catalyst.Common.IO.Transport.Channels
+namespace Catalyst.Common.Interfaces.IO
 {
-    public sealed class ServerChannelInitializerBase<T>
-        : ChannelInitializerBase<T> where T : IChannel
+    /// <summary>
+    /// Creates handler worker multi-threaded loop groups
+    /// </summary>
+    public interface IHandlerWorkerEventLoopGroupFactory
     {
-        /// <inheritdoc />
-        public ServerChannelInitializerBase(IList<IChannelHandler> handlers,
-            IEventLoopGroup handlerEventLoopGroup,
-            X509Certificate certificate = null)
-            : base(handlers,
-                certificate == null ? null : TlsHandler.Server(certificate), handlerEventLoopGroup) { }
+        /// <summary>Creates new multi-threaded tcp client worker group.</summary>
+        /// <returns></returns>
+        IEventLoopGroup NewTcpClientLoopGroup();
 
-        public override string ToString()
-        {
-            return "InboundChannelInitializer[" + StringUtil.SimpleClassName(typeof(T)) + "]";
-        }
+        /// <summary>Creates new multi-threaded tcp server worker group.</summary>
+        /// <returns></returns>
+        IEventLoopGroup NewTcpServerLoopGroup();
+
+        /// <summary>Creates new multi-threaded udp server worker group.</summary>
+        /// <returns></returns>
+        IEventLoopGroup NewUdpServerLoopGroup();
+
+        /// <summary>Creates new multi-threaded udp client worker group.</summary>
+        /// <returns></returns>
+        IEventLoopGroup NewUdpClientLoopGroup();
     }
 }

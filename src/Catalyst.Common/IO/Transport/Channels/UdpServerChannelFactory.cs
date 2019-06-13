@@ -43,14 +43,16 @@ namespace Catalyst.Common.IO.Transport.Channels
         private readonly IPeerSettings _peerSettings;
         private readonly ObservableServiceHandler _observableServiceHandler;
 
+        /// <param name="handlerEventLoopGroup"></param>
         /// <param name="targetAddress">Ignored</param>
         /// <param name="targetPort">Ignored</param>
         /// <param name="certificate">Ignored</param>
         /// <returns></returns>
-        public IObservableChannel BuildChannel(IPAddress targetAddress = null,
+        public IObservableChannel BuildChannel(IEventLoopGroup handlerEventLoopGroup,
+            IPAddress targetAddress = null,
             int targetPort = 0,
             X509Certificate2 certificate = null) =>
-            BootStrapChannel(_observableServiceHandler.MessageStream,
+            BootStrapChannel(handlerEventLoopGroup, _observableServiceHandler.MessageStream,
                 _peerSettings.BindAddress, _peerSettings.Port);
 
         public UdpServerChannelFactory(IMessageCorrelationManager messageCorrelationManager,

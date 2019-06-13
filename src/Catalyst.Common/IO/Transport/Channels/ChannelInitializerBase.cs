@@ -37,12 +37,15 @@ namespace Catalyst.Common.IO.Transport.Channels
     {
         private readonly IImmutableList<IChannelHandler> _handlers;
         private readonly TlsHandler _tlsHandler;
+        private readonly IEventLoopGroup _handlerEventLoopGroup;
 
         protected ChannelInitializerBase(IList<IChannelHandler> handlers,
-            TlsHandler tlsHandler)
+            TlsHandler tlsHandler,
+            IEventLoopGroup handlerEventLoopGroup)
         {
             Guard.Argument(handlers, nameof(handlers)).NotNull().NotEmpty();
             _handlers = handlers.ToImmutableList();
+            _handlerEventLoopGroup = handlerEventLoopGroup;
             _tlsHandler = tlsHandler;
         }
 
@@ -56,7 +59,7 @@ namespace Catalyst.Common.IO.Transport.Channels
             }
 
             pipeline.AddLast(new LoggingHandler(LogLevel.TRACE));
-            pipeline.AddLast(_handlers.ToArray());
+            pipeline.AddLast(_handlerEventLoopGroup, _handlers.ToArray());
         }
     }
 }

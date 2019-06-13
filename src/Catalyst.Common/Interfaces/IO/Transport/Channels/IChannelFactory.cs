@@ -23,12 +23,14 @@
 
 using System.Net;
 using System.Security.Cryptography.X509Certificates;
+using DotNetty.Transport.Channels;
 
 namespace Catalyst.Common.Interfaces.IO.Transport.Channels
 {
     public interface IChannelFactory
     {
-        IObservableChannel BuildChannel(IPAddress targetAddress = null,
+        IObservableChannel BuildChannel(IEventLoopGroup handlerEventLoopGroup,
+            IPAddress targetAddress = null,
             int targetPort = 0,
             X509Certificate2 certificate = null);
     }
