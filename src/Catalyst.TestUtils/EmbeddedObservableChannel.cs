@@ -35,7 +35,7 @@ using NSubstitute;
 
 namespace Catalyst.TestUtils
 {
-    public sealed class EmbeddedObservableChannel : IObservableChannel
+    public static class DotNettyExtensions
     {
         public static IChannelId ToChannelId(this string channelName)
         {

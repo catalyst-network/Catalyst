@@ -46,7 +46,9 @@ namespace Catalyst.Common.IO.Transport.Channels
         private readonly IPeerSettings _peerSettings;
         private readonly IKeySigner _keySigner;
         private const int BackLogValue = 100;
-
+        private List<IChannelHandler> _handlers;
+        private ObservableServiceHandler _observableServiceHandler;
+        
         public TcpServerChannelFactory(IMessageCorrelationManager correlationManger, 
             IPeerSettings peerSettings,
             IKeySigner keySigner)
@@ -54,6 +56,7 @@ namespace Catalyst.Common.IO.Transport.Channels
             _correlationManger = correlationManger;
             _peerSettings = peerSettings;
             _keySigner = keySigner;
+            _observableServiceHandler = new ObservableServiceHandler();
         }
 
         /// <param name="targetAddress">Ignored</param>
@@ -68,20 +71,7 @@ namespace Catalyst.Common.IO.Transport.Channels
         {
             var supervisorEventLoop = new MultithreadEventLoopGroup();
 
-            var observableServiceHandler = new ObservableServiceHandler();
-
-            var handlers = new List<IChannelHandler>
-            {
-                new ProtobufVarint32FrameDecoder(),
-                new ProtobufDecoder(ProtocolMessageSigned.Parser),
-                new ProtobufVarint32LengthFieldPrepender(),
-                new ProtobufEncoder(),
-                new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(new ProtocolMessageVerifyHandler(_keySigner), new ProtocolMessageSignHandler(_keySigner)),
-                new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(new CorrelationHandler(_correlationManger), new CorrelationHandler(_correlationManger)),
-                observableServiceHandler
-            };
-            
-            var channelHandler = new ServerChannelInitializerBase<IChannel>(handlers, certificate);
+            var channelHandler = new ServerChannelInitializerBase<IChannel>(_handlers, certificate);
 
             var channel = new ServerBootstrap()
                .Group(supervisorEventLoop, childGroup: new MultithreadEventLoopGroup())
@@ -93,7 +83,19 @@ namespace Catalyst.Common.IO.Transport.Channels
                .GetAwaiter()
                .GetResult();
 
-            return new ObservableChannel(observableServiceHandler.MessageStream, channel);
+            return new ObservableChannel(_observableServiceHandler.MessageStream, channel);
         }
+
+        protected List<IChannelHandler> Handlers =>
+            _handlers ?? (_handlers = new List<IChannelHandler>
+            {
+                new ProtobufVarint32FrameDecoder(),
+                new ProtobufDecoder(ProtocolMessageSigned.Parser),
+                new ProtobufVarint32LengthFieldPrepender(),
+                new ProtobufEncoder(),
+                new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(new ProtocolMessageVerifyHandler(_keySigner), new ProtocolMessageSignHandler(_keySigner)),
+                new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(new CorrelationHandler(_correlationManger), new CorrelationHandler(_correlationManger)),
+                _observableServiceHandler
+            });
     }
 }
