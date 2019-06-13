@@ -27,6 +27,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
+using Catalyst.Common.Interfaces.P2P.Messaging.Dto;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.Network;
@@ -93,10 +94,9 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
 
             peerRepository.GetAll().Returns(peerList);
 
-            var messageFactory = new ProtocolMessageFactory();
             var sendPeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("sender");
 
-            var requestMessage = messageFactory.GetMessage(new MessageDto(
+            var requestMessage = new ProtocolMessageFactory().GetMessage(new MessageDto(
                 new GetPeerCountRequest(),
                 MessageTypes.Request,
                 PeerIdentifierHelper.GetPeerIdentifier("recipient"),
@@ -113,10 +113,10 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
             var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();
             receivedCalls.Count.Should().Be(1);
 
-            var sentResponse = (ProtocolMessage) receivedCalls[0].GetArguments().Single();
-            sentResponse.TypeUrl.Should().Be(GetPeerCountResponse.Descriptor.ShortenedFullName());
+            var sentResponseDto = (IMessageDto) receivedCalls[0].GetArguments().Single();
+            sentResponseDto.Message.Descriptor.ShortenedFullName().Should().Be(GetPeerCountResponse.Descriptor.ShortenedFullName());
 
-            var responseContent = sentResponse.FromProtocolMessage<GetPeerCountResponse>();
+            var responseContent = (GetPeerCountResponse) sentResponseDto.Message;
 
             responseContent.PeerCount.Should().Be(fakePeers);
         }
