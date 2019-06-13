@@ -33,13 +33,13 @@
         <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
         <PackageReference Include="Serilog.Sinks.File" Version="4.0.0" />
         <PackageReference Include="SharpRepository.InMemoryRepository" Version="2.0.3.1" />
-        <PackageReference Include="System.IO.Abstractions" Version="4.2.8" />
-        <PackageReference Include="System.IO.Abstractions.TestingHelpers" Version="4.2.8" />
-        <PackageReference Include="System.Memory" Version="4.5.2" />
+        <PackageReference Include="System.IO.Abstractions" Version="6.0.3" />
+        <PackageReference Include="System.IO.Abstractions.TestingHelpers" Version="6.0.3" />
+        <PackageReference Include="System.Memory" Version="4.5.3" />
         <PackageReference Include="System.Reactive.Linq" Version="4.1.5" />
         <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="4.5.2" />
         <PackageReference Include="DotNetty.Handlers" Version="0.6.0" />
-        <PackageReference Include="Grpc.Tools" Version="1.20.1">
+        <PackageReference Include="Grpc.Tools" Version="1.21.0">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>

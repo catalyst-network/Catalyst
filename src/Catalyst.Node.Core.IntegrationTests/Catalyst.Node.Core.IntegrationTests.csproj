@@ -28,4 +28,8 @@
     <ItemGroup>
       <PackageReference Include="Nethereum.RLP" Version="3.3.0" />
     </ItemGroup>
+    <ItemGroup>
+      <PackageReference Update="FluentAssertions" Version="5.7.0" />
+      <PackageReference Update="NSubstitute" Version="4.2.0" />
+    </ItemGroup>
 </Project>
