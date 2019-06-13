@@ -21,50 +21,31 @@
 
 #endregion
 
-using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
-using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Observables;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.IO.Messaging;
-using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.IO.Observables;
-using Catalyst.Common.P2P;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
+using Google.Protobuf;
 using Serilog;
 
 namespace Catalyst.Node.Core.P2P.Observables
 {
     public sealed class PingRequestObserver 
-        : ObserverBase<PingRequest>,
+        : RequestObserverBase<PingRequest>,
             IP2PMessageObserver
     {
-        private readonly IPeerIdentifier _peerIdentifier;
-
         public PingRequestObserver(IPeerIdentifier peerIdentifier,
             ILogger logger)
-            : base(logger)
+            : base(logger, peerIdentifier) { }
+
+        public override IMessage HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto)
         {
-            _peerIdentifier = peerIdentifier;
-        }
+            Logger.Debug("message content is {0}", messageDto.Payload.FromProtocolMessage<PingRequest>());
 
-        protected override void Handler(IProtocolMessageDto<ProtocolMessage> messageDto)
-        {
-            Logger.Information("Ping Message Received");
-            var deserialised = messageDto.Payload.FromProtocolMessage<PingRequest>();
-            Logger.Debug("message content is {0}", deserialised);
-
-            var datagramEnvelope = new MessageFactory().GetDatagramMessage(new MessageDto(
-                    new PingResponse(),
-                    MessageTypes.Response,
-                    new PeerIdentifier(messageDto.Payload.PeerId),
-                    _peerIdentifier),
-                messageDto.Payload.CorrelationId.ToGuid()
-            );
-
-            messageDto.Context.Channel.WriteAndFlushAsync(datagramEnvelope);
+            return new PingResponse();
         }
     }
 }

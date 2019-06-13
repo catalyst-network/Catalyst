@@ -40,7 +40,7 @@ namespace Catalyst.Node.Rpc.Client.Observables
     /// The handler reads the response's payload and formats it in user readable format and writes it to the console.
     /// </summary>
     public sealed class VerifyMessageResponseObserver
-        : ObserverBase<VerifyMessageResponse>,
+        : ResponseObserverBase<VerifyMessageResponse>,
             IRpcResponseObserver
     {
         private readonly IUserOutput _output;
@@ -61,9 +61,10 @@ namespace Catalyst.Node.Rpc.Client.Observables
         /// Handles the VersionResponse message sent from the <see />.
         /// </summary>
         /// <param name="messageDto">An object of GetMempoolResponse</param>
-        protected override void Handler(IProtocolMessageDto<ProtocolMessage> messageDto)
+        public override void HandleResponse(IProtocolMessageDto<ProtocolMessage> messageDto)
         {   
-            Logger.Debug("Handling VerifyMessageResponse");
+            Logger.Debug($"Handling VerifyMessageResponse");
+            Guard.Argument(messageDto, nameof(messageDto)).NotNull("Received message cannot be null");
 
             try
             {
@@ -74,7 +75,7 @@ namespace Catalyst.Node.Rpc.Client.Observables
                 var result = deserialised.IsSignedByKey;
 
                 //return to the user the signature, public key and the original message that he sent to be signed
-                _output.WriteLine($"{result.ToString()}");
+                _output.WriteLine($@"{result.ToString()}");
             }
             catch (Exception ex)
             {

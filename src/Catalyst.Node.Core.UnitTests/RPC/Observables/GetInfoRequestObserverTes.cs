@@ -77,7 +77,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
         [Fact]
         public async Task GetInfoMessageRequest_UsingValidRequest_ShouldSendGetInfoResponse()
         {
-            var messageFactory = new MessageFactory();
+            var messageFactory = new ProtocolProtocolMessageFactory();
             var request = messageFactory.GetMessage(new MessageDto(
                 new GetInfoRequest
                 {
@@ -89,7 +89,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
             ));
 
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, request);
-            var handler = new GetInfoRequestObserver(PeerIdentifierHelper.GetPeerIdentifier("sender"), _rpcServerSettings, messageFactory, _logger);
+            var handler = new GetInfoRequestObserver(PeerIdentifierHelper.GetPeerIdentifier("sender"), _rpcServerSettings, _logger);
             handler.StartObserving(messageStream);
 
             await messageStream.WaitForEndOfDelayedStreamOnTaskPoolScheduler();

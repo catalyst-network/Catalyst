@@ -38,34 +38,30 @@ using Catalyst.Common.P2P;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
+using Google.Protobuf;
 using ILogger = Serilog.ILogger;
 
 namespace Catalyst.Node.Core.RPC.Observables
 {
     public sealed class GetMempoolRequestObserver
-        : ObserverBase<GetMempoolRequest>,
+        : RequestObserverBase<GetMempoolRequest>,
             IRpcRequestObserver
     {
         private readonly IMempool _mempool;
-        private readonly IPeerIdentifier _peerIdentifier;
-        private readonly IMessageFactory _messageFactory;
 
         public GetMempoolRequestObserver(IPeerIdentifier peerIdentifier,
             IMempool mempool,
-            IMessageFactory messageFactory,
             ILogger logger)
-            : base(logger)
+            : base(logger, peerIdentifier)
         {
-            _messageFactory = messageFactory;
             _mempool = mempool;
-            _peerIdentifier = peerIdentifier;
         }
 
-        protected override void Handler(IProtocolMessageDto<ProtocolMessage> messageDto)
+        public override IMessage HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto)
         {
-            Guard.Argument(messageDto).NotNull();
-            
             Logger.Debug("GetMempoolRequestHandler starting ...");
+
+            Guard.Argument(messageDto).NotNull();
             
             try
             {
@@ -75,17 +71,22 @@ namespace Catalyst.Node.Core.RPC.Observables
                 
                 Logger.Debug("Received GetMempoolRequest message with content {0}", deserialised);
 
-                var response = _messageFactory.GetMessage(new MessageDto(
-                        new GetMempoolResponse
-                        {
-                            Mempool = {GetMempoolContent()}
-                        },
-                        MessageTypes.Response,
-                        new PeerIdentifier(messageDto.Payload.PeerId),
-                        _peerIdentifier),
-                    messageDto.Payload.CorrelationId.ToGuid());
-                
-                messageDto.Context.Channel.WriteAndFlushAsync(response).GetAwaiter().GetResult();
+                // var response = _protocolMessageFactory.GetMessage(new MessageDto(
+                //         new GetMempoolResponse
+                //         {
+                //             Mempool = {GetMempoolContent()}
+                //         },
+                //         MessageTypes.Response,
+                //         new PeerIdentifier(messageDto.Payload.PeerId),
+                //         _peerIdentifier),
+                //     messageDto.Payload.CorrelationId.ToGuid());
+                //
+                // messageDto.Context.Channel.WriteAndFlushAsync(response).GetAwaiter().GetResult();
+
+                return new GetMempoolResponse
+                {
+                    Mempool = {GetMempoolContent()}
+                };
             }
             catch (Exception ex)
             {

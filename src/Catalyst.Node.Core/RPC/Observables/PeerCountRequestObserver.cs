@@ -34,6 +34,8 @@ using Catalyst.Common.IO.Observables;
 using Catalyst.Common.P2P;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
+using Dawn;
+using Google.Protobuf;
 using Serilog;
 using SharpRepository.Repository;
 
@@ -44,54 +46,36 @@ namespace Catalyst.Node.Core.RPC.Observables
     /// </summary>
     /// <seealso cref="IRpcRequestObserver" />
     public sealed class PeerCountRequestObserver
-        : ObserverBase<GetPeerCountRequest>,
+        : RequestObserverBase<GetPeerCountRequest>,
             IRpcRequestObserver
     {
         /// <summary>The peer discovery</summary>
         private readonly IRepository<Peer> _peerRepository;
 
-        /// <summary>The RPC message base</summary>
-        private readonly IMessageFactory _messageFactory;
-
-        /// <summary>The peer identifier</summary>
-        private readonly IPeerIdentifier _peerIdentifier;
-
         /// <summary>Initializes a new instance of the <see cref="PeerCountRequestObserver"/> class.</summary>
         /// <param name="peerIdentifier">The peer identifier.</param>
         /// <param name="peerRepository">The peer discovery.</param>
-        /// <param name="messageFactory"></param>
         /// <param name="logger">The logger.</param>
         public PeerCountRequestObserver(IPeerIdentifier peerIdentifier,
             IRepository<Peer> peerRepository,
-            IMessageFactory messageFactory,
             ILogger logger) :
-            base(logger)
+            base(logger, peerIdentifier)
         {
             _peerRepository = peerRepository;
-            _messageFactory = messageFactory;
-            _peerIdentifier = peerIdentifier;
         }
 
         /// <summary>Handles the specified message.</summary>
         /// <param name="messageDto">The message.</param>
-        protected override void Handler(IProtocolMessageDto<ProtocolMessage> messageDto)
+        public override IMessage HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto)
         {
+            Guard.Argument(messageDto, nameof(messageDto)).NotNull("Received message cannot be null");
+
             var peerCount = _peerRepository.GetAll().Count();
 
-            var response = new GetPeerCountResponse
+            return new GetPeerCountResponse
             {
                 PeerCount = peerCount
             };
-
-            var responseMessage = _messageFactory.GetMessage(new MessageDto(
-                    response,
-                    MessageTypes.Response,
-                    new PeerIdentifier(messageDto.Payload.PeerId),
-                    _peerIdentifier),
-                messageDto.Payload.CorrelationId.ToGuid()
-            );
-
-            messageDto.Context.Channel.WriteAndFlushAsync(responseMessage);
         }
     }
 }

@@ -74,7 +74,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.Observables
         [MemberData(nameof(QueryContents))]
         public async Task RpcClient_Can_Handle_VerifyMessageResponse(bool isSignedByNode)
         {
-            var response = new MessageFactory().GetMessage(new MessageDto(
+            var response = new ProtocolProtocolMessageFactory().GetMessage(new MessageDto(
                     new VerifyMessageResponse
                     {
                         IsSignedByKey = isSignedByNode

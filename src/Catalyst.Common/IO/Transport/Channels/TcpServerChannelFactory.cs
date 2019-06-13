@@ -77,7 +77,7 @@ namespace Catalyst.Common.IO.Transport.Channels
                 new ProtobufVarint32LengthFieldPrepender(),
                 new ProtobufEncoder(),
                 new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(new ProtocolMessageVerifyHandler(_keySigner), new ProtocolMessageSignHandler(_keySigner)),
-                new CorrelationHandler(_correlationManger),
+                new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(new CorrelationHandler(_correlationManger), new CorrelationHandler(_correlationManger)),
                 observableServiceHandler
             };
             

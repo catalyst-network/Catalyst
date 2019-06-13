@@ -21,7 +21,6 @@
 
 #endregion
 
-using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;
@@ -37,23 +36,30 @@ namespace Catalyst.Common.IO.Handlers
             _messageCorrelationManager = messageCorrelationManager;
         }
 
+        /// <summary>
+        ///     The server should always correlate a response, if it can fire next pipeline, if not close the channel,
+        ///     If the message is not a response (IE Request/Broadcast) it should pass on to the next handler without attempting to correlate.
+        /// </summary>
+        /// <param name="ctx"></param>
+        /// <param name="message"></param>
         protected override void ChannelRead0(IChannelHandlerContext ctx, ProtocolMessage message)
         {
-            if (message.CheckIfMessageIsBroadcast())
+            if (message.TypeUrl.EndsWith("Response"))
             {
-                ctx.FireChannelRead(message);
-            }
-            
-            //@TODO should not negate try match response but currently not storing in cache when sent
-            else if (!_messageCorrelationManager.TryMatchResponse(message))
-            {
-                ctx.FireChannelRead(message);                
+                if (_messageCorrelationManager.TryMatchResponse(message))
+                {
+                    ctx.FireChannelRead(message);                
+                }
+                else
+                {
+                    // @TODO maybe we want to send a message why we close the channel, if we do we will need a Correlation handler for Tcp && Udp to write back correctly.
+                    // ctx.Channel.WriteAndFlushAsync(datagramEnvelope);
+                    ctx.CloseAsync();
+                }
             }
             else
             {
-                // @TODO maybe we want to send a message why we close the channel, if we do we will need a Correlation handler for Tcp && Udp to write back correctly.
-                // ctx.Channel.WriteAndFlushAsync(datagramEnvelope);
-                ctx.CloseAsync();
+                ctx.FireChannelRead(message);
             }
         }
     }

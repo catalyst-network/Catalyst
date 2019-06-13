@@ -22,20 +22,20 @@
 #endregion
 
 using System;
-using Catalyst.Common.Interfaces.IO.Messaging.Dto;
+using Catalyst.Common.Interfaces.P2P.Messaging;
+using Catalyst.Common.Interfaces.P2P.Messaging.Dto;
 using Catalyst.Protocol.Common;
-using DotNetty.Transport.Channels;
+using DotNetty.Buffers;
 
-namespace Catalyst.Common.Interfaces.IO.Observables
+namespace Catalyst.Common.Interfaces.IO.Messaging
 {
-    public interface IObserver
+    public interface IProtocolMessageFactory
     {
-        IChannelHandlerContext ChannelHandlerContext { get; }
-        IDisposable MessageSubscription { get; }
-        
-        void StartObserving(IObservable<IProtocolMessageDto<ProtocolMessage>> messageStream);
-        void OnNext(IProtocolMessageDto<ProtocolMessage> messageDto);
-        void OnCompleted();
-        void OnError(Exception exception);
+        /// <summary>Gets the message.</summary>
+        /// <param name="messageDto">The message.</param>
+        /// <param name="correlationId">The correlation identifier.</param>
+        /// <returns>ProtocolMessage message</returns>
+        ProtocolMessage GetMessage(IMessageDto messageDto,
+            Guid correlationId = default);
     }
 }

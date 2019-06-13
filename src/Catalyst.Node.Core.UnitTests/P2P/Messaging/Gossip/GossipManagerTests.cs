@@ -165,7 +165,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Messaging.Gossip
 
             var peerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("1");
             var senderIdentifier = PeerIdentifierHelper.GetPeerIdentifier("sender");
-            var messageFactory = new MessageFactory();
+            var messageFactory = new ProtocolProtocolMessageFactory();
             IBroadcastManager broadcastMessageHandler = new BroadcastManager(peerIdentifier, _peers, _cache, Substitute.For<IPeerClient>());
 
             var correlationId = Guid.NewGuid();
@@ -200,7 +200,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Messaging.Gossip
 
         private async Task<Guid> Get_Gossip_Correlation_Id(IPeerIdentifier peerIdentifier)
         {
-            var messageFactory = new MessageFactory();
+            var messageFactory = new ProtocolProtocolMessageFactory();
             var senderPeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("sender");
 
             var gossipMessageHandler = new

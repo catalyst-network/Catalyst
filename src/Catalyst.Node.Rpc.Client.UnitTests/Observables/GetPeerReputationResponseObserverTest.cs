@@ -101,7 +101,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.Observables
 
         private async Task TestGetReputationResponse(int rep)
         {
-            var response = new MessageFactory().GetMessage(new MessageDto(
+            var response = new ProtocolProtocolMessageFactory().GetMessage(new MessageDto(
                     new GetPeerReputationResponse
                     {
                         Reputation = rep

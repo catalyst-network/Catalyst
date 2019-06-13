@@ -36,45 +36,31 @@ using Catalyst.Common.Util;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
+using Google.Protobuf;
 using ILogger = Serilog.ILogger;
 
 namespace Catalyst.Node.Core.RPC.Observables
 {
     public sealed class GetVersionRequestObserver
-        : ObserverBase<VersionRequest>,
+        : RequestObserverBase<VersionRequest>,
             IRpcRequestObserver
     {
-        private readonly IPeerIdentifier _peerIdentifier;
-        private readonly IMessageFactory _messageFactory;
-
         public GetVersionRequestObserver(IPeerIdentifier peerIdentifier,
-            ILogger logger,
-            IMessageFactory messageFactory)
-            : base(logger)
-        {
-            _messageFactory = messageFactory;
-            _peerIdentifier = peerIdentifier;
-        }
+            ILogger logger)
+            : base(logger, peerIdentifier) { }
 
-        protected override void Handler(IProtocolMessageDto<ProtocolMessage> messageDto)
+        public override IMessage HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto)
         {
-            Guard.Argument(messageDto).NotNull("Received message cannot be null");
-            
             Logger.Debug("received message of type VersionRequest");
+
+            Guard.Argument(messageDto, nameof(messageDto)).NotNull("Received message cannot be null");
             
             try
             {
-                var response = _messageFactory.GetMessage(new MessageDto(
-                        new VersionResponse
-                        {
-                            Version = NodeUtil.GetVersion()
-                        },
-                        MessageTypes.Response,
-                        new PeerIdentifier(messageDto.Payload.PeerId),
-                        _peerIdentifier),
-                    messageDto.Payload.CorrelationId.ToGuid());
-                
-                messageDto.Context.Channel.WriteAndFlushAsync(response).GetAwaiter().GetResult();
+                return new VersionResponse
+                {
+                    Version = NodeUtil.GetVersion()
+                };
             }
             catch (Exception ex)
             {

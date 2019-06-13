@@ -21,24 +21,15 @@
 
 #endregion
 
-using System;
-using Catalyst.Common.Interfaces.P2P.Messaging;
-using Catalyst.Common.Interfaces.P2P.Messaging.Dto;
+using Catalyst.Common.Interfaces.IO.Messaging.Dto;
+using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Protocol.Common;
-using DotNetty.Buffers;
 
-namespace Catalyst.Common.Interfaces.IO.Messaging
+namespace Catalyst.Common.Interfaces.IO.Observables
 {
-    public interface IMessageFactory
+    internal interface IResponseObserver : IObserver
     {
-        /// <summary>Gets the message.</summary>
-        /// <param name="messageDto">The message.</param>
-        /// <param name="correlationId">The correlation identifier.</param>
-        /// <returns>ProtocolMessage message</returns>
-        ProtocolMessage GetMessage(IMessageDto messageDto,
-            Guid correlationId = default);
-        
-        IByteBufferHolder GetDatagramMessage(IMessageDto messageDto,
-            Guid correlationId = default);
+        IPeerIdentifier PeerIdentifier { get; }
+        void HandleResponse(IProtocolMessageDto<ProtocolMessage> messageDto);
     }
 }

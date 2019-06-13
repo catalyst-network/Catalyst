@@ -21,18 +21,18 @@
 
 #endregion
 
+using System;
 using System.Linq;
 using Catalyst.Common.Extensions;
-using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Observables;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.IO.Observables;
 using Catalyst.Common.P2P;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
+using Google.Protobuf;
 using Nethereum.RLP;
 using SharpRepository.Repository;
 using ILogger = Serilog.ILogger;
@@ -40,7 +40,7 @@ using ILogger = Serilog.ILogger;
 namespace Catalyst.Node.Core.RPC.Observables
 {
     public sealed class PeerReputationRequestObserver
-        : ObserverBase<GetPeerReputationRequest>,
+        : RequestObserverBase<GetPeerReputationRequest>,
             IRpcRequestObserver
     {
         /// <summary>
@@ -48,16 +48,11 @@ namespace Catalyst.Node.Core.RPC.Observables
         /// </summary>
         private readonly IRepository<Peer> _peerRepository;
 
-        private IProtocolMessageDto<ProtocolMessage> _messageDto;
-        
-        private readonly PeerId _peerId;
-
         public PeerReputationRequestObserver(IPeerIdentifier peerIdentifier,
             ILogger logger,
             IRepository<Peer> peerRepository)
-            : base(logger)
+            : base(logger, peerIdentifier)
         {
-            _peerId = peerIdentifier.PeerId;
             _peerRepository = peerRepository;
         }
 
@@ -65,38 +60,23 @@ namespace Catalyst.Node.Core.RPC.Observables
         /// Handlers the specified message.
         /// </summary>
         /// <param name="messageDto">The message.</param>
-        protected override void Handler(IProtocolMessageDto<ProtocolMessage> messageDto)
+        public override IMessage HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto)
         {
-            Guard.Argument(messageDto).NotNull("Received message cannot be null");
+            Logger.Debug("received message of type PeerReputationRequest");
 
-            _messageDto = messageDto;
+            Guard.Argument(messageDto, nameof(messageDto)).NotNull("Received message cannot be null");
 
             var deserialised = messageDto.Payload.FromProtocolMessage<GetPeerReputationRequest>();
-            var publicKey = deserialised.PublicKey.ToStringUtf8(); 
+            var publicKey = deserialised.PublicKey.ToStringUtf8() ?? throw new ArgumentNullException(nameof(messageDto));
+            
             var ip = deserialised.Ip.ToStringUtf8();
 
-            ReturnResponse(_peerRepository.GetAll().Where(m => m.PeerIdentifier.Ip.ToString() == ip.ToString()
-                 && ConvertorForRLPEncodingExtensions.ToStringFromRLPDecoded(m.PeerIdentifier.PublicKey) == publicKey)
-               .Select(x => x.Reputation).DefaultIfEmpty(int.MinValue).First(), messageDto);
-
-            Logger.Debug("received message of type PeerReputationRequest");
-        }
-
-        /// <summary>
-        /// Returns the response.
-        /// </summary>
-        /// <param name="reputation"></param>
-        /// <param name="messageDto"></param>
-        private void ReturnResponse(int reputation, IProtocolMessageDto<ProtocolMessage> messageDto)
-        {
-            var response = new GetPeerReputationResponse
+            return new GetPeerReputationResponse
             {
-                Reputation = reputation
+                Reputation = _peerRepository.GetAll().Where(m => m.PeerIdentifier.Ip.ToString() == ip.ToString()
+                     && m.PeerIdentifier.PublicKey.ToStringFromRLPDecoded() == publicKey)
+                   .Select(x => x.Reputation).DefaultIfEmpty(int.MinValue).First()
             };
-
-            var anySignedResponse = response.ToProtocolMessage(_peerId, _messageDto.Payload.CorrelationId.ToGuid());
-
-            messageDto.Context.Channel.WriteAndFlushAsync(anySignedResponse).GetAwaiter().GetResult();
         }
     }
 }

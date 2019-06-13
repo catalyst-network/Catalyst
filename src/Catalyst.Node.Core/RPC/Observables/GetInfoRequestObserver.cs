@@ -36,6 +36,7 @@ using Catalyst.Common.P2P;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
+using Google.Protobuf;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using ILogger = Serilog.ILogger;
@@ -43,28 +44,24 @@ using ILogger = Serilog.ILogger;
 namespace Catalyst.Node.Core.RPC.Observables
 {
     public sealed class GetInfoRequestObserver
-        : ObserverBase<GetInfoRequest>,
+        : RequestObserverBase<GetInfoRequest>,
             IRpcRequestObserver
     {
-        private readonly IPeerIdentifier _peerIdentifier;
         private readonly IRpcServerSettings _config;
-        private readonly IMessageFactory _messageFactory;
 
         public GetInfoRequestObserver(IPeerIdentifier peerIdentifier,
             IRpcServerSettings config,
-            IMessageFactory messageFactory,
-            ILogger logger) : base(logger)
+            ILogger logger) : base(logger, peerIdentifier)
         {
-            _messageFactory = messageFactory;
-            _peerIdentifier = peerIdentifier;
             _config = config;
         }
 
-        protected override void Handler(IProtocolMessageDto<ProtocolMessage> messageDto)
+        public override IMessage HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto)
         {
-            Guard.Argument(messageDto).NotNull();
-            
             Logger.Debug("received message of type GetInfoRequest");
+
+            Guard.Argument(messageDto, nameof(messageDto)).NotNull("Received message cannot be null");
+            
             try
             {
                 var deserialised = messageDto.Payload.FromProtocolMessage<GetInfoRequest>();
@@ -77,18 +74,23 @@ namespace Catalyst.Node.Core.RPC.Observables
                     _config.NodeConfig.GetSection("CatalystNodeConfiguration").AsEnumerable(), 
                     Formatting.Indented);
 
-                var response = _messageFactory.GetMessage(new MessageDto(
-                        new GetInfoResponse
-                        {
-                            Query = serializedList
-                        },
-                        MessageTypes.Response,
-                        new PeerIdentifier(messageDto.Payload.PeerId), 
-                        _peerIdentifier
-                    ),
-                    messageDto.Payload.CorrelationId.ToGuid());
+                // var response = _protocolMessageFactory.GetMessage(new MessageDto(
+                //         new GetInfoResponse
+                //         {
+                //             Query = serializedList
+                //         },
+                //         MessageTypes.Response,
+                //         new PeerIdentifier(messageDto.Payload.PeerId), 
+                //         _peerIdentifier
+                //     ),
+                //     messageDto.Payload.CorrelationId.ToGuid());
+                //
+                // messageDto.Context.Channel.WriteAndFlushAsync(response).GetAwaiter().GetResult();
                 
-                messageDto.Context.Channel.WriteAndFlushAsync(response).GetAwaiter().GetResult();
+                return new GetInfoResponse
+                {
+                    Query = serializedList
+                };
             }
             catch (Exception ex)
             {

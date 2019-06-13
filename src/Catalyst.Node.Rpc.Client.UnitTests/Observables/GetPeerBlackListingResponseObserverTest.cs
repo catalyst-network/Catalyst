@@ -29,6 +29,7 @@ using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.Util;
 using Catalyst.Node.Core.RPC.Observables;
+using Catalyst.Node.Rpc.Client.Observables;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
@@ -88,7 +89,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.Observables
 
         private async Task TestGetBlackListResponse(bool blacklist, string publicKey, string ip)
         {
-            var response = new MessageFactory().GetMessage(new MessageDto(
+            var response = new ProtocolProtocolMessageFactory().GetMessage(new MessageDto(
                     new SetPeerBlackListResponse
                     {
                         Blacklist = blacklist,

@@ -24,43 +24,39 @@
 using System.Linq;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
-using Catalyst.Common.Interfaces.IO.Messaging;
+using Catalyst.Protocol.IPPN;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Observables;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.IO.Messaging;
-using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.IO.Observables;
 using Catalyst.Common.P2P;
 using Catalyst.Protocol.Common;
-using Catalyst.Protocol.IPPN;
 using Dawn;
+using Google.Protobuf;
 using Serilog;
 using SharpRepository.Repository;
 
 namespace Catalyst.Node.Core.P2P.Observables
 {
     public sealed class GetNeighbourRequestObserver
-        : ObserverBase<PeerNeighborsRequest>,
+        : RequestObserverBase<PeerNeighborsRequest>,
             IP2PMessageObserver
     {
         private readonly IRepository<Peer> _repository;
-        private readonly IPeerIdentifier _peerIdentifier;
 
         public GetNeighbourRequestObserver(IPeerIdentifier peerIdentifier,
             IRepository<Peer> repository,
             ILogger logger)
-            : base(logger)
-        {
-            _peerIdentifier = peerIdentifier;
+            : base(logger, peerIdentifier)
+        { 
             _repository = repository;
         }
 
-        protected override void Handler(IProtocolMessageDto<ProtocolMessage> messageDto)
+        public override IMessage HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto)
         {
             Logger.Debug("PeerNeighborsRequest Message Received");
 
-            // @TODO can't mock FindAll return properly so just do GetAll and filter with link for now
+            // @TODO can't mock FindAll return properly so just do GetAll and filter with linq for now
             // var activePeersList = _repository.FindAll(new Specification<Peer>(p => p.IsAwolPeer == false));
             var activePeersList = _repository.GetAll().Where(p => p.IsAwolPeer == false).ToList();
             Guard.Argument(activePeersList).MinCount(1);
@@ -72,16 +68,7 @@ namespace Catalyst.Node.Core.P2P.Observables
                 peerNeighborsResponseMessage.Peers.Add(activePeersList.RandomElement().PeerIdentifier.PeerId);
             }
 
-            var datagramEnvelope = new MessageFactory().GetDatagramMessage(new MessageDto(
-                    peerNeighborsResponseMessage,
-                    MessageTypes.Response,
-                    new PeerIdentifier(messageDto.Payload.PeerId),
-                    _peerIdentifier
-                ),
-                messageDto.Payload.CorrelationId.ToGuid()
-            );
-
-            messageDto.Context.Channel.WriteAndFlushAsync(datagramEnvelope);
+            return peerNeighborsResponseMessage;
         }
     }
 }

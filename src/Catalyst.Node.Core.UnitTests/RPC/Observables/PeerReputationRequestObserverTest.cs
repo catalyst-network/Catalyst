@@ -123,7 +123,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
 
             var sendPeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("sender");
 
-            var messageFactory = new MessageFactory();
+            var messageFactory = new ProtocolProtocolMessageFactory();
             var request = new GetPeerReputationRequest
             {
                 PublicKey = publicKey.ToBytesForRLPEncoding().ToByteString(),

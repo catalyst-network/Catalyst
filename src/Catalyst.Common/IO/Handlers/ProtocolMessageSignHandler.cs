@@ -47,12 +47,11 @@ namespace Catalyst.Common.IO.Handlers
         /// <returns></returns>
         public override Task WriteAsync(IChannelHandlerContext context, object message)
         {
-            if (!CanSign(message))
+            if (!(message is ProtocolMessage protocolMessage))
             {
-                return context.WriteAndFlushAsync(message);
+                return context.CloseAsync();
             }
-            
-            ProtocolMessage protocolMessage = (ProtocolMessage) message;
+
             var unsignedMessage = protocolMessage.ToByteArray();
             var protocolMessageSigned = new ProtocolMessageSigned
             {
@@ -61,11 +60,6 @@ namespace Catalyst.Common.IO.Handlers
             };
 
             return context.WriteAsync(protocolMessageSigned);
-        }
-
-        private bool CanSign(object msg)
-        {
-            return msg is ProtocolMessage;
         }
     }
 }

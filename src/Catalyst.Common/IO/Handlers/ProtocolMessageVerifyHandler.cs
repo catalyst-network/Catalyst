@@ -52,7 +52,7 @@ namespace Catalyst.Common.IO.Handlers
             {
                 // @TODO maybe we want to send a message why we close the channel, if we do we will need a Correlation handler for Tcp && Udp to write back correctly.
                 // ctx.Channel.WriteAndFlushAsync(datagramEnvelope);
-                ctx.CloseAsync();
+                ctx.CloseAsync().ConfigureAwait(false);
             }
         }
     }

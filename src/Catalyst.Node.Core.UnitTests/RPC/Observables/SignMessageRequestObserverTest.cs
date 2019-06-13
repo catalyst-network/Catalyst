@@ -79,7 +79,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
         [InlineData("Hello&?!1253Catalyst")]
         public async Task RpcServer_Can_Handle_SignMessageRequest(string message)
         {
-            var messageFactory = new MessageFactory();
+            var messageFactory = new ProtocolProtocolMessageFactory();
             var request = messageFactory.GetMessage(new MessageDto(
                 new SignMessageRequest
                 {
@@ -91,7 +91,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
             ));
             
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, request);
-            var handler = new SignMessageRequestObserver(PeerIdentifierHelper.GetPeerIdentifier("sender"), _logger, _keySigner, messageFactory);
+            var handler = new SignMessageRequestObserver(PeerIdentifierHelper.GetPeerIdentifier("sender"), _logger, _keySigner);
             handler.StartObserving(messageStream);
 
             await messageStream.WaitForEndOfDelayedStreamOnTaskPoolScheduler();
