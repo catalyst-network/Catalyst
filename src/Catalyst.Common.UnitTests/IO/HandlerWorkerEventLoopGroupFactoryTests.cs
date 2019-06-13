@@ -48,25 +48,25 @@ namespace Catalyst.Common.UnitTests.IO
         }
 
         [Fact]
-        public void CanSpawnCorrectAmountOfUdpServerEventLoops()
+        public void Can_Spawn_Correct_Amount_Of_Udp_Server_Event_Loops()
         {
             AssertEventLoopSize(_handlerWorkerEventLoopGroupFactory.NewUdpServerLoopGroup(), ExpectedUdpServerThreads);
         }
 
         [Fact]
-        public void CanSpawnCorrectAmountOfUdpClientEventLoops()
+        public void Can_Spawn_Correct_Amount_Of_Udp_Client_Event_Loops()
         {
             AssertEventLoopSize(_handlerWorkerEventLoopGroupFactory.NewUdpClientLoopGroup(), ExpectedUdpClientThreads);
         }
 
         [Fact]
-        public void CanSpawnCorrectAmountOTcpServerEventLoops()
+        public void Can_Spawn_Correct_Amount_Of_Tcp_Server_Event_Loops()
         {
             AssertEventLoopSize(_handlerWorkerEventLoopGroupFactory.NewTcpServerLoopGroup(), ExpectedTcpServerThreads);
         }
 
         [Fact]
-        public void CanSpawnCorrectAmountOTcpClientEventLoops()
+        public void Can_Spawn_Correct_Amount_Of_Tcp_Client_Event_Loops()
         {
             AssertEventLoopSize(_handlerWorkerEventLoopGroupFactory.NewTcpClientLoopGroup(), ExpectedTcpClientThreads);
         }
@@ -75,7 +75,7 @@ namespace Catalyst.Common.UnitTests.IO
         {
             eventLoopGroup.Should().NotBeNull();
             IEventLoop[] eventLoops =
-                (IEventLoop[])eventLoopGroup.GetType().GetField("eventLoops",
+                (IEventLoop[]) eventLoopGroup.GetType().GetField("eventLoops",
                     BindingFlags.Instance | BindingFlags.NonPublic).GetValue(eventLoopGroup);
             eventLoops.Length.Should().Be(expectedEventLoops);
         }
