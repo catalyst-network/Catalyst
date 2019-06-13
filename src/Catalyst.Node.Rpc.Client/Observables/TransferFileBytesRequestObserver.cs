@@ -49,7 +49,7 @@ namespace Catalyst.Node.Rpc.Client.Observables
         private readonly IDownloadFileTransferFactory _fileTransferFactory;
 
         /// <summary>The message factory</summary>
-        private readonly IMessageFactory _messageFactory;
+        private readonly IProtocolMessageFactory _protocolMessageFactory;
 
         /// <summary>The peer identifier</summary>
         private readonly IPeerIdentifier _peerIdentifier;
@@ -58,15 +58,15 @@ namespace Catalyst.Node.Rpc.Client.Observables
         /// <param name="fileTransferFactory">The download file transfer factory.</param>
         /// <param name="config">The configuration.</param>
         /// <param name="logger">The logger.</param>
-        /// <param name="messageFactory"></param>
+        /// <param name="protocolMessageFactory"></param>
         public TransferFileBytesRequestObserver(IDownloadFileTransferFactory fileTransferFactory,
             IConfigurationRoot config,
             ILogger logger,
-            IMessageFactory messageFactory)
+            IProtocolMessageFactory protocolMessageFactory)
             : base(logger)
         {
             _fileTransferFactory = fileTransferFactory;
-            _messageFactory = messageFactory;
+            _protocolMessageFactory = protocolMessageFactory;
             _peerIdentifier = PeerIdentifier.BuildPeerIdFromConfig(config);
         }
 
@@ -74,15 +74,15 @@ namespace Catalyst.Node.Rpc.Client.Observables
         /// <param name="fileTransferFactory">The download file transfer factory.</param>
         /// <param name="peerIdentifier">The peer identifier.</param>
         /// <param name="logger">The logger.</param>
-        /// <param name="messageFactory"></param>
+        /// <param name="protocolMessageFactory"></param>
         public TransferFileBytesRequestObserver(IDownloadFileTransferFactory fileTransferFactory,
             IPeerIdentifier peerIdentifier,
             ILogger logger,
-            IMessageFactory messageFactory)
+            IProtocolMessageFactory protocolMessageFactory)
             : base(logger)
         {
             _fileTransferFactory = fileTransferFactory;
-            _messageFactory = messageFactory;
+            _protocolMessageFactory = protocolMessageFactory;
             _peerIdentifier = peerIdentifier;
         }
 
@@ -112,7 +112,7 @@ namespace Catalyst.Node.Rpc.Client.Observables
                 ResponseCode = ByteString.CopyFrom((byte) responseCode.Id)
             };
 
-            var responseDto = _messageFactory.GetMessage(new MessageDto(
+            var responseDto = _protocolMessageFactory.GetMessage(new MessageDto(
                     responseMessage,
                     MessageTypes.Response,
                     new PeerIdentifier(messageDto.Payload.PeerId),

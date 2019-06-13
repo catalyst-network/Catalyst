@@ -55,7 +55,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
             _observer = new TransferFileBytesRequestObserver(_downloadFileTransferFactory,
                 peerIdentifier,
                 Substitute.For<ILogger>(), 
-                new MessageFactory());
+                new ProtocolMessageFactory());
         }
 
         [Fact(Skip = "This tests needs to mock downloadChunk() return correctly")]

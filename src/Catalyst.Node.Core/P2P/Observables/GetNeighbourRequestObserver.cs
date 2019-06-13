@@ -71,7 +71,7 @@ namespace Catalyst.Node.Core.P2P.Observables
                 peerNeighborsResponseMessage.Peers.Add(activePeersList.RandomElement().PeerIdentifier.PeerId);
             }
 
-            var datagramEnvelope = new MessageFactory().GetDatagramMessage(new MessageDto(
+            var datagramEnvelope = new ProtocolMessageFactory().GetDatagramMessage(new MessageDto(
                     peerNeighborsResponseMessage,
                     MessageTypes.Response,
                     new PeerIdentifier(messageDto.Payload.PeerId),

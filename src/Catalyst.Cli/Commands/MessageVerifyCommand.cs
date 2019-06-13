@@ -59,7 +59,7 @@ namespace Catalyst.Cli.Commands
 
             try
             {
-                var request = _messageFactory.GetMessage(new MessageDto(
+                var request = _protocolMessageFactory.GetMessage(new MessageDto(
                     new VerifyMessageRequest
                     {
                         Message =
