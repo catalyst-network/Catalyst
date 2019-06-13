@@ -37,13 +37,22 @@ namespace Catalyst.TestUtils
 {
     public sealed class EmbeddedObservableChannel : IObservableChannel
     {
-        private readonly EmbeddedChannel _channel;
-
-        public EmbeddedObservableChannel(string channelName)
+        public static IChannelId ToChannelId(this string channelName)
         {
             var channelId = Substitute.For<IChannelId>();
             channelId.AsLongText().Returns(channelName);
             channelId.AsShortText().Returns(channelName);
+            return channelId;
+        }
+    }
+
+    public sealed class EmbeddedObservableChannel : IObservableChannel
+    {
+        private readonly EmbeddedChannel _channel;
+
+        public EmbeddedObservableChannel(string channelName)
+        {
+            var channelId = channelName.ToChannelId();
 
             var observableServiceHandler = new ObservableServiceHandler();
             var embeddedChannel = new EmbeddedChannel(channelId, false, true, observableServiceHandler);
