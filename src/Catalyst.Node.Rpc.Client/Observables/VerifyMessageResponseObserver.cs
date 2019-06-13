@@ -31,8 +31,6 @@ using Catalyst.Common.IO.Observables;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
-using Multiformats.Base;
-using Nethereum.RLP;
 using ILogger = Serilog.ILogger;
 
 namespace Catalyst.Node.Rpc.Client.Observables
@@ -41,17 +39,18 @@ namespace Catalyst.Node.Rpc.Client.Observables
     /// Handler responsible for handling the server's response for the GetMempool request.
     /// The handler reads the response's payload and formats it in user readable format and writes it to the console.
     /// </summary>
-    public sealed class SignResponseObserver
-        : ResponseObserverBase<SignMessageRequest>,
+    public sealed class VerifyMessageResponseObserver
+        : ResponseObserverBase<VerifyMessageResponse>,
             IRpcResponseMessageObserver
     {
         private readonly IUserOutput _output;
 
         /// <summary>
         /// </summary>
+        /// receive the response from the server.
         /// <param name="output"></param>
         /// <param name="logger">Logger to log debug related information.</param>
-        public SignResponseObserver(IUserOutput output,
+        public VerifyMessageResponseObserver(IUserOutput output,
             ILogger logger)
             : base(logger)
         {
@@ -63,34 +62,30 @@ namespace Catalyst.Node.Rpc.Client.Observables
         /// </summary>
         /// <param name="messageDto">An object of GetMempoolResponse</param>
         public override void HandleResponse(IProtocolMessageDto<ProtocolMessage> messageDto)
-        {
-            Logger.Debug($@"sign message response");
+        {   
+            Logger.Debug($"Handling VerifyMessageResponse");
+            Guard.Argument(messageDto, nameof(messageDto)).NotNull("Received message cannot be null");
 
-            Guard.Argument(messageDto, nameof(messageDto)).NotNull($@"Received message cannot be null");
-            
             try
             {
-                var deserialised = messageDto.Payload.FromProtocolMessage<SignMessageResponse>() ?? throw new ArgumentNullException(nameof(messageDto));
+                var deserialised = messageDto.Payload.FromProtocolMessage<VerifyMessageResponse>();
+                Guard.Argument(deserialised).NotNull("The verify message response cannot be null");
 
-                var decodeResult = RLP.Decode(deserialised.OriginalMessage.ToByteArray()).RLPData;
+                //decode the received message
+                var result = deserialised.IsSignedByKey;
 
-                Guard.Argument(decodeResult, nameof(decodeResult)).NotNull("The sign message response cannot be null.");
-
-                var originalMessage = decodeResult.ToStringFromRLPDecoded() ?? throw new ArgumentNullException(nameof(messageDto));
-
-                _output.WriteLine(
-                    $@"Signature: {Multibase.Encode(MultibaseEncoding.Base64, deserialised.Signature.ToByteArray())} " +
-                    $@"Public Key: {Multibase.Encode(MultibaseEncoding.Base58Btc, deserialised.PublicKey.ToByteArray())} Original Message: {originalMessage}");
+                //return to the user the signature, public key and the original message that he sent to be signed
+                _output.WriteLine($@"{result.ToString()}");
             }
             catch (Exception ex)
             {
                 Logger.Error(ex,
-                    "Failed to handle SignMessageResponseHandler after receiving message {0}", messageDto);
-                _output.WriteLine(ex.Message);
+                    "Failed to handle VerifyMessageResponse after receiving message {0}", messageDto);
+                throw;
             }
             finally
             {
-                Logger.Information("Press Enter to continue ...");
+                Logger.Information(@"Press Enter to continue ...");
             }
         }
     }

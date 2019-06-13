@@ -26,6 +26,8 @@ using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Observables;
+using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.Interfaces.P2P.Messaging.Dto;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.IO.Observables;
 using Catalyst.Protocol.Common;
@@ -40,6 +42,7 @@ namespace Catalyst.TestUtils
         where TProto : IMessage, IMessage<TProto>
     {
         public IObserver<TProto> SubstituteObserver { get; }
+        public IPeerIdentifier PeerIdentifier { get; }
 
         public TestMessageObserver(ILogger logger) : base(logger)
         {
@@ -47,13 +50,25 @@ namespace Catalyst.TestUtils
         }
 
         public override void OnError(Exception exception) { SubstituteObserver.OnError(exception); }
-        public override void StartObserving(IObservable<IProtocolMessageDto<ProtocolMessage>> messageStream) { throw new NotImplementedException(); }
+        
+        public void HandleResponse(IProtocolMessageDto<ProtocolMessage> messageDto)
+        {
+            SubstituteObserver.OnNext(messageDto.Payload.FromProtocolMessage<TProto>());
+        }
 
         public override void OnNext(IProtocolMessageDto<ProtocolMessage> messageDto)
         {
             SubstituteObserver.OnNext(messageDto.Payload.FromProtocolMessage<TProto>());
         }
         
+        public IMessage HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto)
+        {
+            return messageDto.Payload.FromProtocolMessage<TProto>();
+        }
+                
         public override void OnCompleted() { SubstituteObserver.OnCompleted(); }
+        public override void StartObserving(IObservable<IProtocolMessageDto<ProtocolMessage>> messageStream) { throw new NotImplementedException(); }
+
+        public void SendChannelContextResponse(IMessageDto messageDto) { throw new NotImplementedException(); }
     }
 }

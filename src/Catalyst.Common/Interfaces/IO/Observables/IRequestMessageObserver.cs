@@ -29,7 +29,7 @@ using Google.Protobuf;
 
 namespace Catalyst.Common.Interfaces.IO.Observables
 {
-    internal interface IRequestMessageObserver : IMessageObserver
+    public interface IRequestMessageObserver : IMessageObserver
     {
         IPeerIdentifier PeerIdentifier { get; }
         IMessage HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto);

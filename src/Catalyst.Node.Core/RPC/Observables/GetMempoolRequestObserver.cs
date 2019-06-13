@@ -44,7 +44,7 @@ using ILogger = Serilog.ILogger;
 namespace Catalyst.Node.Core.RPC.Observables
 {
     public sealed class GetMempoolRequestObserver
-        : RequestMessageObserverBase<GetMempoolRequest>,
+        : RequestObserverBase<GetMempoolRequest>,
             IRpcRequestMessageObserver
     {
         private readonly IMempool _mempool;

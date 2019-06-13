@@ -46,7 +46,7 @@ namespace Catalyst.Node.Core.RPC.Observables
     /// </summary>
     /// <seealso cref="IRpcRequestMessageObserver" />
     public sealed class PeerCountRequestObserver
-        : RequestMessageObserverBase<GetPeerCountRequest>,
+        : RequestObserverBase<GetPeerCountRequest>,
             IRpcRequestMessageObserver
     {
         /// <summary>The peer discovery</summary>

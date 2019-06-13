@@ -54,7 +54,7 @@ namespace Catalyst.Node.Core.RPC.Observables
     /// </summary>
     /// <seealso cref="IRpcRequestMessageObserver" />
     public sealed class GetFileFromDfsRequestObserver 
-        : RequestMessageObserverBase<GetFileFromDfsRequest>,
+        : RequestObserverBase<GetFileFromDfsRequest>,
             IRpcRequestMessageObserver
     {
         /// <summary>The RPC message factory</summary>

@@ -40,11 +40,11 @@ using Serilog;
 
 namespace Catalyst.Common.IO.Observables
 {
-    public abstract class RequestMessageObserverBase<TProto> : MessageObserverBase, IRequestMessageObserver where TProto : IMessage
+    public abstract class RequestObserverBase<TProto> : MessageObserverBase, IRequestMessageObserver where TProto : IMessage
     {
         public IPeerIdentifier PeerIdentifier { get; }
 
-        protected RequestMessageObserverBase(ILogger logger, IPeerIdentifier peerIdentifier) : base(logger)
+        protected RequestObserverBase(ILogger logger, IPeerIdentifier peerIdentifier) : base(logger)
         {
             PeerIdentifier = peerIdentifier;
         }

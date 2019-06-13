@@ -42,7 +42,7 @@ using ILogger = Serilog.ILogger;
 namespace Catalyst.Node.Core.RPC.Observables
 {
     public sealed class GetVersionRequestObserver
-        : RequestMessageObserverBase<VersionRequest>,
+        : RequestObserverBase<VersionRequest>,
             IRpcRequestMessageObserver
     {
         public GetVersionRequestObserver(IPeerIdentifier peerIdentifier,

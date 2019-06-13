@@ -34,7 +34,7 @@ using Serilog;
 namespace Catalyst.Node.Core.P2P.Observables
 {
     public sealed class PingRequestObserver 
-        : RequestMessageObserverBase<PingRequest>,
+        : RequestObserverBase<PingRequest>,
             IP2PMessageObserver
     {
         public PingRequestObserver(IPeerIdentifier peerIdentifier,

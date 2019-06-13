@@ -50,7 +50,7 @@ namespace Catalyst.Node.Core.RPC.Observables
     /// The request handler to add a file to the DFS
     /// </summary>
     /// <seealso cref="IRpcRequestMessageObserver" />
-    public sealed class AddFileToDfsRequestObserver : RequestMessageObserverBase<AddFileToDfsRequest>, IRpcRequestMessageObserver
+    public sealed class AddFileToDfsRequestObserver : RequestObserverBase<AddFileToDfsRequest>, IRpcRequestMessageObserver
     {
         /// <summary>The RPC message factory</summary>
         private readonly IProtocolMessageFactory _protocolMessageFactory;

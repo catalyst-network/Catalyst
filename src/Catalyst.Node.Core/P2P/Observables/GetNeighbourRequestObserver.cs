@@ -39,7 +39,7 @@ using SharpRepository.Repository;
 namespace Catalyst.Node.Core.P2P.Observables
 {
     public sealed class GetNeighbourRequestObserver
-        : RequestMessageObserverBase<PeerNeighborsRequest>,
+        : RequestObserverBase<PeerNeighborsRequest>,
             IP2PMessageObserver
     {
         private readonly IRepository<Peer> _repository;

@@ -43,7 +43,7 @@ using ILogger = Serilog.ILogger;
 namespace Catalyst.Node.Core.RPC.Observables
 {
     public sealed class VerifyMessageRequestObserver
-        : RequestMessageObserverBase<VerifyMessageRequest>,
+        : RequestObserverBase<VerifyMessageRequest>,
             IRpcRequestMessageObserver
     {
         private readonly IKeySigner _keySigner;

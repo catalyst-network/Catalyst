@@ -38,7 +38,7 @@ using Serilog;
 namespace Catalyst.Node.Core.RPC.Observables
 {
     public sealed class TransferFileBytesRequestObserver
-        : RequestMessageObserverBase<TransferFileBytesRequest>,
+        : RequestObserverBase<TransferFileBytesRequest>,
             IRpcRequestMessageObserver
     {
         /// <summary>The download file transfer factory</summary>

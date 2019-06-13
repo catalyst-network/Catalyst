@@ -44,7 +44,7 @@ using ILogger = Serilog.ILogger;
 namespace Catalyst.Node.Core.RPC.Observables
 {
     public sealed class GetInfoRequestObserver
-        : RequestMessageObserverBase<GetInfoRequest>,
+        : RequestObserverBase<GetInfoRequest>,
             IRpcRequestMessageObserver
     {
         private readonly IRpcServerSettings _config;
