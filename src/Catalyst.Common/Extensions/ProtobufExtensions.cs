@@ -27,6 +27,7 @@ using System.Linq;
 using System.Net;
 using System.Reflection;
 using Catalyst.Common.Config;
+using Catalyst.Common.Interfaces.P2P.Messaging.Dto;
 using Catalyst.Common.Util;
 using Catalyst.Protocol.Common;
 using Dawn;
@@ -43,7 +44,8 @@ namespace Catalyst.Common.Extensions
         private const string CatalystProtocol = "Catalyst.Protocol";
 
         private static readonly List<string> ProtoGossipAllowedMessages;
-
+        private static readonly List<string> ProtoRequestAllowedMessages;
+        
         static ProtobufExtensions()
         {
             var protoToClrNameMapper = typeof(ProtocolMessage).Assembly.ExportedTypes
@@ -52,6 +54,10 @@ namespace Catalyst.Common.Extensions
                .ToDictionary(d => d.ShortenedFullName(), d => d.ClrType.FullName);
             ProtoGossipAllowedMessages = protoToClrNameMapper.Keys
                .Where(t => t.EndsWith(MessageTypes.Broadcast.Name))
+               .ToList();
+
+            ProtoRequestAllowedMessages = protoToClrNameMapper.Keys
+               .Where(t => t.EndsWith(MessageTypes.Request.Name))
                .ToList();
         }
 
@@ -93,6 +99,12 @@ namespace Catalyst.Common.Extensions
             return protocolMessage;
         }
 
+        public static bool IsRequestType(this Type type)
+        {
+            var shortType = ShortenedProtoFullName(type);
+            return ProtoRequestAllowedMessages.Contains(shortType);
+        }
+
         public static bool CheckIfMessageIsBroadcast(this ProtocolMessage message)
         {
             return message.TypeUrl.EndsWith(nameof(ProtocolMessage)) &&
@@ -103,6 +115,13 @@ namespace Catalyst.Common.Extensions
         {
             var empty = (T) Activator.CreateInstance(typeof(T));
             var typed = (T) empty.Descriptor.Parser.ParseFrom(message.Value);
+            return typed;
+        }
+
+        public static T FromIMessageDto<T>(this IMessageDto message) where T : IMessage<T>
+        {
+            var empty = (T) Activator.CreateInstance(typeof(T));
+            var typed = (T) empty.Descriptor.Parser.ParseFrom(message.Message.ToByteString());
             return typed;
         }
 

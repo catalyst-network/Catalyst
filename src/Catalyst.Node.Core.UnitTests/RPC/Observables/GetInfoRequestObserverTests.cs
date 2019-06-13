@@ -21,17 +21,18 @@
 
 #endregion
 
-using System;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
+using Catalyst.Common.Interfaces.P2P.Messaging.Dto;
 using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Node.Core.RPC.Observables;
+using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
@@ -45,24 +46,20 @@ using Xunit.Abstractions;
 
 namespace Catalyst.Node.Core.UnitTests.RPC.Observables
 {
-    public sealed class GetInfoRequestObserverTes : ConfigFileBasedTest
+    public sealed class GetInfoRequestObserverTests
     {
         private readonly ILogger _logger;
         private readonly IChannelHandlerContext _fakeContext;
         private readonly IConfigurationRoot _config;
         private readonly IRpcServerSettings _rpcServerSettings;
 
-        public GetInfoRequestObserverTes(ITestOutputHelper output) : base(output)
+        public GetInfoRequestObserverTests()
         {
-            _config = SocketPortHelper.AlterConfigurationToGetUniquePort(new ConfigurationBuilder()
-               .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile))
-               .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile))
-               .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Network.Dev)))
+            _config = new ConfigurationBuilder()
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ShellNodesConfigFile))
-               .Build(), CurrentTestName);
-
-            ConfigureContainerBuilder(_config);
-
+               .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Network.Dev)))
+               .Build();
+            
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
 
@@ -88,35 +85,28 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
                 PeerIdentifierHelper.GetPeerIdentifier("sender")
             ));
 
+            var expectedResponseContent = JsonConvert
+               .SerializeObject(_config.GetSection("CatalystNodeConfiguration").AsEnumerable(),
+                    Formatting.Indented);
+
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, request);
-            var handler = new GetInfoRequestObserver(PeerIdentifierHelper.GetPeerIdentifier("sender"), _rpcServerSettings, _logger);
+            var handler = new GetInfoRequestObserver(
+                PeerIdentifierHelper.GetPeerIdentifier("sender"), _rpcServerSettings, _logger);
+
             handler.StartObserving(messageStream);
 
             await messageStream.WaitForEndOfDelayedStreamOnTaskPoolScheduler();
 
+            await _fakeContext.Channel.Received(1).WriteAndFlushAsync(Arg.Any<object>());
+
             var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();
-            receivedCalls.Count.Should().Be(1);
+            receivedCalls.Count.Should().Be(1, 
+                "the only call should be the one we checked above");
 
-            var infoObj = JsonConvert.SerializeObject(_config.GetSection("CatalystNodeConfiguration").AsEnumerable(),
-                Formatting.Indented);
-            var sentResponse = new GetInfoResponse
-            {
-                Query = infoObj
-            }.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("recipient").PeerId, Guid.NewGuid());
-
-            sentResponse.TypeUrl.Should().Be(GetInfoResponse.Descriptor.ShortenedFullName());
-
-            var responseContent = sentResponse.FromProtocolMessage<GetInfoResponse>();
-            responseContent.Query.Should()
-               .Match(infoObj);
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                base.Dispose(true);
-            }
+            var response = ((IMessageDto) receivedCalls.Single().GetArguments()[0])
+               .FromIMessageDto<GetInfoResponse>();
+            response.Query.Should().Match(expectedResponseContent,
+                "the expected response should contain config information");
         }
     }
 }

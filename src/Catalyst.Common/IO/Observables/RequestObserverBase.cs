@@ -35,6 +35,7 @@ using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.P2P;
 using Catalyst.Common.Util;
 using Catalyst.Protocol.Common;
+using Dawn;
 using Google.Protobuf;
 using Serilog;
 
@@ -42,10 +43,14 @@ namespace Catalyst.Common.IO.Observables
 {
     public abstract class RequestObserverBase<TProto> : MessageObserverBase, IRequestMessageObserver where TProto : IMessage
     {
+        private readonly string _filterMessageType;
         public IPeerIdentifier PeerIdentifier { get; }
 
         protected RequestObserverBase(ILogger logger, IPeerIdentifier peerIdentifier) : base(logger)
         {
+            Guard.Argument(typeof(TProto), nameof(TProto)).Require(t => t.IsRequestType(), 
+                t => $"{nameof(TProto)} is not of type Request");
+            _filterMessageType = typeof(TProto).ShortenedProtoFullName();
             PeerIdentifier = peerIdentifier;
         }
 
@@ -57,15 +62,10 @@ namespace Catalyst.Common.IO.Observables
             {
                 throw new ReadOnlyException($"{GetType()} is already listening to a message stream");
             }
-
-            var filterMessageType = typeof(TProto).ShortenedProtoFullName() ?? throw new ArgumentNullException(nameof(messageStream));
             
             MessageSubscription = messageStream
                .Where(m => m.Payload?.TypeUrl != null 
-                 && m.Payload?.TypeUrl == filterMessageType 
-                 && !m.Equals(NullObjects.ProtocolMessageDto) 
-                 && (bool) m.Payload?.TypeUrl.EndsWith(MessageTypes.Request.Name)
-                )
+                 && m.Payload?.TypeUrl == _filterMessageType)
                .SubscribeOn(TaskPoolScheduler.Default)
                .Subscribe(OnNext, OnError, OnCompleted);
         }
