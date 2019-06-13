@@ -21,14 +21,14 @@
 
 #endregion
 
-using Catalyst.Common.IO.Outbound;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Protocol.Common;
 
 namespace Catalyst.Common.Interfaces.IO.Messaging
 {
     public interface IMessageCorrelationManager
     {
-        void AddPendingRequest(PendingRequest pendingRequest);
+        void AddPendingRequest(CorrelatableMessage correlatableMessage);
 
         bool TryMatchResponse(ProtocolMessage response);
     }

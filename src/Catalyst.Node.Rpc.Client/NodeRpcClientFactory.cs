@@ -23,21 +23,21 @@
 
 using Catalyst.Common.Interfaces.IO;
 using Catalyst.Common.Interfaces.IO.Messaging;
-using Catalyst.Common.Interfaces.IO.Outbound;
+using Catalyst.Common.Interfaces.IO.Observables;
+using Catalyst.Common.Interfaces.IO.Transport;
+using Catalyst.Common.Interfaces.IO.Transport.Channels;
 using Catalyst.Common.Interfaces.Rpc;
-using System.Collections.Generic;
-using System.Security.Cryptography.X509Certificates;
 
 namespace Catalyst.Node.Rpc.Client
 {
     public sealed class NodeRpcClientFactory : INodeRpcClientFactory
     {
         private readonly ITcpClientChannelFactory _channelFactory;
-        private readonly IEnumerable<IRpcResponseHandler> _handlers;
+        private readonly IEnumerable<IRpcResponseObserver> _handlers;
         private readonly IHandlerWorkerEventLoopGroupFactory _handlerWorkerEventLoopGroupFactory;
 
         public NodeRpcClientFactory(ITcpClientChannelFactory channelFactory,
-            IEnumerable<IRpcResponseHandler> handlers,
+            IEnumerable<IRpcResponseObserver> handlers,
             IHandlerWorkerEventLoopGroupFactory handlerWorkerEventLoopGroupFactory)
         {
             _channelFactory = channelFactory;

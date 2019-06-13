@@ -26,15 +26,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading;
-using Catalyst.Common.IO.Inbound;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Sockets;
 using Catalyst.Common.Interfaces.Cryptography;
-using Catalyst.Common.Interfaces.IO;
-using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
+using Catalyst.Common.Interfaces.IO.Messaging.Dto;
+using Catalyst.Common.Interfaces.IO.Observables;
+using Catalyst.Common.Interfaces.IO.Transport;
+using Catalyst.Common.Interfaces.IO.Transport.Channels;
 using Catalyst.Protocol.Common;
 using Catalyst.Common.Interfaces.Rpc;
+using Catalyst.Common.IO.Observables;
+using Catalyst.Common.IO.Transport;
 using DotNetty.Codecs.Protobuf;
 using Serilog;
 
@@ -46,13 +49,13 @@ namespace Catalyst.Node.Core.RPC
         private readonly X509Certificate2 _certificate;
 
         public IRpcServerSettings Settings { get; }
-        public IObservable<IChanneledMessage<ProtocolMessage>> MessageStream { get; }
+        public IObservable<IProtocolMessageDto<ProtocolMessage>> MessageStream { get; }
 
         public NodeRpcServer(IRpcServerSettings settings,
             ILogger logger,
             ITcpServerChannelFactory channelFactory,
             ICertificateStore certificateStore,
-            IEnumerable<IRpcRequestHandler> requestHandlers,
+            IEnumerable<IRpcRequestObserver> requestHandlers,
             IHandlerWorkerEventLoopGroupFactory handlerWorkerEventLoopGroupFactory) 
             : base(channelFactory, logger, handlerWorkerEventLoopGroupFactory)
         {

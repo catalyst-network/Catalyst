@@ -24,10 +24,10 @@
 using System.Net;
 using System.Reflection;
 using System.Threading.Tasks;
-using Catalyst.Common.Interfaces.IO;
-using Catalyst.Common.Interfaces.IO.Outbound;
-using Catalyst.Common.IO.Outbound;
+using Catalyst.Common.Interfaces.IO.Transport;
+using Catalyst.Common.Interfaces.IO.Transport.Channels;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.IO.Transport;
 using DotNetty.Buffers;
 using Serilog;
 

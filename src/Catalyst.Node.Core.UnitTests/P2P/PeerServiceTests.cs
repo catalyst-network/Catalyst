@@ -27,11 +27,12 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Catalyst.Common.Extensions;
-using Catalyst.Common.Interfaces.IO;
-using Catalyst.Common.Interfaces.IO.Inbound;
 using Catalyst.Common.Interfaces.IO.Messaging;
+using Catalyst.Common.Interfaces.IO.Observables;
+using Catalyst.Common.Interfaces.IO.Transport;
+using Catalyst.Common.Interfaces.IO.Transport.Channels;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.IO;
+using Catalyst.Common.IO.Observables;
 using Catalyst.Node.Core.P2P;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
@@ -51,7 +52,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
         private readonly IPeerIdentifier _pid;
         private readonly IUdpServerChannelFactory _udpServerServerChannelFactory;
         private readonly IPeerDiscovery _peerDiscovery;
-        private readonly List<IP2PMessageHandler> _p2PMessageHandlers;
+        private readonly List<IP2PMessageObserver> _p2PMessageHandlers;
         private readonly EmbeddedObservableChannel _serverChannel;
         private PeerService _peerService;
 
@@ -70,13 +71,13 @@ namespace Catalyst.Node.Core.UnitTests.P2P
             peerSettings.Port.Returns(1234);
 
             _peerDiscovery = Substitute.For<IPeerDiscovery>();
-            _p2PMessageHandlers = new List<IP2PMessageHandler>();
+            _p2PMessageHandlers = new List<IP2PMessageObserver>();
         }
 
         [Fact]
         public async Task Can_receive_incoming_ping_responses()
         {
-            var pingHandler = new TestMessageHandler<PingResponse>(_logger);
+            var pingHandler = new TestMessageObserver<PingResponse>(_logger);
             var protocolMessage = new PingResponse().ToProtocolMessage(_pid.PeerId, _guid);
 
             await InitialisePeerServiceAndSendMessage(pingHandler, protocolMessage).ConfigureAwait(false);
@@ -87,7 +88,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
         [Fact]
         public async Task Can_receive_PingRequest()
         {
-            var pingRequestHandler = new TestMessageHandler<PingRequest>(_logger);
+            var pingRequestHandler = new TestMessageObserver<PingRequest>(_logger);
             var request = new PingRequest().ToProtocolMessage(_pid.PeerId, _guid);
 
             await InitialisePeerServiceAndSendMessage(pingRequestHandler, request).ConfigureAwait(false);
@@ -98,7 +99,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
         [Fact]
         public async Task Can_receive_PeerNeighborsRequest()
         {
-            var pingRequestHandler = new TestMessageHandler<PeerNeighborsRequest>(_logger);
+            var pingRequestHandler = new TestMessageObserver<PeerNeighborsRequest>(_logger);
             var request = new PeerNeighborsRequest().ToProtocolMessage(_pid.PeerId, _guid);
 
             await InitialisePeerServiceAndSendMessage(pingRequestHandler, request).ConfigureAwait(false);
@@ -109,7 +110,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
         [Fact]
         public async Task Can_receive_PeerNeighborsResponse()
         {
-            var pingRequestHandler = new TestMessageHandler<PeerNeighborsResponse>(_logger);
+            var pingRequestHandler = new TestMessageObserver<PeerNeighborsResponse>(_logger);
             var neighbourIds = "abc".Select(i => PeerIdHelper.GetPeerId(i.ToString()));
             var responseContent = new PeerNeighborsResponse();
             responseContent.Peers.AddRange(neighbourIds);
@@ -124,7 +125,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
                .Should().BeEquivalentTo(responseContent.Peers);
         }
 
-        private async Task InitialisePeerServiceAndSendMessage(IP2PMessageHandler pingRequestHandler, ProtocolMessage message)
+        private async Task InitialisePeerServiceAndSendMessage(IP2PMessageObserver pingRequestHandler, ProtocolMessage message)
         {
             _p2PMessageHandlers.Add(pingRequestHandler);
 

@@ -23,6 +23,7 @@
 
 using System;
 using Catalyst.Common.Interfaces.P2P.Messaging;
+using Catalyst.Common.Interfaces.P2P.Messaging.Dto;
 using Catalyst.Protocol.Common;
 using DotNetty.Buffers;
 

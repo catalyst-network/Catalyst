@@ -40,34 +40,34 @@
             ]
         },
         {
-            "type": "Catalyst.Common.IO.Inbound.TcpServerChannelFactory, Catalyst.Common",
+            "type": "Catalyst.Common.IO.Transport.Channels.TcpServerChannelFactory, Catalyst.Common",
             "services": [
                 {
-                    "type": "Catalyst.Common.Interfaces.IO.Inbound.ITcpServerChannelFactory, Catalyst.Common"
+                    "type": "Catalyst.Common.Interfaces.IO.Transport.Channels.ITcpServerChannelFactory, Catalyst.Common"
                 }
             ]
         },
         {
-            "type": "Catalyst.Common.IO.Outbound.TcpClientChannelFactory, Catalyst.Common",
+            "type": "Catalyst.Common.IO.Transport.Channels.TcpClientChannelFactory, Catalyst.Common",
             "services": [
                 {
-                    "type": "Catalyst.Common.Interfaces.IO.Outbound.ITcpClientChannelFactory, Catalyst.Common"
+                    "type": "Catalyst.Common.Interfaces.IO.Transport.Channels.ITcpClientChannelFactory, Catalyst.Common"
                 }
             ]
         },
         {
-            "type": "Catalyst.Common.IO.Outbound.UdpClientChannelFactory, Catalyst.Common",
+            "type": "Catalyst.Common.IO.Transport.Channels.UdpClientChannelFactory, Catalyst.Common",
             "services": [
                 {
-                    "type": "Catalyst.Common.Interfaces.IO.Outbound.IUdpClientChannelFactory, Catalyst.Common"
+                    "type": "Catalyst.Common.Interfaces.IO.Transport.Channels.IUdpClientChannelFactory, Catalyst.Common"
                 }
             ]
         },
         {
-            "type": "Catalyst.Common.IO.Inbound.UdpServerChannelFactory, Catalyst.Common",
+            "type": "Catalyst.Common.IO.Transport.Channels.UdpServerChannelFactory, Catalyst.Common",
             "services": [
                 {
-                    "type": "Catalyst.Common.Interfaces.IO.Inbound.IUdpServerChannelFactory, Catalyst.Common"
+                    "type": "Catalyst.Common.Interfaces.IO.Transport.Channels.IUdpServerChannelFactory, Catalyst.Common"
                 }
             ]
         },
@@ -80,10 +80,10 @@
             ]
         },
         {
-            "type": "Catalyst.Common.IO.Inbound.Handlers.ObservableServiceHandler, Catalyst.Common",
+            "type": "Catalyst.Common.IO.Handlers.ObservableServiceHandler, Catalyst.Common",
             "services": [
                 {
-                    "type": "Catalyst.Common.Interfaces.IO.Inbound.Handlers.IObservableServiceHandler, Catalyst.Common"
+                    "type": "Catalyst.Common.Interfaces.IO.Handlers.IObservableServiceHandler, Catalyst.Common"
                 }
             ]
         },
@@ -275,10 +275,10 @@
             "instanceScope": "singleinstance"
         },
         {
-            "type": "Catalyst.Node.Core.P2P.Messaging.Gossip.GossipManager",
+            "type": "Catalyst.Node.Core.P2P.Messaging.Broadcast.BroadcastManager",
             "services": [
                 {
-                    "type": "Catalyst.Common.Interfaces.P2P.Messaging.Gossip.IGossipManager, Catalyst.Common"
+                    "type": "Catalyst.Common.Interfaces.P2P.Messaging.Broadcast.IBroadcastManager, Catalyst.Common"
                 }
             ],
             "instanceScope": "singleinstance"

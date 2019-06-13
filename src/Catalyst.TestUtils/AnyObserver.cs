@@ -24,26 +24,26 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using Catalyst.Common.Interfaces.IO.Inbound;
+using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Util;
 using Catalyst.Protocol.Common;
 using Serilog;
 
 namespace Catalyst.TestUtils
 {
-    public sealed class ProtocolMessageObserver : IObserver<IChanneledMessage<ProtocolMessage>>
+    public sealed class ProtocolMessageObserver : IObserver<IProtocolMessageDto<ProtocolMessage>>
     {
         private readonly ILogger _logger;
-        private readonly ConcurrentStack<IChanneledMessage<ProtocolMessage>> _received;
+        private readonly ConcurrentStack<IProtocolMessageDto<ProtocolMessage>> _received;
 
         public ProtocolMessageObserver(int index, ILogger logger)
         {
             _logger = logger;
             Index = index;
-            _received = new ConcurrentStack<IChanneledMessage<ProtocolMessage>>();
+            _received = new ConcurrentStack<IProtocolMessageDto<ProtocolMessage>>();
         }
 
-        public IReadOnlyCollection<IChanneledMessage<ProtocolMessage>> Received =>
+        public IReadOnlyCollection<IProtocolMessageDto<ProtocolMessage>> Received =>
             Array.AsReadOnly(_received.ToArray());
 
         public int Index { get; }
@@ -51,7 +51,7 @@ namespace Catalyst.TestUtils
         public void OnCompleted() { _logger.Debug($"observer {Index} done"); }
         public void OnError(Exception error) { _logger.Debug($"observer {Index} received error : {error.Message}"); }
 
-        public void OnNext(IChanneledMessage<ProtocolMessage> value)
+        public void OnNext(IProtocolMessageDto<ProtocolMessage> value)
         {
             if (value == NullObjects.ProtocolMessageDto)
             {
