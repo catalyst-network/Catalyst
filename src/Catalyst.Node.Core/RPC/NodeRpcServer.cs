@@ -55,7 +55,7 @@ namespace Catalyst.Node.Core.RPC
             ILogger logger,
             ITcpServerChannelFactory channelFactory,
             ICertificateStore certificateStore,
-            IEnumerable<IRpcRequestObserver> requestHandlers) : base(channelFactory, logger)
+            IEnumerable<IRpcRequestMessageObserver> requestHandlers) : base(channelFactory, logger)
         {
             Settings = settings;
             _cancellationSource = new CancellationTokenSource();

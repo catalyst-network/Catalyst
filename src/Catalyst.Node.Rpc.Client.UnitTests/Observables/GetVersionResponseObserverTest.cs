@@ -45,7 +45,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.Observables
         private readonly IChannelHandlerContext _fakeContext;
 
         private readonly ILogger _logger;
-        private GetVersionResponseObserver _observer;
+        private GetVersionResponseMessageObserver _messageObserver;
 
         static GetVersionResponseObserverTest()
         {
@@ -70,7 +70,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.Observables
         [MemberData(nameof(QueryContents))]
         public async Task RpcClient_Can_Handle_GetVersionResponse(string version)
         {
-            var response = new ProtocolProtocolMessageFactory().GetMessage(new MessageDto(
+            var response = new ProtocolMessageFactory().GetMessage(new MessageDto(
                     new VersionResponse
                     {
                         Version = version
@@ -83,8 +83,8 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.Observables
 
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, response);
 
-            _observer = new GetVersionResponseObserver(_output, _logger);
-            _observer.StartObserving(messageStream);
+            _messageObserver = new GetVersionResponseMessageObserver(_output, _logger);
+            _messageObserver.StartObserving(messageStream);
 
             await messageStream.WaitForEndOfDelayedStreamOnTaskPoolScheduler();
 
@@ -93,7 +93,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.Observables
 
         public void Dispose()
         {
-            _observer?.Dispose();
+            _messageObserver?.Dispose();
         }
     }
 }

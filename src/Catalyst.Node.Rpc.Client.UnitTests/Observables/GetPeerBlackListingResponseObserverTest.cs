@@ -49,7 +49,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.Observables
         private readonly IChannelHandlerContext _fakeContext;
 
         private readonly ILogger _logger;
-        private PeerBlackListingResponseObserver _observer;
+        private PeerBlackListingResponseMessageObserver _messageObserver;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GetPeerBlackListingResponseObserverTest"/> class. </summary>
@@ -89,7 +89,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.Observables
 
         private async Task TestGetBlackListResponse(bool blacklist, string publicKey, string ip)
         {
-            var response = new ProtocolProtocolMessageFactory().GetMessage(new MessageDto(
+            var response = new ProtocolMessageFactory().GetMessage(new MessageDto(
                     new SetPeerBlackListResponse
                     {
                         Blacklist = blacklist,
@@ -103,15 +103,15 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.Observables
 
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, response);
 
-            _observer = new PeerBlackListingResponseObserver(_output, _logger);
-            _observer.StartObserving(messageStream);
+            _messageObserver = new PeerBlackListingResponseMessageObserver(_output, _logger);
+            _messageObserver.StartObserving(messageStream);
 
             await messageStream.WaitForEndOfDelayedStreamOnTaskPoolScheduler();
         }
 
         public void Dispose()
         {
-            _observer?.Dispose();
+            _messageObserver?.Dispose();
         }
     }
 }

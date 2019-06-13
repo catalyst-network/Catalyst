@@ -44,7 +44,7 @@ namespace Catalyst.Node.Core.P2P
 
         public PeerService(IUdpServerChannelFactory serverChannelFactory,
             IPeerDiscovery peerDiscovery,
-            IEnumerable<IP2PMessageObserver> messageHandlers,
+            IEnumerable<IP2PMessageMessageObserver> messageHandlers,
             ILogger logger)
             : base(serverChannelFactory, logger)
         {

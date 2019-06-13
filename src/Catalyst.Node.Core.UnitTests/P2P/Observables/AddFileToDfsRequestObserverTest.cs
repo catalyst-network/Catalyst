@@ -60,7 +60,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Observables
         public void HandlerCanInitializeDownloadFileTransfer()
         {
             var sender = PeerIdHelper.GetPeerId("sender");
-            var handler = new AddFileToDfsRequestObserver(new Dfs(_ipfsEngine, _logger), new PeerIdentifier(sender),
+            var handler = new AddFileToDfsRequestMessageObserver(new Dfs(_ipfsEngine, _logger), new PeerIdentifier(sender),
                 _nodeFileTransferFactory, _protocolMessageFactory, _logger);
 
             //Create a response object and set its return value

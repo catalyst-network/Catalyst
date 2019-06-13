@@ -93,7 +93,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
 
             peerRepository.GetAll().Returns(peerList);
 
-            var messageFactory = new ProtocolProtocolMessageFactory();
+            var messageFactory = new ProtocolMessageFactory();
             var sendPeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("sender");
 
             var requestMessage = messageFactory.GetMessage(new MessageDto(
@@ -105,7 +105,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
 
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, requestMessage);
 
-            var handler = new PeerCountRequestObserver(sendPeerIdentifier, peerRepository, _logger);
+            var handler = new PeerCountRequestMessageObserver(sendPeerIdentifier, peerRepository, _logger);
             handler.StartObserving(messageStream);
 
             await messageStream.WaitForEndOfDelayedStreamOnTaskPoolScheduler();

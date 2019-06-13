@@ -50,7 +50,7 @@ namespace Catalyst.Common.IO.Handlers
                 return context.Channel.CloseAsync();
             }
 
-            var protocolMessage = new ProtocolProtocolMessageFactory().GetMessage(messageDto);
+            var protocolMessage = new ProtocolMessageFactory().GetMessage(messageDto);
             
             if (protocolMessage.TypeUrl.EndsWith(MessageTypes.Request.Name))
             {

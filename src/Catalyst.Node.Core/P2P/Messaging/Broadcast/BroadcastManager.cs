@@ -76,7 +76,7 @@ namespace Catalyst.Node.Core.P2P.Messaging.Broadcast
             _pendingRequests = memoryCache;
             _peers = peers;
             _peerClient = peerClient;
-            _protocolMessageFactory = new ProtocolProtocolMessageFactory();
+            _protocolMessageFactory = new ProtocolMessageFactory();
             _entryOptions = new MemoryCacheEntryOptions()
                .AddExpirationToken(new CancellationChangeToken(new CancellationTokenSource(TimeSpan.FromMinutes(10)).Token));
         }

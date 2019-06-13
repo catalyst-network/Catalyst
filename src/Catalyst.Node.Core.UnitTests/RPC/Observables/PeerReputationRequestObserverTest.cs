@@ -123,7 +123,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
 
             var sendPeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("sender");
 
-            var messageFactory = new ProtocolProtocolMessageFactory();
+            var messageFactory = new ProtocolMessageFactory();
             var request = new GetPeerReputationRequest
             {
                 PublicKey = publicKey.ToBytesForRLPEncoding().ToByteString(),
@@ -139,7 +139,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
 
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, requestMessage);
 
-            var handler = new PeerReputationRequestObserver(sendPeerIdentifier, _logger, peerRepository);
+            var handler = new PeerReputationRequestMessageObserver(sendPeerIdentifier, _logger, peerRepository);
             handler.StartObserving(messageStream);
 
             await messageStream.WaitForEndOfDelayedStreamOnTaskPoolScheduler();

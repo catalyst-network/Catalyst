@@ -34,9 +34,9 @@ namespace Catalyst.Node.Rpc.Client
     public sealed class NodeRpcClientFactory : INodeRpcClientFactory
     {
         private readonly ITcpClientChannelFactory _channelFactory;
-        private readonly IEnumerable<IRpcResponseObserver> _handlers;
+        private readonly IEnumerable<IRpcResponseMessageObserver> _handlers;
 
-        public NodeRpcClientFactory(ITcpClientChannelFactory channelFactory, IEnumerable<IRpcResponseObserver> handlers)
+        public NodeRpcClientFactory(ITcpClientChannelFactory channelFactory, IEnumerable<IRpcResponseMessageObserver> handlers)
         {
             _channelFactory = channelFactory;
             _handlers = handlers;

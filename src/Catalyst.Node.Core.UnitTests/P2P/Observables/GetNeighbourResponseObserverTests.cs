@@ -70,16 +70,16 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Observables
             var container = ContainerBuilder.Build();
             using (container.BeginLifetimeScope(CurrentTestName))
             {
-                var p2PMessageHandlers = container.Resolve<IEnumerable<IP2PMessageObserver>>();
-                IEnumerable<IP2PMessageObserver> getNeighbourResponseHandler = p2PMessageHandlers.OfType<GetNeighbourResponseObserver>();
-                getNeighbourResponseHandler.First().Should().BeOfType(typeof(GetNeighbourResponseObserver));
+                var p2PMessageHandlers = container.Resolve<IEnumerable<IP2PMessageMessageObserver>>();
+                IEnumerable<IP2PMessageMessageObserver> getNeighbourResponseHandler = p2PMessageHandlers.OfType<GetNeighbourResponseMessageObserver>();
+                getNeighbourResponseHandler.First().Should().BeOfType(typeof(GetNeighbourResponseMessageObserver));
             }
         }
 
         [Fact(Skip = "This needs to be refactored as we don't hit rep cache here")] // @TODO 
         public void CanHandlerGetNeighbourRequestHandlerCorrectly()
         {
-            var neighbourResponseHandler = new GetNeighbourResponseObserver(_logger);
+            var neighbourResponseHandler = new GetNeighbourResponseMessageObserver(_logger);
             var peerNeighbourResponseMessage = new PeerNeighborsResponse();
             
             var fakeContext = Substitute.For<IChannelHandlerContext>();

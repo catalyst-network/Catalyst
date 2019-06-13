@@ -96,13 +96,13 @@ namespace Catalyst.Node.Core.UnitTests.Config
         {
             var container = ConfigureAndBuildContainer(_componentsConfig);
 
-            var handlers = container.Resolve<IEnumerable<IP2PMessageObserver>>();
+            var handlers = container.Resolve<IEnumerable<IP2PMessageMessageObserver>>();
             handlers.Select(h => h.GetType()).Should().BeEquivalentTo(
-                typeof(PingRequestObserver),
-                typeof(PingResponseObserver),
-                typeof(GetNeighbourRequestObserver),
-                typeof(GetNeighbourResponseObserver),
-                typeof(TransactionBroadcastObserver)
+                typeof(PingRequestMessageObserver),
+                typeof(PingResponseMessageObserver),
+                typeof(GetNeighbourRequestMessageObserver),
+                typeof(GetNeighbourResponseMessageObserver),
+                typeof(TransactionBroadcastMessageObserver)
             );
         }
     }

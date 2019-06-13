@@ -48,7 +48,7 @@ namespace Catalyst.Common.IO.Transport.Channels
         protected override List<IChannelHandler> Handlers =>
             new List<IChannelHandler>
             {
-                new ProtoDatagramHandler(),
+                new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(new ProtoDatagramParserHandler(), new ProtoDatagramEncoderHandler()),
                 new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(new ProtocolMessageVerifyHandler(_keySigner), new ProtocolMessageSignHandler(_keySigner)),
                 new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(new CorrelationHandler(_correlationManager), new CorrelationHandler(_correlationManager))
             };

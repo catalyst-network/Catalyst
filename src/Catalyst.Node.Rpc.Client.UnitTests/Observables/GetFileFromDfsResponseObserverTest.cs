@@ -70,7 +70,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.Observables
             _fileDownloadFactory.RegisterTransfer(fakeFileTransfer);
 
             var getFileFromDfsResponseHandler =
-                new GetFileFromDfsResponseObserver(_logger, _fileDownloadFactory);
+                new GetFileFromDfsResponseMessageObserver(_logger, _fileDownloadFactory);
 
             var getFileResponse = new GetFileFromDfsResponse
             {

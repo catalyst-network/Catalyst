@@ -46,7 +46,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.Observables
     {
         private readonly IUserOutput _userOutput;
         private readonly IUploadFileTransferFactory _uploadFileTransferFactory;
-        private readonly AddFileToDfsResponseObserver _addFileToDfsResponseObserver;
+        private readonly AddFileToDfsResponseMessageObserver _addFileToDfsResponseMessageObserver;
         private readonly IChannelHandlerContext _channelHandlerContext;
 
         public AddFileToDfsResponseObserverTests()
@@ -55,7 +55,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.Observables
             _uploadFileTransferFactory = Substitute.For<IUploadFileTransferFactory>();
             _channelHandlerContext = Substitute.For<IChannelHandlerContext>();
 
-            _addFileToDfsResponseObserver = new AddFileToDfsResponseObserver(
+            _addFileToDfsResponseMessageObserver = new AddFileToDfsResponseMessageObserver(
                 Substitute.For<ILogger>(),
                 _uploadFileTransferFactory,
                 _userOutput
@@ -65,15 +65,15 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.Observables
         [Fact]
         public void AddFileToDfsResponseHandlerPrintsMessageOnFailureOrSuccess()
         {
-            _addFileToDfsResponseObserver.OnNext(GetAddFileToDfsResponse(FileTransferResponseCodes.Finished));
-            _addFileToDfsResponseObserver.OnNext(GetAddFileToDfsResponse(FileTransferResponseCodes.Failed));
+            _addFileToDfsResponseMessageObserver.OnNext(GetAddFileToDfsResponse(FileTransferResponseCodes.Finished));
+            _addFileToDfsResponseMessageObserver.OnNext(GetAddFileToDfsResponse(FileTransferResponseCodes.Failed));
             _userOutput.Received(Quantity.Exactly(2)).WriteLine(Arg.Any<string>());
         }
 
         [Fact]
         public void InitializesFileTransferOnSuccessResponse()
         {
-            _addFileToDfsResponseObserver.OnNext(GetAddFileToDfsResponse(FileTransferResponseCodes.Successful));
+            _addFileToDfsResponseMessageObserver.OnNext(GetAddFileToDfsResponse(FileTransferResponseCodes.Successful));
             _uploadFileTransferFactory.Received(Quantity.Exactly(1))
                .FileTransferAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>());
         }
@@ -81,7 +81,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.Observables
         [Fact]
         public void HandlerRemovesFileTransferOnError()
         {
-            _addFileToDfsResponseObserver.OnNext(GetAddFileToDfsResponse(FileTransferResponseCodes.Error));
+            _addFileToDfsResponseMessageObserver.OnNext(GetAddFileToDfsResponse(FileTransferResponseCodes.Error));
             _uploadFileTransferFactory.Received(Quantity.Exactly(1)).Remove(Arg.Any<Guid>());
         }
 

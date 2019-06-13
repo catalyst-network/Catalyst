@@ -46,7 +46,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
     {
         private readonly IUploadFileTransferFactory _fileTransferFactory;
         private readonly IDfs _dfs;
-        private readonly GetFileFromDfsRequestObserver _observer;
+        private readonly GetFileFromDfsRequestMessageObserver _messageObserver;
 
         public GetFileFromDfsRequestObserverTest()
         {
@@ -54,7 +54,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
             _fileTransferFactory = Substitute.For<IUploadFileTransferFactory>();
             _dfs = Substitute.For<IDfs>();
             var peerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("test");
-            _observer = new GetFileFromDfsRequestObserver(_dfs, peerIdentifier, _fileTransferFactory, messageFactory, Substitute.For<ILogger>());
+            _messageObserver = new GetFileFromDfsRequestMessageObserver(_dfs, peerIdentifier, _fileTransferFactory, messageFactory, Substitute.For<ILogger>());
         }
 
         [Fact]
@@ -62,7 +62,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
         {
             using (GetFakeDfsStream(FileTransferResponseCodes.Successful))
             {
-                _observer.OnNext(GetFileFromDfsRequestMessage());
+                _messageObserver.OnNext(GetFileFromDfsRequestMessage());
                 _dfs.Received(1).ReadAsync(Arg.Any<string>());
                 _fileTransferFactory.Received(1).FileTransferAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>());
             }
@@ -74,7 +74,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
             using (var fakeStream = GetFakeDfsStream(FileTransferResponseCodes.Error))
             {
                 var message = GetFileFromDfsRequestMessage();
-                _observer.OnNext(message);
+                _messageObserver.OnNext(message);
                 Assert.False(fakeStream.CanRead);
             }
         }

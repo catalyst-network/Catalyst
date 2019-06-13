@@ -122,7 +122,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Messaging.Gossip
         public async Task Gossip_Can_Execute_Proto_Handler()
         {
             var peerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("Test");
-            var handler = new TestMessageObserver<TransactionBroadcast>(_logger);
+            var handler = new TestMessageMessageObserver<TransactionBroadcast>(_logger);
             var manager = new BroadcastManager(peerIdentifier, _peers, Substitute.For<IMemoryCache>(), Substitute.For<IPeerClient>());
             var gossipHandler = new BroadcastHandler(manager);
 
@@ -165,7 +165,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Messaging.Gossip
 
             var peerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("1");
             var senderIdentifier = PeerIdentifierHelper.GetPeerIdentifier("sender");
-            var messageFactory = new ProtocolProtocolMessageFactory();
+            var messageFactory = new ProtocolMessageFactory();
             IBroadcastManager broadcastMessageHandler = new BroadcastManager(peerIdentifier, _peers, _cache, Substitute.For<IPeerClient>());
 
             var correlationId = Guid.NewGuid();
@@ -200,7 +200,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Messaging.Gossip
 
         private async Task<Guid> Get_Gossip_Correlation_Id(IPeerIdentifier peerIdentifier)
         {
-            var messageFactory = new ProtocolProtocolMessageFactory();
+            var messageFactory = new ProtocolMessageFactory();
             var senderPeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("sender");
 
             var gossipMessageHandler = new

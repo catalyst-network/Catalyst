@@ -140,10 +140,10 @@ namespace Catalyst.Node.Core.IntegrationTests.Modules.Dfs
             var senderPeerId = new PeerIdentifier(sender);
             var recipientPeerId = new PeerIdentifier(recipient);
             var fileToTransfer = FileHelper.CreateRandomTempFile(byteSize);
-            var addFileToDfsRequestHandler = new AddFileToDfsRequestObserver(_dfs, senderPeerId, _nodeFileTransferFactory,
+            var addFileToDfsRequestHandler = new AddFileToDfsRequestMessageObserver(_dfs, senderPeerId, _nodeFileTransferFactory,
                 _protocolMessageFactory, _logger);
             var transferBytesRequestHandler =
-                new TransferFileBytesRequestObserver(_nodeFileTransferFactory, senderPeerId, _logger);
+                new TransferFileBytesRequestMessageObserver(_nodeFileTransferFactory, senderPeerId, _logger);
             var uniqueFileKey = Guid.NewGuid();
             crcValue = FileHelper.GetCrcValue(fileToTransfer);
             
@@ -165,7 +165,7 @@ namespace Catalyst.Node.Core.IntegrationTests.Modules.Dfs
             using (var fs = File.Open(fileToTransfer, FileMode.Open))
             {
                 var fileUploadInformation = new UploadFileTransferInformation(fs, senderPeerId, recipientPeerId,
-                    fakeNode.Channel, uniqueFileKey, new ProtocolProtocolMessageFactory());
+                    fakeNode.Channel, uniqueFileKey, new ProtocolMessageFactory());
                 for (uint i = 0; i < fileTransferInformation.MaxChunk; i++)
                 {
                     fileUploadInformation.GetUploadMessageDto(i)

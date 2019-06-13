@@ -94,7 +94,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
             // Build a fake remote endpoint
             _fakeContext.Channel.RemoteAddress.Returns(EndpointBuilder.BuildNewEndPoint("192.0.0.1", 42042));
             
-            var messageFactory = new ProtocolProtocolMessageFactory();
+            var messageFactory = new ProtocolMessageFactory();
             var sendPeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("sender");
 
             var requestMessage = messageFactory.GetMessage(new MessageDto(
@@ -106,7 +106,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
             
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, requestMessage);
 
-            var handler = new PeerListRequestObserver(sendPeerIdentifier, _logger, peerRepository);
+            var handler = new PeerListRequestMessageObserver(sendPeerIdentifier, _logger, peerRepository);
             handler.StartObserving(messageStream);
 
             await messageStream.WaitForEndOfDelayedStreamOnTaskPoolScheduler();

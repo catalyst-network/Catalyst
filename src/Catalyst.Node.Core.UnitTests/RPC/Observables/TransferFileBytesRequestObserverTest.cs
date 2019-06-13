@@ -41,7 +41,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
 {
     public class TransferFileBytesRequestObserverTest
     {
-        private readonly TransferFileBytesRequestObserver _observer;
+        private readonly TransferFileBytesRequestMessageObserver _messageObserver;
         private readonly IDownloadFileTransferFactory _downloadFileTransferFactory;
         private readonly IChannelHandlerContext _context;
 
@@ -52,7 +52,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
             _downloadFileTransferFactory = Substitute.For<IDownloadFileTransferFactory>();
             var peerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("Test");
 
-            _observer = new TransferFileBytesRequestObserver(_downloadFileTransferFactory,
+            _messageObserver = new TransferFileBytesRequestMessageObserver(_downloadFileTransferFactory,
                 peerIdentifier,
                 Substitute.For<ILogger>());
         }
@@ -67,7 +67,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
                 ChunkId = 1,
                 CorrelationFileName = Guid.NewGuid().ToByteString()
             }.ToProtocolMessage(PeerIdHelper.GetPeerId("Test"), guid);
-            request.SendToHandler(_context, _observer);
+            request.SendToHandler(_context, _messageObserver);
 
             _downloadFileTransferFactory.Received(1).DownloadChunk(Arg.Any<Guid>(), Arg.Any<uint>(), Arg.Any<byte[]>());
         }
@@ -82,7 +82,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
                 ChunkId = 1,
                 CorrelationFileName = ByteString.Empty
             }.ToProtocolMessage(PeerIdHelper.GetPeerId("Test"), guid);
-            request.SendToHandler(_context, _observer);
+            request.SendToHandler(_context, _messageObserver);
             _context.Channel.Received().WriteAndFlushAsync(
                 Arg.Is<ProtocolMessage>(signed =>
                     signed.FromProtocolMessage<TransferFileBytesResponse>().ResponseCode[0] == 
