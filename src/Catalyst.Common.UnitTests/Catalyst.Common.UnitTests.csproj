@@ -24,12 +24,4 @@
         <ProjectReference Include="..\Catalyst.Common\Catalyst.Common.csproj" />
         <ProjectReference Include="..\Catalyst.TestUtils\Catalyst.TestUtils.csproj" />
     </ItemGroup>
-    <ItemGroup>
-      <PackageReference Update="coverlet.msbuild" Version="2.6.2">
-        <PrivateAssets>all</PrivateAssets>
-        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      </PackageReference>
-      <PackageReference Update="FluentAssertions" Version="5.7.0" />
-      <PackageReference Update="NSubstitute" Version="4.2.0" />
-    </ItemGroup>
 </Project>
