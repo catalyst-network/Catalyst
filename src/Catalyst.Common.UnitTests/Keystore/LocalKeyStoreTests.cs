@@ -48,13 +48,15 @@ namespace Catalyst.Common.UnitTests.Keystore
             var logger = Substitute.For<ILogger>();
             var passwordReader = new TestPasswordReader("testPassword");
 
+            var addressHelper = new AddressHelper();
+            addressHelper.SetHashAlgorithm(new BLAKE2B_256());
+
             _keystore = new LocalKeyStore(passwordReader,
                 _context,
                 new KeyStoreServiceWrapped(),
                 FileSystem,
                 logger,
-                new AddressHelper(new BLAKE2B_256())
-            );
+                addressHelper);
         }
 
         [Fact]
