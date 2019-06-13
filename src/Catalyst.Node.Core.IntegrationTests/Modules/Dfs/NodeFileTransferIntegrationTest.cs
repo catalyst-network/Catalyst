@@ -56,6 +56,7 @@ namespace Catalyst.Node.Core.IntegrationTests.Modules.Dfs
         private readonly IChannelHandlerContext _fakeContext;
         private readonly IDownloadFileTransferFactory _nodeFileTransferFactory;
         private readonly IDfs _dfs;
+        private readonly IpfsAdapter _ipfsEngine;
         private readonly IProtocolMessageFactory _protocolMessageFactory;
 
         public NodeFileTransferIntegrationTest(ITestOutputHelper testOutput) : base(testOutput)
