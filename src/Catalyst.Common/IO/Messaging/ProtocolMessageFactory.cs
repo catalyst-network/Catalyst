@@ -35,7 +35,7 @@ namespace Catalyst.Common.IO.Messaging
     /// <summary>
     /// The base class to handle building of ProtocolMessage messages
     /// </summary>
-    public sealed class MessageFactory : IMessageFactory
+    public sealed class ProtocolMessageFactory : IProtocolMessageFactory
     {
         /// <summary>Gets the message.</summary>
         /// <param name="messageDto">The message.</param>
