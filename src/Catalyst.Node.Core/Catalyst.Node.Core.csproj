@@ -24,7 +24,7 @@
         <PackageReference Include="DotNetty.Common" Version="0.6.0" />
         <PackageReference Include="DotNetty.Handlers" Version="0.6.0" />
         <PackageReference Include="Ipfs.Core" Version="0.51.1" />
-        <PackageReference Include="Ipfs.Engine" Version="0.10.0" />
+        <PackageReference Include="Ipfs.Engine" Version="0.10.1" />
         <PackageReference Include="Ipfs.HttpGateway" Version="0.3.0" />
         <PackageReference Include="Microsoft.AspNetCore.App" />
         <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="2.2.0" />
