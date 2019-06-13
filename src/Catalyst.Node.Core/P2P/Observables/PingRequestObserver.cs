@@ -56,7 +56,7 @@ namespace Catalyst.Node.Core.P2P.Observables
             var deserialised = messageDto.Payload.FromProtocolMessage<PingRequest>();
             Logger.Debug("message content is {0}", deserialised);
 
-            var datagramEnvelope = new MessageFactory().GetDatagramMessage(new MessageDto(
+            var datagramEnvelope = new ProtocolMessageFactory().GetDatagramMessage(new MessageDto(
                     new PingResponse(),
                     MessageTypes.Response,
                     new PeerIdentifier(messageDto.Payload.PeerId),

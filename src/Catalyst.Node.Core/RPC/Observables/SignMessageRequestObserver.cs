@@ -48,15 +48,15 @@ namespace Catalyst.Node.Core.RPC.Observables
     {
         private readonly IKeySigner _keySigner;
         private readonly IPeerIdentifier _peerIdentifier;
-        private readonly IMessageFactory _messageFactory;
+        private readonly IProtocolMessageFactory _protocolMessageFactory;
 
         public SignMessageRequestObserver(IPeerIdentifier peerIdentifier,
             ILogger logger,
             IKeySigner keySigner,
-            IMessageFactory messageFactory)
+            IProtocolMessageFactory protocolMessageFactory)
             : base(logger)
         {
-            _messageFactory = messageFactory;
+            _protocolMessageFactory = protocolMessageFactory;
             _keySigner = keySigner;
             _peerIdentifier = peerIdentifier;
         }
@@ -87,7 +87,7 @@ namespace Catalyst.Node.Core.RPC.Observables
 
                 Logger.Debug("message content is {0}", deserialised.Message);
                 
-                var response = _messageFactory.GetMessage(new MessageDto(
+                var response = _protocolMessageFactory.GetMessage(new MessageDto(
                         new SignMessageResponse
                         {
                             OriginalMessage = deserialised.Message,

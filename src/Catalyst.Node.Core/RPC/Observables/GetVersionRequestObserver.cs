@@ -45,14 +45,14 @@ namespace Catalyst.Node.Core.RPC.Observables
             IRpcRequestObserver
     {
         private readonly IPeerIdentifier _peerIdentifier;
-        private readonly IMessageFactory _messageFactory;
+        private readonly IProtocolMessageFactory _protocolMessageFactory;
 
         public GetVersionRequestObserver(IPeerIdentifier peerIdentifier,
             ILogger logger,
-            IMessageFactory messageFactory)
+            IProtocolMessageFactory protocolMessageFactory)
             : base(logger)
         {
-            _messageFactory = messageFactory;
+            _protocolMessageFactory = protocolMessageFactory;
             _peerIdentifier = peerIdentifier;
         }
 
@@ -64,7 +64,7 @@ namespace Catalyst.Node.Core.RPC.Observables
             
             try
             {
-                var response = _messageFactory.GetMessage(new MessageDto(
+                var response = _protocolMessageFactory.GetMessage(new MessageDto(
                         new VersionResponse
                         {
                             Version = NodeUtil.GetVersion()

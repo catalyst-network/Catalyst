@@ -54,7 +54,7 @@ namespace Catalyst.Node.Rpc.Client.IntegrationTests.Observables
         private readonly IChannelHandlerContext _fakeContext;
         private readonly IDownloadFileTransferFactory _fileDownloadFactory;
         private readonly IDfs _dfs;
-        private readonly IMessageFactory _messageFactory;
+        private readonly IProtocolMessageFactory _protocolMessageFactory;
 
         public GetFileFromDfsObserverHandler(ITestOutputHelper testOutput) : base(testOutput)
         {
@@ -67,7 +67,7 @@ namespace Catalyst.Node.Rpc.Client.IntegrationTests.Observables
 
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
-            _messageFactory = Substitute.For<IMessageFactory>();
+            _protocolMessageFactory = Substitute.For<IProtocolMessageFactory>();
             _fileDownloadFactory = new DownloadFileTransferFactory();
             _logger = Substitute.For<ILogger>();
             _dfs = Substitute.For<IDfs>();
@@ -97,7 +97,7 @@ namespace Catalyst.Node.Rpc.Client.IntegrationTests.Observables
                 var getFileFromDfsResponseHandler =
                     new Client.Observables.GetFileFromDfsResponseObserver(_logger, _fileDownloadFactory);
                 var transferBytesHandler =
-                    new TransferFileBytesRequestObserver(_fileDownloadFactory, rpcPeer, _logger, _messageFactory);
+                    new TransferFileBytesRequestObserver(_fileDownloadFactory, rpcPeer, _logger, _protocolMessageFactory);
 
                 var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
                 var linearBackOffRetryPolicy = Policy.Handle<TaskCanceledException>()
@@ -125,7 +125,7 @@ namespace Catalyst.Node.Rpc.Client.IntegrationTests.Observables
                     nodePeer,
                     _fakeContext.Channel,
                     correlationGuid,
-                    new MessageFactory());
+                    new ProtocolMessageFactory());
 
                 for (uint i = 0; i < fileUploadInformation.MaxChunk; i++)
                 {

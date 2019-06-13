@@ -67,7 +67,7 @@ namespace Catalyst.Cli.Commands
 
                 var blackListFlag = opts.BlackListFlag;
 
-                var requestMessage = _messageFactory.GetMessage(new MessageDto(
+                var requestMessage = _protocolMessageFactory.GetMessage(new MessageDto(
                     new SetPeerBlackListRequest
                     {
                         PublicKey = peerPublicKey.ToBytesForRLPEncoding().ToByteString(),
