@@ -49,7 +49,7 @@ namespace Catalyst.Common.IO.Transport.Channels
             int port = 0,
             IEventLoopGroup handlerEventLoopGroup = null)
         {
-            var channelHandler = new InboundChannelInitializerBase<IChannel>(Handlers, handlerEventLoopGroup: handlerEventLoopGroup);
+            var channelHandler = new ServerChannelInitializerBase<IChannel>(Handlers, handlerEventLoopGroup: handlerEventLoopGroup);
 
             var channel = new Bootstrap()
                .Group(new MultithreadEventLoopGroup())

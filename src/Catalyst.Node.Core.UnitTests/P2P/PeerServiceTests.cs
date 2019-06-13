@@ -32,6 +32,7 @@ using Catalyst.Common.Interfaces.IO.Observables;
 using Catalyst.Common.Interfaces.IO.Transport;
 using Catalyst.Common.Interfaces.IO.Transport.Channels;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.IO;
 using Catalyst.Common.IO.Observables;
 using Catalyst.Node.Core.P2P;
 using Catalyst.Protocol.Common;

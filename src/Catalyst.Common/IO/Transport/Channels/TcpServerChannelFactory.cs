@@ -62,17 +62,17 @@ namespace Catalyst.Common.IO.Transport.Channels
         /// <param name="targetPort">Ignored</param>
         /// <param name="certificate">Local TLS certificate</param>
         /// <param name="handlerEventLoopGroup"></param>
-        public IObservableSocket BuildChannel(IPAddress targetAddress = null,
+        public IObservableChannel BuildChannel(IPAddress targetAddress = null,
             int targetPort = 0, 
             X509Certificate2 certificate = null,
             IEventLoopGroup handlerEventLoopGroup = null) => 
             Bootstrap(certificate, handlerEventLoopGroup);
 
-        private IObservableSocket Bootstrap(X509Certificate2 certificate, IEventLoopGroup handlerEventLoopGroup = null)
+        private IObservableChannel Bootstrap(X509Certificate2 certificate, IEventLoopGroup handlerEventLoopGroup = null)
         {
             var supervisorEventLoop = new MultithreadEventLoopGroup();
 
-            var channelHandler = new InboundChannelInitializerBase<IChannel>(Handlers, certificate, handlerEventLoopGroup);
+            var channelHandler = new ServerChannelInitializerBase<IChannel>(Handlers, certificate, handlerEventLoopGroup);
 
             var channel = new ServerBootstrap()
                .Group(supervisorEventLoop, childGroup: new MultithreadEventLoopGroup())

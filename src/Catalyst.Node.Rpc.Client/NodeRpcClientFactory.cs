@@ -22,11 +22,11 @@
 #endregion
 
 using Catalyst.Common.Interfaces.IO;
-using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Observables;
-using Catalyst.Common.Interfaces.IO.Transport;
 using Catalyst.Common.Interfaces.IO.Transport.Channels;
 using Catalyst.Common.Interfaces.Rpc;
+using System.Collections.Generic;
+using System.Security.Cryptography.X509Certificates;
 
 namespace Catalyst.Node.Rpc.Client
 {

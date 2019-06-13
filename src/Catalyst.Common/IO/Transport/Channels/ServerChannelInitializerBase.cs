@@ -33,7 +33,7 @@ namespace Catalyst.Common.IO.Transport.Channels
         : ChannelInitializerBase<T> where T : IChannel
     {
         /// <inheritdoc />
-        public InboundChannelInitializerBase(IList<IChannelHandler> handlers,
+        public ServerChannelInitializerBase(IList<IChannelHandler> handlers,
             X509Certificate certificate = null, 
             IEventLoopGroup handlerEventLoopGroup = null)
             : base(handlers,
