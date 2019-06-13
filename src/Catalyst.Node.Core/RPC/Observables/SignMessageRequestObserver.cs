@@ -30,7 +30,6 @@ using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Observables;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.IO.Observables;
 using Catalyst.Common.P2P;
@@ -38,35 +37,31 @@ using Catalyst.Common.Util;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
+using Google.Protobuf;
 using ILogger = Serilog.ILogger;
 
 namespace Catalyst.Node.Core.RPC.Observables
 {
     public sealed class SignMessageRequestObserver
-        : ObserverBase<SignMessageRequest>,
-            IRpcRequestObserver
+        : RequestMessageObserverBase<SignMessageRequest>,
+            IRpcRequestMessageObserver
     {
         private readonly IKeySigner _keySigner;
-        private readonly IPeerIdentifier _peerIdentifier;
-        private readonly IProtocolMessageFactory _protocolMessageFactory;
 
         public SignMessageRequestObserver(IPeerIdentifier peerIdentifier,
             ILogger logger,
-            IKeySigner keySigner,
-            IProtocolMessageFactory protocolMessageFactory)
-            : base(logger)
+            IKeySigner keySigner)
+            : base(logger, peerIdentifier)
         {
-            _protocolMessageFactory = protocolMessageFactory;
             _keySigner = keySigner;
-            _peerIdentifier = peerIdentifier;
         }
 
-        protected override void Handler(IProtocolMessageDto<ProtocolMessage> messageDto)
+        public override IMessage HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto)
         {
-            Guard.Argument(messageDto).NotNull();
-
             Logger.Debug("received message of type SignMessageRequest");
 
+            Guard.Argument(messageDto, nameof(messageDto)).NotNull();
+            
             try
             {
                 var deserialised = messageDto.Payload.FromProtocolMessage<SignMessageRequest>();
@@ -75,7 +70,7 @@ namespace Catalyst.Node.Core.RPC.Observables
 
                 var decodedMessage = deserialised.Message.ToString(Encoding.UTF8);
 
-                var privateKey = _keySigner.CryptoContext.GeneratePrivateKey();
+                var privateKey = _keySigner.CryptoContext.GeneratePrivateKey(); //@TODO We shouldn't be generating a key here
 
                 var signature = _keySigner.CryptoContext.Sign(privateKey, Encoding.UTF8.GetBytes(decodedMessage));
 
@@ -86,20 +81,13 @@ namespace Catalyst.Node.Core.RPC.Observables
                 Guard.Argument(publicKey).NotNull("Failed to get the public key.  Public key cannot be null.");
 
                 Logger.Debug("message content is {0}", deserialised.Message);
-                
-                var response = _protocolMessageFactory.GetMessage(new MessageDto(
-                        new SignMessageResponse
-                        {
-                            OriginalMessage = deserialised.Message,
-                            PublicKey = publicKey.Bytes.RawBytes.ToByteString(),
-                            Signature = signature.Bytes.RawBytes.ToByteString()
-                        },
-                        MessageTypes.Response,
-                        new PeerIdentifier(messageDto.Payload.PeerId),
-                        _peerIdentifier),
-                    messageDto.Payload.CorrelationId.ToGuid());
 
-                messageDto.Context.Channel.WriteAndFlushAsync(response).GetAwaiter().GetResult();
+                return new SignMessageResponse
+                {
+                    OriginalMessage = deserialised.Message,
+                    PublicKey = publicKey.Bytes.RawBytes.ToByteString(),
+                    Signature = signature.Bytes.RawBytes.ToByteString()
+                };
             }
             catch (Exception ex)
             {

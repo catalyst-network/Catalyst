@@ -21,7 +21,27 @@
 
 #endregion
 
-namespace Catalyst.Common.Interfaces.IO.Observables
+using Catalyst.Common.Extensions;
+using Catalyst.Common.Interfaces.IO.Messaging.Dto;
+using Catalyst.Common.Interfaces.IO.Observables;
+using Catalyst.Common.IO.Observables;
+using Catalyst.Protocol.Common;
+using Catalyst.Protocol.IPPN;
+using Serilog;
+
+namespace Catalyst.Node.Core.P2P.Observables
 {
-    public interface IP2PMessageMessageObserver : IMessageObserver { }
+    public sealed class PingResponseObserver
+        : ResponseObserverBase<PingResponse>,
+            IP2PMessageObserver
+    {
+        public PingResponseObserver(ILogger logger)
+            : base(logger) { }
+
+        public override void HandleResponse(IProtocolMessageDto<ProtocolMessage> messageDto)
+        {
+            Logger.Debug("received ping response");
+            var deserialised = messageDto.Payload.FromProtocolMessage<PingResponse>();
+        }
+    }
 }

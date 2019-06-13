@@ -39,17 +39,17 @@ namespace Catalyst.Node.Rpc.Client.Observables
     /// The response handler for removing a peer
     /// </summary>
     /// <seealso cref="IRpcResponseMessageObserver" />
-    public sealed class RemovePeerResponseMessageObserver
-        : ResponseMessageObserverBase<RemovePeerResponse>,
+    public sealed class RemovePeerResponseObserver
+        : ResponseObserverBase<RemovePeerResponse>,
             IRpcResponseMessageObserver
     {
         /// <summary>The user output</summary>
         private readonly IUserOutput _userOutput;
 
-        /// <summary>Initializes a new instance of the <see cref="RemovePeerResponseMessageObserver"/> class.</summary>
+        /// <summary>Initializes a new instance of the <see cref="RemovePeerResponseObserver"/> class.</summary>
         /// <param name="userOutput">The user output.</param>
         /// <param name="logger">The logger.</param>
-        public RemovePeerResponseMessageObserver(IUserOutput userOutput,
+        public RemovePeerResponseObserver(IUserOutput userOutput,
             ILogger logger) : base(logger)
         {
             _userOutput = userOutput;

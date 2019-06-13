@@ -46,7 +46,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.Observables
     public sealed class GetInfoResponseObserverTest : IDisposable
     {
         private readonly ILogger _logger;
-        private GetInfoResponseMessageObserver _requestMessageObserver;
+        private GetInfoResponseObserver _requestObserver;
 
         private static readonly List<object[]> QueryContents;
         private readonly IChannelHandlerContext _fakeContext;
@@ -106,15 +106,15 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.Observables
 
             var messageStream = CreateStreamWithMessage(response);
 
-            _requestMessageObserver = new GetInfoResponseMessageObserver(_output, _logger);
-            _requestMessageObserver.StartObserving(messageStream);
+            _requestObserver = new GetInfoResponseObserver(_output, _logger);
+            _requestObserver.StartObserving(messageStream);
 
             _output.Received(1).WriteLine(query);
         }
 
         public void Dispose()
         {
-            _requestMessageObserver?.Dispose();
+            _requestObserver?.Dispose();
         }
     }
 }

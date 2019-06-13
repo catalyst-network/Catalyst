@@ -99,7 +99,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
             ));
             
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, request);
-            var handler = new VerifyMessageRequestMessageObserver(PeerIdentifierHelper.GetPeerIdentifier("sender"), _logger, _keySigner);
+            var handler = new VerifyMessageRequestObserver(PeerIdentifierHelper.GetPeerIdentifier("sender"), _logger, _keySigner);
             handler.StartObserving(messageStream);
             
             var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();

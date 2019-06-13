@@ -45,7 +45,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.Observables
         private readonly IChannelHandlerContext _fakeContext;
 
         private readonly ILogger _logger;
-        private GetVersionResponseMessageObserver _messageObserver;
+        private GetVersionResponseObserver _observer;
 
         static GetVersionResponseObserverTest()
         {
@@ -83,8 +83,8 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.Observables
 
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, response);
 
-            _messageObserver = new GetVersionResponseMessageObserver(_output, _logger);
-            _messageObserver.StartObserving(messageStream);
+            _observer = new GetVersionResponseObserver(_output, _logger);
+            _observer.StartObserving(messageStream);
 
             await messageStream.WaitForEndOfDelayedStreamOnTaskPoolScheduler();
 
@@ -93,7 +93,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.Observables
 
         public void Dispose()
         {
-            _messageObserver?.Dispose();
+            _observer?.Dispose();
         }
     }
 }

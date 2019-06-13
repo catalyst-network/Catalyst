@@ -21,7 +21,6 @@
 
 #endregion
 
-using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Observables;
 using Catalyst.Common.IO.Observables;
@@ -31,17 +30,15 @@ using Serilog;
 
 namespace Catalyst.Node.Core.P2P.Observables
 {
-    public sealed class PingResponseMessageObserver
-        : ResponseMessageObserverBase<PingResponse>,
-            IP2PMessageMessageObserver
+    public sealed class GetNeighbourResponseObserver
+        : ResponseObserverBase<PeerNeighborsResponse>,
+            IP2PMessageObserver
     {
-        public PingResponseMessageObserver(ILogger logger)
-            : base(logger) { }
-
+        public GetNeighbourResponseObserver(ILogger logger) : base(logger) { }
+        
         public override void HandleResponse(IProtocolMessageDto<ProtocolMessage> messageDto)
         {
-            Logger.Debug("received ping response");
-            var deserialised = messageDto.Payload.FromProtocolMessage<PingResponse>();
+            Logger.Debug("received peer NeighbourResponse");
         }
     }
 }

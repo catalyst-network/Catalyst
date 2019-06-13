@@ -97,7 +97,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
             ));
             
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, request);
-            var handler = new GetMempoolRequestMessageObserver(PeerIdentifierHelper.GetPeerIdentifier("sender"), mempool, _logger);
+            var handler = new GetMempoolRequestObserver(PeerIdentifierHelper.GetPeerIdentifier("sender"), mempool, _logger);
             handler.StartObserving(messageStream);
 
             await messageStream.WaitForEndOfDelayedStreamOnTaskPoolScheduler();

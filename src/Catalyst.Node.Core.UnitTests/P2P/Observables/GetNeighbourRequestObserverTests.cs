@@ -76,7 +76,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Observables
         [Fact]
         public void CanInitGetNeighbourRequestHandlerCorrectly()
         {   
-            var neighbourRequestHandler = new GetNeighbourRequestMessageObserver(_peerIdentifier,
+            var neighbourRequestHandler = new GetNeighbourRequestObserver(_peerIdentifier,
                 _subbedPeerRepository,
                 _subbedLogger
             );
@@ -98,9 +98,9 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Observables
             var container = ContainerBuilder.Build();
             using (container.BeginLifetimeScope(CurrentTestName))
             {
-                var p2PMessageHandlers = container.Resolve<IEnumerable<IP2PMessageMessageObserver>>();
-                IEnumerable<IP2PMessageMessageObserver> getNeighbourResponseHandler = p2PMessageHandlers.OfType<GetNeighbourRequestMessageObserver>();
-                getNeighbourResponseHandler.First().Should().BeOfType(typeof(GetNeighbourRequestMessageObserver));
+                var p2PMessageHandlers = container.Resolve<IEnumerable<IP2PMessageObserver>>();
+                IEnumerable<IP2PMessageObserver> getNeighbourResponseHandler = p2PMessageHandlers.OfType<GetNeighbourRequestObserver>();
+                getNeighbourResponseHandler.First().Should().BeOfType(typeof(GetNeighbourRequestObserver));
             }
         }
 
@@ -121,7 +121,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Observables
             // add them to the mocked repository, and set return expectation
             AddMockPeerToDbAndSetReturnExpectation(randomPeers, _subbedPeerRepository);
 
-            var neighbourRequestHandler = new GetNeighbourRequestMessageObserver(_peerIdentifier,
+            var neighbourRequestHandler = new GetNeighbourRequestObserver(_peerIdentifier,
                 _subbedPeerRepository,
                 _subbedLogger
             );

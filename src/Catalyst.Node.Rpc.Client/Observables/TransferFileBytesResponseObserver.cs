@@ -21,31 +21,33 @@
 
 #endregion
 
-using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Observables;
-using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Observables;
 using Catalyst.Protocol.Common;
-using Catalyst.Protocol.IPPN;
-using Google.Protobuf;
+using Catalyst.Protocol.Rpc.Node;
 using Serilog;
 
-namespace Catalyst.Node.Core.P2P.Observables
+namespace Catalyst.Node.Rpc.Client.Observables
 {
-    public sealed class PingRequestMessageObserver 
-        : RequestMessageObserverBase<PingRequest>,
-            IP2PMessageMessageObserver
+    /// <summary>
+    /// The Transfer file bytes response handler
+    /// </summary>
+    /// <seealso cref="IRpcResponseMessageObserver" />
+    public class TransferFileBytesResponseObserver
+        : ResponseObserverBase<TransferFileBytesResponse>,
+            IRpcResponseMessageObserver
     {
-        public PingRequestMessageObserver(IPeerIdentifier peerIdentifier,
-            ILogger logger)
-            : base(logger, peerIdentifier) { }
+        /// <summary>Initializes a new instance of the <see cref="TransferFileBytesResponseObserver"/> class.</summary>
+        /// <param name="logger">The logger.</param>
+        public TransferFileBytesResponseObserver(ILogger logger) : base(logger) { }
 
-        public override IMessage HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto)
+        /// <summary>Handles the specified message.</summary>
+        /// <param name="messageDto">The message.</param>
+        public override void HandleResponse(IProtocolMessageDto<ProtocolMessage> messageDto)
         {
-            Logger.Debug("message content is {0}", messageDto.Payload.FromProtocolMessage<PingRequest>());
-
-            return new PingResponse();
+            // Response for a node writing a chunk via bytes transfer.
+            // Future logic if an error occurs via chunk transfer then preferably we want to stop file transfer
         }
     }
 }

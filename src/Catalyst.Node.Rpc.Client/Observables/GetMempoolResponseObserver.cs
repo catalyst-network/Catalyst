@@ -36,21 +36,24 @@ using ILogger = Serilog.ILogger;
 namespace Catalyst.Node.Rpc.Client.Observables
 {
     /// <summary>
-    /// Handles the Peer count response
+    /// Handler responsible for handling the server's response for the GetMempool request.
+    /// The handler reads the response's payload and formats it in user readable format and writes it to the console.
     /// </summary>
-    /// <seealso cref="IRpcResponseMessageObserver" />
-    public sealed class PeerCountResponseMessageObserver
-        : ResponseMessageObserverBase<GetPeerCountResponse>,
+    public sealed class GetMempoolResponseObserver
+        : ResponseObserverBase<GetMempoolResponse>,
             IRpcResponseMessageObserver
     {
         private readonly IUserOutput _output;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="PeerCountResponseMessageObserver"/> class.
+        /// <param name="output">
+        ///     A service used to output the result of the messages handling to the user.
+        /// </param>
+        /// <param name="logger">
+        ///     Logger to log debug related information.
+        /// </param>
         /// </summary>
-        /// <param name="output">The output.</param>
-        /// <param name="logger">The logger.</param>
-        public PeerCountResponseMessageObserver(IUserOutput output,
+        public GetMempoolResponseObserver(IUserOutput output,
             ILogger logger)
             : base(logger)
         {
@@ -58,24 +61,33 @@ namespace Catalyst.Node.Rpc.Client.Observables
         }
 
         /// <summary>
-        /// Handles the peer count response.
+        /// Handles the VersionResponse message sent from the <see cref="GetMempoolRequestHandler" />.
         /// </summary>
-        /// <param name="messageDto">The GetPeerCountResponse message.</param>
+        /// <param name="messageDto">An object of GetMempoolResponse</param>
         public override void HandleResponse(IProtocolMessageDto<ProtocolMessage> messageDto)
         {
-            Logger.Debug("Handling GetPeerCount response");
-            Guard.Argument(messageDto, nameof(messageDto)).NotNull("Received message cannot be null");
+            Logger.Debug("GetMempoolResponseHandler starting ...");
 
+            Guard.Argument(messageDto, nameof(messageDto)).NotNull("The message cannot be null");
+            
             try
             {
-                var deserialised = messageDto.Payload.FromProtocolMessage<GetPeerCountResponse>();
-                _output.WriteLine($@"Peer count: {deserialised.PeerCount.ToString()}");
+                var deserialised = messageDto.Payload.FromProtocolMessage<GetMempoolResponse>() ?? throw new ArgumentNullException(nameof(messageDto));
+                
+                Guard.Argument(deserialised, nameof(deserialised)).NotNull("The GetMempoolResponse cannot be null")
+                   .Require(d => d.Mempool != null,
+                        d => $"{nameof(deserialised)} must have a valid Mempool.");
+                
+                for (var i = 0; i < deserialised.Mempool.Count; i++)
+                {
+                    _output.WriteLine($"tx{i}: {deserialised.Mempool[i]},");
+                }
             }
             catch (Exception ex)
             {
                 Logger.Error(ex,
-                    "Failed to handle GetPeerCountResponse after receiving message {0}", messageDto);
-                throw;
+                    "Failed to handle GetMempoolResponse after receiving message {0}", messageDto);
+                _output.WriteLine(ex.Message);
             }
         }
     }

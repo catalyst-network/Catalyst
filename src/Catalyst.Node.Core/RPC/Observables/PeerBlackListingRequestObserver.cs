@@ -21,7 +21,6 @@
 
 #endregion
 
-using System;
 using System.Linq;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
@@ -31,7 +30,6 @@ using Catalyst.Common.IO.Observables;
 using Catalyst.Common.P2P;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
-using Dawn;
 using Google.Protobuf;
 using Nethereum.RLP;
 using SharpRepository.Repository;
@@ -39,16 +37,16 @@ using ILogger = Serilog.ILogger;
 
 namespace Catalyst.Node.Core.RPC.Observables
 {
-    public sealed class PeerReputationRequestMessageObserver
-        : RequestMessageObserverBase<GetPeerReputationRequest>,
+    public sealed class PeerBlackListingRequestObserver
+        : RequestMessageObserverBase<SetPeerBlackListRequest>,
             IRpcRequestMessageObserver
     {
         /// <summary>
-        /// The PeerReputationRequestHandler 
+        /// The PeerBlackListingRequestHandler 
         /// </summary>
         private readonly IRepository<Peer> _peerRepository;
-
-        public PeerReputationRequestMessageObserver(IPeerIdentifier peerIdentifier,
+        
+        public PeerBlackListingRequestObserver(IPeerIdentifier peerIdentifier,
             ILogger logger,
             IRepository<Peer> peerRepository)
             : base(logger, peerIdentifier)
@@ -62,21 +60,34 @@ namespace Catalyst.Node.Core.RPC.Observables
         /// <param name="messageDto">The message.</param>
         public override IMessage HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto)
         {
-            Logger.Debug("received message of type PeerReputationRequest");
-
-            Guard.Argument(messageDto, nameof(messageDto)).NotNull("Received message cannot be null");
-
-            var deserialised = messageDto.Payload.FromProtocolMessage<GetPeerReputationRequest>();
-            var publicKey = deserialised.PublicKey.ToStringUtf8() ?? throw new ArgumentNullException(nameof(messageDto));
+            Logger.Debug("received message of type PeerBlackListingRequest");
             
+            var deserialised = messageDto.Payload.FromProtocolMessage<SetPeerBlackListRequest>();
+            var publicKey = deserialised.PublicKey.ToStringUtf8(); 
             var ip = deserialised.Ip.ToStringUtf8();
+            var blackList = deserialised.Blacklist;
 
-            return new GetPeerReputationResponse
+            var peerItem = _peerRepository.GetAll().FirstOrDefault(m => m.PeerIdentifier.Ip.ToString() == ip.ToString() 
+             && m.PeerIdentifier.PublicKey.ToStringFromRLPDecoded() == publicKey);
+
+            if (peerItem != null)
             {
-                Reputation = _peerRepository.GetAll().Where(m => m.PeerIdentifier.Ip.ToString() == ip.ToString()
-                     && m.PeerIdentifier.PublicKey.ToStringFromRLPDecoded() == publicKey)
-                   .Select(x => x.Reputation).DefaultIfEmpty(int.MinValue).First()
-            };
+                return new SetPeerBlackListResponse
+                {
+                    Blacklist = blackList,
+                    Ip = deserialised.Ip,
+                    PublicKey = deserialised.PublicKey
+                };
+            } //@TODO clean this up
+            else
+            {
+                return new SetPeerBlackListResponse
+                {
+                    Blacklist = false,
+                    Ip = string.Empty.ToUtf8ByteString(),
+                    PublicKey = string.Empty.ToUtf8ByteString()
+                };
+            }
         }
     }
 }

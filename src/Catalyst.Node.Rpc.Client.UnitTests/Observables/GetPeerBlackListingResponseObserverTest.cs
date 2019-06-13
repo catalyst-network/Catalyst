@@ -49,7 +49,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.Observables
         private readonly IChannelHandlerContext _fakeContext;
 
         private readonly ILogger _logger;
-        private PeerBlackListingResponseMessageObserver _messageObserver;
+        private PeerBlackListingResponseObserver _observer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GetPeerBlackListingResponseObserverTest"/> class. </summary>
@@ -103,15 +103,15 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.Observables
 
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, response);
 
-            _messageObserver = new PeerBlackListingResponseMessageObserver(_output, _logger);
-            _messageObserver.StartObserving(messageStream);
+            _observer = new PeerBlackListingResponseObserver(_output, _logger);
+            _observer.StartObserving(messageStream);
 
             await messageStream.WaitForEndOfDelayedStreamOnTaskPoolScheduler();
         }
 
         public void Dispose()
         {
-            _messageObserver?.Dispose();
+            _observer?.Dispose();
         }
     }
 }

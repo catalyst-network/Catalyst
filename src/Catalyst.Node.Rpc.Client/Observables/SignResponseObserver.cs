@@ -41,8 +41,8 @@ namespace Catalyst.Node.Rpc.Client.Observables
     /// Handler responsible for handling the server's response for the GetMempool request.
     /// The handler reads the response's payload and formats it in user readable format and writes it to the console.
     /// </summary>
-    public sealed class SignMessageResponseMessageObserver
-        : ResponseMessageObserverBase<SignMessageRequest>,
+    public sealed class SignResponseObserver
+        : ResponseObserverBase<SignMessageRequest>,
             IRpcResponseMessageObserver
     {
         private readonly IUserOutput _output;
@@ -51,7 +51,7 @@ namespace Catalyst.Node.Rpc.Client.Observables
         /// </summary>
         /// <param name="output"></param>
         /// <param name="logger">Logger to log debug related information.</param>
-        public SignMessageResponseMessageObserver(IUserOutput output,
+        public SignResponseObserver(IUserOutput output,
             ILogger logger)
             : base(logger)
         {

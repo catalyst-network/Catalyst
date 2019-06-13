@@ -48,7 +48,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.Observables
         private readonly IChannelHandlerContext _fakeContext;
 
         private readonly ILogger _logger;
-        private PeerReputationResponseMessageObserver _messageObserver;
+        private PeerReputationResponseObserver _observer;
 
         /// <summary>
         /// Initializes the <see cref="GetPeerReputationResponseObserverTest"/> class.
@@ -113,15 +113,15 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.Observables
 
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, response);
 
-            _messageObserver = new PeerReputationResponseMessageObserver(_output, _logger);
-            _messageObserver.StartObserving(messageStream);
+            _observer = new PeerReputationResponseObserver(_output, _logger);
+            _observer.StartObserving(messageStream);
 
             await messageStream.WaitForEndOfDelayedStreamOnTaskPoolScheduler();
         }
 
         public void Dispose()
         {
-            _messageObserver?.Dispose();
+            _observer?.Dispose();
         }
     }
 }

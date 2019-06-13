@@ -122,7 +122,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Messaging.Gossip
         public async Task Gossip_Can_Execute_Proto_Handler()
         {
             var peerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("Test");
-            var handler = new TestMessageMessageObserver<TransactionBroadcast>(_logger);
+            var handler = new TestMessageObserver<TransactionBroadcast>(_logger);
             var manager = new BroadcastManager(peerIdentifier, _peers, Substitute.For<IMemoryCache>(), Substitute.For<IPeerClient>());
             var gossipHandler = new BroadcastHandler(manager);
 

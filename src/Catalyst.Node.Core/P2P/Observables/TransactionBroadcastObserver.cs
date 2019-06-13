@@ -33,11 +33,11 @@ using Serilog;
 
 namespace Catalyst.Node.Core.P2P.Observables
 {
-    public sealed class TransactionBroadcastMessageObserver
-        : MessageObserverBase,
-            IP2PMessageMessageObserver
+    public sealed class TransactionBroadcastObserver
+        : BroadcastObserverBase,
+            IP2PMessageObserver
     {
-        public TransactionBroadcastMessageObserver(ILogger logger)
+        public TransactionBroadcastObserver(ILogger logger)
             : base(logger) { }
 
         protected override void Handler(IProtocolMessageDto<ProtocolMessage> messageDto)

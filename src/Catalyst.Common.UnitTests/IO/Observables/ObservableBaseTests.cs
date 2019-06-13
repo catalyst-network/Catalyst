@@ -40,21 +40,21 @@ using Xunit;
 
 namespace Catalyst.Common.UnitTests.IO.Observables
 {
-    public class VanillaMessageMessageObserver : TestMessageMessageObserver<GetInfoResponse>
+    public class VanillaMessageObserver : TestMessageObserver<GetInfoResponse>
     {
-        public VanillaMessageMessageObserver(ILogger logger) : base(logger) { }
+        public VanillaMessageObserver(ILogger logger) : base(logger) { }
     }
 
     public class ObservableBaseTests 
 
     {
-        private readonly VanillaMessageMessageObserver _handler;
+        private readonly VanillaMessageObserver _handler;
         private readonly IChannelHandlerContext _fakeContext;
         private readonly ProtocolMessage[] _responseMessages;
 
         public ObservableBaseTests()
         {
-            _handler = new VanillaMessageMessageObserver(Substitute.For<ILogger>());
+            _handler = new VanillaMessageObserver(Substitute.For<ILogger>());
             _fakeContext = Substitute.For<IChannelHandlerContext>();
             _responseMessages = Enumerable.Range(0, 10).Select(i =>
             {

@@ -21,7 +21,9 @@
 
 #endregion
 
+using System;
 using System.Linq;
+using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Observables;
 using Catalyst.Common.Interfaces.P2P;
@@ -31,31 +33,22 @@ using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using Google.Protobuf;
+using Nethereum.RLP;
 using SharpRepository.Repository;
 using ILogger = Serilog.ILogger;
 
 namespace Catalyst.Node.Core.RPC.Observables
 {
-    /// <summary>
-    ///     Handles the PeerListRequest message
-    /// </summary>
-    /// <seealso cref="IRpcRequestMessageObserver" />
-    public sealed class PeerListRequestMessageObserver
-        : RequestMessageObserverBase<GetPeerListRequest>,
+    public sealed class PeerReputationRequestObserver
+        : RequestMessageObserverBase<GetPeerReputationRequest>,
             IRpcRequestMessageObserver
     {
         /// <summary>
-        ///     repository interface to storage
+        /// The PeerReputationRequestHandler 
         /// </summary>
         private readonly IRepository<Peer> _peerRepository;
 
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="PeerListRequestMessageObserver"/> class.
-        /// </summary>
-        /// <param name="peerIdentifier">The peer identifier.</param>
-        /// <param name="logger">The logger.</param>
-        /// <param name="peerRepository"></param>
-        public PeerListRequestMessageObserver(IPeerIdentifier peerIdentifier,
+        public PeerReputationRequestObserver(IPeerIdentifier peerIdentifier,
             ILogger logger,
             IRepository<Peer> peerRepository)
             : base(logger, peerIdentifier)
@@ -69,16 +62,23 @@ namespace Catalyst.Node.Core.RPC.Observables
         /// <param name="messageDto">The message.</param>
         public override IMessage HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto)
         {
-            Logger.Debug("received message of type PeerListRequest");
+            Logger.Debug("received message of type PeerReputationRequest");
 
             Guard.Argument(messageDto, nameof(messageDto)).NotNull("Received message cannot be null");
 
-            var peers = _peerRepository.GetAll().Select(x => x.PeerIdentifier.PeerId);
+            var deserialised = messageDto.Payload.FromProtocolMessage<GetPeerReputationRequest>();
+            var publicKey = deserialised.PublicKey.ToStringUtf8() ?? throw new ArgumentNullException(nameof(messageDto));
+            
+            var ip = deserialised.Ip.ToStringUtf8();
 
-            var response = new GetPeerListResponse();
-            response.Peers.AddRange(peers);
-
-            return response;
+            return new GetPeerReputationResponse
+            {
+                Reputation = _peerRepository.GetAll().Where(m => m.PeerIdentifier.Ip.ToString() == ip.ToString()
+                     && m.PeerIdentifier.PublicKey.ToStringFromRLPDecoded() == publicKey)
+                   .Select(x => x.Reputation).DefaultIfEmpty(int.MinValue).First()
+            };
         }
     }
 }
+
+

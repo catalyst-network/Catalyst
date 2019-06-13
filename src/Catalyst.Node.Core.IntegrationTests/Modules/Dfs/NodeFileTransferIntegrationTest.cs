@@ -142,10 +142,10 @@ namespace Catalyst.Node.Core.IntegrationTests.Modules.Dfs
             var senderPeerId = new PeerIdentifier(sender);
             var recipientPeerId = new PeerIdentifier(recipient);
             var fileToTransfer = FileHelper.CreateRandomTempFile(byteSize);
-            var addFileToDfsRequestHandler = new AddFileToDfsRequestMessageObserver(_dfs, senderPeerId, _nodeFileTransferFactory,
+            var addFileToDfsRequestHandler = new AddFileToDfsRequestObserver(_dfs, senderPeerId, _nodeFileTransferFactory,
                 _protocolMessageFactory, _logger);
             var transferBytesRequestHandler =
-                new TransferFileBytesRequestMessageObserver(_nodeFileTransferFactory, senderPeerId, _logger);
+                new TransferFileBytesRequestObserver(_nodeFileTransferFactory, senderPeerId, _logger);
             var uniqueFileKey = Guid.NewGuid();
             crcValue = FileHelper.GetCrcValue(fileToTransfer);
             

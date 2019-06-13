@@ -35,13 +35,13 @@ using Serilog;
 
 namespace Catalyst.TestUtils
 {
-    public class TestMessageMessageObserver<TProto> : MessageObserverBase,
-        IP2PMessageMessageObserver, IRpcResponseMessageObserver, IRpcRequestMessageObserver
+    public class TestMessageObserver<TProto> : MessageObserverBase,
+        IP2PMessageObserver, IRpcResponseMessageObserver, IRpcRequestMessageObserver
         where TProto : IMessage, IMessage<TProto>
     {
         public IObserver<TProto> SubstituteObserver { get; }
 
-        public TestMessageMessageObserver(ILogger logger) : base(logger)
+        public TestMessageObserver(ILogger logger) : base(logger)
         {
             SubstituteObserver = Substitute.For<IObserver<TProto>>();
         }

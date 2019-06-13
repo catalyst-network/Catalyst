@@ -49,7 +49,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.Observables
         public static readonly List<object[]> QueryContents;
 
         private readonly IUserOutput _output;
-        private GetMempoolResponseMessageObserver _messageObserver;
+        private GetMempoolResponseObserver _observer;
 
         static GetMempoolResponseObserverTest()
         {
@@ -114,8 +114,8 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.Observables
 
             var messageStream = MessageStreamHelper.CreateStreamWithMessages(_fakeContext, response);
 
-            _messageObserver = new GetMempoolResponseMessageObserver(_output, _logger);
-            _messageObserver.StartObserving(messageStream);
+            _observer = new GetMempoolResponseObserver(_output, _logger);
+            _observer.StartObserving(messageStream);
 
             await messageStream.WaitForEndOfDelayedStreamOnTaskPoolScheduler();
 
@@ -124,7 +124,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.Observables
 
         public void Dispose()
         {
-            _messageObserver?.Dispose();
+            _observer?.Dispose();
         }
     }
 }

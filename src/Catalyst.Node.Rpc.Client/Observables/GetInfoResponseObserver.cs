@@ -24,6 +24,7 @@
 using System;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Cli;
+using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Observables;
 using Catalyst.Common.IO.Observables;
@@ -35,47 +36,54 @@ using ILogger = Serilog.ILogger;
 namespace Catalyst.Node.Rpc.Client.Observables
 {
     /// <summary>
-    /// Handles the Peer reputation response
+    /// Handler responsible for handling the server's response for the GetInfo request.
+    /// The handler reads the response's payload and formats it in user readable format and writes it to the console.
     /// </summary>
-    /// <seealso cref="IRpcResponseMessageObserver" />
-    public sealed class PeerReputationResponseMessageObserver
-        : ResponseMessageObserverBase<GetPeerReputationResponse>,
+    public sealed class GetInfoResponseObserver
+        : ResponseObserverBase<GetInfoResponse>,
             IRpcResponseMessageObserver
     {
         private readonly IUserOutput _output;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="PeerReputationResponseMessageObserver"/> class.
+        /// 
         /// </summary>
-        /// <param name="output">The output.</param>
-        /// <param name="logger">The logger.</param>
-        public PeerReputationResponseMessageObserver(IUserOutput output,
-            ILogger logger)
+        /// <param name="output"></param>
+        /// <param name="logger">Logger to log debug related information.</param>
+        public GetInfoResponseObserver(IUserOutput output,
+            ILogger logger) 
             : base(logger)
         {
             _output = output;
         }
 
         /// <summary>
-        /// Handles the peer reputation response.
+        /// Handles the GetInfoResponse message.
         /// </summary>
-        /// <param name="messageDto">The GetPeerReputationResponse message.</param>
+        /// <param name="messageDto">An object of GetInfoResponse</param>
         public override void HandleResponse(IProtocolMessageDto<ProtocolMessage> messageDto)
         {
-            Logger.Debug("Handling GetPeerReputation response");
-            Guard.Argument(messageDto, nameof(messageDto)).NotNull("Received message cannot be null");
+            Logger.Debug("Handling GetInfoResponse");
 
+            Guard.Argument(messageDto, nameof(messageDto)).NotNull("Message cannot be null");
+            
             try
             {
-                var deserialised = messageDto.Payload.FromProtocolMessage<GetPeerReputationResponse>() ?? throw new ArgumentNullException(nameof(messageDto));
-                var msg = deserialised.Reputation == int.MinValue ? "Peer not found" : deserialised.Reputation.ToString();
-                _output.WriteLine($@"Peer Reputation: {msg}");
+                var deserialised = messageDto.Payload.FromProtocolMessage<GetInfoResponse>() ?? throw new ArgumentNullException(nameof(messageDto));
+                
+                Guard.Argument(deserialised).NotNull().Require(d => d.Query != null, d => $"{nameof(deserialised)} must have a valid configuration response.");
+                
+                _output.WriteLine(deserialised.Query);
             }
             catch (Exception ex)
             {
                 Logger.Error(ex,
-                    "Failed to handle GetPeerReputationResponse after receiving message {0}", messageDto);
-                throw;
+                    "Failed to handle GetInfoResponse after receiving message {0}", messageDto);
+                _output.WriteLine(ex.Message);
+            }
+            finally
+            {
+                Logger.Information("Press Enter to continue ...");
             }
         }
     }

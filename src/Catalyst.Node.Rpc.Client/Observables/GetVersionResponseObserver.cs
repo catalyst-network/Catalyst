@@ -36,47 +36,52 @@ using ILogger = Serilog.ILogger;
 namespace Catalyst.Node.Rpc.Client.Observables
 {
     /// <summary>
-    /// Handles the Peer list response from the node
+    /// Handler responsible for handling the server's response for the GetVersion request.
+    /// The handler reads the response's payload and formats it in user readable format and writes it to the console.
     /// </summary>
-    /// <seealso cref="IRpcResponseMessageObserver" />
-    public sealed class PeerListResponseMessageObserver
-        : ResponseMessageObserverBase<GetPeerListResponse>,
+    public sealed class GetVersionResponseObserver
+        : ResponseObserverBase<VersionResponse>,
             IRpcResponseMessageObserver
     {
         private readonly IUserOutput _output;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="PeerListResponseMessageObserver"/> class.
+        /// Handles the VersionResponse message sent from the <see cref="GetVersionRequestHandler" />.
         /// </summary>
-        /// <param name="output">The output.</param>
-        /// <param name="logger">The logger.</param>
-        public PeerListResponseMessageObserver(IUserOutput output,
+        /// <param name="output">A service used to output the result of the messages handling to the user.</param>
+        /// <param name="logger">Logger to log debug related information.</param>
+        public GetVersionResponseObserver(IUserOutput output,
             ILogger logger)
             : base(logger)
         {
             _output = output;
         }
 
-        /// <summary>
-        /// Handles the peer list response.
-        /// </summary>
-        /// <param name="messageDto">The PeerListResponse message.</param>
         public override void HandleResponse(IProtocolMessageDto<ProtocolMessage> messageDto)
         {
-            Logger.Debug("Handling PeerListResponse");
-            Guard.Argument(messageDto, nameof(messageDto)).NotNull("Received message cannot be null");
+            Logger.Debug("GetVersionResponseHandler starting ...");
 
+            Guard.Argument(messageDto, nameof(messageDto)).NotNull("The message cannot be null");
+            
             try
             {
-                var deserialised = messageDto.Payload.FromProtocolMessage<GetPeerListResponse>() ?? throw new ArgumentNullException(nameof(messageDto));
-                var result = string.Join(", ", deserialised.Peers);
-                _output.WriteLine(result);
+                var deserialised = messageDto.Payload.FromProtocolMessage<VersionResponse>();
+                
+                Guard.Argument(deserialised, nameof(deserialised)).NotNull("The VersionResponse cannot be null")
+                   .Require(d => d.Version != null,
+                        d => $"{nameof(deserialised)} must have a valid Version.");
+                
+                _output.WriteLine($"Node Version: {deserialised.Version}");
             }
             catch (Exception ex)
             {
                 Logger.Error(ex,
-                    "Failed to handle PeerListResponse after receiving message {0}", messageDto);
-                throw;
+                    "Failed to handle GetInfoResponse after receiving message {0}", messageDto);
+                _output.WriteLine(ex.Message);
+            }
+            finally
+            {
+                Logger.Information("Press Enter to continue ...");
             }
         }
     }

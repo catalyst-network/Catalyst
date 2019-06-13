@@ -21,24 +21,7 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.IO.Messaging.Dto;
-using Catalyst.Common.Interfaces.IO.Observables;
-using Catalyst.Common.IO.Observables;
-using Catalyst.Protocol.Common;
-using Catalyst.Protocol.IPPN;
-using Serilog;
-
-namespace Catalyst.Node.Core.P2P.Observables
+namespace Catalyst.Common.Interfaces.IO.Observables
 {
-    public sealed class GetNeighbourResponseMessageObserver
-        : ResponseMessageObserverBase<PeerNeighborsResponse>,
-            IP2PMessageMessageObserver
-    {
-        public GetNeighbourResponseMessageObserver(ILogger logger) : base(logger) { }
-        
-        public override void HandleResponse(IProtocolMessageDto<ProtocolMessage> messageDto)
-        {
-            Logger.Debug("received peer NeighbourResponse");
-        }
-    }
+    public interface IP2PMessageObserver : IMessageObserver { }
 }

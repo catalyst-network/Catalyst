@@ -38,11 +38,11 @@ using Serilog;
 
 namespace Catalyst.Common.IO.Observables
 {
-    public abstract class ResponseMessageObserverBase<TProto> : MessageObserverBase, IResponseMessageObserver where TProto : IMessage
+    public abstract class ResponseObserverBase<TProto> : MessageObserverBase, IResponseMessageObserver where TProto : IMessage
     {
         public IPeerIdentifier PeerIdentifier { get; }
 
-        protected ResponseMessageObserverBase(ILogger logger) : base(logger) { }
+        protected ResponseObserverBase(ILogger logger) : base(logger) { }
         
         public abstract void HandleResponse(IProtocolMessageDto<ProtocolMessage> messageDto);
 

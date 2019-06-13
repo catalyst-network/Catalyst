@@ -46,7 +46,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.Observables
 
         public static List<object[]> QueryContents;
 
-        private VerifyMessageResponseMessageObserver _messageObserver;
+        private VerifyResponseObserver _observer;
 
         static VerifyMessageResponseObserverTests()
         {
@@ -87,8 +87,8 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.Observables
 
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, response);
 
-            _messageObserver = new VerifyMessageResponseMessageObserver(_output, _logger);
-            _messageObserver.StartObserving(messageStream);
+            _observer = new VerifyResponseObserver(_output, _logger);
+            _observer.StartObserving(messageStream);
 
             await messageStream.WaitForEndOfDelayedStreamOnTaskPoolScheduler();
 
@@ -97,7 +97,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.Observables
 
         public void Dispose()
         {
-            _messageObserver.Dispose();
+            _observer.Dispose();
         }
     }
 }

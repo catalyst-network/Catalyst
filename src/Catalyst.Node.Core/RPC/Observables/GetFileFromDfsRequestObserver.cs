@@ -23,7 +23,9 @@
 
 using System;
 using System.IO;
+using System.Runtime.CompilerServices;
 using System.Threading;
+using System.Threading.Tasks;
 using Catalyst.Common.Config;
 using Catalyst.Common.Enumerator;
 using Catalyst.Common.Extensions;
@@ -50,18 +52,16 @@ namespace Catalyst.Node.Core.RPC.Observables
     /// <summary>
     /// The request handler to get a file from the DFS
     /// </summary>
-    /// <seealso cref="IRpcRequestObserver" />
-    public sealed class GetFileFromDfsRequestObserver : ObserverBase<GetFileFromDfsRequest>,
-        IRpcRequestObserver
+    /// <seealso cref="IRpcRequestMessageObserver" />
+    public sealed class GetFileFromDfsRequestObserver 
+        : RequestMessageObserverBase<GetFileFromDfsRequest>,
+            IRpcRequestMessageObserver
     {
         /// <summary>The RPC message factory</summary>
         private readonly IProtocolMessageFactory _protocolMessageFactory;
 
         /// <summary>The upload file transfer factory</summary>
         private readonly IUploadFileTransferFactory _fileTransferFactory;
-
-        /// <summary>The peer identifier</summary>
-        private readonly IPeerIdentifier _peerIdentifier;
 
         /// <summary>The DFS</summary>
         private readonly IDfs _dfs;
@@ -76,64 +76,76 @@ namespace Catalyst.Node.Core.RPC.Observables
             IPeerIdentifier peerIdentifier,
             IUploadFileTransferFactory fileTransferFactory,
             IProtocolMessageFactory protocolMessageFactory,
-            ILogger logger) : base(logger)
+            ILogger logger) : base(logger, peerIdentifier)
         {
             _protocolMessageFactory = protocolMessageFactory;
             _fileTransferFactory = fileTransferFactory;
             _dfs = dfs;
-            _peerIdentifier = peerIdentifier;
         }
 
         /// <summary>Handles the specified message.</summary>
         /// <param name="messageDto">The message.</param>
-        protected override void Handler(IProtocolMessageDto<ProtocolMessage> messageDto)
+        public override IMessage HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto)
         {
+            Guard.Argument(messageDto, nameof(messageDto)).NotNull("Message cannot be null");
+
             var deserialised = messageDto.Payload.FromProtocolMessage<GetFileFromDfsRequest>();
-
-            Guard.Argument(deserialised).NotNull("Message cannot be null");
-
+            
             var recipientPeerIdentifier = new PeerIdentifier(messageDto.Payload.PeerId);
             var correlationGuid = messageDto.Payload.CorrelationId.ToGuid();
             long fileLen = 0;
-            FileTransferResponseCodes responseCode;
+
+            // FileTransferResponseCodes responseCode;
             MemoryStream ms = null;
 
-            try
+            FileTransferResponseCodes responseCode;
+
+            var task = Task.Run(async () =>
             {
-                using (var stream = _dfs.ReadAsync(deserialised.DfsHash).GetAwaiter().GetResult())
+                try
                 {
-                    ms = new MemoryStream();
-                    stream.CopyTo(ms);
-                    fileLen = stream.Length;
-                    
-                    IUploadFileInformation fileTransferInformation = new UploadFileTransferInformation(
-                        ms,
-                        _peerIdentifier,
-                        recipientPeerIdentifier,
-                        messageDto.Context.Channel,
-                        correlationGuid,
-                        _protocolMessageFactory
-                    );
-                    responseCode = _fileTransferFactory.RegisterTransfer(fileTransferInformation);
+                    responseCode = await Task.Run(async () =>
+                    {
+                        using (var stream = await _dfs.ReadAsync(deserialised.DfsHash).ConfigureAwait(false))
+                        {
+                            ms = new MemoryStream();
+                            stream.CopyTo(ms);
+                            fileLen = stream.Length;
+
+                            using (var fileTransferInformation = new UploadFileTransferInformation(
+                                ms,
+                                PeerIdentifier,
+                                recipientPeerIdentifier,
+                                messageDto.Context.Channel,
+                                correlationGuid,
+                                _protocolMessageFactory
+                            ))
+                            {
+                                return _fileTransferFactory.RegisterTransfer(fileTransferInformation);                          
+                            }
+                        }
+                    }).ConfigureAwait(false);
                 }
-            }
-            catch (Exception e)
-            {
-                Logger.Error(e,
-                    "Failed to handle GetFileFromDfsRequestHandler after receiving message {0}", messageDto);
-                responseCode = FileTransferResponseCodes.Error;
-            }
+                catch (Exception e)
+                {
+                    Logger.Error(e,
+                        "Failed to handle GetFileFromDfsRequestHandler after receiving message {0}", messageDto);
+                    responseCode = FileTransferResponseCodes.Error;
+                }
+                
+                if (responseCode == FileTransferResponseCodes.Successful)
+                {
+                    await _fileTransferFactory.FileTransferAsync(correlationGuid, CancellationToken.None).ConfigureAwait(false);
+                }
+                else
+                {
+                    ms?.Dispose();
+                }
+                
+                return ReturnResponse(recipientPeerIdentifier, messageDto.Context.Channel, responseCode, correlationGuid, fileLen);
+            });
 
-            ReturnResponse(recipientPeerIdentifier, messageDto.Context.Channel, responseCode, correlationGuid, fileLen);
-
-            if (responseCode == FileTransferResponseCodes.Successful)
-            {
-                _fileTransferFactory.FileTransferAsync(correlationGuid, CancellationToken.None);
-            }
-            else
-            {
-                ms?.Dispose();
-            }
+            return task.Result;
         }
 
         /// <summary>Returns the response.</summary>
@@ -142,7 +154,7 @@ namespace Catalyst.Node.Core.RPC.Observables
         /// <param name="responseCode">The response code.</param>
         /// <param name="correlationGuid">The correlation unique identifier.</param>
         /// <param name="fileSize">Size of the file.</param>
-        private void ReturnResponse(IPeerIdentifier recipientIdentifier, IChannel recipientChannel, Enumeration responseCode, Guid correlationGuid, long fileSize)
+        private IMessage ReturnResponse(IPeerIdentifier recipientIdentifier, IChannel recipientChannel, Enumeration responseCode, Guid correlationGuid, long fileSize)
         {
             Logger.Information("File upload response code: " + responseCode);
             
@@ -153,17 +165,19 @@ namespace Catalyst.Node.Core.RPC.Observables
                 FileSize = (ulong) fileSize
             };
 
-            // Send Response
-            var responseMessage = _protocolMessageFactory.GetMessage(new MessageDto(
-                    response,
-                    MessageTypes.Response,
-                    recipientIdentifier,
-                    _peerIdentifier
-                ),
-                correlationGuid
-            );
+            return response as IMessage;
 
-            recipientChannel.WriteAndFlushAsync(responseMessage).GetAwaiter().GetResult();
+            // // Send Response
+            // var responseMessage = _protocolMessageFactory.GetMessage(new MessageDto(
+            //         response,
+            //         MessageTypes.Response,
+            //         recipientIdentifier,
+            //         PeerIdentifier
+            //     ),
+            //     correlationGuid
+            // );
+            //
+            // recipientChannel.WriteAndFlushAsync(responseMessage).GetAwaiter().GetResult();
         }
     }
 }

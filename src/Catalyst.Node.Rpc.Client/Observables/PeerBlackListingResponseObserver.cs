@@ -24,7 +24,6 @@
 using System;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Cli;
-using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Observables;
 using Catalyst.Common.IO.Observables;
@@ -36,52 +35,51 @@ using ILogger = Serilog.ILogger;
 namespace Catalyst.Node.Rpc.Client.Observables
 {
     /// <summary>
-    /// Handler responsible for handling the server's response for the GetVersion request.
-    /// The handler reads the response's payload and formats it in user readable format and writes it to the console.
+    /// Handles the Peer reputation response
     /// </summary>
-    public sealed class GetVersionResponseMessageObserver
-        : ResponseMessageObserverBase<VersionResponse>,
+    /// <seealso cref="IRpcResponseMessageObserver" />
+    public sealed class PeerBlackListingResponseObserver
+        : ResponseObserverBase<SetPeerBlackListResponse>,
             IRpcResponseMessageObserver
     {
         private readonly IUserOutput _output;
 
         /// <summary>
-        /// Handles the VersionResponse message sent from the <see cref="GetVersionRequestHandler" />.
+        /// Initializes a new instance of the <see cref="PeerBlackListingResponseObserver"/> class.
         /// </summary>
-        /// <param name="output">A service used to output the result of the messages handling to the user.</param>
-        /// <param name="logger">Logger to log debug related information.</param>
-        public GetVersionResponseMessageObserver(IUserOutput output,
+        /// <param name="output">The output.</param>
+        /// <param name="logger">The logger.</param>
+        public PeerBlackListingResponseObserver(IUserOutput output,
             ILogger logger)
             : base(logger)
         {
             _output = output;
         }
 
+        /// <summary>
+        /// Handles the peer reputation response.
+        /// </summary>
+        /// <param name="messageDto">The GetPeerReputationResponse message.</param>
         public override void HandleResponse(IProtocolMessageDto<ProtocolMessage> messageDto)
         {
-            Logger.Debug("GetVersionResponseHandler starting ...");
+            Logger.Debug("Handling GetPeerBlackList response");
+            Guard.Argument(messageDto, nameof(messageDto)).NotNull("Received message cannot be null");
 
-            Guard.Argument(messageDto, nameof(messageDto)).NotNull("The message cannot be null");
-            
             try
             {
-                var deserialised = messageDto.Payload.FromProtocolMessage<VersionResponse>();
-                
-                Guard.Argument(deserialised, nameof(deserialised)).NotNull("The VersionResponse cannot be null")
-                   .Require(d => d.Version != null,
-                        d => $"{nameof(deserialised)} must have a valid Version.");
-                
-                _output.WriteLine($"Node Version: {deserialised.Version}");
+                var deserialised = messageDto.Payload.FromProtocolMessage<SetPeerBlackListResponse>() ?? throw new ArgumentNullException("messageDto.Payload.FromProtocolMessage<SetPeerBlackListResponse>()");
+
+                var msg = deserialised.PublicKey.ToStringUtf8() == string.Empty
+                    ? "Peer not found"
+                    : $"Peer Blacklisting Successful : {deserialised.Blacklist.ToString()}, {deserialised.PublicKey.ToStringUtf8()}, {deserialised.Ip.ToStringUtf8()}";
+                   
+                _output.WriteLine(msg);
             }
             catch (Exception ex)
             {
                 Logger.Error(ex,
-                    "Failed to handle GetInfoResponse after receiving message {0}", messageDto);
-                _output.WriteLine(ex.Message);
-            }
-            finally
-            {
-                Logger.Information("Press Enter to continue ...");
+                    "Failed to handle GetPeerBlackListingResponse after receiving message {0}", messageDto);
+                throw;
             }
         }
     }

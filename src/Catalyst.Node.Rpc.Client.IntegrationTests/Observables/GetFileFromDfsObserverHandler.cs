@@ -95,9 +95,9 @@ namespace Catalyst.Node.Rpc.Client.IntegrationTests.Observables
                     nodePeer,
                     _fakeContext.Channel, correlationGuid, fakeFileOutputPath, 0);
                 var getFileFromDfsResponseHandler =
-                    new Client.Observables.GetFileFromDfsResponseMessageObserver(_logger, _fileDownloadFactory);
+                    new Client.Observables.GetFileFromDfsResponseObserver(_logger, _fileDownloadFactory);
                 var transferBytesHandler =
-                    new TransferFileBytesRequestMessageObserver(_fileDownloadFactory, rpcPeer, _logger);
+                    new TransferFileBytesRequestObserver(_fileDownloadFactory, rpcPeer, _logger);
 
                 var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
                 var linearBackOffRetryPolicy = Policy.Handle<TaskCanceledException>()

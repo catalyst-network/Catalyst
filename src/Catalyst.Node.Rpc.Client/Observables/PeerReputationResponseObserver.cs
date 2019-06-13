@@ -38,18 +38,18 @@ namespace Catalyst.Node.Rpc.Client.Observables
     /// Handles the Peer reputation response
     /// </summary>
     /// <seealso cref="IRpcResponseMessageObserver" />
-    public sealed class PeerBlackListingResponseMessageObserver
-        : ResponseMessageObserverBase<SetPeerBlackListResponse>,
+    public sealed class PeerReputationResponseObserver
+        : ResponseObserverBase<GetPeerReputationResponse>,
             IRpcResponseMessageObserver
     {
         private readonly IUserOutput _output;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="PeerBlackListingResponseMessageObserver"/> class.
+        /// Initializes a new instance of the <see cref="PeerReputationResponseObserver"/> class.
         /// </summary>
         /// <param name="output">The output.</param>
         /// <param name="logger">The logger.</param>
-        public PeerBlackListingResponseMessageObserver(IUserOutput output,
+        public PeerReputationResponseObserver(IUserOutput output,
             ILogger logger)
             : base(logger)
         {
@@ -62,23 +62,19 @@ namespace Catalyst.Node.Rpc.Client.Observables
         /// <param name="messageDto">The GetPeerReputationResponse message.</param>
         public override void HandleResponse(IProtocolMessageDto<ProtocolMessage> messageDto)
         {
-            Logger.Debug("Handling GetPeerBlackList response");
+            Logger.Debug("Handling GetPeerReputation response");
             Guard.Argument(messageDto, nameof(messageDto)).NotNull("Received message cannot be null");
 
             try
             {
-                var deserialised = messageDto.Payload.FromProtocolMessage<SetPeerBlackListResponse>() ?? throw new ArgumentNullException("messageDto.Payload.FromProtocolMessage<SetPeerBlackListResponse>()");
-
-                var msg = deserialised.PublicKey.ToStringUtf8() == string.Empty
-                    ? "Peer not found"
-                    : $"Peer Blacklisting Successful : {deserialised.Blacklist.ToString()}, {deserialised.PublicKey.ToStringUtf8()}, {deserialised.Ip.ToStringUtf8()}";
-                   
-                _output.WriteLine(msg);
+                var deserialised = messageDto.Payload.FromProtocolMessage<GetPeerReputationResponse>() ?? throw new ArgumentNullException(nameof(messageDto));
+                var msg = deserialised.Reputation == int.MinValue ? "Peer not found" : deserialised.Reputation.ToString();
+                _output.WriteLine($@"Peer Reputation: {msg}");
             }
             catch (Exception ex)
             {
                 Logger.Error(ex,
-                    "Failed to handle GetPeerBlackListingResponse after receiving message {0}", messageDto);
+                    "Failed to handle GetPeerReputationResponse after receiving message {0}", messageDto);
                 throw;
             }
         }

@@ -25,71 +25,45 @@ using System;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.FileTransfer;
-using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Observables;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.IO.Observables;
-using Catalyst.Common.P2P;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using Google.Protobuf;
-using Microsoft.Extensions.Configuration;
 using Serilog;
 
 namespace Catalyst.Node.Rpc.Client.Observables
 {
     public sealed class TransferFileBytesRequestObserver
-        : ObserverBase<TransferFileBytesRequest>,
-            IRpcResponseObserver
+        : RequestMessageObserverBase<TransferFileBytesRequest>,
+            IRpcResponseMessageObserver
     {
         /// <summary>The download file transfer factory</summary>
         private readonly IDownloadFileTransferFactory _fileTransferFactory;
-
-        /// <summary>The message factory</summary>
-        private readonly IProtocolMessageFactory _protocolMessageFactory;
-
-        /// <summary>The peer identifier</summary>
-        private readonly IPeerIdentifier _peerIdentifier;
-
-        /// <summary>Initializes a new instance of the <see cref="TransferFileBytesRequestObserver"/> class.</summary>
-        /// <param name="fileTransferFactory">The download file transfer factory.</param>
-        /// <param name="config">The configuration.</param>
-        /// <param name="logger">The logger.</param>
-        /// <param name="protocolMessageFactory"></param>
-        public TransferFileBytesRequestObserver(IDownloadFileTransferFactory fileTransferFactory,
-            IConfigurationRoot config,
-            ILogger logger,
-            IProtocolMessageFactory protocolMessageFactory)
-            : base(logger)
-        {
-            _fileTransferFactory = fileTransferFactory;
-            _protocolMessageFactory = protocolMessageFactory;
-            _peerIdentifier = PeerIdentifier.BuildPeerIdFromConfig(config);
-        }
 
         /// <summary>Initializes a new instance of the <see cref="TransferFileBytesRequestObserver"/> class.</summary>
         /// <param name="fileTransferFactory">The download file transfer factory.</param>
         /// <param name="peerIdentifier">The peer identifier.</param>
         /// <param name="logger">The logger.</param>
-        /// <param name="protocolMessageFactory"></param>
         public TransferFileBytesRequestObserver(IDownloadFileTransferFactory fileTransferFactory,
             IPeerIdentifier peerIdentifier,
-            ILogger logger,
-            IProtocolMessageFactory protocolMessageFactory)
-            : base(logger)
+            ILogger logger)
+            : base(logger, peerIdentifier)
         {
             _fileTransferFactory = fileTransferFactory;
-            _protocolMessageFactory = protocolMessageFactory;
-            _peerIdentifier = peerIdentifier;
         }
 
         /// <summary>Handles the specified message.</summary>
         /// <param name="messageDto">The message.</param>
-        protected override void Handler(IProtocolMessageDto<ProtocolMessage> messageDto)
+        public override IMessage HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto)
         {
+            Logger.Debug("received message of type TransferFileBytesRequestObserver");
+
+            Guard.Argument(messageDto, nameof(messageDto)).NotNull("Received message cannot be null");
+            
             var deserialised = messageDto.Payload.FromProtocolMessage<TransferFileBytesRequest>();
             FileTransferResponseCodes responseCode;
 
@@ -107,21 +81,10 @@ namespace Catalyst.Node.Rpc.Client.Observables
                 responseCode = FileTransferResponseCodes.Error;
             }
 
-            var responseMessage = new TransferFileBytesResponse
+            return new TransferFileBytesResponse
             {
                 ResponseCode = ByteString.CopyFrom((byte) responseCode.Id)
             };
-
-            var responseDto = _protocolMessageFactory.GetMessage(new MessageDto(
-                    responseMessage,
-                    MessageTypes.Response,
-                    new PeerIdentifier(messageDto.Payload.PeerId),
-                    _peerIdentifier
-                ),
-                messageDto.Payload.CorrelationId.ToGuid()
-            );
-
-            messageDto.Context.Channel.WriteAndFlushAsync(responseDto);
         }
     }
 }

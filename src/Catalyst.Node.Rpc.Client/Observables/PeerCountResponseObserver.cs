@@ -22,50 +22,59 @@
 #endregion
 
 using System;
-using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
+using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Observables;
-using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.IO.Messaging;
-using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.IO.Observables;
-using Catalyst.Common.P2P;
-using Catalyst.Common.Util;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
-using Google.Protobuf;
 using ILogger = Serilog.ILogger;
 
-namespace Catalyst.Node.Core.RPC.Observables
+namespace Catalyst.Node.Rpc.Client.Observables
 {
-    public sealed class GetVersionRequestMessageObserver
-        : RequestMessageObserverBase<VersionRequest>,
-            IRpcRequestMessageObserver
+    /// <summary>
+    /// Handles the Peer count response
+    /// </summary>
+    /// <seealso cref="IRpcResponseMessageObserver" />
+    public sealed class PeerCountResponseObserver
+        : ResponseObserverBase<GetPeerCountResponse>,
+            IRpcResponseMessageObserver
     {
-        public GetVersionRequestMessageObserver(IPeerIdentifier peerIdentifier,
+        private readonly IUserOutput _output;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PeerCountResponseObserver"/> class.
+        /// </summary>
+        /// <param name="output">The output.</param>
+        /// <param name="logger">The logger.</param>
+        public PeerCountResponseObserver(IUserOutput output,
             ILogger logger)
-            : base(logger, peerIdentifier) { }
-
-        public override IMessage HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto)
+            : base(logger)
         {
-            Logger.Debug("received message of type VersionRequest");
+            _output = output;
+        }
 
+        /// <summary>
+        /// Handles the peer count response.
+        /// </summary>
+        /// <param name="messageDto">The GetPeerCountResponse message.</param>
+        public override void HandleResponse(IProtocolMessageDto<ProtocolMessage> messageDto)
+        {
+            Logger.Debug("Handling GetPeerCount response");
             Guard.Argument(messageDto, nameof(messageDto)).NotNull("Received message cannot be null");
-            
+
             try
             {
-                return new VersionResponse
-                {
-                    Version = NodeUtil.GetVersion()
-                };
+                var deserialised = messageDto.Payload.FromProtocolMessage<GetPeerCountResponse>();
+                _output.WriteLine($@"Peer count: {deserialised.PeerCount.ToString()}");
             }
             catch (Exception ex)
             {
                 Logger.Error(ex,
-                    "Failed to handle GetVersionRequest after receiving message {0}", messageDto);
+                    "Failed to handle GetPeerCountResponse after receiving message {0}", messageDto);
                 throw;
             }
         }

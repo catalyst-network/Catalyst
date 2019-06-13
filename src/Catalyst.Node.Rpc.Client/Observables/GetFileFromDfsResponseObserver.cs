@@ -22,12 +22,11 @@
 #endregion
 
 using System;
+using System.IO;
 using System.Threading;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
-using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.FileTransfer;
-using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Observables;
 using Catalyst.Common.IO.Observables;
@@ -39,28 +38,23 @@ using Serilog;
 namespace Catalyst.Node.Rpc.Client.Observables
 {
     /// <summary>
-    /// Add File to DFS Response handler
+    /// Handles Get file from DFS response
     /// </summary>
     /// <seealso cref="IRpcResponseMessageObserver" />
-    public sealed class AddFileToDfsResponseMessageObserver : 
-        ResponseMessageObserverBase<AddFileToDfsResponse>,
+    public sealed class GetFileFromDfsResponseObserver : 
+        ResponseObserverBase<GetFileFromDfsResponse>,
         IRpcResponseMessageObserver
     {
-        /// <summary>The upload file transfer factory</summary>
-        private readonly IUploadFileTransferFactory _rpcFileTransferFactory;
+        /// <summary>The file transfer factory</summary>
+        private readonly IDownloadFileTransferFactory _fileTransferFactory;
 
-        private readonly IUserOutput _userOutput;
-
-        /// <summary>Initializes a new instance of the <see cref="AddFileToDfsResponseMessageObserver"/> class.</summary>
+        /// <summary>Initializes a new instance of the <see cref="GetFileFromDfsResponseObserver"/> class.</summary>
         /// <param name="logger">The logger.</param>
-        /// <param name="rpcFileTransferFactory">The upload file transfer factory</param>
-        /// <param name="userOutput"></param>
-        public AddFileToDfsResponseMessageObserver(ILogger logger,
-            IUploadFileTransferFactory rpcFileTransferFactory, 
-            IUserOutput userOutput) : base(logger)
+        /// <param name="fileTransferFactory">The file transfer.</param>
+        public GetFileFromDfsResponseObserver(ILogger logger,
+            IDownloadFileTransferFactory fileTransferFactory) : base(logger)
         {
-            _userOutput = userOutput;
-            _rpcFileTransferFactory = rpcFileTransferFactory;
+            _fileTransferFactory = fileTransferFactory;
         }
 
         /// <summary>Handles the specified message.</summary>
@@ -69,27 +63,34 @@ namespace Catalyst.Node.Rpc.Client.Observables
         {
             Guard.Argument(messageDto, nameof(messageDto)).NotNull("Message cannot be null");
 
-            var deserialised = messageDto.Payload.FromProtocolMessage<AddFileToDfsResponse>() ?? throw new ArgumentNullException(nameof(messageDto));
+            var deserialised = messageDto.Payload.FromProtocolMessage<GetFileFromDfsResponse>() ?? throw new ArgumentNullException(nameof(messageDto));
             
             // @TODO return int not byte
             // var responseCode = Enumeration.Parse<FileTransferResponseCodes>(deserialised.ResponseCode[0].ToString());
 
             var responseCode = (FileTransferResponseCodes) deserialised.ResponseCode[0];
 
-            if (responseCode == FileTransferResponseCodes.Failed || responseCode == FileTransferResponseCodes.Finished)
+            if (_fileTransferFactory != null) 
             {
-                _userOutput.WriteLine("File transfer completed, Response: " + responseCode.Name + " Dfs Hash: " + deserialised.DfsHash);
-            }
-            else
-            {
+                var fileTransferInformation = _fileTransferFactory.GetFileTransferInformation(messageDto.Payload.CorrelationId.ToGuid());
+
+                if (fileTransferInformation == null)
+                {
+                    return;
+                }
+
                 if (responseCode == FileTransferResponseCodes.Successful)
                 {
-                    _rpcFileTransferFactory.FileTransferAsync(messageDto.Payload.CorrelationId.ToGuid(), CancellationToken.None)
-                       .ConfigureAwait(false);
+                    fileTransferInformation.SetLength(deserialised.FileSize);
+
+                    _fileTransferFactory.FileTransferAsync(fileTransferInformation.CorrelationGuid, CancellationToken.None).ContinueWith(task =>
+                    {
+                        File.Move(fileTransferInformation.TempPath, fileTransferInformation.FileOutputPath);
+                    }).ConfigureAwait(false);
                 }
                 else
                 {
-                    _rpcFileTransferFactory.Remove(messageDto.Payload.CorrelationId.ToGuid());
+                    fileTransferInformation.Expire();
                 }
             }
         }
