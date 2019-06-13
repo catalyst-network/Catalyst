@@ -24,6 +24,7 @@
 
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.FileTransfer;
@@ -48,6 +49,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
         private readonly TransferFileBytesRequestObserver _observer;
         private readonly IDownloadFileTransferFactory _downloadFileTransferFactory;
         private readonly IChannelHandlerContext _context;
+        private readonly ILogger _logger;
 
         public TransferFileBytesRequestObserverTest()
         {
@@ -55,6 +57,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
             _context.Channel.Returns(Substitute.For<IChannel>());
             _downloadFileTransferFactory = Substitute.For<IDownloadFileTransferFactory>();
             var peerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("Test");
+            _logger = Substitute.For<ILogger>();
 
             _observer = new TransferFileBytesRequestObserver(_downloadFileTransferFactory,
                 peerIdentifier,
@@ -77,7 +80,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
         }
 
         [Fact]
-        public void HandlerCanSendErrorOnException()
+        public async Task HandlerCanSendErrorOnException()
         {
             var guid = Guid.NewGuid();
             var request = new TransferFileBytesRequest
@@ -87,8 +90,12 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
                 CorrelationFileName = ByteString.Empty
             }.ToProtocolMessage(PeerIdHelper.GetPeerId("Test"), guid);
             
-            request.SendToHandler(_context, _observer);
+            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_context, request);
             
+            _observer.StartObserving(messageStream);
+
+            await messageStream.WaitForEndOfDelayedStreamOnTaskPoolScheduler();
+
             var receivedCalls = _context.Channel.ReceivedCalls().ToList();
             receivedCalls.Count.Should().Be(1);
             var sentResponseDto = (IMessageDto) receivedCalls.Single().GetArguments().Single();
