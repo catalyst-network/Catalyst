@@ -30,6 +30,7 @@ using Catalyst.Common.Interfaces.IO.Transport;
 using Catalyst.Common.Interfaces.IO.Transport.Channels;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.Interfaces.Rpc.Authentication;
 using Catalyst.Common.IO.Handlers;
 using Catalyst.Common.IO.Transport.Bootstrapping;
 using Catalyst.Protocol.Common;
@@ -46,15 +47,18 @@ namespace Catalyst.Common.IO.Transport.Channels
         private readonly IPeerSettings _peerSettings;
         private readonly IKeySigner _keySigner;
         private readonly ObservableServiceHandler _observableServiceHandler;
+        private readonly IAuthenticationStrategy _authenticationStrategy;
         private const int BackLogValue = 100;
 
         public TcpServerChannelFactory(IMessageCorrelationManager correlationManger,
             IPeerSettings peerSettings,
-            IKeySigner keySigner)
+            IKeySigner keySigner,
+            IAuthenticationStrategy authenticationStrategy)
         {
             _correlationManger = correlationManger;
             _peerSettings = peerSettings;
             _keySigner = keySigner;
+            _authenticationStrategy = authenticationStrategy;
             _observableServiceHandler = new ObservableServiceHandler();
         }
 
@@ -94,6 +98,7 @@ namespace Catalyst.Common.IO.Transport.Channels
                 new ProtobufDecoder(ProtocolMessage.Parser),
                 new ProtobufVarint32LengthFieldPrepender(),
                 new ProtobufEncoder(),
+                new AuthenticationHandler(_authenticationStrategy),
                 new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
                     new ProtocolMessageVerifyHandler(_keySigner), 
                     new ProtocolMessageSignHandler(_keySigner)),

@@ -1,13 +1,44 @@
-using System;
-using System.Collections.Generic;
+#region LICENSE
+
+/**
+* Copyright (c) 2019 Catalyst Network
+*
+* This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
+*
+* Catalyst.Node is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 2 of the License, or
+* (at your option) any later version.
+*
+* Catalyst.Node is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
+*/
+
+#endregion
+
 using System.Net;
-using System.Text;
+using Catalyst.Common.Interfaces.Rpc.Authentication;
+using SharpRepository.Repository;
 
 namespace Catalyst.Node.Core.RPC.Authentication
 {
-    public class AuthCredentials
+    /// <summary>
+    /// Credentials to authenticate
+    /// </summary>
+    public class AuthCredentials : IAuthCredentials
     {
+        /// <summary>Gets or sets the public key.</summary>
+        /// <value>The public key.</value>
+        [RepositoryPrimaryKey(Order = 1)]
         public string PublicKey { get; set; }
+
+        /// <summary>Gets or sets the ip address.</summary>
+        /// <value>The ip address.</value>
         public IPAddress IpAddress { get; set; }
     }
 }

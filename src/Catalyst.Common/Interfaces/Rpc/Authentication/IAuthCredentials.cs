@@ -21,18 +21,18 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.P2P;
+using System.Net;
 
 namespace Catalyst.Common.Interfaces.Rpc.Authentication
 {
-    /// <summary>
-    /// The authentication strategy decides how to whitelist a node 
-    /// </summary>
-    public interface IAuthenticationStrategy
+    public interface IAuthCredentials
     {
-        /// <summary>Authenticates the specified peer identifier.</summary>
-        /// <param name="peerIdentifier">The peer identifier.</param>
-        /// <returns>if [true] then whitelist node operator messages otherwise if [false] block messages</returns>
-        bool Authenticate(IPeerIdentifier peerIdentifier);
+        /// <summary>Gets or sets the public key.</summary>
+        /// <value>The public key.</value>
+        string PublicKey { get; set; }
+
+        /// <summary>Gets or sets the ip address.</summary>
+        /// <value>The ip address.</value>
+        IPAddress IpAddress { get; set; }
     }
 }
