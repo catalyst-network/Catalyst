@@ -21,7 +21,6 @@
 
 #endregion
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -29,10 +28,10 @@ using System.Threading.Tasks;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Modules.Mempool;
+using Catalyst.Common.Interfaces.P2P.Messaging.Dto;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Node.Core.RPC.Observables;
-using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.Protocol.Transaction;
 using Catalyst.TestUtils;
@@ -45,12 +44,12 @@ using Xunit;
 
 namespace Catalyst.Node.Core.UnitTests.RPC.Observables 
 {
-    public sealed class GetMempoolRequestObserverTes
+    public sealed class GetMempoolRequestObserverTest
     {
         private readonly ILogger _logger;
         private readonly IChannelHandlerContext _fakeContext;
 
-        public GetMempoolRequestObserverTes()
+        public GetMempoolRequestObserverTest()
         {
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
@@ -84,13 +83,12 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
             var mempool = Substitute.For<IMempool>();
             mempool.GetMemPoolContentEncoded().Returns(x =>
                 {
-                    var txEncodedLst = txLst.Select(tx => ConvertorForRLPEncodingExtensions.ToBytesForRLPEncoding(tx.ToString())).ToList();
+                    var txEncodedLst = txLst.Select(tx => tx.ToString().ToBytesForRLPEncoding()).ToList();
                     return txEncodedLst;
                 }
             );
 
-            var messageFactory = new ProtocolMessageFactory();
-            var request = messageFactory.GetMessage(new MessageDto(
+            var request = new ProtocolMessageFactory().GetMessage(new MessageDto(
                 new GetMempoolRequest(),
                 MessageTypes.Request,
                 PeerIdentifierHelper.GetPeerIdentifier("recipient_key"),
@@ -99,22 +97,18 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
             
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, request);
             var handler = new GetMempoolRequestObserver(PeerIdentifierHelper.GetPeerIdentifier("sender"), mempool, _logger);
+            
             handler.StartObserving(messageStream);
 
             await messageStream.WaitForEndOfDelayedStreamOnTaskPoolScheduler();
 
             var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();
             receivedCalls.Count.Should().Be(1);
-
-            var getMempoolResponse = new GetMempoolResponse();
             
-            // getMempoolResponse.Mempool.AddEntriesFrom(txLst);
-
-            var sentResponse = getMempoolResponse.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("recipient_key").PeerId, Guid.NewGuid());
-            sentResponse.TypeUrl.Should().Be(GetMempoolResponse.Descriptor.ShortenedFullName());
+            var sentResponseDto = (IMessageDto) receivedCalls.Single().GetArguments().Single();
+            sentResponseDto.Message.Descriptor.ShortenedFullName().Should().Be(GetMempoolResponse.Descriptor.ShortenedFullName());
+            var responseContent = (GetMempoolResponse) sentResponseDto.Message;
             
-            var responseContent = sentResponse.FromProtocolMessage<GetMempoolResponse>();
-
             if (expectedTxs == 0)
             {
                 responseContent.Mempool.Should().BeEmpty();
