@@ -29,6 +29,7 @@ using Autofac;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
+using Catalyst.Common.Interfaces.P2P.Messaging.Dto;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Node.Core.RPC.Observables;
@@ -99,16 +100,14 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
             var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();
             receivedCalls.Count.Should().Be(1);
             
-            var sentResponse = (ProtocolMessage) receivedCalls.Single().GetArguments().Single();
-            sentResponse.TypeUrl.Should().Be(SignMessageResponse.Descriptor.ShortenedFullName());
-            
-            var responseContent = sentResponse.FromProtocolMessage<SignMessageResponse>();
-            
-            responseContent.OriginalMessage.Should().Equal(message);
-            
-            responseContent.Signature.Should().NotBeEmpty();
+            var sentResponseDto = (IMessageDto) receivedCalls.Single().GetArguments().Single();
+            sentResponseDto.Message.Descriptor.ShortenedFullName().Should().Be(SignMessageResponse.Descriptor.ShortenedFullName());
 
-            responseContent.PublicKey.Should().NotBeEmpty();
+            var signResponseMessage = (SignMessageResponse) sentResponseDto.Message;
+
+            signResponseMessage.OriginalMessage.Should().Equal(message);
+            signResponseMessage.Signature.Should().NotBeEmpty();
+            signResponseMessage.PublicKey.Should().NotBeEmpty();
         }
 
         protected override void Dispose(bool disposing)
