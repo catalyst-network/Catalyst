@@ -57,7 +57,7 @@ namespace Catalyst.Cli.IntegrationTests.Commands
                 var result = shell.AdvancedShell.ParseCommand(
                     "removepeer", "-n", "node1", "-k", "fake_public_key", "-i", "127.0.0.1");
                 result.Should().BeTrue();
-                NodeRpcClient.Received(1).SendMessage(Arg.Is<ProtocolMessage>(x => x.TypeUrl.Equals(RemovePeerRequest.Descriptor.ShortenedFullName())));
+                NodeRpcClient.Received(1).SendMessageAsync(Arg.Is<ProtocolMessage>(x => x.TypeUrl.Equals(RemovePeerRequest.Descriptor.ShortenedFullName())));
             }
         }
     }

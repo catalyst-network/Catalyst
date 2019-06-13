@@ -74,7 +74,7 @@ namespace Catalyst.Cli.IntegrationTests.Commands
 
                 if (expectedResult)
                 {
-                    NodeRpcClient.Received(1).SendMessage(Arg.Is<ProtocolMessage>(x =>
+                    NodeRpcClient.Received(1).SendMessageAsync(Arg.Is<ProtocolMessage>(x =>
                         x.TypeUrl.Equals(GetFileFromDfsRequest.Descriptor.ShortenedFullName())));
                 }
             }

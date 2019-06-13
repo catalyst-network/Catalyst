@@ -28,8 +28,7 @@ using Catalyst.Protocol.Common;
 namespace Catalyst.Common.Interfaces.IO.Observables
 {
     internal interface IResponseMessageObserver : IMessageObserver
-    {
-        IPeerIdentifier PeerIdentifier { get; }
+    { 
         void HandleResponse(IProtocolMessageDto<ProtocolMessage> messageDto);
     }
 }

@@ -73,7 +73,7 @@ namespace Catalyst.Cli.Commands
                 _peerIdentifier
             ));
 
-            node.SendMessage(requestMessage);
+            node.SendMessageAsync(requestMessage);
 
             return true;
         }

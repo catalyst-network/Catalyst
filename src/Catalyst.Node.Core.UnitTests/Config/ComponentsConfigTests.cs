@@ -99,7 +99,7 @@ namespace Catalyst.Node.Core.UnitTests.Config
             var handlers = container.Resolve<IEnumerable<IP2PMessageObserver>>();
             handlers.Select(h => h.GetType()).Should().BeEquivalentTo(
                 typeof(PingRequestObserver),
-                typeof(PingResponseMessageObserver),
+                typeof(PingResponseObserver),
                 typeof(GetNeighbourRequestObserver),
                 typeof(GetNeighbourResponseObserver),
                 typeof(TransactionBroadcastObserver)

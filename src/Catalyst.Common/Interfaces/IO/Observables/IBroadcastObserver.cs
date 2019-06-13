@@ -21,30 +21,13 @@
 
 #endregion
 
-using Catalyst.Common.Extensions;
-using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
-using Catalyst.Common.Interfaces.IO.Observables;
-using Catalyst.Common.IO.Messaging;
-using Catalyst.Common.IO.Observables;
 using Catalyst.Protocol.Common;
-using Catalyst.Protocol.Transaction;
-using Serilog;
 
-namespace Catalyst.Node.Core.P2P.Observables
+namespace Catalyst.Common.Interfaces.IO.Observables
 {
-    public sealed class TransactionBroadcastObserver
-        : BroadcastObserverBase<TransactionBroadcast>,
-            IP2PMessageObserver
-    {
-        public TransactionBroadcastObserver(ILogger logger)
-            : base(logger) { }
-
-        public override void HandleBroadcast(IProtocolMessageDto<ProtocolMessage> messageDto)
-        {
-            Logger.Debug("received broadcast");
-            var deserialised = messageDto.Payload.FromProtocolMessage<TransactionBroadcast>();
-            Logger.Debug("transaction pong is {0}", deserialised.Signature);
-        }
+    internal interface IBroadcastObserver : IMessageObserver
+    { 
+        void HandleBroadcast(IProtocolMessageDto<ProtocolMessage> messageDto);
     }
 }

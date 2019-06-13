@@ -139,7 +139,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
             var channeledAny = new ProtocolMessageDto(fakeContext, nonCorrelatedMessage);
             var observableStream = new[] {channeledAny}.ToObservable();
 
-            var handler = new PingResponseMessageObserver(_logger);
+            var handler = new PingResponseObserver(_logger);
             handler.StartObserving(observableStream);
 
             // Assert.False(handler.CanExecuteNextHandler(channeledAny));

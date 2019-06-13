@@ -81,7 +81,7 @@ namespace Catalyst.Cli.Commands
 
             _downloadFileTransferFactory.RegisterTransfer(fileTransfer);
 
-            node.SendMessage(messageDto);
+            node.SendMessageAsync(messageDto);
 
             while (!fileTransfer.ChunkIndicatorsTrue() && !fileTransfer.IsExpired())
             {

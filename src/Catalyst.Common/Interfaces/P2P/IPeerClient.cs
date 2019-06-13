@@ -28,8 +28,5 @@ using DotNetty.Buffers;
 
 namespace Catalyst.Common.Interfaces.P2P
 {
-    public interface IPeerClient : IDisposable, ISocketClient
-    {
-        Task SendMessageAsync(IByteBufferHolder datagramPacket);
-    }
+    public interface IPeerClient : IDisposable, ISocketClient { }
 }

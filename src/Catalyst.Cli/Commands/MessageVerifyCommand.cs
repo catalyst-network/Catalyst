@@ -72,7 +72,7 @@ namespace Catalyst.Cli.Commands
                         nodeConfig.Port),
                     _peerIdentifier
                 ));
-                node.SendMessage(request);
+                node.SendMessageAsync(request);
             }
             catch (Exception e)
             {

@@ -21,7 +21,6 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.IO;
 using Catalyst.Common.Interfaces.IO.Transport;
 using Catalyst.Common.Interfaces.IO.Transport.Channels;
 using Catalyst.Protocol.Common;
@@ -34,9 +33,9 @@ namespace Catalyst.Common.IO.Transport
         protected ClientBase(IChannelFactory channelFactory, ILogger logger) 
             : base(channelFactory, logger) { }
 
-        public void SendMessage(ProtocolMessage message)
+        public virtual void SendMessageAsync(ProtocolMessage message)
         {
-            Channel.WriteAndFlushAsync(message).ConfigureAwait(false);
+            Channel.WriteAsync(message).ConfigureAwait(false);
         }
     }
 }

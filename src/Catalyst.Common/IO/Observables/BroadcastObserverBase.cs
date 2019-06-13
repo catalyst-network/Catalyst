@@ -29,8 +29,6 @@ using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Observables;
-using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.Interfaces.P2P.Messaging.Dto;
 using Catalyst.Common.Util;
 using Catalyst.Protocol.Common;
 using Google.Protobuf;
@@ -38,11 +36,11 @@ using Serilog;
 
 namespace Catalyst.Common.IO.Observables
 {
-    public abstract class ResponseObserverBase<TProto> : MessageObserverBase, IResponseMessageObserver where TProto : IMessage
+    public abstract class BroadcastObserverBase<TProto> : MessageObserverBase, IBroadcastObserver where TProto : IMessage
     {
-        protected ResponseObserverBase(ILogger logger) : base(logger) { }
-        
-        public abstract void HandleResponse(IProtocolMessageDto<ProtocolMessage> messageDto);
+        protected BroadcastObserverBase(ILogger logger) : base(logger) { }
+
+        public abstract void HandleBroadcast(IProtocolMessageDto<ProtocolMessage> messageDto);
 
         public override void StartObserving(IObservable<IProtocolMessageDto<ProtocolMessage>> messageStream)
         {
@@ -57,7 +55,7 @@ namespace Catalyst.Common.IO.Observables
                .Where(m => m.Payload?.TypeUrl != null 
                  && m.Payload?.TypeUrl == filterMessageType 
                  && !m.Equals(NullObjects.ProtocolMessageDto) 
-                 && (bool) m.Payload?.TypeUrl.EndsWith(MessageTypes.Response.Name)
+                 && (bool) m.Payload?.TypeUrl.EndsWith(MessageTypes.Broadcast.Name)
                 )
                .SubscribeOn(TaskPoolScheduler.Default)
                .Subscribe(OnNext, OnError, OnCompleted);
@@ -67,7 +65,7 @@ namespace Catalyst.Common.IO.Observables
         {
             Logger.Debug("Pre Handle Message Called");
             ChannelHandlerContext = messageDto.Context;
-            HandleResponse(messageDto);
+            HandleBroadcast(messageDto);
         }
     }
 }
