@@ -68,10 +68,9 @@ namespace Catalyst.TestUtils
         }
 
         private void ConfigureLogging(IConfigurationRoot config, bool writeLogsToTestOutput, bool writeLogsToFile)
-
         {
             var loggerConfiguration = new LoggerConfiguration().ReadFrom.Configuration(config).MinimumLevel.Verbose();
-
+            
             if (writeLogsToTestOutput)
             {
                 loggerConfiguration.WriteTo.TestOutput(Output, LogEventLevel, LogOutputTemplate);
