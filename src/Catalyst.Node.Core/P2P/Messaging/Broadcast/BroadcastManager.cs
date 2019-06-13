@@ -48,7 +48,7 @@ namespace Catalyst.Node.Core.P2P.Messaging.Broadcast
     public sealed class BroadcastManager : IBroadcastManager
     {
         /// <summary>The message factory</summary>
-        private readonly IMessageFactory _messageFactory;
+        private readonly IProtocolMessageFactory _protocolMessageFactory;
 
         /// <summary>The peers</summary>
         private readonly IRepository<Peer> _peers;
@@ -76,7 +76,7 @@ namespace Catalyst.Node.Core.P2P.Messaging.Broadcast
             _pendingRequests = memoryCache;
             _peers = peers;
             _peerClient = peerClient;
-            _messageFactory = new MessageFactory();
+            _protocolMessageFactory = new ProtocolMessageFactory();
             _entryOptions = new MemoryCacheEntryOptions()
                .AddExpirationToken(new CancellationChangeToken(new CancellationTokenSource(TimeSpan.FromMinutes(10)).Token));
         }
@@ -126,7 +126,7 @@ namespace Catalyst.Node.Core.P2P.Messaging.Broadcast
 
             foreach (var peerIdentifier in peersToGossip)
             {
-                var datagramEnvelope = _messageFactory.GetDatagramMessage(new MessageDto(message,
+                var datagramEnvelope = _protocolMessageFactory.GetDatagramMessage(new MessageDto(message,
                     MessageTypes.Broadcast, peerIdentifier, _peerIdentifier), correlationId);
                 await _peerClient.SendMessageAsync(datagramEnvelope).ConfigureAwait(false);
             }

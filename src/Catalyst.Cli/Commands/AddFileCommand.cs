@@ -79,7 +79,7 @@ namespace Catalyst.Cli.Commands
                 request.FileSize = (ulong) fileStream.Length;
             }
             
-            var requestMessage = _messageFactory.GetMessage(new MessageDto(
+            var requestMessage = _protocolMessageFactory.GetMessage(new MessageDto(
                 message: request,
                 messageTypes: MessageTypes.Request,
                 recipient: nodePeerIdentifier,
@@ -92,7 +92,7 @@ namespace Catalyst.Cli.Commands
                 nodePeerIdentifier,
                 node.Channel,
                 requestMessage.CorrelationId.ToGuid(),
-                _messageFactory);
+                _protocolMessageFactory);
 
             _uploadFileTransferFactory.RegisterTransfer(fileTransfer);
 

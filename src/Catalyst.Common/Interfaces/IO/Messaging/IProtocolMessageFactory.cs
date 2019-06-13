@@ -29,7 +29,7 @@ using DotNetty.Buffers;
 
 namespace Catalyst.Common.Interfaces.IO.Messaging
 {
-    public interface IMessageFactory
+    public interface IProtocolMessageFactory
     {
         /// <summary>Gets the message.</summary>
         /// <param name="messageDto">The message.</param>

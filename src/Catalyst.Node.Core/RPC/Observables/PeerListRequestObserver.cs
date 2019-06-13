@@ -62,7 +62,7 @@ namespace Catalyst.Node.Core.RPC.Observables
         /// <summary>
         ///     The RPC message factory
         /// </summary>
-        private readonly IMessageFactory _messageFactory;
+        private readonly IProtocolMessageFactory _protocolMessageFactory;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="PeerListRequestObserver"/> class.
@@ -70,16 +70,16 @@ namespace Catalyst.Node.Core.RPC.Observables
         /// <param name="peerIdentifier">The peer identifier.</param>
         /// <param name="logger">The logger.</param>
         /// <param name="peerRepository"></param>
-        /// <param name="messageFactory"></param>
+        /// <param name="protocolMessageFactory"></param>
         public PeerListRequestObserver(IPeerIdentifier peerIdentifier,
             ILogger logger,
             IRepository<Peer> peerRepository,
-            IMessageFactory messageFactory)
+            IProtocolMessageFactory protocolMessageFactory)
             : base(logger)
         {
             _peerIdentifier = peerIdentifier;
             _peerRepository = peerRepository;
-            _messageFactory = messageFactory;
+            _protocolMessageFactory = protocolMessageFactory;
         }
 
         /// <summary>
@@ -105,7 +105,7 @@ namespace Catalyst.Node.Core.RPC.Observables
             var response = new GetPeerListResponse();
             response.Peers.AddRange(peers);
             
-            var responseMessage = _messageFactory.GetMessage(new MessageDto(
+            var responseMessage = _protocolMessageFactory.GetMessage(new MessageDto(
                     response,
                     MessageTypes.Response,
                     new PeerIdentifier(messageDto.Payload.PeerId),
