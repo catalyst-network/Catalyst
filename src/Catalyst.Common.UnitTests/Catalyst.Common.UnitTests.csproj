@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFramework>netcoreapp2.2</TargetFramework>
         <Authors>James Kirby (nshcore@protonmail.com)</Authors>
@@ -23,8 +23,5 @@
     <ItemGroup>
         <ProjectReference Include="..\Catalyst.Common\Catalyst.Common.csproj" />
         <ProjectReference Include="..\Catalyst.TestUtils\Catalyst.TestUtils.csproj" />
-    </ItemGroup>
-    <ItemGroup>
-      <Compile Remove="IO\Outbound\SocketClientRegistryTests.cs" />
     </ItemGroup>
 </Project>
