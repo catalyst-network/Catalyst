@@ -43,7 +43,7 @@ namespace Catalyst.Cli.IntegrationTests.Commands
 {
     public sealed class AutofacTest
     {
-        private static string LifetimeTag => MethodBase.GetCurrentMethod().DeclaringType.AssemblyQualifiedName;
+        private string LifetimeTag => MethodBase.GetCurrentMethod().DeclaringType.AssemblyQualifiedName;
 
         [Fact]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
@@ -80,7 +80,7 @@ namespace Catalyst.Cli.IntegrationTests.Commands
                 using (container.BeginLifetimeScope(LifetimeTag, b => 
                 { b.Populate(serviceCollection, LifetimeTag); }))
                 {
-                    var shell = container.Resolve<ICatalystCli>();
+                    container.Resolve<ICatalystCli>();
                 }
             }
             catch (Exception e)
