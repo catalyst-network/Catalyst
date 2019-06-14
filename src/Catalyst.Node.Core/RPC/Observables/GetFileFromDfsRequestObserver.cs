@@ -43,7 +43,6 @@ using Catalyst.Common.P2P;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
-using DotNetty.Transport.Channels;
 using Google.Protobuf;
 using Serilog;
 
@@ -87,16 +86,11 @@ namespace Catalyst.Node.Core.RPC.Observables
         /// <param name="messageDto">The message.</param>
         public override IMessage HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto)
         {
-            Guard.Argument(messageDto, nameof(messageDto)).NotNull("Message cannot be null");
-
             var deserialised = messageDto.Payload.FromProtocolMessage<GetFileFromDfsRequest>();
             
             var recipientPeerIdentifier = new PeerIdentifier(messageDto.Payload.PeerId);
             var correlationGuid = messageDto.Payload.CorrelationId.ToGuid();
             long fileLen = 0;
-
-            // FileTransferResponseCodes responseCode;
-            MemoryStream ms = null;
 
             FileTransferResponseCodes responseCode;
 
@@ -107,13 +101,13 @@ namespace Catalyst.Node.Core.RPC.Observables
                     responseCode = await Task.Run(async () =>
                     {
                         using (var stream = await _dfs.ReadAsync(deserialised.DfsHash).ConfigureAwait(false))
+                        using (var memoryStream = new MemoryStream())
                         {
-                            ms = new MemoryStream();
-                            stream.CopyTo(ms);
+                            stream.CopyTo(memoryStream);
                             fileLen = stream.Length;
 
                             using (var fileTransferInformation = new UploadFileTransferInformation(
-                                ms,
+                                memoryStream,
                                 PeerIdentifier,
                                 recipientPeerIdentifier,
                                 messageDto.Context.Channel,
@@ -137,24 +131,17 @@ namespace Catalyst.Node.Core.RPC.Observables
                 {
                     await _fileTransferFactory.FileTransferAsync(correlationGuid, CancellationToken.None).ConfigureAwait(false);
                 }
-                else
-                {
-                    ms?.Dispose();
-                }
-                
-                return ReturnResponse(recipientPeerIdentifier, messageDto.Context.Channel, responseCode, correlationGuid, fileLen);
+
+                return ReturnResponse(responseCode, fileLen);
             });
 
             return task.Result;
         }
 
         /// <summary>Returns the response.</summary>
-        /// <param name="recipientIdentifier">The recipient identifier.</param>
-        /// <param name="recipientChannel">The recipient channel.</param>
         /// <param name="responseCode">The response code.</param>
-        /// <param name="correlationGuid">The correlation unique identifier.</param>
         /// <param name="fileSize">Size of the file.</param>
-        private IMessage ReturnResponse(IPeerIdentifier recipientIdentifier, IChannel recipientChannel, Enumeration responseCode, Guid correlationGuid, long fileSize)
+        private IMessage ReturnResponse(Enumeration responseCode, long fileSize)
         {
             Logger.Information("File upload response code: " + responseCode);
             
@@ -165,19 +152,7 @@ namespace Catalyst.Node.Core.RPC.Observables
                 FileSize = (ulong) fileSize
             };
 
-            return response as IMessage;
-
-            // // Send Response
-            // var responseMessage = _protocolMessageFactory.GetMessage(new MessageDto(
-            //         response,
-            //         MessageTypes.Response,
-            //         recipientIdentifier,
-            //         PeerIdentifier
-            //     ),
-            //     correlationGuid
-            // );
-            //
-            // recipientChannel.WriteAndFlushAsync(responseMessage).GetAwaiter().GetResult();
+            return response;
         }
     }
 }

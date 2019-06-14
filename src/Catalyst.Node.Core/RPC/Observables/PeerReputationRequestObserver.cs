@@ -63,9 +63,7 @@ namespace Catalyst.Node.Core.RPC.Observables
         public override IMessage HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto)
         {
             Logger.Debug("received message of type PeerReputationRequest");
-
-            Guard.Argument(messageDto, nameof(messageDto)).NotNull("Received message cannot be null");
-
+            
             var deserialised = messageDto.Payload.FromProtocolMessage<GetPeerReputationRequest>();
             var publicKey = deserialised.PublicKey.ToStringUtf8() ?? throw new ArgumentNullException(nameof(messageDto));
             

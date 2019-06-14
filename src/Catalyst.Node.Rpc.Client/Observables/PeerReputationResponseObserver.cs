@@ -29,7 +29,6 @@ using Catalyst.Common.Interfaces.IO.Observables;
 using Catalyst.Common.IO.Observables;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
-using Dawn;
 using ILogger = Serilog.ILogger;
 
 namespace Catalyst.Node.Rpc.Client.Observables
@@ -63,7 +62,6 @@ namespace Catalyst.Node.Rpc.Client.Observables
         public override void HandleResponse(IProtocolMessageDto<ProtocolMessage> messageDto)
         {
             Logger.Debug("Handling GetPeerReputation response");
-            Guard.Argument(messageDto, nameof(messageDto)).NotNull("Received message cannot be null");
 
             try
             {

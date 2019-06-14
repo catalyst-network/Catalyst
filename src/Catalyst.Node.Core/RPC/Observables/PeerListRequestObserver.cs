@@ -71,8 +71,6 @@ namespace Catalyst.Node.Core.RPC.Observables
         {
             Logger.Debug("received message of type PeerListRequest");
 
-            Guard.Argument(messageDto, nameof(messageDto)).NotNull("Received message cannot be null");
-
             var peers = _peerRepository.GetAll().Select(x => x.PeerIdentifier.PeerId);
 
             var response = new GetPeerListResponse();

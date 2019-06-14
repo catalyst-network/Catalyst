@@ -22,15 +22,8 @@
 #endregion
 
 using System;
-using System.Data;
-using System.Reactive.Concurrency;
-using System.Reactive.Linq;
-using Catalyst.Common.Extensions;
-using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Observables;
-using Catalyst.Common.Interfaces.P2P.Messaging.Dto;
-using Catalyst.Common.Util;
 using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;
 using Serilog;

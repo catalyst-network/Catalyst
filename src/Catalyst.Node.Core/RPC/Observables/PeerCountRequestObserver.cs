@@ -68,8 +68,6 @@ namespace Catalyst.Node.Core.RPC.Observables
         /// <param name="messageDto">The message.</param>
         public override IMessage HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto)
         {
-            Guard.Argument(messageDto, nameof(messageDto)).NotNull("Received message cannot be null");
-
             var peerCount = _peerRepository.GetAll().Count();
 
             return new GetPeerCountResponse

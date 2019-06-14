@@ -64,7 +64,6 @@ namespace Catalyst.Node.Core.RPC.Observables
         public override IMessage HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto)
         {
             Logger.Information("received message of type PeerBlackListingRequest");
-            Guard.Argument(messageDto, nameof(messageDto)).NotNull();
 
             var deserialised = messageDto.Payload.FromProtocolMessage<SetPeerBlackListRequest>();
 

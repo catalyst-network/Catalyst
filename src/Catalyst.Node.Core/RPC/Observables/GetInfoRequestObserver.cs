@@ -59,8 +59,6 @@ namespace Catalyst.Node.Core.RPC.Observables
         public override IMessage HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto)
         {
             Logger.Debug("received message of type GetInfoRequest");
-
-            Guard.Argument(messageDto, nameof(messageDto)).NotNull("Received message cannot be null");
             
             try
             {

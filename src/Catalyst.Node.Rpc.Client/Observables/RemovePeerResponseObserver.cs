@@ -24,7 +24,6 @@
 using System;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Cli;
-using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Observables;
 using Catalyst.Common.IO.Observables;
@@ -60,9 +59,7 @@ namespace Catalyst.Node.Rpc.Client.Observables
         public override void HandleResponse(IProtocolMessageDto<ProtocolMessage> messageDto)
         {
             Logger.Debug($@"Handling Remove Peer Response");
-
-            Guard.Argument(messageDto, nameof(messageDto)).NotNull($@"Received message cannot be null");
-
+            
             try
             {
                 var deserialised = messageDto.Payload.FromProtocolMessage<RemovePeerResponse>() ?? throw new ArgumentNullException(nameof(messageDto));

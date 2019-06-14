@@ -24,17 +24,12 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
-using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Observables;
 using Catalyst.Common.Interfaces.Modules.Mempool;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.IO.Messaging;
-using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.IO.Observables;
-using Catalyst.Common.P2P;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
@@ -61,13 +56,9 @@ namespace Catalyst.Node.Core.RPC.Observables
         {
             Logger.Debug("GetMempoolRequestHandler starting ...");
 
-            Guard.Argument(messageDto).NotNull();
-            
             try
             {
                 var deserialised = messageDto.Payload.FromProtocolMessage<GetMempoolRequest>();
-                
-                Guard.Argument(deserialised).NotNull("The shell GetMempoolRequest cannot be null.");
                 
                 Logger.Debug("Received GetMempoolRequest message with content {0}", deserialised);
 
@@ -80,7 +71,7 @@ namespace Catalyst.Node.Core.RPC.Observables
             {
                 Logger.Error(ex,
                     "Failed to handle GetInfoRequest after receiving message {0}", messageDto);
-                throw;
+                return new GetMempoolResponse();
             }
         }
 
@@ -102,7 +93,7 @@ namespace Catalyst.Node.Core.RPC.Observables
             catch (Exception ex)
             {
                 Logger.Error(ex,
-                    "Failed to get the mempool content and format it as MapField<string,string> {0}", ex.Message);
+                    "Failed to get the mempool content and format it as List<string> {0}", ex.Message);
                 throw;
             }
         }

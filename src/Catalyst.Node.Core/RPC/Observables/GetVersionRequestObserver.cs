@@ -53,8 +53,6 @@ namespace Catalyst.Node.Core.RPC.Observables
         {
             Logger.Debug("received message of type VersionRequest");
 
-            Guard.Argument(messageDto, nameof(messageDto)).NotNull("Received message cannot be null");
-            
             try
             {
                 return new VersionResponse

@@ -61,8 +61,6 @@ namespace Catalyst.Node.Rpc.Client.Observables
         public override IMessage HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto)
         {
             Logger.Debug("received message of type TransferFileBytesRequestObserver");
-
-            Guard.Argument(messageDto, nameof(messageDto)).NotNull("Received message cannot be null");
             
             var deserialised = messageDto.Payload.FromProtocolMessage<TransferFileBytesRequest>();
             FileTransferResponseCodes responseCode;

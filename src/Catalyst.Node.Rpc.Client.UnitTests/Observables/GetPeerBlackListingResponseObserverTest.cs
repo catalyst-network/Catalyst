@@ -28,7 +28,6 @@ using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.Util;
-using Catalyst.Node.Core.RPC.Observables;
 using Catalyst.Node.Rpc.Client.Observables;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;

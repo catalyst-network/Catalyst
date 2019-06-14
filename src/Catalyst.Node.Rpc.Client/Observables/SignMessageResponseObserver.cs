@@ -65,8 +65,6 @@ namespace Catalyst.Node.Rpc.Client.Observables
         public override void HandleResponse(IProtocolMessageDto<ProtocolMessage> messageDto)
         {
             Logger.Debug($@"sign message response");
-
-            Guard.Argument(messageDto, nameof(messageDto)).NotNull($@"Received message cannot be null");
             
             try
             {

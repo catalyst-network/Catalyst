@@ -62,8 +62,6 @@ namespace Catalyst.Node.Core.RPC.Observables
         {
             Logger.Debug("received message of type TransferFileBytesRequest");
 
-            Guard.Argument(messageDto, nameof(messageDto)).NotNull();
-            
             var deserialised = messageDto.Payload.FromProtocolMessage<TransferFileBytesRequest>();
             FileTransferResponseCodes responseCode;
             try

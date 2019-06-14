@@ -61,8 +61,6 @@ namespace Catalyst.Node.Rpc.Client.Observables
         /// <param name="messageDto">The message.</param>
         public override void HandleResponse(IProtocolMessageDto<ProtocolMessage> messageDto)
         {
-            Guard.Argument(messageDto, nameof(messageDto)).NotNull("Message cannot be null");
-
             var deserialised = messageDto.Payload.FromProtocolMessage<GetFileFromDfsResponse>() ?? throw new ArgumentNullException(nameof(messageDto));
             
             // @TODO return int not byte

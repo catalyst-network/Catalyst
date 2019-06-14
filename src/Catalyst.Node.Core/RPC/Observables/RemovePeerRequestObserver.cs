@@ -67,13 +67,12 @@ namespace Catalyst.Node.Core.RPC.Observables
         {
             Logger.Debug("Received message of type RemovePeerRequest");
 
-            Guard.Argument(messageDto, nameof(messageDto)).NotNull();
-
             try
             {
                 uint peerDeletedCount = 0;
 
-                var deserialised = messageDto.Payload.FromProtocolMessage<RemovePeerRequest>() ?? throw new ArgumentNullException(nameof(messageDto));
+                var deserialised = messageDto.Payload.FromProtocolMessage<RemovePeerRequest>()
+                 ?? throw new ArgumentNullException(nameof(messageDto));
                 var publicKeyIsEmpty = deserialised.PublicKey.IsEmpty;
 
                 Guard.Argument(deserialised).NotNull();

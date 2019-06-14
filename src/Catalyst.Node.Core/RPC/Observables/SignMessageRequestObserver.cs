@@ -60,8 +60,6 @@ namespace Catalyst.Node.Core.RPC.Observables
         {
             Logger.Debug("received message of type SignMessageRequest");
 
-            Guard.Argument(messageDto, nameof(messageDto)).NotNull();
-            
             try
             {
                 var deserialised = messageDto.Payload.FromProtocolMessage<SignMessageRequest>();
