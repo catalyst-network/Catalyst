@@ -21,29 +21,19 @@
 
 #endregion
 
+using System;
 using DotNetty.Transport.Channels;
 
-namespace Catalyst.Common.Interfaces.IO
+namespace Catalyst.Common.Interfaces.IO.EventLoop
 {
-    /// <summary>
-    /// Creates handler worker multi-threaded loop groups
-    /// </summary>
-    public interface IHandlerWorkerEventLoopGroupFactory
+    public interface IEventLoopGroupFactory : IDisposable
     {
-        /// <summary>Creates new multi-threaded tcp client worker group.</summary>
+        /// <summary>Gets or Creates new loop group for the netty handlers.</summary>
         /// <returns></returns>
-        IEventLoopGroup NewTcpClientLoopGroup();
+        IEventLoopGroup GetOrCreateHandlerWorkerEventLoopGroup();
 
-        /// <summary>Creates new multi-threaded tcp server worker group.</summary>
+        /// <summary>Gets or Creates new loop group for the socket IO.</summary>
         /// <returns></returns>
-        IEventLoopGroup NewTcpServerLoopGroup();
-
-        /// <summary>Creates new multi-threaded udp server worker group.</summary>
-        /// <returns></returns>
-        IEventLoopGroup NewUdpServerLoopGroup();
-
-        /// <summary>Creates new multi-threaded udp client worker group.</summary>
-        /// <returns></returns>
-        IEventLoopGroup NewUdpClientLoopGroup();
+        IEventLoopGroup GetOrCreateSocketIoEventLoopGroup();
     }
 }

@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Security.Cryptography.X509Certificates;
 using Catalyst.Common.Interfaces.IO;
+using Catalyst.Common.Interfaces.IO.EventLoop;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Transport.Channels;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
@@ -43,16 +44,16 @@ namespace Catalyst.Common.IO.Transport.Channels
         private readonly IPeerSettings _peerSettings;
         private readonly ObservableServiceHandler _observableServiceHandler;
 
-        /// <param name="handlerEventLoopGroup"></param>
+        /// <param name="handlerEventLoopGroupFactory"></param>
         /// <param name="targetAddress">Ignored</param>
         /// <param name="targetPort">Ignored</param>
         /// <param name="certificate">Ignored</param>
         /// <returns></returns>
-        public IObservableChannel BuildChannel(IEventLoopGroup handlerEventLoopGroup,
+        public IObservableChannel BuildChannel(IEventLoopGroupFactory handlerEventLoopGroupFactory,
             IPAddress targetAddress = null,
             int targetPort = 0,
             X509Certificate2 certificate = null) =>
-            BootStrapChannel(handlerEventLoopGroup, _observableServiceHandler.MessageStream,
+            BootStrapChannel(handlerEventLoopGroupFactory, _observableServiceHandler.MessageStream,
                 _peerSettings.BindAddress, _peerSettings.Port);
 
         public UdpServerChannelFactory(IMessageCorrelationManager messageCorrelationManager,

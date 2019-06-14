@@ -22,17 +22,27 @@
 #endregion
 
 using Catalyst.Common.Interfaces.IO.EventLoop;
-using Catalyst.Common.Interfaces.IO.Transport;
-using Catalyst.Common.Interfaces.IO.Transport.Channels;
-using Serilog;
+using DotNetty.Transport.Channels;
 
-namespace Catalyst.Common.IO.Transport
+namespace Catalyst.Common.IO.EventLoop
 {
-    public class UdpServer : SocketBase, IUdpServer
+    public class TcpClientEventLoopGroupFactory : BaseLoopGroupFactory, ITcpClientEventLoopGroupFactory
     {
-        protected UdpServer(IUdpServerChannelFactory serverChannelFactory,
-            ILogger logger,
-            IUdpServerEventLoopGroupFactory udpServerEventLoopGroupFactory)
-            : base(serverChannelFactory, logger, udpServerEventLoopGroupFactory) { }
+        private readonly IEventLoopGroupFactoryConfiguration _configuration;
+
+        public TcpClientEventLoopGroupFactory(IEventLoopGroupFactoryConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
+        
+        public IEventLoopGroup GetOrCreateHandlerWorkerEventLoopGroup()
+        {
+            return HandlerWorkerEventLoopGroup ?? (HandlerWorkerEventLoopGroup = NewEventLoopGroup(_configuration.TcpClientHandlerWorkerThreads));
+        }
+
+        public IEventLoopGroup GetOrCreateSocketIoEventLoopGroup()
+        {
+            return SocketIoEventLoopGroup ?? (SocketIoEventLoopGroup = NewEventLoopGroup());
+        }
     }
 }

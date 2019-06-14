@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Security.Cryptography.X509Certificates;
 using Catalyst.Common.Interfaces.IO;
+using Catalyst.Common.Interfaces.IO.EventLoop;
 using Catalyst.Common.Interfaces.IO.Transport;
 using Catalyst.Common.Interfaces.IO.Transport.Channels;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
@@ -45,17 +46,17 @@ namespace Catalyst.Common.IO.Transport.Channels
                 new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(new ProtocolMessageVerifyHandler(_keySigner), new ProtocolMessageSignHandler(_keySigner))
             };
 
-        /// <param name="handlerEventLoopGroup"></param>
+        /// <param name="handlerEventLoopGroupFactory"></param>
         /// <param name="targetAddress"></param>
         /// <param name="targetPort">Ignored</param>
         /// <param name="certificate">Ignored</param>
         /// <returns></returns>
-        public IObservableChannel BuildChannel(IEventLoopGroup handlerEventLoopGroup,
+        public IObservableChannel BuildChannel(IEventLoopGroupFactory handlerEventLoopGroupFactory,
             IPAddress targetAddress = null,
             int targetPort = IPEndPoint.MinPort,
             X509Certificate2 certificate = null)
         {
-            return BootStrapChannel(handlerEventLoopGroup, address: targetAddress);
+            return BootStrapChannel(handlerEventLoopGroupFactory, address: targetAddress);
         }
     }
 }

@@ -27,6 +27,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Reactive.Linq;
 using Catalyst.Common.Interfaces.IO;
+using Catalyst.Common.Interfaces.IO.EventLoop;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Transport;
 using Catalyst.Common.Interfaces.IO.Transport.Channels;
@@ -44,15 +45,15 @@ namespace Catalyst.Common.IO.Transport.Channels
     {
         protected abstract List<IChannelHandler> Handlers { get; }
 
-        protected IObservableChannel BootStrapChannel(IEventLoopGroup handlerEventLoopGroup,
+        protected IObservableChannel BootStrapChannel(IEventLoopGroupFactory handlerEventLoopGroupFactory,
             IObservable<IProtocolMessageDto<ProtocolMessage>> messageStream = null, 
             IPAddress address = null,
             int port = 0)
         {
-            var channelHandler = new ServerChannelInitializerBase<IChannel>(Handlers, handlerEventLoopGroup);
+            var channelHandler = new ServerChannelInitializerBase<IChannel>(Handlers, handlerEventLoopGroupFactory);
 
             var channel = new Bootstrap()
-               .Group(new MultithreadEventLoopGroup())
+               .Group(handlerEventLoopGroupFactory.GetOrCreateSocketIoEventLoopGroup())
                .ChannelFactory(() => new SocketDatagramChannel(AddressFamily.InterNetwork))
                .Option(ChannelOption.SoBroadcast, true)
                .Handler(new LoggingHandler(LogLevel.DEBUG))

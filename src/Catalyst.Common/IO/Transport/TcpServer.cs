@@ -22,6 +22,8 @@
 #endregion
 
 using System;
+using Catalyst.Common.Interfaces.IO;
+using Catalyst.Common.Interfaces.IO.EventLoop;
 using Catalyst.Common.Interfaces.IO.Transport;
 using Catalyst.Common.Interfaces.IO.Transport.Channels;
 using DotNetty.Transport.Channels;
@@ -31,32 +33,9 @@ namespace Catalyst.Common.IO.Transport
 {
     public class TcpServer : SocketBase, ITcpServer
     {
-        private readonly IEventLoopGroup _supervisorEventLoop;
-
         protected TcpServer(ITcpServerChannelFactory tcpChannelFactory,
             ILogger logger,
-            IEventLoopGroup handlerEventLoopGroup)
-            : base(tcpChannelFactory, logger, handlerEventLoopGroup)
-        {
-            _supervisorEventLoop = new MultithreadEventLoopGroup();
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            base.Dispose(true);
-            if (!disposing)
-            {
-                return;
-            }
-
-            if (_supervisorEventLoop == null)
-            {
-                return;
-            }
-
-            var quietPeriod = TimeSpan.FromMilliseconds(100);
-            _supervisorEventLoop
-               .ShutdownGracefullyAsync(quietPeriod, 2 * quietPeriod);
-        }
+            IEventLoopGroupFactory eventLoopGroupFactory)
+            : base(tcpChannelFactory, logger, eventLoopGroupFactory) { }
     }
 }

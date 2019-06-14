@@ -27,12 +27,14 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Catalyst.Common.Extensions;
+using Catalyst.Common.Interfaces.IO.EventLoop;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Observables;
 using Catalyst.Common.Interfaces.IO.Transport;
 using Catalyst.Common.Interfaces.IO.Transport.Channels;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO;
+using Catalyst.Common.IO.EventLoop;
 using Catalyst.Common.IO.Observables;
 using Catalyst.Node.Core.P2P;
 using Catalyst.Protocol.Common;
@@ -66,7 +68,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
 
             _serverChannel = new EmbeddedObservableChannel($"Server:{CurrentTestName}");
             _udpServerServerChannelFactory = Substitute.For<IUdpServerChannelFactory>();
-            _udpServerServerChannelFactory.BuildChannel(Arg.Any<IEventLoopGroup>()).Returns(_serverChannel);
+            _udpServerServerChannelFactory.BuildChannel(Arg.Any<IEventLoopGroupFactory>()).Returns(_serverChannel);
 
             var peerSettings = Substitute.For<IPeerSettings>();
             peerSettings.BindAddress.Returns(IPAddress.Parse("127.0.0.1"));
@@ -131,7 +133,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
         {
             _p2PMessageHandlers.Add(pingRequestHandler);
 
-            _peerService = new PeerService(new HandlerWorkerEventLoopGroupFactory(), 
+            _peerService = new PeerService(new UdpServerEventLoopGroupFactory(new EventLoopGroupFactoryConfiguration()), 
                 _udpServerServerChannelFactory,
                 _peerDiscovery,
                 _p2PMessageHandlers,

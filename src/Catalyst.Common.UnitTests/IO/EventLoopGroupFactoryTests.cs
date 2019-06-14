@@ -22,62 +22,71 @@
 #endregion
 
 using System.Reflection;
-using Catalyst.Common.Interfaces.IO;
-using Catalyst.Common.IO;
+using Catalyst.Common.Interfaces.IO.EventLoop;
+using Catalyst.Common.IO.EventLoop;
 using DotNetty.Transport.Channels;
 using FluentAssertions;
 using Xunit;
 
 namespace Catalyst.Common.UnitTests.IO
 {
-    public class HandlerWorkerEventLoopGroupFactoryTests
+    public class EventLoopGroupFactoryTests
     {
         private readonly int ExpectedUdpServerThreads = 2;
         private readonly int ExpectedTcpServerThreads = 3;
         private readonly int ExpectedUdpClientThreads = 4;
         private readonly int ExpectedTcpClientThreads = 5;
-        private readonly IHandlerWorkerEventLoopGroupFactory _handlerWorkerEventLoopGroupFactory;
 
-        public HandlerWorkerEventLoopGroupFactoryTests()
+        private readonly IEventLoopGroupFactoryConfiguration _eventLoopGroupFactoryConfiguration;
+        
+        public EventLoopGroupFactoryTests()
         {
-            _handlerWorkerEventLoopGroupFactory =
-                new HandlerWorkerEventLoopGroupFactory(ExpectedTcpClientThreads,
-                    ExpectedTcpServerThreads,
-                    ExpectedUdpServerThreads,
-                    ExpectedUdpClientThreads);
+            _eventLoopGroupFactoryConfiguration = new EventLoopGroupFactoryConfiguration
+            {
+                TcpClientHandlerWorkerThreads = ExpectedTcpClientThreads,
+                TcpServerHandlerWorkerThreads = ExpectedTcpServerThreads,
+                UdpServerHandlerWorkerThreads = ExpectedUdpServerThreads,
+                UdpClientHandlerWorkerThreads = ExpectedUdpClientThreads
+            };
         }
 
         [Fact]
         public void Can_Spawn_Correct_Amount_Of_Udp_Server_Event_Loops()
         {
-            AssertEventLoopSize(_handlerWorkerEventLoopGroupFactory.NewUdpServerLoopGroup(), ExpectedUdpServerThreads);
+            IEventLoopGroupFactory eventFactory = new UdpServerEventLoopGroupFactory(_eventLoopGroupFactoryConfiguration);
+            AssertEventLoopSize(eventFactory, ExpectedUdpServerThreads);
         }
 
         [Fact]
         public void Can_Spawn_Correct_Amount_Of_Udp_Client_Event_Loops()
         {
-            AssertEventLoopSize(_handlerWorkerEventLoopGroupFactory.NewUdpClientLoopGroup(), ExpectedUdpClientThreads);
+            IEventLoopGroupFactory eventFactory = new UdpClientEventLoopGroupFactory(_eventLoopGroupFactoryConfiguration);
+            AssertEventLoopSize(eventFactory, ExpectedUdpClientThreads);
         }
 
         [Fact]
         public void Can_Spawn_Correct_Amount_Of_Tcp_Server_Event_Loops()
         {
-            AssertEventLoopSize(_handlerWorkerEventLoopGroupFactory.NewTcpServerLoopGroup(), ExpectedTcpServerThreads);
+            IEventLoopGroupFactory eventFactory = new TcpServerEventLoopGroupFactory(_eventLoopGroupFactoryConfiguration);
+            AssertEventLoopSize(eventFactory, ExpectedTcpServerThreads);
         }
 
         [Fact]
         public void Can_Spawn_Correct_Amount_Of_Tcp_Client_Event_Loops()
         {
-            AssertEventLoopSize(_handlerWorkerEventLoopGroupFactory.NewTcpClientLoopGroup(), ExpectedTcpClientThreads);
+            IEventLoopGroupFactory eventFactory = new TcpClientEventLoopGroupFactory(_eventLoopGroupFactoryConfiguration);
+            AssertEventLoopSize(eventFactory, ExpectedTcpClientThreads);
         }
 
-        private void AssertEventLoopSize(IEventLoopGroup eventLoopGroup, int expectedEventLoops)
+        private void AssertEventLoopSize(IEventLoopGroupFactory eventLoopGroupFactory, int expectedEventLoops)
         {
+            IEventLoopGroup eventLoopGroup = eventLoopGroupFactory.GetOrCreateHandlerWorkerEventLoopGroup();
             eventLoopGroup.Should().NotBeNull();
             IEventLoop[] eventLoops =
                 (IEventLoop[]) eventLoopGroup.GetType().GetField("eventLoops",
                     BindingFlags.Instance | BindingFlags.NonPublic).GetValue(eventLoopGroup);
             eventLoops.Length.Should().Be(expectedEventLoops);
+            eventLoopGroup.ShutdownGracefullyAsync();
         }
     }
 }

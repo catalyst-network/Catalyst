@@ -21,19 +21,18 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.IO;
+using Catalyst.Common.Interfaces.IO.EventLoop;
 using Catalyst.Common.Interfaces.IO.Transport;
 using Catalyst.Common.Interfaces.IO.Transport.Channels;
 using Catalyst.Protocol.Common;
-using DotNetty.Transport.Channels;
 using Serilog;
 
 namespace Catalyst.Common.IO.Transport
 {
     public class ClientBase : SocketBase, ISocketClient
     {
-        protected ClientBase(IChannelFactory channelFactory, ILogger logger, IEventLoopGroup handlerEventLoopGroup) 
-            : base(channelFactory, logger, handlerEventLoopGroup) { }
+        protected ClientBase(IChannelFactory channelFactory, ILogger logger, IEventLoopGroupFactory handlerEventEventLoopGroupFactory)
+            : base(channelFactory, logger, handlerEventEventLoopGroupFactory) { }
 
         public void SendMessage(ProtocolMessage message)
         {

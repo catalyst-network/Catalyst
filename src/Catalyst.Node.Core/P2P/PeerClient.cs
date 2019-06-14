@@ -21,34 +21,33 @@
 
 #endregion
 
-using System.Net;
-using System.Reflection;
-using System.Threading.Tasks;
-using Catalyst.Common.Interfaces.IO;
-using Catalyst.Common.Interfaces.IO.Transport;
+using Catalyst.Common.Interfaces.IO.EventLoop;
 using Catalyst.Common.Interfaces.IO.Transport.Channels;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Transport;
 using DotNetty.Buffers;
 using Serilog;
+using System.Net;
+using System.Reflection;
+using System.Threading.Tasks;
 
 namespace Catalyst.Node.Core.P2P
 {
     public sealed class PeerClient : UdpClient, IPeerClient
     {
         /// <param name="clientChannelFactory">A factory used to build the appropriate kind of channel for a udp client.</param>
-        /// <param name="handlerWorkerEventLoopGroupFactory"></param>
+        /// <param name="eventLoopGroupFactory"></param>
         /// <param name="ipAddress">The Peer client NIC binding</param>
-        public PeerClient(IUdpClientChannelFactory clientChannelFactory, 
-            IHandlerWorkerEventLoopGroupFactory handlerWorkerEventLoopGroupFactory, 
+        public PeerClient(IUdpClientChannelFactory clientChannelFactory,
+            IUdpClientEventLoopGroupFactory eventLoopGroupFactory,
             IPAddress ipAddress = null)
-            : base(clientChannelFactory, 
+            : base(clientChannelFactory,
                 Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType),
-                handlerWorkerEventLoopGroupFactory.NewUdpClientLoopGroup())
+                eventLoopGroupFactory)
         {
             var bindingEndpoint = new IPEndPoint(ipAddress ?? IPAddress.Loopback, IPEndPoint.MinPort);
-            Channel = ChannelFactory.BuildChannel(HandlerEventLoopGroup, 
-                bindingEndpoint.Address, 
+            Channel = ChannelFactory.BuildChannel(EventLoopGroupFactory,
+                bindingEndpoint.Address,
                 bindingEndpoint.Port).Channel;
         }
 

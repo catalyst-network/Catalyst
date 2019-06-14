@@ -21,14 +21,14 @@
 
 #endregion
 
-using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Catalyst.Common.Interfaces.IO;
+using Catalyst.Common.Interfaces.IO.EventLoop;
 using Catalyst.Common.Interfaces.IO.Transport;
 using Catalyst.Common.Interfaces.IO.Transport.Channels;
 using DotNetty.Transport.Channels;
 using Serilog;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Catalyst.Common.IO.Transport
 {
@@ -36,17 +36,15 @@ namespace Catalyst.Common.IO.Transport
     {
         protected readonly IChannelFactory ChannelFactory;
         protected readonly ILogger Logger;
-        protected readonly IEventLoopGroup WorkerEventLoop;
-        protected readonly IEventLoopGroup HandlerEventLoopGroup;
+        protected readonly IEventLoopGroupFactory EventLoopGroupFactory;
 
         public IChannel Channel { get; protected set; }
 
-        protected SocketBase(IChannelFactory channelFactory, ILogger logger, IEventLoopGroup handlerEventLoopGroup)
+        protected SocketBase(IChannelFactory channelFactory, ILogger logger, IEventLoopGroupFactory eventLoopGroupFactory)
         {
             ChannelFactory = channelFactory;
             Logger = logger;
-            WorkerEventLoop = new MultithreadEventLoopGroup();
-            HandlerEventLoopGroup = handlerEventLoopGroup;
+            EventLoopGroupFactory = eventLoopGroupFactory;
         }
 
         public void Dispose()
@@ -69,12 +67,11 @@ namespace Catalyst.Common.IO.Transport
             {
                 Channel?.Flush();
                 var closeChannelTask = Channel?.CloseAsync();
-                var closeWorkerLoopTask = WorkerEventLoop?.ShutdownGracefullyAsync(quietPeriod, quietPeriod);
-                var closeHandlerWorkerLoopTask =
-                    HandlerEventLoopGroup?.ShutdownGracefullyAsync(quietPeriod, quietPeriod);
 
-                Task.WaitAll(new[] {closeChannelTask, closeWorkerLoopTask, closeHandlerWorkerLoopTask}.Where(t => t != null).ToArray(),
-                    quietPeriod * 3);
+                Task.WaitAll(new[] {closeChannelTask}.Where(t => t != null).ToArray(),
+                    quietPeriod * 2);
+
+                EventLoopGroupFactory.Dispose();
             }
             catch (Exception e)
             {

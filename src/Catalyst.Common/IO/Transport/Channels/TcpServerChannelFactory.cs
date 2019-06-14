@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Security.Cryptography.X509Certificates;
 using Catalyst.Common.Interfaces.IO;
+using Catalyst.Common.Interfaces.IO.EventLoop;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Transport;
 using Catalyst.Common.Interfaces.IO.Transport.Channels;
@@ -61,21 +62,21 @@ namespace Catalyst.Common.IO.Transport.Channels
         /// <param name="targetAddress">Ignored</param>
         /// <param name="targetPort">Ignored</param>
         /// <param name="certificate">Local TLS certificate</param>
-        /// <param name="handlerEventLoopGroup"></param>
-        public IObservableChannel BuildChannel(IEventLoopGroup handlerEventLoopGroup,
+        /// <param name="handlerEventLoopGroupFactory"></param>
+        public IObservableChannel BuildChannel(IEventLoopGroupFactory handlerEventLoopGroupFactory,
             IPAddress targetAddress = null,
             int targetPort = 0, 
             X509Certificate2 certificate = null) => 
-            Bootstrap(certificate, handlerEventLoopGroup);
+            Bootstrap(certificate, handlerEventLoopGroupFactory);
 
-        private IObservableChannel Bootstrap(X509Certificate2 certificate, IEventLoopGroup handlerEventLoopGroup)
+        private IObservableChannel Bootstrap(X509Certificate2 certificate, IEventLoopGroupFactory handlerEventLoopGroupFactory)
         {
-            var supervisorEventLoop = new MultithreadEventLoopGroup();
-
-            var channelHandler = new ServerChannelInitializerBase<IChannel>(Handlers, handlerEventLoopGroup, certificate);
+            var supervisorLoopGroup = ((ITcpServerEventLoopGroupFactory) handlerEventLoopGroupFactory)
+               .GetOrCreateSupervisorEventLoopGroup();
+            var channelHandler = new ServerChannelInitializerBase<IChannel>(Handlers, handlerEventLoopGroupFactory, certificate);
 
             var channel = new ServerBootstrap()
-               .Group(supervisorEventLoop, childGroup: new MultithreadEventLoopGroup())
+               .Group(handlerEventLoopGroupFactory.GetOrCreateSocketIoEventLoopGroup(), childGroup: supervisorLoopGroup)
                .ChannelFactory(() => new TcpServerSocketChannel())
                .Option(ChannelOption.SoBacklog, BackLogValue)
                .Handler(new LoggingHandler(LogLevel.DEBUG))

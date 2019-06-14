@@ -21,16 +21,16 @@
 
 #endregion
 
+using Catalyst.Common.Interfaces.IO.EventLoop;
 using Catalyst.Common.Interfaces.IO.Transport;
 using Catalyst.Common.Interfaces.IO.Transport.Channels;
-using DotNetty.Transport.Channels;
 using Serilog;
 
 namespace Catalyst.Common.IO.Transport
 {
     public class UdpClient : ClientBase, IUdpClient
     {
-        protected UdpClient(IUdpClientChannelFactory clientChannelFactory, ILogger logger, IEventLoopGroup handlerEventLoopGroup) 
-            : base(clientChannelFactory, logger, handlerEventLoopGroup) { }
+        protected UdpClient(IUdpClientChannelFactory clientChannelFactory, ILogger logger, IUdpClientEventLoopGroupFactory eventLoopGroupFactory)
+            : base(clientChannelFactory, logger, eventLoopGroupFactory) { }
     }
 }

@@ -24,6 +24,7 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using Catalyst.Common.Interfaces.IO.EventLoop;
 using Dawn;
 using DotNetty.Handlers.Logging;
 using DotNetty.Handlers.Tls;
@@ -37,15 +38,15 @@ namespace Catalyst.Common.IO.Transport.Channels
     {
         private readonly IImmutableList<IChannelHandler> _handlers;
         private readonly TlsHandler _tlsHandler;
-        private readonly IEventLoopGroup _handlerEventLoopGroup;
+        private readonly IEventLoopGroupFactory _eventLoopGroupFactory;
 
         protected ChannelInitializerBase(IList<IChannelHandler> handlers,
             TlsHandler tlsHandler,
-            IEventLoopGroup handlerEventLoopGroup)
+            IEventLoopGroupFactory eventLoopGroupFactory)
         {
             Guard.Argument(handlers, nameof(handlers)).NotNull().NotEmpty();
             _handlers = handlers.ToImmutableList();
-            _handlerEventLoopGroup = handlerEventLoopGroup;
+            _eventLoopGroupFactory = eventLoopGroupFactory;
             _tlsHandler = tlsHandler;
         }
 
@@ -59,7 +60,7 @@ namespace Catalyst.Common.IO.Transport.Channels
             }
 
             pipeline.AddLast(new LoggingHandler(LogLevel.TRACE));
-            pipeline.AddLast(_handlerEventLoopGroup, _handlers.ToArray());
+            pipeline.AddLast(_eventLoopGroupFactory.GetOrCreateHandlerWorkerEventLoopGroup(), _handlers.ToArray());
         }
     }
 }
