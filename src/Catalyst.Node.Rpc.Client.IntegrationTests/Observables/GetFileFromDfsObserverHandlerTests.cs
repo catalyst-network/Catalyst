@@ -30,7 +30,6 @@ using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.FileTransfer;
 using Catalyst.Common.Interfaces.FileTransfer;
-using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.Modules.Dfs;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Messaging;
@@ -48,15 +47,14 @@ using Xunit.Abstractions;
 
 namespace Catalyst.Node.Rpc.Client.IntegrationTests.Observables
 {
-    public sealed class GetFileFromDfsObserverHandler : FileSystemBasedTest
+    public sealed class GetFileFromDfsObserverHandlerTests : FileSystemBasedTest
     {
         private readonly ILogger _logger;
         private readonly IChannelHandlerContext _fakeContext;
         private readonly IDownloadFileTransferFactory _fileDownloadFactory;
         private readonly IDfs _dfs;
-        private readonly IProtocolMessageFactory _protocolMessageFactory;
 
-        public GetFileFromDfsObserverHandler(ITestOutputHelper testOutput) : base(testOutput)
+        public GetFileFromDfsObserverHandlerTests(ITestOutputHelper testOutput) : base(testOutput)
         {
             var peerSettings = Substitute.For<IPeerSettings>();
             peerSettings.SeedServers.Returns(new List<string>
@@ -67,7 +65,6 @@ namespace Catalyst.Node.Rpc.Client.IntegrationTests.Observables
 
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
-            _protocolMessageFactory = Substitute.For<IProtocolMessageFactory>();
             _fileDownloadFactory = new DownloadFileTransferFactory();
             _logger = Substitute.For<ILogger>();
             _dfs = Substitute.For<IDfs>();
@@ -97,7 +94,7 @@ namespace Catalyst.Node.Rpc.Client.IntegrationTests.Observables
                 var getFileFromDfsResponseHandler =
                     new Client.Observables.GetFileFromDfsResponseObserver(_logger, _fileDownloadFactory);
                 var transferBytesHandler =
-                    new TransferFileBytesRequestObserver(_fileDownloadFactory, rpcPeer, _logger, _protocolMessageFactory);
+                    new TransferFileBytesRequestObserver(_fileDownloadFactory, rpcPeer, _logger);
 
                 var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
                 var linearBackOffRetryPolicy = Policy.Handle<TaskCanceledException>()

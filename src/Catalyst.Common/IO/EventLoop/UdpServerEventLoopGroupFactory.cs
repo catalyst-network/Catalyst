@@ -21,29 +21,24 @@
 
 #endregion
 
-using System.IO;
-using Catalyst.Protocol.Common;
+using Catalyst.Common.Interfaces.IO.EventLoop;
 using Dawn;
 using DotNetty.Transport.Channels;
-using DotNetty.Transport.Channels.Sockets;
 
-namespace Catalyst.Common.IO.Handlers
+namespace Catalyst.Common.IO.EventLoop
 {
-    public sealed class ProtoDatagramHandler : SimpleChannelInboundHandler<DatagramPacket>
+    public class UdpServerEventLoopGroupFactory : BaseLoopGroupFactory, IUdpServerEventLoopGroupFactory
     {
-        protected override void ChannelRead0(IChannelHandlerContext context, DatagramPacket packet)
+        private readonly IEventLoopGroupFactoryConfiguration _configuration;
+
+        public UdpServerEventLoopGroupFactory(IEventLoopGroupFactoryConfiguration configuration)
         {
-            Guard.Argument(context).NotNull();
-            Guard.Argument(packet.Content.ReadableBytes).NotZero().NotNegative();
-
-            using (var memoryStream = new MemoryStream())
-            {
-                memoryStream.Write(packet.Content.Array, 0, packet.Content.ReadableBytes);
-                memoryStream.Seek(0, SeekOrigin.Begin);
-
-                var signedMessage = ProtocolMessageSigned.Parser.ParseFrom(memoryStream);
-                context.FireChannelRead(signedMessage);
-            }
+            _configuration = configuration;
+        }
+        
+        public IEventLoopGroup GetOrCreateHandlerWorkerEventLoopGroup()
+        {
+            return HandlerWorkerEventLoopGroup ?? (HandlerWorkerEventLoopGroup = NewEventLoopGroup(_configuration.UdpServerHandlerWorkerThreads));
         }
     }
 }

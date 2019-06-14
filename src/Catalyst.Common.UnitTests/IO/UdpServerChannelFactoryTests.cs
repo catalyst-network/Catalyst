@@ -86,15 +86,15 @@ namespace Catalyst.Common.UnitTests.IO
         {
             _factory.InheritedHandlers.Count(h => h != null).Should().Be(5);
             var handlers = _factory.InheritedHandlers.ToArray();
-            handlers[0].Should().BeOfType<ProtoDatagramHandler>();
+            handlers[0].Should().BeOfType<ProtoDatagramDecoderHandler>();
             handlers[1].Should().BeOfType<CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>>();
-            handlers[2].Should().BeOfType<CorrelationHandler>();
+            handlers[2].Should().BeOfType<CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>>();
             handlers[3].Should().BeOfType<BroadcastHandler>();
             handlers[4].Should().BeOfType<ObservableServiceHandler>();
         }
 
         [Fact]
-        public async Task UdpServerChannelFactory_should_put_the_correct_handlers_on_the_pipeline()
+        public async Task UdpServerChannelFactory_should_put_the_correct_handlers_on_the_inbound_pipeline()
         {
             var testingChannel = new EmbeddedChannel("test".ToChannelId(),
                 true, _factory.InheritedHandlers.ToArray());
@@ -121,7 +121,9 @@ namespace Catalyst.Common.UnitTests.IO
             using (messageStream.Subscribe(observer))
             {
                 testingChannel.WriteInbound(datagram);
-                _correlationManager.Received(1).TryMatchResponse(protocolMessage);
+                
+                // _correlationManager.Received(1).TryMatchResponse(protocolMessage); // @TODO in bound server shouldn't try and correlate a request, lets do another test to check this logic
+                _correlationManager.DidNotReceiveWithAnyArgs().TryMatchResponse(protocolMessage);
                 await _gossipManager.DidNotReceiveWithAnyArgs().BroadcastAsync(null);
                 _keySigner.ReceivedWithAnyArgs(1).Verify(null, null, null);
 

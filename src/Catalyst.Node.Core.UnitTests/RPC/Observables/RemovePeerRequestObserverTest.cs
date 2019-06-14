@@ -27,6 +27,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
+using Catalyst.Common.Interfaces.P2P.Messaging.Dto;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.Network;
@@ -126,7 +127,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
 
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, requestMessage);
 
-            var handler = new RemovePeerRequestObserver(sendPeerIdentifier, peerRepository, _logger, messageFactory);
+            var handler = new RemovePeerRequestObserver(sendPeerIdentifier, peerRepository, _logger);
             handler.StartObserving(messageStream);
 
             await messageStream.WaitForEndOfDelayedStreamOnTaskPoolScheduler();
@@ -134,12 +135,12 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
             var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();
             receivedCalls.Count().Should().Be(1);
 
-            var sentResponse = (ProtocolMessage) receivedCalls[0].GetArguments().Single();
-            sentResponse.TypeUrl.Should().Be(RemovePeerResponse.Descriptor.ShortenedFullName());
+            var sentResponseDto = (IMessageDto) receivedCalls[0].GetArguments().Single();
+            sentResponseDto.Message.Descriptor.ShortenedFullName().Should().Be(RemovePeerResponse.Descriptor.ShortenedFullName());
 
-            var responseContent = sentResponse.FromProtocolMessage<RemovePeerResponse>();
+            var signResponseMessage = sentResponseDto.FromIMessageDto<RemovePeerResponse>();
 
-            responseContent.DeletedCount.Should().Be(withPublicKey ? 1 : (uint) fakePeers.Count);
+            signResponseMessage.DeletedCount.Should().Be(withPublicKey ? 1 : (uint) fakePeers.Count);
         }
     }
 }

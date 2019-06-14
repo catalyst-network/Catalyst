@@ -42,7 +42,7 @@ namespace Catalyst.Node.Rpc.Client.Observables
     /// The handler reads the response's payload and formats it in user readable format and writes it to the console.
     /// </summary>
     public sealed class SignMessageResponseObserver
-        : ObserverBase<SignMessageResponse>,
+        : ResponseObserverBase<SignMessageRequest>,
             IRpcResponseObserver
     {
         private readonly IUserOutput _output;
@@ -62,21 +62,23 @@ namespace Catalyst.Node.Rpc.Client.Observables
         /// Handles the VersionResponse message sent from the <see />.
         /// </summary>
         /// <param name="messageDto">An object of GetMempoolResponse</param>
-        protected override void Handler(IProtocolMessageDto<ProtocolMessage> messageDto)
+        public override void HandleResponse(IProtocolMessageDto<ProtocolMessage> messageDto)
         {
+            Logger.Debug($@"sign message response");
+            
             try
             {
-                var deserialised = messageDto.Payload.FromProtocolMessage<SignMessageResponse>();
+                var deserialised = messageDto.Payload.FromProtocolMessage<SignMessageResponse>() ?? throw new ArgumentNullException(nameof(messageDto));
 
                 var decodeResult = RLP.Decode(deserialised.OriginalMessage.ToByteArray()).RLPData;
 
-                Guard.Argument(decodeResult).NotNull("The sign message response cannot be null.");
+                Guard.Argument(decodeResult, nameof(decodeResult)).NotNull("The sign message response cannot be null.");
 
-                var originalMessage = decodeResult.ToStringFromRLPDecoded();
+                var originalMessage = decodeResult.ToStringFromRLPDecoded() ?? throw new ArgumentNullException(nameof(messageDto));
 
                 _output.WriteLine(
-                    $"Signature: {Multibase.Encode(MultibaseEncoding.Base64, deserialised.Signature.ToByteArray())}\n" +
-                    $"Public Key: {Multibase.Encode(MultibaseEncoding.Base58Btc, deserialised.PublicKey.ToByteArray())}\nOriginal Message: {originalMessage}");
+                    $@"Signature: {Multibase.Encode(MultibaseEncoding.Base64, deserialised.Signature.ToByteArray())} " +
+                    $@"Public Key: {Multibase.Encode(MultibaseEncoding.Base58Btc, deserialised.PublicKey.ToByteArray())} Original Message: {originalMessage}");
             }
             catch (Exception ex)
             {

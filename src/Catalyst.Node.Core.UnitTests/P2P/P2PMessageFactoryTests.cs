@@ -25,6 +25,7 @@ using System;
 using Catalyst.Common.Config;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.IO.Messaging.Dto;
+using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
 using Catalyst.Protocol.Transaction;
 using Catalyst.TestUtils;
@@ -39,21 +40,20 @@ namespace Catalyst.Node.Core.UnitTests.P2P
         [Fact]
         public void CanProduceAValidPingRequestMessage()
         {
-            var pingRequestDatagram = new ProtocolMessageFactory().GetDatagramMessage(new MessageDto( 
+            var pingRequestDatagram = new ProtocolMessageFactory().GetMessage(new MessageDto( 
                 new PingRequest(),
                 MessageTypes.Request,
                 PeerIdentifierHelper.GetPeerIdentifier("im_a_recipient"),
                 PeerIdentifierHelper.GetPeerIdentifier("im_a_sender")
             ));
 
-            pingRequestDatagram.Should().BeAssignableTo(typeof(IByteBufferHolder));
-            pingRequestDatagram.Content.Should().BeAssignableTo(typeof(IByteBuffer));
+            pingRequestDatagram.Should().BeAssignableTo(typeof(ProtocolMessage));
         }
         
         [Fact]
         public void CanProduceAValidPingResponseMessage()
         {
-            var pingResponseDatagram = new ProtocolMessageFactory().GetDatagramMessage(new MessageDto(
+            var pingResponseDatagram = new ProtocolMessageFactory().GetMessage(new MessageDto(
                     new PingResponse(),
                     MessageTypes.Response,
                     PeerIdentifierHelper.GetPeerIdentifier("im_a_recipient"),
@@ -62,22 +62,20 @@ namespace Catalyst.Node.Core.UnitTests.P2P
                 Guid.NewGuid()
             );
 
-            pingResponseDatagram.Should().BeAssignableTo(typeof(IByteBufferHolder));
-            pingResponseDatagram.Content.Should().BeAssignableTo(typeof(IByteBuffer));
+            pingResponseDatagram.Should().BeAssignableTo(typeof(ProtocolMessage));
         }
         
         [Fact]
         public void CanProduceAValidTransactionMessage()
         {
-            var transactionDatagram = new ProtocolMessageFactory().GetDatagramMessage(new MessageDto(
+            var transactionDatagram = new ProtocolMessageFactory().GetMessage(new MessageDto(
                 new TransactionBroadcast(),
                 MessageTypes.Request,
                 PeerIdentifierHelper.GetPeerIdentifier("im_a_recipient"),
                 PeerIdentifierHelper.GetPeerIdentifier("im_a_sender")
             ));
 
-            transactionDatagram.Should().BeAssignableTo(typeof(IByteBufferHolder));
-            transactionDatagram.Content.Should().BeAssignableTo(typeof(IByteBuffer));
+            transactionDatagram.Should().BeAssignableTo(typeof(ProtocolMessage));
         }
     }
 }

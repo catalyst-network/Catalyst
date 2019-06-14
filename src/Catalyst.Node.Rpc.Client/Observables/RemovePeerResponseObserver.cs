@@ -24,7 +24,6 @@
 using System;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Cli;
-using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Observables;
 using Catalyst.Common.IO.Observables;
@@ -40,7 +39,7 @@ namespace Catalyst.Node.Rpc.Client.Observables
     /// </summary>
     /// <seealso cref="IRpcResponseObserver" />
     public sealed class RemovePeerResponseObserver
-        : ObserverBase<RemovePeerResponse>,
+        : ResponseObserverBase<RemovePeerResponse>,
             IRpcResponseObserver
     {
         /// <summary>The user output</summary>
@@ -57,18 +56,16 @@ namespace Catalyst.Node.Rpc.Client.Observables
 
         /// <summary>Handles the specified message.</summary>
         /// <param name="messageDto">The message.</param>
-        protected override void Handler(IProtocolMessageDto<ProtocolMessage> messageDto)
+        public override void HandleResponse(IProtocolMessageDto<ProtocolMessage> messageDto)
         {
-            Logger.Debug("Handling Remove Peer Response");
-
-            Guard.Argument(messageDto).NotNull("Received message cannot be null");
-
+            Logger.Debug($@"Handling Remove Peer Response");
+            
             try
             {
-                var deserialised = messageDto.Payload.FromProtocolMessage<RemovePeerResponse>();
+                var deserialised = messageDto.Payload.FromProtocolMessage<RemovePeerResponse>() ?? throw new ArgumentNullException(nameof(messageDto));
                 var deletedCount = deserialised.DeletedCount;
 
-                _userOutput.WriteLine($"Deleted {deletedCount.ToString()} peers");
+                _userOutput.WriteLine($@"Deleted {deletedCount.ToString()} peers");
             }
             catch (Exception ex)
             {

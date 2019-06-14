@@ -46,7 +46,7 @@ using Xunit.Abstractions;
 
 namespace Catalyst.Node.Core.UnitTests.RPC.Observables
 {
-    public sealed class VerifyMessageRequestObserverTests : ConfigFileBasedTest
+    public sealed class VerifyMessageRequestObserverTest : ConfigFileBasedTest
     {
         private readonly ILifetimeScope _scope;
         private readonly ILogger _logger;
@@ -54,7 +54,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
         private readonly IChannelHandlerContext _fakeContext;
         private readonly IProtocolMessageFactory _protocolMessageFactory;
 
-        public VerifyMessageRequestObserverTests(ITestOutputHelper output) : base(output)
+        public VerifyMessageRequestObserverTest(ITestOutputHelper output) : base(output)
         {
             var config = SocketPortHelper.AlterConfigurationToGetUniquePort(new ConfigurationBuilder()
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile))
@@ -99,7 +99,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
             ));
             
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, request);
-            var handler = new VerifyMessageRequestObserver(PeerIdentifierHelper.GetPeerIdentifier("sender"), _logger, _keySigner, _protocolMessageFactory);
+            var handler = new VerifyMessageRequestObserver(PeerIdentifierHelper.GetPeerIdentifier("sender"), _logger, _keySigner);
             handler.StartObserving(messageStream);
             
             var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();

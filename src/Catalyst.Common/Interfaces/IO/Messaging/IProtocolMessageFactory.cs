@@ -37,8 +37,5 @@ namespace Catalyst.Common.Interfaces.IO.Messaging
         /// <returns>ProtocolMessage message</returns>
         ProtocolMessage GetMessage(IMessageDto messageDto,
             Guid correlationId = default);
-        
-        IByteBufferHolder GetDatagramMessage(IMessageDto messageDto,
-            Guid correlationId = default);
     }
 }
