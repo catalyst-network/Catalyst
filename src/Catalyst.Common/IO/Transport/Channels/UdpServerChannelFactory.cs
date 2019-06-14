@@ -63,14 +63,16 @@ namespace Catalyst.Common.IO.Transport.Channels
             _peerSettings = peerSettings;
         }
 
+        private List<IChannelHandler> _handlers;
+
         protected override List<IChannelHandler> Handlers => 
-            new List<IChannelHandler>
+            _handlers ?? (_handlers = new List<IChannelHandler>
             {
                 new ProtoDatagramParserHandler(),
                 new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(new ProtocolMessageVerifyHandler(_keySigner), new ProtocolMessageSignHandler(_keySigner)),
                 new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(new CorrelationHandler(_messageCorrelationManager), new CorrelatableHandler(_messageCorrelationManager)),
                 new BroadcastHandler(_broadcastManager),
                 new ObservableServiceHandler()
-            };
+            });
     }
 }
