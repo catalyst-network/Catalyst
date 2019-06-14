@@ -74,6 +74,11 @@ namespace Catalyst.Common.IO.EventLoop
             _eventLoopGroupList.Add(eventLoopGroup);
             return eventLoopGroup;
         }
+        
+        public IEventLoopGroup GetOrCreateSocketIoEventLoopGroup()
+        {
+            return SocketIoEventLoopGroup ?? (SocketIoEventLoopGroup = NewEventLoopGroup());
+        }
 
         protected virtual void Dispose(bool disposing)
         {

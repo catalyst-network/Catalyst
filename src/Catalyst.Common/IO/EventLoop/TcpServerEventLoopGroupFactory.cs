@@ -42,11 +42,6 @@ namespace Catalyst.Common.IO.EventLoop
             return HandlerWorkerEventLoopGroup ?? (HandlerWorkerEventLoopGroup = NewEventLoopGroup(_configuration.TcpServerHandlerWorkerThreads));
         }
 
-        public IEventLoopGroup GetOrCreateSocketIoEventLoopGroup()
-        {
-            return SocketIoEventLoopGroup ?? (SocketIoEventLoopGroup = NewEventLoopGroup());
-        }
-
         public IEventLoopGroup GetOrCreateSupervisorEventLoopGroup()
         {
             return _supervisorEventLoopGroup ?? (_supervisorEventLoopGroup = NewEventLoopGroup());
