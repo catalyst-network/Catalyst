@@ -80,7 +80,7 @@ namespace Catalyst.Cli.Commands
                     _peerIdentifier
                 ));
 
-                node.SendMessageAsync(requestMessage);
+                node.SendMessage(requestMessage);
             }
             catch (Exception e)
             {

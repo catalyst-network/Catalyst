@@ -22,6 +22,7 @@
 #endregion
 
 using System.Threading.Tasks;
+using Catalyst.Common.Extensions;
 using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;
 
@@ -33,7 +34,7 @@ namespace Catalyst.Common.IO.Handlers
         {
             if (message is ProtocolMessageSigned signedProtocolMessage)
             {
-                return context.WriteAsync(signedProtocolMessage);
+                return context.WriteAsync(signedProtocolMessage.ToDatagram());
             }
 
             return context.CloseAsync();

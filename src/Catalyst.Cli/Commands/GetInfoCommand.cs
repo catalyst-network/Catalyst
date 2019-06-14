@@ -63,7 +63,7 @@ namespace Catalyst.Cli.Commands
                     new PeerIdentifier(Encoding.ASCII.GetBytes(nodeConfig.PublicKey), nodeConfig.HostAddress, nodeConfig.Port), 
                     _peerIdentifier
                 ));
-                node.SendMessageAsync(request);
+                node.SendMessage(request);
             }
             catch (Exception e)
             {

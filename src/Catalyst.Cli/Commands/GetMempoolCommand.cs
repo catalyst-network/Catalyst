@@ -65,7 +65,7 @@ namespace Catalyst.Cli.Commands
                     _peerIdentifier);
                 
                 var request = _protocolMessageFactory.GetMessage(dto);
-                node.SendMessageAsync(request);
+                node.SendMessage(request);
             }
             catch (Exception e)
             {

@@ -33,7 +33,7 @@ namespace Catalyst.Common.IO.Transport
         protected ClientBase(IChannelFactory channelFactory, ILogger logger) 
             : base(channelFactory, logger) { }
 
-        public virtual void SendMessageAsync(ProtocolMessage message)
+        public virtual void SendMessage(ProtocolMessage message)
         {
             Channel.WriteAsync(message).ConfigureAwait(false);
         }

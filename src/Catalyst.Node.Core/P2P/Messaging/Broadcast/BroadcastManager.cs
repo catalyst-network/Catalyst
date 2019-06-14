@@ -128,7 +128,7 @@ namespace Catalyst.Node.Core.P2P.Messaging.Broadcast
 
                 foreach (var peerIdentifier in peersToGossip)
                 {
-                    _peerClient.SendMessageAsync(_protocolMessageFactory.GetMessage(new MessageDto(message,
+                    _peerClient.SendMessage(_protocolMessageFactory.GetMessage(new MessageDto(message,
                         MessageTypes.Broadcast, peerIdentifier, _peerIdentifier), correlationId));
                 }
 
