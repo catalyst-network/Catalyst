@@ -21,9 +21,12 @@
 
 #endregion
 
+using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
+using Catalyst.Common.Interfaces.P2P.Messaging.Dto;
 using Catalyst.Common.IO.Handlers;
+using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.Util;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Types;
 using Catalyst.Protocol.Common;
@@ -38,7 +41,7 @@ namespace Catalyst.Common.UnitTests.IO.Handlers
     public sealed class ProtocolMessageSignHandlerTest
     {
         private readonly IChannelHandlerContext _fakeContext;
-        private readonly ProtocolMessage _protocolMessage;
+        private readonly IMessageDto _protocolMessage;
         private readonly IKeySigner _keySigner;
 
         public ProtocolMessageSignHandlerTest()
@@ -46,10 +49,15 @@ namespace Catalyst.Common.UnitTests.IO.Handlers
             _fakeContext = Substitute.For<IChannelHandlerContext>();
             _keySigner = Substitute.For<IKeySigner>();
 
-            _protocolMessage = new PingRequest().ToProtocolMessage(
+            new PingRequest().ToProtocolMessage(
                 PeerIdentifierHelper.GetPeerIdentifier(
                     ByteUtil.GenerateRandomByteArray(32).ToString()
-                ).PeerId
+                ).PeerId);
+            
+            _protocolMessage = new MessageDto(new PingRequest().ToProtocolMessage(
+                    PeerIdentifierHelper.GetPeerIdentifier(
+                        ByteUtil.GenerateRandomByteArray(32).ToString()
+                    ).PeerId), MessageTypes.Request, PeerIdentifierHelper.GetPeerIdentifier("recipient"), PeerIdentifierHelper.GetPeerIdentifier("sender")
             );
         }
 
