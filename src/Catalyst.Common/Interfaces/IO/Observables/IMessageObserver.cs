@@ -21,29 +21,21 @@
 
 #endregion
 
-using System.IO;
+using System;
+using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Protocol.Common;
-using Dawn;
 using DotNetty.Transport.Channels;
-using DotNetty.Transport.Channels.Sockets;
 
-namespace Catalyst.Common.IO.Handlers
+namespace Catalyst.Common.Interfaces.IO.Observables
 {
-    public sealed class ProtoDatagramHandler : SimpleChannelInboundHandler<DatagramPacket>
+    public interface IMessageObserver
     {
-        protected override void ChannelRead0(IChannelHandlerContext context, DatagramPacket packet)
-        {
-            Guard.Argument(context).NotNull();
-            Guard.Argument(packet.Content.ReadableBytes).NotZero().NotNegative();
-
-            using (var memoryStream = new MemoryStream())
-            {
-                memoryStream.Write(packet.Content.Array, 0, packet.Content.ReadableBytes);
-                memoryStream.Seek(0, SeekOrigin.Begin);
-
-                var signedMessage = ProtocolMessageSigned.Parser.ParseFrom(memoryStream);
-                context.FireChannelRead(signedMessage);
-            }
-        }
+        IChannelHandlerContext ChannelHandlerContext { get; }
+        IDisposable MessageSubscription { get; }
+        
+        void StartObserving(IObservable<IProtocolMessageDto<ProtocolMessage>> messageStream);
+        void OnNext(IProtocolMessageDto<ProtocolMessage> messageDto);
+        void OnCompleted();
+        void OnError(Exception exception);
     }
 }

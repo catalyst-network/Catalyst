@@ -22,10 +22,6 @@
 #endregion
 
 using System;
-using System.Net;
-using System.Security.Cryptography.X509Certificates;
-using Catalyst.Common.Interfaces.IO.Messaging.Dto;
-using Catalyst.Protocol.Common;
 using IChannel = DotNetty.Transport.Channels.IChannel;
 
 namespace Catalyst.Common.Interfaces.IO.Transport

@@ -21,21 +21,29 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.IO.Transport;
-using Catalyst.Common.Interfaces.IO.Transport.Channels;
+using System.IO;
 using Catalyst.Protocol.Common;
-using Serilog;
+using Dawn;
+using DotNetty.Transport.Channels;
+using DotNetty.Transport.Channels.Sockets;
 
-namespace Catalyst.Common.IO.Transport
+namespace Catalyst.Common.IO.Handlers
 {
-    public class ClientBase : SocketBase, ISocketClient
+    public sealed class ProtoDatagramDecoderHandler : SimpleChannelInboundHandler<DatagramPacket>
     {
-        protected ClientBase(IChannelFactory channelFactory, ILogger logger) 
-            : base(channelFactory, logger) { }
-
-        public virtual void SendMessage(ProtocolMessage message)
+        protected override void ChannelRead0(IChannelHandlerContext context, DatagramPacket packet)
         {
-            Channel.WriteAsync(message).ConfigureAwait(false);
+            Guard.Argument(context).NotNull();
+            Guard.Argument(packet.Content.ReadableBytes).NotZero().NotNegative();
+
+            using (var memoryStream = new MemoryStream())
+            {
+                memoryStream.Write(packet.Content.Array, 0, packet.Content.ReadableBytes);
+                memoryStream.Seek(0, SeekOrigin.Begin);
+
+                var signedMessage = ProtocolMessageSigned.Parser.ParseFrom(memoryStream);
+                context.FireChannelRead(signedMessage);
+            }
         }
     }
 }

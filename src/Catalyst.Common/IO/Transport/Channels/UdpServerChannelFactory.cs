@@ -26,6 +26,7 @@ using System.Net;
 using System.Security.Cryptography.X509Certificates;
 using Catalyst.Common.Interfaces.IO;
 using Catalyst.Common.Interfaces.IO.Messaging;
+using Catalyst.Common.Interfaces.IO.Transport;
 using Catalyst.Common.Interfaces.IO.Transport.Channels;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.P2P;
@@ -41,17 +42,15 @@ namespace Catalyst.Common.IO.Transport.Channels
         private readonly IBroadcastManager _broadcastManager;
         private readonly IKeySigner _keySigner;
         private readonly IPeerSettings _peerSettings;
-        private readonly ObservableServiceHandler _observableServiceHandler;
 
         /// <param name="targetAddress">Ignored</param>
         /// <param name="targetPort">Ignored</param>
         /// <param name="certificate">Ignored</param>
         /// <returns></returns>
         public IObservableChannel BuildChannel(IPAddress targetAddress = null,
-            int targetPort = 0,
+            int targetPort = IPEndPoint.MinPort,
             X509Certificate2 certificate = null) =>
-            BootStrapChannel(_observableServiceHandler.MessageStream,
-                _peerSettings.BindAddress, _peerSettings.Port);
+            BootStrapChannel(_peerSettings.BindAddress, _peerSettings.Port);
 
         public UdpServerChannelFactory(IMessageCorrelationManager messageCorrelationManager,
             IBroadcastManager broadcastManager,
@@ -62,7 +61,6 @@ namespace Catalyst.Common.IO.Transport.Channels
             _broadcastManager = broadcastManager;
             _keySigner = keySigner;
             _peerSettings = peerSettings;
-            _observableServiceHandler = new ObservableServiceHandler();
         }
 
         private List<IChannelHandler> _handlers;
@@ -70,13 +68,11 @@ namespace Catalyst.Common.IO.Transport.Channels
         protected override List<IChannelHandler> Handlers => 
             _handlers ?? (_handlers = new List<IChannelHandler>
             {
-                new ProtoDatagramHandler(),
-                new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
-                    new ProtocolMessageVerifyHandler(_keySigner),
-                    new ProtocolMessageSignHandler(_keySigner)),
-                new CorrelationHandler(_messageCorrelationManager),
+                new ProtoDatagramDecoderHandler(),
+                new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(new ProtocolMessageVerifyHandler(_keySigner), new ProtocolMessageSignHandler(_keySigner)),
+                new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(new CorrelationHandler(_messageCorrelationManager), new CorrelatableHandler(_messageCorrelationManager)),
                 new BroadcastHandler(_broadcastManager),
-                _observableServiceHandler
+                new ObservableServiceHandler()
             });
     }
 }

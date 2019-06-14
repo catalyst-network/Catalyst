@@ -21,21 +21,18 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.IO.Transport;
-using Catalyst.Common.Interfaces.IO.Transport.Channels;
+using Catalyst.Common.Interfaces.IO.Messaging.Dto;
+using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.Interfaces.P2P.Messaging.Dto;
 using Catalyst.Protocol.Common;
-using Serilog;
+using Google.Protobuf;
 
-namespace Catalyst.Common.IO.Transport
+namespace Catalyst.Common.Interfaces.IO.Observables
 {
-    public class ClientBase : SocketBase, ISocketClient
+    public interface IRequestMessageObserver : IMessageObserver
     {
-        protected ClientBase(IChannelFactory channelFactory, ILogger logger) 
-            : base(channelFactory, logger) { }
-
-        public virtual void SendMessage(ProtocolMessage message)
-        {
-            Channel.WriteAsync(message).ConfigureAwait(false);
-        }
+        IPeerIdentifier PeerIdentifier { get; }
+        IMessage HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto);
+        void SendChannelContextResponse(IMessageDto messageDto);
     }
 }

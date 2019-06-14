@@ -40,7 +40,7 @@ namespace Catalyst.Node.Rpc.Client.Observables
     /// The handler reads the response's payload and formats it in user readable format and writes it to the console.
     /// </summary>
     public sealed class GetVersionResponseObserver
-        : ObserverBase<VersionResponse>,
+        : ResponseObserverBase<VersionResponse>,
             IRpcResponseObserver
     {
         private readonly IUserOutput _output;
@@ -57,11 +57,11 @@ namespace Catalyst.Node.Rpc.Client.Observables
             _output = output;
         }
 
-        protected override void Handler(IProtocolMessageDto<ProtocolMessage> messageDto)
+        public override void HandleResponse(IProtocolMessageDto<ProtocolMessage> messageDto)
         {
-            Guard.Argument(messageDto).NotNull("The message cannot be null");
-            
             Logger.Debug("GetVersionResponseHandler starting ...");
+
+            Guard.Argument(messageDto, nameof(messageDto)).NotNull("The message cannot be null");
             
             try
             {
