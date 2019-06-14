@@ -21,18 +21,24 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.IO.EventLoop;
-using Catalyst.Common.Interfaces.IO.Transport;
-using Catalyst.Common.Interfaces.IO.Transport.Channels;
-using Serilog;
-
-namespace Catalyst.Common.IO.Transport
+namespace Catalyst.Common.Interfaces.IO.EventLoop
 {
-    public class UdpServer : SocketBase, IUdpServer
+    public interface IEventLoopGroupFactoryConfiguration
     {
-        protected UdpServer(IUdpServerChannelFactory serverChannelFactory,
-            ILogger logger,
-            IUdpServerEventLoopGroupFactory udpServerEventLoopGroupFactory)
-            : base(serverChannelFactory, logger, udpServerEventLoopGroupFactory) { }
+        /// <summary>Gets or sets the TCP server threads.</summary>
+        /// <value>The TCP server threads.</value>
+        int TcpServerHandlerWorkerThreads { get; set; }
+
+        /// <summary>Gets or sets the TCP client threads.</summary>
+        /// <value>The TCP client threads.</value>
+        int TcpClientHandlerWorkerThreads { get; set; }
+
+        /// <summary>Gets or sets the UDP server threads.</summary>
+        /// <value>The UDP server threads.</value>
+        int UdpServerHandlerWorkerThreads { get; set; }
+
+        /// <summary>Gets or sets the UDP client threads.</summary>
+        /// <value>The UDP client threads.</value>
+        int UdpClientHandlerWorkerThreads { get; set; }
     }
 }

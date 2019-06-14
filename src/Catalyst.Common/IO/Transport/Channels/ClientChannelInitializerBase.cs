@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
+using Catalyst.Common.Interfaces.IO.EventLoop;
 using DotNetty.Common.Utilities;
 using DotNetty.Handlers.Tls;
 using DotNetty.Transport.Channels;
@@ -35,6 +36,7 @@ namespace Catalyst.Common.IO.Transport.Channels
     {
         /// <inheritdoc />
         public ClientChannelInitializerBase(IList<IChannelHandler> handlers,
+            IEventLoopGroupFactory eventLoopGroupFactory,
             IPAddress targetHost = default,
             X509Certificate certificate = null)
             : base(handlers,
@@ -42,7 +44,8 @@ namespace Catalyst.Common.IO.Transport.Channels
                     ? null
                     : new TlsHandler(stream =>
                             new SslStream(stream, true, (sender, cert, chain, errors) => true),
-                        new ClientTlsSettings(targetHost.ToString()))
+                        new ClientTlsSettings(targetHost.ToString())),
+                eventLoopGroupFactory
             ) { }
 
         public override string ToString()
