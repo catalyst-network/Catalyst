@@ -6,7 +6,7 @@
             "type": "Catalyst.Node.Core.RPC.Observables.GetInfoRequestObserver",
             "services": [
                 {
-                    "type": "Catalyst.Common.Interfaces.IO.Observables.IRpcRequestMessageObserver, Catalyst.Common"
+                    "type": "Catalyst.Common.Interfaces.IO.Observables.IRpcRequestObserver, Catalyst.Common"
                 }
             ]
         },
@@ -14,7 +14,7 @@
             "type": "Catalyst.Node.Core.RPC.Observables.GetMempoolRequestObserver",
             "services": [
                 {
-                    "type": "Catalyst.Common.Interfaces.IO.Observables.IRpcRequestMessageObserver, Catalyst.Common"
+                    "type": "Catalyst.Common.Interfaces.IO.Observables.IRpcRequestObserver, Catalyst.Common"
                 }
             ]
         },
@@ -22,7 +22,7 @@
             "type": "Catalyst.Node.Core.RPC.Observables.GetVersionRequestObserver",
             "services": [
                 {
-                    "type": "Catalyst.Common.Interfaces.IO.Observables.IRpcRequestMessageObserver, Catalyst.Common"
+                    "type": "Catalyst.Common.Interfaces.IO.Observables.IRpcRequestObserver, Catalyst.Common"
                 }
             ]
         },
@@ -30,7 +30,7 @@
             "type": "Catalyst.Node.Core.RPC.Observables.SignMessageRequestObserver",
             "services": [
                 {
-                    "type": "Catalyst.Common.Interfaces.IO.Observables.IRpcRequestMessageObserver, Catalyst.Common"
+                    "type": "Catalyst.Common.Interfaces.IO.Observables.IRpcRequestObserver, Catalyst.Common"
                 }
             ]
         },
@@ -38,7 +38,7 @@
             "type": "Catalyst.Node.Core.RPC.Observables.VerifyMessageRequestObserver",
             "services": [
                 {
-                    "type": "Catalyst.Common.Interfaces.IO.Observables.IRpcRequestMessageObserver, Catalyst.Common"
+                    "type": "Catalyst.Common.Interfaces.IO.Observables.IRpcRequestObserver, Catalyst.Common"
                 }
             ]
         },
@@ -46,7 +46,7 @@
             "type": "Catalyst.Node.Core.RPC.Observables.PeerListRequestObserver",
             "services": [
                 {
-                    "type": "Catalyst.Common.Interfaces.IO.Observables.IRpcRequestMessageObserver, Catalyst.Common"
+                    "type": "Catalyst.Common.Interfaces.IO.Observables.IRpcRequestObserver, Catalyst.Common"
                 }
             ]
         },
@@ -54,7 +54,7 @@
             "type": "Catalyst.Node.Core.RPC.Observables.AddFileToDfsRequestObserver",
             "services": [
                 {
-                    "type": "Catalyst.Common.Interfaces.IO.Observables.IRpcRequestMessageObserver, Catalyst.Common"
+                    "type": "Catalyst.Common.Interfaces.IO.Observables.IRpcRequestObserver, Catalyst.Common"
                 }
             ]
         },
@@ -62,7 +62,7 @@
             "type": "Catalyst.Node.Core.RPC.Observables.GetFileFromDfsRequestObserver",
             "services": [
                 {
-                    "type": "Catalyst.Common.Interfaces.IO.Observables.IRpcRequestMessageObserver, Catalyst.Common"
+                    "type": "Catalyst.Common.Interfaces.IO.Observables.IRpcRequestObserver, Catalyst.Common"
                 }
             ]
         },
@@ -70,7 +70,7 @@
             "type": "Catalyst.Node.Core.RPC.Observables.TransferFileBytesRequestObserver",
             "services": [
                 {
-                    "type": "Catalyst.Common.Interfaces.IO.Observables.IRpcRequestMessageObserver, Catalyst.Common"
+                    "type": "Catalyst.Common.Interfaces.IO.Observables.IRpcRequestObserver, Catalyst.Common"
                 }
             ]
         },
@@ -78,7 +78,7 @@
             "type": "Catalyst.Node.Core.RPC.Observables.PeerCountRequestObserver",
             "services": [
                 {
-                    "type": "Catalyst.Common.Interfaces.IO.Observables.IRpcRequestMessageObserver, Catalyst.Common"
+                    "type": "Catalyst.Common.Interfaces.IO.Observables.IRpcRequestObserver, Catalyst.Common"
                 }
             ]
         },
@@ -86,7 +86,7 @@
             "type": "Catalyst.Node.Core.RPC.Observables.RemovePeerRequestObserver",
             "services": [
                 {
-                    "type": "Catalyst.Common.Interfaces.IO.Observables.IRpcRequestMessageObserver, Catalyst.Common"
+                    "type": "Catalyst.Common.Interfaces.IO.Observables.IRpcRequestObserver, Catalyst.Common"
                 }
             ]
         },
@@ -94,7 +94,7 @@
             "type": "Catalyst.Node.Core.RPC.Observables.PeerReputationRequestObserver",
             "services": [
                 {
-                    "type": "Catalyst.Common.Interfaces.IO.Observables.IRpcRequestMessageObserver, Catalyst.Common"
+                    "type": "Catalyst.Common.Interfaces.IO.Observables.IRpcRequestObserver, Catalyst.Common"
                 }
             ]
         },
@@ -102,7 +102,7 @@
             "type": "Catalyst.Node.Core.RPC.Observables.PeerBlackListingRequestObserver",
             "services": [
                 {
-                    "type": "Catalyst.Common.Interfaces.IO.Observables.IRpcRequestMessageObserver, Catalyst.Common"
+                    "type": "Catalyst.Common.Interfaces.IO.Observables.IRpcRequestObserver, Catalyst.Common"
                 }
             ]
         },
