@@ -27,6 +27,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Catalyst.Common.Interfaces.IO.EventLoop;
 using Catalyst.Common.IO.EventLoop;
+using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using FluentAssertions;
 using Xunit;
@@ -88,7 +89,7 @@ namespace Catalyst.Common.UnitTests.IO
         }
 
         [Fact]
-        public void Can_Dispose_All_Event_Loops()
+        public async Task Can_Dispose_All_Event_Loops()
         {
             _eventFactory = new TcpClientEventLoopGroupFactory(_eventLoopGroupFactoryConfiguration);
             IEventLoopGroup[] eventLoops =
@@ -96,12 +97,9 @@ namespace Catalyst.Common.UnitTests.IO
                 _eventFactory.GetOrCreateHandlerWorkerEventLoopGroup(), _eventFactory.GetOrCreateSocketIoEventLoopGroup()
             };
 
-            Task.Run(() => _eventFactory.Dispose());
+            _eventFactory.Dispose();
 
-            _eventFactory.GetOrCreateHandlerWorkerEventLoopGroup()?
-               .TerminationCompletion.ConfigureAwait(false).GetAwaiter().GetResult();
-            _eventFactory.GetOrCreateSocketIoEventLoopGroup()?
-               .TerminationCompletion.ConfigureAwait(false).GetAwaiter().GetResult();
+            await TaskHelper.WaitForAsync(() => eventLoops.All(eventLoop => eventLoop.IsShutdown), TimeSpan.FromSeconds(5));
 
             eventLoops.ToList().ForEach(eventLoop => eventLoop.IsShutdown.Should().BeTrue());
         }
