@@ -21,6 +21,7 @@
 
 #endregion
 
+using Catalyst.Common.Interfaces.IO.EventLoop;
 using Catalyst.Common.Interfaces.IO.Transport;
 using Catalyst.Common.Interfaces.IO.Transport.Channels;
 using Catalyst.Protocol.Common;
@@ -30,8 +31,8 @@ namespace Catalyst.Common.IO.Transport
 {
     public class ClientBase : SocketBase, ISocketClient
     {
-        protected ClientBase(IChannelFactory channelFactory, ILogger logger) 
-            : base(channelFactory, logger) { }
+        protected ClientBase(IChannelFactory channelFactory, ILogger logger, IEventLoopGroupFactory handlerEventEventLoopGroupFactory)
+            : base(channelFactory, logger, handlerEventEventLoopGroupFactory) { }
 
         public virtual void SendMessage(ProtocolMessage message)
         {
