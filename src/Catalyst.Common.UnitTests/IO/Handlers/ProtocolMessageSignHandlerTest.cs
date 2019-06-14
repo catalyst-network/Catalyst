@@ -60,7 +60,7 @@ namespace Catalyst.Common.UnitTests.IO.Handlers
 
             protocolMessageSignHandler.WriteAsync(_fakeContext, new object());
 
-            _fakeContext.ReceivedWithAnyArgs().WriteAndFlushAsync(new object());
+            _fakeContext.ReceivedWithAnyArgs().CloseAsync();
             _fakeContext.DidNotReceiveWithAnyArgs().WriteAsync(new object());
         }
 
