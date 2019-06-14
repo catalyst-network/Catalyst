@@ -84,7 +84,7 @@ namespace Catalyst.Common.UnitTests.IO
             handlers[2].Should().BeOfType<ProtobufVarint32LengthFieldPrepender>();
             handlers[3].Should().BeOfType<ProtobufEncoder>();
             handlers[4].Should().BeOfType<CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>>();
-            handlers[5].Should().BeOfType<CorrelationHandler>();
+            handlers[5].Should().BeOfType<CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>>();
             handlers[6].Should().BeOfType<ObservableServiceHandler>();
         }
 
