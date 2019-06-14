@@ -42,7 +42,7 @@ namespace Catalyst.Common.IO.Transport.Channels
     {
         protected abstract List<IChannelHandler> Handlers { get; }
 
-        protected IObservableChannel BootStrapChannel(IPAddress address = null, int port = 0)
+        protected IObservableChannel BootStrapChannel(IPAddress address = null, int port = IPEndPoint.MinPort)
         {
             var observableServiceHandler = Handlers.Last() as ObservableServiceHandler;
 

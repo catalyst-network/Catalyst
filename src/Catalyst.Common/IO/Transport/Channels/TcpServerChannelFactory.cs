@@ -61,7 +61,7 @@ namespace Catalyst.Common.IO.Transport.Channels
         /// <param name="targetPort">Ignored</param>
         /// <param name="certificate">Local TLS certificate</param>
         public IObservableChannel BuildChannel(IPAddress targetAddress = null,
-            int targetPort = 0, 
+            int targetPort = IPEndPoint.MinPort,
             X509Certificate2 certificate = null) => 
             Bootstrap(certificate);
 

@@ -52,7 +52,7 @@ namespace Catalyst.Common.IO.Transport.Channels
             };
 
         public IObservableChannel BuildChannel(IPAddress targetAddress = null,
-            int targetPort = 0,
+            int targetPort = IPEndPoint.MinPort,
             X509Certificate2 certificate = null)
         {
             return BootStrapChannel(targetAddress);
