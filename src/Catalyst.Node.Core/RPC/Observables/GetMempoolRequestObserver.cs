@@ -24,74 +24,54 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
-using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Observables;
 using Catalyst.Common.Interfaces.Modules.Mempool;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.IO.Messaging;
-using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.IO.Observables;
-using Catalyst.Common.P2P;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
+using Google.Protobuf;
 using ILogger = Serilog.ILogger;
 
 namespace Catalyst.Node.Core.RPC.Observables
 {
     public sealed class GetMempoolRequestObserver
-        : ObserverBase<GetMempoolRequest>,
+        : RequestObserverBase<GetMempoolRequest>,
             IRpcRequestObserver
     {
         private readonly IMempool _mempool;
-        private readonly IPeerIdentifier _peerIdentifier;
-        private readonly IProtocolMessageFactory _protocolMessageFactory;
 
         public GetMempoolRequestObserver(IPeerIdentifier peerIdentifier,
             IMempool mempool,
-            IProtocolMessageFactory protocolMessageFactory,
             ILogger logger)
-            : base(logger)
+            : base(logger, peerIdentifier)
         {
-            _protocolMessageFactory = protocolMessageFactory;
             _mempool = mempool;
-            _peerIdentifier = peerIdentifier;
         }
 
-        protected override void Handler(IProtocolMessageDto<ProtocolMessage> messageDto)
+        public override IMessage HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto)
         {
-            Guard.Argument(messageDto).NotNull();
-            
             Logger.Debug("GetMempoolRequestHandler starting ...");
-            
+
             try
             {
                 var deserialised = messageDto.Payload.FromProtocolMessage<GetMempoolRequest>();
                 
-                Guard.Argument(deserialised).NotNull("The shell GetMempoolRequest cannot be null.");
-                
                 Logger.Debug("Received GetMempoolRequest message with content {0}", deserialised);
 
-                var response = _protocolMessageFactory.GetMessage(new MessageDto(
-                        new GetMempoolResponse
-                        {
-                            Mempool = {GetMempoolContent()}
-                        },
-                        MessageTypes.Response,
-                        new PeerIdentifier(messageDto.Payload.PeerId),
-                        _peerIdentifier),
-                    messageDto.Payload.CorrelationId.ToGuid());
-                
-                messageDto.Context.Channel.WriteAndFlushAsync(response).GetAwaiter().GetResult();
+                return new GetMempoolResponse
+                {
+                    Mempool = {GetMempoolContent()}
+                };
             }
             catch (Exception ex)
             {
                 Logger.Error(ex,
                     "Failed to handle GetInfoRequest after receiving message {0}", messageDto);
-                throw;
+                return new GetMempoolResponse();
             }
         }
 
@@ -113,7 +93,7 @@ namespace Catalyst.Node.Core.RPC.Observables
             catch (Exception ex)
             {
                 Logger.Error(ex,
-                    "Failed to get the mempool content and format it as MapField<string,string> {0}", ex.Message);
+                    "Failed to get the mempool content and format it as List<string> {0}", ex.Message);
                 throw;
             }
         }

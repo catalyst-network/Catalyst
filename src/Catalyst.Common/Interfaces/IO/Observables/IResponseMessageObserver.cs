@@ -21,14 +21,14 @@
 
 #endregion
 
-using System;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
+using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Protocol.Common;
 
 namespace Catalyst.Common.Interfaces.IO.Observables
 {
-    public interface IMessageObserver
-    {
-        void StartObserving(IObservable<IProtocolMessageDto<ProtocolMessage>> messageStream);
+    public interface IResponseMessageObserver : IMessageObserver
+    { 
+        void HandleResponse(IProtocolMessageDto<ProtocolMessage> messageDto);
     }
 }

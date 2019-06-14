@@ -24,12 +24,10 @@
 using System;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
-using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Observables;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.IO.Observables;
 using Catalyst.Common.P2P;
@@ -37,6 +35,7 @@ using Catalyst.Cryptography.BulletProofs.Wrapper.Types;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
+using Google.Protobuf;
 using Multiformats.Base;
 using Nethereum.RLP;
 using ILogger = Serilog.ILogger;
@@ -44,13 +43,10 @@ using ILogger = Serilog.ILogger;
 namespace Catalyst.Node.Core.RPC.Observables
 {
     public sealed class VerifyMessageRequestObserver
-        : ObserverBase<VerifyMessageRequest>,
+        : RequestObserverBase<VerifyMessageRequest>,
             IRpcRequestObserver
     {
         private readonly IKeySigner _keySigner;
-        private readonly IPeerIdentifier _peerIdentifier;
-        private IProtocolMessageDto<ProtocolMessage> _messageDto;
-        private readonly IProtocolMessageFactory _protocolMessageFactory;
 
         private const string PublicKeyEncodingInvalid = "Invalid PublicKey encoding";
         private const string PublicKeyNotProvided = "PublicKey not provided";
@@ -60,19 +56,14 @@ namespace Catalyst.Node.Core.RPC.Observables
 
         public VerifyMessageRequestObserver(IPeerIdentifier peerIdentifier,
             ILogger logger,
-            IKeySigner keySigner,
-            IProtocolMessageFactory protocolMessageFactory)
-            : base(logger)
+            IKeySigner keySigner)
+            : base(logger, peerIdentifier)
         {
-            _protocolMessageFactory = protocolMessageFactory;
             _keySigner = keySigner;
-            _peerIdentifier = peerIdentifier;
         }
 
-        protected override void Handler(IProtocolMessageDto<ProtocolMessage> messageDto)
+        public override IMessage HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto)
         {
-            _messageDto = messageDto;
-            
             Logger.Debug("received message of type VerifyMessageRequest");
             
             var deserialised = messageDto.Payload.FromProtocolMessage<VerifyMessageRequest>();
@@ -81,36 +72,31 @@ namespace Catalyst.Node.Core.RPC.Observables
             var decodedMessage = RLP.Decode(deserialised.Message.ToByteArray()).RLPData.ToStringFromRLPDecoded();
             var publicKey = deserialised.PublicKey;
             var signature = deserialised.Signature;
-            var correlationGuid = messageDto.Payload.CorrelationId.ToGuid();
 
             try
             {
                 if (!Multibase.TryDecode(publicKey.ToStringUtf8(), out _, out var decodedPublicKey))
                 {
                     Logger.Error($"{PublicKeyEncodingInvalid}");
-                    ReturnResponse(false, correlationGuid);
-                    return;
+                    return ReturnResponse(false);
                 }
 
                 if (decodedPublicKey.Length == 0)
                 {
                     Logger.Error($"{PublicKeyNotProvided}");
-                    ReturnResponse(false, correlationGuid);
-                    return;
+                    return ReturnResponse(false);
                 }
                 
                 if (!Multibase.TryDecode(signature.ToStringUtf8(), out _, out var decodedSignature))
                 {
                     Logger.Error($"{SignatureEncodingInvalid}");
-                    ReturnResponse(false, correlationGuid);
-                    return;
+                    return ReturnResponse(false);
                 }
                 
                 if (decodedSignature.Length == 0)
                 {
                     Logger.Error($"{SignatureNotProvided}");
-                    ReturnResponse(false, correlationGuid);
-                    return;
+                    return ReturnResponse(false);
                 }
                 
                 var pubKey = _keySigner.CryptoContext.ImportPublicKey(decodedPublicKey);
@@ -122,27 +108,21 @@ namespace Catalyst.Node.Core.RPC.Observables
 
                 Logger.Debug("message content is {0}", deserialised.Message);
                 
-                ReturnResponse(result, correlationGuid);
+                return ReturnResponse(result);
             }
             catch (Exception ex)
             {
                 Logger.Error(ex, $"{FailedToHandleMessage} {messageDto}");
+                throw;
             } 
         }
 
-        private void ReturnResponse(bool result, Guid correlationGuid)
+        private IMessage ReturnResponse(bool result)
         {
-            var response = _protocolMessageFactory.GetMessage(new MessageDto(
-                    new VerifyMessageResponse
-                    {
-                        IsSignedByKey = result
-                    },
-                    MessageTypes.Response,
-                    new PeerIdentifier(_messageDto.Payload.PeerId),
-                    _peerIdentifier),
-                correlationGuid);
-
-            _messageDto.Context.Channel.WriteAndFlushAsync(response).GetAwaiter().GetResult();
+            return new VerifyMessageResponse
+            {
+                IsSignedByKey = result
+            };
         }
     }
 }

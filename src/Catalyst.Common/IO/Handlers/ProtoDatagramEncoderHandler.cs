@@ -21,21 +21,30 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.IO.Transport;
-using Catalyst.Common.Interfaces.IO.Transport.Channels;
+using System.Threading.Tasks;
+using Catalyst.Common.Extensions;
+using Catalyst.Common.Interfaces.P2P.Messaging.Dto;
 using Catalyst.Protocol.Common;
-using Serilog;
+using DotNetty.Transport.Channels;
 
-namespace Catalyst.Common.IO.Transport
+namespace Catalyst.Common.IO.Handlers
 {
-    public class ClientBase : SocketBase, ISocketClient
+    public sealed class ProtoDatagramEncoderHandler : ChannelHandlerAdapter
     {
-        protected ClientBase(IChannelFactory channelFactory, ILogger logger) 
-            : base(channelFactory, logger) { }
-
-        public virtual void SendMessage(ProtocolMessage message)
+        public override Task WriteAsync(IChannelHandlerContext context, object message)
         {
-            Channel.WriteAsync(message).ConfigureAwait(false);
+            if (message is IMessageDto signedProtocolMessage)
+            {
+                var signedMessage = (ProtocolMessageSigned) signedProtocolMessage.Message;
+                return context.WriteAndFlushAsync(signedMessage.ToDatagram(signedProtocolMessage.Recipient.IpEndPoint));
+            }
+
+            return context.CloseAsync();
+        }
+
+        public override void Flush(IChannelHandlerContext context)
+        {
+            context.Flush();
         }
     }
 }

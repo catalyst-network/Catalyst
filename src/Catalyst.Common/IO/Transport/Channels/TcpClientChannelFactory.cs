@@ -46,7 +46,7 @@ namespace Catalyst.Common.IO.Transport.Channels
         private const int BackLogValue = 100;
         
         public IObservableChannel BuildChannel(IPAddress targetAddress = null, 
-            int targetPort = 0,
+            int targetPort = IPEndPoint.MinPort,
             X509Certificate2 certificate = null)
         {
             var observableServiceHandler = new ObservableServiceHandler();

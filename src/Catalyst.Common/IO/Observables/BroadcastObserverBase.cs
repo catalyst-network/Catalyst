@@ -27,54 +27,27 @@ using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
-using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Observables;
-using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.Interfaces.P2P.Messaging.Dto;
-using Catalyst.Common.IO.Messaging;
-using Catalyst.Common.IO.Observables;
-using Catalyst.Common.Util;
 using Catalyst.Protocol.Common;
+using Dawn;
 using Google.Protobuf;
-using NSubstitute;
 using Serilog;
 
-namespace Catalyst.TestUtils
+namespace Catalyst.Common.IO.Observables
 {
-    public class TestMessageObserver<TProto> : MessageObserverBase,
-        IP2PMessageObserver, IRpcResponseObserver, IRpcRequestObserver
-        where TProto : IMessage, IMessage<TProto>
+    public abstract class BroadcastObserverBase<TProto> : MessageObserverBase, IBroadcastObserver where TProto : IMessage
     {
         private readonly string _filterMessageType;
-        public IObserver<TProto> SubstituteObserver { get; }
-        public IPeerIdentifier PeerIdentifier { get; }
 
-        public TestMessageObserver(ILogger logger) : base(logger)
+        protected BroadcastObserverBase(ILogger logger) : base(logger)
         {
-            SubstituteObserver = Substitute.For<IObserver<TProto>>();
-            PeerIdentifier = Substitute.For<IPeerIdentifier>();
+            Guard.Argument(typeof(TProto), nameof(TProto)).Require(t => t.IsBroadcastType(),
+                t => $"{nameof(TProto)} is not of type {MessageTypes.Broadcast.Name}");
             _filterMessageType = typeof(TProto).ShortenedProtoFullName();
         }
 
-        public override void OnError(Exception exception) { SubstituteObserver.OnError(exception); }
-        
-        public void HandleResponse(IProtocolMessageDto<ProtocolMessage> messageDto)
-        {
-            SubstituteObserver.OnNext(messageDto.Payload.FromProtocolMessage<TProto>());
-        }
-
-        public override void OnNext(IProtocolMessageDto<ProtocolMessage> messageDto)
-        {
-            SubstituteObserver.OnNext(messageDto.Payload.FromProtocolMessage<TProto>());
-        }
-        
-        public IMessage HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto)
-        {
-            return messageDto.Payload.FromProtocolMessage<TProto>();
-        }
-                
-        public override void OnCompleted() { SubstituteObserver.OnCompleted(); }
+        public abstract void HandleBroadcast(IProtocolMessageDto<ProtocolMessage> messageDto);
 
         public override void StartObserving(IObservable<IProtocolMessageDto<ProtocolMessage>> messageStream)
         {
@@ -82,14 +55,19 @@ namespace Catalyst.TestUtils
             {
                 throw new ReadOnlyException($"{GetType()} is already listening to a message stream");
             }
-
+            
             MessageSubscription = messageStream
                .Where(m => m.Payload?.TypeUrl != null 
                  && m.Payload.TypeUrl == _filterMessageType)
                .SubscribeOn(TaskPoolScheduler.Default)
                .Subscribe(OnNext, OnError, OnCompleted);
         }
-
-        public void SendChannelContextResponse(IMessageDto messageDto) { throw new NotImplementedException(); }
+        
+        public override void OnNext(IProtocolMessageDto<ProtocolMessage> messageDto)
+        {
+            Logger.Verbose("Pre Handle Message Called");
+            ChannelHandlerContext = messageDto.Context;
+            HandleBroadcast(messageDto);
+        }
     }
 }

@@ -34,17 +34,17 @@ using Serilog;
 namespace Catalyst.Node.Core.P2P.Observables
 {
     public sealed class TransactionBroadcastObserver
-        : ObserverBase<TransactionBroadcast>,
+        : BroadcastObserverBase<TransactionBroadcast>,
             IP2PMessageObserver
     {
         public TransactionBroadcastObserver(ILogger logger)
             : base(logger) { }
 
-        protected override void Handler(IProtocolMessageDto<ProtocolMessage> messageDto)
+        public override void HandleBroadcast(IProtocolMessageDto<ProtocolMessage> messageDto)
         {
-            Logger.Debug("received pong");
+            Logger.Debug("received broadcast");
             var deserialised = messageDto.Payload.FromProtocolMessage<TransactionBroadcast>();
-            Logger.Debug("transaction pong is {0}", deserialised.Signature);
+            Logger.Debug("transaction signature is {0}", deserialised.Signature);
         }
     }
 }
