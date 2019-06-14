@@ -39,6 +39,7 @@ namespace Catalyst.Node.Core.RPC.Authentication
 
         /// <summary>Gets or sets the ip address.</summary>
         /// <value>The ip address.</value>
+        [RepositoryPrimaryKey(Order = 2)]
         public IPAddress IpAddress { get; set; }
     }
 }

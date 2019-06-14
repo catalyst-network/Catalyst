@@ -32,7 +32,7 @@ namespace Catalyst.Common.IO.Handlers
     /// DotNetty Handler in-charge of blocking RPC messages if the node operator is not trusted
     /// </summary>
     /// <seealso cref="SimpleChannelInboundHandler{ProtocolMessageSigned}" />
-    public class AuthenticationHandler : SimpleChannelInboundHandler<ProtocolMessageSigned>
+    public class AuthenticationHandler : SimpleChannelInboundHandler<ProtocolMessage>
     {
         /// <summary>The authentication strategy</summary>
         private readonly IAuthenticationStrategy _authenticationStrategy;
@@ -45,9 +45,9 @@ namespace Catalyst.Common.IO.Handlers
         }
 
         /// <inheritdoc cref="SimpleChannelInboundHandler{I}"/>>
-        protected override void ChannelRead0(IChannelHandlerContext ctx, ProtocolMessageSigned msg)
+        protected override void ChannelRead0(IChannelHandlerContext ctx, ProtocolMessage msg)
         {
-            if (_authenticationStrategy.Authenticate(new PeerIdentifier(msg.Message.PeerId)))
+            if (_authenticationStrategy.Authenticate(new PeerIdentifier(msg.PeerId)))
             {
                 ctx.FireChannelRead(msg);
             }
