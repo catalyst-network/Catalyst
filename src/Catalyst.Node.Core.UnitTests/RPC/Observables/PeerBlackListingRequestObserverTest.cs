@@ -27,6 +27,7 @@ using System.Net;
 using System.Threading.Tasks;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
+using Catalyst.Common.Interfaces.P2P.Messaging.Dto;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.Network;
@@ -96,8 +97,8 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
         /// <param name="ipAddress">Ip address of the peer whose black listing flag we wish to adjust</param>
         /// <param name="blackList">Black listing flag</param>
         [Theory]
-        [InlineData("cne2+eRandomValuebeingusedherefprtestingIOp", "198.51.100.11", "true")]
-        [InlineData("cne2+e5gIfEdfhDWUxkUfr886YuiZnhEj3om5AXmWVXJK7d47/ESkjhbkJsrbzIbuWm8EPSjJ2YicTIcXvfzIOp", "198.51.100.5", "true")]
+        [InlineData("cne2+eRandomValuebeingusedherefprtestingIOp", "198.51.100.11", "false")]
+        [InlineData("cne2+e5gIfEdfhDWUxkUfr886YuiZnhEj3om5AXmWVXJK7d47/ESkjhbkJsrbzIbuWm8EPSjJ2YicTIcXvfzIOp", "198.51.100.5", "false")]
         public async Task TestPeerBlackListingRequestResponseForNonExistantPeers(string publicKey, string ipAddress, string blackList)
         {
             var responseContent = await ApplyBlackListingToPeerTest(publicKey, ipAddress, blackList);
@@ -113,7 +114,8 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
 
             var fakePeers = Enumerable.Range(0, 5).Select(i => new Peer
             {
-                Reputation = 0, PeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier($"iamgroot-{i}")
+                Reputation = 0, PeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier($"iamgroot-{i}"),
+                BlackListed = Convert.ToBoolean(blacklist)
             }).ToList();
 
             //peers we are interested in
@@ -154,11 +156,11 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
 
             var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();
             receivedCalls.Count.Should().Be(1);
-
-            var sentResponse = new SetPeerBlackListResponse().ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("recipient").PeerId, Guid.NewGuid());
-            sentResponse.TypeUrl.Should().Be(SetPeerBlackListResponse.Descriptor.ShortenedFullName());
-
-            return sentResponse.FromProtocolMessage<SetPeerBlackListResponse>();
+            
+            var sentResponseDto = (IMessageDto) receivedCalls.Single().GetArguments().Single();
+            sentResponseDto.Message.Descriptor.ShortenedFullName().Should().Be(SetPeerBlackListResponse.Descriptor.ShortenedFullName());
+            
+            return (SetPeerBlackListResponse) sentResponseDto.Message;
         }
     }
 }
