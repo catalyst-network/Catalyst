@@ -27,6 +27,7 @@ using System.Security.Cryptography.X509Certificates;
 using Catalyst.Common.Interfaces.IO;
 using Catalyst.Common.Interfaces.IO.EventLoop;
 using Catalyst.Common.Interfaces.IO.Messaging;
+using Catalyst.Common.Interfaces.IO.Transport;
 using Catalyst.Common.Interfaces.IO.Transport.Channels;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.P2P;
@@ -51,7 +52,7 @@ namespace Catalyst.Common.IO.Transport.Channels
         /// <returns></returns>
         public IObservableChannel BuildChannel(IEventLoopGroupFactory handlerEventLoopGroupFactory,
             IPAddress targetAddress = null,
-            int targetPort = 0,
+            int targetPort = IPEndPoint.MinPort,
             X509Certificate2 certificate = null) =>
             BootStrapChannel(handlerEventLoopGroupFactory, _observableServiceHandler.MessageStream,
                 _peerSettings.BindAddress, _peerSettings.Port);
@@ -73,11 +74,9 @@ namespace Catalyst.Common.IO.Transport.Channels
         protected override List<IChannelHandler> Handlers => 
             _handlers ?? (_handlers = new List<IChannelHandler>
             {
-                new ProtoDatagramHandler(),
-                new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
-                    new ProtocolMessageVerifyHandler(_keySigner),
-                    new ProtocolMessageSignHandler(_keySigner)),
-                new CorrelationHandler(_messageCorrelationManager),
+                new ProtoDatagramDecoderHandler(),
+                new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(new ProtocolMessageVerifyHandler(_keySigner), new ProtocolMessageSignHandler(_keySigner)),
+                new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(new CorrelationHandler(_messageCorrelationManager), new CorrelatableHandler(_messageCorrelationManager)),
                 new BroadcastHandler(_broadcastManager),
                 _observableServiceHandler
             });

@@ -26,12 +26,9 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Reactive.Linq;
-using Catalyst.Common.Interfaces.IO;
 using Catalyst.Common.Interfaces.IO.EventLoop;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
-using Catalyst.Common.Interfaces.IO.Transport;
 using Catalyst.Common.Interfaces.IO.Transport.Channels;
-using Catalyst.Common.IO.Handlers;
 using Catalyst.Common.IO.Transport.Bootstrapping;
 using Catalyst.Protocol.Common;
 using DotNetty.Handlers.Logging;
@@ -48,7 +45,7 @@ namespace Catalyst.Common.IO.Transport.Channels
         protected IObservableChannel BootStrapChannel(IEventLoopGroupFactory handlerEventLoopGroupFactory,
             IObservable<IProtocolMessageDto<ProtocolMessage>> messageStream = null, 
             IPAddress address = null,
-            int port = 0)
+            int port = IPEndPoint.MinPort)
         {
             var channelHandler = new ServerChannelInitializerBase<IChannel>(Handlers, handlerEventLoopGroupFactory);
 

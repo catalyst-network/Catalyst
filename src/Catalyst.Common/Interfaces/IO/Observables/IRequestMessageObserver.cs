@@ -21,15 +21,18 @@
 
 #endregion
 
-using System.Reflection;
+using Catalyst.Common.Interfaces.IO.Messaging.Dto;
+using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.Interfaces.P2P.Messaging.Dto;
+using Catalyst.Protocol.Common;
+using Google.Protobuf;
 
-namespace Catalyst.Common.Util
+namespace Catalyst.Common.Interfaces.IO.Observables
 {
-    public static class NodeUtil
+    public interface IRequestMessageObserver : IMessageObserver
     {
-        public static string GetVersion()
-        {
-            return Assembly.GetEntryAssembly()?.GetName().Version.ToString();
-        }
+        IPeerIdentifier PeerIdentifier { get; }
+        IMessage HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto);
+        void SendChannelContextResponse(IMessageDto messageDto);
     }
 }

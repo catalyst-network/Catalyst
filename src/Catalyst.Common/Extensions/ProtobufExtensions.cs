@@ -27,6 +27,7 @@ using System.Linq;
 using System.Net;
 using System.Reflection;
 using Catalyst.Common.Config;
+using Catalyst.Common.Interfaces.P2P.Messaging.Dto;
 using Catalyst.Common.Util;
 using Catalyst.Protocol.Common;
 using Dawn;
@@ -42,16 +43,27 @@ namespace Catalyst.Common.Extensions
     {
         private const string CatalystProtocol = "Catalyst.Protocol";
 
-        private static readonly List<string> ProtoGossipAllowedMessages;
-
+        private static readonly List<string> ProtoBroadcastAllowedMessages;
+        private static readonly List<string> ProtoRequestAllowedMessages;
+        private static readonly List<string> ProtoResponseAllowedMessages;
+        
         static ProtobufExtensions()
         {
             var protoToClrNameMapper = typeof(ProtocolMessage).Assembly.ExportedTypes
                .Where(t => typeof(IMessage).IsAssignableFrom(t))
                .Select(t => ((IMessage) Activator.CreateInstance(t)).Descriptor)
                .ToDictionary(d => d.ShortenedFullName(), d => d.ClrType.FullName);
-            ProtoGossipAllowedMessages = protoToClrNameMapper.Keys
+
+            ProtoBroadcastAllowedMessages = protoToClrNameMapper.Keys
                .Where(t => t.EndsWith(MessageTypes.Broadcast.Name))
+               .ToList();
+
+            ProtoRequestAllowedMessages = protoToClrNameMapper.Keys
+               .Where(t => t.EndsWith(MessageTypes.Request.Name))
+               .ToList();
+
+            ProtoResponseAllowedMessages = protoToClrNameMapper.Keys
+               .Where(t => t.EndsWith(MessageTypes.Response.Name))
                .ToList();
         }
 
@@ -93,16 +105,41 @@ namespace Catalyst.Common.Extensions
             return protocolMessage;
         }
 
+        public static bool IsRequestType(this Type type)
+        {
+            var shortType = ShortenedProtoFullName(type);
+            return ProtoRequestAllowedMessages.Contains(shortType);
+        }
+
+        public static bool IsResponseType(this Type type)
+        {
+            var shortType = ShortenedProtoFullName(type);
+            return ProtoResponseAllowedMessages.Contains(shortType);
+        }
+
+        public static bool IsBroadcastType(this Type type)
+        {
+            var shortType = ShortenedProtoFullName(type);
+            return ProtoBroadcastAllowedMessages.Contains(shortType);
+        }
+
         public static bool CheckIfMessageIsBroadcast(this ProtocolMessage message)
         {
             return message.TypeUrl.EndsWith(nameof(ProtocolMessage)) &&
-                ProtoGossipAllowedMessages.Contains(ProtocolMessage.Parser.ParseFrom(message.Value).TypeUrl);
+                ProtoBroadcastAllowedMessages.Contains(ProtocolMessage.Parser.ParseFrom(message.Value).TypeUrl);
         }
 
         public static T FromProtocolMessage<T>(this ProtocolMessage message) where T : IMessage<T>
         {
             var empty = (T) Activator.CreateInstance(typeof(T));
             var typed = (T) empty.Descriptor.Parser.ParseFrom(message.Value);
+            return typed;
+        }
+
+        public static T FromIMessageDto<T>(this IMessageDto message) where T : IMessage<T>
+        {
+            var empty = (T) Activator.CreateInstance(typeof(T));
+            var typed = (T) empty.Descriptor.Parser.ParseFrom(message.Message.ToByteString());
             return typed;
         }
 

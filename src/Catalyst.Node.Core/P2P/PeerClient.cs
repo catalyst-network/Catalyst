@@ -25,6 +25,7 @@ using Catalyst.Common.Interfaces.IO.EventLoop;
 using Catalyst.Common.Interfaces.IO.Transport.Channels;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Transport;
+using Catalyst.Protocol.Common;
 using DotNetty.Buffers;
 using Serilog;
 using System.Net;
@@ -49,11 +50,6 @@ namespace Catalyst.Node.Core.P2P
             Channel = ChannelFactory.BuildChannel(EventLoopGroupFactory,
                 bindingEndpoint.Address,
                 bindingEndpoint.Port).Channel;
-        }
-
-        public Task SendMessageAsync(IByteBufferHolder datagramPacket)
-        {
-            return Channel.WriteAndFlushAsync(datagramPacket);
         }
     }
 }

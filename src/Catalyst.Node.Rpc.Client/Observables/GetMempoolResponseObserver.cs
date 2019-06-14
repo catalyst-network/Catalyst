@@ -40,7 +40,7 @@ namespace Catalyst.Node.Rpc.Client.Observables
     /// The handler reads the response's payload and formats it in user readable format and writes it to the console.
     /// </summary>
     public sealed class GetMempoolResponseObserver
-        : ObserverBase<GetMempoolResponse>,
+        : ResponseObserverBase<GetMempoolResponse>,
             IRpcResponseObserver
     {
         private readonly IUserOutput _output;
@@ -64,15 +64,15 @@ namespace Catalyst.Node.Rpc.Client.Observables
         /// Handles the VersionResponse message sent from the <see cref="GetMempoolRequestHandler" />.
         /// </summary>
         /// <param name="messageDto">An object of GetMempoolResponse</param>
-        protected override void Handler(IProtocolMessageDto<ProtocolMessage> messageDto)
+        public override void HandleResponse(IProtocolMessageDto<ProtocolMessage> messageDto)
         {
-            Guard.Argument(messageDto).NotNull("The message cannot be null");
-            
             Logger.Debug("GetMempoolResponseHandler starting ...");
+
+            Guard.Argument(messageDto, nameof(messageDto)).NotNull("The message cannot be null");
             
             try
             {
-                var deserialised = messageDto.Payload.FromProtocolMessage<GetMempoolResponse>();
+                var deserialised = messageDto.Payload.FromProtocolMessage<GetMempoolResponse>() ?? throw new ArgumentNullException(nameof(messageDto));
                 
                 Guard.Argument(deserialised, nameof(deserialised)).NotNull("The GetMempoolResponse cannot be null")
                    .Require(d => d.Mempool != null,

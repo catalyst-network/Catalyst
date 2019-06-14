@@ -21,21 +21,30 @@
 
 #endregion
 
-using System;
-using Catalyst.Common.Interfaces.P2P.Messaging;
+using System.Threading.Tasks;
+using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.P2P.Messaging.Dto;
 using Catalyst.Protocol.Common;
-using DotNetty.Buffers;
+using DotNetty.Transport.Channels;
 
-namespace Catalyst.Common.Interfaces.IO.Messaging
+namespace Catalyst.Common.IO.Handlers
 {
-    public interface IProtocolMessageFactory
+    public sealed class ProtoDatagramEncoderHandler : ChannelHandlerAdapter
     {
-        /// <summary>Gets the message.</summary>
-        /// <param name="messageDto">The message.</param>
-        /// <param name="correlationId">The correlation identifier.</param>
-        /// <returns>ProtocolMessage message</returns>
-        ProtocolMessage GetMessage(IMessageDto messageDto,
-            Guid correlationId = default);
+        public override Task WriteAsync(IChannelHandlerContext context, object message)
+        {
+            if (message is IMessageDto signedProtocolMessage)
+            {
+                var signedMessage = (ProtocolMessageSigned) signedProtocolMessage.Message;
+                return context.WriteAndFlushAsync(signedMessage.ToDatagram(signedProtocolMessage.Recipient.IpEndPoint));
+            }
+
+            return context.CloseAsync();
+        }
+
+        public override void Flush(IChannelHandlerContext context)
+        {
+            context.Flush();
+        }
     }
 }

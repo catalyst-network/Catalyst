@@ -27,54 +27,34 @@ using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
-using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Observables;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.Messaging.Dto;
-using Catalyst.Common.IO.Messaging;
-using Catalyst.Common.IO.Observables;
+using Catalyst.Common.IO.Messaging.Dto;
+using Catalyst.Common.P2P;
 using Catalyst.Common.Util;
 using Catalyst.Protocol.Common;
+using Dawn;
 using Google.Protobuf;
-using NSubstitute;
 using Serilog;
 
-namespace Catalyst.TestUtils
+namespace Catalyst.Common.IO.Observables
 {
-    public class TestMessageObserver<TProto> : MessageObserverBase,
-        IP2PMessageObserver, IRpcResponseObserver, IRpcRequestObserver
-        where TProto : IMessage, IMessage<TProto>
+    public abstract class RequestObserverBase<TProto> : MessageObserverBase, IRequestMessageObserver where TProto : IMessage
     {
         private readonly string _filterMessageType;
-        public IObserver<TProto> SubstituteObserver { get; }
         public IPeerIdentifier PeerIdentifier { get; }
 
-        public TestMessageObserver(ILogger logger) : base(logger)
+        protected RequestObserverBase(ILogger logger, IPeerIdentifier peerIdentifier) : base(logger)
         {
-            SubstituteObserver = Substitute.For<IObserver<TProto>>();
-            PeerIdentifier = Substitute.For<IPeerIdentifier>();
+            Guard.Argument(typeof(TProto), nameof(TProto)).Require(t => t.IsRequestType(), 
+                t => $"{nameof(TProto)} is not of type {MessageTypes.Request.Name}");
             _filterMessageType = typeof(TProto).ShortenedProtoFullName();
+            PeerIdentifier = peerIdentifier;
         }
 
-        public override void OnError(Exception exception) { SubstituteObserver.OnError(exception); }
-        
-        public void HandleResponse(IProtocolMessageDto<ProtocolMessage> messageDto)
-        {
-            SubstituteObserver.OnNext(messageDto.Payload.FromProtocolMessage<TProto>());
-        }
-
-        public override void OnNext(IProtocolMessageDto<ProtocolMessage> messageDto)
-        {
-            SubstituteObserver.OnNext(messageDto.Payload.FromProtocolMessage<TProto>());
-        }
-        
-        public IMessage HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto)
-        {
-            return messageDto.Payload.FromProtocolMessage<TProto>();
-        }
-                
-        public override void OnCompleted() { SubstituteObserver.OnCompleted(); }
+        public abstract IMessage HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto);
 
         public override void StartObserving(IObservable<IProtocolMessageDto<ProtocolMessage>> messageStream)
         {
@@ -82,14 +62,32 @@ namespace Catalyst.TestUtils
             {
                 throw new ReadOnlyException($"{GetType()} is already listening to a message stream");
             }
-
+            
             MessageSubscription = messageStream
                .Where(m => m.Payload?.TypeUrl != null 
-                 && m.Payload.TypeUrl == _filterMessageType)
+                 && m.Payload?.TypeUrl == _filterMessageType)
                .SubscribeOn(TaskPoolScheduler.Default)
                .Subscribe(OnNext, OnError, OnCompleted);
         }
+        
+        public override void OnNext(IProtocolMessageDto<ProtocolMessage> messageDto)
+        {
+            Logger.Verbose("Pre Handle Message Called");
+            
+            ChannelHandlerContext = messageDto.Context;
+            
+            //@TODO HandleRequest in try catch if catch send error message.
+            
+            SendChannelContextResponse(new MessageDto(
+                HandleRequest(messageDto),
+                MessageTypes.Response,
+                new PeerIdentifier(messageDto.Payload.PeerId),
+                PeerIdentifier));
+        }
 
-        public void SendChannelContextResponse(IMessageDto messageDto) { throw new NotImplementedException(); }
+        public void SendChannelContextResponse(IMessageDto messageDto)
+        {   
+            ChannelHandlerContext.Channel.WriteAndFlushAsync(messageDto);
+        }
     }
 }
