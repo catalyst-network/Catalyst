@@ -21,6 +21,8 @@
 
 #endregion
 
+using System;
+using System.Linq;
 using System.Reflection;
 using Catalyst.Common.Interfaces.IO.EventLoop;
 using Catalyst.Common.IO.EventLoop;
@@ -30,12 +32,14 @@ using Xunit;
 
 namespace Catalyst.Common.UnitTests.IO
 {
-    public class EventLoopGroupFactoryTests
+    public class EventLoopGroupFactoryTests : IDisposable
     {
         private readonly int ExpectedUdpServerThreads = 2;
         private readonly int ExpectedTcpServerThreads = 3;
         private readonly int ExpectedUdpClientThreads = 4;
         private readonly int ExpectedTcpClientThreads = 5;
+        private static readonly int ExpectedDefaultEventLoopThreadCount = Environment.ProcessorCount * 2;
+        private IEventLoopGroupFactory _eventFactory;
 
         private readonly IEventLoopGroupFactoryConfiguration _eventLoopGroupFactoryConfiguration;
         
@@ -53,40 +57,59 @@ namespace Catalyst.Common.UnitTests.IO
         [Fact]
         public void Can_Spawn_Correct_Amount_Of_Udp_Server_Event_Loops()
         {
-            IEventLoopGroupFactory eventFactory = new UdpServerEventLoopGroupFactory(_eventLoopGroupFactoryConfiguration);
-            AssertEventLoopSize(eventFactory, ExpectedUdpServerThreads);
+            _eventFactory = new UdpServerEventLoopGroupFactory(_eventLoopGroupFactoryConfiguration);
+            AssertEventLoopSize(_eventFactory.GetOrCreateHandlerWorkerEventLoopGroup(), ExpectedUdpServerThreads);
+            AssertEventLoopSize(_eventFactory.GetOrCreateSocketIoEventLoopGroup(), ExpectedDefaultEventLoopThreadCount);
         }
 
         [Fact]
         public void Can_Spawn_Correct_Amount_Of_Udp_Client_Event_Loops()
         {
-            IEventLoopGroupFactory eventFactory = new UdpClientEventLoopGroupFactory(_eventLoopGroupFactoryConfiguration);
-            AssertEventLoopSize(eventFactory, ExpectedUdpClientThreads);
+            _eventFactory = new UdpClientEventLoopGroupFactory(_eventLoopGroupFactoryConfiguration);
+            AssertEventLoopSize(_eventFactory.GetOrCreateHandlerWorkerEventLoopGroup(), ExpectedUdpClientThreads);
+            AssertEventLoopSize(_eventFactory.GetOrCreateSocketIoEventLoopGroup(), ExpectedDefaultEventLoopThreadCount);
         }
 
         [Fact]
         public void Can_Spawn_Correct_Amount_Of_Tcp_Server_Event_Loops()
         {
-            IEventLoopGroupFactory eventFactory = new TcpServerEventLoopGroupFactory(_eventLoopGroupFactoryConfiguration);
-            AssertEventLoopSize(eventFactory, ExpectedTcpServerThreads);
+            _eventFactory = new TcpServerEventLoopGroupFactory(_eventLoopGroupFactoryConfiguration);
+            AssertEventLoopSize(_eventFactory.GetOrCreateHandlerWorkerEventLoopGroup(), ExpectedTcpServerThreads);
+            AssertEventLoopSize(_eventFactory.GetOrCreateSocketIoEventLoopGroup(), ExpectedDefaultEventLoopThreadCount);
         }
 
         [Fact]
         public void Can_Spawn_Correct_Amount_Of_Tcp_Client_Event_Loops()
         {
-            IEventLoopGroupFactory eventFactory = new TcpClientEventLoopGroupFactory(_eventLoopGroupFactoryConfiguration);
-            AssertEventLoopSize(eventFactory, ExpectedTcpClientThreads);
+            _eventFactory = new TcpClientEventLoopGroupFactory(_eventLoopGroupFactoryConfiguration);
+            AssertEventLoopSize(_eventFactory.GetOrCreateHandlerWorkerEventLoopGroup(), ExpectedTcpClientThreads);
+            AssertEventLoopSize(_eventFactory.GetOrCreateSocketIoEventLoopGroup(), ExpectedDefaultEventLoopThreadCount);
         }
 
-        private void AssertEventLoopSize(IEventLoopGroupFactory eventLoopGroupFactory, int expectedEventLoops)
+        [Fact]
+        public void Can_Dispose_All_Event_Loops()
         {
-            IEventLoopGroup eventLoopGroup = eventLoopGroupFactory.GetOrCreateHandlerWorkerEventLoopGroup();
+            _eventFactory = new TcpClientEventLoopGroupFactory(_eventLoopGroupFactoryConfiguration);
+            IEventLoopGroup[] eventLoops =
+            {
+                _eventFactory.GetOrCreateHandlerWorkerEventLoopGroup(), _eventFactory.GetOrCreateSocketIoEventLoopGroup()
+            };
+            _eventFactory.Dispose();
+            eventLoops.ToList().ForEach(eventLoop => eventLoop.IsShutdown.Should().BeTrue());
+        }
+
+        private void AssertEventLoopSize(IEventLoopGroup eventLoopGroup, int expectedEventLoops)
+        {
             eventLoopGroup.Should().NotBeNull();
             IEventLoop[] eventLoops =
                 (IEventLoop[]) eventLoopGroup.GetType().GetField("eventLoops",
                     BindingFlags.Instance | BindingFlags.NonPublic).GetValue(eventLoopGroup);
             eventLoops.Length.Should().Be(expectedEventLoops);
-            eventLoopGroup.ShutdownGracefullyAsync();
+        }
+
+        public void Dispose()
+        {
+            _eventFactory.Dispose();
         }
     }
 }

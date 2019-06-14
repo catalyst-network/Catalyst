@@ -75,7 +75,7 @@ namespace Catalyst.Common.IO.EventLoop
             return eventLoopGroup;
         }
 
-        public virtual void Dispose()
+        protected virtual void Dispose(bool disposing)
         {
             Task[] disposeTasks = _eventLoopGroupList.Select(t =>
                     t.ShutdownGracefullyAsync(TimeSpan.FromMilliseconds(QuietPeriod), TimeSpan.FromMilliseconds(QuietPeriod * 3)))
@@ -85,6 +85,11 @@ namespace Catalyst.Common.IO.EventLoop
             _eventLoopGroupList.Clear();
             HandlerWorkerEventLoopGroup = null;
             SocketIoEventLoopGroup = null;
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
         }
     }
 }

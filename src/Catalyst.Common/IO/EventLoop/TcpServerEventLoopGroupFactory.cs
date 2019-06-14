@@ -52,9 +52,9 @@ namespace Catalyst.Common.IO.EventLoop
             return _supervisorEventLoopGroup ?? (_supervisorEventLoopGroup = NewEventLoopGroup());
         }
 
-        public override void Dispose()
+        protected override void Dispose(bool disposing)
         {
-            base.Dispose();
+            base.Dispose(true);
             _supervisorEventLoopGroup = null;
         }
     }
