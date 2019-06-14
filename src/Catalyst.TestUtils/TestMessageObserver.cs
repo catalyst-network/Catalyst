@@ -22,6 +22,10 @@
 #endregion
 
 using System;
+using System.Data;
+using System.Reactive.Concurrency;
+using System.Reactive.Linq;
+using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
@@ -30,6 +34,7 @@ using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.Messaging.Dto;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.IO.Observables;
+using Catalyst.Common.Util;
 using Catalyst.Protocol.Common;
 using Google.Protobuf;
 using NSubstitute;
@@ -67,7 +72,24 @@ namespace Catalyst.TestUtils
         }
                 
         public override void OnCompleted() { SubstituteObserver.OnCompleted(); }
-        public override void StartObserving(IObservable<IProtocolMessageDto<ProtocolMessage>> messageStream) { throw new NotImplementedException(); }
+
+        public override void StartObserving(IObservable<IProtocolMessageDto<ProtocolMessage>> messageStream)
+        {
+            if (MessageSubscription != null)
+            {
+                throw new ReadOnlyException($"{GetType()} is already listening to a message stream");
+            }
+
+            var filterMessageType = typeof(TProto).ShortenedProtoFullName() ?? throw new ArgumentNullException(nameof(messageStream));
+            
+            MessageSubscription = messageStream
+               .Where(m => m.Payload?.TypeUrl != null 
+                 && m.Payload?.TypeUrl == filterMessageType 
+                 && !m.Equals(NullObjects.ProtocolMessageDto) 
+                )
+               .SubscribeOn(TaskPoolScheduler.Default)
+               .Subscribe(OnNext, OnError, OnCompleted);
+        }
 
         public void SendChannelContextResponse(IMessageDto messageDto) { throw new NotImplementedException(); }
     }
