@@ -53,9 +53,11 @@ namespace Catalyst.Common.IO.Handlers
             }
 
             var unsignedMessage = protocolMessage.ToByteArray();
+            var sig = _keySigner.Sign(unsignedMessage);
+            
             var protocolMessageSigned = new ProtocolMessageSigned
             {
-                Signature = _keySigner.Sign(unsignedMessage).Bytes.RawBytes.ToByteString(),
+                Signature = sig.Bytes.RawBytes.ToByteString(),
                 Message = protocolMessage
             };
 
