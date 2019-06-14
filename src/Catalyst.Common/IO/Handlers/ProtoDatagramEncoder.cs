@@ -23,6 +23,7 @@
 
 using System.Threading.Tasks;
 using Catalyst.Common.Extensions;
+using Catalyst.Common.Interfaces.P2P.Messaging.Dto;
 using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;
 
@@ -32,9 +33,10 @@ namespace Catalyst.Common.IO.Handlers
     {
         public override Task WriteAsync(IChannelHandlerContext context, object message)
         {
-            if (message is ProtocolMessageSigned signedProtocolMessage)
+            if (message is IMessageDto signedProtocolMessage)
             {
-                return context.WriteAsync(signedProtocolMessage.ToDatagram());
+                var signedMessage = (ProtocolMessageSigned) signedProtocolMessage.Message;
+                return context.WriteAndFlushAsync(signedMessage.ToDatagram(signedProtocolMessage.Recipient.IpEndPoint));
             }
 
             return context.CloseAsync();
