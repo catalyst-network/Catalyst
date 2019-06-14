@@ -33,11 +33,11 @@ using Xunit;
 
 namespace Catalyst.Common.UnitTests.IO.Messaging.Dto
 {
-    public sealed class MessageDtoTest
+    public sealed class MessageDtoTests
     {
         private readonly MessageDto _messageDto;
 
-        public MessageDtoTest()
+        public MessageDtoTests()
         {
             var peerIdentifier = Substitute.For<IPeerIdentifier>();
             var pingRequest = Substitute.For<IMessage<PingRequest>>();
@@ -53,10 +53,10 @@ namespace Catalyst.Common.UnitTests.IO.Messaging.Dto
         public void CanInitMessageDtoCorrectly()
         {
             Assert.NotNull(_messageDto);
-            AssertionExtensions.Should(_messageDto).BeOfType(typeof(MessageDto));
-            AssertionExtensions.Should(_messageDto.Message).NotBeNull().And.BeAssignableTo(typeof(IMessage<PingRequest>));
-            AssertionExtensions.Should(_messageDto.Recipient).NotBeNull().And.BeAssignableTo(typeof(IPeerIdentifier));
-            AssertionExtensions.Should(_messageDto.Sender).NotBeNull().And.BeAssignableTo(typeof(IPeerIdentifier));
+            _messageDto.Should().BeOfType(typeof(MessageDto));
+            _messageDto.Message.Should().NotBeNull().And.BeAssignableTo(typeof(IMessage<PingRequest>));
+            _messageDto.Recipient.Should().NotBeNull().And.BeAssignableTo(typeof(IPeerIdentifier));
+            _messageDto.Sender.Should().NotBeNull().And.BeAssignableTo(typeof(IPeerIdentifier));
         }
     }
 }

@@ -48,8 +48,6 @@ namespace Catalyst.Node.Core.UnitTests.P2P
             ));
 
             pingRequestDatagram.Should().BeAssignableTo(typeof(ProtocolMessage));
-         
-            // pingRequestDatagram.Content.Should().BeAssignableTo(typeof(IByteBuffer));
         }
         
         [Fact]
@@ -65,8 +63,6 @@ namespace Catalyst.Node.Core.UnitTests.P2P
             );
 
             pingResponseDatagram.Should().BeAssignableTo(typeof(ProtocolMessage));
-         
-            // pingResponseDatagram.Content.Should().BeAssignableTo(typeof(IByteBuffer));
         }
         
         [Fact]
@@ -80,8 +76,6 @@ namespace Catalyst.Node.Core.UnitTests.P2P
             ));
 
             transactionDatagram.Should().BeAssignableTo(typeof(ProtocolMessage));
-         
-            // transactionDatagram.Content.Should().BeAssignableTo(typeof(IByteBuffer));
         }
     }
 }

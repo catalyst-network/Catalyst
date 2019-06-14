@@ -160,7 +160,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
             var sentResponseDto = (IMessageDto) receivedCalls.Single().GetArguments().Single();
             sentResponseDto.Message.Descriptor.ShortenedFullName().Should().Be(SetPeerBlackListResponse.Descriptor.ShortenedFullName());
             
-            return (SetPeerBlackListResponse) sentResponseDto.Message;
+            return sentResponseDto.FromIMessageDto<SetPeerBlackListResponse>();
         }
     }
 }

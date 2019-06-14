@@ -103,7 +103,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
             var sentResponseDto = (IMessageDto) receivedCalls.Single().GetArguments().Single();
             sentResponseDto.Message.Descriptor.ShortenedFullName().Should().Be(SignMessageResponse.Descriptor.ShortenedFullName());
 
-            var signResponseMessage = (SignMessageResponse) sentResponseDto.Message;
+            var signResponseMessage = sentResponseDto.FromIMessageDto<SignMessageResponse>();
 
             signResponseMessage.OriginalMessage.Should().Equal(message);
             signResponseMessage.Signature.Should().NotBeEmpty();

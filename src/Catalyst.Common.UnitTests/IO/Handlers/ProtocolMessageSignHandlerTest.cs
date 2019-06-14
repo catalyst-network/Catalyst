@@ -29,7 +29,6 @@ using Catalyst.Common.IO.Handlers;
 using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.Util;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Types;
-using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
@@ -49,15 +48,12 @@ namespace Catalyst.Common.UnitTests.IO.Handlers
             _fakeContext = Substitute.For<IChannelHandlerContext>();
             _keySigner = Substitute.For<IKeySigner>();
 
-            new PingRequest().ToProtocolMessage(
-                PeerIdentifierHelper.GetPeerIdentifier(
-                    ByteUtil.GenerateRandomByteArray(32).ToString()
-                ).PeerId);
-            
             _protocolMessage = new MessageDto(new PingRequest().ToProtocolMessage(
                     PeerIdentifierHelper.GetPeerIdentifier(
                         ByteUtil.GenerateRandomByteArray(32).ToString()
-                    ).PeerId), MessageTypes.Request, PeerIdentifierHelper.GetPeerIdentifier("recipient"), PeerIdentifierHelper.GetPeerIdentifier("sender")
+                    ).PeerId), MessageTypes.Request, 
+                PeerIdentifierHelper.GetPeerIdentifier("recipient"), 
+                PeerIdentifierHelper.GetPeerIdentifier("sender")
             );
         }
 

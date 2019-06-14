@@ -110,7 +110,7 @@ namespace Catalyst.Node.Core.RPC.Observables
                 {
                     if (fileTransferInformation.ChunkIndicatorsTrue())
                     {
-                        OnSuccess(fileTransferInformation);
+                        OnSuccessAsync(fileTransferInformation).GetAwaiter().GetResult();
                     }
 
                     fileTransferInformation.Dispose();
@@ -122,7 +122,7 @@ namespace Catalyst.Node.Core.RPC.Observables
 
         /// <summary>Called when [success] on file transfer.</summary>
         /// <param name="fileTransferInformation">The file transfer information.</param>
-        private async void OnSuccess(IFileTransferInformation fileTransferInformation)
+        private async Task OnSuccessAsync(IFileTransferInformation fileTransferInformation)
         {
             var addFileResponseCode = Task.Run(async () =>
             {

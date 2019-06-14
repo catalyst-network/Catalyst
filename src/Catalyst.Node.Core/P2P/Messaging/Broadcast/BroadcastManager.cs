@@ -98,7 +98,7 @@ namespace Catalyst.Node.Core.P2P.Messaging.Broadcast
                 return;
             }
 
-            await SendGossipMessages(protocolMessage, gossipRequest).ConfigureAwait(false);
+            SendGossipMessages(protocolMessage, gossipRequest);
         }
 
         /// <inheritdoc/>
@@ -119,7 +119,7 @@ namespace Catalyst.Node.Core.P2P.Messaging.Broadcast
         /// <summary>Sends gossips to random peers.</summary>
         /// <param name="message">The message.</param>
         /// <param name="broadcastMessage">The gossip request</param>
-        private async Task SendGossipMessages(ProtocolMessage message, BroadcastMessage broadcastMessage)
+        private void SendGossipMessages(ProtocolMessage message, BroadcastMessage broadcastMessage)
         {
             try
             {
@@ -144,7 +144,6 @@ namespace Catalyst.Node.Core.P2P.Messaging.Broadcast
             catch (Exception e)
             {
                 //@TODO log
-                return;
             }
         }
 

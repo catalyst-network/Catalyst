@@ -49,7 +49,7 @@ namespace Catalyst.Common.IO.Observables
         protected RequestObserverBase(ILogger logger, IPeerIdentifier peerIdentifier) : base(logger)
         {
             Guard.Argument(typeof(TProto), nameof(TProto)).Require(t => t.IsRequestType(), 
-                t => $"{nameof(TProto)} is not of type Request");
+                t => $"{nameof(TProto)} is not of type {MessageTypes.Request.Name}");
             _filterMessageType = typeof(TProto).ShortenedProtoFullName();
             PeerIdentifier = peerIdentifier;
         }
@@ -72,7 +72,7 @@ namespace Catalyst.Common.IO.Observables
         
         public override void OnNext(IProtocolMessageDto<ProtocolMessage> messageDto)
         {
-            Logger.Debug("Pre Handle Message Called");
+            Logger.Verbose("Pre Handle Message Called");
             
             ChannelHandlerContext = messageDto.Context;
             

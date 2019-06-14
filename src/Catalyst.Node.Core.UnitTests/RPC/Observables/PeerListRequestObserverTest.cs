@@ -118,7 +118,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
             var sentResponseDto = (IMessageDto) receivedCalls[0].GetArguments().Single();
             sentResponseDto.Message.Descriptor.ShortenedFullName().Should().Be(GetPeerListResponse.Descriptor.ShortenedFullName());
 
-            var responseContent = (GetPeerListResponse) sentResponseDto.Message;
+            var responseContent = sentResponseDto.FromIMessageDto<GetPeerListResponse>();
 
             responseContent.Peers.Count.Should().Be(fakePeers.Length);
         }

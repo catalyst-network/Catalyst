@@ -21,6 +21,7 @@
 
 #endregion
 
+using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;
@@ -44,7 +45,7 @@ namespace Catalyst.Common.IO.Handlers
         /// <param name="message"></param>
         protected override void ChannelRead0(IChannelHandlerContext ctx, ProtocolMessage message)
         {
-            if (message.TypeUrl.EndsWith("Response"))
+            if (message.TypeUrl.EndsWith(MessageTypes.Response.Name))
             {
                 if (_messageCorrelationManager.TryMatchResponse(message))
                 {

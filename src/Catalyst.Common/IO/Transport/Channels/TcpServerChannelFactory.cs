@@ -47,7 +47,6 @@ namespace Catalyst.Common.IO.Transport.Channels
         private readonly IKeySigner _keySigner;
         private const int BackLogValue = 100;
         private List<IChannelHandler> _handlers;
-        private ObservableServiceHandler _observableServiceHandler;
         
         public TcpServerChannelFactory(IMessageCorrelationManager correlationManger, 
             IPeerSettings peerSettings,
@@ -56,7 +55,6 @@ namespace Catalyst.Common.IO.Transport.Channels
             _correlationManger = correlationManger;
             _peerSettings = peerSettings;
             _keySigner = keySigner;
-            _observableServiceHandler = new ObservableServiceHandler();
         }
 
         /// <param name="targetAddress">Ignored</param>
@@ -71,7 +69,7 @@ namespace Catalyst.Common.IO.Transport.Channels
         {
             var supervisorEventLoop = new MultithreadEventLoopGroup();
 
-            var channelHandler = new ServerChannelInitializerBase<IChannel>(_handlers, certificate);
+            var channelHandler = new ServerChannelInitializerBase<IChannel>(Handlers, certificate);
 
             var channel = new ServerBootstrap()
                .Group(supervisorEventLoop, childGroup: new MultithreadEventLoopGroup())
@@ -83,7 +81,9 @@ namespace Catalyst.Common.IO.Transport.Channels
                .GetAwaiter()
                .GetResult();
 
-            return new ObservableChannel(_observableServiceHandler.MessageStream, channel);
+            var messageStream = channel.Pipeline.Get<ObservableServiceHandler>()?.MessageStream;
+
+            return new ObservableChannel(messageStream, channel);
         }
 
         protected List<IChannelHandler> Handlers =>
@@ -95,7 +95,7 @@ namespace Catalyst.Common.IO.Transport.Channels
                 new ProtobufEncoder(),
                 new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(new ProtocolMessageVerifyHandler(_keySigner), new ProtocolMessageSignHandler(_keySigner)),
                 new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(new CorrelationHandler(_correlationManger), new CorrelationHandler(_correlationManger)),
-                _observableServiceHandler
+                new ObservableServiceHandler()
             });
     }
 }

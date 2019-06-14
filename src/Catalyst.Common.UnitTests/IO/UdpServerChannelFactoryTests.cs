@@ -86,7 +86,7 @@ namespace Catalyst.Common.UnitTests.IO
         {
             _factory.InheritedHandlers.Count(h => h != null).Should().Be(5);
             var handlers = _factory.InheritedHandlers.ToArray();
-            handlers[0].Should().BeOfType<ProtoDatagramParserHandler>();
+            handlers[0].Should().BeOfType<ProtoDatagramDecoderHandler>();
             handlers[1].Should().BeOfType<CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>>();
             handlers[2].Should().BeOfType<CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>>();
             handlers[3].Should().BeOfType<BroadcastHandler>();

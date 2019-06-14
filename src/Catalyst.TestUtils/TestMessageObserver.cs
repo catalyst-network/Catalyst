@@ -46,12 +46,15 @@ namespace Catalyst.TestUtils
         IP2PMessageObserver, IRpcResponseObserver, IRpcRequestObserver
         where TProto : IMessage, IMessage<TProto>
     {
+        private readonly string _filterMessageType;
         public IObserver<TProto> SubstituteObserver { get; }
         public IPeerIdentifier PeerIdentifier { get; }
 
         public TestMessageObserver(ILogger logger) : base(logger)
         {
             SubstituteObserver = Substitute.For<IObserver<TProto>>();
+            PeerIdentifier = Substitute.For<IPeerIdentifier>();
+            _filterMessageType = typeof(TProto).ShortenedProtoFullName();
         }
 
         public override void OnError(Exception exception) { SubstituteObserver.OnError(exception); }
@@ -80,13 +83,9 @@ namespace Catalyst.TestUtils
                 throw new ReadOnlyException($"{GetType()} is already listening to a message stream");
             }
 
-            var filterMessageType = typeof(TProto).ShortenedProtoFullName() ?? throw new ArgumentNullException(nameof(messageStream));
-            
             MessageSubscription = messageStream
                .Where(m => m.Payload?.TypeUrl != null 
-                 && m.Payload?.TypeUrl == filterMessageType 
-                 && !m.Equals(NullObjects.ProtocolMessageDto) 
-                )
+                 && m.Payload.TypeUrl == _filterMessageType)
                .SubscribeOn(TaskPoolScheduler.Default)
                .Subscribe(OnNext, OnError, OnCompleted);
         }

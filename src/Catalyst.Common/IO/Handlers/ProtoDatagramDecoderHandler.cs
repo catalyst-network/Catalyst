@@ -29,7 +29,7 @@ using DotNetty.Transport.Channels.Sockets;
 
 namespace Catalyst.Common.IO.Handlers
 {
-    public sealed class ProtoDatagramParserHandler : SimpleChannelInboundHandler<DatagramPacket>
+    public sealed class ProtoDatagramDecoderHandler : SimpleChannelInboundHandler<DatagramPacket>
     {
         protected override void ChannelRead0(IChannelHandlerContext context, DatagramPacket packet)
         {

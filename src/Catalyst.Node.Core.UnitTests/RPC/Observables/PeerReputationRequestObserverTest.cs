@@ -151,7 +151,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
             var sentResponseDto = (IMessageDto) receivedCalls[0].GetArguments().Single();
             sentResponseDto.Message.Descriptor.ShortenedFullName().Should().Be(GetPeerReputationResponse.Descriptor.ShortenedFullName());
 
-            return (GetPeerReputationResponse) sentResponseDto.Message;
+            return sentResponseDto.FromIMessageDto<GetPeerReputationResponse>();
         }
     }
 }

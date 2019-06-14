@@ -29,8 +29,8 @@ using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Observables;
-using Catalyst.Common.Util;
 using Catalyst.Protocol.Common;
+using Dawn;
 using Google.Protobuf;
 using Serilog;
 
@@ -38,7 +38,14 @@ namespace Catalyst.Common.IO.Observables
 {
     public abstract class BroadcastObserverBase<TProto> : MessageObserverBase, IBroadcastObserver where TProto : IMessage
     {
-        protected BroadcastObserverBase(ILogger logger) : base(logger) { }
+        private readonly string _filterMessageType;
+
+        protected BroadcastObserverBase(ILogger logger) : base(logger)
+        {
+            Guard.Argument(typeof(TProto), nameof(TProto)).Require(t => t.IsBroadcastType(),
+                t => $"{nameof(TProto)} is not of type {MessageTypes.Broadcast.Name}");
+            _filterMessageType = typeof(TProto).ShortenedProtoFullName();
+        }
 
         public abstract void HandleBroadcast(IProtocolMessageDto<ProtocolMessage> messageDto);
 
@@ -48,22 +55,17 @@ namespace Catalyst.Common.IO.Observables
             {
                 throw new ReadOnlyException($"{GetType()} is already listening to a message stream");
             }
-
-            var filterMessageType = typeof(TProto).ShortenedProtoFullName() ?? throw new ArgumentNullException(nameof(messageStream));
             
             MessageSubscription = messageStream
                .Where(m => m.Payload?.TypeUrl != null 
-                 && m.Payload?.TypeUrl == filterMessageType 
-                 && !m.Equals(NullObjects.ProtocolMessageDto) 
-                 && (bool) m.Payload?.TypeUrl.EndsWith(MessageTypes.Broadcast.Name)
-                )
+                 && m.Payload.TypeUrl == _filterMessageType)
                .SubscribeOn(TaskPoolScheduler.Default)
                .Subscribe(OnNext, OnError, OnCompleted);
         }
         
         public override void OnNext(IProtocolMessageDto<ProtocolMessage> messageDto)
         {
-            Logger.Debug("Pre Handle Message Called");
+            Logger.Verbose("Pre Handle Message Called");
             ChannelHandlerContext = messageDto.Context;
             HandleBroadcast(messageDto);
         }

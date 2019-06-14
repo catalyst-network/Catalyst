@@ -63,7 +63,7 @@ namespace Catalyst.Common.IO.Observables
             ChannelHandlerContext.CloseAsync().ConfigureAwait(false);
         }
 
-        private void Dispose(bool disposing)
+        protected void Dispose(bool disposing)
         {
             if (!disposing)
             {
