@@ -10,6 +10,46 @@
             ]
         },
         {
+            "type": "Catalyst.Common.IO.EventLoop.EventLoopGroupFactoryConfiguration, Catalyst.Common",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.IO.EventLoop.IEventLoopGroupFactoryConfiguration, Catalyst.Common"
+                }
+            ],
+            "properties": {
+                "TcpServerHandlerWorkerThreads": 4,
+                "UdpServerHandlerWorkerThreads": 8,
+                "UdpClientHandlerWorkerThreads": 2
+            }
+        },
+        {
+            "type": "Catalyst.Common.IO.EventLoop.TcpServerEventLoopGroupFactory, Catalyst.Common",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.IO.EventLoop.ITcpServerEventLoopGroupFactory, Catalyst.Common"
+                }
+            ],
+            "instanceScope": "singleinstance"
+        },
+        {
+            "type": "Catalyst.Common.IO.EventLoop.UdpClientEventLoopGroupFactory, Catalyst.Common",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.IO.EventLoop.IUdpClientEventLoopGroupFactory, Catalyst.Common"
+                }
+            ],
+            "instanceScope": "singleinstance"
+        },
+        {
+            "type": "Catalyst.Common.IO.EventLoop.UdpServerEventLoopGroupFactory, Catalyst.Common",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.IO.EventLoop.IUdpServerEventLoopGroupFactory, Catalyst.Common"
+                }
+            ],
+            "instanceScope": "singleinstance"
+        },
+        {
             "type": "Catalyst.Node.Core.P2P.PeerClient",
             "services": [
                 {

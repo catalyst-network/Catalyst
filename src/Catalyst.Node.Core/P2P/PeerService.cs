@@ -21,19 +21,17 @@
 
 #endregion
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using Catalyst.Common.Interfaces.IO.Messaging;
+using Catalyst.Common.Interfaces.IO.EventLoop;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Observables;
-using Catalyst.Common.Interfaces.IO.Transport;
 using Catalyst.Common.Interfaces.IO.Transport.Channels;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.IO.Observables;
 using Catalyst.Common.IO.Transport;
 using Catalyst.Protocol.Common;
 using Serilog;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Catalyst.Node.Core.P2P
 {
@@ -42,14 +40,15 @@ namespace Catalyst.Node.Core.P2P
         public IPeerDiscovery Discovery { get; }
         public IObservable<IProtocolMessageDto<ProtocolMessage>> MessageStream { get; }
 
-        public PeerService(IUdpServerChannelFactory serverChannelFactory,
+        public PeerService(IUdpServerEventLoopGroupFactory udpServerEventLoopGroupFactory,
+            IUdpServerChannelFactory serverChannelFactory,
             IPeerDiscovery peerDiscovery,
             IEnumerable<IP2PMessageObserver> messageHandlers,
             ILogger logger)
-            : base(serverChannelFactory, logger)
+            : base(serverChannelFactory, logger, udpServerEventLoopGroupFactory)
         {
             Discovery = peerDiscovery;
-            var observableChannel = ChannelFactory.BuildChannel();
+            var observableChannel = ChannelFactory.BuildChannel(EventLoopGroupFactory);
             Channel = observableChannel.Channel;
 
             MessageStream = observableChannel.MessageStream;

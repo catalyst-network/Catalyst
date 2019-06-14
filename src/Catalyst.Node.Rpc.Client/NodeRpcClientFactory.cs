@@ -21,13 +21,12 @@
 
 #endregion
 
-using System.Collections.Generic;
-using System.Security.Cryptography.X509Certificates;
-using Catalyst.Common.Interfaces.IO.Messaging;
+using Catalyst.Common.Interfaces.IO.EventLoop;
 using Catalyst.Common.Interfaces.IO.Observables;
-using Catalyst.Common.Interfaces.IO.Transport;
 using Catalyst.Common.Interfaces.IO.Transport.Channels;
 using Catalyst.Common.Interfaces.Rpc;
+using System.Collections.Generic;
+using System.Security.Cryptography.X509Certificates;
 
 namespace Catalyst.Node.Rpc.Client
 {
@@ -35,16 +34,20 @@ namespace Catalyst.Node.Rpc.Client
     {
         private readonly ITcpClientChannelFactory _channelFactory;
         private readonly IEnumerable<IRpcResponseObserver> _handlers;
+        private readonly ITcpClientEventLoopGroupFactory _clientEventLoopGroupFactory;
 
-        public NodeRpcClientFactory(ITcpClientChannelFactory channelFactory, IEnumerable<IRpcResponseObserver> handlers)
+        public NodeRpcClientFactory(ITcpClientChannelFactory channelFactory,
+            ITcpClientEventLoopGroupFactory clientEventLoopGroupFactory,
+            IEnumerable<IRpcResponseObserver> handlers)
         {
+            _clientEventLoopGroupFactory = clientEventLoopGroupFactory;
             _channelFactory = channelFactory;
             _handlers = handlers;
         }
 
         public INodeRpcClient GetClient(X509Certificate2 certificate, IRpcNodeConfig nodeConfig)
         {
-            return new NodeRpcClient(_channelFactory, certificate, nodeConfig, _handlers);
+            return new NodeRpcClient(_channelFactory, certificate, nodeConfig, _handlers, _clientEventLoopGroupFactory);
         }
     }
 }
