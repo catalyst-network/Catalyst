@@ -26,6 +26,14 @@
             ]
         },
         {
+            "type": "Multiformats.Hash.Algorithms.BLAKE2B_256, Multiformats.Hash",
+            "services": [
+                {
+                    "type": "Multiformats.Hash.Algorithms.IMultihashAlgorithm, Multiformats.Hash"
+                }
+            ]
+        },
+        {
             "type": "Catalyst.Common.Modules.KeySigner.KeySigner, Catalyst.Common",
             "services": [
                 {

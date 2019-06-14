@@ -106,38 +106,7 @@
                 }
             ]
         },
-        {
-            "type": "Catalyst.Common.Keystore.LocalKeyStore, Catalyst.Common",
-            "services": [
-                {
-                    "type": "Catalyst.Common.Interfaces.Keystore.IKeyStore, Catalyst.Common"
-                }
-            ]
-        },
-        {
-            "type": "Catalyst.Common.Keystore.KeyStoreServiceWrapped, Catalyst.Common",
-            "services": [
-                {
-                    "type": "Catalyst.Common.Interfaces.Keystore.IKeyStoreService, Catalyst.Common"
-                }
-            ]
-        },
-        {
-            "type": "Catalyst.Common.Util.AddressHelper, Catalyst.Common",
-            "services": [
-                {
-                    "type": "Catalyst.Common.Interfaces.Util.IAddressHelper, Catalyst.Common"
-                }
-            ]
-        },
-        {
-            "type": "Catalyst.Common.Cryptography.RustCryptoContext, Catalyst.Common",
-            "services": [
-                {
-                    "type": "Catalyst.Common.Interfaces.Cryptography.ICryptoContext, Catalyst.Common"
-                }
-            ]
-        },
+       
         {
             "type": "SharpRepository.InMemoryRepository.InMemoryRepository`1[[Catalyst.Common.P2P.Peer, Catalyst.Common]], SharpRepository.InMemoryRepository",
             "services": [

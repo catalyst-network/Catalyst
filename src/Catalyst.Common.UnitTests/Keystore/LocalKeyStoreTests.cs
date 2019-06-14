@@ -33,6 +33,7 @@ using NSubstitute;
 using Serilog;
 using Xunit;
 using Xunit.Abstractions;
+using Autofac;
 
 namespace Catalyst.Common.UnitTests.Keystore
 {
@@ -40,6 +41,8 @@ namespace Catalyst.Common.UnitTests.Keystore
     {
         private readonly IKeyStore _keystore;
         private readonly ICryptoContext _context;
+        private readonly ILifetimeScope _scope;
+
 
         public LocalKeyStoreTests(ITestOutputHelper output) : base(output)
         {
@@ -48,8 +51,11 @@ namespace Catalyst.Common.UnitTests.Keystore
             var logger = Substitute.For<ILogger>();
             var passwordReader = new TestPasswordReader("testPassword");
 
-            var addressHelper = new AddressHelper();
-            addressHelper.SetHashAlgorithm(new BLAKE2B_256());
+
+            var blakeAlgo = Substitute.For<BLAKE2B_256>();
+            blakeAlgo.ComputeHash(Arg.Any<byte[]>()).Returns(new byte[32]);
+
+            var addressHelper = new AddressHelper(blakeAlgo);
 
             _keystore = new LocalKeyStore(passwordReader,
                 _context,
