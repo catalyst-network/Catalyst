@@ -92,9 +92,8 @@ namespace Catalyst.Node.Core.P2P.Messaging.Broadcast
 
             var correlationId = protocolMessage.CorrelationId.ToGuid();
             var gossipRequest = await GetOrCreateAsync(correlationId).ConfigureAwait(false);
-            var canGossip = CanGossip(gossipRequest);
 
-            if (!canGossip)
+            if (!CanGossip(gossipRequest))
             {
                 return;
             }
@@ -122,23 +121,31 @@ namespace Catalyst.Node.Core.P2P.Messaging.Broadcast
         /// <param name="broadcastMessage">The gossip request</param>
         private async Task SendGossipMessages(ProtocolMessage message, BroadcastMessage broadcastMessage)
         {
-            var peersToGossip = GetRandomPeers(Constants.MaxGossipPeersPerRound);
-            var correlationId = message.CorrelationId.ToGuid();
-
-            foreach (var peerIdentifier in peersToGossip)
+            try
             {
-                _peerClient.SendMessageAsync(_protocolMessageFactory.GetMessage(new MessageDto(message,
-                    MessageTypes.Broadcast, peerIdentifier, _peerIdentifier), correlationId));
+                var peersToGossip = GetRandomPeers(Constants.MaxGossipPeersPerRound);
+                var correlationId = message.CorrelationId.ToGuid();
+
+                foreach (var peerIdentifier in peersToGossip)
+                {
+                    _peerClient.SendMessageAsync(_protocolMessageFactory.GetMessage(new MessageDto(message,
+                        MessageTypes.Broadcast, peerIdentifier, _peerIdentifier), correlationId));
+                }
+
+                var updateCount = (uint) peersToGossip.Count;
+                if (updateCount <= 0)
+                {
+                    return;
+                }
+            
+                broadcastMessage.GossipCount += updateCount;
+                UpdatePendingRequest(correlationId, broadcastMessage);
             }
-
-            var updateCount = (uint) peersToGossip.Count;
-            if (updateCount <= 0)
+            catch (Exception e)
             {
+                //@TODO log
                 return;
             }
-            
-            broadcastMessage.GossipCount += updateCount;
-            UpdatePendingRequest(correlationId, broadcastMessage);
         }
 
         /// <summary>Gets the random peers.</summary>
@@ -146,6 +153,7 @@ namespace Catalyst.Node.Core.P2P.Messaging.Broadcast
         /// <returns></returns>
         private List<IPeerIdentifier> GetRandomPeers(int count)
         {
+            //@TODO get all will be inefficient with a large number of discovered nodes
             return _peers.GetAll().RandomSample(count).Select(x => x.PeerIdentifier).ToList();
         }
 
