@@ -23,5 +23,5 @@
 
 namespace Catalyst.Common.Interfaces.IO.Observables
 {
-    public interface IRpcResponseObserver : IMessageObserver { }
+    public interface IRpcResponseObserver : IResponseMessageObserver { }
 }

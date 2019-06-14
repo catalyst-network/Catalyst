@@ -87,7 +87,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Messaging.Gossip
 
             _cache.TryGetValue(correlationId, out BroadcastMessage value);
             
-            value.GossipCount.Should().Be((uint) Constants.MaxGossipPeersPerRound - 1);
+            value.GossipCount.Should().Be(0);
             value.ReceivedCount.Should().Be(0);
         }
 

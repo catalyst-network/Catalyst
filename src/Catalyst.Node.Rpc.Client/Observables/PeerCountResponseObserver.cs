@@ -40,7 +40,7 @@ namespace Catalyst.Node.Rpc.Client.Observables
     /// </summary>
     /// <seealso cref="IRpcResponseObserver" />
     public sealed class PeerCountResponseObserver
-        : ObserverBase<GetPeerCountResponse>,
+        : ResponseObserverBase<GetPeerCountResponse>,
             IRpcResponseObserver
     {
         private readonly IUserOutput _output;
@@ -61,15 +61,14 @@ namespace Catalyst.Node.Rpc.Client.Observables
         /// Handles the peer count response.
         /// </summary>
         /// <param name="messageDto">The GetPeerCountResponse message.</param>
-        protected override void Handler(IProtocolMessageDto<ProtocolMessage> messageDto)
+        public override void HandleResponse(IProtocolMessageDto<ProtocolMessage> messageDto)
         {
             Logger.Debug("Handling GetPeerCount response");
-            Guard.Argument(messageDto).NotNull("Received message cannot be null");
 
             try
             {
                 var deserialised = messageDto.Payload.FromProtocolMessage<GetPeerCountResponse>();
-                _output.WriteLine("Peer count: " + deserialised.PeerCount.ToString());
+                _output.WriteLine($@"Peer count: {deserialised.PeerCount.ToString()}");
             }
             catch (Exception ex)
             {

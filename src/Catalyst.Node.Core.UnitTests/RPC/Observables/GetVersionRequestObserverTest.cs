@@ -21,16 +21,14 @@
 
 #endregion
 
+using System;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
-using Catalyst.Common.IO.Messaging;
-using Catalyst.Common.IO.Messaging.Dto;
+using Catalyst.Common.Interfaces.P2P.Messaging.Dto;
 using Catalyst.Common.Util;
 using Catalyst.Node.Core.RPC.Observables;
-using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
@@ -57,29 +55,24 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
         }
 
         [Fact]
-        public async Task GetVersion_UsingValidRequest_ShouldSendVersionResponse()
+        public async Task Valid_GetVersion_Request_Should_Send_VersionResponse()
         {
-            var messageFactory = new ProtocolMessageFactory();
-            var request = new ProtocolMessageFactory().GetMessage(new MessageDto(
-                new VersionRequest(),
-                MessageTypes.Request,
-                PeerIdentifierHelper.GetPeerIdentifier("recepient"),
-                PeerIdentifierHelper.GetPeerIdentifier("sender")));
-
-            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, request);
-            var handler = new GetVersionRequestObserver(PeerIdentifierHelper.GetPeerIdentifier("sender"), _logger, messageFactory);
+            var versionRequest = new VersionRequest().ToProtocolMessage(PeerIdHelper.GetPeerId(), Guid.NewGuid());
+            
+            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, versionRequest);
+            var handler = new GetVersionRequestObserver(PeerIdentifierHelper.GetPeerIdentifier("sender"), _logger);
+            
             handler.StartObserving(messageStream);
 
             await messageStream.WaitForEndOfDelayedStreamOnTaskPoolScheduler();
-
+            
             var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();
-            receivedCalls.Count().Should().Be(1);
+            receivedCalls.Count.Should().Be(1);
 
-            var sentResponse = (ProtocolMessage) receivedCalls.Single().GetArguments().Single();
-            sentResponse.TypeUrl.Should().Be(VersionResponse.Descriptor.ShortenedFullName());
-
-            var responseContent = sentResponse.FromProtocolMessage<VersionResponse>();
-            responseContent.Version.Should().Be(NodeUtil.GetVersion());
+            var sentResponseDto = (IMessageDto) receivedCalls.Single().GetArguments().Single();
+            sentResponseDto.Message.Descriptor.ShortenedFullName().Should().Be(VersionResponse.Descriptor.ShortenedFullName());
+            var versionResponseMessage = sentResponseDto.FromIMessageDto<VersionResponse>();
+            versionResponseMessage.Version.Should().Be(NodeUtil.GetVersion());
         }
     }
 }

@@ -58,8 +58,8 @@ namespace Catalyst.Common.IO.Handlers
             {
                 _broadcastManager.ReceiveAsync(msg).ConfigureAwait(false).GetAwaiter().GetResult();
 
-                ProtocolMessage originalBroadcastedMessage = ProtocolMessage.Parser.ParseFrom(msg.Value);
-                ctx.FireChannelRead(originalBroadcastedMessage);
+                ProtocolMessage originalBroadcastMessage = ProtocolMessage.Parser.ParseFrom(msg.Value);
+                ctx.FireChannelRead(originalBroadcastMessage);
             }
             else
             {

@@ -28,10 +28,10 @@ using System.Threading.Tasks;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Modules.Mempool;
+using Catalyst.Common.Interfaces.P2P.Messaging.Dto;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Node.Core.RPC.Observables;
-using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.Protocol.Transaction;
 using Catalyst.TestUtils;
@@ -62,7 +62,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
             new List<object[]>
             {
                 new object[] {CreateTestTransactions(), 2},
-                new object[] {new List<TransactionBroadcast>(), 0},
+                new object[] {new List<TransactionBroadcast>(), 0}
             };
 
         private static List<TransactionBroadcast> CreateTestTransactions()
@@ -88,8 +88,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
                 }
             );
 
-            var messageFactory = new ProtocolMessageFactory();
-            var request = messageFactory.GetMessage(new MessageDto(
+            var request = new ProtocolMessageFactory().GetMessage(new MessageDto(
                 new GetMempoolRequest(),
                 MessageTypes.Request,
                 PeerIdentifierHelper.GetPeerIdentifier("recipient_key"),
@@ -97,7 +96,8 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
             ));
             
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, request);
-            var handler = new GetMempoolRequestObserver(PeerIdentifierHelper.GetPeerIdentifier("sender"), mempool, messageFactory, _logger);
+            var handler = new GetMempoolRequestObserver(PeerIdentifierHelper.GetPeerIdentifier("sender"), mempool, _logger);
+            
             handler.StartObserving(messageStream);
 
             await messageStream.WaitForEndOfDelayedStreamOnTaskPoolScheduler();
@@ -105,10 +105,11 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
             var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();
             receivedCalls.Count.Should().Be(1);
             
-            var sentResponse = (ProtocolMessage) receivedCalls.Single().GetArguments().Single();
-            sentResponse.TypeUrl.Should().Be(GetMempoolResponse.Descriptor.ShortenedFullName());
-            var responseContent = sentResponse.FromProtocolMessage<GetMempoolResponse>();
+            var sentResponseDto = (IMessageDto) receivedCalls.Single().GetArguments().Single();
+            sentResponseDto.Message.Descriptor.ShortenedFullName().Should().Be(GetMempoolResponse.Descriptor.ShortenedFullName());
 
+            var responseContent = sentResponseDto.FromIMessageDto<GetMempoolResponse>();
+            
             if (expectedTxs == 0)
             {
                 responseContent.Mempool.Should().BeEmpty();

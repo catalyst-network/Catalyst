@@ -35,6 +35,7 @@ using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.P2P;
 using Catalyst.Protocol.Common;
+using DotNetty.Buffers;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Primitives;
 using SharpRepository.Repository;
@@ -91,14 +92,13 @@ namespace Catalyst.Node.Core.P2P.Messaging.Broadcast
 
             var correlationId = protocolMessage.CorrelationId.ToGuid();
             var gossipRequest = await GetOrCreateAsync(correlationId).ConfigureAwait(false);
-            var canGossip = CanGossip(gossipRequest);
 
-            if (!canGossip)
+            if (!CanGossip(gossipRequest))
             {
                 return;
             }
 
-            await SendGossipMessagesAsync(protocolMessage, gossipRequest).ConfigureAwait(false);
+            SendGossipMessages(protocolMessage, gossipRequest);
         }
 
         /// <inheritdoc/>
@@ -119,23 +119,31 @@ namespace Catalyst.Node.Core.P2P.Messaging.Broadcast
         /// <summary>Sends gossips to random peers.</summary>
         /// <param name="message">The message.</param>
         /// <param name="broadcastMessage">The gossip request</param>
-        private async Task SendGossipMessagesAsync(ProtocolMessage message, BroadcastMessage broadcastMessage)
+        private void SendGossipMessages(ProtocolMessage message, BroadcastMessage broadcastMessage)
         {
-            var peersToGossip = GetRandomPeers(Constants.MaxGossipPeersPerRound);
-            var correlationId = message.CorrelationId.ToGuid();
-
-            foreach (var peerIdentifier in peersToGossip)
+            try
             {
-                var datagramEnvelope = _protocolMessageFactory.GetDatagramMessage(new MessageDto(message,
-                    MessageTypes.Broadcast, peerIdentifier, _peerIdentifier), correlationId);
-                await _peerClient.SendMessageAsync(datagramEnvelope).ConfigureAwait(false);
-            }
+                var peersToGossip = GetRandomPeers(Constants.MaxGossipPeersPerRound);
+                var correlationId = message.CorrelationId.ToGuid();
 
-            var updateCount = (uint) peersToGossip.Count;
-            if (updateCount > 0)
-            {
+                foreach (var peerIdentifier in peersToGossip)
+                {
+                    _peerClient.SendMessage(_protocolMessageFactory.GetMessage(new MessageDto(message,
+                        MessageTypes.Broadcast, peerIdentifier, _peerIdentifier), correlationId));
+                }
+
+                var updateCount = (uint) peersToGossip.Count;
+                if (updateCount <= 0)
+                {
+                    return;
+                }
+            
                 broadcastMessage.GossipCount += updateCount;
                 UpdatePendingRequest(correlationId, broadcastMessage);
+            }
+            catch (Exception e)
+            {
+                //@TODO log
             }
         }
 
@@ -144,9 +152,8 @@ namespace Catalyst.Node.Core.P2P.Messaging.Broadcast
         /// <returns></returns>
         private List<IPeerIdentifier> GetRandomPeers(int count)
         {
-            var peers = _peers.GetAll().Shuffle();
-            var peerAmount = Math.Min(peers.Count, count);
-            return peers.Select(x => x.PeerIdentifier).Take(peerAmount).ToList();
+            //@TODO get all will be inefficient with a large number of discovered nodes
+            return _peers.GetAll().RandomSample(count).Select(x => x.PeerIdentifier).ToList();
         }
 
         /// <summary>Determines whether this instance can gossip the specified correlation identifier.</summary>

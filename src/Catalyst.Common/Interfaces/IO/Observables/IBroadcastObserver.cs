@@ -21,21 +21,13 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.IO.Transport;
-using Catalyst.Common.Interfaces.IO.Transport.Channels;
+using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Protocol.Common;
-using Serilog;
 
-namespace Catalyst.Common.IO.Transport
+namespace Catalyst.Common.Interfaces.IO.Observables
 {
-    public class ClientBase : SocketBase, ISocketClient
-    {
-        protected ClientBase(IChannelFactory channelFactory, ILogger logger) 
-            : base(channelFactory, logger) { }
-
-        public virtual void SendMessage(ProtocolMessage message)
-        {
-            Channel.WriteAsync(message).ConfigureAwait(false);
-        }
+    internal interface IBroadcastObserver : IMessageObserver
+    { 
+        void HandleBroadcast(IProtocolMessageDto<ProtocolMessage> messageDto);
     }
 }

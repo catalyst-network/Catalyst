@@ -21,12 +21,12 @@
 
 #endregion
 
+using System;
 using System.IO;
 using System.Threading;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.FileTransfer;
-using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Observables;
 using Catalyst.Common.IO.Observables;
@@ -41,7 +41,8 @@ namespace Catalyst.Node.Rpc.Client.Observables
     /// Handles Get file from DFS response
     /// </summary>
     /// <seealso cref="IRpcResponseObserver" />
-    public sealed class GetFileFromDfsResponseObserver : ObserverBase<GetFileFromDfsResponse>,
+    public sealed class GetFileFromDfsResponseObserver : 
+        ResponseObserverBase<GetFileFromDfsResponse>,
         IRpcResponseObserver
     {
         /// <summary>The file transfer factory</summary>
@@ -58,36 +59,37 @@ namespace Catalyst.Node.Rpc.Client.Observables
 
         /// <summary>Handles the specified message.</summary>
         /// <param name="messageDto">The message.</param>
-        protected override void Handler(IProtocolMessageDto<ProtocolMessage> messageDto)
+        public override void HandleResponse(IProtocolMessageDto<ProtocolMessage> messageDto)
         {
-            var deserialised = messageDto.Payload.FromProtocolMessage<GetFileFromDfsResponse>();
-
-            Guard.Argument(deserialised).NotNull("Message cannot be null");
-
+            var deserialised = messageDto.Payload.FromProtocolMessage<GetFileFromDfsResponse>() ?? throw new ArgumentNullException(nameof(messageDto));
+            
             // @TODO return int not byte
             // var responseCode = Enumeration.Parse<FileTransferResponseCodes>(deserialised.ResponseCode[0].ToString());
 
             var responseCode = (FileTransferResponseCodes) deserialised.ResponseCode[0];
-            
-            var fileTransferInformation = _fileTransferFactory.GetFileTransferInformation(messageDto.Payload.CorrelationId.ToGuid());
 
-            if (fileTransferInformation == null)
+            if (_fileTransferFactory != null) 
             {
-                return;
-            }
+                var fileTransferInformation = _fileTransferFactory.GetFileTransferInformation(messageDto.Payload.CorrelationId.ToGuid());
 
-            if (responseCode == FileTransferResponseCodes.Successful)
-            {
-                fileTransferInformation.SetLength(deserialised.FileSize);
-
-                _fileTransferFactory.FileTransferAsync(fileTransferInformation.CorrelationGuid, CancellationToken.None).ContinueWith(task =>
+                if (fileTransferInformation == null)
                 {
-                    File.Move(fileTransferInformation.TempPath, fileTransferInformation.FileOutputPath);
-                });
-            }
-            else
-            {
-                fileTransferInformation.Expire();
+                    return;
+                }
+
+                if (responseCode == FileTransferResponseCodes.Successful)
+                {
+                    fileTransferInformation.SetLength(deserialised.FileSize);
+
+                    _fileTransferFactory.FileTransferAsync(fileTransferInformation.CorrelationGuid, CancellationToken.None).ContinueWith(task =>
+                    {
+                        File.Move(fileTransferInformation.TempPath, fileTransferInformation.FileOutputPath);
+                    }).ConfigureAwait(false);
+                }
+                else
+                {
+                    fileTransferInformation.Expire();
+                }
             }
         }
     }
