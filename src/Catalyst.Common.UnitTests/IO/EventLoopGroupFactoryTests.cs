@@ -24,6 +24,7 @@
 using System;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using Catalyst.Common.Interfaces.IO.EventLoop;
 using Catalyst.Common.IO.EventLoop;
 using DotNetty.Transport.Channels;
@@ -94,7 +95,14 @@ namespace Catalyst.Common.UnitTests.IO
             {
                 _eventFactory.GetOrCreateHandlerWorkerEventLoopGroup(), _eventFactory.GetOrCreateSocketIoEventLoopGroup()
             };
-            _eventFactory.Dispose();
+
+            Task.Run(() => _eventFactory.Dispose());
+
+            _eventFactory.GetOrCreateHandlerWorkerEventLoopGroup()?
+               .TerminationCompletion.ConfigureAwait(false).GetAwaiter().GetResult();
+            _eventFactory.GetOrCreateSocketIoEventLoopGroup()?
+               .TerminationCompletion.ConfigureAwait(false).GetAwaiter().GetResult();
+
             eventLoops.ToList().ForEach(eventLoop => eventLoop.IsShutdown.Should().BeTrue());
         }
 
