@@ -29,7 +29,6 @@ using Catalyst.Common.Interfaces.P2P.Messaging.Broadcast;
 using Catalyst.Common.Protocol;
 using Catalyst.Protocol.Delta;
 using Dawn;
-using Microsoft.Extensions.Caching.Memory;
 using Serilog;
 
 namespace Catalyst.Node.Core.Modules.Consensus.Delta
@@ -63,7 +62,7 @@ namespace Catalyst.Node.Core.Modules.Consensus.Delta
         public void BroadcastCandidate(CandidateDeltaBroadcast candidate)
         {
             Guard.Argument(candidate, nameof(candidate)).NotNull().Require(c => c.IsValid());
-            _logger.Information("Broadcasting candidate delta ");
+            _logger.Information("Broadcasting candidate delta {0}", candidate);
 
             if (!candidate.ProducerId.Equals(_peerIdentifier.PeerId))
             {
@@ -73,25 +72,24 @@ namespace Catalyst.Node.Core.Modules.Consensus.Delta
             }
 
             var protocolMessage = candidate.ToProtocolMessage(_peerIdentifier.PeerId, Guid.NewGuid());
-            _broadcastManager.BroadcastAsync(null);
+            _broadcastManager.BroadcastAsync(protocolMessage);
 
-            _logger.Debug("Started gossiping candidate {0}", candidate);
+            _logger.Debug("Started broadcasting candidate {0}", candidate);
         }
 
         /// <inheritdoc />
         public void BroadcastFavouriteCandidateDelta(byte[] previousDeltaDfsHash)
         {
+            if (!_deltaVoter.TryGetFavouriteDelta(previousDeltaDfsHash, out var favourite))
             {
-                var favourite = _deltaVoter.GetFavouriteDelta(previousDeltaDfsHash);
-                if (favourite == null)
-                {
-                    _logger.Debug("No favourite delta has been retrieved for broadcast.");
-                    return;
-                }
+                _logger.Debug("No favourite delta has been retrieved for broadcast.");
+                return;
+            } 
 
-                // https://github.com/catalyst-network/Catalyst.Node/pull/448
-                _broadcastManager.BroadcastAsync(null);
-            }
+            var protocolMessage = favourite.ToProtocolMessage(_peerIdentifier.PeerId, Guid.NewGuid());
+            _broadcastManager.BroadcastAsync(protocolMessage);
+
+            _logger.Debug("Started broadcasting favourite candidate {0}", favourite);
         }
 
         /// <inheritdoc />
@@ -107,7 +105,7 @@ namespace Catalyst.Node.Core.Modules.Consensus.Delta
             _incomingCandidateSubscription = candidateStream.Subscribe(_deltaVoter);
             _logger.Debug("Subscribed to candidate delta incoming stream.");
         }
-        
+
         /// <inheritdoc />
         public void PublishDeltaToIpfs(CandidateDeltaBroadcast candidate) { throw new NotImplementedException(); }
 
