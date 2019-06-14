@@ -21,15 +21,15 @@
 
 #endregion
 
-using System;
-using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
 using Catalyst.Common.Interfaces.IO.EventLoop;
 using Catalyst.Common.IO.EventLoop;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using FluentAssertions;
+using System;
+using System.Linq;
+using System.Reflection;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Catalyst.Common.UnitTests.IO
@@ -44,7 +44,7 @@ namespace Catalyst.Common.UnitTests.IO
         private IEventLoopGroupFactory _eventFactory;
 
         private readonly IEventLoopGroupFactoryConfiguration _eventLoopGroupFactoryConfiguration;
-        
+
         public EventLoopGroupFactoryTests()
         {
             _eventLoopGroupFactoryConfiguration = new EventLoopGroupFactoryConfiguration
@@ -113,9 +113,14 @@ namespace Catalyst.Common.UnitTests.IO
             eventLoops.Length.Should().Be(expectedEventLoops);
         }
 
-        public void Dispose()
+        protected void Dispose(bool disposing)
         {
             _eventFactory.Dispose();
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
         }
     }
 }
