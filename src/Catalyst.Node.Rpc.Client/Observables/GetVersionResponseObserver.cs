@@ -41,7 +41,7 @@ namespace Catalyst.Node.Rpc.Client.Observables
     /// </summary>
     public sealed class GetVersionResponseObserver
         : ResponseObserverBase<VersionResponse>,
-            IRpcResponseMessageObserver
+            IRpcResponseObserver
     {
         private readonly IUserOutput _output;
 

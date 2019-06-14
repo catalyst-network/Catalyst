@@ -41,7 +41,7 @@ namespace Catalyst.Node.Core.RPC.Observables
 {
     public sealed class PeerReputationRequestObserver
         : RequestObserverBase<GetPeerReputationRequest>,
-            IRpcRequestMessageObserver
+            IRpcRequestObserver
     {
         /// <summary>
         /// The PeerReputationRequestHandler 

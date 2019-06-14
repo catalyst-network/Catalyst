@@ -43,7 +43,7 @@ namespace Catalyst.Node.Core.RPC.Observables
 {
     public sealed class GetVersionRequestObserver
         : RequestObserverBase<VersionRequest>,
-            IRpcRequestMessageObserver
+            IRpcRequestObserver
     {
         public GetVersionRequestObserver(IPeerIdentifier peerIdentifier,
             ILogger logger)

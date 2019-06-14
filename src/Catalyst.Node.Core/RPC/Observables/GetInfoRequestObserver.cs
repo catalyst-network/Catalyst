@@ -45,7 +45,7 @@ namespace Catalyst.Node.Core.RPC.Observables
 {
     public sealed class GetInfoRequestObserver
         : RequestObserverBase<GetInfoRequest>,
-            IRpcRequestMessageObserver
+            IRpcRequestObserver
     {
         private readonly IRpcServerSettings _config;
 

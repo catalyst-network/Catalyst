@@ -56,7 +56,7 @@ namespace Catalyst.Node.Rpc.Client
         public NodeRpcClient(ITcpClientChannelFactory channelFactory,
             X509Certificate2 certificate, 
             IRpcNodeConfig nodeConfig,
-            IEnumerable<IRpcResponseMessageObserver> handlers) 
+            IEnumerable<IRpcResponseObserver> handlers) 
             : base(channelFactory, Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType))
         {
             var socket = channelFactory.BuildChannel(nodeConfig.HostAddress, nodeConfig.Port, certificate);

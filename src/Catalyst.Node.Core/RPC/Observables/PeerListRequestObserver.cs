@@ -39,10 +39,10 @@ namespace Catalyst.Node.Core.RPC.Observables
     /// <summary>
     ///     Handles the PeerListRequest message
     /// </summary>
-    /// <seealso cref="IRpcRequestMessageObserver" />
+    /// <seealso cref="IRpcRequestObserver" />
     public sealed class PeerListRequestObserver
         : RequestObserverBase<GetPeerListRequest>,
-            IRpcRequestMessageObserver
+            IRpcRequestObserver
     {
         /// <summary>
         ///     repository interface to storage

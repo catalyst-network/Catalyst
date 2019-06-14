@@ -41,7 +41,7 @@ namespace Catalyst.Node.Rpc.Client.Observables
     /// </summary>
     public sealed class VerifyMessageResponseObserver
         : ResponseObserverBase<VerifyMessageResponse>,
-            IRpcResponseMessageObserver
+            IRpcResponseObserver
     {
         private readonly IUserOutput _output;
 

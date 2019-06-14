@@ -43,7 +43,7 @@ namespace Catalyst.Node.Rpc.Client.Observables
     /// </summary>
     public sealed class SignMessageResponseObserver
         : ResponseObserverBase<SignMessageRequest>,
-            IRpcResponseMessageObserver
+            IRpcResponseObserver
     {
         private readonly IUserOutput _output;
 

@@ -44,7 +44,7 @@ namespace Catalyst.Node.Core.RPC.Observables
 {
     public sealed class SignMessageRequestObserver
         : RequestObserverBase<SignMessageRequest>,
-            IRpcRequestMessageObserver
+            IRpcRequestObserver
     {
         private readonly IKeySigner _keySigner;
 

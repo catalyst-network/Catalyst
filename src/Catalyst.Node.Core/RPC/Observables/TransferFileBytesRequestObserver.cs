@@ -39,7 +39,7 @@ namespace Catalyst.Node.Core.RPC.Observables
 {
     public sealed class TransferFileBytesRequestObserver
         : RequestObserverBase<TransferFileBytesRequest>,
-            IRpcRequestMessageObserver
+            IRpcRequestObserver
     {
         /// <summary>The download file transfer factory</summary>
         private readonly IDownloadFileTransferFactory _fileTransferFactory;

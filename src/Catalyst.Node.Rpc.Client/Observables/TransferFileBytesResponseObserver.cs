@@ -33,10 +33,10 @@ namespace Catalyst.Node.Rpc.Client.Observables
     /// <summary>
     /// The Transfer file bytes response handler
     /// </summary>
-    /// <seealso cref="IRpcResponseMessageObserver" />
+    /// <seealso cref="IRpcResponseObserver" />
     public class TransferFileBytesResponseObserver
         : ResponseObserverBase<TransferFileBytesResponse>,
-            IRpcResponseMessageObserver
+            IRpcResponseObserver
     {
         /// <summary>Initializes a new instance of the <see cref="TransferFileBytesResponseObserver"/> class.</summary>
         /// <param name="logger">The logger.</param>

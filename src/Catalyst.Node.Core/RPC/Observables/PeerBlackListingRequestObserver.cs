@@ -42,7 +42,7 @@ namespace Catalyst.Node.Core.RPC.Observables
 {
     public sealed class PeerBlackListingRequestObserver
         : RequestObserverBase<SetPeerBlackListRequest>,
-            IRpcRequestMessageObserver
+            IRpcRequestObserver
     {
         /// <summary>
         /// The PeerBlackListingRequestHandler 

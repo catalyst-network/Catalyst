@@ -37,10 +37,10 @@ namespace Catalyst.Node.Rpc.Client.Observables
     /// <summary>
     /// Handles the Peer reputation response
     /// </summary>
-    /// <seealso cref="IRpcResponseMessageObserver" />
+    /// <seealso cref="IRpcResponseObserver" />
     public sealed class PeerReputationResponseObserver
         : ResponseObserverBase<GetPeerReputationResponse>,
-            IRpcResponseMessageObserver
+            IRpcResponseObserver
     {
         private readonly IUserOutput _output;
 

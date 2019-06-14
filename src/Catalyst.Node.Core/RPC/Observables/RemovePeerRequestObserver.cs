@@ -42,10 +42,10 @@ namespace Catalyst.Node.Core.RPC.Observables
     /// <summary>
     /// Remove Peer handler
     /// </summary>
-    /// <seealso cref="IRpcRequestMessageObserver" />
+    /// <seealso cref="IRpcRequestObserver" />
     public sealed class RemovePeerRequestObserver
         : RequestObserverBase<RemovePeerRequest>,
-            IRpcRequestMessageObserver
+            IRpcRequestObserver
     {
         /// <summary>The peer discovery</summary>
         private readonly IRepository<Peer> _peerRepository;

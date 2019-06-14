@@ -40,10 +40,10 @@ namespace Catalyst.Node.Rpc.Client.Observables
     /// <summary>
     /// Handles Get file from DFS response
     /// </summary>
-    /// <seealso cref="IRpcResponseMessageObserver" />
+    /// <seealso cref="IRpcResponseObserver" />
     public sealed class GetFileFromDfsResponseObserver : 
         ResponseObserverBase<GetFileFromDfsResponse>,
-        IRpcResponseMessageObserver
+        IRpcResponseObserver
     {
         /// <summary>The file transfer factory</summary>
         private readonly IDownloadFileTransferFactory _fileTransferFactory;

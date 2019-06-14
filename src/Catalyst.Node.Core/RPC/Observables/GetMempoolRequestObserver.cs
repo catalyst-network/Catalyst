@@ -45,7 +45,7 @@ namespace Catalyst.Node.Core.RPC.Observables
 {
     public sealed class GetMempoolRequestObserver
         : RequestObserverBase<GetMempoolRequest>,
-            IRpcRequestMessageObserver
+            IRpcRequestObserver
     {
         private readonly IMempool _mempool;
 

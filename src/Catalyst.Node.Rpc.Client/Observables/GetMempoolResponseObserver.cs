@@ -41,7 +41,7 @@ namespace Catalyst.Node.Rpc.Client.Observables
     /// </summary>
     public sealed class GetMempoolResponseObserver
         : ResponseObserverBase<GetMempoolResponse>,
-            IRpcResponseMessageObserver
+            IRpcResponseObserver
     {
         private readonly IUserOutput _output;
 
