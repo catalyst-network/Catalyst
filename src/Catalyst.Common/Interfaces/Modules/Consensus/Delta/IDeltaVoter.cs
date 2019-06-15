@@ -33,6 +33,6 @@ namespace Catalyst.Common.Interfaces.Modules.Consensus.Delta
     /// </summary>
     public interface IDeltaVoter : IObserver<CandidateDeltaBroadcast>
     {
-        CandidateDeltaBroadcast GetFavouriteDelta(byte[] previousDeltaDfsHash);
+        bool TryGetFavouriteDelta(byte[] previousDeltaDfsHash, out CandidateDeltaBroadcast favourite);
     }
 }
