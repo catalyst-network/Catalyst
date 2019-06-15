@@ -21,14 +21,14 @@
 
 #endregion
 
+using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Reactive.Linq;
+using Catalyst.Common.Interfaces.IO.EventLoop;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Transport.Channels;
-using Catalyst.Common.IO.Handlers;
 using Catalyst.Common.IO.Transport.Bootstrapping;
 using Catalyst.Protocol.Common;
 using DotNetty.Handlers.Logging;
@@ -42,14 +42,15 @@ namespace Catalyst.Common.IO.Transport.Channels
     {
         protected abstract List<IChannelHandler> Handlers { get; }
 
-        protected IObservableChannel BootStrapChannel(IPAddress address = null, int port = IPEndPoint.MinPort)
+        protected IObservableChannel BootStrapChannel(IEventLoopGroupFactory handlerEventLoopGroupFactory,
+            IObservable<IProtocolMessageDto<ProtocolMessage>> messageStream = null, 
+            IPAddress address = null,
+            int port = IPEndPoint.MinPort)
         {
-            var observableServiceHandler = Handlers.Last() as ObservableServiceHandler;
-
-            var channelHandler = new ServerChannelInitializerBase<IChannel>(Handlers);
+            var channelHandler = new ServerChannelInitializerBase<IChannel>(Handlers, handlerEventLoopGroupFactory);
 
             var channel = new Bootstrap()
-               .Group(new MultithreadEventLoopGroup())
+               .Group(handlerEventLoopGroupFactory.GetOrCreateSocketIoEventLoopGroup())
                .ChannelFactory(() => new SocketDatagramChannel(AddressFamily.InterNetwork))
                .Option(ChannelOption.SoBroadcast, true)
                .Handler(new LoggingHandler(LogLevel.DEBUG))
@@ -58,10 +59,8 @@ namespace Catalyst.Common.IO.Transport.Channels
                .GetAwaiter()
                .GetResult();
 
-            var messageStream = channel.Pipeline.Get<ObservableServiceHandler>()?.MessageStream
-             ?? Observable.Never<IProtocolMessageDto<ProtocolMessage>>();
-
-            return new ObservableChannel(messageStream, channel);
+            return new ObservableChannel(messageStream
+             ?? Observable.Never<IProtocolMessageDto<ProtocolMessage>>(), channel);
         }
     }
 }

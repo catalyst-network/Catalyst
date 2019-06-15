@@ -21,18 +21,7 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.IO.EventLoop;
-using Catalyst.Common.Interfaces.IO.Transport;
-using Catalyst.Common.Interfaces.IO.Transport.Channels;
-using Serilog;
-
-namespace Catalyst.Common.IO.Transport
+namespace Catalyst.Common.Interfaces.IO.EventLoop
 {
-    public class UdpServer : SocketBase, IUdpServer
-    {
-        protected UdpServer(IUdpServerChannelFactory serverChannelFactory,
-            ILogger logger,
-            IUdpServerEventLoopGroupFactory udpServerEventLoopGroupFactory)
-            : base(serverChannelFactory, logger, udpServerEventLoopGroupFactory) { }
-    }
+    public interface IUdpServerEventLoopGroupFactory : IEventLoopGroupFactory { }
 }

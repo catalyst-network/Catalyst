@@ -21,18 +21,19 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.IO.EventLoop;
-using Catalyst.Common.Interfaces.IO.Transport;
-using Catalyst.Common.Interfaces.IO.Transport.Channels;
-using Serilog;
+using System;
+using DotNetty.Transport.Channels;
 
-namespace Catalyst.Common.IO.Transport
+namespace Catalyst.Common.Interfaces.IO.EventLoop
 {
-    public class UdpServer : SocketBase, IUdpServer
+    public interface IEventLoopGroupFactory : IDisposable
     {
-        protected UdpServer(IUdpServerChannelFactory serverChannelFactory,
-            ILogger logger,
-            IUdpServerEventLoopGroupFactory udpServerEventLoopGroupFactory)
-            : base(serverChannelFactory, logger, udpServerEventLoopGroupFactory) { }
+        /// <summary>Gets or Creates new loop group for the netty handlers.</summary>
+        /// <returns></returns>
+        IEventLoopGroup GetOrCreateHandlerWorkerEventLoopGroup();
+
+        /// <summary>Gets or Creates new loop group for the socket IO.</summary>
+        /// <returns></returns>
+        IEventLoopGroup GetOrCreateSocketIoEventLoopGroup();
     }
 }

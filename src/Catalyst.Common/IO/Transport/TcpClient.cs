@@ -21,6 +21,7 @@
 
 #endregion
 
+using Catalyst.Common.Interfaces.IO.EventLoop;
 using Catalyst.Common.Interfaces.IO.Transport;
 using Catalyst.Common.Interfaces.IO.Transport.Channels;
 using Serilog;
@@ -29,7 +30,7 @@ namespace Catalyst.Common.IO.Transport
 {
     public class TcpClient : ClientBase, ITcpClient
     {
-        protected TcpClient(ITcpClientChannelFactory channelFactory, ILogger logger) 
-            : base(channelFactory, logger) { }
+        protected TcpClient(ITcpClientChannelFactory channelFactory, ILogger logger, ITcpClientEventLoopGroupFactory loopGroupFactory)
+            : base(channelFactory, logger, loopGroupFactory) { }
     }
 }
