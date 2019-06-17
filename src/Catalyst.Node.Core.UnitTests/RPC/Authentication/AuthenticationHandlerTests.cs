@@ -31,6 +31,10 @@ using Catalyst.TestUtils;
 using DotNetty.Transport.Channels.Embedded;
 using NSubstitute;
 using System;
+using Catalyst.Common.Interfaces.Modules.KeySigner;
+using Catalyst.Cryptography.BulletProofs.Wrapper.Types;
+using Catalyst.Protocol.Common;
+using Google.Protobuf;
 using Xunit;
 
 namespace Catalyst.Node.Core.UnitTests.RPC.Authentication
@@ -55,8 +59,14 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Authentication
 
             var request = new GetPeerListRequest().ToProtocolMessage(PeerIdHelper.GetPeerId("Test"),
                 Guid.NewGuid());
+            var signedMessage = new ProtocolMessageSigned
+            {
+                Message = request,
+                Signature = ByteString.CopyFrom(new byte[64])
+            };
 
-            _serverChannel.WriteInbound(request);
+            _serverChannel.WriteInbound(signedMessage);
+            _authenticationStrategy.ReceivedWithAnyArgs(1).Authenticate(null);
             _testObservableServiceHandler.DidNotReceiveWithAnyArgs().ChannelRead(null, null);
         }
 
@@ -69,6 +79,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Authentication
                 Guid.NewGuid());
 
             _serverChannel.WriteInbound(request);
+            _authenticationStrategy.ReceivedWithAnyArgs(1).Authenticate(null);
             _testObservableServiceHandler.ReceivedWithAnyArgs(1).ChannelRead(null, null);
         }
     }
