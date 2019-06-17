@@ -49,11 +49,10 @@ namespace Catalyst.Common.UnitTests.Keystore
             var logger = Substitute.For<ILogger>();
             var passwordReader = new TestPasswordReader("testPassword");
 
+            var multiAlgo = Substitute.For<IMultihashAlgorithm>();
+            multiAlgo.ComputeHash(Arg.Any<byte[]>()).Returns(new byte[32]);
 
-            var blakeAlgo = Substitute.For<BLAKE2B_256>();
-            blakeAlgo.ComputeHash(Arg.Any<byte[]>()).Returns(new byte[32]);
-
-            var addressHelper = new AddressHelper(blakeAlgo);
+            var addressHelper = new AddressHelper(multiAlgo);
 
             _keystore = new LocalKeyStore(passwordReader,
                 _context,
@@ -64,7 +63,7 @@ namespace Catalyst.Common.UnitTests.Keystore
         }
 
         [Fact]
-        public void ShouldGenerateAccountAndCreateKeyStoreFileScrypt()
+        public void Should_Generate_Account_And_Create_KeyStore_File_Scrypt()
         {
             var catKey = _context.GeneratePrivateKey();
 
