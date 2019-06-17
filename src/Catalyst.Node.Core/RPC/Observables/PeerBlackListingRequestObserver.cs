@@ -1,3 +1,4 @@
+
 #region LICENSE
 
 /**
@@ -27,11 +28,11 @@ using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Observables;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.IO.Observables;
 using Catalyst.Common.P2P;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
+using Dawn;
 using Google.Protobuf;
 using Nethereum.RLP;
 using SharpRepository.Repository;
@@ -40,24 +41,19 @@ using ILogger = Serilog.ILogger;
 namespace Catalyst.Node.Core.RPC.Observables
 {
     public sealed class PeerBlackListingRequestObserver
-        : ObserverBase<SetPeerBlackListRequest>,
+        : RequestObserverBase<SetPeerBlackListRequest>,
             IRpcRequestObserver
     {
         /// <summary>
         /// The PeerBlackListingRequestHandler 
         /// </summary>
         private readonly IRepository<Peer> _peerRepository;
-
-        private IProtocolMessageDto<ProtocolMessage> _messageDto;
         
-        private readonly PeerId _peerId;
-
         public PeerBlackListingRequestObserver(IPeerIdentifier peerIdentifier,
             ILogger logger,
             IRepository<Peer> peerRepository)
-            : base(logger)
+            : base(logger, peerIdentifier)
         {
-            _peerId = peerIdentifier.PeerId;
             _peerRepository = peerRepository;
         }
 
@@ -65,29 +61,16 @@ namespace Catalyst.Node.Core.RPC.Observables
         /// Handlers the specified message.
         /// </summary>
         /// <param name="messageDto">The message.</param>
-        protected override void Handler(IProtocolMessageDto<ProtocolMessage> messageDto)
+        public override IMessage HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto)
         {
-            _messageDto = messageDto;
+            Logger.Information("received message of type PeerBlackListingRequest");
 
             var deserialised = messageDto.Payload.FromProtocolMessage<SetPeerBlackListRequest>();
-            var publicKey = deserialised.PublicKey.ToStringUtf8(); 
-            var ip = deserialised.Ip.ToStringUtf8();
-            var blackList = deserialised.Blacklist;
 
-            var peerItem = _peerRepository.GetAll().Where(m => m.PeerIdentifier.Ip.ToString() == ip.ToString() 
-             && m.PeerIdentifier.PublicKey.ToStringFromRLPDecoded() == publicKey).FirstOrDefault();
+            var peerItem = _peerRepository.GetAll().FirstOrDefault(m => m.PeerIdentifier.Ip.ToString() == deserialised.Ip.ToStringUtf8() 
+             && m.PeerIdentifier.PublicKey.ToStringFromRLPDecoded() == deserialised.PublicKey.ToStringUtf8());
 
-            if (peerItem != null)
-            {
-                peerItem.BlackListed = blackList;
-                ReturnResponse(blackList, deserialised.PublicKey, deserialised.Ip, messageDto);
-            }
-            else
-            {
-                ReturnResponse(false, string.Empty.ToUtf8ByteString(), string.Empty.ToUtf8ByteString(), messageDto);
-            }
-
-            Logger.Debug("received message of type PeerBlackListingRequest");
+            return peerItem == null ? ReturnResponse(false, string.Empty.ToUtf8ByteString(), string.Empty.ToUtf8ByteString()) : ReturnResponse(deserialised.Blacklist, deserialised.PublicKey, deserialised.Ip);
         }
 
         /// <summary>
@@ -96,21 +79,14 @@ namespace Catalyst.Node.Core.RPC.Observables
         /// <param name="blacklist">if set to <c>true</c> [blacklist].</param>
         /// <param name="publicKey">The public key.</param>
         /// <param name="ip">The ip.</param>
-        /// <param name="messageDto">The message.</param>
-        private void ReturnResponse(bool blacklist, ByteString publicKey, ByteString ip, IProtocolMessageDto<ProtocolMessage> messageDto)
+        private SetPeerBlackListResponse ReturnResponse(bool blacklist, ByteString publicKey, ByteString ip)
         {
-            var response = new SetPeerBlackListResponse
+            return new SetPeerBlackListResponse
             {
                 Blacklist = blacklist,
                 Ip = ip,
                 PublicKey = publicKey
             };
-
-            var anySignedResponse = response.ToProtocolMessage(_peerId, _messageDto.Payload.CorrelationId.ToGuid());
-
-            messageDto.Context.Channel.WriteAndFlushAsync(anySignedResponse).GetAwaiter().GetResult();
         }
     }
 }
-
-

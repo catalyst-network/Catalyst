@@ -36,6 +36,7 @@ using Catalyst.Common.P2P;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
+using Google.Protobuf;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using ILogger = Serilog.ILogger;
@@ -43,28 +44,22 @@ using ILogger = Serilog.ILogger;
 namespace Catalyst.Node.Core.RPC.Observables
 {
     public sealed class GetInfoRequestObserver
-        : ObserverBase<GetInfoRequest>,
+        : RequestObserverBase<GetInfoRequest>,
             IRpcRequestObserver
     {
-        private readonly IPeerIdentifier _peerIdentifier;
         private readonly IRpcServerSettings _config;
-        private readonly IProtocolMessageFactory _protocolMessageFactory;
 
         public GetInfoRequestObserver(IPeerIdentifier peerIdentifier,
             IRpcServerSettings config,
-            IProtocolMessageFactory protocolMessageFactory,
-            ILogger logger) : base(logger)
+            ILogger logger) : base(logger, peerIdentifier)
         {
-            _protocolMessageFactory = protocolMessageFactory;
-            _peerIdentifier = peerIdentifier;
             _config = config;
         }
 
-        protected override void Handler(IProtocolMessageDto<ProtocolMessage> messageDto)
+        public override IMessage HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto)
         {
-            Guard.Argument(messageDto).NotNull();
-            
             Logger.Debug("received message of type GetInfoRequest");
+            
             try
             {
                 var deserialised = messageDto.Payload.FromProtocolMessage<GetInfoRequest>();
@@ -76,19 +71,11 @@ namespace Catalyst.Node.Core.RPC.Observables
                 var serializedList = JsonConvert.SerializeObject(
                     _config.NodeConfig.GetSection("CatalystNodeConfiguration").AsEnumerable(), 
                     Formatting.Indented);
-
-                var response = _protocolMessageFactory.GetMessage(new MessageDto(
-                        new GetInfoResponse
-                        {
-                            Query = serializedList
-                        },
-                        MessageTypes.Response,
-                        new PeerIdentifier(messageDto.Payload.PeerId), 
-                        _peerIdentifier
-                    ),
-                    messageDto.Payload.CorrelationId.ToGuid());
                 
-                messageDto.Context.Channel.WriteAndFlushAsync(response).GetAwaiter().GetResult();
+                return new GetInfoResponse
+                {
+                    Query = serializedList
+                };
             }
             catch (Exception ex)
             {

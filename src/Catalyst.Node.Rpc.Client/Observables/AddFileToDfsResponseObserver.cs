@@ -21,6 +21,7 @@
 
 #endregion
 
+using System;
 using System.Threading;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
@@ -41,7 +42,8 @@ namespace Catalyst.Node.Rpc.Client.Observables
     /// Add File to DFS Response handler
     /// </summary>
     /// <seealso cref="IRpcResponseObserver" />
-    public sealed class AddFileToDfsResponseObserver : ObserverBase<AddFileToDfsResponse>,
+    public sealed class AddFileToDfsResponseObserver : 
+        ResponseObserverBase<AddFileToDfsResponse>,
         IRpcResponseObserver
     {
         /// <summary>The upload file transfer factory</summary>
@@ -63,12 +65,10 @@ namespace Catalyst.Node.Rpc.Client.Observables
 
         /// <summary>Handles the specified message.</summary>
         /// <param name="messageDto">The message.</param>
-        protected override void Handler(IProtocolMessageDto<ProtocolMessage> messageDto)
+        public override void HandleResponse(IProtocolMessageDto<ProtocolMessage> messageDto)
         {
-            var deserialised = messageDto.Payload.FromProtocolMessage<AddFileToDfsResponse>();
-
-            Guard.Argument(deserialised).NotNull("Message cannot be null");
-
+            var deserialised = messageDto.Payload.FromProtocolMessage<AddFileToDfsResponse>() ?? throw new ArgumentNullException(nameof(messageDto));
+            
             // @TODO return int not byte
             // var responseCode = Enumeration.Parse<FileTransferResponseCodes>(deserialised.ResponseCode[0].ToString());
 

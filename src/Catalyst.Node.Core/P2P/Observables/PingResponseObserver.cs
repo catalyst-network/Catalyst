@@ -32,13 +32,13 @@ using Serilog;
 namespace Catalyst.Node.Core.P2P.Observables
 {
     public sealed class PingResponseObserver
-        : ObserverBase<PingResponse>,
+        : ResponseObserverBase<PingResponse>,
             IP2PMessageObserver
     {
         public PingResponseObserver(ILogger logger)
             : base(logger) { }
 
-        protected override void Handler(IProtocolMessageDto<ProtocolMessage> messageDto)
+        public override void HandleResponse(IProtocolMessageDto<ProtocolMessage> messageDto)
         {
             Logger.Debug("received ping response");
             var deserialised = messageDto.Payload.FromProtocolMessage<PingResponse>();

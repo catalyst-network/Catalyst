@@ -10,6 +10,26 @@
             ]
         },
         {
+            "type": "Catalyst.Common.IO.EventLoop.EventLoopGroupFactoryConfiguration, Catalyst.Common",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.IO.EventLoop.IEventLoopGroupFactoryConfiguration, Catalyst.Common"
+                }
+            ],
+            "properties": {
+                "TcpClientHandlerWorkerThreads": 2
+            }
+        },
+        {
+            "type": "Catalyst.Common.IO.EventLoop.TcpClientEventLoopGroupFactory, Catalyst.Common",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.IO.EventLoop.ITcpClientEventLoopGroupFactory, Catalyst.Common"
+                }
+            ],
+            "instanceScope": "singleinstance"
+        },
+        {
             "type": "Catalyst.Node.Rpc.Client.NodeRpcClientFactory, Catalyst.Node.Rpc.Client",
             "services": [
                 {
@@ -239,7 +259,7 @@
             "type": "Catalyst.Node.Rpc.Client.Observables.TransferFileBytesRequestObserver, Catalyst.Node.Rpc.Client",
             "services": [
                 {
-                    "type": "Catalyst.Common.Interfaces.IO.Observables.IRpcResponseObserver, Catalyst.Common"
+                    "type": "Catalyst.Common.Interfaces.IO.Observables.IRpcRequestObserver, Catalyst.Common"
                 }
             ]
         },

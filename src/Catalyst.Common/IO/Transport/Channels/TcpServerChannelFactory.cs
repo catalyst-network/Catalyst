@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Security.Cryptography.X509Certificates;
 using Catalyst.Common.Interfaces.IO;
+using Catalyst.Common.Interfaces.IO.EventLoop;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Transport;
 using Catalyst.Common.Interfaces.IO.Transport.Channels;
@@ -45,35 +46,36 @@ namespace Catalyst.Common.IO.Transport.Channels
         private readonly IMessageCorrelationManager _correlationManger;
         private readonly IPeerSettings _peerSettings;
         private readonly IKeySigner _keySigner;
-        private readonly ObservableServiceHandler _observableServiceHandler;
         private const int BackLogValue = 100;
-
-        public TcpServerChannelFactory(IMessageCorrelationManager correlationManger,
+        private List<IChannelHandler> _handlers;
+        
+        public TcpServerChannelFactory(IMessageCorrelationManager correlationManger, 
             IPeerSettings peerSettings,
             IKeySigner keySigner)
         {
             _correlationManger = correlationManger;
             _peerSettings = peerSettings;
             _keySigner = keySigner;
-            _observableServiceHandler = new ObservableServiceHandler();
         }
 
+        /// <param name="handlerEventLoopGroupFactory"></param>
         /// <param name="targetAddress">Ignored</param>
         /// <param name="targetPort">Ignored</param>
         /// <param name="certificate">Local TLS certificate</param>
-        public IObservableChannel BuildChannel(IPAddress targetAddress = null,
-            int targetPort = 0, 
+        public IObservableChannel BuildChannel(IEventLoopGroupFactory handlerEventLoopGroupFactory,
+            IPAddress targetAddress = null,
+            int targetPort = IPEndPoint.MinPort,
             X509Certificate2 certificate = null) => 
-            Bootstrap(certificate);
+            Bootstrap(certificate, handlerEventLoopGroupFactory);
 
-        private IObservableChannel Bootstrap(X509Certificate2 certificate)
+        private IObservableChannel Bootstrap(X509Certificate2 certificate, IEventLoopGroupFactory handlerEventLoopGroupFactory)
         {
-            var supervisorEventLoop = new MultithreadEventLoopGroup();
-
-            var channelHandler = new ServerChannelInitializerBase<IChannel>(Handlers, certificate);
+            var supervisorLoopGroup = ((ITcpServerEventLoopGroupFactory) handlerEventLoopGroupFactory)
+               .GetOrCreateSupervisorEventLoopGroup();
+            var channelHandler = new ServerChannelInitializerBase<IChannel>(Handlers, handlerEventLoopGroupFactory, certificate);
 
             var channel = new ServerBootstrap()
-               .Group(supervisorEventLoop, childGroup: new MultithreadEventLoopGroup())
+               .Group(handlerEventLoopGroupFactory.GetOrCreateSocketIoEventLoopGroup(), supervisorLoopGroup)
                .ChannelFactory(() => new TcpServerSocketChannel())
                .Option(ChannelOption.SoBacklog, BackLogValue)
                .Handler(new LoggingHandler(LogLevel.DEBUG))
@@ -82,23 +84,21 @@ namespace Catalyst.Common.IO.Transport.Channels
                .GetAwaiter()
                .GetResult();
 
-            return new ObservableChannel(_observableServiceHandler.MessageStream, channel);
-        }
+            var messageStream = channel.Pipeline.Get<ObservableServiceHandler>()?.MessageStream;
 
-        private List<IChannelHandler> _handlers;
+            return new ObservableChannel(messageStream, channel);
+        }
 
         protected List<IChannelHandler> Handlers =>
             _handlers ?? (_handlers = new List<IChannelHandler>
             {
                 new ProtobufVarint32FrameDecoder(),
-                new ProtobufDecoder(ProtocolMessage.Parser),
+                new ProtobufDecoder(ProtocolMessageSigned.Parser),
                 new ProtobufVarint32LengthFieldPrepender(),
                 new ProtobufEncoder(),
-                new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
-                    new ProtocolMessageVerifyHandler(_keySigner), 
-                    new ProtocolMessageSignHandler(_keySigner)),
-                new CorrelationHandler(_correlationManger),
-                _observableServiceHandler
+                new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(new ProtocolMessageVerifyHandler(_keySigner), new ProtocolMessageSignHandler(_keySigner)),
+                new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(new CorrelationHandler(_correlationManger), new CorrelationHandler(_correlationManger)),
+                new ObservableServiceHandler()
             });
     }
 }

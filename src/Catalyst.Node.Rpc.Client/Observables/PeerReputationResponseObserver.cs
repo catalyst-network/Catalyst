@@ -24,13 +24,11 @@
 using System;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Cli;
-using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Observables;
 using Catalyst.Common.IO.Observables;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
-using Dawn;
 using ILogger = Serilog.ILogger;
 
 namespace Catalyst.Node.Rpc.Client.Observables
@@ -40,7 +38,7 @@ namespace Catalyst.Node.Rpc.Client.Observables
     /// </summary>
     /// <seealso cref="IRpcResponseObserver" />
     public sealed class PeerReputationResponseObserver
-        : ObserverBase<GetPeerReputationResponse>,
+        : ResponseObserverBase<GetPeerReputationResponse>,
             IRpcResponseObserver
     {
         private readonly IUserOutput _output;
@@ -61,16 +59,15 @@ namespace Catalyst.Node.Rpc.Client.Observables
         /// Handles the peer reputation response.
         /// </summary>
         /// <param name="messageDto">The GetPeerReputationResponse message.</param>
-        protected override void Handler(IProtocolMessageDto<ProtocolMessage> messageDto)
+        public override void HandleResponse(IProtocolMessageDto<ProtocolMessage> messageDto)
         {
             Logger.Debug("Handling GetPeerReputation response");
-            Guard.Argument(messageDto).NotNull("Received message cannot be null");
 
             try
             {
-                var deserialised = messageDto.Payload.FromProtocolMessage<GetPeerReputationResponse>();
+                var deserialised = messageDto.Payload.FromProtocolMessage<GetPeerReputationResponse>() ?? throw new ArgumentNullException(nameof(messageDto));
                 var msg = deserialised.Reputation == int.MinValue ? "Peer not found" : deserialised.Reputation.ToString();
-                _output.WriteLine("Peer Reputation: " + msg);
+                _output.WriteLine($@"Peer Reputation: {msg}");
             }
             catch (Exception ex)
             {
