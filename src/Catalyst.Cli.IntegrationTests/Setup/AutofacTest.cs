@@ -45,6 +45,7 @@ namespace Catalyst.Cli.IntegrationTests.Commands
     {
         private string LifetimeTag => MethodBase.GetCurrentMethod().DeclaringType.AssemblyQualifiedName;
 
+        
         [Fact]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void Cli_Autofac_Startup_Resolve_Test()

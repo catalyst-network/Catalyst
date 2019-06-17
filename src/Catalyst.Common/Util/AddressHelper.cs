@@ -30,7 +30,7 @@ namespace Catalyst.Common.Util
 {
     public sealed class AddressHelper : IAddressHelper
     {
-        private IMultihashAlgorithm _hashAlgorithm;
+        private readonly IMultihashAlgorithm _hashAlgorithm;
 
         public AddressHelper(IMultihashAlgorithm hashAlgorithm)
         {
