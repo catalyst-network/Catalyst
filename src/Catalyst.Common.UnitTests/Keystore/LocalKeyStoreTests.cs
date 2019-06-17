@@ -49,7 +49,6 @@ namespace Catalyst.Common.UnitTests.Keystore
             var logger = Substitute.For<ILogger>();
             var passwordReader = new TestPasswordReader("testPassword");
 
-
             var blakeAlgo = Substitute.For<BLAKE2B_256>();
             blakeAlgo.ComputeHash(Arg.Any<byte[]>()).Returns(new byte[32]);
 
