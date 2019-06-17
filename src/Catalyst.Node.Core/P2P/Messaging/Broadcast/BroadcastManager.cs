@@ -153,7 +153,7 @@ namespace Catalyst.Node.Core.P2P.Messaging.Broadcast
         {
             return _peers
                .AsQueryable()
-               .Select(c => c.PkId).Shuffle().Select(_peers.Get).Take(count).Select(p => p.PeerIdentifier).ToList();
+               .Select(c => c.PkId).Shuffle().Take(count).Select(_peers.Get).Select(p => p.PeerIdentifier).ToList();
         }
 
         /// <summary>Determines whether this instance can gossip the specified correlation identifier.</summary>
@@ -178,7 +178,7 @@ namespace Catalyst.Node.Core.P2P.Messaging.Broadcast
         private uint GetMaxGossipCycles(BroadcastMessage broadcastMessage)
         {
             var peerNetworkSize = broadcastMessage.PeerNetworkSize;
-            return (uint)(Math.Log(Math.Max(10, peerNetworkSize) / (double) Constants.MaxGossipPeersPerRound) /
+            return (uint) (Math.Log(Math.Max(10, peerNetworkSize) / (double) Constants.MaxGossipPeersPerRound) /
                 Math.Max(1, broadcastMessage.GossipCount / Constants.MaxGossipPeersPerRound));
         }
 

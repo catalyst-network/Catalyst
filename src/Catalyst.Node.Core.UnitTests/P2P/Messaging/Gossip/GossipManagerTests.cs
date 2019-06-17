@@ -236,6 +236,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Messaging.Gossip
         public void Dispose()
         {
             _cache.Dispose();
+            _peers.Dispose();
         }
     }
 }
