@@ -45,7 +45,7 @@ namespace Catalyst.Cli.IntegrationTests.Config
         [Theory]
         [MemberData(nameof(Networks))]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
-        public void Registering_All_Configs_Should_Allow_Resolving_CatalystNode(Network network)
+        public void Registering_All_Configs_Should_Allow_Resolving_ICatalystCli(Network network)
         {
             var configFiles = new[]
                 {
