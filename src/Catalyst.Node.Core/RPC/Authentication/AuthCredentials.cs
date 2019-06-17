@@ -21,9 +21,7 @@
 
 #endregion
 
-using System.Net;
 using Catalyst.Common.Interfaces.Rpc.Authentication;
-using SharpRepository.Repository;
 
 namespace Catalyst.Node.Core.RPC.Authentication
 {
@@ -34,12 +32,10 @@ namespace Catalyst.Node.Core.RPC.Authentication
     {
         /// <summary>Gets or sets the public key.</summary>
         /// <value>The public key.</value>
-        [RepositoryPrimaryKey(Order = 1)]
         public string PublicKey { get; set; }
 
         /// <summary>Gets or sets the ip address.</summary>
         /// <value>The ip address.</value>
-        [RepositoryPrimaryKey(Order = 2)]
-        public IPAddress IpAddress { get; set; }
+        public string IpAddress { get; set; }
     }
 }

@@ -41,11 +41,13 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Authentication
         {
             _trustedPeer = PeerIdentifierHelper.GetPeerIdentifier("Trusted");
             var whiteListRepo = new InMemoryRepository<AuthCredentials>();
+
             whiteListRepo.Add(new AuthCredentials()
             {
                 PublicKey = _trustedPeer.PublicKey.ToStringFromRLPDecoded(),
-                IpAddress = _trustedPeer.Ip
+                IpAddress = _trustedPeer.Ip.ToString(),
             });
+
             _repositoryAuthenticationStrategy = new RepositoryAuthenticationStrategy(whiteListRepo);
         }
 

@@ -48,7 +48,7 @@ namespace Catalyst.Node.Core.RPC.Authentication
         public bool Authenticate(IPeerIdentifier peerIdentifier)
         {
             return _trustedPeers.TryFind(t =>
-                t.IpAddress.Equals(peerIdentifier.Ip) &&
+                t.IpAddress.Equals(peerIdentifier.Ip.ToString()) &&
                 t.PublicKey.Equals(peerIdentifier.PublicKey.ToStringFromRLPDecoded()), out _);
         }
     }
