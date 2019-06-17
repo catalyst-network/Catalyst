@@ -70,33 +70,5 @@ namespace Catalyst.Cli.IntegrationTests.Config
                 scope.Resolve<ICatalystCli>();
             }
         }
-
-        [Fact]
-        [Trait(Traits.TestType, Traits.IntegrationTest)]
-        public void Registering_Configs_For_Cli_Resolve_Check()
-        {
-            var configFiles = new[]
-                {
-                    Constants.ShellComponentsJsonConfigFile,
-                    Constants.SerilogJsonConfigFile,
-                    Constants.ShellNodesConfigFile,
-                    Constants.ShellConfigFile
-                }
-               .Select(f => Path.Combine(Constants.ConfigSubFolder, f));
-
-            var configBuilder = new ConfigurationBuilder();
-            configFiles.ToList().ForEach(f => configBuilder.AddJsonFile(f));
-            var configRoot = configBuilder.Build();
-
-            ConfigureContainerBuilder(configRoot);
-
-            var container = ContainerBuilder.Build();
-
-            using (var scope = container.BeginLifetimeScope(CurrentTestName))
-            {
-                scope.Resolve<ICatalystCli>();
-            }
-        }
-
     }
 }
