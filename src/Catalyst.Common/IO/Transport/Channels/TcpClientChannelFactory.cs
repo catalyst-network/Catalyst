@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Security.Cryptography.X509Certificates;
 using Catalyst.Common.Interfaces.IO;
+using Catalyst.Common.Interfaces.IO.EventLoop;
 using Catalyst.Common.Interfaces.IO.Transport;
 using Catalyst.Common.Interfaces.IO.Transport.Channels;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
@@ -45,8 +46,9 @@ namespace Catalyst.Common.IO.Transport.Channels
         
         private const int BackLogValue = 100;
         
-        public IObservableChannel BuildChannel(IPAddress targetAddress = null, 
-            int targetPort = 0,
+        public IObservableChannel BuildChannel(IEventLoopGroupFactory handlerEventLoopGroupFactory,
+            IPAddress targetAddress = null, 
+            int targetPort = IPEndPoint.MinPort,
             X509Certificate2 certificate = null)
         {
             var observableServiceHandler = new ObservableServiceHandler();
@@ -62,11 +64,12 @@ namespace Catalyst.Common.IO.Transport.Channels
             };
 
             var channelHandler = new ClientChannelInitializerBase<ISocketChannel>(channelHandlers,
+                handlerEventLoopGroupFactory,
                 targetAddress,
                 certificate);
 
             var channel = new Bootstrap()
-               .Group(new MultithreadEventLoopGroup())
+               .Group(handlerEventLoopGroupFactory.GetOrCreateSocketIoEventLoopGroup())
                .ChannelFactory(() => new TcpSocketChannel())
                .Option(ChannelOption.SoBacklog, BackLogValue)
                .Handler(new LoggingHandler(LogLevel.DEBUG))

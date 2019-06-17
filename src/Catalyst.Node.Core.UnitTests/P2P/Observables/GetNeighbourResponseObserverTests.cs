@@ -90,17 +90,17 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Observables
             // neighbourResponseHandler.ReputableCache.ReceivedWithAnyArgs(1);
         }
 
-        [Fact]
-        public void PeerDiscoveryCanHandlePeerNeighbourMessageSubscriptions()
-        {
-            var subbedPeerDiscovery = Substitute.For<IPeerDiscovery>();
-            var peerNeighbourResponseMessage = new PeerNeighborsResponse();
-            
-            var fakeContext = Substitute.For<IChannelHandlerContext>();
-            var channeledAny = new ProtocolMessageDto(fakeContext, peerNeighbourResponseMessage.ToProtocolMessage(PeerIdHelper.GetPeerId(), Guid.NewGuid()));
-            var observableStream = new[] {channeledAny}.ToObservable();
-            subbedPeerDiscovery.StartObserving(observableStream);
-            subbedPeerDiscovery.GetNeighbourResponseStream.ReceivedWithAnyArgs(1);
-        }
+        // [Fact]
+        // public void PeerDiscoveryCanHandlePeerNeighbourMessageSubscriptions()
+        // {
+        //     var subbedPeerDiscovery = Substitute.For<IPeerDiscovery>();
+        //     var peerNeighbourResponseMessage = new PeerNeighborsResponse();
+        //     
+        //     var fakeContext = Substitute.For<IChannelHandlerContext>();
+        //     var channeledAny = new ProtocolMessageDto(fakeContext, peerNeighbourResponseMessage.ToProtocolMessage(PeerIdHelper.GetPeerId(), Guid.NewGuid()));
+        //     var observableStream = new[] {channeledAny}.ToObservable();
+        //     subbedPeerDiscovery.StartObserving(observableStream);
+        //     subbedPeerDiscovery.GetNeighbourResponseStream.ReceivedWithAnyArgs(1);
+        // }
     }
 }

@@ -45,7 +45,7 @@ namespace Catalyst.Common.IO.Transport.Channels
         public IChannel Channel { get; }
         public IObservable<IProtocolMessageDto<ProtocolMessage>> MessageStream { get; }
 
-        public void Dispose()
+        void IDisposable.Dispose()
         {
             Channel?.CloseAsync();
         }

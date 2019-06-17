@@ -290,7 +290,9 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Consensus.Delta
 
                 var previousDeltaHash = scoredCandidates[0].Candidate.PreviousDeltaDfsHash.ToByteArray();
 
-                var favouriteCandidate = _voter.GetFavouriteDelta(previousDeltaHash);
+                var found = _voter.TryGetFavouriteDelta(previousDeltaHash, out var favouriteCandidate);
+
+                found.Should().BeTrue();
 
                 favouriteCandidate.PreviousDeltaDfsHash.ToByteArray().SequenceEqual(previousDeltaHash).Should().BeTrue();
                 favouriteCandidate.Hash.ToByteArray().SequenceEqual(scoredCandidates[1].Candidate.Hash.ToByteArray()).Should().BeTrue();
@@ -307,8 +309,9 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Consensus.Delta
 
                 var scoredCandidates = AddCandidatesToCacheAndVote(10, 500, realCache);
 
-                var favouriteCandidate = _voter.GetFavouriteDelta(ByteUtil.GenerateRandomByteArray(32));
+                var found = _voter.TryGetFavouriteDelta(ByteUtil.GenerateRandomByteArray(32), out var favouriteCandidate);
 
+                found.Should().BeFalse();
                 favouriteCandidate.Should().BeNull();
             }
         }
@@ -326,8 +329,9 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Consensus.Delta
                 scoredCandidates.Select(c => c.Candidate.Hash).Distinct().Count().Should().Be(2);
                 scoredCandidates.Select(c => c.Candidate.PreviousDeltaDfsHash).Distinct().Count().Should().Be(1);
 
-                var favouriteCandidate = _voter.GetFavouriteDelta(scoredCandidates.First().Candidate.PreviousDeltaDfsHash.ToByteArray());
+                var found = _voter.TryGetFavouriteDelta(scoredCandidates.First().Candidate.PreviousDeltaDfsHash.ToByteArray(), out var favouriteCandidate);
 
+                found.Should().BeTrue();
                 var expectedFavourite = scoredCandidates
                    .OrderBy(c => c.Candidate.Hash.ToByteArray(), ByteUtil.ByteListMinSizeComparer.Default)
                    .First();

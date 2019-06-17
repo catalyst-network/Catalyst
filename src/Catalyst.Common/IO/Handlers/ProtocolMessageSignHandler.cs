@@ -23,6 +23,8 @@
 
 using System.Threading.Tasks;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
+using Catalyst.Common.Interfaces.P2P.Messaging.Dto;
+using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.Util;
 using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;
@@ -47,25 +49,21 @@ namespace Catalyst.Common.IO.Handlers
         /// <returns></returns>
         public override Task WriteAsync(IChannelHandlerContext context, object message)
         {
-            if (!CanSign(message))
+            if (!(message is IMessageDto protocolMessage))
             {
-                return context.WriteAndFlushAsync(message);
+                return context.CloseAsync();
             }
+
+            var unsignedMessage = protocolMessage.Message.ToByteArray();
+            var sig = _keySigner.Sign(unsignedMessage);
             
-            ProtocolMessage protocolMessage = (ProtocolMessage) message;
-            var unsignedMessage = protocolMessage.ToByteArray();
             var protocolMessageSigned = new ProtocolMessageSigned
             {
-                Signature = _keySigner.Sign(unsignedMessage).Bytes.RawBytes.ToByteString(),
-                Message = protocolMessage
+                Signature = sig.Bytes.RawBytes.ToByteString(),
+                Message = (ProtocolMessage) protocolMessage.Message
             };
 
-            return context.WriteAsync(protocolMessageSigned);
-        }
-
-        private bool CanSign(object msg)
-        {
-            return msg is ProtocolMessage;
+            return context.WriteAsync(new MessageDto(protocolMessageSigned, protocolMessage.MessageType, protocolMessage.Recipient, protocolMessage.Sender));
         }
     }
 }

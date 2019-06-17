@@ -37,6 +37,7 @@ using Catalyst.Common.P2P;
 using Catalyst.Node.Core.Modules.Dfs;
 using Catalyst.Node.Core.P2P;
 using Catalyst.Node.Core.RPC.Observables;
+using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
@@ -74,9 +75,9 @@ namespace Catalyst.Node.Core.IntegrationTests.Modules.Dfs
 
             var passwordReader = new TestPasswordReader("abcd");
 
-            _ipfsEngine = new IpfsAdapter(passwordReader, peerSettings, FileSystem, _logger);
+            var ipfsEngine = new IpfsAdapter(passwordReader, peerSettings, FileSystem, _logger);
             _logger = Substitute.For<ILogger>();
-            _dfs = new Core.Modules.Dfs.Dfs(_ipfsEngine, _logger);
+            _dfs = new Core.Modules.Dfs.Dfs(ipfsEngine, _logger);
         }
         
         [Fact]
@@ -144,12 +145,12 @@ namespace Catalyst.Node.Core.IntegrationTests.Modules.Dfs
             var addFileToDfsRequestHandler = new AddFileToDfsRequestObserver(_dfs, senderPeerId, _nodeFileTransferFactory,
                 _protocolMessageFactory, _logger);
             var transferBytesRequestHandler =
-                new TransferFileBytesRequestObserver(_nodeFileTransferFactory, senderPeerId, _logger, _protocolMessageFactory);
+                new TransferFileBytesRequestObserver(_nodeFileTransferFactory, senderPeerId, _logger);
             var uniqueFileKey = Guid.NewGuid();
             crcValue = FileHelper.GetCrcValue(fileToTransfer);
             
             //Create a response object and set its return value
-            var request = new AddFileToDfsRequest
+            ProtocolMessage request = new AddFileToDfsRequest
             {
                 Node = "node1",
                 FileName = fileToTransfer,
@@ -199,7 +200,7 @@ namespace Catalyst.Node.Core.IntegrationTests.Modules.Dfs
             Assert.NotNull(fileTransferInformation.DfsHash);
             
             long ipfsCrcValue;
-            using (var ipfsStream = _dfs.ReadAsync(fileTransferInformation.DfsHash).GetAwaiter().GetResult())
+            using (var ipfsStream = _dfs.ReadAsync(fileTransferInformation.DfsHash, cts.Token).GetAwaiter().GetResult())
             {
                 ipfsCrcValue = FileHelper.GetCrcValue(ipfsStream);
             }

@@ -92,7 +92,7 @@ namespace Catalyst.Common.UnitTests.IO
             handlers[3].Should().BeOfType<ProtobufEncoder>();
             handlers[4].Should().BeOfType<AuthenticationHandler>();
             handlers[5].Should().BeOfType<CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>>();
-            handlers[6].Should().BeOfType<CorrelationHandler>();
+            handlers[6].Should().BeOfType<CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>>();
             handlers[7].Should().BeOfType<ObservableServiceHandler>();
         }
 
@@ -109,10 +109,14 @@ namespace Catalyst.Common.UnitTests.IO
             var observer = new ProtocolMessageObserver(0, Substitute.For<ILogger>());
            
             var messageStream = ((ObservableServiceHandler) _factory.InheritedHandlers.Last()).MessageStream;
+            
             using (messageStream.Subscribe(observer))
             {
                 testingChannel.WriteInbound(protocolMessage);
-                _correlationManager.Received(1).TryMatchResponse(protocolMessage);
+               
+                // _correlationManager.Received(1).TryMatchResponse(protocolMessage); // @TODO in bound server shouldn't try and correlate a request, lets do another test to check this logic
+                _correlationManager.DidNotReceiveWithAnyArgs().TryMatchResponse(protocolMessage);
+
                 _keySigner.DidNotReceiveWithAnyArgs().Verify(null, null, null);
 
                 await messageStream.WaitForItemsOnDelayedStreamOnTaskPoolScheduler();

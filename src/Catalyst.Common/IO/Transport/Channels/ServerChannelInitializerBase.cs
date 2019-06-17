@@ -23,6 +23,7 @@
 
 using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
+using Catalyst.Common.Interfaces.IO.EventLoop;
 using DotNetty.Common.Utilities;
 using DotNetty.Handlers.Tls;
 using DotNetty.Transport.Channels;
@@ -34,9 +35,10 @@ namespace Catalyst.Common.IO.Transport.Channels
     {
         /// <inheritdoc />
         public ServerChannelInitializerBase(IList<IChannelHandler> handlers,
+            IEventLoopGroupFactory eventLoopGroupFactory,
             X509Certificate certificate = null)
             : base(handlers,
-                certificate == null ? null : TlsHandler.Server(certificate)) { }
+                certificate == null ? null : TlsHandler.Server(certificate), eventLoopGroupFactory) { }
 
         public override string ToString()
         {

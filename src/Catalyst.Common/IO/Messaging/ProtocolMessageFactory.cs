@@ -39,7 +39,7 @@ namespace Catalyst.Common.IO.Messaging
     {
         /// <summary>Gets the message.</summary>
         /// <param name="messageDto">The message.</param>
-        /// <param name="correlationId">The correlation identifier.</param>
+        /// <param name="correlationId">The correlation id of the originating message.</param>
         /// <returns>ProtocolMessage message</returns>
         public ProtocolMessage GetMessage(IMessageDto messageDto,
             Guid correlationId = default)
@@ -61,20 +61,10 @@ namespace Catalyst.Common.IO.Messaging
 
             throw new ArgumentException();
         }
-        
-        /// <summary>Gets the message in datagram envelope.</summary>
-        /// <param name="messageDto">Message Dto wrapper with all params required to send message.</param>
-        /// <param name="correlationId">The correlation identifier.</param>
-        /// <returns></returns>
-        public IByteBufferHolder GetDatagramMessage(IMessageDto messageDto,
-            Guid correlationId = default)
-        {
-            return GetMessage(messageDto, correlationId).ToDatagram(messageDto.Recipient.IpEndPoint);
-        }
 
         /// <summary>Builds the tell message.</summary>
         /// <param name="dto">The dto.</param>
-        /// <param name="correlationId">The correlation identifier.</param>
+        /// <param name="correlationId">The correlation id of the originating message.</param>
         /// <returns>ProtocolMessage message</returns>
         private ProtocolMessage BuildResponseMessage(IMessageDto dto, Guid correlationId)
         {
@@ -89,13 +79,6 @@ namespace Catalyst.Common.IO.Messaging
         private ProtocolMessage BuildRequestMessage(IMessageDto dto)
         {
             var messageContent = dto.Message.ToProtocolMessage(dto.Sender.PeerId, Guid.NewGuid());
-            var correlatableRequest = new CorrelatableMessage
-            {
-                Content = messageContent,
-                Recipient = dto.Recipient,
-                SentAt = DateTimeOffset.MinValue
-            };
-
             return messageContent;
         }
 
