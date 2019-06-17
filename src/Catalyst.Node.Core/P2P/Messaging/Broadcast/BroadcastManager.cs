@@ -21,11 +21,6 @@
 
 #endregion
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging;
@@ -35,10 +30,14 @@ using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.P2P;
 using Catalyst.Protocol.Common;
-using DotNetty.Buffers;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Primitives;
 using SharpRepository.Repository;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Catalyst.Node.Core.P2P.Messaging.Broadcast
 {
@@ -137,7 +136,7 @@ namespace Catalyst.Node.Core.P2P.Messaging.Broadcast
                 {
                     return;
                 }
-            
+
                 broadcastMessage.GossipCount += updateCount;
                 UpdatePendingRequest(correlationId, broadcastMessage);
             }
@@ -152,8 +151,9 @@ namespace Catalyst.Node.Core.P2P.Messaging.Broadcast
         /// <returns></returns>
         private List<IPeerIdentifier> GetRandomPeers(int count)
         {
-            //@TODO get all will be inefficient with a large number of discovered nodes
-            return _peers.GetAll().RandomSample(count).Select(x => x.PeerIdentifier).ToList();
+            return _peers
+               .AsQueryable()
+               .Select(c => c.PkId).Shuffle().Select(_peers.Get).Take(count).Select(p => p.PeerIdentifier).ToList();
         }
 
         /// <summary>Determines whether this instance can gossip the specified correlation identifier.</summary>
@@ -163,7 +163,7 @@ namespace Catalyst.Node.Core.P2P.Messaging.Broadcast
         {
             return request.GossipCount < GetMaxGossipCycles(request);
         }
-        
+
         /// <summary>Adds the gossip request.</summary>
         /// <param name="broadcastMessage">The gossip request.</param>
         /// <param name="correlationId">The message correlation ID</param>
@@ -178,10 +178,10 @@ namespace Catalyst.Node.Core.P2P.Messaging.Broadcast
         private uint GetMaxGossipCycles(BroadcastMessage broadcastMessage)
         {
             var peerNetworkSize = broadcastMessage.PeerNetworkSize;
-            return (uint) (Math.Log(Math.Max(10, peerNetworkSize) / (double) Constants.MaxGossipPeersPerRound) /
+            return (uint)(Math.Log(Math.Max(10, peerNetworkSize) / (double) Constants.MaxGossipPeersPerRound) /
                 Math.Max(1, broadcastMessage.GossipCount / Constants.MaxGossipPeersPerRound));
         }
-        
+
         /// <summary>Increments the received count.</summary>
         /// <param name="correlationId">The correlation identifier.</param>
         private async Task<BroadcastMessage> GetOrCreateAsync(Guid correlationId)
