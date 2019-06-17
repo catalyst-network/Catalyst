@@ -41,8 +41,6 @@ namespace Catalyst.Common.UnitTests.Keystore
     {
         private readonly IKeyStore _keystore;
         private readonly ICryptoContext _context;
-        private readonly ILifetimeScope _scope;
-
 
         public LocalKeyStoreTests(ITestOutputHelper output) : base(output)
         {
