@@ -33,7 +33,7 @@ using Microsoft.Extensions.Configuration;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Catalyst.Cli.UnitTests.Config
+namespace Catalyst.Cli.IntegrationTests.Config
 {
     public sealed class GlobalConfigTests : ConfigFileBasedTest
     {
@@ -42,10 +42,10 @@ namespace Catalyst.Cli.UnitTests.Config
 
         public GlobalConfigTests(ITestOutputHelper output) : base(output) { }
 
-        [Theory(Skip = "Blocking CI")]
+        [Theory]
         [MemberData(nameof(Networks))]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
-        public void RegisteringAllConfigsShouldAllowResolvingCatalystNode(Network network)
+        public void Registering_All_Configs_Should_Allow_Resolving_CatalystNode(Network network)
         {
             var configFiles = new[]
                 {
@@ -70,5 +70,33 @@ namespace Catalyst.Cli.UnitTests.Config
                 scope.Resolve<ICatalystCli>();
             }
         }
+
+        [Fact]
+        [Trait(Traits.TestType, Traits.IntegrationTest)]
+        public void Registering_Configs_For_Cli_Resolve_Check()
+        {
+            var configFiles = new[]
+                {
+                    Constants.ShellComponentsJsonConfigFile,
+                    Constants.SerilogJsonConfigFile,
+                    Constants.ShellNodesConfigFile,
+                    Constants.ShellConfigFile
+                }
+               .Select(f => Path.Combine(Constants.ConfigSubFolder, f));
+
+            var configBuilder = new ConfigurationBuilder();
+            configFiles.ToList().ForEach(f => configBuilder.AddJsonFile(f));
+            var configRoot = configBuilder.Build();
+
+            ConfigureContainerBuilder(configRoot);
+
+            var container = ContainerBuilder.Build();
+
+            using (var scope = container.BeginLifetimeScope(CurrentTestName))
+            {
+                scope.Resolve<ICatalystCli>();
+            }
+        }
+
     }
 }

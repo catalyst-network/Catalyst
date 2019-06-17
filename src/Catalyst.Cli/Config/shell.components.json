@@ -192,14 +192,6 @@
             ]
         },
         {
-            "type": "Catalyst.Node.Rpc.Client.Observables.SignMessageResponseObserver, Catalyst.Node.Rpc.Client",
-            "services": [
-                {
-                    "type": "Catalyst.Common.Interfaces.IO.Observables.IRpcResponseObserver, Catalyst.Common"
-                }
-            ]
-        },
-        {
             "type": "Catalyst.Node.Rpc.Client.Observables.VerifyMessageResponseObserver, Catalyst.Node.Rpc.Client",
             "services": [
                 {
