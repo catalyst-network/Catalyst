@@ -33,7 +33,7 @@ using Microsoft.Extensions.Configuration;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Catalyst.Cli.UnitTests.Config
+namespace Catalyst.Cli.IntegrationTests.Config
 {
     public sealed class GlobalConfigTests : ConfigFileBasedTest
     {
@@ -42,10 +42,10 @@ namespace Catalyst.Cli.UnitTests.Config
 
         public GlobalConfigTests(ITestOutputHelper output) : base(output) { }
 
-        [Theory(Skip = "Blocking CI")]
+        [Theory]
         [MemberData(nameof(Networks))]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
-        public void RegisteringAllConfigsShouldAllowResolvingCatalystNode(Network network)
+        public void Registering_All_Configs_Should_Allow_Resolving_ICatalystCli(Network network)
         {
             var configFiles = new[]
                 {
