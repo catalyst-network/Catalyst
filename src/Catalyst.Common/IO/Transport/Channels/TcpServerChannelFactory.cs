@@ -41,21 +41,18 @@ using DotNetty.Transport.Channels.Sockets;
 
 namespace Catalyst.Common.IO.Transport.Channels
 {
-    public class TcpServerChannelFactory : ITcpServerChannelFactory
+    public abstract class TcpServerChannelFactory : ITcpServerChannelFactory
     {
-        private readonly IMessageCorrelationManager _correlationManger;
+        private readonly int _backLogValue;
+        protected List<IChannelHandler> _handlers;
         private readonly IPeerSettings _peerSettings;
-        private readonly IKeySigner _keySigner;
-        private const int BackLogValue = 100;
-        private List<IChannelHandler> _handlers;
+
+        protected abstract List<IChannelHandler> Handlers { get; }
         
-        public TcpServerChannelFactory(IMessageCorrelationManager correlationManger, 
-            IPeerSettings peerSettings,
-            IKeySigner keySigner)
+        protected TcpServerChannelFactory(IPeerSettings peerSettings, int backLogValue = 100)
         {
-            _correlationManger = correlationManger;
             _peerSettings = peerSettings;
-            _keySigner = keySigner;
+            _backLogValue = backLogValue;
         }
 
         /// <param name="handlerEventLoopGroupFactory"></param>
@@ -77,7 +74,7 @@ namespace Catalyst.Common.IO.Transport.Channels
             var channel = new ServerBootstrap()
                .Group(handlerEventLoopGroupFactory.GetOrCreateSocketIoEventLoopGroup(), supervisorLoopGroup)
                .ChannelFactory(() => new TcpServerSocketChannel())
-               .Option(ChannelOption.SoBacklog, BackLogValue)
+               .Option(ChannelOption.SoBacklog, _backLogValue)
                .Handler(new LoggingHandler(LogLevel.DEBUG))
                .ChildHandler(channelHandler)
                .BindAsync(_peerSettings.BindAddress, _peerSettings.Port)
@@ -88,17 +85,5 @@ namespace Catalyst.Common.IO.Transport.Channels
 
             return new ObservableChannel(messageStream, channel);
         }
-
-        protected List<IChannelHandler> Handlers =>
-            _handlers ?? (_handlers = new List<IChannelHandler>
-            {
-                new ProtobufVarint32FrameDecoder(),
-                new ProtobufDecoder(ProtocolMessageSigned.Parser),
-                new ProtobufVarint32LengthFieldPrepender(),
-                new ProtobufEncoder(),
-                new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(new ProtocolMessageVerifyHandler(_keySigner), new ProtocolMessageSignHandler(_keySigner)),
-                new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(new CorrelationHandler(_correlationManger), new CorrelationHandler(_correlationManger)),
-                new ObservableServiceHandler()
-            });
     }
 }
