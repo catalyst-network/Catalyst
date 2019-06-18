@@ -27,6 +27,7 @@ using System.Reactive.Linq;
 using System.Security.Cryptography.X509Certificates;
 using Catalyst.Common.Interfaces.IO.EventLoop;
 using Catalyst.Common.Interfaces.IO.Handlers;
+using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Transport.Channels;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
@@ -41,10 +42,12 @@ namespace Catalyst.Node.Rpc.Client.IO.Transport.Channels
     public class NodeRpcClientChannelFactory : TcpClientChannelFactory
     {
         private readonly IKeySigner _keySigner;
-        
-        public NodeRpcClientChannelFactory(IKeySigner keySigner, int backLogValue = 100) : base(backLogValue)
+        private readonly IMessageCorrelationManager _messageCorrelationCache;
+
+        public NodeRpcClientChannelFactory(IKeySigner keySigner, IMessageCorrelationManager messageCorrelationCache, int backLogValue = 100) : base(backLogValue)
         {
             _keySigner = keySigner;
+            _messageCorrelationCache = messageCorrelationCache;
         }
 
         protected override List<IChannelHandler> Handlers =>
@@ -55,6 +58,7 @@ namespace Catalyst.Node.Rpc.Client.IO.Transport.Channels
                 new ProtobufVarint32FrameDecoder(),
                 new ProtobufDecoder(ProtocolMessageSigned.Parser),
                 new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(new ProtocolMessageVerifyHandler(_keySigner), new ProtocolMessageSignHandler(_keySigner)),
+                new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(new CorrelationHandler(_messageCorrelationCache), new CorrelationHandler(_messageCorrelationCache)),
                 new ObservableServiceHandler()
             });
 
