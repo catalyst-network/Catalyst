@@ -33,6 +33,7 @@ using NSubstitute;
 using Serilog;
 using Xunit;
 using Xunit.Abstractions;
+using Autofac;
 
 namespace Catalyst.Common.UnitTests.Keystore
 {
@@ -48,17 +49,21 @@ namespace Catalyst.Common.UnitTests.Keystore
             var logger = Substitute.For<ILogger>();
             var passwordReader = new TestPasswordReader("testPassword");
 
+            var multiAlgo = Substitute.For<IMultihashAlgorithm>();
+            multiAlgo.ComputeHash(Arg.Any<byte[]>()).Returns(new byte[32]);
+
+            var addressHelper = new AddressHelper(multiAlgo);
+
             _keystore = new LocalKeyStore(passwordReader,
                 _context,
                 new KeyStoreServiceWrapped(),
                 FileSystem,
                 logger,
-                new AddressHelper(new BLAKE2B_256())
-            );
+                addressHelper);
         }
 
         [Fact]
-        public void ShouldGenerateAccountAndCreateKeyStoreFileScrypt()
+        public void Should_Generate_Account_And_Create_KeyStore_File_Scrypt()
         {
             var catKey = _context.GeneratePrivateKey();
 
