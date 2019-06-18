@@ -21,16 +21,11 @@
 
 #endregion
 
-using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
-using System.Reactive.Linq;
 using Catalyst.Common.Interfaces.IO.EventLoop;
-using Catalyst.Common.Interfaces.IO.Messaging.Dto;
-using Catalyst.Common.Interfaces.IO.Transport.Channels;
 using Catalyst.Common.IO.Transport.Bootstrapping;
-using Catalyst.Protocol.Common;
 using DotNetty.Handlers.Logging;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Sockets;
@@ -42,14 +37,13 @@ namespace Catalyst.Common.IO.Transport.Channels
     {
         protected abstract List<IChannelHandler> Handlers { get; }
 
-        protected IObservableChannel BootStrapChannel(IEventLoopGroupFactory handlerEventLoopGroupFactory,
-            IObservable<IProtocolMessageDto<ProtocolMessage>> messageStream = null, 
-            IPAddress address = null,
-            int port = IPEndPoint.MinPort)
+        protected IChannel BootStrapChannel(IEventLoopGroupFactory handlerEventLoopGroupFactory,
+            IPAddress address,
+            int port)
         {
             var channelHandler = new ServerChannelInitializerBase<IChannel>(Handlers, handlerEventLoopGroupFactory);
 
-            var channel = new Bootstrap()
+            return new Bootstrap()
                .Group(handlerEventLoopGroupFactory.GetOrCreateSocketIoEventLoopGroup())
                .ChannelFactory(() => new SocketDatagramChannel(AddressFamily.InterNetwork))
                .Option(ChannelOption.SoBroadcast, true)
@@ -58,9 +52,6 @@ namespace Catalyst.Common.IO.Transport.Channels
                .BindAsync(address, port)
                .GetAwaiter()
                .GetResult();
-
-            return new ObservableChannel(messageStream
-             ?? Observable.Never<IProtocolMessageDto<ProtocolMessage>>(), channel);
         }
     }
 }

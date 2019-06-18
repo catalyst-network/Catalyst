@@ -38,7 +38,7 @@
             ]
         },
         {
-            "type": "Catalyst.Common.IO.Transport.Channels.TcpClientChannelFactory, Catalyst.Common",
+            "type": "Catalyst.Node.Rpc.Client.IO.Transport.Channels.NodeRpcClientChannelFactory, Catalyst.Node.Rpc.Client",
             "services": [
                 {
                     "type": "Catalyst.Common.Interfaces.IO.Transport.Channels.ITcpClientChannelFactory, Catalyst.Common"

@@ -21,64 +21,18 @@
 
 #endregion
 
-using System.Collections.Generic;
 using System.Net;
 using System.Security.Cryptography.X509Certificates;
-using Catalyst.Common.Interfaces.IO;
 using Catalyst.Common.Interfaces.IO.EventLoop;
-using Catalyst.Common.Interfaces.IO.Messaging;
-using Catalyst.Common.Interfaces.IO.Transport;
 using Catalyst.Common.Interfaces.IO.Transport.Channels;
-using Catalyst.Common.Interfaces.Modules.KeySigner;
-using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.Interfaces.P2P.Messaging.Broadcast;
-using Catalyst.Common.IO.Handlers;
-using DotNetty.Transport.Channels;
 
 namespace Catalyst.Common.IO.Transport.Channels
 {
-    public class UdpServerChannelFactory : UdpChannelFactoryBase, IUdpServerChannelFactory
+    public abstract class UdpServerChannelFactory : UdpChannelFactoryBase, IUdpServerChannelFactory
     {
-        private readonly IMessageCorrelationManager _messageCorrelationManager;
-        private readonly IBroadcastManager _broadcastManager;
-        private readonly IKeySigner _keySigner;
-        private readonly IPeerSettings _peerSettings;
-        private readonly ObservableServiceHandler _observableServiceHandler;
-
-        /// <param name="handlerEventLoopGroupFactory"></param>
-        /// <param name="targetAddress">Ignored</param>
-        /// <param name="targetPort">Ignored</param>
-        /// <param name="certificate">Ignored</param>
-        /// <returns></returns>
-        public IObservableChannel BuildChannel(IEventLoopGroupFactory handlerEventLoopGroupFactory,
-            IPAddress targetAddress = null,
-            int targetPort = IPEndPoint.MinPort,
-            X509Certificate2 certificate = null) =>
-            BootStrapChannel(handlerEventLoopGroupFactory, _observableServiceHandler.MessageStream,
-                _peerSettings.BindAddress, _peerSettings.Port);
-
-        public UdpServerChannelFactory(IMessageCorrelationManager messageCorrelationManager,
-            IBroadcastManager broadcastManager,
-            IKeySigner keySigner,
-            IPeerSettings peerSettings)
-        {
-            _messageCorrelationManager = messageCorrelationManager;
-            _broadcastManager = broadcastManager;
-            _keySigner = keySigner;
-            _peerSettings = peerSettings;
-            _observableServiceHandler = new ObservableServiceHandler();
-        }
-
-        private List<IChannelHandler> _handlers;
-
-        protected override List<IChannelHandler> Handlers => 
-            _handlers ?? (_handlers = new List<IChannelHandler>
-            {
-                new ProtoDatagramDecoderHandler(),
-                new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(new ProtocolMessageVerifyHandler(_keySigner), new ProtocolMessageSignHandler(_keySigner)),
-                new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(new CorrelationHandler(_messageCorrelationManager), new CorrelatableHandler(_messageCorrelationManager)),
-                new BroadcastHandler(_broadcastManager),
-                _observableServiceHandler
-            });
+        public abstract IObservableChannel BuildChannel(IEventLoopGroupFactory eventLoopGroupFactory,
+            IPAddress targetAddress,
+            int targetPort,
+            X509Certificate2 certificate = null);
     }
 }

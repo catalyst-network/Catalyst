@@ -59,6 +59,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
         private readonly List<IP2PMessageObserver> _p2PMessageHandlers;
         private readonly EmbeddedObservableChannel _serverChannel;
         private PeerService _peerService;
+        private IPeerSettings _peerSettings;
 
         public PeerServiceTests(ITestOutputHelper output) : base(output)
         {
@@ -68,11 +69,12 @@ namespace Catalyst.Node.Core.UnitTests.P2P
 
             _serverChannel = new EmbeddedObservableChannel($"Server:{CurrentTestName}");
             _udpServerServerChannelFactory = Substitute.For<IUdpServerChannelFactory>();
-            _udpServerServerChannelFactory.BuildChannel(Arg.Any<IEventLoopGroupFactory>()).Returns(_serverChannel);
 
-            var peerSettings = Substitute.For<IPeerSettings>();
-            peerSettings.BindAddress.Returns(IPAddress.Parse("127.0.0.1"));
-            peerSettings.Port.Returns(1234);
+            _peerSettings = Substitute.For<IPeerSettings>();
+            _peerSettings.BindAddress.Returns(IPAddress.Parse("127.0.0.1"));
+            _peerSettings.Port.Returns(1234);
+
+            _udpServerServerChannelFactory.BuildChannel(Arg.Any<IEventLoopGroupFactory>(), _peerSettings.BindAddress, _peerSettings.Port).Returns(_serverChannel);
 
             _peerDiscovery = Substitute.For<IPeerDiscovery>();
             _p2PMessageHandlers = new List<IP2PMessageObserver>();
@@ -137,6 +139,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
                 _udpServerServerChannelFactory,
                 _peerDiscovery,
                 _p2PMessageHandlers,
+                _peerSettings,
                 _logger);
 
             await _serverChannel.SimulateReceivingMessages(message).ConfigureAwait(false);
