@@ -38,17 +38,14 @@ namespace Catalyst.TestUtils
             var previousHash = previousDeltaHash ?? ByteUtil.GenerateRandomByteArray(32);
             var root = merkleRoot ?? ByteUtil.GenerateRandomByteArray(32);
             var poda = merklePoda ?? ByteUtil.GenerateRandomByteArray(32);
-            if (timestamp == 0)
-            {
-                timestamp += (uint) DateTime.UtcNow.ToOADate();
-            }
+            var nonNullTimestamp = timestamp == 0 ? (uint) DateTime.UtcNow.ToOADate() : timestamp;
 
             var delta = new Delta
             {
                 PreviousDeltaDfsHash = previousHash.ToByteString(),
                 MerkleRoot = root.ToByteString(),
                 MerklePoda = poda.ToByteString(),
-                TimeStamp = timestamp
+                TimeStamp = nonNullTimestamp
             };
 
             return delta;
