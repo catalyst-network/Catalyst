@@ -26,6 +26,7 @@ using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.Messaging;
 using Catalyst.Common.Interfaces.P2P.Messaging.Dto;
 using Dawn;
+using DotNetty.Transport.Channels;
 using Google.Protobuf;
 
 namespace Catalyst.Common.IO.Messaging.Dto
