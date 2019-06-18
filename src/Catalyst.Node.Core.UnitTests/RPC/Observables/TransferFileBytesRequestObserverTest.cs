@@ -49,7 +49,6 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
         private readonly TransferFileBytesRequestObserver _observer;
         private readonly IDownloadFileTransferFactory _downloadFileTransferFactory;
         private readonly IChannelHandlerContext _context;
-        private readonly ILogger _logger;
 
         public TransferFileBytesRequestObserverTest()
         {
@@ -57,14 +56,12 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
             _context.Channel.Returns(Substitute.For<IChannel>());
             _downloadFileTransferFactory = Substitute.For<IDownloadFileTransferFactory>();
             var peerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("Test");
-            _logger = Substitute.For<ILogger>();
-
             _observer = new TransferFileBytesRequestObserver(_downloadFileTransferFactory,
                 peerIdentifier,
                 Substitute.For<ILogger>());
         }
 
-        [Fact(Skip = "This tests needs to mock downloadChunk() return correctly")]
+        [Fact]
         public void CanHandlerDownloadChunk()
         {
             var guid = Guid.NewGuid();
@@ -74,8 +71,11 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
                 ChunkId = 1,
                 CorrelationFileName = Guid.NewGuid().ToByteString()
             }.ToProtocolMessage(PeerIdHelper.GetPeerId("Test"), guid);
-            request.SendToHandler(_context, _observer);
 
+            _downloadFileTransferFactory.DownloadChunk(Arg.Any<Guid>(), Arg.Any<uint>(), Arg.Any<byte[]>())
+               .Returns(FileTransferResponseCodes.Successful);
+
+            request.SendToHandler(_context, _observer);
             _downloadFileTransferFactory.Received(1).DownloadChunk(Arg.Any<Guid>(), Arg.Any<uint>(), Arg.Any<byte[]>());
         }
 
