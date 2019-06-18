@@ -29,7 +29,7 @@ using DotNetty.Transport.Channels;
 
 namespace Catalyst.Common.IO.Handlers
 {
-    internal sealed class ProtoDatagramEncoderHandler : OutboundChannelHandlerBase<IMessageDto>
+    public sealed class ProtoDatagramEncoderHandler : OutboundChannelHandlerBase<IMessageDto>
     {
         protected override Task WriteAsync0(IChannelHandlerContext context, IMessageDto message)
         {
