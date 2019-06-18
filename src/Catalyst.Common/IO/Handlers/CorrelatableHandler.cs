@@ -53,7 +53,7 @@ namespace Catalyst.Common.IO.Handlers
                 });
             }
             
-            return context.Channel.WriteAsync(message);
+            return context.WriteAsync(message);
         }
     }
 }
