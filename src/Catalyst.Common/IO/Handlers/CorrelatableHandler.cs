@@ -28,8 +28,6 @@ using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.P2P.Messaging.Dto;
 using Catalyst.Common.IO.Messaging;
-using Catalyst.Common.IO.Messaging.Dto;
-using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;
 
 namespace Catalyst.Common.IO.Handlers
