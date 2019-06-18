@@ -30,8 +30,10 @@ using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.IO.Handlers;
 using Catalyst.Common.IO.Transport.Channels;
+using Catalyst.Node.Core.RPC.IO.Transport.Channels;
 using Catalyst.Protocol.IPPN;
 using Catalyst.TestUtils;
 using DotNetty.Codecs.Protobuf;
@@ -42,35 +44,33 @@ using NSubstitute;
 using Serilog;
 using Xunit;
 
-namespace Catalyst.Common.UnitTests.IO
+namespace Catalyst.Node.Core.UnitTests.RPC.IO.Transport.Channels
 {
-    public class TcpServerChannelFactoryTests
+    public sealed class NodeRpcServerChannelFactoryTests
     {
-        private sealed class TestTcpServerChannelFactory : TcpServerChannelFactory
+        private sealed class TestNodeRpcServerChannelFactory : NodeRpcServerChannelFactory
         {
-            public TestTcpServerChannelFactory(IMessageCorrelationManager correlationManager,
-                IPeerSettings peerSettings,
+            public TestNodeRpcServerChannelFactory(IMessageCorrelationManager correlationManager,
                 IKeySigner keySigner)
-                : base(correlationManager, peerSettings, keySigner) { }
+                : base(correlationManager, keySigner) { }
 
             public IReadOnlyCollection<IChannelHandler> InheritedHandlers => Handlers;
         }
 
         private readonly IMessageCorrelationManager _correlationManager;
-        private readonly TestTcpServerChannelFactory _factory;
+        private readonly TestNodeRpcServerChannelFactory _factory;
         private readonly IKeySigner _keySigner;
 
-        public TcpServerChannelFactoryTests()
+        public NodeRpcServerChannelFactoryTests()
         {
             _correlationManager = Substitute.For<IMessageCorrelationManager>();
             _keySigner = Substitute.For<IKeySigner>();
 
-            var peerSettings = Substitute.For<IPeerSettings>();
+            var peerSettings = Substitute.For<IRpcServerSettings>();
             peerSettings.BindAddress.Returns(IPAddress.Parse("127.0.0.1"));
             peerSettings.Port.Returns(1234);
-            _factory = new TestTcpServerChannelFactory(
+            _factory = new TestNodeRpcServerChannelFactory(
                 _correlationManager,
-                peerSettings, 
                 _keySigner);
         }
 

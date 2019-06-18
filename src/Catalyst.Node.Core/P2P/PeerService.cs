@@ -44,18 +44,17 @@ namespace Catalyst.Node.Core.P2P
             IUdpServerChannelFactory serverChannelFactory,
             IPeerDiscovery peerDiscovery,
             IEnumerable<IP2PMessageObserver> messageHandlers,
+            IPeerSettings peerSettings,
             ILogger logger)
             : base(serverChannelFactory, logger, udpServerEventLoopGroupFactory)
         {
             Discovery = peerDiscovery;
-            var observableChannel = ChannelFactory.BuildChannel(EventLoopGroupFactory);
+            var observableChannel = ChannelFactory.BuildChannel(EventLoopGroupFactory, peerSettings.BindAddress, peerSettings.Port);
             Channel = observableChannel.Channel;
 
             MessageStream = observableChannel.MessageStream;
             messageHandlers.ToList()
                .ForEach(h => h.StartObserving(MessageStream));
-
-            // peerDiscovery.StartObserving(MessageStream);
         }
     }
 }

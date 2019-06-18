@@ -31,47 +31,49 @@ using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Transport.Channels;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
+using Catalyst.Common.Interfaces.P2P.Messaging.Broadcast;
 using Catalyst.Common.IO.Handlers;
 using Catalyst.Common.IO.Transport.Channels;
 using Catalyst.Protocol.Common;
-using DotNetty.Codecs.Protobuf;
 using DotNetty.Transport.Channels;
 
-namespace Catalyst.Node.Core.RPC.IO.Transport.Channels
+namespace Catalyst.Node.Core.P2P.IO.Transport.Channels
 {
-    public class NodeRpcServerChannelFactory : TcpServerChannelFactory
+    public class PeerServerChannelFactory : UdpServerChannelFactory
     {
-        private readonly IMessageCorrelationManager _correlationManger;
+        private List<IChannelHandler> _handlers;
+        private readonly IMessageCorrelationManager _messageCorrelationManager;
+        private readonly IBroadcastManager _broadcastManager;
         private readonly IKeySigner _keySigner;
 
-        protected override List<IChannelHandler> Handlers =>
-            _handlers ?? (_handlers = new List<IChannelHandler>
-            {
-                new ProtobufVarint32FrameDecoder(),
-                new ProtobufDecoder(ProtocolMessageSigned.Parser),
-                new ProtobufVarint32LengthFieldPrepender(),
-                new ProtobufEncoder(),
-                new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(new ProtocolMessageVerifyHandler(_keySigner), new ProtocolMessageSignHandler(_keySigner)),
-                new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(new CorrelationHandler(_correlationManger), new CorrelationHandler(_correlationManger)),
-                new ObservableServiceHandler()
-            });
-
-        public NodeRpcServerChannelFactory(IMessageCorrelationManager correlationManger, IKeySigner keySigner)
+        public PeerServerChannelFactory(IMessageCorrelationManager messageCorrelationManager, IBroadcastManager broadcastManager, IKeySigner keySigner)
         {
-            _correlationManger = correlationManger;
+            _messageCorrelationManager = messageCorrelationManager;
+            _broadcastManager = broadcastManager;
             _keySigner = keySigner;
         }
 
+        protected override List<IChannelHandler> Handlers => 
+            _handlers ?? (_handlers = new List<IChannelHandler>
+            {
+                new ProtoDatagramDecoderHandler(),
+                new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(new ProtocolMessageVerifyHandler(_keySigner), new ProtocolMessageSignHandler(_keySigner)),
+                new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(new CorrelationHandler(_messageCorrelationManager), new CorrelatableHandler(_messageCorrelationManager)),
+                new BroadcastHandler(_broadcastManager),
+                new ObservableServiceHandler()
+            });
+
         /// <param name="handlerEventLoopGroupFactory"></param>
-        /// <param name="targetPort"></param>
-        /// <param name="certificate">Local TLS certificate</param>
-        /// <param name="targetAddress"></param>
+        /// <param name="targetAddress">Ignored</param>
+        /// <param name="targetPort">Ignored</param>
+        /// <param name="certificate">Ignored</param>
+        /// <returns></returns>
         public override IObservableChannel BuildChannel(IEventLoopGroupFactory handlerEventLoopGroupFactory,
             IPAddress targetAddress,
             int targetPort,
             X509Certificate2 certificate = null)
         {
-            var channel = Bootstrap(handlerEventLoopGroupFactory, targetAddress, targetPort, certificate);
+            var channel = BootStrapChannel(handlerEventLoopGroupFactory, targetAddress, targetPort);
             
             var messageStream = channel.Pipeline.Get<IObservableServiceHandler>()?.MessageStream;
 
