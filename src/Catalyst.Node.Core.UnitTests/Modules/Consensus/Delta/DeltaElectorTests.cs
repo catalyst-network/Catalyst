@@ -55,7 +55,7 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Consensus.Delta
             });
             Add(new FavouriteDeltaBroadcast
             {
-                Candidate = CandidateDeltaHelper.GetCandidateDelta()
+                Candidate = DeltaHelper.GetCandidateDelta()
             });
         }
     }
@@ -138,7 +138,7 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Consensus.Delta
                 var hashProduced = ByteUtil.GenerateRandomByteArray(32);
                 var previousHash = ByteUtil.GenerateRandomByteArray(32);
                 var candidates = producers.Select((p, i) =>
-                    CandidateDeltaHelper.GetCandidateDelta(previousHash, hashProduced, producers[i])
+                    DeltaHelper.GetCandidateDelta(previousHash, hashProduced, producers[i])
                 ).ToArray();
 
                 var votersCount = 4;
@@ -177,7 +177,7 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Consensus.Delta
                    .ToArray();
                 var previousHash = ByteUtil.GenerateRandomByteArray(32);
                 var candidates = producers.Select((p, i) =>
-                    CandidateDeltaHelper.GetCandidateDelta(previousHash,
+                    DeltaHelper.GetCandidateDelta(previousHash,
                         ByteUtil.GenerateRandomByteArray(32),
                         producers[i])
                 ).ToArray();

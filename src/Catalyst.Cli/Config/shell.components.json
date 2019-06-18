@@ -208,14 +208,6 @@
             ]
         },
         {
-            "type": "Catalyst.Node.Rpc.Client.Observables.TransferFileBytesRequestObserver, Catalyst.Node.Rpc.Client",
-            "services": [
-                {
-                    "type": "Catalyst.Common.Interfaces.IO.Observables.IRpcRequestObserver, Catalyst.Common"
-                }
-            ]
-        },
-        {
             "type": "Catalyst.Common.FileTransfer.DownloadFileTransferFactory, Catalyst.Common",
             "services": [
                 {

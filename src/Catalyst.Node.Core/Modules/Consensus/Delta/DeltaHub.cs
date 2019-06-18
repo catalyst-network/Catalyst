@@ -22,13 +22,20 @@
 #endregion
 
 using System;
+using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Modules.Consensus.Delta;
+using Catalyst.Common.Interfaces.Modules.Dfs;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.Messaging.Broadcast;
 using Catalyst.Common.Protocol;
 using Catalyst.Protocol.Delta;
 using Dawn;
+using Google.Protobuf;
+using Polly;
+using Polly.Retry;
 using Serilog;
 
 namespace Catalyst.Node.Core.Modules.Consensus.Delta
@@ -41,20 +48,28 @@ namespace Catalyst.Node.Core.Modules.Consensus.Delta
         private readonly IPeerIdentifier _peerIdentifier;
         private readonly IDeltaVoter _deltaVoter;
         private readonly IDeltaElector _deltaElector;
+        private readonly IDfs _dfs;
         private readonly ILogger _logger;
         private IDisposable _incomingCandidateSubscription;
         private IDisposable _incomingFavouriteCandidateSubscription;
+
+        private static readonly AsyncRetryPolicy<string> IpfsRetryPolicy = Policy<string>
+           .Handle<Exception>()
+           .WaitAndRetryAsync(10, retryAttempt =>
+                TimeSpan.FromMilliseconds(Math.Pow(2, retryAttempt)));
 
         public DeltaHub(IBroadcastManager broadcastManager,
             IPeerIdentifier peerIdentifier,
             IDeltaVoter deltaVoter,
             IDeltaElector deltaElector,
+            IDfs dfs,
             ILogger logger)
         {
             _broadcastManager = broadcastManager;
             _peerIdentifier = peerIdentifier;
             _deltaVoter = deltaVoter;
             _deltaElector = deltaElector;
+            _dfs = dfs;
             _logger = logger;
         }
 
@@ -107,7 +122,31 @@ namespace Catalyst.Node.Core.Modules.Consensus.Delta
         }
 
         /// <inheritdoc />
-        public void PublishDeltaToIpfs(CandidateDeltaBroadcast candidate) { throw new NotImplementedException(); }
+        public async Task<string> PublishDeltaToIpfsAsync(Protocol.Delta.Delta delta, CancellationToken cancellationToken = default)
+        {
+            Guard.Argument(delta, nameof(delta)).NotNull().Require(c => c.IsValid());
+
+            var deltaAsArray = delta.ToByteArray();
+            var ipfsFileAddress = await IpfsRetryPolicy.ExecuteAsync(
+                async c => await TryPublishIpfsFile(deltaAsArray, cancellationToken: c),
+                cancellationToken);
+
+            return ipfsFileAddress;
+        }
+
+        public async Task<string> TryPublishIpfsFile(byte[] deltaAsBytes, CancellationToken cancellationToken)
+        {
+            using (var memoryStream = new MemoryStream())
+            {
+                await memoryStream.WriteAsync(deltaAsBytes, cancellationToken).ConfigureAwait(false);
+                memoryStream.Flush();
+                memoryStream.Seek(0, SeekOrigin.Begin);
+
+                var address = await _dfs.AddAsync(memoryStream, cancellationToken: cancellationToken);
+
+                return address;
+            }
+        }
 
         /// <inheritdoc />
         public void SubscribeToDfsDeltaStream(IObservable<byte[]> dfsDeltaAddressStream) { throw new NotImplementedException(); }
