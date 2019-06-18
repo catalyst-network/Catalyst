@@ -38,17 +38,12 @@ namespace Catalyst.Common.IO.Handlers
     {
         /// <summary>The authentication strategy</summary>
         private readonly IAuthenticationStrategy _authenticationStrategy;
-
-        /// <summary>The logger</summary>
-        private readonly ILogger _logger;
-
+        
         /// <summary>Initializes a new instance of the <see cref="AuthenticationHandler"/> class.</summary>
         /// <param name="authenticationStrategy">The authentication strategy.</param>
-        /// <param name="logger">The logger.</param>
-        public AuthenticationHandler(IAuthenticationStrategy authenticationStrategy, ILogger logger)
+        public AuthenticationHandler(IAuthenticationStrategy authenticationStrategy)
         {
             _authenticationStrategy = authenticationStrategy;
-            _logger = logger;
         }
 
         /// <inheritdoc cref="SimpleChannelInboundHandler{I}"/>>
@@ -61,8 +56,6 @@ namespace Catalyst.Common.IO.Handlers
             }
             else
             {
-                _logger.Debug($"Message from IP: {peerIdentifier.Ip} " +
-                    $"Public Key: {peerIdentifier.PeerId.PublicKey.ToByteArray().ToStringFromRLPDecoded()} not in whitelist, message discarded");
                 ctx.CloseAsync();
             }
         }
