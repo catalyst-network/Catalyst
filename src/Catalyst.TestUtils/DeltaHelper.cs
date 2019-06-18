@@ -38,7 +38,10 @@ namespace Catalyst.TestUtils
             var previousHash = previousDeltaHash ?? ByteUtil.GenerateRandomByteArray(32);
             var root = merkleRoot ?? ByteUtil.GenerateRandomByteArray(32);
             var poda = merklePoda ?? ByteUtil.GenerateRandomByteArray(32);
-            if (timestamp == 0) timestamp = (uint) DateTime.UtcNow.ToOADate();
+            if (timestamp == 0)
+            {
+                timestamp += (uint) DateTime.UtcNow.ToOADate();
+            }
 
             var delta = new Delta
             {
@@ -50,27 +53,6 @@ namespace Catalyst.TestUtils
 
             return delta;
         }
-
-        //public static Delta GetDelta(ByteString previousDeltaHash = null,
-        //    ByteString merkleRoot = null,
-        //    ByteString merklePoda = null,
-        //    uint timestamp = 0)
-        //{
-        //    var previousHash = previousDeltaHash ?? ByteUtil.GenerateRandomByteArray(32).ToByteString();
-        //    var root = merkleRoot ?? ByteUtil.GenerateRandomByteArray(32).ToByteString();
-        //    var poda = merklePoda ?? ByteUtil.GenerateRandomByteArray(32).ToByteString();
-        //    if (timestamp == 0) timestamp = (uint)DateTime.UtcNow.ToOADate();
-
-        //    var delta = new Delta
-        //    {
-        //        PreviousDeltaDfsHash = previousHash,
-        //        MerkleRoot = root.ToByteString(),
-        //        MerklePoda = poda.ToByteString(),
-        //        TimeStamp = timestamp
-        //    };
-
-        //    return delta;
-        //}
 
         public static CandidateDeltaBroadcast GetCandidateDelta(byte[] previousDeltaHash = null, 
             byte[] hash = null,
