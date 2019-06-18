@@ -45,23 +45,21 @@ using Xunit;
 
 namespace Catalyst.Common.UnitTests.IO
 {
-    public class TcpServerChannelFactoryTests
+    public class TcpClientChannelFactoryTests
     {
-        internal sealed class TestTcpServerChannelFactory : TcpServerChannelFactory
+        internal sealed class TestTcpClientChannelFactory : TcpClientChannelFactory
         {
-            public TestTcpServerChannelFactory(IMessageCorrelationManager correlationManager,
-                IPeerSettings peerSettings,
-                IKeySigner keySigner)
-                : base(correlationManager, peerSettings, keySigner) { }
+            public TestTcpClientChannelFactory(IKeySigner keySigner)
+                : base(keySigner) { }
 
             public IReadOnlyCollection<IChannelHandler> InheritedHandlers => Handlers;
         }
 
         private readonly IMessageCorrelationManager _correlationManager;
-        private readonly TestTcpServerChannelFactory _factory;
+        private readonly TestTcpClientChannelFactory _factory;
         private readonly IKeySigner _keySigner;
 
-        public TcpServerChannelFactoryTests()
+        public TcpClientChannelFactoryTests()
         {
             _correlationManager = Substitute.For<IMessageCorrelationManager>();
             _keySigner = Substitute.For<IKeySigner>();
@@ -70,40 +68,36 @@ namespace Catalyst.Common.UnitTests.IO
 
             peerSettings.BindAddress.Returns(IPAddress.Parse("127.0.0.1"));
             peerSettings.Port.Returns(1234);
-            _factory = new TestTcpServerChannelFactory(
-                _correlationManager,
-                peerSettings, 
-                _keySigner);
+            _factory = new TestTcpClientChannelFactory(_keySigner);
         }
 
         [Fact]
         public void TcpServerChannelFactory_should_have_correct_handlers()
         {
-            _factory.InheritedHandlers.Count(h => h != null).Should().Be(7);
+            _factory.InheritedHandlers.Count(h => h != null).Should().Be(6);
             var handlers = _factory.InheritedHandlers.ToArray();
-            handlers[0].Should().BeOfType<ProtobufVarint32FrameDecoder>();
-            handlers[1].Should().BeOfType<ProtobufDecoder>();
-            handlers[2].Should().BeOfType<ProtobufVarint32LengthFieldPrepender>();
-            handlers[3].Should().BeOfType<ProtobufEncoder>();
+            handlers[0].Should().BeOfType<ProtobufVarint32LengthFieldPrepender>();
+            handlers[1].Should().BeOfType<ProtobufEncoder>();
+            handlers[2].Should().BeOfType<ProtobufVarint32FrameDecoder>();
+            handlers[3].Should().BeOfType<ProtobufDecoder>();
             handlers[4].Should().BeOfType<CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>>();
-            handlers[5].Should().BeOfType<CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>>();
-            handlers[6].Should().BeOfType<ObservableServiceHandler>();
+            handlers[5].Should().BeOfType<ObservableServiceHandler>();
         }
 
         [Fact]
-        public async Task TcpServerChannelFactory_should_put_the_correct_inbound_handlers_on_the_pipeline()
+        public async Task TcpClientChannelFactory_should_put_the_correct_inbound_handlers_on_the_pipeline()
         {
             var testingChannel = new EmbeddedChannel("test".ToChannelId(),
                 true, _factory.InheritedHandlers.ToArray());
 
             var senderId = PeerIdHelper.GetPeerId("sender");
             var correlationId = Guid.NewGuid();
-            var protocolMessage = new PingRequest().ToProtocolMessage(senderId, correlationId);
+            var protocolMessage = new PingResponse().ToProtocolMessage(senderId, correlationId);
 
             var observer = new ProtocolMessageObserver(0, Substitute.For<ILogger>());
            
             var messageStream = _factory.InheritedHandlers.OfType<ObservableServiceHandler>().Single().MessageStream;
-            
+
             using (messageStream.Subscribe(observer))
             {
                 testingChannel.WriteInbound(protocolMessage);
@@ -128,7 +122,7 @@ namespace Catalyst.Common.UnitTests.IO
 
             var senderId = PeerIdHelper.GetPeerId("sender");
             var correlationId = Guid.NewGuid();
-            var protocolMessage = new PingResponse().ToProtocolMessage(senderId, correlationId);
+            var protocolMessage = new PingRequest().ToProtocolMessage(senderId, correlationId);
 
             testingChannel.WriteOutbound(protocolMessage);
 

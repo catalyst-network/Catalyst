@@ -23,11 +23,10 @@
 
 using System.Collections.Generic;
 using System.Net;
+using System.Linq;
 using System.Security.Cryptography.X509Certificates;
-using Catalyst.Common.Interfaces.IO;
 using Catalyst.Common.Interfaces.IO.EventLoop;
 using Catalyst.Common.Interfaces.IO.Messaging;
-using Catalyst.Common.Interfaces.IO.Transport;
 using Catalyst.Common.Interfaces.IO.Transport.Channels;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.P2P;
@@ -84,7 +83,7 @@ namespace Catalyst.Common.IO.Transport.Channels
                .GetAwaiter()
                .GetResult();
 
-            var messageStream = channel.Pipeline.Get<ObservableServiceHandler>()?.MessageStream;
+            var messageStream = Handlers.OfType<ObservableServiceHandler>().Single().MessageStream;
 
             return new ObservableChannel(messageStream, channel);
         }

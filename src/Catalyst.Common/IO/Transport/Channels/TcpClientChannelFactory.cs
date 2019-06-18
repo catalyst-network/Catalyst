@@ -22,11 +22,10 @@
 #endregion
 
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Security.Cryptography.X509Certificates;
-using Catalyst.Common.Interfaces.IO;
 using Catalyst.Common.Interfaces.IO.EventLoop;
-using Catalyst.Common.Interfaces.IO.Transport;
 using Catalyst.Common.Interfaces.IO.Transport.Channels;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.IO.Handlers;
@@ -43,27 +42,15 @@ namespace Catalyst.Common.IO.Transport.Channels
     {
         private readonly IKeySigner _keySigner;
         public TcpClientChannelFactory(IKeySigner keySigner) { _keySigner = keySigner; }
-        
         private const int BackLogValue = 100;
-        
+        private List<IChannelHandler> _handlers;
+
         public IObservableChannel BuildChannel(IEventLoopGroupFactory handlerEventLoopGroupFactory,
             IPAddress targetAddress = null, 
             int targetPort = IPEndPoint.MinPort,
             X509Certificate2 certificate = null)
         {
-            var observableServiceHandler = new ObservableServiceHandler();
-
-            var channelHandlers = new List<IChannelHandler>
-            {
-                new ProtobufVarint32LengthFieldPrepender(),
-                new ProtobufEncoder(),
-                new ProtobufVarint32FrameDecoder(),
-                new ProtobufDecoder(ProtocolMessageSigned.Parser),
-                new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(new ProtocolMessageVerifyHandler(_keySigner), new ProtocolMessageSignHandler(_keySigner)),
-                observableServiceHandler
-            };
-
-            var channelHandler = new ClientChannelInitializerBase<ISocketChannel>(channelHandlers,
+            var channelHandler = new ClientChannelInitializerBase<ISocketChannel>(Handlers,
                 handlerEventLoopGroupFactory,
                 targetAddress,
                 certificate);
@@ -78,9 +65,20 @@ namespace Catalyst.Common.IO.Transport.Channels
                .GetAwaiter()
                .GetResult();
 
-            return new ObservableChannel(
-                observableServiceHandler.MessageStream, 
-                channel);
+            var messageStream = Handlers.OfType<ObservableServiceHandler>().Single().MessageStream;
+
+            return new ObservableChannel(messageStream, channel);
         }
+
+        protected List<IChannelHandler> Handlers =>
+            _handlers ?? (_handlers = new List<IChannelHandler>
+            {
+                new ProtobufVarint32LengthFieldPrepender(),
+                new ProtobufEncoder(),
+                new ProtobufVarint32FrameDecoder(),
+                new ProtobufDecoder(ProtocolMessageSigned.Parser),
+                new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(new ProtocolMessageVerifyHandler(_keySigner), new ProtocolMessageSignHandler(_keySigner)),
+                new ObservableServiceHandler()
+            });
     }
 }
