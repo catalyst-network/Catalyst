@@ -113,7 +113,7 @@ namespace Catalyst.Node.Core.IntegrationTests.Modules.Dfs
         [InlineData(1000L)]
         [InlineData(82000L)]
         [InlineData(100000L)]
-        public async Task Verify_File_Integrity_On_Transfer(long byteSize) { await AddFileToDfs(byteSize); }
+        public async Task Verify_File_Integrity_On_Transfer(long byteSize) { await AddFileToDfs(byteSize).ConfigureAwait(false); }
 
         private async Task AddFileToDfs(long byteSize)
         {
