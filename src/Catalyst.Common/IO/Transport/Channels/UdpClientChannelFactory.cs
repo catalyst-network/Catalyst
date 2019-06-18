@@ -21,48 +21,23 @@
 
 #endregion
 
-using System.Collections.Generic;
 using System.Net;
 using System.Security.Cryptography.X509Certificates;
 using Catalyst.Common.Interfaces.IO.EventLoop;
-using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Transport.Channels;
-using Catalyst.Common.Interfaces.Modules.KeySigner;
-using Catalyst.Common.IO.Handlers;
-using DotNetty.Transport.Channels;
 
 namespace Catalyst.Common.IO.Transport.Channels
 {
-    public class UdpClientChannelFactory : UdpChannelFactoryBase, IUdpClientChannelFactory
+    public abstract class UdpClientChannelFactory : UdpChannelFactoryBase, IUdpClientChannelFactory
     {
-        private readonly IKeySigner _keySigner;
-        private readonly IMessageCorrelationManager _correlationManager;
-        
-        public UdpClientChannelFactory(IKeySigner keySigner, IMessageCorrelationManager correlationManager)
-        {
-            _keySigner = keySigner;
-            _correlationManager = correlationManager;
-        }
-
-        protected override List<IChannelHandler> Handlers =>
-            new List<IChannelHandler>
-            {
-                new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(new ProtoDatagramDecoderHandler(), new ProtoDatagramEncoderHandler()),
-                new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(new ProtocolMessageVerifyHandler(_keySigner), new ProtocolMessageSignHandler(_keySigner)),
-                new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(new CorrelationHandler(_correlationManager), new CorrelationHandler(_correlationManager))
-            };
-
         /// <param name="handlerEventLoopGroupFactory"></param>
         /// <param name="targetAddress"></param>
         /// <param name="targetPort">Ignored</param>
         /// <param name="certificate">Ignored</param>
         /// <returns></returns>
-        public IObservableChannel BuildChannel(IEventLoopGroupFactory handlerEventLoopGroupFactory,
-            IPAddress targetAddress = null,
-            int targetPort = IPEndPoint.MinPort,
-            X509Certificate2 certificate = null)
-        {
-            return BootStrapChannel(handlerEventLoopGroupFactory, address: targetAddress);
-        }
+        public abstract IObservableChannel BuildChannel(IEventLoopGroupFactory handlerEventLoopGroupFactory,
+            IPAddress targetAddress,
+            int targetPort,
+            X509Certificate2 certificate = null);
     }
 }
