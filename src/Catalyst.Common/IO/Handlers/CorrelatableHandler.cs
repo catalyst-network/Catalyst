@@ -34,11 +34,11 @@ using DotNetty.Transport.Channels;
 
 namespace Catalyst.Common.IO.Handlers
 {
-    internal sealed class CorrelatableHandler : OutboundChannelHandlerBase<IMessageDto>
+    public sealed class CorrelatableHandler : OutboundChannelHandlerBase<IMessageDto>
     {
         private readonly IMessageCorrelationManager _messageCorrelationManager;
 
-        internal CorrelatableHandler(IMessageCorrelationManager messageCorrelationManager)
+        public CorrelatableHandler(IMessageCorrelationManager messageCorrelationManager)
         {
             _messageCorrelationManager = messageCorrelationManager;
         }
@@ -50,7 +50,7 @@ namespace Catalyst.Common.IO.Handlers
                 _messageCorrelationManager.AddPendingRequest(new CorrelatableMessage
                 {
                     Recipient = message.Recipient,
-                    Content = (ProtocolMessage) message.Message,
+                    Content = message.Message.ToProtocolMessage(message.Sender.PeerId, Guid.NewGuid()),
                     SentAt = DateTimeOffset.UtcNow
                 });
             }
