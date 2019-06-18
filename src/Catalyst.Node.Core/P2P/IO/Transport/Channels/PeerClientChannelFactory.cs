@@ -35,6 +35,7 @@ using Catalyst.Common.IO.Handlers;
 using Catalyst.Common.IO.Transport.Channels;
 using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;
+using Google.Protobuf;
 
 namespace Catalyst.Node.Core.P2P.IO.Transport.Channels
 {
@@ -67,11 +68,8 @@ namespace Catalyst.Node.Core.P2P.IO.Transport.Channels
             X509Certificate2 certificate = null)
         {
             var channel = BootStrapChannel(handlerEventLoopGroupFactory, targetAddress, targetPort);
-            
-            var messageStream = channel.Pipeline.Get<IObservableServiceHandler>()?.MessageStream;
 
-            return new ObservableChannel(messageStream
-             ?? Observable.Never<IProtocolMessageDto<ProtocolMessage>>(), channel);
+            return new ObservableChannel(Observable.Never<IProtocolMessageDto<ProtocolMessage>>(), channel);
         }
     }
 }
