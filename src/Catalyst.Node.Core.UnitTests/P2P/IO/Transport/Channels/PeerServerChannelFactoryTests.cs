@@ -35,6 +35,7 @@ using Catalyst.Common.IO.Handlers;
 using Catalyst.Common.IO.Transport.Channels;
 using Catalyst.Common.Util;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
+using Catalyst.Node.Core.P2P.IO.Transport.Channels;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
 using Catalyst.TestUtils;
@@ -45,17 +46,16 @@ using NSubstitute;
 using Serilog;
 using Xunit;
 
-namespace Catalyst.Common.UnitTests.IO
+namespace Catalyst.Node.Core.UnitTests.P2P.IO.Transport.Channels
 {
-    public class UdpServerChannelFactoryTests
+    public sealed class PeerServerChannelFactoryTests
     {
-        private sealed class TestUdpServerChannelFactory : UdpServerChannelFactory
+        private sealed class TestPeerServerChannelFactory : PeerServerChannelFactory
         {
-            public TestUdpServerChannelFactory(IMessageCorrelationManager correlationManager,
+            public TestPeerServerChannelFactory(IMessageCorrelationManager correlationManager,
                 IBroadcastManager gossipManager,
-                IKeySigner keySigner,
-                IPeerSettings peerSettings)
-                : base(correlationManager, gossipManager, keySigner, peerSettings) { }
+                IKeySigner keySigner)
+                : base(correlationManager, gossipManager, keySigner) { }
 
             public IReadOnlyCollection<IChannelHandler> InheritedHandlers => Handlers;
         }
@@ -63,9 +63,9 @@ namespace Catalyst.Common.UnitTests.IO
         private readonly IMessageCorrelationManager _correlationManager;
         private readonly IBroadcastManager _gossipManager;
         private readonly IKeySigner _keySigner;
-        private readonly TestUdpServerChannelFactory _factory;
+        private readonly TestPeerServerChannelFactory _factory;
 
-        public UdpServerChannelFactoryTests()
+        public PeerServerChannelFactoryTests()
         {
             _correlationManager = Substitute.For<IMessageCorrelationManager>();
             _gossipManager = Substitute.For<IBroadcastManager>();
@@ -74,11 +74,10 @@ namespace Catalyst.Common.UnitTests.IO
             var peerSettings = Substitute.For<IPeerSettings>();
             peerSettings.BindAddress.Returns(IPAddress.Parse("127.0.0.1"));
             peerSettings.Port.Returns(1234);
-            _factory = new TestUdpServerChannelFactory(
+            _factory = new TestPeerServerChannelFactory(
                 _correlationManager,
                 _gossipManager,
-                _keySigner,
-                peerSettings);
+                _keySigner);
         }
 
         [Fact]

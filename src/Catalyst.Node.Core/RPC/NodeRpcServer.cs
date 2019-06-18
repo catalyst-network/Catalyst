@@ -26,21 +26,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading;
-using DotNetty.Transport.Channels;
-using DotNetty.Transport.Channels.Sockets;
 using Catalyst.Common.Interfaces.Cryptography;
-using Catalyst.Common.Interfaces.IO;
 using Catalyst.Common.Interfaces.IO.EventLoop;
-using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Observables;
-using Catalyst.Common.Interfaces.IO.Transport;
 using Catalyst.Common.Interfaces.IO.Transport.Channels;
 using Catalyst.Protocol.Common;
 using Catalyst.Common.Interfaces.Rpc;
-using Catalyst.Common.IO.Observables;
 using Catalyst.Common.IO.Transport;
-using DotNetty.Codecs.Protobuf;
 using Serilog;
 
 namespace Catalyst.Node.Core.RPC
@@ -65,7 +58,7 @@ namespace Catalyst.Node.Core.RPC
             _cancellationSource = new CancellationTokenSource();
             _certificate = certificateStore.ReadOrCreateCertificateFile(settings.PfxFileName);
 
-            var observableSocket = ChannelFactory.BuildChannel(EventLoopGroupFactory, certificate: _certificate);
+            var observableSocket = ChannelFactory.BuildChannel(EventLoopGroupFactory, Settings.BindAddress, Settings.Port, _certificate);
             Channel = observableSocket.Channel;
             MessageStream = observableSocket.MessageStream;
             requestHandlers.ToList().ForEach(h => h.StartObserving(MessageStream));

@@ -31,8 +31,8 @@ namespace Catalyst.Common.Interfaces.IO.Transport.Channels
     public interface IChannelFactory
     {
         IObservableChannel BuildChannel(IEventLoopGroupFactory eventLoopGroupFactory,
-            IPAddress targetAddress = null,
-            int targetPort = 0,
+            IPAddress targetAddress,
+            int targetPort,
             X509Certificate2 certificate = null);
     }
 }

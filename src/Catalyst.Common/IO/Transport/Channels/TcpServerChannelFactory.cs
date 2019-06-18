@@ -24,81 +24,50 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Security.Cryptography.X509Certificates;
-using Catalyst.Common.Interfaces.IO;
 using Catalyst.Common.Interfaces.IO.EventLoop;
-using Catalyst.Common.Interfaces.IO.Messaging;
-using Catalyst.Common.Interfaces.IO.Transport;
 using Catalyst.Common.Interfaces.IO.Transport.Channels;
-using Catalyst.Common.Interfaces.Modules.KeySigner;
-using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.IO.Handlers;
 using Catalyst.Common.IO.Transport.Bootstrapping;
-using Catalyst.Protocol.Common;
-using DotNetty.Codecs.Protobuf;
 using DotNetty.Handlers.Logging;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Sockets;
 
 namespace Catalyst.Common.IO.Transport.Channels
 {
-    public class TcpServerChannelFactory : ITcpServerChannelFactory
+    public abstract class TcpServerChannelFactory : ITcpServerChannelFactory
     {
-        private readonly IMessageCorrelationManager _correlationManger;
-        private readonly IPeerSettings _peerSettings;
-        private readonly IKeySigner _keySigner;
-        private const int BackLogValue = 100;
-        private List<IChannelHandler> _handlers;
+        private readonly int _backLogValue;
+        protected List<IChannelHandler> _handlers;
+
+        protected abstract List<IChannelHandler> Handlers { get; }
         
-        public TcpServerChannelFactory(IMessageCorrelationManager correlationManger, 
-            IPeerSettings peerSettings,
-            IKeySigner keySigner)
+        protected TcpServerChannelFactory(int backLogValue = 100)
         {
-            _correlationManger = correlationManger;
-            _peerSettings = peerSettings;
-            _keySigner = keySigner;
+            _backLogValue = backLogValue;
         }
+        
+        public abstract IObservableChannel BuildChannel(IEventLoopGroupFactory eventLoopGroupFactory,
+            IPAddress targetAddress,
+            int targetPort,
+            X509Certificate2 certificate = null);
 
-        /// <param name="handlerEventLoopGroupFactory"></param>
-        /// <param name="targetAddress">Ignored</param>
-        /// <param name="targetPort">Ignored</param>
-        /// <param name="certificate">Local TLS certificate</param>
-        public IObservableChannel BuildChannel(IEventLoopGroupFactory handlerEventLoopGroupFactory,
-            IPAddress targetAddress = null,
-            int targetPort = IPEndPoint.MinPort,
-            X509Certificate2 certificate = null) => 
-            Bootstrap(certificate, handlerEventLoopGroupFactory);
-
-        private IObservableChannel Bootstrap(X509Certificate2 certificate, IEventLoopGroupFactory handlerEventLoopGroupFactory)
+        protected IChannel Bootstrap(IEventLoopGroupFactory handlerEventLoopGroupFactory,
+            IPAddress targetAddress,
+            int targetPort,
+            X509Certificate2 certificate)
         {
             var supervisorLoopGroup = ((ITcpServerEventLoopGroupFactory) handlerEventLoopGroupFactory)
                .GetOrCreateSupervisorEventLoopGroup();
             var channelHandler = new ServerChannelInitializerBase<IChannel>(Handlers, handlerEventLoopGroupFactory, certificate);
 
-            var channel = new ServerBootstrap()
+            return new ServerBootstrap()
                .Group(handlerEventLoopGroupFactory.GetOrCreateSocketIoEventLoopGroup(), supervisorLoopGroup)
                .ChannelFactory(() => new TcpServerSocketChannel())
-               .Option(ChannelOption.SoBacklog, BackLogValue)
+               .Option(ChannelOption.SoBacklog, _backLogValue)
                .Handler(new LoggingHandler(LogLevel.DEBUG))
                .ChildHandler(channelHandler)
-               .BindAsync(_peerSettings.BindAddress, _peerSettings.Port)
+               .BindAsync(targetAddress, targetPort)
                .GetAwaiter()
                .GetResult();
-
-            var messageStream = channel.Pipeline.Get<ObservableServiceHandler>()?.MessageStream;
-
-            return new ObservableChannel(messageStream, channel);
         }
-
-        protected List<IChannelHandler> Handlers =>
-            _handlers ?? (_handlers = new List<IChannelHandler>
-            {
-                new ProtobufVarint32FrameDecoder(),
-                new ProtobufDecoder(ProtocolMessageSigned.Parser),
-                new ProtobufVarint32LengthFieldPrepender(),
-                new ProtobufEncoder(),
-                new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(new ProtocolMessageVerifyHandler(_keySigner), new ProtocolMessageSignHandler(_keySigner)),
-                new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(new CorrelationHandler(_correlationManger), new CorrelationHandler(_correlationManger)),
-                new ObservableServiceHandler()
-            });
     }
 }
