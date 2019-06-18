@@ -29,17 +29,12 @@ using DotNetty.Transport.Channels;
 
 namespace Catalyst.Common.IO.Handlers
 {
-    public sealed class ProtoDatagramEncoderHandler : ChannelHandlerAdapter
+    internal sealed class ProtoDatagramEncoderHandler : OutboundChannelHandlerBase<IMessageDto>
     {
-        public override Task WriteAsync(IChannelHandlerContext context, object message)
+        protected override Task WriteAsync0(IChannelHandlerContext context, IMessageDto message)
         {
-            if (message is IMessageDto signedProtocolMessage)
-            {
-                var signedMessage = (ProtocolMessageSigned) signedProtocolMessage.Message;
-                return context.WriteAndFlushAsync(signedMessage.ToDatagram(signedProtocolMessage.Recipient.IpEndPoint));
-            }
-
-            return context.CloseAsync();
+            var signedMessage = (ProtocolMessageSigned) message.Message;
+            return context.WriteAndFlushAsync(signedMessage.ToDatagram(message.Recipient.IpEndPoint));
         }
 
         public override void Flush(IChannelHandlerContext context)

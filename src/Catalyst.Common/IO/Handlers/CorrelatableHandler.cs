@@ -34,36 +34,28 @@ using DotNetty.Transport.Channels;
 
 namespace Catalyst.Common.IO.Handlers
 {
-    public sealed class CorrelatableHandler : ChannelHandlerAdapter
+    internal sealed class CorrelatableHandler : OutboundChannelHandlerBase<IMessageDto>
     {
         private readonly IMessageCorrelationManager _messageCorrelationManager;
 
-        public CorrelatableHandler(IMessageCorrelationManager messageCorrelationManager)
+        internal CorrelatableHandler(IMessageCorrelationManager messageCorrelationManager)
         {
             _messageCorrelationManager = messageCorrelationManager;
         }
 
-        public override Task WriteAsync(IChannelHandlerContext context, object message)
+        protected override Task WriteAsync0(IChannelHandlerContext context, IMessageDto message)
         {
-            // https://stackoverflow.com/questions/686412/c-sharp-is-operator-performance#686431
-            if (!(message is IMessageDto messageDto))
-            {
-                return context.Channel.CloseAsync();
-            }
-
-            var protocolMessage = new ProtocolMessageFactory().GetMessage(messageDto);
-            
-            if (protocolMessage.TypeUrl.EndsWith(MessageTypes.Request.Name))
+            if (message.MessageType.Name.Equals(MessageTypes.Request.Name))
             {
                 _messageCorrelationManager.AddPendingRequest(new CorrelatableMessage
                 {
-                    Recipient = messageDto.Recipient,
-                    Content = protocolMessage,
+                    Recipient = message.Recipient,
+                    Content = (ProtocolMessage) message.Message,
                     SentAt = DateTimeOffset.UtcNow
                 });
             }
             
-            return context.Channel.WriteAsync(new MessageDto(protocolMessage, messageDto.MessageType, messageDto.Recipient, messageDto.Sender));
+            return context.Channel.WriteAsync(message);
         }
     }
 }
