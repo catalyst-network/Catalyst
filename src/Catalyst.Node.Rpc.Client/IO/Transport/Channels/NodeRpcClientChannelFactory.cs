@@ -38,7 +38,7 @@ using DotNetty.Transport.Channels;
 
 namespace Catalyst.Node.Rpc.Client.IO.Transport.Channels
 {
-    public class NodeRpcClientChannelFactory : TcpClientChannelFactory, ITcpClientChannelFactory
+    public class NodeRpcClientChannelFactory : TcpClientChannelFactory
     {
         private readonly IKeySigner _keySigner;
         
