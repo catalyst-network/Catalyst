@@ -44,6 +44,7 @@ using Catalyst.Common.Interfaces.P2P.Messaging.Broadcast;
 using Catalyst.Common.IO.Handlers;
 using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Node.Core.P2P.Messaging.Broadcast;
+using SharpRepository.InMemoryRepository;
 using Xunit;
 using TransactionBroadcast = Catalyst.Protocol.Transaction.TransactionBroadcast;
 
@@ -58,7 +59,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Messaging.Gossip
         public GossipManagerTests()
         {
             _logger = Substitute.For<ILogger>();
-            _peers = Substitute.For<IRepository<Peer>>();
+            _peers = new InMemoryRepository<Peer>();
             _cache = new MemoryCache(new MemoryCacheOptions());
         }
 
@@ -87,7 +88,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Messaging.Gossip
 
             _cache.TryGetValue(correlationId, out BroadcastMessage value);
             
-            value.GossipCount.Should().Be(0);
+            value.GossipCount.Should().Be((uint) Constants.MaxGossipPeersPerRound - 1);
             value.ReceivedCount.Should().Be(0);
         }
 
@@ -221,21 +222,21 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Messaging.Gossip
 
         private void PopulatePeers(int count)
         {
-            var peerIdentifiers = new List<Peer>();
             for (var i = 10; i < count + 10; i++)
             {
-                peerIdentifiers.Add(new Peer
+                _peers.Add(new Peer
                 {
-                    PeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier(i.ToString())
+                    PeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier(i.ToString()),
                 });
             }
 
-            _peers.GetAll().Returns(peerIdentifiers);
+            _peers.Count().Should().Be(count);
         }
 
         public void Dispose()
         {
             _cache.Dispose();
+            _peers.Dispose();
         }
     }
 }
