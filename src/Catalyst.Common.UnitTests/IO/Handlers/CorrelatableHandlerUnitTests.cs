@@ -38,8 +38,8 @@ namespace Catalyst.Common.UnitTests.IO.Handlers
 {
     public sealed class CorrelatableHandlerUnitTests
     {
-        private IChannelHandlerContext _fakeContext;
-        private IMessageCorrelationManager _fakeMessageCorrelationManager;
+        private readonly IChannelHandlerContext _fakeContext;
+        private readonly IMessageCorrelationManager _fakeMessageCorrelationManager;
 
         public CorrelatableHandlerUnitTests()
         {
