@@ -25,6 +25,8 @@ using Catalyst.Common.Interfaces.Rpc.Authentication;
 using Catalyst.Common.P2P;
 using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;
+using Nethereum.RLP;
+using Serilog;
 
 namespace Catalyst.Common.IO.Handlers
 {
@@ -37,19 +39,31 @@ namespace Catalyst.Common.IO.Handlers
         /// <summary>The authentication strategy</summary>
         private readonly IAuthenticationStrategy _authenticationStrategy;
 
+        /// <summary>The logger</summary>
+        private readonly ILogger _logger;
+
         /// <summary>Initializes a new instance of the <see cref="AuthenticationHandler"/> class.</summary>
         /// <param name="authenticationStrategy">The authentication strategy.</param>
-        public AuthenticationHandler(IAuthenticationStrategy authenticationStrategy)
+        /// <param name="logger">The logger.</param>
+        public AuthenticationHandler(IAuthenticationStrategy authenticationStrategy, ILogger logger)
         {
             _authenticationStrategy = authenticationStrategy;
+            _logger = logger;
         }
 
         /// <inheritdoc cref="SimpleChannelInboundHandler{I}"/>>
         protected override void ChannelRead0(IChannelHandlerContext ctx, ProtocolMessageSigned msg)
         {
-            if (_authenticationStrategy.Authenticate(new PeerIdentifier(msg.Message.PeerId)))
+            var peerIdentifier = new PeerIdentifier(msg.Message.PeerId);
+            if (_authenticationStrategy.Authenticate(peerIdentifier))
             {
                 ctx.FireChannelRead(msg);
+            }
+            else
+            {
+                _logger.Debug($"Message from IP: {peerIdentifier.Ip} " +
+                    $"Public Key: {peerIdentifier.PeerId.PublicKey.ToByteArray().ToStringFromRLPDecoded()} not in whitelist, message discarded");
+                ctx.CloseAsync();
             }
         }
     }
