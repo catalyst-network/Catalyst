@@ -30,11 +30,11 @@ using DotNetty.Transport.Channels;
 
 namespace Catalyst.Common.IO.Transport.Channels
 {
-    public sealed class ServerChannelInitializerBase<T>
+    internal sealed class ServerChannelInitializerBase<T>
         : ChannelInitializerBase<T> where T : IChannel
     {
         /// <inheritdoc />
-        public ServerChannelInitializerBase(IList<IChannelHandler> handlers,
+        internal ServerChannelInitializerBase(IList<IChannelHandler> handlers,
             IEventLoopGroupFactory eventLoopGroupFactory,
             X509Certificate certificate = null)
             : base(handlers,

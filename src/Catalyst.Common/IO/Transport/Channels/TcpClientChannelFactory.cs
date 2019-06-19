@@ -22,32 +22,33 @@
 #endregion
 
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Security.Cryptography.X509Certificates;
 using Catalyst.Common.Interfaces.IO.EventLoop;
 using Catalyst.Common.Interfaces.IO.Transport.Channels;
-using Catalyst.Common.Interfaces.Modules.KeySigner;
-using Catalyst.Common.IO.Handlers;
 using Catalyst.Common.IO.Transport.Bootstrapping;
-using Catalyst.Protocol.Common;
-using DotNetty.Codecs.Protobuf;
 using DotNetty.Handlers.Logging;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Sockets;
 
 namespace Catalyst.Common.IO.Transport.Channels
 {
-    public class TcpClientChannelFactory : ITcpClientChannelFactory
+    public abstract class TcpClientChannelFactory : ITcpClientChannelFactory
     {
-        private readonly IKeySigner _keySigner;
-        public TcpClientChannelFactory(IKeySigner keySigner) { _keySigner = keySigner; }
-        private const int BackLogValue = 100;
-        private List<IChannelHandler> _handlers;
+        private readonly int _backLogValue;
+        protected List<IChannelHandler> _handlers;
 
-        public IObservableChannel BuildChannel(IEventLoopGroupFactory handlerEventLoopGroupFactory,
-            IPAddress targetAddress = null, 
-            int targetPort = IPEndPoint.MinPort,
+        protected abstract List<IChannelHandler> Handlers { get; }
+        protected TcpClientChannelFactory(int backLogValue = 100) { _backLogValue = backLogValue; }
+        
+        public abstract IObservableChannel BuildChannel(IEventLoopGroupFactory eventLoopGroupFactory,
+            IPAddress targetAddress,
+            int targetPort,
+            X509Certificate2 certificate = null);
+
+        protected IChannel Bootstrap(IEventLoopGroupFactory handlerEventLoopGroupFactory,
+            IPAddress targetAddress, 
+            int targetPort,
             X509Certificate2 certificate = null)
         {
             var channelHandler = new ClientChannelInitializerBase<ISocketChannel>(Handlers,
@@ -55,30 +56,15 @@ namespace Catalyst.Common.IO.Transport.Channels
                 targetAddress,
                 certificate);
 
-            var channel = new Bootstrap()
+            return new Bootstrap()
                .Group(handlerEventLoopGroupFactory.GetOrCreateSocketIoEventLoopGroup())
                .ChannelFactory(() => new TcpSocketChannel())
-               .Option(ChannelOption.SoBacklog, BackLogValue)
+               .Option(ChannelOption.SoBacklog, _backLogValue)
                .Handler(new LoggingHandler(LogLevel.DEBUG))
                .Handler(channelHandler)
                .ConnectAsync(targetAddress, targetPort)
                .GetAwaiter()
                .GetResult();
-
-            var messageStream = Handlers.OfType<ObservableServiceHandler>().Single().MessageStream;
-
-            return new ObservableChannel(messageStream, channel);
         }
-
-        protected List<IChannelHandler> Handlers =>
-            _handlers ?? (_handlers = new List<IChannelHandler>
-            {
-                new ProtobufVarint32LengthFieldPrepender(),
-                new ProtobufEncoder(),
-                new ProtobufVarint32FrameDecoder(),
-                new ProtobufDecoder(ProtocolMessageSigned.Parser),
-                new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(new ProtocolMessageVerifyHandler(_keySigner), new ProtocolMessageSignHandler(_keySigner)),
-                new ObservableServiceHandler()
-            });
     }
 }

@@ -27,35 +27,33 @@ using System.Net;
 using System.Threading.Tasks;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging;
-using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.Interfaces.P2P.Messaging.Dto;
 using Catalyst.Common.IO.Handlers;
 using Catalyst.Common.P2P;
-using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
+using Catalyst.Common.UnitTests.IO;
 using Catalyst.Node.Core.RPC.Observables;
+using Catalyst.Node.Core.UnitTests.RPC.IO.Transport.Channels;
+using Catalyst.Node.Rpc.Client.UnitTests.IO.Transport.Channels;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
-using DotNetty.Common.Utilities;
 using DotNetty.Transport.Channels.Embedded;
-using FluentAssertions;
-using Google.Protobuf;
 using NSubstitute;
 using Serilog;
 using SharpRepository.Repository;
 using Xunit;
 
-namespace Catalyst.Common.UnitTests.IO
+namespace Catalyst.Node.Core.IntegrationTests.Rpc.IO.Transport.Channels
 {
     public class TcpClientAndServerCommunicationTests : IDisposable
     {
         private readonly IMessageCorrelationManager _serverCorrelationManager;
+        private readonly IMessageCorrelationManager _clientCorrelationManager;
         private readonly IKeySigner _serverKeySigner;
-        private readonly TcpServerChannelFactoryTests.TestTcpServerChannelFactory _serverFactory;
         private readonly IKeySigner _clientKeySigner;
-        private readonly TcpClientChannelFactoryTests.TestTcpClientChannelFactory _clientFactory;
+        private readonly NodeRpcServerChannelFactoryTests.TestNodeRpcServerChannelFactory _serverFactory;
+        private readonly NodeRpcClientChannelFactoryTests.TestNodeRpcClientChannelFactory _clientFactory;
         private IRepository<Peer> _peerRepository;
         private PeerCountRequestObserver _peerCountObserver;
         private TestMessageObserver<GetPeerCountResponse> _clientObserver;
@@ -69,13 +67,15 @@ namespace Catalyst.Common.UnitTests.IO
 
             peerSettings.BindAddress.Returns(IPAddress.Parse("127.0.0.1"));
             peerSettings.Port.Returns(1234);
-            _serverFactory = new TcpServerChannelFactoryTests.TestTcpServerChannelFactory(
+            _serverFactory = new NodeRpcServerChannelFactoryTests.TestNodeRpcServerChannelFactory(
                 _serverCorrelationManager,
-                peerSettings,
                 _serverKeySigner);
 
+            _clientCorrelationManager = Substitute.For<IMessageCorrelationManager>();
             _clientKeySigner = Substitute.For<IKeySigner>();
-            _clientFactory = new TcpClientChannelFactoryTests.TestTcpClientChannelFactory(_clientKeySigner);
+            _clientFactory = new NodeRpcClientChannelFactoryTests.TestNodeRpcClientChannelFactory(
+                _clientKeySigner, 
+                _clientCorrelationManager);
         }
 
         [Fact]
