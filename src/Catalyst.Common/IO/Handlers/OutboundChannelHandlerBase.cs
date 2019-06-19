@@ -21,16 +21,23 @@
 
 #endregion
 
-using Catalyst.Common.Config;
-using Google.Protobuf;
+using System.Threading.Tasks;
+using DotNetty.Transport.Channels;
 
-namespace Catalyst.Common.Interfaces.P2P.Messaging.Dto
+namespace Catalyst.Common.IO.Handlers
 {
-    public interface IMessageDto
+    public abstract class OutboundChannelHandlerBase<I> : ChannelHandlerAdapter
     {
-        MessageTypes MessageType { get; }
-        IMessage Message { get; }
-        IPeerIdentifier Recipient { get; }
-        IPeerIdentifier Sender { get; }
+        public override Task WriteAsync(IChannelHandlerContext ctx, object msg)
+        {
+            if (msg is I msg1)
+            {
+                return WriteAsync0(ctx, msg1);
+            }
+
+            return ctx.WriteAsync(msg);
+        }
+
+        protected abstract Task WriteAsync0(IChannelHandlerContext ctx, I msg);
     }
 }
