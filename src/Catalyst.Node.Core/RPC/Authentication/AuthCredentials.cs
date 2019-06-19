@@ -21,6 +21,9 @@
 
 #endregion
 
+using System;
+using Catalyst.Common.Attributes;
+using Catalyst.Common.Interfaces.Attributes;
 using Catalyst.Common.Interfaces.Rpc.Authentication;
 
 namespace Catalyst.Node.Core.RPC.Authentication
@@ -28,6 +31,7 @@ namespace Catalyst.Node.Core.RPC.Authentication
     /// <summary>
     /// Credentials to authenticate
     /// </summary>
+    [Audit]
     public class AuthCredentials : IAuthCredentials
     {
         /// <summary>Gets or sets the public key.</summary>
@@ -37,5 +41,11 @@ namespace Catalyst.Node.Core.RPC.Authentication
         /// <summary>Gets or sets the ip address.</summary>
         /// <value>The ip address.</value>
         public string IpAddress { get; set; }
+
+        /// <inheritdoc cref="IAuditable.Created"/>
+        public DateTime Created { get; set; }
+
+        /// <inheritdoc cref="IAuditable.Modified"/>
+        public DateTime? Modified { get; set; }
     }
 }

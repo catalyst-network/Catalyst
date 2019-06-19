@@ -22,11 +22,12 @@
 #endregion
 
 using System.Net;
+using Catalyst.Common.Interfaces.Attributes;
 using SharpRepository.Repository;
 
 namespace Catalyst.Common.Interfaces.Rpc.Authentication
 {
-    public interface IAuthCredentials
+    public interface IAuthCredentials : IAuditable
     {
         /// <summary>Gets or sets the public key.</summary>
         /// <value>The public key.</value>
