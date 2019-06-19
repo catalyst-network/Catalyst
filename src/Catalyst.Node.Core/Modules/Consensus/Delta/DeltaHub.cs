@@ -126,9 +126,6 @@ namespace Catalyst.Node.Core.Modules.Consensus.Delta
         {
             Guard.Argument(delta, nameof(delta)).NotNull().Require(c => c.IsValid());
 
-            // TODO: Check if the file is there before sending
-            // https://github.com/catalyst-network/Catalyst.Node/issues/537
-
             var deltaAsArray = delta.ToByteArray();
             var ipfsFileAddress = await IpfsRetryPolicy.ExecuteAsync(
                 async c => await TryPublishIpfsFile(deltaAsArray, cancellationToken: c).ConfigureAwait(false),
@@ -137,7 +134,7 @@ namespace Catalyst.Node.Core.Modules.Consensus.Delta
             return ipfsFileAddress;
         }
 
-        public async Task<string> TryPublishIpfsFile(byte[] deltaAsBytes, CancellationToken cancellationToken)
+        private async Task<string> TryPublishIpfsFile(byte[] deltaAsBytes, CancellationToken cancellationToken)
         {
             using (var memoryStream = new MemoryStream())
             {
