@@ -29,6 +29,7 @@ using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.Interfaces.Rpc.Authentication;
 using Catalyst.Common.IO.Handlers;
 using Catalyst.Common.P2P;
 using Catalyst.Node.Core.RPC.Observables;
@@ -55,6 +56,7 @@ namespace Catalyst.Node.Core.IntegrationTests.Rpc.IO.Transport.Channels
         private readonly IKeySigner _clientKeySigner;
         private readonly NodeRpcServerChannelFactoryTests.TestNodeRpcServerChannelFactory _serverFactory;
         private readonly NodeRpcClientChannelFactoryTests.TestNodeRpcClientChannelFactory _clientFactory;
+        private readonly IAuthenticationStrategy _authenticationStrategy;
         private IRepository<Peer> _peerRepository;
         private PeerCountRequestObserver _peerCountObserver;
         private TestMessageObserver<GetPeerCountResponse> _clientObserver;
@@ -68,9 +70,12 @@ namespace Catalyst.Node.Core.IntegrationTests.Rpc.IO.Transport.Channels
 
             peerSettings.BindAddress.Returns(IPAddress.Parse("127.0.0.1"));
             peerSettings.Port.Returns(1234);
+            _authenticationStrategy = Substitute.For<IAuthenticationStrategy>();
+            _authenticationStrategy.Authenticate(Arg.Any<IPeerIdentifier>()).Returns(true);
             _serverFactory = new NodeRpcServerChannelFactoryTests.TestNodeRpcServerChannelFactory(
                 _serverCorrelationManager,
-                _serverKeySigner);
+                _serverKeySigner,
+                _authenticationStrategy);
 
             _clientCorrelationManager = Substitute.For<IMessageCorrelationManager>();
             _clientKeySigner = Substitute.For<IKeySigner>();
