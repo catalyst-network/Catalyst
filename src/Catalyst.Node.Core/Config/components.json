@@ -148,6 +148,14 @@
         },
        
         {
+            "type": "Catalyst.Node.Core.RPC.Authentication.RepositoryAuthenticationStrategy",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.Rpc.Authentication.IAuthenticationStrategy, Catalyst.Common"
+                }
+            ]
+        },
+        {
             "type": "SharpRepository.InMemoryRepository.InMemoryRepository`1[[Catalyst.Common.P2P.Peer, Catalyst.Common]], SharpRepository.InMemoryRepository",
             "services": [
                 {
@@ -164,10 +172,26 @@
             ]
         },
         {
+            "type": "Catalyst.Common.FileSystem.FileSystemAwareXmlRepository`1[[Catalyst.Node.Core.RPC.Authentication.AuthCredentials, Catalyst.Node.Core]], Catalyst.Common",
+            "services": [
+                {
+                    "type": "SharpRepository.Repository.IRepository`1[[Catalyst.Node.Core.RPC.Authentication.AuthCredentials, Catalyst.Node.Core]], SharpRepository.Repository"
+                }
+            ]
+        },
+        {
             "type": "Microsoft.Extensions.Caching.Memory.MemoryCache, Microsoft.Extensions.Caching.Memory",
             "services": [
                 {
                     "type": "Microsoft.Extensions.Caching.Memory.IMemoryCache, Microsoft.Extensions.Caching.Abstractions"
+                }
+            ]
+        },
+        {
+            "type": "Catalyst.Node.Core.Rpc.Authentication.AuthCredentials",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.Rpc.Authentication.IAuthCredentials, Catalyst.Common"
                 }
             ]
         },
