@@ -57,7 +57,7 @@ namespace Catalyst.Common.IO.Handlers
                 Message = (ProtocolMessage) message.Message
             };
 
-            return context.WriteAsync(new MessageDto(protocolMessageSigned, message.MessageType, message.Recipient, message.Sender));
+            return context.WriteAsync(new MessageSignedDto(protocolMessageSigned, message.MessageType, message.Recipient, message.Sender));
         }
     }
 }

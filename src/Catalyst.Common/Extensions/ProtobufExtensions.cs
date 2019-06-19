@@ -158,7 +158,7 @@ namespace Catalyst.Common.Extensions
             return guid.ToByteArray().ToByteString();
         }
 
-        public static DatagramPacket ToDatagram<T>(this T anySignedMessage, IPEndPoint recipient) where T : IMessage<T>
+        public static DatagramPacket ToDatagram(this IMessage<ProtocolMessageSigned> anySignedMessage, IPEndPoint recipient)
         {
             return new DatagramPacket(Unpooled.WrappedBuffer(anySignedMessage.ToByteArray()), recipient);
         }

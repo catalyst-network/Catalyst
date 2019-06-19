@@ -21,10 +21,43 @@
 
 #endregion
 
+using Catalyst.Common.Config;
+using Catalyst.Common.Interfaces.P2P.Messaging.Dto;
+using Catalyst.Common.IO.Handlers;
+using Catalyst.Common.IO.Messaging.Dto;
+using Catalyst.Protocol.Common;
+using Catalyst.Protocol.IPPN;
+using Catalyst.TestUtils;
+using DotNetty.Buffers;
+using DotNetty.Transport.Channels;
+using DotNetty.Transport.Channels.Sockets;
+using Google.Protobuf;
+using NSubstitute;
+using Xunit;
+
 namespace Catalyst.Common.UnitTests.IO.Handlers
 {
-    public class ProtoDatagramEncoderHandlerTests
+    public sealed class ProtoDatagramEncoderHandlerTests
     {
+        private IChannelHandlerContext _fakeContext;
+
+        public ProtoDatagramEncoderHandlerTests()
+        {
+            _fakeContext = Substitute.For<IChannelHandlerContext>();
+        }
         
+        [Fact]
+        public void Does_Process_IMessageDto_Types()
+        {
+            var fakeRequestMessageDto = Substitute.For<IMessageSignedDto<ProtocolMessageSigned>>();
+            fakeRequestMessageDto.MessageType.Returns(MessageTypes.Request);
+            fakeRequestMessageDto.Message.Returns(Substitute.For<IMessage<ProtocolMessageSigned>>());
+            fakeRequestMessageDto.Sender.Returns(PeerIdentifierHelper.GetPeerIdentifier("Im_The_Sender"));
+
+            var protoDatagramEncoderHandler = new ProtoDatagramEncoderHandler<ProtocolMessageSigned>();
+            protoDatagramEncoderHandler.WriteAsync(_fakeContext, fakeRequestMessageDto);
+
+            _fakeContext.ReceivedWithAnyArgs().Received(1).WriteAndFlushAsync(Arg.Any<IByteBufferHolder>());
+        }
     }
 }

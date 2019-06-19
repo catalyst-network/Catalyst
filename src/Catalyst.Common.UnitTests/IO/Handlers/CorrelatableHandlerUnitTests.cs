@@ -21,6 +21,7 @@
 
 #endregion
 
+using System.Linq;
 using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
@@ -30,6 +31,7 @@ using Catalyst.Common.IO.Messaging;
 using Catalyst.Protocol.IPPN;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
+using FluentAssertions;
 using Google.Protobuf;
 using NSubstitute;
 using Xunit;
@@ -57,16 +59,16 @@ namespace Catalyst.Common.UnitTests.IO.Handlers
             fakeRequestMessageDto.Message.Descriptor.Returns(PingRequest.Descriptor);
 
             var correlatableHandler = new CorrelatableHandler(_fakeMessageCorrelationManager);
-            
+
             correlatableHandler.WriteAsync(_fakeContext, fakeRequestMessageDto);
             _fakeMessageCorrelationManager
                .ReceivedWithAnyArgs()
                .AddPendingRequest(Arg.Any<CorrelatableMessage>()
                 );
 
-            _fakeContext.Channel.ReceivedWithAnyArgs();
+            _fakeContext.ReceivedWithAnyArgs().Received(1).WriteAsync(Arg.Any<IMessageDto>());
         }
-        
+
         [Fact]
         public void Does_Not_Process_OtherTypes_Types()
         {
@@ -81,7 +83,7 @@ namespace Catalyst.Common.UnitTests.IO.Handlers
                .AddPendingRequest(Arg.Any<CorrelatableMessage>()
                 );
 
-            _fakeContext.Channel.ReceivedWithAnyArgs();
+            _fakeContext.ReceivedWithAnyArgs().Received(1).WriteAsync(Arg.Any<IMessageDto>());
         }
     }
 }
