@@ -54,7 +54,7 @@ namespace Catalyst.Common.UnitTests.IO.Handlers
             var protoDatagramEncoderHandler = new ProtoDatagramEncoderHandler();
             protoDatagramEncoderHandler.WriteAsync(_fakeContext, fakeRequestMessageDto);
 
-            _fakeContext.ReceivedWithAnyArgs().Received(1).WriteAndFlushAsync(Arg.Any<IByteBufferHolder>());
+            _fakeContext.ReceivedWithAnyArgs(1).WriteAndFlushAsync(Arg.Any<IByteBufferHolder>());
         }
     }
 }

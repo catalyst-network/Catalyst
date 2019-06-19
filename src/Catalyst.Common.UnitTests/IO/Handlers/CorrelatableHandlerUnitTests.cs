@@ -65,7 +65,7 @@ namespace Catalyst.Common.UnitTests.IO.Handlers
                .AddPendingRequest(Arg.Any<CorrelatableMessage>()
                 );
 
-            _fakeContext.ReceivedWithAnyArgs().Received(1).WriteAsync(Arg.Any<IMessageDto>());
+            _fakeContext.ReceivedWithAnyArgs(1).WriteAsync(Arg.Any<IMessageDto>());
         }
 
         [Fact]
@@ -82,7 +82,7 @@ namespace Catalyst.Common.UnitTests.IO.Handlers
                .AddPendingRequest(Arg.Any<CorrelatableMessage>()
                 );
 
-            _fakeContext.ReceivedWithAnyArgs().Received(1).WriteAsync(Arg.Any<IProtocolMessageDto<IMessage>>());
+            _fakeContext.ReceivedWithAnyArgs(1).WriteAsync(Arg.Any<IProtocolMessageDto<IMessage>>());
         }
     }
 }
