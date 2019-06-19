@@ -27,10 +27,15 @@ using System.Security;
 using System.Security.Authentication;
 using System.Threading.Tasks;
 using Catalyst.Common.Interfaces.Cryptography;
+using System.IO;
+using System.Linq;
 using Catalyst.Common.Interfaces.FileSystem;
 using Catalyst.Common.Interfaces.Keystore;
 using Catalyst.Common.Interfaces.Util;
+using Catalyst.Common.Config;
+using Catalyst.Common.Extensions;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
+using Catalyst.Cryptography.BulletProofs.Wrapper.Types;
 using Nethereum.KeyStore.Crypto;
 using Serilog;
 
@@ -130,9 +135,18 @@ namespace Catalyst.Common.Keystore
             return json;
         }
 
+        public IPrivateKey GetDefaultKey()
+        {
+            var directoryInfo = _fileSystem.GetCatalystDataDir().SubDirectoryInfo(Constants.KeyStoreDataSubDir);
+            FileInfo keyStoreFile = directoryInfo.GetFiles("*.json").FirstOrDefault();
+            return keyStoreFile.Exists ? new PrivateKey(KeyStoreDecrypt(Password, keyStoreFile.FullName)) : null;
+        }
+
         public void Dispose()
         {
             _password?.Dispose();
         }
+
+
     }
 }

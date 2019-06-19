@@ -57,6 +57,9 @@ namespace Catalyst.Common.Config
         
         // <summary> Default dfs data directory inside the Catalyst data directory </summary>
         public static string DfsDataSubDir => "dfs";
+
+        // <summary> Default keystore data directory inside the Catalyst data directory </summary>
+        public static string KeyStoreDataSubDir => "keystore";
         
         // <summary> Config file with Catalyst.Cli component registrations for autofac </summary>
         public static string ShellComponentsJsonConfigFile => "shell.components.json";

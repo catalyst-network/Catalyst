@@ -21,17 +21,15 @@
 
 #endregion
 
-using System.Threading.Tasks;
-using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
+using System.IO;
 
-namespace Catalyst.Common.Interfaces.Keystore
+namespace Catalyst.Common.Extensions
 {
-    public interface IKeyStore
+    public static class DirectoryInfoExtensions
     {
-        byte[] KeyStoreDecrypt(string password, string json);
-
-        Task<string> KeyStoreGenerate(IPrivateKey privateKey, string password);
-
-        IPrivateKey GetDefaultKey();
+        public static DirectoryInfo SubDirectoryInfo(this DirectoryInfo parentDirectory, string subDirectoryName)
+        {
+            return new DirectoryInfo(Path.Combine(parentDirectory.FullName, subDirectoryName));
+        }
     }
 }

@@ -51,8 +51,7 @@ namespace Catalyst.Common.UnitTests.Cryptography
 
         private void Create_certificate_store()
         {
-            var dataFolder = FileSystem.GetCatalystDataDir().FullName;
-            _directoryInfo = new DirectoryInfo(dataFolder);
+            _directoryInfo = FileSystem.GetCatalystDataDir();
             _certificateStore = new CertificateStore(FileSystem, _passwordReader);
         }
 

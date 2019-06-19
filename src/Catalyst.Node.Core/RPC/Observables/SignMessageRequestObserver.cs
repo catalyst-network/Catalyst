@@ -66,11 +66,9 @@ namespace Catalyst.Node.Core.RPC.Observables
 
                 Guard.Argument(messageDto).NotNull("The request cannot be null");
 
-                var decodedMessage = deserialised.Message.ToString(Encoding.UTF8);
+                string decodedMessage = deserialised.Message.ToString(Encoding.UTF8);
 
-                var privateKey = _keySigner.CryptoContext.GeneratePrivateKey(); //@TODO We shouldn't be generating a key here
-
-                var signature = _keySigner.CryptoContext.Sign(privateKey, Encoding.UTF8.GetBytes(decodedMessage));
+                var signature = _keySigner.Sign(Encoding.UTF8.GetBytes(decodedMessage));
 
                 Guard.Argument(signature).NotNull("Failed to sign message. The signature cannot be null.");
 
