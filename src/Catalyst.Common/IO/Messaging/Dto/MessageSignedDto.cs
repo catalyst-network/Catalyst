@@ -22,16 +22,24 @@
 #endregion
 
 using Catalyst.Common.Config;
-using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Protocol.Common;
 using Dawn;
 using Google.Protobuf;
 
 namespace Catalyst.Common.IO.Messaging.Dto
 {
-    public sealed class MessageDto : IMessageDto
+    public interface IMessageSignedDto<T> where T : IMessage<T>
     {
-        public IMessage Message { get; }
+        IMessage<T> Message { get; }
+        MessageTypes MessageType { get; }
+        IPeerIdentifier Recipient { get; }
+        IPeerIdentifier Sender { get; }
+    }
+
+    public sealed class MessageSignedDto : IMessageSignedDto<ProtocolMessageSigned>
+    {
+        public IMessage<ProtocolMessageSigned> Message { get; }
         public MessageTypes MessageType { get; }
         public IPeerIdentifier Recipient { get; }
         public IPeerIdentifier Sender { get; }
@@ -43,7 +51,7 @@ namespace Catalyst.Common.IO.Messaging.Dto
         /// <param name="messageTypes"></param>
         /// <param name="recipient"></param>
         /// <param name="sender"></param>
-        public MessageDto(IMessage message,
+        public MessageSignedDto(IMessage<ProtocolMessageSigned> message,
             MessageTypes messageTypes,
             IPeerIdentifier recipient,
             IPeerIdentifier sender)
