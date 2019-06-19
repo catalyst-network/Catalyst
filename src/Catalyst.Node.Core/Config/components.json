@@ -67,15 +67,7 @@
             ]
         },
         {
-            "type": "Catalyst.Common.IO.Transport.Channels.TcpServerChannelFactory, Catalyst.Common",
-            "services": [
-                {
-                    "type": "Catalyst.Common.Interfaces.IO.Transport.Channels.ITcpServerChannelFactory, Catalyst.Common"
-                }
-            ]
-        },
-        {
-            "type": "Catalyst.Common.IO.Transport.Channels.TcpClientChannelFactory, Catalyst.Common",
+            "type": "Catalyst.Node.Rpc.Client.IO.Transport.Channels.NodeRpcClientChannelFactory, Catalyst.Node.Rpc.Client",
             "services": [
                 {
                     "type": "Catalyst.Common.Interfaces.IO.Transport.Channels.ITcpClientChannelFactory, Catalyst.Common"
@@ -83,7 +75,15 @@
             ]
         },
         {
-            "type": "Catalyst.Common.IO.Transport.Channels.UdpClientChannelFactory, Catalyst.Common",
+            "type": "Catalyst.Node.Core.RPC.IO.Transport.Channels.NodeRpcServerChannelFactory",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.IO.Transport.Channels.ITcpServerChannelFactory, Catalyst.Common"
+                }
+            ]
+        },
+        {
+            "type": "Catalyst.Node.Core.P2P.IO.Transport.Channels.PeerClientChannelFactory",
             "services": [
                 {
                     "type": "Catalyst.Common.Interfaces.IO.Transport.Channels.IUdpClientChannelFactory, Catalyst.Common"
@@ -91,7 +91,7 @@
             ]
         },
         {
-            "type": "Catalyst.Common.IO.Transport.Channels.UdpServerChannelFactory, Catalyst.Common",
+            "type": "Catalyst.Node.Core.P2P.IO.Transport.Channels.PeerServerChannelFactory",
             "services": [
                 {
                     "type": "Catalyst.Common.Interfaces.IO.Transport.Channels.IUdpServerChannelFactory, Catalyst.Common"
