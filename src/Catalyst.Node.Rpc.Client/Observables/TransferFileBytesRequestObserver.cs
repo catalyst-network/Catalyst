@@ -45,7 +45,7 @@ namespace Catalyst.Node.Rpc.Client.Observables
         private readonly IDownloadFileTransferFactory _fileTransferFactory;
 
         /// <summary>Initializes a new instance of the <see cref="TransferFileBytesRequestObserver"/> class.</summary>
-        /// <param name="fileTransferFactory">The download transfer factory.</param>
+        /// <param name="fileTransferFactory">The download file transfer factory.</param>
         /// <param name="peerIdentifier">The peer identifier.</param>
         /// <param name="logger">The logger.</param>
         public TransferFileBytesRequestObserver(IDownloadFileTransferFactory fileTransferFactory,
@@ -60,10 +60,11 @@ namespace Catalyst.Node.Rpc.Client.Observables
         /// <param name="messageDto">The message.</param>
         public override IMessage HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto)
         {
-            Logger.Debug("received message of type TransferFileBytesRequest");
+            Logger.Debug("received message of type TransferFileBytesRequestObserver");
 
             var deserialised = messageDto.Payload.FromProtocolMessage<TransferFileBytesRequest>();
             FileTransferResponseCodes responseCode;
+
             try
             {
                 Guard.Argument(deserialised).NotNull("Message cannot be null");

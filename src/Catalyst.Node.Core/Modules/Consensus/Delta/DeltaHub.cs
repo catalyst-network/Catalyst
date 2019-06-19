@@ -53,10 +53,7 @@ namespace Catalyst.Node.Core.Modules.Consensus.Delta
         private IDisposable _incomingCandidateSubscription;
         private IDisposable _incomingFavouriteCandidateSubscription;
 
-        private static readonly AsyncRetryPolicy<string> IpfsRetryPolicy = Policy<string>
-           .Handle<Exception>()
-           .WaitAndRetryAsync(10, retryAttempt =>
-                TimeSpan.FromMilliseconds(Math.Pow(2, retryAttempt)));
+        protected virtual AsyncRetryPolicy<string> IpfsRetryPolicy { get; }
 
         public DeltaHub(IBroadcastManager broadcastManager,
             IPeerIdentifier peerIdentifier,
@@ -71,6 +68,10 @@ namespace Catalyst.Node.Core.Modules.Consensus.Delta
             _deltaElector = deltaElector;
             _dfs = dfs;
             _logger = logger;
+
+            IpfsRetryPolicy = Policy<string>.Handle<Exception>()
+               .WaitAndRetryAsync(4, retryAttempt =>
+                    TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)));
         }
 
         /// <inheritdoc />

@@ -37,6 +37,8 @@ using Catalyst.Protocol.Delta;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using NSubstitute;
+using Polly;
+using Polly.Retry;
 using Serilog;
 using Xunit;
 
@@ -50,6 +52,21 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Consensus.Delta
         private readonly DeltaHub _hub;
         private readonly IDfs _dfs;
 
+        internal sealed class DeltaHubWithFastRetryPolicy : DeltaHub
+        {
+            public DeltaHubWithFastRetryPolicy(IBroadcastManager broadcastManager,
+                IPeerIdentifier peerIdentifier,
+                IDeltaVoter deltaVoter,
+                IDeltaElector deltaElector,
+                IDfs dfs,
+                ILogger logger) : base(broadcastManager, peerIdentifier, deltaVoter, deltaElector, dfs, logger) { }
+
+            protected override AsyncRetryPolicy<string> IpfsRetryPolicy => 
+                Policy<string>.Handle<Exception>()
+                   .WaitAndRetryAsync(4, retryAttempt => 
+                        TimeSpan.FromMilliseconds(Math.Pow(2, retryAttempt)));
+        }
+
         public DeltaHubTests()
         {
             _broadcastManager = Substitute.For<IBroadcastManager>();
@@ -59,7 +76,7 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Consensus.Delta
             var deltaElector = Substitute.For<IDeltaElector>();
             var dfs = Substitute.For<IDfs>();
             _dfs = dfs;
-            _hub = new DeltaHub(_broadcastManager, _peerIdentifier, _deltaVoter, deltaElector, _dfs, logger);
+            _hub = new DeltaHubWithFastRetryPolicy(_broadcastManager, _peerIdentifier, _deltaVoter, deltaElector, _dfs, logger);
         }
 
         [Fact]
@@ -154,8 +171,6 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Consensus.Delta
 
             var dfsResults = new SubstituteResults<string>(() => throw new Exception("this one failed"))
                .Then(() => throw new Exception("this one failed again"))
-               .Then(() => throw new Exception("this one failed again"))
-               .Then(() => throw new Exception("this one failed again"))
                .Then(() =>
                 {
                     cancellationSource.Cancel();
@@ -169,7 +184,7 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Consensus.Delta
             new Action(() => _hub.PublishDeltaToIpfsAsync(delta, cancellationToken).GetAwaiter().GetResult())
                .Should().Throw<TaskCanceledException>();
 
-            await _dfs.ReceivedWithAnyArgs(5).AddAsync(Arg.Any<Stream>(), Arg.Any<string>(), default);
+            await _dfs.ReceivedWithAnyArgs(3).AddAsync(Arg.Any<Stream>(), Arg.Any<string>(), default);
         }
 
         [Theory]
