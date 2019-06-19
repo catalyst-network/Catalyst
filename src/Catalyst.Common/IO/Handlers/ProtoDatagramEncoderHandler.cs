@@ -23,23 +23,17 @@
 
 using System.Threading.Tasks;
 using Catalyst.Common.Extensions;
-using Catalyst.Common.Interfaces.P2P.Messaging.Dto;
+using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;
 
 namespace Catalyst.Common.IO.Handlers
 {
-    public sealed class ProtoDatagramEncoderHandler : ChannelHandlerAdapter
+    public sealed class ProtoDatagramEncoderHandler : OutboundChannelHandlerBase<IMessageSignedDto<ProtocolMessageSigned>>
     {
-        public override Task WriteAsync(IChannelHandlerContext context, object message)
+        protected override Task WriteAsync0(IChannelHandlerContext context, IMessageSignedDto<ProtocolMessageSigned> message)
         {
-            if (message is IMessageDto signedProtocolMessage)
-            {
-                var signedMessage = (ProtocolMessageSigned) signedProtocolMessage.Message;
-                return context.WriteAndFlushAsync(signedMessage.ToDatagram(signedProtocolMessage.Recipient.IpEndPoint));
-            }
-
-            return context.CloseAsync();
+            return context.WriteAndFlushAsync(message.Message.ToDatagram(message.Recipient.IpEndPoint));
         }
 
         public override void Flush(IChannelHandlerContext context)
