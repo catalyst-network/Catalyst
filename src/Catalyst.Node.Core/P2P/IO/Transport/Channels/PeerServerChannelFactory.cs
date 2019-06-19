@@ -56,7 +56,7 @@ namespace Catalyst.Node.Core.P2P.IO.Transport.Channels
         protected override List<IChannelHandler> Handlers => 
             _handlers ?? (_handlers = new List<IChannelHandler>
             {
-                new ProtoDatagramDecoderHandler(),
+                new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(new ProtoDatagramDecoderHandler(), new ProtoDatagramEncoderHandler()),
                 new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(new ProtocolMessageVerifyHandler(_keySigner), new ProtocolMessageSignHandler(_keySigner)),
                 new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(new CorrelationHandler(_messageCorrelationManager), new CorrelatableHandler(_messageCorrelationManager)),
                 new BroadcastHandler(_broadcastManager),
