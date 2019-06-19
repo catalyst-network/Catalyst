@@ -93,16 +93,15 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.Observables
         [MemberData(nameof(QueryContents))]
         public void RpcClient_Can_Handle_GetInfoResponse(string query)
         {
-            var response = new ProtocolMessageFactory().GetMessage(new MessageDto(
-                    new GetInfoResponse
-                    {
-                        Query = query
-                    },
-                    MessageTypes.Response,
-                    PeerIdentifierHelper.GetPeerIdentifier("recipient"),
-                    PeerIdentifierHelper.GetPeerIdentifier("sender")
-                ),
-                Guid.NewGuid());
+            var response = new DtoFactory().GetDto(
+                new GetInfoResponse
+                {
+                    Query = query
+                },
+                PeerIdentifierHelper.GetPeerIdentifier("sender"),
+                PeerIdentifierHelper.GetPeerIdentifier("recipient"),
+                Guid.NewGuid()
+            );
 
             var messageStream = CreateStreamWithMessage(response);
 

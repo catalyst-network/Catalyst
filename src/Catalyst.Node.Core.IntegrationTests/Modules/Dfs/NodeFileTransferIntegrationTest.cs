@@ -56,7 +56,7 @@ namespace Catalyst.Node.Core.IntegrationTests.Modules.Dfs
         private readonly IChannelHandlerContext _fakeContext;
         private readonly IDownloadFileTransferFactory _nodeFileTransferFactory;
         private readonly IDfs _dfs;
-        private readonly IProtocolMessageFactory _protocolMessageFactory;
+        private readonly IDtoFactory _dtoFactory;
 
         public NodeFileTransferIntegrationTest(ITestOutputHelper testOutput) : base(testOutput)
         {
@@ -69,7 +69,7 @@ namespace Catalyst.Node.Core.IntegrationTests.Modules.Dfs
             var peerSettings = new PeerSettings(config);
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
-            _protocolMessageFactory = Substitute.For<IProtocolMessageFactory>();
+            _dtoFactory = Substitute.For<IDtoFactory>();
             _nodeFileTransferFactory = new DownloadFileTransferFactory();
 
             var passwordReader = new TestPasswordReader("abcd");
@@ -124,7 +124,7 @@ namespace Catalyst.Node.Core.IntegrationTests.Modules.Dfs
             var recipientPeerId = new PeerIdentifier(recipient);
             var fileToTransfer = FileHelper.CreateRandomTempFile(byteSize);
             var addFileToDfsRequestHandler = new AddFileToDfsRequestObserver(_dfs, senderPeerId, _nodeFileTransferFactory,
-                _protocolMessageFactory, _logger);
+                _dtoFactory, _logger);
             var transferBytesRequestHandler =
                 new TransferFileBytesRequestObserver(_nodeFileTransferFactory, senderPeerId, _logger);
 
@@ -149,11 +149,10 @@ namespace Catalyst.Node.Core.IntegrationTests.Modules.Dfs
             using (var fs = File.Open(fileToTransfer, FileMode.Open))
             {
                 var fileUploadInformation = new UploadFileTransferInformation(fs, senderPeerId, recipientPeerId,
-                    fakeNode.Channel, uniqueFileKey, new ProtocolMessageFactory());
+                    fakeNode.Channel, uniqueFileKey, new DtoFactory());
                 for (uint i = 0; i < fileTransferInformation.MaxChunk; i++)
                 {
-                    fileUploadInformation.GetUploadMessageDto(i)
-                       .SendToHandler(_fakeContext, transferBytesRequestHandler);
+                    fileUploadInformation.GetUploadMessageDto(i).SendToHandler(_fakeContext, transferBytesRequestHandler);
                 }
             }
 

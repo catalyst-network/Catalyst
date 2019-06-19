@@ -31,6 +31,7 @@ using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Observables;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.Messaging.Dto;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.P2P;
 using Catalyst.Common.Util;
@@ -78,7 +79,7 @@ namespace Catalyst.Common.IO.Observables
             
             //@TODO HandleRequest in try catch if catch send error message.
             
-            SendChannelContextResponse(new MessageDto(
+            SendChannelContextResponse(new DtoFactory().GetDto(
                 HandleRequest(messageDto),
                 MessageTypes.Response,
                 new PeerIdentifier(messageDto.Payload.PeerId),

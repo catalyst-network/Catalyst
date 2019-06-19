@@ -124,19 +124,18 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
 
             var sendPeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("sender");
 
-            var messageFactory = new ProtocolMessageFactory();
+            var messageFactory = new DtoFactory();
             var request = new GetPeerReputationRequest
             {
                 PublicKey = publicKey.ToBytesForRLPEncoding().ToByteString(),
                 Ip = ipAddress.ToBytesForRLPEncoding().ToByteString()
             };
 
-            var requestMessage = messageFactory.GetMessage(new MessageDto(
+            var requestMessage = messageFactory.GetDto(
                 request,
-                MessageTypes.Request,
-                PeerIdentifierHelper.GetPeerIdentifier("recipient"),
-                sendPeerIdentifier
-            ));
+                sendPeerIdentifier,
+                PeerIdentifierHelper.GetPeerIdentifier("recipient")
+            );
 
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, requestMessage);
 

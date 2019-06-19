@@ -111,19 +111,20 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
             // Build a fake remote endpoint
             _fakeContext.Channel.RemoteAddress.Returns(EndpointBuilder.BuildNewEndPoint("192.0.0.1", 42042));
 
-            var messageFactory = new ProtocolMessageFactory();
+            var messageFactory = new DtoFactory();
             var sendPeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("sender");
             var peerToDelete = peerRepository.Get(1);
-            var requestMessage = messageFactory.GetMessage(new MessageDto(
-                new RemovePeerRequest
-                {
-                    PeerIp = peerToDelete.PeerIdentifier.Ip.To16Bytes().ToByteString(),
-                    PublicKey = withPublicKey ? peerToDelete.PeerIdentifier.PublicKey.ToByteString() : ByteString.Empty
-                },
-                MessageTypes.Request,
-                PeerIdentifierHelper.GetPeerIdentifier("recipient"),
-                sendPeerIdentifier
-            ));
+            var removePeerRequest = new RemovePeerRequest
+            {
+                PeerIp = peerToDelete.PeerIdentifier.Ip.To16Bytes().ToByteString(),
+                PublicKey = withPublicKey ? peerToDelete.PeerIdentifier.PublicKey.ToByteString() : ByteString.Empty
+            };
+            
+            var requestMessage = messageFactory.GetDto(
+                removePeerRequest,
+                sendPeerIdentifier,
+                PeerIdentifierHelper.GetPeerIdentifier("recipient")
+            );
 
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, requestMessage);
 

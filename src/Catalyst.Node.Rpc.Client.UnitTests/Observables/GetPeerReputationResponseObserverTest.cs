@@ -101,15 +101,14 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.Observables
 
         private async Task TestGetReputationResponse(int rep)
         {
-            var response = new ProtocolMessageFactory().GetMessage(new MessageDto(
-                    new GetPeerReputationResponse
-                    {
-                        Reputation = rep
-                    },
-                    MessageTypes.Request,
-                    PeerIdentifierHelper.GetPeerIdentifier("recpient"),
-                    PeerIdentifierHelper.GetPeerIdentifier("sender")),
-                Guid.NewGuid());
+            var response = new DtoFactory().GetDto(new GetPeerReputationResponse
+                {
+                    Reputation = rep
+                },
+                PeerIdentifierHelper.GetPeerIdentifier("sender"),
+                PeerIdentifierHelper.GetPeerIdentifier("recpient"),
+                Guid.NewGuid()
+            );
 
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, response);
 

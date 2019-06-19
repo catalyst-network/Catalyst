@@ -80,16 +80,16 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
         [InlineData("Hello&?!1253Catalyst")]
         public async Task RpcServer_Can_Handle_SignMessageRequest(string message)
         {
-            var messageFactory = new ProtocolMessageFactory();
-            var request = messageFactory.GetMessage(new MessageDto(
+            var messageFactory = new DtoFactory();
+            
+            var request = messageFactory.GetDto(
                 new SignMessageRequest
                 {
                     Message = ByteString.CopyFrom(message.Trim('\"'), Encoding.UTF8)
                 },
-                MessageTypes.Request,
-                PeerIdentifierHelper.GetPeerIdentifier("recipient_key"),
-                PeerIdentifierHelper.GetPeerIdentifier("sender_key")
-            ));
+                PeerIdentifierHelper.GetPeerIdentifier("sender_key"),
+                PeerIdentifierHelper.GetPeerIdentifier("recipient_key")
+            );
             
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, request);
             var handler = new SignMessageRequestObserver(PeerIdentifierHelper.GetPeerIdentifier("sender"), _logger, _keySigner);

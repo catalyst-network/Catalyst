@@ -59,19 +59,17 @@ namespace Catalyst.Cli.Commands
 
             try
             {
-                var request = _protocolMessageFactory.GetMessage(new MessageDto(
-                    new VerifyMessageRequest
+                var request = _dtoFactory.GetDto(new VerifyMessageRequest
                     {
                         Message =
                             RLP.EncodeElement(opts.Message.Trim('\"').ToBytesForRLPEncoding()).ToByteString(),
                         PublicKey = opts.Address.ToBytesForRLPEncoding().ToByteString(),
                         Signature = opts.Signature.ToBytesForRLPEncoding().ToByteString()
                     },
-                    MessageTypes.Request,
+                    _peerIdentifier,
                     new PeerIdentifier(Encoding.ASCII.GetBytes(nodeConfig.PublicKey), nodeConfig.HostAddress,
-                        nodeConfig.Port),
-                    _peerIdentifier
-                ));
+                        nodeConfig.Port));
+                
                 node.SendMessage(request);
             }
             catch (Exception e)

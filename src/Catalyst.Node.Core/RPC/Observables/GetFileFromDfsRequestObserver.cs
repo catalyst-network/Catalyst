@@ -57,7 +57,7 @@ namespace Catalyst.Node.Core.RPC.Observables
             IRpcRequestObserver
     {
         /// <summary>The RPC message factory</summary>
-        private readonly IProtocolMessageFactory _protocolMessageFactory;
+        private readonly IDtoFactory _dtoFactory;
 
         /// <summary>The upload file transfer factory</summary>
         private readonly IUploadFileTransferFactory _fileTransferFactory;
@@ -69,15 +69,15 @@ namespace Catalyst.Node.Core.RPC.Observables
         /// <param name="dfs">The DFS.</param>
         /// <param name="peerIdentifier">The peer identifier.</param>
         /// <param name="fileTransferFactory">The upload file transfer factory.</param>
-        /// <param name="protocolMessageFactory"></param>
+        /// <param name="dtoFactory"></param>
         /// <param name="logger">The logger.</param>
         public GetFileFromDfsRequestObserver(IDfs dfs,
             IPeerIdentifier peerIdentifier,
             IUploadFileTransferFactory fileTransferFactory,
-            IProtocolMessageFactory protocolMessageFactory,
+            IDtoFactory dtoFactory,
             ILogger logger) : base(logger, peerIdentifier)
         {
-            _protocolMessageFactory = protocolMessageFactory;
+            _dtoFactory = dtoFactory;
             _fileTransferFactory = fileTransferFactory;
             _dfs = dfs;
         }
@@ -112,7 +112,7 @@ namespace Catalyst.Node.Core.RPC.Observables
                                 recipientPeerIdentifier,
                                 messageDto.Context.Channel,
                                 correlationGuid,
-                                _protocolMessageFactory
+                                _dtoFactory
                             ))
                             {
                                 return _fileTransferFactory.RegisterTransfer(fileTransferInformation);                          

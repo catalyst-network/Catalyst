@@ -101,16 +101,15 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.Observables
         { 
             var txList = mempoolContent.ToList();
 
-            var response = new ProtocolMessageFactory().GetMessage(new MessageDto(
-                    new GetMempoolResponse
-                    {
-                        Mempool = {txList}
-                    },
-                    MessageTypes.Response,
-                    PeerIdentifierHelper.GetPeerIdentifier("recipient_key"),
-                    PeerIdentifierHelper.GetPeerIdentifier("sender_key")
-                ),
-                Guid.NewGuid());
+            var response = new DtoFactory().GetDto(
+                new GetMempoolResponse
+                {
+                    Mempool = {txList}
+                },
+                PeerIdentifierHelper.GetPeerIdentifier("sender_key"),
+                PeerIdentifierHelper.GetPeerIdentifier("recipient_key"),
+                Guid.NewGuid()
+            );
 
             var messageStream = MessageStreamHelper.CreateStreamWithMessages(_fakeContext, response);
 

@@ -21,9 +21,9 @@
 
 #endregion
 
+using System;
 using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.Interfaces.P2P.Messaging;
 using Catalyst.Common.Interfaces.P2P.Messaging.Dto;
 using Dawn;
 using Google.Protobuf;
@@ -32,6 +32,7 @@ namespace Catalyst.Common.IO.Messaging.Dto
 {
     public sealed class MessageDto : IMessageDto
     {
+        public Guid CorrelationId { get; }
         public IMessage Message { get; }
         public MessageTypes MessageType { get; }
         public IPeerIdentifier Recipient { get; }
@@ -42,19 +43,22 @@ namespace Catalyst.Common.IO.Messaging.Dto
         /// </summary>
         /// <param name="message"></param>
         /// <param name="messageTypes"></param>
+        /// <param name="correlationId"></param>
         /// <param name="recipient"></param>
         /// <param name="sender"></param>
         public MessageDto(IMessage message,
-            MessageTypes messageTypes,
-            IPeerIdentifier recipient,
-            IPeerIdentifier sender)
+            IPeerIdentifier sender,
+            Guid correlationId = default,
+            IPeerIdentifier recipient = null)
         {
             Guard.Argument(message, nameof(message)).NotNull();
             Guard.Argument(recipient.IpEndPoint.Address, nameof(recipient.IpEndPoint.Address)).NotNull();
             Guard.Argument(recipient.Port, nameof(recipient.Port)).InRange(0, 65535);
             Guard.Argument(sender, nameof(sender)).Compatible<IPeerIdentifier>().NotNull();
+            CorrelationId = correlationId;
             Message = message;
-            MessageType = messageTypes;
+
+            // MessageType = messageTypes;
             Recipient = recipient;
             Sender = sender;
         }

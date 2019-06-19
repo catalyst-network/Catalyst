@@ -48,7 +48,7 @@ namespace Catalyst.Node.Core.P2P.Messaging.Broadcast
     public sealed class BroadcastManager : IBroadcastManager
     {
         /// <summary>The message factory</summary>
-        private readonly IProtocolMessageFactory _protocolMessageFactory;
+        private readonly IDtoFactory _dtoFactory;
 
         /// <summary>The peers</summary>
         private readonly IRepository<Peer> _peers;
@@ -76,7 +76,7 @@ namespace Catalyst.Node.Core.P2P.Messaging.Broadcast
             _pendingRequests = memoryCache;
             _peers = peers;
             _peerClient = peerClient;
-            _protocolMessageFactory = new ProtocolMessageFactory();
+            _dtoFactory = new DtoFactory();
             _entryOptions = new MemoryCacheEntryOptions()
                .AddExpirationToken(new CancellationChangeToken(new CancellationTokenSource(TimeSpan.FromMinutes(10)).Token));
         }
@@ -124,11 +124,16 @@ namespace Catalyst.Node.Core.P2P.Messaging.Broadcast
             {
                 var peersToGossip = GetRandomPeers(Constants.MaxGossipPeersPerRound);
                 var correlationId = message.CorrelationId.ToGuid();
+                
+                // @TODO maybe check if correlationId is null.
 
                 foreach (var peerIdentifier in peersToGossip)
                 {
-                    _peerClient.SendMessage(_protocolMessageFactory.GetMessage(new MessageDto(message,
-                        MessageTypes.Broadcast, peerIdentifier, _peerIdentifier), correlationId));
+                    var dto = _dtoFactory.GetDto(message,
+                        peerIdentifier,
+                        _peerIdentifier);
+                    
+                    _peerClient.SendMessage(dto);
                 }
 
                 var updateCount = (uint) peersToGossip.Count;

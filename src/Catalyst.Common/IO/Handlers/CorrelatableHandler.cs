@@ -51,7 +51,7 @@ namespace Catalyst.Common.IO.Handlers
                 return context.Channel.CloseAsync();
             }
 
-            var protocolMessage = new ProtocolMessageFactory().GetMessage(messageDto);
+            var protocolMessage = new DtoFactory().GetDto(messageDto, PeerIdentifier);
             
             if (protocolMessage.TypeUrl.EndsWith(MessageTypes.Request.Name))
             {

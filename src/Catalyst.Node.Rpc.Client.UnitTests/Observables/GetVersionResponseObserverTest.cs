@@ -70,16 +70,14 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.Observables
         [MemberData(nameof(QueryContents))]
         public async Task RpcClient_Can_Handle_GetVersionResponse(string version)
         {
-            var response = new ProtocolMessageFactory().GetMessage(new MessageDto(
-                    new VersionResponse
-                    {
-                        Version = version
-                    },
-                    MessageTypes.Response,
-                    PeerIdentifierHelper.GetPeerIdentifier("recpient"),
-                    PeerIdentifierHelper.GetPeerIdentifier("sender")
-                ),
-                Guid.NewGuid());
+            var response = new DtoFactory().GetDto(new VersionResponse
+                {
+                    Version = version
+                },
+                PeerIdentifierHelper.GetPeerIdentifier("sender"),
+                PeerIdentifierHelper.GetPeerIdentifier("recpient"),
+                Guid.NewGuid()
+            );
 
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, response);
 

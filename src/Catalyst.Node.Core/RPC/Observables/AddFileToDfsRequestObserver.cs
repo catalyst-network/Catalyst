@@ -53,7 +53,7 @@ namespace Catalyst.Node.Core.RPC.Observables
     public sealed class AddFileToDfsRequestObserver : RequestObserverBase<AddFileToDfsRequest>, IRpcRequestObserver
     {
         /// <summary>The RPC message factory</summary>
-        private readonly IProtocolMessageFactory _protocolMessageFactory;
+        private readonly IDtoFactory _dtoFactory;
 
         /// <summary>The download file transfer factory</summary>
         private readonly IDownloadFileTransferFactory _fileTransferFactory;
@@ -65,15 +65,15 @@ namespace Catalyst.Node.Core.RPC.Observables
         /// <param name="dfs">The DFS.</param>
         /// <param name="peerIdentifier">The peer identifier.</param>
         /// <param name="fileTransferFactory">The download file transfer factory.</param>
-        /// <param name="protocolMessageFactory"></param>
+        /// <param name="dtoFactory"></param>
         /// <param name="logger">The logger.</param>
         public AddFileToDfsRequestObserver(IDfs dfs,
             IPeerIdentifier peerIdentifier,
             IDownloadFileTransferFactory fileTransferFactory,
-            IProtocolMessageFactory protocolMessageFactory,
+            IDtoFactory dtoFactory,
             ILogger logger) : base(logger, peerIdentifier)
         {
-            _protocolMessageFactory = protocolMessageFactory;
+            _dtoFactory = dtoFactory;
             _fileTransferFactory = fileTransferFactory;
             _dfs = dfs;
         }
@@ -157,12 +157,10 @@ namespace Catalyst.Node.Core.RPC.Observables
             IMessage message = ReturnResponse(fileTransferInformation, await addFileResponseCode);
 
             // Send Response
-            var responseMessage = _protocolMessageFactory.GetMessage(new MessageDto(
-                    message,
-                    MessageTypes.Response,
-                    fileTransferInformation.RecipientIdentifier,
-                    PeerIdentifier
-                ),
+            var responseMessage = _dtoFactory.GetDto(
+                message,
+                PeerIdentifier,
+                fileTransferInformation.RecipientIdentifier,
                 fileTransferInformation.CorrelationGuid
             );
 

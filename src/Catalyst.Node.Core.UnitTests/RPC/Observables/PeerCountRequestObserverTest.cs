@@ -96,12 +96,11 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
 
             var sendPeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("sender");
 
-            var requestMessage = new ProtocolMessageFactory().GetMessage(new MessageDto(
+            var requestMessage = new DtoFactory().GetDto(
                 new GetPeerCountRequest(),
-                MessageTypes.Request,
-                PeerIdentifierHelper.GetPeerIdentifier("recipient"),
-                sendPeerIdentifier
-            ));
+                PeerIdentifierHelper.GetPeerIdentifier("sender"),
+                PeerIdentifierHelper.GetPeerIdentifier("recipient")
+            );
 
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, requestMessage);
 

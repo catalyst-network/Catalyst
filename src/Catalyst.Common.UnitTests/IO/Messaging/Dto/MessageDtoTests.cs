@@ -23,6 +23,8 @@
 
 using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.Interfaces.P2P.Messaging.Dto;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Protocol.IPPN;
 using Catalyst.TestUtils;
@@ -35,17 +37,15 @@ namespace Catalyst.Common.UnitTests.IO.Messaging.Dto
 {
     public sealed class MessageDtoTests
     {
-        private readonly MessageDto _messageDto;
+        private readonly IMessageDto _messageDto;
 
         public MessageDtoTests()
         {
             var peerIdentifier = Substitute.For<IPeerIdentifier>();
             var pingRequest = Substitute.For<IMessage<PingRequest>>();
-            _messageDto = new MessageDto(
-                pingRequest,
-                MessageTypes.Request,
-                PeerIdentifierHelper.GetPeerIdentifier("im_a_recipient"), 
-                peerIdentifier
+            _messageDto = new DtoFactory().GetDto(pingRequest,
+                peerIdentifier,
+                PeerIdentifierHelper.GetPeerIdentifier("im_a_recipient")
             );
         }
 

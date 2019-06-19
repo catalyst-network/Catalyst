@@ -122,7 +122,7 @@ namespace Catalyst.Node.Rpc.Client.IntegrationTests.Observables
                     nodePeer,
                     _fakeContext.Channel,
                     correlationGuid,
-                    new ProtocolMessageFactory());
+                    new DtoFactory());
 
                 for (uint i = 0; i < fileUploadInformation.MaxChunk; i++)
                 {

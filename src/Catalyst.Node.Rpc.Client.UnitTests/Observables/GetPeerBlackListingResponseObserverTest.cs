@@ -88,16 +88,14 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.Observables
 
         private async Task TestGetBlackListResponse(bool blacklist, string publicKey, string ip)
         {
-            var response = new ProtocolMessageFactory().GetMessage(new MessageDto(
-                    new SetPeerBlackListResponse
-                    {
-                        Blacklist = blacklist,
-                        Ip = ip.ToBytesForRLPEncoding().ToByteString(),
-                        PublicKey = publicKey.ToBytesForRLPEncoding().ToByteString()
-                    },
-                    MessageTypes.Request,
-                    PeerIdentifierHelper.GetPeerIdentifier("recipient"),
-                    PeerIdentifierHelper.GetPeerIdentifier("sender")),
+            var response = new DtoFactory().GetDto(new SetPeerBlackListResponse
+                {
+                    Blacklist = blacklist,
+                    Ip = ip.ToBytesForRLPEncoding().ToByteString(),
+                    PublicKey = publicKey.ToBytesForRLPEncoding().ToByteString()
+                },
+                PeerIdentifierHelper.GetPeerIdentifier("sender"),
+                PeerIdentifierHelper.GetPeerIdentifier("recipient"),
                 Guid.NewGuid());
 
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, response);

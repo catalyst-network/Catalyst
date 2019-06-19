@@ -21,6 +21,7 @@
 
 #endregion
 
+using System;
 using Catalyst.Common.Config;
 using Google.Protobuf;
 
@@ -28,6 +29,7 @@ namespace Catalyst.Common.Interfaces.P2P.Messaging.Dto
 {
     public interface IMessageDto
     {
+        Guid CorrelationId { get; }
         MessageTypes MessageType { get; }
         IMessage Message { get; }
         IPeerIdentifier Recipient { get; }
