@@ -30,6 +30,8 @@ using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.Interfaces.Rpc;
+using Catalyst.Common.Interfaces.Rpc.Authentication;
 using Catalyst.Common.IO.Handlers;
 using Catalyst.Node.Core.RPC.IO.Transport.Channels;
 using Catalyst.Protocol.Common;
@@ -51,8 +53,9 @@ namespace Catalyst.Node.Core.UnitTests.RPC.IO.Transport.Channels
         public sealed class TestNodeRpcServerChannelFactory : NodeRpcServerChannelFactory
         {
             public TestNodeRpcServerChannelFactory(IMessageCorrelationManager correlationManager,
-                IKeySigner keySigner)
-                : base(correlationManager, keySigner) { }
+                IKeySigner keySigner, 
+                IAuthenticationStrategy authenticationStrategy)
+                : base(correlationManager, keySigner, authenticationStrategy) { }
 
             public IReadOnlyCollection<IChannelHandler> InheritedHandlers => Handlers;
         }
@@ -69,24 +72,30 @@ namespace Catalyst.Node.Core.UnitTests.RPC.IO.Transport.Channels
             var peerSettings = Substitute.For<IPeerSettings>();
 
             peerSettings.BindAddress.Returns(IPAddress.Parse("127.0.0.1"));
+            
+            var authenticationStrategy = Substitute.For<IAuthenticationStrategy>();
+            authenticationStrategy.Authenticate(Arg.Any<IPeerIdentifier>()).Returns(true);
+
             peerSettings.Port.Returns(1234);
             _factory = new TestNodeRpcServerChannelFactory(
                 _correlationManager,
-                _keySigner);
+                _keySigner,
+                authenticationStrategy);
         }
 
         [Fact]
         public void NodeRpcServerChannelFactory_should_have_correct_handlers()
         {
-            _factory.InheritedHandlers.Count(h => h != null).Should().Be(7);
+            _factory.InheritedHandlers.Count(h => h != null).Should().Be(8);
             var handlers = _factory.InheritedHandlers.ToArray();
             handlers[0].Should().BeOfType<ProtobufVarint32FrameDecoder>();
             handlers[1].Should().BeOfType<ProtobufDecoder>();
             handlers[2].Should().BeOfType<ProtobufVarint32LengthFieldPrepender>();
             handlers[3].Should().BeOfType<ProtobufEncoder>();
-            handlers[4].Should().BeOfType<CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>>();
+            handlers[4].Should().BeOfType<AuthenticationHandler>();
             handlers[5].Should().BeOfType<CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>>();
-            handlers[6].Should().BeOfType<ObservableServiceHandler>();
+            handlers[6].Should().BeOfType<CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>>();
+            handlers[7].Should().BeOfType<ObservableServiceHandler>();
         }
 
         [Fact]
