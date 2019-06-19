@@ -37,8 +37,9 @@ namespace Catalyst.Common.IO.Messaging
 {
     public class MessageCorrelationManager : IMessageCorrelationManager, IDisposable
     {
-        private TimeSpan CacheTtl { get; }
-        protected internal readonly IMemoryCache _pendingRequests;
+        public TimeSpan CacheTtl { get; }
+        
+        private readonly IMemoryCache _pendingRequests;
         private readonly MemoryCacheEntryOptions _entryOptions;
         private readonly ReplaySubject<IMessageEvictionEvent> _evictionEvent;
         public IObservable<IMessageEvictionEvent> EvictionEvents => _evictionEvent.AsObservable();
