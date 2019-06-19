@@ -22,9 +22,9 @@
 #endregion
 
 using Catalyst.Common.Interfaces.IO.EventLoop;
+using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Transport;
 using Catalyst.Common.Interfaces.IO.Transport.Channels;
-using Catalyst.Common.Interfaces.P2P.Messaging.Dto;
 using Serilog;
 
 namespace Catalyst.Common.IO.Transport

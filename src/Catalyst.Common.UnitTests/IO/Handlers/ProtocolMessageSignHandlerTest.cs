@@ -21,10 +21,11 @@
 
 #endregion
 
+using System.Linq;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
+using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
-using Catalyst.Common.Interfaces.P2P.Messaging.Dto;
 using Catalyst.Common.IO.Handlers;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.IO.Messaging.Dto;
@@ -62,8 +63,8 @@ namespace Catalyst.Common.UnitTests.IO.Handlers
 
             protocolMessageSignHandler.WriteAsync(_fakeContext, new object());
 
-            _fakeContext.ReceivedWithAnyArgs().CloseAsync();
-            _fakeContext.DidNotReceiveWithAnyArgs().WriteAsync(new object());
+            _keySigner.DidNotReceiveWithAnyArgs().Sign(Arg.Any<byte[]>());
+            _fakeContext.ReceivedWithAnyArgs().WriteAsync(new object());
         }
 
         [Fact]

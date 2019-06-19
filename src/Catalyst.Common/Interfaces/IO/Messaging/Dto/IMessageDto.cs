@@ -22,23 +22,18 @@
 #endregion
 
 using System;
+using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.P2P;
 using Google.Protobuf;
-using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 
-namespace Catalyst.Common.Interfaces.IO.Messaging
+namespace Catalyst.Common.Interfaces.IO.Messaging.Dto
 {
-    public interface IDtoFactory
+    public interface IMessageDto
     {
-        /// <summary>Gets the message.</summary>
-        /// <param name="messageDto">The message.</param>
-        /// <param name="senderPeerIdentifier"></param>
-        /// <param name="recipientPeerIdentifier"></param>
-        /// <param name="correlationId">The correlation identifier.</param>
-        /// <returns>ProtocolMessage message</returns>
-        IMessageDto GetDto<T>(IMessage<T> messageDto,
-            IPeerIdentifier senderPeerIdentifier,
-            IPeerIdentifier recipientPeerIdentifier,
-            Guid correlationId = default) where T : IMessage<T>;
+        Guid CorrelationId { get; }
+        MessageTypes MessageType { get; }
+        IMessage Message { get; }
+        IPeerIdentifier Recipient { get; }
+        IPeerIdentifier Sender { get; }
     }
 }

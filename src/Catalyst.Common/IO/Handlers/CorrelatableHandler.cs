@@ -26,15 +26,13 @@ using System.Threading.Tasks;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging;
-using Catalyst.Common.Interfaces.P2P.Messaging.Dto;
+using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.IO.Messaging;
-using Catalyst.Common.IO.Messaging.Dto;
-using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;
 
 namespace Catalyst.Common.IO.Handlers
 {
-    public sealed class CorrelatableHandler : ChannelHandlerAdapter
+    public sealed class CorrelatableHandler : OutboundChannelHandlerBase<IMessageDto>
     {
         private readonly IMessageCorrelationManager _messageCorrelationManager;
 
@@ -43,27 +41,19 @@ namespace Catalyst.Common.IO.Handlers
             _messageCorrelationManager = messageCorrelationManager;
         }
 
-        public override Task WriteAsync(IChannelHandlerContext context, object message)
+        protected override Task WriteAsync0(IChannelHandlerContext context, IMessageDto message)
         {
-            // https://stackoverflow.com/questions/686412/c-sharp-is-operator-performance#686431
-            if (!(message is IMessageDto messageDto))
-            {
-                return context.Channel.CloseAsync();
-            }
-
-            var protocolMessage = new DtoFactory().GetDto(messageDto, PeerIdentifier);
-            
-            if (protocolMessage.TypeUrl.EndsWith(MessageTypes.Request.Name))
+            if (message.MessageType.Name.Equals(MessageTypes.Request.Name))
             {
                 _messageCorrelationManager.AddPendingRequest(new CorrelatableMessage
                 {
-                    Recipient = messageDto.Recipient,
-                    Content = protocolMessage,
+                    Recipient = message.Recipient,
+                    Content = message.Message.ToProtocolMessage(message.Sender.PeerId, Guid.NewGuid()),
                     SentAt = DateTimeOffset.UtcNow
                 });
             }
             
-            return context.Channel.WriteAsync(new MessageDto(protocolMessage, messageDto.MessageType, messageDto.Recipient, messageDto.Sender));
+            return context.WriteAsync(message);
         }
     }
 }

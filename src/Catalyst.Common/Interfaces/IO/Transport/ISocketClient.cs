@@ -21,7 +21,7 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.P2P.Messaging.Dto;
+using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 
 namespace Catalyst.Common.Interfaces.IO.Transport
 {
