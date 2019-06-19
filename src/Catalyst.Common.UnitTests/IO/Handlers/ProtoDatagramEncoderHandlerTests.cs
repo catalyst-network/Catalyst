@@ -36,7 +36,7 @@ namespace Catalyst.Common.UnitTests.IO.Handlers
 {
     public sealed class ProtoDatagramEncoderHandlerTests
     {
-        private IChannelHandlerContext _fakeContext;
+        private readonly IChannelHandlerContext _fakeContext;
 
         public ProtoDatagramEncoderHandlerTests()
         {
