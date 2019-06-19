@@ -28,6 +28,18 @@ namespace Catalyst.Common.Protocol
 {
     public static class DeltaExtensions
     {
+        public static bool IsValid(this Delta delta)
+        {
+            Guard.Argument(delta, nameof(delta)).NotNull()
+               .Require(d => d.PreviousDeltaDfsHash != null && !d.PreviousDeltaDfsHash.IsEmpty,
+                    c => $"{nameof(delta.PreviousDeltaDfsHash)} cannot be null or empty")
+               .Require(d => d.MerkleRoot != null && !d.MerkleRoot.IsEmpty,
+                    c => $"{nameof(delta.MerkleRoot)} cannot be null or empty")
+               .Require(d => d.TimeStamp != 0, d => $"{nameof(delta.TimeStamp)} cannot be 0");
+
+            return true;
+        }
+
         public static bool IsValid(this CandidateDeltaBroadcast candidate)
         {
             Guard.Argument(candidate, nameof(candidate)).NotNull()

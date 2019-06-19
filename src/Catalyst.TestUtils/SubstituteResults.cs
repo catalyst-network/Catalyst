@@ -21,28 +21,25 @@
 
 #endregion
 
-using Catalyst.Node.Core.Modules.Consensus.Delta;
-using Catalyst.Protocol.Common;
-using Catalyst.Protocol.Delta;
+using System;
+using System.Collections.Generic;
 
 namespace Catalyst.TestUtils
 {
-    public static class ScoredCandidateDeltaHelper
+    //nice idea from https://stackoverflow.com/questions/12163840/nsubstitute-multiple-return-sequence
+    public class SubstituteResults<T>
     {
-        public static ScoredCandidateDelta GetScoredCandidateDelta(CandidateDeltaBroadcast candidate = default,
-            int score = 0)
+        private readonly Queue<Func<T>> _values = new Queue<Func<T>>();
+        public SubstituteResults(T result) { _values.Enqueue(() => result); }
+        public SubstituteResults(Func<T> value) { _values.Enqueue(value); }
+        public SubstituteResults<T> Then(T value) { return Then(() => value); }
+
+        public SubstituteResults<T> Then(Func<T> value)
         {
-            var candidateDelta = candidate ?? DeltaHelper.GetCandidateDelta();
-            return new ScoredCandidateDelta(candidateDelta, score);
+            _values.Enqueue(value);
+            return this;
         }
 
-        public static ScoredCandidateDelta GetScoredCandidateDelta(byte[] previousDeltaHash = null,
-            byte[] hash = null,
-            PeerId producerId = null,
-            int score = 0)
-        {
-            var candidateDelta = DeltaHelper.GetCandidateDelta(previousDeltaHash, hash, producerId);
-            return new ScoredCandidateDelta(candidateDelta, score);
-        }
+        public T Next() { return _values.Dequeue()(); }
     }
 }
