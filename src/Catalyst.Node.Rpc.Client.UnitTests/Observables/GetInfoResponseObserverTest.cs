@@ -53,6 +53,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.Observables
         [Theory]
         [InlineData("Test")]
         [InlineData("Q2")]
+        [InlineData("A Fake Info Response")]
         public void RpcClient_Can_Handle_GetInfoResponse(string query)
         {
             var getInfoResponse = new GetInfoResponse
