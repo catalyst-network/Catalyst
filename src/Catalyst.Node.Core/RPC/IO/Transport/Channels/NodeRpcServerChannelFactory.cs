@@ -59,9 +59,10 @@ namespace Catalyst.Node.Core.RPC.IO.Transport.Channels
                 new ObservableServiceHandler()
             });
 
-        public NodeRpcServerChannelFactory(IMessageCorrelationManager correlationManger, IKeySigner keySigner, IAuthenticationStrategy)
+        public NodeRpcServerChannelFactory(IMessageCorrelationManager correlationManger, IKeySigner keySigner, IAuthenticationStrategy authenticationStrategy)
         {
             _correlationManger = correlationManger;
+            _authenticationStrategy = authenticationStrategy;
             _keySigner = keySigner;
         }
 

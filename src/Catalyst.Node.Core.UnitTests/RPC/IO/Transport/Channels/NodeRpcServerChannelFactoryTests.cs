@@ -52,8 +52,9 @@ namespace Catalyst.Node.Core.UnitTests.RPC.IO.Transport.Channels
         private sealed class TestNodeRpcServerChannelFactory : NodeRpcServerChannelFactory
         {
             public TestNodeRpcServerChannelFactory(IMessageCorrelationManager correlationManager,
-                IKeySigner keySigner)
-                : base(correlationManager, keySigner) { }
+                IKeySigner keySigner, 
+                IAuthenticationStrategy authenticationStrategy)
+                : base(correlationManager, keySigner, authenticationStrategy) { }
 
             public IReadOnlyCollection<IChannelHandler> InheritedHandlers => Handlers;
         }
@@ -76,7 +77,8 @@ namespace Catalyst.Node.Core.UnitTests.RPC.IO.Transport.Channels
             peerSettings.Port.Returns(1234);
             _factory = new TestNodeRpcServerChannelFactory(
                 _correlationManager,
-                _keySigner);
+                _keySigner,
+                authenticationStrategy);
         }
 
         [Fact]
