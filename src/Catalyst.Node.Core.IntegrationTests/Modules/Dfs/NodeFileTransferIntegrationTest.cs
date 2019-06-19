@@ -56,7 +56,6 @@ namespace Catalyst.Node.Core.IntegrationTests.Modules.Dfs
         private readonly IChannelHandlerContext _fakeContext;
         private readonly IDownloadFileTransferFactory _nodeFileTransferFactory;
         private readonly IDfs _dfs;
-        private readonly IpfsAdapter _ipfsEngine;
         private readonly IProtocolMessageFactory _protocolMessageFactory;
 
         public NodeFileTransferIntegrationTest(ITestOutputHelper testOutput) : base(testOutput)
@@ -79,46 +78,28 @@ namespace Catalyst.Node.Core.IntegrationTests.Modules.Dfs
             _logger = Substitute.For<ILogger>();
             _dfs = new Core.Modules.Dfs.Dfs(ipfsEngine, _logger);
         }
-        
+
         [Fact]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
-        public void Cancel_File_Transfer()
+        public async Task Cancel_File_Transfer()
         {
             var sender = new PeerIdentifier(PeerIdHelper.GetPeerId("sender"));
 
             IDownloadFileInformation fileTransferInformation = new DownloadFileTransferInformation(
                 sender,
-                sender, 
-                _fakeContext.Channel, 
-                Guid.NewGuid(), 
-                string.Empty, 
+                sender,
+                _fakeContext.Channel,
+                Guid.NewGuid(),
+                string.Empty,
                 555);
 
             var cancellationTokenSource = new CancellationTokenSource();
             _nodeFileTransferFactory.RegisterTransfer(fileTransferInformation);
-            _nodeFileTransferFactory.FileTransferAsync(fileTransferInformation.CorrelationGuid, cancellationTokenSource.Token);
+            _nodeFileTransferFactory.FileTransferAsync(fileTransferInformation.CorrelationGuid, cancellationTokenSource.Token).ConfigureAwait(false).GetAwaiter();
             Assert.Single(_nodeFileTransferFactory.Keys);
             cancellationTokenSource.Cancel();
 
-            var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
-            var linearBackOffRetryPolicy = Policy.Handle<TaskCanceledException>()
-               .WaitAndRetryAsync(5, retryAttempt =>
-                {
-                    var timeSpan = TimeSpan.FromSeconds(retryAttempt + 5);
-                    cts = new CancellationTokenSource(timeSpan);
-                    return timeSpan;
-                });
-
-            linearBackOffRetryPolicy.ExecuteAsync(() =>
-            {
-                return Task.Run(() =>
-                {
-                    while (!fileTransferInformation.IsCompleted)
-                    {
-                        Task.Delay(1000, cts.Token).GetAwaiter().GetResult();
-                    }
-                }, cts.Token);
-            }).GetAwaiter().GetResult();
+            await TaskHelper.WaitForAsync(() => fileTransferInformation.IsCompleted, TimeSpan.FromSeconds(10));
 
             var fileCleanedUp = !File.Exists(fileTransferInformation.TempPath);
 
@@ -132,9 +113,9 @@ namespace Catalyst.Node.Core.IntegrationTests.Modules.Dfs
         [InlineData(1000L)]
         [InlineData(82000L)]
         [InlineData(100000L)]
-        public void Verify_File_Integrity_On_Transfer(long byteSize) { AddFileToDfs(byteSize, out _); }
+        public async Task Verify_File_Integrity_On_Transfer(long byteSize) { await AddFileToDfs(byteSize).ConfigureAwait(false); }
 
-        private void AddFileToDfs(long byteSize, out long crcValue)
+        private async Task AddFileToDfs(long byteSize)
         {
             var fakeNode = Substitute.For<INodeRpcClient>();
             var sender = PeerIdHelper.GetPeerId("sender");
@@ -146,9 +127,10 @@ namespace Catalyst.Node.Core.IntegrationTests.Modules.Dfs
                 _protocolMessageFactory, _logger);
             var transferBytesRequestHandler =
                 new TransferFileBytesRequestObserver(_nodeFileTransferFactory, senderPeerId, _logger);
+
             var uniqueFileKey = Guid.NewGuid();
-            crcValue = FileHelper.GetCrcValue(fileToTransfer);
-            
+            var crcValue = FileHelper.GetCrcValue(fileToTransfer);
+
             //Create a response object and set its return value
             ProtocolMessage request = new AddFileToDfsRequest
             {
@@ -157,7 +139,7 @@ namespace Catalyst.Node.Core.IntegrationTests.Modules.Dfs
                 FileSize = (ulong) byteSize
             }.ToProtocolMessage(sender, uniqueFileKey);
             request.SendToHandler(_fakeContext, addFileToDfsRequestHandler);
-            
+
             Assert.Single(_nodeFileTransferFactory.Keys);
 
             var fileTransferInformation =
@@ -176,31 +158,11 @@ namespace Catalyst.Node.Core.IntegrationTests.Modules.Dfs
             }
 
             Assert.True(fileTransferInformation.ChunkIndicatorsTrue());
-            
-            var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
-            var linearBackOffRetryPolicy = Policy.Handle<TaskCanceledException>()
-               .WaitAndRetryAsync(5, retryAttempt =>
-                {
-                    var timeSpan = TimeSpan.FromSeconds(retryAttempt + 5);
-                    cts = new CancellationTokenSource(timeSpan);
-                    return timeSpan;
-                });
-
-            linearBackOffRetryPolicy.ExecuteAsync(() =>
-            {
-                return Task.Run(() =>
-                {
-                    while (fileTransferInformation.DfsHash == null)
-                    {
-                        Task.Delay(1000, cts.Token).GetAwaiter().GetResult();
-                    }
-                }, cts.Token);
-            }).GetAwaiter().GetResult();
-
+            await TaskHelper.WaitForAsync(() => fileTransferInformation.DfsHash != null, TimeSpan.FromSeconds(15));
             Assert.NotNull(fileTransferInformation.DfsHash);
-            
+
             long ipfsCrcValue;
-            using (var ipfsStream = _dfs.ReadAsync(fileTransferInformation.DfsHash, cts.Token).GetAwaiter().GetResult())
+            using (var ipfsStream = await _dfs.ReadAsync(fileTransferInformation.DfsHash))
             {
                 ipfsCrcValue = FileHelper.GetCrcValue(ipfsStream);
             }

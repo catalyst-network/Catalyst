@@ -39,48 +39,38 @@ using DotNetty.Transport.Channels.Sockets;
 
 namespace Catalyst.Common.IO.Transport.Channels
 {
-    public class TcpClientChannelFactory : ITcpClientChannelFactory
+    public abstract class TcpClientChannelFactory : ITcpClientChannelFactory
     {
-        private readonly IKeySigner _keySigner;
-        public TcpClientChannelFactory(IKeySigner keySigner) { _keySigner = keySigner; }
+        private readonly int _backLogValue;
+        protected List<IChannelHandler> _handlers;
+
+        protected abstract List<IChannelHandler> Handlers { get; }
+        protected TcpClientChannelFactory(int backLogValue = 100) { _backLogValue = backLogValue; }
         
-        private const int BackLogValue = 100;
-        
-        public IObservableChannel BuildChannel(IEventLoopGroupFactory handlerEventLoopGroupFactory,
-            IPAddress targetAddress = null, 
-            int targetPort = IPEndPoint.MinPort,
+        public abstract IObservableChannel BuildChannel(IEventLoopGroupFactory eventLoopGroupFactory,
+            IPAddress targetAddress,
+            int targetPort,
+            X509Certificate2 certificate = null);
+
+        protected IChannel Bootstrap(IEventLoopGroupFactory handlerEventLoopGroupFactory,
+            IPAddress targetAddress, 
+            int targetPort,
             X509Certificate2 certificate = null)
         {
-            var observableServiceHandler = new ObservableServiceHandler();
-
-            var channelHandlers = new List<IChannelHandler>
-            {
-                new ProtobufVarint32LengthFieldPrepender(),
-                new ProtobufEncoder(),
-                new ProtobufVarint32FrameDecoder(),
-                new ProtobufDecoder(ProtocolMessageSigned.Parser),
-                new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(new ProtocolMessageVerifyHandler(_keySigner), new ProtocolMessageSignHandler(_keySigner)),
-                observableServiceHandler
-            };
-
-            var channelHandler = new ClientChannelInitializerBase<ISocketChannel>(channelHandlers,
+            var channelHandler = new ClientChannelInitializerBase<ISocketChannel>(Handlers,
                 handlerEventLoopGroupFactory,
                 targetAddress,
                 certificate);
 
-            var channel = new Bootstrap()
+            return new Bootstrap()
                .Group(handlerEventLoopGroupFactory.GetOrCreateSocketIoEventLoopGroup())
                .ChannelFactory(() => new TcpSocketChannel())
-               .Option(ChannelOption.SoBacklog, BackLogValue)
+               .Option(ChannelOption.SoBacklog, _backLogValue)
                .Handler(new LoggingHandler(LogLevel.DEBUG))
                .Handler(channelHandler)
                .ConnectAsync(targetAddress, targetPort)
                .GetAwaiter()
                .GetResult();
-
-            return new ObservableChannel(
-                observableServiceHandler.MessageStream, 
-                channel);
         }
     }
 }
