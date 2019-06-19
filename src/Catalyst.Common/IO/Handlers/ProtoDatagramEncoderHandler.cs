@@ -23,15 +23,13 @@
 
 using System.Threading.Tasks;
 using Catalyst.Common.Extensions;
-using Catalyst.Common.Interfaces.P2P.Messaging.Dto;
 using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;
-using Google.Protobuf;
 
 namespace Catalyst.Common.IO.Handlers
 {
-    public sealed class ProtoDatagramEncoderHandler<T> : OutboundChannelHandlerBase<IMessageSignedDto<ProtocolMessageSigned>> where T : IMessage<T>
+    public sealed class ProtoDatagramEncoderHandler : OutboundChannelHandlerBase<IMessageSignedDto<ProtocolMessageSigned>>
     {
         protected override Task WriteAsync0(IChannelHandlerContext context, IMessageSignedDto<ProtocolMessageSigned> message)
         {
