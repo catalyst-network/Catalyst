@@ -85,7 +85,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.IO.Transport.Channels
         {
             _factory.InheritedHandlers.Count(h => h != null).Should().Be(5);
             var handlers = _factory.InheritedHandlers.ToArray();
-            handlers[0].Should().BeOfType<ProtoDatagramDecoderHandler>();
+            handlers[1].Should().BeOfType<CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>>();
             handlers[1].Should().BeOfType<CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>>();
             handlers[2].Should().BeOfType<CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>>();
             handlers[3].Should().BeOfType<BroadcastHandler>();
