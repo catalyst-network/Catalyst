@@ -25,7 +25,6 @@ using System.Linq;
 using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
-using Catalyst.Common.Interfaces.P2P.Messaging.Dto;
 using Catalyst.Common.IO.Handlers;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Protocol.IPPN;
@@ -83,7 +82,7 @@ namespace Catalyst.Common.UnitTests.IO.Handlers
                .AddPendingRequest(Arg.Any<CorrelatableMessage>()
                 );
 
-            _fakeContext.ReceivedWithAnyArgs().Received(1).WriteAsync(Arg.Any<IMessageDto>());
+            _fakeContext.ReceivedWithAnyArgs().Received(1).WriteAsync(Arg.Any<IProtocolMessageDto<IMessage>>());
         }
     }
 }

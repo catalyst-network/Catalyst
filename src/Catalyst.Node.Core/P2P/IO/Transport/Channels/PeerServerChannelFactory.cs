@@ -46,7 +46,7 @@ namespace Catalyst.Node.Core.P2P.IO.Transport.Channels
         private readonly IBroadcastManager _broadcastManager;
         private readonly IKeySigner _keySigner;
 
-        protected PeerServerChannelFactory(IMessageCorrelationManager messageCorrelationManager, IBroadcastManager broadcastManager, IKeySigner keySigner)
+        public PeerServerChannelFactory(IMessageCorrelationManager messageCorrelationManager, IBroadcastManager broadcastManager, IKeySigner keySigner)
         {
             _messageCorrelationManager = messageCorrelationManager;
             _broadcastManager = broadcastManager;

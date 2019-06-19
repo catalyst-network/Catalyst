@@ -24,8 +24,8 @@
 using System.Linq;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
+using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
-using Catalyst.Common.Interfaces.P2P.Messaging.Dto;
 using Catalyst.Common.IO.Handlers;
 using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.Util;

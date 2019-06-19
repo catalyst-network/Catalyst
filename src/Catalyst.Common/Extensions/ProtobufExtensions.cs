@@ -27,7 +27,7 @@ using System.Linq;
 using System.Net;
 using System.Reflection;
 using Catalyst.Common.Config;
-using Catalyst.Common.Interfaces.P2P.Messaging.Dto;
+using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Util;
 using Catalyst.Protocol.Common;
 using Dawn;

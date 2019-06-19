@@ -22,9 +22,10 @@
 #endregion
 
 using Catalyst.Common.Config;
+using Catalyst.Common.Interfaces.P2P;
 using Google.Protobuf;
 
-namespace Catalyst.Common.Interfaces.P2P.Messaging.Dto
+namespace Catalyst.Common.Interfaces.IO.Messaging.Dto
 {
     public interface IMessageDto
     {
