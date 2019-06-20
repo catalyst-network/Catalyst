@@ -25,6 +25,7 @@ using System;
 using Catalyst.Common.Extensions;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
+using Catalyst.Protocol.Rpc.Node;
 using Catalyst.Protocol.Transaction;
 using Catalyst.TestUtils;
 using FluentAssertions;
@@ -91,14 +92,21 @@ namespace Catalyst.Common.UnitTests.Extensions
             wrapped.FromProtocolMessage<PeerId>().ClientId.Should().Equal(expectedContent.ToUtf8ByteString());
         }
 
-        [Fact(Skip = "fail")]
-        public static void ToAnySigned_should_fail_on_response_without_correlationId()
+        [Fact]
+        public static void ToProtocolMessage_When_Processing_Request_Should_Generate_New_CorrelationId_If_Not_Specified()
         {
             var peerId = PeerIdHelper.GetPeerId("someone");
-            var expectedContent = "censored";
-            var response = new PeerId
+            var request = new GetPeerCountRequest().ToProtocolMessage(peerId);
+            request.CorrelationId.ToGuid().Should().NotBe(default);
+        }
+
+        [Fact]
+        public static void ToProtocolMessage_When_Processing_Request_Should_Fail_If_No_CorrelationId_Specified()
+        {
+            var peerId = PeerIdHelper.GetPeerId("someone");
+            var response = new GetPeerCountResponse
             {
-                ClientId = expectedContent.ToUtf8ByteString()
+                PeerCount = 13
             };
             new Action(() => response.ToProtocolMessage(peerId))
                .Should().Throw<ArgumentException>();

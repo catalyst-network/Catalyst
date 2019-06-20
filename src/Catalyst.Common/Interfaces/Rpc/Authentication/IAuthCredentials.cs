@@ -21,16 +21,22 @@
 
 #endregion
 
-using Catalyst.Common.Config;
-using Google.Protobuf;
+using System.Net;
+using Catalyst.Common.Interfaces.Attributes;
+using SharpRepository.Repository;
 
-namespace Catalyst.Common.Interfaces.P2P.Messaging.Dto
+namespace Catalyst.Common.Interfaces.Rpc.Authentication
 {
-    public interface IMessageDto
+    public interface IAuthCredentials : IAuditable
     {
-        MessageTypes MessageType { get; }
-        IMessage Message { get; }
-        IPeerIdentifier Recipient { get; }
-        IPeerIdentifier Sender { get; }
+        /// <summary>Gets or sets the public key.</summary>
+        /// <value>The public key.</value>
+        [RepositoryPrimaryKey(Order = 1)]
+        string PublicKey { get; set; }
+
+        /// <summary>Gets or sets the ip address.</summary>
+        /// <value>The ip address.</value>
+        [RepositoryPrimaryKey(Order = 2)]
+        string IpAddress { get; set; }
     }
 }

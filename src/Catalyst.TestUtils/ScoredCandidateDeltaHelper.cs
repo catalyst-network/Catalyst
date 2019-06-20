@@ -27,12 +27,12 @@ using Catalyst.Protocol.Delta;
 
 namespace Catalyst.TestUtils
 {
-    public class ScoredCandidateDeltaHelper
+    public static class ScoredCandidateDeltaHelper
     {
         public static ScoredCandidateDelta GetScoredCandidateDelta(CandidateDeltaBroadcast candidate = default,
             int score = 0)
         {
-            var candidateDelta = candidate ?? CandidateDeltaHelper.GetCandidateDelta();
+            var candidateDelta = candidate ?? DeltaHelper.GetCandidateDelta();
             return new ScoredCandidateDelta(candidateDelta, score);
         }
 
@@ -41,7 +41,7 @@ namespace Catalyst.TestUtils
             PeerId producerId = null,
             int score = 0)
         {
-            var candidateDelta = CandidateDeltaHelper.GetCandidateDelta(previousDeltaHash, hash, producerId);
+            var candidateDelta = DeltaHelper.GetCandidateDelta(previousDeltaHash, hash, producerId);
             return new ScoredCandidateDelta(candidateDelta, score);
         }
     }

@@ -21,21 +21,17 @@
 
 #endregion
 
-using System;
-using Catalyst.Common.Interfaces.IO.Messaging.Dto;
-using Catalyst.Common.Interfaces.P2P.Messaging;
-using Catalyst.Protocol.Common;
-using DotNetty.Buffers;
+using Catalyst.Common.Config;
+using Catalyst.Common.Interfaces.P2P;
+using Google.Protobuf;
 
-namespace Catalyst.Common.Interfaces.IO.Messaging
+namespace Catalyst.Common.Interfaces.IO.Messaging.Dto
 {
-    public interface IProtocolMessageFactory
+    public interface IMessageDto
     {
-        /// <summary>Gets the message.</summary>
-        /// <param name="messageDto">The message.</param>
-        /// <param name="correlationId">The correlation identifier.</param>
-        /// <returns>ProtocolMessage message</returns>
-        ProtocolMessage GetMessage(IMessageDto messageDto,
-            Guid correlationId = default);
+        MessageTypes MessageType { get; }
+        IMessage Message { get; }
+        IPeerIdentifier Recipient { get; }
+        IPeerIdentifier Sender { get; }
     }
 }

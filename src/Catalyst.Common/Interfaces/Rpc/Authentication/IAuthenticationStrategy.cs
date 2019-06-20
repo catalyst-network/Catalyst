@@ -21,21 +21,18 @@
 
 #endregion
 
-using System;
-using Catalyst.Common.Interfaces.IO.Messaging.Dto;
-using Catalyst.Common.Interfaces.P2P.Messaging;
-using Catalyst.Protocol.Common;
-using DotNetty.Buffers;
+using Catalyst.Common.Interfaces.P2P;
 
-namespace Catalyst.Common.Interfaces.IO.Messaging
+namespace Catalyst.Common.Interfaces.Rpc.Authentication
 {
-    public interface IProtocolMessageFactory
+    /// <summary>
+    /// The authentication strategy decides how to whitelist a node 
+    /// </summary>
+    public interface IAuthenticationStrategy
     {
-        /// <summary>Gets the message.</summary>
-        /// <param name="messageDto">The message.</param>
-        /// <param name="correlationId">The correlation identifier.</param>
-        /// <returns>ProtocolMessage message</returns>
-        ProtocolMessage GetMessage(IMessageDto messageDto,
-            Guid correlationId = default);
+        /// <summary>Authenticates the specified peer identifier.</summary>
+        /// <param name="peerIdentifier">The peer identifier.</param>
+        /// <returns>if [true] then whitelist node operator messages otherwise if [false] block messages</returns>
+        bool Authenticate(IPeerIdentifier peerIdentifier);
     }
 }

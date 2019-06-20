@@ -21,21 +21,19 @@
 
 #endregion
 
-using System;
-using Catalyst.Common.Interfaces.IO.Messaging.Dto;
-using Catalyst.Common.Interfaces.P2P.Messaging;
-using Catalyst.Protocol.Common;
-using DotNetty.Buffers;
+using System.IO;
+using Catalyst.Common.Interfaces.FileSystem;
+using SharpRepository.XmlRepository;
 
-namespace Catalyst.Common.Interfaces.IO.Messaging
+namespace Catalyst.Common.FileSystem
 {
-    public interface IProtocolMessageFactory
+    /// <summary>
+    /// Xml Repository where base folder is derived from the file system <see cref="IFileSystem"/>
+    /// </summary>
+    /// <typeparam name="T">Type of object</typeparam>
+    /// <seealso cref="SharpRepository.XmlRepository.XmlRepository{T}" />
+    public class FileSystemAwareXmlRepository<T> : XmlRepository<T> where T : class, new()
     {
-        /// <summary>Gets the message.</summary>
-        /// <param name="messageDto">The message.</param>
-        /// <param name="correlationId">The correlation identifier.</param>
-        /// <returns>ProtocolMessage message</returns>
-        ProtocolMessage GetMessage(IMessageDto messageDto,
-            Guid correlationId = default);
+        public FileSystemAwareXmlRepository(IFileSystem fileSystem, string path = "") : base(Path.Combine(fileSystem.GetCatalystDataDir().ToString(), path)) { }
     }
 }

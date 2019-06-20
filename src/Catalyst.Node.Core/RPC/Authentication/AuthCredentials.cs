@@ -22,20 +22,30 @@
 #endregion
 
 using System;
-using Catalyst.Common.Interfaces.IO.Messaging.Dto;
-using Catalyst.Common.Interfaces.P2P.Messaging;
-using Catalyst.Protocol.Common;
-using DotNetty.Buffers;
+using Catalyst.Common.Attributes;
+using Catalyst.Common.Interfaces.Attributes;
+using Catalyst.Common.Interfaces.Rpc.Authentication;
 
-namespace Catalyst.Common.Interfaces.IO.Messaging
+namespace Catalyst.Node.Core.RPC.Authentication
 {
-    public interface IProtocolMessageFactory
+    /// <summary>
+    /// Credentials to authenticate
+    /// </summary>
+    [Audit]
+    public class AuthCredentials : IAuthCredentials
     {
-        /// <summary>Gets the message.</summary>
-        /// <param name="messageDto">The message.</param>
-        /// <param name="correlationId">The correlation identifier.</param>
-        /// <returns>ProtocolMessage message</returns>
-        ProtocolMessage GetMessage(IMessageDto messageDto,
-            Guid correlationId = default);
+        /// <summary>Gets or sets the public key.</summary>
+        /// <value>The public key.</value>
+        public string PublicKey { get; set; }
+
+        /// <summary>Gets or sets the ip address.</summary>
+        /// <value>The ip address.</value>
+        public string IpAddress { get; set; }
+
+        /// <inheritdoc cref="IAuditable.Created"/>
+        public DateTime Created { get; set; }
+
+        /// <inheritdoc cref="IAuditable.Modified"/>
+        public DateTime? Modified { get; set; }
     }
 }

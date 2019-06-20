@@ -21,21 +21,23 @@
 
 #endregion
 
-using System;
-using Catalyst.Common.Interfaces.IO.Messaging.Dto;
-using Catalyst.Common.Interfaces.P2P.Messaging;
-using Catalyst.Protocol.Common;
-using DotNetty.Buffers;
+using System.Threading.Tasks;
+using DotNetty.Transport.Channels;
 
-namespace Catalyst.Common.Interfaces.IO.Messaging
+namespace Catalyst.Common.IO.Handlers
 {
-    public interface IProtocolMessageFactory
+    public abstract class OutboundChannelHandlerBase<I> : ChannelHandlerAdapter
     {
-        /// <summary>Gets the message.</summary>
-        /// <param name="messageDto">The message.</param>
-        /// <param name="correlationId">The correlation identifier.</param>
-        /// <returns>ProtocolMessage message</returns>
-        ProtocolMessage GetMessage(IMessageDto messageDto,
-            Guid correlationId = default);
+        public override Task WriteAsync(IChannelHandlerContext ctx, object msg)
+        {
+            if (msg is I msg1)
+            {
+                return WriteAsync0(ctx, msg1);
+            }
+
+            return ctx.WriteAsync(msg);
+        }
+
+        protected abstract Task WriteAsync0(IChannelHandlerContext ctx, I msg);
     }
 }

@@ -22,20 +22,24 @@
 #endregion
 
 using System;
-using Catalyst.Common.Interfaces.IO.Messaging.Dto;
-using Catalyst.Common.Interfaces.P2P.Messaging;
-using Catalyst.Protocol.Common;
-using DotNetty.Buffers;
+using System.Collections.Generic;
 
-namespace Catalyst.Common.Interfaces.IO.Messaging
+namespace Catalyst.TestUtils
 {
-    public interface IProtocolMessageFactory
+    //nice idea from https://stackoverflow.com/questions/12163840/nsubstitute-multiple-return-sequence
+    public class SubstituteResults<T>
     {
-        /// <summary>Gets the message.</summary>
-        /// <param name="messageDto">The message.</param>
-        /// <param name="correlationId">The correlation identifier.</param>
-        /// <returns>ProtocolMessage message</returns>
-        ProtocolMessage GetMessage(IMessageDto messageDto,
-            Guid correlationId = default);
+        private readonly Queue<Func<T>> _values = new Queue<Func<T>>();
+        public SubstituteResults(T result) { _values.Enqueue(() => result); }
+        public SubstituteResults(Func<T> value) { _values.Enqueue(value); }
+        public SubstituteResults<T> Then(T value) { return Then(() => value); }
+
+        public SubstituteResults<T> Then(Func<T> value)
+        {
+            _values.Enqueue(value);
+            return this;
+        }
+
+        public T Next() { return _values.Dequeue()(); }
     }
 }

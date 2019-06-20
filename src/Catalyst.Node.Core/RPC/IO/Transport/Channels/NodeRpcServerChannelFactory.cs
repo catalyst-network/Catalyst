@@ -31,6 +31,7 @@ using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Transport.Channels;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
+using Catalyst.Common.Interfaces.Rpc.Authentication;
 using Catalyst.Common.IO.Handlers;
 using Catalyst.Common.IO.Transport.Channels;
 using Catalyst.Protocol.Common;
@@ -42,6 +43,7 @@ namespace Catalyst.Node.Core.RPC.IO.Transport.Channels
     public class NodeRpcServerChannelFactory : TcpServerChannelFactory
     {
         private readonly IMessageCorrelationManager _correlationManger;
+        private readonly IAuthenticationStrategy _authenticationStrategy;
         private readonly IKeySigner _keySigner;
 
         protected override List<IChannelHandler> Handlers =>
@@ -51,14 +53,16 @@ namespace Catalyst.Node.Core.RPC.IO.Transport.Channels
                 new ProtobufDecoder(ProtocolMessageSigned.Parser),
                 new ProtobufVarint32LengthFieldPrepender(),
                 new ProtobufEncoder(),
+                new AuthenticationHandler(_authenticationStrategy),
                 new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(new ProtocolMessageVerifyHandler(_keySigner), new ProtocolMessageSignHandler(_keySigner)),
                 new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(new CorrelationHandler(_correlationManger), new CorrelationHandler(_correlationManger)),
                 new ObservableServiceHandler()
             });
 
-        public NodeRpcServerChannelFactory(IMessageCorrelationManager correlationManger, IKeySigner keySigner)
+        public NodeRpcServerChannelFactory(IMessageCorrelationManager correlationManger, IKeySigner keySigner, IAuthenticationStrategy authenticationStrategy)
         {
             _correlationManger = correlationManger;
+            _authenticationStrategy = authenticationStrategy;
             _keySigner = keySigner;
         }
 

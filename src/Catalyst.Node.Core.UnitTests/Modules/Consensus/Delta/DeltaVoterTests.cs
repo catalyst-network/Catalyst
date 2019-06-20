@@ -118,7 +118,7 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Consensus.Delta
         [Fact]
         public void When_candidate_is_produced_by_unexpected_producer_should_log_and_return_without_hitting_the_cache()
         {
-            var candidateFromUnknownProducer = CandidateDeltaHelper.GetCandidateDelta(
+            var candidateFromUnknownProducer = DeltaHelper.GetCandidateDelta(
                 producerId: PeerIdHelper.GetPeerId("unknown_producer"));
             var logger = Substitute.For<ILogger>();
 
@@ -137,7 +137,7 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Consensus.Delta
         {
             _voter = new DeltaVoter(_cache, _producersProvider, Substitute.For<ILogger>());
 
-            var candidate = CandidateDeltaHelper.GetCandidateDelta(
+            var candidate = DeltaHelper.GetCandidateDelta(
                 previousDeltaHash: _previousDeltaHash,
                 producerId: _producerIds.First().PeerId);
 
@@ -208,10 +208,10 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Consensus.Delta
             int secondVotesCount,
             MemoryCache realCache)
         {
-            var firstCandidate = CandidateDeltaHelper.GetCandidateDelta(_previousDeltaHash,
+            var firstCandidate = DeltaHelper.GetCandidateDelta(_previousDeltaHash,
                 producerId: _producerIds.First().PeerId);
 
-            var secondCandidate = CandidateDeltaHelper.GetCandidateDelta(_previousDeltaHash,
+            var secondCandidate = DeltaHelper.GetCandidateDelta(_previousDeltaHash,
                 producerId: _producerIds.Skip(1).First().PeerId);
 
             var candidateStream = Enumerable.Repeat(firstCandidate, firstVotesCount)
@@ -240,12 +240,12 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Consensus.Delta
             {
                 _voter = new DeltaVoter(realCache, _producersProvider, Substitute.For<ILogger>());
 
-                var candidate1 = CandidateDeltaHelper.GetCandidateDelta(
+                var candidate1 = DeltaHelper.GetCandidateDelta(
                     previousDeltaHash: _previousDeltaHash,
                     producerId: _producerIds.First().PeerId);
                 var candidate1CacheKey = DeltaVoter.GetCandidateCacheKey(candidate1);
 
-                var candidate2 = CandidateDeltaHelper.GetCandidateDelta(
+                var candidate2 = DeltaHelper.GetCandidateDelta(
                     previousDeltaHash: _previousDeltaHash,
                     producerId: _producerIds.Last().PeerId);
                 var candidate2CacheKey = DeltaVoter.GetCandidateCacheKey(candidate2);

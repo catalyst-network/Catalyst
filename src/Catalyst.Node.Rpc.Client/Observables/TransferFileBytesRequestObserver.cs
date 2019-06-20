@@ -61,7 +61,7 @@ namespace Catalyst.Node.Rpc.Client.Observables
         public override IMessage HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto)
         {
             Logger.Debug("received message of type TransferFileBytesRequestObserver");
-            
+
             var deserialised = messageDto.Payload.FromProtocolMessage<TransferFileBytesRequest>();
             FileTransferResponseCodes responseCode;
 
@@ -81,7 +81,7 @@ namespace Catalyst.Node.Rpc.Client.Observables
 
             return new TransferFileBytesResponse
             {
-                ResponseCode = ByteString.CopyFrom((byte) responseCode.Id)
+                ResponseCode = ByteString.CopyFrom((byte)responseCode.Id)
             };
         }
     }
