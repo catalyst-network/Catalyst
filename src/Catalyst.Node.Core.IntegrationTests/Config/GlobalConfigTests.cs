@@ -25,7 +25,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading;
 using Autofac;
 using Catalyst.Common.Config;
 using Catalyst.Common.Enumerator;
@@ -35,18 +34,17 @@ using Microsoft.Extensions.Configuration;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Catalyst.Node.Core.UnitTests.Config
+namespace Catalyst.Node.Core.IntegrationTests.Config
 {
     public class GlobalConfigTests : ConfigFileBasedTest
     {
         public static readonly List<object[]> Networks = 
             Enumeration.GetAll<Network>().Select(n => new object[] {n}).ToList();
-
+        
         public GlobalConfigTests(ITestOutputHelper output) : base(output) { }
 
-        [Theory(Skip = "Blocking CI")]
+        [Theory]
         [MemberData(nameof(Networks))]
-        [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void RegisteringAllConfigsShouldAllowResolvingCatalystNode(Network network)
         {
             var configFiles = new[]
@@ -76,10 +74,8 @@ namespace Catalyst.Node.Core.UnitTests.Config
             var container = ContainerBuilder.Build();
 
             using (var scope = container.BeginLifetimeScope(CurrentTestName + network.Name))
-            using (var cancellationSource = new CancellationTokenSource(TimeSpan.FromSeconds(1)))
             {
-                var catalystNode = scope.Resolve<ICatalystNode>();
-                catalystNode.RunAsync(cancellationSource.Token);
+                _ = scope.Resolve<ICatalystNode>();
             }
         }
     }
