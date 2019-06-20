@@ -24,13 +24,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reactive.Linq;
 using Catalyst.Common.Extensions;
+using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.IO.Handlers;
 using Catalyst.Common.IO.Messaging;
-using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.P2P;
-using Catalyst.Node.Core.P2P.Observables;
+using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
@@ -51,7 +51,6 @@ namespace Catalyst.Node.Core.UnitTests.P2P
         
         // private readonly P2PCorrelationCache _cache;
         private readonly Dictionary<IPeerIdentifier, int> _reputationByPeerIdentifier;
-        private readonly ILogger _logger;
 
         public MessageCorrelationCacheTests(ITestOutputHelper output)
         {
@@ -80,9 +79,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
                         r => r.Content.CorrelationId.ToBase64() == ((ByteString) ci[0]).ToBase64());
                     return ci[1] != null;
                 });
-
-            _logger = Substitute.For<ILogger>();
-
+            
             // _cache = new P2PCorrelationCache(responseStore, _logger);
             // _cache.PeerRatingChanges.Subscribe(change =>
             // {
@@ -127,22 +124,19 @@ namespace Catalyst.Node.Core.UnitTests.P2P
             reputationAfter.Should().BeLessThan(reputationBefore);
         }
 
-        [Fact(Skip = "This will need to be refactored testing with correlation in pipeline.")] // @TODO
-        public void UncorrelatedMessage_should_block_handler()
+        [Fact]
+        public void UncorrelatedMessage_should_not_propogate_to_next_pipeline()
         {
-            var fakeContext = Substitute.For<IChannelHandlerContext>();
-            var fakeChannel = Substitute.For<IChannel>();
+            var correlationManager = Substitute.For<IMessageCorrelationManager>();
+            correlationManager.TryMatchResponse(Arg.Any<ProtocolMessage>()).Returns(false);
+
+            var correlationHandler = new CorrelationHandler(correlationManager);
+            var channelHandlerContext = Substitute.For<IChannelHandlerContext>();
             var nonCorrelatedMessage = new PingResponse().ToProtocolMessage(_peerIds[0].PeerId, Guid.NewGuid());
+            correlationHandler.ChannelRead(channelHandlerContext, nonCorrelatedMessage);
 
-            fakeContext.Channel.Returns(fakeChannel);
-
-            var channeledAny = new ProtocolMessageDto(fakeContext, nonCorrelatedMessage);
-            var observableStream = new[] {channeledAny}.ToObservable();
-
-            var handler = new PingResponseObserver(_logger);
-            handler.StartObserving(observableStream);
-
-            // Assert.False(handler.CanExecuteNextHandler(channeledAny));
+            channelHandlerContext.DidNotReceive().FireChannelRead(nonCorrelatedMessage);
+            channelHandlerContext.Received().CloseAsync();
         }
 
         [Fact]
