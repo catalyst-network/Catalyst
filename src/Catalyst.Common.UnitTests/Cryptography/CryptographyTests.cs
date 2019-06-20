@@ -21,9 +21,12 @@
 
 #endregion
 
+using System;
 using System.Text;
 using Catalyst.Common.Cryptography;
 using Catalyst.Common.Interfaces.Cryptography;
+using Catalyst.Cryptography.BulletProofs.Wrapper.Exceptions;
+using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Types;
 using FluentAssertions;
 using Xunit;
@@ -91,6 +94,19 @@ namespace Catalyst.Common.UnitTests.Cryptography
             var importedKey = _context.ImportPublicKey(blob);
             _context.Verify(importedKey, data, signature).Should()
                .BeTrue("signature should verify with imported public key");
+        }
+
+        [Fact] 
+        public void TestWrapperCustomException()
+        {
+            IPrivateKey privateKey = _context.GeneratePrivateKey();
+            IPublicKey publicKey = _context.GetPublicKey(privateKey);
+            string invalidSignature = "mL9Z+e5gIfEdfhDWUxkUox886YuiZnhEj3om5AXmWVXJK7dl7/ESkjhbkJsrbzIbuWm8EPSjJ2YicTIcXvfzIA==";
+            byte[] signatureBytes = Convert.FromBase64String(invalidSignature);
+            Signature invalidSig = new Signature(signatureBytes);
+            byte[] message = Encoding.UTF8.GetBytes("fa la la la");
+            Action action = () => { _context.Verify(publicKey, message, invalidSig); };
+            action.Should().Throw<SignatureException>();
         }
     }
 }
