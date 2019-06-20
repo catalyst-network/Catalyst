@@ -138,6 +138,11 @@ namespace Catalyst.Common.Keystore
         public IPrivateKey GetDefaultKey()
         {
             var directoryInfo = _fileSystem.GetCatalystDataDir().SubDirectoryInfo(Constants.KeyStoreDataSubDir);
+            if (!directoryInfo.Exists)
+            {
+                return null;
+            }
+
             FileInfo keyStoreFile = directoryInfo.GetFiles("*.json").FirstOrDefault();
             return keyStoreFile.Exists ? new PrivateKey(KeyStoreDecrypt(Password, keyStoreFile.FullName)) : null;
         }
@@ -146,7 +151,5 @@ namespace Catalyst.Common.Keystore
         {
             _password?.Dispose();
         }
-
-
     }
 }

@@ -34,6 +34,8 @@ namespace Catalyst.Common.Modules.KeySigner
     {
         private readonly IKeyStore _keyStore;
         private readonly ICryptoContext _cryptoContext;
+        private IPrivateKey _defaultSigningKey;
+        private IPublicKey _defaultPublicKey;
 
         /// <summary>Initializes a new instance of the <see cref="KeySigner"/> class.</summary>
         /// <param name="keyStore">The key store.</param>
@@ -43,16 +45,16 @@ namespace Catalyst.Common.Modules.KeySigner
         {
             _keyStore = keyStore;
             _cryptoContext = cryptoContext;
-            InitDefaultKey();
+            InitDefaultKeys();
         }
-
-        private IPrivateKey _defaultSigningKey;
 
         /// <inheritdoc/>
         IKeyStore IKeySigner.KeyStore => _keyStore;
 
         /// <inheritdoc/>
         ICryptoContext IKeySigner.CryptoContext => _cryptoContext;
+
+        IPublicKey IKeySigner.PublicKey => _defaultPublicKey;
 
         /// <inheritdoc/>
         public ISignature Sign(byte[] data)
@@ -72,7 +74,7 @@ namespace Catalyst.Common.Modules.KeySigner
             throw new NotImplementedException();
         }
 
-        private void InitDefaultKey()
+        private void InitDefaultKeys()
         {
             var key = _keyStore.GetDefaultKey();
             if (key != null)
@@ -83,7 +85,10 @@ namespace Catalyst.Common.Modules.KeySigner
             {
                 var privateKey = _cryptoContext.GeneratePrivateKey();
                 _keyStore.KeyStoreGenerate(privateKey, "temp password");
+                _defaultSigningKey = _keyStore.GetDefaultKey();
             }
+            
+            _defaultPublicKey = _cryptoContext.GetPublicKey(key);
         }
     }
 }

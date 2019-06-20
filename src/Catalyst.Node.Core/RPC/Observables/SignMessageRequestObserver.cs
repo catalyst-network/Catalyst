@@ -72,7 +72,7 @@ namespace Catalyst.Node.Core.RPC.Observables
 
                 Guard.Argument(signature).NotNull("Failed to sign message. The signature cannot be null.");
 
-                var publicKey = _keySigner.CryptoContext.GetPublicKey(privateKey);
+                var publicKey = _keySigner.PublicKey;
 
                 Guard.Argument(publicKey).NotNull("Failed to get the public key.  Public key cannot be null.");
 

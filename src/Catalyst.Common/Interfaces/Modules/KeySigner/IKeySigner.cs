@@ -47,5 +47,7 @@ namespace Catalyst.Common.Interfaces.Modules.KeySigner
 
         /// <summary>Exports the key.</summary>
         void ExportKey();
+
+        IPublicKey PublicKey { get; }
     }
 }
