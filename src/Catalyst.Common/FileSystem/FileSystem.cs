@@ -34,10 +34,19 @@ namespace Catalyst.Common.FileSystem
         : System.IO.Abstractions.FileSystem,
             IFileSystem
     {
+        private string _currentPath = string.Empty;
+
         public DirectoryInfo GetCatalystDataDir()
         {
             var path = Path.Combine(GetUserHomeDir(), Constants.CatalystDataDir);
-            return new DirectoryInfo(path);
+            return new DirectoryInfo(_currentPath == string.Empty ? _currentPath : path);
+        }
+
+        public bool SetCurrentPath(string path)
+        {
+            _currentPath = path;
+
+            return false;
         }
 
         public async Task<IFileInfo> WriteFileToCdd(string fileName, string contents)

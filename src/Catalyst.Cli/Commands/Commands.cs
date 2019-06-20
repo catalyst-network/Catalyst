@@ -112,6 +112,7 @@ namespace Catalyst.Cli.Commands
                     (RemovePeerOptions opts) => PeerRemoveCommand(opts),
                     (PeerReputationOptions opts) => PeerReputationCommand(opts),
                     (PeerBlackListingOptions opts) => PeerBlackListingCommand(opts),
+                    (ChangeDataFolderOptions opts) => ChangeDataFolderCommand(opts),
                     (AddFileOptions opts) => AddFile(opts),
                     (ConnectOptions opts) => OnConnectNode(opts.NodeId),
                     (ConnectOptions opts) => DisconnectNode(opts.NodeId),
