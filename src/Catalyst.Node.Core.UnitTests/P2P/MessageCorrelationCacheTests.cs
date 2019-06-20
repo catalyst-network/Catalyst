@@ -125,7 +125,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
         }
 
         [Fact]
-        public void UncorrelatedMessage_should_block_handler()
+        public void UncorrelatedMessage_should_not_propogate_to_next_pipeline()
         {
             var correlationManager = Substitute.For<IMessageCorrelationManager>();
             correlationManager.TryMatchResponse(Arg.Any<ProtocolMessage>()).Returns(false);
