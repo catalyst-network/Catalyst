@@ -92,7 +92,7 @@ namespace Catalyst.Common.UnitTests.Extensions
         }
 
         [Fact]
-        public static void ToProtocolMessage_Should_Generate_New_Guid_If_Not_Specified()
+        public static void ToProtocolMessage_Should_Generate_New_CorrelationId_If_Not_Specified()
         {
             var peerId = PeerIdHelper.GetPeerId("someone");
             var expectedContent = "censored";
