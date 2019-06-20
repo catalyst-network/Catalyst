@@ -91,17 +91,16 @@ namespace Catalyst.Common.UnitTests.Extensions
             wrapped.FromProtocolMessage<PeerId>().ClientId.Should().Equal(expectedContent.ToUtf8ByteString());
         }
 
-        [Fact(Skip = "fail")]
-        public static void ToAnySigned_should_fail_on_response_without_correlationId()
+        [Fact]
+        public static void ToProtocolMessage_Should_Generate_New_Guid_If_Not_Specified()
         {
             var peerId = PeerIdHelper.GetPeerId("someone");
             var expectedContent = "censored";
             var response = new PeerId
             {
                 ClientId = expectedContent.ToUtf8ByteString()
-            };
-            new Action(() => response.ToProtocolMessage(peerId))
-               .Should().Throw<ArgumentException>();
+            }.ToProtocolMessage(peerId);
+            response.CorrelationId.ToGuid().Should().NotBe(default);
         }
 
         [Fact]
