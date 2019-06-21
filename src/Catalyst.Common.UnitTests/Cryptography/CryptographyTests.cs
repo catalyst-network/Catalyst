@@ -97,7 +97,7 @@ namespace Catalyst.Common.UnitTests.Cryptography
         }
 
         [Fact] 
-        public void CanThrowSignatureExceptionOnInvalidSignature()
+        public void Can_Throw_Signature_Exception_On_Invalid_Signature()
         {
             IPrivateKey privateKey = _context.GeneratePrivateKey();
             IPublicKey publicKey = _context.GetPublicKey(privateKey);
