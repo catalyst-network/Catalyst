@@ -52,7 +52,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Messaging.Gossip
         }
 
         [Fact]
-        public async Task CanIncreaseBroadcastCountWhenBroadcasting()
+        public async Task Can_Increase_Broadcast_Count_When_Broadcasting()
         {
             PopulatePeers(100);
             var correlationId = await BroadcastMessage();
@@ -63,7 +63,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Messaging.Gossip
         }
 
         [Fact]
-        public async Task CanBroadcastMessageWhenNotEnoughPeersToGossip()
+        public async Task Can_Broadcast_Message_When_Not_Enough_Peers_To_Gossip()
         {
             PopulatePeers(Constants.MaxGossipPeersPerRound - 1);
             var correlationId = await BroadcastMessage();
@@ -78,7 +78,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Messaging.Gossip
         [InlineData(1)]
         [InlineData(6)]
         [InlineData(3)]
-        public async Task CanIncreaseReceivedCountWhenBroadcastMessageIsReceived(int receivedCount)
+        public async Task Can_Increase_Received_Count_When_Broadcast_Message_Is_Received(int receivedCount)
         {
             PopulatePeers(100);
 

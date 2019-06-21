@@ -44,7 +44,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Messaging.Gossip
     public class BroadcastHandlerTests
     {
         [Fact]
-        public async Task BroadcastHandlerCanNotifyManagerOnIncomingBroadcast()
+        public async Task Broadcast_Handler_Can_Notify_Manager_On_Incoming_Broadcast()
         {
             var peerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("1");
             var recipientIdentifier = Substitute.For<IPeerIdentifier>();
@@ -71,7 +71,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Messaging.Gossip
         }
 
         [Fact]
-        public async Task BroadcastCanExecuteProtoHandler()
+        public async Task Broadcast_Can_Execute_Proto_Handler()
         {
             var handler = new TestMessageObserver<TransactionBroadcast>(Substitute.For<ILogger>());
             var manager = Substitute.For<IBroadcastManager>();
