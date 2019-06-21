@@ -61,13 +61,9 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Messaging.Gossip
         }
 
         [Theory]
-        [InlineData("0")]
-        [InlineData("1")]
-        [InlineData("2")]
-        public async Task Gossip_Message_Test(string peerId)
+        public async Task Gossip_Message_Test()
         {
             PopulatePeers(100);
-            var peerIdentifier = PeerIdentifierHelper.GetPeerIdentifier(peerId);
             var correlationId = await Get_Gossip_Correlation_Id();
 
             _cache.TryGetValue(correlationId, out BroadcastMessage value);
