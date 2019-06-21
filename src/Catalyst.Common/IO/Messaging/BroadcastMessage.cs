@@ -31,7 +31,7 @@ namespace Catalyst.Common.IO.Messaging
     {
         /// <summary>Gets or sets the gossip count.</summary>
         /// <value>The amount of messages sent due to gossiping.</value>
-        public uint GossipCount { get; set; }
+        public uint BroadcastCount { get; set; }
 
         /// <summary>Gets or sets the received count.</summary>
         /// <value>The amount of times the message has been received.</value>
