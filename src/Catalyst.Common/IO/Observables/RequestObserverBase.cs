@@ -33,7 +33,6 @@ using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.P2P;
 using Catalyst.Protocol.Common;
-using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using Google.Protobuf;
 using Serilog;
@@ -54,7 +53,7 @@ namespace Catalyst.Common.IO.Observables
             PeerIdentifier = peerIdentifier;
         }
 
-        public abstract IMessage<TProtoRes> HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto);
+        protected abstract IMessage<TProtoRes> HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto);
 
         public override void StartObserving(IObservable<IProtocolMessageDto<ProtocolMessage>> messageStream)
         {

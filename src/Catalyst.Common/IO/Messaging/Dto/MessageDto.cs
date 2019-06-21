@@ -42,7 +42,6 @@ namespace Catalyst.Common.IO.Messaging.Dto
         ///     Data transfer object to wrap up all parameters for sending protocol messages into a MessageFactors.
         /// </summary>
         /// <param name="message"></param>
-        /// <param name="messageTypes"></param>
         /// <param name="correlationId"></param>
         /// <param name="recipient"></param>
         /// <param name="sender"></param>

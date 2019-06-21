@@ -35,16 +35,15 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Ledger
 {
     public sealed class LedgerTests
     {
-        private readonly IRepository<Account> _accounts;    
         private readonly LedgerService _ledger;
 
         public LedgerTests()
         {
-            _accounts = new InMemoryRepository<Account>();
+            IRepository<Account> accounts = new InMemoryRepository<Account>();
 
             var logger = Substitute.For<ILogger>();
 
-            _ledger = new Catalyst.Node.Core.Modules.Ledger.Ledger(_accounts, logger);
+            _ledger = new Catalyst.Node.Core.Modules.Ledger.Ledger(accounts, logger);
         }
 
         [Fact]

@@ -29,7 +29,6 @@ using Catalyst.Common.Interfaces.IO.Observables;
 using Catalyst.Common.IO.Observables;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
-using Dawn;
 using Serilog;
 
 namespace Catalyst.Node.Rpc.Client.Observables

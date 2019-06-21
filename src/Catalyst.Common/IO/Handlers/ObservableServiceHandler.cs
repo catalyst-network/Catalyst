@@ -55,7 +55,7 @@ namespace Catalyst.Common.IO.Handlers
         ///     Reads the channel once accepted and pushed into a stream.
         /// </summary>
         /// <param name="ctx"></param>
-        /// <param name="msg"></param>
+        /// <param name="message"></param>
         protected override void ChannelRead0(IChannelHandlerContext ctx, ProtocolMessage message)
         {
             var contextAny = new ProtocolMessageDto(ctx, message);
