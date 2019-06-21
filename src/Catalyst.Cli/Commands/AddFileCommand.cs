@@ -79,20 +79,19 @@ namespace Catalyst.Cli.Commands
                 request.FileSize = (ulong) fileStream.Length;
             }
             
-            var requestMessage = _protocolMessageFactory.GetMessage(new MessageDto(
-                message: request,
-                messageTypes: MessageTypes.Request,
-                recipient: nodePeerIdentifier,
-                sender: _peerIdentifier
-            ));
+            var requestMessage = _dtoFactory.GetDto(
+                request,
+                nodePeerIdentifier,
+                _peerIdentifier
+            );
 
             IUploadFileInformation fileTransfer = new UploadFileTransferInformation(
                 File.Open(opts.File, FileMode.Open),
                 _peerIdentifier,
                 nodePeerIdentifier,
                 node.Channel,
-                requestMessage.CorrelationId.ToGuid(),
-                _protocolMessageFactory);
+                requestMessage.CorrelationId,
+                _dtoFactory);
 
             _uploadFileTransferFactory.RegisterTransfer(fileTransfer);
 

@@ -148,6 +148,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC.IO.Transport.Channels
             _keySigner.DidNotReceiveWithAnyArgs().Sign(Arg.Any<byte[]>());
 
             var outboundMessageBytes = testingChannel.ReadOutbound<IByteBuffer>();
+
             //var outboundMessage = ProtocolMessageSigned.Parser.ParseFrom(outboundMessageBytes.Array);
             //outboundMessage.Should().BeNull();
 

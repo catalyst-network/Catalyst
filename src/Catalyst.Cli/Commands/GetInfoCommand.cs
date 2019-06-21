@@ -57,12 +57,16 @@ namespace Catalyst.Cli.Commands
 
             try
             {
-                var message = new GetInfoRequest {Query = true};
-                var request = _protocolMessageFactory.GetMessage(new MessageDto(message,
-                    MessageTypes.Request,
-                    new PeerIdentifier(Encoding.ASCII.GetBytes(nodeConfig.PublicKey), nodeConfig.HostAddress, nodeConfig.Port), 
-                    _peerIdentifier
-                ));
+                var message = new GetInfoRequest
+                {
+                    Query = true
+                };
+                
+                var request = _dtoFactory.GetDto(message,
+                    _peerIdentifier,
+                    new PeerIdentifier(Encoding.ASCII.GetBytes(nodeConfig.PublicKey), nodeConfig.HostAddress, nodeConfig.Port)
+                );
+
                 node.SendMessage(request);
             }
             catch (Exception e)

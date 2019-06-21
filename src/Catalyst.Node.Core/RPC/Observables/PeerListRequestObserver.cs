@@ -41,7 +41,7 @@ namespace Catalyst.Node.Core.RPC.Observables
     /// </summary>
     /// <seealso cref="IRpcRequestObserver" />
     public sealed class PeerListRequestObserver
-        : RequestObserverBase<GetPeerListRequest>,
+        : RequestObserverBase<GetPeerListRequest, GetPeerListResponse>,
             IRpcRequestObserver
     {
         /// <summary>
@@ -67,7 +67,7 @@ namespace Catalyst.Node.Core.RPC.Observables
         /// Handlers the specified message.
         /// </summary>
         /// <param name="messageDto">The message.</param>
-        public override IMessage HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto)
+        public override IMessage<GetPeerListResponse> HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto)
         {
             Logger.Debug("received message of type PeerListRequest");
 

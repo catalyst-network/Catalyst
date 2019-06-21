@@ -26,16 +26,15 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Common.Config;
+using Catalyst.Common.Enumerator;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.FileTransfer;
 using Catalyst.Common.Interfaces.FileTransfer;
-using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Observables;
 using Catalyst.Common.Interfaces.Modules.Dfs;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Messaging;
-using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.IO.Observables;
 using Catalyst.Common.P2P;
 using Catalyst.Protocol.Common;
@@ -50,11 +49,10 @@ namespace Catalyst.Node.Core.RPC.Observables
     /// The request handler to add a file to the DFS
     /// </summary>
     /// <seealso cref="IRpcRequestObserver" />
-    public sealed class AddFileToDfsRequestObserver : RequestObserverBase<AddFileToDfsRequest>, IRpcRequestObserver
+    public sealed class AddFileToDfsRequestObserver 
+        : RequestObserverBase<AddFileToDfsRequest, AddFileToDfsResponse>,
+            IRpcRequestObserver
     {
-        /// <summary>The RPC message factory</summary>
-        private readonly IProtocolMessageFactory _protocolMessageFactory;
-
         /// <summary>The download file transfer factory</summary>
         private readonly IDownloadFileTransferFactory _fileTransferFactory;
 
@@ -65,22 +63,19 @@ namespace Catalyst.Node.Core.RPC.Observables
         /// <param name="dfs">The DFS.</param>
         /// <param name="peerIdentifier">The peer identifier.</param>
         /// <param name="fileTransferFactory">The download file transfer factory.</param>
-        /// <param name="protocolMessageFactory"></param>
         /// <param name="logger">The logger.</param>
         public AddFileToDfsRequestObserver(IDfs dfs,
             IPeerIdentifier peerIdentifier,
             IDownloadFileTransferFactory fileTransferFactory,
-            IProtocolMessageFactory protocolMessageFactory,
             ILogger logger) : base(logger, peerIdentifier)
         {
-            _protocolMessageFactory = protocolMessageFactory;
             _fileTransferFactory = fileTransferFactory;
             _dfs = dfs;
         }
 
         /// <summary>Handles the specified message.</summary>
         /// <param name="messageDto">The message.</param>
-        public override IMessage HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto)
+        public override IMessage<AddFileToDfsResponse> HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto)
         {
             var deserialised = messageDto.Payload.FromProtocolMessage<AddFileToDfsRequest>();
 
@@ -102,7 +97,7 @@ namespace Catalyst.Node.Core.RPC.Observables
                 responseCode = FileTransferResponseCodes.Error;
             }
 
-            IMessage message = ReturnResponse(fileTransferInformation, responseCode);
+            var message = ReturnResponse(fileTransferInformation, responseCode);
 
             if (responseCode == FileTransferResponseCodes.Successful)
             {
@@ -154,15 +149,13 @@ namespace Catalyst.Node.Core.RPC.Observables
                 return responseCode;
             }).ConfigureAwait(false);
 
-            IMessage message = ReturnResponse(fileTransferInformation, await addFileResponseCode);
+            var message = ReturnResponse(fileTransferInformation, await addFileResponseCode);
 
             // Send Response
-            var responseMessage = _protocolMessageFactory.GetMessage(new MessageDto(
-                    message,
-                    MessageTypes.Response,
-                    fileTransferInformation.RecipientIdentifier,
-                    PeerIdentifier
-                ),
+            var responseMessage = new DtoFactory().GetDto(
+                message,
+                PeerIdentifier,
+                fileTransferInformation.RecipientIdentifier,
                 fileTransferInformation.CorrelationGuid
             );
 
@@ -171,7 +164,7 @@ namespace Catalyst.Node.Core.RPC.Observables
 
         /// <param name="fileTransferInformation">The file transfer information.</param>
         /// <param name="responseCode">The response code.</param>
-        private IMessage ReturnResponse(IFileTransferInformation fileTransferInformation, FileTransferResponseCodes responseCode)
+        private AddFileToDfsResponse ReturnResponse(IFileTransferInformation fileTransferInformation, Enumeration responseCode)
         {
             Logger.Information("File transfer response code: " + responseCode);
             if (responseCode == FileTransferResponseCodes.Successful)

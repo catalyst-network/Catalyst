@@ -122,13 +122,13 @@ namespace Catalyst.Node.Rpc.Client.IntegrationTests.Observables
                     nodePeer,
                     _fakeContext.Channel,
                     correlationGuid,
-                    new ProtocolMessageFactory());
+                    new DtoFactory());
 
                 for (uint i = 0; i < fileUploadInformation.MaxChunk; i++)
                 {
                     var transferMessage = fileUploadInformation
                        .GetUploadMessageDto(i);
-                    transferMessage.SendToHandler(_fakeContext, transferBytesHandler);
+                    transferMessage.Message.ToProtocolMessage(rpcPeerId).SendToHandler(_fakeContext, transferBytesHandler);
                 }
 
                 linearBackOffRetryPolicy.ExecuteAsync(() =>

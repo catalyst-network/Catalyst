@@ -42,14 +42,14 @@ using ILogger = Serilog.ILogger;
 namespace Catalyst.Node.Core.RPC.Observables
 {
     public sealed class GetVersionRequestObserver
-        : RequestObserverBase<VersionRequest>,
+        : RequestObserverBase<VersionRequest, VersionResponse>,
             IRpcRequestObserver
     {
         public GetVersionRequestObserver(IPeerIdentifier peerIdentifier,
             ILogger logger)
             : base(logger, peerIdentifier) { }
 
-        public override IMessage HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto)
+        public override IMessage<VersionResponse> HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto)
         {
             Logger.Debug("received message of type VersionRequest");
 

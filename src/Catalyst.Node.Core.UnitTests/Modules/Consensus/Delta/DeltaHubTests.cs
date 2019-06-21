@@ -30,6 +30,7 @@ using Catalyst.Common.Interfaces.Modules.Consensus.Delta;
 using Catalyst.Common.Interfaces.Modules.Dfs;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.Messaging.Broadcast;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.Util;
 using Catalyst.Node.Core.Modules.Consensus.Delta;
 using Catalyst.Protocol.Common;

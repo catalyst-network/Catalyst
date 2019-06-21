@@ -22,6 +22,7 @@
 #endregion
 
 using System.Threading.Tasks;
+using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.IO.Messaging.Dto;
@@ -54,7 +55,7 @@ namespace Catalyst.Common.IO.Handlers
             var protocolMessageSigned = new ProtocolMessageSigned
             {
                 Signature = sig.Bytes.RawBytes.ToByteString(),
-                Message = (ProtocolMessage) message.Message
+                Message = message.Message.ToProtocolMessage(message.Sender.PeerId, message.CorrelationId)
             };
 
             return context.WriteAsync(new MessageSignedDto(protocolMessageSigned, message.MessageType, message.Recipient, message.Sender));

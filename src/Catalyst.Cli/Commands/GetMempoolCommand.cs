@@ -57,15 +57,14 @@ namespace Catalyst.Cli.Commands
 
             try
             {
-                var dto = new MessageDto(new GetMempoolRequest(),
-                    MessageTypes.Request,
+                var dto = _dtoFactory.GetDto(new GetMempoolRequest(),
+                    _peerIdentifier,
                     new PeerIdentifier(Encoding.ASCII.GetBytes(nodeConfig.PublicKey),
                         nodeConfig.HostAddress,
-                        nodeConfig.Port),
-                    _peerIdentifier);
+                        nodeConfig.Port)
+                );
                 
-                var request = _protocolMessageFactory.GetMessage(dto);
-                node.SendMessage(request);
+                node.SendMessage(dto);
             }
             catch (Exception e)
             {

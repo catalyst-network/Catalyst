@@ -28,7 +28,7 @@ using Autofac;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.FileTransfer;
-using Catalyst.Protocol.Common;
+using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using FluentAssertions;
@@ -74,8 +74,9 @@ namespace Catalyst.Cli.IntegrationTests.Commands
 
                     if (expectedResult)
                     {
-                        NodeRpcClient.Received(1).SendMessage(Arg.Is<ProtocolMessage>(x =>
-                            x.TypeUrl.Equals(GetFileFromDfsRequest.Descriptor.ShortenedFullName())));
+                        NodeRpcClient.Received(1).SendMessage(Arg.Is<IMessageDto>(x =>
+                            x.Message.Descriptor != null &&
+                            x.Message.Descriptor.Name.Equals(GetFileFromDfsRequest.Descriptor.Name)));
                     }
                 }
             }

@@ -88,14 +88,13 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
                 }
             );
 
-            var request = new ProtocolMessageFactory().GetMessage(new MessageDto(
+            var request = new DtoFactory().GetDto(
                 new GetMempoolRequest(),
-                MessageTypes.Request,
                 PeerIdentifierHelper.GetPeerIdentifier("recipient_key"),
                 PeerIdentifierHelper.GetPeerIdentifier("sender_key")
-            ));
+            );
             
-            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, request);
+            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, request.Message.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId));
             var handler = new GetMempoolRequestObserver(PeerIdentifierHelper.GetPeerIdentifier("sender"), mempool, _logger);
             
             handler.StartObserving(messageStream);

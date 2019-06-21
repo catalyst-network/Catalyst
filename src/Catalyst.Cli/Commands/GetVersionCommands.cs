@@ -58,18 +58,16 @@ namespace Catalyst.Cli.Commands
 
             try
             {
-                var request = _protocolMessageFactory.GetMessage(new MessageDto(
-                    new VersionRequest
+                var dto = _dtoFactory.GetDto(new VersionRequest
                     {
                         Query = true
                     },
-                    MessageTypes.Request,
+                    _peerIdentifier,
                     new PeerIdentifier(Encoding.ASCII.GetBytes(nodeConfig.PublicKey), nodeConfig.HostAddress,
-                        nodeConfig.Port),
-                    _peerIdentifier
-                ));
+                        nodeConfig.Port)
+                );
 
-                node.SendMessage(request.ToProtocolMessage(_peerIdentifier.PeerId, Guid.NewGuid()));
+                node.SendMessage(dto);
             }
             catch (Exception e)
             {

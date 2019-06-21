@@ -21,12 +21,12 @@
 
 #endregion
 
-using Catalyst.Protocol.Common;
+using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 
 namespace Catalyst.Common.Interfaces.IO.Transport
 {
     public interface ISocketClient : ISocket
     {
-        void SendMessage(ProtocolMessage message);
+        void SendMessage(IMessageDto message);
     }
 }

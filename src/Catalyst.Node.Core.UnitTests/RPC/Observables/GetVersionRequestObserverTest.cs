@@ -21,12 +21,12 @@
 
 #endregion
 
-using System;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.Util;
 using Catalyst.Node.Core.RPC.Observables;
 using Catalyst.Protocol.Rpc.Node;
@@ -57,9 +57,15 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
         [Fact]
         public async Task Valid_GetVersion_Request_Should_Send_VersionResponse()
         {
-            var versionRequest = new VersionRequest().ToProtocolMessage(PeerIdHelper.GetPeerId(), Guid.NewGuid());
+            var versionRequest = new DtoFactory().GetDto(new VersionRequest(), 
+                PeerIdentifierHelper.GetPeerIdentifier("sender"), 
+                PeerIdentifierHelper.GetPeerIdentifier("recipient")
+            );
             
-            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, versionRequest);
+            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, 
+                versionRequest.Message.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId)
+            );
+            
             var handler = new GetVersionRequestObserver(PeerIdentifierHelper.GetPeerIdentifier("sender"), _logger);
             
             handler.StartObserving(messageStream);
