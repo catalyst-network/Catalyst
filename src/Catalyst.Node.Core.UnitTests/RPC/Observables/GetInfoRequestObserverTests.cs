@@ -85,7 +85,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
                .SerializeObject(_config.GetSection("CatalystNodeConfiguration").AsEnumerable(),
                     Formatting.Indented);
 
-            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, request);
+            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, request.Message.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId));
             var handler = new GetInfoRequestObserver(
                 PeerIdentifierHelper.GetPeerIdentifier("sender"), _rpcServerSettings, _logger);
 

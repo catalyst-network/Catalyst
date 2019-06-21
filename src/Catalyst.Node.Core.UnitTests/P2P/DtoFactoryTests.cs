@@ -44,10 +44,10 @@ namespace Catalyst.Node.Core.UnitTests.P2P
                 PeerIdentifierHelper.GetPeerIdentifier("im_a_sender")
             );
             
-            pingRequestDto.Should().BeOfType<IMessageDto>();
-            pingRequestDto.Recipient.Should().BeOfType<IPeerIdentifier>();
-            pingRequestDto.Sender.Should().BeOfType<IPeerIdentifier>();
-            pingRequestDto.Message.Should().BeOfType<IMessage>();
+            pingRequestDto.Should().BeAssignableTo<IMessageDto>();
+            pingRequestDto.Recipient.Should().BeAssignableTo<IPeerIdentifier>();
+            pingRequestDto.Sender.Should().BeAssignableTo<IPeerIdentifier>();
+            pingRequestDto.Message.Should().BeAssignableTo<IMessage>();
         }
         
         [Fact]
@@ -59,10 +59,10 @@ namespace Catalyst.Node.Core.UnitTests.P2P
                 Guid.NewGuid()
             );
 
-            pingResponseDto.Should().BeOfType<IMessageDto>();
-            pingResponseDto.Recipient.Should().BeOfType<IPeerIdentifier>();
-            pingResponseDto.Sender.Should().BeOfType<IPeerIdentifier>();
-            pingResponseDto.Message.Should().BeOfType<IMessage>();
+            pingResponseDto.Should().BeAssignableTo<IMessageDto>();
+            pingResponseDto.Recipient.Should().BeAssignableTo<IPeerIdentifier>();
+            pingResponseDto.Sender.Should().BeAssignableTo<IPeerIdentifier>();
+            pingResponseDto.Message.Should().BeAssignableTo<IMessage>();
             pingResponseDto.CorrelationId.Should().NotBeEmpty();
         }
 
@@ -75,10 +75,10 @@ namespace Catalyst.Node.Core.UnitTests.P2P
                 PeerIdentifierHelper.GetPeerIdentifier("im_a_sender")
             );
             
-            transactionDto.Should().BeOfType<IMessageDto>();
-            transactionDto.Recipient.Should().BeOfType<IPeerIdentifier>();
-            transactionDto.Sender.Should().BeOfType<IPeerIdentifier>();
-            transactionDto.Message.Should().BeOfType<IMessage>();
+            transactionDto.Should().BeAssignableTo<IMessageDto>();
+            transactionDto.Recipient.Should().BeAssignableTo<IPeerIdentifier>();
+            transactionDto.Sender.Should().BeAssignableTo<IPeerIdentifier>();
+            transactionDto.Message.Should().BeAssignableTo<IMessage>();
         }
     }
 }

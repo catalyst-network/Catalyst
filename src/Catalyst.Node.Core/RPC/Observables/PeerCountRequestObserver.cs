@@ -46,7 +46,7 @@ namespace Catalyst.Node.Core.RPC.Observables
     /// </summary>
     /// <seealso cref="IRpcRequestObserver" />
     public sealed class PeerCountRequestObserver
-        : RequestObserverBase<GetPeerCountRequest>,
+        : RequestObserverBase<GetPeerCountRequest, GetPeerCountResponse>,
             IRpcRequestObserver
     {
         /// <summary>The peer discovery</summary>
@@ -66,7 +66,7 @@ namespace Catalyst.Node.Core.RPC.Observables
 
         /// <summary>Handles the specified message.</summary>
         /// <param name="messageDto">The message.</param>
-        public override IMessage HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto)
+        public override IMessage<GetPeerCountResponse> HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto)
         {
             var peerCount = _peerRepository.GetAll().Count();
 

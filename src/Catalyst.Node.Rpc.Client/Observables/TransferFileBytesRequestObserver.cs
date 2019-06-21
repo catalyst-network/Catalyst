@@ -38,7 +38,7 @@ using Serilog;
 namespace Catalyst.Node.Rpc.Client.Observables
 {
     public sealed class TransferFileBytesRequestObserver
-        : RequestObserverBase<TransferFileBytesRequest>,
+        : RequestObserverBase<TransferFileBytesRequest, TransferFileBytesResponse>,
             IRpcRequestObserver
     {
         /// <summary>The download file transfer factory</summary>
@@ -58,7 +58,7 @@ namespace Catalyst.Node.Rpc.Client.Observables
 
         /// <summary>Handles the specified message.</summary>
         /// <param name="messageDto">The message.</param>
-        public override IMessage HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto)
+        public override IMessage<TransferFileBytesResponse> HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto)
         {
             Logger.Debug("received message of type TransferFileBytesRequestObserver");
             

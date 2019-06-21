@@ -27,7 +27,6 @@ using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.Messaging.Broadcast;
 using Catalyst.Common.IO.Messaging;
-using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.P2P;
 using Catalyst.Protocol.Common;
 using Microsoft.Extensions.Caching.Memory;
@@ -103,13 +102,12 @@ namespace Catalyst.Node.Core.P2P.Messaging.Broadcast
         /// <inheritdoc/>
         public async Task ReceiveAsync(ProtocolMessage protocolMessage)
         {
-            if (!protocolMessage.CheckIfMessageIsBroadcast())
-            {
-                throw new NotSupportedException("The Message is not a gossip type");
-            }
+            // if (!protocolMessage.CheckIfMessageIsBroadcast())
+            // {
+            //     throw new NotSupportedException("The Message is not a gossip type");
+            // }
 
-            var originalGossipedMessage = ProtocolMessage.Parser.ParseFrom(protocolMessage.Value);
-            var correlationId = originalGossipedMessage.CorrelationId.ToGuid();
+            var correlationId = protocolMessage.CorrelationId.ToGuid();
             var gossipRequest = await GetOrCreateAsync(correlationId).ConfigureAwait(false);
             gossipRequest.ReceivedCount += 1;
             UpdatePendingRequest(correlationId, gossipRequest);
@@ -124,16 +122,10 @@ namespace Catalyst.Node.Core.P2P.Messaging.Broadcast
             {
                 var peersToGossip = GetRandomPeers(Constants.MaxGossipPeersPerRound);
                 var correlationId = message.CorrelationId.ToGuid();
-                
-                // @TODO maybe check if correlationId is null.
 
                 foreach (var peerIdentifier in peersToGossip)
                 {
-                    var dto = _dtoFactory.GetDto(message,
-                        peerIdentifier,
-                        _peerIdentifier);
-                    
-                    _peerClient.SendMessage(dto);
+                    _peerClient.SendMessage(_dtoFactory.GetDto(message, peerIdentifier, _peerIdentifier, correlationId));
                 }
 
                 var updateCount = (uint) peersToGossip.Count;

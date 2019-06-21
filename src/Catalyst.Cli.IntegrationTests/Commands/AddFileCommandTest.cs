@@ -78,7 +78,7 @@ namespace Catalyst.Cli.IntegrationTests.Commands
 
                     if (expectedResult)
                     {
-                        NodeRpcClient.Received(1).SendMessage(Arg.Is<IMessageDto>(x => x.Message.Descriptor != null && x.Message.Descriptor.Equals(AddFileToDfsRequest.Descriptor.ShortenedFullName())));
+                        NodeRpcClient.Received(1).SendMessage(Arg.Is<IMessageDto>(x => x.Message.Descriptor != null && x.Message.Descriptor.Name.Equals(AddFileToDfsRequest.Descriptor.Name)));
                     }
                 }   
             }

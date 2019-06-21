@@ -40,7 +40,7 @@ using ILogger = Serilog.ILogger;
 namespace Catalyst.Node.Core.RPC.Observables
 {
     public sealed class PeerReputationRequestObserver
-        : RequestObserverBase<GetPeerReputationRequest>,
+        : RequestObserverBase<GetPeerReputationRequest, GetPeerReputationResponse>,
             IRpcRequestObserver
     {
         /// <summary>
@@ -60,7 +60,7 @@ namespace Catalyst.Node.Core.RPC.Observables
         /// Handlers the specified message.
         /// </summary>
         /// <param name="messageDto">The message.</param>
-        public override IMessage HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto)
+        public override IMessage<GetPeerReputationResponse> HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto)
         {
             Logger.Debug("received message of type PeerReputationRequest");
             

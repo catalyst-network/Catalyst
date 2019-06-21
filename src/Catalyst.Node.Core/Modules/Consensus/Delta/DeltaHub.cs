@@ -28,6 +28,7 @@ using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.Messaging.Broadcast;
 using Catalyst.Common.Protocol;
 using Catalyst.Protocol.Delta;
+using Catalyst.Protocol.Transaction;
 using Dawn;
 using Serilog;
 

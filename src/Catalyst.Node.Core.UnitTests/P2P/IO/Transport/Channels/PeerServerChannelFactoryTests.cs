@@ -38,6 +38,7 @@ using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
 using Catalyst.Node.Core.P2P.IO.Transport.Channels;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
+using Catalyst.Protocol.Transaction;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Embedded;

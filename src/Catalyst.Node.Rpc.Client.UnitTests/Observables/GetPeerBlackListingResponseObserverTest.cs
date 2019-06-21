@@ -24,6 +24,7 @@
 using System;
 using System.Threading.Tasks;
 using Catalyst.Common.Config;
+using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.IO.Messaging.Dto;
@@ -72,7 +73,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.Observables
         {
             await TestGetBlackListResponse(blacklist, publicKey, ip);
 
-            _output.Received(1).WriteLine($"Peer Blacklisting Successful : {blacklist}, {publicKey}, {ip}");
+            _output.Received(1).WriteLine($"Peer Blacklisting Successful : {blacklist.ToString()}, {publicKey}, {ip}");
         }
 
         /// <summary>
@@ -98,7 +99,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.Observables
                 PeerIdentifierHelper.GetPeerIdentifier("recipient"),
                 Guid.NewGuid());
 
-            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, response);
+            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, response.Message.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId, response.CorrelationId));
 
             _observer = new PeerBlackListingResponseObserver(_output, _logger);
             _observer.StartObserving(messageStream);

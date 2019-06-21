@@ -39,7 +39,7 @@ using ILogger = Serilog.ILogger;
 namespace Catalyst.Node.Core.RPC.Observables
 {
     public sealed class GetMempoolRequestObserver
-        : RequestObserverBase<GetMempoolRequest>,
+        : RequestObserverBase<GetMempoolRequest, GetMempoolResponse>,
             IRpcRequestObserver
     {
         private readonly IMempool _mempool;
@@ -52,7 +52,7 @@ namespace Catalyst.Node.Core.RPC.Observables
             _mempool = mempool;
         }
 
-        public override IMessage HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto)
+        public override IMessage<GetMempoolResponse> HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto)
         {
             Logger.Debug("GetMempoolRequestHandler starting ...");
 

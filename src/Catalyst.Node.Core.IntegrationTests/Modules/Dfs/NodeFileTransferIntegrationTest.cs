@@ -152,7 +152,7 @@ namespace Catalyst.Node.Core.IntegrationTests.Modules.Dfs
                     fakeNode.Channel, uniqueFileKey, new DtoFactory());
                 for (uint i = 0; i < fileTransferInformation.MaxChunk; i++)
                 {
-                    fileUploadInformation.GetUploadMessageDto(i).SendToHandler(_fakeContext, transferBytesRequestHandler);
+                    fileUploadInformation.GetUploadMessageDto(i).Message.ToProtocolMessage(sender).SendToHandler(_fakeContext, transferBytesRequestHandler);
                 }
             }
 

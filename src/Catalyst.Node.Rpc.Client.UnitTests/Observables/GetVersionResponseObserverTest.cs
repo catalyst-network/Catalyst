@@ -25,6 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Catalyst.Common.Config;
+using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.IO.Messaging.Dto;
@@ -79,7 +80,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.Observables
                 Guid.NewGuid()
             );
 
-            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, response);
+            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, response.Message.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId, response.CorrelationId));
 
             _observer = new GetVersionResponseObserver(_output, _logger);
             _observer.StartObserving(messageStream);

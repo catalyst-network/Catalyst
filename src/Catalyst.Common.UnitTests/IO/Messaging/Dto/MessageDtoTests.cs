@@ -40,12 +40,8 @@ namespace Catalyst.Common.UnitTests.IO.Messaging.Dto
 
         public MessageDtoTests()
         {
-            var peerIdentifier = Substitute.For<IPeerIdentifier>();
             var pingRequest = Substitute.For<IMessage<PingRequest>>();
-            _messageDto = new DtoFactory().GetDto(pingRequest,
-                peerIdentifier,
-                PeerIdentifierHelper.GetPeerIdentifier("im_a_recipient")
-            );
+            _messageDto = new MessageDto(pingRequest, PeerIdentifierHelper.GetPeerIdentifier("Sender_Key"), PeerIdentifierHelper.GetPeerIdentifier("Recipient_Key"));
         }
 
         [Fact]

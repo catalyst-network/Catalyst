@@ -41,7 +41,7 @@ using ILogger = Serilog.ILogger;
 namespace Catalyst.Node.Core.RPC.Observables
 {
     public sealed class PeerBlackListingRequestObserver
-        : RequestObserverBase<SetPeerBlackListRequest>,
+        : RequestObserverBase<SetPeerBlackListRequest, SetPeerBlackListResponse>,
             IRpcRequestObserver
     {
         /// <summary>
@@ -61,7 +61,7 @@ namespace Catalyst.Node.Core.RPC.Observables
         /// Handlers the specified message.
         /// </summary>
         /// <param name="messageDto">The message.</param>
-        public override IMessage HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto)
+        public override IMessage<SetPeerBlackListResponse> HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto)
         {
             Logger.Information("received message of type PeerBlackListingRequest");
 

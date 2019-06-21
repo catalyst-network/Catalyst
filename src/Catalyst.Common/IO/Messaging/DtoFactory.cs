@@ -51,7 +51,7 @@ namespace Catalyst.Common.IO.Messaging
             //@TODO if IMessagerequest guid should be defualt
             if (message.Descriptor.Name.EndsWith(MessageTypes.Request.Name))
             {
-                return BuildRequestMessage(message, senderPeerIdentifier);
+                return BuildRequestMessage(message, senderPeerIdentifier, recipientPeerIdentifier);
             }
             
             if (message.Descriptor.Name.EndsWith(MessageTypes.Response.Name))
@@ -61,7 +61,7 @@ namespace Catalyst.Common.IO.Messaging
 
             if (message.Descriptor.Name.EndsWith(MessageTypes.Broadcast.Name))
             {
-                return BuildBroadcastMessage(message, senderPeerIdentifier);
+                return BuildBroadcastMessage(message, senderPeerIdentifier, recipientPeerIdentifier, correlationId);
             }
 
             throw new ArgumentException();
@@ -76,25 +76,25 @@ namespace Catalyst.Common.IO.Messaging
         private IMessageDto BuildResponseMessage(IMessage message, IPeerIdentifier recipientPeerIdentifier, IPeerIdentifier senderPeerIdentifier, Guid correlationId)
         {
             Guard.Argument(correlationId, nameof(correlationId)).NotDefault();
-            return new MessageDto(message, senderPeerIdentifier, correlationId, recipientPeerIdentifier);
+            return new MessageDto(message, senderPeerIdentifier, recipientPeerIdentifier, correlationId);
         }
 
         /// <summary>Builds the ask message.</summary>
         /// <param name="message">The dto.</param>
         /// <param name="senderPeerIdentifier"></param>
         /// <returns>ProtocolMessage message</returns>
-        private IMessageDto BuildRequestMessage(IMessage message, IPeerIdentifier senderPeerIdentifier)
+        private IMessageDto BuildRequestMessage(IMessage message, IPeerIdentifier senderPeerIdentifier, IPeerIdentifier recipientPeerIdentifier)
         {
-            return new MessageDto(message, senderPeerIdentifier, Guid.NewGuid());
+            return new MessageDto(message, senderPeerIdentifier, recipientPeerIdentifier, Guid.NewGuid());
         }
 
         /// <summary>Builds the gossip message.</summary>
         /// <param name="message">The dto.</param>
         /// <param name="senderPeerIdentifier"></param>
         /// <returns>ProtocolMessage message</returns>
-        private IMessageDto BuildBroadcastMessage(IMessage message, IPeerIdentifier senderPeerIdentifier)
+        private IMessageDto BuildBroadcastMessage(IMessage message, IPeerIdentifier senderPeerIdentifier, IPeerIdentifier recipientPeerIdentifier, Guid correlationId)
         {
-            return new MessageDto(message, senderPeerIdentifier, Guid.NewGuid());
+            return new MessageDto(message, senderPeerIdentifier, recipientPeerIdentifier, (correlationId == default ? Guid.NewGuid() : correlationId));
         }
     }
 }

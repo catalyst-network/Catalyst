@@ -48,8 +48,8 @@ namespace Catalyst.Common.IO.Messaging.Dto
         /// <param name="sender"></param>
         public MessageDto(IMessage message,
             IPeerIdentifier sender,
-            Guid correlationId = default,
-            IPeerIdentifier recipient = null)
+            IPeerIdentifier recipient,
+            Guid correlationId = default)
         {
             Guard.Argument(message, nameof(message)).NotNull();
             Guard.Argument(recipient.IpEndPoint.Address, nameof(recipient.IpEndPoint.Address)).NotNull();
