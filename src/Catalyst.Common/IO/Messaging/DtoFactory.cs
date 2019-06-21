@@ -49,7 +49,6 @@ namespace Catalyst.Common.IO.Messaging
             IPeerIdentifier recipientPeerIdentifier,
             Guid correlationId = default) where T : IMessage<T>
         {
-            //@TODO if IMessagerequest guid should be defualt
             if (message.Descriptor.Name.EndsWith(MessageTypes.Request.Name))
             {
                 return BuildRequestMessage(message, senderPeerIdentifier, recipientPeerIdentifier);

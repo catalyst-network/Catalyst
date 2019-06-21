@@ -102,11 +102,6 @@ namespace Catalyst.Node.Core.P2P.Messaging.Broadcast
         /// <inheritdoc/>
         public async Task ReceiveAsync(ProtocolMessage protocolMessage)
         {
-            // if (!protocolMessage.CheckIfMessageIsBroadcast())
-            // {
-            //     throw new NotSupportedException("The Message is not a gossip type");
-            // }
-
             var correlationId = protocolMessage.CorrelationId.ToGuid();
             var gossipRequest = await GetOrCreateAsync(correlationId).ConfigureAwait(false);
             gossipRequest.ReceivedCount += 1;
@@ -125,7 +120,11 @@ namespace Catalyst.Node.Core.P2P.Messaging.Broadcast
 
                 foreach (var peerIdentifier in peersToGossip)
                 {
-                    _peerClient.SendMessage(_dtoFactory.GetDto(message, peerIdentifier, _peerIdentifier, correlationId));
+                    _peerClient.SendMessage(_dtoFactory.GetDto(message, 
+                        peerIdentifier, 
+                        _peerIdentifier,
+                        correlationId)
+                    );
                 }
 
                 var updateCount = (uint) peersToGossip.Count;

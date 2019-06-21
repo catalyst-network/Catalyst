@@ -123,8 +123,7 @@ namespace Catalyst.Node.Core.IntegrationTests.Modules.Dfs
             var senderPeerId = new PeerIdentifier(sender);
             var recipientPeerId = new PeerIdentifier(recipient);
             var fileToTransfer = FileHelper.CreateRandomTempFile(byteSize);
-            var addFileToDfsRequestHandler = new AddFileToDfsRequestObserver(_dfs, senderPeerId, _nodeFileTransferFactory,
-                _dtoFactory, _logger);
+            var addFileToDfsRequestHandler = new AddFileToDfsRequestObserver(_dfs, senderPeerId, _nodeFileTransferFactory, _logger);
             var transferBytesRequestHandler =
                 new TransferFileBytesRequestObserver(_nodeFileTransferFactory, senderPeerId, _logger);
 

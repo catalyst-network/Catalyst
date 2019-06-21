@@ -57,8 +57,6 @@ namespace Catalyst.Common.IO.Messaging.Dto
             Guard.Argument(sender, nameof(sender)).Compatible<IPeerIdentifier>().NotNull();
             CorrelationId = correlationId;
             Message = message;
-
-            // MessageType = messageTypes;
             Recipient = recipient;
             Sender = sender;
         }

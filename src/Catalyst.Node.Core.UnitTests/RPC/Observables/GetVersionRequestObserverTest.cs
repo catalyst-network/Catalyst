@@ -57,9 +57,15 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
         [Fact]
         public async Task Valid_GetVersion_Request_Should_Send_VersionResponse()
         {
-            var versionRequest = new DtoFactory().GetDto(new VersionRequest(), PeerIdentifierHelper.GetPeerIdentifier("sender"), PeerIdentifierHelper.GetPeerIdentifier("recipient"));
+            var versionRequest = new DtoFactory().GetDto(new VersionRequest(), 
+                PeerIdentifierHelper.GetPeerIdentifier("sender"), 
+                PeerIdentifierHelper.GetPeerIdentifier("recipient")
+            );
             
-            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, versionRequest.Message.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId));
+            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, 
+                versionRequest.Message.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId)
+            );
+            
             var handler = new GetVersionRequestObserver(PeerIdentifierHelper.GetPeerIdentifier("sender"), _logger);
             
             handler.StartObserving(messageStream);
