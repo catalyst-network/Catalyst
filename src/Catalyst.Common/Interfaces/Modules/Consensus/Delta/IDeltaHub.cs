@@ -22,6 +22,8 @@
 #endregion
 
 using System;
+using System.Threading;
+using System.Threading.Tasks;
 using Catalyst.Protocol.Delta;
 
 namespace Catalyst.Common.Interfaces.Modules.Consensus.Delta
@@ -78,8 +80,9 @@ namespace Catalyst.Common.Interfaces.Modules.Consensus.Delta
         /// it should then post it on IPFS (if it can't find it there already) so that the rest of the
         /// network can retrieve and apply it.
         /// </summary>
-        /// <param name="candidate"></param>
-        void PublishDeltaToIpfs(CandidateDeltaBroadcast candidate);
+        /// <param name="delta">The delta which has been elected for this cycle.</param>
+        /// <param name="cancellationToken">A cancellation token allowing to abort the tasks.</param>
+        Task<string> PublishDeltaToIpfsAsync(Catalyst.Protocol.Delta.Delta delta, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// This method should be called in order for the hub to start listening for incoming deltas on the

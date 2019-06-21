@@ -66,12 +66,12 @@ namespace Catalyst.Node.Rpc.Client.IO.Transport.Channels
         /// <param name="targetAddress">Ignored</param>
         /// <param name="targetPort">Ignored</param>
         /// <param name="certificate">Local TLS certificate</param>
-        public override IObservableChannel BuildChannel(IEventLoopGroupFactory handlerEventLoopGroupFactory,
+        public override IObservableChannel BuildChannel(IEventLoopGroupFactory eventLoopGroupFactory,
             IPAddress targetAddress,
             int targetPort,
             X509Certificate2 certificate = null)
         {
-            var channel = Bootstrap(handlerEventLoopGroupFactory, targetAddress, targetPort, certificate);
+            var channel = Bootstrap(eventLoopGroupFactory, targetAddress, targetPort, certificate);
             
             var messageStream = channel.Pipeline.Get<IObservableServiceHandler>()?.MessageStream;
 
