@@ -76,7 +76,7 @@ namespace Catalyst.Node.Core
                 //Enable after checking safety implications, if plugins become important.
                 // AssemblyLoadContext.Default.Resolving += TryLoadAssemblyFromExecutionDirectory;
 
-                var targetConfigFolder = new FileSystem().GetCatalystDataDir().FullName;
+                var targetConfigFolder = new FileSystem(true).GetCatalystDataDir().FullName;
                 var network = Network.Dev;
 
 #if (DEBUG)                

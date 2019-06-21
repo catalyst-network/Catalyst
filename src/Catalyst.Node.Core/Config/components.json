@@ -274,7 +274,10 @@
                 {
                     "type": "Catalyst.Common.Interfaces.FileSystem.IFileSystem, Catalyst.Common"
                 }
-            ]
+            ],
+            "parameters": {
+                "checkConfigPointer": true
+            }
         },
         {
             "type": "Catalyst.Common.FileTransfer.UploadFileTransferFactory, Catalyst.Common",

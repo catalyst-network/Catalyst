@@ -34,12 +34,38 @@ namespace Catalyst.Common.FileSystem
         : System.IO.Abstractions.FileSystem,
             IFileSystem
     {
-        private string _currentPath = string.Empty;
+        private string _currentPath;
+
+        private string _configPointerFilePath => Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) 
+           + Constants.ConfigFilePointer;
+
+        private bool _checkConfigPointerFile = false;
+        public FileSystem()
+        {
+            _currentPath = string.Empty;
+        }
+
+        public FileSystem(bool checkConfigPointerFile)
+        {
+            if (checkConfigPointerFile)
+            {
+                if (!System.IO.File.Exists(_configPointerFilePath))
+                {
+                    using (System.IO.File.CreateText(_configPointerFilePath)) { }
+
+                    CreateConfigPointerFile(_configPointerFilePath);
+                }
+            }
+            _checkConfigPointerFile = checkConfigPointerFile;
+        }
 
         public DirectoryInfo GetCatalystDataDir()
         {
+            if (_checkConfigPointerFile) _currentPath = GetHiddenCatalystDataDir();
+
             var path = Path.Combine(GetUserHomeDir(), Constants.CatalystDataDir);
-            return new DirectoryInfo(_currentPath == string.Empty ? _currentPath : path);
+
+            return new DirectoryInfo(_currentPath == string.Empty ? path : _currentPath);
         }
 
         public bool SetCurrentPath(string path)
@@ -69,17 +95,36 @@ namespace Catalyst.Common.FileSystem
         {
             return File.Exists(Path.Combine(GetCatalystDataDir().ToString(), fileName));
         }
-        
+
+        private string GetHiddenCatalystDataDir()
+        {
+            try
+            {   
+                using (var sr = new StreamReader(_configPointerFilePath))
+                {
+                   return sr.ReadToEnd();
+                }
+            }
+            catch (IOException e)
+            {
+                Console.WriteLine("The file configuration file pointer could not be read:");
+                Console.WriteLine(e.Message);
+            }
+            return string.Empty;
+        }
+
         private static string GetUserHomeDir()
         {
-            var dataDirInfo = new DirectoryInfo("");
-            if (!dataDirInfo.Exists)
-            {
-                dataDirInfo.Create();
-            }
-
-
             return Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+        }
+
+        private static void CreateConfigPointerFile(string path)
+        {
+            using (StreamWriter writer = new StreamWriter(path))
+            {
+                var contents = GetUserHomeDir() + Constants.CatalystDataDir;
+                writer.Write(contents);
+            }
         }
     }
 }

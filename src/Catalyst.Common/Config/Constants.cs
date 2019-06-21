@@ -55,6 +55,9 @@ namespace Catalyst.Common.Config
         // <summary> Default Catalyst data directory </summary>
         public static string CatalystDataDir => ".Catalyst";
         
+        // <summary> Default Configuration File Pointer which points to the current location of the data directory </summary>
+        public static string ConfigFilePointer => "\\ConfigFilePointer.txt";
+
         // <summary> Default dfs data directory inside the Catalyst data directory </summary>
         public static string DfsDataSubDir => "dfs";
         
