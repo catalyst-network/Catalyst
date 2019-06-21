@@ -31,8 +31,6 @@ using Catalyst.TestUtils;
 using DotNetty.Transport.Channels.Embedded;
 using NSubstitute;
 using System;
-using Catalyst.Common.Interfaces.Modules.KeySigner;
-using Catalyst.Cryptography.BulletProofs.Wrapper.Types;
 using Catalyst.Protocol.Common;
 using Google.Protobuf;
 using Xunit;

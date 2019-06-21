@@ -21,7 +21,6 @@
 
 #endregion
 
-using System.Net;
 using Catalyst.Common.Interfaces.Attributes;
 using SharpRepository.Repository;
 
