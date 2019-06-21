@@ -43,12 +43,20 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Messaging.Gossip
 {
     public class BroadcastHandlerTests
     {
+        private readonly IBroadcastManager _fakeBroadcastManager;
+        private readonly BroadcastHandler _broadcastHandler;
+
+        public BroadcastHandlerTests()
+        {
+            _fakeBroadcastManager = Substitute.For<IBroadcastManager>();
+            _broadcastHandler = new BroadcastHandler(_fakeBroadcastManager);
+        }
+
         [Fact]
         public async Task Broadcast_Handler_Can_Notify_Manager_On_Incoming_Broadcast()
         {
             var peerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("1");
             var recipientIdentifier = Substitute.For<IPeerIdentifier>();
-            var gossipMessageHandler = Substitute.For<IBroadcastManager>();
             var fakeIp = IPAddress.Any;
             var guid = Guid.NewGuid();
 
@@ -56,7 +64,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Messaging.Gossip
             recipientIdentifier.IpEndPoint.Returns(new IPEndPoint(fakeIp, 10));
 
             EmbeddedChannel channel = new EmbeddedChannel(
-                new BroadcastHandler(gossipMessageHandler),
+                _broadcastHandler,
                 new ObservableServiceHandler()
             );
 
@@ -66,7 +74,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Messaging.Gossip
 
             channel.WriteInbound(anySigned);
 
-            await gossipMessageHandler.Received(Quantity.Exactly(1))
+            await _fakeBroadcastManager.Received(Quantity.Exactly(1))
                .ReceiveAsync(Arg.Any<ProtocolMessage>());
         }
 
@@ -74,13 +82,11 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Messaging.Gossip
         public async Task Broadcast_Can_Execute_Proto_Handler()
         {
             var handler = new TestMessageObserver<TransactionBroadcast>(Substitute.For<ILogger>());
-            var manager = Substitute.For<IBroadcastManager>();
-            var gossipHandler = new BroadcastHandler(manager);
 
             var protoDatagramChannelHandler = new ObservableServiceHandler();
             handler.StartObserving(protoDatagramChannelHandler.MessageStream);
 
-            var channel = new EmbeddedChannel(gossipHandler, protoDatagramChannelHandler);
+            var channel = new EmbeddedChannel(_broadcastHandler, protoDatagramChannelHandler);
 
             var anySignedGossip = new TransactionBroadcast()
                .ToProtocolMessage(PeerIdHelper.GetPeerId(Guid.NewGuid().ToString()))
