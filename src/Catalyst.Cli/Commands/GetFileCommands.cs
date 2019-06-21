@@ -23,18 +23,13 @@
 
 using System;
 using System.Text;
-using Catalyst.Common.Config;
-using Catalyst.Common.Extensions;
 using Catalyst.Common.FileTransfer;
 using Catalyst.Common.Interfaces.Cli.Options;
 using Catalyst.Common.Interfaces.FileTransfer;
 using Catalyst.Common.Interfaces.Rpc;
-using Catalyst.Common.IO.Messaging;
-using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.P2P;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
-using Serilog.Events;
 
 namespace Catalyst.Cli.Commands
 {
@@ -64,17 +59,19 @@ namespace Catalyst.Cli.Commands
                 DfsHash = opts.FileHash
             };
 
-            var dto = new MessageDto(message, MessageTypes.Request, new PeerIdentifier(
+            var recipient = new PeerIdentifier(
                 Encoding.ASCII.GetBytes(nodeConfig.PublicKey),
-                nodeConfig.HostAddress, nodeConfig.Port), _peerIdentifier);
-
-            var messageDto = _protocolMessageFactory.GetMessage(dto);
+                nodeConfig.HostAddress, nodeConfig.Port);
+            
+            var messageDto = _dtoFactory.GetDto(message, 
+                recipient,
+                _peerIdentifier);
 
             IDownloadFileInformation fileTransfer = new DownloadFileTransferInformation(
                 _peerIdentifier,
-                new PeerIdentifier(messageDto.PeerId),
+                messageDto.Sender,
                 node.Channel,
-                messageDto.CorrelationId.ToGuid(),
+                messageDto.CorrelationId,
                 opts.FileOutput,
                 0
             );

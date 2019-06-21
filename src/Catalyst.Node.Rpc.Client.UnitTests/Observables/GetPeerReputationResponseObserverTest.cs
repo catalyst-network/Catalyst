@@ -24,10 +24,9 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Catalyst.Common.Config;
+using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.IO.Messaging;
-using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Node.Rpc.Client.Observables;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
@@ -101,17 +100,16 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.Observables
 
         private async Task TestGetReputationResponse(int rep)
         {
-            var response = new ProtocolMessageFactory().GetMessage(new MessageDto(
-                    new GetPeerReputationResponse
-                    {
-                        Reputation = rep
-                    },
-                    MessageTypes.Request,
-                    PeerIdentifierHelper.GetPeerIdentifier("recpient"),
-                    PeerIdentifierHelper.GetPeerIdentifier("sender")),
-                Guid.NewGuid());
+            var response = new DtoFactory().GetDto(new GetPeerReputationResponse
+                {
+                    Reputation = rep
+                },
+                PeerIdentifierHelper.GetPeerIdentifier("sender"),
+                PeerIdentifierHelper.GetPeerIdentifier("recpient"),
+                Guid.NewGuid()
+            );
 
-            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, response);
+            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, response.Message.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId, response.CorrelationId));
 
             _observer = new PeerReputationResponseObserver(_output, _logger);
             _observer.StartObserving(messageStream);

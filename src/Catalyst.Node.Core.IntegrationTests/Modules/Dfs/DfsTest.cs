@@ -31,7 +31,6 @@ using Catalyst.Node.Core.Modules.Dfs;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using NSubstitute;
-using Polly;
 using Serilog;
 using Xunit;
 using Xunit.Abstractions;

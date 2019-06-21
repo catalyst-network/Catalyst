@@ -22,15 +22,12 @@
 #endregion
 
 using System;
-using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Observables;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.IO.Observables;
-using Catalyst.Common.P2P;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Types;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
@@ -43,7 +40,7 @@ using ILogger = Serilog.ILogger;
 namespace Catalyst.Node.Core.RPC.Observables
 {
     public sealed class VerifyMessageRequestObserver
-        : RequestObserverBase<VerifyMessageRequest>,
+        : RequestObserverBase<VerifyMessageRequest, VerifyMessageResponse>,
             IRpcRequestObserver
     {
         private readonly IKeySigner _keySigner;
@@ -62,7 +59,7 @@ namespace Catalyst.Node.Core.RPC.Observables
             _keySigner = keySigner;
         }
 
-        public override IMessage HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto)
+        protected override IMessage<VerifyMessageResponse> HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto)
         {
             Logger.Debug("received message of type VerifyMessageRequest");
             
@@ -117,7 +114,7 @@ namespace Catalyst.Node.Core.RPC.Observables
             } 
         }
 
-        private IMessage ReturnResponse(bool result)
+        private IMessage<VerifyMessageResponse> ReturnResponse(bool result)
         {
             return new VerifyMessageResponse
             {

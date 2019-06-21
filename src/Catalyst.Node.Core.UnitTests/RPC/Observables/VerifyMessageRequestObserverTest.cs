@@ -26,10 +26,8 @@ using System.Linq;
 using Autofac;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
-using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.IO.Messaging;
-using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.Util;
 using Catalyst.Node.Core.RPC.Observables;
 using Catalyst.Protocol.Common;
@@ -52,7 +50,6 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
         private readonly ILogger _logger;
         private readonly IKeySigner _keySigner;
         private readonly IChannelHandlerContext _fakeContext;
-        private readonly IProtocolMessageFactory _protocolMessageFactory;
 
         public VerifyMessageRequestObserverTest(ITestOutputHelper output) : base(output)
         {
@@ -69,7 +66,6 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
             _scope = container.BeginLifetimeScope(CurrentTestName);
             
             _keySigner = container.Resolve<IKeySigner>();
-            _protocolMessageFactory = Substitute.For<IProtocolMessageFactory>();
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
             
@@ -87,20 +83,26 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
 
         public void VerifyMessageRequest_UsingValidRequest_ShouldSendVerifyMessageResponse(string message, string signature, string publicKey, bool expectedResult)
         {
-            var request = new ProtocolMessageFactory().GetMessage(new MessageDto(
+            var request = new DtoFactory().GetDto(
                 new VerifyMessageRequest
                 {
                     Message = RLP.EncodeElement(message.Trim('\"').ToBytesForRLPEncoding()).ToByteString(),
                     PublicKey = publicKey.ToBytesForRLPEncoding().ToByteString(),
                     Signature = signature.ToBytesForRLPEncoding().ToByteString()
                 },
-                MessageTypes.Request,
-                PeerIdentifierHelper.GetPeerIdentifier("recipient_key"),
-                PeerIdentifierHelper.GetPeerIdentifier("sender_key")
-            ));
+                PeerIdentifierHelper.GetPeerIdentifier("sender_key"),
+                PeerIdentifierHelper.GetPeerIdentifier("recipient_key")
+            );
             
-            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, request);
-            var handler = new VerifyMessageRequestObserver(PeerIdentifierHelper.GetPeerIdentifier("sender"), _logger, _keySigner);
+            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, 
+                request.Message.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId)
+            );
+            
+            var handler = new VerifyMessageRequestObserver(PeerIdentifierHelper.GetPeerIdentifier("sender"),
+                _logger,
+                _keySigner
+            );
+            
             handler.StartObserving(messageStream);
             
             var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();

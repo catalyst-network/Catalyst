@@ -154,7 +154,7 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Consensus.Delta
                 var elector = new DeltaElector(realCache, _logger);
 
                 var favouriteStream = favourites.ToObservable();
-                using (var subscription = favouriteStream.Subscribe(elector))
+                using (favouriteStream.Subscribe(elector))
                 {
                     var candidateListKey = DeltaElector.GetCandidateListCacheKey(favourites.First());
 
@@ -196,7 +196,7 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Consensus.Delta
                 var elector = new DeltaElector(realCache, _logger);
 
                 var favouriteStream = favourites.ToObservable();
-                using (var subscription = favouriteStream.Subscribe(elector))
+                using (favouriteStream.Subscribe(elector))
                 {
                     var candidateListKey = DeltaElector.GetCandidateListCacheKey(favourites.First());
 

@@ -26,10 +26,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Catalyst.Common.Config;
+using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.IO.Messaging;
-using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Node.Rpc.Client.Observables;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.Protocol.Transaction;
@@ -83,7 +82,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.Observables
                 TransactionHelper.GetTransaction(567, "standardPubKey", "sign2")
             };
 
-            var txEncodedLst = txLst.Select(tx => ConvertorForRLPEncodingExtensions.ToBytesForRLPEncoding((string) tx.ToString())).ToList();
+            var txEncodedLst = txLst.Select(tx => ConvertorForRLPEncodingExtensions.ToBytesForRLPEncoding(tx.ToString())).ToList();
             
             var mempoolList = new List<string>();
             
@@ -101,18 +100,21 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.Observables
         { 
             var txList = mempoolContent.ToList();
 
-            var response = new ProtocolMessageFactory().GetMessage(new MessageDto(
-                    new GetMempoolResponse
-                    {
-                        Mempool = {txList}
-                    },
-                    MessageTypes.Response,
-                    PeerIdentifierHelper.GetPeerIdentifier("recipient_key"),
-                    PeerIdentifierHelper.GetPeerIdentifier("sender_key")
-                ),
-                Guid.NewGuid());
+            var response = new DtoFactory().GetDto(
+                new GetMempoolResponse
+                {
+                    Mempool = {txList}
+                },
+                PeerIdentifierHelper.GetPeerIdentifier("sender_key"),
+                PeerIdentifierHelper.GetPeerIdentifier("recipient_key"),
+                Guid.NewGuid()
+            );
 
-            var messageStream = MessageStreamHelper.CreateStreamWithMessages(_fakeContext, response);
+            var messageStream = MessageStreamHelper.CreateStreamWithMessages(_fakeContext,
+                response.Message.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender_key").PeerId,
+                    response.CorrelationId
+                )
+            );
 
             _observer = new GetMempoolResponseObserver(_output, _logger);
             _observer.StartObserving(messageStream);

@@ -23,11 +23,8 @@
 
 using System;
 using System.Text;
-using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.Cli.Options;
 using Catalyst.Common.Interfaces.Rpc;
-using Catalyst.Common.IO.Messaging;
-using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.P2P;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
@@ -57,15 +54,14 @@ namespace Catalyst.Cli.Commands
 
             try
             {
-                var dto = new MessageDto(new GetMempoolRequest(),
-                    MessageTypes.Request,
+                var dto = _dtoFactory.GetDto(new GetMempoolRequest(),
+                    _peerIdentifier,
                     new PeerIdentifier(Encoding.ASCII.GetBytes(nodeConfig.PublicKey),
                         nodeConfig.HostAddress,
-                        nodeConfig.Port),
-                    _peerIdentifier);
+                        nodeConfig.Port)
+                );
                 
-                var request = _protocolMessageFactory.GetMessage(dto);
-                node.SendMessage(request);
+                node.SendMessage(dto);
             }
             catch (Exception e)
             {

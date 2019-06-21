@@ -24,11 +24,8 @@
 using System;
 using System.Net;
 using System.Text;
-using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.Cli.Options;
 using Catalyst.Common.Interfaces.Rpc;
-using Catalyst.Common.IO.Messaging;
-using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.Network;
 using Catalyst.Common.P2P;
 using Catalyst.Protocol.Rpc.Node;
@@ -59,19 +56,16 @@ namespace Catalyst.Cli.Commands
             var nodeConfig = GetNodeConfig(opts.Node);
             Guard.Argument(nodeConfig, nameof(nodeConfig)).NotNull("The node configuration cannot be null");
 
-            var requestMessage = _protocolMessageFactory.GetMessage(new MessageDto(
-                new RemovePeerRequest
+            var requestMessage = _dtoFactory.GetDto(new RemovePeerRequest
                 {
                     PeerIp = ByteString.CopyFrom(IPAddress.Parse(opts.Ip).To16Bytes()),
                     PublicKey = string.IsNullOrEmpty(opts.PublicKey)
                         ? ByteString.Empty
                         : ByteString.CopyFrom(opts.PublicKey.ToBytesForRLPEncoding())
                 },
-                MessageTypes.Request,
+                _peerIdentifier,
                 new PeerIdentifier(Encoding.ASCII.GetBytes(nodeConfig.PublicKey), nodeConfig.HostAddress,
-                    nodeConfig.Port),
-                _peerIdentifier
-            ));
+                    nodeConfig.Port));
 
             node.SendMessage(requestMessage);
 

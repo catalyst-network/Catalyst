@@ -21,7 +21,6 @@
 
 #endregion
 
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Catalyst.Common.Interfaces.P2P;

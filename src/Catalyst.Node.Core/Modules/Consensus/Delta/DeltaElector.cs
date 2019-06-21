@@ -30,7 +30,6 @@ using Catalyst.Common.Interfaces.Modules.Consensus.Delta;
 using Catalyst.Common.Protocol;
 using Catalyst.Common.Util;
 using Catalyst.Protocol.Delta;
-using Catalyst.Protocol.Transaction;
 using Dawn;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Primitives;
