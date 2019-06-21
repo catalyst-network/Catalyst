@@ -64,7 +64,7 @@ namespace Catalyst.Common.IO.Messaging
                 return BuildBroadcastMessage(message, senderPeerIdentifier, recipientPeerIdentifier, correlationId);
             }
 
-            throw new ArgumentException();
+            throw new ArgumentException("Cannot resolve message type");
         }
 
         /// <summary>Builds the tell message.</summary>
