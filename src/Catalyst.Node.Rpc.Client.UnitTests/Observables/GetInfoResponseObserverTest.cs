@@ -21,7 +21,7 @@
 
 #endregion
 
-using Catalyst.Common.Config;
+using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.IO.Messaging.Dto;
@@ -56,20 +56,20 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.Observables
         [InlineData("A Fake Info Response")]
         public void RpcClient_Can_Handle_GetInfoResponse(string query)
         {
-            var getInfoResponse = new GetInfoResponse
-            {
-                Query = query
-            };
-            var response = new ProtocolMessageFactory().GetMessage(new MessageDto(
-                    getInfoResponse,
-                    MessageTypes.Response,
-                    PeerIdentifierHelper.GetPeerIdentifier("recipient"),
-                    PeerIdentifierHelper.GetPeerIdentifier("sender")
-                ),
-                Guid.NewGuid());
+            var response = new DtoFactory().GetDto(
+                new GetInfoResponse
+                {
+                    Query = query
+                },
+                PeerIdentifierHelper.GetPeerIdentifier("sender"),
+                PeerIdentifierHelper.GetPeerIdentifier("recipient"),
+                Guid.NewGuid()
+            );
+
+            // var messageStream = MessageStreamHelper.CreateStreamWithMessage(response.Message.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId));
 
             _requestObserver = new GetInfoResponseObserver(_output, _logger);
-            _requestObserver.HandleResponse(new ProtocolMessageDto(_fakeContext, response));
+            _requestObserver.HandleResponse(new ProtocolMessageDto(_fakeContext, response.Message.ToProtocolMessage(response.Sender.PeerId, response.CorrelationId)));
             _output.Received(1).WriteLine(query);
         }
 

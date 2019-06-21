@@ -30,9 +30,8 @@ using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Observables;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.IO.Messaging.Dto;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.P2P;
-using Catalyst.Common.Util;
 using Catalyst.Protocol.Common;
 using Dawn;
 using Google.Protobuf;
@@ -40,20 +39,21 @@ using Serilog;
 
 namespace Catalyst.Common.IO.Observables
 {
-    public abstract class RequestObserverBase<TProto> : MessageObserverBase, IRequestMessageObserver where TProto : IMessage
+    public abstract class RequestObserverBase<TProtoReq, TProtoRes> : MessageObserverBase, IRequestMessageObserver
+        where TProtoReq : IMessage<TProtoReq> where TProtoRes : IMessage<TProtoRes>
     {
         private readonly string _filterMessageType;
         public IPeerIdentifier PeerIdentifier { get; }
 
         protected RequestObserverBase(ILogger logger, IPeerIdentifier peerIdentifier) : base(logger)
         {
-            Guard.Argument(typeof(TProto), nameof(TProto)).Require(t => t.IsRequestType(), 
-                t => $"{nameof(TProto)} is not of type {MessageTypes.Request.Name}");
-            _filterMessageType = typeof(TProto).ShortenedProtoFullName();
+            Guard.Argument(typeof(TProtoReq), nameof(TProtoReq)).Require(t => t.IsRequestType(), 
+                t => $"{nameof(TProtoReq)} is not of type {MessageTypes.Request.Name}");
+            _filterMessageType = typeof(TProtoReq).ShortenedProtoFullName();
             PeerIdentifier = peerIdentifier;
         }
 
-        public abstract IMessage HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto);
+        protected abstract IMessage<TProtoRes> HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto);
 
         public override void StartObserving(IObservable<IProtocolMessageDto<ProtocolMessage>> messageStream)
         {
@@ -76,12 +76,13 @@ namespace Catalyst.Common.IO.Observables
             ChannelHandlerContext = messageDto.Context;
             
             //@TODO HandleRequest in try catch if catch send error message.
+            var response = HandleRequest(messageDto);
             
-            SendChannelContextResponse(new MessageDto(
-                HandleRequest(messageDto),
-                MessageTypes.Response,
+            SendChannelContextResponse(new DtoFactory().GetDto(response,
+                PeerIdentifier,
                 new PeerIdentifier(messageDto.Payload.PeerId),
-                PeerIdentifier));
+                messageDto.Payload.CorrelationId.ToGuid()
+            ));
         }
 
         public void SendChannelContextResponse(IMessageDto messageDto)

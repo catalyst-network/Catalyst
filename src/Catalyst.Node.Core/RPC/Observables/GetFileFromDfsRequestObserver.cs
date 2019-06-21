@@ -23,7 +23,6 @@
 
 using System;
 using System.IO;
-using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Common.Config;
@@ -36,13 +35,10 @@ using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Observables;
 using Catalyst.Common.Interfaces.Modules.Dfs;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.IO.Messaging;
-using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.IO.Observables;
 using Catalyst.Common.P2P;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
-using Dawn;
 using Google.Protobuf;
 using Serilog;
 
@@ -53,11 +49,11 @@ namespace Catalyst.Node.Core.RPC.Observables
     /// </summary>
     /// <seealso cref="IRpcRequestObserver" />
     public sealed class GetFileFromDfsRequestObserver 
-        : RequestObserverBase<GetFileFromDfsRequest>,
+        : RequestObserverBase<GetFileFromDfsRequest, GetFileFromDfsResponse>,
             IRpcRequestObserver
     {
         /// <summary>The RPC message factory</summary>
-        private readonly IProtocolMessageFactory _protocolMessageFactory;
+        private readonly IDtoFactory _dtoFactory;
 
         /// <summary>The upload file transfer factory</summary>
         private readonly IUploadFileTransferFactory _fileTransferFactory;
@@ -69,22 +65,22 @@ namespace Catalyst.Node.Core.RPC.Observables
         /// <param name="dfs">The DFS.</param>
         /// <param name="peerIdentifier">The peer identifier.</param>
         /// <param name="fileTransferFactory">The upload file transfer factory.</param>
-        /// <param name="protocolMessageFactory"></param>
+        /// <param name="dtoFactory"></param>
         /// <param name="logger">The logger.</param>
         public GetFileFromDfsRequestObserver(IDfs dfs,
             IPeerIdentifier peerIdentifier,
             IUploadFileTransferFactory fileTransferFactory,
-            IProtocolMessageFactory protocolMessageFactory,
+            IDtoFactory dtoFactory,
             ILogger logger) : base(logger, peerIdentifier)
         {
-            _protocolMessageFactory = protocolMessageFactory;
+            _dtoFactory = dtoFactory;
             _fileTransferFactory = fileTransferFactory;
             _dfs = dfs;
         }
 
         /// <summary>Handles the specified message.</summary>
         /// <param name="messageDto">The message.</param>
-        public override IMessage HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto)
+        protected override IMessage<GetFileFromDfsResponse> HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto)
         {
             var deserialised = messageDto.Payload.FromProtocolMessage<GetFileFromDfsRequest>();
             
@@ -112,7 +108,7 @@ namespace Catalyst.Node.Core.RPC.Observables
                                 recipientPeerIdentifier,
                                 messageDto.Context.Channel,
                                 correlationGuid,
-                                _protocolMessageFactory
+                                _dtoFactory
                             ))
                             {
                                 return _fileTransferFactory.RegisterTransfer(fileTransferInformation);                          
@@ -141,7 +137,7 @@ namespace Catalyst.Node.Core.RPC.Observables
         /// <summary>Returns the response.</summary>
         /// <param name="responseCode">The response code.</param>
         /// <param name="fileSize">Size of the file.</param>
-        private IMessage ReturnResponse(Enumeration responseCode, long fileSize)
+        private IMessage<GetFileFromDfsResponse> ReturnResponse(Enumeration responseCode, long fileSize)
         {
             Logger.Information("File upload response code: " + responseCode);
             

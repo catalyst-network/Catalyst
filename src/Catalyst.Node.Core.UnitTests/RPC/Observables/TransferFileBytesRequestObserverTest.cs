@@ -30,9 +30,7 @@ using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.FileTransfer;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.IO.Messaging;
-using Catalyst.Common.Util;
 using Catalyst.Node.Core.RPC.Observables;
-using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
@@ -82,15 +80,14 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
         [Fact]
         public async Task HandlerCanSendErrorOnException()
         {
-            var guid = Guid.NewGuid();
-            var request = new TransferFileBytesRequest
+            var requestDto = new DtoFactory().GetDto(new TransferFileBytesRequest
             {
                 ChunkBytes = ByteString.Empty,
                 ChunkId = 1,
                 CorrelationFileName = ByteString.Empty
-            }.ToProtocolMessage(PeerIdHelper.GetPeerId("Test"), guid);
+            }, PeerIdentifierHelper.GetPeerIdentifier("sender"), PeerIdentifierHelper.GetPeerIdentifier("recipient"));
             
-            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_context, request);
+            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_context, requestDto.Message.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId));
             
             _observer.StartObserving(messageStream);
 

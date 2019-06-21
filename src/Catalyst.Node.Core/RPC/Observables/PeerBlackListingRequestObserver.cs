@@ -24,7 +24,6 @@
 
 using System.Linq;
 using Catalyst.Common.Extensions;
-using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Observables;
 using Catalyst.Common.Interfaces.P2P;
@@ -32,7 +31,6 @@ using Catalyst.Common.IO.Observables;
 using Catalyst.Common.P2P;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
-using Dawn;
 using Google.Protobuf;
 using Nethereum.RLP;
 using SharpRepository.Repository;
@@ -41,7 +39,7 @@ using ILogger = Serilog.ILogger;
 namespace Catalyst.Node.Core.RPC.Observables
 {
     public sealed class PeerBlackListingRequestObserver
-        : RequestObserverBase<SetPeerBlackListRequest>,
+        : RequestObserverBase<SetPeerBlackListRequest, SetPeerBlackListResponse>,
             IRpcRequestObserver
     {
         /// <summary>
@@ -61,7 +59,7 @@ namespace Catalyst.Node.Core.RPC.Observables
         /// Handlers the specified message.
         /// </summary>
         /// <param name="messageDto">The message.</param>
-        public override IMessage HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto)
+        protected override IMessage<SetPeerBlackListResponse> HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto)
         {
             Logger.Information("received message of type PeerBlackListingRequest");
 

@@ -38,7 +38,6 @@ using FluentAssertions;
 using Google.Protobuf;
 using Microsoft.Extensions.Caching.Memory;
 using NSubstitute;
-using Serilog;
 using Xunit;
 using Xunit.Abstractions;
 

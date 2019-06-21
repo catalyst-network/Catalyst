@@ -22,7 +22,6 @@
 #endregion
 
 using Catalyst.Common.Interfaces.IO.EventLoop;
-using Dawn;
 using DotNetty.Transport.Channels;
 
 namespace Catalyst.Common.IO.EventLoop

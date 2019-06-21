@@ -32,7 +32,6 @@ using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.Messaging.Broadcast;
 using Catalyst.Common.IO.Handlers;
-using Catalyst.Common.IO.Transport.Channels;
 using Catalyst.Common.Util;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
 using Catalyst.Node.Core.P2P.IO.Transport.Channels;

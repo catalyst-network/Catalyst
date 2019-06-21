@@ -22,19 +22,13 @@
 #endregion
 
 using System.Linq;
-using Catalyst.Common.Config;
-using Catalyst.Common.Extensions;
-using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Observables;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.IO.Messaging;
-using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.IO.Observables;
 using Catalyst.Common.P2P;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
-using Dawn;
 using Google.Protobuf;
 using Serilog;
 using SharpRepository.Repository;
@@ -46,7 +40,7 @@ namespace Catalyst.Node.Core.RPC.Observables
     /// </summary>
     /// <seealso cref="IRpcRequestObserver" />
     public sealed class PeerCountRequestObserver
-        : RequestObserverBase<GetPeerCountRequest>,
+        : RequestObserverBase<GetPeerCountRequest, GetPeerCountResponse>,
             IRpcRequestObserver
     {
         /// <summary>The peer discovery</summary>
@@ -66,7 +60,7 @@ namespace Catalyst.Node.Core.RPC.Observables
 
         /// <summary>Handles the specified message.</summary>
         /// <param name="messageDto">The message.</param>
-        public override IMessage HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto)
+        protected override IMessage<GetPeerCountResponse> HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto)
         {
             var peerCount = _peerRepository.GetAll().Count();
 

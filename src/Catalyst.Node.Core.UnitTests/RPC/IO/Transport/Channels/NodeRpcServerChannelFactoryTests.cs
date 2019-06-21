@@ -30,11 +30,9 @@ using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.Interfaces.Rpc.Authentication;
 using Catalyst.Common.IO.Handlers;
 using Catalyst.Node.Core.RPC.IO.Transport.Channels;
-using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
 using Catalyst.TestUtils;
 using DotNetty.Buffers;
@@ -148,6 +146,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC.IO.Transport.Channels
             _keySigner.DidNotReceiveWithAnyArgs().Sign(Arg.Any<byte[]>());
 
             var outboundMessageBytes = testingChannel.ReadOutbound<IByteBuffer>();
+
             //var outboundMessage = ProtocolMessageSigned.Parser.ParseFrom(outboundMessageBytes.Array);
             //outboundMessage.Should().BeNull();
 

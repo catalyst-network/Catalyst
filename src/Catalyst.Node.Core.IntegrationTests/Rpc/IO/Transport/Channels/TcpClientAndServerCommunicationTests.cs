@@ -40,7 +40,6 @@ using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels.Embedded;
 using DotNetty.Buffers;
-using FluentAssertions;
 using NSubstitute;
 using Serilog;
 using SharpRepository.Repository;
@@ -50,38 +49,33 @@ namespace Catalyst.Node.Core.IntegrationTests.Rpc.IO.Transport.Channels
 {
     public class TcpClientAndServerCommunicationTests : IDisposable
     {
-        private readonly IMessageCorrelationManager _serverCorrelationManager;
-        private readonly IMessageCorrelationManager _clientCorrelationManager;
-        private readonly IKeySigner _serverKeySigner;
-        private readonly IKeySigner _clientKeySigner;
         private readonly NodeRpcServerChannelFactoryTests.TestNodeRpcServerChannelFactory _serverFactory;
         private readonly NodeRpcClientChannelFactoryTests.TestNodeRpcClientChannelFactory _clientFactory;
-        private readonly IAuthenticationStrategy _authenticationStrategy;
         private IRepository<Peer> _peerRepository;
         private PeerCountRequestObserver _peerCountObserver;
         private TestMessageObserver<GetPeerCountResponse> _clientObserver;
 
         public TcpClientAndServerCommunicationTests()
         {
-            _serverCorrelationManager = Substitute.For<IMessageCorrelationManager>();
-            _serverKeySigner = Substitute.For<IKeySigner>();
+            var serverCorrelationManager = Substitute.For<IMessageCorrelationManager>();
+            var serverKeySigner = Substitute.For<IKeySigner>();
 
             var peerSettings = Substitute.For<IPeerSettings>();
 
             peerSettings.BindAddress.Returns(IPAddress.Parse("127.0.0.1"));
             peerSettings.Port.Returns(1234);
-            _authenticationStrategy = Substitute.For<IAuthenticationStrategy>();
-            _authenticationStrategy.Authenticate(Arg.Any<IPeerIdentifier>()).Returns(true);
+            var authenticationStrategy = Substitute.For<IAuthenticationStrategy>();
+            authenticationStrategy.Authenticate(Arg.Any<IPeerIdentifier>()).Returns(true);
             _serverFactory = new NodeRpcServerChannelFactoryTests.TestNodeRpcServerChannelFactory(
-                _serverCorrelationManager,
-                _serverKeySigner,
-                _authenticationStrategy);
+                serverCorrelationManager,
+                serverKeySigner,
+                authenticationStrategy);
 
-            _clientCorrelationManager = Substitute.For<IMessageCorrelationManager>();
-            _clientKeySigner = Substitute.For<IKeySigner>();
+            var clientCorrelationManager = Substitute.For<IMessageCorrelationManager>();
+            var clientKeySigner = Substitute.For<IKeySigner>();
             _clientFactory = new NodeRpcClientChannelFactoryTests.TestNodeRpcClientChannelFactory(
-                _clientKeySigner, 
-                _clientCorrelationManager);
+                clientKeySigner, 
+                clientCorrelationManager);
         }
 
         [Fact]
@@ -98,6 +92,7 @@ namespace Catalyst.Node.Core.IntegrationTests.Rpc.IO.Transport.Channels
             clientChannel.WriteOutbound(initialRequest);
 
             var sentBytes = clientChannel.ReadOutbound<IByteBuffer>();
+
             //var sent = ProtocolMessageSigned.Parser.ParseFrom(sentBytes.Array);
             //sent.Signature.Should().NotBeNullOrEmpty();
             //sent.Message.CorrelationId.ToGuid().Should().Be(guid);
@@ -130,7 +125,9 @@ namespace Catalyst.Node.Core.IntegrationTests.Rpc.IO.Transport.Channels
             //send the response back on the outbound channel
             //serverChannel.WriteOutbound(rawResponse);
             //_serverKeySigner.Received(1).Sign(Arg.Any<byte[]>());
+            
             var response = serverChannel.ReadOutbound<ProtocolMessageSigned>();
+
             //response.Should().NotBeNull();
             //response.Signature.Should().NotBeEmpty();
 

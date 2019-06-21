@@ -25,12 +25,9 @@ using Catalyst.Common.Interfaces.IO.EventLoop;
 using Catalyst.Common.Interfaces.IO.Transport.Channels;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Transport;
-using Catalyst.Protocol.Common;
-using DotNetty.Buffers;
 using Serilog;
 using System.Net;
 using System.Reflection;
-using System.Threading.Tasks;
 
 namespace Catalyst.Node.Core.P2P
 {
