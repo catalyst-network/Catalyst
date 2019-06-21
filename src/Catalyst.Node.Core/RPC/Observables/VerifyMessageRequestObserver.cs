@@ -43,7 +43,7 @@ using ILogger = Serilog.ILogger;
 namespace Catalyst.Node.Core.RPC.Observables
 {
     public sealed class VerifyMessageRequestObserver
-        : RequestObserverBase<VerifyMessageRequest>,
+        : RequestObserverBase<VerifyMessageRequest, VerifyMessageResponse>,
             IRpcRequestObserver
     {
         private readonly IKeySigner _keySigner;
@@ -62,7 +62,7 @@ namespace Catalyst.Node.Core.RPC.Observables
             _keySigner = keySigner;
         }
 
-        public override IMessage HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto)
+        public override IMessage<VerifyMessageResponse> HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto)
         {
             Logger.Debug("received message of type VerifyMessageRequest");
             
@@ -117,7 +117,7 @@ namespace Catalyst.Node.Core.RPC.Observables
             } 
         }
 
-        private IMessage ReturnResponse(bool result)
+        private IMessage<VerifyMessageResponse> ReturnResponse(bool result)
         {
             return new VerifyMessageResponse
             {

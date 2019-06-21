@@ -57,13 +57,11 @@ namespace Catalyst.Cli.Commands
             
             try
             {
-                var requestMessage = _protocolMessageFactory.GetMessage(new MessageDto(
-                    new GetPeerListRequest(),
-                    MessageTypes.Request,
+                var requestMessage = _dtoFactory.GetDto(new GetPeerListRequest(),
+                    _peerIdentifier,
                     new PeerIdentifier(Encoding.ASCII.GetBytes(nodeConfig.PublicKey), nodeConfig.HostAddress,
-                        nodeConfig.Port),
-                    _peerIdentifier
-                ));
+                        nodeConfig.Port)
+                );
 
                 node.SendMessage(requestMessage);
             }

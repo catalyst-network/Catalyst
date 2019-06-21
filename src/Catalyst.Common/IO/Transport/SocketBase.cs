@@ -35,7 +35,7 @@ namespace Catalyst.Common.IO.Transport
     public class SocketBase : ISocket
     {
         protected readonly IChannelFactory ChannelFactory;
-        protected readonly ILogger Logger;
+        private readonly ILogger _logger;
         protected readonly IEventLoopGroupFactory EventLoopGroupFactory;
 
         public IChannel Channel { get; protected set; }
@@ -43,7 +43,7 @@ namespace Catalyst.Common.IO.Transport
         protected SocketBase(IChannelFactory channelFactory, ILogger logger, IEventLoopGroupFactory eventLoopGroupFactory)
         {
             ChannelFactory = channelFactory;
-            Logger = logger;
+            _logger = logger;
             EventLoopGroupFactory = eventLoopGroupFactory;
         }
 
@@ -59,7 +59,7 @@ namespace Catalyst.Common.IO.Transport
                 return;
             }
 
-            Logger.Debug($"Disposing {0}", GetType().Name);
+            _logger.Debug($"Disposing {0}", GetType().Name);
 
             var quietPeriod = TimeSpan.FromMilliseconds(100);
 
@@ -75,7 +75,7 @@ namespace Catalyst.Common.IO.Transport
             }
             catch (Exception e)
             {
-                Logger?.Error(e, "Dispose failed to complete.");
+                _logger?.Error(e, "Dispose failed to complete.");
             }
         }
     }

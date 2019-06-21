@@ -44,7 +44,7 @@ using ILogger = Serilog.ILogger;
 namespace Catalyst.Node.Core.RPC.Observables
 {
     public sealed class GetInfoRequestObserver
-        : RequestObserverBase<GetInfoRequest>,
+        : RequestObserverBase<GetInfoRequest, GetInfoResponse>,
             IRpcRequestObserver
     {
         private readonly IRpcServerSettings _config;
@@ -56,7 +56,7 @@ namespace Catalyst.Node.Core.RPC.Observables
             _config = config;
         }
 
-        public override IMessage HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto)
+        public override IMessage<GetInfoResponse> HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto)
         {
             Logger.Debug("received message of type GetInfoRequest");
             

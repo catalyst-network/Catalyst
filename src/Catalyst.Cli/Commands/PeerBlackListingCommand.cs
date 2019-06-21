@@ -67,18 +67,16 @@ namespace Catalyst.Cli.Commands
 
                 var blackListFlag = opts.BlackListFlag;
 
-                var requestMessage = _protocolMessageFactory.GetMessage(new MessageDto(
-                    new SetPeerBlackListRequest
+                var requestMessage = _dtoFactory.GetDto(new SetPeerBlackListRequest
                     {
                         PublicKey = peerPublicKey.ToBytesForRLPEncoding().ToByteString(),
                         Ip = peerIp.ToBytesForRLPEncoding().ToByteString(),
                         Blacklist = blackListFlag
                     },
-                    MessageTypes.Request,
+                    _peerIdentifier,
                     new PeerIdentifier(Encoding.ASCII.GetBytes(nodeConfig.PublicKey), nodeConfig.HostAddress,
-                        nodeConfig.Port),
-                    _peerIdentifier
-                ));
+                        nodeConfig.Port)
+                );
 
                 node.SendMessage(requestMessage);
             }

@@ -34,14 +34,14 @@ using Serilog;
 namespace Catalyst.Node.Core.P2P.Observables
 {
     public sealed class PingRequestObserver 
-        : RequestObserverBase<PingRequest>,
+        : RequestObserverBase<PingRequest, PingResponse>,
             IP2PMessageObserver
     {
         public PingRequestObserver(IPeerIdentifier peerIdentifier,
             ILogger logger)
             : base(logger, peerIdentifier) { }
 
-        public override IMessage HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto)
+        public override IMessage<PingResponse> HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto)
         {
             Logger.Debug("message content is {0}", messageDto.Payload.FromProtocolMessage<PingRequest>());
 
