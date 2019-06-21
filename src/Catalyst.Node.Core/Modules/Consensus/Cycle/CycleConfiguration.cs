@@ -22,6 +22,7 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using Catalyst.Common.Interfaces.Modules.Consensus.Cycle;
 using Catalyst.Common.Modules.Consensus.Cycle;
 
@@ -35,28 +36,34 @@ namespace Catalyst.Node.Core.Modules.Consensus.Cycle
             PhaseTimings voting, 
             PhaseTimings synchronisation)
         {
-            Construction = construction;
-            Campaigning = campaigning;
-            Voting = voting;
-            Synchronisation = synchronisation;
             CycleDuration = construction.TotalTime + campaigning.TotalTime + voting.TotalTime +
                 synchronisation.TotalTime;
+            TimingsByName = new Dictionary<PhaseName, PhaseTimings>
+            {
+                {PhaseName.Construction, construction},
+                {PhaseName.Campaigning, campaigning},
+                {PhaseName.Voting, voting},
+                {PhaseName.Synchronisation, synchronisation}
+            };
         }
 
         /// <inheritdoc />
-        public PhaseTimings Construction { get; }
+        public PhaseTimings Construction => TimingsByName[PhaseName.Construction];
 
         /// <inheritdoc />
-        public PhaseTimings Campaigning { get; }
+        public PhaseTimings Campaigning => TimingsByName[PhaseName.Campaigning];
 
         /// <inheritdoc />
-        public PhaseTimings Voting { get; }
+        public PhaseTimings Voting => TimingsByName[PhaseName.Voting];
 
         /// <inheritdoc />
-        public PhaseTimings Synchronisation { get; }
+        public PhaseTimings Synchronisation => TimingsByName[PhaseName.Synchronisation];
 
         /// <inheritdoc />
         public TimeSpan CycleDuration { get; }
+
+        /// <inheritdoc />
+        public IReadOnlyDictionary<PhaseName, PhaseTimings> TimingsByName { get; }
 
         private static readonly TimeSpan ConstructionOffset = TimeSpan.Zero;
         private static readonly TimeSpan ConstructionProduction = TimeSpan.FromSeconds(2);

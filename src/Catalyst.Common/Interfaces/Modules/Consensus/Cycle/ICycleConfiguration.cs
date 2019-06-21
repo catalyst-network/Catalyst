@@ -22,6 +22,7 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using Catalyst.Common.Modules.Consensus.Cycle;
 
 namespace Catalyst.Common.Interfaces.Modules.Consensus.Cycle
@@ -51,5 +52,11 @@ namespace Catalyst.Common.Interfaces.Modules.Consensus.Cycle
         /// <see cref="Campaigning"/>, <see cref="Voting"/> and <see cref="Synchronisation"/>
         /// </summary>
         TimeSpan CycleDuration { get; }
+
+        /// <summary>
+        /// This dictionary can be used to retrieve the <see cref="PhaseTimings"/> for a
+        /// give <see cref="PhaseName"/>
+        /// </summary>
+        IReadOnlyDictionary<PhaseName, PhaseTimings> TimingsByName { get; }
     }
 }

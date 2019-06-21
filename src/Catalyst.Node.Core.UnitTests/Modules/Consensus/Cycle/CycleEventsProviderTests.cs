@@ -22,10 +22,18 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using Catalyst.Common.Enumerator;
+using Catalyst.Common.Interfaces.Modules.Consensus.Cycle;
+using Catalyst.Common.Modules.Consensus.Cycle;
 using Catalyst.Node.Core.Modules.Consensus;
 using Catalyst.Node.Core.Modules.Consensus.Cycle;
 using Catalyst.TestUtils;
+using FluentAssertions;
+using NSubstitute;
+using Org.BouncyCastle.Bcpg;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -34,6 +42,7 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Consensus.Cycle
     public class CycleEventsProviderTests
     {
         private readonly ITestOutputHelper _output;
+        private static readonly PhaseStatus[] StatusesInOrder = new[] {PhaseStatus.Producing, PhaseStatus.Collecting, PhaseStatus.Idle};
 
         public CycleEventsProviderTests(ITestOutputHelper output) { _output = output; }
 
@@ -44,22 +53,61 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Consensus.Cycle
 
             var cycleProvider = new CycleEventsProvider(TestCycleConfiguration.TestDefault, new DateTimeProvider());
 
-            var tenEvents = cycleProvider.PhaseChanges;
-            var counter = 0;
+            var phaseChanges = cycleProvider.PhaseChanges;
             var completed = false;
+            var receivedCount = 0;
+            var spy = Substitute.For<IObserver<IPhase>>();
 
-            tenEvents.Subscribe(p =>
+            phaseChanges.Subscribe(p =>
             {
-                counter++;
                 _output.WriteLine($"{DateTime.Now:ss:fff} -- {p}");
-            }, () => completed = true);
+                receivedCount++;
+                spy.OnNext(p);
+            }, () =>
+            {
+                _output.WriteLine($"completed at {DateTime.Now:ss:fff}");
+                completed = true;
+                spy.OnCompleted();
+            });
 
-            await TaskHelper.WaitForAsync(() => counter >= 20, TimeSpan.FromSeconds(100));
+            await TaskHelper.WaitForAsync(() => receivedCount >= 20, TimeSpan.FromSeconds(100));
             cycleProvider.Close();
 
             await TaskHelper.WaitForAsync(() => completed, TimeSpan.FromSeconds(10));
 
-            _output.WriteLine($"completed at {DateTime.Now:ss:fff}");
+            spy.Received(1).OnCompleted();
+
+            var receivedPhases = spy.ReceivedCalls().Where(r => r.GetMethodInfo().Name == nameof(spy.OnNext))
+               .Select(c => (IPhase) c.GetArguments().Single()).OrderBy(p => p.UtcStartTime).ToList();
+
+            foreach (var phaseName in Enumeration.GetAll<PhaseName>())
+            {
+                var received = receivedPhases.Where(p => p.Name == phaseName).ToList();
+                CheckStatusChangesHappenedInOrder(received);
+            }
+        }
+
+        private void CheckStatusChangesHappenedInOrder(IList<IPhase> phases)
+        {
+            phases.Select((p, i) => p.Status == StatusesInOrder[i % StatusesInOrder.Length])
+               .Should().AllBeEquivalentTo(true);
+
+            for (var i = 1; i < phases.Count; i++)
+            {
+                var timeDiff = phases[i].UtcStartTime - phases[0].UtcStartTime;
+
+                var phaseTimings = TestCycleConfiguration.TestDefault.TimingsByName[phases[i].Name];
+                var fullCycleOffset = TestCycleConfiguration.TestDefault.CycleDuration.Multiply(i % 3);
+
+                var expectedDiff = (phases[i].Status == PhaseStatus.Producing)
+                    ? fullCycleOffset + phaseTimings.Offset
+                    : phases[i].Status == PhaseStatus.Collecting
+                        ? fullCycleOffset + phaseTimings.ProductionTime
+                        : fullCycleOffset + phaseTimings.TotalTime;
+
+                timeDiff.TotalMilliseconds.Should()
+                   .BeApproximately(expectedDiff.TotalMilliseconds, 1d);
+            }
         }
     }
 }

@@ -118,7 +118,7 @@ namespace Catalyst.Common.Enumerator
             return Equals((Enumeration) obj);
         }
 
-        public override int GetHashCode() { throw new NotImplementedException(); }
+        public override int GetHashCode() { return Id; }
         public static bool operator ==(Enumeration left, Enumeration right) { return Equals(left, right); }
         public static bool operator !=(Enumeration left, Enumeration right) { return !Equals(left, right); }
 
