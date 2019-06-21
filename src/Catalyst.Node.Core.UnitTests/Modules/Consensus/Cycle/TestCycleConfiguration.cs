@@ -28,10 +28,10 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Consensus.Cycle
 {
     public class TestCycleConfiguration : CycleConfiguration
     {
-        private const int CompressionFactor = 10;
+        public const int CompressionFactor = 20;
 
         public static CycleConfiguration TestDefault = new TestCycleConfiguration(Default.Construction.CompressTime(CompressionFactor),
-            Default.Construction.CompressTime(CompressionFactor),
+            Default.Campaigning.CompressTime(CompressionFactor),
             Default.Voting.CompressTime(CompressionFactor),
             Default.Synchronisation.CompressTime(CompressionFactor));
 

@@ -23,6 +23,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Catalyst.Common.Enumerator;
@@ -47,10 +48,8 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Consensus.Cycle
         public CycleEventsProviderTests(ITestOutputHelper output) { _output = output; }
 
         [Fact]
-        public async Task Changes_should_happen_in_time()
+        public async Task Changes_Should_Happen_In_Time()
         {
-            _output.WriteLine($"starting at {DateTime.Now:ss:fff}");
-
             var cycleProvider = new CycleEventsProvider(TestCycleConfiguration.TestDefault, new DateTimeProvider());
 
             var phaseChanges = cycleProvider.PhaseChanges;
@@ -58,14 +57,18 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Consensus.Cycle
             var receivedCount = 0;
             var spy = Substitute.For<IObserver<IPhase>>();
 
+            var stopWatch = new Stopwatch();
+            stopWatch.Start();
+            _output.WriteLine($"starting at {stopWatch.Elapsed:g}");
+
             phaseChanges.Subscribe(p =>
             {
-                _output.WriteLine($"{DateTime.Now:ss:fff} -- {p}");
+                _output.WriteLine($"{stopWatch.Elapsed:g} -- {p}");
                 receivedCount++;
                 spy.OnNext(p);
             }, () =>
             {
-                _output.WriteLine($"completed at {DateTime.Now:ss:fff}");
+                _output.WriteLine($"completed after {stopWatch.Elapsed:g}");
                 completed = true;
                 spy.OnCompleted();
             });
@@ -83,30 +86,46 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Consensus.Cycle
             foreach (var phaseName in Enumeration.GetAll<PhaseName>())
             {
                 var received = receivedPhases.Where(p => p.Name == phaseName).ToList();
-                CheckStatusChangesHappenedInOrder(received);
+                CheckStatusChangesHappenedInOrder(received, receivedPhases[0].UtcStartTime);
             }
+
+            stopWatch.Stop();
         }
 
-        private void CheckStatusChangesHappenedInOrder(IList<IPhase> phases)
+        private void CheckStatusChangesHappenedInOrder(IList<IPhase> phases, DateTime eventsStartTime)
         {
             phases.Select((p, i) => p.Status == StatusesInOrder[i % StatusesInOrder.Length])
                .Should().AllBeEquivalentTo(true);
 
-            for (var i = 1; i < phases.Count; i++)
+            var tolerance = 19d;
+            tolerance.Should().BeLessOrEqualTo(TestCycleConfiguration.TestDefault.CycleDuration.TotalMilliseconds / 50, 
+                "we can tolerate 2% error with respect to the total cycle duration. In a non testing context the " +
+                $"duration will be {TestCycleConfiguration.CompressionFactor} times longer, but the errors will stay in the same " +
+                $"range, so we end up with a prod tolerance of 0.1% of error.");
+
+            for (var i = 0; i < phases.Count; i++)
             {
-                var timeDiff = phases[i].UtcStartTime - phases[0].UtcStartTime;
+                var timeDiff = phases[i].UtcStartTime - eventsStartTime;
 
                 var phaseTimings = TestCycleConfiguration.TestDefault.TimingsByName[phases[i].Name];
-                var fullCycleOffset = TestCycleConfiguration.TestDefault.CycleDuration.Multiply(i % 3);
+                var fullCycleOffset = TestCycleConfiguration.TestDefault.CycleDuration.Multiply(i / 3);
 
-                var expectedDiff = (phases[i].Status == PhaseStatus.Producing)
+                var expectedDiff = phases[i].Status == PhaseStatus.Producing
                     ? fullCycleOffset + phaseTimings.Offset
                     : phases[i].Status == PhaseStatus.Collecting
-                        ? fullCycleOffset + phaseTimings.ProductionTime
-                        : fullCycleOffset + phaseTimings.TotalTime;
+                        ? fullCycleOffset + phaseTimings.Offset + phaseTimings.ProductionTime
+                        : fullCycleOffset + phaseTimings.Offset + phaseTimings.TotalTime;
 
+                var _ = Environment.NewLine;
                 timeDiff.TotalMilliseconds.Should()
-                   .BeApproximately(expectedDiff.TotalMilliseconds, 1d);
+                   .BeApproximately(expectedDiff.TotalMilliseconds, tolerance, 
+                        $"{_}{phases[i]}" +
+                        $"{_}{nameof(timeDiff)}: {timeDiff}" +
+                        $"{_}{nameof(fullCycleOffset)}: {fullCycleOffset}" +
+                        $"{_}{nameof(phaseTimings.Offset)}: {phaseTimings.Offset}" +
+                        $"{_}{nameof(phaseTimings.ProductionTime)}: {phaseTimings.ProductionTime}" +
+                        $"{_}{nameof(phaseTimings.CollectionTime)}: {phaseTimings.CollectionTime}" +
+                        $"{_}");
             }
         }
     }
