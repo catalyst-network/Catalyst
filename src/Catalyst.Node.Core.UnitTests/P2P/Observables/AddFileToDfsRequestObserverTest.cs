@@ -51,7 +51,6 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Observables
             _ipfsEngine = ipfsEngine;
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
-            Substitute.For<IDtoFactory>();
             _nodeFileTransferFactory = new DownloadFileTransferFactory();
             _logger = Substitute.For<ILogger>();
         }
