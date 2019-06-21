@@ -24,7 +24,7 @@
 using Autofac;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Cli;
-using Catalyst.Protocol.Common;
+using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Protocol.Rpc.Node;
 using FluentAssertions;
 using NSubstitute;
@@ -56,8 +56,8 @@ namespace Catalyst.Cli.IntegrationTests.Commands
                     var result = shell.AdvancedShell.ParseCommand(
                         "removepeer", "-n", "node1", "-k", "fake_public_key", "-i", "127.0.0.1");
                     result.Should().BeTrue();
-                    NodeRpcClient.Received(1).SendMessage(Arg.Is<ProtocolMessage>(x => x.TypeUrl.Equals(RemovePeerRequest.Descriptor.ShortenedFullName())));
-                }
+                    NodeRpcClient.Received(1).SendMessage(Arg.Is<IMessageDto>(x => x.Message.Descriptor != null && x.Message.Descriptor.Name.Equals(RemovePeerRequest.Descriptor.Name)));
+                }   
             }
         }
     }

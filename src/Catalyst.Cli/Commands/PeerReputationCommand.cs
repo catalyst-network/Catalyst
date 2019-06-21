@@ -64,17 +64,15 @@ namespace Catalyst.Cli.Commands
 
                 Guard.Argument(node).NotNull();
 
-                var requestMessage = _protocolMessageFactory.GetMessage(new MessageDto(
+                var requestMessage = _dtoFactory.GetDto(
                     new GetPeerReputationRequest
                     {
                         PublicKey = peerPublicKey.ToBytesForRLPEncoding().ToByteString(),
                         Ip = peerIp.ToBytesForRLPEncoding().ToByteString()
                     },
-                    MessageTypes.Request,
+                    _peerIdentifier,
                     new PeerIdentifier(Encoding.ASCII.GetBytes(nodeConfig.PublicKey), nodeConfig.HostAddress,
-                        nodeConfig.Port),
-                    _peerIdentifier
-                ));
+                        nodeConfig.Port));
 
                 node.SendMessage(requestMessage);
             }

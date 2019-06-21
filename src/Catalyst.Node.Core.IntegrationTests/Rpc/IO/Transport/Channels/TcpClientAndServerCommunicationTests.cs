@@ -98,6 +98,7 @@ namespace Catalyst.Node.Core.IntegrationTests.Rpc.IO.Transport.Channels
             clientChannel.WriteOutbound(initialRequest);
 
             var sentBytes = clientChannel.ReadOutbound<IByteBuffer>();
+
             //var sent = ProtocolMessageSigned.Parser.ParseFrom(sentBytes.Array);
             //sent.Signature.Should().NotBeNullOrEmpty();
             //sent.Message.CorrelationId.ToGuid().Should().Be(guid);
@@ -130,7 +131,9 @@ namespace Catalyst.Node.Core.IntegrationTests.Rpc.IO.Transport.Channels
             //send the response back on the outbound channel
             //serverChannel.WriteOutbound(rawResponse);
             //_serverKeySigner.Received(1).Sign(Arg.Any<byte[]>());
+            
             var response = serverChannel.ReadOutbound<ProtocolMessageSigned>();
+
             //response.Should().NotBeNull();
             //response.Signature.Should().NotBeEmpty();
 

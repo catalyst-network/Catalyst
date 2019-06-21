@@ -43,7 +43,7 @@ using ILogger = Serilog.ILogger;
 namespace Catalyst.Node.Core.RPC.Observables
 {
     public sealed class SignMessageRequestObserver
-        : RequestObserverBase<SignMessageRequest>,
+        : RequestObserverBase<SignMessageRequest, SignMessageResponse>,
             IRpcRequestObserver
     {
         private readonly IKeySigner _keySigner;
@@ -56,7 +56,7 @@ namespace Catalyst.Node.Core.RPC.Observables
             _keySigner = keySigner;
         }
 
-        public override IMessage HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto)
+        public override IMessage<SignMessageResponse> HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto)
         {
             Logger.Debug("received message of type SignMessageRequest");
 

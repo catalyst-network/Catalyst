@@ -44,7 +44,7 @@ namespace Catalyst.Node.Core.RPC.Observables
     /// </summary>
     /// <seealso cref="IRpcRequestObserver" />
     public sealed class RemovePeerRequestObserver
-        : RequestObserverBase<RemovePeerRequest>,
+        : RequestObserverBase<RemovePeerRequest, RemovePeerResponse>,
             IRpcRequestObserver
     {
         /// <summary>The peer discovery</summary>
@@ -63,7 +63,7 @@ namespace Catalyst.Node.Core.RPC.Observables
 
         /// <summary>Handles the specified message.</summary>
         /// <param name="messageDto">The message.</param>
-        public override IMessage HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto)
+        public override IMessage<RemovePeerResponse> HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto)
         {
             Logger.Debug("Received message of type RemovePeerRequest");
 

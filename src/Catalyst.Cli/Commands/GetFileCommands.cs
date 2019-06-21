@@ -64,17 +64,19 @@ namespace Catalyst.Cli.Commands
                 DfsHash = opts.FileHash
             };
 
-            var dto = new MessageDto(message, MessageTypes.Request, new PeerIdentifier(
+            var recipient = new PeerIdentifier(
                 Encoding.ASCII.GetBytes(nodeConfig.PublicKey),
-                nodeConfig.HostAddress, nodeConfig.Port), _peerIdentifier);
-
-            var messageDto = _protocolMessageFactory.GetMessage(dto);
+                nodeConfig.HostAddress, nodeConfig.Port);
+            
+            var messageDto = _dtoFactory.GetDto(message, 
+                recipient,
+                _peerIdentifier);
 
             IDownloadFileInformation fileTransfer = new DownloadFileTransferInformation(
                 _peerIdentifier,
-                new PeerIdentifier(messageDto.PeerId),
+                messageDto.Sender,
                 node.Channel,
-                messageDto.CorrelationId.ToGuid(),
+                messageDto.CorrelationId,
                 opts.FileOutput,
                 0
             );

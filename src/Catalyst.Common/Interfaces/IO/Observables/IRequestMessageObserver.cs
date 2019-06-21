@@ -24,6 +24,7 @@
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Rpc.Node;
 using Google.Protobuf;
 
 namespace Catalyst.Common.Interfaces.IO.Observables
@@ -31,7 +32,6 @@ namespace Catalyst.Common.Interfaces.IO.Observables
     public interface IRequestMessageObserver : IMessageObserver
     {
         IPeerIdentifier PeerIdentifier { get; }
-        IMessage HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto);
         void SendChannelContextResponse(IMessageDto messageDto);
     }
 }

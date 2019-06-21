@@ -27,7 +27,6 @@ using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.Messaging.Broadcast;
 using Catalyst.Common.IO.Messaging;
-using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.P2P;
 using Catalyst.Protocol.Common;
 using Microsoft.Extensions.Caching.Memory;
@@ -48,7 +47,7 @@ namespace Catalyst.Node.Core.P2P.Messaging.Broadcast
     public sealed class BroadcastManager : IBroadcastManager
     {
         /// <summary>The message factory</summary>
-        private readonly IProtocolMessageFactory _protocolMessageFactory;
+        private readonly IDtoFactory _dtoFactory;
 
         /// <summary>The peers</summary>
         private readonly IRepository<Peer> _peers;
@@ -76,7 +75,7 @@ namespace Catalyst.Node.Core.P2P.Messaging.Broadcast
             _pendingRequests = memoryCache;
             _peers = peers;
             _peerClient = peerClient;
-            _protocolMessageFactory = new ProtocolMessageFactory();
+            _dtoFactory = new DtoFactory();
             _entryOptions = new MemoryCacheEntryOptions()
                .AddExpirationToken(new CancellationChangeToken(new CancellationTokenSource(TimeSpan.FromMinutes(10)).Token));
         }
@@ -103,13 +102,7 @@ namespace Catalyst.Node.Core.P2P.Messaging.Broadcast
         /// <inheritdoc/>
         public async Task ReceiveAsync(ProtocolMessage protocolMessage)
         {
-            if (!protocolMessage.CheckIfMessageIsBroadcast())
-            {
-                throw new NotSupportedException("The Message is not a gossip type");
-            }
-
-            var originalGossipedMessage = ProtocolMessage.Parser.ParseFrom(protocolMessage.Value);
-            var correlationId = originalGossipedMessage.CorrelationId.ToGuid();
+            var correlationId = protocolMessage.CorrelationId.ToGuid();
             var gossipRequest = await GetOrCreateAsync(correlationId).ConfigureAwait(false);
             gossipRequest.ReceivedCount += 1;
             UpdatePendingRequest(correlationId, gossipRequest);
@@ -127,8 +120,11 @@ namespace Catalyst.Node.Core.P2P.Messaging.Broadcast
 
                 foreach (var peerIdentifier in peersToGossip)
                 {
-                    _peerClient.SendMessage(_protocolMessageFactory.GetMessage(new MessageDto(message,
-                        MessageTypes.Broadcast, peerIdentifier, _peerIdentifier), correlationId));
+                    _peerClient.SendMessage(_dtoFactory.GetDto(message, 
+                        peerIdentifier, 
+                        _peerIdentifier,
+                        correlationId)
+                    );
                 }
 
                 var updateCount = (uint) peersToGossip.Count;

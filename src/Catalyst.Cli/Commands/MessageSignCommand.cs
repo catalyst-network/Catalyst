@@ -59,17 +59,15 @@ namespace Catalyst.Cli.Commands
 
             try
             {
-                var request = _protocolMessageFactory.GetMessage(new MessageDto(
-                    new SignMessageRequest
+                var request = _dtoFactory.GetDto(new SignMessageRequest
                     {
                         Message = ByteString.CopyFrom(opts.Message.Trim('\"'), Encoding.UTF8)
                            .ToByteString()
                     },
-                    MessageTypes.Request,
+                    _peerIdentifier,
                     new PeerIdentifier(Encoding.ASCII.GetBytes(nodeConfig.PublicKey), nodeConfig.HostAddress,
-                        nodeConfig.Port),
-                    _peerIdentifier
-                ));
+                        nodeConfig.Port));
+
                 node.SendMessage(request);
             }
             catch (Exception e)

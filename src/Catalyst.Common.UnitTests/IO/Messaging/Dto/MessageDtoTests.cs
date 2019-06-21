@@ -21,9 +21,9 @@
 
 #endregion
 
-using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Protocol.IPPN;
 using Catalyst.TestUtils;
@@ -40,14 +40,8 @@ namespace Catalyst.Common.UnitTests.IO.Messaging.Dto
 
         public MessageDtoTests()
         {
-            var peerIdentifier = Substitute.For<IPeerIdentifier>();
             var pingRequest = Substitute.For<IMessage<PingRequest>>();
-            _messageDto = new MessageDto(
-                pingRequest,
-                MessageTypes.Request,
-                PeerIdentifierHelper.GetPeerIdentifier("im_a_recipient"), 
-                peerIdentifier
-            );
+            _messageDto = new MessageDto(pingRequest, PeerIdentifierHelper.GetPeerIdentifier("Sender_Key"), PeerIdentifierHelper.GetPeerIdentifier("Recipient_Key"));
         }
 
         [Fact]
