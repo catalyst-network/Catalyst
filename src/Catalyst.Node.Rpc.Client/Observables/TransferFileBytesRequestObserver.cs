@@ -81,7 +81,7 @@ namespace Catalyst.Node.Rpc.Client.Observables
 
             return new TransferFileBytesResponse
             {
-                ResponseCode = ByteString.CopyFrom((byte)responseCode.Id)
+                ResponseCode = ByteString.CopyFrom((byte) responseCode.Id)
             };
         }
     }

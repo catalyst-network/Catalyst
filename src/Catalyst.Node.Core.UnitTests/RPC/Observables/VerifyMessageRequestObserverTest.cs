@@ -52,7 +52,6 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
         private readonly ILogger _logger;
         private readonly IKeySigner _keySigner;
         private readonly IChannelHandlerContext _fakeContext;
-        private readonly IDtoFactory _dtoFactory;
 
         public VerifyMessageRequestObserverTest(ITestOutputHelper output) : base(output)
         {
@@ -69,7 +68,6 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
             _scope = container.BeginLifetimeScope(CurrentTestName);
             
             _keySigner = container.Resolve<IKeySigner>();
-            _dtoFactory = Substitute.For<IDtoFactory>();
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
             
@@ -97,8 +95,15 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
                 PeerIdentifierHelper.GetPeerIdentifier("recipient_key")
             );
             
-            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, request.Message.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId));
-            var handler = new VerifyMessageRequestObserver(PeerIdentifierHelper.GetPeerIdentifier("sender"), _logger, _keySigner);
+            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, 
+                request.Message.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId)
+            );
+            
+            var handler = new VerifyMessageRequestObserver(PeerIdentifierHelper.GetPeerIdentifier("sender"),
+                _logger,
+                _keySigner
+            );
+            
             handler.StartObserving(messageStream);
             
             var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();

@@ -30,7 +30,6 @@ using Catalyst.Common.Enumerator;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.FileTransfer;
 using Catalyst.Common.Interfaces.FileTransfer;
-using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Observables;
 using Catalyst.Common.Interfaces.Modules.Dfs;
@@ -54,9 +53,6 @@ namespace Catalyst.Node.Core.RPC.Observables
         : RequestObserverBase<AddFileToDfsRequest, AddFileToDfsResponse>,
             IRpcRequestObserver
     {
-        /// <summary>The RPC message factory</summary>
-        private readonly IDtoFactory _dtoFactory;
-
         /// <summary>The download file transfer factory</summary>
         private readonly IDownloadFileTransferFactory _fileTransferFactory;
 
@@ -67,15 +63,12 @@ namespace Catalyst.Node.Core.RPC.Observables
         /// <param name="dfs">The DFS.</param>
         /// <param name="peerIdentifier">The peer identifier.</param>
         /// <param name="fileTransferFactory">The download file transfer factory.</param>
-        /// <param name="dtoFactory"></param>
         /// <param name="logger">The logger.</param>
         public AddFileToDfsRequestObserver(IDfs dfs,
             IPeerIdentifier peerIdentifier,
             IDownloadFileTransferFactory fileTransferFactory,
-            IDtoFactory dtoFactory,
             ILogger logger) : base(logger, peerIdentifier)
         {
-            _dtoFactory = dtoFactory;
             _fileTransferFactory = fileTransferFactory;
             _dfs = dfs;
         }
