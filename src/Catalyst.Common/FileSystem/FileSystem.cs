@@ -27,6 +27,8 @@ using System.IO.Abstractions;
 using System.Threading.Tasks;
 using Catalyst.Common.Config;
 using IFileSystem = Catalyst.Common.Interfaces.FileSystem.IFileSystem;
+using ILogger = Serilog.ILogger;
+
 
 namespace Catalyst.Common.FileSystem
 {
@@ -35,6 +37,7 @@ namespace Catalyst.Common.FileSystem
             IFileSystem
     {
         private string _currentPath;
+        private readonly ILogger _logger;
 
         private string _configPointerFilePath => Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) 
            + Constants.ConfigFilePointer;
@@ -45,7 +48,7 @@ namespace Catalyst.Common.FileSystem
             _currentPath = string.Empty;
         }
 
-        public FileSystem(bool checkConfigPointerFile)
+        public FileSystem(bool checkConfigPointerFile, ILogger logger)
         {
             if (checkConfigPointerFile)
             {
@@ -55,6 +58,7 @@ namespace Catalyst.Common.FileSystem
 
                     CreateConfigPointerFile(_configPointerFilePath);
                 }
+                _logger = logger;
             }
             _checkConfigPointerFile = checkConfigPointerFile;
         }
@@ -105,10 +109,9 @@ namespace Catalyst.Common.FileSystem
                    return sr.ReadToEnd();
                 }
             }
-            catch (IOException e)
+            catch (Exception e)
             {
-                Console.WriteLine("The file configuration file pointer could not be read:");
-                Console.WriteLine(e.Message);
+                _logger.Error(e.Message);
             }
             return string.Empty;
         }
