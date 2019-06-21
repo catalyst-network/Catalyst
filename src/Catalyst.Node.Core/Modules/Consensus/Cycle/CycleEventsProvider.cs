@@ -1,0 +1,78 @@
+#region LICENSE
+
+/**
+* Copyright (c) 2019 Catalyst Network
+*
+* This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
+*
+* Catalyst.Node is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 2 of the License, or
+* (at your option) any later version.
+*
+* Catalyst.Node is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
+*/
+
+#endregion
+
+using System;
+using System.Reactive.Linq;
+using System.Threading;
+using Catalyst.Common.Interfaces.Modules.Consensus;
+using Catalyst.Common.Interfaces.Modules.Consensus.Cycle;
+using Catalyst.Common.Modules.Consensus.Cycle;
+using Catalyst.Common.Util;
+
+namespace Catalyst.Node.Core.Modules.Consensus.Cycle
+{
+    /// <inheritdoc cref="ICycleEventsProvider"/>
+    /// <inheritdoc cref="IDisposable"/>
+    public class CycleEventsProvider : ICycleEventsProvider, IDisposable
+    {
+        private readonly CancellationTokenSource _cancellationTokenSource;
+
+        public CycleEventsProvider(ICycleConfiguration configuration, IDateTimeProvider timeProvider)
+        {
+            _cancellationTokenSource = new CancellationTokenSource();
+
+            Configuration = configuration;
+
+            var constructionStatusChanges = StatefulPhase.GetStatusChangeObservable(
+                PhaseName.Construction, Configuration.Construction, Configuration.CycleDuration);
+
+            var campaigningStatusChanges = StatefulPhase.GetStatusChangeObservable(
+                PhaseName.Campaigning, Configuration.Campaigning, Configuration.CycleDuration);
+
+            var votingStatusChanges = StatefulPhase.GetStatusChangeObservable(
+                PhaseName.Voting, Configuration.Voting, Configuration.CycleDuration);
+
+            var synchronisationStatusChanges = StatefulPhase.GetStatusChangeObservable(
+                PhaseName.Synchronisation, Configuration.Synchronisation, Configuration.CycleDuration);
+
+            PhaseChanges = constructionStatusChanges
+               .Merge(campaigningStatusChanges)
+               .Merge(votingStatusChanges)
+               .Merge(synchronisationStatusChanges)
+               .Select(s => new Phase(ByteUtil.GenerateRandomByteArray(32), s.Name, s.Status, timeProvider.UtcNow))
+               .TakeWhile(_ => !_cancellationTokenSource.IsCancellationRequested);
+        }
+
+        /// <inheritdoc />
+        public ICycleConfiguration Configuration { get; }
+
+        /// <inheritdoc />
+        public IObservable<IPhase> PhaseChanges { get; }
+
+        /// <inheritdoc />
+        public void Close() { _cancellationTokenSource.Cancel(); }
+
+        /// <inheritdoc />
+        public void Dispose() { _cancellationTokenSource.Dispose(); }
+    }
+}
