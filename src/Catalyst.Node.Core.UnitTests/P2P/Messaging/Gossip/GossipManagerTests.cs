@@ -60,7 +60,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Messaging.Gossip
             _cache = new MemoryCache(new MemoryCacheOptions());
         }
 
-        [Theory]
+        [Fact]
         public async Task Gossip_Message_Test()
         {
             PopulatePeers(100);
