@@ -24,18 +24,13 @@
 using System;
 using System.IO;
 using System.Text;
-using Catalyst.Common.Config;
-using Catalyst.Common.Extensions;
 using Catalyst.Common.FileTransfer;
 using Catalyst.Common.Interfaces.Cli.Options;
 using Catalyst.Common.Interfaces.FileTransfer;
 using Catalyst.Common.Interfaces.Rpc;
-using Catalyst.Common.IO.Messaging;
-using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.P2P;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
-using Serilog.Events;
 
 namespace Catalyst.Cli.Commands
 {

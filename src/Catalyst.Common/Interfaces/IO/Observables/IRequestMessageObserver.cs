@@ -23,9 +23,6 @@
 
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Protocol.Common;
-using Catalyst.Protocol.Rpc.Node;
-using Google.Protobuf;
 
 namespace Catalyst.Common.Interfaces.IO.Observables
 {

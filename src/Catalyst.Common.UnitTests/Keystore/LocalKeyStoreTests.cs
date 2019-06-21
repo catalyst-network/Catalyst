@@ -33,7 +33,6 @@ using NSubstitute;
 using Serilog;
 using Xunit;
 using Xunit.Abstractions;
-using Autofac;
 
 namespace Catalyst.Common.UnitTests.Keystore
 {

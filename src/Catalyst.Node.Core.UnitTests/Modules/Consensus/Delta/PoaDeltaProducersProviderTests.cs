@@ -37,7 +37,6 @@ using NSubstitute;
 using Serilog;
 using SharpRepository.Repository;
 using Xunit;
-using Xunit.Abstractions;
 using Peer = Catalyst.Common.P2P.Peer;
 
 namespace Catalyst.Node.Core.UnitTests.Modules.Consensus.Delta
@@ -48,10 +47,10 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Consensus.Delta
         private readonly PoaDeltaProducersProvider _poaDeltaProducerProvider;
         private readonly IMultihashAlgorithm _hashAlgorithm;
         private readonly byte[] _previousDeltaHash;
-        private IMemoryCache _producersByPreviousDelta;
-        private string _previousDeltaHashHex;
+        private readonly IMemoryCache _producersByPreviousDelta;
+        private readonly string _previousDeltaHashHex;
 
-        public PoaDeltaProducersProviderTests(ITestOutputHelper output)
+        public PoaDeltaProducersProviderTests()
         {
             var rand = new Random();
             _peers = Enumerable.Range(0, 5)

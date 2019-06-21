@@ -44,14 +44,13 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Observables
         private readonly ILogger _logger;
         private readonly IChannelHandlerContext _fakeContext;
         private readonly IDownloadFileTransferFactory _nodeFileTransferFactory;
-        private readonly IDtoFactory _dtoFactory;
-        private ICoreApi _ipfsEngine;
+        private readonly ICoreApi _ipfsEngine;
 
         public AddFileToDfsRequestObserverTest()
         {
+            _ipfsEngine = Substitute.For<ICoreApi>();
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
-            _dtoFactory = Substitute.For<IDtoFactory>();
             _nodeFileTransferFactory = new DownloadFileTransferFactory();
             _logger = Substitute.For<ILogger>();
         }

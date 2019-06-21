@@ -25,7 +25,6 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Autofac;
-using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.FileTransfer;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;

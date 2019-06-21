@@ -32,7 +32,6 @@ using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Handlers;
 using Catalyst.Node.Rpc.Client.IO.Transport.Channels;
-using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
 using Catalyst.TestUtils;
 using DotNetty.Buffers;

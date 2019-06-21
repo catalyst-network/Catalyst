@@ -31,7 +31,6 @@ using Catalyst.Common.Protocol;
 using Catalyst.Common.Util;
 using Catalyst.Protocol.Delta;
 using Dawn;
-using Google.Protobuf;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Primitives;
 using Nethereum.Hex.HexConvertors.Extensions;

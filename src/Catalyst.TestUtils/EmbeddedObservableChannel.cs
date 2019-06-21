@@ -23,9 +23,7 @@
 
 using System;
 using System.Threading.Tasks;
-using Catalyst.Common.Interfaces.IO;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
-using Catalyst.Common.Interfaces.IO.Transport;
 using Catalyst.Common.Interfaces.IO.Transport.Channels;
 using Catalyst.Common.IO.Handlers;
 using Catalyst.Protocol.Common;
