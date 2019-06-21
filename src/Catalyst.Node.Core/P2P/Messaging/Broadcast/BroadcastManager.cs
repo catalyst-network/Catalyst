@@ -133,7 +133,7 @@ namespace Catalyst.Node.Core.P2P.Messaging.Broadcast
                     return;
                 }
 
-                broadcastMessage.GossipCount += updateCount;
+                broadcastMessage.BroadcastCount += updateCount;
                 UpdatePendingRequest(correlationId, broadcastMessage);
             }
             catch (Exception e)
@@ -157,7 +157,7 @@ namespace Catalyst.Node.Core.P2P.Messaging.Broadcast
         /// <returns><c>true</c> if this instance can gossip the specified correlation identifier; otherwise, <c>false</c>.</returns>
         private bool CanGossip(BroadcastMessage request)
         {
-            return request.GossipCount < GetMaxGossipCycles(request);
+            return request.BroadcastCount < GetMaxGossipCycles(request);
         }
 
         /// <summary>Adds the gossip request.</summary>
@@ -175,7 +175,7 @@ namespace Catalyst.Node.Core.P2P.Messaging.Broadcast
         {
             var peerNetworkSize = broadcastMessage.PeerNetworkSize;
             return (uint) (Math.Log(Math.Max(10, peerNetworkSize) / (double) Constants.MaxGossipPeersPerRound) /
-                Math.Max(1, broadcastMessage.GossipCount / Constants.MaxGossipPeersPerRound));
+                Math.Max(1, broadcastMessage.BroadcastCount / Constants.MaxGossipPeersPerRound));
         }
 
         /// <summary>Increments the received count.</summary>
@@ -188,7 +188,7 @@ namespace Catalyst.Node.Core.P2P.Messaging.Broadcast
                 var gossipRequest = await Task.FromResult(new BroadcastMessage
                 {
                     ReceivedCount = 0,
-                    GossipCount = 0,
+                    BroadcastCount = 0,
                     PeerNetworkSize = _peers.GetAll().Count()
                 }).ConfigureAwait(false);
                 entry.Value = gossipRequest;
