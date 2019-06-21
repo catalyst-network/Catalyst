@@ -54,7 +54,6 @@ namespace Catalyst.Node.Core.IntegrationTests.P2P
             ConfigureContainerBuilder(config);
             var container = ContainerBuilder.Build();
             _scope = container.BeginLifetimeScope(CurrentTestName);
-            Substitute.For<ILogger>();
         }
 
         [Fact(Skip = "due to reputation refactor")] // @TODO
