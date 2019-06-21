@@ -21,12 +21,9 @@
 
 #endregion
 
-using System;
-using Catalyst.Common.Interfaces.IO;
 using Catalyst.Common.Interfaces.IO.EventLoop;
 using Catalyst.Common.Interfaces.IO.Transport;
 using Catalyst.Common.Interfaces.IO.Transport.Channels;
-using DotNetty.Transport.Channels;
 using Serilog;
 
 namespace Catalyst.Common.IO.Transport

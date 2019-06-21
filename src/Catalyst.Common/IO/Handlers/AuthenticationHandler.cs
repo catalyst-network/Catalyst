@@ -25,8 +25,6 @@ using Catalyst.Common.Interfaces.Rpc.Authentication;
 using Catalyst.Common.P2P;
 using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;
-using Nethereum.RLP;
-using Serilog;
 
 namespace Catalyst.Common.IO.Handlers
 {

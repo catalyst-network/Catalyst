@@ -52,7 +52,7 @@ namespace Catalyst.Node.Core.P2P.Observables
             _repository = repository;
         }
 
-        public override IMessage<PeerNeighborsResponse> HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto)
+        protected override IMessage<PeerNeighborsResponse> HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto)
         {
             Logger.Debug("PeerNeighborsRequest Message Received");
 

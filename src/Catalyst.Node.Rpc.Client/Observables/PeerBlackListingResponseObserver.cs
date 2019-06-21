@@ -29,7 +29,6 @@ using Catalyst.Common.Interfaces.IO.Observables;
 using Catalyst.Common.IO.Observables;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
-using Dawn;
 using ILogger = Serilog.ILogger;
 
 namespace Catalyst.Node.Rpc.Client.Observables
@@ -66,7 +65,7 @@ namespace Catalyst.Node.Rpc.Client.Observables
 
             try
             {
-                var deserialised = messageDto.Payload.FromProtocolMessage<SetPeerBlackListResponse>() ?? throw new ArgumentNullException("messageDto.Payload.FromProtocolMessage<SetPeerBlackListResponse>()");
+                var deserialised = messageDto.Payload.FromProtocolMessage<SetPeerBlackListResponse>() ?? throw new ArgumentNullException(nameof(messageDto));
 
                 var msg = deserialised.PublicKey.ToStringUtf8() == string.Empty
                     ? "Peer not found"

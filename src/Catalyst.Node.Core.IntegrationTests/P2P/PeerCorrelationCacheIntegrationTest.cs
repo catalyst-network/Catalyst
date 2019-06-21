@@ -44,7 +44,6 @@ namespace Catalyst.Node.Core.IntegrationTests.P2P
     public sealed class PeerCorrelationCacheIntegrationTest : ConfigFileBasedTest
     {
         private readonly ILifetimeScope _scope;
-        private readonly ILogger _logger;
 
         public PeerCorrelationCacheIntegrationTest(ITestOutputHelper output) : base(output)
         {
@@ -55,7 +54,7 @@ namespace Catalyst.Node.Core.IntegrationTests.P2P
             ConfigureContainerBuilder(config);
             var container = ContainerBuilder.Build();
             _scope = container.BeginLifetimeScope(CurrentTestName);
-            _logger = Substitute.For<ILogger>();
+            Substitute.For<ILogger>();
         }
 
         [Fact(Skip = "due to reputation refactor")] // @TODO
@@ -100,7 +99,7 @@ namespace Catalyst.Node.Core.IntegrationTests.P2P
 
             await Task.Delay(ttl.Add(TimeSpan.FromMilliseconds(ttl.TotalMilliseconds * 0.2)));
 
-            correlationIds.Select<Guid, bool>(c => cache.TryGetValue(c.ToByteString(), out _))
+            correlationIds.Select(c => cache.TryGetValue(c.ToByteString(), out _))
                .Should().AllBeEquivalentTo(false, "entries are removed by matching or expiring");
 
             reputations.Where(p => !p.Key.Equals(peerIds[1])).Select(p => p.Value < 0)
