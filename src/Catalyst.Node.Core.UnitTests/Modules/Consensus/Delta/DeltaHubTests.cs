@@ -30,7 +30,6 @@ using Catalyst.Common.Interfaces.Modules.Consensus.Delta;
 using Catalyst.Common.Interfaces.Modules.Dfs;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.Messaging.Broadcast;
-using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.Util;
 using Catalyst.Node.Core.Modules.Consensus.Delta;
 using Catalyst.Protocol.Common;
@@ -152,14 +151,14 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Consensus.Delta
                .Then(() => throw new Exception("this one failed too"))
                .Then(dfsHash);
 
-            _dfs.AddAsync(Arg.Any<Stream>(), Arg.Any<string>(), default)
+            _dfs.AddAsync(Arg.Any<Stream>(), Arg.Any<string>())
                .Returns(ci => dfsResults.Next());
 
             var deltaHash = await _hub.PublishDeltaToIpfsAsync(delta);
             deltaHash.Should().NotBeNullOrEmpty();
             deltaHash.Should().Be(dfsHash);
 
-            await _dfs.ReceivedWithAnyArgs(3).AddAsync(Arg.Any<Stream>(), Arg.Any<string>(), default);
+            await _dfs.ReceivedWithAnyArgs(3).AddAsync(Arg.Any<Stream>(), Arg.Any<string>());
         }
 
         [Fact]
@@ -185,7 +184,7 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Consensus.Delta
             new Action(() => _hub.PublishDeltaToIpfsAsync(delta, cancellationToken).GetAwaiter().GetResult())
                .Should().Throw<TaskCanceledException>();
 
-            await _dfs.ReceivedWithAnyArgs(3).AddAsync(Arg.Any<Stream>(), Arg.Any<string>(), default);
+            await _dfs.ReceivedWithAnyArgs(3).AddAsync(Arg.Any<Stream>(), Arg.Any<string>());
         }
 
         [Theory]

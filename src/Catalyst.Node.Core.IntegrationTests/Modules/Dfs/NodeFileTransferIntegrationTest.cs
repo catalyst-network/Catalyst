@@ -43,7 +43,6 @@ using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using Microsoft.Extensions.Configuration;
 using NSubstitute;
-using Polly;
 using Serilog;
 using Xunit;
 using Xunit.Abstractions;
@@ -56,7 +55,6 @@ namespace Catalyst.Node.Core.IntegrationTests.Modules.Dfs
         private readonly IChannelHandlerContext _fakeContext;
         private readonly IDownloadFileTransferFactory _nodeFileTransferFactory;
         private readonly IDfs _dfs;
-        private readonly IDtoFactory _dtoFactory;
 
         public NodeFileTransferIntegrationTest(ITestOutputHelper testOutput) : base(testOutput)
         {
@@ -69,7 +67,7 @@ namespace Catalyst.Node.Core.IntegrationTests.Modules.Dfs
             var peerSettings = new PeerSettings(config);
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
-            _dtoFactory = Substitute.For<IDtoFactory>();
+            Substitute.For<IDtoFactory>();
             _nodeFileTransferFactory = new DownloadFileTransferFactory();
 
             var passwordReader = new TestPasswordReader("abcd");

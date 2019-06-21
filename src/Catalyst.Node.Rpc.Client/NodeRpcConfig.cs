@@ -39,7 +39,7 @@ namespace Catalyst.Node.Rpc.Client
             {
                 NodeId = child.GetSection("nodeId").Value,
                 HostAddress = IPAddress.Parse(child.GetSection("host").Value),
-                Port = int.Parse((string) child.GetSection("port").Value),
+                Port = int.Parse(child.GetSection("port").Value),
                 PfxFileName = child.GetSection("PfxFileName").Value,
                 SslCertPassword = child.GetSection("SslCertPassword").Value,
                 PublicKey = child.GetSection("PublicKey").Value

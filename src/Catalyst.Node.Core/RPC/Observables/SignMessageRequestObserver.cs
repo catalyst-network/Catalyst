@@ -23,16 +23,12 @@
 
 using System;
 using System.Text;
-using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
-using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Observables;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.IO.Observables;
-using Catalyst.Common.P2P;
 using Catalyst.Common.Util;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
@@ -56,7 +52,7 @@ namespace Catalyst.Node.Core.RPC.Observables
             _keySigner = keySigner;
         }
 
-        public override IMessage<SignMessageResponse> HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto)
+        protected override IMessage<SignMessageResponse> HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto)
         {
             Logger.Debug("received message of type SignMessageRequest");
 

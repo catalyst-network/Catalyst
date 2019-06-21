@@ -82,6 +82,7 @@ namespace Catalyst.Common.IO.Messaging
         /// <summary>Builds the ask message.</summary>
         /// <param name="message">The dto.</param>
         /// <param name="senderPeerIdentifier"></param>
+        /// <param name="recipientPeerIdentifier"></param>
         /// <returns>ProtocolMessage message</returns>
         private IMessageDto BuildRequestMessage(IMessage message, IPeerIdentifier senderPeerIdentifier, IPeerIdentifier recipientPeerIdentifier)
         {
@@ -91,6 +92,8 @@ namespace Catalyst.Common.IO.Messaging
         /// <summary>Builds the gossip message.</summary>
         /// <param name="message">The dto.</param>
         /// <param name="senderPeerIdentifier"></param>
+        /// <param name="recipientPeerIdentifier"></param>
+        /// <param name="correlationId"></param>
         /// <returns>ProtocolMessage message</returns>
         private IMessageDto BuildBroadcastMessage(IMessage message, IPeerIdentifier senderPeerIdentifier, IPeerIdentifier recipientPeerIdentifier, Guid correlationId)
         {

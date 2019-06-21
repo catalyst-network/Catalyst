@@ -62,7 +62,7 @@ namespace Catalyst.Node.Rpc.Client.IO.Transport.Channels
                 new ObservableServiceHandler()
             });
 
-        /// <param name="handlerEventLoopGroupFactory"></param>
+        /// <param name="eventLoopGroupFactory"></param>
         /// <param name="targetAddress">Ignored</param>
         /// <param name="targetPort">Ignored</param>
         /// <param name="certificate">Local TLS certificate</param>
