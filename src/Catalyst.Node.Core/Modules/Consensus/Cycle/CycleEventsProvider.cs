@@ -55,6 +55,8 @@ namespace Catalyst.Node.Core.Modules.Consensus.Cycle
             var synchronisationStatusChanges = StatefulPhase.GetStatusChangeObservable(
                 PhaseName.Synchronisation, Configuration.Synchronisation, Configuration.CycleDuration);
 
+            // ByteUtil.GenerateRandom should not be used here, instead this should be implemented
+            // TODO: https://github.com/catalyst-network/Catalyst.Node/issues/552
             PhaseChanges = constructionStatusChanges
                .Merge(campaigningStatusChanges)
                .Merge(votingStatusChanges)
@@ -72,7 +74,25 @@ namespace Catalyst.Node.Core.Modules.Consensus.Cycle
         /// <inheritdoc />
         public void Close() { _cancellationTokenSource.Cancel(); }
 
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposing)
+            {
+                return;
+            }
+
+            if (!_cancellationTokenSource.IsCancellationRequested)
+            {
+                Close();
+            }
+
+            _cancellationTokenSource.Dispose();
+        }
+
         /// <inheritdoc />
-        public void Dispose() { _cancellationTokenSource.Dispose(); }
+        public void Dispose()
+        {
+            Dispose(true);
+        }
     }
 }
