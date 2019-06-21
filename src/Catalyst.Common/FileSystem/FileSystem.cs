@@ -44,8 +44,11 @@ namespace Catalyst.Common.FileSystem
 
         public bool SetCurrentPath(string path)
         {
-            _currentPath = path;
-
+            if (new DirectoryInfo(path).Exists)
+            {
+                _currentPath = path;
+                return true;
+            }
             return false;
         }
 
@@ -69,6 +72,13 @@ namespace Catalyst.Common.FileSystem
         
         private static string GetUserHomeDir()
         {
+            var dataDirInfo = new DirectoryInfo("");
+            if (!dataDirInfo.Exists)
+            {
+                dataDirInfo.Create();
+            }
+
+
             return Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
         }
     }

@@ -59,7 +59,7 @@ namespace Catalyst.Node.Core.RPC.Observables
 
         public override IMessage HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto)
         {
-            Logger.Debug("received message of type GetInfoRequest");
+            Logger.Debug("received message of type SetPeerDataFolderRequest");
             
             try
             {
@@ -69,21 +69,15 @@ namespace Catalyst.Node.Core.RPC.Observables
                 
                 Logger.Debug("message content is {0}", deserialised);
 
-                var serializedList = JsonConvert.SerializeObject(
-                    _config.NodeConfig.GetSection("CatalystNodeConfiguration").AsEnumerable(), 
-                    Formatting.Indented);
-
-                //_fileSystem
-
                 return new GetPeerDataFolderResponse
                 {
-                    Query = false
+                    Query = _fileSystem.SetCurrentPath(deserialised.Datafolder)
                 };
             }
             catch (Exception ex)
             {
                 Logger.Error(ex,
-                    "Failed to handle GetInfoRequest after receiving message {0}", messageDto);
+                    "Failed to handle SetPeerDataFolderRequest after receiving message {0}", messageDto);
                 throw;
             }
         }

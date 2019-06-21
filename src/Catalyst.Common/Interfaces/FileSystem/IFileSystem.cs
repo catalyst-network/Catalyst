@@ -32,5 +32,6 @@ namespace Catalyst.Common.Interfaces.FileSystem
         DirectoryInfo GetCatalystDataDir();
         Task<IFileInfo> WriteFileToCdd(string fileName, string contents);
         bool DataFileExists(string fileName);
+        bool SetCurrentPath(string path);
     }
 }
