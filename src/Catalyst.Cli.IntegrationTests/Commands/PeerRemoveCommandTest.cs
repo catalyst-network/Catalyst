@@ -21,7 +21,6 @@
 
 #endregion
 
-using System;
 using Autofac;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Cli;
@@ -43,21 +42,22 @@ namespace Catalyst.Cli.IntegrationTests.Commands
         [Fact] 
         public void Cli_Can_Send_Remove_Peer_Request()
         {
-            var container = ContainerBuilder.Build();
-
-            using (container.BeginLifetimeScope(CurrentTestName))
+            using (var container = ContainerBuilder.Build())
             {
-                var shell = container.Resolve<ICatalystCli>();
-                var hasConnected = shell.AdvancedShell.ParseCommand("connect", "-n", "node1");
-                hasConnected.Should().BeTrue();
+                using (container.BeginLifetimeScope(CurrentTestName))
+                {
+                    var shell = container.Resolve<ICatalystCli>();
+                    var hasConnected = shell.AdvancedShell.ParseCommand("connect", "-n", "node1");
+                    hasConnected.Should().BeTrue();
 
-                var node1 = shell.AdvancedShell.GetConnectedNode("node1");
-                node1.Should().NotBeNull("we've just connected it");
+                    var node1 = shell.AdvancedShell.GetConnectedNode("node1");
+                    node1.Should().NotBeNull("we've just connected it");
 
-                var result = shell.AdvancedShell.ParseCommand(
-                    "removepeer", "-n", "node1", "-k", "fake_public_key", "-i", "127.0.0.1");
-                result.Should().BeTrue();
-                NodeRpcClient.Received(1).SendMessage(Arg.Is<ProtocolMessage>(x => x.TypeUrl.Equals(RemovePeerRequest.Descriptor.ShortenedFullName())));
+                    var result = shell.AdvancedShell.ParseCommand(
+                        "removepeer", "-n", "node1", "-k", "fake_public_key", "-i", "127.0.0.1");
+                    result.Should().BeTrue();
+                    NodeRpcClient.Received(1).SendMessage(Arg.Is<ProtocolMessage>(x => x.TypeUrl.Equals(RemovePeerRequest.Descriptor.ShortenedFullName())));
+                }
             }
         }
     }

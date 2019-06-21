@@ -48,36 +48,38 @@ namespace Catalyst.Cli.IntegrationTests.Commands
         [MemberData(nameof(AddFileData))]
         public async Task Cli_Can_Send_Add_File_Request(string fileName, bool expectedResult)
         {
-            var container = ContainerBuilder.Build();
-            var uploadFileTransferFactory = container.Resolve<IUploadFileTransferFactory>();
-
-            using (container.BeginLifetimeScope(CurrentTestName))
+            using (var container = ContainerBuilder.Build())
             {
-                var shell = container.Resolve<ICatalystCli>();
-                var hasConnected = shell.AdvancedShell.ParseCommand("connect", "-n", "node1");
-                hasConnected.Should().BeTrue();
+                var uploadFileTransferFactory = container.Resolve<IUploadFileTransferFactory>();
 
-                var node1 = shell.AdvancedShell.GetConnectedNode("node1");
-                node1.Should().NotBeNull("we've just connected it");
-
-                var task = Task.Run(() => 
-                    shell.AdvancedShell.ParseCommand(
-                        "addfile", "-n", "node1", "-f", fileName));
-
-                if (expectedResult)
+                using (container.BeginLifetimeScope(CurrentTestName))
                 {
-                    await TaskHelper.WaitForAsync(() => uploadFileTransferFactory.Keys.Length > 0, TimeSpan.FromSeconds(5));
+                    var shell = container.Resolve<ICatalystCli>();
+                    var hasConnected = shell.AdvancedShell.ParseCommand("connect", "-n", "node1");
+                    hasConnected.Should().BeTrue();
 
-                    uploadFileTransferFactory.GetFileTransferInformation(uploadFileTransferFactory.Keys.First())
-                       .Expire();
-                }
+                    var node1 = shell.AdvancedShell.GetConnectedNode("node1");
+                    node1.Should().NotBeNull("we've just connected it");
 
-                var result = await task.ConfigureAwait(false);
-                result.Should().Be(expectedResult);
+                    var task = Task.Run(() => 
+                        shell.AdvancedShell.ParseCommand(
+                            "addfile", "-n", "node1", "-f", fileName));
 
-                if (expectedResult)
-                {
-                    NodeRpcClient.Received(1).SendMessage(Arg.Is<ProtocolMessage>(x => x.TypeUrl.Equals(AddFileToDfsRequest.Descriptor.ShortenedFullName())));
+                    if (expectedResult)
+                    {
+                        await TaskHelper.WaitForAsync(() => uploadFileTransferFactory.Keys.Length > 0, TimeSpan.FromSeconds(5));
+
+                        uploadFileTransferFactory.GetFileTransferInformation(uploadFileTransferFactory.Keys.First())
+                           .Expire();
+                    }
+
+                    var result = await task.ConfigureAwait(false);
+                    result.Should().Be(expectedResult);
+
+                    if (expectedResult)
+                    {
+                        NodeRpcClient.Received(1).SendMessage(Arg.Is<ProtocolMessage>(x => x.TypeUrl.Equals(AddFileToDfsRequest.Descriptor.ShortenedFullName())));
+                    }
                 }
             }
         }
