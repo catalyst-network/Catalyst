@@ -68,7 +68,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Messaging.Gossip
         {
             PopulatePeers(100);
             var peerIdentifier = PeerIdentifierHelper.GetPeerIdentifier(peerId);
-            var correlationId = await Get_Gossip_Correlation_Id(peerIdentifier);
+            var correlationId = await Get_Gossip_Correlation_Id();
 
             _cache.TryGetValue(correlationId, out BroadcastMessage value);
             value.GossipCount.Should().Be((uint) Constants.MaxGossipPeersPerRound);
@@ -79,9 +79,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Messaging.Gossip
         public async Task Not_Enough_Peers_To_Gossip()
         {
             PopulatePeers(Constants.MaxGossipPeersPerRound - 1);
-
-            var peerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("1");
-            var correlationId = await Get_Gossip_Correlation_Id(peerIdentifier);
+            var correlationId = await Get_Gossip_Correlation_Id();
 
             _cache.TryGetValue(correlationId, out BroadcastMessage value);
             
@@ -175,7 +173,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Messaging.Gossip
 
             var gossipDto = messageDto.Message.ToProtocolMessage(senderIdentifier.PeerId, messageDto.CorrelationId);
 
-            await broadcastMessageHandler.ReceiveAsync(TransactionHelper.GetTransaction().ToProtocolMessage(senderIdentifier.PeerId));
+            await broadcastMessageHandler.ReceiveAsync(gossipDto);
             await broadcastMessageHandler.BroadcastAsync(gossipDto);
 
             _cache.TryGetValue(messageDto.CorrelationId, out BroadcastMessage value);
@@ -191,22 +189,17 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Messaging.Gossip
             value.ReceivedCount.Should().Be((uint) receivedCount + 1);
         }
 
-        private async Task<Guid> Get_Gossip_Correlation_Id(IPeerIdentifier peerIdentifier)
+        private async Task<Guid> Get_Gossip_Correlation_Id()
         {
-            var messageFactory = new DtoFactory();
             var senderPeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("sender");
 
             var gossipMessageHandler = new
                 BroadcastManager(senderPeerIdentifier, _peers, _cache, Substitute.For<IPeerClient>());
 
-            var messageDto = messageFactory.GetDto(
-                TransactionHelper.GetTransaction(),
-                peerIdentifier,
-                senderPeerIdentifier
-            );
-
-            await gossipMessageHandler.BroadcastAsync(messageDto.Message.ToProtocolMessage(senderPeerIdentifier.PeerId));
-            return messageDto.CorrelationId;
+            var gossipMessage = TransactionHelper.GetTransaction().ToProtocolMessage(senderPeerIdentifier.PeerId);
+           
+            await gossipMessageHandler.BroadcastAsync(gossipMessage);
+            return gossipMessage.CorrelationId.ToGuid();
         }
 
         private void PopulatePeers(int count)

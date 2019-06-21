@@ -27,6 +27,7 @@ using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Messaging.Dto;
+using Catalyst.Protocol.Common;
 using Dawn;
 using Google.Protobuf;
 
@@ -59,7 +60,7 @@ namespace Catalyst.Common.IO.Messaging
                 return BuildResponseMessage(message, senderPeerIdentifier, recipientPeerIdentifier, correlationId);   
             }
 
-            if (message.Descriptor.Name.EndsWith(MessageTypes.Broadcast.Name))
+            if (message.Descriptor.Name.EndsWith(MessageTypes.Broadcast.Name) || message.Descriptor.Name == nameof(ProtocolMessage))
             {
                 return BuildBroadcastMessage(message, senderPeerIdentifier, recipientPeerIdentifier, correlationId);
             }
