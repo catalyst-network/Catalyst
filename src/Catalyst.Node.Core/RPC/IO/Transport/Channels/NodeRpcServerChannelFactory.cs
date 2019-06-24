@@ -47,7 +47,7 @@ namespace Catalyst.Node.Core.RPC.IO.Transport.Channels
         private readonly IKeySigner _keySigner;
 
         protected override List<IChannelHandler> Handlers =>
-            _handlers ?? (_handlers = new List<IChannelHandler>
+            new List<IChannelHandler>
             {
                 new ProtobufVarint32FrameDecoder(),
                 new ProtobufDecoder(ProtocolMessageSigned.Parser),
@@ -57,7 +57,7 @@ namespace Catalyst.Node.Core.RPC.IO.Transport.Channels
                 new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(new ProtocolMessageVerifyHandler(_keySigner), new ProtocolMessageSignHandler(_keySigner)),
                 new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(new CorrelationHandler(_correlationManger), new CorrelationHandler(_correlationManger)),
                 new ObservableServiceHandler()
-            });
+            };
 
         public NodeRpcServerChannelFactory(IMessageCorrelationManager correlationManger, IKeySigner keySigner, IAuthenticationStrategy authenticationStrategy)
         {
