@@ -104,7 +104,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
             var handler = new PeerCountRequestObserver(sendPeerIdentifier, peerRepository, _logger);
             handler.StartObserving(messageStream);
 
-            await messageStream.WaitForEndOfDelayedStreamOnTaskPoolScheduler();
+            await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
 
             var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();
             receivedCalls.Count.Should().Be(1);

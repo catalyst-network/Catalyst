@@ -58,10 +58,10 @@ namespace Catalyst.TestUtils
             MessageStream = observableServiceHandler.MessageStream;
         }
 
-        public async Task SimulateReceivingMessages(params object[] messages)
+        public async Task SimulateReceivingMessagesAsync(params object[] messages)
         {
             await Task.Run(() => _channel.WriteInbound(messages)).ConfigureAwait(false);
-            await MessageStream.WaitForItemsOnDelayedStreamOnTaskPoolScheduler();
+            await MessageStream.WaitForItemsOnDelayedStreamOnTaskPoolSchedulerAsync();
         }
 
         public IChannel Channel => _channel;

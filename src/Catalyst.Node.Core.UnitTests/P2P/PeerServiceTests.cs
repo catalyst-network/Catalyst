@@ -137,7 +137,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
                 _peerSettings,
                 _logger);
 
-            await _serverChannel.SimulateReceivingMessages(message).ConfigureAwait(false);
+            await _serverChannel.SimulateReceivingMessagesAsync(message).ConfigureAwait(false);
         }
 
         public void Dispose()
