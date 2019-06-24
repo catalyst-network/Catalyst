@@ -36,7 +36,6 @@ namespace Catalyst.Common.IO.Transport.Channels
     public abstract class TcpServerChannelFactory : ITcpServerChannelFactory
     {
         private readonly int _backLogValue;
-        protected List<IChannelHandler> _handlers;
 
         protected abstract List<IChannelHandler> Handlers { get; }
         

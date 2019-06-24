@@ -50,12 +50,17 @@ namespace Catalyst.Node.Core.UnitTests.RPC.IO.Transport.Channels
     {
         public sealed class TestNodeRpcServerChannelFactory : NodeRpcServerChannelFactory
         {
-            public TestNodeRpcServerChannelFactory(IMessageCorrelationManager correlationManager,
-                IKeySigner keySigner, 
-                IAuthenticationStrategy authenticationStrategy)
-                : base(correlationManager, keySigner, authenticationStrategy) { }
+            private readonly List<IChannelHandler> _handlers;
 
-            public IReadOnlyCollection<IChannelHandler> InheritedHandlers => Handlers;
+            public TestNodeRpcServerChannelFactory(IMessageCorrelationManager correlationManager,
+                IKeySigner keySigner,
+                IAuthenticationStrategy authenticationStrategy)
+                : base(correlationManager, keySigner, authenticationStrategy)
+            {
+                _handlers = Handlers;
+            }
+
+            public IReadOnlyCollection<IChannelHandler> InheritedHandlers => _handlers;
         }
 
         private readonly IMessageCorrelationManager _correlationManager;
