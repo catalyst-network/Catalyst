@@ -41,7 +41,6 @@ namespace Catalyst.Node.Core.P2P.IO.Transport.Channels
 {
     public class PeerServerChannelFactory : UdpServerChannelFactory
     {
-        private List<IChannelHandler> _handlers;
         private readonly IMessageCorrelationManager _messageCorrelationManager;
         private readonly IBroadcastManager _broadcastManager;
         private readonly IKeySigner _keySigner;
@@ -54,14 +53,14 @@ namespace Catalyst.Node.Core.P2P.IO.Transport.Channels
         }
 
         protected override List<IChannelHandler> Handlers => 
-            _handlers ?? (_handlers = new List<IChannelHandler>
+            new List<IChannelHandler>
             {
                 new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(new ProtoDatagramDecoderHandler(), new ProtoDatagramEncoderHandler()),
                 new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(new ProtocolMessageVerifyHandler(_keySigner), new ProtocolMessageSignHandler(_keySigner)),
                 new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(new CorrelationHandler(_messageCorrelationManager), new CorrelatableHandler(_messageCorrelationManager)),
                 new BroadcastHandler(_broadcastManager),
                 new ObservableServiceHandler()
-            });
+            };
 
         /// <param name="handlerEventLoopGroupFactory"></param>
         /// <param name="targetAddress">Ignored</param>

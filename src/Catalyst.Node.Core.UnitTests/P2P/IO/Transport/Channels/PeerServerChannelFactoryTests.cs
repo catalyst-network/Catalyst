@@ -51,12 +51,17 @@ namespace Catalyst.Node.Core.UnitTests.P2P.IO.Transport.Channels
     {
         private sealed class TestPeerServerChannelFactory : PeerServerChannelFactory
         {
+            private readonly List<IChannelHandler> _handlers;
+
             public TestPeerServerChannelFactory(IMessageCorrelationManager correlationManager,
                 IBroadcastManager gossipManager,
                 IKeySigner keySigner)
-                : base(correlationManager, gossipManager, keySigner) { }
+                : base(correlationManager, gossipManager, keySigner)
+            {
+                _handlers = Handlers;
+            }
 
-            public IReadOnlyCollection<IChannelHandler> InheritedHandlers => Handlers;
+            public IReadOnlyCollection<IChannelHandler> InheritedHandlers => _handlers;
         }
 
         private readonly IMessageCorrelationManager _correlationManager;
