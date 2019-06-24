@@ -63,7 +63,8 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Consensus.Cycle
             stopWatch.Start();
             _output.WriteLine($"starting at {stopWatch.Elapsed:g}");
 
-            phaseChanges.SubscribeOn(Scheduler.Immediate).Subscribe(p =>
+            phaseChanges.SubscribeOn(TaskPoolScheduler.Default)
+               .Subscribe(p =>
             {
                 _output.WriteLine($"{stopWatch.Elapsed:g} -- {p}");
                 receivedCount++;
