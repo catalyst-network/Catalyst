@@ -25,6 +25,8 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Reactive.Concurrency;
+using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Catalyst.Common.Enumerator;
 using Catalyst.Common.Interfaces.Modules.Consensus.Cycle;
@@ -34,9 +36,9 @@ using Catalyst.Node.Core.Modules.Consensus.Cycle;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using NSubstitute;
-using Org.BouncyCastle.Bcpg;
 using Xunit;
 using Xunit.Abstractions;
+using Xunit.Sdk;
 
 namespace Catalyst.Node.Core.UnitTests.Modules.Consensus.Cycle
 {
@@ -61,7 +63,7 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Consensus.Cycle
             stopWatch.Start();
             _output.WriteLine($"starting at {stopWatch.Elapsed:g}");
 
-            phaseChanges.Subscribe(p =>
+            phaseChanges.SubscribeOn(Scheduler.Immediate).Subscribe(p =>
             {
                 _output.WriteLine($"{stopWatch.Elapsed:g} -- {p}");
                 receivedCount++;
@@ -94,17 +96,17 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Consensus.Cycle
 
         private void CheckStatusChangesHappenedInOrder(IList<IPhase> phases, DateTime eventsStartTime)
         {
-            phases.Select((p, i) => p.Status == StatusesInOrder[i % StatusesInOrder.Length])
-               .Should().AllBeEquivalentTo(true);
-
-            var tolerance = 19d;
-            tolerance.Should().BeLessOrEqualTo(TestCycleConfiguration.TestDefault.CycleDuration.TotalMilliseconds / 50, 
-                "we can tolerate 2% error with respect to the total cycle duration. In a non testing context the " +
+            var cycleDurationMs = TestCycleConfiguration.TestDefault.CycleDuration.TotalMilliseconds;
+            var fivePercentTolerance = cycleDurationMs / 20d;
+            fivePercentTolerance.Should().BeLessOrEqualTo(0.05d * cycleDurationMs, 
+                "we can tolerate 5% error with respect to the total cycle duration. In a non testing context the " +
                 $"duration will be {TestCycleConfiguration.CompressionFactor} times longer, but the errors will stay in the same " +
-                $"range, so we end up with a prod tolerance of 0.1% of error.");
+                $"range, so we end up with a prod tolerance of {0.05 / TestCycleConfiguration.CompressionFactor:P1} of error.");
 
             for (var i = 0; i < phases.Count; i++)
             {
+                phases[i].Status.Should().Be(StatusesInOrder[i % 3]);
+
                 var timeDiff = phases[i].UtcStartTime - eventsStartTime;
 
                 var phaseTimings = TestCycleConfiguration.TestDefault.TimingsByName[phases[i].Name];
@@ -118,7 +120,7 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Consensus.Cycle
 
                 var _ = Environment.NewLine;
                 timeDiff.TotalMilliseconds.Should()
-                   .BeApproximately(expectedDiff.TotalMilliseconds, tolerance, 
+                   .BeApproximately(expectedDiff.TotalMilliseconds, fivePercentTolerance, 
                         $"{_}{phases[i]}" +
                         $"{_}{nameof(timeDiff)}: {timeDiff}" +
                         $"{_}{nameof(fullCycleOffset)}: {fullCycleOffset}" +
