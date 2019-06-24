@@ -37,30 +37,31 @@ namespace Catalyst.Node.Core.Modules.Consensus.Cycle
     {
         private readonly CancellationTokenSource _cancellationTokenSource;
 
-        public CycleEventsProvider(ICycleConfiguration configuration, IDateTimeProvider timeProvider)
+        public CycleEventsProvider(ICycleConfiguration configuration, IDateTimeProvider timeProvider, ICycleSchedulerProvider schedulerProvider)
         {
             _cancellationTokenSource = new CancellationTokenSource();
-
+            
             Configuration = configuration;
+            var scheduler = schedulerProvider.Scheduler;
 
             var constructionStatusChanges = StatefulPhase.GetStatusChangeObservable(
-                PhaseName.Construction, Configuration.Construction, Configuration.CycleDuration);
+                PhaseName.Construction, Configuration.Construction, Configuration.CycleDuration, scheduler);
 
             var campaigningStatusChanges = StatefulPhase.GetStatusChangeObservable(
-                PhaseName.Campaigning, Configuration.Campaigning, Configuration.CycleDuration);
+                PhaseName.Campaigning, Configuration.Campaigning, Configuration.CycleDuration, scheduler);
 
             var votingStatusChanges = StatefulPhase.GetStatusChangeObservable(
-                PhaseName.Voting, Configuration.Voting, Configuration.CycleDuration);
+                PhaseName.Voting, Configuration.Voting, Configuration.CycleDuration, scheduler);
 
             var synchronisationStatusChanges = StatefulPhase.GetStatusChangeObservable(
-                PhaseName.Synchronisation, Configuration.Synchronisation, Configuration.CycleDuration);
+                PhaseName.Synchronisation, Configuration.Synchronisation, Configuration.CycleDuration, scheduler);
 
             // ByteUtil.GenerateRandom should not be used here, instead this should be implemented
             // TODO: https://github.com/catalyst-network/Catalyst.Node/issues/552
             PhaseChanges = constructionStatusChanges
-               .Merge(campaigningStatusChanges)
-               .Merge(votingStatusChanges)
-               .Merge(synchronisationStatusChanges)
+               .Merge(campaigningStatusChanges, scheduler)
+               .Merge(votingStatusChanges, scheduler)
+               .Merge(synchronisationStatusChanges, scheduler)
                .Select(s => new Phase(ByteUtil.GenerateRandomByteArray(32), s.Name, s.Status, timeProvider.UtcNow))
                .TakeWhile(_ => !_cancellationTokenSource.IsCancellationRequested);
         }

@@ -23,95 +23,103 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
-using System.Threading.Tasks;
 using Catalyst.Common.Enumerator;
+using Catalyst.Common.Interfaces.Modules.Consensus;
 using Catalyst.Common.Interfaces.Modules.Consensus.Cycle;
 using Catalyst.Common.Modules.Consensus.Cycle;
-using Catalyst.Node.Core.Modules.Consensus;
 using Catalyst.Node.Core.Modules.Consensus.Cycle;
-using Catalyst.TestUtils;
 using FluentAssertions;
+using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Xunit;
 using Xunit.Abstractions;
-using Xunit.Sdk;
 
 namespace Catalyst.Node.Core.UnitTests.Modules.Consensus.Cycle
 {
-    public class CycleEventsProviderTests
+    public sealed class CycleEventsProviderTests : IDisposable
     {
-        private readonly ITestOutputHelper _output;
-        private static readonly PhaseStatus[] StatusesInOrder = new[] {PhaseStatus.Producing, PhaseStatus.Collecting, PhaseStatus.Idle};
+        private static readonly PhaseStatus[] StatusesInOrder = {PhaseStatus.Producing, PhaseStatus.Collecting, PhaseStatus.Idle};
+        private readonly TestScheduler _testScheduler;
+        private readonly CycleEventsProvider _cycleProvider;
+        private readonly IDisposable _subscription;
+        private readonly IObserver<IPhase> _spy;
 
-        public CycleEventsProviderTests(ITestOutputHelper output) { _output = output; }
+        public CycleEventsProviderTests(ITestOutputHelper output)
+        {
+            var output1 = output;
+            _testScheduler = new TestScheduler();
+
+            var schedulerProvider = Substitute.For<ICycleSchedulerProvider>();
+            schedulerProvider.Scheduler.Returns(_testScheduler);
+            var dateTimeProvider = Substitute.For<IDateTimeProvider>();
+
+            dateTimeProvider.UtcNow.Returns(_ => _testScheduler.Now.DateTime);
+            _cycleProvider = new CycleEventsProvider(CycleConfiguration.Default, dateTimeProvider, schedulerProvider);
+
+            _spy = Substitute.For<IObserver<IPhase>>();
+
+            var stopWatch = _testScheduler.StartStopwatch();
+
+            _subscription = _cycleProvider.PhaseChanges.Take(50)
+               .Subscribe(p =>
+                {
+                    output1.WriteLine($"{stopWatch.Elapsed.TotalSeconds} -- {p}");
+                    _spy.OnNext(p);
+                }, () =>
+                {
+                    output1.WriteLine($"completed after {stopWatch.Elapsed.TotalSeconds:g}");
+                    _spy.OnCompleted();
+                });
+        }
 
         [Fact]
-        public async Task Changes_Should_Happen_In_Time()
+        public void PhaseChanges_Should_Complete_When_Stop_Is_Called()
         {
-            var cycleProvider = new CycleEventsProvider(TestCycleConfiguration.TestDefault, new DateTimeProvider());
+            var cancellationTime = CycleConfiguration.Default.CycleDuration
+               .Add(CycleConfiguration.Default.Construction.ProductionTime.Divide(2));
 
-            var phaseChanges = cycleProvider.PhaseChanges;
-            var completed = false;
-            var receivedCount = 0;
-            var spy = Substitute.For<IObserver<IPhase>>();
+            _testScheduler.Schedule(cancellationTime, _cycleProvider.Close);
 
-            var stopWatch = new Stopwatch();
-            stopWatch.Start();
-            _output.WriteLine($"starting at {stopWatch.Elapsed:g}");
+            _testScheduler.Start();
 
-            phaseChanges.SubscribeOn(TaskPoolScheduler.Default)
-               .Subscribe(p =>
-            {
-                _output.WriteLine($"{stopWatch.Elapsed:g} -- {p}");
-                receivedCount++;
-                spy.OnNext(p);
-            }, () =>
-            {
-                _output.WriteLine($"completed after {stopWatch.Elapsed:g}");
-                completed = true;
-                spy.OnCompleted();
-            });
+            _spy.Received(1).OnCompleted();
+            _spy.ReceivedCalls().Count(r => r.GetMethodInfo().Name == nameof(_spy.OnNext))
+               .Should().Be(13, "the cycle has been stopped after the start of the second loop" +
+                    "and before the end of the construction/production phase. A full cycle is 3*4 calls to " +
+                    "OnNext, and the start of the second loop is 1.");
+        }
 
-            await TaskHelper.WaitForAsync(() => receivedCount >= 20, TimeSpan.FromSeconds(100));
-            cycleProvider.Close();
+        [Fact]
+        public void Changes_Should_Happen_In_Time()
+        {
+            _testScheduler.Start();
 
-            await TaskHelper.WaitForAsync(() => completed, TimeSpan.FromSeconds(10));
+            _spy.Received(1).OnCompleted();
 
-            spy.Received(1).OnCompleted();
-
-            var receivedPhases = spy.ReceivedCalls().Where(r => r.GetMethodInfo().Name == nameof(spy.OnNext))
+            var receivedPhases = _spy.ReceivedCalls().Where(r => r.GetMethodInfo().Name == nameof(_spy.OnNext))
                .Select(c => (IPhase) c.GetArguments().Single()).OrderBy(p => p.UtcStartTime).ToList();
+            receivedPhases.Count.Should().Be(50);
 
             foreach (var phaseName in Enumeration.GetAll<PhaseName>())
             {
                 var received = receivedPhases.Where(p => p.Name == phaseName).ToList();
                 CheckStatusChangesHappenedInOrder(received, receivedPhases[0].UtcStartTime);
             }
-
-            stopWatch.Stop();
         }
 
         private void CheckStatusChangesHappenedInOrder(IList<IPhase> phases, DateTime eventsStartTime)
         {
-            var cycleDurationMs = TestCycleConfiguration.TestDefault.CycleDuration.TotalMilliseconds;
-            var fivePercentTolerance = cycleDurationMs / 20d;
-            fivePercentTolerance.Should().BeLessOrEqualTo(0.05d * cycleDurationMs, 
-                "we can tolerate 5% error with respect to the total cycle duration. In a non testing context the " +
-                $"duration will be {TestCycleConfiguration.CompressionFactor} times longer, but the errors will stay in the same " +
-                $"range, so we end up with a prod tolerance of {0.05 / TestCycleConfiguration.CompressionFactor:P1} of error.");
-
             for (var i = 0; i < phases.Count; i++)
             {
                 phases[i].Status.Should().Be(StatusesInOrder[i % 3]);
 
                 var timeDiff = phases[i].UtcStartTime - eventsStartTime;
 
-                var phaseTimings = TestCycleConfiguration.TestDefault.TimingsByName[phases[i].Name];
-                var fullCycleOffset = TestCycleConfiguration.TestDefault.CycleDuration.Multiply(i / 3);
+                var phaseTimings = CycleConfiguration.Default.TimingsByName[phases[i].Name];
+                var fullCycleOffset = CycleConfiguration.Default.CycleDuration.Multiply(i / 3);
 
                 var expectedDiff = phases[i].Status == PhaseStatus.Producing
                     ? fullCycleOffset + phaseTimings.Offset
@@ -120,8 +128,8 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Consensus.Cycle
                         : fullCycleOffset + phaseTimings.Offset + phaseTimings.TotalTime;
 
                 var _ = Environment.NewLine;
-                timeDiff.TotalMilliseconds.Should()
-                   .BeApproximately(expectedDiff.TotalMilliseconds, fivePercentTolerance, 
+                timeDiff.TotalSeconds.Should()
+                   .BeApproximately(expectedDiff.TotalSeconds, 0.0001d,
                         $"{_}{phases[i]}" +
                         $"{_}{nameof(timeDiff)}: {timeDiff}" +
                         $"{_}{nameof(fullCycleOffset)}: {fullCycleOffset}" +
@@ -130,6 +138,12 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Consensus.Cycle
                         $"{_}{nameof(phaseTimings.CollectionTime)}: {phaseTimings.CollectionTime}" +
                         $"{_}");
             }
+        }
+
+        public void Dispose()
+        {
+            _cycleProvider?.Dispose();
+            _subscription?.Dispose();
         }
     }
 }

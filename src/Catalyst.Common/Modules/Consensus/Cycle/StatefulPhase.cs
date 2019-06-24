@@ -22,6 +22,7 @@
 #endregion
 
 using System;
+using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 
 namespace Catalyst.Common.Modules.Consensus.Cycle
@@ -43,22 +44,26 @@ namespace Catalyst.Common.Modules.Consensus.Cycle
         /// <param name="name">The name of the phase for which you need the state change events.</param>
         /// <param name="timings">The timing configuration for the phase.</param>
         /// <param name="cycleDuration">The total duration of a delta production cycle.</param>
+        /// <param name="scheduler">The IScheduler used to synchronise the Timers.</param>
         /// <returns></returns>
-        public static IObservable<StatefulPhase> GetStatusChangeObservable(PhaseName name, PhaseTimings timings, TimeSpan cycleDuration)
+        public static IObservable<StatefulPhase> GetStatusChangeObservable(PhaseName name, 
+            PhaseTimings timings, 
+            TimeSpan cycleDuration, 
+            IScheduler scheduler)
         {
             var phaseInProducingStatus = Observable
-               .Timer(timings.Offset, cycleDuration)
+               .Timer(timings.Offset, cycleDuration, scheduler)
                .Select(_ => new StatefulPhase(name, PhaseStatus.Producing));
 
             var phaseInCollectingStatus = Observable
-               .Timer(timings.Offset + timings.ProductionTime, cycleDuration)
+               .Timer(timings.Offset + timings.ProductionTime, cycleDuration, scheduler)
                .Select(_ => new StatefulPhase(name, PhaseStatus.Collecting));
 
             var phaseInIdleStatus = Observable
-               .Timer(timings.Offset + timings.TotalTime, cycleDuration)
+               .Timer(timings.Offset + timings.TotalTime, cycleDuration, scheduler)
                .Select(_ => new StatefulPhase(name, PhaseStatus.Idle));
 
-            return phaseInProducingStatus.Merge(phaseInCollectingStatus).Merge(phaseInIdleStatus);
+            return phaseInProducingStatus.Merge(phaseInCollectingStatus, scheduler).Merge(phaseInIdleStatus, scheduler);
         }
     }
 }
