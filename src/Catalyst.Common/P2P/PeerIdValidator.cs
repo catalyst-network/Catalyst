@@ -56,7 +56,7 @@ namespace Catalyst.Common.P2P
                .Require(p => ValidateClientId(p.ClientId.ToByteArray()),
                     _ => "ClientId should only be 2 alphabetical letters")
                .Require(p => ValidateClientVersion(p.ClientVersion.ToByteArray()),
-                    _ => $"ClientVersion doesn't match {_peerIdClientVersion.GetAssemblyMajorVersion}");
+                    _ => $"ClientVersion doesn't match {_peerIdClientVersion.AssemblyMajorVersion}");
             return true;
         }
 
