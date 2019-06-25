@@ -139,7 +139,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Observables
                 peerNeighborsResponseMessage.Peers.Add(PeerIdHelper.GetPeerId());
             }
 
-            await observableStream.WaitForEndOfDelayedStreamOnTaskPoolScheduler();
+            await observableStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
 
             await fakeContext.Channel.ReceivedWithAnyArgs(1)
                .WriteAndFlushAsync(peerNeighborsResponseMessage.ToProtocolMessage(_peerIdentifier.PeerId, Guid.NewGuid()));

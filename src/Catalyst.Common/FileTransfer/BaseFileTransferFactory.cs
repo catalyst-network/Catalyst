@@ -103,7 +103,7 @@ namespace Catalyst.Common.FileTransfer
             try
             {
                 fileTransferInformation.CancellationToken = cancellationToken;
-                await DoTransfer(fileTransferInformation).ConfigureAwait(false);
+                await DoTransferAsync(fileTransferInformation).ConfigureAwait(false);
                 Remove(fileTransferInformation, fileTransferInformation.IsExpired());
             }
             catch (Exception)
@@ -170,6 +170,6 @@ namespace Catalyst.Common.FileTransfer
 
         /// <summary>Does the transfer.</summary>
         /// <param name="fileTransferInformation">The file transfer information.</param>
-        protected abstract Task DoTransfer(T fileTransferInformation);
+        protected abstract Task DoTransferAsync(T fileTransferInformation);
     }
 }

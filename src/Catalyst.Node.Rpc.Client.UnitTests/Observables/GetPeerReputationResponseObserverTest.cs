@@ -114,7 +114,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.Observables
             _observer = new PeerReputationResponseObserver(_output, _logger);
             _observer.StartObserving(messageStream);
 
-            await messageStream.WaitForEndOfDelayedStreamOnTaskPoolScheduler();
+            await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
         }
 
         public void Dispose()

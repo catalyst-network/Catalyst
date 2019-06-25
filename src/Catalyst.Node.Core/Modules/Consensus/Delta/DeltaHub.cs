@@ -129,13 +129,13 @@ namespace Catalyst.Node.Core.Modules.Consensus.Delta
 
             var deltaAsArray = delta.ToByteArray();
             var ipfsFileAddress = await IpfsRetryPolicy.ExecuteAsync(
-                async c => await TryPublishIpfsFile(deltaAsArray, cancellationToken: c).ConfigureAwait(false),
+                async c => await TryPublishIpfsFileAsync(deltaAsArray, cancellationToken: c).ConfigureAwait(false),
                 cancellationToken).ConfigureAwait(false);
 
             return ipfsFileAddress;
         }
 
-        private async Task<string> TryPublishIpfsFile(byte[] deltaAsBytes, CancellationToken cancellationToken)
+        private async Task<string> TryPublishIpfsFileAsync(byte[] deltaAsBytes, CancellationToken cancellationToken)
         {
             using (var memoryStream = new MemoryStream())
             {
