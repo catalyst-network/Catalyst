@@ -51,7 +51,7 @@ namespace Catalyst.Node.Rpc.Client.IO.Transport.Channels
         }
 
         protected override List<IChannelHandler> Handlers =>
-            _handlers ?? (_handlers = new List<IChannelHandler>
+            new List<IChannelHandler>
             {
                 new ProtobufVarint32LengthFieldPrepender(),
                 new ProtobufEncoder(),
@@ -60,18 +60,18 @@ namespace Catalyst.Node.Rpc.Client.IO.Transport.Channels
                 new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(new ProtocolMessageVerifyHandler(_keySigner), new ProtocolMessageSignHandler(_keySigner)),
                 new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(new CorrelationHandler(_messageCorrelationCache), new CorrelationHandler(_messageCorrelationCache)),
                 new ObservableServiceHandler()
-            });
+            };
 
-        /// <param name="handlerEventLoopGroupFactory"></param>
+        /// <param name="eventLoopGroupFactory"></param>
         /// <param name="targetAddress">Ignored</param>
         /// <param name="targetPort">Ignored</param>
         /// <param name="certificate">Local TLS certificate</param>
-        public override IObservableChannel BuildChannel(IEventLoopGroupFactory handlerEventLoopGroupFactory,
+        public override IObservableChannel BuildChannel(IEventLoopGroupFactory eventLoopGroupFactory,
             IPAddress targetAddress,
             int targetPort,
             X509Certificate2 certificate = null)
         {
-            var channel = Bootstrap(handlerEventLoopGroupFactory, targetAddress, targetPort, certificate);
+            var channel = Bootstrap(eventLoopGroupFactory, targetAddress, targetPort, certificate);
             
             var messageStream = channel.Pipeline.Get<IObservableServiceHandler>()?.MessageStream;
 

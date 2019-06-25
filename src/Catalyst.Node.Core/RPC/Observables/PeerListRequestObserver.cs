@@ -29,7 +29,6 @@ using Catalyst.Common.IO.Observables;
 using Catalyst.Common.P2P;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
-using Dawn;
 using Google.Protobuf;
 using SharpRepository.Repository;
 using ILogger = Serilog.ILogger;
@@ -41,7 +40,7 @@ namespace Catalyst.Node.Core.RPC.Observables
     /// </summary>
     /// <seealso cref="IRpcRequestObserver" />
     public sealed class PeerListRequestObserver
-        : RequestObserverBase<GetPeerListRequest>,
+        : RequestObserverBase<GetPeerListRequest, GetPeerListResponse>,
             IRpcRequestObserver
     {
         /// <summary>
@@ -67,7 +66,7 @@ namespace Catalyst.Node.Core.RPC.Observables
         /// Handlers the specified message.
         /// </summary>
         /// <param name="messageDto">The message.</param>
-        public override IMessage HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto)
+        protected override IMessage<GetPeerListResponse> HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto)
         {
             Logger.Debug("received message of type PeerListRequest");
 

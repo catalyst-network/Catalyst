@@ -25,16 +25,13 @@ using System;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.IO.Messaging;
-using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.Network;
 using Catalyst.Common.P2P;
 using Catalyst.Common.Util;
 using Catalyst.Node.Core.RPC.Observables;
-using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
@@ -121,7 +118,11 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
             //peers we are interested in
             fakePeers.AddRange(Enumerable.Range(0, 23).Select(i => new Peer
             {
-                Reputation = 125, PeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier($"highscored-{i}", "Tc", 1, IPAddress.Parse("198.51.100." + i))
+                Reputation = 125, PeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier($"highscored-{i}", 
+                    "Tc", 
+                    1,
+                    IPAddress.Parse("198.51.100." + i)
+                )
             }));
 
             // Let peerRepository return the fake peer list
@@ -132,7 +133,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
 
             var sendPeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("sender");
 
-            var messageFactory = new ProtocolMessageFactory();
+            var messageFactory = new DtoFactory();
             var request = new SetPeerBlackListRequest
             {
                 PublicKey = publicKey.ToBytesForRLPEncoding().ToByteString(),
@@ -140,25 +141,28 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
                 Blacklist = Convert.ToBoolean(blacklist)
             };
 
-            var requestMessage = messageFactory.GetMessage(new MessageDto(
+            var requestMessage = messageFactory.GetDto(
                 request,
-                MessageTypes.Request,
                 PeerIdentifierHelper.GetPeerIdentifier("recipient"),
-                sendPeerIdentifier
-            ));
-
-            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, requestMessage);
+                PeerIdentifierHelper.GetPeerIdentifier("sender")
+            );
+            
+            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, 
+                requestMessage.Message.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId)
+            );
 
             var handler = new PeerBlackListingRequestObserver(sendPeerIdentifier, _logger, peerRepository);
             handler.StartObserving(messageStream);
 
-            await messageStream.WaitForEndOfDelayedStreamOnTaskPoolScheduler();
+            await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
 
             var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();
             receivedCalls.Count.Should().Be(1);
             
             var sentResponseDto = (IMessageDto) receivedCalls.Single().GetArguments().Single();
-            sentResponseDto.Message.Descriptor.ShortenedFullName().Should().Be(SetPeerBlackListResponse.Descriptor.ShortenedFullName());
+            sentResponseDto.Message.Descriptor.ShortenedFullName()
+               .Should()
+               .Be(SetPeerBlackListResponse.Descriptor.ShortenedFullName());
             
             return sentResponseDto.FromIMessageDto<SetPeerBlackListResponse>();
         }

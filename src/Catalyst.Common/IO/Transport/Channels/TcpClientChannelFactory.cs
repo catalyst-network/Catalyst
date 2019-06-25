@@ -24,15 +24,9 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Security.Cryptography.X509Certificates;
-using Catalyst.Common.Interfaces.IO;
 using Catalyst.Common.Interfaces.IO.EventLoop;
-using Catalyst.Common.Interfaces.IO.Transport;
 using Catalyst.Common.Interfaces.IO.Transport.Channels;
-using Catalyst.Common.Interfaces.Modules.KeySigner;
-using Catalyst.Common.IO.Handlers;
 using Catalyst.Common.IO.Transport.Bootstrapping;
-using Catalyst.Protocol.Common;
-using DotNetty.Codecs.Protobuf;
 using DotNetty.Handlers.Logging;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Sockets;
@@ -42,7 +36,6 @@ namespace Catalyst.Common.IO.Transport.Channels
     public abstract class TcpClientChannelFactory : ITcpClientChannelFactory
     {
         private readonly int _backLogValue;
-        protected List<IChannelHandler> _handlers;
 
         protected abstract List<IChannelHandler> Handlers { get; }
         protected TcpClientChannelFactory(int backLogValue = 100) { _backLogValue = backLogValue; }

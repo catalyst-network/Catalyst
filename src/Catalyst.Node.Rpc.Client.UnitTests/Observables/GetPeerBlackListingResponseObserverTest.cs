@@ -23,10 +23,9 @@
 
 using System;
 using System.Threading.Tasks;
-using Catalyst.Common.Config;
+using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.IO.Messaging;
-using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.Util;
 using Catalyst.Node.Rpc.Client.Observables;
 using Catalyst.Protocol.Rpc.Node;
@@ -72,7 +71,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.Observables
         {
             await TestGetBlackListResponse(blacklist, publicKey, ip);
 
-            _output.Received(1).WriteLine($"Peer Blacklisting Successful : {blacklist}, {publicKey}, {ip}");
+            _output.Received(1).WriteLine($"Peer Blacklisting Successful : {blacklist.ToString()}, {publicKey}, {ip}");
         }
 
         /// <summary>
@@ -88,24 +87,22 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.Observables
 
         private async Task TestGetBlackListResponse(bool blacklist, string publicKey, string ip)
         {
-            var response = new ProtocolMessageFactory().GetMessage(new MessageDto(
-                    new SetPeerBlackListResponse
-                    {
-                        Blacklist = blacklist,
-                        Ip = ip.ToBytesForRLPEncoding().ToByteString(),
-                        PublicKey = publicKey.ToBytesForRLPEncoding().ToByteString()
-                    },
-                    MessageTypes.Request,
-                    PeerIdentifierHelper.GetPeerIdentifier("recipient"),
-                    PeerIdentifierHelper.GetPeerIdentifier("sender")),
+            var response = new DtoFactory().GetDto(new SetPeerBlackListResponse
+                {
+                    Blacklist = blacklist,
+                    Ip = ip.ToBytesForRLPEncoding().ToByteString(),
+                    PublicKey = publicKey.ToBytesForRLPEncoding().ToByteString()
+                },
+                PeerIdentifierHelper.GetPeerIdentifier("sender"),
+                PeerIdentifierHelper.GetPeerIdentifier("recipient"),
                 Guid.NewGuid());
 
-            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, response);
+            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, response.Message.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId, response.CorrelationId));
 
             _observer = new PeerBlackListingResponseObserver(_output, _logger);
             _observer.StartObserving(messageStream);
 
-            await messageStream.WaitForEndOfDelayedStreamOnTaskPoolScheduler();
+            await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
         }
 
         public void Dispose()

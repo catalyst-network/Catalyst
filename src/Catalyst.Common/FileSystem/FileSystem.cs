@@ -94,7 +94,7 @@ namespace Catalyst.Common.FileSystem
             return false;
         }
 
-        public async Task<IFileInfo> WriteFileToCdd(string fileName, string contents)
+        public async Task<IFileInfo> WriteFileToCddAsync(string fileName, string contents)
         {
             var fullPath = Path.Combine(GetCatalystDataDir().ToString(), fileName);
 

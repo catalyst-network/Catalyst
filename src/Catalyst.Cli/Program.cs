@@ -36,10 +36,7 @@ using Catalyst.Common.Util;
 using Catalyst.Common.Interfaces.Cli;
 using Microsoft.Extensions.Configuration;
 using Serilog;
-using Serilog.Core;
-using Serilog.Events;
 using Constants = Catalyst.Common.Config.Constants;
-using Catalyst.Common.Shell;
 
 namespace Catalyst.Cli
 {

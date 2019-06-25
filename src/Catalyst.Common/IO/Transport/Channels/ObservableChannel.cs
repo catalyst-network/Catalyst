@@ -22,9 +22,7 @@
 #endregion
 
 using System;
-using Catalyst.Common.Interfaces.IO;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
-using Catalyst.Common.Interfaces.IO.Transport;
 using Catalyst.Common.Interfaces.IO.Transport.Channels;
 using Catalyst.Protocol.Common;
 using Dawn;

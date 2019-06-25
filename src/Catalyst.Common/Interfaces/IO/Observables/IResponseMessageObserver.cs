@@ -22,7 +22,6 @@
 #endregion
 
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
-using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Protocol.Common;
 
 namespace Catalyst.Common.Interfaces.IO.Observables

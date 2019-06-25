@@ -23,9 +23,7 @@
 
 using System;
 using System.Threading.Tasks;
-using Catalyst.Common.Interfaces.IO;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
-using Catalyst.Common.Interfaces.IO.Transport;
 using Catalyst.Common.Interfaces.IO.Transport.Channels;
 using Catalyst.Common.IO.Handlers;
 using Catalyst.Protocol.Common;
@@ -60,10 +58,10 @@ namespace Catalyst.TestUtils
             MessageStream = observableServiceHandler.MessageStream;
         }
 
-        public async Task SimulateReceivingMessages(params object[] messages)
+        public async Task SimulateReceivingMessagesAsync(params object[] messages)
         {
             await Task.Run(() => _channel.WriteInbound(messages)).ConfigureAwait(false);
-            await MessageStream.WaitForItemsOnDelayedStreamOnTaskPoolScheduler();
+            await MessageStream.WaitForItemsOnDelayedStreamOnTaskPoolSchedulerAsync();
         }
 
         public IChannel Channel => _channel;

@@ -59,10 +59,10 @@
             "instanceScope": "singleinstance"
         },
         {
-            "type": "Catalyst.Common.IO.Messaging.ProtocolMessageFactory, Catalyst.Common",
+            "type": "Catalyst.Common.IO.Messaging.DtoFactory, Catalyst.Common",
             "services": [
                 {
-                    "type": "Catalyst.Common.Interfaces.IO.Messaging.IProtocolMessageFactory, Catalyst.Common"
+                    "type": "Catalyst.Common.Interfaces.IO.Messaging.IDtoFactory, Catalyst.Common"
                 }
             ]
         },

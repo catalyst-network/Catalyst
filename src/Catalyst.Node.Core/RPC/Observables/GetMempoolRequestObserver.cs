@@ -32,14 +32,13 @@ using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Observables;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
-using Dawn;
 using Google.Protobuf;
 using ILogger = Serilog.ILogger;
 
 namespace Catalyst.Node.Core.RPC.Observables
 {
     public sealed class GetMempoolRequestObserver
-        : RequestObserverBase<GetMempoolRequest>,
+        : RequestObserverBase<GetMempoolRequest, GetMempoolResponse>,
             IRpcRequestObserver
     {
         private readonly IMempool _mempool;
@@ -52,7 +51,7 @@ namespace Catalyst.Node.Core.RPC.Observables
             _mempool = mempool;
         }
 
-        public override IMessage HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto)
+        protected override IMessage<GetMempoolResponse> HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto)
         {
             Logger.Debug("GetMempoolRequestHandler starting ...");
 

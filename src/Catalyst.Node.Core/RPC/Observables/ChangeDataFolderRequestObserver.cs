@@ -38,7 +38,7 @@ using ILogger = Serilog.ILogger;
 namespace Catalyst.Node.Core.RPC.Observables
 {
     public sealed class ChangeDataFolderRequestObserver
-        : RequestObserverBase<SetPeerDataFolderRequest>,
+        : RequestObserverBase<SetPeerDataFolderRequest, GetPeerDataFolderResponse>,
             IRpcRequestObserver
     {
         private readonly IRpcServerSettings _config;
@@ -51,7 +51,7 @@ namespace Catalyst.Node.Core.RPC.Observables
             _config = config;
         }
 
-        public override IMessage HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto)
+        protected override IMessage<GetPeerDataFolderResponse> HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto)
         {
             Logger.Debug("received message of type SetPeerDataFolderRequest");
 

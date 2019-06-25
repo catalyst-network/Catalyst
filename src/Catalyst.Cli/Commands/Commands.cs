@@ -56,11 +56,11 @@ namespace Catalyst.Cli.Commands
         private readonly IUploadFileTransferFactory _uploadFileTransferFactory;
         private readonly ILogger _logger;
         private readonly IUserOutput _userOutput;
-        private readonly IProtocolMessageFactory _protocolMessageFactory;
+        private readonly IDtoFactory _dtoFactory;
 
         /// <summary>
         /// </summary>
-        public Commands(IProtocolMessageFactory protocolMessageFactory,
+        public Commands(IDtoFactory dtoFactory,
             INodeRpcClientFactory nodeRpcClientFactory,
             IConfigurationRoot config,
             ILogger logger,
@@ -69,7 +69,7 @@ namespace Catalyst.Cli.Commands
             IUploadFileTransferFactory uploadFileTransferFactory,
             IUserOutput userOutput) : base(userOutput)
         {
-            _protocolMessageFactory = protocolMessageFactory;
+            _dtoFactory = dtoFactory;
             _certificateStore = certificateStore;
             _nodeRpcClientFactory = nodeRpcClientFactory;
             _logger = logger;

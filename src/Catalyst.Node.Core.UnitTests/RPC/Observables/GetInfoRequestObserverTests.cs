@@ -30,9 +30,7 @@ using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.IO.Messaging;
-using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Node.Core.RPC.Observables;
-using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
@@ -42,7 +40,6 @@ using Newtonsoft.Json;
 using NSubstitute;
 using Serilog;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace Catalyst.Node.Core.UnitTests.RPC.Observables
 {
@@ -74,28 +71,30 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
         [Fact]
         public async Task GetInfoMessageRequest_UsingValidRequest_ShouldSendGetInfoResponse()
         {
-            var messageFactory = new ProtocolMessageFactory();
-            var request = messageFactory.GetMessage(new MessageDto(
+            var messageFactory = new DtoFactory();
+            var request = messageFactory.GetDto(
                 new GetInfoRequest
                 {
                     Query = true
                 },
-                MessageTypes.Request,
                 PeerIdentifierHelper.GetPeerIdentifier("recipient"),
                 PeerIdentifierHelper.GetPeerIdentifier("sender")
-            ));
+            );
 
             var expectedResponseContent = JsonConvert
                .SerializeObject(_config.GetSection("CatalystNodeConfiguration").AsEnumerable(),
                     Formatting.Indented);
 
-            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, request);
+            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, 
+                request.Message.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId)
+            );
+            
             var handler = new GetInfoRequestObserver(
                 PeerIdentifierHelper.GetPeerIdentifier("sender"), _rpcServerSettings, _logger);
 
             handler.StartObserving(messageStream);
 
-            await messageStream.WaitForEndOfDelayedStreamOnTaskPoolScheduler();
+            await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
 
             await _fakeContext.Channel.Received(1).WriteAndFlushAsync(Arg.Any<object>());
 

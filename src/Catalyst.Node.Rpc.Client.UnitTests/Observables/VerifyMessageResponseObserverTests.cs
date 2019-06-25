@@ -24,10 +24,9 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Catalyst.Common.Config;
+using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.IO.Messaging;
-using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Node.Rpc.Client.Observables;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
@@ -74,23 +73,20 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.Observables
         [MemberData(nameof(QueryContents))]
         public async Task RpcClient_Can_Handle_VerifyMessageResponse(bool isSignedByNode)
         {
-            var response = new ProtocolMessageFactory().GetMessage(new MessageDto(
-                    new VerifyMessageResponse
-                    {
-                        IsSignedByKey = isSignedByNode
-                    },
-                    MessageTypes.Response,
-                    PeerIdentifierHelper.GetPeerIdentifier("recipient"),
-                    PeerIdentifierHelper.GetPeerIdentifier("sender")
-                ),
+            var response = new DtoFactory().GetDto(new VerifyMessageResponse
+                {
+                    IsSignedByKey = isSignedByNode
+                },
+                PeerIdentifierHelper.GetPeerIdentifier("sender"),
+                PeerIdentifierHelper.GetPeerIdentifier("recipient"),
                 Guid.NewGuid());
 
-            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, response);
+            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, response.Message.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId, response.CorrelationId));
 
             _observer = new VerifyMessageResponseObserver(_output, _logger);
             _observer.StartObserving(messageStream);
 
-            await messageStream.WaitForEndOfDelayedStreamOnTaskPoolScheduler();
+            await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
 
             _output.Received(1).WriteLine(isSignedByNode.ToString());
         }

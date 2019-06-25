@@ -61,24 +61,22 @@ namespace Catalyst.Cli.Commands
                 {
                     throw new KeyNotFoundException($"Unable to find configuration for node {opts.Node}");
                 }
-                
+
                 var peerPublicKey = opts.PublicKey;
                 var peerIp = opts.IpAddress;
 
                 var dataFolder = opts.DataFolder;
 
-                var requestMessage = _protocolMessageFactory.GetMessage(new MessageDto(
-                    new SetPeerDataFolderRequest
-                    {
-                        PublicKey = peerPublicKey.ToBytesForRLPEncoding().ToByteString(),
-                        Ip = peerIp.ToBytesForRLPEncoding().ToByteString(),
-                        Datafolder = dataFolder
-                    },
-                    MessageTypes.Request,
+                var requestMessage = _dtoFactory.GetDto(new SetPeerDataFolderRequest
+                {
+                    PublicKey = peerPublicKey.ToBytesForRLPEncoding().ToByteString(),
+                    Ip = peerIp.ToBytesForRLPEncoding().ToByteString(),
+                    Datafolder = dataFolder
+                },
                     new PeerIdentifier(Encoding.ASCII.GetBytes(nodeConfig.PublicKey), nodeConfig.HostAddress,
                         nodeConfig.Port),
                     _peerIdentifier
-                ));
+                );
 
                 node.SendMessage(requestMessage);
             }

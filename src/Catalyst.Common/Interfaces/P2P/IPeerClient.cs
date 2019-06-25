@@ -21,12 +21,9 @@
 
 #endregion
 
-using System;
-using System.Threading.Tasks;
 using Catalyst.Common.Interfaces.IO.Transport;
-using DotNetty.Buffers;
 
 namespace Catalyst.Common.Interfaces.P2P
 {
-    public interface IPeerClient : IDisposable, ISocketClient { }
+    public interface IPeerClient : ISocketClient { }
 }

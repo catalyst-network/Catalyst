@@ -23,11 +23,8 @@
 
 using System;
 using System.Text;
-using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.Cli.Options;
 using Catalyst.Common.Interfaces.Rpc;
-using Catalyst.Common.IO.Messaging;
-using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.P2P;
 using Catalyst.Common.Util;
 using Catalyst.Protocol.Rpc.Node;
@@ -64,17 +61,15 @@ namespace Catalyst.Cli.Commands
 
                 Guard.Argument(node).NotNull();
 
-                var requestMessage = _protocolMessageFactory.GetMessage(new MessageDto(
+                var requestMessage = _dtoFactory.GetDto(
                     new GetPeerReputationRequest
                     {
                         PublicKey = peerPublicKey.ToBytesForRLPEncoding().ToByteString(),
                         Ip = peerIp.ToBytesForRLPEncoding().ToByteString()
                     },
-                    MessageTypes.Request,
+                    _peerIdentifier,
                     new PeerIdentifier(Encoding.ASCII.GetBytes(nodeConfig.PublicKey), nodeConfig.HostAddress,
-                        nodeConfig.Port),
-                    _peerIdentifier
-                ));
+                        nodeConfig.Port));
 
                 node.SendMessage(requestMessage);
             }

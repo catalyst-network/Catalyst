@@ -21,13 +21,10 @@
 
 #endregion
 
-using System.Linq;
-using Catalyst.Common.Config;
-using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.IO.Handlers;
-using Catalyst.Common.IO.Messaging.Dto;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.Util;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Types;
 using Catalyst.Protocol.IPPN;
@@ -41,7 +38,7 @@ namespace Catalyst.Common.UnitTests.IO.Handlers
     public sealed class ProtocolMessageSignHandlerTest
     {
         private readonly IChannelHandlerContext _fakeContext;
-        private readonly IMessageDto _protocolMessage;
+        private readonly IMessageDto _dto;
         private readonly IKeySigner _keySigner;
 
         public ProtocolMessageSignHandlerTest()
@@ -49,10 +46,7 @@ namespace Catalyst.Common.UnitTests.IO.Handlers
             _fakeContext = Substitute.For<IChannelHandlerContext>();
             _keySigner = Substitute.For<IKeySigner>();
 
-            _protocolMessage = new MessageDto(new PingRequest().ToProtocolMessage(
-                    PeerIdentifierHelper.GetPeerIdentifier(
-                        ByteUtil.GenerateRandomByteArray(32).ToString()
-                    ).PeerId), MessageTypes.Request, 
+            _dto = new DtoFactory().GetDto(new PingRequest(),
                 PeerIdentifierHelper.GetPeerIdentifier("recipient"), 
                 PeerIdentifierHelper.GetPeerIdentifier("sender")
             );
@@ -76,7 +70,7 @@ namespace Catalyst.Common.UnitTests.IO.Handlers
 
             var protocolMessageSignHandler = new ProtocolMessageSignHandler(_keySigner);
 
-            protocolMessageSignHandler.WriteAsync(_fakeContext, _protocolMessage);
+            protocolMessageSignHandler.WriteAsync(_fakeContext, _dto);
             
             _fakeContext.DidNotReceiveWithAnyArgs().WriteAndFlushAsync(new object());
             _fakeContext.ReceivedWithAnyArgs().WriteAsync(new object());

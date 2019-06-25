@@ -24,18 +24,13 @@
 using System;
 using System.IO;
 using System.Text;
-using Catalyst.Common.Config;
-using Catalyst.Common.Extensions;
 using Catalyst.Common.FileTransfer;
 using Catalyst.Common.Interfaces.Cli.Options;
 using Catalyst.Common.Interfaces.FileTransfer;
 using Catalyst.Common.Interfaces.Rpc;
-using Catalyst.Common.IO.Messaging;
-using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.P2P;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
-using Serilog.Events;
 
 namespace Catalyst.Cli.Commands
 {
@@ -79,20 +74,19 @@ namespace Catalyst.Cli.Commands
                 request.FileSize = (ulong) fileStream.Length;
             }
             
-            var requestMessage = _protocolMessageFactory.GetMessage(new MessageDto(
-                message: request,
-                messageTypes: MessageTypes.Request,
-                recipient: nodePeerIdentifier,
-                sender: _peerIdentifier
-            ));
+            var requestMessage = _dtoFactory.GetDto(
+                request,
+                nodePeerIdentifier,
+                _peerIdentifier
+            );
 
             IUploadFileInformation fileTransfer = new UploadFileTransferInformation(
                 File.Open(opts.File, FileMode.Open),
                 _peerIdentifier,
                 nodePeerIdentifier,
                 node.Channel,
-                requestMessage.CorrelationId.ToGuid(),
-                _protocolMessageFactory);
+                requestMessage.CorrelationId,
+                _dtoFactory);
 
             _uploadFileTransferFactory.RegisterTransfer(fileTransfer);
 
