@@ -21,24 +21,18 @@
 
 #endregion
 
-using System;
-using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
-using Catalyst.Common.FileSystem;
 using Catalyst.Common.Interfaces.FileSystem;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Observables;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Rpc;
-using Catalyst.Common.IO.Messaging;
-using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.IO.Observables;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using Google.Protobuf;
-using Microsoft.Extensions.Configuration;
-using Newtonsoft.Json;
+using System;
 using ILogger = Serilog.ILogger;
 
 namespace Catalyst.Node.Core.RPC.Observables
@@ -60,13 +54,13 @@ namespace Catalyst.Node.Core.RPC.Observables
         public override IMessage HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto)
         {
             Logger.Debug("received message of type SetPeerDataFolderRequest");
-            
+
             try
             {
                 var deserialised = messageDto.Payload.FromProtocolMessage<SetPeerDataFolderRequest>();
-                
+
                 Guard.Argument(deserialised).NotNull();
-                
+
                 Logger.Debug("message content is {0}", deserialised);
 
                 return new GetPeerDataFolderResponse

@@ -26,6 +26,7 @@ using System.IO;
 using System.IO.Abstractions;
 using System.Threading.Tasks;
 using Catalyst.Common.Config;
+//using DirectoryInfoStandard = System.IO.DirectoryInfo;
 using IFileSystem = Catalyst.Common.Interfaces.FileSystem.IFileSystem;
 using ILogger = Serilog.ILogger;
 
@@ -36,47 +37,58 @@ namespace Catalyst.Common.FileSystem
         : System.IO.Abstractions.FileSystem,
             IFileSystem
     {
-        private string _currentPath;
+        private string _currentDataDirPointer;
         private readonly ILogger _logger;
+        private bool _dataDirValid = true;
+        private string _dataDir;
+        public string DataDir { get { return this._dataDir; } set { _dataDir = value; } }
+        public static string FilePointerBaseLocation => Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
 
-        private string _configPointerFilePath => Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) 
-           + Constants.ConfigFilePointer;
-
-        private bool _checkConfigPointerFile = false;
+        private bool _checkDataDirPointerFile = false;
         public FileSystem()
         {
-            _currentPath = string.Empty;
+            _currentDataDirPointer = string.Empty;
         }
 
-        public FileSystem(bool checkConfigPointerFile, ILogger logger)
+        public FileSystem(bool checkDataDirPointerFile, ILogger logger, string configFilePointer = "", string configDataDir = "\\.Catalyst")
         {
-            if (checkConfigPointerFile)
+            if (checkDataDirPointerFile)
             {
-                if (!System.IO.File.Exists(_configPointerFilePath))
-                {
-                    using (System.IO.File.CreateText(_configPointerFilePath)) { }
+                DataDir = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + configDataDir;
 
-                    CreateConfigPointerFile(_configPointerFilePath);
+                _currentDataDirPointer = configFilePointer == string.Empty ? GetUserHomeDir() + Constants.ConfigFilePointer : configFilePointer;
+
+                if (!new DirectoryInfo(DataDir).Exists)
+                {
+                    if (CreateDataDirectory(DataDir))
+                    {
+                        CreateConfigPointerFile(DataDir, configFilePointer);
+                    }
+                }
+                else
+                {
+                    _currentDataDirPointer = ReadConfigFilePointer();
                 }
                 _logger = logger;
             }
-            _checkConfigPointerFile = checkConfigPointerFile;
+            _checkDataDirPointerFile = checkDataDirPointerFile;
         }
 
         public DirectoryInfo GetCatalystDataDir()
         {
-            if (_checkConfigPointerFile) _currentPath = GetHiddenCatalystDataDir();
-
             var path = Path.Combine(GetUserHomeDir(), Constants.CatalystDataDir);
 
-            return new DirectoryInfo(_currentPath == string.Empty ? path : _currentPath);
+            return new DirectoryInfo(_dataDirValid && string.IsNullOrEmpty(DataDir) == false ? DataDir : path);
         }
 
         public bool SetCurrentPath(string path)
         {
             if (new DirectoryInfo(path).Exists)
             {
-                _currentPath = path;
+                SaveConfigPointerFile(path, _currentDataDirPointer);
+
+                _dataDir = path;
+
                 return true;
             }
             return false;
@@ -103,10 +115,10 @@ namespace Catalyst.Common.FileSystem
         private string GetHiddenCatalystDataDir()
         {
             try
-            {   
-                using (var sr = new StreamReader(_configPointerFilePath))
+            {
+                using (var sr = new StreamReader(DataDir))
                 {
-                   return sr.ReadToEnd();
+                    return sr.ReadToEnd();
                 }
             }
             catch (Exception e)
@@ -121,13 +133,51 @@ namespace Catalyst.Common.FileSystem
             return Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
         }
 
-        private static void CreateConfigPointerFile(string path)
+        private static void CreateConfigPointerFile(string configDirLocation, string configFilePointer)
         {
-            using (StreamWriter writer = new StreamWriter(path))
+            using (System.IO.File.Create(configFilePointer)) { }
+
+            SaveConfigPointerFile(configDirLocation, configFilePointer);
+        }
+
+        private static void SaveConfigPointerFile(string configDirLocation, string configFilePointer)
+        {
+            using (StreamWriter writer = new StreamWriter(configFilePointer))
             {
-                var contents = GetUserHomeDir() + Constants.CatalystDataDir;
-                writer.Write(contents);
+                writer.Write(configDirLocation);
             }
         }
+
+        private bool CreateDataDirectory(string path)
+        {
+            _dataDirValid = true;
+            try
+            {
+                System.IO.Directory.CreateDirectory(path);
+            }
+            catch (Exception ex)
+            {
+                _dataDirValid = false;
+            }
+            return _dataDirValid;
+        }
+        private string ReadConfigFilePointer()
+        {
+            string ln = string.Empty;
+            try
+            {
+                using (StreamReader file = new StreamReader(_currentDataDirPointer))
+                {
+                    ln = file.ReadLine();
+                    file.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex.ToString());
+            }
+            return ln;
+        }
+    
     }
 }
