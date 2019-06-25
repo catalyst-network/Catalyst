@@ -76,7 +76,8 @@ namespace Catalyst.Common.UnitTests.IO.Messaging
                 {
                     requests.ForEach(r => messageCorrelationCacheManager.AddPendingRequest(r));
 
-                    await Task.Delay(ttl.Add(TimeSpan.FromMilliseconds(ttl.TotalMilliseconds * 0.2)));
+                    await Task.Delay(ttl.Add(TimeSpan.FromMilliseconds(ttl.TotalMilliseconds * 0.2)))
+                       .ConfigureAwait(false);
                     await Task.Yield();
 
                     foreach (var response in responses)
