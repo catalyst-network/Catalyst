@@ -27,7 +27,6 @@ using System.Reactive.Subjects;
 using System.Threading;
 using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.IO.Messaging;
-using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Protocol.Common;
 using Dawn;
 using Microsoft.Extensions.Caching.Memory;
@@ -62,7 +61,8 @@ namespace Catalyst.Common.IO.Messaging
             //TODO: find a way to trigger the actual remove with correct reason
             //when the cache is not under pressure, eviction happens by token expiry :(
             //if (reason == EvictionReason.Removed) {return;}
-            _evictionEvent.OnNext(new MessageEvictionEvent((IPeerIdentifier) key, value));
+            var message = (CorrelatableMessage) value;
+            _evictionEvent.OnNext(new MessageEvictionEvent(message));
         }
         
         public void AddPendingRequest(CorrelatableMessage correlatableMessage)
@@ -83,7 +83,7 @@ namespace Catalyst.Common.IO.Messaging
             return _pendingRequests.TryGetValue(response.CorrelationId, out _);
         }
         
-        private void Dispose(bool disposing)
+        protected void Dispose(bool disposing)
         {
             if (!disposing)
             {

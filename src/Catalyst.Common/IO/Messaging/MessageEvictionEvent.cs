@@ -31,10 +31,10 @@ namespace Catalyst.Common.IO.Messaging
         public object EvictedContent { get; }
         public IPeerIdentifier PeerIdentifier { get; }
         
-        public MessageEvictionEvent(IPeerIdentifier peerIdentifier, object payload)
+        public MessageEvictionEvent(CorrelatableMessage correlatableMessage)
         {
-            EvictedContent = payload;
-            PeerIdentifier = peerIdentifier;
+            EvictedContent = correlatableMessage.Content;
+            PeerIdentifier = correlatableMessage.Recipient;
         }
     }
 }
