@@ -57,7 +57,7 @@ namespace Catalyst.Node.Core.P2P.Observables
         {
             Logger.Debug("PeerNeighborsRequest Message Received");
 
-            var activePeersList = _repository.FindAll(new Specification<Peer>(p => p.IsAwolPeer == false)).ToList();
+            var activePeersList = _repository.FindAll(new Specification<Peer>(p => !p.IsAwolPeer)).ToList();
             Guard.Argument(activePeersList).MinCount(1);
 
             var peerNeighborsResponseMessage = new PeerNeighborsResponse();
