@@ -52,7 +52,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
         }
 
         [Fact]
-        public void Can_Validate_Peer_id_Format()
+        public void Can_Validate_PeerId_Format()
         {
             _peerIdValidator.ValidatePeerIdFormat(_validPeerId);
 
