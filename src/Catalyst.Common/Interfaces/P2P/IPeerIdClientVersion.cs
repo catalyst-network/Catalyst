@@ -33,7 +33,7 @@ namespace Catalyst.Common.Interfaces.P2P
         byte[] ClientId { get; }
 
         /// <summary>Gets the get assembly major version.</summary>
-        /// <value>The get assembly major version.</value>
-        byte[] GetAssemblyMajorVersion { get; }
+        /// <value>Gets assembly major version.</value>
+        byte[] AssemblyMajorVersion { get; }
     }
 }
