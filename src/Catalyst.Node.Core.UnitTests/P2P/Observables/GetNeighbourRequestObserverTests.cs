@@ -43,6 +43,7 @@ using Microsoft.Extensions.Configuration;
 using NSubstitute;
 using Serilog;
 using SharpRepository.Repository;
+using SharpRepository.Repository.Specifications;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -65,10 +66,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Observables
             IRepository<Peer, int> store)
         {
             store.Add(peer);
-            
-            // store.FindAll(new Specification<Peer>(p => p.IsAwolPeer == false))
-            
-            store.GetAll().Returns(peer);
+            store.FindAll(Arg.Any<Specification<Peer>>()).Returns(peer);
         }
         
         [Fact]
