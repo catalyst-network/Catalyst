@@ -25,4 +25,7 @@
         <DebugSymbols>False</DebugSymbols>
         <Optimize>true</Optimize>
     </PropertyGroup>
+    <ItemGroup>
+        <None Include="$(MSBuildThisFileDirectory)../LICENSE" PackagePath="" Pack="true" />
+    </ItemGroup>
 </Project>
