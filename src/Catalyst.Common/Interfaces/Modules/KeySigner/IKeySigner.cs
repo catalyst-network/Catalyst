@@ -43,6 +43,8 @@ namespace Catalyst.Common.Interfaces.Modules.KeySigner
         //ISignature Sign(byte[] data);
 
         ISignature Sign(byte[] data, string keyIdentifier);
+        
+        ISignature Sign(byte[] data);
 
         KeyValuePair<IPublicKey, ISignature> SignAndGetPublicKey(byte[] data, string keyIdentifier);
 
@@ -54,7 +56,5 @@ namespace Catalyst.Common.Interfaces.Modules.KeySigner
 
         /// <summary>Exports the key.</summary>
         void ExportKey();
-
-        IPublicKey PublicKey { get; }
     }
 }

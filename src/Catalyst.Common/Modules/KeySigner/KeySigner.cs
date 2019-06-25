@@ -38,8 +38,7 @@ namespace Catalyst.Common.Modules.KeySigner
         private readonly IKeyStore _keyStore;
         private readonly ICryptoContext _cryptoContext;
         private KeyRegistry _keyRegistry;
-        private IPrivateKey _defaultSigningKey;
-        private IPublicKey _defaultPublicKey;
+        private const string defaultKeyIdentifier = "blah";
 
         /// <summary>Initializes a new instance of the <see cref="KeySigner"/> class.</summary>
         /// <param name="keyStore">The key store.</param>
@@ -49,10 +48,27 @@ namespace Catalyst.Common.Modules.KeySigner
         {
             _keyStore = keyStore;
             _cryptoContext = cryptoContext;
+            InitialiseKeyRegistry();
+
+
         }
 
-        private const string defaultKeyIdentifier = "blah";
 
+        private void InitialiseKeyRegistry()
+        {
+            _keyRegistry = new KeyRegistry();
+            if (!TryPopulateKeyRegistry(defaultKeyIdentifier))
+            {
+                IPrivateKey privateKey = _cryptoContext.GeneratePrivateKey();
+                //note I'm using identifier in place of password, this needs to be changed
+                _keyStore.KeyStoreGenerateAsync(privateKey, defaultKeyIdentifier);
+            }
+
+            if (!TryPopulateKeyRegistry(defaultKeyIdentifier))
+            {
+                throw new SignatureException("");
+            }
+        }
         /// <inheritdoc/>
         IKeyStore IKeySigner.KeyStore => _keyStore;
 
@@ -63,6 +79,11 @@ namespace Catalyst.Common.Modules.KeySigner
         {
             var privateKey = _keyRegistry.GetItemFromRegistry(keyIdentifier);
             return Sign(data, privateKey);
+        }
+
+        public ISignature Sign(byte[] data)
+        {
+            return Sign(data, defaultKeyIdentifier);
         }
 
         public KeyValuePair<IPublicKey, ISignature> SignAndGetPublicKey(byte[] data, string keyIdentifier)
@@ -106,5 +127,7 @@ namespace Catalyst.Common.Modules.KeySigner
             var key = _keyStore.KeyStoreDecrypt(keyIdentifier);
             return key != null && _keyRegistry.AddItemToRegistry(keyIdentifier, key);
         }
+
+        
     }
 }

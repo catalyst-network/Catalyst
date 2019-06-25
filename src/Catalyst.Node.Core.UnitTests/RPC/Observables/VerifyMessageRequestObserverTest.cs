@@ -41,6 +41,7 @@ using NSubstitute;
 using Serilog;
 using Xunit;
 using Xunit.Abstractions;
+using Nethereum.Hex.HexConvertors.Extensions;
 
 namespace Catalyst.Node.Core.UnitTests.RPC.Observables
 {
@@ -87,8 +88,8 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
                 new VerifyMessageRequest
                 {
                     Message = RLP.EncodeElement(message.Trim('\"').ToBytesForRLPEncoding()).ToByteString(),
-                    PublicKey = publicKey.ToBytesForRLPEncoding().ToByteString(),
-                    Signature = signature.ToBytesForRLPEncoding().ToByteString()
+                    PublicKey = publicKey.HexToByteArray().ToByteString(),
+                    Signature = signature.HexToByteArray().ToByteString()
                 },
                 PeerIdentifierHelper.GetPeerIdentifier("sender_key"),
                 PeerIdentifierHelper.GetPeerIdentifier("recipient_key")
