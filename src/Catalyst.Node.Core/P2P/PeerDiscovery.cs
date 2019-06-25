@@ -70,7 +70,7 @@ namespace Catalyst.Node.Core.P2P
 
             Peers.TryAdd(Dns.GetSeedNodesFromDns(ParseDnsServersFromConfig(rootSection)).RandomElement());
 
-            var longRunningTasks = new[] {PeerCrawler()};
+            var longRunningTasks = new[] {PeerCrawlerAsync()};
             Task.WaitAll(longRunningTasks);
         }
 
@@ -126,7 +126,7 @@ namespace Catalyst.Node.Core.P2P
             var peerNeighborsResponse = messageDto.Payload.FromProtocolMessage<PeerNeighborsResponse>();
         }
 
-        private async Task PeerCrawler()
+        private async Task PeerCrawlerAsync()
         {
             if (Peers.Count != 0) return;
             try { }

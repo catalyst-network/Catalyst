@@ -36,10 +36,10 @@ namespace Catalyst.Common.FileTransfer
     public sealed class DownloadFileTransferFactory : BaseFileTransferFactory<IDownloadFileInformation>, IDownloadFileTransferFactory
     {
         /// <inheritdoc />
-        protected override async Task DoTransfer(IDownloadFileInformation fileTransferInformation)
+        protected override async Task DoTransferAsync(IDownloadFileInformation fileTransferInformation)
         {
             EnsureKeyExists(fileTransferInformation.CorrelationGuid);
-            await Download(fileTransferInformation).ConfigureAwait(false);
+            await DownloadAsync(fileTransferInformation).ConfigureAwait(false);
         }
 
         /// <inheritdoc />
@@ -66,7 +66,7 @@ namespace Catalyst.Common.FileTransfer
         /// <summary>Downloads the specified file transfer information.</summary>
         /// <param name="fileTransferInformation">The file transfer information.</param>
         /// <returns></returns>
-        private async Task Download(IDownloadFileInformation fileTransferInformation)
+        private async Task DownloadAsync(IDownloadFileInformation fileTransferInformation)
         {
             EnsureKeyExists(fileTransferInformation.CorrelationGuid);
             while (!fileTransferInformation.ChunkIndicatorsTrue() && !fileTransferInformation.IsExpired())

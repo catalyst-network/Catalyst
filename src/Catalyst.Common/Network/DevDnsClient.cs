@@ -45,15 +45,15 @@ namespace Catalyst.Common.Network
             _dnsQueryAnswerValues = configurationRoot.GetSection("QueryAnswerValues").GetChildren().Select(p => p.Value).ToArray();
         }
 
-        public async Task<IList<IDnsQueryResponse>> GetTxtRecords(IList<string> hostnames = null)
+        public async Task<IList<IDnsQueryResponse>> GetTxtRecordsAsync(IList<string> hostnames = null)
         {
-            var queries = _seedServers.Select(GetTxtRecords).ToArray();
+            var queries = _seedServers.Select(GetTxtRecordsAsync).ToArray();
             var responses = await Task.WhenAll(queries).ConfigureAwait(false);
 
             return responses.Where(c => c != null).ToList();
         }
 
-        public async Task<IDnsQueryResponse> GetTxtRecords(string hostname = "seed1.catalystnetwork.io")
+        public async Task<IDnsQueryResponse> GetTxtRecordsAsync(string hostname = "seed1.catalystnetwork.io")
         {
             var devDnsQueryResponse = new DevDnsQueryResponse
             {

@@ -66,7 +66,7 @@ namespace Catalyst.Common.UnitTests.Keystore
         {
             var catKey = _context.GeneratePrivateKey();
 
-            var json = _keystore.KeyStoreGenerate(catKey, "testPassword").GetAwaiter().GetResult();
+            var json = _keystore.KeyStoreGenerateAsync(catKey, "testPassword").GetAwaiter().GetResult();
             var key = _keystore.KeyStoreDecrypt("testPassword", json);
             Assert.Equal(catKey.Bytes.RawBytes.ToHex(), key.ToHex());
         }
