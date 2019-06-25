@@ -56,9 +56,7 @@ namespace Catalyst.Node.Core.P2P.Observables
         {
             Logger.Debug("PeerNeighborsRequest Message Received");
 
-            // @TODO can't mock FindAll return properly so just do GetAll and filter with linq for now
-            // var activePeersList = _repository.FindAll(new Specification<Peer>(p => p.IsAwolPeer == false));
-            var activePeersList = _repository.GetAll().Where(p => p.IsAwolPeer == false).ToList();
+            var activePeersList = _repository.FindAll(p => p.IsAwolPeer == false).ToList();
             Guard.Argument(activePeersList).MinCount(1);
 
             var peerNeighborsResponseMessage = new PeerNeighborsResponse();

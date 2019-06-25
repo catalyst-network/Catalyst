@@ -25,6 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Autofac;
@@ -65,10 +66,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Observables
             IRepository<Peer, int> store)
         {
             store.Add(peer);
-            
-            // store.FindAll(new Specification<Peer>(p => p.IsAwolPeer == false))
-            
-            store.GetAll().Returns(peer);
+            store.FindAll(Arg.Any<Expression<Func<Peer, bool>>>()).Returns(peer);
         }
         
         [Fact]
