@@ -29,13 +29,13 @@ using Catalyst.Cryptography.BulletProofs.Wrapper.Types;
 
 namespace Catalyst.Common.Cryptography
 {
-    public sealed class RustCryptoContext : ICryptoContext
+    public sealed class CryptoContext : ICryptoContext
     {
         private const int PublicKeyByteLength = 32;
 
         private readonly IWrapper _wrapper;
 
-        public RustCryptoContext(IWrapper wrapper)
+        public CryptoContext(IWrapper wrapper)
         {
             _wrapper = wrapper;
         }

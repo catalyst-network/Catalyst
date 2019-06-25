@@ -36,7 +36,7 @@ namespace Catalyst.Common.UnitTests.Cryptography
 {
     public sealed class CryptographyTests
     {
-        public CryptographyTests() { _context = new RustCryptoContext(new CryptoWrapper()); }
+        public CryptographyTests() { _context = new CryptoContext(new CryptoWrapper()); }
 
         private readonly ICryptoContext _context;
 
