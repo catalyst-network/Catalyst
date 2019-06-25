@@ -59,9 +59,7 @@ namespace Catalyst.Cli.Commands
                 DfsHash = opts.FileHash
             };
 
-            var recipient = new PeerIdentifier(
-                Encoding.ASCII.GetBytes(nodeConfig.PublicKey),
-                nodeConfig.HostAddress, nodeConfig.Port);
+            var recipient = PeerIdentifier.BuildPeerIdFromConfig(nodeConfig, _peerIdClientVersion);
             
             var messageDto = _dtoFactory.GetDto(message, 
                 recipient,

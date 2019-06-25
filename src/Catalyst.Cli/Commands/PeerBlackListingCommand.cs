@@ -71,8 +71,7 @@ namespace Catalyst.Cli.Commands
                         Blacklist = blackListFlag
                     },
                     _peerIdentifier,
-                    new PeerIdentifier(Encoding.ASCII.GetBytes(nodeConfig.PublicKey), nodeConfig.HostAddress,
-                        nodeConfig.Port)
+                    PeerIdentifier.BuildPeerIdFromConfig(nodeConfig, _peerIdClientVersion)
                 );
 
                 node.SendMessage(requestMessage);

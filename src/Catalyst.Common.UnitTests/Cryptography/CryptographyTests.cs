@@ -25,6 +25,7 @@ using System;
 using System.Text;
 using Catalyst.Common.Cryptography;
 using Catalyst.Common.Interfaces.Cryptography;
+using Catalyst.Cryptography.BulletProofs.Wrapper;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Exceptions;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Types;
@@ -35,7 +36,7 @@ namespace Catalyst.Common.UnitTests.Cryptography
 {
     public sealed class CryptographyTests
     {
-        public CryptographyTests() { _context = new RustCryptoContext(); }
+        public CryptographyTests() { _context = new RustCryptoContext(new CryptoWrapper()); }
 
         private readonly ICryptoContext _context;
 

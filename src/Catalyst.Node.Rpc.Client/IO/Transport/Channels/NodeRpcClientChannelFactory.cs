@@ -31,6 +31,7 @@ using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Transport.Channels;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
+using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Handlers;
 using Catalyst.Common.IO.Transport.Channels;
 using Catalyst.Protocol.Common;
@@ -43,11 +44,16 @@ namespace Catalyst.Node.Rpc.Client.IO.Transport.Channels
     {
         private readonly IKeySigner _keySigner;
         private readonly IMessageCorrelationManager _messageCorrelationCache;
+        private readonly IPeerIdValidator _peerIdValidator;
 
-        public NodeRpcClientChannelFactory(IKeySigner keySigner, IMessageCorrelationManager messageCorrelationCache, int backLogValue = 100) : base(backLogValue)
+        public NodeRpcClientChannelFactory(IKeySigner keySigner,
+            IMessageCorrelationManager messageCorrelationCache, 
+            IPeerIdValidator peerIdValidator, 
+            int backLogValue = 100) : base(backLogValue)
         {
             _keySigner = keySigner;
             _messageCorrelationCache = messageCorrelationCache;
+            _peerIdValidator = peerIdValidator;
         }
 
         protected override List<IChannelHandler> Handlers =>
@@ -57,6 +63,7 @@ namespace Catalyst.Node.Rpc.Client.IO.Transport.Channels
                 new ProtobufEncoder(),
                 new ProtobufVarint32FrameDecoder(),
                 new ProtobufDecoder(ProtocolMessageSigned.Parser),
+                new PeerIdValidationHandler(_peerIdValidator),
                 new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(new ProtocolMessageVerifyHandler(_keySigner), new ProtocolMessageSignHandler(_keySigner)),
                 new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(new CorrelationHandler(_messageCorrelationCache), new CorrelationHandler(_messageCorrelationCache)),
                 new ObservableServiceHandler()
@@ -72,7 +79,7 @@ namespace Catalyst.Node.Rpc.Client.IO.Transport.Channels
             X509Certificate2 certificate = null)
         {
             var channel = Bootstrap(eventLoopGroupFactory, targetAddress, targetPort, certificate);
-            
+
             var messageStream = channel.Pipeline.Get<IObservableServiceHandler>()?.MessageStream;
 
             return new ObservableChannel(messageStream

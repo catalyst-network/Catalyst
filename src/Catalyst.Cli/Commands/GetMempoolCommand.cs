@@ -56,11 +56,8 @@ namespace Catalyst.Cli.Commands
             {
                 var dto = _dtoFactory.GetDto(new GetMempoolRequest(),
                     _peerIdentifier,
-                    new PeerIdentifier(Encoding.ASCII.GetBytes(nodeConfig.PublicKey),
-                        nodeConfig.HostAddress,
-                        nodeConfig.Port)
-                );
-                
+                    PeerIdentifier.BuildPeerIdFromConfig(nodeConfig, _peerIdClientVersion));
+
                 node.SendMessage(dto);
             }
             catch (Exception e)

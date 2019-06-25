@@ -38,14 +38,17 @@ namespace Catalyst.Common.Network
     public sealed class DnsClient : IDns
     {
         private readonly ILookupClient _client;
+        private readonly IPeerIdValidator _peerIdValidator;
 
         /// <summary>
         /// </summary>
         /// <param name="client"></param>
-        public DnsClient(ILookupClient client)
+        /// <param name="peerIdValidator"></param>
+        public DnsClient(ILookupClient client, IPeerIdValidator peerIdValidator)
         {
             Guard.Argument(client, nameof(client)).NotNull();
             _client = client;
+            _peerIdValidator = peerIdValidator;
         }
 
         public async Task<IList<IDnsQueryResponse>> GetTxtRecordsAsync(IList<string> hostnames)
@@ -87,7 +90,10 @@ namespace Catalyst.Common.Network
                 answerSection.EscapedText.ToList().ForEach(hexPid =>
                 {
                     var peerChunks = hexPid.HexToUTF8String().Split("|");
-                    peers.Add(PeerIdentifier.ParseHexPeerIdentifier(peerChunks));
+                    _peerIdValidator.ValidateRawPidChunks(peerChunks);
+
+                    var peerIdentifier = PeerIdentifier.ParseHexPeerIdentifier(peerChunks);
+                    peers.Add(peerIdentifier);
                 });
         
                 Guard.Argument(peers).MinCount(1);

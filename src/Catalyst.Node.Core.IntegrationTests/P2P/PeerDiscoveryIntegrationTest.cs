@@ -67,7 +67,7 @@ namespace Catalyst.Node.Core.IntegrationTests.P2P
             _peerRepository = Substitute.For<IRepository<Peer>>();
             _logger = Substitute.For<ILogger>();
             _lookupClient = Substitute.For<ILookupClient>();
-            _dns = new Common.Network.DnsClient(_lookupClient);
+            _dns = new Common.Network.DnsClient(_lookupClient, Substitute.For<IPeerIdValidator>());
 
             _config = new ConfigurationBuilder()
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile))

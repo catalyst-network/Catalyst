@@ -86,6 +86,14 @@
             ]
         },
         {
+            "type": "Catalyst.Cryptography.BulletProofs.Wrapper.CryptoWrapper, Catalyst.Cryptography.BulletProofs.Wrapper",
+            "services": [
+                {
+                    "type": "Catalyst.Cryptography.BulletProofs.Wrapper.IWrapper, Catalyst.Cryptography.BulletProofs.Wrapper"
+                }
+            ]
+        },
+        {
             "type": "Catalyst.Common.Keystore.KeyStoreServiceWrapped, Catalyst.Common",
             "services": [
                 {
@@ -272,6 +280,25 @@
                 }
             ],
             "instanceScope": "singleinstance"
+        },
+        {
+            "type": "Catalyst.Common.P2P.PeerIdValidator, Catalyst.Common",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.P2P.IPeerIdValidator, Catalyst.Common"
+                }
+            ]
+        },
+        {
+            "type": "Catalyst.Common.P2P.PeerIdClientVersion, Catalyst.Common",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.P2P.IPeerIdClientVersion, Catalyst.Common"
+                }
+            ],
+            "parameters": {
+                "clientId": "AC" 
+            }
         }
     ]
 }

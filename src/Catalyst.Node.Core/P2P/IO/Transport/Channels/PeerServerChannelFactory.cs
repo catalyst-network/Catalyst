@@ -31,6 +31,7 @@ using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Transport.Channels;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
+using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.Messaging.Broadcast;
 using Catalyst.Common.IO.Handlers;
 using Catalyst.Common.IO.Transport.Channels;
@@ -44,18 +45,21 @@ namespace Catalyst.Node.Core.P2P.IO.Transport.Channels
         private readonly IMessageCorrelationManager _messageCorrelationManager;
         private readonly IBroadcastManager _broadcastManager;
         private readonly IKeySigner _keySigner;
+        private readonly IPeerIdValidator _peerIdValidator;
 
-        public PeerServerChannelFactory(IMessageCorrelationManager messageCorrelationManager, IBroadcastManager broadcastManager, IKeySigner keySigner)
+        public PeerServerChannelFactory(IMessageCorrelationManager messageCorrelationManager, IBroadcastManager broadcastManager, IKeySigner keySigner, IPeerIdValidator peerIdValidator)
         {
             _messageCorrelationManager = messageCorrelationManager;
             _broadcastManager = broadcastManager;
             _keySigner = keySigner;
+            _peerIdValidator = peerIdValidator;
         }
 
         protected override List<IChannelHandler> Handlers => 
             new List<IChannelHandler>
             {
                 new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(new ProtoDatagramDecoderHandler(), new ProtoDatagramEncoderHandler()),
+                new PeerIdValidationHandler(_peerIdValidator),
                 new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(new ProtocolMessageVerifyHandler(_keySigner), new ProtocolMessageSignHandler(_keySigner)),
                 new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(new CorrelationHandler(_messageCorrelationManager), new CorrelatableHandler(_messageCorrelationManager)),
                 new BroadcastHandler(_broadcastManager),

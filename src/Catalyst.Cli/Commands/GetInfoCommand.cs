@@ -48,7 +48,7 @@ namespace Catalyst.Cli.Commands
                 _logger.Error(e.Message);
                 return false;
             }
-            
+
             var nodeConfig = GetNodeConfig(opts.NodeId);
             Guard.Argument(nodeConfig, nameof(nodeConfig)).NotNull("The node configuration cannot be null");
 
@@ -58,11 +58,10 @@ namespace Catalyst.Cli.Commands
                 {
                     Query = true
                 };
-                
+
                 var request = _dtoFactory.GetDto(message,
                     _peerIdentifier,
-                    new PeerIdentifier(Encoding.ASCII.GetBytes(nodeConfig.PublicKey), nodeConfig.HostAddress, nodeConfig.Port)
-                );
+                    PeerIdentifier.BuildPeerIdFromConfig(nodeConfig, _peerIdClientVersion));
 
                 node.SendMessage(request);
             }
