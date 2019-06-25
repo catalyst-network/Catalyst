@@ -48,27 +48,27 @@ namespace Catalyst.Common.Network
             _client = client;
         }
 
-        public async Task<IList<IDnsQueryResponse>> GetTxtRecords(IList<string> hostnames)
+        public async Task<IList<IDnsQueryResponse>> GetTxtRecordsAsync(IList<string> hostnames)
         {
             Guard.Argument(hostnames, nameof(hostnames))
                .NotNull()
                .NotEmpty()
                .DoesNotContainNull();
 
-            var queries = hostnames.Select(GetTxtRecords).ToArray();
+            var queries = hostnames.Select(GetTxtRecordsAsync).ToArray();
             var responses = await Task.WhenAll(queries);
 
             return responses.Where(c => c != null).ToList();
         }
 
-        public async Task<IDnsQueryResponse> GetTxtRecords(string hostname)
+        public async Task<IDnsQueryResponse> GetTxtRecordsAsync(string hostname)
         {
             Guard.Argument(hostname, nameof(hostname))
                .NotNull()
                .NotEmpty()
                .NotWhiteSpace();
 
-            return await Query(hostname, QueryType.TXT).ConfigureAwait(false);
+            return await QueryAsync(hostname, QueryType.TXT).ConfigureAwait(false);
         }
         
         /// <inheritdoc />
@@ -80,7 +80,7 @@ namespace Catalyst.Common.Network
             var peers = new List<IPeerIdentifier>();
             seedServers.ToList().ForEach(async seedServer =>
             {
-                var dnsQueryAnswer = await GetTxtRecords(seedServer).ConfigureAwait(false);
+                var dnsQueryAnswer = await GetTxtRecordsAsync(seedServer).ConfigureAwait(false);
                 var answerSection = (TxtRecord) dnsQueryAnswer.Answers.FirstOrDefault();
         
                 Guard.Argument(answerSection.EscapedText).NotNull().Count(1);        
@@ -95,7 +95,7 @@ namespace Catalyst.Common.Network
             return peers;
         }
 
-        private async Task<IDnsQueryResponse> Query(string hostname, QueryType type)
+        private async Task<IDnsQueryResponse> QueryAsync(string hostname, QueryType type)
         {
             Guard.Argument(hostname, nameof(hostname))
                .NotNull()

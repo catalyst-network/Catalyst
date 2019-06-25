@@ -51,7 +51,7 @@ namespace Catalyst.Node.Rpc.Client.IO.Transport.Channels
         }
 
         protected override List<IChannelHandler> Handlers =>
-            _handlers ?? (_handlers = new List<IChannelHandler>
+            new List<IChannelHandler>
             {
                 new ProtobufVarint32LengthFieldPrepender(),
                 new ProtobufEncoder(),
@@ -60,7 +60,7 @@ namespace Catalyst.Node.Rpc.Client.IO.Transport.Channels
                 new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(new ProtocolMessageVerifyHandler(_keySigner), new ProtocolMessageSignHandler(_keySigner)),
                 new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(new CorrelationHandler(_messageCorrelationCache), new CorrelationHandler(_messageCorrelationCache)),
                 new ObservableServiceHandler()
-            });
+            };
 
         /// <param name="eventLoopGroupFactory"></param>
         /// <param name="targetAddress">Ignored</param>

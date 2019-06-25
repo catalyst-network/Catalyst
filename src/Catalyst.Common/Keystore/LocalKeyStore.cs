@@ -138,7 +138,7 @@ namespace Catalyst.Common.Keystore
             throw new AuthenticationException("Password incorrect for keystore.");
         }
         
-        public async Task<string> KeyStoreGenerate(IPrivateKey privateKey, string password)
+        public async Task<string> KeyStoreGenerateAsync(IPrivateKey privateKey, string password)
         {
             var address = _addressHelper.GenerateAddress(privateKey.GetPublicKey());
             
@@ -149,7 +149,7 @@ namespace Catalyst.Common.Keystore
             
             try
             {
-                await _fileSystem.WriteFileToCdd(_keyStoreService.GenerateUTCFileName(address), json);
+                await _fileSystem.WriteFileToCddAsync(_keyStoreService.GenerateUTCFileName(address), json);
             }
             catch (Exception e)
             {

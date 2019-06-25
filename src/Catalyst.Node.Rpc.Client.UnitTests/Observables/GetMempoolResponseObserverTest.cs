@@ -119,7 +119,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.Observables
             _observer = new GetMempoolResponseObserver(_output, _logger);
             _observer.StartObserving(messageStream);
 
-            await messageStream.WaitForEndOfDelayedStreamOnTaskPoolScheduler();
+            await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
 
             _output.Received(txList.Count).WriteLine(Arg.Any<string>());
         }

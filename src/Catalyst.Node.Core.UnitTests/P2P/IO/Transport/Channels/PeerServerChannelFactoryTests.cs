@@ -51,12 +51,17 @@ namespace Catalyst.Node.Core.UnitTests.P2P.IO.Transport.Channels
     {
         private sealed class TestPeerServerChannelFactory : PeerServerChannelFactory
         {
+            private readonly List<IChannelHandler> _handlers;
+
             public TestPeerServerChannelFactory(IMessageCorrelationManager correlationManager,
                 IBroadcastManager gossipManager,
                 IKeySigner keySigner)
-                : base(correlationManager, gossipManager, keySigner) { }
+                : base(correlationManager, gossipManager, keySigner)
+            {
+                _handlers = Handlers;
+            }
 
-            public IReadOnlyCollection<IChannelHandler> InheritedHandlers => Handlers;
+            public IReadOnlyCollection<IChannelHandler> InheritedHandlers => _handlers;
         }
 
         private readonly IMessageCorrelationManager _correlationManager;
@@ -125,7 +130,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.IO.Transport.Channels
                 await _gossipManager.DidNotReceiveWithAnyArgs().BroadcastAsync(null);
                 _keySigner.ReceivedWithAnyArgs(1).Verify(null, null, null);
 
-                await messageStream.WaitForItemsOnDelayedStreamOnTaskPoolScheduler();
+                await messageStream.WaitForItemsOnDelayedStreamOnTaskPoolSchedulerAsync();
 
                 observer.Received.Count.Should().Be(1);
                 observer.Received.Single().Payload.CorrelationId.ToGuid().Should().Be(correlationId);

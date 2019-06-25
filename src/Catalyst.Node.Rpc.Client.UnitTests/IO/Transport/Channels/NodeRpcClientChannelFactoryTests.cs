@@ -49,10 +49,15 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Transport.Channels
     {
         public sealed class TestNodeRpcClientChannelFactory : NodeRpcClientChannelFactory
         {
-            public TestNodeRpcClientChannelFactory(IKeySigner keySigner, IMessageCorrelationManager correlationManager)
-                : base(keySigner, correlationManager) { }
+            private readonly List<IChannelHandler> _handlers;
 
-            public IReadOnlyCollection<IChannelHandler> InheritedHandlers => Handlers;
+            public TestNodeRpcClientChannelFactory(IKeySigner keySigner, IMessageCorrelationManager correlationManager)
+                : base(keySigner, correlationManager)
+            {
+                _handlers = Handlers;
+            }
+
+            public IReadOnlyCollection<IChannelHandler> InheritedHandlers => _handlers;
         }
 
         private readonly IMessageCorrelationManager _correlationManager;
@@ -110,7 +115,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Transport.Channels
 
                 _keySigner.DidNotReceiveWithAnyArgs().Verify(null, null, null);
 
-                await messageStream.WaitForItemsOnDelayedStreamOnTaskPoolScheduler();
+                await messageStream.WaitForItemsOnDelayedStreamOnTaskPoolSchedulerAsync();
 
                 observer.Received.Count.Should().Be(1);
                 observer.Received.Single().Payload.CorrelationId.ToGuid().Should().Be(correlationId);

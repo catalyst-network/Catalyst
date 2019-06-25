@@ -34,13 +34,13 @@ namespace Catalyst.Common.Interfaces.Network
         /// </summary>
         /// <param name="hostnames"></param>
         /// <returns></returns>
-        Task<IList<IDnsQueryResponse>> GetTxtRecords(IList<string> hostnames);
+        Task<IList<IDnsQueryResponse>> GetTxtRecordsAsync(IList<string> hostnames);
 
         /// <summary>
         /// </summary>
         /// <param name="hostname"></param>
         /// <returns></returns>
-        Task<IDnsQueryResponse> GetTxtRecords(string hostname);
+        Task<IDnsQueryResponse> GetTxtRecordsAsync(string hostname);
 
         /// <summary>
         ///     Returns a list of seed nodes from TXT records
