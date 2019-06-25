@@ -21,17 +21,12 @@
 
 #endregion
 
-using System.Threading.Tasks;
-using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
+using System.Collections.Generic;
 
-namespace Catalyst.Common.Interfaces.Keystore
+namespace Catalyst.Common.Interfaces.Registry
 {
-    public interface IKeyStore
+    public interface IRegistryBase<T, K>
     {
-        byte[] KeyStoreDecrypt(string password, string json);
-
-        IPrivateKey KeyStoreDecrypt(string identifier);
-
-        Task<string> KeyStoreGenerate(IPrivateKey privateKey, string password);
+        IDictionary<T, K> Registry { get; }
     }
 }

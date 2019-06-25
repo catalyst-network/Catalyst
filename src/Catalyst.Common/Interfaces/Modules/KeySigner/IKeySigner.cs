@@ -21,6 +21,7 @@
 
 #endregion
 
+using System.Collections.Generic;
 using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Common.Interfaces.Keystore;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
@@ -39,7 +40,13 @@ namespace Catalyst.Common.Interfaces.Modules.KeySigner
         /// </summary>
         ICryptoContext CryptoContext { get; }
 
-        ISignature Sign(byte[] data);
+        //ISignature Sign(byte[] data);
+
+        ISignature Sign(byte[] data, string keyIdentifier);
+
+        KeyValuePair<IPublicKey, ISignature> SignAndGetPublicKey(byte[] data, string keyIdentifier);
+
+        KeyValuePair<IPublicKey, ISignature> SignAndGetPublicKey(byte[] data);
 
         /// <summary>Verifies a message signature.</summary>
         /// <returns></returns>

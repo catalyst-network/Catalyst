@@ -64,11 +64,12 @@ namespace Catalyst.Node.Core.RPC.Observables
 
                 string decodedMessage = deserialised.Message.ToString(Encoding.UTF8);
 
-                var signature = _keySigner.Sign(Encoding.UTF8.GetBytes(decodedMessage));
+                var signaturePublicKeyPair = _keySigner.SignAndGetPublicKey(Encoding.UTF8.GetBytes(decodedMessage));
+                
+                var publicKey = signaturePublicKeyPair.Key;
+                var signature = signaturePublicKeyPair.Value;
 
                 Guard.Argument(signature).NotNull("Failed to sign message. The signature cannot be null.");
-
-                var publicKey = _keySigner.PublicKey;
 
                 Guard.Argument(publicKey).NotNull("Failed to get the public key.  Public key cannot be null.");
 

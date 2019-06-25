@@ -84,8 +84,33 @@ namespace Catalyst.Common.Keystore
             _keyStoreService = keyStoreService;
             _fileSystem = fileSystem;
         }
-        
-        public byte[] KeyStoreDecrypt(string password, string json)
+
+        public IPrivateKey KeyStoreDecrypt(string identifier)
+        {
+            string password = " password retrieval not implemented yet";
+            string filename = FilenameFromIdentifier(identifier);
+            
+            try
+            {
+                var keyBytes = _keyStoreService.DecryptKeyStoreFromJson(identifier, filename);
+                    
+                if (keyBytes != null && keyBytes.Length > 0)
+                {
+                    return new PrivateKey(keyBytes);
+                }
+            }
+            catch (DecryptionException)
+            {
+                _logger.Error("Error decrypting keystore");
+            }
+
+            return null;
+        }
+
+        private string FilenameFromIdentifier(string identifier) { return identifier; }
+
+        //need to change so keystore uses identifier to retrieve password
+        public byte[] KeyStoreDecrypt(string identifier, string json)
         {
             var tries = 0;
 

@@ -22,10 +22,13 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Common.Interfaces.Keystore;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
+using Catalyst.Common.Interfaces.Registry;
+using Catalyst.Cryptography.BulletProofs.Wrapper.Exceptions;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Types;
 
 namespace Catalyst.Common.Modules.KeySigner
@@ -34,6 +37,7 @@ namespace Catalyst.Common.Modules.KeySigner
     {
         private readonly IKeyStore _keyStore;
         private readonly ICryptoContext _cryptoContext;
+        private KeyRegistry _keyRegistry;
         private IPrivateKey _defaultSigningKey;
         private IPublicKey _defaultPublicKey;
 
@@ -45,8 +49,9 @@ namespace Catalyst.Common.Modules.KeySigner
         {
             _keyStore = keyStore;
             _cryptoContext = cryptoContext;
-            InitDefaultKeys();
         }
+
+        private const string defaultKeyIdentifier = "blah";
 
         /// <inheritdoc/>
         IKeyStore IKeySigner.KeyStore => _keyStore;
@@ -54,12 +59,34 @@ namespace Catalyst.Common.Modules.KeySigner
         /// <inheritdoc/>
         ICryptoContext IKeySigner.CryptoContext => _cryptoContext;
 
-        IPublicKey IKeySigner.PublicKey => _defaultPublicKey;
-
-        /// <inheritdoc/>
-        public ISignature Sign(byte[] data)
+        public ISignature Sign(byte[] data, string keyIdentifier = defaultKeyIdentifier)
         {
-            return _cryptoContext.Sign(_defaultSigningKey, new ReadOnlySpan<byte>(data));
+            var privateKey = _keyRegistry.GetItemFromRegistry(keyIdentifier);
+            return Sign(data, privateKey);
+        }
+
+        public KeyValuePair<IPublicKey, ISignature> SignAndGetPublicKey(byte[] data, string keyIdentifier)
+        {
+            var privateKey = _keyRegistry.GetItemFromRegistry(keyIdentifier);
+            var signature = Sign(data, privateKey);
+            var publicKey = _cryptoContext.GetPublicKey(privateKey);
+            return new KeyValuePair<IPublicKey, ISignature>(publicKey, signature);
+        }
+
+        public KeyValuePair<IPublicKey, ISignature> SignAndGetPublicKey(byte[] data)
+        {
+            return SignAndGetPublicKey(data, defaultKeyIdentifier);
+        }
+
+
+        private ISignature Sign(byte[] data, IPrivateKey privateKey)
+        {
+            if (privateKey != null)
+            {
+                return _cryptoContext.Sign(privateKey, data);
+            }
+
+            throw new SignatureException("The specified key could not be used to create a signature");
         }
 
         /// <inheritdoc/>
@@ -74,21 +101,10 @@ namespace Catalyst.Common.Modules.KeySigner
             throw new NotImplementedException();
         }
 
-        private void InitDefaultKeys()
+        private bool TryPopulateKeyRegistry(string keyIdentifier)
         {
-            var key = _keyStore.GetDefaultKey();
-            if (key != null)
-            {
-                _defaultSigningKey = key;
-            }
-            else
-            {
-                var privateKey = _cryptoContext.GeneratePrivateKey();
-                _keyStore.KeyStoreGenerate(privateKey, "temp password");
-                _defaultSigningKey = _keyStore.GetDefaultKey();
-            }
-            
-            _defaultPublicKey = _cryptoContext.GetPublicKey(key);
+            var key = _keyStore.KeyStoreDecrypt(keyIdentifier);
+            return key != null && _keyRegistry.AddItemToRegistry(keyIdentifier, key);
         }
     }
 }
