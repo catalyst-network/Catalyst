@@ -45,7 +45,7 @@ namespace Catalyst.Common.UnitTests.IO.Handlers
             _peerIdValidationHandler = new PeerIdValidationHandler(_peerIdValidator);
             _message = new ProtocolMessageSigned
             {
-                Message = new ProtocolMessage() {PeerId = PeerIdHelper.GetPeerId("Test")}
+                Message = new ProtocolMessage {PeerId = PeerIdHelper.GetPeerId("Test")}
             };
         }
 
