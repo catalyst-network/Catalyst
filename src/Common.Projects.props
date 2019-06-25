@@ -2,7 +2,7 @@
     <PropertyGroup>
         <Company>AtlasCity.io</Company>
         <Copyright>Copyright © 2019 AtlasCity.io</Copyright>
-        <PackageLicenseUrl>https://github.com/catalyst-network/Catalyst.Node/blob/develop/LICENSE</PackageLicenseUrl>
+        <PackageLicenseUrl>https://github.com/catalyst-network/Catalyst.Node/blob/master/LICENSE</PackageLicenseUrl>
         <PackageProjectUrl>https://github.com/catalyst-network/Catalyst.Node</PackageProjectUrl>
         <RepositoryUrl>https://github.com/catalyst-network/Catalyst.Node</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
