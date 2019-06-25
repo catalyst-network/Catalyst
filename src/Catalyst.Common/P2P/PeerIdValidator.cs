@@ -49,8 +49,9 @@ namespace Catalyst.Common.P2P
         /// <inheritdoc cref="IPeerIdValidator"/>
         public bool ValidatePeerIdFormat(PeerId peerId)
         {
+            var publicKeyLength = _cryptoContext.GetPublicKeyByteLength();
             Guard.Argument(peerId, nameof(peerId)).NotNull()
-               .Require(p => p.PublicKey.Length == _cryptoContext.GetPublicKeyByteLength(), _ => $"PublicKey should be {_cryptoContext.GetPublicKeyByteLength()} bytes")
+               .Require(p => p.PublicKey.Length == publicKeyLength, _ => $"PublicKey should be {publicKeyLength} bytes")
                .Require(p => p.Ip.Length == 16 && ValidateIp(p.Ip.ToByteArray()), _ => "Ip should be 16 bytes")
                .Require(p => ValidatePort(p.Port.ToByteArray()), _ => "Port should be between 1025 and 65535")
                .Require(p => ValidateClientId(p.ClientId.ToByteArray()),
