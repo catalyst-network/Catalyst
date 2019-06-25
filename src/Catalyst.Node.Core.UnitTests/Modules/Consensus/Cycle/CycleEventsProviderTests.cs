@@ -127,16 +127,17 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Consensus.Cycle
                         ? fullCycleOffset + phaseTimings.Offset + phaseTimings.ProductionTime
                         : fullCycleOffset + phaseTimings.Offset + phaseTimings.TotalTime;
 
-                var _ = Environment.NewLine;
+                var nl = Environment.NewLine;
                 timeDiff.TotalSeconds.Should()
                    .BeApproximately(expectedDiff.TotalSeconds, 0.0001d,
-                        $"{_}{phases[i]}" +
-                        $"{_}{nameof(timeDiff)}: {timeDiff}" +
-                        $"{_}{nameof(fullCycleOffset)}: {fullCycleOffset}" +
-                        $"{_}{nameof(phaseTimings.Offset)}: {phaseTimings.Offset}" +
-                        $"{_}{nameof(phaseTimings.ProductionTime)}: {phaseTimings.ProductionTime}" +
-                        $"{_}{nameof(phaseTimings.CollectionTime)}: {phaseTimings.CollectionTime}" +
-                        $"{_}");
+                        $"phase details are " +
+                        $"{nl}{phases[i]}" +
+                        $"{nl}{nameof(timeDiff)}: {timeDiff}" +
+                        $"{nl}{nameof(fullCycleOffset)}: {fullCycleOffset}" +
+                        $"{nl}{nameof(phaseTimings.Offset)}: {phaseTimings.Offset}" +
+                        $"{nl}{nameof(phaseTimings.ProductionTime)}: {phaseTimings.ProductionTime}" +
+                        $"{nl}{nameof(phaseTimings.CollectionTime)}: {phaseTimings.CollectionTime}" +
+                        $"{nl}");
             }
         }
 
