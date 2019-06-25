@@ -44,7 +44,7 @@ namespace Catalyst.Common.UnitTests.Keystore
 
         public LocalKeyStoreTests(ITestOutputHelper output) : base(output)
         {
-            _context = new RustCryptoContext(new CryptoWrapper());
+            _context = new CryptoContext(new CryptoWrapper());
 
             var logger = Substitute.For<ILogger>();
             var passwordReader = new TestPasswordReader("testPassword");
