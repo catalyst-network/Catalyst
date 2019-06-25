@@ -86,7 +86,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.Observables
             _observer = new VerifyMessageResponseObserver(_output, _logger);
             _observer.StartObserving(messageStream);
 
-            await messageStream.WaitForEndOfDelayedStreamOnTaskPoolScheduler();
+            await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
 
             _output.Received(1).WriteLine(isSignedByNode.ToString());
         }

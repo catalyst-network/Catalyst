@@ -30,6 +30,6 @@ namespace Catalyst.Common.Interfaces.Keystore
     {
         byte[] KeyStoreDecrypt(string password, string json);
 
-        Task<string> KeyStoreGenerate(IPrivateKey privateKey, string password);
+        Task<string> KeyStoreGenerateAsync(IPrivateKey privateKey, string password);
     }
 }

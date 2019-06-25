@@ -124,7 +124,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC.IO.Transport.Channels
 
                 _keySigner.DidNotReceiveWithAnyArgs().Verify(null, null, null);
 
-                await messageStream.WaitForItemsOnDelayedStreamOnTaskPoolScheduler();
+                await messageStream.WaitForItemsOnDelayedStreamOnTaskPoolSchedulerAsync();
 
                 observer.Received.Count.Should().Be(1);
                 observer.Received.Single().Payload.CorrelationId.ToGuid().Should().Be(correlationId);
