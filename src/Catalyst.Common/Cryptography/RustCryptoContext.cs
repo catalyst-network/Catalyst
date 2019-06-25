@@ -31,12 +31,25 @@ namespace Catalyst.Common.Cryptography
 {
     public sealed class RustCryptoContext : ICryptoContext
     {
-        private static readonly IWrapper Wrapper = new CryptoWrapper();
+        private const int PublicKeyByteLength = 32;
+
+        private readonly IWrapper _wrapper;
+
+        public RustCryptoContext(IWrapper wrapper)
+        {
+            _wrapper = wrapper;
+        }
+
+        /// <inheritdoc />
+        public int GetPublicKeyByteLength()
+        {
+            return PublicKeyByteLength;
+        }
 
         /// <inheritdoc />
         public IPrivateKey GeneratePrivateKey()
         {
-            return Wrapper.GenerateKey();
+            return _wrapper.GenerateKey();
         }
 
         /// <inheritdoc />
@@ -66,19 +79,19 @@ namespace Catalyst.Common.Cryptography
         /// <inheritdoc />
         public ISignature Sign(IPrivateKey privateKey, ReadOnlySpan<byte> data)
         {
-            return Wrapper.StdSign(privateKey, data.ToArray());
+            return _wrapper.StdSign(privateKey, data.ToArray());
         }
-        
+
         /// <inheritdoc />
         public bool Verify(IPublicKey key, ReadOnlySpan<byte> message, ISignature signature)
         {
-            return Wrapper.StdVerify(signature, key, message.ToArray());
+            return _wrapper.StdVerify(signature, key, message.ToArray());
         }
 
         /// <inheritdoc />
         public IPublicKey GetPublicKey(IPrivateKey key)
         {
-            return Wrapper.GetPublicKeyFromPrivate(key);
+            return _wrapper.GetPublicKeyFromPrivate(key);
         }
     }
 }

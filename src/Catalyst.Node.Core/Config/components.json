@@ -146,7 +146,7 @@
                 }
             ]
         },
-       
+
         {
             "type": "Catalyst.Node.Core.RPC.Authentication.RepositoryAuthenticationStrategy",
             "services": [
@@ -302,6 +302,25 @@
                 }
             ],
             "instanceScope": "singleinstance"
+        },
+        {
+            "type": "Catalyst.Common.P2P.PeerIdValidator, Catalyst.Common",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.P2P.IPeerIdValidator, Catalyst.Common"
+                }
+            ]
+        },
+        {
+            "type": "Catalyst.Common.P2P.PeerIdClientVersion, Catalyst.Common",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.P2P.IPeerIdClientVersion, Catalyst.Common"
+                }
+            ],
+            "parameters": {
+                "clientId": "AC"
+            }
         }
     ],
     "modules": [

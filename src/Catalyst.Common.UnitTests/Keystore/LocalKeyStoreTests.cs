@@ -26,6 +26,7 @@ using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Common.Interfaces.Keystore;
 using Catalyst.Common.Keystore;
 using Catalyst.Common.Util;
+using Catalyst.Cryptography.BulletProofs.Wrapper;
 using Catalyst.TestUtils;
 using Multiformats.Hash.Algorithms;
 using Nethereum.Hex.HexConvertors.Extensions;
@@ -43,7 +44,7 @@ namespace Catalyst.Common.UnitTests.Keystore
 
         public LocalKeyStoreTests(ITestOutputHelper output) : base(output)
         {
-            _context = new RustCryptoContext();
+            _context = new RustCryptoContext(new CryptoWrapper());
 
             var logger = Substitute.For<ILogger>();
             var passwordReader = new TestPasswordReader("testPassword");
@@ -55,7 +56,7 @@ namespace Catalyst.Common.UnitTests.Keystore
 
             _keystore = new LocalKeyStore(passwordReader,
                 _context,
-                new KeyStoreServiceWrapped(),
+                new KeyStoreServiceWrapped(_context),
                 FileSystem,
                 logger,
                 addressHelper);

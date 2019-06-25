@@ -30,6 +30,7 @@ using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Transport.Channels;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
+using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Handlers;
 using Catalyst.Common.IO.Transport.Channels;
 using Catalyst.Protocol.Common;
@@ -41,19 +42,22 @@ namespace Catalyst.Node.Core.P2P.IO.Transport.Channels
     {
         private readonly IKeySigner _keySigner;
         private readonly IMessageCorrelationManager _correlationManager;
+        private readonly IPeerIdValidator _peerIdValidator;
 
         protected override List<IChannelHandler> Handlers =>
             new List<IChannelHandler>
             {
                 new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(new ProtoDatagramDecoderHandler(), new ProtoDatagramEncoderHandler()),
+                new PeerIdValidationHandler(_peerIdValidator),
                 new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(new ProtocolMessageVerifyHandler(_keySigner), new ProtocolMessageSignHandler(_keySigner)),
                 new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(new CorrelationHandler(_correlationManager), new CorrelationHandler(_correlationManager))
             };
         
-        public PeerClientChannelFactory(IKeySigner keySigner, IMessageCorrelationManager correlationManager)
+        public PeerClientChannelFactory(IKeySigner keySigner, IMessageCorrelationManager correlationManager, IPeerIdValidator peerIdValidator)
         {
             _keySigner = keySigner;
             _correlationManager = correlationManager;
+            _peerIdValidator = peerIdValidator;
         }
         
         /// <param name="handlerEventLoopGroupFactory"></param>

@@ -21,6 +21,7 @@
 
 #endregion
 
+using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Common.Interfaces.Keystore;
 using Dawn;
 using Nethereum.KeyStore;
@@ -30,10 +31,12 @@ namespace Catalyst.Common.Keystore
     public sealed class KeyStoreServiceWrapped : IKeyStoreService
     {
         private readonly KeyStoreService _keyStoreService;
-        
-        public KeyStoreServiceWrapped()
+        private readonly ICryptoContext _cryptoContext;
+
+        public KeyStoreServiceWrapped(ICryptoContext cryptoContext)
         {
             _keyStoreService = new KeyStoreService();
+            _cryptoContext = cryptoContext;
         }
 
         public string GetAddressFromKeyStore(string json)
@@ -53,7 +56,7 @@ namespace Catalyst.Common.Keystore
 
         public string EncryptAndGenerateDefaultKeyStoreAsJson(string password, byte[] key, string address)
         {
-            Guard.Argument(key, nameof(key)).MinCount(32).MaxCount(32);
+            Guard.Argument(key, nameof(key)).MinCount(_cryptoContext.GetPublicKeyByteLength()).MaxCount(_cryptoContext.GetPublicKeyByteLength());
             Guard.Argument(address, nameof(address)).NotEmpty().NotNull().NotWhiteSpace();
             Guard.Argument(password, nameof(password)).NotEmpty().NotNull().NotWhiteSpace();
             return _keyStoreService.EncryptAndGenerateDefaultKeyStoreAsJson(password, key, address);
