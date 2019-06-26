@@ -49,26 +49,30 @@ namespace Catalyst.Common.Modules.KeySigner
             _keyStore = keyStore;
             _cryptoContext = cryptoContext;
             InitialiseKeyRegistry();
-
-
         }
-
 
         private void InitialiseKeyRegistry()
         {
             _keyRegistry = new KeyRegistry();
             if (!TryPopulateKeyRegistry(defaultKeyIdentifier))
             {
-                IPrivateKey privateKey = _cryptoContext.GeneratePrivateKey();
-                //note I'm using identifier in place of password, this needs to be changed
-                _keyStore.KeyStoreGenerateAsync(privateKey, defaultKeyIdentifier);
-            }
+                GenerateKeyAndPopulateRegistry(defaultKeyIdentifier);
+            }   
+        }
 
-            if (!TryPopulateKeyRegistry(defaultKeyIdentifier))
+        private async void GenerateKeyAndPopulateRegistry(string keyIdentifier)
+        {
+            IPrivateKey privateKey = _cryptoContext.GeneratePrivateKey();
+
+            //note I'm using identifier in place of password, this needs to be changed
+            await _keyStore.KeyStoreGenerateAsync(privateKey, keyIdentifier);
+
+            if (!TryPopulateKeyRegistry(keyIdentifier))
             {
-                throw new SignatureException("");
+                throw new SignatureException("Failed to populate registry with new key");
             }
         }
+
         /// <inheritdoc/>
         IKeyStore IKeySigner.KeyStore => _keyStore;
 
@@ -99,7 +103,6 @@ namespace Catalyst.Common.Modules.KeySigner
             return SignAndGetPublicKey(data, defaultKeyIdentifier);
         }
 
-
         private ISignature Sign(byte[] data, IPrivateKey privateKey)
         {
             if (privateKey != null)
@@ -124,10 +127,10 @@ namespace Catalyst.Common.Modules.KeySigner
 
         private bool TryPopulateKeyRegistry(string keyIdentifier)
         {
+            IPrivateKey privateKey = null;
+
             var key = _keyStore.KeyStoreDecrypt(keyIdentifier);
             return key != null && _keyRegistry.AddItemToRegistry(keyIdentifier, key);
-        }
-
-        
+        }    
     }
 }

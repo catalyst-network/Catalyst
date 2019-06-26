@@ -87,12 +87,19 @@ namespace Catalyst.Common.Keystore
 
         public IPrivateKey KeyStoreDecrypt(string identifier)
         {
-            string password = " password retrieval not implemented yet";
+            string password = "password retrieval not implemented yet";
             string filepath = GetKeyFilePath(identifier);
+            if (filepath == null)
+            {
+                _logger.Error("No keystore exists for the given key");
+                return null;
+            }
+
+            string json = File.ReadAllText(filepath);
             
             try
             {
-                var keyBytes = _keyStoreService.DecryptKeyStoreFromJson(identifier, filename);
+                var keyBytes = _keyStoreService.DecryptKeyStoreFromJson(identifier, json);
                     
                 if (keyBytes != null && keyBytes.Length > 0)
                 {
@@ -149,7 +156,7 @@ namespace Catalyst.Common.Keystore
             
             try
             {
-                await _fileSystem.WriteFileToCddAsync(_keyStoreService.GenerateUTCFileName(address), json);
+                await _fileSystem.WriteFileToCddSubDirectoryAsync(password, Constants.KeyStoreDataSubDir, json);
             }
             catch (Exception e)
             {
@@ -180,10 +187,9 @@ namespace Catalyst.Common.Keystore
                 return null;
             }
 
-            FileInfo keyStoreFile = directoryInfo.GetFiles("*.json").FirstOrDefault();
-            return keyStoreFile.Exists ? keyStoreFile.FullName : "";
+            FileInfo keyStoreFile = directoryInfo.GetFiles().FirstOrDefault();
+            return keyStoreFile.Exists ? keyStoreFile.FullName : null;
         }
-
 
         public void Dispose()
         {

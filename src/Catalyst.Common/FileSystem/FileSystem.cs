@@ -44,13 +44,27 @@ namespace Catalyst.Common.FileSystem
         {
             var fullPath = Path.Combine(GetCatalystDataDir().ToString(), fileName);
 
-            using (var file = File.CreateText(fullPath))
-            {
+            return await WriteFileToPathAsync(fullPath, contents);
+        }
+
+        public async Task<IFileInfo> WriteFileToCddSubDirectoryAsync(string fileName, string subDirectory, string contents)
+        {
+            var subDirInfo = Directory.CreateDirectory(Path.Combine(GetCatalystDataDir().ToString(), subDirectory));
+            var fullPath = Path.Combine(subDirInfo.Name, fileName);
+
+            return await WriteFileToPathAsync(fullPath, contents);
+        }
+
+        private async Task<IFileInfo> WriteFileToPathAsync(string path, string contents)
+        {
+            var file = File.CreateText(path);
+            //using ()
+            //{
                 await file.WriteAsync(contents).ConfigureAwait(false);
                 await file.FlushAsync().ConfigureAwait(false);
-            }
+            //}
 
-            return FileInfo.FromFileName(fullPath);
+            return FileInfo.FromFileName(path);
         }
 
         public bool DataFileExists(string fileName)
