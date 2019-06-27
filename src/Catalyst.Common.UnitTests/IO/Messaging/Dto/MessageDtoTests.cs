@@ -35,23 +35,23 @@ namespace Catalyst.Common.UnitTests.IO.Messaging.Dto
 {
     public sealed class MessageDtoTests
     {
-        private readonly IMessageDto _messageDto;
+        private readonly IOutboundDto _outboundDto;
 
         public MessageDtoTests()
         {
             var pingRequest = Substitute.For<IMessage<PingRequest>>();
-            _messageDto = new MessageDto(pingRequest, PeerIdentifierHelper.GetPeerIdentifier("Sender_Key"), PeerIdentifierHelper.GetPeerIdentifier("Recipient_Key"));
+            _outboundDto = new OutboundDto(pingRequest, PeerIdentifierHelper.GetPeerIdentifier("Sender_Key"), PeerIdentifierHelper.GetPeerIdentifier("Recipient_Key"));
         }
 
         [Fact]
         public void CanInitMessageDtoCorrectly()
         {
-            Assert.NotNull(_messageDto);
+            Assert.NotNull(_outboundDto);
 
-            _messageDto.Should().BeOfType<MessageDto>();
-            _messageDto.Message.Should().NotBeNull().And.BeAssignableTo(typeof(IMessage<PingRequest>));
-            _messageDto.Recipient.Should().NotBeNull().And.BeAssignableTo(typeof(IPeerIdentifier));
-            _messageDto.Sender.Should().NotBeNull().And.BeAssignableTo(typeof(IPeerIdentifier));
+            _outboundDto.Should().BeOfType<OutboundDto>();
+            _outboundDto.Message.Should().NotBeNull().And.BeAssignableTo(typeof(IMessage<PingRequest>));
+            _outboundDto.Recipient.Should().NotBeNull().And.BeAssignableTo(typeof(IPeerIdentifier));
+            _outboundDto.Sender.Should().NotBeNull().And.BeAssignableTo(typeof(IPeerIdentifier));
         }
     }
 }

@@ -81,7 +81,7 @@ namespace Catalyst.Common.UnitTests.IO.Observables
         [Fact]
         public async Task MessageHandler_should_subscribe_to_next_and_error()
         {
-            var erroringStream = new ReplaySubject<IProtocolMessageDto<ProtocolMessage>>(10);
+            var erroringStream = new ReplaySubject<IInboundDto<ProtocolMessage>>(10);
             
             _handler.StartObserving(erroringStream);
 
@@ -92,7 +92,7 @@ namespace Catalyst.Common.UnitTests.IO.Observables
                     erroringStream.OnError(new DataMisalignedException("5 erred"));
                 }
 
-                erroringStream.OnNext(new ProtocolMessageDto(_fakeContext, payload));
+                erroringStream.OnNext(new InboundDto(_fakeContext, payload));
             }
 
             await erroringStream.WaitForItemsOnDelayedStreamOnTaskPoolSchedulerAsync();

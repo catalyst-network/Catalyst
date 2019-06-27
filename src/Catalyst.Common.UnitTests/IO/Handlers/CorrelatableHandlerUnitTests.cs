@@ -49,7 +49,7 @@ namespace Catalyst.Common.UnitTests.IO.Handlers
         [Fact]
         public void Does_Process_IMessageDto_Types()
         {
-            var fakeRequestMessageDto = Substitute.For<IMessageDto>();
+            var fakeRequestMessageDto = Substitute.For<IOutboundDto>();
             fakeRequestMessageDto.MessageType.Returns(MessageTypes.Request);
             fakeRequestMessageDto.Message.Returns(Substitute.For<IMessage>());
             fakeRequestMessageDto.Sender.Returns(PeerIdentifierHelper.GetPeerIdentifier("Im_The_Sender"));
@@ -63,13 +63,13 @@ namespace Catalyst.Common.UnitTests.IO.Handlers
                .AddPendingRequest(Arg.Any<CorrelatableMessage>()
                 );
 
-            _fakeContext.ReceivedWithAnyArgs(1).WriteAsync(Arg.Any<IMessageDto>());
+            _fakeContext.ReceivedWithAnyArgs(1).WriteAsync(Arg.Any<IOutboundDto>());
         }
 
         [Fact]
         public void Does_Not_Process_OtherTypes_Types()
         {
-            var fakeRequestMessageDto = Substitute.For<IProtocolMessageDto<IMessage>>();
+            var fakeRequestMessageDto = Substitute.For<IInboundDto<IMessage>>();
 
             var correlatableHandler = new CorrelatableHandler(_fakeMessageCorrelationManager);
             
@@ -80,7 +80,7 @@ namespace Catalyst.Common.UnitTests.IO.Handlers
                .AddPendingRequest(Arg.Any<CorrelatableMessage>()
                 );
 
-            _fakeContext.ReceivedWithAnyArgs(1).WriteAsync(Arg.Any<IProtocolMessageDto<IMessage>>());
+            _fakeContext.ReceivedWithAnyArgs(1).WriteAsync(Arg.Any<IInboundDto<IMessage>>());
         }
     }
 }

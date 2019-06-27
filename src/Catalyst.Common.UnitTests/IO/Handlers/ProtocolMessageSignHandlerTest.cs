@@ -38,7 +38,7 @@ namespace Catalyst.Common.UnitTests.IO.Handlers
     public sealed class ProtocolMessageSignHandlerTest
     {
         private readonly IChannelHandlerContext _fakeContext;
-        private readonly IMessageDto _dto;
+        private readonly IOutboundDto _dto;
         private readonly IKeySigner _keySigner;
 
         public ProtocolMessageSignHandlerTest()

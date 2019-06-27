@@ -42,7 +42,7 @@ namespace Catalyst.Node.Core.RPC.Observables
             ILogger logger)
             : base(logger, peerIdentifier) { }
 
-        protected override IMessage<VersionResponse> HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto)
+        protected override IMessage<VersionResponse> HandleRequest(IInboundDto<ProtocolMessage> messageDto)
         {
             Logger.Debug("received message of type VersionRequest");
 
