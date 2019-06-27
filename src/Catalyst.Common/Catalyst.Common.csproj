@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFramework>netcoreapp2.2</TargetFramework>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -41,10 +41,6 @@
         <PackageReference Include="System.Reactive.Linq" Version="4.1.5" />
         <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="4.5.2" />
         <PackageReference Include="DotNetty.Handlers" Version="0.6.0" />
-        <PackageReference Include="Grpc.Tools" Version="1.20.1">
-            <PrivateAssets>all</PrivateAssets>
-            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
     </ItemGroup>
     <ItemGroup>
         <None Include="..\Build\libs\advapi32.dll">
