@@ -29,6 +29,6 @@ namespace Catalyst.Common.Interfaces.IO.Observables
     public interface IRequestMessageObserver : IMessageObserver
     {
         IPeerIdentifier PeerIdentifier { get; }
-        void SendChannelContextResponse(IOutboundDto outboundDto);
+        void SendChannelContextResponse(IMessageDto messageDto);
     }
 }

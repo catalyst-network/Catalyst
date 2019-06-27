@@ -88,7 +88,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
             return fakeStream;
         }
 
-        private IInboundDto<ProtocolMessage> GetFileFromDfsRequestMessage()
+        private IProtocolMessageDto<ProtocolMessage> GetFileFromDfsRequestMessage()
         {
             var getFileFromDfsRequestMessage = new GetFileFromDfsRequest
             {
@@ -96,7 +96,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
             };
             var protocolMessage = getFileFromDfsRequestMessage
                .ToProtocolMessage(PeerIdHelper.GetPeerId("TestMan"), Guid.NewGuid());
-            return new InboundDto(Substitute.For<IChannelHandlerContext>(), protocolMessage);
+            return new ProtocolMessageDto(Substitute.For<IChannelHandlerContext>(), protocolMessage);
         }
     }
 }

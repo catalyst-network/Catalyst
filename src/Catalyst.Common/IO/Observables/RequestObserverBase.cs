@@ -53,9 +53,9 @@ namespace Catalyst.Common.IO.Observables
             PeerIdentifier = peerIdentifier;
         }
 
-        protected abstract IMessage<TProtoRes> HandleRequest(IInboundDto<ProtocolMessage> messageDto);
+        protected abstract IMessage<TProtoRes> HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto);
 
-        public override void StartObserving(IObservable<IInboundDto<ProtocolMessage>> messageStream)
+        public override void StartObserving(IObservable<IProtocolMessageDto<ProtocolMessage>> messageStream)
         {
             if (MessageSubscription != null)
             {
@@ -69,7 +69,7 @@ namespace Catalyst.Common.IO.Observables
                .Subscribe(OnNext, OnError, OnCompleted);
         }
         
-        public override void OnNext(IInboundDto<ProtocolMessage> messageDto)
+        public override void OnNext(IProtocolMessageDto<ProtocolMessage> messageDto)
         {
             Logger.Verbose("Pre Handle Message Called");
             
@@ -85,9 +85,9 @@ namespace Catalyst.Common.IO.Observables
             ));
         }
 
-        public void SendChannelContextResponse(IOutboundDto outboundDto)
+        public void SendChannelContextResponse(IMessageDto messageDto)
         {   
-            ChannelHandlerContext.Channel.WriteAndFlushAsync(outboundDto);
+            ChannelHandlerContext.Channel.WriteAndFlushAsync(messageDto);
         }
     }
 }

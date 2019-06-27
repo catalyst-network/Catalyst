@@ -36,7 +36,7 @@ namespace Catalyst.Node.Core.P2P.Observables
     {
         public GetNeighbourResponseObserver(ILogger logger) : base(logger) { }
         
-        public override void HandleResponse(IInboundDto<ProtocolMessage> messageDto)
+        public override void HandleResponse(IProtocolMessageDto<ProtocolMessage> messageDto)
         {
             Logger.Debug("received peer NeighbourResponse");
         }
