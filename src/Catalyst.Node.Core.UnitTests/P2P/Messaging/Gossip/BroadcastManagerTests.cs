@@ -36,6 +36,7 @@ using SharpRepository.InMemoryRepository;
 using SharpRepository.Repository;
 using System;
 using System.Threading.Tasks;
+using Catalyst.Common.IO.Messaging.Dto;
 using Xunit;
 
 namespace Catalyst.Node.Core.UnitTests.P2P.Messaging.Gossip

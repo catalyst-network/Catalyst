@@ -26,12 +26,11 @@ using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Protocol.Common;
 using Dawn;
 using Google.Protobuf;
 
-namespace Catalyst.Common.IO.Messaging
+namespace Catalyst.Common.IO.Messaging.Dto
 {
     /// <summary>
     /// The base class to handle building of ProtocolMessage messages
