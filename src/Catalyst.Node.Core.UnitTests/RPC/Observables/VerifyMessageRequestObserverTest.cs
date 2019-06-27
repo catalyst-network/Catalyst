@@ -44,6 +44,7 @@ using Xunit;
 using Xunit.Abstractions;
 using Nethereum.Hex.HexConvertors.Extensions;
 using System.Threading.Tasks;
+using Catalyst.Common.IO.Messaging.Dto;
 
 namespace Catalyst.Node.Core.UnitTests.RPC.Observables
 {
@@ -106,20 +107,18 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
                 _logger,
                 _keySigner
             );
-            
+
             handler.StartObserving(messageStream);
 
-           await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
-            
+            await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
+
             var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();
             receivedCalls.Count.Should().Be(1);
 
-            
-            var sentResponse = (ProtocolMessage) receivedCalls.Single().GetArguments().Single();
-            sentResponse.TypeUrl.Should().Be(VerifyMessageResponse.Descriptor.ShortenedFullName());
-
-
-            sentResponse.IsSignedByKey.Should().Be(expectedResult);
+            var sentResponseDto = (IMessageDto) receivedCalls.Single().GetArguments().Single();
+            sentResponseDto.Message.Descriptor.ShortenedFullName().Should().Be(VerifyMessageResponse.Descriptor.ShortenedFullName());
+            var verifyResponseMessage = sentResponseDto.FromIMessageDto<VerifyMessageResponse>();
+            verifyResponseMessage.IsSignedByKey.Should().Be(expectedResult);
         }
 
         protected override void Dispose(bool disposing)
