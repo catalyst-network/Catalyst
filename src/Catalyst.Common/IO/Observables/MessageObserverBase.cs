@@ -41,9 +41,9 @@ namespace Catalyst.Common.IO.Observables
             Logger = logger;
         }
 
-        public abstract void StartObserving(IObservable<IInboundDto<ProtocolMessage>> messageStream);
+        public abstract void StartObserving(IObservable<IProtocolMessageDto<ProtocolMessage>> messageStream);
 
-        public abstract void OnNext(IInboundDto<ProtocolMessage> messageDto);
+        public abstract void OnNext(IProtocolMessageDto<ProtocolMessage> messageDto);
 
         public virtual void OnCompleted()
         {

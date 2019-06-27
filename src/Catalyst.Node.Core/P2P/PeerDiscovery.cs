@@ -93,7 +93,7 @@ namespace Catalyst.Node.Core.P2P
             return seedDnsUrls;
         }
 
-        public void StartObserving(IObservable<IInboundDto<ProtocolMessage>> observer)
+        public void StartObserving(IObservable<IProtocolMessageDto<ProtocolMessage>> observer)
         {
             PingResponseMessageStream = observer
                .Where(m => m != null && m.Payload.TypeUrl == typeof(PingResponse)
@@ -106,7 +106,7 @@ namespace Catalyst.Node.Core.P2P
                 ).Subscribe(PeerNeighbourSubscriptionHandler);
         }
 
-        private void PingSubscriptionHandler(IInboundDto<ProtocolMessage> messageDto)
+        private void PingSubscriptionHandler(IProtocolMessageDto<ProtocolMessage> messageDto)
         {
             Logger.Information("processing ping message stream");
             var pingResponse = messageDto.Payload.FromProtocolMessage<PingResponse>();
@@ -120,7 +120,7 @@ namespace Catalyst.Node.Core.P2P
             Logger.Information(messageDto.Payload.TypeUrl);
         }
         
-        public void PeerNeighbourSubscriptionHandler(IInboundDto<ProtocolMessage> messageDto)
+        public void PeerNeighbourSubscriptionHandler(IProtocolMessageDto<ProtocolMessage> messageDto)
         {
             Logger.Information("processing peer neighbour message stream");
             var peerNeighborsResponse = messageDto.Payload.FromProtocolMessage<PeerNeighborsResponse>();

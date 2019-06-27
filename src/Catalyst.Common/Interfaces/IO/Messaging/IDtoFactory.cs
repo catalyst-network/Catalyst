@@ -36,7 +36,7 @@ namespace Catalyst.Common.Interfaces.IO.Messaging
         /// <param name="recipientPeerIdentifier"></param>
         /// <param name="correlationId">The correlation identifier.</param>
         /// <returns>ProtocolMessage message</returns>
-        IOutboundDto GetDto<T>(IMessage<T> messageDto,
+        IMessageDto GetDto<T>(IMessage<T> messageDto,
             IPeerIdentifier senderPeerIdentifier,
             IPeerIdentifier recipientPeerIdentifier,
             Guid correlationId = default) where T : IMessage<T>;

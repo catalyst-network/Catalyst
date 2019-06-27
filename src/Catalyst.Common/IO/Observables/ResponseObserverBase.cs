@@ -47,9 +47,9 @@ namespace Catalyst.Common.IO.Observables
             _filterMessageType = typeof(TProto).ShortenedProtoFullName();
         }
         
-        public abstract void HandleResponse(IInboundDto<ProtocolMessage> messageDto);
+        public abstract void HandleResponse(IProtocolMessageDto<ProtocolMessage> messageDto);
 
-        public override void StartObserving(IObservable<IInboundDto<ProtocolMessage>> messageStream)
+        public override void StartObserving(IObservable<IProtocolMessageDto<ProtocolMessage>> messageStream)
         {
             if (MessageSubscription != null)
             {
@@ -63,7 +63,7 @@ namespace Catalyst.Common.IO.Observables
                .Subscribe(OnNext, OnError, OnCompleted);
         }
         
-        public override void OnNext(IInboundDto<ProtocolMessage> messageDto)
+        public override void OnNext(IProtocolMessageDto<ProtocolMessage> messageDto)
         {
             Logger.Verbose("Pre Handle Message Called");
             ChannelHandlerContext = messageDto.Context;

@@ -27,6 +27,6 @@ namespace Catalyst.Common.Interfaces.IO.Transport
 {
     public interface ISocketClient : ISocket
     {
-        void SendMessage(IOutboundDto outbound);
+        void SendMessage(IMessageDto message);
     }
 }

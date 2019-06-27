@@ -62,7 +62,7 @@ namespace Catalyst.Common.FileTransfer
         }
 
         /// <inheritdoc />
-        public IOutboundDto GetUploadMessageDto(uint index)
+        public IMessageDto GetUploadMessageDto(uint index)
         {
             var chunkId = index + 1;
             var startPos = index * Constants.FileTransferChunkSize;
