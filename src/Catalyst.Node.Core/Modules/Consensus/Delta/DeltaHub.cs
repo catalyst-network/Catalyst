@@ -30,7 +30,7 @@ using Catalyst.Common.Interfaces.Modules.Consensus.Delta;
 using Catalyst.Common.Interfaces.Modules.Dfs;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.Messaging.Broadcast;
-using Catalyst.Common.Protocol;
+using Catalyst.Protocol;
 using Catalyst.Protocol.Delta;
 using Dawn;
 using Google.Protobuf;
