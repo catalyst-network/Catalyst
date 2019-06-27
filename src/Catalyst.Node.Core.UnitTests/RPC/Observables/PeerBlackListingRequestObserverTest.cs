@@ -159,10 +159,11 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
             var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();
             receivedCalls.Count.Should().Be(1);
             
-            var sentResponseDto = (IMessageDto) receivedCalls.Single().GetArguments().Single();
-            sentResponseDto.Message.Descriptor.ShortenedFullName()
+            var sentResponseDto = (IMessageDto<SetPeerBlackListResponse>) receivedCalls.Single().GetArguments().Single();
+            
+            sentResponseDto.Message.GetType()
                .Should()
-               .Be(SetPeerBlackListResponse.Descriptor.ShortenedFullName());
+               .BeAssignableTo<SetPeerBlackListResponse>();
             
             return sentResponseDto.FromIMessageDto<SetPeerBlackListResponse>();
         }

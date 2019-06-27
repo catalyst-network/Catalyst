@@ -22,11 +22,12 @@
 #endregion
 
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
+using Google.Protobuf;
 
 namespace Catalyst.Common.Interfaces.IO.Transport
 {
     public interface ISocketClient : ISocket
     {
-        void SendMessage(IMessageDto message);
+        void SendMessage<T>(IMessageDto<T> message) where T : IMessage<T>;
     }
 }

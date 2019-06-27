@@ -51,7 +51,7 @@ namespace Catalyst.Node.Core.RPC.Observables
             _mempool = mempool;
         }
 
-        protected override IMessage<GetMempoolResponse> HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto)
+        protected override GetMempoolResponse HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto)
         {
             Logger.Debug("GetMempoolRequestHandler starting ...");
 

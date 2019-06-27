@@ -63,7 +63,7 @@ namespace Catalyst.Node.Core.RPC.Observables
 
         /// <summary>Handles the specified message.</summary>
         /// <param name="messageDto">The message.</param>
-        protected override IMessage<RemovePeerResponse> HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto)
+        protected override RemovePeerResponse HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto)
         {
             Logger.Debug("Received message of type RemovePeerRequest");
 
@@ -80,14 +80,19 @@ namespace Catalyst.Node.Core.RPC.Observables
                 var peersToDelete = _peerRepository.GetAll().TakeWhile(peer =>
                     peer.PeerIdentifier.Ip.To16Bytes().SequenceEqual(deserialised.PeerIp.ToByteArray()) &&
                     (publicKeyIsEmpty || peer.PeerIdentifier.PublicKey.SequenceEqual(deserialised.PublicKey.ToByteArray()))).ToArray();
-                
-                if (peersToDelete.Length > 0)
+
+                if (peersToDelete.Length <= 0)
                 {
-                    foreach (var peerToDelete in peersToDelete)
+                    return new RemovePeerResponse
                     {
-                        _peerRepository.Delete(peerToDelete);
-                        peerDeletedCount += 1;
-                    }
+                        DeletedCount = peerDeletedCount
+                    };
+                }
+                
+                foreach (var peerToDelete in peersToDelete)
+                {
+                    _peerRepository.Delete(peerToDelete);
+                    peerDeletedCount += 1;
                 }
 
                 return new RemovePeerResponse

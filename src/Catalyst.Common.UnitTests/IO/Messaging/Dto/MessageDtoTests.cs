@@ -35,12 +35,12 @@ namespace Catalyst.Common.UnitTests.IO.Messaging.Dto
 {
     public sealed class MessageDtoTests
     {
-        private readonly IMessageDto _messageDto;
+        private readonly IMessageDto<PingRequest> _messageDto;
 
         public MessageDtoTests()
         {
-            var pingRequest = Substitute.For<IMessage<PingRequest>>();
-            _messageDto = new MessageDto(pingRequest, PeerIdentifierHelper.GetPeerIdentifier("Sender_Key"), PeerIdentifierHelper.GetPeerIdentifier("Recipient_Key"));
+            var pingRequest = new PingRequest();
+            _messageDto = new MessageDto<PingRequest>(pingRequest, PeerIdentifierHelper.GetPeerIdentifier("Sender_Key"), PeerIdentifierHelper.GetPeerIdentifier("Recipient_Key"));
         }
 
         [Fact]
@@ -48,7 +48,7 @@ namespace Catalyst.Common.UnitTests.IO.Messaging.Dto
         {
             Assert.NotNull(_messageDto);
 
-            _messageDto.Should().BeOfType<MessageDto>();
+            _messageDto.Should().BeOfType<MessageDto<PingRequest>>();
             _messageDto.Message.Should().NotBeNull().And.BeAssignableTo(typeof(IMessage<PingRequest>));
             _messageDto.Recipient.Should().NotBeNull().And.BeAssignableTo(typeof(IPeerIdentifier));
             _messageDto.Sender.Should().NotBeNull().And.BeAssignableTo(typeof(IPeerIdentifier));

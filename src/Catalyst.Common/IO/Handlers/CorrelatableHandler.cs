@@ -28,11 +28,12 @@ using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.IO.Messaging;
+using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;
 
 namespace Catalyst.Common.IO.Handlers
 {
-    public sealed class CorrelatableHandler : OutboundChannelHandlerBase<IMessageDto>
+    public sealed class CorrelatableHandler : OutboundChannelHandlerBase<IMessageDto<ProtocolMessage>>
     {
         private readonly IMessageCorrelationManager _messageCorrelationManager;
 
@@ -41,7 +42,7 @@ namespace Catalyst.Common.IO.Handlers
             _messageCorrelationManager = messageCorrelationManager;
         }
 
-        protected override Task WriteAsync0(IChannelHandlerContext context, IMessageDto message)
+        protected override Task WriteAsync0(IChannelHandlerContext context, IMessageDto<ProtocolMessage> message)
         {
             if (message.MessageType.Name.Equals(MessageTypes.Request.Name))
             {
