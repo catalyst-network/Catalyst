@@ -41,10 +41,10 @@ namespace Catalyst.Common.IO.Handlers
     public sealed class ObservableServiceHandler : SimpleChannelInboundHandler<ProtocolMessage>, IObservableServiceHandler
     {
         private readonly ILogger _logger;
-        public IObservable<IInboundDto<ProtocolMessage>> MessageStream => _messageSubject.AsObservable();
+        public IObservable<IProtocolMessageDto<ProtocolMessage>> MessageStream => _messageSubject.AsObservable();
 
-        private readonly ReplaySubject<IInboundDto<ProtocolMessage>> _messageSubject 
-            = new ReplaySubject<IInboundDto<ProtocolMessage>>(1);
+        private readonly ReplaySubject<IProtocolMessageDto<ProtocolMessage>> _messageSubject 
+            = new ReplaySubject<IProtocolMessageDto<ProtocolMessage>>(1);
         
         public ObservableServiceHandler()
         {
@@ -58,7 +58,7 @@ namespace Catalyst.Common.IO.Handlers
         /// <param name="message"></param>
         protected override void ChannelRead0(IChannelHandlerContext ctx, ProtocolMessage message)
         {
-            var contextAny = new InboundDto(ctx, message);
+            var contextAny = new ProtocolMessageDto(ctx, message);
             _messageSubject.OnNext(contextAny);
         }
         

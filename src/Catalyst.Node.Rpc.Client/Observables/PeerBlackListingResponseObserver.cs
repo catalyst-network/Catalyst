@@ -59,7 +59,7 @@ namespace Catalyst.Node.Rpc.Client.Observables
         /// Handles the peer reputation response.
         /// </summary>
         /// <param name="messageDto">The GetPeerReputationResponse message.</param>
-        public override void HandleResponse(IInboundDto<ProtocolMessage> messageDto)
+        public override void HandleResponse(IProtocolMessageDto<ProtocolMessage> messageDto)
         {
             Logger.Debug("Handling GetPeerBlackList response");
 

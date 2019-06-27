@@ -32,6 +32,6 @@ namespace Catalyst.Common.Interfaces.IO.Messaging
         /// <summary>
         ///     Message stream
         /// </summary>
-        IObservable<IInboundDto<T>> MessageStream { get; }
+        IObservable<IProtocolMessageDto<T>> MessageStream { get; }
     }
 }

@@ -56,7 +56,7 @@ namespace Catalyst.Node.Rpc.Client.Observables
             _output = output;
         }
 
-        public override void HandleResponse(IInboundDto<ProtocolMessage> messageDto)
+        public override void HandleResponse(IProtocolMessageDto<ProtocolMessage> messageDto)
         {
             Logger.Debug("GetVersionResponseHandler starting ...");
 
