@@ -29,6 +29,6 @@ namespace Catalyst.Common.Util
     public static class NullObjects
     {
         public static readonly ProtocolMessage ProtocolMessage = new ProtocolMessage();
-        public static readonly ProtocolMessageDto ProtocolMessageDto = new ProtocolMessageDto(null, new ProtocolMessage());
+        public static readonly InboundDto InboundDto = new InboundDto(null, new ProtocolMessage());
     }
 }

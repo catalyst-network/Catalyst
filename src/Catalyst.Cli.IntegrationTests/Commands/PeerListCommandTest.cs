@@ -55,7 +55,7 @@ namespace Catalyst.Cli.IntegrationTests.Commands
                     var result = shell.AdvancedShell.ParseCommand(
                         "listpeers", "-n", "node1");
                     result.Should().BeTrue();
-                    NodeRpcClient.Received(1).SendMessage(Arg.Is<IMessageDto>(x => x.Message.Descriptor != null && x.Message.Descriptor.Name.Equals(GetPeerListRequest.Descriptor.Name)));
+                    NodeRpcClient.Received(1).SendMessage(Arg.Is<IOutboundDto>(x => x.Message.Descriptor != null && x.Message.Descriptor.Name.Equals(GetPeerListRequest.Descriptor.Name)));
                 }   
             }
         }
