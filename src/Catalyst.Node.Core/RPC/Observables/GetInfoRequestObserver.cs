@@ -51,7 +51,7 @@ namespace Catalyst.Node.Core.RPC.Observables
             _config = config;
         }
 
-        protected override IMessage<GetInfoResponse> HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto)
+        protected override IMessage<GetInfoResponse> HandleRequest(IInboundDto<ProtocolMessage> messageDto)
         {
             Logger.Debug("received message of type GetInfoRequest");
             
