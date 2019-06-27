@@ -136,10 +136,10 @@ namespace Catalyst.Common.Extensions
             return typed;
         }
 
-        public static T FromIMessageDto<T>(this IMessageDto message) where T : IMessage<T>
+        public static T FromIMessageDto<T>(this IOutboundDto outbound) where T : IMessage<T>
         {
             var empty = (T) Activator.CreateInstance(typeof(T));
-            var typed = (T) empty.Descriptor.Parser.ParseFrom(message.Message.ToByteString());
+            var typed = (T) empty.Descriptor.Parser.ParseFrom(outbound.Message.ToByteString());
             return typed;
         }
 

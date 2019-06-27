@@ -44,7 +44,7 @@ namespace Catalyst.Node.Rpc.Client.Observables
 
         /// <summary>Handles the specified message.</summary>
         /// <param name="messageDto">The message.</param>
-        public override void HandleResponse(IProtocolMessageDto<ProtocolMessage> messageDto)
+        public override void HandleResponse(IInboundDto<ProtocolMessage> messageDto)
         {
             // Response for a node writing a chunk via bytes transfer.
             // Future logic if an error occurs via chunk transfer then preferably we want to stop file transfer

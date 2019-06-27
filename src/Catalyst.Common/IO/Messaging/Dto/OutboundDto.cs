@@ -30,7 +30,7 @@ using Google.Protobuf;
 
 namespace Catalyst.Common.IO.Messaging.Dto
 {
-    public sealed class MessageDto : IMessageDto
+    public sealed class OutboundDto : IOutboundDto
     {
         public Guid CorrelationId { get; }
         public IMessage Message { get; }
@@ -45,7 +45,7 @@ namespace Catalyst.Common.IO.Messaging.Dto
         /// <param name="correlationId"></param>
         /// <param name="recipient"></param>
         /// <param name="sender"></param>
-        public MessageDto(IMessage message,
+        public OutboundDto(IMessage message,
             IPeerIdentifier sender,
             IPeerIdentifier recipient,
             Guid correlationId = default)
