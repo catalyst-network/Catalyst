@@ -28,6 +28,6 @@ namespace Catalyst.Common.Interfaces.IO.Observables
 {
     internal interface IBroadcastObserver : IMessageObserver
     { 
-        void HandleBroadcast(IInboundDto<ProtocolMessage> messageDto);
+        void HandleBroadcast(IProtocolMessageDto<ProtocolMessage> messageDto);
     }
 }

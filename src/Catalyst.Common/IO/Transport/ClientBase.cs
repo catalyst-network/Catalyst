@@ -34,9 +34,9 @@ namespace Catalyst.Common.IO.Transport
         protected ClientBase(IChannelFactory channelFactory, ILogger logger, IEventLoopGroupFactory handlerEventEventLoopGroupFactory)
             : base(channelFactory, logger, handlerEventEventLoopGroupFactory) { }
 
-        public virtual void SendMessage(IOutboundDto outbound)
+        public virtual void SendMessage(IMessageDto message)
         {
-            Channel.WriteAsync(outbound).ConfigureAwait(false);
+            Channel.WriteAsync(message).ConfigureAwait(false);
         }
     }
 }

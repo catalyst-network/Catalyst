@@ -67,7 +67,7 @@ namespace Catalyst.Node.Core.P2P.IO.Transport.Channels
         {
             var channel = BootStrapChannel(handlerEventLoopGroupFactory, targetAddress, targetPort);
 
-            return new ObservableChannel(Observable.Never<IInboundDto<ProtocolMessage>>(), channel);
+            return new ObservableChannel(Observable.Never<IProtocolMessageDto<ProtocolMessage>>(), channel);
         }
     }
 }
