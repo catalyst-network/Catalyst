@@ -21,19 +21,22 @@
 
 #endregion
 
-using System;
-using Catalyst.Common.Config;
-using Catalyst.Common.Interfaces.P2P;
-using Google.Protobuf;
+using Catalyst.Common.Interfaces.IO.Messaging.Dto;
+using Catalyst.Protocol.Common;
+using DotNetty.Transport.Channels;
 
-namespace Catalyst.Common.Interfaces.IO.Messaging.Dto
+namespace Catalyst.Common.IO.Messaging.Dto
 {
-    public interface IOutboundDto
+    public sealed class ProtocolMessageDto
+        : IProtocolMessageDto<ProtocolMessage>
     {
-        Guid CorrelationId { get; }
-        MessageTypes MessageType { get; }
-        IMessage Message { get; }
-        IPeerIdentifier Recipient { get; }
-        IPeerIdentifier Sender { get; }
+        public ProtocolMessage Payload { get; }
+        public IChannelHandlerContext Context { get; }
+
+        public ProtocolMessageDto(IChannelHandlerContext context, ProtocolMessage message)
+        {
+            Payload = message;
+            Context = context;
+        }
     }
 }

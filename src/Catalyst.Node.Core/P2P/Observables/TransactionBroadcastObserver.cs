@@ -38,7 +38,7 @@ namespace Catalyst.Node.Core.P2P.Observables
         public TransactionBroadcastObserver(ILogger logger)
             : base(logger) { }
 
-        public override void HandleBroadcast(IInboundDto<ProtocolMessage> messageDto)
+        public override void HandleBroadcast(IProtocolMessageDto<ProtocolMessage> messageDto)
         {
             Logger.Debug("received broadcast");
             var deserialised = messageDto.Payload.FromProtocolMessage<TransactionBroadcast>();
