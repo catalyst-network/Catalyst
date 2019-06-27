@@ -33,8 +33,8 @@ namespace Catalyst.Common.Interfaces.IO.Observables
         IChannelHandlerContext ChannelHandlerContext { get; }
         IDisposable MessageSubscription { get; }
         
-        void StartObserving(IObservable<IInboundDto<ProtocolMessage>> messageStream);
-        void OnNext(IInboundDto<ProtocolMessage> messageDto);
+        void StartObserving(IObservable<IProtocolMessageDto<ProtocolMessage>> messageStream);
+        void OnNext(IProtocolMessageDto<ProtocolMessage> messageDto);
         void OnCompleted();
         void OnError(Exception exception);
     }

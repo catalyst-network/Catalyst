@@ -76,7 +76,7 @@ namespace Catalyst.Node.Rpc.Client.IO.Transport.Channels
             var messageStream = channel.Pipeline.Get<IObservableServiceHandler>()?.MessageStream;
 
             return new ObservableChannel(messageStream
-             ?? Observable.Never<IInboundDto<ProtocolMessage>>(), channel);
+             ?? Observable.Never<IProtocolMessageDto<ProtocolMessage>>(), channel);
         }
     }
 }

@@ -60,7 +60,7 @@ namespace Catalyst.Node.Core.RPC.Observables
 
         /// <summary>Handles the specified message.</summary>
         /// <param name="messageDto">The message.</param>
-        protected override IMessage<GetPeerCountResponse> HandleRequest(IInboundDto<ProtocolMessage> messageDto)
+        protected override IMessage<GetPeerCountResponse> HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto)
         {
             var peerCount = _peerRepository.GetAll().Count();
 

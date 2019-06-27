@@ -32,7 +32,7 @@ using DotNetty.Transport.Channels;
 
 namespace Catalyst.Common.IO.Handlers
 {
-    public sealed class CorrelatableHandler : OutboundChannelHandlerBase<IOutboundDto>
+    public sealed class CorrelatableHandler : OutboundChannelHandlerBase<IMessageDto>
     {
         private readonly IMessageCorrelationManager _messageCorrelationManager;
 
@@ -41,19 +41,19 @@ namespace Catalyst.Common.IO.Handlers
             _messageCorrelationManager = messageCorrelationManager;
         }
 
-        protected override Task WriteAsync0(IChannelHandlerContext context, IOutboundDto outbound)
+        protected override Task WriteAsync0(IChannelHandlerContext context, IMessageDto message)
         {
-            if (outbound.MessageType.Name.Equals(MessageTypes.Request.Name))
+            if (message.MessageType.Name.Equals(MessageTypes.Request.Name))
             {
                 _messageCorrelationManager.AddPendingRequest(new CorrelatableMessage
                 {
-                    Recipient = outbound.Recipient,
-                    Content = outbound.Message.ToProtocolMessage(outbound.Sender.PeerId, Guid.NewGuid()),
+                    Recipient = message.Recipient,
+                    Content = message.Message.ToProtocolMessage(message.Sender.PeerId, Guid.NewGuid()),
                     SentAt = DateTimeOffset.UtcNow
                 });
             }
             
-            return context.WriteAsync(outbound);
+            return context.WriteAsync(message);
         }
     }
 }

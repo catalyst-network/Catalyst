@@ -31,19 +31,19 @@ using Serilog;
 
 namespace Catalyst.TestUtils
 {
-    public sealed class ProtocolMessageObserver : IObserver<IInboundDto<ProtocolMessage>>
+    public sealed class ProtocolMessageObserver : IObserver<IProtocolMessageDto<ProtocolMessage>>
     {
         private readonly ILogger _logger;
-        private readonly ConcurrentStack<IInboundDto<ProtocolMessage>> _received;
+        private readonly ConcurrentStack<IProtocolMessageDto<ProtocolMessage>> _received;
 
         public ProtocolMessageObserver(int index, ILogger logger)
         {
             _logger = logger;
             Index = index;
-            _received = new ConcurrentStack<IInboundDto<ProtocolMessage>>();
+            _received = new ConcurrentStack<IProtocolMessageDto<ProtocolMessage>>();
         }
 
-        public IReadOnlyCollection<IInboundDto<ProtocolMessage>> Received =>
+        public IReadOnlyCollection<IProtocolMessageDto<ProtocolMessage>> Received =>
             Array.AsReadOnly(_received.ToArray());
 
         public int Index { get; }
@@ -51,9 +51,9 @@ namespace Catalyst.TestUtils
         public void OnCompleted() { _logger.Debug($"observer {Index} done"); }
         public void OnError(Exception error) { _logger.Debug($"observer {Index} received error : {error.Message}"); }
 
-        public void OnNext(IInboundDto<ProtocolMessage> value)
+        public void OnNext(IProtocolMessageDto<ProtocolMessage> value)
         {
-            if (value == NullObjects.InboundDto)
+            if (value == NullObjects.ProtocolMessageDto)
             {
                 return;
             }

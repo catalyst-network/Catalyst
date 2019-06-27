@@ -28,6 +28,6 @@ namespace Catalyst.Common.Interfaces.IO.Observables
 {
     public interface IResponseMessageObserver : IMessageObserver
     { 
-        void HandleResponse(IInboundDto<ProtocolMessage> messageDto);
+        void HandleResponse(IProtocolMessageDto<ProtocolMessage> messageDto);
     }
 }
