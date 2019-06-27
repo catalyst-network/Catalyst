@@ -114,22 +114,12 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
             var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();
             receivedCalls.Count.Should().Be(1);
 
-            var sentResponseDto = (IMessageDto) receivedCalls.Single().GetArguments().Single();
-            sentResponseDto.Message.Descriptor.ShortenedFullName().Should().Be(VerifyMessageResponse.Descriptor.ShortenedFullName());
-
-            var verifyResponseMessage = sentResponseDto.FromIMessageDto<VerifyMessageResponse>();
-
-            verifyResponseMessage.OriginalMessage.Should().Equal(message);
-            verifyResponseMessage.Signature.Should().NotBeEmpty();
-            verifyResponseMessage.PublicKey.Should().NotBeEmpty();
-            .
             
             var sentResponse = (ProtocolMessage) receivedCalls.Single().GetArguments().Single();
             sentResponse.TypeUrl.Should().Be(VerifyMessageResponse.Descriptor.ShortenedFullName());
 
-            var responseContent = sentResponse.FromProtocolMessage<VerifyMessageResponse>();
 
-            responseContent.IsSignedByKey.Should().Be(expectedResult);
+            sentResponse.IsSignedByKey.Should().Be(expectedResult);
         }
 
         protected override void Dispose(bool disposing)
