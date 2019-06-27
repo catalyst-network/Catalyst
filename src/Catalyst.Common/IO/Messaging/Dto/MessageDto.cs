@@ -50,7 +50,7 @@ namespace Catalyst.Common.IO.Messaging.Dto
             IPeerIdentifier recipient,
             Guid correlationId = default)
         {
-            // Guard.Argument(message, nameof(message)).NotNull();
+            Guard.Argument(message, nameof(message)).Compatible<T>();
             Guard.Argument(recipient.IpEndPoint.Address, nameof(recipient.IpEndPoint.Address)).NotNull();
             Guard.Argument(recipient.Port, nameof(recipient.Port)).InRange(0, 65535);
             Guard.Argument(sender, nameof(sender)).Compatible<IPeerIdentifier>().NotNull();

@@ -97,7 +97,7 @@ namespace Catalyst.Common.IO.Messaging
         /// <returns>ProtocolMessage message</returns>
         private IMessageDto<T> BuildBroadcastMessage<T>(T message, IPeerIdentifier senderPeerIdentifier, IPeerIdentifier recipientPeerIdentifier, Guid correlationId) where T : IMessage<T>
         {
-            return new MessageDto<T>(message, senderPeerIdentifier, recipientPeerIdentifier, (correlationId == default ? Guid.NewGuid() : correlationId));
+            return new MessageDto<T>(message, senderPeerIdentifier, recipientPeerIdentifier, correlationId == default ? Guid.NewGuid() : correlationId);
         }
     }
 }
