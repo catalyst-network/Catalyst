@@ -22,6 +22,7 @@
 #endregion
 
 using System;
+using System.Text;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Observables;
@@ -33,7 +34,6 @@ using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using Google.Protobuf;
-using Multiformats.Base;
 using Nethereum.RLP;
 using ILogger = Serilog.ILogger;
 
@@ -67,41 +67,21 @@ namespace Catalyst.Node.Core.RPC.Observables
             Guard.Argument(deserialised).NotNull("The verify message request cannot be null");
 
             var decodedMessage = RLP.Decode(deserialised.Message.ToByteArray()).RLPData.ToStringFromRLPDecoded();
-            var publicKey = deserialised.PublicKey;
-            var signature = deserialised.Signature;
+            var decodedpublicKey = deserialised.PublicKey.ToByteArray();
+            var decodedsignature = deserialised.Signature.ToByteArray();
 
             try
             {
-                if (!Multibase.TryDecode(publicKey.ToStringUtf8(), out _, out var decodedPublicKey))
-                {
-                    Logger.Error($"{PublicKeyEncodingInvalid}");
-                    return ReturnResponse(false);
-                }
-
-                if (decodedPublicKey.Length == 0)
-                {
-                    Logger.Error($"{PublicKeyNotProvided}");
-                    return ReturnResponse(false);
-                }
-                
-                if (!Multibase.TryDecode(signature.ToStringUtf8(), out _, out var decodedSignature))
-                {
-                    Logger.Error($"{SignatureEncodingInvalid}");
-                    return ReturnResponse(false);
-                }
-                
-                if (decodedSignature.Length == 0)
-                {
-                    Logger.Error($"{SignatureNotProvided}");
-                    return ReturnResponse(false);
-                }
-                
-                var pubKey = _keySigner.CryptoContext.ImportPublicKey(decodedPublicKey);
-
+                var pubKey = _keySigner.CryptoContext.ImportPublicKey(decodedpublicKey);
                 Guard.Argument(pubKey).HasValue();
 
-                var result = _keySigner.CryptoContext.Verify(pubKey, decodedMessage.ToBytesForRLPEncoding(),
-                    new Signature(decodedSignature));
+                var sig = new Signature(decodedsignature);
+                Guard.Argument(sig).HasValue();
+
+                byte[] data = Encoding.UTF8.GetBytes(decodedMessage);
+                var span = new ReadOnlySpan<byte>(data);
+
+                var result = _keySigner.CryptoContext.Verify(pubKey, span, sig);
 
                 Logger.Debug("message content is {0}", deserialised.Message);
                 
