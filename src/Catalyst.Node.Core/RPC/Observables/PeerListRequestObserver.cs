@@ -66,7 +66,7 @@ namespace Catalyst.Node.Core.RPC.Observables
         /// Handlers the specified message.
         /// </summary>
         /// <param name="messageDto">The message.</param>
-        protected override IMessage<GetPeerListResponse> HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto)
+        protected override IMessage<GetPeerListResponse> HandleRequest(IInboundDto<ProtocolMessage> messageDto)
         {
             Logger.Debug("received message of type PeerListRequest");
 

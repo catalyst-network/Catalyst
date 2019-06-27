@@ -29,7 +29,7 @@ namespace Catalyst.Common.Interfaces.IO.Transport.Channels
 {
     public interface IObservableChannel : ISocket
     {
-        IObservable<IProtocolMessageDto<ProtocolMessage>> MessageStream { get; }
+        IObservable<IInboundDto<ProtocolMessage>> MessageStream { get; }
     }
 }
 

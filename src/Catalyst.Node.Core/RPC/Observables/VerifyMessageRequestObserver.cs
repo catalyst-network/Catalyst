@@ -59,7 +59,7 @@ namespace Catalyst.Node.Core.RPC.Observables
             _keySigner = keySigner;
         }
 
-        protected override IMessage<VerifyMessageResponse> HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto)
+        protected override IMessage<VerifyMessageResponse> HandleRequest(IInboundDto<ProtocolMessage> messageDto)
         {
             Logger.Debug("received message of type VerifyMessageRequest");
             
