@@ -14,6 +14,15 @@
         "test",
         "code"
       ]
+      },
+      "login": "richardschneider",
+      "name": "Richard Schneider",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/631061?v=4",
+      "profile": "https://github.com/richardschneider",
+      "contributions": [
+        "test",
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
