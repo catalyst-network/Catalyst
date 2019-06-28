@@ -1,0 +1,24 @@
+{
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": false,
+  "contributors": [
+    {
+      "login": "monsieurleberre",
+      "name": "monsieurleberre",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/4638821?v=4",
+      "profile": "https://github.com/monsieurleberre",
+      "contributions": [
+        "test",
+        "code"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7,
+  "projectName": "Catalyst.Node",
+  "projectOwner": "catalyst-network",
+  "repoType": "github",
+  "repoHost": "https://github.com"
+}
