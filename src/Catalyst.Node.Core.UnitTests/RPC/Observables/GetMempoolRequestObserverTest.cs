@@ -29,6 +29,7 @@ using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.Modules.Mempool;
 using Catalyst.Common.IO.Messaging;
+using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Node.Core.RPC.Observables;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.Protocol.Transaction;
