@@ -62,7 +62,7 @@ namespace Catalyst.Common.FileTransfer
         }
 
         /// <inheritdoc />
-        public IMessageDto GetUploadMessageDto(uint index)
+        public IMessageDto<TransferFileBytesRequest> GetUploadMessageDto(uint index)
         {
             var chunkId = index + 1;
             var startPos = index * Constants.FileTransferChunkSize;
@@ -108,12 +108,7 @@ namespace Catalyst.Common.FileTransfer
         /// <inheritdoc />
         public bool CanRetry()
         {
-            if (RetryCount >= Constants.FileTransferMaxChunkRetryCount)
-            {
-                return false;
-            }
-
-            return true;
+            return RetryCount < Constants.FileTransferMaxChunkRetryCount;
         }
     }
 }

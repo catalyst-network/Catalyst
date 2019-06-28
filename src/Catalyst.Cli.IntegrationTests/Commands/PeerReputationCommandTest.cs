@@ -55,7 +55,9 @@ namespace Catalyst.Cli.IntegrationTests.Commands
                     var result = shell.AdvancedShell.ParseCommand(
                         "peerrep", "-n", "node1", "-l", "127.0.0.1", "-p", "fake_public_key");
                     result.Should().BeTrue();
-                    NodeRpcClient.Received(1).SendMessage(Arg.Is<IMessageDto>(x => x.Message.Descriptor != null && x.Message.Descriptor.Name.Equals(GetPeerReputationRequest.Descriptor.Name)));
+                    NodeRpcClient.Received(1).SendMessage(Arg.Is<IMessageDto<GetPeerReputationRequest>>(
+                        x => x.Message != null && 
+                            x.Message.GetType().IsAssignableTo<GetPeerReputationRequest>()));
                 }
             }
         }

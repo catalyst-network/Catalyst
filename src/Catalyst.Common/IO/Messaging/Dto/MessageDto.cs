@@ -30,10 +30,10 @@ using Google.Protobuf;
 
 namespace Catalyst.Common.IO.Messaging.Dto
 {
-    public sealed class MessageDto : IMessageDto
+    public sealed class MessageDto<T> : IMessageDto<T> where T : IMessage<T>
     {
         public Guid CorrelationId { get; }
-        public IMessage Message { get; }
+        public T Message { get; }
         public MessageTypes MessageType { get; }
         public IPeerIdentifier Recipient { get; }
         public IPeerIdentifier Sender { get; }
@@ -45,12 +45,12 @@ namespace Catalyst.Common.IO.Messaging.Dto
         /// <param name="correlationId"></param>
         /// <param name="recipient"></param>
         /// <param name="sender"></param>
-        public MessageDto(IMessage message,
+        public MessageDto(T message,
             IPeerIdentifier sender,
             IPeerIdentifier recipient,
             Guid correlationId = default)
         {
-            Guard.Argument(message, nameof(message)).NotNull();
+            Guard.Argument(message, nameof(message)).Compatible<T>();
             Guard.Argument(recipient.IpEndPoint.Address, nameof(recipient.IpEndPoint.Address)).NotNull();
             Guard.Argument(recipient.Port, nameof(recipient.Port)).InRange(0, 65535);
             Guard.Argument(sender, nameof(sender)).Compatible<IPeerIdentifier>().NotNull();

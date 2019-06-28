@@ -44,7 +44,7 @@ namespace Catalyst.TestUtils
         private readonly string _filterMessageType;
         public IObserver<TProto> SubstituteObserver { get; }
         public IPeerIdentifier PeerIdentifier { get; }
-
+        
         public TestMessageObserver(ILogger logger) : base(logger)
         {
             SubstituteObserver = Substitute.For<IObserver<TProto>>();
@@ -84,7 +84,7 @@ namespace Catalyst.TestUtils
                .SubscribeOn(TaskPoolScheduler.Default)
                .Subscribe(OnNext, OnError, OnCompleted);
         }
-
-        public void SendChannelContextResponse(IMessageDto messageDto) { throw new NotImplementedException(); }
+        
+        public void SendChannelContextResponse(IMessageDto<TProto> messageDto) { throw new NotImplementedException(); }
     }
 }

@@ -102,8 +102,8 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
             var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();
             receivedCalls.Count.Should().Be(1);
             
-            var sentResponseDto = (IMessageDto) receivedCalls.Single().GetArguments().Single();
-            sentResponseDto.Message.Descriptor.ShortenedFullName().Should().Be(GetMempoolResponse.Descriptor.ShortenedFullName());
+            var sentResponseDto = (IMessageDto<GetMempoolResponse>) receivedCalls.Single().GetArguments().Single();
+            sentResponseDto.Message.GetType().Should().BeAssignableTo<GetMempoolResponse>();
 
             var responseContent = sentResponseDto.FromIMessageDto<GetMempoolResponse>();
             
