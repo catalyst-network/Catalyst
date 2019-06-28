@@ -6,6 +6,18 @@
   "commit": false,
   "contributors": [
     {
+      "login": "nshCore",
+      "name": "nshCore",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/21375475?v=4",
+      "profile": "https://hub.docker.com/u/jkirkby91",
+      "contributions": [
+        "infra",
+        "ideas",
+        "test",
+        "code"
+      ]
+      },
+    {
       "login": "franssl",
       "name": "franssl",
       "avatar_url": "https://avatars0.githubusercontent.com/u/46971650?v=4",
