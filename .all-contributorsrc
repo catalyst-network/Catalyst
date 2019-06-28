@@ -6,6 +6,15 @@
   "commit": false,
   "contributors": [
     {
+      "login": "monsieurleberre",
+      "name": "monsieurleberre",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/4638821?v=4",
+      "profile": "https://github.com/monsieurleberre",
+      "contributions": [
+        "test",
+        "code"
+      ]
+      },
       "login": "atlassanjay",
       "name": "atlassanjay",
       "avatar_url": "https://avatars3.githubusercontent.com/u/49910176?v=4",
