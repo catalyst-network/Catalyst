@@ -24,9 +24,8 @@
 using System;
 using Catalyst.Common.Interfaces.P2P;
 using Google.Protobuf;
-using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 
-namespace Catalyst.Common.Interfaces.IO.Messaging
+namespace Catalyst.Common.Interfaces.IO.Messaging.Dto
 {
     public interface IDtoFactory
     {
