@@ -33,7 +33,7 @@ using Google.Protobuf;
 
 namespace Catalyst.Common.IO.Handlers
 {
-    public sealed class ProtocolMessageSignHandler : OutboundChannelHandlerBase<IMessageDto>
+    public sealed class ProtocolMessageSignHandler : OutboundChannelHandlerBase<IMessageDto<ProtocolMessage>>
     {
         private readonly IKeySigner _keySigner;
 
@@ -48,7 +48,7 @@ namespace Catalyst.Common.IO.Handlers
         /// <param name="context"></param>
         /// <param name="message"></param>
         /// <returns></returns>
-        protected override Task WriteAsync0(IChannelHandlerContext context, IMessageDto message)
+        protected override Task WriteAsync0(IChannelHandlerContext context, IMessageDto<ProtocolMessage> message)
         {
             var sig = _keySigner.Sign(message.Message.ToByteArray());
             

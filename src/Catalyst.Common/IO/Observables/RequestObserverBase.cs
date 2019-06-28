@@ -40,12 +40,12 @@ using Serilog;
 
 namespace Catalyst.Common.IO.Observables
 {
-    public abstract class RequestObserverBase<TProtoReq, TProtoRes> : MessageObserverBase, IRequestMessageObserver
+    public abstract class RequestObserverBase<TProtoReq, TProtoRes> : MessageObserverBase, IRequestMessageObserver<TProtoRes>
         where TProtoReq : IMessage<TProtoReq> where TProtoRes : IMessage<TProtoRes>
     {
         private readonly string _filterMessageType;
         public IPeerIdentifier PeerIdentifier { get; }
-
+        
         protected RequestObserverBase(ILogger logger, IPeerIdentifier peerIdentifier) : base(logger)
         {
             Guard.Argument(typeof(TProtoReq), nameof(TProtoReq)).Require(t => t.IsRequestType(), 
@@ -54,7 +54,7 @@ namespace Catalyst.Common.IO.Observables
             PeerIdentifier = peerIdentifier;
         }
 
-        protected abstract IMessage<TProtoRes> HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto);
+        protected abstract TProtoRes HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto);
 
         public override void StartObserving(IObservable<IProtocolMessageDto<ProtocolMessage>> messageStream)
         {
@@ -86,7 +86,7 @@ namespace Catalyst.Common.IO.Observables
             ));
         }
 
-        public void SendChannelContextResponse(IMessageDto messageDto)
+        public void SendChannelContextResponse(IMessageDto<TProtoRes> messageDto)
         {   
             ChannelHandlerContext.Channel.WriteAndFlushAsync(messageDto);
         }

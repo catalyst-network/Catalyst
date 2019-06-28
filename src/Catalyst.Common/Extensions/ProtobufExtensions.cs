@@ -136,7 +136,7 @@ namespace Catalyst.Common.Extensions
             return typed;
         }
 
-        public static T FromIMessageDto<T>(this IMessageDto message) where T : IMessage<T>
+        public static T FromIMessageDto<T>(this IMessageDto<T> message) where T : IMessage<T>
         {
             var empty = (T) Activator.CreateInstance(typeof(T));
             var typed = (T) empty.Descriptor.Parser.ParseFrom(message.Message.ToByteString());

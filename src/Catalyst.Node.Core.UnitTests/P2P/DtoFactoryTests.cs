@@ -45,7 +45,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
                 PeerIdentifierHelper.GetPeerIdentifier("im_a_sender")
             );
             
-            pingRequestDto.Should().BeAssignableTo<IMessageDto>();
+            pingRequestDto.Should().BeAssignableTo<IMessageDto<PingRequest>>();
             pingRequestDto.Recipient.Should().BeAssignableTo<IPeerIdentifier>();
             pingRequestDto.Sender.Should().BeAssignableTo<IPeerIdentifier>();
             pingRequestDto.Message.Should().BeAssignableTo<IMessage>();
@@ -60,7 +60,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
                 Guid.NewGuid()
             );
 
-            pingResponseDto.Should().BeAssignableTo<IMessageDto>();
+            pingResponseDto.Should().BeAssignableTo<IMessageDto<PingResponse>>();
             pingResponseDto.Recipient.Should().BeAssignableTo<IPeerIdentifier>();
             pingResponseDto.Sender.Should().BeAssignableTo<IPeerIdentifier>();
             pingResponseDto.Message.Should().BeAssignableTo<IMessage>();
@@ -76,7 +76,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
                 PeerIdentifierHelper.GetPeerIdentifier("im_a_sender")
             );
             
-            transactionDto.Should().BeAssignableTo<IMessageDto>();
+            transactionDto.Should().BeAssignableTo<IMessageDto<TransactionBroadcast>>();
             transactionDto.Recipient.Should().BeAssignableTo<IPeerIdentifier>();
             transactionDto.Sender.Should().BeAssignableTo<IPeerIdentifier>();
             transactionDto.Message.Should().BeAssignableTo<IMessage>();

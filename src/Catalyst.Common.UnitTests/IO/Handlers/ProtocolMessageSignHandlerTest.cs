@@ -31,6 +31,7 @@ using Catalyst.Cryptography.BulletProofs.Wrapper.Types;
 using Catalyst.Protocol.IPPN;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
+using Google.Protobuf;
 using NSubstitute;
 using Xunit;
 
@@ -39,7 +40,7 @@ namespace Catalyst.Common.UnitTests.IO.Handlers
     public sealed class ProtocolMessageSignHandlerTest
     {
         private readonly IChannelHandlerContext _fakeContext;
-        private readonly IMessageDto _dto;
+        private readonly IMessageDto<PingRequest> _dto;
         private readonly IKeySigner _keySigner;
 
         public ProtocolMessageSignHandlerTest()

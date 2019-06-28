@@ -1,4 +1,4 @@
-<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
 	<s:String x:Key="/Default/CodeEditing/NullCheckPatterns/CustomExpressionPatternText/@EntryValue">// Use the following placeholders:
 // $EXPR$    -- source expression
 // $NAME$    -- source name (string literal or 'nameof' expression)
@@ -199,5 +199,6 @@ namespace $NAMESPACE$&#xD;
 	<s:Int64 x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=92732F9610241D49818D3E4BE966CB00/Field/=NAMESPACE/Order/@EntryValue">0</s:Int64>
 	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=92732F9610241D49818D3E4BE966CB00/Field/=MessageType/@KeyIndexDefined">True</s:Boolean>
 	<s:Int64 x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=92732F9610241D49818D3E4BE966CB00/Field/=MessageType/Order/@EntryValue">1</s:Int64>
-	<s:Boolean x:Key="/Default/UserDictionary/Words/=Synchronisation/@EntryIndexedValue">True</s:Boolean></wpf:ResourceDictionary>
+	<s:Boolean x:Key="/Default/UserDictionary/Words/=Synchronisation/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/UserDictionary/Words/=Synchronised/@EntryIndexedValue">True</s:Boolean></wpf:ResourceDictionary>
 	
