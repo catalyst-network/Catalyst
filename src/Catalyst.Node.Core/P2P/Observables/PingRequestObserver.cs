@@ -41,7 +41,7 @@ namespace Catalyst.Node.Core.P2P.Observables
             ILogger logger)
             : base(logger, peerIdentifier) { }
 
-        protected override IMessage<PingResponse> HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto)
+        protected override PingResponse HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto)
         {
             Logger.Debug("message content is {0}", messageDto.Payload.FromProtocolMessage<PingRequest>());
 

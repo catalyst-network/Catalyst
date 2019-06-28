@@ -32,8 +32,8 @@ namespace Catalyst.Common.IO.Observables
 {
     public abstract class MessageObserverBase : IMessageObserver, IDisposable
     {
-        public readonly ILogger Logger;
-        public IDisposable MessageSubscription { get; set; }
+        protected readonly ILogger Logger;
+        public IDisposable MessageSubscription { get; protected set; }
         public IChannelHandlerContext ChannelHandlerContext { get; protected set; }
 
         protected MessageObserverBase(ILogger logger)

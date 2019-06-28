@@ -58,7 +58,7 @@ namespace Catalyst.Node.Rpc.Client.Observables
 
         /// <summary>Handles the specified message.</summary>
         /// <param name="messageDto">The message.</param>
-        protected override IMessage<TransferFileBytesResponse> HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto)
+        protected override TransferFileBytesResponse HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto)
         {
             Logger.Debug("received message of type TransferFileBytesRequestObserver");
 

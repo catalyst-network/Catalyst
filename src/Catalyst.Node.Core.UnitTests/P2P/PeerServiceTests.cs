@@ -78,12 +78,12 @@ namespace Catalyst.Node.Core.UnitTests.P2P
         [Fact]
         public async Task Can_receive_incoming_ping_responses()
         {
-            var pingHandler = new TestMessageObserver<PingResponse>(_logger);
+            var messageObserver = new TestMessageObserver<PingResponse>(_logger);
             var protocolMessage = new PingResponse().ToProtocolMessage(_pid.PeerId, _guid);
 
-            await InitialisePeerServiceAndSendMessage(pingHandler, protocolMessage).ConfigureAwait(false);
+            await InitialisePeerServiceAndSendMessage(messageObserver, protocolMessage).ConfigureAwait(false);
 
-            pingHandler.SubstituteObserver.Received().OnNext(Arg.Any<PingResponse>());
+            messageObserver.SubstituteObserver.Received().OnNext(Arg.Any<PingResponse>());
         }
 
         [Fact]

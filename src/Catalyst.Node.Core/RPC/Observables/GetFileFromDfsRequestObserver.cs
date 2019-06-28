@@ -80,7 +80,7 @@ namespace Catalyst.Node.Core.RPC.Observables
 
         /// <summary>Handles the specified message.</summary>
         /// <param name="messageDto">The message.</param>
-        protected override IMessage<GetFileFromDfsResponse> HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto)
+        protected override GetFileFromDfsResponse HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto)
         {
             var deserialised = messageDto.Payload.FromProtocolMessage<GetFileFromDfsRequest>();
             
@@ -137,7 +137,7 @@ namespace Catalyst.Node.Core.RPC.Observables
         /// <summary>Returns the response.</summary>
         /// <param name="responseCode">The response code.</param>
         /// <param name="fileSize">Size of the file.</param>
-        private IMessage<GetFileFromDfsResponse> ReturnResponse(Enumeration responseCode, long fileSize)
+        private GetFileFromDfsResponse ReturnResponse(Enumeration responseCode, long fileSize)
         {
             Logger.Information("File upload response code: " + responseCode);
             
