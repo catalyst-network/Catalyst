@@ -6,6 +6,16 @@
   "commit": false,
   "contributors": [
     {
+      "login": "Millymanz",
+      "name": "Millymanz",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/5070123?v=4",
+      "profile": "https://github.com/Millymanz",
+      "contributions": [
+        "test",
+        "code"
+      ]
+      },
+    {
       "login": "monsieurleberre",
       "name": "monsieurleberre",
       "avatar_url": "https://avatars2.githubusercontent.com/u/4638821?v=4",
@@ -15,6 +25,7 @@
         "code"
       ]
       },
+     {
       "login": "atlassanjay",
       "name": "atlassanjay",
       "avatar_url": "https://avatars3.githubusercontent.com/u/49910176?v=4",
@@ -24,6 +35,7 @@
         "code"
       ]
       },
+     {
       "login": "richardschneider",
       "name": "Richard Schneider",
       "avatar_url": "https://avatars2.githubusercontent.com/u/631061?v=4",
