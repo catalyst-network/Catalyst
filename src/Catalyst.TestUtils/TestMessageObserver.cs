@@ -38,7 +38,7 @@ using Serilog;
 namespace Catalyst.TestUtils
 {
     public class TestMessageObserver<TProto> : MessageObserverBase,
-        IP2PMessageObserver, IRpcResponseObserver
+        IP2PMessageObserver, IRpcResponseObserver, IRpcRequestObserver
         where TProto : IMessage, IMessage<TProto>
     {
         private readonly string _filterMessageType;
