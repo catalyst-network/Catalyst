@@ -55,7 +55,7 @@ namespace Catalyst.Node.Rpc.Client.IO.Observables
 
         /// <summary>Handles the specified message.</summary>
         /// <param name="messageDto">The message.</param>
-        public override void HandleResponse(IProtocolMessageDto<ProtocolMessage> messageDto)
+        public override void HandleResponse(IObserverDto<ProtocolMessage> messageDto)
         {
             Logger.Debug($@"Handling Remove Peer Response");
             

@@ -51,7 +51,7 @@ namespace Catalyst.Node.Core.RPC.IO.Observables
             _keySigner = keySigner;
         }
 
-        protected override SignMessageResponse HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto)
+        protected override SignMessageResponse HandleRequest(IObserverDto<ProtocolMessage> messageDto)
         {
             Logger.Debug("received message of type SignMessageRequest");
 

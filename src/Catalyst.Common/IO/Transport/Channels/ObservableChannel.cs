@@ -32,7 +32,7 @@ namespace Catalyst.Common.IO.Transport.Channels
 {
     public sealed class ObservableChannel : IObservableChannel
     {
-        public ObservableChannel(IObservable<IProtocolMessageDto<ProtocolMessage>> messageStream, IChannel channel)
+        public ObservableChannel(IObservable<IObserverDto<ProtocolMessage>> messageStream, IChannel channel)
         {
             Guard.Argument(messageStream, nameof(messageStream)).NotNull();
 
@@ -41,7 +41,7 @@ namespace Catalyst.Common.IO.Transport.Channels
         }
 
         public IChannel Channel { get; }
-        public IObservable<IProtocolMessageDto<ProtocolMessage>> MessageStream { get; }
+        public IObservable<IObserverDto<ProtocolMessage>> MessageStream { get; }
 
         void IDisposable.Dispose()
         {

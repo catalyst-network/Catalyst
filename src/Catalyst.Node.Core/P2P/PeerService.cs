@@ -38,7 +38,7 @@ namespace Catalyst.Node.Core.P2P
     public sealed class PeerService : UdpServer, IPeerService
     {
         public IPeerDiscovery Discovery { get; }
-        public IObservable<IProtocolMessageDto<ProtocolMessage>> MessageStream { get; }
+        public IObservable<IObserverDto<ProtocolMessage>> MessageStream { get; }
 
         public PeerService(IUdpServerEventLoopGroupFactory udpServerEventLoopGroupFactory,
             IUdpServerChannelFactory serverChannelFactory,

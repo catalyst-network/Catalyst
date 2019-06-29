@@ -59,7 +59,7 @@ namespace Catalyst.Node.Rpc.Client.IO.Observables
         /// Handles the peer list response.
         /// </summary>
         /// <param name="messageDto">The PeerListResponse message.</param>
-        public override void HandleResponse(IProtocolMessageDto<ProtocolMessage> messageDto)
+        public override void HandleResponse(IObserverDto<ProtocolMessage> messageDto)
         {
             Logger.Debug("Handling PeerListResponse");
 

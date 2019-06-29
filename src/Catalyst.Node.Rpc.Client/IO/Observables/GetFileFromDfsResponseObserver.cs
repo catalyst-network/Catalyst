@@ -58,7 +58,7 @@ namespace Catalyst.Node.Rpc.Client.IO.Observables
 
         /// <summary>Handles the specified message.</summary>
         /// <param name="messageDto">The message.</param>
-        public override void HandleResponse(IProtocolMessageDto<ProtocolMessage> messageDto)
+        public override void HandleResponse(IObserverDto<ProtocolMessage> messageDto)
         {
             var deserialised = messageDto.Payload.FromProtocolMessage<GetFileFromDfsResponse>() ?? throw new ArgumentNullException(nameof(messageDto));
             

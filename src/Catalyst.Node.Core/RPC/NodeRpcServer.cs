@@ -44,7 +44,7 @@ namespace Catalyst.Node.Core.RPC
         private readonly X509Certificate2 _certificate;
 
         public IRpcServerSettings Settings { get; }
-        public IObservable<IProtocolMessageDto<ProtocolMessage>> MessageStream { get; }
+        public IObservable<IObserverDto<ProtocolMessage>> MessageStream { get; }
 
         public NodeRpcServer(IRpcServerSettings settings,
             ILogger logger,

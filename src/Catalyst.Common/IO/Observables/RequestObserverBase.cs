@@ -54,9 +54,9 @@ namespace Catalyst.Common.IO.Observables
             PeerIdentifier = peerIdentifier;
         }
 
-        protected abstract TProtoRes HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto);
+        protected abstract TProtoRes HandleRequest(IObserverDto<ProtocolMessage> messageDto);
 
-        public override void StartObserving(IObservable<IProtocolMessageDto<ProtocolMessage>> messageStream)
+        public override void StartObserving(IObservable<IObserverDto<ProtocolMessage>> messageStream)
         {
             if (MessageSubscription != null)
             {
@@ -70,7 +70,7 @@ namespace Catalyst.Common.IO.Observables
                .Subscribe(OnNext, OnError, OnCompleted);
         }
         
-        public override void OnNext(IProtocolMessageDto<ProtocolMessage> messageDto)
+        public override void OnNext(IObserverDto<ProtocolMessage> messageDto)
         {
             Logger.Verbose("Pre Handle Message Called");
             

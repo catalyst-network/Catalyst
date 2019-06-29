@@ -59,7 +59,7 @@ namespace Catalyst.Node.Core.RPC.IO.Observables
         /// Handlers the specified message.
         /// </summary>
         /// <param name="messageDto">The message.</param>
-        protected override SetPeerBlackListResponse HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto)
+        protected override SetPeerBlackListResponse HandleRequest(IObserverDto<ProtocolMessage> messageDto)
         {
             Logger.Information("received message of type PeerBlackListingRequest");
 
