@@ -85,7 +85,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.Observables
             _uploadFileTransferFactory.Received(Quantity.Exactly(1)).Remove(Arg.Any<Guid>());
         }
 
-        private IProtocolMessageDto<ProtocolMessage> GetAddFileToDfsResponse(FileTransferResponseCodes responseCode)
+        private IObserverDto<ProtocolMessage> GetAddFileToDfsResponse(FileTransferResponseCodes responseCode)
         {
             AddFileToDfsResponse addFileResponse = new AddFileToDfsResponse
             {
@@ -94,7 +94,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.Observables
             };
 
             var protocolMessage = addFileResponse.ToProtocolMessage(PeerIdHelper.GetPeerId("Test"), Guid.NewGuid());
-            return new ProtocolMessageDto(_channelHandlerContext, protocolMessage);
+            return new ObserverDto(_channelHandlerContext, protocolMessage);
         }
     }
 }

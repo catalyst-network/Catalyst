@@ -58,7 +58,7 @@ namespace Catalyst.Node.Core.RPC.IO.Observables
         /// Handlers the specified message.
         /// </summary>
         /// <param name="messageDto">The message.</param>
-        protected override GetPeerReputationResponse HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto)
+        protected override GetPeerReputationResponse HandleRequest(IObserverDto<ProtocolMessage> messageDto)
         {
             Logger.Debug("received message of type PeerReputationRequest");
             

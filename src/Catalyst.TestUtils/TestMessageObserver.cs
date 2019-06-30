@@ -54,24 +54,24 @@ namespace Catalyst.TestUtils
 
         public override void OnError(Exception exception) { SubstituteObserver.OnError(exception); }
         
-        public void HandleResponse(IProtocolMessageDto<ProtocolMessage> messageDto)
+        public void HandleResponse(IObserverDto<ProtocolMessage> messageDto)
         {
             SubstituteObserver.OnNext(messageDto.Payload.FromProtocolMessage<TProto>());
         }
 
-        public override void OnNext(IProtocolMessageDto<ProtocolMessage> messageDto)
+        public override void OnNext(IObserverDto<ProtocolMessage> messageDto)
         {
             SubstituteObserver.OnNext(messageDto.Payload.FromProtocolMessage<TProto>());
         }
         
-        public IMessage HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto)
+        public IMessage HandleRequest(IObserverDto<ProtocolMessage> messageDto)
         {
             return messageDto.Payload.FromProtocolMessage<TProto>();
         }
                 
         public override void OnCompleted() { SubstituteObserver.OnCompleted(); }
 
-        public override void StartObserving(IObservable<IProtocolMessageDto<ProtocolMessage>> messageStream)
+        public override void StartObserving(IObservable<IObserverDto<ProtocolMessage>> messageStream)
         {
             if (MessageSubscription != null)
             {

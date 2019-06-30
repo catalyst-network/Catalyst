@@ -62,7 +62,7 @@ namespace Catalyst.Node.Core.RPC.IO.Observables
 
         /// <summary>Handles the specified message.</summary>
         /// <param name="messageDto">The message.</param>
-        protected override RemovePeerResponse HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto)
+        protected override RemovePeerResponse HandleRequest(IObserverDto<ProtocolMessage> messageDto)
         {
             Logger.Debug("Received message of type RemovePeerRequest");
 
