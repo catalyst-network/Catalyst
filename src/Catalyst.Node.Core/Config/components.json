@@ -295,7 +295,7 @@
             "instanceScope": "singleinstance"
         },
         {
-            "type": "Catalyst.Node.Core.P2P.Messaging.Broadcast.BroadcastManager",
+            "type": "Catalyst.Node.Core.P2P.IO.Messaging.Broadcast.BroadcastManager",
             "services": [
                 {
                     "type": "Catalyst.Common.Interfaces.P2P.Messaging.Broadcast.IBroadcastManager, Catalyst.Common"
