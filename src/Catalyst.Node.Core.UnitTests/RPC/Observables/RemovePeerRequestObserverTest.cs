@@ -138,7 +138,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
             sentResponseDto.Message.GetType()
                .Should().BeAssignableTo<RemovePeerResponse>();
 
-            var signResponseMessage = sentResponseDto.FromIMessageDto<RemovePeerResponse>();
+            var signResponseMessage = sentResponseDto.FromIMessageDto();
 
             signResponseMessage.DeletedCount.Should().Be(withPublicKey ? 1 : (uint) fakePeers.Count);
         }

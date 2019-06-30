@@ -22,14 +22,13 @@
 #endregion
 
 using System;
-using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Cli;
-using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Observables;
+using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Observables;
-using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
+using DotNetty.Transport.Channels;
 using ILogger = Serilog.ILogger;
 
 namespace Catalyst.Node.Rpc.Client.IO.Observables
@@ -55,27 +54,29 @@ namespace Catalyst.Node.Rpc.Client.IO.Observables
         {
             _output = output;
         }
-
+        
         /// <summary>
-        /// Handles the GetInfoResponse message.
+        /// 
         /// </summary>
-        /// <param name="messageDto">An object of GetInfoResponse</param>
-        public override void HandleResponse(IObserverDto<ProtocolMessage> messageDto)
+        /// <param name="getInfoResponse"></param>
+        /// <param name="channelHandlerContext"></param>
+        /// <param name="senderPeerIdentifier"></param>
+        /// <param name="correlationId"></param>
+        protected override void HandleResponse(GetInfoResponse getInfoResponse, IChannelHandlerContext channelHandlerContext, IPeerIdentifier senderPeerIdentifier, Guid correlationId)
         {
+            Guard.Argument(getInfoResponse, nameof(getInfoResponse)).NotNull();
+            Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
+            Guard.Argument(senderPeerIdentifier, nameof(senderPeerIdentifier)).NotNull();
             Logger.Debug("Handling GetInfoResponse");
             
             try
             {
-                var deserialised = messageDto.Payload.FromProtocolMessage<GetInfoResponse>() ?? throw new ArgumentNullException(nameof(messageDto));
-                
-                Guard.Argument(deserialised).NotNull().Require(d => d.Query != null, d => $"{nameof(deserialised)} must have a valid configuration response.");
-                
-                _output.WriteLine(deserialised.Query);
+                _output.WriteLine(getInfoResponse.Query);
             }
             catch (Exception ex)
             {
                 Logger.Error(ex,
-                    "Failed to handle GetInfoResponse after receiving message {0}", messageDto);
+                    "Failed to handle GetInfoResponse after receiving message {0}", getInfoResponse);
                 _output.WriteLine(ex.Message);
             }
             finally

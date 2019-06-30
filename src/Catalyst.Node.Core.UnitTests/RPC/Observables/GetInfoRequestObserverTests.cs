@@ -103,7 +103,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
                 "the only call should be the one we checked above");
 
             var response = ((IMessageDto<GetInfoResponse>) receivedCalls.Single().GetArguments()[0])
-               .FromIMessageDto<GetInfoResponse>();
+               .FromIMessageDto();
             response.Query.Should().Match(expectedResponseContent,
                 "the expected response should contain config information");
         }

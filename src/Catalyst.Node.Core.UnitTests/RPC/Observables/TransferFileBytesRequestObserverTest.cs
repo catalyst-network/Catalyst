@@ -97,7 +97,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
             receivedCalls.Count.Should().Be(1);
             var sentResponseDto = (IMessageDto<TransferFileBytesResponse>) receivedCalls.Single().GetArguments().Single();
             sentResponseDto.Message.GetType().Should().BeAssignableTo<TransferFileBytesResponse>();
-            var versionResponseMessage = sentResponseDto.FromIMessageDto<TransferFileBytesResponse>();
+            var versionResponseMessage = sentResponseDto.FromIMessageDto();
             versionResponseMessage.ResponseCode.Should().Equal((byte) FileTransferResponseCodes.Error);
         }
     }

@@ -165,7 +165,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
                .Should()
                .BeAssignableTo<SetPeerBlackListResponse>();
             
-            return sentResponseDto.FromIMessageDto<SetPeerBlackListResponse>();
+            return sentResponseDto.FromIMessageDto();
         }
     }
 }

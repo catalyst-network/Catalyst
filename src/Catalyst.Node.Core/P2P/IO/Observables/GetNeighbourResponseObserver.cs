@@ -21,11 +21,12 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.IO.Messaging.Dto;
+using System;
 using Catalyst.Common.Interfaces.IO.Observables;
+using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Observables;
-using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
+using DotNetty.Transport.Channels;
 using Serilog;
 
 namespace Catalyst.Node.Core.P2P.IO.Observables
@@ -35,8 +36,15 @@ namespace Catalyst.Node.Core.P2P.IO.Observables
             IP2PMessageObserver
     {
         public GetNeighbourResponseObserver(ILogger logger) : base(logger) { }
-        
-        public override void HandleResponse(IObserverDto<ProtocolMessage> messageDto)
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="messageDto"></param>
+        /// <param name="channelHandlerContext"></param>
+        /// <param name="senderPeerIdentifier"></param>
+        /// <param name="correlationId"></param>
+        protected override void HandleResponse(PeerNeighborsResponse messageDto, IChannelHandlerContext channelHandlerContext, IPeerIdentifier senderPeerIdentifier, Guid correlationId)
         {
             Logger.Debug("received peer NeighbourResponse");
         }

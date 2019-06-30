@@ -115,7 +115,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
                .Should()
                .BeAssignableTo<GetPeerCountResponse>();
 
-            var responseContent = sentResponseDto.FromIMessageDto<GetPeerCountResponse>();
+            var responseContent = sentResponseDto.FromIMessageDto();
 
             responseContent.PeerCount.Should().Be(fakePeers);
         }
