@@ -22,6 +22,7 @@
 #endregion
 
 using Catalyst.Common.Config;
+using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.IO.Handlers;
 using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Protocol.Common;
@@ -47,9 +48,9 @@ namespace Catalyst.Common.UnitTests.IO.Handlers
         [Fact]
         public void Does_Process_IMessageDto_Types()
         {
-            var fakeRequestMessageDto = Substitute.For<IMessageSignedDto<ProtocolMessageSigned>>();
+            var fakeRequestMessageDto = Substitute.For<IMessageDto<ProtocolMessageSigned>>();
             fakeRequestMessageDto.MessageType.Returns(MessageTypes.Request);
-            fakeRequestMessageDto.Message.Returns(Substitute.For<IMessage<ProtocolMessageSigned>>());
+            fakeRequestMessageDto.Message.Returns(new ProtocolMessageSigned());
             fakeRequestMessageDto.Sender.Returns(PeerIdentifierHelper.GetPeerIdentifier("Im_The_Sender"));
 
             var protoDatagramEncoderHandler = new ProtoDatagramEncoderHandler(Substitute.For<ILogger>());
