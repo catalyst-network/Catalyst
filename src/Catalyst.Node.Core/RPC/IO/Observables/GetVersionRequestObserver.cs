@@ -22,13 +22,13 @@
 #endregion
 
 using System;
-using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Observables;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Observables;
 using Catalyst.Common.Util;
-using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
+using Dawn;
+using DotNetty.Transport.Channels;
 using ILogger = Serilog.ILogger;
 
 namespace Catalyst.Node.Core.RPC.IO.Observables
@@ -41,8 +41,19 @@ namespace Catalyst.Node.Core.RPC.IO.Observables
             ILogger logger)
             : base(logger, peerIdentifier) { }
 
-        protected override VersionResponse HandleRequest(IObserverDto<ProtocolMessage> messageDto)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="versionRequest"></param>
+        /// <param name="channelHandlerContext"></param>
+        /// <param name="senderPeerIdentifier"></param>
+        /// <param name="correlationId"></param>
+        /// <returns></returns>
+        protected override VersionResponse HandleRequest(VersionRequest versionRequest, IChannelHandlerContext channelHandlerContext, IPeerIdentifier senderPeerIdentifier, Guid correlationId)
         {
+            Guard.Argument(versionRequest, nameof(versionRequest)).NotNull();
+            Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
+            Guard.Argument(senderPeerIdentifier, nameof(senderPeerIdentifier)).NotNull();
             Logger.Debug("received message of type VersionRequest");
 
             try
@@ -55,7 +66,7 @@ namespace Catalyst.Node.Core.RPC.IO.Observables
             catch (Exception ex)
             {
                 Logger.Error(ex,
-                    "Failed to handle GetVersionRequest after receiving message {0}", messageDto);
+                    "Failed to handle GetVersionRequest after receiving message {0}", versionRequest);
                 throw;
             }
         }

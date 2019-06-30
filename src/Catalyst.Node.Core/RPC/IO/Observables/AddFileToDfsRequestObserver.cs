@@ -27,19 +27,16 @@ using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Common.Config;
 using Catalyst.Common.Enumerator;
-using Catalyst.Common.Extensions;
 using Catalyst.Common.FileTransfer;
 using Catalyst.Common.Interfaces.FileTransfer;
-using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Observables;
 using Catalyst.Common.Interfaces.Modules.Dfs;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.IO.Observables;
-using Catalyst.Common.P2P;
-using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
+using DotNetty.Transport.Channels;
 using Google.Protobuf;
 using Serilog;
 
@@ -72,18 +69,24 @@ namespace Catalyst.Node.Core.RPC.IO.Observables
             _fileTransferFactory = fileTransferFactory;
             _dfs = dfs;
         }
-
-        /// <summary>Handles the specified message.</summary>
-        /// <param name="messageDto">The message.</param>
-        protected override AddFileToDfsResponse HandleRequest(IObserverDto<ProtocolMessage> messageDto)
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="addFileToDfsRequest"></param>
+        /// <param name="channelHandlerContext"></param>
+        /// <param name="senderPeerIdentifier"></param>
+        /// <param name="correlationId"></param>
+        /// <returns></returns>
+        protected override AddFileToDfsResponse HandleRequest(AddFileToDfsRequest addFileToDfsRequest, IChannelHandlerContext channelHandlerContext, IPeerIdentifier senderPeerIdentifier, Guid correlationId)
         {
-            var deserialised = messageDto.Payload.FromProtocolMessage<AddFileToDfsRequest>();
-
-            Guard.Argument(deserialised).NotNull("Message cannot be null");
-
+            Guard.Argument(addFileToDfsRequest, nameof(addFileToDfsRequest)).NotNull();
+            Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
+            Guard.Argument(senderPeerIdentifier, nameof(senderPeerIdentifier)).NotNull();
+            
             var fileTransferInformation = new DownloadFileTransferInformation(PeerIdentifier,
-                new PeerIdentifier(messageDto.Payload.PeerId), messageDto.Context.Channel,
-                messageDto.Payload.CorrelationId.ToGuid(), deserialised.FileName, deserialised.FileSize);
+                senderPeerIdentifier, channelHandlerContext.Channel,
+                correlationId, addFileToDfsRequest.FileName, addFileToDfsRequest.FileSize);
 
             FileTransferResponseCodes responseCode;
             try
@@ -93,7 +96,7 @@ namespace Catalyst.Node.Core.RPC.IO.Observables
             catch (Exception e)
             {
                 Logger.Error(e,
-                    "Failed to handle AddFileToDfsRequestHandler after receiving message {0}", messageDto);
+                    "Failed to handle AddFileToDfsRequestHandler after receiving message {0}", addFileToDfsRequest);
                 responseCode = FileTransferResponseCodes.Error;
             }
 

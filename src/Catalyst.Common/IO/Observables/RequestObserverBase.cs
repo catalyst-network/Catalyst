@@ -30,11 +30,11 @@ using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Observables;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.P2P;
 using Catalyst.Protocol.Common;
 using Dawn;
+using DotNetty.Transport.Channels;
 using Google.Protobuf;
 using Serilog;
 
@@ -54,8 +54,6 @@ namespace Catalyst.Common.IO.Observables
             PeerIdentifier = peerIdentifier;
         }
 
-        protected abstract TProtoRes HandleRequest(IObserverDto<ProtocolMessage> messageDto);
-
         public override void StartObserving(IObservable<IObserverDto<ProtocolMessage>> messageStream)
         {
             if (MessageSubscription != null)
@@ -70,25 +68,23 @@ namespace Catalyst.Common.IO.Observables
                .Subscribe(OnNext, OnError, OnCompleted);
         }
         
+        protected abstract TProtoRes HandleRequest(TProtoReq messageDto, IChannelHandlerContext channelHandlerContext, IPeerIdentifier senderPeerIdentifier, Guid correlationId);
+
         public override void OnNext(IObserverDto<ProtocolMessage> messageDto)
         {
             Logger.Verbose("Pre Handle Message Called");
             
-            ChannelHandlerContext = messageDto.Context;
-            
             //@TODO HandleRequest in try catch if catch send error message.
-            var response = HandleRequest(messageDto);
+            var response = HandleRequest(messageDto.Payload.FromProtocolMessage<TProtoReq>(),
+                messageDto.Context,
+                new PeerIdentifier(messageDto.Payload.PeerId),
+                messageDto.Payload.CorrelationId.ToGuid());
             
-            SendChannelContextResponse(new DtoFactory().GetDto(response,
+            messageDto.Context.Channel.WriteAndFlushAsync(new DtoFactory().GetDto(response,
                 PeerIdentifier,
                 new PeerIdentifier(messageDto.Payload.PeerId),
                 messageDto.Payload.CorrelationId.ToGuid()
             ));
-        }
-
-        public void SendChannelContextResponse(IMessageDto<TProtoRes> messageDto)
-        {   
-            ChannelHandlerContext.Channel.WriteAndFlushAsync(messageDto);
         }
     }
 }

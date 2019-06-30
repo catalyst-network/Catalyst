@@ -38,6 +38,10 @@ namespace Catalyst.Node.Core.P2P.IO.Observables
         public PingResponseObserver(ILogger logger)
             : base(logger) { }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="messageDto"></param>
         public override void HandleResponse(IObserverDto<ProtocolMessage> messageDto)
         {
             Logger.Debug("received ping response");

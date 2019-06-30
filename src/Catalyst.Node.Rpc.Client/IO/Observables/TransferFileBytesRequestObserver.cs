@@ -23,15 +23,13 @@
 
 using System;
 using Catalyst.Common.Config;
-using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.FileTransfer;
-using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Observables;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Observables;
-using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
+using DotNetty.Transport.Channels;
 using Google.Protobuf;
 using Serilog;
 
@@ -55,27 +53,33 @@ namespace Catalyst.Node.Rpc.Client.IO.Observables
         {
             _fileTransferFactory = fileTransferFactory;
         }
-
-        /// <summary>Handles the specified message.</summary>
-        /// <param name="messageDto">The message.</param>
-        protected override TransferFileBytesResponse HandleRequest(IObserverDto<ProtocolMessage> messageDto)
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="transferFileBytesRequest"></param>
+        /// <param name="channelHandlerContext"></param>
+        /// <param name="senderPeerIdentifier"></param>
+        /// <param name="correlationId"></param>
+        /// <returns></returns>
+        protected override TransferFileBytesResponse HandleRequest(TransferFileBytesRequest transferFileBytesRequest, IChannelHandlerContext channelHandlerContext, IPeerIdentifier senderPeerIdentifier, Guid correlationId)
         {
+            Guard.Argument(transferFileBytesRequest, nameof(transferFileBytesRequest)).NotNull();
+            Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
+            Guard.Argument(senderPeerIdentifier, nameof(senderPeerIdentifier)).NotNull();
             Logger.Debug("received message of type TransferFileBytesRequestObserver");
 
-            var deserialised = messageDto.Payload.FromProtocolMessage<TransferFileBytesRequest>();
             FileTransferResponseCodes responseCode;
 
             try
             {
-                Guard.Argument(deserialised).NotNull("Message cannot be null");
-
-                var correlationId = new Guid(deserialised.CorrelationFileName.ToByteArray());
-                responseCode = _fileTransferFactory.DownloadChunk(correlationId, deserialised.ChunkId, deserialised.ChunkBytes.ToByteArray());
+                var transferCorrelationId = new Guid(transferFileBytesRequest.CorrelationFileName.ToByteArray());
+                responseCode = _fileTransferFactory.DownloadChunk(transferCorrelationId, transferFileBytesRequest.ChunkId, transferFileBytesRequest.ChunkBytes.ToByteArray());
             }
             catch (Exception e)
             {
                 Logger.Error(e,
-                    "Failed to handle TransferFileBytesRequestHandler after receiving message {0}", messageDto);
+                    "Failed to handle TransferFileBytesRequestHandler after receiving message {0}", transferFileBytesRequest);
                 responseCode = FileTransferResponseCodes.Error;
             }
 
