@@ -62,7 +62,10 @@ namespace Catalyst.Node.Rpc.Client.IO.Observables
         /// <param name="channelHandlerContext"></param>
         /// <param name="senderPeerIdentifier"></param>
         /// <param name="correlationId"></param>
-        protected override void HandleResponse(VersionResponse versionResponse, IChannelHandlerContext channelHandlerContext, IPeerIdentifier senderPeerIdentifier, Guid correlationId)
+        protected override void HandleResponse(VersionResponse versionResponse,
+            IChannelHandlerContext channelHandlerContext,
+            IPeerIdentifier senderPeerIdentifier,
+            Guid correlationId)
         {
             Guard.Argument(versionResponse, nameof(versionResponse)).NotNull();
             Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();

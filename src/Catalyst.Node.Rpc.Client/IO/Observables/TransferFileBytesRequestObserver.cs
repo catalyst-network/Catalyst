@@ -62,7 +62,10 @@ namespace Catalyst.Node.Rpc.Client.IO.Observables
         /// <param name="senderPeerIdentifier"></param>
         /// <param name="correlationId"></param>
         /// <returns></returns>
-        protected override TransferFileBytesResponse HandleRequest(TransferFileBytesRequest transferFileBytesRequest, IChannelHandlerContext channelHandlerContext, IPeerIdentifier senderPeerIdentifier, Guid correlationId)
+        protected override TransferFileBytesResponse HandleRequest(TransferFileBytesRequest transferFileBytesRequest,
+            IChannelHandlerContext channelHandlerContext,
+            IPeerIdentifier senderPeerIdentifier,
+            Guid correlationId)
         {
             Guard.Argument(transferFileBytesRequest, nameof(transferFileBytesRequest)).NotNull();
             Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();

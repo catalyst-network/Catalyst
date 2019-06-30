@@ -60,7 +60,10 @@ namespace Catalyst.Node.Core.P2P.IO.Observables
         /// <param name="senderPeerIdentifier"></param>
         /// <param name="correlationId"></param>
         /// <returns></returns>
-        protected override PeerNeighborsResponse HandleRequest(PeerNeighborsRequest peerNeighborsRequest, IChannelHandlerContext channelHandlerContext, IPeerIdentifier senderPeerIdentifier, Guid correlationId)
+        protected override PeerNeighborsResponse HandleRequest(PeerNeighborsRequest peerNeighborsRequest,
+            IChannelHandlerContext channelHandlerContext,
+            IPeerIdentifier senderPeerIdentifier,
+            Guid correlationId)
         {
             Guard.Argument(peerNeighborsRequest, nameof(peerNeighborsRequest)).NotNull();
             Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();

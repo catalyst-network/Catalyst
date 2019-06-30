@@ -78,7 +78,10 @@ namespace Catalyst.Node.Core.RPC.IO.Observables
         /// <param name="senderPeerIdentifier"></param>
         /// <param name="correlationId"></param>
         /// <returns></returns>
-        protected override AddFileToDfsResponse HandleRequest(AddFileToDfsRequest addFileToDfsRequest, IChannelHandlerContext channelHandlerContext, IPeerIdentifier senderPeerIdentifier, Guid correlationId)
+        protected override AddFileToDfsResponse HandleRequest(AddFileToDfsRequest addFileToDfsRequest,
+            IChannelHandlerContext channelHandlerContext,
+            IPeerIdentifier senderPeerIdentifier,
+            Guid correlationId)
         {
             Guard.Argument(addFileToDfsRequest, nameof(addFileToDfsRequest)).NotNull();
             Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();

@@ -63,7 +63,10 @@ namespace Catalyst.Node.Rpc.Client.IO.Observables
         /// <param name="channelHandlerContext"></param>
         /// <param name="senderPeerIdentifier"></param>
         /// <param name="correlationId"></param>
-        protected override void HandleResponse(SignMessageResponse signMessageRequest, IChannelHandlerContext channelHandlerContext, IPeerIdentifier senderPeerIdentifier, Guid correlationId)
+        protected override void HandleResponse(SignMessageResponse signMessageRequest,
+            IChannelHandlerContext channelHandlerContext,
+            IPeerIdentifier senderPeerIdentifier,
+            Guid correlationId)
         {
             Guard.Argument(signMessageRequest, nameof(signMessageRequest)).NotNull();
             Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
@@ -76,7 +79,9 @@ namespace Catalyst.Node.Rpc.Client.IO.Observables
 
                 Guard.Argument(decodeResult, nameof(decodeResult)).NotNull("The sign message response cannot be null.");
 
-                var originalMessage = decodeResult.ToStringFromRLPDecoded() ?? throw new ArgumentNullException(nameof(signMessageRequest));
+                var originalMessage = decodeResult.ToStringFromRLPDecoded();
+                
+                Guard.Argument(originalMessage, nameof(originalMessage)).NotNull();
 
                 _output.WriteLine(
                     $@"Signature: {Multibase.Encode(MultibaseEncoding.Base64, signMessageRequest.Signature.ToByteArray())} " +

@@ -64,7 +64,10 @@ namespace Catalyst.Node.Core.RPC.IO.Observables
         /// <param name="senderPeerIdentifier"></param>
         /// <param name="correlationId"></param>
         /// <returns></returns>
-        protected override SetPeerBlackListResponse HandleRequest(SetPeerBlackListRequest setPeerBlackListRequest, IChannelHandlerContext channelHandlerContext, IPeerIdentifier senderPeerIdentifier, Guid correlationId)
+        protected override SetPeerBlackListResponse HandleRequest(SetPeerBlackListRequest setPeerBlackListRequest,
+            IChannelHandlerContext channelHandlerContext,
+            IPeerIdentifier senderPeerIdentifier,
+            Guid correlationId)
         {
             Guard.Argument(setPeerBlackListRequest, nameof(setPeerBlackListRequest)).NotNull();
             Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
@@ -74,7 +77,9 @@ namespace Catalyst.Node.Core.RPC.IO.Observables
             var peerItem = _peerRepository.GetAll().FirstOrDefault(m => m.PeerIdentifier.Ip.ToString() == setPeerBlackListRequest.Ip.ToStringUtf8() 
              && ConvertorForRLPEncodingExtensions.ToStringFromRLPDecoded(m.PeerIdentifier.PublicKey) == setPeerBlackListRequest.PublicKey.ToStringUtf8());
 
-            return peerItem == null ? ReturnResponse(false, string.Empty.ToUtf8ByteString(), string.Empty.ToUtf8ByteString()) : ReturnResponse(setPeerBlackListRequest.Blacklist, setPeerBlackListRequest.PublicKey, setPeerBlackListRequest.Ip);
+            return peerItem == null
+                ? ReturnResponse(false, string.Empty.ToUtf8ByteString(), string.Empty.ToUtf8ByteString()) 
+                : ReturnResponse(setPeerBlackListRequest.Blacklist, setPeerBlackListRequest.PublicKey, setPeerBlackListRequest.Ip);
         }
 
         /// <summary>

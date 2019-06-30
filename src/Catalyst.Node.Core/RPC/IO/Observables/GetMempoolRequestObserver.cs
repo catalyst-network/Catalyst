@@ -57,7 +57,10 @@ namespace Catalyst.Node.Core.RPC.IO.Observables
         /// <param name="senderPeerIdentifier"></param>
         /// <param name="correlationId"></param>
         /// <returns></returns>
-        protected override GetMempoolResponse HandleRequest(GetMempoolRequest getMempoolRequest, IChannelHandlerContext channelHandlerContext, IPeerIdentifier senderPeerIdentifier, Guid correlationId)
+        protected override GetMempoolResponse HandleRequest(GetMempoolRequest getMempoolRequest,
+            IChannelHandlerContext channelHandlerContext,
+            IPeerIdentifier senderPeerIdentifier,
+            Guid correlationId)
         {
             Guard.Argument(getMempoolRequest, nameof(getMempoolRequest)).NotNull();
             Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
