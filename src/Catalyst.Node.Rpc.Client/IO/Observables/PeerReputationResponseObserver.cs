@@ -59,7 +59,7 @@ namespace Catalyst.Node.Rpc.Client.IO.Observables
         /// Handles the peer reputation response.
         /// </summary>
         /// <param name="messageDto">The GetPeerReputationResponse message.</param>
-        public override void HandleResponse(IProtocolMessageDto<ProtocolMessage> messageDto)
+        public override void HandleResponse(IObserverDto<ProtocolMessage> messageDto)
         {
             Logger.Debug("Handling GetPeerReputation response");
 

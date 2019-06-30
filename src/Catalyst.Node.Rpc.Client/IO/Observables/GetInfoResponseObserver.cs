@@ -60,7 +60,7 @@ namespace Catalyst.Node.Rpc.Client.IO.Observables
         /// Handles the GetInfoResponse message.
         /// </summary>
         /// <param name="messageDto">An object of GetInfoResponse</param>
-        public override void HandleResponse(IProtocolMessageDto<ProtocolMessage> messageDto)
+        public override void HandleResponse(IObserverDto<ProtocolMessage> messageDto)
         {
             Logger.Debug("Handling GetInfoResponse");
             

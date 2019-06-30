@@ -125,7 +125,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Observables
             var peerNeighbourRequestMessage = new PeerNeighborsRequest();
             
             var fakeContext = Substitute.For<IChannelHandlerContext>();
-            var channeledAny = new ProtocolMessageDto(fakeContext, peerNeighbourRequestMessage.ToProtocolMessage(PeerIdHelper.GetPeerId(), Guid.NewGuid()));
+            var channeledAny = new ObserverDto(fakeContext, peerNeighbourRequestMessage.ToProtocolMessage(PeerIdHelper.GetPeerId(), Guid.NewGuid()));
             var observableStream = new[] {channeledAny}.ToObservable();
             
             neighbourRequestHandler.StartObserving(observableStream);

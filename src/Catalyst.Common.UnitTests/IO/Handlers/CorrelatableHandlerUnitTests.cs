@@ -70,7 +70,7 @@ namespace Catalyst.Common.UnitTests.IO.Handlers
         [Fact]
         public void Does_Not_Process_OtherTypes_Types()
         {
-            var fakeRequestMessageDto = Substitute.For<IProtocolMessageDto<IMessage>>();
+            var fakeRequestMessageDto = Substitute.For<IObserverDto<IMessage>>();
 
             var correlatableHandler = new CorrelatableHandler(_fakeMessageCorrelationManager);
             
@@ -81,7 +81,7 @@ namespace Catalyst.Common.UnitTests.IO.Handlers
                .AddPendingRequest(Arg.Any<CorrelatableMessage>()
                 );
 
-            _fakeContext.ReceivedWithAnyArgs(1).WriteAsync(Arg.Any<IProtocolMessageDto<IMessage>>());
+            _fakeContext.ReceivedWithAnyArgs(1).WriteAsync(Arg.Any<IObserverDto<IMessage>>());
         }
     }
 }

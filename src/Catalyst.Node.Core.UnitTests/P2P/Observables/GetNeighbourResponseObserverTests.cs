@@ -80,7 +80,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Observables
             var peerNeighbourResponseMessage = new PeerNeighborsResponse();
             
             var fakeContext = Substitute.For<IChannelHandlerContext>();
-            var channeledAny = new ProtocolMessageDto(fakeContext, peerNeighbourResponseMessage.ToProtocolMessage(PeerIdHelper.GetPeerId(), Guid.NewGuid()));
+            var channeledAny = new ObserverDto(fakeContext, peerNeighbourResponseMessage.ToProtocolMessage(PeerIdHelper.GetPeerId(), Guid.NewGuid()));
             var observableStream = new[] {channeledAny}.ToObservable();
             neighbourResponseHandler.StartObserving(observableStream);
 

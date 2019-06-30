@@ -65,7 +65,7 @@ namespace Catalyst.TestUtils
         }
 
         public IChannel Channel => _channel;
-        public IObservable<IProtocolMessageDto<ProtocolMessage>> MessageStream { get; }
+        public IObservable<IObserverDto<ProtocolMessage>> MessageStream { get; }
         void IDisposable.Dispose() { Channel.CloseAsync().Wait(50); }
     }
 }

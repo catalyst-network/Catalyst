@@ -79,7 +79,7 @@ namespace Catalyst.Node.Core.RPC.IO.Observables
 
         /// <summary>Handles the specified message.</summary>
         /// <param name="messageDto">The message.</param>
-        protected override GetFileFromDfsResponse HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto)
+        protected override GetFileFromDfsResponse HandleRequest(IObserverDto<ProtocolMessage> messageDto)
         {
             var deserialised = messageDto.Payload.FromProtocolMessage<GetFileFromDfsRequest>();
             
