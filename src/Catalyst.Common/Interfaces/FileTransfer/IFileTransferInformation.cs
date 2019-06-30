@@ -33,7 +33,7 @@ namespace Catalyst.Common.Interfaces.FileTransfer
     /// <summary>
     /// The File transfer interface
     /// </summary>
-    public interface IFileTransferInformation
+    public interface IFileTransferInformation : IDisposable
     {
         /// <summary>Gets the percentage.</summary>
         int GetPercentage();
@@ -51,9 +51,6 @@ namespace Catalyst.Common.Interfaces.FileTransfer
 
         /// <summary>Deletes the file.</summary>
         void Delete();
-
-        /// <summary>Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.</summary>
-        void Dispose();
 
         /// <summary>Gets or sets a value indicating whether this instance is completed.</summary>
         /// <value><c>true</c> if this instance is completed; otherwise, <c>false</c>.</value>
@@ -105,33 +102,5 @@ namespace Catalyst.Common.Interfaces.FileTransfer
         
         /// <summary>Expires this instance.</summary>
         void Expire();
-    }
-
-    public interface IUploadFileInformation : IFileTransferInformation
-    {
-        /// <summary>Gets or sets the retry count.</summary>
-        /// <value>The retry count.</value>
-        int RetryCount { get; set; }
-
-        /// <summary>Retries the upload.</summary>
-        /// <returns></returns>
-        bool CanRetry();
-        
-        /// <summary>Gets the upload message.</summary>
-        /// <param name="chunkId">The chunk identifier.</param>
-        /// <returns></returns>
-        IMessageDto<TransferFileBytesRequest> GetUploadMessageDto(uint chunkId);
-    }
-
-    public interface IDownloadFileInformation : IFileTransferInformation
-    {
-        /// <summary>Writes to stream.</summary>
-        /// <param name="chunk">The chunk.</param>
-        /// <param name="fileBytes">The file bytes.</param>
-        void WriteToStream(uint chunk, byte[] fileBytes);
-
-        /// <summary>Sets file the length.</summary>
-        /// <param name="fileSize">Size of the file.</param>
-        void SetLength(ulong fileSize);
     }
 }
