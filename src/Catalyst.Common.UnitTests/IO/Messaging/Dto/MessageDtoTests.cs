@@ -28,7 +28,6 @@ using Catalyst.Protocol.IPPN;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Google.Protobuf;
-using NSubstitute;
 using Xunit;
 
 namespace Catalyst.Common.UnitTests.IO.Messaging.Dto

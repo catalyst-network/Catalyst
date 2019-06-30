@@ -32,7 +32,6 @@ using Catalyst.Common.Interfaces.Modules.Consensus.Cycle;
 using Catalyst.Common.Modules.Consensus.Cycle;
 using Catalyst.Node.Core.Modules.Consensus.Cycle;
 using FluentAssertions;
-using FluentAssertions.Primitives;
 using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Xunit;
