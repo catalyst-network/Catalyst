@@ -26,6 +26,7 @@ using System.Threading;
 using Catalyst.Common.Interfaces.Modules.Consensus.Delta;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Primitives;
+using Serilog;
 
 namespace Catalyst.Node.Core.Modules.Consensus.Delta
 {
@@ -35,26 +36,35 @@ namespace Catalyst.Node.Core.Modules.Consensus.Delta
     {
         private readonly IMemoryCache _memoryCache;
         private readonly IDeltaDfsReader _dfsReader;
+        private readonly ILogger _logger;
         private readonly MemoryCacheEntryOptions _entryOptions;
 
-        private const int DefaultCacheSize = 100;
         private static readonly TimeSpan DefaultCacheTtl = TimeSpan.FromMinutes(10);
 
         public DeltaCache(IMemoryCache memoryCache,
             IDeltaDfsReader dfsReader,
-            int cacheSize = default,
+            ILogger logger,
             TimeSpan cacheTtl = default)
         {
             _memoryCache = memoryCache;
             _dfsReader = dfsReader;
-            _entryOptions = new MemoryCacheEntryOptions {Size = cacheSize == default ? DefaultCacheSize : cacheSize};
+            _logger = logger;
             var expirationTtl = cacheTtl == default ? DefaultCacheTtl : cacheTtl;
-            _entryOptions.AddExpirationToken(new CancellationChangeToken(new CancellationTokenSource(expirationTtl).Token));
+            _entryOptions = new MemoryCacheEntryOptions();
+            _entryOptions.AddExpirationToken(new CancellationChangeToken(new CancellationTokenSource(expirationTtl).Token))
+               .RegisterPostEvictionCallback(EvictionCallback);
+        }
+
+        private void EvictionCallback(object key, object value, EvictionReason reason, object state)
+        {
+            _logger.Debug("Evicted Delta {0} from cache.",
+                Multiformats.Hash.Multihash.Decode(((Protocol.Delta.Delta) value).PreviousDeltaDfsHash.ToByteArray()));
         }
 
         /// <inheritdoc />
         public bool TryGetDelta(string hash, out Protocol.Delta.Delta delta)
         {
+            //this calls for a TryGetOrCreate IMemoryCache extension function
             if (_memoryCache.TryGetValue(hash, out delta))
             {
                 return true;
@@ -65,7 +75,7 @@ namespace Catalyst.Node.Core.Modules.Consensus.Delta
                 return false;
             }
 
-            _memoryCache.Set<Protocol.Delta.Delta>(hash, delta, _entryOptions);
+            _memoryCache.Set(hash, delta, _entryOptions);
             return true;
         }
 

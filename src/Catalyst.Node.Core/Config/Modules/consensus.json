@@ -72,6 +72,32 @@
                     "type": "SharpRepository.Repository.IRepository`1[[Catalyst.Common.P2P.Peer, Catalyst.Common]], SharpRepository.Repository"
                 }
             ]
+        },
+        {
+            "type": "Catalyst.Node.Core.Modules.Consensus.Delta.DeltaHashProvider",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.Modules.Consensus.Delta.IDeltaHashProvider, Catalyst.Common"
+                }
+            ]
+        },
+        {
+            "type": "Catalyst.Node.Core.Modules.Consensus.Delta.DeltaCache",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.Modules.Consensus.Delta.IDeltaCache, Catalyst.Common"
+                }
+            ],
+            "instanceScope": "singleinstance"
+        },
+        {
+            "type": "Catalyst.Node.Core.Modules.Consensus.Delta.DeltaDfsReader",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.Modules.Consensus.Delta.IDeltaDfsReader, Catalyst.Common"
+                }
+            ],
+            "instanceScope": "singleinstance"
         }
     ]
 }

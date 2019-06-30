@@ -47,7 +47,7 @@ namespace Catalyst.Protocol.zDelta {
             new pbr::GeneratedClrTypeInfo(typeof(global::Catalyst.Protocol.Delta.Delta), global::Catalyst.Protocol.Delta.Delta.Parser, new[]{ "Version", "PreviousDeltaDfsHash", "MerkleRoot", "MerklePoda", "TimeStamp", "STEntries", "CFEntries", "CBEntries" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Catalyst.Protocol.Delta.CandidateDeltaBroadcast), global::Catalyst.Protocol.Delta.CandidateDeltaBroadcast.Parser, new[]{ "Hash", "ProducerId", "PreviousDeltaDfsHash" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Catalyst.Protocol.Delta.FavouriteDeltaBroadcast), global::Catalyst.Protocol.Delta.FavouriteDeltaBroadcast.Parser, new[]{ "Candidate", "VoterId" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Catalyst.Protocol.Delta.DeltaDfsHashBroadcast), global::Catalyst.Protocol.Delta.DeltaDfsHashBroadcast.Parser, new[]{ "DeltaDfsHash", "PreviousDeltaDfsHash" }, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Catalyst.Protocol.zDelta.DeltaDfsHashBroadcast), global::Catalyst.Protocol.zDelta.DeltaDfsHashBroadcast.Parser, new[]{ "DeltaDfsHash", "PreviousDeltaDfsHash" }, null, null, null)
           }));
     }
     #endregion

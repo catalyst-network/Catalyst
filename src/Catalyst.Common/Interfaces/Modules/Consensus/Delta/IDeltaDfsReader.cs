@@ -35,8 +35,8 @@ namespace Catalyst.Common.Interfaces.Modules.Consensus.Delta
         /// </summary>
         /// <param name="hash">The hash or address of the delta on the Dfs.</param>
         /// <param name="delta">The retrieved delta.</param>
-        /// <param name="cancellationToken">A cancellation token which can be used to interrupt the tasks.</param>
+        /// <param name="cancellationToken">An optional cancellation token which can be used to interrupt the tasks.</param>
         /// <returns><see cref="true" /> if the retrieval was successful, <see cref="false" /> otherwise.</returns>
-        bool TryReadDeltaFromDfs(string hash, out Protocol.Delta.Delta delta, CancellationToken cancellationToken);
+        bool TryReadDeltaFromDfs(string hash, out Protocol.Delta.Delta delta, CancellationToken cancellationToken = default);
     }
 }
