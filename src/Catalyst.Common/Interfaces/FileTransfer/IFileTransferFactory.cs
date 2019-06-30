@@ -57,24 +57,4 @@ namespace Catalyst.Common.Interfaces.FileTransfer
         /// <value>The keys.</value>
         Guid[] Keys { get; }
     }
-
-    /// <summary>
-    /// Handles storing of file uploads
-    /// </summary>
-    /// <seealso cref="IFileTransferFactory{IUploadFileInformation}" />
-    public interface IUploadFileTransferFactory : IFileTransferFactory<IUploadFileInformation> { }
-
-    /// <summary>
-    /// Handles storing of the file downloads
-    /// </summary>
-    /// <seealso cref="IFileTransferFactory{IDownloadFileInformation}" />
-    public interface IDownloadFileTransferFactory : IFileTransferFactory<IDownloadFileInformation>
-    {
-        /// <summary>Downloads the chunk.</summary>
-        /// <param name="fileName">Name of the file.</param>
-        /// <param name="chunkId">The chunk identifier.</param>
-        /// <param name="fileChunk">The file chunk.</param>
-        /// <returns></returns>
-        FileTransferResponseCodes DownloadChunk(Guid fileName, uint chunkId, byte[] fileChunk);
-    }
 }

@@ -90,7 +90,7 @@ namespace Catalyst.Node.Core.IntegrationTests.Modules.Dfs
                 }
                 catch (Exception)
                 {
-                    await Task.Delay(200);
+                    await Task.Delay(200).ConfigureAwait(false);
                 }
             }
 

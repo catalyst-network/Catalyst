@@ -64,15 +64,15 @@ namespace Catalyst.Node.Core.RPC
             requestHandlers.ToList().ForEach(h => h.StartObserving(MessageStream));
         }
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="disposing"></param>
         protected override void Dispose(bool disposing)
         {
-            if (!disposing) return;
-            _cancellationSource?.Dispose();
-            _certificate?.Dispose();
+            if (disposing)
+            {
+                _cancellationSource?.Dispose();
+                _certificate?.Dispose();
+            }
+
+            base.Dispose(disposing);
         }
     }
 }

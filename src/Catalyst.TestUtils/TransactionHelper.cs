@@ -39,7 +39,7 @@ namespace Catalyst.TestUtils
             ulong transactionFees = 2,
             ulong lockTime = 9876)
         {
-            var transaction = new TransactionBroadcast()
+            var transaction = new TransactionBroadcast
             {
                 STEntries =
                 {

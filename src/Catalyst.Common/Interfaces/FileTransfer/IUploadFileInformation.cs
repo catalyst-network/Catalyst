@@ -21,13 +21,27 @@
 
 #endregion
 
-namespace Catalyst.Common.Interfaces.Keystore
+using Catalyst.Common.Interfaces.IO.Messaging.Dto;
+using Catalyst.Protocol.Rpc.Node;
+
+namespace Catalyst.Common.Interfaces.FileTransfer
 {
-    public interface IKeyStoreService
+    /// <summary>
+    /// 
+    /// </summary>
+    public interface IUploadFileInformation : IFileTransferInformation
     {
-        string GetAddressFromKeyStore(string json);
-        string GenerateUtcFileName(string address);
-        byte[] DecryptKeyStoreFromJson(string password, string json);
-        string EncryptAndGenerateDefaultKeyStoreAsJson(string password, byte[] key, string address);
+        /// <summary>Gets or sets the retry count.</summary>
+        /// <value>The retry count.</value>
+        int RetryCount { get; set; }
+
+        /// <summary>Retries the upload.</summary>
+        /// <returns></returns>
+        bool CanRetry();
+        
+        /// <summary>Gets the upload message.</summary>
+        /// <param name="chunkId">The chunk identifier.</param>
+        /// <returns></returns>
+        IMessageDto<TransferFileBytesRequest> GetUploadMessageDto(uint chunkId);
     }
 }
