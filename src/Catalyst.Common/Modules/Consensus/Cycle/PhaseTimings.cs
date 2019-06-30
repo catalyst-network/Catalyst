@@ -22,8 +22,6 @@
 #endregion
 
 using System;
-using System.Reactive.Linq;
-using Serilog;
 
 namespace Catalyst.Common.Modules.Consensus.Cycle
 {

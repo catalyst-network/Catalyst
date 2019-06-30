@@ -23,16 +23,14 @@
 
 using System;
 using System.Linq;
-using Catalyst.Common.Extensions;
-using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Observables;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Observables;
 using Catalyst.Common.Network;
 using Catalyst.Common.P2P;
-using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
+using DotNetty.Transport.Channels;
 using SharpRepository.Repository;
 using ILogger = Serilog.ILogger;
 
@@ -59,26 +57,31 @@ namespace Catalyst.Node.Core.RPC.IO.Observables
         {
             _peerRepository = peerRepository;
         }
-
-        /// <summary>Handles the specified message.</summary>
-        /// <param name="messageDto">The message.</param>
-        protected override RemovePeerResponse HandleRequest(IObserverDto<ProtocolMessage> messageDto)
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="removePeerRequest"></param>
+        /// <param name="channelHandlerContext"></param>
+        /// <param name="senderPeerIdentifier"></param>
+        /// <param name="correlationId"></param>
+        /// <returns></returns>
+        protected override RemovePeerResponse HandleRequest(RemovePeerRequest removePeerRequest, IChannelHandlerContext channelHandlerContext, IPeerIdentifier senderPeerIdentifier, Guid correlationId)
         {
+            Guard.Argument(removePeerRequest, nameof(removePeerRequest)).NotNull();
+            Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
+            Guard.Argument(senderPeerIdentifier, nameof(senderPeerIdentifier)).NotNull();
             Logger.Debug("Received message of type RemovePeerRequest");
 
             try
             {
                 uint peerDeletedCount = 0;
 
-                var deserialised = messageDto.Payload.FromProtocolMessage<RemovePeerRequest>()
-                 ?? throw new ArgumentNullException(nameof(messageDto));
-                var publicKeyIsEmpty = deserialised.PublicKey.IsEmpty;
-
-                Guard.Argument(deserialised).NotNull();
+                var publicKeyIsEmpty = removePeerRequest.PublicKey.IsEmpty;
                 
                 var peersToDelete = _peerRepository.GetAll().TakeWhile(peer =>
-                    Ip.To16Bytes(peer.PeerIdentifier.Ip).SequenceEqual(deserialised.PeerIp.ToByteArray()) &&
-                    (publicKeyIsEmpty || peer.PeerIdentifier.PublicKey.SequenceEqual(deserialised.PublicKey.ToByteArray()))).ToArray();
+                    Ip.To16Bytes(peer.PeerIdentifier.Ip).SequenceEqual(removePeerRequest.PeerIp.ToByteArray()) &&
+                    (publicKeyIsEmpty || peer.PeerIdentifier.PublicKey.SequenceEqual(removePeerRequest.PublicKey.ToByteArray()))).ToArray();
 
                 foreach (var peerToDelete in peersToDelete)
                 {
@@ -94,7 +97,7 @@ namespace Catalyst.Node.Core.RPC.IO.Observables
             catch (Exception ex)
             {
                 Logger.Error(ex,
-                    "Failed to handle GetInfoRequest after receiving message {0}", messageDto);
+                    "Failed to handle GetInfoRequest after receiving message {0}", removePeerRequest);
                 throw;
             }
         }
