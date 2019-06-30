@@ -29,7 +29,7 @@ using Autofac.Configuration;
 using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.IO.Observables;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Node.Core.P2P.Observables;
+using Catalyst.Node.Core.P2P.IO.Observables;
 using FluentAssertions;
 using Microsoft.Extensions.Configuration;
 using Nethereum.RLP;

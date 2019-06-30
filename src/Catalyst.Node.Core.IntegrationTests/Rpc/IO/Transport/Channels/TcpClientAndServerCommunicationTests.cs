@@ -32,7 +32,7 @@ using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Rpc.Authentication;
 using Catalyst.Common.IO.Handlers;
 using Catalyst.Common.P2P;
-using Catalyst.Node.Core.RPC.Observables;
+using Catalyst.Node.Core.RPC.IO.Observables;
 using Catalyst.Node.Core.UnitTests.RPC.IO.Transport.Channels;
 using Catalyst.Node.Rpc.Client.UnitTests.IO.Transport.Channels;
 using Catalyst.Protocol.Common;

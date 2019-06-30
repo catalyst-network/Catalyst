@@ -35,7 +35,8 @@ using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.P2P;
-using Catalyst.Node.Core.RPC.Observables;
+using Catalyst.Node.Core.RPC.IO.Observables;
+using Catalyst.Node.Rpc.Client.IO.Observables;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
@@ -45,6 +46,7 @@ using Polly;
 using Serilog;
 using Xunit;
 using Xunit.Abstractions;
+using TransferFileBytesRequestObserver = Catalyst.Node.Core.RPC.IO.Observables.TransferFileBytesRequestObserver;
 
 namespace Catalyst.Node.Rpc.Client.IntegrationTests.Observables
 {
@@ -93,7 +95,7 @@ namespace Catalyst.Node.Rpc.Client.IntegrationTests.Observables
                     nodePeer,
                     _fakeContext.Channel, correlationGuid, fakeFileOutputPath, 0);
                 var getFileFromDfsResponseHandler =
-                    new Client.Observables.GetFileFromDfsResponseObserver(_logger, _fileDownloadFactory);
+                    new GetFileFromDfsResponseObserver(_logger, _fileDownloadFactory);
                 var transferBytesHandler =
                     new TransferFileBytesRequestObserver(_fileDownloadFactory, rpcPeer, _logger);
 
