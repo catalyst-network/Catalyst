@@ -21,15 +21,15 @@
 
 #endregion
 
-using Catalyst.Common.Config;
-using Catalyst.Common.Interfaces.IO.Messaging.Dto;
+using System;
 using Catalyst.Common.IO.Handlers;
 using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Protocol.Common;
 using Catalyst.TestUtils;
 using DotNetty.Buffers;
-using DotNetty.Transport.Channels;
-using Google.Protobuf;
+using DotNetty.Transport.Channels.Embedded;
+using DotNetty.Transport.Channels.Sockets;
+using FluentAssertions;
 using NSubstitute;
 using Serilog;
 using Xunit;
@@ -38,25 +38,21 @@ namespace Catalyst.Common.UnitTests.IO.Handlers
 {
     public sealed class ProtoDatagramEncoderHandlerTests
     {
-        private readonly IChannelHandlerContext _fakeContext;
-
-        public ProtoDatagramEncoderHandlerTests()
-        {
-            _fakeContext = Substitute.For<IChannelHandlerContext>();
-        }
-        
         [Fact]
         public void Does_Process_IMessageDto_Types()
         {
-            var fakeRequestMessageDto = Substitute.For<IMessageDto<ProtocolMessageSigned>>();
-            fakeRequestMessageDto.MessageType.Returns(MessageTypes.Request);
-            fakeRequestMessageDto.Message.Returns(new ProtocolMessageSigned());
-            fakeRequestMessageDto.Sender.Returns(PeerIdentifierHelper.GetPeerIdentifier("Im_The_Sender"));
+            var handler = new DatagramProtobufEncoder(Substitute.For<ILogger>());
+            var channel = new EmbeddedChannel(handler);
 
-            var protoDatagramEncoderHandler = new ProtoDatagramEncoderHandler(Substitute.For<ILogger>());
-            protoDatagramEncoderHandler.WriteAsync(_fakeContext, fakeRequestMessageDto);
+            var dto = new MessageDto<ProtocolMessageSigned>(
+                new ProtocolMessageSigned(),
+                PeerIdentifierHelper.GetPeerIdentifier("sender"),
+                PeerIdentifierHelper.GetPeerIdentifier("recipient"),
+                Guid.NewGuid());
 
-            _fakeContext.ReceivedWithAnyArgs(1).WriteAndFlushAsync(Arg.Any<IByteBufferHolder>());
+            channel.WriteOutbound(dto);
+            var packet = channel.ReadOutbound<DatagramPacket>();
+            packet.Content.Should().BeAssignableTo<IByteBuffer>();
         }
     }
 }

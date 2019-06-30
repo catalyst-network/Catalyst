@@ -24,15 +24,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Reflection;
 using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Util;
 using Catalyst.Protocol.Common;
 using Dawn;
-using DotNetty.Buffers;
-using DotNetty.Transport.Channels.Sockets;
 using Google.Protobuf;
 using Google.Protobuf.Reflection;
 using Type = System.Type;
@@ -155,11 +152,6 @@ namespace Catalyst.Common.Extensions
         public static ByteString ToByteString(this Guid guid)
         {
             return guid.ToByteArray().ToByteString();
-        }
-
-        public static DatagramPacket ToDatagram(this IMessage<ProtocolMessageSigned> anySignedMessage, IPEndPoint recipient)
-        {
-            return new DatagramPacket(Unpooled.WrappedBuffer(anySignedMessage.ToByteArray()), recipient);
         }
 
         public static string GetRequestType(this string responseTypeUrl)
