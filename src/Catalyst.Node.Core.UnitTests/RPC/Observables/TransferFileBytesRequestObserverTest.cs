@@ -29,7 +29,6 @@ using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.FileTransfer;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
-using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Node.Core.RPC.IO.Observables;
 using Catalyst.Protocol.Rpc.Node;
@@ -98,7 +97,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
             receivedCalls.Count.Should().Be(1);
             var sentResponseDto = (IMessageDto<TransferFileBytesResponse>) receivedCalls.Single().GetArguments().Single();
             sentResponseDto.Message.GetType().Should().BeAssignableTo<TransferFileBytesResponse>();
-            var versionResponseMessage = sentResponseDto.FromIMessageDto<TransferFileBytesResponse>();
+            var versionResponseMessage = sentResponseDto.FromIMessageDto();
             versionResponseMessage.ResponseCode.Should().Equal((byte) FileTransferResponseCodes.Error);
         }
     }

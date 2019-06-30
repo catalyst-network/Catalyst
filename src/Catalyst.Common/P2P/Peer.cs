@@ -35,8 +35,6 @@ namespace Catalyst.Common.P2P
     [Audit]
     public sealed class Peer : IPeer, IAuditable
     {
-        private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
-
         /// <inheritdoc />
         [RepositoryPrimaryKey(Order = 1)]
         public int PkId { get; set; }

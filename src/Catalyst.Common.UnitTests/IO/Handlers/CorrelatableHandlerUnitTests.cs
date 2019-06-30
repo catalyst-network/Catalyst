@@ -27,7 +27,6 @@ using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.IO.Handlers;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Protocol.Common;
-using Catalyst.Protocol.IPPN;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using Google.Protobuf;
