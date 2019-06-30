@@ -36,6 +36,7 @@ using Catalyst.Common.IO.Handlers;
 using Catalyst.Common.IO.Transport.Channels;
 using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;
+using Serilog;
 
 namespace Catalyst.Node.Core.P2P.IO.Transport.Channels
 {
@@ -44,22 +45,40 @@ namespace Catalyst.Node.Core.P2P.IO.Transport.Channels
         private readonly IMessageCorrelationManager _messageCorrelationManager;
         private readonly IBroadcastManager _broadcastManager;
         private readonly IKeySigner _keySigner;
+        private readonly ILogger _logger;
 
-        public PeerServerChannelFactory(IMessageCorrelationManager messageCorrelationManager, IBroadcastManager broadcastManager, IKeySigner keySigner)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="messageCorrelationManager"></param>
+        /// <param name="broadcastManager"></param>
+        /// <param name="keySigner"></param>
+        /// <param name="logger"></param>
+        public PeerServerChannelFactory(IMessageCorrelationManager messageCorrelationManager,
+            IBroadcastManager broadcastManager,
+            IKeySigner keySigner,
+            ILogger logger)
         {
             _messageCorrelationManager = messageCorrelationManager;
             _broadcastManager = broadcastManager;
             _keySigner = keySigner;
+            _logger = logger;
         }
 
         protected override List<IChannelHandler> Handlers => 
             new List<IChannelHandler>
             {
-                new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(new ProtoDatagramDecoderHandler(), new ProtoDatagramEncoderHandler()),
-                new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(new ProtocolMessageVerifyHandler(_keySigner), new ProtocolMessageSignHandler(_keySigner)),
-                new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(new CorrelationHandler(_messageCorrelationManager), new CorrelatableHandler(_messageCorrelationManager)),
-                new BroadcastHandler(_broadcastManager),
-                new ObservableServiceHandler()
+                new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
+                    new ProtoDatagramDecoderHandler(_logger), new ProtoDatagramEncoderHandler(_logger)
+                ),
+                new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
+                    new ProtocolMessageVerifyHandler(_keySigner, _logger), new ProtocolMessageSignHandler(_keySigner, _logger)
+                ),
+                new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
+                    new CorrelationHandler(_messageCorrelationManager, _logger), new CorrelatableHandler(_messageCorrelationManager, _logger)
+                ),
+                new BroadcastHandler(_broadcastManager, _logger),
+                new ObservableServiceHandler(_logger)
             };
 
         /// <param name="handlerEventLoopGroupFactory"></param>

@@ -26,6 +26,7 @@ using Catalyst.Common.Extensions;
 using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;
+using Serilog;
 
 namespace Catalyst.Common.IO.Handlers
 {
@@ -40,5 +41,11 @@ namespace Catalyst.Common.IO.Handlers
         {
             context.Flush();
         }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="logger"></param>
+        public ProtoDatagramEncoderHandler(ILogger logger) : base(logger) { }
     }
 }

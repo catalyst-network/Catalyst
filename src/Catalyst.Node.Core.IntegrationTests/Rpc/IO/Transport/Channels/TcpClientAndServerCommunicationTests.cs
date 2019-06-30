@@ -47,7 +47,7 @@ using Xunit;
 
 namespace Catalyst.Node.Core.IntegrationTests.Rpc.IO.Transport.Channels
 {
-    public class TcpClientAndServerCommunicationTests : IDisposable
+    public sealed class TcpClientAndServerCommunicationTests : IDisposable
     {
         private readonly NodeRpcServerChannelFactoryTests.TestNodeRpcServerChannelFactory _serverFactory;
         private readonly NodeRpcClientChannelFactoryTests.TestNodeRpcClientChannelFactory _clientFactory;
@@ -69,13 +69,15 @@ namespace Catalyst.Node.Core.IntegrationTests.Rpc.IO.Transport.Channels
             _serverFactory = new NodeRpcServerChannelFactoryTests.TestNodeRpcServerChannelFactory(
                 serverCorrelationManager,
                 serverKeySigner,
-                authenticationStrategy);
+                authenticationStrategy,
+                Substitute.For<ILogger>());
 
             var clientCorrelationManager = Substitute.For<IMessageCorrelationManager>();
             var clientKeySigner = Substitute.For<IKeySigner>();
             _clientFactory = new NodeRpcClientChannelFactoryTests.TestNodeRpcClientChannelFactory(
                 clientKeySigner, 
-                clientCorrelationManager);
+                clientCorrelationManager,
+                Substitute.For<ILogger>());
         }
 
         [Fact]
