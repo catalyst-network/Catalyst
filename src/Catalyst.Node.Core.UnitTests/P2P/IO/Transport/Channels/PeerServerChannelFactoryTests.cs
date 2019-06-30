@@ -38,9 +38,12 @@ using Catalyst.Node.Core.P2P.IO.Transport.Channels;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
 using Catalyst.TestUtils;
+using DotNetty.Buffers;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Embedded;
+using DotNetty.Transport.Channels.Sockets;
 using FluentAssertions;
+using Google.Protobuf;
 using NSubstitute;
 using Serilog;
 using Xunit;
@@ -99,7 +102,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.IO.Transport.Channels
         }
 
         [Fact]
-        public async Task UdpServerChannelFactory_should_put_the_correct_handlers_on_the_inbound_pipeline()
+        public async Task PeerServerChannelFactory_should_put_the_correct_handlers_on_the_inbound_pipeline()
         {
             var testingChannel = new EmbeddedChannel("test".ToChannelId(),
                 true, _factory.InheritedHandlers.ToArray());
@@ -118,16 +121,13 @@ namespace Catalyst.Node.Core.UnitTests.P2P.IO.Transport.Channels
             _keySigner.Verify(Arg.Any<IPublicKey>(), Arg.Any<byte[]>(), Arg.Any<ISignature>())
                .Returns(true);
 
-            var datagram = signedMessage.ToDatagram(new IPEndPoint(IPAddress.Loopback, 0));
-
             var observer = new ProtocolMessageObserver(0, Substitute.For<ILogger>());
            
             var messageStream = ((ObservableServiceHandler) _factory.InheritedHandlers.Last()).MessageStream;
+            
             using (messageStream.Subscribe(observer))
             {
-                testingChannel.WriteInbound(datagram);
-                
-                // _correlationManager.Received(1).TryMatchResponse(protocolMessage); // @TODO in bound server shouldn't try and correlate a request, lets do another test to check this logic
+                testingChannel.WriteInbound(signedMessage);
                 _correlationManager.DidNotReceiveWithAnyArgs().TryMatchResponse(protocolMessage);
                 await _gossipManager.DidNotReceiveWithAnyArgs().BroadcastAsync(null);
                 _keySigner.ReceivedWithAnyArgs(1).Verify(null, null, null);

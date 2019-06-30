@@ -30,7 +30,7 @@ namespace Catalyst.Common.IO.Handlers
 {
     public abstract class InboundChannelHandlerBase<T> : ChannelHandlerAdapter
     {
-        protected readonly ILogger _logger;
+        protected readonly ILogger Logger;
         private readonly bool _autoRelease;
 
         /// <summary>
@@ -40,7 +40,7 @@ namespace Catalyst.Common.IO.Handlers
         protected InboundChannelHandlerBase(ILogger logger)
             : this(true)
         {
-            _logger = logger;
+            Logger = logger;
         }
 
         /// <summary>
@@ -74,7 +74,7 @@ namespace Catalyst.Common.IO.Handlers
             }
             catch (Exception e)
             {
-                _logger.Error(e, e.Message);
+                Logger.Error(e, e.Message);
             }
             finally
             {
