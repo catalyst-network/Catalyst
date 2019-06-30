@@ -66,7 +66,10 @@ namespace Catalyst.Node.Core.RPC.IO.Observables
         /// <param name="senderPeerIdentifier"></param>
         /// <param name="correlationId"></param>
         /// <returns></returns>
-        protected override RemovePeerResponse HandleRequest(RemovePeerRequest removePeerRequest, IChannelHandlerContext channelHandlerContext, IPeerIdentifier senderPeerIdentifier, Guid correlationId)
+        protected override RemovePeerResponse HandleRequest(RemovePeerRequest removePeerRequest,
+            IChannelHandlerContext channelHandlerContext,
+            IPeerIdentifier senderPeerIdentifier,
+            Guid correlationId)
         {
             Guard.Argument(removePeerRequest, nameof(removePeerRequest)).NotNull();
             Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
@@ -80,7 +83,7 @@ namespace Catalyst.Node.Core.RPC.IO.Observables
                 var publicKeyIsEmpty = removePeerRequest.PublicKey.IsEmpty;
                 
                 var peersToDelete = _peerRepository.GetAll().TakeWhile(peer =>
-                    Ip.To16Bytes(peer.PeerIdentifier.Ip).SequenceEqual(removePeerRequest.PeerIp.ToByteArray()) &&
+                    peer.PeerIdentifier.Ip.To16Bytes().SequenceEqual(removePeerRequest.PeerIp.ToByteArray()) &&
                     (publicKeyIsEmpty || peer.PeerIdentifier.PublicKey.SequenceEqual(removePeerRequest.PublicKey.ToByteArray()))).ToArray();
 
                 foreach (var peerToDelete in peersToDelete)

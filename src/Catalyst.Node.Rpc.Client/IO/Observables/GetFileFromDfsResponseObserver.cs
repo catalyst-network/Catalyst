@@ -63,7 +63,10 @@ namespace Catalyst.Node.Rpc.Client.IO.Observables
         /// <param name="channelHandlerContext"></param>
         /// <param name="senderPeerIdentifier"></param>
         /// <param name="correlationId"></param>
-        protected override void HandleResponse(GetFileFromDfsResponse getFileFromDfsResponse, IChannelHandlerContext channelHandlerContext, IPeerIdentifier senderPeerIdentifier, Guid correlationId)
+        protected override void HandleResponse(GetFileFromDfsResponse getFileFromDfsResponse,
+            IChannelHandlerContext channelHandlerContext,
+            IPeerIdentifier senderPeerIdentifier,
+            Guid correlationId)
         {
             Guard.Argument(getFileFromDfsResponse, nameof(getFileFromDfsResponse)).NotNull();
             Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
@@ -74,7 +77,7 @@ namespace Catalyst.Node.Rpc.Client.IO.Observables
 
             var responseCode = (FileTransferResponseCodes) getFileFromDfsResponse.ResponseCode[0];
 
-            var fileTransferInformation = _fileTransferFactory?.GetFileTransferInformation(correlationId);
+            var fileTransferInformation = _fileTransferFactory.GetFileTransferInformation(correlationId);
 
             if (fileTransferInformation == null)
             {

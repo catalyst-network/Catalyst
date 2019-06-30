@@ -61,7 +61,10 @@ namespace Catalyst.Node.Core.RPC.IO.Observables
         /// <param name="senderPeerIdentifier"></param>
         /// <param name="correlationId"></param>
         /// <returns></returns>
-        protected override GetPeerReputationResponse HandleRequest(GetPeerReputationRequest getPeerReputationRequest, IChannelHandlerContext channelHandlerContext, IPeerIdentifier senderPeerIdentifier, Guid correlationId)
+        protected override GetPeerReputationResponse HandleRequest(GetPeerReputationRequest getPeerReputationRequest,
+            IChannelHandlerContext channelHandlerContext,
+            IPeerIdentifier senderPeerIdentifier,
+            Guid correlationId)
         {
             Guard.Argument(getPeerReputationRequest, nameof(getPeerReputationRequest)).NotNull();
             Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
@@ -73,7 +76,7 @@ namespace Catalyst.Node.Core.RPC.IO.Observables
             return new GetPeerReputationResponse
             {
                 Reputation = _peerRepository.GetAll().Where(m => m.PeerIdentifier.Ip.ToString() == ip.ToString()
-                     && ConvertorForRLPEncodingExtensions.ToStringFromRLPDecoded(m.PeerIdentifier.PublicKey) == getPeerReputationRequest.PublicKey.ToStringUtf8())
+                     && m.PeerIdentifier.PublicKey.ToStringFromRLPDecoded() == getPeerReputationRequest.PublicKey.ToStringUtf8())
                    .Select(x => x.Reputation).DefaultIfEmpty(int.MinValue).First()
             };
         }

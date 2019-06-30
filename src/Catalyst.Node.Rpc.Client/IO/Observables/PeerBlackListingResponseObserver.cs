@@ -62,7 +62,10 @@ namespace Catalyst.Node.Rpc.Client.IO.Observables
         /// <param name="channelHandlerContext"></param>
         /// <param name="senderPeerIdentifier"></param>
         /// <param name="correlationId"></param>
-        protected override void HandleResponse(SetPeerBlackListResponse setPeerBlackListResponse, IChannelHandlerContext channelHandlerContext, IPeerIdentifier senderPeerIdentifier, Guid correlationId)
+        protected override void HandleResponse(SetPeerBlackListResponse setPeerBlackListResponse,
+            IChannelHandlerContext channelHandlerContext,
+            IPeerIdentifier senderPeerIdentifier,
+            Guid correlationId)
         {
             Guard.Argument(setPeerBlackListResponse, nameof(setPeerBlackListResponse)).NotNull();
             Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
@@ -73,7 +76,10 @@ namespace Catalyst.Node.Rpc.Client.IO.Observables
             {
                 var msg = setPeerBlackListResponse.PublicKey.ToStringUtf8() == string.Empty
                     ? "Peer not found"
-                    : $"Peer Blacklisting Successful : {setPeerBlackListResponse.Blacklist.ToString()}, {setPeerBlackListResponse.PublicKey.ToStringUtf8()}, {setPeerBlackListResponse.Ip.ToStringUtf8()}";
+                    : $"Peer Blacklisting Successful : " +
+                    $"{setPeerBlackListResponse.Blacklist.ToString()}, " +
+                    $"{setPeerBlackListResponse.PublicKey.ToStringUtf8()}, " +
+                    $"{setPeerBlackListResponse.Ip.ToStringUtf8()}";
                    
                 _output.WriteLine(msg);
             }
