@@ -55,8 +55,9 @@ namespace Catalyst.Node.Core.UnitTests.P2P.IO.Transport.Channels
 
             public TestPeerServerChannelFactory(IMessageCorrelationManager correlationManager,
                 IBroadcastManager gossipManager,
-                IKeySigner keySigner)
-                : base(correlationManager, gossipManager, keySigner)
+                IKeySigner keySigner,
+                ILogger logger)
+                : base(correlationManager, gossipManager, keySigner, logger)
             {
                 _handlers = Handlers;
             }
@@ -81,7 +82,8 @@ namespace Catalyst.Node.Core.UnitTests.P2P.IO.Transport.Channels
             _factory = new TestPeerServerChannelFactory(
                 _correlationManager,
                 _gossipManager,
-                _keySigner);
+                _keySigner,
+                Substitute.For<ILogger>());
         }
 
         [Fact]

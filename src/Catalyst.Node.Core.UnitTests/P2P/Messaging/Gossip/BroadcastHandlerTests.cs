@@ -49,7 +49,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Messaging.Gossip
         public BroadcastHandlerTests()
         {
             _fakeBroadcastManager = Substitute.For<IBroadcastManager>();
-            _broadcastHandler = new BroadcastHandler(_fakeBroadcastManager);
+            _broadcastHandler = new BroadcastHandler(_fakeBroadcastManager, Substitute.For<ILogger>());
         }
 
         [Fact]
@@ -65,7 +65,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Messaging.Gossip
 
             EmbeddedChannel channel = new EmbeddedChannel(
                 _broadcastHandler,
-                new ObservableServiceHandler()
+                new ObservableServiceHandler(Substitute.For<ILogger>())
             );
 
             var transaction = new TransactionBroadcast();
@@ -83,7 +83,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Messaging.Gossip
         {
             var handler = new TestMessageObserver<TransactionBroadcast>(Substitute.For<ILogger>());
 
-            var protoDatagramChannelHandler = new ObservableServiceHandler();
+            var protoDatagramChannelHandler = new ObservableServiceHandler(Substitute.For<ILogger>());
             handler.StartObserving(protoDatagramChannelHandler.MessageStream);
 
             var channel = new EmbeddedChannel(_broadcastHandler, protoDatagramChannelHandler);

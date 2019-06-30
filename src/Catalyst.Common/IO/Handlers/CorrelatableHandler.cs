@@ -30,6 +30,7 @@ using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;
+using Serilog;
 
 namespace Catalyst.Common.IO.Handlers
 {
@@ -37,11 +38,22 @@ namespace Catalyst.Common.IO.Handlers
     {
         private readonly IMessageCorrelationManager _messageCorrelationManager;
 
-        public CorrelatableHandler(IMessageCorrelationManager messageCorrelationManager)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="messageCorrelationManager"></param>
+        /// <param name="logger"></param>
+        public CorrelatableHandler(IMessageCorrelationManager messageCorrelationManager, ILogger logger) : base(logger)
         {
             _messageCorrelationManager = messageCorrelationManager;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="message"></param>
+        /// <returns></returns>
         protected override Task WriteAsync0(IChannelHandlerContext context, IMessageDto<ProtocolMessage> message)
         {
             if (message.MessageType.Name.Equals(MessageTypes.Request.Name))
