@@ -24,14 +24,14 @@
 using System;
 using System.Threading;
 using Catalyst.Common.Config;
-using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.FileTransfer;
-using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Observables;
+using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Observables;
-using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
+using Dawn;
+using DotNetty.Transport.Channels;
 using Serilog;
 
 namespace Catalyst.Node.Rpc.Client.IO.Observables
@@ -61,31 +61,38 @@ namespace Catalyst.Node.Rpc.Client.IO.Observables
             _rpcFileTransferFactory = rpcFileTransferFactory;
         }
 
-        /// <summary>Handles the specified message.</summary>
-        /// <param name="messageDto">The message.</param>
-        public override void HandleResponse(IObserverDto<ProtocolMessage> messageDto)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="addFileToDfsResponse"></param>
+        /// <param name="channelHandlerContext"></param>
+        /// <param name="senderPeerIdentifier"></param>
+        /// <param name="correlationId"></param>
+        protected override void HandleResponse(AddFileToDfsResponse addFileToDfsResponse, IChannelHandlerContext channelHandlerContext, IPeerIdentifier senderPeerIdentifier, Guid correlationId)
         {
-            var deserialised = messageDto.Payload.FromProtocolMessage<AddFileToDfsResponse>() ?? throw new ArgumentNullException(nameof(messageDto));
+            Guard.Argument(addFileToDfsResponse, nameof(addFileToDfsResponse)).NotNull();
+            Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
+            Guard.Argument(senderPeerIdentifier, nameof(senderPeerIdentifier)).NotNull();
             
             // @TODO return int not byte
             // var responseCode = Enumeration.Parse<FileTransferResponseCodes>(deserialised.ResponseCode[0].ToString());
 
-            var responseCode = (FileTransferResponseCodes) deserialised.ResponseCode[0];
+            var responseCode = (FileTransferResponseCodes) addFileToDfsResponse.ResponseCode[0];
 
             if (responseCode == FileTransferResponseCodes.Failed || responseCode == FileTransferResponseCodes.Finished)
             {
-                _userOutput.WriteLine("File transfer completed, Response: " + responseCode.Name + " Dfs Hash: " + deserialised.DfsHash);
+                _userOutput.WriteLine("File transfer completed, Response: " + responseCode.Name + " Dfs Hash: " + addFileToDfsResponse.DfsHash);
             }
             else
             {
                 if (responseCode == FileTransferResponseCodes.Successful)
                 {
-                    _rpcFileTransferFactory.FileTransferAsync(messageDto.Payload.CorrelationId.ToGuid(), CancellationToken.None)
+                    _rpcFileTransferFactory.FileTransferAsync(correlationId, CancellationToken.None)
                        .ConfigureAwait(false);
                 }
                 else
                 {
-                    _rpcFileTransferFactory.Remove(messageDto.Payload.CorrelationId.ToGuid());
+                    _rpcFileTransferFactory.Remove(correlationId);
                 }
             }
         }

@@ -22,13 +22,13 @@
 #endregion
 
 using System;
-using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Cli;
-using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Observables;
+using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Observables;
-using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
+using Dawn;
+using DotNetty.Transport.Channels;
 using ILogger = Serilog.ILogger;
 
 namespace Catalyst.Node.Rpc.Client.IO.Observables
@@ -56,27 +56,31 @@ namespace Catalyst.Node.Rpc.Client.IO.Observables
         }
 
         /// <summary>
-        /// Handles the peer reputation response.
+        /// 
         /// </summary>
-        /// <param name="messageDto">The GetPeerReputationResponse message.</param>
-        public override void HandleResponse(IObserverDto<ProtocolMessage> messageDto)
+        /// <param name="setPeerBlackListResponse"></param>
+        /// <param name="channelHandlerContext"></param>
+        /// <param name="senderPeerIdentifier"></param>
+        /// <param name="correlationId"></param>
+        protected override void HandleResponse(SetPeerBlackListResponse setPeerBlackListResponse, IChannelHandlerContext channelHandlerContext, IPeerIdentifier senderPeerIdentifier, Guid correlationId)
         {
+            Guard.Argument(setPeerBlackListResponse, nameof(setPeerBlackListResponse)).NotNull();
+            Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
+            Guard.Argument(senderPeerIdentifier, nameof(senderPeerIdentifier)).NotNull();
             Logger.Debug("Handling GetPeerBlackList response");
 
             try
             {
-                var deserialised = messageDto.Payload.FromProtocolMessage<SetPeerBlackListResponse>() ?? throw new ArgumentNullException(nameof(messageDto));
-
-                var msg = deserialised.PublicKey.ToStringUtf8() == string.Empty
+                var msg = setPeerBlackListResponse.PublicKey.ToStringUtf8() == string.Empty
                     ? "Peer not found"
-                    : $"Peer Blacklisting Successful : {deserialised.Blacklist.ToString()}, {deserialised.PublicKey.ToStringUtf8()}, {deserialised.Ip.ToStringUtf8()}";
+                    : $"Peer Blacklisting Successful : {setPeerBlackListResponse.Blacklist.ToString()}, {setPeerBlackListResponse.PublicKey.ToStringUtf8()}, {setPeerBlackListResponse.Ip.ToStringUtf8()}";
                    
                 _output.WriteLine(msg);
             }
             catch (Exception ex)
             {
                 Logger.Error(ex,
-                    "Failed to handle GetPeerBlackListingResponse after receiving message {0}", messageDto);
+                    "Failed to handle GetPeerBlackListingResponse after receiving message {0}", setPeerBlackListResponse);
                 throw;
             }
         }

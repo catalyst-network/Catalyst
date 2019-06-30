@@ -22,14 +22,13 @@
 #endregion
 
 using System;
-using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Cli;
-using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Observables;
+using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Observables;
-using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
+using DotNetty.Transport.Channels;
 using ILogger = Serilog.ILogger;
 
 namespace Catalyst.Node.Rpc.Client.IO.Observables
@@ -58,34 +57,36 @@ namespace Catalyst.Node.Rpc.Client.IO.Observables
         {
             _output = output;
         }
-
+        
         /// <summary>
-        /// Handles the VersionResponse message sent from the <see cref="GetMempoolRequestHandler" />.
+        /// 
         /// </summary>
-        /// <param name="messageDto">An object of GetMempoolResponse</param>
-        public override void HandleResponse(IObserverDto<ProtocolMessage> messageDto)
+        /// <param name="getMempoolResponse"></param>
+        /// <param name="channelHandlerContext"></param>
+        /// <param name="senderPeerIdentifier"></param>
+        /// <param name="correlationId"></param>
+        protected override void HandleResponse(GetMempoolResponse getMempoolResponse, IChannelHandlerContext channelHandlerContext, IPeerIdentifier senderPeerIdentifier, Guid correlationId)
         {
+            Guard.Argument(getMempoolResponse, nameof(getMempoolResponse)).NotNull();
+            Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
+            Guard.Argument(senderPeerIdentifier, nameof(senderPeerIdentifier)).NotNull();
             Logger.Debug("GetMempoolResponseHandler starting ...");
 
-            Guard.Argument(messageDto, nameof(messageDto)).NotNull("The message cannot be null");
+            Guard.Argument(getMempoolResponse, nameof(getMempoolResponse)).NotNull("The GetMempoolResponse cannot be null")
+               .Require(d => d.Mempool != null,
+                    d => $"{nameof(getMempoolResponse)} must have a valid Mempool.");
             
             try
             {
-                var deserialised = messageDto.Payload.FromProtocolMessage<GetMempoolResponse>() ?? throw new ArgumentNullException(nameof(messageDto));
-                
-                Guard.Argument(deserialised, nameof(deserialised)).NotNull("The GetMempoolResponse cannot be null")
-                   .Require(d => d.Mempool != null,
-                        d => $"{nameof(deserialised)} must have a valid Mempool.");
-                
-                for (var i = 0; i < deserialised.Mempool.Count; i++)
+                for (var i = 0; i < getMempoolResponse.Mempool.Count; i++)
                 {
-                    _output.WriteLine($"tx{i}: {deserialised.Mempool[i]},");
+                    _output.WriteLine($"tx{i}: {getMempoolResponse.Mempool[i]},");
                 }
             }
             catch (Exception ex)
             {
                 Logger.Error(ex,
-                    "Failed to handle GetMempoolResponse after receiving message {0}", messageDto);
+                    "Failed to handle GetMempoolResponse after receiving message {0}", getMempoolResponse);
                 _output.WriteLine(ex.Message);
             }
         }

@@ -22,13 +22,13 @@
 #endregion
 
 using System;
-using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Cli;
-using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Observables;
+using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Observables;
-using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
+using Dawn;
+using DotNetty.Transport.Channels;
 using ILogger = Serilog.ILogger;
 
 namespace Catalyst.Node.Rpc.Client.IO.Observables
@@ -54,25 +54,30 @@ namespace Catalyst.Node.Rpc.Client.IO.Observables
         {
             _output = output;
         }
-
+        
         /// <summary>
-        /// Handles the peer reputation response.
+        /// 
         /// </summary>
-        /// <param name="messageDto">The GetPeerReputationResponse message.</param>
-        public override void HandleResponse(IObserverDto<ProtocolMessage> messageDto)
+        /// <param name="getPeerReputationResponse"></param>
+        /// <param name="channelHandlerContext"></param>
+        /// <param name="senderPeerIdentifier"></param>
+        /// <param name="correlationId"></param>
+        protected override void HandleResponse(GetPeerReputationResponse getPeerReputationResponse, IChannelHandlerContext channelHandlerContext, IPeerIdentifier senderPeerIdentifier, Guid correlationId)
         {
+            Guard.Argument(getPeerReputationResponse, nameof(getPeerReputationResponse)).NotNull();
+            Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
+            Guard.Argument(senderPeerIdentifier, nameof(senderPeerIdentifier)).NotNull();
             Logger.Debug("Handling GetPeerReputation response");
 
             try
             {
-                var deserialised = messageDto.Payload.FromProtocolMessage<GetPeerReputationResponse>() ?? throw new ArgumentNullException(nameof(messageDto));
-                var msg = deserialised.Reputation == int.MinValue ? "Peer not found" : deserialised.Reputation.ToString();
+                var msg = getPeerReputationResponse.Reputation == int.MinValue ? "Peer not found" : getPeerReputationResponse.Reputation.ToString();
                 _output.WriteLine($@"Peer Reputation: {msg}");
             }
             catch (Exception ex)
             {
                 Logger.Error(ex,
-                    "Failed to handle GetPeerReputationResponse after receiving message {0}", messageDto);
+                    "Failed to handle GetPeerReputationResponse after receiving message {0}", getPeerReputationResponse);
                 throw;
             }
         }

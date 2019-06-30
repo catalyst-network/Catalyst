@@ -149,7 +149,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
             sentResponseDto.Message.GetType()
                .Should().BeAssignableTo<GetPeerReputationResponse>();
 
-            return sentResponseDto.FromIMessageDto<GetPeerReputationResponse>();
+            return sentResponseDto.FromIMessageDto();
         }
     }
 }

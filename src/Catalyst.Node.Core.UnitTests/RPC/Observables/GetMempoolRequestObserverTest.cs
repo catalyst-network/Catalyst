@@ -105,7 +105,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
             var sentResponseDto = (IMessageDto<GetMempoolResponse>) receivedCalls.Single().GetArguments().Single();
             sentResponseDto.Message.GetType().Should().BeAssignableTo<GetMempoolResponse>();
 
-            var responseContent = sentResponseDto.FromIMessageDto<GetMempoolResponse>();
+            var responseContent = sentResponseDto.FromIMessageDto();
             
             if (expectedTxs == 0)
             {

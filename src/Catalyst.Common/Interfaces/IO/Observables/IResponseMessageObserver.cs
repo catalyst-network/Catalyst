@@ -21,13 +21,7 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.IO.Messaging.Dto;
-using Catalyst.Protocol.Common;
-
 namespace Catalyst.Common.Interfaces.IO.Observables
 {
-    public interface IResponseMessageObserver : IMessageObserver
-    { 
-        void HandleResponse(IObserverDto<ProtocolMessage> messageDto);
-    }
+    public interface IResponseMessageObserver : IMessageObserver { }
 }

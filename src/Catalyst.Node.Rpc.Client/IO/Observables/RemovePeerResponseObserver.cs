@@ -22,13 +22,13 @@
 #endregion
 
 using System;
-using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Cli;
-using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Observables;
+using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Observables;
-using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
+using Dawn;
+using DotNetty.Transport.Channels;
 using Serilog;
 
 namespace Catalyst.Node.Rpc.Client.IO.Observables
@@ -52,24 +52,31 @@ namespace Catalyst.Node.Rpc.Client.IO.Observables
         {
             _userOutput = userOutput;
         }
-
-        /// <summary>Handles the specified message.</summary>
-        /// <param name="messageDto">The message.</param>
-        public override void HandleResponse(IObserverDto<ProtocolMessage> messageDto)
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="removePeerResponse"></param>
+        /// <param name="channelHandlerContext"></param>
+        /// <param name="senderPeerIdentifier"></param>
+        /// <param name="correlationId"></param>
+        protected override void HandleResponse(RemovePeerResponse removePeerResponse, IChannelHandlerContext channelHandlerContext, IPeerIdentifier senderPeerIdentifier, Guid correlationId)
         {
+            Guard.Argument(removePeerResponse, nameof(removePeerResponse)).NotNull();
+            Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
+            Guard.Argument(senderPeerIdentifier, nameof(senderPeerIdentifier)).NotNull();
             Logger.Debug($@"Handling Remove Peer Response");
             
             try
             {
-                var deserialised = messageDto.Payload.FromProtocolMessage<RemovePeerResponse>() ?? throw new ArgumentNullException(nameof(messageDto));
-                var deletedCount = deserialised.DeletedCount;
+                var deletedCount = removePeerResponse.DeletedCount;
 
                 _userOutput.WriteLine($@"Deleted {deletedCount.ToString()} peers");
             }
             catch (Exception ex)
             {
                 Logger.Error(ex,
-                    "Failed to handle RemovePeerResponse after receiving message {0}", messageDto);
+                    "Failed to handle RemovePeerResponse after receiving message {0}", removePeerResponse);
                 throw;
             }
         }

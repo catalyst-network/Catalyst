@@ -77,7 +77,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
 
             var sentResponseDto = (IMessageDto<VersionResponse>) receivedCalls.Single().GetArguments().Single();
             sentResponseDto.Message.GetType().Should().BeAssignableTo<VersionResponse>();
-            var versionResponseMessage = sentResponseDto.FromIMessageDto<VersionResponse>();
+            var versionResponseMessage = sentResponseDto.FromIMessageDto();
             versionResponseMessage.Version.Should().Be(NodeUtil.GetVersion());
         }
     }

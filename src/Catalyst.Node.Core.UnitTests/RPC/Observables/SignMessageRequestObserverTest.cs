@@ -104,7 +104,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
                .Should()
                .BeAssignableTo<SignMessageResponse>();
 
-            var signResponseMessage = sentResponseDto.FromIMessageDto<SignMessageResponse>();
+            var signResponseMessage = sentResponseDto.FromIMessageDto();
 
             signResponseMessage.OriginalMessage.Should().Equal(message);
             signResponseMessage.Signature.Should().NotBeEmpty();
