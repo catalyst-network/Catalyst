@@ -22,15 +22,13 @@
 #endregion
 
 using System;
-using Catalyst.Common.Extensions;
-using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Observables;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.IO.Observables;
-using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
+using DotNetty.Transport.Channels;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using ILogger = Serilog.ILogger;
@@ -50,17 +48,27 @@ namespace Catalyst.Node.Core.RPC.IO.Observables
             _config = config;
         }
 
-        protected override GetInfoResponse HandleRequest(IObserverDto<ProtocolMessage> messageDto)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="getInfoRequest"></param>
+        /// <param name="channelHandlerContext"></param>
+        /// <param name="senderPeerIdentifier"></param>
+        /// <param name="correlationId"></param>
+        /// <returns></returns>
+        protected override GetInfoResponse HandleRequest(GetInfoRequest getInfoRequest,
+            IChannelHandlerContext channelHandlerContext,
+            IPeerIdentifier senderPeerIdentifier,
+            Guid correlationId)
         {
+            Guard.Argument(getInfoRequest, nameof(getInfoRequest)).NotNull();
+            Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
+            Guard.Argument(senderPeerIdentifier, nameof(senderPeerIdentifier)).NotNull();
             Logger.Debug("received message of type GetInfoRequest");
             
             try
             {
-                var deserialised = messageDto.Payload.FromProtocolMessage<GetInfoRequest>();
-                
-                Guard.Argument(deserialised).NotNull();
-                
-                Logger.Debug("message content is {0}", deserialised);
+                Logger.Debug("message content is {0}", getInfoRequest);
 
                 var serializedList = JsonConvert.SerializeObject(
                     _config.NodeConfig.GetSection("CatalystNodeConfiguration").AsEnumerable(), 
@@ -74,7 +82,7 @@ namespace Catalyst.Node.Core.RPC.IO.Observables
             catch (Exception ex)
             {
                 Logger.Error(ex,
-                    "Failed to handle GetInfoRequest after receiving message {0}", messageDto);
+                    "Failed to handle GetInfoRequest after receiving message {0}", getInfoRequest);
                 throw;
             }
         }

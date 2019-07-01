@@ -27,7 +27,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Common.Config;
 using Catalyst.Common.Enumerator;
-using Catalyst.Common.Extensions;
 using Catalyst.Common.FileTransfer;
 using Catalyst.Common.Interfaces.FileTransfer;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
@@ -35,9 +34,9 @@ using Catalyst.Common.Interfaces.IO.Observables;
 using Catalyst.Common.Interfaces.Modules.Dfs;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Observables;
-using Catalyst.Common.P2P;
-using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
+using Dawn;
+using DotNetty.Transport.Channels;
 using Google.Protobuf;
 using Serilog;
 
@@ -76,15 +75,24 @@ namespace Catalyst.Node.Core.RPC.IO.Observables
             _fileTransferFactory = fileTransferFactory;
             _dfs = dfs;
         }
-
-        /// <summary>Handles the specified message.</summary>
-        /// <param name="messageDto">The message.</param>
-        protected override GetFileFromDfsResponse HandleRequest(IObserverDto<ProtocolMessage> messageDto)
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="getFileFromDfsRequest"></param>
+        /// <param name="channelHandlerContext"></param>
+        /// <param name="senderPeerIdentifier"></param>
+        /// <param name="correlationId"></param>
+        /// <returns></returns>
+        protected override GetFileFromDfsResponse HandleRequest(GetFileFromDfsRequest getFileFromDfsRequest,
+            IChannelHandlerContext channelHandlerContext,
+            IPeerIdentifier senderPeerIdentifier,
+            Guid correlationId)
         {
-            var deserialised = messageDto.Payload.FromProtocolMessage<GetFileFromDfsRequest>();
+            Guard.Argument(getFileFromDfsRequest, nameof(getFileFromDfsRequest)).NotNull();
+            Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
+            Guard.Argument(senderPeerIdentifier, nameof(senderPeerIdentifier)).NotNull();
             
-            var recipientPeerIdentifier = new PeerIdentifier(messageDto.Payload.PeerId);
-            var correlationGuid = messageDto.Payload.CorrelationId.ToGuid();
             long fileLen = 0;
 
             FileTransferResponseCodes responseCode;
@@ -95,7 +103,7 @@ namespace Catalyst.Node.Core.RPC.IO.Observables
                 {
                     responseCode = await Task.Run(async () =>
                     {
-                        using (var stream = await _dfs.ReadAsync(deserialised.DfsHash).ConfigureAwait(false))
+                        using (var stream = await _dfs.ReadAsync(getFileFromDfsRequest.DfsHash).ConfigureAwait(false))
                         using (var memoryStream = new MemoryStream())
                         {
                             stream.CopyTo(memoryStream);
@@ -104,9 +112,9 @@ namespace Catalyst.Node.Core.RPC.IO.Observables
                             using (var fileTransferInformation = new UploadFileTransferInformation(
                                 memoryStream,
                                 PeerIdentifier,
-                                recipientPeerIdentifier,
-                                messageDto.Context.Channel,
-                                correlationGuid,
+                                senderPeerIdentifier,
+                                channelHandlerContext.Channel,
+                                correlationId,
                                 _dtoFactory
                             ))
                             {
@@ -118,13 +126,13 @@ namespace Catalyst.Node.Core.RPC.IO.Observables
                 catch (Exception e)
                 {
                     Logger.Error(e,
-                        "Failed to handle GetFileFromDfsRequestHandler after receiving message {0}", messageDto);
+                        "Failed to handle GetFileFromDfsRequestHandler after receiving message {0}", getFileFromDfsRequest);
                     responseCode = FileTransferResponseCodes.Error;
                 }
                 
                 if (responseCode == FileTransferResponseCodes.Successful)
                 {
-                    await _fileTransferFactory.FileTransferAsync(correlationGuid, CancellationToken.None).ConfigureAwait(false);
+                    await _fileTransferFactory.FileTransferAsync(correlationId, CancellationToken.None).ConfigureAwait(false);
                 }
 
                 return ReturnResponse(responseCode, fileLen);
