@@ -21,32 +21,42 @@
 
 #endregion
 
+using System;
 using Catalyst.Common.Interfaces.IO.Messaging;
-using Catalyst.Common.Interfaces.IO.Observables;
-using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.IO.Observables;
-using Catalyst.Protocol.IPPN;
-using DotNetty.Transport.Channels;
-using Serilog;
 
-namespace Catalyst.Node.Core.P2P.IO.Observables
+namespace Catalyst.Common.IO.Messaging
 {
-    public sealed class GetNeighbourResponseObserver
-        : ResponseObserverBase<PeerNeighborsResponse>,
-            IP2PMessageObserver
+    /// <summary>
+    /// 
+    /// </summary>
+    public sealed class CorrelationId : ICorrelationId
     {
-        public GetNeighbourResponseObserver(ILogger logger) : base(logger) { }
+        public Guid Id { get; set; }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        public CorrelationId(Guid id) { Id = id; } 
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="bytes"></param>
+        public CorrelationId(byte[] bytes) { Id = new Guid(bytes); } 
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="messageDto"></param>
-        /// <param name="channelHandlerContext"></param>
-        /// <param name="senderPeerIdentifier"></param>
-        /// <param name="correlationId"></param>
-        protected override void HandleResponse(PeerNeighborsResponse messageDto, IChannelHandlerContext channelHandlerContext, IPeerIdentifier senderPeerIdentifier, ICorrelationId correlationId)
+        private CorrelationId() { Id = Guid.NewGuid(); }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public static ICorrelationId GenerateCorrelationId()
         {
-            Logger.Debug("received peer NeighbourResponse");
+            return new CorrelationId();
         }
     }
 }

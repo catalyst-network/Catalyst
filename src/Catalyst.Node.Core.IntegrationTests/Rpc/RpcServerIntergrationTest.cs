@@ -135,7 +135,7 @@
 //                         var request = new GetInfoRequest();
 //                         var peerSettings = new PeerSettings(_config);
 //                         var pid = new PeerIdentifier(ByteUtil.InitialiseEmptyByteArray(20), peerSettings.BindAddress, peerSettings.Port);
-//                         nodeRpcClient.SendMessage(request.ToAnySigned(pid.PeerId, Guid.NewGuid()));
+//                         nodeRpcClient.SendMessage(request.ToAnySigned(pid.PeerId, CorrelationId.GenerateCorrelationId()));
 //
 //                         var tasks = new IChanneledMessageStreamer<ProtocolMessage>[]
 //                             {
@@ -184,7 +184,7 @@
 //                         var request = new VersionRequest();
 //                         var peerSettings = new PeerSettings(_config);
 //                         var pid = new PeerIdentifier(ByteUtil.InitialiseEmptyByteArray(20), peerSettings.BindAddress, peerSettings.Port);
-//                         nodeRpcClient.SendMessage(request.ToAnySigned(pid.PeerId, Guid.NewGuid()));
+//                         nodeRpcClient.SendMessage(request.ToAnySigned(pid.PeerId, CorrelationId.GenerateCorrelationId()));
 //
 //                         var tasks = new IChanneledMessageStreamer<ProtocolMessage>[]
 //                             {
@@ -231,7 +231,7 @@
 //                     var request = new GetMempoolRequest();
 //                     var peerSettings = new PeerSettings(_config);
 //                     var pid = new PeerIdentifier(ByteUtil.InitialiseEmptyByteArray(20), peerSettings.BindAddress, peerSettings.Port);
-//                     nodeRpcClient.SendMessage(request.ToAnySigned(pid.PeerId, Guid.NewGuid()));
+//                     nodeRpcClient.SendMessage(request.ToAnySigned(pid.PeerId, CorrelationId.GenerateCorrelationId()));
 //
 //                     var tasks = new IChanneledMessageStreamer<ProtocolMessage>[]
 //                         {
@@ -282,7 +282,7 @@
 //
 //                     var peerSettings = new PeerSettings(_config);
 //                     var pid = new PeerIdentifier(ByteUtil.InitialiseEmptyByteArray(20), peerSettings.BindAddress, peerSettings.Port);
-//                     nodeRpcClient.SendMessage(request.ToAnySigned(pid.PeerId, Guid.NewGuid()));
+//                     nodeRpcClient.SendMessage(request.ToAnySigned(pid.PeerId, CorrelationId.GenerateCorrelationId()));
 //
 //                     var tasks = new IChanneledMessageStreamer<ProtocolMessage>[]
 //                         {

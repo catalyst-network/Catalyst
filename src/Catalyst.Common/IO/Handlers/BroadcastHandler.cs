@@ -21,7 +21,6 @@
 
 #endregion
 
-using System;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.P2P.Messaging.Broadcast;
 using Catalyst.Protocol.Common;

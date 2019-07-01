@@ -25,6 +25,7 @@ using System;
 using System.Threading.Tasks;
 using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.FileTransfer;
+using Catalyst.Common.Interfaces.IO.Messaging;
 
 namespace Catalyst.Common.FileTransfer
 {
@@ -38,12 +39,12 @@ namespace Catalyst.Common.FileTransfer
         /// <inheritdoc />
         protected override async Task DoTransferAsync(IDownloadFileInformation fileTransferInformation)
         {
-            EnsureKeyExists(fileTransferInformation.CorrelationGuid);
+            EnsureKeyExists(fileTransferInformation.CorrelationId);
             await DownloadAsync(fileTransferInformation).ConfigureAwait(false);
         }
 
         /// <inheritdoc />
-        public FileTransferResponseCodes DownloadChunk(Guid fileName, uint chunkId, byte[] fileChunk)
+        public FileTransferResponseCodes DownloadChunk(ICorrelationId fileName, uint chunkId, byte[] fileChunk)
         {
             EnsureKeyExists(fileName);
             var fileTransferInformation = GetFileTransferInformation(fileName);
@@ -68,7 +69,7 @@ namespace Catalyst.Common.FileTransfer
         /// <returns></returns>
         private async Task DownloadAsync(IDownloadFileInformation fileTransferInformation)
         {
-            EnsureKeyExists(fileTransferInformation.CorrelationGuid);
+            EnsureKeyExists(fileTransferInformation.CorrelationId);
             while (!fileTransferInformation.ChunkIndicatorsTrue() && !fileTransferInformation.IsExpired())
             {
                 await Task.Delay(TimeSpan.FromSeconds(1), fileTransferInformation.CancellationToken).ConfigureAwait(false);

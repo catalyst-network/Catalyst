@@ -26,7 +26,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Catalyst.Common.Config;
+using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.Util;
 using Catalyst.Protocol.Common;
 using Dawn;
@@ -83,7 +85,7 @@ namespace Catalyst.Common.Extensions
 
         public static ProtocolMessage ToProtocolMessage(this IMessage protobufObject,
             PeerId senderId,
-            Guid correlationId = default)
+            ICorrelationId correlationId = default)
         {
             var typeUrl = protobufObject.Descriptor.ShortenedFullName();
             Guard.Argument(senderId, nameof(senderId)).NotNull();
@@ -94,7 +96,7 @@ namespace Catalyst.Common.Extensions
             return new ProtocolMessage
             {
                 PeerId = senderId,
-                CorrelationId = (correlationId == default ? Guid.NewGuid() : correlationId).ToByteString(),
+                CorrelationId = (correlationId ?? CorrelationId.GenerateCorrelationId()).Id.ToByteString(),
                 
                 TypeUrl = typeUrl,
                 Value = protobufObject.ToByteString()
@@ -144,9 +146,9 @@ namespace Catalyst.Common.Extensions
             return ByteString.CopyFromUtf8(utf8String);
         }
 
-        public static Guid ToGuid(this ByteString guidBytes)
+        public static ICorrelationId ToCorrelationId(this ByteString guidBytes)
         {
-            return new Guid(guidBytes.ToByteArray());
+            return new CorrelationId(new Guid(guidBytes.ToByteArray()));
         }
 
         public static ByteString ToByteString(this Guid guid)

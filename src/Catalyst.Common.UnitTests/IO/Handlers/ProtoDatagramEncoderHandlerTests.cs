@@ -21,27 +21,20 @@
 
 #endregion
 
-using System;
 using System.Net;
 using Catalyst.Common.Extensions;
-using Catalyst.Common.Interfaces.IO.Messaging.Dto;
-using Catalyst.Common.IO.Handlers;
-using Catalyst.Common.IO.Messaging.Dto;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.Util;
-using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
 using Catalyst.TestUtils;
 using DotNetty.Buffers;
 using DotNetty.Codecs;
 using DotNetty.Codecs.Protobuf;
-using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Embedded;
 using DotNetty.Transport.Channels.Sockets;
 using FluentAssertions;
 using Google.Protobuf;
-using NSubstitute;
-using Serilog;
 using Xunit;
 
 namespace Catalyst.Common.UnitTests.IO.Handlers
@@ -60,7 +53,7 @@ namespace Catalyst.Common.UnitTests.IO.Handlers
 
             var protocolMessageSigned = new ProtocolMessageSigned
             {
-                Message = new PingRequest().ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId, Guid.NewGuid()),
+                Message = new PingRequest().ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId, CorrelationId.GenerateCorrelationId()),
                 Signature = ByteUtil.GenerateRandomByteArray(64).ToByteString()
             };
            

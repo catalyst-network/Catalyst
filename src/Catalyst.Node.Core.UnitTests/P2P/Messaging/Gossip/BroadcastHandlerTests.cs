@@ -35,6 +35,7 @@ using Serilog;
 using System;
 using System.Net;
 using System.Threading.Tasks;
+using Catalyst.Common.IO.Messaging;
 using FluentAssertions;
 using NSubstitute.Exceptions;
 using Xunit;
@@ -58,7 +59,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Messaging.Gossip
             var peerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("1");
             var recipientIdentifier = Substitute.For<IPeerIdentifier>();
             var fakeIp = IPAddress.Any;
-            var guid = Guid.NewGuid();
+            var guid = CorrelationId.GenerateCorrelationId();
 
             recipientIdentifier.Ip.Returns(fakeIp);
             recipientIdentifier.IpEndPoint.Returns(new IPEndPoint(fakeIp, 10));
@@ -70,7 +71,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Messaging.Gossip
 
             var transaction = new TransactionBroadcast();
             var anySigned = transaction.ToProtocolMessage(peerIdentifier.PeerId, guid)
-               .ToProtocolMessage(peerIdentifier.PeerId, Guid.NewGuid());
+               .ToProtocolMessage(peerIdentifier.PeerId, CorrelationId.GenerateCorrelationId());
 
             channel.WriteInbound(anySigned);
 
@@ -89,8 +90,8 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Messaging.Gossip
             var channel = new EmbeddedChannel(_broadcastHandler, protoDatagramChannelHandler);
 
             var anySignedGossip = new TransactionBroadcast()
-               .ToProtocolMessage(PeerIdHelper.GetPeerId(Guid.NewGuid().ToString()))
-               .ToProtocolMessage(PeerIdHelper.GetPeerId(Guid.NewGuid().ToString()));
+               .ToProtocolMessage(PeerIdHelper.GetPeerId(CorrelationId.GenerateCorrelationId().ToString()))
+               .ToProtocolMessage(PeerIdHelper.GetPeerId(CorrelationId.GenerateCorrelationId().ToString()));
 
             channel.WriteInbound(anySignedGossip);
 

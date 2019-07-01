@@ -23,6 +23,7 @@
 
 using System;
 using Catalyst.Common.Interfaces.Cli;
+using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Observables;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Observables;
@@ -65,7 +66,7 @@ namespace Catalyst.Node.Rpc.Client.IO.Observables
         protected override void HandleResponse(VerifyMessageResponse verifyMessageResponse,
             IChannelHandlerContext channelHandlerContext,
             IPeerIdentifier senderPeerIdentifier,
-            Guid correlationId)
+            ICorrelationId correlationId)
         {   
             Guard.Argument(verifyMessageResponse, nameof(verifyMessageResponse)).NotNull();
             Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
