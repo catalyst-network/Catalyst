@@ -94,8 +94,8 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
                 new VerifyMessageRequest
                 {
                     Message = RLP.EncodeElement(messageBytes).ToByteString(),
-                    PublicKey = publicKeyBytes.ToByteString(),
-                    Signature = signatureBytes.ToByteString()
+                    PublicKey = RLP.EncodeElement(publicKeyBytes).ToByteString(),
+                    Signature = RLP.EncodeElement(signatureBytes.ToArray()).ToByteString()
                 },
                 PeerIdentifierHelper.GetPeerIdentifier("sender_key"),
                 PeerIdentifierHelper.GetPeerIdentifier("recipient_key")
