@@ -37,20 +37,14 @@ namespace Catalyst.Common.IO.Handlers
     public sealed class CorrelatableHandler : OutboundChannelHandlerBase<IMessageDto<ProtocolMessage>>
     {
         private readonly IMessageCorrelationManager _messageCorrelationManager;
-
-        /// <summary>
-        /// 
-        /// </summary>
+        
         /// <param name="messageCorrelationManager"></param>
         /// <param name="logger"></param>
         public CorrelatableHandler(IMessageCorrelationManager messageCorrelationManager, ILogger logger) : base(logger)
         {
             _messageCorrelationManager = messageCorrelationManager;
         }
-
-        /// <summary>
-        /// 
-        /// </summary>
+        
         /// <param name="context"></param>
         /// <param name="message"></param>
         /// <returns></returns>
