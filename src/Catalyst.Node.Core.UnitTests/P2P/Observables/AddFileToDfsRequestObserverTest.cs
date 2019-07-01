@@ -21,10 +21,10 @@
 
 #endregion
 
-using System;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.FileTransfer;
 using Catalyst.Common.Interfaces.FileTransfer;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.P2P;
 using Catalyst.Node.Core.Modules.Dfs;
 using Catalyst.Node.Core.RPC.IO.Observables;
@@ -67,7 +67,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Observables
                 Node = "node1",
                 FileName = "Test.dat",
                 FileSize = 10000
-            }.ToProtocolMessage(sender, Guid.NewGuid());
+            }.ToProtocolMessage(sender, CorrelationId.GenerateCorrelationId());
             request.SendToHandler(_fakeContext, handler);
 
             Assert.Equal(1, _nodeFileTransferFactory.Keys.Length);

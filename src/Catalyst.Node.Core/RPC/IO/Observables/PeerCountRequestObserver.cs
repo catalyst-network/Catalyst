@@ -21,8 +21,8 @@
 
 #endregion
 
-using System;
 using System.Linq;
+using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Observables;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Observables;
@@ -69,7 +69,7 @@ namespace Catalyst.Node.Core.RPC.IO.Observables
         protected override GetPeerCountResponse HandleRequest(GetPeerCountRequest getPeerCountRequest,
             IChannelHandlerContext channelHandlerContext,
             IPeerIdentifier senderPeerIdentifier,
-            Guid correlationId)
+            ICorrelationId correlationId)
         {
             Guard.Argument(getPeerCountRequest, nameof(getPeerCountRequest)).NotNull();
             Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();

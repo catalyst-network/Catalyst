@@ -28,6 +28,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.FileTransfer;
+using Catalyst.Common.Interfaces.IO.Messaging;
 
 namespace Catalyst.Common.FileTransfer
 {
@@ -38,13 +39,13 @@ namespace Catalyst.Common.FileTransfer
     public abstract class BaseFileTransferFactory<T> : IFileTransferFactory<T> where T : IFileTransferInformation
     {
         /// <summary>The pending file transfers</summary>
-        private readonly Dictionary<Guid, T> _pendingFileTransfers;
+        private readonly Dictionary<ICorrelationId, T> _pendingFileTransfers;
 
         /// <summary>The lock object</summary>
         private readonly object _lockObject = new object();
 
         /// <inheritdoc />
-        public Guid[] Keys
+        public ICorrelationId[] Keys
         {
             get
             {
@@ -58,7 +59,7 @@ namespace Catalyst.Common.FileTransfer
         /// <summary>Initializes a new instance of the <see cref="BaseFileTransferFactory{T}"/> class.</summary>
         protected BaseFileTransferFactory()
         {
-            _pendingFileTransfers = new Dictionary<Guid, T>();
+            _pendingFileTransfers = new Dictionary<ICorrelationId, T>();
         }
 
         /// <inheritdoc />
@@ -68,7 +69,7 @@ namespace Catalyst.Common.FileTransfer
         /// <exception cref="InvalidOperationException">This instance cannot be registered to the factory due to IsDownload flag.</exception>
         public FileTransferResponseCodes RegisterTransfer(T fileTransferInformation)
         {
-            var fileHash = fileTransferInformation.CorrelationGuid;
+            var fileHash = fileTransferInformation.CorrelationId;
 
             lock (_lockObject)
             {
@@ -89,7 +90,7 @@ namespace Catalyst.Common.FileTransfer
         /// <returns></returns>
         /// <exception cref="NullReferenceException">File transfer has not been registered to factory</exception>
         /// <exception cref="InvalidOperationException">File transfer has already been initialised</exception>
-        public async Task FileTransferAsync(Guid correlationGuid, CancellationToken cancellationToken)
+        public async Task FileTransferAsync(ICorrelationId correlationGuid, CancellationToken cancellationToken)
         {
             EnsureKeyExists(correlationGuid);
             var fileTransferInformation = GetFileTransferInformation(correlationGuid);
@@ -114,7 +115,7 @@ namespace Catalyst.Common.FileTransfer
         }
         
         /// <inheritdoc />
-        public T GetFileTransferInformation(Guid key)
+        public T GetFileTransferInformation(ICorrelationId key)
         {
             lock (_lockObject)
             {
@@ -123,7 +124,7 @@ namespace Catalyst.Common.FileTransfer
         }
 
         /// <inheritdoc />
-        public void Remove(Guid key)
+        public void Remove(ICorrelationId key)
         {
             lock (_lockObject)
             {
@@ -139,15 +140,15 @@ namespace Catalyst.Common.FileTransfer
         /// <param name="expiredOrCancelled">if set to <c>true</c> [expired or cancelled].</param>
         protected void Remove(T fileTransferInformation, bool expiredOrCancelled)
         {
-            EnsureKeyExists(fileTransferInformation.CorrelationGuid);
+            EnsureKeyExists(fileTransferInformation.CorrelationId);
             if (expiredOrCancelled)
             {
-                Remove(fileTransferInformation.CorrelationGuid);
+                Remove(fileTransferInformation.CorrelationId);
                 fileTransferInformation.CleanUp();
             }
             else
             {
-                Remove(fileTransferInformation.CorrelationGuid);
+                Remove(fileTransferInformation.CorrelationId);
                 fileTransferInformation.Dispose();
             }
 
@@ -158,7 +159,7 @@ namespace Catalyst.Common.FileTransfer
         /// <param name="guid">The unique identifier.</param>
         /// <returns></returns>
         /// <exception cref="InvalidOperationException">The specified key does not exist inside the factory.</exception>
-        protected bool EnsureKeyExists(Guid guid)
+        protected bool EnsureKeyExists(ICorrelationId guid)
         {
             if (GetFileTransferInformation(guid) == null)
             {

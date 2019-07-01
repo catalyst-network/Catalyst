@@ -22,6 +22,7 @@
 #endregion
 
 using System;
+using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Observables;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Observables;
@@ -52,7 +53,7 @@ namespace Catalyst.Node.Core.RPC.IO.Observables
         protected override VersionResponse HandleRequest(VersionRequest versionRequest,
             IChannelHandlerContext channelHandlerContext,
             IPeerIdentifier senderPeerIdentifier,
-            Guid correlationId)
+            ICorrelationId correlationId)
         {
             Guard.Argument(versionRequest, nameof(versionRequest)).NotNull();
             Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();

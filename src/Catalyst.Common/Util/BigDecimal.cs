@@ -24,7 +24,6 @@
 using System;
 using System.Globalization;
 using System.Numerics;
-using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 
 namespace Catalyst.Common.Util

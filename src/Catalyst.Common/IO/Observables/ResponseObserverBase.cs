@@ -27,6 +27,7 @@ using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
+using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Observables;
 using Catalyst.Common.Interfaces.P2P;
@@ -43,6 +44,10 @@ namespace Catalyst.Common.IO.Observables
     {
         private readonly string _filterMessageType;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="logger"></param>
         protected ResponseObserverBase(ILogger logger) : base(logger)
         {
             Guard.Argument(typeof(TProto), nameof(TProto)).Require(t => t.IsResponseType(),
@@ -50,8 +55,20 @@ namespace Catalyst.Common.IO.Observables
             _filterMessageType = typeof(TProto).ShortenedProtoFullName();
         }
         
-        protected abstract void HandleResponse(TProto messageDto, IChannelHandlerContext channelHandlerContext, IPeerIdentifier senderPeerIdentifier, Guid correlationId);
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="messageDto"></param>
+        /// <param name="channelHandlerContext"></param>
+        /// <param name="senderPeerIdentifier"></param>
+        /// <param name="correlationId"></param>
+        protected abstract void HandleResponse(TProto messageDto, IChannelHandlerContext channelHandlerContext, IPeerIdentifier senderPeerIdentifier, ICorrelationId correlationId);
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="messageStream"></param>
+        /// <exception cref="ReadOnlyException"></exception>
         public override void StartObserving(IObservable<IObserverDto<ProtocolMessage>> messageStream)
         {
             if (MessageSubscription != null)
@@ -66,10 +83,14 @@ namespace Catalyst.Common.IO.Observables
                .Subscribe(OnNext, OnError, OnCompleted);
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="messageDto"></param>
         public override void OnNext(IObserverDto<ProtocolMessage> messageDto)
         {
             Logger.Verbose("Pre Handle Message Called");
-            HandleResponse(messageDto.Payload.FromProtocolMessage<TProto>(), messageDto.Context, new PeerIdentifier(messageDto.Payload.PeerId), messageDto.Payload.CorrelationId.ToGuid());
+            HandleResponse(messageDto.Payload.FromProtocolMessage<TProto>(), messageDto.Context, new PeerIdentifier(messageDto.Payload.PeerId), messageDto.Payload.CorrelationId.ToCorrelationId());
         }
     }
 }

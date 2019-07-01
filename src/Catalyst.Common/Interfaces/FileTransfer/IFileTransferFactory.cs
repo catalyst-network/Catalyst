@@ -21,10 +21,10 @@
 
 #endregion
 
-using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Common.Config;
+using Catalyst.Common.Interfaces.IO.Messaging;
 
 namespace Catalyst.Common.Interfaces.FileTransfer
 {
@@ -39,22 +39,22 @@ namespace Catalyst.Common.Interfaces.FileTransfer
         FileTransferResponseCodes RegisterTransfer(T fileTransferInformation);
 
         /// <summary>Files the transfer asynchronous.</summary>
-        /// <param name="correlationGuid">The correlation unique identifier.</param>
+        /// <param name="correlationId">The correlation unique identifier.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns></returns>
-        Task FileTransferAsync(Guid correlationGuid, CancellationToken cancellationToken);
+        Task FileTransferAsync(ICorrelationId correlationId, CancellationToken cancellationToken);
         
         /// <summary>Gets the file transfer information.</summary>
-        /// <param name="correlationGuid">The correlation unique identifier.</param>
+        /// <param name="correlationId">The correlation unique identifier.</param>
         /// <returns></returns>
-        T GetFileTransferInformation(Guid correlationGuid);
+        T GetFileTransferInformation(ICorrelationId correlationId);
 
         /// <summary>Removes the specified unique identifier.</summary>
         /// <param name="guid">The unique identifier.</param>
-        void Remove(Guid guid);
+        void Remove(ICorrelationId guid);
 
         /// <summary>Gets the keys.</summary>
         /// <value>The keys.</value>
-        Guid[] Keys { get; }
+        ICorrelationId[] Keys { get; }
     }
 }
