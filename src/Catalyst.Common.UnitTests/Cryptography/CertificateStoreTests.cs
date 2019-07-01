@@ -22,7 +22,6 @@
 #endregion
 
 using System;
-using System.IO;
 using System.Security.Cryptography.X509Certificates;
 using Catalyst.Common.Cryptography;
 using Catalyst.Common.Interfaces.Cryptography;

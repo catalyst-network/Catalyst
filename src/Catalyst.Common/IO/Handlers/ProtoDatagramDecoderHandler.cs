@@ -22,7 +22,6 @@
 #endregion
 
 using System.IO;
-using Catalyst.Common.Extensions;
 using Catalyst.Protocol.Common;
 using Dawn;
 using DotNetty.Transport.Channels;
