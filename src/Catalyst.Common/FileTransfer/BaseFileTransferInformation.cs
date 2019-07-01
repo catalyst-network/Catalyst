@@ -85,7 +85,12 @@ namespace Catalyst.Common.FileTransfer
         /// <param name="correlationId">The correlation unique identifier.</param>
         /// <param name="fileName">Name of the file.</param>
         /// <param name="fileSize">Size of the file.</param>
-        protected BaseFileTransferInformation(IPeerIdentifier peerIdentifier, IPeerIdentifier recipientIdentifier, IChannel recipientChannel, ICorrelationId correlationId, string fileName, ulong fileSize)
+        protected BaseFileTransferInformation(IPeerIdentifier peerIdentifier,
+            IPeerIdentifier recipientIdentifier,
+            IChannel recipientChannel,
+            ICorrelationId correlationId,
+            string fileName,
+            ulong fileSize)
         {
             TempPath = Path.GetTempPath() + correlationId.Id.ToString() + ".tmp";
             MaxChunk = (uint) Math.Max(1, (int) Math.Ceiling((double) fileSize / Constants.FileTransferChunkSize));
