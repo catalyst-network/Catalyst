@@ -22,7 +22,6 @@
 #endregion
 
 using System;
-using System.Text;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Observables;
@@ -30,11 +29,10 @@ using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Observables;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Types;
+using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
-using Google.Protobuf;
-using Multiformats.Base;
 using Nethereum.RLP;
 using ILogger = Serilog.ILogger;
 
@@ -45,10 +43,8 @@ namespace Catalyst.Node.Core.RPC.IO.Observables
     {
         private readonly IKeySigner _keySigner;
 
-        private const string PublicKeyEncodingInvalid = "Invalid PublicKey encoding";
-        private const string PublicKeyNotProvided = "PublicKey not provided";
-        private const string SignatureEncodingInvalid = "Invalid Signature encoding";
-        private const string SignatureNotProvided = "Signature not provided";
+        private const string PublicKeyInvalid = "Invalid PublicKey";
+        private const string SignatureInvalid = "Invalid Signature";
         private const string FailedToHandleMessage = "Failed to handle VerifyMessageRequest after receiving message";
 
         public VerifyMessageRequestObserver(IPeerIdentifier peerIdentifier,
@@ -62,7 +58,7 @@ namespace Catalyst.Node.Core.RPC.IO.Observables
         protected override VerifyMessageResponse HandleRequest(IObserverDto<ProtocolMessage> messageDto)
         {
             Logger.Debug("received message of type VerifyMessageRequest");
-            
+
             var deserialised = messageDto.Payload.FromProtocolMessage<VerifyMessageRequest>();
             Guard.Argument(deserialised).NotNull("The verify message request cannot be null");
 
@@ -70,15 +66,32 @@ namespace Catalyst.Node.Core.RPC.IO.Observables
             var decodedPublicKey = deserialised.PublicKey.ToByteArray();
             var decodedSignature = deserialised.Signature.ToByteArray();
 
+            IPublicKey publicKey = null;
             try
             {
-                var pubKey = _keySigner.CryptoContext.ImportPublicKey(decodedPublicKey);
-                Guard.Argument(pubKey).HasValue();
+                publicKey = _keySigner.CryptoContext.ImportPublicKey(decodedPublicKey);
 
-                var sig = new Signature(decodedSignature);
-                Guard.Argument(sig).HasValue();
+                Guard.Argument(publicKey).HasValue();
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex, $"{PublicKeyInvalid} {messageDto}");
+            }
 
-                var result = _keySigner.CryptoContext.Verify(pubKey, decodedMessage, sig);
+            ISignature signature = null;
+            try
+            {
+                signature = new Signature(decodedSignature);
+                Guard.Argument(signature).HasValue();
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex, $"{SignatureInvalid} {messageDto}");
+            }
+
+            try
+            {
+                var result = _keySigner.CryptoContext.Verify(publicKey, decodedMessage, signature);
 
                 Logger.Debug("message content is {0}", deserialised.Message);
                 
