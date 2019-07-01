@@ -30,6 +30,7 @@ using DotNetty.Buffers;
 using DotNetty.Transport.Channels;
 using Google.Protobuf;
 using NSubstitute;
+using Serilog;
 using Xunit;
 
 namespace Catalyst.Common.UnitTests.IO.Handlers
@@ -51,7 +52,7 @@ namespace Catalyst.Common.UnitTests.IO.Handlers
             fakeRequestMessageDto.Message.Returns(Substitute.For<IMessage<ProtocolMessageSigned>>());
             fakeRequestMessageDto.Sender.Returns(PeerIdentifierHelper.GetPeerIdentifier("Im_The_Sender"));
 
-            var protoDatagramEncoderHandler = new ProtoDatagramEncoderHandler();
+            var protoDatagramEncoderHandler = new ProtoDatagramEncoderHandler(Substitute.For<ILogger>());
             protoDatagramEncoderHandler.WriteAsync(_fakeContext, fakeRequestMessageDto);
 
             _fakeContext.ReceivedWithAnyArgs(1).WriteAndFlushAsync(Arg.Any<IByteBufferHolder>());

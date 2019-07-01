@@ -30,6 +30,7 @@ using Catalyst.Common.Util;
 using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;
 using Google.Protobuf;
+using Serilog;
 
 namespace Catalyst.Common.IO.Handlers
 {
@@ -37,7 +38,7 @@ namespace Catalyst.Common.IO.Handlers
     {
         private readonly IKeySigner _keySigner;
 
-        public ProtocolMessageSignHandler(IKeySigner keySigner)
+        public ProtocolMessageSignHandler(IKeySigner keySigner, ILogger logger) : base(logger)
         {
             _keySigner = keySigner;
         }

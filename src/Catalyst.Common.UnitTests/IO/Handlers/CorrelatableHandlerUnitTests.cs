@@ -31,6 +31,7 @@ using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using Google.Protobuf;
 using NSubstitute;
+using Serilog;
 using Xunit;
 
 namespace Catalyst.Common.UnitTests.IO.Handlers
@@ -54,7 +55,7 @@ namespace Catalyst.Common.UnitTests.IO.Handlers
             fakeRequestMessageDto.Message.Returns(new ProtocolMessage());
             fakeRequestMessageDto.Sender.Returns(PeerIdentifierHelper.GetPeerIdentifier("Im_The_Sender"));
 
-            var correlatableHandler = new CorrelatableHandler(_fakeMessageCorrelationManager);
+            var correlatableHandler = new CorrelatableHandler(_fakeMessageCorrelationManager, Substitute.For<ILogger>());
 
             correlatableHandler.WriteAsync(_fakeContext, fakeRequestMessageDto);
             
@@ -71,7 +72,7 @@ namespace Catalyst.Common.UnitTests.IO.Handlers
         {
             var fakeRequestMessageDto = Substitute.For<IObserverDto<IMessage>>();
 
-            var correlatableHandler = new CorrelatableHandler(_fakeMessageCorrelationManager);
+            var correlatableHandler = new CorrelatableHandler(_fakeMessageCorrelationManager, Substitute.For<ILogger>());
             
             correlatableHandler.WriteAsync(_fakeContext, fakeRequestMessageDto);
             

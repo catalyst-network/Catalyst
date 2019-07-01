@@ -45,14 +45,14 @@ using Xunit;
 
 namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Transport.Channels
 {
-    public class NodeRpcClientChannelFactoryTests
+    public sealed class NodeRpcClientChannelFactoryTests
     {
         public sealed class TestNodeRpcClientChannelFactory : NodeRpcClientChannelFactory
         {
             private readonly List<IChannelHandler> _handlers;
 
-            public TestNodeRpcClientChannelFactory(IKeySigner keySigner, IMessageCorrelationManager correlationManager)
-                : base(keySigner, correlationManager)
+            public TestNodeRpcClientChannelFactory(IKeySigner keySigner, IMessageCorrelationManager correlationManager, ILogger logger)
+                : base(keySigner, correlationManager, logger)
             {
                 _handlers = Handlers;
             }
@@ -73,7 +73,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Transport.Channels
 
             peerSettings.BindAddress.Returns(IPAddress.Parse("127.0.0.1"));
             peerSettings.Port.Returns(1234);
-            _factory = new TestNodeRpcClientChannelFactory(_keySigner, _correlationManager);
+            _factory = new TestNodeRpcClientChannelFactory(_keySigner, _correlationManager, Substitute.For<ILogger>());
         }
 
         [Fact]
