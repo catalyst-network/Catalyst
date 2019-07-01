@@ -56,8 +56,6 @@ namespace Catalyst.Common.IO.Messaging.Dto
             Guard.Argument(recipient.IpEndPoint.Address, nameof(recipient.IpEndPoint.Address)).NotNull();
             Guard.Argument(recipient.Port, nameof(recipient.Port)).InRange(0, 65535);
             Guard.Argument(sender, nameof(sender)).Compatible<IPeerIdentifier>().NotNull();
-
-            // MessageType = Enumeration.ParseEndsWith<MessageTypes>(Message.Descriptor.ShortenedFullName());
             CorrelationId = correlationId;
             Message = message;
             Recipient = recipient;

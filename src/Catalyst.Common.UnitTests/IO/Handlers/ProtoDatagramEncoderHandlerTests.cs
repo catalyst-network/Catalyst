@@ -44,7 +44,6 @@ namespace Catalyst.Common.UnitTests.IO.Handlers
         [Fact]
         public void Does_Process_IMessageDto_Types()
         {
-            // var handler = new DatagramProtobufEncoder(Substitute.For<ILogger>());
             var handler = new DatagramPacketEncoder<IMessage>(
                 new ProtobufEncoder()
             );
