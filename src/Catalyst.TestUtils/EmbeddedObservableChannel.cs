@@ -30,6 +30,7 @@ using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Embedded;
 using NSubstitute;
+using Serilog;
 
 namespace Catalyst.TestUtils
 {
@@ -52,7 +53,7 @@ namespace Catalyst.TestUtils
         {
             var channelId = channelName.ToChannelId();
 
-            var observableServiceHandler = new ObservableServiceHandler();
+            var observableServiceHandler = new ObservableServiceHandler(Substitute.For<ILogger>());
             var embeddedChannel = new EmbeddedChannel(channelId, false, true, observableServiceHandler);
             _channel = embeddedChannel;
             MessageStream = observableServiceHandler.MessageStream;

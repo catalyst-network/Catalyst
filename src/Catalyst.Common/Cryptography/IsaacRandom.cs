@@ -21,6 +21,7 @@
 
 #endregion
 
+using System;
 using Catalyst.Common.Interfaces.Cryptography;
 using Nethereum.Hex.HexConvertors.Extensions;
 
@@ -33,16 +34,16 @@ namespace Catalyst.Common.Cryptography
     public sealed class IsaacRandom : IDeterministicRandom
     {
         // external results 
-        readonly uint[] _randRsl = new uint[256];
-        uint _randCnt;
+        private readonly uint[] _randRsl = new uint[256];
+        private uint _randCnt;
 
         // internal state 
-        readonly uint[] _mm = new uint[256];
+        private readonly uint[] _mm = new uint[256];
         private uint _aa;
         private uint _bb;
         private uint _cc;
 
-        void Isaac()
+        private void Isaac()
         {
             uint i;
             _cc++; // _cc just gets incremented once per 256 results 
@@ -54,17 +55,19 @@ namespace Catalyst.Common.Cryptography
                 switch (i & 3)
                 {
                     case 0:
-                        _aa = _aa ^ (_aa << 13);
+                        _aa ^= _aa << 13;
                         break;
                     case 1:
-                        _aa = _aa ^ (_aa >> 6);
+                        _aa ^= _aa >> 6;
                         break;
                     case 2:
-                        _aa = _aa ^ (_aa << 2);
+                        _aa ^= _aa << 2;
                         break;
                     case 3:
-                        _aa = _aa ^ (_aa >> 16);
+                        _aa ^= _aa >> 16;
                         break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
                 }
 
                 _aa = _mm[(i + 128) & 255] + _aa;
@@ -77,28 +80,28 @@ namespace Catalyst.Common.Cryptography
 
         void Mix(ref uint a, ref uint b, ref uint c, ref uint d, ref uint e, ref uint f, ref uint g, ref uint h)
         {
-            a = a ^ b << 11;
+            a ^= b << 11;
             d += a;
             b += c;
-            b = b ^ c >> 2;
+            b ^= c >> 2;
             e += b;
             c += d;
-            c = c ^ d << 8;
+            c ^= d << 8;
             f += c;
             d += e;
-            d = d ^ e >> 16;
+            d ^= e >> 16;
             g += d;
             e += f;
-            e = e ^ f << 10;
+            e ^= f << 10;
             h += e;
             f += g;
-            f = f ^ g >> 4;
+            f ^= g >> 4;
             a += f;
             g += h;
-            g = g ^ h << 8;
+            g ^= h << 8;
             b += g;
             h += a;
-            h = h ^ a >> 9;
+            h ^= a >> 9;
             c += h;
             a += b;
         }
@@ -107,7 +110,7 @@ namespace Catalyst.Common.Cryptography
         /// <param name="flag">if set to <c>true</c> [flag]
         /// use the contents of _randRsl[] to initialize _mm[].
         /// </param>
-        void Init(bool flag)
+        private void Init(bool flag)
         {
             short i;
 
@@ -193,8 +196,8 @@ namespace Catalyst.Common.Cryptography
         /// <param name="seed">The seed.</param>
         public IsaacRandom(string seed)
         {
-            int m = seed.Length;
-            for (int i = 0; i < m; i++)
+            var m = seed.Length;
+            for (var i = 0; i < m; i++)
             {
                 _randRsl[i] = seed[i];
             }
@@ -206,13 +209,15 @@ namespace Catalyst.Common.Cryptography
         /// <inhertdoc/>
         public uint NextInt()
         {
-            uint result = _randRsl[_randCnt];
+            var result = _randRsl[_randCnt];
             _randCnt++;
-            if (_randCnt > 255)
+            if (_randCnt <= 255)
             {
-                Isaac();
-                _randCnt = 0;
+                return result;
             }
+            
+            Isaac();
+            _randCnt = 0;
 
             return result;
         }
@@ -224,7 +229,7 @@ namespace Catalyst.Common.Cryptography
         }
     }
 
-    public class IsaacRandomFactory : IDeterministicRandomFactory
+    public sealed class IsaacRandomFactory : IDeterministicRandomFactory
     {
         public IDeterministicRandom GetDeterministicRandomFromSeed(byte[] seed)
         {

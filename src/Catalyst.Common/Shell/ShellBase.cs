@@ -51,7 +51,7 @@ namespace Catalyst.Common.Shell
 
             Console.OutputEncoding = Encoding.Unicode;
             Console.ForegroundColor = ConsoleColor.DarkMagenta;
-            var ver = Assembly.GetEntryAssembly().GetName().Version;
+            var ver = Assembly.GetEntryAssembly()?.GetName().Version;
             UserOutput.WriteLine($@"{ServiceName} Version: {ver}");
 
             while (!ct.IsCancellationRequested)

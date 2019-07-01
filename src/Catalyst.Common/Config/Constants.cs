@@ -110,9 +110,6 @@ namespace Catalyst.Common.Config
         /// <summary> The empty trie hash </summary>
         public static readonly byte[] EmptyTrieHash = Multihash.Encode<BLAKE2B_8>(RLP.EncodeElement(ByteUtil.EmptyByteArray));
 
-        /// <summary> Sets the maximum precision of division operations. </summary>
-        public const int Precision = 50;
-
         /// <summary> TTL for correlation cache </summary>
         public static TimeSpan CorrelationTtl => TimeSpan.FromSeconds(10);
       
