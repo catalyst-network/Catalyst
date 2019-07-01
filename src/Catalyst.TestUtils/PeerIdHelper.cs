@@ -40,7 +40,7 @@ namespace Catalyst.TestUtils
             IPAddress ipAddress = null,
             int port = 12345)
         {
-            var peerIdentifier = new PeerId()
+            var peerIdentifier = new PeerId
             {
                 PublicKey = (publicKey ?? new byte[32]).ToByteString(),
                 ClientId = clientId.ToUtf8ByteString(),

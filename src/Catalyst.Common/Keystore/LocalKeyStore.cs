@@ -119,7 +119,7 @@ namespace Catalyst.Common.Keystore
             
             try
             {
-                await _fileSystem.WriteFileToCddAsync(_keyStoreService.GenerateUTCFileName(address), json);
+                await _fileSystem.WriteFileToCddAsync(_keyStoreService.GenerateUtcFileName(address), json);
             }
             catch (Exception e)
             {

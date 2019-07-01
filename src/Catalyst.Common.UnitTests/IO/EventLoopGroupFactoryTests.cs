@@ -34,12 +34,12 @@ using Xunit;
 
 namespace Catalyst.Common.UnitTests.IO
 {
-    public class EventLoopGroupFactoryTests : IDisposable
+    public sealed class EventLoopGroupFactoryTests : IDisposable
     {
-        private readonly int ExpectedUdpServerThreads = 2;
-        private readonly int ExpectedTcpServerThreads = 3;
-        private readonly int ExpectedUdpClientThreads = 4;
-        private readonly int ExpectedTcpClientThreads = 5;
+        private const int ExpectedUdpServerThreads = 2;
+        private const int ExpectedTcpServerThreads = 3;
+        private const int ExpectedUdpClientThreads = 4;
+        private const int ExpectedTcpClientThreads = 5;
         private static readonly int ExpectedDefaultEventLoopThreadCount = Environment.ProcessorCount * 2;
         private IEventLoopGroupFactory _eventFactory;
 
@@ -113,14 +113,9 @@ namespace Catalyst.Common.UnitTests.IO
             eventLoops.Length.Should().Be(expectedEventLoops);
         }
 
-        protected void Dispose(bool disposing)
-        {
-            _eventFactory.Dispose();
-        }
-
         public void Dispose()
         {
-            Dispose(true);
+            _eventFactory?.Dispose();
         }
     }
 }

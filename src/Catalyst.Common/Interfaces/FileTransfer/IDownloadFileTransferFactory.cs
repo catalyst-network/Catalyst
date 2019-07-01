@@ -21,13 +21,22 @@
 
 #endregion
 
-namespace Catalyst.Common.Interfaces.Keystore
+using System;
+using Catalyst.Common.Config;
+
+namespace Catalyst.Common.Interfaces.FileTransfer
 {
-    public interface IKeyStoreService
+    /// <summary>
+    /// Handles storing of the file downloads
+    /// </summary>
+    /// <seealso cref="IFileTransferFactory{IDownloadFileInformation}" />
+    public interface IDownloadFileTransferFactory : IFileTransferFactory<IDownloadFileInformation>
     {
-        string GetAddressFromKeyStore(string json);
-        string GenerateUtcFileName(string address);
-        byte[] DecryptKeyStoreFromJson(string password, string json);
-        string EncryptAndGenerateDefaultKeyStoreAsJson(string password, byte[] key, string address);
+        /// <summary>Downloads the chunk.</summary>
+        /// <param name="fileName">Name of the file.</param>
+        /// <param name="chunkId">The chunk identifier.</param>
+        /// <param name="fileChunk">The file chunk.</param>
+        /// <returns></returns>
+        FileTransferResponseCodes DownloadChunk(Guid fileName, uint chunkId, byte[] fileChunk);
     }
 }

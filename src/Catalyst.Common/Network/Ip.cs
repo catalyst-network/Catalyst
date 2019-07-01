@@ -61,7 +61,7 @@ namespace Catalyst.Common.Network
             var defaultedIpEchoUrls = ipEchoUrls ?? DefaultIpEchoUrls.ToObservable();
 
             var echoedIp = await defaultedIpEchoUrls
-               .Select((url, i) => Observable.FromAsync(async () => await TryGetExternalIpFromEchoUrlAsync(url)))
+               .Select((url, i) => Observable.FromAsync(async () => await TryGetExternalIpFromEchoUrlAsync(url).ConfigureAwait(false)))
                .Merge()
                .FirstAsync(t => t != null);
 
