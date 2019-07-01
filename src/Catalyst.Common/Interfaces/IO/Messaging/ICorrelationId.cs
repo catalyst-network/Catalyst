@@ -21,22 +21,12 @@
 
 #endregion
 
-using Catalyst.Common.Config;
-using Catalyst.Common.Interfaces.IO.Messaging;
+using System;
 
-namespace Catalyst.Common.Interfaces.FileTransfer
+namespace Catalyst.Common.Interfaces.IO.Messaging
 {
-    /// <summary>
-    /// Handles storing of the file downloads
-    /// </summary>
-    /// <seealso cref="IFileTransferFactory{IDownloadFileInformation}" />
-    public interface IDownloadFileTransferFactory : IFileTransferFactory<IDownloadFileInformation>
+    public interface ICorrelationId
     {
-        /// <summary>Downloads the chunk.</summary>
-        /// <param name="fileName">Name of the file.</param>
-        /// <param name="chunkId">The chunk identifier.</param>
-        /// <param name="fileChunk">The file chunk.</param>
-        /// <returns></returns>
-        FileTransferResponseCodes DownloadChunk(ICorrelationId fileName, uint chunkId, byte[] fileChunk);
+        Guid Id { get; set; }
     }
 }

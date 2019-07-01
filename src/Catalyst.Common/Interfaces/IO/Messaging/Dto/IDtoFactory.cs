@@ -21,7 +21,6 @@
 
 #endregion
 
-using System;
 using Catalyst.Common.Interfaces.P2P;
 using Google.Protobuf;
 
@@ -38,6 +37,6 @@ namespace Catalyst.Common.Interfaces.IO.Messaging.Dto
         IMessageDto<T> GetDto<T>(T messageDto,
             IPeerIdentifier senderPeerIdentifier,
             IPeerIdentifier recipientPeerIdentifier,
-            Guid correlationId = default) where T : IMessage<T>;
+            ICorrelationId correlationId = default) where T : IMessage<T>;
     }
 }

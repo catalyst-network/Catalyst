@@ -55,7 +55,7 @@ namespace Catalyst.Common.IO.Handlers
                 _messageCorrelationManager.AddPendingRequest(new CorrelatableMessage
                 {
                     Recipient = message.RecipientPeerIdentifier,
-                    Content = message.Content.ToProtocolMessage(message.SenderPeerIdentifier.PeerId, Guid.NewGuid()),
+                    Content = message.Content.ToProtocolMessage(message.SenderPeerIdentifier.PeerId, CorrelationId.GenerateCorrelationId()),
                     SentAt = DateTimeOffset.UtcNow
                 });
             }

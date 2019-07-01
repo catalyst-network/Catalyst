@@ -28,6 +28,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
+using Catalyst.Common.IO.Messaging;
 using FluentAssertions;
 using Ipfs;
 using Ipfs.CoreApi;
@@ -54,7 +55,7 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Dfs
             _ipfsEngine.FileSystem.Returns(fileSystem);
 
             _logger = Substitute.For<ILogger>();
-            var hashBits = Guid.NewGuid().ToByteArray().Concat(new byte[16]).ToArray();
+            var hashBits = CorrelationId.GenerateCorrelationId().Id.ToByteArray().Concat(new byte[16]).ToArray();
             _expectedCid = new Cid
             {
                 Encoding = Constants.EncodingAlgorithm.ToString().ToLowerInvariant(),
