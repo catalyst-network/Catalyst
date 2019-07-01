@@ -38,7 +38,7 @@ namespace Catalyst.Node.Core.P2P.IO.Observables
         public GetNeighbourResponseObserver(ILogger logger) : base(logger) { }
 
         /// <summary>
-        /// 
+        ///     Processes a GetNeighbourResponse item from stream.
         /// </summary>
         /// <param name="messageDto"></param>
         /// <param name="channelHandlerContext"></param>
