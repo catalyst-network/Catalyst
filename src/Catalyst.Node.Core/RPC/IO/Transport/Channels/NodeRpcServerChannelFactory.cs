@@ -37,6 +37,7 @@ using Catalyst.Common.IO.Transport.Channels;
 using Catalyst.Protocol.Common;
 using DotNetty.Codecs.Protobuf;
 using DotNetty.Transport.Channels;
+using Serilog;
 
 namespace Catalyst.Node.Core.RPC.IO.Transport.Channels
 {
@@ -44,6 +45,7 @@ namespace Catalyst.Node.Core.RPC.IO.Transport.Channels
     {
         private readonly IMessageCorrelationManager _correlationManger;
         private readonly IAuthenticationStrategy _authenticationStrategy;
+        private readonly ILogger _logger;
         private readonly IKeySigner _keySigner;
 
         protected override List<IChannelHandler> Handlers =>
@@ -53,16 +55,31 @@ namespace Catalyst.Node.Core.RPC.IO.Transport.Channels
                 new ProtobufDecoder(ProtocolMessageSigned.Parser),
                 new ProtobufVarint32LengthFieldPrepender(),
                 new ProtobufEncoder(),
-                new AuthenticationHandler(_authenticationStrategy),
-                new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(new ProtocolMessageVerifyHandler(_keySigner), new ProtocolMessageSignHandler(_keySigner)),
-                new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(new CorrelationHandler(_correlationManger), new CorrelationHandler(_correlationManger)),
-                new ObservableServiceHandler()
+                new AuthenticationHandler(_authenticationStrategy, _logger),
+                new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
+                    new ProtocolMessageVerifyHandler(_keySigner, _logger), new ProtocolMessageSignHandler(_keySigner, _logger)
+                ),
+                new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
+                    new CorrelationHandler(_correlationManger, _logger), new CorrelationHandler(_correlationManger, _logger)
+                ),
+                new ObservableServiceHandler(_logger)
             };
 
-        public NodeRpcServerChannelFactory(IMessageCorrelationManager correlationManger, IKeySigner keySigner, IAuthenticationStrategy authenticationStrategy)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="correlationManger"></param>
+        /// <param name="keySigner"></param>
+        /// <param name="authenticationStrategy"></param>
+        /// <param name="logger"></param>
+        public NodeRpcServerChannelFactory(IMessageCorrelationManager correlationManger,
+            IKeySigner keySigner,
+            IAuthenticationStrategy authenticationStrategy,
+            ILogger logger)
         {
             _correlationManger = correlationManger;
             _authenticationStrategy = authenticationStrategy;
+            _logger = logger;
             _keySigner = keySigner;
         }
 

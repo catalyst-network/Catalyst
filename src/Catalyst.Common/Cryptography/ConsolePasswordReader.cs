@@ -59,18 +59,7 @@ namespace Catalyst.Common.Cryptography
                 var keyInfo = Console.ReadKey(true);
                 if (keyInfo.Key != ConsoleKey.Enter)
                 {
-                    if (keyInfo.Key == ConsoleKey.Backspace)
-                    {
-                        if (inputLength == 0)
-                        {
-                            continue;
-                        }
-
-                        removeChar(inputLength - 1);
-                        inputLength--;
-                        userOutput.Write(@" ");
-                    }
-                    else
+                    if (keyInfo.Key != ConsoleKey.Backspace)
                     {
                         appendChar(keyInfo.KeyChar, inputLength);
                         inputLength++;
@@ -82,6 +71,17 @@ namespace Catalyst.Common.Cryptography
 
                         userOutput.WriteLine($"Max password length reached ({maxLength})");
                         waitForInput = false;
+                    }
+                    else
+                    {
+                        if (inputLength == 0)
+                        {
+                            continue;
+                        }
+
+                        removeChar(inputLength - 1);
+                        inputLength--;
+                        userOutput.Write(@" ");
                     }
                 }
                 else

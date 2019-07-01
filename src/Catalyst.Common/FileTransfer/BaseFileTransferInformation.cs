@@ -32,7 +32,7 @@ using DotNetty.Transport.Channels;
 
 namespace Catalyst.Common.FileTransfer
 {
-    public class BaseFileTransferInformation : IDisposable, IFileTransferInformation
+    public class BaseFileTransferInformation : IFileTransferInformation
     {
         /// <inheritdoc />
         public string TempPath { get; }

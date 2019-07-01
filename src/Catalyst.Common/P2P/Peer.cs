@@ -22,12 +22,10 @@
 #endregion
 
 using System;
-using System.Reflection;
 using Catalyst.Common.Interfaces.Attributes;
 using Catalyst.Common.Util;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Attributes;
-using Serilog;
 using SharpRepository.Repository;
 
 namespace Catalyst.Common.P2P

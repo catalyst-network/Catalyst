@@ -42,9 +42,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.Observables
         private readonly ILogger _logger;
         private readonly IChannelHandlerContext _fakeContext;
         private readonly IUserOutput _output;
-
         public static List<object[]> QueryContents;
-
         private VerifyMessageResponseObserver _observer;
 
         static VerifyMessageResponseObserverTest()
@@ -87,7 +85,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.Observables
             _observer = new VerifyMessageResponseObserver(_output, _logger);
             _observer.StartObserving(messageStream);
 
-            await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
+            await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync().ConfigureAwait(false);
 
             _output.Received(1).WriteLine(isSignedByNode.ToString());
         }

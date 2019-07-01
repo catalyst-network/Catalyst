@@ -25,13 +25,13 @@ using System;
 using System.IO;
 using System.Threading;
 using Catalyst.Common.Config;
-using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.FileTransfer;
-using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Observables;
+using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Observables;
-using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
+using Dawn;
+using DotNetty.Transport.Channels;
 using Serilog;
 
 namespace Catalyst.Node.Rpc.Client.IO.Observables
@@ -55,40 +55,47 @@ namespace Catalyst.Node.Rpc.Client.IO.Observables
         {
             _fileTransferFactory = fileTransferFactory;
         }
-
-        /// <summary>Handles the specified message.</summary>
-        /// <param name="messageDto">The message.</param>
-        public override void HandleResponse(IObserverDto<ProtocolMessage> messageDto)
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="getFileFromDfsResponse"></param>
+        /// <param name="channelHandlerContext"></param>
+        /// <param name="senderPeerIdentifier"></param>
+        /// <param name="correlationId"></param>
+        protected override void HandleResponse(GetFileFromDfsResponse getFileFromDfsResponse,
+            IChannelHandlerContext channelHandlerContext,
+            IPeerIdentifier senderPeerIdentifier,
+            Guid correlationId)
         {
-            var deserialised = messageDto.Payload.FromProtocolMessage<GetFileFromDfsResponse>() ?? throw new ArgumentNullException(nameof(messageDto));
+            Guard.Argument(getFileFromDfsResponse, nameof(getFileFromDfsResponse)).NotNull();
+            Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
+            Guard.Argument(senderPeerIdentifier, nameof(senderPeerIdentifier)).NotNull();
             
             // @TODO return int not byte
             // var responseCode = Enumeration.Parse<FileTransferResponseCodes>(deserialised.ResponseCode[0].ToString());
 
-            var responseCode = (FileTransferResponseCodes) deserialised.ResponseCode[0];
+            var responseCode = (FileTransferResponseCodes) getFileFromDfsResponse.ResponseCode[0];
 
-            if (_fileTransferFactory != null) 
+            var fileTransferInformation = _fileTransferFactory.GetFileTransferInformation(correlationId);
+
+            if (fileTransferInformation == null)
             {
-                var fileTransferInformation = _fileTransferFactory.GetFileTransferInformation(messageDto.Payload.CorrelationId.ToGuid());
+                return;
+            }
 
-                if (fileTransferInformation == null)
-                {
-                    return;
-                }
+            if (responseCode == FileTransferResponseCodes.Successful)
+            {
+                fileTransferInformation.SetLength(getFileFromDfsResponse.FileSize);
 
-                if (responseCode == FileTransferResponseCodes.Successful)
+                _fileTransferFactory.FileTransferAsync(fileTransferInformation.CorrelationGuid, CancellationToken.None).ContinueWith(task =>
                 {
-                    fileTransferInformation.SetLength(deserialised.FileSize);
-
-                    _fileTransferFactory.FileTransferAsync(fileTransferInformation.CorrelationGuid, CancellationToken.None).ContinueWith(task =>
-                    {
-                        File.Move(fileTransferInformation.TempPath, fileTransferInformation.FileOutputPath);
-                    }).ConfigureAwait(false);
-                }
-                else
-                {
-                    fileTransferInformation.Expire();
-                }
+                    File.Move(fileTransferInformation.TempPath, fileTransferInformation.FileOutputPath);
+                }).ConfigureAwait(false);
+            }
+            else
+            {
+                fileTransferInformation.Expire();
             }
         }
     }

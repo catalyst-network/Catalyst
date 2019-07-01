@@ -30,6 +30,7 @@ using DotNetty.Transport.Channels;
 using NSubstitute;
 using Serilog;
 using System;
+using System.Threading.Tasks;
 using Catalyst.Node.Rpc.Client.IO.Observables;
 using Xunit;
 
@@ -38,7 +39,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.Observables
     public sealed class GetInfoResponseObserverTest : IDisposable
     {
         private readonly ILogger _logger;
-        private GetInfoResponseObserver _requestObserver;
+        private GetInfoResponseObserver _observer;
         private readonly IChannelHandlerContext _fakeContext;
         private readonly IUserOutput _output;
 
@@ -53,7 +54,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.Observables
         [InlineData("Test")]
         [InlineData("Q2")]
         [InlineData("A Fake Info Response")]
-        public void RpcClient_Can_Handle_GetInfoResponse(string query)
+        public async Task RpcClient_Can_Handle_GetInfoResponse(string query)
         {
             var response = new DtoFactory().GetDto(
                 new GetInfoResponse
@@ -65,16 +66,22 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.Observables
                 Guid.NewGuid()
             );
 
-            // var messageStream = MessageStreamHelper.CreateStreamWithMessage(response.Message.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId));
+            var messageStream = MessageStreamHelper.CreateStreamWithMessages(_fakeContext,
+                response.Message.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender_key").PeerId,
+                    response.CorrelationId
+                )
+            );
+            
+            _observer = new GetInfoResponseObserver(_output, _logger);
+            _observer.StartObserving(messageStream);
 
-            _requestObserver = new GetInfoResponseObserver(_output, _logger);
-            _requestObserver.HandleResponse(new ObserverDto(_fakeContext, response.Message.ToProtocolMessage(response.Sender.PeerId, response.CorrelationId)));
+            await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
             _output.Received(1).WriteLine(query);
         }
 
         public void Dispose()
         {
-            _requestObserver?.Dispose();
+            _observer?.Dispose();
         }
     }
 }
