@@ -110,7 +110,6 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Transport.Channels
             {
                 testingChannel.WriteInbound(protocolMessage);
 
-                // @TODO in bound server shouldn't try and correlate a request, lets do another test to check this logic
                 _correlationManager.Received(1).TryMatchResponse(protocolMessage);
 
                 _keySigner.DidNotReceiveWithAnyArgs().Verify(null, null, null);
@@ -118,7 +117,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Transport.Channels
                 await messageStream.WaitForItemsOnDelayedStreamOnTaskPoolSchedulerAsync();
 
                 observer.Received.Count.Should().Be(1);
-                observer.Received.Single().Payload.CorrelationId.ToCorrelationId().Should().Be(correlationId);
+                observer.Received.Single().Payload.CorrelationId.ToCorrelationId().Id.Should().Be(correlationId.Id);
             }
         }
 

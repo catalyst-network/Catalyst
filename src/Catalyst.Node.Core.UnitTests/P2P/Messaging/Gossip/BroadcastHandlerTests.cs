@@ -90,8 +90,8 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Messaging.Gossip
             var channel = new EmbeddedChannel(_broadcastHandler, protoDatagramChannelHandler);
 
             var anySignedGossip = new TransactionBroadcast()
-               .ToProtocolMessage(PeerIdHelper.GetPeerId(CorrelationId.GenerateCorrelationId().ToString()))
-               .ToProtocolMessage(PeerIdHelper.GetPeerId(CorrelationId.GenerateCorrelationId().ToString()));
+               .ToProtocolMessage(PeerIdHelper.GetPeerId("Sender"))
+               .ToProtocolMessage(PeerIdHelper.GetPeerId("Sender"));
 
             channel.WriteInbound(anySignedGossip);
 

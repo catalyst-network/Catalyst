@@ -87,7 +87,7 @@ namespace Catalyst.Common.UnitTests.Extensions
                 ClientId = expectedContent.ToUtf8ByteString()
             }.ToProtocolMessage(peerId, guid);
 
-            wrapped.CorrelationId.ToCorrelationId().Should().Be(guid);
+            wrapped.CorrelationId.ToCorrelationId().Id.Should().Be(guid.Id);
             wrapped.PeerId.Should().Be(peerId);
             wrapped.TypeUrl.Should().Be(PeerId.Descriptor.ShortenedFullName());
             wrapped.FromProtocolMessage<PeerId>().ClientId.Should().Equal(expectedContent.ToUtf8ByteString());
@@ -110,7 +110,7 @@ namespace Catalyst.Common.UnitTests.Extensions
                 PeerCount = 13
             };
             new Action(() => response.ToProtocolMessage(peerId))
-               .Should().Throw<ArgumentException>();
+               .Should().Throw<NullReferenceException>();
         }
 
         [Fact]
