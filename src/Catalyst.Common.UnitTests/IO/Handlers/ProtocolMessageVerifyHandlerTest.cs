@@ -29,6 +29,7 @@ using Catalyst.Protocol.Common;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using NSubstitute;
+using Serilog;
 using Xunit;
 
 namespace Catalyst.Common.UnitTests.IO.Handlers
@@ -60,12 +61,11 @@ namespace Catalyst.Common.UnitTests.IO.Handlers
             _keySigner.Verify(Arg.Any<PublicKey>(), Arg.Any<byte[]>(), Arg.Any<Signature>())
                .Returns(true);
 
-            var signatureHandler = new ProtocolMessageVerifyHandler(_keySigner);
+            var signatureHandler = new ProtocolMessageVerifyHandler(_keySigner, Substitute.For<ILogger>());
 
             signatureHandler.ChannelRead(_fakeContext, _protocolMessageSigned);
 
             _fakeContext.ReceivedWithAnyArgs().FireChannelRead(_protocolMessageSigned).Received(1);
-            _fakeContext.DidNotReceiveWithAnyArgs().CloseAsync();
         }
         
         [Fact]
@@ -74,12 +74,11 @@ namespace Catalyst.Common.UnitTests.IO.Handlers
             _keySigner.Verify(Arg.Any<PublicKey>(), Arg.Any<byte[]>(), Arg.Any<Signature>())
                .Returns(false);
 
-            var signatureHandler = new ProtocolMessageVerifyHandler(_keySigner);
+            var signatureHandler = new ProtocolMessageVerifyHandler(_keySigner, Substitute.For<ILogger>());
 
             signatureHandler.ChannelRead(_fakeContext, _protocolMessageSigned);
 
             _fakeContext.DidNotReceiveWithAnyArgs().FireChannelRead(_protocolMessageSigned).Received(0);
-            _fakeContext.ReceivedWithAnyArgs().CloseAsync();
         }
     }
 }

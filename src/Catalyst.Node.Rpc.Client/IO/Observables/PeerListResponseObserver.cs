@@ -22,13 +22,13 @@
 #endregion
 
 using System;
-using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Cli;
-using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Observables;
+using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Observables;
-using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
+using Dawn;
+using DotNetty.Transport.Channels;
 using ILogger = Serilog.ILogger;
 
 namespace Catalyst.Node.Rpc.Client.IO.Observables
@@ -54,25 +54,33 @@ namespace Catalyst.Node.Rpc.Client.IO.Observables
         {
             _output = output;
         }
-
+        
         /// <summary>
-        /// Handles the peer list response.
+        /// 
         /// </summary>
-        /// <param name="messageDto">The PeerListResponse message.</param>
-        public override void HandleResponse(IObserverDto<ProtocolMessage> messageDto)
+        /// <param name="getPeerListResponse"></param>
+        /// <param name="channelHandlerContext"></param>
+        /// <param name="senderPeerIdentifier"></param>
+        /// <param name="correlationId"></param>
+        protected override void HandleResponse(GetPeerListResponse getPeerListResponse,
+            IChannelHandlerContext channelHandlerContext,
+            IPeerIdentifier senderPeerIdentifier,
+            Guid correlationId)
         {
+            Guard.Argument(getPeerListResponse, nameof(getPeerListResponse)).NotNull();
+            Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
+            Guard.Argument(senderPeerIdentifier, nameof(senderPeerIdentifier)).NotNull();
             Logger.Debug("Handling PeerListResponse");
 
             try
             {
-                var deserialised = messageDto.Payload.FromProtocolMessage<GetPeerListResponse>() ?? throw new ArgumentNullException(nameof(messageDto));
-                var result = string.Join(", ", deserialised.Peers);
+                var result = string.Join(", ", getPeerListResponse.Peers);
                 _output.WriteLine(result);
             }
             catch (Exception ex)
             {
                 Logger.Error(ex,
-                    "Failed to handle PeerListResponse after receiving message {0}", messageDto);
+                    "Failed to handle PeerListResponse after receiving message {0}", getPeerListResponse);
                 throw;
             }
         }

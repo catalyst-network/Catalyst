@@ -69,7 +69,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.Observables
         [InlineData("false", "198.51.100.14", "uebeingusedhere44j6jhdhdhandomValfprtestingItn")]
         public async Task RpcClient_Can_Handle_GetBlackListingResponse(bool blacklist, string publicKey, string ip)
         {
-            await TestGetBlackListResponse(blacklist, publicKey, ip);
+            await TestGetBlackListResponse(blacklist, publicKey, ip).ConfigureAwait(false);
 
             _output.Received(1).WriteLine($"Peer Blacklisting Successful : {blacklist.ToString()}, {publicKey}, {ip}");
         }

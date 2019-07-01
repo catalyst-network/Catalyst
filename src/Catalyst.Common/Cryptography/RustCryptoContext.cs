@@ -80,5 +80,11 @@ namespace Catalyst.Common.Cryptography
         {
             return Wrapper.GetPublicKeyFromPrivate(key);
         }
+
+        public int PrivateKeyLength => Wrapper.PrivateKeyLength;
+
+        public int PublicKeyLength => Wrapper.PublicKeyLength;
+
+        public int SignatureLength => Wrapper.SignatureLength;
     }
 }

@@ -71,7 +71,7 @@ namespace Catalyst.Common.IO.Messaging.Dto
         /// <param name="senderPeerIdentifier"></param>
         /// <param name="correlationId">The correlation id of the originating message.</param>
         /// <returns>ProtocolMessage message</returns>
-        private IMessageDto<T> BuildResponseMessage<T>(T message, IPeerIdentifier recipientPeerIdentifier, IPeerIdentifier senderPeerIdentifier, Guid correlationId) where T : IMessage<T>
+        private IMessageDto<T> BuildResponseMessage<T>(T message, IPeerIdentifier senderPeerIdentifier, IPeerIdentifier recipientPeerIdentifier, Guid correlationId) where T : IMessage<T>
         {
             Guard.Argument(correlationId, nameof(correlationId)).NotDefault();
             return new MessageDto<T>(message, senderPeerIdentifier, recipientPeerIdentifier, correlationId);

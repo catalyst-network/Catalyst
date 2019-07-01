@@ -22,14 +22,13 @@
 #endregion
 
 using System;
-using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Cli;
-using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Observables;
+using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Observables;
-using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
+using DotNetty.Transport.Channels;
 using ILogger = Serilog.ILogger;
 
 namespace Catalyst.Node.Rpc.Client.IO.Observables
@@ -55,27 +54,38 @@ namespace Catalyst.Node.Rpc.Client.IO.Observables
         {
             _output = output;
         }
-
-        public override void HandleResponse(IObserverDto<ProtocolMessage> messageDto)
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="versionResponse"></param>
+        /// <param name="channelHandlerContext"></param>
+        /// <param name="senderPeerIdentifier"></param>
+        /// <param name="correlationId"></param>
+        protected override void HandleResponse(VersionResponse versionResponse,
+            IChannelHandlerContext channelHandlerContext,
+            IPeerIdentifier senderPeerIdentifier,
+            Guid correlationId)
         {
+            Guard.Argument(versionResponse, nameof(versionResponse)).NotNull();
+            Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
+            Guard.Argument(senderPeerIdentifier, nameof(senderPeerIdentifier)).NotNull();
             Logger.Debug("GetVersionResponseHandler starting ...");
 
-            Guard.Argument(messageDto, nameof(messageDto)).NotNull("The message cannot be null");
+            Guard.Argument(versionResponse, nameof(versionResponse)).NotNull("The message cannot be null");
+            
+            Guard.Argument(versionResponse, nameof(versionResponse)).NotNull("The VersionResponse cannot be null")
+               .Require(d => d.Version != null,
+                    d => $"{nameof(versionResponse)} must have a valid Version.");
             
             try
             {
-                var deserialised = messageDto.Payload.FromProtocolMessage<VersionResponse>();
-                
-                Guard.Argument(deserialised, nameof(deserialised)).NotNull("The VersionResponse cannot be null")
-                   .Require(d => d.Version != null,
-                        d => $"{nameof(deserialised)} must have a valid Version.");
-                
-                _output.WriteLine($"Node Version: {deserialised.Version}");
+                _output.WriteLine($"Node Version: {versionResponse.Version}");
             }
             catch (Exception ex)
             {
                 Logger.Error(ex,
-                    "Failed to handle GetInfoResponse after receiving message {0}", messageDto);
+                    "Failed to handle GetInfoResponse after receiving message {0}", versionResponse);
                 _output.WriteLine(ex.Message);
             }
             finally

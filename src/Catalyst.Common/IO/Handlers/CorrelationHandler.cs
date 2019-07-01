@@ -25,14 +25,15 @@ using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;
+using Serilog;
 
 namespace Catalyst.Common.IO.Handlers
 {
-    public sealed class CorrelationHandler : SimpleChannelInboundHandler<ProtocolMessage>
+    public sealed class CorrelationHandler : InboundChannelHandlerBase<ProtocolMessage>
     {
         private readonly IMessageCorrelationManager _messageCorrelationManager;
 
-        public CorrelationHandler(IMessageCorrelationManager messageCorrelationManager)
+        public CorrelationHandler(IMessageCorrelationManager messageCorrelationManager, ILogger logger) : base(logger)
         {
             _messageCorrelationManager = messageCorrelationManager;
         }
@@ -50,12 +51,6 @@ namespace Catalyst.Common.IO.Handlers
                 if (_messageCorrelationManager.TryMatchResponse(message))
                 {
                     ctx.FireChannelRead(message);                
-                }
-                else
-                {
-                    // @TODO maybe we want to send a message why we close the channel, if we do we will need a Correlation handler for Tcp && Udp to write back correctly.
-                    // ctx.Channel.WriteAndFlushAsync(datagramEnvelope);
-                    ctx.CloseAsync();
                 }
             }
             else
