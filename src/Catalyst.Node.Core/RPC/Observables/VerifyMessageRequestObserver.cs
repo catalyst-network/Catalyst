@@ -66,22 +66,21 @@ namespace Catalyst.Node.Core.RPC.Observables
             var deserialised = messageDto.Payload.FromProtocolMessage<VerifyMessageRequest>();
             Guard.Argument(deserialised).NotNull("The verify message request cannot be null");
 
-            var decodedMessage = RLP.Decode(deserialised.Message.ToByteArray()).RLPData.ToStringFromRLPDecoded();
-            var decodedpublicKey = deserialised.PublicKey.ToByteArray();
-            var decodedsignature = deserialised.Signature.ToByteArray();
+            var decodedMessage = RLP.Decode(deserialised.Message.ToByteArray()).RLPData;
+            var decodedPublicKey = deserialised.PublicKey.ToByteArray();
+            var decodedSignature = deserialised.Signature.ToByteArray();
 
             try
             {
-                var pubKey = _keySigner.CryptoContext.ImportPublicKey(decodedpublicKey);
+                var pubKey = _keySigner.CryptoContext.ImportPublicKey(decodedPublicKey);
                 Guard.Argument(pubKey).HasValue();
 
-                var sig = new Signature(decodedsignature);
+                var sig = new Signature(decodedSignature);
                 Guard.Argument(sig).HasValue();
 
-                byte[] data = Encoding.UTF8.GetBytes(decodedMessage);
-                var span = new ReadOnlySpan<byte>(data);
-
-                var result = _keySigner.CryptoContext.Verify(pubKey, span, sig);
+                
+               
+                var result = _keySigner.CryptoContext.Verify(pubKey, decodedMessage, sig);
 
                 Logger.Debug("message content is {0}", deserialised.Message);
                 
