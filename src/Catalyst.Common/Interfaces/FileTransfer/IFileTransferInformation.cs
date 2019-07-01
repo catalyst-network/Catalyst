@@ -25,6 +25,7 @@ using System;
 using System.Threading;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Protocol.Rpc.Node;
 using DotNetty.Transport.Channels;
 
 namespace Catalyst.Common.Interfaces.FileTransfer
@@ -119,7 +120,7 @@ namespace Catalyst.Common.Interfaces.FileTransfer
         /// <summary>Gets the upload message.</summary>
         /// <param name="chunkId">The chunk identifier.</param>
         /// <returns></returns>
-        IMessageDto GetUploadMessageDto(uint chunkId);
+        IMessageDto<TransferFileBytesRequest> GetUploadMessageDto(uint chunkId);
     }
 
     public interface IDownloadFileInformation : IFileTransferInformation

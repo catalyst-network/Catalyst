@@ -55,7 +55,9 @@ namespace Catalyst.Cli.IntegrationTests.Commands
                     var result = shell.AdvancedShell.ParseCommand(
                         "peercount", "-n", "node1");
                     result.Should().BeTrue();
-                    NodeRpcClient.Received(1).SendMessage(Arg.Is<IMessageDto>(x => x.Message.Descriptor != null && x.Message.Descriptor.Name.Equals(GetPeerCountRequest.Descriptor.Name)));
+                    NodeRpcClient.Received(1).SendMessage(Arg.Is<IMessageDto<GetPeerCountRequest>>(
+                        x => x.Message != null &&
+                            x.Message.GetType().IsAssignableTo<GetPeerCountRequest>()));
                 }   
             }
         }

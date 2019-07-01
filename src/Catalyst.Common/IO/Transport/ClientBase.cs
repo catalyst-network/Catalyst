@@ -25,6 +25,7 @@ using Catalyst.Common.Interfaces.IO.EventLoop;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Transport;
 using Catalyst.Common.Interfaces.IO.Transport.Channels;
+using Google.Protobuf;
 using Serilog;
 
 namespace Catalyst.Common.IO.Transport
@@ -34,7 +35,7 @@ namespace Catalyst.Common.IO.Transport
         protected ClientBase(IChannelFactory channelFactory, ILogger logger, IEventLoopGroupFactory handlerEventEventLoopGroupFactory)
             : base(channelFactory, logger, handlerEventEventLoopGroupFactory) { }
 
-        public virtual void SendMessage(IMessageDto message)
+        public virtual void SendMessage<T>(IMessageDto<T> message) where T : IMessage<T>
         {
             Channel.WriteAsync(message).ConfigureAwait(false);
         }

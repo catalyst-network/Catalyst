@@ -23,15 +23,14 @@
 
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Cli;
-using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.IO.Messaging.Dto;
-using Catalyst.Node.Rpc.Client.Observables;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using NSubstitute;
 using Serilog;
 using System;
+using Catalyst.Node.Rpc.Client.IO.Observables;
 using Xunit;
 
 namespace Catalyst.Node.Rpc.Client.UnitTests.Observables
@@ -69,7 +68,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.Observables
             // var messageStream = MessageStreamHelper.CreateStreamWithMessage(response.Message.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId));
 
             _requestObserver = new GetInfoResponseObserver(_output, _logger);
-            _requestObserver.HandleResponse(new ProtocolMessageDto(_fakeContext, response.Message.ToProtocolMessage(response.Sender.PeerId, response.CorrelationId)));
+            _requestObserver.HandleResponse(new ObserverDto(_fakeContext, response.Message.ToProtocolMessage(response.Sender.PeerId, response.CorrelationId)));
             _output.Received(1).WriteLine(query);
         }
 

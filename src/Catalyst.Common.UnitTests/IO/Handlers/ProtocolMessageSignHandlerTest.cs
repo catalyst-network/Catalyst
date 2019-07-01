@@ -24,7 +24,7 @@
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.IO.Handlers;
-using Catalyst.Common.IO.Messaging;
+using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.Util;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Types;
 using Catalyst.Protocol.IPPN;
@@ -38,7 +38,7 @@ namespace Catalyst.Common.UnitTests.IO.Handlers
     public sealed class ProtocolMessageSignHandlerTest
     {
         private readonly IChannelHandlerContext _fakeContext;
-        private readonly IMessageDto _dto;
+        private readonly IMessageDto<PingRequest> _dto;
         private readonly IKeySigner _keySigner;
 
         public ProtocolMessageSignHandlerTest()
