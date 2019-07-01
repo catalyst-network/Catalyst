@@ -78,8 +78,6 @@ namespace Catalyst.Node.Core.RPC.IO.Observables
                 var sig = new Signature(decodedSignature);
                 Guard.Argument(sig).HasValue();
 
-                
-               
                 var result = _keySigner.CryptoContext.Verify(pubKey, decodedMessage, sig);
 
                 Logger.Debug("message content is {0}", deserialised.Message);
