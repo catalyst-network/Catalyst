@@ -24,7 +24,6 @@
 using System.Net;
 using System.Security.Cryptography.X509Certificates;
 using Catalyst.Common.Interfaces.IO.EventLoop;
-using Serilog;
 
 namespace Catalyst.Common.Interfaces.IO.Transport.Channels
 {

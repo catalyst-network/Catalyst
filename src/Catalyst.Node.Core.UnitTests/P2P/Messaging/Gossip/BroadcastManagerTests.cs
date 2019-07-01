@@ -95,7 +95,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Messaging.Gossip
                 Guid.NewGuid()
             );
 
-            var gossipDto = messageDto.Message.ToProtocolMessage(senderIdentifier.PeerId, messageDto.CorrelationId);
+            var gossipDto = messageDto.Content.ToProtocolMessage(senderIdentifier.PeerId, messageDto.CorrelationId);
 
             await broadcastMessageHandler.ReceiveAsync(gossipDto);
 

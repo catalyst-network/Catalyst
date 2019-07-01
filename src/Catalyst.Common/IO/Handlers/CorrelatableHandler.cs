@@ -60,8 +60,8 @@ namespace Catalyst.Common.IO.Handlers
             {
                 _messageCorrelationManager.AddPendingRequest(new CorrelatableMessage
                 {
-                    Recipient = message.Recipient,
-                    Content = message.Message.ToProtocolMessage(message.Sender.PeerId, Guid.NewGuid()),
+                    Recipient = message.RecipientPeerIdentifier,
+                    Content = message.Content.ToProtocolMessage(message.SenderPeerIdentifier.PeerId, Guid.NewGuid()),
                     SentAt = DateTimeOffset.UtcNow
                 });
             }

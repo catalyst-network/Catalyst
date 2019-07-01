@@ -48,9 +48,9 @@ namespace Catalyst.Common.UnitTests.IO.Messaging.Dto
             Assert.NotNull(_messageDto);
 
             _messageDto.Should().BeOfType<MessageDto<PingRequest>>();
-            _messageDto.Message.Should().NotBeNull().And.BeAssignableTo(typeof(IMessage<PingRequest>));
-            _messageDto.Recipient.Should().NotBeNull().And.BeAssignableTo(typeof(IPeerIdentifier));
-            _messageDto.Sender.Should().NotBeNull().And.BeAssignableTo(typeof(IPeerIdentifier));
+            _messageDto.Content.Should().NotBeNull().And.BeAssignableTo(typeof(IMessage<PingRequest>));
+            _messageDto.RecipientPeerIdentifier.Should().NotBeNull().And.BeAssignableTo(typeof(IPeerIdentifier));
+            _messageDto.SenderPeerIdentifier.Should().NotBeNull().And.BeAssignableTo(typeof(IPeerIdentifier));
         }
     }
 }

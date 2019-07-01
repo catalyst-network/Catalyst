@@ -21,7 +21,6 @@
 
 #endregion
 
-using System;
 using System.Security.Authentication;
 using Catalyst.Common.Interfaces.Rpc.Authentication;
 using Catalyst.Common.P2P;

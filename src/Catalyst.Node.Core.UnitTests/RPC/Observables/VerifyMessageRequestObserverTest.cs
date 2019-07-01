@@ -94,7 +94,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
             );
             
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, 
-                request.Message.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId)
+                request.Content.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId)
             );
             
             var handler = new VerifyMessageRequestObserver(PeerIdentifierHelper.GetPeerIdentifier("sender"),

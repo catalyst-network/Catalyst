@@ -78,7 +78,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.Observables
                 Guid.NewGuid()
             );
 
-            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, response.Message.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId, response.CorrelationId));
+            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, response.Content.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId, response.CorrelationId));
 
             _observer = new GetVersionResponseObserver(_output, _logger);
             _observer.StartObserving(messageStream);

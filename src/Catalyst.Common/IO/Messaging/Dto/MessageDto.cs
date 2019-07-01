@@ -23,41 +23,43 @@
 
 using System;
 using Catalyst.Common.Config;
+using Catalyst.Common.Enumerator;
+using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.P2P;
 using Dawn;
+using DotNetty.Transport.Channels;
 using Google.Protobuf;
 
 namespace Catalyst.Common.IO.Messaging.Dto
 {
-    public sealed class MessageDto<T> : IMessageDto<T> where T : IMessage<T>
+    public sealed class MessageDto<T> : DefaultAddressedEnvelope<T>, IMessageDto<T> where T : IMessage<T>
     {
         public Guid CorrelationId { get; }
-        public T Message { get; }
         public MessageTypes MessageType { get; }
-        public IPeerIdentifier Recipient { get; }
-        public IPeerIdentifier Sender { get; }
+        public IPeerIdentifier RecipientPeerIdentifier { get; }
+        public IPeerIdentifier SenderPeerIdentifier { get; }
 
         /// <summary>
         ///     Data transfer object to wrap up all parameters for sending protocol messages into a MessageFactors.
         /// </summary>
-        /// <param name="message"></param>
+        /// <param name="content"></param>
         /// <param name="correlationId"></param>
-        /// <param name="recipient"></param>
-        /// <param name="sender"></param>
-        public MessageDto(T message,
-            IPeerIdentifier sender,
-            IPeerIdentifier recipient,
-            Guid correlationId = default)
+        /// <param name="recipientPeerIdentifier"></param>
+        /// <param name="senderPeerIdentifier"></param>
+        public MessageDto(T content,
+            IPeerIdentifier senderPeerIdentifier,
+            IPeerIdentifier recipientPeerIdentifier,
+            Guid correlationId = default) : base(content, senderPeerIdentifier.IpEndPoint, recipientPeerIdentifier.IpEndPoint)
         {
-            Guard.Argument(message, nameof(message)).Compatible<T>();
-            Guard.Argument(recipient.IpEndPoint.Address, nameof(recipient.IpEndPoint.Address)).NotNull();
-            Guard.Argument(recipient.Port, nameof(recipient.Port)).InRange(0, 65535);
-            Guard.Argument(sender, nameof(sender)).Compatible<IPeerIdentifier>().NotNull();
+            Guard.Argument(content, nameof(content)).Compatible<T>();
+            Guard.Argument(recipientPeerIdentifier.IpEndPoint.Address, nameof(recipientPeerIdentifier.IpEndPoint.Address)).NotNull();
+            Guard.Argument(recipientPeerIdentifier.Port, nameof(recipientPeerIdentifier.Port)).InRange(0, 65535);
+            Guard.Argument(senderPeerIdentifier, nameof(senderPeerIdentifier)).Compatible<IPeerIdentifier>().NotNull();
             CorrelationId = correlationId;
-            Message = message;
-            Recipient = recipient;
-            Sender = sender;
+            RecipientPeerIdentifier = recipientPeerIdentifier;
+            SenderPeerIdentifier = senderPeerIdentifier;
+            MessageType = Enumeration.ParseEndsWith<MessageTypes>(Content.Descriptor.ShortenedFullName());
         }
     }
 }
