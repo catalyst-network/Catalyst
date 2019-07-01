@@ -31,6 +31,7 @@ using NSubstitute;
 using Serilog;
 using System;
 using System.Threading.Tasks;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Node.Rpc.Client.IO.Observables;
 using Xunit;
 
@@ -63,7 +64,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.Observables
                 },
                 PeerIdentifierHelper.GetPeerIdentifier("sender"),
                 PeerIdentifierHelper.GetPeerIdentifier("recipient"),
-                Guid.NewGuid()
+                CorrelationId.GenerateCorrelationId()
             );
 
             var messageStream = MessageStreamHelper.CreateStreamWithMessages(_fakeContext,

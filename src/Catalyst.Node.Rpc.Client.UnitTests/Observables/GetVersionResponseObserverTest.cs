@@ -26,6 +26,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Cli;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Node.Rpc.Client.IO.Observables;
 using Catalyst.Protocol.Rpc.Node;
@@ -75,7 +76,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.Observables
                 },
                 PeerIdentifierHelper.GetPeerIdentifier("sender"),
                 PeerIdentifierHelper.GetPeerIdentifier("recpient"),
-                Guid.NewGuid()
+                CorrelationId.GenerateCorrelationId()
             );
 
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, response.Content.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId, response.CorrelationId));

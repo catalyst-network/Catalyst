@@ -21,7 +21,6 @@
 
 #endregion
 
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -30,6 +29,7 @@ using Autofac;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Observables;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Node.Core.P2P.IO.Observables;
 using Catalyst.Protocol.IPPN;
@@ -80,7 +80,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Observables
             var peerNeighbourResponseMessage = new PeerNeighborsResponse();
             
             var fakeContext = Substitute.For<IChannelHandlerContext>();
-            var channeledAny = new ObserverDto(fakeContext, peerNeighbourResponseMessage.ToProtocolMessage(PeerIdHelper.GetPeerId(), Guid.NewGuid()));
+            var channeledAny = new ObserverDto(fakeContext, peerNeighbourResponseMessage.ToProtocolMessage(PeerIdHelper.GetPeerId(), CorrelationId.GenerateCorrelationId()));
             var observableStream = new[] {channeledAny}.ToObservable();
             neighbourResponseHandler.StartObserving(observableStream);
 
@@ -94,7 +94,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Observables
         //     var peerNeighbourResponseMessage = new PeerNeighborsResponse();
         //     
         //     var fakeContext = Substitute.For<IChannelHandlerContext>();
-        //     var channeledAny = new ProtocolMessageDto(fakeContext, peerNeighbourResponseMessage.ToProtocolMessage(PeerIdHelper.GetPeerId(), Guid.NewGuid()));
+        //     var channeledAny = new ProtocolMessageDto(fakeContext, peerNeighbourResponseMessage.ToProtocolMessage(PeerIdHelper.GetPeerId(), CorrelationId.GenerateCorrelationId()));
         //     var observableStream = new[] {channeledAny}.ToObservable();
         //     subbedPeerDiscovery.StartObserving(observableStream);
         //     subbedPeerDiscovery.GetNeighbourResponseStream.ReceivedWithAnyArgs(1);

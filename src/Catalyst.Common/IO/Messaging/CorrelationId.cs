@@ -21,22 +21,42 @@
 
 #endregion
 
-using Catalyst.Common.Config;
+using System;
 using Catalyst.Common.Interfaces.IO.Messaging;
 
-namespace Catalyst.Common.Interfaces.FileTransfer
+namespace Catalyst.Common.IO.Messaging
 {
     /// <summary>
-    /// Handles storing of the file downloads
+    /// 
     /// </summary>
-    /// <seealso cref="IFileTransferFactory{IDownloadFileInformation}" />
-    public interface IDownloadFileTransferFactory : IFileTransferFactory<IDownloadFileInformation>
+    public sealed class CorrelationId : ICorrelationId
     {
-        /// <summary>Downloads the chunk.</summary>
-        /// <param name="fileName">Name of the file.</param>
-        /// <param name="chunkId">The chunk identifier.</param>
-        /// <param name="fileChunk">The file chunk.</param>
+        public Guid Id { get; set; }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        public CorrelationId(Guid id) { Id = id; } 
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="bytes"></param>
+        public CorrelationId(byte[] bytes) { Id = new Guid(bytes); } 
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private CorrelationId() { Id = Guid.NewGuid(); }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <returns></returns>
-        FileTransferResponseCodes DownloadChunk(ICorrelationId fileName, uint chunkId, byte[] fileChunk);
+        public static ICorrelationId GenerateCorrelationId()
+        {
+            return new CorrelationId();
+        }
     }
 }

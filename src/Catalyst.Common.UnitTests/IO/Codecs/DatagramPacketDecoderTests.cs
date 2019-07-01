@@ -21,9 +21,9 @@
 
 #endregion
 
-using System;
 using System.Net;
 using Catalyst.Common.Extensions;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.Util;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
@@ -52,7 +52,7 @@ namespace Catalyst.Common.UnitTests.IO.Codecs
             var protocolMessageSigned = new ProtocolMessageSigned
             {
                 Message = new PingRequest().ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId, 
-                    Guid.NewGuid()
+                    CorrelationId.GenerateCorrelationId()
                 ),
                 
                 Signature = ByteUtil.GenerateRandomByteArray(64).ToByteString()

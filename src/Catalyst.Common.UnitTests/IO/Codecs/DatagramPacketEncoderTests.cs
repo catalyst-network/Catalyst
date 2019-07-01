@@ -21,10 +21,10 @@
 
 #endregion
 
-using System;
 using System.Net;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.Util;
 using Catalyst.Protocol.Common;
@@ -70,7 +70,7 @@ namespace Catalyst.Common.UnitTests.IO.Codecs
 
             _protocolMessageSigned = new ProtocolMessageSigned
             {
-                Message = new PingRequest().ToProtocolMessage(_senderPid.PeerId, Guid.NewGuid()),
+                Message = new PingRequest().ToProtocolMessage(_senderPid.PeerId, CorrelationId.GenerateCorrelationId()),
                 Signature = ByteUtil.GenerateRandomByteArray(64).ToByteString()
             };
             
@@ -88,7 +88,8 @@ namespace Catalyst.Common.UnitTests.IO.Codecs
                 _protocolMessageSigned,
                 _senderPid,
                 _recipientPid,
-                Guid.NewGuid())));
+                CorrelationId.GenerateCorrelationId()
+            )));
 
             var datagramPacket = _channel.ReadOutbound<DatagramPacket>();
             Assert.NotNull(datagramPacket);

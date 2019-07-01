@@ -32,6 +32,7 @@ using Catalyst.Common.FileTransfer;
 using Catalyst.Common.Interfaces.FileTransfer;
 using Catalyst.Common.Interfaces.Modules.Dfs;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.P2P;
 using Catalyst.Node.Rpc.Client.IO.Observables;
@@ -87,11 +88,11 @@ namespace Catalyst.Node.Rpc.Client.IntegrationTests.Observables
                 var rpcPeerId = PeerIdHelper.GetPeerId("recipient");
                 var nodePeer = new PeerIdentifier(nodePeerId);
                 var rpcPeer = new PeerIdentifier(rpcPeerId);
-                var correlationGuid = Guid.NewGuid();
+                var correlationId = CorrelationId.GenerateCorrelationId();
                 var fakeFileOutputPath = Path.GetTempFileName();
                 IDownloadFileInformation fileDownloadInformation = new DownloadFileTransferInformation(rpcPeer,
                     nodePeer,
-                    _fakeContext.Channel, correlationGuid, fakeFileOutputPath, 0);
+                    _fakeContext.Channel, correlationId, fakeFileOutputPath, 0);
                 var getFileFromDfsResponseHandler =
                     new GetFileFromDfsResponseObserver(_logger, _fileDownloadFactory);
                 var transferBytesHandler =
@@ -112,7 +113,7 @@ namespace Catalyst.Node.Rpc.Client.IntegrationTests.Observables
                 {
                     FileSize = (ulong) byteSize,
                     ResponseCode = ByteString.CopyFrom((byte) FileTransferResponseCodes.Successful.Id)
-                }.ToProtocolMessage(nodePeer.PeerId, correlationGuid);
+                }.ToProtocolMessage(nodePeer.PeerId, correlationId);
 
                 getFileResponse.SendToHandler(_fakeContext, getFileFromDfsResponseHandler);
 
@@ -122,7 +123,7 @@ namespace Catalyst.Node.Rpc.Client.IntegrationTests.Observables
                     rpcPeer,
                     nodePeer,
                     _fakeContext.Channel,
-                    correlationGuid,
+                    correlationId,
                     new DtoFactory());
 
                 for (uint i = 0; i < fileUploadInformation.MaxChunk; i++)
@@ -155,7 +156,7 @@ namespace Catalyst.Node.Rpc.Client.IntegrationTests.Observables
         private string AddFileToDfs(long byteSize, out long crcValue, out Stream stream)
         {
             var fileToTransfer = FileHelper.CreateRandomTempFile(byteSize);
-            var fakeId = Guid.NewGuid().ToString();
+            var fakeId = CorrelationId.GenerateCorrelationId().ToString();
             crcValue = FileHelper.GetCrcValue(fileToTransfer);
             stream = new MemoryStream(File.ReadAllBytes(fileToTransfer));
             _dfs.ReadAsync(fakeId).Returns(stream);

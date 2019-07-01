@@ -29,6 +29,7 @@ using Catalyst.Common.Config;
 using Catalyst.Common.Enumerator;
 using Catalyst.Common.FileTransfer;
 using Catalyst.Common.Interfaces.FileTransfer;
+using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Observables;
 using Catalyst.Common.Interfaces.Modules.Dfs;
 using Catalyst.Common.Interfaces.P2P;
@@ -81,7 +82,7 @@ namespace Catalyst.Node.Core.RPC.IO.Observables
         protected override AddFileToDfsResponse HandleRequest(AddFileToDfsRequest addFileToDfsRequest,
             IChannelHandlerContext channelHandlerContext,
             IPeerIdentifier senderPeerIdentifier,
-            Guid correlationId)
+            ICorrelationId correlationId)
         {
             Guard.Argument(addFileToDfsRequest, nameof(addFileToDfsRequest)).NotNull();
             Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
@@ -107,7 +108,7 @@ namespace Catalyst.Node.Core.RPC.IO.Observables
 
             if (responseCode == FileTransferResponseCodes.Successful)
             {
-                _fileTransferFactory.FileTransferAsync(fileTransferInformation.CorrelationGuid, CancellationToken.None).ContinueWith(task =>
+                _fileTransferFactory.FileTransferAsync(fileTransferInformation.CorrelationId, CancellationToken.None).ContinueWith(task =>
                 {
                     if (fileTransferInformation.ChunkIndicatorsTrue())
                     {
@@ -144,7 +145,7 @@ namespace Catalyst.Node.Core.RPC.IO.Observables
                 }
                 catch (Exception e)
                 {
-                    Logger.Error(e, "Failed to handle file download OnSuccess {0}", fileTransferInformation.CorrelationGuid);
+                    Logger.Error(e, "Failed to handle file download OnSuccess {0}", fileTransferInformation.CorrelationId.Id);
                     responseCode = FileTransferResponseCodes.Failed;
                 }
                 finally
@@ -162,7 +163,7 @@ namespace Catalyst.Node.Core.RPC.IO.Observables
                 message,
                 PeerIdentifier,
                 fileTransferInformation.RecipientIdentifier,
-                fileTransferInformation.CorrelationGuid
+                fileTransferInformation.CorrelationId
             );
 
             await fileTransferInformation.RecipientChannel.WriteAndFlushAsync(responseMessage).ConfigureAwait(false);

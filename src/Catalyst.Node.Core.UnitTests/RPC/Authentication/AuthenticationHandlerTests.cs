@@ -30,7 +30,7 @@ using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels.Embedded;
 using NSubstitute;
-using System;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Protocol.Common;
 using Google.Protobuf;
 using Serilog;
@@ -57,7 +57,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Authentication
             _authenticationStrategy.Authenticate(Arg.Any<IPeerIdentifier>()).Returns(false);
 
             var request = new GetPeerListRequest().ToProtocolMessage(PeerIdHelper.GetPeerId("Test"),
-                Guid.NewGuid());
+                CorrelationId.GenerateCorrelationId());
             var signedMessage = new ProtocolMessageSigned
             {
                 Message = request,
@@ -75,7 +75,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Authentication
             _authenticationStrategy.Authenticate(Arg.Any<IPeerIdentifier>()).Returns(true);
 
             var request = new GetPeerListRequest().ToProtocolMessage(PeerIdHelper.GetPeerId("Test"),
-                Guid.NewGuid());
+                CorrelationId.GenerateCorrelationId());
             var signedMessage = new ProtocolMessageSigned
             {
                 Message = request,
