@@ -63,8 +63,8 @@ namespace Catalyst.Node.Core.RPC.IO.Observables
             Guard.Argument(deserialised).NotNull("The verify message request cannot be null");
 
             var decodedMessage = RLP.Decode(deserialised.Message.ToByteArray()).RLPData;
-            var decodedPublicKey = deserialised.PublicKey.ToByteArray();
-            var decodedSignature = deserialised.Signature.ToByteArray();
+            var decodedPublicKey = RLP.Decode(deserialised.PublicKey.ToByteArray()).RLPData;
+            var decodedSignature = RLP.Decode(deserialised.Signature.ToByteArray()).RLPData;
 
             IPublicKey publicKey = null;
             try
