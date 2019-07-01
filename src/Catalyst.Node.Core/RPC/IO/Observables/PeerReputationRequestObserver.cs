@@ -23,14 +23,13 @@
 
 using System;
 using System.Linq;
-using Catalyst.Common.Extensions;
-using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Observables;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Observables;
 using Catalyst.Common.P2P;
-using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
+using Dawn;
+using DotNetty.Transport.Channels;
 using Nethereum.RLP;
 using SharpRepository.Repository;
 using ILogger = Serilog.ILogger;
@@ -55,22 +54,29 @@ namespace Catalyst.Node.Core.RPC.IO.Observables
         }
 
         /// <summary>
-        /// Handlers the specified message.
+        /// 
         /// </summary>
-        /// <param name="messageDto">The message.</param>
-        protected override GetPeerReputationResponse HandleRequest(IObserverDto<ProtocolMessage> messageDto)
+        /// <param name="getPeerReputationRequest"></param>
+        /// <param name="channelHandlerContext"></param>
+        /// <param name="senderPeerIdentifier"></param>
+        /// <param name="correlationId"></param>
+        /// <returns></returns>
+        protected override GetPeerReputationResponse HandleRequest(GetPeerReputationRequest getPeerReputationRequest,
+            IChannelHandlerContext channelHandlerContext,
+            IPeerIdentifier senderPeerIdentifier,
+            Guid correlationId)
         {
+            Guard.Argument(getPeerReputationRequest, nameof(getPeerReputationRequest)).NotNull();
+            Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
+            Guard.Argument(senderPeerIdentifier, nameof(senderPeerIdentifier)).NotNull();
             Logger.Debug("received message of type PeerReputationRequest");
             
-            var deserialised = messageDto.Payload.FromProtocolMessage<GetPeerReputationRequest>();
-            var publicKey = deserialised.PublicKey.ToStringUtf8() ?? throw new ArgumentNullException(nameof(messageDto));
-            
-            var ip = deserialised.Ip.ToStringUtf8();
+            var ip = getPeerReputationRequest.Ip.ToStringUtf8();
 
             return new GetPeerReputationResponse
             {
                 Reputation = _peerRepository.GetAll().Where(m => m.PeerIdentifier.Ip.ToString() == ip.ToString()
-                     && ConvertorForRLPEncodingExtensions.ToStringFromRLPDecoded(m.PeerIdentifier.PublicKey) == publicKey)
+                     && m.PeerIdentifier.PublicKey.ToStringFromRLPDecoded() == getPeerReputationRequest.PublicKey.ToStringUtf8())
                    .Select(x => x.Reputation).DefaultIfEmpty(int.MinValue).First()
             };
         }

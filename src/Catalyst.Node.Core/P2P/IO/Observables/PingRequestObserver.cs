@@ -21,13 +21,13 @@
 
 #endregion
 
-using Catalyst.Common.Extensions;
-using Catalyst.Common.Interfaces.IO.Messaging.Dto;
+using System;
 using Catalyst.Common.Interfaces.IO.Observables;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Observables;
-using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
+using Dawn;
+using DotNetty.Transport.Channels;
 using Serilog;
 
 namespace Catalyst.Node.Core.P2P.IO.Observables
@@ -40,9 +40,21 @@ namespace Catalyst.Node.Core.P2P.IO.Observables
             ILogger logger)
             : base(logger, peerIdentifier) { }
 
-        protected override PingResponse HandleRequest(IObserverDto<ProtocolMessage> messageDto)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="pingRequest"></param>
+        /// <param name="channelHandlerContext"></param>
+        /// <param name="senderPeerIdentifier"></param>
+        /// <param name="correlationId"></param>
+        /// <returns></returns>
+        protected override PingResponse HandleRequest(PingRequest pingRequest, IChannelHandlerContext channelHandlerContext, IPeerIdentifier senderPeerIdentifier, Guid correlationId)
         {
-            Logger.Debug("message content is {0}", messageDto.Payload.FromProtocolMessage<PingRequest>());
+            Guard.Argument(pingRequest, nameof(pingRequest)).NotNull();
+            Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
+            Guard.Argument(senderPeerIdentifier, nameof(senderPeerIdentifier)).NotNull();
+            
+            Logger.Debug("message content is {0}", pingRequest);
 
             return new PingResponse();
         }

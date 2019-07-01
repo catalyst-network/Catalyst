@@ -22,16 +22,14 @@
 #endregion
 
 using System;
-using Catalyst.Common.Extensions;
-using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Observables;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Observables;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Types;
-using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
+using DotNetty.Transport.Channels;
 using Multiformats.Base;
 using Nethereum.RLP;
 using ILogger = Serilog.ILogger;
@@ -57,16 +55,27 @@ namespace Catalyst.Node.Core.RPC.IO.Observables
             _keySigner = keySigner;
         }
 
-        protected override VerifyMessageResponse HandleRequest(IObserverDto<ProtocolMessage> messageDto)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="verifyMessageRequest"></param>
+        /// <param name="channelHandlerContext"></param>
+        /// <param name="senderPeerIdentifier"></param>
+        /// <param name="correlationId"></param>
+        /// <returns></returns>
+        protected override VerifyMessageResponse HandleRequest(VerifyMessageRequest verifyMessageRequest,
+            IChannelHandlerContext channelHandlerContext,
+            IPeerIdentifier senderPeerIdentifier,
+            Guid correlationId)
         {
+            Guard.Argument(verifyMessageRequest, nameof(verifyMessageRequest)).NotNull();
+            Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
+            Guard.Argument(senderPeerIdentifier, nameof(senderPeerIdentifier)).NotNull();
             Logger.Debug("received message of type VerifyMessageRequest");
-            
-            var deserialised = messageDto.Payload.FromProtocolMessage<VerifyMessageRequest>();
-            Guard.Argument(deserialised).NotNull("The verify message request cannot be null");
 
-            var decodedMessage = RLP.Decode(deserialised.Message.ToByteArray()).RLPData.ToStringFromRLPDecoded();
-            var publicKey = deserialised.PublicKey;
-            var signature = deserialised.Signature;
+            var decodedMessage = RLP.Decode(verifyMessageRequest.Message.ToByteArray()).RLPData.ToStringFromRLPDecoded();
+            var publicKey = verifyMessageRequest.PublicKey;
+            var signature = verifyMessageRequest.Signature;
 
             try
             {
@@ -101,13 +110,13 @@ namespace Catalyst.Node.Core.RPC.IO.Observables
                 var result = _keySigner.CryptoContext.Verify(pubKey, decodedMessage.ToBytesForRLPEncoding(),
                     new Signature(decodedSignature));
 
-                Logger.Debug("message content is {0}", deserialised.Message);
+                Logger.Debug("message content is {0}", verifyMessageRequest.Message);
                 
                 return ReturnResponse(result);
             }
             catch (Exception ex)
             {
-                Logger.Error(ex, $"{FailedToHandleMessage} {messageDto}");
+                Logger.Error(ex, $"{FailedToHandleMessage} {verifyMessageRequest}");
                 throw;
             } 
         }

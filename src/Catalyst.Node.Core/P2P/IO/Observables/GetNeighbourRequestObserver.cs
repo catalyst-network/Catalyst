@@ -21,17 +21,17 @@
 
 #endregion
 
+using System;
 using System.Linq;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
-using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Observables;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Observables;
 using Catalyst.Common.P2P;
-using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
 using Dawn;
+using DotNetty.Transport.Channels;
 using Serilog;
 using SharpRepository.Repository;
 using SharpRepository.Repository.Specifications;
@@ -52,8 +52,23 @@ namespace Catalyst.Node.Core.P2P.IO.Observables
             _repository = repository;
         }
 
-        protected override PeerNeighborsResponse HandleRequest(IObserverDto<ProtocolMessage> messageDto)
+        /// <summary>
+        ///     Processes a GetNeighbourResponse item from stream.
+        /// </summary>
+        /// <param name="peerNeighborsRequest"></param>
+        /// <param name="channelHandlerContext"></param>
+        /// <param name="senderPeerIdentifier"></param>
+        /// <param name="correlationId"></param>
+        /// <returns></returns>
+        protected override PeerNeighborsResponse HandleRequest(PeerNeighborsRequest peerNeighborsRequest,
+            IChannelHandlerContext channelHandlerContext,
+            IPeerIdentifier senderPeerIdentifier,
+            Guid correlationId)
         {
+            Guard.Argument(peerNeighborsRequest, nameof(peerNeighborsRequest)).NotNull();
+            Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
+            Guard.Argument(senderPeerIdentifier, nameof(senderPeerIdentifier)).NotNull();
+            
             Logger.Debug("PeerNeighborsRequest Message Received");
 
             var activePeersList = _repository.FindAll(new Specification<Peer>(p => !p.IsAwolPeer)).ToList();

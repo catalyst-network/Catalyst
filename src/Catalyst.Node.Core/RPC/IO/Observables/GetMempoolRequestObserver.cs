@@ -24,14 +24,13 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Catalyst.Common.Extensions;
-using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Observables;
 using Catalyst.Common.Interfaces.Modules.Mempool;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Observables;
-using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
+using Dawn;
+using DotNetty.Transport.Channels;
 using ILogger = Serilog.ILogger;
 
 namespace Catalyst.Node.Core.RPC.IO.Observables
@@ -50,15 +49,27 @@ namespace Catalyst.Node.Core.RPC.IO.Observables
             _mempool = mempool;
         }
 
-        protected override GetMempoolResponse HandleRequest(IObserverDto<ProtocolMessage> messageDto)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="getMempoolRequest"></param>
+        /// <param name="channelHandlerContext"></param>
+        /// <param name="senderPeerIdentifier"></param>
+        /// <param name="correlationId"></param>
+        /// <returns></returns>
+        protected override GetMempoolResponse HandleRequest(GetMempoolRequest getMempoolRequest,
+            IChannelHandlerContext channelHandlerContext,
+            IPeerIdentifier senderPeerIdentifier,
+            Guid correlationId)
         {
+            Guard.Argument(getMempoolRequest, nameof(getMempoolRequest)).NotNull();
+            Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
+            Guard.Argument(senderPeerIdentifier, nameof(senderPeerIdentifier)).NotNull();
             Logger.Debug("GetMempoolRequestHandler starting ...");
 
             try
             {
-                var deserialised = messageDto.Payload.FromProtocolMessage<GetMempoolRequest>();
-                
-                Logger.Debug("Received GetMempoolRequest message with content {0}", deserialised);
+                Logger.Debug("Received GetMempoolRequest message with content {0}", getMempoolRequest);
 
                 return new GetMempoolResponse
                 {
@@ -68,7 +79,7 @@ namespace Catalyst.Node.Core.RPC.IO.Observables
             catch (Exception ex)
             {
                 Logger.Error(ex,
-                    "Failed to handle GetInfoRequest after receiving message {0}", messageDto);
+                    "Failed to handle GetInfoRequest after receiving message {0}", getMempoolRequest);
                 return new GetMempoolResponse();
             }
         }
