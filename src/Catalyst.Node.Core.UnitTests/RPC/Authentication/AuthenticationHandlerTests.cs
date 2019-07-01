@@ -33,6 +33,7 @@ using NSubstitute;
 using System;
 using Catalyst.Protocol.Common;
 using Google.Protobuf;
+using Serilog;
 using Xunit;
 
 namespace Catalyst.Node.Core.UnitTests.RPC.Authentication
@@ -47,7 +48,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Authentication
         {
             _testObservableServiceHandler = Substitute.For<IObservableServiceHandler>();
             _authenticationStrategy = Substitute.For<IAuthenticationStrategy>();
-            _serverChannel = new EmbeddedChannel(new AuthenticationHandler(_authenticationStrategy), _testObservableServiceHandler);
+            _serverChannel = new EmbeddedChannel(new AuthenticationHandler(_authenticationStrategy, Substitute.For<ILogger>()), _testObservableServiceHandler);
         }
 
         [Fact]

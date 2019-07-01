@@ -21,13 +21,11 @@
 
 #endregion
 
-namespace Catalyst.Common.Interfaces.Keystore
+namespace Catalyst.Common.Interfaces.FileTransfer
 {
-    public interface IKeyStoreService
-    {
-        string GetAddressFromKeyStore(string json);
-        string GenerateUtcFileName(string address);
-        byte[] DecryptKeyStoreFromJson(string password, string json);
-        string EncryptAndGenerateDefaultKeyStoreAsJson(string password, byte[] key, string address);
-    }
+    /// <summary>
+    /// Handles storing of file uploads
+    /// </summary>
+    /// <seealso cref="IFileTransferFactory{IUploadFileInformation}" />
+    public interface IUploadFileTransferFactory : IFileTransferFactory<IUploadFileInformation> { }
 }
