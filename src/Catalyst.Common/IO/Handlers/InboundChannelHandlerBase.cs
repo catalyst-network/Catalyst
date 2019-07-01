@@ -32,34 +32,25 @@ namespace Catalyst.Common.IO.Handlers
     {
         protected readonly ILogger Logger;
         private readonly bool _autoRelease;
-
-        /// <summary>
-        /// 
-        /// </summary>
+        
         /// <param name="logger"></param>
         protected InboundChannelHandlerBase(ILogger logger)
             : this(true)
         {
             Logger = logger;
         }
-
-        /// <summary>
-        /// 
-        /// </summary>
+        
         /// <param name="autoRelease"></param>
         private InboundChannelHandlerBase(bool autoRelease)
         {
             _autoRelease = autoRelease;
         }
         
-        /// <summary>
-        /// 
-        /// </summary>
         /// <param name="ctx"></param>
         /// <param name="msg"></param>
         public override void ChannelRead(IChannelHandlerContext ctx, object msg)
         {
-            var flag = true;
+            var release = true;
             try
             {
                 if (msg is T msg1)
@@ -68,7 +59,7 @@ namespace Catalyst.Common.IO.Handlers
                 }
                 else
                 {
-                    flag = false;
+                    release = false;
                     ctx.FireChannelRead(msg);
                 }
             }
@@ -78,7 +69,7 @@ namespace Catalyst.Common.IO.Handlers
             }
             finally
             {
-                if (_autoRelease && flag)
+                if (_autoRelease && release)
                 {
                     ReferenceCountUtil.Release(msg);   
                 }
