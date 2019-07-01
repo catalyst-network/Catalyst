@@ -51,15 +51,15 @@ namespace Catalyst.Common.IO.Handlers
         /// <returns></returns>
         protected override Task WriteAsync0(IChannelHandlerContext context, IMessageDto<ProtocolMessage> message)
         {
-            var sig = _keySigner.Sign(message.Message.ToByteArray());
+            var sig = _keySigner.Sign(message.Content.ToByteArray());
             
             var protocolMessageSigned = new ProtocolMessageSigned
             {
                 Signature = sig.Bytes.RawBytes.ToByteString(),
-                Message = message.Message.ToProtocolMessage(message.Sender.PeerId, message.CorrelationId)
+                Message = message.Content.ToProtocolMessage(message.SenderPeerIdentifier.PeerId, message.CorrelationId)
             };
 
-            return context.WriteAsync(new MessageDto<ProtocolMessageSigned>(protocolMessageSigned, message.Sender, message.Recipient, message.CorrelationId));
+            return context.WriteAsync(new MessageDto<ProtocolMessageSigned>(protocolMessageSigned, message.SenderPeerIdentifier, message.RecipientPeerIdentifier, message.CorrelationId));
         }
     }
 }

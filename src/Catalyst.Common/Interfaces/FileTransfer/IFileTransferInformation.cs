@@ -23,9 +23,7 @@
 
 using System;
 using System.Threading;
-using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Protocol.Rpc.Node;
 using DotNetty.Transport.Channels;
 
 namespace Catalyst.Common.Interfaces.FileTransfer

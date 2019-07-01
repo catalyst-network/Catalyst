@@ -87,7 +87,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
                 CorrelationFileName = ByteString.Empty
             }, PeerIdentifierHelper.GetPeerIdentifier("sender"), PeerIdentifierHelper.GetPeerIdentifier("recipient"));
             
-            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_context, requestDto.Message.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId));
+            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_context, requestDto.Content.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId));
             
             _observer.StartObserving(messageStream);
 
@@ -96,7 +96,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
             var receivedCalls = _context.Channel.ReceivedCalls().ToList();
             receivedCalls.Count.Should().Be(1);
             var sentResponseDto = (IMessageDto<TransferFileBytesResponse>) receivedCalls.Single().GetArguments().Single();
-            sentResponseDto.Message.GetType().Should().BeAssignableTo<TransferFileBytesResponse>();
+            sentResponseDto.Content.GetType().Should().BeAssignableTo<TransferFileBytesResponse>();
             var versionResponseMessage = sentResponseDto.FromIMessageDto();
             versionResponseMessage.ResponseCode.Should().Equal((byte) FileTransferResponseCodes.Error);
         }

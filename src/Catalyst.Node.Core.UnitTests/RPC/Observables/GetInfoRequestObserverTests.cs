@@ -86,7 +86,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
                     Formatting.Indented);
 
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, 
-                request.Message.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId)
+                request.Content.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId)
             );
             
             var handler = new GetInfoRequestObserver(

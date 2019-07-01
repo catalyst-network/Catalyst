@@ -99,7 +99,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
                 PeerIdentifierHelper.GetPeerIdentifier("recipient")
             );
 
-            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, requestMessage.Message.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId));
+            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, requestMessage.Content.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId));
 
             var handler = new PeerCountRequestObserver(sendPeerIdentifier, peerRepository, _logger);
             handler.StartObserving(messageStream);
@@ -111,7 +111,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
 
             var sentResponseDto = (IMessageDto<GetPeerCountResponse>) receivedCalls[0].GetArguments().Single();
             
-            sentResponseDto.Message.GetType()
+            sentResponseDto.Content.GetType()
                .Should()
                .BeAssignableTo<GetPeerCountResponse>();
 

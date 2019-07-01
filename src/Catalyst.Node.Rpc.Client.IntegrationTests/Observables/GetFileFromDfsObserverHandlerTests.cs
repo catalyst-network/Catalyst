@@ -129,7 +129,7 @@ namespace Catalyst.Node.Rpc.Client.IntegrationTests.Observables
                 {
                     var transferMessage = fileUploadInformation
                        .GetUploadMessageDto(i);
-                    transferMessage.Message.ToProtocolMessage(rpcPeerId).SendToHandler(_fakeContext, transferBytesHandler);
+                    transferMessage.Content.ToProtocolMessage(rpcPeerId).SendToHandler(_fakeContext, transferBytesHandler);
                 }
 
                 linearBackOffRetryPolicy.ExecuteAsync(() =>

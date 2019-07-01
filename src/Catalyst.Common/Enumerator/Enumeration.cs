@@ -78,6 +78,22 @@ namespace Catalyst.Common.Enumerator
 
             return result;
         }
+        
+        public static T ParseEndsWith<T>(string value,
+            StringComparison comparison = StringComparison.InvariantCultureIgnoreCase) where T : Enumeration
+        {
+            Guard.Argument(value, nameof(value)).NotNull();
+            var allValues = GetAll<T>();
+            var enumerable = allValues as T[] ?? allValues.ToArray();
+            var result = enumerable.SingleOrDefault(e => e.Name.EndsWith(value, comparison));
+            if (result == null)
+            {
+                throw new FormatException($"Failed to parse {value} into a {typeof(T).Name}, " +
+                    $"admitted values are {string.Join(", ", enumerable.Select(v => v.Name))}");
+            }
+
+            return result;
+        }
 
         public static explicit operator int(Enumeration enumeration)
         {
