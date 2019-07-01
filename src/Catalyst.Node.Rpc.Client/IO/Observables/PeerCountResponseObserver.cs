@@ -22,13 +22,13 @@
 #endregion
 
 using System;
-using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Cli;
-using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Observables;
+using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Observables;
-using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
+using Dawn;
+using DotNetty.Transport.Channels;
 using ILogger = Serilog.ILogger;
 
 namespace Catalyst.Node.Rpc.Client.IO.Observables
@@ -54,24 +54,32 @@ namespace Catalyst.Node.Rpc.Client.IO.Observables
         {
             _output = output;
         }
-
+        
         /// <summary>
-        /// Handles the peer count response.
+        /// 
         /// </summary>
-        /// <param name="messageDto">The GetPeerCountResponse message.</param>
-        public override void HandleResponse(IObserverDto<ProtocolMessage> messageDto)
+        /// <param name="getPeerCountResponse"></param>
+        /// <param name="channelHandlerContext"></param>
+        /// <param name="senderPeerIdentifier"></param>
+        /// <param name="correlationId"></param>
+        protected override void HandleResponse(GetPeerCountResponse getPeerCountResponse,
+            IChannelHandlerContext channelHandlerContext,
+            IPeerIdentifier senderPeerIdentifier,
+            Guid correlationId)
         {
+            Guard.Argument(getPeerCountResponse, nameof(getPeerCountResponse)).NotNull();
+            Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
+            Guard.Argument(senderPeerIdentifier, nameof(senderPeerIdentifier)).NotNull();
             Logger.Debug("Handling GetPeerCount response");
 
             try
             {
-                var deserialised = messageDto.Payload.FromProtocolMessage<GetPeerCountResponse>();
-                _output.WriteLine($@"Peer count: {deserialised.PeerCount.ToString()}");
+                _output.WriteLine($@"Peer count: {getPeerCountResponse.PeerCount.ToString()}");
             }
             catch (Exception ex)
             {
                 Logger.Error(ex,
-                    "Failed to handle GetPeerCountResponse after receiving message {0}", messageDto);
+                    "Failed to handle GetPeerCountResponse after receiving message {0}", getPeerCountResponse);
                 throw;
             }
         }
