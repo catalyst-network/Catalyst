@@ -60,7 +60,7 @@ namespace Catalyst.Common.IO.Handlers
         
         public override void ExceptionCaught(IChannelHandlerContext context, Exception e)
         {
-            _logger.Error(e, "Error in ObservableServiceHandler");
+            Logger.Error(e, "Error in ObservableServiceHandler");
             context.CloseAsync().ContinueWith(_ => _messageSubject.OnError(e));
         }
 
