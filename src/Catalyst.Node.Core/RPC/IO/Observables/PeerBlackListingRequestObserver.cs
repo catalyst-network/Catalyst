@@ -22,15 +22,16 @@
 
 #endregion
 
+using System;
 using System.Linq;
 using Catalyst.Common.Extensions;
-using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Observables;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Observables;
 using Catalyst.Common.P2P;
-using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
+using Dawn;
+using DotNetty.Transport.Channels;
 using Google.Protobuf;
 using Nethereum.RLP;
 using SharpRepository.Repository;
@@ -54,21 +55,31 @@ namespace Catalyst.Node.Core.RPC.IO.Observables
         {
             _peerRepository = peerRepository;
         }
-
+        
         /// <summary>
-        /// Handlers the specified message.
+        /// 
         /// </summary>
-        /// <param name="messageDto">The message.</param>
-        protected override SetPeerBlackListResponse HandleRequest(IObserverDto<ProtocolMessage> messageDto)
+        /// <param name="setPeerBlackListRequest"></param>
+        /// <param name="channelHandlerContext"></param>
+        /// <param name="senderPeerIdentifier"></param>
+        /// <param name="correlationId"></param>
+        /// <returns></returns>
+        protected override SetPeerBlackListResponse HandleRequest(SetPeerBlackListRequest setPeerBlackListRequest,
+            IChannelHandlerContext channelHandlerContext,
+            IPeerIdentifier senderPeerIdentifier,
+            Guid correlationId)
         {
+            Guard.Argument(setPeerBlackListRequest, nameof(setPeerBlackListRequest)).NotNull();
+            Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
+            Guard.Argument(senderPeerIdentifier, nameof(senderPeerIdentifier)).NotNull();
             Logger.Information("received message of type PeerBlackListingRequest");
+            
+            var peerItem = _peerRepository.GetAll().FirstOrDefault(m => m.PeerIdentifier.Ip.ToString() == setPeerBlackListRequest.Ip.ToStringUtf8() 
+             && ConvertorForRLPEncodingExtensions.ToStringFromRLPDecoded(m.PeerIdentifier.PublicKey) == setPeerBlackListRequest.PublicKey.ToStringUtf8());
 
-            var deserialised = messageDto.Payload.FromProtocolMessage<SetPeerBlackListRequest>();
-
-            var peerItem = _peerRepository.GetAll().FirstOrDefault(m => m.PeerIdentifier.Ip.ToString() == deserialised.Ip.ToStringUtf8() 
-             && ConvertorForRLPEncodingExtensions.ToStringFromRLPDecoded(m.PeerIdentifier.PublicKey) == deserialised.PublicKey.ToStringUtf8());
-
-            return peerItem == null ? ReturnResponse(false, string.Empty.ToUtf8ByteString(), string.Empty.ToUtf8ByteString()) : ReturnResponse(deserialised.Blacklist, deserialised.PublicKey, deserialised.Ip);
+            return peerItem == null
+                ? ReturnResponse(false, string.Empty.ToUtf8ByteString(), string.Empty.ToUtf8ByteString()) 
+                : ReturnResponse(setPeerBlackListRequest.Blacklist, setPeerBlackListRequest.PublicKey, setPeerBlackListRequest.Ip);
         }
 
         /// <summary>

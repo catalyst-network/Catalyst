@@ -22,14 +22,13 @@
 #endregion
 
 using System;
-using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Cli;
-using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Observables;
+using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Observables;
-using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
+using DotNetty.Transport.Channels;
 using Multiformats.Base;
 using Nethereum.RLP;
 using ILogger = Serilog.ILogger;
@@ -41,7 +40,7 @@ namespace Catalyst.Node.Rpc.Client.IO.Observables
     /// The handler reads the response's payload and formats it in user readable format and writes it to the console.
     /// </summary>
     public sealed class SignMessageResponseObserver
-        : ResponseObserverBase<SignMessageRequest>,
+        : ResponseObserverBase<SignMessageResponse>,
             IRpcResponseObserver
     {
         private readonly IUserOutput _output;
@@ -56,33 +55,42 @@ namespace Catalyst.Node.Rpc.Client.IO.Observables
         {
             _output = output;
         }
-
+        
         /// <summary>
-        /// Handles the VersionResponse message sent from the <see />.
+        /// 
         /// </summary>
-        /// <param name="messageDto">An object of GetMempoolResponse</param>
-        public override void HandleResponse(IObserverDto<ProtocolMessage> messageDto)
+        /// <param name="signMessageRequest"></param>
+        /// <param name="channelHandlerContext"></param>
+        /// <param name="senderPeerIdentifier"></param>
+        /// <param name="correlationId"></param>
+        protected override void HandleResponse(SignMessageResponse signMessageRequest,
+            IChannelHandlerContext channelHandlerContext,
+            IPeerIdentifier senderPeerIdentifier,
+            Guid correlationId)
         {
+            Guard.Argument(signMessageRequest, nameof(signMessageRequest)).NotNull();
+            Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
+            Guard.Argument(senderPeerIdentifier, nameof(senderPeerIdentifier)).NotNull();
             Logger.Debug($@"sign message response");
             
             try
             {
-                var deserialised = messageDto.Payload.FromProtocolMessage<SignMessageResponse>() ?? throw new ArgumentNullException(nameof(messageDto));
-
-                var decodeResult = RLP.Decode(deserialised.OriginalMessage.ToByteArray()).RLPData;
+                var decodeResult = RLP.Decode(signMessageRequest.OriginalMessage.ToByteArray()).RLPData;
 
                 Guard.Argument(decodeResult, nameof(decodeResult)).NotNull("The sign message response cannot be null.");
 
-                var originalMessage = decodeResult.ToStringFromRLPDecoded() ?? throw new ArgumentNullException(nameof(messageDto));
+                var originalMessage = decodeResult.ToStringFromRLPDecoded();
+                
+                Guard.Argument(originalMessage, nameof(originalMessage)).NotNull();
 
                 _output.WriteLine(
-                    $@"Signature: {Multibase.Encode(MultibaseEncoding.Base64, deserialised.Signature.ToByteArray())} " +
-                    $@"Public Key: {Multibase.Encode(MultibaseEncoding.Base58Btc, deserialised.PublicKey.ToByteArray())} Original Message: {originalMessage}");
+                    $@"Signature: {Multibase.Encode(MultibaseEncoding.Base64, signMessageRequest.Signature.ToByteArray())} " +
+                    $@"Public Key: {Multibase.Encode(MultibaseEncoding.Base58Btc, signMessageRequest.PublicKey.ToByteArray())} Original Message: {originalMessage}");
             }
             catch (Exception ex)
             {
                 Logger.Error(ex,
-                    "Failed to handle SignMessageResponseHandler after receiving message {0}", messageDto);
+                    "Failed to handle SignMessageResponseHandler after receiving message {0}", signMessageRequest);
                 _output.WriteLine(ex.Message);
             }
             finally
