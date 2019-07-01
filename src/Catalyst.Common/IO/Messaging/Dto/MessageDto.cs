@@ -23,8 +23,6 @@
 
 using System;
 using Catalyst.Common.Config;
-using Catalyst.Common.Enumerator;
-using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.P2P;
 using Dawn;
@@ -59,7 +57,6 @@ namespace Catalyst.Common.IO.Messaging.Dto
             CorrelationId = correlationId;
             RecipientPeerIdentifier = recipientPeerIdentifier;
             SenderPeerIdentifier = senderPeerIdentifier;
-            MessageType = Enumeration.ParseEndsWith<MessageTypes>(Content.Descriptor.ShortenedFullName());
         }
     }
 }
