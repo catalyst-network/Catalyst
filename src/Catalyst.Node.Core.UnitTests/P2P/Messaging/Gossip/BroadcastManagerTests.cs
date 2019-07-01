@@ -100,7 +100,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Messaging.Gossip
 
             await broadcastMessageHandler.ReceiveAsync(gossipDto);
 
-            _cache.TryGetValue(messageDto.CorrelationId, out BroadcastMessage value);
+            _cache.TryGetValue(messageDto.CorrelationId.Id, out BroadcastMessage value);
             value.ReceivedCount.Should().Be(1);
 
             for (var i = 0; i < receivedCount; i++)
@@ -108,7 +108,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Messaging.Gossip
                 await broadcastMessageHandler.ReceiveAsync(gossipDto);
             }
 
-            _cache.TryGetValue(messageDto.CorrelationId, out value);
+            _cache.TryGetValue(messageDto.CorrelationId.Id, out value);
             value.ReceivedCount.Should().Be((uint) receivedCount + 1);
         }
 

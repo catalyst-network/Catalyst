@@ -89,15 +89,17 @@ namespace Catalyst.Common.Extensions
         {
             var typeUrl = protobufObject.Descriptor.ShortenedFullName();
             Guard.Argument(senderId, nameof(senderId)).NotNull();
-            Guard.Argument(correlationId, nameof(correlationId))
-               .Require(c => !typeUrl.EndsWith(MessageTypes.Response.Name) || c != default,
-                    g => $"{typeUrl} is a response type and needs a correlationId");
-
+            
+            if (typeUrl.EndsWith(MessageTypes.Response.Name))
+            {
+                Guard.Argument(correlationId, nameof(correlationId)).NotNull();
+            }
+            
             return new ProtocolMessage
             {
                 PeerId = senderId,
-                CorrelationId = (correlationId ?? CorrelationId.GenerateCorrelationId()).Id.ToByteString(),
-                
+                CorrelationId = (correlationId == default ? CorrelationId.GenerateCorrelationId().Id : correlationId.Id).ToByteString(),
+
                 TypeUrl = typeUrl,
                 Value = protobufObject.ToByteString()
             };
