@@ -75,7 +75,7 @@ namespace Catalyst.Node.Core.RPC.IO.Observables
             }
             catch (Exception ex)
             {
-                Logger.Error(ex, $"{PublicKeyInvalid} {messageDto}");
+                Logger.Error(ex, "{0} {1}", PublicKeyInvalid, messageDto);
             }
 
             ISignature signature = null;
@@ -86,7 +86,7 @@ namespace Catalyst.Node.Core.RPC.IO.Observables
             }
             catch (Exception ex)
             {
-                Logger.Error(ex, $"{SignatureInvalid} {messageDto}");
+                Logger.Error(ex, "{0} {1}", SignatureInvalid, messageDto);
             }
 
             try
@@ -99,7 +99,7 @@ namespace Catalyst.Node.Core.RPC.IO.Observables
             }
             catch (Exception ex)
             {
-                Logger.Error(ex, $"{FailedToHandleMessage} {messageDto}");
+                Logger.Error(ex, "{0} {1}", FailedToHandleMessage, messageDto);
                 throw;
             } 
         }
