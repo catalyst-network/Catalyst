@@ -120,7 +120,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
 
             var sentResponseDto = (IMessageDto<VerifyMessageResponse>) receivedCalls.Single().GetArguments().Single();
             
-            sentResponseDto.Message.GetType()
+            sentResponseDto.Content.GetType()
                .Should()
                .BeAssignableTo<VerifyMessageResponse>();
 
