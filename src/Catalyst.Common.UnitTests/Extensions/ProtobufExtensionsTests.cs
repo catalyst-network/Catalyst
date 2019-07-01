@@ -102,7 +102,7 @@ namespace Catalyst.Common.UnitTests.Extensions
         }
 
         [Fact]
-        public static void ToProtocolMessage_When_Processing_Request_Should_Fail_If_No_CorrelationId_Specified()
+        public static void ToProtocolMessage_When_Processing_Response_Should_Fail_If_No_CorrelationId_Specified()
         {
             var peerId = PeerIdHelper.GetPeerId("someone");
             var response = new GetPeerCountResponse
@@ -110,7 +110,7 @@ namespace Catalyst.Common.UnitTests.Extensions
                 PeerCount = 13
             };
             new Action(() => response.ToProtocolMessage(peerId))
-               .Should().Throw<NullReferenceException>();
+               .Should().Throw<ArgumentException>();
         }
 
         [Fact]

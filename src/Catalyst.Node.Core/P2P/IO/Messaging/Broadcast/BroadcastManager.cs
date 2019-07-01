@@ -167,7 +167,7 @@ namespace Catalyst.Node.Core.P2P.IO.Messaging.Broadcast
         /// <param name="correlationId">The message correlation ID</param>
         private void UpdatePendingRequest(ICorrelationId correlationId, BroadcastMessage broadcastMessage)
         {
-            _pendingRequests.Set(correlationId, broadcastMessage, _entryOptions);
+            _pendingRequests.Set(correlationId.Id, broadcastMessage, _entryOptions);
         }
 
         /// <summary>Gets the maximum gossip cycles.</summary>
@@ -184,7 +184,7 @@ namespace Catalyst.Node.Core.P2P.IO.Messaging.Broadcast
         /// <param name="correlationId">The correlation identifier.</param>
         private async Task<BroadcastMessage> GetOrCreateAsync(ICorrelationId correlationId)
         {
-            var request = await _pendingRequests.GetOrCreateAsync(correlationId, async entry =>
+            var request = await _pendingRequests.GetOrCreateAsync(correlationId.Id, async entry =>
             {
                 entry.SetOptions(_entryOptions);
                 var gossipRequest = await Task.FromResult(new BroadcastMessage

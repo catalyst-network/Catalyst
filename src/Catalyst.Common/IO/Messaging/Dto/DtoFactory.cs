@@ -119,7 +119,7 @@ namespace Catalyst.Common.IO.Messaging.Dto
             return new MessageDto<T>(message,
                 senderPeerIdentifier,
                 recipientPeerIdentifier,
-                correlationId.Id == default ? CorrelationId.GenerateCorrelationId() : correlationId
+                correlationId ?? CorrelationId.GenerateCorrelationId()
             );
         }
     }
