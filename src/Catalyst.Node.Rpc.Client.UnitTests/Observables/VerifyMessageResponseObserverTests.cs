@@ -80,7 +80,10 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.Observables
                 PeerIdentifierHelper.GetPeerIdentifier("recipient"),
                 CorrelationId.GenerateCorrelationId());
 
-            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, response.Content.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId, response.CorrelationId));
+            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext,
+                response.Content.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId,
+                    response.CorrelationId)
+            );
 
             _observer = new VerifyMessageResponseObserver(_output, _logger);
             _observer.StartObserving(messageStream);
