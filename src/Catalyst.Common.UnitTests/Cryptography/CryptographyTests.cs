@@ -108,5 +108,23 @@ namespace Catalyst.Common.UnitTests.Cryptography
             Action action = () => { _context.Verify(publicKey, message, invalidSig); };
             action.Should().Throw<SignatureException>();
         }
+
+        [Fact]
+        public void Is_PrivateKey_Length_Positive()
+        {
+            _context.PrivateKeyLength.Should().BePositive();
+        }
+
+        [Fact]
+        public void Is_PublicKey_Length_Positive()
+        {
+            _context.PublicKeyLength.Should().BePositive();
+        }
+
+        [Fact]
+        public void Is_Signature_Length_Positive()
+        {
+            _context.SignatureLength.Should().BePositive();
+        }
     }
 }
