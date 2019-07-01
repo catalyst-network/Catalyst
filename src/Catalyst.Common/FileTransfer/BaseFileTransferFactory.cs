@@ -39,13 +39,13 @@ namespace Catalyst.Common.FileTransfer
     public abstract class BaseFileTransferFactory<T> : IFileTransferFactory<T> where T : IFileTransferInformation
     {
         /// <summary>The pending file transfers</summary>
-        private readonly Dictionary<ICorrelationId, T> _pendingFileTransfers;
+        private readonly Dictionary<Guid, T> _pendingFileTransfers;
 
         /// <summary>The lock object</summary>
         private readonly object _lockObject = new object();
 
         /// <inheritdoc />
-        public ICorrelationId[] Keys
+        public Guid[] Keys
         {
             get
             {
@@ -59,7 +59,7 @@ namespace Catalyst.Common.FileTransfer
         /// <summary>Initializes a new instance of the <see cref="BaseFileTransferFactory{T}"/> class.</summary>
         protected BaseFileTransferFactory()
         {
-            _pendingFileTransfers = new Dictionary<ICorrelationId, T>();
+            _pendingFileTransfers = new Dictionary<Guid, T>();
         }
 
         /// <inheritdoc />
@@ -73,12 +73,12 @@ namespace Catalyst.Common.FileTransfer
 
             lock (_lockObject)
             {
-                if (_pendingFileTransfers.ContainsKey(fileHash))
+                if (_pendingFileTransfers.ContainsKey(fileHash.Id))
                 {
                     return FileTransferResponseCodes.TransferPending;
                 }
 
-                _pendingFileTransfers.Add(fileHash, fileTransferInformation);
+                _pendingFileTransfers.Add(fileHash.Id, fileTransferInformation);
                 return FileTransferResponseCodes.Successful;
             }
         }
@@ -119,7 +119,7 @@ namespace Catalyst.Common.FileTransfer
         {
             lock (_lockObject)
             {
-                return !_pendingFileTransfers.ContainsKey(key) ? default : _pendingFileTransfers[key];
+                return !_pendingFileTransfers.ContainsKey(key.Id) ? default : _pendingFileTransfers[key.Id];
             }
         }
 
@@ -128,9 +128,9 @@ namespace Catalyst.Common.FileTransfer
         {
             lock (_lockObject)
             {
-                if (_pendingFileTransfers.ContainsKey(key))
+                if (_pendingFileTransfers.ContainsKey(key.Id))
                 {
-                    _pendingFileTransfers.Remove(key);
+                    _pendingFileTransfers.Remove(key.Id);
                 }
             }
         }

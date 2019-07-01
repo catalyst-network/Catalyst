@@ -59,7 +59,7 @@ namespace Catalyst.Common.UnitTests.Extensions
 
             for (var i = 0; i < 50; i++)
             {
-                randomList.Add(CorrelationId.GenerateCorrelationId().ToString());
+                randomList.Add(CorrelationId.GenerateCorrelationId().Id.ToString());
             }
 
             for (var i = 0; i < 5; i++)

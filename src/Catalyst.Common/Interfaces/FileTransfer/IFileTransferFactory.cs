@@ -21,6 +21,7 @@
 
 #endregion
 
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Common.Config;
@@ -55,6 +56,6 @@ namespace Catalyst.Common.Interfaces.FileTransfer
 
         /// <summary>Gets the keys.</summary>
         /// <value>The keys.</value>
-        ICorrelationId[] Keys { get; }
+        Guid[] Keys { get; }
     }
 }
