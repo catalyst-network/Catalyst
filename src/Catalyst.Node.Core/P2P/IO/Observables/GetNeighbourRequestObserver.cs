@@ -53,7 +53,7 @@ namespace Catalyst.Node.Core.P2P.IO.Observables
         }
 
         /// <summary>
-        /// 
+        ///     Processes a GetNeighbourResponse item from stream.
         /// </summary>
         /// <param name="peerNeighborsRequest"></param>
         /// <param name="channelHandlerContext"></param>
