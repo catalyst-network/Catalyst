@@ -23,6 +23,7 @@
 
 using System.Threading.Tasks;
 using Catalyst.Common.Extensions;
+using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;
@@ -30,9 +31,9 @@ using Serilog;
 
 namespace Catalyst.Common.IO.Handlers
 {
-    public sealed class ProtoDatagramEncoderHandler : OutboundChannelHandlerBase<IMessageSignedDto<ProtocolMessageSigned>>
+    public sealed class ProtoDatagramEncoderHandler : OutboundChannelHandlerBase<IMessageDto<ProtocolMessageSigned>>
     {
-        protected override Task WriteAsync0(IChannelHandlerContext context, IMessageSignedDto<ProtocolMessageSigned> message)
+        protected override Task WriteAsync0(IChannelHandlerContext context, IMessageDto<ProtocolMessageSigned> message)
         {
             return context.WriteAndFlushAsync(message.Message.ToDatagram(message.Recipient.IpEndPoint));
         }

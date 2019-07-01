@@ -56,8 +56,12 @@ namespace Catalyst.Node.Core.RPC.IO.Transport.Channels
                 new ProtobufVarint32LengthFieldPrepender(),
                 new ProtobufEncoder(),
                 new AuthenticationHandler(_authenticationStrategy, _logger),
-                new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(new ProtocolMessageVerifyHandler(_keySigner, _logger), new ProtocolMessageSignHandler(_keySigner, _logger)),
-                new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(new CorrelationHandler(_correlationManger, _logger), new CorrelationHandler(_correlationManger, _logger)),
+                new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
+                    new ProtocolMessageVerifyHandler(_keySigner, _logger), new ProtocolMessageSignHandler(_keySigner, _logger)
+                ),
+                new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
+                    new CorrelationHandler(_correlationManger, _logger), new CorrelationHandler(_correlationManger, _logger)
+                ),
                 new ObservableServiceHandler(_logger)
             };
 
