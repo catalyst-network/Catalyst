@@ -24,12 +24,10 @@
 using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.IO.Handlers;
-using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Protocol.Common;
 using Catalyst.TestUtils;
 using DotNetty.Buffers;
 using DotNetty.Transport.Channels;
-using Google.Protobuf;
 using NSubstitute;
 using Serilog;
 using Xunit;

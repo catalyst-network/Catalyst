@@ -24,7 +24,6 @@
 using System;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
-using System.Reflection;
 using Catalyst.Common.Interfaces.IO.Handlers;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.IO.Messaging.Dto;
