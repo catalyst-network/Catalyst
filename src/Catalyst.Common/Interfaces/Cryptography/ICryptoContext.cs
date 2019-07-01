@@ -78,5 +78,20 @@ namespace Catalyst.Common.Interfaces.Cryptography
         /// <param name="key"></param>
         /// <returns></returns>
         IPublicKey GetPublicKey(IPrivateKey key);
+
+        /// <summary>
+        /// Private key byte length.
+        /// </summary>
+        int PrivateKeyLength { get; }
+
+        /// <summary>
+        /// Public key byte length.
+        /// </summary>
+        int PublicKeyLength { get; }
+
+        /// <summary>
+        /// Signature byte length.
+        /// </summary>
+        int SignatureLength { get; }
     }
 }
