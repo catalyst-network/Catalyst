@@ -29,6 +29,14 @@ namespace Catalyst.Common.Attributes
 {
     public sealed class AuditAttribute : RepositoryActionBaseAttribute
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <param name="context"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="TKey"></typeparam>
+        /// <returns></returns>
         public override bool OnAddExecuting<T, TKey>(T entity, RepositoryActionContext<T, TKey> context)
         {
             if (entity is IAuditable tmp)
@@ -39,6 +47,14 @@ namespace Catalyst.Common.Attributes
             return true;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <param name="context"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="TKey"></typeparam>
+        /// <returns></returns>
         public override bool OnUpdateExecuting<T, TKey>(T entity, RepositoryActionContext<T, TKey> context)
         {
             if (entity is IAuditable tmp)
