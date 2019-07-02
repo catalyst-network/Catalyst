@@ -38,7 +38,7 @@ namespace Catalyst.Common.IO.Handlers
     {
         private readonly IKeySigner _keySigner;
 
-        public ProtocolMessageSignHandler(IKeySigner keySigner, ILogger logger) : base(logger)
+        public ProtocolMessageSignHandler(IKeySigner keySigner)
         {
             _keySigner = keySigner;
         }

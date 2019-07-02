@@ -53,7 +53,7 @@ namespace Catalyst.TestUtils
         {
             var channelId = channelName.ToChannelId();
 
-            var observableServiceHandler = new ObservableServiceHandler(Substitute.For<ILogger>());
+            var observableServiceHandler = new ObservableServiceHandler();
             var embeddedChannel = new EmbeddedChannel(channelId, false, true, observableServiceHandler);
             _channel = embeddedChannel;
             MessageStream = observableServiceHandler.MessageStream;
