@@ -31,19 +31,11 @@ namespace Catalyst.Common.Cryptography
 {
     public sealed class CryptoContext : ICryptoContext
     {
-        private const int PublicKeyByteLength = 32;
-
         private readonly IWrapper _wrapper;
 
         public CryptoContext(IWrapper wrapper)
         {
             _wrapper = wrapper;
-        }
-
-        /// <inheritdoc />
-        public int GetPublicKeyByteLength()
-        {
-            return PublicKeyByteLength;
         }
 
         /// <inheritdoc />
@@ -94,10 +86,10 @@ namespace Catalyst.Common.Cryptography
             return _wrapper.GetPublicKeyFromPrivate(key);
         }
 
-        public int PrivateKeyLength => Wrapper.PrivateKeyLength;
+        public int PrivateKeyLength => _wrapper.PrivateKeyLength;
 
-        public int PublicKeyLength => Wrapper.PublicKeyLength;
+        public int PublicKeyLength => _wrapper.PublicKeyLength;
 
-        public int SignatureLength => Wrapper.SignatureLength;
+        public int SignatureLength => _wrapper.SignatureLength;
     }
 }
