@@ -51,7 +51,6 @@ namespace Catalyst.Node.Rpc.Client.IO.Transport.Channels
         /// </summary>
         /// <param name="keySigner"></param>
         /// <param name="messageCorrelationCache"></param>
-        /// <param name="logger"></param>
         /// <param name="peerIdValidator"></param>
         /// <param name="backLogValue"></param>
         public NodeRpcClientChannelFactory(IKeySigner keySigner,
@@ -76,7 +75,7 @@ namespace Catalyst.Node.Rpc.Client.IO.Transport.Channels
                     new ProtocolMessageVerifyHandler(_keySigner), new ProtocolMessageSignHandler(_keySigner)
                 ),
                 new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
-                    new CorrelationHandler(_messageCorrelationCache), new CorrelationHandler(_messageCorrelationCache)
+                    new CorrelationHandler(_messageCorrelationCache), new CorrelatableHandler(_messageCorrelationCache)
                 ),
                 new ObservableServiceHandler()
             };

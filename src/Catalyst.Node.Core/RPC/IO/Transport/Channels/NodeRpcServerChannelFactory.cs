@@ -38,7 +38,6 @@ using Catalyst.Common.IO.Transport.Channels;
 using Catalyst.Protocol.Common;
 using DotNetty.Codecs.Protobuf;
 using DotNetty.Transport.Channels;
-using Serilog;
 
 namespace Catalyst.Node.Core.RPC.IO.Transport.Channels
 {
@@ -62,7 +61,7 @@ namespace Catalyst.Node.Core.RPC.IO.Transport.Channels
                     new ProtocolMessageVerifyHandler(_keySigner), new ProtocolMessageSignHandler(_keySigner)
                 ),
                 new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
-                    new CorrelationHandler(_correlationManger), new CorrelationHandler(_correlationManger)
+                    new CorrelationHandler(_correlationManger), new CorrelatableHandler(_correlationManger)
                 ),
                 new ObservableServiceHandler()
             };
