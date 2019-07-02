@@ -37,7 +37,6 @@ using Catalyst.Common.IO.Transport.Channels;
 using Catalyst.Protocol.Common;
 using DotNetty.Codecs.Protobuf;
 using DotNetty.Transport.Channels;
-using Serilog;
 
 namespace Catalyst.Node.Rpc.Client.IO.Transport.Channels
 {
@@ -45,7 +44,6 @@ namespace Catalyst.Node.Rpc.Client.IO.Transport.Channels
     {
         private readonly IKeySigner _keySigner;
         private readonly IMessageCorrelationManager _messageCorrelationCache;
-        private readonly ILogger _logger;
         private readonly IPeerIdValidator _peerIdValidator;
 
         /// <summary>
@@ -53,18 +51,15 @@ namespace Catalyst.Node.Rpc.Client.IO.Transport.Channels
         /// </summary>
         /// <param name="keySigner"></param>
         /// <param name="messageCorrelationCache"></param>
-        /// <param name="logger"></param>
         /// <param name="peerIdValidator"></param>
         /// <param name="backLogValue"></param>
         public NodeRpcClientChannelFactory(IKeySigner keySigner,
             IMessageCorrelationManager messageCorrelationCache,
             IPeerIdValidator peerIdValidator,
-            ILogger logger,
             int backLogValue = 100) : base(backLogValue)
         {
             _keySigner = keySigner;
             _messageCorrelationCache = messageCorrelationCache;
-            _logger = logger;
             _peerIdValidator = peerIdValidator;
         }
 

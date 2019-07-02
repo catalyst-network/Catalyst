@@ -38,7 +38,6 @@ using Catalyst.Common.IO.Transport.Channels;
 using Catalyst.Protocol.Common;
 using DotNetty.Codecs.Protobuf;
 using DotNetty.Transport.Channels;
-using Serilog;
 
 namespace Catalyst.Node.Core.RPC.IO.Transport.Channels
 {
@@ -74,7 +73,6 @@ namespace Catalyst.Node.Core.RPC.IO.Transport.Channels
         /// <param name="keySigner"></param>
         /// <param name="authenticationStrategy"></param>
         /// <param name="peerIdValidator"></param>
-        /// <param name="logger"></param>
         public NodeRpcServerChannelFactory(IMessageCorrelationManager correlationManger,
             IKeySigner keySigner,
             IAuthenticationStrategy authenticationStrategy,

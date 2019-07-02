@@ -52,8 +52,8 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Transport.Channels
         {
             private readonly List<IChannelHandler> _handlers;
 
-            public TestNodeRpcClientChannelFactory(IKeySigner keySigner, IMessageCorrelationManager correlationManager, IPeerIdValidator peerIdValidator, ILogger logger)
-                : base(keySigner, correlationManager, peerIdValidator, logger)
+            public TestNodeRpcClientChannelFactory(IKeySigner keySigner, IMessageCorrelationManager correlationManager, IPeerIdValidator peerIdValidator)
+                : base(keySigner, correlationManager, peerIdValidator)
             {
                 _handlers = Handlers;
             }
@@ -77,7 +77,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Transport.Channels
             var peerIdValidator = Substitute.For<IPeerIdValidator>();
             peerIdValidator.ValidatePeerIdFormat(Arg.Any<PeerId>()).Returns(true);
 
-            _factory = new TestNodeRpcClientChannelFactory(_keySigner, _correlationManager, peerIdValidator, Substitute.For<ILogger>());
+            _factory = new TestNodeRpcClientChannelFactory(_keySigner, _correlationManager, peerIdValidator);
         }
 
         [Fact]
