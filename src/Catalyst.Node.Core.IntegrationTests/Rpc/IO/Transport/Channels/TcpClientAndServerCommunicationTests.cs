@@ -75,8 +75,7 @@ namespace Catalyst.Node.Core.IntegrationTests.Rpc.IO.Transport.Channels
                 serverCorrelationManager,
                 serverKeySigner,
                 authenticationStrategy,
-                peerIdValidator,
-                Substitute.For<ILogger>());
+                peerIdValidator);
 
             var clientCorrelationManager = Substitute.For<IMessageCorrelationManager>();
             var clientKeySigner = Substitute.For<IKeySigner>();

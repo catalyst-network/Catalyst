@@ -25,7 +25,6 @@ using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.P2P.Messaging.Broadcast;
 using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;
-using Serilog;
 
 namespace Catalyst.Common.IO.Handlers
 {
@@ -42,7 +41,7 @@ namespace Catalyst.Common.IO.Handlers
         /// <summary>Initializes a new instance of the <see cref="BroadcastHandler"/> class.</summary>
         /// <param name="broadcastManager">The gossip manager.</param>
         /// <param name="logger"></param>
-        public BroadcastHandler(IBroadcastManager broadcastManager, ILogger logger) : base(logger)
+        public BroadcastHandler(IBroadcastManager broadcastManager)
         {
             _broadcastManager = broadcastManager;
         }

@@ -77,12 +77,12 @@ namespace Catalyst.Node.Rpc.Client.IO.Transport.Channels
                 new ProtobufDecoder(ProtocolMessageSigned.Parser),
                 new PeerIdValidationHandler(_peerIdValidator),
                 new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
-                    new ProtocolMessageVerifyHandler(_keySigner, _logger), new ProtocolMessageSignHandler(_keySigner, _logger)
+                    new ProtocolMessageVerifyHandler(_keySigner), new ProtocolMessageSignHandler(_keySigner)
                 ),
                 new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
-                    new CorrelationHandler(_messageCorrelationCache, _logger), new CorrelationHandler(_messageCorrelationCache, _logger)
+                    new CorrelationHandler(_messageCorrelationCache), new CorrelationHandler(_messageCorrelationCache)
                 ),
-                new ObservableServiceHandler(_logger)
+                new ObservableServiceHandler()
             };
 
         /// <param name="eventLoopGroupFactory"></param>

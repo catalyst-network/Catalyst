@@ -22,6 +22,7 @@
 #endregion
 
 using System;
+using System.Reflection;
 using System.Threading.Tasks;
 using DotNetty.Common.Utilities;
 using DotNetty.Transport.Channels;
@@ -30,35 +31,24 @@ using Serilog;
 namespace Catalyst.Common.IO.Handlers
 {
     /// <summary>
-    /// 
+    ///     OutboundChannel Handler is similar to Dot Netty's simple inbound channel handler, except it removes some redundant double cast operations.
     /// </summary>
     /// <typeparam name="T"></typeparam>
     public abstract class OutboundChannelHandlerBase<T> : ChannelHandlerAdapter
     {
-        private readonly ILogger _logger;
+        private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
         private readonly bool _autoRelease;
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="logger"></param>
-        protected OutboundChannelHandlerBase(ILogger logger)
-            : this(true)
-        {
-            _logger = logger;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="autoRelease"></param>
+        
+        protected OutboundChannelHandlerBase()
+            : this(true) { }
+        
         private OutboundChannelHandlerBase(bool autoRelease)
         {
             _autoRelease = autoRelease;
         }
         
         /// <summary>
-        /// 
+        ///     Does check to see if it can process the msg, if object is T thn it fires the inheritor WriteAsync0
         /// </summary>
         /// <param name="ctx"></param>
         /// <param name="msg"></param>
@@ -79,7 +69,7 @@ namespace Catalyst.Common.IO.Handlers
             }
             catch (Exception e)
             {
-                _logger.Error(e, e.Message);
+                Logger.Error(e, e.Message);
             }
             finally
             {
@@ -93,7 +83,7 @@ namespace Catalyst.Common.IO.Handlers
         }
 
         /// <summary>
-        /// 
+        ///     Only fires if the msg if is the same as the classes generic T, should be implemented by inherited concrete classes.
         /// </summary>
         /// <param name="ctx"></param>
         /// <param name="msg"></param>

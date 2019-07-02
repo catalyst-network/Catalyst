@@ -81,15 +81,15 @@ namespace Catalyst.Node.Core.P2P.IO.Transport.Channels
                 ),
                 new PeerIdValidationHandler(_peerIdValidator),
                 new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
-                    new ProtocolMessageVerifyHandler(_keySigner, _logger),
-                    new ProtocolMessageSignHandler(_keySigner, _logger)
+                    new ProtocolMessageVerifyHandler(_keySigner),
+                    new ProtocolMessageSignHandler(_keySigner)
                 ),
                 new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
-                    new CorrelationHandler(_messageCorrelationManager, _logger),
-                    new CorrelatableHandler(_messageCorrelationManager, _logger)
+                    new CorrelationHandler(_messageCorrelationManager),
+                    new CorrelatableHandler(_messageCorrelationManager)
                 ),
-                new BroadcastHandler(_broadcastManager, _logger),
-                new ObservableServiceHandler(_logger)
+                new BroadcastHandler(_broadcastManager),
+                new ObservableServiceHandler()
             };
 
         /// <param name="handlerEventLoopGroupFactory"></param>
