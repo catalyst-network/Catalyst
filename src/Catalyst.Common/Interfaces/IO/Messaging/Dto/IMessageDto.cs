@@ -23,16 +23,16 @@
 
 using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.P2P;
+using DotNetty.Transport.Channels;
 using Google.Protobuf;
 
 namespace Catalyst.Common.Interfaces.IO.Messaging.Dto
 {
-    public interface IMessageDto<out T> where T : IMessage<T>
+    public interface IMessageDto<out T> : IAddressedEnvelope<T> where T : IMessage<T>
     {
         ICorrelationId CorrelationId { get; }
         MessageTypes MessageType { get; }
-        T Message { get; }
-        IPeerIdentifier Recipient { get; }
-        IPeerIdentifier Sender { get; }
+        IPeerIdentifier RecipientPeerIdentifier { get; }
+        IPeerIdentifier SenderPeerIdentifier { get; }
     }
 }

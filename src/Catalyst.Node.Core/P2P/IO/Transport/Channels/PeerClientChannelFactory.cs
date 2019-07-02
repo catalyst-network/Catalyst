@@ -34,7 +34,10 @@ using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Handlers;
 using Catalyst.Common.IO.Transport.Channels;
 using Catalyst.Protocol.Common;
+using DotNetty.Codecs;
+using DotNetty.Codecs.Protobuf;
 using DotNetty.Transport.Channels;
+using Google.Protobuf;
 using Serilog;
 
 namespace Catalyst.Node.Core.P2P.IO.Transport.Channels
@@ -50,7 +53,8 @@ namespace Catalyst.Node.Core.P2P.IO.Transport.Channels
             new List<IChannelHandler>
             {
                 new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
-                    new DatagramProtobufDecoder(_logger), new DatagramProtobufEncoder(_logger)
+                    new DatagramPacketDecoder(new ProtobufDecoder(ProtocolMessageSigned.Parser)),
+                    new DatagramPacketEncoder<IMessage>(new ProtobufEncoder())
                 ),
                 new PeerIdValidationHandler(_peerIdValidator),
                 new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
