@@ -63,13 +63,13 @@ namespace Catalyst.Common.P2P
             PeerId = peerId;
         }
 
-        public static IPeerIdentifier BuildPeerIdFromConfig(IRpcNodeConfig nodeConfig, IPeerIdClientVersion clientVersion)
+        public static IPeerIdentifier BuildPeerIdFromConfig(IRpcNodeConfig nodeConfig, IPeerIdClientId clientId)
         {
             return new PeerIdentifier(Encoding.ASCII.GetBytes(nodeConfig.PublicKey),
-                nodeConfig.HostAddress, nodeConfig.Port, clientVersion);
+                nodeConfig.HostAddress, nodeConfig.Port, clientId);
         }
         
-        public static IPeerIdentifier BuildPeerIdFromConfig(IConfiguration configuration, IPeerIdClientVersion clientVersion)
+        public static IPeerIdentifier BuildPeerIdFromConfig(IConfiguration configuration, IPeerIdClientId clientId)
         {
             //TODO: Handle different scenarios to get the IPAddress and Port depending
             //on you whether you are connecting to a local node, or a remote one.
@@ -77,7 +77,7 @@ namespace Catalyst.Common.P2P
 
             return new PeerIdentifier(configuration.GetSection("CatalystCliConfig")
                    .GetSection("PublicKey").Value.ToBytesForRLPEncoding(),
-                IPAddress.Loopback, IPEndPoint.MaxPort, clientVersion);
+                IPAddress.Loopback, IPEndPoint.MaxPort, clientId);
         }
 
         /// <summary>
@@ -100,21 +100,21 @@ namespace Catalyst.Common.P2P
             });
         }
         
-        public PeerIdentifier(IPeerSettings settings, IPeerIdClientVersion clientVersion)
-            : this(settings.PublicKey.ToBytesForRLPEncoding(), new IPEndPoint(settings.BindAddress.MapToIPv4(), settings.Port), clientVersion) { }
+        public PeerIdentifier(IPeerSettings settings, IPeerIdClientId clientId)
+            : this(settings.PublicKey.ToBytesForRLPEncoding(), new IPEndPoint(settings.BindAddress.MapToIPv4(), settings.Port), clientId) { }
         
-        public PeerIdentifier(IEnumerable<byte> publicKey, IPAddress ipAddress, int port, IPeerIdClientVersion clientVersion)
-            : this(publicKey, EndpointBuilder.BuildNewEndPoint(ipAddress, port), clientVersion) { }
+        public PeerIdentifier(IEnumerable<byte> publicKey, IPAddress ipAddress, int port, IPeerIdClientId clientId)
+            : this(publicKey, EndpointBuilder.BuildNewEndPoint(ipAddress, port), clientId) { }
         
-        private PeerIdentifier(IEnumerable<byte> publicKey, IPEndPoint endPoint, IPeerIdClientVersion clientVersion)
+        private PeerIdentifier(IEnumerable<byte> publicKey, IPEndPoint endPoint, IPeerIdClientId clientId)
         {
             PeerId = new PeerId
             {
                 PublicKey = publicKey.ToByteString(),
                 Port = BitConverter.GetBytes(endPoint.Port).ToByteString(),
                 Ip = endPoint.Address.To16Bytes().ToByteString(),
-                ClientId = clientVersion.ClientId.ToByteString(),
-                ClientVersion = clientVersion.AssemblyMajorVersion.ToByteString()
+                ClientId = clientId.ClientId.ToByteString(),
+                ClientVersion = clientId.AssemblyMajorVersion.ToByteString()
             };
         }
 

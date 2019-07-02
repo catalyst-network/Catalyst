@@ -48,7 +48,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
         {
             _output = output;
             _validPeerId = PeerIdHelper.GetPeerId();
-            _peerIdValidator = new PeerIdValidator(new CryptoContext(new CryptoWrapper()), new PeerIdClientVersion("AC"));
+            _peerIdValidator = new PeerIdValidator(new CryptoContext(new CryptoWrapper()), new PeerIdClientId("AC"));
         }
 
         [Fact]

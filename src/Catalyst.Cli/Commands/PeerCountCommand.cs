@@ -56,7 +56,7 @@ namespace Catalyst.Cli.Commands
             {
                 var requestMessage = _dtoFactory.GetDto(new GetPeerCountRequest(),
                     _peerIdentifier,
-                    PeerIdentifier.BuildPeerIdFromConfig(nodeConfig, _peerIdClientVersion)
+                    PeerIdentifier.BuildPeerIdFromConfig(nodeConfig, _peerIdClientId)
                 );
 
                 node.SendMessage(requestMessage);

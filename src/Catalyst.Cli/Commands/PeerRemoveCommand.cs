@@ -64,7 +64,7 @@ namespace Catalyst.Cli.Commands
                         : ByteString.CopyFrom(opts.PublicKey.ToBytesForRLPEncoding())
                 },
                 _peerIdentifier,
-                PeerIdentifier.BuildPeerIdFromConfig(nodeConfig, _peerIdClientVersion));
+                PeerIdentifier.BuildPeerIdFromConfig(nodeConfig, _peerIdClientId));
 
             node.SendMessage(requestMessage);
 

@@ -59,7 +59,7 @@ namespace Catalyst.Cli.Commands
                         Query = true
                     },
                     _peerIdentifier,
-                    PeerIdentifier.BuildPeerIdFromConfig(nodeConfig, _peerIdClientVersion)
+                    PeerIdentifier.BuildPeerIdFromConfig(nodeConfig, _peerIdClientId)
                 );
 
                 node.SendMessage(dto);

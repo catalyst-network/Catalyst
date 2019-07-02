@@ -21,29 +21,29 @@
 
 #endregion
 
-using System;
-using System.Collections.Generic;
-using System.Net;
-using System.Text;
-using System.Text.RegularExpressions;
 using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Network;
 using Catalyst.Common.Util;
 using Catalyst.Protocol.Common;
 using Dawn;
+using System;
+using System.Collections.Generic;
+using System.Net;
+using System.Text;
+using System.Text.RegularExpressions;
 
 namespace Catalyst.Common.P2P
 {
     public class PeerIdValidator : IPeerIdValidator
     {
         private readonly ICryptoContext _cryptoContext;
-        private readonly IPeerIdClientVersion _peerIdClientVersion;
+        private readonly IPeerIdClientId _peerIdClientId;
 
-        public PeerIdValidator(ICryptoContext cryptoContext, IPeerIdClientVersion clientVersion)
+        public PeerIdValidator(ICryptoContext cryptoContext, IPeerIdClientId clientId)
         {
             _cryptoContext = cryptoContext;
-            _peerIdClientVersion = clientVersion;
+            _peerIdClientId = clientId;
         }
 
         /// <inheritdoc cref="IPeerIdValidator"/>
@@ -57,7 +57,7 @@ namespace Catalyst.Common.P2P
                .Require(p => ValidateClientId(p.ClientId.ToByteArray()),
                     _ => "ClientId should only be 2 alphabetical letters")
                .Require(p => ValidateClientVersion(p.ClientVersion.ToByteArray()),
-                    _ => $"ClientVersion doesn't match {_peerIdClientVersion.AssemblyMajorVersion}");
+                    _ => $"ClientVersion doesn't match {_peerIdClientId.AssemblyMajorVersion}");
             return true;
         }
 

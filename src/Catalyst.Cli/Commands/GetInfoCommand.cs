@@ -61,7 +61,7 @@ namespace Catalyst.Cli.Commands
 
                 var request = _dtoFactory.GetDto(message,
                     _peerIdentifier,
-                    PeerIdentifier.BuildPeerIdFromConfig(nodeConfig, _peerIdClientVersion));
+                    PeerIdentifier.BuildPeerIdFromConfig(nodeConfig, _peerIdClientId));
 
                 node.SendMessage(request);
             }
