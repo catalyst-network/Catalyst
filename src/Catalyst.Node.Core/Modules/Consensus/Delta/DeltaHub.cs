@@ -30,6 +30,7 @@ using Catalyst.Common.Interfaces.Modules.Consensus.Delta;
 using Catalyst.Common.Interfaces.Modules.Dfs;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.Messaging.Broadcast;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Protocol;
 using Catalyst.Protocol.Delta;
 using Dawn;
@@ -87,7 +88,7 @@ namespace Catalyst.Node.Core.Modules.Consensus.Delta
                 return;
             }
 
-            var protocolMessage = candidate.ToProtocolMessage(_peerIdentifier.PeerId, Guid.NewGuid());
+            var protocolMessage = candidate.ToProtocolMessage(_peerIdentifier.PeerId, CorrelationId.GenerateCorrelationId());
             _broadcastManager.BroadcastAsync(protocolMessage);
 
             _logger.Debug("Started broadcasting candidate {0}", candidate);
@@ -102,7 +103,7 @@ namespace Catalyst.Node.Core.Modules.Consensus.Delta
                 return;
             } 
 
-            var protocolMessage = favourite.ToProtocolMessage(_peerIdentifier.PeerId, Guid.NewGuid());
+            var protocolMessage = favourite.ToProtocolMessage(_peerIdentifier.PeerId, CorrelationId.GenerateCorrelationId());
             _broadcastManager.BroadcastAsync(protocolMessage);
 
             _logger.Debug("Started broadcasting favourite candidate {0}", favourite);

@@ -21,11 +21,11 @@
 
 #endregion
 
-using System;
 using System.IO;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.FileTransfer;
+using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Protocol.Rpc.Node;
@@ -50,7 +50,7 @@ namespace Catalyst.Common.FileTransfer
             IPeerIdentifier peerIdentifier,
             IPeerIdentifier recipientIdentifier,
             IChannel recipientChannel,
-            Guid correlationGuid,
+            ICorrelationId correlationGuid,
             IDtoFactory uploadDtoFactory) :
             base(peerIdentifier, recipientIdentifier, recipientChannel,
                 correlationGuid, string.Empty, (ulong) stream.Length)
@@ -93,7 +93,7 @@ namespace Catalyst.Common.FileTransfer
             {
                 ChunkBytes = ByteString.CopyFrom(chunk),
                 ChunkId = chunkId,
-                CorrelationFileName = CorrelationGuid.ToByteString()
+                CorrelationFileName = CorrelationId.Id.ToByteString()
             };
             
             return _uploadDtoFactory.GetDto(transferMessage,

@@ -21,14 +21,15 @@
 
 #endregion
 
-using System;
 using System.IO;
 using System.Threading;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.FileTransfer;
+using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.Modules.Dfs;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Node.Core.RPC.IO.Observables;
 using Catalyst.Protocol.Common;
@@ -63,7 +64,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
             {
                 _observer.OnNext(GetFileFromDfsRequestMessage());
                 _dfs.Received(1).ReadAsync(Arg.Any<string>());
-                _fileTransferFactory.Received(1).FileTransferAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>());
+                _fileTransferFactory.Received(1).FileTransferAsync(Arg.Any<ICorrelationId>(), Arg.Any<CancellationToken>());
             }
         }
 
@@ -94,7 +95,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
                 DfsHash = "test"
             };
             var protocolMessage = getFileFromDfsRequestMessage
-               .ToProtocolMessage(PeerIdHelper.GetPeerId("TestMan"), Guid.NewGuid());
+               .ToProtocolMessage(PeerIdHelper.GetPeerId("TestMan"), CorrelationId.GenerateCorrelationId());
             return new ObserverDto(Substitute.For<IChannelHandlerContext>(), protocolMessage);
         }
     }

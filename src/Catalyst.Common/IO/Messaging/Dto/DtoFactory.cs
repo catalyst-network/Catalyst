@@ -23,6 +23,7 @@
 
 using System;
 using Catalyst.Common.Config;
+using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Protocol.Common;
@@ -45,7 +46,7 @@ namespace Catalyst.Common.IO.Messaging.Dto
         public IMessageDto<T> GetDto<T>(T message,
             IPeerIdentifier senderPeerIdentifier,
             IPeerIdentifier recipientPeerIdentifier,
-            Guid correlationId = default) where T : IMessage<T>
+            ICorrelationId correlationId = default) where T : IMessage<T>
         {
             if (message.Descriptor.Name.EndsWith(MessageTypes.Request.Name))
             {
@@ -71,10 +72,19 @@ namespace Catalyst.Common.IO.Messaging.Dto
         /// <param name="senderPeerIdentifier"></param>
         /// <param name="correlationId">The correlation id of the originating message.</param>
         /// <returns>ProtocolMessage message</returns>
-        private IMessageDto<T> BuildResponseMessage<T>(T message, IPeerIdentifier senderPeerIdentifier, IPeerIdentifier recipientPeerIdentifier, Guid correlationId) where T : IMessage<T>
+        private IMessageDto<T> BuildResponseMessage<T>(T message, 
+            IPeerIdentifier senderPeerIdentifier,
+            IPeerIdentifier recipientPeerIdentifier,
+            ICorrelationId correlationId) 
+            where T : IMessage<T>
         {
-            Guard.Argument(correlationId, nameof(correlationId)).NotDefault();
-            return new MessageDto<T>(message, senderPeerIdentifier, recipientPeerIdentifier, correlationId);
+            Guard.Argument(correlationId.Id, nameof(correlationId)).NotDefault();
+            
+            return new MessageDto<T>(message,
+                senderPeerIdentifier,
+                recipientPeerIdentifier,
+                correlationId
+            );
         }
 
         /// <summary>Builds the ask message.</summary>
@@ -82,9 +92,16 @@ namespace Catalyst.Common.IO.Messaging.Dto
         /// <param name="senderPeerIdentifier"></param>
         /// <param name="recipientPeerIdentifier"></param>
         /// <returns>ProtocolMessage message</returns>
-        private IMessageDto<T> BuildRequestMessage<T>(T message, IPeerIdentifier senderPeerIdentifier, IPeerIdentifier recipientPeerIdentifier) where T : IMessage<T>
+        private IMessageDto<T> BuildRequestMessage<T>(T message,
+            IPeerIdentifier senderPeerIdentifier,
+            IPeerIdentifier recipientPeerIdentifier)
+            where T : IMessage<T>
         {
-            return new MessageDto<T>(message, senderPeerIdentifier, recipientPeerIdentifier, Guid.NewGuid());
+            return new MessageDto<T>(message,
+                senderPeerIdentifier,
+                recipientPeerIdentifier,
+                CorrelationId.GenerateCorrelationId()
+            );
         }
 
         /// <summary>Builds the gossip message.</summary>
@@ -93,9 +110,17 @@ namespace Catalyst.Common.IO.Messaging.Dto
         /// <param name="recipientPeerIdentifier"></param>
         /// <param name="correlationId"></param>
         /// <returns>ProtocolMessage message</returns>
-        private IMessageDto<T> BuildBroadcastMessage<T>(T message, IPeerIdentifier senderPeerIdentifier, IPeerIdentifier recipientPeerIdentifier, Guid correlationId) where T : IMessage<T>
+        private IMessageDto<T> BuildBroadcastMessage<T>(T message,
+            IPeerIdentifier senderPeerIdentifier,
+            IPeerIdentifier recipientPeerIdentifier,
+            ICorrelationId correlationId)
+            where T : IMessage<T>
         {
-            return new MessageDto<T>(message, senderPeerIdentifier, recipientPeerIdentifier, correlationId == default ? Guid.NewGuid() : correlationId);
+            return new MessageDto<T>(message,
+                senderPeerIdentifier,
+                recipientPeerIdentifier,
+                correlationId ?? CorrelationId.GenerateCorrelationId()
+            );
         }
     }
 }

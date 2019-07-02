@@ -24,8 +24,10 @@
 using System;
 using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.FileTransfer;
+using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Observables;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.IO.Observables;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
@@ -65,7 +67,7 @@ namespace Catalyst.Node.Core.RPC.IO.Observables
         protected override TransferFileBytesResponse HandleRequest(TransferFileBytesRequest transferFileBytesRequest,
             IChannelHandlerContext channelHandlerContext,
             IPeerIdentifier senderPeerIdentifier,
-            Guid correlationId)
+            ICorrelationId correlationId)
         {
             Guard.Argument(transferFileBytesRequest, nameof(transferFileBytesRequest)).NotNull();
             Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
@@ -75,7 +77,7 @@ namespace Catalyst.Node.Core.RPC.IO.Observables
             FileTransferResponseCodes responseCode;
             try
             {
-                var fileTransferCorrelationId = new Guid(transferFileBytesRequest.CorrelationFileName.ToByteArray());
+                var fileTransferCorrelationId = new CorrelationId(transferFileBytesRequest.CorrelationFileName.ToByteArray());
                 responseCode = _fileTransferFactory.DownloadChunk(fileTransferCorrelationId, transferFileBytesRequest.ChunkId, transferFileBytesRequest.ChunkBytes.ToByteArray());
             }
             catch (Exception e)

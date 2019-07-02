@@ -27,6 +27,7 @@ using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
+using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Observables;
 using Catalyst.Common.Interfaces.P2P;
@@ -68,7 +69,7 @@ namespace Catalyst.Common.IO.Observables
                .Subscribe(OnNext, OnError, OnCompleted);
         }
         
-        protected abstract TProtoRes HandleRequest(TProtoReq messageDto, IChannelHandlerContext channelHandlerContext, IPeerIdentifier senderPeerIdentifier, Guid correlationId);
+        protected abstract TProtoRes HandleRequest(TProtoReq messageDto, IChannelHandlerContext channelHandlerContext, IPeerIdentifier senderPeerIdentifier, ICorrelationId correlationId);
 
         public override void OnNext(IObserverDto<ProtocolMessage> messageDto)
         {
@@ -78,12 +79,12 @@ namespace Catalyst.Common.IO.Observables
             var response = HandleRequest(messageDto.Payload.FromProtocolMessage<TProtoReq>(),
                 messageDto.Context,
                 new PeerIdentifier(messageDto.Payload.PeerId),
-                messageDto.Payload.CorrelationId.ToGuid());
+                messageDto.Payload.CorrelationId.ToCorrelationId());
             
             messageDto.Context.Channel.WriteAndFlushAsync(new DtoFactory().GetDto(response,
                 PeerIdentifier,
                 new PeerIdentifier(messageDto.Payload.PeerId),
-                messageDto.Payload.CorrelationId.ToGuid()
+                messageDto.Payload.CorrelationId.ToCorrelationId()
             ));
         }
     }
