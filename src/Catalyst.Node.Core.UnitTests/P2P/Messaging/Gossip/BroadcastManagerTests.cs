@@ -27,7 +27,6 @@ using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.Messaging.Broadcast;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.P2P;
-using Catalyst.Node.Core.P2P.Messaging.Broadcast;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Microsoft.Extensions.Caching.Memory;
@@ -36,6 +35,8 @@ using SharpRepository.InMemoryRepository;
 using SharpRepository.Repository;
 using System;
 using System.Threading.Tasks;
+using Catalyst.Common.IO.Messaging.Dto;
+using Catalyst.Node.Core.P2P.IO.Messaging.Broadcast;
 using Xunit;
 
 namespace Catalyst.Node.Core.UnitTests.P2P.Messaging.Gossip

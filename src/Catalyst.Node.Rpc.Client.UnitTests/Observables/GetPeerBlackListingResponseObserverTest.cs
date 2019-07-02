@@ -25,9 +25,9 @@ using System;
 using System.Threading.Tasks;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Cli;
-using Catalyst.Common.IO.Messaging;
+using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.Util;
-using Catalyst.Node.Rpc.Client.Observables;
+using Catalyst.Node.Rpc.Client.IO.Observables;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
@@ -69,7 +69,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.Observables
         [InlineData("false", "198.51.100.14", "uebeingusedhere44j6jhdhdhandomValfprtestingItn")]
         public async Task RpcClient_Can_Handle_GetBlackListingResponse(bool blacklist, string publicKey, string ip)
         {
-            await TestGetBlackListResponse(blacklist, publicKey, ip);
+            await TestGetBlackListResponse(blacklist, publicKey, ip).ConfigureAwait(false);
 
             _output.Received(1).WriteLine($"Peer Blacklisting Successful : {blacklist.ToString()}, {publicKey}, {ip}");
         }

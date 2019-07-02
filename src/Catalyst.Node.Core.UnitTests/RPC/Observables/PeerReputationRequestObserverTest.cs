@@ -26,11 +26,11 @@ using System.Net;
 using System.Threading.Tasks;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
-using Catalyst.Common.IO.Messaging;
+using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.Network;
 using Catalyst.Common.P2P;
 using Catalyst.Common.Util;
-using Catalyst.Node.Core.RPC.Observables;
+using Catalyst.Node.Core.RPC.IO.Observables;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
@@ -144,10 +144,12 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
             var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();
             receivedCalls.Count.Should().Be(1);
 
-            var sentResponseDto = (IMessageDto) receivedCalls[0].GetArguments().Single();
-            sentResponseDto.Message.Descriptor.ShortenedFullName().Should().Be(GetPeerReputationResponse.Descriptor.ShortenedFullName());
+            var sentResponseDto = (IMessageDto<GetPeerReputationResponse>) receivedCalls[0].GetArguments().Single();
 
-            return sentResponseDto.FromIMessageDto<GetPeerReputationResponse>();
+            sentResponseDto.Message.GetType()
+               .Should().BeAssignableTo<GetPeerReputationResponse>();
+
+            return sentResponseDto.FromIMessageDto();
         }
     }
 }

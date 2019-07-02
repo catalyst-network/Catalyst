@@ -21,14 +21,13 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.P2P;
+using Google.Protobuf;
 
 namespace Catalyst.Common.Interfaces.IO.Observables
 {
-    public interface IRequestMessageObserver : IMessageObserver
+    public interface IRequestMessageObserver<in T> : IMessageObserver where T : IMessage<T>
     {
         IPeerIdentifier PeerIdentifier { get; }
-        void SendChannelContextResponse(IMessageDto messageDto);
     }
 }

@@ -34,7 +34,7 @@ using Catalyst.Common.Interfaces.IO.Observables;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.P2P;
-using Catalyst.Node.Core.P2P.Observables;
+using Catalyst.Node.Core.P2P.IO.Observables;
 using Catalyst.Protocol.IPPN;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
@@ -43,6 +43,7 @@ using Microsoft.Extensions.Configuration;
 using NSubstitute;
 using Serilog;
 using SharpRepository.Repository;
+using SharpRepository.Repository.Specifications;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -65,10 +66,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Observables
             IRepository<Peer, int> store)
         {
             store.Add(peer);
-            
-            // store.FindAll(new Specification<Peer>(p => p.IsAwolPeer == false))
-            
-            store.GetAll().Returns(peer);
+            store.FindAll(Arg.Any<Specification<Peer>>()).Returns(peer);
         }
         
         [Fact]
@@ -127,7 +125,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Observables
             var peerNeighbourRequestMessage = new PeerNeighborsRequest();
             
             var fakeContext = Substitute.For<IChannelHandlerContext>();
-            var channeledAny = new ProtocolMessageDto(fakeContext, peerNeighbourRequestMessage.ToProtocolMessage(PeerIdHelper.GetPeerId(), Guid.NewGuid()));
+            var channeledAny = new ObserverDto(fakeContext, peerNeighbourRequestMessage.ToProtocolMessage(PeerIdHelper.GetPeerId(), Guid.NewGuid()));
             var observableStream = new[] {channeledAny}.ToObservable();
             
             neighbourRequestHandler.StartObserving(observableStream);

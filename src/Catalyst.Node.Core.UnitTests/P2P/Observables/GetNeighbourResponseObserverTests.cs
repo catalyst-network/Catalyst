@@ -31,7 +31,7 @@ using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Observables;
 using Catalyst.Common.IO.Messaging.Dto;
-using Catalyst.Node.Core.P2P.Observables;
+using Catalyst.Node.Core.P2P.IO.Observables;
 using Catalyst.Protocol.IPPN;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
@@ -80,7 +80,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Observables
             var peerNeighbourResponseMessage = new PeerNeighborsResponse();
             
             var fakeContext = Substitute.For<IChannelHandlerContext>();
-            var channeledAny = new ProtocolMessageDto(fakeContext, peerNeighbourResponseMessage.ToProtocolMessage(PeerIdHelper.GetPeerId(), Guid.NewGuid()));
+            var channeledAny = new ObserverDto(fakeContext, peerNeighbourResponseMessage.ToProtocolMessage(PeerIdHelper.GetPeerId(), Guid.NewGuid()));
             var observableStream = new[] {channeledAny}.ToObservable();
             neighbourResponseHandler.StartObserving(observableStream);
 

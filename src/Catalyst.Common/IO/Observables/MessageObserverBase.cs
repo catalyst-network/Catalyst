@@ -32,8 +32,8 @@ namespace Catalyst.Common.IO.Observables
 {
     public abstract class MessageObserverBase : IMessageObserver, IDisposable
     {
-        public readonly ILogger Logger;
-        public IDisposable MessageSubscription { get; set; }
+        protected readonly ILogger Logger;
+        public IDisposable MessageSubscription { get; protected set; }
         public IChannelHandlerContext ChannelHandlerContext { get; protected set; }
 
         protected MessageObserverBase(ILogger logger)
@@ -41,9 +41,9 @@ namespace Catalyst.Common.IO.Observables
             Logger = logger;
         }
 
-        public abstract void StartObserving(IObservable<IProtocolMessageDto<ProtocolMessage>> messageStream);
+        public abstract void StartObserving(IObservable<IObserverDto<ProtocolMessage>> messageStream);
 
-        public abstract void OnNext(IProtocolMessageDto<ProtocolMessage> messageDto);
+        public abstract void OnNext(IObserverDto<ProtocolMessage> messageDto);
 
         public virtual void OnCompleted()
         {

@@ -28,11 +28,11 @@ using Google.Protobuf;
 
 namespace Catalyst.Common.Interfaces.IO.Messaging.Dto
 {
-    public interface IMessageDto
+    public interface IMessageDto<out T> where T : IMessage<T>
     {
         Guid CorrelationId { get; }
         MessageTypes MessageType { get; }
-        IMessage Message { get; }
+        T Message { get; }
         IPeerIdentifier Recipient { get; }
         IPeerIdentifier Sender { get; }
     }

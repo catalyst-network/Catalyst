@@ -51,14 +51,17 @@ namespace Catalyst.Node.Core.UnitTests.RPC.IO.Transport.Channels
     {
         public sealed class TestNodeRpcServerChannelFactory : NodeRpcServerChannelFactory
         {
+            private readonly ILogger _logger;
             private readonly List<IChannelHandler> _handlers;
 
             public TestNodeRpcServerChannelFactory(IMessageCorrelationManager correlationManager,
                 IKeySigner keySigner,
                 IAuthenticationStrategy authenticationStrategy,
-                IPeerIdValidator peerIdValidator)
-                : base(correlationManager, keySigner, authenticationStrategy, peerIdValidator)
+                IPeerIdValidator peerIdValidator,
+                ILogger logger)
+                : base(correlationManager, keySigner, authenticationStrategy, peerIdValidator, logger)
             {
+                _logger = logger;
                 _handlers = Handlers;
             }
 
@@ -89,7 +92,8 @@ namespace Catalyst.Node.Core.UnitTests.RPC.IO.Transport.Channels
                 _correlationManager,
                 _keySigner,
                 authenticationStrategy,
-                peerIdValidator);
+                peerIdValidator,
+                Substitute.For<ILogger>());
         }
 
         [Fact]

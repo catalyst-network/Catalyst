@@ -46,14 +46,14 @@ using Xunit;
 
 namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Transport.Channels
 {
-    public class NodeRpcClientChannelFactoryTests
+    public sealed class NodeRpcClientChannelFactoryTests
     {
         public sealed class TestNodeRpcClientChannelFactory : NodeRpcClientChannelFactory
         {
             private readonly List<IChannelHandler> _handlers;
 
-            public TestNodeRpcClientChannelFactory(IKeySigner keySigner, IMessageCorrelationManager correlationManager, IPeerIdValidator peerIdValidator)
-                : base(keySigner, correlationManager, peerIdValidator)
+            public TestNodeRpcClientChannelFactory(IKeySigner keySigner, IMessageCorrelationManager correlationManager, IPeerIdValidator peerIdValidator, ILogger logger)
+                : base(keySigner, correlationManager, peerIdValidator, logger)
             {
                 _handlers = Handlers;
             }
@@ -77,7 +77,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Transport.Channels
             var peerIdValidator = Substitute.For<IPeerIdValidator>();
             peerIdValidator.ValidatePeerIdFormat(Arg.Any<PeerId>()).Returns(true);
 
-            _factory = new TestNodeRpcClientChannelFactory(_keySigner, _correlationManager, peerIdValidator);
+            _factory = new TestNodeRpcClientChannelFactory(_keySigner, _correlationManager, peerIdValidator, Substitute.For<ILogger>());
         }
 
         [Fact]

@@ -32,7 +32,7 @@ using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Rpc.Authentication;
 using Catalyst.Common.IO.Handlers;
 using Catalyst.Common.P2P;
-using Catalyst.Node.Core.RPC.Observables;
+using Catalyst.Node.Core.RPC.IO.Observables;
 using Catalyst.Node.Core.UnitTests.RPC.IO.Transport.Channels;
 using Catalyst.Node.Rpc.Client.UnitTests.IO.Transport.Channels;
 using Catalyst.Protocol.Common;
@@ -47,7 +47,7 @@ using Xunit;
 
 namespace Catalyst.Node.Core.IntegrationTests.Rpc.IO.Transport.Channels
 {
-    public class TcpClientAndServerCommunicationTests : IDisposable
+    public sealed class TcpClientAndServerCommunicationTests : IDisposable
     {
         private readonly NodeRpcServerChannelFactoryTests.TestNodeRpcServerChannelFactory _serverFactory;
         private readonly NodeRpcClientChannelFactoryTests.TestNodeRpcClientChannelFactory _clientFactory;
@@ -74,14 +74,16 @@ namespace Catalyst.Node.Core.IntegrationTests.Rpc.IO.Transport.Channels
                 serverCorrelationManager,
                 serverKeySigner,
                 authenticationStrategy,
-                peerIdValidator);
+                peerIdValidator,
+                Substitute.For<ILogger>());
 
             var clientCorrelationManager = Substitute.For<IMessageCorrelationManager>();
             var clientKeySigner = Substitute.For<IKeySigner>();
             _clientFactory = new NodeRpcClientChannelFactoryTests.TestNodeRpcClientChannelFactory(
                 clientKeySigner, 
                 clientCorrelationManager,
-                peerIdValidator);
+                peerIdValidator,
+                Substitute.For<ILogger>());
         }
 
         [Fact]

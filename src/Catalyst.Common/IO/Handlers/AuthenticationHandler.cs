@@ -21,10 +21,12 @@
 
 #endregion
 
+using System.Security.Authentication;
 using Catalyst.Common.Interfaces.Rpc.Authentication;
 using Catalyst.Common.P2P;
 using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;
+using Serilog;
 
 namespace Catalyst.Common.IO.Handlers
 {
@@ -32,14 +34,15 @@ namespace Catalyst.Common.IO.Handlers
     /// DotNetty Handler in-charge of blocking RPC messages if the node operator is not trusted
     /// </summary>
     /// <seealso cref="SimpleChannelInboundHandler{ProtocolMessageSigned}" />
-    public class AuthenticationHandler : SimpleChannelInboundHandler<ProtocolMessageSigned>
+    public sealed class AuthenticationHandler : InboundChannelHandlerBase<ProtocolMessageSigned>
     {
         /// <summary>The authentication strategy</summary>
         private readonly IAuthenticationStrategy _authenticationStrategy;
-        
+
         /// <summary>Initializes a new instance of the <see cref="AuthenticationHandler"/> class.</summary>
         /// <param name="authenticationStrategy">The authentication strategy.</param>
-        public AuthenticationHandler(IAuthenticationStrategy authenticationStrategy)
+        /// <param name="logger"></param>
+        public AuthenticationHandler(IAuthenticationStrategy authenticationStrategy, ILogger logger) : base(logger)
         {
             _authenticationStrategy = authenticationStrategy;
         }
@@ -47,14 +50,15 @@ namespace Catalyst.Common.IO.Handlers
         /// <inheritdoc cref="SimpleChannelInboundHandler{I}"/>>
         protected override void ChannelRead0(IChannelHandlerContext ctx, ProtocolMessageSigned msg)
         {
-            var peerIdentifier = new PeerIdentifier(msg.Message.PeerId);
-            if (_authenticationStrategy.Authenticate(peerIdentifier))
+            if (_authenticationStrategy.Authenticate(new PeerIdentifier(msg.Message.PeerId)))
             {
                 ctx.FireChannelRead(msg);
             }
             else
             {
                 ctx.CloseAsync();
+
+                throw new AuthenticationException("Authentication Attempt Failed");
             }
         }
     }
