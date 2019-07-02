@@ -56,7 +56,7 @@ namespace Catalyst.Common.Keystore
 
         public string EncryptAndGenerateDefaultKeyStoreAsJson(string password, byte[] key, string address)
         {
-            var pubKeyLen = _cryptoContext.GetPublicKeyByteLength();
+            var pubKeyLen = _cryptoContext.PublicKeyLength;
             Guard.Argument(key, nameof(key)).MinCount(pubKeyLen).MaxCount(pubKeyLen);
             Guard.Argument(address, nameof(address)).NotEmpty().NotNull().NotWhiteSpace();
             Guard.Argument(password, nameof(password)).NotEmpty().NotNull().NotWhiteSpace();
