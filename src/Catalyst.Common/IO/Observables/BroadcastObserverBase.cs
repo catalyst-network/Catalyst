@@ -59,7 +59,7 @@ namespace Catalyst.Common.IO.Observables
             MessageSubscription = messageStream
                .Where(m => m.Payload?.TypeUrl != null 
                  && m.Payload.TypeUrl == _filterMessageType)
-               .SubscribeOn(TaskPoolScheduler.Default)
+               .SubscribeOn(NewThreadScheduler.Default)
                .Subscribe(OnNext, OnError, OnCompleted);
         }
         

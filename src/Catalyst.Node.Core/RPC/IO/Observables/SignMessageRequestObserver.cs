@@ -23,16 +23,14 @@
 
 using System;
 using System.Text;
-using Catalyst.Common.Extensions;
-using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Observables;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Observables;
 using Catalyst.Common.Util;
-using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
+using DotNetty.Transport.Channels;
 using ILogger = Serilog.ILogger;
 
 namespace Catalyst.Node.Core.RPC.IO.Observables
@@ -51,17 +49,27 @@ namespace Catalyst.Node.Core.RPC.IO.Observables
             _keySigner = keySigner;
         }
 
-        protected override SignMessageResponse HandleRequest(IObserverDto<ProtocolMessage> messageDto)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="signMessageRequest"></param>
+        /// <param name="channelHandlerContext"></param>
+        /// <param name="senderPeerIdentifier"></param>
+        /// <param name="correlationId"></param>
+        /// <returns></returns>
+        protected override SignMessageResponse HandleRequest(SignMessageRequest signMessageRequest,
+            IChannelHandlerContext channelHandlerContext,
+            IPeerIdentifier senderPeerIdentifier,
+            Guid correlationId)
         {
+            Guard.Argument(signMessageRequest, nameof(signMessageRequest)).NotNull();
+            Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
+            Guard.Argument(senderPeerIdentifier, nameof(senderPeerIdentifier)).NotNull();
             Logger.Debug("received message of type SignMessageRequest");
 
             try
             {
-                var deserialised = messageDto.Payload.FromProtocolMessage<SignMessageRequest>();
-
-                Guard.Argument(messageDto).NotNull("The request cannot be null");
-
-                string decodedMessage = deserialised.Message.ToString(Encoding.UTF8);
+                var decodedMessage = signMessageRequest.Message.ToString(Encoding.UTF8);
 
                 var signaturePublicKeyPair = _keySigner.SignAndGetPublicKey(Encoding.UTF8.GetBytes(decodedMessage));
                 
@@ -72,11 +80,11 @@ namespace Catalyst.Node.Core.RPC.IO.Observables
 
                 Guard.Argument(publicKey).NotNull("Failed to get the public key.  Public key cannot be null.");
 
-                Logger.Debug("message content is {0}", deserialised.Message);
+                Logger.Debug("message content is {0}", signMessageRequest.Message);
 
                 return new SignMessageResponse
                 {
-                    OriginalMessage = deserialised.Message,
+                    OriginalMessage = signMessageRequest.Message,
                     PublicKey = publicKey.Bytes.RawBytes.ToByteString(),
                     Signature = signature.Bytes.RawBytes.ToByteString()
                 };
@@ -84,7 +92,7 @@ namespace Catalyst.Node.Core.RPC.IO.Observables
             catch (Exception ex)
             {
                 Logger.Error(ex,
-                    "Failed to handle SignMessageRequest after receiving message {0}", messageDto);
+                    "Failed to handle SignMessageRequest after receiving message {0}", signMessageRequest);
                 throw;
             }
         }

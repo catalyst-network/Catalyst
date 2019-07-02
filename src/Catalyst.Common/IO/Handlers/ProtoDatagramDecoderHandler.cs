@@ -26,10 +26,11 @@ using Catalyst.Protocol.Common;
 using Dawn;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Sockets;
+using Serilog;
 
 namespace Catalyst.Common.IO.Handlers
 {
-    public sealed class ProtoDatagramDecoderHandler : SimpleChannelInboundHandler<DatagramPacket>
+    public sealed class ProtoDatagramDecoderHandler : InboundChannelHandlerBase<DatagramPacket>
     {
         protected override void ChannelRead0(IChannelHandlerContext context, DatagramPacket packet)
         {
@@ -45,5 +46,7 @@ namespace Catalyst.Common.IO.Handlers
                 context.FireChannelRead(signedMessage);
             }
         }
+
+        public ProtoDatagramDecoderHandler(ILogger logger) : base(logger) { }
     }
 }

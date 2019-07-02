@@ -41,7 +41,7 @@ namespace Catalyst.Common.Keystore
             return _keyStoreService.GetAddressFromKeyStore(json);
         }
 
-        public string GenerateUTCFileName(string address)
+        public string GenerateUtcFileName(string address)
         {
             return _keyStoreService.GenerateUTCFileName(address);
         }

@@ -21,11 +21,13 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.IO.Messaging.Dto;
+using System;
 using Catalyst.Common.Interfaces.IO.Observables;
+using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Observables;
-using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
+using Dawn;
+using DotNetty.Transport.Channels;
 using Serilog;
 
 namespace Catalyst.Node.Rpc.Client.IO.Observables
@@ -41,11 +43,23 @@ namespace Catalyst.Node.Rpc.Client.IO.Observables
         /// <summary>Initializes a new instance of the <see cref="TransferFileBytesResponseObserver"/> class.</summary>
         /// <param name="logger">The logger.</param>
         public TransferFileBytesResponseObserver(ILogger logger) : base(logger) { }
-
-        /// <summary>Handles the specified message.</summary>
-        /// <param name="messageDto">The message.</param>
-        public override void HandleResponse(IObserverDto<ProtocolMessage> messageDto)
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="transferFileBytesResponse"></param>
+        /// <param name="channelHandlerContext"></param>
+        /// <param name="senderPeerIdentifier"></param>
+        /// <param name="correlationId"></param>
+        protected override void HandleResponse(TransferFileBytesResponse transferFileBytesResponse,
+            IChannelHandlerContext channelHandlerContext,
+            IPeerIdentifier senderPeerIdentifier,
+            Guid correlationId)
         {
+            Guard.Argument(transferFileBytesResponse, nameof(transferFileBytesResponse)).NotNull();
+            Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
+            Guard.Argument(senderPeerIdentifier, nameof(senderPeerIdentifier)).NotNull();
+            
             // Response for a node writing a chunk via bytes transfer.
             // Future logic if an error occurs via chunk transfer then preferably we want to stop file transfer
         }

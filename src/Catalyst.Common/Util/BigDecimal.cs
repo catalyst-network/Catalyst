@@ -24,7 +24,6 @@
 using System;
 using System.Globalization;
 using System.Numerics;
-using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 
 namespace Catalyst.Common.Util
@@ -39,11 +38,13 @@ namespace Catalyst.Common.Util
     ///     Division never determines more digits than the given precision of 50.
     /// </summary>
     public struct BigDecimal : IComparable, IComparable<BigDecimal>
-    {        
-        public BigDecimal(BigDecimal bigDecimal, bool alwaysTruncate = false) : this(bigDecimal.Mantissa,
+    {
+        internal static int Precision { get; } = 50;
+
+        private BigDecimal(BigDecimal bigDecimal, bool alwaysTruncate = false) : this(bigDecimal.Mantissa,
             bigDecimal.Exponent, alwaysTruncate) { }
 
-        public BigDecimal(decimal value, bool alwaysTruncate = false) : this((BigDecimal) value, alwaysTruncate) { }
+        private BigDecimal(decimal value, bool alwaysTruncate = false) : this((BigDecimal) value, alwaysTruncate) { }
 
         /// <summary>
         /// </summary>
@@ -64,18 +65,18 @@ namespace Catalyst.Common.Util
             Normalize();
             if (alwaysTruncate)
             {
-                Truncate();
+                Truncate(Precision);
             }
         }
 
-        public BigInteger Mantissa { get; internal set; }
-        public int Exponent { get; internal set; }
+        private BigInteger Mantissa { get; set; }
+        private int Exponent { get; set; }
 
         public int CompareTo(object obj)
         {
             if (!(obj is BigDecimal))
             {
-                throw new ArgumentException();
+                throw new ArgumentException("Is not big decimal type");
             }
             
             return CompareTo((BigDecimal) obj);
@@ -86,21 +87,21 @@ namespace Catalyst.Common.Util
             return this < other ? -1 : this > other ? 1 : 0;
         }
 
-        public void NormaliseExponentBiggerThanZero()
+        private void NormaliseExponentBiggerThanZero()
         {
             if (Exponent <= 0)
             {
                 return;
             }
             
-            Mantissa = Mantissa * BigInteger.Pow(10, Exponent);
+            Mantissa *= BigInteger.Pow(10, Exponent);
             Exponent = 0;
         }
 
         /// <summary>
         ///     Removes trailing zeros on the mantissa
         /// </summary>
-        public void Normalize()
+        private void Normalize()
         {
             if (Exponent == 0)
             {
@@ -134,7 +135,7 @@ namespace Catalyst.Common.Util
         ///     Truncate the number to the given precision by removing the least significant digits.
         /// </summary>
         /// <returns>The truncated number</returns>
-        internal BigDecimal Truncate(int precision = Constants.Precision)
+        private BigDecimal Truncate(int precision)
         {
             // copy this instance (remember its a struct)
             var shortened = this;
@@ -195,7 +196,7 @@ namespace Catalyst.Common.Util
             return s;
         }
 
-        public bool Equals(BigDecimal other)
+        private bool Equals(BigDecimal other)
         {
             var first = this;
             var second = other;
@@ -211,7 +212,7 @@ namespace Catalyst.Common.Util
                 return false;
             }
             
-            return obj is BigDecimal && Equals((BigDecimal) obj);
+            return obj is BigDecimal @decimal && Equals(@decimal);
         }
 
         public override int GetHashCode()
@@ -329,7 +330,7 @@ namespace Catalyst.Common.Util
 
         public static BigDecimal operator /(BigDecimal dividend, BigDecimal divisor)
         {
-            var exponentChange = Constants.Precision - (NumberOfDigits(dividend.Mantissa) - NumberOfDigits(divisor.Mantissa));
+            var exponentChange = Precision - (NumberOfDigits(dividend.Mantissa) - NumberOfDigits(divisor.Mantissa));
             if (exponentChange < 0)
             {
                 exponentChange = 0;
@@ -380,7 +381,6 @@ namespace Catalyst.Common.Util
 
         public static BigDecimal Parse(string value)
         {
-            //todo culture format
             const string decimalCharacter = ".";
             var indexOfDecimal = value.IndexOf(".", StringComparison.Ordinal);
             var exponent = 0;
@@ -405,14 +405,15 @@ namespace Catalyst.Common.Util
         public static BigDecimal Exp(double exponent)
         {
             var tmp = (BigDecimal) 1;
+            var exponentDiff = 0;
             while (Math.Abs(exponent) > 100)
             {
                 var diff = exponent > 0 ? 100 : -100;
                 tmp *= Math.Exp(diff);
-                exponent -= diff;
+                exponentDiff = diff;
             }
             
-            return tmp * Math.Exp(exponent);
+            return tmp * Math.Exp(exponentDiff);
         }
 
         public static BigDecimal Pow(double basis, double exponent)

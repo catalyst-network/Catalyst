@@ -21,14 +21,15 @@
 
 #endregion
 
+using System;
 using System.Linq;
-using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Observables;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Observables;
 using Catalyst.Common.P2P;
-using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
+using Dawn;
+using DotNetty.Transport.Channels;
 using SharpRepository.Repository;
 using ILogger = Serilog.ILogger;
 
@@ -60,13 +61,23 @@ namespace Catalyst.Node.Core.RPC.IO.Observables
         {
             _peerRepository = peerRepository;
         }
-
+        
         /// <summary>
-        /// Handlers the specified message.
+        /// 
         /// </summary>
-        /// <param name="messageDto">The message.</param>
-        protected override GetPeerListResponse HandleRequest(IObserverDto<ProtocolMessage> messageDto)
+        /// <param name="getPeerListRequest"></param>
+        /// <param name="channelHandlerContext"></param>
+        /// <param name="senderPeerIdentifier"></param>
+        /// <param name="correlationId"></param>
+        /// <returns></returns>
+        protected override GetPeerListResponse HandleRequest(GetPeerListRequest getPeerListRequest,
+            IChannelHandlerContext channelHandlerContext,
+            IPeerIdentifier senderPeerIdentifier,
+            Guid correlationId)
         {
+            Guard.Argument(getPeerListRequest, nameof(getPeerListRequest)).NotNull();
+            Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
+            Guard.Argument(senderPeerIdentifier, nameof(senderPeerIdentifier)).NotNull();
             Logger.Debug("received message of type PeerListRequest");
 
             var peers = _peerRepository.GetAll().Select(x => x.PeerIdentifier.PeerId);

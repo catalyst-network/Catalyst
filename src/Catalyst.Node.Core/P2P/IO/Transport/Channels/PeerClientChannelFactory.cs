@@ -34,6 +34,7 @@ using Catalyst.Common.IO.Handlers;
 using Catalyst.Common.IO.Transport.Channels;
 using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;
+using Serilog;
 
 namespace Catalyst.Node.Core.P2P.IO.Transport.Channels
 {
@@ -41,19 +42,29 @@ namespace Catalyst.Node.Core.P2P.IO.Transport.Channels
     {
         private readonly IKeySigner _keySigner;
         private readonly IMessageCorrelationManager _correlationManager;
+        private readonly ILogger _logger;
 
         protected override List<IChannelHandler> Handlers =>
             new List<IChannelHandler>
             {
-                new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(new ProtoDatagramDecoderHandler(), new ProtoDatagramEncoderHandler()),
-                new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(new ProtocolMessageVerifyHandler(_keySigner), new ProtocolMessageSignHandler(_keySigner)),
-                new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(new CorrelationHandler(_correlationManager), new CorrelationHandler(_correlationManager))
+                new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(new ProtoDatagramDecoderHandler(_logger), new ProtoDatagramEncoderHandler(_logger)),
+                new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(new ProtocolMessageVerifyHandler(_keySigner, _logger), new ProtocolMessageSignHandler(_keySigner, _logger)),
+                new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(new CorrelationHandler(_correlationManager, _logger), new CorrelationHandler(_correlationManager, _logger))
             };
         
-        public PeerClientChannelFactory(IKeySigner keySigner, IMessageCorrelationManager correlationManager)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="keySigner"></param>
+        /// <param name="correlationManager"></param>
+        /// <param name="logger"></param>
+        public PeerClientChannelFactory(IKeySigner keySigner,
+            IMessageCorrelationManager correlationManager,
+            ILogger logger)
         {
             _keySigner = keySigner;
             _correlationManager = correlationManager;
+            _logger = logger;
         }
         
         /// <param name="handlerEventLoopGroupFactory"></param>

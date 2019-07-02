@@ -21,12 +21,12 @@
 
 #endregion
 
-using Catalyst.Common.Extensions;
-using Catalyst.Common.Interfaces.IO.Messaging.Dto;
+using System;
 using Catalyst.Common.Interfaces.IO.Observables;
+using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Observables;
-using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
+using DotNetty.Transport.Channels;
 using Serilog;
 
 namespace Catalyst.Node.Core.P2P.IO.Observables
@@ -37,11 +37,17 @@ namespace Catalyst.Node.Core.P2P.IO.Observables
     {
         public PingResponseObserver(ILogger logger)
             : base(logger) { }
-
-        public override void HandleResponse(IObserverDto<ProtocolMessage> messageDto)
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="pingResponse"></param>
+        /// <param name="channelHandlerContext"></param>
+        /// <param name="senderPeerIdentifier"></param>
+        /// <param name="correlationId"></param>
+        protected override void HandleResponse(PingResponse pingResponse, IChannelHandlerContext channelHandlerContext, IPeerIdentifier senderPeerIdentifier, Guid correlationId)
         {
             Logger.Debug("received ping response");
-            var deserialised = messageDto.Payload.FromProtocolMessage<PingResponse>();
         }
     }
 }

@@ -53,6 +53,7 @@ namespace Catalyst.TestUtils
                 var currentProperty = propertyExpression.Compile()(currentItem);
                 var nextProperty = propertyExpression.Compile()(item);
                 var compare = comparer.Compare(currentProperty, nextProperty);
+                
                 if (compare != resultWhenNotSorted)
                 {
                     currentItem = item;
@@ -82,12 +83,12 @@ namespace Catalyst.TestUtils
         }
     }
 
-    public class FluentAssertionsExtensionsTests
+    public sealed class FluentAssertionsExtensionsTests
     {
-        public class StringWrapper
+        private sealed class StringWrapper
         {
-            public StringWrapper(string stringValue) { StringValue = stringValue; }
-            public string StringValue { get; }
+            internal StringWrapper(string stringValue) { StringValue = stringValue; }
+            internal string StringValue { get; }
         }
 
         private readonly StringWrapper[] _stringsInAscendingOrder;
