@@ -29,14 +29,19 @@ using Catalyst.Cryptography.BulletProofs.Wrapper.Types;
 
 namespace Catalyst.Common.Cryptography
 {
-    public sealed class RustCryptoContext : ICryptoContext
+    public sealed class CryptoContext : ICryptoContext
     {
-        private static readonly IWrapper Wrapper = new CryptoWrapper();
+        private readonly IWrapper _wrapper;
+
+        public CryptoContext(IWrapper wrapper)
+        {
+            _wrapper = wrapper;
+        }
 
         /// <inheritdoc />
         public IPrivateKey GeneratePrivateKey()
         {
-            return Wrapper.GenerateKey();
+            return _wrapper.GenerateKey();
         }
 
         /// <inheritdoc />
@@ -66,25 +71,25 @@ namespace Catalyst.Common.Cryptography
         /// <inheritdoc />
         public ISignature Sign(IPrivateKey privateKey, ReadOnlySpan<byte> data)
         {
-            return Wrapper.StdSign(privateKey, data.ToArray());
+            return _wrapper.StdSign(privateKey, data.ToArray());
         }
-        
+
         /// <inheritdoc />
         public bool Verify(IPublicKey key, ReadOnlySpan<byte> message, ISignature signature)
         {
-            return Wrapper.StdVerify(signature, key, message.ToArray());
+            return _wrapper.StdVerify(signature, key, message.ToArray());
         }
 
         /// <inheritdoc />
         public IPublicKey GetPublicKey(IPrivateKey key)
         {
-            return Wrapper.GetPublicKeyFromPrivate(key);
+            return _wrapper.GetPublicKeyFromPrivate(key);
         }
 
-        public int PrivateKeyLength => Wrapper.PrivateKeyLength;
+        public int PrivateKeyLength => _wrapper.PrivateKeyLength;
 
-        public int PublicKeyLength => Wrapper.PublicKeyLength;
+        public int PublicKeyLength => _wrapper.PublicKeyLength;
 
-        public int SignatureLength => Wrapper.SignatureLength;
+        public int SignatureLength => _wrapper.SignatureLength;
     }
 }

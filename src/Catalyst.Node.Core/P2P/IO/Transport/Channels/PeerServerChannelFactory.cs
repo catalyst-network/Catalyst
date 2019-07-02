@@ -31,6 +31,7 @@ using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Transport.Channels;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
+using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.Messaging.Broadcast;
 using Catalyst.Common.IO.Handlers;
 using Catalyst.Common.IO.Transport.Channels;
@@ -49,6 +50,7 @@ namespace Catalyst.Node.Core.P2P.IO.Transport.Channels
         private readonly IBroadcastManager _broadcastManager;
         private readonly IKeySigner _keySigner;
         private readonly ILogger _logger;
+        private readonly IPeerIdValidator _peerIdValidator;
 
         /// <summary>
         /// 
@@ -60,11 +62,13 @@ namespace Catalyst.Node.Core.P2P.IO.Transport.Channels
         public PeerServerChannelFactory(IMessageCorrelationManager messageCorrelationManager,
             IBroadcastManager broadcastManager,
             IKeySigner keySigner,
+            IPeerIdValidator peerIdValidator,
             ILogger logger)
         {
             _messageCorrelationManager = messageCorrelationManager;
             _broadcastManager = broadcastManager;
             _keySigner = keySigner;
+            _peerIdValidator = peerIdValidator;
             _logger = logger;
         }
 
@@ -75,6 +79,7 @@ namespace Catalyst.Node.Core.P2P.IO.Transport.Channels
                     new DatagramPacketDecoder(new ProtobufDecoder(ProtocolMessageSigned.Parser)),
                     new DatagramPacketEncoder<IMessage>(new ProtobufEncoder())
                 ),
+                new PeerIdValidationHandler(_peerIdValidator),
                 new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
                     new ProtocolMessageVerifyHandler(_keySigner, _logger),
                     new ProtocolMessageSignHandler(_keySigner, _logger)
