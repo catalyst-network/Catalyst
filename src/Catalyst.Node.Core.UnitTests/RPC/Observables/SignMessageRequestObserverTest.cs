@@ -89,7 +89,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
                 PeerIdentifierHelper.GetPeerIdentifier("recipient_key")
             );
             
-            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, request.Message.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId));
+            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, request.Content.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId));
             var handler = new SignMessageRequestObserver(PeerIdentifierHelper.GetPeerIdentifier("sender"), _logger, _keySigner);
             handler.StartObserving(messageStream);
 
@@ -100,7 +100,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
             
             var sentResponseDto = (IMessageDto<SignMessageResponse>) receivedCalls.Single().GetArguments().Single();
             
-            sentResponseDto.Message.GetType()
+            sentResponseDto.Content.GetType()
                .Should()
                .BeAssignableTo<SignMessageResponse>();
 

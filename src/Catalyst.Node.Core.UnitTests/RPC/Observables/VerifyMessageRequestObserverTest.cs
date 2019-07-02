@@ -103,7 +103,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
             );
             
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, 
-                request.Message.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId)
+                request.Content.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId)
             );
             
             var handler = new VerifyMessageRequestObserver(PeerIdentifierHelper.GetPeerIdentifier("sender"),
@@ -120,7 +120,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
 
             var sentResponseDto = (IMessageDto<VerifyMessageResponse>) receivedCalls.Single().GetArguments().Single();
             
-            sentResponseDto.Message.GetType()
+            sentResponseDto.Content.GetType()
                .Should()
                .BeAssignableTo<VerifyMessageResponse>();
 
