@@ -21,23 +21,83 @@
 
 #endregion
 
+using System;
 using System.Threading.Tasks;
+using DotNetty.Common.Utilities;
 using DotNetty.Transport.Channels;
+using Serilog;
 
 namespace Catalyst.Common.IO.Handlers
 {
-    public abstract class OutboundChannelHandlerBase<I> : ChannelHandlerAdapter
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    public abstract class OutboundChannelHandlerBase<T> : ChannelHandlerAdapter
     {
+        private readonly ILogger _logger;
+        private readonly bool _autoRelease;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="logger"></param>
+        protected OutboundChannelHandlerBase(ILogger logger)
+            : this(true)
+        {
+            _logger = logger;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="autoRelease"></param>
+        private OutboundChannelHandlerBase(bool autoRelease)
+        {
+            _autoRelease = autoRelease;
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="ctx"></param>
+        /// <param name="msg"></param>
+        /// <returns></returns>
         public override Task WriteAsync(IChannelHandlerContext ctx, object msg)
         {
-            if (msg is I msg1)
+            var flag = true;
+            try
             {
-                return WriteAsync0(ctx, msg1);
+                if (msg is T msg1)
+                {
+                    return WriteAsync0(ctx, msg1);
+                }
+                else
+                {
+                    flag = false;
+                }
             }
-
+            catch (Exception e)
+            {
+                _logger.Error(e, e.Message);
+            }
+            finally
+            {
+                if (_autoRelease && flag)
+                {
+                    ReferenceCountUtil.Release(msg);   
+                }
+            }
+            
             return ctx.WriteAsync(msg);
         }
 
-        protected abstract Task WriteAsync0(IChannelHandlerContext ctx, I msg);
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="ctx"></param>
+        /// <param name="msg"></param>
+        /// <returns></returns>
+        protected abstract Task WriteAsync0(IChannelHandlerContext ctx, T msg);
     }
 }

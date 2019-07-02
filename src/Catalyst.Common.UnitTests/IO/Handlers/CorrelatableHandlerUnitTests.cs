@@ -26,11 +26,12 @@ using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.IO.Handlers;
 using Catalyst.Common.IO.Messaging;
-using Catalyst.Protocol.IPPN;
+using Catalyst.Protocol.Common;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using Google.Protobuf;
 using NSubstitute;
+using Serilog;
 using Xunit;
 
 namespace Catalyst.Common.UnitTests.IO.Handlers
@@ -49,29 +50,29 @@ namespace Catalyst.Common.UnitTests.IO.Handlers
         [Fact]
         public void Does_Process_IMessageDto_Types()
         {
-            var fakeRequestMessageDto = Substitute.For<IMessageDto>();
+            var fakeRequestMessageDto = Substitute.For<IMessageDto<ProtocolMessage>>();
             fakeRequestMessageDto.MessageType.Returns(MessageTypes.Request);
-            fakeRequestMessageDto.Message.Returns(Substitute.For<IMessage>());
+            fakeRequestMessageDto.Message.Returns(new ProtocolMessage());
             fakeRequestMessageDto.Sender.Returns(PeerIdentifierHelper.GetPeerIdentifier("Im_The_Sender"));
-            fakeRequestMessageDto.Message.Descriptor.Returns(PingRequest.Descriptor);
 
-            var correlatableHandler = new CorrelatableHandler(_fakeMessageCorrelationManager);
+            var correlatableHandler = new CorrelatableHandler(_fakeMessageCorrelationManager, Substitute.For<ILogger>());
 
             correlatableHandler.WriteAsync(_fakeContext, fakeRequestMessageDto);
+            
             _fakeMessageCorrelationManager
                .ReceivedWithAnyArgs()
                .AddPendingRequest(Arg.Any<CorrelatableMessage>()
                 );
 
-            _fakeContext.ReceivedWithAnyArgs(1).WriteAsync(Arg.Any<IMessageDto>());
+            _fakeContext.ReceivedWithAnyArgs(1).WriteAsync(Arg.Any<IMessageDto<ProtocolMessage>>());
         }
 
         [Fact]
         public void Does_Not_Process_OtherTypes_Types()
         {
-            var fakeRequestMessageDto = Substitute.For<IProtocolMessageDto<IMessage>>();
+            var fakeRequestMessageDto = Substitute.For<IObserverDto<IMessage>>();
 
-            var correlatableHandler = new CorrelatableHandler(_fakeMessageCorrelationManager);
+            var correlatableHandler = new CorrelatableHandler(_fakeMessageCorrelationManager, Substitute.For<ILogger>());
             
             correlatableHandler.WriteAsync(_fakeContext, fakeRequestMessageDto);
             
@@ -80,7 +81,7 @@ namespace Catalyst.Common.UnitTests.IO.Handlers
                .AddPendingRequest(Arg.Any<CorrelatableMessage>()
                 );
 
-            _fakeContext.ReceivedWithAnyArgs(1).WriteAsync(Arg.Any<IProtocolMessageDto<IMessage>>());
+            _fakeContext.ReceivedWithAnyArgs(1).WriteAsync(Arg.Any<IObserverDto<IMessage>>());
         }
     }
 }

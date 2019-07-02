@@ -38,6 +38,7 @@ using Catalyst.Common.IO.Transport.Channels;
 using Catalyst.Protocol.Common;
 using DotNetty.Codecs.Protobuf;
 using DotNetty.Transport.Channels;
+using Serilog;
 
 namespace Catalyst.Node.Core.RPC.IO.Transport.Channels
 {
@@ -45,6 +46,7 @@ namespace Catalyst.Node.Core.RPC.IO.Transport.Channels
     {
         private readonly IMessageCorrelationManager _correlationManger;
         private readonly IAuthenticationStrategy _authenticationStrategy;
+        private readonly ILogger _logger;
         private readonly IKeySigner _keySigner;
         private readonly IPeerIdValidator _peerIdValidator;
 
@@ -55,20 +57,34 @@ namespace Catalyst.Node.Core.RPC.IO.Transport.Channels
                 new ProtobufDecoder(ProtocolMessageSigned.Parser),
                 new ProtobufVarint32LengthFieldPrepender(),
                 new ProtobufEncoder(),
-                new AuthenticationHandler(_authenticationStrategy),
+                new AuthenticationHandler(_authenticationStrategy, _logger),
                 new PeerIdValidationHandler(_peerIdValidator),
-                new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(new ProtocolMessageVerifyHandler(_keySigner), new ProtocolMessageSignHandler(_keySigner)),
-                new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(new CorrelationHandler(_correlationManger), new CorrelationHandler(_correlationManger)),
-                new ObservableServiceHandler()
+                new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
+                    new ProtocolMessageVerifyHandler(_keySigner, _logger), new ProtocolMessageSignHandler(_keySigner, _logger)
+                ),
+                new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
+                    new CorrelationHandler(_correlationManger, _logger), new CorrelationHandler(_correlationManger, _logger)
+                ),
+                new ObservableServiceHandler(_logger)
             };
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="correlationManger"></param>
+        /// <param name="keySigner"></param>
+        /// <param name="authenticationStrategy"></param>
+        /// <param name="peerIdValidator"></param>
+        /// <param name="logger"></param>
         public NodeRpcServerChannelFactory(IMessageCorrelationManager correlationManger,
             IKeySigner keySigner,
             IAuthenticationStrategy authenticationStrategy,
-            IPeerIdValidator peerIdValidator)
+            IPeerIdValidator peerIdValidator,
+            ILogger logger)
         {
             _correlationManger = correlationManger;
             _authenticationStrategy = authenticationStrategy;
+            _logger = logger;
             _keySigner = keySigner;
             _peerIdValidator = peerIdValidator;
         }
@@ -87,7 +103,7 @@ namespace Catalyst.Node.Core.RPC.IO.Transport.Channels
             var messageStream = channel.Pipeline.Get<IObservableServiceHandler>()?.MessageStream;
 
             return new ObservableChannel(messageStream
-             ?? Observable.Never<IProtocolMessageDto<ProtocolMessage>>(), channel);
+             ?? Observable.Never<IObserverDto<ProtocolMessage>>(), channel);
         }
     }
 }

@@ -30,14 +30,15 @@ using Catalyst.Common.Util;
 using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;
 using Google.Protobuf;
+using Serilog;
 
 namespace Catalyst.Common.IO.Handlers
 {
-    public sealed class ProtocolMessageSignHandler : OutboundChannelHandlerBase<IMessageDto>
+    public sealed class ProtocolMessageSignHandler : OutboundChannelHandlerBase<IMessageDto<ProtocolMessage>>
     {
         private readonly IKeySigner _keySigner;
 
-        public ProtocolMessageSignHandler(IKeySigner keySigner)
+        public ProtocolMessageSignHandler(IKeySigner keySigner, ILogger logger) : base(logger)
         {
             _keySigner = keySigner;
         }
@@ -48,7 +49,7 @@ namespace Catalyst.Common.IO.Handlers
         /// <param name="context"></param>
         /// <param name="message"></param>
         /// <returns></returns>
-        protected override Task WriteAsync0(IChannelHandlerContext context, IMessageDto message)
+        protected override Task WriteAsync0(IChannelHandlerContext context, IMessageDto<ProtocolMessage> message)
         {
             var sig = _keySigner.Sign(message.Message.ToByteArray());
             
@@ -58,7 +59,7 @@ namespace Catalyst.Common.IO.Handlers
                 Message = message.Message.ToProtocolMessage(message.Sender.PeerId, message.CorrelationId)
             };
 
-            return context.WriteAsync(new MessageSignedDto(protocolMessageSigned, message.MessageType, message.Recipient, message.Sender));
+            return context.WriteAsync(new MessageDto<ProtocolMessageSigned>(protocolMessageSigned, message.Sender, message.Recipient, message.CorrelationId));
         }
     }
 }

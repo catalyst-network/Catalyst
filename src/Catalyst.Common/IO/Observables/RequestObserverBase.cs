@@ -30,21 +30,22 @@ using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Observables;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.IO.Messaging;
+using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.P2P;
 using Catalyst.Protocol.Common;
 using Dawn;
+using DotNetty.Transport.Channels;
 using Google.Protobuf;
 using Serilog;
 
 namespace Catalyst.Common.IO.Observables
 {
-    public abstract class RequestObserverBase<TProtoReq, TProtoRes> : MessageObserverBase, IRequestMessageObserver
+    public abstract class RequestObserverBase<TProtoReq, TProtoRes> : MessageObserverBase, IRequestMessageObserver<TProtoRes>
         where TProtoReq : IMessage<TProtoReq> where TProtoRes : IMessage<TProtoRes>
     {
         private readonly string _filterMessageType;
         public IPeerIdentifier PeerIdentifier { get; }
-
+        
         protected RequestObserverBase(ILogger logger, IPeerIdentifier peerIdentifier) : base(logger)
         {
             Guard.Argument(typeof(TProtoReq), nameof(TProtoReq)).Require(t => t.IsRequestType(), 
@@ -53,9 +54,7 @@ namespace Catalyst.Common.IO.Observables
             PeerIdentifier = peerIdentifier;
         }
 
-        protected abstract IMessage<TProtoRes> HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto);
-
-        public override void StartObserving(IObservable<IProtocolMessageDto<ProtocolMessage>> messageStream)
+        public override void StartObserving(IObservable<IObserverDto<ProtocolMessage>> messageStream)
         {
             if (MessageSubscription != null)
             {
@@ -65,29 +64,27 @@ namespace Catalyst.Common.IO.Observables
             MessageSubscription = messageStream
                .Where(m => m.Payload?.TypeUrl != null 
                  && m.Payload?.TypeUrl == _filterMessageType)
-               .SubscribeOn(TaskPoolScheduler.Default)
+               .SubscribeOn(NewThreadScheduler.Default)
                .Subscribe(OnNext, OnError, OnCompleted);
         }
         
-        public override void OnNext(IProtocolMessageDto<ProtocolMessage> messageDto)
+        protected abstract TProtoRes HandleRequest(TProtoReq messageDto, IChannelHandlerContext channelHandlerContext, IPeerIdentifier senderPeerIdentifier, Guid correlationId);
+
+        public override void OnNext(IObserverDto<ProtocolMessage> messageDto)
         {
             Logger.Verbose("Pre Handle Message Called");
             
-            ChannelHandlerContext = messageDto.Context;
-            
             //@TODO HandleRequest in try catch if catch send error message.
-            var response = HandleRequest(messageDto);
+            var response = HandleRequest(messageDto.Payload.FromProtocolMessage<TProtoReq>(),
+                messageDto.Context,
+                new PeerIdentifier(messageDto.Payload.PeerId),
+                messageDto.Payload.CorrelationId.ToGuid());
             
-            SendChannelContextResponse(new DtoFactory().GetDto(response,
+            messageDto.Context.Channel.WriteAndFlushAsync(new DtoFactory().GetDto(response,
                 PeerIdentifier,
                 new PeerIdentifier(messageDto.Payload.PeerId),
                 messageDto.Payload.CorrelationId.ToGuid()
             ));
-        }
-
-        public void SendChannelContextResponse(IMessageDto messageDto)
-        {   
-            ChannelHandlerContext.Channel.WriteAndFlushAsync(messageDto);
         }
     }
 }

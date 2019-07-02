@@ -27,7 +27,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using Catalyst.Common.Interfaces.Modules.Consensus.Delta;
-using Catalyst.Common.Protocol;
+using Catalyst.Protocol;
 using Catalyst.Common.Util;
 using Catalyst.Protocol.Delta;
 using Dawn;

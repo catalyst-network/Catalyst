@@ -93,5 +93,11 @@ namespace Catalyst.Common.Cryptography
         {
             return _wrapper.GetPublicKeyFromPrivate(key);
         }
+
+        public int PrivateKeyLength => Wrapper.PrivateKeyLength;
+
+        public int PublicKeyLength => Wrapper.PublicKeyLength;
+
+        public int SignatureLength => Wrapper.SignatureLength;
     }
 }

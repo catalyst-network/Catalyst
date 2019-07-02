@@ -44,7 +44,7 @@ namespace Catalyst.TestUtils
         private readonly string _filterMessageType;
         public IObserver<TProto> SubstituteObserver { get; }
         public IPeerIdentifier PeerIdentifier { get; }
-
+        
         public TestMessageObserver(ILogger logger) : base(logger)
         {
             SubstituteObserver = Substitute.For<IObserver<TProto>>();
@@ -54,24 +54,24 @@ namespace Catalyst.TestUtils
 
         public override void OnError(Exception exception) { SubstituteObserver.OnError(exception); }
         
-        public void HandleResponse(IProtocolMessageDto<ProtocolMessage> messageDto)
+        public void HandleResponse(IObserverDto<ProtocolMessage> messageDto)
         {
             SubstituteObserver.OnNext(messageDto.Payload.FromProtocolMessage<TProto>());
         }
 
-        public override void OnNext(IProtocolMessageDto<ProtocolMessage> messageDto)
+        public override void OnNext(IObserverDto<ProtocolMessage> messageDto)
         {
             SubstituteObserver.OnNext(messageDto.Payload.FromProtocolMessage<TProto>());
         }
         
-        public IMessage HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto)
+        public IMessage HandleRequest(IObserverDto<ProtocolMessage> messageDto)
         {
             return messageDto.Payload.FromProtocolMessage<TProto>();
         }
                 
         public override void OnCompleted() { SubstituteObserver.OnCompleted(); }
 
-        public override void StartObserving(IObservable<IProtocolMessageDto<ProtocolMessage>> messageStream)
+        public override void StartObserving(IObservable<IObserverDto<ProtocolMessage>> messageStream)
         {
             if (MessageSubscription != null)
             {
@@ -84,7 +84,7 @@ namespace Catalyst.TestUtils
                .SubscribeOn(TaskPoolScheduler.Default)
                .Subscribe(OnNext, OnError, OnCompleted);
         }
-
-        public void SendChannelContextResponse(IMessageDto messageDto) { throw new NotImplementedException(); }
+        
+        public void SendChannelContextResponse(IMessageDto<TProto> messageDto) { throw new NotImplementedException(); }
     }
 }

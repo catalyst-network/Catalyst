@@ -43,6 +43,6 @@ namespace Catalyst.Common.Interfaces.P2P
         IProducerConsumerCollection<IPeerIdentifier> Peers { get; }
         IRepository<Peer> PeerRepository { get; }
         IList<string> ParseDnsServersFromConfig(IConfigurationRoot rootSection);
-        void PeerNeighbourSubscriptionHandler(IProtocolMessageDto<ProtocolMessage> messageDto);
+        void PeerNeighbourSubscriptionHandler(IObserverDto<ProtocolMessage> messageDto);
     }
 }

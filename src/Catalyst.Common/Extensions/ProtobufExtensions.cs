@@ -94,7 +94,7 @@ namespace Catalyst.Common.Extensions
                .Require(c => !typeUrl.EndsWith(MessageTypes.Response.Name) || c != default,
                     g => $"{typeUrl} is a response type and needs a correlationId");
 
-            var protocolMessage = new ProtocolMessage
+            return new ProtocolMessage
             {
                 PeerId = senderId,
                 CorrelationId = (correlationId == default ? Guid.NewGuid() : correlationId).ToByteString(),
@@ -102,7 +102,6 @@ namespace Catalyst.Common.Extensions
                 TypeUrl = typeUrl,
                 Value = protobufObject.ToByteString()
             };
-            return protocolMessage;
         }
 
         public static bool IsRequestType(this Type type)
@@ -136,7 +135,7 @@ namespace Catalyst.Common.Extensions
             return typed;
         }
 
-        public static T FromIMessageDto<T>(this IMessageDto message) where T : IMessage<T>
+        public static T FromIMessageDto<T>(this IMessageDto<T> message) where T : IMessage<T>
         {
             var empty = (T) Activator.CreateInstance(typeof(T));
             var typed = (T) empty.Descriptor.Parser.ParseFrom(message.Message.ToByteString());

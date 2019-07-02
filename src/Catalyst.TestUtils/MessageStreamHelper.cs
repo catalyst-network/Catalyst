@@ -41,25 +41,25 @@ namespace Catalyst.TestUtils
             handler.OnNext(CreateChanneledMessage(fakeContext, messages));
         }
 
-        public static IObservable<IProtocolMessageDto<ProtocolMessage>> CreateStreamWithMessage(IChannelHandlerContext fakeContext, ProtocolMessage response)
+        public static IObservable<IObserverDto<ProtocolMessage>> CreateStreamWithMessage(IChannelHandlerContext fakeContext, ProtocolMessage response)
         {   
-            var channeledAny = new ProtocolMessageDto(fakeContext, response);
+            var channeledAny = new ObserverDto(fakeContext, response);
             var messageStream = new[] {channeledAny}.ToObservable();
             return messageStream;
         }
 
-        public static IObservable<IProtocolMessageDto<ProtocolMessage>> CreateStreamWithMessages(IChannelHandlerContext fakeContext, params ProtocolMessage[] responseMessages)
+        public static IObservable<IObserverDto<ProtocolMessage>> CreateStreamWithMessages(IChannelHandlerContext fakeContext, params ProtocolMessage[] responseMessages)
         {
             var stream = responseMessages
-               .Select(message => new ProtocolMessageDto(fakeContext, message));
+               .Select(message => new ObserverDto(fakeContext, message));
 
             var messageStream = stream.ToObservable();
             return messageStream;
         }
 
-        private static ProtocolMessageDto CreateChanneledMessage(IChannelHandlerContext fakeContext, ProtocolMessage responseMessage)
+        private static ObserverDto CreateChanneledMessage(IChannelHandlerContext fakeContext, ProtocolMessage responseMessage)
         {
-            return new ProtocolMessageDto(fakeContext, responseMessage);
+            return new ObserverDto(fakeContext, responseMessage);
         }
 
         public static IObservable<T> DelayAndSubscribeOnTaskPool<T>(this IObservable<T> messageStream, TimeSpan customDelay = default)

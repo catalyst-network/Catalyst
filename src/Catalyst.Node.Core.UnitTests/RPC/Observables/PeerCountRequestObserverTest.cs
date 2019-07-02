@@ -27,10 +27,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
-using Catalyst.Common.IO.Messaging;
+using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.Network;
 using Catalyst.Common.P2P;
-using Catalyst.Node.Core.RPC.Observables;
+using Catalyst.Node.Core.RPC.IO.Observables;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
@@ -109,10 +109,13 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
             var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();
             receivedCalls.Count.Should().Be(1);
 
-            var sentResponseDto = (IMessageDto) receivedCalls[0].GetArguments().Single();
-            sentResponseDto.Message.Descriptor.ShortenedFullName().Should().Be(GetPeerCountResponse.Descriptor.ShortenedFullName());
+            var sentResponseDto = (IMessageDto<GetPeerCountResponse>) receivedCalls[0].GetArguments().Single();
+            
+            sentResponseDto.Message.GetType()
+               .Should()
+               .BeAssignableTo<GetPeerCountResponse>();
 
-            var responseContent = sentResponseDto.FromIMessageDto<GetPeerCountResponse>();
+            var responseContent = sentResponseDto.FromIMessageDto();
 
             responseContent.PeerCount.Should().Be(fakePeers);
         }

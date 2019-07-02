@@ -27,11 +27,10 @@ using System.Threading;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.FileTransfer;
-using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.Modules.Dfs;
 using Catalyst.Common.IO.Messaging.Dto;
-using Catalyst.Node.Core.RPC.Observables;
+using Catalyst.Node.Core.RPC.IO.Observables;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
@@ -88,7 +87,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
             return fakeStream;
         }
 
-        private IProtocolMessageDto<ProtocolMessage> GetFileFromDfsRequestMessage()
+        private IObserverDto<ProtocolMessage> GetFileFromDfsRequestMessage()
         {
             var getFileFromDfsRequestMessage = new GetFileFromDfsRequest
             {
@@ -96,7 +95,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
             };
             var protocolMessage = getFileFromDfsRequestMessage
                .ToProtocolMessage(PeerIdHelper.GetPeerId("TestMan"), Guid.NewGuid());
-            return new ProtocolMessageDto(Substitute.For<IChannelHandlerContext>(), protocolMessage);
+            return new ObserverDto(Substitute.For<IChannelHandlerContext>(), protocolMessage);
         }
     }
 }

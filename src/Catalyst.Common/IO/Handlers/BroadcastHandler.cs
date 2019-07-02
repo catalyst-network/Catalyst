@@ -25,6 +25,7 @@ using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.P2P.Messaging.Broadcast;
 using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;
+using Serilog;
 
 namespace Catalyst.Common.IO.Handlers
 {
@@ -34,13 +35,14 @@ namespace Catalyst.Common.IO.Handlers
     /// </summary>
     /// <seealso cref="ObservableServiceHandler" />
     public sealed class BroadcastHandler
-        : SimpleChannelInboundHandler<ProtocolMessage>
+        : InboundChannelHandlerBase<ProtocolMessage>
     {
         private readonly IBroadcastManager _broadcastManager;
 
         /// <summary>Initializes a new instance of the <see cref="BroadcastHandler"/> class.</summary>
         /// <param name="broadcastManager">The gossip manager.</param>
-        public BroadcastHandler(IBroadcastManager broadcastManager)
+        /// <param name="logger"></param>
+        public BroadcastHandler(IBroadcastManager broadcastManager, ILogger logger) : base(logger)
         {
             _broadcastManager = broadcastManager;
         }
@@ -58,7 +60,7 @@ namespace Catalyst.Common.IO.Handlers
             {
                 _broadcastManager.ReceiveAsync(msg).ConfigureAwait(false).GetAwaiter().GetResult();
 
-                ProtocolMessage originalBroadcastMessage = ProtocolMessage.Parser.ParseFrom(msg.Value);
+                var originalBroadcastMessage = ProtocolMessage.Parser.ParseFrom(msg.Value);
                 ctx.FireChannelRead(originalBroadcastMessage);
             }
             else
