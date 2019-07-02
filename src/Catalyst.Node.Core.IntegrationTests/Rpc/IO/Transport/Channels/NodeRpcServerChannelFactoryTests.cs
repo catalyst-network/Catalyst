@@ -163,5 +163,12 @@ namespace Catalyst.Node.Core.IntegrationTests.Rpc.IO.Transport.Channels
             await _serverChannel.DisconnectAsync();
             await _clientChannel.DisconnectAsync();
         }
+
+        public void Dispose()
+        {
+            _peerRepository?.Dispose();
+            _peerCountObserver?.Dispose();
+            _clientObserver?.Dispose();
+        }
     }
 }
