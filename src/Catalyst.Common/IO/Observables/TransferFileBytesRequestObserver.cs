@@ -28,14 +28,13 @@ using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Observables;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Messaging;
-using Catalyst.Common.IO.Observables;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using DotNetty.Transport.Channels;
 using Google.Protobuf;
 using Serilog;
 
-namespace Catalyst.Common.FileTransfer
+namespace Catalyst.Common.IO.Observables
 {
     public sealed class TransferFileBytesRequestObserver
         : RequestObserverBase<TransferFileBytesRequest, TransferFileBytesResponse>,
