@@ -28,6 +28,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
+using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.Messaging.Broadcast;
@@ -89,7 +90,7 @@ namespace Catalyst.Node.Core.P2P.IO.Messaging.Broadcast
                 throw new NotSupportedException("Cannot broadcast a message which is already a gossip type");
             }
 
-            var correlationId = protocolMessage.CorrelationId.ToGuid();
+            var correlationId = protocolMessage.CorrelationId.ToCorrelationId();
             var gossipRequest = await GetOrCreateAsync(correlationId).ConfigureAwait(false);
 
             if (!CanGossip(gossipRequest))
@@ -103,7 +104,7 @@ namespace Catalyst.Node.Core.P2P.IO.Messaging.Broadcast
         /// <inheritdoc/>
         public async Task ReceiveAsync(ProtocolMessage protocolMessage)
         {
-            var correlationId = protocolMessage.CorrelationId.ToGuid();
+            var correlationId = protocolMessage.CorrelationId.ToCorrelationId();
             var gossipRequest = await GetOrCreateAsync(correlationId).ConfigureAwait(false);
             gossipRequest.ReceivedCount += 1;
             UpdatePendingRequest(correlationId, gossipRequest);
@@ -117,7 +118,7 @@ namespace Catalyst.Node.Core.P2P.IO.Messaging.Broadcast
             try
             {
                 var peersToGossip = GetRandomPeers(Constants.MaxGossipPeersPerRound);
-                var correlationId = message.CorrelationId.ToGuid();
+                var correlationId = message.CorrelationId.ToCorrelationId();
 
                 foreach (var peerIdentifier in peersToGossip)
                 {
@@ -164,9 +165,9 @@ namespace Catalyst.Node.Core.P2P.IO.Messaging.Broadcast
         /// <summary>Adds the gossip request.</summary>
         /// <param name="broadcastMessage">The gossip request.</param>
         /// <param name="correlationId">The message correlation ID</param>
-        private void UpdatePendingRequest(Guid correlationId, BroadcastMessage broadcastMessage)
+        private void UpdatePendingRequest(ICorrelationId correlationId, BroadcastMessage broadcastMessage)
         {
-            _pendingRequests.Set(correlationId, broadcastMessage, _entryOptions);
+            _pendingRequests.Set(correlationId.Id, broadcastMessage, _entryOptions);
         }
 
         /// <summary>Gets the maximum gossip cycles.</summary>
@@ -181,9 +182,9 @@ namespace Catalyst.Node.Core.P2P.IO.Messaging.Broadcast
 
         /// <summary>Increments the received count.</summary>
         /// <param name="correlationId">The correlation identifier.</param>
-        private async Task<BroadcastMessage> GetOrCreateAsync(Guid correlationId)
+        private async Task<BroadcastMessage> GetOrCreateAsync(ICorrelationId correlationId)
         {
-            var request = await _pendingRequests.GetOrCreateAsync(correlationId, async entry =>
+            var request = await _pendingRequests.GetOrCreateAsync(correlationId.Id, async entry =>
             {
                 entry.SetOptions(_entryOptions);
                 var gossipRequest = await Task.FromResult(new BroadcastMessage

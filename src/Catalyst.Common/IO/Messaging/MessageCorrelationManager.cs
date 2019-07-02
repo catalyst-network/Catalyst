@@ -34,7 +34,7 @@ using Microsoft.Extensions.Primitives;
 
 namespace Catalyst.Common.IO.Messaging
 {
-    public class MessageCorrelationManager : IMessageCorrelationManager, IDisposable
+    public sealed class MessageCorrelationManager : IMessageCorrelationManager, IDisposable
     {
         public TimeSpan CacheTtl { get; }
         
@@ -82,8 +82,8 @@ namespace Catalyst.Common.IO.Messaging
 
             return _pendingRequests.TryGetValue(response.CorrelationId, out _);
         }
-        
-        protected void Dispose(bool disposing)
+
+        private void Dispose(bool disposing)
         {
             if (!disposing)
             {

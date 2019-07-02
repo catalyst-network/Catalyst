@@ -22,13 +22,14 @@
 
 #endregion
 
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.FileTransfer;
+using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Node.Core.RPC.IO.Observables;
 using Catalyst.Protocol.Rpc.Node;
@@ -62,19 +63,19 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
         [Fact]
         public void CanHandlerDownloadChunk()
         {
-            var guid = Guid.NewGuid();
+            var guid = CorrelationId.GenerateCorrelationId();
             var request = new TransferFileBytesRequest
             {
                 ChunkBytes = ByteString.Empty,
                 ChunkId = 1,
-                CorrelationFileName = Guid.NewGuid().ToByteString()
+                CorrelationFileName = CorrelationId.GenerateCorrelationId().Id.ToByteString()
             }.ToProtocolMessage(PeerIdHelper.GetPeerId("Test"), guid);
 
-            _downloadFileTransferFactory.DownloadChunk(Arg.Any<Guid>(), Arg.Any<uint>(), Arg.Any<byte[]>())
+            _downloadFileTransferFactory.DownloadChunk(Arg.Any<ICorrelationId>(), Arg.Any<uint>(), Arg.Any<byte[]>())
                .Returns(FileTransferResponseCodes.Successful);
 
             request.SendToHandler(_context, _observer);
-            _downloadFileTransferFactory.Received(1).DownloadChunk(Arg.Any<Guid>(), Arg.Any<uint>(), Arg.Any<byte[]>());
+            _downloadFileTransferFactory.Received(1).DownloadChunk(Arg.Any<ICorrelationId>(), Arg.Any<uint>(), Arg.Any<byte[]>());
         }
 
         [Fact]

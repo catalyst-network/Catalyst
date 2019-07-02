@@ -21,11 +21,11 @@
 
 #endregion
 
-using System;
 using System.IO;
 using System.Threading.Tasks;
 using Autofac;
 using Catalyst.Common.Config;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Microsoft.Extensions.Configuration;
@@ -77,7 +77,7 @@ namespace Catalyst.Node.Core.UnitTests.Config
             {
                 var component = container.Resolve<IComponentWithRepository>();
 
-                var guid = Guid.NewGuid().ToString();
+                var guid = CorrelationId.GenerateCorrelationId().ToString();
                 var storedItem = new StoredItem {Name = guid, Value = 10};
                 
                 component.StringRepository.Add(storedItem);
