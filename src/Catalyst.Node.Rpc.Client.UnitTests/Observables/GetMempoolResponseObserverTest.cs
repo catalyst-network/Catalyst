@@ -112,7 +112,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.Observables
             );
 
             var messageStream = MessageStreamHelper.CreateStreamWithMessages(_fakeContext,
-                response.Message.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender_key").PeerId,
+                response.Content.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender_key").PeerId,
                     response.CorrelationId
                 )
             );
