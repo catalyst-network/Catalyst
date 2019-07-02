@@ -92,7 +92,7 @@ namespace Catalyst.Common.FileTransfer
             string fileName,
             ulong fileSize)
         {
-            TempPath = Path.GetTempPath() + correlationId.Id.ToString() + ".tmp";
+            TempPath = Path.GetTempPath() + correlationId.Id + ".tmp";
             MaxChunk = (uint) Math.Max(1, (int) Math.Ceiling((double) fileSize / Constants.FileTransferChunkSize));
             RecipientChannel = recipientChannel;
             RecipientIdentifier = recipientIdentifier;
