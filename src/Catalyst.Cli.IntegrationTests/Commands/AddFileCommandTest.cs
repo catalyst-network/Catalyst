@@ -79,8 +79,8 @@ namespace Catalyst.Cli.IntegrationTests.Commands
                     if (expectedResult)
                     {
                         NodeRpcClient.Received(1).SendMessage(Arg.Is<IMessageDto<AddFileToDfsRequest>>(
-                            x => x.Message != null && 
-                                x.Message.GetType().IsAssignableTo<AddFileToDfsRequest>()));
+                            x => x.Content != null && 
+                                x.Content.GetType().IsAssignableTo<AddFileToDfsRequest>()));
                     }
                 }   
             }

@@ -56,8 +56,8 @@ namespace Catalyst.Cli.IntegrationTests.Commands
                         "removepeer", "-n", "node1", "-k", "fake_public_key", "-i", "127.0.0.1");
                     result.Should().BeTrue();
                     NodeRpcClient.Received(1).SendMessage(Arg.Is<IMessageDto<RemovePeerRequest>>(
-                        x => x.Message != null && 
-                            x.Message.GetType().IsAssignableTo<RemovePeerRequest>()));
+                        x => x.Content != null && 
+                            x.Content.GetType().IsAssignableTo<RemovePeerRequest>()));
                 }   
             }
         }
