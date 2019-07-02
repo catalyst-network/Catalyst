@@ -32,6 +32,7 @@ using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Handlers;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Node.Rpc.Client.IO.Transport.Channels;
+using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
 using Catalyst.TestUtils;
 using DotNetty.Buffers;
@@ -51,8 +52,8 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Transport.Channels
         {
             private readonly List<IChannelHandler> _handlers;
 
-            public TestNodeRpcClientChannelFactory(IKeySigner keySigner, IMessageCorrelationManager correlationManager, ILogger logger)
-                : base(keySigner, correlationManager, logger)
+            public TestNodeRpcClientChannelFactory(IKeySigner keySigner, IMessageCorrelationManager correlationManager, IPeerIdValidator peerIdValidator, ILogger logger)
+                : base(keySigner, correlationManager, peerIdValidator, logger)
             {
                 _handlers = Handlers;
             }
@@ -70,24 +71,28 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Transport.Channels
             _keySigner = Substitute.For<IKeySigner>();
 
             var peerSettings = Substitute.For<IPeerSettings>();
-
             peerSettings.BindAddress.Returns(IPAddress.Parse("127.0.0.1"));
             peerSettings.Port.Returns(1234);
-            _factory = new TestNodeRpcClientChannelFactory(_keySigner, _correlationManager, Substitute.For<ILogger>());
+
+            var peerIdValidator = Substitute.For<IPeerIdValidator>();
+            peerIdValidator.ValidatePeerIdFormat(Arg.Any<PeerId>()).Returns(true);
+
+            _factory = new TestNodeRpcClientChannelFactory(_keySigner, _correlationManager, peerIdValidator, Substitute.For<ILogger>());
         }
 
         [Fact]
         public void NodeRpcClientChannelFactory_should_have_correct_handlers()
         {
-            _factory.InheritedHandlers.Count(h => h != null).Should().Be(7);
+            _factory.InheritedHandlers.Count(h => h != null).Should().Be(8);
             var handlers = _factory.InheritedHandlers.ToArray();
             handlers[0].Should().BeOfType<ProtobufVarint32LengthFieldPrepender>();
             handlers[1].Should().BeOfType<ProtobufEncoder>();
             handlers[2].Should().BeOfType<ProtobufVarint32FrameDecoder>();
             handlers[3].Should().BeOfType<ProtobufDecoder>();
-            handlers[4].Should().BeOfType<CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>>();
+            handlers[4].Should().BeOfType<PeerIdValidationHandler>();
             handlers[5].Should().BeOfType<CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>>();
-            handlers[6].Should().BeOfType<ObservableServiceHandler>();
+            handlers[6].Should().BeOfType<CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>>();
+            handlers[7].Should().BeOfType<ObservableServiceHandler>();
         }
 
         [Fact]
