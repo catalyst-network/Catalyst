@@ -64,7 +64,7 @@ namespace Catalyst.Cli.Commands
                         Signature = opts.Signature.ToBytesForRLPEncoding().ToByteString()
                     },
                     _peerIdentifier,
-                    PeerIdentifier.BuildPeerIdFromConfig(nodeConfig, _peerIdClientVersion));
+                    PeerIdentifier.BuildPeerIdFromConfig(nodeConfig, _peerIdClientId));
                 
                 node.SendMessage(request);
             }

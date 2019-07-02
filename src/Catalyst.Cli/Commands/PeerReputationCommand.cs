@@ -68,7 +68,7 @@ namespace Catalyst.Cli.Commands
                         Ip = peerIp.ToBytesForRLPEncoding().ToByteString()
                     },
                     _peerIdentifier,
-                    PeerIdentifier.BuildPeerIdFromConfig(nodeConfig, _peerIdClientVersion));
+                    PeerIdentifier.BuildPeerIdFromConfig(nodeConfig, _peerIdClientId));
 
                 node.SendMessage(requestMessage);
             }

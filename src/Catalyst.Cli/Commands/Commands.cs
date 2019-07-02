@@ -51,7 +51,7 @@ namespace Catalyst.Cli.Commands
         private readonly ICertificateStore _certificateStore;
         private readonly IList<IRpcNodeConfig> _rpcNodeConfigs;
         private readonly INodeRpcClientFactory _nodeRpcClientFactory;
-        private readonly IPeerIdClientVersion _peerIdClientVersion;
+        private readonly IPeerIdClientId _peerIdClientId;
         private readonly ISocketClientRegistry<INodeRpcClient> _socketClientRegistry;
         private readonly IDownloadFileTransferFactory _downloadFileTransferFactory;
         private readonly IUploadFileTransferFactory _uploadFileTransferFactory;
@@ -69,7 +69,7 @@ namespace Catalyst.Cli.Commands
             IDownloadFileTransferFactory downloadFileTransferFactory,
             IUploadFileTransferFactory uploadFileTransferFactory,
             IUserOutput userOutput,
-            IPeerIdClientVersion peerIdClientVersion) : base(userOutput)
+            IPeerIdClientId peerIdClientId) : base(userOutput)
         {
             _dtoFactory = dtoFactory;
             _certificateStore = certificateStore;
@@ -79,9 +79,9 @@ namespace Catalyst.Cli.Commands
             _rpcNodeConfigs = NodeRpcConfig.BuildRpcNodeSettingList(config);
             _downloadFileTransferFactory = downloadFileTransferFactory;
             _uploadFileTransferFactory = uploadFileTransferFactory;
-            _peerIdentifier = PeerIdentifier.BuildPeerIdFromConfig(config, peerIdClientVersion);
+            _peerIdentifier = PeerIdentifier.BuildPeerIdFromConfig(config, peerIdClientId);
             _userOutput = userOutput;
-            _peerIdClientVersion = peerIdClientVersion;
+            _peerIdClientId = peerIdClientId;
             _userOutput.WriteLine(@"Koopa Shell Start");
         }
 

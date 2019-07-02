@@ -62,7 +62,7 @@ namespace Catalyst.Cli.Commands
                            .ToByteString()
                     },
                     _peerIdentifier,
-                    PeerIdentifier.BuildPeerIdFromConfig(nodeConfig, _peerIdClientVersion));
+                    PeerIdentifier.BuildPeerIdFromConfig(nodeConfig, _peerIdClientId));
 
                 node.SendMessage(request);
             }

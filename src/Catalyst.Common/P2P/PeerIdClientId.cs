@@ -21,19 +21,23 @@
 
 #endregion
 
-namespace Catalyst.Common.Interfaces.P2P
-{
-    /// <summary>
-    /// Handles peerId client information
-    /// </summary>
-    public interface IPeerIdClientVersion
-    {
-        /// <summary>Gets the client identifier.</summary>
-        /// <returns></returns>
-        byte[] ClientId { get; }
+using System.Reflection;
+using System.Text;
+using Catalyst.Common.Interfaces.P2P;
 
-        /// <summary>Gets the get assembly major version.</summary>
-        /// <value>Gets assembly major version.</value>
-        byte[] AssemblyMajorVersion { get; }
+namespace Catalyst.Common.P2P
+{
+    public class PeerIdClientId : IPeerIdClientId
+    {
+        public PeerIdClientId(string clientId)
+        {
+            var assemblyMajorVersion2Digits = Assembly.GetExecutingAssembly().GetName().Version.Major.ToString("D2");
+            AssemblyMajorVersion = Encoding.UTF8.GetBytes(assemblyMajorVersion2Digits);
+            ClientId = Encoding.UTF8.GetBytes(clientId);
+        }
+
+        public byte[] ClientId { get; }
+
+        public byte[] AssemblyMajorVersion { get; }
     }
 }

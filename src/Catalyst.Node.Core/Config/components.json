@@ -312,10 +312,10 @@
             ]
         },
         {
-            "type": "Catalyst.Common.P2P.PeerIdClientVersion, Catalyst.Common",
+            "type": "Catalyst.Common.P2P.PeerIdClientId, Catalyst.Common",
             "services": [
                 {
-                    "type": "Catalyst.Common.Interfaces.P2P.IPeerIdClientVersion, Catalyst.Common"
+                    "type": "Catalyst.Common.Interfaces.P2P.IPeerIdClientId, Catalyst.Common"
                 }
             ],
             "parameters": {

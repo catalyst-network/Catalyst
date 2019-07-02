@@ -55,7 +55,7 @@ namespace Catalyst.Cli.Commands
             var nodeConfig = GetNodeConfig(opts.Node);
             Guard.Argument(nodeConfig, nameof(nodeConfig)).NotNull();
 
-            var nodePeerIdentifier = PeerIdentifier.BuildPeerIdFromConfig(nodeConfig, _peerIdClientVersion);
+            var nodePeerIdentifier = PeerIdentifier.BuildPeerIdFromConfig(nodeConfig, _peerIdClientId);
 
             if (!File.Exists(opts.File))
             {
