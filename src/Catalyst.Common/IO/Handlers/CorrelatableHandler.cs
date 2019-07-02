@@ -39,15 +39,12 @@ namespace Catalyst.Common.IO.Handlers
         private readonly IMessageCorrelationManager _messageCorrelationManager;
         
         /// <param name="messageCorrelationManager"></param>
-        /// <param name="logger"></param>
-        public CorrelatableHandler(IMessageCorrelationManager messageCorrelationManager, ILogger logger) : base(logger)
+        public CorrelatableHandler(IMessageCorrelationManager messageCorrelationManager)
         {
             _messageCorrelationManager = messageCorrelationManager;
         }
         
-        /// <param name="context"></param>
-        /// <param name="message"></param>
-        /// <returns></returns>
+        /// <inheritdoc />
         protected override Task WriteAsync0(IChannelHandlerContext context, IMessageDto<ProtocolMessage> message)
         {
             if (message.MessageType.Name.Equals(MessageTypes.Request.Name))

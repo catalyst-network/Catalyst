@@ -55,10 +55,10 @@ namespace Catalyst.Node.Core.P2P.IO.Transport.Channels
                     new DatagramPacketEncoder<IMessage>(new ProtobufEncoder())
                 ),
                 new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
-                    new ProtocolMessageVerifyHandler(_keySigner, _logger), new ProtocolMessageSignHandler(_keySigner, _logger)
+                    new ProtocolMessageVerifyHandler(_keySigner), new ProtocolMessageSignHandler(_keySigner)
                 ),
                 new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
-                    new CorrelationHandler(_correlationManager, _logger), new CorrelationHandler(_correlationManager, _logger)
+                    new CorrelationHandler(_correlationManager), new CorrelationHandler(_correlationManager)
                 )
             };
         

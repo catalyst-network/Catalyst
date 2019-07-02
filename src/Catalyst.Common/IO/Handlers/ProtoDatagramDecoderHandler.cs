@@ -47,6 +47,6 @@ namespace Catalyst.Common.IO.Handlers
             }
         }
 
-        public ProtoDatagramDecoderHandler(ILogger logger) : base(logger) { }
+        public ProtoDatagramDecoderHandler() : base() { }
     }
 }
