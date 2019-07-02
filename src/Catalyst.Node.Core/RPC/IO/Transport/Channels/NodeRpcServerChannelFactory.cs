@@ -31,6 +31,7 @@ using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Transport.Channels;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
+using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Rpc.Authentication;
 using Catalyst.Common.IO.Handlers;
 using Catalyst.Common.IO.Transport.Channels;
@@ -47,6 +48,7 @@ namespace Catalyst.Node.Core.RPC.IO.Transport.Channels
         private readonly IAuthenticationStrategy _authenticationStrategy;
         private readonly ILogger _logger;
         private readonly IKeySigner _keySigner;
+        private readonly IPeerIdValidator _peerIdValidator;
 
         protected override List<IChannelHandler> Handlers =>
             new List<IChannelHandler>
@@ -56,6 +58,7 @@ namespace Catalyst.Node.Core.RPC.IO.Transport.Channels
                 new ProtobufVarint32LengthFieldPrepender(),
                 new ProtobufEncoder(),
                 new AuthenticationHandler(_authenticationStrategy, _logger),
+                new PeerIdValidationHandler(_peerIdValidator),
                 new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
                     new ProtocolMessageVerifyHandler(_keySigner, _logger), new ProtocolMessageSignHandler(_keySigner, _logger)
                 ),
@@ -71,16 +74,19 @@ namespace Catalyst.Node.Core.RPC.IO.Transport.Channels
         /// <param name="correlationManger"></param>
         /// <param name="keySigner"></param>
         /// <param name="authenticationStrategy"></param>
+        /// <param name="peerIdValidator"></param>
         /// <param name="logger"></param>
         public NodeRpcServerChannelFactory(IMessageCorrelationManager correlationManger,
             IKeySigner keySigner,
             IAuthenticationStrategy authenticationStrategy,
+            IPeerIdValidator peerIdValidator,
             ILogger logger)
         {
             _correlationManger = correlationManger;
             _authenticationStrategy = authenticationStrategy;
             _logger = logger;
             _keySigner = keySigner;
+            _peerIdValidator = peerIdValidator;
         }
 
         /// <param name="handlerEventLoopGroupFactory"></param>

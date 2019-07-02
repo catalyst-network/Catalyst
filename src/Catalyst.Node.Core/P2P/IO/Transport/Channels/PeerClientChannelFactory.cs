@@ -30,6 +30,7 @@ using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Transport.Channels;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
+using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Handlers;
 using Catalyst.Common.IO.Transport.Channels;
 using Catalyst.Protocol.Common;
@@ -43,6 +44,7 @@ namespace Catalyst.Node.Core.P2P.IO.Transport.Channels
         private readonly IKeySigner _keySigner;
         private readonly IMessageCorrelationManager _correlationManager;
         private readonly ILogger _logger;
+        private readonly IPeerIdValidator _peerIdValidator;
 
         protected override List<IChannelHandler> Handlers =>
             new List<IChannelHandler>
@@ -50,6 +52,7 @@ namespace Catalyst.Node.Core.P2P.IO.Transport.Channels
                 new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
                     new DatagramProtobufDecoder(_logger), new DatagramProtobufEncoder(_logger)
                 ),
+                new PeerIdValidationHandler(_peerIdValidator),
                 new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
                     new ProtocolMessageVerifyHandler(_keySigner, _logger), new ProtocolMessageSignHandler(_keySigner, _logger)
                 ),
@@ -57,20 +60,23 @@ namespace Catalyst.Node.Core.P2P.IO.Transport.Channels
                     new CorrelationHandler(_correlationManager, _logger), new CorrelationHandler(_correlationManager, _logger)
                 )
             };
-        
+
         /// <summary>
         /// 
         /// </summary>
         /// <param name="keySigner"></param>
         /// <param name="correlationManager"></param>
         /// <param name="logger"></param>
+        /// <param name="peerIdValidator"></param>
         public PeerClientChannelFactory(IKeySigner keySigner,
             IMessageCorrelationManager correlationManager,
-            ILogger logger)
+            ILogger logger,
+            IPeerIdValidator peerIdValidator)
         {
             _keySigner = keySigner;
             _correlationManager = correlationManager;
             _logger = logger;
+            _peerIdValidator = peerIdValidator;
         }
         
         /// <param name="handlerEventLoopGroupFactory"></param>
