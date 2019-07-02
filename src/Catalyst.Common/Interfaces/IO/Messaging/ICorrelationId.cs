@@ -25,6 +25,9 @@ using System;
 
 namespace Catalyst.Common.Interfaces.IO.Messaging
 {
+    /// <summary>
+    ///     Provides a CorrelationId type for easy reference to what the Guid is for and mocking
+    /// </summary>
     public interface ICorrelationId
     {
         Guid Id { get; set; }
