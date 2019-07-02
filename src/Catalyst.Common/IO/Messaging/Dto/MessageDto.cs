@@ -51,10 +51,9 @@ namespace Catalyst.Common.IO.Messaging.Dto
             ICorrelationId correlationId = default)
             : base(content, senderPeerIdentifier.IpEndPoint, recipientPeerIdentifier.IpEndPoint)
         {
-            Guard.Argument(content, nameof(content)).Compatible<T>();
             Guard.Argument(recipientPeerIdentifier.IpEndPoint.Address, nameof(recipientPeerIdentifier.IpEndPoint.Address)).NotNull();
-            Guard.Argument(recipientPeerIdentifier.Port, nameof(recipientPeerIdentifier.Port)).InRange(0, 65535);
-            Guard.Argument(senderPeerIdentifier, nameof(senderPeerIdentifier)).Compatible<IPeerIdentifier>().NotNull();
+            Guard.Argument(senderPeerIdentifier.IpEndPoint.Address, nameof(senderPeerIdentifier.IpEndPoint.Address)).NotNull();
+
             CorrelationId = correlationId;
             RecipientPeerIdentifier = recipientPeerIdentifier;
             SenderPeerIdentifier = senderPeerIdentifier;
