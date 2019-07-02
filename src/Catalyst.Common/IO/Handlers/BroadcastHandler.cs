@@ -40,7 +40,6 @@ namespace Catalyst.Common.IO.Handlers
 
         /// <summary>Initializes a new instance of the <see cref="BroadcastHandler"/> class.</summary>
         /// <param name="broadcastManager">The gossip manager.</param>
-        /// <param name="logger"></param>
         public BroadcastHandler(IBroadcastManager broadcastManager)
         {
             _broadcastManager = broadcastManager;

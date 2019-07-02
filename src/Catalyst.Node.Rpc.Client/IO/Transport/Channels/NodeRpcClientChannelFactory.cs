@@ -31,12 +31,12 @@ using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Transport.Channels;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
+using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Handlers;
 using Catalyst.Common.IO.Transport.Channels;
 using Catalyst.Protocol.Common;
 using DotNetty.Codecs.Protobuf;
 using DotNetty.Transport.Channels;
-using Serilog;
 
 namespace Catalyst.Node.Rpc.Client.IO.Transport.Channels
 {
@@ -44,7 +44,7 @@ namespace Catalyst.Node.Rpc.Client.IO.Transport.Channels
     {
         private readonly IKeySigner _keySigner;
         private readonly IMessageCorrelationManager _messageCorrelationCache;
-        private readonly ILogger _logger;
+        private readonly IPeerIdValidator _peerIdValidator;
 
         /// <summary>
         /// 
@@ -52,15 +52,16 @@ namespace Catalyst.Node.Rpc.Client.IO.Transport.Channels
         /// <param name="keySigner"></param>
         /// <param name="messageCorrelationCache"></param>
         /// <param name="logger"></param>
+        /// <param name="peerIdValidator"></param>
         /// <param name="backLogValue"></param>
         public NodeRpcClientChannelFactory(IKeySigner keySigner,
             IMessageCorrelationManager messageCorrelationCache,
-            ILogger logger,
+            IPeerIdValidator peerIdValidator,
             int backLogValue = 100) : base(backLogValue)
         {
             _keySigner = keySigner;
             _messageCorrelationCache = messageCorrelationCache;
-            _logger = logger;
+            _peerIdValidator = peerIdValidator;
         }
 
         protected override List<IChannelHandler> Handlers =>
@@ -70,6 +71,7 @@ namespace Catalyst.Node.Rpc.Client.IO.Transport.Channels
                 new ProtobufEncoder(),
                 new ProtobufVarint32FrameDecoder(),
                 new ProtobufDecoder(ProtocolMessageSigned.Parser),
+                new PeerIdValidationHandler(_peerIdValidator),
                 new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
                     new ProtocolMessageVerifyHandler(_keySigner), new ProtocolMessageSignHandler(_keySigner)
                 ),
@@ -89,7 +91,7 @@ namespace Catalyst.Node.Rpc.Client.IO.Transport.Channels
             X509Certificate2 certificate = null)
         {
             var channel = Bootstrap(eventLoopGroupFactory, targetAddress, targetPort, certificate);
-            
+
             var messageStream = channel.Pipeline.Get<IObservableServiceHandler>()?.MessageStream;
 
             return new ObservableChannel(messageStream

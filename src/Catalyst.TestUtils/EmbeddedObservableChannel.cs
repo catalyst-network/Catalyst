@@ -30,7 +30,6 @@ using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Embedded;
 using NSubstitute;
-using Serilog;
 
 namespace Catalyst.TestUtils
 {
