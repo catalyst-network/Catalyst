@@ -22,6 +22,7 @@
 #endregion
 
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -50,16 +51,13 @@ namespace Catalyst.Node.Core.UnitTests.RPC.IO.Transport.Channels
     {
         public sealed class TestNodeRpcServerChannelFactory : NodeRpcServerChannelFactory
         {
-            private readonly ILogger _logger;
             private readonly List<IChannelHandler> _handlers;
 
             public TestNodeRpcServerChannelFactory(IMessageCorrelationManager correlationManager,
                 IKeySigner keySigner,
-                IAuthenticationStrategy authenticationStrategy,
-                ILogger logger)
-                : base(correlationManager, keySigner, authenticationStrategy, logger)
+                IAuthenticationStrategy authenticationStrategy)
+                : base(correlationManager, keySigner, authenticationStrategy)
             {
-                _logger = logger;
                 _handlers = Handlers;
             }
 
@@ -86,8 +84,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC.IO.Transport.Channels
             _factory = new TestNodeRpcServerChannelFactory(
                 _correlationManager,
                 _keySigner,
-                authenticationStrategy,
-                Substitute.For<ILogger>());
+                authenticationStrategy);
         }
 
         [Fact]
@@ -110,6 +107,8 @@ namespace Catalyst.Node.Core.UnitTests.RPC.IO.Transport.Channels
         {
             var testingChannel = new EmbeddedChannel("test".ToChannelId(),
                 true, _factory.InheritedHandlers.ToArray());
+            
+            var x = testingChannel.Pipeline.GetEnumerator().Current;
 
             var senderId = PeerIdHelper.GetPeerId("sender");
             var correlationId = CorrelationId.GenerateCorrelationId();
@@ -122,14 +121,9 @@ namespace Catalyst.Node.Core.UnitTests.RPC.IO.Transport.Channels
             using (messageStream.Subscribe(observer))
             {
                 testingChannel.WriteInbound(protocolMessage);
-               
-                // _correlationManager.Received(1).TryMatchResponse(protocolMessage); // @TODO in bound server shouldn't try and correlate a request, lets do another test to check this logic
                 _correlationManager.DidNotReceiveWithAnyArgs().TryMatchResponse(protocolMessage);
-
                 _keySigner.DidNotReceiveWithAnyArgs().Verify(null, null, null);
-
                 await messageStream.WaitForItemsOnDelayedStreamOnTaskPoolSchedulerAsync();
-
                 observer.Received.Count.Should().Be(1);
                 observer.Received.Single().Payload.CorrelationId.ToCorrelationId().Id.Should().Be(correlationId.Id);
             }
@@ -140,7 +134,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC.IO.Transport.Channels
         {
             var testingChannel = new EmbeddedChannel("test".ToChannelId(),
                 true, _factory.InheritedHandlers.ToArray());
-
+            
             var senderId = PeerIdHelper.GetPeerId("sender");
             var correlationId = CorrelationId.GenerateCorrelationId();
             var protocolMessage = new PingResponse().ToProtocolMessage(senderId, correlationId);

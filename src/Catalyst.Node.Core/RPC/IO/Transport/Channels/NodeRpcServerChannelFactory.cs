@@ -45,7 +45,6 @@ namespace Catalyst.Node.Core.RPC.IO.Transport.Channels
     {
         private readonly IMessageCorrelationManager _correlationManger;
         private readonly IAuthenticationStrategy _authenticationStrategy;
-        private readonly ILogger _logger;
         private readonly IKeySigner _keySigner;
 
         protected override List<IChannelHandler> Handlers =>
@@ -71,15 +70,12 @@ namespace Catalyst.Node.Core.RPC.IO.Transport.Channels
         /// <param name="correlationManger"></param>
         /// <param name="keySigner"></param>
         /// <param name="authenticationStrategy"></param>
-        /// <param name="logger"></param>
         public NodeRpcServerChannelFactory(IMessageCorrelationManager correlationManger,
             IKeySigner keySigner,
-            IAuthenticationStrategy authenticationStrategy,
-            ILogger logger)
+            IAuthenticationStrategy authenticationStrategy)
         {
             _correlationManger = correlationManger;
             _authenticationStrategy = authenticationStrategy;
-            _logger = logger;
             _keySigner = keySigner;
         }
 
