@@ -68,7 +68,7 @@ namespace Catalyst.Common.FileTransfer
             EnsureKeyExists(fileTransferInformation.CorrelationId);
 
             Context context =
-                new Context(fileTransferInformation.CorrelationId.ToString(), new Dictionary<string, object>())
+                new Context(fileTransferInformation.CorrelationId.Id.ToString(), new Dictionary<string, object>())
                 {
                     {StartChunkRetryKey, (uint) 0}
                 };
