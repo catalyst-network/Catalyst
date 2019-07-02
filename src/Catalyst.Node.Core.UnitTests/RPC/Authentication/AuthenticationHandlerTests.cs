@@ -48,7 +48,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Authentication
         {
             _testObservableServiceHandler = Substitute.For<IObservableServiceHandler>();
             _authenticationStrategy = Substitute.For<IAuthenticationStrategy>();
-            _serverChannel = new EmbeddedChannel(new AuthenticationHandler(_authenticationStrategy, Substitute.For<ILogger>()), _testObservableServiceHandler);
+            _serverChannel = new EmbeddedChannel(new AuthenticationHandler(_authenticationStrategy), _testObservableServiceHandler);
         }
 
         [Fact]

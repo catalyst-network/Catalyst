@@ -61,7 +61,7 @@ namespace Catalyst.Common.UnitTests.IO.Handlers
             _keySigner.Verify(Arg.Any<PublicKey>(), Arg.Any<byte[]>(), Arg.Any<Signature>())
                .Returns(true);
 
-            var signatureHandler = new ProtocolMessageVerifyHandler(_keySigner, Substitute.For<ILogger>());
+            var signatureHandler = new ProtocolMessageVerifyHandler(_keySigner);
 
             signatureHandler.ChannelRead(_fakeContext, _protocolMessageSigned);
 
@@ -74,7 +74,7 @@ namespace Catalyst.Common.UnitTests.IO.Handlers
             _keySigner.Verify(Arg.Any<PublicKey>(), Arg.Any<byte[]>(), Arg.Any<Signature>())
                .Returns(false);
 
-            var signatureHandler = new ProtocolMessageVerifyHandler(_keySigner, Substitute.For<ILogger>());
+            var signatureHandler = new ProtocolMessageVerifyHandler(_keySigner);
 
             signatureHandler.ChannelRead(_fakeContext, _protocolMessageSigned);
 
