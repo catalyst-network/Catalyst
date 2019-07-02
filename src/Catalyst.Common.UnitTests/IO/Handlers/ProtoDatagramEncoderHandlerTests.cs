@@ -53,7 +53,7 @@ namespace Catalyst.Common.UnitTests.IO.Handlers
             var protocolMessageSigned = new ProtocolMessageSigned
             {
                 Message = new PingRequest().ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId, CorrelationId.GenerateCorrelationId()),
-                Signature = ByteUtil.GenerateRandomByteArray(64).ToByteString()
+                Signature = ByteUtil.GenerateRandomByteArray(FFI.GetSignatureLength()).ToByteString()
             };
            
             var datagram = new DatagramPacket(Unpooled.WrappedBuffer(protocolMessageSigned.Message.ToByteArray()), new IPEndPoint(IPAddress.Loopback, IPEndPoint.MinPort));
