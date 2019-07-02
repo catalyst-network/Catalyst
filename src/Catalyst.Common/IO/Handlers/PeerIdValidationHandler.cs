@@ -21,28 +21,22 @@
 
 #endregion
 
-using System.IO;
+using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Protocol.Common;
-using Dawn;
 using DotNetty.Transport.Channels;
-using DotNetty.Transport.Channels.Sockets;
 
 namespace Catalyst.Common.IO.Handlers
 {
-    public sealed class ProtoDatagramDecoderHandler : InboundChannelHandlerBase<DatagramPacket>
+    public sealed class PeerIdValidationHandler : SimpleChannelInboundHandler<ProtocolMessageSigned>
     {
-        protected override void ChannelRead0(IChannelHandlerContext context, DatagramPacket packet)
+        private readonly IPeerIdValidator _peerIdValidator;
+        public PeerIdValidationHandler(IPeerIdValidator peerIdValidator) { _peerIdValidator = peerIdValidator; }
+
+        protected override void ChannelRead0(IChannelHandlerContext ctx, ProtocolMessageSigned msg)
         {
-            Guard.Argument(context).NotNull();
-            Guard.Argument(packet.Content.ReadableBytes).NotZero().NotNegative();
-
-            using (var memoryStream = new MemoryStream())
+            if (_peerIdValidator.ValidatePeerIdFormat(msg.Message.PeerId))
             {
-                memoryStream.Write(packet.Content.Array, 0, packet.Content.ReadableBytes);
-                memoryStream.Seek(0, SeekOrigin.Begin);
-
-                var signedMessage = ProtocolMessageSigned.Parser.ParseFrom(memoryStream);
-                context.FireChannelRead(signedMessage);
+                ctx.FireChannelRead(msg);
             }
         }
     }

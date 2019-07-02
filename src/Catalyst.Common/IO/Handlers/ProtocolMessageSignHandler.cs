@@ -30,7 +30,6 @@ using Catalyst.Common.Util;
 using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;
 using Google.Protobuf;
-using Serilog;
 
 namespace Catalyst.Common.IO.Handlers
 {

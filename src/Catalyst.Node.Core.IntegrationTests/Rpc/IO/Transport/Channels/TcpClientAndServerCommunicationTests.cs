@@ -67,18 +67,22 @@ namespace Catalyst.Node.Core.IntegrationTests.Rpc.IO.Transport.Channels
             peerSettings.Port.Returns(1234);
             var authenticationStrategy = Substitute.For<IAuthenticationStrategy>();
             authenticationStrategy.Authenticate(Arg.Any<IPeerIdentifier>()).Returns(true);
+
+            var peerIdValidator = Substitute.For<IPeerIdValidator>();
+            peerIdValidator.ValidatePeerIdFormat(Arg.Any<PeerId>()).Returns(true);
+
             _serverFactory = new NodeRpcServerChannelFactoryTests.TestNodeRpcServerChannelFactory(
                 serverCorrelationManager,
                 serverKeySigner,
                 authenticationStrategy,
-                Substitute.For<ILogger>());
+                peerIdValidator);
 
             var clientCorrelationManager = Substitute.For<IMessageCorrelationManager>();
             var clientKeySigner = Substitute.For<IKeySigner>();
             _clientFactory = new NodeRpcClientChannelFactoryTests.TestNodeRpcClientChannelFactory(
                 clientKeySigner, 
                 clientCorrelationManager,
-                Substitute.For<ILogger>());
+                peerIdValidator);
         }
 
         [Fact]

@@ -22,7 +22,6 @@
 #endregion
 
 using System;
-using System.Text;
 using Catalyst.Common.Interfaces.Cli.Options;
 using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.P2P;
@@ -59,8 +58,7 @@ namespace Catalyst.Cli.Commands
                         Query = true
                     },
                     _peerIdentifier,
-                    new PeerIdentifier(Encoding.ASCII.GetBytes(nodeConfig.PublicKey), nodeConfig.HostAddress,
-                        nodeConfig.Port)
+                    PeerIdentifier.BuildPeerIdFromConfig(nodeConfig, _peerIdClientId)
                 );
 
                 node.SendMessage(dto);

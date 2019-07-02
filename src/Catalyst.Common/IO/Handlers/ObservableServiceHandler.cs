@@ -42,8 +42,6 @@ namespace Catalyst.Common.IO.Handlers
 
         private readonly ReplaySubject<IObserverDto<ProtocolMessage>> _messageSubject 
             = new ReplaySubject<IObserverDto<ProtocolMessage>>(1);
-        
-        public ObservableServiceHandler() : base() { }
 
         /// <summary>
         ///     Reads the channel once accepted and pushed into a stream.

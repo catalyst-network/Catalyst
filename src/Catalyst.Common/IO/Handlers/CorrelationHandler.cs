@@ -25,7 +25,6 @@ using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;
-using Serilog;
 
 namespace Catalyst.Common.IO.Handlers
 {
