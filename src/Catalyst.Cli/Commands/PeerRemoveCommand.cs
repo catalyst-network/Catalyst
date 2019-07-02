@@ -23,7 +23,6 @@
 
 using System;
 using System.Net;
-using System.Text;
 using Catalyst.Common.Interfaces.Cli.Options;
 using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.Network;

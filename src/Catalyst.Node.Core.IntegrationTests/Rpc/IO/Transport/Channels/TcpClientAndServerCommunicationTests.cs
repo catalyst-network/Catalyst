@@ -82,8 +82,7 @@ namespace Catalyst.Node.Core.IntegrationTests.Rpc.IO.Transport.Channels
             _clientFactory = new NodeRpcClientChannelFactoryTests.TestNodeRpcClientChannelFactory(
                 clientKeySigner, 
                 clientCorrelationManager,
-                peerIdValidator,
-                Substitute.For<ILogger>());
+                peerIdValidator);
         }
 
         [Fact]
