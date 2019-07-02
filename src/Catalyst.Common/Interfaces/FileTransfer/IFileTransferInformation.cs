@@ -23,6 +23,7 @@
 
 using System;
 using System.Threading;
+using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.P2P;
 using DotNetty.Transport.Channels;
 
@@ -64,7 +65,7 @@ namespace Catalyst.Common.Interfaces.FileTransfer
         
         /// <summary>Gets or sets the name of the unique file.</summary>
         /// <value>The name of the unique file.</value>
-        Guid CorrelationGuid { get; set; }
+        ICorrelationId CorrelationId { get; set; }
 
         /// <summary>Gets the temporary path.</summary>
         /// <value>The temporary path.</value>

@@ -73,7 +73,7 @@ namespace Catalyst.Node.Core.P2P.IO.Transport.Channels
             new List<IChannelHandler>
             {
                 new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
-                    new ProtoDatagramDecoderHandler(_logger), new ProtoDatagramEncoderHandler(_logger)
+                    new DatagramProtobufDecoder(_logger), new DatagramProtobufEncoder(_logger)
                 ),
                 new PeerIdValidationHandler(_peerIdValidator),
                 new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(

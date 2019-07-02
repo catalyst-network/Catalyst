@@ -49,10 +49,16 @@ namespace Catalyst.Node.Core.P2P.IO.Transport.Channels
         protected override List<IChannelHandler> Handlers =>
             new List<IChannelHandler>
             {
-                new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(new ProtoDatagramDecoderHandler(_logger), new ProtoDatagramEncoderHandler(_logger)),
+                new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
+                    new DatagramProtobufDecoder(_logger), new DatagramProtobufEncoder(_logger)
+                ),
                 new PeerIdValidationHandler(_peerIdValidator),
-                new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(new ProtocolMessageVerifyHandler(_keySigner, _logger), new ProtocolMessageSignHandler(_keySigner, _logger)),
-                new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(new CorrelationHandler(_correlationManager, _logger), new CorrelationHandler(_correlationManager, _logger))
+                new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
+                    new ProtocolMessageVerifyHandler(_keySigner, _logger), new ProtocolMessageSignHandler(_keySigner, _logger)
+                ),
+                new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
+                    new CorrelationHandler(_correlationManager, _logger), new CorrelationHandler(_correlationManager, _logger)
+                )
             };
 
         /// <summary>

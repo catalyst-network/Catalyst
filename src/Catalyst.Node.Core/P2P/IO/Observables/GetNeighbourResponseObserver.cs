@@ -21,7 +21,7 @@
 
 #endregion
 
-using System;
+using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Observables;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Observables;
@@ -44,7 +44,7 @@ namespace Catalyst.Node.Core.P2P.IO.Observables
         /// <param name="channelHandlerContext"></param>
         /// <param name="senderPeerIdentifier"></param>
         /// <param name="correlationId"></param>
-        protected override void HandleResponse(PeerNeighborsResponse messageDto, IChannelHandlerContext channelHandlerContext, IPeerIdentifier senderPeerIdentifier, Guid correlationId)
+        protected override void HandleResponse(PeerNeighborsResponse messageDto, IChannelHandlerContext channelHandlerContext, IPeerIdentifier senderPeerIdentifier, ICorrelationId correlationId)
         {
             Logger.Debug("received peer NeighbourResponse");
         }

@@ -31,6 +31,7 @@ using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Rpc.Authentication;
 using Catalyst.Common.IO.Handlers;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.P2P;
 using Catalyst.Node.Core.RPC.IO.Observables;
 using Catalyst.Node.Core.UnitTests.RPC.IO.Transport.Channels;
@@ -91,7 +92,7 @@ namespace Catalyst.Node.Core.IntegrationTests.Rpc.IO.Transport.Channels
         {
             var serverId = PeerIdHelper.GetPeerId("server");
             var clientId = PeerIdHelper.GetPeerId("client");
-            var guid = Guid.NewGuid();
+            var guid = CorrelationId.GenerateCorrelationId();
 
             var serverChannel = new EmbeddedChannel("server".ToChannelId(), true, _serverFactory.InheritedHandlers.ToArray());
             var clientChannel = new EmbeddedChannel("client".ToChannelId(), true, _clientFactory.InheritedHandlers.ToArray());

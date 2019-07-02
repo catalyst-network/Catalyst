@@ -28,6 +28,7 @@ using Autofac;
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.FileTransfer;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using FluentAssertions;
@@ -66,7 +67,7 @@ namespace Catalyst.Cli.IntegrationTests.Commands
 
                     await TaskHelper.WaitForAsync(() => downloadFileFactory.Keys.Length > 0, TimeSpan.FromSeconds(5));
 
-                    downloadFileFactory.GetFileTransferInformation(downloadFileFactory.Keys.First()).Expire();
+                    downloadFileFactory.GetFileTransferInformation(new CorrelationId(downloadFileFactory.Keys.First())).Expire();
 
                     var result = await task.ConfigureAwait(false);
                     result.Should().Be(expectedResult);
