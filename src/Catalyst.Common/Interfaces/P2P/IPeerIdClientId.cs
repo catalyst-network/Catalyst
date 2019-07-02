@@ -30,7 +30,7 @@ namespace Catalyst.Common.Interfaces.P2P
     {
         /// <summary>Gets the client identifier.</summary>
         /// <returns></returns>
-        byte[] ClientId { get; }
+        byte[] ClientVersion { get; }
 
         /// <summary>Gets the get assembly major version.</summary>
         /// <value>Gets assembly major version.</value>

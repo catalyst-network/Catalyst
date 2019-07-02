@@ -319,7 +319,7 @@
                 }
             ],
             "parameters": {
-                "clientId": "AC"
+                "clientVersion": "AC"
             }
         }
     ],
