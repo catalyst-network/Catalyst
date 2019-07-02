@@ -21,13 +21,11 @@
 
 #endregion
 
-using System.Reflection;
 using System.Security.Authentication;
 using Catalyst.Common.Interfaces.Rpc.Authentication;
 using Catalyst.Common.P2P;
 using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;
-using Serilog;
 
 namespace Catalyst.Common.IO.Handlers
 {
@@ -42,8 +40,7 @@ namespace Catalyst.Common.IO.Handlers
 
         /// <summary>Initializes a new instance of the <see cref="AuthenticationHandler"/> class.</summary>
         /// <param name="authenticationStrategy">The authentication strategy.</param>
-        /// <param name="logger"></param>
-        public AuthenticationHandler(IAuthenticationStrategy authenticationStrategy) : base()
+        public AuthenticationHandler(IAuthenticationStrategy authenticationStrategy)
         {
             _authenticationStrategy = authenticationStrategy;
         }

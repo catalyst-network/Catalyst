@@ -23,7 +23,6 @@
 
 using System;
 using System.IO;
-using System.Text;
 using Catalyst.Common.FileTransfer;
 using Catalyst.Common.Interfaces.Cli.Options;
 using Catalyst.Common.Interfaces.FileTransfer;

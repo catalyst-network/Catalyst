@@ -33,7 +33,6 @@ using NSubstitute;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Protocol.Common;
 using Google.Protobuf;
-using Serilog;
 using Xunit;
 
 namespace Catalyst.Node.Core.UnitTests.RPC.Authentication

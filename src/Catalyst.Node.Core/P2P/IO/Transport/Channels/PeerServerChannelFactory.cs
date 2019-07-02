@@ -40,7 +40,6 @@ using DotNetty.Codecs;
 using DotNetty.Codecs.Protobuf;
 using DotNetty.Transport.Channels;
 using Google.Protobuf;
-using Serilog;
 
 namespace Catalyst.Node.Core.P2P.IO.Transport.Channels
 {
@@ -49,7 +48,6 @@ namespace Catalyst.Node.Core.P2P.IO.Transport.Channels
         private readonly IMessageCorrelationManager _messageCorrelationManager;
         private readonly IBroadcastManager _broadcastManager;
         private readonly IKeySigner _keySigner;
-        private readonly ILogger _logger;
         private readonly IPeerIdValidator _peerIdValidator;
 
         /// <summary>
@@ -58,18 +56,16 @@ namespace Catalyst.Node.Core.P2P.IO.Transport.Channels
         /// <param name="messageCorrelationManager"></param>
         /// <param name="broadcastManager"></param>
         /// <param name="keySigner"></param>
-        /// <param name="logger"></param>
+        /// <param name="peerIdValidator"></param>
         public PeerServerChannelFactory(IMessageCorrelationManager messageCorrelationManager,
             IBroadcastManager broadcastManager,
             IKeySigner keySigner,
-            IPeerIdValidator peerIdValidator,
-            ILogger logger)
+            IPeerIdValidator peerIdValidator)
         {
             _messageCorrelationManager = messageCorrelationManager;
             _broadcastManager = broadcastManager;
             _keySigner = keySigner;
             _peerIdValidator = peerIdValidator;
-            _logger = logger;
         }
 
         protected override List<IChannelHandler> Handlers => 
