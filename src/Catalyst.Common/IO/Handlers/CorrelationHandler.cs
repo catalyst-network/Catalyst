@@ -33,7 +33,7 @@ namespace Catalyst.Common.IO.Handlers
     {
         private readonly IMessageCorrelationManager _messageCorrelationManager;
 
-        public CorrelationHandler(IMessageCorrelationManager messageCorrelationManager, ILogger logger) : base(logger)
+        public CorrelationHandler(IMessageCorrelationManager messageCorrelationManager)
         {
             _messageCorrelationManager = messageCorrelationManager;
         }

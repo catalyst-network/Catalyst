@@ -55,14 +55,14 @@ namespace Catalyst.Node.Core.RPC.IO.Transport.Channels
                 new ProtobufDecoder(ProtocolMessageSigned.Parser),
                 new ProtobufVarint32LengthFieldPrepender(),
                 new ProtobufEncoder(),
-                new AuthenticationHandler(_authenticationStrategy, _logger),
+                new AuthenticationHandler(_authenticationStrategy),
                 new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
-                    new ProtocolMessageVerifyHandler(_keySigner, _logger), new ProtocolMessageSignHandler(_keySigner, _logger)
+                    new ProtocolMessageVerifyHandler(_keySigner), new ProtocolMessageSignHandler(_keySigner)
                 ),
                 new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
-                    new CorrelationHandler(_correlationManger, _logger), new CorrelationHandler(_correlationManger, _logger)
+                    new CorrelationHandler(_correlationManger), new CorrelationHandler(_correlationManger)
                 ),
-                new ObservableServiceHandler(_logger)
+                new ObservableServiceHandler()
             };
 
         /// <summary>

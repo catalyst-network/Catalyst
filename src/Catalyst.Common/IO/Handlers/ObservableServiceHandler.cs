@@ -29,7 +29,6 @@ using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;
-using Serilog;
 
 namespace Catalyst.Common.IO.Handlers
 {
@@ -44,7 +43,7 @@ namespace Catalyst.Common.IO.Handlers
         private readonly ReplaySubject<IObserverDto<ProtocolMessage>> _messageSubject 
             = new ReplaySubject<IObserverDto<ProtocolMessage>>(1);
         
-        public ObservableServiceHandler(ILogger logger) : base(logger) { }
+        public ObservableServiceHandler() : base() { }
 
         /// <summary>
         ///     Reads the channel once accepted and pushed into a stream.
