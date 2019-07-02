@@ -31,7 +31,6 @@ using Catalyst.Protocol.IPPN;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using NSubstitute;
-using Serilog;
 using Xunit;
 
 namespace Catalyst.Common.UnitTests.IO.Handlers

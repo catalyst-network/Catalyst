@@ -22,15 +22,12 @@
 #endregion
 
 using System.Threading.Tasks;
-using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
-using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.Util;
 using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;
 using Google.Protobuf;
-using Serilog;
 
 namespace Catalyst.Common.IO.Handlers
 {
@@ -56,10 +53,10 @@ namespace Catalyst.Common.IO.Handlers
             var protocolMessageSigned = new ProtocolMessageSigned
             {
                 Signature = sig.Bytes.RawBytes.ToByteString(),
-                Message = message.Content.ToProtocolMessage(message.SenderPeerIdentifier.PeerId, message.CorrelationId)
+                Message = message.Content
             };
 
-            return context.WriteAsync(new MessageDto<ProtocolMessageSigned>(protocolMessageSigned, message.SenderPeerIdentifier, message.RecipientPeerIdentifier, message.CorrelationId));
+            return context.WriteAsync(protocolMessageSigned);
         }
     }
 }
