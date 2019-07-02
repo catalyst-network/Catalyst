@@ -60,7 +60,8 @@ namespace Catalyst.Node.Core.P2P.IO.Transport.Channels
                 ),
                 new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
                     new CorrelationHandler(_correlationManager), new CorrelationHandler(_correlationManager)
-                )
+                ),
+                new ObservableServiceHandler()
             };
 
         /// <summary>

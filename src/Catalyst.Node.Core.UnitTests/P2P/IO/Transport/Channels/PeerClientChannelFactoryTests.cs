@@ -47,17 +47,16 @@ using Xunit;
 
 namespace Catalyst.Node.Core.UnitTests.P2P.IO.Transport.Channels
 {
-    public sealed class PeerServerChannelFactoryTests
+    public sealed class PeerClientChannelFactoryTests
     {
-        private sealed class TestPeerServerChannelFactory : PeerServerChannelFactory
+        private sealed class TestPeerClientChannelFactory : PeerClientChannelFactory
         {
             private readonly List<IChannelHandler> _handlers;
 
-            public TestPeerServerChannelFactory(IMessageCorrelationManager correlationManager,
-                IBroadcastManager broadcastManager,
-                IKeySigner keySigner,
+            public TestPeerClientChannelFactory(IKeySigner keySigner,
+                IMessageCorrelationManager correlationManager,
                 IPeerIdValidator peerIdValidator)
-                : base(correlationManager, broadcastManager, keySigner, peerIdValidator)
+                : base(keySigner, correlationManager, peerIdValidator)
             {
                 _handlers = Handlers;
             }
@@ -68,9 +67,9 @@ namespace Catalyst.Node.Core.UnitTests.P2P.IO.Transport.Channels
         private readonly IMessageCorrelationManager _correlationManager;
         private readonly IBroadcastManager _gossipManager;
         private readonly IKeySigner _keySigner;
-        private readonly TestPeerServerChannelFactory _factory;
+        private readonly TestPeerClientChannelFactory _factory;
 
-        public PeerServerChannelFactoryTests()
+        public PeerClientChannelFactoryTests()
         {
             _correlationManager = Substitute.For<IMessageCorrelationManager>();
             _gossipManager = Substitute.For<IBroadcastManager>();
@@ -83,28 +82,26 @@ namespace Catalyst.Node.Core.UnitTests.P2P.IO.Transport.Channels
             var peerValidator = Substitute.For<IPeerIdValidator>();
             peerValidator.ValidatePeerIdFormat(Arg.Any<PeerId>()).Returns(true);
 
-            _factory = new TestPeerServerChannelFactory(
-                _correlationManager,
-                _gossipManager,
+            _factory = new TestPeerClientChannelFactory(
                 _keySigner,
+                _correlationManager,
                 peerValidator);
         }
 
         [Fact]
-        public void PeerServerChannelFactory_should_have_correct_handlers()
+        public void PeerClientChannelFactory_should_have_correct_handlers()
         {
-            _factory.InheritedHandlers.Count(h => h != null).Should().Be(6);
+            _factory.InheritedHandlers.Count(h => h != null).Should().Be(5);
             var handlers = _factory.InheritedHandlers.ToArray();
             handlers[0].Should().BeOfType<CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>>();
             handlers[1].Should().BeOfType<PeerIdValidationHandler>();
             handlers[2].Should().BeOfType<CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>>();
             handlers[3].Should().BeOfType<CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>>();
-            handlers[4].Should().BeOfType<BroadcastHandler>();
-            handlers[5].Should().BeOfType<ObservableServiceHandler>();
+            handlers[4].Should().BeOfType<ObservableServiceHandler>();
         }
 
         [Fact]
-        public async Task PeerServerChannelFactory_should_put_the_correct_handlers_on_the_inbound_pipeline()
+        public async Task PeerClientChannelFactory_should_put_the_correct_handlers_on_the_inbound_pipeline()
         {
             var testingChannel = new EmbeddedChannel("test".ToChannelId(),
                 true, _factory.InheritedHandlers.ToArray());
