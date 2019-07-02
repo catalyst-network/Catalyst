@@ -21,7 +21,6 @@
 
 #endregion
 
-using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.P2P;
@@ -34,7 +33,6 @@ namespace Catalyst.Common.IO.Messaging.Dto
     public sealed class MessageDto<T> : DefaultAddressedEnvelope<T>, IMessageDto<T> where T : IMessage<T>
     {
         public ICorrelationId CorrelationId { get; }
-        public MessageTypes MessageType { get; }
         public IPeerIdentifier RecipientPeerIdentifier { get; }
         public IPeerIdentifier SenderPeerIdentifier { get; }
 

@@ -34,23 +34,22 @@ using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.Util;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Types;
-using Catalyst.Node.Rpc.Client.UnitTests.IO.Transport.Channels;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
-using DotNetty.Transport.Channels.Embedded;
 using DotNetty.Buffers;
+using DotNetty.Transport.Channels.Embedded;
 using FluentAssertions;
 using NSubstitute;
 using Serilog;
 using Xunit;
+using NodeRpcServerChannelFactoryTests = Catalyst.Node.Core.UnitTests.RPC.IO.Transport.Channels.NodeRpcServerChannelFactoryTests;
 
-namespace Catalyst.Node.Core.IntegrationTests.Rpc.IO.Transport.Channels
+namespace Catalyst.Node.Rpc.Client.IntegrationTests.IO.Transport.Channels
 {
-    public sealed class NodeRpcServerChannelFactoryTests
+    public sealed class NodeRpcClientChannelFactoryTests
     {
-        private readonly UnitTests.RPC.IO.Transport.Channels.NodeRpcServerChannelFactoryTests.TestNodeRpcServerChannelFactory _serverFactory;
-        private readonly NodeRpcClientChannelFactoryTests.TestNodeRpcClientChannelFactory _clientFactory;
+        private readonly NodeRpcServerChannelFactoryTests.TestNodeRpcServerChannelFactory _serverFactory;
         private readonly EmbeddedChannel _serverChannel;
         private readonly EmbeddedChannel _clientChannel;
         private readonly IMessageCorrelationManager _clientCorrelationManager;
@@ -60,7 +59,7 @@ namespace Catalyst.Node.Core.IntegrationTests.Rpc.IO.Transport.Channels
         private readonly IKeySigner _serverKeySigner;
         private readonly IMessageCorrelationManager _serverCorrelationManager;
 
-        public NodeRpcServerChannelFactoryTests()
+        public NodeRpcClientChannelFactoryTests()
         {
             _serverCorrelationManager = Substitute.For<IMessageCorrelationManager>();
             _serverKeySigner = Substitute.For<IKeySigner>();
@@ -73,7 +72,7 @@ namespace Catalyst.Node.Core.IntegrationTests.Rpc.IO.Transport.Channels
 
             _peerIdValidator = Substitute.For<IPeerIdValidator>();
 
-            _serverFactory = new UnitTests.RPC.IO.Transport.Channels.NodeRpcServerChannelFactoryTests.TestNodeRpcServerChannelFactory(
+            _serverFactory = new NodeRpcServerChannelFactoryTests.TestNodeRpcServerChannelFactory(
                 _serverCorrelationManager,
                 _serverKeySigner,
                 _authenticationStrategy,
@@ -82,7 +81,7 @@ namespace Catalyst.Node.Core.IntegrationTests.Rpc.IO.Transport.Channels
             _clientCorrelationManager = Substitute.For<IMessageCorrelationManager>();
             _clientKeySigner = Substitute.For<IKeySigner>();
            
-            _clientFactory = new NodeRpcClientChannelFactoryTests.TestNodeRpcClientChannelFactory(
+            var clientFactory = new UnitTests.IO.Transport.Channels.NodeRpcClientChannelFactoryTests.TestNodeRpcClientChannelFactory(
                 _clientKeySigner, 
                 _clientCorrelationManager,
                 _peerIdValidator);
@@ -91,40 +90,41 @@ namespace Catalyst.Node.Core.IntegrationTests.Rpc.IO.Transport.Channels
                 new EmbeddedChannel("server".ToChannelId(), true, _serverFactory.InheritedHandlers.ToArray());
             
             _clientChannel =
-                new EmbeddedChannel("client".ToChannelId(), true, _clientFactory.InheritedHandlers.ToArray());
+                new EmbeddedChannel("client".ToChannelId(), true, clientFactory.InheritedHandlers.ToArray());
         }
-
+        
         [Fact]
         public async Task
-            NodeRpcServerChannelFactory_Pipeline_Should_Produce_Response_Object_NodeRpcClientChannelFactory_Can_Process()
+            NodeRpcClientChannelFactory_Pipeline_Should_Produce_Request_Object_NodeRpcServerChannelFactory_Can_Process_Into_Observable()
         {
             var recipient = PeerIdentifierHelper.GetPeerIdentifier("recipient");
             var sender = PeerIdentifierHelper.GetPeerIdentifier("sender");
             var sig = new Signature(ByteUtil.GenerateRandomByteArray(64));
             _peerIdValidator.ValidatePeerIdFormat(Arg.Any<PeerId>()).Returns(true);
 
-            _serverKeySigner.Sign(Arg.Any<byte[]>()).ReturnsForAnyArgs(sig);
+            _clientKeySigner.Sign(Arg.Any<byte[]>()).ReturnsForAnyArgs(sig);
             
             var correlationId = CorrelationId.GenerateCorrelationId();
 
-            var protocolMessage = new GetPeerCountResponse().ToProtocolMessage(sender.PeerId, correlationId);
+            var protocolMessage = new GetPeerCountRequest().ToProtocolMessage(sender.PeerId, correlationId);
             var dto = new MessageDto<ProtocolMessage>(
                 protocolMessage,
                 sender,
                 recipient,
                 CorrelationId.GenerateCorrelationId()
             );
+            
+            _clientChannel.WriteOutbound(dto);
+            var sentBytes = _clientChannel.ReadOutbound<IByteBuffer>();
 
-            _clientCorrelationManager.TryMatchResponse(Arg.Any<ProtocolMessage>()).Returns(true);
+            // obviously
+            sentBytes.Should().BeAssignableTo<IByteBuffer>();
             
-            _serverChannel.WriteOutbound(dto);
-            var sentBytes = _serverChannel.ReadOutbound<IByteBuffer>();
-
-            _serverCorrelationManager.DidNotReceiveWithAnyArgs().AddPendingRequest(Arg.Any<CorrelatableMessage>());
+            _clientCorrelationManager.ReceivedWithAnyArgs(1).AddPendingRequest(Arg.Any<CorrelatableMessage>());
             
-            _serverKeySigner.ReceivedWithAnyArgs(1).Sign(Arg.Any<byte[]>());
+            _clientKeySigner.ReceivedWithAnyArgs(1).Sign(Arg.Any<byte[]>());
             
-            _clientKeySigner.Verify(
+            _serverKeySigner.Verify(
                     Arg.Any<PublicKey>(),
                     Arg.Any<byte[]>(),
                     Arg.Any<Signature>())
@@ -134,14 +134,13 @@ namespace Catalyst.Node.Core.IntegrationTests.Rpc.IO.Transport.Channels
             
             var observer = new ProtocolMessageObserver(0, Substitute.For<ILogger>());
 
-            var messageStream = _clientFactory.InheritedHandlers.OfType<ObservableServiceHandler>().Single().MessageStream;
+            var messageStream = _serverFactory.InheritedHandlers.OfType<ObservableServiceHandler>().Single().MessageStream;
             
             using (messageStream.Subscribe(observer))
             {
-                _clientChannel.WriteInbound(sentBytes);
-                _clientChannel.ReadInbound<ProtocolMessageSigned>();
-                _clientCorrelationManager.ReceivedWithAnyArgs(1).TryMatchResponse(Arg.Any<ProtocolMessage>());
-                _clientKeySigner.ReceivedWithAnyArgs(1).Verify(null, null, null);
+                _serverChannel.WriteInbound(sentBytes);
+                _serverCorrelationManager.DidNotReceiveWithAnyArgs().TryMatchResponse(protocolMessage);
+                _serverKeySigner.ReceivedWithAnyArgs(1).Verify(null, null, null);
                 await messageStream.WaitForItemsOnDelayedStreamOnTaskPoolSchedulerAsync();
                 observer.Received.Count.Should().Be(1);
                 observer.Received.Single().Payload.CorrelationId.ToCorrelationId().Id.Should().Be(correlationId.Id);
