@@ -67,7 +67,7 @@
             ]
         },
         {
-            "type": "Catalyst.Node.Core.RPC.IO.Observables.TransferFileBytesRequestObserver",
+            "type": "Catalyst.Common.IO.Observables.TransferFileBytesRequestObserver, Catalyst.Common",
             "services": [
                 {
                     "type": "Catalyst.Common.Interfaces.IO.Observables.IRpcRequestObserver, Catalyst.Common"
