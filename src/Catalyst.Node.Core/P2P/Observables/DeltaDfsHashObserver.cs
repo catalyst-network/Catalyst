@@ -28,7 +28,7 @@ using Catalyst.Common.Interfaces.IO.Observables;
 using Catalyst.Common.Interfaces.Modules.Consensus.Delta;
 using Catalyst.Common.IO.Observables;
 using Catalyst.Protocol.Common;
-using Catalyst.Protocol.zDelta;
+using Catalyst.Protocol.Delta;
 using Multiformats.Hash;
 using Serilog;
 
