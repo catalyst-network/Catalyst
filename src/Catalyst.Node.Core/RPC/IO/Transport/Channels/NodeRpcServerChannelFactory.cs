@@ -46,7 +46,6 @@ namespace Catalyst.Node.Core.RPC.IO.Transport.Channels
     {
         private readonly IMessageCorrelationManager _correlationManger;
         private readonly IAuthenticationStrategy _authenticationStrategy;
-        private readonly ILogger _logger;
         private readonly IKeySigner _keySigner;
         private readonly IPeerIdValidator _peerIdValidator;
 
@@ -57,15 +56,15 @@ namespace Catalyst.Node.Core.RPC.IO.Transport.Channels
                 new ProtobufDecoder(ProtocolMessageSigned.Parser),
                 new ProtobufVarint32LengthFieldPrepender(),
                 new ProtobufEncoder(),
-                new AuthenticationHandler(_authenticationStrategy, _logger),
+                new AuthenticationHandler(_authenticationStrategy),
                 new PeerIdValidationHandler(_peerIdValidator),
                 new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
-                    new ProtocolMessageVerifyHandler(_keySigner, _logger), new ProtocolMessageSignHandler(_keySigner, _logger)
+                    new ProtocolMessageVerifyHandler(_keySigner), new ProtocolMessageSignHandler(_keySigner)
                 ),
                 new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
-                    new CorrelationHandler(_correlationManger, _logger), new CorrelationHandler(_correlationManger, _logger)
+                    new CorrelationHandler(_correlationManger), new CorrelationHandler(_correlationManger)
                 ),
-                new ObservableServiceHandler(_logger)
+                new ObservableServiceHandler()
             };
 
         /// <summary>
@@ -79,12 +78,10 @@ namespace Catalyst.Node.Core.RPC.IO.Transport.Channels
         public NodeRpcServerChannelFactory(IMessageCorrelationManager correlationManger,
             IKeySigner keySigner,
             IAuthenticationStrategy authenticationStrategy,
-            IPeerIdValidator peerIdValidator,
-            ILogger logger)
+            IPeerIdValidator peerIdValidator)
         {
             _correlationManger = correlationManger;
             _authenticationStrategy = authenticationStrategy;
-            _logger = logger;
             _keySigner = keySigner;
             _peerIdValidator = peerIdValidator;
         }
