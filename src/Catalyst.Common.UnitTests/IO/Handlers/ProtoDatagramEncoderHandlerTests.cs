@@ -36,6 +36,7 @@ using DotNetty.Transport.Channels.Sockets;
 using FluentAssertions;
 using Google.Protobuf;
 using Xunit;
+using Catalyst.Cryptography.BulletProofs.Wrapper;
 
 namespace Catalyst.Common.UnitTests.IO.Handlers
 {
