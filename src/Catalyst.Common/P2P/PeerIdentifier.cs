@@ -113,7 +113,7 @@ namespace Catalyst.Common.P2P
                 PublicKey = publicKey.ToByteString(),
                 Port = BitConverter.GetBytes(endPoint.Port).ToByteString(),
                 Ip = endPoint.Address.To16Bytes().ToByteString(),
-                ClientId = clientId.ClientId.ToByteString(),
+                ClientId = clientId.ClientVersion.ToByteString(),
                 ClientVersion = clientId.AssemblyMajorVersion.ToByteString()
             };
         }

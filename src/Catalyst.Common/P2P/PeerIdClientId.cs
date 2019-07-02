@@ -29,14 +29,14 @@ namespace Catalyst.Common.P2P
 {
     public class PeerIdClientId : IPeerIdClientId
     {
-        public PeerIdClientId(string clientId)
+        public PeerIdClientId(string clientVersion)
         {
             var assemblyMajorVersion2Digits = Assembly.GetExecutingAssembly().GetName().Version.Major.ToString("D2");
             AssemblyMajorVersion = Encoding.UTF8.GetBytes(assemblyMajorVersion2Digits);
-            ClientId = Encoding.UTF8.GetBytes(clientId);
+            ClientVersion = Encoding.UTF8.GetBytes(clientVersion);
         }
 
-        public byte[] ClientId { get; }
+        public byte[] ClientVersion { get; }
 
         public byte[] AssemblyMajorVersion { get; }
     }
