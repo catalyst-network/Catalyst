@@ -26,32 +26,30 @@ using Catalyst.Common.Interfaces.IO.Messaging;
 
 namespace Catalyst.Common.IO.Messaging
 {
-    /// <summary>
-    /// 
-    /// </summary>
+    /// <inheritdoc/>
     public sealed class CorrelationId : ICorrelationId
     {
         public Guid Id { get; set; }
         
         /// <summary>
-        /// 
+        ///     Provide a known correlation Id
         /// </summary>
         /// <param name="id"></param>
         public CorrelationId(Guid id) { Id = id; } 
         
         /// <summary>
-        /// 
+        ///     Provide a correlation Id from a protocol message as byte string to get an ICorrelationId Type
         /// </summary>
         /// <param name="bytes"></param>
         public CorrelationId(byte[] bytes) { Id = new Guid(bytes); } 
 
         /// <summary>
-        /// 
+        /// Gets a new CorrelationId
         /// </summary>
         private CorrelationId() { Id = Guid.NewGuid(); }
 
         /// <summary>
-        /// 
+        ///     Static helper to get new CorrelationId
         /// </summary>
         /// <returns></returns>
         public static ICorrelationId GenerateCorrelationId()
