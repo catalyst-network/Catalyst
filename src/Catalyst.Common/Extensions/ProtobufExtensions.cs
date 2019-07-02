@@ -24,15 +24,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Reflection;
 using Catalyst.Common.Config;
+using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.Util;
 using Catalyst.Protocol.Common;
 using Dawn;
-using DotNetty.Buffers;
-using DotNetty.Transport.Channels.Sockets;
 using Google.Protobuf;
 using Google.Protobuf.Reflection;
 using Type = System.Type;
@@ -86,19 +85,21 @@ namespace Catalyst.Common.Extensions
 
         public static ProtocolMessage ToProtocolMessage(this IMessage protobufObject,
             PeerId senderId,
-            Guid correlationId = default)
+            ICorrelationId correlationId = default)
         {
             var typeUrl = protobufObject.Descriptor.ShortenedFullName();
             Guard.Argument(senderId, nameof(senderId)).NotNull();
-            Guard.Argument(correlationId, nameof(correlationId))
-               .Require(c => !typeUrl.EndsWith(MessageTypes.Response.Name) || c != default,
-                    g => $"{typeUrl} is a response type and needs a correlationId");
-
+            
+            if (typeUrl.EndsWith(MessageTypes.Response.Name))
+            {
+                Guard.Argument(correlationId, nameof(correlationId)).NotNull();
+            }
+            
             return new ProtocolMessage
             {
                 PeerId = senderId,
-                CorrelationId = (correlationId == default ? Guid.NewGuid() : correlationId).ToByteString(),
-                
+                CorrelationId = (correlationId == default ? CorrelationId.GenerateCorrelationId().Id : correlationId.Id).ToByteString(),
+
                 TypeUrl = typeUrl,
                 Value = protobufObject.ToByteString()
             };
@@ -147,19 +148,14 @@ namespace Catalyst.Common.Extensions
             return ByteString.CopyFromUtf8(utf8String);
         }
 
-        public static Guid ToGuid(this ByteString guidBytes)
+        public static ICorrelationId ToCorrelationId(this ByteString guidBytes)
         {
-            return new Guid(guidBytes.ToByteArray());
+            return new CorrelationId(new Guid(guidBytes.ToByteArray()));
         }
 
         public static ByteString ToByteString(this Guid guid)
         {
             return guid.ToByteArray().ToByteString();
-        }
-
-        public static DatagramPacket ToDatagram(this IMessage<ProtocolMessageSigned> anySignedMessage, IPEndPoint recipient)
-        {
-            return new DatagramPacket(Unpooled.WrappedBuffer(anySignedMessage.ToByteArray()), recipient);
         }
 
         public static string GetRequestType(this string responseTypeUrl)

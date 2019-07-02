@@ -88,7 +88,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.Observables
     //                 MessageTypes.Tell,
     //                 PeerIdentifierHelper.GetPeerIdentifier("recipient_key"),
     //                 PeerIdentifierHelper.GetPeerIdentifier("sender_key")),                
-    //             Guid.NewGuid());
+    //             CorrelationId.GenerateCorrelationId());
     //
     //         var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, response);
     //         

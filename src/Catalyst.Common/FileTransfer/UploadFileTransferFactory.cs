@@ -56,7 +56,7 @@ namespace Catalyst.Common.FileTransfer
         /// <returns></returns>
         protected override async Task DoTransferAsync(IUploadFileInformation fileTransferInformation)
         {
-            EnsureKeyExists(fileTransferInformation.CorrelationGuid);
+            EnsureKeyExists(fileTransferInformation.CorrelationId);
             await UploadAsync(fileTransferInformation).ConfigureAwait(false);
         }
 
@@ -65,10 +65,10 @@ namespace Catalyst.Common.FileTransfer
         /// <returns></returns>
         private async Task UploadAsync(IUploadFileInformation fileTransferInformation)
         {
-            EnsureKeyExists(fileTransferInformation.CorrelationGuid);
+            EnsureKeyExists(fileTransferInformation.CorrelationId);
 
             Context context =
-                new Context(fileTransferInformation.CorrelationGuid.ToString(), new Dictionary<string, object>())
+                new Context(fileTransferInformation.CorrelationId.Id.ToString(), new Dictionary<string, object>())
                 {
                     {StartChunkRetryKey, (uint) 0}
                 };

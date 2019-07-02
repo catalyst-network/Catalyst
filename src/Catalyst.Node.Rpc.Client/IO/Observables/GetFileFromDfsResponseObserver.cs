@@ -21,11 +21,11 @@
 
 #endregion
 
-using System;
 using System.IO;
 using System.Threading;
 using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.FileTransfer;
+using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Observables;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Observables;
@@ -66,7 +66,7 @@ namespace Catalyst.Node.Rpc.Client.IO.Observables
         protected override void HandleResponse(GetFileFromDfsResponse getFileFromDfsResponse,
             IChannelHandlerContext channelHandlerContext,
             IPeerIdentifier senderPeerIdentifier,
-            Guid correlationId)
+            ICorrelationId correlationId)
         {
             Guard.Argument(getFileFromDfsResponse, nameof(getFileFromDfsResponse)).NotNull();
             Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
@@ -88,7 +88,7 @@ namespace Catalyst.Node.Rpc.Client.IO.Observables
             {
                 fileTransferInformation.SetLength(getFileFromDfsResponse.FileSize);
 
-                _fileTransferFactory.FileTransferAsync(fileTransferInformation.CorrelationGuid, CancellationToken.None).ContinueWith(task =>
+                _fileTransferFactory.FileTransferAsync(fileTransferInformation.CorrelationId, CancellationToken.None).ContinueWith(task =>
                 {
                     File.Move(fileTransferInformation.TempPath, fileTransferInformation.FileOutputPath);
                 }).ConfigureAwait(false);
