@@ -51,7 +51,7 @@ namespace Catalyst.Node.Core.P2P
             Discovery = peerDiscovery;
             var observableChannel = ChannelFactory.BuildChannel(EventLoopGroupFactory, peerSettings.BindAddress, peerSettings.Port);
             Channel = observableChannel.Channel;
-
+            
             MessageStream = observableChannel.MessageStream;
             messageHandlers.ToList()
                .ForEach(h => h.StartObserving(MessageStream));

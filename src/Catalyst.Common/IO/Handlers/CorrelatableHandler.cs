@@ -46,7 +46,7 @@ namespace Catalyst.Common.IO.Handlers
         /// <inheritdoc />
         protected override Task WriteAsync0(IChannelHandlerContext context, IMessageDto<ProtocolMessage> message)
         {
-            if (message.MessageType.Name.Equals(MessageTypes.Request.Name))
+            if (message.Content.TypeUrl.EndsWith(MessageTypes.Request.Name))
             {
                 _messageCorrelationManager.AddPendingRequest(new CorrelatableMessage
                 {
