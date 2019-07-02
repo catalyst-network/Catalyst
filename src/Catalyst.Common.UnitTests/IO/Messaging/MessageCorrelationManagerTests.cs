@@ -47,7 +47,7 @@ namespace Catalyst.Common.UnitTests.IO.Messaging
             var targetPeerIds = Enumerable.Range(0, requestCount).Select(i =>
                 PeerIdentifierHelper.GetPeerIdentifier($"target-{i}")).ToList();
             
-            var correlationIds = Enumerable.Range(0, requestCount).Select(i => Guid.NewGuid()).ToList();
+            var correlationIds = Enumerable.Range(0, requestCount).Select(i => CorrelationId.GenerateCorrelationId()).ToList();
 
             var requests = correlationIds
                .Zip(targetPeerIds, (c, p) => new
@@ -62,7 +62,7 @@ namespace Catalyst.Common.UnitTests.IO.Messaging
                 }).ToList();
 
             var responses = requests.Select(r =>
-                new PingResponse().ToProtocolMessage(r.Recipient.PeerId, r.Content.CorrelationId.ToGuid()));
+                new PingResponse().ToProtocolMessage(r.Recipient.PeerId, r.Content.CorrelationId.ToCorrelationId()));
 
             var evictionObserver = Substitute.For<IObserver<IMessageEvictionEvent>>();
 

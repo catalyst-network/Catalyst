@@ -21,7 +21,6 @@
 
 #endregion
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -31,6 +30,7 @@ using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Handlers;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Node.Rpc.Client.IO.Transport.Channels;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
@@ -102,7 +102,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Transport.Channels
                 true, _factory.InheritedHandlers.ToArray());
 
             var senderId = PeerIdHelper.GetPeerId("sender");
-            var correlationId = Guid.NewGuid();
+            var correlationId = CorrelationId.GenerateCorrelationId();
             
             var protocolMessage = new PingResponse().ToProtocolMessage(senderId, correlationId);
             _correlationManager.TryMatchResponse(protocolMessage).Returns(true);
@@ -115,7 +115,6 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Transport.Channels
             {
                 testingChannel.WriteInbound(protocolMessage);
 
-                // @TODO in bound server shouldn't try and correlate a request, lets do another test to check this logic
                 _correlationManager.Received(1).TryMatchResponse(protocolMessage);
 
                 _keySigner.DidNotReceiveWithAnyArgs().Verify(null, null, null);
@@ -123,7 +122,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Transport.Channels
                 await messageStream.WaitForItemsOnDelayedStreamOnTaskPoolSchedulerAsync();
 
                 observer.Received.Count.Should().Be(1);
-                observer.Received.Single().Payload.CorrelationId.ToGuid().Should().Be(correlationId);
+                observer.Received.Single().Payload.CorrelationId.ToCorrelationId().Id.Should().Be(correlationId.Id);
             }
         }
 
@@ -134,7 +133,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Transport.Channels
                 true, _factory.InheritedHandlers.ToArray());
 
             var senderId = PeerIdHelper.GetPeerId("sender");
-            var correlationId = Guid.NewGuid();
+            var correlationId = CorrelationId.GenerateCorrelationId();
             var protocolMessage = new PingRequest().ToProtocolMessage(senderId, correlationId);
 
             testingChannel.WriteOutbound(protocolMessage);

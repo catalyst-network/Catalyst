@@ -23,6 +23,7 @@
 
 using System;
 using System.Linq;
+using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Observables;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Observables;
@@ -69,7 +70,7 @@ namespace Catalyst.Node.Core.RPC.IO.Observables
         protected override RemovePeerResponse HandleRequest(RemovePeerRequest removePeerRequest,
             IChannelHandlerContext channelHandlerContext,
             IPeerIdentifier senderPeerIdentifier,
-            Guid correlationId)
+            ICorrelationId correlationId)
         {
             Guard.Argument(removePeerRequest, nameof(removePeerRequest)).NotNull();
             Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();

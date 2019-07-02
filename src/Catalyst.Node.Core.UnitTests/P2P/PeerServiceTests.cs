@@ -28,10 +28,12 @@ using System.Net;
 using System.Threading.Tasks;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.EventLoop;
+using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Observables;
 using Catalyst.Common.Interfaces.IO.Transport.Channels;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.EventLoop;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Node.Core.P2P;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
@@ -46,7 +48,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
 {
     public sealed class PeerServiceTests : SelfAwareTestBase, IDisposable
     {
-        private readonly Guid _guid;
+        private readonly ICorrelationId _guid;
         private readonly ILogger _logger;
         private readonly IPeerIdentifier _pid;
         private readonly IUdpServerChannelFactory _udpServerServerChannelFactory;
@@ -59,7 +61,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
         public PeerServiceTests(ITestOutputHelper output) : base(output)
         {
             _pid = PeerIdentifierHelper.GetPeerIdentifier("im_a_key");
-            _guid = Guid.NewGuid();
+            _guid = CorrelationId.GenerateCorrelationId();
             _logger = Substitute.For<ILogger>();
 
             _serverChannel = new EmbeddedObservableChannel($"Server:{CurrentTestName}");

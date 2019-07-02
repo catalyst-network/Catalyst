@@ -21,13 +21,13 @@
 
 #endregion
 
-using System;
 using System.Collections.Generic;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.FileTransfer;
 using Catalyst.Common.Interfaces.FileTransfer;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Node.Rpc.Client.IO.Observables;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
@@ -64,8 +64,8 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.Observables
         public void CanExpireDownloadFileTransferOnError()
         {
             var fakeFileTransfer = Substitute.For<IDownloadFileInformation>();
-            var guid = Guid.NewGuid();
-            fakeFileTransfer.CorrelationGuid.Returns(guid);
+            var guid = CorrelationId.GenerateCorrelationId();
+            fakeFileTransfer.CorrelationId.Returns(guid);
 
             _fileDownloadFactory.RegisterTransfer(fakeFileTransfer);
 

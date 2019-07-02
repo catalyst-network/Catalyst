@@ -21,7 +21,7 @@
 
 #endregion
 
-using System;
+using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Observables;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Observables;
@@ -54,7 +54,7 @@ namespace Catalyst.Node.Rpc.Client.IO.Observables
         protected override void HandleResponse(TransferFileBytesResponse transferFileBytesResponse,
             IChannelHandlerContext channelHandlerContext,
             IPeerIdentifier senderPeerIdentifier,
-            Guid correlationId)
+            ICorrelationId correlationId)
         {
             Guard.Argument(transferFileBytesResponse, nameof(transferFileBytesResponse)).NotNull();
             Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();

@@ -21,9 +21,9 @@
 
 #endregion
 
-using System;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Protocol.IPPN;
 using Catalyst.Protocol.Transaction;
@@ -56,14 +56,14 @@ namespace Catalyst.Node.Core.UnitTests.P2P
             var pingResponseDto = new DtoFactory().GetDto(new PingResponse(),
                 PeerIdentifierHelper.GetPeerIdentifier("im_a_recipient"),
                 PeerIdentifierHelper.GetPeerIdentifier("im_a_sender"),
-                Guid.NewGuid()
+                CorrelationId.GenerateCorrelationId()
             );
 
             pingResponseDto.Should().BeAssignableTo<IMessageDto<PingResponse>>();
             pingResponseDto.Recipient.Should().BeAssignableTo<IPeerIdentifier>();
             pingResponseDto.Sender.Should().BeAssignableTo<IPeerIdentifier>();
             pingResponseDto.Message.Should().BeAssignableTo<IMessage>();
-            pingResponseDto.CorrelationId.Should().NotBeEmpty();
+            pingResponseDto.CorrelationId.Id.Should().NotBeEmpty();
         }
 
         [Fact]

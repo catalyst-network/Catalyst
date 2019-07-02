@@ -21,8 +21,8 @@
 
 #endregion
 
-using System;
 using Catalyst.Common.Config;
+using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.P2P;
 using Dawn;
@@ -32,7 +32,7 @@ namespace Catalyst.Common.IO.Messaging.Dto
 {
     public sealed class MessageDto<T> : IMessageDto<T> where T : IMessage<T>
     {
-        public Guid CorrelationId { get; }
+        public ICorrelationId CorrelationId { get; }
         public T Message { get; }
         public MessageTypes MessageType { get; }
         public IPeerIdentifier Recipient { get; }
@@ -48,7 +48,7 @@ namespace Catalyst.Common.IO.Messaging.Dto
         public MessageDto(T message,
             IPeerIdentifier sender,
             IPeerIdentifier recipient,
-            Guid correlationId = default)
+            ICorrelationId correlationId)
         {
             Guard.Argument(message, nameof(message)).Compatible<T>();
             Guard.Argument(recipient.IpEndPoint.Address, nameof(recipient.IpEndPoint.Address)).NotNull();

@@ -21,7 +21,6 @@
 
 #endregion
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -32,6 +31,7 @@ using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Rpc.Authentication;
 using Catalyst.Common.IO.Handlers;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Node.Core.RPC.IO.Transport.Channels;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
@@ -119,7 +119,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC.IO.Transport.Channels
                 true, _factory.InheritedHandlers.ToArray());
 
             var senderId = PeerIdHelper.GetPeerId("sender");
-            var correlationId = Guid.NewGuid();
+            var correlationId = CorrelationId.GenerateCorrelationId();
             var protocolMessage = new PingRequest().ToProtocolMessage(senderId, correlationId);
 
             var observer = new ProtocolMessageObserver(0, Substitute.For<ILogger>());
@@ -138,7 +138,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC.IO.Transport.Channels
                 await messageStream.WaitForItemsOnDelayedStreamOnTaskPoolSchedulerAsync();
 
                 observer.Received.Count.Should().Be(1);
-                observer.Received.Single().Payload.CorrelationId.ToGuid().Should().Be(correlationId);
+                observer.Received.Single().Payload.CorrelationId.ToCorrelationId().Id.Should().Be(correlationId.Id);
             }
         }
 
@@ -149,7 +149,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC.IO.Transport.Channels
                 true, _factory.InheritedHandlers.ToArray());
 
             var senderId = PeerIdHelper.GetPeerId("sender");
-            var correlationId = Guid.NewGuid();
+            var correlationId = CorrelationId.GenerateCorrelationId();
             var protocolMessage = new PingResponse().ToProtocolMessage(senderId, correlationId);
 
             testingChannel.WriteOutbound(protocolMessage);

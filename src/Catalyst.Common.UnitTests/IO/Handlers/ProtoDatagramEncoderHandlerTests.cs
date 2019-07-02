@@ -21,40 +21,53 @@
 
 #endregion
 
-using Catalyst.Common.Config;
-using Catalyst.Common.Interfaces.IO.Messaging.Dto;
-using Catalyst.Common.IO.Handlers;
+using System.Net;
+using Catalyst.Common.Extensions;
+using Catalyst.Common.IO.Messaging;
+using Catalyst.Common.Util;
 using Catalyst.Protocol.Common;
+using Catalyst.Protocol.IPPN;
 using Catalyst.TestUtils;
 using DotNetty.Buffers;
-using DotNetty.Transport.Channels;
-using NSubstitute;
-using Serilog;
+using DotNetty.Codecs;
+using DotNetty.Codecs.Protobuf;
+using DotNetty.Transport.Channels.Embedded;
+using DotNetty.Transport.Channels.Sockets;
+using FluentAssertions;
+using Google.Protobuf;
 using Xunit;
+using Catalyst.Cryptography.BulletProofs.Wrapper;
 
 namespace Catalyst.Common.UnitTests.IO.Handlers
 {
     public sealed class ProtoDatagramEncoderHandlerTests
     {
-        private readonly IChannelHandlerContext _fakeContext;
-
-        public ProtoDatagramEncoderHandlerTests()
-        {
-            _fakeContext = Substitute.For<IChannelHandlerContext>();
-        }
-        
         [Fact]
         public void Does_Process_IMessageDto_Types()
         {
-            var fakeRequestMessageDto = Substitute.For<IMessageDto<ProtocolMessageSigned>>();
-            fakeRequestMessageDto.MessageType.Returns(MessageTypes.Request);
-            fakeRequestMessageDto.Message.Returns(new ProtocolMessageSigned());
-            fakeRequestMessageDto.Sender.Returns(PeerIdentifierHelper.GetPeerIdentifier("Im_The_Sender"));
+            var handler = new DatagramPacketEncoder<IMessage>(
+                new ProtobufEncoder()
+            );
 
-            var protoDatagramEncoderHandler = new ProtoDatagramEncoderHandler(Substitute.For<ILogger>());
-            protoDatagramEncoderHandler.WriteAsync(_fakeContext, fakeRequestMessageDto);
+            var channel = new EmbeddedChannel(handler);
 
-            _fakeContext.ReceivedWithAnyArgs(1).WriteAndFlushAsync(Arg.Any<IByteBufferHolder>());
+            var protocolMessageSigned = new ProtocolMessageSigned
+            {
+                Message = new PingRequest().ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId, CorrelationId.GenerateCorrelationId()),
+                Signature = ByteUtil.GenerateRandomByteArray(FFI.GetSignatureLength()).ToByteString()
+            };
+           
+            var datagram = new DatagramPacket(Unpooled.WrappedBuffer(protocolMessageSigned.Message.ToByteArray()), new IPEndPoint(IPAddress.Loopback, IPEndPoint.MinPort));
+                
+            channel.WriteOutbound(datagram);
+            var packet = channel.ReadOutbound<DatagramPacket>();
+            packet.Content.Should().BeAssignableTo<IByteBuffer>();
+            
+            var decoder = new DatagramPacketDecoder(new ProtobufDecoder(ProtocolMessageSigned.Parser));
+            var decoderChannel = new EmbeddedChannel(decoder);
+            decoderChannel.WriteInbound(new ProtocolMessageSigned());
+            var message = decoderChannel.ReadInbound<IMessage>();
+            message.Should().BeAssignableTo<IMessage>();
         }
     }
 }

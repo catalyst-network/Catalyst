@@ -22,6 +22,7 @@
 #endregion
 
 using System;
+using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Observables;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.P2P;
@@ -61,7 +62,7 @@ namespace Catalyst.Node.Core.RPC.IO.Observables
         protected override VerifyMessageResponse HandleRequest(VerifyMessageRequest verifyMessageRequest,
             IChannelHandlerContext channelHandlerContext,
             IPeerIdentifier senderPeerIdentifier,
-            Guid correlationId)
+            ICorrelationId correlationId)
         {
             Guard.Argument(verifyMessageRequest, nameof(verifyMessageRequest)).NotNull();
             Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
