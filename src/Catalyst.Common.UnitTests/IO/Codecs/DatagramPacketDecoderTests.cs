@@ -63,18 +63,11 @@ namespace Catalyst.Common.UnitTests.IO.Codecs
                 new IPEndPoint(IPAddress.Any, IPEndPoint.MinPort),
                 new IPEndPoint(IPAddress.Any, IPEndPoint.MaxPort)
             );
-            
-            try
-            {
-                Assert.True(channel.WriteInbound(datagramPacket));
-                
-                var content = channel.ReadInbound<ProtocolMessageSigned>();
-                Assert.Equal(protocolMessageSigned, content);
-            }
-            finally
-            {
-                Assert.False(channel.Finish());
-            }
+
+            Assert.True(channel.WriteInbound(datagramPacket));
+            var content = channel.ReadInbound<ProtocolMessageSigned>();
+            Assert.Equal(protocolMessageSigned, content);
+            Assert.False(channel.Finish());
         }
     }
 }
