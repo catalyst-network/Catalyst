@@ -35,7 +35,7 @@ using DotNetty.Transport.Channels;
 using Google.Protobuf;
 using Serilog;
 
-namespace Catalyst.Node.Rpc.Client.IO.Observables
+namespace Catalyst.Common.FileTransfer
 {
     public sealed class TransferFileBytesRequestObserver
         : RequestObserverBase<TransferFileBytesRequest, TransferFileBytesResponse>,
@@ -45,7 +45,7 @@ namespace Catalyst.Node.Rpc.Client.IO.Observables
         private readonly IDownloadFileTransferFactory _fileTransferFactory;
 
         /// <summary>Initializes a new instance of the <see cref="TransferFileBytesRequestObserver"/> class.</summary>
-        /// <param name="fileTransferFactory">The download file transfer factory.</param>
+        /// <param name="fileTransferFactory">The download transfer factory.</param>
         /// <param name="peerIdentifier">The peer identifier.</param>
         /// <param name="logger">The logger.</param>
         public TransferFileBytesRequestObserver(IDownloadFileTransferFactory fileTransferFactory,
@@ -72,14 +72,13 @@ namespace Catalyst.Node.Rpc.Client.IO.Observables
             Guard.Argument(transferFileBytesRequest, nameof(transferFileBytesRequest)).NotNull();
             Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
             Guard.Argument(senderPeerIdentifier, nameof(senderPeerIdentifier)).NotNull();
-            Logger.Debug("received message of type TransferFileBytesRequestObserver");
+            Logger.Debug("received message of type TransferFileBytesRequest");
 
             FileTransferResponseCodes responseCode;
-
             try
             {
-                var transferCorrelationId = new CorrelationId(transferFileBytesRequest.CorrelationFileName.ToByteArray());
-                responseCode = _fileTransferFactory.DownloadChunk(transferCorrelationId, transferFileBytesRequest.ChunkId, transferFileBytesRequest.ChunkBytes.ToByteArray());
+                var fileTransferCorrelationId = new CorrelationId(transferFileBytesRequest.CorrelationFileName.ToByteArray());
+                responseCode = _fileTransferFactory.DownloadChunk(fileTransferCorrelationId, transferFileBytesRequest.ChunkId, transferFileBytesRequest.ChunkBytes.ToByteArray());
             }
             catch (Exception e)
             {
@@ -87,7 +86,7 @@ namespace Catalyst.Node.Rpc.Client.IO.Observables
                     "Failed to handle TransferFileBytesRequestHandler after receiving message {0}", transferFileBytesRequest);
                 responseCode = FileTransferResponseCodes.Error;
             }
-
+            
             return new TransferFileBytesResponse
             {
                 ResponseCode = ByteString.CopyFrom((byte) responseCode.Id)
