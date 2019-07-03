@@ -23,6 +23,7 @@
 
 using Catalyst.Common.Interfaces.IO.EventLoop;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
+using Catalyst.Common.Interfaces.IO.Observers;
 using Catalyst.Common.Interfaces.IO.Transport.Channels;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Transport;

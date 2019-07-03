@@ -22,6 +22,7 @@
 #endregion
 
 using Catalyst.Common.Interfaces.IO.EventLoop;
+using Catalyst.Common.Interfaces.IO.Observers;
 using Catalyst.Common.Interfaces.IO.Transport.Channels;
 using Catalyst.Common.Interfaces.Rpc;
 using System.Collections.Generic;
