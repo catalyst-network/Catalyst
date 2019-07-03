@@ -26,6 +26,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Catalyst.Cli.Options;
 using Catalyst.Common.Interfaces.Cli;
+using Catalyst.Common.Interfaces.Cli.Commands;
 using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Common.Interfaces.FileTransfer;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
@@ -45,44 +46,16 @@ using ILogger = Serilog.ILogger;
 namespace Catalyst.Cli.Commands
 {
     /// <inheritdoc cref="ShellBase" />
-    internal sealed partial class Commands : ShellBase, IAdvancedShell
+    public sealed class Commands : ShellBase
     {
-        private readonly IPeerIdentifier _peerIdentifier;
-        private readonly ICertificateStore _certificateStore;
-        private readonly IList<IRpcNodeConfig> _rpcNodeConfigs;
-        private readonly INodeRpcClientFactory _nodeRpcClientFactory;
-        private readonly IPeerIdClientId _peerIdClientId;
         private readonly ISocketClientRegistry<INodeRpcClient> _socketClientRegistry;
-        private readonly IDownloadFileTransferFactory _downloadFileTransferFactory;
-        private readonly IUploadFileTransferFactory _uploadFileTransferFactory;
-        private readonly ILogger _logger;
-        private readonly IUserOutput _userOutput;
-        private readonly IDtoFactory _dtoFactory;
 
         /// <summary>
         /// </summary>
-        public Commands(IDtoFactory dtoFactory,
-            INodeRpcClientFactory nodeRpcClientFactory,
-            IConfigurationRoot config,
-            ILogger logger,
-            ICertificateStore certificateStore,
-            IDownloadFileTransferFactory downloadFileTransferFactory,
-            IUploadFileTransferFactory uploadFileTransferFactory,
-            IUserOutput userOutput,
-            IPeerIdClientId peerIdClientId) : base(userOutput)
+        public Commands(IUserOutput userOutput) : base(userOutput)
         {
-            _dtoFactory = dtoFactory;
-            _certificateStore = certificateStore;
-            _nodeRpcClientFactory = nodeRpcClientFactory;
-            _logger = logger;
             _socketClientRegistry = new SocketClientRegistry<INodeRpcClient>();
-            _rpcNodeConfigs = NodeRpcConfig.BuildRpcNodeSettingList(config);
-            _downloadFileTransferFactory = downloadFileTransferFactory;
-            _uploadFileTransferFactory = uploadFileTransferFactory;
-            _peerIdentifier = PeerIdentifier.BuildPeerIdFromConfig(config, peerIdClientId);
-            _userOutput = userOutput;
-            _peerIdClientId = peerIdClientId;
-            _userOutput.WriteLine(@"Koopa Shell Start");
+            userOutput.WriteLine(@"Koopa Shell Start");
         }
 
         /// <inheritdoc cref="ParseCommand" />
@@ -120,7 +93,7 @@ namespace Catalyst.Cli.Commands
                     (GetFileOptions opts) => GetFileOptions(opts),
                     errs => false);
         }
-
+        
         /// <summary>
         /// Connects a valid and configured node to the RPC server.
         /// </summary>
