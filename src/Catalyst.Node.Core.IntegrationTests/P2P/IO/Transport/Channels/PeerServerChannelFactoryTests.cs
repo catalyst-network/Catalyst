@@ -96,7 +96,7 @@ namespace Catalyst.Node.Core.IntegrationTests.P2P.IO.Transport.Channels
         {
             var recipient = PeerIdentifierHelper.GetPeerIdentifier("recipient");
             var sender = PeerIdentifierHelper.GetPeerIdentifier("sender");
-            var sig = new Signature(ByteUtil.GenerateRandomByteArray(64));
+            var sig = new Signature(ByteUtil.GenerateRandomByteArray(Cryptography.BulletProofs.Wrapper.FFI.GetSignatureLength()));
             _peerIdValidator.ValidatePeerIdFormat(Arg.Any<PeerId>()).Returns(true);
 
             _serverKeySigner.Sign(Arg.Any<byte[]>()).ReturnsForAnyArgs(sig);
