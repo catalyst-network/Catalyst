@@ -22,6 +22,7 @@
 #endregion
 
 using Catalyst.Common.Interfaces.Modules.KeySigner;
+using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Types;
 using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;
@@ -40,11 +41,13 @@ namespace Catalyst.Common.IO.Handlers
 
         protected override void ChannelRead0(IChannelHandlerContext ctx, ProtocolMessageSigned signedMessage)
         {
-            if (_keySigner.Verify(
-                new PublicKey(signedMessage.Message.PeerId.PublicKey.ToByteArray()),
-                signedMessage.Message.ToByteString().ToByteArray(),
-                new Signature(signedMessage.Signature.ToByteArray()))
-            )
+            var sig = signedMessage.Signature.ToByteArray();
+            var pub = signedMessage.Message.PeerId.PublicKey.ToByteArray();
+            var signature = new Signature(sig, pub);
+
+            var message = signedMessage.Message.ToByteString().ToByteArray();
+            
+            if (_keySigner.Verify(signature, message))
             {
                 ctx.FireChannelRead(signedMessage.Message);
             }

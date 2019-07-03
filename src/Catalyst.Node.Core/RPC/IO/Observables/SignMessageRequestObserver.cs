@@ -29,6 +29,7 @@ using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Observables;
 using Catalyst.Common.Util;
+using Catalyst.Cryptography.BulletProofs.Wrapper.Types;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using DotNetty.Transport.Channels;
@@ -73,10 +74,9 @@ namespace Catalyst.Node.Core.RPC.IO.Observables
             {
                 var decodedMessage = RLP.Decode(signMessageRequest.Message.ToByteArray()).RLPData;
 
-                var signaturePublicKeyPair = _keySigner.SignAndGetPublicKey(decodedMessage);
-                
-                var publicKey = signaturePublicKeyPair.Key;
-                var signature = signaturePublicKeyPair.Value;
+                var signature = _keySigner.Sign(decodedMessage);
+
+                var publicKey = _keySigner.CryptoContext.ImportPublicKey(signature.PublicKeyBytes.RawBytes);
 
                 Guard.Argument(signature).NotNull("Failed to sign message. The signature cannot be null.");
 
@@ -88,7 +88,7 @@ namespace Catalyst.Node.Core.RPC.IO.Observables
                 {
                     OriginalMessage = RLP.EncodeElement(decodedMessage).ToByteString(),
                     PublicKey = RLP.EncodeElement(publicKey.Bytes.RawBytes).ToByteString(),
-                    Signature = RLP.EncodeElement(signature.Bytes.RawBytes).ToByteString()
+                    Signature = RLP.EncodeElement(signature.SignatureBytes.RawBytes).ToByteString()
                 };
             }
             catch (Exception ex)

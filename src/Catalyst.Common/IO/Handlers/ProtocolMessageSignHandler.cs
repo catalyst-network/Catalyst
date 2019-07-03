@@ -53,7 +53,7 @@ namespace Catalyst.Common.IO.Handlers
             
             var protocolMessageSigned = new ProtocolMessageSigned
             {
-                Signature = sig.Bytes.RawBytes.ToByteString(),
+                Signature = sig.SignatureBytes.RawBytes.ToByteString(),
                 Message = message.Content
             };
 
