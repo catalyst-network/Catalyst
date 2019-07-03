@@ -99,7 +99,9 @@ namespace Catalyst.Node.Rpc.Client.IntegrationTests.IO.Transport.Channels
         {
             var recipient = PeerIdentifierHelper.GetPeerIdentifier("recipient");
             var sender = PeerIdentifierHelper.GetPeerIdentifier("sender");
-            var sig = new Signature(ByteUtil.GenerateRandomByteArray(Cryptography.BulletProofs.Wrapper.FFI.GetSignatureLength()));
+            var sigBytes = ByteUtil.GenerateRandomByteArray(Cryptography.BulletProofs.Wrapper.FFI.GetSignatureLength());
+            var pubBytes = ByteUtil.GenerateRandomByteArray(Cryptography.BulletProofs.Wrapper.FFI.GetPublicKeyLength());
+            var sig = new Signature(sigBytes, pubBytes);
             _peerIdValidator.ValidatePeerIdFormat(Arg.Any<PeerId>()).Returns(true);
 
             _clientKeySigner.Sign(Arg.Any<byte[]>()).ReturnsForAnyArgs(sig);
@@ -122,12 +124,12 @@ namespace Catalyst.Node.Rpc.Client.IntegrationTests.IO.Transport.Channels
             
             _clientCorrelationManager.ReceivedWithAnyArgs(1).AddPendingRequest(Arg.Is<CorrelatableMessage>(c => c.Content.CorrelationId.ToCorrelationId().Equals(correlationId)));
             
-            _clientKeySigner.ReceivedWithAnyArgs(1).Sign(Arg.Is(sig.Bytes.RawBytes));
+            _clientKeySigner.ReceivedWithAnyArgs(1).Sign(Arg.Is(sig.SignatureBytes.RawBytes));
             
             _serverKeySigner.Verify(
-                    Arg.Any<PublicKey>(),
-                    Arg.Any<byte[]>(),
-                    Arg.Any<Signature>())
+                    Arg.Any<Signature>(),
+                    Arg.Any<byte[]>()
+                )
                .ReturnsForAnyArgs(true);
             
             _authenticationStrategy.Authenticate(Arg.Any<IPeerIdentifier>()).Returns(true);
@@ -140,7 +142,7 @@ namespace Catalyst.Node.Rpc.Client.IntegrationTests.IO.Transport.Channels
             {
                 _serverChannel.WriteInbound(sentBytes);
                 _serverCorrelationManager.DidNotReceiveWithAnyArgs().TryMatchResponse(protocolMessage);
-                _serverKeySigner.ReceivedWithAnyArgs(1).Verify(null, null, null);
+                _serverKeySigner.ReceivedWithAnyArgs(1).Verify(null, null);
                 await messageStream.WaitForItemsOnDelayedStreamOnTaskPoolSchedulerAsync();
                 observer.Received.Count.Should().Be(1);
                 observer.Received.Single().Payload.CorrelationId.ToCorrelationId().Id.Should().Be(correlationId.Id);

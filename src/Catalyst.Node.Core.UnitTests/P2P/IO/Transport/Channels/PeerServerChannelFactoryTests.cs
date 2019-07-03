@@ -120,7 +120,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.IO.Transport.Channels
                 Signature = signature.ToByteString()
             };
 
-            _keySigner.Verify(Arg.Any<IPublicKey>(), Arg.Any<byte[]>(), Arg.Any<ISignature>())
+            _keySigner.Verify(Arg.Any<ISignature>(), Arg.Any<byte[]>())
                .Returns(true);
 
             var observer = new ProtocolMessageObserver(0, Substitute.For<ILogger>());
@@ -132,7 +132,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.IO.Transport.Channels
                 testingChannel.WriteInbound(signedMessage);
                 _correlationManager.DidNotReceiveWithAnyArgs().TryMatchResponse(protocolMessage);
                 await _gossipManager.DidNotReceiveWithAnyArgs().BroadcastAsync(null);
-                _keySigner.ReceivedWithAnyArgs(1).Verify(null, null, null);
+                _keySigner.ReceivedWithAnyArgs(1).Verify(null, null);
 
                 await messageStream.WaitForItemsOnDelayedStreamOnTaskPoolSchedulerAsync();
 
