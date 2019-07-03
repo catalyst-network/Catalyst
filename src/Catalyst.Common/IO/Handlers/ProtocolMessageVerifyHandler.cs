@@ -22,7 +22,6 @@
 #endregion
 
 using Catalyst.Common.Interfaces.Modules.KeySigner;
-using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Types;
 using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;

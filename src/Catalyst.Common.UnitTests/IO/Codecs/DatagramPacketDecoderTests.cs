@@ -23,7 +23,7 @@
 
 using System.Net;
 using Catalyst.Common.Extensions;
-using Catalyst.Common.IO.Messaging;
+using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Common.Util;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
