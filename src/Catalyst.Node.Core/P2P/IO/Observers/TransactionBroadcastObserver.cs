@@ -23,7 +23,7 @@
 
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
-using Catalyst.Common.Interfaces.IO.Observables;
+using Catalyst.Common.Interfaces.IO.Observers;
 using Catalyst.Common.IO.Observers;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Transaction;
