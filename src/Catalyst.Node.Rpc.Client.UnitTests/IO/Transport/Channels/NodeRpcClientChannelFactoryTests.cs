@@ -119,7 +119,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Transport.Channels
 
                 _correlationManager.Received(1).TryMatchResponse(protocolMessage);
 
-                _keySigner.DidNotReceiveWithAnyArgs().Verify(null, null, null);
+                _keySigner.DidNotReceiveWithAnyArgs().Verify(null, null);
 
                 await messageStream.WaitForItemsOnDelayedStreamOnTaskPoolSchedulerAsync();
 
