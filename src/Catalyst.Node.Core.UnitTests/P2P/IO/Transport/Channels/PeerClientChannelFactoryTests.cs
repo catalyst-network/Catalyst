@@ -49,7 +49,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.IO.Transport.Channels
 {
     public sealed class PeerClientChannelFactoryTests
     {
-        private sealed class TestPeerClientChannelFactory : PeerClientChannelFactory
+        public sealed class TestPeerClientChannelFactory : PeerClientChannelFactory
         {
             private readonly List<IChannelHandler> _handlers;
 

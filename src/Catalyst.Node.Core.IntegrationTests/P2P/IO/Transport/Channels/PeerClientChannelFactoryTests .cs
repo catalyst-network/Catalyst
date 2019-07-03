@@ -46,7 +46,7 @@ using Xunit;
 
 namespace Catalyst.Node.Core.IntegrationTests.P2P.IO.Transport.Channels
 {
-    public sealed class PeerServerChannelFactoryTests
+    public sealed class PeerClientChannelFactoryTests
     {
         private readonly UnitTests.P2P.IO.Transport.Channels.PeerServerChannelFactoryTests.TestPeerServerChannelFactory _serverFactory;
         private readonly UnitTests.P2P.IO.Transport.Channels.PeerClientChannelFactoryTests.TestPeerClientChannelFactory _clientFactory;
@@ -59,7 +59,7 @@ namespace Catalyst.Node.Core.IntegrationTests.P2P.IO.Transport.Channels
         private readonly IMessageCorrelationManager _serverCorrelationManager;
         private readonly IBroadcastManager _broadcastManager;
 
-        public PeerServerChannelFactoryTests()
+        public PeerClientChannelFactoryTests()
         {
             _serverCorrelationManager = Substitute.For<IMessageCorrelationManager>();
             _serverKeySigner = Substitute.For<IKeySigner>();
@@ -94,7 +94,7 @@ namespace Catalyst.Node.Core.IntegrationTests.P2P.IO.Transport.Channels
         
         [Fact]
         public async Task
-            PeerServerChannelFactory_Pipeline_Should_Produce_Response_Object_PeerClientChannelFactory_Can_Process()
+            PeerClientChannelFactory_Pipeline_Should_Produce_Request_Object_PeerClientChannelFactory_Can_Process()
         {
             var recipient = PeerIdentifierHelper.GetPeerIdentifier("recipient");
             var sender = PeerIdentifierHelper.GetPeerIdentifier("sender");
@@ -105,7 +105,7 @@ namespace Catalyst.Node.Core.IntegrationTests.P2P.IO.Transport.Channels
             
             var correlationId = CorrelationId.GenerateCorrelationId();
 
-            var protocolMessage = new PingResponse().ToProtocolMessage(sender.PeerId, correlationId);
+            var protocolMessage = new PingRequest().ToProtocolMessage(sender.PeerId, correlationId);
             var dto = new MessageDto<ProtocolMessage>(
                 protocolMessage,
                 sender,
@@ -118,7 +118,7 @@ namespace Catalyst.Node.Core.IntegrationTests.P2P.IO.Transport.Channels
             _serverChannel.WriteOutbound(dto);
             var sentBytes = _serverChannel.ReadOutbound<DatagramPacket>();
 
-            _serverCorrelationManager.DidNotReceiveWithAnyArgs().AddPendingRequest(Arg.Any<CorrelatableMessage>());
+            _serverCorrelationManager.ReceivedWithAnyArgs(1).AddPendingRequest(Arg.Any<CorrelatableMessage>());
             
             _serverKeySigner.ReceivedWithAnyArgs(1).Sign(Arg.Any<byte[]>());
             
@@ -136,7 +136,7 @@ namespace Catalyst.Node.Core.IntegrationTests.P2P.IO.Transport.Channels
             {
                 _clientChannel.WriteInbound(sentBytes);
                 _clientChannel.ReadInbound<ProtocolMessageSigned>();
-                _clientCorrelationManager.ReceivedWithAnyArgs(1).TryMatchResponse(Arg.Any<ProtocolMessage>());
+                _clientCorrelationManager.DidNotReceiveWithAnyArgs().TryMatchResponse(Arg.Any<ProtocolMessage>());
                 _clientKeySigner.ReceivedWithAnyArgs(1).Verify(null, null, null);
                 await messageStream.WaitForItemsOnDelayedStreamOnTaskPoolSchedulerAsync();
                 observer.Received.Count.Should().Be(1);

@@ -32,6 +32,7 @@ using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Transport.Channels;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.IO.Codecs;
 using Catalyst.Common.IO.Handlers;
 using Catalyst.Common.IO.Transport.Channels;
 using Catalyst.Protocol.Common;
@@ -71,6 +72,7 @@ namespace Catalyst.Node.Rpc.Client.IO.Transport.Channels
                 new ProtobufVarint32FrameDecoder(),
                 new ProtobufDecoder(ProtocolMessageSigned.Parser),
                 new PeerIdValidationHandler(_peerIdValidator),
+                new AddressedEnvelopeToIMessage(),
                 new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
                     new ProtocolMessageVerifyHandler(_keySigner), new ProtocolMessageSignHandler(_keySigner)
                 ),

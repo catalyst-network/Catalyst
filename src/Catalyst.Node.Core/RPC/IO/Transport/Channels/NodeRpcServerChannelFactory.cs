@@ -33,6 +33,7 @@ using Catalyst.Common.Interfaces.IO.Transport.Channels;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Rpc.Authentication;
+using Catalyst.Common.IO.Codecs;
 using Catalyst.Common.IO.Handlers;
 using Catalyst.Common.IO.Transport.Channels;
 using Catalyst.Protocol.Common;
@@ -57,6 +58,7 @@ namespace Catalyst.Node.Core.RPC.IO.Transport.Channels
                 new ProtobufEncoder(),
                 new AuthenticationHandler(_authenticationStrategy),
                 new PeerIdValidationHandler(_peerIdValidator),
+                new AddressedEnvelopeToIMessage(),
                 new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
                     new ProtocolMessageVerifyHandler(_keySigner), new ProtocolMessageSignHandler(_keySigner)
                 ),
