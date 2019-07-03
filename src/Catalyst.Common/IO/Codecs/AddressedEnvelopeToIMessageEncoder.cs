@@ -21,16 +21,22 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.P2P;
+using System.Collections.Generic;
+using Catalyst.Common.Interfaces.IO.Messaging.Dto;
+using Catalyst.Protocol.Common;
+using DotNetty.Codecs;
 using DotNetty.Transport.Channels;
-using Google.Protobuf;
 
-namespace Catalyst.Common.Interfaces.IO.Messaging.Dto
+namespace Catalyst.Common.IO.Codecs
 {
-    public interface IMessageDto<out T> : IAddressedEnvelope<T> where T : IMessage<T>
+    public sealed class AddressedEnvelopeToIMessageEncoder 
+        : MessageToMessageEncoder<IMessageDto<ProtocolMessageSigned>>
     {
-        ICorrelationId CorrelationId { get; }
-        IPeerIdentifier RecipientPeerIdentifier { get; }
-        IPeerIdentifier SenderPeerIdentifier { get; }
+        protected override void Encode(IChannelHandlerContext context,
+            IMessageDto<ProtocolMessageSigned> message,
+            List<object> output)
+        {
+            output.Add(message.Content);
+        }
     }
 }

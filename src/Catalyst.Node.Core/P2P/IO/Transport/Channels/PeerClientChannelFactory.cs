@@ -38,7 +38,6 @@ using DotNetty.Codecs;
 using DotNetty.Codecs.Protobuf;
 using DotNetty.Transport.Channels;
 using Google.Protobuf;
-using Serilog;
 
 namespace Catalyst.Node.Core.P2P.IO.Transport.Channels
 {
@@ -61,7 +60,8 @@ namespace Catalyst.Node.Core.P2P.IO.Transport.Channels
                 ),
                 new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
                     new CorrelationHandler(_correlationManager), new CorrelationHandler(_correlationManager)
-                )
+                ),
+                new ObservableServiceHandler()
             };
 
         /// <summary>
