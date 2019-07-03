@@ -48,7 +48,6 @@ namespace Catalyst.Node.Core.IntegrationTests.P2P.IO.Transport.Channels
 {
     public sealed class PeerClientChannelFactoryTests
     {
-        private readonly UnitTests.P2P.IO.Transport.Channels.PeerServerChannelFactoryTests.TestPeerServerChannelFactory _serverFactory;
         private readonly UnitTests.P2P.IO.Transport.Channels.PeerClientChannelFactoryTests.TestPeerClientChannelFactory _clientFactory;
         private readonly EmbeddedChannel _serverChannel;
         private readonly EmbeddedChannel _clientChannel;
@@ -57,13 +56,12 @@ namespace Catalyst.Node.Core.IntegrationTests.P2P.IO.Transport.Channels
         private readonly IPeerIdValidator _peerIdValidator;
         private readonly IKeySigner _serverKeySigner;
         private readonly IMessageCorrelationManager _serverCorrelationManager;
-        private readonly IBroadcastManager _broadcastManager;
 
         public PeerClientChannelFactoryTests()
         {
             _serverCorrelationManager = Substitute.For<IMessageCorrelationManager>();
             _serverKeySigner = Substitute.For<IKeySigner>();
-            _broadcastManager = Substitute.For<IBroadcastManager>();
+            var broadcastManager = Substitute.For<IBroadcastManager>();
 
             var peerSettings = Substitute.For<IPeerSettings>();
             peerSettings.BindAddress.Returns(IPAddress.Parse("127.0.0.1"));
@@ -71,9 +69,9 @@ namespace Catalyst.Node.Core.IntegrationTests.P2P.IO.Transport.Channels
             
             _peerIdValidator = Substitute.For<IPeerIdValidator>();
 
-            _serverFactory = new UnitTests.P2P.IO.Transport.Channels.PeerServerChannelFactoryTests.TestPeerServerChannelFactory(
+            var serverFactory = new UnitTests.P2P.IO.Transport.Channels.PeerServerChannelFactoryTests.TestPeerServerChannelFactory(
                 _serverCorrelationManager,
-                _broadcastManager,
+                broadcastManager,
                 _serverKeySigner,
                 _peerIdValidator);
 
@@ -86,7 +84,7 @@ namespace Catalyst.Node.Core.IntegrationTests.P2P.IO.Transport.Channels
                 _peerIdValidator);
 
             _serverChannel =
-                new EmbeddedChannel("server".ToChannelId(), true, _serverFactory.InheritedHandlers.ToArray());
+                new EmbeddedChannel("server".ToChannelId(), true, serverFactory.InheritedHandlers.ToArray());
             
             _clientChannel =
                 new EmbeddedChannel("client".ToChannelId(), true, _clientFactory.InheritedHandlers.ToArray());

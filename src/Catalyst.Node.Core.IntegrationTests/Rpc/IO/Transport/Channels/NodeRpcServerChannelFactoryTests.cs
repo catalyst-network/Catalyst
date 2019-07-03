@@ -49,7 +49,6 @@ namespace Catalyst.Node.Core.IntegrationTests.Rpc.IO.Transport.Channels
 {
     public sealed class NodeRpcServerChannelFactoryTests
     {
-        private readonly UnitTests.RPC.IO.Transport.Channels.NodeRpcServerChannelFactoryTests.TestNodeRpcServerChannelFactory _serverFactory;
         private readonly NodeRpcClientChannelFactoryTests.TestNodeRpcClientChannelFactory _clientFactory;
         private readonly EmbeddedChannel _serverChannel;
         private readonly EmbeddedChannel _clientChannel;
@@ -73,7 +72,7 @@ namespace Catalyst.Node.Core.IntegrationTests.Rpc.IO.Transport.Channels
 
             _peerIdValidator = Substitute.For<IPeerIdValidator>();
 
-            _serverFactory = new UnitTests.RPC.IO.Transport.Channels.NodeRpcServerChannelFactoryTests.TestNodeRpcServerChannelFactory(
+            var serverFactory = new UnitTests.RPC.IO.Transport.Channels.NodeRpcServerChannelFactoryTests.TestNodeRpcServerChannelFactory(
                 _serverCorrelationManager,
                 _serverKeySigner,
                 _authenticationStrategy,
@@ -88,7 +87,7 @@ namespace Catalyst.Node.Core.IntegrationTests.Rpc.IO.Transport.Channels
                 _peerIdValidator);
 
             _serverChannel =
-                new EmbeddedChannel("server".ToChannelId(), true, _serverFactory.InheritedHandlers.ToArray());
+                new EmbeddedChannel("server".ToChannelId(), true, serverFactory.InheritedHandlers.ToArray());
             
             _clientChannel =
                 new EmbeddedChannel("client".ToChannelId(), true, _clientFactory.InheritedHandlers.ToArray());
