@@ -24,6 +24,7 @@
 using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.IO.Handlers;
 using Catalyst.Common.Util;
+using Catalyst.Cryptography.BulletProofs.Wrapper;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Types;
 using Catalyst.Protocol.Common;
 using Catalyst.TestUtils;
@@ -44,12 +45,15 @@ namespace Catalyst.Common.UnitTests.IO.Handlers
             _fakeContext = Substitute.For<IChannelHandlerContext>();
             _keySigner = Substitute.For<IKeySigner>();
 
+            var signatureBytes = ByteUtil.GenerateRandomByteArray(FFI.GetSignatureLength());
+            var publicKeyBytes = ByteUtil.GenerateRandomByteArray(FFI.GetPublicKeyLength());
+
             _protocolMessageSigned = new ProtocolMessageSigned
             {
-                Signature = new Signature(ByteUtil.GenerateRandomByteArray(64)).Bytes.RawBytes.ToByteString(),
+                Signature = signatureBytes.ToByteString(),
                 Message = new ProtocolMessage
                 {
-                    PeerId = PeerIdentifierHelper.GetPeerIdentifier(ByteUtil.GenerateRandomByteArray(32).ToString()).PeerId
+                    PeerId = PeerIdentifierHelper.GetPeerIdentifier(publicKeyBytes.ToString()).PeerId
                 }
             };
         }
@@ -57,7 +61,7 @@ namespace Catalyst.Common.UnitTests.IO.Handlers
         [Fact]
         private void CanFireNextPipelineOnValidSignature()
         {
-            _keySigner.Verify(Arg.Any<PublicKey>(), Arg.Any<byte[]>(), Arg.Any<Signature>())
+            _keySigner.Verify(Arg.Any<Signature>(), Arg.Any<byte[]>())
                .Returns(true);
 
             var signatureHandler = new ProtocolMessageVerifyHandler(_keySigner);
@@ -70,7 +74,7 @@ namespace Catalyst.Common.UnitTests.IO.Handlers
         [Fact]
         private void CanFireNextPipelineOnInvalidSignature()
         {
-            _keySigner.Verify(Arg.Any<PublicKey>(), Arg.Any<byte[]>(), Arg.Any<Signature>())
+            _keySigner.Verify(Arg.Any<Signature>(), Arg.Any<byte[]>())
                .Returns(false);
 
             var signatureHandler = new ProtocolMessageVerifyHandler(_keySigner);
