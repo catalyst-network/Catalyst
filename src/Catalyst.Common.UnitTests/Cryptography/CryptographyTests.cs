@@ -94,8 +94,8 @@ namespace Catalyst.Common.UnitTests.Cryptography
             var blob = _context.ExportPublicKey(publicKey);
 
             var importedKey = _context.ImportPublicKey(blob);
-            var signature2 = new Signature(signature.SignatureBytes, importedKey.Bytes);
-            _context.Verify(signature, data).Should()
+            var signatureWithImportedKey = new Signature(signature.SignatureBytes, importedKey.Bytes);
+            _context.Verify(signatureWithImportedKey, data).Should()
                .BeTrue("signature should verify with imported public key");
         }
 
