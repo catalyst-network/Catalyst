@@ -26,6 +26,7 @@ using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.IO.Handlers;
 using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.Util;
+using Catalyst.Cryptography.BulletProofs.Wrapper;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Types;
 using Catalyst.Protocol.IPPN;
 using Catalyst.TestUtils;
@@ -66,7 +67,10 @@ namespace Catalyst.Common.UnitTests.IO.Handlers
         [Fact]
         public void CanWriteAsyncOnSigningMessage()
         {
-            _keySigner.Sign(Arg.Any<byte[]>()).Returns(new Signature(ByteUtil.GenerateRandomByteArray(64)));
+            var signatureBytes = ByteUtil.GenerateRandomByteArray(FFI.GetSignatureLength());
+            var publicKeyBytes = ByteUtil.GenerateRandomByteArray(FFI.GetPublicKeyLength());
+
+            _keySigner.Sign(Arg.Any<byte[]>()).Returns(new Signature(signatureBytes, publicKeyBytes));
 
             var protocolMessageSignHandler = new ProtocolMessageSignHandler(_keySigner);
 
