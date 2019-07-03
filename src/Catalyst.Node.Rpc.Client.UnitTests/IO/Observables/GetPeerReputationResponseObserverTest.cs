@@ -36,43 +36,74 @@ using NSubstitute;
 using Serilog;
 using Xunit;
 
-namespace Catalyst.Node.Rpc.Client.UnitTests.Observables
+namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observables
 {
-    public sealed class GetVersionResponseObserverTest : IDisposable
+    /// <summary>
+    /// Tests the CLI for peer reputation response
+    /// </summary>
+    public sealed class GetPeerReputationResponseObserverTest : IDisposable
     {
         private readonly IUserOutput _output;
         public static readonly List<object[]> QueryContents;
         private readonly IChannelHandlerContext _fakeContext;
 
         private readonly ILogger _logger;
-        private GetVersionResponseObserver _observer;
+        private PeerReputationResponseObserver _observer;
 
-        static GetVersionResponseObserverTest()
-        {
+        /// <summary>
+        /// Initializes the <see cref="GetPeerReputationResponseObserverTest"/> class.
+        /// </summary>
+        static GetPeerReputationResponseObserverTest()
+        {             
             QueryContents = new List<object[]>
             {
-                new object[]
-                {
-                    "0.0.0.0"
-                },
-                new object[] {""}
+                new object[] {78},
+                new object[] {1572},
+                new object[] {22}
             };
         }
 
-        public GetVersionResponseObserverTest()
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GetPeerReputationResponseObserverTest"/> class.
+        /// </summary>
+        public GetPeerReputationResponseObserverTest()
         {
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
             _output = Substitute.For<IUserOutput>();
         }
-        
+
+        /// <summary>
+        /// RPCs the client can handle get reputation response.
+        /// </summary>
+        /// <param name="rep">The rep.</param>
         [Theory]
         [MemberData(nameof(QueryContents))]
-        public async Task RpcClient_Can_Handle_GetVersionResponse(string version)
+        public async Task RpcClient_Can_Handle_GetReputationResponse(int rep)
         {
-            var response = new DtoFactory().GetDto(new VersionResponse
+            await TestGetReputationResponse(rep);
+
+            _output.Received(1).WriteLine($"Peer Reputation: {rep}");
+        }
+
+        /// <summary>
+        /// RPCs the client can handle get reputation response non existant peers.
+        /// </summary>
+        /// <param name="rep">The rep.</param>
+        [Theory]
+        [InlineData(int.MinValue)]
+        public async Task RpcClient_Can_Handle_GetReputationResponseNonExistantPeers(int rep)
+        {
+            await TestGetReputationResponse(rep);
+
+            _output.Received(1).WriteLine("Peer Reputation: Peer not found");
+        }
+
+        private async Task TestGetReputationResponse(int rep)
+        {
+            var response = new DtoFactory().GetDto(new GetPeerReputationResponse
                 {
-                    Version = version
+                    Reputation = rep
                 },
                 PeerIdentifierHelper.GetPeerIdentifier("sender"),
                 PeerIdentifierHelper.GetPeerIdentifier("recpient"),
@@ -81,15 +112,12 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.Observables
 
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext,
                 response.Content.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId,
-                    response.CorrelationId)
-            );
+                    response.CorrelationId));
 
-            _observer = new GetVersionResponseObserver(_output, _logger);
+            _observer = new PeerReputationResponseObserver(_output, _logger);
             _observer.StartObserving(messageStream);
 
             await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
-
-            _output.Received(1).WriteLine($"Node Version: {version}");
         }
 
         public void Dispose()

@@ -40,7 +40,7 @@ using NSubstitute;
 using Serilog;
 using Xunit;
 
-namespace Catalyst.Node.Core.UnitTests.RPC.Observables 
+namespace Catalyst.Node.Core.UnitTests.RPC.IO.Observables 
 {
     public sealed class GetMempoolRequestObserverTest
     {
@@ -81,7 +81,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
             var mempool = Substitute.For<IMempool>();
             mempool.GetMemPoolContentEncoded().Returns(x =>
                 {
-                    var txEncodedLst = txLst.Select(tx => tx.ToString().ToBytesForRLPEncoding()).ToList();
+                    var txEncodedLst = txLst.Select(tx => ConvertorForRLPEncodingExtensions.ToBytesForRLPEncoding((string) tx.ToString())).ToList();
                     return txEncodedLst;
                 }
             );

@@ -47,7 +47,7 @@ using Serilog;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Catalyst.Node.Rpc.Client.IntegrationTests.Observables
+namespace Catalyst.Node.Rpc.Client.IntegrationTests.IO.Observables
 {
     public sealed class GetFileFromDfsObserverHandlerTests : FileSystemBasedTest
     {

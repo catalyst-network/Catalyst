@@ -40,23 +40,23 @@ using Serilog;
 using SharpRepository.Repository;
 using Xunit;
 
-namespace Catalyst.Node.Core.UnitTests.RPC.Observables
+namespace Catalyst.Node.Core.UnitTests.RPC.IO.Observables
 {
     /// <summary>
-    /// Tests the peer list CLI and RPC calls
+    /// Tests the peer count CLI and RPC calls
     /// </summary>
-    public sealed class PeerListRequestObserverTest
+    public sealed class PeerCountRequestObserverTest
     {
         /// <summary>The logger</summary>
         private readonly ILogger _logger;
 
         /// <summary>The fake channel context</summary>
         private readonly IChannelHandlerContext _fakeContext;
-
+        
         /// <summary>
         /// Initializes a new instance of the <see cref="PeerListRequestObserverTest"/> class.
         /// </summary>
-        public PeerListRequestObserverTest()
+        public PeerCountRequestObserverTest()
         {
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
@@ -65,44 +65,43 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
         }
 
         /// <summary>
-        /// Tests the peer list request and response.
+        /// Tests the peer count request and response.
         /// </summary>
-        /// <param name="fakePeers">The fake peers.</param>
+        /// <param name="fakePeers">The peer count.</param>
         [Theory]
-        [InlineData("FakePeer1", "FakePeer2")]
-        [InlineData("FakePeer1002", "FakePeer6000", "FakePeerSataoshi")]
-        public async Task TestPeerListRequestResponse(params string[] fakePeers)
+        [InlineData(40)]
+        [InlineData(20)]
+        public async Task TestPeerListRequestResponse(int fakePeers)
         {
             var peerRepository = Substitute.For<IRepository<Peer>>();
             var peerList = new List<Peer>();
 
-            fakePeers.ToList().ForEach(fakePeer =>
+            for (var i = 0; i < fakePeers; i++)
             {
                 peerList.Add(new Peer
                 {
                     Reputation = 0,
                     LastSeen = DateTime.Now,
-                    PeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier(fakePeer)
+                    PeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier(i.ToString())
                 });
-            });
-
-            // Let peerRepository return the fake peer list
-            peerRepository.GetAll().Returns(peerList.ToArray());
-
+            }
+            
             // Build a fake remote endpoint
             _fakeContext.Channel.RemoteAddress.Returns(EndpointBuilder.BuildNewEndPoint("192.0.0.1", 42042));
-            
-            var messageFactory = new DtoFactory();
 
-            var requestMessage = messageFactory.GetDto(
-                new GetPeerListRequest(),
+            peerRepository.GetAll().Returns(peerList);
+
+            var sendPeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("sender");
+
+            var requestMessage = new DtoFactory().GetDto(
+                new GetPeerCountRequest(),
                 PeerIdentifierHelper.GetPeerIdentifier("sender"),
                 PeerIdentifierHelper.GetPeerIdentifier("recipient")
             );
-            
+
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, requestMessage.Content.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId));
 
-            var handler = new PeerListRequestObserver(PeerIdentifierHelper.GetPeerIdentifier("sender"), _logger, peerRepository);
+            var handler = new PeerCountRequestObserver(sendPeerIdentifier, peerRepository, _logger);
             handler.StartObserving(messageStream);
 
             await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
@@ -110,15 +109,15 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
             var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();
             receivedCalls.Count.Should().Be(1);
 
-            var sentResponseDto = (IMessageDto<GetPeerListResponse>) receivedCalls[0].GetArguments().Single();
+            var sentResponseDto = (IMessageDto<GetPeerCountResponse>) receivedCalls[0].GetArguments().Single();
             
             sentResponseDto.Content.GetType()
                .Should()
-               .BeAssignableTo<GetPeerListResponse>();
+               .BeAssignableTo<GetPeerCountResponse>();
 
             var responseContent = sentResponseDto.FromIMessageDto();
 
-            responseContent.Peers.Count.Should().Be(fakePeers.Length);
+            responseContent.PeerCount.Should().Be(fakePeers);
         }
     }
 }
