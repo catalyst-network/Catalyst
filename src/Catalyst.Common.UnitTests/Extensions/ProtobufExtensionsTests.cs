@@ -22,6 +22,7 @@
 #endregion
 
 using System;
+using System.Text;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Util;
 using Catalyst.Common.IO.Messaging;
@@ -134,7 +135,7 @@ namespace Catalyst.Common.UnitTests.Extensions
         [Fact]
         public void ToMultihash_Can_Convert_Valid_ByteString_To_Multihash()
         {
-            var initialHash = Multihash.Encode("hello", HashType.BLAKE2B_256);
+            var initialHash = Multihash.Sum(HashType.BLAKE2B_256, Encoding.UTF8.GetBytes("hello"));
             var byteString = initialHash.ToBytes().ToByteString();
 
             var convertedHash = byteString.ToMultihash();
@@ -149,6 +150,7 @@ namespace Catalyst.Common.UnitTests.Extensions
             var byteString = initialHash.ToBytes().ToByteString();
 
             var multihash = byteString.ToMultihashString();
+            multihash.Should().NotBe(null);
         }
     }
 }

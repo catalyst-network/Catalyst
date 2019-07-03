@@ -83,7 +83,10 @@ namespace Catalyst.Node.Core.Modules.Consensus.Delta
             lock (_hashesByTimeDescending)
             {
                 _hashesByTimeDescending.Add(newDelta.TimeStamp, newHash);
-                if (_hashesByTimeDescending.Count > _capacity) _hashesByTimeDescending.RemoveAt(_capacity);
+                if (_hashesByTimeDescending.Count > _capacity)
+                {
+                    _hashesByTimeDescending.RemoveAt(_capacity);
+                }
             }
             
             _deltaHashUpdatesSubject.OnNext(newHash);
@@ -107,7 +110,7 @@ namespace Catalyst.Node.Core.Modules.Consensus.Delta
             //todo: do we want to start walking down
             //the history of hashes and get them from IPFS
             //if they are not found here?
-
+            //https://github.com/catalyst-network/Catalyst.Node/issues/615
             return hash.Value;
         }
     }
