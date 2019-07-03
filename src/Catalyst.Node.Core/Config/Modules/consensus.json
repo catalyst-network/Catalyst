@@ -101,14 +101,14 @@
                 }
             ],
             "instanceScope": "singleinstance"
-        //},
-        //{
-        //    "type": "Catalyst.Node.Core.P2P.IO.Observables.DeltaDfsHashObserver",
-        //    "services": [
-        //        {
-        //            "type": "Catalyst.Common.Interfaces.IO.Observables.IP2PMessageObserver, Catalyst.Common"
-        //        }
-        //    ]
+        },
+        {
+            "type": "Catalyst.Node.Core.P2P.IO.Observables.DeltaDfsHashObserver",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.IO.Observables.IP2PMessageObserver, Catalyst.Common"
+                }
+            ]
         }
     ]
 }
