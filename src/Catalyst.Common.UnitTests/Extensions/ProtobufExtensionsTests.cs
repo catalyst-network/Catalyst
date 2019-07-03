@@ -23,12 +23,17 @@
 
 using System;
 using Catalyst.Common.Extensions;
+using Catalyst.Common.Util;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.Protocol.Transaction;
 using Catalyst.TestUtils;
+using Common.Logging.Configuration;
 using FluentAssertions;
+using Ipfs;
+using Multiformats.Hash;
+using SharpRepository.Repository.Configuration;
 using Xunit;
 
 namespace Catalyst.Common.UnitTests.Extensions
@@ -126,6 +131,26 @@ namespace Catalyst.Common.UnitTests.Extensions
             var secondNonGossipMessage = new PingRequest().ToProtocolMessage(peerIdentifier.PeerId, Guid.NewGuid())
                .ToProtocolMessage(peerIdentifier.PeerId, Guid.NewGuid());
             secondNonGossipMessage.CheckIfMessageIsBroadcast().Should().BeFalse();
+        }
+
+        [Fact]
+        public void ToMultihash_Can_Convert_Valid_ByteString_To_Multihash()
+        {
+            var initialHash = Multihash.Encode("hello", HashType.BLAKE2B_256);
+            var byteString = initialHash.ToBytes().ToByteString();
+
+            var convertedHash = byteString.ToMultihash();
+
+            convertedHash.Should().Be(initialHash);
+        }
+
+        [Fact]
+        public void ToMultihashString_Can_Convert_Valid_ByteString_To_String()
+        {
+            var initialHash = Multihash.Encode("hello", HashType.BLAKE2B_256);
+            var byteString = initialHash.ToBytes().ToByteString();
+
+            var multihash = byteString.ToMultihashString();
         }
     }
 }

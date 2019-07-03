@@ -26,6 +26,7 @@ using System.Reactive.Linq;
 using System.Threading;
 using Catalyst.Common.Interfaces.Modules.Consensus;
 using Catalyst.Common.Interfaces.Modules.Consensus.Cycle;
+using Catalyst.Common.Interfaces.Modules.Consensus.Delta;
 using Catalyst.Common.Modules.Consensus.Cycle;
 using Catalyst.Common.Util;
 
@@ -35,10 +36,15 @@ namespace Catalyst.Node.Core.Modules.Consensus.Cycle
     /// <inheritdoc cref="IDisposable"/>
     public class CycleEventsProvider : ICycleEventsProvider, IDisposable
     {
+        private readonly IDeltaHashProvider _deltaHashProvider;
         private readonly CancellationTokenSource _cancellationTokenSource;
 
-        public CycleEventsProvider(ICycleConfiguration configuration, IDateTimeProvider timeProvider, ICycleSchedulerProvider schedulerProvider)
+        public CycleEventsProvider(ICycleConfiguration configuration,
+            IDateTimeProvider timeProvider,
+            ICycleSchedulerProvider schedulerProvider,
+            IDeltaHashProvider deltaHashProvider)
         {
+            _deltaHashProvider = deltaHashProvider;
             _cancellationTokenSource = new CancellationTokenSource();
             
             Configuration = configuration;
@@ -62,7 +68,7 @@ namespace Catalyst.Node.Core.Modules.Consensus.Cycle
                .Merge(campaigningStatusChanges, scheduler)
                .Merge(votingStatusChanges, scheduler)
                .Merge(synchronisationStatusChanges, scheduler)
-               .Select(s => new Phase(ByteUtil.GenerateRandomByteArray(32), s.Name, s.Status, timeProvider.UtcNow))
+               .Select(s => new Phase(_deltaHashProvider.GetLatestDeltaHash(timeProvider.UtcNow), s.Name, s.Status, timeProvider.UtcNow))
                .TakeWhile(_ => !_cancellationTokenSource.IsCancellationRequested);
         }
 

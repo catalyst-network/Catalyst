@@ -23,6 +23,7 @@
 
 using System;
 using Catalyst.Common.Modules.Consensus.Cycle;
+using Multiformats.Hash;
 
 namespace Catalyst.Common.Interfaces.Modules.Consensus.Cycle
 {
@@ -36,7 +37,7 @@ namespace Catalyst.Common.Interfaces.Modules.Consensus.Cycle
         /// Address on the DFS of the delta elected on the previous cycle, here used as
         /// a unique identifier for this phase.
         /// </summary>
-        byte[] PreviousDeltaDfsHash { get; }
+        Multihash PreviousDeltaDfsHash { get; }
 
         /// <summary>
         /// The name of the phase represented by this instance.

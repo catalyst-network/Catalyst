@@ -23,51 +23,91 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reactive.Linq;
+using System.Reactive.Subjects;
+using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Modules.Consensus.Delta;
-using Catalyst.Common.Interfaces.Modules.Dfs;
+using Nito.Comparers;
+using Serilog;
 
 namespace Catalyst.Node.Core.Modules.Consensus.Delta
 {
     /// <inheritdoc />
     public class DeltaHashProvider : IDeltaHashProvider
     {
-        private readonly IDfs _dfs;
         private readonly IDeltaCache _deltaCache;
-        private const string LatestDeltaKey = "LatestDelta";
-        private readonly SortedList<DateTime, string> _hashesByTimeDescending;
+        private readonly ILogger _logger;
 
-        private readonly object _latestDeltaLock = new object();
+        private readonly ReplaySubject<string> _deltaHashUpdatesSubject;
+        private readonly SortedList<uint, string> _hashesByTimeDescending;
+        private readonly int _capacity;
 
-        private class TimeStampedHash
+        public IObservable<string> DeltaHashUpdates => _deltaHashUpdatesSubject.AsObservable();
+
+        public DeltaHashProvider(IDeltaCache deltaCache, 
+            ILogger logger,
+            int capacity = 10_000)
         {
-            public DateTime TimeStamp { get; }
-            public string Hash { get; }
-
-            public TimeStampedHash(string hash, DateTime timeStamp)
-            {
-                Hash = hash;
-                TimeStamp = timeStamp;
-            }
-        }
-
-        public DeltaHashProvider(IDfs dfs, IDeltaCache deltaCache)
-        {
-            _dfs = dfs;
             _deltaCache = deltaCache;
-            _hashesByTimeDescending = new SortedList<DateTime, string>();
+            _logger = logger;
+            _deltaHashUpdatesSubject = new ReplaySubject<string>(0);
+            var comparer = ComparerBuilder.For<uint>().OrderBy(u => u, descending: true);
+            _capacity = capacity;
+            _hashesByTimeDescending = new SortedList<uint, string>(comparer)
+            {
+                Capacity = _capacity,
+            };
         }
 
-        // <inheritdoc />
+        /// <inheritdoc />
         public bool TryUpdateLatestHash(string previousHash, string newHash)
         {
-            throw new NotImplementedException();
-            //_hashesByTimeDescending.ContainsKey();
+            var foundNewDelta = _deltaCache.TryGetDelta(newHash, out var newDelta);
+            var foundPreviousDelta = _deltaCache.TryGetDelta(previousHash, out var previousDelta);
+
+            if (!foundNewDelta 
+             || !foundPreviousDelta
+             || newDelta.PreviousDeltaDfsHash.ToMultihashString() != previousHash
+             || previousDelta.TimeStamp >= newDelta.TimeStamp)
+            {
+                _logger.Warning("Failed to update latest hash from {previousHash} to {newHash}",
+                    previousHash, newHash);
+                return false;
+            }
+
+            _logger.Debug("Successfully to updated latest hash from {previousHash} to {newHash}",
+                previousHash, newHash);
+
+            lock (_hashesByTimeDescending)
+            {
+                _hashesByTimeDescending.Add(newDelta.TimeStamp, newHash);
+                if (_hashesByTimeDescending.Count > _capacity) _hashesByTimeDescending.RemoveAt(_capacity);
+            }
+            
+            _deltaHashUpdatesSubject.OnNext(newHash);
+
+            return true;
         }
 
         /// <inheritdoc />
-        public string GetLatestDeltaHash(DateTime? asOf = null) { throw new NotImplementedException(); }
+        public string GetLatestDeltaHash(DateTime? asOf = null)
+        {
+            if (!asOf.HasValue)
+            {
+                return _hashesByTimeDescending.FirstOrDefault().Value;
+            }
 
-        /// <inheritdoc />
-        public IObservable<string> DeltaHashUpdates { get; }
+            var dateTimeAsUint = (uint) asOf.Value.ToOADate();
+            var hash = _hashesByTimeDescending
+               .SkipWhile(p => p.Key > dateTimeAsUint)
+               .FirstOrDefault();
+
+            //todo: do we want to start walking down
+            //the history of hashes and get them from IPFS
+            //if they are not found here?
+
+            return hash.Value ?? string.Empty;
+        }
     }
 }

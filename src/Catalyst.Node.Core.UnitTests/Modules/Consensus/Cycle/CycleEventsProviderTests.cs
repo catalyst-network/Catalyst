@@ -29,10 +29,14 @@ using System.Reactive.Linq;
 using Catalyst.Common.Enumerator;
 using Catalyst.Common.Interfaces.Modules.Consensus;
 using Catalyst.Common.Interfaces.Modules.Consensus.Cycle;
+using Catalyst.Common.Interfaces.Modules.Consensus.Delta;
 using Catalyst.Common.Modules.Consensus.Cycle;
+using Catalyst.Common.Util;
 using Catalyst.Node.Core.Modules.Consensus.Cycle;
 using FluentAssertions;
 using Microsoft.Reactive.Testing;
+using Multiformats.Hash;
+using Multiformats.Hash.Algorithms;
 using NSubstitute;
 using Xunit;
 using Xunit.Abstractions;
@@ -55,9 +59,13 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Consensus.Cycle
             var schedulerProvider = Substitute.For<ICycleSchedulerProvider>();
             schedulerProvider.Scheduler.Returns(_testScheduler);
             var dateTimeProvider = Substitute.For<IDateTimeProvider>();
+            var hashProvider = Substitute.For<IDeltaHashProvider>();
+
+            hashProvider.GetLatestDeltaHash(Arg.Any<DateTime>())
+               .Returns(Multihash.Sum(HashType.ID, ByteUtil.GenerateRandomByteArray(32)).ToString());
 
             dateTimeProvider.UtcNow.Returns(_ => _testScheduler.Now.DateTime);
-            _cycleProvider = new CycleEventsProvider(CycleConfiguration.Default, dateTimeProvider, schedulerProvider);
+            _cycleProvider = new CycleEventsProvider(CycleConfiguration.Default, dateTimeProvider, schedulerProvider, hashProvider);
 
             _spy = Substitute.For<IObserver<IPhase>>();
 

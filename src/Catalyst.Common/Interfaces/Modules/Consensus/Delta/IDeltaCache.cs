@@ -35,10 +35,5 @@ namespace Catalyst.Common.Interfaces.Modules.Consensus.Delta
         /// <param name="delta">The delta retrieved on the Dfs.</param>
         /// <returns><see cref="true" /> if the retrieval was successful, <see cref="false" /> otherwise.</returns>
         bool TryGetDelta(string hash, out Protocol.Delta.Delta delta);
-
-        /// <summary>
-        /// The latest known delta.
-        /// </summary>
-        Protocol.Delta.Delta LatestKnownDelta { get; }
     }
 }

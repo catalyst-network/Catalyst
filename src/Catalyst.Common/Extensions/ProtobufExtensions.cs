@@ -35,6 +35,8 @@ using DotNetty.Buffers;
 using DotNetty.Transport.Channels.Sockets;
 using Google.Protobuf;
 using Google.Protobuf.Reflection;
+using Multiformats.Base;
+using Multiformats.Hash;
 using Type = System.Type;
 
 namespace Catalyst.Common.Extensions
@@ -156,6 +158,16 @@ namespace Catalyst.Common.Extensions
         public static ByteString ToByteString(this Guid guid)
         {
             return guid.ToByteArray().ToByteString();
+        }
+
+        public static Multihash ToMultihash(this ByteString byteString)
+        {
+            return Multihash.Decode(byteString.ToByteArray());
+        }
+
+        public static string ToMultihashString(this ByteString byteString)
+        {
+            return ToMultihash(byteString).ToString();
         }
 
         public static DatagramPacket ToDatagram(this IMessage<ProtocolMessageSigned> anySignedMessage, IPEndPoint recipient)

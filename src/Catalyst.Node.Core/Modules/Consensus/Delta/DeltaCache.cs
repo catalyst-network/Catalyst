@@ -23,6 +23,7 @@
 
 using System;
 using System.Threading;
+using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Modules.Consensus.Delta;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Primitives;
@@ -58,7 +59,7 @@ namespace Catalyst.Node.Core.Modules.Consensus.Delta
         private void EvictionCallback(object key, object value, EvictionReason reason, object state)
         {
             _logger.Debug("Evicted Delta {0} from cache.",
-                Multiformats.Hash.Multihash.Decode(((Protocol.Delta.Delta) value).PreviousDeltaDfsHash.ToByteArray()));
+                ((Protocol.Delta.Delta) value).PreviousDeltaDfsHash.ToMultihashString());
         }
 
         /// <inheritdoc />
@@ -78,8 +79,6 @@ namespace Catalyst.Node.Core.Modules.Consensus.Delta
             _memoryCache.Set(hash, delta, _entryOptions);
             return true;
         }
-
-        public Protocol.Delta.Delta LatestKnownDelta => throw new NotImplementedException();
 
         protected virtual void Dispose(bool disposing) { _memoryCache.Dispose(); }
 

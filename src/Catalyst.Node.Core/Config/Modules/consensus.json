@@ -79,7 +79,10 @@
                 {
                     "type": "Catalyst.Common.Interfaces.Modules.Consensus.Delta.IDeltaHashProvider, Catalyst.Common"
                 }
-            ]
+            ],
+            "parameters": {
+                "capacity": 10000 
+            } 
         },
         {
             "type": "Catalyst.Node.Core.Modules.Consensus.Delta.DeltaCache",
