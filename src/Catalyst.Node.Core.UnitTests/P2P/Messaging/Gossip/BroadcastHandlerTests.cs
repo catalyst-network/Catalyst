@@ -23,7 +23,6 @@
 
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.Interfaces.P2P.Messaging.Broadcast;
 using Catalyst.Common.IO.Handlers;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Transaction;
@@ -35,6 +34,7 @@ using Serilog;
 using System;
 using System.Net;
 using System.Threading.Tasks;
+using Catalyst.Common.Interfaces.P2P.IO.Messaging.Broadcast;
 using Catalyst.Common.IO.Messaging;
 using FluentAssertions;
 using NSubstitute.Exceptions;

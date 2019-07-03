@@ -27,7 +27,7 @@ using Catalyst.Protocol.Common;
 
 namespace Catalyst.Common.Interfaces.IO.Messaging
 {
-    public interface IMessageCorrelationManager
+    public interface IMessageCorrelationManager : IDisposable
     {
         /// <summary>
         /// TimeSpan after which requests automatically get deleted from the cache (inflicting

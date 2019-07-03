@@ -23,21 +23,24 @@
 
 using System;
 using System.Threading;
-using Catalyst.Common.Interfaces.IO.Messaging;
+using Catalyst.Common.Interfaces.P2P.IO.Messaging;
+using Catalyst.Common.Interfaces.P2P.ReputationSystem;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Protocol.Common;
 using Dawn;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Primitives;
 
-namespace Catalyst.Common.IO.Messaging
+namespace Catalyst.Node.Core.P2P.IO.Messaging
 {
-    public sealed class MessageCorrelationManager : IMessageCorrelationManager
+    public class PeerMessageCorrelationManager : IPeerMessageCorrelationManager
     {
         public TimeSpan CacheTtl { get; }
         private readonly IMemoryCache _pendingRequests;
         private readonly MemoryCacheEntryOptions _entryOptions;
-        
-        public MessageCorrelationManager(IMemoryCache cache,
+
+        public PeerMessageCorrelationManager(IReputationManager reputationManager,
+            IMemoryCache cache,
             TimeSpan cacheTtl = default)
         {
             CacheTtl = cacheTtl == default ? TimeSpan.FromSeconds(10) : cacheTtl;
@@ -47,27 +50,16 @@ namespace Catalyst.Common.IO.Messaging
                .AddExpirationToken(new CancellationChangeToken(new CancellationTokenSource(CacheTtl).Token))
                .RegisterPostEvictionCallback(EvictionCallback);
         }
-        
-        /// <summary>
-        ///     A callback method that is called upon eviction of a message,
-        ///     for basic protocols such the RPC, it doesn't do anything
-        /// </summary>
-        /// <param name="key"></param>
-        /// <param name="value"></param>
-        /// <param name="reason"></param>
-        /// <param name="state"></param>
+
         private void EvictionCallback(object key, object value, EvictionReason reason, object state)
         {
             //TODO: find a way to trigger the actual remove with correct reason
             //when the cache is not under pressure, eviction happens by token expiry :(
             //if (reason == EvictionReason.Removed) {return;}
             var message = (CorrelatableMessage) value;
+            _evictionEvent.OnNext(new MessageEvictionEvent(message));
         }
         
-        /// <summary>
-        ///     Stores a CorrelatableMessage in the cache so we can correlate incoming messages.
-        /// </summary>
-        /// <param name="correlatableMessage"></param>
         public void AddPendingRequest(CorrelatableMessage correlatableMessage)
         {
             _pendingRequests.Set(correlatableMessage.Content.CorrelationId, correlatableMessage, _entryOptions);
@@ -94,6 +86,7 @@ namespace Catalyst.Common.IO.Messaging
             }
 
             _pendingRequests?.Dispose();
+            _evictionEvent?.Dispose();
         }
 
         public void Dispose()
