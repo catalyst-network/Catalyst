@@ -22,9 +22,9 @@
 #endregion
 
 using System;
-using Catalyst.Common.Interfaces.IO.Messaging;
+using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 
-namespace Catalyst.Common.IO.Messaging
+namespace Catalyst.Common.IO.Messaging.Correlation
 {
     /// <inheritdoc/>
     public sealed class CorrelationId : ICorrelationId

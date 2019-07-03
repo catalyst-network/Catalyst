@@ -25,7 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Catalyst.Common.Enumerator;
-using Catalyst.Common.Interfaces.IO.Messaging;
+using Catalyst.Common.Interfaces.Config;
 using Google.Protobuf;
 
 namespace Catalyst.Common.Config
@@ -34,7 +34,7 @@ namespace Catalyst.Common.Config
     /// The Rpc Messages
     /// </summary>
     /// <seealso cref="Catalyst.Common.Enumerator.Enumeration" />
-    /// <seealso cref="Catalyst.Common.Interfaces.IO.Messaging.IEnumerableMessageType" />
+    /// <seealso cref="IEnumerableMessageType" />
     public class RpcMessages
         : Enumeration,
             IEnumerableMessageType

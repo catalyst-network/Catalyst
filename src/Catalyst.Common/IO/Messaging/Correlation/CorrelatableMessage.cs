@@ -22,21 +22,15 @@
 #endregion
 
 using System;
-using Catalyst.Common.IO.Messaging;
+using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Protocol.Common;
 
-namespace Catalyst.Common.Interfaces.IO.Messaging
+namespace Catalyst.Common.IO.Messaging.Correlation
 {
-    public interface IMessageCorrelationManager : IDisposable
+    public sealed class CorrelatableMessage
     {
-        /// <summary>
-        /// TimeSpan after which requests automatically get deleted from the cache (inflicting
-        /// a reputation penalty for the peer who didn't reply).
-        /// </summary>
-        TimeSpan CacheTtl { get; }
-        
-        void AddPendingRequest(CorrelatableMessage correlatableMessage);
-
-        bool TryMatchResponse(ProtocolMessage response);
+        public ProtocolMessage Content { get; set; }
+        public IPeerIdentifier Recipient { get; set; }
+        public DateTimeOffset SentAt { get; set; }
     }
 }

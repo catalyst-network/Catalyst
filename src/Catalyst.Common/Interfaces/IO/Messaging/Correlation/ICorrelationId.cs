@@ -22,13 +22,14 @@
 #endregion
 
 using System;
-using Catalyst.Common.Enumerator;
 
-namespace Catalyst.Common.Interfaces.IO.Messaging
+namespace Catalyst.Common.Interfaces.IO.Messaging.Correlation
 {
-    public interface IEnumerableMessageType : IEquatable<Enumeration>
+    /// <summary>
+    ///     Provides a CorrelationId type for easy reference to what the Guid is for and mocking
+    /// </summary>
+    public interface ICorrelationId
     {
-        string Name { get; }        
+        Guid Id { get; set; }
     }
 }
-

@@ -30,14 +30,14 @@ using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels.Embedded;
 using NSubstitute;
-using Catalyst.Common.IO.Messaging;
+using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Protocol.Common;
 using Google.Protobuf;
 using Xunit;
 
 namespace Catalyst.Node.Core.UnitTests.RPC.Authentication
 {
-    public class AuthenticationHandlerTests
+    public sealed class AuthenticationHandlerTests
     {
         private readonly IAuthenticationStrategy _authenticationStrategy;
         private readonly EmbeddedChannel _serverChannel;

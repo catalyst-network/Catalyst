@@ -24,50 +24,39 @@
 using System;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
-using System.Threading;
 using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.P2P.IO.Messaging;
 using Catalyst.Common.Interfaces.P2P.ReputationSystem;
-using Catalyst.Common.IO.Messaging;
+using Catalyst.Common.IO.Messaging.Correlation;
+using Catalyst.Common.P2P;
 using Catalyst.Node.Core.P2P.ReputationSystem;
 using Catalyst.Protocol.Common;
 using Dawn;
 using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Primitives;
+using Serilog;
 
 namespace Catalyst.Node.Core.P2P.IO.Messaging
 {
-    public class PeerMessageCorrelationManager : IPeerMessageCorrelationManager
+    public sealed class PeerMessageCorrelationManager : MessageCorrelationManagerBase, IPeerMessageCorrelationManager
     {
-        public TimeSpan CacheTtl { get; }
-        private readonly IMemoryCache _pendingRequests;
-        private readonly MemoryCacheEntryOptions _entryOptions;
         private readonly ReplaySubject<IPeerReputationChange> _reputationEvent;
-        private IObservable<IPeerReputationChange> ReputationEventStream => _reputationEvent.AsObservable();
+        public IObservable<IPeerReputationChange> ReputationEventStream => _reputationEvent.AsObservable();
         
         public PeerMessageCorrelationManager(IReputationManager reputationManager,
             IMemoryCache cache,
-            TimeSpan cacheTtl = default)
+            ILogger logger,
+            TimeSpan cacheTtl = default) : base(cache, logger, cacheTtl)
         {
-            CacheTtl = cacheTtl == default ? TimeSpan.FromSeconds(10) : cacheTtl;
-            _pendingRequests = cache;
             _reputationEvent = new ReplaySubject<IPeerReputationChange>(0);
 
-            _entryOptions = new MemoryCacheEntryOptions()
-               .AddExpirationToken(new CancellationChangeToken(new CancellationTokenSource(CacheTtl).Token))
-               .RegisterPostEvictionCallback(EvictionCallback);
             reputationManager.MergeReputationStream(ReputationEventStream);
         }
 
-        private void EvictionCallback(object key, object value, EvictionReason reason, object state)
+        protected override void EvictionCallback(object key, object value, EvictionReason reason, object state)
         {
+            Logger.Debug($"{key} message evicted");
             var message = (CorrelatableMessage) value;
             _reputationEvent.OnNext(new PeerReputationChange(message.Recipient, ReputationEvents.NoResponseReceived));
-        }
-        
-        public void AddPendingRequest(CorrelatableMessage correlatableMessage)
-        {
-            _pendingRequests.Set(correlatableMessage.Content.CorrelationId, correlatableMessage, _entryOptions);
         }
 
         /// <summary>
@@ -76,38 +65,37 @@ namespace Catalyst.Node.Core.P2P.IO.Messaging
         /// </summary>
         /// <param name="response"></param>
         /// <returns></returns>
-        public bool TryMatchResponse(ProtocolMessage response)
+        public override bool TryMatchResponse(ProtocolMessage response)
         {
             Guard.Argument(response, nameof(response)).NotNull();
 
-            if (!_pendingRequests.TryGetValue(response.CorrelationId, out CorrelatableMessage message))
+            if (!PendingRequests.TryGetValue(response.CorrelationId, out CorrelatableMessage message))
             {
-                _reputationEvent.OnNext(new PeerReputationChange(message.Recipient,
+                Logger.Debug($"{response.CorrelationId} message not found");
+
+                _reputationEvent.OnNext(new PeerReputationChange(new PeerIdentifier(response.PeerId),
                     ReputationEvents.UnCorrelatableMessage)
                 );
                 return false;
             }
-
+            
+            Logger.Debug($"{response.CorrelationId} message found");
             _reputationEvent.OnNext(new PeerReputationChange(message.Recipient,
                 ReputationEvents.ResponseReceived)
             );
             return true;
         }
 
-        private void Dispose(bool disposing)
+        protected override void Dispose(bool disposing)
         {
             if (!disposing)
             {
                 return;
             }
 
-            _pendingRequests?.Dispose();
             _reputationEvent?.Dispose();
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
+            
+            base.Dispose();
         }
     }
 }

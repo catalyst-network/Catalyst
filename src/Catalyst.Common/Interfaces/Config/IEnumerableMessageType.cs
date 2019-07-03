@@ -22,16 +22,13 @@
 #endregion
 
 using System;
-using Catalyst.Common.Interfaces.IO.Messaging.Dto;
-using Google.Protobuf;
+using Catalyst.Common.Enumerator;
 
-namespace Catalyst.Common.Interfaces.IO.Messaging
+namespace Catalyst.Common.Interfaces.Config
 {
-    public interface IObservableMessageStreamer<out T> where T : IMessage
+    internal interface IEnumerableMessageType : IEquatable<Enumeration>
     {
-        /// <summary>
-        ///     Message stream
-        /// </summary>
-        IObservable<IObserverDto<T>> MessageStream { get; }
+        string Name { get; }        
     }
 }
+

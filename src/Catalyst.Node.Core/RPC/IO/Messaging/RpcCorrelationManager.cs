@@ -21,20 +21,20 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.IO.Messaging;
-using Catalyst.Common.Interfaces.P2P;
+using System;
+using Catalyst.Common.IO.Messaging.Correlation;
+using Microsoft.Extensions.Caching.Memory;
+using Serilog.Core;
 
-namespace Catalyst.Common.IO.Messaging
+namespace Catalyst.Node.Core.RPC.IO.Messaging
 {
-    public sealed class MessageEvictionEvent : IMessageEvictionEvent
+    public class RpcCorrelationManager : MessageCorrelationManagerBase
     {
-        public object EvictedContent { get; }
-        public IPeerIdentifier PeerIdentifier { get; }
-        
-        public MessageEvictionEvent(CorrelatableMessage correlatableMessage)
+        public RpcCorrelationManager(IMemoryCache cache, Logger logger, TimeSpan cacheTtl = default) : base(cache, logger, cacheTtl) { }
+
+        protected override void EvictionCallback(object key, object value, EvictionReason reason, object state)
         {
-            EvictedContent = correlatableMessage.Content;
-            PeerIdentifier = correlatableMessage.Recipient;
+            Logger.Debug($"{key} message evicted");
         }
     }
 }
