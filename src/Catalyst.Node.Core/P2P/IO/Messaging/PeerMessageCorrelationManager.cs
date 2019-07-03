@@ -36,6 +36,7 @@ namespace Catalyst.Node.Core.P2P.IO.Messaging
     public class PeerMessageCorrelationManager : IPeerMessageCorrelationManager
     {
         public TimeSpan CacheTtl { get; }
+        private readonly IReputationManager _reputationManager;
         private readonly IMemoryCache _pendingRequests;
         private readonly MemoryCacheEntryOptions _entryOptions;
 
@@ -44,6 +45,7 @@ namespace Catalyst.Node.Core.P2P.IO.Messaging
             TimeSpan cacheTtl = default)
         {
             CacheTtl = cacheTtl == default ? TimeSpan.FromSeconds(10) : cacheTtl;
+            _reputationManager = reputationManager;
             _pendingRequests = cache;
 
             _entryOptions = new MemoryCacheEntryOptions()
@@ -57,7 +59,7 @@ namespace Catalyst.Node.Core.P2P.IO.Messaging
             //when the cache is not under pressure, eviction happens by token expiry :(
             //if (reason == EvictionReason.Removed) {return;}
             var message = (CorrelatableMessage) value;
-            _evictionEvent.OnNext(new MessageEvictionEvent(message));
+            _reputationManager.ReputationEvents.OnNext(new MessageEvictionEvent(message));
         }
         
         public void AddPendingRequest(CorrelatableMessage correlatableMessage)
