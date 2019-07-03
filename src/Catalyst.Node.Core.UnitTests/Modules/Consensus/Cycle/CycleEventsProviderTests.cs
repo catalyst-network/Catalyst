@@ -36,7 +36,6 @@ using Catalyst.Node.Core.Modules.Consensus.Cycle;
 using FluentAssertions;
 using Microsoft.Reactive.Testing;
 using Multiformats.Hash;
-using Multiformats.Hash.Algorithms;
 using NSubstitute;
 using Xunit;
 using Xunit.Abstractions;

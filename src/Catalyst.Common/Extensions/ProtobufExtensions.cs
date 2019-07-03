@@ -33,8 +33,6 @@ using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.Util;
 using Catalyst.Protocol.Common;
 using Dawn;
-using DotNetty.Buffers;
-using DotNetty.Transport.Channels.Sockets;
 using Google.Protobuf;
 using Google.Protobuf.Reflection;
 using Multiformats.Hash;
@@ -170,11 +168,6 @@ namespace Catalyst.Common.Extensions
         public static string ToMultihashString(this ByteString byteString)
         {
             return ToMultihash(byteString).ToString();
-        }
-
-        public static DatagramPacket ToDatagram(this IMessage<ProtocolMessageSigned> anySignedMessage, IPEndPoint recipient)
-        {
-            return new DatagramPacket(Unpooled.WrappedBuffer(anySignedMessage.ToByteArray()), recipient);
         }
 
         public static string GetRequestType(this string responseTypeUrl)

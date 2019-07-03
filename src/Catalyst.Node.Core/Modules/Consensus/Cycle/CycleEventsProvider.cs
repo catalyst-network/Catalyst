@@ -28,7 +28,6 @@ using Catalyst.Common.Interfaces.Modules.Consensus;
 using Catalyst.Common.Interfaces.Modules.Consensus.Cycle;
 using Catalyst.Common.Interfaces.Modules.Consensus.Delta;
 using Catalyst.Common.Modules.Consensus.Cycle;
-using Catalyst.Common.Util;
 
 namespace Catalyst.Node.Core.Modules.Consensus.Cycle
 {

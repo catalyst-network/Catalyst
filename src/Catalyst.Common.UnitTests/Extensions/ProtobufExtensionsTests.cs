@@ -30,11 +30,8 @@ using Catalyst.Protocol.IPPN;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.Protocol.Transaction;
 using Catalyst.TestUtils;
-using Common.Logging.Configuration;
 using FluentAssertions;
-using Ipfs;
 using Multiformats.Hash;
-using SharpRepository.Repository.Configuration;
 using Xunit;
 
 namespace Catalyst.Common.UnitTests.Extensions
