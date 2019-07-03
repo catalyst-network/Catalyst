@@ -120,7 +120,7 @@ namespace Catalyst.Node.Rpc.Client.IntegrationTests.IO.Transport.Channels
             // obviously
             sentBytes.Should().BeAssignableTo<IByteBuffer>();
             
-            _clientCorrelationManager.ReceivedWithAnyArgs(1).AddPendingRequest(Arg.Any<CorrelatableMessage>());
+            _clientCorrelationManager.ReceivedWithAnyArgs(1).AddPendingRequest(Arg.Is<CorrelatableMessage>(c => c.Content.CorrelationId.ToCorrelationId().Equals(correlationId)));
             
             _clientKeySigner.ReceivedWithAnyArgs(1).Sign(Arg.Is(sig.Bytes.RawBytes));
             
