@@ -1,4 +1,4 @@
-﻿#region LICENSE
+#region LICENSE
 
 /**
 * Copyright (c) 2019 Catalyst Network
@@ -21,13 +21,18 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.Config;
+using System;
+using Catalyst.Common.Enumerator;
 
-namespace Catalyst.Common.Interfaces.P2P.ReputationSystem
+namespace Catalyst.Common.Interfaces.Enumerator
 {
-    public interface IPeerReputationChange
+    public interface IEnumeration : IEquatable<Enumeration>
     {
-        IPeerIdentifier PeerIdentifier { get; }
-        IReputationEvents ReputationEvent { get; }
+        string Name { get; }
+        int Id { get; }
+        string ToString();
+        bool Equals(Enumeration other);
+        bool Equals(object obj);
+        int GetHashCode();
     }
 }

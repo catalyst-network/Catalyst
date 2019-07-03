@@ -21,6 +21,7 @@
 
 #endregion
 
+using Catalyst.Common.Interfaces.Config;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.ReputationSystem;
 
@@ -30,12 +31,12 @@ namespace Catalyst.Node.Core.P2P.ReputationSystem
         : IPeerReputationChange
     {
         public IPeerIdentifier PeerIdentifier { get; }
-        public int ReputationChange { get; }
+        public IReputationEvents ReputationEvent { get; }
 
-        public PeerReputationChange(IPeerIdentifier peerIdentifier, int reputationChange)
+        public PeerReputationChange(IPeerIdentifier peerIdentifier, IReputationEvents reputationEvent)
         {
             PeerIdentifier = peerIdentifier;
-            ReputationChange = reputationChange;
+            ReputationEvent = reputationEvent;
         }
     }
 }

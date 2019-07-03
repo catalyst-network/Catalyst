@@ -24,7 +24,6 @@
 using System;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
-using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.P2P.ReputationSystem;
 using Catalyst.Common.P2P;
 using SharpRepository.Repository;
@@ -34,13 +33,23 @@ namespace Catalyst.Node.Core.P2P.ReputationSystem
     public class ReputationManager : IReputationManager
     {
         public IRepository<Peer> PeerRepository { get; }
-        private readonly ReplaySubject<IMessageEvictionEvent> _reputationEvent;
-        public IObservable<IMessageEvictionEvent> ReputationEvents => _reputationEvent.AsObservable();
+        private readonly ReplaySubject<IPeerReputationChange> _reputationEvent;
+        public IObservable<IPeerReputationChange> MasterReputationEventStream => _reputationEvent.AsObservable();
 
         public ReputationManager(IRepository<Peer> peerRepository)
         {
             PeerRepository = peerRepository;
-            _reputationEvent = new ReplaySubject<IMessageEvictionEvent>(0);
+            _reputationEvent = new ReplaySubject<IPeerReputationChange>(0);
+        }
+
+        /// <summary>
+        ///     Allows passing in multiple reputation streams and merging with this MasterReputationEventStream
+        /// </summary>
+        /// <param name="reputationChangeStream"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        public void MergeReputationStream(IObservable<IPeerReputationChange> reputationChangeStream)
+        {
+            MasterReputationEventStream.Merge(reputationChangeStream);
         }
     }
 }

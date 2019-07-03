@@ -22,17 +22,10 @@
 #endregion
 
 using Catalyst.Common.Enumerator;
+using Catalyst.Common.Interfaces.Config;
 
 namespace Catalyst.Common.Config
 {
-    public interface IReputationEvents {
-        int Amount { get; set; }
-        string Name { get; }
-        int Id { get; }
-        bool Equals(Enumeration other);
-        bool Equals(object obj);
-    }
-
     public class ReputationEvents : Enumeration, IReputationEvents
     {
         public static readonly ReputationEvents NoResponseReceived = new NoResponseReceivedEvent();
