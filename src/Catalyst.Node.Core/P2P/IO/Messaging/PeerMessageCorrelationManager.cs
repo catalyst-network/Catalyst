@@ -43,7 +43,7 @@ namespace Catalyst.Node.Core.P2P.IO.Messaging
         private readonly IMemoryCache _pendingRequests;
         private readonly MemoryCacheEntryOptions _entryOptions;
         private readonly ReplaySubject<IPeerReputationChange> _reputationEvent;
-        public IObservable<IPeerReputationChange> ReputationEventStream => _reputationEvent.AsObservable();
+        private IObservable<IPeerReputationChange> ReputationEventStream => _reputationEvent.AsObservable();
         
         public PeerMessageCorrelationManager(IReputationManager reputationManager,
             IMemoryCache cache,
@@ -80,7 +80,18 @@ namespace Catalyst.Node.Core.P2P.IO.Messaging
         {
             Guard.Argument(response, nameof(response)).NotNull();
 
-            return _pendingRequests.TryGetValue(response.CorrelationId, out _);
+            if (!_pendingRequests.TryGetValue(response.CorrelationId, out CorrelatableMessage message))
+            {
+                _reputationEvent.OnNext(new PeerReputationChange(message.Recipient,
+                    ReputationEvents.UnCorrelatableMessage)
+                );
+                return false;
+            }
+
+            _reputationEvent.OnNext(new PeerReputationChange(message.Recipient,
+                ReputationEvents.ResponseReceived)
+            );
+            return true;
         }
 
         private void Dispose(bool disposing)

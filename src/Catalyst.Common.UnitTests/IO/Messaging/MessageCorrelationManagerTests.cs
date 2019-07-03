@@ -29,7 +29,6 @@ using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Protocol.IPPN;
 using Catalyst.TestUtils;
-using FluentAssertions;
 using Microsoft.Extensions.Caching.Memory;
 using NSubstitute;
 using Xunit;

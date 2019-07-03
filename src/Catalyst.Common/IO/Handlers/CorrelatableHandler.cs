@@ -33,12 +33,14 @@ using DotNetty.Transport.Channels;
 
 namespace Catalyst.Common.IO.Handlers
 {
-    public sealed class CorrelatableHandler : OutboundChannelHandlerBase<IMessageDto<ProtocolMessage>>
+    public sealed class CorrelatableHandler<T> :
+        OutboundChannelHandlerBase<IMessageDto<ProtocolMessage>>
+        where T : IMessageCorrelationManager
     {
-        private readonly IMessageCorrelationManager _messageCorrelationManager;
+        private readonly T _messageCorrelationManager;
         
         /// <param name="messageCorrelationManager"></param>
-        public CorrelatableHandler(IMessageCorrelationManager messageCorrelationManager)
+        public CorrelatableHandler(T messageCorrelationManager)
         {
             _messageCorrelationManager = messageCorrelationManager;
         }

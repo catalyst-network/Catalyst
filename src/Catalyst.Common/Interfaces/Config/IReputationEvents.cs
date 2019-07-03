@@ -27,6 +27,6 @@ namespace Catalyst.Common.Interfaces.Config
 {
     public interface IReputationEvents : IEnumeration
     {
-        int Amount { get; set; }
+        long Amount { get; set; }
     }
 }

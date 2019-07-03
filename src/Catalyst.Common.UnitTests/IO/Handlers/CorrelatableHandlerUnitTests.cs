@@ -57,7 +57,7 @@ namespace Catalyst.Common.UnitTests.IO.Handlers
             
             fakeRequestMessageDto.SenderPeerIdentifier.Returns(PeerIdentifierHelper.GetPeerIdentifier("sender"));
 
-            var correlatableHandler = new CorrelatableHandler(_fakeMessageCorrelationManager);
+            var correlatableHandler = new CorrelatableHandler<IMessageCorrelationManager>(_fakeMessageCorrelationManager);
 
             correlatableHandler.WriteAsync(_fakeContext, fakeRequestMessageDto);
             
@@ -74,7 +74,7 @@ namespace Catalyst.Common.UnitTests.IO.Handlers
         {
             var fakeRequestMessageDto = Substitute.For<IObserverDto<IMessage>>();
 
-            var correlatableHandler = new CorrelatableHandler(_fakeMessageCorrelationManager);
+            var correlatableHandler = new CorrelatableHandler<IMessageCorrelationManager>(_fakeMessageCorrelationManager);
             
             correlatableHandler.WriteAsync(_fakeContext, fakeRequestMessageDto);
             

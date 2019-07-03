@@ -29,11 +29,13 @@ namespace Catalyst.Common.Config
     public class ReputationEvents : Enumeration, IReputationEvents
     {
         public static readonly ReputationEvents NoResponseReceived = new NoResponseReceivedEvent();
+        public static readonly ReputationEvents ResponseReceived = new ResponseReceivedEvent();
+        public static readonly ReputationEvents UnCorrelatableMessage = new UnCorrelatableMessageEvent();
         public static readonly ReputationEvents InvalidMessageSignature = new InvalidMessageSignatureEvent();
         
-        public int Amount { get; set; }
-        
-        protected ReputationEvents(int id, string name) : base(id, name) { }
+        public long Amount { get; set; }
+
+        private ReputationEvents(int id, string name) : base(id, name) { }
         
         /// <summary>
         ///     Fires when a message is evicted for the PeerMessageCorrelationManager cache.
@@ -41,15 +43,34 @@ namespace Catalyst.Common.Config
         /// </summary>
         private sealed class NoResponseReceivedEvent : ReputationEvents
         {
-            public NoResponseReceivedEvent() : base(1, "noResponseReceived") { Amount = 10; }
+            public NoResponseReceivedEvent() : base(1, "noResponseReceived") { Amount = -10; }
         }
         
         /// <summary>
-        ///     Fired when node receives an invalid message.
+        ///     Fires when a message is matched PeerMessageCorrelationManager cache.
+        ///     This means a node has correctly respond to a message.
+        /// </summary>
+        private sealed class ResponseReceivedEvent : ReputationEvents
+        {
+            public ResponseReceivedEvent() : base(2, "responseReceived") { Amount = 10; }
+        }
+        
+        /// <summary>
+        ///     Fires when a message is received but can't be correlated by the PeerMessageCorrelationManager cache.
+        ///     This means a node has either sent a message with an invalid CorrelationId, it's responded too late,
+        ///     or sent a message to the wrong node.
+        /// </summary>
+        private sealed class UnCorrelatableMessageEvent : ReputationEvents
+        {
+            public UnCorrelatableMessageEvent() : base(3, "unCorrelatableMessage") { Amount = -100; }
+        }
+        
+        /// <summary>
+        ///     Fired when node receives a message with an invalid signature.
         /// </summary>
         private sealed class InvalidMessageSignatureEvent : ReputationEvents
         {
-            public InvalidMessageSignatureEvent() : base(1, "invalidMessageSignature") { Amount = 100; }
+            public InvalidMessageSignatureEvent() : base(4, "invalidMessageSignature") { Amount = -1000; }
         }
     }
 }
