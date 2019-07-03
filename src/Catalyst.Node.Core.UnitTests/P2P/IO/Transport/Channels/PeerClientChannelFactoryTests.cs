@@ -117,7 +117,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.IO.Transport.Channels
                 Signature = signature.ToByteString()
             };
 
-            _keySigner.Verify(Arg.Any<IPublicKey>(), Arg.Any<byte[]>(), Arg.Any<ISignature>())
+            _keySigner.Verify(Arg.Any<IPublicKey>(), Arg.Any<byte[]>(), Arg.Is<ISignature>(s => s.Bytes.RawBytes.SequenceEqual(signature)))
                .Returns(true);
 
             var observer = new ProtocolMessageObserver(0, Substitute.For<ILogger>());
