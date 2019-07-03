@@ -29,14 +29,16 @@ using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.FileTransfer;
 using Catalyst.Common.Interfaces.FileTransfer;
-using Catalyst.Common.Interfaces.IO.Messaging;
+using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.Modules.Dfs;
 using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.IO.Messaging;
+using Catalyst.Common.IO.Messaging.Dto;
+using Catalyst.Common.IO.Observables;
 using Catalyst.Common.P2P;
 using Catalyst.Node.Core.Modules.Dfs;
 using Catalyst.Node.Core.P2P;
-using Catalyst.Node.Core.RPC.Observables;
+using Catalyst.Node.Core.RPC.IO.Observables;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
@@ -87,13 +89,13 @@ namespace Catalyst.Node.Core.IntegrationTests.Modules.Dfs
                 sender,
                 sender,
                 _fakeContext.Channel,
-                Guid.NewGuid(),
+                CorrelationId.GenerateCorrelationId(),
                 string.Empty,
                 555);
 
             var cancellationTokenSource = new CancellationTokenSource();
             _nodeFileTransferFactory.RegisterTransfer(fileTransferInformation);
-            _nodeFileTransferFactory.FileTransferAsync(fileTransferInformation.CorrelationGuid, cancellationTokenSource.Token).ConfigureAwait(false).GetAwaiter();
+            _nodeFileTransferFactory.FileTransferAsync(fileTransferInformation.CorrelationId, cancellationTokenSource.Token).ConfigureAwait(false).GetAwaiter();
             Assert.Single(_nodeFileTransferFactory.Keys);
             cancellationTokenSource.Cancel();
 
@@ -125,7 +127,7 @@ namespace Catalyst.Node.Core.IntegrationTests.Modules.Dfs
             var transferBytesRequestHandler =
                 new TransferFileBytesRequestObserver(_nodeFileTransferFactory, senderPeerId, _logger);
 
-            var uniqueFileKey = Guid.NewGuid();
+            var uniqueFileKey = CorrelationId.GenerateCorrelationId();
             var crcValue = FileHelper.GetCrcValue(fileToTransfer);
 
             //Create a response object and set its return value
@@ -149,7 +151,7 @@ namespace Catalyst.Node.Core.IntegrationTests.Modules.Dfs
                     fakeNode.Channel, uniqueFileKey, new DtoFactory());
                 for (uint i = 0; i < fileTransferInformation.MaxChunk; i++)
                 {
-                    fileUploadInformation.GetUploadMessageDto(i).Message.ToProtocolMessage(sender).SendToHandler(_fakeContext, transferBytesRequestHandler);
+                    fileUploadInformation.GetUploadMessageDto(i).Content.ToProtocolMessage(sender).SendToHandler(_fakeContext, transferBytesRequestHandler);
                 }
             }
 

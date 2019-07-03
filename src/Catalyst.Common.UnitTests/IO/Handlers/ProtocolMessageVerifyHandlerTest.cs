@@ -65,7 +65,6 @@ namespace Catalyst.Common.UnitTests.IO.Handlers
             signatureHandler.ChannelRead(_fakeContext, _protocolMessageSigned);
 
             _fakeContext.ReceivedWithAnyArgs().FireChannelRead(_protocolMessageSigned).Received(1);
-            _fakeContext.DidNotReceiveWithAnyArgs().CloseAsync();
         }
         
         [Fact]
@@ -79,7 +78,6 @@ namespace Catalyst.Common.UnitTests.IO.Handlers
             signatureHandler.ChannelRead(_fakeContext, _protocolMessageSigned);
 
             _fakeContext.DidNotReceiveWithAnyArgs().FireChannelRead(_protocolMessageSigned).Received(0);
-            _fakeContext.ReceivedWithAnyArgs().CloseAsync();
         }
     }
 }

@@ -25,6 +25,7 @@ using System;
 using System.Text;
 using Catalyst.Common.Cryptography;
 using Catalyst.Common.Interfaces.Cryptography;
+using Catalyst.Cryptography.BulletProofs.Wrapper;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Exceptions;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Types;
@@ -35,7 +36,7 @@ namespace Catalyst.Common.UnitTests.Cryptography
 {
     public sealed class CryptographyTests
     {
-        public CryptographyTests() { _context = new RustCryptoContext(); }
+        public CryptographyTests() { _context = new CryptoContext(new CryptoWrapper()); }
 
         private readonly ICryptoContext _context;
 
@@ -107,6 +108,24 @@ namespace Catalyst.Common.UnitTests.Cryptography
             byte[] message = Encoding.UTF8.GetBytes("fa la la la");
             Action action = () => { _context.Verify(publicKey, message, invalidSig); };
             action.Should().Throw<SignatureException>();
+        }
+
+        [Fact]
+        public void Is_PrivateKey_Length_Positive()
+        {
+            _context.PrivateKeyLength.Should().BePositive();
+        }
+
+        [Fact]
+        public void Is_PublicKey_Length_Positive()
+        {
+            _context.PublicKeyLength.Should().BePositive();
+        }
+
+        [Fact]
+        public void Is_Signature_Length_Positive()
+        {
+            _context.SignatureLength.Should().BePositive();
         }
     }
 }

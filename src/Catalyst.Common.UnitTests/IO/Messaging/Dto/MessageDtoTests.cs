@@ -23,12 +23,12 @@
 
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Protocol.IPPN;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Google.Protobuf;
-using NSubstitute;
 using Xunit;
 
 namespace Catalyst.Common.UnitTests.IO.Messaging.Dto
@@ -40,7 +40,11 @@ namespace Catalyst.Common.UnitTests.IO.Messaging.Dto
         public MessageDtoTests()
         {
             var pingRequest = new PingRequest();
-            _messageDto = new MessageDto<PingRequest>(pingRequest, PeerIdentifierHelper.GetPeerIdentifier("Sender_Key"), PeerIdentifierHelper.GetPeerIdentifier("Recipient_Key"));
+            _messageDto = new MessageDto<PingRequest>(pingRequest, 
+                PeerIdentifierHelper.GetPeerIdentifier("Sender_Key"),
+                PeerIdentifierHelper.GetPeerIdentifier("Recipient_Key"),
+                CorrelationId.GenerateCorrelationId()
+            );
         }
 
         [Fact]
@@ -49,9 +53,9 @@ namespace Catalyst.Common.UnitTests.IO.Messaging.Dto
             Assert.NotNull(_messageDto);
 
             _messageDto.Should().BeOfType<MessageDto<PingRequest>>();
-            _messageDto.Message.Should().NotBeNull().And.BeAssignableTo(typeof(IMessage<PingRequest>));
-            _messageDto.Recipient.Should().NotBeNull().And.BeAssignableTo(typeof(IPeerIdentifier));
-            _messageDto.Sender.Should().NotBeNull().And.BeAssignableTo(typeof(IPeerIdentifier));
+            _messageDto.Content.Should().NotBeNull().And.BeAssignableTo(typeof(IMessage<PingRequest>));
+            _messageDto.RecipientPeerIdentifier.Should().NotBeNull().And.BeAssignableTo(typeof(IPeerIdentifier));
+            _messageDto.SenderPeerIdentifier.Should().NotBeNull().And.BeAssignableTo(typeof(IPeerIdentifier));
         }
     }
 }

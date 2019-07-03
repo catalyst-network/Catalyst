@@ -27,7 +27,6 @@ using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.Messaging.Broadcast;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.P2P;
-using Catalyst.Node.Core.P2P.Messaging.Broadcast;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Microsoft.Extensions.Caching.Memory;
@@ -36,6 +35,9 @@ using SharpRepository.InMemoryRepository;
 using SharpRepository.Repository;
 using System;
 using System.Threading.Tasks;
+using Catalyst.Common.Interfaces.IO.Messaging;
+using Catalyst.Common.IO.Messaging.Dto;
+using Catalyst.Node.Core.P2P.IO.Messaging.Broadcast;
 using Xunit;
 
 namespace Catalyst.Node.Core.UnitTests.P2P.Messaging.Gossip
@@ -57,7 +59,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Messaging.Gossip
             PopulatePeers(100);
             var correlationId = await BroadcastMessage();
 
-            _cache.TryGetValue(correlationId, out BroadcastMessage value);
+            _cache.TryGetValue(correlationId.Id, out BroadcastMessage value);
             value.BroadcastCount.Should().Be((uint) Constants.MaxGossipPeersPerRound);
             value.ReceivedCount.Should().Be(0);
         }
@@ -68,7 +70,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Messaging.Gossip
             PopulatePeers(Constants.MaxGossipPeersPerRound - 1);
             var correlationId = await BroadcastMessage();
 
-            _cache.TryGetValue(correlationId, out BroadcastMessage value);
+            _cache.TryGetValue(correlationId.Id, out BroadcastMessage value);
 
             value.BroadcastCount.Should().Be((uint) Constants.MaxGossipPeersPerRound - 1);
             value.ReceivedCount.Should().Be(0);
@@ -91,14 +93,14 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Messaging.Gossip
                 TransactionHelper.GetTransaction(),
                 peerIdentifier,
                 senderIdentifier,
-                Guid.NewGuid()
+                CorrelationId.GenerateCorrelationId()
             );
 
-            var gossipDto = messageDto.Message.ToProtocolMessage(senderIdentifier.PeerId, messageDto.CorrelationId);
+            var gossipDto = messageDto.Content.ToProtocolMessage(senderIdentifier.PeerId, messageDto.CorrelationId);
 
             await broadcastMessageHandler.ReceiveAsync(gossipDto);
 
-            _cache.TryGetValue(messageDto.CorrelationId, out BroadcastMessage value);
+            _cache.TryGetValue(messageDto.CorrelationId.Id, out BroadcastMessage value);
             value.ReceivedCount.Should().Be(1);
 
             for (var i = 0; i < receivedCount; i++)
@@ -106,11 +108,11 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Messaging.Gossip
                 await broadcastMessageHandler.ReceiveAsync(gossipDto);
             }
 
-            _cache.TryGetValue(messageDto.CorrelationId, out value);
+            _cache.TryGetValue(messageDto.CorrelationId.Id, out value);
             value.ReceivedCount.Should().Be((uint) receivedCount + 1);
         }
 
-        private async Task<Guid> BroadcastMessage()
+        private async Task<ICorrelationId> BroadcastMessage()
         {
             var senderPeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("sender");
 
@@ -120,7 +122,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Messaging.Gossip
             var gossipMessage = TransactionHelper.GetTransaction().ToProtocolMessage(senderPeerIdentifier.PeerId);
 
             await gossipMessageHandler.BroadcastAsync(gossipMessage);
-            return gossipMessage.CorrelationId.ToGuid();
+            return gossipMessage.CorrelationId.ToCorrelationId();
         }
 
         private void PopulatePeers(int count)

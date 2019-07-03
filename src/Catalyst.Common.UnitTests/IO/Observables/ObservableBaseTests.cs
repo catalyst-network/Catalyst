@@ -27,6 +27,7 @@ using System.Reactive.Subjects;
 using System.Threading.Tasks;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.Util;
 using Catalyst.Protocol.Common;
@@ -61,7 +62,7 @@ namespace Catalyst.Common.UnitTests.IO.Observables
                 var message = new GetInfoResponse {Query = i.ToString()};
                 return message.ToProtocolMessage(
                     PeerIdentifierHelper.GetPeerIdentifier(i.ToString()).PeerId,
-                    Guid.NewGuid());
+                    CorrelationId.GenerateCorrelationId());
             }).ToArray();
         }
 
@@ -81,7 +82,7 @@ namespace Catalyst.Common.UnitTests.IO.Observables
         [Fact]
         public async Task MessageHandler_should_subscribe_to_next_and_error()
         {
-            var erroringStream = new ReplaySubject<IProtocolMessageDto<ProtocolMessage>>(10);
+            var erroringStream = new ReplaySubject<IObserverDto<ProtocolMessage>>(10);
             
             _handler.StartObserving(erroringStream);
 
@@ -92,7 +93,7 @@ namespace Catalyst.Common.UnitTests.IO.Observables
                     erroringStream.OnError(new DataMisalignedException("5 erred"));
                 }
 
-                erroringStream.OnNext(new ProtocolMessageDto(_fakeContext, payload));
+                erroringStream.OnNext(new ObserverDto(_fakeContext, payload));
             }
 
             await erroringStream.WaitForItemsOnDelayedStreamOnTaskPoolSchedulerAsync();
@@ -107,11 +108,11 @@ namespace Catalyst.Common.UnitTests.IO.Observables
         {
             _responseMessages[3] = new PingResponse().ToProtocolMessage(
                 _responseMessages[3].PeerId, 
-                _responseMessages[3].CorrelationId.ToGuid());
+                _responseMessages[3].CorrelationId.ToCorrelationId());
 
             _responseMessages[7] = new PingRequest().ToProtocolMessage(
                 _responseMessages[7].PeerId,
-                _responseMessages[7].CorrelationId.ToGuid());
+                _responseMessages[7].CorrelationId.ToCorrelationId());
 
             var mixedTypesStream = MessageStreamHelper.CreateStreamWithMessages(_fakeContext, _responseMessages);
 

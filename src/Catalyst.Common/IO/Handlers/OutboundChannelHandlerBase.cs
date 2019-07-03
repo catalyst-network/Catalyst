@@ -21,23 +21,73 @@
 
 #endregion
 
+using System;
+using System.Reflection;
 using System.Threading.Tasks;
+using DotNetty.Common.Utilities;
 using DotNetty.Transport.Channels;
+using Serilog;
 
 namespace Catalyst.Common.IO.Handlers
 {
+    /// <summary>
+    ///     OutboundChannel Handler is similar to Dot Netty's simple inbound channel handler, except it removes some redundant double cast operations.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public abstract class OutboundChannelHandlerBase<T> : ChannelHandlerAdapter
     {
+        private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
+        private readonly bool _autoRelease;
+        
+        protected OutboundChannelHandlerBase()
+            : this(true) { }
+        
+        private OutboundChannelHandlerBase(bool autoRelease)
+        {
+            _autoRelease = autoRelease;
+        }
+        
+        /// <summary>
+        ///     Does check to see if it can process the msg, if object is T thn it fires the inheritor WriteAsync0
+        /// </summary>
+        /// <param name="ctx"></param>
+        /// <param name="msg"></param>
+        /// <returns></returns>
         public override Task WriteAsync(IChannelHandlerContext ctx, object msg)
         {
-            if (msg is T msg1)
+            var flag = true;
+            try
             {
-                return WriteAsync0(ctx, msg1);
+                if (msg is T msg1)
+                {
+                    return WriteAsync0(ctx, msg1);
+                }
+                else
+                {
+                    flag = false;
+                }
             }
-
+            catch (Exception e)
+            {
+                Logger.Error(e, e.Message);
+            }
+            finally
+            {
+                if (_autoRelease && flag)
+                {
+                    ReferenceCountUtil.Release(msg);   
+                }
+            }
+            
             return ctx.WriteAsync(msg);
         }
 
+        /// <summary>
+        ///     Only fires if the msg if is the same as the classes generic T, should be implemented by inherited concrete classes.
+        /// </summary>
+        /// <param name="ctx"></param>
+        /// <param name="msg"></param>
+        /// <returns></returns>
         protected abstract Task WriteAsync0(IChannelHandlerContext ctx, T msg);
     }
 }

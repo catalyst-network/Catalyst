@@ -22,7 +22,6 @@
 #endregion
 
 using System;
-using System.Text;
 using Catalyst.Common.FileTransfer;
 using Catalyst.Common.Interfaces.Cli.Options;
 using Catalyst.Common.Interfaces.FileTransfer;
@@ -59,9 +58,7 @@ namespace Catalyst.Cli.Commands
                 DfsHash = opts.FileHash
             };
 
-            var recipient = new PeerIdentifier(
-                Encoding.ASCII.GetBytes(nodeConfig.PublicKey),
-                nodeConfig.HostAddress, nodeConfig.Port);
+            var recipient = PeerIdentifier.BuildPeerIdFromConfig(nodeConfig, _peerIdClientId);
             
             var messageDto = _dtoFactory.GetDto(message, 
                 recipient,
@@ -69,7 +66,7 @@ namespace Catalyst.Cli.Commands
 
             IDownloadFileInformation fileTransfer = new DownloadFileTransferInformation(
                 _peerIdentifier,
-                messageDto.Sender,
+                messageDto.SenderPeerIdentifier,
                 node.Channel,
                 messageDto.CorrelationId,
                 opts.FileOutput,

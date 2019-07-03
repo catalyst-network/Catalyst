@@ -27,10 +27,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
-using Catalyst.Common.IO.Messaging;
+using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.Network;
 using Catalyst.Common.P2P;
-using Catalyst.Node.Core.RPC.Observables;
+using Catalyst.Node.Core.RPC.IO.Observables;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
@@ -99,7 +99,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
                 PeerIdentifierHelper.GetPeerIdentifier("recipient")
             );
 
-            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, requestMessage.Message.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId));
+            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, requestMessage.Content.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId));
 
             var handler = new PeerCountRequestObserver(sendPeerIdentifier, peerRepository, _logger);
             handler.StartObserving(messageStream);
@@ -111,11 +111,11 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
 
             var sentResponseDto = (IMessageDto<GetPeerCountResponse>) receivedCalls[0].GetArguments().Single();
             
-            sentResponseDto.Message.GetType()
+            sentResponseDto.Content.GetType()
                .Should()
                .BeAssignableTo<GetPeerCountResponse>();
 
-            var responseContent = sentResponseDto.FromIMessageDto<GetPeerCountResponse>();
+            var responseContent = sentResponseDto.FromIMessageDto();
 
             responseContent.PeerCount.Should().Be(fakePeers);
         }

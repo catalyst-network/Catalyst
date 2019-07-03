@@ -29,7 +29,8 @@ using System.Threading.Tasks;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.IO.Messaging;
-using Catalyst.Node.Rpc.Client.Observables;
+using Catalyst.Common.IO.Messaging.Dto;
+using Catalyst.Node.Rpc.Client.IO.Observables;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.Protocol.Transaction;
 using Catalyst.TestUtils;
@@ -107,11 +108,11 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.Observables
                 },
                 PeerIdentifierHelper.GetPeerIdentifier("sender_key"),
                 PeerIdentifierHelper.GetPeerIdentifier("recipient_key"),
-                Guid.NewGuid()
+                CorrelationId.GenerateCorrelationId()
             );
 
             var messageStream = MessageStreamHelper.CreateStreamWithMessages(_fakeContext,
-                response.Message.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender_key").PeerId,
+                response.Content.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender_key").PeerId,
                     response.CorrelationId
                 )
             );

@@ -28,7 +28,7 @@ using Catalyst.Cli.Options;
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Common.Interfaces.FileTransfer;
-using Catalyst.Common.Interfaces.IO.Messaging;
+using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Transport;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Rpc;
@@ -51,6 +51,7 @@ namespace Catalyst.Cli.Commands
         private readonly ICertificateStore _certificateStore;
         private readonly IList<IRpcNodeConfig> _rpcNodeConfigs;
         private readonly INodeRpcClientFactory _nodeRpcClientFactory;
+        private readonly IPeerIdClientId _peerIdClientId;
         private readonly ISocketClientRegistry<INodeRpcClient> _socketClientRegistry;
         private readonly IDownloadFileTransferFactory _downloadFileTransferFactory;
         private readonly IUploadFileTransferFactory _uploadFileTransferFactory;
@@ -67,7 +68,8 @@ namespace Catalyst.Cli.Commands
             ICertificateStore certificateStore,
             IDownloadFileTransferFactory downloadFileTransferFactory,
             IUploadFileTransferFactory uploadFileTransferFactory,
-            IUserOutput userOutput) : base(userOutput)
+            IUserOutput userOutput,
+            IPeerIdClientId peerIdClientId) : base(userOutput)
         {
             _dtoFactory = dtoFactory;
             _certificateStore = certificateStore;
@@ -77,8 +79,9 @@ namespace Catalyst.Cli.Commands
             _rpcNodeConfigs = NodeRpcConfig.BuildRpcNodeSettingList(config);
             _downloadFileTransferFactory = downloadFileTransferFactory;
             _uploadFileTransferFactory = uploadFileTransferFactory;
-            _peerIdentifier = PeerIdentifier.BuildPeerIdFromConfig(config);
+            _peerIdentifier = PeerIdentifier.BuildPeerIdFromConfig(config, peerIdClientId);
             _userOutput = userOutput;
+            _peerIdClientId = peerIdClientId;
             _userOutput.WriteLine(@"Koopa Shell Start");
         }
 

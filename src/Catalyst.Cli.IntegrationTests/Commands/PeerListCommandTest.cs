@@ -56,8 +56,8 @@ namespace Catalyst.Cli.IntegrationTests.Commands
                         "listpeers", "-n", "node1");
                     result.Should().BeTrue();
                     NodeRpcClient.Received(1).SendMessage(Arg.Is<IMessageDto<GetPeerListRequest>>(
-                        x => x.Message != null && 
-                            x.Message.GetType().IsAssignableTo<GetPeerListRequest>()));
+                        x => x.Content != null && 
+                            x.Content.GetType().IsAssignableTo<GetPeerListRequest>()));
                 }   
             }
         }

@@ -21,16 +21,17 @@
 
 #endregion
 
+using System;
 using System.IO;
 using System.Linq;
 using Autofac;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
+using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
-using Catalyst.Common.IO.Messaging;
+using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.Util;
-using Catalyst.Node.Core.RPC.Observables;
-using Catalyst.Protocol.Common;
+using Catalyst.Node.Core.RPC.IO.Observables;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
@@ -41,6 +42,8 @@ using NSubstitute;
 using Serilog;
 using Xunit;
 using Xunit.Abstractions;
+using Nethereum.Hex.HexConvertors.Extensions;
+using System.Threading.Tasks;
 
 namespace Catalyst.Node.Core.UnitTests.RPC.Observables
 {
@@ -73,46 +76,57 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
             _fakeContext.Channel.Returns(fakeChannel);
         }
         
-        [Theory(Skip = "Fails, fixing in #393")]
-        [InlineData("hello", "mL9Z+e5gIfEdfhDWUxkUox886YuiZnhEj3om5AXmWVXJK7dl7/ESkjhbkJsrbzIbuWm8EPSjJ2YicTIcXvfzIAw", "zGfHq2tTVk9z4eXgyUwcss5uApFrvVdAjf395XdQt2wbY8drESxbLQSHrbSx2", true)]
-        [InlineData("Different Message", "mL9Z+e5gIfEdfhDWUxkUox886YuiZnhEj3om5AXmWVXJK7dl7/ESkjhbkJsrbzIbuWm8EPSjJ2YicTIcXvfzIAw", "zGfHq2tTVk9z4eXgyUwcss5uApFrvVdAjf395XdQt2wbY8drESxbLQSHrbSx2", false)]
-        [InlineData("hello", "any signature", "zGfHq2tTVk9z4eXgyUwcss5uApFrvVdAjf395XdQt2wbY8drESxbLQSHrbSx2", false)]
-        [InlineData("hello", "mL9Z+e5gIfEdfhDWUxkUox886YuiZnhEj3om5AXmWVXJK7dl7/ESkjhbkJsrbzIbuWm8EPSjJ2YicTIcXvfzIAw", "any public key", false)]
-        [InlineData("hello", "any signature", "any public key", false)]
-        [InlineData("", "", "", false)]
-        public void VerifyMessageRequest_UsingValidRequest_ShouldSendVerifyMessageResponse(string message, string signature, string publicKey, bool expectedResult)
+        //From http://ed25519.cr.yp.to/python/sign.input
+        [Theory]
+        [InlineData("", "e5564300c360ac729086e2cc806e828a84877f1eb8e5d974d873e065224901555fb8821590a33bacc61e39701cf9b46bd25bf5f0595bbe24655141438e7a100b", "d75a980182b10ab7d54bfed3c964073a0ee172f3daa62325af021a68f707511a", true)]
+        [InlineData("72", "92a009a9f0d4cab8720e820b5f642540a2b27b5416503f8fb3762223ebdb69da085ac1e43e15996e458f3613d0f11d8c387b2eaeb4302aeeb00d291612bb0c0072", "3d4017c3e843895a92b70aa74d1b7ebc9c982ccf2ec4968cc0cd55f12af4660c", true)]
+        [InlineData("af82", "6291d657deec24024827e69c3abe01a30ce548a284743a445e3680d7db5ac3ac18ff9b538d16f290ae67f760984dc6594a7c15e9716ed28dc027beceea1ec40aaf82", "fc51cd8e6218a1a38da47ed00230f0580816ed13ba3303ac5deb911548908025", true)]
+        [InlineData("", "f5564300c360ac729086e2cc806e828a84877f1eb8e5d974d873e065224901555fb8821590a33bacc61e39701cf9b46bd25bf5f0595bbe24655141438e7a100b", "d75a980182b10ab7d54bfed3c964073a0ee172f3daa62325af021a68f707511a", false)]
+        [InlineData("7255", "92a009a9f0d4cab8720e820b5f642540a2b27b5416503f8fb3762223ebdb69da085ac1e43e15996e458f3613d0f11d8c387b2eaeb4302aeeb00d291612bb0c0072", "3d4017c3e843895a92b70aa74d1b7ebc9c982ccf2ec4968cc0cd55f12af4660c", false)]
+        public async Task VerifyMessageRequest_UsingValidRequest_ShouldSendVerifyMessageResponse(string message, string signatureAndMessage, string publicKey, bool expectedResult)
         {
-            var request = new DtoFactory().GetDto(
+            var signatureMessageBytes = signatureAndMessage.HexToByteArray();
+            ArraySegment<byte> signatureBytes = new ArraySegment<byte>(signatureMessageBytes, 0, 64);
+            var publicKeyBytes = publicKey.HexToByteArray();
+            var messageBytes = message.HexToByteArray();
+
+            var messageFactory = new DtoFactory();
+            var request = messageFactory.GetDto(
                 new VerifyMessageRequest
                 {
-                    Message = RLP.EncodeElement(message.Trim('\"').ToBytesForRLPEncoding()).ToByteString(),
-                    PublicKey = publicKey.ToBytesForRLPEncoding().ToByteString(),
-                    Signature = signature.ToBytesForRLPEncoding().ToByteString()
+                    Message = RLP.EncodeElement(messageBytes).ToByteString(),
+                    PublicKey = RLP.EncodeElement(publicKeyBytes).ToByteString(),
+                    Signature = RLP.EncodeElement(signatureBytes.ToArray()).ToByteString()
                 },
                 PeerIdentifierHelper.GetPeerIdentifier("sender_key"),
                 PeerIdentifierHelper.GetPeerIdentifier("recipient_key")
             );
             
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, 
-                request.Message.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId)
+                request.Content.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId)
             );
             
             var handler = new VerifyMessageRequestObserver(PeerIdentifierHelper.GetPeerIdentifier("sender"),
                 _logger,
                 _keySigner
             );
-            
+
             handler.StartObserving(messageStream);
-            
+
+            await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
+
             var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();
             receivedCalls.Count.Should().Be(1);
+
+            var sentResponseDto = (IMessageDto<VerifyMessageResponse>) receivedCalls.Single().GetArguments().Single();
             
-            var sentResponse = (ProtocolMessage) receivedCalls.Single().GetArguments().Single();
-            sentResponse.TypeUrl.Should().Be(VerifyMessageResponse.Descriptor.ShortenedFullName());
+            sentResponseDto.Content.GetType()
+               .Should()
+               .BeAssignableTo<VerifyMessageResponse>();
 
-            var responseContent = sentResponse.FromProtocolMessage<VerifyMessageResponse>();
+            var verifyResponseMessage = sentResponseDto.FromIMessageDto();
 
-            responseContent.IsSignedByKey.Should().Be(expectedResult);
+            verifyResponseMessage.IsSignedByKey.Should().Be(expectedResult);
         }
 
         protected override void Dispose(bool disposing)

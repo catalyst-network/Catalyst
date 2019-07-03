@@ -21,7 +21,6 @@
 
 #endregion
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -32,6 +31,7 @@ using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.Messaging.Broadcast;
 using Catalyst.Common.IO.Handlers;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.Util;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
 using Catalyst.Node.Core.P2P.IO.Transport.Channels;
@@ -49,14 +49,15 @@ namespace Catalyst.Node.Core.UnitTests.P2P.IO.Transport.Channels
 {
     public sealed class PeerServerChannelFactoryTests
     {
-        private sealed class TestPeerServerChannelFactory : PeerServerChannelFactory
+        public sealed class TestPeerServerChannelFactory : PeerServerChannelFactory
         {
             private readonly List<IChannelHandler> _handlers;
 
             public TestPeerServerChannelFactory(IMessageCorrelationManager correlationManager,
-                IBroadcastManager gossipManager,
-                IKeySigner keySigner)
-                : base(correlationManager, gossipManager, keySigner)
+                IBroadcastManager broadcastManager,
+                IKeySigner keySigner,
+                IPeerIdValidator peerIdValidator)
+                : base(correlationManager, broadcastManager, keySigner, peerIdValidator)
             {
                 _handlers = Handlers;
             }
@@ -78,32 +79,38 @@ namespace Catalyst.Node.Core.UnitTests.P2P.IO.Transport.Channels
             var peerSettings = Substitute.For<IPeerSettings>();
             peerSettings.BindAddress.Returns(IPAddress.Parse("127.0.0.1"));
             peerSettings.Port.Returns(1234);
+
+            var peerValidator = Substitute.For<IPeerIdValidator>();
+            peerValidator.ValidatePeerIdFormat(Arg.Any<PeerId>()).Returns(true);
+
             _factory = new TestPeerServerChannelFactory(
                 _correlationManager,
                 _gossipManager,
-                _keySigner);
+                _keySigner,
+                peerValidator);
         }
 
         [Fact]
-        public void UdpServerChannelFactory_should_have_correct_handlers()
+        public void PeerServerChannelFactory_should_have_correct_handlers()
         {
-            _factory.InheritedHandlers.Count(h => h != null).Should().Be(5);
+            _factory.InheritedHandlers.Count(h => h != null).Should().Be(6);
             var handlers = _factory.InheritedHandlers.ToArray();
-            handlers[1].Should().BeOfType<CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>>();
-            handlers[1].Should().BeOfType<CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>>();
+            handlers[0].Should().BeOfType<CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>>();
+            handlers[1].Should().BeOfType<PeerIdValidationHandler>();
             handlers[2].Should().BeOfType<CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>>();
-            handlers[3].Should().BeOfType<BroadcastHandler>();
-            handlers[4].Should().BeOfType<ObservableServiceHandler>();
+            handlers[3].Should().BeOfType<CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>>();
+            handlers[4].Should().BeOfType<BroadcastHandler>();
+            handlers[5].Should().BeOfType<ObservableServiceHandler>();
         }
 
         [Fact]
-        public async Task UdpServerChannelFactory_should_put_the_correct_handlers_on_the_inbound_pipeline()
+        public async Task PeerServerChannelFactory_should_put_the_correct_handlers_on_the_inbound_pipeline()
         {
             var testingChannel = new EmbeddedChannel("test".ToChannelId(),
                 true, _factory.InheritedHandlers.ToArray());
 
             var senderId = PeerIdHelper.GetPeerId("sender");
-            var correlationId = Guid.NewGuid();
+            var correlationId = CorrelationId.GenerateCorrelationId();
             var protocolMessage = new PingRequest().ToProtocolMessage(senderId, correlationId);
             var signature = ByteUtil.GenerateRandomByteArray(64);
 
@@ -116,16 +123,13 @@ namespace Catalyst.Node.Core.UnitTests.P2P.IO.Transport.Channels
             _keySigner.Verify(Arg.Any<IPublicKey>(), Arg.Any<byte[]>(), Arg.Any<ISignature>())
                .Returns(true);
 
-            var datagram = signedMessage.ToDatagram(new IPEndPoint(IPAddress.Loopback, 0));
-
             var observer = new ProtocolMessageObserver(0, Substitute.For<ILogger>());
            
             var messageStream = ((ObservableServiceHandler) _factory.InheritedHandlers.Last()).MessageStream;
+            
             using (messageStream.Subscribe(observer))
             {
-                testingChannel.WriteInbound(datagram);
-                
-                // _correlationManager.Received(1).TryMatchResponse(protocolMessage); // @TODO in bound server shouldn't try and correlate a request, lets do another test to check this logic
+                testingChannel.WriteInbound(signedMessage);
                 _correlationManager.DidNotReceiveWithAnyArgs().TryMatchResponse(protocolMessage);
                 await _gossipManager.DidNotReceiveWithAnyArgs().BroadcastAsync(null);
                 _keySigner.ReceivedWithAnyArgs(1).Verify(null, null, null);
@@ -133,7 +137,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.IO.Transport.Channels
                 await messageStream.WaitForItemsOnDelayedStreamOnTaskPoolSchedulerAsync();
 
                 observer.Received.Count.Should().Be(1);
-                observer.Received.Single().Payload.CorrelationId.ToGuid().Should().Be(correlationId);
+                observer.Received.Single().Payload.CorrelationId.ToCorrelationId().Id.Should().Be(correlationId.Id);
             }
         }
     }

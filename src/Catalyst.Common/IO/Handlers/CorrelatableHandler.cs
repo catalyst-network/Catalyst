@@ -36,20 +36,22 @@ namespace Catalyst.Common.IO.Handlers
     public sealed class CorrelatableHandler : OutboundChannelHandlerBase<IMessageDto<ProtocolMessage>>
     {
         private readonly IMessageCorrelationManager _messageCorrelationManager;
-
+        
+        /// <param name="messageCorrelationManager"></param>
         public CorrelatableHandler(IMessageCorrelationManager messageCorrelationManager)
         {
             _messageCorrelationManager = messageCorrelationManager;
         }
-
+        
+        /// <inheritdoc />
         protected override Task WriteAsync0(IChannelHandlerContext context, IMessageDto<ProtocolMessage> message)
         {
-            if (message.MessageType.Name.Equals(MessageTypes.Request.Name))
+            if (message.Content.TypeUrl.EndsWith(MessageTypes.Request.Name))
             {
                 _messageCorrelationManager.AddPendingRequest(new CorrelatableMessage
                 {
-                    Recipient = message.Recipient,
-                    Content = message.Message.ToProtocolMessage(message.Sender.PeerId, Guid.NewGuid()),
+                    Recipient = message.RecipientPeerIdentifier,
+                    Content = message.Content.ToProtocolMessage(message.SenderPeerIdentifier.PeerId, CorrelationId.GenerateCorrelationId()),
                     SentAt = DateTimeOffset.UtcNow
                 });
             }

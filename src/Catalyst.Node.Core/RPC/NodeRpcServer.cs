@@ -44,7 +44,7 @@ namespace Catalyst.Node.Core.RPC
         private readonly X509Certificate2 _certificate;
 
         public IRpcServerSettings Settings { get; }
-        public IObservable<IProtocolMessageDto<ProtocolMessage>> MessageStream { get; }
+        public IObservable<IObserverDto<ProtocolMessage>> MessageStream { get; }
 
         public NodeRpcServer(IRpcServerSettings settings,
             ILogger logger,
@@ -64,15 +64,15 @@ namespace Catalyst.Node.Core.RPC
             requestHandlers.ToList().ForEach(h => h.StartObserving(MessageStream));
         }
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="disposing"></param>
         protected override void Dispose(bool disposing)
         {
-            if (!disposing) return;
-            _cancellationSource?.Dispose();
-            _certificate?.Dispose();
+            if (disposing)
+            {
+                _cancellationSource?.Dispose();
+                _certificate?.Dispose();
+            }
+
+            base.Dispose(disposing);
         }
     }
 }

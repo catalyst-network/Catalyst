@@ -24,13 +24,11 @@
 using System;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
-using System.Reflection;
 using Catalyst.Common.Interfaces.IO.Handlers;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;
-using Serilog;
 
 namespace Catalyst.Common.IO.Handlers
 {
@@ -38,18 +36,12 @@ namespace Catalyst.Common.IO.Handlers
     ///     This handler terminates dotnetty involvement and passes service messages into rx land,
     ///     by this point all messages should be treated as genuine and sanitised.
     /// </summary>
-    public sealed class ObservableServiceHandler : SimpleChannelInboundHandler<ProtocolMessage>, IObservableServiceHandler
+    public sealed class ObservableServiceHandler : InboundChannelHandlerBase<ProtocolMessage>, IObservableServiceHandler
     {
-        private readonly ILogger _logger;
-        public IObservable<IProtocolMessageDto<ProtocolMessage>> MessageStream => _messageSubject.AsObservable();
+        public IObservable<IObserverDto<ProtocolMessage>> MessageStream => _messageSubject.AsObservable();
 
-        private readonly ReplaySubject<IProtocolMessageDto<ProtocolMessage>> _messageSubject 
-            = new ReplaySubject<IProtocolMessageDto<ProtocolMessage>>(1);
-        
-        public ObservableServiceHandler()
-        {
-            _logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
-        }
+        private readonly ReplaySubject<IObserverDto<ProtocolMessage>> _messageSubject 
+            = new ReplaySubject<IObserverDto<ProtocolMessage>>(1);
 
         /// <summary>
         ///     Reads the channel once accepted and pushed into a stream.
@@ -58,13 +50,13 @@ namespace Catalyst.Common.IO.Handlers
         /// <param name="message"></param>
         protected override void ChannelRead0(IChannelHandlerContext ctx, ProtocolMessage message)
         {
-            var contextAny = new ProtocolMessageDto(ctx, message);
+            var contextAny = new ObserverDto(ctx, message);
             _messageSubject.OnNext(contextAny);
         }
         
         public override void ExceptionCaught(IChannelHandlerContext context, Exception e)
         {
-            _logger.Error(e, "Error in ObservableServiceHandler");
+            Logger.Error(e, "Error in ObservableServiceHandler");
             context.CloseAsync().ContinueWith(_ => _messageSubject.OnError(e));
         }
 

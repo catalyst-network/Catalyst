@@ -25,6 +25,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Common.Config;
+using Catalyst.Common.Interfaces.IO.Messaging;
 
 namespace Catalyst.Common.Interfaces.FileTransfer
 {
@@ -39,42 +40,22 @@ namespace Catalyst.Common.Interfaces.FileTransfer
         FileTransferResponseCodes RegisterTransfer(T fileTransferInformation);
 
         /// <summary>Files the transfer asynchronous.</summary>
-        /// <param name="correlationGuid">The correlation unique identifier.</param>
+        /// <param name="correlationId">The correlation unique identifier.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns></returns>
-        Task FileTransferAsync(Guid correlationGuid, CancellationToken cancellationToken);
+        Task FileTransferAsync(ICorrelationId correlationId, CancellationToken cancellationToken);
         
         /// <summary>Gets the file transfer information.</summary>
-        /// <param name="correlationGuid">The correlation unique identifier.</param>
+        /// <param name="correlationId">The correlation unique identifier.</param>
         /// <returns></returns>
-        T GetFileTransferInformation(Guid correlationGuid);
+        T GetFileTransferInformation(ICorrelationId correlationId);
 
         /// <summary>Removes the specified unique identifier.</summary>
         /// <param name="guid">The unique identifier.</param>
-        void Remove(Guid guid);
+        void Remove(ICorrelationId guid);
 
         /// <summary>Gets the keys.</summary>
         /// <value>The keys.</value>
         Guid[] Keys { get; }
-    }
-
-    /// <summary>
-    /// Handles storing of file uploads
-    /// </summary>
-    /// <seealso cref="IFileTransferFactory{IUploadFileInformation}" />
-    public interface IUploadFileTransferFactory : IFileTransferFactory<IUploadFileInformation> { }
-
-    /// <summary>
-    /// Handles storing of the file downloads
-    /// </summary>
-    /// <seealso cref="IFileTransferFactory{IDownloadFileInformation}" />
-    public interface IDownloadFileTransferFactory : IFileTransferFactory<IDownloadFileInformation>
-    {
-        /// <summary>Downloads the chunk.</summary>
-        /// <param name="fileName">Name of the file.</param>
-        /// <param name="chunkId">The chunk identifier.</param>
-        /// <param name="fileChunk">The file chunk.</param>
-        /// <returns></returns>
-        FileTransferResponseCodes DownloadChunk(Guid fileName, uint chunkId, byte[] fileChunk);
     }
 }

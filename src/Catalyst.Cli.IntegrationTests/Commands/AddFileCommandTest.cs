@@ -28,6 +28,7 @@ using Autofac;
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.FileTransfer;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using FluentAssertions;
@@ -68,7 +69,7 @@ namespace Catalyst.Cli.IntegrationTests.Commands
                     {
                         await TaskHelper.WaitForAsync(() => uploadFileTransferFactory.Keys.Length > 0, TimeSpan.FromSeconds(5));
 
-                        uploadFileTransferFactory.GetFileTransferInformation(uploadFileTransferFactory.Keys.First())
+                        uploadFileTransferFactory.GetFileTransferInformation(new CorrelationId(uploadFileTransferFactory.Keys.First()))
                            .Expire();
                     }
 
@@ -78,8 +79,8 @@ namespace Catalyst.Cli.IntegrationTests.Commands
                     if (expectedResult)
                     {
                         NodeRpcClient.Received(1).SendMessage(Arg.Is<IMessageDto<AddFileToDfsRequest>>(
-                            x => x.Message != null && 
-                                x.Message.GetType().IsAssignableTo<AddFileToDfsRequest>()));
+                            x => x.Content != null && 
+                                x.Content.GetType().IsAssignableTo<AddFileToDfsRequest>()));
                     }
                 }   
             }

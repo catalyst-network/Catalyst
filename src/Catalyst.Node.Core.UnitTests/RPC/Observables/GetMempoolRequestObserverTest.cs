@@ -28,8 +28,8 @@ using System.Threading.Tasks;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.Modules.Mempool;
-using Catalyst.Common.IO.Messaging;
-using Catalyst.Node.Core.RPC.Observables;
+using Catalyst.Common.IO.Messaging.Dto;
+using Catalyst.Node.Core.RPC.IO.Observables;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.Protocol.Transaction;
 using Catalyst.TestUtils;
@@ -92,7 +92,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
                 PeerIdentifierHelper.GetPeerIdentifier("sender_key")
             );
             
-            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, request.Message.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId));
+            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, request.Content.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId));
             var handler = new GetMempoolRequestObserver(PeerIdentifierHelper.GetPeerIdentifier("sender"), mempool, _logger);
             
             handler.StartObserving(messageStream);
@@ -103,9 +103,9 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
             receivedCalls.Count.Should().Be(1);
             
             var sentResponseDto = (IMessageDto<GetMempoolResponse>) receivedCalls.Single().GetArguments().Single();
-            sentResponseDto.Message.GetType().Should().BeAssignableTo<GetMempoolResponse>();
+            sentResponseDto.Content.GetType().Should().BeAssignableTo<GetMempoolResponse>();
 
-            var responseContent = sentResponseDto.FromIMessageDto<GetMempoolResponse>();
+            var responseContent = sentResponseDto.FromIMessageDto();
             
             if (expectedTxs == 0)
             {

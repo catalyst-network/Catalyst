@@ -29,7 +29,7 @@ using Google.Protobuf;
 
 namespace Catalyst.Common.IO.Handlers
 {
-    public sealed class ProtocolMessageVerifyHandler : SimpleChannelInboundHandler<ProtocolMessageSigned>
+    public sealed class ProtocolMessageVerifyHandler : InboundChannelHandlerBase<ProtocolMessageSigned>
     {
         private readonly IKeySigner _keySigner;
 
@@ -46,13 +46,7 @@ namespace Catalyst.Common.IO.Handlers
                 new Signature(signedMessage.Signature.ToByteArray()))
             )
             {
-                ctx.FireChannelRead(signedMessage.Message);                
-            }
-            else
-            {
-                // @TODO maybe we want to send a message why we close the channel, if we do we will need a Correlation handler for Tcp && Udp to write back correctly.
-                // ctx.Channel.WriteAndFlushAsync(datagramEnvelope);
-                ctx.CloseAsync().ConfigureAwait(false);
+                ctx.FireChannelRead(signedMessage.Message);
             }
         }
     }

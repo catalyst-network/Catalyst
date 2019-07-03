@@ -27,7 +27,9 @@ using System.Linq;
 using System.Net;
 using System.Reflection;
 using Catalyst.Common.Config;
+using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.Util;
 using Catalyst.Protocol.Common;
 using Dawn;
@@ -35,7 +37,6 @@ using DotNetty.Buffers;
 using DotNetty.Transport.Channels.Sockets;
 using Google.Protobuf;
 using Google.Protobuf.Reflection;
-using Multiformats.Base;
 using Multiformats.Hash;
 using Type = System.Type;
 
@@ -88,23 +89,24 @@ namespace Catalyst.Common.Extensions
 
         public static ProtocolMessage ToProtocolMessage(this IMessage protobufObject,
             PeerId senderId,
-            Guid correlationId = default)
+            ICorrelationId correlationId = default)
         {
             var typeUrl = protobufObject.Descriptor.ShortenedFullName();
             Guard.Argument(senderId, nameof(senderId)).NotNull();
-            Guard.Argument(correlationId, nameof(correlationId))
-               .Require(c => !typeUrl.EndsWith(MessageTypes.Response.Name) || c != default,
-                    g => $"{typeUrl} is a response type and needs a correlationId");
-
-            var protocolMessage = new ProtocolMessage
+            
+            if (typeUrl.EndsWith(MessageTypes.Response.Name))
+            {
+                Guard.Argument(correlationId, nameof(correlationId)).NotNull();
+            }
+            
+            return new ProtocolMessage
             {
                 PeerId = senderId,
-                CorrelationId = (correlationId == default ? Guid.NewGuid() : correlationId).ToByteString(),
-                
+                CorrelationId = (correlationId == default ? CorrelationId.GenerateCorrelationId().Id : correlationId.Id).ToByteString(),
+
                 TypeUrl = typeUrl,
                 Value = protobufObject.ToByteString()
             };
-            return protocolMessage;
         }
 
         public static bool IsRequestType(this Type type)
@@ -141,7 +143,7 @@ namespace Catalyst.Common.Extensions
         public static T FromIMessageDto<T>(this IMessageDto<T> message) where T : IMessage<T>
         {
             var empty = (T) Activator.CreateInstance(typeof(T));
-            var typed = (T) empty.Descriptor.Parser.ParseFrom(message.Message.ToByteString());
+            var typed = (T) empty.Descriptor.Parser.ParseFrom(message.Content.ToByteString());
             return typed;
         }
 
@@ -150,9 +152,9 @@ namespace Catalyst.Common.Extensions
             return ByteString.CopyFromUtf8(utf8String);
         }
 
-        public static Guid ToGuid(this ByteString guidBytes)
+        public static ICorrelationId ToCorrelationId(this ByteString guidBytes)
         {
-            return new Guid(guidBytes.ToByteArray());
+            return new CorrelationId(new Guid(guidBytes.ToByteArray()));
         }
 
         public static ByteString ToByteString(this Guid guid)

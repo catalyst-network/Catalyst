@@ -30,8 +30,8 @@ using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
-using Catalyst.Common.IO.Messaging;
-using Catalyst.Node.Core.RPC.Observables;
+using Catalyst.Common.IO.Messaging.Dto;
+using Catalyst.Node.Core.RPC.IO.Observables;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
@@ -89,7 +89,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
                 PeerIdentifierHelper.GetPeerIdentifier("recipient_key")
             );
             
-            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, request.Message.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId));
+            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, request.Content.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId));
             var handler = new SignMessageRequestObserver(PeerIdentifierHelper.GetPeerIdentifier("sender"), _logger, _keySigner);
             handler.StartObserving(messageStream);
 
@@ -100,11 +100,11 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
             
             var sentResponseDto = (IMessageDto<SignMessageResponse>) receivedCalls.Single().GetArguments().Single();
             
-            sentResponseDto.Message.GetType()
+            sentResponseDto.Content.GetType()
                .Should()
                .BeAssignableTo<SignMessageResponse>();
 
-            var signResponseMessage = sentResponseDto.FromIMessageDto<SignMessageResponse>();
+            var signResponseMessage = sentResponseDto.FromIMessageDto();
 
             signResponseMessage.OriginalMessage.Should().Equal(message);
             signResponseMessage.Signature.Should().NotBeEmpty();

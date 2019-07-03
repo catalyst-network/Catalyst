@@ -59,10 +59,10 @@
             "instanceScope": "singleinstance"
         },
         {
-            "type": "Catalyst.Common.IO.Messaging.DtoFactory, Catalyst.Common",
+            "type": "Catalyst.Common.IO.Messaging.Dto.DtoFactory, Catalyst.Common",
             "services": [
                 {
-                    "type": "Catalyst.Common.Interfaces.IO.Messaging.IDtoFactory, Catalyst.Common"
+                    "type": "Catalyst.Common.Interfaces.IO.Messaging.Dto.IDtoFactory, Catalyst.Common"
                 }
             ]
         },
@@ -146,7 +146,7 @@
                 }
             ]
         },
-       
+
         {
             "type": "Catalyst.Node.Core.RPC.Authentication.RepositoryAuthenticationStrategy",
             "services": [
@@ -295,13 +295,32 @@
             "instanceScope": "singleinstance"
         },
         {
-            "type": "Catalyst.Node.Core.P2P.Messaging.Broadcast.BroadcastManager",
+            "type": "Catalyst.Node.Core.P2P.IO.Messaging.Broadcast.BroadcastManager",
             "services": [
                 {
                     "type": "Catalyst.Common.Interfaces.P2P.Messaging.Broadcast.IBroadcastManager, Catalyst.Common"
                 }
             ],
             "instanceScope": "singleinstance"
+        },
+        {
+            "type": "Catalyst.Common.P2P.PeerIdValidator, Catalyst.Common",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.P2P.IPeerIdValidator, Catalyst.Common"
+                }
+            ]
+        },
+        {
+            "type": "Catalyst.Common.P2P.PeerIdClientId, Catalyst.Common",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.P2P.IPeerIdClientId, Catalyst.Common"
+                }
+            ],
+            "parameters": {
+                "clientVersion": "AC"
+            }
         }
     ],
     "modules": [

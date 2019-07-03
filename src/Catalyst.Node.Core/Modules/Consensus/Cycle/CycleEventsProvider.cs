@@ -62,14 +62,25 @@ namespace Catalyst.Node.Core.Modules.Consensus.Cycle
             var synchronisationStatusChanges = StatefulPhase.GetStatusChangeObservable(
                 PhaseName.Synchronisation, Configuration.Synchronisation, Configuration.CycleDuration, scheduler);
 
+            var synchronisationOffset = GetTimeSpanUntilNextCycleStart(timeProvider);
+
             // ByteUtil.GenerateRandom should not be used here, instead this should be implemented
             // TODO: https://github.com/catalyst-network/Catalyst.Node/issues/552
             PhaseChanges = constructionStatusChanges
                .Merge(campaigningStatusChanges, scheduler)
                .Merge(votingStatusChanges, scheduler)
                .Merge(synchronisationStatusChanges, scheduler)
+               .Delay(TimeSpan.FromTicks(synchronisationOffset), scheduler)
                .Select(s => new Phase(_deltaHashProvider.GetLatestDeltaHash(timeProvider.UtcNow), s.Name, s.Status, timeProvider.UtcNow))
                .TakeWhile(_ => !_cancellationTokenSource.IsCancellationRequested);
+        }
+
+        private long GetTimeSpanUntilNextCycleStart(IDateTimeProvider timeProvider)
+        {
+            var cycleDurationTicks = timeProvider.UtcNow.Ticks % Configuration.CycleDuration.Ticks;
+            return cycleDurationTicks == 0
+                ? 0 
+                : Configuration.CycleDuration.Ticks - cycleDurationTicks;
         }
 
         /// <inheritdoc />

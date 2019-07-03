@@ -21,15 +21,16 @@
 
 #endregion
 
-using System;
 using System.Threading;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.FileTransfer;
+using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.IO.Messaging.Dto;
-using Catalyst.Node.Rpc.Client.Observables;
+using Catalyst.Node.Rpc.Client.IO.Observables;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
@@ -75,17 +76,17 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.Observables
         {
             _addFileToDfsResponseObserver.OnNext(GetAddFileToDfsResponse(FileTransferResponseCodes.Successful));
             _uploadFileTransferFactory.Received(Quantity.Exactly(1))
-               .FileTransferAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>());
+               .FileTransferAsync(Arg.Any<ICorrelationId>(), Arg.Any<CancellationToken>());
         }
 
         [Fact]
         public void HandlerRemovesFileTransferOnError()
         {
             _addFileToDfsResponseObserver.OnNext(GetAddFileToDfsResponse(FileTransferResponseCodes.Error));
-            _uploadFileTransferFactory.Received(Quantity.Exactly(1)).Remove(Arg.Any<Guid>());
+            _uploadFileTransferFactory.Received(Quantity.Exactly(1)).Remove(Arg.Any<ICorrelationId>());
         }
 
-        private IProtocolMessageDto<ProtocolMessage> GetAddFileToDfsResponse(FileTransferResponseCodes responseCode)
+        private IObserverDto<ProtocolMessage> GetAddFileToDfsResponse(FileTransferResponseCodes responseCode)
         {
             AddFileToDfsResponse addFileResponse = new AddFileToDfsResponse
             {
@@ -93,8 +94,8 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.Observables
                 ResponseCode = ByteString.CopyFrom((byte) responseCode)
             };
 
-            var protocolMessage = addFileResponse.ToProtocolMessage(PeerIdHelper.GetPeerId("Test"), Guid.NewGuid());
-            return new ProtocolMessageDto(_channelHandlerContext, protocolMessage);
+            var protocolMessage = addFileResponse.ToProtocolMessage(PeerIdHelper.GetPeerId("Test"), CorrelationId.GenerateCorrelationId());
+            return new ObserverDto(_channelHandlerContext, protocolMessage);
         }
     }
 }

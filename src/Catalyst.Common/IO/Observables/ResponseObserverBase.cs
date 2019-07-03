@@ -27,19 +27,27 @@ using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
+using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Observables;
+using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.P2P;
 using Catalyst.Protocol.Common;
 using Dawn;
+using DotNetty.Transport.Channels;
 using Google.Protobuf;
 using Serilog;
 
 namespace Catalyst.Common.IO.Observables
 {
-    public abstract class ResponseObserverBase<TProto> : MessageObserverBase, IResponseMessageObserver where TProto : IMessage
+    public abstract class ResponseObserverBase<TProto> : MessageObserverBase, IResponseMessageObserver where TProto : IMessage<TProto>
     {
         private readonly string _filterMessageType;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="logger"></param>
         protected ResponseObserverBase(ILogger logger) : base(logger)
         {
             Guard.Argument(typeof(TProto), nameof(TProto)).Require(t => t.IsResponseType(),
@@ -47,9 +55,21 @@ namespace Catalyst.Common.IO.Observables
             _filterMessageType = typeof(TProto).ShortenedProtoFullName();
         }
         
-        public abstract void HandleResponse(IProtocolMessageDto<ProtocolMessage> messageDto);
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="messageDto"></param>
+        /// <param name="channelHandlerContext"></param>
+        /// <param name="senderPeerIdentifier"></param>
+        /// <param name="correlationId"></param>
+        protected abstract void HandleResponse(TProto messageDto, IChannelHandlerContext channelHandlerContext, IPeerIdentifier senderPeerIdentifier, ICorrelationId correlationId);
 
-        public override void StartObserving(IObservable<IProtocolMessageDto<ProtocolMessage>> messageStream)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="messageStream"></param>
+        /// <exception cref="ReadOnlyException"></exception>
+        public override void StartObserving(IObservable<IObserverDto<ProtocolMessage>> messageStream)
         {
             if (MessageSubscription != null)
             {
@@ -59,15 +79,18 @@ namespace Catalyst.Common.IO.Observables
             MessageSubscription = messageStream
                .Where(m => m.Payload?.TypeUrl != null 
                  && m.Payload?.TypeUrl == _filterMessageType)
-               .SubscribeOn(TaskPoolScheduler.Default)
+               .SubscribeOn(NewThreadScheduler.Default)
                .Subscribe(OnNext, OnError, OnCompleted);
         }
         
-        public override void OnNext(IProtocolMessageDto<ProtocolMessage> messageDto)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="messageDto"></param>
+        public override void OnNext(IObserverDto<ProtocolMessage> messageDto)
         {
             Logger.Verbose("Pre Handle Message Called");
-            ChannelHandlerContext = messageDto.Context;
-            HandleResponse(messageDto);
+            HandleResponse(messageDto.Payload.FromProtocolMessage<TProto>(), messageDto.Context, new PeerIdentifier(messageDto.Payload.PeerId), messageDto.Payload.CorrelationId.ToCorrelationId());
         }
     }
 }

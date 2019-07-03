@@ -21,10 +21,10 @@
 
 #endregion
 
-using System;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Messaging;
+using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Protocol.IPPN;
 using Catalyst.Protocol.Transaction;
 using Catalyst.TestUtils;
@@ -45,9 +45,9 @@ namespace Catalyst.Node.Core.UnitTests.P2P
             );
             
             pingRequestDto.Should().BeAssignableTo<IMessageDto<PingRequest>>();
-            pingRequestDto.Recipient.Should().BeAssignableTo<IPeerIdentifier>();
-            pingRequestDto.Sender.Should().BeAssignableTo<IPeerIdentifier>();
-            pingRequestDto.Message.Should().BeAssignableTo<IMessage>();
+            pingRequestDto.RecipientPeerIdentifier.Should().BeAssignableTo<IPeerIdentifier>();
+            pingRequestDto.SenderPeerIdentifier.Should().BeAssignableTo<IPeerIdentifier>();
+            pingRequestDto.Content.Should().BeAssignableTo<IMessage>();
         }
         
         [Fact]
@@ -56,14 +56,14 @@ namespace Catalyst.Node.Core.UnitTests.P2P
             var pingResponseDto = new DtoFactory().GetDto(new PingResponse(),
                 PeerIdentifierHelper.GetPeerIdentifier("im_a_recipient"),
                 PeerIdentifierHelper.GetPeerIdentifier("im_a_sender"),
-                Guid.NewGuid()
+                CorrelationId.GenerateCorrelationId()
             );
 
             pingResponseDto.Should().BeAssignableTo<IMessageDto<PingResponse>>();
-            pingResponseDto.Recipient.Should().BeAssignableTo<IPeerIdentifier>();
-            pingResponseDto.Sender.Should().BeAssignableTo<IPeerIdentifier>();
-            pingResponseDto.Message.Should().BeAssignableTo<IMessage>();
-            pingResponseDto.CorrelationId.Should().NotBeEmpty();
+            pingResponseDto.RecipientPeerIdentifier.Should().BeAssignableTo<IPeerIdentifier>();
+            pingResponseDto.SenderPeerIdentifier.Should().BeAssignableTo<IPeerIdentifier>();
+            pingResponseDto.Content.Should().BeAssignableTo<IMessage>();
+            pingResponseDto.CorrelationId.Id.Should().NotBeEmpty();
         }
 
         [Fact]
@@ -76,9 +76,9 @@ namespace Catalyst.Node.Core.UnitTests.P2P
             );
             
             transactionDto.Should().BeAssignableTo<IMessageDto<TransactionBroadcast>>();
-            transactionDto.Recipient.Should().BeAssignableTo<IPeerIdentifier>();
-            transactionDto.Sender.Should().BeAssignableTo<IPeerIdentifier>();
-            transactionDto.Message.Should().BeAssignableTo<IMessage>();
+            transactionDto.RecipientPeerIdentifier.Should().BeAssignableTo<IPeerIdentifier>();
+            transactionDto.SenderPeerIdentifier.Should().BeAssignableTo<IPeerIdentifier>();
+            transactionDto.Content.Should().BeAssignableTo<IMessage>();
         }
     }
 }

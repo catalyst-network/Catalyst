@@ -27,11 +27,11 @@ using System.Net;
 using System.Threading.Tasks;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
-using Catalyst.Common.IO.Messaging;
+using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.Network;
 using Catalyst.Common.P2P;
 using Catalyst.Common.Util;
-using Catalyst.Node.Core.RPC.Observables;
+using Catalyst.Node.Core.RPC.IO.Observables;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
@@ -148,7 +148,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
             );
             
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, 
-                requestMessage.Message.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId)
+                requestMessage.Content.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId)
             );
 
             var handler = new PeerBlackListingRequestObserver(sendPeerIdentifier, _logger, peerRepository);
@@ -161,11 +161,11 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
             
             var sentResponseDto = (IMessageDto<SetPeerBlackListResponse>) receivedCalls.Single().GetArguments().Single();
             
-            sentResponseDto.Message.GetType()
+            sentResponseDto.Content.GetType()
                .Should()
                .BeAssignableTo<SetPeerBlackListResponse>();
             
-            return sentResponseDto.FromIMessageDto<SetPeerBlackListResponse>();
+            return sentResponseDto.FromIMessageDto();
         }
     }
 }

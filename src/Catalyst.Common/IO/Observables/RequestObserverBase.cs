@@ -27,13 +27,15 @@ using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
+using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Observables;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.IO.Messaging;
+using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.P2P;
 using Catalyst.Protocol.Common;
 using Dawn;
+using DotNetty.Transport.Channels;
 using Google.Protobuf;
 using Serilog;
 
@@ -53,9 +55,7 @@ namespace Catalyst.Common.IO.Observables
             PeerIdentifier = peerIdentifier;
         }
 
-        protected abstract TProtoRes HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto);
-
-        public override void StartObserving(IObservable<IProtocolMessageDto<ProtocolMessage>> messageStream)
+        public override void StartObserving(IObservable<IObserverDto<ProtocolMessage>> messageStream)
         {
             if (MessageSubscription != null)
             {
@@ -65,29 +65,27 @@ namespace Catalyst.Common.IO.Observables
             MessageSubscription = messageStream
                .Where(m => m.Payload?.TypeUrl != null 
                  && m.Payload?.TypeUrl == _filterMessageType)
-               .SubscribeOn(TaskPoolScheduler.Default)
+               .SubscribeOn(NewThreadScheduler.Default)
                .Subscribe(OnNext, OnError, OnCompleted);
         }
         
-        public override void OnNext(IProtocolMessageDto<ProtocolMessage> messageDto)
+        protected abstract TProtoRes HandleRequest(TProtoReq messageDto, IChannelHandlerContext channelHandlerContext, IPeerIdentifier senderPeerIdentifier, ICorrelationId correlationId);
+
+        public override void OnNext(IObserverDto<ProtocolMessage> messageDto)
         {
             Logger.Verbose("Pre Handle Message Called");
             
-            ChannelHandlerContext = messageDto.Context;
-            
             //@TODO HandleRequest in try catch if catch send error message.
-            var response = HandleRequest(messageDto);
+            var response = HandleRequest(messageDto.Payload.FromProtocolMessage<TProtoReq>(),
+                messageDto.Context,
+                new PeerIdentifier(messageDto.Payload.PeerId),
+                messageDto.Payload.CorrelationId.ToCorrelationId());
             
-            SendChannelContextResponse(new DtoFactory().GetDto(response,
+            messageDto.Context.Channel.WriteAndFlushAsync(new DtoFactory().GetDto(response,
                 PeerIdentifier,
                 new PeerIdentifier(messageDto.Payload.PeerId),
-                messageDto.Payload.CorrelationId.ToGuid()
+                messageDto.Payload.CorrelationId.ToCorrelationId()
             ));
-        }
-
-        public void SendChannelContextResponse(IMessageDto<TProtoRes> messageDto)
-        {   
-            ChannelHandlerContext.Channel.WriteAndFlushAsync(messageDto);
         }
     }
 }

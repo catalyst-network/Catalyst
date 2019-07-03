@@ -21,7 +21,6 @@
 
 #endregion
 
-using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
@@ -31,6 +30,7 @@ using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Network;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.Network;
 using Catalyst.Node.Core.P2P;
@@ -67,7 +67,7 @@ namespace Catalyst.Node.Core.IntegrationTests.P2P
             _peerRepository = Substitute.For<IRepository<Peer>>();
             _logger = Substitute.For<ILogger>();
             _lookupClient = Substitute.For<ILookupClient>();
-            _dns = new Common.Network.DnsClient(_lookupClient);
+            _dns = new Common.Network.DnsClient(_lookupClient, Substitute.For<IPeerIdValidator>());
 
             _config = new ConfigurationBuilder()
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile))
@@ -154,8 +154,8 @@ namespace Catalyst.Node.Core.IntegrationTests.P2P
             var fakeContext = Substitute.For<IChannelHandlerContext>();
             var pingRequest = new PingResponse();
             var pid = PeerIdentifierHelper.GetPeerIdentifier("im_a_key");
-            var channeledAny = new ProtocolMessageDto(fakeContext, 
-                pingRequest.ToProtocolMessage(pid.PeerId, Guid.NewGuid()));
+            var channeledAny = new ObserverDto(fakeContext, 
+                pingRequest.ToProtocolMessage(pid.PeerId, CorrelationId.GenerateCorrelationId()));
             
             var observableStream = new[] {channeledAny}.ToObservable();
 

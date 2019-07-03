@@ -30,10 +30,14 @@ using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Transport.Channels;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
+using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Handlers;
 using Catalyst.Common.IO.Transport.Channels;
 using Catalyst.Protocol.Common;
+using DotNetty.Codecs;
+using DotNetty.Codecs.Protobuf;
 using DotNetty.Transport.Channels;
+using Google.Protobuf;
 
 namespace Catalyst.Node.Core.P2P.IO.Transport.Channels
 {
@@ -41,19 +45,38 @@ namespace Catalyst.Node.Core.P2P.IO.Transport.Channels
     {
         private readonly IKeySigner _keySigner;
         private readonly IMessageCorrelationManager _correlationManager;
+        private readonly IPeerIdValidator _peerIdValidator;
 
         protected override List<IChannelHandler> Handlers =>
             new List<IChannelHandler>
             {
-                new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(new ProtoDatagramDecoderHandler(), new ProtoDatagramEncoderHandler()),
-                new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(new ProtocolMessageVerifyHandler(_keySigner), new ProtocolMessageSignHandler(_keySigner)),
-                new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(new CorrelationHandler(_correlationManager), new CorrelationHandler(_correlationManager))
+                new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
+                    new DatagramPacketDecoder(new ProtobufDecoder(ProtocolMessageSigned.Parser)),
+                    new DatagramPacketEncoder<IMessage>(new ProtobufEncoder())
+                ),
+                new PeerIdValidationHandler(_peerIdValidator),
+                new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
+                    new ProtocolMessageVerifyHandler(_keySigner), new ProtocolMessageSignHandler(_keySigner)
+                ),
+                new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
+                    new CorrelationHandler(_correlationManager), new CorrelationHandler(_correlationManager)
+                ),
+                new ObservableServiceHandler()
             };
-        
-        public PeerClientChannelFactory(IKeySigner keySigner, IMessageCorrelationManager correlationManager)
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="keySigner"></param>
+        /// <param name="correlationManager"></param>
+        /// <param name="peerIdValidator"></param>
+        public PeerClientChannelFactory(IKeySigner keySigner,
+            IMessageCorrelationManager correlationManager,
+            IPeerIdValidator peerIdValidator)
         {
             _keySigner = keySigner;
             _correlationManager = correlationManager;
+            _peerIdValidator = peerIdValidator;
         }
         
         /// <param name="handlerEventLoopGroupFactory"></param>
@@ -67,7 +90,7 @@ namespace Catalyst.Node.Core.P2P.IO.Transport.Channels
         {
             var channel = BootStrapChannel(handlerEventLoopGroupFactory, targetAddress, targetPort);
 
-            return new ObservableChannel(Observable.Never<IProtocolMessageDto<ProtocolMessage>>(), channel);
+            return new ObservableChannel(Observable.Never<IObserverDto<ProtocolMessage>>(), channel);
         }
     }
 }
