@@ -36,7 +36,7 @@ using NSubstitute;
 using Serilog;
 using Xunit;
 
-namespace Catalyst.Node.Rpc.Client.UnitTests.Observables
+namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observables
 {
     public sealed class VerifyMessageResponseObserverTest : IDisposable
     {

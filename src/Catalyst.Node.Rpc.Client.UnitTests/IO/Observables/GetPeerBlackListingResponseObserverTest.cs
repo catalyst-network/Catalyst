@@ -37,7 +37,7 @@ using NSubstitute;
 using Serilog;
 using Xunit;
 
-namespace Catalyst.Node.Rpc.Client.UnitTests.Observables
+namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observables
 {
     /// <summary>
     /// Tests the CLI for peer blacklisting response

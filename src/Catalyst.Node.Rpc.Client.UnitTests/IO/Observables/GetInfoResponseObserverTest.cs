@@ -21,21 +21,21 @@
 
 #endregion
 
+using System;
+using System.Threading.Tasks;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Cli;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.IO.Messaging.Dto;
+using Catalyst.Node.Rpc.Client.IO.Observables;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using NSubstitute;
 using Serilog;
-using System;
-using System.Threading.Tasks;
-using Catalyst.Common.IO.Messaging;
-using Catalyst.Node.Rpc.Client.IO.Observables;
 using Xunit;
 
-namespace Catalyst.Node.Rpc.Client.UnitTests.Observables
+namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observables
 {
     public sealed class GetInfoResponseObserverTest : IDisposable
     {

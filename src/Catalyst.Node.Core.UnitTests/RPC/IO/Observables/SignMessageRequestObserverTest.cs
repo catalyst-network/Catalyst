@@ -43,7 +43,7 @@ using Serilog;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Catalyst.Node.Core.UnitTests.RPC.Observables
+namespace Catalyst.Node.Core.UnitTests.RPC.IO.Observables
 {
     public sealed class SignMessageRequestObserverTest : ConfigFileBasedTest
     {

@@ -37,7 +37,7 @@ using NSubstitute;
 using Serilog;
 using Xunit;
 
-namespace Catalyst.Node.Core.UnitTests.RPC.Observables
+namespace Catalyst.Node.Core.UnitTests.RPC.IO.Observables
 {
     public sealed class GetVersionRequestObserverTest
     {
