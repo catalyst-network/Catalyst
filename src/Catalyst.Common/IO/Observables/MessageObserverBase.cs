@@ -23,12 +23,12 @@
 
 using System;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
-using Catalyst.Common.Interfaces.IO.Observables;
+using Catalyst.Common.Interfaces.IO.Observers;
 using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;
 using Serilog;
 
-namespace Catalyst.Common.IO.Observables
+namespace Catalyst.Common.IO.Observers
 {
     public abstract class MessageObserverBase : IMessageObserver, IDisposable
     {

@@ -22,7 +22,7 @@
 #endregion
 
 using Catalyst.Common.Config;
-using Catalyst.Common.Interfaces.IO.Messaging;
+using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;
 
