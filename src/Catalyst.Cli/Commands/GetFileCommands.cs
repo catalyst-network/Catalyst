@@ -21,61 +21,59 @@
 
 #endregion
 
-using System;
+using Catalyst.Common.Extensions;
 using Catalyst.Common.FileTransfer;
+using Catalyst.Common.Interfaces.Cli;
+using Catalyst.Common.Interfaces.Cli.Commands;
 using Catalyst.Common.Interfaces.Cli.Options;
 using Catalyst.Common.Interfaces.FileTransfer;
-using Catalyst.Common.Interfaces.Rpc;
-using Catalyst.Common.P2P;
 using Catalyst.Protocol.Rpc.Node;
-using Dawn;
 
 namespace Catalyst.Cli.Commands
 {
-    internal sealed partial class Commands
+    public class GetFileCommands : CommandBase<GetFileFromDfsRequest, IGetFileOptions>
     {
-        /// <summary>Called when [get file options].</summary>
-        /// <param name="opts">The opts.</param>
-        /// <returns></returns>
-        private bool GetFileOptions(IGetFileOptions opts)
+        private readonly IDownloadFileTransferFactory _downloadFileTransferFactory;
+        private readonly IUserOutput _userOutput;
+
+        public GetFileCommands(IUserOutput userOutput,
+            IDownloadFileTransferFactory downloadFileTransferFactory,
+            IOptionsBase optionBase,
+            ICommandContext commandContext) : base(optionBase, commandContext)
         {
-            INodeRpcClient node;
-            try
-            {
-                node = GetConnectedNode(opts.Node);
-            }
-            catch (Exception e)
-            {
-                _logger.Error(e.Message);
-                return false;
-            }
+            _userOutput = userOutput;
+            _downloadFileTransferFactory = downloadFileTransferFactory;
+        }
 
-            var nodeConfig = GetNodeConfig(opts.Node);
-            Guard.Argument(nodeConfig, nameof(nodeConfig)).NotNull();
-
-            var message = new GetFileFromDfsRequest
+        public override GetFileFromDfsRequest GetMessage(IGetFileOptions option)
+        {
+            return new GetFileFromDfsRequest
             {
-                DfsHash = opts.FileHash
+                DfsHash = option.FileHash
             };
+        }
 
-            var recipient = PeerIdentifier.BuildPeerIdFromConfig(nodeConfig, _peerIdClientId);
-            
-            var messageDto = _dtoFactory.GetDto(message, 
-                recipient,
-                _peerIdentifier);
+        public override bool SendMessage(IGetFileOptions opts)
+        {
+            var message = GetMessage(opts);
 
-            IDownloadFileInformation fileTransfer = new DownloadFileTransferInformation(
-                _peerIdentifier,
-                messageDto.SenderPeerIdentifier,
-                node.Channel,
+            var messageDto = CommandContext.DtoFactory.GetDto(
+                message.ToProtocolMessage(SenderPeerIdentifier.PeerId),
+                SenderPeerIdentifier,
+                RecipientPeerIdentifier);
+            Target.SendMessage(messageDto);
+
+            var fileTransfer = new DownloadFileTransferInformation(
+                SenderPeerIdentifier,
+                RecipientPeerIdentifier,
+                Target.Channel,
                 messageDto.CorrelationId,
                 opts.FileOutput,
                 0
             );
 
             _downloadFileTransferFactory.RegisterTransfer(fileTransfer);
-
-            node.SendMessage(messageDto);
+            Target.SendMessage(messageDto);
 
             while (!fileTransfer.ChunkIndicatorsTrue() && !fileTransfer.IsExpired())
             {

@@ -21,63 +21,25 @@
 
 #endregion
 
-using System;
+using Catalyst.Common.Interfaces.Cli.Commands;
 using Catalyst.Common.Interfaces.Cli.Options;
-using Catalyst.Common.Interfaces.Rpc;
-using Catalyst.Common.P2P;
 using Catalyst.Common.Util;
 using Catalyst.Protocol.Rpc.Node;
-using Dawn;
 using Nethereum.RLP;
 
 namespace Catalyst.Cli.Commands
 {
-    internal partial class Commands
+    public class PeerReputationCommand : CommandBase<GetPeerReputationRequest, IPeerReputationOptions>
     {
-        /// <inheritdoc cref="PeerReputationCommand" />
-        public bool PeerReputationCommand(IPeerReputationOptions opts)
+        public PeerReputationCommand(IOptionsBase optionBase, ICommandContext commandContext) : base(optionBase, commandContext) { }
+
+        public override GetPeerReputationRequest GetMessage(IPeerReputationOptions option)
         {
-            try
+            return new GetPeerReputationRequest
             {
-                Guard.Argument(opts).NotNull().Compatible<IPeerReputationOptions>();
-
-                INodeRpcClient node;
-                try
-                {
-                    node = GetConnectedNode(opts.Node);
-                }
-                catch (Exception e)
-                {
-                    _logger.Error(e.Message);
-                    return false;
-                }
-
-                var nodeConfig = GetNodeConfig(opts.Node);
-                Guard.Argument(nodeConfig, nameof(nodeConfig)).NotNull("The node configuration cannot be null");
-                
-                var peerPublicKey = opts.PublicKey;
-                var peerIp = opts.IpAddress;
-
-                Guard.Argument(node).NotNull();
-
-                var requestMessage = _dtoFactory.GetDto(
-                    new GetPeerReputationRequest
-                    {
-                        PublicKey = peerPublicKey.ToBytesForRLPEncoding().ToByteString(),
-                        Ip = peerIp.ToBytesForRLPEncoding().ToByteString()
-                    },
-                    _peerIdentifier,
-                    PeerIdentifier.BuildPeerIdFromConfig(nodeConfig, _peerIdClientId));
-
-                node.SendMessage(requestMessage);
-            }
-            catch (Exception e)
-            {
-                _logger.Debug(e.Message);
-                return false;
-            }
-
-            return true;
+                PublicKey = option.PublicKey.ToBytesForRLPEncoding().ToByteString(),
+                Ip = option.PublicKey.ToBytesForRLPEncoding().ToByteString()
+            };
         }
     }
 }

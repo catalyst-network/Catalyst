@@ -21,56 +21,22 @@
 
 #endregion
 
-using System;
+using Catalyst.Common.Interfaces.Cli.Commands;
 using Catalyst.Common.Interfaces.Cli.Options;
-using Catalyst.Common.Interfaces.Rpc;
-using Catalyst.Common.P2P;
 using Catalyst.Protocol.Rpc.Node;
-using Dawn;
 
 namespace Catalyst.Cli.Commands
 {
-    internal sealed partial class Commands
+    public class GetInfoCommand : CommandBase<GetInfoRequest, IGetInfoOptions>
     {
-        /// <inheritdoc cref="GetInfoCommand" />
-        public bool GetInfoCommand(IGetInfoOptions opts)
+        public GetInfoCommand(IOptionsBase optionBase, ICommandContext commandContext) : base(optionBase, commandContext) { }
+
+        public override GetInfoRequest GetMessage(IGetInfoOptions option)
         {
-            Guard.Argument(opts, nameof(opts)).NotNull().Compatible<IGetInfoOptions>();
-
-            INodeRpcClient node;
-            try
+            return new GetInfoRequest
             {
-                node = GetConnectedNode(opts.NodeId);
-            }
-            catch (Exception e)
-            {
-                _logger.Error(e.Message);
-                return false;
-            }
-
-            var nodeConfig = GetNodeConfig(opts.NodeId);
-            Guard.Argument(nodeConfig, nameof(nodeConfig)).NotNull("The node configuration cannot be null");
-
-            try
-            {
-                var message = new GetInfoRequest
-                {
-                    Query = true
-                };
-
-                var request = _dtoFactory.GetDto(message,
-                    _peerIdentifier,
-                    PeerIdentifier.BuildPeerIdFromConfig(nodeConfig, _peerIdClientId));
-
-                node.SendMessage(request);
-            }
-            catch (Exception e)
-            {
-                _logger.Debug(e.Message);
-                return false;
-            }
-
-            return true;
+                Query = true
+            };
         }
     }
 }

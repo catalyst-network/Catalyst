@@ -24,6 +24,8 @@
 using System;
 using System.IO;
 using Catalyst.Common.FileTransfer;
+using Catalyst.Common.Interfaces.Cli;
+using Catalyst.Common.Interfaces.Cli.Commands;
 using Catalyst.Common.Interfaces.Cli.Options;
 using Catalyst.Common.Interfaces.FileTransfer;
 using Catalyst.Common.Interfaces.Rpc;
@@ -33,62 +35,60 @@ using Dawn;
 
 namespace Catalyst.Cli.Commands
 {
-    internal sealed partial class Commands
+    public sealed class AddFileCommand : CommandBase<AddFileToDfsRequest, IAddFileOnDfsOptions>
     {
-        /// <inheritdoc cref="AddFile" />
-        public bool AddFile(IAddFileOnDfsOptions opts)
+        private readonly IUserOutput _userOutput;
+        private readonly IUploadFileTransferFactory _uploadFileTransferFactory;
+
+        public AddFileCommand(IUploadFileTransferFactory uploadFileTransferFactory,
+            IUserOutput userOutput,
+            IOptionsBase optionBase,
+            ICommandContext commandContext) : base(optionBase, commandContext)
         {
-            Guard.Argument(opts, nameof(opts)).NotNull().Compatible<IAddFileOnDfsOptions>();
+            _uploadFileTransferFactory = uploadFileTransferFactory;
+            _userOutput = userOutput;
+        }
 
-            INodeRpcClient node;
-            try
+        public override AddFileToDfsRequest GetMessage(IAddFileOnDfsOptions option)
+        {
+            return new AddFileToDfsRequest
             {
-                node = GetConnectedNode(opts.Node);
-            }
-            catch (Exception e)
-            {
-                _logger.Error(e.Message);
-                return false;
-            }
-
-            var nodeConfig = GetNodeConfig(opts.Node);
-            Guard.Argument(nodeConfig, nameof(nodeConfig)).NotNull();
-
-            var nodePeerIdentifier = PeerIdentifier.BuildPeerIdFromConfig(nodeConfig, _peerIdClientId);
-
-            if (!File.Exists(opts.File))
-            {
-                UserOutput.WriteLine("File does not exist.");
-                return false;
-            }
-
-            var request = new AddFileToDfsRequest
-            {
-                FileName = Path.GetFileName(opts.File)
+                FileName = Path.GetFileName(option.File)
             };
+        }
 
-            using (var fileStream = File.Open(opts.File, FileMode.Open))
+        public override bool SendMessage(IAddFileOnDfsOptions options)
+        {
+            if (!File.Exists(options.File))
+            {
+                _userOutput.WriteLine("File does not exist.");
+                return false;
+            }
+
+            var request = GetMessage(options);
+
+            using (var fileStream = File.Open(options.File, FileMode.Open))
             {
                 request.FileSize = (ulong) fileStream.Length;
             }
-            
-            var requestMessage = _dtoFactory.GetDto(
+
+            var requestMessage = CommandContext.DtoFactory.GetDto(
                 request,
-                nodePeerIdentifier,
-                _peerIdentifier
+                SenderPeerIdentifier,
+                RecipientPeerIdentifier
             );
 
             IUploadFileInformation fileTransfer = new UploadFileTransferInformation(
-                File.Open(opts.File, FileMode.Open),
-                _peerIdentifier,
-                nodePeerIdentifier,
-                node.Channel,
+                File.Open(options.File, FileMode.Open),
+                SenderPeerIdentifier,
+                RecipientPeerIdentifier,
+                Target.Channel,
                 requestMessage.CorrelationId,
-                _dtoFactory);
+                CommandContext.DtoFactory);
 
             _uploadFileTransferFactory.RegisterTransfer(fileTransfer);
 
-            node.SendMessage(requestMessage);
+            Target.SendMessage(requestMessage);
 
             while (!fileTransfer.ChunkIndicatorsTrue() && !fileTransfer.IsExpired())
             {
