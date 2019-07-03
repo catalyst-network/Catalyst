@@ -21,58 +21,26 @@
 
 #endregion
 
-using System;
-using System.Text;
+using Catalyst.Common.Interfaces.Cli.Commands;
 using Catalyst.Common.Interfaces.Cli.Options;
-using Catalyst.Common.Interfaces.Rpc;
-using Catalyst.Common.P2P;
 using Catalyst.Common.Util;
 using Catalyst.Protocol.Rpc.Node;
-using Dawn;
 using Google.Protobuf;
+using System.Text;
 
 namespace Catalyst.Cli.Commands
 {
-    internal partial class Commands
+    public class MessageSignCommand : CommandBase<SignMessageRequest, ISignOptions>
     {
-        /// <inheritdoc cref="MessageSignCommand" />
-        public bool MessageSignCommand(ISignOptions opts)
+        public MessageSignCommand(IOptionsBase optionBase, ICommandContext commandContext) : base(optionBase, commandContext) { }
+
+        public override SignMessageRequest GetMessage(ISignOptions option)
         {
-            Guard.Argument(opts, nameof(opts)).NotNull().Compatible<ISignOptions>();
-
-            INodeRpcClient node;
-            try
+            return new SignMessageRequest
             {
-                node = GetConnectedNode(opts.Node);
-            }
-            catch (Exception e)
-            {
-                _logger.Error(e.Message);
-                return false;
-            }
-            
-            var nodeConfig = GetNodeConfig(opts.Node);
-            Guard.Argument(nodeConfig, nameof(nodeConfig)).NotNull("The node configuration cannot be null");
-
-            try
-            {
-                var request = _dtoFactory.GetDto(new SignMessageRequest
-                    {
-                        Message = ByteString.CopyFrom(opts.Message.Trim('\"'), Encoding.UTF8)
-                           .ToByteString()
-                    },
-                    _peerIdentifier,
-                    PeerIdentifier.BuildPeerIdFromConfig(nodeConfig, _peerIdClientId));
-
-                node.SendMessage(request);
-            }
-            catch (Exception e)
-            {
-                _logger.Debug(e.Message);
-                return false;
-            }
-
-            return true;
+                Message = ByteString.CopyFrom(option.Message.Trim('\"'), Encoding.UTF8)
+                   .ToByteString()
+            };
         }
     }
 }

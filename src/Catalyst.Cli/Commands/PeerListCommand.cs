@@ -21,52 +21,16 @@
 
 #endregion
 
-using System;
+using Catalyst.Common.Interfaces.Cli.Commands;
 using Catalyst.Common.Interfaces.Cli.Options;
-using Catalyst.Common.Interfaces.Rpc;
-using Catalyst.Common.P2P;
 using Catalyst.Protocol.Rpc.Node;
-using Dawn;
 
 namespace Catalyst.Cli.Commands
 {
-    internal partial class Commands
+    public class PeerListCommand : CommandBase<GetPeerListRequest, IPeerListOptions>
     {
-        /// <inheritdoc cref="PeerListCommand" />
-        public bool PeerListCommand(IPeerListOptions opts)
-        {
-            Guard.Argument(opts).NotNull().Compatible<IPeerListOptions>();
+        public PeerListCommand(IOptionsBase optionBase, ICommandContext commandContext) : base(optionBase, commandContext) { }
 
-            INodeRpcClient node;
-            try
-            {
-                node = GetConnectedNode(opts.Node);
-            }
-            catch (Exception e)
-            {
-                _logger.Error(e.Message);
-                return false;
-            }
-            
-            var nodeConfig = GetNodeConfig(opts.Node);
-            Guard.Argument(nodeConfig, nameof(nodeConfig)).NotNull("The node configuration cannot be null");
-            
-            try
-            {
-                var requestMessage = _dtoFactory.GetDto(new GetPeerListRequest(),
-                    _peerIdentifier,
-                    PeerIdentifier.BuildPeerIdFromConfig(nodeConfig, _peerIdClientId)
-                );
-
-                node.SendMessage(requestMessage);
-            }
-            catch (Exception e)
-            {
-                _logger.Debug(e.Message);
-                return false;
-            }
-
-            return true;
-        }
+        public override GetPeerListRequest GetMessage(IPeerListOptions option) { return new GetPeerListRequest(); }
     }
 }

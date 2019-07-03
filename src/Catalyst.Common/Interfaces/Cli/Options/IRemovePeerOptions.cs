@@ -23,16 +23,8 @@
 
 namespace Catalyst.Common.Interfaces.Cli.Options
 {
-    public interface IRemovePeerOptions
+    public interface IRemovePeerOptions : IOptionsBase
     {
-        /// <summary>
-        /// Gets or sets the node.
-        /// </summary>
-        /// <value>
-        /// The node.
-        /// </value>
-        string Node { get; set; }
-
         /// <summary>Gets or sets the public key.</summary>
         /// <value>The public key.</value>
         string PublicKey { get; set; }

@@ -23,12 +23,8 @@
 
 namespace Catalyst.Common.Interfaces.Cli.Options
 {
-    public interface IGetFileOptions
+    public interface IGetFileOptions : IOptionsBase
     {
-        /// <summary>Gets or sets the node.</summary>
-        /// <value>The node.</value>
-        string Node { get; set; }
-
         /// <summary>Gets or sets the file hash.</summary>
         /// <value>The file hash.</value>
         string FileHash { get; set; }
