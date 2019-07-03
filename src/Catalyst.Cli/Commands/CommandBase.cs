@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Cli.Commands;
 using Catalyst.Common.Interfaces.Cli.Options;
@@ -16,21 +14,20 @@ namespace Catalyst.Cli.Commands
         where TOption : IOptionsBase
     {
         private readonly IOptionsBase _optionsBase;
-        private readonly ICommandContext _commandContext;
 
-        public CommandBase(IOptionsBase optionBase, ICommandContext commandContext)
+        protected CommandBase(IOptionsBase optionBase, ICommandContext commandContext)
         {
             _optionsBase = optionBase;
-            _commandContext = commandContext;
+            CommandContext = commandContext;
         }
 
         public virtual bool SendMessage(TOption options)
         {
-            T message = GetMessage(options);
+            var message = GetMessage(options);
 
             if (message != null)
             {
-                var messageDto = _commandContext.DtoFactory.GetDto(
+                var messageDto = CommandContext.DtoFactory.GetDto(
                     message.ToProtocolMessage(SenderPeerIdentifier.PeerId),
                     SenderPeerIdentifier,
                     RecipientPeerIdentifier);
@@ -42,13 +39,13 @@ namespace Catalyst.Cli.Commands
 
         public abstract T GetMessage(TOption option);
 
-        protected ICommandContext CommandContext => _commandContext;
+        protected ICommandContext CommandContext { get; }
 
-        protected IPeerIdentifier RecipientPeerIdentifier => PeerIdentifier.BuildPeerIdFromConfig(_commandContext.GetNodeConfig(_optionsBase.Node), _commandContext.PeerIdClientId);
+        protected IPeerIdentifier RecipientPeerIdentifier => PeerIdentifier.BuildPeerIdFromConfig(CommandContext.GetNodeConfig(_optionsBase.Node), CommandContext.PeerIdClientId);
 
-        protected IPeerIdentifier SenderPeerIdentifier => _commandContext.PeerIdentifier;
+        protected IPeerIdentifier SenderPeerIdentifier => CommandContext.PeerIdentifier;
 
-        public INodeRpcClient Target => _commandContext.GetConnectedNode(_optionsBase.Node);
+        public INodeRpcClient Target => CommandContext.GetConnectedNode(_optionsBase.Node);
 
         public Type GetOptionType() { return typeof(TOption); }
     }
