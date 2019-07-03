@@ -97,7 +97,7 @@ namespace Catalyst.Node.Core.IntegrationTests.Rpc.Observables
             );
             
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, 
-                request.Message.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId)
+                request.Content.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId)
             );
 
             var handler = new SignMessageRequestObserver(PeerIdentifierHelper.GetPeerIdentifier("sender"), _logger, _keySigner);
@@ -111,8 +111,6 @@ namespace Catalyst.Node.Core.IntegrationTests.Rpc.Observables
 
             var signResponseMessage = sentResponseDto.FromIMessageDto();
 
-            
-            
             var verifyRequest = messageFactory.GetDto(
                 new VerifyMessageRequest
                 {
@@ -125,7 +123,7 @@ namespace Catalyst.Node.Core.IntegrationTests.Rpc.Observables
             );
             
             var verifyMessageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext2, 
-                verifyRequest.Message.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId)
+                verifyRequest.Content.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId)
             );
             
             var verifyMessageRequestObserver = new VerifyMessageRequestObserver(PeerIdentifierHelper.GetPeerIdentifier("sender"),

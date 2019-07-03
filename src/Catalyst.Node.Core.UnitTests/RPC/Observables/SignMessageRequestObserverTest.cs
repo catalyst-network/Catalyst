@@ -83,7 +83,6 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
             var messageFactory = new DtoFactory();
             var encodedMessage = RLP.EncodeElement(message.ToBytesForRLPEncoding()).ToByteString();
 
-            
             var request = messageFactory.GetDto(
                 new SignMessageRequest
                 {

@@ -57,12 +57,11 @@ namespace Catalyst.Common.FileSystem
 
         private async Task<IFileInfo> WriteFileToPathAsync(string path, string contents)
         {
-            var file = File.CreateText(path);
-            //using ()
-            //{
+            using (var file = File.CreateText(path))
+            {
                 await file.WriteAsync(contents).ConfigureAwait(false);
                 await file.FlushAsync().ConfigureAwait(false);
-            //}
+            }
 
             return FileInfo.FromFileName(path);
         }

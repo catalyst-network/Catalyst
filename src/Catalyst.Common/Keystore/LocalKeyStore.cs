@@ -88,33 +88,26 @@ namespace Catalyst.Common.Keystore
         public IPrivateKey KeyStoreDecrypt(string identifier)
         {
             string password = "password retrieval not implemented yet";
-            string filepath = GetKeyFilePath(identifier);
-            if (filepath == null)
+            string json = GetJsonFromKeyStore(identifier);
+            if (json != null)
             {
-                _logger.Error("No keystore exists for the given key");
-                return null;
-            }
-
-            string json = File.ReadAllText(filepath);
-            
-            try
-            {
-                var keyBytes = _keyStoreService.DecryptKeyStoreFromJson(identifier, json);
-                    
-                if (keyBytes != null && keyBytes.Length > 0)
+                try
                 {
-                    return new PrivateKey(keyBytes);
+                    var keyBytes = _keyStoreService.DecryptKeyStoreFromJson(identifier, json);
+                    
+                    if (keyBytes != null && keyBytes.Length > 0)
+                    {
+                        return new PrivateKey(keyBytes);
+                    }
+                }
+                catch (DecryptionException)
+                {
+                    _logger.Error("Error decrypting keystore");
                 }
             }
-            catch (DecryptionException)
-            {
-                _logger.Error("Error decrypting keystore");
-            }
-
+            
             return null;
         }
-
-        private string FilenameFromIdentifier(string identifier) { return identifier; }
 
         //need to change so keystore uses identifier to retrieve password
         public byte[] KeyStoreDecrypt(string identifier, string json)
@@ -167,19 +160,7 @@ namespace Catalyst.Common.Keystore
             return json;
         }
 
-        public IPrivateKey GetKey(string identifier)
-        {
-            var directoryInfo = _fileSystem.GetCatalystDataDir().SubDirectoryInfo(Constants.KeyStoreDataSubDir);
-            if (!directoryInfo.Exists)
-            {
-                return null;
-            }
-
-            FileInfo keyStoreFile = directoryInfo.GetFiles("*.json").FirstOrDefault();
-            return keyStoreFile.Exists ? new PrivateKey(KeyStoreDecrypt(Password, keyStoreFile.FullName)) : null;
-        }
-
-        public string GetKeyFilePath(string identifier)
+        private string GetJsonFromKeyStore(string identifier)
         {
             var directoryInfo = _fileSystem.GetCatalystDataDir().SubDirectoryInfo(Constants.KeyStoreDataSubDir);
             if (!directoryInfo.Exists)
@@ -188,7 +169,14 @@ namespace Catalyst.Common.Keystore
             }
 
             FileInfo keyStoreFile = directoryInfo.GetFiles().FirstOrDefault();
-            return keyStoreFile.Exists ? keyStoreFile.FullName : null;
+
+            if (keyStoreFile.Exists)
+            {
+                return File.ReadAllText(keyStoreFile.FullName);
+            }
+
+            _logger.Error("No keystore exists for the given key");
+            return null;
         }
 
         public void Dispose()
