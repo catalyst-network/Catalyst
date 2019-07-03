@@ -32,6 +32,7 @@ using Catalyst.Common.Util;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using DotNetty.Transport.Channels;
+using Nethereum.RLP;
 using ILogger = Serilog.ILogger;
 
 namespace Catalyst.Node.Core.RPC.IO.Observables
@@ -70,9 +71,9 @@ namespace Catalyst.Node.Core.RPC.IO.Observables
 
             try
             {
-                var decodedMessage = signMessageRequest.Message.ToString(Encoding.UTF8);
+                var decodedMessage = RLP.Decode(signMessageRequest.Message.ToByteArray()).RLPData;
 
-                var signaturePublicKeyPair = _keySigner.SignAndGetPublicKey(Encoding.UTF8.GetBytes(decodedMessage));
+                var signaturePublicKeyPair = _keySigner.SignAndGetPublicKey(decodedMessage);
                 
                 var publicKey = signaturePublicKeyPair.Key;
                 var signature = signaturePublicKeyPair.Value;
@@ -85,9 +86,9 @@ namespace Catalyst.Node.Core.RPC.IO.Observables
 
                 return new SignMessageResponse
                 {
-                    OriginalMessage = signMessageRequest.Message,
-                    PublicKey = publicKey.Bytes.RawBytes.ToByteString(),
-                    Signature = signature.Bytes.RawBytes.ToByteString()
+                    OriginalMessage = RLP.EncodeElement(decodedMessage).ToByteString(),
+                    PublicKey = RLP.EncodeElement(publicKey.Bytes.RawBytes).ToByteString(),
+                    Signature = RLP.EncodeElement(signature.Bytes.RawBytes).ToByteString()
                 };
             }
             catch (Exception ex)

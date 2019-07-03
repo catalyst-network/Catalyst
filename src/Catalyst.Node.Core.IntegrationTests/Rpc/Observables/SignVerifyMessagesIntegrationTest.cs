@@ -45,16 +45,17 @@ using Serilog;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Catalyst.Node.Core.UnitTests.RPC.Observables
+namespace Catalyst.Node.Core.IntegrationTests.Rpc.Observables
 {
-    public sealed class SignMessageRequestObserverTest : ConfigFileBasedTest
+    public class SignVerifyMessagesIntegrationTest : ConfigFileBasedTest
     {
         private readonly ILifetimeScope _scope;
         private readonly ILogger _logger;
         private readonly IKeySigner _keySigner;
         private readonly IChannelHandlerContext _fakeContext;
+        private readonly IChannelHandlerContext _fakeContext2;
         
-        public SignMessageRequestObserverTest(ITestOutputHelper output) : base(output)
+        public SignVerifyMessagesIntegrationTest(ITestOutputHelper output) : base(output)
         {
             var config = SocketPortHelper.AlterConfigurationToGetUniquePort(new ConfigurationBuilder()
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile))
@@ -72,17 +73,19 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
             _fakeContext = Substitute.For<IChannelHandlerContext>();
             var fakeChannel = Substitute.For<IChannel>();
             _fakeContext.Channel.Returns(fakeChannel);
+            _fakeContext2 = Substitute.For<IChannelHandlerContext>();
+            var fakeChannel2 = Substitute.For<IChannel>();
+            _fakeContext2.Channel.Returns(fakeChannel2);
         }
-        
+
         [Theory]
         [InlineData("Hello Catalyst")]
         [InlineData("")]
         [InlineData("Hello&?!1253Catalyst")]
-        public async Task RpcServer_Can_Handle_SignMessageRequest(string message)
+        public async Task SignMessageResponse_Is_Verified_By_VerifyMessageResponse(string message)
         {
             var messageFactory = new DtoFactory();
             var encodedMessage = RLP.EncodeElement(message.ToBytesForRLPEncoding()).ToByteString();
-
             
             var request = messageFactory.GetDto(
                 new SignMessageRequest
@@ -103,30 +106,44 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
             await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
 
             var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();
-            receivedCalls.Count.Should().Be(1);
             
             var sentResponseDto = (IMessageDto<SignMessageResponse>) receivedCalls.Single().GetArguments().Single();
-            
-            sentResponseDto.Message.GetType()
-               .Should()
-               .BeAssignableTo<SignMessageResponse>();
 
             var signResponseMessage = sentResponseDto.FromIMessageDto();
 
-            signResponseMessage.OriginalMessage.Should().Equal(encodedMessage);
-            signResponseMessage.Signature.Should().NotBeEmpty();
-            signResponseMessage.PublicKey.Should().NotBeEmpty();
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            base.Dispose(disposing);
-            if (!disposing)
-            {
-                return;
-            }
             
-            _scope?.Dispose();
+            
+            var verifyRequest = messageFactory.GetDto(
+                new VerifyMessageRequest
+                {
+                    Message = signResponseMessage.OriginalMessage,
+                    PublicKey = signResponseMessage.PublicKey,
+                    Signature = signResponseMessage.Signature
+                },
+                PeerIdentifierHelper.GetPeerIdentifier("recipient_key"),
+                PeerIdentifierHelper.GetPeerIdentifier("recipient_key")
+            );
+            
+            var verifyMessageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext2, 
+                verifyRequest.Message.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId)
+            );
+            
+            var verifyMessageRequestObserver = new VerifyMessageRequestObserver(PeerIdentifierHelper.GetPeerIdentifier("sender"),
+                _logger,
+                _keySigner
+            );
+
+            verifyMessageRequestObserver.StartObserving(verifyMessageStream);
+
+            await verifyMessageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
+
+            var receivedVerifyCalls = _fakeContext2.Channel.ReceivedCalls().ToList();
+
+            var sentResponseDto2 = (IMessageDto<VerifyMessageResponse>) receivedVerifyCalls.Single().GetArguments().Single();
+
+            var verifyResponseMessage = sentResponseDto2.FromIMessageDto();
+
+            verifyResponseMessage.IsSignedByKey.Should().Be(true);
         }
     }
 }
