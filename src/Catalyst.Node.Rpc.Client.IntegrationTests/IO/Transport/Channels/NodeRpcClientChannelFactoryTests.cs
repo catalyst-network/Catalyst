@@ -122,7 +122,7 @@ namespace Catalyst.Node.Rpc.Client.IntegrationTests.IO.Transport.Channels
             
             _clientCorrelationManager.ReceivedWithAnyArgs(1).AddPendingRequest(Arg.Any<CorrelatableMessage>());
             
-            _clientKeySigner.ReceivedWithAnyArgs(1).Sign(Arg.Any<byte[]>());
+            _clientKeySigner.ReceivedWithAnyArgs(1).Sign(Arg.Is(sig.Bytes.RawBytes));
             
             _serverKeySigner.Verify(
                     Arg.Any<PublicKey>(),
