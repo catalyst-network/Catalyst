@@ -1,4 +1,4 @@
-#region LICENSE
+﻿#region LICENSE
 
 /**
 * Copyright (c) 2019 Catalyst Network
@@ -21,19 +21,21 @@
 
 #endregion
 
-using System.Threading.Tasks;
-using Catalyst.Protocol.Common;
+using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.Interfaces.P2P.ReputationSystem;
 
-namespace Catalyst.Common.Interfaces.P2P.Messaging.Broadcast
-{ 
-    public interface IBroadcastManager
+namespace Catalyst.Node.Core.P2P.ReputationSystem
+{
+    internal sealed class PeerReputationChange
+        : IPeerReputationChange
     {
-        /// <summary>Broadcasts a message.</summary>
-        /// <param name="protocolMessage">Any signed message.</param>
-        Task BroadcastAsync(ProtocolMessage protocolMessage);
+        public IPeerIdentifier PeerIdentifier { get; }
+        public int ReputationChange { get; }
 
-        /// <summary>Handles Incoming gossip.</summary>
-        /// <param name="anySigned">Any signed message.</param>
-        Task ReceiveAsync(ProtocolMessage anySigned);
+        public PeerReputationChange(IPeerIdentifier peerIdentifier, int reputationChange)
+        {
+            PeerIdentifier = peerIdentifier;
+            ReputationChange = reputationChange;
+        }
     }
 }

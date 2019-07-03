@@ -21,11 +21,13 @@
 
 #endregion
 
-namespace Catalyst.Common.Interfaces.P2P
+using Catalyst.Common.P2P;
+using SharpRepository.Repository;
+
+namespace Catalyst.Common.Interfaces.P2P.ReputationSystem
 {
-    public interface IPeerReputationChange
+    public interface IReputationManager
     {
-        IPeerIdentifier PeerIdentifier { get; }
-        int ReputationChange { get; }
+        IRepository<Peer> PeerRepository { get; }
     }
 }

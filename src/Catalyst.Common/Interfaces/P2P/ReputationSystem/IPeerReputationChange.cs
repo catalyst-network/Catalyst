@@ -1,4 +1,4 @@
-#region LICENSE
+﻿#region LICENSE
 
 /**
 * Copyright (c) 2019 Catalyst Network
@@ -21,20 +21,11 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.IO.Messaging;
-using Catalyst.Common.Interfaces.P2P;
-
-namespace Catalyst.Common.IO.Messaging
+namespace Catalyst.Common.Interfaces.P2P.ReputationSystem
 {
-    public sealed class MessageEvictionEvent : IMessageEvictionEvent
+    public interface IPeerReputationChange
     {
-        public object EvictedContent { get; }
-        public IPeerIdentifier PeerIdentifier { get; }
-        
-        public MessageEvictionEvent(CorrelatableMessage correlatableMessage)
-        {
-            EvictedContent = correlatableMessage.Content;
-            PeerIdentifier = correlatableMessage.Recipient;
-        }
+        IPeerIdentifier PeerIdentifier { get; }
+        int ReputationChange { get; }
     }
 }

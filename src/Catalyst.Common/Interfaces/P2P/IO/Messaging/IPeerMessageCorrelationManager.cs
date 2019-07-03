@@ -1,4 +1,4 @@
-﻿#region LICENSE
+#region LICENSE
 
 /**
 * Copyright (c) 2019 Catalyst Network
@@ -21,13 +21,9 @@
 
 #endregion
 
-using Catalyst.Common.P2P;
-using SharpRepository.Repository;
+using Catalyst.Common.Interfaces.IO.Messaging;
 
-namespace Catalyst.Common.Interfaces.P2P
+namespace Catalyst.Common.Interfaces.P2P.IO.Messaging
 {
-    interface IReputationManager
-    {
-        IRepository<Peer> PeerRepository { get; }
-    }
+    public interface IPeerMessageCorrelationManager : IMessageCorrelationManager { }
 }

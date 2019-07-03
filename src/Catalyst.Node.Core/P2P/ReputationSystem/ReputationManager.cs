@@ -1,4 +1,4 @@
-﻿#region LICENSE
+#region LICENSE
 
 /**
 * Copyright (c) 2019 Catalyst Network
@@ -21,20 +21,26 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.P2P;
+using System;
+using System.Reactive.Linq;
+using System.Reactive.Subjects;
+using Catalyst.Common.Interfaces.IO.Messaging;
+using Catalyst.Common.Interfaces.P2P.ReputationSystem;
+using Catalyst.Common.P2P;
+using SharpRepository.Repository;
 
-namespace Catalyst.Node.Core.P2P
+namespace Catalyst.Node.Core.P2P.ReputationSystem
 {
-    internal sealed class PeerReputationChange
-        : IPeerReputationChange
+    public class ReputationManager : IReputationManager
     {
-        public IPeerIdentifier PeerIdentifier { get; }
-        public int ReputationChange { get; }
+        public IRepository<Peer> PeerRepository { get; }
+        private readonly ReplaySubject<IMessageEvictionEvent> _evictionEvent;
+        public IObservable<IMessageEvictionEvent> EvictionEvents => _evictionEvent.AsObservable();
 
-        public PeerReputationChange(IPeerIdentifier peerIdentifier, int reputationChange)
+        public ReputationManager(IRepository<Peer> peerRepository)
         {
-            PeerIdentifier = peerIdentifier;
-            ReputationChange = reputationChange;
+            PeerRepository = peerRepository;
+            _evictionEvent = new ReplaySubject<IMessageEvictionEvent>(0);
         }
     }
 }

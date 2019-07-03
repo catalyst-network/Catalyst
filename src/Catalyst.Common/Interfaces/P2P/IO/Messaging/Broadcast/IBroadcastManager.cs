@@ -21,20 +21,19 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.IO.Messaging;
-using Catalyst.Common.Interfaces.P2P;
+using System.Threading.Tasks;
+using Catalyst.Protocol.Common;
 
-namespace Catalyst.Common.IO.Messaging
-{
-    public sealed class MessageEvictionEvent : IMessageEvictionEvent
+namespace Catalyst.Common.Interfaces.P2P.IO.Messaging.Broadcast
+{ 
+    public interface IBroadcastManager
     {
-        public object EvictedContent { get; }
-        public IPeerIdentifier PeerIdentifier { get; }
-        
-        public MessageEvictionEvent(CorrelatableMessage correlatableMessage)
-        {
-            EvictedContent = correlatableMessage.Content;
-            PeerIdentifier = correlatableMessage.Recipient;
-        }
+        /// <summary>Broadcasts a message.</summary>
+        /// <param name="protocolMessage">Any signed message.</param>
+        Task BroadcastAsync(ProtocolMessage protocolMessage);
+
+        /// <summary>Handles Incoming gossip.</summary>
+        /// <param name="anySigned">Any signed message.</param>
+        Task ReceiveAsync(ProtocolMessage anySigned);
     }
 }
