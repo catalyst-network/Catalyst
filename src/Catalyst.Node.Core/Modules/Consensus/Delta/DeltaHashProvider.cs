@@ -62,7 +62,7 @@ namespace Catalyst.Node.Core.Modules.Consensus.Delta
         }
 
         /// <inheritdoc />
-        public bool TryUpdateLatestHash(string previousHash, Multihash newHash)
+        public bool TryUpdateLatestHash(Multihash previousHash, Multihash newHash)
         {
             var foundNewDelta = _deltaCache.TryGetDelta(newHash, out var newDelta);
             var foundPreviousDelta = _deltaCache.TryGetDelta(previousHash, out var previousDelta);

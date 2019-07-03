@@ -48,9 +48,9 @@ namespace Catalyst.Node.Core.P2P.IO.Observables
             try
             {
                 var deserialised = messageDto.Payload.FromProtocolMessage<DeltaDfsHashBroadcast>();
-                var previousHash = Multihash.Decode(deserialised.PreviousDeltaDfsHash.ToByteArray());
-                var newHash = Multihash.Decode(deserialised.DeltaDfsHash.ToByteArray());
-                _deltaHashProvider.TryUpdateLatestHash(previousHash.ToString(), newHash.ToString());
+                var previousHash = Multihash.Cast(deserialised.PreviousDeltaDfsHash.ToByteArray());
+                var newHash = Multihash.Cast(deserialised.DeltaDfsHash.ToByteArray());
+                _deltaHashProvider.TryUpdateLatestHash(previousHash, newHash);
             }
             catch (Exception exception)
             {

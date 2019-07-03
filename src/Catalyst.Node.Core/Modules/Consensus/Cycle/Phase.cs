@@ -25,7 +25,6 @@ using System;
 using Catalyst.Common.Interfaces.Modules.Consensus.Cycle;
 using Catalyst.Common.Modules.Consensus.Cycle;
 using Multiformats.Hash;
-using Nethereum.Hex.HexConvertors.Extensions;
 
 namespace Catalyst.Node.Core.Modules.Consensus.Cycle
 {

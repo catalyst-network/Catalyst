@@ -81,8 +81,8 @@
                 }
             ],
             "parameters": {
-                "capacity": 10000 
-            } 
+                "capacity": 10000
+            }
         },
         {
             "type": "Catalyst.Node.Core.Modules.Consensus.Delta.DeltaCache",
@@ -101,6 +101,14 @@
                 }
             ],
             "instanceScope": "singleinstance"
+        //},
+        //{
+        //    "type": "Catalyst.Node.Core.P2P.IO.Observables.DeltaDfsHashObserver",
+        //    "services": [
+        //        {
+        //            "type": "Catalyst.Common.Interfaces.IO.Observables.IP2PMessageObserver, Catalyst.Common"
+        //        }
+        //    ]
         }
     ]
 }

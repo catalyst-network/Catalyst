@@ -21,26 +21,26 @@
 
 #endregion
 
+using System;
+using System.Net;
+using System.Threading.Tasks;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.Messaging.Broadcast;
 using Catalyst.Common.IO.Handlers;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Transaction;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels.Embedded;
+using FluentAssertions;
 using NSubstitute;
+using NSubstitute.Exceptions;
 using NSubstitute.ReceivedExtensions;
 using Serilog;
-using System;
-using System.Net;
-using System.Threading.Tasks;
-using Catalyst.Common.IO.Messaging;
-using FluentAssertions;
-using NSubstitute.Exceptions;
 using Xunit;
 
-namespace Catalyst.Node.Core.UnitTests.P2P.Messaging.Gossip
+namespace Catalyst.Node.Core.UnitTests.P2P.IO.Messaging.Broadcast
 {
     public class BroadcastHandlerTests
     {
