@@ -72,7 +72,7 @@ namespace Catalyst.Node.Rpc.Client.IO.Transport.Channels
                 new ProtobufVarint32FrameDecoder(),
                 new ProtobufDecoder(ProtocolMessageSigned.Parser),
                 new PeerIdValidationHandler(_peerIdValidator),
-                new AddressedEnvelopeToIMessage(),
+                new AddressedEnvelopeToIMessageEncoder(),
                 new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
                     new ProtocolMessageVerifyHandler(_keySigner), new ProtocolMessageSignHandler(_keySigner)
                 ),

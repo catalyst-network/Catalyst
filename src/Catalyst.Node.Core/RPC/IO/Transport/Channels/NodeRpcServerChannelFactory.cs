@@ -58,7 +58,7 @@ namespace Catalyst.Node.Core.RPC.IO.Transport.Channels
                 new ProtobufEncoder(),
                 new AuthenticationHandler(_authenticationStrategy),
                 new PeerIdValidationHandler(_peerIdValidator),
-                new AddressedEnvelopeToIMessage(),
+                new AddressedEnvelopeToIMessageEncoder(),
                 new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
                     new ProtocolMessageVerifyHandler(_keySigner), new ProtocolMessageSignHandler(_keySigner)
                 ),

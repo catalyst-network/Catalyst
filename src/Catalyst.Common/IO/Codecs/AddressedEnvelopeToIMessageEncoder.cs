@@ -29,7 +29,8 @@ using DotNetty.Transport.Channels;
 
 namespace Catalyst.Common.IO.Codecs
 {
-    public sealed class AddressedEnvelopeToIMessage : MessageToMessageEncoder<IMessageDto<ProtocolMessageSigned>>
+    public sealed class AddressedEnvelopeToIMessageEncoder 
+        : MessageToMessageEncoder<IMessageDto<ProtocolMessageSigned>>
     {
         protected override void Encode(IChannelHandlerContext context,
             IMessageDto<ProtocolMessageSigned> message,

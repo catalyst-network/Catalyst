@@ -104,7 +104,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC.IO.Transport.Channels
             handlers[3].Should().BeOfType<ProtobufEncoder>();
             handlers[4].Should().BeOfType<AuthenticationHandler>();
             handlers[5].Should().BeOfType<PeerIdValidationHandler>();
-            handlers[6].Should().BeOfType<AddressedEnvelopeToIMessage>();
+            handlers[6].Should().BeOfType<AddressedEnvelopeToIMessageEncoder>();
             handlers[7].Should().BeOfType<CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>>();
             handlers[8].Should().BeOfType<CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>>();
             handlers[9].Should().BeOfType<ObservableServiceHandler>();
