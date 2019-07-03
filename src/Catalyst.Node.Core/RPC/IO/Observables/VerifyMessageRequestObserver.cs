@@ -88,7 +88,7 @@ namespace Catalyst.Node.Core.RPC.IO.Observables
             ISignature signature = null;
             try
             {
-                signature = new Signature(decodedSignature);
+                signature = new Signature(decodedSignature, decodedPublicKey);
                 Guard.Argument(signature).HasValue();
             }
             catch (Exception ex)
@@ -98,7 +98,7 @@ namespace Catalyst.Node.Core.RPC.IO.Observables
 
             try
             {
-                var result = _keySigner.CryptoContext.Verify(publicKey, decodedMessage, signature);
+                var result = _keySigner.CryptoContext.Verify(signature, decodedMessage);
 
                 Logger.Debug("message content is {0}", verifyMessageRequest.Message);
                 
