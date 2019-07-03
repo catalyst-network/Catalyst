@@ -42,7 +42,7 @@ using Serilog;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Catalyst.Node.Core.UnitTests.P2P.Observables
+namespace Catalyst.Node.Core.UnitTests.P2P.IO.Observables
 {
     public sealed class GetNeighbourResponseObserverTests : ConfigFileBasedTest
     {
