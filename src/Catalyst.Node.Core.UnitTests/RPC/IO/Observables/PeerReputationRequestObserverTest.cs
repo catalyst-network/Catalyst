@@ -41,7 +41,7 @@ using Serilog;
 using SharpRepository.Repository;
 using Xunit;
 
-namespace Catalyst.Node.Core.UnitTests.RPC.Observables
+namespace Catalyst.Node.Core.UnitTests.RPC.IO.Observables
 {
     /// <summary>
     /// Tests the peer reputation calls

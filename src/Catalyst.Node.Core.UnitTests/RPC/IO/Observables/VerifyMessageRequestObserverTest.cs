@@ -24,6 +24,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using Autofac;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
@@ -37,15 +38,14 @@ using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using FluentAssertions;
 using Microsoft.Extensions.Configuration;
+using Nethereum.Hex.HexConvertors.Extensions;
 using Nethereum.RLP;
 using NSubstitute;
 using Serilog;
 using Xunit;
 using Xunit.Abstractions;
-using Nethereum.Hex.HexConvertors.Extensions;
-using System.Threading.Tasks;
 
-namespace Catalyst.Node.Core.UnitTests.RPC.Observables
+namespace Catalyst.Node.Core.UnitTests.RPC.IO.Observables
 {
     public sealed class VerifyMessageRequestObserverTest : ConfigFileBasedTest
     {
