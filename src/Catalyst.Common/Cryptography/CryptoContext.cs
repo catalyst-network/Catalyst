@@ -75,9 +75,9 @@ namespace Catalyst.Common.Cryptography
         }
 
         /// <inheritdoc />
-        public bool Verify(IPublicKey key, ReadOnlySpan<byte> message, ISignature signature)
+        public bool Verify(ISignature signature, ReadOnlySpan<byte> message)
         {
-            return _wrapper.StdVerify(signature, key, message.ToArray());
+            return _wrapper.StdVerify(signature, message.ToArray());
         }
 
         /// <inheritdoc />
