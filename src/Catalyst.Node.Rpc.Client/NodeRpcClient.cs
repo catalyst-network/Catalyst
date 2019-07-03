@@ -22,7 +22,6 @@
 #endregion
 
 using Catalyst.Common.Interfaces.IO.EventLoop;
-using Catalyst.Common.Interfaces.IO.Observables;
 using Catalyst.Common.Interfaces.IO.Transport.Channels;
 using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.IO.Transport;
@@ -31,6 +30,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
+using Catalyst.Common.Interfaces.IO.Observers;
 
 namespace Catalyst.Node.Rpc.Client
 {

@@ -28,13 +28,13 @@ using System.Reactive.Linq;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
-using Catalyst.Common.Interfaces.IO.Observables;
+using Catalyst.Common.Interfaces.IO.Observers;
 using Catalyst.Protocol.Common;
 using Dawn;
 using Google.Protobuf;
 using Serilog;
 
-namespace Catalyst.Common.IO.Observables
+namespace Catalyst.Common.IO.Observers
 {
     public abstract class BroadcastObserverBase<TProto> : MessageObserverBase, IBroadcastObserver where TProto : IMessage
     {
