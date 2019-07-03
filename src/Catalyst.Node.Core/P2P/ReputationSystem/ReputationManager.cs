@@ -34,13 +34,13 @@ namespace Catalyst.Node.Core.P2P.ReputationSystem
     public class ReputationManager : IReputationManager
     {
         public IRepository<Peer> PeerRepository { get; }
-        private readonly ReplaySubject<IMessageEvictionEvent> _evictionEvent;
-        public IObservable<IMessageEvictionEvent> EvictionEvents => _evictionEvent.AsObservable();
+        private readonly ReplaySubject<IMessageEvictionEvent> _reputationEvent;
+        public IObservable<IMessageEvictionEvent> ReputationEvents => _reputationEvent.AsObservable();
 
         public ReputationManager(IRepository<Peer> peerRepository)
         {
             PeerRepository = peerRepository;
-            _evictionEvent = new ReplaySubject<IMessageEvictionEvent>(0);
+            _reputationEvent = new ReplaySubject<IMessageEvictionEvent>(0);
         }
     }
 }
