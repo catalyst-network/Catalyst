@@ -38,7 +38,7 @@ namespace Catalyst.Common.P2P
         public int PkId { get; set; }
 
         /// <inheritdoc />
-        public int Reputation { get; set; }
+        public long Reputation { get; set; }
 
         /// <inheritdoc />
         public bool BlackListed { get; set; }
@@ -66,17 +66,5 @@ namespace Catalyst.Common.P2P
 
         /// <inheritdoc />
         public void Touch() { LastSeen = DateTimeUtil.UtcNow; }
-
-        /// <inheritdoc />
-        public void IncreaseReputation(int mer = 1)
-        {
-            Reputation += mer;
-        }
-
-        /// <inheritdoc />
-        public void DecreaseReputation(int mer = 1)
-        {
-            Reputation += mer;
-        }
     }
 }

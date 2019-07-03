@@ -22,15 +22,11 @@
 #endregion
 
 using System;
-using Catalyst.Common.Interfaces.IO.Messaging;
-using Catalyst.Common.P2P;
-using SharpRepository.Repository;
 
 namespace Catalyst.Common.Interfaces.P2P.ReputationSystem
 {
     public interface IReputationManager
-    {
-        IRepository<Peer> PeerRepository { get; }
+    { 
         IObservable<IPeerReputationChange> MasterReputationEventStream { get; }
 
         void MergeReputationStream(IObservable<IPeerReputationChange> reputationChangeStream);

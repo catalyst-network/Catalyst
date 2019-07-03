@@ -129,7 +129,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
             var correlationManager = Substitute.For<IMessageCorrelationManager>();
             correlationManager.TryMatchResponse(Arg.Any<ProtocolMessage>()).Returns(false);
 
-            var correlationHandler = new CorrelationHandler(correlationManager);
+            var correlationHandler = new CorrelationHandler<IMessageCorrelationManager>(correlationManager);
             var channelHandlerContext = Substitute.For<IChannelHandlerContext>();
             var nonCorrelatedMessage = new PingResponse().ToProtocolMessage(_peerIds[0].PeerId, CorrelationId.GenerateCorrelationId());
             correlationHandler.ChannelRead(channelHandlerContext, nonCorrelatedMessage);

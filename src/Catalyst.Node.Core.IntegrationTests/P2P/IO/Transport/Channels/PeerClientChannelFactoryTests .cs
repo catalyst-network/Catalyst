@@ -25,9 +25,9 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Catalyst.Common.Extensions;
-using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.Interfaces.P2P.IO.Messaging;
 using Catalyst.Common.Interfaces.P2P.IO.Messaging.Broadcast;
 using Catalyst.Common.IO.Handlers;
 using Catalyst.Common.IO.Messaging;
@@ -51,15 +51,15 @@ namespace Catalyst.Node.Core.IntegrationTests.P2P.IO.Transport.Channels
         private readonly UnitTests.P2P.IO.Transport.Channels.PeerClientChannelFactoryTests.TestPeerClientChannelFactory _clientFactory;
         private readonly EmbeddedChannel _serverChannel;
         private readonly EmbeddedChannel _clientChannel;
-        private readonly IMessageCorrelationManager _clientCorrelationManager;
+        private readonly IPeerMessageCorrelationManager _clientCorrelationManager;
         private readonly IKeySigner _clientKeySigner;
         private readonly IPeerIdValidator _peerIdValidator;
         private readonly IKeySigner _serverKeySigner;
-        private readonly IMessageCorrelationManager _serverCorrelationManager;
+        private readonly IPeerMessageCorrelationManager _serverCorrelationManager;
 
         public PeerClientChannelFactoryTests()
         {
-            _serverCorrelationManager = Substitute.For<IMessageCorrelationManager>();
+            _serverCorrelationManager = Substitute.For<IPeerMessageCorrelationManager>();
             _serverKeySigner = Substitute.For<IKeySigner>();
             var broadcastManager = Substitute.For<IBroadcastManager>();
 
@@ -75,7 +75,7 @@ namespace Catalyst.Node.Core.IntegrationTests.P2P.IO.Transport.Channels
                 _serverKeySigner,
                 _peerIdValidator);
 
-            _clientCorrelationManager = Substitute.For<IMessageCorrelationManager>();
+            _clientCorrelationManager = Substitute.For<IPeerMessageCorrelationManager>();
             _clientKeySigner = Substitute.For<IKeySigner>();
            
             _clientFactory = new UnitTests.P2P.IO.Transport.Channels.PeerClientChannelFactoryTests.TestPeerClientChannelFactory(

@@ -22,34 +22,75 @@
 #endregion
 
 using System;
+using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using Catalyst.Common.Interfaces.P2P.ReputationSystem;
 using Catalyst.Common.P2P;
+using Serilog;
 using SharpRepository.Repository;
 
 namespace Catalyst.Node.Core.P2P.ReputationSystem
 {
-    public class ReputationManager : IReputationManager
+    public class ReputationManager : IReputationManager, IDisposable
     {
-        public IRepository<Peer> PeerRepository { get; }
+        private readonly ILogger _logger;
+        private IRepository<Peer> PeerRepository { get; }
         private readonly ReplaySubject<IPeerReputationChange> _reputationEvent;
         public IObservable<IPeerReputationChange> MasterReputationEventStream => _reputationEvent.AsObservable();
 
-        public ReputationManager(IRepository<Peer> peerRepository)
+        public ReputationManager(IRepository<Peer> peerRepository, ILogger logger)
         {
+            _logger = logger;
             PeerRepository = peerRepository;
             _reputationEvent = new ReplaySubject<IPeerReputationChange>(0);
+            
+            MasterReputationEventStream
+               .SubscribeOn(NewThreadScheduler.Default)
+               .Subscribe(OnNext, OnError, OnCompleted);
         }
-
+        
         /// <summary>
-        ///     Allows passing in multiple reputation streams and merging with this MasterReputationEventStream
+        ///     Allows passing a reputation streams to merge with the MasterReputationEventStream
         /// </summary>
         /// <param name="reputationChangeStream"></param>
         /// <exception cref="NotImplementedException"></exception>
         public void MergeReputationStream(IObservable<IPeerReputationChange> reputationChangeStream)
         {
             MasterReputationEventStream.Merge(reputationChangeStream);
+        }
+
+        private void OnCompleted()
+        {
+            _logger.Debug("Message stream ended.");
+        }
+
+        private void OnError(Exception obj)
+        {
+            _logger.Error("Message stream ended.");
+        }
+
+        private void OnNext(IPeerReputationChange peerReputationChange)
+        {
+            PeerRepository.TryFind(p => p.PeerIdentifier.Equals(peerReputationChange.PeerIdentifier), out var peer);
+            peer.Reputation += peerReputationChange.ReputationEvent.Amount;
+            PeerRepository.Update(peer);
+        }
+        
+        private void Dispose(bool disposing)
+        {
+            if (!disposing)
+            {
+                return;
+            }
+
+            _reputationEvent?.Dispose();
+            PeerRepository?.Dispose();
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
         }
     }
 }

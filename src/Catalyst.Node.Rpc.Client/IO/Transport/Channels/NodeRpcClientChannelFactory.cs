@@ -77,7 +77,8 @@ namespace Catalyst.Node.Rpc.Client.IO.Transport.Channels
                     new ProtocolMessageVerifyHandler(_keySigner), new ProtocolMessageSignHandler(_keySigner)
                 ),
                 new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
-                    new CorrelationHandler(_messageCorrelationCache), new CorrelatableHandler(_messageCorrelationCache)
+                    new CorrelationHandler<IMessageCorrelationManager>(_messageCorrelationCache),
+                    new CorrelatableHandler<IMessageCorrelationManager>(_messageCorrelationCache)
                 ),
                 new ObservableServiceHandler()
             };
