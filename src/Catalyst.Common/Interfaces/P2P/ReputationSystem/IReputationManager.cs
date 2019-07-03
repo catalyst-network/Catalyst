@@ -31,6 +31,8 @@ namespace Catalyst.Common.Interfaces.P2P.ReputationSystem
     public interface IReputationManager
     {
         IRepository<Peer> PeerRepository { get; }
-        IObservable<IMessageEvictionEvent> ReputationEvents { get; }
+        IObservable<IPeerReputationChange> MasterReputationEventStream { get; }
+
+        void MergeReputationStream(IObservable<IPeerReputationChange> reputationChangeStream);
     }
 }

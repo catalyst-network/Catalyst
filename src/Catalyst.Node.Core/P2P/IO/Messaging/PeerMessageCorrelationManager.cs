@@ -22,10 +22,14 @@
 #endregion
 
 using System;
+using System.Reactive.Linq;
+using System.Reactive.Subjects;
 using System.Threading;
+using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.P2P.IO.Messaging;
 using Catalyst.Common.Interfaces.P2P.ReputationSystem;
 using Catalyst.Common.IO.Messaging;
+using Catalyst.Node.Core.P2P.ReputationSystem;
 using Catalyst.Protocol.Common;
 using Dawn;
 using Microsoft.Extensions.Caching.Memory;
@@ -36,30 +40,29 @@ namespace Catalyst.Node.Core.P2P.IO.Messaging
     public class PeerMessageCorrelationManager : IPeerMessageCorrelationManager
     {
         public TimeSpan CacheTtl { get; }
-        private readonly IReputationManager _reputationManager;
         private readonly IMemoryCache _pendingRequests;
         private readonly MemoryCacheEntryOptions _entryOptions;
-
+        private readonly ReplaySubject<IPeerReputationChange> _reputationEvent;
+        public IObservable<IPeerReputationChange> ReputationEventStream => _reputationEvent.AsObservable();
+        
         public PeerMessageCorrelationManager(IReputationManager reputationManager,
             IMemoryCache cache,
             TimeSpan cacheTtl = default)
         {
             CacheTtl = cacheTtl == default ? TimeSpan.FromSeconds(10) : cacheTtl;
-            _reputationManager = reputationManager;
             _pendingRequests = cache;
+            _reputationEvent = new ReplaySubject<IPeerReputationChange>(0);
 
             _entryOptions = new MemoryCacheEntryOptions()
                .AddExpirationToken(new CancellationChangeToken(new CancellationTokenSource(CacheTtl).Token))
                .RegisterPostEvictionCallback(EvictionCallback);
+            reputationManager.MergeReputationStream(ReputationEventStream);
         }
 
         private void EvictionCallback(object key, object value, EvictionReason reason, object state)
         {
-            //TODO: find a way to trigger the actual remove with correct reason
-            //when the cache is not under pressure, eviction happens by token expiry :(
-            //if (reason == EvictionReason.Removed) {return;}
             var message = (CorrelatableMessage) value;
-            _reputationManager.ReputationEvents.OnNext(new MessageEvictionEvent(message));
+            _reputationEvent.OnNext(new PeerReputationChange(message.Recipient, ReputationEvents.NoResponseReceived));
         }
         
         public void AddPendingRequest(CorrelatableMessage correlatableMessage)
@@ -88,7 +91,7 @@ namespace Catalyst.Node.Core.P2P.IO.Messaging
             }
 
             _pendingRequests?.Dispose();
-            _evictionEvent?.Dispose();
+            _reputationEvent?.Dispose();
         }
 
         public void Dispose()
