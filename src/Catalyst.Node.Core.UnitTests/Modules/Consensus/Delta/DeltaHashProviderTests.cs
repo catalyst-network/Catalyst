@@ -68,7 +68,7 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Consensus.Delta
             updated.Should().BeTrue();
 
             hashProvider.GetLatestDeltaHash()
-               .Should().Be(GetHash(1).ToString());
+               .Should().Be(GetHash(1));
         }
 
         [Fact]
@@ -76,7 +76,7 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Consensus.Delta
         {
             const int deltaCount = 2;
             BuildDeltasAndSetCacheExpectations(deltaCount);
-            var observer = Substitute.For<IObserver<string>>();
+            var observer = Substitute.For<IObserver<Multihash>>();
 
             var hashProvider = new DeltaHashProvider(_deltaCache, _logger, 3);
 
@@ -84,7 +84,7 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Consensus.Delta
             {
                 hashProvider.TryUpdateLatestHash(GetHash(0), GetHash(1));
 
-                observer.Received(1).OnNext(Arg.Is(GetHash(1).ToString()));
+                observer.Received(1).OnNext(Arg.Is(GetHash(1)));
             }
         }
 
@@ -101,7 +101,7 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Consensus.Delta
             updated.Should().BeTrue();
 
             hashProvider.GetLatestDeltaHash()
-               .Should().Be(GetHash(2).ToString());
+               .Should().Be(GetHash(2));
         }
 
         [Fact]
@@ -133,7 +133,7 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Consensus.Delta
             evictedRange.ToList().ForEach(i =>
             {
                 hashProvider.GetLatestDeltaHash(GetDateTimeForIndex(i))
-                   .Should().Be(string.Empty);
+                   .Should().Be(default);
             });
         }
 

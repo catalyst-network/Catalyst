@@ -67,7 +67,7 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Consensus.Cycle
             _deltaHashProvider = Substitute.For<IDeltaHashProvider>();
 
             _deltaHashProvider.GetLatestDeltaHash(Arg.Any<DateTime>())
-               .Returns(Multihash.Sum(HashType.ID, ByteUtil.GenerateRandomByteArray(32)).ToString());
+               .Returns(Multihash.Sum(HashType.ID, ByteUtil.GenerateRandomByteArray(32)));
 
             _dateTimeProvider.UtcNow.Returns(_ => _testScheduler.Now.DateTime);
             _cycleProvider = new CycleEventsProvider(CycleConfiguration.Default, _dateTimeProvider, _schedulerProvider, _deltaHashProvider);

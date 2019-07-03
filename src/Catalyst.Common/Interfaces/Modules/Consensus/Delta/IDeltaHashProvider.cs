@@ -23,6 +23,7 @@
 
 using System;
 using Catalyst.Common.Interfaces.Modules.Dfs;
+using Multiformats.Hash;
 
 namespace Catalyst.Common.Interfaces.Modules.Consensus.Delta
 {
@@ -40,18 +41,18 @@ namespace Catalyst.Common.Interfaces.Modules.Consensus.Delta
         /// <param name="previousHash">The hash that is supposed to chronologically precede the new one.</param>
         /// <param name="newHash">The new and latest hash, which should replace <see cref="previousHash"/>.</param>
         /// <returns><see cref="true" /> if the update was successful, <see cref="false" /> otherwise.</returns>
-        bool TryUpdateLatestHash(string previousHash, string newHash);
+        bool TryUpdateLatestHash(string previousHash, Multihash newHash);
 
         /// <summary>
         /// Retrieve the latest ledger update, as seen from an optional point in time in the past.
         /// </summary>
         /// <param name="asOf">An optional point in time in the past, if not provided, it will use <see cref="IDateTimeProvider.UtcNow"/></param>
         /// <returns>The hash, or address on the DFS, of the latest ledger state update as a string, as returned in <seealso cref="IDfs.AddAsync"/></returns>
-        string GetLatestDeltaHash(DateTime? asOf = null);
+        Multihash GetLatestDeltaHash(DateTime? asOf = null);
 
         /// <summary>
         /// Subscribe to these updates to get live notifications for the hashes of new deltas as they get published on the Dfs.
         /// </summary>
-        IObservable<string> DeltaHashUpdates { get; }
+        IObservable<Multihash> DeltaHashUpdates { get; }
     }
 }

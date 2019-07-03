@@ -28,6 +28,7 @@ using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Modules.Consensus.Delta;
+using Multiformats.Hash;
 using Nito.Comparers;
 using Serilog;
 
@@ -39,11 +40,11 @@ namespace Catalyst.Node.Core.Modules.Consensus.Delta
         private readonly IDeltaCache _deltaCache;
         private readonly ILogger _logger;
 
-        private readonly ReplaySubject<string> _deltaHashUpdatesSubject;
-        private readonly SortedList<uint, string> _hashesByTimeDescending;
+        private readonly ReplaySubject<Multihash> _deltaHashUpdatesSubject;
+        private readonly SortedList<uint, Multihash> _hashesByTimeDescending;
         private readonly int _capacity;
 
-        public IObservable<string> DeltaHashUpdates => _deltaHashUpdatesSubject.AsObservable();
+        public IObservable<Multihash> DeltaHashUpdates => _deltaHashUpdatesSubject.AsObservable();
 
         public DeltaHashProvider(IDeltaCache deltaCache, 
             ILogger logger,
@@ -51,17 +52,17 @@ namespace Catalyst.Node.Core.Modules.Consensus.Delta
         {
             _deltaCache = deltaCache;
             _logger = logger;
-            _deltaHashUpdatesSubject = new ReplaySubject<string>(0);
+            _deltaHashUpdatesSubject = new ReplaySubject<Multihash>(0);
             var comparer = ComparerBuilder.For<uint>().OrderBy(u => u, descending: true);
             _capacity = capacity;
-            _hashesByTimeDescending = new SortedList<uint, string>(comparer)
+            _hashesByTimeDescending = new SortedList<uint, Multihash>(comparer)
             {
                 Capacity = _capacity,
             };
         }
 
         /// <inheritdoc />
-        public bool TryUpdateLatestHash(string previousHash, string newHash)
+        public bool TryUpdateLatestHash(string previousHash, Multihash newHash)
         {
             var foundNewDelta = _deltaCache.TryGetDelta(newHash, out var newDelta);
             var foundPreviousDelta = _deltaCache.TryGetDelta(previousHash, out var previousDelta);
@@ -91,7 +92,7 @@ namespace Catalyst.Node.Core.Modules.Consensus.Delta
         }
 
         /// <inheritdoc />
-        public string GetLatestDeltaHash(DateTime? asOf = null)
+        public Multihash GetLatestDeltaHash(DateTime? asOf = null)
         {
             if (!asOf.HasValue)
             {
@@ -107,7 +108,7 @@ namespace Catalyst.Node.Core.Modules.Consensus.Delta
             //the history of hashes and get them from IPFS
             //if they are not found here?
 
-            return hash.Value ?? string.Empty;
+            return hash.Value;
         }
     }
 }
