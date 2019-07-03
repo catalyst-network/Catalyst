@@ -70,7 +70,7 @@ namespace Catalyst.Common.Interfaces.Cryptography
         /// <returns></returns>
         ISignature Sign(IPrivateKey privateKey, ReadOnlySpan<byte> data);
 
-        bool Verify(IPublicKey key, ReadOnlySpan<byte> data, ISignature signature);
+        bool Verify(ISignature signature, ReadOnlySpan<byte> message);
 
         /// <summary>
         ///     Given a private key returns corresponding public key.

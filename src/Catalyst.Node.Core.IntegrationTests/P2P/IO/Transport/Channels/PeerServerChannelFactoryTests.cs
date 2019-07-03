@@ -96,7 +96,9 @@ namespace Catalyst.Node.Core.IntegrationTests.P2P.IO.Transport.Channels
         {
             var recipient = PeerIdentifierHelper.GetPeerIdentifier("recipient");
             var sender = PeerIdentifierHelper.GetPeerIdentifier("sender");
-            var sig = new Signature(ByteUtil.GenerateRandomByteArray(Cryptography.BulletProofs.Wrapper.FFI.GetSignatureLength()));
+            var sigBytes = ByteUtil.GenerateRandomByteArray(Cryptography.BulletProofs.Wrapper.FFI.GetSignatureLength());
+            var pubBytes = ByteUtil.GenerateRandomByteArray(Cryptography.BulletProofs.Wrapper.FFI.GetPublicKeyLength());
+            var sig = new Signature(sigBytes, pubBytes);
             _peerIdValidator.ValidatePeerIdFormat(Arg.Any<PeerId>()).Returns(true);
 
             _serverKeySigner.Sign(Arg.Any<byte[]>()).ReturnsForAnyArgs(sig);
@@ -121,9 +123,8 @@ namespace Catalyst.Node.Core.IntegrationTests.P2P.IO.Transport.Channels
             _serverKeySigner.ReceivedWithAnyArgs(1).Sign(Arg.Any<byte[]>());
             
             _clientKeySigner.Verify(
-                    Arg.Any<PublicKey>(),
-                    Arg.Any<byte[]>(),
-                    Arg.Any<Signature>())
+                    Arg.Any<Signature>(),
+                    Arg.Any<byte[]>())
                .ReturnsForAnyArgs(true);
             
             var observer = new ProtocolMessageObserver(0, Substitute.For<ILogger>());
@@ -135,7 +136,7 @@ namespace Catalyst.Node.Core.IntegrationTests.P2P.IO.Transport.Channels
                 _clientChannel.WriteInbound(sentBytes);
                 _clientChannel.ReadInbound<ProtocolMessageSigned>();
                 _clientCorrelationManager.ReceivedWithAnyArgs(1).TryMatchResponse(Arg.Any<ProtocolMessage>());
-                _clientKeySigner.ReceivedWithAnyArgs(1).Verify(null, null, null);
+                _clientKeySigner.ReceivedWithAnyArgs(1).Verify(null, null);
                 await messageStream.WaitForItemsOnDelayedStreamOnTaskPoolSchedulerAsync();
                 observer.Received.Count.Should().Be(1);
                 observer.Received.Single().Payload.CorrelationId.ToCorrelationId().Id.Should().Be(correlationId.Id);
