@@ -49,15 +49,15 @@ namespace Catalyst.Node.Core.UnitTests.P2P.IO.Transport.Channels
 {
     public sealed class PeerServerChannelFactoryTests
     {
-        private sealed class TestPeerServerChannelFactory : PeerServerChannelFactory
+        public sealed class TestPeerServerChannelFactory : PeerServerChannelFactory
         {
             private readonly List<IChannelHandler> _handlers;
 
             public TestPeerServerChannelFactory(IMessageCorrelationManager correlationManager,
-                IBroadcastManager gossipManager,
+                IBroadcastManager broadcastManager,
                 IKeySigner keySigner,
-                ILogger logger)
-                : base(correlationManager, gossipManager, keySigner, logger)
+                IPeerIdValidator peerIdValidator)
+                : base(correlationManager, broadcastManager, keySigner, peerIdValidator)
             {
                 _handlers = Handlers;
             }
@@ -79,23 +79,28 @@ namespace Catalyst.Node.Core.UnitTests.P2P.IO.Transport.Channels
             var peerSettings = Substitute.For<IPeerSettings>();
             peerSettings.BindAddress.Returns(IPAddress.Parse("127.0.0.1"));
             peerSettings.Port.Returns(1234);
+
+            var peerValidator = Substitute.For<IPeerIdValidator>();
+            peerValidator.ValidatePeerIdFormat(Arg.Any<PeerId>()).Returns(true);
+
             _factory = new TestPeerServerChannelFactory(
                 _correlationManager,
                 _gossipManager,
                 _keySigner,
-                Substitute.For<ILogger>());
+                peerValidator);
         }
 
         [Fact]
-        public void UdpServerChannelFactory_should_have_correct_handlers()
+        public void PeerServerChannelFactory_should_have_correct_handlers()
         {
-            _factory.InheritedHandlers.Count(h => h != null).Should().Be(5);
+            _factory.InheritedHandlers.Count(h => h != null).Should().Be(6);
             var handlers = _factory.InheritedHandlers.ToArray();
-            handlers[1].Should().BeOfType<CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>>();
-            handlers[1].Should().BeOfType<CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>>();
+            handlers[0].Should().BeOfType<CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>>();
+            handlers[1].Should().BeOfType<PeerIdValidationHandler>();
             handlers[2].Should().BeOfType<CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>>();
-            handlers[3].Should().BeOfType<BroadcastHandler>();
-            handlers[4].Should().BeOfType<ObservableServiceHandler>();
+            handlers[3].Should().BeOfType<CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>>();
+            handlers[4].Should().BeOfType<BroadcastHandler>();
+            handlers[5].Should().BeOfType<ObservableServiceHandler>();
         }
 
         [Fact]

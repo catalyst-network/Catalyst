@@ -25,7 +25,6 @@ using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;
-using Serilog;
 
 namespace Catalyst.Common.IO.Handlers
 {
@@ -33,7 +32,7 @@ namespace Catalyst.Common.IO.Handlers
     {
         private readonly IMessageCorrelationManager _messageCorrelationManager;
 
-        public CorrelationHandler(IMessageCorrelationManager messageCorrelationManager, ILogger logger) : base(logger)
+        public CorrelationHandler(IMessageCorrelationManager messageCorrelationManager)
         {
             _messageCorrelationManager = messageCorrelationManager;
         }

@@ -31,7 +31,7 @@ using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.IO.Messaging.Dto;
-using Catalyst.Node.Core.RPC.IO.Observables;
+using Catalyst.Common.IO.Observables;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
@@ -41,7 +41,7 @@ using NSubstitute;
 using Serilog;
 using Xunit;
 
-namespace Catalyst.Node.Core.UnitTests.RPC.Observables
+namespace Catalyst.Common.UnitTests.IO.Observables
 {
     public sealed class TransferFileBytesRequestObserverTest
     {
@@ -88,7 +88,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
                 CorrelationFileName = ByteString.Empty
             }, PeerIdentifierHelper.GetPeerIdentifier("sender"), PeerIdentifierHelper.GetPeerIdentifier("recipient"));
             
-            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_context, requestDto.Message.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId));
+            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_context, requestDto.Content.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId));
             
             _observer.StartObserving(messageStream);
 
@@ -97,7 +97,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC.Observables
             var receivedCalls = _context.Channel.ReceivedCalls().ToList();
             receivedCalls.Count.Should().Be(1);
             var sentResponseDto = (IMessageDto<TransferFileBytesResponse>) receivedCalls.Single().GetArguments().Single();
-            sentResponseDto.Message.GetType().Should().BeAssignableTo<TransferFileBytesResponse>();
+            sentResponseDto.Content.GetType().Should().BeAssignableTo<TransferFileBytesResponse>();
             var versionResponseMessage = sentResponseDto.FromIMessageDto();
             versionResponseMessage.ResponseCode.Should().Equal((byte) FileTransferResponseCodes.Error);
         }

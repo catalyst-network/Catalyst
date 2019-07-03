@@ -22,7 +22,6 @@
 #endregion
 
 using System.Threading.Tasks;
-using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.IO.Messaging.Dto;
@@ -30,7 +29,6 @@ using Catalyst.Common.Util;
 using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;
 using Google.Protobuf;
-using Serilog;
 
 namespace Catalyst.Common.IO.Handlers
 {
@@ -38,7 +36,7 @@ namespace Catalyst.Common.IO.Handlers
     {
         private readonly IKeySigner _keySigner;
 
-        public ProtocolMessageSignHandler(IKeySigner keySigner, ILogger logger) : base(logger)
+        public ProtocolMessageSignHandler(IKeySigner keySigner)
         {
             _keySigner = keySigner;
         }
@@ -51,15 +49,22 @@ namespace Catalyst.Common.IO.Handlers
         /// <returns></returns>
         protected override Task WriteAsync0(IChannelHandlerContext context, IMessageDto<ProtocolMessage> message)
         {
-            var sig = _keySigner.Sign(message.Message.ToByteArray());
+            var sig = _keySigner.Sign(message.Content.ToByteArray());
             
             var protocolMessageSigned = new ProtocolMessageSigned
             {
                 Signature = sig.Bytes.RawBytes.ToByteString(),
-                Message = message.Message.ToProtocolMessage(message.Sender.PeerId, message.CorrelationId)
+                Message = message.Content
             };
 
-            return context.WriteAsync(new MessageDto<ProtocolMessageSigned>(protocolMessageSigned, message.Sender, message.Recipient, message.CorrelationId));
+            var signedDto = new MessageDto<ProtocolMessageSigned>(protocolMessageSigned,
+                message.SenderPeerIdentifier,
+                message.RecipientPeerIdentifier,
+                message.CorrelationId);
+
+            message.Release();
+
+            return context.WriteAsync(signedDto);
         }
     }
 }

@@ -31,12 +31,15 @@ using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Transport.Channels;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
+using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.Messaging.Broadcast;
 using Catalyst.Common.IO.Handlers;
 using Catalyst.Common.IO.Transport.Channels;
 using Catalyst.Protocol.Common;
+using DotNetty.Codecs;
+using DotNetty.Codecs.Protobuf;
 using DotNetty.Transport.Channels;
-using Serilog;
+using Google.Protobuf;
 
 namespace Catalyst.Node.Core.P2P.IO.Transport.Channels
 {
@@ -45,7 +48,7 @@ namespace Catalyst.Node.Core.P2P.IO.Transport.Channels
         private readonly IMessageCorrelationManager _messageCorrelationManager;
         private readonly IBroadcastManager _broadcastManager;
         private readonly IKeySigner _keySigner;
-        private readonly ILogger _logger;
+        private readonly IPeerIdValidator _peerIdValidator;
 
         /// <summary>
         /// 
@@ -53,32 +56,36 @@ namespace Catalyst.Node.Core.P2P.IO.Transport.Channels
         /// <param name="messageCorrelationManager"></param>
         /// <param name="broadcastManager"></param>
         /// <param name="keySigner"></param>
-        /// <param name="logger"></param>
+        /// <param name="peerIdValidator"></param>
         public PeerServerChannelFactory(IMessageCorrelationManager messageCorrelationManager,
             IBroadcastManager broadcastManager,
             IKeySigner keySigner,
-            ILogger logger)
+            IPeerIdValidator peerIdValidator)
         {
             _messageCorrelationManager = messageCorrelationManager;
             _broadcastManager = broadcastManager;
             _keySigner = keySigner;
-            _logger = logger;
+            _peerIdValidator = peerIdValidator;
         }
 
         protected override List<IChannelHandler> Handlers => 
             new List<IChannelHandler>
             {
                 new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
-                    new DatagramProtobufDecoder(_logger), new DatagramProtobufEncoder(_logger)
+                    new DatagramPacketDecoder(new ProtobufDecoder(ProtocolMessageSigned.Parser)),
+                    new DatagramPacketEncoder<IMessage>(new ProtobufEncoder())
+                ),
+                new PeerIdValidationHandler(_peerIdValidator),
+                new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
+                    new ProtocolMessageVerifyHandler(_keySigner),
+                    new ProtocolMessageSignHandler(_keySigner)
                 ),
                 new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
-                    new ProtocolMessageVerifyHandler(_keySigner, _logger), new ProtocolMessageSignHandler(_keySigner, _logger)
+                    new CorrelationHandler(_messageCorrelationManager),
+                    new CorrelatableHandler(_messageCorrelationManager)
                 ),
-                new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
-                    new CorrelationHandler(_messageCorrelationManager, _logger), new CorrelatableHandler(_messageCorrelationManager, _logger)
-                ),
-                new BroadcastHandler(_broadcastManager, _logger),
-                new ObservableServiceHandler(_logger)
+                new BroadcastHandler(_broadcastManager),
+                new ObservableServiceHandler()
             };
 
         /// <param name="handlerEventLoopGroupFactory"></param>

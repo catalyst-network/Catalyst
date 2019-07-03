@@ -30,9 +30,11 @@ using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Rpc.Authentication;
+using Catalyst.Common.IO.Codecs;
 using Catalyst.Common.IO.Handlers;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Node.Core.RPC.IO.Transport.Channels;
+using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
 using Catalyst.TestUtils;
 using DotNetty.Buffers;
@@ -50,16 +52,14 @@ namespace Catalyst.Node.Core.UnitTests.RPC.IO.Transport.Channels
     {
         public sealed class TestNodeRpcServerChannelFactory : NodeRpcServerChannelFactory
         {
-            private readonly ILogger _logger;
             private readonly List<IChannelHandler> _handlers;
 
             public TestNodeRpcServerChannelFactory(IMessageCorrelationManager correlationManager,
                 IKeySigner keySigner,
                 IAuthenticationStrategy authenticationStrategy,
-                ILogger logger)
-                : base(correlationManager, keySigner, authenticationStrategy, logger)
+                IPeerIdValidator peerIdValidator)
+                : base(correlationManager, keySigner, authenticationStrategy, peerIdValidator)
             {
-                _logger = logger;
                 _handlers = Handlers;
             }
 
@@ -83,26 +83,31 @@ namespace Catalyst.Node.Core.UnitTests.RPC.IO.Transport.Channels
             authenticationStrategy.Authenticate(Arg.Any<IPeerIdentifier>()).Returns(true);
 
             peerSettings.Port.Returns(1234);
+
+            var peerIdValidator = Substitute.For<IPeerIdValidator>();
+            peerIdValidator.ValidatePeerIdFormat(Arg.Any<PeerId>()).Returns(true);
             _factory = new TestNodeRpcServerChannelFactory(
                 _correlationManager,
                 _keySigner,
                 authenticationStrategy,
-                Substitute.For<ILogger>());
+                peerIdValidator);
         }
 
         [Fact]
         public void NodeRpcServerChannelFactory_should_have_correct_handlers()
         {
-            _factory.InheritedHandlers.Count(h => h != null).Should().Be(8);
+            _factory.InheritedHandlers.Count(h => h != null).Should().Be(10);
             var handlers = _factory.InheritedHandlers.ToArray();
             handlers[0].Should().BeOfType<ProtobufVarint32FrameDecoder>();
             handlers[1].Should().BeOfType<ProtobufDecoder>();
             handlers[2].Should().BeOfType<ProtobufVarint32LengthFieldPrepender>();
             handlers[3].Should().BeOfType<ProtobufEncoder>();
             handlers[4].Should().BeOfType<AuthenticationHandler>();
-            handlers[5].Should().BeOfType<CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>>();
-            handlers[6].Should().BeOfType<CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>>();
-            handlers[7].Should().BeOfType<ObservableServiceHandler>();
+            handlers[5].Should().BeOfType<PeerIdValidationHandler>();
+            handlers[6].Should().BeOfType<AddressedEnvelopeToIMessageEncoder>();
+            handlers[7].Should().BeOfType<CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>>();
+            handlers[8].Should().BeOfType<CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>>();
+            handlers[9].Should().BeOfType<ObservableServiceHandler>();
         }
 
         [Fact]
@@ -122,14 +127,9 @@ namespace Catalyst.Node.Core.UnitTests.RPC.IO.Transport.Channels
             using (messageStream.Subscribe(observer))
             {
                 testingChannel.WriteInbound(protocolMessage);
-               
-                // _correlationManager.Received(1).TryMatchResponse(protocolMessage); // @TODO in bound server shouldn't try and correlate a request, lets do another test to check this logic
                 _correlationManager.DidNotReceiveWithAnyArgs().TryMatchResponse(protocolMessage);
-
                 _keySigner.DidNotReceiveWithAnyArgs().Verify(null, null, null);
-
                 await messageStream.WaitForItemsOnDelayedStreamOnTaskPoolSchedulerAsync();
-
                 observer.Received.Count.Should().Be(1);
                 observer.Received.Single().Payload.CorrelationId.ToCorrelationId().Id.Should().Be(correlationId.Id);
             }
@@ -140,7 +140,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC.IO.Transport.Channels
         {
             var testingChannel = new EmbeddedChannel("test".ToChannelId(),
                 true, _factory.InheritedHandlers.ToArray());
-
+            
             var senderId = PeerIdHelper.GetPeerId("sender");
             var correlationId = CorrelationId.GenerateCorrelationId();
             var protocolMessage = new PingResponse().ToProtocolMessage(senderId, correlationId);

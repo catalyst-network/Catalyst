@@ -23,7 +23,6 @@
 
 using System;
 using System.Net;
-using System.Text;
 using Catalyst.Common.Interfaces.Cli.Options;
 using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.Network;
@@ -64,8 +63,7 @@ namespace Catalyst.Cli.Commands
                         : ByteString.CopyFrom(opts.PublicKey.ToBytesForRLPEncoding())
                 },
                 _peerIdentifier,
-                new PeerIdentifier(Encoding.ASCII.GetBytes(nodeConfig.PublicKey), nodeConfig.HostAddress,
-                    nodeConfig.Port));
+                PeerIdentifier.BuildPeerIdFromConfig(nodeConfig, _peerIdClientId));
 
             node.SendMessage(requestMessage);
 

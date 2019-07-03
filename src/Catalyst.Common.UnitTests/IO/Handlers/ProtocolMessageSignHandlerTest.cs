@@ -31,7 +31,6 @@ using Catalyst.Protocol.IPPN;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using NSubstitute;
-using Serilog;
 using Xunit;
 
 namespace Catalyst.Common.UnitTests.IO.Handlers
@@ -56,7 +55,7 @@ namespace Catalyst.Common.UnitTests.IO.Handlers
         [Fact]
         public void CantSignMessage()
         {
-            var protocolMessageSignHandler = new ProtocolMessageSignHandler(_keySigner, Substitute.For<ILogger>());
+            var protocolMessageSignHandler = new ProtocolMessageSignHandler(_keySigner);
 
             protocolMessageSignHandler.WriteAsync(_fakeContext, new object());
 
@@ -69,7 +68,7 @@ namespace Catalyst.Common.UnitTests.IO.Handlers
         {
             _keySigner.Sign(Arg.Any<byte[]>()).Returns(new Signature(ByteUtil.GenerateRandomByteArray(64)));
 
-            var protocolMessageSignHandler = new ProtocolMessageSignHandler(_keySigner, Substitute.For<ILogger>());
+            var protocolMessageSignHandler = new ProtocolMessageSignHandler(_keySigner);
 
             protocolMessageSignHandler.WriteAsync(_fakeContext, _dto);
             

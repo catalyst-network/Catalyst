@@ -34,6 +34,7 @@ using Catalyst.Common.Interfaces.Modules.Dfs;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.IO.Messaging.Dto;
+using Catalyst.Common.IO.Observables;
 using Catalyst.Common.P2P;
 using Catalyst.Node.Rpc.Client.IO.Observables;
 using Catalyst.Protocol.Rpc.Node;
@@ -45,7 +46,6 @@ using Polly;
 using Serilog;
 using Xunit;
 using Xunit.Abstractions;
-using TransferFileBytesRequestObserver = Catalyst.Node.Core.RPC.IO.Observables.TransferFileBytesRequestObserver;
 
 namespace Catalyst.Node.Rpc.Client.IntegrationTests.Observables
 {
@@ -130,7 +130,7 @@ namespace Catalyst.Node.Rpc.Client.IntegrationTests.Observables
                 {
                     var transferMessage = fileUploadInformation
                        .GetUploadMessageDto(i);
-                    transferMessage.Message.ToProtocolMessage(rpcPeerId).SendToHandler(_fakeContext, transferBytesHandler);
+                    transferMessage.Content.ToProtocolMessage(rpcPeerId).SendToHandler(_fakeContext, transferBytesHandler);
                 }
 
                 linearBackOffRetryPolicy.ExecuteAsync(() =>

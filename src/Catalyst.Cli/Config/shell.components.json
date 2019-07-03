@@ -78,10 +78,18 @@
             ]
         },
         {
-            "type": "Catalyst.Common.Cryptography.RustCryptoContext, Catalyst.Common",
+            "type": "Catalyst.Common.Cryptography.CryptoContext, Catalyst.Common",
             "services": [
                 {
                     "type": "Catalyst.Common.Interfaces.Cryptography.ICryptoContext, Catalyst.Common"
+                }
+            ]
+        },
+        {
+            "type": "Catalyst.Cryptography.BulletProofs.Wrapper.CryptoWrapper, Catalyst.Cryptography.BulletProofs.Wrapper",
+            "services": [
+                {
+                    "type": "Catalyst.Cryptography.BulletProofs.Wrapper.IWrapper, Catalyst.Cryptography.BulletProofs.Wrapper"
                 }
             ]
         },
@@ -248,7 +256,7 @@
             ]
         },
         {
-            "type": "Catalyst.Node.Rpc.Client.IO.Observables.TransferFileBytesRequestObserver, Catalyst.Node.Rpc.Client",
+            "type": "Catalyst.Common.IO.Observables.TransferFileBytesRequestObserver, Catalyst.Common",
             "services": [
                 {
                     "type": "Catalyst.Common.Interfaces.IO.Observables.IRpcRequestObserver, Catalyst.Common"
@@ -272,6 +280,25 @@
                 }
             ],
             "instanceScope": "singleinstance"
+        },
+        {
+            "type": "Catalyst.Common.P2P.PeerIdValidator, Catalyst.Common",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.P2P.IPeerIdValidator, Catalyst.Common"
+                }
+            ]
+        },
+        {
+            "type": "Catalyst.Common.P2P.PeerIdClientId, Catalyst.Common",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.P2P.IPeerIdClientId, Catalyst.Common"
+                }
+            ],
+            "parameters": {
+                "clientVersion": "AC"
+            }
         }
     ]
 }

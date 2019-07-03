@@ -21,17 +21,17 @@
 
 #endregion
 
-using Catalyst.Common.Config;
+using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.IO.Handlers;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Protocol.Common;
+using Catalyst.Protocol.IPPN;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using Google.Protobuf;
 using NSubstitute;
-using Serilog;
 using Xunit;
 
 namespace Catalyst.Common.UnitTests.IO.Handlers
@@ -51,11 +51,13 @@ namespace Catalyst.Common.UnitTests.IO.Handlers
         public void Does_Process_IMessageDto_Types()
         {
             var fakeRequestMessageDto = Substitute.For<IMessageDto<ProtocolMessage>>();
-            fakeRequestMessageDto.MessageType.Returns(MessageTypes.Request);
-            fakeRequestMessageDto.Message.Returns(new ProtocolMessage());
-            fakeRequestMessageDto.Sender.Returns(PeerIdentifierHelper.GetPeerIdentifier("Im_The_Sender"));
+            fakeRequestMessageDto.Content.Returns(new PingRequest().ToProtocolMessage(
+                PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId
+            ));
+            
+            fakeRequestMessageDto.SenderPeerIdentifier.Returns(PeerIdentifierHelper.GetPeerIdentifier("sender"));
 
-            var correlatableHandler = new CorrelatableHandler(_fakeMessageCorrelationManager, Substitute.For<ILogger>());
+            var correlatableHandler = new CorrelatableHandler(_fakeMessageCorrelationManager);
 
             correlatableHandler.WriteAsync(_fakeContext, fakeRequestMessageDto);
             
@@ -72,7 +74,7 @@ namespace Catalyst.Common.UnitTests.IO.Handlers
         {
             var fakeRequestMessageDto = Substitute.For<IObserverDto<IMessage>>();
 
-            var correlatableHandler = new CorrelatableHandler(_fakeMessageCorrelationManager, Substitute.For<ILogger>());
+            var correlatableHandler = new CorrelatableHandler(_fakeMessageCorrelationManager);
             
             correlatableHandler.WriteAsync(_fakeContext, fakeRequestMessageDto);
             

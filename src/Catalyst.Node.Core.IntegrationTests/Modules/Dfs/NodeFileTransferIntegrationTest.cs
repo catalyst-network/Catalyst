@@ -34,6 +34,7 @@ using Catalyst.Common.Interfaces.Modules.Dfs;
 using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.IO.Messaging.Dto;
+using Catalyst.Common.IO.Observables;
 using Catalyst.Common.P2P;
 using Catalyst.Node.Core.Modules.Dfs;
 using Catalyst.Node.Core.P2P;
@@ -150,7 +151,7 @@ namespace Catalyst.Node.Core.IntegrationTests.Modules.Dfs
                     fakeNode.Channel, uniqueFileKey, new DtoFactory());
                 for (uint i = 0; i < fileTransferInformation.MaxChunk; i++)
                 {
-                    fileUploadInformation.GetUploadMessageDto(i).Message.ToProtocolMessage(sender).SendToHandler(_fakeContext, transferBytesRequestHandler);
+                    fileUploadInformation.GetUploadMessageDto(i).Content.ToProtocolMessage(sender).SendToHandler(_fakeContext, transferBytesRequestHandler);
                 }
             }
 
