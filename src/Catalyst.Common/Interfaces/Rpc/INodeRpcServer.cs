@@ -22,7 +22,7 @@
 #endregion
 
 using System;
-using Catalyst.Common.Interfaces.IO.Messaging;
+using Catalyst.Common.Interfaces.IO.Observables;
 using Catalyst.Protocol.Common;
 
 namespace Catalyst.Common.Interfaces.Rpc

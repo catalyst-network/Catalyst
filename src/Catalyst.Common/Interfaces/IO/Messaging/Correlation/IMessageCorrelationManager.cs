@@ -22,14 +22,21 @@
 #endregion
 
 using System;
+using Catalyst.Common.IO.Messaging.Correlation;
+using Catalyst.Protocol.Common;
 
-namespace Catalyst.Common.Interfaces.IO.Messaging
+namespace Catalyst.Common.Interfaces.IO.Messaging.Correlation
 {
-    /// <summary>
-    ///     Provides a CorrelationId type for easy reference to what the Guid is for and mocking
-    /// </summary>
-    public interface ICorrelationId
+    public interface IMessageCorrelationManager : IDisposable
     {
-        Guid Id { get; set; }
+        /// <summary>
+        /// TimeSpan after which requests automatically get deleted from the cache (inflicting
+        /// a reputation penalty for the peer who didn't reply).
+        /// </summary>
+        TimeSpan CacheTtl { get; }
+        
+        void AddPendingRequest(CorrelatableMessage correlatableMessage);
+
+        bool TryMatchResponse(ProtocolMessage response);
     }
 }

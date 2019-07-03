@@ -25,17 +25,20 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Catalyst.Common.Extensions;
-using Catalyst.Common.Interfaces.IO.Messaging;
-using Catalyst.Common.IO.Messaging;
+using Catalyst.Common.Interfaces.P2P.ReputationSystem;
+using Catalyst.Common.IO.Messaging.Correlation;
+using Catalyst.Node.Core.P2P.IO.Messaging;
 using Catalyst.Protocol.IPPN;
 using Catalyst.TestUtils;
+using FluentAssertions;
 using Microsoft.Extensions.Caching.Memory;
 using NSubstitute;
+using Serilog;
 using Xunit;
 
-namespace Catalyst.Common.UnitTests.IO.Messaging
+namespace Catalyst.Node.Core.UnitTests.RPC.IO.Messaging
 {
-    public sealed class MessageCorrelationManagerTests
+    public sealed class PeerMessageCorrelationManagerTests
     {
         [Fact]
         public async Task RequestStore_should_not_keep_records_for_longer_than_ttl()
@@ -63,30 +66,31 @@ namespace Catalyst.Common.UnitTests.IO.Messaging
             var responses = requests.Select(r =>
                 new PingResponse().ToProtocolMessage(r.Recipient.PeerId, r.Content.CorrelationId.ToCorrelationId()));
 
-            var evictionObserver = Substitute.For<IObserver<IMessageEvictionEvent>>();
+            var evictionObserver = Substitute.For<IObserver<IPeerReputationChange>>();
+            var repManager = Substitute.For<IReputationManager>();
 
             using (var cache = new MemoryCache(new MemoryCacheOptions()))
             {
                 var ttl = TimeSpan.FromMilliseconds(100);
-                var messageCorrelationCacheManager = new MessageCorrelationManager(cache, ttl);
+                var messageCorrelationCacheManager = new PeerMessageCorrelationManager(repManager, cache, Substitute.For<ILogger>(), ttl);
 
-                // using (messageCorrelationCacheManager.EvictionEvents
-                //    .Subscribe(evictionObserver.OnNext))
-                // {
-                //     requests.ForEach(r => messageCorrelationCacheManager.AddPendingRequest(r));
-                //
-                //     await Task.Delay(ttl.Add(TimeSpan.FromMilliseconds(ttl.TotalMilliseconds * 0.2)))
-                //        .ConfigureAwait(false);
-                //     await Task.Yield();
-                //
-                //     foreach (var response in responses)
-                //     {
-                //         messageCorrelationCacheManager.TryMatchResponse(response).Should()
-                //            .BeFalse("we have passed the TTL so the records should have disappeared");
-                //     }
-                //
-                //     evictionObserver.Received(requestCount).OnNext(Arg.Any<IMessageEvictionEvent>());
-                // }
+                using (messageCorrelationCacheManager.ReputationEventStream
+                   .Subscribe(evictionObserver.OnNext))
+                {
+                    requests.ForEach(r => messageCorrelationCacheManager.AddPendingRequest(r));
+                
+                    await Task.Delay(ttl.Add(TimeSpan.FromMilliseconds(ttl.TotalMilliseconds * 0.2)))
+                       .ConfigureAwait(false);
+                    await Task.Yield();
+                
+                    foreach (var response in responses)
+                    {
+                        messageCorrelationCacheManager.TryMatchResponse(response).Should()
+                           .BeFalse("we have passed the TTL so the records should have disappeared");
+                    }
+                
+                    evictionObserver.Received(requestCount).OnNext(Arg.Any<IPeerReputationChange>());
+                }
             }
         }
     }

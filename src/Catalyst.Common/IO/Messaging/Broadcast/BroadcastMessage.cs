@@ -21,7 +21,9 @@
 
 #endregion
 
-namespace Catalyst.Common.IO.Messaging
+using Catalyst.Common.IO.Messaging.Correlation;
+
+namespace Catalyst.Common.IO.Messaging.Broadcast
 {
     /// <summary>
     /// Represents a gossip request to the gossip cache
