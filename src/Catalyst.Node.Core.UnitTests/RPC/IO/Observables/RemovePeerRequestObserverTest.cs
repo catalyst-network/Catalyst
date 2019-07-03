@@ -42,7 +42,7 @@ using Serilog;
 using SharpRepository.InMemoryRepository;
 using Xunit;
 
-namespace Catalyst.Node.Core.UnitTests.RPC.Observables
+namespace Catalyst.Node.Core.UnitTests.RPC.IO.Observables
 {
     /// <summary>
     /// Tests remove peer CLI and RPC calls

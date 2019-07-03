@@ -36,7 +36,7 @@ using NSubstitute;
 using Serilog;
 using Xunit;
 
-namespace Catalyst.Node.Core.UnitTests.P2P.Observables
+namespace Catalyst.Node.Core.UnitTests.P2P.IO.Observables
 {
     public sealed class AddFileToDfsRequestObserverTest
     {
