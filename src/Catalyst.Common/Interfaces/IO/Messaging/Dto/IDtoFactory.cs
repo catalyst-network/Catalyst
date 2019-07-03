@@ -21,6 +21,7 @@
 
 #endregion
 
+using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.P2P;
 using Google.Protobuf;
 
