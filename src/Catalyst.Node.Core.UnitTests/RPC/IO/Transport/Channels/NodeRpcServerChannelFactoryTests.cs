@@ -30,6 +30,7 @@ using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Rpc.Authentication;
+using Catalyst.Common.IO.Codecs;
 using Catalyst.Common.IO.Handlers;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Node.Core.RPC.IO.Transport.Channels;
@@ -95,7 +96,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC.IO.Transport.Channels
         [Fact]
         public void NodeRpcServerChannelFactory_should_have_correct_handlers()
         {
-            _factory.InheritedHandlers.Count(h => h != null).Should().Be(9);
+            _factory.InheritedHandlers.Count(h => h != null).Should().Be(10);
             var handlers = _factory.InheritedHandlers.ToArray();
             handlers[0].Should().BeOfType<ProtobufVarint32FrameDecoder>();
             handlers[1].Should().BeOfType<ProtobufDecoder>();
@@ -103,9 +104,10 @@ namespace Catalyst.Node.Core.UnitTests.RPC.IO.Transport.Channels
             handlers[3].Should().BeOfType<ProtobufEncoder>();
             handlers[4].Should().BeOfType<AuthenticationHandler>();
             handlers[5].Should().BeOfType<PeerIdValidationHandler>();
-            handlers[6].Should().BeOfType<CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>>();
+            handlers[6].Should().BeOfType<AddressedEnvelopeToIMessage>();
             handlers[7].Should().BeOfType<CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>>();
-            handlers[8].Should().BeOfType<ObservableServiceHandler>();
+            handlers[8].Should().BeOfType<CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>>();
+            handlers[9].Should().BeOfType<ObservableServiceHandler>();
         }
 
         [Fact]

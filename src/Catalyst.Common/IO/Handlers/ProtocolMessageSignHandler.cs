@@ -24,6 +24,7 @@
 using System.Threading.Tasks;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
+using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.Util;
 using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;
@@ -56,7 +57,14 @@ namespace Catalyst.Common.IO.Handlers
                 Message = message.Content
             };
 
-            return context.WriteAsync(protocolMessageSigned);
+            var signedDto = new MessageDto<ProtocolMessageSigned>(protocolMessageSigned,
+                message.SenderPeerIdentifier,
+                message.RecipientPeerIdentifier,
+                message.CorrelationId);
+
+            message.Release();
+
+            return context.WriteAsync(signedDto);
         }
     }
 }
