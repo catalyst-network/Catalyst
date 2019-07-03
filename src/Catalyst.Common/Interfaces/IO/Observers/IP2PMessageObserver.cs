@@ -21,21 +21,7 @@
 
 #endregion
 
-using System;
-using Catalyst.Common.Interfaces.IO.Messaging.Dto;
-using Catalyst.Protocol.Common;
-using DotNetty.Transport.Channels;
-
-namespace Catalyst.Common.Interfaces.IO.Observables
+namespace Catalyst.Common.Interfaces.IO.Observers
 {
-    public interface IMessageObserver
-    {
-        IChannelHandlerContext ChannelHandlerContext { get; }
-        IDisposable MessageSubscription { get; }
-        
-        void StartObserving(IObservable<IObserverDto<ProtocolMessage>> messageStream);
-        void OnNext(IObserverDto<ProtocolMessage> messageDto);
-        void OnCompleted();
-        void OnError(Exception exception);
-    }
+    public interface IP2PMessageObserver : IMessageObserver { }
 }

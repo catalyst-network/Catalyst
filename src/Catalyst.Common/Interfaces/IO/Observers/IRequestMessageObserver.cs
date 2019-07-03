@@ -24,7 +24,7 @@
 using Catalyst.Common.Interfaces.P2P;
 using Google.Protobuf;
 
-namespace Catalyst.Common.Interfaces.IO.Observables
+namespace Catalyst.Common.Interfaces.IO.Observers
 {
     public interface IRequestMessageObserver<in T> : IMessageObserver where T : IMessage<T>
     {

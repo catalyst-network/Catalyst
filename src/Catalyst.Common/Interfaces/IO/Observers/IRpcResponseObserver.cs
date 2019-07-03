@@ -21,13 +21,7 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.IO.Messaging.Dto;
-using Catalyst.Protocol.Common;
-
-namespace Catalyst.Common.Interfaces.IO.Observables
+namespace Catalyst.Common.Interfaces.IO.Observers
 {
-    internal interface IBroadcastObserver : IMessageObserver
-    { 
-        void HandleBroadcast(IObserverDto<ProtocolMessage> messageDto);
-    }
+    public interface IRpcResponseObserver : IResponseMessageObserver { }
 }

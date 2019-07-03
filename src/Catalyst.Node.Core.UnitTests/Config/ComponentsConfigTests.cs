@@ -27,7 +27,7 @@ using System.Linq;
 using Autofac;
 using Autofac.Configuration;
 using Catalyst.Common.Config;
-using Catalyst.Common.Interfaces.IO.Observables;
+using Catalyst.Common.Interfaces.IO.Observers;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Node.Core.P2P.IO.Observers;
 using FluentAssertions;

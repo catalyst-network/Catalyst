@@ -21,7 +21,7 @@
 
 #endregion
 
-namespace Catalyst.Common.Interfaces.IO.Observables
+namespace Catalyst.Common.Interfaces.IO.Observers
 {
-    public interface IP2PMessageObserver : IMessageObserver { }
+    public interface IResponseMessageObserver : IMessageObserver { }
 }
