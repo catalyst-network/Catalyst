@@ -43,10 +43,10 @@ namespace Catalyst.Cli.IntegrationTests.Commands
                     var shell = container.Resolve<ICatalystCli>();
                     var hasConnected = shell.ParseCommand("connect", "-n", "node1");
                     hasConnected.Should().BeTrue();
-                }   
+                }
             }
         }
-        
+
         [Fact]
         public void Cli_Can_Handle_Multiple_Connection_Attempts()
         {
@@ -60,7 +60,7 @@ namespace Catalyst.Cli.IntegrationTests.Commands
                         var canConnect = shell.ParseCommand("connect", "-n", "node1");
                         canConnect.Should().BeTrue();
                     }
-                }   
+                }
             }
         }
     }

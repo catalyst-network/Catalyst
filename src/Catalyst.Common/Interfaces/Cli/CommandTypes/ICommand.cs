@@ -21,29 +21,22 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.Cli.Options;
 using System;
-using Catalyst.Common.Interfaces.Cli.Commands;
 
-namespace Catalyst.Cli.Commands
+namespace Catalyst.Common.Interfaces.Cli.CommandTypes
 {
-    public class BaseOptionCommand<TOption> : BaseCommand
-        where TOption : IOptionsBase
+    public interface ICommand
     {
-        public BaseOptionCommand(ICommandContext commandContext) { CommandContext = commandContext; }
+        /// <summary>Parses the specified arguments.</summary>
+        /// <param name="args">The arguments.</param>
+        bool Parse(string[] args);
+        
+        /// <summary>Gets the name of the command.</summary>
+        /// <value>The name of the command.</value>
+        string CommandName { get; }
 
-        protected ICommandContext CommandContext { get; }
-
-        protected IOptionsBase Options { get; set; }
-
-        protected virtual void ExecuteCommand(TOption option) { }
-
-        protected override void ExecuteCommand(IOptionsBase optionsBase)
-        {
-            Options = optionsBase;
-            ExecuteCommand((TOption) Options);
-        }
-
-        public override Type OptionType => typeof(TOption);
+        /// <summary>Gets the type of the option.</summary>
+        /// <value>The type of the option.</value>
+        Type OptionType { get; }
     }
 }

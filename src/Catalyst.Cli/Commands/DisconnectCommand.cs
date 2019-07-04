@@ -21,6 +21,7 @@
 
 #endregion
 
+using Catalyst.Cli.CommandTypes;
 using Catalyst.Cli.Options;
 using Catalyst.Common.Interfaces.Cli.Commands;
 using Catalyst.Common.Network;
@@ -32,7 +33,7 @@ namespace Catalyst.Cli.Commands
     {
         public DisconnectCommand(ICommandContext commandContext) : base(commandContext) { }
 
-        protected override void ExecuteCommand(DisconnectOptions option)
+        protected override bool ExecuteCommand(DisconnectOptions option)
         {
             var nodeConfig = CommandContext.GetNodeConfig(option.Node);
             Guard.Argument(nodeConfig, nameof(nodeConfig)).NotNull();
@@ -45,6 +46,7 @@ namespace Catalyst.Cli.Commands
 
             node.Dispose();
             CommandContext.SocketClientRegistry.RemoveClientFromRegistry(registryId);
+            return true;
         }
     }
 }

@@ -47,7 +47,7 @@ namespace Catalyst.Cli.IntegrationTests.Commands
                     var hasConnected = shell.ParseCommand("connect", "-n", "node1");
                     hasConnected.Should().BeTrue();
                     
-                    var result = shell.ParseCommand("getmempool", "-m", "node1");
+                    var result = shell.ParseCommand("getmempool", "-n", "node1");
                     result.Should().BeTrue();
                 }   
             }

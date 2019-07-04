@@ -21,22 +21,16 @@
 
 #endregion
 
-using System;
+using Catalyst.Common.Interfaces.Rpc;
+using Google.Protobuf;
 
-namespace Catalyst.Common.Interfaces.Cli.Commands
+namespace Catalyst.Common.Interfaces.Cli.CommandTypes
 {
-    public interface ICommand
+    public interface IMessageCommand<out T> : ICommand
+        where T : IMessage<T>
     {
-        /// <summary>Parses the specified arguments.</summary>
-        /// <param name="args">The arguments.</param>
-        void Parse(string[] args);
-        
-        /// <summary>Gets the name of the command.</summary>
-        /// <value>The name of the command.</value>
-        string CommandName { get; }
-
-        /// <summary>Gets the type of the option.</summary>
-        /// <value>The type of the option.</value>
-        Type OptionType { get; }
+        /// <summary>The node to send the message to.</summary>
+        /// <value>The target node.</value>
+        INodeRpcClient Target { get; }
     }
 }

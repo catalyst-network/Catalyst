@@ -21,6 +21,7 @@
 
 #endregion
 
+using Catalyst.Cli.CommandTypes;
 using Catalyst.Cli.Options;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.FileTransfer;
@@ -56,7 +57,6 @@ namespace Catalyst.Cli.Commands
                 message.ToProtocolMessage(SenderPeerIdentifier.PeerId),
                 SenderPeerIdentifier,
                 RecipientPeerIdentifier);
-            Target.SendMessage(messageDto);
 
             var fileTransfer = new DownloadFileTransferInformation(
                 SenderPeerIdentifier,

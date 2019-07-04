@@ -22,7 +22,7 @@
 #endregion
 
 using Catalyst.Common.Interfaces.Cli;
-using Catalyst.Common.Interfaces.Cli.Commands;
+using Catalyst.Common.Interfaces.Cli.CommandTypes;
 using CommandLine;
 using System;
 using System.Collections.Generic;
@@ -51,7 +51,7 @@ namespace Catalyst.Cli
 
             if (commandExists)
             {
-                parsedCommand.Parse(args);
+                return parsedCommand.Parse(args);
             }
             else
             {
@@ -59,7 +59,7 @@ namespace Catalyst.Cli
                 Parser.Default.ParseArguments(args, types);
             }
 
-            return commandExists;
+            return false;
         }
     }
 }

@@ -58,7 +58,7 @@ namespace Catalyst.Common.Modules.KeySigner
                 // var key = _keyStore.KeyStoreDecrypt(_keyStore.Password);
                 // return Task.FromResult(_cryptoContext.Sign(key, new ReadOnlySpan<byte>(data))).GetAwaiter().GetResult();
             }
-            return new Signature(new byte[0]);
+            return new Signature(new byte[64]);
         }
 
         /// <inheritdoc/>
