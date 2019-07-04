@@ -55,14 +55,11 @@ namespace Catalyst.Cli.IntegrationTests.Commands
                     var shell = container.Resolve<ICatalystCli>();
                     var downloadFileFactory = container.Resolve<IDownloadFileTransferFactory>();
 
-                    var hasConnected = shell.AdvancedShell.ParseCommand("connect", "-n", "node1");
+                    var hasConnected = shell.ParseCommand("connect", "-n", "node1");
                     hasConnected.Should().BeTrue();
-
-                    var node1 = shell.AdvancedShell.GetConnectedNode("node1");
-                    node1.Should().NotBeNull("we've just connected it");
-
+                    
                     var task = Task.Run(() =>
-                        shell.AdvancedShell.ParseCommand("getfile", "-n", "node1", "-f", fileHash, "-o", outputPath)
+                        shell.ParseCommand("getfile", "-n", "node1", "-f", fileHash, "-o", outputPath)
                     );
 
                     await TaskHelper.WaitForAsync(() => downloadFileFactory.Keys.Length > 0, TimeSpan.FromSeconds(5));

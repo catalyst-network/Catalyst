@@ -55,14 +55,11 @@ namespace Catalyst.Cli.IntegrationTests.Commands
                 using (container.BeginLifetimeScope(CurrentTestName))
                 {
                     var shell = container.Resolve<ICatalystCli>();
-                    var hasConnected = shell.AdvancedShell.ParseCommand("connect", "-n", "node1");
+                    var hasConnected = shell.ParseCommand("connect", "-n", "node1");
                     hasConnected.Should().BeTrue();
-
-                    var node1 = shell.AdvancedShell.GetConnectedNode("node1");
-                    node1.Should().NotBeNull("we've just connected it");
-
+                    
                     var task = Task.Run(() => 
-                        shell.AdvancedShell.ParseCommand(
+                        shell.ParseCommand(
                             "addfile", "-n", "node1", "-f", fileName));
 
                     if (expectedResult)

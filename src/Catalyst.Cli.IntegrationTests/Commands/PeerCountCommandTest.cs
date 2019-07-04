@@ -46,13 +46,10 @@ namespace Catalyst.Cli.IntegrationTests.Commands
                 using (container.BeginLifetimeScope(CurrentTestName))
                 {
                     var shell = container.Resolve<ICatalystCli>();
-                    var hasConnected = shell.AdvancedShell.ParseCommand("connect", "-n", "node1");
+                    var hasConnected = shell.ParseCommand("connect", "-n", "node1");
                     hasConnected.Should().BeTrue();
-
-                    var node1 = shell.AdvancedShell.GetConnectedNode("node1");
-                    node1.Should().NotBeNull("we've just connected it");
-
-                    var result = shell.AdvancedShell.ParseCommand(
+                    
+                    var result = shell.ParseCommand(
                         "peercount", "-n", "node1");
                     result.Should().BeTrue();
                     NodeRpcClient.Received(1).SendMessage(Arg.Is<IMessageDto<GetPeerCountRequest>>(
