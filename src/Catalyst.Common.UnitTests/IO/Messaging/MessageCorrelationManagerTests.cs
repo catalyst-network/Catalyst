@@ -43,7 +43,7 @@ namespace Catalyst.Common.UnitTests.IO.Messaging
     public sealed class MessageCorrelationManagerTests
     {
         [Fact]
-        public async Task RequestStore_should_not_keep_records_for_longer_than_ttl()
+        public async Task RequestStore_Should_Not_Keep_Records_For_Longer_Than_Ttl()
         {
             var senderPeerId = PeerIdHelper.GetPeerId("sender");
 
