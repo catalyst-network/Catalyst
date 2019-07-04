@@ -26,7 +26,7 @@ using Dawn;
 
 namespace Catalyst.Common.Interfaces.Registry
 {
-    public class RegistryBase<T, K> : IRegistryBase<T, K>
+    public abstract class RegistryBase<T, K> : IRegistryBase<T, K>
         where K : class
     {
         public IDictionary<T, K> Registry { get; protected set; }
@@ -45,14 +45,9 @@ namespace Catalyst.Common.Interfaces.Registry
             return retItem;
         }
 
-        /// <inheritdoc />
         public bool RemoveItemFromRegistry(T identifier)
         {
-            //Guard.Argument(socketHashCode, nameof(socketHashCode)).NotZero();
             return Registry.Remove(identifier);
         }
-
     }
-
-
 }

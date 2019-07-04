@@ -21,16 +21,26 @@
 
 #endregion
 
-using System.Collections.Generic;
-using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
+using System.Security;
+using Catalyst.Common.Interfaces.Cryptography;
+using Catalyst.Common.Interfaces.Registry;
 
-namespace Catalyst.Common.Interfaces.Registry
+namespace Catalyst.Common.Cryptography
 {
-    public class KeyRegistry : RegistryBase<string, IPrivateKey>
-    {        
-        public KeyRegistry()
+    public class PasswordRegistryPasswordReader : IPasswordReader
+    {
+        private readonly IPasswordRegistry _passwordRegistry;
+
+        public PasswordRegistryPasswordReader(IPasswordRegistry passwordRegistry)
         {
-            Registry = new Dictionary<string, IPrivateKey>();
+            _passwordRegistry = passwordRegistry;
+        }
+
+        public SecureString ReadSecurePassword() { throw new System.NotImplementedException(); }
+
+        public SecureString ReadSecurePassword(string passwordIdentifier)
+        {
+            _passwordRegistry.
         }
     }
 }

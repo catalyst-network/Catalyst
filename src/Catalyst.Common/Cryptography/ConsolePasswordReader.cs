@@ -36,8 +36,9 @@ namespace Catalyst.Common.Cryptography
         private readonly IUserOutput _userOutput;
         public ConsolePasswordReader(IUserOutput userOutput) { _userOutput = userOutput; }
         
-        public SecureString ReadSecurePassword(string passwordContext = "Please enter your password")
+        public SecureString ReadSecurePassword()
         {
+            string passwordContext = "Please enter your password";
             var pwd = new SecureString();
             ReadCharsFromConsole(_userOutput, passwordContext, (c, i) => pwd.AppendChar(c), i => pwd.RemoveAt(i));
 
