@@ -72,8 +72,9 @@ public PeerDiscovery(IDns dns,
 ```
  are not worth the pain involved in maintaining them, or the cognitive overload they create on the reader. Yes there are quite a few instances of these in the code, but we are working towards sanitisation 😂
  
- - Interface methods should be documented in a human readable way, and describe the functionalities offered by the interface
- ``` csharp
+- Interface methods should be documented in a human readable way, and describe the functionalities offered by the interface
+
+``` csharp
 /// <summary>
 ///   Provides read-write access to a distributed file system.
 /// </summary>
@@ -88,8 +89,10 @@ public interface IDfs
     Task<string> AddTextAsync(string content, CancellationToken cancellationToken = default);
 ...
 ```
+
 After that, the methods implementing this interface should not need much more than an `<inheritdoc />` to provide information through intellisense.
-```csharp
+
+``` csharp
 /// <inheritdoc />
 public sealed class Dfs : IDfs
 {
