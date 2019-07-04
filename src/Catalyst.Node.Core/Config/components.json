@@ -123,10 +123,18 @@
             ]
         },
         {
-            "type": "Catalyst.Common.IO.Messaging.Correlation.MessageCorrelationManager, Catalyst.Common",
+            "type": "Catalyst.Common.RPC.IO.Messaging.Correlation.RpcMessageCorrelationManager, Catalyst.Common",
             "services": [
                 {
                     "type": "Catalyst.Common.Interfaces.IO.Messaging.Correlation.IMessageCorrelationManager, Catalyst.Common"
+                }
+            ]
+        },
+        {
+            "type": "Catalyst.Node.Core.P2P.IO.Messaging.Correlation.PeerMessageCorrelationManager",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.P2P.IO.Messaging.Correlation.IPeerMessageCorrelationManager, Catalyst.Common"
                 }
             ]
         },
@@ -295,10 +303,19 @@
             "instanceScope": "singleinstance"
         },
         {
+            "type": "Catalyst.Node.Core.P2P.ReputationSystem.ReputationManager",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.P2P.ReputationSystem.IReputationManager, Catalyst.Common"
+                }
+            ],
+            "instanceScope": "singleinstance"
+        },
+        {
             "type": "Catalyst.Node.Core.P2P.IO.Messaging.Broadcast.BroadcastManager",
             "services": [
                 {
-                    "type": "Catalyst.Common.Interfaces.P2P.Messaging.Broadcast.IBroadcastManager, Catalyst.Common"
+                    "type": "Catalyst.Common.Interfaces.P2P.IO.Messaging.Broadcast.IBroadcastManager, Catalyst.Common"
                 }
             ],
             "instanceScope": "singleinstance"
