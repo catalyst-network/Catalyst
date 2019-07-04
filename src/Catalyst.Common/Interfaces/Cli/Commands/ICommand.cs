@@ -30,13 +30,13 @@ namespace Catalyst.Common.Interfaces.Cli.Commands
         /// <summary>Parses the specified arguments.</summary>
         /// <param name="args">The arguments.</param>
         void Parse(string[] args);
+        
+        /// <summary>Gets the name of the command.</summary>
+        /// <value>The name of the command.</value>
+        string CommandName { get; }
 
         /// <summary>Gets the type of the option.</summary>
         /// <value>The type of the option.</value>
         Type OptionType { get; }
-
-        /// <summary>Gets the name of the command.</summary>
-        /// <value>The name of the command.</value>
-        string CommandName { get; }
     }
 }

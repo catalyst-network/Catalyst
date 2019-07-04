@@ -23,14 +23,13 @@
 
 using Catalyst.Cli.Options;
 using Catalyst.Common.Interfaces.Cli.Commands;
-using Catalyst.Common.Interfaces.Cli.Options;
 using Catalyst.Common.Util;
 using Catalyst.Protocol.Rpc.Node;
 using Nethereum.RLP;
 
 namespace Catalyst.Cli.Commands
 {
-    public class PeerBlackListingCommand : MessageCommand<SetPeerBlackListRequest, PeerBlackListingOptions>
+    public sealed class PeerBlackListingCommand : BaseMessageCommand<SetPeerBlackListRequest, PeerBlackListingOptions>
     {
         public PeerBlackListingCommand(ICommandContext commandContext) : base(commandContext) { }
 

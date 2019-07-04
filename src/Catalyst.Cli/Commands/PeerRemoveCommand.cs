@@ -1,15 +1,14 @@
+using Catalyst.Cli.Options;
 using Catalyst.Common.Interfaces.Cli.Commands;
-using Catalyst.Common.Interfaces.Cli.Options;
 using Catalyst.Common.Network;
 using Catalyst.Protocol.Rpc.Node;
 using Google.Protobuf;
 using Nethereum.RLP;
 using System.Net;
-using Catalyst.Cli.Options;
 
 namespace Catalyst.Cli.Commands
 {
-    public class PeerRemoveCommand : MessageCommand<RemovePeerRequest, RemovePeerOptions>
+    public sealed class PeerRemoveCommand : BaseMessageCommand<RemovePeerRequest, RemovePeerOptions>
     {
         public PeerRemoveCommand(ICommandContext commandContext) : base(commandContext) { }
 
