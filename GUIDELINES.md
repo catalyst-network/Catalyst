@@ -1,5 +1,7 @@
 # Project Guidelines
 
+Whenever a guideline is not explicitly given in this document, please refer the [.Net Framework Design Guidelines](https://docs.microsoft.com/en-us/dotnet/standard/design-guidelines/) to make your own decision.
+
 ## Code style
 
 When contributing to this repository, please make sure you respect the code style it defines.
