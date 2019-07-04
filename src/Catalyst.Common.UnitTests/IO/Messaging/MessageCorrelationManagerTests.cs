@@ -23,14 +23,18 @@
 
 using System;
 using System.Linq;
+using System.Reactive.Concurrency;
+using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
+using Catalyst.Common.Interfaces.Util;
 using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Protocol.IPPN;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Primitives;
 using NSubstitute;
 using Xunit;
 
@@ -66,25 +70,29 @@ namespace Catalyst.Common.UnitTests.IO.Messaging
 
             var evictionObserver = Substitute.For<IObserver<IMessageEvictionEvent>>();
 
+            var changeToken = Substitute.For<IChangeToken>();
+            var changeTokenProvider = Substitute.For<IChangeTokenProvider>();
+            changeTokenProvider.GetChangeToken().Returns(changeToken);
+
             using (var cache = new MemoryCache(new MemoryCacheOptions()))
             {
-                var ttl = TimeSpan.FromMilliseconds(100);
-                var messageCorrelationCacheManager = new MessageCorrelationManager(cache, ttl);
+                var messageCorrelationCacheManager = new MessageCorrelationManager(cache, changeTokenProvider);
 
-                using (messageCorrelationCacheManager.EvictionEvents
+                using (messageCorrelationCacheManager.EvictionEvents.SubscribeOn(ImmediateScheduler.Instance)
                    .Subscribe(evictionObserver.OnNext))
                 {
                     requests.ForEach(r => messageCorrelationCacheManager.AddPendingRequest(r));
 
-                    await Task.Delay(ttl.Add(TimeSpan.FromMilliseconds(ttl.TotalMilliseconds * 0.2)))
-                       .ConfigureAwait(false);
-                    await Task.Yield();
+                    changeToken.HasChanged.Returns(true);
 
                     foreach (var response in responses)
                     {
                         messageCorrelationCacheManager.TryMatchResponse(response).Should()
-                           .BeFalse("we have passed the TTL so the records should have disappeared");
+                           .BeFalse("the changeToken has simulated a TTL expiry");
                     }
+
+                    await TaskHelper.WaitForAsync(() => evictionObserver.ReceivedCalls().Any(),
+                        TimeSpan.FromMilliseconds(500));
 
                     evictionObserver.Received(requestCount).OnNext(Arg.Any<IMessageEvictionEvent>());
                 }
