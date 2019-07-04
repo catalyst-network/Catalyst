@@ -26,12 +26,12 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Catalyst.Common.Extensions;
-using Catalyst.Common.Interfaces.IO.Messaging;
+using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.Messaging.Broadcast;
 using Catalyst.Common.IO.Handlers;
-using Catalyst.Common.IO.Messaging;
+using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Common.Util;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
 using Catalyst.Node.Core.P2P.IO.Transport.Channels;
@@ -120,7 +120,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.IO.Transport.Channels
                 Signature = signature.ToByteString()
             };
 
-            _keySigner.Verify(Arg.Any<IPublicKey>(), Arg.Any<byte[]>(), Arg.Any<ISignature>())
+            _keySigner.Verify(Arg.Any<ISignature>(), Arg.Any<byte[]>())
                .Returns(true);
 
             var observer = new ProtocolMessageObserver(0, Substitute.For<ILogger>());
@@ -132,7 +132,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.IO.Transport.Channels
                 testingChannel.WriteInbound(signedMessage);
                 _correlationManager.DidNotReceiveWithAnyArgs().TryMatchResponse(protocolMessage);
                 await _gossipManager.DidNotReceiveWithAnyArgs().BroadcastAsync(null);
-                _keySigner.ReceivedWithAnyArgs(1).Verify(null, null, null);
+                _keySigner.ReceivedWithAnyArgs(1).Verify(null, null);
 
                 await messageStream.WaitForItemsOnDelayedStreamOnTaskPoolSchedulerAsync();
 

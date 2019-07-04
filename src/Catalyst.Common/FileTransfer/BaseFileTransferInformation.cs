@@ -27,7 +27,7 @@ using System.Linq;
 using System.Threading;
 using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.FileTransfer;
-using Catalyst.Common.Interfaces.IO.Messaging;
+using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.P2P;
 using DotNetty.Transport.Channels;
 

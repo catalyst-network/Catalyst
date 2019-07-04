@@ -43,7 +43,7 @@ namespace Catalyst.Common.Interfaces.Modules.KeySigner
 
         /// <summary>Verifies a message signature.</summary>
         /// <returns></returns>
-        bool Verify(IPublicKey key, byte[] message, ISignature signature);
+        bool Verify(ISignature signature, byte[] message);
 
         /// <summary>Exports the key.</summary>
         void ExportKey();
