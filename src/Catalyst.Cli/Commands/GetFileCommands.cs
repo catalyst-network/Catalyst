@@ -21,31 +21,30 @@
 
 #endregion
 
+using Catalyst.Cli.Options;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.FileTransfer;
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.Cli.Commands;
-using Catalyst.Common.Interfaces.Cli.Options;
 using Catalyst.Common.Interfaces.FileTransfer;
 using Catalyst.Protocol.Rpc.Node;
 
 namespace Catalyst.Cli.Commands
 {
-    public class GetFileCommands : CommandBase<GetFileFromDfsRequest, IGetFileOptions>
+    public class GetFileCommands : MessageCommand<GetFileFromDfsRequest, GetFileOptions>
     {
         private readonly IDownloadFileTransferFactory _downloadFileTransferFactory;
         private readonly IUserOutput _userOutput;
 
         public GetFileCommands(IUserOutput userOutput,
             IDownloadFileTransferFactory downloadFileTransferFactory,
-            IOptionsBase optionBase,
-            ICommandContext commandContext) : base(optionBase, commandContext)
+            ICommandContext commandContext) : base(commandContext)
         {
             _userOutput = userOutput;
             _downloadFileTransferFactory = downloadFileTransferFactory;
         }
 
-        public override GetFileFromDfsRequest GetMessage(IGetFileOptions option)
+        protected override GetFileFromDfsRequest GetMessage(GetFileOptions option)
         {
             return new GetFileFromDfsRequest
             {
@@ -53,7 +52,7 @@ namespace Catalyst.Cli.Commands
             };
         }
 
-        public override bool SendMessage(IGetFileOptions opts)
+        public override void SendMessage(GetFileOptions opts)
         {
             var message = GetMessage(opts);
 
@@ -89,8 +88,6 @@ namespace Catalyst.Cli.Commands
             {
                 _userOutput.WriteLine("\nFile transfer expired.");
             }
-
-            return true;
         }
     }
 }

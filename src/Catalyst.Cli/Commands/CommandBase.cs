@@ -1,52 +1,54 @@
-using System;
-using Catalyst.Common.Extensions;
+#region LICENSE
+
+/**
+* Copyright (c) 2019 Catalyst Network
+*
+* This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
+*
+* Catalyst.Node is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 2 of the License, or
+* (at your option) any later version.
+*
+* Catalyst.Node is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
+*/
+
+#endregion
+
 using Catalyst.Common.Interfaces.Cli.Commands;
 using Catalyst.Common.Interfaces.Cli.Options;
-using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.Interfaces.Rpc;
-using Catalyst.Common.P2P;
-using Google.Protobuf;
+using CommandLine;
+using System;
+using System.Reflection;
 
 namespace Catalyst.Cli.Commands
 {
-    public abstract class CommandBase<T, TOption> : ICommandBase<T, TOption>
-        where T : IMessage<T>
-        where TOption : IOptionsBase
+    public abstract class CommandBase : ICommand
     {
-        private readonly IOptionsBase _optionsBase;
+        protected abstract void ExecuteCommand(IOptionsBase optionsBase);
+        public abstract Type OptionType { get; }
+        public string CommandName { get; }
 
-        protected CommandBase(IOptionsBase optionBase, ICommandContext commandContext)
+        protected CommandBase()
         {
-            _optionsBase = optionBase;
-            CommandContext = commandContext;
+            CommandName = ((VerbAttribute) OptionType.GetCustomAttribute(typeof(VerbAttribute))).Name;
         }
 
-        public virtual bool SendMessage(TOption options)
+        public void Parse(string[] args)
         {
-            var message = GetMessage(options);
-
-            if (message != null)
+            var result = Parser.Default.ParseArguments(args, OptionType);
+            if (result.Tag == ParserResultType.NotParsed)
             {
-                var messageDto = CommandContext.DtoFactory.GetDto(
-                    message.ToProtocolMessage(SenderPeerIdentifier.PeerId),
-                    SenderPeerIdentifier,
-                    RecipientPeerIdentifier);
-                Target.SendMessage(messageDto);
+                return;
             }
 
-            return true;
+            result.WithParsed(options => ExecuteCommand((IOptionsBase) options));
         }
-
-        public abstract T GetMessage(TOption option);
-
-        protected ICommandContext CommandContext { get; }
-
-        protected IPeerIdentifier RecipientPeerIdentifier => PeerIdentifier.BuildPeerIdFromConfig(CommandContext.GetNodeConfig(_optionsBase.Node), CommandContext.PeerIdClientId);
-
-        protected IPeerIdentifier SenderPeerIdentifier => CommandContext.PeerIdentifier;
-
-        public INodeRpcClient Target => CommandContext.GetConnectedNode(_optionsBase.Node);
-
-        public Type GetOptionType() { return typeof(TOption); }
     }
 }

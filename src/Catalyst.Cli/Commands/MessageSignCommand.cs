@@ -27,14 +27,15 @@ using Catalyst.Common.Util;
 using Catalyst.Protocol.Rpc.Node;
 using Google.Protobuf;
 using System.Text;
+using Catalyst.Cli.Options;
 
 namespace Catalyst.Cli.Commands
 {
-    public class MessageSignCommand : CommandBase<SignMessageRequest, ISignOptions>
+    public class MessageSignCommand : MessageCommand<SignMessageRequest, SignOptions>
     {
-        public MessageSignCommand(IOptionsBase optionBase, ICommandContext commandContext) : base(optionBase, commandContext) { }
+        public MessageSignCommand(ICommandContext commandContext) : base(commandContext) { }
 
-        public override SignMessageRequest GetMessage(ISignOptions option)
+        protected override SignMessageRequest GetMessage(SignOptions option)
         {
             return new SignMessageRequest
             {

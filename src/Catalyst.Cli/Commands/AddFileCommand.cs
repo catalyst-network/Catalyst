@@ -21,35 +21,30 @@
 
 #endregion
 
-using System;
-using System.IO;
+using Catalyst.Cli.Options;
 using Catalyst.Common.FileTransfer;
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.Cli.Commands;
-using Catalyst.Common.Interfaces.Cli.Options;
 using Catalyst.Common.Interfaces.FileTransfer;
-using Catalyst.Common.Interfaces.Rpc;
-using Catalyst.Common.P2P;
 using Catalyst.Protocol.Rpc.Node;
-using Dawn;
+using System.IO;
 
 namespace Catalyst.Cli.Commands
 {
-    public sealed class AddFileCommand : CommandBase<AddFileToDfsRequest, IAddFileOnDfsOptions>
+    public sealed class AddFileCommand : MessageCommand<AddFileToDfsRequest, AddFileOptions>
     {
         private readonly IUserOutput _userOutput;
         private readonly IUploadFileTransferFactory _uploadFileTransferFactory;
 
         public AddFileCommand(IUploadFileTransferFactory uploadFileTransferFactory,
             IUserOutput userOutput,
-            IOptionsBase optionBase,
-            ICommandContext commandContext) : base(optionBase, commandContext)
+            ICommandContext commandContext) : base(commandContext)
         {
             _uploadFileTransferFactory = uploadFileTransferFactory;
             _userOutput = userOutput;
         }
 
-        public override AddFileToDfsRequest GetMessage(IAddFileOnDfsOptions option)
+        protected override AddFileToDfsRequest GetMessage(AddFileOptions option)
         {
             return new AddFileToDfsRequest
             {
@@ -57,12 +52,12 @@ namespace Catalyst.Cli.Commands
             };
         }
 
-        public override bool SendMessage(IAddFileOnDfsOptions options)
+        public override void SendMessage(AddFileOptions options)
         {
             if (!File.Exists(options.File))
             {
                 _userOutput.WriteLine("File does not exist.");
-                return false;
+                return;
             }
 
             var request = GetMessage(options);
@@ -104,8 +99,6 @@ namespace Catalyst.Cli.Commands
             {
                 _userOutput.WriteLine("\nFile transfer expired.");
             }
-
-            return true;
         }
     }
 }

@@ -21,22 +21,22 @@
 
 #endregion
 
-using Catalyst.Cli.Options;
-using Catalyst.Common.Interfaces.Cli.Commands;
-using Catalyst.Protocol.Rpc.Node;
+using System;
 
-namespace Catalyst.Cli.Commands
+namespace Catalyst.Common.Interfaces.Cli.Commands
 {
-    public class GetVersionCommands : MessageCommand<VersionRequest, GetVersionOptions>
+    public interface ICommand
     {
-        public GetVersionCommands(ICommandContext commandContext) : base(commandContext) { }
+        /// <summary>Parses the specified arguments.</summary>
+        /// <param name="args">The arguments.</param>
+        void Parse(string[] args);
 
-        protected override VersionRequest GetMessage(GetVersionOptions option)
-        {
-            return new VersionRequest
-            {
-                Query = true
-            };
-        }
+        /// <summary>Gets the type of the option.</summary>
+        /// <value>The type of the option.</value>
+        Type OptionType { get; }
+
+        /// <summary>Gets the name of the command.</summary>
+        /// <value>The name of the command.</value>
+        string CommandName { get; }
     }
 }
