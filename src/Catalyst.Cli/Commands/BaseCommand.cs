@@ -29,13 +29,13 @@ using System.Reflection;
 
 namespace Catalyst.Cli.Commands
 {
-    public abstract class CommandBase : ICommand
+    public abstract class BaseCommand : ICommand
     {
         protected abstract void ExecuteCommand(IOptionsBase optionsBase);
         public abstract Type OptionType { get; }
         public string CommandName { get; }
 
-        protected CommandBase()
+        protected BaseCommand()
         {
             CommandName = ((VerbAttribute) OptionType.GetCustomAttribute(typeof(VerbAttribute))).Name;
         }

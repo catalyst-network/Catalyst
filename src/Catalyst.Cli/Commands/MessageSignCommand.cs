@@ -21,17 +21,16 @@
 
 #endregion
 
+using Catalyst.Cli.Options;
 using Catalyst.Common.Interfaces.Cli.Commands;
-using Catalyst.Common.Interfaces.Cli.Options;
 using Catalyst.Common.Util;
 using Catalyst.Protocol.Rpc.Node;
 using Google.Protobuf;
 using System.Text;
-using Catalyst.Cli.Options;
 
 namespace Catalyst.Cli.Commands
 {
-    public class MessageSignCommand : MessageCommand<SignMessageRequest, SignOptions>
+    public sealed class MessageSignCommand : BaseMessageCommand<SignMessageRequest, SignOptions>
     {
         public MessageSignCommand(ICommandContext commandContext) : base(commandContext) { }
 

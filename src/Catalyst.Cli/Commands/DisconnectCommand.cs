@@ -23,23 +23,28 @@
 
 using Catalyst.Cli.Options;
 using Catalyst.Common.Interfaces.Cli.Commands;
-using Catalyst.Common.Util;
-using Catalyst.Protocol.Rpc.Node;
-using Nethereum.RLP;
+using Catalyst.Common.Network;
+using Dawn;
 
 namespace Catalyst.Cli.Commands
 {
-    public sealed class PeerReputationCommand : BaseMessageCommand<GetPeerReputationRequest, PeerReputationOptions>
+    public class DisconnectCommand : BaseOptionCommand<DisconnectOptions>
     {
-        public PeerReputationCommand(ICommandContext commandContext) : base(commandContext) { }
+        public DisconnectCommand(ICommandContext commandContext) : base(commandContext) { }
 
-        protected override GetPeerReputationRequest GetMessage(PeerReputationOptions option)
+        protected override void ExecuteCommand(DisconnectOptions option)
         {
-            return new GetPeerReputationRequest
-            {
-                PublicKey = option.PublicKey.ToBytesForRLPEncoding().ToByteString(),
-                Ip = option.PublicKey.ToBytesForRLPEncoding().ToByteString()
-            };
+            var nodeConfig = CommandContext.GetNodeConfig(option.Node);
+            Guard.Argument(nodeConfig, nameof(nodeConfig)).NotNull();
+
+            var registryId = CommandContext.SocketClientRegistry.GenerateClientHashCode(
+                EndpointBuilder.BuildNewEndPoint(nodeConfig.HostAddress, nodeConfig.Port));
+
+            var node = CommandContext.SocketClientRegistry.GetClientFromRegistry(registryId);
+            Guard.Argument(node, nameof(node)).Require(CommandContext.IsSocketChannelActive(node));
+
+            node.Dispose();
+            CommandContext.SocketClientRegistry.RemoveClientFromRegistry(registryId);
         }
     }
 }

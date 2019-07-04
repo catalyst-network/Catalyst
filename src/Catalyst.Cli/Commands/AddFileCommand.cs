@@ -23,7 +23,6 @@
 
 using Catalyst.Cli.Options;
 using Catalyst.Common.FileTransfer;
-using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.Cli.Commands;
 using Catalyst.Common.Interfaces.FileTransfer;
 using Catalyst.Protocol.Rpc.Node;
@@ -31,17 +30,14 @@ using System.IO;
 
 namespace Catalyst.Cli.Commands
 {
-    public sealed class AddFileCommand : MessageCommand<AddFileToDfsRequest, AddFileOptions>
+    public sealed class AddFileCommand : BaseMessageCommand<AddFileToDfsRequest, AddFileOptions>
     {
-        private readonly IUserOutput _userOutput;
         private readonly IUploadFileTransferFactory _uploadFileTransferFactory;
 
         public AddFileCommand(IUploadFileTransferFactory uploadFileTransferFactory,
-            IUserOutput userOutput,
             ICommandContext commandContext) : base(commandContext)
         {
             _uploadFileTransferFactory = uploadFileTransferFactory;
-            _userOutput = userOutput;
         }
 
         protected override AddFileToDfsRequest GetMessage(AddFileOptions option)
@@ -56,7 +52,7 @@ namespace Catalyst.Cli.Commands
         {
             if (!File.Exists(options.File))
             {
-                _userOutput.WriteLine("File does not exist.");
+                CommandContext.UserOutput.WriteLine("File does not exist.");
                 return;
             }
 
@@ -87,17 +83,17 @@ namespace Catalyst.Cli.Commands
 
             while (!fileTransfer.ChunkIndicatorsTrue() && !fileTransfer.IsExpired())
             {
-                _userOutput.Write($"\rUploaded: {fileTransfer.GetPercentage().ToString()}%");
+                CommandContext.UserOutput.Write($"\rUploaded: {fileTransfer.GetPercentage().ToString()}%");
                 System.Threading.Thread.Sleep(500);
             }
 
             if (fileTransfer.ChunkIndicatorsTrue())
             {
-                _userOutput.Write($"\rUploaded: {fileTransfer.GetPercentage().ToString()}%\n");
+                CommandContext.UserOutput.Write($"\rUploaded: {fileTransfer.GetPercentage().ToString()}%\n");
             }
             else
             {
-                _userOutput.WriteLine("\nFile transfer expired.");
+                CommandContext.UserOutput.WriteLine("\nFile transfer expired.");
             }
         }
     }

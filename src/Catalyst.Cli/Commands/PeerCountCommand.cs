@@ -23,12 +23,11 @@
 
 using Catalyst.Cli.Options;
 using Catalyst.Common.Interfaces.Cli.Commands;
-using Catalyst.Common.Interfaces.Cli.Options;
 using Catalyst.Protocol.Rpc.Node;
 
 namespace Catalyst.Cli.Commands
 {
-    public class PeerCountCommand : MessageCommand<GetPeerCountRequest, PeerCountOptions>
+    public sealed class PeerCountCommand : BaseMessageCommand<GetPeerCountRequest, PeerCountOptions>
     {
         public PeerCountCommand(ICommandContext commandContext) : base(commandContext) { }
 

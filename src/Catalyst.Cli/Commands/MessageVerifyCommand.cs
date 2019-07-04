@@ -23,14 +23,13 @@
 
 using Catalyst.Cli.Options;
 using Catalyst.Common.Interfaces.Cli.Commands;
-using Catalyst.Common.Interfaces.Cli.Options;
 using Catalyst.Common.Util;
 using Catalyst.Protocol.Rpc.Node;
 using Nethereum.RLP;
 
 namespace Catalyst.Cli.Commands
 {
-    public class MessageVerifyCommand : MessageCommand<VerifyMessageRequest, VerifyOptions>
+    public sealed class MessageVerifyCommand : BaseMessageCommand<VerifyMessageRequest, VerifyOptions>
     {
         public MessageVerifyCommand(ICommandContext commandContext) : base(commandContext) { }
 

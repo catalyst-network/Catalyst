@@ -21,25 +21,29 @@
 
 #endregion
 
-using Catalyst.Cli.Options;
+using Catalyst.Common.Interfaces.Cli.Options;
+using System;
 using Catalyst.Common.Interfaces.Cli.Commands;
-using Catalyst.Common.Util;
-using Catalyst.Protocol.Rpc.Node;
-using Nethereum.RLP;
 
 namespace Catalyst.Cli.Commands
 {
-    public sealed class PeerReputationCommand : BaseMessageCommand<GetPeerReputationRequest, PeerReputationOptions>
+    public class BaseOptionCommand<TOption> : BaseCommand
+        where TOption : IOptionsBase
     {
-        public PeerReputationCommand(ICommandContext commandContext) : base(commandContext) { }
+        public BaseOptionCommand(ICommandContext commandContext) { CommandContext = commandContext; }
 
-        protected override GetPeerReputationRequest GetMessage(PeerReputationOptions option)
+        protected ICommandContext CommandContext { get; }
+
+        protected IOptionsBase Options { get; set; }
+
+        protected virtual void ExecuteCommand(TOption option) { }
+
+        protected override void ExecuteCommand(IOptionsBase optionsBase)
         {
-            return new GetPeerReputationRequest
-            {
-                PublicKey = option.PublicKey.ToBytesForRLPEncoding().ToByteString(),
-                Ip = option.PublicKey.ToBytesForRLPEncoding().ToByteString()
-            };
+            Options = optionsBase;
+            ExecuteCommand((TOption) Options);
         }
+
+        public override Type OptionType => typeof(TOption);
     }
 }

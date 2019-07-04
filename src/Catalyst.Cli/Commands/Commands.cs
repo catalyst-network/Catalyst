@@ -27,6 +27,7 @@ using Catalyst.Common.Shell;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using CommandLine;
 
 namespace Catalyst.Cli.Commands
 {
@@ -48,62 +49,18 @@ namespace Catalyst.Cli.Commands
         {
             var parsedCommand = _commands.FirstOrDefault(command => command.CommandName.Equals(args[0], StringComparison.InvariantCultureIgnoreCase));
             var commandExists = parsedCommand != null;
-            parsedCommand?.Parse(args);
-            return commandExists;
-        }
 
-        /// <summary>
-        /// Connects a valid and configured node to the RPC server.
-        /// </summary>
-        /// <param name="nodeId">a string including the node ID.</param>
-        /// <returns>Returns true unless an unhandled exception occurs.</returns>
-        private bool OnConnectNode(string nodeId)
-        {
-            /*Guard.Argument(nodeId, nameof(nodeId)).NotEmpty();
-            var rpcNodeConfigs = GetNodeConfig(nodeId);
-            Guard.Argument(rpcNodeConfigs, nameof(rpcNodeConfigs)).NotNull();
-
-            try
+            if (commandExists)
             {
-                //Connect to the node and store it in the socket client registry
-                var nodeRpcClient = _nodeRpcClientFactory.GetClient(_certificateStore.ReadOrCreateCertificateFile(rpcNodeConfigs.PfxFileName), rpcNodeConfigs);
-
-                if (!IsSocketChannelActive(nodeRpcClient))
-                {
-                    return false;
-                }
-
-                var clientHashCode = _socketClientRegistry.GenerateClientHashCode(
-                    EndpointBuilder.BuildNewEndPoint(rpcNodeConfigs.HostAddress, rpcNodeConfigs.Port));
-
-                _socketClientRegistry.AddClientToRegistry(clientHashCode, nodeRpcClient);
+                parsedCommand.Parse(args);
             }
-            catch (Exception e)
+            else
             {
-                _logger.Debug(e.Message, e);
-                return false;
-            }*/
+                Type[] types = _commands.Select(command => command.OptionType).ToArray();
+                Parser.Default.ParseArguments(args, types);
+            }
 
-            return true;
-        }
-
-        /// <inheritdoc cref="DisconnectNode" />
-        private bool DisconnectNode(string nodeId)
-        {
-            /*Guard.Argument(nodeId, nameof(nodeId)).Contains(typeof(string));
-            var nodeConfig = GetNodeConfig(nodeId);
-            Guard.Argument(nodeConfig, nameof(nodeConfig)).NotNull();
-
-            var registryId = _socketClientRegistry.GenerateClientHashCode(
-                EndpointBuilder.BuildNewEndPoint(nodeConfig.HostAddress, nodeConfig.Port));
-
-            var node = _socketClientRegistry.GetClientFromRegistry(registryId);
-            Guard.Argument(node, nameof(node)).Require(IsSocketChannelActive(node));
-
-            node.Dispose();
-            _socketClientRegistry.RemoveClientFromRegistry(registryId);*/
-
-            return true;
+            return commandExists;
         }
     }
 }

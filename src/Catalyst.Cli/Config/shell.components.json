@@ -10,6 +10,14 @@
             ]
         },
         {
+            "type": "Catalyst.Cli.Commands.ConnectCommand",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.Cli.Commands.ICommand, Catalyst.Common"
+                }
+            ]
+        },
+        {
             "type": "Catalyst.Cli.Commands.GetVersionCommands",
             "services": [
                 {
@@ -164,7 +172,8 @@
                 {
                     "type": "Catalyst.Common.Interfaces.Cli.Commands.ICommandContext, Catalyst.Common"
                 }
-            ]
+            ],
+            "instanceScope": "singleinstance"
         },
         {
             "type": "Catalyst.Common.Shell.ConsoleUserOutput, Catalyst.Common",

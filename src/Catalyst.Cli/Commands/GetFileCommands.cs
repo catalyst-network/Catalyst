@@ -24,23 +24,19 @@
 using Catalyst.Cli.Options;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.FileTransfer;
-using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.Cli.Commands;
 using Catalyst.Common.Interfaces.FileTransfer;
 using Catalyst.Protocol.Rpc.Node;
 
 namespace Catalyst.Cli.Commands
 {
-    public class GetFileCommands : MessageCommand<GetFileFromDfsRequest, GetFileOptions>
+    public sealed class GetFileCommands : BaseMessageCommand<GetFileFromDfsRequest, GetFileOptions>
     {
         private readonly IDownloadFileTransferFactory _downloadFileTransferFactory;
-        private readonly IUserOutput _userOutput;
 
-        public GetFileCommands(IUserOutput userOutput,
-            IDownloadFileTransferFactory downloadFileTransferFactory,
+        public GetFileCommands(IDownloadFileTransferFactory downloadFileTransferFactory,
             ICommandContext commandContext) : base(commandContext)
         {
-            _userOutput = userOutput;
             _downloadFileTransferFactory = downloadFileTransferFactory;
         }
 
@@ -76,17 +72,17 @@ namespace Catalyst.Cli.Commands
 
             while (!fileTransfer.ChunkIndicatorsTrue() && !fileTransfer.IsExpired())
             {
-                _userOutput.Write($"\rDownloaded: {fileTransfer.GetPercentage().ToString()}%");
+                CommandContext.UserOutput.Write($"\rDownloaded: {fileTransfer.GetPercentage().ToString()}%");
                 System.Threading.Thread.Sleep(500);
             }
 
             if (fileTransfer.ChunkIndicatorsTrue())
             {
-                _userOutput.Write($"\rDownloaded: {fileTransfer.GetPercentage().ToString()}%\n");
+                CommandContext.UserOutput.Write($"\rDownloaded: {fileTransfer.GetPercentage().ToString()}%\n");
             }
             else
             {
-                _userOutput.WriteLine("\nFile transfer expired.");
+                CommandContext.UserOutput.WriteLine("\nFile transfer expired.");
             }
         }
     }

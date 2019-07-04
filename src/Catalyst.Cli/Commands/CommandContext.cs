@@ -26,6 +26,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.Cli.Commands;
+using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Transport;
 using Catalyst.Common.Interfaces.P2P;
@@ -42,9 +43,7 @@ namespace Catalyst.Cli.Commands
     public class CommandContext : ICommandContext
     {
         private readonly IList<IRpcNodeConfig> _rpcNodeConfigs;
-        private readonly ISocketClientRegistry<INodeRpcClient> _socketClientRegistry;
         private readonly ILogger _logger;
-        private readonly IUserOutput _userOutput;
 
         /// <summary>
         /// </summary>
@@ -52,21 +51,35 @@ namespace Catalyst.Cli.Commands
             ILogger logger,
             IUserOutput userOutput,
             IPeerIdClientId peerIdClientId,
-            IDtoFactory dtoFactory)
+            IDtoFactory dtoFactory,
+            INodeRpcClientFactory nodeRpcClientFactory,
+            ICertificateStore certificateStore)
         {
             _logger = logger;
-            _socketClientRegistry = new SocketClientRegistry<INodeRpcClient>();
             _rpcNodeConfigs = NodeRpcConfig.BuildRpcNodeSettingList(config);
-            _userOutput = userOutput;
+
+            SocketClientRegistry = new SocketClientRegistry<INodeRpcClient>();
             DtoFactory = dtoFactory;
             PeerIdClientId = peerIdClientId;
             PeerIdentifier = Common.P2P.PeerIdentifier.BuildPeerIdFromConfig(config, peerIdClientId);
+            NodeRpcClientFactory = nodeRpcClientFactory;
+            CertificateStore = certificateStore;
+            UserOutput = userOutput;
         }
 
         public IDtoFactory DtoFactory { get; }
+
         public IPeerIdentifier PeerIdentifier { get; }
 
+        public INodeRpcClientFactory NodeRpcClientFactory { get; }
+
+        public ICertificateStore CertificateStore { get; }
+
+        public IUserOutput UserOutput { get; }
+
         public IPeerIdClientId PeerIdClientId { get; }
+
+        public ISocketClientRegistry<INodeRpcClient> SocketClientRegistry { get; }
 
         /// <inheritdoc cref="GetConnectedNode" />
         public INodeRpcClient GetConnectedNode(string nodeId)
@@ -75,10 +88,10 @@ namespace Catalyst.Cli.Commands
             var nodeConfig = _rpcNodeConfigs.SingleOrDefault(node => node.NodeId.Equals(nodeId));
             Guard.Argument(nodeConfig, nameof(nodeConfig)).NotNull();
 
-            var registryId = _socketClientRegistry.GenerateClientHashCode(
+            var registryId = SocketClientRegistry.GenerateClientHashCode(
                 EndpointBuilder.BuildNewEndPoint(nodeConfig.HostAddress, nodeConfig.Port));
 
-            var nodeRpcClient = _socketClientRegistry.GetClientFromRegistry(registryId);
+            var nodeRpcClient = SocketClientRegistry.GetClientFromRegistry(registryId);
             Guard.Argument(nodeRpcClient).Require(IsSocketChannelActive(nodeRpcClient));
 
             return nodeRpcClient;
@@ -96,16 +109,11 @@ namespace Catalyst.Cli.Commands
                 return nodeConfig;
             }
 
-            _userOutput.WriteLine("Node not configured. Add node to config file and try again.");
+            UserOutput.WriteLine("Node not configured. Add node to config file and try again.");
 
             return null;
         }
 
-        /// <summary>
-        /// Checks if the socket channel opened with the RPC server in the node is still active.
-        /// </summary>
-        /// <param name="node">A <see cref="IRpcNode"/> object including node required information.</param>
-        /// <returns>Returns True if the channel is still active and False otherwise.  A "Channel inactive ..." message is returned to the console.</returns>
         public bool IsSocketChannelActive(INodeRpcClient node)
         {
             Guard.Argument(node, nameof(node)).Compatible<INodeRpcClient>();
