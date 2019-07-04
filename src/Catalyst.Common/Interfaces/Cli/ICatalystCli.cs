@@ -21,7 +21,23 @@
 
 #endregion
 
+using System.Threading;
+
 namespace Catalyst.Common.Interfaces.Cli
 {
-    public interface ICatalystCli { }
+    public interface ICatalystCli
+    {
+        /// <summary>
+        ///     Runs the main cli ui.
+        /// </summary>
+        /// <returns></returns>
+        bool RunConsole(CancellationToken ct);
+
+        /// <summary>
+        /// Parses the Options object sent and calls the correct message to handle the option a defined in the MapResult
+        /// </summary>
+        /// <param name="args">string array including the parameters passed through the command line</param>
+        /// <returns>Returns true if a method to handle the options is found otherwise returns false</returns>
+        bool ParseCommand(params string[] args);
+    }
 }
