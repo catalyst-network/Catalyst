@@ -24,7 +24,7 @@
 using System.Net;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.IO.Messaging;
+using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.Util;
 using Catalyst.Protocol.Common;

@@ -25,7 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Catalyst.Common.Enumerator;
-using Catalyst.Common.Interfaces.IO.Messaging;
+using Catalyst.Common.Interfaces.Config;
 using Google.Protobuf;
 
 namespace Catalyst.Common.Config

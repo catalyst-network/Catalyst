@@ -58,13 +58,13 @@ namespace Catalyst.Common.Modules.KeySigner
                 // var key = _keyStore.KeyStoreDecrypt(_keyStore.Password);
                 // return Task.FromResult(_cryptoContext.Sign(key, new ReadOnlySpan<byte>(data))).GetAwaiter().GetResult();
             }
-            return new Signature(new byte[64]);
+            return new Signature(new byte[0], new byte[0]);
         }
 
         /// <inheritdoc/>
-        public bool Verify(IPublicKey key, byte[] message, ISignature signature)
+        public bool Verify(ISignature signature, byte[] message)
         {
-            return _cryptoContext.Verify(key, message, signature);
+            return _cryptoContext.Verify(signature, message);
         }
 
         /// <inheritdoc/>

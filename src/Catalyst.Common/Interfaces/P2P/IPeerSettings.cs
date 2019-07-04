@@ -28,7 +28,7 @@ namespace Catalyst.Common.Interfaces.P2P
 {
     public interface IPeerSettings
     {
-        Config.Network Network { get; }
+        Common.Config.Network Network { get; }
         string PayoutAddress { get; }
         string PublicKey { get; }
         bool Announce { get; }

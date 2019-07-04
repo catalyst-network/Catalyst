@@ -34,7 +34,7 @@ using Catalyst.Common.Interfaces.Modules.Dfs;
 using Catalyst.Common.Interfaces.Modules.Ledger;
 using Catalyst.Common.Interfaces.Modules.Mempool;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.IO.Messaging;
+using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Node.Core.Modules.Contract;
 using Catalyst.TestUtils;
 using FluentAssertions;
