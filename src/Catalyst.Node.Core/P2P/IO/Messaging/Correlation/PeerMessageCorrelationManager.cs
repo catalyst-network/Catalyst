@@ -26,6 +26,7 @@ using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.P2P.IO.Messaging;
+using Catalyst.Common.Interfaces.P2P.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.P2P.ReputationSystem;
 using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Common.P2P;
@@ -35,7 +36,7 @@ using Dawn;
 using Microsoft.Extensions.Caching.Memory;
 using Serilog;
 
-namespace Catalyst.Node.Core.P2P.IO.Messaging
+namespace Catalyst.Node.Core.P2P.IO.Messaging.Correlation
 {
     public sealed class PeerMessageCorrelationManager : MessageCorrelationManagerBase, IPeerMessageCorrelationManager
     {

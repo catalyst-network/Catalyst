@@ -63,6 +63,7 @@
     <ItemGroup>
         <Folder Include="Interfaces\IO\Messaging\Handlers" />
         <Folder Include="Interfaces\Util" />
+        <Folder Include="Rpc\IO\Messaging\Correlation" />
     </ItemGroup>
     <ItemGroup>
         <Reference Include="System">

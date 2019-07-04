@@ -28,6 +28,7 @@ using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.P2P.ReputationSystem;
 using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Node.Core.P2P.IO.Messaging;
+using Catalyst.Node.Core.P2P.IO.Messaging.Correlation;
 using Catalyst.Protocol.IPPN;
 using Catalyst.TestUtils;
 using FluentAssertions;
