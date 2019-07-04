@@ -92,7 +92,7 @@ namespace Catalyst.Common.UnitTests.IO.Messaging
                     }
 
                     await TaskHelper.WaitForAsync(() => evictionObserver.ReceivedCalls().Any(),
-                        TimeSpan.FromMilliseconds(500));
+                        TimeSpan.FromMilliseconds(1000));
 
                     evictionObserver.Received(requestCount).OnNext(Arg.Any<IMessageEvictionEvent>());
                 }
