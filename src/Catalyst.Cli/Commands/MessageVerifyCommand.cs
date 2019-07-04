@@ -21,6 +21,7 @@
 
 #endregion
 
+using Catalyst.Cli.Options;
 using Catalyst.Common.Interfaces.Cli.Commands;
 using Catalyst.Common.Interfaces.Cli.Options;
 using Catalyst.Common.Util;
@@ -29,11 +30,11 @@ using Nethereum.RLP;
 
 namespace Catalyst.Cli.Commands
 {
-    public class MessageVerifyCommand : CommandBase<VerifyMessageRequest, IVerifyOptions>
+    public class MessageVerifyCommand : MessageCommand<VerifyMessageRequest, VerifyOptions>
     {
-        public MessageVerifyCommand(IOptionsBase optionBase, ICommandContext commandContext) : base(optionBase, commandContext) { }
+        public MessageVerifyCommand(ICommandContext commandContext) : base(commandContext) { }
 
-        public override VerifyMessageRequest GetMessage(IVerifyOptions option)
+        protected override VerifyMessageRequest GetMessage(VerifyOptions option)
         {
             return new VerifyMessageRequest
             {

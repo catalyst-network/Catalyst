@@ -21,17 +21,17 @@
 
 #endregion
 
+using Catalyst.Cli.Options;
 using Catalyst.Common.Interfaces.Cli.Commands;
-using Catalyst.Common.Interfaces.Cli.Options;
 using Catalyst.Protocol.Rpc.Node;
 
 namespace Catalyst.Cli.Commands
 {
-    public class GetInfoCommand : CommandBase<GetInfoRequest, IGetInfoOptions>
+    public class GetInfoCommand : MessageCommand<GetInfoRequest, GetInfoOptions>
     {
-        public GetInfoCommand(IOptionsBase optionBase, ICommandContext commandContext) : base(optionBase, commandContext) { }
+        public GetInfoCommand(ICommandContext commandContext) : base(commandContext) { }
 
-        public override GetInfoRequest GetMessage(IGetInfoOptions option)
+        protected override GetInfoRequest GetMessage(GetInfoOptions option)
         {
             return new GetInfoRequest
             {

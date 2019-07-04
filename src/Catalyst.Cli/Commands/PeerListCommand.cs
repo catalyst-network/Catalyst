@@ -21,16 +21,17 @@
 
 #endregion
 
+using Catalyst.Cli.Options;
 using Catalyst.Common.Interfaces.Cli.Commands;
 using Catalyst.Common.Interfaces.Cli.Options;
 using Catalyst.Protocol.Rpc.Node;
 
 namespace Catalyst.Cli.Commands
 {
-    public class PeerListCommand : CommandBase<GetPeerListRequest, IPeerListOptions>
+    public class PeerListCommand : MessageCommand<GetPeerListRequest, PeerListOptions>
     {
-        public PeerListCommand(IOptionsBase optionBase, ICommandContext commandContext) : base(optionBase, commandContext) { }
+        public PeerListCommand(ICommandContext commandContext) : base(commandContext) { }
 
-        public override GetPeerListRequest GetMessage(IPeerListOptions option) { return new GetPeerListRequest(); }
+        protected override GetPeerListRequest GetMessage(PeerListOptions option) { return new GetPeerListRequest(); }
     }
 }

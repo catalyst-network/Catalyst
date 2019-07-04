@@ -21,16 +21,17 @@
 
 #endregion
 
+using Catalyst.Cli.Options;
 using Catalyst.Common.Interfaces.Cli.Commands;
 using Catalyst.Common.Interfaces.Cli.Options;
 using Catalyst.Protocol.Rpc.Node;
 
 namespace Catalyst.Cli.Commands
 {
-    public class PeerCountCommand : CommandBase<GetPeerCountRequest, IPeerCountOptions>
+    public class PeerCountCommand : MessageCommand<GetPeerCountRequest, PeerCountOptions>
     {
-        public PeerCountCommand(IOptionsBase optionBase, ICommandContext commandContext) : base(optionBase, commandContext) { }
+        public PeerCountCommand(ICommandContext commandContext) : base(commandContext) { }
 
-        public override GetPeerCountRequest GetMessage(IPeerCountOptions option) { return new GetPeerCountRequest(); }
+        protected override GetPeerCountRequest GetMessage(PeerCountOptions option) { return new GetPeerCountRequest(); }
     }
 }

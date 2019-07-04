@@ -5,14 +5,15 @@ using Catalyst.Protocol.Rpc.Node;
 using Google.Protobuf;
 using Nethereum.RLP;
 using System.Net;
+using Catalyst.Cli.Options;
 
 namespace Catalyst.Cli.Commands
 {
-    public class PeerRemoveCommand : CommandBase<RemovePeerRequest, IRemovePeerOptions>
+    public class PeerRemoveCommand : MessageCommand<RemovePeerRequest, RemovePeerOptions>
     {
-        public PeerRemoveCommand(IOptionsBase optionBase, ICommandContext commandContext) : base(optionBase, commandContext) { }
+        public PeerRemoveCommand(ICommandContext commandContext) : base(commandContext) { }
 
-        public override RemovePeerRequest GetMessage(IRemovePeerOptions option)
+        protected override RemovePeerRequest GetMessage(RemovePeerOptions option)
         {
             return new RemovePeerRequest
             {

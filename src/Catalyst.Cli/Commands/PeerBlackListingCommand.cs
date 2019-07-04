@@ -21,6 +21,7 @@
 
 #endregion
 
+using Catalyst.Cli.Options;
 using Catalyst.Common.Interfaces.Cli.Commands;
 using Catalyst.Common.Interfaces.Cli.Options;
 using Catalyst.Common.Util;
@@ -29,11 +30,11 @@ using Nethereum.RLP;
 
 namespace Catalyst.Cli.Commands
 {
-    public class PeerBlackListingCommand : CommandBase<SetPeerBlackListRequest, IPeerBlackListingOptions>
+    public class PeerBlackListingCommand : MessageCommand<SetPeerBlackListRequest, PeerBlackListingOptions>
     {
-        public PeerBlackListingCommand(IOptionsBase optionBase, ICommandContext commandContext) : base(optionBase, commandContext) { }
+        public PeerBlackListingCommand(ICommandContext commandContext) : base(commandContext) { }
 
-        public override SetPeerBlackListRequest GetMessage(IPeerBlackListingOptions option)
+        protected override SetPeerBlackListRequest GetMessage(PeerBlackListingOptions option)
         {
             return new SetPeerBlackListRequest
             {

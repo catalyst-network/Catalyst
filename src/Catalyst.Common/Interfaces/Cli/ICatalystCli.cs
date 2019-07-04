@@ -23,8 +23,5 @@
 
 namespace Catalyst.Common.Interfaces.Cli
 {
-    public interface ICatalystCli
-    {
-        IAdvancedShell AdvancedShell { get; set; }
-    }
+    public interface ICatalystCli { }
 }

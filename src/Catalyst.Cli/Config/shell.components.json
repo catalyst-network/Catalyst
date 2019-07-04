@@ -10,6 +10,30 @@
             ]
         },
         {
+            "type": "Catalyst.Cli.Commands.GetVersionCommands",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.Cli.Commands.ICommand, Catalyst.Common"
+                }
+            ]
+        },
+        {
+            "type": "Catalyst.Cli.Commands.PeerCountCommand",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.Cli.Commands.ICommand, Catalyst.Common"
+                }
+            ]
+        },
+        {
+            "type": "Catalyst.Cli.Commands.Commands",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.Cli.IShell, Catalyst.Common"
+                }
+            ]
+        },
+        {
             "type": "Catalyst.Common.IO.EventLoop.EventLoopGroupFactoryConfiguration, Catalyst.Common",
             "services": [
                 {
@@ -135,10 +159,10 @@
             "instanceScope": "singleinstance"
         },
         {
-            "type": "Catalyst.Cli.Commands.Commands",
+            "type": "Catalyst.Cli.Commands.CommandContext",
             "services": [
                 {
-                    "type": "Catalyst.Common.Interfaces.Cli.IAdvancedShell, Catalyst.Common"
+                    "type": "Catalyst.Common.Interfaces.Cli.Commands.ICommandContext, Catalyst.Common"
                 }
             ]
         },

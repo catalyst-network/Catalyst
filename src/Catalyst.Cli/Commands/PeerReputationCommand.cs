@@ -21,6 +21,7 @@
 
 #endregion
 
+using Catalyst.Cli.Options;
 using Catalyst.Common.Interfaces.Cli.Commands;
 using Catalyst.Common.Interfaces.Cli.Options;
 using Catalyst.Common.Util;
@@ -29,11 +30,11 @@ using Nethereum.RLP;
 
 namespace Catalyst.Cli.Commands
 {
-    public class PeerReputationCommand : CommandBase<GetPeerReputationRequest, IPeerReputationOptions>
+    public class PeerReputationCommand : MessageCommand<GetPeerReputationRequest, PeerReputationOptions>
     {
-        public PeerReputationCommand(IOptionsBase optionBase, ICommandContext commandContext) : base(optionBase, commandContext) { }
+        public PeerReputationCommand(ICommandContext commandContext) : base(commandContext) { }
 
-        public override GetPeerReputationRequest GetMessage(IPeerReputationOptions option)
+        protected override GetPeerReputationRequest GetMessage(PeerReputationOptions option)
         {
             return new GetPeerReputationRequest
             {

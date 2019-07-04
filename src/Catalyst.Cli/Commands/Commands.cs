@@ -21,79 +21,37 @@
 
 #endregion
 
+using Catalyst.Common.Interfaces.Cli;
+using Catalyst.Common.Interfaces.Cli.Commands;
+using Catalyst.Common.Shell;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Catalyst.Cli.Options;
-using Catalyst.Common.Interfaces.Cli;
-using Catalyst.Common.Interfaces.Cli.Commands;
-using Catalyst.Common.Interfaces.Cryptography;
-using Catalyst.Common.Interfaces.FileTransfer;
-using Catalyst.Common.Interfaces.IO.Messaging.Dto;
-using Catalyst.Common.Interfaces.IO.Transport;
-using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.Interfaces.Rpc;
-using Catalyst.Common.IO.Transport;
-using Catalyst.Common.Network;
-using Catalyst.Common.P2P;
-using Catalyst.Common.Shell;
-using Catalyst.Node.Rpc.Client;
-using CommandLine;
-using Dawn;
-using Microsoft.Extensions.Configuration;
-using ILogger = Serilog.ILogger;
 
 namespace Catalyst.Cli.Commands
 {
     /// <inheritdoc cref="ShellBase" />
     public sealed class Commands : ShellBase
     {
-        private readonly ISocketClientRegistry<INodeRpcClient> _socketClientRegistry;
+        private readonly IEnumerable<ICommand> _commands;
 
         /// <summary>
         /// </summary>
-        public Commands(IUserOutput userOutput) : base(userOutput)
+        public Commands(IUserOutput userOutput, IEnumerable<ICommand> commands) : base(userOutput)
         {
-            _socketClientRegistry = new SocketClientRegistry<INodeRpcClient>();
+            _commands = commands;
             userOutput.WriteLine(@"Koopa Shell Start");
         }
 
         /// <inheritdoc cref="ParseCommand" />
         public override bool ParseCommand(params string[] args)
         {
-            Guard.Argument(args, nameof(args)).NotNull().MinCount(1).NotEmpty();
-            return Parser.Default.ParseArguments<
-                    GetInfoOptions,
-                    GetVersionOptions,
-                    GetMempoolOptions,
-                    ConnectOptions,
-                    SignOptions, 
-                    VerifyOptions,
-                    PeerListOptions,
-                    PeerCountOptions,
-                    RemovePeerOptions,
-                    PeerReputationOptions,
-                    PeerBlackListingOptions,
-                    AddFileOptions,
-                    GetFileOptions>(args)
-               .MapResult(
-                    (GetInfoOptions opts) => GetInfoCommand(opts),
-                    (GetVersionOptions opts) => GetVersionCommand(opts),
-                    (GetMempoolOptions opts) => GetMempoolCommand(opts),
-                    (SignOptions opts) => MessageSignCommand(opts),
-                    (VerifyOptions opts) => MessageVerifyCommand(opts),
-                    (PeerListOptions opts) => PeerListCommand(opts),
-                    (PeerCountOptions opts) => PeerCountCommand(opts),
-                    (RemovePeerOptions opts) => PeerRemoveCommand(opts),
-                    (PeerReputationOptions opts) => PeerReputationCommand(opts),
-                    (PeerBlackListingOptions opts) => PeerBlackListingCommand(opts),
-                    (AddFileOptions opts) => AddFile(opts),
-                    (ConnectOptions opts) => OnConnectNode(opts.Node),
-                    (ConnectOptions opts) => DisconnectNode(opts.Node),
-                    (GetFileOptions opts) => GetFileOptions(opts),
-                    errs => false);
+            var parsedCommand = _commands.FirstOrDefault(command => command.CommandName.Equals(args[0], StringComparison.InvariantCultureIgnoreCase));
+            var commandExists = parsedCommand != null;
+            parsedCommand?.Parse(args);
+            return commandExists;
         }
-        
+
         /// <summary>
         /// Connects a valid and configured node to the RPC server.
         /// </summary>
@@ -101,7 +59,7 @@ namespace Catalyst.Cli.Commands
         /// <returns>Returns true unless an unhandled exception occurs.</returns>
         private bool OnConnectNode(string nodeId)
         {
-            Guard.Argument(nodeId, nameof(nodeId)).NotEmpty();
+            /*Guard.Argument(nodeId, nameof(nodeId)).NotEmpty();
             var rpcNodeConfigs = GetNodeConfig(nodeId);
             Guard.Argument(rpcNodeConfigs, nameof(rpcNodeConfigs)).NotNull();
 
@@ -124,7 +82,7 @@ namespace Catalyst.Cli.Commands
             {
                 _logger.Debug(e.Message, e);
                 return false;
-            }
+            }*/
 
             return true;
         }
@@ -132,7 +90,7 @@ namespace Catalyst.Cli.Commands
         /// <inheritdoc cref="DisconnectNode" />
         private bool DisconnectNode(string nodeId)
         {
-            Guard.Argument(nodeId, nameof(nodeId)).Contains(typeof(string));
+            /*Guard.Argument(nodeId, nameof(nodeId)).Contains(typeof(string));
             var nodeConfig = GetNodeConfig(nodeId);
             Guard.Argument(nodeConfig, nameof(nodeConfig)).NotNull();
 
@@ -143,7 +101,7 @@ namespace Catalyst.Cli.Commands
             Guard.Argument(node, nameof(node)).Require(IsSocketChannelActive(node));
 
             node.Dispose();
-            _socketClientRegistry.RemoveClientFromRegistry(registryId);
+            _socketClientRegistry.RemoveClientFromRegistry(registryId);*/
 
             return true;
         }

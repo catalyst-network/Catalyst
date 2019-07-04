@@ -26,13 +26,5 @@ using Catalyst.Common.Interfaces.Cli;
 namespace Catalyst.Cli
 {
     public class CatalystCli
-        : ICatalystCli
-    {
-        public IAdvancedShell AdvancedShell { get; set; }
-
-        public CatalystCli(IAdvancedShell advancedShell)
-        {
-            AdvancedShell = advancedShell;
-        }
-    }
+        : ICatalystCli { }
 }

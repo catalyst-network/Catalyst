@@ -21,15 +21,15 @@
 
 #endregion
 
+using Catalyst.Cli.Options;
 using Catalyst.Common.Interfaces.Cli.Commands;
-using Catalyst.Common.Interfaces.Cli.Options;
 using Catalyst.Protocol.Rpc.Node;
 
 namespace Catalyst.Cli.Commands
 {
-    public class GetMempoolCommand : CommandBase<GetMempoolRequest, IGetMempoolOptions>
+    public class GetMempoolCommand : MessageCommand<GetMempoolRequest, GetMempoolOptions>
     {
-        public GetMempoolCommand(IOptionsBase optionBase, ICommandContext commandContext) : base(optionBase, commandContext) { }
-        public override GetMempoolRequest GetMessage(IGetMempoolOptions option) { return new GetMempoolRequest(); }
+        public GetMempoolCommand(ICommandContext commandContext) : base(commandContext) { }
+        protected override GetMempoolRequest GetMessage(GetMempoolOptions option) { return new GetMempoolRequest(); }
     }
 }
