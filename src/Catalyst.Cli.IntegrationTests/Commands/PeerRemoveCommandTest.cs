@@ -23,10 +23,8 @@
 
 using Autofac;
 using Catalyst.Common.Interfaces.Cli;
-using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Protocol.Rpc.Node;
 using FluentAssertions;
-using NSubstitute;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -37,8 +35,8 @@ namespace Catalyst.Cli.IntegrationTests.Commands
         //This test is the base to all other tests.  If the Cli cannot connect to a node than all other commands
         //will fail
         public PeerRemoveCommandTest(ITestOutputHelper output) : base(output) { }
-        
-        [Fact] 
+
+        [Fact]
         public void Cli_Can_Send_Remove_Peer_Request()
         {
             using (var container = ContainerBuilder.Build())
@@ -52,10 +50,8 @@ namespace Catalyst.Cli.IntegrationTests.Commands
                     var result = shell.ParseCommand(
                         "removepeer", "-n", "node1", "-k", "fake_public_key", "-i", "127.0.0.1");
                     result.Should().BeTrue();
-                    NodeRpcClient.Received(1).SendMessage(Arg.Is<IMessageDto<RemovePeerRequest>>(
-                        x => x.Content != null && 
-                            x.Content.GetType().IsAssignableTo<RemovePeerRequest>()));
-                }   
+                    AssertSentMessage<RemovePeerRequest>();
+                }
             }
         }
     }

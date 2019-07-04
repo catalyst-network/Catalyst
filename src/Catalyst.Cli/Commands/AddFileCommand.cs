@@ -27,6 +27,8 @@ using Catalyst.Common.Interfaces.Cli.Commands;
 using Catalyst.Common.Interfaces.FileTransfer;
 using Catalyst.Protocol.Rpc.Node;
 using System.IO;
+using Catalyst.Cli.CommandTypes;
+using Catalyst.Common.Extensions;
 
 namespace Catalyst.Cli.Commands
 {
@@ -48,14 +50,13 @@ namespace Catalyst.Cli.Commands
             };
         }
 
+        protected override bool ExecuteCommand(AddFileOptions options)
+        {
+            return File.Exists(options.File);
+        }
+
         public override void SendMessage(AddFileOptions options)
         {
-            if (!File.Exists(options.File))
-            {
-                CommandContext.UserOutput.WriteLine("File does not exist.");
-                return;
-            }
-
             var request = GetMessage(options);
 
             using (var fileStream = File.Open(options.File, FileMode.Open))
@@ -64,7 +65,7 @@ namespace Catalyst.Cli.Commands
             }
 
             var requestMessage = CommandContext.DtoFactory.GetDto(
-                request,
+                request.ToProtocolMessage(SenderPeerIdentifier.PeerId),
                 SenderPeerIdentifier,
                 RecipientPeerIdentifier
             );

@@ -27,6 +27,7 @@ using Catalyst.Common.Util;
 using Catalyst.Protocol.Rpc.Node;
 using Google.Protobuf;
 using System.Text;
+using Catalyst.Cli.CommandTypes;
 
 namespace Catalyst.Cli.Commands
 {

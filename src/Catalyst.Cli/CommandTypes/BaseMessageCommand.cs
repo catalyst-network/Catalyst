@@ -23,13 +23,14 @@
 
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Cli.Commands;
+using Catalyst.Common.Interfaces.Cli.CommandTypes;
 using Catalyst.Common.Interfaces.Cli.Options;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.P2P;
 using Google.Protobuf;
 
-namespace Catalyst.Cli.Commands
+namespace Catalyst.Cli.CommandTypes
 {
     public abstract class BaseMessageCommand<T, TOption> : BaseOptionCommand<TOption>, IMessageCommand<T>
         where T : IMessage<T>
@@ -59,10 +60,17 @@ namespace Catalyst.Cli.Commands
 
         public INodeRpcClient Target => CommandContext.GetConnectedNode(Options.Node);
 
-        protected override void ExecuteCommand(IOptionsBase optionsBase)
+        protected override bool ExecuteCommandInner(IOptionsBase optionsBase)
         {
-            base.ExecuteCommand(optionsBase);
-            SendMessage((TOption) Options);
+            var option = (TOption) optionsBase;
+            var sendMessage = base.ExecuteCommandInner(optionsBase);
+
+            if (sendMessage)
+            {
+                SendMessage(option);
+            }
+
+            return sendMessage;
         }
     }
 }

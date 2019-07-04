@@ -46,7 +46,7 @@ namespace Catalyst.Cli.IntegrationTests.Commands
                     var hasConnected = shell.ParseCommand("connect", "-n", "node1");
                     hasConnected.Should().BeTrue();
 
-                    var result = shell.ParseCommand("getinfo", "-i", "node1");
+                    var result = shell.ParseCommand("getinfo", "-n", "node1");
                     result.Should().BeTrue();
                 }   
             }

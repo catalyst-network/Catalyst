@@ -21,18 +21,16 @@
 
 #endregion
 
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 using Autofac;
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.FileTransfer;
-using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using FluentAssertions;
-using NSubstitute;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -57,7 +55,7 @@ namespace Catalyst.Cli.IntegrationTests.Commands
 
                     var hasConnected = shell.ParseCommand("connect", "-n", "node1");
                     hasConnected.Should().BeTrue();
-                    
+
                     var task = Task.Run(() =>
                         shell.ParseCommand("getfile", "-n", "node1", "-f", fileHash, "-o", outputPath)
                     );
@@ -71,9 +69,7 @@ namespace Catalyst.Cli.IntegrationTests.Commands
 
                     if (expectedResult)
                     {
-                        NodeRpcClient.Received(1).SendMessage(Arg.Is<IMessageDto<GetFileFromDfsRequest>>(x =>
-                            x.Content != null &&
-                            x.Content.GetType().IsAssignableTo<GetFileFromDfsRequest>()));
+                        AssertSentMessage<GetFileFromDfsRequest>();
                     }
                 }
             }

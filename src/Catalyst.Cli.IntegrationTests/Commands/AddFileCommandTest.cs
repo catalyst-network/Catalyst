@@ -21,18 +21,17 @@
 
 #endregion
 
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 using Autofac;
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.FileTransfer;
-using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using FluentAssertions;
-using NSubstitute;
+using System;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -43,7 +42,7 @@ namespace Catalyst.Cli.IntegrationTests.Commands
         //This test is the base to all other tests.  If the Cli cannot connect to a node than all other commands
         //will fail
         public AddFileCommandTest(ITestOutputHelper output) : base(output) { }
-        
+
         [Theory]
         [MemberData(nameof(AddFileData))]
         public async Task Cli_Can_Send_Add_File_Request(string fileName, bool expectedResult)
@@ -57,8 +56,8 @@ namespace Catalyst.Cli.IntegrationTests.Commands
                     var shell = container.Resolve<ICatalystCli>();
                     var hasConnected = shell.ParseCommand("connect", "-n", "node1");
                     hasConnected.Should().BeTrue();
-                    
-                    var task = Task.Run(() => 
+
+                    var task = Task.Run(() =>
                         shell.ParseCommand(
                             "addfile", "-n", "node1", "-f", fileName));
 
@@ -75,11 +74,9 @@ namespace Catalyst.Cli.IntegrationTests.Commands
 
                     if (expectedResult)
                     {
-                        NodeRpcClient.Received(1).SendMessage(Arg.Is<IMessageDto<AddFileToDfsRequest>>(
-                            x => x.Content != null && 
-                                x.Content.GetType().IsAssignableTo<AddFileToDfsRequest>()));
+                        AssertSentMessage<AddFileToDfsRequest>();
                     }
-                }   
+                }
             }
         }
     }
