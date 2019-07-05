@@ -32,7 +32,7 @@ using Google.Protobuf;
 
 namespace Catalyst.Cli.CommandTypes
 {
-    public abstract class BaseMessageCommand<T, TOption> : BaseOptionCommand<TOption>, IMessageCommand<T>
+    public abstract class BaseMessageCommand<T, TOption> : BaseCommand<TOption>, IMessageCommand<T>
         where T : IMessage<T>
         where TOption : IOptionsBase
     {
@@ -42,14 +42,16 @@ namespace Catalyst.Cli.CommandTypes
         {
             var message = GetMessage(options);
 
-            if (message != null)
+            if (message == null)
             {
-                var messageDto = CommandContext.DtoFactory.GetDto(
-                    message.ToProtocolMessage(SenderPeerIdentifier.PeerId),
-                    SenderPeerIdentifier,
-                    RecipientPeerIdentifier);
-                Target.SendMessage(messageDto);
+                return;
             }
+
+            var messageDto = CommandContext.DtoFactory.GetDto(
+                message.ToProtocolMessage(SenderPeerIdentifier.PeerId),
+                SenderPeerIdentifier,
+                RecipientPeerIdentifier);
+            Target.SendMessage(messageDto);
         }
 
         protected abstract T GetMessage(TOption option);
@@ -62,12 +64,11 @@ namespace Catalyst.Cli.CommandTypes
 
         protected override bool ExecuteCommandInner(IOptionsBase optionsBase)
         {
-            var option = (TOption) optionsBase;
             var sendMessage = base.ExecuteCommandInner(optionsBase);
 
             if (sendMessage)
             {
-                SendMessage(option);
+                SendMessage((TOption) optionsBase);
             }
 
             return sendMessage;

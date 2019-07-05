@@ -29,7 +29,7 @@ using Dawn;
 
 namespace Catalyst.Cli.Commands
 {
-    public class DisconnectCommand : BaseOptionCommand<DisconnectOptions>
+    public class DisconnectCommand : BaseCommand<DisconnectOptions>
     {
         public DisconnectCommand(ICommandContext commandContext) : base(commandContext) { }
 

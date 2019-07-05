@@ -31,7 +31,7 @@ using Serilog;
 
 namespace Catalyst.Cli.Commands
 {
-    public class ConnectCommand : BaseOptionCommand<ConnectOptions>
+    public class ConnectCommand : BaseCommand<ConnectOptions>
     {
         private readonly ILogger _logger;
 

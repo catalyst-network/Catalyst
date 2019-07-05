@@ -25,21 +25,33 @@ using Catalyst.Common.Interfaces.Cli.Options;
 using CommandLine;
 using System;
 using System.Reflection;
+using Catalyst.Common.Interfaces.Cli.Commands;
 using Catalyst.Common.Interfaces.Cli.CommandTypes;
 
 namespace Catalyst.Cli.CommandTypes
 {
-    public abstract class BaseCommand : ICommand
+    public abstract class BaseCommand<TOption> : ICommand
+        where TOption : IOptionsBase
     {
-        protected abstract bool ExecuteCommandInner(IOptionsBase optionsBase);
-        public abstract Type OptionType { get; }
         public string CommandName { get; }
+        protected ICommandContext CommandContext { get; }
+        protected IOptionsBase Options { get; set; }
+        public Type OptionType => typeof(TOption);
 
-        protected BaseCommand()
+        protected BaseCommand(ICommandContext commandContext)
         {
+            CommandContext = commandContext;
             CommandName = ((VerbAttribute) OptionType.GetCustomAttribute(typeof(VerbAttribute))).Name;
         }
 
+        protected virtual bool ExecuteCommand(TOption option) { return true; }
+
+        protected virtual bool ExecuteCommandInner(IOptionsBase optionsBase)
+        {
+            Options = optionsBase;
+            return ExecuteCommand((TOption) Options);
+        }
+        
         public bool Parse(string[] args)
         {
             var parsedCommand = Parser.Default.ParseArguments(args, OptionType);
