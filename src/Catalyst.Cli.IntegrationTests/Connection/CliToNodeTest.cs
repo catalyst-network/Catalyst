@@ -27,7 +27,7 @@ using FluentAssertions;
 using Xunit;
 using Xunit.Abstractions;
 using System;
-using Catalyst.Common.Interfaces.Rpc;
+using Catalyst.Common.FileSystem;
 using Catalyst.Common.Interfaces.Cryptography;
 using Microsoft.Extensions.Configuration;
 using Catalyst.Node.Core.Modules.Dfs;
@@ -51,21 +51,21 @@ namespace Catalyst.Cli.IntegrationTests.Connection
 {
     public sealed class CliToNodeTest : CliCommandTestBase
     {
-        private NodeTest _node;
+        private readonly NodeTest _node;
 
         public static readonly List<object[]> Networks = 
             Enumeration.GetAll<Network>().Select(n => new object[] { n }).ToList();
 
-        public CliToNodeTest(ITestOutputHelper output) : base(output, false)
+        public CliToNodeTest(ITestOutputHelper output) : base(output, false, false)
         {
             _node = new NodeTest(output);
         }
 
-        private class NodeTest : CliCommandTestBase
+        private class NodeTest : CliCommandTestBase, IDisposable
         {
             private CancellationTokenSource _cancellationSource;
 
-            public NodeTest(ITestOutputHelper output) : base(output) { }
+            public NodeTest(ITestOutputHelper output) : base(output, false, false) { }
 
             private Network GetNetworkType(string networkType)
             {
@@ -76,6 +76,8 @@ namespace Catalyst.Cli.IntegrationTests.Connection
                     case "Test_Mode": { netTemp = Network.Test;  } break;
                     case "Dev_Mode": { netTemp = Network.Dev; } break;
                     case "Main_Mode": { netTemp = Network.Main; } break;
+                    default:
+                        throw new InvalidOperationException("This network type or mode is not valid");
                 }
                 return netTemp;
             }
@@ -132,24 +134,63 @@ namespace Catalyst.Cli.IntegrationTests.Connection
 
                 using (var container = ContainerBuilder.Build())
                 {
-                    using (var scope = container.BeginLifetimeScope("testnet"))
+                    using (var scope = container.BeginLifetimeScope(CurrentTestName))
                     {
                         var node = scope.Resolve<ICatalystNode>();
                         node.RunAsync(_cancellationSource.Token).Wait(_cancellationSource.Token);
                     }
                 }
             }
+
+            public void Dispose()
+            {
+                base.Dispose();
+                _cancellationSource?.Dispose();                
+            }
+        }
+
+        private void AssignCliClientRpc(string modeType)
+        {
+            var targetConfigFolder = string.Empty;
+
+            switch (modeType)
+            {
+                case "Test_Mode": { targetConfigFolder = Constants.ConfigSubFolder; } break;
+                case "Dev_Mode": {
+                        targetConfigFolder = new FileSystem().GetCatalystDataDir().FullName;
+                    }
+                    break;
+                case "Main_Mode": { targetConfigFolder = Constants.ConfigSubFolder; } break;
+                default:
+                    throw new InvalidOperationException("This mode does not exist");
+            }
+
+            var config = new ConfigurationBuilder()
+               .AddJsonFile(Path.Combine(targetConfigFolder, Constants.ShellComponentsJsonConfigFile))
+               .AddJsonFile(Path.Combine(targetConfigFolder, Constants.SerilogJsonConfigFile))
+               .AddJsonFile(Path.Combine(targetConfigFolder, Constants.ShellNodesConfigFile))
+               .AddJsonFile(Path.Combine(targetConfigFolder, Constants.ShellConfigFile))
+               .Build();
+
+            ConfigureContainerBuilder(config);
+        }
+
+        private void SetupCliToNodeComms(string modeType)
+        {
+            _node.StartNode(modeType);
+
+            AssignCliClientRpc(modeType);
         }
 
         [Theory]
         [InlineData("Test_Mode")]
         [InlineData("Dev_Mode")]
         [InlineData("Main_Mode")]
-        public void CliToNode_Connect_To_Node(string netType)
+        public void CliToNode_Connect_To_Node(string modeType)
         {
-            _node.StartNode(netType);
+            SetupCliToNodeComms(modeType);
 
-            Thread.Sleep(4000);
+            Thread.Sleep(4500);
 
             using (var container = ContainerBuilder.Build())
             {

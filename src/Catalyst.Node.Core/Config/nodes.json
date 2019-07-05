@@ -4,7 +4,7 @@
             {
                 "nodeId": "node1",
                 "host": "127.0.0.1",
-                "port": 42089,
+                "port": 42051,
                 "PfxFileName": "mycert.pfx",
                 "SslCertPassword": "test",
                 "PublicKey": "302a300506032b650321"
