@@ -59,9 +59,9 @@ namespace Catalyst.Cli.IntegrationTests.Commands
                 new object[] {"/fake_file_hash", AppDomain.CurrentDomain.BaseDirectory + "/Config/addfile_test.json", true}
             };
 
-        protected CliCommandTestBase(ITestOutputHelper output, bool bSubstituteNodeClient = true, bool bUseDefaultConfig = true) : base(output)
+        protected CliCommandTestBase(ITestOutputHelper output, bool substituteNodeClient = true, bool useDefaultConfig = true) : base(output)
         {
-            if (bUseDefaultConfig)
+            if (useDefaultConfig)
             {
                 var config = new ConfigurationBuilder()
                    .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ShellComponentsJsonConfigFile))
@@ -72,7 +72,7 @@ namespace Catalyst.Cli.IntegrationTests.Commands
 
                 ConfigureContainerBuilder(config);
 
-                if (bSubstituteNodeClient)
+                if (substituteNodeClient)
                 {
                     ConfigureNodeClient();
                 }

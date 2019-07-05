@@ -56,7 +56,7 @@ namespace Catalyst.Cli.IntegrationTests.Connection
         public static readonly List<object[]> Networks = 
             Enumeration.GetAll<Network>().Select(n => new object[] { n }).ToList();
 
-        public CliToNodeTest(ITestOutputHelper output) : base(output, false, false)
+        public CliToNodeTest(ITestOutputHelper output) : base(output, false, true)
         {
             _node = new NodeTest(output);
         }
@@ -149,47 +149,11 @@ namespace Catalyst.Cli.IntegrationTests.Connection
             }
         }
 
-        private void AssignCliClientRpc(string modeType)
-        {
-            var targetConfigFolder = string.Empty;
-
-            switch (modeType)
-            {
-                case "Test_Mode": { targetConfigFolder = Constants.ConfigSubFolder; } break;
-                case "Dev_Mode": {
-                        targetConfigFolder = new FileSystem().GetCatalystDataDir().FullName;
-
-                        new CliConfigCopier().RunConfigStartUp(targetConfigFolder, GetNetworkType(modeType), overwrite: true);
-                    }
-                    break;
-                case "Main_Mode": { targetConfigFolder = Constants.ConfigSubFolder; } break;
-                default:
-                    throw new InvalidOperationException("This mode does not exist");
-            }
-           
-
-            var config = new ConfigurationBuilder()
-               .AddJsonFile(Path.Combine(targetConfigFolder, Constants.ShellComponentsJsonConfigFile))
-               .AddJsonFile(Path.Combine(targetConfigFolder, Constants.SerilogJsonConfigFile))
-               .AddJsonFile(Path.Combine(targetConfigFolder, Constants.ShellNodesConfigFile))
-               .AddJsonFile(Path.Combine(targetConfigFolder, Constants.ShellConfigFile))
-               .Build();
-
-            ConfigureContainerBuilder(config);
-        }
-
-        private void SetupCliToNodeComms(string modeType)
-        {
-            _node.StartNode(modeType);
-
-            AssignCliClientRpc(modeType);
-        }
-
         [Theory]
         [InlineData("Main_Mode")]
         public void CliToNode_Connect_To_Node(string modeType)
         {
-            SetupCliToNodeComms(modeType);
+            _node.StartNode(modeType);
 
             Thread.Sleep(4500);
 
