@@ -60,6 +60,20 @@ namespace Catalyst.Cli.IntegrationTests.Connection
         {
             _node = new NodeTest(output);
         }
+        public static Network GetNetworkType(string networkType)
+        {
+            Network netTemp = null;
+
+            switch (networkType)
+            {
+                case "Test_Mode": { netTemp = Network.Test; } break;
+                case "Dev_Mode": { netTemp = Network.Dev; } break;
+                case "Main_Mode": { netTemp = Network.Main; } break;
+                default:
+                    throw new InvalidOperationException("This network type or mode is not valid");
+            }
+            return netTemp;
+        }
 
         private class NodeTest : CliCommandTestBase, IDisposable
         {
@@ -67,20 +81,6 @@ namespace Catalyst.Cli.IntegrationTests.Connection
 
             public NodeTest(ITestOutputHelper output) : base(output, false, false) { }
 
-            private Network GetNetworkType(string networkType)
-            {
-                Network netTemp = null;
-
-                switch (networkType)
-                {
-                    case "Test_Mode": { netTemp = Network.Test;  } break;
-                    case "Dev_Mode": { netTemp = Network.Dev; } break;
-                    case "Main_Mode": { netTemp = Network.Main; } break;
-                    default:
-                        throw new InvalidOperationException("This network type or mode is not valid");
-                }
-                return netTemp;
-            }
 
             private void NodeSetup(object network)
             {
@@ -158,12 +158,15 @@ namespace Catalyst.Cli.IntegrationTests.Connection
                 case "Test_Mode": { targetConfigFolder = Constants.ConfigSubFolder; } break;
                 case "Dev_Mode": {
                         targetConfigFolder = new FileSystem().GetCatalystDataDir().FullName;
+
+                        new CliConfigCopier().RunConfigStartUp(targetConfigFolder, GetNetworkType(modeType), overwrite: true);
                     }
                     break;
                 case "Main_Mode": { targetConfigFolder = Constants.ConfigSubFolder; } break;
                 default:
                     throw new InvalidOperationException("This mode does not exist");
             }
+           
 
             var config = new ConfigurationBuilder()
                .AddJsonFile(Path.Combine(targetConfigFolder, Constants.ShellComponentsJsonConfigFile))
@@ -183,8 +186,6 @@ namespace Catalyst.Cli.IntegrationTests.Connection
         }
 
         [Theory]
-        //[InlineData("Test_Mode")]
-        //[InlineData("Dev_Mode")]
         [InlineData("Main_Mode")]
         public void CliToNode_Connect_To_Node(string modeType)
         {

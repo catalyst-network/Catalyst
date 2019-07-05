@@ -33,7 +33,7 @@
         },
         "Rpc": {
             "BindAddress": "127.0.0.1",
-            "Port": 42089,
+            "Port": 42066,
             "MutualAuthentication": false,
             "AcceptInvalidCerts": false,
             "PfxFileName": "mycert.pfx"
