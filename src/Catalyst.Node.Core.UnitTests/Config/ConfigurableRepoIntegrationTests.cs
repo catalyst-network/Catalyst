@@ -25,7 +25,7 @@ using System.IO;
 using System.Threading.Tasks;
 using Autofac;
 using Catalyst.Common.Config;
-using Catalyst.Common.IO.Messaging;
+using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Microsoft.Extensions.Configuration;

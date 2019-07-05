@@ -9,44 +9,46 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		..\.gitignore = ..\.gitignore
 		..\addLicenseHeader.sh = ..\addLicenseHeader.sh
 		Catalyst.sln.DotSettings = Catalyst.sln.DotSettings
+		Common.IntegrationTests.props = Common.IntegrationTests.props
 		Common.Projects.props = Common.Projects.props
+		Common.TestProjects.props = Common.TestProjects.props
 		Common.UnitTests.props = Common.UnitTests.props
+		..\CONTRIBUTING.md = ..\CONTRIBUTING.md
 		..\COPYING = ..\COPYING
 		..\devnet_dnszone.txt = ..\devnet_dnszone.txt
 		..\dns-docker-compose.yml = ..\dns-docker-compose.yml
 		..\Dockerfile = ..\Dockerfile
 		..\entrypoint.sh = ..\entrypoint.sh
+		..\GUIDELINES.md = ..\GUIDELINES.md
 		..\README.md = ..\README.md
 		..\testnet-docker-compose.yml = ..\testnet-docker-compose.yml
-		Common.IntegrationTests.props = Common.IntegrationTests.props
-		Common.TestProjects.props = Common.TestProjects.props
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Cli", "Catalyst.Cli\Catalyst.Cli.csproj", "{C02FE86B-1A21-4CFA-88B4-2DCE22D3A7D1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Cli", "Catalyst.Cli\Catalyst.Cli.csproj", "{C02FE86B-1A21-4CFA-88B4-2DCE22D3A7D1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Cli.IntegrationTests", "Catalyst.Cli.IntegrationTests\Catalyst.Cli.IntegrationTests.csproj", "{944BCBA2-AB95-43BA-9735-C6438ACDB3DD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Cli.IntegrationTests", "Catalyst.Cli.IntegrationTests\Catalyst.Cli.IntegrationTests.csproj", "{944BCBA2-AB95-43BA-9735-C6438ACDB3DD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Cli.UnitTests", "Catalyst.Cli.UnitTests\Catalyst.Cli.UnitTests.csproj", "{2963022A-C9A5-42CA-9250-F154EE51166A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Cli.UnitTests", "Catalyst.Cli.UnitTests\Catalyst.Cli.UnitTests.csproj", "{2963022A-C9A5-42CA-9250-F154EE51166A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Common", "Catalyst.Common\Catalyst.Common.csproj", "{70A9269E-666A-4F38-8FCB-BCF96B03FD15}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Common", "Catalyst.Common\Catalyst.Common.csproj", "{70A9269E-666A-4F38-8FCB-BCF96B03FD15}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Common.IntegrationTests", "Catalyst.Common.IntegrationTests\Catalyst.Common.IntegrationTests.csproj", "{6F35B498-1990-42FE-BAC4-ABBE4F4807BD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Common.IntegrationTests", "Catalyst.Common.IntegrationTests\Catalyst.Common.IntegrationTests.csproj", "{6F35B498-1990-42FE-BAC4-ABBE4F4807BD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Common.UnitTests", "Catalyst.Common.UnitTests\Catalyst.Common.UnitTests.csproj", "{DB23BB56-8802-4AB1-BAF2-D8ABFF78D01C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Common.UnitTests", "Catalyst.Common.UnitTests\Catalyst.Common.UnitTests.csproj", "{DB23BB56-8802-4AB1-BAF2-D8ABFF78D01C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Node.Core", "Catalyst.Node.Core\Catalyst.Node.Core.csproj", "{E5AB79D3-2457-426E-AA91-6071B56B6BD7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Node.Core", "Catalyst.Node.Core\Catalyst.Node.Core.csproj", "{E5AB79D3-2457-426E-AA91-6071B56B6BD7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Node.Core.IntegrationTests", "Catalyst.Node.Core.IntegrationTests\Catalyst.Node.Core.IntegrationTests.csproj", "{CB6DB33D-CE4C-4009-BA1F-9AAFF589553C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Node.Core.IntegrationTests", "Catalyst.Node.Core.IntegrationTests\Catalyst.Node.Core.IntegrationTests.csproj", "{CB6DB33D-CE4C-4009-BA1F-9AAFF589553C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Node.Rpc.Client", "Catalyst.Node.Rpc.Client\Catalyst.Node.Rpc.Client.csproj", "{C1421E6D-40B5-4D3B-A107-F4B6682C1B5A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Node.Rpc.Client", "Catalyst.Node.Rpc.Client\Catalyst.Node.Rpc.Client.csproj", "{C1421E6D-40B5-4D3B-A107-F4B6682C1B5A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Node.Rpc.Client.IntegrationTests", "Catalyst.Node.Rpc.Client.IntegrationTests\Catalyst.Node.Rpc.Client.IntegrationTests.csproj", "{35C329EE-2F8C-400E-A2E0-C8A67CE948F3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Node.Rpc.Client.IntegrationTests", "Catalyst.Node.Rpc.Client.IntegrationTests\Catalyst.Node.Rpc.Client.IntegrationTests.csproj", "{35C329EE-2F8C-400E-A2E0-C8A67CE948F3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Node.Rpc.Client.UnitTests", "Catalyst.Node.Rpc.Client.UnitTests\Catalyst.Node.Rpc.Client.UnitTests.csproj", "{FB776469-FF5E-4B9E-AFFC-443F4D4D553D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Node.Rpc.Client.UnitTests", "Catalyst.Node.Rpc.Client.UnitTests\Catalyst.Node.Rpc.Client.UnitTests.csproj", "{FB776469-FF5E-4B9E-AFFC-443F4D4D553D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.TestUtils", "Catalyst.TestUtils\Catalyst.TestUtils.csproj", "{B276137D-FB34-48DB-80CF-ADA34A2D2F96}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.TestUtils", "Catalyst.TestUtils\Catalyst.TestUtils.csproj", "{B276137D-FB34-48DB-80CF-ADA34A2D2F96}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Node.Core.UnitTests", "Catalyst.Node.Core.UnitTests\Catalyst.Node.Core.UnitTests.csproj", "{C5D8FAA9-B2AC-4D5B-91AA-07E6D1FC9183}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Node.Core.UnitTests", "Catalyst.Node.Core.UnitTests\Catalyst.Node.Core.UnitTests.csproj", "{C5D8FAA9-B2AC-4D5B-91AA-07E6D1FC9183}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -56,9 +58,9 @@ Global
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{C02FE86B-1A21-4CFA-88B4-2DCE22D3A7D1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C02FE86B-1A21-4CFA-88B4-2DCE22D3A7D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C02FE86B-1A21-4CFA-88B4-2DCE22D3A7D1}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
 		{C02FE86B-1A21-4CFA-88B4-2DCE22D3A7D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C02FE86B-1A21-4CFA-88B4-2DCE22D3A7D1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C02FE86B-1A21-4CFA-88B4-2DCE22D3A7D1}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
 		{C02FE86B-1A21-4CFA-88B4-2DCE22D3A7D1}.Release|Any CPU.Deploy.0 = Release|Any CPU
 		{944BCBA2-AB95-43BA-9735-C6438ACDB3DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{944BCBA2-AB95-43BA-9735-C6438ACDB3DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
@@ -82,9 +84,9 @@ Global
 		{DB23BB56-8802-4AB1-BAF2-D8ABFF78D01C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E5AB79D3-2457-426E-AA91-6071B56B6BD7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{E5AB79D3-2457-426E-AA91-6071B56B6BD7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E5AB79D3-2457-426E-AA91-6071B56B6BD7}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
 		{E5AB79D3-2457-426E-AA91-6071B56B6BD7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E5AB79D3-2457-426E-AA91-6071B56B6BD7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E5AB79D3-2457-426E-AA91-6071B56B6BD7}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
 		{E5AB79D3-2457-426E-AA91-6071B56B6BD7}.Release|Any CPU.Deploy.0 = Release|Any CPU
 		{CB6DB33D-CE4C-4009-BA1F-9AAFF589553C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{CB6DB33D-CE4C-4009-BA1F-9AAFF589553C}.Debug|Any CPU.Build.0 = Debug|Any CPU
@@ -92,9 +94,9 @@ Global
 		{CB6DB33D-CE4C-4009-BA1F-9AAFF589553C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C1421E6D-40B5-4D3B-A107-F4B6682C1B5A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C1421E6D-40B5-4D3B-A107-F4B6682C1B5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C1421E6D-40B5-4D3B-A107-F4B6682C1B5A}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
 		{C1421E6D-40B5-4D3B-A107-F4B6682C1B5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C1421E6D-40B5-4D3B-A107-F4B6682C1B5A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C1421E6D-40B5-4D3B-A107-F4B6682C1B5A}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
 		{C1421E6D-40B5-4D3B-A107-F4B6682C1B5A}.Release|Any CPU.Deploy.0 = Release|Any CPU
 		{35C329EE-2F8C-400E-A2E0-C8A67CE948F3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{35C329EE-2F8C-400E-A2E0-C8A67CE948F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
@@ -118,7 +120,5 @@ Global
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {34F221DE-645E-4697-BCC2-818F1F10FE8A}
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
 	EndGlobalSection
 EndGlobal

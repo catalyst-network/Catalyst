@@ -24,7 +24,7 @@
 using System.Linq;
 using Catalyst.Common.Cryptography;
 using Catalyst.Common.Interfaces.Cryptography;
-using Catalyst.Common.IO.Messaging;
+using Catalyst.Common.IO.Messaging.Correlation;
 using Xunit;
 
 namespace Catalyst.Common.UnitTests.Cryptography
