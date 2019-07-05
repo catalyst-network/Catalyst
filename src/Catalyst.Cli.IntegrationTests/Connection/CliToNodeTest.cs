@@ -53,7 +53,7 @@ namespace Catalyst.Cli.IntegrationTests.Connection
     {
         private readonly NodeTest _node;
 
-        public static readonly List<object[]> Networks =
+        private static readonly List<object[]> Networks =
             Enumeration.GetAll<Network>().Select(n => new object[] { n }).ToList();
 
         public CliToNodeTest(ITestOutputHelper output) : base(output, false, true)
