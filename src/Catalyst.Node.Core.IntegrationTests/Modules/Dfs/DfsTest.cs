@@ -52,7 +52,7 @@ namespace Catalyst.Node.Core.IntegrationTests.Modules.Dfs
             });
             
             var passwordReader = Substitute.For<IPasswordReader>();
-            passwordReader.ReadSecurePassword(Arg.Any<String>()).ReturnsForAnyArgs(TestPasswordReader.BuildSecureStringPassword("abcd"));
+            passwordReader.ReadSecurePassword(Arg.Any<string>()).Returns(TestPasswordReader.BuildSecureStringPassword("abcd"));
             _logger = Substitute.For<ILogger>();
             _ipfs = new IpfsAdapter(passwordReader, peerSettings, FileSystem, _logger);
 

@@ -44,9 +44,7 @@ namespace Catalyst.TestUtils
             return secureString;
         }
 
-        public void ReadSecurePasswordToRegistry(string passwordIdentifier) { throw new System.NotImplementedException(); }
-
-        public SecureString ReadSecurePassword(string passwordContext = "Please enter your password")
+        public SecureString ReadSecurePassword(string passwordIdentifier, string prompt = "Please enter your password")
         {
             return BuildSecureStringPassword(_expectedPassword);
         }

@@ -42,21 +42,20 @@ namespace Catalyst.Common.Cryptography
             _passwordRegistry = passwordRegistry;
         }
         
-        public void ReadSecurePasswordToRegistry(string passwordIdentifier)
+        private void ReadSecurePasswordToRegistry(string passwordIdentifier, string prompt)
         {
-            string passwordContext = $"Please enter your password for {passwordIdentifier}";
             var pwd = new SecureString();
-            ReadCharsFromConsole(_userOutput, passwordContext, (c, i) => pwd.AppendChar(c), i => pwd.RemoveAt(i));
+            ReadCharsFromConsole(_userOutput, prompt, (c, i) => pwd.AppendChar(c), i => pwd.RemoveAt(i));
 
-            _passwordRegistry.AddItemToRegistry(passwordContext, pwd);
+            _passwordRegistry.AddItemToRegistry(passwordIdentifier, pwd);
         }
 
-        public SecureString ReadSecurePassword(string passwordIdentifier)
+        public SecureString ReadSecurePassword(string passwordIdentifier, string prompt = "Please enter your password")
         {
             SecureString password = _passwordRegistry.GetItemFromRegistry(passwordIdentifier);
             if (password == null)
             {
-                ReadSecurePasswordToRegistry(passwordIdentifier);
+                ReadSecurePasswordToRegistry(passwordIdentifier, prompt);
                 password = _passwordRegistry.GetItemFromRegistry(passwordIdentifier);
             }
 

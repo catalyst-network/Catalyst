@@ -78,7 +78,8 @@ namespace Catalyst.Common.Cryptography
         {
             const string promptMessage = "Catalyst Node needs to create an SSL certificate." +
                 " Please enter a password to encrypt the certificate on disk:";
-            using (var password = _passwordReader.ReadSecurePassword(promptMessage))
+            string passwordIdentifier = "certPass";
+            using (var password = _passwordReader.ReadSecurePassword(passwordIdentifier, promptMessage))
             {
                 var certificate = BuildSelfSignedServerCertificate(password, commonName);
                 Save(certificate, filePath, password);

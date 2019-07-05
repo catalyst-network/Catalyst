@@ -27,8 +27,6 @@ namespace Catalyst.Common.Interfaces.Cryptography
 {
     public interface IPasswordReader
     {
-        void ReadSecurePasswordToRegistry(string passwordIdentifier);
-        
-        SecureString ReadSecurePassword(string passwordIdentifier);
+        SecureString ReadSecurePassword(string passwordIdentifier, string prompt = "Please enter your password");
     }
 }
