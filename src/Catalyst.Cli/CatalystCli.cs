@@ -35,7 +35,6 @@ namespace Catalyst.Cli
     {
         private readonly IEnumerable<ICommand> _commands;
 
-        /// <summary>
         /// </summary>
         public CatalystCli(IUserOutput userOutput, IEnumerable<ICommand> commands) : base(userOutput)
         {
