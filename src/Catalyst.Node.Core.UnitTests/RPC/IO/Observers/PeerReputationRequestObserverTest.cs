@@ -91,11 +91,11 @@ namespace Catalyst.Node.Core.UnitTests.RPC.IO.Observers
         [Theory]
         [InlineData("cne2+eRandomValuebeingusedherefprtestingIOp", "192.200.200.22")]
         [InlineData("cne2+e5gIfEdfhDWUxkUfr886YuiZnhEj3om5AXmWVXJK7d47/ESkjhbkJsrbzIbuWm8EPSjJ2YicTIcXvfzIOp", "192.111.100.26")]
-        public async Task TestPeerReputationRequestResponseForNonExistantPeers(string publicKey, string ipAddress)
+        public async Task Test_PeerReputationRequestResponse_For_NonExistant_Peers(string publicKey, string ipAddress)
         {
             var responseContent = await GetPeerReputationTest(publicKey, ipAddress);
 
-            responseContent.Reputation.Should().Be(int.MinValue);
+            responseContent.Reputation.Should().Be(0);
         }
 
         private async Task<GetPeerReputationResponse> GetPeerReputationTest(string publicKey, string ipAddress)
@@ -104,13 +104,13 @@ namespace Catalyst.Node.Core.UnitTests.RPC.IO.Observers
 
             var fakePeers = Enumerable.Range(0, 5).Select(i => new Peer
             {
-                Reputation = 0, PeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier($"iamgroot-{i}")
+                Reputation = 0, PeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier($"iamgroot-{i.ToString()}")
             }).ToList();
 
             //peers we are interested in
             fakePeers.AddRange(Enumerable.Range(125, 2).Select(i => new Peer
             {
-                Reputation = 125, PeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier($"highscored-{i}", "Tc", 1, IPAddress.Parse("192.168.0." + i))
+                Reputation = 125, PeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier($"highscored-{i.ToString()}", "Tc", 1, IPAddress.Parse("192.168.0." + i.ToString()))
             }));
 
             // Let peerRepository return the fake peer list
