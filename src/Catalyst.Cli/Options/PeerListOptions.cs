@@ -32,12 +32,8 @@ namespace Catalyst.Cli.Options
     /// Class contains the options for the peer list command
     /// </summary>
     [Verb("listpeers", HelpText = "displays peer list")]
-    internal sealed class PeerListOptions : IPeerListOptions
+    public sealed class PeerListOptions : OptionsBase, IPeerListOptions
     {
-        /// <inheritdoc />
-        [Option('n', "node", HelpText = "A valid node ID as listed in the nodes.json config file.")]
-        public string Node { get; set; }
-
         /// <summary>
         /// Gets the examples.
         /// </summary>

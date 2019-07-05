@@ -23,10 +23,8 @@
 
 namespace Catalyst.Common.Interfaces.Cli.Options
 {
-    public interface IVerifyOptions : IOptionsBase
+    public interface IOptionsBase
     {
-        string Message { get; set; }
-        string Address { get; set; }
-        string Signature { get; set; }
+        string Node { get; set; }
     }
 }

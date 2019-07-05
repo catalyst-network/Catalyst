@@ -24,14 +24,29 @@
 using Catalyst.Cli.CommandTypes;
 using Catalyst.Cli.Options;
 using Catalyst.Common.Interfaces.Cli.Commands;
-using Catalyst.Protocol.Rpc.Node;
+using Catalyst.Common.Network;
+using Dawn;
 
 namespace Catalyst.Cli.Commands
 {
-    public sealed class PeerListCommand : BaseMessageCommand<GetPeerListRequest, PeerListOptions>
+    public class DisconnectCommand : BaseCommand<DisconnectOptions>
     {
-        public PeerListCommand(ICommandContext commandContext) : base(commandContext) { }
+        public DisconnectCommand(ICommandContext commandContext) : base(commandContext) { }
 
-        protected override GetPeerListRequest GetMessage(PeerListOptions option) { return new GetPeerListRequest(); }
+        protected override bool ExecuteCommand(DisconnectOptions option)
+        {
+            var nodeConfig = CommandContext.GetNodeConfig(option.Node);
+            Guard.Argument(nodeConfig, nameof(nodeConfig)).NotNull();
+
+            var registryId = CommandContext.SocketClientRegistry.GenerateClientHashCode(
+                EndpointBuilder.BuildNewEndPoint(nodeConfig.HostAddress, nodeConfig.Port));
+
+            var node = CommandContext.SocketClientRegistry.GetClientFromRegistry(registryId);
+            Guard.Argument(node, nameof(node)).Require(CommandContext.IsSocketChannelActive(node));
+
+            node.Dispose();
+            CommandContext.SocketClientRegistry.RemoveClientFromRegistry(registryId);
+            return true;
+        }
     }
 }

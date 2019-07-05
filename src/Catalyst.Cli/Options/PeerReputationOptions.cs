@@ -32,12 +32,8 @@ namespace Catalyst.Cli.Options
     /// Class contains the options for the peer list command
     /// </summary>
     [Verb("peerrep", HelpText = "displays the reputation of a peer")]
-    internal sealed class PeerReputationOptions : IPeerReputationOptions
+    public sealed class PeerReputationOptions : OptionsBase, IPeerReputationOptions
     {
-        /// <inheritdoc />
-        [Option('n', "node", HelpText = "A valid node ID as listed in the nodes.json config file.")]
-        public string Node { get; set; }
-
         /// <inheritdoc />
         [Option('l', "ip", HelpText = "IP address of the peer whose reputation is of interest.")]
         public string IpAddress { get; set; }

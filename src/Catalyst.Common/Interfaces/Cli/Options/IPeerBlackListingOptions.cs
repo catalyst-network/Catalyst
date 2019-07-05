@@ -23,16 +23,8 @@
 
 namespace Catalyst.Common.Interfaces.Cli.Options
 {
-    public interface IPeerBlackListingOptions
+    public interface IPeerBlackListingOptions : IOptionsBase
     {
-        /// <summary>
-        /// Gets or sets the node.
-        /// </summary>
-        /// <value>
-        /// The node.
-        /// </value>
-        string Node { get; set; }
-
         /// <summary>
         /// Gets or sets a value indicating whether a peer has been black listed or not.
         /// </summary>
