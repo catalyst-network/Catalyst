@@ -30,7 +30,7 @@ using Catalyst.Common.Interfaces.Cli.CommandTypes;
 
 namespace Catalyst.Cli.CommandTypes
 {
-    public abstract class BaseCommand<TOption> : ICommand
+    public class BaseCommand<TOption> : ICommand
         where TOption : IOptionsBase
     {
         public string CommandName { get; }
