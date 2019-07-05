@@ -21,51 +21,16 @@
 
 #endregion
 
-using System;
-using Catalyst.Common.Interfaces.Cli.Options;
-using Catalyst.Common.Interfaces.Rpc;
-using Catalyst.Common.P2P;
+using Catalyst.Cli.CommandTypes;
+using Catalyst.Cli.Options;
+using Catalyst.Common.Interfaces.Cli.Commands;
 using Catalyst.Protocol.Rpc.Node;
-using Dawn;
 
 namespace Catalyst.Cli.Commands
 {
-    internal partial class Commands
+    public sealed class GetMempoolCommand : BaseMessageCommand<GetMempoolRequest, GetMempoolOptions>
     {
-        /// <inheritdoc cref="GetMempoolCommand" />
-        public bool GetMempoolCommand(IGetMempoolOptions opts)
-        {
-            Guard.Argument(opts, nameof(opts)).NotNull().Compatible<IGetMempoolOptions>();
-
-            INodeRpcClient node;
-            try
-            {
-                node = GetConnectedNode(opts.NodeId);
-            }
-            catch (Exception e)
-            {
-                _logger.Error(e.Message);
-                return false;
-            }
-            
-            var nodeConfig = GetNodeConfig(opts.NodeId);
-            Guard.Argument(nodeConfig, nameof(nodeConfig)).NotNull("The node configuration cannot be null");
-
-            try
-            {
-                var dto = _dtoFactory.GetDto(new GetMempoolRequest(),
-                    _peerIdentifier,
-                    PeerIdentifier.BuildPeerIdFromConfig(nodeConfig, _peerIdClientId));
-
-                node.SendMessage(dto);
-            }
-            catch (Exception e)
-            {
-                _logger.Debug(e.Message);
-                return false;
-            }
-
-            return true;
-        }
+        public GetMempoolCommand(ICommandContext commandContext) : base(commandContext) { }
+        protected override GetMempoolRequest GetMessage(GetMempoolOptions option) { return new GetMempoolRequest(); }
     }
 }

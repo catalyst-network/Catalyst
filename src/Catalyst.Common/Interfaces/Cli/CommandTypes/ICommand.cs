@@ -21,12 +21,22 @@
 
 #endregion
 
-namespace Catalyst.Common.Interfaces.Cli.Options
+using System;
+
+namespace Catalyst.Common.Interfaces.Cli.CommandTypes
 {
-    public interface IVerifyOptions : IOptionsBase
+    public interface ICommand
     {
-        string Message { get; set; }
-        string Address { get; set; }
-        string Signature { get; set; }
+        /// <summary>Parses the specified arguments.</summary>
+        /// <param name="args">The arguments.</param>
+        bool Parse(string[] args);
+        
+        /// <summary>Gets the name of the command.</summary>
+        /// <value>The name of the command.</value>
+        string CommandName { get; }
+
+        /// <summary>Gets the type of the option.</summary>
+        /// <value>The type of the option.</value>
+        Type OptionType { get; }
     }
 }

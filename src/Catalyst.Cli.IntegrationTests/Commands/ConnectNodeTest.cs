@@ -41,12 +41,12 @@ namespace Catalyst.Cli.IntegrationTests.Commands
                 using (container.BeginLifetimeScope(CurrentTestName))
                 {
                     var shell = container.Resolve<ICatalystCli>();
-                    var hasConnected = shell.AdvancedShell.ParseCommand("connect", "-n", "node1");
+                    var hasConnected = shell.ParseCommand("connect", "-n", "node1");
                     hasConnected.Should().BeTrue();
-                }   
+                }
             }
         }
-        
+
         [Fact]
         public void Cli_Can_Handle_Multiple_Connection_Attempts()
         {
@@ -57,10 +57,10 @@ namespace Catalyst.Cli.IntegrationTests.Commands
                     var shell = container.Resolve<ICatalystCli>();
                     for (var i = 0; i < 10; i++)
                     {
-                        var canConnect = shell.AdvancedShell.ParseCommand("connect", "-n", "node1");
+                        var canConnect = shell.ParseCommand("connect", "-n", "node1");
                         canConnect.Should().BeTrue();
                     }
-                }   
+                }
             }
         }
     }
