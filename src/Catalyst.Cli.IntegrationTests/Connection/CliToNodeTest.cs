@@ -49,11 +49,11 @@ using Constants = Catalyst.Common.Config.Constants;
 
 namespace Catalyst.Cli.IntegrationTests.Connection
 {
-    public sealed class CliToNodeTest : CliCommandTestBase
+    public sealed class CliToNodeTest : CliCommandTestBase, IDisposable
     {
         private readonly NodeTest _node;
 
-        public static readonly List<object[]> Networks = 
+        public static readonly List<object[]> Networks =
             Enumeration.GetAll<Network>().Select(n => new object[] { n }).ToList();
 
         public CliToNodeTest(ITestOutputHelper output) : base(output, false, true)
@@ -145,7 +145,7 @@ namespace Catalyst.Cli.IntegrationTests.Connection
             public void Dispose()
             {
                 base.Dispose();
-                _cancellationSource?.Dispose();                
+                _cancellationSource?.Dispose();
             }
         }
 
@@ -166,6 +166,10 @@ namespace Catalyst.Cli.IntegrationTests.Connection
                     hasConnected.Should().BeTrue();
                 }
             }
+        }
+        public void Dispose()
+        {
+            _node?.Dispose();
         }
     }
 }
