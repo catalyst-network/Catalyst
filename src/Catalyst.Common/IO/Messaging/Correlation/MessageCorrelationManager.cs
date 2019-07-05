@@ -27,32 +27,35 @@ using System.Reactive.Subjects;
 using System.Threading;
 using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
+using Catalyst.Common.Interfaces.Util;
 using Catalyst.Protocol.Common;
 using Dawn;
 using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Primitives;
 
 namespace Catalyst.Common.IO.Messaging.Correlation
 {
+    /// <inheritdoc cref="IMessageCorrelationManager"/>
+    /// <summary>
+    /// In this implementation of the correlation manager, the underlying cache adds records
+    /// with a Time To Live after which they get automatically get deleted from the cache (inflicting
+    /// a reputation penalty for the peer who didn't reply).
+    /// </summary>
     public sealed class MessageCorrelationManager : IMessageCorrelationManager, IDisposable
     {
-        public TimeSpan CacheTtl { get; }
-        
         private readonly IMemoryCache _pendingRequests;
-        private readonly MemoryCacheEntryOptions _entryOptions;
+        private readonly Func<MemoryCacheEntryOptions> _entryOptions;
         private readonly ReplaySubject<IMessageEvictionEvent> _evictionEvent;
         public IObservable<IMessageEvictionEvent> EvictionEvents => _evictionEvent.AsObservable();
         
         public MessageCorrelationManager(IMemoryCache cache,
-            TimeSpan cacheTtl = default)
+            IChangeTokenProvider changeTokenProvider)
         {
-            CacheTtl = cacheTtl == default ? Constants.CorrelationTtl : cacheTtl;
             _pendingRequests = cache;
 
             _evictionEvent = new ReplaySubject<IMessageEvictionEvent>(0);
 
-            _entryOptions = new MemoryCacheEntryOptions()
-               .AddExpirationToken(new CancellationChangeToken(new CancellationTokenSource(CacheTtl).Token))
+            _entryOptions = () => new MemoryCacheEntryOptions()
+               .AddExpirationToken(changeTokenProvider.GetChangeToken())
                .RegisterPostEvictionCallback(EvictionCallback);
         }
         
@@ -65,17 +68,13 @@ namespace Catalyst.Common.IO.Messaging.Correlation
             _evictionEvent.OnNext(new MessageEvictionEvent(message));
         }
         
+        /// <inheritdoc />
         public void AddPendingRequest(CorrelatableMessage correlatableMessage)
         {
-            _pendingRequests.Set(correlatableMessage.Content.CorrelationId, correlatableMessage, _entryOptions);
+            _pendingRequests.Set(correlatableMessage.Content.CorrelationId, correlatableMessage, _entryOptions());
         }
 
-        /// <summary>
-        ///     Takes a generic request type of IMessage, and generic response type of IMessage and the message and look them up in the cache.
-        ///     Return what's found or emit an-uncorrectable event 
-        /// </summary>
-        /// <param name="response"></param>
-        /// <returns></returns>
+        /// <inheritdoc />
         public bool TryMatchResponse(ProtocolMessage response)
         {
             Guard.Argument(response, nameof(response)).NotNull();
@@ -94,6 +93,7 @@ namespace Catalyst.Common.IO.Messaging.Correlation
             _evictionEvent?.Dispose();
         }
 
+        /// <inheritdoc />
         public void Dispose()
         {
             Dispose(true);
