@@ -21,91 +21,81 @@
 
 #endregion
 
-using System;
-using System.IO;
+using Catalyst.Cli.Options;
 using Catalyst.Common.FileTransfer;
-using Catalyst.Common.Interfaces.Cli.Options;
+using Catalyst.Common.Interfaces.Cli.Commands;
 using Catalyst.Common.Interfaces.FileTransfer;
-using Catalyst.Common.Interfaces.Rpc;
-using Catalyst.Common.P2P;
 using Catalyst.Protocol.Rpc.Node;
-using Dawn;
+using System.IO;
+using Catalyst.Cli.CommandTypes;
+using Catalyst.Common.Extensions;
 
 namespace Catalyst.Cli.Commands
 {
-    internal sealed partial class Commands
+    public sealed class AddFileCommand : BaseMessageCommand<AddFileToDfsRequest, AddFileOptions>
     {
-        /// <inheritdoc cref="AddFile" />
-        public bool AddFile(IAddFileOnDfsOptions opts)
+        private readonly IUploadFileTransferFactory _uploadFileTransferFactory;
+
+        public AddFileCommand(IUploadFileTransferFactory uploadFileTransferFactory,
+            ICommandContext commandContext) : base(commandContext)
         {
-            Guard.Argument(opts, nameof(opts)).NotNull().Compatible<IAddFileOnDfsOptions>();
+            _uploadFileTransferFactory = uploadFileTransferFactory;
+        }
 
-            INodeRpcClient node;
-            try
+        protected override AddFileToDfsRequest GetMessage(AddFileOptions option)
+        {
+            return new AddFileToDfsRequest
             {
-                node = GetConnectedNode(opts.Node);
-            }
-            catch (Exception e)
-            {
-                _logger.Error(e.Message);
-                return false;
-            }
-
-            var nodeConfig = GetNodeConfig(opts.Node);
-            Guard.Argument(nodeConfig, nameof(nodeConfig)).NotNull();
-
-            var nodePeerIdentifier = PeerIdentifier.BuildPeerIdFromConfig(nodeConfig, _peerIdClientId);
-
-            if (!File.Exists(opts.File))
-            {
-                UserOutput.WriteLine("File does not exist.");
-                return false;
-            }
-
-            var request = new AddFileToDfsRequest
-            {
-                FileName = Path.GetFileName(opts.File)
+                FileName = Path.GetFileName(option.File)
             };
+        }
 
-            using (var fileStream = File.Open(opts.File, FileMode.Open))
+        protected override bool ExecuteCommand(AddFileOptions options)
+        {
+            return File.Exists(options.File);
+        }
+
+        public override void SendMessage(AddFileOptions options)
+        {
+            var request = GetMessage(options);
+
+            using (var fileStream = File.Open(options.File, FileMode.Open))
             {
                 request.FileSize = (ulong) fileStream.Length;
             }
-            
-            var requestMessage = _dtoFactory.GetDto(
-                request,
-                nodePeerIdentifier,
-                _peerIdentifier
+
+            var requestMessage = CommandContext.DtoFactory.GetDto(
+                request.ToProtocolMessage(SenderPeerIdentifier.PeerId),
+                SenderPeerIdentifier,
+                RecipientPeerIdentifier
             );
 
             IUploadFileInformation fileTransfer = new UploadFileTransferInformation(
-                File.Open(opts.File, FileMode.Open),
-                _peerIdentifier,
-                nodePeerIdentifier,
-                node.Channel,
+                File.Open(options.File, FileMode.Open),
+                SenderPeerIdentifier,
+                RecipientPeerIdentifier,
+                Target.Channel,
                 requestMessage.CorrelationId,
-                _dtoFactory);
+                CommandContext.DtoFactory);
 
             _uploadFileTransferFactory.RegisterTransfer(fileTransfer);
 
-            node.SendMessage(requestMessage);
+            Target.SendMessage(requestMessage);
 
             while (!fileTransfer.ChunkIndicatorsTrue() && !fileTransfer.IsExpired())
             {
-                _userOutput.Write($"\rUploaded: {fileTransfer.GetPercentage().ToString()}%");
+                CommandContext.UserOutput.Write($"\rUploaded: {fileTransfer.GetPercentage().ToString()}%");
                 System.Threading.Thread.Sleep(500);
             }
 
             if (fileTransfer.ChunkIndicatorsTrue())
             {
-                _userOutput.Write($"\rUploaded: {fileTransfer.GetPercentage().ToString()}%\n");
+                CommandContext.UserOutput.Write($"\rUploaded: {fileTransfer.GetPercentage().ToString()}%\n");
             }
             else
             {
-                _userOutput.WriteLine("\nFile transfer expired.");
+                CommandContext.UserOutput.WriteLine("\nFile transfer expired.");
             }
-
-            return true;
         }
     }
 }

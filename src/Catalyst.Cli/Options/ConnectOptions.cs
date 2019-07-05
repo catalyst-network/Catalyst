@@ -29,25 +29,15 @@ using CommandLine.Text;
 namespace Catalyst.Cli.Options
 {
     [Verb("connect", HelpText = "Connects the CLI to a catalyst node")]
-    internal sealed class ConnectOptions : IConnectOptions
+    public sealed class ConnectOptions : OptionsBase, IConnectOptions
     {
-        /// <inheritdoc />
-        [Option('n', "node", HelpText = "A valid node ID as listed in the nodes.json config file.")]
-        public bool Node { get; set; }
-
-        /// <inheritdoc />
-        [Value(1, MetaName = "Node ID",
-            HelpText = "Node name as listed in nodes.json config file.",
-            Required = true)]
-        public string NodeId { get; set; }
-
         [Usage(ApplicationAlias = "")]
         public static IEnumerable<Example> Examples =>
             new List<Example>
             {
                 new Example("Connects the CLI to a node", new ConnectOptions
                 {
-                    NodeId = "Node ID"
+                    Node = "Node ID"
                 })
             };
     }

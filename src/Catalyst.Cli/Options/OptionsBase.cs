@@ -21,23 +21,15 @@
 
 #endregion
 
-using System.Threading;
+using Catalyst.Common.Interfaces.Cli.Options;
+using CommandLine;
 
-namespace Catalyst.Common.Interfaces.Cli
+namespace Catalyst.Cli.Options
 {
-    public interface IShell
+    public class OptionsBase : IOptionsBase
     {
-        /// <summary>
-        ///     Runs the main cli ui.
-        /// </summary>
-        /// <returns></returns>
-        bool RunConsole(CancellationToken ct);
-        
-        /// <summary>
-        /// Parses the Options object sent and calls the correct message to handle the option a defined in the MapResult
-        /// </summary>
-        /// <param name="args">string array including the parameters passed through the command line</param>
-        /// <returns>Returns true if a method to handle the options is found otherwise returns false</returns>
-        bool ParseCommand(params string[] args);
+        /// <inheritdoc />
+        [Option('n', "node", Required = true, HelpText = "A valid node ID as listed in the nodes.json config file.")]
+        public string Node { get; set; }
     }
 }

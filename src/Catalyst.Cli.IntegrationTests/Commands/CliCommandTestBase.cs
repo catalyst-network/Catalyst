@@ -27,9 +27,14 @@ using System.IO;
 using System.Net;
 using System.Security.Cryptography.X509Certificates;
 using Autofac;
+using Catalyst.Common.Extensions;
+using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.Rpc;
+using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
+using Google.Protobuf;
 using Microsoft.Extensions.Configuration;
 using NSubstitute;
 using Xunit.Abstractions;
@@ -83,6 +88,15 @@ namespace Catalyst.Cli.IntegrationTests.Commands
                .Returns(NodeRpcClient);
 
             ContainerBuilder.RegisterInstance(nodeRpcClientFactory).As<INodeRpcClientFactory>();
+        }
+
+        protected void AssertSentMessage<T>() where T : IMessage<T>
+        {
+            NodeRpcClient.Received(1).SendMessage(Arg.Is<IMessageDto<ProtocolMessage>>(x =>
+                x.Content != null &&
+                x.Content.GetType().IsAssignableTo<ProtocolMessage>() &&
+                x.Content.FromProtocolMessage<T>() != null
+            ));
         }
     }
 }
