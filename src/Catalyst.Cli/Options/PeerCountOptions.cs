@@ -32,12 +32,8 @@ namespace Catalyst.Cli.Options
     /// Class contains the options for the peer count command
     /// </summary>
     [Verb("peercount", HelpText = "Gets the peer count")]
-    internal sealed class PeerCountOptions : IPeerCountOptions
+    public sealed class PeerCountOptions : OptionsBase, IPeerCountOptions
     {
-        /// <inheritdoc />
-        [Option('n', "node", HelpText = "A valid node ID as listed in the nodes.json config file.")]
-        public string Node { get; set; }
-
         /// <summary>
         /// Gets the examples.
         /// </summary>

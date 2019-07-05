@@ -27,14 +27,9 @@ using CommandLine;
 namespace Catalyst.Cli.Options
 {
     [Verb("getinfo", HelpText = "Gets information from a catalyst node")]
-    internal sealed class GetInfoOptions : IGetInfoOptions
+    public sealed class GetInfoOptions : OptionsBase, IGetInfoOptions
     {
         [Option('i', "info")]
         public bool Info { get; set; }
-
-        [Value(1, MetaName = "Node ID",
-            HelpText = "Valid and connected node ID.",
-            Required = true)]
-        public string NodeId { get; set; }
     }
 }

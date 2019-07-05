@@ -22,33 +22,30 @@
 #endregion
 
 using System;
-using System.Threading;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
+using Catalyst.Common.Interfaces.Util;
 using Catalyst.Protocol.Common;
 using Dawn;
 using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Primitives;
 using Serilog;
 
 namespace Catalyst.Common.IO.Messaging.Correlation
 {
     public abstract class MessageCorrelationManagerBase : IMessageCorrelationManager
     {
-        public TimeSpan CacheTtl { get; }
         protected readonly IMemoryCache PendingRequests;
+        private readonly Func<MemoryCacheEntryOptions> _entryOptions;
         protected readonly ILogger Logger;
-        private readonly MemoryCacheEntryOptions _entryOptions;
 
         protected MessageCorrelationManagerBase(IMemoryCache cache,
             ILogger logger,
-            TimeSpan cacheTtl = default)
+            IChangeTokenProvider changeTokenProvider)
         {
-            CacheTtl = cacheTtl == default ? TimeSpan.FromSeconds(10) : cacheTtl;
             PendingRequests = cache;
             Logger = logger;
 
-            _entryOptions = new MemoryCacheEntryOptions()
-               .AddExpirationToken(new CancellationChangeToken(new CancellationTokenSource(CacheTtl).Token))
+            _entryOptions = () => new MemoryCacheEntryOptions()
+               .AddExpirationToken(changeTokenProvider.GetChangeToken())
                .RegisterPostEvictionCallback(EvictionCallback);
         }
 
@@ -68,7 +65,7 @@ namespace Catalyst.Common.IO.Messaging.Correlation
         /// <param name="correlatableMessage"></param>
         public virtual void AddPendingRequest(CorrelatableMessage correlatableMessage)
         {
-            PendingRequests.Set(correlatableMessage.Content.CorrelationId, correlatableMessage, _entryOptions);
+            PendingRequests.Set(correlatableMessage.Content.CorrelationId, correlatableMessage, _entryOptions());
         }
 
         /// <summary>

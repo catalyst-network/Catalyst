@@ -64,6 +64,7 @@
         <Folder Include="Interfaces\IO\Messaging\Handlers" />
         <Folder Include="Interfaces\Util" />
         <Folder Include="Rpc\IO\Messaging\Correlation" />
+        <Folder Include="Interfaces\P2P\Messaging\Dto" />
     </ItemGroup>
     <ItemGroup>
         <Reference Include="System">

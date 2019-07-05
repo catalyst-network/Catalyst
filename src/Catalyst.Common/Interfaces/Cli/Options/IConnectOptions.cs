@@ -23,9 +23,5 @@
 
 namespace Catalyst.Common.Interfaces.Cli.Options
 {
-    public interface IConnectOptions
-    {
-        bool Node { get; set; }
-        string NodeId { get; set; }
-    }
+    public interface IConnectOptions : IOptionsBase { }
 }
