@@ -24,7 +24,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Catalyst.Common.Extensions;
-using Catalyst.Common.IO.Messaging;
+using Catalyst.Common.IO.Messaging.Correlation;
 using FluentAssertions;
 using Xunit;
 

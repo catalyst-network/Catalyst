@@ -123,10 +123,10 @@
             ]
         },
         {
-            "type": "Catalyst.Common.IO.Messaging.MessageCorrelationManager, Catalyst.Common",
+            "type": "Catalyst.Common.IO.Messaging.Correlation.MessageCorrelationManager, Catalyst.Common",
             "services": [
                 {
-                    "type": "Catalyst.Common.Interfaces.IO.Messaging.IMessageCorrelationManager, Catalyst.Common"
+                    "type": "Catalyst.Common.Interfaces.IO.Messaging.Correlation.IMessageCorrelationManager, Catalyst.Common"
                 }
             ]
         },
@@ -339,6 +339,17 @@
             ],
             "parameters": {
                 "clientVersion": "AC"
+            }
+        },
+        {
+            "type": "Catalyst.Common.Util.TtlChangeTokenProvider, Catalyst.Common",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.Util.IChangeTokenProvider, Catalyst.Common"
+                }
+            ],
+            "parameters": {
+                "timeToLiveInMs": 10000
             }
         }
     ],
