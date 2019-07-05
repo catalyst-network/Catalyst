@@ -25,9 +25,9 @@ using System;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using Catalyst.Common.Config;
-using Catalyst.Common.Interfaces.P2P.IO.Messaging;
 using Catalyst.Common.Interfaces.P2P.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.P2P.ReputationSystem;
+using Catalyst.Common.Interfaces.Util;
 using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Common.P2P;
 using Catalyst.Node.Core.P2P.ReputationSystem;
@@ -46,7 +46,7 @@ namespace Catalyst.Node.Core.P2P.IO.Messaging.Correlation
         public PeerMessageCorrelationManager(IReputationManager reputationManager,
             IMemoryCache cache,
             ILogger logger,
-            TimeSpan cacheTtl = default) : base(cache, logger, cacheTtl)
+            IChangeTokenProvider changeTokenProvider) : base(cache, logger, changeTokenProvider)
         {
             _reputationEvent = new ReplaySubject<IPeerReputationChange>(0);
 

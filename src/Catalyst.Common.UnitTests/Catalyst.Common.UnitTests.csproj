@@ -26,5 +26,6 @@
     </ItemGroup>
     <ItemGroup>
       <Folder Include="IO\Messaging\Correlation" />
+      <Folder Include="RPC\IO" />
     </ItemGroup>
 </Project>

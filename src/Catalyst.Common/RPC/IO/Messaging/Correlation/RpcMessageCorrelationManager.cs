@@ -21,7 +21,7 @@
 
 #endregion
 
-using System;
+using Catalyst.Common.Interfaces.Util;
 using Catalyst.Common.IO.Messaging.Correlation;
 using Microsoft.Extensions.Caching.Memory;
 using Serilog;
@@ -30,7 +30,10 @@ namespace Catalyst.Common.RPC.IO.Messaging.Correlation
 {
     public sealed class RpcMessageCorrelationManager : MessageCorrelationManagerBase
     {
-        public RpcMessageCorrelationManager(IMemoryCache cache, ILogger logger, TimeSpan cacheTtl = default) : base(cache, logger, cacheTtl) { }
+        public RpcMessageCorrelationManager(IMemoryCache cache,
+            ILogger logger,
+            IChangeTokenProvider changeTokenProvider) 
+            : base(cache, logger, changeTokenProvider) { }
 
         protected override void EvictionCallback(object key, object value, EvictionReason reason, object state)
         {

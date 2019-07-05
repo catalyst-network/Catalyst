@@ -27,16 +27,26 @@ using Catalyst.Protocol.Common;
 
 namespace Catalyst.Common.Interfaces.IO.Messaging.Correlation
 {
+    /// <summary>
+    /// The message correlation manager is a cached user to store correlation Ids of outgoing requests
+    /// and use them to match incoming responses.
+    /// </summary>
     public interface IMessageCorrelationManager : IDisposable
     {
         /// <summary>
-        /// TimeSpan after which requests automatically get deleted from the cache (inflicting
-        /// a reputation penalty for the peer who didn't reply).
+        /// Adds a correlatable message to the cache, which can then be matched in
+        /// <see cref="TryMatchResponse"/> upon receiving the response.
+        /// in the cache.
         /// </summary>
-        TimeSpan CacheTtl { get; }
-        
+        /// <param name="correlatableMessage">The (outgoing) correlatable message to add to the cache.</param>
         void AddPendingRequest(CorrelatableMessage correlatableMessage);
 
+        /// <summary>
+        /// Tries to match the response by checking its correlation Id is still
+        /// in the cache.
+        /// </summary>
+        /// <param name="response">A response type message received from the network</param>
+        /// <returns><see cref="true"/> if the response was matched, <see cref="false"/> otherwise.</returns>
         bool TryMatchResponse(ProtocolMessage response);
     }
 }

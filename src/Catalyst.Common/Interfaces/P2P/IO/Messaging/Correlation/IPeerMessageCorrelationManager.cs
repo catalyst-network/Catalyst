@@ -21,9 +21,14 @@
 
 #endregion
 
+using System;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
+using Catalyst.Common.Interfaces.P2P.ReputationSystem;
 
 namespace Catalyst.Common.Interfaces.P2P.IO.Messaging.Correlation
 {
-    public interface IPeerMessageCorrelationManager : IMessageCorrelationManager { }
+    public interface IPeerMessageCorrelationManager : IMessageCorrelationManager
+    {
+        IObservable<IPeerReputationChange> ReputationEventStream { get; }
+    }
 }

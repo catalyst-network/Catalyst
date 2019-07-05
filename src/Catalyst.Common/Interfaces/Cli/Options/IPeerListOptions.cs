@@ -23,14 +23,5 @@
 
 namespace Catalyst.Common.Interfaces.Cli.Options
 {
-    public interface IPeerListOptions
-    {
-        /// <summary>
-        /// Gets or sets the node.
-        /// </summary>
-        /// <value>
-        /// The node.
-        /// </value>
-        string Node { get; set; }
-    }
+    public interface IPeerListOptions : IOptionsBase { }
 }

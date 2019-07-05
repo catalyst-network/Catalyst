@@ -23,9 +23,8 @@
 
 namespace Catalyst.Common.Interfaces.Cli.Options
 {
-    public interface IGetInfoOptions
+    public interface IGetInfoOptions : IOptionsBase
     {
         bool Info { get; set; }
-        string NodeId { get; set; }
     }
 }
