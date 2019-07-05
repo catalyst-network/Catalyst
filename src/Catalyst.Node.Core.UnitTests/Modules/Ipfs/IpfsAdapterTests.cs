@@ -48,7 +48,7 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Ipfs
             _peerSettings = Substitute.For<IPeerSettings>();
             _peerSettings.SeedServers.Returns(new[] {"seed1.server.va", "island.domain.tv"});
             _passwordReader = Substitute.For<IPasswordReader>();
-            _passwordReader.ReadSecurePassword().ReturnsForAnyArgs(TestPasswordReader.BuildSecureStringPassword("abcd"));
+            _passwordReader.ReadSecurePassword(Arg.Any<String>()).ReturnsForAnyArgs(TestPasswordReader.BuildSecureStringPassword("abcd"));
             _logger = Substitute.For<ILogger>();
         }
 
@@ -75,7 +75,7 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Ipfs
         {
             using (new IpfsAdapter(_passwordReader, _peerSettings, FileSystem, _logger))
             {
-                _passwordReader.ReceivedWithAnyArgs(1).ReadSecurePassword();
+                _passwordReader.ReceivedWithAnyArgs(1).ReadSecurePassword("ipfsPassword");
             }
         }
 

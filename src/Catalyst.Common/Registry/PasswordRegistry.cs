@@ -22,15 +22,13 @@
 #endregion
 
 using System.Collections.Generic;
-using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
+using System.Security;
+using Catalyst.Common.Interfaces.Registry;
 
-namespace Catalyst.Common.Interfaces.Registry
+namespace Catalyst.Common.Registry
 {
-    public class KeyRegistry : RegistryBase<string, IPrivateKey>
-    {        
-        public KeyRegistry()
-        {
-            Registry = new Dictionary<string, IPrivateKey>();
-        }
+    public class PasswordRegistry : RegistryBase<string, SecureString>, IPasswordRegistry
+    {
+        public PasswordRegistry() { Registry = new Dictionary<string, SecureString>(); }
     }
 }

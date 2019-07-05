@@ -67,7 +67,7 @@ namespace Catalyst.Common.UnitTests.Cryptography
         private void Create_a_certificate_file_with_password()
         {
             _fileWithPassName = "test-with-pass.pfx";
-            _passwordReader.ReadSecurePassword().Returns(TestPasswordReader.BuildSecureStringPassword("password"));
+            _passwordReader.ReadSecurePassword("certificatePassword").Returns(TestPasswordReader.BuildSecureStringPassword("password"));
             _createdCertificate = _certificateStore.ReadOrCreateCertificateFile(_fileWithPassName);
         }
 
@@ -78,7 +78,7 @@ namespace Catalyst.Common.UnitTests.Cryptography
 
         private void Read_the_certificate_file_with_password()
         {
-            _passwordReader.ReadSecurePassword().Returns(TestPasswordReader.BuildSecureStringPassword("password"));
+            _passwordReader.ReadSecurePassword("certificatePassword").Returns(TestPasswordReader.BuildSecureStringPassword("password"));
             _retrievedCertificate = _certificateStore.ReadOrCreateCertificateFile(_fileWithPassName);
         }
 

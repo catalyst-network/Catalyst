@@ -25,25 +25,42 @@ using System;
 using System.Security;
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.Cryptography;
+using Catalyst.Common.Interfaces.Registry;
 
 namespace Catalyst.Common.Cryptography
 {
-    public class ConsolePasswordReader
-        : IPasswordReader
+    public class ConsolePasswordReader : IPasswordReader
     {
         private const int MaxLength = 255;
 
         private readonly IUserOutput _userOutput;
-        public ConsolePasswordReader(IUserOutput userOutput) { _userOutput = userOutput; }
+        private readonly IPasswordRegistry _passwordRegistry;
         
-        public SecureString ReadSecurePassword()
+        public ConsolePasswordReader(IUserOutput userOutput, IPasswordRegistry passwordRegistry) 
+        { 
+            _userOutput = userOutput;
+            _passwordRegistry = passwordRegistry;
+        }
+        
+        public void ReadSecurePasswordToRegistry(string passwordIdentifier)
         {
-            string passwordContext = "Please enter your password";
+            string passwordContext = $"Please enter your password for {passwordIdentifier}";
             var pwd = new SecureString();
             ReadCharsFromConsole(_userOutput, passwordContext, (c, i) => pwd.AppendChar(c), i => pwd.RemoveAt(i));
 
-            pwd.MakeReadOnly();
-            return pwd;
+            _passwordRegistry.AddItemToRegistry(passwordContext, pwd);
+        }
+
+        public SecureString ReadSecurePassword(string passwordIdentifier)
+        {
+            SecureString password = _passwordRegistry.GetItemFromRegistry(passwordIdentifier);
+            if (password == null)
+            {
+                ReadSecurePasswordToRegistry(passwordIdentifier);
+                password = _passwordRegistry.GetItemFromRegistry(passwordIdentifier);
+            }
+
+            return password;
         }
 
         private static void ReadCharsFromConsole(IUserOutput userOutput,

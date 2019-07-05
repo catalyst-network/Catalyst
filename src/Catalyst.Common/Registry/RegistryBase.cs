@@ -22,9 +22,10 @@
 #endregion
 
 using System.Collections.Generic;
+using Catalyst.Common.Interfaces.Registry;
 using Dawn;
 
-namespace Catalyst.Common.Interfaces.Registry
+namespace Catalyst.Common.Registry
 {
     public abstract class RegistryBase<T, K> : IRegistryBase<T, K>
         where K : class

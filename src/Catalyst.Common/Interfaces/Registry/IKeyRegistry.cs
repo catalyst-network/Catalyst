@@ -21,10 +21,10 @@
 
 #endregion
 
-using System.Collections.Generic;
-using System.Security;
+using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
+using Catalyst.Cryptography.BulletProofs.Wrapper.Types;
 
 namespace Catalyst.Common.Interfaces.Registry
 {
-    public class PasswordRegistry : RegistryBase<string, SecureString>, IPasswordRegistry { }
+    public interface IKeyRegistry : IRegistryBase<string, IPrivateKey> { }
 }

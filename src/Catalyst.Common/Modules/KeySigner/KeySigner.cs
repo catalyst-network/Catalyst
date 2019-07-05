@@ -37,23 +37,22 @@ namespace Catalyst.Common.Modules.KeySigner
     {
         private readonly IKeyStore _keyStore;
         private readonly ICryptoContext _cryptoContext;
-        private KeyRegistry _keyRegistry;
+        private IKeyRegistry _keyRegistry;
         private const string defaultKeyIdentifier = "blah";
 
         /// <summary>Initializes a new instance of the <see cref="KeySigner"/> class.</summary>
         /// <param name="keyStore">The key store.</param>
         /// <param name="cryptoContext">The crypto context.</param>
-        public KeySigner(IKeyStore keyStore,
-            ICryptoContext cryptoContext)
+        //public KeySigner(IKeyStore keyStore, ICryptoContext cryptoContext, IKeyRegistry keyRegistry)
+        public KeySigner(IKeyStore keyStore, ICryptoContext cryptoContext)
         {
             _keyStore = keyStore;
             _cryptoContext = cryptoContext;
-            InitialiseKeyRegistry();
+            //_keyRegistry = keyRegistry;
         }
 
         private void InitialiseKeyRegistry()
         {
-            _keyRegistry = new KeyRegistry();
             if (!TryPopulateKeyRegistry(defaultKeyIdentifier))
             {
                 GenerateKeyAndPopulateRegistry(defaultKeyIdentifier);
@@ -88,19 +87,6 @@ namespace Catalyst.Common.Modules.KeySigner
         public ISignature Sign(byte[] data)
         {
             return Sign(data, defaultKeyIdentifier);
-        }
-
-        public KeyValuePair<IPublicKey, ISignature> SignAndGetPublicKey(byte[] data, string keyIdentifier)
-        {
-            var privateKey = _keyRegistry.GetItemFromRegistry(keyIdentifier);
-            var signature = Sign(data, privateKey);
-            var publicKey = _cryptoContext.GetPublicKey(privateKey);
-            return new KeyValuePair<IPublicKey, ISignature>(publicKey, signature);
-        }
-
-        public KeyValuePair<IPublicKey, ISignature> SignAndGetPublicKey(byte[] data)
-        {
-            return SignAndGetPublicKey(data, defaultKeyIdentifier);
         }
 
         private ISignature Sign(byte[] data, IPrivateKey privateKey)

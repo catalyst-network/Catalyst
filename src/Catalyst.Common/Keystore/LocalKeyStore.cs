@@ -41,7 +41,7 @@ using Serilog;
 
 namespace Catalyst.Common.Keystore
 {
-    public sealed class LocalKeyStore : IKeyStore, IDisposable
+    public sealed class LocalKeyStore : IKeyStore
     {
         private readonly ILogger _logger;
         private readonly IAddressHelper _addressHelper;
@@ -50,25 +50,8 @@ namespace Catalyst.Common.Keystore
         private readonly IPasswordReader _passwordReader;
         private readonly IKeyStoreService _keyStoreService;
 
-        private SecureString _password;
         private static int MaxTries => 5;
 
-        public string Password
-        {
-            get
-            {
-                if (_password == null)
-                {
-                    return string.Empty;
-                }
-
-                var stringPointer = Marshal.SecureStringToBSTR(_password);
-                var normalString = Marshal.PtrToStringBSTR(stringPointer);
-                Marshal.ZeroFreeBSTR(stringPointer);
-                return normalString;
-            }
-        }
-        
         public LocalKeyStore(IPasswordReader passwordReader,
             ICryptoContext cryptoContext,
             IKeyStoreService keyStoreService,
@@ -87,40 +70,40 @@ namespace Catalyst.Common.Keystore
 
         public IPrivateKey KeyStoreDecrypt(string identifier)
         {
-            string password = "password retrieval not implemented yet";
             string json = GetJsonFromKeyStore(identifier);
             if (json != null)
             {
+                var keyBytes = KeyStoreDecrypt(identifier, json);
+                IPrivateKey privateKey = null;
                 try
                 {
-                    var keyBytes = _keyStoreService.DecryptKeyStoreFromJson(identifier, json);
-                    
-                    if (keyBytes != null && keyBytes.Length > 0)
-                    {
-                        return new PrivateKey(keyBytes);
-                    }
+                    privateKey = _cryptoContext.ImportPrivateKey(keyBytes);
                 }
-                catch (DecryptionException)
+                catch (ArgumentException)
                 {
-                    _logger.Error("Error decrypting keystore");
+                    _logger.Error("Keystore did not contain a valid key");
                 }
+
+                return privateKey;
             }
             
             return null;
         }
 
-        //need to change so keystore uses identifier to retrieve password
-        public byte[] KeyStoreDecrypt(string identifier, string json)
+        public byte[] KeyStoreDecrypt(string keyIdentifier, string json)
         {
             var tries = 0;
 
             while (tries < MaxTries)
             {
-                _password = _passwordReader.ReadSecurePassword("Please enter key signer password");
-
+                var securePassword = _passwordReader.ReadSecurePassword(keyIdentifier);
+                var stringPointer = Marshal.SecureStringToBSTR(securePassword);
+                var password = Marshal.PtrToStringBSTR(stringPointer);
+                Marshal.ZeroFreeBSTR(stringPointer);
+                
                 try
                 {
-                    var keyStore = _keyStoreService.DecryptKeyStoreFromJson(Password, json);
+                    var keyStore = _keyStoreService.DecryptKeyStoreFromJson(password, json);
                     
                     if (keyStore != null && keyStore.Length > 0)
                     {
@@ -138,9 +121,12 @@ namespace Catalyst.Common.Keystore
             throw new AuthenticationException("Password incorrect for keystore.");
         }
         
-        public async Task<string> KeyStoreGenerateAsync(IPrivateKey privateKey, string password)
+        public async Task<string> KeyStoreGenerateAsync(IPrivateKey privateKey, string keyIdentifier)
         {
             var address = _addressHelper.GenerateAddress(privateKey.GetPublicKey());
+            
+            var realPassword = _passwordReader.ReadSecurePassword(keyIdentifier);
+            var password = keyIdentifier;
             
             var json = _keyStoreService.EncryptAndGenerateDefaultKeyStoreAsJson(
                 password: password, 
@@ -177,11 +163,6 @@ namespace Catalyst.Common.Keystore
 
             _logger.Error("No keystore exists for the given key");
             return null;
-        }
-
-        public void Dispose()
-        {
-            _password?.Dispose();
         }
     }
 }
