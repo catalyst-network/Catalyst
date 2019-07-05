@@ -27,14 +27,9 @@ using CommandLine;
 namespace Catalyst.Cli.Options
 {
     [Verb("getversion", HelpText = "Gets information from a catalyst node")]
-    internal sealed class GetVersionOptions : IGetVersionOptions
+    public sealed class GetVersionOptions : OptionsBase, IGetVersionOptions
     {
         [Option('v', "version")]
         public bool Version { get; set; }
-
-        [Value(1, MetaName = "Node ID",
-            HelpText = "Valid and connected node ID.",
-            Required = true)]
-        public string NodeId { get; set; }
     }
 }

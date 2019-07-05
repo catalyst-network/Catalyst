@@ -9,6 +9,120 @@
                 }
             ]
         },
+        // Start Commands
+        {
+            "type": "Catalyst.Cli.Commands.AddFileCommand",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.Cli.CommandTypes.ICommand, Catalyst.Common"
+                }
+            ]
+        },
+        {
+            "type": "Catalyst.Cli.Commands.ConnectCommand",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.Cli.CommandTypes.ICommand, Catalyst.Common"
+                }
+            ]
+        },
+        {
+            "type": "Catalyst.Cli.Commands.DisconnectCommand",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.Cli.CommandTypes.ICommand, Catalyst.Common"
+                }
+            ]
+        },
+        {
+            "type": "Catalyst.Cli.Commands.GetFileCommand",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.Cli.CommandTypes.ICommand, Catalyst.Common"
+                }
+            ]
+        },
+        {
+            "type": "Catalyst.Cli.Commands.GetInfoCommand",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.Cli.CommandTypes.ICommand, Catalyst.Common"
+                }
+            ]
+        },
+        {
+            "type": "Catalyst.Cli.Commands.GetMempoolCommand",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.Cli.CommandTypes.ICommand, Catalyst.Common"
+                }
+            ]
+        },
+        {
+            "type": "Catalyst.Cli.Commands.GetVersionCommand",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.Cli.CommandTypes.ICommand, Catalyst.Common"
+                }
+            ]
+        },
+        {
+            "type": "Catalyst.Cli.Commands.MessageSignCommand",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.Cli.CommandTypes.ICommand, Catalyst.Common"
+                }
+            ]
+        },
+        {
+            "type": "Catalyst.Cli.Commands.MessageVerifyCommand",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.Cli.CommandTypes.ICommand, Catalyst.Common"
+                }
+            ]
+        },
+        {
+            "type": "Catalyst.Cli.Commands.PeerBlackListingCommand",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.Cli.CommandTypes.ICommand, Catalyst.Common"
+                }
+            ]
+        },
+        {
+            "type": "Catalyst.Cli.Commands.PeerCountCommand",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.Cli.CommandTypes.ICommand, Catalyst.Common"
+                }
+            ]
+        },
+        {
+            "type": "Catalyst.Cli.Commands.PeerListCommand",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.Cli.CommandTypes.ICommand, Catalyst.Common"
+                }
+            ]
+        },
+        {
+            "type": "Catalyst.Cli.Commands.PeerRemoveCommand",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.Cli.CommandTypes.ICommand, Catalyst.Common"
+                }
+            ]
+        },
+        {
+            "type": "Catalyst.Cli.Commands.PeerReputationCommand",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.Cli.CommandTypes.ICommand, Catalyst.Common"
+                }
+            ]
+        },
+        //End Commands
         {
             "type": "Catalyst.Common.IO.EventLoop.EventLoopGroupFactoryConfiguration, Catalyst.Common",
             "services": [
@@ -135,12 +249,13 @@
             "instanceScope": "singleinstance"
         },
         {
-            "type": "Catalyst.Cli.Commands.Commands",
+            "type": "Catalyst.Cli.Commands.CommandContext",
             "services": [
                 {
-                    "type": "Catalyst.Common.Interfaces.Cli.IAdvancedShell, Catalyst.Common"
+                    "type": "Catalyst.Common.Interfaces.Cli.Commands.ICommandContext, Catalyst.Common"
                 }
-            ]
+            ],
+            "instanceScope": "singleinstance"
         },
         {
             "type": "Catalyst.Common.Shell.ConsoleUserOutput, Catalyst.Common",

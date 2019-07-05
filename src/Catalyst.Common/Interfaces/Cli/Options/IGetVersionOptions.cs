@@ -23,9 +23,8 @@
 
 namespace Catalyst.Common.Interfaces.Cli.Options
 {
-    public interface IGetVersionOptions
+    public interface IGetVersionOptions : IOptionsBase
     {
         bool Version { get; set; }
-        string NodeId { get; set; }
     }
 }
