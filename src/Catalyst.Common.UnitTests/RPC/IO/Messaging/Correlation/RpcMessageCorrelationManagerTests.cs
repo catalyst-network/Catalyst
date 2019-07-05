@@ -22,10 +22,12 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
+using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Common.RPC.IO.Messaging.Correlation;
 using Catalyst.Common.UnitTests.IO.Messaging;
@@ -33,6 +35,7 @@ using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using Microsoft.Extensions.Caching.Memory;
 using NSubstitute;
+using NSubstitute.ReceivedExtensions;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -50,6 +53,18 @@ namespace Catalyst.Common.UnitTests.RPC.IO.Messaging.Correlation
                 SubbedLogger,
                 ChangeTokenProvider
             );
+            
+            PendingRequests = PeerIds.Select((p, i) => new CorrelatableMessage
+            {
+                Content = new GetInfoRequest().ToProtocolMessage(SenderPeerId, CorrelationId.GenerateCorrelationId()),
+                Recipient = p,
+                SentAt = DateTimeOffset.MinValue.Add(TimeSpan.FromMilliseconds(100 * i))
+            }).ToList();
+            
+            foreach (var correlatableMessage in PendingRequests)
+            {
+                CorrelationManager.AddPendingRequest(correlatableMessage);
+            }
         }
 
         [Fact]
@@ -79,7 +94,7 @@ namespace Catalyst.Common.UnitTests.RPC.IO.Messaging.Correlation
             var responses = requests.Select(r =>
                 new GetInfoResponse().ToProtocolMessage(r.Recipient.PeerId, r.Content.CorrelationId.ToCorrelationId()));
 
-            SubbedLogger.ReceivedWithAnyArgs().Debug("log should be called");
+            SubbedLogger.ReceivedWithAnyArgs(1).Debug(Arg.Any<string>());
         }
     }
 }

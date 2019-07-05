@@ -59,6 +59,18 @@ namespace Catalyst.Node.Core.UnitTests.P2P.IO.Messaging.Correlation
 
             _reputationByPeerIdentifier = PeerIds.ToDictionary(p => p, p => (long) 0); //smells funky
             
+            PendingRequests = PeerIds.Select((p, i) => new CorrelatableMessage
+            {
+                Content = new PingRequest().ToProtocolMessage(SenderPeerId, CorrelationId.GenerateCorrelationId()),
+                Recipient = p,
+                SentAt = DateTimeOffset.MinValue.Add(TimeSpan.FromMilliseconds(100 * i))
+            }).ToList();
+            
+            foreach (var correlatableMessage in PendingRequests)
+            {
+                CorrelationManager.AddPendingRequest(correlatableMessage);
+            }
+            
             CorrelationManager.ReputationEventStream.Subscribe(change =>
             {
                 if (!_reputationByPeerIdentifier.ContainsKey(change.PeerIdentifier))
