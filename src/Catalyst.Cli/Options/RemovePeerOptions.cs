@@ -32,12 +32,8 @@ namespace Catalyst.Cli.Options
     /// Class contains the options for the peer list command
     /// </summary>
     [Verb("removepeer", HelpText = "removes a peer")]
-    internal sealed class RemovePeerOptions : IRemovePeerOptions
+    public sealed class RemovePeerOptions : OptionsBase, IRemovePeerOptions
     {
-        /// <inheritdoc />
-        [Option('n', "node", HelpText = "A valid node ID as listed in the nodes.json config file.", Required = true)]
-        public string Node { get; set; }
-
         /// <inheritdoc />
         [Option('k', "publickey", HelpText = "The peer public key", Required = false)]
         public string PublicKey { get; set; }

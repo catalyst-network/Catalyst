@@ -29,16 +29,12 @@ using CommandLine.Text;
 namespace Catalyst.Cli.Options
 {
     [Verb("sign", HelpText = "Signs a message or a transaction")]
-    internal sealed class SignOptions : ISignOptions
+    public sealed class SignOptions : OptionsBase, ISignOptions
     {
         /// <inheritdoc />
         [Option('m', "message", HelpText = "Directs the CLI to sign the message to be provided as the value")]
         public string Message { get; set; }
-
-        /// <inheritdoc />
-        [Option('n', "node", HelpText = "A valid node ID as listed in the nodes.json config file.")]
-        public string Node { get; set; }
-
+        
         [Usage(ApplicationAlias = "")]
         public static IEnumerable<Example> Examples =>
             new List<Example>

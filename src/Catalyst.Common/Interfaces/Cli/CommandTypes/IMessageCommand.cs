@@ -21,12 +21,16 @@
 
 #endregion
 
-namespace Catalyst.Common.Interfaces.Cli.Options
+using Catalyst.Common.Interfaces.Rpc;
+using Google.Protobuf;
+
+namespace Catalyst.Common.Interfaces.Cli.CommandTypes
 {
-    public interface IVerifyOptions : IOptionsBase
+    public interface IMessageCommand<out T> : ICommand
+        where T : IMessage<T>
     {
-        string Message { get; set; }
-        string Address { get; set; }
-        string Signature { get; set; }
+        /// <summary>The node to send the message to.</summary>
+        /// <value>The target node.</value>
+        INodeRpcClient Target { get; }
     }
 }

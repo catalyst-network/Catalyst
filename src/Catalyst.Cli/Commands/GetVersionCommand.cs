@@ -21,12 +21,23 @@
 
 #endregion
 
-namespace Catalyst.Common.Interfaces.Cli.Options
+using Catalyst.Cli.CommandTypes;
+using Catalyst.Cli.Options;
+using Catalyst.Common.Interfaces.Cli.Commands;
+using Catalyst.Protocol.Rpc.Node;
+
+namespace Catalyst.Cli.Commands
 {
-    public interface IVerifyOptions : IOptionsBase
+    public sealed class GetVersionCommand : BaseMessageCommand<VersionRequest, GetVersionOptions>
     {
-        string Message { get; set; }
-        string Address { get; set; }
-        string Signature { get; set; }
+        public GetVersionCommand(ICommandContext commandContext) : base(commandContext) { }
+
+        protected override VersionRequest GetMessage(GetVersionOptions option)
+        {
+            return new VersionRequest
+            {
+                Query = true
+            };
+        }
     }
 }
