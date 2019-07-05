@@ -23,10 +23,8 @@
 
 using Autofac;
 using Catalyst.Common.Interfaces.Cli;
-using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Protocol.Rpc.Node;
 using FluentAssertions;
-using NSubstitute;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -37,8 +35,8 @@ namespace Catalyst.Cli.IntegrationTests.Commands
         //This test is the base to all other tests.  If the Cli cannot connect to a node than all other commands
         //will fail
         public PeerCommandCommandTest(ITestOutputHelper output) : base(output) { }
-        
-        [Fact] 
+
+        [Fact]
         public void Cli_Can_Send_Peers_Count_Request()
         {
             using (var container = ContainerBuilder.Build())
@@ -46,19 +44,14 @@ namespace Catalyst.Cli.IntegrationTests.Commands
                 using (container.BeginLifetimeScope(CurrentTestName))
                 {
                     var shell = container.Resolve<ICatalystCli>();
-                    var hasConnected = shell.AdvancedShell.ParseCommand("connect", "-n", "node1");
+                    var hasConnected = shell.ParseCommand("connect", "-n", "node1");
                     hasConnected.Should().BeTrue();
 
-                    var node1 = shell.AdvancedShell.GetConnectedNode("node1");
-                    node1.Should().NotBeNull("we've just connected it");
-
-                    var result = shell.AdvancedShell.ParseCommand(
+                    var result = shell.ParseCommand(
                         "peercount", "-n", "node1");
                     result.Should().BeTrue();
-                    NodeRpcClient.Received(1).SendMessage(Arg.Is<IMessageDto<GetPeerCountRequest>>(
-                        x => x.Content != null &&
-                            x.Content.GetType().IsAssignableTo<GetPeerCountRequest>()));
-                }   
+                    AssertSentMessage<GetPeerCountRequest>();
+                }
             }
         }
     }
