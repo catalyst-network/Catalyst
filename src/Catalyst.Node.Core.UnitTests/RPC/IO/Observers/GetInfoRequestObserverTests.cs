@@ -31,6 +31,7 @@ using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Node.Core.RPC.IO.Observers;
+using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
@@ -102,8 +103,8 @@ namespace Catalyst.Node.Core.UnitTests.RPC.IO.Observers
             receivedCalls.Count.Should().Be(1, 
                 "the only call should be the one we checked above");
 
-            var response = ((IMessageDto<GetInfoResponse>) receivedCalls.Single().GetArguments()[0])
-               .FromIMessageDto();
+            var response = ((IMessageDto<ProtocolMessage>) receivedCalls.Single().GetArguments()[0])
+               .FromIMessageDto().FromProtocolMessage<GetInfoResponse>();
             response.Query.Should().Match(expectedResponseContent,
                 "the expected response should contain config information");
         }

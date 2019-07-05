@@ -61,9 +61,7 @@ namespace Catalyst.Common.IO.Handlers
                 message.SenderPeerIdentifier,
                 message.RecipientPeerIdentifier,
                 message.CorrelationId);
-
-            message.Release();
-
+            
             return context.WriteAsync(signedDto);
         }
     }

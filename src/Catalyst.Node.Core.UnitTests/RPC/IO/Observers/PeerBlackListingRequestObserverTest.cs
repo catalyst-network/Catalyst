@@ -32,6 +32,7 @@ using Catalyst.Common.Network;
 using Catalyst.Common.P2P;
 using Catalyst.Common.Util;
 using Catalyst.Node.Core.RPC.IO.Observers;
+using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
@@ -159,13 +160,9 @@ namespace Catalyst.Node.Core.UnitTests.RPC.IO.Observers
             var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();
             receivedCalls.Count.Should().Be(1);
             
-            var sentResponseDto = (IMessageDto<SetPeerBlackListResponse>) receivedCalls.Single().GetArguments().Single();
+            var sentResponseDto = (IMessageDto<ProtocolMessage>) receivedCalls.Single().GetArguments().Single();
             
-            sentResponseDto.Content.GetType()
-               .Should()
-               .BeAssignableTo<SetPeerBlackListResponse>();
-            
-            return sentResponseDto.FromIMessageDto();
+            return sentResponseDto.FromIMessageDto().FromProtocolMessage<SetPeerBlackListResponse>();
         }
     }
 }
