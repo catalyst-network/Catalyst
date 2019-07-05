@@ -183,7 +183,7 @@ namespace Catalyst.Cli.IntegrationTests.Connection
         }
 
         [Theory]
-        [InlineData("Test_Mode")]
+        //[InlineData("Test_Mode")]
         //[InlineData("Dev_Mode")]
         [InlineData("Main_Mode")]
         public void CliToNode_Connect_To_Node(string modeType)
