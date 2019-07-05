@@ -28,9 +28,9 @@ using Autofac;
 using Autofac.Configuration;
 using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.Cryptography;
-using Catalyst.Common.Interfaces.IO.Observables;
+using Catalyst.Common.Interfaces.IO.Observers;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Node.Core.P2P.IO.Observables;
+using Catalyst.Node.Core.P2P.IO.Observers;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Microsoft.Extensions.Configuration;
@@ -71,7 +71,7 @@ namespace Catalyst.Node.Core.UnitTests.Config
 
             var passwordReader = new TestPasswordReader();
             containerBuilder.RegisterInstance(passwordReader).As<IPasswordReader>();
-
+            
             var container = containerBuilder.Build();
             return container;
         }

@@ -28,7 +28,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
-using Catalyst.Common.IO.Messaging;
+using Catalyst.Common.IO.Messaging.Correlation;
 using FluentAssertions;
 using Ipfs;
 using Ipfs.CoreApi;

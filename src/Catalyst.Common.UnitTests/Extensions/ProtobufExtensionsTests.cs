@@ -24,6 +24,7 @@
 using System;
 using System.Text;
 using Catalyst.Common.Extensions;
+using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Common.Util;
 using Catalyst.Common.IO.Messaging;
 using Catalyst.Protocol.Common;

@@ -27,7 +27,7 @@ using System.Reactive.Linq;
 using System.Security.Cryptography.X509Certificates;
 using Catalyst.Common.Interfaces.IO.EventLoop;
 using Catalyst.Common.Interfaces.IO.Handlers;
-using Catalyst.Common.Interfaces.IO.Messaging;
+using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Transport.Channels;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
