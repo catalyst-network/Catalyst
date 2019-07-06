@@ -105,13 +105,10 @@ namespace Catalyst.Node.Core.RPC.IO.Observers
                     responseCode = await Task.Run(async () =>
                     {
                         using (var stream = await _dfs.ReadAsync(getFileFromDfsRequest.DfsHash).ConfigureAwait(false))
-                        using (var memoryStream = new MemoryStream())
                         {
-                            stream.CopyTo(memoryStream);
                             fileLen = stream.Length;
-
                             using (var fileTransferInformation = new UploadFileTransferInformation(
-                                memoryStream,
+                                stream,
                                 PeerIdentifier,
                                 senderPeerIdentifier,
                                 channelHandlerContext.Channel,
