@@ -32,7 +32,6 @@ using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Catalyst.Common.Interfaces.IO.Observers;
 
 namespace Catalyst.Node.Core.P2P
 {
