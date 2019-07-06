@@ -24,7 +24,7 @@
 using System.Threading.Tasks;
 using Catalyst.Protocol.Common;
 
-namespace Catalyst.Common.Interfaces.P2P.Messaging.Broadcast
+namespace Catalyst.Common.Interfaces.P2P.IO.Messaging.Broadcast
 { 
     public interface IBroadcastManager
     {
