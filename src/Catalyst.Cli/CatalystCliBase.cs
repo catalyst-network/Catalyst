@@ -22,20 +22,21 @@
 #endregion
 
 using System;
+using System.Globalization;
 using System.Reflection;
 using System.Text;
-using System.Globalization;
 using System.Text.RegularExpressions;
 using System.Threading;
 using Catalyst.Common.Interfaces.Cli;
 
-namespace Catalyst.Common.Shell
+namespace Catalyst.Cli
 {
-    public abstract class ShellBase : IShell
+    public abstract class CatalystCliBase
+        : ICatalystCli
     {
         protected readonly IUserOutput UserOutput;
 
-        protected ShellBase(IUserOutput userOutput)
+        protected CatalystCliBase(IUserOutput userOutput)
         {
             UserOutput = userOutput;
         }
@@ -43,7 +44,7 @@ namespace Catalyst.Common.Shell
         private static string Prompt => "Koopa";
         private static string ServiceName => "Catalyst Distributed Shell";
         private static CultureInfo AppCulture => new CultureInfo("en-GB", false);
-        
+
         /// <inheritdoc />
         public bool RunConsole(CancellationToken ct)
         {

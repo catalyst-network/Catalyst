@@ -32,12 +32,8 @@ namespace Catalyst.Cli.Options
     /// Get file onto DFS CLI options
     /// </summary>
     [Verb("getfile", HelpText = "gets file from dfs")]
-    public sealed class GetFileOptions : IGetFileOptions
+    public sealed class GetFileOptions : OptionsBase, IGetFileOptions
     {
-        /// <inheritdoc/>
-        [Option('n', "node", HelpText = "A valid node ID as listed in the nodes.json config file.", Required = true)]
-        public string Node { get; set; }
-
         /// <inheritdoc/>
         [Option('f', "file", HelpText = "The file hash", Required = true)]
         public string FileHash { get; set; }

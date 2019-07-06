@@ -23,9 +23,8 @@
 
 namespace Catalyst.Common.Interfaces.Cli.Options
 {
-    public interface IGetMempoolOptions
+    public interface IGetMempoolOptions : IOptionsBase
     {
         bool Mempool { get; set; }
-        string NodeId { get; set; }
     }
 }

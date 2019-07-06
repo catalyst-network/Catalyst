@@ -37,6 +37,7 @@ using Catalyst.Common.IO.Codecs;
 using Catalyst.Common.IO.Handlers;
 using Catalyst.Common.IO.Transport.Channels;
 using Catalyst.Protocol.Common;
+using DotNetty.Buffers;
 using DotNetty.Codecs.Protobuf;
 using DotNetty.Transport.Channels;
 
@@ -48,6 +49,7 @@ namespace Catalyst.Node.Core.RPC.IO.Transport.Channels
         private readonly IAuthenticationStrategy _authenticationStrategy;
         private readonly IKeySigner _keySigner;
         private readonly IPeerIdValidator _peerIdValidator;
+        private readonly IObservableServiceHandler _observableServiceHandler;
 
         protected override List<IChannelHandler> Handlers =>
             new List<IChannelHandler>
@@ -65,7 +67,7 @@ namespace Catalyst.Node.Core.RPC.IO.Transport.Channels
                 new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
                     new CorrelationHandler(_correlationManger), new CorrelatableHandler(_correlationManger)
                 ),
-                new ObservableServiceHandler()
+                _observableServiceHandler
             };
 
         /// <summary>
@@ -84,6 +86,7 @@ namespace Catalyst.Node.Core.RPC.IO.Transport.Channels
             _authenticationStrategy = authenticationStrategy;
             _keySigner = keySigner;
             _peerIdValidator = peerIdValidator;
+            _observableServiceHandler = new ObservableServiceHandler();
         }
 
         /// <param name="handlerEventLoopGroupFactory"></param>
@@ -97,7 +100,7 @@ namespace Catalyst.Node.Core.RPC.IO.Transport.Channels
         {
             var channel = Bootstrap(handlerEventLoopGroupFactory, targetAddress, targetPort, certificate);
             
-            var messageStream = channel.Pipeline.Get<IObservableServiceHandler>()?.MessageStream;
+            var messageStream = _observableServiceHandler.MessageStream;
 
             return new ObservableChannel(messageStream
              ?? Observable.Never<IObserverDto<ProtocolMessage>>(), channel);

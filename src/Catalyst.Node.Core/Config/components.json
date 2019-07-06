@@ -321,6 +321,17 @@
             "parameters": {
                 "clientVersion": "AC"
             }
+        },
+        {
+            "type": "Catalyst.Common.Util.TtlChangeTokenProvider, Catalyst.Common",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.Util.IChangeTokenProvider, Catalyst.Common"
+                }
+            ],
+            "parameters": {
+                "timeToLiveInMs": 10000
+            }
         }
     ],
     "modules": [
