@@ -24,7 +24,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
@@ -43,7 +42,6 @@ using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using Google.Protobuf;
 using NSubstitute;
-using Polly;
 using Serilog;
 using Xunit;
 using Xunit.Abstractions;
@@ -77,8 +75,9 @@ namespace Catalyst.Node.Rpc.Client.IntegrationTests.IO.Observers
         [InlineData(1000L)]
         [InlineData(82000L)]
         [InlineData(100000L)]
+        [InlineData(800000L)]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
-        public void Get_File_Rpc(long byteSize)
+        public async Task Get_File_Rpc(long byteSize)
         {
             string addedIpfsHash = AddFileToDfs(byteSize, out var crcValue, out var stream);
             Stream fileStream = null;
@@ -98,16 +97,7 @@ namespace Catalyst.Node.Rpc.Client.IntegrationTests.IO.Observers
                     new GetFileFromDfsResponseObserver(_logger, _fileDownloadFactory);
                 var transferBytesHandler =
                     new TransferFileBytesRequestObserver(_fileDownloadFactory, rpcPeer, _logger);
-
-                var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
-                var linearBackOffRetryPolicy = Policy.Handle<TaskCanceledException>()
-                   .WaitAndRetryAsync(5, retryAttempt =>
-                    {
-                        var timeSpan = TimeSpan.FromSeconds(retryAttempt + 5);
-                        cts = new CancellationTokenSource(timeSpan);
-                        return timeSpan;
-                    });
-
+                
                 _fileDownloadFactory.RegisterTransfer(fileDownloadInformation);
 
                 var getFileResponse = new GetFileFromDfsResponse
@@ -118,7 +108,7 @@ namespace Catalyst.Node.Rpc.Client.IntegrationTests.IO.Observers
 
                 getFileResponse.SendToHandler(_fakeContext, getFileFromDfsResponseHandler);
 
-                fileStream = _dfs.ReadAsync(addedIpfsHash).GetAwaiter().GetResult();
+                fileStream = await _dfs.ReadAsync(addedIpfsHash);
                 IUploadFileInformation fileUploadInformation = new UploadFileTransferInformation(
                     fileStream,
                     rpcPeer,
@@ -134,16 +124,7 @@ namespace Catalyst.Node.Rpc.Client.IntegrationTests.IO.Observers
                     transferMessage.Content.ToProtocolMessage(rpcPeerId).SendToHandler(_fakeContext, transferBytesHandler);
                 }
 
-                linearBackOffRetryPolicy.ExecuteAsync(() =>
-                {
-                    return Task.Run(() =>
-                    {
-                        while (!fileDownloadInformation.IsCompleted)
-                        {
-                            Task.Delay(1000, cts.Token).GetAwaiter().GetResult();
-                        }
-                    }, cts.Token);
-                }).GetAwaiter().GetResult();
+                await TaskHelper.WaitForAsync(() => fileDownloadInformation.IsCompleted, TimeSpan.FromSeconds(10));
 
                 Assert.Equal(crcValue, FileHelper.GetCrcValue(fileDownloadInformation.TempPath));
             }

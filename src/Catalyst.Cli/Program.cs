@@ -122,7 +122,7 @@ namespace Catalyst.Cli
                 {
                     var shell = container.Resolve<ICatalystCli>();
 
-                    shell.AdvancedShell.RunConsole(_cancellationSource.Token);
+                    shell.RunConsole(_cancellationSource.Token);
                 }
 
                 Environment.ExitCode = 0;

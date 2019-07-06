@@ -94,12 +94,11 @@ namespace Catalyst.Common.UnitTests.IO.Observers
             _observer.StartObserving(messageStream);
 
             await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
-
+            
             var receivedCalls = _context.Channel.ReceivedCalls().ToList();
             receivedCalls.Count.Should().Be(1);
-            var sentResponseDto = (IMessageDto<TransferFileBytesResponse>) receivedCalls.Single().GetArguments().Single();
-            sentResponseDto.Content.GetType().Should().BeAssignableTo<TransferFileBytesResponse>();
-            var versionResponseMessage = sentResponseDto.FromIMessageDto();
+            var sentResponseDto = (IMessageDto<ProtocolMessage>) receivedCalls.Single().GetArguments().Single();
+            var versionResponseMessage = sentResponseDto.Content.FromProtocolMessage<TransferFileBytesResponse>();
             versionResponseMessage.ResponseCode.Should().Equal((byte) FileTransferResponseCodes.Error);
         }
     }

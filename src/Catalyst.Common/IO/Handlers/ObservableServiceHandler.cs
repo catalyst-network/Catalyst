@@ -72,5 +72,7 @@ namespace Catalyst.Common.IO.Handlers
         {
             Dispose(true);
         }
+
+        public override bool IsSharable => true;
     }
 }

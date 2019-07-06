@@ -30,6 +30,7 @@ using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.Modules.Mempool;
 using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Node.Core.RPC.IO.Observers;
+using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.Protocol.Transaction;
 using Catalyst.TestUtils;
@@ -102,10 +103,9 @@ namespace Catalyst.Node.Core.UnitTests.RPC.IO.Observers
             var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();
             receivedCalls.Count.Should().Be(1);
             
-            var sentResponseDto = (IMessageDto<GetMempoolResponse>) receivedCalls.Single().GetArguments().Single();
-            sentResponseDto.Content.GetType().Should().BeAssignableTo<GetMempoolResponse>();
-
-            var responseContent = sentResponseDto.FromIMessageDto();
+            var sentResponseDto = (IMessageDto<ProtocolMessage>) receivedCalls.Single().GetArguments().Single();
+            
+            var responseContent = sentResponseDto.FromIMessageDto().FromProtocolMessage<GetMempoolResponse>();
             
             if (expectedTxs == 0)
             {
