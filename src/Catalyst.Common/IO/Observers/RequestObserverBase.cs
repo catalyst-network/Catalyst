@@ -74,17 +74,21 @@ namespace Catalyst.Common.IO.Observers
         public override void OnNext(IObserverDto<ProtocolMessage> messageDto)
         {
             Logger.Verbose("Pre Handle Message Called");
-            
+
+            var correlationId = messageDto.Payload.CorrelationId.ToCorrelationId();
+            var recipientPeerIdentifier = new PeerIdentifier(messageDto.Payload.PeerId);
+
             //@TODO HandleRequest in try catch if catch send error message.
             var response = HandleRequest(messageDto.Payload.FromProtocolMessage<TProtoReq>(),
                 messageDto.Context,
-                new PeerIdentifier(messageDto.Payload.PeerId),
-                messageDto.Payload.CorrelationId.ToCorrelationId());
+                recipientPeerIdentifier,
+                correlationId);
             
-            messageDto.Context.Channel.WriteAndFlushAsync(new DtoFactory().GetDto(response,
+            messageDto.Context.Channel.WriteAndFlushAsync(new DtoFactory().GetDto(
+                response.ToProtocolMessage(PeerIdentifier.PeerId, correlationId),
                 PeerIdentifier,
-                new PeerIdentifier(messageDto.Payload.PeerId),
-                messageDto.Payload.CorrelationId.ToCorrelationId()
+                recipientPeerIdentifier,
+                correlationId
             ));
         }
     }

@@ -31,6 +31,7 @@ using Catalyst.Common.Network;
 using Catalyst.Common.P2P;
 using Catalyst.Common.Util;
 using Catalyst.Node.Core.RPC.IO.Observers;
+using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
@@ -144,12 +145,9 @@ namespace Catalyst.Node.Core.UnitTests.RPC.IO.Observers
             var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();
             receivedCalls.Count.Should().Be(1);
 
-            var sentResponseDto = (IMessageDto<GetPeerReputationResponse>) receivedCalls[0].GetArguments().Single();
-
-            sentResponseDto.Content.GetType()
-               .Should().BeAssignableTo<GetPeerReputationResponse>();
-
-            return sentResponseDto.FromIMessageDto();
+            var sentResponseDto = (IMessageDto<ProtocolMessage>) receivedCalls[0].GetArguments().Single();
+            
+            return sentResponseDto.FromIMessageDto().FromProtocolMessage<GetPeerReputationResponse>();
         }
     }
 }

@@ -36,6 +36,7 @@ using Catalyst.Common.IO.Codecs;
 using Catalyst.Common.IO.Handlers;
 using Catalyst.Common.IO.Transport.Channels;
 using Catalyst.Protocol.Common;
+using DotNetty.Buffers;
 using DotNetty.Codecs.Protobuf;
 using DotNetty.Transport.Channels;
 
@@ -69,6 +70,7 @@ namespace Catalyst.Node.Rpc.Client.IO.Transport.Channels
         protected override List<IChannelHandler> Handlers =>
             new List<IChannelHandler>
             {
+                new FlushPipelineHandler<IByteBuffer>(),
                 new ProtobufVarint32LengthFieldPrepender(),
                 new ProtobufEncoder(),
                 new ProtobufVarint32FrameDecoder(),

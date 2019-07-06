@@ -29,6 +29,7 @@ using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.Util;
 using Catalyst.Node.Core.RPC.IO.Observers;
+using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
@@ -75,9 +76,8 @@ namespace Catalyst.Node.Core.UnitTests.RPC.IO.Observers
             var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();
             receivedCalls.Count.Should().Be(1);
 
-            var sentResponseDto = (IMessageDto<VersionResponse>) receivedCalls.Single().GetArguments().Single();
-            sentResponseDto.Content.GetType().Should().BeAssignableTo<VersionResponse>();
-            var versionResponseMessage = sentResponseDto.FromIMessageDto();
+            var sentResponseDto = (IMessageDto<ProtocolMessage>) receivedCalls.Single().GetArguments().Single();
+            var versionResponseMessage = sentResponseDto.FromIMessageDto().FromProtocolMessage<VersionResponse>();
             versionResponseMessage.Version.Should().Be(NodeUtil.GetVersion());
         }
     }

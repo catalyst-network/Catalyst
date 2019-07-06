@@ -84,17 +84,18 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Transport.Channels
         [Fact]
         public void NodeRpcClientChannelFactory_should_have_correct_handlers()
         {
-            _factory.InheritedHandlers.Count(h => h != null).Should().Be(9);
+            _factory.InheritedHandlers.Count(h => h != null).Should().Be(10);
             var handlers = _factory.InheritedHandlers.ToArray();
-            handlers[0].Should().BeOfType<ProtobufVarint32LengthFieldPrepender>();
-            handlers[1].Should().BeOfType<ProtobufEncoder>();
-            handlers[2].Should().BeOfType<ProtobufVarint32FrameDecoder>();
-            handlers[3].Should().BeOfType<ProtobufDecoder>();
-            handlers[4].Should().BeOfType<PeerIdValidationHandler>();
-            handlers[5].Should().BeOfType<AddressedEnvelopeToIMessageEncoder>();
-            handlers[6].Should().BeOfType<CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>>();
+            handlers[0].Should().BeOfType<FlushPipelineHandler<IByteBuffer>>();
+            handlers[1].Should().BeOfType<ProtobufVarint32LengthFieldPrepender>();
+            handlers[2].Should().BeOfType<ProtobufEncoder>();
+            handlers[3].Should().BeOfType<ProtobufVarint32FrameDecoder>();
+            handlers[4].Should().BeOfType<ProtobufDecoder>();
+            handlers[5].Should().BeOfType<PeerIdValidationHandler>();
+            handlers[6].Should().BeOfType<AddressedEnvelopeToIMessageEncoder>();
             handlers[7].Should().BeOfType<CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>>();
-            handlers[8].Should().BeOfType<ObservableServiceHandler>();
+            handlers[8].Should().BeOfType<CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>>();
+            handlers[9].Should().BeOfType<ObservableServiceHandler>();
         }
 
         [Fact]
