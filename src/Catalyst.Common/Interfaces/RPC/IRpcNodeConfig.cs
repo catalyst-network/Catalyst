@@ -21,21 +21,17 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.Attributes;
-using SharpRepository.Repository;
+using System.Net;
 
-namespace Catalyst.Common.Interfaces.Rpc.Authentication
+namespace Catalyst.Common.Interfaces.RPC
 {
-    public interface IAuthCredentials : IAuditable
+    public interface IRpcNodeConfig
     {
-        /// <summary>Gets or sets the public key.</summary>
-        /// <value>The public key.</value>
-        [RepositoryPrimaryKey(Order = 1)]
+        string NodeId { get; set; }
+        IPAddress HostAddress { get; set; }
+        int Port { get; set; }
+        string PfxFileName { get; set; }
+        string SslCertPassword { get; set; }
         string PublicKey { get; set; }
-
-        /// <summary>Gets or sets the ip address.</summary>
-        /// <value>The ip address.</value>
-        [RepositoryPrimaryKey(Order = 2)]
-        string IpAddress { get; set; }
     }
 }

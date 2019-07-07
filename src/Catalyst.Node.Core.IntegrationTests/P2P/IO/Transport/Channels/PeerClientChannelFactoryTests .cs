@@ -118,7 +118,7 @@ namespace Catalyst.Node.Core.IntegrationTests.P2P.IO.Transport.Channels
             _serverChannel.WriteOutbound(dto);
             var sentBytes = _serverChannel.ReadOutbound<DatagramPacket>();
 
-            _serverCorrelationManager.ReceivedWithAnyArgs(1).AddPendingRequest(Arg.Any<CorrelatableMessage>());
+            _serverCorrelationManager.ReceivedWithAnyArgs(1).AddPendingRequest(Arg.Any<CorrelatableMessage<ProtocolMessage>>());
             
             _serverKeySigner.ReceivedWithAnyArgs(1).Sign(Arg.Any<byte[]>());
             

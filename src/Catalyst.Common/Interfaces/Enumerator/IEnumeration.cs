@@ -31,7 +31,6 @@ namespace Catalyst.Common.Interfaces.Enumerator
         string Name { get; }
         int Id { get; }
         string ToString();
-        bool Equals(Enumeration other);
         bool Equals(object obj);
         int GetHashCode();
     }

@@ -24,7 +24,7 @@
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Handlers;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.Interfaces.Rpc.Authentication;
+using Catalyst.Common.Interfaces.RPC.Authentication;
 using Catalyst.Common.IO.Handlers;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;

@@ -22,7 +22,7 @@
 #endregion
 
 using System.Security.Authentication;
-using Catalyst.Common.Interfaces.Rpc.Authentication;
+using Catalyst.Common.Interfaces.RPC.Authentication;
 using Catalyst.Common.P2P;
 using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;

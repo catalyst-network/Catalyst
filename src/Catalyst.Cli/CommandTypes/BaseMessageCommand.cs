@@ -26,7 +26,7 @@ using Catalyst.Common.Interfaces.Cli.Commands;
 using Catalyst.Common.Interfaces.Cli.CommandTypes;
 using Catalyst.Common.Interfaces.Cli.Options;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.Interfaces.Rpc;
+using Catalyst.Common.Interfaces.RPC;
 using Catalyst.Common.P2P;
 using Google.Protobuf;
 

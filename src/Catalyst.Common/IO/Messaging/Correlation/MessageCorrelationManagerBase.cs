@@ -63,7 +63,7 @@ namespace Catalyst.Common.IO.Messaging.Correlation
         ///     Stores a CorrelatableMessage in the cache so we can correlate incoming messages.
         /// </summary>
         /// <param name="correlatableMessage"></param>
-        public virtual void AddPendingRequest(CorrelatableMessage correlatableMessage)
+        public virtual void AddPendingRequest(CorrelatableMessage<ProtocolMessage> correlatableMessage)
         {
             PendingRequests.Set(correlatableMessage.Content.CorrelationId, correlatableMessage, _entryOptions());
         }

@@ -35,7 +35,7 @@
 // using Catalyst.Common.Interfaces.Cryptography;
 // using Catalyst.Common.Interfaces.IO.Messaging;
 // using Catalyst.Common.Interfaces.Modules.Mempool;
-// using Catalyst.Common.Interfaces.Rpc;
+// using Catalyst.Common.Interfaces.RPC;
 // using Catalyst.Common.P2P;
 // using Catalyst.Common.UnitTests.TestUtils;
 // using Catalyst.Common.Util;

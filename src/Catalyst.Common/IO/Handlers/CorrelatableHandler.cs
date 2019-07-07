@@ -49,7 +49,7 @@ namespace Catalyst.Common.IO.Handlers
         {
             if (message.Content.TypeUrl.EndsWith(MessageTypes.Request.Name))
             {
-                _messageCorrelationManager.AddPendingRequest(new CorrelatableMessage
+                _messageCorrelationManager.AddPendingRequest(new CorrelatableMessage<ProtocolMessage>
                 {
                     Recipient = message.RecipientPeerIdentifier,
                     Content = message.Content,

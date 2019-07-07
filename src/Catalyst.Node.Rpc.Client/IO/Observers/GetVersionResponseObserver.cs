@@ -45,7 +45,10 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
         private readonly IUserOutput _output;
 
         /// <summary>
-        /// Handles the VersionResponse message sent from the <see cref="GetVersionRequestHandler" />.
+        /// Handles the VersionResponse message sent from the <see>
+        ///     <cref>GetVersionRequestHandler</cref>
+        /// </see>
+        /// .
         /// </summary>
         /// <param name="output">A service used to output the result of the messages handling to the user.</param>
         /// <param name="logger">Logger to log debug related information.</param>

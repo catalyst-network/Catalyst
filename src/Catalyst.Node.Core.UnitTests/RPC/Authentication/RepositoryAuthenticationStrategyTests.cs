@@ -22,7 +22,7 @@
 #endregion
 
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.Interfaces.Rpc.Authentication;
+using Catalyst.Common.Interfaces.RPC.Authentication;
 using Catalyst.Node.Core.RPC.Authentication;
 using Catalyst.TestUtils;
 using FluentAssertions;

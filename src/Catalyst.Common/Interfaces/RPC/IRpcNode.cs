@@ -21,18 +21,13 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.Interfaces.IO.Transport;
 
-namespace Catalyst.Common.Interfaces.Rpc.Authentication
+namespace Catalyst.Common.Interfaces.RPC
 {
-    /// <summary>
-    /// The authentication strategy decides how to whitelist a node 
-    /// </summary>
-    public interface IAuthenticationStrategy
+    public interface IRpcNode
     {
-        /// <summary>Authenticates the specified peer identifier.</summary>
-        /// <param name="peerIdentifier">The peer identifier.</param>
-        /// <returns>if [true] then whitelist node operator messages otherwise if [false] block messages</returns>
-        bool Authenticate(IPeerIdentifier peerIdentifier);
+        IRpcNodeConfig Config { get; }
+        ISocketClient SocketClient { get; }
     }
 }

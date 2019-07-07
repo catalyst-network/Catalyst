@@ -23,7 +23,7 @@
 
 using Catalyst.Common.Interfaces.IO.Transport;
 
-namespace Catalyst.Common.Interfaces.Rpc
+namespace Catalyst.Common.Interfaces.RPC
 {
     public interface INodeRpcClient : ISocketClient { }
 }

@@ -24,7 +24,7 @@
 using System;
 using Catalyst.Common.Attributes;
 using Catalyst.Common.Interfaces.Attributes;
-using Catalyst.Common.Interfaces.Rpc.Authentication;
+using Catalyst.Common.Interfaces.RPC.Authentication;
 
 namespace Catalyst.Node.Core.RPC.Authentication
 {

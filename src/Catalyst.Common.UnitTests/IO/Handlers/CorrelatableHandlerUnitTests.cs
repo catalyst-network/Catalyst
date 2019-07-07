@@ -63,7 +63,7 @@ namespace Catalyst.Common.UnitTests.IO.Handlers
             
             _fakeMessageCorrelationManager
                .ReceivedWithAnyArgs()
-               .AddPendingRequest(Arg.Any<CorrelatableMessage>()
+               .AddPendingRequest(Arg.Any<CorrelatableMessage<ProtocolMessage>>()
                 );
 
             _fakeContext.ReceivedWithAnyArgs(1).WriteAsync(Arg.Any<IMessageDto<ProtocolMessage>>());
@@ -80,7 +80,7 @@ namespace Catalyst.Common.UnitTests.IO.Handlers
             
             _fakeMessageCorrelationManager
                .DidNotReceiveWithAnyArgs()
-               .AddPendingRequest(Arg.Any<CorrelatableMessage>()
+               .AddPendingRequest(Arg.Any<CorrelatableMessage<ProtocolMessage>>()
                 );
 
             _fakeContext.ReceivedWithAnyArgs(1).WriteAsync(Arg.Any<IObserverDto<IMessage>>());
