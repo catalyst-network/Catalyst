@@ -75,7 +75,7 @@
             ]
         },
         {
-            "type": "Catalyst.Node.Core.RPC.IO.Transport.Channels.NodeRpcServerChannelFactory",
+            "type": "Catalyst.Node.Core.Rpc.IO.Transport.Channels.NodeRpcServerChannelFactory",
             "services": [
                 {
                     "type": "Catalyst.Common.Interfaces.IO.Transport.Channels.ITcpServerChannelFactory, Catalyst.Common"
@@ -99,7 +99,7 @@
             ]
         },
         {
-            "type": "Catalyst.Node.Core.RPC.NodeRpcServer",
+            "type": "Catalyst.Node.Core.Rpc.NodeRpcServer",
             "services": [
                 {
                     "type": "Catalyst.Common.Interfaces.Rpc.INodeRpcServer, Catalyst.Common"
@@ -115,7 +115,7 @@
             ]
         },
         {
-            "type": "Catalyst.Node.Core.RPC.RpcServerSettings",
+            "type": "Catalyst.Node.Core.Rpc.RpcServerSettings",
             "services": [
                 {
                     "type": "Catalyst.Common.Interfaces.Rpc.IRpcServerSettings, Catalyst.Common"
@@ -148,7 +148,7 @@
         },
 
         {
-            "type": "Catalyst.Node.Core.RPC.Authentication.RepositoryAuthenticationStrategy",
+            "type": "Catalyst.Node.Core.Rpc.Authentication.RepositoryAuthenticationStrategy",
             "services": [
                 {
                     "type": "Catalyst.Common.Interfaces.Rpc.Authentication.IAuthenticationStrategy, Catalyst.Common"
@@ -172,10 +172,10 @@
             ]
         },
         {
-            "type": "Catalyst.Common.FileSystem.FileSystemAwareXmlRepository`1[[Catalyst.Node.Core.RPC.Authentication.AuthCredentials, Catalyst.Node.Core]], Catalyst.Common",
+            "type": "Catalyst.Common.FileSystem.FileSystemAwareXmlRepository`1[[Catalyst.Node.Core.Rpc.Authentication.AuthCredentials, Catalyst.Node.Core]], Catalyst.Common",
             "services": [
                 {
-                    "type": "SharpRepository.Repository.IRepository`1[[Catalyst.Node.Core.RPC.Authentication.AuthCredentials, Catalyst.Node.Core]], SharpRepository.Repository"
+                    "type": "SharpRepository.Repository.IRepository`1[[Catalyst.Node.Core.Rpc.Authentication.AuthCredentials, Catalyst.Node.Core]], SharpRepository.Repository"
                 }
             ]
         },
