@@ -22,12 +22,10 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
-using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Common.RPC.IO.Messaging.Correlation;
 using Catalyst.Common.UnitTests.IO.Messaging;
@@ -35,7 +33,6 @@ using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using Microsoft.Extensions.Caching.Memory;
 using NSubstitute;
-using NSubstitute.ReceivedExtensions;
 using Xunit;
 using Xunit.Abstractions;
 
