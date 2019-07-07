@@ -148,7 +148,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.IO.Transport.Channels
             }
         }
 
-        private class ThrowingHandler :
+        private sealed class ThrowingHandler :
             RequestObserverBase<PeerNeighborsRequest, PeerNeighborsResponse>,
             IP2PMessageObserver
         {

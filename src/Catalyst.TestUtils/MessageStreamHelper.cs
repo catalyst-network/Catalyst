@@ -26,11 +26,15 @@ using System.Linq;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
+using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
+using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.IO.Observers;
 using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;
+using Google.Protobuf;
+using NSubstitute;
 
 namespace Catalyst.TestUtils 
 {
@@ -46,6 +50,17 @@ namespace Catalyst.TestUtils
             var channeledAny = new ObserverDto(fakeContext, response);
             var messageStream = new[] {channeledAny}.ToObservable();
             return messageStream;
+        }
+
+        public static IObservable<IObserverDto<ProtocolMessage>> CreateStreamWithMessages<T>(params T[] messages)
+            where T : IMessage<T>, IMessage
+        {
+            var protoMessages = messages.Select(m =>
+                m.ToProtocolMessage(PeerIdHelper.GetPeerId(), CorrelationId.GenerateCorrelationId()));
+
+            var context = Substitute.For<IChannelHandlerContext>();
+
+            return CreateStreamWithMessages(context, protoMessages.ToArray());
         }
 
         public static IObservable<IObserverDto<ProtocolMessage>> CreateStreamWithMessages(IChannelHandlerContext fakeContext, params ProtocolMessage[] responseMessages)
