@@ -37,6 +37,7 @@ namespace Catalyst.Common.RPC.IO.Messaging.Correlation
     public sealed class RpcMessageCorrelationManager : MessageCorrelationManagerBase, IRpcMessageCorrelationManager
     {
         private readonly ReplaySubject<ICacheEvictionEvent<ProtocolMessage>> _evictionEvent;
+
         public IObservable<ICacheEvictionEvent<ProtocolMessage>> EvictionEvents => _evictionEvent.AsObservable();
 
         public RpcMessageCorrelationManager(IMemoryCache cache,
@@ -52,6 +53,16 @@ namespace Catalyst.Common.RPC.IO.Messaging.Correlation
             Logger.Debug($"{key} message evicted");
             var message = (CorrelatableMessage<ProtocolMessage>) value;
             _evictionEvent.OnNext(new MessageEvictionEvent<ProtocolMessage>(message));
+        }
+        
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _evictionEvent?.Dispose();
+            }
+
+            base.Dispose(disposing);
         }
     }
 }
