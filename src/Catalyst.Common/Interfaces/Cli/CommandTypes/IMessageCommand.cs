@@ -21,7 +21,7 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.RPC;
+using Catalyst.Common.Interfaces.Rpc;
 using Google.Protobuf;
 
 namespace Catalyst.Common.Interfaces.Cli.CommandTypes

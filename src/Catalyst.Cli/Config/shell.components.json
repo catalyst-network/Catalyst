@@ -147,7 +147,7 @@
             "type": "Catalyst.Node.Rpc.Client.NodeRpcClientFactory, Catalyst.Node.Rpc.Client",
             "services": [
                 {
-                    "type": "Catalyst.Common.Interfaces.RPC.INodeRpcClientFactory, Catalyst.Common"
+                    "type": "Catalyst.Common.Interfaces.Rpc.INodeRpcClientFactory, Catalyst.Common"
                 }
             ]
         },
@@ -240,10 +240,10 @@
             ]
         },
         {
-            "type": "Catalyst.Common.RPC.IO.Messaging.Correlation.RpcMessageCorrelationManager, Catalyst.Common",
+            "type": "Catalyst.Common.Rpc.IO.Messaging.Correlation.RpcMessageCorrelationManager, Catalyst.Common",
             "services": [
                 {
-                    "type": "Catalyst.Common.Interfaces.RPC.IO.Messaging.Correlation.IRpcMessageCorrelationManager, Catalyst.Common"
+                    "type": "Catalyst.Common.Interfaces.Rpc.IO.Messaging.Correlation.IRpcMessageCorrelationManager, Catalyst.Common"
                 }
             ],
             "instanceScope": "singleinstance"
@@ -371,7 +371,7 @@
             ]
         },
         {
-            "type": "Catalyst.Common.RPC.IO.Observers.TransferFileBytesRequestObserver, Catalyst.Common",
+            "type": "Catalyst.Common.Rpc.IO.Observers.TransferFileBytesRequestObserver, Catalyst.Common",
             "services": [
                 {
                     "type": "Catalyst.Common.Interfaces.IO.Observers.IRpcRequestObserver, Catalyst.Common"

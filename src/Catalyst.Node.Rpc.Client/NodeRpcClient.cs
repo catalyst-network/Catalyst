@@ -24,7 +24,7 @@
 using Catalyst.Common.Interfaces.IO.EventLoop;
 using Catalyst.Common.Interfaces.IO.Observers;
 using Catalyst.Common.Interfaces.IO.Transport.Channels;
-using Catalyst.Common.Interfaces.RPC;
+using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.IO.Transport;
 using Serilog;
 using System.Collections.Generic;
