@@ -29,7 +29,7 @@ using System.Text;
 using Catalyst.Common.Network;
 using Catalyst.Common.Util;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.Interfaces.Rpc;
+using Catalyst.Common.Interfaces.RPC;
 using Catalyst.Protocol.Common;
 using Google.Protobuf;
 using Microsoft.Extensions.Configuration;

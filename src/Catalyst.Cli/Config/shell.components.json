@@ -147,7 +147,7 @@
             "type": "Catalyst.Node.Rpc.Client.NodeRpcClientFactory, Catalyst.Node.Rpc.Client",
             "services": [
                 {
-                    "type": "Catalyst.Common.Interfaces.Rpc.INodeRpcClientFactory, Catalyst.Common"
+                    "type": "Catalyst.Common.Interfaces.RPC.INodeRpcClientFactory, Catalyst.Common"
                 }
             ]
         },
@@ -243,7 +243,7 @@
             "type": "Catalyst.Common.RPC.IO.Messaging.Correlation.RpcMessageCorrelationManager, Catalyst.Common",
             "services": [
                 {
-                    "type": "Catalyst.Common.Interfaces.IO.Messaging.Correlation.IMessageCorrelationManager, Catalyst.Common"
+                    "type": "Catalyst.Common.Interfaces.RPC.IO.Messaging.Correlation.IRpcMessageCorrelationManager, Catalyst.Common"
                 }
             ],
             "instanceScope": "singleinstance"

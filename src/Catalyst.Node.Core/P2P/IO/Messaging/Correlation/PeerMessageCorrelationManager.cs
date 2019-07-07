@@ -56,7 +56,7 @@ namespace Catalyst.Node.Core.P2P.IO.Messaging.Correlation
         protected override void EvictionCallback(object key, object value, EvictionReason reason, object state)
         {
             Logger.Debug($"{key} message evicted");
-            var message = (CorrelatableMessage) value;
+            var message = (CorrelatableMessage<ProtocolMessage>) value;
             _reputationEvent.OnNext(new PeerReputationChange(message.Recipient, ReputationEvents.NoResponseReceived));
         }
 
@@ -70,7 +70,7 @@ namespace Catalyst.Node.Core.P2P.IO.Messaging.Correlation
         {
             Guard.Argument(response, nameof(response)).NotNull();
 
-            if (!PendingRequests.TryGetValue(response.CorrelationId, out CorrelatableMessage message))
+            if (!PendingRequests.TryGetValue(response.CorrelationId, out CorrelatableMessage<ProtocolMessage> message))
             {
                 Logger.Debug($"{response.CorrelationId} message not found");
 

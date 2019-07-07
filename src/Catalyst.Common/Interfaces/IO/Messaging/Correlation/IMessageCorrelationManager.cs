@@ -39,14 +39,22 @@ namespace Catalyst.Common.Interfaces.IO.Messaging.Correlation
         /// in the cache.
         /// </summary>
         /// <param name="correlatableMessage">The (outgoing) correlatable message to add to the cache.</param>
-        void AddPendingRequest(CorrelatableMessage correlatableMessage);
+        void AddPendingRequest(CorrelatableMessage<ProtocolMessage> correlatableMessage);
 
         /// <summary>
         /// Tries to match the response by checking its correlation Id is still
         /// in the cache.
         /// </summary>
         /// <param name="response">A response type message received from the network</param>
-        /// <returns><see cref="true"/> if the response was matched, <see cref="false"/> otherwise.</returns>
+        /// <returns>
+        ///     <see>
+        ///         <cref>true</cref>
+        ///     </see>
+        ///     if the response was matched,
+        ///     <see>
+        ///         <cref>false</cref>
+        ///     </see>
+        ///     otherwise.</returns>
         bool TryMatchResponse(ProtocolMessage response);
     }
 }

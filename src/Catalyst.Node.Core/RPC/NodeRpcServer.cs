@@ -32,7 +32,7 @@ using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Observers;
 using Catalyst.Common.Interfaces.IO.Transport.Channels;
 using Catalyst.Protocol.Common;
-using Catalyst.Common.Interfaces.Rpc;
+using Catalyst.Common.Interfaces.RPC;
 using Catalyst.Common.IO.Transport;
 using Serilog;
 

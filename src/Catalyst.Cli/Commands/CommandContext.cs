@@ -30,7 +30,7 @@ using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Transport;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.Interfaces.Rpc;
+using Catalyst.Common.Interfaces.RPC;
 using Catalyst.Common.IO.Transport;
 using Catalyst.Common.Network;
 using Catalyst.Node.Rpc.Client;

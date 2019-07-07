@@ -21,12 +21,21 @@
 
 #endregion
 
-using System.Collections.Generic;
+using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
+using Catalyst.Common.Interfaces.P2P;
+using Google.Protobuf;
 
-namespace Catalyst.Common.Interfaces.Rpc
+namespace Catalyst.Common.IO.Messaging.Correlation
 {
-    public interface IRpcNodesSettings
+    public sealed class MessageEvictionEvent<T> : ICacheEvictionEvent<T> where T : IMessage
     {
-        List<IRpcNodeConfig> NodesList { get; }
+        public T EvictedContent { get; }
+        public IPeerIdentifier PeerIdentifier { get; }
+        
+        public MessageEvictionEvent(CorrelatableMessage<T> correlatableMessage)
+        {
+            EvictedContent = correlatableMessage.Content;
+            PeerIdentifier = correlatableMessage.Recipient;
+        }
     }
 }

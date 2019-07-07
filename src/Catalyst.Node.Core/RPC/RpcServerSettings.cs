@@ -23,7 +23,7 @@
 
 using Microsoft.Extensions.Configuration;
 using System.Net;
-using Catalyst.Common.Interfaces.Rpc;
+using Catalyst.Common.Interfaces.RPC;
 using Dawn;
 
 namespace Catalyst.Node.Core.RPC

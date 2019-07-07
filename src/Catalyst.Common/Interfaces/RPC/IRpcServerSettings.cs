@@ -21,16 +21,19 @@
 
 #endregion
 
-using System;
-using Catalyst.Common.Interfaces.P2P;
-using Google.Protobuf;
+using System.Net;
+using Microsoft.Extensions.Configuration;
 
-namespace Catalyst.Common.IO.Messaging.Correlation
+namespace Catalyst.Common.Interfaces.RPC
 {
-    public sealed class CorrelatableMessage<T> where T : IMessage
+    public interface IRpcServerSettings
     {
-        public T Content { get; set; }
-        public IPeerIdentifier Recipient { get; set; }
-        public DateTimeOffset SentAt { get; set; }
+        IConfigurationRoot NodeConfig { get; }
+
+        int Port { get; }
+        IPAddress BindAddress { get; }
+        bool MutualAuthentication { get; }
+        bool AcceptInvalidCerts { get; }
+        string PfxFileName { get; }
     }
 }

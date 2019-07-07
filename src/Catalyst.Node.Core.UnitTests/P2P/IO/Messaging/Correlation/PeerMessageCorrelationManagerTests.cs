@@ -35,6 +35,7 @@ using Catalyst.Common.Interfaces.P2P.ReputationSystem;
 using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Common.UnitTests.IO.Messaging;
 using Catalyst.Node.Core.P2P.IO.Messaging.Correlation;
+using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
 using Catalyst.TestUtils;
 using FluentAssertions;
@@ -60,7 +61,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.IO.Messaging.Correlation
 
             _reputationByPeerIdentifier = PeerIds.ToDictionary(p => p, p => (long) 0); //smells funky
             
-            PendingRequests = PeerIds.Select((p, i) => new CorrelatableMessage
+            PendingRequests = PeerIds.Select((p, i) => new CorrelatableMessage<ProtocolMessage>
             {
                 Content = new PingRequest().ToProtocolMessage(SenderPeerId, CorrelationId.GenerateCorrelationId()),
                 Recipient = p,
@@ -99,7 +100,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.IO.Messaging.Correlation
                 {
                     CorrelationId = c, PeerIdentifier = p
                 })
-               .Select(c => new CorrelatableMessage
+               .Select(c => new CorrelatableMessage<ProtocolMessage>
                 {
                     Content = new PingRequest().ToProtocolMessage(senderPeerId, c.CorrelationId),
                     Recipient = c.PeerIdentifier,

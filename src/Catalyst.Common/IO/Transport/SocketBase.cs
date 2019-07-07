@@ -59,7 +59,7 @@ namespace Catalyst.Common.IO.Transport
                 return;
             }
 
-            _logger.Debug($"Disposing {0}", GetType().Name);
+            _logger.Debug("Disposing {0}", GetType().Name);
 
             var quietPeriod = TimeSpan.FromMilliseconds(100);
 

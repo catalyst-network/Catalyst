@@ -25,7 +25,7 @@ using System;
 using Catalyst.Common.Interfaces.IO.Observers;
 using Catalyst.Protocol.Common;
 
-namespace Catalyst.Common.Interfaces.Rpc
+namespace Catalyst.Common.Interfaces.RPC
 {
     public interface INodeRpcServer : IObservableMessageStreamer<ProtocolMessage>, IDisposable
     {

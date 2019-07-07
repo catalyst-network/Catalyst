@@ -22,15 +22,13 @@
 #endregion
 
 using System;
-using Catalyst.Common.Interfaces.P2P;
-using Google.Protobuf;
+using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
+using Catalyst.Protocol.Common;
 
-namespace Catalyst.Common.IO.Messaging.Correlation
+namespace Catalyst.Common.Interfaces.RPC.IO.Messaging.Correlation
 {
-    public sealed class CorrelatableMessage<T> where T : IMessage
+    public interface IRpcMessageCorrelationManager : IMessageCorrelationManager
     {
-        public T Content { get; set; }
-        public IPeerIdentifier Recipient { get; set; }
-        public DateTimeOffset SentAt { get; set; }
+        IObservable<ICacheEvictionEvent<ProtocolMessage>> EvictionEvents { get; }
     }
 }

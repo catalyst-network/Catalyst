@@ -51,7 +51,7 @@ namespace Catalyst.Common.UnitTests.IO.Messaging
         where T : IMessageCorrelationManager, IDisposable
     {
         protected readonly IPeerIdentifier[] PeerIds;
-        protected IList<CorrelatableMessage> PendingRequests;
+        protected IList<CorrelatableMessage<ProtocolMessage>> PendingRequests;
 
         protected T CorrelationManager;
         protected readonly ILogger SubbedLogger;
@@ -77,7 +77,7 @@ namespace Catalyst.Common.UnitTests.IO.Messaging
             }.Select(p => new PeerIdentifier(p) as IPeerIdentifier).ToArray();
             
             var responseStore = Substitute.For<IMemoryCache>();
-            responseStore.TryGetValue(Arg.Any<ByteString>(), out Arg.Any<CorrelatableMessage>())
+            responseStore.TryGetValue(Arg.Any<ByteString>(), out Arg.Any<CorrelatableMessage<ProtocolMessage>>())
                .Returns(ci =>
                 {
                     output.WriteLine("");

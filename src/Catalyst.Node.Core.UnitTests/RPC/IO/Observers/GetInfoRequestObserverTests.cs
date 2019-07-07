@@ -28,7 +28,7 @@ using System.Threading.Tasks;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
-using Catalyst.Common.Interfaces.Rpc;
+using Catalyst.Common.Interfaces.RPC;
 using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Node.Core.RPC.IO.Observers;
 using Catalyst.Protocol.Common;

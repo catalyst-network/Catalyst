@@ -21,19 +21,12 @@
 
 #endregion
 
-using System.Net;
-using Microsoft.Extensions.Configuration;
+using System.Security.Cryptography.X509Certificates;
 
-namespace Catalyst.Common.Interfaces.Rpc
+namespace Catalyst.Common.Interfaces.RPC
 {
-    public interface IRpcServerSettings
+    public interface INodeRpcClientFactory
     {
-        IConfigurationRoot NodeConfig { get; }
-
-        int Port { get; }
-        IPAddress BindAddress { get; }
-        bool MutualAuthentication { get; }
-        bool AcceptInvalidCerts { get; }
-        string PfxFileName { get; }
+        INodeRpcClient GetClient(X509Certificate2 certificate, IRpcNodeConfig nodeConfig);
     }
 }

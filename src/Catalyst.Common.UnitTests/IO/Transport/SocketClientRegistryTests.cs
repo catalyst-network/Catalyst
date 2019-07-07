@@ -28,7 +28,7 @@ using System.Linq;
 using System.Net;
 using Catalyst.Common.Interfaces.IO.Transport;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.Interfaces.Rpc;
+using Catalyst.Common.Interfaces.RPC;
 using Catalyst.Common.IO.Transport;
 using FluentAssertions;
 using NSubstitute;

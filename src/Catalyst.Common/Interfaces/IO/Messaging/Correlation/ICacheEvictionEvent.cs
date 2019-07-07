@@ -22,12 +22,13 @@
 #endregion
 
 using Catalyst.Common.Interfaces.P2P;
+using Google.Protobuf;
 
 namespace Catalyst.Common.Interfaces.IO.Messaging.Correlation
 {
-    public interface IMessageEvictionEvent
+    public interface ICacheEvictionEvent<out T> where T : IMessage
     {
-        object EvictedContent { get; }
+        T EvictedContent { get; }
         IPeerIdentifier PeerIdentifier { get; }
     }
 }

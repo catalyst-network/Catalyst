@@ -29,7 +29,7 @@ using System.Security.Cryptography.X509Certificates;
 using Autofac;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
-using Catalyst.Common.Interfaces.Rpc;
+using Catalyst.Common.Interfaces.RPC;
 using Catalyst.Protocol.Common;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
