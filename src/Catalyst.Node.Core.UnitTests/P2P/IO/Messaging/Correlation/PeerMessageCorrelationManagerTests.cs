@@ -27,6 +27,7 @@ using System.Linq;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
+using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.IO.Messaging.Correlation;
@@ -126,7 +127,8 @@ namespace Catalyst.Node.Core.UnitTests.P2P.IO.Messaging.Correlation
                 await TaskHelper.WaitForAsync(() => evictionObserver.ReceivedCalls().Any(),
                     TimeSpan.FromMilliseconds(1000));
 
-                evictionObserver.Received(requestCount).OnNext(Arg.Any<IPeerReputationChange>());
+                evictionObserver.Received(requestCount).OnNext(Arg.Is<IPeerReputationChange>(r => r.ReputationEvent.Name == ReputationEvents.NoResponseReceived.Name));
+                evictionObserver.Received(requestCount).OnNext(Arg.Is<IPeerReputationChange>(r => r.ReputationEvent.Name == ReputationEvents.UnCorrelatableMessage.Name));
             }
         }
         
