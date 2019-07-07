@@ -21,20 +21,13 @@
 
 #endregion
 
+using Catalyst.Common.Interfaces.Util;
+
 namespace Catalyst.Common.Interfaces.Modules.Consensus.Delta
 {
+    /// <inheritdoc cref="IChangeTokenProvider"/>
     /// <summary>
-    /// This service should be used to retrieve and cache Delta from the Dfs
+    /// Provides IChangeToken especially made for the DeltaCache
     /// </summary>
-    public interface IDeltaCache
-    {
-        /// <summary>
-        /// Attempts to retrieve a delta from the local cache first, then, if the delta was not found there,
-        /// the retrieval is done from the Dfs.
-        /// </summary>
-        /// <param name="hash">The hash or address of the delta on the Dfs.</param>
-        /// <param name="delta">The delta retrieved on the Dfs.</param>
-        /// <returns><see cref="true" /> if the retrieval was successful, <see cref="false" /> otherwise.</returns>
-        bool TryGetDelta(string hash, out Protocol.Delta.Delta delta);
-    }
+    public interface IDeltaCacheChangeTokenProvider : IChangeTokenProvider { }
 }

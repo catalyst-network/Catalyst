@@ -109,6 +109,17 @@
                     "type": "Catalyst.Common.Interfaces.IO.Observers.IP2PMessageObserver, Catalyst.Common"
                 }
             ]
+        },
+        {
+            "type": "Catalyst.Node.Core.Modules.Consensus.Delta.DeltaCacheChangeTokenProvider",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.Modules.Consensus.Delta.IDeltaCacheChangeTokenProvider, Catalyst.Common"
+                }
+            ],
+            "parameters": {
+                "timeToLiveInMs": 600000 //10mn
+            }
         }
     ]
 }

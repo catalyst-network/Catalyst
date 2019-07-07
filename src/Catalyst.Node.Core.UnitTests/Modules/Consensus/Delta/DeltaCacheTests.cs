@@ -22,11 +22,14 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using Catalyst.Common.Interfaces.Modules.Consensus.Delta;
 using Catalyst.Node.Core.Modules.Consensus.Delta;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Primitives;
 using NSubstitute;
 using Serilog;
 using Xunit;
@@ -38,15 +41,18 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Consensus.Delta
         private readonly IMemoryCache _memoryCache;
         private readonly IDeltaDfsReader _dfsReader;
         private readonly DeltaCache _deltaCache;
+        private readonly ILogger _logger;
 
         public DeltaCacheTests()
         {
             _memoryCache = Substitute.For<IMemoryCache>();
             _dfsReader = Substitute.For<IDeltaDfsReader>();
-            var logger = Substitute.For<ILogger>();
-            var cacheTtl = TimeSpan.FromMilliseconds(123);
+            _logger = Substitute.For<ILogger>();
 
-            _deltaCache = new DeltaCache(_memoryCache, _dfsReader, logger, cacheTtl);
+            var tokenProvider = Substitute.For<IDeltaCacheChangeTokenProvider>();
+            tokenProvider.GetChangeToken().Returns(Substitute.For<IChangeToken>());
+
+            _deltaCache = new DeltaCache(_memoryCache, _dfsReader, tokenProvider, _logger);
         }
 
         [Fact]
@@ -92,13 +98,18 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Consensus.Delta
         }
 
         [Fact]
-        public void TryGetDelta_Should_Cache_Delta_When_Delta_Is_Not_In_Cache()
+        public void TryGetDelta_Should_Cache_Delta_With_Expiry_Options_When_Delta_Is_Not_In_Cache()
         {
             var deltaFromDfs = DeltaHelper.GetDelta();
             var hash = "ijk";
             ExpectDeltaFromDfsAndNotFromCache(hash, deltaFromDfs);
 
             var cacheEntry = Substitute.For<ICacheEntry>();
+            var expirationTokens = new List<IChangeToken>();
+            cacheEntry.ExpirationTokens.Returns(expirationTokens);
+            var expirationCallbacks = new List<PostEvictionCallbackRegistration>();
+            cacheEntry.PostEvictionCallbacks.Returns(expirationCallbacks);
+
             _memoryCache.CreateEntry(hash).Returns(cacheEntry);
 
             _deltaCache.TryGetDelta(hash, out var delta);
@@ -106,7 +117,12 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Consensus.Delta
             _memoryCache.Received(1).CreateEntry(hash);
             cacheEntry.Value.Should().Be(deltaFromDfs);
 
-            //cacheEntry.ExpirationTokens.Count.Should().Be(1);
+            cacheEntry.ExpirationTokens.Count.Should().Be(1);
+            cacheEntry.PostEvictionCallbacks.Count.Should().Be(1);
+
+            _logger.ClearReceivedCalls();
+            cacheEntry.PostEvictionCallbacks.Single().EvictionCallback.Invoke("key", "value", EvictionReason.Expired, "state");
+            _logger.Received(1).Debug(Arg.Any<string>(), Arg.Any<object>());
         }
 
         private void ExpectDeltaFromDfsAndNotFromCache(string hash, Protocol.Delta.Delta deltaFromDfs)
