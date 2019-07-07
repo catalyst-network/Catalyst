@@ -21,13 +21,19 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.IO.Messaging.Dto;
+using System.Threading.Tasks;
 using Catalyst.Protocol.Common;
 
-namespace Catalyst.Common.Interfaces.IO.Observers
-{
-    internal interface IBroadcastObserver : IMessageObserver
-    { 
-        void HandleBroadcast(IObserverDto<ProtocolMessage> messageDto);
+namespace Catalyst.Common.Interfaces.P2P.IO.Messaging.Broadcast
+{ 
+    public interface IBroadcastManager
+    {
+        /// <summary>Broadcasts a message.</summary>
+        /// <param name="protocolMessage">Any signed message.</param>
+        Task BroadcastAsync(ProtocolMessage protocolMessage);
+
+        /// <summary>Handles Incoming gossip.</summary>
+        /// <param name="anySigned">Any signed message.</param>
+        Task ReceiveAsync(ProtocolMessage anySigned);
     }
 }

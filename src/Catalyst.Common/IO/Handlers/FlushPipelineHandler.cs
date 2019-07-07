@@ -22,18 +22,12 @@
 #endregion
 
 using System.Threading.Tasks;
-using Catalyst.Protocol.Common;
+using DotNetty.Transport.Channels;
 
-namespace Catalyst.Common.Interfaces.P2P.Messaging.Broadcast
-{ 
-    public interface IBroadcastManager
+namespace Catalyst.Common.IO.Handlers
+{
+    public sealed class FlushPipelineHandler<T> : OutboundChannelHandlerBase<T>
     {
-        /// <summary>Broadcasts a message.</summary>
-        /// <param name="protocolMessage">Any signed message.</param>
-        Task BroadcastAsync(ProtocolMessage protocolMessage);
-
-        /// <summary>Handles Incoming gossip.</summary>
-        /// <param name="anySigned">Any signed message.</param>
-        Task ReceiveAsync(ProtocolMessage anySigned);
+        protected override Task WriteAsync0(IChannelHandlerContext ctx, T msg) { return ctx.WriteAndFlushAsync(msg); }
     }
 }

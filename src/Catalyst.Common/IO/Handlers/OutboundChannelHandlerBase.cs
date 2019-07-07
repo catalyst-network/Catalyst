@@ -24,7 +24,6 @@
 using System;
 using System.Reflection;
 using System.Threading.Tasks;
-using DotNetty.Common.Utilities;
 using DotNetty.Transport.Channels;
 using Serilog;
 
@@ -37,15 +36,6 @@ namespace Catalyst.Common.IO.Handlers
     public abstract class OutboundChannelHandlerBase<T> : ChannelHandlerAdapter
     {
         private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
-        private readonly bool _autoRelease;
-        
-        protected OutboundChannelHandlerBase()
-            : this(true) { }
-        
-        private OutboundChannelHandlerBase(bool autoRelease)
-        {
-            _autoRelease = autoRelease;
-        }
         
         /// <summary>
         ///     Does check to see if it can process the msg, if object is T thn it fires the inheritor WriteAsync0
@@ -55,31 +45,20 @@ namespace Catalyst.Common.IO.Handlers
         /// <returns></returns>
         public override Task WriteAsync(IChannelHandlerContext ctx, object msg)
         {
-            var flag = true;
+            Task writeTask = null;
             try
             {
                 if (msg is T msg1)
                 {
-                    return WriteAsync0(ctx, msg1);
-                }
-                else
-                {
-                    flag = false;
+                    writeTask = WriteAsync0(ctx, msg1);
                 }
             }
             catch (Exception e)
             {
                 Logger.Error(e, e.Message);
             }
-            finally
-            {
-                if (_autoRelease && flag)
-                {
-                    ReferenceCountUtil.Release(msg);   
-                }
-            }
             
-            return ctx.WriteAsync(msg);
+            return writeTask ?? ctx.WriteAsync(msg);
         }
 
         /// <summary>

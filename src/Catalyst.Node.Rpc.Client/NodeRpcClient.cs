@@ -31,7 +31,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
-using Catalyst.Common.Interfaces.IO.Observers;
 
 namespace Catalyst.Node.Rpc.Client
 {
