@@ -96,19 +96,11 @@ namespace Catalyst.Node.Core.RPC.IO.Observers
                 Logger.Error(ex, "{0} {1}", SignatureInvalid, verifyMessageRequest);
             }
 
-            try
-            {
-                var result = _keySigner.CryptoContext.Verify(signature, decodedMessage);
+            var result = _keySigner.CryptoContext.Verify(signature, decodedMessage);
 
-                Logger.Debug("message content is {0}", verifyMessageRequest.Message);
-                
-                return ReturnResponse(result);
-            }
-            catch (Exception ex)
-            {
-                Logger.Error(ex, "{0} {1}", FailedToHandleMessage, verifyMessageRequest);
-                throw;
-            } 
+            Logger.Debug("message content is {0}", verifyMessageRequest.Message);
+            
+            return ReturnResponse(result);
         }
 
         private VerifyMessageResponse ReturnResponse(bool result)

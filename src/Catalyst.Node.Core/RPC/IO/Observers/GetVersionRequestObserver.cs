@@ -58,21 +58,13 @@ namespace Catalyst.Node.Core.RPC.IO.Observers
             Guard.Argument(versionRequest, nameof(versionRequest)).NotNull();
             Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
             Guard.Argument(senderPeerIdentifier, nameof(senderPeerIdentifier)).NotNull();
+
             Logger.Debug("received message of type VersionRequest");
 
-            try
+            return new VersionResponse
             {
-                return new VersionResponse
-                {
-                    Version = NodeUtil.GetVersion()
-                };
-            }
-            catch (Exception ex)
-            {
-                Logger.Error(ex,
-                    "Failed to handle GetVersionRequest after receiving message {0}", versionRequest);
-                throw;
-            }
+                Version = NodeUtil.GetVersion()
+            };
         }
     }
 }

@@ -23,6 +23,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.IO.Observers;
@@ -87,25 +88,8 @@ namespace Catalyst.Node.Core.RPC.IO.Observers
 
         private IEnumerable<string> GetMempoolContent()
         {
-            var mempoolList = new List<string>();
-
-            try
-            {
-                var memPoolContentEncoded = _mempool.GetMemPoolContentEncoded();
-
-                foreach (var tx in memPoolContentEncoded)
-                {
-                    mempoolList.Add(Encoding.Default.GetString(tx));
-                }
-
-                return mempoolList;
-            }
-            catch (Exception ex)
-            {
-                Logger.Error(ex,
-                    "Failed to get the mempool content and format it as List<string> {0}", ex.Message);
-                throw;
-            }
+            return _mempool.GetMemPoolContentEncoded()
+               .Select(Encoding.Default.GetString);
         }
     }
 }

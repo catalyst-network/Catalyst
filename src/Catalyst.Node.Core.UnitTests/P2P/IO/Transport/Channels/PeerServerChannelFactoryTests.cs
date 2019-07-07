@@ -21,21 +21,17 @@
 
 #endregion
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
-using Catalyst.Common.Interfaces.IO.Observers;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.IO.Messaging.Broadcast;
 using Catalyst.Common.IO.Handlers;
 using Catalyst.Common.IO.Messaging.Correlation;
-using Catalyst.Common.IO.Observers;
 using Catalyst.Common.Util;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
 using Catalyst.Node.Core.P2P.IO.Transport.Channels;
@@ -147,29 +143,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.IO.Transport.Channels
                 observer.Received.Single().Payload.CorrelationId.ToCorrelationId().Id.Should().Be(_correlationId.Id);
             }
         }
-
-        private sealed class ThrowingHandler :
-            RequestObserverBase<PeerNeighborsRequest, PeerNeighborsResponse>,
-            IP2PMessageObserver
-        {
-            public int Counter;
-            public ThrowingHandler(ILogger logger, IPeerIdentifier peerIdentifier) : base(logger, peerIdentifier) { }
-
-            protected override PeerNeighborsResponse HandleRequest(PeerNeighborsRequest messageDto,
-                IChannelHandlerContext channelHandlerContext,
-                IPeerIdentifier senderPeerIdentifier,
-                ICorrelationId correlationId)
-            {
-                var count = Interlocked.Increment(ref Counter);
-                if (count % 2 == 0)
-                {
-                    throw new ArgumentException("something went wrong handling the request");
-                }
-
-                return new PeerNeighborsResponse {Peers = {PeerIdHelper.GetPeerId()}};
-            }
-        }
-
+        
         [Fact]
         public void Observer_Exception_Should_Not_Stop_Correct_Messages_Reception()
         {
@@ -177,7 +151,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.IO.Transport.Channels
                 true, _factory.InheritedHandlers.ToArray());
             
             var serverIdentifier = PeerIdentifierHelper.GetPeerIdentifier("server");
-            using (var badHandler = new ThrowingHandler(Substitute.For<ILogger>(), serverIdentifier))
+            using (var badHandler = new FailingRequestObserver(Substitute.For<ILogger>(), serverIdentifier))
             {
                 var messageStream = ((ObservableServiceHandler) _factory.InheritedHandlers.Last()).MessageStream;
                 badHandler.StartObserving(messageStream);

@@ -25,11 +25,15 @@ using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
+using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Observers;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Delta;
+using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
+using DotNetty.Transport.Channels;
 using FluentAssertions;
 using NSubstitute;
 using Serilog;
@@ -37,14 +41,18 @@ using Xunit;
 
 namespace Catalyst.Common.UnitTests.IO.Observers
 {
-    public class BroadcastObserverBaseTests
+    public class ResponseObserverBaseTests
     {
-        private sealed class FailingBroadCastObserver : BroadcastObserverBase<CandidateDeltaBroadcast>
+        private sealed class FailingResponseObserver : ResponseObserverBase<GetPeerCountResponse>
         {
             public int Counter;
-            public FailingBroadCastObserver(ILogger logger) : base(logger) { }
 
-            public override void HandleBroadcast(IObserverDto<ProtocolMessage> messageDto)
+            public FailingResponseObserver(ILogger logger) : base(logger) { }
+
+            protected override void HandleResponse(GetPeerCountResponse messageDto,
+                IChannelHandlerContext channelHandlerContext,
+                IPeerIdentifier senderPeerIdentifier,
+                ICorrelationId correlationId)
             {
                 var count = Interlocked.Increment(ref Counter);
                 if (count % 2 == 0)
@@ -57,13 +65,14 @@ namespace Catalyst.Common.UnitTests.IO.Observers
         [Fact]
         public async Task OnNext_Should_Still_Get_Called_After_HandleBroadcast_Failure()
         {
-            var candidateDeltaMessages = Enumerable.Repeat(DeltaHelper.GetCandidateDelta(), 10).ToArray();
+            var candidateDeltaMessages = Enumerable.Range(0, 10)
+               .Select(i => new GetPeerCountResponse {PeerCount = i}).ToArray();
 
             var messageStream = MessageStreamHelper.CreateStreamWithMessages(candidateDeltaMessages);
-            using (var observer = new FailingBroadCastObserver(Substitute.For<ILogger>()))
+            using (var observer = new FailingResponseObserver(Substitute.For<ILogger>()))
             {
                 observer.StartObserving(messageStream);
-                await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync(TimeSpan.FromSeconds(1));
+                await messageStream.WaitForItemsOnDelayedStreamOnTaskPoolSchedulerAsync();
                 observer.Counter.Should().Be(10);
             }
         }

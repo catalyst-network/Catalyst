@@ -23,12 +23,8 @@
 
 using System;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
-using Catalyst.Common.Interfaces.IO.Messaging.Dto;
-using Catalyst.Common.IO.Observers;
-using Catalyst.Protocol.Common;
-using Catalyst.Protocol.Delta;
+using Catalyst.Protocol.IPPN;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using NSubstitute;
@@ -37,30 +33,16 @@ using Xunit;
 
 namespace Catalyst.Common.UnitTests.IO.Observers
 {
-    public class BroadcastObserverBaseTests
+    public class RequestObserverBaseTests
     {
-        private sealed class FailingBroadCastObserver : BroadcastObserverBase<CandidateDeltaBroadcast>
-        {
-            public int Counter;
-            public FailingBroadCastObserver(ILogger logger) : base(logger) { }
-
-            public override void HandleBroadcast(IObserverDto<ProtocolMessage> messageDto)
-            {
-                var count = Interlocked.Increment(ref Counter);
-                if (count % 2 == 0)
-                {
-                    throw new ArgumentException("something went wrong handling the request");
-                }
-            }
-        }
-
         [Fact]
         public async Task OnNext_Should_Still_Get_Called_After_HandleBroadcast_Failure()
         {
-            var candidateDeltaMessages = Enumerable.Repeat(DeltaHelper.GetCandidateDelta(), 10).ToArray();
+            var candidateDeltaMessages = Enumerable.Repeat(new PeerNeighborsRequest(), 10).ToArray();
 
             var messageStream = MessageStreamHelper.CreateStreamWithMessages(candidateDeltaMessages);
-            using (var observer = new FailingBroadCastObserver(Substitute.For<ILogger>()))
+            using (var observer = new FailingRequestObserver(Substitute.For<ILogger>(), 
+                PeerIdentifierHelper.GetPeerIdentifier("server")))
             {
                 observer.StartObserving(messageStream);
                 await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync(TimeSpan.FromSeconds(1));
