@@ -91,7 +91,7 @@ namespace Catalyst.Node.Core.UnitTests.Config
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         private void ComponentsJsonFile_should_configure_modules(Type interfaceType, Type resolutionType)
         {
-            using (_container.BeginLifetimeScope(Guid.NewGuid()))
+            using (_container.BeginLifetimeScope(Guid.NewGuid().ToString()))
             {
                 var resolvedType = _container.Resolve(interfaceType);
                 resolvedType.Should().NotBeNull();
