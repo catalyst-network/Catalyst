@@ -141,28 +141,28 @@ namespace Catalyst.Node.Core.IntegrationTests.P2P
             peerDiscovery.Peers.Should().ContainItemsAssignableTo<IPeerIdentifier>();
         }
 
-        [Fact]
-        public void CanReceivePingEventsFromSubscribedStream()
-        {
-            _dnsDomains.ForEach(domain =>
-            {
-                MockQueryResponse.CreateFakeLookupResult(domain, _seedPid, _lookupClient);
-            });
-            
-            var peerDiscovery = new PeerDiscovery(_dns, _peerRepository, _config, _logger);
-
-            var fakeContext = Substitute.For<IChannelHandlerContext>();
-            var pingRequest = new PingResponse();
-            var pid = PeerIdentifierHelper.GetPeerIdentifier("im_a_key");
-            var channeledAny = new ObserverDto(fakeContext, 
-                pingRequest.ToProtocolMessage(pid.PeerId, CorrelationId.GenerateCorrelationId()));
-            
-            var observableStream = new[] {channeledAny}.ToObservable();
-
-            peerDiscovery.StartObserving(observableStream);
-
-            _peerRepository.Received(1)
-               .Add(Arg.Is<Peer>(p => p.PeerIdentifier.Equals(pid)));
-        }
+        // [Fact]
+        // public void CanReceivePingEventsFromSubscribedStream()
+        // {
+        //     _dnsDomains.ForEach(domain =>
+        //     {
+        //         MockQueryResponse.CreateFakeLookupResult(domain, _seedPid, _lookupClient);
+        //     });
+        //     
+        //     var peerDiscovery = new PeerDiscovery(_dns, _peerRepository, _config, _logger);
+        //
+        //     var fakeContext = Substitute.For<IChannelHandlerContext>();
+        //     var pingRequest = new PingResponse();
+        //     var pid = PeerIdentifierHelper.GetPeerIdentifier("im_a_key");
+        //     var channeledAny = new ObserverDto(fakeContext, 
+        //         pingRequest.ToProtocolMessage(pid.PeerId, CorrelationId.GenerateCorrelationId()));
+        //     
+        //     var observableStream = new[] {channeledAny}.ToObservable();
+        //
+        //     peerDiscovery.StartObserving(observableStream);
+        //
+        //     _peerRepository.Received(1)
+        //        .Add(Arg.Is<Peer>(p => p.PeerIdentifier.Equals(pid)));
+        // }
     }
 }
