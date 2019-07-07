@@ -23,10 +23,8 @@
 
 using Autofac;
 using Catalyst.Common.Interfaces.Cli;
-using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Protocol.Rpc.Node;
 using FluentAssertions;
-using NSubstitute;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -37,8 +35,8 @@ namespace Catalyst.Cli.IntegrationTests.Commands
         //This test is the base to all other tests.  If the Cli cannot connect to a node than all other commands
         //will fail
         public PeerReputationCommandTest(ITestOutputHelper output) : base(output) { }
-        
-        [Fact] 
+
+        [Fact]
         public void Cli_Can_Send_Peer_Reputation_Request()
         {
             using (var container = ContainerBuilder.Build())
@@ -46,18 +44,13 @@ namespace Catalyst.Cli.IntegrationTests.Commands
                 using (container.BeginLifetimeScope(CurrentTestName))
                 {
                     var shell = container.Resolve<ICatalystCli>();
-                    var hasConnected = shell.AdvancedShell.ParseCommand("connect", "-n", "node1");
+                    var hasConnected = shell.ParseCommand("connect", "-n", "node1");
                     hasConnected.Should().BeTrue();
 
-                    var node1 = shell.AdvancedShell.GetConnectedNode("node1");
-                    node1.Should().NotBeNull("we've just connected it");
-
-                    var result = shell.AdvancedShell.ParseCommand(
+                    var result = shell.ParseCommand(
                         "peerrep", "-n", "node1", "-l", "127.0.0.1", "-p", "fake_public_key");
                     result.Should().BeTrue();
-                    NodeRpcClient.Received(1).SendMessage(Arg.Is<IMessageDto<GetPeerReputationRequest>>(
-                        x => x.Content != null && 
-                            x.Content.GetType().IsAssignableTo<GetPeerReputationRequest>()));
+                    AssertSentMessage<GetPeerReputationRequest>();
                 }
             }
         }

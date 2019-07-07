@@ -94,7 +94,7 @@ namespace Catalyst.Common.IO.Observers
             }
             catch (Exception exception)
             {
-                Logger.Error(exception, "Failed to process incoming request");
+                Logger.Error(exception, "Failed to process message");
             }
         }
     }

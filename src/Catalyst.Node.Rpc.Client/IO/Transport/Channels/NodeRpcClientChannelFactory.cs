@@ -36,6 +36,7 @@ using Catalyst.Common.IO.Codecs;
 using Catalyst.Common.IO.Handlers;
 using Catalyst.Common.IO.Transport.Channels;
 using Catalyst.Protocol.Common;
+using DotNetty.Buffers;
 using DotNetty.Codecs.Protobuf;
 using DotNetty.Transport.Channels;
 
@@ -46,6 +47,7 @@ namespace Catalyst.Node.Rpc.Client.IO.Transport.Channels
         private readonly IKeySigner _keySigner;
         private readonly IMessageCorrelationManager _messageCorrelationCache;
         private readonly IPeerIdValidator _peerIdValidator;
+        private readonly IObservableServiceHandler _observableServiceHandler;
 
         /// <summary>
         /// 
@@ -62,11 +64,13 @@ namespace Catalyst.Node.Rpc.Client.IO.Transport.Channels
             _keySigner = keySigner;
             _messageCorrelationCache = messageCorrelationCache;
             _peerIdValidator = peerIdValidator;
+            _observableServiceHandler = new ObservableServiceHandler();
         }
 
         protected override List<IChannelHandler> Handlers =>
             new List<IChannelHandler>
             {
+                new FlushPipelineHandler<IByteBuffer>(),
                 new ProtobufVarint32LengthFieldPrepender(),
                 new ProtobufEncoder(),
                 new ProtobufVarint32FrameDecoder(),
@@ -79,7 +83,7 @@ namespace Catalyst.Node.Rpc.Client.IO.Transport.Channels
                 new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
                     new CorrelationHandler(_messageCorrelationCache), new CorrelatableHandler(_messageCorrelationCache)
                 ),
-                new ObservableServiceHandler()
+                _observableServiceHandler
             };
 
         /// <param name="eventLoopGroupFactory"></param>
@@ -93,7 +97,7 @@ namespace Catalyst.Node.Rpc.Client.IO.Transport.Channels
         {
             var channel = Bootstrap(eventLoopGroupFactory, targetAddress, targetPort, certificate);
 
-            var messageStream = channel.Pipeline.Get<IObservableServiceHandler>()?.MessageStream;
+            var messageStream = _observableServiceHandler.MessageStream;
 
             return new ObservableChannel(messageStream
              ?? Observable.Never<IObserverDto<ProtocolMessage>>(), channel);

@@ -23,9 +23,8 @@
 
 namespace Catalyst.Common.Interfaces.Cli.Options
 {
-    public interface ISignOptions
+    public interface ISignOptions : IOptionsBase
     {
         string Message { get; set; }
-        string Node { get; set; }
     }
 }

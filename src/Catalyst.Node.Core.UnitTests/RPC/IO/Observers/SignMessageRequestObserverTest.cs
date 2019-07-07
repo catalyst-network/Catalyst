@@ -32,6 +32,7 @@ using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Node.Core.RPC.IO.Observers;
+using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
@@ -98,13 +99,8 @@ namespace Catalyst.Node.Core.UnitTests.RPC.IO.Observers
             var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();
             receivedCalls.Count.Should().Be(1);
             
-            var sentResponseDto = (IMessageDto<SignMessageResponse>) receivedCalls.Single().GetArguments().Single();
-            
-            sentResponseDto.Content.GetType()
-               .Should()
-               .BeAssignableTo<SignMessageResponse>();
-
-            var signResponseMessage = sentResponseDto.FromIMessageDto();
+            var sentResponseDto = (IMessageDto<ProtocolMessage>) receivedCalls.Single().GetArguments().Single();
+            var signResponseMessage = sentResponseDto.FromIMessageDto().FromProtocolMessage<SignMessageResponse>();
 
             signResponseMessage.OriginalMessage.Should().Equal(message);
             signResponseMessage.Signature.Should().NotBeEmpty();

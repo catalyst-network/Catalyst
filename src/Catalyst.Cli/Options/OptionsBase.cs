@@ -21,19 +21,15 @@
 
 #endregion
 
-using System.Threading.Tasks;
-using Catalyst.Protocol.Common;
+using Catalyst.Common.Interfaces.Cli.Options;
+using CommandLine;
 
-namespace Catalyst.Common.Interfaces.P2P.Messaging.Broadcast
-{ 
-    public interface IBroadcastManager
+namespace Catalyst.Cli.Options
+{
+    public class OptionsBase : IOptionsBase
     {
-        /// <summary>Broadcasts a message.</summary>
-        /// <param name="protocolMessage">Any signed message.</param>
-        Task BroadcastAsync(ProtocolMessage protocolMessage);
-
-        /// <summary>Handles Incoming gossip.</summary>
-        /// <param name="anySigned">Any signed message.</param>
-        Task ReceiveAsync(ProtocolMessage anySigned);
+        /// <inheritdoc />
+        [Option('n', "node", Required = true, HelpText = "A valid node ID as listed in the nodes.json config file.")]
+        public string Node { get; set; }
     }
 }

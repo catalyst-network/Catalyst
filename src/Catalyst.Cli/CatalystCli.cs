@@ -22,17 +22,42 @@
 #endregion
 
 using Catalyst.Common.Interfaces.Cli;
+using Catalyst.Common.Interfaces.Cli.CommandTypes;
+using CommandLine;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Catalyst.Cli
 {
-    public class CatalystCli
-        : ICatalystCli
+    /// <inheritdoc cref="CatalystCliBase" />
+    public sealed class CatalystCli : CatalystCliBase
     {
-        public IAdvancedShell AdvancedShell { get; set; }
+        private readonly IEnumerable<ICommand> _commands;
 
-        public CatalystCli(IAdvancedShell advancedShell)
+        public CatalystCli(IUserOutput userOutput, IEnumerable<ICommand> commands) : base(userOutput)
         {
-            AdvancedShell = advancedShell;
+            _commands = commands;
+            userOutput.WriteLine(@"Koopa Shell Start");
+        }
+
+        /// <inheritdoc cref="ParseCommand" />
+        public override bool ParseCommand(params string[] args)
+        {
+            var parsedCommand = _commands.FirstOrDefault(command => command.CommandName.Equals(args[0], StringComparison.InvariantCultureIgnoreCase));
+            var commandExists = parsedCommand != null;
+
+            if (commandExists)
+            {
+                return parsedCommand.Parse(args);
+            }
+            else
+            {
+                var types = _commands.Select(command => command.OptionType).ToArray();
+                Parser.Default.ParseArguments(args, types);
+            }
+
+            return false;
         }
     }
 }

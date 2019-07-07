@@ -21,23 +21,16 @@
 
 #endregion
 
-using System.Threading;
+using Catalyst.Common.Interfaces.Rpc;
+using Google.Protobuf;
 
-namespace Catalyst.Common.Interfaces.Cli
+namespace Catalyst.Common.Interfaces.Cli.CommandTypes
 {
-    public interface IShell
+    public interface IMessageCommand<out T> : ICommand
+        where T : IMessage<T>
     {
-        /// <summary>
-        ///     Runs the main cli ui.
-        /// </summary>
-        /// <returns></returns>
-        bool RunConsole(CancellationToken ct);
-        
-        /// <summary>
-        /// Parses the Options object sent and calls the correct message to handle the option a defined in the MapResult
-        /// </summary>
-        /// <param name="args">string array including the parameters passed through the command line</param>
-        /// <returns>Returns true if a method to handle the options is found otherwise returns false</returns>
-        bool ParseCommand(params string[] args);
+        /// <summary>The node to send the message to.</summary>
+        /// <value>The target node.</value>
+        INodeRpcClient Target { get; }
     }
 }
