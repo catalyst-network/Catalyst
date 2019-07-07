@@ -24,7 +24,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using Catalyst.Common.Interfaces.RPC;
+using Catalyst.Common.Interfaces.Rpc;
 using Microsoft.Extensions.Configuration;
 
 namespace Catalyst.Node.Rpc.Client

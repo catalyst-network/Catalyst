@@ -27,8 +27,8 @@ using System.Threading.Tasks;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.Interfaces.RPC.Authentication;
-using Catalyst.Common.Interfaces.RPC.IO.Messaging.Correlation;
+using Catalyst.Common.Interfaces.Rpc.Authentication;
+using Catalyst.Common.Interfaces.Rpc.IO.Messaging.Correlation;
 using Catalyst.Common.IO.Handlers;
 using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Common.IO.Messaging.Dto;
@@ -43,7 +43,7 @@ using FluentAssertions;
 using NSubstitute;
 using Serilog;
 using Xunit;
-using NodeRpcServerChannelFactoryTests = Catalyst.Node.Core.UnitTests.RPC.IO.Transport.Channels.NodeRpcServerChannelFactoryTests;
+using NodeRpcServerChannelFactoryTests = Catalyst.Node.Core.UnitTests.Rpc.IO.Transport.Channels.NodeRpcServerChannelFactoryTests;
 
 namespace Catalyst.Node.Rpc.Client.IntegrationTests.IO.Transport.Channels
 {

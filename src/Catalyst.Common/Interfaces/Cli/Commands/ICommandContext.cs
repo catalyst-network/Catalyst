@@ -25,7 +25,7 @@ using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Transport;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.Interfaces.RPC;
+using Catalyst.Common.Interfaces.Rpc;
 
 namespace Catalyst.Common.Interfaces.Cli.Commands
 {
