@@ -34,7 +34,7 @@ using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.P2P;
-using Catalyst.Common.RPC.IO.Observers;
+using Catalyst.Common.Rpc.IO.Observers;
 using Catalyst.Node.Rpc.Client.IO.Observers;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
