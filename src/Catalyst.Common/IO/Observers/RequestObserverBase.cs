@@ -66,7 +66,7 @@ namespace Catalyst.Common.IO.Observers
                .Where(m => m.Payload?.TypeUrl != null 
                  && m.Payload?.TypeUrl == _filterMessageType)
                .SubscribeOn(NewThreadScheduler.Default)
-               .Subscribe(OnNext, OnError, OnCompleted);
+               .Subscribe(this);
         }
         
         protected abstract TProtoRes HandleRequest(TProtoReq messageDto, IChannelHandlerContext channelHandlerContext, IPeerIdentifier senderPeerIdentifier, ICorrelationId correlationId);
@@ -74,18 +74,28 @@ namespace Catalyst.Common.IO.Observers
         public override void OnNext(IObserverDto<ProtocolMessage> messageDto)
         {
             Logger.Verbose("Pre Handle Message Called");
-            
-            //@TODO HandleRequest in try catch if catch send error message.
-            var response = HandleRequest(messageDto.Payload.FromProtocolMessage<TProtoReq>(),
-                messageDto.Context,
-                new PeerIdentifier(messageDto.Payload.PeerId),
-                messageDto.Payload.CorrelationId.ToCorrelationId());
-            
-            messageDto.Context.Channel.WriteAndFlushAsync(new DtoFactory().GetDto(response,
-                PeerIdentifier,
-                new PeerIdentifier(messageDto.Payload.PeerId),
-                messageDto.Payload.CorrelationId.ToCorrelationId()
-            ));
+
+            try
+            {
+                var correlationId = messageDto.Payload.CorrelationId.ToCorrelationId();
+                var recipientPeerIdentifier = new PeerIdentifier(messageDto.Payload.PeerId);
+
+                var response = HandleRequest(messageDto.Payload.FromProtocolMessage<TProtoReq>(),
+                    messageDto.Context,
+                    recipientPeerIdentifier,
+                    correlationId);
+
+                messageDto.Context.Channel.WriteAndFlushAsync(new DtoFactory().GetDto(
+                    response.ToProtocolMessage(PeerIdentifier.PeerId, correlationId),
+                    PeerIdentifier,
+                    recipientPeerIdentifier,
+                    correlationId
+                ));
+            }
+            catch (Exception exception)
+            {
+                Logger.Error(exception, "Failed to process incoming request");
+            }
         }
     }
 }
