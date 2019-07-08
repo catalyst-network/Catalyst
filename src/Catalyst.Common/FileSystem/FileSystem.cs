@@ -42,15 +42,14 @@ namespace Catalyst.Common.FileSystem
 
         public async Task<IFileInfo> WriteFileToCddAsync(string fileName, string contents)
         {
-            var fullPath = Path.Combine(GetCatalystDataDir().ToString(), fileName);
+            var fullPath = Path.Combine(GetCatalystDataDir().FullName, fileName);
 
             return await WriteFileToPathAsync(fullPath, contents);
         }
 
         public async Task<IFileInfo> WriteFileToCddSubDirectoryAsync(string fileName, string subDirectory, string contents)
         {
-            var subDirInfo = Directory.CreateDirectory(Path.Combine(GetCatalystDataDir().ToString(), subDirectory));
-            var fullPath = Path.Combine(subDirInfo.Name, fileName);
+            var fullPath = Path.Combine(GetCatalystDataDir().FullName, subDirectory, fileName);
 
             return await WriteFileToPathAsync(fullPath, contents);
         }
@@ -68,7 +67,7 @@ namespace Catalyst.Common.FileSystem
 
         public bool DataFileExists(string fileName)
         {
-            return File.Exists(Path.Combine(GetCatalystDataDir().ToString(), fileName));
+            return File.Exists(Path.Combine(GetCatalystDataDir().FullName, fileName));
         }
         
         private static string GetUserHomeDir()
