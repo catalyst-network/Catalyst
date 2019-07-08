@@ -47,7 +47,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.IO.Messaging.Correlation
 {
     public sealed class PeerMessageCorrelationManagerTests : MessageCorrelationManagerTests<IPeerMessageCorrelationManager>
     {
-        private readonly Dictionary<IPeerIdentifier, long> _reputationByPeerIdentifier;
+        private readonly Dictionary<IPeerIdentifier, int> _reputationByPeerIdentifier;
 
         public PeerMessageCorrelationManagerTests(ITestOutputHelper output) : base(output)
         {
@@ -59,7 +59,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.IO.Messaging.Correlation
                 ChangeTokenProvider
             );
 
-            _reputationByPeerIdentifier = PeerIds.ToDictionary(p => p, p => (long) 0); //smells funky
+            _reputationByPeerIdentifier = PeerIds.ToDictionary(p => p, p => 0); //smells funky
             
             PendingRequests = PeerIds.Select((p, i) => new CorrelatableMessage<ProtocolMessage>
             {

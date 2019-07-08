@@ -33,7 +33,7 @@ namespace Catalyst.Common.Config
         public static readonly ReputationEvents UnCorrelatableMessage = new UnCorrelatableMessageEvent();
         public static readonly ReputationEvents InvalidMessageSignature = new InvalidMessageSignatureEvent();
         
-        public long Amount { get; set; }
+        public int Amount { get; set; }
 
         private ReputationEvents(int id, string name) : base(id, name) { }
         
