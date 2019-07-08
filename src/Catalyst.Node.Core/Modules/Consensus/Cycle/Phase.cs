@@ -24,14 +24,14 @@
 using System;
 using Catalyst.Common.Interfaces.Modules.Consensus.Cycle;
 using Catalyst.Common.Modules.Consensus.Cycle;
-using Nethereum.Hex.HexConvertors.Extensions;
+using Multiformats.Hash;
 
 namespace Catalyst.Node.Core.Modules.Consensus.Cycle
 {
     /// <inheritdoc cref="IPhase"/>
     public class Phase : IPhase
     {
-        public Phase(byte[] previousDeltaDfsHash, 
+        public Phase(Multihash previousDeltaDfsHash, 
             PhaseName phaseName, 
             PhaseStatus phaseStatus,
             DateTime utcStartTime)
@@ -43,7 +43,7 @@ namespace Catalyst.Node.Core.Modules.Consensus.Cycle
         }
 
         /// <inheritdoc />
-        public byte[] PreviousDeltaDfsHash { get; }
+        public Multihash PreviousDeltaDfsHash { get; }
 
         /// <inheritdoc />
         public PhaseName Name { get; }
@@ -57,7 +57,7 @@ namespace Catalyst.Node.Core.Modules.Consensus.Cycle
         /// <inheritdoc />
         public override string ToString()
         {
-            return $"{Name} : {Status} @ {UtcStartTime:O} | {PreviousDeltaDfsHash.ToHex().Substring(0, 10)}...";
+            return $"{Name} : {Status} @ {UtcStartTime:O} | {PreviousDeltaDfsHash}";
         }
     }
 }

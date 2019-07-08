@@ -21,7 +21,6 @@
 
 #endregion
 
-using System;
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.IO.Observers;
@@ -44,11 +43,6 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
     {
         private readonly IUserOutput _output;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="PeerBlackListingResponseObserver"/> class.
-        /// </summary>
-        /// <param name="output">The output.</param>
-        /// <param name="logger">The logger.</param>
         public PeerBlackListingResponseObserver(IUserOutput output,
             ILogger logger)
             : base(logger)
@@ -56,13 +50,6 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
             _output = output;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="setPeerBlackListResponse"></param>
-        /// <param name="channelHandlerContext"></param>
-        /// <param name="senderPeerIdentifier"></param>
-        /// <param name="correlationId"></param>
         protected override void HandleResponse(SetPeerBlackListResponse setPeerBlackListResponse,
             IChannelHandlerContext channelHandlerContext,
             IPeerIdentifier senderPeerIdentifier,
@@ -73,23 +60,14 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
             Guard.Argument(senderPeerIdentifier, nameof(senderPeerIdentifier)).NotNull();
             Logger.Debug("Handling GetPeerBlackList response");
 
-            try
-            {
-                var msg = setPeerBlackListResponse.PublicKey.ToStringUtf8() == string.Empty
-                    ? "Peer not found"
-                    : $"Peer Blacklisting Successful : " +
-                    $"{setPeerBlackListResponse.Blacklist.ToString()}, " +
-                    $"{setPeerBlackListResponse.PublicKey.ToStringUtf8()}, " +
-                    $"{setPeerBlackListResponse.Ip.ToStringUtf8()}";
-                   
-                _output.WriteLine(msg);
-            }
-            catch (Exception ex)
-            {
-                Logger.Error(ex,
-                    "Failed to handle GetPeerBlackListingResponse after receiving message {0}", setPeerBlackListResponse);
-                throw;
-            }
+            var msg = setPeerBlackListResponse.PublicKey.ToStringUtf8() == string.Empty
+                ? "Peer not found"
+                : $"Peer Blacklisting Successful : " +
+                $"{setPeerBlackListResponse.Blacklist.ToString()}, " +
+                $"{setPeerBlackListResponse.PublicKey.ToStringUtf8()}, " +
+                $"{setPeerBlackListResponse.Ip.ToStringUtf8()}";
+               
+            _output.WriteLine(msg);
         }
     }
 }

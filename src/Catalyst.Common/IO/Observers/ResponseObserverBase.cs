@@ -44,10 +44,6 @@ namespace Catalyst.Common.IO.Observers
     {
         private readonly string _filterMessageType;
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="logger"></param>
         protected ResponseObserverBase(ILogger logger) : base(logger)
         {
             Guard.Argument(typeof(TProto), nameof(TProto)).Require(t => t.IsResponseType(),
@@ -55,20 +51,8 @@ namespace Catalyst.Common.IO.Observers
             _filterMessageType = typeof(TProto).ShortenedProtoFullName();
         }
         
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="messageDto"></param>
-        /// <param name="channelHandlerContext"></param>
-        /// <param name="senderPeerIdentifier"></param>
-        /// <param name="correlationId"></param>
         protected abstract void HandleResponse(TProto messageDto, IChannelHandlerContext channelHandlerContext, IPeerIdentifier senderPeerIdentifier, ICorrelationId correlationId);
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="messageStream"></param>
-        /// <exception cref="ReadOnlyException"></exception>
         public override void StartObserving(IObservable<IObserverDto<ProtocolMessage>> messageStream)
         {
             if (MessageSubscription != null)
@@ -83,14 +67,18 @@ namespace Catalyst.Common.IO.Observers
                .Subscribe(OnNext, OnError, OnCompleted);
         }
         
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="messageDto"></param>
         public override void OnNext(IObserverDto<ProtocolMessage> messageDto)
         {
             Logger.Verbose("Pre Handle Message Called");
-            HandleResponse(messageDto.Payload.FromProtocolMessage<TProto>(), messageDto.Context, new PeerIdentifier(messageDto.Payload.PeerId), messageDto.Payload.CorrelationId.ToCorrelationId());
+            try
+            {
+                HandleResponse(messageDto.Payload.FromProtocolMessage<TProto>(), messageDto.Context,
+                    new PeerIdentifier(messageDto.Payload.PeerId), messageDto.Payload.CorrelationId.ToCorrelationId());
+            }
+            catch (Exception exception)
+            {
+                Logger.Error(exception, "Failed to handle response message");
+            }
         }
     }
 }

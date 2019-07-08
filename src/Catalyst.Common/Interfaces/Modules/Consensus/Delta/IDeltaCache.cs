@@ -21,19 +21,20 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.Modules.Consensus.Delta;
-
-namespace Catalyst.Common.Interfaces.Modules.Consensus
+namespace Catalyst.Common.Interfaces.Modules.Consensus.Delta
 {
-    public interface IConsensus
+    /// <summary>
+    /// This service should be used to retrieve and cache Delta from the Dfs
+    /// </summary>
+    public interface IDeltaCache
     {
-        /// <see cref="IDeltaBuilder" />
-        IDeltaBuilder DeltaBuilder { get; }
-
-        /// <see cref="IDeltaHub" />
-        IDeltaHub DeltaHub { get; }
-
-        /// <see cref="IDeltaHashProvider"/>
-        IDeltaHashProvider DeltaHashProvider { get; }
+        /// <summary>
+        /// Attempts to retrieve a delta from the local cache first, then, if the delta was not found there,
+        /// the retrieval is done from the Dfs.
+        /// </summary>
+        /// <param name="hash">The hash or address of the delta on the Dfs.</param>
+        /// <param name="delta">The delta retrieved on the Dfs.</param>
+        /// <returns><see cref="true" /> if the retrieval was successful, <see cref="false" /> otherwise.</returns>
+        bool TryGetDelta(string hash, out Protocol.Delta.Delta delta);
     }
 }
