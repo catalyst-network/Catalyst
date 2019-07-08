@@ -22,18 +22,12 @@
 #endregion
 
 using Catalyst.Common.Interfaces.Modules.Consensus.Delta;
+using Catalyst.Common.Util;
 
-namespace Catalyst.Common.Interfaces.Modules.Consensus
+namespace Catalyst.Node.Core.Modules.Consensus.Delta
 {
-    public interface IConsensus
+    public class DeltaCacheChangeTokenProvider : TtlChangeTokenProvider, IDeltaCacheChangeTokenProvider
     {
-        /// <see cref="IDeltaBuilder" />
-        IDeltaBuilder DeltaBuilder { get; }
-
-        /// <see cref="IDeltaHub" />
-        IDeltaHub DeltaHub { get; }
-
-        /// <see cref="IDeltaHashProvider"/>
-        IDeltaHashProvider DeltaHashProvider { get; }
+        public DeltaCacheChangeTokenProvider(int timeToLiveInMs) : base(timeToLiveInMs) { }
     }
 }

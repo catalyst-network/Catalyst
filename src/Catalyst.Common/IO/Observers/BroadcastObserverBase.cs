@@ -60,14 +60,21 @@ namespace Catalyst.Common.IO.Observers
                .Where(m => m.Payload?.TypeUrl != null 
                  && m.Payload.TypeUrl == _filterMessageType)
                .SubscribeOn(NewThreadScheduler.Default)
-               .Subscribe(OnNext, OnError, OnCompleted);
+               .Subscribe(this);
         }
         
         public override void OnNext(IObserverDto<ProtocolMessage> messageDto)
         {
             Logger.Verbose("Pre Handle Message Called");
-            ChannelHandlerContext = messageDto.Context;
-            HandleBroadcast(messageDto);
+            try
+            {
+                ChannelHandlerContext = messageDto.Context;
+                HandleBroadcast(messageDto);
+            }
+            catch (Exception exception)
+            {
+                Logger.Error(exception, "Failed to handle message");
+            }
         }
     }
 }
