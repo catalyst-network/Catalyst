@@ -41,12 +41,14 @@ namespace Catalyst.Common.UnitTests.IO.Observers
     {
         private sealed class FailingBroadCastObserver : BroadcastObserverBase<CandidateDeltaBroadcast>
         {
-            public int Counter;
+            private int _counter;
+            public int Counter => _counter;
+
             public FailingBroadCastObserver(ILogger logger) : base(logger) { }
 
             public override void HandleBroadcast(IObserverDto<ProtocolMessage> messageDto)
             {
-                var count = Interlocked.Increment(ref Counter);
+                var count = Interlocked.Increment(ref _counter);
                 if (count % 2 == 0)
                 {
                     throw new ArgumentException("something went wrong handling the request");

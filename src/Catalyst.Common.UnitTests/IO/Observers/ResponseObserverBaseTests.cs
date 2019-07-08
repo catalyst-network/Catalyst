@@ -45,7 +45,8 @@ namespace Catalyst.Common.UnitTests.IO.Observers
     {
         private sealed class FailingResponseObserver : ResponseObserverBase<GetPeerCountResponse>
         {
-            public int Counter;
+            private int _counter;
+            public int Counter => _counter;
 
             public FailingResponseObserver(ILogger logger) : base(logger) { }
 
@@ -54,7 +55,7 @@ namespace Catalyst.Common.UnitTests.IO.Observers
                 IPeerIdentifier senderPeerIdentifier,
                 ICorrelationId correlationId)
             {
-                var count = Interlocked.Increment(ref Counter);
+                var count = Interlocked.Increment(ref _counter);
                 if (count % 2 == 0)
                 {
                     throw new ArgumentException("something went wrong handling the request");

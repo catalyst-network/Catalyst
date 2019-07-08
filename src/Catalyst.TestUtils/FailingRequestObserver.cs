@@ -37,7 +37,9 @@ namespace Catalyst.TestUtils
         RequestObserverBase<PeerNeighborsRequest, PeerNeighborsResponse>,
         IP2PMessageObserver
     {
-        public int Counter;
+        private int _counter;
+        public int Counter => _counter;
+
         public FailingRequestObserver(ILogger logger, IPeerIdentifier peerIdentifier) : base(logger, peerIdentifier) { }
 
         protected override PeerNeighborsResponse HandleRequest(PeerNeighborsRequest messageDto,
@@ -45,7 +47,7 @@ namespace Catalyst.TestUtils
             IPeerIdentifier senderPeerIdentifier,
             ICorrelationId correlationId)
         {
-            var count = Interlocked.Increment(ref Counter);
+            var count = Interlocked.Increment(ref _counter);
             if (count % 2 == 0)
             {
                 throw new ArgumentException("something went wrong handling the request");
