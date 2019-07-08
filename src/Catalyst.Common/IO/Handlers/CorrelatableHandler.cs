@@ -24,7 +24,6 @@
 using System;
 using System.Threading.Tasks;
 using Catalyst.Common.Config;
-using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.IO.Messaging.Correlation;
@@ -51,7 +50,7 @@ namespace Catalyst.Common.IO.Handlers
                 _messageCorrelationManager.AddPendingRequest(new CorrelatableMessage
                 {
                     Recipient = message.RecipientPeerIdentifier,
-                    Content = message.Content.ToProtocolMessage(message.SenderPeerIdentifier.PeerId, CorrelationId.GenerateCorrelationId()),
+                    Content = message.Content,
                     SentAt = DateTimeOffset.UtcNow
                 });
             }

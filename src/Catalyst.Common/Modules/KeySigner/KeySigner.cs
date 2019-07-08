@@ -95,8 +95,7 @@ namespace Catalyst.Common.Modules.KeySigner
             {
                 return _cryptoContext.Sign(privateKey, data);
             }
-
-            throw new SignatureException("The specified key could not be used to create a signature");
+            return new Signature(new byte[64], new byte[32]);
         }
 
         /// <inheritdoc/>
