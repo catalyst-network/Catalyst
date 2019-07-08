@@ -21,47 +21,39 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.Cli;
+using System;
+using System.Threading;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.IO.Observers;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Observers;
-using Catalyst.Protocol.Rpc.Node;
-using Dawn;
+using Catalyst.Protocol.IPPN;
 using DotNetty.Transport.Channels;
-using ILogger = Serilog.ILogger;
+using Serilog;
 
-namespace Catalyst.Node.Rpc.Client.IO.Observers
+namespace Catalyst.TestUtils
 {
-    /// <summary>
-    /// Handles the Peer list response from the node
-    /// </summary>
-    /// <seealso cref="IRpcResponseObserver" />
-    public sealed class PeerListResponseObserver
-        : ResponseObserverBase<GetPeerListResponse>,
-            IRpcResponseObserver
+    public sealed class FailingRequestObserver :
+        RequestObserverBase<PeerNeighborsRequest, PeerNeighborsResponse>,
+        IP2PMessageObserver
     {
-        private readonly IUserOutput _output;
+        private int _counter;
+        public int Counter => _counter;
 
-        public PeerListResponseObserver(IUserOutput output,
-            ILogger logger)
-            : base(logger)
-        {
-            _output = output;
-        }
+        public FailingRequestObserver(ILogger logger, IPeerIdentifier peerIdentifier) : base(logger, peerIdentifier) { }
 
-        protected override void HandleResponse(GetPeerListResponse getPeerListResponse,
+        protected override PeerNeighborsResponse HandleRequest(PeerNeighborsRequest messageDto,
             IChannelHandlerContext channelHandlerContext,
             IPeerIdentifier senderPeerIdentifier,
             ICorrelationId correlationId)
         {
-            Guard.Argument(getPeerListResponse, nameof(getPeerListResponse)).NotNull();
-            Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
-            Guard.Argument(senderPeerIdentifier, nameof(senderPeerIdentifier)).NotNull();
-            Logger.Debug("Handling PeerListResponse");
+            var count = Interlocked.Increment(ref _counter);
+            if (count % 2 == 0)
+            {
+                throw new ArgumentException("something went wrong handling the request");
+            }
 
-            var result = string.Join(", ", getPeerListResponse.Peers);
-            _output.WriteLine(result);
+            return new PeerNeighborsResponse {Peers = {PeerIdHelper.GetPeerId()}};
         }
     }
 }
