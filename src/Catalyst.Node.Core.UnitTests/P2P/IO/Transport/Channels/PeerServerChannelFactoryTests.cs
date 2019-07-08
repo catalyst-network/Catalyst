@@ -94,7 +94,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.IO.Transport.Channels
 
             _senderId = PeerIdHelper.GetPeerId("sender");
             _correlationId = CorrelationId.GenerateCorrelationId();
-            _signature = ByteUtil.GenerateRandomByteArray(64);
+            _signature = ByteUtil.GenerateRandomByteArray(Cryptography.BulletProofs.Wrapper.FFI.GetSignatureLength());
             _keySigner.Verify(Arg.Any<ISignature>(), Arg.Any<byte[]>())
                .Returns(true);
         }
