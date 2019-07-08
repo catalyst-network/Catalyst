@@ -48,7 +48,7 @@ using Xunit.Abstractions;
 namespace Catalyst.Common.UnitTests.IO.Messaging.Correlation
 {
     public abstract class MessageCorrelationManagerTests<T> 
-        where T : IMessageCorrelationManager, IDisposable
+        where T : IMessageCorrelationManager
     {
         protected readonly IPeerIdentifier[] PeerIds;
         protected IList<CorrelatableMessage<ProtocolMessage>> PendingRequests;

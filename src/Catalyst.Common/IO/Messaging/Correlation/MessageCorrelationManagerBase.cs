@@ -31,7 +31,7 @@ using Serilog;
 
 namespace Catalyst.Common.IO.Messaging.Correlation
 {
-    public abstract class MessageCorrelationManagerBase : IMessageCorrelationManager, IDisposable
+    public abstract class MessageCorrelationManagerBase : IMessageCorrelationManager
     {
         protected readonly IMemoryCache PendingRequests;
         private readonly Func<MemoryCacheEntryOptions> _entryOptions;
