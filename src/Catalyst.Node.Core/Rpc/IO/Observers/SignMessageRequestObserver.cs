@@ -21,7 +21,6 @@
 
 #endregion
 
-using System;
 using System.Text;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.IO.Observers;
