@@ -21,8 +21,9 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.IO.Messaging;
+using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.IO.Messaging.Correlation;
 
 namespace Catalyst.Common.IO.Messaging
 {
@@ -31,10 +32,10 @@ namespace Catalyst.Common.IO.Messaging
         public object EvictedContent { get; }
         public IPeerIdentifier PeerIdentifier { get; }
         
-        public MessageEvictionEvent(IPeerIdentifier peerIdentifier, object payload)
+        public MessageEvictionEvent(CorrelatableMessage correlatableMessage)
         {
-            EvictedContent = payload;
-            PeerIdentifier = peerIdentifier;
+            EvictedContent = correlatableMessage.Content;
+            PeerIdentifier = correlatableMessage.Recipient;
         }
     }
 }

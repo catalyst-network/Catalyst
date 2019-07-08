@@ -24,8 +24,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using Catalyst.Common.Interfaces.IO.Inbound;
-using Catalyst.Common.Interfaces.IO.Messaging;
+using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.Network;
 using Catalyst.Common.P2P;
 using Catalyst.Protocol.Common;
@@ -35,7 +34,7 @@ using SharpRepository.Repository;
 
 namespace Catalyst.Common.Interfaces.P2P
 {
-    public interface IPeerDiscovery : IMessageHandler
+    public interface IPeerDiscovery
     {
         IDisposable PingResponseMessageStream { get; }
         IDisposable GetNeighbourResponseStream { get; }
@@ -44,6 +43,6 @@ namespace Catalyst.Common.Interfaces.P2P
         IProducerConsumerCollection<IPeerIdentifier> Peers { get; }
         IRepository<Peer> PeerRepository { get; }
         IList<string> ParseDnsServersFromConfig(IConfigurationRoot rootSection);
-        void PeerNeighbourSubscriptionHandler(IChanneledMessage<ProtocolMessage> message);
+        void PeerNeighbourSubscriptionHandler(IObserverDto<ProtocolMessage> messageDto);
     }
 }

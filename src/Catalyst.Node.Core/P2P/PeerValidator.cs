@@ -35,13 +35,19 @@ using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
 using System.Collections.Concurrent;
 using System.Net;
-using Catalyst.Common.Interfaces.IO.Inbound;
+using Catalyst.Common.Interfaces.IO;
+using Catalyst.Common.Interfaces.IO.Messaging.Dto;
+using Catalyst.Common.Interfaces.IO.Observers;
+using Catalyst.Common.IO.Messaging.Dto;
+using Catalyst.Common.IO.Observers;
+using Google.Protobuf;
 using Serilog;
 
 namespace Catalyst.Node.Core.P2P
 {
-    public sealed class PeerValidator : IPeerValidator,
-        IDisposable
+    public class PeerValidator<TProto> : MessageObserverBase,
+        IPeerValidator, IP2PMessageObserver, IRpcResponseObserver, IRpcRequestObserver
+        where TProto : IMessage, IMessage<TProto>
     {
         private readonly IPEndPoint _hostEndPoint;
         private readonly IPeerSettings _peerSettings;
@@ -49,7 +55,7 @@ namespace Catalyst.Node.Core.P2P
         private readonly ILogger _logger;
 
         private readonly IDisposable _incomingPingResponseSubscription;
-        private readonly ConcurrentStack<IChanneledMessage<ProtocolMessage>> _receivedResponses;
+        //private readonly ConcurrentStack<IChanneledMessage<ProtocolMessage>> _receivedResponses;
 
         private readonly IPeerClient _peerClient;
 
@@ -57,17 +63,33 @@ namespace Catalyst.Node.Core.P2P
             IPeerSettings peerSettings,
             IPeerService peerService,
             ILogger logger,
-            IPeerClient peerClient)
+            IPeerClient peerClient) : base(logger)
         {
             _peerSettings = peerSettings;
             _peerService = peerService;
             _hostEndPoint = hostEndPoint;
 
             _logger = logger;
-            _receivedResponses = new ConcurrentStack<IChanneledMessage<ProtocolMessage>>();
+
+            //_receivedResponses = new ConcurrentStack<IChanneledMessage<ProtocolMessage>>();
+
             _incomingPingResponseSubscription = peerService.MessageStream.Subscribe(this);
 
             _peerClient = peerClient;
+        }
+
+        public override void StartObserving(IObservable<IObserverDto<ProtocolMessage>> messageStream)
+        {
+            //if (MessageSubscription != null)
+            //{
+            //    throw new ReadOnlyException($"{GetType()} is already listening to a message stream");
+            //}
+
+            //MessageSubscription = messageStream
+            //   .Where(m => m.Payload?.TypeUrl != null
+            //     && m.Payload.TypeUrl == _filterMessageType)
+            //   .SubscribeOn(TaskPoolScheduler.Default)
+            //   .Subscribe(OnNext, OnError, OnCompleted);
         }
 
         public void OnCompleted() { _logger.Information("End of {0} stream.", nameof(ProtocolMessage)); }
@@ -77,57 +99,57 @@ namespace Catalyst.Node.Core.P2P
             _logger.Error(error, "Error occured in {0} stream.", nameof(ProtocolMessage));
         }
 
-        public void OnNext(IChanneledMessage<ProtocolMessage> response)
+        public override void OnNext(IObserverDto<ProtocolMessage> messageDto)
         {
-            if (response.Payload.Equals(NullObjects.ProtocolMessage)) 
+            if (messageDto.Payload.Equals(NullObjects.ProtocolMessage)) 
             {
                 return;
             }
 
-            _receivedResponses.Push(response);
+            //_receivedResponses.Push(messageDto);
         }
 
         public bool PeerChallengeResponse(PeerIdentifier recipientPeerIdentifier)
         {
-            try
-            {
-                var datagramEnvelope = new MessageFactory().GetDatagramMessage(
-                    new MessageDto(
-                        new PingRequest(),
-                        MessageTypes.Request,
-                        new PeerIdentifier(recipientPeerIdentifier.PeerId),
-                        new PeerIdentifier(_peerSettings)
-                    ),
-                    Guid.NewGuid()
-                );
+            //try
+            //{
+            //    var datagramEnvelope = new MessageFactory().GetDatagramMessage(
+            //        new MessageDto<>(
+            //            new PingRequest(),
+            //            MessageTypes.Request,
+            //            new PeerIdentifier(recipientPeerIdentifier.PeerId),
+            //            new PeerIdentifier(_peerSettings)
+            //        ),
+            //        Guid.NewGuid()
+            //    );
 
-                ((PeerClient)_peerClient).SendMessageAsync(datagramEnvelope);
+            //    ((PeerClient)_peerClient).SendMessageAsync(datagramEnvelope);
 
-                var tasks = new IChanneledMessageStreamer<ProtocolMessage>[]
-                    {
-                        _peerService
-                    }
-                   .Select(async p =>
-                        await p.MessageStream.FirstAsync(a => a != null && a != NullObjects.ProtocolMessageDto))
-                   .ToArray();
+            //    var tasks = new IChanneledMessageStreamer<ProtocolMessage>[]
+            //        {
+            //            _peerService
+            //        }
+            //       .Select(async p =>
+            //            await p.MessageStream.FirstAsync(a => a != null && a != NullObjects.ProtocolMessageDto))
+            //       .ToArray();
 
-                Task.WaitAll(tasks, TimeSpan.FromMilliseconds(2500));
+            //    Task.WaitAll(tasks, TimeSpan.FromMilliseconds(2500));
 
-                if (_receivedResponses.Any())
-                {
-                    if (_receivedResponses.Last().Payload.PeerId.PublicKey.ToStringUtf8() ==
-                        recipientPeerIdentifier.PeerId.PublicKey.ToStringUtf8())
-                    {
-                        return true;
-                    }
-                }
+            //    if (_receivedResponses.Any())
+            //    {
+            //        if (_receivedResponses.Last().Payload.PeerId.PublicKey.ToStringUtf8() ==
+            //            recipientPeerIdentifier.PeerId.PublicKey.ToStringUtf8())
+            //        {
+            //            return true;
+            //        }
+            //    }
 
-                return false;
-            }
-            catch (Exception e)
-            {
-                _logger.Error(e.Message);
-            }
+            //    return false;
+            //}
+            //catch (Exception e)
+            //{
+            //    _logger.Error(e.Message);
+            //}
 
             return false;
         }

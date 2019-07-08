@@ -27,9 +27,11 @@ using System.Linq;
 using Autofac;
 using Autofac.Configuration;
 using Catalyst.Common.Config;
-using Catalyst.Common.Interfaces.IO.Messaging;
+using Catalyst.Common.Interfaces.Cryptography;
+using Catalyst.Common.Interfaces.IO.Observers;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Node.Core.P2P.Messaging.Handlers;
+using Catalyst.Node.Core.P2P.IO.Observers;
+using Catalyst.TestUtils;
 using FluentAssertions;
 using Microsoft.Extensions.Configuration;
 using Nethereum.RLP;
@@ -67,6 +69,9 @@ namespace Catalyst.Node.Core.UnitTests.Config
             var logger = Substitute.For<ILogger>();
             containerBuilder.RegisterInstance(logger).As<ILogger>();
 
+            var passwordReader = new TestPasswordReader();
+            containerBuilder.RegisterInstance(passwordReader).As<IPasswordReader>();
+            
             var container = containerBuilder.Build();
             return container;
         }
@@ -94,13 +99,14 @@ namespace Catalyst.Node.Core.UnitTests.Config
         {
             var container = ConfigureAndBuildContainer(_componentsConfig);
 
-            var handlers = container.Resolve<IEnumerable<IP2PMessageHandler>>();
+            var handlers = container.Resolve<IEnumerable<IP2PMessageObserver>>();
             handlers.Select(h => h.GetType()).Should().BeEquivalentTo(
-                typeof(PingRequestHandler),
-                typeof(PingResponseHandler),
-                typeof(GetNeighbourRequestHandler),
-                typeof(GetNeighbourResponseHandler),
-                typeof(TransactionRequestHandler)
+                typeof(PingRequestObserver),
+                typeof(PingResponseObserver),
+                typeof(GetNeighbourRequestObserver),
+                typeof(GetNeighbourResponseObserver),
+                typeof(TransactionBroadcastObserver),
+                typeof(DeltaDfsHashObserver)
             );
         }
     }

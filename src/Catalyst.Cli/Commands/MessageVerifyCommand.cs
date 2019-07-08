@@ -21,65 +21,28 @@
 
 #endregion
 
-using System;
-using System.Text;
-using Catalyst.Common.Config;
-using Catalyst.Common.Interfaces.Cli.Options;
-using Catalyst.Common.Interfaces.Rpc;
-using Catalyst.Common.IO.Messaging;
-using Catalyst.Common.P2P;
+using Catalyst.Cli.CommandTypes;
+using Catalyst.Cli.Options;
+using Catalyst.Common.Interfaces.Cli.Commands;
 using Catalyst.Common.Util;
 using Catalyst.Protocol.Rpc.Node;
-using Dawn;
 using Nethereum.RLP;
 
 namespace Catalyst.Cli.Commands
 {
-    internal partial class Commands
+    public sealed class MessageVerifyCommand : BaseMessageCommand<VerifyMessageRequest, VerifyOptions>
     {
-        /// <inheritdoc cref="MessageVerifyCommand" />
-        public bool MessageVerifyCommand(IVerifyOptions opts)
+        public MessageVerifyCommand(ICommandContext commandContext) : base(commandContext) { }
+
+        protected override VerifyMessageRequest GetMessage(VerifyOptions option)
         {
-            Guard.Argument(opts, nameof(opts)).NotNull().Compatible<IVerifyOptions>();
-
-            INodeRpcClient node;
-            try
+            return new VerifyMessageRequest
             {
-                node = GetConnectedNode(opts.Node);
-            }
-            catch (Exception e)
-            {
-                _logger.Error(e.Message);
-                return false;
-            }
-            
-            var nodeConfig = GetNodeConfig(opts.Node);
-            Guard.Argument(nodeConfig, nameof(nodeConfig)).NotNull("The node configuration cannot be null");
-
-            try
-            {
-                var request = _messageFactory.GetMessage(new MessageDto(
-                    new VerifyMessageRequest
-                    {
-                        Message =
-                            RLP.EncodeElement(opts.Message.Trim('\"').ToBytesForRLPEncoding()).ToByteString(),
-                        PublicKey = opts.Address.ToBytesForRLPEncoding().ToByteString(),
-                        Signature = opts.Signature.ToBytesForRLPEncoding().ToByteString()
-                    },
-                    MessageTypes.Request,
-                    new PeerIdentifier(Encoding.ASCII.GetBytes(nodeConfig.PublicKey), nodeConfig.HostAddress,
-                        nodeConfig.Port),
-                    _peerIdentifier
-                ));
-                node.SendMessage(request);
-            }
-            catch (Exception e)
-            {
-                _logger.Debug(e.Message);
-                return false;
-            }
-
-            return true;
+                Message =
+                    RLP.EncodeElement(option.Message.Trim('\"').ToBytesForRLPEncoding()).ToByteString(),
+                PublicKey = option.Address.ToBytesForRLPEncoding().ToByteString(),
+                Signature = option.Signature.ToBytesForRLPEncoding().ToByteString()
+            };
         }
     }
 }

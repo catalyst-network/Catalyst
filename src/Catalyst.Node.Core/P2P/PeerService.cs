@@ -21,33 +21,37 @@
 
 #endregion
 
+using Catalyst.Common.Interfaces.IO.EventLoop;
+using Catalyst.Common.Interfaces.IO.Messaging.Dto;
+using Catalyst.Common.Interfaces.IO.Observers;
+using Catalyst.Common.Interfaces.IO.Transport.Channels;
+using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.IO.Transport;
+using Catalyst.Protocol.Common;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Catalyst.Common.IO.Inbound;
-using Catalyst.Common.Interfaces.IO.Inbound;
-using Catalyst.Common.Interfaces.IO.Messaging;
-using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Protocol.Common;
-using Serilog;
 
 namespace Catalyst.Node.Core.P2P
 {
     public sealed class PeerService : UdpServer, IPeerService
     {
         public IPeerDiscovery Discovery { get; }
-        public IObservable<IChanneledMessage<ProtocolMessage>> MessageStream { get; }
+        public IObservable<IObserverDto<ProtocolMessage>> MessageStream { get; }
 
-        public PeerService(IUdpServerChannelFactory serverChannelFactory,
+        public PeerService(IUdpServerEventLoopGroupFactory udpServerEventLoopGroupFactory,
+            IUdpServerChannelFactory serverChannelFactory,
             IPeerDiscovery peerDiscovery,
-            IEnumerable<IP2PMessageHandler> messageHandlers,
+            IEnumerable<IP2PMessageObserver> messageHandlers,
+            IPeerSettings peerSettings,
             ILogger logger)
-            : base(serverChannelFactory, logger)
+            : base(serverChannelFactory, logger, udpServerEventLoopGroupFactory)
         {
             Discovery = peerDiscovery;
-            var observableChannel = ChannelFactory.BuildChannel();
+            var observableChannel = ChannelFactory.BuildChannel(EventLoopGroupFactory, peerSettings.BindAddress, peerSettings.Port);
             Channel = observableChannel.Channel;
-
+            
             MessageStream = observableChannel.MessageStream;
             messageHandlers.ToList()
                .ForEach(h => h.StartObserving(MessageStream));

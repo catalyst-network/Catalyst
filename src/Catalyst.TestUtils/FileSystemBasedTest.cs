@@ -1,4 +1,4 @@
-﻿#region LICENSE
+#region LICENSE
 
 /**
 * Copyright (c) 2019 Catalyst Network
@@ -33,7 +33,7 @@ using NSubstitute;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Catalyst.Common.UnitTests.TestUtils
+namespace Catalyst.TestUtils
 {
     /// <inheritdoc />
     /// <summary>
@@ -41,9 +41,8 @@ namespace Catalyst.Common.UnitTests.TestUtils
     ///     to create files, logs, etc.
     /// </summary>
     [Trait(Traits.TestType, Traits.IntegrationTest)]
-    public abstract class FileSystemBasedTest : IDisposable
+    public class FileSystemBasedTest : IDisposable
     {
-        protected readonly ITest CurrentTest;
         protected readonly string CurrentTestName;
         protected readonly IFileSystem FileSystem;
         protected readonly ITestOutputHelper Output;
@@ -53,17 +52,17 @@ namespace Catalyst.Common.UnitTests.TestUtils
         {
             Guard.Argument(output, nameof(output)).NotNull();
             Output = output;
-            CurrentTest = Output.GetType()
+            var currentTest = Output.GetType()
                .GetField("test", BindingFlags.Instance | BindingFlags.NonPublic)
                .GetValue(Output) as ITest;
 
-            if (CurrentTest == null)
+            if (currentTest == null)
             {
                 throw new ArgumentNullException(
                     $"Failed to reflect current test as {nameof(ITest)} from {nameof(output)}");
             }
 
-            CurrentTestName = CurrentTest.TestCase.TestMethod.Method.Name;
+            CurrentTestName = currentTest.TestCase.TestMethod.Method.Name;
             var testStartTime = DateTime.Now;
             _testDirectory = new DirectoryInfo(Path.Combine(Environment.CurrentDirectory,
 

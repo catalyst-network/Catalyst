@@ -23,8 +23,8 @@
 
 using System;
 using Catalyst.Common.Interfaces.Cryptography;
+using Catalyst.Common.Interfaces.Keystore;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
-using Catalyst.Common.Interfaces.KeyStore;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Types;
 
@@ -58,13 +58,13 @@ namespace Catalyst.Common.Modules.KeySigner
                 // var key = _keyStore.KeyStoreDecrypt(_keyStore.Password);
                 // return Task.FromResult(_cryptoContext.Sign(key, new ReadOnlySpan<byte>(data))).GetAwaiter().GetResult();
             }
-            return new Signature(new byte[0]);
+            return new Signature(new byte[64], new byte[32]);
         }
 
         /// <inheritdoc/>
-        public bool Verify(IPublicKey key, byte[] message, ISignature signature)
+        public bool Verify(ISignature signature, byte[] message)
         {
-            return _cryptoContext.Verify(key, message, signature);
+            return _cryptoContext.Verify(signature, message);
         }
 
         /// <inheritdoc/>

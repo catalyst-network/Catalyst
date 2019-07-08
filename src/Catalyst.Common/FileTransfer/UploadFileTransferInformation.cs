@@ -21,15 +21,13 @@
 
 #endregion
 
-using System;
 using System.IO;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.FileTransfer;
-using Catalyst.Common.Interfaces.IO.Messaging;
+using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
+using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.IO.Messaging;
-using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using DotNetty.Transport.Channels;
 using Google.Protobuf;
@@ -39,7 +37,7 @@ namespace Catalyst.Common.FileTransfer
     public sealed class UploadFileTransferInformation : BaseFileTransferInformation, IUploadFileInformation
     {
         /// <summary>The upload message factory</summary>
-        private readonly IMessageFactory _uploadMessageFactory;
+        private readonly IDtoFactory _uploadDtoFactory;
         
         /// <summary>Initializes a new instance of the <see cref="UploadFileTransferInformation"/> class.</summary>
         /// <param name="stream">The stream.</param>
@@ -47,23 +45,23 @@ namespace Catalyst.Common.FileTransfer
         /// <param name="recipientIdentifier">The recipient identifier.</param>
         /// <param name="recipientChannel">The recipient channel.</param>
         /// <param name="correlationGuid">The correlation unique identifier.</param>
-        /// <param name="uploadMessageFactory">The upload message factory.</param>
+        /// <param name="uploadDtoFactory">The upload message factory.</param>
         public UploadFileTransferInformation(Stream stream,
             IPeerIdentifier peerIdentifier,
             IPeerIdentifier recipientIdentifier,
             IChannel recipientChannel,
-            Guid correlationGuid,
-            IMessageFactory uploadMessageFactory) :
+            ICorrelationId correlationGuid,
+            IDtoFactory uploadDtoFactory) :
             base(peerIdentifier, recipientIdentifier, recipientChannel,
                 correlationGuid, string.Empty, (ulong) stream.Length)
         {
             RandomAccessStream = stream;
-            _uploadMessageFactory = uploadMessageFactory;
+            _uploadDtoFactory = uploadDtoFactory;
             RetryCount = 0;
         }
 
         /// <inheritdoc />
-        public ProtocolMessage GetUploadMessageDto(uint index)
+        public IMessageDto<TransferFileBytesRequest> GetUploadMessageDto(uint index)
         {
             var chunkId = index + 1;
             var startPos = index * Constants.FileTransferChunkSize;
@@ -95,15 +93,13 @@ namespace Catalyst.Common.FileTransfer
             {
                 ChunkBytes = ByteString.CopyFrom(chunk),
                 ChunkId = chunkId,
-                CorrelationFileName = CorrelationGuid.ToByteString()
+                CorrelationFileName = CorrelationId.Id.ToByteString()
             };
             
-            return _uploadMessageFactory.GetMessage(new MessageDto(
-                transferMessage,
-                MessageTypes.Request,
-                PeerIdentifier,
-                RecipientIdentifier
-            ));
+            return _uploadDtoFactory.GetDto(transferMessage,
+                RecipientIdentifier,
+                PeerIdentifier
+            );
         }
 
         public int RetryCount { get; set; }
@@ -111,12 +107,7 @@ namespace Catalyst.Common.FileTransfer
         /// <inheritdoc />
         public bool CanRetry()
         {
-            if (RetryCount >= Constants.FileTransferMaxChunkRetryCount)
-            {
-                return false;
-            }
-
-            return true;
+            return RetryCount < Constants.FileTransferMaxChunkRetryCount;
         }
     }
 }

@@ -21,14 +21,14 @@
 
 #endregion
 
-using System;
 using System.IO;
 using System.Threading.Tasks;
 using Autofac;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Modules.Mempool;
-using Catalyst.Common.UnitTests.TestUtils;
+using Catalyst.Common.IO.Messaging.Correlation;
+using Catalyst.TestUtils;
 using FluentAssertions;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
@@ -58,7 +58,7 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Mempool
             {
                 var mempool = container.Resolve<IMempool>();
 
-                var guid = Guid.NewGuid().ToString();
+                var guid = CorrelationId.GenerateCorrelationId().ToString();
                 var transactionToSave = TransactionHelper.GetTransaction(signature: guid);
 
                 mempool.SaveTransaction(transactionToSave);

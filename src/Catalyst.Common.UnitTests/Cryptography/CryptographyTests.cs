@@ -21,9 +21,13 @@
 
 #endregion
 
+using System;
 using System.Text;
 using Catalyst.Common.Cryptography;
 using Catalyst.Common.Interfaces.Cryptography;
+using Catalyst.Cryptography.BulletProofs.Wrapper;
+using Catalyst.Cryptography.BulletProofs.Wrapper.Exceptions;
+using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Types;
 using FluentAssertions;
 using Xunit;
@@ -32,7 +36,7 @@ namespace Catalyst.Common.UnitTests.Cryptography
 {
     public sealed class CryptographyTests
     {
-        public CryptographyTests() { _context = new RustCryptoContext(); }
+        public CryptographyTests() { _context = new CryptoContext(new CryptoWrapper()); }
 
         private readonly ICryptoContext _context;
 
@@ -54,7 +58,9 @@ namespace Catalyst.Common.UnitTests.Cryptography
             var key2 = _context.GeneratePrivateKey();
             var publicKey2 = _context.GetPublicKey(key2);
 
-            _context.Verify(publicKey2, data, signature)
+            var invalidSignature = new Signature(signature.SignatureBytes, publicKey2.Bytes);
+
+            _context.Verify(invalidSignature, data)
                .Should().BeFalse("signature should not verify with incorrect key");
         }
 
@@ -71,11 +77,10 @@ namespace Catalyst.Common.UnitTests.Cryptography
         public void TestSigningVerification()
         {
             var privateKey = _context.GeneratePrivateKey();
-            var publicKey = _context.GetPublicKey(privateKey);
             var data = Encoding.UTF8.GetBytes("Testing testing 1 2 3");
             var signature = _context.Sign(privateKey, data);
 
-            _context.Verify(publicKey, data, signature)
+            _context.Verify(signature, data)
                .Should().BeTrue("signature generated with private key should verify with corresponding public key");
         }
 
@@ -89,8 +94,40 @@ namespace Catalyst.Common.UnitTests.Cryptography
             var blob = _context.ExportPublicKey(publicKey);
 
             var importedKey = _context.ImportPublicKey(blob);
-            _context.Verify(importedKey, data, signature).Should()
+            var signatureWithImportedKey = new Signature(signature.SignatureBytes, importedKey.Bytes);
+            _context.Verify(signatureWithImportedKey, data).Should()
                .BeTrue("signature should verify with imported public key");
+        }
+
+        [Fact] 
+        public void Can_Throw_Signature_Exception_On_Invalid_Signature()
+        {
+            IPrivateKey privateKey = _context.GeneratePrivateKey();
+            IPublicKey publicKey = _context.GetPublicKey(privateKey);
+            string invalidSignature = "mL9Z+e5gIfEdfhDWUxkUox886YuiZnhEj3om5AXmWVXJK7dl7/ESkjhbkJsrbzIbuWm8EPSjJ2YicTIcXvfzIA==";
+            byte[] signatureBytes = Convert.FromBase64String(invalidSignature);
+            Signature invalidSig = new Signature(signatureBytes, publicKey.Bytes.RawBytes);
+            byte[] message = Encoding.UTF8.GetBytes("fa la la la");
+            Action action = () => { _context.Verify(invalidSig, message); };
+            action.Should().Throw<SignatureException>();
+        }
+
+        [Fact]
+        public void Is_PrivateKey_Length_Positive()
+        {
+            _context.PrivateKeyLength.Should().BePositive();
+        }
+
+        [Fact]
+        public void Is_PublicKey_Length_Positive()
+        {
+            _context.PublicKeyLength.Should().BePositive();
+        }
+
+        [Fact]
+        public void Is_Signature_Length_Positive()
+        {
+            _context.SignatureLength.Should().BePositive();
         }
     }
 }

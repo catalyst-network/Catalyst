@@ -36,8 +36,6 @@ using Catalyst.Common.Util;
 using Catalyst.Common.Interfaces.Cli;
 using Microsoft.Extensions.Configuration;
 using Serilog;
-using Serilog.Core;
-using Serilog.Events;
 using Constants = Catalyst.Common.Config.Constants;
 
 namespace Catalyst.Cli
@@ -98,12 +96,7 @@ namespace Catalyst.Cli
                 containerBuilder.RegisterModule(configurationModule);
 
                 var loggerConfiguration = new LoggerConfiguration();
-
-                //var minimumLevel = Enum.Parse<LogEventLevel>(configurationModule.Configuration["Serilog:MinimumLevel"]);
-
-                //LogLevelSwitch = new LoggingLevelSwitch(minimumLevel);
                 loggerConfiguration.ReadFrom.Configuration(configurationModule.Configuration);
-                loggerConfiguration.MinimumLevel.ControlledBy(LogLevelSwitch);
 
                 _logger = loggerConfiguration.WriteTo
                    .File(Path.Combine(targetConfigFolder, LogFileName),
@@ -129,7 +122,7 @@ namespace Catalyst.Cli
                 {
                     var shell = container.Resolve<ICatalystCli>();
 
-                    shell.AdvancedShell.RunConsole(_cancellationSource.Token);
+                    shell.RunConsole(_cancellationSource.Token);
                 }
 
                 Environment.ExitCode = 0;
@@ -149,7 +142,5 @@ namespace Catalyst.Cli
         {
             _cancellationSource.Cancel();
         }
-
-        public static LoggingLevelSwitch LogLevelSwitch => AppLoggingLevelSwitch.LoggingLevelSwitch;
     }
 }

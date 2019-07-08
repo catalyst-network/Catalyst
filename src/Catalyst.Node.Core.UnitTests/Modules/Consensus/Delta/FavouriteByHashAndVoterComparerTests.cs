@@ -21,10 +21,10 @@
 
 #endregion
 
-using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Common.Util;
 using Catalyst.Node.Core.Modules.Consensus.Delta;
 using Catalyst.Protocol.Delta;
+using Catalyst.TestUtils;
 using FluentAssertions;
 using Xunit;
 

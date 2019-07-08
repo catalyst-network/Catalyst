@@ -29,7 +29,7 @@ namespace Catalyst.Common.Util
     {
         public static string GetVersion()
         {
-            return Assembly.GetEntryAssembly().GetName().Version.ToString();
+            return Assembly.GetEntryAssembly()?.GetName().Version.ToString();
         }
     }
 }

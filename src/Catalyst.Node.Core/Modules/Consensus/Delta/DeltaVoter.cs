@@ -27,11 +27,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using Catalyst.Common.Interfaces.Modules.Consensus.Delta;
-using Catalyst.Common.Protocol;
+using Catalyst.Protocol;
 using Catalyst.Common.Util;
 using Catalyst.Protocol.Delta;
 using Dawn;
-using Google.Protobuf;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Primitives;
 using Nethereum.Hex.HexConvertors.Extensions;
@@ -126,7 +125,7 @@ namespace Catalyst.Node.Core.Modules.Consensus.Delta
             candidatesByPreviousHash.Add(candidateCacheKey);
         }
 
-        public CandidateDeltaBroadcast GetFavouriteDelta(byte[] previousDeltaDfsHash)
+        public bool TryGetFavouriteDelta(byte[] previousDeltaDfsHash, out CandidateDeltaBroadcast favourite)
         {
             Guard.Argument(previousDeltaDfsHash, nameof(previousDeltaDfsHash)).NotNull().NotEmpty();
             Log.Debug("Retrieving favourite candidate delta for the successor of delta {0}", 
@@ -137,16 +136,17 @@ namespace Catalyst.Node.Core.Modules.Consensus.Delta
             {
                 _logger.Debug("Failed to retrieve any scored candidate with previous delta {0}",
                     previousDeltaDfsHash.ToHex());
-                return null;
+                favourite = default;
+                return false;
             }
 
-            var favourite = candidates.Select(c => _candidatesCache.Get(c) as IScoredCandidateDelta)
+            favourite = candidates.Select(c => _candidatesCache.Get(c) as IScoredCandidateDelta)
                .Where(c => c != null)
                .OrderByDescending(c => c.Score)
                .ThenBy(c => c.Candidate.Hash.ToByteArray(), ByteUtil.ByteListMinSizeComparer.Default)
-               .First();
+               .First().Candidate;
 
-            return favourite.Candidate;
+            return true;
         }
 
         private int GetProducerRankFactor(CandidateDeltaBroadcast candidate)

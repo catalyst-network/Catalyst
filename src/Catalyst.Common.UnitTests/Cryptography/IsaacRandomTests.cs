@@ -21,10 +21,10 @@
 
 #endregion
 
-using System;
 using System.Linq;
 using Catalyst.Common.Cryptography;
 using Catalyst.Common.Interfaces.Cryptography;
+using Catalyst.Common.IO.Messaging.Correlation;
 using Xunit;
 
 namespace Catalyst.Common.UnitTests.Cryptography
@@ -37,7 +37,7 @@ namespace Catalyst.Common.UnitTests.Cryptography
         [InlineData(100000)]
         public void Test_Deterministic_Algorithm(uint sequenceSize)
         {
-            var seed = Guid.NewGuid().ToString();
+            var seed = CorrelationId.GenerateCorrelationId().ToString();
             uint[] sequence = new uint[sequenceSize];
             uint[] duplicateSequence = new uint[sequenceSize];
 

@@ -24,36 +24,32 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reactive.Linq;
 using Catalyst.Common.Extensions;
+using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.IO.Inbound;
-using Catalyst.Common.IO.Messaging;
+using Catalyst.Common.IO.Handlers;
+using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Common.P2P;
-using Catalyst.Common.UnitTests.TestUtils;
-using Catalyst.Node.Core.P2P.Messaging;
-using Catalyst.Node.Core.P2P.Messaging.Handlers;
+using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
+using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using FluentAssertions;
 using Google.Protobuf;
 using Microsoft.Extensions.Caching.Memory;
 using NSubstitute;
-using Serilog;
 using Xunit;
 using Xunit.Abstractions;
-using PendingRequest = Catalyst.Common.IO.Outbound.PendingRequest;
 
 namespace Catalyst.Node.Core.UnitTests.P2P
 {
     public sealed class MessageCorrelationCacheTests
     {
         private readonly IPeerIdentifier[] _peerIds;
-        private readonly IList<PendingRequest> _pendingRequests;
+        private readonly IList<CorrelatableMessage> _pendingRequests;
         
         // private readonly P2PCorrelationCache _cache;
         private readonly Dictionary<IPeerIdentifier, int> _reputationByPeerIdentifier;
-        private readonly ILogger _logger;
 
         public MessageCorrelationCacheTests(ITestOutputHelper output)
         {
@@ -66,15 +62,15 @@ namespace Catalyst.Node.Core.UnitTests.P2P
             }.Select(p => new PeerIdentifier(p) as IPeerIdentifier).ToArray();
 
             _reputationByPeerIdentifier = _peerIds.ToDictionary(p => p, p => 0);
-            _pendingRequests = _peerIds.Select((p, i) => new PendingRequest
+            _pendingRequests = _peerIds.Select((p, i) => new CorrelatableMessage
             {
-                Content = new PingRequest().ToProtocolMessage(senderPeerId, Guid.NewGuid()),
+                Content = new PingRequest().ToProtocolMessage(senderPeerId, CorrelationId.GenerateCorrelationId()),
                 Recipient = p,
                 SentAt = DateTimeOffset.MinValue.Add(TimeSpan.FromMilliseconds(100 * i))
             }).ToList();
 
             var responseStore = Substitute.For<IMemoryCache>();
-            responseStore.TryGetValue(Arg.Any<ByteString>(), out Arg.Any<PendingRequest>())
+            responseStore.TryGetValue(Arg.Any<ByteString>(), out Arg.Any<CorrelatableMessage>())
                .Returns(ci =>
                 {
                     output.WriteLine("");
@@ -82,9 +78,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
                         r => r.Content.CorrelationId.ToBase64() == ((ByteString) ci[0]).ToBase64());
                     return ci[1] != null;
                 });
-
-            _logger = Substitute.For<ILogger>();
-
+            
             // _cache = new P2PCorrelationCache(responseStore, _logger);
             // _cache.PeerRatingChanges.Subscribe(change =>
             // {
@@ -98,7 +92,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
         {
             var responseMatchingIndex1 = new PingResponse().ToProtocolMessage(
                 _peerIds[1].PeerId,
-                _pendingRequests[1].Content.CorrelationId.ToGuid());
+                _pendingRequests[1].Content.CorrelationId.ToCorrelationId());
 
             // var request = _cache.TryMatchResponse<PingRequest, PingResponse>(responseMatchingIndex1);
             // request.Should().NotBeNull();
@@ -122,35 +116,33 @@ namespace Catalyst.Node.Core.UnitTests.P2P
             var reputationBefore = _reputationByPeerIdentifier[_peerIds[1]];
             var responseMatchingIndex1 = new PingResponse().ToProtocolMessage(
                 _peerIds[1].PeerId,
-                Guid.NewGuid());
+                CorrelationId.GenerateCorrelationId());
 
             // var request = _cache.TryMatchResponse<PingRequest, PingResponse>(responseMatchingIndex1);
             var reputationAfter = _reputationByPeerIdentifier[_peerIds[1]];
             reputationAfter.Should().BeLessThan(reputationBefore);
         }
 
-        [Fact(Skip = "This will need to be refactored testing with correlation in pipeline.")] // @TODO
-        public void UncorrelatedMessage_should_block_handler()
+        [Fact]
+        public void UncorrelatedMessage_should_not_propogate_to_next_pipeline()
         {
-            var fakeContext = Substitute.For<IChannelHandlerContext>();
-            var fakeChannel = Substitute.For<IChannel>();
-            var nonCorrelatedMessage = new PingResponse().ToProtocolMessage(_peerIds[0].PeerId, Guid.NewGuid());
+            var correlationManager = Substitute.For<IMessageCorrelationManager>();
+            correlationManager.TryMatchResponse(Arg.Any<ProtocolMessage>()).Returns(false);
 
-            fakeContext.Channel.Returns(fakeChannel);
+            var correlationHandler = new CorrelationHandler(correlationManager);
+            var channelHandlerContext = Substitute.For<IChannelHandlerContext>();
+            var nonCorrelatedMessage = new PingResponse().ToProtocolMessage(_peerIds[0].PeerId, CorrelationId.GenerateCorrelationId());
+            correlationHandler.ChannelRead(channelHandlerContext, nonCorrelatedMessage);
 
-            var channeledAny = new ProtocolMessageDto(fakeContext, nonCorrelatedMessage);
-            var observableStream = new[] {channeledAny}.ToObservable();
-
-            var handler = new PingResponseHandler(_logger);
-            handler.StartObserving(observableStream);
-
-            // Assert.False(handler.CanExecuteNextHandler(channeledAny));
+            channelHandlerContext.DidNotReceive().FireChannelRead(nonCorrelatedMessage);
+            
+            // channelHandlerContext.Received().CloseAsync();
         }
 
         [Fact]
         public void TryMatchResponseAsync_should_not_match_existing_records_with_non_matching_correlation_id()
         {
-            var responseMatchingNothing = new PingResponse().ToProtocolMessage(_peerIds[1].PeerId, Guid.NewGuid());
+            var responseMatchingNothing = new PingResponse().ToProtocolMessage(_peerIds[1].PeerId, CorrelationId.GenerateCorrelationId());
          
             // var request = _cache.TryMatchResponse<PingRequest, PingResponse>(responseMatchingNothing);
             // request.Should().BeNull();

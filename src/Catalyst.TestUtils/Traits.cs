@@ -21,11 +21,12 @@
 
 #endregion
 
-namespace Catalyst.Common.UnitTests.TestUtils
+namespace Catalyst.TestUtils
 {
     public static class Traits
     {
         public const string TestType = "TestType";
         public const string IntegrationTest = "IntegrationTest";
+        public const string EmbeddedChannelTest = "EmbeddedChannelTest";
     }
 }

@@ -25,7 +25,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using Dawn;
 
 namespace Catalyst.Common.Enumerator
@@ -37,6 +36,11 @@ namespace Catalyst.Common.Enumerator
     public class Enumeration
         : IEquatable<Enumeration>
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="name"></param>
         protected Enumeration(int id, string name)
         {
             Guard.Argument(name, nameof(name)).NotNull();
@@ -47,9 +51,16 @@ namespace Catalyst.Common.Enumerator
         
         public string Name { get; }
         public int Id { get; }
-
         public override string ToString() { return Name; }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="parsed"></param>
+        /// <param name="comparison"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
         public static bool TryParse<T>(string value,
             out T parsed,
             StringComparison comparison = StringComparison.InvariantCultureIgnoreCase) where T : Enumeration
@@ -64,6 +75,14 @@ namespace Catalyst.Common.Enumerator
             return parsed != null;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="comparison"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        /// <exception cref="FormatException"></exception>
         public static T Parse<T>(string value,
             StringComparison comparison = StringComparison.InvariantCultureIgnoreCase) where T : Enumeration
         {
@@ -80,11 +99,21 @@ namespace Catalyst.Common.Enumerator
             return result;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="enumeration"></param>
+        /// <returns></returns>
         public static explicit operator int(Enumeration enumeration)
         {
             return enumeration.Id;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
         public static IEnumerable<T> GetAll<T>() where T : Enumeration
         {
             var fields = typeof(T).GetFields(BindingFlags.Public |
@@ -118,7 +147,7 @@ namespace Catalyst.Common.Enumerator
             return Equals((Enumeration) obj);
         }
 
-        public override int GetHashCode() { throw new NotImplementedException(); }
+        public override int GetHashCode() { return Id; }
         public static bool operator ==(Enumeration left, Enumeration right) { return Equals(left, right); }
         public static bool operator !=(Enumeration left, Enumeration right) { return !Equals(left, right); }
 

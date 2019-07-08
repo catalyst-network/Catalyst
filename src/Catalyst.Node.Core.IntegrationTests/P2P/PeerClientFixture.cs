@@ -23,10 +23,15 @@
 
 using System;
 using System.Net;
+using Catalyst.Common.Interfaces.IO.EventLoop;
+using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Node.Core.P2P;
-using Catalyst.Common.IO.Outbound;
+using Catalyst.Common.IO;
 using NSubstitute;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
+using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.IO.Transport.Channels;
+using Catalyst.Node.Core.P2P.IO.Transport.Channels;
 
 namespace Catalyst.Node.Core.IntegrationTests.P2P
 {
@@ -34,7 +39,7 @@ namespace Catalyst.Node.Core.IntegrationTests.P2P
     {
         public PeerClientFixture()
         {
-            UniversalPeerClient = new PeerClient(new UdpClientChannelFactory(Substitute.For<IKeySigner>()));
+            UniversalPeerClient = new PeerClient(new PeerClientChannelFactory(Substitute.For<IKeySigner>(), Substitute.For<IMessageCorrelationManager>(), Substitute.For<IPeerIdValidator>()), Substitute.For<IUdpClientEventLoopGroupFactory>());
         }
 
         public void Dispose()

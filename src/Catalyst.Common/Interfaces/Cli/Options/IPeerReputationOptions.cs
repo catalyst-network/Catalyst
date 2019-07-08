@@ -23,16 +23,8 @@
 
 namespace Catalyst.Common.Interfaces.Cli.Options
 {
-    public interface IPeerReputationOptions
+    public interface IPeerReputationOptions : IOptionsBase
     {
-        /// <summary>
-        /// Gets or sets the node.
-        /// </summary>
-        /// <value>
-        /// The node.
-        /// </value>
-        string Node { get; set; }
-
         string IpAddress { get; set; }
         
         string PublicKey { get; set; }

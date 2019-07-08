@@ -32,12 +32,8 @@ namespace Catalyst.Cli.Options
     /// Class contains the options for the peer list command
     /// </summary>
     [Verb("peerblacklist", HelpText = "displays the blacklist state of a peer")]
-    internal sealed class PeerBlackListingOptions : IPeerBlackListingOptions
+    public sealed class PeerBlackListingOptions : OptionsBase, IPeerBlackListingOptions
     {
-        /// <inheritdoc />
-        [Option('n', "node", HelpText = "A valid node ID as listed in the nodes.json config file.")]
-        public string Node { get; set; }
-
         /// <inheritdoc />
         [Option('b', "blacklistflag", HelpText = "Blacklist flag for peer.")]
         public bool BlackListFlag { get; set; }

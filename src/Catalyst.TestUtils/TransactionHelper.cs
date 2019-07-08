@@ -24,7 +24,7 @@
 using Catalyst.Common.Extensions;
 using Catalyst.Protocol.Transaction;
 
-namespace Catalyst.Common.UnitTests.TestUtils
+namespace Catalyst.TestUtils
 {
     public static class TransactionHelper
     {
@@ -39,7 +39,7 @@ namespace Catalyst.Common.UnitTests.TestUtils
             ulong transactionFees = 2,
             ulong lockTime = 9876)
         {
-            var transaction = new TransactionBroadcast()
+            var transaction = new TransactionBroadcast
             {
                 STEntries =
                 {

@@ -28,15 +28,15 @@ using System.Security.Authentication;
 using System.Threading.Tasks;
 using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Common.Interfaces.FileSystem;
-using Catalyst.Common.Interfaces.KeyStore;
+using Catalyst.Common.Interfaces.Keystore;
 using Catalyst.Common.Interfaces.Util;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
 using Nethereum.KeyStore.Crypto;
 using Serilog;
 
-namespace Catalyst.Common.KeyStore
+namespace Catalyst.Common.Keystore
 {
-    public sealed class LocalKeyStore : IKeyStore
+    public sealed class LocalKeyStore : IKeyStore, IDisposable
     {
         private readonly ILogger _logger;
         private readonly IAddressHelper _addressHelper;
@@ -108,7 +108,7 @@ namespace Catalyst.Common.KeyStore
             throw new AuthenticationException("Password incorrect for keystore.");
         }
         
-        public async Task<string> KeyStoreGenerate(IPrivateKey privateKey, string password)
+        public async Task<string> KeyStoreGenerateAsync(IPrivateKey privateKey, string password)
         {
             var address = _addressHelper.GenerateAddress(privateKey.GetPublicKey());
             
@@ -119,7 +119,7 @@ namespace Catalyst.Common.KeyStore
             
             try
             {
-                await _fileSystem.WriteFileToCdd(_keyStoreService.GenerateUTCFileName(address), json);
+                await _fileSystem.WriteFileToCddAsync(_keyStoreService.GenerateUtcFileName(address), json);
             }
             catch (Exception e)
             {
@@ -128,6 +128,11 @@ namespace Catalyst.Common.KeyStore
             }
             
             return json;
+        }
+
+        public void Dispose()
+        {
+            _password?.Dispose();
         }
     }
 }

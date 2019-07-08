@@ -21,7 +21,6 @@
 
 #endregion
 
-using System;
 using Autofac;
 using Catalyst.Common.Interfaces.Cli;
 using FluentAssertions;
@@ -45,10 +44,10 @@ namespace Catalyst.Cli.IntegrationTests.Commands
                 {
                     var shell = container.Resolve<ICatalystCli>();
                 
-                    var hasConnected = shell.AdvancedShell.ParseCommand("connect", "-n", "node1");
+                    var hasConnected = shell.ParseCommand("connect", "-n", "node1");
                     hasConnected.Should().BeTrue();
 
-                    var result = shell.AdvancedShell.ParseCommand("sign", "-m", "test message", "-n", "node1");
+                    var result = shell.ParseCommand("sign", "-m", "test message", "-n", "node1");
                     result.Should().BeTrue();
                 }   
             }

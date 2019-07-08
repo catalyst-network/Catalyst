@@ -21,20 +21,16 @@
 
 #endregion
 
+using Catalyst.Common.Interfaces.IO.EventLoop;
+using Catalyst.Common.Interfaces.IO.Observers;
+using Catalyst.Common.Interfaces.IO.Transport.Channels;
+using Catalyst.Common.Interfaces.Rpc;
+using Catalyst.Common.IO.Transport;
+using Serilog;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
-using Catalyst.Common.Interfaces.IO.Messaging;
-using Catalyst.Common.Interfaces.IO.Outbound;
-using Catalyst.Common.IO.Outbound;
-using Catalyst.Common.Network;
-using Catalyst.Common.Interfaces.Rpc;
-using Catalyst.Protocol.Common;
-using DotNetty.Codecs.Protobuf;
-using DotNetty.Transport.Channels;
-using DotNetty.Transport.Channels.Sockets;
-using Serilog;
 
 namespace Catalyst.Node.Rpc.Client
 {
@@ -51,13 +47,16 @@ namespace Catalyst.Node.Rpc.Client
         /// <param name="certificate"></param>
         /// <param name="nodeConfig">rpc node config</param>
         /// <param name="handlers"></param>
+        /// <param name="clientEventLoopGroupFactory"></param>
         public NodeRpcClient(ITcpClientChannelFactory channelFactory,
-            X509Certificate2 certificate, 
+            X509Certificate2 certificate,
             IRpcNodeConfig nodeConfig,
-            IEnumerable<IRpcResponseHandler> handlers) 
-            : base(channelFactory, Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType))
+            IEnumerable<IRpcResponseObserver> handlers,
+            ITcpClientEventLoopGroupFactory clientEventLoopGroupFactory)
+            : base(channelFactory, Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType),
+                clientEventLoopGroupFactory)
         {
-            var socket = channelFactory.BuildChannel(nodeConfig.HostAddress, nodeConfig.Port, certificate);
+            var socket = channelFactory.BuildChannel(EventLoopGroupFactory, nodeConfig.HostAddress, nodeConfig.Port, certificate);
             handlers.ToList().ForEach(handler => handler.StartObserving(socket.MessageStream));
             Channel = socket.Channel;
         }

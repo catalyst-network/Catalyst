@@ -26,15 +26,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Reflection;
-using System.Security.Cryptography;
 using Catalyst.Common.Config;
+using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
+using Catalyst.Common.Interfaces.IO.Messaging.Dto;
+using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Common.Util;
 using Catalyst.Protocol.Common;
 using Dawn;
-using DotNetty.Buffers;
-using DotNetty.Transport.Channels.Sockets;
 using Google.Protobuf;
 using Google.Protobuf.Reflection;
+using Multiformats.Hash;
 using Type = System.Type;
 
 namespace Catalyst.Common.Extensions
@@ -43,16 +44,27 @@ namespace Catalyst.Common.Extensions
     {
         private const string CatalystProtocol = "Catalyst.Protocol";
 
-        private static readonly List<string> ProtoGossipAllowedMessages;
-
+        private static readonly List<string> ProtoBroadcastAllowedMessages;
+        private static readonly List<string> ProtoRequestAllowedMessages;
+        private static readonly List<string> ProtoResponseAllowedMessages;
+        
         static ProtobufExtensions()
         {
             var protoToClrNameMapper = typeof(ProtocolMessage).Assembly.ExportedTypes
                .Where(t => typeof(IMessage).IsAssignableFrom(t))
                .Select(t => ((IMessage) Activator.CreateInstance(t)).Descriptor)
                .ToDictionary(d => d.ShortenedFullName(), d => d.ClrType.FullName);
-            ProtoGossipAllowedMessages = protoToClrNameMapper.Keys
+
+            ProtoBroadcastAllowedMessages = protoToClrNameMapper.Keys
                .Where(t => t.EndsWith(MessageTypes.Broadcast.Name))
+               .ToList();
+
+            ProtoRequestAllowedMessages = protoToClrNameMapper.Keys
+               .Where(t => t.EndsWith(MessageTypes.Request.Name))
+               .ToList();
+
+            ProtoResponseAllowedMessages = protoToClrNameMapper.Keys
+               .Where(t => t.EndsWith(MessageTypes.Response.Name))
                .ToList();
         }
 
@@ -75,29 +87,48 @@ namespace Catalyst.Common.Extensions
 
         public static ProtocolMessage ToProtocolMessage(this IMessage protobufObject,
             PeerId senderId,
-            Guid correlationId = default)
+            ICorrelationId correlationId = default)
         {
             var typeUrl = protobufObject.Descriptor.ShortenedFullName();
             Guard.Argument(senderId, nameof(senderId)).NotNull();
-            Guard.Argument(correlationId, nameof(correlationId))
-               .Require(c => !typeUrl.EndsWith(MessageTypes.Response.Name) || c != default,
-                    g => $"{typeUrl} is a response type and needs a correlationId");
-
-            var protocolMessage = new ProtocolMessage
+            
+            if (typeUrl.EndsWith(MessageTypes.Response.Name))
+            {
+                Guard.Argument(correlationId, nameof(correlationId)).NotNull();
+            }
+            
+            return new ProtocolMessage
             {
                 PeerId = senderId,
-                CorrelationId = (correlationId == default ? Guid.NewGuid() : correlationId).ToByteString(),
-                
+                CorrelationId = (correlationId == default ? CorrelationId.GenerateCorrelationId().Id : correlationId.Id).ToByteString(),
+
                 TypeUrl = typeUrl,
                 Value = protobufObject.ToByteString()
             };
-            return protocolMessage;
+        }
+
+        public static bool IsRequestType(this Type type)
+        {
+            var shortType = ShortenedProtoFullName(type);
+            return ProtoRequestAllowedMessages.Contains(shortType);
+        }
+
+        public static bool IsResponseType(this Type type)
+        {
+            var shortType = ShortenedProtoFullName(type);
+            return ProtoResponseAllowedMessages.Contains(shortType);
+        }
+
+        public static bool IsBroadcastType(this Type type)
+        {
+            var shortType = ShortenedProtoFullName(type);
+            return ProtoBroadcastAllowedMessages.Contains(shortType);
         }
 
         public static bool CheckIfMessageIsBroadcast(this ProtocolMessage message)
         {
             return message.TypeUrl.EndsWith(nameof(ProtocolMessage)) &&
-                ProtoGossipAllowedMessages.Contains(ProtocolMessage.Parser.ParseFrom(message.Value).TypeUrl);
+                ProtoBroadcastAllowedMessages.Contains(ProtocolMessage.Parser.ParseFrom(message.Value).TypeUrl);
         }
 
         public static T FromProtocolMessage<T>(this ProtocolMessage message) where T : IMessage<T>
@@ -107,14 +138,21 @@ namespace Catalyst.Common.Extensions
             return typed;
         }
 
+        public static T FromIMessageDto<T>(this IMessageDto<T> message) where T : IMessage<T>
+        {
+            var empty = (T) Activator.CreateInstance(typeof(T));
+            var typed = (T) empty.Descriptor.Parser.ParseFrom(message.Content.ToByteString());
+            return typed;
+        }
+
         public static ByteString ToUtf8ByteString(this string utf8String)
         {
             return ByteString.CopyFromUtf8(utf8String);
         }
 
-        public static Guid ToGuid(this ByteString guidBytes)
+        public static ICorrelationId ToCorrelationId(this ByteString guidBytes)
         {
-            return new Guid(guidBytes.ToByteArray());
+            return new CorrelationId(new Guid(guidBytes.ToByteArray()));
         }
 
         public static ByteString ToByteString(this Guid guid)
@@ -122,9 +160,14 @@ namespace Catalyst.Common.Extensions
             return guid.ToByteArray().ToByteString();
         }
 
-        public static DatagramPacket ToDatagram<T>(this T anySignedMessage, IPEndPoint recipient) where T : IMessage<T>
+        public static Multihash ToMultihash(this ByteString byteString)
         {
-            return new DatagramPacket(Unpooled.WrappedBuffer(anySignedMessage.ToByteArray()), recipient);
+            return Multihash.Decode(byteString.ToByteArray());
+        }
+
+        public static string ToMultihashString(this ByteString byteString)
+        {
+            return ToMultihash(byteString).ToString();
         }
 
         public static string GetRequestType(this string responseTypeUrl)

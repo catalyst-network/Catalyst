@@ -27,9 +27,13 @@ using System.IO;
 using System.Net;
 using System.Security.Cryptography.X509Certificates;
 using Autofac;
+using Catalyst.Common.Extensions;
+using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.Rpc;
-using Catalyst.Common.UnitTests.TestUtils;
+using Catalyst.Protocol.Common;
+using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
+using Google.Protobuf;
 using Microsoft.Extensions.Configuration;
 using NSubstitute;
 using Xunit.Abstractions;
@@ -54,7 +58,7 @@ namespace Catalyst.Cli.IntegrationTests.Commands
                 new object[] {"/fake_file_hash", AppDomain.CurrentDomain.BaseDirectory + "/Config/addfile_test.json", true}
             };
 
-        public CliCommandTestBase(ITestOutputHelper output) : base(output)
+        protected CliCommandTestBase(ITestOutputHelper output) : base(output)
         {
             var config = new ConfigurationBuilder()
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ShellComponentsJsonConfigFile))
@@ -78,6 +82,15 @@ namespace Catalyst.Cli.IntegrationTests.Commands
             ConfigureContainerBuilder(config);
 
             ContainerBuilder.RegisterInstance(nodeRpcClientFactory).As<INodeRpcClientFactory>();
+        }
+
+        protected void AssertSentMessage<T>() where T : IMessage<T>
+        {
+            NodeRpcClient.Received(1).SendMessage(Arg.Is<IMessageDto<ProtocolMessage>>(x =>
+                x.Content != null &&
+                x.Content.GetType().IsAssignableTo<ProtocolMessage>() &&
+                x.Content.FromProtocolMessage<T>() != null
+            ));
         }
     }
 }

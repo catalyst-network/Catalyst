@@ -22,12 +22,12 @@
 #endregion
 
 using System;
-using Catalyst.Common.Interfaces.IO.Messaging;
+using Catalyst.Common.Interfaces.IO.Observers;
 using Catalyst.Protocol.Common;
 
 namespace Catalyst.Common.Interfaces.P2P
 {
-    public interface IPeerService : IChanneledMessageStreamer<ProtocolMessage>, IDisposable
+    public interface IPeerService : IObservableMessageStreamer<ProtocolMessage>, IDisposable
     {
         /// <summary>
         ///     The discovery mechanism for the peer network.

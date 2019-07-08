@@ -21,60 +21,30 @@
 
 #endregion
 
-using System;
-using System.Net;
-using System.Text;
-using Catalyst.Common.Config;
-using Catalyst.Common.Interfaces.Cli.Options;
-using Catalyst.Common.Interfaces.Rpc;
-using Catalyst.Common.IO.Messaging;
+using Catalyst.Cli.Options;
+using Catalyst.Common.Interfaces.Cli.Commands;
 using Catalyst.Common.Network;
-using Catalyst.Common.P2P;
 using Catalyst.Protocol.Rpc.Node;
-using Dawn;
 using Google.Protobuf;
 using Nethereum.RLP;
+using System.Net;
+using Catalyst.Cli.CommandTypes;
 
 namespace Catalyst.Cli.Commands
 {
-    internal partial class Commands
+    public sealed class PeerRemoveCommand : BaseMessageCommand<RemovePeerRequest, RemovePeerOptions>
     {
-        /// <inheritdoc cref="PeerRemoveCommand" />
-        public bool PeerRemoveCommand(IRemovePeerOptions opts)
+        public PeerRemoveCommand(ICommandContext commandContext) : base(commandContext) { }
+
+        protected override RemovePeerRequest GetMessage(RemovePeerOptions option)
         {
-            Guard.Argument(opts).NotNull().Compatible<IRemovePeerOptions>();
-
-            INodeRpcClient node;
-            try
+            return new RemovePeerRequest
             {
-                node = GetConnectedNode(opts.Node);
-            }
-            catch (Exception e)
-            {
-                _logger.Error(e.Message);
-                return false;
-            }
-            
-            var nodeConfig = GetNodeConfig(opts.Node);
-            Guard.Argument(nodeConfig, nameof(nodeConfig)).NotNull("The node configuration cannot be null");
-
-            var requestMessage = _messageFactory.GetMessage(new MessageDto(
-                new RemovePeerRequest
-                {
-                    PeerIp = ByteString.CopyFrom(IPAddress.Parse(opts.Ip).To16Bytes()),
-                    PublicKey = string.IsNullOrEmpty(opts.PublicKey)
-                        ? ByteString.Empty
-                        : ByteString.CopyFrom(opts.PublicKey.ToBytesForRLPEncoding())
-                },
-                MessageTypes.Request,
-                new PeerIdentifier(Encoding.ASCII.GetBytes(nodeConfig.PublicKey), nodeConfig.HostAddress,
-                    nodeConfig.Port),
-                _peerIdentifier
-            ));
-
-            node.SendMessage(requestMessage);
-
-            return true;
+                PeerIp = ByteString.CopyFrom(IPAddress.Parse(option.Ip).To16Bytes()),
+                PublicKey = string.IsNullOrEmpty(option.PublicKey)
+                    ? ByteString.Empty
+                    : ByteString.CopyFrom(option.PublicKey.ToBytesForRLPEncoding())
+            };
         }
     }
 }

@@ -28,6 +28,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
+using Catalyst.Common.IO.Messaging.Correlation;
 using FluentAssertions;
 using Ipfs;
 using Ipfs.CoreApi;
@@ -54,7 +55,7 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Dfs
             _ipfsEngine.FileSystem.Returns(fileSystem);
 
             _logger = Substitute.For<ILogger>();
-            var hashBits = Guid.NewGuid().ToByteArray().Concat(new byte[16]).ToArray();
+            var hashBits = CorrelationId.GenerateCorrelationId().Id.ToByteArray().Concat(new byte[16]).ToArray();
             _expectedCid = new Cid
             {
                 Encoding = Constants.EncodingAlgorithm.ToString().ToLowerInvariant(),
@@ -120,6 +121,7 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Dfs
             _ipfsEngine.FileSystem.AddTextAsync(Arg.Any<string>(), Arg.Any<AddFileOptions>(), Arg.Any<CancellationToken>())
                .Returns(c =>
                 {
+                    Task.Yield().GetAwaiter().GetResult();
                     Task.Delay(DelayInMs * DelayMultiplier, (CancellationToken) c[2]).GetAwaiter().GetResult();
                     return Task.FromResult(_addedRecord);
                 });
@@ -136,6 +138,7 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Dfs
             _ipfsEngine.FileSystem.AddAsync(Arg.Any<Stream>(), Arg.Any<string>(), Arg.Any<AddFileOptions>(), Arg.Any<CancellationToken>())
                .Returns(c =>
                 {
+                    Task.Yield().GetAwaiter().GetResult();
                     Task.Delay(DelayInMs * DelayMultiplier, (CancellationToken) c[3]).GetAwaiter().GetResult();
                     return Task.FromResult(_addedRecord);
                 });
@@ -152,6 +155,7 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Dfs
             _ipfsEngine.FileSystem.ReadAllTextAsync(Arg.Any<string>(), Arg.Any<CancellationToken>())
                .Returns(c =>
                 {
+                    Task.Yield().GetAwaiter().GetResult();
                     Task.Delay(DelayInMs * DelayMultiplier, (CancellationToken) c[1]).GetAwaiter().GetResult();
                     return Task.FromResult("some content");
                 });
@@ -168,6 +172,7 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Dfs
             _ipfsEngine.FileSystem.ReadFileAsync(Arg.Any<string>(), Arg.Any<CancellationToken>())
                .Returns(c =>
                 {
+                    Task.Yield().GetAwaiter().GetResult();
                     Task.Delay(DelayInMs * DelayMultiplier, (CancellationToken) c[1]).GetAwaiter().GetResult();
                     return Task.FromResult(Stream.Null);
                 });

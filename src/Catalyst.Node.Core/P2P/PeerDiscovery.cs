@@ -29,7 +29,7 @@ using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
-using Catalyst.Common.Interfaces.IO.Inbound;
+using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.Network;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.P2P;
@@ -70,7 +70,7 @@ namespace Catalyst.Node.Core.P2P
 
             Peers.TryAdd(Dns.GetSeedNodesFromDns(ParseDnsServersFromConfig(rootSection)).RandomElement());
 
-            var longRunningTasks = new[] {PeerCrawler()};
+            var longRunningTasks = new[] {PeerCrawlerAsync()};
             Task.WaitAll(longRunningTasks);
         }
 
@@ -93,7 +93,7 @@ namespace Catalyst.Node.Core.P2P
             return seedDnsUrls;
         }
 
-        public void StartObserving(IObservable<IChanneledMessage<ProtocolMessage>> observer)
+        public void StartObserving(IObservable<IObserverDto<ProtocolMessage>> observer)
         {
             PingResponseMessageStream = observer
                .Where(m => m != null && m.Payload.TypeUrl == typeof(PingResponse)
@@ -106,27 +106,27 @@ namespace Catalyst.Node.Core.P2P
                 ).Subscribe(PeerNeighbourSubscriptionHandler);
         }
 
-        private void PingSubscriptionHandler(IChanneledMessage<ProtocolMessage> message)
+        private void PingSubscriptionHandler(IObserverDto<ProtocolMessage> messageDto)
         {
             Logger.Information("processing ping message stream");
-            var pingResponse = message.Payload.FromProtocolMessage<PingResponse>();
+            var pingResponse = messageDto.Payload.FromProtocolMessage<PingResponse>();
             PeerRepository.Add(new Peer
             {
                 LastSeen = DateTime.Now,
-                PeerIdentifier = new PeerIdentifier(message.Payload.PeerId),
+                PeerIdentifier = new PeerIdentifier(messageDto.Payload.PeerId),
                 Reputation = 0
             });
 
-            Logger.Information(message.Payload.TypeUrl);
+            Logger.Information(messageDto.Payload.TypeUrl);
         }
         
-        public void PeerNeighbourSubscriptionHandler(IChanneledMessage<ProtocolMessage> message)
+        public void PeerNeighbourSubscriptionHandler(IObserverDto<ProtocolMessage> messageDto)
         {
             Logger.Information("processing peer neighbour message stream");
-            var peerNeighborsResponse = message.Payload.FromProtocolMessage<PeerNeighborsResponse>();
+            var peerNeighborsResponse = messageDto.Payload.FromProtocolMessage<PeerNeighborsResponse>();
         }
 
-        private async Task PeerCrawler()
+        private async Task PeerCrawlerAsync()
         {
             if (Peers.Count != 0) return;
             try { }

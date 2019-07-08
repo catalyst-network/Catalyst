@@ -38,37 +38,40 @@ namespace Catalyst.Common.Network
     public sealed class DnsClient : IDns
     {
         private readonly ILookupClient _client;
+        private readonly IPeerIdValidator _peerIdValidator;
 
         /// <summary>
         /// </summary>
         /// <param name="client"></param>
-        public DnsClient(ILookupClient client)
+        /// <param name="peerIdValidator"></param>
+        public DnsClient(ILookupClient client, IPeerIdValidator peerIdValidator)
         {
             Guard.Argument(client, nameof(client)).NotNull();
             _client = client;
+            _peerIdValidator = peerIdValidator;
         }
 
-        public async Task<IList<IDnsQueryResponse>> GetTxtRecords(IList<string> hostnames)
+        public async Task<IList<IDnsQueryResponse>> GetTxtRecordsAsync(IList<string> hostnames)
         {
             Guard.Argument(hostnames, nameof(hostnames))
                .NotNull()
                .NotEmpty()
                .DoesNotContainNull();
 
-            var queries = hostnames.Select(GetTxtRecords).ToArray();
+            var queries = hostnames.Select(GetTxtRecordsAsync).ToArray();
             var responses = await Task.WhenAll(queries);
 
             return responses.Where(c => c != null).ToList();
         }
 
-        public async Task<IDnsQueryResponse> GetTxtRecords(string hostname)
+        public async Task<IDnsQueryResponse> GetTxtRecordsAsync(string hostname)
         {
             Guard.Argument(hostname, nameof(hostname))
                .NotNull()
                .NotEmpty()
                .NotWhiteSpace();
 
-            return await Query(hostname, QueryType.TXT).ConfigureAwait(false);
+            return await QueryAsync(hostname, QueryType.TXT).ConfigureAwait(false);
         }
         
         /// <inheritdoc />
@@ -80,14 +83,17 @@ namespace Catalyst.Common.Network
             var peers = new List<IPeerIdentifier>();
             seedServers.ToList().ForEach(async seedServer =>
             {
-                var dnsQueryAnswer = await GetTxtRecords(seedServer).ConfigureAwait(false);
+                var dnsQueryAnswer = await GetTxtRecordsAsync(seedServer).ConfigureAwait(false);
                 var answerSection = (TxtRecord) dnsQueryAnswer.Answers.FirstOrDefault();
         
                 Guard.Argument(answerSection.EscapedText).NotNull().Count(1);        
                 answerSection.EscapedText.ToList().ForEach(hexPid =>
                 {
                     var peerChunks = hexPid.HexToUTF8String().Split("|");
-                    peers.Add(PeerIdentifier.ParseHexPeerIdentifier(peerChunks));
+                    _peerIdValidator.ValidateRawPidChunks(peerChunks);
+
+                    var peerIdentifier = PeerIdentifier.ParseHexPeerIdentifier(peerChunks);
+                    peers.Add(peerIdentifier);
                 });
         
                 Guard.Argument(peers).MinCount(1);
@@ -95,7 +101,7 @@ namespace Catalyst.Common.Network
             return peers;
         }
 
-        private async Task<IDnsQueryResponse> Query(string hostname, QueryType type)
+        private async Task<IDnsQueryResponse> QueryAsync(string hostname, QueryType type)
         {
             Guard.Argument(hostname, nameof(hostname))
                .NotNull()

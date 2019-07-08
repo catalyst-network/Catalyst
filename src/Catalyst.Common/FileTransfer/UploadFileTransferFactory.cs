@@ -54,33 +54,33 @@ namespace Catalyst.Common.FileTransfer
         /// <summary>Does the transfer.</summary>
         /// <param name="fileTransferInformation">The file transfer information.</param>
         /// <returns></returns>
-        protected override async Task DoTransfer(IUploadFileInformation fileTransferInformation)
+        protected override async Task DoTransferAsync(IUploadFileInformation fileTransferInformation)
         {
-            EnsureKeyExists(fileTransferInformation.CorrelationGuid);
-            await Upload(fileTransferInformation).ConfigureAwait(false);
+            EnsureKeyExists(fileTransferInformation.CorrelationId);
+            await UploadAsync(fileTransferInformation).ConfigureAwait(false);
         }
 
         /// <summary>Uploads the specified file transfer information.</summary>
         /// <param name="fileTransferInformation">The file transfer information.</param>
         /// <returns></returns>
-        private async Task Upload(IUploadFileInformation fileTransferInformation)
+        private async Task UploadAsync(IUploadFileInformation fileTransferInformation)
         {
-            EnsureKeyExists(fileTransferInformation.CorrelationGuid);
+            EnsureKeyExists(fileTransferInformation.CorrelationId);
 
             Context context =
-                new Context(fileTransferInformation.CorrelationGuid.ToString(), new Dictionary<string, object>())
+                new Context(fileTransferInformation.CorrelationId.Id.ToString(), new Dictionary<string, object>())
                 {
                     {StartChunkRetryKey, (uint) 0}
                 };
 
-            await _retryPolicy.ExecuteAsync(ctx => SendChunks(fileTransferInformation, ctx), context);
+            await _retryPolicy.ExecuteAsync(ctx => SendChunksAsync(fileTransferInformation, ctx), context);
         }
 
         /// <summary>Sends the chunks.</summary>
         /// <param name="fileTransferInformation">The file transfer information.</param>
         /// <param name="retryContext">The retry context.</param>
         /// <returns></returns>
-        private async Task SendChunks(IUploadFileInformation fileTransferInformation, Context retryContext)
+        private async Task SendChunksAsync(IUploadFileInformation fileTransferInformation, Context retryContext)
         {
             var cancellationRequested = fileTransferInformation.IsExpired();
             retryContext.TryGetValue(StartChunkRetryKey, out var value);

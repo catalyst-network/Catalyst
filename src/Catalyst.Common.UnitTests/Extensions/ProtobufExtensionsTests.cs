@@ -22,12 +22,18 @@
 #endregion
 
 using System;
+using System.Text;
 using Catalyst.Common.Extensions;
-using Catalyst.Common.UnitTests.TestUtils;
+using Catalyst.Common.IO.Messaging.Correlation;
+using Catalyst.Common.Util;
+using Catalyst.Common.IO.Messaging;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
+using Catalyst.Protocol.Rpc.Node;
 using Catalyst.Protocol.Transaction;
+using Catalyst.TestUtils;
 using FluentAssertions;
+using Multiformats.Hash;
 using Xunit;
 
 namespace Catalyst.Common.UnitTests.Extensions
@@ -77,7 +83,7 @@ namespace Catalyst.Common.UnitTests.Extensions
         [Fact]
         public static void ToAnySigned_should_set_the_wrapper_fields()
         {
-            var guid = Guid.NewGuid();
+            var guid = CorrelationId.GenerateCorrelationId();
             var peerId = PeerIdHelper.GetPeerId("blablabla");
             var expectedContent = "content";
             var wrapped = new PeerId()
@@ -85,20 +91,27 @@ namespace Catalyst.Common.UnitTests.Extensions
                 ClientId = expectedContent.ToUtf8ByteString()
             }.ToProtocolMessage(peerId, guid);
 
-            wrapped.CorrelationId.ToGuid().Should().Be(guid);
+            wrapped.CorrelationId.ToCorrelationId().Id.Should().Be(guid.Id);
             wrapped.PeerId.Should().Be(peerId);
             wrapped.TypeUrl.Should().Be(PeerId.Descriptor.ShortenedFullName());
             wrapped.FromProtocolMessage<PeerId>().ClientId.Should().Equal(expectedContent.ToUtf8ByteString());
         }
 
-        [Fact(Skip = "fail")]
-        public static void ToAnySigned_should_fail_on_response_without_correlationId()
+        [Fact]
+        public static void ToProtocolMessage_When_Processing_Request_Should_Generate_New_CorrelationId_If_Not_Specified()
         {
             var peerId = PeerIdHelper.GetPeerId("someone");
-            var expectedContent = "censored";
-            var response = new PeerId
+            var request = new GetPeerCountRequest().ToProtocolMessage(peerId);
+            request.CorrelationId.ToCorrelationId().Should().NotBe(default);
+        }
+
+        [Fact]
+        public static void ToProtocolMessage_When_Processing_Response_Should_Fail_If_No_CorrelationId_Specified()
+        {
+            var peerId = PeerIdHelper.GetPeerId("someone");
+            var response = new GetPeerCountResponse
             {
-                ClientId = expectedContent.ToUtf8ByteString()
+                PeerCount = 13
             };
             new Action(() => response.ToProtocolMessage(peerId))
                .Should().Throw<ArgumentException>();
@@ -108,16 +121,37 @@ namespace Catalyst.Common.UnitTests.Extensions
         public void Can_Recognize_Gossip_Message()
         {
             var peerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("1");
-            var gossipMessage = new TransactionBroadcast().ToProtocolMessage(peerIdentifier.PeerId, Guid.NewGuid())
-               .ToProtocolMessage(peerIdentifier.PeerId, Guid.NewGuid());
+            var gossipMessage = new TransactionBroadcast().ToProtocolMessage(peerIdentifier.PeerId, CorrelationId.GenerateCorrelationId())
+               .ToProtocolMessage(peerIdentifier.PeerId, CorrelationId.GenerateCorrelationId());
             gossipMessage.CheckIfMessageIsBroadcast().Should().BeTrue();
 
-            var nonGossipMessage = new PingRequest().ToProtocolMessage(peerIdentifier.PeerId, Guid.NewGuid());
+            var nonGossipMessage = new PingRequest().ToProtocolMessage(peerIdentifier.PeerId, CorrelationId.GenerateCorrelationId());
             nonGossipMessage.CheckIfMessageIsBroadcast().Should().BeFalse();
 
-            var secondNonGossipMessage = new PingRequest().ToProtocolMessage(peerIdentifier.PeerId, Guid.NewGuid())
-               .ToProtocolMessage(peerIdentifier.PeerId, Guid.NewGuid());
+            var secondNonGossipMessage = new PingRequest().ToProtocolMessage(peerIdentifier.PeerId, CorrelationId.GenerateCorrelationId())
+               .ToProtocolMessage(peerIdentifier.PeerId, CorrelationId.GenerateCorrelationId());
             secondNonGossipMessage.CheckIfMessageIsBroadcast().Should().BeFalse();
+        }
+
+        [Fact]
+        public void ToMultihash_Can_Convert_Valid_ByteString_To_Multihash()
+        {
+            var initialHash = Multihash.Sum(HashType.BLAKE2B_256, Encoding.UTF8.GetBytes("hello"));
+            var byteString = initialHash.ToBytes().ToByteString();
+
+            var convertedHash = byteString.ToMultihash();
+
+            convertedHash.Should().Be(initialHash);
+        }
+
+        [Fact]
+        public void ToMultihashString_Can_Convert_Valid_ByteString_To_String()
+        {
+            var initialHash = Multihash.Encode("hello", HashType.BLAKE2B_256);
+            var byteString = initialHash.ToBytes().ToByteString();
+
+            var multihash = byteString.ToMultihashString();
+            multihash.Should().NotBe(null);
         }
     }
 }

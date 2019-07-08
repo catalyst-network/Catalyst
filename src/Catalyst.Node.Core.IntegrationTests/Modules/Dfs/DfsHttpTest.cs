@@ -26,8 +26,8 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Node.Core.Modules.Dfs;
+using Catalyst.TestUtils;
 using FluentAssertions;
 using NSubstitute;
 using Serilog;
@@ -90,7 +90,7 @@ namespace Catalyst.Node.Core.IntegrationTests.Modules.Dfs
                 }
                 catch (Exception)
                 {
-                    await Task.Delay(200);
+                    await Task.Delay(200).ConfigureAwait(false);
                 }
             }
 

@@ -22,12 +22,12 @@
 #endregion
 
 using System;
-using Catalyst.Common.Interfaces.IO.Messaging;
+using Catalyst.Common.Interfaces.IO.Observers;
 using Catalyst.Protocol.Common;
 
 namespace Catalyst.Common.Interfaces.Rpc
 {
-    public interface INodeRpcServer : IChanneledMessageStreamer<ProtocolMessage>, IDisposable
+    public interface INodeRpcServer : IObservableMessageStreamer<ProtocolMessage>, IDisposable
     {
         IRpcServerSettings Settings { get; }
     }

@@ -22,14 +22,21 @@
 #endregion
 
 using System;
+using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Modules.Consensus.Delta;
+using Catalyst.Common.Interfaces.Modules.Dfs;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.Interfaces.P2P.Messaging.Gossip;
-using Catalyst.Common.Protocol;
+using Catalyst.Common.Interfaces.P2P.IO.Messaging.Broadcast;
+using Catalyst.Common.IO.Messaging.Correlation;
+using Catalyst.Protocol;
 using Catalyst.Protocol.Delta;
 using Dawn;
-using Microsoft.Extensions.Caching.Memory;
+using Google.Protobuf;
+using Polly;
+using Polly.Retry;
 using Serilog;
 
 namespace Catalyst.Node.Core.Modules.Consensus.Delta
@@ -38,32 +45,41 @@ namespace Catalyst.Node.Core.Modules.Consensus.Delta
     /// <inheritdoc cref="IDisposable" />
     public class DeltaHub : IDeltaHub, IDisposable
     {
-        private readonly IGossipManager _gossipManager;
+        private readonly IBroadcastManager _broadcastManager;
         private readonly IPeerIdentifier _peerIdentifier;
         private readonly IDeltaVoter _deltaVoter;
         private readonly IDeltaElector _deltaElector;
+        private readonly IDfs _dfs;
         private readonly ILogger _logger;
         private IDisposable _incomingCandidateSubscription;
         private IDisposable _incomingFavouriteCandidateSubscription;
 
-        public DeltaHub(IGossipManager gossipManager,
+        protected virtual AsyncRetryPolicy<string> IpfsRetryPolicy { get; }
+
+        public DeltaHub(IBroadcastManager broadcastManager,
             IPeerIdentifier peerIdentifier,
             IDeltaVoter deltaVoter,
             IDeltaElector deltaElector,
+            IDfs dfs,
             ILogger logger)
         {
-            _gossipManager = gossipManager;
+            _broadcastManager = broadcastManager;
             _peerIdentifier = peerIdentifier;
             _deltaVoter = deltaVoter;
             _deltaElector = deltaElector;
+            _dfs = dfs;
             _logger = logger;
+
+            IpfsRetryPolicy = Policy<string>.Handle<Exception>()
+               .WaitAndRetryAsync(4, retryAttempt =>
+                    TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)));
         }
 
         /// <inheritdoc />
         public void BroadcastCandidate(CandidateDeltaBroadcast candidate)
         {
             Guard.Argument(candidate, nameof(candidate)).NotNull().Require(c => c.IsValid());
-            _logger.Information("Broadcasting candidate delta ");
+            _logger.Information("Broadcasting candidate delta {0}", candidate);
 
             if (!candidate.ProducerId.Equals(_peerIdentifier.PeerId))
             {
@@ -72,26 +88,25 @@ namespace Catalyst.Node.Core.Modules.Consensus.Delta
                 return;
             }
 
-            var protocolMessage = candidate.ToProtocolMessage(_peerIdentifier.PeerId, Guid.NewGuid());
-            _gossipManager.BroadcastAsync(null);
+            var protocolMessage = candidate.ToProtocolMessage(_peerIdentifier.PeerId, CorrelationId.GenerateCorrelationId());
+            _broadcastManager.BroadcastAsync(protocolMessage);
 
-            _logger.Debug("Started gossiping candidate {0}", candidate);
+            _logger.Debug("Started broadcasting candidate {0}", candidate);
         }
 
         /// <inheritdoc />
         public void BroadcastFavouriteCandidateDelta(byte[] previousDeltaDfsHash)
         {
+            if (!_deltaVoter.TryGetFavouriteDelta(previousDeltaDfsHash, out var favourite))
             {
-                var favourite = _deltaVoter.GetFavouriteDelta(previousDeltaDfsHash);
-                if (favourite == null)
-                {
-                    _logger.Debug("No favourite delta has been retrieved for broadcast.");
-                    return;
-                }
+                _logger.Debug("No favourite delta has been retrieved for broadcast.");
+                return;
+            } 
 
-                // https://github.com/catalyst-network/Catalyst.Node/pull/448
-                _gossipManager.BroadcastAsync(null);
-            }
+            var protocolMessage = favourite.ToProtocolMessage(_peerIdentifier.PeerId, CorrelationId.GenerateCorrelationId());
+            _broadcastManager.BroadcastAsync(protocolMessage);
+
+            _logger.Debug("Started broadcasting favourite candidate {0}", favourite);
         }
 
         /// <inheritdoc />
@@ -107,9 +122,33 @@ namespace Catalyst.Node.Core.Modules.Consensus.Delta
             _incomingCandidateSubscription = candidateStream.Subscribe(_deltaVoter);
             _logger.Debug("Subscribed to candidate delta incoming stream.");
         }
-        
+
         /// <inheritdoc />
-        public void PublishDeltaToIpfs(CandidateDeltaBroadcast candidate) { throw new NotImplementedException(); }
+        public async Task<string> PublishDeltaToIpfsAsync(Protocol.Delta.Delta delta, CancellationToken cancellationToken = default)
+        {
+            Guard.Argument(delta, nameof(delta)).NotNull().Require(c => c.IsValid());
+
+            var deltaAsArray = delta.ToByteArray();
+            var ipfsFileAddress = await IpfsRetryPolicy.ExecuteAsync(
+                async c => await TryPublishIpfsFileAsync(deltaAsArray, cancellationToken: c).ConfigureAwait(false),
+                cancellationToken).ConfigureAwait(false);
+
+            return ipfsFileAddress;
+        }
+
+        private async Task<string> TryPublishIpfsFileAsync(byte[] deltaAsBytes, CancellationToken cancellationToken)
+        {
+            using (var memoryStream = new MemoryStream())
+            {
+                await memoryStream.WriteAsync(deltaAsBytes, cancellationToken).ConfigureAwait(false);
+                memoryStream.Flush();
+                memoryStream.Seek(0, SeekOrigin.Begin);
+
+                var address = await _dfs.AddAsync(memoryStream, cancellationToken: cancellationToken);
+
+                return address;
+            }
+        }
 
         /// <inheritdoc />
         public void SubscribeToDfsDeltaStream(IObservable<byte[]> dfsDeltaAddressStream) { throw new NotImplementedException(); }

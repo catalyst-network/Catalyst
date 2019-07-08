@@ -29,25 +29,25 @@ using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.FileTransfer;
 using Catalyst.Common.Interfaces.FileTransfer;
-using Catalyst.Common.Interfaces.IO.Messaging;
+using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.Modules.Dfs;
 using Catalyst.Common.Interfaces.Rpc;
-using Catalyst.Common.IO.Messaging;
+using Catalyst.Common.IO.Messaging.Correlation;
+using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.P2P;
-using Catalyst.Common.UnitTests.TestUtils;
+using Catalyst.Common.Rpc.IO.Observers;
 using Catalyst.Node.Core.Modules.Dfs;
 using Catalyst.Node.Core.P2P;
-using Catalyst.Node.Core.RPC.Handlers;
+using Catalyst.Node.Core.Rpc.IO.Observers;
+using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using Microsoft.Extensions.Configuration;
 using NSubstitute;
-using Polly;
 using Serilog;
 using Xunit;
 using Xunit.Abstractions;
-using TransferFileBytesRequestHandler = Catalyst.Node.Core.RPC.Handlers.TransferFileBytesRequestHandler;
 
 namespace Catalyst.Node.Core.IntegrationTests.Modules.Dfs
 {
@@ -57,8 +57,6 @@ namespace Catalyst.Node.Core.IntegrationTests.Modules.Dfs
         private readonly IChannelHandlerContext _fakeContext;
         private readonly IDownloadFileTransferFactory _nodeFileTransferFactory;
         private readonly IDfs _dfs;
-        private readonly IpfsAdapter _ipfsEngine;
-        private readonly IMessageFactory _messageFactory;
 
         public NodeFileTransferIntegrationTest(ITestOutputHelper testOutput) : base(testOutput)
         {
@@ -71,19 +69,19 @@ namespace Catalyst.Node.Core.IntegrationTests.Modules.Dfs
             var peerSettings = new PeerSettings(config);
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
-            _messageFactory = Substitute.For<IMessageFactory>();
+            Substitute.For<IDtoFactory>();
             _nodeFileTransferFactory = new DownloadFileTransferFactory();
 
             var passwordReader = new TestPasswordReader("abcd");
 
-            _ipfsEngine = new IpfsAdapter(passwordReader, peerSettings, FileSystem, _logger);
+            var ipfsEngine = new IpfsAdapter(passwordReader, peerSettings, FileSystem, _logger);
             _logger = Substitute.For<ILogger>();
-            _dfs = new Core.Modules.Dfs.Dfs(_ipfsEngine, _logger);
+            _dfs = new Core.Modules.Dfs.Dfs(ipfsEngine, _logger);
         }
 
         [Fact]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
-        public void Cancel_File_Transfer()
+        public async Task Cancel_File_Transfer()
         {
             var sender = new PeerIdentifier(PeerIdHelper.GetPeerId("sender"));
 
@@ -91,35 +89,17 @@ namespace Catalyst.Node.Core.IntegrationTests.Modules.Dfs
                 sender,
                 sender,
                 _fakeContext.Channel,
-                Guid.NewGuid(),
+                CorrelationId.GenerateCorrelationId(),
                 string.Empty,
                 555);
 
             var cancellationTokenSource = new CancellationTokenSource();
             _nodeFileTransferFactory.RegisterTransfer(fileTransferInformation);
-            _nodeFileTransferFactory.FileTransferAsync(fileTransferInformation.CorrelationGuid, cancellationTokenSource.Token);
+            _nodeFileTransferFactory.FileTransferAsync(fileTransferInformation.CorrelationId, cancellationTokenSource.Token).ConfigureAwait(false).GetAwaiter();
             Assert.Single(_nodeFileTransferFactory.Keys);
             cancellationTokenSource.Cancel();
 
-            var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
-            var linearBackOffRetryPolicy = Policy.Handle<TaskCanceledException>()
-               .WaitAndRetryAsync(5, retryAttempt =>
-               {
-                   var timeSpan = TimeSpan.FromSeconds(retryAttempt + 5);
-                   cts = new CancellationTokenSource(timeSpan);
-                   return timeSpan;
-               });
-
-            linearBackOffRetryPolicy.ExecuteAsync(() =>
-            {
-                return Task.Run(() =>
-                {
-                    while (!fileTransferInformation.IsCompleted)
-                    {
-                        Task.Delay(1000, cts.Token).GetAwaiter().GetResult();
-                    }
-                }, cts.Token);
-            }).GetAwaiter().GetResult();
+            await TaskHelper.WaitForAsync(() => fileTransferInformation.IsCompleted, TimeSpan.FromSeconds(10));
 
             var fileCleanedUp = !File.Exists(fileTransferInformation.TempPath);
 
@@ -133,9 +113,9 @@ namespace Catalyst.Node.Core.IntegrationTests.Modules.Dfs
         [InlineData(1000L)]
         [InlineData(82000L)]
         [InlineData(100000L)]
-        public void Verify_File_Integrity_On_Transfer(long byteSize) { AddFileToDfs(byteSize, out _); }
+        public async Task Verify_File_Integrity_On_Transfer(long byteSize) { await AddFileToDfs(byteSize).ConfigureAwait(false); }
 
-        private void AddFileToDfs(long byteSize, out long crcValue)
+        private async Task AddFileToDfs(long byteSize)
         {
             var fakeNode = Substitute.For<INodeRpcClient>();
             var sender = PeerIdHelper.GetPeerId("sender");
@@ -143,15 +123,15 @@ namespace Catalyst.Node.Core.IntegrationTests.Modules.Dfs
             var senderPeerId = new PeerIdentifier(sender);
             var recipientPeerId = new PeerIdentifier(recipient);
             var fileToTransfer = FileHelper.CreateRandomTempFile(byteSize);
-            var addFileToDfsRequestHandler = new AddFileToDfsRequestHandler(_dfs, senderPeerId, _nodeFileTransferFactory,
-                _messageFactory, _logger);
+            var addFileToDfsRequestHandler = new AddFileToDfsRequestObserver(_dfs, senderPeerId, _nodeFileTransferFactory, _logger);
             var transferBytesRequestHandler =
-                new TransferFileBytesRequestHandler(_nodeFileTransferFactory, senderPeerId, _logger, _messageFactory);
-            var uniqueFileKey = Guid.NewGuid();
-            crcValue = FileHelper.GetCrcValue(fileToTransfer);
+                new TransferFileBytesRequestObserver(_nodeFileTransferFactory, senderPeerId, _logger);
+
+            var uniqueFileKey = CorrelationId.GenerateCorrelationId();
+            var crcValue = FileHelper.GetCrcValue(fileToTransfer);
 
             //Create a response object and set its return value
-            var request = new AddFileToDfsRequest
+            ProtocolMessage request = new AddFileToDfsRequest
             {
                 Node = "node1",
                 FileName = fileToTransfer,
@@ -168,40 +148,19 @@ namespace Catalyst.Node.Core.IntegrationTests.Modules.Dfs
             using (var fs = File.Open(fileToTransfer, FileMode.Open))
             {
                 var fileUploadInformation = new UploadFileTransferInformation(fs, senderPeerId, recipientPeerId,
-                    fakeNode.Channel, uniqueFileKey, new MessageFactory());
+                    fakeNode.Channel, uniqueFileKey, new DtoFactory());
                 for (uint i = 0; i < fileTransferInformation.MaxChunk; i++)
                 {
-                    fileUploadInformation.GetUploadMessageDto(i)
-                       .SendToHandler(_fakeContext, transferBytesRequestHandler);
+                    fileUploadInformation.GetUploadMessageDto(i).Content.ToProtocolMessage(sender).SendToHandler(_fakeContext, transferBytesRequestHandler);
                 }
             }
 
             Assert.True(fileTransferInformation.ChunkIndicatorsTrue());
-
-            var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
-            var linearBackOffRetryPolicy = Policy.Handle<TaskCanceledException>()
-               .WaitAndRetryAsync(5, retryAttempt =>
-               {
-                   var timeSpan = TimeSpan.FromSeconds(retryAttempt + 5);
-                   cts = new CancellationTokenSource(timeSpan);
-                   return timeSpan;
-               });
-
-            linearBackOffRetryPolicy.ExecuteAsync(() =>
-            {
-                return Task.Run(() =>
-                {
-                    while (fileTransferInformation.DfsHash == null)
-                    {
-                        Task.Delay(1000, cts.Token).GetAwaiter().GetResult();
-                    }
-                }, cts.Token);
-            }).GetAwaiter().GetResult();
-
+            await TaskHelper.WaitForAsync(() => fileTransferInformation.DfsHash != null, TimeSpan.FromSeconds(15));
             Assert.NotNull(fileTransferInformation.DfsHash);
 
             long ipfsCrcValue;
-            using (var ipfsStream = _dfs.ReadAsync(fileTransferInformation.DfsHash).GetAwaiter().GetResult())
+            using (var ipfsStream = await _dfs.ReadAsync(fileTransferInformation.DfsHash))
             {
                 ipfsCrcValue = FileHelper.GetCrcValue(ipfsStream);
             }

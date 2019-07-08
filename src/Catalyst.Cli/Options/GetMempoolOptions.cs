@@ -27,14 +27,9 @@ using CommandLine;
 namespace Catalyst.Cli.Options
 {
     [Verb("getmempool", HelpText = "Gets information from a catalyst node")]
-    internal sealed class GetMempoolOptions : IGetMempoolOptions
+    public sealed class GetMempoolOptions : OptionsBase, IGetMempoolOptions
     {
         [Option('m', "mempool")]
         public bool Mempool { get; set; }
-
-        [Value(1, MetaName = "Node ID",
-            HelpText = "Valid and connected node ID.",
-            Required = true)]
-        public string NodeId { get; set; }
     }
 }

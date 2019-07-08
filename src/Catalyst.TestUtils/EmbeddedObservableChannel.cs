@@ -23,10 +23,9 @@
 
 using System;
 using System.Threading.Tasks;
-using Catalyst.Common.Interfaces.IO;
-using Catalyst.Common.Interfaces.IO.Inbound;
-using Catalyst.Common.IO.Inbound.Handlers;
-using Catalyst.Common.UnitTests.TestUtils;
+using Catalyst.Common.Interfaces.IO.Messaging.Dto;
+using Catalyst.Common.Interfaces.IO.Transport.Channels;
+using Catalyst.Common.IO.Handlers;
 using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Embedded;
@@ -45,7 +44,7 @@ namespace Catalyst.TestUtils
         }
     }
 
-    public sealed class EmbeddedObservableChannel : IObservableSocket
+    public sealed class EmbeddedObservableChannel : IObservableChannel
     {
         private readonly EmbeddedChannel _channel;
 
@@ -59,14 +58,14 @@ namespace Catalyst.TestUtils
             MessageStream = observableServiceHandler.MessageStream;
         }
 
-        public async Task SimulateReceivingMessages(params object[] messages)
+        public async Task SimulateReceivingMessagesAsync(params object[] messages)
         {
             await Task.Run(() => _channel.WriteInbound(messages)).ConfigureAwait(false);
-            await MessageStream.WaitForItemsOnDelayedStreamOnTaskPoolScheduler();
+            await MessageStream.WaitForItemsOnDelayedStreamOnTaskPoolSchedulerAsync();
         }
 
         public IChannel Channel => _channel;
-        public IObservable<IChanneledMessage<ProtocolMessage>> MessageStream { get; }
+        public IObservable<IObserverDto<ProtocolMessage>> MessageStream { get; }
         void IDisposable.Dispose() { Channel.CloseAsync().Wait(50); }
     }
 }

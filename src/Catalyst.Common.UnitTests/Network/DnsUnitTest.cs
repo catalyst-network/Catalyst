@@ -25,8 +25,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Catalyst.Common.Cryptography;
 using Catalyst.Common.Interfaces.Network;
-using Catalyst.Common.UnitTests.TestUtils;
+using Catalyst.Common.P2P;
+using Catalyst.Cryptography.BulletProofs.Wrapper;
 using Catalyst.TestUtils;
 using DnsClient;
 using DnsClient.Protocol;
@@ -42,7 +44,8 @@ namespace Catalyst.Common.UnitTests.Network
         public DnsUnitTest()
         {
             _lookupClient = Substitute.For<ILookupClient>();
-            _dns = new Common.Network.DnsClient(_lookupClient);
+            _dns = new Common.Network.DnsClient(_lookupClient, 
+                new PeerIdValidator(new CryptoContext(new CryptoWrapper()), new PeerIdClientId("AC")));
         }
 
         private readonly IDns _dns;
@@ -60,7 +63,7 @@ namespace Catalyst.Common.UnitTests.Network
             MockQueryResponse.CreateFakeLookupResult(domain1, "value1", _lookupClient);
             MockQueryResponse.CreateFakeLookupResult(domain2, "value2", _lookupClient);
 
-            var responses = await _dns.GetTxtRecords(urlList);
+            var responses = await _dns.GetTxtRecordsAsync(urlList);
 
             responses.Count.Should().Be(2);
             responses.Should().Contain(r => r.Answers[0].DomainName.Value.StartsWith(domain1));
@@ -82,7 +85,7 @@ namespace Catalyst.Common.UnitTests.Network
             _lookupClient.QueryAsync(Arg.Is(domain2), Arg.Any<QueryType>())
                .Throws(new InvalidOperationException("failed"));
 
-            var responses = await _dns.GetTxtRecords(urlList);
+            var responses = await _dns.GetTxtRecordsAsync(urlList);
 
             responses.Count.Should().Be(1);
             responses.Should().Contain(r => r.Answers[0].DomainName.Value.StartsWith(domain1));
@@ -97,7 +100,7 @@ namespace Catalyst.Common.UnitTests.Network
 
             MockQueryResponse.CreateFakeLookupResult(domainName, value, _lookupClient);
 
-            var txtRecords = await _dns.GetTxtRecords(domainName);
+            var txtRecords = await _dns.GetTxtRecordsAsync(domainName);
 
             txtRecords.Should().BeAssignableTo<IDnsQueryResponse>();
             txtRecords.Answers.Count.Should().Be(1);
@@ -112,7 +115,7 @@ namespace Catalyst.Common.UnitTests.Network
             _lookupClient.QueryAsync(Arg.Any<string>(), Arg.Any<QueryType>())
                .Throws(new InvalidOperationException("failed"));
 
-            var txtRecords = await _dns.GetTxtRecords("www.internet.com");
+            var txtRecords = await _dns.GetTxtRecordsAsync("www.internet.com");
 
             txtRecords.Should().BeNull();
         }

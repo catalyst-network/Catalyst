@@ -21,12 +21,12 @@
 
 #endregion
 
-namespace Catalyst.Common.Interfaces.KeyStore
+namespace Catalyst.Common.Interfaces.Keystore
 {
     public interface IKeyStoreService
     {
         string GetAddressFromKeyStore(string json);
-        string GenerateUTCFileName(string address);
+        string GenerateUtcFileName(string address);
         byte[] DecryptKeyStoreFromJson(string password, string json);
         string EncryptAndGenerateDefaultKeyStoreAsJson(string password, byte[] key, string address);
     }

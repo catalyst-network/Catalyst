@@ -28,6 +28,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.FileTransfer;
+using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 
 namespace Catalyst.Common.FileTransfer
 {
@@ -68,16 +69,16 @@ namespace Catalyst.Common.FileTransfer
         /// <exception cref="InvalidOperationException">This instance cannot be registered to the factory due to IsDownload flag.</exception>
         public FileTransferResponseCodes RegisterTransfer(T fileTransferInformation)
         {
-            var fileHash = fileTransferInformation.CorrelationGuid;
+            var fileHash = fileTransferInformation.CorrelationId;
 
             lock (_lockObject)
             {
-                if (_pendingFileTransfers.ContainsKey(fileHash))
+                if (_pendingFileTransfers.ContainsKey(fileHash.Id))
                 {
                     return FileTransferResponseCodes.TransferPending;
                 }
 
-                _pendingFileTransfers.Add(fileHash, fileTransferInformation);
+                _pendingFileTransfers.Add(fileHash.Id, fileTransferInformation);
                 return FileTransferResponseCodes.Successful;
             }
         }
@@ -89,7 +90,7 @@ namespace Catalyst.Common.FileTransfer
         /// <returns></returns>
         /// <exception cref="NullReferenceException">File transfer has not been registered to factory</exception>
         /// <exception cref="InvalidOperationException">File transfer has already been initialised</exception>
-        public async Task FileTransferAsync(Guid correlationGuid, CancellationToken cancellationToken)
+        public async Task FileTransferAsync(ICorrelationId correlationGuid, CancellationToken cancellationToken)
         {
             EnsureKeyExists(correlationGuid);
             var fileTransferInformation = GetFileTransferInformation(correlationGuid);
@@ -103,7 +104,7 @@ namespace Catalyst.Common.FileTransfer
             try
             {
                 fileTransferInformation.CancellationToken = cancellationToken;
-                await DoTransfer(fileTransferInformation).ConfigureAwait(false);
+                await DoTransferAsync(fileTransferInformation).ConfigureAwait(false);
                 Remove(fileTransferInformation, fileTransferInformation.IsExpired());
             }
             catch (Exception)
@@ -114,22 +115,22 @@ namespace Catalyst.Common.FileTransfer
         }
         
         /// <inheritdoc />
-        public T GetFileTransferInformation(Guid key)
+        public T GetFileTransferInformation(ICorrelationId key)
         {
             lock (_lockObject)
             {
-                return !_pendingFileTransfers.ContainsKey(key) ? default : _pendingFileTransfers[key];
+                return !_pendingFileTransfers.ContainsKey(key.Id) ? default : _pendingFileTransfers[key.Id];
             }
         }
 
         /// <inheritdoc />
-        public void Remove(Guid key)
+        public void Remove(ICorrelationId key)
         {
             lock (_lockObject)
             {
-                if (_pendingFileTransfers.ContainsKey(key))
+                if (_pendingFileTransfers.ContainsKey(key.Id))
                 {
-                    _pendingFileTransfers.Remove(key);
+                    _pendingFileTransfers.Remove(key.Id);
                 }
             }
         }
@@ -139,15 +140,15 @@ namespace Catalyst.Common.FileTransfer
         /// <param name="expiredOrCancelled">if set to <c>true</c> [expired or cancelled].</param>
         protected void Remove(T fileTransferInformation, bool expiredOrCancelled)
         {
-            EnsureKeyExists(fileTransferInformation.CorrelationGuid);
+            EnsureKeyExists(fileTransferInformation.CorrelationId);
             if (expiredOrCancelled)
             {
-                Remove(fileTransferInformation.CorrelationGuid);
+                Remove(fileTransferInformation.CorrelationId);
                 fileTransferInformation.CleanUp();
             }
             else
             {
-                Remove(fileTransferInformation.CorrelationGuid);
+                Remove(fileTransferInformation.CorrelationId);
                 fileTransferInformation.Dispose();
             }
 
@@ -158,7 +159,7 @@ namespace Catalyst.Common.FileTransfer
         /// <param name="guid">The unique identifier.</param>
         /// <returns></returns>
         /// <exception cref="InvalidOperationException">The specified key does not exist inside the factory.</exception>
-        protected bool EnsureKeyExists(Guid guid)
+        protected bool EnsureKeyExists(ICorrelationId guid)
         {
             if (GetFileTransferInformation(guid) == null)
             {
@@ -170,6 +171,6 @@ namespace Catalyst.Common.FileTransfer
 
         /// <summary>Does the transfer.</summary>
         /// <param name="fileTransferInformation">The file transfer information.</param>
-        protected abstract Task DoTransfer(T fileTransferInformation);
+        protected abstract Task DoTransferAsync(T fileTransferInformation);
     }
 }

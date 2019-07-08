@@ -15,7 +15,4 @@
         <ProjectReference Include="..\Catalyst.Common\Catalyst.Common.csproj" />
         <ProjectReference Include="..\Catalyst.Node.Core\Catalyst.Node.Core.csproj" />
     </ItemGroup>
-    <ItemGroup>
-      <PackageReference Include="Nethereum.RLP" Version="3.3.0" />
-    </ItemGroup>
 </Project>

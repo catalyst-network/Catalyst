@@ -23,7 +23,7 @@
 
 using System;
 using System.Net;
-using Catalyst.Common.Interfaces.IO.Inbound;
+using Catalyst.Common.Interfaces.IO;
 using Catalyst.Common.P2P;
 using Catalyst.Protocol.Common;
 
@@ -32,7 +32,7 @@ namespace Catalyst.Common.Interfaces.P2P
     /// <summary>
     /// This class is used to validate peers by carrying out a peer challenge response
     /// </summary>
-    public interface IPeerValidator : IObserver<IChanneledMessage<ProtocolMessage>>
+    public interface IPeerValidator 
     {
         /// <summary>
         /// Used to challenge a peer for a response based on the provided public key, ip and port chunks 

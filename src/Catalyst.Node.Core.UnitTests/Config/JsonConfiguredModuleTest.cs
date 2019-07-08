@@ -34,8 +34,8 @@ using Catalyst.Common.Interfaces.Modules.Dfs;
 using Catalyst.Common.Interfaces.Modules.Ledger;
 using Catalyst.Common.Interfaces.Modules.Mempool;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.UnitTests.TestUtils;
 using Catalyst.Node.Core.Modules.Contract;
+using Catalyst.TestUtils;
 using FluentAssertions;
 using Microsoft.Extensions.Configuration;
 using NSubstitute;
@@ -91,7 +91,7 @@ namespace Catalyst.Node.Core.UnitTests.Config
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         private void ComponentsJsonFile_should_configure_modules(Type interfaceType, Type resolutionType)
         {
-            using (_container.BeginLifetimeScope(Guid.NewGuid()))
+            using (_container.BeginLifetimeScope(Guid.NewGuid().ToString()))
             {
                 var resolvedType = _container.Resolve(interfaceType);
                 resolvedType.Should().NotBeNull();

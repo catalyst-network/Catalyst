@@ -21,8 +21,7 @@
 
 #endregion
 
-using Catalyst.Common.IO.Inbound;
-using Catalyst.Common.IO.Messaging;
+using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Protocol.Common;
 
 namespace Catalyst.Common.Util
@@ -30,6 +29,6 @@ namespace Catalyst.Common.Util
     public static class NullObjects
     {
         public static readonly ProtocolMessage ProtocolMessage = new ProtocolMessage();
-        public static readonly ProtocolMessageDto ProtocolMessageDto = new ProtocolMessageDto(null, new ProtocolMessage());
+        public static readonly ObserverDto ObserverDto = new ObserverDto(null, new ProtocolMessage());
     }
 }
