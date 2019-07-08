@@ -132,7 +132,7 @@ namespace Catalyst.Common.UnitTests.IO.Messaging.Correlation
                .Should().Throw<ArgumentException>();
         }
 
-        private void Dispose(bool disposing)
+        protected virtual void Dispose(bool disposing)
         {
             if (!disposing)
             {

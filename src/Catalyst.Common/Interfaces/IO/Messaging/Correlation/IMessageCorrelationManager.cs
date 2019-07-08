@@ -31,7 +31,7 @@ namespace Catalyst.Common.Interfaces.IO.Messaging.Correlation
     /// The message correlation manager is a cached user to store correlation Ids of outgoing requests
     /// and use them to match incoming responses.
     /// </summary>
-    public interface IMessageCorrelationManager : IDisposable
+    public interface IMessageCorrelationManager
     {
         /// <summary>
         /// Adds a correlatable message to the cache, which can then be matched in

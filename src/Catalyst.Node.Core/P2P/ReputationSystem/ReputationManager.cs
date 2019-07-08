@@ -32,7 +32,7 @@ using SharpRepository.Repository;
 
 namespace Catalyst.Node.Core.P2P.ReputationSystem
 {
-    public class ReputationManager : IReputationManager, IDisposable
+    public sealed class ReputationManager : IReputationManager, IDisposable
     {
         private readonly ILogger _logger;
         private IRepository<Peer> PeerRepository { get; }
