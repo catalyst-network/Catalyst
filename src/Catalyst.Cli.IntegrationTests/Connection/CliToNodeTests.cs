@@ -93,27 +93,17 @@ namespace Catalyst.Cli.IntegrationTests.Connection
                 return new IpfsAdapter(passwordReader, peerSettings, FileSystem, logger);
             }
 
-            public bool RunNodeInstance()
+            public void RunNodeInstance()
             {
-                var hasStarted = true;
-                try
-                {
-                    NodeSetup();
+                NodeSetup();
 
-                    var ipfs = ConfigureKeyTestDependency();
-                    ContainerBuilder.RegisterInstance(ipfs).As<ICoreApi>();
+                var ipfs = ConfigureKeyTestDependency();
+                ContainerBuilder.RegisterInstance(ipfs).As<ICoreApi>();
 
-                    _container = ContainerBuilder.Build();
+                _container = ContainerBuilder.Build();
 
-                    _scope = _container.BeginLifetimeScope(CurrentTestName);
-                    _ = _scope.Resolve<ICatalystNode>();
-                }
-                catch (Exception ex)
-                {
-                    hasStarted = false;
-                }
-
-                return hasStarted;
+                _scope = _container.BeginLifetimeScope(CurrentTestName);
+                _ = _scope.Resolve<ICatalystNode>();
             }
 
             public new void Dispose()
@@ -126,11 +116,9 @@ namespace Catalyst.Cli.IntegrationTests.Connection
         }
 
         [Fact]
-        public async Task CliToNode_Connect_To_Node()
+        public void CliToNode_Connect_To_Node()
         {
-            var hasStarted = _node.RunNodeInstance();
-
-            await TaskHelper.WaitForAsync(() => hasStarted, TimeSpan.FromSeconds(4500));
+            _node.RunNodeInstance();
 
             using (var container = ContainerBuilder.Build())
             {
