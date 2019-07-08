@@ -37,6 +37,7 @@ namespace Catalyst.Common.Cryptography
     public sealed class CertificateStore
         : ICertificateStore
     {
+        public static readonly string CertificatePasswordIdentifier = "1ed2a4e2-bf23-4280-a8cf-69d283bc6b0a";
         private static int MaxTries => 5;
         private static int PasswordReTries => 1;
         private const string LocalHost = "localhost";
@@ -78,8 +79,8 @@ namespace Catalyst.Common.Cryptography
         {
             const string promptMessage = "Catalyst Node needs to create an SSL certificate." +
                 " Please enter a password to encrypt the certificate on disk:";
-            string passwordIdentifier = "certPass";
-            using (var password = _passwordReader.ReadSecurePassword(passwordIdentifier, promptMessage))
+            
+            using (var password = _passwordReader.ReadSecurePassword(CertificatePasswordIdentifier, promptMessage))
             {
                 var certificate = BuildSelfSignedServerCertificate(password, commonName);
                 Save(certificate, filePath, password);
@@ -119,7 +120,7 @@ namespace Catalyst.Common.Cryptography
             try
             {
                 var fileInBytes = File.ReadAllBytes(fullPath);
-                var passwordIdentifier = "certPassword";
+
                 var passwordPromptMessage =
                     $"Please type in the password for the certificate at {fullPath} (optional):";
                 var tryCount = 0;
@@ -127,7 +128,7 @@ namespace Catalyst.Common.Cryptography
                 {
                     try
                     {
-                        using (var passwordFromConsole = _passwordReader.ReadSecurePassword(passwordIdentifier, passwordPromptMessage))
+                        using (var passwordFromConsole = _passwordReader.ReadSecurePassword(CertificatePasswordIdentifier, passwordPromptMessage))
                         {
                             certificate = new X509Certificate2(fileInBytes, passwordFromConsole);
                             break;
