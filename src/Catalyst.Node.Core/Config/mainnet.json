@@ -12,7 +12,7 @@
             "PublicKey": "32kssh5iflgk3jfmcjs03ldj4hfgs8gn",
             "Announce": true,
             "AnnounceServer": "127.0.0.1:21420",
-            "Port": 42069,
+            "Port": 42071,
             "BindAddress": "127.0.0.1",
             "DnsServers": [
                 "127.0.0.1:5053"
@@ -27,7 +27,7 @@
         },
         "Rpc": {
             "BindAddress": "127.0.0.1",
-            "Port": 42042,
+            "Port": 42051,
             "MutualAuthentication": false,
             "AcceptInvalidCerts": false,
             "PfxFileName": "mycert.pfx"
