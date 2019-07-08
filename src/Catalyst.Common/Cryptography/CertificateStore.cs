@@ -119,6 +119,7 @@ namespace Catalyst.Common.Cryptography
             try
             {
                 var fileInBytes = File.ReadAllBytes(fullPath);
+                var passwordIdentifier = "certPassword";
                 var passwordPromptMessage =
                     $"Please type in the password for the certificate at {fullPath} (optional):";
                 var tryCount = 0;
@@ -126,7 +127,7 @@ namespace Catalyst.Common.Cryptography
                 {
                     try
                     {
-                        using (var passwordFromConsole = _passwordReader.ReadSecurePassword(passwordPromptMessage))
+                        using (var passwordFromConsole = _passwordReader.ReadSecurePassword(passwordIdentifier, passwordPromptMessage))
                         {
                             certificate = new X509Certificate2(fileInBytes, passwordFromConsole);
                             break;
