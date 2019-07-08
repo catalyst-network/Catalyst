@@ -78,7 +78,8 @@ namespace Catalyst.Common.UnitTests.IO.Messaging
             {
                 var messageCorrelationCacheManager = new MessageCorrelationManager(cache, changeTokenProvider);
 
-                using (messageCorrelationCacheManager.EvictionEvents.SubscribeOn(ImmediateScheduler.Instance)
+                using (messageCorrelationCacheManager.EvictionEvents
+                   .SubscribeOn(TaskPoolScheduler.Default)
                    .Subscribe(evictionObserver.OnNext))
                 {
                     requests.ForEach(r => messageCorrelationCacheManager.AddPendingRequest(r));
@@ -92,7 +93,7 @@ namespace Catalyst.Common.UnitTests.IO.Messaging
                     }
 
                     await TaskHelper.WaitForAsync(() => evictionObserver.ReceivedCalls().Any(),
-                        TimeSpan.FromMilliseconds(1000));
+                        TimeSpan.FromMilliseconds(2000));
 
                     evictionObserver.Received(requestCount).OnNext(Arg.Any<IMessageEvictionEvent>());
                 }

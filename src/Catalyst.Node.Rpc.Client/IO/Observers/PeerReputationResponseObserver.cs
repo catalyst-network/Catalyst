@@ -21,7 +21,6 @@
 
 #endregion
 
-using System;
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.IO.Observers;
@@ -44,11 +43,6 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
     {
         private readonly IUserOutput _output;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="PeerReputationResponseObserver"/> class.
-        /// </summary>
-        /// <param name="output">The output.</param>
-        /// <param name="logger">The logger.</param>
         public PeerReputationResponseObserver(IUserOutput output,
             ILogger logger)
             : base(logger)
@@ -56,13 +50,6 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
             _output = output;
         }
         
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="getPeerReputationResponse"></param>
-        /// <param name="channelHandlerContext"></param>
-        /// <param name="senderPeerIdentifier"></param>
-        /// <param name="correlationId"></param>
         protected override void HandleResponse(GetPeerReputationResponse getPeerReputationResponse,
             IChannelHandlerContext channelHandlerContext,
             IPeerIdentifier senderPeerIdentifier,
@@ -73,17 +60,8 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
             Guard.Argument(senderPeerIdentifier, nameof(senderPeerIdentifier)).NotNull();
             Logger.Debug("Handling GetPeerReputation response");
 
-            try
-            {
-                var msg = getPeerReputationResponse.Reputation == int.MinValue ? "Peer not found" : getPeerReputationResponse.Reputation.ToString();
-                _output.WriteLine($@"Peer Reputation: {msg}");
-            }
-            catch (Exception ex)
-            {
-                Logger.Error(ex,
-                    "Failed to handle GetPeerReputationResponse after receiving message {0}", getPeerReputationResponse);
-                throw;
-            }
+            var msg = getPeerReputationResponse.Reputation == int.MinValue ? "Peer not found" : getPeerReputationResponse.Reputation.ToString();
+            _output.WriteLine($@"Peer Reputation: {msg}");
         }
     }
 }
