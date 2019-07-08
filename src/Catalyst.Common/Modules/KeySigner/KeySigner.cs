@@ -37,18 +37,19 @@ namespace Catalyst.Common.Modules.KeySigner
     {
         private readonly IKeyStore _keyStore;
         private readonly ICryptoContext _cryptoContext;
-        private IKeyRegistry _keyRegistry;
+        private readonly IKeyRegistry _keyRegistry;
         private const string defaultKeyIdentifier = "blah";
 
         /// <summary>Initializes a new instance of the <see cref="KeySigner"/> class.</summary>
         /// <param name="keyStore">The key store.</param>
         /// <param name="cryptoContext">The crypto context.</param>
-        //public KeySigner(IKeyStore keyStore, ICryptoContext cryptoContext, IKeyRegistry keyRegistry)
-        public KeySigner(IKeyStore keyStore, ICryptoContext cryptoContext)
+        /// /// <param name="keyRegistry">The key registry.</param>
+        public KeySigner(IKeyStore keyStore, ICryptoContext cryptoContext, IKeyRegistry keyRegistry)
+        //public KeySigner(IKeyStore keyStore, ICryptoContext cryptoContext)
         {
             _keyStore = keyStore;
             _cryptoContext = cryptoContext;
-            //_keyRegistry = keyRegistry;
+            _keyRegistry = keyRegistry;
         }
 
         private void InitialiseKeyRegistry()

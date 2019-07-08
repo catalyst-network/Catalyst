@@ -56,6 +56,15 @@
                     "type": "Catalyst.Cryptography.BulletProofs.Wrapper.IWrapper, Catalyst.Cryptography.BulletProofs.Wrapper"
                 }
             ]
+        },
+        {
+            "type": "Catalyst.Common.Registry.KeyRegistry, Catalyst.Common",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.Registry.IKeyRegistry, Catalyst.Common"
+                }
+            ],
+            "instanceScope": "singleinstance"
         }
     ]
 }

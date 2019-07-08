@@ -42,9 +42,9 @@ namespace Catalyst.Common.UnitTests.Modules.KeySigner
             _keystore = Substitute.For<IKeyStore>();
             _keyRegistry = Substitute.For<IKeyRegistry>();
             _wrapper = Substitute.For<IWrapper>();
-            //_keySigner = new Common.Modules.KeySigner.KeySigner(_keystore, new CryptoContext(_wrapper), _keyRegistry);
-            _keySigner = new Common.Modules.KeySigner.KeySigner(_keystore, new CryptoContext(_wrapper));
-            privateKeyBytes = Util.ByteUtil.GenerateRandomByteArray(_wrapper.PrivateKeyLength);
+            _keySigner = new Common.Modules.KeySigner.KeySigner(_keystore, new CryptoContext(_wrapper), _keyRegistry);
+            //_keySigner = new Common.Modules.KeySigner.KeySigner(_keystore, new CryptoContext(_wrapper));
+            privateKeyBytes = Util.ByteUtil.GenerateRandomByteArray(FFI.GetPrivateKeyLength());
         }
 
         private readonly IKeyStore _keystore;
