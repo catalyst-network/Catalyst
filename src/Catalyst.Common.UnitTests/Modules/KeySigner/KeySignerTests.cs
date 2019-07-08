@@ -21,11 +21,13 @@
 
 #endregion
 
+using System.Linq;
 using Catalyst.Common.Cryptography;
 using Catalyst.Common.Interfaces.Keystore;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.Registry;
 using Catalyst.Cryptography.BulletProofs.Wrapper;
+using Catalyst.Cryptography.BulletProofs.Wrapper.Types;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using NSubstitute;
@@ -42,17 +44,21 @@ namespace Catalyst.Common.UnitTests.Modules.KeySigner
             _wrapper = Substitute.For<IWrapper>();
             //_keySigner = new Common.Modules.KeySigner.KeySigner(_keystore, new CryptoContext(_wrapper), _keyRegistry);
             _keySigner = new Common.Modules.KeySigner.KeySigner(_keystore, new CryptoContext(_wrapper));
+            privateKeyBytes = Util.ByteUtil.GenerateRandomByteArray(_wrapper.PrivateKeyLength);
         }
 
-        private IKeyStore _keystore;
-        private IKeyRegistry _keyRegistry;
-        private IWrapper _wrapper;
-        private IKeySigner _keySigner;
-
+        private readonly IKeyStore _keystore;
+        private readonly IKeyRegistry _keyRegistry;
+        private readonly IWrapper _wrapper;
+        private readonly IKeySigner _keySigner;
+        private readonly byte[] privateKeyBytes;
+        
         [Fact] 
         public void KeySigner_Can_Sign_If_Key_Exists_In_Registry()
         {
-            //_keyRegistry.GetItemFromRegistry(Arg.Any<String>()).Returns();
+            _keyRegistry.GetItemFromRegistry(Arg.Any<string>()).Returns(new PrivateKey(privateKeyBytes));
+
+            //_keySigner.Sign()
         }
     }
 }

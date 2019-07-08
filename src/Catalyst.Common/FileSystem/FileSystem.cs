@@ -44,14 +44,14 @@ namespace Catalyst.Common.FileSystem
         {
             var fullPath = Path.Combine(GetCatalystDataDir().FullName, fileName);
 
-            return await WriteFileToPathAsync(fullPath, contents);
+            return await WriteFileToPathAsync(fullPath, contents).ConfigureAwait(false);
         }
 
         public async Task<IFileInfo> WriteFileToCddSubDirectoryAsync(string fileName, string subDirectory, string contents)
         {
             var fullPath = Path.Combine(GetCatalystDataDir().FullName, subDirectory, fileName);
 
-            return await WriteFileToPathAsync(fullPath, contents);
+            return await WriteFileToPathAsync(fullPath, contents).ConfigureAwait(false);
         }
 
         private async Task<IFileInfo> WriteFileToPathAsync(string path, string contents)
