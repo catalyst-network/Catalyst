@@ -55,47 +55,17 @@ namespace Catalyst.Cli.IntegrationTests.Connection
             _node = new NodeTest(output);
         }
 
-        public static Network GetNetworkType(string networkType)
-        {
-            Network netTemp = null;
-
-            switch (networkType)
-            {
-                case "Test_Mode":
-                {
-                    netTemp = Network.Test;
-                }
-                    break;
-                case "Dev_Mode":
-                {
-                    netTemp = Network.Dev;
-                }
-                    break;
-                case "Main_Mode":
-                {
-                    netTemp = Network.Main;
-                }
-                    break;
-                default:
-                    throw new InvalidOperationException("This network type or mode is not valid");
-            }
-
-            return netTemp;
-        }
-
         private sealed class NodeTest : ConfigFileBasedTest, IDisposable
         {
             private CancellationTokenSource _cancellationSource;
 
             public NodeTest(ITestOutputHelper output) : base(output) { }
 
-            private void NodeSetup(object network)
+            private void NodeSetup()
             {
-                var currentNetwork = GetNetworkType(network as string);
-
                 var configFiles = new[]
                 {
-                    Constants.NetworkConfigFile(currentNetwork),
+                    Constants.NetworkConfigFile(Network.Main),
                     Constants.ComponentsJsonConfigFile,
                     Constants.SerilogJsonConfigFile
                 }.Select(f => Path.Combine(Constants.ConfigSubFolder, f));
@@ -107,11 +77,11 @@ namespace Catalyst.Cli.IntegrationTests.Connection
                 ConfigureContainerBuilder(configRoot);
             }
 
-            public void StartNode(string networkType)
+            public void StartNode()
             {
-                var threadStart = new ParameterizedThreadStart(RunNodeInstance);
+                var threadStart = new ThreadStart(RunNodeInstance);
                 var thread = new Thread(threadStart);
-                thread.Start(networkType);
+                thread.Start();
             }
 
             private IpfsAdapter ConfigureKeyTestDependency()
@@ -128,9 +98,9 @@ namespace Catalyst.Cli.IntegrationTests.Connection
                 return new IpfsAdapter(passwordReader, peerSettings, FileSystem, logger);
             }
 
-            private void RunNodeInstance(object network)
+            private void RunNodeInstance()
             {
-                NodeSetup(network);
+                NodeSetup();
 
                 _cancellationSource = new CancellationTokenSource();
 
@@ -154,12 +124,10 @@ namespace Catalyst.Cli.IntegrationTests.Connection
             }
         }
 
-        [Theory]
-        [InlineData("Main_Mode")]
-        [InlineData("Test_Mode")]
-        public void CliToNode_Connect_To_Node(string modeType)
+        [Fact]
+        public void CliToNode_Connect_To_Node()
         {
-            _node.StartNode(modeType);
+            _node.StartNode();
 
             Thread.Sleep(4500);
 
