@@ -57,7 +57,8 @@ namespace Catalyst.Cli.IntegrationTests.Connection
 
         private sealed class NodeTest : ConfigFileBasedTest, IDisposable
         {
-            private CancellationTokenSource _cancellationSource;
+            private ILifetimeScope _scope;
+            private IContainer _container;
 
             public NodeTest(ITestOutputHelper output) : base(output) { }
 
@@ -77,13 +78,6 @@ namespace Catalyst.Cli.IntegrationTests.Connection
                 ConfigureContainerBuilder(configRoot);
             }
 
-            public void StartNode()
-            {
-                var threadStart = new ThreadStart(RunNodeInstance);
-                var thread = new Thread(threadStart);
-                thread.Start();
-            }
-
             private IpfsAdapter ConfigureKeyTestDependency()
             {
                 var peerSettings = Substitute.For<IPeerSettings>();
@@ -98,38 +92,44 @@ namespace Catalyst.Cli.IntegrationTests.Connection
                 return new IpfsAdapter(passwordReader, peerSettings, FileSystem, logger);
             }
 
-            private void RunNodeInstance()
+            public bool RunNodeInstance()
             {
-                NodeSetup();
-
-                _cancellationSource = new CancellationTokenSource();
-
-                var ipfs = ConfigureKeyTestDependency();
-                ContainerBuilder.RegisterInstance(ipfs).As<ICoreApi>();
-
-                using (var container = ContainerBuilder.Build())
+                var hasStarted = true;
+                try
                 {
-                    using (var scope = container.BeginLifetimeScope(CurrentTestName))
-                    {
-                        var node = scope.Resolve<ICatalystNode>();
-                        node.RunAsync(_cancellationSource.Token).Wait(_cancellationSource.Token);
-                    }
+                    NodeSetup();
+
+                    var ipfs = ConfigureKeyTestDependency();
+                    ContainerBuilder.RegisterInstance(ipfs).As<ICoreApi>();
+
+                    _container = ContainerBuilder.Build();
+
+                    _scope = _container.BeginLifetimeScope(CurrentTestName);
+                    _ = _scope.Resolve<ICatalystNode>();
                 }
+                catch (Exception ex)
+                {
+                    hasStarted = false;
+                }
+
+                return hasStarted;
             }
 
             public new void Dispose()
             {
                 base.Dispose();
-                _cancellationSource?.Dispose();
+
+                _container.Dispose();
+                _scope.Dispose();
             }
         }
 
         [Fact]
-        public void CliToNode_Connect_To_Node()
+        public async void CliToNode_Connect_To_Node()
         {
-            _node.StartNode();
+            var hasStarted = _node.RunNodeInstance();
 
-            Thread.Sleep(4500);
+            await TaskHelper.WaitForAsync(() => hasStarted, TimeSpan.FromSeconds(4500));
 
             using (var container = ContainerBuilder.Build())
             {
