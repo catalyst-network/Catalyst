@@ -27,14 +27,11 @@ using FluentAssertions;
 using Xunit;
 using Xunit.Abstractions;
 using System;
-using Catalyst.Common.FileSystem;
 using Catalyst.Common.Interfaces.Cryptography;
 using Microsoft.Extensions.Configuration;
 using Catalyst.Node.Core.Modules.Dfs;
 using Catalyst.Common.Config;
-using Catalyst.Common.Enumerator;
 using System.Linq;
-using System.Collections.Generic;
 using System.IO;
 using Catalyst.Common.Interfaces;
 using System.Threading;
@@ -49,11 +46,11 @@ using Constants = Catalyst.Common.Config.Constants;
 
 namespace Catalyst.Cli.IntegrationTests.Connection
 {
-    public sealed class CliToNodeTest : CliCommandTestBase, IDisposable
+    public sealed class CliToNodeTests : CliCommandTestBase, IDisposable
     {
         private readonly NodeTest _node;
 
-        public CliToNodeTest(ITestOutputHelper output) : base(output, false, true)
+        public CliToNodeTests(ITestOutputHelper output) : base(output, false)
         {
             _node = new NodeTest(output);
         }
@@ -86,11 +83,11 @@ namespace Catalyst.Cli.IntegrationTests.Connection
             return netTemp;
         }
 
-        private sealed class NodeTest : CliCommandTestBase, IDisposable
+        private sealed class NodeTest : ConfigFileBasedTest, IDisposable
         {
             private CancellationTokenSource _cancellationSource;
 
-            public NodeTest(ITestOutputHelper output) : base(output, false, false) { }
+            public NodeTest(ITestOutputHelper output) : base(output) { }
 
             private void NodeSetup(object network)
             {

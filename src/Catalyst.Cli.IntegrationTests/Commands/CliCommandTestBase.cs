@@ -58,23 +58,20 @@ namespace Catalyst.Cli.IntegrationTests.Commands
                 new object[] {"/fake_file_hash", AppDomain.CurrentDomain.BaseDirectory + "/Config/addfile_test.json", true}
             };
 
-        protected CliCommandTestBase(ITestOutputHelper output, bool substituteNodeClient = true, bool useDefaultConfig = true) : base(output)
+        protected CliCommandTestBase(ITestOutputHelper output, bool substituteNodeClient = true) : base(output)
         {
-            if (useDefaultConfig)
+            var config = new ConfigurationBuilder()
+               .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ShellComponentsJsonConfigFile))
+               .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile))
+               .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ShellNodesConfigFile))
+               .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ShellConfigFile))
+               .Build();
+
+            ConfigureContainerBuilder(config);
+
+            if (substituteNodeClient)
             {
-                var config = new ConfigurationBuilder()
-                   .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ShellComponentsJsonConfigFile))
-                   .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile))
-                   .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ShellNodesConfigFile))
-                   .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ShellConfigFile))
-                   .Build();
-
-                ConfigureContainerBuilder(config);
-
-                if (substituteNodeClient)
-                {
-                    ConfigureNodeClient();
-                }
+                ConfigureNodeClient();
             }
         }
 
