@@ -54,12 +54,13 @@ namespace Catalyst.Cli.IntegrationTests.Connection
         private readonly NodeTest _node;
 
         private static readonly List<object[]> Networks =
-            Enumeration.GetAll<Network>().Select(n => new object[] { n }).ToList();
+            Enumeration.GetAll<Network>().Select(n => new object[] {n}).ToList();
 
         public CliToNodeTest(ITestOutputHelper output) : base(output, false, true)
         {
             _node = new NodeTest(output);
         }
+
         public static Network GetNetworkType(string networkType)
         {
             Network netTemp = null;
@@ -81,18 +82,16 @@ namespace Catalyst.Cli.IntegrationTests.Connection
 
             public NodeTest(ITestOutputHelper output) : base(output, false, false) { }
 
-
             private void NodeSetup(object network)
             {
                 var currentNetwork = GetNetworkType(network as string);
 
                 var configFiles = new[]
-                    {
+                {
                     Constants.NetworkConfigFile(currentNetwork),
                     Constants.ComponentsJsonConfigFile,
                     Constants.SerilogJsonConfigFile
-                }
-                .Select(f => Path.Combine(Constants.ConfigSubFolder, f));
+                }.Select(f => Path.Combine(Constants.ConfigSubFolder, f));
 
                 var configBuilder = new ConfigurationBuilder();
                 configFiles.ToList().ForEach(f => configBuilder.AddJsonFile(f));
@@ -113,9 +112,8 @@ namespace Catalyst.Cli.IntegrationTests.Connection
                 var peerSettings = Substitute.For<IPeerSettings>();
                 peerSettings.SeedServers.Returns(new[]
                 {
-                "seed1.server.va",
-                "island.domain.tv"
-            });
+                    "seed1.server.va",
+                    "island.domain.tv"});
 
                 var passwordReader = Substitute.For<IPasswordReader>();
                 passwordReader.ReadSecurePassword().ReturnsForAnyArgs(TestPasswordReader.BuildSecureStringPassword("trendy"));
@@ -142,7 +140,7 @@ namespace Catalyst.Cli.IntegrationTests.Connection
                 }
             }
 
-            public void Dispose()
+            public new void Dispose()
             {
                 base.Dispose();
                 _cancellationSource?.Dispose();
@@ -167,7 +165,8 @@ namespace Catalyst.Cli.IntegrationTests.Connection
                 }
             }
         }
-        public void Dispose()
+
+        public new void Dispose()
         {
             _node?.Dispose();
         }
