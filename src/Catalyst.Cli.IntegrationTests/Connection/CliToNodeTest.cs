@@ -64,16 +64,29 @@ namespace Catalyst.Cli.IntegrationTests.Connection
 
             switch (networkType)
             {
-                case "Test_Mode": { netTemp = Network.Test; } break;
-                case "Dev_Mode": { netTemp = Network.Dev; } break;
-                case "Main_Mode": { netTemp = Network.Main; } break;
+                case "Test_Mode":
+                {
+                    netTemp = Network.Test;
+                }
+                    break;
+                case "Dev_Mode":
+                {
+                    netTemp = Network.Dev;
+                }
+                    break;
+                case "Main_Mode":
+                {
+                    netTemp = Network.Main;
+                }
+                    break;
                 default:
                     throw new InvalidOperationException("This network type or mode is not valid");
             }
+
             return netTemp;
         }
 
-        private class NodeTest : CliCommandTestBase, IDisposable
+        private sealed class NodeTest : CliCommandTestBase, IDisposable
         {
             private CancellationTokenSource _cancellationSource;
 
@@ -165,6 +178,7 @@ namespace Catalyst.Cli.IntegrationTests.Connection
 
         public new void Dispose()
         {
+            base.Dispose();
             _node?.Dispose();
         }
     }

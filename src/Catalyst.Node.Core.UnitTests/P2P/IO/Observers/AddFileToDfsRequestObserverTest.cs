@@ -27,7 +27,7 @@ using Catalyst.Common.Interfaces.FileTransfer;
 using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Common.P2P;
 using Catalyst.Node.Core.Modules.Dfs;
-using Catalyst.Node.Core.RPC.IO.Observers;
+using Catalyst.Node.Core.Rpc.IO.Observers;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
