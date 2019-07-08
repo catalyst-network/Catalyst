@@ -31,7 +31,6 @@ using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.Rpc.IO.Messaging.Correlation;
 using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Common.Rpc.IO.Messaging.Correlation;
-using Catalyst.Common.UnitTests.IO.Messaging;
 using Catalyst.Common.UnitTests.IO.Messaging.Correlation;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
@@ -44,7 +43,7 @@ using Xunit.Abstractions;
 
 namespace Catalyst.Common.UnitTests.Rpc.IO.Messaging.Correlation
 {
-    public sealed class RpcMessageCorrelationManagerTests : MessageCorrelationManagerTests<IRpcMessageCorrelationManager>, IDisposable
+    public sealed class RpcMessageCorrelationManagerTests : MessageCorrelationManagerTests<IRpcMessageCorrelationManager>
     {
         public RpcMessageCorrelationManagerTests(ITestOutputHelper output) : base(output)
         {
