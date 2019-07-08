@@ -128,7 +128,8 @@
                 {
                     "type": "Catalyst.Common.Interfaces.Rpc.IO.Messaging.Correlation.IRpcMessageCorrelationManager, Catalyst.Common"
                 }
-            ]
+            ],
+            "instanceScope": "singleinstance"
         },
         {
             "type": "Catalyst.Node.Core.P2P.IO.Messaging.Correlation.PeerMessageCorrelationManager",
@@ -136,7 +137,8 @@
                 {
                     "type": "Catalyst.Common.Interfaces.P2P.IO.Messaging.Correlation.IPeerMessageCorrelationManager, Catalyst.Common"
                 }
-            ]
+            ],
+            "instanceScope": "singleinstance"
         },
         {
             "type": "Catalyst.Node.Core.P2P.PeerSettings",

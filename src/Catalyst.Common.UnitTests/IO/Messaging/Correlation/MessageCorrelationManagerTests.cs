@@ -45,7 +45,7 @@ using Serilog;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Catalyst.Common.UnitTests.IO.Messaging
+namespace Catalyst.Common.UnitTests.IO.Messaging.Correlation
 {
     public abstract class MessageCorrelationManagerTests<T> 
         where T : IMessageCorrelationManager, IDisposable
@@ -131,11 +131,21 @@ namespace Catalyst.Common.UnitTests.IO.Messaging
             new Action(() => CorrelationManager.TryMatchResponse(matchingRequest))
                .Should().Throw<ArgumentException>();
         }
+
+        private void Dispose(bool disposing)
+        {
+            if (!disposing)
+            {
+                return;
+            }
+            
+            Cache?.Dispose();
+            CorrelationManager?.Dispose();
+        }
         
         public void Dispose()
         {
-            Cache?.Dispose();
-            CorrelationManager?.Dispose();
+            Dispose(true);
         }
     }
 }
