@@ -21,19 +21,13 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.Modules.Consensus.Delta;
+using Catalyst.Common.Interfaces.Util;
 
-namespace Catalyst.Common.Interfaces.Modules.Consensus
+namespace Catalyst.Common.Interfaces.Modules.Consensus.Delta
 {
-    public interface IConsensus
-    {
-        /// <see cref="IDeltaBuilder" />
-        IDeltaBuilder DeltaBuilder { get; }
-
-        /// <see cref="IDeltaHub" />
-        IDeltaHub DeltaHub { get; }
-
-        /// <see cref="IDeltaHashProvider"/>
-        IDeltaHashProvider DeltaHashProvider { get; }
-    }
+    /// <inheritdoc cref="IChangeTokenProvider"/>
+    /// <summary>
+    /// Provides IChangeToken especially made for the DeltaCache
+    /// </summary>
+    public interface IDeltaCacheChangeTokenProvider : IChangeTokenProvider { }
 }
