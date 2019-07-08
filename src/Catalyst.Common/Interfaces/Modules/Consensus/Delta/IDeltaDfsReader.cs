@@ -21,37 +21,22 @@
 
 #endregion
 
-using System;
-using Catalyst.Common.Modules.Consensus.Cycle;
-using Multiformats.Hash;
+using System.Threading;
 
-namespace Catalyst.Common.Interfaces.Modules.Consensus.Cycle
+namespace Catalyst.Common.Interfaces.Modules.Consensus.Delta
 {
     /// <summary>
-    /// Represents a given phaseDetails of the ledger update cycle, namely,
-    /// Construction, Campaigning, Voting and Synchronisation.
+    /// Provides convenience method to read Delta from the Dfs.
     /// </summary>
-    public interface IPhase
+    public interface IDeltaDfsReader
     {
         /// <summary>
-        /// Address on the DFS of the delta elected on the previous cycle, here used as
-        /// a unique identifier for this phase.
+        /// Asynchronously retrieves the content at the hash/address on the Dfs, and tries to parse it as a Delta.
         /// </summary>
-        Multihash PreviousDeltaDfsHash { get; }
-
-        /// <summary>
-        /// The name of the phase represented by this instance.
-        /// </summary>
-        PhaseName Name { get; }
-
-        /// <summary>
-        /// Status in which our Phase is.
-        /// </summary>
-        PhaseStatus Status { get; }
-
-        /// <summary>
-        /// The time at which the phase was started.
-        /// </summary>
-        DateTime UtcStartTime { get; }
+        /// <param name="hash">The hash or address of the delta on the Dfs.</param>
+        /// <param name="delta">The retrieved delta.</param>
+        /// <param name="cancellationToken">An optional cancellation token which can be used to interrupt the tasks.</param>
+        /// <returns><see cref="true" /> if the retrieval was successful, <see cref="false" /> otherwise.</returns>
+        bool TryReadDeltaFromDfs(string hash, out Protocol.Delta.Delta delta, CancellationToken cancellationToken = default);
     }
 }

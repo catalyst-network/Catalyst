@@ -53,8 +53,7 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
             IPeerIdentifier senderPeerIdentifier,
             ICorrelationId correlationId)
         {
-            var content = 
-            _output.WriteLine();
+            var content = _output.WriteLine();
         }
 
         private string GetDeltaAsJson(Delta delta)

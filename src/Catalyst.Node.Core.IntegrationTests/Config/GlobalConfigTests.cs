@@ -45,7 +45,7 @@ namespace Catalyst.Node.Core.IntegrationTests.Config
 
         [Theory]
         [MemberData(nameof(Networks))]
-        public void RegisteringAllConfigsShouldAllowResolvingCatalystNode(Network network)
+        public void Registering_All_Configs_Should_Allow_Resolving_CatalystNode(Network network)
         {
             var configFiles = new[]
                 {

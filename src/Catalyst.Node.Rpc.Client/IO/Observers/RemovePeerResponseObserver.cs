@@ -21,7 +21,6 @@
 
 #endregion
 
-using System;
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.IO.Observers;
@@ -42,25 +41,14 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
         : ResponseObserverBase<RemovePeerResponse>,
             IRpcResponseObserver
     {
-        /// <summary>The user output</summary>
         private readonly IUserOutput _userOutput;
 
-        /// <summary>Initializes a new instance of the <see cref="RemovePeerResponseObserver"/> class.</summary>
-        /// <param name="userOutput">The user output.</param>
-        /// <param name="logger">The logger.</param>
         public RemovePeerResponseObserver(IUserOutput userOutput,
             ILogger logger) : base(logger)
         {
             _userOutput = userOutput;
         }
-        
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="removePeerResponse"></param>
-        /// <param name="channelHandlerContext"></param>
-        /// <param name="senderPeerIdentifier"></param>
-        /// <param name="correlationId"></param>
+
         protected override void HandleResponse(RemovePeerResponse removePeerResponse,
             IChannelHandlerContext channelHandlerContext,
             IPeerIdentifier senderPeerIdentifier,
@@ -71,18 +59,9 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
             Guard.Argument(senderPeerIdentifier, nameof(senderPeerIdentifier)).NotNull();
             Logger.Debug($@"Handling Remove Peer Response");
             
-            try
-            {
-                var deletedCount = removePeerResponse.DeletedCount;
+            var deletedCount = removePeerResponse.DeletedCount;
 
-                _userOutput.WriteLine($@"Deleted {deletedCount.ToString()} peers");
-            }
-            catch (Exception ex)
-            {
-                Logger.Error(ex,
-                    "Failed to handle RemovePeerResponse after receiving message {0}", removePeerResponse);
-                throw;
-            }
+            _userOutput.WriteLine($@"Deleted {deletedCount.ToString()} peers");
         }
     }
 }
