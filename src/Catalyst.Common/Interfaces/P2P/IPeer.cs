@@ -33,7 +33,7 @@ namespace Catalyst.Common.Interfaces.P2P
 
         /// <summary>Gets the reputation.</summary>
         /// <value>The reputation.</value>
-        long Reputation { get; }
+        int Reputation { get; }
 
         /// <summary>Gets the blacklisting state of the peer.</summary>
         /// <value>The black listing flag.</value>

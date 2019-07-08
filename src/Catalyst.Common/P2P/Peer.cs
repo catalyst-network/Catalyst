@@ -38,7 +38,7 @@ namespace Catalyst.Common.P2P
         public int PkId { get; set; }
 
         /// <inheritdoc />
-        public long Reputation { get; set; }
+        public int Reputation { get; set; }
 
         /// <inheritdoc />
         public bool BlackListed { get; set; }
