@@ -27,7 +27,6 @@ using Catalyst.Common.Interfaces.IO.Transport.Channels;
 using Catalyst.Common.Interfaces.Rpc;
 using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
-using Catalyst.Common.Interfaces.IO.Observers;
 
 namespace Catalyst.Node.Rpc.Client
 {

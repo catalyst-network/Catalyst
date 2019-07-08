@@ -35,7 +35,7 @@ using System.Text.RegularExpressions;
 
 namespace Catalyst.Common.P2P
 {
-    public class PeerIdValidator : IPeerIdValidator
+    public sealed class PeerIdValidator : IPeerIdValidator
     {
         private readonly ICryptoContext _cryptoContext;
         private readonly IPeerIdClientId _peerIdClientId;
