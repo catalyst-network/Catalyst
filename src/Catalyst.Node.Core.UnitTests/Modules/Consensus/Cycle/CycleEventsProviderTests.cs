@@ -29,10 +29,13 @@ using System.Reactive.Linq;
 using Catalyst.Common.Enumerator;
 using Catalyst.Common.Interfaces.Modules.Consensus;
 using Catalyst.Common.Interfaces.Modules.Consensus.Cycle;
+using Catalyst.Common.Interfaces.Modules.Consensus.Delta;
 using Catalyst.Common.Modules.Consensus.Cycle;
+using Catalyst.Common.Util;
 using Catalyst.Node.Core.Modules.Consensus.Cycle;
 using FluentAssertions;
 using Microsoft.Reactive.Testing;
+using Multiformats.Hash;
 using NSubstitute;
 using Xunit;
 using Xunit.Abstractions;
@@ -51,6 +54,7 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Consensus.Cycle
         private readonly ICycleSchedulerProvider _schedulerProvider;
         private readonly ITestOutputHelper _output;
         private readonly IStopwatch _stopWatch;
+        private readonly IDeltaHashProvider _deltaHashProvider;
 
         public CycleEventsProviderTests(ITestOutputHelper output)
         {
@@ -60,9 +64,13 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Consensus.Cycle
             _schedulerProvider = Substitute.For<ICycleSchedulerProvider>();
             _schedulerProvider.Scheduler.Returns(_testScheduler);
             _dateTimeProvider = Substitute.For<IDateTimeProvider>();
+            _deltaHashProvider = Substitute.For<IDeltaHashProvider>();
+
+            _deltaHashProvider.GetLatestDeltaHash(Arg.Any<DateTime>())
+               .Returns(Multihash.Sum(HashType.ID, ByteUtil.GenerateRandomByteArray(32)));
 
             _dateTimeProvider.UtcNow.Returns(_ => _testScheduler.Now.DateTime);
-            _cycleProvider = new CycleEventsProvider(CycleConfiguration.Default, _dateTimeProvider, _schedulerProvider);
+            _cycleProvider = new CycleEventsProvider(CycleConfiguration.Default, _dateTimeProvider, _schedulerProvider, _deltaHashProvider);
 
             _spy = Substitute.For<IObserver<IPhase>>();
 
@@ -159,7 +167,7 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Consensus.Cycle
             _testScheduler.AdvanceBy(secondProviderStartOffset.Ticks);
 
             var spy2 = Substitute.For<IObserver<IPhase>>();
-            using (var cycleProvider2 = new CycleEventsProvider(CycleConfiguration.Default, _dateTimeProvider, _schedulerProvider))
+            using (var cycleProvider2 = new CycleEventsProvider(CycleConfiguration.Default, _dateTimeProvider, _schedulerProvider, _deltaHashProvider))
             using (cycleProvider2.PhaseChanges.Take(50 - PhaseCountPerCycle)
                .Subscribe(p =>
                 {

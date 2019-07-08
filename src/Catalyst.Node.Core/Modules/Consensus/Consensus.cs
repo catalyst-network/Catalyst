@@ -31,13 +31,16 @@ namespace Catalyst.Node.Core.Modules.Consensus
     {
         public IDeltaBuilder DeltaBuilder { get; }
         public IDeltaHub DeltaHub { get; }
+        public IDeltaHashProvider DeltaHashProvider { get; }
 
         public Consensus(IDeltaBuilder deltaBuilder,
             IDeltaHub deltaHub,
-            ILogger logger)
+            ILogger logger,
+            IDeltaHashProvider deltaHashProvider)
         {
             DeltaBuilder = deltaBuilder;
             DeltaHub = deltaHub;
+            DeltaHashProvider = deltaHashProvider;
             logger.Information("Consensus service initialised.");
         }
     }
