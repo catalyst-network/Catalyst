@@ -35,6 +35,7 @@ using System.Linq;
 using System.IO;
 using Catalyst.Common.Interfaces;
 using System.Threading;
+using System.Threading.Tasks;
 using NSubstitute;
 using Serilog;
 using Catalyst.TestUtils;
@@ -125,7 +126,7 @@ namespace Catalyst.Cli.IntegrationTests.Connection
         }
 
         [Fact]
-        public async void CliToNode_Connect_To_Node()
+        public async Task CliToNode_Connect_To_Node()
         {
             var hasStarted = _node.RunNodeInstance();
 
