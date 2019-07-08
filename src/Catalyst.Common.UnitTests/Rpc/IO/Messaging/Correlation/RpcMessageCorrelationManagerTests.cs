@@ -32,6 +32,7 @@ using Catalyst.Common.Interfaces.Rpc.IO.Messaging.Correlation;
 using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Common.Rpc.IO.Messaging.Correlation;
 using Catalyst.Common.UnitTests.IO.Messaging;
+using Catalyst.Common.UnitTests.IO.Messaging.Correlation;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
