@@ -9,6 +9,15 @@
                 }
             ]
         },
+        {
+            "type": "Catalyst.Common.Registry.KeyRegistry, Catalyst.Common",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.Registry.IKeyRegistry, Catalyst.Common"
+                }
+            ],
+            "instanceScope": "singleinstance"
+        },
         // Start Commands
         {
             "type": "Catalyst.Cli.Commands.AddFileCommand",
