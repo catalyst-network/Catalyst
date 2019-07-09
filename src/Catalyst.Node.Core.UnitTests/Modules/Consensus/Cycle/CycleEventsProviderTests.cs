@@ -150,11 +150,11 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Consensus.Cycle
                    .BeApproximately(expectedDiff.TotalSeconds, 0.0001d,
                         $"phase details are " +
                         $"{nl}{phases[i]}" +
-                        $"{nl}{nameof(timeDiff)}: {timeDiff}" +
-                        $"{nl}{nameof(fullCycleOffset)}: {fullCycleOffset}" +
-                        $"{nl}{nameof(phaseTimings.Offset)}: {phaseTimings.Offset}" +
-                        $"{nl}{nameof(phaseTimings.ProductionTime)}: {phaseTimings.ProductionTime}" +
-                        $"{nl}{nameof(phaseTimings.CollectionTime)}: {phaseTimings.CollectionTime}" +
+                        $"{nl}{nameof(timeDiff)}: {timeDiff.ToString()}" +
+                        $"{nl}{nameof(fullCycleOffset)}: {fullCycleOffset.ToString()}" +
+                        $"{nl}{nameof(phaseTimings.Offset)}: {phaseTimings.Offset.ToString()}" +
+                        $"{nl}{nameof(phaseTimings.ProductionTime)}: {phaseTimings.ProductionTime.ToString()}" +
+                        $"{nl}{nameof(phaseTimings.CollectionTime)}: {phaseTimings.CollectionTime.ToString()}" +
                         $"{nl}");
             }
         }
@@ -171,11 +171,11 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Consensus.Cycle
             using (cycleProvider2.PhaseChanges.Take(50 - PhaseCountPerCycle)
                .Subscribe(p =>
                 {
-                    _output.WriteLine($"{_stopWatch.Elapsed.TotalSeconds} % 2 -- {p}");
+                    _output.WriteLine($"{_stopWatch.Elapsed.TotalSeconds.ToString()} % 2 -- {p}");
                     spy2.OnNext(p);
                 }, () =>
                 {
-                    _output.WriteLine($"% 2 -- completed after {_stopWatch.Elapsed.TotalSeconds:g}");
+                    _output.WriteLine($"% 2 -- completed after {_stopWatch.Elapsed.TotalSeconds.ToString():g}");
                     spy2.OnCompleted();
                 }))
             {

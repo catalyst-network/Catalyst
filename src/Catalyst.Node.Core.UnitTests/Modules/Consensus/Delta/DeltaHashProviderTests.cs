@@ -33,28 +33,26 @@ using Multiformats.Hash.Algorithms;
 using NSubstitute;
 using Xunit;
 using Serilog;
-using Serilog.Events;
 using Xunit.Abstractions;
 
 namespace Catalyst.Node.Core.UnitTests.Modules.Consensus.Delta
 {
-    public class DeltaHashProviderTests : SelfAwareTestBase
+    public sealed class DeltaHashProviderTests : SelfAwareTestBase
     {
         //we just need an offset to not have TimeStamp = 0 when building deltas (cf DeltaHelper)
         private const int Offset = 100;
         private readonly IDeltaCache _deltaCache;
         private readonly ILogger _logger;
-        private readonly IMultihashAlgorithm _hashAlgo;
 
         public DeltaHashProviderTests(ITestOutputHelper output) : base(output)
         {
             _deltaCache = Substitute.For<IDeltaCache>();
             _logger = new LoggerConfiguration()
                .MinimumLevel.Verbose()
-               .WriteTo.TestOutput(output, LogEventLevel.Verbose)
+               .WriteTo.TestOutput(output)
                .CreateLogger()
                .ForContext(MethodBase.GetCurrentMethod().DeclaringType);
-            _hashAlgo = new ID();
+            new ID();
         }
 
         [Fact]

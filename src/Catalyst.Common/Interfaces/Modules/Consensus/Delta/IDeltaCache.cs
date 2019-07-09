@@ -34,7 +34,13 @@ namespace Catalyst.Common.Interfaces.Modules.Consensus.Delta
         /// </summary>
         /// <param name="hash">The hash or address of the delta on the Dfs.</param>
         /// <param name="delta">The delta retrieved on the Dfs.</param>
-        /// <returns><see cref="true" /> if the retrieval was successful, <see cref="false" /> otherwise.</returns>
+        /// <returns><see>
+        ///         <cref>true</cref>
+        ///     </see>
+        ///     if the retrieval was successful, <see>
+        ///         <cref>false</cref>
+        ///     </see>
+        ///     otherwise.</returns>
         bool TryGetDelta(string hash, out Protocol.Delta.Delta delta);
     }
 }
