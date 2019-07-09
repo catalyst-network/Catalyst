@@ -22,11 +22,13 @@
 #endregion
 
 using System;
+using System.Text;
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.IO.Observers;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Observers;
+using Catalyst.Common.Util;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using DotNetty.Transport.Channels;
@@ -75,7 +77,7 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
 
             try
             {
-                var msg = getPeerInfoResponse.PeerInfo.Count == 0 ? "Peer not found" : "GetPeerInfo Successful";
+                var msg = getPeerInfoResponse.PeerInfo.Count == 0 ? "Peer(s) not found" : CommandFormatHelper.FormatRepeatedPeerInfoResponse(getPeerInfoResponse.PeerInfo);
                 _output.WriteLine(msg);
             }
             catch (Exception ex)
