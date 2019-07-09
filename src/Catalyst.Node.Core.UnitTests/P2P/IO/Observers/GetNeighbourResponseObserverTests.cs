@@ -29,7 +29,6 @@ using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.P2P.IO.Messaging.Dto;
 using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Common.IO.Messaging.Dto;
-using Catalyst.Node.Core.P2P.IO.Messaging.Dto;
 using Catalyst.Node.Core.P2P.IO.Observers;
 using Catalyst.Protocol.IPPN;
 using Catalyst.TestUtils;
