@@ -66,7 +66,7 @@ namespace Catalyst.Node.Core.IntegrationTests.Modules.Dfs
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Network.Dev)))
                .Build(), "NodeFileTransferIntegrationTest");
 
-            var peerSettings = new PeerSettings(config, Substitute.For<ILogger>());
+            var peerSettings = new PeerSettings(config);
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
             Substitute.For<IDtoFactory>();
