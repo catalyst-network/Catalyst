@@ -21,26 +21,20 @@
 
 #endregion
 
-using Catalyst.Cli.CommandTypes;
-using Catalyst.Cli.Options;
-using Catalyst.Common.Interfaces.Cli.Commands;
-using Catalyst.Common.Util;
-using Catalyst.Protocol.Rpc.Node;
-using Nethereum.RLP;
+using Catalyst.Common.Interfaces.Cli.Options;
+using CommandLine;
 
-namespace Catalyst.Cli.Commands
+namespace Catalyst.Cli.Options
 {
-    public sealed class PeerReputationCommand : BaseMessageCommand<GetPeerReputationRequest, PeerReputationOptions>
+    [Verb("getpeerinfo", HelpText = "Gets peer information from a catalyst node")]
+    public sealed class GetPeerInfoOptions : OptionsBase, IGetPeerInfoOptions
     {
-        public PeerReputationCommand(ICommandContext commandContext) : base(commandContext) { }
+        /// <inheritdoc />
+        [Option('i', "ip", HelpText = "IP address of the peer whose reputation is of interest.")]
+        public string IpAddress { get; set; }
 
-        protected override GetPeerReputationRequest GetMessage(PeerReputationOptions option)
-        {
-            return new GetPeerReputationRequest
-            {
-                PublicKey = option.PublicKey.ToBytesForRLPEncoding().ToByteString(),
-                Ip = option.IpAddress.ToBytesForRLPEncoding().ToByteString()
-            };
-        }
+        /// <inheritdoc />
+        [Option('k', "publickey", HelpText = "Public key of the peer whose reputation is of interest.")]
+        public string PublicKey { get; set; }
     }
 }

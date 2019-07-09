@@ -30,13 +30,13 @@ using Nethereum.RLP;
 
 namespace Catalyst.Cli.Commands
 {
-    public sealed class PeerReputationCommand : BaseMessageCommand<GetPeerReputationRequest, PeerReputationOptions>
+    public sealed class GetPeerInfoCommand : BaseMessageCommand<GetPeerInfoRequest, GetPeerInfoOptions>
     {
-        public PeerReputationCommand(ICommandContext commandContext) : base(commandContext) { }
+        public GetPeerInfoCommand(ICommandContext commandContext) : base(commandContext) { }
 
-        protected override GetPeerReputationRequest GetMessage(PeerReputationOptions option)
+        protected override GetPeerInfoRequest GetMessage(GetPeerInfoOptions option)
         {
-            return new GetPeerReputationRequest
+            return new GetPeerInfoRequest()
             {
                 PublicKey = option.PublicKey.ToBytesForRLPEncoding().ToByteString(),
                 Ip = option.IpAddress.ToBytesForRLPEncoding().ToByteString()
