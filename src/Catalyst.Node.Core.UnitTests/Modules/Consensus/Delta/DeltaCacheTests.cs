@@ -72,7 +72,7 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Consensus.Delta
             delta.Should().Be(deltaFromCache);
             found.Should().BeTrue();
 
-            _dfsReader.DidNotReceiveWithAnyArgs().TryReadDeltaFromDfs(default, out var _, default);
+            _dfsReader.DidNotReceiveWithAnyArgs().TryReadDeltaFromDfs(default, out _);
             _memoryCache.DidNotReceiveWithAnyArgs().CreateEntry(default);
         }
 
@@ -111,7 +111,7 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Consensus.Delta
 
             _memoryCache.CreateEntry(hash).Returns(cacheEntry);
 
-            _deltaCache.TryGetDelta(hash, out var delta);
+            _deltaCache.TryGetDelta(hash, out _);
 
             _memoryCache.Received(1).CreateEntry(hash);
             cacheEntry.Value.Should().Be(deltaFromDfs);
