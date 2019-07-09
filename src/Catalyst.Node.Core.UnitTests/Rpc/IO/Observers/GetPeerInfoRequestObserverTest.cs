@@ -83,7 +83,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC.IO.Observers
         [InlineData("publickey-15", "172.0.0.15")]
         public async Task TestGetPeerInfoRequestResponse(string publicKey, string ipAddress)
         {
-            publicKey = TestDataHelper.AppendPadding(publicKey, 32, '\0');
+            publicKey = TestDataHelper.AppendPadding(publicKey, Cryptography.BulletProofs.Wrapper.FFI.GetPublicKeyLength(), '\0');
             var responseContent = await GetPeerInfoTest(publicKey, ipAddress);
 
             for (var i = 0; i < responseContent.PeerInfo.Count; i++)
@@ -106,7 +106,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC.IO.Observers
         [InlineData("publickey-5", "0.0.0.0")]
         public async Task TestGetPeerInfoRequestResponseForNonExistantPeers(string publicKey, string ipAddress)
         {
-            publicKey = TestDataHelper.AppendPadding(publicKey, 32, '\0');
+            publicKey = TestDataHelper.AppendPadding(publicKey, Cryptography.BulletProofs.Wrapper.FFI.GetPublicKeyLength(), '\0');
             var responseContent = await GetPeerInfoTest(publicKey, ipAddress);
             responseContent.PeerInfo.Count.Should().Be(0);
         }
@@ -157,12 +157,13 @@ namespace Catalyst.Node.Core.UnitTests.RPC.IO.Observers
             AssignPeerIdentifiersToPeers(peerIdentifiers, peers);
             SetPeerDateTimeValuesToUTC(peers);
 
-            //The query GetPeerInfo is expected to run
-            var queryPeers = peers.Where(m => m.PeerIdentifier.Ip.ToString() == ipAddress && m.PeerIdentifier.PublicKey.ToStringFromRLPDecoded() == publicKey).ToList();
-
             var peerRepository = Substitute.For<IRepository<Peer>>();
             peerRepository.FindAll(Arg.Any<Expression<Func<Peer, bool>>>())
-            .Returns(queryPeers);
+               .Returns(ci =>
+                {
+                    var filtered = peers.Where(p => ((Expression<Func<Peer, bool>>) ci[0]).Compile()(p));
+                    return filtered;
+                });
 
             //Build a fake remote endpoint
             _fakeContext.Channel.RemoteAddress.Returns(EndpointBuilder.BuildNewEndPoint("192.0.0.1", 42042));
