@@ -28,8 +28,9 @@ using Catalyst.Protocol.Common;
 
 namespace Catalyst.Common.Interfaces.P2P
 {
-    public interface IPeerService<out TDiscovery> 
+    public interface IPeerService<TDiscovery> 
         : IObservableMessageStreamer<ProtocolMessage>, IDisposable
+        where TDiscovery : IPeerDiscovery
     {
         /// <summary>
         ///     The discovery mechanism for the peer network.
