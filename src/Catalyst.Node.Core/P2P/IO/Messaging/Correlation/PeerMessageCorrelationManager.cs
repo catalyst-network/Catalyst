@@ -89,14 +89,14 @@ namespace Catalyst.Node.Core.P2P.IO.Messaging.Correlation
 
         protected override void Dispose(bool disposing)
         {
+            base.Dispose(disposing);
+            
             if (!disposing)
             {
                 return;
             }
 
             _reputationEvent?.Dispose();
-            
-            base.Dispose();
         }
     }
 }

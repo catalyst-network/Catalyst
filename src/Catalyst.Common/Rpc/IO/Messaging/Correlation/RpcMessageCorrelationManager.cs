@@ -57,12 +57,12 @@ namespace Catalyst.Common.Rpc.IO.Messaging.Correlation
         
         protected override void Dispose(bool disposing)
         {
+            base.Dispose(disposing);
+
             if (disposing)
             {
                 _evictionEvent?.Dispose();
             }
-
-            base.Dispose(disposing);
         }
     }
 }
