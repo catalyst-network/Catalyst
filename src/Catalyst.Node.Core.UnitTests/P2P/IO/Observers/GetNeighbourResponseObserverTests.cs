@@ -54,13 +54,18 @@ namespace Catalyst.Node.Core.UnitTests.P2P.IO.Observers
         [Fact]
         public async void Observer_Can_Process_GetNeighbourResponse_Correctly()
         {
+            var peers = new[]
+            {
+                PeerIdHelper.GetPeerId(),
+                PeerIdHelper.GetPeerId(),
+                PeerIdHelper.GetPeerId()
+            };
+                
             var response = new DtoFactory().GetDto(new PeerNeighborsResponse
                 {
                     Peers =
                     {
-                        PeerIdHelper.GetPeerId(),
-                        PeerIdHelper.GetPeerId(),
-                        PeerIdHelper.GetPeerId()
+                        peers
                     }
                 },
                 PeerIdentifierHelper.GetPeerIdentifier("sender"),
@@ -82,7 +87,10 @@ namespace Catalyst.Node.Core.UnitTests.P2P.IO.Observers
             {
                 await TaskHelper.WaitForAsync(() => peerNeighborsResponseObserver.ReceivedCalls().Any(),
                     TimeSpan.FromMilliseconds(1000));
-                peerNeighborsResponseObserver.Received(1).OnNext(Arg.Any<IPeerClientMessageDto<PeerNeighborsResponse>>());
+                
+                peerNeighborsResponseObserver.Received(1).OnNext(Arg.Is<IPeerClientMessageDto<PeerNeighborsResponse>>(p => p.Message.Peers.Contains(peers[0])));
+                peerNeighborsResponseObserver.Received(1).OnNext(Arg.Is<IPeerClientMessageDto<PeerNeighborsResponse>>(p => p.Message.Peers.Contains(peers[1])));
+                peerNeighborsResponseObserver.Received(1).OnNext(Arg.Is<IPeerClientMessageDto<PeerNeighborsResponse>>(p => p.Message.Peers.Contains(peers[2])));
             }
         }
     }
