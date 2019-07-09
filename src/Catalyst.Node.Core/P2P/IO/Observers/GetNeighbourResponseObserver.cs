@@ -21,10 +21,15 @@
 
 #endregion
 
+using System;
+using System.Reactive.Concurrency;
+using System.Reactive.Linq;
+using System.Reactive.Subjects;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.IO.Observers;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Observers;
+using Catalyst.Node.Core.P2P.IO.Messaging.Dto;
 using Catalyst.Protocol.IPPN;
 using DotNetty.Transport.Channels;
 using Serilog;
@@ -35,7 +40,13 @@ namespace Catalyst.Node.Core.P2P.IO.Observers
         : ResponseObserverBase<PeerNeighborsResponse>,
             IP2PMessageObserver
     {
-        public GetNeighbourResponseObserver(ILogger logger) : base(logger) { }
+        private readonly ReplaySubject<IPeerClientMessageDto<PeerNeighborsResponse>> _peerNeighborsResponse;
+        public IObservable<IPeerClientMessageDto<PeerNeighborsResponse>> PeerNeighborsResponseStream => _peerNeighborsResponse.AsObservable();
+        
+        public GetNeighbourResponseObserver(ILogger logger) : base(logger)
+        {
+            _peerNeighborsResponse = new ReplaySubject<IPeerClientMessageDto<PeerNeighborsResponse>>(0);
+        }
 
         /// <summary>
         ///     Processes a GetNeighbourResponse item from stream.
@@ -44,9 +55,12 @@ namespace Catalyst.Node.Core.P2P.IO.Observers
         /// <param name="channelHandlerContext"></param>
         /// <param name="senderPeerIdentifier"></param>
         /// <param name="correlationId"></param>
-        protected override void HandleResponse(PeerNeighborsResponse messageDto, IChannelHandlerContext channelHandlerContext, IPeerIdentifier senderPeerIdentifier, ICorrelationId correlationId)
+        protected override void HandleResponse(PeerNeighborsResponse messageDto,
+            IChannelHandlerContext channelHandlerContext,
+            IPeerIdentifier senderPeerIdentifier,
+            ICorrelationId correlationId)
         {
-            Logger.Debug("received peer NeighbourResponse");
+            _peerNeighborsResponse.OnNext(new PeerClientMessageDto<PeerNeighborsResponse>(messageDto, senderPeerIdentifier));
         }
     }
 }
