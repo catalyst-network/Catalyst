@@ -40,7 +40,13 @@ namespace Catalyst.Common.Interfaces.Modules.Consensus.Delta
         /// </summary>
         /// <param name="previousHash">The hash that is supposed to chronologically precede the new one.</param>
         /// <param name="newHash">The new and latest hash, which should replace <see cref="previousHash"/>.</param>
-        /// <returns><see cref="true" /> if the update was successful, <see cref="false" /> otherwise.</returns>
+        /// <returns><see>
+        ///         <cref>true</cref>
+        ///     </see>
+        ///     if the update was successful, <see>
+        ///         <cref>false</cref>
+        ///     </see>
+        ///     otherwise.</returns>
         bool TryUpdateLatestHash(Multihash previousHash, Multihash newHash);
 
         /// <summary>

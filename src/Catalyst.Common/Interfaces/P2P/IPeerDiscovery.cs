@@ -36,13 +36,13 @@ namespace Catalyst.Common.Interfaces.P2P
 {
     public interface IPeerDiscovery
     {
-        IDisposable PingResponseMessageStream { get; }
-        IDisposable GetNeighbourResponseStream { get; }
-        IDns Dns { get; }
-        ILogger Logger { get; }
-        IProducerConsumerCollection<IPeerIdentifier> Peers { get; }
-        IRepository<Peer> PeerRepository { get; }
-        IList<string> ParseDnsServersFromConfig(IConfigurationRoot rootSection);
-        void PeerNeighbourSubscriptionHandler(IObserverDto<ProtocolMessage> messageDto);
+        // IDisposable PingResponseMessageStream { get; }
+        // IDisposable GetNeighbourResponseStream { get; }
+        // IDns Dns { get; }
+        // ILogger Logger { get; }
+        // IProducerConsumerCollection<IPeerIdentifier> Peers { get; }
+        // IRepository<Peer> PeerRepository { get; }
+        // IList<string> ParseDnsServersFromConfig(IConfigurationRoot rootSection);
+        // void PeerNeighbourSubscriptionHandler(IObserverDto<ProtocolMessage> messageDto);
     }
 }
