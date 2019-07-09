@@ -21,23 +21,20 @@
 
 #endregion
 
-using System;
-using System.Collections.Generic;
-using System.Net;
-using Microsoft.Extensions.Configuration;
+using System.Collections.Concurrent;
+using Catalyst.Common.Interfaces.Network;
 
-namespace Catalyst.Common.Interfaces.P2P
+namespace Catalyst.Common.Interfaces.P2P.Discovery
 {
-    public interface IPeerSettings
+    public interface IHastingsDiscovery : IPeerDiscovery
     {
-        Common.Config.Network Network { get; }
-        string PayoutAddress { get; }
-        string PublicKey { get; }
-        bool Announce { get; }
-        IPEndPoint AnnounceServer { get; }
-        int Port { get; }
-        IPAddress BindAddress { get; }
-        IList<Uri> SeedServers { get; }
+        IDns Dns { get; }
+        
+        IProducerConsumerCollection<IPeerIdentifier> Peers { get; }
+        
+        // IDisposable PingResponseMessageStream { get; }
+        // IDisposable GetNeighbourResponseStream { get; }
+        // IList<string> ParseDnsServersFromConfig(IConfigurationRoot rootSection);
+        // void PeerNeighbourSubscriptionHandler(IObserverDto<ProtocolMessage> messageDto);
     }
 }
-

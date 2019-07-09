@@ -21,13 +21,20 @@
 
 #endregion
 
+using System.Collections.Generic;
 using System.IO;
 using Autofac;
 using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.P2P;
+using Catalyst.Node.Core.P2P;
 using Catalyst.TestUtils;
+using DnsClient;
 using FluentAssertions;
 using Microsoft.Extensions.Configuration;
+using NSubstitute;
+using Serilog;
+using SharpRepository.Repository;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -57,6 +64,37 @@ namespace Catalyst.Node.Core.UnitTests.P2P
                 var peerDiscovery = container.Resolve<IPeerSettings>();
                 peerDiscovery.Network.Name.Should().Equals("testnet");
             }
+        }
+        
+        [Fact]
+        public void CanParseDnsNodesFromConfig()
+        {
+            var peerRepository = Substitute.For<IRepository<Peer>>();
+            var lookupClient = Substitute.For<ILookupClient>();
+            var dns = new Common.Network.DnsClient(lookupClient, Substitute.For<IPeerIdValidator>());
+            
+            var dnsDomains = new List<string>
+            {
+                "seed1.catalystnetwork.io",
+                "seed2.catalystnetwork.io",
+                "seed3.catalystnetwork.io",
+                "seed4.catalystnetwork.io",
+                "seed5.catalystnetwork.io"
+            };
+            
+            var seedPid = "0x41437c30317c39322e3230372e3137382e3139387c34323036397c3031323334353637383930313233343536373839323232323232323232323232";
+            
+            dnsDomains.ForEach(domain =>
+            {
+                MockQueryResponse.CreateFakeLookupResult(domain, seedPid, lookupClient);
+            });
+            
+            var peerSettings = new PeerSettings(_config, Substitute.For<ILogger>());
+        
+            var seedServers = peerSettings.ParseDnsServersFromConfig(_config);
+        
+            seedServers.Should().NotBeNullOrEmpty();
+            seedServers.Should().Contain(dnsDomains);
         }
     }
 }

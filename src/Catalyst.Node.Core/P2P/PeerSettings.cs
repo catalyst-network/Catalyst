@@ -21,6 +21,7 @@
 
 #endregion
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -30,6 +31,7 @@ using Catalyst.Common.Network;
 using Catalyst.Common.Interfaces.P2P;
 using Dawn;
 using Microsoft.Extensions.Configuration;
+using Serilog;
 
 namespace Catalyst.Node.Core.P2P
 {
@@ -39,13 +41,16 @@ namespace Catalyst.Node.Core.P2P
     public sealed class PeerSettings
         : IPeerSettings
     {
+        private readonly ILogger _logger;
+
         /// <summary>
         ///     Set attributes
         /// </summary>
         /// <param name="rootSection"></param>
-        public PeerSettings(IConfigurationRoot rootSection)
+        public PeerSettings(IConfigurationRoot rootSection, ILogger logger)
         {
             Guard.Argument(rootSection, nameof(rootSection)).NotNull();
+            _logger = logger;
             var section = rootSection.GetSection("CatalystNodeConfiguration").GetSection("Peer");
             Network = Enumeration.Parse<Network>(section.GetSection("Network").Value);
             PublicKey = section.GetSection("PublicKey").Value;
@@ -53,7 +58,7 @@ namespace Catalyst.Node.Core.P2P
             PayoutAddress = section.GetSection("PayoutAddress").Value;
             Announce = bool.Parse(section.GetSection("Announce").Value);
             BindAddress = IPAddress.Parse(section.GetSection("BindAddress").Value);
-            SeedServers = section.GetSection("SeedServers").GetChildren().Select(p => p.Value).ToList();
+            SeedServers = section.GetSection("SeedServers").GetChildren().Select(p => new Uri(p.Value)).ToList();
             AnnounceServer =
                 Announce ? EndpointBuilder.BuildNewEndPoint(section.GetSection("AnnounceServer").Value) : null;
         }
@@ -65,6 +70,30 @@ namespace Catalyst.Node.Core.P2P
         public bool Announce { get; }
         public IPEndPoint AnnounceServer { get; }
         public IPAddress BindAddress { get; }
-        public IList<string> SeedServers { get; }
+        public IList<Uri> SeedServers { get; }
+        
+        /// <summary>
+        ///     Provides a uri list of dns servers from the config
+        /// </summary>
+        /// <param name="rootSection"></param>
+        /// <returns></returns>
+        public IList<Uri> ParseDnsServersFromConfig()
+        {
+            var seedDnsUrls = new List<Uri>();
+            try
+            {
+                ConfigValueParser.GetStringArrValues(SeedServers, "SeedServers").ToList().ForEach(seedUrl =>
+                {  
+                    seedDnsUrls.Add(new Uri(seedUrl));
+                });
+            }
+            catch (Exception e)
+            {
+                _logger.Error(e.Message);
+                throw;
+            }
+        
+            return seedDnsUrls;
+        }
     }
 }

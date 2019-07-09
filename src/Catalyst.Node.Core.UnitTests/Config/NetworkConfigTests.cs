@@ -32,6 +32,8 @@ using Catalyst.Common.Enumerator;
 using Catalyst.Node.Core.P2P;
 using FluentAssertions;
 using Microsoft.Extensions.Configuration;
+using NSubstitute;
+using Serilog;
 using SharpRepository.Repository;
 using Xunit;
 
@@ -77,7 +79,7 @@ namespace Catalyst.Node.Core.UnitTests.Config
             containerBuilder.RegisterModule(configModule);
             containerBuilder.RegisterInstance(configRoot).As<IConfigurationRoot>();
 
-            var peerSettings = new PeerSettings(configRoot);
+            var peerSettings = new PeerSettings(configRoot, Substitute.For<ILogger>());
 
             peerSettings.Should().NotBeNull();
             peerSettings.Network.Name.Should().NotBeNullOrWhiteSpace().Should().Equals(networkConfig);

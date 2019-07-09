@@ -109,21 +109,7 @@ namespace Catalyst.Node.Core.IntegrationTests.P2P
     //         }
     //     }
     //
-    //     [Fact]
-    //     public void CanParseDnsNodesFromConfig()
-    //     {
-    //         _dnsDomains.ForEach(domain =>
-    //         {
-    //             MockQueryResponse.CreateFakeLookupResult(domain, _seedPid, _lookupClient);
-    //         });
-    //         
-    //         var peerDiscovery = new PeerDiscovery(_dns, _peerRepository, _config, _logger);
-    //
-    //         var seedServers = peerDiscovery.ParseDnsServersFromConfig(_config);
-    //
-    //         seedServers.Should().NotBeNullOrEmpty();
-    //         seedServers.Should().Contain(_dnsDomains);
-    //     }
+
     //
     //     [Fact]
     //     public void CanGetSeedNodesFromDns()
