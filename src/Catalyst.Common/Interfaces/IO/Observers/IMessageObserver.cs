@@ -28,14 +28,11 @@ using DotNetty.Transport.Channels;
 
 namespace Catalyst.Common.Interfaces.IO.Observers
 {
-    public interface IMessageObserver
+    public interface IMessageObserver : IObserver<IObserverDto<ProtocolMessage>>
     {
         IChannelHandlerContext ChannelHandlerContext { get; }
         IDisposable MessageSubscription { get; }
         
         void StartObserving(IObservable<IObserverDto<ProtocolMessage>> messageStream);
-        void OnNext(IObserverDto<ProtocolMessage> messageDto);
-        void OnCompleted();
-        void OnError(Exception exception);
     }
 }

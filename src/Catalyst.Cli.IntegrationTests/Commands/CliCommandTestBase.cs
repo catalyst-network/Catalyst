@@ -31,7 +31,6 @@ using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Protocol.Common;
-using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using Google.Protobuf;
@@ -44,7 +43,7 @@ namespace Catalyst.Cli.IntegrationTests.Commands
 {
     public abstract class CliCommandTestBase : ConfigFileBasedTest
     {
-        protected readonly INodeRpcClient NodeRpcClient;
+        protected INodeRpcClient NodeRpcClient;
 
         public static IEnumerable<object[]> AddFileData =>
             new List<object[]>
@@ -59,7 +58,7 @@ namespace Catalyst.Cli.IntegrationTests.Commands
                 new object[] {"/fake_file_hash", AppDomain.CurrentDomain.BaseDirectory + "/Config/addfile_test.json", true}
             };
 
-        protected CliCommandTestBase(ITestOutputHelper output) : base(output)
+        protected CliCommandTestBase(ITestOutputHelper output, bool substituteNodeClient = true) : base(output)
         {
             var config = new ConfigurationBuilder()
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ShellComponentsJsonConfigFile))
@@ -68,6 +67,16 @@ namespace Catalyst.Cli.IntegrationTests.Commands
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ShellConfigFile))
                .Build();
 
+            ConfigureContainerBuilder(config);
+
+            if (substituteNodeClient)
+            {
+                ConfigureNodeClient();
+            }
+        }
+
+        protected void ConfigureNodeClient()
+        {
             var channel = Substitute.For<IChannel>();
             channel.Active.Returns(true);
 
@@ -79,8 +88,6 @@ namespace Catalyst.Cli.IntegrationTests.Commands
             nodeRpcClientFactory
                .GetClient(Arg.Any<X509Certificate2>(), Arg.Is<IRpcNodeConfig>(c => c.NodeId == "node1"))
                .Returns(NodeRpcClient);
-
-            ConfigureContainerBuilder(config);
 
             ContainerBuilder.RegisterInstance(nodeRpcClientFactory).As<INodeRpcClientFactory>();
         }

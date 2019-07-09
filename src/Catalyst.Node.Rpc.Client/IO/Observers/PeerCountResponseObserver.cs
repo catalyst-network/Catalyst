@@ -21,7 +21,6 @@
 
 #endregion
 
-using System;
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.IO.Observers;
@@ -44,11 +43,6 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
     {
         private readonly IUserOutput _output;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="PeerCountResponseObserver"/> class.
-        /// </summary>
-        /// <param name="output">The output.</param>
-        /// <param name="logger">The logger.</param>
         public PeerCountResponseObserver(IUserOutput output,
             ILogger logger)
             : base(logger)
@@ -56,13 +50,6 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
             _output = output;
         }
         
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="getPeerCountResponse"></param>
-        /// <param name="channelHandlerContext"></param>
-        /// <param name="senderPeerIdentifier"></param>
-        /// <param name="correlationId"></param>
         protected override void HandleResponse(GetPeerCountResponse getPeerCountResponse,
             IChannelHandlerContext channelHandlerContext,
             IPeerIdentifier senderPeerIdentifier,
@@ -72,17 +59,8 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
             Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
             Guard.Argument(senderPeerIdentifier, nameof(senderPeerIdentifier)).NotNull();
             Logger.Debug("Handling GetPeerCount response");
-
-            try
-            {
-                _output.WriteLine($@"Peer count: {getPeerCountResponse.PeerCount.ToString()}");
-            }
-            catch (Exception ex)
-            {
-                Logger.Error(ex,
-                    "Failed to handle GetPeerCountResponse after receiving message {0}", getPeerCountResponse);
-                throw;
-            }
+            
+            _output.WriteLine($@"Peer count: {getPeerCountResponse.PeerCount.ToString()}");
         }
     }
 }
