@@ -21,23 +21,17 @@
 
 #endregion
 
-using System;
-using System.Collections.Generic;
-using System.Net;
-using Microsoft.Extensions.Configuration;
+using System.Threading.Tasks;
+using Catalyst.Common.P2P;
+using Serilog;
+using SharpRepository.Repository;
 
-namespace Catalyst.Common.Interfaces.P2P
+namespace Catalyst.Common.Interfaces.P2P.Discovery
 {
-    public interface IPeerSettings
+    public interface IPeerDiscovery
     {
-        Common.Config.Network Network { get; }
-        string PayoutAddress { get; }
-        string PublicKey { get; }
-        bool Announce { get; }
-        IPEndPoint AnnounceServer { get; }
-        int Port { get; }
-        IPAddress BindAddress { get; }
-        IList<Uri> SeedServers { get; }
+        ILogger Logger { get; }
+        IRepository<Peer> PeerRepository { get; }
+        Task DiscoveryAsync();
     }
 }
-
