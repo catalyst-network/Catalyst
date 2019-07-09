@@ -21,7 +21,6 @@
 
 #endregion
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -41,16 +40,13 @@ namespace Catalyst.Node.Core.P2P
     public sealed class PeerSettings
         : IPeerSettings
     {
-        private readonly ILogger _logger;
-
         /// <summary>
         ///     Set attributes
         /// </summary>
         /// <param name="rootSection"></param>
-        public PeerSettings(IConfigurationRoot rootSection, ILogger logger)
+        public PeerSettings(IConfigurationRoot rootSection)
         {
             Guard.Argument(rootSection, nameof(rootSection)).NotNull();
-            _logger = logger;
             var section = rootSection.GetSection("CatalystNodeConfiguration").GetSection("Peer");
             Network = Enumeration.Parse<Network>(section.GetSection("Network").Value);
             PublicKey = section.GetSection("PublicKey").Value;
