@@ -28,6 +28,7 @@ using Catalyst.Common.Interfaces.Network;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.Discovery;
 using Catalyst.Common.P2P;
+using Microsoft.Extensions.Configuration;
 using Serilog;
 using SharpRepository.Repository;
 
@@ -41,13 +42,13 @@ namespace Catalyst.Node.Core.P2P.Discovery
         public IDns Dns { get; }
         public IProducerConsumerCollection<IPeerIdentifier> Peers { get; }
 
-        public HastingsDiscovery(ILogger logger, IRepository<Peer> peerRepository, IDns dns, IPeerSettings peerSettings)
+        public HastingsDiscovery(ILogger logger, IRepository<Peer> peerRepository, IDns dns, IConfigurationRoot conf)
         {
             Logger = logger;
-            PeerRepository = peerRepository;
-            Dns = dns;
+            // PeerRepository = peerRepository;
+            // Dns = dns;
             
-            Peers.TryAdd(Dns.GetSeedNodesFromDns(peerSettings.SeedServers).RandomElement());
+            // Peers.TryAdd(Dns.GetSeedNodesFromDns(peerSettings.SeedServers).RandomElement());
         }
     }
 }
