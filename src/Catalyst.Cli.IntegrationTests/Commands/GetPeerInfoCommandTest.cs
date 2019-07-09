@@ -36,8 +36,9 @@ namespace Catalyst.Cli.IntegrationTests.Commands
         //will fail
         public GetPeerInfoCommandTest(ITestOutputHelper output) : base(output) { }
 
-        [Fact]
-        public void Cli_Can_Send_Get_Peer_Info_Request()
+        [Theory]
+        [InlineData("fake_public_key", "127.0.0.1")]
+        public void Cli_Can_Send_Get_Peer_Info_Request(string publicKey, string ipAddress)
         {
             using (var container = ContainerBuilder.Build())
             {
@@ -47,7 +48,7 @@ namespace Catalyst.Cli.IntegrationTests.Commands
                     var hasConnected = shell.ParseCommand("connect", "-n", "node1");
                     hasConnected.Should().BeTrue();
 
-                    var result = shell.ParseCommand("getpeerinfo", "-n", "node1", "-i", "127.0.0.1", "-k", "fake_public_key");
+                    var result = shell.ParseCommand("getpeerinfo", "-n", "node1", "-i", ipAddress, "-k", publicKey);
                     result.Should().BeTrue();
                     AssertSentMessage<GetPeerInfoRequest>();
                 }
