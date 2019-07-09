@@ -22,7 +22,7 @@
 #endregion
 
 using Catalyst.Common.Extensions;
-using Catalyst.Common.Interfaces.P2P.Messaging.Broadcast;
+using Catalyst.Common.Interfaces.P2P.IO.Messaging.Broadcast;
 using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;
 
