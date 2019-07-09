@@ -65,15 +65,15 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
             _output = Substitute.For<IUserOutput>();
         }
 
-        private PeerInfo ConstructSamplePeerInfo()
+        private PeerInfo ConstructSamplePeerInfo(string publicKey, string ipAddress)
         {
             var peerInfo = new PeerInfo();
             peerInfo.Reputation = 0;
             peerInfo.BlackListed = false;
-            peerInfo.PeerId = new PeerId()
+            peerInfo.PeerId = new PeerId
             {
-                Ip = "10.1.1.1".ToBytesForRLPEncoding().ToByteString(),
-                PublicKey = "publicKey".ToBytesForRLPEncoding().ToByteString()
+                Ip = ipAddress.ToBytesForRLPEncoding().ToByteString(),
+                PublicKey = publicKey.ToBytesForRLPEncoding().ToByteString()
             };
             peerInfo.InactiveFor = TimeSpan.FromSeconds(100).ToDuration();
             peerInfo.LastSeen = DateTime.UtcNow.ToTimestamp();
@@ -85,29 +85,31 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
         /// <summary>
         /// RPCs the client can handle get peer info response.
         /// </summary>
-        [Fact]
-        public async Task RpcClient_Can_Handle_GetPeerInfoResponse()
+        [Theory]
+        [InlineData("publickey-10", "172.0.0.10")]
+        public async Task RpcClient_Can_Handle_GetPeerInfoResponse(string publicKey, string ipAddress)
         {
-            var peerInfo = ConstructSamplePeerInfo();
+            var peerInfo = ConstructSamplePeerInfo(publicKey, ipAddress);
 
             await TestGetPeerInfoResponse(peerInfo).ConfigureAwait(false);
 
-            var repeatedPeerInfo = new RepeatedField<PeerInfo>() { peerInfo };
+            var repeatedPeerInfo = new RepeatedField<PeerInfo> { peerInfo };
             _output.Received(1).WriteLine(CommandFormatHelper.FormatRepeatedPeerInfoResponse(repeatedPeerInfo));
         }
 
         /// <summary>
         /// RPCs the client can handle get peer info response.
         /// </summary>
-        [Fact]
-        public async Task RpcClient_Can_Handle_Null_Modified_GetPeerInfoResponse()
+        [Theory]
+        [InlineData("publickey-10", "172.0.0.10")]
+        public async Task RpcClient_Can_Handle_Null_Modified_GetPeerInfoResponse(string publicKey, string ipAddress)
         {
-            var peerInfo = ConstructSamplePeerInfo();
+            var peerInfo = ConstructSamplePeerInfo(publicKey, ipAddress);
             peerInfo.Modified = null;
 
             await TestGetPeerInfoResponse(peerInfo).ConfigureAwait(false);
 
-            var repeatedPeerInfo = new RepeatedField<PeerInfo>() { peerInfo };
+            var repeatedPeerInfo = new RepeatedField<PeerInfo> { peerInfo };
             _output.Received(1).WriteLine(CommandFormatHelper.FormatRepeatedPeerInfoResponse(repeatedPeerInfo));
         }
 
@@ -117,7 +119,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
         [Fact]
         public async Task RpcClient_Can_Handle_GetPeerInfoResponseNonExistentPeers()
         {
-            await TestGetPeerInfoResponse(null);
+            await TestGetPeerInfoResponse(null).ConfigureAwait(false);
 
             _output.Received(1).WriteLine("Peer(s) not found");
         }

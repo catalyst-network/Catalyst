@@ -36,7 +36,7 @@ namespace Catalyst.Cli.Commands
 
         protected override GetPeerInfoRequest GetMessage(GetPeerInfoOptions option)
         {
-            return new GetPeerInfoRequest()
+            return new GetPeerInfoRequest
             {
                 PublicKey = option.PublicKey.ToBytesForRLPEncoding().ToByteString(),
                 Ip = option.IpAddress.ToBytesForRLPEncoding().ToByteString()

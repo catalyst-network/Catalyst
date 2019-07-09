@@ -40,12 +40,13 @@ namespace Catalyst.TestUtils
         /// <returns>The modified data</returns>
         public static string AppendPadding(string data, int expectedLength, char padding)
         {
+            var stringBuilder = new StringBuilder(data);
             var paddingCount = expectedLength - data.Length;
             for (var i = 0; i < paddingCount; i++)
             {
-                data += padding;
+                stringBuilder.Append(padding);
             }
-            return data;
+            return stringBuilder.ToString();
         }
     }
 }
