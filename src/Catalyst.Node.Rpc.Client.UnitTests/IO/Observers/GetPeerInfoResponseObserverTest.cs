@@ -65,25 +65,45 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
             _output = Substitute.For<IUserOutput>();
         }
 
+        private PeerInfo ConstructSamplePeerInfo()
+        {
+            var peerInfo = new PeerInfo();
+            peerInfo.Reputation = 0;
+            peerInfo.BlackListed = false;
+            peerInfo.PeerId = new PeerId()
+            {
+                Ip = "10.1.1.1".ToBytesForRLPEncoding().ToByteString(),
+                PublicKey = "publicKey".ToBytesForRLPEncoding().ToByteString()
+            };
+            peerInfo.InactiveFor = TimeSpan.FromSeconds(100).ToDuration();
+            peerInfo.LastSeen = DateTime.UtcNow.ToTimestamp();
+            peerInfo.Modified = DateTime.UtcNow.ToTimestamp();
+            peerInfo.Created = DateTime.UtcNow.ToTimestamp();
+            return peerInfo;
+        }
+
         /// <summary>
         /// RPCs the client can handle get peer info response.
         /// </summary>
         [Fact]
         public async Task RpcClient_Can_Handle_GetPeerInfoResponse()
         {
-            var ip = "172.0.0.1";
-            var publicKey = "publicKey";
+            var peerInfo = ConstructSamplePeerInfo();
 
-            var peerInfo = new PeerInfo();
-            peerInfo.Reputation = 0;
-            peerInfo.BlackListed = false;
-            peerInfo.PeerId = new PeerId();
-            peerInfo.PeerId.Ip = ip.ToBytesForRLPEncoding().ToByteString();
-            peerInfo.PeerId.PublicKey = publicKey.ToBytesForRLPEncoding().ToByteString();
-            peerInfo.InactiveFor = TimeSpan.FromSeconds(100).ToDuration();
-            peerInfo.LastSeen = DateTime.UtcNow.ToTimestamp();
-            peerInfo.Modified = DateTime.UtcNow.ToTimestamp();
-            peerInfo.Created = DateTime.UtcNow.ToTimestamp();
+            await TestGetPeerInfoResponse(peerInfo).ConfigureAwait(false);
+
+            var repeatedPeerInfo = new RepeatedField<PeerInfo>() { peerInfo };
+            _output.Received(1).WriteLine(CommandFormatHelper.FormatRepeatedPeerInfoResponse(repeatedPeerInfo));
+        }
+
+        /// <summary>
+        /// RPCs the client can handle get peer info response.
+        /// </summary>
+        [Fact]
+        public async Task RpcClient_Can_Handle_Null_Modified_GetPeerInfoResponse()
+        {
+            var peerInfo = ConstructSamplePeerInfo();
+            peerInfo.Modified = null;
 
             await TestGetPeerInfoResponse(peerInfo).ConfigureAwait(false);
 
