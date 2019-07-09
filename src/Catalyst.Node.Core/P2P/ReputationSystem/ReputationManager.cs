@@ -22,11 +22,15 @@
 #endregion
 
 using System;
+using System.Diagnostics;
+using System.Linq;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
+using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.ReputationSystem;
 using Catalyst.Common.P2P;
+using Dawn;
 using Serilog;
 using SharpRepository.Repository;
 
@@ -35,17 +39,18 @@ namespace Catalyst.Node.Core.P2P.ReputationSystem
     public sealed class ReputationManager : IReputationManager, IDisposable
     {
         private readonly ILogger _logger;
-        private IRepository<Peer> PeerRepository { get; }
-        private readonly ReplaySubject<IPeerReputationChange> _reputationEvent;
-        public IObservable<IPeerReputationChange> MasterReputationEventStream => _reputationEvent.AsObservable();
+        public IRepository<Peer> PeerRepository { get; }
+        public readonly ReplaySubject<IPeerReputationChange> ReputationEvent;
+        public IObservable<IPeerReputationChange> ReputationEventStream => ReputationEvent.AsObservable();
+        public IObservable<IPeerReputationChange> MergedEventStream { get; set; }
 
         public ReputationManager(IRepository<Peer> peerRepository, ILogger logger)
         {
             _logger = logger;
             PeerRepository = peerRepository;
-            _reputationEvent = new ReplaySubject<IPeerReputationChange>(0);
+            ReputationEvent = new ReplaySubject<IPeerReputationChange>(0);
             
-            MasterReputationEventStream
+            ReputationEventStream
                .SubscribeOn(NewThreadScheduler.Default)
                .Subscribe(OnNext, OnError, OnCompleted);
         }
@@ -57,7 +62,7 @@ namespace Catalyst.Node.Core.P2P.ReputationSystem
         /// <exception cref="NotImplementedException"></exception>
         public void MergeReputationStream(IObservable<IPeerReputationChange> reputationChangeStream)
         {
-            MasterReputationEventStream.Merge(reputationChangeStream);
+            MergedEventStream = ReputationEventStream.Merge(reputationChangeStream);
         }
 
         private void OnCompleted()
@@ -70,9 +75,11 @@ namespace Catalyst.Node.Core.P2P.ReputationSystem
             _logger.Error("Message stream ended.");
         }
 
-        private void OnNext(IPeerReputationChange peerReputationChange)
+        public void OnNext(IPeerReputationChange peerReputationChange)
         {
-            PeerRepository.TryFind(p => p.PeerIdentifier.Equals(peerReputationChange.PeerIdentifier), out var peer);
+            var peer = PeerRepository.GetAll().FirstOrDefault(p => p.PeerIdentifier.Equals(peerReputationChange.PeerIdentifier));
+            Guard.Argument(peer, nameof(peer)).NotNull();
+
             peer.Reputation += peerReputationChange.ReputationEvent.Amount;
             PeerRepository.Update(peer);
         }
@@ -84,7 +91,7 @@ namespace Catalyst.Node.Core.P2P.ReputationSystem
                 return;
             }
 
-            _reputationEvent?.Dispose();
+            ReputationEvent?.Dispose();
             PeerRepository?.Dispose();
         }
 
