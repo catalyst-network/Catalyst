@@ -23,6 +23,7 @@
 
 using System.Linq;
 using System.Security;
+using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.Cryptography;
 
 namespace Catalyst.TestUtils
@@ -44,7 +45,7 @@ namespace Catalyst.TestUtils
             return secureString;
         }
 
-        public SecureString ReadSecurePassword(string passwordIdentifier, string prompt = "Please enter your password")
+        public SecureString ReadSecurePassword(PasswordRegistryKey passwordKey, string prompt = "Please enter your password")
         {
             return BuildSecureStringPassword(_expectedPassword);
         }

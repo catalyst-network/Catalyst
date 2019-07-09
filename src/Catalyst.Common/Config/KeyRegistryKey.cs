@@ -21,15 +21,18 @@
 
 #endregion
 
-using System.Collections.Generic;
-using System.Security;
-using Catalyst.Common.Config;
-using Catalyst.Common.Interfaces.Registry;
+using Catalyst.Common.Enumerator;
 
-namespace Catalyst.Common.Registry
+namespace Catalyst.Common.Config
 {
-    public class PasswordRegistry : RegistryBase<PasswordRegistryKey, SecureString>, IPasswordRegistry
+    public class KeyRegistryKey : Enumeration
     {
-        public PasswordRegistry() { Registry = new Dictionary<PasswordRegistryKey, SecureString>(); }
+        public static readonly KeyRegistryKey DefaultKey = new DefaultSigningKey();
+        private KeyRegistryKey(int id, string name) : base(id, name) { }
+
+        private sealed class DefaultSigningKey : KeyRegistryKey
+        {
+            public DefaultSigningKey() : base(1, "defaultSigningKey") { }
+        }
     }
 }

@@ -21,10 +21,11 @@
 
 #endregion
 
+using Catalyst.Common.Config;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Types;
 
 namespace Catalyst.Common.Interfaces.Registry
 {
-    public interface IKeyRegistry : IRegistryBase<string, IPrivateKey> { }
+    public interface IKeyRegistry : IRegistryBase<KeyRegistryKey, IPrivateKey> { }
 }

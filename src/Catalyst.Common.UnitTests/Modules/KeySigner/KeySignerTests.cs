@@ -22,6 +22,7 @@
 #endregion
 
 using System.Linq;
+using Catalyst.Common.Config;
 using Catalyst.Common.Cryptography;
 using Catalyst.Common.Interfaces.Keystore;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
@@ -43,7 +44,6 @@ namespace Catalyst.Common.UnitTests.Modules.KeySigner
             _keyRegistry = Substitute.For<IKeyRegistry>();
             _wrapper = Substitute.For<IWrapper>();
             _keySigner = new Common.Modules.KeySigner.KeySigner(_keystore, new CryptoContext(_wrapper), _keyRegistry);
-            //_keySigner = new Common.Modules.KeySigner.KeySigner(_keystore, new CryptoContext(_wrapper));
             privateKeyBytes = Util.ByteUtil.GenerateRandomByteArray(FFI.GetPrivateKeyLength());
         }
 
@@ -56,7 +56,7 @@ namespace Catalyst.Common.UnitTests.Modules.KeySigner
         [Fact] 
         public void KeySigner_Can_Sign_If_Key_Exists_In_Registry()
         {
-            _keyRegistry.GetItemFromRegistry(Arg.Any<string>()).Returns(new PrivateKey(privateKeyBytes));
+            _keyRegistry.GetItemFromRegistry(KeyRegistryKey.DefaultKey).Returns(new PrivateKey(privateKeyBytes));
 
             //_keySigner.Sign()
         }

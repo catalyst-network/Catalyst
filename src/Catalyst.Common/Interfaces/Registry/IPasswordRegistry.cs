@@ -22,8 +22,9 @@
 #endregion
 
 using System.Security;
+using Catalyst.Common.Config;
 
 namespace Catalyst.Common.Interfaces.Registry
 {
-    public interface IPasswordRegistry : IRegistryBase<string, SecureString> { }
+    public interface IPasswordRegistry : IRegistryBase<PasswordRegistryKey, SecureString> { }
 }

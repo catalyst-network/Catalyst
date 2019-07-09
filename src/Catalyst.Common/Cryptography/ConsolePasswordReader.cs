@@ -23,6 +23,7 @@
 
 using System;
 using System.Security;
+using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Common.Interfaces.Registry;
@@ -42,7 +43,7 @@ namespace Catalyst.Common.Cryptography
             _passwordRegistry = passwordRegistry;
         }
         
-        private void ReadSecurePasswordToRegistry(string passwordIdentifier, string prompt)
+        private void ReadSecurePasswordToRegistry(PasswordRegistryKey passwordIdentifier, string prompt)
         {
             var pwd = new SecureString();
             ReadCharsFromConsole(_userOutput, prompt, (c, i) => pwd.AppendChar(c), i => pwd.RemoveAt(i));
@@ -50,7 +51,7 @@ namespace Catalyst.Common.Cryptography
             _passwordRegistry.AddItemToRegistry(passwordIdentifier, pwd);
         }
 
-        public SecureString ReadSecurePassword(string passwordIdentifier, string prompt = "Please enter your password")
+        public SecureString ReadSecurePassword(PasswordRegistryKey passwordIdentifier, string prompt = "Please enter your password")
         {
             SecureString password = _passwordRegistry.GetItemFromRegistry(passwordIdentifier);
             if (password == null)

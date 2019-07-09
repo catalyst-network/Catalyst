@@ -21,38 +21,30 @@
 
 #endregion
 
-using System.Collections.Generic;
-using Catalyst.Common.Interfaces.Registry;
-using Catalyst.Common.Config;
 using Catalyst.Common.Enumerator;
-using Dawn;
 
-namespace Catalyst.Common.Registry
+namespace Catalyst.Common.Config
 {
-    public class RegistryBase<T, K> : IRegistryBase<T, K>
-        where T : Enumeration
-        where K : class
+    public class PasswordRegistryKey : Enumeration
     {
-        protected RegistryBase() { }
-        public IDictionary<T, K> Registry { get; protected set; }
+        public static readonly PasswordRegistryKey CertificatePassword = new CertificatePasswordKey();
+        public static readonly PasswordRegistryKey IPFSPassword = new IPFSPasswordKey();
+        public static readonly PasswordRegistryKey DFSPassword = new DFSPasswordKey();
+        private PasswordRegistryKey(int id, string name) : base(id, name) { }
 
-        public bool AddItemToRegistry(T identifier, K item)
+        private sealed class CertificatePasswordKey : PasswordRegistryKey
         {
-            Guard.Argument(item, nameof(item)).NotNull();
-            return Registry.TryAdd(identifier, item);
+            public CertificatePasswordKey() : base(1, "certificatePasswordKey") { }
         }
 
-        public K GetItemFromRegistry(T identifier)
+        private sealed class IPFSPasswordKey : PasswordRegistryKey
         {
-            var retItem = Registry.TryGetValue(identifier, out var item)
-                ? item
-                : null;
-            return retItem;
+            public IPFSPasswordKey() : base(2, "certificatePasswordKey") { }
         }
 
-        public bool RemoveItemFromRegistry(T identifier)
+        private sealed class DFSPasswordKey : PasswordRegistryKey
         {
-            return Registry.Remove(identifier);
+            public DFSPasswordKey() : base(3, "certificatePasswordKey") { }
         }
     }
 }

@@ -49,6 +49,7 @@ namespace Catalyst.Common.Keystore
         private readonly ICryptoContext _cryptoContext;
         private readonly IPasswordReader _passwordReader;
         private readonly IKeyStoreService _keyStoreService;
+        private readonly PasswordRegistryKey _defaultNodePassword;
 
         private static int MaxTries => 5;
 
@@ -68,12 +69,12 @@ namespace Catalyst.Common.Keystore
             _fileSystem = fileSystem;
         }
 
-        public IPrivateKey KeyStoreDecrypt(string identifier)
+        public IPrivateKey KeyStoreDecrypt(KeyRegistryKey keyIdentifier)
         {
-            string json = GetJsonFromKeyStore(identifier);
+            string json = GetJsonFromKeyStore(keyIdentifier);
             if (json != null)
             {
-                var keyBytes = KeyStoreDecrypt(identifier, json);
+                var keyBytes = KeyStoreDecrypt(_defaultNodePassword, json);
                 IPrivateKey privateKey = null;
                 try
                 {
@@ -90,13 +91,13 @@ namespace Catalyst.Common.Keystore
             return null;
         }
 
-        public byte[] KeyStoreDecrypt(string keyIdentifier, string json)
+        private byte[] KeyStoreDecrypt(PasswordRegistryKey passwordIdentifier, string json)
         {
             var tries = 0;
 
             while (tries < MaxTries)
             {
-                var securePassword = _passwordReader.ReadSecurePassword(keyIdentifier);
+                var securePassword = _passwordReader.ReadSecurePassword(passwordIdentifier);
                 var stringPointer = Marshal.SecureStringToBSTR(securePassword);
                 var password = Marshal.PtrToStringBSTR(stringPointer);
                 Marshal.ZeroFreeBSTR(stringPointer);
@@ -121,12 +122,14 @@ namespace Catalyst.Common.Keystore
             throw new AuthenticationException("Password incorrect for keystore.");
         }
         
-        public async Task<string> KeyStoreGenerateAsync(IPrivateKey privateKey, string keyIdentifier)
+        public async Task<string> KeyStoreGenerateAsync(IPrivateKey privateKey, KeyRegistryKey keyIdentifier)
         {
             var address = _addressHelper.GenerateAddress(privateKey.GetPublicKey());
             
-            var realPassword = _passwordReader.ReadSecurePassword(keyIdentifier);
-            var password = keyIdentifier;
+            var securePassword = _passwordReader.ReadSecurePassword(_defaultNodePassword);
+            var stringPointer = Marshal.SecureStringToBSTR(securePassword);
+            var password = Marshal.PtrToStringBSTR(stringPointer);
+            Marshal.ZeroFreeBSTR(stringPointer);
             
             var json = _keyStoreService.EncryptAndGenerateDefaultKeyStoreAsJson(
                 password: password, 
@@ -135,7 +138,7 @@ namespace Catalyst.Common.Keystore
             
             try
             {
-                await _fileSystem.WriteFileToCddSubDirectoryAsync(password, Constants.KeyStoreDataSubDir, json);
+                await _fileSystem.WriteFileToCddSubDirectoryAsync(keyIdentifier.Name, Constants.KeyStoreDataSubDir, json);
             }
             catch (Exception e)
             {
@@ -146,7 +149,16 @@ namespace Catalyst.Common.Keystore
             return json;
         }
 
-        private string GetJsonFromKeyStore(string identifier)
+        private string GetJsonFromKeyStore(KeyRegistryKey keyIdentifier) 
+        {
+            if (keyIdentifier == KeyRegistryKey.DefaultKey)
+            {
+                return GetDefaultJsonFile();
+            }
+            else throw new Exception("Behaviour only defined for default key");
+        }
+
+        private string GetDefaultJsonFile()
         {
             var directoryInfo = _fileSystem.GetCatalystDataDir().SubDirectoryInfo(Constants.KeyStoreDataSubDir);
             if (!directoryInfo.Exists)

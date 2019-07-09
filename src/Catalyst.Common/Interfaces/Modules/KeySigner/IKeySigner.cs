@@ -39,8 +39,6 @@ namespace Catalyst.Common.Interfaces.Modules.KeySigner
         ///     Takes the crypto library implementation the nodes using.
         /// </summary>
         ICryptoContext CryptoContext { get; }
-
-        ISignature Sign(byte[] data, string keyIdentifier);
         
         ISignature Sign(byte[] data);
 

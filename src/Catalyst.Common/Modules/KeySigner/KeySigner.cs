@@ -23,6 +23,7 @@
 
 using System;
 using System.Collections.Generic;
+using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Common.Interfaces.Keystore;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
@@ -38,36 +39,35 @@ namespace Catalyst.Common.Modules.KeySigner
         private readonly IKeyStore _keyStore;
         private readonly ICryptoContext _cryptoContext;
         private readonly IKeyRegistry _keyRegistry;
-        private const string defaultKeyIdentifier = "blah";
+        private readonly KeyRegistryKey _defaultKey = KeyRegistryKey.DefaultKey;
 
         /// <summary>Initializes a new instance of the <see cref="KeySigner"/> class.</summary>
         /// <param name="keyStore">The key store.</param>
         /// <param name="cryptoContext">The crypto context.</param>
         /// /// <param name="keyRegistry">The key registry.</param>
         public KeySigner(IKeyStore keyStore, ICryptoContext cryptoContext, IKeyRegistry keyRegistry)
-        //public KeySigner(IKeyStore keyStore, ICryptoContext cryptoContext)
         {
             _keyStore = keyStore;
             _cryptoContext = cryptoContext;
             _keyRegistry = keyRegistry;
+            InitialiseKeyRegistry();
         }
 
         private void InitialiseKeyRegistry()
         {
-            if (!TryPopulateKeyRegistry(defaultKeyIdentifier))
+            if (!TryPopulateKeyRegistryWithDefault())
             {
-                GenerateKeyAndPopulateRegistry(defaultKeyIdentifier);
+                GenerateKeyAndPopulateRegistryWithDefault();
             }   
         }
 
-        private async void GenerateKeyAndPopulateRegistry(string keyIdentifier)
+        private async void GenerateKeyAndPopulateRegistryWithDefault()
         {
             IPrivateKey privateKey = _cryptoContext.GeneratePrivateKey();
 
-            //note I'm using identifier in place of password, this needs to be changed
-            await _keyStore.KeyStoreGenerateAsync(privateKey, keyIdentifier);
+            await _keyStore.KeyStoreGenerateAsync(privateKey, _defaultKey);
 
-            if (!TryPopulateKeyRegistry(keyIdentifier))
+            if (!TryPopulateKeyRegistryWithDefault())
             {
                 throw new SignatureException("Failed to populate registry with new key");
             }
@@ -79,7 +79,7 @@ namespace Catalyst.Common.Modules.KeySigner
         /// <inheritdoc/>
         ICryptoContext IKeySigner.CryptoContext => _cryptoContext;
 
-        public ISignature Sign(byte[] data, string keyIdentifier = defaultKeyIdentifier)
+        public ISignature Sign(byte[] data, KeyRegistryKey keyIdentifier)
         {
             var privateKey = _keyRegistry.GetItemFromRegistry(keyIdentifier);
             return Sign(data, privateKey);
@@ -87,7 +87,7 @@ namespace Catalyst.Common.Modules.KeySigner
 
         public ISignature Sign(byte[] data)
         {
-            return Sign(data, defaultKeyIdentifier);
+            return Sign(data, KeyRegistryKey.DefaultKey);
         }
 
         private ISignature Sign(byte[] data, IPrivateKey privateKey)
@@ -96,6 +96,7 @@ namespace Catalyst.Common.Modules.KeySigner
             {
                 return _cryptoContext.Sign(privateKey, data);
             }
+
             return new Signature(new byte[64], new byte[32]);
         }
 
@@ -111,12 +112,10 @@ namespace Catalyst.Common.Modules.KeySigner
             throw new NotImplementedException();
         }
 
-        private bool TryPopulateKeyRegistry(string keyIdentifier)
+        private bool TryPopulateKeyRegistryWithDefault()
         {
-            IPrivateKey privateKey = null;
-
-            var key = _keyStore.KeyStoreDecrypt(keyIdentifier);
-            return key != null && _keyRegistry.AddItemToRegistry(keyIdentifier, key);
+            var key = _keyStore.KeyStoreDecrypt(_defaultKey);
+            return key != null && _keyRegistry.AddItemToRegistry(_defaultKey, key);
         }    
     }
 }

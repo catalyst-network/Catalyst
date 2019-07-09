@@ -28,6 +28,7 @@ using System.Reflection;
 using System.Security;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
+using Catalyst.Common.Config;
 using Serilog;
 using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Common.Interfaces.FileSystem;
@@ -37,7 +38,7 @@ namespace Catalyst.Common.Cryptography
     public sealed class CertificateStore
         : ICertificateStore
     {
-        public static readonly string CertificatePasswordIdentifier = "1ed2a4e2-bf23-4280-a8cf-69d283bc6b0a";
+        public readonly PasswordRegistryKey CertificatePasswordIdentifier = PasswordRegistryKey.CertificatePassword;
         private static int MaxTries => 5;
         private static int PasswordReTries => 1;
         private const string LocalHost = "localhost";
