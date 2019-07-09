@@ -21,26 +21,32 @@
 
 #endregion
 
-using Catalyst.Cli.CommandTypes;
-using Catalyst.Cli.Options;
-using Catalyst.Common.Interfaces.Cli.Commands;
-using Catalyst.Common.Util;
-using Catalyst.Protocol.Rpc.Node;
-using Nethereum.RLP;
-
-namespace Catalyst.Cli.Commands
+namespace Catalyst.Common.Interfaces.Cli.Options
 {
-    public sealed class PeerReputationCommand : BaseMessageCommand<GetPeerReputationRequest, PeerReputationOptions>
+    public interface IGetPeerInfoOptions
     {
-        public PeerReputationCommand(ICommandContext commandContext) : base(commandContext) { }
+        /// <summary>
+        /// Gets or sets the node.
+        /// </summary>
+        /// <value>
+        /// The node.
+        /// </value>
+        string Node { get; set; }
 
-        protected override GetPeerReputationRequest GetMessage(PeerReputationOptions option)
-        {
-            return new GetPeerReputationRequest
-            {
-                PublicKey = option.PublicKey.ToBytesForRLPEncoding().ToByteString(),
-                Ip = option.IpAddress.ToBytesForRLPEncoding().ToByteString()
-            };
-        }
+        /// <summary>
+        /// Gets or sets the ip address.
+        /// </summary>
+        /// <value>
+        /// The ip address.
+        /// </value>
+        string IpAddress { get; set; }
+
+        /// <summary>
+        /// Gets or sets the public key.
+        /// </summary>
+        /// <value>
+        /// The public key.
+        /// </value>
+        string PublicKey { get; set; }
     }
 }
