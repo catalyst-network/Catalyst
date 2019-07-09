@@ -36,7 +36,7 @@ using Catalyst.Common.Interfaces.P2P.Discovery;
 
 namespace Catalyst.Node.Core.P2P
 {
-    public sealed class PeerService<TDiscovery> : UdpServer, IPeerService<TDiscovery> where TDiscovery : IPeerDiscovery
+    public sealed class PeerService<TDiscovery> : UdpServer, IPeerService<TDiscovery>
     {
         public TDiscovery Discovery { get; }
         public IObservable<IObserverDto<ProtocolMessage>> MessageStream { get; }

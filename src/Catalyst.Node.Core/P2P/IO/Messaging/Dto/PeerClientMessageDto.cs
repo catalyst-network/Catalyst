@@ -21,21 +21,30 @@
 
 #endregion
 
-using System.Collections.Generic;
-using System.Net;
+using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Protocol.IPPN;
+using Dawn;
+using Google.Protobuf;
 
-namespace Catalyst.Common.Interfaces.P2P
+namespace Catalyst.Node.Core.P2P.IO.Messaging.Dto
 {
-    public interface IPeerSettings
+    public interface IPeerClientMessageDto<T> where T : IMessage<T>
     {
-        Common.Config.Network Network { get; }
-        string PayoutAddress { get; }
-        string PublicKey { get; }
-        bool Announce { get; }
-        IPEndPoint AnnounceServer { get; }
-        int Port { get; }
-        IPAddress BindAddress { get; }
-        IList<string> SeedServers { get; }
+        IPeerIdentifier Sender { get; set; }
+        T Message { get; set; }
+    }
+
+    public sealed class PeerClientMessageDto<T> : IPeerClientMessageDto<T> where T : IMessage<T>
+    {
+        public IPeerIdentifier Sender { get; set; }
+        public T Message { get; set; }
+
+        public PeerClientMessageDto(T message, IPeerIdentifier sender)
+        {
+            Guard.Argument(message, nameof(message))
+               .Require(message.GetType().Namespace.Contains("IPPN"));
+            Message = message;
+            Sender = sender;
+        }
     }
 }
-

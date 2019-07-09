@@ -23,6 +23,7 @@
 
 using System.Collections.Concurrent;
 using System.Threading.Tasks;
+using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Network;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.Discovery;
@@ -45,6 +46,8 @@ namespace Catalyst.Node.Core.P2P.Discovery
             Logger = logger;
             PeerRepository = peerRepository;
             Dns = dns;
+            
+            Peers.TryAdd(Dns.GetSeedNodesFromDns(peerSettings.SeedServers).RandomElement());
         }
     }
 }
