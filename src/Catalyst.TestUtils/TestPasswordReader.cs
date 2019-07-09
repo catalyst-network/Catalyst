@@ -32,7 +32,7 @@ namespace Catalyst.TestUtils
     {
         private readonly string _expectedPassword;
 
-        public TestPasswordReader(string expectedPassword = "")
+        public TestPasswordReader(string expectedPassword = "password")
         {
             _expectedPassword = expectedPassword;
         }

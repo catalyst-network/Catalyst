@@ -29,6 +29,7 @@ using Catalyst.Common.Keystore;
 using Catalyst.Common.Util;
 using Catalyst.Cryptography.BulletProofs.Wrapper;
 using Catalyst.TestUtils;
+using FluentAssertions;
 using Multiformats.Hash.Algorithms;
 using Nethereum.Hex.HexConvertors.Extensions;
 using NSubstitute;
@@ -38,7 +39,7 @@ using Xunit.Abstractions;
 
 namespace Catalyst.Common.UnitTests.Keystore
 {
-    public sealed class LocalKeyStoreTests : ConfigFileBasedTest
+    public sealed class LocalKeyStoreTests : FileSystemBasedTest 
     {
         private readonly IKeyStore _keystore;
         private readonly ICryptoContext _context;
@@ -63,14 +64,34 @@ namespace Catalyst.Common.UnitTests.Keystore
                 addressHelper);
         }
 
+        private void Ensure_No_Keystore_File_Exists()
+        {
+            var directoryInfo = FileSystem.GetCatalystDataDir();
+            if (directoryInfo.Exists)
+            {
+                directoryInfo.Delete(true);
+            }
+
+            directoryInfo.Create();
+            directoryInfo.EnumerateFiles().Should().BeEmpty();
+        }
+
         [Fact]
         public void Should_Generate_Account_And_Create_KeyStore_File_Scrypt()
         {
+            Ensure_No_Keystore_File_Exists();
             var catKey = _context.GeneratePrivateKey();
 
-            var json = _keystore.KeyStoreGenerateAsync(catKey, KeyRegistryKey.DefaultKey).GetAwaiter().GetResult();
+            _keystore.KeyStoreGenerateAsync(catKey, KeyRegistryKey.DefaultKey);
             var key = _keystore.KeyStoreDecrypt(KeyRegistryKey.DefaultKey);
             Assert.Equal(catKey.Bytes.RawBytes.ToHex(), key.Bytes.RawBytes.ToHex());
         }
+
+        //Keystore_Can_Create_Keystore_File_From_Key_It_Generates
+        //Keystore_Can_Create_Keystore_File_From_Provided_Key
+        //Keystore_Returns_Key_If_Keystore_exists
+        //Keystore_Doesn't_return_Key_If_Keystore_doesn't_exist
+        //Keystore_Doesn't_return_Key_If_PasswordIncorrect_doesn't_exist
+        //Overwrite??
     }
 }

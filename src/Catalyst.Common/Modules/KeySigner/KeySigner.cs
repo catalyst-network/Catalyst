@@ -112,10 +112,18 @@ namespace Catalyst.Common.Modules.KeySigner
             throw new NotImplementedException();
         }
 
-        private bool TryPopulateKeyRegistryWithDefault()
+        private bool TryPopulateKeyRegistry(KeyRegistryKey keyIdentifier)
         {
-            var key = _keyStore.KeyStoreDecrypt(_defaultKey);
-            return key != null && _keyRegistry.AddItemToRegistry(_defaultKey, key);
+            if (_keyRegistry.GetItemFromRegistry(keyIdentifier) != null)
+            {
+                var key = _keyStore.KeyStoreDecrypt(keyIdentifier);
+                bool ret = _keyRegistry.AddItemToRegistry(keyIdentifier, key);
+                return key != null && ret;
+            }
+
+            return true;
         }    
+
+        private bool TryPopulateKeyRegistryWithDefault() { return TryPopulateKeyRegistry(_defaultKey); }   
     }
 }

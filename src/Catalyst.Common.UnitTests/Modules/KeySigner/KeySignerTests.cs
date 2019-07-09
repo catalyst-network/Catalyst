@@ -28,6 +28,7 @@ using Catalyst.Common.Interfaces.Keystore;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.Registry;
 using Catalyst.Cryptography.BulletProofs.Wrapper;
+using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Types;
 using Catalyst.TestUtils;
 using FluentAssertions;
@@ -56,9 +57,14 @@ namespace Catalyst.Common.UnitTests.Modules.KeySigner
         [Fact] 
         public void KeySigner_Can_Sign_If_Key_Exists_In_Registry()
         {
+            _wrapper.StdSign(Any<IPrivateKey>)
             _keyRegistry.GetItemFromRegistry(KeyRegistryKey.DefaultKey).Returns(new PrivateKey(privateKeyBytes));
 
             //_keySigner.Sign()
         }
+
+         //KeySigner_Can_Sign_If_Key_Doesn't_Exist_In_Registry
+
+         
     }
 }

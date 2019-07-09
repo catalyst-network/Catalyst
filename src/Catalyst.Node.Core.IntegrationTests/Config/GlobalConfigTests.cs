@@ -29,6 +29,7 @@ using Autofac;
 using Catalyst.Common.Config;
 using Catalyst.Common.Enumerator;
 using Catalyst.Common.Interfaces;
+using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.TestUtils;
 using Microsoft.Extensions.Configuration;
 using Xunit;
@@ -70,6 +71,8 @@ namespace Catalyst.Node.Core.IntegrationTests.Config
                 random.Next(10000, 20000).ToString();
 
             ConfigureContainerBuilder(configRoot);
+
+            ContainerBuilder.RegisterInstance(new TestPasswordReader()).As<IPasswordReader>();
 
             var container = ContainerBuilder.Build();
 

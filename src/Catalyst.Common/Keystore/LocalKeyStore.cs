@@ -72,23 +72,19 @@ namespace Catalyst.Common.Keystore
         public IPrivateKey KeyStoreDecrypt(KeyRegistryKey keyIdentifier)
         {
             string json = GetJsonFromKeyStore(keyIdentifier);
-            if (json != null)
+            if (json == null) return null;
+            var keyBytes = KeyStoreDecrypt(_defaultNodePassword, json);
+            IPrivateKey privateKey = null;
+            try
             {
-                var keyBytes = KeyStoreDecrypt(_defaultNodePassword, json);
-                IPrivateKey privateKey = null;
-                try
-                {
-                    privateKey = _cryptoContext.ImportPrivateKey(keyBytes);
-                }
-                catch (ArgumentException)
-                {
-                    _logger.Error("Keystore did not contain a valid key");
-                }
-
-                return privateKey;
+                privateKey = _cryptoContext.ImportPrivateKey(keyBytes);
             }
-            
-            return null;
+            catch (ArgumentException)
+            {
+                _logger.Error("Keystore did not contain a valid key");
+            }
+
+            return privateKey;
         }
 
         private byte[] KeyStoreDecrypt(PasswordRegistryKey passwordIdentifier, string json)
@@ -98,9 +94,7 @@ namespace Catalyst.Common.Keystore
             while (tries < MaxTries)
             {
                 var securePassword = _passwordReader.ReadSecurePassword(passwordIdentifier);
-                var stringPointer = Marshal.SecureStringToBSTR(securePassword);
-                var password = Marshal.PtrToStringBSTR(stringPointer);
-                Marshal.ZeroFreeBSTR(stringPointer);
+                var password = StringFromSecureString(securePassword);
                 
                 try
                 {
@@ -119,18 +113,17 @@ namespace Catalyst.Common.Keystore
                 tries += 1;
             }
 
-            throw new AuthenticationException("Password incorrect for keystore.");
+            _logger.Error("Password incorrect for keystore.");
+            return null;
         }
         
         public async Task<string> KeyStoreGenerateAsync(IPrivateKey privateKey, KeyRegistryKey keyIdentifier)
         {
-            var address = _addressHelper.GenerateAddress(privateKey.GetPublicKey());
-            
+            var address = _addressHelper.GenerateAddress(privateKey.GetPublicKey());        
             var securePassword = _passwordReader.ReadSecurePassword(_defaultNodePassword);
-            var stringPointer = Marshal.SecureStringToBSTR(securePassword);
-            var password = Marshal.PtrToStringBSTR(stringPointer);
-            Marshal.ZeroFreeBSTR(stringPointer);
-            
+
+            var password = StringFromSecureString(securePassword);
+
             var json = _keyStoreService.EncryptAndGenerateDefaultKeyStoreAsJson(
                 password: password, 
                 key: _cryptoContext.ExportPrivateKey(privateKey),
@@ -168,13 +161,22 @@ namespace Catalyst.Common.Keystore
 
             FileInfo keyStoreFile = directoryInfo.GetFiles().FirstOrDefault();
 
-            if (keyStoreFile.Exists)
+            if (keyStoreFile != null && keyStoreFile.Exists)
             {
                 return File.ReadAllText(keyStoreFile.FullName);
             }
 
             _logger.Error("No keystore exists for the given key");
             return null;
+        }
+
+        private string StringFromSecureString(SecureString secureString)
+        {
+            var stringPointer = Marshal.SecureStringToBSTR(secureString);
+            var password = Marshal.PtrToStringBSTR(stringPointer);
+            Marshal.ZeroFreeBSTR(stringPointer);
+
+            return password;
         }
     }
 }
