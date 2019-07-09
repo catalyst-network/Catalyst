@@ -224,6 +224,15 @@
             ]
         },
         {
+            "type": "Catalyst.Common.Rpc.IO.Messaging.Correlation.RpcMessageCorrelationManager, Catalyst.Common",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.Rpc.IO.Messaging.Correlation.IRpcMessageCorrelationManager, Catalyst.Common"
+                }
+            ],
+            "instanceScope": "singleinstance"
+        },
+        {
             "type": "Microsoft.Extensions.Caching.Memory.MemoryCacheOptions, Microsoft.Extensions.Caching.Memory",
             "services": [
                 {
@@ -238,15 +247,6 @@
                     "type": "Microsoft.Extensions.Caching.Memory.IMemoryCache, Microsoft.Extensions.Caching.Abstractions"
                 }
             ]
-        },
-        {
-            "type": "Catalyst.Common.Rpc.IO.Messaging.Correlation.RpcMessageCorrelationManager, Catalyst.Common",
-            "services": [
-                {
-                    "type": "Catalyst.Common.Interfaces.Rpc.IO.Messaging.Correlation.IRpcMessageCorrelationManager, Catalyst.Common"
-                }
-            ],
-            "instanceScope": "singleinstance"
         },
         {
             "type": "Catalyst.Cli.Commands.CommandContext",

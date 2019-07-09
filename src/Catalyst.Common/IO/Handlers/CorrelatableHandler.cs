@@ -26,6 +26,7 @@ using System.Threading.Tasks;
 using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
+using Catalyst.Common.Interfaces.Rpc.IO.Messaging.Correlation;
 using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;
