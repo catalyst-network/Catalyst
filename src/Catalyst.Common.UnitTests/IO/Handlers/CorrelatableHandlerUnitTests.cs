@@ -22,7 +22,7 @@
 #endregion
 
 using Catalyst.Common.Extensions;
-using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
+using Catalyst.Common.Interfaces.Rpc.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.IO.Handlers;
 using Catalyst.Common.IO.Messaging.Correlation;
@@ -39,11 +39,11 @@ namespace Catalyst.Common.UnitTests.IO.Handlers
     public sealed class CorrelatableHandlerUnitTests
     {
         private readonly IChannelHandlerContext _fakeContext;
-        private readonly IMessageCorrelationManager _fakeMessageCorrelationManager;
+        private readonly IRpcCorrelationManager _fakeMessageCorrelationManager;
 
         public CorrelatableHandlerUnitTests()
         {
-            _fakeMessageCorrelationManager = Substitute.For<IMessageCorrelationManager>();
+            _fakeMessageCorrelationManager = Substitute.For<IRpcCorrelationManager>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
         }
 
