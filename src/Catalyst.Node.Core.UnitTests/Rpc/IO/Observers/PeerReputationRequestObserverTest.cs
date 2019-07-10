@@ -96,7 +96,7 @@ namespace Catalyst.Node.Core.UnitTests.Rpc.IO.Observers
         {
             var responseContent = await GetPeerReputationTest(publicKey, ipAddress);
 
-            responseContent.Reputation.Should().Be(0);
+            responseContent.Reputation.Should().Be(int.MinValue);
         }
 
         private async Task<GetPeerReputationResponse> GetPeerReputationTest(string publicKey, string ipAddress)
