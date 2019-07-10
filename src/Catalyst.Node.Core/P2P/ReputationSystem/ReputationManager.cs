@@ -27,6 +27,7 @@ using System.Linq;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
+using System.Threading;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.ReputationSystem;
 using Catalyst.Common.P2P;
@@ -43,6 +44,7 @@ namespace Catalyst.Node.Core.P2P.ReputationSystem
         public readonly ReplaySubject<IPeerReputationChange> ReputationEvent;
         public IObservable<IPeerReputationChange> ReputationEventStream => ReputationEvent.AsObservable();
         public IObservable<IPeerReputationChange> MergedEventStream { get; set; }
+        static readonly SemaphoreSlim semaphoreSlim = new SemaphoreSlim(1);
 
         public ReputationManager(IRepository<Peer> peerRepository, ILogger logger)
         {
@@ -75,29 +77,29 @@ namespace Catalyst.Node.Core.P2P.ReputationSystem
             _logger.Error("Message stream ended.");
         }
 
-        public void OnNext(IPeerReputationChange peerReputationChange)
+        public async void OnNext(IPeerReputationChange peerReputationChange)
         {
-            var peer = PeerRepository.GetAll().FirstOrDefault(p => p.PeerIdentifier.Equals(peerReputationChange.PeerIdentifier));
-            Guard.Argument(peer, nameof(peer)).NotNull();
+            await semaphoreSlim.WaitAsync();
+            try
+            {
+                var peer = PeerRepository.GetAll().FirstOrDefault(p => p.PeerIdentifier.Equals(peerReputationChange.PeerIdentifier));
+                Guard.Argument(peer, nameof(peer)).NotNull();
 
-            peer.Reputation += peerReputationChange.ReputationEvent.Amount;
-            PeerRepository.Update(peer);
+                peer.Reputation += peerReputationChange.ReputationEvent.Amount;
+                PeerRepository.Update(peer);
+            }
+            finally
+            {
+                //When the task is ready, release the semaphore. It is vital to ALWAYS release the semaphore when we are ready, or else we will end up with a Semaphore that is forever locked.
+                //This is why it is important to do the Release within a try...finally clause; program execution may crash or take a different path, this way you are guaranteed execution
+                semaphoreSlim.Release();
+            }
         }
         
-        private void Dispose(bool disposing)
-        {
-            if (!disposing)
-            {
-                return;
-            }
-
-            ReputationEvent?.Dispose();
-            PeerRepository?.Dispose();
-        }
-
         public void Dispose()
         {
-            Dispose(true);
+            ReputationEvent?.Dispose();
+            PeerRepository?.Dispose();    
         }
     }
 }

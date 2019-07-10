@@ -40,11 +40,11 @@ namespace Catalyst.Common.UnitTests.IO.Handlers
     public sealed class CorrelatableHandlerUnitTests
     {
         private readonly IChannelHandlerContext _fakeContext;
-        private readonly IRpcMessageCorrelationManager _fakeMessageCorrelationManager;
+        private readonly IMessageCorrelationManager _fakeMessageCorrelationManager;
 
         public CorrelatableHandlerUnitTests()
         {
-            _fakeMessageCorrelationManager = Substitute.For<IRpcMessageCorrelationManager>();
+            _fakeMessageCorrelationManager = Substitute.For<IMessageCorrelationManager>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
         }
 

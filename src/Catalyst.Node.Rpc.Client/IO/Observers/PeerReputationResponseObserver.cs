@@ -60,7 +60,7 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
             Guard.Argument(senderPeerIdentifier, nameof(senderPeerIdentifier)).NotNull();
             Logger.Debug("Handling GetPeerReputation response");
 
-            var msg = getPeerReputationResponse.Reputation == 0 ? "Peer not found" : getPeerReputationResponse.Reputation.ToString();
+            var msg = getPeerReputationResponse.Reputation == int.MinValue ? "Peer not found" : getPeerReputationResponse.Reputation.ToString();
             _output.WriteLine($@"Peer Reputation: {msg}");
         }
     }

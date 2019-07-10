@@ -77,7 +77,7 @@ namespace Catalyst.Node.Core.Rpc.IO.Observers
             {
                 Reputation = _peerRepository.GetAll().Where(m => m.PeerIdentifier.Ip.ToString() == ip.ToString()
                      && m.PeerIdentifier.PublicKey.ToStringFromRLPDecoded() == getPeerReputationRequest.PublicKey.ToStringUtf8())
-                   .Select(x => x.Reputation).DefaultIfEmpty(0).First()
+                   .Select(x => x.Reputation).DefaultIfEmpty(int.MinValue).First()
             };
         }
     }

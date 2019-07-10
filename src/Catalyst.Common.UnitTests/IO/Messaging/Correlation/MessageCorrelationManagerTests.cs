@@ -71,10 +71,10 @@ namespace Catalyst.Common.UnitTests.IO.Messaging.Correlation
             SenderPeerId = PeerIdHelper.GetPeerId("sender");
             PeerIds = new[]
             {
-                PeerIdHelper.GetPeerId("peer1"),
-                PeerIdHelper.GetPeerId("peer2"),
-                PeerIdHelper.GetPeerId("peer3")
-            }.Select(p => new PeerIdentifier(p) as IPeerIdentifier).ToArray();
+                PeerIdentifierHelper.GetPeerIdentifier("peer1"),
+                PeerIdentifierHelper.GetPeerIdentifier("peer2"),
+                PeerIdentifierHelper.GetPeerIdentifier("peer3"),
+            }.ToArray();
             
             var responseStore = Substitute.For<IMemoryCache>();
             responseStore.TryGetValue(Arg.Any<ByteString>(), out Arg.Any<CorrelatableMessage<ProtocolMessage>>())
@@ -82,7 +82,7 @@ namespace Catalyst.Common.UnitTests.IO.Messaging.Correlation
                 {
                     output.WriteLine("");
                     ci[1] = PendingRequests.SingleOrDefault(
-                        r => r.Content.CorrelationId.ToBase64() == ((ByteString) ci[0]).ToBase64());
+                        r => Equals(r.Content.CorrelationId, ci[0]));
                     return ci[1] != null;
                 });
         }
