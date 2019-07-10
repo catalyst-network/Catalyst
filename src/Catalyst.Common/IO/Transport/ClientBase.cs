@@ -37,7 +37,7 @@ namespace Catalyst.Common.IO.Transport
 
         public virtual void SendMessage<T>(IMessageDto<T> message) where T : IMessage<T>
         {
-            Channel.WriteAsync(message).ConfigureAwait(false);
+            Channel.WriteAndFlushAsync(message).ConfigureAwait(false);
         }
     }
 }

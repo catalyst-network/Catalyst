@@ -23,31 +23,27 @@
 
 using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.IO;
 using System.Net;
-using System.Reactive.Linq;
 using Autofac;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
-using Catalyst.Common.Interfaces.Network;
+using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
+using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.IO.Messaging.Correlation;
-using Catalyst.Common.IO.Messaging.Dto;
+using Catalyst.Common.IO.EventLoop;
 using Catalyst.Common.Network;
 using Catalyst.Common.P2P;
 using Catalyst.Node.Core.P2P;
+using Catalyst.Node.Core.P2P.IO.Transport.Channels;
 using Catalyst.Protocol.IPPN;
 using Catalyst.TestUtils;
-using DnsClient;
-using DotNetty.Transport.Channels;
 using FluentAssertions;
 using Microsoft.Extensions.Configuration;
 using NSubstitute;
 using Serilog;
 using Serilog.Core;
 using SharpRepository.InMemoryRepository;
-using SharpRepository.Repository;
 using Xunit;
 using Xunit.Abstractions;
 using Constants = Catalyst.Common.Config.Constants;
@@ -63,6 +59,8 @@ namespace Catalyst.Node.Core.IntegrationTests.P2P
         private readonly IContainer _container;
         private readonly PingRequest _pingRequest;
         private readonly IConfigurationRoot _config;
+        private readonly PeerClientFixture _peerClientFixture;
+
         public PeerValidationIntegrationTest(ITestOutputHelper output) : base(output)
         {
             _config = SocketPortHelper.AlterConfigurationToGetUniquePort(new ConfigurationBuilder()
@@ -74,6 +72,7 @@ namespace Catalyst.Node.Core.IntegrationTests.P2P
             _guid = Guid.NewGuid();
             _logger = Substitute.For<ILogger>();
             _pingRequest = new PingRequest();
+            //_peerClientFixture = new PeerClientFixture();
 
             ConfigureContainerBuilder(_config, true, true);
 
@@ -102,7 +101,39 @@ namespace Catalyst.Node.Core.IntegrationTests.P2P
             }
         }
 
-        [Theory(Skip = "due to peer service refactor")]
+        [Fact(Skip = "due to major change")]
+        [Trait(Traits.TestType, Traits.IntegrationTest)]
+        public void PeerChallenge_PeerIdentifiers_Expect_To_Succeed_Valid_IP_Port_PublicKey()
+        {
+            using (_container.BeginLifetimeScope(CurrentTestName))
+            {
+                using (var peerService = _container.Resolve<IPeerService>())
+                {
+                    var peerSettings = new PeerSettings(_config);
+                    var targetHost = new IPEndPoint(peerSettings.BindAddress,
+                        peerSettings.Port + new Random().Next(0, 5000));
+
+                    var eventLoopGroupFactoryConfiguration = new EventLoopGroupFactoryConfiguration
+                    {
+                        TcpClientHandlerWorkerThreads = 2,
+                        TcpServerHandlerWorkerThreads = 3,
+                        UdpServerHandlerWorkerThreads = 4,
+                        UdpClientHandlerWorkerThreads = 5
+                    };
+
+                    var peerValidator = new PeerValidator(targetHost, peerSettings, peerService, _logger,
+                        new PeerClient(new PeerClientChannelFactory(Substitute.For<IKeySigner>(),
+                                Substitute.For<IMessageCorrelationManager>(), Substitute.For<IPeerIdValidator>()),
+                            new UdpClientEventLoopGroupFactory(eventLoopGroupFactoryConfiguration)), new PeerIdentifier(peerSettings, Substitute.For<IPeerIdClientId>()));
+
+                    var valid = peerValidator.PeerChallengeResponse(new PeerIdentifier(peerSettings, Substitute.For<IPeerIdClientId>()));
+
+                    valid.Should().BeTrue();
+                }
+            }
+        }
+
+        [Theory(Skip = "due to major change")]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         [InlineData("Fr2a300k06032b657793", "92.207.178.198", 1574)]
         [InlineData("pp2a300k55032b657791", "198.51.100.3", 2524)]
@@ -110,31 +141,34 @@ namespace Catalyst.Node.Core.IntegrationTests.P2P
         {
             using (_container.BeginLifetimeScope(CurrentTestName))
             {
+                using (var peerService = _container.Resolve<IPeerService>())
+                {
+                    var peerSettings = new PeerSettings(_config);
+                    var targetHost = new IPEndPoint(peerSettings.BindAddress,
+                        peerSettings.Port + new Random().Next(0, 5000));
+
+                    var eventLoopGroupFactoryConfiguration = new EventLoopGroupFactoryConfiguration
+                    {
+                        TcpClientHandlerWorkerThreads = 2,
+                        TcpServerHandlerWorkerThreads = 3,
+                        UdpServerHandlerWorkerThreads = 4,
+                        UdpClientHandlerWorkerThreads = 5
+                    };
+
+                    var peerValidator = new PeerValidator(targetHost, peerSettings, peerService, _logger,
+                        new PeerClient(new PeerClientChannelFactory(Substitute.For<IKeySigner>(),
+                                Substitute.For<IMessageCorrelationManager>(), Substitute.For<IPeerIdValidator>()),
+                            new UdpClientEventLoopGroupFactory(eventLoopGroupFactoryConfiguration)), new PeerIdentifier(peerSettings, Substitute.For<IPeerIdClientId>()));
+
+                    var peerActiveId = new PeerIdentifier(publicKey.ToUtf8ByteString().ToByteArray(),
+                        IPAddress.Parse(ip),
+                        port, Substitute.For<IPeerIdClientId>());
+
+                    var valid = peerValidator.PeerChallengeResponse(peerActiveId);
+
+                    valid.Should().BeFalse();
+                }
             }
         }
-
-        //[Fact]
-        //public void CanReceivePingEventsFromSubscribedStream()
-        //{
-        //    _dnsDomains.ForEach(domain =>
-        //    {
-        //        MockQueryResponse.CreateFakeLookupResult(domain, _seedPid, _lookupClient);
-        //    });
-            
-        //    var peerDiscovery = new PeerDiscovery(_dns, _peerRepository, _config, _logger);
-
-        //    var fakeContext = Substitute.For<IChannelHandlerContext>();
-        //    var pingRequest = new PingResponse();
-        //    var pid = PeerIdentifierHelper.GetPeerIdentifier("im_a_key");
-        //    var channeledAny = new ObserverDto(fakeContext, 
-        //        pingRequest.ToProtocolMessage(pid.PeerId, CorrelationId.GenerateCorrelationId()));
-            
-        //    var observableStream = new[] {channeledAny}.ToObservable();
-
-        //    peerDiscovery.StartObserving(observableStream);
-
-        //    _peerRepository.Received(1)
-        //       .Add(Arg.Is<Peer>(p => p.PeerIdentifier.Equals(pid)));
-        //}
     }
 }

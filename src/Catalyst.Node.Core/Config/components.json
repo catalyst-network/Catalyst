@@ -241,6 +241,16 @@
                 {
                     "type": "Catalyst.Common.Interfaces.P2P.IPeerValidator, Catalyst.Common"
                 }
+                //},
+                //{
+                //    "type": "Catalyst.Common.Interfaces.IO.Observers.IP2PMessageObserver, Catalyst.Common"
+                //},
+                //{
+                //    "type": "Catalyst.Common.Interfaces.IO.Observers.IRpcResponseObserver, Catalyst.Common"
+                //},
+                //{
+                //    "type": "Catalyst.Common.Interfaces.IO.Observers.IRpcRequestObserver, Catalyst.Common"
+                //}
             ]
         },
         {
