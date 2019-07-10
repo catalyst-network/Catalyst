@@ -39,13 +39,14 @@ using ILogger = Serilog.ILogger;
 
 namespace Catalyst.Node.Core.RPC.IO.Observers
 {
+    /// <summary>
+    /// The GetPeerInfoRequestObserver 
+    /// </summary>
     public sealed class GetPeerInfoRequestObserver
         : RequestObserverBase<GetPeerInfoRequest, GetPeerInfoResponse>,
             IRpcRequestObserver
     {
-        /// <summary>
-        /// The PeerReputationRequestHandler 
-        /// </summary>
+
         private readonly IRepository<Peer> _peerRepository;
 
         public GetPeerInfoRequestObserver(IPeerIdentifier peerIdentifier,
@@ -74,10 +75,10 @@ namespace Catalyst.Node.Core.RPC.IO.Observers
             Guard.Argument(senderPeerIdentifier, nameof(senderPeerIdentifier)).NotNull();
             Logger.Debug("received message of type GetPeerInfoRequest");
 
-            var ip = getPeerInfoRequest.Ip.ToStringUtf8();
+            var ip = getPeerInfoRequest.Ip;
 
-            var peerInfo = _peerRepository.FindAll(m => m.PeerIdentifier.Ip.ToString() == ip.ToString()
-                     && m.PeerIdentifier.PublicKey.ToStringFromRLPDecoded() == getPeerInfoRequest.PublicKey.ToStringUtf8())
+            var peerInfo = _peerRepository.FindAll(m => m.PeerIdentifier.PeerId.Ip == ip
+                     && m.PeerIdentifier.PeerId.PublicKey == getPeerInfoRequest.PublicKey)
                 .Select(x =>
                 new PeerInfo
                 {
@@ -89,7 +90,7 @@ namespace Catalyst.Node.Core.RPC.IO.Observers
                     LastSeen = x.LastSeen.ToTimestamp(),
                     Modified = x.Modified.HasValue ? x.Modified.Value.ToTimestamp() : null,
                     Created = x.Created.ToTimestamp()
-                });
+                }).ToList();
 
             var response = new GetPeerInfoResponse();
             response.PeerInfo.AddRange(peerInfo);

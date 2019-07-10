@@ -30,16 +30,17 @@ using Xunit.Abstractions;
 
 namespace Catalyst.Cli.IntegrationTests.Commands
 {
-    public sealed class GetPeerInfoCommandTest : CliCommandTestBase
+    public sealed class GetPeerInfoCommandTests : CliCommandTestBase
     {
         //This test is the base to all other tests.  If the Cli cannot connect to a node than all other commands
         //will fail
-        public GetPeerInfoCommandTest(ITestOutputHelper output) : base(output) { }
+        public GetPeerInfoCommandTests(ITestOutputHelper output) : base(output) { }
 
-        [Theory]
-        [InlineData("fake_public_key", "127.0.0.1")]
-        public void Cli_Can_Send_Get_Peer_Info_Request(string publicKey, string ipAddress)
+        [Fact]
+        public void Cli_Can_Send_Get_Peer_Info_Request()
         {
+            var publicKey = "fake_public_key";
+            var ipAddress = "127.0.0.1";
             using (var container = ContainerBuilder.Build())
             {
                 using (container.BeginLifetimeScope(CurrentTestName))

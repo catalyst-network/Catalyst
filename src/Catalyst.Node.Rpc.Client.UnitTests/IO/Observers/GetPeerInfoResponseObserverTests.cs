@@ -28,6 +28,7 @@ using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Common.IO.Messaging.Dto;
+using Catalyst.Common.Network;
 using Catalyst.Common.P2P;
 using Catalyst.Common.Util;
 using Catalyst.Node.Rpc.Client.IO.Observers;
@@ -36,6 +37,7 @@ using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using FizzWare.NBuilder;
+using Google.Protobuf;
 using Google.Protobuf.Collections;
 using Google.Protobuf.WellKnownTypes;
 using Nethereum.RLP;
@@ -48,7 +50,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
     /// <summary>
     /// Tests the CLI for get peer info response
     /// </summary>
-    public sealed class GetPeerInfoResponseObserverTest : IDisposable
+    public sealed class GetPeerInfoResponseObserverTests : IDisposable
     {
         private readonly IUserOutput _output;
         private readonly IChannelHandlerContext _fakeContext;
@@ -58,7 +60,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GetPeerInfoResponseObserverTest"/> class. </summary>
-        public GetPeerInfoResponseObserverTest()
+        public GetPeerInfoResponseObserverTests()
         {
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
@@ -70,11 +72,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
             var peerInfo = new PeerInfo();
             peerInfo.Reputation = 0;
             peerInfo.BlackListed = false;
-            peerInfo.PeerId = new PeerId
-            {
-                Ip = ipAddress.ToBytesForRLPEncoding().ToByteString(),
-                PublicKey = publicKey.ToBytesForRLPEncoding().ToByteString()
-            };
+            peerInfo.PeerId = PeerIdHelper.GetPeerId(publicKey, "id-1", 1, ipAddress, 12345);
             peerInfo.InactiveFor = TimeSpan.FromSeconds(100).ToDuration();
             peerInfo.LastSeen = DateTime.UtcNow.ToTimestamp();
             peerInfo.Modified = DateTime.UtcNow.ToTimestamp();
