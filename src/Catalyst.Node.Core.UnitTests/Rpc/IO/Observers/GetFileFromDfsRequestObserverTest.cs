@@ -21,6 +21,7 @@
 
 #endregion
 
+using System;
 using System.IO;
 using System.Threading;
 using Catalyst.Common.Config;
@@ -42,8 +43,13 @@ using Xunit;
 
 namespace Catalyst.Node.Core.UnitTests.Rpc.IO.Observers
 {
-    public sealed class GetFileFromDfsRequestObserverTest
+    public sealed class GetFileFromDfsRequestObserverTest : IDisposable
     {
+        public void Dispose()
+        {
+            _observer?.Dispose();
+        }
+
         private readonly IUploadFileTransferFactory _fileTransferFactory;
         private readonly IDfs _dfs;
         private readonly GetFileFromDfsRequestObserver _observer;

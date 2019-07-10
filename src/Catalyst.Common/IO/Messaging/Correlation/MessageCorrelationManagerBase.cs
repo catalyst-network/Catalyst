@@ -38,33 +38,22 @@ namespace Catalyst.Common.IO.Messaging.Correlation
     /// with a Time To Live after which they get automatically get deleted from the cache (inflicting
     /// a reputation penalty for the peer who didn't reply).
     /// </summary>
-    public sealed class MessageCorrelationManager : IMessageCorrelationManager, IDisposable
+    public abstract class MessageCorrelationManagerBase : IMessageCorrelationManager, IDisposable
     {
         private readonly IMemoryCache _pendingRequests;
         private readonly Func<MemoryCacheEntryOptions> _entryOptions;
-        private readonly ReplaySubject<IMessageEvictionEvent> _evictionEvent;
-        public IObservable<IMessageEvictionEvent> EvictionEvents => _evictionEvent.AsObservable();
-        
-        public MessageCorrelationManager(IMemoryCache cache,
+
+        protected MessageCorrelationManagerBase(IMemoryCache cache,
             IChangeTokenProvider changeTokenProvider)
         {
             _pendingRequests = cache;
-
-            _evictionEvent = new ReplaySubject<IMessageEvictionEvent>(0);
-
+            
             _entryOptions = () => new MemoryCacheEntryOptions()
                .AddExpirationToken(changeTokenProvider.GetChangeToken())
                .RegisterPostEvictionCallback(EvictionCallback);
         }
-        
-        private void EvictionCallback(object key, object value, EvictionReason reason, object state)
-        {
-            //TODO: find a way to trigger the actual remove with correct reason
-            //when the cache is not under pressure, eviction happens by token expiry :(
-            //if (reason == EvictionReason.Removed) {return;}
-            var message = (CorrelatableMessage) value;
-            _evictionEvent.OnNext(new MessageEvictionEvent(message));
-        }
+
+        protected abstract void EvictionCallback(object key, object value, EvictionReason reason, object state);
         
         /// <inheritdoc />
         public void AddPendingRequest(CorrelatableMessage correlatableMessage)
@@ -80,7 +69,7 @@ namespace Catalyst.Common.IO.Messaging.Correlation
             return _pendingRequests.TryGetValue(response.CorrelationId, out _);
         }
 
-        private void Dispose(bool disposing)
+        protected virtual void Dispose(bool disposing)
         {
             if (!disposing)
             {
@@ -88,7 +77,6 @@ namespace Catalyst.Common.IO.Messaging.Correlation
             }
 
             _pendingRequests?.Dispose();
-            _evictionEvent?.Dispose();
         }
 
         /// <inheritdoc />

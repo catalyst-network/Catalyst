@@ -44,7 +44,6 @@ namespace Catalyst.Node.Core.Rpc.IO.Observers
 
         private const string PublicKeyInvalid = "Invalid PublicKey";
         private const string SignatureInvalid = "Invalid Signature";
-        private const string FailedToHandleMessage = "Failed to handle VerifyMessageRequest after receiving message";
 
         public VerifyMessageRequestObserver(IPeerIdentifier peerIdentifier,
             ILogger logger,
@@ -96,19 +95,11 @@ namespace Catalyst.Node.Core.Rpc.IO.Observers
                 Logger.Error(ex, "{0} {1}", SignatureInvalid, verifyMessageRequest);
             }
 
-            try
-            {
-                var result = _keySigner.CryptoContext.Verify(signature, decodedMessage);
+            var result = _keySigner.CryptoContext.Verify(signature, decodedMessage);
 
-                Logger.Debug("message content is {0}", verifyMessageRequest.Message);
-                
-                return ReturnResponse(result);
-            }
-            catch (Exception ex)
-            {
-                Logger.Error(ex, "{0} {1}", FailedToHandleMessage, verifyMessageRequest);
-                throw;
-            } 
+            Logger.Debug("message content is {0}", verifyMessageRequest.Message);
+            
+            return ReturnResponse(result);
         }
 
         private VerifyMessageResponse ReturnResponse(bool result)

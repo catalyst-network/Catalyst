@@ -32,6 +32,7 @@ using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Transport.Channels;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.Interfaces.Rpc.IO.Messaging.Correlation;
 using Catalyst.Common.IO.Codecs;
 using Catalyst.Common.IO.Handlers;
 using Catalyst.Common.IO.Transport.Channels;
@@ -45,7 +46,7 @@ namespace Catalyst.Node.Rpc.Client.IO.Transport.Channels
     public class NodeRpcClientChannelFactory : TcpClientChannelFactory
     {
         private readonly IKeySigner _keySigner;
-        private readonly IMessageCorrelationManager _messageCorrelationCache;
+        private readonly IRpcCorrelationManager _messageCorrelationCache;
         private readonly IPeerIdValidator _peerIdValidator;
         private readonly IObservableServiceHandler _observableServiceHandler;
 
@@ -57,7 +58,7 @@ namespace Catalyst.Node.Rpc.Client.IO.Transport.Channels
         /// <param name="peerIdValidator"></param>
         /// <param name="backLogValue"></param>
         public NodeRpcClientChannelFactory(IKeySigner keySigner,
-            IMessageCorrelationManager messageCorrelationCache,
+            IRpcCorrelationManager messageCorrelationCache,
             IPeerIdValidator peerIdValidator,
             int backLogValue = 100) : base(backLogValue)
         {

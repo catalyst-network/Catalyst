@@ -27,9 +27,11 @@ using System.Linq;
 using Autofac;
 using Autofac.Configuration;
 using Catalyst.Common.Config;
+using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Common.Interfaces.IO.Observers;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Node.Core.P2P.IO.Observers;
+using Catalyst.TestUtils;
 using FluentAssertions;
 using Microsoft.Extensions.Configuration;
 using Nethereum.RLP;
@@ -67,6 +69,9 @@ namespace Catalyst.Node.Core.UnitTests.Config
             var logger = Substitute.For<ILogger>();
             containerBuilder.RegisterInstance(logger).As<ILogger>();
 
+            var passwordReader = new TestPasswordReader();
+            containerBuilder.RegisterInstance(passwordReader).As<IPasswordReader>();
+            
             var container = containerBuilder.Build();
             return container;
         }
@@ -100,7 +105,8 @@ namespace Catalyst.Node.Core.UnitTests.Config
                 typeof(PingResponseObserver),
                 typeof(GetNeighbourRequestObserver),
                 typeof(GetNeighbourResponseObserver),
-                typeof(TransactionBroadcastObserver)
+                typeof(TransactionBroadcastObserver),
+                typeof(DeltaDfsHashObserver)
             );
         }
     }

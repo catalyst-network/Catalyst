@@ -26,8 +26,8 @@ using System.Reactive.Linq;
 using System.Threading;
 using Catalyst.Common.Interfaces.Modules.Consensus;
 using Catalyst.Common.Interfaces.Modules.Consensus.Cycle;
+using Catalyst.Common.Interfaces.Modules.Consensus.Delta;
 using Catalyst.Common.Modules.Consensus.Cycle;
-using Catalyst.Common.Util;
 
 namespace Catalyst.Node.Core.Modules.Consensus.Cycle
 {
@@ -37,7 +37,10 @@ namespace Catalyst.Node.Core.Modules.Consensus.Cycle
     {
         private readonly CancellationTokenSource _cancellationTokenSource;
 
-        public CycleEventsProvider(ICycleConfiguration configuration, IDateTimeProvider timeProvider, ICycleSchedulerProvider schedulerProvider)
+        public CycleEventsProvider(ICycleConfiguration configuration,
+            IDateTimeProvider timeProvider,
+            ICycleSchedulerProvider schedulerProvider,
+            IDeltaHashProvider deltaHashProvider)
         {
             _cancellationTokenSource = new CancellationTokenSource();
             
@@ -58,14 +61,12 @@ namespace Catalyst.Node.Core.Modules.Consensus.Cycle
 
             var synchronisationOffset = GetTimeSpanUntilNextCycleStart(timeProvider);
 
-            // ByteUtil.GenerateRandom should not be used here, instead this should be implemented
-            // TODO: https://github.com/catalyst-network/Catalyst.Node/issues/552
             PhaseChanges = constructionStatusChanges
                .Merge(campaigningStatusChanges, scheduler)
                .Merge(votingStatusChanges, scheduler)
                .Merge(synchronisationStatusChanges, scheduler)
                .Delay(TimeSpan.FromTicks(synchronisationOffset), scheduler)
-               .Select(s => new Phase(ByteUtil.GenerateRandomByteArray(32), s.Name, s.Status, timeProvider.UtcNow))
+               .Select(s => new Phase(deltaHashProvider.GetLatestDeltaHash(timeProvider.UtcNow), s.Name, s.Status, timeProvider.UtcNow))
                .TakeWhile(_ => !_cancellationTokenSource.IsCancellationRequested);
         }
 

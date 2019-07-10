@@ -21,7 +21,6 @@
 
 #endregion
 
-using System;
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.IO.Observers;
@@ -44,25 +43,13 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
     {
         private readonly IUserOutput _output;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="PeerListResponseObserver"/> class.
-        /// </summary>
-        /// <param name="output">The output.</param>
-        /// <param name="logger">The logger.</param>
         public PeerListResponseObserver(IUserOutput output,
             ILogger logger)
             : base(logger)
         {
             _output = output;
         }
-        
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="getPeerListResponse"></param>
-        /// <param name="channelHandlerContext"></param>
-        /// <param name="senderPeerIdentifier"></param>
-        /// <param name="correlationId"></param>
+
         protected override void HandleResponse(GetPeerListResponse getPeerListResponse,
             IChannelHandlerContext channelHandlerContext,
             IPeerIdentifier senderPeerIdentifier,
@@ -73,17 +60,8 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
             Guard.Argument(senderPeerIdentifier, nameof(senderPeerIdentifier)).NotNull();
             Logger.Debug("Handling PeerListResponse");
 
-            try
-            {
-                var result = string.Join(", ", getPeerListResponse.Peers);
-                _output.WriteLine(result);
-            }
-            catch (Exception ex)
-            {
-                Logger.Error(ex,
-                    "Failed to handle PeerListResponse after receiving message {0}", getPeerListResponse);
-                throw;
-            }
+            var result = string.Join(", ", getPeerListResponse.Peers);
+            _output.WriteLine(result);
         }
     }
 }

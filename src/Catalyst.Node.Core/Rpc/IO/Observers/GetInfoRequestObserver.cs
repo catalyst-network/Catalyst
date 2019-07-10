@@ -21,7 +21,6 @@
 
 #endregion
 
-using System;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.IO.Observers;
 using Catalyst.Common.Interfaces.P2P;
@@ -66,26 +65,17 @@ namespace Catalyst.Node.Core.Rpc.IO.Observers
             Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
             Guard.Argument(senderPeerIdentifier, nameof(senderPeerIdentifier)).NotNull();
             Logger.Debug("received message of type GetInfoRequest");
-            
-            try
-            {
-                Logger.Debug("message content is {0}", getInfoRequest);
 
-                var serializedList = JsonConvert.SerializeObject(
-                    _config.NodeConfig.GetSection("CatalystNodeConfiguration").AsEnumerable(), 
-                    Formatting.Indented);
-                
-                return new GetInfoResponse
-                {
-                    Query = serializedList
-                };
-            }
-            catch (Exception ex)
+            Logger.Debug("message content is {0}", getInfoRequest);
+
+            var serializedList = JsonConvert.SerializeObject(
+                _config.NodeConfig.GetSection("CatalystNodeConfiguration").AsEnumerable(),
+                Formatting.Indented);
+
+            return new GetInfoResponse
             {
-                Logger.Error(ex,
-                    "Failed to handle GetInfoRequest after receiving message {0}", getInfoRequest);
-                throw;
-            }
+                Query = serializedList
+            };
         }
     }
 }

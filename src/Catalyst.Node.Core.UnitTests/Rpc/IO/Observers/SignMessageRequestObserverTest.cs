@@ -110,13 +110,12 @@ namespace Catalyst.Node.Core.UnitTests.Rpc.IO.Observers
 
         protected override void Dispose(bool disposing)
         {
-            base.Dispose(disposing);
-            if (!disposing)
+            if (disposing)
             {
-                return;
+                _scope?.Dispose();
             }
-            
-            _scope?.Dispose();
+
+            base.Dispose(disposing);
         }
     }
 }

@@ -21,7 +21,6 @@
 
 #endregion
 
-using System;
 using System.Linq;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.IO.Observers;
@@ -77,33 +76,24 @@ namespace Catalyst.Node.Core.Rpc.IO.Observers
             Guard.Argument(senderPeerIdentifier, nameof(senderPeerIdentifier)).NotNull();
             Logger.Debug("Received message of type RemovePeerRequest");
 
-            try
+            uint peerDeletedCount = 0;
+
+            var publicKeyIsEmpty = removePeerRequest.PublicKey.IsEmpty;
+            
+            var peersToDelete = _peerRepository.GetAll().TakeWhile(peer =>
+                peer.PeerIdentifier.Ip.To16Bytes().SequenceEqual(removePeerRequest.PeerIp.ToByteArray()) &&
+                (publicKeyIsEmpty || peer.PeerIdentifier.PublicKey.SequenceEqual(removePeerRequest.PublicKey.ToByteArray()))).ToArray();
+
+            foreach (var peerToDelete in peersToDelete)
             {
-                uint peerDeletedCount = 0;
-
-                var publicKeyIsEmpty = removePeerRequest.PublicKey.IsEmpty;
-                
-                var peersToDelete = _peerRepository.GetAll().TakeWhile(peer =>
-                    peer.PeerIdentifier.Ip.To16Bytes().SequenceEqual(removePeerRequest.PeerIp.ToByteArray()) &&
-                    (publicKeyIsEmpty || peer.PeerIdentifier.PublicKey.SequenceEqual(removePeerRequest.PublicKey.ToByteArray()))).ToArray();
-
-                foreach (var peerToDelete in peersToDelete)
-                {
-                    _peerRepository.Delete(peerToDelete);
-                    peerDeletedCount += 1;
-                }
-
-                return new RemovePeerResponse
-                {
-                    DeletedCount = peerDeletedCount
-                };
+                _peerRepository.Delete(peerToDelete);
+                peerDeletedCount += 1;
             }
-            catch (Exception ex)
+
+            return new RemovePeerResponse
             {
-                Logger.Error(ex,
-                    "Failed to handle GetInfoRequest after receiving message {0}", removePeerRequest);
-                throw;
-            }
+                DeletedCount = peerDeletedCount
+            };
         }
     }
 }

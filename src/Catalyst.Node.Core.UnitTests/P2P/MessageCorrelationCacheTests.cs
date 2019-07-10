@@ -27,6 +27,7 @@ using System.Linq;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.Interfaces.Rpc.IO.Messaging.Correlation;
 using Catalyst.Common.IO.Handlers;
 using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Common.P2P;
@@ -126,7 +127,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
         [Fact]
         public void UncorrelatedMessage_should_not_propogate_to_next_pipeline()
         {
-            var correlationManager = Substitute.For<IMessageCorrelationManager>();
+            var correlationManager = Substitute.For<IRpcCorrelationManager>();
             correlationManager.TryMatchResponse(Arg.Any<ProtocolMessage>()).Returns(false);
 
             var correlationHandler = new CorrelationHandler(correlationManager);

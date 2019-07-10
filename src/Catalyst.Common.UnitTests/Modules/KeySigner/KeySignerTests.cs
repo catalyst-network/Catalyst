@@ -57,14 +57,11 @@ namespace Catalyst.Common.UnitTests.Modules.KeySigner
         [Fact] 
         public void KeySigner_Can_Sign_If_Key_Exists_In_Registry()
         {
-            _wrapper.StdSign(Any<IPrivateKey>)
             _keyRegistry.GetItemFromRegistry(KeyRegistryKey.DefaultKey).Returns(new PrivateKey(privateKeyBytes));
 
             //_keySigner.Sign()
         }
 
          //KeySigner_Can_Sign_If_Key_Doesn't_Exist_In_Registry
-
-         
     }
 }
