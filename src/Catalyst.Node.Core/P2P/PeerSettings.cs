@@ -30,7 +30,6 @@ using Catalyst.Common.Network;
 using Catalyst.Common.Interfaces.P2P;
 using Dawn;
 using Microsoft.Extensions.Configuration;
-using Serilog;
 
 namespace Catalyst.Node.Core.P2P
 {

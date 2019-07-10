@@ -32,8 +32,6 @@ using Catalyst.Common.Enumerator;
 using Catalyst.Node.Core.P2P;
 using FluentAssertions;
 using Microsoft.Extensions.Configuration;
-using NSubstitute;
-using Serilog;
 using SharpRepository.Repository;
 using Xunit;
 
