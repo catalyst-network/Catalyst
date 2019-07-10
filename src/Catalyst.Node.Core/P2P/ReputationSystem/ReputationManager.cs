@@ -79,7 +79,7 @@ namespace Catalyst.Node.Core.P2P.ReputationSystem
 
         public async void OnNext(IPeerReputationChange peerReputationChange)
         {
-            await semaphoreSlim.WaitAsync();
+            await semaphoreSlim.WaitAsync().ConfigureAwait(false);
             try
             {
                 var peer = PeerRepository.GetAll().FirstOrDefault(p => p.PeerIdentifier.Equals(peerReputationChange.PeerIdentifier));
