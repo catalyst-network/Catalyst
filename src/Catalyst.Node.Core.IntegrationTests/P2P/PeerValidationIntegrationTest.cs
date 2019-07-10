@@ -73,9 +73,7 @@ namespace Catalyst.Node.Core.IntegrationTests.P2P
             _logger = Substitute.For<ILogger>();
             _pingRequest = new PingRequest();
             //_peerClientFixture = new PeerClientFixture();
-
             ConfigureContainerBuilder(_config, true, true);
-
             _container = ContainerBuilder.Build();
         }
 
