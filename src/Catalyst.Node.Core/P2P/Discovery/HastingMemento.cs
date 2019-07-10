@@ -21,34 +21,27 @@
 
 #endregion
 
-using System.Threading.Tasks;
-using Catalyst.Common.Interfaces.Network;
+using System.Collections.Concurrent;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.Discovery;
-using Catalyst.Common.P2P;
-using Serilog;
-using SharpRepository.Repository;
 
 namespace Catalyst.Node.Core.P2P.Discovery
 {
-    public class HastingsDiscovery : IHastingsDiscovery
+    /// <summary>
+    ///     Represents a single step within the hastings walk.
+    /// </summary>
+    public sealed class HastingMemento : IHastingMemento
     {
-        public ILogger Logger { get; }
-        public IRepository<Peer> PeerRepository { get; }
-        public Task DiscoveryAsync() { throw new System.NotImplementedException(); }
-        public IDns Dns { get; }
+        public ConcurrentBag<IPeerIdentifier> Neighbours { get; set; }
 
-        private HastingCareTaker _hastingCareTaker;
-
-        public HastingsDiscovery(ILogger logger, IRepository<Peer> peerRepository, IDns dns, IPeerSettings peerSettings)
+        public HastingMemento(ConcurrentBag<IPeerIdentifier> neighbours) : this()
         {
-            Logger = logger;
-            PeerRepository = peerRepository;
-            Dns = dns;
-            
-            _hastingCareTaker = new HastingCareTaker();
-            
-            // Peers.TryAdd(Dns.GetSeedNodesFromDns(peerSettings.SeedServers).RandomElement());
+            Neighbours = neighbours;
+        }
+
+        public HastingMemento()
+        {
+            Neighbours = new ConcurrentBag<IPeerIdentifier>();
         }
     }
 }

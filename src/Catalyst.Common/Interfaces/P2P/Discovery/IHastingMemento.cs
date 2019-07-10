@@ -21,17 +21,12 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.Network;
+using System.Collections.Concurrent;
 
 namespace Catalyst.Common.Interfaces.P2P.Discovery
 {
-    public interface IHastingsDiscovery : IPeerDiscovery
+    public interface IHastingMemento
     {
-        IDns Dns { get; }
-        
-        // IDisposable PingResponseMessageStream { get; }
-        // IDisposable GetNeighbourResponseStream { get; }
-        // IList<string> ParseDnsServersFromConfig(IConfigurationRoot rootSection);
-        // void PeerNeighbourSubscriptionHandler(IObserverDto<ProtocolMessage> messageDto);
+        ConcurrentBag<IPeerIdentifier> Neighbours { get; set; }
     }
 }
