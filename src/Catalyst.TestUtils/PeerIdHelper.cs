@@ -63,6 +63,9 @@ namespace Catalyst.TestUtils
             return GetPeerId(publicKeyBytes, clientId, clientVersion, ipAddress, port);
         }
 
-        public static PeerId GetPeerId(string publicKey, string clientId, int clientVersion, string ipAddress, int port) => GetPeerId(publicKey, clientId, clientVersion, IPAddress.Parse(ipAddress), port);
+        public static PeerId GetPeerId(string publicKey, string clientId, int clientVersion, string ipAddress, int port)
+        {
+            return GetPeerId(publicKey, clientId, clientVersion, IPAddress.Parse(ipAddress), port);
+        }
     }
 }
