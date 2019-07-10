@@ -91,7 +91,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
         /// </summary>
         /// <param name="rep">The rep.</param>
         [Theory]
-        [InlineData(0)]
+        [InlineData(int.MinValue)]
         public async Task RpcClient_Can_Handle_GetReputationResponseNonExistantPeers(int rep)
         {
             await TestGetReputationResponse(rep);
