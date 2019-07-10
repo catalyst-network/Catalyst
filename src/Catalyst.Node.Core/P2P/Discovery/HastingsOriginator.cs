@@ -21,36 +21,39 @@
 
 #endregion
 
-using System.Threading.Tasks;
-using Catalyst.Common.Interfaces.Network;
+using System.Collections.Concurrent;
+using System.Linq;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.Discovery;
-using Catalyst.Common.P2P;
-using Serilog;
-using SharpRepository.Repository;
 
 namespace Catalyst.Node.Core.P2P.Discovery
 {
-    public class HastingsDiscovery : IHastingsDiscovery
+    public sealed class HastingsOriginator
     {
-        public ILogger Logger { get; }
-        public IRepository<Peer> PeerRepository { get; }
-        public Task DiscoveryAsync() { throw new System.NotImplementedException(); }
-        public IDns Dns { get; }
-
-        private HastingsOriginator _state;
-        private HastingCareTaker _hastingCareTaker;
-
-        public HastingsDiscovery(ILogger logger, IRepository<Peer> peerRepository, IDns dns, IPeerSettings peerSettings)
+        private ConcurrentBag<IPeerIdentifier> _currentPeersNeighbours;
+        
+        public ConcurrentBag<IPeerIdentifier> CurrentPeersNeighbours
         {
-            Logger = logger;
-            PeerRepository = peerRepository;
-            Dns = dns;
+            get => _currentPeersNeighbours;
+            set => _currentPeersNeighbours = value;
+        }
 
-            _state = new HastingsOriginator();
-            _hastingCareTaker = new HastingCareTaker();
-            
-            // Peers.TryAdd(Dns.GetSeedNodesFromDns(peerSettings.SeedServers).RandomElement());
+        /// <summary>
+        ///     creates a memento from current state
+        /// </summary>
+        /// <returns></returns>
+        public IHastingMemento CreateMemento()
+        {
+            return new HastingMemento(_currentPeersNeighbours);
+        }
+ 
+        /// <summary>
+        ///     Restores the state from a memento
+        /// </summary>
+        /// <param name="hastingMemento"></param>
+        public void SetMemento(IHastingMemento hastingMemento)
+        {
+            CurrentPeersNeighbours = new ConcurrentBag<IPeerIdentifier>(hastingMemento.Neighbours);
         }
     }
 }

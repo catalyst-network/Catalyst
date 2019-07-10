@@ -32,7 +32,7 @@ namespace Catalyst.Node.Core.P2P.Discovery
     /// </summary>
     public sealed class HastingMemento : IHastingMemento
     {
-        public ConcurrentBag<IPeerIdentifier> Neighbours { get; set; }
+        public ConcurrentBag<IPeerIdentifier> Neighbours { get; }
 
         public HastingMemento(ConcurrentBag<IPeerIdentifier> neighbours) : this()
         {

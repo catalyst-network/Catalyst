@@ -27,7 +27,7 @@ using Catalyst.Common.Interfaces.P2P.Discovery;
 
 namespace Catalyst.Node.Core.P2P.Discovery
 {
-    public sealed class HastingCareTaker
+    public sealed class HastingCareTaker : IHastingCareTaker
     {
         public ConcurrentQueue<IHastingMemento> HastingMementoList { get; }
 
