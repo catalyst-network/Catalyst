@@ -29,6 +29,7 @@ using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Rpc.Authentication;
+using Catalyst.Common.Interfaces.Rpc.IO.Messaging.Correlation;
 using Catalyst.Common.IO.Handlers;
 using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Common.IO.Messaging.Dto;
@@ -52,16 +53,16 @@ namespace Catalyst.Node.Core.IntegrationTests.Rpc.IO.Transport.Channels
         private readonly NodeRpcClientChannelFactoryTests.TestNodeRpcClientChannelFactory _clientFactory;
         private readonly EmbeddedChannel _serverChannel;
         private readonly EmbeddedChannel _clientChannel;
-        private readonly IMessageCorrelationManager _clientCorrelationManager;
+        private readonly IRpcCorrelationManager _clientCorrelationManager;
         private readonly IKeySigner _clientKeySigner;
         private readonly IAuthenticationStrategy _authenticationStrategy;
         private readonly IPeerIdValidator _peerIdValidator;
         private readonly IKeySigner _serverKeySigner;
-        private readonly IMessageCorrelationManager _serverCorrelationManager;
+        private readonly IRpcCorrelationManager _serverCorrelationManager;
 
         public NodeRpcServerChannelFactoryTests()
         {
-            _serverCorrelationManager = Substitute.For<IMessageCorrelationManager>();
+            _serverCorrelationManager = Substitute.For<IRpcCorrelationManager>();
             _serverKeySigner = Substitute.For<IKeySigner>();
 
             var peerSettings = Substitute.For<IPeerSettings>();
@@ -78,7 +79,7 @@ namespace Catalyst.Node.Core.IntegrationTests.Rpc.IO.Transport.Channels
                 _authenticationStrategy,
                 _peerIdValidator);
 
-            _clientCorrelationManager = Substitute.For<IMessageCorrelationManager>();
+            _clientCorrelationManager = Substitute.For<IRpcCorrelationManager>();
             _clientKeySigner = Substitute.For<IKeySigner>();
            
             _clientFactory = new NodeRpcClientChannelFactoryTests.TestNodeRpcClientChannelFactory(

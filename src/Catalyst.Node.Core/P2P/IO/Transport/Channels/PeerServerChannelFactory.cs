@@ -33,6 +33,7 @@ using Catalyst.Common.Interfaces.IO.Transport.Channels;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.IO.Messaging.Broadcast;
+using Catalyst.Common.Interfaces.Rpc.IO.Messaging.Correlation;
 using Catalyst.Common.IO.Handlers;
 using Catalyst.Common.IO.Transport.Channels;
 using Catalyst.Protocol.Common;
@@ -45,7 +46,7 @@ namespace Catalyst.Node.Core.P2P.IO.Transport.Channels
 {
     public class PeerServerChannelFactory : UdpServerChannelFactory
     {
-        private readonly IMessageCorrelationManager _messageCorrelationManager;
+        private readonly IRpcCorrelationManager _messageCorrelationManager;
         private readonly IBroadcastManager _broadcastManager;
         private readonly IKeySigner _keySigner;
         private readonly IPeerIdValidator _peerIdValidator;
@@ -57,7 +58,7 @@ namespace Catalyst.Node.Core.P2P.IO.Transport.Channels
         /// <param name="broadcastManager"></param>
         /// <param name="keySigner"></param>
         /// <param name="peerIdValidator"></param>
-        public PeerServerChannelFactory(IMessageCorrelationManager messageCorrelationManager,
+        public PeerServerChannelFactory(IRpcCorrelationManager messageCorrelationManager,
             IBroadcastManager broadcastManager,
             IKeySigner keySigner,
             IPeerIdValidator peerIdValidator)

@@ -30,6 +30,7 @@ using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.Util;
 using Catalyst.Common.IO.Messaging.Correlation;
+using Catalyst.Common.Rpc.IO.Messaging.Correlation;
 using Catalyst.Protocol.IPPN;
 using Catalyst.TestUtils;
 using FluentAssertions;
@@ -38,9 +39,9 @@ using Microsoft.Extensions.Primitives;
 using NSubstitute;
 using Xunit;
 
-namespace Catalyst.Common.UnitTests.IO.Messaging
+namespace Catalyst.Common.UnitTests.Rpc.IO.Messaging.Correlation
 {
-    public sealed class MessageCorrelationManagerTests
+    public sealed class RpcCorrelationManagerTests
     {
         [Fact]
         public async Task RequestStore_Should_Not_Keep_Records_For_Longer_Than_Ttl()
@@ -76,7 +77,7 @@ namespace Catalyst.Common.UnitTests.IO.Messaging
 
             using (var cache = new MemoryCache(new MemoryCacheOptions()))
             {
-                var messageCorrelationCacheManager = new MessageCorrelationManager(cache, changeTokenProvider);
+                var messageCorrelationCacheManager = new RpcCorrelationManager(cache, changeTokenProvider);
 
                 using (messageCorrelationCacheManager.EvictionEvents
                    .SubscribeOn(TaskPoolScheduler.Default)

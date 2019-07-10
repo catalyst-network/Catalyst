@@ -23,6 +23,7 @@
 
 using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
+using Catalyst.Common.Interfaces.Rpc.IO.Messaging.Correlation;
 using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;
 
@@ -30,9 +31,9 @@ namespace Catalyst.Common.IO.Handlers
 {
     public sealed class CorrelationHandler : InboundChannelHandlerBase<ProtocolMessage>
     {
-        private readonly IMessageCorrelationManager _messageCorrelationManager;
+        private readonly IRpcCorrelationManager _messageCorrelationManager;
 
-        public CorrelationHandler(IMessageCorrelationManager messageCorrelationManager)
+        public CorrelationHandler(IRpcCorrelationManager messageCorrelationManager)
         {
             _messageCorrelationManager = messageCorrelationManager;
         }
