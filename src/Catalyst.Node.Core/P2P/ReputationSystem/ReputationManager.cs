@@ -90,8 +90,6 @@ namespace Catalyst.Node.Core.P2P.ReputationSystem
             }
             finally
             {
-                //When the task is ready, release the semaphore. It is vital to ALWAYS release the semaphore when we are ready, or else we will end up with a Semaphore that is forever locked.
-                //This is why it is important to do the Release within a try...finally clause; program execution may crash or take a different path, this way you are guaranteed execution
                 semaphoreSlim.Release();
             }
         }
