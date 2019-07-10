@@ -33,6 +33,7 @@ using Catalyst.Common.Interfaces.IO.Transport.Channels;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Rpc.Authentication;
+using Catalyst.Common.Interfaces.Rpc.IO.Messaging.Correlation;
 using Catalyst.Common.IO.Codecs;
 using Catalyst.Common.IO.Handlers;
 using Catalyst.Common.IO.Transport.Channels;
@@ -44,7 +45,7 @@ namespace Catalyst.Node.Core.Rpc.IO.Transport.Channels
 {
     public class NodeRpcServerChannelFactory : TcpServerChannelFactory
     {
-        private readonly IMessageCorrelationManager _correlationManger;
+        private readonly IRpcCorrelationManager _correlationManger;
         private readonly IAuthenticationStrategy _authenticationStrategy;
         private readonly IKeySigner _keySigner;
         private readonly IPeerIdValidator _peerIdValidator;
@@ -76,7 +77,7 @@ namespace Catalyst.Node.Core.Rpc.IO.Transport.Channels
         /// <param name="keySigner"></param>
         /// <param name="authenticationStrategy"></param>
         /// <param name="peerIdValidator"></param>
-        public NodeRpcServerChannelFactory(IMessageCorrelationManager correlationManger,
+        public NodeRpcServerChannelFactory(IRpcCorrelationManager correlationManger,
             IKeySigner keySigner,
             IAuthenticationStrategy authenticationStrategy,
             IPeerIdValidator peerIdValidator)
