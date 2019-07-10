@@ -96,7 +96,6 @@ namespace Catalyst.Node.Core.UnitTests.RPC.IO.Observers
         public async Task TestGetPeerInfoRequestSingularResponse(string publicKey, string ipAddress)
         {
             var peerId = PeerIdHelper.GetPeerId(publicKey, "id-1", 1, ipAddress, 12345);
-
             var responseContent = await GetPeerInfoTest(peerId);
             responseContent.PeerInfo.Count().Should().Be(1);
 
@@ -118,7 +117,6 @@ namespace Catalyst.Node.Core.UnitTests.RPC.IO.Observers
         public async Task TestGetPeerInfoRequestRepeatedResponse(string publicKey, string ipAddress)
         {
             var peerId = PeerIdHelper.GetPeerId(publicKey, "id-1", 1, ipAddress, 12345);
-
             var responseContent = await GetPeerInfoTest(peerId);
             responseContent.PeerInfo.Count().Should().Be(2);
 
@@ -155,7 +153,6 @@ namespace Catalyst.Node.Core.UnitTests.RPC.IO.Observers
         /// <returns></returns>
         private async Task<GetPeerInfoResponse> GetPeerInfoTest(PeerId peerId)
         {
-            //Build a fake remote endpoint
             _fakeContext.Channel.RemoteAddress.Returns(EndpointBuilder.BuildNewEndPoint("192.0.0.1", 42042));
 
             var sendPeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("sender");
