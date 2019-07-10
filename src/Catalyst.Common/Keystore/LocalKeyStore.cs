@@ -28,8 +28,8 @@ using System.Security.Authentication;
 using System.Threading.Tasks;
 using Catalyst.Common.Interfaces.Cryptography;
 using System.IO;
+using System.IO.Abstractions;
 using System.Linq;
-using Catalyst.Common.Interfaces.FileSystem;
 using Catalyst.Common.Interfaces.Keystore;
 using Catalyst.Common.Interfaces.Util;
 using Catalyst.Common.Config;
@@ -38,6 +38,7 @@ using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Types;
 using Nethereum.KeyStore.Crypto;
 using Serilog;
+using IFileSystem = Catalyst.Common.Interfaces.FileSystem.IFileSystem;
 
 namespace Catalyst.Common.Keystore
 {
@@ -49,7 +50,7 @@ namespace Catalyst.Common.Keystore
         private readonly ICryptoContext _cryptoContext;
         private readonly IPasswordReader _passwordReader;
         private readonly IKeyStoreService _keyStoreService;
-        private readonly PasswordRegistryKey _defaultNodePassword;
+        private readonly PasswordRegistryKey _defaultNodePassword = PasswordRegistryKey.DefaultNodePassword;
 
         private static int MaxTries => 5;
 
@@ -71,8 +72,11 @@ namespace Catalyst.Common.Keystore
 
         public IPrivateKey KeyStoreDecrypt(KeyRegistryKey keyIdentifier)
         {
-            string json = GetJsonFromKeyStore(keyIdentifier);
-            if (json == null) return null;
+            var json = GetJsonFromKeyStore(keyIdentifier);
+            if (json == null)
+            {
+                return null;
+            }
             var keyBytes = KeyStoreDecrypt(_defaultNodePassword, json);
             IPrivateKey privateKey = null;
             try
@@ -105,9 +109,9 @@ namespace Catalyst.Common.Keystore
                         return keyStore;
                     }
                 }
-                catch (DecryptionException)
+                catch (Exception ex)
                 {
-                    _logger.Error("Error decrypting keystore");
+                    _logger.Error("Error decrypting keystore - {}", ex.Message);
                 }
 
                 tries += 1;
@@ -116,30 +120,38 @@ namespace Catalyst.Common.Keystore
             _logger.Error("Password incorrect for keystore.");
             return null;
         }
-        
-        public async Task<string> KeyStoreGenerateAsync(IPrivateKey privateKey, KeyRegistryKey keyIdentifier)
+
+        public async Task<IPrivateKey> KeyStoreGenerateAsync(KeyRegistryKey keyIdentifier)
         {
-            var address = _addressHelper.GenerateAddress(privateKey.GetPublicKey());        
-            var securePassword = _passwordReader.ReadSecurePassword(_defaultNodePassword);
+            var privateKey = _cryptoContext.GeneratePrivateKey();
 
-            var password = StringFromSecureString(securePassword);
+            KeyStoreEncryptAsync(privateKey, keyIdentifier);
 
-            var json = _keyStoreService.EncryptAndGenerateDefaultKeyStoreAsJson(
-                password: password, 
-                key: _cryptoContext.ExportPrivateKey(privateKey),
-                address: address);
-            
+            return privateKey;
+        }
+
+        public async Task KeyStoreEncryptAsync(IPrivateKey privateKey, KeyRegistryKey keyIdentifier)
+        {
+            Task<IFileInfo> fileInfoTask = null;
             try
             {
-                await _fileSystem.WriteFileToCddSubDirectoryAsync(keyIdentifier.Name, Constants.KeyStoreDataSubDir, json);
+                var address = _addressHelper.GenerateAddress(privateKey.GetPublicKey());        
+                var securePassword = _passwordReader.ReadSecurePassword(_defaultNodePassword);
+    
+                var password = StringFromSecureString(securePassword);
+    
+                var json = _keyStoreService.EncryptAndGenerateDefaultKeyStoreAsJson(
+                    password: password, 
+                    key: _cryptoContext.ExportPrivateKey(privateKey),
+                    address: address);
+
+                var fileInfo = await _fileSystem.WriteFileToCddSubDirectoryAsync(keyIdentifier.Name, Constants.KeyStoreDataSubDir, json);
+                Console.WriteLine(fileInfo);
             }
             catch (Exception e)
             {
                 _logger.Error(e.Message);
-                throw;
             }
-            
-            return json;
         }
 
         private string GetJsonFromKeyStore(KeyRegistryKey keyIdentifier) 
@@ -148,7 +160,8 @@ namespace Catalyst.Common.Keystore
             {
                 return GetDefaultJsonFile();
             }
-            else throw new Exception("Behaviour only defined for default key");
+
+            throw new ArgumentException("Behaviour only defined for default key");
         }
 
         private string GetDefaultJsonFile()

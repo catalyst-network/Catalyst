@@ -40,18 +40,18 @@ namespace Catalyst.Common.FileSystem
             return new DirectoryInfo(path);
         }
 
-        public async Task<IFileInfo> WriteFileToCddAsync(string fileName, string contents)
+        public Task<IFileInfo> WriteFileToCddAsync(string fileName, string contents)
         {
             var fullPath = Path.Combine(GetCatalystDataDir().FullName, fileName);
 
-            return await WriteFileToPathAsync(fullPath, contents).ConfigureAwait(false);
+            return WriteFileToPathAsync(fullPath, contents);
         }
 
-        public async Task<IFileInfo> WriteFileToCddSubDirectoryAsync(string fileName, string subDirectory, string contents)
+        public Task<IFileInfo> WriteFileToCddSubDirectoryAsync(string fileName, string subDirectory, string contents)
         {
             var fullPath = Path.Combine(GetCatalystDataDir().FullName, subDirectory, fileName);
 
-            return await WriteFileToPathAsync(fullPath, contents).ConfigureAwait(false);
+            return WriteFileToPathAsync(fullPath, contents);
         }
 
         private async Task<IFileInfo> WriteFileToPathAsync(string path, string contents)

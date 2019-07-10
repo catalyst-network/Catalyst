@@ -23,6 +23,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Common.Interfaces.Keystore;
@@ -55,21 +56,18 @@ namespace Catalyst.Common.Modules.KeySigner
 
         private void InitialiseKeyRegistry()
         {
-            if (!TryPopulateKeyRegistryWithDefault())
+            if (!TryPopulateDefaultKeyFromKeyStore())
             {
                 GenerateKeyAndPopulateRegistryWithDefault();
             }   
         }
 
-        private async void GenerateKeyAndPopulateRegistryWithDefault()
+        private async Task GenerateKeyAndPopulateRegistryWithDefault()
         {
-            IPrivateKey privateKey = _cryptoContext.GeneratePrivateKey();
-
-            await _keyStore.KeyStoreGenerateAsync(privateKey, _defaultKey);
-
-            if (!TryPopulateKeyRegistryWithDefault())
-            {
-                throw new SignatureException("Failed to populate registry with new key");
+            var privateKey = await _keyStore.KeyStoreGenerateAsync(_defaultKey);
+            if (privateKey != null)
+            { 
+                _keyRegistry.AddItemToRegistry(_defaultKey, privateKey);
             }
         }
 
@@ -79,7 +77,7 @@ namespace Catalyst.Common.Modules.KeySigner
         /// <inheritdoc/>
         ICryptoContext IKeySigner.CryptoContext => _cryptoContext;
 
-        public ISignature Sign(byte[] data, KeyRegistryKey keyIdentifier)
+        private ISignature Sign(byte[] data, KeyRegistryKey keyIdentifier)
         {
             var privateKey = _keyRegistry.GetItemFromRegistry(keyIdentifier);
             return Sign(data, privateKey);
@@ -112,18 +110,14 @@ namespace Catalyst.Common.Modules.KeySigner
             throw new NotImplementedException();
         }
 
-        private bool TryPopulateKeyRegistry(KeyRegistryKey keyIdentifier)
+        private bool TryPopulateRegistryFromKeyStore(KeyRegistryKey keyIdentifier)
         {
-            if (_keyRegistry.GetItemFromRegistry(keyIdentifier) != null)
-            {
-                var key = _keyStore.KeyStoreDecrypt(keyIdentifier);
-                bool ret = _keyRegistry.AddItemToRegistry(keyIdentifier, key);
-                return key != null && ret;
-            }
+            var key = _keyRegistry.GetItemFromRegistry(keyIdentifier);
+            if (key != null) return true;
+            key = _keyStore.KeyStoreDecrypt(keyIdentifier);
+            return key != null && _keyRegistry.AddItemToRegistry(keyIdentifier, key);
+        }
 
-            return true;
-        }    
-
-        private bool TryPopulateKeyRegistryWithDefault() { return TryPopulateKeyRegistry(_defaultKey); }   
+        private bool TryPopulateDefaultKeyFromKeyStore() { return TryPopulateRegistryFromKeyStore(_defaultKey); }   
     }
 }

@@ -71,7 +71,7 @@ namespace Catalyst.Node.Core.Modules.Dfs
             _logger = logger;
 
             // The passphrase is used to access the private keys.
-            var passphrase = passwordReader.ReadSecurePassword(PasswordRegistryKey.IPFSPassword, "Please provide your IPFS password");
+            var passphrase = passwordReader.ReadSecurePassword(PasswordRegistryKey.IpfsPassword, "Please provide your IPFS password");
             _ipfs = new IpfsEngine(passphrase);
             _ipfs.Options.KeyChain.DefaultKeyType = Constants.KeyChainDefaultKeyType;
 

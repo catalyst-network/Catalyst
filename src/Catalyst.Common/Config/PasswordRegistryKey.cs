@@ -28,8 +28,10 @@ namespace Catalyst.Common.Config
     public class PasswordRegistryKey : Enumeration
     {
         public static readonly PasswordRegistryKey CertificatePassword = new CertificatePasswordKey();
-        public static readonly PasswordRegistryKey IPFSPassword = new IPFSPasswordKey();
-        public static readonly PasswordRegistryKey DFSPassword = new DFSPasswordKey();
+        public static readonly PasswordRegistryKey IpfsPassword = new IpfsPasswordKey();
+        public static readonly PasswordRegistryKey DfsPassword = new DfsPasswordKey();
+        public static readonly PasswordRegistryKey DefaultNodePassword = new DefaultNodePasswordKey();
+
         private PasswordRegistryKey(int id, string name) : base(id, name) { }
 
         private sealed class CertificatePasswordKey : PasswordRegistryKey
@@ -37,14 +39,19 @@ namespace Catalyst.Common.Config
             public CertificatePasswordKey() : base(1, "certificatePasswordKey") { }
         }
 
-        private sealed class IPFSPasswordKey : PasswordRegistryKey
+        private sealed class IpfsPasswordKey : PasswordRegistryKey
         {
-            public IPFSPasswordKey() : base(2, "certificatePasswordKey") { }
+            public IpfsPasswordKey() : base(2, "certificatePasswordKey") { }
         }
 
-        private sealed class DFSPasswordKey : PasswordRegistryKey
+        private sealed class DfsPasswordKey : PasswordRegistryKey
         {
-            public DFSPasswordKey() : base(3, "certificatePasswordKey") { }
+            public DfsPasswordKey() : base(3, "certificatePasswordKey") { }
+        }
+
+        private sealed class DefaultNodePasswordKey : PasswordRegistryKey
+        {
+            public DefaultNodePasswordKey() : base(4, "certificatePasswordKey") { }
         }
     }
 }

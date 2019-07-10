@@ -38,7 +38,7 @@ namespace Catalyst.Common.Cryptography
     public sealed class CertificateStore
         : ICertificateStore
     {
-        public readonly PasswordRegistryKey CertificatePasswordIdentifier = PasswordRegistryKey.CertificatePassword;
+        private readonly PasswordRegistryKey CertificatePasswordIdentifier = PasswordRegistryKey.CertificatePassword;
         private static int MaxTries => 5;
         private static int PasswordReTries => 1;
         private const string LocalHost = "localhost";
