@@ -52,24 +52,36 @@ namespace Catalyst.Node.Core.UnitTests.RPC.IO.Observers
     /// <summary>
     /// Tests the get peer info calls
     /// </summary>
-    public sealed class GetPeerInfoRequestObserverTest
+    public sealed class GetPeerInfoRequestObserverTests
     {
-        /// <summary>The logger</summary>
         private readonly ILogger _logger;
-
-        /// <summary>The fake channel context</summary>
         private readonly IChannelHandlerContext _fakeContext;
+        private readonly IRepository<Peer> _peerRepository;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="GetPeerInfoRequestObserverTest"/> class.
-        /// </summary>
-        public GetPeerInfoRequestObserverTest()
+        public GetPeerInfoRequestObserverTests()
         {
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
 
             var fakeChannel = Substitute.For<IChannel>();
             _fakeContext.Channel.Returns(fakeChannel);
+
+            var peers = GetPeerTestData();
+
+            _peerRepository = Substitute.For<IRepository<Peer>>();
+            _peerRepository.FindAll(Arg.Any<Expression<Func<Peer, bool>>>())
+            .Returns(ci =>
+            {
+                return peers.Where(p => ((Expression<Func<Peer, bool>>)ci[0]).Compile()(p));
+            });
+        }
+
+        public IEnumerable<Peer> GetPeerTestData()
+        {
+            yield return new Peer { PeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier($"publickey-1", $"id-1", 1, IPAddress.Parse($"172.0.0.1"), 9090), LastSeen = DateTime.UtcNow, Created = DateTime.UtcNow };
+            yield return new Peer { PeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier($"publickey-2", $"id-2", 1, IPAddress.Parse($"172.0.0.2"), 9090), LastSeen = DateTime.UtcNow, Created = DateTime.UtcNow };
+            yield return new Peer { PeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier($"publickey-3", $"id-3", 1, IPAddress.Parse($"172.0.0.3"), 9090), LastSeen = DateTime.UtcNow, Created = DateTime.UtcNow };
+            yield return new Peer { PeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier($"publickey-3", $"id-4", 1, IPAddress.Parse($"172.0.0.3"), 9090), LastSeen = DateTime.UtcNow, Created = DateTime.UtcNow };
         }
 
         /// <summary>
@@ -79,19 +91,41 @@ namespace Catalyst.Node.Core.UnitTests.RPC.IO.Observers
         /// <param name="publicKey">Public key of the peer whose reputation is of interest</param>
         /// <param name="ipAddress">Ip address of the peer whose reputation is of interest</param>
         [Theory]
-        [InlineData("publickey-10", "172.0.0.10")]
-        [InlineData("publickey-15", "172.0.0.15")]
-        public async Task TestGetPeerInfoRequestResponse(string publicKey, string ipAddress)
+        [InlineData("publickey-1", "172.0.0.1")]
+        [InlineData("publickey-2", "172.0.0.2")]
+        public async Task TestGetPeerInfoRequestSingularResponse(string publicKey, string ipAddress)
         {
-            publicKey = TestDataHelper.AppendPadding(publicKey, 32, '\0');
-            var responseContent = await GetPeerInfoTest(publicKey, ipAddress);
+            var peerId = PeerIdHelper.GetPeerId(publicKey, "id-1", 1, ipAddress, 12345);
 
-            for (var i = 0; i < responseContent.PeerInfo.Count; i++)
+            var responseContent = await GetPeerInfoTest(peerId);
+            responseContent.PeerInfo.Count().Should().Be(1);
+
+            foreach (var peerInfo in responseContent.PeerInfo)
             {
-                var peerInfo = responseContent.PeerInfo[i];
-                var peerIdentifier = new PeerIdentifier(peerInfo.PeerId);
-                ipAddress.Should().Be(peerIdentifier.Ip.ToString());
-                publicKey.Should().Be(peerIdentifier.PublicKey.ToStringFromRLPDecoded());
+                peerInfo.PeerId.Ip.ToByteArray().Should().BeEquivalentTo(peerId.Ip.ToByteArray());
+                peerInfo.PeerId.PublicKey.ToByteArray().Should().BeEquivalentTo(peerId.PublicKey.ToByteArray());
+            }
+        }
+
+        /// <summary>
+        /// Tests the get peer info request and response via RPC.
+        /// Peer is expected to be found in this case
+        /// </summary>
+        /// <param name="publicKey">Public key of the peer whose reputation is of interest</param>
+        /// <param name="ipAddress">Ip address of the peer whose reputation is of interest</param>
+        [Theory]
+        [InlineData("publickey-3", "172.0.0.3")]
+        public async Task TestGetPeerInfoRequestRepeatedResponse(string publicKey, string ipAddress)
+        {
+            var peerId = PeerIdHelper.GetPeerId(publicKey, "id-1", 1, ipAddress, 12345);
+
+            var responseContent = await GetPeerInfoTest(peerId);
+            responseContent.PeerInfo.Count().Should().Be(2);
+
+            foreach (var peerInfo in responseContent.PeerInfo)
+            {
+                peerInfo.PeerId.Ip.ToByteArray().Should().BeEquivalentTo(peerId.Ip.ToByteArray());
+                peerInfo.PeerId.PublicKey.ToByteArray().Should().BeEquivalentTo(peerId.PublicKey.ToByteArray());
             }
         }
 
@@ -103,42 +137,14 @@ namespace Catalyst.Node.Core.UnitTests.RPC.IO.Observers
         /// <param name="ipAddress">Ip address of the peer whose reputation is of interest</param>
         [Theory]
         [InlineData("this-pk-should-not-exist", "172.0.0.1")]
-        [InlineData("publickey-5", "0.0.0.0")]
+        [InlineData("this-pk-should-not-exist", "172.0.0.3")]
+        [InlineData("publickey-1", "0.0.0.0")]
+        [InlineData("publickey-3", "0.0.0.0")]
         public async Task TestGetPeerInfoRequestResponseForNonExistantPeers(string publicKey, string ipAddress)
         {
-            publicKey = TestDataHelper.AppendPadding(publicKey, 32, '\0');
-            var responseContent = await GetPeerInfoTest(publicKey, ipAddress);
+            var peerId = PeerIdHelper.GetPeerId(publicKey, "id-1", 1, ipAddress, 12345);
+            var responseContent = await GetPeerInfoTest(peerId);
             responseContent.PeerInfo.Count.Should().Be(0);
-        }
-
-        /// <summary>
-        /// Assign the peer identifiers to the peers.
-        /// </summary>
-        /// <param name="peerIdentifiers">All the peerIdentifiers we will assign to peers</param>
-        /// <param name="peers">All the peers we will update</param>
-        private void AssignPeerIdentifiersToPeers(IList<IPeerIdentifier> peerIdentifiers, IList<Peer> peers)
-        {
-            var minCount = Math.Min(peerIdentifiers.Count(), peers.Count);
-            for (var i = 0; i < peers.Count(); i++)
-            {
-                var peerPosition = i % minCount;
-                peers[i].PeerIdentifier = peerIdentifiers[peerPosition];
-            }
-        }
-
-        /// <summary>
-        /// ProtoBuff requires all dates in UTC
-        /// </summary>
-        /// <param name="peers">All the peers we will update</param>
-        private void SetPeerDateTimeValuesToUTC(IList<Peer> peers)
-        {
-            foreach (var peer in peers)
-            {
-                peer.LastSeen = DateTime.SpecifyKind(peer.LastSeen, DateTimeKind.Utc);
-                if (peer.Modified.HasValue)
-                    peer.Modified = DateTime.SpecifyKind(peer.Modified.Value, DateTimeKind.Utc);
-                peer.Created = DateTime.SpecifyKind(peer.Created, DateTimeKind.Utc);
-            }
         }
 
         /// <summary>
@@ -147,34 +153,15 @@ namespace Catalyst.Node.Core.UnitTests.RPC.IO.Observers
         /// <param name="publicKey">Public key of the peer whose reputation is of interest</param>
         /// <param name="ipAddress">Ip address of the peer whose reputation is of interest</param>
         /// <returns></returns>
-        private async Task<GetPeerInfoResponse> GetPeerInfoTest(string publicKey, string ipAddress)
+        private async Task<GetPeerInfoResponse> GetPeerInfoTest(PeerId peerId)
         {
-            var peerIdentifiers = Enumerable.Range(0, 30).Select(i =>
-                PeerIdentifierHelper.GetPeerIdentifier($"publickey-{i}", $"id{i}", 1, IPAddress.Parse($"172.0.0.{i}"), 9090)
-            ).ToList();
-            var peers = Builder<Peer>.CreateListOfSize(100).All().Build();
-
-            AssignPeerIdentifiersToPeers(peerIdentifiers, peers);
-            SetPeerDateTimeValuesToUTC(peers);
-
-            //The query GetPeerInfo is expected to run
-            var queryPeers = peers.Where(m => m.PeerIdentifier.Ip.ToString() == ipAddress && m.PeerIdentifier.PublicKey.ToStringFromRLPDecoded() == publicKey).ToList();
-
-            var peerRepository = Substitute.For<IRepository<Peer>>();
-            peerRepository.FindAll(Arg.Any<Expression<Func<Peer, bool>>>())
-            .Returns(queryPeers);
-
             //Build a fake remote endpoint
             _fakeContext.Channel.RemoteAddress.Returns(EndpointBuilder.BuildNewEndPoint("192.0.0.1", 42042));
 
             var sendPeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("sender");
 
             var messageFactory = new DtoFactory();
-            var request = new GetPeerInfoRequest
-            {
-                PublicKey = publicKey.ToBytesForRLPEncoding().ToByteString(),
-                Ip = ipAddress.ToBytesForRLPEncoding().ToByteString()
-            };
+            var request = new GetPeerInfoRequest { PublicKey = peerId.PublicKey, Ip = peerId.Ip };
 
             var requestMessage = messageFactory.GetDto(
                 request,
@@ -184,7 +171,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC.IO.Observers
 
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, requestMessage.Content.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId));
 
-            var handler = new GetPeerInfoRequestObserver(sendPeerIdentifier, _logger, peerRepository);
+            var handler = new GetPeerInfoRequestObserver(sendPeerIdentifier, _logger, _peerRepository);
             handler.StartObserving(messageStream);
 
             await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
