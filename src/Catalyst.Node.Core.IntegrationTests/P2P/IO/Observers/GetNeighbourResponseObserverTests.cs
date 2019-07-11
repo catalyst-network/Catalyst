@@ -56,15 +56,18 @@ namespace Catalyst.Node.Core.IntegrationTests.P2P.IO.Observers
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile))
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Network.Dev)))
                .Build();
-            
+
             ConfigureContainerBuilder(config, true, true);
 
-            var container = ContainerBuilder.Build();
-            using (container.BeginLifetimeScope(CurrentTestName))
+            using (var container = ContainerBuilder.Build())
             {
-                var p2PMessageHandlers = container.Resolve<IEnumerable<IP2PMessageObserver>>();
-                IEnumerable<IP2PMessageObserver> getNeighbourResponseHandler = p2PMessageHandlers.OfType<GetNeighbourResponseObserver>();
-                getNeighbourResponseHandler.First().Should().BeOfType(typeof(GetNeighbourResponseObserver));
+                using (container.BeginLifetimeScope(CurrentTestName))
+                {
+                    var p2PMessageHandlers = container.Resolve<IEnumerable<IP2PMessageObserver>>();
+                    IEnumerable<IP2PMessageObserver> getNeighbourResponseHandler =
+                        p2PMessageHandlers.OfType<GetNeighbourResponseObserver>();
+                    getNeighbourResponseHandler.First().Should().BeOfType(typeof(GetNeighbourResponseObserver));
+                }
             }
         }
     }
