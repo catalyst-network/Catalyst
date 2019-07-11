@@ -84,7 +84,7 @@ namespace Catalyst.TestUtils
             result.GetCatalystDataDir().Returns(_testDirectory);
 
             var fileSystem = new FileSystem();
-            FileSystem.WriteFileToCddSubDirectoryAsync(Arg.Any<string>(),
+            result.WriteFileToCddSubDirectoryAsync(Arg.Any<string>(),
                 Arg.Any<string>(), Arg.Any<string>()).Returns(async ci =>
             {
                 var filePath = Path.Combine(_testDirectory.FullName, (string) ci[1], (string) ci[0]);
