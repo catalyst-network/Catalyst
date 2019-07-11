@@ -26,12 +26,13 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
-using Catalyst.Common.Interfaces.FileSystem;
 using Dawn;
 using FluentAssertions;
 using NSubstitute;
 using Xunit;
 using Xunit.Abstractions;
+using FileSystem = Catalyst.Common.FileSystem.FileSystem;
+using IFileSystem = Catalyst.Common.Interfaces.FileSystem.IFileSystem;
 
 namespace Catalyst.TestUtils
 {
@@ -72,10 +73,27 @@ namespace Catalyst.TestUtils
             _testDirectory.Exists.Should().BeFalse();
             _testDirectory.Create();
 
-            FileSystem = Substitute.For<IFileSystem>();
-            FileSystem.GetCatalystDataDir().Returns(_testDirectory);
+            FileSystem = GetFileSystemSubstitute();
 
             Output.WriteLine("test running in folder {0}", _testDirectory.FullName);
+        }
+
+        private IFileSystem GetFileSystemSubstitute()
+        {
+            var result = Substitute.For<IFileSystem>();
+            result.GetCatalystDataDir().Returns(_testDirectory);
+
+            var fileSystem = new FileSystem();
+            FileSystem.WriteFileToCddSubDirectoryAsync(Arg.Any<string>(),
+                Arg.Any<string>(), Arg.Any<string>()).Returns(async ci =>
+            {
+                var filePath = Path.Combine(_testDirectory.FullName, (string) ci[1], (string) ci[0]);
+                var fileInfo = fileSystem.FileInfo.FromFileName(filePath);
+                fileInfo.Directory.Create();
+                await File.WriteAllTextAsync(filePath, (string) ci[2]);
+                return fileInfo;
+            });
+            return result;
         }
 
         public void Dispose() { Dispose(true); }

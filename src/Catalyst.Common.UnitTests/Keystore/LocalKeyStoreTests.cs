@@ -93,8 +93,8 @@ namespace Catalyst.Common.UnitTests.Keystore
             //??
         }
         
-        [Fact(Skip = "I don't know how to test this")]
-        public async void Keystore_Can_Create_Keystore_File_From_Provided_Key()
+        [Fact]
+        public void Keystore_Can_Create_Keystore_File_From_Provided_Key()
         {
             Ensure_No_Keystore_File_Exists();
             IPrivateKey privateKey = _context.GeneratePrivateKey();
