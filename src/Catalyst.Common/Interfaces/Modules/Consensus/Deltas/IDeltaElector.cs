@@ -21,19 +21,21 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.Modules.Consensus.Deltas;
+using System;
+using Catalyst.Protocol.Deltas;
 
-namespace Catalyst.Common.Interfaces.Modules.Consensus
+namespace Catalyst.Common.Interfaces.Modules.Consensus.Deltas
 {
-    public interface IConsensus
+    public interface IDeltaElector : IObserver<FavouriteDeltaBroadcast>
     {
-        /// <see cref="IDeltaBuilder" />
-        IDeltaBuilder DeltaBuilder { get; }
-
-        /// <see cref="IDeltaHub" />
-        IDeltaHub DeltaHub { get; }
-
-        /// <see cref="IDeltaHashProvider"/>
-        IDeltaHashProvider DeltaHashProvider { get; }
+        /// <summary>
+        /// When the election phase is over, this method can be called to retrieve which candidate
+        /// has been the most popular for a given cycle. If the candidate is popular enough, it
+        /// will then be appointed as the next official delta.
+        /// </summary>
+        /// <param name="previousDeltaDfsHash">The DFS hash of the delta for which we are
+        /// trying to produce a successor.</param>
+        /// <returns>The most popular candidate for a given cycle.</returns>
+        CandidateDeltaBroadcast GetMostPopularCandidateDelta(byte[] previousDeltaDfsHash);
     }
 }

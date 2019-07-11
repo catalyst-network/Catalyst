@@ -21,19 +21,14 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.Modules.Consensus.Deltas;
+using Catalyst.Protocol.Deltas;
 
-namespace Catalyst.Common.Interfaces.Modules.Consensus
+namespace Catalyst.Common.Interfaces.Modules.Consensus.Deltas
 {
-    public interface IConsensus
+    public interface IScoredCandidateDelta
     {
-        /// <see cref="IDeltaBuilder" />
-        IDeltaBuilder DeltaBuilder { get; }
-
-        /// <see cref="IDeltaHub" />
-        IDeltaHub DeltaHub { get; }
-
-        /// <see cref="IDeltaHashProvider"/>
-        IDeltaHashProvider DeltaHashProvider { get; }
+        CandidateDeltaBroadcast Candidate { get; }
+        int Score { get; }
+        int IncreasePopularity(int voteCount);
     }
 }

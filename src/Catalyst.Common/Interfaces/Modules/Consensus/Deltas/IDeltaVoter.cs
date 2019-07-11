@@ -21,19 +21,18 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.Modules.Consensus.Deltas;
+using System;
+using Catalyst.Protocol.Deltas;
 
-namespace Catalyst.Common.Interfaces.Modules.Consensus
+namespace Catalyst.Common.Interfaces.Modules.Consensus.Deltas
 {
-    public interface IConsensus
+    /// <summary>
+    /// This component is meant to be used to produce and retrieve ranking/voting data
+    /// about the different candidate deltas observed on the network, in order to be
+    /// able to determine which candidate should eventually make it to the DFS.
+    /// </summary>
+    public interface IDeltaVoter : IObserver<CandidateDeltaBroadcast>
     {
-        /// <see cref="IDeltaBuilder" />
-        IDeltaBuilder DeltaBuilder { get; }
-
-        /// <see cref="IDeltaHub" />
-        IDeltaHub DeltaHub { get; }
-
-        /// <see cref="IDeltaHashProvider"/>
-        IDeltaHashProvider DeltaHashProvider { get; }
+        bool TryGetFavouriteDelta(byte[] previousDeltaDfsHash, out CandidateDeltaBroadcast favourite);
     }
 }
