@@ -109,16 +109,15 @@ namespace Catalyst.Common.Keystore
                         return keyStore;
                     }
                 }
-                catch (Exception ex)
+                catch (DecryptionException)
                 {
-                    _logger.Error("Error decrypting keystore - {}", ex.Message);
+                    _logger.Error("Error decrypting keystore");
                 }
 
                 tries += 1;
             }
 
-            _logger.Error("Password incorrect for keystore.");
-            return null;
+            throw new AuthenticationException("Password incorrect for keystore.");
         }
 
         public async Task<IPrivateKey> KeyStoreGenerateAsync(KeyRegistryKey keyIdentifier)

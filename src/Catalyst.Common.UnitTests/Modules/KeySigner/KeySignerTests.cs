@@ -63,30 +63,6 @@ namespace Catalyst.Common.UnitTests.Modules.KeySigner
         private IKeySigner _keySigner;
         private readonly ISignature _signature;
         private readonly byte[] _privateKeyBytes = ByteUtil.GenerateRandomByteArray(FFI.GetPrivateKeyLength());
-        
-        [Fact] 
-        public void KeySigner_Can_Sign_If_Key_Exists_In_Registry()
-        {
-            _keyRegistry.GetItemFromRegistry(KeyRegistryKey.DefaultKey).Returns(new PrivateKey(_privateKeyBytes));
-
-            _keySigner = new Common.Modules.KeySigner.KeySigner(_keystore, new CryptoContext(_wrapper), _keyRegistry);
-            var sig = _keySigner.Sign(Encoding.UTF8.GetBytes("sign this please"));
-            _keystore.DidNotReceive().KeyStoreDecrypt(Arg.Any<KeyRegistryKey>());
-
-            Assert.Equal(_signature, sig);
-        }
-
-        [Fact]
-        public void KeySigner_Can_Sign_If_Not_Initialised_With_Key()
-        {
-            //Is this testing this??
-            _keyRegistry.GetItemFromRegistry(KeyRegistryKey.DefaultKey).Returns(null, new PrivateKey(_privateKeyBytes));
-            _keySigner = new Common.Modules.KeySigner.KeySigner(_keystore, new CryptoContext(_wrapper), _keyRegistry);
-            _keySigner.Sign(Encoding.UTF8.GetBytes("sign this please"));
-            _keystore.Received(1).KeyStoreDecrypt(Arg.Any<KeyRegistryKey>());
-
-            Assert.Equal(_signature, _keySigner.Sign(Encoding.UTF8.GetBytes("sign this please")));
-        }
 
         [Fact]
         public void KeySigner_Can_Initialise_If_Key_Doesnt_Initially_Exist_In_Registry()
@@ -100,6 +76,28 @@ namespace Catalyst.Common.UnitTests.Modules.KeySigner
 
         //KeySigner_Can_Initialise_With_Key_If_KeyStore_File_Doesnt_Exist()
 
-        //KeySigner_Can_Sign_If_Initialised_With_Key()
+        [Fact] 
+        public void KeySigner_Can_Sign_If_Key_Exists_In_Registry()
+        {
+            _keyRegistry.GetItemFromRegistry(KeyRegistryKey.DefaultKey).Returns(new PrivateKey(_privateKeyBytes));
+
+            _keySigner = new Common.Modules.KeySigner.KeySigner(_keystore, new CryptoContext(_wrapper), _keyRegistry);
+            var sig = _keySigner.Sign(Encoding.UTF8.GetBytes("sign this please"));
+            _keystore.DidNotReceive().KeyStoreDecrypt(Arg.Any<KeyRegistryKey>());
+
+            Assert.Equal(_signature, sig);
+        }
+
+        [Fact] 
+        public void KeySigner_Can_Sign_If_Key_Doesnt_Exists_In_Registry()
+        {
+            _keyRegistry.GetItemFromRegistry(KeyRegistryKey.DefaultKey).Returns((IPrivateKey)null, new PrivateKey(_privateKeyBytes));
+
+            var sig = _keySigner.Sign(Encoding.UTF8.GetBytes("sign this please"));
+            _keystore.DidNotReceive().KeyStoreDecrypt(Arg.Any<KeyRegistryKey>());
+
+            Assert.Equal(_signature, sig);
+        }
+
     }
 }

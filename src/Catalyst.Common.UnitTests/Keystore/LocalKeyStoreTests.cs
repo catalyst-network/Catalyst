@@ -22,6 +22,7 @@
 #endregion
 
 using System.Reactive.Threading.Tasks;
+using System.Security.Authentication;
 using Catalyst.Common.Config;
 using Catalyst.Common.Cryptography;
 using Catalyst.Common.Interfaces.Cryptography;
@@ -45,20 +46,21 @@ namespace Catalyst.Common.UnitTests.Keystore
     {
         private readonly IKeyStore _keystore;
         private readonly ICryptoContext _context;
+        private readonly TestPasswordReader _passwordReader;
 
         public LocalKeyStoreTests(ITestOutputHelper output) : base(output)
         {
             _context = new CryptoContext(new CryptoWrapper());
 
             var logger = Substitute.For<ILogger>();
-            var passwordReader = new TestPasswordReader("testPassword");
+            _passwordReader = new TestPasswordReader("testPassword");
 
             var multiAlgo = Substitute.For<IMultihashAlgorithm>();
             multiAlgo.ComputeHash(Arg.Any<byte[]>()).Returns(new byte[32]);
 
             var addressHelper = new AddressHelper(multiAlgo);
 
-            _keystore = new LocalKeyStore(passwordReader,
+            _keystore = new LocalKeyStore(_passwordReader,
                 _context,
                 new KeyStoreServiceWrapped(_context),
                 FileSystem,
@@ -79,7 +81,7 @@ namespace Catalyst.Common.UnitTests.Keystore
         }
 
         [Fact]
-        public void Should_Generate_Key_If_No_Keystore_File_Exists()
+        public void KeyStore_Can_Generate_Key_And_Create_Keystore_File()
         {
             Ensure_No_Keystore_File_Exists();
             
@@ -87,44 +89,53 @@ namespace Catalyst.Common.UnitTests.Keystore
             privateKey.Should().NotBe(null);
         }
 
-        [Fact(Skip = "I don't know how to test this")]
-        public void Keystore_Returns_Key_If_KeyStore_File_Exist()
-        {
-            //??
-        }
-        
         [Fact]
-        public async void Keystore_Can_Create_Keystore_File_From_Provided_Key()
+        public void KeyStore_Throws_Exception_On_Invalid_KeyStore_File()
         {
             Ensure_No_Keystore_File_Exists();
+            FileSystem.WriteFileToCddSubDirectoryAsync("bad_file", Constants.KeyStoreDataSubDir, "bad contents");
+            Assert.Throws<AuthenticationException>(() =>_keystore.KeyStoreDecrypt(KeyRegistryKey.DefaultKey));
+        }
+
+        [Fact]
+        public void Keystore_Can_Create_Keystore_File_From_Provided_Key()
+        {
+            Ensure_No_Keystore_File_Exists();
+
             IPrivateKey privateKey = _context.GeneratePrivateKey();
             _keystore.KeyStoreEncryptAsync(privateKey, KeyRegistryKey.DefaultKey).Wait();
             var storedKey = _keystore.KeyStoreDecrypt(KeyRegistryKey.DefaultKey);
             Assert.Equal(privateKey.Bytes.RawBytes, storedKey.Bytes.RawBytes);
         } 
 
-        [Fact(Skip = "I don't know how to test this either")]
+        [Fact]
         public void Keystore_Can_Create_Keystore_File_From_Key_It_Generates()
         {
-            //??
+            Ensure_No_Keystore_File_Exists();
+            
+            _keystore.KeyStoreGenerateAsync(KeyRegistryKey.DefaultKey).Wait();
+            var storedKey = _keystore.KeyStoreDecrypt(KeyRegistryKey.DefaultKey);
+
+            storedKey.Should().NotBe(null);
         }
 
         [Fact]
-        public void KeyStore_Returns_Null_On_Invalid_Json()
+        public void Keystore_Throws_Exception_If_Password_Incorrect()
         {
-            //??
-        }
+            Ensure_No_Keystore_File_Exists();
 
-        [Fact]
-        public void Keystore_Returns_Null_If_Password_Incorrect()
-        {
-            //??
+            IPrivateKey privateKey = _context.GeneratePrivateKey();
+            _keystore.KeyStoreEncryptAsync(privateKey, KeyRegistryKey.DefaultKey).Wait();
+            _passwordReader.ReadSecurePassword(default, default).ReturnsForAnyArgs(TestPasswordReader.BuildSecureStringPassword("aDifferentPassword"));
+            Assert.Throws<AuthenticationException>(() => _keystore.KeyStoreDecrypt(KeyRegistryKey.DefaultKey));
         }
 
         [Fact]
         public void Keystore_Returns_Null_If_Key_File_Doesnt_Exist()
         {
-            //??
+            Ensure_No_Keystore_File_Exists();
+
+            _keystore.KeyStoreDecrypt(KeyRegistryKey.DefaultKey).Should().Be(null);
         }
     }
 }
