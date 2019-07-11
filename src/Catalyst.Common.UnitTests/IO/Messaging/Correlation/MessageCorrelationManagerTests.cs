@@ -74,7 +74,7 @@ namespace Catalyst.Common.UnitTests.IO.Messaging.Correlation
                 PeerIdentifierHelper.GetPeerIdentifier("peer1"),
                 PeerIdentifierHelper.GetPeerIdentifier("peer2"),
                 PeerIdentifierHelper.GetPeerIdentifier("peer3"),
-            }.ToArray();
+            };
             
             var responseStore = Substitute.For<IMemoryCache>();
             responseStore.TryGetValue(Arg.Any<ByteString>(), out Arg.Any<CorrelatableMessage<ProtocolMessage>>())
