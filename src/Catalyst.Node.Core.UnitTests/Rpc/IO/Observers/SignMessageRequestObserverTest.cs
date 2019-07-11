@@ -80,12 +80,11 @@ namespace Catalyst.Node.Core.UnitTests.Rpc.IO.Observers
         public async Task RpcServer_Can_Handle_SignMessageRequest(string message)
         {
             var messageFactory = new DtoFactory();
-            var encodedMessage = RLP.EncodeElement(message.ToBytesForRLPEncoding()).ToByteString();
 
             var request = messageFactory.GetDto(
                 new SignMessageRequest
                 {
-                    Message = encodedMessage
+                    Message = message.ToUtf8ByteString()
                 },
                 PeerIdentifierHelper.GetPeerIdentifier("sender_key"),
                 PeerIdentifierHelper.GetPeerIdentifier("recipient_key")
@@ -103,7 +102,7 @@ namespace Catalyst.Node.Core.UnitTests.Rpc.IO.Observers
             var sentResponseDto = (IMessageDto<ProtocolMessage>) receivedCalls.Single().GetArguments().Single();
             var signResponseMessage = sentResponseDto.FromIMessageDto().FromProtocolMessage<SignMessageResponse>();
 
-            signResponseMessage.OriginalMessage.Should().Equal(encodedMessage);
+            signResponseMessage.OriginalMessage.Should().Equal(message);
             signResponseMessage.Signature.Should().NotBeEmpty();
             signResponseMessage.PublicKey.Should().NotBeEmpty();
         }

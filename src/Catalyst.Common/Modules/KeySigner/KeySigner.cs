@@ -113,7 +113,11 @@ namespace Catalyst.Common.Modules.KeySigner
         private bool TryPopulateRegistryFromKeyStore(KeyRegistryKey keyIdentifier)
         {
             var key = _keyRegistry.GetItemFromRegistry(keyIdentifier);
-            if (key != null) return true;
+            if (key != null)
+            {
+                return true;
+            }
+
             key = _keyStore.KeyStoreDecrypt(keyIdentifier);
             return key != null && _keyRegistry.AddItemToRegistry(keyIdentifier, key);
         }

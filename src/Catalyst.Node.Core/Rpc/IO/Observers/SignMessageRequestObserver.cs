@@ -71,7 +71,7 @@ namespace Catalyst.Node.Core.Rpc.IO.Observers
 
             try
             {
-                var decodedMessage = RLP.Decode(signMessageRequest.Message.ToByteArray()).RLPData;
+                var decodedMessage = signMessageRequest.Message.ToByteArray();
 
                 var signature = _keySigner.Sign(decodedMessage);
 
@@ -85,9 +85,9 @@ namespace Catalyst.Node.Core.Rpc.IO.Observers
 
                 return new SignMessageResponse
                 {
-                    OriginalMessage = RLP.EncodeElement(decodedMessage).ToByteString(),
-                    PublicKey = RLP.EncodeElement(publicKey.Bytes.RawBytes).ToByteString(),
-                    Signature = RLP.EncodeElement(signature.SignatureBytes.RawBytes).ToByteString()
+                    OriginalMessage = signMessageRequest.Message,
+                    PublicKey = publicKey.Bytes.RawBytes.ToByteString(),
+                    Signature = signature.SignatureBytes.RawBytes.ToByteString()
                 };
             }
             catch (Exception ex)

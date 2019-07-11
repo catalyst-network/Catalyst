@@ -43,7 +43,7 @@ namespace Catalyst.Common.Cryptography
             _passwordRegistry = passwordRegistry;
         }
         
-        private void ReadSecurePasswordToRegistry(PasswordRegistryKey passwordIdentifier, string prompt)
+        private void ReadSecurePasswordAndAddToRegistry(PasswordRegistryKey passwordIdentifier, string prompt)
         {
             var pwd = new SecureString();
             ReadCharsFromConsole(_userOutput, prompt, (c, i) => pwd.AppendChar(c), i => pwd.RemoveAt(i));
@@ -56,7 +56,7 @@ namespace Catalyst.Common.Cryptography
             SecureString password = _passwordRegistry.GetItemFromRegistry(passwordIdentifier);
             if (password == null)
             {
-                ReadSecurePasswordToRegistry(passwordIdentifier, prompt);
+                ReadSecurePasswordAndAddToRegistry(passwordIdentifier, prompt);
                 password = _passwordRegistry.GetItemFromRegistry(passwordIdentifier);
             }
 

@@ -132,7 +132,6 @@ namespace Catalyst.Common.Keystore
 
         public async Task KeyStoreEncryptAsync(IPrivateKey privateKey, KeyRegistryKey keyIdentifier)
         {
-            Task<IFileInfo> fileInfoTask = null;
             try
             {
                 var address = _addressHelper.GenerateAddress(privateKey.GetPublicKey());        
