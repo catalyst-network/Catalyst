@@ -24,11 +24,15 @@
 using System.Collections.Generic;
 using System.IO;
 using Catalyst.Common.Config;
+using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.Network;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.Interfaces.Util;
 using Catalyst.Common.P2P;
 using Catalyst.Node.Core.P2P;
 using Catalyst.Node.Core.P2P.Discovery;
+using Catalyst.Protocol.Common;
+using Catalyst.Protocol.IPPN;
 using Catalyst.TestUtils;
 using DnsClient;
 using Microsoft.Extensions.Configuration;
@@ -49,9 +53,14 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Discovery
         private readonly PeerSettings _settings;
         private ILookupClient _lookupClient;
         private IPeerIdValidator _peerIdValidator;
+        private readonly PeerId _ownPeerId;
+        private PeerId _testPeer1;
 
         public HastingsDiscoveryTests()
         {
+            _ownPeerId = PeerIdHelper.GetPeerId("own_node");
+            _testPeer1 = PeerIdHelper.GetPeerId("test_peer1");
+            
             _dnsDomains = new List<string>
             {
                 "seed1.catalystnetwork.io",
@@ -78,14 +87,38 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Discovery
                 Substitute.For<IDns>(),
                 _settings,
                 Substitute.For<IPeerClient>(),
-                Substitute.For<IChangeToken>()
-                ))
+                SubDtoFactoryGetDtoResponse(),
+                SubCancellationProvider()
+            ))
             {
                 walker.Dns.GetSeedNodesFromDns(Arg.Any<IEnumerable<string>>()).Received(1);
             }
         }
 
-        private IDns ConfigureDnsClient(bool peerIdValidatorResponse = true)
+        private IDtoFactory SubDtoFactoryGetDtoResponse()
+        {
+            var dtoFactory = Substitute.For<IDtoFactory>();
+            var subbedOwnNodePid = Substitute.For<IPeerIdentifier>();
+            subbedOwnNodePid.PeerId.Returns(_ownPeerId);
+            
+            var subbedTestPid = Substitute.For<IPeerIdentifier>();
+            subbedTestPid.PeerId.Returns(_testPeer1);
+
+            dtoFactory.GetDto(new PeerNeighborsRequest(),
+                subbedOwnNodePid,
+                subbedTestPid);
+
+            return dtoFactory;
+        }
+
+        private ICancellationTokenProvider SubCancellationProvider(bool result = false)
+        {
+            var provider = Substitute.For<ICancellationTokenProvider>();
+            provider.HasTokenCancelled().Returns(result);
+            return provider;
+        }
+
+        private IDns SubDnsClient(bool peerIdValidatorResponse = true)
         {
             _peerIdValidator = Substitute.For<IPeerIdValidator>();
             _lookupClient = Substitute.For<ILookupClient>();

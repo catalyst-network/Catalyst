@@ -21,17 +21,17 @@
 
 #endregion
 
-using System;
-using Catalyst.Common.Interfaces.IO.Messaging.Dto;
-using Google.Protobuf;
+using System.Threading;
 
-namespace Catalyst.Common.Interfaces.IO.Observables
+namespace Catalyst.Common.Interfaces.Util
 {
-    public interface IObservableMessageStreamer<out T> where T : IMessage
+    /// <summary>
+    ///     An interface used to generate a cancellation token
+    /// </summary>
+    public interface ICancellationTokenProvider
     {
-        /// <summary>
-        ///     Message stream
-        /// </summary>
-        IObservable<IObserverDto<T>> MessageStream { get; }
+        CancellationToken CancellationToken { get; set; }
+
+        bool HasTokenCancelled();
     }
 }

@@ -21,13 +21,7 @@
 
 #endregion
 
-using Google.Protobuf;
-
-namespace Catalyst.Common.Interfaces.P2P.IO.Messaging.Dto
+namespace Catalyst.Node.Core.P2P.IO.Messaging.Dto
 {
-    public interface IPeerClientMessageDto
-    {
-        IPeerIdentifier Sender { get; set; }
-        IMessage Message { get; set; }
-    }
+    public class DiscoveryMessageDto { }
 }

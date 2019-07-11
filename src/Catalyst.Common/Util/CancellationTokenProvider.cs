@@ -21,13 +21,23 @@
 
 #endregion
 
-using Google.Protobuf;
+using System.Threading;
+using Catalyst.Common.Interfaces.Util;
 
-namespace Catalyst.Common.Interfaces.P2P.IO.Messaging.Dto
+namespace Catalyst.Common.Util
 {
-    public interface IPeerClientMessageDto
+    public class CancellationTokenProvider : ICancellationTokenProvider
     {
-        IPeerIdentifier Sender { get; set; }
-        IMessage Message { get; set; }
+        public CancellationToken CancellationToken { get; set; }
+
+        public CancellationTokenProvider()
+        {
+            CancellationToken = new CancellationTokenSource().Token;
+        }
+
+        public bool HasTokenCancelled()
+        {
+            return CancellationToken.IsCancellationRequested;
+        }
     }
 }

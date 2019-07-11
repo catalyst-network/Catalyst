@@ -38,14 +38,15 @@ namespace Catalyst.Node.Core.P2P.IO.Observers
 {
     public sealed class GetNeighbourResponseObserver
         : ResponseObserverBase<PeerNeighborsResponse>,
-            IP2PMessageObserver
+            IP2PMessageObserver,
+            IPeerClientObservable
     {
-        private readonly ReplaySubject<IPeerClientMessageDto<PeerNeighborsResponse>> _peerNeighborsResponse;
-        public IObservable<IPeerClientMessageDto<PeerNeighborsResponse>> PeerNeighborsResponseStream => _peerNeighborsResponse.AsObservable();
+        private readonly ReplaySubject<IPeerClientMessageDto> _peerNeighborsResponse;
+        public IObservable<IPeerClientMessageDto> MessageStream => _peerNeighborsResponse.AsObservable();
         
         public GetNeighbourResponseObserver(ILogger logger) : base(logger)
         {
-            _peerNeighborsResponse = new ReplaySubject<IPeerClientMessageDto<PeerNeighborsResponse>>(1);
+            _peerNeighborsResponse = new ReplaySubject<IPeerClientMessageDto>(1);
         }
 
         /// <summary>

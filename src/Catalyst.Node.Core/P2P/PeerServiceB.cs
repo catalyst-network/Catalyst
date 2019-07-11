@@ -21,45 +21,35 @@
 
 #endregion
 
+using System.Collections.Generic;
+using System.Linq;
 using Catalyst.Common.Interfaces.IO.EventLoop;
-using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Observers;
 using Catalyst.Common.Interfaces.IO.Transport.Channels;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.IO.Transport;
-using Catalyst.Protocol.Common;
-using Serilog;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reactive.Linq;
 using Catalyst.Common.Interfaces.P2P.Discovery;
 using Catalyst.Node.Core.P2P.IO.Observers;
-using Catalyst.Protocol.IPPN;
-using Google.Protobuf;
+using Serilog;
 
 namespace Catalyst.Node.Core.P2P
 {
-    public abstract class PeerService<TDiscovery> : UdpServer, IPeerService<TDiscovery> where TDiscovery : IPeerDiscovery
+    public sealed class PeerServiceB : PeerService<IHastingsDiscovery>
     {
-        public TDiscovery Discovery { get; }
-        public IObservable<IObserverDto<ProtocolMessage>> MessageStream { get; }
-
-        public PeerService(IUdpServerEventLoopGroupFactory udpServerEventLoopGroupFactory,
+        public PeerServiceB(IUdpServerEventLoopGroupFactory udpServerEventLoopGroupFactory,
             IUdpServerChannelFactory serverChannelFactory,
-            TDiscovery peerDiscovery,
+            IHastingsDiscovery peerDiscovery,
             IEnumerable<IP2PMessageObserver> messageHandlers,
+            IEnumerable<IPeerClientObservable> peerClientObservables,
             IPeerSettings peerSettings,
             ILogger logger)
-            : base(serverChannelFactory, logger, udpServerEventLoopGroupFactory)
+            : base(udpServerEventLoopGroupFactory,
+                serverChannelFactory,
+                peerDiscovery,
+                messageHandlers,
+                peerSettings,
+                logger)
         {
-            Discovery = peerDiscovery;
-            var observableChannel = ChannelFactory.BuildChannel(EventLoopGroupFactory, peerSettings.BindAddress, peerSettings.Port);
-            Channel = observableChannel.Channel;
-            
-            MessageStream = observableChannel.MessageStream;
-            messageHandlers.ToList()
-               .ForEach(h => h.StartObserving(MessageStream));
+            peerClientObservables.ToList().ForEach(pco => Discovery.MergeDiscoveryMessageStreams(pco.MessageStream));
         }
     }
 }

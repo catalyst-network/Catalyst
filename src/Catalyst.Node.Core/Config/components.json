@@ -238,7 +238,7 @@
             ]
         },
         {
-            "type": "Catalyst.Node.Core.P2P.PeerService`1[[Catalyst.Common.Interfaces.P2P.Discovery.IHastingsDiscovery, Catalyst.Common]], Catalyst.Node.Core",
+            "type": "Catalyst.Node.Core.P2P.PeerServiceB, Catalyst.Node.Core",
             "services": [
                 {
                     "type": "Catalyst.Common.Interfaces.P2P.IPeerService`1[[Catalyst.Common.Interfaces.P2P.Discovery.IHastingsDiscovery, Catalyst.Common]], Catalyst.Common"
@@ -351,6 +351,14 @@
             "parameters": {
                 "timeToLiveInMs": 10000
             }
+        },
+        {
+            "type": "Catalyst.Common.Util.CancellationTokenProvider, Catalyst.Common",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.Util.ICancellationTokenProvider, Catalyst.Common"
+                }
+            ]
         }
     ],
     "modules": [

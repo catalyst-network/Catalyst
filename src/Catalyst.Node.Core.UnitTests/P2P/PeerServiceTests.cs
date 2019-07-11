@@ -36,6 +36,7 @@ using Catalyst.Common.Interfaces.P2P.Discovery;
 using Catalyst.Common.IO.EventLoop;
 using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Node.Core.P2P;
+using Catalyst.Node.Core.P2P.IO.Observers;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
 using Catalyst.TestUtils;
@@ -53,10 +54,10 @@ namespace Catalyst.Node.Core.UnitTests.P2P
         private readonly ILogger _logger;
         private readonly IPeerIdentifier _pid;
         private readonly IUdpServerChannelFactory _udpServerServerChannelFactory;
-        private readonly IPeerDiscovery _peerDiscovery;
+        private readonly IHastingsDiscovery _peerDiscovery;
         private readonly List<IP2PMessageObserver> _p2PMessageHandlers;
         private readonly EmbeddedObservableChannel _serverChannel;
-        private PeerService<IPeerDiscovery> _peerService;
+        private PeerService<IHastingsDiscovery> _peerService;
         private readonly IPeerSettings _peerSettings;
 
         public PeerServiceTests(ITestOutputHelper output) : base(output)
@@ -74,7 +75,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
 
             _udpServerServerChannelFactory.BuildChannel(Arg.Any<IEventLoopGroupFactory>(), _peerSettings.BindAddress, _peerSettings.Port).Returns(_serverChannel);
 
-            _peerDiscovery = Substitute.For<IPeerDiscovery>();
+            _peerDiscovery = Substitute.For<IHastingsDiscovery>();
             _p2PMessageHandlers = new List<IP2PMessageObserver>();
         }
 
@@ -133,10 +134,11 @@ namespace Catalyst.Node.Core.UnitTests.P2P
         {
             _p2PMessageHandlers.Add(pingRequestHandler);
 
-            _peerService = new PeerService<IPeerDiscovery>(new UdpServerEventLoopGroupFactory(new EventLoopGroupFactoryConfiguration()), 
+            _peerService = new PeerServiceB(new UdpServerEventLoopGroupFactory(new EventLoopGroupFactoryConfiguration()), 
                 _udpServerServerChannelFactory,
                 _peerDiscovery,
                 _p2PMessageHandlers,
+                Substitute.For<IEnumerable<IPeerClientObservable>>(),
                 _peerSettings,
                 _logger);
 

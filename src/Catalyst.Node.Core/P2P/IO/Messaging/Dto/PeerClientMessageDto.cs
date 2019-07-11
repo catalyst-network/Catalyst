@@ -28,12 +28,12 @@ using Google.Protobuf;
 
 namespace Catalyst.Node.Core.P2P.IO.Messaging.Dto
 {
-    public sealed class PeerClientMessageDto<T> : IPeerClientMessageDto<T> where T : IMessage<T>
+    public sealed class PeerClientMessageDto<T> : IPeerClientMessageDto where T : IMessage<T>
     {
         public IPeerIdentifier Sender { get; set; }
-        public T Message { get; set; }
+        public IMessage Message { get; set; }
 
-        public PeerClientMessageDto(T message, IPeerIdentifier sender)
+        public PeerClientMessageDto(IMessage message, IPeerIdentifier sender)
         {
             Guard.Argument(message, nameof(message))
                .Require(message.GetType().Namespace.Contains("IPPN"));

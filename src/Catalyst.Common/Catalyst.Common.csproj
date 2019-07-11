@@ -61,9 +61,6 @@
         </None>
     </ItemGroup>
     <ItemGroup>
-        <Folder Include="Interfaces\Util" />
-    </ItemGroup>
-    <ItemGroup>
         <Reference Include="System">
             <HintPath>System</HintPath>
         </Reference>
