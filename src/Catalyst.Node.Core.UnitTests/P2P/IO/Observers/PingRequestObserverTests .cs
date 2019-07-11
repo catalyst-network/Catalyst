@@ -21,6 +21,7 @@
 
 #endregion
 
+using System;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Catalyst.Common.Extensions;
@@ -36,7 +37,7 @@ using Xunit;
 
 namespace Catalyst.Node.Core.UnitTests.P2P.IO.Observers
 {
-    public sealed class PingRequestObserverTests
+    public sealed class PingRequestObserverTests : IDisposable
     {
         private readonly ILogger _subbedLogger;
         private readonly PingRequestObserver _pingRequestObserver;
@@ -66,6 +67,11 @@ namespace Catalyst.Node.Core.UnitTests.P2P.IO.Observers
                .WriteAndFlushAsync(new PingResponse().ToProtocolMessage(PeerIdHelper.GetPeerId(), CorrelationId.GenerateCorrelationId()));
             
             _subbedLogger.ReceivedWithAnyArgs(1);
+        }
+        
+        public void Dispose()
+        {
+            _pingRequestObserver?.Dispose();
         }
     }
 }

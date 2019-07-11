@@ -39,7 +39,7 @@ namespace Catalyst.Node.Core.IntegrationTests.P2P.IO.Observers
     public sealed class GetNeighbourRequestObserverTests : ConfigFileBasedTest
     {
         public GetNeighbourRequestObserverTests(ITestOutputHelper output) : base(output) { }
-        
+
         [Fact]
         public void Can_Resolve_GetNeighbourRequestObserver_From_Container()
         {
@@ -48,15 +48,18 @@ namespace Catalyst.Node.Core.IntegrationTests.P2P.IO.Observers
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile))
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Network.Test)))
                .Build();
-            
+
             ConfigureContainerBuilder(config, true, true);
 
-            var container = ContainerBuilder.Build();
-            using (container.BeginLifetimeScope(CurrentTestName))
+            using (var container = ContainerBuilder.Build())
             {
-                var p2PMessageHandlers = container.Resolve<IEnumerable<IP2PMessageObserver>>();
-                IEnumerable<IP2PMessageObserver> getNeighbourResponseHandler = p2PMessageHandlers.OfType<GetNeighbourRequestObserver>();
-                getNeighbourResponseHandler.First().Should().BeOfType(typeof(GetNeighbourRequestObserver));
+                using (container.BeginLifetimeScope(CurrentTestName))
+                {
+                    var p2PMessageHandlers = container.Resolve<IEnumerable<IP2PMessageObserver>>();
+                    IEnumerable<IP2PMessageObserver> getNeighbourResponseHandler =
+                        p2PMessageHandlers.OfType<GetNeighbourRequestObserver>();
+                    getNeighbourResponseHandler.First().Should().BeOfType(typeof(GetNeighbourRequestObserver));
+                }
             }
         }
     }

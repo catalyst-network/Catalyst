@@ -25,6 +25,10 @@ using Google.Protobuf;
 
 namespace Catalyst.Common.Interfaces.P2P.IO.Messaging.Dto
 {
+    /// <summary>
+    ///     Dto to be used to push IPPN protocol messages to an observable stream.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public interface IPeerClientMessageDto<T> where T : IMessage<T>
     {
         IPeerIdentifier Sender { get; set; }

@@ -40,7 +40,7 @@ using Xunit;
 
 namespace Catalyst.Node.Core.UnitTests.P2P.IO.Observers
 {
-    public sealed class PingResponseObserverTests
+    public sealed class PingResponseObserverTests : IDisposable
     {
         private readonly IChannelHandlerContext _fakeContext;
         private readonly PingResponseObserver _observer;
@@ -76,6 +76,11 @@ namespace Catalyst.Node.Core.UnitTests.P2P.IO.Observers
                     TimeSpan.FromMilliseconds(1000));
                 pingResponseObserver.Received(1).OnNext(Arg.Any<IPeerClientMessageDto<PingResponse>>());
             }
+        }
+
+        public void Dispose()
+        {
+            _observer?.Dispose();
         }
     }
 }
