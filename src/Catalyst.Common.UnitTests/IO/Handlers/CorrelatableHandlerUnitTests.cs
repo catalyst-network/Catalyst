@@ -22,6 +22,7 @@
 #endregion
 
 using Catalyst.Common.Extensions;
+using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.Rpc.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.IO.Handlers;
@@ -39,11 +40,11 @@ namespace Catalyst.Common.UnitTests.IO.Handlers
     public sealed class CorrelatableHandlerUnitTests
     {
         private readonly IChannelHandlerContext _fakeContext;
-        private readonly IRpcCorrelationManager _fakeMessageCorrelationManager;
+        private readonly IMessageCorrelationManager _fakeMessageCorrelationManager;
 
         public CorrelatableHandlerUnitTests()
         {
-            _fakeMessageCorrelationManager = Substitute.For<IRpcCorrelationManager>();
+            _fakeMessageCorrelationManager = Substitute.For<IMessageCorrelationManager>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
         }
 
@@ -57,13 +58,13 @@ namespace Catalyst.Common.UnitTests.IO.Handlers
             
             fakeRequestMessageDto.SenderPeerIdentifier.Returns(PeerIdentifierHelper.GetPeerIdentifier("sender"));
 
-            var correlatableHandler = new CorrelatableHandler(_fakeMessageCorrelationManager);
+            var correlatableHandler = new CorrelatableHandler<IMessageCorrelationManager>(_fakeMessageCorrelationManager);
 
             correlatableHandler.WriteAsync(_fakeContext, fakeRequestMessageDto);
             
             _fakeMessageCorrelationManager
                .ReceivedWithAnyArgs()
-               .AddPendingRequest(Arg.Any<CorrelatableMessage>()
+               .AddPendingRequest(Arg.Any<CorrelatableMessage<ProtocolMessage>>()
                 );
 
             _fakeContext.ReceivedWithAnyArgs(1).WriteAsync(Arg.Any<IMessageDto<ProtocolMessage>>());
@@ -74,13 +75,13 @@ namespace Catalyst.Common.UnitTests.IO.Handlers
         {
             var fakeRequestMessageDto = Substitute.For<IObserverDto<IMessage>>();
 
-            var correlatableHandler = new CorrelatableHandler(_fakeMessageCorrelationManager);
+            var correlatableHandler = new CorrelatableHandler<IMessageCorrelationManager>(_fakeMessageCorrelationManager);
             
             correlatableHandler.WriteAsync(_fakeContext, fakeRequestMessageDto);
             
             _fakeMessageCorrelationManager
                .DidNotReceiveWithAnyArgs()
-               .AddPendingRequest(Arg.Any<CorrelatableMessage>()
+               .AddPendingRequest(Arg.Any<CorrelatableMessage<ProtocolMessage>>()
                 );
 
             _fakeContext.ReceivedWithAnyArgs(1).WriteAsync(Arg.Any<IObserverDto<IMessage>>());

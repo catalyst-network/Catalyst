@@ -1,4 +1,4 @@
-﻿#region LICENSE
+#region LICENSE
 
 /**
 * Copyright (c) 2019 Catalyst Network
@@ -21,20 +21,14 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.P2P;
+using System;
+using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
+using Catalyst.Protocol.Common;
 
-namespace Catalyst.Node.Core.P2P
+namespace Catalyst.Common.Interfaces.Rpc.IO.Messaging.Correlation
 {
-    internal sealed class PeerReputationChange
-        : IPeerReputationChange
+    public interface IRpcMessageCorrelationManager : IMessageCorrelationManager
     {
-        public IPeerIdentifier PeerIdentifier { get; }
-        public int ReputationChange { get; }
-
-        public PeerReputationChange(IPeerIdentifier peerIdentifier, int reputationChange)
-        {
-            PeerIdentifier = peerIdentifier;
-            ReputationChange = reputationChange;
-        }
+        IObservable<ICacheEvictionEvent<ProtocolMessage>> EvictionEvents { get; }
     }
 }
