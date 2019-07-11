@@ -1,4 +1,4 @@
-#region LICENSE
+﻿#region LICENSE
 
 /**
 * Copyright (c) 2019 Catalyst Network
@@ -21,17 +21,13 @@
 
 #endregion
 
-using System.Threading.Tasks;
-using Catalyst.Common.P2P;
-using Serilog;
-using SharpRepository.Repository;
+using Catalyst.Common.Interfaces.Config;
 
-namespace Catalyst.Common.Interfaces.P2P.Discovery
+namespace Catalyst.Common.Interfaces.P2P.ReputationSystem
 {
-    public interface IPeerDiscovery
+    public interface IPeerReputationChange
     {
-        ILogger Logger { get; }
-        IRepository<Peer> PeerRepository { get; }
-        Task DiscoveryAsync();
+        IPeerIdentifier PeerIdentifier { get; }
+        IReputationEvents ReputationEvent { get; }
     }
 }

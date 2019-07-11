@@ -1,4 +1,4 @@
-﻿#region LICENSE
+#region LICENSE
 
 /**
 * Copyright (c) 2019 Catalyst Network
@@ -21,13 +21,14 @@
 
 #endregion
 
-using Catalyst.Common.P2P;
-using SharpRepository.Repository;
+using Catalyst.Common.Interfaces.P2P;
+using Google.Protobuf;
 
-namespace Catalyst.Common.Interfaces.P2P
+namespace Catalyst.Common.Interfaces.IO.Messaging.Correlation
 {
-    interface IReputationManager
+    public interface ICacheEvictionEvent<out T> where T : IMessage
     {
-        IRepository<Peer> PeerRepository { get; }
+        T EvictedContent { get; }
+        IPeerIdentifier PeerIdentifier { get; }
     }
 }

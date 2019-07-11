@@ -22,12 +22,16 @@
 #endregion
 
 using System;
-using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
+using Catalyst.Common.Enumerator;
 
-namespace Catalyst.Common.Interfaces.Rpc.IO.Messaging.Correlation
+namespace Catalyst.Common.Interfaces.Enumerator
 {
-    public interface IRpcCorrelationManager : IMessageCorrelationManager
+    public interface IEnumeration : IEquatable<Enumeration>
     {
-        IObservable<IMessageEvictionEvent> EvictionEvents { get; }
+        string Name { get; }
+        int Id { get; }
+        string ToString();
+        bool Equals(object obj);
+        int GetHashCode();
     }
 }

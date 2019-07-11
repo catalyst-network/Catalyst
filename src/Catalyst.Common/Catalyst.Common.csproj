@@ -61,6 +61,7 @@
         </None>
     </ItemGroup>
     <ItemGroup>
+        <Folder Include="Interfaces\P2P\Messaging\Dto" />
         <Folder Include="Interfaces\Util" />
     </ItemGroup>
     <ItemGroup>

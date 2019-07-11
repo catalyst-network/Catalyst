@@ -22,51 +22,63 @@
 #endregion
 
 using System;
-using System.Reactive.Linq;
-using System.Reactive.Subjects;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.Util;
 using Catalyst.Protocol.Common;
 using Dawn;
 using Microsoft.Extensions.Caching.Memory;
+using Serilog;
 
 namespace Catalyst.Common.IO.Messaging.Correlation
 {
-    /// <inheritdoc cref="IMessageCorrelationManager"/>
-    /// <summary>
-    /// In this implementation of the correlation manager, the underlying cache adds records
-    /// with a Time To Live after which they get automatically get deleted from the cache (inflicting
-    /// a reputation penalty for the peer who didn't reply).
-    /// </summary>
-    public abstract class MessageCorrelationManagerBase : IMessageCorrelationManager, IDisposable
+    public abstract class MessageCorrelationManagerBase : IMessageCorrelationManager
     {
-        private readonly IMemoryCache _pendingRequests;
+        protected readonly IMemoryCache PendingRequests;
         private readonly Func<MemoryCacheEntryOptions> _entryOptions;
+        protected readonly ILogger Logger;
 
         protected MessageCorrelationManagerBase(IMemoryCache cache,
+            ILogger logger,
             IChangeTokenProvider changeTokenProvider)
         {
-            _pendingRequests = cache;
-            
+            PendingRequests = cache;
+            Logger = logger;
+
             _entryOptions = () => new MemoryCacheEntryOptions()
                .AddExpirationToken(changeTokenProvider.GetChangeToken())
                .RegisterPostEvictionCallback(EvictionCallback);
         }
 
+        /// <summary>
+        ///     A callback method that is called upon eviction of a message,
+        ///     for basic protocols such the RPC, it doesn't do anything
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
+        /// <param name="reason"></param>
+        /// <param name="state"></param>
         protected abstract void EvictionCallback(object key, object value, EvictionReason reason, object state);
-        
-        /// <inheritdoc />
-        public void AddPendingRequest(CorrelatableMessage correlatableMessage)
+
+        /// <summary>
+        ///     Stores a CorrelatableMessage in the cache so we can correlate incoming messages.
+        /// </summary>
+        /// <param name="correlatableMessage"></param>
+        public virtual void AddPendingRequest(CorrelatableMessage<ProtocolMessage> correlatableMessage)
         {
-            _pendingRequests.Set(correlatableMessage.Content.CorrelationId, correlatableMessage, _entryOptions());
+            PendingRequests.Set(correlatableMessage.Content.CorrelationId, correlatableMessage, _entryOptions());
         }
 
-        /// <inheritdoc />
-        public bool TryMatchResponse(ProtocolMessage response)
+        /// <summary>
+        ///     Takes a generic request type of IMessage, and generic response type of IMessage and the message and look them up in the cache.
+        ///     Return what's found or emit an-uncorrectable event 
+        /// </summary>
+        /// <param name="response"></param>
+        /// <returns></returns>
+        public virtual bool TryMatchResponse(ProtocolMessage response)
         {
             Guard.Argument(response, nameof(response)).NotNull();
 
-            return _pendingRequests.TryGetValue(response.CorrelationId, out _);
+            return PendingRequests.TryGetValue(response.CorrelationId, out _);
         }
 
         protected virtual void Dispose(bool disposing)
@@ -76,10 +88,9 @@ namespace Catalyst.Common.IO.Messaging.Correlation
                 return;
             }
 
-            _pendingRequests?.Dispose();
+            PendingRequests?.Dispose();
         }
 
-        /// <inheritdoc />
         public void Dispose()
         {
             Dispose(true);

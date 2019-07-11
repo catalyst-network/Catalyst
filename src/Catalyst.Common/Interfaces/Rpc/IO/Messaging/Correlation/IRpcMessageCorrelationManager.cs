@@ -21,21 +21,14 @@
 
 #endregion
 
+using System;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
-using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.IO.Messaging.Correlation;
+using Catalyst.Protocol.Common;
 
-namespace Catalyst.Common.IO.Messaging
+namespace Catalyst.Common.Interfaces.Rpc.IO.Messaging.Correlation
 {
-    internal sealed class MessageEvictionEvent : IMessageEvictionEvent
+    public interface IRpcMessageCorrelationManager : IMessageCorrelationManager
     {
-        public object EvictedContent { get; }
-        public IPeerIdentifier PeerIdentifier { get; }
-        
-        public MessageEvictionEvent(CorrelatableMessage correlatableMessage)
-        {
-            EvictedContent = correlatableMessage.Content;
-            PeerIdentifier = correlatableMessage.Recipient;
-        }
+        IObservable<ICacheEvictionEvent<ProtocolMessage>> EvictionEvents { get; }
     }
 }

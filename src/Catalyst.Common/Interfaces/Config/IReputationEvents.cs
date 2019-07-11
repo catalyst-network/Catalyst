@@ -21,13 +21,12 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.Interfaces.Enumerator;
 
-namespace Catalyst.Common.Interfaces.IO.Messaging.Correlation
+namespace Catalyst.Common.Interfaces.Config
 {
-    public interface IMessageEvictionEvent
+    public interface IReputationEvents : IEnumeration
     {
-        object EvictedContent { get; }
-        IPeerIdentifier PeerIdentifier { get; }
+        int Amount { get; set; }
     }
 }

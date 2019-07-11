@@ -32,7 +32,6 @@ using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.Modules.Ledger;
 using Catalyst.Common.Interfaces.Modules.Mempool;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.Interfaces.P2P.Discovery;
 using Catalyst.Common.Interfaces.Rpc;
 using Serilog;
 
@@ -48,10 +47,10 @@ namespace Catalyst.Node.Core
         private readonly IKeySigner _keySigner;
         private readonly ILogger _logger;
         private readonly IMempool _mempool;
-        private readonly IPeerService<IHastingsDiscovery> _peerDiscovery;
+        private readonly IPeerService _peer;
         private readonly INodeRpcServer _nodeRpcServer;
 
-        public CatalystNode(IPeerService<IHastingsDiscovery> peerDiscovery,
+        public CatalystNode(IPeerService peer,
             IConsensus consensus,
             IDfs dfs,
             ILedger ledger,
@@ -61,7 +60,7 @@ namespace Catalyst.Node.Core
             IMempool mempool = null,
             IContract contract = null)
         {
-            _peerDiscovery = peerDiscovery;
+            _peer = peer;
             _consensus = consensus;
             _dfs = dfs;
             _ledger = ledger;
