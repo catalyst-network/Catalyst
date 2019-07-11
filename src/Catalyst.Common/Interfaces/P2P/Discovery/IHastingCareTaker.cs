@@ -1,8 +1,7 @@
 using System;
 using System.Collections.Concurrent;
-using Catalyst.Common.Interfaces.P2P.Discovery;
 
-namespace Catalyst.Node.Core.P2P.Discovery
+namespace Catalyst.Common.Interfaces.P2P.Discovery
 {
     public interface IHastingCareTaker
     {

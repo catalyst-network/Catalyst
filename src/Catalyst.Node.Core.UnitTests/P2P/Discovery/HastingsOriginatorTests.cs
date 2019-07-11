@@ -35,12 +35,19 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Discovery
 {
     public sealed class HastingsOriginatorTests
     {
+        private readonly IPeerIdentifier _peer;
+
+        public HastingsOriginatorTests()
+        {
+            _peer = PeerIdentifierHelper.GetPeerIdentifier("current_peer");
+        }
+        
         private IHastingMemento BuildMemento()
         {
             var peers = Enumerable.Range(0, 5).Select(i =>
                 PeerIdentifierHelper.GetPeerIdentifier($"neighbour-{i.ToString()}")).ToList();
             
-            var memento = new HastingMemento();
+            var memento = new HastingMemento(_peer);
 
             foreach (var peerIdentifier in peers)
             {
@@ -60,11 +67,13 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Discovery
                 PeerIdentifierHelper.GetPeerIdentifier("peer-1")
             };
             
+            originator.Peer = _peer;
             originator.CurrentPeersNeighbours = state;
 
             var stateMemento = originator.CreateMemento();
 
             stateMemento.Neighbours.Should().Contain(state);
+            stateMemento.Peer.Should().Be(_peer);
         }
 
         [Fact]
@@ -72,9 +81,10 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Discovery
         {
             var memento = BuildMemento();
             var originator = new HastingsOriginator();
-            originator.SetMemento(memento);
+            originator.SetMemento(_peer, memento);
 
-            originator.CurrentPeersNeighbours.Should().Contain(memento.Neighbours);   
+            originator.Peer.Should().Be(_peer);
+            originator.CurrentPeersNeighbours.Should().Contain(memento.Neighbours);
         }
     }
 }

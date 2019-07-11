@@ -28,8 +28,16 @@ using Catalyst.Common.Interfaces.P2P.Discovery;
 
 namespace Catalyst.Node.Core.P2P.Discovery
 {
-    public sealed class HastingsOriginator
+    public sealed class HastingsOriginator : IHastingsOriginator
     {
+        private IPeerIdentifier _peer;
+
+        public IPeerIdentifier Peer
+        {
+            get => _peer;
+            set => _peer = value;
+        }
+        
         private ConcurrentBag<IPeerIdentifier> _currentPeersNeighbours;
         
         public ConcurrentBag<IPeerIdentifier> CurrentPeersNeighbours
@@ -38,21 +46,16 @@ namespace Catalyst.Node.Core.P2P.Discovery
             set => _currentPeersNeighbours = value;
         }
 
-        /// <summary>
-        ///     creates a memento from current state
-        /// </summary>
-        /// <returns></returns>
+        /// <inheritdoc />
         public IHastingMemento CreateMemento()
         {
-            return new HastingMemento(_currentPeersNeighbours);
+            return new HastingMemento(_peer, _currentPeersNeighbours);
         }
- 
-        /// <summary>
-        ///     Restores the state from a memento
-        /// </summary>
-        /// <param name="hastingMemento"></param>
-        public void SetMemento(IHastingMemento hastingMemento)
+        
+        /// <inheritdoc />
+        public void SetMemento(IPeerIdentifier peer, IHastingMemento hastingMemento)
         {
+            Peer = peer;
             CurrentPeersNeighbours = new ConcurrentBag<IPeerIdentifier>(hastingMemento.Neighbours);
         }
     }

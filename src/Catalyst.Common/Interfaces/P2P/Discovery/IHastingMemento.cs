@@ -27,6 +27,7 @@ namespace Catalyst.Common.Interfaces.P2P.Discovery
 {
     public interface IHastingMemento
     {
+        IPeerIdentifier Peer { get; }
         ConcurrentBag<IPeerIdentifier> Neighbours { get; }
     }
 }

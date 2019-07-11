@@ -22,28 +22,25 @@
 #endregion
 
 using System.Collections.Concurrent;
-using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.Interfaces.P2P.Discovery;
 
-namespace Catalyst.Node.Core.P2P.Discovery
+namespace Catalyst.Common.Interfaces.P2P.Discovery
 {
-    /// <summary>
-    ///     Represents a single step within the hastings walk.
-    /// </summary>
-    public sealed class HastingMemento : IHastingMemento
+    public interface IHastingsOriginator
     {
-        public IPeerIdentifier Peer { get; }
-        public ConcurrentBag<IPeerIdentifier> Neighbours { get; }
+        IPeerIdentifier Peer { get; set; }
+        ConcurrentBag<IPeerIdentifier> CurrentPeersNeighbours { get; set; }
 
-        public HastingMemento(IPeerIdentifier peer, ConcurrentBag<IPeerIdentifier> neighbours) : this(peer)
-        {
-            Neighbours = neighbours;
-        }
+        /// <summary>
+        ///     creates a memento from current state
+        /// </summary>
+        /// <returns></returns>
+        IHastingMemento CreateMemento();
 
-        public HastingMemento(IPeerIdentifier peer)
-        {
-            Peer = peer;
-            Neighbours = new ConcurrentBag<IPeerIdentifier>();
-        }
+        /// <summary>
+        ///     Restores the state from a memento
+        /// </summary>
+        /// <param name="peer"></param>
+        /// <param name="hastingMemento"></param>
+        void SetMemento(IPeerIdentifier peer, IHastingMemento hastingMemento);
     }
 }

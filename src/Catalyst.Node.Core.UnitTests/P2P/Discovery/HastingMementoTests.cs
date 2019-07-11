@@ -34,6 +34,10 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Discovery
 {
     public sealed class HastingMementoTests
     {
+        private readonly IPeerIdentifier _peer;
+
+        public HastingMementoTests() { _peer = PeerIdentifierHelper.GetPeerIdentifier("current_peer"); }
+        
         private static List<IPeerIdentifier> GenerateNeighbours()
         {
             return Enumerable.Range(0, 5).Select(i =>
@@ -45,13 +49,14 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Discovery
         {
             var neighbours = GenerateNeighbours();
 
-            var memento = new HastingMemento();
+            var memento = new HastingMemento(_peer);
 
             foreach (var peerIdentifier in neighbours)
             {
                 memento.Neighbours.Add(peerIdentifier);
             }
 
+            memento.Peer.Should().Be(_peer);
             memento.Neighbours.Should().Contain(neighbours);
             memento.Neighbours.Should().HaveCount(5);
         }
@@ -68,8 +73,9 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Discovery
                 bag.Add(peerIdentifier);
             }
             
-            var memento = new HastingMemento(bag);
+            var memento = new HastingMemento(_peer, bag);
 
+            memento.Peer.Should().Be(_peer);
             memento.Neighbours.Should().Contain(neighbours);
             memento.Neighbours.Should().HaveCount(5);
         }

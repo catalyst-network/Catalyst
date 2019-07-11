@@ -36,20 +36,13 @@ namespace Catalyst.Node.Core.P2P.Discovery
             HastingMementoList = new ConcurrentQueue<IHastingMemento>();
         }
 
-        /// <summary>
-        ///     Adds a new state from the walk to the queue
-        /// </summary>
-        /// <param name="hastingMemento"></param>
+        /// <inheritdoc />
         public void Add(IHastingMemento hastingMemento)
         {
             HastingMementoList.Enqueue(hastingMemento);
         }
 
-        /// <summary>
-        ///     Gets the last state of the walk from the queue
-        /// </summary>
-        /// <returns></returns>
-        /// <exception cref="Exception"></exception>
+        /// <inheritdoc />
         public IHastingMemento Get()
         {
             if (HastingMementoList.TryDequeue(out var hastingMemento))
