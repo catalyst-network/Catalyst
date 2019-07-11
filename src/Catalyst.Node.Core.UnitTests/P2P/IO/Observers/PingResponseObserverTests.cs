@@ -29,6 +29,7 @@ using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.P2P.IO.Messaging.Dto;
 using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Common.IO.Messaging.Dto;
+using Catalyst.Node.Core.P2P.IO.Messaging.Dto;
 using Catalyst.Node.Core.P2P.IO.Observers;
 using Catalyst.Protocol.IPPN;
 using Catalyst.TestUtils;
@@ -39,40 +40,27 @@ using Xunit;
 
 namespace Catalyst.Node.Core.UnitTests.P2P.IO.Observers
 {
-    public sealed class GetNeighbourResponseObserverTests : IDisposable
+    public sealed class PingResponseObserverTests : IDisposable
     {
         private readonly IChannelHandlerContext _fakeContext;
-        private readonly GetNeighbourResponseObserver _observer;
+        private readonly PingResponseObserver _observer;
 
-        public GetNeighbourResponseObserverTests()
+        public PingResponseObserverTests()
         {
             _fakeContext = Substitute.For<IChannelHandlerContext>();
-            _observer = new GetNeighbourResponseObserver(Substitute.For<ILogger>());
+            _observer = new PingResponseObserver(Substitute.For<ILogger>());
         }
 
         [Fact]
-        public async void Observer_Can_Process_GetNeighbourResponse_Correctly()
+        public async void Observer_Can_Process_PingResponse_Correctly()
         {
-            var peers = new[]
-            {
-                PeerIdHelper.GetPeerId(),
-                PeerIdHelper.GetPeerId(),
-                PeerIdHelper.GetPeerId()
-            };
-                
-            var response = new DtoFactory().GetDto(new PeerNeighborsResponse
-                {
-                    Peers =
-                    {
-                        peers
-                    }
-                },
+            var response = new DtoFactory().GetDto(new PingResponse(),
                 PeerIdentifierHelper.GetPeerIdentifier("sender"),
                 PeerIdentifierHelper.GetPeerIdentifier("recipient"),
                 CorrelationId.GenerateCorrelationId()
             );
             
-            var peerNeighborsResponseObserver = Substitute.For<IObserver<IPeerClientMessageDto<PeerNeighborsResponse>>>();
+            var pingResponseObserver = Substitute.For<IObserver<IPeerClientMessageDto<PingResponse>>>();
 
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext,
                 response.Content.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId,
@@ -81,15 +69,12 @@ namespace Catalyst.Node.Core.UnitTests.P2P.IO.Observers
             _observer.StartObserving(messageStream);
             await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
 
-            using (_observer.PeerNeighborsResponseStream.SubscribeOn(TaskPoolScheduler.Default)
-               .Subscribe(peerNeighborsResponseObserver.OnNext))
+            using (_observer.PingResponseStream.SubscribeOn(ImmediateScheduler.Instance)
+               .Subscribe(pingResponseObserver.OnNext))
             {
-                await TaskHelper.WaitForAsync(() => peerNeighborsResponseObserver.ReceivedCalls().Any(),
+                await TaskHelper.WaitForAsync(() => pingResponseObserver.ReceivedCalls().Any(),
                     TimeSpan.FromMilliseconds(1000));
-                
-                peerNeighborsResponseObserver.Received(1).OnNext(Arg.Is<IPeerClientMessageDto<PeerNeighborsResponse>>(p => p.Message.Peers.Contains(peers[0])));
-                peerNeighborsResponseObserver.Received(1).OnNext(Arg.Is<IPeerClientMessageDto<PeerNeighborsResponse>>(p => p.Message.Peers.Contains(peers[1])));
-                peerNeighborsResponseObserver.Received(1).OnNext(Arg.Is<IPeerClientMessageDto<PeerNeighborsResponse>>(p => p.Message.Peers.Contains(peers[2])));
+                pingResponseObserver.Received(1).OnNext(Arg.Any<IPeerClientMessageDto<PingResponse>>());
             }
         }
 
