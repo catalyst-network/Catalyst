@@ -66,17 +66,5 @@ namespace Catalyst.Common.P2P
 
         /// <inheritdoc />
         public void Touch() { LastSeen = DateTimeUtil.UtcNow; }
-
-        /// <inheritdoc />
-        public void IncreaseReputation(int mer = 1)
-        {
-            Reputation += mer;
-        }
-
-        /// <inheritdoc />
-        public void DecreaseReputation(int mer = 1)
-        {
-            Reputation += mer;
-        }
     }
 }

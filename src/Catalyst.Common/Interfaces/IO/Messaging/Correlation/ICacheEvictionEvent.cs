@@ -21,13 +21,14 @@
 
 #endregion
 
-using System;
-using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
+using Catalyst.Common.Interfaces.P2P;
+using Google.Protobuf;
 
-namespace Catalyst.Common.Interfaces.Rpc.IO.Messaging.Correlation
+namespace Catalyst.Common.Interfaces.IO.Messaging.Correlation
 {
-    public interface IRpcCorrelationManager : IMessageCorrelationManager
+    public interface ICacheEvictionEvent<out T> where T : IMessage
     {
-        IObservable<IMessageEvictionEvent> EvictionEvents { get; }
+        T EvictedContent { get; }
+        IPeerIdentifier PeerIdentifier { get; }
     }
 }

@@ -21,11 +21,22 @@
 
 #endregion
 
-namespace Catalyst.Common.Interfaces.P2P
+using Catalyst.Common.Interfaces.Config;
+using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.Interfaces.P2P.ReputationSystem;
+
+namespace Catalyst.Node.Core.P2P.ReputationSystem
 {
-    public interface IPeerReputationChange
+    internal sealed class PeerReputationChange
+        : IPeerReputationChange
     {
-        IPeerIdentifier PeerIdentifier { get; }
-        int ReputationChange { get; }
+        public IPeerIdentifier PeerIdentifier { get; }
+        public IReputationEvents ReputationEvent { get; }
+
+        public PeerReputationChange(IPeerIdentifier peerIdentifier, IReputationEvents reputationEvent)
+        {
+            PeerIdentifier = peerIdentifier;
+            ReputationEvent = reputationEvent;
+        }
     }
 }

@@ -27,38 +27,42 @@ using System.Reactive.Subjects;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.Rpc.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.Util;
-using Catalyst.Common.IO.Messaging;
 using Catalyst.Common.IO.Messaging.Correlation;
+using Catalyst.Protocol.Common;
 using Microsoft.Extensions.Caching.Memory;
+using Serilog;
 
 namespace Catalyst.Common.Rpc.IO.Messaging.Correlation
 {
-    public sealed class RpcCorrelationManager : MessageCorrelationManagerBase, IRpcCorrelationManager
+    public sealed class RpcMessageCorrelationManager : MessageCorrelationManagerBase, IRpcMessageCorrelationManager
     {
-        private readonly ReplaySubject<IMessageEvictionEvent> _evictionEvent;
-        public IObservable<IMessageEvictionEvent> EvictionEvents => _evictionEvent.AsObservable();
-        
-        public RpcCorrelationManager(IMemoryCache cache, IChangeTokenProvider changeTokenProvider) : base(cache,
-            changeTokenProvider)
+        private readonly ReplaySubject<ICacheEvictionEvent<ProtocolMessage>> _evictionEvent;
+
+        public IObservable<ICacheEvictionEvent<ProtocolMessage>> EvictionEvents => _evictionEvent.AsObservable();
+
+        public RpcMessageCorrelationManager(IMemoryCache cache,
+            ILogger logger,
+            IChangeTokenProvider changeTokenProvider)
+            : base(cache, logger, changeTokenProvider)
         {
-            _evictionEvent = new ReplaySubject<IMessageEvictionEvent>(0);
+            _evictionEvent = new ReplaySubject<ICacheEvictionEvent<ProtocolMessage>>(0);
         }
 
         protected override void EvictionCallback(object key, object value, EvictionReason reason, object state)
         {
-            var message = (CorrelatableMessage) value;
-            _evictionEvent.OnNext(new MessageEvictionEvent(message));
+            Logger.Debug($"{key} message evicted");
+            var message = (CorrelatableMessage<ProtocolMessage>) value;
+            _evictionEvent.OnNext(new MessageEvictionEvent<ProtocolMessage>(message));
         }
-
+        
         protected override void Dispose(bool disposing)
         {
             base.Dispose(disposing);
-            if (!disposing)
+
+            if (disposing)
             {
-                return;
+                _evictionEvent?.Dispose();
             }
-            
-            _evictionEvent?.Dispose();
         }
     }
 }

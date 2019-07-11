@@ -70,7 +70,10 @@ namespace Catalyst.Common.Interfaces.Cli.Commands
         IRpcNodeConfig GetNodeConfig(string nodeId);
 
         /// <summary>Determines whether [is socket channel active] [the specified node].</summary>
-        /// <param name="node">A <see cref="IRpcNode"/> object including node required information.</param>
+        /// <param name="node">A <see>
+        ///         <cref>IRpcNode</cref>
+        ///     </see>
+        ///     object including node required information.</param>
         /// <returns><c>true</c> if [is socket channel active] [the specified node]; otherwise,
         /// <c>false</c> A "Channel inactive ..." message is returned to the console.</returns>
         bool IsSocketChannelActive(INodeRpcClient node);
