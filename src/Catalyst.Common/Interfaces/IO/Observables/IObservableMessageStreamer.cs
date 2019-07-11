@@ -22,15 +22,16 @@
 #endregion
 
 using System;
-using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Google.Protobuf;
 
-namespace Catalyst.Common.IO.Messaging.Correlation
+namespace Catalyst.Common.Interfaces.IO.Observables
 {
-    public sealed class CorrelatableMessage<T> where T : IMessage
+    public interface IObservableMessageStreamer<out T> where T : IMessage
     {
-        public T Content { get; set; }
-        public IPeerIdentifier Recipient { get; set; }
-        public DateTimeOffset SentAt { get; set; }
+        /// <summary>
+        ///     Message stream
+        /// </summary>
+        IObservable<IObserverDto<T>> MessageStream { get; }
     }
 }

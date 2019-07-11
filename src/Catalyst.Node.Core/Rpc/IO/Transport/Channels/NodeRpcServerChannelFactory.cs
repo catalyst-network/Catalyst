@@ -27,7 +27,6 @@ using System.Reactive.Linq;
 using System.Security.Cryptography.X509Certificates;
 using Catalyst.Common.Interfaces.IO.EventLoop;
 using Catalyst.Common.Interfaces.IO.Handlers;
-using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Transport.Channels;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
@@ -45,7 +44,7 @@ namespace Catalyst.Node.Core.Rpc.IO.Transport.Channels
 {
     public class NodeRpcServerChannelFactory : TcpServerChannelFactory
     {
-        private readonly IRpcCorrelationManager _correlationManger;
+        private readonly IRpcMessageCorrelationManager _correlationManger;
         private readonly IAuthenticationStrategy _authenticationStrategy;
         private readonly IKeySigner _keySigner;
         private readonly IPeerIdValidator _peerIdValidator;
@@ -62,10 +61,12 @@ namespace Catalyst.Node.Core.Rpc.IO.Transport.Channels
                 new PeerIdValidationHandler(_peerIdValidator),
                 new AddressedEnvelopeToIMessageEncoder(),
                 new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
-                    new ProtocolMessageVerifyHandler(_keySigner), new ProtocolMessageSignHandler(_keySigner)
+                    new ProtocolMessageVerifyHandler(_keySigner),
+                    new ProtocolMessageSignHandler(_keySigner)
                 ),
                 new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
-                    new CorrelationHandler(_correlationManger), new CorrelatableHandler(_correlationManger)
+                    new CorrelationHandler<IRpcMessageCorrelationManager>(_correlationManger),
+                    new CorrelatableHandler<IRpcMessageCorrelationManager>(_correlationManger)
                 ),
                 _observableServiceHandler
             };
@@ -77,7 +78,7 @@ namespace Catalyst.Node.Core.Rpc.IO.Transport.Channels
         /// <param name="keySigner"></param>
         /// <param name="authenticationStrategy"></param>
         /// <param name="peerIdValidator"></param>
-        public NodeRpcServerChannelFactory(IRpcCorrelationManager correlationManger,
+        public NodeRpcServerChannelFactory(IRpcMessageCorrelationManager correlationManger,
             IKeySigner keySigner,
             IAuthenticationStrategy authenticationStrategy,
             IPeerIdValidator peerIdValidator)
