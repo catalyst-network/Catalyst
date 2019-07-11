@@ -21,19 +21,28 @@
 
 #endregion
 
+using System.Threading;
 using Catalyst.Common.Interfaces.Modules.Consensus.Deltas;
+using Catalyst.Protocol.Deltas;
 
-namespace Catalyst.Common.Interfaces.Modules.Consensus
+namespace Catalyst.Node.Core.Modules.Consensus.Deltas
 {
-    public interface IConsensus
+    public class ScoredCandidateDelta : IScoredCandidateDelta
     {
-        /// <see cref="IDeltaBuilder" />
-        IDeltaBuilder DeltaBuilder { get; }
+        private int _score;
 
-        /// <see cref="IDeltaHub" />
-        IDeltaHub DeltaHub { get; }
+        public ScoredCandidateDelta(CandidateDeltaBroadcast candidate, int score)
+        {
+            Candidate = candidate;
+            _score = score;
+        }
 
-        /// <see cref="IDeltaHashProvider"/>
-        IDeltaHashProvider DeltaHashProvider { get; }
+        public CandidateDeltaBroadcast Candidate { get; }
+        public int Score => Volatile.Read(ref _score);
+
+        public int IncreasePopularity(int voteCount)
+        {
+            return Interlocked.Add(ref _score, voteCount);
+        }
     }
 }

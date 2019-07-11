@@ -21,19 +21,22 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.Modules.Consensus.Deltas;
+using Catalyst.Protocol.Deltas;
 
-namespace Catalyst.Common.Interfaces.Modules.Consensus
+namespace Catalyst.Common.Interfaces.Modules.Consensus.Deltas
 {
-    public interface IConsensus
+    /// <summary>
+    /// The service in charge of building the delta state update used to update the ledger update 
+    /// for a given cycle.
+    /// </summary>
+    public interface IDeltaBuilder
     {
-        /// <see cref="IDeltaBuilder" />
-        IDeltaBuilder DeltaBuilder { get; }
-
-        /// <see cref="IDeltaHub" />
-        IDeltaHub DeltaHub { get; }
-
-        /// <see cref="IDeltaHashProvider"/>
-        IDeltaHashProvider DeltaHashProvider { get; }
+        /// <summary>
+        /// Builds a new candidate delta based on the content of its predecessor
+        /// </summary>
+        /// <param name="previousDeltaHash">The content based address of the previous delta on the Dfs.</param>
+        /// <returns>Returns a candidate delta object that contains the hash for the update,
+        /// the hash for the previous delta and the producer's PeerId</returns>
+        CandidateDeltaBroadcast BuildCandidateDelta(byte[] previousDeltaHash);
     }
 }
