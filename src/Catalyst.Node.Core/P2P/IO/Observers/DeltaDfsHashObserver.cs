@@ -22,11 +22,11 @@
 #endregion
 
 using System;
-using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Observers;
 using Catalyst.Common.Interfaces.Modules.Consensus.Deltas;
 using Catalyst.Common.IO.Observers;
+using Catalyst.Protocol;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Deltas;
 using Multiformats.Hash;

@@ -33,6 +33,7 @@ using Catalyst.Common.Interfaces.IO.Observers;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.P2P;
+using Catalyst.Protocol;
 using Catalyst.Protocol.Common;
 using Dawn;
 using DotNetty.Transport.Channels;

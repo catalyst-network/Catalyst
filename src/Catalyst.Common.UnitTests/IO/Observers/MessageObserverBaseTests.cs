@@ -30,6 +30,7 @@ using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.Util;
+using Catalyst.Protocol;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
 using Catalyst.Protocol.Rpc.Node;

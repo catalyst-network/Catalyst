@@ -26,6 +26,7 @@ using System.Text;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Common.Util;
+using Catalyst.Protocol;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
 using Catalyst.Protocol.Rpc.Node;
@@ -39,38 +40,6 @@ namespace Catalyst.Common.UnitTests.Extensions
 {
     public class ProtobufExtensionsTests
     {
-        [Fact]
-        public static void ShortenedFullName_should_remove_namespace_start()
-        {
-            TransactionBroadcast.Descriptor.FullName.Should().Be("Catalyst.Protocol.Transaction.TransactionBroadcast");
-            TransactionBroadcast.Descriptor.ShortenedFullName().Should().Be("Transaction.TransactionBroadcast");
-        }
-
-        [Fact]
-        public static void ShortenedProtoFullName_should_remove_namespace_start()
-        {
-            PingRequest.Descriptor.FullName.Should().Be("Catalyst.Protocol.IPPN.PingRequest");
-            typeof(PingRequest).ShortenedProtoFullName().Should().Be("IPPN.PingRequest");
-        }
-
-        [Theory]
-        [InlineData("MyFunnyRequest", "MyFunnyResponse")]
-        [InlineData("Request", "Response")]
-        [InlineData("Some.Namespace.ClassRequest", "Some.Namespace.ClassResponse")]
-        public static void GetResponseType_should_swap_request_suffix_for_response_suffix(string requestType, string responseType)
-        {
-            requestType.GetResponseType().Should().Be(responseType);
-        }
-
-        [Theory]
-        [InlineData("MyFunnyResponse", "MyFunnyRequest")]
-        [InlineData("Response", "Request")]
-        [InlineData("Some.Namespace.ClassResponse", "Some.Namespace.ClassRequest")]
-        public static void GetRequestType_should_swap_request_suffix_for_response_suffix(string responseType, string requestType)
-        {
-            responseType.GetRequestType().Should().Be(requestType);
-        }
-
         [Fact]
         public static void ToAnySigned_should_happen_new_guid_to_request_if_not_specified()
         {
@@ -122,14 +91,14 @@ namespace Catalyst.Common.UnitTests.Extensions
             var peerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("1");
             var gossipMessage = new TransactionBroadcast().ToProtocolMessage(peerIdentifier.PeerId, CorrelationId.GenerateCorrelationId())
                .ToProtocolMessage(peerIdentifier.PeerId, CorrelationId.GenerateCorrelationId());
-            gossipMessage.CheckIfMessageIsBroadcast().Should().BeTrue();
+            gossipMessage.IsBroadCastMessage().Should().BeTrue();
 
             var nonGossipMessage = new PingRequest().ToProtocolMessage(peerIdentifier.PeerId, CorrelationId.GenerateCorrelationId());
-            nonGossipMessage.CheckIfMessageIsBroadcast().Should().BeFalse();
+            nonGossipMessage.IsBroadCastMessage().Should().BeFalse();
 
             var secondNonGossipMessage = new PingRequest().ToProtocolMessage(peerIdentifier.PeerId, CorrelationId.GenerateCorrelationId())
                .ToProtocolMessage(peerIdentifier.PeerId, CorrelationId.GenerateCorrelationId());
-            secondNonGossipMessage.CheckIfMessageIsBroadcast().Should().BeFalse();
+            secondNonGossipMessage.IsBroadCastMessage().Should().BeFalse();
         }
 
         [Fact]

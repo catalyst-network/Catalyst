@@ -24,11 +24,11 @@
 using System;
 using System.Linq;
 using Catalyst.Common.Cryptography;
-using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.P2P;
 using Catalyst.Common.Util;
 using Catalyst.Cryptography.BulletProofs.Wrapper;
+using Catalyst.Protocol;
 using Catalyst.Protocol.Common;
 using Catalyst.TestUtils;
 using FluentAssertions;
