@@ -45,11 +45,6 @@ namespace Catalyst.Node.Core.UnitTests.Rpc.IO.Observers
 {
     public sealed class GetFileFromDfsRequestObserverTest : IDisposable
     {
-        public void Dispose()
-        {
-            _observer?.Dispose();
-        }
-
         private readonly IUploadFileTransferFactory _fileTransferFactory;
         private readonly IDfs _dfs;
         private readonly GetFileFromDfsRequestObserver _observer;
@@ -103,6 +98,11 @@ namespace Catalyst.Node.Core.UnitTests.Rpc.IO.Observers
             var protocolMessage = getFileFromDfsRequestMessage
                .ToProtocolMessage(PeerIdHelper.GetPeerId("TestMan"), CorrelationId.GenerateCorrelationId());
             return new ObserverDto(Substitute.For<IChannelHandlerContext>(), protocolMessage);
+        }
+        
+        public void Dispose()
+        {
+            _observer?.Dispose();
         }
     }
 }

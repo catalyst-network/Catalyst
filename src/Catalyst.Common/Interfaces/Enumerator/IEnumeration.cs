@@ -21,21 +21,17 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
-using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.IO.Messaging.Correlation;
+using System;
+using Catalyst.Common.Enumerator;
 
-namespace Catalyst.Common.IO.Messaging
+namespace Catalyst.Common.Interfaces.Enumerator
 {
-    internal sealed class MessageEvictionEvent : IMessageEvictionEvent
+    public interface IEnumeration : IEquatable<Enumeration>
     {
-        public object EvictedContent { get; }
-        public IPeerIdentifier PeerIdentifier { get; }
-        
-        public MessageEvictionEvent(CorrelatableMessage correlatableMessage)
-        {
-            EvictedContent = correlatableMessage.Content;
-            PeerIdentifier = correlatableMessage.Recipient;
-        }
+        string Name { get; }
+        int Id { get; }
+        string ToString();
+        bool Equals(object obj);
+        int GetHashCode();
     }
 }

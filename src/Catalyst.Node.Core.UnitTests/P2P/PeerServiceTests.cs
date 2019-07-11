@@ -142,9 +142,19 @@ namespace Catalyst.Node.Core.UnitTests.P2P
             await _serverChannel.SimulateReceivingMessagesAsync(message).ConfigureAwait(false);
         }
 
+        private void Dispose(bool disposing)
+        {
+            if (!disposing)
+            {
+                return;
+            }
+            
+            _peerService?.Dispose();
+        }
+
         public void Dispose()
         {
-            _peerService?.Dispose();
+            Dispose(true);
         }
     }
 }
