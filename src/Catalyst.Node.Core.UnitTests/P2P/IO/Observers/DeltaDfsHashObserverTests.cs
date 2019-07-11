@@ -69,7 +69,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.IO.Observers
         [Fact]
         public void HandleBroadcast_Should_Not_Try_Update_Invalid_Hash()
         {
-            var invalidNewHash = ByteUtil.GenerateRandomByteArray(21);
+            var invalidNewHash = Encoding.UTF8.GetBytes("invalid hash");
             var prevHash = Multihash.Sum(HashType.ID, Encoding.UTF8.GetBytes("prevHash"));
             var receivedMessage = PrepareReceivedMessage(invalidNewHash, prevHash);
 
