@@ -21,20 +21,17 @@
 
 #endregion
 
-using System.Collections.Concurrent;
-using Catalyst.Common.Interfaces.Network;
+using System;
+using Catalyst.Common.Interfaces.IO.Messaging.Dto;
+using Google.Protobuf;
 
-namespace Catalyst.Common.Interfaces.P2P.Discovery
+namespace Catalyst.Common.Interfaces.IO.Observables
 {
-    public interface IHastingsDiscovery : IPeerDiscovery
+    public interface IObservableMessageStreamer<out T> where T : IMessage
     {
-        IDns Dns { get; }
-        
-        IProducerConsumerCollection<IPeerIdentifier> Peers { get; }
-        
-        // IDisposable PingResponseMessageStream { get; }
-        // IDisposable GetNeighbourResponseStream { get; }
-        // IList<string> ParseDnsServersFromConfig(IConfigurationRoot rootSection);
-        // void PeerNeighbourSubscriptionHandler(IObserverDto<ProtocolMessage> messageDto);
+        /// <summary>
+        ///     Message stream
+        /// </summary>
+        IObservable<IObserverDto<T>> MessageStream { get; }
     }
 }

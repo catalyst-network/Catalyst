@@ -183,9 +183,16 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Dfs
                .And.CancellationToken.Should().Be(_cancellationTokenSource.Token);
         }
 
-        public void Dispose()
+        private void Dispose(bool disposing)
         {
+            if (!disposing)
+            {
+                return;
+            }
+            
             _cancellationTokenSource?.Dispose();
         }
+
+        public void Dispose() { Dispose(true); }
     }
 }

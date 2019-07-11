@@ -123,12 +123,22 @@
             ]
         },
         {
-            "type": "Catalyst.Common.Rpc.IO.Messaging.Correlation.RpcCorrelationManager, Catalyst.Common",
+            "type": "Catalyst.Common.Rpc.IO.Messaging.Correlation.RpcMessageCorrelationManager, Catalyst.Common",
             "services": [
                 {
-                    "type": "Catalyst.Common.Interfaces.Rpc.IO.Messaging.Correlation.IRpcCorrelationManager, Catalyst.Common"
+                    "type": "Catalyst.Common.Interfaces.Rpc.IO.Messaging.Correlation.IRpcMessageCorrelationManager, Catalyst.Common"
                 }
-            ]
+            ],
+            "instanceScope": "singleinstance"
+        },
+        {
+            "type": "Catalyst.Node.Core.P2P.IO.Messaging.Correlation.PeerMessageCorrelationManager",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.P2P.IO.Messaging.Correlation.IPeerMessageCorrelationManager, Catalyst.Common"
+                }
+            ],
+            "instanceScope": "singleinstance"
         },
         {
             "type": "Catalyst.Node.Core.P2P.PeerSettings",
@@ -204,6 +214,14 @@
             ]
         },
         {
+            "type": "Catalyst.Node.Core.P2P.PeerDiscovery",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.P2P.IPeerDiscovery, Catalyst.Common"
+                }
+            ]
+        },
+        {
             "type": "Catalyst.Common.Network.DevDnsClient, Catalyst.Common",
             "services": [
                 {
@@ -220,18 +238,10 @@
             ]
         },
         {
-            "type": "Catalyst.Node.Core.P2P.Discovery.HastingsDiscovery, Catalyst.Node.Core",
+            "type": "Catalyst.Node.Core.P2P.PeerService",
             "services": [
                 {
-                    "type": "Catalyst.Common.Interfaces.P2P.Discovery.IHastingsDiscovery, Catalyst.Common"
-                }
-            ]
-        },
-        {
-            "type": "Catalyst.Node.Core.P2P.PeerService`1[[Catalyst.Common.Interfaces.P2P.Discovery.IHastingsDiscovery, Catalyst.Common]], Catalyst.Node.Core",
-            "services": [
-                {
-                    "type": "Catalyst.Common.Interfaces.P2P.IPeerService`1[[Catalyst.Common.Interfaces.P2P.Discovery.IHastingsDiscovery, Catalyst.Common]], Catalyst.Common"
+                    "type": "Catalyst.Common.Interfaces.P2P.IPeerService, Catalyst.Common"
                 }
             ]
         },
@@ -290,6 +300,15 @@
             "services": [
                 {
                     "type": "Catalyst.Common.Interfaces.FileTransfer.IDownloadFileTransferFactory, Catalyst.Common"
+                }
+            ],
+            "instanceScope": "singleinstance"
+        },
+        {
+            "type": "Catalyst.Node.Core.P2P.ReputationSystem.ReputationManager",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.P2P.ReputationSystem.IReputationManager, Catalyst.Common"
                 }
             ],
             "instanceScope": "singleinstance"

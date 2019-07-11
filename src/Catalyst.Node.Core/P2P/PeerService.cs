@@ -32,18 +32,17 @@ using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Catalyst.Common.Interfaces.P2P.Discovery;
 
 namespace Catalyst.Node.Core.P2P
 {
-    public sealed class PeerService<TDiscovery> : UdpServer, IPeerService<TDiscovery> where TDiscovery : IPeerDiscovery
+    public sealed class PeerService : UdpServer, IPeerService
     {
-        public TDiscovery Discovery { get; }
+        public IPeerDiscovery Discovery { get; }
         public IObservable<IObserverDto<ProtocolMessage>> MessageStream { get; }
 
         public PeerService(IUdpServerEventLoopGroupFactory udpServerEventLoopGroupFactory,
             IUdpServerChannelFactory serverChannelFactory,
-            TDiscovery peerDiscovery,
+            IPeerDiscovery peerDiscovery,
             IEnumerable<IP2PMessageObserver> messageHandlers,
             IPeerSettings peerSettings,
             ILogger logger)

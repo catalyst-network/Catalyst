@@ -32,7 +32,6 @@ using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.IO.Observers;
 using Catalyst.Common.Interfaces.IO.Transport.Channels;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.Interfaces.P2P.Discovery;
 using Catalyst.Common.IO.EventLoop;
 using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Node.Core.P2P;
@@ -56,8 +55,8 @@ namespace Catalyst.Node.Core.UnitTests.P2P
         private readonly IPeerDiscovery _peerDiscovery;
         private readonly List<IP2PMessageObserver> _p2PMessageHandlers;
         private readonly EmbeddedObservableChannel _serverChannel;
-        private PeerService<IPeerDiscovery> _peerService;
-        private readonly IPeerSettings _peerSettings;
+        private PeerService _peerService;
+        private IPeerSettings _peerSettings;
 
         public PeerServiceTests(ITestOutputHelper output) : base(output)
         {
@@ -133,7 +132,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P
         {
             _p2PMessageHandlers.Add(pingRequestHandler);
 
-            _peerService = new PeerService<IPeerDiscovery>(new UdpServerEventLoopGroupFactory(new EventLoopGroupFactoryConfiguration()), 
+            _peerService = new PeerService(new UdpServerEventLoopGroupFactory(new EventLoopGroupFactoryConfiguration()), 
                 _udpServerServerChannelFactory,
                 _peerDiscovery,
                 _p2PMessageHandlers,
@@ -143,9 +142,19 @@ namespace Catalyst.Node.Core.UnitTests.P2P
             await _serverChannel.SimulateReceivingMessagesAsync(message).ConfigureAwait(false);
         }
 
+        private void Dispose(bool disposing)
+        {
+            if (!disposing)
+            {
+                return;
+            }
+            
+            _peerService?.Dispose();
+        }
+
         public void Dispose()
         {
-            _peerService?.Dispose();
+            Dispose(true);
         }
     }
 }

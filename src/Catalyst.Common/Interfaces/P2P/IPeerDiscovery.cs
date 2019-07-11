@@ -21,33 +21,28 @@
 
 #endregion
 
+using System;
 using System.Collections.Concurrent;
-using System.Threading.Tasks;
-using Catalyst.Common.Extensions;
+using System.Collections.Generic;
+using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.Network;
-using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.Interfaces.P2P.Discovery;
 using Catalyst.Common.P2P;
+using Catalyst.Protocol.Common;
+using Microsoft.Extensions.Configuration;
 using Serilog;
 using SharpRepository.Repository;
 
-namespace Catalyst.Node.Core.P2P.Discovery
+namespace Catalyst.Common.Interfaces.P2P
 {
-    public class HastingsDiscovery : IHastingsDiscovery
+    public interface IPeerDiscovery
     {
-        public ILogger Logger { get; }
-        public IRepository<Peer> PeerRepository { get; }
-        public Task DiscoveryAsync() { throw new System.NotImplementedException(); }
-        public IDns Dns { get; }
-        public IProducerConsumerCollection<IPeerIdentifier> Peers { get; }
-
-        public HastingsDiscovery(ILogger logger, IRepository<Peer> peerRepository, IDns dns, IPeerSettings peerSettings)
-        {
-            Logger = logger;
-            PeerRepository = peerRepository;
-            Dns = dns;
-            Peers = new ConcurrentQueue<IPeerIdentifier>();
-            Peers.TryAdd(Dns.GetSeedNodesFromDns(peerSettings.SeedServers).RandomElement());
-        }
+        // IDisposable PingResponseMessageStream { get; }
+        // IDisposable GetNeighbourResponseStream { get; }
+        // IDns Dns { get; }
+        // ILogger Logger { get; }
+        // IProducerConsumerCollection<IPeerIdentifier> Peers { get; }
+        // IRepository<Peer> PeerRepository { get; }
+        // IList<string> ParseDnsServersFromConfig(IConfigurationRoot rootSection);
+        // void PeerNeighbourSubscriptionHandler(IObserverDto<ProtocolMessage> messageDto);
     }
 }
