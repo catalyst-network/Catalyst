@@ -154,23 +154,13 @@ namespace Catalyst.Common.Keystore
 
         private string GetJsonFromKeyStore(KeyRegistryKey keyIdentifier) 
         {
-            if (keyIdentifier == KeyRegistryKey.DefaultKey)
-            {
-                return GetDefaultJsonFile();
-            }
-
-            throw new ArgumentException("Behaviour only defined for default key");
-        }
-
-        private string GetDefaultJsonFile()
-        {
             var directoryInfo = _fileSystem.GetCatalystDataDir().SubDirectoryInfo(Constants.KeyStoreDataSubDir);
             if (!directoryInfo.Exists)
             {
                 return null;
             }
 
-            FileInfo keyStoreFile = directoryInfo.GetFiles().FirstOrDefault();
+            FileInfo keyStoreFile = directoryInfo.GetFiles(keyIdentifier.Name).FirstOrDefault();
 
             if (keyStoreFile != null && keyStoreFile.Exists)
             {

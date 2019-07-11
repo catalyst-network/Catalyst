@@ -120,14 +120,16 @@ namespace Catalyst.Common.UnitTests.Keystore
         }
 
         [Fact]
-        public void Keystore_Throws_Exception_If_Password_Incorrect()
+        public async void Keystore_Throws_Exception_If_Password_Incorrect()
         {
             Ensure_No_Keystore_File_Exists();
+            _passwordReader.ReadSecurePassword(default, default).ReturnsForAnyArgs(TestPasswordReader.BuildSecureStringPassword("a different password"), TestPasswordReader.BuildSecureStringPassword("a different password2"));
 
             IPrivateKey privateKey = _context.GeneratePrivateKey();
-            _keystore.KeyStoreEncryptAsync(privateKey, KeyRegistryKey.DefaultKey).Wait();
-            _passwordReader.ReadSecurePassword(default, default).ReturnsForAnyArgs(TestPasswordReader.BuildSecureStringPassword("aDifferentPassword"));
-            Assert.Throws<AuthenticationException>(() => _keystore.KeyStoreDecrypt(KeyRegistryKey.DefaultKey));
+            await _keystore.KeyStoreEncryptAsync(privateKey, KeyRegistryKey.DefaultKey);
+            _keystore.KeyStoreDecrypt(KeyRegistryKey.DefaultKey);
+
+            //Assert.Throws<AuthenticationException>(() => ));
         }
 
         [Fact]
