@@ -1,4 +1,4 @@
-#region LICENSE
+﻿#region LICENSE
 
 /**
 * Copyright (c) 2019 Catalyst Network
@@ -22,15 +22,21 @@
 #endregion
 
 using System;
-using Catalyst.Common.Interfaces.P2P;
-using Google.Protobuf;
+using Catalyst.Common.P2P;
+using SharpRepository.Repository;
 
-namespace Catalyst.Common.IO.Messaging.Correlation
+namespace Catalyst.Common.Interfaces.P2P.ReputationSystem
 {
-    public sealed class CorrelatableMessage<T> where T : IMessage
-    {
-        public T Content { get; set; }
-        public IPeerIdentifier Recipient { get; set; }
-        public DateTimeOffset SentAt { get; set; }
+    public interface IReputationManager
+    { 
+        IRepository<Peer> PeerRepository { get; }
+        
+        IObservable<IPeerReputationChange> ReputationEventStream { get; }
+
+        IObservable<IPeerReputationChange> MergedEventStream { get; set; }
+
+        void MergeReputationStream(IObservable<IPeerReputationChange> reputationChangeStream);
+
+        void OnNext(IPeerReputationChange peerReputationChange);
     }
 }

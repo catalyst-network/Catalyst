@@ -26,11 +26,10 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Catalyst.Common.Extensions;
-using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.IO.Messaging.Broadcast;
-using Catalyst.Common.Interfaces.Rpc.IO.Messaging.Correlation;
+using Catalyst.Common.Interfaces.P2P.IO.Messaging.Correlation;
 using Catalyst.Common.IO.Handlers;
 using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Common.Util;
@@ -56,7 +55,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.IO.Transport.Channels
             private readonly List<IChannelHandler> _handlers;
 
             public TestPeerClientChannelFactory(IKeySigner keySigner,
-                IRpcCorrelationManager correlationManager,
+                IPeerMessageCorrelationManager correlationManager,
                 IPeerIdValidator peerIdValidator)
                 : base(keySigner, correlationManager, peerIdValidator)
             {
@@ -66,14 +65,14 @@ namespace Catalyst.Node.Core.UnitTests.P2P.IO.Transport.Channels
             public IReadOnlyCollection<IChannelHandler> InheritedHandlers => _handlers;
         }
 
-        private readonly IRpcCorrelationManager _correlationManager;
+        private readonly IPeerMessageCorrelationManager _correlationManager;
         private readonly IBroadcastManager _gossipManager;
         private readonly IKeySigner _keySigner;
         private readonly TestPeerClientChannelFactory _factory;
 
         public PeerClientChannelFactoryTests()
         {
-            _correlationManager = Substitute.For<IRpcCorrelationManager>();
+            _correlationManager = Substitute.For<IPeerMessageCorrelationManager>();
             _gossipManager = Substitute.For<IBroadcastManager>();
             _keySigner = Substitute.For<IKeySigner>();
 
