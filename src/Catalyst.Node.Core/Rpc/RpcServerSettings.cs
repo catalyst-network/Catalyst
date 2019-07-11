@@ -26,7 +26,7 @@ using System.Net;
 using Catalyst.Common.Interfaces.Rpc;
 using Dawn;
 
-namespace Catalyst.Node.Core.RPC
+namespace Catalyst.Node.Core.Rpc
 {
     /// <summary>
     ///     This class provides the settings for the RpcServer class.

@@ -60,7 +60,9 @@ namespace Catalyst.Common.Interfaces.Modules.Consensus.Delta
         /// emerge. This function should be called to trigger the broadcasting of the elected best
         /// candidate delta for a given cycle.
         /// </summary>
-        /// <seealso cref="https://github.com/catalyst-network/Catalyst.Node/blob/develop/Documentation/PoA.md#voting-phase"/>
+        /// <seealso>
+        ///     <cref>https://github.com/catalyst-network/Catalyst.Node/blob/develop/Documentation/PoA.md#voting-phase</cref>
+        /// </seealso>
         /// <param name="previousDeltaDfsHash">The hash of the delta preceding the candidate we favor.
         /// This is basically as an identifier for the cycle we are currently sending our vote for.</param>
         void BroadcastFavouriteCandidateDelta(byte[] previousDeltaDfsHash);
@@ -70,7 +72,9 @@ namespace Catalyst.Common.Interfaces.Modules.Consensus.Delta
         /// at the end of the voting phase of each cycle. Receiving these favourite deltas will allow it to
         /// choose which hash is the best for the cycle and potentially publish it or look for it on IPFS.
         /// </summary>
-        /// <seealso cref="https://github.com/catalyst-network/Catalyst.Node/blob/develop/Documentation/PoA.md#voting-phase"/>
+        /// <seealso>
+        ///     <cref>https://github.com/catalyst-network/Catalyst.Node/blob/develop/Documentation/PoA.md#voting-phase</cref>
+        /// </seealso>
         /// <param name="favouriteCandidateStream">The stream on which the incoming favourite deltas votes are
         /// expected to be pushed.</param>
         void SubscribeToFavouriteCandidateStream(IObservable<FavouriteDeltaBroadcast> favouriteCandidateStream);

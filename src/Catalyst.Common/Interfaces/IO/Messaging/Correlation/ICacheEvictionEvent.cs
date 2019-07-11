@@ -21,21 +21,14 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.IO.Messaging.Correlation;
+using Google.Protobuf;
 
-namespace Catalyst.Common.IO.Messaging
+namespace Catalyst.Common.Interfaces.IO.Messaging.Correlation
 {
-    internal sealed class MessageEvictionEvent : IMessageEvictionEvent
+    public interface ICacheEvictionEvent<out T> where T : IMessage
     {
-        public object EvictedContent { get; }
-        public IPeerIdentifier PeerIdentifier { get; }
-        
-        public MessageEvictionEvent(CorrelatableMessage correlatableMessage)
-        {
-            EvictedContent = correlatableMessage.Content;
-            PeerIdentifier = correlatableMessage.Recipient;
-        }
+        T EvictedContent { get; }
+        IPeerIdentifier PeerIdentifier { get; }
     }
 }

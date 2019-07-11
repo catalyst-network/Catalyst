@@ -25,10 +25,10 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Catalyst.Common.Extensions;
-using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Rpc.Authentication;
+using Catalyst.Common.Interfaces.Rpc.IO.Messaging.Correlation;
 using Catalyst.Common.IO.Handlers;
 using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Common.IO.Messaging.Dto;
@@ -52,16 +52,16 @@ namespace Catalyst.Node.Core.IntegrationTests.Rpc.IO.Transport.Channels
         private readonly NodeRpcClientChannelFactoryTests.TestNodeRpcClientChannelFactory _clientFactory;
         private readonly EmbeddedChannel _serverChannel;
         private readonly EmbeddedChannel _clientChannel;
-        private readonly IMessageCorrelationManager _clientCorrelationManager;
+        private readonly IRpcMessageCorrelationManager _clientCorrelationManager;
         private readonly IKeySigner _clientKeySigner;
         private readonly IAuthenticationStrategy _authenticationStrategy;
         private readonly IPeerIdValidator _peerIdValidator;
         private readonly IKeySigner _serverKeySigner;
-        private readonly IMessageCorrelationManager _serverCorrelationManager;
+        private readonly IRpcMessageCorrelationManager _serverCorrelationManager;
 
         public NodeRpcServerChannelFactoryTests()
         {
-            _serverCorrelationManager = Substitute.For<IMessageCorrelationManager>();
+            _serverCorrelationManager = Substitute.For<IRpcMessageCorrelationManager>();
             _serverKeySigner = Substitute.For<IKeySigner>();
 
             var peerSettings = Substitute.For<IPeerSettings>();
@@ -78,7 +78,7 @@ namespace Catalyst.Node.Core.IntegrationTests.Rpc.IO.Transport.Channels
                 _authenticationStrategy,
                 _peerIdValidator);
 
-            _clientCorrelationManager = Substitute.For<IMessageCorrelationManager>();
+            _clientCorrelationManager = Substitute.For<IRpcMessageCorrelationManager>();
             _clientKeySigner = Substitute.For<IKeySigner>();
            
             _clientFactory = new NodeRpcClientChannelFactoryTests.TestNodeRpcClientChannelFactory(
@@ -121,7 +121,7 @@ namespace Catalyst.Node.Core.IntegrationTests.Rpc.IO.Transport.Channels
             _serverChannel.WriteOutbound(dto);
             var sentBytes = _serverChannel.ReadOutbound<IByteBuffer>();
 
-            _serverCorrelationManager.DidNotReceiveWithAnyArgs().AddPendingRequest(Arg.Any<CorrelatableMessage>());
+            _serverCorrelationManager.DidNotReceiveWithAnyArgs().AddPendingRequest(Arg.Any<CorrelatableMessage<ProtocolMessage>>());
             
             _serverKeySigner.ReceivedWithAnyArgs(1).Sign(Arg.Any<byte[]>());
             

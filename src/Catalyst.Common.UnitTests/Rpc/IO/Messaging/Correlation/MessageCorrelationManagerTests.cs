@@ -30,17 +30,20 @@ using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.Util;
 using Catalyst.Common.IO.Messaging.Correlation;
+using Catalyst.Common.Rpc.IO.Messaging.Correlation;
+using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Primitives;
 using NSubstitute;
+using Serilog;
 using Xunit;
 
-namespace Catalyst.Common.UnitTests.IO.Messaging
+namespace Catalyst.Common.UnitTests.Rpc.IO.Messaging.Correlation
 {
-    public sealed class MessageCorrelationManagerTests
+    public sealed class RpcCorrelationManagerTests
     {
         [Fact]
         public async Task RequestStore_Should_Not_Keep_Records_For_Longer_Than_Ttl()
@@ -58,7 +61,7 @@ namespace Catalyst.Common.UnitTests.IO.Messaging
                 {
                     CorrelationId = c, PeerIdentifier = p
                 })
-               .Select(c => new CorrelatableMessage
+               .Select(c => new CorrelatableMessage<ProtocolMessage>
                 {
                     Content = new PingRequest().ToProtocolMessage(senderPeerId, c.CorrelationId),
                     Recipient = c.PeerIdentifier,
@@ -68,7 +71,7 @@ namespace Catalyst.Common.UnitTests.IO.Messaging
             var responses = requests.Select(r =>
                 new PingResponse().ToProtocolMessage(r.Recipient.PeerId, r.Content.CorrelationId.ToCorrelationId()));
 
-            var evictionObserver = Substitute.For<IObserver<IMessageEvictionEvent>>();
+            var evictionObserver = Substitute.For<IObserver<ICacheEvictionEvent<ProtocolMessage>>>();
 
             var changeToken = Substitute.For<IChangeToken>();
             var changeTokenProvider = Substitute.For<IChangeTokenProvider>();
@@ -76,7 +79,7 @@ namespace Catalyst.Common.UnitTests.IO.Messaging
 
             using (var cache = new MemoryCache(new MemoryCacheOptions()))
             {
-                var messageCorrelationCacheManager = new MessageCorrelationManager(cache, changeTokenProvider);
+                var messageCorrelationCacheManager = new RpcMessageCorrelationManager(cache, Substitute.For<ILogger>(), changeTokenProvider);
 
                 using (messageCorrelationCacheManager.EvictionEvents
                    .SubscribeOn(TaskPoolScheduler.Default)
@@ -95,7 +98,7 @@ namespace Catalyst.Common.UnitTests.IO.Messaging
                     await TaskHelper.WaitForAsync(() => evictionObserver.ReceivedCalls().Any(),
                         TimeSpan.FromMilliseconds(2000));
 
-                    evictionObserver.Received(requestCount).OnNext(Arg.Any<IMessageEvictionEvent>());
+                    evictionObserver.Received(requestCount).OnNext(Arg.Any<ICacheEvictionEvent<ProtocolMessage>>());
                 }
             }
         }

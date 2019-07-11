@@ -21,14 +21,11 @@
 
 #endregion
 
-using Catalyst.Common.IO.Messaging.Correlation;
-
 namespace Catalyst.Common.IO.Messaging.Broadcast
 {
     /// <summary>
     /// Represents a gossip request to the gossip cache
     /// </summary>
-    /// <seealso cref="CorrelatableMessage" />
     public sealed class BroadcastMessage
     {
         /// <summary>Gets or sets the gossip count.</summary>

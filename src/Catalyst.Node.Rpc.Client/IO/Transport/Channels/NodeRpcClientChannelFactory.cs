@@ -27,11 +27,11 @@ using System.Reactive.Linq;
 using System.Security.Cryptography.X509Certificates;
 using Catalyst.Common.Interfaces.IO.EventLoop;
 using Catalyst.Common.Interfaces.IO.Handlers;
-using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Transport.Channels;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.Interfaces.Rpc.IO.Messaging.Correlation;
 using Catalyst.Common.IO.Codecs;
 using Catalyst.Common.IO.Handlers;
 using Catalyst.Common.IO.Transport.Channels;
@@ -45,7 +45,7 @@ namespace Catalyst.Node.Rpc.Client.IO.Transport.Channels
     public class NodeRpcClientChannelFactory : TcpClientChannelFactory
     {
         private readonly IKeySigner _keySigner;
-        private readonly IMessageCorrelationManager _messageCorrelationCache;
+        private readonly IRpcMessageCorrelationManager _messageCorrelationCache;
         private readonly IPeerIdValidator _peerIdValidator;
         private readonly IObservableServiceHandler _observableServiceHandler;
 
@@ -57,7 +57,7 @@ namespace Catalyst.Node.Rpc.Client.IO.Transport.Channels
         /// <param name="peerIdValidator"></param>
         /// <param name="backLogValue"></param>
         public NodeRpcClientChannelFactory(IKeySigner keySigner,
-            IMessageCorrelationManager messageCorrelationCache,
+            IRpcMessageCorrelationManager messageCorrelationCache,
             IPeerIdValidator peerIdValidator,
             int backLogValue = 100) : base(backLogValue)
         {
@@ -81,7 +81,8 @@ namespace Catalyst.Node.Rpc.Client.IO.Transport.Channels
                     new ProtocolMessageVerifyHandler(_keySigner), new ProtocolMessageSignHandler(_keySigner)
                 ),
                 new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
-                    new CorrelationHandler(_messageCorrelationCache), new CorrelatableHandler(_messageCorrelationCache)
+                    new CorrelationHandler<IRpcMessageCorrelationManager>(_messageCorrelationCache),
+                    new CorrelatableHandler<IRpcMessageCorrelationManager>(_messageCorrelationCache)
                 ),
                 _observableServiceHandler
             };

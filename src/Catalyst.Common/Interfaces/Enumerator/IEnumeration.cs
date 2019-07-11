@@ -1,4 +1,4 @@
-﻿#region LICENSE
+#region LICENSE
 
 /**
 * Copyright (c) 2019 Catalyst Network
@@ -21,20 +21,17 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.P2P;
+using System;
+using Catalyst.Common.Enumerator;
 
-namespace Catalyst.Node.Core.P2P
+namespace Catalyst.Common.Interfaces.Enumerator
 {
-    internal sealed class PeerReputationChange
-        : IPeerReputationChange
+    public interface IEnumeration : IEquatable<Enumeration>
     {
-        public IPeerIdentifier PeerIdentifier { get; }
-        public int ReputationChange { get; }
-
-        public PeerReputationChange(IPeerIdentifier peerIdentifier, int reputationChange)
-        {
-            PeerIdentifier = peerIdentifier;
-            ReputationChange = reputationChange;
-        }
+        string Name { get; }
+        int Id { get; }
+        string ToString();
+        bool Equals(object obj);
+        int GetHashCode();
     }
 }

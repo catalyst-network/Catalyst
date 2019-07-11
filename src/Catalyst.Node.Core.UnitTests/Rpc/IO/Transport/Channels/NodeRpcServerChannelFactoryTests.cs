@@ -26,10 +26,10 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Catalyst.Common.Extensions;
-using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Rpc.Authentication;
+using Catalyst.Common.Interfaces.Rpc.IO.Messaging.Correlation;
 using Catalyst.Common.IO.Codecs;
 using Catalyst.Common.IO.Handlers;
 using Catalyst.Common.IO.Messaging.Correlation;
@@ -54,7 +54,7 @@ namespace Catalyst.Node.Core.UnitTests.Rpc.IO.Transport.Channels
         {
             private readonly List<IChannelHandler> _handlers;
 
-            public TestNodeRpcServerChannelFactory(IMessageCorrelationManager correlationManager,
+            public TestNodeRpcServerChannelFactory(IRpcMessageCorrelationManager correlationManager,
                 IKeySigner keySigner,
                 IAuthenticationStrategy authenticationStrategy,
                 IPeerIdValidator peerIdValidator)
@@ -66,13 +66,13 @@ namespace Catalyst.Node.Core.UnitTests.Rpc.IO.Transport.Channels
             public IReadOnlyCollection<IChannelHandler> InheritedHandlers => _handlers;
         }
 
-        private readonly IMessageCorrelationManager _correlationManager;
+        private readonly IRpcMessageCorrelationManager _correlationManager;
         private readonly TestNodeRpcServerChannelFactory _factory;
         private readonly IKeySigner _keySigner;
 
         public NodeRpcServerChannelFactoryTests()
         {
-            _correlationManager = Substitute.For<IMessageCorrelationManager>();
+            _correlationManager = Substitute.For<IRpcMessageCorrelationManager>();
             _keySigner = Substitute.For<IKeySigner>();
 
             var peerSettings = Substitute.For<IPeerSettings>();

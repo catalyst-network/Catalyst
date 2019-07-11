@@ -1,4 +1,4 @@
-﻿#region LICENSE
+#region LICENSE
 
 /**
 * Copyright (c) 2019 Catalyst Network
@@ -21,11 +21,14 @@
 
 #endregion
 
-namespace Catalyst.Common.Interfaces.P2P
+using System;
+using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
+using Catalyst.Protocol.Common;
+
+namespace Catalyst.Common.Interfaces.Rpc.IO.Messaging.Correlation
 {
-    public interface IPeerReputationChange
+    public interface IRpcMessageCorrelationManager : IMessageCorrelationManager
     {
-        IPeerIdentifier PeerIdentifier { get; }
-        int ReputationChange { get; }
+        IObservable<ICacheEvictionEvent<ProtocolMessage>> EvictionEvents { get; }
     }
 }

@@ -36,7 +36,7 @@ using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.IO.Transport;
 using Serilog;
 
-namespace Catalyst.Node.Core.RPC
+namespace Catalyst.Node.Core.Rpc
 {
     public class NodeRpcServer : TcpServer, INodeRpcServer
     {

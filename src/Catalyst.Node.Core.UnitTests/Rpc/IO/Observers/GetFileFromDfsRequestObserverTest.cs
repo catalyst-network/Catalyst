@@ -21,6 +21,7 @@
 
 #endregion
 
+using System;
 using System.IO;
 using System.Threading;
 using Catalyst.Common.Config;
@@ -42,7 +43,7 @@ using Xunit;
 
 namespace Catalyst.Node.Core.UnitTests.Rpc.IO.Observers
 {
-    public sealed class GetFileFromDfsRequestObserverTest
+    public sealed class GetFileFromDfsRequestObserverTest : IDisposable
     {
         private readonly IUploadFileTransferFactory _fileTransferFactory;
         private readonly IDfs _dfs;
@@ -97,6 +98,11 @@ namespace Catalyst.Node.Core.UnitTests.Rpc.IO.Observers
             var protocolMessage = getFileFromDfsRequestMessage
                .ToProtocolMessage(PeerIdHelper.GetPeerId("TestMan"), CorrelationId.GenerateCorrelationId());
             return new ObserverDto(Substitute.For<IChannelHandlerContext>(), protocolMessage);
+        }
+        
+        public void Dispose()
+        {
+            _observer?.Dispose();
         }
     }
 }

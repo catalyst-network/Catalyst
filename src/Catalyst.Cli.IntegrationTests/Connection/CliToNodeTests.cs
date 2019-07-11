@@ -34,8 +34,6 @@ using Catalyst.Common.Config;
 using System.Linq;
 using System.IO;
 using Catalyst.Common.Interfaces;
-using System.Threading;
-using System.Threading.Tasks;
 using NSubstitute;
 using Serilog;
 using Catalyst.TestUtils;
@@ -43,7 +41,6 @@ using Ipfs.CoreApi;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Cli.IntegrationTests.Commands;
 using Constants = Catalyst.Common.Config.Constants;
-
 
 namespace Catalyst.Cli.IntegrationTests.Connection
 {
@@ -85,7 +82,8 @@ namespace Catalyst.Cli.IntegrationTests.Connection
                 peerSettings.SeedServers.Returns(new[]
                 {
                     "seed1.server.va",
-                    "island.domain.tv"});
+                    "island.domain.tv"
+                });
 
                 var passwordReader = Substitute.For<IPasswordReader>();
                 passwordReader.ReadSecurePassword().ReturnsForAnyArgs(TestPasswordReader.BuildSecureStringPassword("trendy"));
