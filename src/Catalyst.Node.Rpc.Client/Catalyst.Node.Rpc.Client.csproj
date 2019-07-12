@@ -11,6 +11,20 @@
     </PropertyGroup>
     <Import Project="../Common.Projects.props" />
     <ItemGroup>
+      <Compile Remove="IO\Observers\AddFileToDfsResponseObserver.cs" />
+      <Compile Remove="IO\Observers\GetFileFromDfsResponseObserver.cs" />
+      <Compile Remove="IO\Observers\GetInfoResponseObserver.cs" />
+      <Compile Remove="IO\Observers\GetMempoolResponseObserver.cs" />
+      <Compile Remove="IO\Observers\PeerBlackListingResponseObserver.cs" />
+      <Compile Remove="IO\Observers\PeerCountResponseObserver.cs" />
+      <Compile Remove="IO\Observers\PeerListResponseObserver.cs" />
+      <Compile Remove="IO\Observers\PeerReputationResponseObserver.cs" />
+      <Compile Remove="IO\Observers\RemovePeerResponseObserver.cs" />
+      <Compile Remove="IO\Observers\SignMessageResponseObserver.cs" />
+      <Compile Remove="IO\Observers\TransferFileBytesResponseObserver.cs" />
+      <Compile Remove="IO\Observers\VerifyMessageResponseObserver.cs" />
+    </ItemGroup>
+    <ItemGroup>
         <ProjectReference Include="..\Catalyst.Common\Catalyst.Common.csproj" />
     </ItemGroup>
     <ItemGroup>

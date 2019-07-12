@@ -22,8 +22,14 @@
 #endregion
 
 using Catalyst.Common.Interfaces.IO.Transport;
+using Catalyst.Common.Interfaces.Rpc.IO.Messaging.Dto;
+using Google.Protobuf;
+using System;
 
 namespace Catalyst.Common.Interfaces.Rpc
 {
-    public interface INodeRpcClient : ISocketClient { }
+    public interface INodeRpcClient : ISocketClient
+    {
+        IObservable<IRPCClientMessageDto<IMessage>> MessageResponseStream { get; }
+    }
 }

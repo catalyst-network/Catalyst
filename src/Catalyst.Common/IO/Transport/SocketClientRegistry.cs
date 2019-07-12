@@ -21,22 +21,59 @@
 
 #endregion
 
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Net;
+using System.Reactive.Linq;
+using System.Reactive.Subjects;
 using Catalyst.Common.Interfaces.IO.Transport;
 using Dawn;
 
 namespace Catalyst.Common.IO.Transport
 {
+    public interface iEventType
+    {
+
+    }
+
+    public interface iObservableEvent
+    {
+
+    }
+
+    public class ObservableEvent<T> where T : iObservableEvent
+    {
+
+    }
+
+    public class SocketClientRegistryEvent : iObservableEvent
+    {
+
+    }
+
+    public class SocketClientRegistryConnected : SocketClientRegistryEvent
+    {
+        public int SocketHashCode { set; get; }
+    }
+
+    public class SocketClientRegistryDisconnected : SocketClientRegistryEvent
+    {
+        public int SocketHashCode { set; get; }
+    }
+
     public sealed class SocketClientRegistry<TSocketChannel>
         : ISocketClientRegistry<TSocketChannel>
         where TSocketChannel : class, ISocketClient
     {
+        public IObservable<SocketClientRegistryEvent> EventStream { get; }
+        private ReplaySubject<SocketClientRegistryEvent> EventReplySubject = new ReplaySubject<SocketClientRegistryEvent>(1);
         public IDictionary<int, TSocketChannel> Registry { get; }
 
         public SocketClientRegistry()
         {
+            EventStream = EventReplySubject.AsObservable();
+
             Registry = new ConcurrentDictionary<int, TSocketChannel>();
         }
 
@@ -54,7 +91,13 @@ namespace Catalyst.Common.IO.Transport
             Guard.Argument(socketHashCode, nameof(socketHashCode)).NotZero();
             Guard.Argument(socket.Channel.Active, nameof(socket))
                .True("Unable to add inactive client to the registry.");
-            return Registry.TryAdd(socketHashCode, socket);
+
+            var addedToRegistry = Registry.TryAdd(socketHashCode, socket);
+            if (addedToRegistry)
+            {
+                EventReplySubject.OnNext(new SocketClientRegistryConnected { SocketHashCode = socketHashCode });
+            }
+            return addedToRegistry;
         }
 
         /// <inheritdoc />
