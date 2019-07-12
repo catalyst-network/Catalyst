@@ -26,6 +26,7 @@ using System.Collections.Concurrent;
 using System.IO;
 using System.Net;
 using Autofac;
+using Catalyst.Protocol.Common;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
@@ -46,6 +47,8 @@ using Serilog.Core;
 using SharpRepository.InMemoryRepository;
 using Xunit;
 using Xunit.Abstractions;
+using Catalyst.Common.Util;
+using Catalyst.Cryptography.BulletProofs.Wrapper.Types;
 using Constants = Catalyst.Common.Config.Constants;
 using Peer = Catalyst.Common.P2P.Peer;
 
@@ -60,6 +63,8 @@ namespace Catalyst.Node.Core.IntegrationTests.P2P
         private readonly PingRequest _pingRequest;
         private readonly IConfigurationRoot _config;
         private readonly PeerClientFixture _peerClientFixture;
+        private readonly IKeySigner _serverKeySigner;
+        private readonly IPeerIdValidator _peerIdValidator;
 
         public PeerValidationIntegrationTest(ITestOutputHelper output) : base(output)
         {
@@ -71,6 +76,10 @@ namespace Catalyst.Node.Core.IntegrationTests.P2P
             _pid = PeerIdentifierHelper.GetPeerIdentifier("im_a_key");
             _guid = Guid.NewGuid();
             _logger = Substitute.For<ILogger>();
+            _serverKeySigner = Substitute.For<IKeySigner>();
+            _peerIdValidator = Substitute.For<IPeerIdValidator>();
+
+
             _pingRequest = new PingRequest();
             //_peerClientFixture = new PeerClientFixture();
             ConfigureContainerBuilder(_config, true, true);
@@ -99,7 +108,7 @@ namespace Catalyst.Node.Core.IntegrationTests.P2P
             }
         }
 
-        [Fact(Skip = "due to major change")]
+        [Fact/*(Skip = "due to major change")*/]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void PeerChallenge_PeerIdentifiers_Expect_To_Succeed_Valid_IP_Port_PublicKey()
         {
@@ -111,6 +120,23 @@ namespace Catalyst.Node.Core.IntegrationTests.P2P
                     var targetHost = new IPEndPoint(peerSettings.BindAddress,
                         peerSettings.Port + new Random().Next(0, 5000));
 
+                    var sigBytes = ByteUtil.GenerateRandomByteArray(Cryptography.BulletProofs.Wrapper.FFI.GetSignatureLength());
+                    var pubBytes = ByteUtil.GenerateRandomByteArray(Cryptography.BulletProofs.Wrapper.FFI.GetPublicKeyLength());
+                    var sig = new Signature(sigBytes, pubBytes);
+
+                    var recipient = new PeerIdentifier("32kssh5iflgk3jfmcjs03ldj4hfgs8gn".ToUtf8ByteString().ToByteArray(), peerSettings.BindAddress,
+                        peerSettings.Port, Substitute.For<IPeerIdClientId>());
+
+                    //var recipient = PeerIdentifierHelper.GetPeerIdentifier("recipient", "Tc", 1, peerSettings.BindAddress, peerSettings.Port);
+
+                    var sender = PeerIdentifierHelper.GetPeerIdentifier("sender", "Tc", 1, peerSettings.BindAddress, peerSettings.Port);
+
+                    _serverKeySigner.Sign(Arg.Any<byte[]>()).ReturnsForAnyArgs(sig);
+
+                    _peerIdValidator.ValidatePeerIdFormat(sender.PeerId);
+                    _peerIdValidator.ValidatePeerIdFormat(recipient.PeerId);
+
+
                     var eventLoopGroupFactoryConfiguration = new EventLoopGroupFactoryConfiguration
                     {
                         TcpClientHandlerWorkerThreads = 2,
@@ -120,11 +146,11 @@ namespace Catalyst.Node.Core.IntegrationTests.P2P
                     };
 
                     var peerValidator = new PeerValidator(targetHost, peerSettings, peerService, _logger,
-                        new PeerClient(new PeerClientChannelFactory(Substitute.For<IKeySigner>(),
-                                Substitute.For<IMessageCorrelationManager>(), Substitute.For<IPeerIdValidator>()),
-                            new UdpClientEventLoopGroupFactory(eventLoopGroupFactoryConfiguration)), new PeerIdentifier(peerSettings, Substitute.For<IPeerIdClientId>()));
+                        new PeerClient(new PeerClientChannelFactory(_serverKeySigner,
+                                Substitute.For<IMessageCorrelationManager>(), _peerIdValidator),
+                            new UdpClientEventLoopGroupFactory(eventLoopGroupFactoryConfiguration)), sender);
 
-                    var valid = peerValidator.PeerChallengeResponse(new PeerIdentifier(peerSettings, Substitute.For<IPeerIdClientId>()));
+                    var valid = peerValidator.PeerChallengeResponse(recipient);
 
                     valid.Should().BeTrue();
                 }

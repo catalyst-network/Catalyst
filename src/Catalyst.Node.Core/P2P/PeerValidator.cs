@@ -33,21 +33,29 @@ using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.IO.Observers;
 using DotNetty.Transport.Channels;
+using Catalyst.Common.Extensions;
 using Serilog;
+using System.Linq;
+using System.Reactive.Linq;
+using System.Threading.Tasks;
+using Catalyst.Common.Util;
+using Catalyst.Common.Interfaces.IO.Messaging.Dto;
+using System.Collections.Concurrent;
 
 namespace Catalyst.Node.Core.P2P
 {
-    public class PeerValidator : ResponseObserverBase<PingResponse>,
-        IP2PMessageObserver, 
+    public class PeerValidator : /*: RequestObserverBase<PingRequest, PingResponse>, *//*RequestObserverBase<PingRequest>,*/
+        //IP2PMessageObserver, 
         IPeerValidator
     {
-        private readonly IPEndPoint _hostEndPoint;
-        private readonly IPeerSettings _peerSettings;
+        //private readonly IPEndPoint _hostEndPoint;
+        //private readonly IPeerSettings _peerSettings;
         private readonly IPeerService _peerService;
         private readonly ILogger _logger;
         private readonly IPeerIdentifier _senderIdentifier;
 
         private readonly IDisposable _incomingPingResponseSubscription;
+        private readonly ConcurrentStack<IObserverDto<ProtocolMessage>> _receivedResponses;
 
         private readonly IPeerClient _peerClient;
 
@@ -58,19 +66,34 @@ namespace Catalyst.Node.Core.P2P
             IPeerService peerService,
             ILogger logger,
             IPeerClient peerClient,
-            IPeerIdentifier senderIdentifier) : base(logger)
+            IPeerIdentifier senderIdentifier) 
         {
-            _peerSettings = peerSettings;
+            _receivedResponses = new ConcurrentStack<IObserverDto<ProtocolMessage>>();
+            _incomingPingResponseSubscription = peerService.MessageStream.Subscribe(this);
+
             _peerService = peerService;
-            _hostEndPoint = hostEndPoint;
+            //_hostEndPoint = hostEndPoint;
             _senderIdentifier = senderIdentifier;
             _logger = logger;
             _peerClient = peerClient;
         }
 
-        protected override void HandleResponse(PingResponse pingResponse, IChannelHandlerContext channelHandlerContext, IPeerIdentifier senderPeerIdentifier, ICorrelationId correlationId)
+        //this may well be responding to outbound messages rather than inbound
+        //when code was commented out RequestObserverBase, in wireshark there was no pingresponse
+        //however in all cases the onext worked but with sender message
+        //need to ensure pingresponse reach this
+        public void OnNext(IObserverDto<ProtocolMessage> messageDto)
         {
-            Logger.Debug("received ping response");
+            if (messageDto.Payload.Equals(NullObjects.ProtocolMessage))
+            {
+                return;
+            }
+            _receivedResponses.Push(messageDto);
+        }
+
+        protected PingResponse HandleRequest(PingRequest messageDto, IChannelHandlerContext channelHandlerContext, IPeerIdentifier senderPeerIdentifier, ICorrelationId correlationId)
+        {
+            return new PingResponse(){ };
         }
 
         public void OnCompleted() { _logger.Information("End of {0} stream.", nameof(ProtocolMessage)); }
@@ -80,38 +103,47 @@ namespace Catalyst.Node.Core.P2P
             _logger.Error(error, "Error occured in {0} stream.", nameof(ProtocolMessage));
         }
 
-        public bool PeerChallengeResponse(PeerIdentifier recipientPeerIdentifier)
+        public bool PeerChallengeResponse(IPeerIdentifier recipientPeerIdentifier)
         {
             try
             {
-                var pingRequest = new PingRequest();
-                var messageDto = new MessageDto<PingRequest>(pingRequest,
+                var correlationId = CorrelationId.GenerateCorrelationId();
+
+                var protocolMessage = new PingRequest().ToProtocolMessage(_senderIdentifier.PeerId, correlationId);
+                var messageDto = new MessageDto<ProtocolMessage>(
+                    protocolMessage,
                     _senderIdentifier,
                     recipientPeerIdentifier,
-                    CorrelationId.GenerateCorrelationId());
+                    CorrelationId.GenerateCorrelationId()
+                );
+
+                var sendPubKey = _senderIdentifier.PeerId.PublicKey.ToStringUtf8();
+                var recPubKey = recipientPeerIdentifier.PeerId.PublicKey.ToStringUtf8();
+
 
                 ((PeerClient)_peerClient).SendMessage(messageDto);
 
-                //var tasks = new IChanneledMessageStreamer<ProtocolMessage>[]
-                //    {
-                //        _peerService
-                //    }
-                //   .Select(async p =>
-                //        await p.MessageStream.FirstAsync(a => a != null && a != NullObjects.ProtocolMessageDto))
-                //   .ToArray();
+                var tasks = new IObservableMessageStreamer<ProtocolMessage>[]
+                    {
+                        _peerService
+                    }.
+                    Select(async p =>
+                        await p.MessageStream.FirstAsync(a => a != null && a != NullObjects.ObserverDto))
+                   .ToArray();
 
-                //Task.WaitAll(tasks, TimeSpan.FromMilliseconds(2500));
+                Task.WaitAll(tasks, TimeSpan.FromMilliseconds(10000));
 
-                //if (_receivedResponses.Any())
-                //{
-                //    if (_receivedResponses.Last().Payload.PeerId.PublicKey.ToStringUtf8() ==
-                //        recipientPeerIdentifier.PeerId.PublicKey.ToStringUtf8())
-                //    {
-                //        return true;
-                //    }
-                //}
+                if (_receivedResponses.Any())
+                {
+                    var recippientPubKey = recipientPeerIdentifier.PeerId.PublicKey.ToStringUtf8();
+                    var receivedPubKey = _receivedResponses.Last().Payload.PeerId.PublicKey.ToStringUtf8();
 
-                //return false;
+                    if (_receivedResponses.Last().Payload.PeerId.PublicKey.ToStringUtf8() ==
+                        recipientPeerIdentifier.PeerId.PublicKey.ToStringUtf8())
+                    {
+                        return true;
+                    }
+                }                
             }
             catch (Exception e)
             {

@@ -38,6 +38,7 @@ using DotNetty.Buffers;
 using DotNetty.Codecs;
 using DotNetty.Codecs.Protobuf;
 using DotNetty.Transport.Channels;
+using DotNetty.Transport.Channels.Sockets;
 using Google.Protobuf;
 
 namespace Catalyst.Node.Core.P2P.IO.Transport.Channels
@@ -51,7 +52,7 @@ namespace Catalyst.Node.Core.P2P.IO.Transport.Channels
         protected override List<IChannelHandler> Handlers =>
             new List<IChannelHandler>
             {
-                new FlushPipelineHandler<IByteBuffer>(),
+                new FlushPipelineHandler<DatagramPacket>(),
                 new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
                     new DatagramPacketDecoder(new ProtobufDecoder(ProtocolMessageSigned.Parser)),
                     new DatagramPacketEncoder<IMessage>(new ProtobufEncoder())
