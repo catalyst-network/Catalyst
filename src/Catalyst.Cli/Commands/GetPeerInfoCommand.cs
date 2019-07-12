@@ -21,6 +21,7 @@
 
 #endregion
 
+using System.Net;
 using Catalyst.Cli.CommandTypes;
 using Catalyst.Cli.Options;
 using Catalyst.Common.Interfaces.Cli.Commands;
