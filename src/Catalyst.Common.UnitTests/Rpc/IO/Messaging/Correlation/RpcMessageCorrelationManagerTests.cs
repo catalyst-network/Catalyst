@@ -97,7 +97,7 @@ namespace Catalyst.Common.UnitTests.Rpc.IO.Messaging.Correlation
 
             var evictionObserver = Substitute.For<IObserver<ICacheEvictionEvent<ProtocolMessage>>>();
             
-            using (CorrelationManager.EvictionEvents.SubscribeOn(ImmediateScheduler.Instance)
+            using (CorrelationManager.EvictionEvents.SubscribeOn(TaskPoolScheduler.Default)
                .Subscribe(evictionObserver.OnNext))
             {
                 requests.ForEach(r => CorrelationManager.AddPendingRequest(r));
@@ -111,7 +111,7 @@ namespace Catalyst.Common.UnitTests.Rpc.IO.Messaging.Correlation
                 }
 
                 await TaskHelper.WaitForAsync(() => evictionObserver.ReceivedCalls().Any(),
-                    TimeSpan.FromMilliseconds(1000));
+                    TimeSpan.FromMilliseconds(2000));
                 
                 evictionObserver.Received(requestCount).OnNext(Arg.Any<ICacheEvictionEvent<ProtocolMessage>>());
             }
