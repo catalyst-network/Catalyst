@@ -111,7 +111,7 @@ namespace Catalyst.Common.UnitTests.Rpc.IO.Messaging.Correlation
                 }
 
                 await TaskHelper.WaitForAsync(() => evictionObserver.ReceivedCalls().Any(),
-                    TimeSpan.FromSeconds(2));
+                    TimeSpan.FromMilliseconds(2000));
                 
                 evictionObserver.Received(requestCount).OnNext(Arg.Any<ICacheEvictionEvent<ProtocolMessage>>());
             }
