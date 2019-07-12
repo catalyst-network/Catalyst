@@ -25,10 +25,12 @@ using Catalyst.Cli.CommandTypes;
 using Catalyst.Cli.Options;
 using Catalyst.Common.Interfaces.Cli.Commands;
 using Catalyst.Protocol.Rpc.Node;
+using System;
+using System.Diagnostics;
 
 namespace Catalyst.Cli.Commands
 {
-    public sealed class GetVersionCommand : BaseMessageCommand<VersionRequest, GetVersionOptions>
+    public sealed class GetVersionCommand : BaseMessageCommand<VersionRequest, VersionResponse, GetVersionOptions>
     {
         public GetVersionCommand(ICommandContext commandContext) : base(commandContext) { }
 
@@ -38,6 +40,11 @@ namespace Catalyst.Cli.Commands
             {
                 Query = true
             };
+        }
+
+        protected override void ResponseMessage(VersionResponse response)
+        {
+            Console.WriteLine($"Version {response.Version}");
         }
     }
 }

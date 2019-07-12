@@ -22,14 +22,19 @@
 #endregion
 
 using System;
+using System.Reactive.Linq;
+using System.Reactive.Subjects;
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.IO.Observers;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.Interfaces.Rpc.IO.Messaging.Dto;
 using Catalyst.Common.IO.Observers;
+using Catalyst.Node.Rpc.Client.IO.Messaging.Dto;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using DotNetty.Transport.Channels;
+using Google.Protobuf;
 using ILogger = Serilog.ILogger;
 
 namespace Catalyst.Node.Rpc.Client.IO.Observers
@@ -44,6 +49,9 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
     {
         private readonly IUserOutput _output;
 
+        public ReplaySubject<IRPCClientMessageDto<IMessage>> MessageResponse;
+        public IObservable<IRPCClientMessageDto<IMessage>> MessageResponseStream => MessageResponse.AsObservable();
+
         /// <summary>
         /// Handles the VersionResponse message sent from the <see>
         ///     <cref>GetVersionRequestHandler</cref>
@@ -57,8 +65,9 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
             : base(logger)
         {
             _output = output;
+            MessageResponse = new ReplaySubject<IRPCClientMessageDto<IMessage>>(1);
         }
-        
+
         /// <summary>
         /// 
         /// </summary>
@@ -81,21 +90,23 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
             Guard.Argument(versionResponse, nameof(versionResponse)).NotNull("The VersionResponse cannot be null")
                .Require(d => d.Version != null,
                     d => $"{nameof(versionResponse)} must have a valid Version.");
-            
-            try
-            {
-                _output.WriteLine($"Node Version: {versionResponse.Version}");
-            }
-            catch (Exception ex)
-            {
-                Logger.Error(ex,
-                    "Failed to handle GetInfoResponse after receiving message {0}", versionResponse);
-                _output.WriteLine(ex.Message);
-            }
-            finally
-            {
-                Logger.Information("Press Enter to continue ...");
-            }
+
+
+            MessageResponse.OnNext(new RPCClientMessageDto<IMessage>(versionResponse, senderPeerIdentifier));
+            //try
+            //{
+            //    _output.WriteLine($"Node Version: {versionResponse.Version}");
+            //}
+            //catch (Exception ex)
+            //{
+            //    Logger.Error(ex,
+            //        "Failed to handle GetInfoResponse after receiving message {0}", versionResponse);
+            //    _output.WriteLine(ex.Message);
+            //}
+            //finally
+            //{
+            //    Logger.Information("Press Enter to continue ...");
+            //}
         }
     }
 }

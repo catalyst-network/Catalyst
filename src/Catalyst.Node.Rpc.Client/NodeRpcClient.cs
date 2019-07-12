@@ -25,10 +25,15 @@ using Catalyst.Common.Interfaces.IO.EventLoop;
 using Catalyst.Common.Interfaces.IO.Observers;
 using Catalyst.Common.Interfaces.IO.Transport.Channels;
 using Catalyst.Common.Interfaces.Rpc;
+using Catalyst.Common.Interfaces.Rpc.IO.Messaging.Dto;
 using Catalyst.Common.IO.Transport;
+using Google.Protobuf;
 using Serilog;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive.Linq;
+using System.Reactive.Subjects;
 using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
 
@@ -38,8 +43,14 @@ namespace Catalyst.Node.Rpc.Client
     ///     This class provides a command line interface (CLI) application to connect to Catalyst Node.
     ///     Through the CLI the node operator will be able to connect to any number of running nodes and run commands.
     /// </summary>
-    internal sealed class NodeRpcClient : TcpClient, INodeRpcClient
+    internal sealed class NodeRpcClient : TcpClient, INodeRpcClient, IObserver<IRPCClientMessageDto<IMessage>>
     {
+        public IObservable<IRPCClientMessageDto<IMessage>> MessageResponseStream
+        {
+            private set;
+            get;
+        }
+
         /// <summary>
         ///     Initialize a new instance of RPClient
         /// </summary>
@@ -56,9 +67,37 @@ namespace Catalyst.Node.Rpc.Client
             : base(channelFactory, Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType),
                 clientEventLoopGroupFactory)
         {
+            var messageResponse = new ReplaySubject<IRPCClientMessageDto<IMessage>>(1);
+            MessageResponseStream = messageResponse.AsObservable();
+
             var socket = channelFactory.BuildChannel(EventLoopGroupFactory, nodeConfig.HostAddress, nodeConfig.Port, certificate);
-            handlers.ToList().ForEach(handler => handler.StartObserving(socket.MessageStream));
+            handlers.ToList().ForEach(handler =>
+            {
+                MessageResponseStream = MessageResponseStream.Merge(handler.MessageResponseStream);
+                handler.StartObserving(socket.MessageStream);
+            });
+
+            foreach (var handler in handlers)
+            {
+                //handler.MessageResponseStream.Subscribe(this);
+            }
+
             Channel = socket.Channel;
+        }
+
+        public void OnCompleted()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void OnError(Exception error)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void OnNext(IRPCClientMessageDto<IMessage> value)
+        {
+            
         }
     }
 }

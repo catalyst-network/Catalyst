@@ -27,16 +27,27 @@ using Catalyst.Common.Interfaces.Cli.CommandTypes;
 using Catalyst.Common.Interfaces.Cli.Options;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Rpc;
+using Catalyst.Common.Interfaces.Rpc.IO.Messaging.Dto;
+using Catalyst.Common.IO.Transport;
 using Catalyst.Common.P2P;
 using Google.Protobuf;
+using System;
+using System.Reactive.Linq;
+using System.Threading.Tasks;
 
 namespace Catalyst.Cli.CommandTypes
 {
-    public abstract class BaseMessageCommand<T, TOption> : BaseCommand<TOption>, IMessageCommand<T>
-        where T : IMessage<T>
+    public abstract class BaseMessageCommand<TRequest, TResponse, TOption> : BaseCommand<TOption>, IMessageCommand<TRequest>
+        where TRequest : IMessage<TRequest>
+        where TResponse : IMessage<TResponse>
         where TOption : IOptionsBase
     {
-        protected BaseMessageCommand(ICommandContext commandContext) : base(commandContext) { }
+
+        protected BaseMessageCommand(ICommandContext commandContext) : base(commandContext)
+        {
+            CommandContext.SocketClientRegistry.EventStream.OfType<SocketClientRegistryConnected>().Subscribe(OnNext, OnError, OnCompleted);
+            //CommandContext.SocketClientRegistry.EventStream.Where(x => x.GetType() == typeof(SocketClientRegistryConnected)).Select(x => (SocketClientRegistryConnected)(x)).Subscribe(this);
+        }
 
         public virtual void SendMessage(TOption options)
         {
@@ -54,8 +65,8 @@ namespace Catalyst.Cli.CommandTypes
             Target.SendMessage(messageDto);
         }
 
-        protected abstract T GetMessage(TOption option);
-        
+        protected abstract TRequest GetMessage(TOption option);
+
         protected IPeerIdentifier RecipientPeerIdentifier => PeerIdentifier.BuildPeerIdFromConfig(CommandContext.GetNodeConfig(Options.Node), CommandContext.PeerIdClientId);
 
         protected IPeerIdentifier SenderPeerIdentifier => CommandContext.PeerIdentifier;
@@ -68,10 +79,36 @@ namespace Catalyst.Cli.CommandTypes
 
             if (sendMessage)
             {
-                SendMessage((TOption) optionsBase);
+                SendMessage((TOption)optionsBase);
             }
 
             return sendMessage;
+        }
+
+        protected virtual void ResponseMessage(TResponse response)
+        {
+
+        }
+
+        public void OnCompleted()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void OnError(Exception error)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void OnNext(IRPCClientMessageDto<TResponse> value)
+        {
+            ResponseMessage(value.Message);
+        }
+
+        public void OnNext(SocketClientRegistryConnected value)
+        {
+            INodeRpcClient client = CommandContext.SocketClientRegistry.GetClientFromRegistry(value.SocketHashCode);
+            client.MessageResponseStream.OfType<IRPCClientMessageDto<TResponse>>().Subscribe(OnNext, OnError, OnCompleted);
         }
     }
 }
