@@ -47,8 +47,8 @@ namespace Catalyst.Cli.IntegrationTests.Commands
     /// </summary>
     public abstract class CliCommandTestBase : ConfigFileBasedTest
     {
-        private protected const string ServerNodeName = "node1";
-        private protected const string NodeArgumentPrefix = "-n";
+        private protected static readonly string ServerNodeName = "node1";
+        private protected static readonly string NodeArgumentPrefix = "-n";
         protected INodeRpcClient NodeRpcClient;
         protected ILifetimeScope Scope;
         protected ICatalystCli Shell;
