@@ -21,24 +21,32 @@
 
 #endregion
 
-using Catalyst.Cli.CommandTypes;
-using Catalyst.Cli.Options;
-using Catalyst.Common.Interfaces.Cli.Commands;
-using Catalyst.Protocol.Rpc.Node;
-
-namespace Catalyst.Cli.Commands
+namespace Catalyst.Common.Interfaces.Cli.Options
 {
-    public sealed class GetInfoCommand : BaseMessageCommand<GetInfoRequest, GetInfoOptions>
+    public interface IGetPeerInfoOptions
     {
-        public GetInfoCommand(ICommandContext commandContext) : base(commandContext) { }
+        /// <summary>
+        /// Gets or sets the node.
+        /// </summary>
+        /// <value>
+        /// The node.
+        /// </value>
+        string Node { get; set; }
 
-        protected override GetInfoRequest GetMessage(GetInfoOptions option)
-        {
-            return new 
-                GetInfoRequest
-            {
-                Query = true
-            };
-        }
+        /// <summary>
+        /// Gets or sets the ip address.
+        /// </summary>
+        /// <value>
+        /// The ip address.
+        /// </value>
+        string IpAddress { get; set; }
+
+        /// <summary>
+        /// Gets or sets the public key.
+        /// </summary>
+        /// <value>
+        /// The public key.
+        /// </value>
+        string PublicKey { get; set; }
     }
 }
