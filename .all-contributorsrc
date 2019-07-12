@@ -16,7 +16,7 @@
         "test",
         "code"
       ]
-      },
+    },
     {
       "login": "franssl",
       "name": "franssl",
@@ -26,7 +26,7 @@
         "test",
         "code"
       ]
-      },
+    },
     {
       "login": "monsieurleberre",
       "name": "monsieurleberre",
@@ -36,8 +36,8 @@
         "test",
         "code"
       ]
-      },
-     {
+    },
+    {
       "login": "atlassanjay",
       "name": "atlassanjay",
       "avatar_url": "https://avatars3.githubusercontent.com/u/49910176?v=4",
@@ -46,8 +46,8 @@
         "test",
         "code"
       ]
-      },
-            {
+    },
+    {
       "login": "Millymanz",
       "name": "Millymanz",
       "avatar_url": "https://avatars3.githubusercontent.com/u/5070123?v=4",
@@ -56,8 +56,8 @@
         "test",
         "code"
       ]
-      },
-     {
+    },
+    {
       "login": "richardschneider",
       "name": "Richard Schneider",
       "avatar_url": "https://avatars2.githubusercontent.com/u/631061?v=4",
@@ -65,6 +65,16 @@
       "contributions": [
         "test",
         "code"
+      ]
+    },
+    {
+      "login": "Xela101",
+      "name": "Alex",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/11431881?v=4",
+      "profile": "https://github.com/Xela101",
+      "contributions": [
+        "code",
+        "test"
       ]
     }
   ],
