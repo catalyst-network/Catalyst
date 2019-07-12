@@ -21,10 +21,15 @@
 
 #endregion
 
+using System;
+using System.Reactive.Linq;
+using System.Reactive.Subjects;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.IO.Observers;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.Interfaces.P2P.IO.Messaging.Dto;
 using Catalyst.Common.IO.Observers;
+using Catalyst.Node.Core.P2P.IO.Messaging.Dto;
 using Catalyst.Protocol.IPPN;
 using DotNetty.Transport.Channels;
 using Serilog;
@@ -35,8 +40,14 @@ namespace Catalyst.Node.Core.P2P.IO.Observers
         : ResponseObserverBase<PingResponse>,
             IP2PMessageObserver
     {
+        private readonly ReplaySubject<IPeerClientMessageDto<PingResponse>> _pingResponse;
+        public IObservable<IPeerClientMessageDto<PingResponse>> PingResponseStream => _pingResponse.AsObservable();
+
         public PingResponseObserver(ILogger logger)
-            : base(logger) { }
+            : base(logger)
+        {
+            _pingResponse = new ReplaySubject<IPeerClientMessageDto<PingResponse>>(1);
+        }
         
         /// <summary>
         /// 
@@ -45,9 +56,12 @@ namespace Catalyst.Node.Core.P2P.IO.Observers
         /// <param name="channelHandlerContext"></param>
         /// <param name="senderPeerIdentifier"></param>
         /// <param name="correlationId"></param>
-        protected override void HandleResponse(PingResponse pingResponse, IChannelHandlerContext channelHandlerContext, IPeerIdentifier senderPeerIdentifier, ICorrelationId correlationId)
+        protected override void HandleResponse(PingResponse pingResponse,
+            IChannelHandlerContext channelHandlerContext,
+            IPeerIdentifier senderPeerIdentifier,
+            ICorrelationId correlationId)
         {
-            Logger.Debug("received ping response");
+            _pingResponse.OnNext(new PeerClientMessageDto<PingResponse>(pingResponse, senderPeerIdentifier));
         }
     }
 }

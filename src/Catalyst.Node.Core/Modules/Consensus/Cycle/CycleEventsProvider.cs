@@ -26,7 +26,7 @@ using System.Reactive.Linq;
 using System.Threading;
 using Catalyst.Common.Interfaces.Modules.Consensus;
 using Catalyst.Common.Interfaces.Modules.Consensus.Cycle;
-using Catalyst.Common.Interfaces.Modules.Consensus.Delta;
+using Catalyst.Common.Interfaces.Modules.Consensus.Deltas;
 using Catalyst.Common.Modules.Consensus.Cycle;
 
 namespace Catalyst.Node.Core.Modules.Consensus.Cycle

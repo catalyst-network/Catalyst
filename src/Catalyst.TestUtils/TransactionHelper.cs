@@ -21,7 +21,7 @@
 
 #endregion
 
-using Catalyst.Common.Extensions;
+using Catalyst.Protocol;
 using Catalyst.Protocol.Transaction;
 
 namespace Catalyst.TestUtils
