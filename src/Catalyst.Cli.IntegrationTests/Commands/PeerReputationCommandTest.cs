@@ -21,8 +21,6 @@
 
 #endregion
 
-using Autofac;
-using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Protocol.Rpc.Node;
 using FluentAssertions;
 using Xunit;
@@ -32,27 +30,15 @@ namespace Catalyst.Cli.IntegrationTests.Commands
 {
     public sealed class PeerReputationCommandTest : CliCommandTestBase
     {
-        //This test is the base to all other tests.  If the Cli cannot connect to a node than all other commands
-        //will fail
         public PeerReputationCommandTest(ITestOutputHelper output) : base(output) { }
 
         [Fact]
         public void Cli_Can_Send_Peer_Reputation_Request()
         {
-            using (var container = ContainerBuilder.Build())
-            {
-                using (container.BeginLifetimeScope(CurrentTestName))
-                {
-                    var shell = container.Resolve<ICatalystCli>();
-                    var hasConnected = shell.ParseCommand("connect", "-n", "node1");
-                    hasConnected.Should().BeTrue();
-
-                    var result = shell.ParseCommand(
-                        "peerrep", "-n", "node1", "-l", "127.0.0.1", "-p", "fake_public_key");
-                    result.Should().BeTrue();
-                    AssertSentMessage<GetPeerReputationRequest>();
-                }
-            }
+            var result = Shell.ParseCommand(
+                "peerrep", NodeArgumentPrefix, ServerNodeName, "-l", "127.0.0.1", "-p", "fake_public_key");
+            result.Should().BeTrue();
+            AssertSentMessage<GetPeerReputationRequest>();
         }
     }
 }

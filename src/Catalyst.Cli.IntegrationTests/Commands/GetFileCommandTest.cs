@@ -22,13 +22,13 @@
 #endregion
 
 using Autofac;
-using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.FileTransfer;
 using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
@@ -38,40 +38,34 @@ namespace Catalyst.Cli.IntegrationTests.Commands
 {
     public sealed class GetFileCommandTest : CliCommandTestBase
     {
-        //This test is the base to all other tests.  If the Cli cannot connect to a node than all other commands
-        //will fail
+        public static IEnumerable<object[]> GetFileData =>
+            new List<object[]>
+            {
+                new object[] {"/fake_file_hash", AppDomain.CurrentDomain.BaseDirectory + "/Config/addfile_test.json", true}
+            };
+
         public GetFileCommandTest(ITestOutputHelper output) : base(output) { }
 
         [Theory]
         [MemberData(nameof(GetFileData))]
         public async Task Cli_Can_Send_Get_File_Request(string fileHash, string outputPath, bool expectedResult)
         {
-            using (var container = ContainerBuilder.Build())
+            var downloadFileFactory = Scope.Resolve<IDownloadFileTransferFactory>();
+
+            var task = Task.Run(() =>
+                Shell.ParseCommand("getfile", NodeArgumentPrefix, ServerNodeName, "-f", fileHash, "-o", outputPath)
+            );
+
+            await TaskHelper.WaitForAsync(() => downloadFileFactory.Keys.Length > 0, TimeSpan.FromSeconds(5));
+
+            downloadFileFactory.GetFileTransferInformation(new CorrelationId(downloadFileFactory.Keys.First())).Expire();
+
+            var result = await task.ConfigureAwait(false);
+            result.Should().Be(expectedResult);
+
+            if (expectedResult)
             {
-                using (container.BeginLifetimeScope(CurrentTestName))
-                {
-                    var shell = container.Resolve<ICatalystCli>();
-                    var downloadFileFactory = container.Resolve<IDownloadFileTransferFactory>();
-
-                    var hasConnected = shell.ParseCommand("connect", "-n", "node1");
-                    hasConnected.Should().BeTrue();
-
-                    var task = Task.Run(() =>
-                        shell.ParseCommand("getfile", "-n", "node1", "-f", fileHash, "-o", outputPath)
-                    );
-
-                    await TaskHelper.WaitForAsync(() => downloadFileFactory.Keys.Length > 0, TimeSpan.FromSeconds(5));
-
-                    downloadFileFactory.GetFileTransferInformation(new CorrelationId(downloadFileFactory.Keys.First())).Expire();
-
-                    var result = await task.ConfigureAwait(false);
-                    result.Should().Be(expectedResult);
-
-                    if (expectedResult)
-                    {
-                        AssertSentMessage<GetFileFromDfsRequest>();
-                    }
-                }
+                AssertSentMessage<GetFileFromDfsRequest>();
             }
         }
     }
