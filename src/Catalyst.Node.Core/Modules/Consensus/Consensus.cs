@@ -22,7 +22,7 @@
 #endregion
 
 using Catalyst.Common.Interfaces.Modules.Consensus;
-using Catalyst.Common.Interfaces.Modules.Consensus.Delta;
+using Catalyst.Common.Interfaces.Modules.Consensus.Deltas;
 using Serilog;
 
 namespace Catalyst.Node.Core.Modules.Consensus
