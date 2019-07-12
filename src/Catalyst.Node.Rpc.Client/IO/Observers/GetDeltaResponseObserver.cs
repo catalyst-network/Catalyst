@@ -26,11 +26,9 @@ using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.IO.Observers;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Observers;
-using Catalyst.Protocol.Delta;
+using Catalyst.Protocol;
 using Catalyst.Protocol.Rpc.Node;
-using Dawn;
 using DotNetty.Transport.Channels;
-using Newtonsoft.Json;
 using Serilog;
 
 namespace Catalyst.Node.Rpc.Client.IO.Observers
@@ -53,9 +51,7 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
             IPeerIdentifier senderPeerIdentifier,
             ICorrelationId correlationId)
         {
-            _output.WriteLine(deltaResponse.Query);
+            _output.WriteLine(deltaResponse.Delta.ToJsonString());
         }
-
-        private string GetDeltaAsJson(Delta delta) { return null; }
     }
 }

@@ -10,10 +10,10 @@
             ]
         },
         {
-            "type": "Catalyst.Node.Core.Modules.Consensus.Delta.DeltaBuilder",
+            "type": "Catalyst.Node.Core.Modules.Consensus.Deltas.DeltaBuilder",
             "services": [
                 {
-                    "type": "Catalyst.Common.Interfaces.Modules.Consensus.Delta.IDeltaBuilder, Catalyst.Common"
+                    "type": "Catalyst.Common.Interfaces.Modules.Consensus.Deltas.IDeltaBuilder, Catalyst.Common"
                 }
             ]
         },
@@ -26,42 +26,42 @@
             ]
         },
         {
-            "type": "Catalyst.Node.Core.Modules.Consensus.Delta.DeltaTransactionRetriever",
+            "type": "Catalyst.Node.Core.Modules.Consensus.Deltas.DeltaTransactionRetriever",
             "services": [
                 {
-                    "type": "Catalyst.Common.Interfaces.Modules.Consensus.Delta.IDeltaTransactionRetriever, Catalyst.Common"
+                    "type": "Catalyst.Common.Interfaces.Modules.Consensus.Deltas.IDeltaTransactionRetriever, Catalyst.Common"
                 }
             ]
         },
         {
-            "type": "Catalyst.Node.Core.Modules.Consensus.Delta.PoaDeltaProducersProvider",
+            "type": "Catalyst.Node.Core.Modules.Consensus.Deltas.PoaDeltaProducersProvider",
             "services": [
                 {
-                    "type": "Catalyst.Common.Interfaces.Modules.Consensus.Delta.IDeltaProducersProvider, Catalyst.Common"
+                    "type": "Catalyst.Common.Interfaces.Modules.Consensus.Deltas.IDeltaProducersProvider, Catalyst.Common"
                 }
             ]
         },
         {
-            "type": "Catalyst.Node.Core.Modules.Consensus.Delta.DeltaHub",
+            "type": "Catalyst.Node.Core.Modules.Consensus.Deltas.DeltaHub",
             "services": [
                 {
-                    "type": "Catalyst.Common.Interfaces.Modules.Consensus.Delta.IDeltaHub, Catalyst.Common"
+                    "type": "Catalyst.Common.Interfaces.Modules.Consensus.Deltas.IDeltaHub, Catalyst.Common"
                 }
             ]
         },
         {
-            "type": "Catalyst.Node.Core.Modules.Consensus.Delta.DeltaVoter",
+            "type": "Catalyst.Node.Core.Modules.Consensus.Deltas.DeltaVoter",
             "services": [
                 {
-                    "type": "Catalyst.Common.Interfaces.Modules.Consensus.Delta.IDeltaVoter, Catalyst.Common"
+                    "type": "Catalyst.Common.Interfaces.Modules.Consensus.Deltas.IDeltaVoter, Catalyst.Common"
                 }
             ]
         },
         {
-            "type": "Catalyst.Node.Core.Modules.Consensus.Delta.DeltaElector",
+            "type": "Catalyst.Node.Core.Modules.Consensus.Deltas.DeltaElector",
             "services": [
                 {
-                    "type": "Catalyst.Common.Interfaces.Modules.Consensus.Delta.IDeltaElector, Catalyst.Common"
+                    "type": "Catalyst.Common.Interfaces.Modules.Consensus.Deltas.IDeltaElector, Catalyst.Common"
                 }
             ]
         },
@@ -74,10 +74,10 @@
             ]
         },
         {
-            "type": "Catalyst.Node.Core.Modules.Consensus.Delta.DeltaHashProvider",
+            "type": "Catalyst.Node.Core.Modules.Consensus.Deltas.DeltaHashProvider",
             "services": [
                 {
-                    "type": "Catalyst.Common.Interfaces.Modules.Consensus.Delta.IDeltaHashProvider, Catalyst.Common"
+                    "type": "Catalyst.Common.Interfaces.Modules.Consensus.Deltas.IDeltaHashProvider, Catalyst.Common"
                 }
             ],
             "parameters": {
@@ -85,19 +85,19 @@
             }
         },
         {
-            "type": "Catalyst.Node.Core.Modules.Consensus.Delta.DeltaCache",
+            "type": "Catalyst.Node.Core.Modules.Consensus.Deltas.DeltaCache",
             "services": [
                 {
-                    "type": "Catalyst.Common.Interfaces.Modules.Consensus.Delta.IDeltaCache, Catalyst.Common"
+                    "type": "Catalyst.Common.Interfaces.Modules.Consensus.Deltas.IDeltaCache, Catalyst.Common"
                 }
             ],
             "instanceScope": "singleinstance"
         },
         {
-            "type": "Catalyst.Node.Core.Modules.Consensus.Delta.DeltaDfsReader",
+            "type": "Catalyst.Node.Core.Modules.Consensus.Deltas.DeltaDfsReader",
             "services": [
                 {
-                    "type": "Catalyst.Common.Interfaces.Modules.Consensus.Delta.IDeltaDfsReader, Catalyst.Common"
+                    "type": "Catalyst.Common.Interfaces.Modules.Consensus.Deltas.IDeltaDfsReader, Catalyst.Common"
                 }
             ],
             "instanceScope": "singleinstance"
@@ -111,10 +111,10 @@
             ]
         },
         {
-            "type": "Catalyst.Node.Core.Modules.Consensus.Delta.DeltaCacheChangeTokenProvider",
+            "type": "Catalyst.Node.Core.Modules.Consensus.Deltas.DeltaCacheChangeTokenProvider",
             "services": [
                 {
-                    "type": "Catalyst.Common.Interfaces.Modules.Consensus.Delta.IDeltaCacheChangeTokenProvider, Catalyst.Common"
+                    "type": "Catalyst.Common.Interfaces.Modules.Consensus.Deltas.IDeltaCacheChangeTokenProvider, Catalyst.Common"
                 }
             ],
             "parameters": {
