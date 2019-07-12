@@ -26,6 +26,7 @@ using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive.Concurrency;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
@@ -70,6 +71,9 @@ namespace Catalyst.Node.Core.P2P.Discovery
         protected readonly IMemoryCache StepCandidates;
         private Func<MemoryCacheEntryOptions> _cacheOptions;
         private readonly ICancellationTokenProvider _cancellationTokenProvider;
+        private IDisposable discoverySubscription;
+        
+        public List<IPeerIdentifier> _x { get; set; }
 
         public HastingsDiscovery(ILogger logger,
             IRepository<Peer> peerRepository,
@@ -93,9 +97,11 @@ namespace Catalyst.Node.Core.P2P.Discovery
 
             DiscoveryStream = Observable.Empty<IPeerClientMessageDto>();
             
-            _cacheOptions = () => new MemoryCacheEntryOptions()
-               .AddExpirationToken(changeTokenProvider.GetChangeToken())
-               .RegisterPostEvictionCallback(EvictionCallback);
+            _x = new List<IPeerIdentifier>();
+            
+            // _cacheOptions = () => new MemoryCacheEntryOptions()
+            //    .AddExpirationToken(changeTokenProvider.GetChangeToken())
+            //    .RegisterPostEvictionCallback(EvictionCallback);
             
             // build the initial state of walk, which our node and seed nodes
             state = BuildState(_ownNode, GetSeedNodes());
@@ -103,10 +109,26 @@ namespace Catalyst.Node.Core.P2P.Discovery
             // store state with caretaker
             _hastingCareTaker.Add(state.CreateMemento());
             
+            DiscoveryStream.Where(m => _x.Contains(m.Sender))
+               .SubscribeOn(TaskPoolScheduler.Default)
+               .Subscribe(OnNext, OnError, OnCompleted);
+            
             Task.Run(async () =>
             {
                 await DiscoveryAsync();
             });
+        }
+
+        private void OnError(Exception obj)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void OnCompleted() { throw new NotImplementedException(); }
+
+        private void OnNext(IPeerClientMessageDto obj)
+        {
+            Logger.Debug(obj.Sender.ToString());
         }
 
         public async Task DiscoveryAsync()
@@ -117,7 +139,7 @@ namespace Catalyst.Node.Core.P2P.Discovery
                 {
                     var peerNeighbourRequestDto = BuildDtoMessage(n);
                     
-                    StepCandidates.Set(state.Peer, n, _cacheOptions());
+                    StepCandidates.Set(peerNeighbourRequestDto.CorrelationId, n, _cacheOptions());
                     _peerClient.SendMessage(peerNeighbourRequestDto);
                 });
 

@@ -150,5 +150,6 @@ namespace Catalyst.Node.Core.P2P
         //         Logger.Debug($"Disposing {GetType().Name}");
         //         PingResponseMessageStream?.Dispose();
         //     }
+        public Task DiscoveryAsync() { throw new NotImplementedException(); }
     }
 }

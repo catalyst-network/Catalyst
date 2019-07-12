@@ -21,23 +21,28 @@
 
 #endregion
 
-using Catalyst.Cli.CommandTypes;
-using Catalyst.Cli.Options;
-using Catalyst.Common.Interfaces.Cli.Commands;
-using Catalyst.Protocol.Rpc.Node;
+using System;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
+using System.Reactive.Subjects;
 
-namespace Catalyst.Cli.Commands
+namespace Catalyst.Common.Extensions
 {
-    public sealed class GetInfoCommand : BaseMessageCommand<GetInfoRequest, GetInfoOptions>
+    public static class ObserverExtensions
     {
-        public GetInfoCommand(ICommandContext commandContext) : base(commandContext) { }
-
-        protected override GetInfoRequest GetMessage(GetInfoOptions option)
+        public static IObservable<T> MergeWithCompleteOnEither<T>(this IObservable<T> source, IObservable<T> right)
         {
-            return new GetInfoRequest 
+            return Observable.Create<T>(obs =>
             {
-                Query = true
-            };
-        }
+                var compositeDisposable = new CompositeDisposable();
+                var subject = new Subject<T>();
+
+                compositeDisposable.Add(subject.Subscribe(obs));
+                compositeDisposable.Add(source.Subscribe(subject));
+                compositeDisposable.Add(right.Subscribe(subject));
+                
+                return compositeDisposable;
+            });     
+        }   
     }
 }

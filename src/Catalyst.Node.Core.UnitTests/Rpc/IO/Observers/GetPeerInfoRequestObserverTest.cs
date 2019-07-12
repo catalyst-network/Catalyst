@@ -67,18 +67,18 @@ namespace Catalyst.Node.Core.UnitTests.RPC.IO.Observers
 
             _peerRepository = Substitute.For<IRepository<Peer>>();
             _peerRepository.FindAll(Arg.Any<Expression<Func<Peer, bool>>>())
-            .Returns(ci =>
-            {
-                return peers.Where(p => ((Expression<Func<Peer, bool>>)ci[0]).Compile()(p));
-            });
+               .Returns(ci =>
+                {
+                    return peers.Where(p => ((Expression<Func<Peer, bool>>) ci[0]).Compile()(p));
+                });
         }
 
         public IEnumerable<Peer> GetPeerTestData()
         {
-            yield return new Peer { PeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier($"publickey-1", $"id-1", 1, IPAddress.Parse($"172.0.0.1"), 9090), LastSeen = DateTime.UtcNow, Created = DateTime.UtcNow };
-            yield return new Peer { PeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier($"publickey-2", $"id-2", 1, IPAddress.Parse($"172.0.0.2"), 9090), LastSeen = DateTime.UtcNow, Created = DateTime.UtcNow };
-            yield return new Peer { PeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier($"publickey-3", $"id-3", 1, IPAddress.Parse($"172.0.0.3"), 9090), LastSeen = DateTime.UtcNow, Created = DateTime.UtcNow };
-            yield return new Peer { PeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier($"publickey-3", $"id-4", 1, IPAddress.Parse($"172.0.0.3"), 9090), LastSeen = DateTime.UtcNow, Created = DateTime.UtcNow };
+            yield return new Peer {PeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier($"publickey-1", $"id-1", 1, IPAddress.Parse($"172.0.0.1"), 9090), LastSeen = DateTime.UtcNow, Created = DateTime.UtcNow};
+            yield return new Peer {PeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier($"publickey-2", $"id-2", 1, IPAddress.Parse($"172.0.0.2"), 9090), LastSeen = DateTime.UtcNow, Created = DateTime.UtcNow};
+            yield return new Peer {PeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier($"publickey-3", $"id-3", 1, IPAddress.Parse($"172.0.0.3"), 9090), LastSeen = DateTime.UtcNow, Created = DateTime.UtcNow};
+            yield return new Peer {PeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier($"publickey-3", $"id-4", 1, IPAddress.Parse($"172.0.0.3"), 9090), LastSeen = DateTime.UtcNow, Created = DateTime.UtcNow};
         }
 
         /// <summary>
@@ -155,7 +155,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC.IO.Observers
             var sendPeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("sender");
 
             var messageFactory = new DtoFactory();
-            var request = new GetPeerInfoRequest { PublicKey = peerId.PublicKey, Ip = peerId.Ip };
+            var request = new GetPeerInfoRequest {PublicKey = peerId.PublicKey, Ip = peerId.Ip};
 
             var requestMessage = messageFactory.GetDto(
                 request,
@@ -173,7 +173,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC.IO.Observers
             var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();
             receivedCalls.Count.Should().Be(1);
 
-            var sentResponseDto = (IMessageDto<ProtocolMessage>)receivedCalls[0].GetArguments().Single();
+            var sentResponseDto = (IMessageDto<ProtocolMessage>) receivedCalls[0].GetArguments().Single();
 
             return sentResponseDto.FromIMessageDto().FromProtocolMessage<GetPeerInfoResponse>();
         }

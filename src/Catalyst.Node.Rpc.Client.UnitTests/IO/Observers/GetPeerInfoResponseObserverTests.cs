@@ -91,7 +91,10 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
 
             await TestGetPeerInfoResponse(peerInfo).ConfigureAwait(false);
 
-            var repeatedPeerInfo = new RepeatedField<PeerInfo> { peerInfo };
+            var repeatedPeerInfo = new RepeatedField<PeerInfo>
+            {
+                peerInfo
+            };
             _output.Received(1).WriteLine(CommandFormatHelper.FormatRepeatedPeerInfoResponse(repeatedPeerInfo));
         }
 
@@ -107,7 +110,10 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
 
             await TestGetPeerInfoResponse(peerInfo).ConfigureAwait(false);
 
-            var repeatedPeerInfo = new RepeatedField<PeerInfo> { peerInfo };
+            var repeatedPeerInfo = new RepeatedField<PeerInfo>
+            {
+                peerInfo
+            };
             _output.Received(1).WriteLine(CommandFormatHelper.FormatRepeatedPeerInfoResponse(repeatedPeerInfo));
         }
 

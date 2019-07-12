@@ -137,29 +137,24 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Discovery
                 Substitute.For<IChangeTokenProvider>()
             ))
             {
-                var discoveryMessageType1 = new ReplaySubject<IPeerClientMessageDto>(1);
-                var discoveryMessage1Stream = discoveryMessageType1.AsObservable();
-                discoveryMessage1Stream.SubscribeOn(TaskPoolScheduler.Default).Subscribe((reputationChange) => Substitute.For<ILogger>());
+                var streams = MimicDiscoveryStreams();
 
-                var discoveryMessageType2 = new ReplaySubject<IPeerClientMessageDto>(1);
-                var discoveryMessage2Stream = discoveryMessageType2.AsObservable();
-                discoveryMessage2Stream.SubscribeOn(TaskPoolScheduler.Default).Subscribe((reputationChange) => Substitute.For<ILogger>());
-
-                walker.MergeDiscoveryMessageStreams(discoveryMessage1Stream);
-                walker.MergeDiscoveryMessageStreams(discoveryMessage2Stream);
+                streams.ToList().ForEach((k) => walker.MergeDiscoveryMessageStreams(k.Value));
                 
                 var streamObserver = Substitute.For<IObserver<IPeerClientMessageDto>>();
 
                 using (walker.DiscoveryStream.SubscribeOn(TaskPoolScheduler.Default)
                    .Subscribe(streamObserver.OnNext))
                 {
-                    var subbedDto1 = Substitute.For<IPeerClientMessageDto>();
-                    subbedDto1.Sender.Returns(PeerIdentifierHelper.GetPeerIdentifier("sender1"));
-                    discoveryMessageType1.OnNext(subbedDto1);
-                    
-                    var subbedDto2 = Substitute.For<IPeerClientMessageDto>();
-                    subbedDto2.Sender.Returns(PeerIdentifierHelper.GetPeerIdentifier("sender2"));
-                    discoveryMessageType2.OnNext(subbedDto2);
+                    var i = 0;
+                    foreach (var item in streams)
+                    {
+                        var subbedDto1 = Substitute.For<IPeerClientMessageDto>();
+                        subbedDto1.Sender.Returns(PeerIdentifierHelper.GetPeerIdentifier($"sender{i}"));
+                        item.Value.OnNext(subbedDto1);
+
+                        i++;
+                    }
 
                     await walker.DiscoveryStream.WaitForItemsOnDelayedStreamOnTaskPoolSchedulerAsync(2);
 
@@ -168,22 +163,37 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Discovery
             }
         }
 
-        private IDtoFactory SubDtoFactoryGetDtoResponse()
+        [Fact]
+        public void Can_Filter_Subscription_On_Changing_List()
         {
-            var dtoFactory = Substitute.For<IDtoFactory>();
-            var subbedOwnNodePid = Substitute.For<IPeerIdentifier>();
-            subbedOwnNodePid.PeerId.Returns(_ownPeerId);
-            
-            var subbedTestPid = Substitute.For<IPeerIdentifier>();
-            subbedTestPid.PeerId.Returns(_testPeer1);
-
-            dtoFactory.GetDto(new PeerNeighborsRequest(),
-                subbedOwnNodePid,
-                subbedTestPid);
-
-            return dtoFactory;
+            using (var walker = new HastingsDiscovery(Substitute.For<ILogger>(),
+                Substitute.For<IRepository<Peer>>(),
+                Substitute.For<IDns>(),
+                _settings,
+                Substitute.For<IPeerClient>(),
+                Substitute.For<IDtoFactory>(),
+                SubCancellationProvider(),
+                Substitute.For<IChangeTokenProvider>()
+            )) { }
         }
 
+        private IDictionary<IObservable<IPeerClientMessageDto>, ReplaySubject<IPeerClientMessageDto>> MimicDiscoveryStreams()
+        {
+            var discoveryStreams = new Dictionary<IObservable<IPeerClientMessageDto>, ReplaySubject<IPeerClientMessageDto>>();
+            
+            var discoveryMessageType1 = new ReplaySubject<IPeerClientMessageDto>(1);
+            var discoveryMessage1Stream = discoveryMessageType1.AsObservable();
+            discoveryMessage1Stream.SubscribeOn(TaskPoolScheduler.Default).Subscribe((reputationChange) => Substitute.For<ILogger>());
+            discoveryStreams.Add(discoveryMessage1Stream, discoveryMessageType1);
+
+            var discoveryMessageType2 = new ReplaySubject<IPeerClientMessageDto>(1);
+            var discoveryMessage2Stream = discoveryMessageType2.AsObservable();
+            discoveryMessage2Stream.SubscribeOn(TaskPoolScheduler.Default).Subscribe((reputationChange) => Substitute.For<ILogger>());
+            discoveryStreams.Add(discoveryMessage2Stream, discoveryMessageType2);
+
+            return discoveryStreams;
+        }
+        
         private ICancellationTokenProvider SubCancellationProvider(bool result = false)
         {
             var provider = Substitute.For<ICancellationTokenProvider>();
