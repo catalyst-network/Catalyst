@@ -38,8 +38,6 @@ namespace Catalyst.Cli.IntegrationTests.Commands
 {
     public sealed class AddFileCommandTest : CliCommandTestBase
     {
-        private IUploadFileTransferFactory _uploadFileTransferFactory;
-
         public static IEnumerable<object[]> AddFileData =>
             new List<object[]>
             {
@@ -53,16 +51,16 @@ namespace Catalyst.Cli.IntegrationTests.Commands
         [MemberData(nameof(AddFileData))]
         public async Task Cli_Can_Send_Add_File_Request(string fileName, bool expectedResult)
         {
-            _uploadFileTransferFactory = Scope.Resolve<IUploadFileTransferFactory>();
+            var uploadFileTransferFactory = Scope.Resolve<IUploadFileTransferFactory>();
 
             var task = Task.Run(() =>
                 Shell.ParseCommand("addfile", NodeArgumentPrefix, ServerNodeName, "-f", fileName));
 
             if (expectedResult)
             {
-                await TaskHelper.WaitForAsync(() => _uploadFileTransferFactory.Keys.Length > 0, TimeSpan.FromSeconds(5));
+                await TaskHelper.WaitForAsync(() => uploadFileTransferFactory.Keys.Length > 0, TimeSpan.FromSeconds(5));
 
-                _uploadFileTransferFactory.GetFileTransferInformation(new CorrelationId(_uploadFileTransferFactory.Keys.First()))
+                uploadFileTransferFactory.GetFileTransferInformation(new CorrelationId(uploadFileTransferFactory.Keys.First()))
                    .Expire();
             }
 
