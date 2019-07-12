@@ -35,7 +35,5 @@ namespace Catalyst.Common.Interfaces.Registry
         bool RegistryContainsKey(T identifier);
 
         bool RemoveItemFromRegistry(T identifier);
-
-        IDictionary<T, K> Registry { get; }
     }
 }

@@ -34,7 +34,7 @@ namespace Catalyst.Common.Registry
         where K : class
     {
         protected RegistryBase() { }
-        public IDictionary<T, K> Registry { get; protected set; }
+        protected IDictionary<T, K> Registry { get; set; }
 
         public bool AddItemToRegistry(T identifier, K item)
         {

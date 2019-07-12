@@ -56,7 +56,7 @@ namespace Catalyst.Common.Modules.KeySigner
 
         private void InitialiseKeyRegistry()
         {
-            if (!TryPopulateDefaultKeyFromKeyStore())
+            if (!TryPopulateDefaultKeyFromKeyStore(out _))
             {
                 GenerateKeyAndPopulateRegistryWithDefault();
             }   
@@ -64,7 +64,7 @@ namespace Catalyst.Common.Modules.KeySigner
 
         private async Task GenerateKeyAndPopulateRegistryWithDefault()
         {
-            var privateKey = await _keyStore.KeyStoreGenerateAsync(_defaultKey);
+            var privateKey = _keyStore.KeyStoreGenerateAsync(_defaultKey).Result;
             if (privateKey != null)
             { 
                 _keyRegistry.AddItemToRegistry(_defaultKey, privateKey);
@@ -82,7 +82,7 @@ namespace Catalyst.Common.Modules.KeySigner
             var privateKey = _keyRegistry.GetItemFromRegistry(keyIdentifier);
             if (privateKey == null)
             {
-                if (!TryPopulateRegistryFromKeyStore(keyIdentifier))
+                if (!TryPopulateRegistryFromKeyStore(keyIdentifier, out privateKey))
                 {
                     throw new SignatureException("The signature cannot be created because the key does not exist");
                 }
@@ -118,13 +118,17 @@ namespace Catalyst.Common.Modules.KeySigner
             throw new NotImplementedException();
         }
 
-        private bool TryPopulateRegistryFromKeyStore(KeyRegistryKey keyIdentifier)
+        private bool TryPopulateRegistryFromKeyStore(KeyRegistryKey keyIdentifier, out IPrivateKey key)
         {
-            var key = _keyStore.KeyStoreDecrypt(keyIdentifier);
+            key = _keyStore.KeyStoreDecrypt(keyIdentifier);
             
             return key != null && (_keyRegistry.RegistryContainsKey(keyIdentifier) || _keyRegistry.AddItemToRegistry(keyIdentifier, key));
         }
 
-        private bool TryPopulateDefaultKeyFromKeyStore() { return TryPopulateRegistryFromKeyStore(_defaultKey); }   
+        private bool TryPopulateDefaultKeyFromKeyStore(out IPrivateKey key)
+        {
+            return TryPopulateRegistryFromKeyStore(_defaultKey, out key);
+        }   
     }
 }
+                                         

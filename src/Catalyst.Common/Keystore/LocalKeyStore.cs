@@ -64,10 +64,9 @@ namespace Catalyst.Common.Keystore
             _passwordReader = passwordReader;
             _cryptoContext = cryptoContext;
             _keyStoreService = keyStoreService;
-            _logger = logger;
-            _addressHelper = addressHelper;
-            _keyStoreService = keyStoreService;
             _fileSystem = fileSystem;
+            _logger = logger;
+            _addressHelper = addressHelper;            
         }
 
         public IPrivateKey KeyStoreDecrypt(KeyRegistryKey keyIdentifier)

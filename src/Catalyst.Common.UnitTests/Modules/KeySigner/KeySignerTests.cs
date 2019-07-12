@@ -53,7 +53,7 @@ namespace Catalyst.Common.UnitTests.Modules.KeySigner
             var publicKeyBytes = ByteUtil.GenerateRandomByteArray(FFI.GetPublicKeyLength());
             _signature = new Signature(signatureBytes, publicKeyBytes);
             var privateKeyBytes = ByteUtil.GenerateRandomByteArray(FFI.GetPrivateKeyLength());
-            var _privateKey = new PrivateKey(privateKeyBytes);
+            _privateKey = new PrivateKey(privateKeyBytes);
             _keystore.KeyStoreDecrypt(default).ReturnsForAnyArgs(_privateKey);
 
             _wrapper.StdSign(default, default).ReturnsForAnyArgs(_signature);
@@ -64,8 +64,7 @@ namespace Catalyst.Common.UnitTests.Modules.KeySigner
         private readonly IWrapper _wrapper;
         private IKeySigner _keySigner;
         private readonly ISignature _signature;
-        private readonly IPrivateKey _privateKey;
-        
+        private readonly IPrivateKey _privateKey;        
 
         [Fact]
         public void On_Init_KeySigner_Can_Retrieve_Key_From_KeyStore_If_Key_Doesnt_Initially_Exist_In_Registry()
@@ -94,7 +93,6 @@ namespace Catalyst.Common.UnitTests.Modules.KeySigner
             _keyRegistry.ReceivedWithAnyArgs(1).AddItemToRegistry(default, default);
         }
 
-
         [Fact] 
         public void KeySigner_Can_Sign_If_Key_Exists_In_Registry()
         {
@@ -120,14 +118,20 @@ namespace Catalyst.Common.UnitTests.Modules.KeySigner
 
         [Fact] 
         public void KeySigner_Can_Sign_If_Key_Doesnt_Exists_In_Registry_But_There_Is_A_Keystore_File()
-        {
-            _keyRegistry.GetItemFromRegistry(KeyRegistryKey.DefaultKey).Returns(null, _privateKey);
+        {            
+            _keySigner = new Common.Modules.KeySigner.KeySigner(_keystore, new CryptoContext(_wrapper), _keyRegistry);            
+            _keystore.ClearReceivedCalls();
+            _keyRegistry.ClearReceivedCalls();
+
+            _keyRegistry.GetItemFromRegistry(default).ReturnsForAnyArgs(null, _privateKey);
+            _keyRegistry.RegistryContainsKey(default).ReturnsForAnyArgs(true);
+            _keyRegistry.AddItemToRegistry(default, default).ReturnsForAnyArgs(true);
 
             var actualSignature = _keySigner.Sign(Encoding.UTF8.GetBytes("sign this please"));
+
             _keystore.Received(1).KeyStoreDecrypt(Arg.Any<KeyRegistryKey>());
 
             Assert.Equal(_signature, actualSignature);
         }
-
     }
 }
