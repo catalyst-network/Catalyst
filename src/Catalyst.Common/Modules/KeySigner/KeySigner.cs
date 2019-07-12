@@ -80,6 +80,14 @@ namespace Catalyst.Common.Modules.KeySigner
         private ISignature Sign(byte[] data, KeyRegistryKey keyIdentifier)
         {
             var privateKey = _keyRegistry.GetItemFromRegistry(keyIdentifier);
+            if (privateKey == null)
+            {
+                if (!TryPopulateRegistryFromKeyStore(keyIdentifier))
+                {
+                    throw new SignatureException("The signature cannot be created because the key does not exist");
+                }
+            }
+
             return Sign(data, privateKey);
         }
 
@@ -112,14 +120,9 @@ namespace Catalyst.Common.Modules.KeySigner
 
         private bool TryPopulateRegistryFromKeyStore(KeyRegistryKey keyIdentifier)
         {
-            var key = _keyRegistry.GetItemFromRegistry(keyIdentifier);
-            if (key != null)
-            {
-                return true;
-            }
-
-            key = _keyStore.KeyStoreDecrypt(keyIdentifier);
-            return key != null && _keyRegistry.AddItemToRegistry(keyIdentifier, key);
+            var key = _keyStore.KeyStoreDecrypt(keyIdentifier);
+            
+            return key != null && (_keyRegistry.RegistryContainsKey(keyIdentifier) || _keyRegistry.AddItemToRegistry(keyIdentifier, key));
         }
 
         private bool TryPopulateDefaultKeyFromKeyStore() { return TryPopulateRegistryFromKeyStore(_defaultKey); }   

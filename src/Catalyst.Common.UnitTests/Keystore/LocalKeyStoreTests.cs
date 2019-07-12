@@ -46,14 +46,16 @@ namespace Catalyst.Common.UnitTests.Keystore
     {
         private readonly IKeyStore _keystore;
         private readonly ICryptoContext _context;
-        private readonly TestPasswordReader _passwordReader;
+        private readonly IPasswordReader _passwordReader;
 
         public LocalKeyStoreTests(ITestOutputHelper output) : base(output)
         {
             _context = new CryptoContext(new CryptoWrapper());
 
             var logger = Substitute.For<ILogger>();
-            _passwordReader = new TestPasswordReader("testPassword");
+            _passwordReader = Substitute.For<IPasswordReader>();
+            _passwordReader.ReadSecurePassword(default, default)
+               .ReturnsForAnyArgs(TestPasswordReader.BuildSecureStringPassword("test password"));
 
             var multiAlgo = Substitute.For<IMultihashAlgorithm>();
             multiAlgo.ComputeHash(Arg.Any<byte[]>()).Returns(new byte[32]);
@@ -93,8 +95,8 @@ namespace Catalyst.Common.UnitTests.Keystore
         public void KeyStore_Throws_Exception_On_Invalid_KeyStore_File()
         {
             Ensure_No_Keystore_File_Exists();
-            FileSystem.WriteFileToCddSubDirectoryAsync("bad_file", Constants.KeyStoreDataSubDir, "bad contents");
-            Assert.Throws<AuthenticationException>(() =>_keystore.KeyStoreDecrypt(KeyRegistryKey.DefaultKey));
+            FileSystem.WriteFileToCddSubDirectoryAsync(KeyRegistryKey.DefaultKey.Name, Constants.KeyStoreDataSubDir, "bad contents");
+            Assert.Throws<System.Exception>(() =>_keystore.KeyStoreDecrypt(KeyRegistryKey.DefaultKey));
         }
 
         [Fact]
@@ -123,13 +125,13 @@ namespace Catalyst.Common.UnitTests.Keystore
         public async void Keystore_Throws_Exception_If_Password_Incorrect()
         {
             Ensure_No_Keystore_File_Exists();
-            _passwordReader.ReadSecurePassword(default, default).ReturnsForAnyArgs(TestPasswordReader.BuildSecureStringPassword("a different password"), TestPasswordReader.BuildSecureStringPassword("a different password2"));
 
             IPrivateKey privateKey = _context.GeneratePrivateKey();
             await _keystore.KeyStoreEncryptAsync(privateKey, KeyRegistryKey.DefaultKey);
-            _keystore.KeyStoreDecrypt(KeyRegistryKey.DefaultKey);
+            _passwordReader.ReadSecurePassword(default, default)
+               .ReturnsForAnyArgs(TestPasswordReader.BuildSecureStringPassword("a different test password"));
+            Assert.Throws<AuthenticationException>(() =>_keystore.KeyStoreDecrypt(KeyRegistryKey.DefaultKey));
 
-            //Assert.Throws<AuthenticationException>(() => ));
         }
 
         [Fact]

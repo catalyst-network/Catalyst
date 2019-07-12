@@ -28,12 +28,14 @@ namespace Catalyst.Common.Interfaces.Registry
 {
     public interface IRegistryBase<T, K>
     {
-        IDictionary<T, K> Registry { get; }
-
         bool AddItemToRegistry(T identifier, K item);
 
         K GetItemFromRegistry(T identifier);
 
+        bool RegistryContainsKey(T identifier);
+
         bool RemoveItemFromRegistry(T identifier);
+
+        IDictionary<T, K> Registry { get; }
     }
 }

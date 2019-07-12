@@ -143,8 +143,8 @@ namespace Catalyst.Common.Keystore
                     key: _cryptoContext.ExportPrivateKey(privateKey),
                     address: address);
 
-                var fileInfo = await _fileSystem.WriteFileToCddSubDirectoryAsync(keyIdentifier.Name, Constants.KeyStoreDataSubDir, json);
-                Console.WriteLine(fileInfo);
+                await _fileSystem.WriteFileToCddSubDirectoryAsync(keyIdentifier.Name, Constants.KeyStoreDataSubDir, json);
+
             }
             catch (Exception e)
             {

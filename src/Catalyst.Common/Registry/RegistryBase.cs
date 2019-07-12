@@ -50,6 +50,8 @@ namespace Catalyst.Common.Registry
             return retItem;
         }
 
+        public bool RegistryContainsKey(T identifier) { return Registry.ContainsKey(identifier); }
+
         public bool RemoveItemFromRegistry(T identifier)
         {
             return Registry.Remove(identifier);
