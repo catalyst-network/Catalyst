@@ -27,90 +27,17 @@ using FluentAssertions;
 using Xunit;
 using Xunit.Abstractions;
 using System;
-using Catalyst.Common.Interfaces.Cryptography;
-using Microsoft.Extensions.Configuration;
-using Catalyst.Node.Core.Modules.Dfs;
-using Catalyst.Common.Config;
-using System.Linq;
-using System.IO;
-using Catalyst.Common.Interfaces;
-using NSubstitute;
-using Serilog;
-using Catalyst.TestUtils;
-using Ipfs.CoreApi;
-using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Cli.IntegrationTests.Commands;
-using Constants = Catalyst.Common.Config.Constants;
 
 namespace Catalyst.Cli.IntegrationTests.Connection
 {
     public sealed class CliToNodeTests : CliCommandTestBase, IDisposable
     {
-        private readonly NodeTest _node;
+        private readonly TestCatalystNode _node;
 
         public CliToNodeTests(ITestOutputHelper output) : base(output, false)
         {
-            _node = new NodeTest(output);
-        }
-
-        private sealed class NodeTest : ConfigFileBasedTest, IDisposable
-        {
-            private ILifetimeScope _scope;
-            private IContainer _container;
-
-            public NodeTest(ITestOutputHelper output) : base(output) { }
-
-            private void NodeSetup()
-            {
-                var configFiles = new[]
-                {
-                    Constants.NetworkConfigFile(Network.Main),
-                    Constants.ComponentsJsonConfigFile,
-                    Constants.SerilogJsonConfigFile
-                }.Select(f => Path.Combine(Constants.ConfigSubFolder, f));
-
-                var configBuilder = new ConfigurationBuilder();
-                configFiles.ToList().ForEach(f => configBuilder.AddJsonFile(f));
-
-                var configRoot = configBuilder.Build();
-                ConfigureContainerBuilder(configRoot);
-            }
-
-            private IpfsAdapter ConfigureKeyTestDependency()
-            {
-                var peerSettings = Substitute.For<IPeerSettings>();
-                peerSettings.SeedServers.Returns(new[]
-                {
-                    "seed1.server.va",
-                    "island.domain.tv"
-                });
-
-                var passwordReader = Substitute.For<IPasswordReader>();
-                passwordReader.ReadSecurePassword().ReturnsForAnyArgs(TestPasswordReader.BuildSecureStringPassword("trendy"));
-                var logger = Substitute.For<ILogger>();
-                return new IpfsAdapter(passwordReader, peerSettings, FileSystem, logger);
-            }
-
-            public void RunNodeInstance()
-            {
-                NodeSetup();
-
-                var ipfs = ConfigureKeyTestDependency();
-                ContainerBuilder.RegisterInstance(ipfs).As<ICoreApi>();
-
-                _container = ContainerBuilder.Build();
-
-                _scope = _container.BeginLifetimeScope(CurrentTestName);
-                _ = _scope.Resolve<ICatalystNode>();
-            }
-
-            public new void Dispose()
-            {
-                base.Dispose();
-
-                _container.Dispose();
-                _scope.Dispose();
-            }
+            _node = new TestCatalystNode("server", output);
         }
 
         [Fact]

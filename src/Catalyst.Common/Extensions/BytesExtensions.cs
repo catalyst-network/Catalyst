@@ -21,32 +21,21 @@
 
 #endregion
 
-using System.IO;
-using System.Text;
-using System.Threading;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using Multiformats.Hash;
+using Multiformats.Hash.Algorithms;
 
 namespace Catalyst.Common.Extensions
 {
-    public static class StreamExtensions
+    public static class BytesExtensions
     {
-        public static string ReadAllAsUtf8String(this Stream stream, bool leaveOpen)
+        public static async Task<Multihash> ComputeMultihashAsync(this IEnumerable<byte> bytes, IMultihashAlgorithm algorithm)
         {
-            using (var reader = new StreamReader(stream, Encoding.UTF8,
-                true, 4096, leaveOpen))
-            {
-                return reader.ReadToEnd();
-            }
-        }
-
-        public static async Task<byte[]> ReadAllBytesAsync(this Stream stream, CancellationToken cancellationToken)
-        {
-            using (var memoryStream = new MemoryStream())
-            {
-                await stream.CopyToAsync(memoryStream, cancellationToken);
-                var contentBytes = memoryStream.ToArray();
-                return contentBytes;
-            }
+            var hashBytes = await algorithm.ComputeHashAsync(bytes.ToArray()).ConfigureAwait(false);
+            var multihash = Multihash.Cast(hashBytes);
+            return multihash;
         }
     }
 }

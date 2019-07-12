@@ -1,0 +1,91 @@
+#region LICENSE
+
+/**
+* Copyright (c) 2019 Catalyst Network
+*
+* This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
+*
+* Catalyst.Node is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 2 of the License, or
+* (at your option) any later version.
+*
+* Catalyst.Node is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
+*/
+
+#endregion
+
+using System.IO;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+using Catalyst.Common.Extensions;
+using Catalyst.Common.Interfaces.Modules.Dfs;
+using Multiformats.Hash.Algorithms;
+
+namespace Catalyst.Modules.Dfs
+{
+    /// <summary>
+    /// A very naive implementation of the IDfs interface that simply relies on the file system.
+    /// This can only result in a 'Distributed' file system if the <see cref="_baseFolder"/> happens
+    /// to be shared network path. Otherwise, this can be used in integration tests, to ensure
+    /// the tests can be run locally and offline.
+    /// </summary>
+    /// <remarks>The hashing algorithm is also a simple one (<see cref="BLAKE2B_32"/>>) to save time
+    /// in integration tests</remarks>
+    /// <inheritdoc cref="IDfs" />
+    public class FileSystemDfs : IDfs
+    {
+        private readonly DirectoryInfo _baseFolder;
+        private readonly BLAKE2B_32 _hashingAlgorithm;
+
+        public FileSystemDfs(string baseFolder)
+        {
+            _baseFolder = new DirectoryInfo(baseFolder);
+            if (!_baseFolder.Exists)
+            {
+                _baseFolder.Create();
+            }
+
+            _hashingAlgorithm = new BLAKE2B_32();
+        }
+
+        /// <inheritdoc />
+        public async Task<string> AddTextAsync(string utf8Content, CancellationToken cancellationToken = default)
+        {
+            var bytes = Encoding.UTF8.GetBytes(utf8Content);
+            var contentHash = await bytes.ComputeMultihashAsync(_hashingAlgorithm);
+            await File.WriteAllTextAsync(Path.Combine(_baseFolder.FullName, contentHash),
+                utf8Content, Encoding.UTF8, cancellationToken);
+
+            return contentHash;
+        }
+
+        /// <inheritdoc />
+        public async Task<string> ReadTextAsync(string id, CancellationToken cancellationToken = default)
+        {
+            return await File.ReadAllTextAsync(Path.Combine(_baseFolder.FullName, id), cancellationToken);
+        }
+
+        /// <inheritdoc />
+        public async Task<string> AddAsync(Stream content, string name = "", CancellationToken cancellationToken = default)
+        {
+            var bytes = await content.ReadAllBytesAsync(cancellationToken);
+            var contentHash = await bytes.ComputeMultihashAsync(_hashingAlgorithm);
+            await File.WriteAllBytesAsync(Path.Combine(_baseFolder.FullName, contentHash), bytes, cancellationToken);
+            return contentHash;
+        }
+
+        /// <inheritdoc />
+        public async Task<Stream> ReadAsync(string id, CancellationToken cancellationToken = default)
+        {
+            return await Task.FromResult(File.OpenRead(Path.Combine(_baseFolder.FullName, id)) as Stream);
+        }
+    }
+}
