@@ -126,7 +126,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.IO.Messaging.Correlation
                 }
 
                 await TaskHelper.WaitForAsync(() => evictionObserver.ReceivedCalls().Any(),
-                    TimeSpan.FromSeconds(2));
+                    TimeSpan.FromMilliseconds(2000));
 
                 evictionObserver.Received(requestCount).OnNext(Arg.Is<IPeerReputationChange>(r => r.ReputationEvent.Name == ReputationEvents.NoResponseReceived.Name));
                 evictionObserver.Received(requestCount).OnNext(Arg.Is<IPeerReputationChange>(r => r.ReputationEvent.Name == ReputationEvents.UnCorrelatableMessage.Name));
