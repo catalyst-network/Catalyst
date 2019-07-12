@@ -21,83 +21,81 @@
 
 #endregion
 
-using System.Collections.Generic;
-using System.IO;
+using System;
 using System.Linq;
+using System.Reactive.Concurrency;
 using System.Reactive.Linq;
-using Autofac;
-using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
-using Catalyst.Common.Interfaces.IO.Observers;
+using Catalyst.Common.Interfaces.P2P.IO.Messaging.Dto;
 using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Node.Core.P2P.IO.Observers;
 using Catalyst.Protocol.IPPN;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
-using FluentAssertions;
-using Microsoft.Extensions.Configuration;
 using NSubstitute;
 using Serilog;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace Catalyst.Node.Core.UnitTests.P2P.IO.Observers
 {
-    public sealed class GetNeighbourResponseObserverTests : ConfigFileBasedTest
+    public sealed class GetNeighbourResponseObserverTests : IDisposable
     {
-        private readonly ILogger _logger;
+        private readonly IChannelHandlerContext _fakeContext;
+        private readonly GetNeighbourResponseObserver _observer;
 
-        public GetNeighbourResponseObserverTests(ITestOutputHelper output) : base(output)
+        public GetNeighbourResponseObserverTests()
         {
-            _logger = Substitute.For<ILogger>();
+            _fakeContext = Substitute.For<IChannelHandlerContext>();
+            _observer = new GetNeighbourResponseObserver(Substitute.For<ILogger>());
         }
 
         [Fact]
-        public void CanResolveGetNeighbourResponseHandlerFromContainer()
+        public async void Observer_Can_Process_GetNeighbourResponse_Correctly()
         {
-            var config = new ConfigurationBuilder()
-               .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile))
-               .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile))
-               .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Network.Dev)))
-               .Build();
-            
-            ConfigureContainerBuilder(config, true, true);
-
-            var container = ContainerBuilder.Build();
-            using (container.BeginLifetimeScope(CurrentTestName))
+            var peers = new[]
             {
-                var p2PMessageHandlers = container.Resolve<IEnumerable<IP2PMessageObserver>>();
-                IEnumerable<IP2PMessageObserver> getNeighbourResponseHandler = p2PMessageHandlers.OfType<GetNeighbourResponseObserver>();
-                getNeighbourResponseHandler.First().Should().BeOfType(typeof(GetNeighbourResponseObserver));
+                PeerIdHelper.GetPeerId(),
+                PeerIdHelper.GetPeerId(),
+                PeerIdHelper.GetPeerId()
+            };
+                
+            var response = new DtoFactory().GetDto(new PeerNeighborsResponse
+                {
+                    Peers =
+                    {
+                        peers
+                    }
+                },
+                PeerIdentifierHelper.GetPeerIdentifier("sender"),
+                PeerIdentifierHelper.GetPeerIdentifier("recipient"),
+                CorrelationId.GenerateCorrelationId()
+            );
+            
+            var peerNeighborsResponseObserver = Substitute.For<IObserver<IPeerClientMessageDto<PeerNeighborsResponse>>>();
+
+            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext,
+                response.Content.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId,
+                    response.CorrelationId));
+                
+            _observer.StartObserving(messageStream);
+            await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
+
+            using (_observer.PeerNeighborsResponseStream.SubscribeOn(TaskPoolScheduler.Default)
+               .Subscribe(peerNeighborsResponseObserver.OnNext))
+            {
+                await TaskHelper.WaitForAsync(() => peerNeighborsResponseObserver.ReceivedCalls().Any(),
+                    TimeSpan.FromMilliseconds(1000));
+                
+                peerNeighborsResponseObserver.Received(1).OnNext(Arg.Is<IPeerClientMessageDto<PeerNeighborsResponse>>(p => p.Message.Peers.Contains(peers[0])));
+                peerNeighborsResponseObserver.Received(1).OnNext(Arg.Is<IPeerClientMessageDto<PeerNeighborsResponse>>(p => p.Message.Peers.Contains(peers[1])));
+                peerNeighborsResponseObserver.Received(1).OnNext(Arg.Is<IPeerClientMessageDto<PeerNeighborsResponse>>(p => p.Message.Peers.Contains(peers[2])));
             }
         }
 
-        [Fact(Skip = "This needs to be refactored as we don't hit rep cache here")] // @TODO 
-        public void CanHandlerGetNeighbourRequestHandlerCorrectly()
+        public void Dispose()
         {
-            var neighbourResponseHandler = new GetNeighbourResponseObserver(_logger);
-            var peerNeighbourResponseMessage = new PeerNeighborsResponse();
-            
-            var fakeContext = Substitute.For<IChannelHandlerContext>();
-            var channeledAny = new ObserverDto(fakeContext, peerNeighbourResponseMessage.ToProtocolMessage(PeerIdHelper.GetPeerId(), CorrelationId.GenerateCorrelationId()));
-            var observableStream = new[] {channeledAny}.ToObservable();
-            neighbourResponseHandler.StartObserving(observableStream);
-
-            // neighbourResponseHandler.ReputableCache.ReceivedWithAnyArgs(1);
+            _observer?.Dispose();
         }
-
-        // [Fact]
-        // public void PeerDiscoveryCanHandlePeerNeighbourMessageSubscriptions()
-        // {
-        //     var subbedPeerDiscovery = Substitute.For<IPeerDiscovery>();
-        //     var peerNeighbourResponseMessage = new PeerNeighborsResponse();
-        //     
-        //     var fakeContext = Substitute.For<IChannelHandlerContext>();
-        //     var channeledAny = new ProtocolMessageDto(fakeContext, peerNeighbourResponseMessage.ToProtocolMessage(PeerIdHelper.GetPeerId(), CorrelationId.GenerateCorrelationId()));
-        //     var observableStream = new[] {channeledAny}.ToObservable();
-        //     subbedPeerDiscovery.StartObserving(observableStream);
-        //     subbedPeerDiscovery.GetNeighbourResponseStream.ReceivedWithAnyArgs(1);
-        // }
     }
 }
