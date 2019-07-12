@@ -214,6 +214,14 @@
             ]
         },
         {
+            "type": "Catalyst.Node.Core.P2P.PeerDiscovery",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.P2P.IPeerDiscovery, Catalyst.Common"
+                }
+            ]
+        },
+        {
             "type": "Catalyst.Common.Network.DevDnsClient, Catalyst.Common",
             "services": [
                 {
@@ -230,18 +238,10 @@
             ]
         },
         {
-            "type": "Catalyst.Node.Core.P2P.Discovery.HastingsDiscovery, Catalyst.Node.Core",
-            "services": [
-                {
-                    "type": "Catalyst.Common.Interfaces.P2P.Discovery.IHastingsDiscovery, Catalyst.Common"
-                }
-            ]
-        },
-        {
             "type": "Catalyst.Node.Core.P2P.PeerServiceB, Catalyst.Node.Core",
             "services": [
                 {
-                    "type": "Catalyst.Common.Interfaces.P2P.IPeerService`1[[Catalyst.Common.Interfaces.P2P.Discovery.IHastingsDiscovery, Catalyst.Common]], Catalyst.Common"
+                    "type": "Catalyst.Common.Interfaces.P2P.IPeerService, Catalyst.Common"
                 }
             ]
         },

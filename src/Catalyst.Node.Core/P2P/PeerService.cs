@@ -42,12 +42,12 @@ namespace Catalyst.Node.Core.P2P
 {
     public abstract class PeerService<TDiscovery> : UdpServer, IPeerService<TDiscovery> where TDiscovery : IPeerDiscovery
     {
-        public TDiscovery Discovery { get; }
+        public IPeerDiscovery Discovery { get; }
         public IObservable<IObserverDto<ProtocolMessage>> MessageStream { get; }
 
         public PeerService(IUdpServerEventLoopGroupFactory udpServerEventLoopGroupFactory,
             IUdpServerChannelFactory serverChannelFactory,
-            TDiscovery peerDiscovery,
+            IPeerDiscovery peerDiscovery,
             IEnumerable<IP2PMessageObserver> messageHandlers,
             IPeerSettings peerSettings,
             ILogger logger)

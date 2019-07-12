@@ -42,7 +42,7 @@ using Xunit;
 
 namespace Catalyst.Node.Core.UnitTests.P2P.IO.Observers
 {
-    public sealed class GetNeighbourRequestObserverTests
+    public sealed class GetNeighbourRequestObserverTests : IDisposable
     {
         private readonly ILogger _subbedLogger;
         private readonly IPeerIdentifier _peerIdentifier;
@@ -103,6 +103,11 @@ namespace Catalyst.Node.Core.UnitTests.P2P.IO.Observers
 
             await fakeContext.Channel.ReceivedWithAnyArgs(1)
                .WriteAndFlushAsync(peerNeighborsResponseMessage.ToProtocolMessage(_peerIdentifier.PeerId, CorrelationId.GenerateCorrelationId()));
+        }
+
+        public void Dispose()
+        {
+            _subbedPeerRepository?.Dispose();
         }
     }
 }
