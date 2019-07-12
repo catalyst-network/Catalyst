@@ -25,6 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Catalyst.Common.Interfaces.Enumerator;
 using Dawn;
 
 namespace Catalyst.Common.Enumerator
@@ -34,7 +35,7 @@ namespace Catalyst.Common.Enumerator
     ///     <see href="https://docs.microsoft.com/en-us/dotnet/standard/microservices-architecture/microservice-ddd-cqrs-patterns/enumeration-classes-over-enum-types" />
     /// </summary>
     public class Enumeration
-        : IEquatable<Enumeration>
+        : IEnumeration
     {
         /// <summary>
         /// 
@@ -114,7 +115,7 @@ namespace Catalyst.Common.Enumerator
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public static IEnumerable<T> GetAll<T>() where T : Enumeration
+        public static IEnumerable<T> GetAll<T>() where T : IEnumeration
         {
             var fields = typeof(T).GetFields(BindingFlags.Public |
                 BindingFlags.Static |
@@ -144,7 +145,7 @@ namespace Catalyst.Common.Enumerator
                 return false;
             }
 
-            return Equals((Enumeration) obj);
+            return Equals((IEnumeration) obj);
         }
 
         public override int GetHashCode() { return Id; }

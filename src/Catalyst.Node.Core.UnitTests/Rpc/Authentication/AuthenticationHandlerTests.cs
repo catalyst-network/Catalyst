@@ -37,7 +37,7 @@ using Xunit;
 
 namespace Catalyst.Node.Core.UnitTests.Rpc.Authentication
 {
-    public class AuthenticationHandlerTests
+    public sealed class AuthenticationHandlerTests
     {
         private readonly IAuthenticationStrategy _authenticationStrategy;
         private readonly EmbeddedChannel _serverChannel;

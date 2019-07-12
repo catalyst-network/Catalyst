@@ -23,14 +23,9 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
-using Autofac;
-using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
-using Catalyst.Common.Interfaces.IO.Observers;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Common.IO.Messaging.Dto;
@@ -39,24 +34,21 @@ using Catalyst.Node.Core.P2P.IO.Observers;
 using Catalyst.Protocol.IPPN;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
-using FluentAssertions;
-using Microsoft.Extensions.Configuration;
 using NSubstitute;
 using Serilog;
 using SharpRepository.Repository;
 using SharpRepository.Repository.Specifications;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace Catalyst.Node.Core.UnitTests.P2P.IO.Observers
 {
-    public sealed class GetNeighbourRequestObserverTests : ConfigFileBasedTest
+    public sealed class GetNeighbourRequestObserverTests : IDisposable
     {
         private readonly ILogger _subbedLogger;
         private readonly IPeerIdentifier _peerIdentifier;
         private readonly IRepository<Peer> _subbedPeerRepository;
 
-        public GetNeighbourRequestObserverTests(ITestOutputHelper output) : base(output)
+        public GetNeighbourRequestObserverTests()
         {
             _subbedLogger = Substitute.For<ILogger>();
             _subbedPeerRepository = Substitute.For<IRepository<Peer>>();
@@ -69,40 +61,9 @@ namespace Catalyst.Node.Core.UnitTests.P2P.IO.Observers
             store.Add(peer);
             store.FindAll(Arg.Any<Specification<Peer>>()).Returns(peer);
         }
-        
-        [Fact]
-        public void CanInitGetNeighbourRequestHandlerCorrectly()
-        {   
-            var neighbourRequestHandler = new GetNeighbourRequestObserver(_peerIdentifier,
-                _subbedPeerRepository,
-                _subbedLogger
-            );
-
-            neighbourRequestHandler.Should().NotBeNull();
-        }
-        
-        [Fact]
-        public void CanResolveGetNeighbourRequestHandlerFromContainer()
-        {
-            var config = new ConfigurationBuilder()
-               .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile))
-               .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile))
-               .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Network.Test)))
-               .Build();
-            
-            ConfigureContainerBuilder(config, true, true);
-
-            var container = ContainerBuilder.Build();
-            using (container.BeginLifetimeScope(CurrentTestName))
-            {
-                var p2PMessageHandlers = container.Resolve<IEnumerable<IP2PMessageObserver>>();
-                IEnumerable<IP2PMessageObserver> getNeighbourResponseHandler = p2PMessageHandlers.OfType<GetNeighbourRequestObserver>();
-                getNeighbourResponseHandler.First().Should().BeOfType(typeof(GetNeighbourRequestObserver));
-            }
-        }
 
         [Fact]
-        public async Task CanHandlerGetNeighbourRequestHandlerCorrectly()
+        public async Task Can_Process_GetNeighbourRequest_Correctly()
         {
             // mock a random set of peers
             var randomPeers = new List<Peer>
@@ -142,6 +103,11 @@ namespace Catalyst.Node.Core.UnitTests.P2P.IO.Observers
 
             await fakeContext.Channel.ReceivedWithAnyArgs(1)
                .WriteAndFlushAsync(peerNeighborsResponseMessage.ToProtocolMessage(_peerIdentifier.PeerId, CorrelationId.GenerateCorrelationId()));
+        }
+
+        public void Dispose()
+        {
+            _subbedPeerRepository?.Dispose();
         }
     }
 }

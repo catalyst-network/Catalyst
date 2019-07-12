@@ -30,7 +30,7 @@ using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.IO.Messaging.Broadcast;
-using Catalyst.Common.Interfaces.Rpc.IO.Messaging.Correlation;
+using Catalyst.Common.Interfaces.P2P.IO.Messaging.Correlation;
 using Catalyst.Common.IO.Handlers;
 using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Common.Util;
@@ -54,7 +54,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.IO.Transport.Channels
         {
             private readonly List<IChannelHandler> _handlers;
 
-            public TestPeerServerChannelFactory(IRpcCorrelationManager correlationManager,
+            public TestPeerServerChannelFactory(IPeerMessageCorrelationManager correlationManager,
                 IBroadcastManager broadcastManager,
                 IKeySigner keySigner,
                 IPeerIdValidator peerIdValidator)
@@ -66,7 +66,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.IO.Transport.Channels
             public IReadOnlyCollection<IChannelHandler> InheritedHandlers => _handlers;
         }
 
-        private readonly IRpcCorrelationManager _correlationManager;
+        private readonly IPeerMessageCorrelationManager _correlationManager;
         private readonly IBroadcastManager _gossipManager;
         private readonly IKeySigner _keySigner;
         private readonly TestPeerServerChannelFactory _factory;
@@ -76,7 +76,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.IO.Transport.Channels
 
         public PeerServerChannelFactoryTests()
         {
-            _correlationManager = Substitute.For<IRpcCorrelationManager>();
+            _correlationManager = Substitute.For<IPeerMessageCorrelationManager>();
             _gossipManager = Substitute.For<IBroadcastManager>();
             _keySigner = Substitute.For<IKeySigner>();
 
