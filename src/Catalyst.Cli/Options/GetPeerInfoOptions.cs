@@ -21,24 +21,20 @@
 
 #endregion
 
-using Catalyst.Cli.CommandTypes;
-using Catalyst.Cli.Options;
-using Catalyst.Common.Interfaces.Cli.Commands;
-using Catalyst.Protocol.Rpc.Node;
+using Catalyst.Common.Interfaces.Cli.Options;
+using CommandLine;
 
-namespace Catalyst.Cli.Commands
+namespace Catalyst.Cli.Options
 {
-    public sealed class GetInfoCommand : BaseMessageCommand<GetInfoRequest, GetInfoOptions>
+    [Verb("getpeerinfo", HelpText = "Gets peer information from a catalyst node")]
+    public sealed class GetPeerInfoOptions : OptionsBase, IGetPeerInfoOptions
     {
-        public GetInfoCommand(ICommandContext commandContext) : base(commandContext) { }
+        /// <inheritdoc />
+        [Option('i', "ip", HelpText = "IP address of the peer whose reputation is of interest.")]
+        public string IpAddress { get; set; }
 
-        protected override GetInfoRequest GetMessage(GetInfoOptions option)
-        {
-            return new 
-                GetInfoRequest
-            {
-                Query = true
-            };
-        }
+        /// <inheritdoc />
+        [Option('k', "publickey", HelpText = "Public key of the peer whose reputation is of interest.")]
+        public string PublicKey { get; set; }
     }
 }
