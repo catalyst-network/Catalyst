@@ -1,9 +1,7 @@
 using System;
 using Catalyst.Common.Interfaces.P2P.IO.Messaging.Dto;
-using Catalyst.Protocol.IPPN;
-using Google.Protobuf;
 
-namespace Catalyst.Node.Core.P2P.IO.Observers
+namespace Catalyst.Common.Interfaces.P2P.IO
 {
     public interface IPeerClientObservable
     {

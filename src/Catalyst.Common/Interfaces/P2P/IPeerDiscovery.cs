@@ -21,21 +21,14 @@
 
 #endregion
 
-using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using Catalyst.Common.Interfaces.IO.Messaging.Dto;
-using Catalyst.Common.Interfaces.Network;
-using Catalyst.Common.P2P;
-using Catalyst.Protocol.Common;
-using Microsoft.Extensions.Configuration;
-using Serilog;
-using SharpRepository.Repository;
+using System.Threading.Tasks;
 
 namespace Catalyst.Common.Interfaces.P2P
 {
     public interface IPeerDiscovery
     {
+        Task DiscoveryAsync();
+
         // IDisposable PingResponseMessageStream { get; }
         // IDisposable GetNeighbourResponseStream { get; }
         // IDns Dns { get; }

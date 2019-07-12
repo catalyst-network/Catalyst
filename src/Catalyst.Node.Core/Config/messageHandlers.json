@@ -122,7 +122,7 @@
                     "type": "Catalyst.Common.Interfaces.IO.Observers.IP2PMessageObserver, Catalyst.Common"
                 },
                 {
-                    "type": "Catalyst.Node.Core.P2P.IO.Observers.IPeerClientObservable`1[[Catalyst.Protocol.IPPN.PingResponse, Catalyst.Protocol]], Catalyst.Common"
+                    "type": "Catalyst.Common.Interfaces.P2P.IO.IPeerClientObservable, Catalyst.Common"
                 }
             ]
         },
@@ -141,7 +141,7 @@
                     "type": "Catalyst.Common.Interfaces.IO.Observers.IP2PMessageObserver, Catalyst.Common"
                 },
                 {
-                    "type": "Catalyst.Node.Core.P2P.IO.Observers.IPeerClientObservable`1[[Catalyst.Protocol.IPPN.PeerNeighbourResponse, Catalyst.Protocol]], Catalyst.Common"
+                    "type": "Catalyst.Common.Interfaces.P2P.IO.IPeerClientObservable, Catalyst.Common"
                 }
             ]
         },

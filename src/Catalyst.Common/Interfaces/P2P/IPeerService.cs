@@ -27,12 +27,14 @@ using Catalyst.Protocol.Common;
 
 namespace Catalyst.Common.Interfaces.P2P
 {
-    public interface IPeerService : IObservableMessageStreamer<ProtocolMessage>, IDisposable
+    public interface IPeerService<out TDiscovery> : 
+        IObservableMessageStreamer<ProtocolMessage>, IDisposable
+        where TDiscovery : IPeerDiscovery
     {
         /// <summary>
         ///     The discovery mechanism for the peer network.
         /// </summary>
-        IPeerDiscovery Discovery { get; }
+        TDiscovery Discovery { get; }
                 
         // /// <summary>
         // ///     Request the node at <see cref="targetNode" /> for a list of peers.

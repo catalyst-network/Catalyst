@@ -23,8 +23,10 @@
 
 using System;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Threading;
@@ -34,7 +36,6 @@ using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.Network;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.Discovery;
-using Catalyst.Common.Interfaces.P2P.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.P2P.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.Util;
 using Catalyst.Common.IO.Messaging.Dto;
@@ -48,6 +49,7 @@ using Nethereum.KeyStore.Crypto;
 using Nethereum.RLP;
 using Serilog;
 using SharpRepository.Repository;
+using Tmds.Linux;
 
 namespace Catalyst.Node.Core.P2P.Discovery
 {
@@ -57,32 +59,26 @@ namespace Catalyst.Node.Core.P2P.Discovery
         public IDns Dns { get; }
         public ILogger Logger { get; }
         public IRepository<Peer> PeerRepository { get; }
-        private readonly ReplaySubject<IPeerClientMessageDto> _discoveryMessage;
-
-        private IObservable<IPeerClientMessageDto> _discoveryMessageStream;
-
-        public IObservable<IPeerClientMessageDto> DiscoveryMessageStream
-        {
-            get => _discoveryMessage.AsObservable();
-            set => _discoveryMessageStream = value;
-        }
-
+        public IObservable<IPeerClientMessageDto> DiscoveryStream { get; set; }
+        
         private IPeerIdentifier _ownNode;
-        private IHastingsOriginator state;
+        public IHastingsOriginator state;
         private readonly IPeerClient _peerClient;
         private readonly IDtoFactory _dtoFactory;
         private HastingCareTaker _hastingCareTaker;
         private readonly IPeerSettings _peerSettings;
+        protected readonly IMemoryCache StepCandidates;
+        private Func<MemoryCacheEntryOptions> _cacheOptions;
         private readonly ICancellationTokenProvider _cancellationTokenProvider;
-        private readonly IPeerMessageCorrelationManager _peerMessageCorrelationManager;
-        
+
         public HastingsDiscovery(ILogger logger,
             IRepository<Peer> peerRepository,
             IDns dns,
             IPeerSettings peerSettings,
             IPeerClient peerClient,
             IDtoFactory dtoFactory,
-            ICancellationTokenProvider cancellationTokenProvider)
+            ICancellationTokenProvider cancellationTokenProvider,
+            IChangeTokenProvider changeTokenProvider)
         {
             Dns = dns;
             Logger = logger;
@@ -93,8 +89,19 @@ namespace Catalyst.Node.Core.P2P.Discovery
             _peerSettings = peerSettings;
             _hastingCareTaker = new HastingCareTaker();
             _cancellationTokenProvider = cancellationTokenProvider;
-            _discoveryMessage = new ReplaySubject<IPeerClientMessageDto>(1);
             _ownNode = new PeerIdentifier(_peerSettings, new PeerIdClientId("AC")); // this needs to be changed
+
+            DiscoveryStream = Observable.Empty<IPeerClientMessageDto>();
+            
+            _cacheOptions = () => new MemoryCacheEntryOptions()
+               .AddExpirationToken(changeTokenProvider.GetChangeToken())
+               .RegisterPostEvictionCallback(EvictionCallback);
+            
+            // build the initial state of walk, which our node and seed nodes
+            state = BuildState(_ownNode, GetSeedNodes());
+            
+            // store state with caretaker
+            _hastingCareTaker.Add(state.CreateMemento());
             
             Task.Run(async () =>
             {
@@ -104,33 +111,50 @@ namespace Catalyst.Node.Core.P2P.Discovery
 
         public async Task DiscoveryAsync()
         {
-            // start walk by getting a seed node from dns
-            var seedNodes = GetSeedNodes();
-            
-            // select random seedNode for first step in walk
-            state = new HastingsOriginator
-            {
-                Peer = seedNodes.RandomElement()
-            };
-
             do
             {
-                var peerNeighbourRequestDto = _dtoFactory.GetDto(new PeerNeighborsRequest(),
-                    _ownNode,
-                    state.Peer
-                );
-            
+                state.CurrentPeersNeighbours.ToList().ForEach(n =>
+                {
+                    var peerNeighbourRequestDto = BuildDtoMessage(n);
+                    
+                    StepCandidates.Set(state.Peer, n, _cacheOptions());
+                    _peerClient.SendMessage(peerNeighbourRequestDto);
+                });
+
                 // peerNeighbourRequestDto.CorrelationId
             
                 // _peerClient.SendMessage(peerNeighbourRequestDto);
             } while (!_cancellationTokenProvider.HasTokenCancelled());
         }
+
+        private IHastingsOriginator BuildState(IPeerIdentifier currentNeighbour, IEnumerable<IPeerIdentifier> currentNeighboursPeers)
+        {
+            return new HastingsOriginator
+            {
+                Peer = currentNeighbour,
+                CurrentPeersNeighbours = new ConcurrentBag<IPeerIdentifier>(currentNeighboursPeers)
+            };
+        }
         
+        /// <summary>
+        ///     Takes discovery messages from IPeerClientObservable and merges them here.
+        /// </summary>
+        /// <param name="reputationChangeStream"></param>
         public void MergeDiscoveryMessageStreams(IObservable<IPeerClientMessageDto> reputationChangeStream)
         {
-            DiscoveryMessageStream = DiscoveryMessageStream.Merge(reputationChangeStream);
+            DiscoveryStream = DiscoveryStream.Merge(reputationChangeStream);
         }
 
+        private void EvictionCallback(object key, object value, EvictionReason reason, object state) { }
+
+        private IMessageDto<PeerNeighborsRequest> BuildDtoMessage(IPeerIdentifier recipient)
+        {
+            return _dtoFactory.GetDto(new PeerNeighborsRequest(),
+                _ownNode,
+                recipient
+            );
+        }
+        
         private IEnumerable<IPeerIdentifier> GetSeedNodes()
         {
             return Dns.GetSeedNodesFromDns(_peerSettings.SeedServers).ToList();

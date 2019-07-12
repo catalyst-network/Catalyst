@@ -21,12 +21,19 @@
 
 #endregion
 
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Reactive.Concurrency;
+using System.Reactive.Linq;
+using System.Reactive.Subjects;
+using System.Threading.Tasks;
 using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.Network;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.Interfaces.P2P.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.Util;
 using Catalyst.Common.P2P;
 using Catalyst.Node.Core.P2P;
@@ -35,13 +42,14 @@ using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
 using Catalyst.TestUtils;
 using DnsClient;
+using FluentAssertions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Primitives;
+using Nethereum.Hex.HexConvertors.Extensions;
 using NSubstitute;
 using Serilog;
 using SharpRepository.Repository;
 using Xunit;
-using DnsClient = Catalyst.Common.Network.DnsClient;
 
 namespace Catalyst.Node.Core.UnitTests.P2P.Discovery
 {
@@ -87,11 +95,76 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Discovery
                 Substitute.For<IDns>(),
                 _settings,
                 Substitute.For<IPeerClient>(),
-                SubDtoFactoryGetDtoResponse(),
-                SubCancellationProvider()
+                Substitute.For<IDtoFactory>(),
+                SubCancellationProvider(),
+                Substitute.For<IChangeTokenProvider>()
             ))
             {
                 walker.Dns.GetSeedNodesFromDns(Arg.Any<IEnumerable<string>>()).Received(1);
+            }
+        }
+        
+        [Fact]
+        public void Discovery_Can_Build_Initial_State_From_SeedNodes()
+        {   
+            using (var walker = new HastingsDiscovery(Substitute.For<ILogger>(),
+                Substitute.For<IRepository<Peer>>(),
+                SubDnsClient(),
+                _settings,
+                Substitute.For<IPeerClient>(),
+                Substitute.For<IDtoFactory>(),
+                SubCancellationProvider(),
+                Substitute.For<IChangeTokenProvider>()
+            ))
+            {
+                walker.state.Peer.PublicKey.ToHex()
+                   .Equals("33326b7373683569666c676b336a666d636a7330336c646a346866677338676e");
+
+                walker.state.CurrentPeersNeighbours.Should().HaveCount(5);
+            }
+        }
+
+        [Fact]
+        public async Task Can_Merge_PeerClientObservable_Stream_And_Read_Items_Pushed_On_Separate_Streams()
+        {
+            using (var walker = new HastingsDiscovery(Substitute.For<ILogger>(),
+                Substitute.For<IRepository<Peer>>(),
+                Substitute.For<IDns>(),
+                _settings,
+                Substitute.For<IPeerClient>(),
+                Substitute.For<IDtoFactory>(),
+                SubCancellationProvider(),
+                Substitute.For<IChangeTokenProvider>()
+            ))
+            {
+                var discoveryMessageType1 = new ReplaySubject<IPeerClientMessageDto>(1);
+                var discoveryMessage1Stream = discoveryMessageType1.AsObservable();
+                discoveryMessage1Stream.SubscribeOn(TaskPoolScheduler.Default).Subscribe((reputationChange) => Substitute.For<ILogger>());
+
+                var discoveryMessageType2 = new ReplaySubject<IPeerClientMessageDto>(1);
+                var discoveryMessage2Stream = discoveryMessageType2.AsObservable();
+                discoveryMessage2Stream.SubscribeOn(TaskPoolScheduler.Default).Subscribe((reputationChange) => Substitute.For<ILogger>());
+
+                walker.MergeDiscoveryMessageStreams(discoveryMessage1Stream);
+                walker.MergeDiscoveryMessageStreams(discoveryMessage2Stream);
+                
+                var streamObserver = Substitute.For<IObserver<IPeerClientMessageDto>>();
+
+                using (walker.DiscoveryStream.SubscribeOn(TaskPoolScheduler.Default)
+                   .Subscribe(streamObserver.OnNext))
+                {
+                    var subbedDto1 = Substitute.For<IPeerClientMessageDto>();
+                    subbedDto1.Sender.Returns(PeerIdentifierHelper.GetPeerIdentifier("sender1"));
+                    discoveryMessageType1.OnNext(subbedDto1);
+                    
+                    var subbedDto2 = Substitute.For<IPeerClientMessageDto>();
+                    subbedDto2.Sender.Returns(PeerIdentifierHelper.GetPeerIdentifier("sender2"));
+                    discoveryMessageType2.OnNext(subbedDto2);
+
+                    await walker.DiscoveryStream.WaitForItemsOnDelayedStreamOnTaskPoolSchedulerAsync(2);
+
+                    streamObserver.Received(2).OnNext(Arg.Any<IPeerClientMessageDto>());
+                }
             }
         }
 
@@ -128,7 +201,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Discovery
                 MockQueryResponse.CreateFakeLookupResult(domain, _seedPid, _lookupClient);
             });
 
-            return new Common.Network.DnsClient(_lookupClient, _peerIdValidator);
+            return new Common.Network.DevDnsClient(_settings);
         }
     }
 }

@@ -214,10 +214,10 @@
             ]
         },
         {
-            "type": "Catalyst.Node.Core.P2P.PeerDiscovery",
+            "type": "Catalyst.Node.Core.P2P.Discovery.HastingsDiscovery",
             "services": [
                 {
-                    "type": "Catalyst.Common.Interfaces.P2P.IPeerDiscovery, Catalyst.Common"
+                    "type": "Catalyst.Common.Interfaces.P2P.Discovery.IHastingsDiscovery, Catalyst.Common"
                 }
             ]
         },
@@ -238,10 +238,10 @@
             ]
         },
         {
-            "type": "Catalyst.Node.Core.P2P.PeerServiceB, Catalyst.Node.Core",
+            "type": "Catalyst.Node.Core.P2P.PeerServiceB",
             "services": [
                 {
-                    "type": "Catalyst.Common.Interfaces.P2P.IPeerService, Catalyst.Common"
+                    "type": "Catalyst.Common.Interfaces.P2P.IPeerService`1[[Catalyst.Common.Interfaces.P2P.Discovery.IHastingsDiscovery, Catalyst.Common]], Catalyst.Common"
                 }
             ]
         },

@@ -24,7 +24,6 @@
 using System;
 using Catalyst.Common.Interfaces.Network;
 using Catalyst.Common.Interfaces.P2P.IO.Messaging.Dto;
-using Google.Protobuf;
 
 namespace Catalyst.Common.Interfaces.P2P.Discovery
 {

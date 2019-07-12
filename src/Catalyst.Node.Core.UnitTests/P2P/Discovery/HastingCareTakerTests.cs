@@ -22,12 +22,9 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.Discovery;
 using Catalyst.Node.Core.P2P.Discovery;
-using Catalyst.TestUtils;
 using FluentAssertions;
 using NSubstitute;
 using Xunit;

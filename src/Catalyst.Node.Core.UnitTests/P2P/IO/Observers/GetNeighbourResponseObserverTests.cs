@@ -83,7 +83,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.IO.Observers
             _observer.StartObserving(messageStream);
             await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
 
-            using (_observer.PeerNeighborsResponseStream.SubscribeOn(TaskPoolScheduler.Default)
+            using (_observer.MessageStream.SubscribeOn(TaskPoolScheduler.Default)
                .Subscribe(peerNeighborsResponseObserver.OnNext))
             {
                 await TaskHelper.WaitForAsync(() => peerNeighborsResponseObserver.ReceivedCalls().Any(),

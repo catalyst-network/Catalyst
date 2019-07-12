@@ -49,13 +49,8 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Discovery
         {
             var neighbours = GenerateNeighbours();
 
-            var memento = new HastingMemento(_peer);
-
-            foreach (var peerIdentifier in neighbours)
-            {
-                memento.Neighbours.Add(peerIdentifier);
-            }
-
+            var memento = new HastingMemento(_peer, neighbours);
+            
             memento.Peer.Should().Be(_peer);
             memento.Neighbours.Should().Contain(neighbours);
             memento.Neighbours.Should().HaveCount(5);
@@ -64,16 +59,9 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Discovery
         [Fact]
         public void Can_Init_Memento_With_Existing_Params()
         {
-            var bag = new ConcurrentBag<IPeerIdentifier>();
-            
             var neighbours = GenerateNeighbours();
 
-            foreach (var peerIdentifier in neighbours)
-            {
-                bag.Add(peerIdentifier);
-            }
-            
-            var memento = new HastingMemento(_peer, bag);
+            var memento = new HastingMemento(_peer, neighbours);
 
             memento.Peer.Should().Be(_peer);
             memento.Neighbours.Should().Contain(neighbours);

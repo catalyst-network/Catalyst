@@ -39,8 +39,7 @@ namespace Catalyst.Common.Interfaces.P2P.Discovery
         /// <summary>
         ///     Restores the state from a memento
         /// </summary>
-        /// <param name="peer"></param>
         /// <param name="hastingMemento"></param>
-        void SetMemento(IPeerIdentifier peer, IHastingMemento hastingMemento);
+        void SetMemento(IHastingMemento hastingMemento);
     }
 }

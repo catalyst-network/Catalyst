@@ -44,15 +44,10 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Discovery
         
         private IHastingMemento BuildMemento()
         {
-            var peers = Enumerable.Range(0, 5).Select(i =>
+            var neighbours = Enumerable.Range(0, 5).Select(i =>
                 PeerIdentifierHelper.GetPeerIdentifier($"neighbour-{i.ToString()}")).ToList();
             
-            var memento = new HastingMemento(_peer);
-
-            foreach (var peerIdentifier in peers)
-            {
-                memento.Neighbours.Add(peerIdentifier);
-            }
+            var memento = new HastingMemento(_peer, neighbours);
 
             return memento;
         }
@@ -81,7 +76,8 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Discovery
         {
             var memento = BuildMemento();
             var originator = new HastingsOriginator();
-            originator.SetMemento(_peer, memento);
+            
+            originator.SetMemento(memento);
 
             originator.Peer.Should().Be(_peer);
             originator.CurrentPeersNeighbours.Should().Contain(memento.Neighbours);

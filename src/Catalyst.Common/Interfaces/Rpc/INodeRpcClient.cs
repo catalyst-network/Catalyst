@@ -21,6 +21,7 @@
 
 #endregion
 
+using System;
 using Catalyst.Common.Interfaces.IO.Transport;
 
 namespace Catalyst.Common.Interfaces.Rpc

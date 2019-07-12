@@ -53,9 +53,9 @@ namespace Catalyst.Node.Core.P2P.Discovery
         }
         
         /// <inheritdoc />
-        public void SetMemento(IPeerIdentifier peer, IHastingMemento hastingMemento)
+        public void SetMemento(IHastingMemento hastingMemento)
         {
-            Peer = peer;
+            Peer = hastingMemento.Peer;
             CurrentPeersNeighbours = new ConcurrentBag<IPeerIdentifier>(hastingMemento.Neighbours);
         }
     }

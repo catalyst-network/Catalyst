@@ -32,6 +32,8 @@ using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.IO.Observers;
 using Catalyst.Common.Interfaces.IO.Transport.Channels;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.Interfaces.P2P.Discovery;
+using Catalyst.Common.Interfaces.P2P.IO;
 using Catalyst.Common.IO.EventLoop;
 using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Node.Core.P2P;
