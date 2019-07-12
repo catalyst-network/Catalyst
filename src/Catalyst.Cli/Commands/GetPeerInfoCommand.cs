@@ -21,6 +21,7 @@
 
 #endregion
 
+using System.Net;
 using Catalyst.Cli.CommandTypes;
 using Catalyst.Cli.Options;
 using Catalyst.Common.Interfaces.Cli.Commands;
@@ -33,13 +34,13 @@ using System.Net;
 
 namespace Catalyst.Cli.Commands
 {
-    public sealed class PeerReputationCommand : BaseMessageCommand<GetPeerReputationRequest, PeerReputationOptions>
+    public sealed class GetPeerInfoCommand : BaseMessageCommand<GetPeerInfoRequest, GetPeerInfoOptions>
     {
-        public PeerReputationCommand(ICommandContext commandContext) : base(commandContext) { }
+        public GetPeerInfoCommand(ICommandContext commandContext) : base(commandContext) { }
 
-        protected override GetPeerReputationRequest GetMessage(PeerReputationOptions option)
+        protected override GetPeerInfoRequest GetMessage(GetPeerInfoOptions option)
         {
-            return new GetPeerReputationRequest
+            return new GetPeerInfoRequest
             {
                 PublicKey = option.PublicKey.ToBytesForRLPEncoding().ToByteString(),
                 Ip = ByteString.CopyFrom(IPAddress.Parse(option.IpAddress).To16Bytes())
