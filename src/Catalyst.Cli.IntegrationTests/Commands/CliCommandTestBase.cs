@@ -22,6 +22,7 @@
 #endregion
 
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Security.Cryptography.X509Certificates;
 using Autofac;
@@ -102,13 +103,18 @@ namespace Catalyst.Cli.IntegrationTests.Commands
             ContainerBuilder.RegisterInstance(nodeRpcClientFactory).As<INodeRpcClientFactory>();
         }
 
-        protected void AssertSentMessage<T>() where T : IMessage<T>
+        protected T AssertSentMessageAndGetMessageContent<T>() where T : IMessage<T>
         {
             NodeRpcClient.Received(1).SendMessage(Arg.Is<IMessageDto<ProtocolMessage>>(x =>
                 x.Content != null &&
                 x.Content.GetType().IsAssignableTo<ProtocolMessage>() &&
                 x.Content.FromProtocolMessage<T>() != null
             ));
+            var sentMessageDto = (IMessageDto<ProtocolMessage>) NodeRpcClient.ReceivedCalls()
+               .Single(c => c.GetMethodInfo().Name == nameof(INodeRpcClient.SendMessage))
+               .GetArguments()[0];
+            var requestSent = sentMessageDto.Content.FromProtocolMessage<T>();
+            return requestSent;
         }
 
         protected override void Dispose(bool disposing)

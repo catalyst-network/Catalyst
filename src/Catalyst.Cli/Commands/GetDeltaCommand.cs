@@ -26,6 +26,7 @@ using Catalyst.Cli.Options;
 using Catalyst.Common.Interfaces.Cli.Commands;
 using Catalyst.Common.Util;
 using Catalyst.Protocol.Rpc.Node;
+using Serilog;
 
 namespace Catalyst.Cli.Commands
 {
@@ -37,6 +38,8 @@ namespace Catalyst.Cli.Commands
         {
             if (!Multiformats.Hash.Multihash.TryParse(option.Hash, out var hash))
             {
+                Log.Warning("Unable to parse hash {0} as a Multihash", option.Hash);
+                CommandContext.UserOutput.WriteLine($"Unable to parse hash {option.Hash} as a Multihash");
                 return default;
             }
 

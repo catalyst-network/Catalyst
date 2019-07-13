@@ -86,12 +86,13 @@ namespace Catalyst.Common.IO.Observers
                     recipientPeerIdentifier,
                     correlationId);
 
-                messageDto.Context.Channel.WriteAndFlushAsync(new DtoFactory().GetDto(
+                var responseDto = new DtoFactory().GetDto(
                     response.ToProtocolMessage(PeerIdentifier.PeerId, correlationId),
                     PeerIdentifier,
                     recipientPeerIdentifier,
-                    correlationId
-                ));
+                    correlationId);
+
+                messageDto.Context.Channel.WriteAndFlushAsync(responseDto);
             }
             catch (Exception exception)
             {

@@ -21,24 +21,32 @@
 
 #endregion
 
+using System.Text;
+using Catalyst.Common.Extensions;
 using Catalyst.Protocol.Rpc.Node;
 using FluentAssertions;
+using Multiformats.Hash;
+using Multiformats.Hash.Algorithms;
 using Xunit;
 using Xunit.Abstractions;
 
 namespace Catalyst.Cli.IntegrationTests.Commands
 {
-    public sealed class MessageVerifyCommandTest : CliCommandTestBase
+    public sealed class GetDeltaCommandTests : CliCommandTestBase
     {
-        public MessageVerifyCommandTest(ITestOutputHelper output) : base(output) { }
+        public GetDeltaCommandTests(ITestOutputHelper output) : base(output) { }
 
         [Fact]
-        public void Cli_Can_Verify_Message()
+        public void Cli_Can_Request_Node_Info()
         {
-            var result = Shell.ParseCommand(
-                "verify", "-m", "test message", "-k", "public_key", "-s", "signature", NodeArgumentPrefix, ServerNodeName);
+            var hashingAlgorithm = Common.Config.Constants.HashAlgorithm;
+            var hash = Multihash.Cast(hashingAlgorithm.ComputeHash(Encoding.UTF8.GetBytes("hello")));
+
+            var result = Shell.ParseCommand("getdelta", "-h", hash, NodeArgumentPrefix, ServerNodeName);
             result.Should().BeTrue();
-            AssertSentMessageAndGetMessageContent<VerifyMessageRequest>();
+
+            var request = AssertSentMessageAndGetMessageContent<GetDeltaRequest>();
+            request.DeltaDfsHash.ToMultihash().Should().Be(hash);
         }
     }
 }

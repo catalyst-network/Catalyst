@@ -37,7 +37,7 @@ namespace Catalyst.Cli.IntegrationTests.Commands
         {
             var result = Shell.ParseCommand("listpeers", NodeArgumentPrefix, ServerNodeName);
             result.Should().BeTrue();
-            AssertSentMessage<GetPeerListRequest>();
+            AssertSentMessageAndGetMessageContent<GetPeerListRequest>();
         }
     }
 }
