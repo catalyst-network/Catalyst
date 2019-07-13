@@ -23,25 +23,29 @@
 
 using System;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
+using Google.Protobuf;
 
 namespace Catalyst.Common.IO.Messaging.Correlation
 {
-    /// <inheritdoc/>
+    /// <inheritdoc />
     public sealed class CorrelationId : ICorrelationId
     {
-        public Guid Id { get; set; }
+        public Guid Id { get; }
         
         /// <summary>
-        ///     Provide a known correlation Id
+        ///     Provide a known correlation Id.
         /// </summary>
-        /// <param name="id"></param>
         public CorrelationId(Guid id) { Id = id; } 
         
         /// <summary>
-        ///     Provide a correlation Id from a protocol message as byte string to get an ICorrelationId Type
+        ///     Provides a correlation Id from a byte array.
         /// </summary>
-        /// <param name="bytes"></param>
-        public CorrelationId(byte[] bytes) { Id = new Guid(bytes); } 
+        public CorrelationId(byte[] bytes) { Id = new Guid(bytes); }
+
+        /// <summary>
+        ///     Provides a correlation Id from a protobuf byte string.
+        /// </summary>
+        public CorrelationId(ByteString byteString) : this(byteString.ToByteArray()) { }
 
         /// <summary>
         /// Gets a new CorrelationId
@@ -49,12 +53,31 @@ namespace Catalyst.Common.IO.Messaging.Correlation
         private CorrelationId() { Id = Guid.NewGuid(); }
 
         /// <summary>
-        ///     Static helper to get new CorrelationId
+        ///     Static helper to get new CorrelationId.
         /// </summary>
-        /// <returns></returns>
         public static ICorrelationId GenerateCorrelationId()
         {
             return new CorrelationId();
         }
+
+        public override string ToString() { return Id.ToString(); }
+
+        public bool Equals(ICorrelationId other)
+        {
+            return !ReferenceEquals(null, other) && (ReferenceEquals(this, other) || Id.Equals(other.Id));
+        }
+
+        public override bool Equals(object obj)
+        {
+            return ReferenceEquals(this, obj) || obj is ICorrelationId other && Equals(other);
+        }
+
+        public override int GetHashCode()
+        {
+            return Id.GetHashCode();
+        }
+
+        public static bool operator ==(CorrelationId left, CorrelationId right) { return Equals(left, right); }
+        public static bool operator !=(CorrelationId left, CorrelationId right) { return !Equals(left, right); }
     }
 }
