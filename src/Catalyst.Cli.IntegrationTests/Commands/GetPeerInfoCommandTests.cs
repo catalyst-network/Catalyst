@@ -32,8 +32,6 @@ namespace Catalyst.Cli.IntegrationTests.Commands
 {
     public sealed class GetPeerInfoCommandTests : CliCommandTestBase
     {
-        //This test is the base to all other tests.  If the Cli cannot connect to a node than all other commands
-        //will fail
         public GetPeerInfoCommandTests(ITestOutputHelper output) : base(output) { }
 
         [Fact]
@@ -44,7 +42,7 @@ namespace Catalyst.Cli.IntegrationTests.Commands
             
             var result = Shell.ParseCommand("getpeerinfo", NodeArgumentPrefix, ServerNodeName, "-i", ipAddress, "-k", publicKey);
             result.Should().BeTrue();
-            AssertSentMessage<GetPeerInfoRequest>();
+            AssertSentMessageAndGetMessageContent<GetPeerInfoRequest>();
         }
     }
 }
