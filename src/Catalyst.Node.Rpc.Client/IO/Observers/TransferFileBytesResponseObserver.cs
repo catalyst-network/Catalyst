@@ -24,11 +24,16 @@
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.IO.Observers;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.Interfaces.Rpc.IO.Messaging.Dto;
 using Catalyst.Common.IO.Observers;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using DotNetty.Transport.Channels;
+using Google.Protobuf;
 using Serilog;
+using System;
+using System.Reactive.Linq;
+using System.Reactive.Subjects;
 
 namespace Catalyst.Node.Rpc.Client.IO.Observers
 {
@@ -40,6 +45,9 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
         : ResponseObserverBase<TransferFileBytesResponse>,
             IRpcResponseObserver
     {
+        public ReplaySubject<IRPCClientMessageDto<IMessage>> MessageResponse;
+        public IObservable<IRPCClientMessageDto<IMessage>> MessageResponseStream => MessageResponse.AsObservable();
+
         /// <summary>Initializes a new instance of the <see cref="TransferFileBytesResponseObserver"/> class.</summary>
         /// <param name="logger">The logger.</param>
         public TransferFileBytesResponseObserver(ILogger logger) : base(logger) { }

@@ -22,6 +22,8 @@
 #endregion
 
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using Catalyst.Common.Interfaces.Cli;
@@ -86,27 +88,13 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
             Logger.Debug("GetVersionResponseHandler starting ...");
 
             Guard.Argument(versionResponse, nameof(versionResponse)).NotNull("The message cannot be null");
-            
+
             Guard.Argument(versionResponse, nameof(versionResponse)).NotNull("The VersionResponse cannot be null")
                .Require(d => d.Version != null,
                     d => $"{nameof(versionResponse)} must have a valid Version.");
 
 
             MessageResponse.OnNext(new RPCClientMessageDto<IMessage>(versionResponse, senderPeerIdentifier));
-            //try
-            //{
-            //    _output.WriteLine($"Node Version: {versionResponse.Version}");
-            //}
-            //catch (Exception ex)
-            //{
-            //    Logger.Error(ex,
-            //        "Failed to handle GetInfoResponse after receiving message {0}", versionResponse);
-            //    _output.WriteLine(ex.Message);
-            //}
-            //finally
-            //{
-            //    Logger.Information("Press Enter to continue ...");
-            //}
         }
     }
 }

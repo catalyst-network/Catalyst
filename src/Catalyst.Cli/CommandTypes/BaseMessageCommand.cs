@@ -32,6 +32,7 @@ using Catalyst.Common.IO.Transport;
 using Catalyst.Common.P2P;
 using Google.Protobuf;
 using System;
+using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 
@@ -45,8 +46,7 @@ namespace Catalyst.Cli.CommandTypes
 
         protected BaseMessageCommand(ICommandContext commandContext) : base(commandContext)
         {
-            CommandContext.SocketClientRegistry.EventStream.OfType<SocketClientRegistryConnected>().Subscribe(OnNext, OnError, OnCompleted);
-            //CommandContext.SocketClientRegistry.EventStream.Where(x => x.GetType() == typeof(SocketClientRegistryConnected)).Select(x => (SocketClientRegistryConnected)(x)).Subscribe(this);
+            CommandContext.SocketClientRegistry.EventStream.OfType<SocketClientRegistryClientAdded>().Subscribe(SocketClientRegistryClientAddedOnNext, OnError, OnCompleted);
         }
 
         public virtual void SendMessage(TOption options)
@@ -90,25 +90,25 @@ namespace Catalyst.Cli.CommandTypes
 
         }
 
-        public void OnCompleted()
+        private void OnCompleted()
         {
-            throw new NotImplementedException();
+            
         }
 
-        public void OnError(Exception error)
+        private void OnError(Exception error)
         {
-            throw new NotImplementedException();
+            
         }
 
-        public void OnNext(IRPCClientMessageDto<TResponse> value)
+        private void OnNext(IRPCClientMessageDto<IMessage> value)
         {
-            ResponseMessage(value.Message);
+            ResponseMessage((TResponse)value.Message);
         }
 
-        public void OnNext(SocketClientRegistryConnected value)
+        private void SocketClientRegistryClientAddedOnNext(SocketClientRegistryClientAdded value)
         {
             INodeRpcClient client = CommandContext.SocketClientRegistry.GetClientFromRegistry(value.SocketHashCode);
-            client.MessageResponseStream.OfType<IRPCClientMessageDto<TResponse>>().Subscribe(OnNext, OnError, OnCompleted);
+            client.MessageResponseStream.Where(x => x.Message.GetType() == typeof(TResponse)).SubscribeOn(NewThreadScheduler.Default).Subscribe(OnNext, OnError, OnCompleted);
         }
     }
 }

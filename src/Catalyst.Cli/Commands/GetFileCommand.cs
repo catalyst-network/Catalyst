@@ -31,7 +31,7 @@ using Catalyst.Protocol.Rpc.Node;
 
 namespace Catalyst.Cli.Commands
 {
-    public sealed class GetFileCommand : BaseMessageCommand<GetFileFromDfsRequest, GetFileOptions>
+    public sealed class GetFileCommand : BaseMessageCommand<GetFileFromDfsRequest, GetFileFromDfsResponse, GetFileOptions>
     {
         private readonly IDownloadFileTransferFactory _downloadFileTransferFactory;
 

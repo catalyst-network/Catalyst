@@ -28,7 +28,7 @@ using Catalyst.Protocol.Rpc.Node;
 
 namespace Catalyst.Cli.Commands
 {
-    public sealed class GetMempoolCommand : BaseMessageCommand<GetMempoolRequest, GetMempoolOptions>
+    public sealed class GetMempoolCommand : BaseMessageCommand<GetMempoolRequest, GetMempoolResponse, GetMempoolOptions>
     {
         public GetMempoolCommand(ICommandContext commandContext) : base(commandContext) { }
         protected override GetMempoolRequest GetMessage(GetMempoolOptions option) { return new GetMempoolRequest(); }

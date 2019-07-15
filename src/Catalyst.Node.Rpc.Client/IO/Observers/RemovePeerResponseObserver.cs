@@ -21,15 +21,20 @@
 
 #endregion
 
+using System;
+using System.Reactive.Linq;
+using System.Reactive.Subjects;
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.IO.Observers;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.Interfaces.Rpc.IO.Messaging.Dto;
 using Catalyst.Common.IO.Observers;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using DotNetty.Transport.Channels;
-using Serilog;
+using Google.Protobuf;
+using ILogger = Serilog.ILogger;
 
 namespace Catalyst.Node.Rpc.Client.IO.Observers
 {
@@ -41,6 +46,9 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
         : ResponseObserverBase<RemovePeerResponse>,
             IRpcResponseObserver
     {
+        public ReplaySubject<IRPCClientMessageDto<IMessage>> MessageResponse;
+        public IObservable<IRPCClientMessageDto<IMessage>> MessageResponseStream => MessageResponse.AsObservable();
+
         private readonly IUserOutput _userOutput;
 
         public RemovePeerResponseObserver(IUserOutput userOutput,

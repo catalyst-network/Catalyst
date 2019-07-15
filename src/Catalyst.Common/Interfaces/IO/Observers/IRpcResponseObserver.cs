@@ -1,13 +1,5 @@
 #region LICENSE
 
-
-
-#endregion
-
-using Catalyst.Common.Interfaces.IO.Messaging.Dto;
-using Catalyst.Common.Interfaces.Rpc.IO.Messaging.Dto;
-using Google.Protobuf;
-using System;
 /**
 * Copyright (c) 2019 Catalyst Network
 *
@@ -26,6 +18,14 @@ using System;
 * You should have received a copy of the GNU General Public License
 * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
+
+#endregion
+
+using Catalyst.Common.Interfaces.IO.Messaging.Dto;
+using Catalyst.Common.Interfaces.Rpc.IO.Messaging.Dto;
+using Google.Protobuf;
+using System;
+
 namespace Catalyst.Common.Interfaces.IO.Observers
 {
     public interface IRpcResponseObserver : IResponseMessageObserver

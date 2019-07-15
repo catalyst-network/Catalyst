@@ -24,17 +24,20 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Reflection;
 using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.IO.Messaging.Correlation;
+using Catalyst.Common.Network;
 using Catalyst.Common.Util;
 using Catalyst.Protocol.Common;
 using Dawn;
 using Google.Protobuf;
 using Google.Protobuf.Reflection;
 using Multiformats.Hash;
+using Nethereum.RLP;
 using Type = System.Type;
 
 namespace Catalyst.Common.Extensions
@@ -186,6 +189,21 @@ namespace Catalyst.Common.Extensions
             return requestTypeUrl
                    .Remove(requestTypeUrl.Length - originalSuffix.Length, originalSuffix.Length)
               + targetSuffix;
+        }
+
+        public static ByteString PublicKeyToProtobuf(this string publicKey)
+        {
+            return publicKey.ToBytesForRLPEncoding().ToByteString();
+        }
+
+        public static ByteString IpAddressToProtobuf(this IPAddress ipAddress)
+        {
+            return ByteString.CopyFrom(ipAddress.To16Bytes());
+        }
+
+        public static ByteString IpAddressToProtobuf(this string ipAddress)
+        {
+            return IPAddress.Parse(ipAddress).IpAddressToProtobuf();
         }
     }
 }

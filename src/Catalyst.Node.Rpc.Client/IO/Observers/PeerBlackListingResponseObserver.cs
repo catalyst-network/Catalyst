@@ -21,14 +21,20 @@
 
 #endregion
 
+using System;
+using System.Reactive.Linq;
+using System.Reactive.Subjects;
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.IO.Observers;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.Interfaces.Rpc.IO.Messaging.Dto;
 using Catalyst.Common.IO.Observers;
+using Catalyst.Node.Rpc.Client.IO.Messaging.Dto;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using DotNetty.Transport.Channels;
+using Google.Protobuf;
 using ILogger = Serilog.ILogger;
 
 namespace Catalyst.Node.Rpc.Client.IO.Observers
@@ -41,6 +47,9 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
         : ResponseObserverBase<SetPeerBlackListResponse>,
             IRpcResponseObserver
     {
+        public ReplaySubject<IRPCClientMessageDto<IMessage>> MessageResponse;
+        public IObservable<IRPCClientMessageDto<IMessage>> MessageResponseStream => MessageResponse.AsObservable();
+
         private readonly IUserOutput _output;
 
         public PeerBlackListingResponseObserver(IUserOutput output,
@@ -48,6 +57,7 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
             : base(logger)
         {
             _output = output;
+            MessageResponse = new ReplaySubject<IRPCClientMessageDto<IMessage>>(1);
         }
 
         protected override void HandleResponse(SetPeerBlackListResponse setPeerBlackListResponse,
@@ -60,14 +70,7 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
             Guard.Argument(senderPeerIdentifier, nameof(senderPeerIdentifier)).NotNull();
             Logger.Debug("Handling GetPeerBlackList response");
 
-            var msg = setPeerBlackListResponse.PublicKey.ToStringUtf8() == string.Empty
-                ? "Peer not found"
-                : $"Peer Blacklisting Successful : " +
-                $"{setPeerBlackListResponse.Blacklist.ToString()}, " +
-                $"{setPeerBlackListResponse.PublicKey.ToStringUtf8()}, " +
-                $"{setPeerBlackListResponse.Ip.ToStringUtf8()}";
-               
-            _output.WriteLine(msg);
+            MessageResponse.OnNext(new RPCClientMessageDto<IMessage>(setPeerBlackListResponse, senderPeerIdentifier));
         }
     }
 }

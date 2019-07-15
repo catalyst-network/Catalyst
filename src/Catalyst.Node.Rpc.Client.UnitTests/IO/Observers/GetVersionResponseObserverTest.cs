@@ -23,9 +23,11 @@
 
 using System;
 using System.Collections.Generic;
+using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Cli;
+using Catalyst.Common.Interfaces.Rpc.IO.Messaging.Dto;
 using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Node.Rpc.Client.IO.Observers;
@@ -35,6 +37,8 @@ using DotNetty.Transport.Channels;
 using NSubstitute;
 using Serilog;
 using Xunit;
+using FluentAssertions;
+using System.Reactive.Concurrency;
 
 namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
 {
@@ -65,15 +69,15 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
             _fakeContext = Substitute.For<IChannelHandlerContext>();
             _output = Substitute.For<IUserOutput>();
         }
-        
+
         [Theory]
         [MemberData(nameof(QueryContents))]
         public async Task RpcClient_Can_Handle_GetVersionResponse(string version)
         {
             var response = new DtoFactory().GetDto(new VersionResponse
-                {
-                    Version = version
-                },
+            {
+                Version = version
+            },
                 PeerIdentifierHelper.GetPeerIdentifier("sender"),
                 PeerIdentifierHelper.GetPeerIdentifier("recpient"),
                 CorrelationId.GenerateCorrelationId()
@@ -84,12 +88,19 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
                     response.CorrelationId)
             );
 
+            VersionResponse messageStreamResponse = null;
+
             _observer = new GetVersionResponseObserver(_output, _logger);
             _observer.StartObserving(messageStream);
+            _observer.MessageResponseStream.Where(x => x.Message.GetType() == typeof(VersionResponse)).SubscribeOn(NewThreadScheduler.Default).Subscribe((rpcClientMessageDto) =>
+            {
+                messageStreamResponse = (VersionResponse)rpcClientMessageDto.Message;
+            });
 
             await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
 
-            _output.Received(1).WriteLine($"Node Version: {version}");
+            messageStreamResponse.Should().NotBeNull();
+            messageStreamResponse.Version.Should().Be(response.Content.Version);
         }
 
         public void Dispose()

@@ -12,20 +12,6 @@
     </PropertyGroup>
     <Import Project="../Common.Projects.props" />
     <ItemGroup>
-      <Compile Remove="Commands\AddFileCommand.cs" />
-      <Compile Remove="Commands\DisconnectCommand.cs" />
-      <Compile Remove="Commands\GetFileCommand.cs" />
-      <Compile Remove="Commands\GetInfoCommand.cs" />
-      <Compile Remove="Commands\GetMempoolCommand.cs" />
-      <Compile Remove="Commands\MessageSignCommand.cs" />
-      <Compile Remove="Commands\MessageVerifyCommand.cs" />
-      <Compile Remove="Commands\PeerBlackListingCommand.cs" />
-      <Compile Remove="Commands\PeerCountCommand.cs" />
-      <Compile Remove="Commands\PeerListCommand.cs" />
-      <Compile Remove="Commands\PeerRemoveCommand.cs" />
-      <Compile Remove="Commands\PeerReputationCommand.cs" />
-    </ItemGroup>
-    <ItemGroup>
         <PackageReference Include="Autofac" Version="4.8.1" />
         <PackageReference Include="Autofac.Configuration" Version="4.1.0" />
         <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="4.3.1" />
