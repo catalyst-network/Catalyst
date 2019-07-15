@@ -73,11 +73,11 @@ namespace Catalyst.TestUtils
 
         public override void StartObserving(IObservable<IObserverDto<ProtocolMessage>> messageStream)
         {
-            MessageSubscriptions.Add(messageStream
+            MessageSubscription = messageStream
                .Where(m => m.Payload?.TypeUrl != null 
                  && m.Payload.TypeUrl == _filterMessageType)
                .SubscribeOn(TaskPoolScheduler.Default)
-               .Subscribe(OnNext, OnError, OnCompleted));
+               .Subscribe(OnNext, OnError, OnCompleted);
         }
         
         public void SendChannelContextResponse(IMessageDto<TProto> messageDto) { throw new NotImplementedException(); }

@@ -34,12 +34,11 @@ namespace Catalyst.Common.IO.Observers
     public abstract class MessageObserverBase : IMessageObserver, IDisposable
     {
         protected readonly ILogger Logger;
-        protected readonly List<IDisposable> MessageSubscriptions;
+        protected IDisposable MessageSubscription;
         public IChannelHandlerContext ChannelHandlerContext { get; protected set; }
 
         protected MessageObserverBase(ILogger logger)
         {
-            MessageSubscriptions = new List<IDisposable>();
             Logger = logger;
         }
 
@@ -65,9 +64,8 @@ namespace Catalyst.Common.IO.Observers
                 return;
             }
 
-            MessageSubscriptions.ForEach(subscription => subscription.Dispose());
+            MessageSubscription.Dispose();
             ChannelHandlerContext?.CloseAsync().ConfigureAwait(false);
-            MessageSubscriptions.Clear();
         }
 
         public void Dispose()

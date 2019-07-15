@@ -56,11 +56,11 @@ namespace Catalyst.Common.IO.Observers
 
         public override void StartObserving(IObservable<IObserverDto<ProtocolMessage>> messageStream)
         {
-            MessageSubscriptions.Add(messageStream
+            MessageSubscription = messageStream
                .Where(m => m.Payload?.TypeUrl != null 
                  && m.Payload?.TypeUrl == _filterMessageType)
                .SubscribeOn(NewThreadScheduler.Default)
-               .Subscribe(OnNext, OnError, OnCompleted));
+               .Subscribe(OnNext, OnError, OnCompleted);
         }
         
         public override void OnNext(IObserverDto<ProtocolMessage> messageDto)
