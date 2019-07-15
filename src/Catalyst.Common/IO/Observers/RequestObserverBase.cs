@@ -47,10 +47,10 @@ namespace Catalyst.Common.IO.Observers
     {
         private readonly string _filterMessageType;
         public IPeerIdentifier PeerIdentifier { get; }
-        
+
         protected RequestObserverBase(ILogger logger, IPeerIdentifier peerIdentifier) : base(logger)
         {
-            Guard.Argument(typeof(TProtoReq), nameof(TProtoReq)).Require(t => t.IsRequestType(), 
+            Guard.Argument(typeof(TProtoReq), nameof(TProtoReq)).Require(t => t.IsRequestType(),
                 t => $"{nameof(TProtoReq)} is not of type {MessageTypes.Request.Name}");
             _filterMessageType = typeof(TProtoReq).ShortenedProtoFullName();
             PeerIdentifier = peerIdentifier;
@@ -58,13 +58,18 @@ namespace Catalyst.Common.IO.Observers
 
         public override void StartObserving(IObservable<IObserverDto<ProtocolMessage>> messageStream)
         {
+            if (MessageSubscription != null)
+            {
+                return;
+            }
             MessageSubscription = messageStream
-               .Where(m => m.Payload?.TypeUrl != null 
+               .Where(m => m.Payload?.TypeUrl != null
                  && m.Payload?.TypeUrl == _filterMessageType)
                .SubscribeOn(NewThreadScheduler.Default)
                .Subscribe(this);
+
         }
-        
+
         protected abstract TProtoRes HandleRequest(TProtoReq messageDto, IChannelHandlerContext channelHandlerContext, IPeerIdentifier senderPeerIdentifier, ICorrelationId correlationId);
 
         public override void OnNext(IObserverDto<ProtocolMessage> messageDto)

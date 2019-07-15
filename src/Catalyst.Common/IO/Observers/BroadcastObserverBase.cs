@@ -51,13 +51,18 @@ namespace Catalyst.Common.IO.Observers
 
         public override void StartObserving(IObservable<IObserverDto<ProtocolMessage>> messageStream)
         {
+            if (MessageSubscription != null)
+            {
+                return;
+            }
             MessageSubscription = messageStream
-               .Where(m => m.Payload?.TypeUrl != null 
+               .Where(m => m.Payload?.TypeUrl != null
                  && m.Payload.TypeUrl == _filterMessageType)
                .SubscribeOn(NewThreadScheduler.Default)
                .Subscribe(this);
+
         }
-        
+
         public override void OnNext(IObserverDto<ProtocolMessage> messageDto)
         {
             Logger.Verbose("Pre Handle Message Called");

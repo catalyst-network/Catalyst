@@ -64,7 +64,7 @@ namespace Catalyst.Common.IO.Observers
                 return;
             }
 
-            MessageSubscription.Dispose();
+            MessageSubscription?.Dispose();
             ChannelHandlerContext?.CloseAsync().ConfigureAwait(false);
         }
 

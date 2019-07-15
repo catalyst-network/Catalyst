@@ -51,18 +51,23 @@ namespace Catalyst.Common.IO.Observers
                 t => $"{nameof(TProto)} is not of type {MessageTypes.Response.Name}");
             _filterMessageType = typeof(TProto).ShortenedProtoFullName();
         }
-        
+
         protected abstract void HandleResponse(TProto messageDto, IChannelHandlerContext channelHandlerContext, IPeerIdentifier senderPeerIdentifier, ICorrelationId correlationId);
 
         public override void StartObserving(IObservable<IObserverDto<ProtocolMessage>> messageStream)
         {
+            if (MessageSubscription != null)
+            {
+                return;
+            }
+
             MessageSubscription = messageStream
-               .Where(m => m.Payload?.TypeUrl != null 
+               .Where(m => m.Payload?.TypeUrl != null
                  && m.Payload?.TypeUrl == _filterMessageType)
                .SubscribeOn(NewThreadScheduler.Default)
                .Subscribe(OnNext, OnError, OnCompleted);
         }
-        
+
         public override void OnNext(IObserverDto<ProtocolMessage> messageDto)
         {
             Logger.Verbose("Pre Handle Message Called");
