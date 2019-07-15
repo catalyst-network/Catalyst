@@ -25,6 +25,7 @@ using System;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using Catalyst.Common.Config;
+using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.P2P.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.P2P.ReputationSystem;
 using Catalyst.Common.Interfaces.Util;
