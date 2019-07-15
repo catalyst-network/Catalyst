@@ -65,6 +65,7 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
             : base(logger)
         {
             _output = output;
+            MessageResponse = new ReplaySubject<IRPCClientMessageDto<IMessage>>(1);
         }
         
         /// <summary>

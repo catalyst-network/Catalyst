@@ -24,21 +24,22 @@
 using System;
 using Catalyst.Common.Util;
 using Catalyst.Protocol.Common;
-using Catalyst.Protocol.Delta;
+using Catalyst.Protocol.Deltas;
+using Google.Protobuf.WellKnownTypes;
 
 namespace Catalyst.TestUtils
 {
     public static class DeltaHelper
     {
-        public static Delta GetDelta(byte[] previousDeltaHash = null, 
-            byte[] merkleRoot = null,
-            byte[] merklePoda = null,
-            uint timestamp = 0)
+        public static Delta GetDelta(byte[] previousDeltaHash = default, 
+            byte[] merkleRoot = default,
+            byte[] merklePoda = default,
+            DateTime? timestamp = default)
         {
             var previousHash = previousDeltaHash ?? ByteUtil.GenerateRandomByteArray(32);
             var root = merkleRoot ?? ByteUtil.GenerateRandomByteArray(32);
             var poda = merklePoda ?? ByteUtil.GenerateRandomByteArray(32);
-            var nonNullTimestamp = timestamp == 0 ? (uint) DateTime.UtcNow.ToOADate() : timestamp;
+            var nonNullTimestamp = Timestamp.FromDateTime(timestamp?.ToUniversalTime() ?? DateTime.Now.ToUniversalTime());
 
             var delta = new Delta
             {
