@@ -37,7 +37,7 @@ namespace Catalyst.Node.Core.P2P.Discovery
             get => _peer;
             set => _peer = value;
         }
-        
+
         private ConcurrentBag<IPeerIdentifier> _currentPeersNeighbours;
         
         public ConcurrentBag<IPeerIdentifier> CurrentPeersNeighbours

@@ -22,11 +22,13 @@
 #endregion
 
 using System;
+using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Node.Core.P2P.IO.Messaging.Dto;
 using Catalyst.Protocol.IPPN;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using FluentAssertions;
+using NSubstitute;
 using Xunit;
 
 namespace Catalyst.Node.Core.UnitTests.P2P.IO.Messaging.Dto
@@ -39,7 +41,8 @@ namespace Catalyst.Node.Core.UnitTests.P2P.IO.Messaging.Dto
             var pingRequest = new PingRequest();
             var pid = PeerIdentifierHelper.GetPeerIdentifier("sender");
             var dto = new PeerClientMessageDto<PingRequest>(pingRequest,
-                pid
+                pid,
+                Substitute.For<ICorrelationId>()
             );
 
             dto.Message.Should().Be(pingRequest);
@@ -54,7 +57,8 @@ namespace Catalyst.Node.Core.UnitTests.P2P.IO.Messaging.Dto
             Assert.Throws<ArgumentException>(() =>
             {
                 new PeerClientMessageDto<VersionRequest>(rpcMessage,
-                    PeerIdentifierHelper.GetPeerIdentifier("sender")
+                    PeerIdentifierHelper.GetPeerIdentifier("sender"),
+                    Substitute.For<ICorrelationId>()
                 );
             });
         }

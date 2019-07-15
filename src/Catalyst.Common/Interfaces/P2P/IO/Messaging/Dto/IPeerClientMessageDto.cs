@@ -21,6 +21,7 @@
 
 #endregion
 
+using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Google.Protobuf;
 
 namespace Catalyst.Common.Interfaces.P2P.IO.Messaging.Dto
@@ -31,6 +32,7 @@ namespace Catalyst.Common.Interfaces.P2P.IO.Messaging.Dto
     /// <typeparam name="T"></typeparam>
     public interface IPeerClientMessageDto
     {
+        ICorrelationId CorrelationId { get; set; }
         IPeerIdentifier Sender { get; set; }
         IMessage Message { get; set; }
     }

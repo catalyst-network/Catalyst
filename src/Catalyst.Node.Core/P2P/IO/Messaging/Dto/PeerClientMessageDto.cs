@@ -21,6 +21,7 @@
 
 #endregion
 
+using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.IO.Messaging.Dto;
 using Dawn;
@@ -30,10 +31,11 @@ namespace Catalyst.Node.Core.P2P.IO.Messaging.Dto
 {
     public sealed class PeerClientMessageDto<T> : IPeerClientMessageDto where T : IMessage<T>
     {
+        public ICorrelationId CorrelationId { get; set; }
         public IPeerIdentifier Sender { get; set; }
         public IMessage Message { get; set; }
 
-        public PeerClientMessageDto(IMessage message, IPeerIdentifier sender)
+        public PeerClientMessageDto(IMessage message, IPeerIdentifier sender, ICorrelationId CorrelationId)
         {
             Guard.Argument(message, nameof(message))
                .Require(message.GetType().Namespace.Contains("IPPN"));

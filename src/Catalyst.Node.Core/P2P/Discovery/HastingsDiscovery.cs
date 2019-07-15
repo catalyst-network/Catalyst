@@ -27,53 +27,48 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Concurrency;
-using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Reactive.Subjects;
 using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Common.Extensions;
+using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.Network;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.Discovery;
+using Catalyst.Common.Interfaces.P2P.IO;
+using Catalyst.Common.Interfaces.P2P.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.P2P.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.Util;
-using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.P2P;
-using Catalyst.Node.Core.P2P.IO.Messaging.Dto;
-using Catalyst.Protocol.Common;
+using Catalyst.Protocol;
 using Catalyst.Protocol.IPPN;
-using Google.Protobuf;
-using Microsoft.Extensions.Caching.Memory;
-using Nethereum.KeyStore.Crypto;
-using Nethereum.RLP;
 using Serilog;
 using SharpRepository.Repository;
-using Tmds.Linux;
 
 namespace Catalyst.Node.Core.P2P.Discovery
 {
     public sealed class HastingsDiscovery 
         : IHastingsDiscovery, IDisposable
     {
-        public IDns Dns { get; }
-        public ILogger Logger { get; }
-        public IRepository<Peer> PeerRepository { get; }
-        public IObservable<IPeerClientMessageDto> DiscoveryStream { get; set; }
-        
-        private IPeerIdentifier _ownNode;
+        public readonly IDns Dns;
+        private int _awaitedResponses;
+        private int _unresponsivePeers;
+        public readonly ILogger Logger;
         public IHastingsOriginator state;
-        private readonly IPeerClient _peerClient;
+        private int _discoveredPeerInCurrentWalk;
+        public readonly IPeerClient _peerClient;
         private readonly IDtoFactory _dtoFactory;
+        private readonly IPeerIdentifier _ownNode;
+        private readonly int _peerDiscoveryBurnIn;
+        private IHastingsOriginator _stateCandidate;
         private HastingCareTaker _hastingCareTaker;
-        private readonly IPeerSettings _peerSettings;
-        protected readonly IMemoryCache StepCandidates;
-        private Func<MemoryCacheEntryOptions> _cacheOptions;
+        private readonly IRepository<Peer> _peerRepository;
+        public readonly IDictionary<ICorrelationId, IPeerIdentifier> _cache;
         private readonly ICancellationTokenProvider _cancellationTokenProvider;
-        private IDisposable discoverySubscription;
-        
-        public List<IPeerIdentifier> _x { get; set; }
+        private readonly IDisposable _evictionSubscription;
+
+        public IObservable<IPeerClientMessageDto> DiscoveryStream { get; private set; }
 
         public HastingsDiscovery(ILogger logger,
             IRepository<Peer> peerRepository,
@@ -81,42 +76,183 @@ namespace Catalyst.Node.Core.P2P.Discovery
             IPeerSettings peerSettings,
             IPeerClient peerClient,
             IDtoFactory dtoFactory,
+            IPeerMessageCorrelationManager peerMessageCorrelationManager,
             ICancellationTokenProvider cancellationTokenProvider,
-            IChangeTokenProvider changeTokenProvider)
+            IEnumerable<IPeerClientObservable> peerClientObservables,
+            int peerDiscoveryBurnIn = 10) : this(logger,
+            peerRepository,
+            dns,
+            peerSettings,
+            peerClient,
+            dtoFactory,
+            peerMessageCorrelationManager,
+            cancellationTokenProvider,
+            peerClientObservables,
+            new Dictionary<ICorrelationId, IPeerIdentifier>(),
+            peerDiscoveryBurnIn
+        ) { }
+            
+        public HastingsDiscovery(ILogger logger,
+            IRepository<Peer> peerRepository,
+            IDns dns,
+            IPeerSettings peerSettings,
+            IPeerClient peerClient,
+            IDtoFactory dtoFactory,
+            IPeerMessageCorrelationManager peerMessageCorrelationManager,
+            ICancellationTokenProvider cancellationTokenProvider,
+            IEnumerable<IPeerClientObservable> peerClientObservables,
+            IDictionary<ICorrelationId, IPeerIdentifier> cache,
+            int peerDiscoveryBurnIn = 10)
+        
         {
             Dns = dns;
+            _cache = cache;
             Logger = logger;
-            PeerRepository = peerRepository;
-
             _peerClient = peerClient;
             _dtoFactory = dtoFactory;
-            _peerSettings = peerSettings;
+            var peerSettings1 = peerSettings;
+            _peerRepository = peerRepository;
+            _discoveredPeerInCurrentWalk = 0;
+            _peerDiscoveryBurnIn = peerDiscoveryBurnIn;
             _hastingCareTaker = new HastingCareTaker();
             _cancellationTokenProvider = cancellationTokenProvider;
-            _ownNode = new PeerIdentifier(_peerSettings, new PeerIdClientId("AC")); // this needs to be changed
-
+            _ownNode = new PeerIdentifier(peerSettings1, new PeerIdClientId("AC")); // this needs to be changed
+            
             DiscoveryStream = Observable.Empty<IPeerClientMessageDto>();
+
+            peerClientObservables.ToList()
+               .GroupBy(p => p.MessageStream)
+               .Select(p => p.Key)
+               .ToList()
+               .ForEach(s => DiscoveryStream = DiscoveryStream.Merge(s));
+
+            DiscoveryStream
+               .Where(i => i.Message.Descriptor.ShortenedFullName()
+                   .Equals(PingResponse.Descriptor.ShortenedFullName())
+                )
+               .SubscribeOn(TaskPoolScheduler.Default)
+               .Subscribe(OnPingResponse, OnError, OnCompleted);
             
-            _x = new List<IPeerIdentifier>();
-            
-            // _cacheOptions = () => new MemoryCacheEntryOptions()
-            //    .AddExpirationToken(changeTokenProvider.GetChangeToken())
-            //    .RegisterPostEvictionCallback(EvictionCallback);
+            DiscoveryStream
+               .Where(i => i.Message.Descriptor.ShortenedFullName()
+                   .Equals(PeerNeighborsResponse.Descriptor.ShortenedFullName())
+                )
+               .SubscribeOn(TaskPoolScheduler.Default)
+               .Subscribe(OnPeerNeighbourResponse, OnError, OnCompleted);
             
             // build the initial state of walk, which our node and seed nodes
-            state = BuildState(_ownNode, GetSeedNodes());
+            state = new HastingsOriginator
+            {
+                Peer = _ownNode,
+                CurrentPeersNeighbours = new ConcurrentBag<IPeerIdentifier>(
+                    Dns.GetSeedNodesFromDns(peerSettings1.SeedServers)
+                       .ToList()
+                )
+            };
             
             // store state with caretaker
             _hastingCareTaker.Add(state.CreateMemento());
-            
-            DiscoveryStream.Where(m => _x.Contains(m.Sender))
-               .SubscribeOn(TaskPoolScheduler.Default)
-               .Subscribe(OnNext, OnError, OnCompleted);
-            
+
+            _evictionSubscription = peerMessageCorrelationManager.EvictionEventStream.Subscribe(EvictionCallback);
+
             Task.Run(async () =>
             {
                 await DiscoveryAsync();
             });
+        }
+
+        private void EvictionCallback(KeyValuePair<ICorrelationId, IPeerIdentifier> item)
+        {
+            if (item.Value.Equals(state.Peer))
+            {
+                // reset walk as did not recieve pnr
+            }
+            else if (_cache.ContainsKey(item.Key))
+            {
+                Interlocked.Increment(ref _unresponsivePeers);
+            }
+        }
+        
+        public async Task DiscoveryAsync()
+        {
+            do
+            {
+                try
+                {
+                    _stateCandidate = new HastingsOriginator
+                    {
+                        Peer = state.CurrentPeersNeighbours.RandomElement()
+                    };
+                    
+                    var peerNeighbourRequestDto = _dtoFactory.GetDto(new PeerNeighborsRequest(),
+                        _ownNode,
+                        _stateCandidate.Peer
+                    );
+
+                    _cache.Add(peerNeighbourRequestDto.CorrelationId, _stateCandidate.Peer);
+                    _peerClient.SendMessage(peerNeighbourRequestDto);
+
+                    await WaitUntil(() => (_unresponsivePeers += _stateCandidate.CurrentPeersNeighbours.ToList().Count).Equals(
+                        _awaitedResponses));
+                    
+                    _stateCandidate.CurrentPeersNeighbours.ToList().ForEach(StorePeer);
+
+                    var nextState = _stateCandidate.CreateMemento();
+                    _hastingCareTaker.Add(nextState);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    throw;
+                }
+            } while (!_cancellationTokenProvider.HasTokenCancelled());
+        }
+      
+        private void OnPingResponse(IPeerClientMessageDto obj)
+        {
+            Logger.Debug("OnPingResponse");
+
+            if (!_cache.TryGetValue(obj.CorrelationId, out IPeerIdentifier neighbour))
+            {
+                return;
+            }
+
+            _cache.Remove(obj.CorrelationId);
+            _stateCandidate.CurrentPeersNeighbours.Add(neighbour);
+            
+            Interlocked.Decrement(ref _awaitedResponses);
+        }
+
+        private void OnPeerNeighbourResponse(IPeerClientMessageDto obj)
+        {
+            Logger.Debug("OnPeerNeighbourResponse");
+
+            if (!_cache.TryGetValue(obj.CorrelationId, out _))
+            {
+                return;
+            }
+
+            _cache.Remove(obj.CorrelationId);
+
+            var peerNeighbours = (PeerNeighborsResponse) obj.Message;
+
+            _unresponsivePeers = 0;
+                
+            peerNeighbours.Peers.ToList().ForEach(p =>
+            {
+                var pingRequestDto = _dtoFactory.GetDto(new PingRequest(),
+                    _ownNode,
+                    _stateCandidate.Peer
+                );
+
+                _cache.Add(pingRequestDto.CorrelationId, pingRequestDto.RecipientPeerIdentifier);
+                
+                _peerClient.SendMessage(pingRequestDto);
+            });
+
+            _awaitedResponses = 0; // reset counter for new loop
+
+            Interlocked.Add(ref _awaitedResponses, peerNeighbours.Peers.Count);
         }
 
         private void OnError(Exception obj)
@@ -124,68 +260,61 @@ namespace Catalyst.Node.Core.P2P.Discovery
             throw new NotImplementedException();
         }
 
-        private void OnCompleted() { throw new NotImplementedException(); }
-
-        private void OnNext(IPeerClientMessageDto obj)
+        private void OnCompleted()
         {
-            Logger.Debug(obj.Sender.ToString());
-        }
-
-        public async Task DiscoveryAsync()
-        {
-            do
-            {
-                state.CurrentPeersNeighbours.ToList().ForEach(n =>
-                {
-                    var peerNeighbourRequestDto = BuildDtoMessage(n);
-                    
-                    StepCandidates.Set(peerNeighbourRequestDto.CorrelationId, n, _cacheOptions());
-                    _peerClient.SendMessage(peerNeighbourRequestDto);
-                });
-
-                // peerNeighbourRequestDto.CorrelationId
-            
-                // _peerClient.SendMessage(peerNeighbourRequestDto);
-            } while (!_cancellationTokenProvider.HasTokenCancelled());
-        }
-
-        private IHastingsOriginator BuildState(IPeerIdentifier currentNeighbour, IEnumerable<IPeerIdentifier> currentNeighboursPeers)
-        {
-            return new HastingsOriginator
-            {
-                Peer = currentNeighbour,
-                CurrentPeersNeighbours = new ConcurrentBag<IPeerIdentifier>(currentNeighboursPeers)
-            };
+            throw new NotImplementedException();
         }
         
         /// <summary>
-        ///     Takes discovery messages from IPeerClientObservable and merges them here.
+        ///     Blocks until condition is true or timeout occurs.
         /// </summary>
-        /// <param name="reputationChangeStream"></param>
-        public void MergeDiscoveryMessageStreams(IObservable<IPeerClientMessageDto> reputationChangeStream)
+        /// <param name="condition">The break condition.</param>
+        /// <param name="frequency">The frequency at which the condition will be checked.</param>
+        /// <param name="timeout">The timeout in milliseconds.</param>
+        /// <returns></returns>
+        private static async Task WaitUntil(Func<bool> condition, int frequency = 1000, int timeout = -1)
         {
-            DiscoveryStream = DiscoveryStream.Merge(reputationChangeStream);
+            var waitTask = Task.Run(async () =>
+            {
+                while (!condition())
+                {
+                    await Task.Delay(frequency);
+                }
+            });
+
+            if (waitTask != await Task.WhenAny(waitTask, Task.Delay(timeout)))
+            {
+                throw new TimeoutException();
+            }
         }
 
-        private void EvictionCallback(object key, object value, EvictionReason reason, object state) { }
-
-        private IMessageDto<PeerNeighborsRequest> BuildDtoMessage(IPeerIdentifier recipient)
+        /// <summary>
+        ///     Stores a peer in the database unless we are in the burn-in phase.
+        /// </summary>
+        /// <param name="peerIdentifier"></param>
+        /// <returns></returns>
+        private void StorePeer(IPeerIdentifier peerIdentifier)
         {
-            return _dtoFactory.GetDto(new PeerNeighborsRequest(),
-                _ownNode,
-                recipient
-            );
-        }
-        
-        private IEnumerable<IPeerIdentifier> GetSeedNodes()
-        {
-            return Dns.GetSeedNodesFromDns(_peerSettings.SeedServers).ToList();
+            if (_discoveredPeerInCurrentWalk < _peerDiscoveryBurnIn)
+            {
+                return;
+            }
+            
+            _peerRepository.Add(new Peer
+            {
+                LastSeen = DateTime.UtcNow,
+                PeerIdentifier = peerIdentifier,
+                Reputation = 0
+            });
+                
+            Interlocked.Add(ref _discoveredPeerInCurrentWalk, 1);
         }
         
         public void Dispose()
         {
             _peerClient?.Dispose();
-            PeerRepository?.Dispose();
+            _peerRepository?.Dispose();
+            _evictionSubscription?.Dispose();
         }
     }
 }

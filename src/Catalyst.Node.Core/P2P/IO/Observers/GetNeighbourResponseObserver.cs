@@ -62,7 +62,7 @@ namespace Catalyst.Node.Core.P2P.IO.Observers
             IPeerIdentifier senderPeerIdentifier,
             ICorrelationId correlationId)
         {
-            _peerNeighborsResponse.OnNext(new PeerClientMessageDto<PeerNeighborsResponse>(messageDto, senderPeerIdentifier));
+            _peerNeighborsResponse.OnNext(new PeerClientMessageDto<PeerNeighborsResponse>(messageDto, senderPeerIdentifier, correlationId));
         }
     }
 }

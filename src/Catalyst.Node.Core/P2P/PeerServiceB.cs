@@ -29,6 +29,7 @@ using Catalyst.Common.Interfaces.IO.Transport.Channels;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.Discovery;
 using Catalyst.Common.Interfaces.P2P.IO;
+using Dawn;
 using Serilog;
 
 namespace Catalyst.Node.Core.P2P
@@ -49,7 +50,8 @@ namespace Catalyst.Node.Core.P2P
                 peerSettings,
                 logger)
         {
-            peerClientObservables.ToList().ForEach(pco => Discovery.MergeDiscoveryMessageStreams(pco.MessageStream));
+            var clientObservables = peerClientObservables as IPeerClientObservable[] ?? peerClientObservables.ToArray();
+            Guard.Argument(clientObservables, nameof(peerClientObservables)).NotEmpty().NotNull();
         }
     }
 }

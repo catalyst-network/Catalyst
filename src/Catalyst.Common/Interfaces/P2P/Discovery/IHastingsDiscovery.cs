@@ -21,21 +21,7 @@
 
 #endregion
 
-using System;
-using Catalyst.Common.Interfaces.Network;
-using Catalyst.Common.Interfaces.P2P.IO.Messaging.Dto;
-
 namespace Catalyst.Common.Interfaces.P2P.Discovery
 {
-    public interface IHastingsDiscovery : IPeerDiscovery
-    {
-        IDns Dns { get; }
-
-        void MergeDiscoveryMessageStreams(IObservable<IPeerClientMessageDto> reputationChangeStream);
-
-        // IDisposable PingResponseMessageStream { get; }
-        // IDisposable GetNeighbourResponseStream { get; }
-        // IList<string> ParseDnsServersFromConfig(IConfigurationRoot rootSection);
-        // void PeerNeighbourSubscriptionHandler(IObserverDto<ProtocolMessage> messageDto);
-    }
+    public interface IHastingsDiscovery : IPeerDiscovery { }
 }

@@ -22,9 +22,12 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using Catalyst.Common.Config;
+using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
+using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.P2P.ReputationSystem;
 using Catalyst.Common.Interfaces.Util;
@@ -42,13 +45,17 @@ namespace Catalyst.Node.Core.P2P.IO.Messaging.Correlation
     {
         private readonly ReplaySubject<IPeerReputationChange> _reputationEvent;
         public IObservable<IPeerReputationChange> ReputationEventStream => _reputationEvent.AsObservable();
-        
+
+        private readonly ReplaySubject<KeyValuePair<ICorrelationId, IPeerIdentifier>> _evictionEvent;
+        public IObservable<KeyValuePair<ICorrelationId, IPeerIdentifier>> EvictionEventStream => _evictionEvent.AsObservable();
+
         public PeerMessageCorrelationManager(IReputationManager reputationManager,
             IMemoryCache cache,
             ILogger logger,
             IChangeTokenProvider changeTokenProvider) : base(cache, logger, changeTokenProvider)
         {
             _reputationEvent = new ReplaySubject<IPeerReputationChange>(0);
+            _evictionEvent = new ReplaySubject<KeyValuePair<ICorrelationId, IPeerIdentifier>>(0);
 
             reputationManager.MergeReputationStream(ReputationEventStream);
         }
@@ -56,8 +63,19 @@ namespace Catalyst.Node.Core.P2P.IO.Messaging.Correlation
         protected override void EvictionCallback(object key, object value, EvictionReason reason, object state)
         {
             Logger.Debug($"{key} message evicted");
+            
             var message = (CorrelatableMessage<ProtocolMessage>) value;
-            _reputationEvent.OnNext(new PeerReputationChange(message.Recipient, ReputationEvents.NoResponseReceived));
+            
+            _evictionEvent.OnNext(new KeyValuePair<ICorrelationId, IPeerIdentifier>(
+                new CorrelationId(message.Content.CorrelationId.ToByteArray()),
+                message.Recipient)
+            );
+            
+            _reputationEvent.OnNext(
+                new PeerReputationChange(message.Recipient,
+                    ReputationEvents.NoResponseReceived
+                )
+            );
         }
 
         /// <summary>
