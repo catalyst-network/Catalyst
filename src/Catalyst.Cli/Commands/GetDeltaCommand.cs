@@ -43,7 +43,7 @@ namespace Catalyst.Cli.Commands
                 return default;
             }
 
-            return new GetDeltaRequest()
+            return new GetDeltaRequest
             {
                 DeltaDfsHash = hash.ToBytes().ToByteString()
             };
