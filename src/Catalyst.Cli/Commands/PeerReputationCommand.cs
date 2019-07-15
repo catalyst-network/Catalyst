@@ -23,6 +23,7 @@
 
 using Catalyst.Cli.CommandTypes;
 using Catalyst.Cli.Options;
+using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Cli.Commands;
 using Catalyst.Common.Util;
 using Catalyst.Protocol.Rpc.Node;
@@ -30,7 +31,7 @@ using Nethereum.RLP;
 
 namespace Catalyst.Cli.Commands
 {
-    public sealed class PeerReputationCommand : BaseMessageCommand<GetPeerReputationRequest, PeerReputationOptions>
+    public sealed class PeerReputationCommand : BaseMessageCommand<GetPeerReputationRequest, GetPeerReputationResponse, PeerReputationOptions>
     {
         public PeerReputationCommand(ICommandContext commandContext) : base(commandContext) { }
 
@@ -38,9 +39,14 @@ namespace Catalyst.Cli.Commands
         {
             return new GetPeerReputationRequest
             {
-                PublicKey = option.PublicKey.ToBytesForRLPEncoding().ToByteString(),
-                Ip = option.PublicKey.ToBytesForRLPEncoding().ToByteString()
+                PublicKey = option.PublicKey.PublicKeyToProtobuf(),
+                Ip = option.IpAddress.IpAddressToProtobuf(),
             };
+        }
+
+        protected override void ResponseMessage(GetPeerReputationResponse response)
+        {
+            
         }
     }
 }

@@ -80,6 +80,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
             _output.Received(1).WriteLine(query);
         }
 
+
         public void Dispose()
         {
             _observer?.Dispose();

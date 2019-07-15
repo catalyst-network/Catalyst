@@ -31,7 +31,7 @@ using Catalyst.Cli.CommandTypes;
 
 namespace Catalyst.Cli.Commands
 {
-    public sealed class MessageSignCommand : BaseMessageCommand<SignMessageRequest, SignOptions>
+    public sealed class MessageSignCommand : BaseMessageCommand<SignMessageRequest, SignMessageResponse, SignOptions>
     {
         public MessageSignCommand(ICommandContext commandContext) : base(commandContext) { }
 

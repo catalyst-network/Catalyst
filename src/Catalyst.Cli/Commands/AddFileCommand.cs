@@ -32,7 +32,7 @@ using Catalyst.Common.Extensions;
 
 namespace Catalyst.Cli.Commands
 {
-    public sealed class AddFileCommand : BaseMessageCommand<AddFileToDfsRequest, AddFileOptions>
+    public sealed class AddFileCommand : BaseMessageCommand<AddFileToDfsRequest, AddFileToDfsResponse, AddFileOptions>
     {
         private readonly IUploadFileTransferFactory _uploadFileTransferFactory;
 

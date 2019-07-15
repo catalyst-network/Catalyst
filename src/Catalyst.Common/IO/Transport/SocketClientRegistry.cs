@@ -52,12 +52,12 @@ namespace Catalyst.Common.IO.Transport
 
     }
 
-    public class SocketClientRegistryConnected : SocketClientRegistryEvent
+    public class SocketClientRegistryClientAdded : SocketClientRegistryEvent
     {
         public int SocketHashCode { set; get; }
     }
 
-    public class SocketClientRegistryDisconnected : SocketClientRegistryEvent
+    public class SocketClientRegistryClientRemoved : SocketClientRegistryEvent
     {
         public int SocketHashCode { set; get; }
     }
@@ -95,7 +95,7 @@ namespace Catalyst.Common.IO.Transport
             var addedToRegistry = Registry.TryAdd(socketHashCode, socket);
             if (addedToRegistry)
             {
-                EventReplySubject.OnNext(new SocketClientRegistryConnected { SocketHashCode = socketHashCode });
+                EventReplySubject.OnNext(new SocketClientRegistryClientAdded { SocketHashCode = socketHashCode });
             }
             return addedToRegistry;
         }
@@ -114,7 +114,12 @@ namespace Catalyst.Common.IO.Transport
         public bool RemoveClientFromRegistry(int socketHashCode)
         {
             Guard.Argument(socketHashCode, nameof(socketHashCode)).NotZero();
-            return Registry.Remove(socketHashCode);
+            var removedFromRegistry = Registry.Remove(socketHashCode);
+            if (removedFromRegistry)
+            {
+                EventReplySubject.OnNext(new SocketClientRegistryClientRemoved { SocketHashCode = socketHashCode });
+            }
+            return removedFromRegistry;
         }
 
         public string GetRegistryType()

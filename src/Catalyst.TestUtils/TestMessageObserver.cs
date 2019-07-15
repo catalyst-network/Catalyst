@@ -25,10 +25,12 @@ using System;
 using System.Data;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
+using System.Reactive.Subjects;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Observers;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.Interfaces.Rpc.IO.Messaging.Dto;
 using Catalyst.Common.IO.Observers;
 using Catalyst.Protocol.Common;
 using Google.Protobuf;
@@ -41,6 +43,10 @@ namespace Catalyst.TestUtils
         IP2PMessageObserver, IRpcResponseObserver, IRpcRequestObserver
         where TProto : IMessage, IMessage<TProto>
     {
+        public ReplaySubject<IRPCClientMessageDto<IMessage>> MessageResponse;
+        public IObservable<IRPCClientMessageDto<IMessage>> MessageResponseStream => MessageResponse.AsObservable();
+
+
         private readonly string _filterMessageType;
         public IObserver<TProto> SubstituteObserver { get; }
         public IPeerIdentifier PeerIdentifier { get; }
