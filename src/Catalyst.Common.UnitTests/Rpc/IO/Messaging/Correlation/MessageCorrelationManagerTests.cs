@@ -95,7 +95,7 @@ namespace Catalyst.Common.UnitTests.Rpc.IO.Messaging.Correlation
                            .BeFalse("the changeToken has simulated a TTL expiry");
                     }
 
-                    await TaskHelper.WaitForAsync(() => evictionObserver.ReceivedCalls().Any(),
+                    await TaskHelper.WaitForAsync(() => evictionObserver.ReceivedCalls().Count() >= 3,
                         TimeSpan.FromMilliseconds(2000));
 
                     evictionObserver.Received(requestCount).OnNext(Arg.Any<ICacheEvictionEvent<ProtocolMessage>>());
