@@ -1,3 +1,4 @@
+
 #region LICENSE
 
 /**
@@ -41,10 +42,19 @@ namespace Catalyst.Cli.IntegrationTests.Commands
         {
             var publicKey = "fake_public_key";
             var ipAddress = "127.0.0.1";
-            
-            var result = Shell.ParseCommand("getpeerinfo", NodeArgumentPrefix, ServerNodeName, "-i", ipAddress, "-k", publicKey);
-            result.Should().BeTrue();
-            AssertSentMessage<GetPeerInfoRequest>();
+            using (var container = ContainerBuilder.Build())
+            {
+                using (container.BeginLifetimeScope(CurrentTestName))
+                {
+                    var shell = container.Resolve<ICatalystCli>();
+                    var hasConnected = shell.ParseCommand("connect", "-n", "node1");
+                    hasConnected.Should().BeTrue();
+
+                    var result = shell.ParseCommand("getpeerinfo", "-n", "node1", "-i", ipAddress, "-k", publicKey);
+                    result.Should().BeTrue();
+                    AssertSentMessage<GetPeerInfoRequest>();
+                }
+            }
         }
     }
 }
