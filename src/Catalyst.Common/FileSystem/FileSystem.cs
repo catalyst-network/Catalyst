@@ -56,6 +56,12 @@ namespace Catalyst.Common.FileSystem
 
         private async Task<IFileInfo> WriteFileToPathAsync(string path, string contents)
         {
+            var fileInfo = FileInfo.FromFileName(path);
+            if (!Directory.Exists(fileInfo.DirectoryName))
+            {
+                Directory.CreateDirectory(fileInfo.DirectoryName);
+            }
+
             using (var file = File.CreateText(path))
             {
                 await file.WriteAsync(contents).ConfigureAwait(false);

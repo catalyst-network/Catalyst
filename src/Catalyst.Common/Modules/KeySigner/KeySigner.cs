@@ -80,8 +80,7 @@ namespace Catalyst.Common.Modules.KeySigner
         private ISignature Sign(byte[] data, KeyRegistryKey keyIdentifier)
         {
             var privateKey = _keyRegistry.GetItemFromRegistry(keyIdentifier);
-            if (privateKey != null) return Sign(data, privateKey);
-            if (!TryPopulateRegistryFromKeyStore(keyIdentifier, out privateKey))
+            if (privateKey == null && !TryPopulateRegistryFromKeyStore(keyIdentifier, out privateKey))
             {
                 throw new SignatureException("The signature cannot be created because the key does not exist");
             }
@@ -96,12 +95,7 @@ namespace Catalyst.Common.Modules.KeySigner
 
         private ISignature Sign(byte[] data, IPrivateKey privateKey)
         {
-            if (privateKey != null)
-            {
-                return _cryptoContext.Sign(privateKey, data);
-            }
-
-            return new Signature(new byte[64], new byte[32]);
+            return _cryptoContext.Sign(privateKey, data);
         }
 
         /// <inheritdoc/>

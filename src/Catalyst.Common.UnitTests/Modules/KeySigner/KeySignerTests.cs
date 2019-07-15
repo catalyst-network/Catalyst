@@ -33,6 +33,7 @@ using Catalyst.Common.Util;
 using Catalyst.Cryptography.BulletProofs.Wrapper;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Types;
+using FluentAssertions;
 using NSubstitute;
 using NSubstitute.Core;
 using NSubstitute.ReceivedExtensions;
@@ -90,6 +91,7 @@ namespace Catalyst.Common.UnitTests.Modules.KeySigner
             _keystore.Received(1).KeyStoreDecrypt(Arg.Any<KeyRegistryKey>());
             _keystore.Received(1).KeyStoreGenerateAsync(Arg.Any<KeyRegistryKey>());
             _keyRegistry.ReceivedWithAnyArgs(1).AddItemToRegistry(default, default);
+            keySigner.Should().NotBe(null);
         }
 
         [Fact] 
