@@ -112,7 +112,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.IO.Messaging.Correlation
 
             var evictionObserver = Substitute.For<IObserver<IPeerReputationChange>>();
             
-            using (CorrelationManager.ReputationEventStream.SubscribeOn(ImmediateScheduler.Instance)
+            using (CorrelationManager.ReputationEventStream.SubscribeOn(TaskPoolScheduler.Default)
                .Subscribe(evictionObserver.OnNext))
             {
                 requests.ForEach(r => CorrelationManager.AddPendingRequest(r));
@@ -126,7 +126,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.IO.Messaging.Correlation
                 }
 
                 await TaskHelper.WaitForAsync(() => evictionObserver.ReceivedCalls().Any(),
-                    TimeSpan.FromMilliseconds(1000));
+                    TimeSpan.FromMilliseconds(2000));
 
                 evictionObserver.Received(requestCount).OnNext(Arg.Is<IPeerReputationChange>(r => r.ReputationEvent.Name == ReputationEvents.NoResponseReceived.Name));
                 evictionObserver.Received(requestCount).OnNext(Arg.Is<IPeerReputationChange>(r => r.ReputationEvent.Name == ReputationEvents.UnCorrelatableMessage.Name));
