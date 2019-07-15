@@ -23,6 +23,7 @@
 
 using System.Reactive.Threading.Tasks;
 using System.Security.Authentication;
+using System.Threading.Tasks;
 using Catalyst.Common.Config;
 using Catalyst.Common.Cryptography;
 using Catalyst.Common.Interfaces.Cryptography;
@@ -122,7 +123,7 @@ namespace Catalyst.Common.UnitTests.Keystore
         }
 
         [Fact]
-        public async void Keystore_Throws_Exception_If_Password_Incorrect()
+        public async Task Keystore_Throws_Exception_If_Password_Incorrect()
         {
             Ensure_No_Keystore_File_Exists();
 

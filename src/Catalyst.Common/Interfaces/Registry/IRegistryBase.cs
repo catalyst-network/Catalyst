@@ -26,7 +26,7 @@ using Catalyst.Common.Config;
 
 namespace Catalyst.Common.Interfaces.Registry
 {
-    public interface IRegistryBase<T, K>
+    public interface IRegistryBase<in T, K>
     {
         bool AddItemToRegistry(T identifier, K item);
 

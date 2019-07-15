@@ -62,7 +62,6 @@ namespace Catalyst.Common.UnitTests.Modules.KeySigner
         private readonly IKeyStore _keystore;
         private readonly IKeyRegistry _keyRegistry;
         private readonly IWrapper _wrapper;
-        private IKeySigner _keySigner;
         private readonly ISignature _signature;
         private readonly IPrivateKey _privateKey;        
 
@@ -73,7 +72,7 @@ namespace Catalyst.Common.UnitTests.Modules.KeySigner
             _keyRegistry.RegistryContainsKey(default).ReturnsForAnyArgs(false);
             _keyRegistry.AddItemToRegistry(default, default).ReturnsForAnyArgs(true);
 
-            _keySigner = new Common.Modules.KeySigner.KeySigner(_keystore, new CryptoContext(_wrapper), _keyRegistry);
+            var keySigner = new Common.Modules.KeySigner.KeySigner(_keystore, new CryptoContext(_wrapper), _keyRegistry);
             _keystore.Received(1).KeyStoreDecrypt(Arg.Any<KeyRegistryKey>());
             _keyRegistry.ReceivedWithAnyArgs(1).AddItemToRegistry(default, default);
         }
@@ -87,7 +86,7 @@ namespace Catalyst.Common.UnitTests.Modules.KeySigner
 
             _keystore.KeyStoreDecrypt(default).ReturnsForAnyArgs((IPrivateKey) null);
 
-            _keySigner = new Common.Modules.KeySigner.KeySigner(_keystore, new CryptoContext(_wrapper), _keyRegistry);
+            var keySigner = new Common.Modules.KeySigner.KeySigner(_keystore, new CryptoContext(_wrapper), _keyRegistry);
             _keystore.Received(1).KeyStoreDecrypt(Arg.Any<KeyRegistryKey>());
             _keystore.Received(1).KeyStoreGenerateAsync(Arg.Any<KeyRegistryKey>());
             _keyRegistry.ReceivedWithAnyArgs(1).AddItemToRegistry(default, default);
@@ -100,26 +99,26 @@ namespace Catalyst.Common.UnitTests.Modules.KeySigner
             _keyRegistry.RegistryContainsKey(default).ReturnsForAnyArgs(true);
             _keyRegistry.AddItemToRegistry(default, default).ReturnsForAnyArgs(true);
 
-            _keySigner = new Common.Modules.KeySigner.KeySigner(_keystore, new CryptoContext(_wrapper), _keyRegistry);
+            var keySigner = new Common.Modules.KeySigner.KeySigner(_keystore, new CryptoContext(_wrapper), _keyRegistry);
 
             _keyRegistry.ReceivedWithAnyArgs(0).AddItemToRegistry(default, default);
             _keystore.ClearReceivedCalls();
             _keyRegistry.ClearReceivedCalls();
 
-            var sig = _keySigner.Sign(Encoding.UTF8.GetBytes("sign this please"));
+            var actualSignature = keySigner.Sign(Encoding.UTF8.GetBytes("sign this please"));
 
             _keyRegistry.ReceivedWithAnyArgs(1).GetItemFromRegistry(default);
             _keystore.Received(0).KeyStoreDecrypt(Arg.Any<KeyRegistryKey>());
             _keystore.Received(0).KeyStoreGenerateAsync(Arg.Any<KeyRegistryKey>());
             _keyRegistry.ReceivedWithAnyArgs(0).AddItemToRegistry(default, default);
             
-            Assert.Equal(_signature, sig);
+            Assert.Equal(_signature, actualSignature);
         }
 
         [Fact] 
         public void KeySigner_Can_Sign_If_Key_Doesnt_Exists_In_Registry_But_There_Is_A_Keystore_File()
         {            
-            _keySigner = new Common.Modules.KeySigner.KeySigner(_keystore, new CryptoContext(_wrapper), _keyRegistry);            
+            var keySigner = new Common.Modules.KeySigner.KeySigner(_keystore, new CryptoContext(_wrapper), _keyRegistry);            
             _keystore.ClearReceivedCalls();
             _keyRegistry.ClearReceivedCalls();
 
@@ -127,7 +126,7 @@ namespace Catalyst.Common.UnitTests.Modules.KeySigner
             _keyRegistry.RegistryContainsKey(default).ReturnsForAnyArgs(true);
             _keyRegistry.AddItemToRegistry(default, default).ReturnsForAnyArgs(true);
 
-            var actualSignature = _keySigner.Sign(Encoding.UTF8.GetBytes("sign this please"));
+            var actualSignature = keySigner.Sign(Encoding.UTF8.GetBytes("sign this please"));
 
             _keystore.Received(1).KeyStoreDecrypt(Arg.Any<KeyRegistryKey>());
 
