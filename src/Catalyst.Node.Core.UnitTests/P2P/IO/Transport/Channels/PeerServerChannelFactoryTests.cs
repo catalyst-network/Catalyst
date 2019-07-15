@@ -21,6 +21,7 @@
 
 #endregion
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -146,7 +147,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.IO.Transport.Channels
         }
         
         [Fact]
-        public void Observer_Exception_Should_Not_Stop_Correct_Messages_Reception()
+        public async Task Observer_Exception_Should_Not_Stop_Correct_Messages_Reception()
         {
             var testingChannel = new EmbeddedChannel("testWithExceptions".ToChannelId(),
                 true, _factory.InheritedHandlers.ToArray());
@@ -159,6 +160,8 @@ namespace Catalyst.Node.Core.UnitTests.P2P.IO.Transport.Channels
 
                 Enumerable.Range(0, 10).ToList()
                    .ForEach(i => testingChannel.WriteInbound(GetSignedMessage()));
+
+                await TaskHelper.WaitForAsync(() => badHandler.Counter >= 1, TimeSpan.FromSeconds(2));
 
                 badHandler.Counter.Should().Be(10);
             }

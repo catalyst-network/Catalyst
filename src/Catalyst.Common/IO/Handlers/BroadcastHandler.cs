@@ -21,8 +21,8 @@
 
 #endregion
 
-using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.P2P.IO.Messaging.Broadcast;
+using Catalyst.Protocol;
 using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;
 
@@ -54,7 +54,7 @@ namespace Catalyst.Common.IO.Handlers
         /// <param name="msg">The gossip message.</param>
         protected override void ChannelRead0(IChannelHandlerContext ctx, ProtocolMessage msg)
         {
-            if (msg.CheckIfMessageIsBroadcast())
+            if (msg.IsBroadCastMessage())
             {
                 _broadcastManager.ReceiveAsync(msg).ConfigureAwait(false).GetAwaiter().GetResult();
 

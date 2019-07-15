@@ -11,7 +11,15 @@
             ]
         },
         {
-            "type": "Catalyst.Node.Core.Rpc.IO.Observers.GetMempoolRequestObserver",
+            "type": "Catalyst.Node.Core.RPC.IO.Observers.GetPeerInfoRequestObserver",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.IO.Observers.IRpcRequestObserver, Catalyst.Common"
+                }
+            ]
+        },
+        {
+            "type": "Catalyst.Node.Core.RPC.IO.Observers.GetMempoolRequestObserver",
             "services": [
                 {
                     "type": "Catalyst.Common.Interfaces.IO.Observers.IRpcRequestObserver, Catalyst.Common"
