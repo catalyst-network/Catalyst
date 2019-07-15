@@ -21,6 +21,7 @@
 
 #endregion
 
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Security.Cryptography.X509Certificates;
@@ -37,7 +38,7 @@ namespace Catalyst.Common.IO.Transport.Channels
     {
         private readonly int _backLogValue;
 
-        protected abstract List<IChannelHandler> Handlers { get; }
+        protected abstract Func<List<IChannelHandler>> HandlerGenerationFunction { get; }
         
         protected TcpServerChannelFactory(int backLogValue = 100)
         {
@@ -56,7 +57,7 @@ namespace Catalyst.Common.IO.Transport.Channels
         {
             var supervisorLoopGroup = ((ITcpServerEventLoopGroupFactory) handlerEventLoopGroupFactory)
                .GetOrCreateSupervisorEventLoopGroup();
-            var channelHandler = new ServerChannelInitializerBase<IChannel>(Handlers, handlerEventLoopGroupFactory, certificate);
+            var channelHandler = new ServerChannelInitializerBase<IChannel>(HandlerGenerationFunction, handlerEventLoopGroupFactory, certificate); ;
 
             return new ServerBootstrap()
                .Group(handlerEventLoopGroupFactory.GetOrCreateSocketIoEventLoopGroup(), supervisorLoopGroup)

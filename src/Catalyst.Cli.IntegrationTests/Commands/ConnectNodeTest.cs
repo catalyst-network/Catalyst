@@ -59,6 +59,9 @@ namespace Catalyst.Cli.IntegrationTests.Commands
                     {
                         var canConnect = shell.ParseCommand("connect", "-n", "node1");
                         canConnect.Should().BeTrue();
+
+                        var disconnected = shell.ParseCommand("disconnect", "-n", "node1");
+                        disconnected.Should().BeTrue();
                     }
                 }
             }

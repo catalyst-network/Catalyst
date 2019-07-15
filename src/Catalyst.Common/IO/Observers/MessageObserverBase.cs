@@ -22,6 +22,7 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Observers;
 using Catalyst.Protocol.Common;
@@ -33,11 +34,12 @@ namespace Catalyst.Common.IO.Observers
     public abstract class MessageObserverBase : IMessageObserver, IDisposable
     {
         protected readonly ILogger Logger;
-        public IDisposable MessageSubscription { get; protected set; }
+        protected readonly List<IDisposable> MessageSubscriptions;
         public IChannelHandlerContext ChannelHandlerContext { get; protected set; }
 
         protected MessageObserverBase(ILogger logger)
         {
+            MessageSubscriptions = new List<IDisposable>();
             Logger = logger;
         }
 
@@ -53,7 +55,7 @@ namespace Catalyst.Common.IO.Observers
         public virtual void OnError(Exception exception)
         {
             Logger.Error(exception, "Failed to process message.");
-            ChannelHandlerContext.CloseAsync().ConfigureAwait(false);
+            ChannelHandlerContext?.CloseAsync().ConfigureAwait(false);
         }
 
         private void Dispose(bool disposing)
@@ -62,9 +64,10 @@ namespace Catalyst.Common.IO.Observers
             {
                 return;
             }
-            
-            MessageSubscription?.Dispose();
+
+            MessageSubscriptions.ForEach(subscription => subscription.Dispose());
             ChannelHandlerContext?.CloseAsync().ConfigureAwait(false);
+            MessageSubscriptions.Clear();
         }
 
         public void Dispose()

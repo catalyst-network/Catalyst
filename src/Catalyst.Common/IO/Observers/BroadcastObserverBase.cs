@@ -51,16 +51,11 @@ namespace Catalyst.Common.IO.Observers
 
         public override void StartObserving(IObservable<IObserverDto<ProtocolMessage>> messageStream)
         {
-            if (MessageSubscription != null)
-            {
-                throw new ReadOnlyException($"{GetType()} is already listening to a message stream");
-            }
-            
-            MessageSubscription = messageStream
+            MessageSubscriptions.Add(messageStream
                .Where(m => m.Payload?.TypeUrl != null 
                  && m.Payload.TypeUrl == _filterMessageType)
                .SubscribeOn(NewThreadScheduler.Default)
-               .Subscribe(this);
+               .Subscribe(this));
         }
         
         public override void OnNext(IObserverDto<ProtocolMessage> messageDto)

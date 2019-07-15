@@ -21,6 +21,7 @@
 
 #endregion
 
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Reactive.Linq;
@@ -67,25 +68,31 @@ namespace Catalyst.Node.Rpc.Client.IO.Transport.Channels
             _observableServiceHandler = new ObservableServiceHandler();
         }
 
-        protected override List<IChannelHandler> Handlers =>
-            new List<IChannelHandler>
+        protected override Func<List<IChannelHandler>> HandlerGenerationFunction
+        {
+            get
             {
-                new FlushPipelineHandler<IByteBuffer>(),
-                new ProtobufVarint32LengthFieldPrepender(),
-                new ProtobufEncoder(),
-                new ProtobufVarint32FrameDecoder(),
-                new ProtobufDecoder(ProtocolMessageSigned.Parser),
-                new PeerIdValidationHandler(_peerIdValidator),
-                new AddressedEnvelopeToIMessageEncoder(),
-                new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
+                return () => new List<IChannelHandler>
+                {
+                    new FlushPipelineHandler<IByteBuffer>(),
+                    new ProtobufVarint32LengthFieldPrepender(),
+                    new ProtobufEncoder(),
+                    new ProtobufVarint32FrameDecoder(),
+                    new ProtobufDecoder(ProtocolMessageSigned.Parser),
+                    new PeerIdValidationHandler(_peerIdValidator),
+                    new AddressedEnvelopeToIMessageEncoder(),
+                    new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
                     new ProtocolMessageVerifyHandler(_keySigner), new ProtocolMessageSignHandler(_keySigner)
                 ),
-                new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
+                    new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
                     new CorrelationHandler<IRpcMessageCorrelationManager>(_messageCorrelationCache),
                     new CorrelatableHandler<IRpcMessageCorrelationManager>(_messageCorrelationCache)
                 ),
-                _observableServiceHandler
-            };
+                    _observableServiceHandler
+                };
+            }
+        }
+
 
         /// <param name="eventLoopGroupFactory"></param>
         /// <param name="targetAddress">Ignored</param>

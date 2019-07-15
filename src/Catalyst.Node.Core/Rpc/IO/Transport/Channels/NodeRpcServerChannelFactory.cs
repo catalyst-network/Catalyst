@@ -21,6 +21,7 @@
 
 #endregion
 
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Reactive.Linq;
@@ -50,26 +51,31 @@ namespace Catalyst.Node.Core.Rpc.IO.Transport.Channels
         private readonly IPeerIdValidator _peerIdValidator;
         private readonly IObservableServiceHandler _observableServiceHandler;
 
-        protected override List<IChannelHandler> Handlers =>
-            new List<IChannelHandler>
+        protected override Func<List<IChannelHandler>> HandlerGenerationFunction
+        {
+            get
             {
-                new ProtobufVarint32FrameDecoder(),
-                new ProtobufDecoder(ProtocolMessageSigned.Parser),
-                new ProtobufVarint32LengthFieldPrepender(),
-                new ProtobufEncoder(),
-                new AuthenticationHandler(_authenticationStrategy),
-                new PeerIdValidationHandler(_peerIdValidator),
-                new AddressedEnvelopeToIMessageEncoder(),
-                new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
+                return () => new List<IChannelHandler>
+                {
+                    new ProtobufVarint32FrameDecoder(),
+                    new ProtobufDecoder(ProtocolMessageSigned.Parser),
+                    new ProtobufVarint32LengthFieldPrepender(),
+                    new ProtobufEncoder(),
+                    new AuthenticationHandler(_authenticationStrategy),
+                    new PeerIdValidationHandler(_peerIdValidator),
+                    new AddressedEnvelopeToIMessageEncoder(),
+                    new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
                     new ProtocolMessageVerifyHandler(_keySigner),
                     new ProtocolMessageSignHandler(_keySigner)
                 ),
-                new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
+                    new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
                     new CorrelationHandler<IRpcMessageCorrelationManager>(_correlationManger),
                     new CorrelatableHandler<IRpcMessageCorrelationManager>(_correlationManger)
                 ),
-                _observableServiceHandler
-            };
+                    _observableServiceHandler
+                };
+            }
+        }
 
         /// <summary>
         /// 
