@@ -23,16 +23,11 @@
 
 using System;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.P2P;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
-using System.Net;
-using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.IO.Observers;
 using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Common.IO.Messaging.Dto;
-using Catalyst.Common.IO.Observers;
-using DotNetty.Transport.Channels;
 using Catalyst.Common.Extensions;
 using Serilog;
 using System.Linq;
@@ -44,12 +39,8 @@ using System.Collections.Concurrent;
 
 namespace Catalyst.Node.Core.P2P
 {
-    public class PeerValidator : /*: RequestObserverBase<PingRequest, PingResponse>, *//*RequestObserverBase<PingRequest>,*/
-        //IP2PMessageObserver, 
-        IPeerValidator
+    public class PeerValidator : IPeerValidator
     {
-        //private readonly IPEndPoint _hostEndPoint;
-        //private readonly IPeerSettings _peerSettings;
         private readonly IPeerService _peerService;
         private readonly ILogger _logger;
         private readonly IPeerIdentifier _senderIdentifier;
@@ -58,11 +49,11 @@ namespace Catalyst.Node.Core.P2P
         private readonly ConcurrentStack<IObserverDto<ProtocolMessage>> _receivedResponses;
 
         private readonly IPeerClient _peerClient;
+        private readonly string _messageType = "IPPN.PingResponse";
 
         public object PeerIdentifierHelper { get; private set; }
 
-        public PeerValidator(IPEndPoint hostEndPoint,
-            IPeerSettings peerSettings,
+        public PeerValidator(IPeerSettings peerSettings,
             IPeerService peerService,
             ILogger logger,
             IPeerClient peerClient,
@@ -72,7 +63,6 @@ namespace Catalyst.Node.Core.P2P
             _incomingPingResponseSubscription = peerService.MessageStream.Subscribe(this);
 
             _peerService = peerService;
-            //_hostEndPoint = hostEndPoint;
             _senderIdentifier = senderIdentifier;
             _logger = logger;
             _peerClient = peerClient;
@@ -88,12 +78,11 @@ namespace Catalyst.Node.Core.P2P
             {
                 return;
             }
-            _receivedResponses.Push(messageDto);
-        }
 
-        protected PingResponse HandleRequest(PingRequest messageDto, IChannelHandlerContext channelHandlerContext, IPeerIdentifier senderPeerIdentifier, ICorrelationId correlationId)
-        {
-            return new PingResponse(){ };
+            if (messageDto.Payload.TypeUrl == _messageType)
+            {
+                _receivedResponses.Push(messageDto);
+            }
         }
 
         public void OnCompleted() { _logger.Information("End of {0} stream.", nameof(ProtocolMessage)); }
@@ -126,9 +115,10 @@ namespace Catalyst.Node.Core.P2P
                 var tasks = new IObservableMessageStreamer<ProtocolMessage>[]
                     {
                         _peerService
-                    }.
-                    Select(async p =>
-                        await p.MessageStream.FirstAsync(a => a != null && a != NullObjects.ObserverDto))
+                    }
+                    .Select(async p =>
+                        await p.MessageStream.FirstAsync(a => a != null  && a != NullObjects.ObserverDto
+                        && a.Payload.TypeUrl == _messageType))
                    .ToArray();
 
                 Task.WaitAll(tasks, TimeSpan.FromMilliseconds(10000));

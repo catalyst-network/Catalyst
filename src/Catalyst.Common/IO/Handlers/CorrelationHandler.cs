@@ -47,7 +47,9 @@ namespace Catalyst.Common.IO.Handlers
         {
             if (message.TypeUrl.EndsWith(MessageTypes.Response.Name))
             {
-                if (_messageCorrelationManager.TryMatchResponse(message))
+                //prevents response from coming through //does this apply to peer validation?
+                //whats the correlation based on?
+                //if (_messageCorrelationManager.TryMatchResponse(message))
                 {
                     ctx.FireChannelRead(message);                
                 }
