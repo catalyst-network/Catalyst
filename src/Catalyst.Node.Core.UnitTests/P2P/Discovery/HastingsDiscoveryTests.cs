@@ -41,6 +41,7 @@ using Catalyst.Common.Interfaces.Util;
 using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.P2P;
+using Catalyst.Common.Util;
 using Catalyst.Node.Core.P2P;
 using Catalyst.Node.Core.P2P.Discovery;
 using Catalyst.Node.Core.P2P.IO.Observers;
@@ -51,10 +52,12 @@ using DnsClient;
 using FluentAssertions;
 using Google.Protobuf;
 using Google.Protobuf.Collections;
+using Google.Protobuf.WellKnownTypes;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Primitives;
 using Nethereum.Hex.HexConvertors.Extensions;
+using Nito.Comparers.Linq;
 using NSubstitute;
 using NSubstitute.Core;
 using NSubstitute.ReceivedExtensions;
@@ -62,6 +65,7 @@ using Serilog;
 using SharpRepository.Repository;
 using Xunit;
 using Xunit.Extensions;
+using Type = System.Type;
 
 namespace Catalyst.Node.Core.UnitTests.P2P.Discovery
 {
@@ -345,18 +349,50 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Discovery
                 new GetNeighbourResponseObserver(logger)
             };
 
-            var expectedPeerNeighbourResponse = new List<KeyValuePair<ICorrelationId, IPeerIdentifier>>
+            var neighbours = new List<PeerId>
             {
-                new KeyValuePair<ICorrelationId, IPeerIdentifier>(CorrelationId.GenerateCorrelationId(),
-                    PeerIdentifierHelper.GetPeerIdentifier("neighbour"))
+                PeerIdHelper.GetPeerId(ByteUtil.GenerateRandomByteArray(32)),
+                PeerIdHelper.GetPeerId(ByteUtil.GenerateRandomByteArray(32)),
+                PeerIdHelper.GetPeerId(ByteUtil.GenerateRandomByteArray(32)),
+                PeerIdHelper.GetPeerId(ByteUtil.GenerateRandomByteArray(32)),
+                PeerIdHelper.GetPeerId(ByteUtil.GenerateRandomByteArray(32))
             };
+
+            var expectedPeerNeighbourResponse = new List<KeyValuePair<ICorrelationId, IPeerIdentifier>>();
+
+            var ownNode = PeerIdentifierHelper.GetPeerIdentifier("sender");
+            var subbedPnr =
+                new KeyValuePair<ICorrelationId, IPeerIdentifier>(CorrelationId.GenerateCorrelationId(), ownNode);
+            
+            expectedPeerNeighbourResponse.Add(subbedPnr);
+                
+            neighbours.ForEach(n =>
+            {
+                expectedPeerNeighbourResponse.Add(new KeyValuePair<ICorrelationId, IPeerIdentifier>(CorrelationId.GenerateCorrelationId(),
+                    new PeerIdentifier(n)));
+            });
+
+            var subbedDtoFactory = Substitute.For<IDtoFactory>();
+            
+            neighbours.ToList().ForEach(n =>
+            {
+                subbedDtoFactory.GetDto(Arg.Any<PingRequest>(),
+                    ownNode,
+                    new PeerIdentifier(n)
+                ).Returns(
+                    new MessageDto<PingRequest>(new PingRequest(),
+                        ownNode,
+                        new PeerIdentifier(n)
+                    )
+                );
+            });
             
             using (var walker = new HastingsDiscovery(logger,
                 Substitute.For<IRepository<Peer>>(),
                 SubDnsClient(),
                 _settings,
                 Substitute.For<IPeerClient>(),
-                Substitute.For<IDtoFactory>(),
+                subbedDtoFactory,
                 Substitute.For<IPeerMessageCorrelationManager>(),
                 SubCancellationProvider(),
                 peerClientObservers,
@@ -369,25 +405,20 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Discovery
                 using (walker.DiscoveryStream.SubscribeOn(TaskPoolScheduler.Default)
                    .Subscribe(streamObserver.OnNext))
                 {
-                    var subbedDto1 = Substitute.For<IPeerClientMessageDto>();
-                    subbedDto1.Sender.Returns(expectedPeerNeighbourResponse.FirstOrDefault().Value);
-                    subbedDto1.CorrelationId.Returns(expectedPeerNeighbourResponse.FirstOrDefault().Key);
+                    var subbedDto = Substitute.For<IPeerClientMessageDto>();
+                    subbedDto.Sender.Returns(ownNode);
+                    subbedDto.CorrelationId.Returns(subbedPnr.Key);
+                    
                     var peerNeighborsResponse = new PeerNeighborsResponse();
-
-                    var neighbours = new List<PeerId>
-                    {
-                        PeerIdHelper.GetPeerId(),
-                        PeerIdHelper.GetPeerId(),
-                        PeerIdHelper.GetPeerId(),
-                        PeerIdHelper.GetPeerId(),
-                        PeerIdHelper.GetPeerId()
-                    };
-
                     peerNeighborsResponse.Peers.Add(neighbours);
+                   
+                    subbedDto.Message.Returns(peerNeighborsResponse);
                     
-                    subbedDto1.Message.Returns(peerNeighborsResponse);
-                    
-                    peerClientObservers.ToList().ForEach(o => o._responseMessageSubject.OnNext(subbedDto1));
+                    peerClientObservers.ToList()
+                       .ForEach(o =>
+                        {
+                            o._responseMessageSubject.OnNext(subbedDto);
+                        });
 
                     await walker.DiscoveryStream.WaitForItemsOnDelayedStreamOnTaskPoolSchedulerAsync(1);
 
@@ -395,8 +426,71 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Discovery
                        .Should()
                        .Be(neighbours.Count);
                     
-                    walker._peerClient.Received(5).SendMessage(Arg.Any<IMessageDto<PingRequest>>());
+                    walker._cache
+                       .Select(i => i.Value)
+                       .Where(i => neighbours.Contains(i.PeerId))
+                       .Should()
+                       .HaveCount(5);
+
+                    walker._dtoFactory
+                       .Received(5)
+                       .GetDto(
+                            Arg.Is(new PingRequest()),
+                            Arg.Any<IPeerIdentifier>(),
+                            Arg.Any<IPeerIdentifier>()
+                        );
+                    
+                    walker._peerClient
+                       .Received(5)
+                       .SendMessage(Arg.Any<IMessageDto<PingRequest>>());
+                    
+                    walker._awaitedResponses.Should().Be(neighbours.Count);
+                    walker._unresponsivePeers.Should().Be(0);
                 }
+            }
+        }
+
+        [Fact]
+        public void Known_Evicted_Correlation_Cache_PingRequest_Message_Increments_UnResponsivePeer()
+        {
+            var logger = Substitute.For<ILogger>();
+            
+            var subbedCache = Substitute.For<IList<KeyValuePair<ICorrelationId, IPeerIdentifier>>>();
+            
+            var pnr = new KeyValuePair<ICorrelationId, IPeerIdentifier>(CorrelationId.GenerateCorrelationId(),
+                PeerIdentifierHelper.GetPeerIdentifier("sender")
+            );
+            
+            subbedCache.Contains(Arg.Any<KeyValuePair<ICorrelationId, IPeerIdentifier>>()).Returns(true);
+
+            var evictionEvent = new ReplaySubject<KeyValuePair<ICorrelationId, IPeerIdentifier>>(0);
+
+            evictionEvent.OnNext(pnr);
+            
+            using (var walker = new HastingsDiscovery(logger,
+                Substitute.For<IRepository<Peer>>(),
+                SubDnsClient(),
+                _settings,
+                Substitute.For<IPeerClient>(),
+                Substitute.For<IDtoFactory>(),
+                Substitute.For<IPeerMessageCorrelationManager>(),
+                SubCancellationProvider(),
+                Substitute.For<IList<IPeerClientObservable>>(),
+                subbedCache,
+                0
+            ))
+            {
+                walker._cache
+                   .ReceivedWithAnyArgs(1)
+                   .Contains(pnr);
+                
+                walker._cache
+                   .ReceivedWithAnyArgs(1)
+                   .Remove(pnr);
+
+                walker._unresponsivePeers
+                   .Should()
+                   .Be(1);
             }
         }
 
@@ -420,21 +514,3 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Discovery
         }
     }
 }
-
-// private IDictionary<IObservable<IPeerClientMessageDto>, ReplaySubject<IPeerClientMessageDto>> MimicDiscoveryStreams()
-// {
-        //     var discoveryStreams = new Dictionary<IObservable<IPeerClientMessageDto>, ReplaySubject<IPeerClientMessageDto>>();
-        //     
-        //     var discoveryMessageType1 = new ReplaySubject<IPeerClientMessageDto>(1);
-        //     var discoveryMessage1Stream = discoveryMessageType1.AsObservable();
-        //     discoveryMessage1Stream.SubscribeOn(TaskPoolScheduler.Default).Subscribe((reputationChange) => Substitute.For<ILogger>());
-        //     discoveryStreams.Add(discoveryMessage1Stream, discoveryMessageType1);
-        //
-        //     var discoveryMessageType2 = new ReplaySubject<IPeerClientMessageDto>(1);
-        //     var discoveryMessage2Stream = discoveryMessageType2.AsObservable();
-        //     discoveryMessage2Stream.SubscribeOn(TaskPoolScheduler.Default).Subscribe((reputationChange) => Substitute.For<ILogger>());
-        //     discoveryStreams.Add(discoveryMessage2Stream, discoveryMessageType2);
-        //
-        //     return discoveryStreams;
-        // }
-        

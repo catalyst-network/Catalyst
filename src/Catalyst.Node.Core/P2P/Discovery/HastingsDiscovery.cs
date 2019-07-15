@@ -59,15 +59,15 @@ namespace Catalyst.Node.Core.P2P.Discovery
         public IHastingsOriginator state;
         private int _discoveredPeerInCurrentWalk;
         public readonly IPeerClient _peerClient;
-        private readonly IDtoFactory _dtoFactory;
+        public readonly IDtoFactory _dtoFactory;
         private readonly IPeerIdentifier _ownNode;
         private readonly int _peerDiscoveryBurnIn;
         public IHastingsOriginator _stateCandidate;
-        private HastingCareTaker _hastingCareTaker;
+        private IHastingCareTaker _hastingCareTaker;
         private readonly IRepository<Peer> _peerRepository;
         public readonly IList<KeyValuePair<ICorrelationId, IPeerIdentifier>> _cache;
         private readonly ICancellationTokenProvider _cancellationTokenProvider;
-        private readonly IDisposable _evictionSubscription;
+        public readonly IDisposable _evictionSubscription;
 
         public IObservable<IPeerClientMessageDto> DiscoveryStream { get; private set; }
 
@@ -103,7 +103,8 @@ namespace Catalyst.Node.Core.P2P.Discovery
             ICancellationTokenProvider cancellationTokenProvider,
             IEnumerable<IPeerClientObservable> peerClientObservables,
             IList<KeyValuePair<ICorrelationId, IPeerIdentifier>> cache,
-            int peerDiscoveryBurnIn = 10)
+            int peerDiscoveryBurnIn = 10,
+            IHastingCareTaker hastingCareTaker = default)
         
         {
             Dns = dns;
@@ -115,7 +116,9 @@ namespace Catalyst.Node.Core.P2P.Discovery
             _peerRepository = peerRepository;
             _discoveredPeerInCurrentWalk = 0;
             _peerDiscoveryBurnIn = peerDiscoveryBurnIn;
-            _hastingCareTaker = new HastingCareTaker();
+            
+            _hastingCareTaker = hastingCareTaker ?? new HastingCareTaker();
+
             _cancellationTokenProvider = cancellationTokenProvider;
             _ownNode = new PeerIdentifier(peerSettings1, new PeerIdClientId("AC")); // this needs to be changed
             
@@ -210,7 +213,7 @@ namespace Catalyst.Node.Core.P2P.Discovery
         
         private void EvictionCallback(KeyValuePair<ICorrelationId, IPeerIdentifier> item)
         {
-            if (item.Value?.Equals(state.Peer) ?? false)
+            if (state.Peer.Equals(item.Value))
             {
                 // reset walk as did not receive pnr
             }
@@ -238,14 +241,17 @@ namespace Catalyst.Node.Core.P2P.Discovery
         {
             Logger.Debug("OnPeerNeighbourResponse");
 
-            var currentStepPNR = new KeyValuePair<ICorrelationId, IPeerIdentifier>(obj.CorrelationId, obj.Sender);
+            var currentStepPnr = new KeyValuePair<ICorrelationId, IPeerIdentifier>(obj.CorrelationId, obj.Sender);
             
-            if (!_cache.ToList().Contains(currentStepPNR))
+            if (!_cache.ToList().Contains(currentStepPnr))
             {
                 return;
             }
 
-            _cache.Remove(currentStepPNR);
+            if (!_cache.Remove(currentStepPnr))
+            {
+                return;
+            }
 
             var peerNeighbours = (PeerNeighborsResponse) obj.Message;
             
@@ -269,6 +275,11 @@ namespace Catalyst.Node.Core.P2P.Discovery
             _awaitedResponses = 0;
 
             Interlocked.Add(ref _awaitedResponses, peerNeighbours.Peers.Count);
+        }
+
+        private void WalkBack()
+        {
+            var lastState = _hastingCareTaker.Get();
         }
         
         /// <summary>

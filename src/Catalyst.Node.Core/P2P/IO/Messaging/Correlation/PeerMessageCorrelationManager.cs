@@ -44,9 +44,8 @@ namespace Catalyst.Node.Core.P2P.IO.Messaging.Correlation
     public sealed class PeerMessageCorrelationManager : MessageCorrelationManagerBase, IPeerMessageCorrelationManager
     {
         private readonly ReplaySubject<IPeerReputationChange> _reputationEvent;
+        public ReplaySubject<KeyValuePair<ICorrelationId, IPeerIdentifier>> _evictionEvent { get; }
         public IObservable<IPeerReputationChange> ReputationEventStream => _reputationEvent.AsObservable();
-
-        private readonly ReplaySubject<KeyValuePair<ICorrelationId, IPeerIdentifier>> _evictionEvent;
         public IObservable<KeyValuePair<ICorrelationId, IPeerIdentifier>> EvictionEventStream => _evictionEvent.AsObservable();
 
         public PeerMessageCorrelationManager(IReputationManager reputationManager,
