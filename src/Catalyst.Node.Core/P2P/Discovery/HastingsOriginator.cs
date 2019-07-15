@@ -31,7 +31,7 @@ namespace Catalyst.Node.Core.P2P.Discovery
     public sealed class HastingsOriginator : IHastingsOriginator
     {
         private IPeerIdentifier _peer;
-
+        
         public IPeerIdentifier Peer
         {
             get => _peer;
@@ -44,6 +44,11 @@ namespace Catalyst.Node.Core.P2P.Discovery
         {
             get => _currentPeersNeighbours;
             set => _currentPeersNeighbours = value;
+        }
+
+        public HastingsOriginator()
+        {
+            _currentPeersNeighbours = new ConcurrentBag<IPeerIdentifier>();
         }
 
         /// <inheritdoc />

@@ -43,6 +43,7 @@ using Catalyst.Common.Interfaces.Util;
 using Catalyst.Common.P2P;
 using Catalyst.Protocol;
 using Catalyst.Protocol.IPPN;
+using Nito.Comparers.Linq;
 using Serilog;
 using SharpRepository.Repository;
 
@@ -52,8 +53,8 @@ namespace Catalyst.Node.Core.P2P.Discovery
         : IHastingsDiscovery, IDisposable
     {
         public readonly IDns Dns;
-        private int _awaitedResponses;
-        private int _unresponsivePeers;
+        public int _awaitedResponses;
+        public int _unresponsivePeers;
         public readonly ILogger Logger;
         public IHastingsOriginator state;
         private int _discoveredPeerInCurrentWalk;
@@ -61,10 +62,10 @@ namespace Catalyst.Node.Core.P2P.Discovery
         private readonly IDtoFactory _dtoFactory;
         private readonly IPeerIdentifier _ownNode;
         private readonly int _peerDiscoveryBurnIn;
-        private IHastingsOriginator _stateCandidate;
+        public IHastingsOriginator _stateCandidate;
         private HastingCareTaker _hastingCareTaker;
         private readonly IRepository<Peer> _peerRepository;
-        public readonly IDictionary<ICorrelationId, IPeerIdentifier> _cache;
+        public readonly IList<KeyValuePair<ICorrelationId, IPeerIdentifier>> _cache;
         private readonly ICancellationTokenProvider _cancellationTokenProvider;
         private readonly IDisposable _evictionSubscription;
 
@@ -88,7 +89,7 @@ namespace Catalyst.Node.Core.P2P.Discovery
             peerMessageCorrelationManager,
             cancellationTokenProvider,
             peerClientObservables,
-            new Dictionary<ICorrelationId, IPeerIdentifier>(),
+            new List<KeyValuePair<ICorrelationId, IPeerIdentifier>>(),
             peerDiscoveryBurnIn
         ) { }
             
@@ -101,7 +102,7 @@ namespace Catalyst.Node.Core.P2P.Discovery
             IPeerMessageCorrelationManager peerMessageCorrelationManager,
             ICancellationTokenProvider cancellationTokenProvider,
             IEnumerable<IPeerClientObservable> peerClientObservables,
-            IDictionary<ICorrelationId, IPeerIdentifier> cache,
+            IList<KeyValuePair<ICorrelationId, IPeerIdentifier>> cache,
             int peerDiscoveryBurnIn = 10)
         
         {
@@ -118,29 +119,33 @@ namespace Catalyst.Node.Core.P2P.Discovery
             _cancellationTokenProvider = cancellationTokenProvider;
             _ownNode = new PeerIdentifier(peerSettings1, new PeerIdClientId("AC")); // this needs to be changed
             
+            // create an empty stream for discovery messages
             DiscoveryStream = Observable.Empty<IPeerClientMessageDto>();
 
+            // merge the streams of all our IPeerClientObservable on to our empty DiscoveryStream.
             peerClientObservables.ToList()
                .GroupBy(p => p.MessageStream)
                .Select(p => p.Key)
                .ToList()
                .ForEach(s => DiscoveryStream = DiscoveryStream.Merge(s));
 
+            // register subscription for ping response messages.
             DiscoveryStream
                .Where(i => i.Message.Descriptor.ShortenedFullName()
                    .Equals(PingResponse.Descriptor.ShortenedFullName())
                 )
-               .SubscribeOn(TaskPoolScheduler.Default)
-               .Subscribe(OnPingResponse, OnError, OnCompleted);
-            
+               .SubscribeOn(Scheduler.CurrentThread)
+               .Subscribe(OnPingResponse);
+
+            // register subscription from peerNeighbourResponse.
             DiscoveryStream
                .Where(i => i.Message.Descriptor.ShortenedFullName()
                    .Equals(PeerNeighborsResponse.Descriptor.ShortenedFullName())
                 )
-               .SubscribeOn(TaskPoolScheduler.Default)
-               .Subscribe(OnPeerNeighbourResponse, OnError, OnCompleted);
-            
-            // build the initial state of walk, which our node and seed nodes
+               .SubscribeOn(Scheduler.CurrentThread)
+               .Subscribe(OnPeerNeighbourResponse);
+
+            // build the initial state of walk, which is our node and seed nodes
             state = new HastingsOriginator
             {
                 Peer = _ownNode,
@@ -152,8 +157,19 @@ namespace Catalyst.Node.Core.P2P.Discovery
             
             // store state with caretaker
             _hastingCareTaker.Add(state.CreateMemento());
+            
+            // start first true step of walk with a random seed
+            _stateCandidate = new HastingsOriginator
+            {
+                Peer = state.CurrentPeersNeighbours.RandomElement()
+            };
 
-            _evictionSubscription = peerMessageCorrelationManager.EvictionEventStream.Subscribe(EvictionCallback);
+            // subscribe to evicted peer messages, so we can cross
+            // reference them with discovery messages we sent
+            _evictionSubscription = peerMessageCorrelationManager
+               .EvictionEventStream
+               .SubscribeOn(TaskPoolScheduler.Default)
+               .Subscribe(onNext: EvictionCallback);
 
             Task.Run(async () =>
             {
@@ -161,35 +177,19 @@ namespace Catalyst.Node.Core.P2P.Discovery
             });
         }
 
-        private void EvictionCallback(KeyValuePair<ICorrelationId, IPeerIdentifier> item)
-        {
-            if (item.Value.Equals(state.Peer))
-            {
-                // reset walk as did not recieve pnr
-            }
-            else if (_cache.ContainsKey(item.Key))
-            {
-                Interlocked.Increment(ref _unresponsivePeers);
-            }
-        }
-        
         public async Task DiscoveryAsync()
         {
             do
             {
                 try
                 {
-                    _stateCandidate = new HastingsOriginator
-                    {
-                        Peer = state.CurrentPeersNeighbours.RandomElement()
-                    };
-                    
                     var peerNeighbourRequestDto = _dtoFactory.GetDto(new PeerNeighborsRequest(),
                         _ownNode,
                         _stateCandidate.Peer
                     );
 
-                    _cache.Add(peerNeighbourRequestDto.CorrelationId, _stateCandidate.Peer);
+                    // _cache.Add(new KeyValuePair<ICorrelationId, IPeerIdentifier>(peerNeighbourRequestDto.CorrelationId, _stateCandidate.Peer));
+                    
                     _peerClient.SendMessage(peerNeighbourRequestDto);
 
                     await WaitUntil(() => (_unresponsivePeers += _stateCandidate.CurrentPeersNeighbours.ToList().Count).Equals(
@@ -207,37 +207,48 @@ namespace Catalyst.Node.Core.P2P.Discovery
                 }
             } while (!_cancellationTokenProvider.HasTokenCancelled());
         }
+        
+        private void EvictionCallback(KeyValuePair<ICorrelationId, IPeerIdentifier> item)
+        {
+            if (item.Value?.Equals(state.Peer) ?? false)
+            {
+                // reset walk as did not receive pnr
+            }
+            else if (_cache.Contains(new KeyValuePair<ICorrelationId, IPeerIdentifier>(item.Key, item.Value)))
+            {
+                Interlocked.Increment(ref _unresponsivePeers);
+                _cache.Remove(new KeyValuePair<ICorrelationId, IPeerIdentifier>(item.Key, item.Value));
+            }
+        }
       
         private void OnPingResponse(IPeerClientMessageDto obj)
         {
             Logger.Debug("OnPingResponse");
-
-            if (!_cache.TryGetValue(obj.CorrelationId, out IPeerIdentifier neighbour))
+            
+            if (!_cache.ToList().Contains(new KeyValuePair<ICorrelationId, IPeerIdentifier>(obj.CorrelationId, obj.Sender)))
             {
                 return;
             }
 
-            _cache.Remove(obj.CorrelationId);
-            _stateCandidate.CurrentPeersNeighbours.Add(neighbour);
-            
-            Interlocked.Decrement(ref _awaitedResponses);
+            _cache.Remove(new KeyValuePair<ICorrelationId, IPeerIdentifier>(obj.CorrelationId, obj.Sender));
+            _stateCandidate.CurrentPeersNeighbours.Add(obj.Sender);
         }
 
         private void OnPeerNeighbourResponse(IPeerClientMessageDto obj)
         {
             Logger.Debug("OnPeerNeighbourResponse");
 
-            if (!_cache.TryGetValue(obj.CorrelationId, out _))
+            var currentStepPNR = new KeyValuePair<ICorrelationId, IPeerIdentifier>(obj.CorrelationId, obj.Sender);
+            
+            if (!_cache.ToList().Contains(currentStepPNR))
             {
                 return;
             }
 
-            _cache.Remove(obj.CorrelationId);
+            _cache.Remove(currentStepPNR);
 
             var peerNeighbours = (PeerNeighborsResponse) obj.Message;
-
-            _unresponsivePeers = 0;
-                
+            
             peerNeighbours.Peers.ToList().ForEach(p =>
             {
                 var pingRequestDto = _dtoFactory.GetDto(new PingRequest(),
@@ -245,24 +256,19 @@ namespace Catalyst.Node.Core.P2P.Discovery
                     _stateCandidate.Peer
                 );
 
-                _cache.Add(pingRequestDto.CorrelationId, pingRequestDto.RecipientPeerIdentifier);
+                _cache.Add(new KeyValuePair<ICorrelationId, IPeerIdentifier>(
+                    pingRequestDto.CorrelationId,
+                    pingRequestDto.RecipientPeerIdentifier)
+                );
                 
                 _peerClient.SendMessage(pingRequestDto);
             });
 
-            _awaitedResponses = 0; // reset counter for new loop
+            // reset counters for new loop
+            _unresponsivePeers = 0;
+            _awaitedResponses = 0;
 
             Interlocked.Add(ref _awaitedResponses, peerNeighbours.Peers.Count);
-        }
-
-        private void OnError(Exception obj)
-        {
-            throw new NotImplementedException();
-        }
-
-        private void OnCompleted()
-        {
-            throw new NotImplementedException();
         }
         
         /// <summary>

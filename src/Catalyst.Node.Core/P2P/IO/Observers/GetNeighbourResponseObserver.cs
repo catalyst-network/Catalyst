@@ -42,12 +42,12 @@ namespace Catalyst.Node.Core.P2P.IO.Observers
             IP2PMessageObserver,
             IPeerClientObservable
     {
-        private readonly ReplaySubject<IPeerClientMessageDto> _peerNeighborsResponse;
-        public IObservable<IPeerClientMessageDto> MessageStream => _peerNeighborsResponse.AsObservable();
+        public ReplaySubject<IPeerClientMessageDto> _responseMessageSubject { get; }
+        public IObservable<IPeerClientMessageDto> MessageStream => _responseMessageSubject.AsObservable();
         
         public GetNeighbourResponseObserver(ILogger logger) : base(logger)
         {
-            _peerNeighborsResponse = new ReplaySubject<IPeerClientMessageDto>(1);
+            _responseMessageSubject = new ReplaySubject<IPeerClientMessageDto>(1);
         }
 
         /// <summary>
@@ -62,7 +62,7 @@ namespace Catalyst.Node.Core.P2P.IO.Observers
             IPeerIdentifier senderPeerIdentifier,
             ICorrelationId correlationId)
         {
-            _peerNeighborsResponse.OnNext(new PeerClientMessageDto<PeerNeighborsResponse>(messageDto, senderPeerIdentifier, correlationId));
+            _responseMessageSubject.OnNext(new PeerClientMessageDto<PeerNeighborsResponse>(messageDto, senderPeerIdentifier, correlationId));
         }
     }
 }
