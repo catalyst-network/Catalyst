@@ -21,13 +21,14 @@
 
 #endregion
 
-using System;
-using System.Collections.Generic;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Observers;
 using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;
 using Serilog;
+using System;
+using System.Reactive.Concurrency;
+using System.Reactive.Linq;
 
 namespace Catalyst.Common.IO.Observers
 {
@@ -35,14 +36,29 @@ namespace Catalyst.Common.IO.Observers
     {
         protected readonly ILogger Logger;
         protected IDisposable MessageSubscription;
+        private readonly string _filterMessageType;
+
         public IChannelHandlerContext ChannelHandlerContext { get; protected set; }
 
-        protected MessageObserverBase(ILogger logger)
+        protected MessageObserverBase(ILogger logger, string filterMessageType)
         {
             Logger = logger;
+            _filterMessageType = filterMessageType;
         }
 
-        public abstract void StartObserving(IObservable<IObserverDto<ProtocolMessage>> messageStream);
+        public void StartObserving(IObservable<IObserverDto<ProtocolMessage>> messageStream)
+        {
+            if (MessageSubscription != null)
+            {
+                return;
+            }
+
+            MessageSubscription = messageStream
+               .Where(m => m.Payload?.TypeUrl != null
+                 && m.Payload.TypeUrl == _filterMessageType)
+               .SubscribeOn(NewThreadScheduler.Default)
+               .Subscribe(this);
+        }
 
         public abstract void OnNext(IObserverDto<ProtocolMessage> messageDto);
 

@@ -21,10 +21,6 @@
 
 #endregion
 
-using System;
-using System.Data;
-using System.Reactive.Concurrency;
-using System.Reactive.Linq;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
@@ -38,35 +34,19 @@ using Dawn;
 using DotNetty.Transport.Channels;
 using Google.Protobuf;
 using Serilog;
+using System;
 
 namespace Catalyst.Common.IO.Observers
 {
     public abstract class ResponseObserverBase<TProto> : MessageObserverBase, IResponseMessageObserver where TProto : IMessage<TProto>
     {
-        private readonly string _filterMessageType;
-
-        protected ResponseObserverBase(ILogger logger) : base(logger)
+        protected ResponseObserverBase(ILogger logger) : base(logger, typeof(TProto).ShortenedProtoFullName())
         {
             Guard.Argument(typeof(TProto), nameof(TProto)).Require(t => t.IsResponseType(),
                 t => $"{nameof(TProto)} is not of type {MessageTypes.Response.Name}");
-            _filterMessageType = typeof(TProto).ShortenedProtoFullName();
         }
 
         protected abstract void HandleResponse(TProto messageDto, IChannelHandlerContext channelHandlerContext, IPeerIdentifier senderPeerIdentifier, ICorrelationId correlationId);
-
-        public override void StartObserving(IObservable<IObserverDto<ProtocolMessage>> messageStream)
-        {
-            if (MessageSubscription != null)
-            {
-                return;
-            }
-
-            MessageSubscription = messageStream
-               .Where(m => m.Payload?.TypeUrl != null
-                 && m.Payload?.TypeUrl == _filterMessageType)
-               .SubscribeOn(NewThreadScheduler.Default)
-               .Subscribe(OnNext, OnError, OnCompleted);
-        }
 
         public override void OnNext(IObserverDto<ProtocolMessage> messageDto)
         {
