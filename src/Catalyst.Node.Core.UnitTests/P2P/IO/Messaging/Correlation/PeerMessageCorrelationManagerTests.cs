@@ -59,20 +59,10 @@ namespace Catalyst.Node.Core.UnitTests.P2P.IO.Messaging.Correlation
                 ChangeTokenProvider
             );
 
-            _reputationByPeerIdentifier = PeerIds.ToDictionary(p => p, p => 0); //smells funky
-            
-            PendingRequests = PeerIds.Select((p, i) => new CorrelatableMessage<ProtocolMessage>
-            {
-                Content = new PingRequest().ToProtocolMessage(SenderPeerId, CorrelationId.GenerateCorrelationId()),
-                Recipient = p,
-                SentAt = DateTimeOffset.MinValue.Add(TimeSpan.FromMilliseconds(100 * i))
-            }).ToList();
-            
-            foreach (var correlatableMessage in PendingRequests)
-            {
-                CorrelationManager.AddPendingRequest(correlatableMessage);
-            }
-            
+            _reputationByPeerIdentifier = PeerIds.ToDictionary(p => p, p => 0);
+
+            PrepareCacheWithPendingRequests<PingRequest>();
+
             CorrelationManager.ReputationEventStream.Subscribe(change =>
             {
                 if (!_reputationByPeerIdentifier.ContainsKey(change.PeerIdentifier))
@@ -84,54 +74,54 @@ namespace Catalyst.Node.Core.UnitTests.P2P.IO.Messaging.Correlation
             });
         }
 
-        [Fact]
-        public override async Task RequestStore_Should_Not_Keep_Records_For_Longer_Than_Ttl()
-        {
-            var senderPeerId = PeerIdHelper.GetPeerId("sender");
+        //[Fact]
+        //public override async Task RequestStore_Should_Not_Keep_Records_For_Longer_Than_Ttl()
+        //{
+        //    var senderPeerId = PeerIdHelper.GetPeerId("sender");
 
-            const int requestCount = 3;
-            var targetPeerIds = Enumerable.Range(0, requestCount).Select(i =>
-                PeerIdentifierHelper.GetPeerIdentifier($"target-{i.ToString()}")).ToList();
+        //    const int requestCount = 3;
+        //    var targetPeerIds = Enumerable.Range(0, requestCount).Select(i =>
+        //        PeerIdentifierHelper.GetPeerIdentifier($"target-{i.ToString()}")).ToList();
             
-            var correlationIds = Enumerable.Range(0, requestCount).Select(i => CorrelationId.GenerateCorrelationId()).ToList();
+        //    var correlationIds = Enumerable.Range(0, requestCount).Select(i => CorrelationId.GenerateCorrelationId()).ToList();
 
-            var requests = correlationIds
-               .Zip(targetPeerIds, (c, p) => new
-                {
-                    CorrelationId = c, PeerIdentifier = p
-                })
-               .Select(c => new CorrelatableMessage<ProtocolMessage>
-                {
-                    Content = new PingRequest().ToProtocolMessage(senderPeerId, c.CorrelationId),
-                    Recipient = c.PeerIdentifier,
-                    SentAt = DateTimeOffset.MinValue
-                }).ToList();
+        //    var requests = correlationIds
+        //       .Zip(targetPeerIds, (c, p) => new
+        //        {
+        //            CorrelationId = c, PeerIdentifier = p
+        //        })
+        //       .Select(c => new CorrelatableMessage<ProtocolMessage>
+        //        {
+        //            Content = new PingRequest().ToProtocolMessage(senderPeerId, c.CorrelationId),
+        //            Recipient = c.PeerIdentifier,
+        //            SentAt = DateTimeOffset.MinValue
+        //        }).ToList();
 
-            var responses = requests.Select(r =>
-                new PingResponse().ToProtocolMessage(r.Recipient.PeerId, r.Content.CorrelationId.ToCorrelationId()));
+        //    var responses = requests.Select(r =>
+        //        new PingResponse().ToProtocolMessage(r.Recipient.PeerId, r.Content.CorrelationId.ToCorrelationId()));
 
-            var evictionObserver = Substitute.For<IObserver<IPeerReputationChange>>();
+        //    var evictionObserver = Substitute.For<IObserver<IPeerReputationChange>>();
             
-            using (CorrelationManager.ReputationEventStream.SubscribeOn(TaskPoolScheduler.Default)
-               .Subscribe(evictionObserver.OnNext))
-            {
-                requests.ForEach(r => CorrelationManager.AddPendingRequest(r));
+        //    using (CorrelationManager.ReputationEventStream.SubscribeOn(TaskPoolScheduler.Default)
+        //       .Subscribe(evictionObserver.OnNext))
+        //    {
+        //        requests.ForEach(r => CorrelationManager.AddPendingRequest(r));
 
-                ChangeToken.HasChanged.Returns(true);
+        //        ChangeToken.HasChanged.Returns(true);
 
-                foreach (var response in responses)
-                {
-                    CorrelationManager.TryMatchResponse(response).Should()
-                       .BeFalse("the changeToken has simulated a TTL expiry");
-                }
+        //        foreach (var response in responses)
+        //        {
+        //            CorrelationManager.TryMatchResponse(response).Should()
+        //               .BeFalse("the changeToken has simulated a TTL expiry");
+        //        }
 
-                await TaskHelper.WaitForAsync(() => evictionObserver.ReceivedCalls().Any(),
-                    TimeSpan.FromMilliseconds(2000));
+        //        await TaskHelper.WaitForAsync(() => evictionObserver.ReceivedCalls().Any(),
+        //            TimeSpan.FromMilliseconds(2000));
 
-                evictionObserver.Received(requestCount).OnNext(Arg.Is<IPeerReputationChange>(r => r.ReputationEvent.Name == ReputationEvents.NoResponseReceived.Name));
-                evictionObserver.Received(requestCount).OnNext(Arg.Is<IPeerReputationChange>(r => r.ReputationEvent.Name == ReputationEvents.UnCorrelatableMessage.Name));
-            }
-        }
+        //        evictionObserver.Received(requestCount).OnNext(Arg.Is<IPeerReputationChange>(r => r.ReputationEvent.Name == ReputationEvents.NoResponseReceived.Name));
+        //        evictionObserver.Received(requestCount).OnNext(Arg.Is<IPeerReputationChange>(r => r.ReputationEvent.Name == ReputationEvents.UnCorrelatableMessage.Name));
+        //    }
+        //}
         
         [Fact]
         public void TryMatchResponseAsync_when_matching_should_increase_reputation()
@@ -164,5 +154,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.IO.Messaging.Correlation
             var reputationAfter = _reputationByPeerIdentifier[PeerIds[1]];
             reputationAfter.Should().BeLessThan(reputationBefore);
         }
+
+        protected override void CheckCacheEntriesCallback() { throw new NotImplementedException(); }
     }
 }

@@ -34,7 +34,6 @@ using Catalyst.Common.Interfaces.P2P.ReputationSystem;
 using Catalyst.Common.Interfaces.Util;
 using Catalyst.Common.IO.Handlers;
 using Catalyst.Common.IO.Messaging.Correlation;
-using Catalyst.Common.P2P;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
 using Catalyst.TestUtils;
@@ -44,9 +43,11 @@ using Google.Protobuf;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Primitives;
 using NSubstitute;
+using NSubstitute.Core;
 using Serilog;
 using Xunit;
 using Xunit.Abstractions;
+using PendingRequest = Catalyst.Common.IO.Messaging.Correlation.CorrelatableMessage<Catalyst.Protocol.Common.ProtocolMessage>;
 
 namespace Catalyst.Common.UnitTests.IO.Messaging.Correlation
 {
@@ -54,14 +55,17 @@ namespace Catalyst.Common.UnitTests.IO.Messaging.Correlation
         where T : IMessageCorrelationManager
     {
         protected readonly IPeerIdentifier[] PeerIds;
-        protected IList<CorrelatableMessage<ProtocolMessage>> PendingRequests;
+        protected List<PendingRequest> PendingRequests;
 
         protected T CorrelationManager;
         protected readonly ILogger SubbedLogger;
         protected readonly IChangeTokenProvider ChangeTokenProvider;
         protected readonly IChangeToken ChangeToken;
-        protected MemoryCache Cache;
+        protected readonly IMemoryCache Cache;
         protected readonly PeerId SenderPeerId;
+
+        protected readonly Dictionary<ByteString, ICacheEntry> CacheEntriesByRequest 
+            = new Dictionary<ByteString, ICacheEntry>();
         
         protected MessageCorrelationManagerTests(ITestOutputHelper output)
         {
@@ -69,7 +73,7 @@ namespace Catalyst.Common.UnitTests.IO.Messaging.Correlation
             ChangeTokenProvider = Substitute.For<IChangeTokenProvider>();
             ChangeToken = Substitute.For<IChangeToken>();
             ChangeTokenProvider.GetChangeToken().Returns(ChangeToken);
-            Cache = new MemoryCache(new MemoryCacheOptions());
+            Cache = Substitute.For<IMemoryCache>();
 
             SenderPeerId = PeerIdHelper.GetPeerId("sender");
             PeerIds = new[]
@@ -78,19 +82,82 @@ namespace Catalyst.Common.UnitTests.IO.Messaging.Correlation
                 PeerIdentifierHelper.GetPeerIdentifier("peer2"),
                 PeerIdentifierHelper.GetPeerIdentifier("peer3"),
             };
-            
-            var responseStore = Substitute.For<IMemoryCache>();
-            responseStore.TryGetValue(Arg.Any<ByteString>(), out Arg.Any<CorrelatableMessage<ProtocolMessage>>())
+        }
+
+        protected void PrepareCacheWithPendingRequests<T>()
+            where T : IMessage, new()
+        {
+            PendingRequests = PeerIds.Select((p, i) => new CorrelatableMessage<ProtocolMessage>
+            {
+                Content = new T().ToProtocolMessage(SenderPeerId, CorrelationId.GenerateCorrelationId()),
+                Recipient = p,
+                SentAt = DateTimeOffset.MinValue.Add(TimeSpan.FromMilliseconds(100 * i))
+            }).ToList();
+
+            PendingRequests.ForEach(AddRequestExpectation);
+        }
+
+        private void AddRequestExpectation(CorrelatableMessage<ProtocolMessage> pendingRequest)
+        {
+            Cache.TryGetValue(pendingRequest.Content.CorrelationId, out Arg.Any<object>())
                .Returns(ci =>
                 {
-                    output.WriteLine("");
-                    ci[1] = PendingRequests.SingleOrDefault(
-                        r => Equals(r.Content.CorrelationId, ci[0]));
-                    return ci[1] != null;
+                    ci[1] = pendingRequest;
+                    return true;
                 });
         }
 
-        public abstract Task RequestStore_Should_Not_Keep_Records_For_Longer_Than_Ttl();
+        private void AddCreateCacheEntryExpectation(object key)
+        {
+            var correlationId = (ByteString) key;
+            var cacheEntry = Substitute.For<ICacheEntry>();
+            var expirationTokens = new List<IChangeToken>();
+            cacheEntry.ExpirationTokens.Returns(expirationTokens);
+            var expirationCallbacks = new List<PostEvictionCallbackRegistration>();
+            cacheEntry.PostEvictionCallbacks.Returns(expirationCallbacks);
+
+            Cache.CreateEntry(correlationId).Returns(cacheEntry);
+        }
+
+        [Fact]
+        public virtual async Task New_Entries_Should_Be_Added_With_Individual_Entry_Options()
+        {
+            PendingRequests.ForEach(p => AddCreateCacheEntryExpectation(p.Content.CorrelationId.ToCorrelationId()));
+            PendingRequests.ForEach(CorrelationManager.AddPendingRequest);
+
+            Cache.Received(PendingRequests.Count).CreateEntry(
+                Arg.Is<object>(o => ((ByteString) o).ToCorrelationId().Id != Guid.Empty));
+
+            var createEntryCalls = Cache.ReceivedCalls()
+               .Where(ci => ci.GetMethodInfo().Name == nameof(IMemoryCache.CreateEntry));
+
+            createEntryCalls.Select(c => c.GetArguments()[0]).Cast<ICorrelationId>()
+               .Should().BeEquivalentTo(PendingRequests.Select(p => p.Content.CorrelationId));
+
+            foreach (var cacheEntry in CacheEntriesByRequest.Values)
+            {
+                cacheEntry.ExpirationTokens.Count.Should().Be(1);
+                cacheEntry.PostEvictionCallbacks.Count.Should().Be(1);
+            }
+
+            CheckExpirationTokensAreDifferentForEachEntry();
+
+            CheckCacheEntriesCallback();
+        }
+
+        private void CheckExpirationTokensAreDifferentForEachEntry()
+        {
+            var x = new List<int>();
+
+            for (var i = 0; i < CacheEntriesByRequest.Count; i++)
+            for (var j = i + 1; j < CacheEntriesByRequest.Count; j++)
+            {
+                CacheEntriesByRequest[PendingRequests[i].Content.CorrelationId]
+                   .Should().NotBeSameAs(CacheEntriesByRequest[PendingRequests[j].Content.CorrelationId]);
+            }
+        }
+
+        protected abstract void CheckCacheEntriesCallback();
 
         [Fact]
         public void TryMatchResponseAsync_should_match_existing_records_with_matching_correlation_id()
