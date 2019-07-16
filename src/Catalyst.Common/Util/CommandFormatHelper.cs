@@ -23,8 +23,6 @@
 
 using Catalyst.Protocol.Common;
 using Google.Protobuf.Collections;
-using System;
-using System.Collections.Generic;
 using System.Text;
 
 namespace Catalyst.Common.Util
