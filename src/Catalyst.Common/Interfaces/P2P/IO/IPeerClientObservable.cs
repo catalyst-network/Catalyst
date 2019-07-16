@@ -22,16 +22,14 @@
 #endregion
 
 using System;
-using Catalyst.Common.Interfaces.IO.Messaging.Dto;
-using Google.Protobuf;
+using System.Reactive.Subjects;
+using Catalyst.Common.Interfaces.P2P.IO.Messaging.Dto;
 
-namespace Catalyst.Common.Interfaces.IO.Observables
+namespace Catalyst.Common.Interfaces.P2P.IO
 {
-    public interface IObservableMessageStreamer<out T> where T : IMessage
+    public interface IPeerClientObservable
     {
-        /// <summary>
-        ///     Message stream
-        /// </summary>
-        IObservable<IObserverDto<T>> MessageStream { get; }
+        ReplaySubject<IPeerClientMessageDto> _responseMessageSubject { get; }
+        IObservable<IPeerClientMessageDto> MessageStream { get; }
     }
 }

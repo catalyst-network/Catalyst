@@ -53,7 +53,7 @@ namespace Catalyst.Common.Extensions
             return new ProtocolMessage
             {
                 PeerId = senderId,
-                CorrelationId = (correlationId == default ? CorrelationId.GenerateCorrelationId().Id : correlationId.Id).ToByteString(),
+                CorrelationId = (correlationId?.Id ?? CorrelationId.GenerateCorrelationId().Id).ToByteString(),
 
                 TypeUrl = typeUrl,
                 Value = protobufObject.ToByteString()
