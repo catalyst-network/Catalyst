@@ -37,6 +37,7 @@ namespace Catalyst.Cli.IntegrationTests.Commands
         {
             var result = Shell.ParseCommand("getversion", NodeArgumentPrefix, ServerNodeName);
             result.Should().BeTrue();
+
             AssertSentMessageAndGetMessageContent<VersionRequest>();
         }
     }

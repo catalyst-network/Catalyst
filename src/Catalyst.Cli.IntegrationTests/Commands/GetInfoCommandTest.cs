@@ -37,6 +37,7 @@ namespace Catalyst.Cli.IntegrationTests.Commands
         {
             var result = Shell.ParseCommand("getinfo", NodeArgumentPrefix, ServerNodeName);
             result.Should().BeTrue();
+            
             AssertSentMessageAndGetMessageContent<GetInfoRequest>();
         }
     }

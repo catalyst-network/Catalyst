@@ -38,6 +38,7 @@ namespace Catalyst.Cli.IntegrationTests.Commands
             var result = Shell.ParseCommand(
                 "verify", "-m", "test message", "-k", "public_key", "-s", "signature", NodeArgumentPrefix, ServerNodeName);
             result.Should().BeTrue();
+
             AssertSentMessageAndGetMessageContent<VerifyMessageRequest>();
         }
     }

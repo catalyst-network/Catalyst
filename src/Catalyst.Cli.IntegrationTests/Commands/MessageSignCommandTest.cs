@@ -37,6 +37,7 @@ namespace Catalyst.Cli.IntegrationTests.Commands
         {
             var result = Shell.ParseCommand("sign", "-m", "test message", NodeArgumentPrefix, ServerNodeName);
             result.Should().BeTrue();
+
             AssertSentMessageAndGetMessageContent<SignMessageRequest>();
         }
     }

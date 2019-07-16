@@ -38,6 +38,7 @@ namespace Catalyst.Cli.IntegrationTests.Commands
             var result = Shell.ParseCommand(
                 "peerrep", NodeArgumentPrefix, ServerNodeName, "-l", "127.0.0.1", "-p", "fake_public_key");
             result.Should().BeTrue();
+
             AssertSentMessageAndGetMessageContent<GetPeerReputationRequest>();
         }
     }

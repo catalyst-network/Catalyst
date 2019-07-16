@@ -42,7 +42,8 @@ namespace Catalyst.Cli.IntegrationTests.Commands
             
             var result = Shell.ParseCommand("getpeerinfo", NodeArgumentPrefix, ServerNodeName, "-i", ipAddress, "-k", publicKey);
             result.Should().BeTrue();
-            AssertSentMessageAndGetMessageContent<GetPeerInfoRequest>();
+
+            AssertSentMessage<GetPeerInfoRequest>();
         }
     }
 }
