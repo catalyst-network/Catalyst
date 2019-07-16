@@ -65,13 +65,13 @@ namespace Catalyst.Node.Core.Rpc.IO.Transport.Channels
                     new PeerIdValidationHandler(_peerIdValidator),
                     new AddressedEnvelopeToIMessageEncoder(),
                     new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
-                    new ProtocolMessageVerifyHandler(_keySigner),
-                    new ProtocolMessageSignHandler(_keySigner)
-                ),
+                        new ProtocolMessageVerifyHandler(_keySigner),
+                        new ProtocolMessageSignHandler(_keySigner)
+                    ),
                     new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
-                    new CorrelationHandler<IRpcMessageCorrelationManager>(_correlationManger),
-                    new CorrelatableHandler<IRpcMessageCorrelationManager>(_correlationManger)
-                ),
+                        new CorrelationHandler<IRpcMessageCorrelationManager>(_correlationManger),
+                        new CorrelatableHandler<IRpcMessageCorrelationManager>(_correlationManger)
+                    ),
                     _observableServiceHandler
                 };
             }
