@@ -93,10 +93,11 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
 
             _observer = new VerifyMessageResponseObserver(_output, _logger);
             _observer.StartObserving(messageStream);
-            _observer.MessageResponseStream.Where(x => x.Message.GetType() == typeof(VerifyMessageResponse)).SubscribeOn(NewThreadScheduler.Default).Subscribe((RpcClientMessageDto) =>
-            {
-                messageStreamResponse = (VerifyMessageResponse)RpcClientMessageDto.Message;
-            });
+            _observer.MessageResponseStream.Where(x => x.Message is VerifyMessageResponse)
+               .SubscribeOn(NewThreadScheduler.Default).Subscribe(rpcClientMessageDto =>
+                {
+                    messageStreamResponse = (VerifyMessageResponse) rpcClientMessageDto.Message;
+                });
 
             await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
 

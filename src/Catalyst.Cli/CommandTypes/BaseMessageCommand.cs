@@ -43,7 +43,6 @@ namespace Catalyst.Cli.CommandTypes
         where TResponse : IMessage<TResponse>
         where TOption : IOptionsBase
     {
-
         protected BaseMessageCommand(ICommandContext commandContext) : base(commandContext)
         {
             CommandContext.SocketClientRegistry.EventStream.OfType<SocketClientRegistryClientAdded>().Subscribe(SocketClientRegistryClientAddedOnNext);
@@ -79,7 +78,7 @@ namespace Catalyst.Cli.CommandTypes
 
             if (sendMessage)
             {
-                SendMessage((TOption)optionsBase);
+                SendMessage((TOption) optionsBase);
             }
 
             return sendMessage;
@@ -93,12 +92,12 @@ namespace Catalyst.Cli.CommandTypes
 
         private void CommandResponseOnNext(IRpcClientMessageDto<IMessage> value)
         {
-            ResponseMessage((TResponse)value.Message);
+            ResponseMessage((TResponse) value.Message);
         }
 
         private void SocketClientRegistryClientAddedOnNext(SocketClientRegistryClientAdded value)
         {
-            INodeRpcClient client = CommandContext.SocketClientRegistry.GetClientFromRegistry(value.SocketHashCode);
+            var client = CommandContext.SocketClientRegistry.GetClientFromRegistry(value.SocketHashCode);
             client.MessageResponseStream.Where(x => x.Message.GetType() == typeof(TResponse)).SubscribeOn(NewThreadScheduler.Default).Subscribe(CommandResponseOnNext);
         }
     }
