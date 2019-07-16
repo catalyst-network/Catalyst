@@ -44,12 +44,8 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
     /// </summary>
     /// <seealso cref="IRpcResponseObserver" />
     public sealed class PeerListResponseObserver
-        : ResponseObserverBase<GetPeerListResponse>,
-            IRpcResponseObserver
+        : RpcResponseObserver<GetPeerListResponse>
     {
-        private readonly ReplaySubject<IRpcClientMessage<IMessage>> _messageResponse;
-        public IObservable<IRpcClientMessage<IMessage>> MessageResponseStream { private set; get; }
-
         private readonly IUserOutput _output;
 
         public PeerListResponseObserver(IUserOutput output,
@@ -57,8 +53,6 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
             : base(logger)
         {
             _output = output;
-            _messageResponse = new ReplaySubject<IRpcClientMessage<IMessage>>(1);
-            MessageResponseStream = _messageResponse.AsObservable();
         }
 
         protected override void HandleResponse(GetPeerListResponse getPeerListResponse,
@@ -70,7 +64,7 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
             Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
             Guard.Argument(senderPeerIdentifier, nameof(senderPeerIdentifier)).NotNull();
 
-            _messageResponse.OnNext(new RpcClientMessage<IMessage>(getPeerListResponse, senderPeerIdentifier));
+            SendMessage(getPeerListResponse, senderPeerIdentifier);
         }
     }
 }

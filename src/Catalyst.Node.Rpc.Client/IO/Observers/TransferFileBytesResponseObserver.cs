@@ -43,17 +43,13 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
     /// </summary>
     /// <seealso cref="IRpcResponseObserver" />
     public class TransferFileBytesResponseObserver
-        : ResponseObserverBase<TransferFileBytesResponse>,
-            IRpcResponseObserver
+        : RpcResponseObserver<TransferFileBytesResponse>
     {
-        private readonly ReplaySubject<IRpcClientMessage<IMessage>> _messageResponse;
-        public IObservable<IRpcClientMessage<IMessage>> MessageResponseStream { private set; get; }
 
         /// <summary>Initializes a new instance of the <see cref="TransferFileBytesResponseObserver"/> class.</summary>
         /// <param name="logger">The logger.</param>
         public TransferFileBytesResponseObserver(ILogger logger) : base(logger) {
-            _messageResponse = new ReplaySubject<IRpcClientMessage<IMessage>>(1);
-            MessageResponseStream = _messageResponse.AsObservable();
+
         }
         
         /// <summary>
@@ -72,7 +68,7 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
             Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
             Guard.Argument(senderPeerIdentifier, nameof(senderPeerIdentifier)).NotNull();
 
-            _messageResponse.OnNext(new RpcClientMessage<IMessage>(transferFileBytesResponse, senderPeerIdentifier));
+            SendMessage(transferFileBytesResponse, senderPeerIdentifier);
 
             // Response for a node writing a chunk via bytes transfer.
             // Future logic if an error occurs via chunk transfer then preferably we want to stop file transfer

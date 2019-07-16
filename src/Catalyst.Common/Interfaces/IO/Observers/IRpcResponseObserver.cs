@@ -21,7 +21,6 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.Rpc.IO.Messaging.Dto;
 using Google.Protobuf;
 using System;

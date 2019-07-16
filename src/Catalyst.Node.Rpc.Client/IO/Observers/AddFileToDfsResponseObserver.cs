@@ -46,13 +46,8 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
     /// Add File to DFS Response handler
     /// </summary>
     /// <seealso cref="IRpcResponseObserver" />
-    public sealed class AddFileToDfsResponseObserver :
-        ResponseObserverBase<AddFileToDfsResponse>,
-        IRpcResponseObserver
+    public sealed class AddFileToDfsResponseObserver : RpcResponseObserver<AddFileToDfsResponse>
     {
-        private readonly ReplaySubject<IRpcClientMessage<IMessage>> _messageResponse;
-        public IObservable<IRpcClientMessage<IMessage>> MessageResponseStream { private set; get; }
-
         /// <summary>The upload file transfer factory</summary>
         private readonly IUploadFileTransferFactory _rpcFileTransferFactory;
 
@@ -68,8 +63,6 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
         {
             _userOutput = userOutput;
             _rpcFileTransferFactory = rpcFileTransferFactory;
-            _messageResponse = new ReplaySubject<IRpcClientMessage<IMessage>>(1);
-            MessageResponseStream = _messageResponse.AsObservable();
         }
 
         /// <summary>
@@ -110,7 +103,7 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
                 }
             }
 
-            _messageResponse.OnNext(new RpcClientMessage<IMessage>(addFileToDfsResponse, senderPeerIdentifier));
+            SendMessage(addFileToDfsResponse, senderPeerIdentifier);
         }
     }
 }

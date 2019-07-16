@@ -45,14 +45,9 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
     /// Handler responsible for handling the server's response for the GetVersion request.
     /// The handler reads the response's payload and formats it in user readable format and writes it to the console.
     /// </summary>
-    public sealed class GetVersionResponseObserver
-        : ResponseObserverBase<VersionResponse>,
-            IRpcResponseObserver
+    public sealed class GetVersionResponseObserver : RpcResponseObserver<VersionResponse>
     {
         private readonly IUserOutput _output;
-
-        private readonly ReplaySubject<IRpcClientMessage<IMessage>> _messageResponse;
-        public IObservable<IRpcClientMessage<IMessage>> MessageResponseStream { private set; get; }
 
         /// <summary>
         /// Handles the VersionResponse message sent from the <see>
@@ -67,8 +62,6 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
             : base(logger)
         {
             _output = output;
-            _messageResponse = new ReplaySubject<IRpcClientMessage<IMessage>>(1);
-            MessageResponseStream = _messageResponse.AsObservable();
         }
 
         /// <summary>
@@ -94,7 +87,7 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
                .Require(d => d.Version != null,
                     d => $"{nameof(versionResponse)} must have a valid Version.");
 
-            _messageResponse.OnNext(new RpcClientMessage<IMessage>(versionResponse, senderPeerIdentifier));
+            SendMessage(versionResponse, senderPeerIdentifier);
         }
     }
 }
