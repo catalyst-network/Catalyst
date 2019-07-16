@@ -22,30 +22,30 @@
 #endregion
 
 using System;
-using System.Collections.Concurrent;
+using System.Collections.Generic;
 using Catalyst.Common.Interfaces.P2P.Discovery;
 
 namespace Catalyst.Node.Core.P2P.Discovery
 {
     public sealed class HastingCareTaker : IHastingCareTaker
     {
-        public ConcurrentQueue<IHastingMemento> HastingMementoList { get; }
+        public Stack<IHastingMemento> HastingMementoList { get; }
 
         public HastingCareTaker()
         {
-            HastingMementoList = new ConcurrentQueue<IHastingMemento>();
+            HastingMementoList = new Stack<IHastingMemento>();
         }
 
         /// <inheritdoc />
         public void Add(IHastingMemento hastingMemento)
         {
-            HastingMementoList.Enqueue(hastingMemento);
+            HastingMementoList.Push(hastingMemento);
         }
 
         /// <inheritdoc />
         public IHastingMemento Get()
         {
-            if (HastingMementoList.TryDequeue(out var hastingMemento))
+            if (HastingMementoList.TryPop(out var hastingMemento))
             {
                 return hastingMemento;
             }

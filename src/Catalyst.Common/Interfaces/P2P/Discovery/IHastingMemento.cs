@@ -21,13 +21,13 @@
 
 #endregion
 
-using System.Collections.Concurrent;
+using System.Collections.Generic;
 
 namespace Catalyst.Common.Interfaces.P2P.Discovery
 {
     public interface IHastingMemento
     {
         IPeerIdentifier Peer { get; }
-        ConcurrentBag<IPeerIdentifier> Neighbours { get; }
+        IList<IPeerIdentifier> Neighbours { get; }
     }
 }

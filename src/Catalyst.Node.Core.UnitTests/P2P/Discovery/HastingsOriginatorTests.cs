@@ -22,6 +22,7 @@
 #endregion
 
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Linq;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.Discovery;
@@ -57,7 +58,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Discovery
         {
             var originator = new HastingsOriginator();
 
-            var state = new ConcurrentBag<IPeerIdentifier>
+            var state = new List<IPeerIdentifier>
             {
                 PeerIdentifierHelper.GetPeerIdentifier("peer-1")
             };

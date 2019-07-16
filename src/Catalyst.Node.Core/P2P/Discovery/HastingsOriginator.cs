@@ -21,8 +21,9 @@
 
 #endregion
 
-using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Threading;
+using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.Discovery;
 
@@ -30,24 +31,31 @@ namespace Catalyst.Node.Core.P2P.Discovery
 {
     public sealed class HastingsOriginator : IHastingsOriginator
     {
+        private IPeerIdentifier _peer;
         private int _unreachableNeighbour;
-        
-        public IPeerIdentifier Peer { get; set; }
-        public int ExpectedResponses { get; set; }
-        public ConcurrentBag<IPeerIdentifier> CurrentPeersNeighbours { get; set; }
-        
-        public int UnreachableNeighbour
-        {
-            get => _unreachableNeighbour;
-            private set => _unreachableNeighbour = value;
-        }
+        public int UnreachableNeighbour => _unreachableNeighbour;
+        public IList<IPeerIdentifier> CurrentPeersNeighbours { get; set; }
+        public KeyValuePair<ICorrelationId, IPeerIdentifier> ExpectedPnr { get; set; }
+        public IList<KeyValuePair<ICorrelationId, IPeerIdentifier>> ContactedNeighbours { get; private set; }
 
-        public HastingsOriginator()
+        /// <summary>
+        ///     if setting a new peer, clean counters
+        /// </summary>
+        public IPeerIdentifier Peer
         {
-            ExpectedResponses = 0;
-            _unreachableNeighbour = 0;
-            CurrentPeersNeighbours = new ConcurrentBag<IPeerIdentifier>();
+            get => _peer;
+            set
+            {
+                if (_peer != null)
+                {
+                    CleanUp();
+                }
+                
+                _peer = value;
+            }
         }
+        
+        public HastingsOriginator() { CleanUp(); }
 
         /// <inheritdoc />
         public IHastingMemento CreateMemento()
@@ -58,15 +66,25 @@ namespace Catalyst.Node.Core.P2P.Discovery
         /// <inheritdoc />
         public void SetMemento(IHastingMemento hastingMemento)
         {
-            ExpectedResponses = 0;
-            UnreachableNeighbour = 0;
             Peer = hastingMemento.Peer;
-            CurrentPeersNeighbours = new ConcurrentBag<IPeerIdentifier>(hastingMemento.Neighbours);
+            CurrentPeersNeighbours = new List<IPeerIdentifier>(hastingMemento.Neighbours);
         }
 
+        /// <inheritdoc />
         public void IncrementUnreachablePeer()
         {
             Interlocked.Increment(ref _unreachableNeighbour);
+        }
+
+        /// <summary>
+        ///     sets originator to default value
+        /// </summary>
+        private void CleanUp()
+        {
+            _unreachableNeighbour = 0;
+            CurrentPeersNeighbours = new List<IPeerIdentifier>();
+            ExpectedPnr = new KeyValuePair<ICorrelationId, IPeerIdentifier>();
+            ContactedNeighbours = new List<KeyValuePair<ICorrelationId, IPeerIdentifier>>();
         }
     }
 }

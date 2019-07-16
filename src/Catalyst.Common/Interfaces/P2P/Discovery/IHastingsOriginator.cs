@@ -21,30 +21,35 @@
 
 #endregion
 
-using System.Collections.Concurrent;
+using System.Collections.Generic;
+using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 
 namespace Catalyst.Common.Interfaces.P2P.Discovery
 {
     public interface IHastingsOriginator
     {
-        IPeerIdentifier Peer { get; set; }
-        ConcurrentBag<IPeerIdentifier> CurrentPeersNeighbours { get; }
-
-        int ExpectedResponses { get; set; }
         int UnreachableNeighbour { get; }
+        IPeerIdentifier Peer { get; set; }
+        IList<IPeerIdentifier> CurrentPeersNeighbours { get; }
+        KeyValuePair<ICorrelationId, IPeerIdentifier> ExpectedPnr { get; set; }
+        IList<KeyValuePair<ICorrelationId, IPeerIdentifier>> ContactedNeighbours { get; }
+        
+        /// <summary>
+        ///     called when ContactedNeighbour doesn't respond
+        /// </summary>
+        /// <returns></returns>
+        void IncrementUnreachablePeer();
 
         /// <summary>
         ///     creates a memento from current state
         /// </summary>
         /// <returns></returns>
         IHastingMemento CreateMemento();
-
+        
         /// <summary>
         ///     Restores the state from a memento
         /// </summary>
         /// <param name="hastingMemento"></param>
         void SetMemento(IHastingMemento hastingMemento);
-
-        void IncrementUnreachablePeer();
     }
 }

@@ -23,6 +23,7 @@
 
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 
 namespace Catalyst.Common.Interfaces.P2P.Discovery
 {
@@ -33,7 +34,7 @@ namespace Catalyst.Common.Interfaces.P2P.Discovery
     /// </summary>
     public interface IHastingCareTaker
     {
-        ConcurrentQueue<IHastingMemento> HastingMementoList { get; }
+        Stack<IHastingMemento> HastingMementoList { get; }
 
         /// <summary>
         ///     Adds a new state from the walk to the queue

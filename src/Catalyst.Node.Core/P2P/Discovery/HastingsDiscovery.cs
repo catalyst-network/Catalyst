@@ -46,6 +46,7 @@ using Catalyst.Protocol.IPPN;
 using Nito.Comparers.Linq;
 using Serilog;
 using SharpRepository.Repository;
+using SharpRepository.Repository.Caching;
 
 namespace Catalyst.Node.Core.P2P.Discovery
 {
@@ -63,13 +64,12 @@ namespace Catalyst.Node.Core.P2P.Discovery
         public readonly IHastingsOriginator StateCandidate;
         private readonly IHastingCareTaker _hastingCareTaker;
         private readonly IRepository<Peer> _peerRepository;
-        public readonly IList<KeyValuePair<ICorrelationId, IPeerIdentifier>> Cache;
         private readonly ICancellationTokenProvider _cancellationTokenProvider;
         private readonly IDisposable _evictionSubscription;
 
         public IObservable<IPeerClientMessageDto> DiscoveryStream { get; private set; }
 
-        static readonly SemaphoreSlim SemaphoreSlim = new SemaphoreSlim(1, 1);
+        private static readonly SemaphoreSlim SemaphoreSlim = new SemaphoreSlim(1, 1);
 
         public HastingsDiscovery(ILogger logger,
             IRepository<Peer> peerRepository,
@@ -80,47 +80,29 @@ namespace Catalyst.Node.Core.P2P.Discovery
             IPeerMessageCorrelationManager peerMessageCorrelationManager,
             ICancellationTokenProvider cancellationTokenProvider,
             IEnumerable<IPeerClientObservable> peerClientObservables,
-            int peerDiscoveryBurnIn = 10) : this(logger,
-            peerRepository,
-            dns,
-            peerSettings,
-            peerClient,
-            dtoFactory,
-            peerMessageCorrelationManager,
-            cancellationTokenProvider,
-            peerClientObservables,
-            new List<KeyValuePair<ICorrelationId, IPeerIdentifier>>(),
-            peerDiscoveryBurnIn
-        ) { }
-            
-        public HastingsDiscovery(ILogger logger,
-            IRepository<Peer> peerRepository,
-            IDns dns,
-            IPeerSettings peerSettings,
-            IPeerClient peerClient,
-            IDtoFactory dtoFactory,
-            IPeerMessageCorrelationManager peerMessageCorrelationManager,
-            ICancellationTokenProvider cancellationTokenProvider,
-            IEnumerable<IPeerClientObservable> peerClientObservables,
-            IList<KeyValuePair<ICorrelationId, IPeerIdentifier>> cache,
             int peerDiscoveryBurnIn = 10,
-            IHastingCareTaker hastingCareTaker = default)
-        
+            IHastingCareTaker hastingCareTaker = default,
+            IHastingsOriginator stateCandidate = default,
+            IHastingsOriginator state = default)
         {
             Dns = dns;
-            Cache = cache;
             Logger = logger;
             PeerClient = peerClient;
             DtoFactory = dtoFactory;
-            var peerSettings1 = peerSettings;
             _peerRepository = peerRepository;
             _discoveredPeerInCurrentWalk = 0;
             _peerDiscoveryBurnIn = peerDiscoveryBurnIn;
-            
-            _hastingCareTaker = hastingCareTaker ?? new HastingCareTaker();
-
             _cancellationTokenProvider = cancellationTokenProvider;
-            _ownNode = new PeerIdentifier(peerSettings1, new PeerIdClientId("AC")); // this needs to be changed
+            _hastingCareTaker = hastingCareTaker ?? new HastingCareTaker();
+            _ownNode = new PeerIdentifier(peerSettings, new PeerIdClientId("AC")); // this needs to be changed
+            
+            // build the initial stateCandidate for walk,
+            // which is our node and seed nodes
+            StateCandidate = stateCandidate ?? new HastingsOriginator
+            {
+                Peer = _ownNode,
+                CurrentPeersNeighbours = new List<IPeerIdentifier>(Dns.GetSeedNodesFromDns(peerSettings.SeedServers))
+            };
             
             // create an empty stream for discovery messages
             DiscoveryStream = Observable.Empty<IPeerClientMessageDto>();
@@ -148,151 +130,235 @@ namespace Catalyst.Node.Core.P2P.Discovery
                .SubscribeOn(Scheduler.CurrentThread)
                .Subscribe(OnPeerNeighbourResponse);
 
-            // build the initial state of walk, which is our node and seed nodes
-            StateCandidate = new HastingsOriginator
-            {
-                Peer = _ownNode,
-                CurrentPeersNeighbours = new ConcurrentBag<IPeerIdentifier>(
-                    Dns.GetSeedNodesFromDns(peerSettings1.SeedServers)
-                       .ToList()
-                )
-            };
-            
-            WalkForward();
-
             // subscribe to evicted peer messages, so we can cross
             // reference them with discovery messages we sent
             _evictionSubscription = peerMessageCorrelationManager
                .EvictionEventStream
                .SubscribeOn(TaskPoolScheduler.Default)
-               .Subscribe(onNext: EvictionCallback);
+               .Subscribe(EvictionCallback);
 
+            // store initial state to start discovery.
+            if (state == default)
+            {
+                // state should be default for normal instantiation
+                // create empty state and start walk
+                State = new HastingsOriginator();
+                WalkForward();
+            }
+            else
+            {
+                // providing a known state for testing
+                State = state;
+            }
+            
+            // start discovery task, should run indefinitely 
             Task.Run(async () =>
             {
                 await DiscoveryAsync();
             });
         }
 
+        /// <summary>
+        ///     Discovery mechanism for Hasting metropolis walk.
+        /// </summary>
+        /// <returns></returns>
         public async Task DiscoveryAsync()
         {
             do
             {
+                // only let one thread in at a time
                 await SemaphoreSlim.WaitAsync();
 
                 try
                 {
-                    await WaitUntil(() => (
-                            StateCandidate.UnreachableNeighbour + StateCandidate.CurrentPeersNeighbours.ToList().Count)
-                       .Equals(State.ExpectedResponses)
-                    );
+                    // spins until our expected result equals found and unreachable peers for this step.
+                    await WaitUntil(HasValidCandidate, 1000, -1);
 
+                    // condition met so walk forward
                     WalkForward();
                 }
                 catch (Exception e)
                 {
+                    // either an exception was thrown for un-known reason or the await on the condition timed out,
+                    // if so this step can't be completed so transition back.
                     Logger.Error(e, e.Message);
                     WalkBack();
                 }
                 finally
                 {
+                    // step out lock block
                     SemaphoreSlim.Release();
                 }
+                
+                // discovery should always run
             } while (!_cancellationTokenProvider.HasTokenCancelled());
         }
 
+        private bool HasValidCandidate()
+        {
+            lock (StateCandidate)
+            {
+                if (StateCandidate.ContactedNeighbours.Count < 1)
+                {
+                    return false;
+                }
+                
+                return StateCandidate.ContactedNeighbours.Count
+                   .Equals(StateCandidate.UnreachableNeighbour + StateCandidate.CurrentPeersNeighbours.Count);
+            }
+        }
+
+        /// <summary>
+        ///     Transitions StateCandidate to state,
+        ///     then start to try building next StateCandidate.
+        /// </summary>
         private void WalkForward()
         {
-            StateCandidate.CurrentPeersNeighbours
-               .ToList()
-               .ForEach(StorePeer);
+            lock (State) 
+            lock (StateCandidate)
+            {
+                // store discovered peers
+                StateCandidate.CurrentPeersNeighbours
+                   .ToList()
+                   .ForEach(StorePeer);
 
-            var newState = StateCandidate.CreateMemento();
-            
-            _hastingCareTaker.Add(newState);
-            
-            State.SetMemento(newState);
+                // create memento of state
+                var newState = StateCandidate.CreateMemento();
 
-            StateCandidate.Peer = State.CurrentPeersNeighbours.RandomElement();
+                // store state with caretaker
+                _hastingCareTaker.Add(newState);
             
-            var peerNeighbourRequestDto = DtoFactory.GetDto(new PeerNeighborsRequest(),
-                _ownNode,
-                StateCandidate.Peer
-            );
+                // transition to valid new state
+                State.SetMemento(newState);
 
-            Cache.Add(new KeyValuePair<ICorrelationId, IPeerIdentifier>(peerNeighbourRequestDto.CorrelationId, StateCandidate.Peer));
+                // continue walk by proposing next degree.
+                StateCandidate.Peer = State.CurrentPeersNeighbours.RandomElement();
+            
+                var peerNeighbourRequestDto = DtoFactory.GetDto(new PeerNeighborsRequest(),
+                    _ownNode,
+                    StateCandidate.Peer
+                );
+
+                // make discovery wait for this pnr response
+                StateCandidate.ExpectedPnr = new KeyValuePair<ICorrelationId, IPeerIdentifier>(peerNeighbourRequestDto.CorrelationId, StateCandidate.Peer);
                     
-            PeerClient.SendMessage(peerNeighbourRequestDto);
+                PeerClient.SendMessage(peerNeighbourRequestDto);                
+            }
         }
         
+        /// <summary>
+        ///     Transition back to last state
+        /// </summary>
         private void WalkBack()
         {
-            State.SetMemento(_hastingCareTaker.Get());
-            StateCandidate.CurrentPeersNeighbours.Clear();
-            StateCandidate.Peer = State.CurrentPeersNeighbours.RandomElement();
+            lock (State)
+            lock (StateCandidate)
+            {
+                // transitions to last state
+                State.SetMemento(_hastingCareTaker.Get());
+
+                // continues walk by proposing a new degree
+                StateCandidate.Peer = State.CurrentPeersNeighbours.RandomElement();
+
+                var peerNeighbourRequestDto = DtoFactory.GetDto(new PeerNeighborsRequest(),
+                    _ownNode,
+                    StateCandidate.Peer
+                );
+                
+                PeerClient.SendMessage(peerNeighbourRequestDto);   
+
+                // make discovery wait for this pnr response
+                StateCandidate.ExpectedPnr = new KeyValuePair<ICorrelationId, IPeerIdentifier>(peerNeighbourRequestDto.CorrelationId, StateCandidate.Peer);
+            }
         }
 
+        /// <summary>
+        ///     OnNext method for _evictionSubscription
+        ///     handles the discovery messages to see if there of interest to us.
+        /// </summary>
+        /// <param name="item"></param>
         private void EvictionCallback(KeyValuePair<ICorrelationId, IPeerIdentifier> item)
         {
-            if (StateCandidate.Peer.Equals(item.Value))
+            lock (StateCandidate)
             {
-                // state candidate give any neighbours so go back a step.
-                WalkBack();
-            }
-            else if (Cache.Contains(new KeyValuePair<ICorrelationId, IPeerIdentifier>(item.Key, item.Value)))
-            {
-                // peer hasn't responded to ping so assume un-responsive.
-                StateCandidate.IncrementUnreachablePeer();
-                Cache.Remove(new KeyValuePair<ICorrelationId, IPeerIdentifier>(item.Key, item.Value));
+                if (item.Value.Equals(null) || item.Key.Equals(null))
+                {
+                    return;
+                }
+                
+                if (StateCandidate.ExpectedPnr.Equals(item))
+                {
+                    // state candidate didn't give any neighbours so go back a step.
+                    WalkBack();
+                }
+                else if (StateCandidate.ContactedNeighbours.Contains(item))
+                {
+                    // peer hasn't responded to ping so assume un-responsive.
+                    StateCandidate.IncrementUnreachablePeer();
+                }
             }
         }
       
+        /// <summary>
+        ///     OnNext for PingResponse discovery messages that are of interest to us.
+        ///     If it's not continue, if expecting this message it means a potential neighbour is reachable,
+        ///     and should be added to the next state candidate.
+        /// </summary>
+        /// <param name="obj"></param>
         private void OnPingResponse(IPeerClientMessageDto obj)
         {
             Logger.Debug("OnPingResponse");
             
-            if (!Cache.ToList().Contains(new KeyValuePair<ICorrelationId, IPeerIdentifier>(obj.CorrelationId, obj.Sender)))
+            lock (StateCandidate)
             {
-                return;
-            }
+                if (!StateCandidate.ContactedNeighbours.Contains(new KeyValuePair<ICorrelationId, IPeerIdentifier>(obj.CorrelationId, obj.Sender)))
+                {
+                    // a pingResponse that isn't known to discovery
+                    return;
+                }
 
-            Cache.Remove(new KeyValuePair<ICorrelationId, IPeerIdentifier>(obj.CorrelationId, obj.Sender));
-            StateCandidate.CurrentPeersNeighbours.Add(obj.Sender);
+                StateCandidate.CurrentPeersNeighbours.Add(obj.Sender);
+            }
         }
 
         private void OnPeerNeighbourResponse(IPeerClientMessageDto obj)
         {
             Logger.Debug("OnPeerNeighbourResponse");
-
-            var currentStepPnr = new KeyValuePair<ICorrelationId, IPeerIdentifier>(obj.CorrelationId, obj.Sender);
             
-            if (!Cache.Contains(currentStepPnr))
+            lock (StateCandidate)
             {
-                return;
-            }
+                if (!StateCandidate.ExpectedPnr.Equals(new KeyValuePair<ICorrelationId, IPeerIdentifier>(obj.CorrelationId, obj.Sender)))
+                {
+                    // we shouldn't get here as we should always known about a pnr,
+                    // as only this class produces them
+                    throw new ArgumentException();
+                }
 
-            if (!Cache.Remove(currentStepPnr))
-            {
-                return;
-            }
-
-            var peerNeighbours = (PeerNeighborsResponse) obj.Message;
+                var peerNeighbours = (PeerNeighborsResponse) obj.Message;
             
-            peerNeighbours.Peers.ToList().ForEach(p =>
-            {
-                var pingRequestDto = DtoFactory.GetDto(new PingRequest(),
-                    _ownNode,
-                    StateCandidate.Peer
-                );
+                // state candidate provided us a list of neighbours,
+                // so now check they are reachable
+                peerNeighbours.Peers.ToList().ForEach(p =>
+                {
+                    var pingRequestDto = DtoFactory.GetDto(new PingRequest(),
+                        _ownNode,
+                        new PeerIdentifier(p)
+                    );
 
-                Cache.Add(new KeyValuePair<ICorrelationId, IPeerIdentifier>(
-                    pingRequestDto.CorrelationId,
-                    pingRequestDto.RecipientPeerIdentifier)
-                );
+                    var req = new KeyValuePair<ICorrelationId, IPeerIdentifier>(
+                        pingRequestDto.CorrelationId,
+                        pingRequestDto.RecipientPeerIdentifier);
+
+                    // make discovery aware of sent ping
+                    StateCandidate.ContactedNeighbours.Add(req);
                 
-                PeerClient.SendMessage(pingRequestDto);
-            });
-
-            StateCandidate.ExpectedResponses = peerNeighbours.Peers.Count;
+                    PeerClient.SendMessage(pingRequestDto);
+                    
+                    // our total expected responses should be same as number of pings sent out,
+                    // potential neighbours, can either send response, or we will see them evicted from cache
+                    StateCandidate.ContactedNeighbours.Add(req);
+                });
+            }
         }
 
         /// <summary>
@@ -302,17 +368,15 @@ namespace Catalyst.Node.Core.P2P.Discovery
         /// <param name="frequency">The frequency at which the condition will be checked.</param>
         /// <param name="timeout">The timeout in milliseconds.</param>
         /// <returns></returns>
-        private static async Task WaitUntil(Func<bool> condition, int frequency = 1000, int timeout = -1)
+        private static async Task WaitUntil(Func<bool> condition, int frequency = 25, int timeout = -1)
         {
             var waitTask = Task.Run(async () =>
             {
-                while (!condition())
-                {
-                    await Task.Delay(frequency);
-                }
+                while (!condition()) await Task.Delay(frequency);
             });
 
-            if (waitTask != await Task.WhenAny(waitTask, Task.Delay(timeout)))
+            if (waitTask != await Task.WhenAny(waitTask,
+                Task.Delay(timeout)))
             {
                 throw new TimeoutException();
             }
@@ -327,6 +391,7 @@ namespace Catalyst.Node.Core.P2P.Discovery
         {
             if (_discoveredPeerInCurrentWalk < _peerDiscoveryBurnIn)
             {
+                // if where not past our burn in phase just continue.
                 return;
             }
             
