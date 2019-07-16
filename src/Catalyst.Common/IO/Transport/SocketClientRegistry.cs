@@ -27,52 +27,24 @@ using System.Collections.Generic;
 using System.Net;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
+using Catalyst.Common.Interfaces.IO.Observables;
 using Catalyst.Common.Interfaces.IO.Transport;
+using Catalyst.Common.IO.Events;
 using Dawn;
 
 namespace Catalyst.Common.IO.Transport
 {
-    public interface iEventType
-    {
-
-    }
-
-    public interface iObservableEvent
-    {
-
-    }
-
-    public class ObservableEvent<T> where T : iObservableEvent
-    {
-
-    }
-
-    public class SocketClientRegistryEvent : iObservableEvent
-    {
-
-    }
-
-    public class SocketClientRegistryClientAdded : SocketClientRegistryEvent
-    {
-        public int SocketHashCode { set; get; }
-    }
-
-    public class SocketClientRegistryClientRemoved : SocketClientRegistryEvent
-    {
-        public int SocketHashCode { set; get; }
-    }
-
     public sealed class SocketClientRegistry<TSocketChannel>
         : ISocketClientRegistry<TSocketChannel>
         where TSocketChannel : class, ISocketClient
     {
-        public IObservable<SocketClientRegistryEvent> EventStream { private set;  get; }
-        private readonly ReplaySubject<SocketClientRegistryEvent> _eventReplySubject;
+        public IObservable<IObservableEvent> EventStream { private set;  get; }
+        private readonly ReplaySubject<IObservableEvent> _eventReplySubject;
         public IDictionary<int, TSocketChannel> Registry { get; }
 
         public SocketClientRegistry()
         {
-            _eventReplySubject = new ReplaySubject<SocketClientRegistryEvent>(1);
+            _eventReplySubject = new ReplaySubject<IObservableEvent>(1);
             EventStream = _eventReplySubject.AsObservable();
 
             Registry = new ConcurrentDictionary<int, TSocketChannel>();

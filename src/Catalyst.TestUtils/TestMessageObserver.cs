@@ -46,16 +46,15 @@ namespace Catalyst.TestUtils
         private readonly ReplaySubject<IRPCClientMessageDto<IMessage>> _messageResponse;
         public IObservable<IRPCClientMessageDto<IMessage>> MessageResponseStream { private set; get; }
 
-
         private readonly string _filterMessageType;
+
         public IObserver<TProto> SubstituteObserver { get; }
         public IPeerIdentifier PeerIdentifier { get; }
         
-        public TestMessageObserver(ILogger logger) : base(logger)
+        public TestMessageObserver(ILogger logger) : base(logger, typeof(TProto).ShortenedProtoFullName())
         {
             SubstituteObserver = Substitute.For<IObserver<TProto>>();
             PeerIdentifier = Substitute.For<IPeerIdentifier>();
-            _filterMessageType = typeof(TProto).ShortenedProtoFullName();
         }
 
         public override void OnError(Exception exception) { SubstituteObserver.OnError(exception); }
@@ -76,20 +75,6 @@ namespace Catalyst.TestUtils
         }
                 
         public override void OnCompleted() { SubstituteObserver.OnCompleted(); }
-
-        public override void StartObserving(IObservable<IObserverDto<ProtocolMessage>> messageStream)
-        {
-            if (MessageSubscription != null)
-            {
-                throw new ReadOnlyException($"{GetType()} is already listening to a message stream");
-            }
-
-            MessageSubscription = messageStream
-               .Where(m => m.Payload?.TypeUrl != null 
-                 && m.Payload.TypeUrl == _filterMessageType)
-               .SubscribeOn(TaskPoolScheduler.Default)
-               .Subscribe(OnNext, OnError, OnCompleted);
-        }
         
         public void SendChannelContextResponse(IMessageDto<TProto> messageDto) { throw new NotImplementedException(); }
     }
