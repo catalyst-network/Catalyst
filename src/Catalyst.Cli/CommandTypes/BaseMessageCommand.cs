@@ -28,14 +28,13 @@ using Catalyst.Common.Interfaces.Cli.Options;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.Interfaces.Rpc.IO.Messaging.Dto;
-using Catalyst.Common.IO.Transport;
+using Catalyst.Common.IO.Events;
 using Catalyst.Common.P2P;
 using Google.Protobuf;
 using Newtonsoft.Json;
 using System;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
-using System.Threading.Tasks;
 
 namespace Catalyst.Cli.CommandTypes
 {

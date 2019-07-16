@@ -21,8 +21,7 @@
 
 #endregion
 
-using Autofac;
-using Catalyst.Common.Interfaces.Cli;
+using Catalyst.Protocol.Rpc.Node;
 using FluentAssertions;
 using Xunit;
 using Xunit.Abstractions;
@@ -31,26 +30,14 @@ namespace Catalyst.Cli.IntegrationTests.Commands
 {
     public sealed class GetMempoolCommandTest : CliCommandTestBase
     {
-        //This test is the base to all other tests.  If the Cli cannot connect to a node than all other commands
-        //will fail
         public GetMempoolCommandTest(ITestOutputHelper output) : base(output) { }
-        
-        [Fact] 
+
+        [Fact]
         public void Cli_Can_Request_Node_Mempool()
         {
-            using (var container = ContainerBuilder.Build())
-            {
-                using (container.BeginLifetimeScope(CurrentTestName))
-                {
-                    var shell = container.Resolve<ICatalystCli>();
-
-                    var hasConnected = shell.ParseCommand("connect", "-n", "node1");
-                    hasConnected.Should().BeTrue();
-                    
-                    var result = shell.ParseCommand("getmempool", "-n", "node1");
-                    result.Should().BeTrue();
-                }   
-            }
+            var result = Shell.ParseCommand("getmempool", NodeArgumentPrefix, ServerNodeName);
+            result.Should().BeTrue();
+            AssertSentMessage<GetMempoolRequest>();
         }
     }
 }

@@ -56,7 +56,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Transport.Channels
             public TestNodeRpcClientChannelFactory(IKeySigner keySigner, IRpcMessageCorrelationManager correlationManager, IPeerIdValidator peerIdValidator)
                 : base(keySigner, correlationManager, peerIdValidator)
             {
-                _handlers = Handlers;
+                _handlers = HandlerGenerationFunction();
             }
 
             public IReadOnlyCollection<IChannelHandler> InheritedHandlers => _handlers;

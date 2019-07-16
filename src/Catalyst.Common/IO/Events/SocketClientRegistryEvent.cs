@@ -21,24 +21,9 @@
 
 #endregion
 
-using Catalyst.Protocol.Rpc.Node;
-using FluentAssertions;
-using Xunit;
-using Xunit.Abstractions;
+using Catalyst.Common.Interfaces.IO.Observables;
 
-namespace Catalyst.Cli.IntegrationTests.Commands
+namespace Catalyst.Common.IO.Events
 {
-    public sealed class PeerReputationCommandTest : CliCommandTestBase
-    {
-        public PeerReputationCommandTest(ITestOutputHelper output) : base(output) { }
-
-        [Fact]
-        public void Cli_Can_Send_Peer_Reputation_Request()
-        {
-            var result = Shell.ParseCommand(
-                "peerrep", NodeArgumentPrefix, ServerNodeName, "-l", "127.0.0.1", "-p", "fake_public_key");
-            result.Should().BeTrue();
-            AssertSentMessage<GetPeerReputationRequest>();
-        }
-    }
+    public class SocketClientRegistryEvent : IObservableEvent { }
 }
