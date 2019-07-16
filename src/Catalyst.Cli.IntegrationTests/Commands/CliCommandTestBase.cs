@@ -45,7 +45,7 @@ namespace Catalyst.Cli.IntegrationTests.Commands
     /// This test is the base to all other tests.  If the Cli cannot connect to a node then all other commands
     /// will fail
     /// </summary>
-    public abstract class CliCommandTestBase : ConfigFileBasedTest
+    public abstract class CliCommandTestsBase : ConfigFileBasedTest
     {
         private protected static readonly string ServerNodeName = "node1";
         private protected static readonly string NodeArgumentPrefix = "-n";
@@ -54,7 +54,7 @@ namespace Catalyst.Cli.IntegrationTests.Commands
         protected ICatalystCli Shell;
         private IContainer _container;
 
-        protected CliCommandTestBase(ITestOutputHelper output) : base(output)
+        protected CliCommandTestsBase(ITestOutputHelper output) : base(output)
         {
             var config = new ConfigurationBuilder()
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ShellComponentsJsonConfigFile))
