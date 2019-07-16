@@ -97,7 +97,8 @@ namespace Catalyst.Common.UnitTests.Rpc.IO.Messaging.Correlation
 
             var evictionObserver = Substitute.For<IObserver<ICacheEvictionEvent<ProtocolMessage>>>();
             
-            using (CorrelationManager.EvictionEvents.SubscribeOn(TaskPoolScheduler.Default)
+            using (CorrelationManager.EvictionEvents
+               .SubscribeOn(NewThreadScheduler.Default)
                .Subscribe(evictionObserver.OnNext))
             {
                 requests.ForEach(r => CorrelationManager.AddPendingRequest(r));
@@ -110,8 +111,8 @@ namespace Catalyst.Common.UnitTests.Rpc.IO.Messaging.Correlation
                        .BeFalse("the changeToken has simulated a TTL expiry");
                 }
 
-                await TaskHelper.WaitForAsync(() => evictionObserver.ReceivedCalls().Any(),
-                    TimeSpan.FromMilliseconds(2000));
+                await TaskHelper.WaitForAsync(() => evictionObserver.ReceivedCalls().ToList().Count >= requestCount,
+                    TimeSpan.FromMilliseconds(5000)).ConfigureAwait(false);
                 
                 evictionObserver.Received(requestCount).OnNext(Arg.Any<ICacheEvictionEvent<ProtocolMessage>>());
             }
