@@ -21,18 +21,24 @@
 
 #endregion
 
-using System;
+using Catalyst.Protocol.Rpc.Node;
+using FluentAssertions;
+using Xunit;
+using Xunit.Abstractions;
 
-namespace Catalyst.Common.Interfaces.IO.Messaging.Correlation
+namespace Catalyst.Cli.IntegrationTests.Commands
 {
-    /// <summary>
-    ///     Provides a CorrelationId type for easy reference to what the Guid is for and mocking
-    /// </summary>
-    public interface ICorrelationId : IEquatable<ICorrelationId>
+    public sealed class MessageSignCommandTests : CliCommandTestsBase
     {
-        /// <summary>
-        ///     The Guid underpinning that ICorrelationId
-        /// </summary>
-        Guid Id { get; }
+        public MessageSignCommandTests(ITestOutputHelper output) : base(output) { }
+
+        [Fact]
+        public void Cli_Can_Request_Node_To_Sign_A_Message()
+        {
+            var result = Shell.ParseCommand("sign", "-m", "test message", NodeArgumentPrefix, ServerNodeName);
+            result.Should().BeTrue();
+
+            AssertSentMessageAndGetMessageContent<SignMessageRequest>();
+        }
     }
 }

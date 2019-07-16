@@ -21,18 +21,27 @@
 
 #endregion
 
-using System;
+using FluentAssertions;
+using Xunit;
+using Xunit.Abstractions;
 
-namespace Catalyst.Common.Interfaces.IO.Messaging.Correlation
+namespace Catalyst.Cli.IntegrationTests.Commands
 {
-    /// <summary>
-    ///     Provides a CorrelationId type for easy reference to what the Guid is for and mocking
-    /// </summary>
-    public interface ICorrelationId : IEquatable<ICorrelationId>
+    public sealed class ConnectNodeTests : CliCommandTestsBase
     {
-        /// <summary>
-        ///     The Guid underpinning that ICorrelationId
-        /// </summary>
-        Guid Id { get; }
+        public ConnectNodeTests(ITestOutputHelper output) : base(output) { }
+
+        [Fact]
+        public void Cli_Can_Handle_Multiple_Connection_Attempts()
+        {
+            for (var i = 0; i < 10; i++)
+            {
+                var canConnect = Shell.ParseCommand("connect", NodeArgumentPrefix, ServerNodeName);
+                canConnect.Should().BeTrue();
+
+                var disconnected = Shell.ParseCommand("disconnect", NodeArgumentPrefix, ServerNodeName);
+                disconnected.Should().BeTrue();
+            }
+        }
     }
 }

@@ -21,18 +21,25 @@
 
 #endregion
 
-using System;
+using Catalyst.Protocol.Rpc.Node;
+using FluentAssertions;
+using Xunit;
+using Xunit.Abstractions;
 
-namespace Catalyst.Common.Interfaces.IO.Messaging.Correlation
+namespace Catalyst.Cli.IntegrationTests.Commands
 {
-    /// <summary>
-    ///     Provides a CorrelationId type for easy reference to what the Guid is for and mocking
-    /// </summary>
-    public interface ICorrelationId : IEquatable<ICorrelationId>
+    public sealed class PeerReputationCommandTests : CliCommandTestsBase
     {
-        /// <summary>
-        ///     The Guid underpinning that ICorrelationId
-        /// </summary>
-        Guid Id { get; }
+        public PeerReputationCommandTests(ITestOutputHelper output) : base(output) { }
+
+        [Fact]
+        public void Cli_Can_Send_Peer_Reputation_Request()
+        {
+            var result = Shell.ParseCommand(
+                "peerrep", NodeArgumentPrefix, ServerNodeName, "-l", "127.0.0.1", "-p", "fake_public_key");
+            result.Should().BeTrue();
+
+            AssertSentMessageAndGetMessageContent<GetPeerReputationRequest>();
+        }
     }
 }

@@ -21,18 +21,25 @@
 
 #endregion
 
-using System;
+using Catalyst.Protocol.Rpc.Node;
+using FluentAssertions;
+using Xunit;
+using Xunit.Abstractions;
 
-namespace Catalyst.Common.Interfaces.IO.Messaging.Correlation
+namespace Catalyst.Cli.IntegrationTests.Commands
 {
-    /// <summary>
-    ///     Provides a CorrelationId type for easy reference to what the Guid is for and mocking
-    /// </summary>
-    public interface ICorrelationId : IEquatable<ICorrelationId>
+    public sealed class MessageVerifyCommandTests : CliCommandTestsBase
     {
-        /// <summary>
-        ///     The Guid underpinning that ICorrelationId
-        /// </summary>
-        Guid Id { get; }
+        public MessageVerifyCommandTests(ITestOutputHelper output) : base(output) { }
+
+        [Fact]
+        public void Cli_Can_Verify_Message()
+        {
+            var result = Shell.ParseCommand(
+                "verify", "-m", "test message", "-k", "public_key", "-s", "signature", NodeArgumentPrefix, ServerNodeName);
+            result.Should().BeTrue();
+
+            AssertSentMessageAndGetMessageContent<VerifyMessageRequest>();
+        }
     }
 }

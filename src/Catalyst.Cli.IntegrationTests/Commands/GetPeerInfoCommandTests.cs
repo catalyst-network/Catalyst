@@ -30,7 +30,7 @@ using Xunit.Abstractions;
 
 namespace Catalyst.Cli.IntegrationTests.Commands
 {
-    public sealed class GetPeerInfoCommandTests : CliCommandTestBase
+    public sealed class GetPeerInfoCommandTests : CliCommandTestsBase
     {
         public GetPeerInfoCommandTests(ITestOutputHelper output) : base(output) { }
 
