@@ -64,7 +64,7 @@ namespace Catalyst.Common.Modules.KeySigner
         /// <inheritdoc/>
         public bool Verify(ISignature signature, byte[] message)
         {
-            return /*_cryptoContext.Verify(signature, message)*/ true;
+            return _cryptoContext.Verify(signature, message);
         }
 
         /// <inheritdoc/>
