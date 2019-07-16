@@ -80,7 +80,9 @@ namespace Catalyst.Node.Core.P2P.IO.Messaging.Correlation
                 );
                 return false;
             }
-            
+
+            ValidateResponseType(response, message);
+
             Logger.Debug($"{response.CorrelationId} message found");
             _reputationEvent.OnNext(new PeerReputationChange(message.Recipient,
                 ReputationEvents.ResponseReceived)

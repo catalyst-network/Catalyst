@@ -24,6 +24,7 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.Rpc.IO.Messaging.Correlation;
 using Catalyst.Common.Rpc.IO.Messaging.Correlation;
@@ -31,7 +32,9 @@ using Catalyst.Common.UnitTests.IO.Messaging.Correlation;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
+using FluentAssertions;
 using NSubstitute;
+using Xunit;
 using Xunit.Abstractions;
 
 namespace Catalyst.Common.UnitTests.Rpc.IO.Messaging.Correlation
@@ -46,6 +49,18 @@ namespace Catalyst.Common.UnitTests.Rpc.IO.Messaging.Correlation
             );
 
             PrepareCacheWithPendingRequests<GetInfoRequest>();
+        }
+
+        [Fact]
+        public void TryMatchResponseAsync_Should_Match_Existing_Records_With_Matching_Correlation_Id()
+        {
+            TryMatchResponseAsync_Should_Match_Existing_Records_With_Matching_Correlation_Id<GetInfoResponse>();
+        }
+
+        [Fact]
+        public void TryMatchResponseAsync_Should_Not_Match_Existing_Records_With_Non_Matching_Correlation_Id()
+        {
+            TryMatchResponseAsync_Should_Not_Match_Existing_Records_With_Non_Matching_Correlation_Id<GetInfoResponse>();
         }
 
         protected override async Task CheckCacheEntriesCallback()

@@ -74,6 +74,18 @@ namespace Catalyst.Node.Core.UnitTests.P2P.IO.Messaging.Correlation
         }
 
         [Fact]
+        public void TryMatchResponseAsync_Should_Match_Existing_Records_With_Matching_Correlation_Id()
+        {
+            TryMatchResponseAsync_Should_Match_Existing_Records_With_Matching_Correlation_Id<PingResponse>();
+        }
+
+        [Fact]
+        public void TryMatchResponseAsync_Should_Not_Match_Existing_Records_With_Non_Matching_Correlation_Id()
+        {
+            TryMatchResponseAsync_Should_Not_Match_Existing_Records_With_Non_Matching_Correlation_Id<PingResponse>();
+        }
+
+        [Fact]
         public void TryMatchResponseAsync_when_matching_should_increase_reputation()
         {
             var reputationBefore = _reputationByPeerIdentifier[PeerIds[1]];
