@@ -44,12 +44,8 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
     /// The handler reads the response's payload and formats it in user readable format and writes it to the console.
     /// </summary>
     public sealed class GetMempoolResponseObserver
-        : ResponseObserverBase<GetMempoolResponse>,
-            IRpcResponseObserver
+        : RpcResponseObserver<GetMempoolResponse>
     {
-        private readonly ReplaySubject<IRpcClientMessage<IMessage>> _messageResponse;
-        public IObservable<IRpcClientMessage<IMessage>> MessageResponseStream { private set; get; }
-
         private readonly IUserOutput _output;
 
         /// <summary>
@@ -65,8 +61,6 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
             : base(logger)
         {
             _output = output;
-            _messageResponse = new ReplaySubject<IRpcClientMessage<IMessage>>(1);
-            MessageResponseStream = _messageResponse.AsObservable();
         }
         
         /// <summary>
@@ -88,7 +82,7 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
                .Require(d => d.Mempool != null,
                     d => $"{nameof(getMempoolResponse)} must have a valid Mempool.");
 
-            _messageResponse.OnNext(new RpcClientMessage<IMessage>(getMempoolResponse, senderPeerIdentifier));
+            SendMessage(getMempoolResponse, senderPeerIdentifier);
         }
     }
 }
