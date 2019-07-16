@@ -22,13 +22,13 @@
 #endregion
 
 using Autofac;
-using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.FileTransfer;
 using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
@@ -38,44 +38,38 @@ namespace Catalyst.Cli.IntegrationTests.Commands
 {
     public sealed class AddFileCommandTest : CliCommandTestBase
     {
-        //This test is the base to all other tests.  If the Cli cannot connect to a node than all other commands
-        //will fail
+        public static IEnumerable<object[]> AddFileData =>
+            new List<object[]>
+            {
+                new object[] {"/fake_file_path", false},
+                new object[] {AppDomain.CurrentDomain.BaseDirectory + "/Config/addfile_test.json", true}
+            };
+
         public AddFileCommandTest(ITestOutputHelper output) : base(output) { }
 
         [Theory]
         [MemberData(nameof(AddFileData))]
         public async Task Cli_Can_Send_Add_File_Request(string fileName, bool expectedResult)
         {
-            using (var container = ContainerBuilder.Build())
+            var uploadFileTransferFactory = Scope.Resolve<IUploadFileTransferFactory>();
+
+            var task = Task.Run(() =>
+                Shell.ParseCommand("addfile", NodeArgumentPrefix, ServerNodeName, "-f", fileName));
+
+            if (expectedResult)
             {
-                var uploadFileTransferFactory = container.Resolve<IUploadFileTransferFactory>();
+                await TaskHelper.WaitForAsync(() => uploadFileTransferFactory.Keys.Length > 0, TimeSpan.FromSeconds(5));
 
-                using (container.BeginLifetimeScope(CurrentTestName))
-                {
-                    var shell = container.Resolve<ICatalystCli>();
-                    var hasConnected = shell.ParseCommand("connect", "-n", "node1");
-                    hasConnected.Should().BeTrue();
+                uploadFileTransferFactory.GetFileTransferInformation(new CorrelationId(uploadFileTransferFactory.Keys.First()))
+                   .Expire();
+            }
 
-                    var task = Task.Run(() =>
-                        shell.ParseCommand(
-                            "addfile", "-n", "node1", "-f", fileName));
+            var result = await task.ConfigureAwait(false);
+            result.Should().Be(expectedResult);
 
-                    if (expectedResult)
-                    {
-                        await TaskHelper.WaitForAsync(() => uploadFileTransferFactory.Keys.Length > 0, TimeSpan.FromSeconds(5));
-
-                        uploadFileTransferFactory.GetFileTransferInformation(new CorrelationId(uploadFileTransferFactory.Keys.First()))
-                           .Expire();
-                    }
-
-                    var result = await task.ConfigureAwait(false);
-                    result.Should().Be(expectedResult);
-
-                    if (expectedResult)
-                    {
-                        AssertSentMessage<AddFileToDfsRequest>();
-                    }
-                }
+            if (expectedResult)
+            {
+                AssertSentMessage<AddFileToDfsRequest>();
             }
         }
     }
