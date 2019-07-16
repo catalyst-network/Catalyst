@@ -25,15 +25,21 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
+using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.Network;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.Discovery;
 using Catalyst.Common.Interfaces.P2P.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.Util;
 using Catalyst.Common.IO.Messaging.Correlation;
+using Catalyst.Common.IO.Messaging.Dto;
+using Catalyst.Common.P2P;
 using Catalyst.Common.Util;
+using Catalyst.Protocol.IPPN;
 using DnsClient;
+using Google.Protobuf;
 using NSubstitute;
+using NSubstitute.Core;
 
 namespace Catalyst.TestUtils
 {
@@ -104,6 +110,56 @@ namespace Catalyst.TestUtils
             var provider = Substitute.For<ICancellationTokenProvider>();
             provider.HasTokenCancelled().Returns(result);
             return provider;
+        }
+
+        public static IDtoFactory SubDtoFactory(IPeerIdentifier sender,
+            IPeerIdentifier recipient,
+            PeerNeighborsResponse peerNeighborsResponse)
+        {
+            var subbedDtoFactory = Substitute.For<IDtoFactory>();
+
+            subbedDtoFactory.GetDto(Arg.Any<PeerNeighborsResponse>(),
+                sender,
+                recipient
+            ).Returns(
+                new MessageDto<PeerNeighborsResponse>(peerNeighborsResponse, sender, recipient)
+            );
+
+            return subbedDtoFactory;
+        }
+        
+        public static IDtoFactory SubDtoFactory(IPeerIdentifier sender,
+            IPeerIdentifier recipient,
+            PingResponse pingResponse)
+        {
+            var subbedDtoFactory = Substitute.For<IDtoFactory>();
+
+            subbedDtoFactory.GetDto(Arg.Any<PingResponse>(),
+                sender,
+                recipient
+            ).Returns(
+                new MessageDto<PingResponse>(pingResponse, sender, recipient)
+            );
+
+            return subbedDtoFactory;
+        }
+        
+        public static IDtoFactory SubDtoFactory(IPeerIdentifier sender, IList<KeyValuePair<ICorrelationId, IPeerIdentifier>> knownRequests, PingResponse pingResponse)
+        {
+            var subbedDtoFactory = Substitute.For<IDtoFactory>();
+         
+            knownRequests.ToList().ForEach(r =>
+            {
+                var (_, value) = r;
+                subbedDtoFactory.GetDto(Arg.Any<PingResponse>(),
+                    sender,
+                    value
+                ).Returns(
+                    new MessageDto<PingResponse>(pingResponse, sender, value)
+                );
+            });
+
+            return subbedDtoFactory;
         }
     }
 }
