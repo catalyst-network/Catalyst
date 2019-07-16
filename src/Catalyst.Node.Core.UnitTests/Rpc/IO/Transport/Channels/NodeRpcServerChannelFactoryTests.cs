@@ -60,7 +60,7 @@ namespace Catalyst.Node.Core.UnitTests.Rpc.IO.Transport.Channels
                 IPeerIdValidator peerIdValidator)
                 : base(correlationManager, keySigner, authenticationStrategy, peerIdValidator)
             {
-                _handlers = Handlers;
+                _handlers = HandlerGenerationFunction();
             }
 
             public IReadOnlyCollection<IChannelHandler> InheritedHandlers => _handlers;
