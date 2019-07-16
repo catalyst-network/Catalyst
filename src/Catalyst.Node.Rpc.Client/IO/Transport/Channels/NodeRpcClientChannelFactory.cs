@@ -82,17 +82,15 @@ namespace Catalyst.Node.Rpc.Client.IO.Transport.Channels
                     new PeerIdValidationHandler(_peerIdValidator),
                     new AddressedEnvelopeToIMessageEncoder(),
                     new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
-                    new ProtocolMessageVerifyHandler(_keySigner), new ProtocolMessageSignHandler(_keySigner)
-                ),
+                        new ProtocolMessageVerifyHandler(_keySigner), 
+                        new ProtocolMessageSignHandler(_keySigner)),
                     new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
-                    new CorrelationHandler<IRpcMessageCorrelationManager>(_messageCorrelationCache),
-                    new CorrelatableHandler<IRpcMessageCorrelationManager>(_messageCorrelationCache)
-                ),
+                        new CorrelationHandler<IRpcMessageCorrelationManager>(_messageCorrelationCache),
+                        new CorrelatableHandler<IRpcMessageCorrelationManager>(_messageCorrelationCache)),
                     _observableServiceHandler
                 };
             }
         }
-
 
         /// <param name="eventLoopGroupFactory"></param>
         /// <param name="targetAddress">Ignored</param>
