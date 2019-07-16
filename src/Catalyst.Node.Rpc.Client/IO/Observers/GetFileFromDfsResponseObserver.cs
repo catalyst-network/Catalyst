@@ -33,6 +33,7 @@ using Catalyst.Common.Interfaces.IO.Observers;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Rpc.IO.Messaging.Dto;
 using Catalyst.Common.IO.Observers;
+using Catalyst.Node.Rpc.Client.IO.Messaging.Dto;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using DotNetty.Transport.Channels;
@@ -49,8 +50,8 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
         ResponseObserverBase<GetFileFromDfsResponse>,
         IRpcResponseObserver
     {
-        public ReplaySubject<IRPCClientMessageDto<IMessage>> MessageResponse;
-        public IObservable<IRPCClientMessageDto<IMessage>> MessageResponseStream => MessageResponse.AsObservable();
+        private readonly ReplaySubject<IRPCClientMessageDto<IMessage>> _messageResponse;
+        public IObservable<IRPCClientMessageDto<IMessage>> MessageResponseStream { private set; get; }
 
         /// <summary>The file transfer factory</summary>
         private readonly IDownloadFileTransferFactory _fileTransferFactory;
@@ -62,6 +63,8 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
             IDownloadFileTransferFactory fileTransferFactory) : base(logger)
         {
             _fileTransferFactory = fileTransferFactory;
+            _messageResponse = new ReplaySubject<IRPCClientMessageDto<IMessage>>(1);
+            MessageResponseStream = _messageResponse.AsObservable();
         }
         
         /// <summary>
@@ -105,6 +108,8 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
             {
                 fileTransferInformation.Expire();
             }
+
+            _messageResponse.OnNext(new RPCClientMessageDto<IMessage>(getFileFromDfsResponse, senderPeerIdentifier));
         }
     }
 }

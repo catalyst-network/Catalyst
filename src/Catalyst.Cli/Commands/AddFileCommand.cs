@@ -61,7 +61,7 @@ namespace Catalyst.Cli.Commands
 
             using (var fileStream = File.Open(options.File, FileMode.Open))
             {
-                request.FileSize = (ulong) fileStream.Length;
+                request.FileSize = (ulong)fileStream.Length;
             }
 
             var requestMessage = CommandContext.DtoFactory.GetDto(

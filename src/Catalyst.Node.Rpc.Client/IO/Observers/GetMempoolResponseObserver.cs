@@ -47,8 +47,8 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
         : ResponseObserverBase<GetMempoolResponse>,
             IRpcResponseObserver
     {
-        public ReplaySubject<IRPCClientMessageDto<IMessage>> MessageResponse;
-        public IObservable<IRPCClientMessageDto<IMessage>> MessageResponseStream => MessageResponse.AsObservable();
+        private readonly ReplaySubject<IRPCClientMessageDto<IMessage>> _messageResponse;
+        public IObservable<IRPCClientMessageDto<IMessage>> MessageResponseStream { private set; get; }
 
         private readonly IUserOutput _output;
 
@@ -65,7 +65,8 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
             : base(logger)
         {
             _output = output;
-            MessageResponse = new ReplaySubject<IRPCClientMessageDto<IMessage>>(1);
+            _messageResponse = new ReplaySubject<IRPCClientMessageDto<IMessage>>(1);
+            MessageResponseStream = _messageResponse.AsObservable();
         }
         
         /// <summary>
@@ -83,13 +84,11 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
             Guard.Argument(getMempoolResponse, nameof(getMempoolResponse)).NotNull();
             Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
             Guard.Argument(senderPeerIdentifier, nameof(senderPeerIdentifier)).NotNull();
-            Logger.Debug("GetMempoolResponseHandler starting ...");
-
             Guard.Argument(getMempoolResponse, nameof(getMempoolResponse)).NotNull("The GetMempoolResponse cannot be null")
                .Require(d => d.Mempool != null,
                     d => $"{nameof(getMempoolResponse)} must have a valid Mempool.");
 
-            MessageResponse.OnNext(new RPCClientMessageDto<IMessage>(getMempoolResponse, senderPeerIdentifier));
+            _messageResponse.OnNext(new RPCClientMessageDto<IMessage>(getMempoolResponse, senderPeerIdentifier));
         }
     }
 }

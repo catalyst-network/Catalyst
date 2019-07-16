@@ -66,13 +66,14 @@ namespace Catalyst.Common.IO.Transport
         : ISocketClientRegistry<TSocketChannel>
         where TSocketChannel : class, ISocketClient
     {
-        public IObservable<SocketClientRegistryEvent> EventStream { get; }
-        private ReplaySubject<SocketClientRegistryEvent> EventReplySubject = new ReplaySubject<SocketClientRegistryEvent>(1);
+        public IObservable<SocketClientRegistryEvent> EventStream { private set;  get; }
+        private readonly ReplaySubject<SocketClientRegistryEvent> _eventReplySubject;
         public IDictionary<int, TSocketChannel> Registry { get; }
 
         public SocketClientRegistry()
         {
-            EventStream = EventReplySubject.AsObservable();
+            _eventReplySubject = new ReplaySubject<SocketClientRegistryEvent>(1);
+            EventStream = _eventReplySubject.AsObservable();
 
             Registry = new ConcurrentDictionary<int, TSocketChannel>();
         }
@@ -95,7 +96,7 @@ namespace Catalyst.Common.IO.Transport
             var addedToRegistry = Registry.TryAdd(socketHashCode, socket);
             if (addedToRegistry)
             {
-                EventReplySubject.OnNext(new SocketClientRegistryClientAdded { SocketHashCode = socketHashCode });
+                _eventReplySubject.OnNext(new SocketClientRegistryClientAdded { SocketHashCode = socketHashCode });
             }
             return addedToRegistry;
         }
@@ -117,7 +118,7 @@ namespace Catalyst.Common.IO.Transport
             var removedFromRegistry = Registry.Remove(socketHashCode);
             if (removedFromRegistry)
             {
-                EventReplySubject.OnNext(new SocketClientRegistryClientRemoved { SocketHashCode = socketHashCode });
+                _eventReplySubject.OnNext(new SocketClientRegistryClientRemoved { SocketHashCode = socketHashCode });
             }
             return removedFromRegistry;
         }

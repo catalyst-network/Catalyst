@@ -25,9 +25,6 @@ using Catalyst.Cli.CommandTypes;
 using Catalyst.Cli.Options;
 using Catalyst.Common.Interfaces.Cli.Commands;
 using Catalyst.Protocol.Rpc.Node;
-using System;
-using System.Diagnostics;
-
 namespace Catalyst.Cli.Commands
 {
     public sealed class GetVersionCommand : BaseMessageCommand<VersionRequest, VersionResponse, GetVersionOptions>
@@ -44,7 +41,7 @@ namespace Catalyst.Cli.Commands
 
         protected override void ResponseMessage(VersionResponse response)
         {
-            Console.WriteLine($"Version {response.Version}");
+            CommandContext.UserOutput.WriteLine($"Version {response.Version}");
         }
     }
 }

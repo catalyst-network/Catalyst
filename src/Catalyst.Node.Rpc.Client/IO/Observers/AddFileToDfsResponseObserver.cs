@@ -33,6 +33,7 @@ using Catalyst.Common.Interfaces.IO.Observers;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Rpc.IO.Messaging.Dto;
 using Catalyst.Common.IO.Observers;
+using Catalyst.Node.Rpc.Client.IO.Messaging.Dto;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using DotNetty.Transport.Channels;
@@ -45,12 +46,12 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
     /// Add File to DFS Response handler
     /// </summary>
     /// <seealso cref="IRpcResponseObserver" />
-    public sealed class AddFileToDfsResponseObserver : 
+    public sealed class AddFileToDfsResponseObserver :
         ResponseObserverBase<AddFileToDfsResponse>,
         IRpcResponseObserver
     {
-        public ReplaySubject<IRPCClientMessageDto<IMessage>> MessageResponse;
-        public IObservable<IRPCClientMessageDto<IMessage>> MessageResponseStream => MessageResponse.AsObservable();
+        private readonly ReplaySubject<IRPCClientMessageDto<IMessage>> _messageResponse;
+        public IObservable<IRPCClientMessageDto<IMessage>> MessageResponseStream { private set; get; }
 
         /// <summary>The upload file transfer factory</summary>
         private readonly IUploadFileTransferFactory _rpcFileTransferFactory;
@@ -62,11 +63,13 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
         /// <param name="rpcFileTransferFactory">The upload file transfer factory</param>
         /// <param name="userOutput"></param>
         public AddFileToDfsResponseObserver(ILogger logger,
-            IUploadFileTransferFactory rpcFileTransferFactory, 
+            IUploadFileTransferFactory rpcFileTransferFactory,
             IUserOutput userOutput) : base(logger)
         {
             _userOutput = userOutput;
             _rpcFileTransferFactory = rpcFileTransferFactory;
+            _messageResponse = new ReplaySubject<IRPCClientMessageDto<IMessage>>(1);
+            MessageResponseStream = _messageResponse.AsObservable();
         }
 
         /// <summary>
@@ -77,18 +80,18 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
         /// <param name="senderPeerIdentifier"></param>
         /// <param name="correlationId"></param>
         protected override void HandleResponse(AddFileToDfsResponse addFileToDfsResponse,
-            IChannelHandlerContext channelHandlerContext, 
+            IChannelHandlerContext channelHandlerContext,
             IPeerIdentifier senderPeerIdentifier,
             ICorrelationId correlationId)
         {
             Guard.Argument(addFileToDfsResponse, nameof(addFileToDfsResponse)).NotNull();
             Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
             Guard.Argument(senderPeerIdentifier, nameof(senderPeerIdentifier)).NotNull();
-            
+
             // @TODO return int not byte
             // var responseCode = Enumeration.Parse<FileTransferResponseCodes>(deserialised.ResponseCode[0].ToString());
 
-            var responseCode = (FileTransferResponseCodes) addFileToDfsResponse.ResponseCode[0];
+            var responseCode = (FileTransferResponseCodes)addFileToDfsResponse.ResponseCode[0];
 
             if (responseCode == FileTransferResponseCodes.Failed || responseCode == FileTransferResponseCodes.Finished)
             {
@@ -106,6 +109,8 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
                     _rpcFileTransferFactory.Remove(correlationId);
                 }
             }
+
+            _messageResponse.OnNext(new RPCClientMessageDto<IMessage>(addFileToDfsResponse, senderPeerIdentifier));
         }
     }
 }

@@ -24,6 +24,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive.Concurrency;
+using System.Reactive.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Catalyst.Common.Extensions;
@@ -35,6 +37,7 @@ using Catalyst.Protocol.Rpc.Node;
 using Catalyst.Protocol.Transaction;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
+using FluentAssertions;
 using Nethereum.RLP;
 using NSubstitute;
 using Serilog;
@@ -84,9 +87,9 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
             };
 
             var txEncodedLst = txLst.Select(tx => tx.ToString().ToBytesForRLPEncoding()).ToList();
-            
+
             var mempoolList = new List<string>();
-            
+
             foreach (var tx in txEncodedLst)
             {
                 mempoolList.Add(Encoding.Default.GetString(tx));
@@ -98,13 +101,13 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
         [Theory]
         [MemberData(nameof(QueryContents))]
         public async Task RpcClient_Can_Handle_GetMempoolResponse(IEnumerable<string> mempoolContent)
-        { 
+        {
             var txList = mempoolContent.ToList();
 
             var response = new DtoFactory().GetDto(
                 new GetMempoolResponse
                 {
-                    Mempool = {txList}
+                    Mempool = { txList }
                 },
                 PeerIdentifierHelper.GetPeerIdentifier("sender_key"),
                 PeerIdentifierHelper.GetPeerIdentifier("recipient_key"),
@@ -117,12 +120,19 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
                 )
             );
 
+            GetMempoolResponse messageStreamResponse = null;
+
             _observer = new GetMempoolResponseObserver(_output, _logger);
             _observer.StartObserving(messageStream);
 
+            _observer.MessageResponseStream.Where(x => x.Message.GetType() == typeof(GetMempoolResponse)).SubscribeOn(NewThreadScheduler.Default).Subscribe((rpcClientMessageDto) =>
+            {
+                messageStreamResponse = (GetMempoolResponse)rpcClientMessageDto.Message;
+            });
+
             await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
 
-            _output.Received(txList.Count).WriteLine(Arg.Any<string>());
+            messageStreamResponse.Mempool.Count.Should().Be(txList.Count);
         }
 
         public void Dispose()

@@ -47,8 +47,8 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
         : ResponseObserverBase<GetPeerReputationResponse>,
             IRpcResponseObserver
     {
-        public ReplaySubject<IRPCClientMessageDto<IMessage>> MessageResponse;
-        public IObservable<IRPCClientMessageDto<IMessage>> MessageResponseStream => MessageResponse.AsObservable();
+        private readonly ReplaySubject<IRPCClientMessageDto<IMessage>> _messageResponse;
+        public IObservable<IRPCClientMessageDto<IMessage>> MessageResponseStream { private set; get; }
 
         private readonly IUserOutput _output;
 
@@ -57,7 +57,8 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
             : base(logger)
         {
             _output = output;
-            MessageResponse = new ReplaySubject<IRPCClientMessageDto<IMessage>>(1);
+            _messageResponse = new ReplaySubject<IRPCClientMessageDto<IMessage>>(1);
+            MessageResponseStream = _messageResponse.AsObservable();
         }
         
         protected override void HandleResponse(GetPeerReputationResponse getPeerReputationResponse,
@@ -68,9 +69,8 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
             Guard.Argument(getPeerReputationResponse, nameof(getPeerReputationResponse)).NotNull();
             Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
             Guard.Argument(senderPeerIdentifier, nameof(senderPeerIdentifier)).NotNull();
-            Logger.Debug("Handling GetPeerReputation response");
 
-            MessageResponse.OnNext(new RPCClientMessageDto<IMessage>(getPeerReputationResponse, senderPeerIdentifier));
+            _messageResponse.OnNext(new RPCClientMessageDto<IMessage>(getPeerReputationResponse, senderPeerIdentifier));
         }
     }
 }

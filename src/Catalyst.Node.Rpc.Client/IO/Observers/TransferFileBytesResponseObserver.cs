@@ -26,6 +26,7 @@ using Catalyst.Common.Interfaces.IO.Observers;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Rpc.IO.Messaging.Dto;
 using Catalyst.Common.IO.Observers;
+using Catalyst.Node.Rpc.Client.IO.Messaging.Dto;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using DotNetty.Transport.Channels;
@@ -45,12 +46,15 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
         : ResponseObserverBase<TransferFileBytesResponse>,
             IRpcResponseObserver
     {
-        public ReplaySubject<IRPCClientMessageDto<IMessage>> MessageResponse;
-        public IObservable<IRPCClientMessageDto<IMessage>> MessageResponseStream => MessageResponse.AsObservable();
+        private readonly ReplaySubject<IRPCClientMessageDto<IMessage>> _messageResponse;
+        public IObservable<IRPCClientMessageDto<IMessage>> MessageResponseStream { private set; get; }
 
         /// <summary>Initializes a new instance of the <see cref="TransferFileBytesResponseObserver"/> class.</summary>
         /// <param name="logger">The logger.</param>
-        public TransferFileBytesResponseObserver(ILogger logger) : base(logger) { }
+        public TransferFileBytesResponseObserver(ILogger logger) : base(logger) {
+            _messageResponse = new ReplaySubject<IRPCClientMessageDto<IMessage>>(1);
+            MessageResponseStream = _messageResponse.AsObservable();
+        }
         
         /// <summary>
         /// 
@@ -67,7 +71,9 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
             Guard.Argument(transferFileBytesResponse, nameof(transferFileBytesResponse)).NotNull();
             Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
             Guard.Argument(senderPeerIdentifier, nameof(senderPeerIdentifier)).NotNull();
-            
+
+            _messageResponse.OnNext(new RPCClientMessageDto<IMessage>(transferFileBytesResponse, senderPeerIdentifier));
+
             // Response for a node writing a chunk via bytes transfer.
             // Future logic if an error occurs via chunk transfer then preferably we want to stop file transfer
         }

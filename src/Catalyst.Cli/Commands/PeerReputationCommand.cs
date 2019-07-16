@@ -25,12 +25,7 @@ using Catalyst.Cli.CommandTypes;
 using Catalyst.Cli.Options;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Cli.Commands;
-using Catalyst.Common.Network;
-using Catalyst.Common.Util;
 using Catalyst.Protocol.Rpc.Node;
-using Google.Protobuf;
-using Nethereum.RLP;
-using System.Net;
 
 namespace Catalyst.Cli.Commands
 {
@@ -45,11 +40,6 @@ namespace Catalyst.Cli.Commands
                 PublicKey = option.PublicKey.PublicKeyToProtobuf(),
                 Ip = option.IpAddress.IpAddressToProtobuf(),
             };
-        }
-
-        protected override void ResponseMessage(GetPeerReputationResponse response)
-        {
-            
         }
     }
 }

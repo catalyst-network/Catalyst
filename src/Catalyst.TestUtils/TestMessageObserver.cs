@@ -43,8 +43,8 @@ namespace Catalyst.TestUtils
         IP2PMessageObserver, IRpcResponseObserver, IRpcRequestObserver
         where TProto : IMessage, IMessage<TProto>
     {
-        public ReplaySubject<IRPCClientMessageDto<IMessage>> MessageResponse;
-        public IObservable<IRPCClientMessageDto<IMessage>> MessageResponseStream => MessageResponse.AsObservable();
+        private readonly ReplaySubject<IRPCClientMessageDto<IMessage>> _messageResponse;
+        public IObservable<IRPCClientMessageDto<IMessage>> MessageResponseStream { private set; get; }
 
 
         private readonly string _filterMessageType;
