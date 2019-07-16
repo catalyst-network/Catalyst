@@ -82,7 +82,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
             _observer.StartObserving(messageStream);
             _observer.MessageResponseStream.Where(x => x.Message.GetType() == typeof(GetInfoResponse)).SubscribeOn(NewThreadScheduler.Default).Subscribe((RpcClientMessageDto) =>
             {
-                messageStreamResponse = (GetInfoResponse)RpcClientMessageDto.Message;
+                messageStreamResponse = (GetInfoResponse) RpcClientMessageDto.Message;
             });
 
             await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
@@ -90,7 +90,6 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
             messageStreamResponse.Should().NotBeNull();
             messageStreamResponse.Query.Should().Be(response.Content.Query);
         }
-
 
         public void Dispose()
         {

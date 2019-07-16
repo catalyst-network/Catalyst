@@ -90,12 +90,12 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
         }
 
         /// <summary>
-        /// RPCs the client can handle get reputation response non existant peers.
+        /// RPCs the client can handle get reputation response non existent peers.
         /// </summary>
         /// <param name="rep">The rep.</param>
         [Theory]
         [InlineData(int.MinValue)]
-        public async Task RpcClient_Can_Handle_GetReputationResponseNonExistantPeers(int rep)
+        public async Task RpcClient_Can_Handle_GetReputationResponseNonExistentPeers(int rep)
         {
             var getPeerReputationResponse = await TestGetReputationResponse(rep).ConfigureAwait(false);
             getPeerReputationResponse.Should().NotBeNull();
@@ -109,7 +109,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
                     Reputation = rep
                 },
                 PeerIdentifierHelper.GetPeerIdentifier("sender"),
-                PeerIdentifierHelper.GetPeerIdentifier("recpient"),
+                PeerIdentifierHelper.GetPeerIdentifier("recipient"),
                 CorrelationId.GenerateCorrelationId()
             );
 
@@ -121,10 +121,11 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
 
             _observer = new PeerReputationResponseObserver(_output, _logger);
             _observer.StartObserving(messageStream);
-            _observer.MessageResponseStream.Where(x => x.Message.GetType() == typeof(GetPeerReputationResponse)).SubscribeOn(NewThreadScheduler.Default).Subscribe((RpcClientMessageDto) =>
-            {
-                messageStreamResponse = (GetPeerReputationResponse)RpcClientMessageDto.Message;
-            });
+            _observer.MessageResponseStream.Where(x => x.Message is GetPeerReputationResponse)
+               .SubscribeOn(NewThreadScheduler.Default).Subscribe(rpcClientMessageDto =>
+                {
+                    messageStreamResponse = (GetPeerReputationResponse) rpcClientMessageDto.Message;
+                });
 
             await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync().ConfigureAwait(false);
 

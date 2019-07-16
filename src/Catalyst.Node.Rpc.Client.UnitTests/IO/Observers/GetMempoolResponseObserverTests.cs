@@ -107,7 +107,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
             var response = new DtoFactory().GetDto(
                 new GetMempoolResponse
                 {
-                    Mempool = { txList }
+                    Mempool = {txList}
                 },
                 PeerIdentifierHelper.GetPeerIdentifier("sender_key"),
                 PeerIdentifierHelper.GetPeerIdentifier("recipient_key"),
@@ -125,10 +125,11 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
             _observer = new GetMempoolResponseObserver(_output, _logger);
             _observer.StartObserving(messageStream);
 
-            _observer.MessageResponseStream.Where(x => x.Message.GetType() == typeof(GetMempoolResponse)).SubscribeOn(NewThreadScheduler.Default).Subscribe((RpcClientMessageDto) =>
-            {
-                messageStreamResponse = (GetMempoolResponse)RpcClientMessageDto.Message;
-            });
+            _observer.MessageResponseStream.Where(x => x.Message is GetMempoolResponse)
+               .SubscribeOn(NewThreadScheduler.Default).Subscribe(rpcClientMessageDto =>
+                {
+                    messageStreamResponse = (GetMempoolResponse) rpcClientMessageDto.Message;
+                });
 
             await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
 

@@ -104,11 +104,11 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
         private async Task<SetPeerBlackListResponse> TestGetBlackListResponse(bool blacklist, string ip, string publicKey)
         {
             var response = new DtoFactory().GetDto(new SetPeerBlackListResponse
-            {
-                Blacklist = blacklist,
-                Ip = string.IsNullOrEmpty(ip) ? ip.ToUtf8ByteString() : ip.IpAddressToProtobuf(),
-                PublicKey = string.IsNullOrEmpty(publicKey) ? publicKey.ToUtf8ByteString() : publicKey.PublicKeyToProtobuf()
-            },
+                {
+                    Blacklist = blacklist,
+                    Ip = string.IsNullOrEmpty(ip) ? ip.ToUtf8ByteString() : ip.IpAddressToProtobuf(),
+                    PublicKey = string.IsNullOrEmpty(publicKey) ? publicKey.ToUtf8ByteString() : publicKey.PublicKeyToProtobuf()
+                },
                 PeerIdentifierHelper.GetPeerIdentifier("sender"),
                 PeerIdentifierHelper.GetPeerIdentifier("recipient"),
                 CorrelationId.GenerateCorrelationId());
@@ -123,10 +123,11 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
             _observer = new PeerBlackListingResponseObserver(_output, _logger);
             _observer.StartObserving(messageStream);
 
-            _observer.MessageResponseStream.Where(x => x.Message.GetType() == typeof(SetPeerBlackListResponse)).SubscribeOn(NewThreadScheduler.Default).Subscribe((RpcClientMessageDto) =>
-            {
-                messageStreamResponse = (SetPeerBlackListResponse)RpcClientMessageDto.Message;
-            });
+            _observer.MessageResponseStream.Where(x => x.Message is SetPeerBlackListResponse)
+               .SubscribeOn(NewThreadScheduler.Default).Subscribe(rpcClientMessageDto =>
+                {
+                    messageStreamResponse = (SetPeerBlackListResponse) rpcClientMessageDto.Message;
+                });
 
             await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
 

@@ -148,7 +148,7 @@ namespace Catalyst.Common.UnitTests.IO.Transport
         {
             var clientSocketRegistry = new SocketClientRegistry<ISocketClient>();
             var listOfSockets = new ConcurrentDictionary<int, ISocketClient>();
-            var randomPorts = new List<int> { 2000, 3000, 4000, 5000, 6000 };
+            var randomPorts = new List<int> {2000, 3000, 4000, 5000, 6000};
 
             randomPorts.ForEach(port => listOfSockets.TryAdd(
                 new IPEndPoint(IPAddress.Loopback, port).GetHashCode(),
@@ -198,7 +198,7 @@ namespace Catalyst.Common.UnitTests.IO.Transport
         {
             var clientSocketRegistry = new SocketClientRegistry<ISocketClient>();
             var listOfSockets = new ConcurrentDictionary<int, ISocketClient>();
-            var randomPorts = new List<int> { 2000, 3000, 4000, 5000, 6000 };
+            var randomPorts = new List<int> {2000, 3000, 4000, 5000, 6000};
 
             randomPorts.ForEach(port => listOfSockets.TryAdd(
                 new IPEndPoint(IPAddress.Loopback, port).GetHashCode(),
@@ -234,7 +234,7 @@ namespace Catalyst.Common.UnitTests.IO.Transport
             });
 
             var listOfSockets = new ConcurrentDictionary<int, ISocketClient>();
-            var randomPorts = new List<int> { 2000, 3000, 4000, 5000, 6000 };
+            var randomPorts = new List<int> {2000, 3000, 4000, 5000, 6000};
 
             randomPorts.ForEach(port => listOfSockets.TryAdd(
                 new IPEndPoint(IPAddress.Loopback, port).GetHashCode(),
@@ -265,7 +265,7 @@ namespace Catalyst.Common.UnitTests.IO.Transport
             });
 
             var listOfSockets = new ConcurrentDictionary<int, ISocketClient>();
-            var randomPorts = new List<int> { 2000, 3000, 4000, 5000, 6000 };
+            var randomPorts = new List<int> {2000, 3000, 4000, 5000, 6000};
 
             randomPorts.ForEach(port => listOfSockets.TryAdd(
                 new IPEndPoint(IPAddress.Loopback, port).GetHashCode(),
@@ -278,9 +278,8 @@ namespace Catalyst.Common.UnitTests.IO.Transport
                 );
 
             listOfSockets.ToList()
-             .ForEach(element =>
-                  clientSocketRegistry.RemoveClientFromRegistry(element.Key)
-              );
+               .ForEach(element =>
+                    clientSocketRegistry.RemoveClientFromRegistry(element.Key));
 
             connectionEvents.Should().BeEmpty();
         }
