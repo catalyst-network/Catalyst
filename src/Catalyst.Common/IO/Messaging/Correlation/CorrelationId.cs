@@ -30,8 +30,14 @@ namespace Catalyst.Common.IO.Messaging.Correlation
     /// <inheritdoc />
     public sealed class CorrelationId : ICorrelationId
     {
+        /// <inheritdoc />
         public Guid Id { get; }
-        
+
+        /// <summary>
+        ///     Length of the inner Guid in bytes
+        /// </summary>
+        public static readonly int GuidByteLength = Guid.Empty.ToByteArray().Length;
+
         /// <summary>
         ///     Provide a known correlation Id.
         /// </summary>

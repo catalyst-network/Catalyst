@@ -30,6 +30,9 @@ namespace Catalyst.Common.Interfaces.IO.Messaging.Correlation
     /// </summary>
     public interface ICorrelationId : IEquatable<ICorrelationId>
     {
+        /// <summary>
+        ///     The Guid underpinning that ICorrelationId
+        /// </summary>
         Guid Id { get; }
     }
 }

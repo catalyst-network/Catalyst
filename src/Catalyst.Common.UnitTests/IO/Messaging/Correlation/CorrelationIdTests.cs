@@ -33,7 +33,7 @@ namespace Catalyst.Common.UnitTests.IO.Messaging.Correlation
         [Fact]
         public void CorrelationId_Be_Equal_When_Ids_Are_Equal()
         {
-            var baseBytes = ByteUtil.GenerateRandomByteArray(16);
+            var baseBytes = ByteUtil.GenerateRandomByteArray(CorrelationId.GuidByteLength);
 
             var id1 = new CorrelationId(baseBytes);
             var id2 = new CorrelationId(baseBytes);
@@ -46,8 +46,8 @@ namespace Catalyst.Common.UnitTests.IO.Messaging.Correlation
         [Fact]
         public void CorrelationId_Not_Be_Equal_When_Ids_Are_Not_Equal()
         {
-            var baseBytes = ByteUtil.GenerateRandomByteArray(16);
-            var differentBytes = ByteUtil.GenerateRandomByteArray(16);
+            var baseBytes = ByteUtil.GenerateRandomByteArray(CorrelationId.GuidByteLength);
+            var differentBytes = ByteUtil.GenerateRandomByteArray(CorrelationId.GuidByteLength);
 
             var id1 = new CorrelationId(baseBytes);
             var id2 = (CorrelationId) null;
@@ -62,7 +62,7 @@ namespace Catalyst.Common.UnitTests.IO.Messaging.Correlation
         [Fact]
         public void ToString_Should_Be_The_Same_As_Guid_ToString()
         {
-            var baseBytes = ByteUtil.GenerateRandomByteArray(16);
+            var baseBytes = ByteUtil.GenerateRandomByteArray(CorrelationId.GuidByteLength);
 
             var id1 = new CorrelationId(baseBytes);
             id1.ToString().Should().Be(id1.Id.ToString());

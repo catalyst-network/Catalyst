@@ -71,9 +71,9 @@ namespace Catalyst.Common.Extensions
         {
             var bytes = guidBytes?.ToByteArray();
             
-            var validBytes = bytes?.Length == 16 
+            var validBytes = bytes?.Length == CorrelationId.GuidByteLength
                 ? bytes
-                : (bytes ?? new byte[0]).Concat(Enumerable.Repeat((byte) 0, 16)).Take(16).ToArray();
+                : (bytes ?? new byte[0]).Concat(Enumerable.Repeat((byte) 0, CorrelationId.GuidByteLength)).Take(CorrelationId.GuidByteLength).ToArray();
 
             return new CorrelationId(new Guid(validBytes));
         }
