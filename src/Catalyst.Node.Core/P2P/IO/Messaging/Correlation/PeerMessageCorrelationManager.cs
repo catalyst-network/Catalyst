@@ -25,6 +25,7 @@ using System;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using Catalyst.Common.Config;
+using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.P2P.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.P2P.ReputationSystem;
 using Catalyst.Common.Interfaces.Util;
@@ -33,6 +34,7 @@ using Catalyst.Common.P2P;
 using Catalyst.Node.Core.P2P.ReputationSystem;
 using Catalyst.Protocol.Common;
 using Dawn;
+using Google.Protobuf;
 using Microsoft.Extensions.Caching.Memory;
 using Serilog;
 
@@ -55,7 +57,7 @@ namespace Catalyst.Node.Core.P2P.IO.Messaging.Correlation
 
         protected override void EvictionCallback(object key, object value, EvictionReason reason, object state)
         {
-            Logger.Debug($"{key} message evicted");
+            Logger.Verbose("{key} message evicted", (key as ByteString).ToCorrelationId());
             var message = (CorrelatableMessage<ProtocolMessage>) value;
             _reputationEvent.OnNext(new PeerReputationChange(message.Recipient, ReputationEvents.NoResponseReceived));
         }
