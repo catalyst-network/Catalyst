@@ -123,9 +123,9 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
             _observer = new PeerBlackListingResponseObserver(_output, _logger);
             _observer.StartObserving(messageStream);
 
-            _observer.MessageResponseStream.Where(x => x.Message.GetType() == typeof(SetPeerBlackListResponse)).SubscribeOn(NewThreadScheduler.Default).Subscribe((RpcClientMessage) =>
+            _observer.MessageResponseStream.Where(x => x.Message.GetType() == typeof(SetPeerBlackListResponse)).SubscribeOn(NewThreadScheduler.Default).Subscribe((RpcClientMessageDto) =>
             {
-                messageStreamResponse = (SetPeerBlackListResponse)RpcClientMessage.Message;
+                messageStreamResponse = (SetPeerBlackListResponse)RpcClientMessageDto.Message;
             });
 
             await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();

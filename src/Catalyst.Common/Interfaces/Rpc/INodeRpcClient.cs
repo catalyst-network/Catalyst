@@ -30,6 +30,6 @@ namespace Catalyst.Common.Interfaces.Rpc
 {
     public interface INodeRpcClient : ISocketClient
     {
-        IObservable<IRpcClientMessage<IMessage>> MessageResponseStream { get; }
+        IObservable<IRpcClientMessageDto<IMessage>> MessageResponseStream { get; }
     }
 }

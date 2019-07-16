@@ -91,7 +91,7 @@ namespace Catalyst.Cli.CommandTypes
             CommandContext.UserOutput.WriteLine($"{JsonConvert.SerializeObject(response)}");
         }
 
-        private void CommandResponseOnNext(IRpcClientMessage<IMessage> value)
+        private void CommandResponseOnNext(IRpcClientMessageDto<IMessage> value)
         {
             ResponseMessage((TResponse)value.Message);
         }

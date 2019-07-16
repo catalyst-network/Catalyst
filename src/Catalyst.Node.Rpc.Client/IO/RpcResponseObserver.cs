@@ -36,18 +36,18 @@ namespace Catalyst.Node.Rpc.Client.IO
 {
     public abstract class RpcResponseObserver<TProto> : ResponseObserverBase<TProto>, IRpcResponseObserver where TProto : IMessage<TProto>
     {
-        private readonly ReplaySubject<IRpcClientMessage<IMessage>> _messageResponse;
-        public IObservable<IRpcClientMessage<IMessage>> MessageResponseStream { private set; get; }
+        private readonly ReplaySubject<IRpcClientMessageDto<IMessage>> _messageResponse;
+        public IObservable<IRpcClientMessageDto<IMessage>> MessageResponseStream { private set; get; }
 
-        protected RpcResponseObserver(ILogger logger) : base(logger)
+        public RpcResponseObserver(ILogger logger) : base(logger)
         {
-            _messageResponse = new ReplaySubject<IRpcClientMessage<IMessage>>(1);
+            _messageResponse = new ReplaySubject<IRpcClientMessageDto<IMessage>>(1);
             MessageResponseStream = _messageResponse.AsObservable();
         }
 
         protected void SendMessage(TProto message, IPeerIdentifier senderPeerIdentifier)
         {
-            _messageResponse.OnNext(new RpcClientMessage<IMessage>(message, senderPeerIdentifier));
+            _messageResponse.OnNext(new RpcClientMessageDto<IMessage>(message, senderPeerIdentifier));
         }
     }
 }

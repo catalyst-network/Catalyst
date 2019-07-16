@@ -25,18 +25,15 @@ using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Rpc.IO.Messaging.Dto;
 using Dawn;
 using Google.Protobuf;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Catalyst.Node.Rpc.Client.IO.Messaging.Dto
 {
-    public sealed class RpcClientMessage<T> : IRpcClientMessage<T> where T : IMessage
+    public sealed class RpcClientMessageDto<T> : IRpcClientMessageDto<T> where T : IMessage
     {
         public IPeerIdentifier Sender { get; set; }
         public T Message { get; set; }
 
-        public RpcClientMessage(T message, IPeerIdentifier sender)
+        public RpcClientMessageDto(T message, IPeerIdentifier sender)
         {
             Guard.Argument(message, nameof(message))
             .Require(message.GetType().Namespace.Contains("Catalyst.Protocol.Rpc"));

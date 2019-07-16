@@ -45,7 +45,7 @@ namespace Catalyst.Node.Rpc.Client
     /// </summary>
     internal sealed class NodeRpcClient : TcpClient, INodeRpcClient
     {
-        public IObservable<IRpcClientMessage<IMessage>> MessageResponseStream
+        public IObservable<IRpcClientMessageDto<IMessage>> MessageResponseStream
         {
             private set;
             get;
@@ -67,7 +67,7 @@ namespace Catalyst.Node.Rpc.Client
             : base(channelFactory, Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType),
                 clientEventLoopGroupFactory)
         {
-            var messageResponse = new ReplaySubject<IRpcClientMessage<IMessage>>(1);
+            var messageResponse = new ReplaySubject<IRpcClientMessageDto<IMessage>>(1);
             MessageResponseStream = messageResponse.AsObservable();
 
             var socket = channelFactory.BuildChannel(EventLoopGroupFactory, nodeConfig.HostAddress, nodeConfig.Port, certificate);
