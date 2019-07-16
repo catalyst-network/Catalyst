@@ -33,18 +33,52 @@ using Catalyst.Common.Interfaces.P2P.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.Util;
 using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Common.IO.Messaging.Dto;
-using Catalyst.Common.P2P;
 using Catalyst.Common.Util;
 using Catalyst.Protocol.IPPN;
 using DnsClient;
-using Google.Protobuf;
 using NSubstitute;
-using NSubstitute.Core;
 
 namespace Catalyst.TestUtils
 {
     public static class HastingDiscoveryHelper
     {
+        public static IHastingsOriginator MockSeedStateHastingOriginator(IPeerIdentifier ownNode, IList<IPeerIdentifier> seedNodes)
+        {
+            return MockOriginator(ownNode, seedNodes);
+        }
+
+        public static IHastingsOriginator MockOriginator(IPeerIdentifier peer = default,
+            IList<IPeerIdentifier> currentPeersNeighbours = default,
+            KeyValuePair<ICorrelationId, IPeerIdentifier> expectedPnr = default,
+            IList<KeyValuePair<ICorrelationId, IPeerIdentifier>> contactedNeighbour = default)
+        {
+            var peerParam = peer ?? PeerIdentifierHelper.GetPeerIdentifier(ByteUtil.GenerateRandomByteArray(32).ToString());
+            var currentPeerNeighboursParam = currentPeersNeighbours ?? GenerateNeighbours();
+            var expectedPnrParam = expectedPnr;
+            var contactedNeighbourParam = contactedNeighbour;
+
+            var subbedOriginator = Substitute.For<IHastingsOriginator>();
+            
+            subbedOriginator.UnreachableNeighbour.Returns(0);
+            subbedOriginator.Peer.Returns(peerParam);
+            subbedOriginator.CurrentPeersNeighbours.Returns(currentPeerNeighboursParam);
+            subbedOriginator.ExpectedPnr.Returns(expectedPnrParam);
+            subbedOriginator.ContactedNeighbours.Returns(contactedNeighbourParam);
+
+            return subbedOriginator;
+        }
+        
+        public static IHastingMemento GenerateSeedState(IPeerIdentifier ownNode, List<string> domains, IPeerSettings peerSettings)
+        {
+            return SubMemento(ownNode, SubDnsClient(domains, peerSettings)
+               .GetSeedNodesFromDns(peerSettings.SeedServers).ToList());
+        }
+        
+        public static KeyValuePair<ICorrelationId, IPeerIdentifier> MockPnr(IPeerIdentifier peerIdentifier = default, ICorrelationId correlationId = default)
+        {
+            return new KeyValuePair<ICorrelationId, IPeerIdentifier>(correlationId ?? CorrelationId.GenerateCorrelationId(), peerIdentifier ?? PeerIdentifierHelper.GetPeerIdentifier("sender"));
+        }
+        
         public static IEnumerable<IPeerIdentifier> GenerateNeighbours(int amount = 5)
         {
             var neighbours = new List<IPeerIdentifier>();

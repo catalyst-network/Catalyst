@@ -62,7 +62,7 @@ namespace Catalyst.Node.Core.P2P.Discovery
         private readonly IPeerIdentifier _ownNode;
         private readonly int _peerDiscoveryBurnIn;
         public readonly IHastingsOriginator StateCandidate;
-        private readonly IHastingCareTaker _hastingCareTaker;
+        public readonly IHastingCareTaker _hastingCareTaker;
         private readonly IRepository<Peer> _peerRepository;
         private readonly ICancellationTokenProvider _cancellationTokenProvider;
         private readonly IDisposable _evictionSubscription;
@@ -168,7 +168,7 @@ namespace Catalyst.Node.Core.P2P.Discovery
         ///     so we assume it is reachable, so we add this to the StateCandidate.CurrentNeighbours.
         ///     Once the sum of StateCandidate.CurrentNeighbours and EvictedPingResponses equals the total expected responses,
         ///     At this point we received all the potential messages we could, if we have potential peers for the next step, then we can walk forward.
-        ///     if not of the condition has not been met within a timeout then we walk back by taking the last known state from the IHastingCaretaker.
+        ///     if not the condition has not been met within a timeout then we walk back by taking the last known state from the IHastingCaretaker.
         /// </summary>
         /// <returns></returns>
         public async Task DiscoveryAsync()
@@ -192,7 +192,8 @@ namespace Catalyst.Node.Core.P2P.Discovery
                         }
                         else
                         {
-                            // assume all neighbours provided are un-reachable.
+                            // we've received enough matching events but no StateCandidate.CurrentPeersNeighbours
+                            // Assume all neighbours provided are un-reachable.
                             WalkBack();
                         }
                     }
@@ -313,11 +314,6 @@ namespace Catalyst.Node.Core.P2P.Discovery
         {
             lock (StateCandidate)
             {
-                if (item.Value.Equals(null) || item.Key.Equals(null))
-                {
-                    return;
-                }
-                
                 if (StateCandidate.ExpectedPnr.Equals(item))
                 {
                     // state candidate didn't give any neighbours so go back a step.
@@ -330,7 +326,7 @@ namespace Catalyst.Node.Core.P2P.Discovery
                 }
             }
         }
-      
+
         /// <summary>
         ///     OnNext for PingResponse discovery messages that are of interest to us.
         ///     If it's not continue, if expecting this message it means a potential neighbour is reachable,
