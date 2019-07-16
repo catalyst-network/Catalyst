@@ -49,5 +49,16 @@ namespace Catalyst.TestUtils
         {
             return BuildSecureStringPassword(_expectedPassword);
         }
+
+        public SecureString ReadSecurePasswordAndAddToRegistry(PasswordRegistryKey passwordIdentifier,
+            string prompt = "Please enter your password")
+        {
+            return BuildSecureStringPassword(_expectedPassword);
+        }
+
+        public bool AddPasswordToRegistry(PasswordRegistryKey passwordIdentifier, SecureString password)
+        {
+            return true;
+        }
     }
 }

@@ -190,7 +190,8 @@
                 {
                     "type": "Catalyst.Common.Interfaces.Modules.KeySigner.IKeySigner, Catalyst.Common"
                 }
-            ]
+            ],
+            "instanceScope": "singleinstance"
         },
         {
             "type": "Catalyst.Common.Keystore.LocalKeyStore, Catalyst.Common",

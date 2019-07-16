@@ -86,7 +86,7 @@ namespace Catalyst.Cli.IntegrationTests.Connection
                 });
 
                 var passwordReader = Substitute.For<IPasswordReader>();
-                passwordReader.ReadSecurePassword(Arg.Any<PasswordRegistryKey>(), Arg.Any<string>()).ReturnsForAnyArgs(TestPasswordReader.BuildSecureStringPassword("trendy"));
+                passwordReader.ReadSecurePasswordAndAddToRegistry(Arg.Any<PasswordRegistryKey>(), Arg.Any<string>()).ReturnsForAnyArgs(TestPasswordReader.BuildSecureStringPassword("trendy"));
                 var logger = Substitute.For<ILogger>();
                 return new IpfsAdapter(passwordReader, peerSettings, FileSystem, logger);
             }

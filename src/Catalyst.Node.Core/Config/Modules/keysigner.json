@@ -7,7 +7,8 @@
                 {
                     "type": "Catalyst.Common.Interfaces.Modules.KeySigner.IKeySigner, Catalyst.Common"
                 }
-            ]
+            ] ,
+            "instanceScope": "singleinstance"
         },
         {
             "type": "Multiformats.Hash.Algorithms.BLAKE2B_256, Multiformats.Hash",

@@ -43,24 +43,35 @@ namespace Catalyst.Common.Cryptography
             _passwordRegistry = passwordRegistry;
         }
         
-        private void ReadSecurePasswordAndAddToRegistry(PasswordRegistryKey passwordIdentifier, string prompt)
+        public SecureString ReadSecurePasswordAndAddToRegistry(PasswordRegistryKey passwordIdentifier, string prompt = "Please enter your password")
         {
-            var pwd = new SecureString();
-            ReadCharsFromConsole(_userOutput, prompt, (c, i) => pwd.AppendChar(c), i => pwd.RemoveAt(i));
+            var password = ReadSecurePassword(passwordIdentifier, prompt);
+            if (password != null)
+            {
+                AddPasswordToRegistry(passwordIdentifier, password);
+            }
 
-            _passwordRegistry.AddItemToRegistry(passwordIdentifier, pwd);
+            return password;
         }
 
         public SecureString ReadSecurePassword(PasswordRegistryKey passwordIdentifier, string prompt = "Please enter your password")
         {
-            SecureString password = _passwordRegistry.GetItemFromRegistry(passwordIdentifier);
-            if (password == null)
-            {
-                ReadSecurePasswordAndAddToRegistry(passwordIdentifier, prompt);
-                password = _passwordRegistry.GetItemFromRegistry(passwordIdentifier);
-            }
+            var password = _passwordRegistry.GetItemFromRegistry(passwordIdentifier) ??
+                ReadSecurePasswordFromConsole(prompt);
 
             return password;
+        }
+                   
+        private SecureString ReadSecurePasswordFromConsole(string prompt)
+        {
+            var pwd = new SecureString();
+            ReadCharsFromConsole(_userOutput, prompt, (c, i) => pwd.AppendChar(c), i => pwd.RemoveAt(i));
+            return pwd.Length == 0 ? null : pwd;
+        }
+
+        public bool AddPasswordToRegistry(PasswordRegistryKey passwordIdentifier, SecureString password)
+        {
+            return _passwordRegistry.AddItemToRegistry(passwordIdentifier, password);
         }
 
         private static void ReadCharsFromConsole(IUserOutput userOutput,

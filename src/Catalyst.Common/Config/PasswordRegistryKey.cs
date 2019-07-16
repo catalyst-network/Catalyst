@@ -41,17 +41,17 @@ namespace Catalyst.Common.Config
 
         private sealed class IpfsPasswordKey : PasswordRegistryKey
         {
-            public IpfsPasswordKey() : base(2, "certificatePasswordKey") { }
+            public IpfsPasswordKey() : base(2, "ipfsPasswordKey") { }
         }
 
         private sealed class DfsPasswordKey : PasswordRegistryKey
         {
-            public DfsPasswordKey() : base(3, "certificatePasswordKey") { }
+            public DfsPasswordKey() : base(3, "dfsPasswordKey") { }
         }
 
         private sealed class DefaultNodePasswordKey : PasswordRegistryKey
         {
-            public DefaultNodePasswordKey() : base(4, "certificatePasswordKey") { }
+            public DefaultNodePasswordKey() : base(4, "defaultNodePasswordKey") { }
         }
     }
 }

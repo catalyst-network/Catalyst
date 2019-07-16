@@ -96,16 +96,17 @@ namespace Catalyst.Common.Keystore
 
             while (tries < MaxTries)
             {
-                var securePassword = _passwordReader.ReadSecurePassword(passwordIdentifier);
+                var securePassword = _passwordReader.ReadSecurePassword(passwordIdentifier, "Please provide your node password");
                 var password = StringFromSecureString(securePassword);
                 
                 try
                 {
-                    var keyStore = _keyStoreService.DecryptKeyStoreFromJson(password, json);
+                    var keyBytes = _keyStoreService.DecryptKeyStoreFromJson(password, json);
                     
-                    if (keyStore != null && keyStore.Length > 0)
+                    if (keyBytes != null && keyBytes.Length > 0)
                     {
-                        return keyStore;
+                        _passwordReader.AddPasswordToRegistry(passwordIdentifier, securePassword);
+                        return keyBytes;
                     }
                 }
                 catch (DecryptionException)
@@ -133,7 +134,7 @@ namespace Catalyst.Common.Keystore
             try
             {
                 var address = _addressHelper.GenerateAddress(privateKey.GetPublicKey());        
-                var securePassword = _passwordReader.ReadSecurePassword(_defaultNodePassword);
+                var securePassword = _passwordReader.ReadSecurePassword(_defaultNodePassword, "Please create a password for this node");
     
                 var password = StringFromSecureString(securePassword);
     
@@ -142,8 +143,9 @@ namespace Catalyst.Common.Keystore
                     key: _cryptoContext.ExportPrivateKey(privateKey),
                     address: address);
 
-                await _fileSystem.WriteFileToCddSubDirectoryAsync(keyIdentifier.Name, Constants.KeyStoreDataSubDir, json);
+                _passwordReader.AddPasswordToRegistry(_defaultNodePassword, securePassword);
 
+                await _fileSystem.WriteFileToCddSubDirectoryAsync(keyIdentifier.Name, Constants.KeyStoreDataSubDir, json);
             }
             catch (Exception e)
             {
@@ -166,7 +168,7 @@ namespace Catalyst.Common.Keystore
                 return File.ReadAllText(keyStoreFile.FullName);
             }
 
-            _logger.Error("No keystore exists for the given key");
+            _logger.Information("No keystore exists for the given key");
             return null;
         }
 

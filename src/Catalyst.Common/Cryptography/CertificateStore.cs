@@ -40,7 +40,6 @@ namespace Catalyst.Common.Cryptography
     {
         private readonly PasswordRegistryKey CertificatePasswordIdentifier = PasswordRegistryKey.CertificatePassword;
         private static int MaxTries => 5;
-        private static int PasswordReTries => 1;
         private const string LocalHost = "localhost";
         private readonly DirectoryInfo _storageFolder;
         private readonly IPasswordReader _passwordReader;
@@ -118,44 +117,36 @@ namespace Catalyst.Common.Cryptography
                 return false;
             }
 
-            try
+            var fileInBytes = File.ReadAllBytes(fullPath);
+
+            var passwordPromptMessage =
+                $"Please type in the password for the certificate at {fullPath} (optional):";
+
+            while (PasswordTries < MaxTries)
             {
-                var fileInBytes = File.ReadAllBytes(fullPath);
-
-                var passwordPromptMessage =
-                    $"Please type in the password for the certificate at {fullPath} (optional):";
-                var tryCount = 0;
-                while (tryCount <= MaxTries)
+                try
                 {
-                    try
+                    using (var passwordFromConsole = _passwordReader.ReadSecurePassword(CertificatePasswordIdentifier, passwordPromptMessage))
                     {
-                        using (var passwordFromConsole = _passwordReader.ReadSecurePassword(CertificatePasswordIdentifier, passwordPromptMessage))
-                        {
-                            certificate = new X509Certificate2(fileInBytes, passwordFromConsole);
-                            break;
-                        }
+                        certificate = passwordFromConsole == null ? new X509Certificate2(fileInBytes) : new X509Certificate2(fileInBytes, passwordFromConsole);
+                        _passwordReader.AddPasswordToRegistry(CertificatePasswordIdentifier, passwordFromConsole);
+                        return true;
                     }
-                    catch (CryptographicException ex)
-                    {
-                        PasswordAttemptCounter(ex.Message, fullPath);
-                    }
-
-                    tryCount++;
+                }
+                catch (CryptographicException ex)
+                {
+                    PasswordAttemptCounter(ex.Message, fullPath);
                 }
             }
-            catch (Exception exception)
-            {
-                Logger.Error(exception, "Failed to read certificate {0}", fullPath);
-                return false;
-            }
-
-            return true;
+            
+            Logger.Error("Failed to read certificate {0}", fullPath);
+            return false;
         }
 
         private void PasswordAttemptCounter(string msg, string path)
         {
             PasswordTries++;
-            if (PasswordTries == PasswordReTries)
+            if (PasswordTries == MaxTries)
             {
                 Logger.Warning("The certificate at {0} requires a password to be read.", path);
             }
