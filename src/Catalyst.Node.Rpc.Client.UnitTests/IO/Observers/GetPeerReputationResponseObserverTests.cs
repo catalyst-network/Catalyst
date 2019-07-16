@@ -51,7 +51,10 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
         private PeerReputationResponseObserver _observer;
 
         /// <summary>
-        /// Initializes the <see cref="GetPeerReputationResponseObserverTest"/> class.
+        /// Initializes the <see>
+        ///     <cref>GetPeerReputationResponseObserverTest</cref>
+        /// </see>
+        /// class.
         /// </summary>
         static GetPeerReputationResponseObserverTests()
         {             
@@ -64,7 +67,10 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="GetPeerReputationResponseObserverTest"/> class.
+        /// Initializes a new instance of the <see>
+        ///     <cref>GetPeerReputationResponseObserverTest</cref>
+        /// </see>
+        /// class.
         /// </summary>
         public GetPeerReputationResponseObserverTests()
         {
