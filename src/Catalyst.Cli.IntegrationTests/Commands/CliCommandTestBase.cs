@@ -123,12 +123,5 @@ namespace Catalyst.Cli.IntegrationTests.Commands
             Scope?.Dispose();
             _container.Dispose();
         }
-
-        protected override void Dispose(bool disposing)
-        {
-            base.Dispose(disposing);
-            Scope?.Dispose();
-            _container.Dispose();
-        }
     }
 }
