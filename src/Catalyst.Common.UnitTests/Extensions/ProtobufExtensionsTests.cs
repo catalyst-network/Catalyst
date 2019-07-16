@@ -22,6 +22,7 @@
 #endregion
 
 using System;
+using System.Linq;
 using System.Text;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.IO.Messaging.Correlation;
@@ -33,6 +34,7 @@ using Catalyst.Protocol.Rpc.Node;
 using Catalyst.Protocol.Transaction;
 using Catalyst.TestUtils;
 using FluentAssertions;
+using Google.Protobuf;
 using Multiformats.Hash;
 using Xunit;
 
@@ -120,6 +122,17 @@ namespace Catalyst.Common.UnitTests.Extensions
 
             var multihash = byteString.ToMultihashString();
             multihash.Should().NotBe(null);
+        }
+
+        [Fact]
+        public void ToCorrelationId_Should_Take_Care_Of_All_ByteStrings()
+        {
+            var tooLong = ByteUtil.GenerateRandomByteArray(43).ToByteString();
+            var tooShort = ByteUtil.GenerateRandomByteArray(14).ToByteString();
+
+            tooLong.ToCorrelationId().Should().Be(new CorrelationId(tooLong.ToByteArray().Take(16).ToArray()));
+            tooShort.ToCorrelationId().Should().Be(new CorrelationId(tooShort.ToByteArray().Concat(new byte[] {0, 0}).ToArray()));
+            ((ByteString) null).ToCorrelationId().Should().Be(new CorrelationId(Guid.Empty));
         }
     }
 }
