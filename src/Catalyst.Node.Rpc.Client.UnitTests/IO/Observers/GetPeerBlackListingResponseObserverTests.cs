@@ -51,7 +51,10 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
         private PeerBlackListingResponseObserver _observer;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="GetPeerBlackListingResponseObserverTest"/> class. </summary>
+        /// Initializes a new instance of the <see>
+        ///     <cref>GetPeerBlackListingResponseObserverTest</cref>
+        /// </see>
+        /// class. </summary>
         public GetPeerBlackListingResponseObserverTests()
         {
             _logger = Substitute.For<ILogger>();

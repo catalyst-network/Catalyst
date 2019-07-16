@@ -22,13 +22,11 @@
 #endregion
 
 using System;
-using System.Diagnostics;
 using System.Linq;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Threading;
-using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.ReputationSystem;
 using Catalyst.Common.P2P;
 using Dawn;
@@ -44,7 +42,7 @@ namespace Catalyst.Node.Core.P2P.ReputationSystem
         public readonly ReplaySubject<IPeerReputationChange> ReputationEvent;
         public IObservable<IPeerReputationChange> ReputationEventStream => ReputationEvent.AsObservable();
         public IObservable<IPeerReputationChange> MergedEventStream { get; set; }
-        static readonly SemaphoreSlim semaphoreSlim = new SemaphoreSlim(1);
+        static readonly SemaphoreSlim SemaphoreSlim = new SemaphoreSlim(1);
 
         public ReputationManager(IRepository<Peer> peerRepository, ILogger logger)
         {
@@ -79,7 +77,7 @@ namespace Catalyst.Node.Core.P2P.ReputationSystem
 
         public async void OnNext(IPeerReputationChange peerReputationChange)
         {
-            await semaphoreSlim.WaitAsync().ConfigureAwait(false);
+            await SemaphoreSlim.WaitAsync().ConfigureAwait(false);
             try
             {
                 var peer = PeerRepository.GetAll().FirstOrDefault(p => p.PeerIdentifier.Equals(peerReputationChange.PeerIdentifier));
@@ -90,7 +88,7 @@ namespace Catalyst.Node.Core.P2P.ReputationSystem
             }
             finally
             {
-                semaphoreSlim.Release();
+                SemaphoreSlim.Release();
             }
         }
         
