@@ -21,6 +21,7 @@
 
 #endregion
 
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Reactive.Linq;
@@ -68,25 +69,33 @@ namespace Catalyst.Node.Core.P2P.IO.Transport.Channels
             _peerIdValidator = peerIdValidator;
         }
 
-        protected override List<IChannelHandler> Handlers => 
-            new List<IChannelHandler>
+        protected override Func<List<IChannelHandler>> HandlerGenerationFunction
+        {
+            get
             {
-                new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
-                    new DatagramPacketDecoder(new ProtobufDecoder(ProtocolMessageSigned.Parser)),
-                    new DatagramPacketEncoder<IMessage>(new ProtobufEncoder())
-                ),
-                new PeerIdValidationHandler(_peerIdValidator),
-                new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
-                    new ProtocolMessageVerifyHandler(_keySigner),
-                    new ProtocolMessageSignHandler(_keySigner)
-                ),
-                new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
-                    new CorrelationHandler<IPeerMessageCorrelationManager>(_messageCorrelationManager),
-                    new CorrelatableHandler<IPeerMessageCorrelationManager>(_messageCorrelationManager)
-                ),
-                new BroadcastHandler(_broadcastManager),
-                new ObservableServiceHandler()
-            };
+                return () =>
+                {
+                    return new List<IChannelHandler>
+                    {
+                        new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
+                            new DatagramPacketDecoder(new ProtobufDecoder(ProtocolMessageSigned.Parser)),
+                            new DatagramPacketEncoder<IMessage>(new ProtobufEncoder())
+                        ),
+                        new PeerIdValidationHandler(_peerIdValidator),
+                        new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
+                            new ProtocolMessageVerifyHandler(_keySigner),
+                            new ProtocolMessageSignHandler(_keySigner)
+                        ),
+                        new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
+                            new CorrelationHandler<IPeerMessageCorrelationManager>(_messageCorrelationManager),
+                            new CorrelatableHandler<IPeerMessageCorrelationManager>(_messageCorrelationManager)
+                        ),
+                        new BroadcastHandler(_broadcastManager),
+                        new ObservableServiceHandler()
+                    };
+                };
+            }
+        }
 
         /// <param name="handlerEventLoopGroupFactory"></param>
         /// <param name="targetAddress">Ignored</param>
@@ -99,7 +108,7 @@ namespace Catalyst.Node.Core.P2P.IO.Transport.Channels
             X509Certificate2 certificate = null)
         {
             var channel = BootStrapChannel(handlerEventLoopGroupFactory, targetAddress, targetPort);
-            
+
             var messageStream = channel.Pipeline.Get<IObservableServiceHandler>()?.MessageStream;
 
             return new ObservableChannel(messageStream
