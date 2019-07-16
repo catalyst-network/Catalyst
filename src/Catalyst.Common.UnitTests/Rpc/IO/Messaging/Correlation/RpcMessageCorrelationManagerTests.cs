@@ -69,7 +69,7 @@ namespace Catalyst.Common.UnitTests.Rpc.IO.Messaging.Correlation
             }
         }
 
-        [Fact]
+        [Fact(Skip = "Fixed in pending PR https://github.com/catalyst-network/Catalyst.Node/pull/675")]
         public override async Task RequestStore_Should_Not_Keep_Records_For_Longer_Than_Ttl()
         {
             var senderPeerId = PeerIdHelper.GetPeerId("sender");

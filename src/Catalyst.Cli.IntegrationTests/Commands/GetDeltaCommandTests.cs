@@ -26,13 +26,12 @@ using Catalyst.Common.Extensions;
 using Catalyst.Protocol.Rpc.Node;
 using FluentAssertions;
 using Multiformats.Hash;
-using Multiformats.Hash.Algorithms;
 using Xunit;
 using Xunit.Abstractions;
 
 namespace Catalyst.Cli.IntegrationTests.Commands
 {
-    public sealed class GetDeltaCommandTests : CliCommandTestBase
+    public sealed class GetDeltaCommandTests : CliCommandTestsBase
     {
         public GetDeltaCommandTests(ITestOutputHelper output) : base(output) { }
 
