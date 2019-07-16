@@ -28,7 +28,10 @@ namespace Catalyst.Common.Interfaces.P2P.Discovery
     public interface IHastingsOriginator
     {
         IPeerIdentifier Peer { get; set; }
-        ConcurrentBag<IPeerIdentifier> CurrentPeersNeighbours { get; set; }
+        ConcurrentBag<IPeerIdentifier> CurrentPeersNeighbours { get; }
+
+        int ExpectedResponses { get; set; }
+        int UnreachableNeighbour { get; }
 
         /// <summary>
         ///     creates a memento from current state
@@ -41,5 +44,7 @@ namespace Catalyst.Common.Interfaces.P2P.Discovery
         /// </summary>
         /// <param name="hastingMemento"></param>
         void SetMemento(IHastingMemento hastingMemento);
+
+        void IncrementUnreachablePeer();
     }
 }

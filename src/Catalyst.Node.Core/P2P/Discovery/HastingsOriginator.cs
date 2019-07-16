@@ -22,7 +22,7 @@
 #endregion
 
 using System.Collections.Concurrent;
-using System.Linq;
+using System.Threading;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.Discovery;
 
@@ -30,38 +30,43 @@ namespace Catalyst.Node.Core.P2P.Discovery
 {
     public sealed class HastingsOriginator : IHastingsOriginator
     {
-        private IPeerIdentifier _peer;
+        private int _unreachableNeighbour;
         
-        public IPeerIdentifier Peer
-        {
-            get => _peer;
-            set => _peer = value;
-        }
-
-        private ConcurrentBag<IPeerIdentifier> _currentPeersNeighbours;
+        public IPeerIdentifier Peer { get; set; }
+        public int ExpectedResponses { get; set; }
+        public ConcurrentBag<IPeerIdentifier> CurrentPeersNeighbours { get; set; }
         
-        public ConcurrentBag<IPeerIdentifier> CurrentPeersNeighbours
+        public int UnreachableNeighbour
         {
-            get => _currentPeersNeighbours;
-            set => _currentPeersNeighbours = value;
+            get => _unreachableNeighbour;
+            private set => _unreachableNeighbour = value;
         }
 
         public HastingsOriginator()
         {
-            _currentPeersNeighbours = new ConcurrentBag<IPeerIdentifier>();
+            ExpectedResponses = 0;
+            _unreachableNeighbour = 0;
+            CurrentPeersNeighbours = new ConcurrentBag<IPeerIdentifier>();
         }
 
         /// <inheritdoc />
         public IHastingMemento CreateMemento()
         {
-            return new HastingMemento(_peer, _currentPeersNeighbours);
+            return new HastingMemento(Peer, CurrentPeersNeighbours);
         }
         
         /// <inheritdoc />
         public void SetMemento(IHastingMemento hastingMemento)
         {
+            ExpectedResponses = 0;
+            UnreachableNeighbour = 0;
             Peer = hastingMemento.Peer;
             CurrentPeersNeighbours = new ConcurrentBag<IPeerIdentifier>(hastingMemento.Neighbours);
+        }
+
+        public void IncrementUnreachablePeer()
+        {
+            Interlocked.Increment(ref _unreachableNeighbour);
         }
     }
 }
