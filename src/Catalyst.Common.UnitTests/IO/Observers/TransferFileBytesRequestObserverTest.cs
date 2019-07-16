@@ -73,11 +73,11 @@ namespace Catalyst.Common.UnitTests.IO.Observers
                 CorrelationFileName = CorrelationId.GenerateCorrelationId().Id.ToByteString()
             }.ToProtocolMessage(PeerIdHelper.GetPeerId("Test"), guid);
 
-            _downloadFileTransferFactory.DownloadChunk(Arg.Any<ICorrelationId>(), Arg.Any<uint>(), Arg.Any<byte[]>())
+            _downloadFileTransferFactory.DownloadChunk(Arg.Any<TransferFileBytesRequest>())
                .Returns(FileTransferResponseCodes.Successful);
 
             request.SendToHandler(_context, _observer);
-            _downloadFileTransferFactory.Received(1).DownloadChunk(Arg.Any<ICorrelationId>(), Arg.Any<uint>(), Arg.Any<byte[]>());
+            _downloadFileTransferFactory.Received(1).DownloadChunk(Arg.Any<TransferFileBytesRequest>());
         }
 
         [Fact]

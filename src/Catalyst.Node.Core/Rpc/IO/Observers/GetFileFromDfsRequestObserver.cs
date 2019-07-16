@@ -26,6 +26,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Common.Config;
 using Catalyst.Common.Enumerator;
+using Catalyst.Common.Extensions;
 using Catalyst.Common.FileTransfer;
 using Catalyst.Common.Interfaces.FileTransfer;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
@@ -34,6 +35,7 @@ using Catalyst.Common.Interfaces.IO.Observers;
 using Catalyst.Common.Interfaces.Modules.Dfs;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Observers;
+using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using DotNetty.Transport.Channels;
@@ -46,7 +48,7 @@ namespace Catalyst.Node.Core.Rpc.IO.Observers
     /// The request handler to get a file from the DFS
     /// </summary>
     /// <seealso cref="IRpcRequestObserver" />
-    public sealed class GetFileFromDfsRequestObserver 
+    public sealed class GetFileFromDfsRequestObserver
         : RequestObserverBase<GetFileFromDfsRequest, GetFileFromDfsResponse>,
             IRpcRequestObserver
     {
@@ -75,7 +77,7 @@ namespace Catalyst.Node.Core.Rpc.IO.Observers
             _fileTransferFactory = fileTransferFactory;
             _dfs = dfs;
         }
-        
+
         /// <summary>
         /// 
         /// </summary>
@@ -92,7 +94,7 @@ namespace Catalyst.Node.Core.Rpc.IO.Observers
             Guard.Argument(getFileFromDfsRequest, nameof(getFileFromDfsRequest)).NotNull();
             Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
             Guard.Argument(senderPeerIdentifier, nameof(senderPeerIdentifier)).NotNull();
-            
+
             long fileLen = 0;
 
             FileTransferResponseCodes responseCode;
@@ -103,20 +105,18 @@ namespace Catalyst.Node.Core.Rpc.IO.Observers
                 {
                     responseCode = await Task.Run(async () =>
                     {
-                        using (var stream = await _dfs.ReadAsync(getFileFromDfsRequest.DfsHash).ConfigureAwait(false))
+                        var stream = await _dfs.ReadAsync(getFileFromDfsRequest.DfsHash).ConfigureAwait(false);
+                        fileLen = stream.Length;
+                        using (var fileTransferInformation = new UploadFileTransferInformation(
+                            stream,
+                            senderPeerIdentifier,
+                            PeerIdentifier,
+                            channelHandlerContext.Channel,
+                            correlationId,
+                            _dtoFactory
+                        ))
                         {
-                            fileLen = stream.Length;
-                            using (var fileTransferInformation = new UploadFileTransferInformation(
-                                stream,
-                                PeerIdentifier,
-                                senderPeerIdentifier,
-                                channelHandlerContext.Channel,
-                                correlationId,
-                                _dtoFactory
-                            ))
-                            {
-                                return _fileTransferFactory.RegisterTransfer(fileTransferInformation);                          
-                            }
+                            return _fileTransferFactory.RegisterTransfer(fileTransferInformation);
                         }
                     }).ConfigureAwait(false);
                 }
@@ -126,16 +126,21 @@ namespace Catalyst.Node.Core.Rpc.IO.Observers
                         "Failed to handle GetFileFromDfsRequestHandler after receiving message {0}", getFileFromDfsRequest);
                     responseCode = FileTransferResponseCodes.Error;
                 }
-                
-                if (responseCode == FileTransferResponseCodes.Successful)
-                {
-                    await _fileTransferFactory.FileTransferAsync(correlationId, CancellationToken.None).ConfigureAwait(false);
-                }
-
                 return ReturnResponse(responseCode, fileLen);
             });
 
             return task.Result;
+        }
+
+        public override void OnNext(IObserverDto<ProtocolMessage> messageDto)
+        {
+            base.OnNext(messageDto);
+
+            var correlationId = messageDto.Payload.CorrelationId.ToCorrelationId();
+            if (_fileTransferFactory.GetFileTransferInformation(correlationId) != null)
+            {
+                _fileTransferFactory.FileTransferAsync(correlationId, CancellationToken.None).ConfigureAwait(false);
+            }
         }
 
         /// <summary>Returns the response.</summary>
@@ -144,12 +149,12 @@ namespace Catalyst.Node.Core.Rpc.IO.Observers
         private GetFileFromDfsResponse ReturnResponse(Enumeration responseCode, long fileSize)
         {
             Logger.Information("File upload response code: " + responseCode);
-            
+
             // Build Response
             var response = new GetFileFromDfsResponse
             {
-                ResponseCode = ByteString.CopyFrom((byte) responseCode.Id),
-                FileSize = (ulong) fileSize
+                ResponseCode = ByteString.CopyFrom((byte)responseCode.Id),
+                FileSize = (ulong)fileSize
             };
 
             return response;
