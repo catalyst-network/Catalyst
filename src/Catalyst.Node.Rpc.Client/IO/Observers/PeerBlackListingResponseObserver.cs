@@ -47,8 +47,8 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
         : ResponseObserverBase<SetPeerBlackListResponse>,
             IRpcResponseObserver
     {
-        public ReplaySubject<IRPCClientMessageDto<IMessage>> MessageResponse;
-        public IObservable<IRPCClientMessageDto<IMessage>> MessageResponseStream => MessageResponse.AsObservable();
+        private readonly ReplaySubject<IRPCClientMessageDto<IMessage>> _messageResponse;
+        public IObservable<IRPCClientMessageDto<IMessage>> MessageResponseStream { private set; get; }
 
         private readonly IUserOutput _output;
 
@@ -57,7 +57,8 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
             : base(logger)
         {
             _output = output;
-            MessageResponse = new ReplaySubject<IRPCClientMessageDto<IMessage>>(1);
+            _messageResponse = new ReplaySubject<IRPCClientMessageDto<IMessage>>(1);
+            MessageResponseStream = _messageResponse.AsObservable();
         }
 
         protected override void HandleResponse(SetPeerBlackListResponse setPeerBlackListResponse,
@@ -68,9 +69,8 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
             Guard.Argument(setPeerBlackListResponse, nameof(setPeerBlackListResponse)).NotNull();
             Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
             Guard.Argument(senderPeerIdentifier, nameof(senderPeerIdentifier)).NotNull();
-            Logger.Debug("Handling GetPeerBlackList response");
 
-            MessageResponse.OnNext(new RPCClientMessageDto<IMessage>(setPeerBlackListResponse, senderPeerIdentifier));
+            _messageResponse.OnNext(new RPCClientMessageDto<IMessage>(setPeerBlackListResponse, senderPeerIdentifier));
         }
     }
 }

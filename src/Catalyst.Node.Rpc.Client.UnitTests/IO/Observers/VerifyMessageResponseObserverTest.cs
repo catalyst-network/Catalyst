@@ -23,6 +23,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Reactive.Concurrency;
+using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Cli;
@@ -32,6 +34,7 @@ using Catalyst.Node.Rpc.Client.IO.Observers;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
+using FluentAssertions;
 using NSubstitute;
 using Serilog;
 using Xunit;
@@ -86,12 +89,19 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
                     response.CorrelationId)
             );
 
+            VerifyMessageResponse messageStreamResponse = null;
+
             _observer = new VerifyMessageResponseObserver(_output, _logger);
             _observer.StartObserving(messageStream);
+            _observer.MessageResponseStream.Where(x => x.Message.GetType() == typeof(VerifyMessageResponse)).SubscribeOn(NewThreadScheduler.Default).Subscribe((rpcClientMessageDto) =>
+            {
+                messageStreamResponse = (VerifyMessageResponse)rpcClientMessageDto.Message;
+            });
 
-            await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync().ConfigureAwait(false);
+            await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
 
-            _output.Received(1).WriteLine(isSignedByNode.ToString());
+            messageStreamResponse.Should().NotBeNull();
+            messageStreamResponse.IsSignedByKey.Should().Be(response.Content.IsSignedByKey);
         }
 
         public void Dispose()

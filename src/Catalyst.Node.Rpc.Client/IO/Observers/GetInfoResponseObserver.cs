@@ -30,6 +30,7 @@ using Catalyst.Common.Interfaces.IO.Observers;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Rpc.IO.Messaging.Dto;
 using Catalyst.Common.IO.Observers;
+using Catalyst.Node.Rpc.Client.IO.Messaging.Dto;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using DotNetty.Transport.Channels;
@@ -46,8 +47,8 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
         : ResponseObserverBase<GetInfoResponse>,
             IRpcResponseObserver
     {
-                public ReplaySubject<IRPCClientMessageDto<IMessage>> MessageResponse;
-        public IObservable<IRPCClientMessageDto<IMessage>> MessageResponseStream => MessageResponse.AsObservable();
+        private readonly ReplaySubject<IRPCClientMessageDto<IMessage>> _messageResponse;
+        public IObservable<IRPCClientMessageDto<IMessage>> MessageResponseStream { private set; get; }
         private readonly IUserOutput _output;
 
         /// <summary>
@@ -56,12 +57,14 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
         /// <param name="output"></param>
         /// <param name="logger">Logger to log debug related information.</param>
         public GetInfoResponseObserver(IUserOutput output,
-            ILogger logger) 
+            ILogger logger)
             : base(logger)
         {
             _output = output;
+            _messageResponse = new ReplaySubject<IRPCClientMessageDto<IMessage>>(1);
+            MessageResponseStream = _messageResponse.AsObservable();
         }
-        
+
         /// <summary>
         /// 
         /// </summary>
@@ -77,22 +80,8 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
             Guard.Argument(getInfoResponse, nameof(getInfoResponse)).NotNull();
             Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
             Guard.Argument(senderPeerIdentifier, nameof(senderPeerIdentifier)).NotNull();
-            Logger.Debug("Handling GetInfoResponse");
-            
-            try
-            {
-                _output.WriteLine(getInfoResponse.Query);
-            }
-            catch (Exception ex)
-            {
-                Logger.Error(ex,
-                    "Failed to handle GetInfoResponse after receiving message {0}", getInfoResponse);
-                _output.WriteLine(ex.Message);
-            }
-            finally
-            {
-                Logger.Information("Press Enter to continue ...");
-            }
+
+            _messageResponse.OnNext(new RPCClientMessageDto<IMessage>(getInfoResponse, senderPeerIdentifier));
         }
     }
 }

@@ -30,6 +30,7 @@ using Catalyst.Common.Interfaces.IO.Observers;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Rpc.IO.Messaging.Dto;
 using Catalyst.Common.IO.Observers;
+using Catalyst.Node.Rpc.Client.IO.Messaging.Dto;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using DotNetty.Transport.Channels;
@@ -46,8 +47,8 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
         : ResponseObserverBase<VerifyMessageResponse>,
             IRpcResponseObserver
     {
-        public ReplaySubject<IRPCClientMessageDto<IMessage>> MessageResponse;
-        public IObservable<IRPCClientMessageDto<IMessage>> MessageResponseStream => MessageResponse.AsObservable();
+        private readonly ReplaySubject<IRPCClientMessageDto<IMessage>> _messageResponse;
+        public IObservable<IRPCClientMessageDto<IMessage>> MessageResponseStream { private set; get; }
 
         private readonly IUserOutput _output;
 
@@ -61,6 +62,8 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
             : base(logger)
         {
             _output = output;
+            _messageResponse = new ReplaySubject<IRPCClientMessageDto<IMessage>>(1);
+            MessageResponseStream = _messageResponse.AsObservable();
         }
         
         /// <summary>
@@ -78,26 +81,8 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
             Guard.Argument(verifyMessageResponse, nameof(verifyMessageResponse)).NotNull();
             Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
             Guard.Argument(senderPeerIdentifier, nameof(senderPeerIdentifier)).NotNull();
-            Logger.Debug($"Handling VerifyMessageResponse");
 
-            try
-            {
-                //decode the received message
-                var result = verifyMessageResponse.IsSignedByKey;
-
-                //return to the user the signature, public key and the original message that he sent to be signed
-                _output.WriteLine($@"{result.ToString()}");
-            }
-            catch (Exception ex)
-            {
-                Logger.Error(ex,
-                    "Failed to handle VerifyMessageResponse after receiving message {0}", verifyMessageResponse);
-                throw;
-            }
-            finally
-            {
-                Logger.Information(@"Press Enter to continue ...");
-            }
+            _messageResponse.OnNext(new RPCClientMessageDto<IMessage>(verifyMessageResponse, senderPeerIdentifier));
         }
     }
 }
