@@ -43,9 +43,9 @@ namespace Catalyst.Node.Rpc.Client
     ///     This class provides a command line interface (CLI) application to connect to Catalyst Node.
     ///     Through the CLI the node operator will be able to connect to any number of running nodes and run commands.
     /// </summary>
-    internal sealed class NodeRpcClient : TcpClient, INodeRpcClient, IObserver<IRPCClientMessageDto<IMessage>>
+    internal sealed class NodeRpcClient : TcpClient, INodeRpcClient
     {
-        public IObservable<IRPCClientMessageDto<IMessage>> MessageResponseStream
+        public IObservable<IRpcClientMessage<IMessage>> MessageResponseStream
         {
             private set;
             get;
@@ -67,7 +67,7 @@ namespace Catalyst.Node.Rpc.Client
             : base(channelFactory, Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType),
                 clientEventLoopGroupFactory)
         {
-            var messageResponse = new ReplaySubject<IRPCClientMessageDto<IMessage>>(1);
+            var messageResponse = new ReplaySubject<IRpcClientMessage<IMessage>>(1);
             MessageResponseStream = messageResponse.AsObservable();
 
             var socket = channelFactory.BuildChannel(EventLoopGroupFactory, nodeConfig.HostAddress, nodeConfig.Port, certificate);
@@ -77,27 +77,7 @@ namespace Catalyst.Node.Rpc.Client
                 handler.StartObserving(socket.MessageStream);
             });
 
-            foreach (var handler in handlers)
-            {
-                //handler.MessageResponseStream.Subscribe(this);
-            }
-
             Channel = socket.Channel;
-        }
-
-        public void OnCompleted()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void OnError(Exception error)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void OnNext(IRPCClientMessageDto<IMessage> value)
-        {
-            
         }
     }
 }

@@ -46,7 +46,7 @@ namespace Catalyst.Cli.CommandTypes
 
         protected BaseMessageCommand(ICommandContext commandContext) : base(commandContext)
         {
-            CommandContext.SocketClientRegistry.EventStream.OfType<SocketClientRegistryClientAdded>().Subscribe(SocketClientRegistryClientAddedOnNext, OnError, OnCompleted);
+            CommandContext.SocketClientRegistry.EventStream.OfType<SocketClientRegistryClientAdded>().Subscribe(SocketClientRegistryClientAddedOnNext);
         }
 
         public virtual void SendMessage(TOption options)
@@ -91,17 +91,7 @@ namespace Catalyst.Cli.CommandTypes
             CommandContext.UserOutput.WriteLine($"{JsonConvert.SerializeObject(response)}");
         }
 
-        private void OnCompleted()
-        {
-
-        }
-
-        private void OnError(Exception error)
-        {
-
-        }
-
-        private void OnNext(IRPCClientMessageDto<IMessage> value)
+        private void CommandResponseOnNext(IRpcClientMessage<IMessage> value)
         {
             ResponseMessage((TResponse)value.Message);
         }
@@ -109,7 +99,7 @@ namespace Catalyst.Cli.CommandTypes
         private void SocketClientRegistryClientAddedOnNext(SocketClientRegistryClientAdded value)
         {
             INodeRpcClient client = CommandContext.SocketClientRegistry.GetClientFromRegistry(value.SocketHashCode);
-            client.MessageResponseStream.Where(x => x.Message.GetType() == typeof(TResponse)).SubscribeOn(NewThreadScheduler.Default).Subscribe(OnNext, OnError, OnCompleted);
+            client.MessageResponseStream.Where(x => x.Message.GetType() == typeof(TResponse)).SubscribeOn(NewThreadScheduler.Default).Subscribe(CommandResponseOnNext);
         }
     }
 }

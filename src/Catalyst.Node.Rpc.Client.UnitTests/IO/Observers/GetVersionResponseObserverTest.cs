@@ -92,9 +92,9 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
 
             _observer = new GetVersionResponseObserver(_output, _logger);
             _observer.StartObserving(messageStream);
-            _observer.MessageResponseStream.Where(x => x.Message.GetType() == typeof(VersionResponse)).SubscribeOn(NewThreadScheduler.Default).Subscribe((rpcClientMessageDto) =>
+            _observer.MessageResponseStream.Where(x => x.Message.GetType() == typeof(VersionResponse)).SubscribeOn(NewThreadScheduler.Default).Subscribe((RpcClientMessage) =>
             {
-                messageStreamResponse = (VersionResponse)rpcClientMessageDto.Message;
+                messageStreamResponse = (VersionResponse)RpcClientMessage.Message;
             });
 
             await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();

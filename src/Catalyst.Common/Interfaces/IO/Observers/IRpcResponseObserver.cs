@@ -30,6 +30,6 @@ namespace Catalyst.Common.Interfaces.IO.Observers
 {
     public interface IRpcResponseObserver : IResponseMessageObserver
     {
-        IObservable<IRPCClientMessageDto<IMessage>> MessageResponseStream { get; }
+        IObservable<IRpcClientMessage<IMessage>> MessageResponseStream { get; }
     }
 }
