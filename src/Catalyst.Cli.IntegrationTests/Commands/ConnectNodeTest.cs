@@ -21,8 +21,6 @@
 
 #endregion
 
-using Autofac;
-using Catalyst.Common.Interfaces.Cli;
 using FluentAssertions;
 using Xunit;
 using Xunit.Abstractions;
@@ -34,33 +32,12 @@ namespace Catalyst.Cli.IntegrationTests.Commands
         public ConnectNodeTest(ITestOutputHelper output) : base(output) { }
 
         [Fact]
-        public void Cli_Can_Connect_To_Node()
-        {
-            using (var container = ContainerBuilder.Build())
-            {
-                using (container.BeginLifetimeScope(CurrentTestName))
-                {
-                    var shell = container.Resolve<ICatalystCli>();
-                    var hasConnected = shell.ParseCommand("connect", "-n", "node1");
-                    hasConnected.Should().BeTrue();
-                }
-            }
-        }
-
-        [Fact]
         public void Cli_Can_Handle_Multiple_Connection_Attempts()
         {
-            using (var container = ContainerBuilder.Build())
+            for (var i = 0; i < 10; i++)
             {
-                using (container.BeginLifetimeScope(CurrentTestName))
-                {
-                    var shell = container.Resolve<ICatalystCli>();
-                    for (var i = 0; i < 10; i++)
-                    {
-                        var canConnect = shell.ParseCommand("connect", "-n", "node1");
-                        canConnect.Should().BeTrue();
-                    }
-                }
+                var canConnect = Shell.ParseCommand("connect", NodeArgumentPrefix, ServerNodeName);
+                canConnect.Should().BeTrue();
             }
         }
     }
