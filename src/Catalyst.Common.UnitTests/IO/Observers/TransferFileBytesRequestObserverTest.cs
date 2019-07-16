@@ -22,16 +22,14 @@
 
 #endregion
 
-using System.Linq;
-using System.Threading.Tasks;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
+using Catalyst.Common.FileTransfer;
 using Catalyst.Common.Interfaces.FileTransfer;
-using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Common.IO.Messaging.Dto;
-using Catalyst.Common.Rpc.IO.Observers;
+using Catalyst.Node.Core.Rpc.IO.Observers;
 using Catalyst.Protocol;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
@@ -41,6 +39,8 @@ using FluentAssertions;
 using Google.Protobuf;
 using NSubstitute;
 using Serilog;
+using System.Linq;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Catalyst.Common.UnitTests.IO.Observers
@@ -50,16 +50,18 @@ namespace Catalyst.Common.UnitTests.IO.Observers
         private readonly TransferFileBytesRequestObserver _observer;
         private readonly IDownloadFileTransferFactory _downloadFileTransferFactory;
         private readonly IChannelHandlerContext _context;
+        private readonly ILogger _logger;
 
         public TransferFileBytesRequestObserverTest()
         {
+            _logger = Substitute.For<ILogger>();
             _context = Substitute.For<IChannelHandlerContext>();
             _context.Channel.Returns(Substitute.For<IChannel>());
             _downloadFileTransferFactory = Substitute.For<IDownloadFileTransferFactory>();
             var peerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("Test");
             _observer = new TransferFileBytesRequestObserver(_downloadFileTransferFactory,
                 peerIdentifier,
-                Substitute.For<ILogger>());
+                _logger);
         }
 
         [Fact]
@@ -83,24 +85,30 @@ namespace Catalyst.Common.UnitTests.IO.Observers
         [Fact]
         public async Task HandlerCanSendErrorOnException()
         {
+            var observer = new TransferFileBytesRequestObserver(new DownloadFileTransferFactory(_logger),
+                PeerIdentifierHelper.GetPeerIdentifier("Test"),
+                _logger);
+
+            var sender = PeerIdentifierHelper.GetPeerIdentifier("sender");
             var requestDto = new DtoFactory().GetDto(new TransferFileBytesRequest
             {
                 ChunkBytes = ByteString.Empty,
                 ChunkId = 1,
                 CorrelationFileName = ByteString.Empty
-            }, PeerIdentifierHelper.GetPeerIdentifier("sender"), PeerIdentifierHelper.GetPeerIdentifier("recipient"));
-            
-            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_context, requestDto.Content.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId));
-            
-            _observer.StartObserving(messageStream);
+            }.ToProtocolMessage(sender.PeerId)
+            , sender, PeerIdentifierHelper.GetPeerIdentifier("recipient"));
+
+            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_context, requestDto.Content);
+
+            observer.StartObserving(messageStream);
 
             await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
-            
+
             var receivedCalls = _context.Channel.ReceivedCalls().ToList();
             receivedCalls.Count.Should().Be(1);
-            var sentResponseDto = (IMessageDto<ProtocolMessage>) receivedCalls.Single().GetArguments().Single();
+            var sentResponseDto = (IMessageDto<ProtocolMessage>)receivedCalls.Single().GetArguments().Single();
             var versionResponseMessage = sentResponseDto.Content.FromProtocolMessage<TransferFileBytesResponse>();
-            versionResponseMessage.ResponseCode.Should().Equal((byte) FileTransferResponseCodes.Error);
+            versionResponseMessage.ResponseCode.Should().Equal((byte)FileTransferResponseCodes.Error);
         }
     }
 }
