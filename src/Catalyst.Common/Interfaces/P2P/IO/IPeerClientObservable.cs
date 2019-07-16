@@ -21,17 +21,15 @@
 
 #endregion
 
-namespace Catalyst.Common.Interfaces.P2P
+using System;
+using System.Reactive.Subjects;
+using Catalyst.Common.Interfaces.P2P.IO.Messaging.Dto;
+
+namespace Catalyst.Common.Interfaces.P2P.IO
 {
-    public interface IPeerDiscovery
+    public interface IPeerClientObservable
     {
-        // IDisposable PingResponseMessageStream { get; }
-        // IDisposable GetNeighbourResponseStream { get; }
-        // IDns Dns { get; }
-        // ILogger Logger { get; }
-        // IProducerConsumerCollection<IPeerIdentifier> Peers { get; }
-        // IRepository<Peer> PeerRepository { get; }
-        // IList<string> ParseDnsServersFromConfig(IConfigurationRoot rootSection);
-        // void PeerNeighbourSubscriptionHandler(IObserverDto<ProtocolMessage> messageDto);
+        ReplaySubject<IPeerClientMessageDto> _responseMessageSubject { get; }
+        IObservable<IPeerClientMessageDto> MessageStream { get; }
     }
 }
