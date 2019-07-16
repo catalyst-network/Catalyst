@@ -32,11 +32,7 @@ using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reactive.Linq;
 using Catalyst.Common.Interfaces.P2P.Discovery;
-using Catalyst.Node.Core.P2P.IO.Observers;
-using Catalyst.Protocol.IPPN;
-using Google.Protobuf;
 
 namespace Catalyst.Node.Core.P2P
 {

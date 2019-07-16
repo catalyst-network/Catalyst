@@ -29,18 +29,19 @@ using Google.Protobuf;
 
 namespace Catalyst.Node.Core.P2P.IO.Messaging.Dto
 {
-    public sealed class PeerClientMessageDto<T> : IPeerClientMessageDto where T : IMessage<T>
+    public sealed class PeerClientMessageDto : IPeerClientMessageDto
     {
         public ICorrelationId CorrelationId { get; set; }
         public IPeerIdentifier Sender { get; set; }
         public IMessage Message { get; set; }
 
-        public PeerClientMessageDto(IMessage message, IPeerIdentifier sender, ICorrelationId CorrelationId)
+        public PeerClientMessageDto(IMessage message, IPeerIdentifier sender, ICorrelationId correlationId)
         {
             Guard.Argument(message, nameof(message))
                .Require(message.GetType().Namespace.Contains("IPPN"));
             Message = message;
             Sender = sender;
+            CorrelationId = correlationId;
         }
     }
 }

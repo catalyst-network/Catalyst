@@ -1,3 +1,4 @@
+
 #region LICENSE
 
 /**
@@ -62,7 +63,7 @@ namespace Catalyst.Node.Core.P2P.IO.Observers
             IPeerIdentifier senderPeerIdentifier,
             ICorrelationId correlationId)
         {
-            _responseMessageSubject.OnNext(new PeerClientMessageDto<PeerNeighborsResponse>(messageDto, senderPeerIdentifier, correlationId));
+            _responseMessageSubject.OnNext(new PeerClientMessageDto(messageDto, senderPeerIdentifier, correlationId));
         }
     }
 }

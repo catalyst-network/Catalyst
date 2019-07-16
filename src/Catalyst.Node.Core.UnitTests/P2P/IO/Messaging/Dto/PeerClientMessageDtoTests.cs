@@ -40,7 +40,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.IO.Messaging.Dto
         {
             var pingRequest = new PingRequest();
             var pid = PeerIdentifierHelper.GetPeerIdentifier("sender");
-            var dto = new PeerClientMessageDto<PingRequest>(pingRequest,
+            var dto = new PeerClientMessageDto(pingRequest,
                 pid,
                 Substitute.For<ICorrelationId>()
             );
@@ -56,7 +56,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.IO.Messaging.Dto
 
             Assert.Throws<ArgumentException>(() =>
             {
-                new PeerClientMessageDto<VersionRequest>(rpcMessage,
+                new PeerClientMessageDto(rpcMessage,
                     PeerIdentifierHelper.GetPeerIdentifier("sender"),
                     Substitute.For<ICorrelationId>()
                 );

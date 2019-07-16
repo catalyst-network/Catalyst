@@ -1,3 +1,4 @@
+
 #region LICENSE
 
 /**
@@ -25,12 +26,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.Network;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.P2P;
 using DnsClient;
-using Microsoft.Extensions.Configuration;
 using Nethereum.Hex.HexConvertors.Extensions;
 
 namespace Catalyst.Common.Network

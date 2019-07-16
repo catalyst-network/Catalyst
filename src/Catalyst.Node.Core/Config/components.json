@@ -217,7 +217,7 @@
             "type": "Catalyst.Node.Core.P2P.Discovery.HastingsDiscovery",
             "services": [
                 {
-                    "type": "Catalyst.Common.Interfaces.P2P.Discovery.IHastingsDiscovery, Catalyst.Common"
+                    "type": "Catalyst.Common.Interfaces.P2P.Discovery.IPeerDiscovery, Catalyst.Common"
                 }
             ]
         },
