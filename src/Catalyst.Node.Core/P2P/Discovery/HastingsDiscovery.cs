@@ -137,36 +137,45 @@ namespace Catalyst.Node.Core.P2P.Discovery
                .SubscribeOn(TaskPoolScheduler.Default)
                .Subscribe(EvictionCallback);
 
-            // store initial state to start discovery.
+            // no state provide is assumed a "live run", instantiated with state assumes test run so don't start discovery
             if (state == default)
             {
-                // state should be default for normal instantiation
                 // create empty state and start walk
                 State = new HastingsOriginator();
                 WalkForward();
+                
+                // should run until cancelled
+                Task.Run(async () =>
+                {
+                    await DiscoveryAsync();
+                });
             }
             else
             {
-                // providing a known state for testing
+                // providing a known state for testing,
+                // doesn't start walk
                 State = state;
             }
-            
-            // start discovery task, should run indefinitely 
-            Task.Run(async () =>
-            {
-                await DiscoveryAsync();
-            });
         }
 
         /// <summary>
         ///     Discovery mechanism for Hasting metropolis walk.
+        ///     method loops until we can build up a valid next state,
+        ///     a valid next state is when we see a sum of events on our Discovery stream that
+        ///     equal to the number of peers we tried to discover. The discovery streams is merged from
+        ///     PeerCorrelation cache where we listen for evicted pingResponses (the ones we sen to try discover the peer),
+        ///     and PingResponses. Expected PingResponse messages indicate a potential neighbour has responded to our ping,
+        ///     so we assume it is reachable, so we add this to the StateCandidate.CurrentNeighbours.
+        ///     Once the sum of StateCandidate.CurrentNeighbours and EvictedPingResponses equals the total expected responses,
+        ///     At this point we received all the potential messages we could, if we have potential peers for the next step, then we can walk forward.
+        ///     if not of the condition has not been met within a timeout then we walk back by taking the last known state from the IHastingCaretaker.
         /// </summary>
         /// <returns></returns>
         public async Task DiscoveryAsync()
         {
             do
             {
-                // only let one thread in at a time
+                // only let one thread in at a time.
                 await SemaphoreSlim.WaitAsync();
 
                 try
@@ -174,23 +183,44 @@ namespace Catalyst.Node.Core.P2P.Discovery
                     // spins until our expected result equals found and unreachable peers for this step.
                     await WaitUntil(HasValidCandidate, 1000, -1);
 
-                    // condition met so walk forward
-                    WalkForward();
+                    lock (StateCandidate)
+                    {
+                        if (StateCandidate.CurrentPeersNeighbours.Count > 0)
+                        {
+                            // have a walkable next step, so continue walk.
+                            WalkForward();   
+                        }
+                        else
+                        {
+                            // assume all neighbours provided are un-reachable.
+                            WalkBack();
+                        }
+                    }
                 }
-                catch (Exception e)
+                catch (Exception e) // either an exception was thrown for un-known reason or the await on the condition timed out.
                 {
-                    // either an exception was thrown for un-known reason or the await on the condition timed out,
-                    // if so this step can't be completed so transition back.
                     Logger.Error(e, e.Message);
-                    WalkBack();
+                    lock (StateCandidate)
+                    {
+                        if (StateCandidate.CurrentPeersNeighbours.Count > 0)
+                        {
+                            // if we discovered at least some peers we can continue walk.
+                            WalkForward();
+                        }
+                        else
+                        {
+                            // we got an exception and found 0 contactable peers, so go back to previous state.
+                            WalkBack();   
+                        }
+                    }
                 }
                 finally
                 {
-                    // step out lock block
+                    // step out lock block.
                     SemaphoreSlim.Release();
                 }
                 
-                // discovery should always run
+                // discovery should run until canceled.
             } while (!_cancellationTokenProvider.HasTokenCancelled());
         }
 
@@ -200,9 +230,11 @@ namespace Catalyst.Node.Core.P2P.Discovery
             {
                 if (StateCandidate.ContactedNeighbours.Count < 1)
                 {
+                    // if we haven't contacted neighbours don't try compare.
                     return false;
                 }
-                
+
+                // see if sum of unreachable peers and reachable peers equals the total contacted number.
                 return StateCandidate.ContactedNeighbours.Count
                    .Equals(StateCandidate.UnreachableNeighbour + StateCandidate.CurrentPeersNeighbours.Count);
             }
@@ -217,18 +249,18 @@ namespace Catalyst.Node.Core.P2P.Discovery
             lock (State) 
             lock (StateCandidate)
             {
-                // store discovered peers
+                // store discovered peers.
                 StateCandidate.CurrentPeersNeighbours
                    .ToList()
                    .ForEach(StorePeer);
 
-                // create memento of state
+                // create memento of state.
                 var newState = StateCandidate.CreateMemento();
 
-                // store state with caretaker
+                // store state with caretaker.
                 _hastingCareTaker.Add(newState);
             
-                // transition to valid new state
+                // transition to valid new state.
                 State.SetMemento(newState);
 
                 // continue walk by proposing next degree.
@@ -239,7 +271,7 @@ namespace Catalyst.Node.Core.P2P.Discovery
                     StateCandidate.Peer
                 );
 
-                // make discovery wait for this pnr response
+                // make discovery wait for this pnr response.
                 StateCandidate.ExpectedPnr = new KeyValuePair<ICorrelationId, IPeerIdentifier>(peerNeighbourRequestDto.CorrelationId, StateCandidate.Peer);
                     
                 PeerClient.SendMessage(peerNeighbourRequestDto);                
@@ -247,17 +279,17 @@ namespace Catalyst.Node.Core.P2P.Discovery
         }
         
         /// <summary>
-        ///     Transition back to last state
+        ///     Transition back to last state.
         /// </summary>
         private void WalkBack()
         {
             lock (State)
             lock (StateCandidate)
             {
-                // transitions to last state
+                // transitions to last state.
                 State.SetMemento(_hastingCareTaker.Get());
 
-                // continues walk by proposing a new degree
+                // continues walk by proposing a new degree.
                 StateCandidate.Peer = State.CurrentPeersNeighbours.RandomElement();
 
                 var peerNeighbourRequestDto = DtoFactory.GetDto(new PeerNeighborsRequest(),
@@ -313,7 +345,7 @@ namespace Catalyst.Node.Core.P2P.Discovery
             {
                 if (!StateCandidate.ContactedNeighbours.Contains(new KeyValuePair<ICorrelationId, IPeerIdentifier>(obj.CorrelationId, obj.Sender)))
                 {
-                    // a pingResponse that isn't known to discovery
+                    // a pingResponse that isn't known to discovery.
                     return;
                 }
 
@@ -329,15 +361,13 @@ namespace Catalyst.Node.Core.P2P.Discovery
             {
                 if (!StateCandidate.ExpectedPnr.Equals(new KeyValuePair<ICorrelationId, IPeerIdentifier>(obj.CorrelationId, obj.Sender)))
                 {
-                    // we shouldn't get here as we should always known about a pnr,
-                    // as only this class produces them
+                    // we shouldn't get here as we should always known about a pnr as only this class produces them.
                     throw new ArgumentException();
                 }
 
                 var peerNeighbours = (PeerNeighborsResponse) obj.Message;
             
-                // state candidate provided us a list of neighbours,
-                // so now check they are reachable
+                // state candidate provided us a list of neighbours, so now check they are reachable.
                 peerNeighbours.Peers.ToList().ForEach(p =>
                 {
                     var pingRequestDto = DtoFactory.GetDto(new PingRequest(),
@@ -348,14 +378,11 @@ namespace Catalyst.Node.Core.P2P.Discovery
                     var req = new KeyValuePair<ICorrelationId, IPeerIdentifier>(
                         pingRequestDto.CorrelationId,
                         pingRequestDto.RecipientPeerIdentifier);
-
-                    // make discovery aware of sent ping
-                    StateCandidate.ContactedNeighbours.Add(req);
-                
+                    
                     PeerClient.SendMessage(pingRequestDto);
                     
                     // our total expected responses should be same as number of pings sent out,
-                    // potential neighbours, can either send response, or we will see them evicted from cache
+                    // potential neighbours, can either send response, or we will see them evicted from cache.
                     StateCandidate.ContactedNeighbours.Add(req);
                 });
             }
