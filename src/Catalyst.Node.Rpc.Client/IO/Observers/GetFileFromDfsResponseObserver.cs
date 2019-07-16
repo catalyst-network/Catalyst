@@ -50,8 +50,8 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
         ResponseObserverBase<GetFileFromDfsResponse>,
         IRpcResponseObserver
     {
-        private readonly ReplaySubject<IRPCClientMessageDto<IMessage>> _messageResponse;
-        public IObservable<IRPCClientMessageDto<IMessage>> MessageResponseStream { private set; get; }
+        private readonly ReplaySubject<IRpcClientMessage<IMessage>> _messageResponse;
+        public IObservable<IRpcClientMessage<IMessage>> MessageResponseStream { private set; get; }
 
         /// <summary>The file transfer factory</summary>
         private readonly IDownloadFileTransferFactory _fileTransferFactory;
@@ -63,7 +63,7 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
             IDownloadFileTransferFactory fileTransferFactory) : base(logger)
         {
             _fileTransferFactory = fileTransferFactory;
-            _messageResponse = new ReplaySubject<IRPCClientMessageDto<IMessage>>(1);
+            _messageResponse = new ReplaySubject<IRpcClientMessage<IMessage>>(1);
             MessageResponseStream = _messageResponse.AsObservable();
         }
         
@@ -109,7 +109,7 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
                 fileTransferInformation.Expire();
             }
 
-            _messageResponse.OnNext(new RPCClientMessageDto<IMessage>(getFileFromDfsResponse, senderPeerIdentifier));
+            _messageResponse.OnNext(new RpcClientMessage<IMessage>(getFileFromDfsResponse, senderPeerIdentifier));
         }
     }
 }

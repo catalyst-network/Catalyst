@@ -161,9 +161,9 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
             _observer = new GetPeerInfoResponseObserver(_output, _logger);
             _observer.StartObserving(messageStream);
 
-            _observer.MessageResponseStream.Where(x => x.Message.GetType() == typeof(GetPeerInfoResponse)).SubscribeOn(NewThreadScheduler.Default).Subscribe((rpcClientMessageDto) =>
+            _observer.MessageResponseStream.Where(x => x.Message.GetType() == typeof(GetPeerInfoResponse)).SubscribeOn(NewThreadScheduler.Default).Subscribe((RpcClientMessage) =>
             {
-                messageStreamResponse = (GetPeerInfoResponse)rpcClientMessageDto.Message;
+                messageStreamResponse = (GetPeerInfoResponse)RpcClientMessage.Message;
             });
 
             await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();

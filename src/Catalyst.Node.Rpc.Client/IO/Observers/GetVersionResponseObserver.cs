@@ -51,8 +51,8 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
     {
         private readonly IUserOutput _output;
 
-        private readonly ReplaySubject<IRPCClientMessageDto<IMessage>> _messageResponse;
-        public IObservable<IRPCClientMessageDto<IMessage>> MessageResponseStream { private set; get; }
+        private readonly ReplaySubject<IRpcClientMessage<IMessage>> _messageResponse;
+        public IObservable<IRpcClientMessage<IMessage>> MessageResponseStream { private set; get; }
 
         /// <summary>
         /// Handles the VersionResponse message sent from the <see>
@@ -67,7 +67,7 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
             : base(logger)
         {
             _output = output;
-            _messageResponse = new ReplaySubject<IRPCClientMessageDto<IMessage>>(1);
+            _messageResponse = new ReplaySubject<IRpcClientMessage<IMessage>>(1);
             MessageResponseStream = _messageResponse.AsObservable();
         }
 
@@ -94,7 +94,7 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
                .Require(d => d.Version != null,
                     d => $"{nameof(versionResponse)} must have a valid Version.");
 
-            _messageResponse.OnNext(new RPCClientMessageDto<IMessage>(versionResponse, senderPeerIdentifier));
+            _messageResponse.OnNext(new RpcClientMessage<IMessage>(versionResponse, senderPeerIdentifier));
         }
     }
 }

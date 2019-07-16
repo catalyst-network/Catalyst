@@ -31,15 +31,15 @@ using System.Text;
 
 namespace Catalyst.Node.Rpc.Client.IO.Messaging.Dto
 {
-    public sealed class RPCClientMessageDto<T> : IRPCClientMessageDto<T> where T : IMessage
+    public sealed class RpcClientMessage<T> : IRpcClientMessage<T> where T : IMessage
     {
         public IPeerIdentifier Sender { get; set; }
         public T Message { get; set; }
 
-        public RPCClientMessageDto(T message, IPeerIdentifier sender)
+        public RpcClientMessage(T message, IPeerIdentifier sender)
         {
-            //Guard.Argument(message, nameof(message))
-            //   .Require(message.GetType().Namespace.Contains("IPPN"));
+            Guard.Argument(message, nameof(message))
+            .Require(message.GetType().Namespace.Contains("Catalyst.Protocol.Rpc"));
             Message = message;
             Sender = sender;
         }

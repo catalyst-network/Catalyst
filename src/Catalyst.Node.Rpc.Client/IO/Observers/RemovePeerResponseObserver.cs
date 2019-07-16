@@ -47,8 +47,8 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
         : ResponseObserverBase<RemovePeerResponse>,
             IRpcResponseObserver
     {
-        private readonly ReplaySubject<IRPCClientMessageDto<IMessage>> _messageResponse;
-        public IObservable<IRPCClientMessageDto<IMessage>> MessageResponseStream { private set; get; }
+        private readonly ReplaySubject<IRpcClientMessage<IMessage>> _messageResponse;
+        public IObservable<IRpcClientMessage<IMessage>> MessageResponseStream { private set; get; }
 
         private readonly IUserOutput _userOutput;
 
@@ -56,7 +56,7 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
             ILogger logger) : base(logger)
         {
             _userOutput = userOutput;
-            _messageResponse = new ReplaySubject<IRPCClientMessageDto<IMessage>>(1);
+            _messageResponse = new ReplaySubject<IRpcClientMessage<IMessage>>(1);
             MessageResponseStream = _messageResponse.AsObservable();
         }
 
@@ -69,7 +69,7 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
             Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
             Guard.Argument(senderPeerIdentifier, nameof(senderPeerIdentifier)).NotNull();
 
-            _messageResponse.OnNext(new RPCClientMessageDto<IMessage>(removePeerResponse, senderPeerIdentifier));
+            _messageResponse.OnNext(new RpcClientMessage<IMessage>(removePeerResponse, senderPeerIdentifier));
         }
     }
 }

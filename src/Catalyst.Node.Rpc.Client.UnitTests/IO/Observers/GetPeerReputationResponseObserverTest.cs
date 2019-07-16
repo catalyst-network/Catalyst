@@ -84,7 +84,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
         [MemberData(nameof(QueryContents))]
         public async Task RpcClient_Can_Handle_GetReputationResponse(int rep)
         {
-            var getPeerReputationResponse = await TestGetReputationResponse(rep);
+            var getPeerReputationResponse = await TestGetReputationResponse(rep).ConfigureAwait(false);
             getPeerReputationResponse.Should().NotBeNull();
             getPeerReputationResponse.Reputation.Should().Be(rep);
         }
@@ -97,7 +97,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
         [InlineData(int.MinValue)]
         public async Task RpcClient_Can_Handle_GetReputationResponseNonExistantPeers(int rep)
         {
-            var getPeerReputationResponse = await TestGetReputationResponse(rep);
+            var getPeerReputationResponse = await TestGetReputationResponse(rep).ConfigureAwait(false);
             getPeerReputationResponse.Should().NotBeNull();
             getPeerReputationResponse.Reputation.Should().Be(rep);
         }
@@ -121,12 +121,12 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
 
             _observer = new PeerReputationResponseObserver(_output, _logger);
             _observer.StartObserving(messageStream);
-            _observer.MessageResponseStream.Where(x => x.Message.GetType() == typeof(GetPeerReputationResponse)).SubscribeOn(NewThreadScheduler.Default).Subscribe((rpcClientMessageDto) =>
+            _observer.MessageResponseStream.Where(x => x.Message.GetType() == typeof(GetPeerReputationResponse)).SubscribeOn(NewThreadScheduler.Default).Subscribe((RpcClientMessage) =>
             {
-                messageStreamResponse = (GetPeerReputationResponse)rpcClientMessageDto.Message;
+                messageStreamResponse = (GetPeerReputationResponse)RpcClientMessage.Message;
             });
 
-            await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
+            await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync().ConfigureAwait(false);
 
             return messageStreamResponse;
         }

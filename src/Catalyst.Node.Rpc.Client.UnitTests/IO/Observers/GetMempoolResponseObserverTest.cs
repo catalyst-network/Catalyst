@@ -125,9 +125,9 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
             _observer = new GetMempoolResponseObserver(_output, _logger);
             _observer.StartObserving(messageStream);
 
-            _observer.MessageResponseStream.Where(x => x.Message.GetType() == typeof(GetMempoolResponse)).SubscribeOn(NewThreadScheduler.Default).Subscribe((rpcClientMessageDto) =>
+            _observer.MessageResponseStream.Where(x => x.Message.GetType() == typeof(GetMempoolResponse)).SubscribeOn(NewThreadScheduler.Default).Subscribe((RpcClientMessage) =>
             {
-                messageStreamResponse = (GetMempoolResponse)rpcClientMessageDto.Message;
+                messageStreamResponse = (GetMempoolResponse)RpcClientMessage.Message;
             });
 
             await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
