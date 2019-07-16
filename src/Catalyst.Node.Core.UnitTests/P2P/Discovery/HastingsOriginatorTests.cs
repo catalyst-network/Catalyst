@@ -21,7 +21,6 @@
 
 #endregion
 
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using Catalyst.Common.Interfaces.P2P;
@@ -29,7 +28,6 @@ using Catalyst.Common.Interfaces.P2P.Discovery;
 using Catalyst.Node.Core.P2P.Discovery;
 using Catalyst.TestUtils;
 using FluentAssertions;
-using NSubstitute;
 using Xunit;
 
 namespace Catalyst.Node.Core.UnitTests.P2P.Discovery
@@ -45,10 +43,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Discovery
         
         private IHastingMemento BuildMemento()
         {
-            var neighbours = Enumerable.Range(0, 5).Select(i =>
-                PeerIdentifierHelper.GetPeerIdentifier($"neighbour-{i.ToString()}")).ToList();
-            
-            var memento = new HastingMemento(_peer, neighbours);
+            var memento = new HastingMemento(_peer, HastingDiscoveryHelper.GenerateNeighbours());
 
             return memento;
         }
@@ -82,6 +77,61 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Discovery
 
             originator.Peer.Should().Be(_peer);
             originator.CurrentPeersNeighbours.Should().Contain(memento.Neighbours);
+        }
+
+        [Fact]
+        public void Can_Increment_UnReachable_Peer()
+        {
+            var originator = new HastingsOriginator();
+            
+            Enumerable.Range(0, 100).ToList().ForEach(i => originator.IncrementUnreachablePeer());
+
+            originator.UnreachableNeighbour.Should().Be(100);
+        }
+
+        [Fact]
+        public void Can_Clean_Up_When_Calling_SetMemento()
+        {
+            var originator = new HastingsOriginator();
+
+            var memento1 = HastingDiscoveryHelper.SubMemento();
+            var memento2 = HastingDiscoveryHelper.SubMemento();
+            
+            originator.SetMemento(memento1);
+            originator.IncrementUnreachablePeer();
+            originator.CurrentPeersNeighbours = HastingDiscoveryHelper.GenerateNeighbours().ToList();
+            originator.ContactedNeighbours = HastingDiscoveryHelper.MockContactedNeighboursValuePairs(HastingDiscoveryHelper.GenerateNeighbours());
+            originator.ExpectedPnr = HastingDiscoveryHelper.MockPnr();
+            originator.CurrentPeersNeighbours.Should().Contain(memento1.Neighbours);
+            
+            originator.SetMemento(memento2);
+
+            originator.UnreachableNeighbour.Should().Be(0);
+            originator.ContactedNeighbours.Count.Should().Be(0);
+            originator.ExpectedPnr.Key.Should().Be(null);
+            originator.ExpectedPnr.Value.Should().Be(null);
+            originator.CurrentPeersNeighbours.Should().Contain(memento2.Neighbours);
+        }
+        
+        [Fact]
+        public void Can_Clean_Up_When_Setting_Peer()
+        {
+            var originator = new HastingsOriginator();
+
+            var memento1 = HastingDiscoveryHelper.SubMemento();
+            
+            originator.SetMemento(memento1);
+            originator.IncrementUnreachablePeer();
+            originator.CurrentPeersNeighbours = HastingDiscoveryHelper.GenerateNeighbours().ToList();
+            originator.ContactedNeighbours = HastingDiscoveryHelper.MockContactedNeighboursValuePairs(HastingDiscoveryHelper.GenerateNeighbours());
+            originator.ExpectedPnr = HastingDiscoveryHelper.MockPnr();
+
+            originator.Peer = PeerIdentifierHelper.GetPeerIdentifier("new_peer");
+
+            originator.UnreachableNeighbour.Should().Be(0);
+            originator.ContactedNeighbours.Count.Should().Be(0);
+            originator.ExpectedPnr.Key.Should().Be(null);
+            originator.ExpectedPnr.Value.Should().Be(null);
         }
     }
 }

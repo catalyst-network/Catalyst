@@ -24,6 +24,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.Network;
@@ -34,6 +35,7 @@ using Catalyst.Common.Interfaces.Util;
 using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.Util;
+using Catalyst.Node.Core.P2P.Discovery;
 using Catalyst.Protocol.IPPN;
 using DnsClient;
 using NSubstitute;
@@ -81,14 +83,8 @@ namespace Catalyst.TestUtils
         
         public static IEnumerable<IPeerIdentifier> GenerateNeighbours(int amount = 5)
         {
-            var neighbours = new List<IPeerIdentifier>();
-            while (amount > 0)
-            {
-                neighbours.Add(PeerIdentifierHelper.GetPeerIdentifier($@"neighbour-{neighbours.Count.ToString()}"));
-                amount -= 1;
-            }
-
-            return neighbours;
+            return Enumerable.Range(0, amount).Select(i =>
+                PeerIdentifierHelper.GetPeerIdentifier($"neighbour-{i.ToString()}")).ToList();
         }
 
         public static IList<KeyValuePair<ICorrelationId, IPeerIdentifier>> MockContactedNeighboursValuePairs(IEnumerable<IPeerIdentifier> neighbours = default)
@@ -194,6 +190,13 @@ namespace Catalyst.TestUtils
             });
 
             return subbedDtoFactory;
+        }
+
+        public static Stack<IHastingMemento> GenerateMementohistory(Stack<IHastingMemento> state, int depth = 10)
+        {
+            state.Push(new HastingMemento(state.Last().Neighbours.RandomElement(), GenerateNeighbours()));
+
+            return state.Count >= depth ? GenerateMementohistory(state) : state;
         }
     }
 }

@@ -36,7 +36,7 @@ namespace Catalyst.Node.Core.P2P.Discovery
         public int UnreachableNeighbour => _unreachableNeighbour;
         public IList<IPeerIdentifier> CurrentPeersNeighbours { get; set; }
         public KeyValuePair<ICorrelationId, IPeerIdentifier> ExpectedPnr { get; set; }
-        public IList<KeyValuePair<ICorrelationId, IPeerIdentifier>> ContactedNeighbours { get; private set; }
+        public IList<KeyValuePair<ICorrelationId, IPeerIdentifier>> ContactedNeighbours { get; set; }
 
         /// <summary>
         ///     if setting a new peer, clean counters

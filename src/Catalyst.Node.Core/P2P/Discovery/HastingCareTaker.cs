@@ -45,8 +45,16 @@ namespace Catalyst.Node.Core.P2P.Discovery
         /// <inheritdoc />
         public IHastingMemento Get()
         {
-            if (HastingMementoList.TryPop(out var hastingMemento))
+            if (HastingMementoList.Count >= 2)
             {
+                if (HastingMementoList.TryPop(out var hastingMemento))
+                {
+                    return hastingMemento;
+                }
+            }
+            else if (HastingMementoList.Count == 1)
+            {
+                HastingMementoList.TryPeek(out var hastingMemento);
                 return hastingMemento;
             }
 

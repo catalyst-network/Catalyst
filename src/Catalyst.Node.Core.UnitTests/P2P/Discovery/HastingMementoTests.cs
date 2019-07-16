@@ -21,9 +21,6 @@
 
 #endregion
 
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Node.Core.P2P.Discovery;
 using Catalyst.TestUtils;
@@ -37,17 +34,11 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Discovery
         private readonly IPeerIdentifier _peer;
 
         public HastingMementoTests() { _peer = PeerIdentifierHelper.GetPeerIdentifier("current_peer"); }
-        
-        private static List<IPeerIdentifier> GenerateNeighbours()
-        {
-            return Enumerable.Range(0, 5).Select(i =>
-                PeerIdentifierHelper.GetPeerIdentifier($"neighbour-{i.ToString()}")).ToList();
-        }
-        
+
         [Fact]
         public void Can_Add_Peers_To_Memento_List()
         {
-            var neighbours = GenerateNeighbours();
+            var neighbours = HastingDiscoveryHelper.GenerateNeighbours();
 
             var memento = new HastingMemento(_peer, neighbours);
             
@@ -59,7 +50,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Discovery
         [Fact]
         public void Can_Init_Memento_With_Existing_Params()
         {
-            var neighbours = GenerateNeighbours();
+            var neighbours = HastingDiscoveryHelper.GenerateNeighbours();
 
             var memento = new HastingMemento(_peer, neighbours);
 

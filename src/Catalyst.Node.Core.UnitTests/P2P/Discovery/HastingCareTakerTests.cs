@@ -25,6 +25,7 @@ using System;
 using System.Linq;
 using Catalyst.Common.Interfaces.P2P.Discovery;
 using Catalyst.Node.Core.P2P.Discovery;
+using Catalyst.TestUtils;
 using FluentAssertions;
 using NSubstitute;
 using Xunit;
@@ -69,6 +70,48 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Discovery
             {
                 var previousState = careTaker.Get();
             });
+        }
+        
+        [Fact]
+        public void Can_Never_Take_Last_Memento()
+        {
+            var careTaker = new HastingCareTaker();
+
+            var subbedMemento = Substitute.For<IHastingMemento>();
+            
+            careTaker.Add(subbedMemento);
+            
+            careTaker.Get();
+
+            careTaker.HastingMementoList.Count.Should().Be(1);
+        }
+
+        [Fact]
+        public void Can_LIFO_When_Histoy_N_Plus2()
+        {
+            var careTaker = new HastingCareTaker();
+
+            var subbedMemento1 = Substitute.For<IHastingMemento>();
+            subbedMemento1.Peer.Returns(PeerIdentifierHelper.GetPeerIdentifier("step1"));
+            careTaker.Add(subbedMemento1);
+
+            var subbedMemento2 = Substitute.For<IHastingMemento>();
+            subbedMemento2.Peer.Returns(PeerIdentifierHelper.GetPeerIdentifier("step2"));
+            careTaker.Add(subbedMemento2);
+            
+            var subbedMemento3 = Substitute.For<IHastingMemento>();
+            subbedMemento3.Peer.Returns(PeerIdentifierHelper.GetPeerIdentifier("step3"));
+            careTaker.Add(subbedMemento3);
+            
+            var lastState1 = careTaker.Get();
+            lastState1.Should().Be(subbedMemento3);
+            careTaker.HastingMementoList.Count.Should().Be(2);
+            careTaker.HastingMementoList.First().Should().Be(subbedMemento2);
+            
+            var lastState2 = careTaker.Get();
+            lastState2.Should().Be(subbedMemento2);
+            careTaker.HastingMementoList.Count.Should().Be(1);
+            careTaker.HastingMementoList.First().Should().Be(subbedMemento1);
         }
     }
 }
