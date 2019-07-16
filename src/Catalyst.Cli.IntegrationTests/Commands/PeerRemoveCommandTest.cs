@@ -36,7 +36,7 @@ namespace Catalyst.Cli.IntegrationTests.Commands
         public void Cli_Can_Send_Remove_Peer_Request()
         {
             var result = Shell.ParseCommand(
-                "removepeer", NodeArgumentPrefix, ServerNodeName, "-k", "fake_public_key", "-i", "127.0.0.1");
+                "removepeer", NodeArgumentPrefix, ServerNodeName, "-p", "fake_public_key", "-i", "127.0.0.1");
             result.Should().BeTrue();
             AssertSentMessage<RemovePeerRequest>();
         }

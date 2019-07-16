@@ -36,7 +36,7 @@ namespace Catalyst.Cli.IntegrationTests.Commands
         public void Cli_Can_Send_Peer_Reputation_Request()
         {
             var result = Shell.ParseCommand(
-                "peerrep", NodeArgumentPrefix, ServerNodeName, "-l", "127.0.0.1", "-p", "fake_public_key");
+                "peerrep", NodeArgumentPrefix, ServerNodeName, "-i", "127.0.0.1", "-p", "fake_public_key");
             result.Should().BeTrue();
             AssertSentMessage<GetPeerReputationRequest>();
         }
