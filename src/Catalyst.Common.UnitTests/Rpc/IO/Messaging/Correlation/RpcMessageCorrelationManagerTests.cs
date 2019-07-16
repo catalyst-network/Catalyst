@@ -21,13 +21,17 @@
 
 #endregion
 
-using System.Collections.Generic;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
+using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.Rpc.IO.Messaging.Correlation;
 using Catalyst.Common.Rpc.IO.Messaging.Correlation;
 using Catalyst.Common.UnitTests.IO.Messaging.Correlation;
+using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
-using Google.Protobuf;
-using Microsoft.Extensions.Caching.Memory;
+using Catalyst.TestUtils;
+using NSubstitute;
 using Xunit.Abstractions;
 
 namespace Catalyst.Common.UnitTests.Rpc.IO.Messaging.Correlation
@@ -44,6 +48,20 @@ namespace Catalyst.Common.UnitTests.Rpc.IO.Messaging.Correlation
             PrepareCacheWithPendingRequests<GetInfoRequest>();
         }
 
-        protected override void CheckCacheEntriesCallback() { throw new System.NotImplementedException(); }
+        protected override async Task CheckCacheEntriesCallback()
+        {
+            var observer = Substitute.For<IObserver<ICacheEvictionEvent<ProtocolMessage>>>();
+            using (CorrelationManager.EvictionEvents.Subscribe(observer))
+            {
+                var firstCorrelationId = PendingRequests[0].Content.CorrelationId;
+                FireEvictionCallBackByCorrelationId(firstCorrelationId);
+
+                await TaskHelper.WaitForAsync(() => observer.ReceivedCalls().Any(), TimeSpan.FromSeconds(2));
+
+                observer.Received(1).OnNext(Arg.Is<ICacheEvictionEvent<ProtocolMessage>>(p =>
+                    p.EvictedContent.CorrelationId == firstCorrelationId
+                 && p.PeerIdentifier.PeerId.Equals(PendingRequests[0].Content.PeerId)));
+            }
+        }
     }
 }

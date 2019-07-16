@@ -57,7 +57,8 @@ namespace Catalyst.Node.Core.P2P.IO.Messaging.Correlation
         {
             Logger.Debug($"{key} message evicted");
             var message = (CorrelatableMessage<ProtocolMessage>) value;
-            _reputationEvent.OnNext(new PeerReputationChange(message.Recipient, ReputationEvents.NoResponseReceived));
+            _reputationEvent.OnNext(new PeerReputationChange(new PeerIdentifier(message.Content.PeerId), 
+                ReputationEvents.NoResponseReceived));
         }
 
         /// <summary>

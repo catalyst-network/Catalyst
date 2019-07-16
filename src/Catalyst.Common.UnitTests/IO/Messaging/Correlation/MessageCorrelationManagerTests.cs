@@ -21,16 +21,9 @@
 
 #endregion
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reactive.Concurrency;
-using System.Threading.Tasks;
-using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.Interfaces.P2P.ReputationSystem;
 using Catalyst.Common.Interfaces.Util;
 using Catalyst.Common.IO.Handlers;
 using Catalyst.Common.IO.Messaging.Correlation;
@@ -43,8 +36,11 @@ using Google.Protobuf;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Primitives;
 using NSubstitute;
-using NSubstitute.Core;
 using Serilog;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
 using PendingRequest = Catalyst.Common.IO.Messaging.Correlation.CorrelatableMessage<Catalyst.Protocol.Common.ProtocolMessage>;
@@ -87,7 +83,7 @@ namespace Catalyst.Common.UnitTests.IO.Messaging.Correlation
         protected void PrepareCacheWithPendingRequests<T>()
             where T : IMessage, new()
         {
-            PendingRequests = PeerIds.Select((p, i) => new CorrelatableMessage<ProtocolMessage>
+            PendingRequests = PeerIds.Select((p, i) => new PendingRequest
             {
                 Content = new T().ToProtocolMessage(SenderPeerId, CorrelationId.GenerateCorrelationId()),
                 Recipient = p,
@@ -97,7 +93,7 @@ namespace Catalyst.Common.UnitTests.IO.Messaging.Correlation
             PendingRequests.ForEach(AddRequestExpectation);
         }
 
-        private void AddRequestExpectation(CorrelatableMessage<ProtocolMessage> pendingRequest)
+        private void AddRequestExpectation(PendingRequest pendingRequest)
         {
             Cache.TryGetValue(pendingRequest.Content.CorrelationId, out Arg.Any<object>())
                .Returns(ci =>
@@ -117,12 +113,13 @@ namespace Catalyst.Common.UnitTests.IO.Messaging.Correlation
             cacheEntry.PostEvictionCallbacks.Returns(expirationCallbacks);
 
             Cache.CreateEntry(correlationId).Returns(cacheEntry);
+            CacheEntriesByRequest.Add(correlationId, cacheEntry);
         }
 
         [Fact]
         public virtual async Task New_Entries_Should_Be_Added_With_Individual_Entry_Options()
         {
-            PendingRequests.ForEach(p => AddCreateCacheEntryExpectation(p.Content.CorrelationId.ToCorrelationId()));
+            PendingRequests.ForEach(p => AddCreateCacheEntryExpectation(p.Content.CorrelationId));
             PendingRequests.ForEach(CorrelationManager.AddPendingRequest);
 
             Cache.Received(PendingRequests.Count).CreateEntry(
@@ -131,7 +128,7 @@ namespace Catalyst.Common.UnitTests.IO.Messaging.Correlation
             var createEntryCalls = Cache.ReceivedCalls()
                .Where(ci => ci.GetMethodInfo().Name == nameof(IMemoryCache.CreateEntry));
 
-            createEntryCalls.Select(c => c.GetArguments()[0]).Cast<ICorrelationId>()
+            createEntryCalls.Select(c => c.GetArguments()[0]).Cast<ByteString>()
                .Should().BeEquivalentTo(PendingRequests.Select(p => p.Content.CorrelationId));
 
             foreach (var cacheEntry in CacheEntriesByRequest.Values)
@@ -142,13 +139,11 @@ namespace Catalyst.Common.UnitTests.IO.Messaging.Correlation
 
             CheckExpirationTokensAreDifferentForEachEntry();
 
-            CheckCacheEntriesCallback();
+            await CheckCacheEntriesCallback().ConfigureAwait(false);
         }
 
         private void CheckExpirationTokensAreDifferentForEachEntry()
         {
-            var x = new List<int>();
-
             for (var i = 0; i < CacheEntriesByRequest.Count; i++)
             for (var j = i + 1; j < CacheEntriesByRequest.Count; j++)
             {
@@ -157,7 +152,14 @@ namespace Catalyst.Common.UnitTests.IO.Messaging.Correlation
             }
         }
 
-        protected abstract void CheckCacheEntriesCallback();
+        protected abstract Task CheckCacheEntriesCallback();
+
+        protected void FireEvictionCallBackByCorrelationId(ByteString correlationId)
+        {
+            var pendingRequest = PendingRequests.Single(p => p.Content.CorrelationId == correlationId);
+            CacheEntriesByRequest[correlationId].PostEvictionCallbacks[0].EvictionCallback
+               .Invoke(null, pendingRequest, EvictionReason.Expired, null);
+        }
 
         [Fact]
         public void TryMatchResponseAsync_should_match_existing_records_with_matching_correlation_id()
