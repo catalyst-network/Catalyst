@@ -24,12 +24,12 @@
 using System.Text;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
-using Catalyst.Common.Interfaces.Modules.Consensus.Delta;
+using Catalyst.Common.Interfaces.Modules.Consensus.Deltas;
 using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.Util;
 using Catalyst.Node.Core.P2P.IO.Observers;
 using Catalyst.Protocol.Common;
-using Catalyst.Protocol.Delta;
+using Catalyst.Protocol.Deltas;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using Multiformats.Hash;
@@ -69,7 +69,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.IO.Observers
         [Fact]
         public void HandleBroadcast_Should_Not_Try_Update_Invalid_Hash()
         {
-            var invalidNewHash = ByteUtil.GenerateRandomByteArray(21);
+            var invalidNewHash = Encoding.UTF8.GetBytes("invalid hash");
             var prevHash = Multihash.Sum(HashType.ID, Encoding.UTF8.GetBytes("prevHash"));
             var receivedMessage = PrepareReceivedMessage(invalidNewHash, prevHash);
 

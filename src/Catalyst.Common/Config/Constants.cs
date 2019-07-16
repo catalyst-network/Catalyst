@@ -108,7 +108,7 @@ namespace Catalyst.Common.Config
         
         /// <summary> The empty trie hash </summary>
         public static readonly byte[] EmptyTrieHash = Multihash.Encode<BLAKE2B_8>(RLP.EncodeElement(ByteUtil.EmptyByteArray));
-      
+
         /// <summary> This merkle tree first n bits. In this case 5 </summary>
         public static int MerkleTreeFirstStandardBits => 5;
 

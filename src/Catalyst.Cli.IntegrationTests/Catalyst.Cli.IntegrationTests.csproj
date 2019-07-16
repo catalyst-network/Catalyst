@@ -10,6 +10,8 @@
     <Import Project="../Common.IntegrationTests.props" />
     <ItemGroup>
         <ProjectReference Include="..\Catalyst.Cli\Catalyst.Cli.csproj" />
+        <ProjectReference Include="..\Catalyst.Common\Catalyst.Common.csproj" />
+        <ProjectReference Include="..\Catalyst.Node.Core.IntegrationTests\Catalyst.Node.Core.IntegrationTests.csproj" />
         <ProjectReference Include="..\Catalyst.Node.Core\Catalyst.Node.Core.csproj" />
         <ProjectReference Include="..\Catalyst.TestUtils\Catalyst.TestUtils.csproj" />
     </ItemGroup>

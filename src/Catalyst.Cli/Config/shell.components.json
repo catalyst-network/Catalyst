@@ -19,6 +19,14 @@
             ]
         },
         {
+            "type": "Catalyst.Cli.Commands.GetPeerInfoCommand",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.Cli.CommandTypes.ICommand, Catalyst.Common"
+                }
+            ]
+        },
+        {
             "type": "Catalyst.Cli.Commands.ConnectCommand",
             "services": [
                 {
@@ -224,6 +232,15 @@
             ]
         },
         {
+            "type": "Catalyst.Common.Rpc.IO.Messaging.Correlation.RpcMessageCorrelationManager, Catalyst.Common",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.Rpc.IO.Messaging.Correlation.IRpcMessageCorrelationManager, Catalyst.Common"
+                }
+            ],
+            "instanceScope": "singleinstance"
+        },
+        {
             "type": "Microsoft.Extensions.Caching.Memory.MemoryCacheOptions, Microsoft.Extensions.Caching.Memory",
             "services": [
                 {
@@ -238,15 +255,6 @@
                     "type": "Microsoft.Extensions.Caching.Memory.IMemoryCache, Microsoft.Extensions.Caching.Abstractions"
                 }
             ]
-        },
-        {
-            "type": "Catalyst.Common.IO.Messaging.Correlation.MessageCorrelationManager, Catalyst.Common",
-            "services": [
-                {
-                    "type": "Catalyst.Common.Interfaces.IO.Messaging.Correlation.IMessageCorrelationManager, Catalyst.Common"
-                }
-            ],
-            "instanceScope": "singleinstance"
         },
         {
             "type": "Catalyst.Cli.Commands.CommandContext",
@@ -292,6 +300,14 @@
         // Rpc response handlers
         {
             "type": "Catalyst.Node.Rpc.Client.IO.Observers.GetInfoResponseObserver, Catalyst.Node.Rpc.Client",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.IO.Observers.IRpcResponseObserver, Catalyst.Common"
+                }
+            ]
+        },
+        {
+            "type": "Catalyst.Node.Rpc.Client.IO.Observers.GetPeerInfoResponseObserver, Catalyst.Node.Rpc.Client",
             "services": [
                 {
                     "type": "Catalyst.Common.Interfaces.IO.Observers.IRpcResponseObserver, Catalyst.Common"

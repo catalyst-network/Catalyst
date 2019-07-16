@@ -21,6 +21,7 @@
 
 #endregion
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -30,6 +31,7 @@ using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.IO.Messaging.Broadcast;
+using Catalyst.Common.Interfaces.P2P.IO.Messaging.Correlation;
 using Catalyst.Common.IO.Handlers;
 using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Common.Util;
@@ -53,7 +55,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.IO.Transport.Channels
         {
             private readonly List<IChannelHandler> _handlers;
 
-            public TestPeerServerChannelFactory(IMessageCorrelationManager correlationManager,
+            public TestPeerServerChannelFactory(IPeerMessageCorrelationManager correlationManager,
                 IBroadcastManager broadcastManager,
                 IKeySigner keySigner,
                 IPeerIdValidator peerIdValidator)
@@ -65,7 +67,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.IO.Transport.Channels
             public IReadOnlyCollection<IChannelHandler> InheritedHandlers => _handlers;
         }
 
-        private readonly IMessageCorrelationManager _correlationManager;
+        private readonly IPeerMessageCorrelationManager _correlationManager;
         private readonly IBroadcastManager _gossipManager;
         private readonly IKeySigner _keySigner;
         private readonly TestPeerServerChannelFactory _factory;
@@ -75,7 +77,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.IO.Transport.Channels
 
         public PeerServerChannelFactoryTests()
         {
-            _correlationManager = Substitute.For<IMessageCorrelationManager>();
+            _correlationManager = Substitute.For<IPeerMessageCorrelationManager>();
             _gossipManager = Substitute.For<IBroadcastManager>();
             _keySigner = Substitute.For<IKeySigner>();
 
@@ -145,7 +147,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.IO.Transport.Channels
         }
         
         [Fact]
-        public void Observer_Exception_Should_Not_Stop_Correct_Messages_Reception()
+        public async Task Observer_Exception_Should_Not_Stop_Correct_Messages_Reception()
         {
             var testingChannel = new EmbeddedChannel("testWithExceptions".ToChannelId(),
                 true, _factory.InheritedHandlers.ToArray());
@@ -158,6 +160,8 @@ namespace Catalyst.Node.Core.UnitTests.P2P.IO.Transport.Channels
 
                 Enumerable.Range(0, 10).ToList()
                    .ForEach(i => testingChannel.WriteInbound(GetSignedMessage()));
+
+                await TaskHelper.WaitForAsync(() => badHandler.Counter >= 1, TimeSpan.FromSeconds(2));
 
                 badHandler.Counter.Should().Be(10);
             }

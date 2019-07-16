@@ -23,13 +23,13 @@
 
 using System;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Protocol.Common;
+using Google.Protobuf;
 
 namespace Catalyst.Common.IO.Messaging.Correlation
 {
-    public sealed class CorrelatableMessage
+    public sealed class CorrelatableMessage<T> where T : IMessage
     {
-        public ProtocolMessage Content { get; set; }
+        public T Content { get; set; }
         public IPeerIdentifier Recipient { get; set; }
         public DateTimeOffset SentAt { get; set; }
     }

@@ -32,6 +32,7 @@ using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Node.Core.Rpc.IO.Observers;
+using Catalyst.Protocol;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
@@ -109,13 +110,12 @@ namespace Catalyst.Node.Core.UnitTests.Rpc.IO.Observers
 
         protected override void Dispose(bool disposing)
         {
-            base.Dispose(disposing);
-            if (!disposing)
+            if (disposing)
             {
-                return;
+                _scope?.Dispose();
             }
-            
-            _scope?.Dispose();
+
+            base.Dispose(disposing);
         }
     }
 }

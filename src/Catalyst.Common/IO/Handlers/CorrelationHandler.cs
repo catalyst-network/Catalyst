@@ -23,16 +23,19 @@
 
 using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
+using Catalyst.Common.Interfaces.Rpc.IO.Messaging.Correlation;
 using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;
 
 namespace Catalyst.Common.IO.Handlers
 {
-    public sealed class CorrelationHandler : InboundChannelHandlerBase<ProtocolMessage>
+    public sealed class CorrelationHandler<T> : 
+        InboundChannelHandlerBase<ProtocolMessage>
+        where T : IMessageCorrelationManager
     {
-        private readonly IMessageCorrelationManager _messageCorrelationManager;
+        private readonly T _messageCorrelationManager;
 
-        public CorrelationHandler(IMessageCorrelationManager messageCorrelationManager)
+        public CorrelationHandler(T messageCorrelationManager)
         {
             _messageCorrelationManager = messageCorrelationManager;
         }
@@ -47,8 +50,6 @@ namespace Catalyst.Common.IO.Handlers
         {
             if (message.TypeUrl.EndsWith(MessageTypes.Response.Name))
             {
-                //prevents response from coming through //does this apply to peer validation?
-                //whats the correlation based on?
                 if (_messageCorrelationManager.TryMatchResponse(message))
                 {
                     ctx.FireChannelRead(message);                

@@ -44,7 +44,6 @@ namespace Catalyst.Node.Core.Rpc.IO.Observers
 
         private const string PublicKeyInvalid = "Invalid PublicKey";
         private const string SignatureInvalid = "Invalid Signature";
-        private const string FailedToHandleMessage = "Failed to handle VerifyMessageRequest after receiving message";
 
         public VerifyMessageRequestObserver(IPeerIdentifier peerIdentifier,
             ILogger logger,

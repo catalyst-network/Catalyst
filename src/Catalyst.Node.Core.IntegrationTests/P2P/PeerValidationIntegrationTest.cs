@@ -23,16 +23,12 @@
 
 using System.IO;
 using System.Net;
+using System.Text;
 using Autofac;
 using Catalyst.Common.Config;
-using Catalyst.Common.Extensions;
-using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
-using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.IO.EventLoop;
 using Catalyst.Common.P2P;
 using Catalyst.Node.Core.P2P;
-using Catalyst.Node.Core.P2P.IO.Transport.Channels;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Microsoft.Extensions.Configuration;
@@ -40,11 +36,7 @@ using NSubstitute;
 using Serilog;
 using Xunit;
 using Xunit.Abstractions;
-using Catalyst.Common.Util;
-using Catalyst.Cryptography.BulletProofs.Wrapper.Types;
-using Catalyst.Common.IO.Messaging.Correlation;
 using Constants = Catalyst.Common.Config.Constants;
-using Catalyst.Node.Core.P2P.IO.Messaging.Broadcast;
 
 namespace Catalyst.Node.Core.IntegrationTests.P2P
 {
@@ -53,9 +45,7 @@ namespace Catalyst.Node.Core.IntegrationTests.P2P
         private readonly ILogger _logger;
         private readonly IContainer _container;
         private readonly IConfigurationRoot _config;
-        private readonly IKeySigner _serverKeySigner;
         private readonly IPeerIdValidator _peerIdValidator;
-        private readonly EventLoopGroupFactoryConfiguration _eventLoopGroupFactoryConfiguration;
 
         public PeerValidationIntegrationTest(ITestOutputHelper output) : base(output)
         {
@@ -66,32 +56,10 @@ namespace Catalyst.Node.Core.IntegrationTests.P2P
                .Build(), CurrentTestName);
 
             _logger = Substitute.For<ILogger>();
-            _serverKeySigner = Substitute.For<IKeySigner>();
             _peerIdValidator = Substitute.For<IPeerIdValidator>();
 
-            var sigBytes = ByteUtil.GenerateRandomByteArray(Cryptography.BulletProofs.Wrapper.FFI.GetSignatureLength());
-            var pubBytes = ByteUtil.GenerateRandomByteArray(Cryptography.BulletProofs.Wrapper.FFI.GetPublicKeyLength());
-            var sig = new Signature(sigBytes, pubBytes);
-
-            _serverKeySigner.Sign(Arg.Any<byte[]>()).ReturnsForAnyArgs(sig);
-
-
-            _eventLoopGroupFactoryConfiguration = new EventLoopGroupFactoryConfiguration
-            {
-                TcpClientHandlerWorkerThreads = 2,
-                TcpServerHandlerWorkerThreads = 3,
-                UdpServerHandlerWorkerThreads = 4,
-                UdpClientHandlerWorkerThreads = 5
-            };
-
-
             ConfigureContainerBuilder(_config, true, true);
-            ContainerBuilder.RegisterType<MessageCorrelationManager>().SingleInstance();
-
             _container = ContainerBuilder.Build();
-
-            //var builder = ContainerBuilder;
-            //builder.RegisterType<IMessageCorrelationManager>().SingleInstance();
         }
 
         [Fact]
@@ -104,26 +72,13 @@ namespace Catalyst.Node.Core.IntegrationTests.P2P
                 {
                     var peerSettings = new PeerSettings(_config);
 
-                    var recipient = new PeerIdentifier(peerSettings.PublicKey.ToUtf8ByteString().ToByteArray(), peerSettings.BindAddress,
+                    var recipient = new PeerIdentifier(Encoding.UTF8.GetBytes(peerSettings.PublicKey), peerSettings.BindAddress,
                         peerSettings.Port, Substitute.For<IPeerIdClientId>());
 
                     var sender = PeerIdentifierHelper.GetPeerIdentifier("sender", "Tc", 1, peerSettings.BindAddress, peerSettings.Port);
 
-                    _peerIdValidator.ValidatePeerIdFormat(sender.PeerId);
-                    _peerIdValidator.ValidatePeerIdFormat(recipient.PeerId);
-
-                    var peerServerFact = ((PeerServerChannelFactory)((PeerService)peerService).ChannelFactory);
-                    var ch = peerServerFact._messageCorrelationManager;
-                    var boardcastMgr = peerServerFact._broadcastManager;
-                    var peerClient = ((BroadcastManager)boardcastMgr)._peerClient;
-
-                    var peerValidator = new PeerValidator(peerSettings, peerService, _logger, peerClient, sender);
-
-
-                    //var peerValidator = new PeerValidator(peerSettings, peerService, _logger,
-                    //    new PeerClient(new PeerClientChannelFactory(_serverKeySigner,
-                    //           ch, _peerIdValidator),
-                    //        new UdpClientEventLoopGroupFactory(_eventLoopGroupFactoryConfiguration)), sender);
+                    var peerClientSingleInstance = _container.Resolve<IPeerClient>();
+                    var peerValidator = new PeerValidator(peerSettings, peerService, _logger, peerClientSingleInstance, sender);
 
                     var valid = peerValidator.PeerChallengeResponse(recipient);
 
@@ -144,18 +99,13 @@ namespace Catalyst.Node.Core.IntegrationTests.P2P
                 {
                     var peerSettings = new PeerSettings(_config);
 
-                    var recipient = new PeerIdentifier(publicKey.ToUtf8ByteString().ToByteArray(), IPAddress.Parse(ip),
+                    var recipient = new PeerIdentifier(Encoding.UTF8.GetBytes(publicKey), IPAddress.Parse(ip),
                         port, Substitute.For<IPeerIdClientId>());
 
                     var sender = PeerIdentifierHelper.GetPeerIdentifier("sender", "Tc", 1, peerSettings.BindAddress, peerSettings.Port);
 
-                    _peerIdValidator.ValidatePeerIdFormat(sender.PeerId);
-                    _peerIdValidator.ValidatePeerIdFormat(recipient.PeerId);
-
-                    var peerValidator = new PeerValidator(peerSettings, peerService, _logger,
-                        new PeerClient(new PeerClientChannelFactory(_serverKeySigner,
-                                Substitute.For<IMessageCorrelationManager>(), _peerIdValidator),
-                            new UdpClientEventLoopGroupFactory(_eventLoopGroupFactoryConfiguration)), sender);
+                    var peerClientSingleInstance = _container.Resolve<IPeerClient>();
+                    var peerValidator = new PeerValidator(peerSettings, peerService, _logger, peerClientSingleInstance, sender);
 
                     var valid = peerValidator.PeerChallengeResponse(recipient);
 

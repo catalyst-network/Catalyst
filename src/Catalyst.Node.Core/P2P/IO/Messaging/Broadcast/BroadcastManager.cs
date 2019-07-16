@@ -35,6 +35,7 @@ using Catalyst.Common.Interfaces.P2P.IO.Messaging.Broadcast;
 using Catalyst.Common.IO.Messaging.Broadcast;
 using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.P2P;
+using Catalyst.Protocol;
 using Catalyst.Protocol.Common;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Primitives;
@@ -85,7 +86,7 @@ namespace Catalyst.Node.Core.P2P.IO.Messaging.Broadcast
         /// <inheritdoc/>
         public async Task BroadcastAsync(ProtocolMessage protocolMessage)
         {
-            if (protocolMessage.CheckIfMessageIsBroadcast())
+            if (protocolMessage.IsBroadCastMessage())
             {
                 throw new NotSupportedException("Cannot broadcast a message which is already a gossip type");
             }

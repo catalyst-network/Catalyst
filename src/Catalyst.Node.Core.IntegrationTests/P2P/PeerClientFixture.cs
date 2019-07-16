@@ -32,6 +32,7 @@ using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Transport.Channels;
 using Catalyst.Node.Core.P2P.IO.Transport.Channels;
+using Catalyst.Common.Interfaces.P2P.IO.Messaging.Correlation;
 
 namespace Catalyst.Node.Core.IntegrationTests.P2P
 {
@@ -39,7 +40,8 @@ namespace Catalyst.Node.Core.IntegrationTests.P2P
     {
         public PeerClientFixture()
         {
-            UniversalPeerClient = new PeerClient(new PeerClientChannelFactory(Substitute.For<IKeySigner>(), Substitute.For<IMessageCorrelationManager>(), Substitute.For<IPeerIdValidator>()), Substitute.For<IUdpClientEventLoopGroupFactory>());
+            UniversalPeerClient = new PeerClient(new PeerClientChannelFactory(Substitute.For<IKeySigner>(), Substitute.For<IPeerMessageCorrelationManager>(), Substitute.For<IPeerIdValidator>()),
+                Substitute.For<IUdpClientEventLoopGroupFactory>());
         }
 
         public void Dispose()
