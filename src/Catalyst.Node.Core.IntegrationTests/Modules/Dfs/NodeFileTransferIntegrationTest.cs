@@ -70,7 +70,7 @@ namespace Catalyst.Node.Core.IntegrationTests.Modules.Dfs
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
             Substitute.For<IDtoFactory>();
-            _nodeFileTransferFactory = new DownloadFileTransferFactory();
+            _nodeFileTransferFactory = new DownloadFileTransferFactory(_logger);
 
             var passwordReader = new TestPasswordReader("abcd");
 

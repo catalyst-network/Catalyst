@@ -45,10 +45,13 @@ namespace Catalyst.Common.IO.Observers
     {
         private readonly string _filterMessageType;
 
-        protected ResponseObserverBase(ILogger logger) : base(logger)
+        protected ResponseObserverBase(ILogger logger, bool assertMessageNameCheck = true) : base(logger)
         {
-            Guard.Argument(typeof(TProto), nameof(TProto)).Require(t => t.IsResponseType(),
-                t => $"{nameof(TProto)} is not of type {MessageTypes.Response.Name}");
+            if (assertMessageNameCheck)
+            {
+                Guard.Argument(typeof(TProto), nameof(TProto)).Require(t => t.IsResponseType(),
+                    t => $"{nameof(TProto)} is not of type {MessageTypes.Response.Name}");
+            }
             _filterMessageType = typeof(TProto).ShortenedProtoFullName();
         }
         

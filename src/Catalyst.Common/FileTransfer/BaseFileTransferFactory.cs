@@ -29,6 +29,7 @@ using System.Threading.Tasks;
 using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.FileTransfer;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
+using Serilog;
 
 namespace Catalyst.Common.FileTransfer
 {
@@ -40,9 +41,12 @@ namespace Catalyst.Common.FileTransfer
     {
         /// <summary>The pending file transfers</summary>
         private readonly Dictionary<Guid, T> _pendingFileTransfers;
-
+        
         /// <summary>The lock object</summary>
         private readonly object _lockObject = new object();
+
+        /// <summary>The logger</summary>
+        protected readonly ILogger Logger;
 
         /// <inheritdoc />
         public Guid[] Keys
@@ -57,8 +61,9 @@ namespace Catalyst.Common.FileTransfer
         }
 
         /// <summary>Initializes a new instance of the <see cref="BaseFileTransferFactory{T}"/> class.</summary>
-        protected BaseFileTransferFactory()
+        protected BaseFileTransferFactory(ILogger logger)
         {
+            Logger = logger;
             _pendingFileTransfers = new Dictionary<Guid, T>();
         }
 
