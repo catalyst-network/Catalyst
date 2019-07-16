@@ -48,7 +48,11 @@ namespace Catalyst.Common.FileTransfer
             await DownloadAsync(fileTransferInformation).ConfigureAwait(false);
         }
 
-        /// <inheritdoc />
+        /// <summary>Writes chunk to file system and returns the write status response.</summary>
+        /// <param name="fileName">Name of the file.</param>
+        /// <param name="chunkId">The chunk identifier.</param>
+        /// <param name="fileChunk">The file chunk bytes.</param>
+        /// <returns><see cref="FileTransferResponseCodes"/></returns>
         private FileTransferResponseCodes DownloadChunkResponse(ICorrelationId fileName, uint chunkId, byte[] fileChunk)
         {
             EnsureKeyExists(fileName);
@@ -81,6 +85,7 @@ namespace Catalyst.Common.FileTransfer
             }
         }
 
+        /// <inheritdoc />
         public FileTransferResponseCodes DownloadChunk(TransferFileBytesRequest transferFileBytesRequest)
         {
             FileTransferResponseCodes responseCode;
