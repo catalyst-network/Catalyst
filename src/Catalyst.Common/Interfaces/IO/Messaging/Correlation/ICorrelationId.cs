@@ -28,8 +28,11 @@ namespace Catalyst.Common.Interfaces.IO.Messaging.Correlation
     /// <summary>
     ///     Provides a CorrelationId type for easy reference to what the Guid is for and mocking
     /// </summary>
-    public interface ICorrelationId
+    public interface ICorrelationId : IEquatable<ICorrelationId>
     {
-        Guid Id { get; set; }
+        /// <summary>
+        ///     The Guid underpinning that ICorrelationId
+        /// </summary>
+        Guid Id { get; }
     }
 }

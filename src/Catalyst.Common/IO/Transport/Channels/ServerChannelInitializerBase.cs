@@ -21,7 +21,9 @@
 
 #endregion
 
+using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Security.Cryptography.X509Certificates;
 using Catalyst.Common.Interfaces.IO.EventLoop;
 using DotNetty.Common.Utilities;
@@ -34,11 +36,15 @@ namespace Catalyst.Common.IO.Transport.Channels
         : ChannelInitializerBase<T> where T : IChannel
     {
         /// <inheritdoc />
-        internal ServerChannelInitializerBase(IList<IChannelHandler> handlers,
+        internal ServerChannelInitializerBase(Func<IList<IChannelHandler>> handlerGenerationFunction,
             IEventLoopGroupFactory eventLoopGroupFactory,
             X509Certificate certificate = null)
-            : base(handlers,
-                certificate == null ? null : TlsHandler.Server(certificate), eventLoopGroupFactory) { }
+            : base(handlerGenerationFunction, eventLoopGroupFactory, certificate: certificate) { }
+
+        public override TlsHandler NewTlsHandler(IPAddress targetHost, X509Certificate certificate)
+        {
+            return certificate == null ? null : TlsHandler.Server(certificate);
+        }
 
         public override string ToString()
         {

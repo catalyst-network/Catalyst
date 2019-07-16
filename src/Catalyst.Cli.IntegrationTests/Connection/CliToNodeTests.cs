@@ -33,6 +33,7 @@ using Catalyst.Node.Core.Modules.Dfs;
 using Catalyst.Common.Config;
 using System.Linq;
 using System.IO;
+using Autofac.Core.Lifetime;
 using Catalyst.Common.Interfaces;
 using NSubstitute;
 using Serilog;
@@ -44,16 +45,24 @@ using Constants = Catalyst.Common.Config.Constants;
 
 namespace Catalyst.Cli.IntegrationTests.Connection
 {
-    public sealed class CliToNodeTests : CliCommandTestBase, IDisposable
+    public sealed class CliToNodeTests : ConfigFileBasedTest
     {
         private readonly NodeTest _node;
 
-        public CliToNodeTests(ITestOutputHelper output) : base(output, false)
+        public CliToNodeTests(ITestOutputHelper output) : base(output)
         {
             _node = new NodeTest(output);
+
+            var config = new ConfigurationBuilder()
+               .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ShellComponentsJsonConfigFile))
+               .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ShellNodesConfigFile))
+               .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ShellConfigFile))
+               .Build();
+
+            ConfigureContainerBuilder(config);
         }
 
-        private sealed class NodeTest : ConfigFileBasedTest, IDisposable
+        private sealed class NodeTest : ConfigFileBasedTest
         {
             private ILifetimeScope _scope;
             private IContainer _container;
@@ -104,12 +113,12 @@ namespace Catalyst.Cli.IntegrationTests.Connection
                 _ = _scope.Resolve<ICatalystNode>();
             }
 
-            public new void Dispose()
+            protected override void Dispose(bool disposing)
             {
-                base.Dispose();
+                base.Dispose(disposing);
 
-                _container.Dispose();
-                _scope.Dispose();
+                _container?.Dispose();
+                _scope?.Dispose();
             }
         }
 
@@ -119,19 +128,17 @@ namespace Catalyst.Cli.IntegrationTests.Connection
             _node.RunNodeInstance();
 
             using (var container = ContainerBuilder.Build())
+            using (var scope = container.BeginLifetimeScope(CurrentTestName))
             {
-                using (container.BeginLifetimeScope(CurrentTestName))
-                {
-                    var shell = container.Resolve<ICatalystCli>();
-                    var hasConnected = shell.ParseCommand("connect", "-n", "node1");
-                    hasConnected.Should().BeTrue();
-                }
-            }
+                var shell = scope.Resolve<ICatalystCli>();
+                var hasConnected = shell.ParseCommand("connect", "-n", "node1");
+                hasConnected.Should().BeTrue();
+            }   
         }
 
-        public new void Dispose()
+        protected override void Dispose(bool disposing)
         {
-            base.Dispose();
+            base.Dispose(disposing);
             _node?.Dispose();
         }
     }
