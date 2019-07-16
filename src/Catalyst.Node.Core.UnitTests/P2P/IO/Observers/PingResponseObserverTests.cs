@@ -59,7 +59,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.IO.Observers
                 CorrelationId.GenerateCorrelationId()
             );
             
-            var pingResponseObserver = Substitute.For<IObserver<IPeerClientMessageDto<PingResponse>>>();
+            var pingResponseObserver = Substitute.For<IObserver<IPeerClientMessageDto>>();
 
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext,
                 response.Content.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId,
@@ -73,7 +73,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.IO.Observers
             {
                 await TaskHelper.WaitForAsync(() => pingResponseObserver.ReceivedCalls().Any(),
                     TimeSpan.FromMilliseconds(1000));
-                pingResponseObserver.Received(1).OnNext(Arg.Any<IPeerClientMessageDto<PingResponse>>());
+                pingResponseObserver.Received(1).OnNext(Arg.Any<IPeerClientMessageDto>());
             }
         }
 

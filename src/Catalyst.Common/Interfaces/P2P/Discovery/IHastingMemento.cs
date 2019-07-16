@@ -21,17 +21,13 @@
 
 #endregion
 
-using System;
-using Catalyst.Common.Interfaces.IO.Messaging.Dto;
-using Google.Protobuf;
+using System.Collections.Generic;
 
-namespace Catalyst.Common.Interfaces.IO.Observables
+namespace Catalyst.Common.Interfaces.P2P.Discovery
 {
-    public interface IObservableMessageStreamer<out T> where T : IMessage
+    public interface IHastingMemento
     {
-        /// <summary>
-        ///     Message stream
-        /// </summary>
-        IObservable<IObserverDto<T>> MessageStream { get; }
+        IPeerIdentifier Peer { get; }
+        IList<IPeerIdentifier> Neighbours { get; }
     }
 }

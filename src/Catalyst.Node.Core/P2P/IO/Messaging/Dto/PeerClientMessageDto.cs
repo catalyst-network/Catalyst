@@ -21,6 +21,7 @@
 
 #endregion
 
+using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.IO.Messaging.Dto;
 using Dawn;
@@ -28,17 +29,19 @@ using Google.Protobuf;
 
 namespace Catalyst.Node.Core.P2P.IO.Messaging.Dto
 {
-    public sealed class PeerClientMessageDto<T> : IPeerClientMessageDto<T> where T : IMessage<T>
+    public sealed class PeerClientMessageDto : IPeerClientMessageDto
     {
+        public ICorrelationId CorrelationId { get; set; }
         public IPeerIdentifier Sender { get; set; }
-        public T Message { get; set; }
+        public IMessage Message { get; set; }
 
-        public PeerClientMessageDto(T message, IPeerIdentifier sender)
+        public PeerClientMessageDto(IMessage message, IPeerIdentifier sender, ICorrelationId correlationId)
         {
             Guard.Argument(message, nameof(message))
                .Require(message.GetType().Namespace.Contains("IPPN"));
             Message = message;
             Sender = sender;
+            CorrelationId = correlationId;
         }
     }
 }
