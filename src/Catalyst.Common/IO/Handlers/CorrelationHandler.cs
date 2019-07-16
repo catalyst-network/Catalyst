@@ -49,7 +49,7 @@ namespace Catalyst.Common.IO.Handlers
             {
                 //prevents response from coming through //does this apply to peer validation?
                 //whats the correlation based on?
-                //if (_messageCorrelationManager.TryMatchResponse(message))
+                if (_messageCorrelationManager.TryMatchResponse(message))
                 {
                     ctx.FireChannelRead(message);                
                 }

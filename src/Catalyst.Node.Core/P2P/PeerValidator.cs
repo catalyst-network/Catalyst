@@ -103,7 +103,7 @@ namespace Catalyst.Node.Core.P2P
                     protocolMessage,
                     _senderIdentifier,
                     recipientPeerIdentifier,
-                    CorrelationId.GenerateCorrelationId()
+                  correlationId
                 );
 
                 var sendPubKey = _senderIdentifier.PeerId.PublicKey.ToStringUtf8();

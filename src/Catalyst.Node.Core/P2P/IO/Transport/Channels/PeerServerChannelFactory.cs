@@ -45,8 +45,8 @@ namespace Catalyst.Node.Core.P2P.IO.Transport.Channels
 {
     public class PeerServerChannelFactory : UdpServerChannelFactory
     {
-        private readonly IMessageCorrelationManager _messageCorrelationManager;
-        private readonly IBroadcastManager _broadcastManager;
+        public readonly IMessageCorrelationManager _messageCorrelationManager;
+        public readonly IBroadcastManager _broadcastManager;
         private readonly IKeySigner _keySigner;
         private readonly IPeerIdValidator _peerIdValidator;
 

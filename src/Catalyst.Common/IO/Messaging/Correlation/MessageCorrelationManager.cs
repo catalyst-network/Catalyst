@@ -50,6 +50,8 @@ namespace Catalyst.Common.IO.Messaging.Correlation
         {
             _pendingRequests = cache;
 
+            System.Diagnostics.Debug.WriteLine(this.GetHashCode());
+
             _evictionEvent = new ReplaySubject<IMessageEvictionEvent>(0);
 
             _entryOptions = () => new MemoryCacheEntryOptions()
@@ -69,6 +71,8 @@ namespace Catalyst.Common.IO.Messaging.Correlation
         /// <inheritdoc />
         public void AddPendingRequest(CorrelatableMessage correlatableMessage)
         {
+            System.Diagnostics.Debug.WriteLine(this.GetHashCode() + " Setting the pendingrequests");
+
             _pendingRequests.Set(correlatableMessage.Content.CorrelationId, correlatableMessage, _entryOptions());
         }
 
@@ -76,6 +80,8 @@ namespace Catalyst.Common.IO.Messaging.Correlation
         public bool TryMatchResponse(ProtocolMessage response)
         {
             Guard.Argument(response, nameof(response)).NotNull();
+
+            System.Diagnostics.Debug.WriteLine(this.GetHashCode() + " Performing check");
 
             return _pendingRequests.TryGetValue(response.CorrelationId, out _);
         }

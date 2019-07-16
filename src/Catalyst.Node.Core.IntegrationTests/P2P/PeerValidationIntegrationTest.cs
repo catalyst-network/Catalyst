@@ -42,7 +42,9 @@ using Xunit;
 using Xunit.Abstractions;
 using Catalyst.Common.Util;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Types;
+using Catalyst.Common.IO.Messaging.Correlation;
 using Constants = Catalyst.Common.Config.Constants;
+using Catalyst.Node.Core.P2P.IO.Messaging.Broadcast;
 
 namespace Catalyst.Node.Core.IntegrationTests.P2P
 {
@@ -82,8 +84,14 @@ namespace Catalyst.Node.Core.IntegrationTests.P2P
                 UdpClientHandlerWorkerThreads = 5
             };
 
+
             ConfigureContainerBuilder(_config, true, true);
+            ContainerBuilder.RegisterType<MessageCorrelationManager>().SingleInstance();
+
             _container = ContainerBuilder.Build();
+
+            //var builder = ContainerBuilder;
+            //builder.RegisterType<IMessageCorrelationManager>().SingleInstance();
         }
 
         [Fact]
@@ -104,11 +112,18 @@ namespace Catalyst.Node.Core.IntegrationTests.P2P
                     _peerIdValidator.ValidatePeerIdFormat(sender.PeerId);
                     _peerIdValidator.ValidatePeerIdFormat(recipient.PeerId);
 
+                    var peerServerFact = ((PeerServerChannelFactory)((PeerService)peerService).ChannelFactory);
+                    var ch = peerServerFact._messageCorrelationManager;
+                    var boardcastMgr = peerServerFact._broadcastManager;
+                    var peerClient = ((BroadcastManager)boardcastMgr)._peerClient;
 
-                    var peerValidator = new PeerValidator(peerSettings, peerService, _logger,
-                        new PeerClient(new PeerClientChannelFactory(_serverKeySigner,
-                                Substitute.For<IMessageCorrelationManager>(), _peerIdValidator),
-                            new UdpClientEventLoopGroupFactory(_eventLoopGroupFactoryConfiguration)), sender);
+                    var peerValidator = new PeerValidator(peerSettings, peerService, _logger, peerClient, sender);
+
+
+                    //var peerValidator = new PeerValidator(peerSettings, peerService, _logger,
+                    //    new PeerClient(new PeerClientChannelFactory(_serverKeySigner,
+                    //           ch, _peerIdValidator),
+                    //        new UdpClientEventLoopGroupFactory(_eventLoopGroupFactoryConfiguration)), sender);
 
                     var valid = peerValidator.PeerChallengeResponse(recipient);
 
