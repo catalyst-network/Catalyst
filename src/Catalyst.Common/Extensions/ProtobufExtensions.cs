@@ -23,6 +23,7 @@
 
 using System;
 using System.Net;
+using System.Linq;
 using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
@@ -71,7 +72,13 @@ namespace Catalyst.Common.Extensions
 
         public static ICorrelationId ToCorrelationId(this ByteString guidBytes)
         {
-            return new CorrelationId(new Guid(guidBytes.ToByteArray()));
+            var bytes = guidBytes?.ToByteArray();
+            
+            var validBytes = bytes?.Length == CorrelationId.GuidByteLength
+                ? bytes
+                : (bytes ?? new byte[0]).Concat(Enumerable.Repeat((byte) 0, CorrelationId.GuidByteLength)).Take(CorrelationId.GuidByteLength).ToArray();
+
+            return new CorrelationId(new Guid(validBytes));
         }
 
         public static ByteString ToByteString(this Guid guid)
