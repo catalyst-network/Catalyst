@@ -21,6 +21,7 @@
 
 #endregion
 
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
@@ -35,13 +36,13 @@ namespace Catalyst.Common.IO.Transport.Channels
 {
     public abstract class UdpChannelFactoryBase
     {
-        protected abstract List<IChannelHandler> Handlers { get; }
+        protected abstract Func<List<IChannelHandler>> HandlerGenerationFunction { get; }
 
         protected IChannel BootStrapChannel(IEventLoopGroupFactory handlerEventLoopGroupFactory,
             IPAddress address,
             int port)
         {
-            var channelHandler = new ServerChannelInitializerBase<IChannel>(Handlers, handlerEventLoopGroupFactory);
+            var channelHandler = new ServerChannelInitializerBase<IChannel>(HandlerGenerationFunction, handlerEventLoopGroupFactory);
 
             return new Bootstrap()
                .Group(handlerEventLoopGroupFactory.GetOrCreateSocketIoEventLoopGroup())
