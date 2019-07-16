@@ -62,7 +62,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.IO.Transport.Channels
                 IPeerIdValidator peerIdValidator)
                 : base(correlationManager, broadcastManager, keySigner, peerIdValidator)
             {
-                _handlers = Handlers;
+                _handlers = HandlerGenerationFunction();
             }
 
             public IReadOnlyCollection<IChannelHandler> InheritedHandlers => _handlers;
