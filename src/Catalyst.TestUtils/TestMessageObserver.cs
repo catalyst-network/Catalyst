@@ -22,9 +22,6 @@
 #endregion
 
 using System;
-using System.Data;
-using System.Reactive.Concurrency;
-using System.Reactive.Linq;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Observers;
 using Catalyst.Common.Interfaces.P2P;

@@ -21,8 +21,6 @@
 
 #endregion
 
-using Autofac;
-using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Protocol.Rpc.Node;
 using FluentAssertions;
 using Xunit;

@@ -21,7 +21,6 @@
 
 #endregion
 
-using System.Collections.Generic;
 using System.Linq;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.IO.Observers;
@@ -33,7 +32,6 @@ using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using DotNetty.Transport.Channels;
 using Google.Protobuf.WellKnownTypes;
-using Nethereum.RLP;
 using SharpRepository.Repository;
 using ILogger = Serilog.ILogger;
 
