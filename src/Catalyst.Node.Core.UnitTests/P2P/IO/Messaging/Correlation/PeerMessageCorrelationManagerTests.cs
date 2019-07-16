@@ -112,7 +112,8 @@ namespace Catalyst.Node.Core.UnitTests.P2P.IO.Messaging.Correlation
 
             var evictionObserver = Substitute.For<IObserver<IPeerReputationChange>>();
             
-            using (CorrelationManager.ReputationEventStream.SubscribeOn(TaskPoolScheduler.Default)
+            using (CorrelationManager.ReputationEventStream
+               .SubscribeOn(NewThreadScheduler.Default)
                .Subscribe(evictionObserver.OnNext))
             {
                 requests.ForEach(r => CorrelationManager.AddPendingRequest(r));
@@ -125,11 +126,15 @@ namespace Catalyst.Node.Core.UnitTests.P2P.IO.Messaging.Correlation
                        .BeFalse("the changeToken has simulated a TTL expiry");
                 }
 
-                await TaskHelper.WaitForAsync(() => evictionObserver.ReceivedCalls().Any(),
-                    TimeSpan.FromMilliseconds(2000));
+                await TaskHelper.WaitForAsync(() => evictionObserver.ReceivedCalls().Count() >= requestCount * 2,
+                    TimeSpan.FromMilliseconds(5000)).ConfigureAwait(false);
 
-                evictionObserver.Received(requestCount).OnNext(Arg.Is<IPeerReputationChange>(r => r.ReputationEvent.Name == ReputationEvents.NoResponseReceived.Name));
-                evictionObserver.Received(requestCount).OnNext(Arg.Is<IPeerReputationChange>(r => r.ReputationEvent.Name == ReputationEvents.UnCorrelatableMessage.Name));
+                var onNextReceivedArgs = evictionObserver.ReceivedCalls()
+                   .Where(r => r.GetMethodInfo().Name == nameof(IObserver<IPeerReputationChange>.OnNext))
+                   .Select(r => (IPeerReputationChange) r.GetArguments()[0]).ToList();
+
+                onNextReceivedArgs.Count(r => r.ReputationEvent.Name == ReputationEvents.NoResponseReceived.Name).Should().Be(3);
+                onNextReceivedArgs.Count(r => r.ReputationEvent.Name == ReputationEvents.UnCorrelatableMessage.Name).Should().Be(3);
             }
         }
         

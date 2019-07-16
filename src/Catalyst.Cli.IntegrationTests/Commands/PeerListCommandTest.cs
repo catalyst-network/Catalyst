@@ -21,8 +21,6 @@
 
 #endregion
 
-using Autofac;
-using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Protocol.Rpc.Node;
 using FluentAssertions;
 using Xunit;
@@ -32,27 +30,14 @@ namespace Catalyst.Cli.IntegrationTests.Commands
 {
     public sealed class PeerListCommandTest : CliCommandTestBase
     {
-        //This test is the base to all other tests.  If the Cli cannot connect to a node than all other commands
-        //will fail
         public PeerListCommandTest(ITestOutputHelper output) : base(output) { }
 
         [Fact]
         public void Cli_Can_Send_List_Peers_Request()
         {
-            using (var container = ContainerBuilder.Build())
-            {
-                using (container.BeginLifetimeScope(CurrentTestName))
-                {
-                    var shell = container.Resolve<ICatalystCli>();
-                    var hasConnected = shell.ParseCommand("connect", "-n", "node1");
-                    hasConnected.Should().BeTrue();
-
-                    var result = shell.ParseCommand(
-                        "listpeers", "-n", "node1");
-                    result.Should().BeTrue();
-                    AssertSentMessage<GetPeerListRequest>();
-                }
-            }
+            var result = Shell.ParseCommand("listpeers", NodeArgumentPrefix, ServerNodeName);
+            result.Should().BeTrue();
+            AssertSentMessage<GetPeerListRequest>();
         }
     }
 }

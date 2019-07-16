@@ -25,6 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
@@ -145,7 +146,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.IO.Transport.Channels
                 observer.Received.Single().Payload.CorrelationId.ToCorrelationId().Id.Should().Be(_correlationId.Id);
             }
         }
-        
+         
         [Fact]
         public async Task Observer_Exception_Should_Not_Stop_Correct_Messages_Reception()
         {
@@ -161,7 +162,16 @@ namespace Catalyst.Node.Core.UnitTests.P2P.IO.Transport.Channels
                 Enumerable.Range(0, 10).ToList()
                    .ForEach(i => testingChannel.WriteInbound(GetSignedMessage()));
 
-                await TaskHelper.WaitForAsync(() => badHandler.Counter >= 1, TimeSpan.FromSeconds(2));
+                var inboundMessagesThatWentThroughPipeline = 0;
+                while (testingChannel.OutboundMessages.Count > 0)
+                {
+                    testingChannel.OutboundMessages.Dequeue();
+                    inboundMessagesThatWentThroughPipeline++;
+                }
+
+                inboundMessagesThatWentThroughPipeline.Should().Be(5);
+
+                await messageStream.WaitForItemsOnDelayedStreamOnTaskPoolSchedulerAsync().ConfigureAwait(false);
 
                 badHandler.Counter.Should().Be(10);
             }
