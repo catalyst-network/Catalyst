@@ -42,10 +42,10 @@ namespace Catalyst.Node.Core.P2P.IO.Observers
         : RequestObserverBase<PeerNeighborsRequest, PeerNeighborsResponse>,
             IP2PMessageObserver
     {
-        private readonly IRepository<Peer> _repository;
+        private readonly IRepository<Peer, string> _repository;
 
         public GetNeighbourRequestObserver(IPeerIdentifier peerIdentifier,
-            IRepository<Peer> repository,
+            IRepository<Peer, string> repository,
             ILogger logger)
             : base(logger, peerIdentifier)
         { 

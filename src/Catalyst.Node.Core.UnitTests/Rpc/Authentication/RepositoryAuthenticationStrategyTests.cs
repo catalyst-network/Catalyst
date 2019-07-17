@@ -40,7 +40,7 @@ namespace Catalyst.Node.Core.UnitTests.Rpc.Authentication
         public RepositoryAuthenticationHandlerTests()
         {
             _trustedPeer = PeerIdentifierHelper.GetPeerIdentifier("Trusted");
-            var whiteListRepo = new InMemoryRepository<AuthCredentials>();
+            var whiteListRepo = new InMemoryRepository<AuthCredentials, string>();
 
             whiteListRepo.Add(new AuthCredentials()
             {

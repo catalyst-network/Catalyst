@@ -53,7 +53,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC.IO.Observers
     {
         private readonly ILogger _logger;
         private readonly IChannelHandlerContext _fakeContext;
-        private readonly IRepository<Peer> _peerRepository;
+        private readonly IRepository<Peer, string> _peerRepository;
 
         public GetPeerInfoRequestObserverTests()
         {
@@ -65,7 +65,7 @@ namespace Catalyst.Node.Core.UnitTests.RPC.IO.Observers
 
             var peers = GetPeerTestData();
 
-            _peerRepository = Substitute.For<IRepository<Peer>>();
+            _peerRepository = Substitute.For<IRepository<Peer, string>>();
             _peerRepository.FindAll(Arg.Any<Expression<Func<Peer, bool>>>())
                .Returns(ci =>
                 {

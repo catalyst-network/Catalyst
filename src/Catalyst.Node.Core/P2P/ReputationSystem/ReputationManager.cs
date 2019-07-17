@@ -38,13 +38,13 @@ namespace Catalyst.Node.Core.P2P.ReputationSystem
     public sealed class ReputationManager : IReputationManager, IDisposable
     {
         private readonly ILogger _logger;
-        public IRepository<Peer> PeerRepository { get; }
+        public IRepository<Peer, string> PeerRepository { get; }
         public readonly ReplaySubject<IPeerReputationChange> ReputationEvent;
         public IObservable<IPeerReputationChange> ReputationEventStream => ReputationEvent.AsObservable();
         public IObservable<IPeerReputationChange> MergedEventStream { get; set; }
         static readonly SemaphoreSlim SemaphoreSlim = new SemaphoreSlim(1);
 
-        public ReputationManager(IRepository<Peer> peerRepository, ILogger logger)
+        public ReputationManager(IRepository<Peer, string> peerRepository, ILogger logger)
         {
             _logger = logger;
             PeerRepository = peerRepository;

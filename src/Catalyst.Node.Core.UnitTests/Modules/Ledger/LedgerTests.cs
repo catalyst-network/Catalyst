@@ -39,7 +39,7 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Ledger
 
         public LedgerTests()
         {
-            IRepository<Account> accounts = new InMemoryRepository<Account>();
+            IRepository<Account, string> accounts = new InMemoryRepository<Account, string>();
 
             var logger = Substitute.For<ILogger>();
 

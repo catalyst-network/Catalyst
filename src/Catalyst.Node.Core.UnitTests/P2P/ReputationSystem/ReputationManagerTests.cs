@@ -42,12 +42,12 @@ namespace Catalyst.Node.Core.UnitTests.P2P.ReputationSystem
     public sealed class ReputationManagerTests
     {
         private readonly ILogger _subbedLogger;
-        private readonly IRepository<Peer> _subbedPeerRepository;
+        private readonly IRepository<Peer, string> _subbedPeerRepository;
 
         public ReputationManagerTests()
         {
             _subbedLogger = Substitute.For<ILogger>();
-            _subbedPeerRepository = Substitute.For<IRepository<Peer>>();
+            _subbedPeerRepository = Substitute.For<IRepository<Peer, string>>();
         }
 
         [Fact]

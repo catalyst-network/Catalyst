@@ -46,17 +46,17 @@ namespace Catalyst.Node.Core.UnitTests.P2P.IO.Observers
     {
         private readonly ILogger _subbedLogger;
         private readonly IPeerIdentifier _peerIdentifier;
-        private readonly IRepository<Peer> _subbedPeerRepository;
+        private readonly IRepository<Peer, string> _subbedPeerRepository;
 
         public GetNeighbourRequestObserverTests()
         {
             _subbedLogger = Substitute.For<ILogger>();
-            _subbedPeerRepository = Substitute.For<IRepository<Peer>>();
+            _subbedPeerRepository = Substitute.For<IRepository<Peer, string>>();
             _peerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("testPeer");
         }
         
         private static void AddMockPeerToDbAndSetReturnExpectation(IReadOnlyList<Peer> peer,
-            IRepository<Peer, int> store)
+            IRepository<Peer, string> store)
         {
             store.Add(peer);
             store.FindAll(Arg.Any<Specification<Peer>>()).Returns(peer);

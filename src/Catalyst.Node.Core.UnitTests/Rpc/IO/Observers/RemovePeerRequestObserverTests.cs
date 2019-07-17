@@ -94,8 +94,8 @@ namespace Catalyst.Node.Core.UnitTests.Rpc.IO.Observers
         /// <param name="withPublicKey">if set to <c>true</c> [send message to handler with the public key].</param>
         private async Task ExecuteTestCase(IReadOnlyCollection<string> fakePeers, bool withPublicKey)
         {
-            var peerRepository = new InMemoryRepository<Peer>();
-
+            var peerRepository = new InMemoryRepository<Peer, string>();
+            Peer targetPeerToDelete = null;
             fakePeers.ToList().ForEach(fakePeer =>
             {
                 var peer = new Peer
@@ -106,6 +106,10 @@ namespace Catalyst.Node.Core.UnitTests.Rpc.IO.Observers
                 };
 
                 peerRepository.Add(peer);
+                if (targetPeerToDelete == null)
+                {
+                    targetPeerToDelete = peer;
+                }
             });
 
             peerRepository.GetAll().Count().Should().Be(fakePeers.Count);
@@ -115,11 +119,11 @@ namespace Catalyst.Node.Core.UnitTests.Rpc.IO.Observers
 
             var messageFactory = new DtoFactory();
             var sendPeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("sender");
-            var peerToDelete = peerRepository.Get(1);
+
             var removePeerRequest = new RemovePeerRequest
             {
-                PeerIp = peerToDelete.PeerIdentifier.Ip.To16Bytes().ToByteString(),
-                PublicKey = withPublicKey ? peerToDelete.PeerIdentifier.PublicKey.ToByteString() : ByteString.Empty
+                PeerIp = targetPeerToDelete.PeerIdentifier.Ip.To16Bytes().ToByteString(),
+                PublicKey = withPublicKey ? targetPeerToDelete.PeerIdentifier.PublicKey.ToByteString() : ByteString.Empty
             };
             
             var requestMessage = messageFactory.GetDto(

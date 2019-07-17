@@ -51,9 +51,9 @@ namespace Catalyst.Node.Core.Modules.Consensus.Deltas
         public IMultihashAlgorithm HashAlgorithm { get; }
 
         /// <inheritdoc />
-        public IRepository<Peer> PeerRepository { get; }
+        public IRepository<Peer, string> PeerRepository { get; }
 
-        public PoaDeltaProducersProvider(IRepository<Peer> peerRepository,
+        public PoaDeltaProducersProvider(IRepository<Peer, string> peerRepository,
             IMemoryCache producersByPreviousDelta,
             IMultihashAlgorithm hashAlgorithm,
             ILogger logger)

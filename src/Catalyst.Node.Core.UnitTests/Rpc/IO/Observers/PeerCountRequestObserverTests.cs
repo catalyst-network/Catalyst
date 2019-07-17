@@ -78,7 +78,7 @@ namespace Catalyst.Node.Core.UnitTests.Rpc.IO.Observers
         [InlineData(20)]
         public async Task TestPeerListRequestResponse(int fakePeers)
         {
-            var peerRepository = Substitute.For<IRepository<Peer>>();
+            var peerRepository = Substitute.For<IRepository<Peer, string>>();
             var peerList = new List<Peer>();
 
             for (var i = 0; i < fakePeers; i++)
