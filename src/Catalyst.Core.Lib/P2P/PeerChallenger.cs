@@ -36,10 +36,11 @@ using System.Threading.Tasks;
 using Catalyst.Common.Util;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using System.Collections.Concurrent;
+using Catalyst.Protocol;
 
 namespace Catalyst.Core.Lib.P2P
 {
-    public class PeerValidator : IPeerValidator, IDisposable
+    public class PeerChallenger : IPeerChallenger, IDisposable
     {
         private readonly IPeerService _peerService;
         private readonly ILogger _logger;
@@ -49,11 +50,11 @@ namespace Catalyst.Core.Lib.P2P
         private readonly ConcurrentStack<IObserverDto<ProtocolMessage>> _receivedResponses;
 
         private readonly IPeerClient _peerClient;
-        private readonly string _messageType = "IPPN.PingResponse";
+        private readonly string _messageType = PingResponse.Descriptor.ShortenedFullName();
 
         public object PeerIdentifierHelper { get; private set; }
 
-        public PeerValidator(IPeerSettings peerSettings,
+        public PeerChallenger(IPeerSettings peerSettings,
             IPeerService peerService,
             ILogger logger,
             IPeerClient peerClient,
@@ -88,7 +89,50 @@ namespace Catalyst.Core.Lib.P2P
             _logger.Error(error, "Error occured in {0} stream.", nameof(ProtocolMessage));
         }
 
-        public bool PeerChallengeResponse(IPeerIdentifier recipientPeerIdentifier)
+        public bool ChallengePeer(IPeerIdentifier recipientPeerIdentifier)
+        {
+            try
+            {
+                var correlationId = CorrelationId.GenerateCorrelationId();
+
+                var protocolMessage = new PingRequest().ToProtocolMessage(_senderIdentifier.PeerId, correlationId);
+                var messageDto = new MessageDto<ProtocolMessage>(
+                    protocolMessage,
+                    _senderIdentifier,
+                    recipientPeerIdentifier,
+                  correlationId
+                );
+
+                ((PeerClient)_peerClient).SendMessage(messageDto);
+
+                var tasks = new IObservableMessageStreamer<ProtocolMessage>[]
+                    {
+                        _peerService
+                    }
+                    .Select(async (p, n) =>                    
+                        await p.MessageStream.FirstAsync(a => a != null && a != NullObjects.ObserverDto
+                        && a.Payload.TypeUrl == _messageType
+                        && a.Payload.PeerId.PublicKey.ToStringUtf8() == recipientPeerIdentifier.PeerId.PublicKey.ToStringUtf8())                        )
+                   .ToArray();              
+
+                Task.WaitAny(tasks, TimeSpan.FromMilliseconds(20000));
+
+                if (_receivedResponses.Any() && _receivedResponses.Last().Payload.PeerId.PublicKey.ToStringUtf8() ==
+                        recipientPeerIdentifier.PeerId.PublicKey.ToStringUtf8())
+                {
+                    return true;
+                }
+            }
+            catch (Exception e)
+            {
+                _logger.Error(e.Message);
+            }
+
+            return false;
+        }
+
+
+        public bool PeerChallengeResponseA(IPeerIdentifier recipientPeerIdentifier)
         {
             try
             {

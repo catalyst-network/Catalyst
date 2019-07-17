@@ -48,7 +48,7 @@ using Catalyst.Common.Interfaces.P2P.IO.Messaging.Broadcast;
 using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Common.Interfaces.Keystore;
 using Constants = Catalyst.Common.Config.Constants;
-using System.Linq;
+
 
 namespace Catalyst.Node.Core.IntegrationTests.P2P
 {
@@ -129,9 +129,9 @@ namespace Catalyst.Node.Core.IntegrationTests.P2P
             var sender = PeerIdentifierHelper.GetPeerIdentifier("sender", "Tc", 1, peerSettings.BindAddress, peerSettings.Port);
 
             var peerClientSingleInstance = _container.Resolve<IPeerClient>();
-            var peerValidator = new PeerValidator(peerSettings, _peerService, _logger, peerClientSingleInstance, sender);
+            var peerValidator = new PeerChallenger(peerSettings, _peerService, _logger, peerClientSingleInstance, sender);
 
-            return peerValidator.PeerChallengeResponse(recipient);
+            return peerValidator.ChallengePeer(recipient);
         }
 
         public new void Dispose()
