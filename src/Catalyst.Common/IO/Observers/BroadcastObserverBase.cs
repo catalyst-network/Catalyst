@@ -21,48 +21,28 @@
 
 #endregion
 
-using System;
-using System.Data;
-using System.Reactive.Concurrency;
-using System.Reactive.Linq;
 using Catalyst.Common.Config;
-using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Observers;
+using Catalyst.Protocol;
 using Catalyst.Protocol.Common;
 using Dawn;
 using Google.Protobuf;
 using Serilog;
+using System;
 
 namespace Catalyst.Common.IO.Observers
 {
     public abstract class BroadcastObserverBase<TProto> : MessageObserverBase, IBroadcastObserver where TProto : IMessage
     {
-        private readonly string _filterMessageType;
-
-        protected BroadcastObserverBase(ILogger logger) : base(logger)
+        protected BroadcastObserverBase(ILogger logger) : base(logger, typeof(TProto).ShortenedProtoFullName())
         {
             Guard.Argument(typeof(TProto), nameof(TProto)).Require(t => t.IsBroadcastType(),
                 t => $"{nameof(TProto)} is not of type {MessageTypes.Broadcast.Name}");
-            _filterMessageType = typeof(TProto).ShortenedProtoFullName();
         }
 
         public abstract void HandleBroadcast(IObserverDto<ProtocolMessage> messageDto);
 
-        public override void StartObserving(IObservable<IObserverDto<ProtocolMessage>> messageStream)
-        {
-            if (MessageSubscription != null)
-            {
-                throw new ReadOnlyException($"{GetType()} is already listening to a message stream");
-            }
-            
-            MessageSubscription = messageStream
-               .Where(m => m.Payload?.TypeUrl != null 
-                 && m.Payload.TypeUrl == _filterMessageType)
-               .SubscribeOn(NewThreadScheduler.Default)
-               .Subscribe(this);
-        }
-        
         public override void OnNext(IObserverDto<ProtocolMessage> messageDto)
         {
             Logger.Verbose("Pre Handle Message Called");

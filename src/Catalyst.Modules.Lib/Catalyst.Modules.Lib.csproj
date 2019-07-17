@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>netcoreapp2.2</TargetFramework>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <RootNamespace>Catalyst.Modules.Lib</RootNamespace>
+        <SignAssembly>true</SignAssembly>
+        <PublicSign>true</PublicSign>
+        <Description>Contains alternate implementations for the modules defined in Catalyst.Common and otherwise implementd in Catalyst.Core.Lib, such as POA consensus, Filesystem based 'Dfs', etc.</Description>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <AssemblyName>Catalyst.Modules.Lib</AssemblyName>
+        <AssemblyOriginatorKeyFile>Catalyst.Modules.Lib.snk</AssemblyOriginatorKeyFile>
+    </PropertyGroup>
+    <ItemGroup>
+      <Compile Remove="Consensus\**" />
+      <EmbeddedResource Remove="Consensus\**" />
+      <None Remove="Consensus\**" />
+    </ItemGroup>
+    <ItemGroup>
+      <ProjectReference Include="..\Catalyst.Common\Catalyst.Common.csproj" />
+    </ItemGroup>
+    <Import Project="../Common.Projects.props" />
+</Project>

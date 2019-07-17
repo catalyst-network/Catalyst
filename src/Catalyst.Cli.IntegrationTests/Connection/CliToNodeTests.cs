@@ -26,18 +26,97 @@ using Catalyst.Common.Interfaces.Cli;
 using FluentAssertions;
 using Xunit;
 using Xunit.Abstractions;
-using System;
-using Catalyst.Cli.IntegrationTests.Commands;
+using Catalyst.Common.Interfaces.Cryptography;
+using Microsoft.Extensions.Configuration;
+using Catalyst.Core.Lib.Modules.Dfs;
+using Catalyst.Common.Config;
+using System.Linq;
+using System.IO;
+using Catalyst.Common.Interfaces;
+using NSubstitute;
+using Serilog;
+using Catalyst.TestUtils;
+using Ipfs.CoreApi;
+using Catalyst.Common.Interfaces.P2P;
+using Constants = Catalyst.Common.Config.Constants;
 
 namespace Catalyst.Cli.IntegrationTests.Connection
 {
-    public sealed class CliToNodeTests : CliCommandTestBase, IDisposable
+    public sealed class CliToNodeTests : ConfigFileBasedTest
     {
-        private readonly TestCatalystNode _node;
+        private readonly NodeTest _node;
 
-        public CliToNodeTests(ITestOutputHelper output) : base(output, false)
+        public CliToNodeTests(ITestOutputHelper output) : base(output)
         {
-            _node = new TestCatalystNode("server", output);
+            _node = new NodeTest(output);
+
+            var config = new ConfigurationBuilder()
+               .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ShellComponentsJsonConfigFile))
+               .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ShellNodesConfigFile))
+               .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ShellConfigFile))
+               .Build();
+
+            ConfigureContainerBuilder(config);
+        }
+
+        private sealed class NodeTest : ConfigFileBasedTest
+        {
+            private ILifetimeScope _scope;
+            private IContainer _container;
+
+            public NodeTest(ITestOutputHelper output) : base(output) { }
+
+            private void NodeSetup()
+            {
+                var configFiles = new[]
+                {
+                    Constants.NetworkConfigFile(Network.Main),
+                    Constants.ComponentsJsonConfigFile,
+                    Constants.SerilogJsonConfigFile
+                }.Select(f => Path.Combine(Constants.ConfigSubFolder, f));
+
+                var configBuilder = new ConfigurationBuilder();
+                configFiles.ToList().ForEach(f => configBuilder.AddJsonFile(f));
+
+                var configRoot = configBuilder.Build();
+                ConfigureContainerBuilder(configRoot);
+            }
+
+            private IpfsAdapter ConfigureKeyTestDependency()
+            {
+                var peerSettings = Substitute.For<IPeerSettings>();
+                peerSettings.SeedServers.Returns(new[]
+                {
+                    "seed1.server.va",
+                    "island.domain.tv"
+                });
+
+                var passwordReader = Substitute.For<IPasswordReader>();
+                passwordReader.ReadSecurePassword().ReturnsForAnyArgs(TestPasswordReader.BuildSecureStringPassword("trendy"));
+                var logger = Substitute.For<ILogger>();
+                return new IpfsAdapter(passwordReader, peerSettings, FileSystem, logger);
+            }
+
+            public void RunNodeInstance()
+            {
+                NodeSetup();
+
+                var ipfs = ConfigureKeyTestDependency();
+                ContainerBuilder.RegisterInstance(ipfs).As<ICoreApi>();
+
+                _container = ContainerBuilder.Build();
+
+                _scope = _container.BeginLifetimeScope(CurrentTestName);
+                _ = _scope.Resolve<ICatalystNode>();
+            }
+
+            protected override void Dispose(bool disposing)
+            {
+                base.Dispose(disposing);
+
+                _container?.Dispose();
+                _scope?.Dispose();
+            }
         }
 
         [Fact]
@@ -46,19 +125,17 @@ namespace Catalyst.Cli.IntegrationTests.Connection
             _node.RunNodeInstance();
 
             using (var container = ContainerBuilder.Build())
+            using (var scope = container.BeginLifetimeScope(CurrentTestName))
             {
-                using (container.BeginLifetimeScope(CurrentTestName))
-                {
-                    var shell = container.Resolve<ICatalystCli>();
-                    var hasConnected = shell.ParseCommand("connect", "-n", "node1");
-                    hasConnected.Should().BeTrue();
-                }
-            }
+                var shell = scope.Resolve<ICatalystCli>();
+                var hasConnected = shell.ParseCommand("connect", "-n", "node1");
+                hasConnected.Should().BeTrue();
+            }   
         }
 
-        public new void Dispose()
+        protected override void Dispose(bool disposing)
         {
-            base.Dispose();
+            base.Dispose(disposing);
             _node?.Dispose();
         }
     }

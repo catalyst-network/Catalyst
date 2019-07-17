@@ -22,14 +22,11 @@
 #endregion
 
 using System;
-using System.Data;
-using System.Reactive.Concurrency;
-using System.Reactive.Linq;
-using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Observers;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Observers;
+using Catalyst.Protocol;
 using Catalyst.Protocol.Common;
 using Google.Protobuf;
 using NSubstitute;
@@ -41,15 +38,13 @@ namespace Catalyst.TestUtils
         IP2PMessageObserver, IRpcResponseObserver, IRpcRequestObserver
         where TProto : IMessage, IMessage<TProto>
     {
-        private readonly string _filterMessageType;
         public IObserver<TProto> SubstituteObserver { get; }
         public IPeerIdentifier PeerIdentifier { get; }
         
-        public TestMessageObserver(ILogger logger) : base(logger)
+        public TestMessageObserver(ILogger logger) : base(logger, typeof(TProto).ShortenedProtoFullName())
         {
             SubstituteObserver = Substitute.For<IObserver<TProto>>();
             PeerIdentifier = Substitute.For<IPeerIdentifier>();
-            _filterMessageType = typeof(TProto).ShortenedProtoFullName();
         }
 
         public override void OnError(Exception exception) { SubstituteObserver.OnError(exception); }
@@ -70,20 +65,6 @@ namespace Catalyst.TestUtils
         }
                 
         public override void OnCompleted() { SubstituteObserver.OnCompleted(); }
-
-        public override void StartObserving(IObservable<IObserverDto<ProtocolMessage>> messageStream)
-        {
-            if (MessageSubscription != null)
-            {
-                throw new ReadOnlyException($"{GetType()} is already listening to a message stream");
-            }
-
-            MessageSubscription = messageStream
-               .Where(m => m.Payload?.TypeUrl != null 
-                 && m.Payload.TypeUrl == _filterMessageType)
-               .SubscribeOn(TaskPoolScheduler.Default)
-               .Subscribe(OnNext, OnError, OnCompleted);
-        }
         
         public void SendChannelContextResponse(IMessageDto<TProto> messageDto) { throw new NotImplementedException(); }
     }
