@@ -74,8 +74,10 @@ namespace Catalyst.Common.Keystore
             var json = GetJsonFromKeyStore(keyIdentifier);
             if (json == null)
             {
+                _logger.Error("No keystore exists for the given key");
                 return null;
             }
+
             var keyBytes = KeyStoreDecrypt(_defaultNodePassword, json);
             IPrivateKey privateKey = null;
             try
@@ -153,26 +155,12 @@ namespace Catalyst.Common.Keystore
             }
         }
 
-        private string GetJsonFromKeyStore(KeyRegistryKey keyIdentifier) 
+        private string GetJsonFromKeyStore(KeyRegistryKey keyIdentifier)
         {
-            var directoryInfo = _fileSystem.GetCatalystDataDir().SubDirectoryInfo(Constants.KeyStoreDataSubDir);
-            if (!directoryInfo.Exists)
-            {
-                return null;
-            }
-
-            FileInfo keyStoreFile = directoryInfo.GetFiles(keyIdentifier.Name).FirstOrDefault();
-
-            if (keyStoreFile != null && keyStoreFile.Exists)
-            {
-                return File.ReadAllText(keyStoreFile.FullName);
-            }
-
-            _logger.Information("No keystore exists for the given key");
-            return null;
+            return _fileSystem.ReadTextFromCddSubDirectoryFile(keyIdentifier.Name, Constants.KeyStoreDataSubDir);
         }
 
-        private string StringFromSecureString(SecureString secureString)
+        private static string StringFromSecureString(SecureString secureString)
         {
             var stringPointer = Marshal.SecureStringToBSTR(secureString);
             var password = Marshal.PtrToStringBSTR(stringPointer);

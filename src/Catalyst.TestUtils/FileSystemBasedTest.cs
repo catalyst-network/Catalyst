@@ -84,6 +84,7 @@ namespace Catalyst.TestUtils
             result.GetCatalystDataDir().Returns(_testDirectory);
 
             var fileSystem = new FileSystem();
+
             result.WriteFileToCddSubDirectoryAsync(Arg.Any<string>(),
                 Arg.Any<string>(), Arg.Any<string>()).Returns(async ci =>
             {
@@ -92,6 +93,15 @@ namespace Catalyst.TestUtils
                 fileInfo.Directory.Create();
                 await File.WriteAllTextAsync(filePath, (string) ci[2]);
                 return fileInfo;
+            });
+
+            result.ReadTextFromCddSubDirectoryFile(Arg.Any<string>(),
+                Arg.Any<string>()).Returns(ci =>
+            {
+                var filePath = Path.Combine(_testDirectory.FullName, (string) ci[1], (string) ci[0]);
+                var fileInfo = fileSystem.FileInfo.FromFileName(filePath);
+
+                return File.Exists(filePath) ? File.ReadAllText(filePath) : null;
             });
             return result;
         }

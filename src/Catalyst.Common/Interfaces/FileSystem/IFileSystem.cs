@@ -33,5 +33,11 @@ namespace Catalyst.Common.Interfaces.FileSystem
         Task<IFileInfo> WriteFileToCddAsync(string fileName, string contents);
         Task<IFileInfo> WriteFileToCddSubDirectoryAsync(string fileName, string subDirectory, string contents);
         bool DataFileExists(string fileName);
+
+        bool DataFileExistsInSubDirectory(string fileName, string subDirectory);
+
+        string ReadTextFromCddFile(string fileName);
+
+        string ReadTextFromCddSubDirectoryFile(string fileName, string subDirectory);
     }
 }

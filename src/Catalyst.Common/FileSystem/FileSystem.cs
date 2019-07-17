@@ -75,10 +75,32 @@ namespace Catalyst.Common.FileSystem
         {
             return File.Exists(Path.Combine(GetCatalystDataDir().FullName, fileName));
         }
+
+        public bool DataFileExistsInSubDirectory(string fileName, string subDirectory)
+        {
+            return File.Exists(Path.Combine(GetCatalystDataDir().FullName, subDirectory, fileName));
+        }
         
         private static string GetUserHomeDir()
         {
             return Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+        }
+
+        public string ReadTextFromCddFile(string fileName)
+        {
+            var path = Path.Combine(GetCatalystDataDir().FullName, fileName);
+            return ReadTextFromFile(path);
+        }
+
+        public string ReadTextFromCddSubDirectoryFile(string fileName, string subDirectory)
+        {
+            var path = Path.Combine(GetCatalystDataDir().FullName, subDirectory, fileName);
+            return ReadTextFromFile(path);
+        }
+
+        private string ReadTextFromFile(string filePath)
+        {
+            return File.Exists(filePath) ? File.ReadAllText(filePath) : null;
         }
     }
 }

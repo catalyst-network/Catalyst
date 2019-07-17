@@ -76,6 +76,7 @@ namespace Catalyst.Common.UnitTests.Modules.KeySigner
             var keySigner = new Common.Modules.KeySigner.KeySigner(_keystore, new CryptoContext(_wrapper), _keyRegistry);
             _keystore.Received(1).KeyStoreDecrypt(Arg.Any<KeyRegistryKey>());
             _keyRegistry.ReceivedWithAnyArgs(1).AddItemToRegistry(default, default);
+            keySigner.Should().NotBe(null);
         }
 
         [Fact]

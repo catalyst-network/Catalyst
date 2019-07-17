@@ -21,11 +21,15 @@
 
 #endregion
 
+using System;
+using System.IO;
+using System.Linq;
 using System.Reactive.Threading.Tasks;
 using System.Security.Authentication;
 using System.Threading.Tasks;
 using Catalyst.Common.Config;
 using Catalyst.Common.Cryptography;
+using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Common.Interfaces.Keystore;
 using Catalyst.Common.Keystore;
@@ -112,11 +116,15 @@ namespace Catalyst.Common.UnitTests.Keystore
         } 
 
         [Fact]
-        public void Keystore_Can_Create_Keystore_File_From_Key_It_Generates()
+        public async Task Keystore_Can_Create_Keystore_File_From_Key_It_Generates()
         {
             Ensure_No_Keystore_File_Exists();
             
             var privateKey = _keystore.KeyStoreGenerate(KeyRegistryKey.DefaultKey);
+
+            await TaskHelper.WaitForAsync(() => FileSystem.DataFileExistsInSubDirectory(KeyRegistryKey.DefaultKey.Name, Constants.CatalystDataDir),
+                    TimeSpan.FromSeconds(3))
+               .ConfigureAwait(false);
             
             var storedKey = _keystore.KeyStoreDecrypt(KeyRegistryKey.DefaultKey);
 
