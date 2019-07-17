@@ -85,30 +85,23 @@ namespace Catalyst.Common.UnitTests.IO.Observers
         [Fact]
         public async Task HandlerCanSendErrorOnException()
         {
-            var observer = new TransferFileBytesRequestObserver(new DownloadFileTransferFactory(_logger),
-                PeerIdentifierHelper.GetPeerIdentifier("Test"),
-                _logger);
+            _downloadFileTransferFactory.DownloadChunk(Arg.Any<TransferFileBytesRequest>()).Returns(FileTransferResponseCodes.Error);
 
             var sender = PeerIdentifierHelper.GetPeerIdentifier("sender");
-            var requestDto = new DtoFactory().GetDto(new TransferFileBytesRequest
-            {
-                ChunkBytes = ByteString.Empty,
-                ChunkId = 1,
-                CorrelationFileName = ByteString.Empty
-            }.ToProtocolMessage(sender.PeerId)
+            var requestDto = new DtoFactory().GetDto(new TransferFileBytesRequest().ToProtocolMessage(sender.PeerId)
             , sender, PeerIdentifierHelper.GetPeerIdentifier("recipient"));
 
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_context, requestDto.Content);
 
-            observer.StartObserving(messageStream);
+            _observer.StartObserving(messageStream);
 
             await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
 
             var receivedCalls = _context.Channel.ReceivedCalls().ToList();
             receivedCalls.Count.Should().Be(1);
             var sentResponseDto = (IMessageDto<ProtocolMessage>)receivedCalls.Single().GetArguments().Single();
-            var versionResponseMessage = sentResponseDto.Content.FromProtocolMessage<TransferFileBytesResponse>();
-            versionResponseMessage.ResponseCode.Should().Equal((byte)FileTransferResponseCodes.Error);
+            var transferFileBytesResponse = sentResponseDto.Content.FromProtocolMessage<TransferFileBytesResponse>();
+            transferFileBytesResponse.ResponseCode.Should().Equal((byte)FileTransferResponseCodes.Error);
         }
     }
 }

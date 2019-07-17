@@ -128,8 +128,9 @@ namespace Catalyst.Common.FileTransfer
             }
         }
 
-        /// <inheritdoc />
-        public void Remove(ICorrelationId key)
+        /// <summary>Removes the specified unique identifier.</summary>
+        /// <param name="guid">The unique identifier.</param>
+        private void Remove(ICorrelationId key)
         {
             lock (_lockObject)
             {
@@ -140,10 +141,8 @@ namespace Catalyst.Common.FileTransfer
             }
         }
 
-        /// <summary>Removes the specified file transfer information.</summary>
-        /// <param name="fileTransferInformation">The file transfer information.</param>
-        /// <param name="expiredOrCancelled">if set to <c>true</c> [expired or cancelled].</param>
-        protected void Remove(T fileTransferInformation, bool expiredOrCancelled)
+        /// <inheritdoc />
+        public void Remove(T fileTransferInformation, bool expiredOrCancelled)
         {
             EnsureKeyExists(fileTransferInformation.CorrelationId);
             if (expiredOrCancelled)
