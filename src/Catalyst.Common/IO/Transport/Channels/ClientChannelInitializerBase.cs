@@ -49,10 +49,10 @@ namespace Catalyst.Common.IO.Transport.Channels
         public override TlsHandler NewTlsHandler(IPAddress targetHost, X509Certificate certificate)
         {
             return certificate == null || targetHost == null
-                    ? null
-                    : new TlsHandler(stream =>
-                            new SslStream(stream, true, (sender, cert, chain, errors) => true),
-                        new ClientTlsSettings(targetHost.ToString()));
+                ? null
+                : new TlsHandler(stream =>
+                        new SslStream(stream, true, (sender, cert, chain, errors) => true),
+                    new ClientTlsSettings(targetHost.ToString()));
         }
 
         public override string ToString()

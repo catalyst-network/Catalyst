@@ -70,8 +70,9 @@ namespace Catalyst.Common.Extensions
         /// <returns></returns>
         public static IList<T> Shuffle<T>(this IEnumerable<T> source)
         {
-            Guard.Argument(source, nameof(source)).NotNull();
-            var list = source as List<T> ?? source.ToList();
+            var enumerable = source as T[] ?? source.ToArray();
+            Guard.Argument(enumerable, nameof(source)).NotNull();
+            var list = source as List<T> ?? enumerable.ToList();
 
             var randomlyMapped = Enumerable.Range(0, list.Count)
                .Select(i => new {Index = i, SortingKey = Rng.Next()})
