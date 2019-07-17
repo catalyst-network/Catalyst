@@ -21,6 +21,7 @@
 
 #endregion
 
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Security;
@@ -33,20 +34,26 @@ using DotNetty.Transport.Channels;
 namespace Catalyst.Common.IO.Transport.Channels
 {
     public sealed class ClientChannelInitializerBase<T> : ChannelInitializerBase<T> where T : IChannel
-    {
+    {        
         /// <inheritdoc />
-        public ClientChannelInitializerBase(IList<IChannelHandler> handlers,
+        public ClientChannelInitializerBase(Func<IList<IChannelHandler>> handlerGenerationFunction,
             IEventLoopGroupFactory eventLoopGroupFactory,
             IPAddress targetHost = default,
             X509Certificate certificate = null)
-            : base(handlers,
-                certificate == null || targetHost == null
-                    ? null
-                    : new TlsHandler(stream =>
-                            new SslStream(stream, true, (sender, cert, chain, errors) => true),
-                        new ClientTlsSettings(targetHost.ToString())),
-                eventLoopGroupFactory
+            : base(handlerGenerationFunction,
+                eventLoopGroupFactory,
+                targetHost,
+                certificate
             ) { }
+
+        public override TlsHandler NewTlsHandler(IPAddress targetHost, X509Certificate certificate)
+        {
+            return certificate == null || targetHost == null
+                ? null
+                : new TlsHandler(stream =>
+                        new SslStream(stream, true, (sender, cert, chain, errors) => true),
+                    new ClientTlsSettings(targetHost.ToString()));
+        }
 
         public override string ToString()
         {

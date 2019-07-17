@@ -34,7 +34,7 @@ namespace Catalyst.Cli.Commands
 
         protected override GetInfoRequest GetMessage(GetInfoOptions option)
         {
-            return new GetInfoRequest
+            return new GetInfoRequest 
             {
                 Query = true
             };

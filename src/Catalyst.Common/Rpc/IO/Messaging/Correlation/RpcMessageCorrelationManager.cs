@@ -24,11 +24,13 @@
 using System;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
+using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.Rpc.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.Util;
 using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Protocol.Common;
+using Google.Protobuf;
 using Microsoft.Extensions.Caching.Memory;
 using Serilog;
 
@@ -50,9 +52,9 @@ namespace Catalyst.Common.Rpc.IO.Messaging.Correlation
 
         protected override void EvictionCallback(object key, object value, EvictionReason reason, object state)
         {
-            Logger.Debug($"{key} message evicted");
+            Logger.Verbose("{key} message evicted", (key as ByteString).ToCorrelationId());
             var message = (CorrelatableMessage<ProtocolMessage>) value;
-            _evictionEvent.OnNext(new MessageEvictionEvent<ProtocolMessage>(message));
+            _evictionEvent.OnNext(new MessageEvictionEvent<ProtocolMessage>(message, message.Content.PeerId));
         }
         
         protected override void Dispose(bool disposing)

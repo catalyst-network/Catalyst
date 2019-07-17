@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>netcoreapp2.2</TargetFramework>
+        <SignAssembly>true</SignAssembly>
+        <AssemblyOriginatorKeyFile>Catalyst.Modules.Lib.IntegrationTests.snk</AssemblyOriginatorKeyFile>
+        <PublicSign>true</PublicSign>
+    </PropertyGroup>
+    <PropertyGroup>
+        <RootNamespace>Catalyst.Modules.Lib.IntegrationTests</RootNamespace>
+        <ApplicationIcon />
+        <OutputType>Library</OutputType>
+        <StartupObject />
+    </PropertyGroup>
+    <Import Project="../Common.IntegrationTests.props" />
+    <ItemGroup>
+        <ProjectReference Include="..\Catalyst.Modules\Catalyst.Modules.Lib.csproj" />
+        <ProjectReference Include="..\Catalyst.TestUtils\Catalyst.TestUtils.csproj" />
+    </ItemGroup>
+</Project>

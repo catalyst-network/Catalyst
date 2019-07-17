@@ -21,10 +21,6 @@
 
 #endregion
 
-using System;
-using System.Data;
-using System.Reactive.Concurrency;
-using System.Reactive.Linq;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
@@ -33,42 +29,28 @@ using Catalyst.Common.Interfaces.IO.Observers;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.P2P;
+using Catalyst.Protocol;
 using Catalyst.Protocol.Common;
 using Dawn;
 using DotNetty.Transport.Channels;
 using Google.Protobuf;
 using Serilog;
+using System;
 
 namespace Catalyst.Common.IO.Observers
 {
     public abstract class RequestObserverBase<TProtoReq, TProtoRes> : MessageObserverBase, IRequestMessageObserver<TProtoRes>
         where TProtoReq : IMessage<TProtoReq> where TProtoRes : IMessage<TProtoRes>
     {
-        private readonly string _filterMessageType;
         public IPeerIdentifier PeerIdentifier { get; }
-        
-        protected RequestObserverBase(ILogger logger, IPeerIdentifier peerIdentifier) : base(logger)
+
+        protected RequestObserverBase(ILogger logger, IPeerIdentifier peerIdentifier) : base(logger, typeof(TProtoReq).ShortenedProtoFullName())
         {
-            Guard.Argument(typeof(TProtoReq), nameof(TProtoReq)).Require(t => t.IsRequestType(), 
+            Guard.Argument(typeof(TProtoReq), nameof(TProtoReq)).Require(t => t.IsRequestType(),
                 t => $"{nameof(TProtoReq)} is not of type {MessageTypes.Request.Name}");
-            _filterMessageType = typeof(TProtoReq).ShortenedProtoFullName();
             PeerIdentifier = peerIdentifier;
         }
 
-        public override void StartObserving(IObservable<IObserverDto<ProtocolMessage>> messageStream)
-        {
-            if (MessageSubscription != null)
-            {
-                throw new ReadOnlyException($"{GetType()} is already listening to a message stream");
-            }
-            
-            MessageSubscription = messageStream
-               .Where(m => m.Payload?.TypeUrl != null 
-                 && m.Payload?.TypeUrl == _filterMessageType)
-               .SubscribeOn(NewThreadScheduler.Default)
-               .Subscribe(this);
-        }
-        
         protected abstract TProtoRes HandleRequest(TProtoReq messageDto, IChannelHandlerContext channelHandlerContext, IPeerIdentifier senderPeerIdentifier, ICorrelationId correlationId);
 
         public override void OnNext(IObserverDto<ProtocolMessage> messageDto)
@@ -85,12 +67,13 @@ namespace Catalyst.Common.IO.Observers
                     recipientPeerIdentifier,
                     correlationId);
 
-                messageDto.Context.Channel.WriteAndFlushAsync(new DtoFactory().GetDto(
+                var responseDto = new DtoFactory().GetDto(
                     response.ToProtocolMessage(PeerIdentifier.PeerId, correlationId),
                     PeerIdentifier,
                     recipientPeerIdentifier,
-                    correlationId
-                ));
+                    correlationId);
+
+                messageDto.Context.Channel.WriteAndFlushAsync(responseDto);
             }
             catch (Exception exception)
             {

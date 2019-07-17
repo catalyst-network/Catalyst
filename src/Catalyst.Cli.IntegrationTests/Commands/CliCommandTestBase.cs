@@ -21,18 +21,19 @@
 
 #endregion
 
-using System;
-using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Security.Cryptography.X509Certificates;
 using Autofac;
-using Catalyst.Common.Extensions;
+using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.Rpc;
+using Catalyst.Protocol;
 using Catalyst.Protocol.Common;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
+using FluentAssertions;
 using Google.Protobuf;
 using Microsoft.Extensions.Configuration;
 using NSubstitute;
@@ -41,24 +42,20 @@ using Constants = Catalyst.Common.Config.Constants;
 
 namespace Catalyst.Cli.IntegrationTests.Commands
 {
-    public abstract class CliCommandTestBase : ConfigFileBasedTest
+    /// <summary>
+    /// This test is the base to all other tests.  If the Cli cannot connect to a node then all other commands
+    /// will fail
+    /// </summary>
+    public abstract class CliCommandTestsBase : ConfigFileBasedTest
     {
+        private protected static readonly string ServerNodeName = "node1";
+        private protected static readonly string NodeArgumentPrefix = "-n";
         protected INodeRpcClient NodeRpcClient;
+        protected ILifetimeScope Scope;
+        protected ICatalystCli Shell;
+        private IContainer _container;
 
-        public static IEnumerable<object[]> AddFileData =>
-            new List<object[]>
-            {
-                new object[] {"/fake_file_path", false},
-                new object[] {AppDomain.CurrentDomain.BaseDirectory + "/Config/addfile_test.json", true}
-            };
-        
-        public static IEnumerable<object[]> GetFileData =>
-            new List<object[]>
-            {
-                new object[] {"/fake_file_hash", AppDomain.CurrentDomain.BaseDirectory + "/Config/addfile_test.json", true}
-            };
-
-        protected CliCommandTestBase(ITestOutputHelper output, bool substituteNodeClient = true) : base(output)
+        protected CliCommandTestsBase(ITestOutputHelper output) : base(output)
         {
             var config = new ConfigurationBuilder()
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ShellComponentsJsonConfigFile))
@@ -69,10 +66,24 @@ namespace Catalyst.Cli.IntegrationTests.Commands
 
             ConfigureContainerBuilder(config);
 
-            if (substituteNodeClient)
-            {
-                ConfigureNodeClient();
-            }
+            ConfigureNodeClient();
+
+            CreateResolutionScope();
+
+            ConnectShell();
+        }
+
+        private void CreateResolutionScope()
+        {
+            _container = ContainerBuilder.Build();
+            Scope = _container.BeginLifetimeScope(CurrentTestName);
+        }
+
+        private void ConnectShell()
+        {
+            Shell = Scope.Resolve<ICatalystCli>();
+            var hasConnected = Shell.ParseCommand("connect", NodeArgumentPrefix, ServerNodeName);
+            hasConnected.Should().BeTrue();
         }
 
         protected void ConfigureNodeClient()
@@ -86,19 +97,31 @@ namespace Catalyst.Cli.IntegrationTests.Commands
 
             var nodeRpcClientFactory = Substitute.For<INodeRpcClientFactory>();
             nodeRpcClientFactory
-               .GetClient(Arg.Any<X509Certificate2>(), Arg.Is<IRpcNodeConfig>(c => c.NodeId == "node1"))
+               .GetClient(Arg.Any<X509Certificate2>(), Arg.Is<IRpcNodeConfig>(c => c.NodeId == ServerNodeName))
                .Returns(NodeRpcClient);
 
             ContainerBuilder.RegisterInstance(nodeRpcClientFactory).As<INodeRpcClientFactory>();
         }
 
-        protected void AssertSentMessage<T>() where T : IMessage<T>
+        protected T AssertSentMessageAndGetMessageContent<T>() where T : IMessage<T>
         {
             NodeRpcClient.Received(1).SendMessage(Arg.Is<IMessageDto<ProtocolMessage>>(x =>
                 x.Content != null &&
                 x.Content.GetType().IsAssignableTo<ProtocolMessage>() &&
                 x.Content.FromProtocolMessage<T>() != null
             ));
+            var sentMessageDto = (IMessageDto<ProtocolMessage>) NodeRpcClient.ReceivedCalls()
+               .Single(c => c.GetMethodInfo().Name == nameof(INodeRpcClient.SendMessage))
+               .GetArguments()[0];
+            var requestSent = sentMessageDto.Content.FromProtocolMessage<T>();
+            return requestSent;
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+            Scope?.Dispose();
+            _container.Dispose();
         }
     }
 }
