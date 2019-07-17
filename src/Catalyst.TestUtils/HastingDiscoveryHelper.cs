@@ -35,7 +35,7 @@ using Catalyst.Common.Interfaces.Util;
 using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.Util;
-using Catalyst.Node.Core.P2P.Discovery;
+using Catalyst.Core.Lib.P2P.Discovery;
 using Catalyst.Protocol.IPPN;
 using DnsClient;
 using NSubstitute;

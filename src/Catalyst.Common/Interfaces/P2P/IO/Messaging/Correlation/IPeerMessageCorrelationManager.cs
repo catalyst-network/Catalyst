@@ -26,8 +26,6 @@ using System.Collections.Generic;
 using System.Reactive.Subjects;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.P2P.ReputationSystem;
-using Catalyst.Protocol.Common;
-using Google.Protobuf;
 
 namespace Catalyst.Common.Interfaces.P2P.IO.Messaging.Correlation
 {

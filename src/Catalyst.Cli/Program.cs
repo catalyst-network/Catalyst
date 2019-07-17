@@ -25,10 +25,8 @@ using System;
 using System.IO;
 using System.Reflection;
 using System.Threading;
-using Microsoft.Extensions.DependencyInjection;
 using Autofac;
 using Autofac.Configuration;
-using Autofac.Extensions.DependencyInjection;
 using AutofacSerilogIntegration;
 using Catalyst.Common.FileSystem;
 using Catalyst.Common.Config;
@@ -45,14 +43,14 @@ namespace Catalyst.Cli
         private static ILogger _logger;
         private static readonly string LifetimeTag;
         private static readonly Type DeclaringType;
-        private static CancellationTokenSource _cancellationSource;
+        private static readonly CancellationTokenSource CancellationSource;
         private static readonly string LogFileName = "Catalyst.Cli..log";
 
         static Program()
         {
             DeclaringType = MethodBase.GetCurrentMethod().DeclaringType;
             _logger = ConsoleProgram.GetTempLogger(LogFileName, DeclaringType);
-            _cancellationSource = new CancellationTokenSource();
+            CancellationSource = new CancellationTokenSource();
 
             AppDomain.CurrentDomain.UnhandledException +=
                 (sender, args) => ConsoleProgram.LogUnhandledException(_logger, sender, args);
@@ -69,8 +67,6 @@ namespace Catalyst.Cli
                 System.Diagnostics.Process.GetCurrentProcess().Id.ToString());
 
             const int bufferSize = 1024 * 67 + 128;
-
-            var serviceCollection = new ServiceCollection();
 
             try
             {
@@ -118,11 +114,11 @@ namespace Catalyst.Cli
                 );
 
                 // Add .Net Core serviceCollection to the Autofac container.
-                using (container.BeginLifetimeScope(LifetimeTag, b => { b.Populate(serviceCollection, LifetimeTag); }))
+                using (container.BeginLifetimeScope(LifetimeTag))
                 {
                     var shell = container.Resolve<ICatalystCli>();
 
-                    shell.RunConsole(_cancellationSource.Token);
+                    shell.RunConsole(CancellationSource.Token);
                 }
 
                 Environment.ExitCode = 0;
@@ -140,7 +136,7 @@ namespace Catalyst.Cli
 
         static void CurrentDomain_ProcessExit(object sender, EventArgs e)
         {
-            _cancellationSource.Cancel();
+            CancellationSource.Cancel();
         }
     }
 }

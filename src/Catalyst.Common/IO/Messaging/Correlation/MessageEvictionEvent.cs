@@ -23,6 +23,8 @@
 
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.P2P;
+using Catalyst.Protocol.Common;
 using Google.Protobuf;
 
 namespace Catalyst.Common.IO.Messaging.Correlation
@@ -32,10 +34,10 @@ namespace Catalyst.Common.IO.Messaging.Correlation
         public T EvictedContent { get; }
         public IPeerIdentifier PeerIdentifier { get; }
         
-        public MessageEvictionEvent(CorrelatableMessage<T> correlatableMessage)
+        public MessageEvictionEvent(CorrelatableMessage<T> correlatableMessage, PeerId sender)
         {
             EvictedContent = correlatableMessage.Content;
-            PeerIdentifier = correlatableMessage.Recipient;
+            PeerIdentifier = new PeerIdentifier(sender);
         }
     }
 }
