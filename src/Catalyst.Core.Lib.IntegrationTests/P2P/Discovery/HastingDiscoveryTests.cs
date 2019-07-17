@@ -75,43 +75,22 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
             _logger = Substitute.For<ILogger>();
             _ownNode = PeerIdentifierHelper.GetPeerIdentifier("ownNode");
         }
-        
-        /// <summary>
-        ///  clean up
-        /// </summary>
-        /// <param name="key"></param>
-        /// <param name="cache"></param>
-        private void AddCreateEntryExpectation(object key, IMemoryCache cache)
-        {
-            var correlationId = (ByteString) key;
-            var cacheEntry = Substitute.For<ICacheEntry>();
-            var expirationTokens = new List<IChangeToken>();
-            cacheEntry.ExpirationTokens.Returns(expirationTokens);
-            var expirationCallbacks = new List<PostEvictionCallbackRegistration>();
-            cacheEntry.PostEvictionCallbacks.Returns(expirationCallbacks);
-
-            cache.CreateEntry(correlationId).Returns(cacheEntry);
-            CacheEntriesByRequest.Add(correlationId, cacheEntry);
-        }
-
-        protected readonly Dictionary<ByteString, ICacheEntry> CacheEntriesByRequest 
-            = new Dictionary<ByteString, ICacheEntry>();
 
         [Fact]
-        public async Task Evicted_Known_Ping_Message_Sets_Contacted_Neighbour_As_UnReachable()
+        public void Evicted_Known_Ping_Message_Sets_Contacted_Neighbour_As_UnReachable()
         {
+            var cacheEntriesByRequest = new Dictionary<ByteString, ICacheEntry>();
             var pr = new PingResponseObserver(Substitute.For<ILogger>());
             var peerClientObservers = new List<IPeerClientObservable> {pr};
 
-            var seedState = HastingDiscoveryHelper.GenerateSeedState(_ownNode, _settings.SeedServers.ToList(), _settings);
+            var seedState = HastingDiscoveryHelper.SubSeedState(_ownNode, _settings.SeedServers.ToList(), _settings);
             var seedOrigin = new HastingsOriginator();
             seedOrigin.SetMemento(seedState);
-            
             var stateCareTaker = new HastingCareTaker();
             var stateHistory = new Stack<IHastingMemento>();
             stateHistory.Push(seedState);
             
-            HastingDiscoveryHelper.GenerateMementoHistory(stateHistory, 5).ToList().ForEach(i => stateCareTaker.Add(i));
+            HastingDiscoveryHelper.MockMementoHistory(stateHistory, 5).ToList().ForEach(i => stateCareTaker.Add(i));
             
             var knownPnr = HastingDiscoveryHelper.MockPnr();
             var stateCandidate = HastingDiscoveryHelper.MockOriginator();
@@ -126,18 +105,18 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
                 Substitute.For<ILogger>(),
                 new TtlChangeTokenProvider(3));
                 
+            var correlatableMessages = new List<CorrelatableMessage<ProtocolMessage>>();
             stateCandidate.ContactedNeighbours.ToList().ForEach(i =>
             {
-                AddCreateEntryExpectation(i.Key.Id.ToByteString(), memoryCache);
+                cacheEntriesByRequest = CacheHelper.MockCacheEvictionCallback(i.Key.Id.ToByteString(), memoryCache, cacheEntriesByRequest);
 
-                peerMessageCorrelationManager.AddPendingRequest(
-                    new CorrelatableMessage<ProtocolMessage>
-                    {
-                        Content = new PingRequest().ToProtocolMessage(_ownNode.PeerId, i.Key),
-                        Recipient = i.Value
-                    });
-
-                var x = CacheEntriesByRequest[i.Key.Id.ToByteString()].PostEvictionCallbacks.Count;
+                var msg = new CorrelatableMessage<ProtocolMessage>
+                {
+                    Content = new PingRequest().ToProtocolMessage(_ownNode.PeerId, i.Key),
+                    Recipient = i.Value
+                };
+                correlatableMessages.Add(msg);
+                peerMessageCorrelationManager.AddPendingRequest(msg);
             });
             
             using (var walker = new HastingsDiscovery(
@@ -156,9 +135,17 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
                 stateCareTaker,
                 stateCandidate))
             {
-                CacheEntriesByRequest.ToList().ForEach(i => i.Value.PostEvictionCallbacks.FirstOrDefault().EvictionCallback.Invoke());
-                CacheEntriesByRequest[stateCandidate.ContactedNeighbours[0].Key.Id.ToByteString()].PostEvictionCallbacks[0].EvictionCallback
-                   .Invoke();
+                for (var i = 0; i < cacheEntriesByRequest.Count; i++)
+                {
+                    cacheEntriesByRequest[stateCandidate.ContactedNeighbours[i].Key.Id.ToByteString()]
+                       .PostEvictionCallbacks[0]
+                       .EvictionCallback
+                       .Invoke(
+                            stateCandidate.ContactedNeighbours[i].Key, correlatableMessages[i], EvictionReason.Expired, new object()
+                        );   
+                }
+
+                walker.StateCandidate.UnreachableNeighbour.Should().Be(5);
             }
         }
 
@@ -168,7 +155,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
             var pr = new PingResponseObserver(Substitute.For<ILogger>());
             var peerClientObservers = new List<IPeerClientObservable> {pr};
 
-            var seedState = HastingDiscoveryHelper.GenerateSeedState(_ownNode, _settings.SeedServers.ToList(), _settings);
+            var seedState = HastingDiscoveryHelper.SubSeedState(_ownNode, _settings.SeedServers.ToList(), _settings);
             var seedOrigin = new HastingsOriginator();
             seedOrigin.SetMemento(seedState);
             
@@ -176,10 +163,10 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
             var stateHistory = new Stack<IHastingMemento>();
             stateHistory.Push(seedState);
             
-            HastingDiscoveryHelper.GenerateMementoHistory(stateHistory, 5).ToList().ForEach(i => stateCareTaker.Add(i));
+            HastingDiscoveryHelper.MockMementoHistory(stateHistory, 5).ToList().ForEach(i => stateCareTaker.Add(i));
             
             var knownPnr = HastingDiscoveryHelper.MockPnr();
-            var stateCandidate = HastingDiscoveryHelper.MockOriginator();
+            var stateCandidate = HastingDiscoveryHelper.SubOriginator();
             stateCandidate.ExpectedPnr = knownPnr;
             stateCandidate.CurrentPeersNeighbours.Clear();
 
@@ -238,7 +225,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
             var pr = new PingResponseObserver(Substitute.For<ILogger>());
             var peerClientObservers = new List<IPeerClientObservable> {pr};
 
-            var seedState = HastingDiscoveryHelper.GenerateSeedState(_ownNode, _settings.SeedServers.ToList(), _settings);
+            var seedState = HastingDiscoveryHelper.SubSeedState(_ownNode, _settings.SeedServers.ToList(), _settings);
             var seedOrigin = new HastingsOriginator();
             seedOrigin.SetMemento(seedState);
 
@@ -246,16 +233,15 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
             var stateHistory = new Stack<IHastingMemento>();
             stateHistory.Push(seedState);
             
-            HastingDiscoveryHelper.GenerateMementoHistory(stateHistory, 5).ToList().ForEach(i => stateCareTaker.Add(i));
+            HastingDiscoveryHelper.MockMementoHistory(stateHistory, 5).ToList().ForEach(i => stateCareTaker.Add(i));
             
             var knownPnr = HastingDiscoveryHelper.MockPnr();
-            var stateCandidate = HastingDiscoveryHelper.MockOriginator();
-            stateCandidate.ExpectedPnr = knownPnr;
+            var stateCandidate = HastingDiscoveryHelper.MockOriginator(default, default, knownPnr);
             stateCandidate.CurrentPeersNeighbours.Clear();
 
             using (var walker = new HastingsDiscovery(
                 Substitute.For<ILogger>(),
-                Substitute.For<IRepository<Peer>>(), 
+                Substitute.For<IRepository<Peer>>(),
                 HastingDiscoveryHelper.SubDnsClient(_settings.SeedServers.ToList(), _settings),
                 _settings,
                 Substitute.For<IPeerClient>(),

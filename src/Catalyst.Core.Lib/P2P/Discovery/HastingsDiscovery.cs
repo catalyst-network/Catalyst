@@ -131,7 +131,7 @@ namespace Catalyst.Core.Lib.P2P.Discovery
             // reference them with discovery messages we sent
             _evictionSubscription = peerMessageCorrelationManager
                .EvictionEventStream
-               .SubscribeOn(TaskPoolScheduler.Default)
+               .SubscribeOn(Scheduler.CurrentThread)
                .Subscribe(EvictionCallback);
 
             // no state provide is assumed a "live run", instantiated with state assumes test run so don't start discovery

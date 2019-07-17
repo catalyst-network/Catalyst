@@ -38,7 +38,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
         [Fact]
         public void Can_Add_Peers_To_Memento_List()
         {
-            var neighbours = HastingDiscoveryHelper.GenerateNeighbours();
+            var neighbours = HastingDiscoveryHelper.MockNeighbours();
 
             var memento = new HastingMemento(_peer, neighbours);
             
@@ -50,7 +50,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
         [Fact]
         public void Can_Init_Memento_With_Existing_Params()
         {
-            var neighbours = HastingDiscoveryHelper.GenerateNeighbours();
+            var neighbours = HastingDiscoveryHelper.MockNeighbours();
 
             var memento = new HastingMemento(_peer, neighbours);
 

@@ -44,18 +44,28 @@ namespace Catalyst.TestUtils
 {
     public static class HastingDiscoveryHelper
     {
-        public static IHastingsOriginator MockSeedStateHastingOriginator(IPeerIdentifier ownNode, IList<IPeerIdentifier> seedNodes)
-        {
-            return MockOriginator(ownNode, seedNodes);
-        }
-
         public static IHastingsOriginator MockOriginator(IPeerIdentifier peer = default,
             IList<IPeerIdentifier> currentPeersNeighbours = default,
             KeyValuePair<ICorrelationId, IPeerIdentifier> expectedPnr = default,
             IList<KeyValuePair<ICorrelationId, IPeerIdentifier>> contactedNeighbour = default)
         {
+            return new HastingsOriginator
+            {
+                Peer =
+                    peer ?? PeerIdentifierHelper.GetPeerIdentifier(ByteUtil.GenerateRandomByteArray(32).ToString()),
+                CurrentPeersNeighbours = currentPeersNeighbours ?? MockNeighbours(),
+                ExpectedPnr = expectedPnr,
+                ContactedNeighbours = contactedNeighbour ?? MockContactedNeighboursValuePairs()
+            }; 
+        }
+        
+        public static IHastingsOriginator SubOriginator(IPeerIdentifier peer = default,
+            IList<IPeerIdentifier> currentPeersNeighbours = default,
+            KeyValuePair<ICorrelationId, IPeerIdentifier> expectedPnr = default,
+            IList<KeyValuePair<ICorrelationId, IPeerIdentifier>> contactedNeighbour = default)
+        {
             var peerParam = peer ?? PeerIdentifierHelper.GetPeerIdentifier(ByteUtil.GenerateRandomByteArray(32).ToString());
-            var currentPeerNeighboursParam = currentPeersNeighbours ?? GenerateNeighbours();
+            var currentPeerNeighboursParam = currentPeersNeighbours ?? MockNeighbours();
 
             var expectedPnrParam = expectedPnr;
             var contactedNeighbourParam = contactedNeighbour ?? MockContactedNeighboursValuePairs();
@@ -71,7 +81,7 @@ namespace Catalyst.TestUtils
             return subbedOriginator;
         }
         
-        public static IHastingMemento GenerateSeedState(IPeerIdentifier ownNode, List<string> domains, IPeerSettings peerSettings)
+        public static IHastingMemento SubSeedState(IPeerIdentifier ownNode, List<string> domains, IPeerSettings peerSettings)
         {
             return SubMemento(ownNode, SubDnsClient(domains, peerSettings)
                .GetSeedNodesFromDns(peerSettings.SeedServers).ToList());
@@ -82,7 +92,7 @@ namespace Catalyst.TestUtils
             return new KeyValuePair<ICorrelationId, IPeerIdentifier>(correlationId ?? CorrelationId.GenerateCorrelationId(), peerIdentifier ?? PeerIdentifierHelper.GetPeerIdentifier("sender"));
         }
         
-        public static IEnumerable<IPeerIdentifier> GenerateNeighbours(int amount = 5)
+        public static IList<IPeerIdentifier> MockNeighbours(int amount = 5)
         {
             return Enumerable.Range(0, amount).Select(i =>
                 PeerIdentifierHelper.GetPeerIdentifier($"neighbour-{i.ToString()}")).ToList();
@@ -92,7 +102,7 @@ namespace Catalyst.TestUtils
         {
             if (neighbours == null || neighbours.Equals(default))
             {
-                neighbours = GenerateNeighbours();
+                neighbours = MockNeighbours();
             }
             
             var mockContactedNeighboursList = new List<KeyValuePair<ICorrelationId, IPeerIdentifier>>();
@@ -104,14 +114,28 @@ namespace Catalyst.TestUtils
 
             return mockContactedNeighboursList;
         }
+
+        public static IHastingMemento MockMemento(IPeerIdentifier identifier = default, IEnumerable<IPeerIdentifier> neighbours = default)
+        {
+            var peerParam = identifier ?? PeerIdentifierHelper.GetPeerIdentifier(ByteUtil.GenerateRandomByteArray(32).ToString());
+            var neighbourParam = neighbours ?? MockNeighbours();
+            return new HastingMemento(peerParam, neighbourParam);
+        }
         
         public static IHastingMemento SubMemento(IPeerIdentifier identifier = default, IEnumerable<IPeerIdentifier> neighbours = default)
         {
             var subbedMemento = Substitute.For<IHastingMemento>();
             subbedMemento.Peer.Returns(identifier ?? PeerIdentifierHelper.GetPeerIdentifier(ByteUtil.GenerateRandomByteArray(32).ToString()));
-            subbedMemento.Neighbours.Returns(neighbours ?? GenerateNeighbours());
+            subbedMemento.Neighbours.Returns(neighbours ?? MockNeighbours());
 
             return subbedMemento;
+        }
+        
+        public static Stack<IHastingMemento> MockMementoHistory(Stack<IHastingMemento> state, int depth = 10)
+        {
+            state.Push(new HastingMemento(state.Last().Neighbours.RandomElement(), MockNeighbours()));
+
+            return state.Count >= depth ? MockMementoHistory(state) : state;
         }
         
         public static IDns SubDnsClient(List<string> domains,
@@ -191,13 +215,6 @@ namespace Catalyst.TestUtils
             });
 
             return subbedDtoFactory;
-        }
-
-        public static Stack<IHastingMemento> GenerateMementoHistory(Stack<IHastingMemento> state, int depth = 10)
-        {
-            state.Push(new HastingMemento(state.Last().Neighbours.RandomElement(), GenerateNeighbours()));
-
-            return state.Count >= depth ? GenerateMementoHistory(state) : state;
         }
     }
 }

@@ -43,7 +43,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
         
         private IHastingMemento BuildMemento()
         {
-            var memento = new HastingMemento(_peer, HastingDiscoveryHelper.GenerateNeighbours());
+            var memento = new HastingMemento(_peer, HastingDiscoveryHelper.MockNeighbours());
 
             return memento;
         }
@@ -99,8 +99,8 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
             
             originator.SetMemento(memento1);
             originator.IncrementUnreachablePeer();
-            originator.CurrentPeersNeighbours = HastingDiscoveryHelper.GenerateNeighbours().ToList();
-            originator.ContactedNeighbours = HastingDiscoveryHelper.MockContactedNeighboursValuePairs(HastingDiscoveryHelper.GenerateNeighbours());
+            originator.CurrentPeersNeighbours = HastingDiscoveryHelper.MockNeighbours().ToList();
+            originator.ContactedNeighbours = HastingDiscoveryHelper.MockContactedNeighboursValuePairs(HastingDiscoveryHelper.MockNeighbours());
             originator.ExpectedPnr = HastingDiscoveryHelper.MockPnr();
             originator.CurrentPeersNeighbours.Should().Contain(memento1.Neighbours);
             
@@ -122,8 +122,8 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
             
             originator.SetMemento(memento1);
             originator.IncrementUnreachablePeer();
-            originator.CurrentPeersNeighbours = HastingDiscoveryHelper.GenerateNeighbours().ToList();
-            originator.ContactedNeighbours = HastingDiscoveryHelper.MockContactedNeighboursValuePairs(HastingDiscoveryHelper.GenerateNeighbours());
+            originator.CurrentPeersNeighbours = HastingDiscoveryHelper.MockNeighbours().ToList();
+            originator.ContactedNeighbours = HastingDiscoveryHelper.MockContactedNeighboursValuePairs(HastingDiscoveryHelper.MockNeighbours());
             originator.ExpectedPnr = HastingDiscoveryHelper.MockPnr();
 
             originator.Peer = PeerIdentifierHelper.GetPeerIdentifier("new_peer");

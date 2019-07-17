@@ -72,7 +72,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
             _settings = PeerSettingsHelper.TestPeerSettings();
             _logger = Substitute.For<ILogger>();
             _ownNode = PeerIdentifierHelper.GetPeerIdentifier("ownNode");
-            _seedState = HastingDiscoveryHelper.MockOriginator(_ownNode);
+            _seedState = HastingDiscoveryHelper.SubOriginator(_ownNode);
         }
 
         [Fact(Skip = "if we have tests for Dns.GetSeedNodesFromDns this seems redundant")]
@@ -472,15 +472,15 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
             var subbedCareTaker = Substitute.For<IHastingCareTaker>();
             
             var currentState = HastingDiscoveryHelper.SubMemento();
-            var currentOriginator = HastingDiscoveryHelper.MockOriginator(currentState.Peer, currentState.Neighbours);
+            var currentOriginator = HastingDiscoveryHelper.SubOriginator(currentState.Peer, currentState.Neighbours);
 
             var stateCandidate = HastingDiscoveryHelper.SubMemento();
             var stateCandidateOriginator =
-                HastingDiscoveryHelper.MockOriginator(stateCandidate.Peer, _seedState.CurrentPeersNeighbours);
+                HastingDiscoveryHelper.SubOriginator(stateCandidate.Peer, _seedState.CurrentPeersNeighbours);
 
             var mockedHistory = new Stack<IHastingMemento>();
 
-            var seed = HastingDiscoveryHelper.GenerateSeedState(_ownNode, _dnsDomains, _settings);
+            var seed = HastingDiscoveryHelper.SubSeedState(_ownNode, _dnsDomains, _settings);
             mockedHistory.Push(seed);
             subbedCareTaker.HastingMementoList.Returns(mockedHistory);
             subbedCareTaker.Get().Returns(seed);
