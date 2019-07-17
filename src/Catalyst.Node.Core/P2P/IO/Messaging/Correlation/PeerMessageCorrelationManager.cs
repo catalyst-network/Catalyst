@@ -65,16 +65,13 @@ namespace Catalyst.Node.Core.P2P.IO.Messaging.Correlation
         {
             Logger.Verbose("{key} message evicted", (key as ByteString).ToCorrelationId());
             var message = (CorrelatableMessage<ProtocolMessage>) value;
+
+            _reputationEvent.OnNext(new PeerReputationChange(new PeerIdentifier(message.Content.PeerId), 
+                ReputationEvents.NoResponseReceived));
             
             _evictionEvent.OnNext(new KeyValuePair<ICorrelationId, IPeerIdentifier>(
                 new CorrelationId(message.Content.CorrelationId.ToByteArray()),
                 message.Recipient)
-            );
-            
-            _reputationEvent.OnNext(
-                new PeerReputationChange(message.Recipient,
-                    ReputationEvents.NoResponseReceived
-                )
             );
         }
 
@@ -97,7 +94,9 @@ namespace Catalyst.Node.Core.P2P.IO.Messaging.Correlation
                 );
                 return false;
             }
-            
+
+            ValidateResponseType(response, message);
+
             Logger.Debug($"{response.CorrelationId} message found");
             _reputationEvent.OnNext(new PeerReputationChange(message.Recipient,
                 ReputationEvents.ResponseReceived)
