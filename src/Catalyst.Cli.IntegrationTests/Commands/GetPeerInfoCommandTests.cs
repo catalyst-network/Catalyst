@@ -38,7 +38,7 @@ namespace Catalyst.Cli.IntegrationTests.Commands
             var publicKey = "fake_public_key";
             var ipAddress = "127.0.0.1";
             
-            var result = Shell.ParseCommand("getpeerinfo", NodeArgumentPrefix, ServerNodeName, "-i", ipAddress, "-k", publicKey);
+            var result = Shell.ParseCommand("getpeerinfo", NodeArgumentPrefix, ServerNodeName, "-i", ipAddress, "-p", publicKey);
             result.Should().BeTrue();
 
             AssertSentMessageAndGetMessageContent<GetPeerInfoRequest>();
