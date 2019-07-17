@@ -21,53 +21,47 @@
 
 #endregion
 
+using System.Collections.Generic;
+using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.IO.Observers;
+using Catalyst.Common.Interfaces.Modules.Consensus.Deltas;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.IO.Observers;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using DotNetty.Transport.Channels;
-using Microsoft.Extensions.Configuration;
-using Newtonsoft.Json;
 using ILogger = Serilog.ILogger;
 
 namespace Catalyst.Node.Core.Rpc.IO.Observers
 {
-    public sealed class GetInfoRequestObserver
-        : RequestObserverBase<GetInfoRequest, GetInfoResponse>,
-            IRpcRequestObserver
+    public sealed class GetDeltaRequestObserver
+        : RequestObserverBase<GetDeltaRequest, GetDeltaResponse>, IRpcRequestObserver
     {
-        private readonly IRpcServerSettings _config;
+        private readonly IDeltaCache _deltaCache;
 
-        public GetInfoRequestObserver(IPeerIdentifier peerIdentifier,
-            IRpcServerSettings config,
+        public GetDeltaRequestObserver(IDeltaCache deltaCache,
+            IPeerIdentifier peerIdentifier,
             ILogger logger) : base(logger, peerIdentifier)
         {
-            _config = config;
+            _deltaCache = deltaCache;
         }
 
-        protected override GetInfoResponse HandleRequest(GetInfoRequest getInfoRequest,
+        protected override GetDeltaResponse HandleRequest(GetDeltaRequest getDeltaRequest,
             IChannelHandlerContext channelHandlerContext,
             IPeerIdentifier senderPeerIdentifier,
             ICorrelationId correlationId)
         {
-            Guard.Argument(getInfoRequest, nameof(getInfoRequest)).NotNull();
+            Guard.Argument(getDeltaRequest, nameof(getDeltaRequest)).NotNull();
             Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
             Guard.Argument(senderPeerIdentifier, nameof(senderPeerIdentifier)).NotNull();
-            Logger.Debug("received message of type GetInfoRequest");
+            Logger.Verbose("received message of type GetDeltaRequest:");
+            Logger.Verbose("{getDeltaRequest}", getDeltaRequest);
 
-            Logger.Debug("message content is {0}", getInfoRequest);
+            var multiHash = getDeltaRequest.DeltaDfsHash.ToMultihashString();
 
-            var serializedList = JsonConvert.SerializeObject(
-                _config.NodeConfig.GetSection("CatalystNodeConfiguration").AsEnumerable(),
-                Formatting.Indented);
-
-            return new GetInfoResponse
-            {
-                Query = serializedList
-            };
+            _deltaCache.TryGetDelta(multiHash, out var delta);
+            return new GetDeltaResponse {Delta = delta};
         }
     }
 }

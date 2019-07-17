@@ -21,24 +21,31 @@
 
 #endregion
 
+using System.Text;
+using Catalyst.Common.Extensions;
 using Catalyst.Protocol.Rpc.Node;
 using FluentAssertions;
+using Multiformats.Hash;
 using Xunit;
 using Xunit.Abstractions;
 
 namespace Catalyst.Cli.IntegrationTests.Commands
 {
-    public sealed class PeerCommandCommandTests : CliCommandTestsBase
+    public sealed class GetDeltaCommandTests : CliCommandTestsBase
     {
-        public PeerCommandCommandTests(ITestOutputHelper output) : base(output) { }
+        public GetDeltaCommandTests(ITestOutputHelper output) : base(output) { }
 
         [Fact]
-        public void Cli_Can_Send_Peers_Count_Request()
+        public void Cli_Can_Request_Node_Info()
         {
-            var result = Shell.ParseCommand("peercount", NodeArgumentPrefix, ServerNodeName);
+            var hashingAlgorithm = Common.Config.Constants.HashAlgorithm;
+            var hash = Multihash.Cast(hashingAlgorithm.ComputeHash(Encoding.UTF8.GetBytes("hello")));
+
+            var result = Shell.ParseCommand("getdelta", "-h", hash, NodeArgumentPrefix, ServerNodeName);
             result.Should().BeTrue();
 
-            AssertSentMessageAndGetMessageContent<GetPeerCountRequest>();
+            var request = AssertSentMessageAndGetMessageContent<GetDeltaRequest>();
+            request.DeltaDfsHash.ToMultihash().Should().Be(hash);
         }
     }
 }
