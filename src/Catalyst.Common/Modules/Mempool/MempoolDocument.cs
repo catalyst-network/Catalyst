@@ -24,13 +24,17 @@
 using Catalyst.Common.Interfaces.Modules.Mempool;
 using Catalyst.Protocol.Transaction;
 using Google.Protobuf;
+using Newtonsoft.Json;
+using SharpRepository.Repository;
 
-namespace Catalyst.Node.Core.Modules.Mempool
+namespace Catalyst.Common.Modules.Mempool
 {
     public class MempoolDocument : IMempoolDocument
     {
         public TransactionBroadcast Transaction { get; set; }
 
+        [RepositoryPrimaryKey(Order = 1)]
+        [JsonProperty("id")]
         public string DocumentId => Transaction.Signature.ToByteString().ToBase64();
     }
 }

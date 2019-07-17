@@ -19,15 +19,10 @@
 */
 #endregion
 
-using Newtonsoft.Json;
-using SharpRepository.Repository;
-
 namespace Catalyst.Common.Interfaces.Repository
 {
     public interface IDocumentStorable
     {
-        [RepositoryPrimaryKey(Order = 1)]
-        [JsonProperty("id")]
         string DocumentId { get; }
     }
 }

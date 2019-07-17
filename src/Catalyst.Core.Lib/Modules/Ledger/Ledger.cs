@@ -26,6 +26,8 @@ using SharpRepository.Repository;
 using Dawn;
 using Serilog;
 using System;
+using Catalyst.Common.Modules.Ledger;
+using Catalyst.Common.Interfaces.Repository;
 
 namespace Catalyst.Core.Lib.Modules.Ledger
 {
@@ -35,12 +37,12 @@ namespace Catalyst.Core.Lib.Modules.Ledger
     /// <seealso cref="Catalyst.Common.Interfaces.Modules.Ledger.ILedger" />
     public class Ledger : ILedger
     {
-        public IRepository<Account, string> Accounts { get; }
+        public IAccountRepository Accounts { get; }
         private readonly ILogger _logger;
 
         public byte[] LedgerStateUpdate { get; set; }
  
-        public Ledger(IRepository<Account, string> accounts, ILogger logger)
+        public Ledger(IAccountRepository accounts, ILogger logger)
         {
             Accounts = accounts;
             _logger = logger;
@@ -52,7 +54,7 @@ namespace Catalyst.Core.Lib.Modules.Ledger
 
             try
             {
-                Accounts.Add((Account) account);
+                Accounts.Repository.Add((Account) account);
                 return true;
             }
             catch (Exception e)
