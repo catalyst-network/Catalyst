@@ -37,7 +37,7 @@ using Catalyst.Common.Util;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using System.Collections.Concurrent;
 
-namespace Catalyst.Node.Core.P2P
+namespace Catalyst.Core.Lib.P2P
 {
     public class PeerValidator : IPeerValidator, IDisposable
     {

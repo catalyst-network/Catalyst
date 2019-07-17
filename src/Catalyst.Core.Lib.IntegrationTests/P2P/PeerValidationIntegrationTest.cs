@@ -30,7 +30,6 @@ using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Modules.KeySigner;
 using Catalyst.Common.P2P;
-using Catalyst.Node.Core.P2P;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Microsoft.Extensions.Configuration;
@@ -39,7 +38,9 @@ using Serilog;
 using Xunit;
 using Xunit.Abstractions;
 using Catalyst.Common.IO.EventLoop;
-using Catalyst.Node.Core.P2P.IO.Transport.Channels;
+using Catalyst.Core.Lib.P2P.IO.Transport.Channels;
+using Catalyst.Common.Interfaces.P2P.Discovery;
+using Catalyst.Core.Lib.P2P;
 using System.Collections.Generic;
 using Catalyst.Common.Interfaces.IO.Observers;
 using Catalyst.Common.Interfaces.P2P.IO.Messaging.Correlation;
@@ -47,7 +48,6 @@ using Catalyst.Common.Interfaces.P2P.IO.Messaging.Broadcast;
 using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Common.Interfaces.Keystore;
 using Constants = Catalyst.Common.Config.Constants;
-using Catalyst.Common.Interfaces.P2P.Discovery;
 
 namespace Catalyst.Node.Core.IntegrationTests.P2P
 {

@@ -263,8 +263,17 @@
         //        //}
         //    ]
         //},
+
         {
-            "type": "Catalyst.Node.Core.P2P.PeerClient",
+            "type": "Catalyst.Core.Lib.P2P.PeerValidator",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.P2P.IPeerValidator, Catalyst.Common"
+                }
+            ]
+        },
+        {
+            "type": "Catalyst.Core.Lib.P2P.PeerClient",
             "services": [
                 {
                     "type": "Catalyst.Common.Interfaces.P2P.IPeerClient, Catalyst.Common"
