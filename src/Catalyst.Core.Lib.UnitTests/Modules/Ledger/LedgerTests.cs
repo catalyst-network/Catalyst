@@ -21,6 +21,9 @@
 
 #endregion
 
+using Catalyst.Common.Interfaces.Repository;
+using Catalyst.Common.Modules.Ledger;
+using Catalyst.Common.Repository;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using NSubstitute;
@@ -29,7 +32,6 @@ using SharpRepository.InMemoryRepository;
 using SharpRepository.Repository;
 using Xunit;
 using LedgerService = Catalyst.Core.Lib.Modules.Ledger.Ledger;
-using Account = Catalyst.Core.Lib.Modules.Ledger.Account;
 
 namespace Catalyst.Core.Lib.UnitTests.Modules.Ledger
 {
@@ -39,11 +41,12 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Ledger
 
         public LedgerTests()
         {
-            IRepository<Account, string> accounts = new InMemoryRepository<Account, string>();
+            IAccountRepository accounts 
+                = new AccountRepository(new InMemoryRepository<Account, string>());
 
             var logger = Substitute.For<ILogger>();
 
-            _ledger = new Catalyst.Core.Lib.Modules.Ledger.Ledger(accounts, logger);
+            _ledger = new LedgerService(accounts, logger);
         }
 
         [Fact]
@@ -56,8 +59,8 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Ledger
                 _ledger.SaveAccountState(account);
             }
 
-            _ledger.Accounts.GetAll().Should().HaveCount(10);
-            _ledger.Accounts.GetAll().Should().NotContainNulls();            
+            _ledger.Accounts.Repository.GetAll().Should().HaveCount(10);
+            _ledger.Accounts.Repository.GetAll().Should().NotContainNulls();            
         }
     }
 }

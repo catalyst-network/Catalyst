@@ -25,6 +25,8 @@ using Catalyst.Common.Attributes;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Util;
 using Google.Protobuf;
+using Newtonsoft.Json;
+using SharpRepository.Repository;
 using System;
 
 namespace Catalyst.Common.P2P
@@ -59,7 +61,9 @@ namespace Catalyst.Common.P2P
         /// <inheritdoc />
         public TimeSpan InactiveFor => DateTimeUtil.UtcNow - LastSeen;
 
-        public string DocumentId => PeerIdentifier.PeerId.ToByteString().ToBase64();
+        [RepositoryPrimaryKey(Order = 1)]
+        [JsonProperty("id")]
+        public string DocumentId => PeerIdentifier.PeerId?.ToByteString().ToBase64();
 
         /// <inheritdoc />
         public void Touch() { LastSeen = DateTimeUtil.UtcNow; }

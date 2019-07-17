@@ -23,6 +23,7 @@
 
 using System;
 using Catalyst.Common.P2P;
+using Catalyst.TestUtils;
 using FluentAssertions;
 using SharpRepository.InMemoryRepository;
 using Xunit;
@@ -35,7 +36,7 @@ namespace Catalyst.Common.UnitTests.P2P
         public void EntityStoreAuditsCreateTime()
         {
             var repo = new InMemoryRepository<Peer, string>();
-            var peer = new Peer();
+            var peer = new Peer { PeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("Test") };
             repo.Add(peer);
             var retrievedPeer = repo.Get(peer.DocumentId);
             DateTime now = DateTime.UtcNow.Date;
@@ -48,7 +49,7 @@ namespace Catalyst.Common.UnitTests.P2P
         public void EntityStoreAuditsModifiedTime()
         {
             var repo = new InMemoryRepository<Peer, string>();
-            var peer = new Peer();
+            var peer = new Peer { PeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("Test") };
             repo.Add(peer);
             var retrievedPeer = repo.Get(peer.DocumentId);
             retrievedPeer.Touch();

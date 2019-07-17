@@ -27,14 +27,12 @@ using System.Linq;
 using System.Threading;
 using Catalyst.Common.Interfaces.Modules.Mempool;
 using Catalyst.Common.Interfaces.Repository;
-using Catalyst.Node.Core.Modules.Mempool;
-using Catalyst.Protocol.Transaction;
+using Catalyst.Common.Modules.Mempool;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 using Serilog;
-using SharpRepository.Repository;
 using Xunit;
 
 namespace Catalyst.Core.Lib.UnitTests.Modules.Mempool
@@ -64,7 +62,7 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Mempool
             store.Repository.Get(Arg.Is<string>(k => k.Equals(document.DocumentId)))
                .Returns(document);
             store.Repository.TryGet(Arg.Is<string>(k => k.Equals(document.Transaction.Signature)),
-                    out Arg.Any<IMempoolDocument>())
+                    out Arg.Any<MempoolDocument>())
                .Returns(ci =>
                 {
                     ci[1] = document.Transaction;

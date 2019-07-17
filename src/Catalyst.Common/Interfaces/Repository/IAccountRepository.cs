@@ -21,11 +21,11 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.Modules.Ledger;
+using Catalyst.Common.Modules.Ledger;
 
 namespace Catalyst.Common.Interfaces.Repository
 {
-    public interface IAccountRepository : IRepositoryWrapper<IAccount, string>
+    public interface IAccountRepository : IRepositoryWrapper<Account, string>
     {
     }
 }

@@ -26,6 +26,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Catalyst.Common.Interfaces.Modules.Mempool;
 using Catalyst.Common.Interfaces.Repository;
+using Catalyst.Common.Modules.Mempool;
 using Catalyst.Protocol.Transaction;
 using Dawn;
 using Google.Protobuf;
@@ -92,7 +93,7 @@ namespace Catalyst.Core.Lib.Modules.Mempool
                     return false;
                 }
 
-                _transactionStore.Repository.Add(mempoolDocument);
+                _transactionStore.Repository.Add((MempoolDocument) mempoolDocument);
                 return true;
             }
             catch (Exception e)
