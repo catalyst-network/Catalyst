@@ -24,7 +24,7 @@
 using Catalyst.Common.Config;
 using Catalyst.Common.Enumerator;
 using Catalyst.Common.Util;
-using Catalyst.Node.Core.Modules.Ledger;
+using Catalyst.Core.Lib.Modules.Ledger;
 
 namespace Catalyst.TestUtils
 {

@@ -21,7 +21,7 @@
 
 #endregion
 
-using Catalyst.Node.Core.Modules.Consensus.Deltas;
+using Catalyst.Core.Lib.Modules.Consensus.Deltas;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Deltas;
 
