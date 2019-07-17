@@ -55,10 +55,11 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Discovery
             var subbedMemento = Substitute.For<IHastingMemento>();
             
             careTaker.Add(subbedMemento);
+            careTaker.Add(subbedMemento);
+            careTaker.HastingMementoList.Should().HaveCount(2);
             var previousState = careTaker.Get();
-
             previousState.Should().BeSameAs(subbedMemento);
-            careTaker.HastingMementoList.Should().HaveCount(0);
+            careTaker.HastingMementoList.Should().HaveCount(1);
         }
         
         [Fact]
@@ -87,7 +88,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.Discovery
         }
 
         [Fact]
-        public void Can_LIFO_When_Histoy_N_Plus2()
+        public void Can_LIFO_When_History_N_Plus2()
         {
             var careTaker = new HastingCareTaker();
 

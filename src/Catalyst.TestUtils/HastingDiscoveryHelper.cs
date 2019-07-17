@@ -56,8 +56,9 @@ namespace Catalyst.TestUtils
         {
             var peerParam = peer ?? PeerIdentifierHelper.GetPeerIdentifier(ByteUtil.GenerateRandomByteArray(32).ToString());
             var currentPeerNeighboursParam = currentPeersNeighbours ?? GenerateNeighbours();
+
             var expectedPnrParam = expectedPnr;
-            var contactedNeighbourParam = contactedNeighbour;
+            var contactedNeighbourParam = contactedNeighbour ?? MockContactedNeighboursValuePairs();
 
             var subbedOriginator = Substitute.For<IHastingsOriginator>();
             
@@ -192,11 +193,11 @@ namespace Catalyst.TestUtils
             return subbedDtoFactory;
         }
 
-        public static Stack<IHastingMemento> GenerateMementohistory(Stack<IHastingMemento> state, int depth = 10)
+        public static Stack<IHastingMemento> GenerateMementoHistory(Stack<IHastingMemento> state, int depth = 10)
         {
             state.Push(new HastingMemento(state.Last().Neighbours.RandomElement(), GenerateNeighbours()));
 
-            return state.Count >= depth ? GenerateMementohistory(state) : state;
+            return state.Count >= depth ? GenerateMementoHistory(state) : state;
         }
     }
 }

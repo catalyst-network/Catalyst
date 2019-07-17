@@ -49,7 +49,7 @@ namespace Catalyst.Node.Core.IntegrationTests.P2P.Discovery
             var stack = new Stack<IHastingMemento>();
             stack.Push(HastingDiscoveryHelper.SubMemento(_ownNode));
             
-            var history = HastingDiscoveryHelper.GenerateMementohistory(stack);
+            var history = HastingDiscoveryHelper.GenerateMementoHistory(stack);
             
             history.ToList().ForEach(m => careTaker.Add(m));
 
@@ -64,7 +64,7 @@ namespace Catalyst.Node.Core.IntegrationTests.P2P.Discovery
             var stack = new Stack<IHastingMemento>();
             stack.Push(HastingDiscoveryHelper.SubMemento(_ownNode));
             
-            var history = HastingDiscoveryHelper.GenerateMementohistory(stack);
+            var history = HastingDiscoveryHelper.GenerateMementoHistory(stack);
             
             history.ToList().ForEach(m => careTaker.Add(m));
 

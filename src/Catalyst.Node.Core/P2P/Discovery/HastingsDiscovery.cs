@@ -62,8 +62,8 @@ namespace Catalyst.Node.Core.P2P.Discovery
         private readonly IPeerIdentifier _ownNode;
         private readonly int _peerDiscoveryBurnIn;
         public readonly IHastingsOriginator StateCandidate;
-        public readonly IHastingCareTaker _hastingCareTaker;
-        private readonly IRepository<Peer> _peerRepository;
+        public readonly IHastingCareTaker HastingCareTaker;
+        public readonly IRepository<Peer> _peerRepository;
         private readonly ICancellationTokenProvider _cancellationTokenProvider;
         private readonly IDisposable _evictionSubscription;
 
@@ -80,10 +80,11 @@ namespace Catalyst.Node.Core.P2P.Discovery
             IPeerMessageCorrelationManager peerMessageCorrelationManager,
             ICancellationTokenProvider cancellationTokenProvider,
             IEnumerable<IPeerClientObservable> peerClientObservables,
+            bool autoStart = true,
             int peerDiscoveryBurnIn = 10,
+            IHastingsOriginator state = default,
             IHastingCareTaker hastingCareTaker = default,
-            IHastingsOriginator stateCandidate = default,
-            IHastingsOriginator state = default)
+            IHastingsOriginator stateCandidate = default)
         {
             Dns = dns;
             Logger = logger;
@@ -93,7 +94,7 @@ namespace Catalyst.Node.Core.P2P.Discovery
             _discoveredPeerInCurrentWalk = 0;
             _peerDiscoveryBurnIn = peerDiscoveryBurnIn;
             _cancellationTokenProvider = cancellationTokenProvider;
-            _hastingCareTaker = hastingCareTaker ?? new HastingCareTaker();
+            HastingCareTaker = hastingCareTaker ?? new HastingCareTaker();
             _ownNode = new PeerIdentifier(peerSettings, new PeerIdClientId("AC")); // this needs to be changed
             
             // build the initial stateCandidate for walk,
@@ -138,24 +139,20 @@ namespace Catalyst.Node.Core.P2P.Discovery
                .Subscribe(EvictionCallback);
 
             // no state provide is assumed a "live run", instantiated with state assumes test run so don't start discovery
-            if (state == default)
+            State = state ?? new HastingsOriginator();
+
+            if (autoStart == false)
             {
-                // create empty state and start walk
-                State = new HastingsOriginator();
-                WalkForward();
+                return;
+            }
+            
+            WalkForward();
                 
-                // should run until cancelled
-                Task.Run(async () =>
-                {
-                    await DiscoveryAsync();
-                });
-            }
-            else
+            // should run until cancelled
+            Task.Run(async () =>
             {
-                // providing a known state for testing,
-                // doesn't start walk
-                State = state;
-            }
+                await DiscoveryAsync();
+            });
         }
 
         /// <summary>
@@ -259,7 +256,7 @@ namespace Catalyst.Node.Core.P2P.Discovery
                 var newState = StateCandidate.CreateMemento();
 
                 // store state with caretaker.
-                _hastingCareTaker.Add(newState);
+                HastingCareTaker.Add(newState);
             
                 // transition to valid new state.
                 State.SetMemento(newState);
@@ -288,7 +285,7 @@ namespace Catalyst.Node.Core.P2P.Discovery
             lock (StateCandidate)
             {
                 // transitions to last state.
-                State.SetMemento(_hastingCareTaker.Get());
+                State.SetMemento(HastingCareTaker.Get());
 
                 // continues walk by proposing a new degree.
                 StateCandidate.Peer = State.CurrentPeersNeighbours.RandomElement();
@@ -342,6 +339,7 @@ namespace Catalyst.Node.Core.P2P.Discovery
                 if (!StateCandidate.ContactedNeighbours.Contains(new KeyValuePair<ICorrelationId, IPeerIdentifier>(obj.CorrelationId, obj.Sender)))
                 {
                     // a pingResponse that isn't known to discovery.
+                    Logger.Debug("UnKnownMessage");
                     return;
                 }
 
