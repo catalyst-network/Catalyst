@@ -54,7 +54,10 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
         private PeerReputationResponseObserver _observer;
 
         /// <summary>
-        /// Initializes the <see cref="GetPeerReputationResponseObserverTest"/> class.
+        /// Initializes the <see>
+        ///     <cref>GetPeerReputationResponseObserverTest</cref>
+        /// </see>
+        /// class.
         /// </summary>
         static GetPeerReputationResponseObserverTests()
         {             
@@ -67,7 +70,10 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="GetPeerReputationResponseObserverTest"/> class.
+        /// Initializes a new instance of the <see>
+        ///     <cref>GetPeerReputationResponseObserverTest</cref>
+        /// </see>
+        /// class.
         /// </summary>
         public GetPeerReputationResponseObserverTests()
         {
@@ -82,20 +88,8 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
         /// <param name="rep">The rep.</param>
         [Theory]
         [MemberData(nameof(QueryContents))]
-        public async Task RpcClient_Can_Handle_GetReputationResponse(int rep)
-        {
-            var getPeerReputationResponse = await TestGetReputationResponse(rep).ConfigureAwait(false);
-            getPeerReputationResponse.Should().NotBeNull();
-            getPeerReputationResponse.Reputation.Should().Be(rep);
-        }
-
-        /// <summary>
-        /// RPCs the client can handle get reputation response non existant peers.
-        /// </summary>
-        /// <param name="rep">The rep.</param>
-        [Theory]
         [InlineData(int.MinValue)]
-        public async Task RpcClient_Can_Handle_GetReputationResponseNonExistantPeers(int rep)
+        public async Task RpcClient_Can_Handle_GetReputationResponse(int rep)
         {
             var getPeerReputationResponse = await TestGetReputationResponse(rep).ConfigureAwait(false);
             getPeerReputationResponse.Should().NotBeNull();

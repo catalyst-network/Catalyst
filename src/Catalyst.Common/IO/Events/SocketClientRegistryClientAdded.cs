@@ -23,8 +23,5 @@
 
 namespace Catalyst.Common.IO.Events
 {
-    public class SocketClientRegistryClientAdded : SocketClientRegistryEvent
-    {
-        public int SocketHashCode { set; get; }
-    }
+    public class SocketClientRegistryClientAdded : SocketClientRegistryEvent { }
 }

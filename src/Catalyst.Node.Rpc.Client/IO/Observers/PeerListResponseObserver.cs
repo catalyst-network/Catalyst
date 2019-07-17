@@ -63,8 +63,6 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
             Guard.Argument(getPeerListResponse, nameof(getPeerListResponse)).NotNull();
             Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
             Guard.Argument(senderPeerIdentifier, nameof(senderPeerIdentifier)).NotNull();
-
-            SendMessage(getPeerListResponse, senderPeerIdentifier);
         }
     }
 }

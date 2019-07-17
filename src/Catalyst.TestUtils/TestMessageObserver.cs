@@ -22,8 +22,6 @@
 #endregion
 
 using System;
-using System.Data;
-using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
@@ -43,7 +41,6 @@ namespace Catalyst.TestUtils
         IP2PMessageObserver, IRpcResponseObserver, IRpcRequestObserver
         where TProto : IMessage, IMessage<TProto>
     {
-        private readonly ReplaySubject<IRpcClientMessageDto<IMessage>> _messageResponse;
         public IObservable<IRpcClientMessageDto<IMessage>> MessageResponseStream { private set; get; }
 
         public IObserver<TProto> SubstituteObserver { get; }
@@ -51,9 +48,6 @@ namespace Catalyst.TestUtils
         
         public TestMessageObserver(ILogger logger) : base(logger, typeof(TProto).ShortenedProtoFullName())
         {
-            _messageResponse = new ReplaySubject<IRpcClientMessageDto<IMessage>>(1);
-            MessageResponseStream = _messageResponse.AsObservable();
-
             SubstituteObserver = Substitute.For<IObserver<TProto>>();
             PeerIdentifier = Substitute.For<IPeerIdentifier>();
         }

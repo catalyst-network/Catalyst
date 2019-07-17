@@ -54,9 +54,12 @@ namespace Catalyst.Node.Core.UnitTests.Rpc.IO.Observers
 
         /// <summary>The fake channel context</summary>
         private readonly IChannelHandlerContext _fakeContext;
-        
+
         /// <summary>
-        /// Initializes a new instance of the <see cref="PeerListRequestObserverTest"/> class.
+        /// Initializes a new instance of the <see>
+        ///     <cref>PeerListRequestObserverTest</cref>
+        /// </see>
+        /// class.
         /// </summary>
         public PeerCountRequestObserverTests()
         {

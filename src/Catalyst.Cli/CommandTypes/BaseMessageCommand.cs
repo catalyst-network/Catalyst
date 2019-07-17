@@ -30,8 +30,8 @@ using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.Interfaces.Rpc.IO.Messaging.Dto;
 using Catalyst.Common.IO.Events;
 using Catalyst.Common.P2P;
+using Catalyst.Protocol;
 using Google.Protobuf;
-using Newtonsoft.Json;
 using System;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
@@ -88,7 +88,7 @@ namespace Catalyst.Cli.CommandTypes
         protected virtual void ResponseMessage(TResponse response)
         {
             CommandContext.UserOutput.WriteLine($"Response: {typeof(TResponse).ToString()}");
-            CommandContext.UserOutput.WriteLine($"{JsonConvert.SerializeObject(response)}");
+            CommandContext.UserOutput.WriteLine($"{response.ToJsonString()}");
         }
 
         private void CommandResponseOnNext(IRpcClientMessageDto<IMessage> value)

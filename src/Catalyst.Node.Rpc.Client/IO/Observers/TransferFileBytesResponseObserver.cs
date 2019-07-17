@@ -68,8 +68,6 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
             Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
             Guard.Argument(senderPeerIdentifier, nameof(senderPeerIdentifier)).NotNull();
 
-            SendMessage(transferFileBytesResponse, senderPeerIdentifier);
-
             // Response for a node writing a chunk via bytes transfer.
             // Future logic if an error occurs via chunk transfer then preferably we want to stop file transfer
         }

@@ -48,12 +48,17 @@ namespace Catalyst.Common.IO.Observers
 
         protected abstract void HandleResponse(TProto messageDto, IChannelHandlerContext channelHandlerContext, IPeerIdentifier senderPeerIdentifier, ICorrelationId correlationId);
 
+        protected virtual void RedirectResponse(TProto messageDto, IChannelHandlerContext channelHandlerContext, IPeerIdentifier senderPeerIdentifier, ICorrelationId correlationId)
+        {
+            HandleResponse(messageDto, channelHandlerContext, senderPeerIdentifier, correlationId);
+        }
+
         public override void OnNext(IObserverDto<ProtocolMessage> messageDto)
         {
             Logger.Verbose("Pre Handle Message Called");
             try
             {
-                HandleResponse(messageDto.Payload.FromProtocolMessage<TProto>(), messageDto.Context,
+                RedirectResponse(messageDto.Payload.FromProtocolMessage<TProto>(), messageDto.Context,
                     new PeerIdentifier(messageDto.Payload.PeerId), messageDto.Payload.CorrelationId.ToCorrelationId());
             }
             catch (Exception exception)

@@ -102,8 +102,6 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
             {
                 fileTransferInformation.Expire();
             }
-
-            SendMessage(getFileFromDfsResponse, senderPeerIdentifier);
         }
     }
 }

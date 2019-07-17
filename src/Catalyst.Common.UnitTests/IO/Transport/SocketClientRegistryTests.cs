@@ -119,46 +119,40 @@ namespace Catalyst.Common.UnitTests.IO.Transport
                .BeAssignableTo<ISocketClient>();
         }
 
+        private Dictionary<int, ISocketClient> ConstructSocketByEndpointSampleData()
+        {
+            return new[] { 2000, 3000, 4000, 5000, 6000 }.ToDictionary(
+               p => new IPEndPoint(IPAddress.Loopback, p).GetHashCode(),
+               p => GetSubstituteForActiveSocketClient()
+            );
+        }
+
+        private ISocketClientRegistry<ISocketClient> ConstructPopulatedSocketRepository(Dictionary<int, ISocketClient> socketsByEndpointHashCode)
+        {
+            var clientSocketRegistry = new SocketClientRegistry<ISocketClient>();
+            socketsByEndpointHashCode.ToList().ForEach(element =>
+                clientSocketRegistry.AddClientToRegistry(element.Key, element.Value)
+            );
+            return clientSocketRegistry;
+        }
+
         [Fact]
         public void Can_Add_Multiple_Sockets_To_Registry()
         {
-            var clientSocketRegistry = new SocketClientRegistry<ISocketClient>();
-            var listOfSockets = new ConcurrentDictionary<int, ISocketClient>();
-            var randomPorts = new List<int> { 2000, 3000, 4000, 5000, 6000 };
-
-            randomPorts.ForEach(port => listOfSockets.TryAdd(
-                new IPEndPoint(IPAddress.Loopback, port).GetHashCode(),
-                GetSubstituteForActiveSocketClient()
-            ));
-
-            listOfSockets.ToList()
-               .ForEach(element =>
-                    clientSocketRegistry.AddClientToRegistry(element.Key, element.Value)
-                );
-
+            var socketsByEndpointHashCode = ConstructSocketByEndpointSampleData();
+            var clientSocketRegistry = ConstructPopulatedSocketRepository(socketsByEndpointHashCode);
             clientSocketRegistry.Registry
                .Should().NotBeEmpty()
                .And
                .HaveCount(5)
-               .And.ContainValues(listOfSockets.Values);
+               .And.ContainValues(socketsByEndpointHashCode.Values);
         }
 
         [Fact]
         public void Can_Add_Multiple_Sockets_To_Registry_And_Get_One()
         {
-            var clientSocketRegistry = new SocketClientRegistry<ISocketClient>();
-            var listOfSockets = new ConcurrentDictionary<int, ISocketClient>();
-            var randomPorts = new List<int> { 2000, 3000, 4000, 5000, 6000 };
-
-            randomPorts.ForEach(port => listOfSockets.TryAdd(
-                new IPEndPoint(IPAddress.Loopback, port).GetHashCode(),
-                GetSubstituteForActiveSocketClient()
-            ));
-
-            listOfSockets.ToList()
-               .ForEach(element =>
-                    clientSocketRegistry.AddClientToRegistry(element.Key, element.Value)
-                );
+            var socketsByEndpointHashCode = ConstructSocketByEndpointSampleData();
+            var clientSocketRegistry = ConstructPopulatedSocketRepository(socketsByEndpointHashCode);
 
             var socketClient = clientSocketRegistry.GetClientFromRegistry(new IPEndPoint(IPAddress.Loopback, 2000).GetHashCode());
             socketClient.Should()
@@ -196,55 +190,36 @@ namespace Catalyst.Common.UnitTests.IO.Transport
         [Fact]
         public void Can_Add_Multiple_Sockets_To_Registry_And_Remove_One()
         {
-            var clientSocketRegistry = new SocketClientRegistry<ISocketClient>();
-            var listOfSockets = new ConcurrentDictionary<int, ISocketClient>();
-            var randomPorts = new List<int> { 2000, 3000, 4000, 5000, 6000 };
+            var socketsByEndpointHashCode = ConstructSocketByEndpointSampleData();
+            var clientSocketRegistry = ConstructPopulatedSocketRepository(socketsByEndpointHashCode);
 
-            randomPorts.ForEach(port => listOfSockets.TryAdd(
-                new IPEndPoint(IPAddress.Loopback, port).GetHashCode(),
-                GetSubstituteForActiveSocketClient()
-            ));
-
-            listOfSockets.ToList()
-               .ForEach(element =>
-                    clientSocketRegistry.AddClientToRegistry(element.Key, element.Value)
-                );
-
-            listOfSockets.Remove(new IPEndPoint(IPAddress.Loopback, 2000).GetHashCode(), out _);
+            socketsByEndpointHashCode.Remove(new IPEndPoint(IPAddress.Loopback, 2000).GetHashCode(), out _);
 
             var socketClient = clientSocketRegistry.RemoveClientFromRegistry(new IPEndPoint(IPAddress.Loopback, 2000).GetHashCode());
-            socketClient.Should()
-               .BeTrue();
+            socketClient.Should().BeTrue();
 
             clientSocketRegistry.Registry
                .Should().NotBeEmpty()
                .And
                .HaveCount(4)
-               .And.ContainValues(listOfSockets.Values);
+               .And.ContainValues(socketsByEndpointHashCode.Values);
         }
 
         [Fact]
         public void Can_Listen_To_Registry_Client_Added_Events()
         {
-            var connectionEvents = new List<int>();
+            var socketsByEndpointHashCode = ConstructSocketByEndpointSampleData();
             var clientSocketRegistry = new SocketClientRegistry<ISocketClient>();
+
+            var connectionEvents = new List<int>();
             clientSocketRegistry.EventStream.OfType<SocketClientRegistryClientAdded>().Subscribe((socketClientRegistryClientAdded) =>
             {
                 connectionEvents.Add(socketClientRegistryClientAdded.SocketHashCode);
             });
 
-            var listOfSockets = new ConcurrentDictionary<int, ISocketClient>();
-            var randomPorts = new List<int> { 2000, 3000, 4000, 5000, 6000 };
-
-            randomPorts.ForEach(port => listOfSockets.TryAdd(
-                new IPEndPoint(IPAddress.Loopback, port).GetHashCode(),
-                GetSubstituteForActiveSocketClient()
-            ));
-
-            listOfSockets.ToList()
-               .ForEach(element =>
-                    clientSocketRegistry.AddClientToRegistry(element.Key, element.Value)
-                );
+            socketsByEndpointHashCode.ToList().ForEach(element =>
+                clientSocketRegistry.AddClientToRegistry(element.Key, element.Value)
+            );
 
             connectionEvents.Should().NotBeEmpty().And.HaveCount(5);
         }
@@ -252,8 +227,10 @@ namespace Catalyst.Common.UnitTests.IO.Transport
         [Fact]
         public void Can_Listen_To_Registry_Client_Removed_Events()
         {
+            var socketsByEndpointHashCode = ConstructSocketByEndpointSampleData();
+            var clientSocketRegistry = ConstructPopulatedSocketRepository(socketsByEndpointHashCode);
+
             var connectionEvents = new List<int>();
-            var clientSocketRegistry = new SocketClientRegistry<ISocketClient>();
             clientSocketRegistry.EventStream.OfType<SocketClientRegistryClientAdded>().Subscribe((socketClientRegistryClientAdded) =>
             {
                 connectionEvents.Add(socketClientRegistryClientAdded.SocketHashCode);
@@ -264,23 +241,10 @@ namespace Catalyst.Common.UnitTests.IO.Transport
                 connectionEvents.Remove(socketClientRegistryClientAddedRemoved.SocketHashCode);
             });
 
-            var listOfSockets = new ConcurrentDictionary<int, ISocketClient>();
-            var randomPorts = new List<int> { 2000, 3000, 4000, 5000, 6000 };
-
-            randomPorts.ForEach(port => listOfSockets.TryAdd(
-                new IPEndPoint(IPAddress.Loopback, port).GetHashCode(),
-                GetSubstituteForActiveSocketClient()
-            ));
-
-            listOfSockets.ToList()
-               .ForEach(element =>
-                    clientSocketRegistry.AddClientToRegistry(element.Key, element.Value)
-                );
-
-            listOfSockets.ToList()
-             .ForEach(element =>
-                  clientSocketRegistry.RemoveClientFromRegistry(element.Key)
-              );
+            socketsByEndpointHashCode.ToList().ForEach(element =>
+            {
+                clientSocketRegistry.RemoveClientFromRegistry(element.Key);
+            });
 
             connectionEvents.Should().BeEmpty();
         }
