@@ -57,7 +57,7 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Consensus.Deltas
         {
             DodgyCandidates = new List<object[]>
             {
-                new object[] {(CandidateDeltaBroadcast)null},
+                new object[] {(CandidateDeltaBroadcast) null},
                 new object[] {new CandidateDeltaBroadcast()},
                 new object[] 
                 {

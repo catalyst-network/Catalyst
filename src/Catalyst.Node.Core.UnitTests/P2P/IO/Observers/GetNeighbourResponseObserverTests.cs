@@ -30,9 +30,11 @@ using Catalyst.Common.Interfaces.P2P.IO.Messaging.Dto;
 using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Node.Core.P2P.IO.Observers;
+using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
+using Google.Protobuf;
 using NSubstitute;
 using Serilog;
 using Xunit;
@@ -72,7 +74,7 @@ namespace Catalyst.Node.Core.UnitTests.P2P.IO.Observers
                 CorrelationId.GenerateCorrelationId()
             );
             
-            var peerNeighborsResponseObserver = Substitute.For<IObserver<IPeerClientMessageDto<PeerNeighborsResponse>>>();
+            var peerNeighborsResponseObserver = Substitute.For<IObserver<IPeerClientMessageDto>>();
 
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext,
                 response.Content.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId,
@@ -81,16 +83,22 @@ namespace Catalyst.Node.Core.UnitTests.P2P.IO.Observers
             _observer.StartObserving(messageStream);
             await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
 
-            using (_observer.PeerNeighborsResponseStream.SubscribeOn(TaskPoolScheduler.Default)
+            using (_observer.MessageStream.SubscribeOn(TaskPoolScheduler.Default)
                .Subscribe(peerNeighborsResponseObserver.OnNext))
             {
                 await TaskHelper.WaitForAsync(() => peerNeighborsResponseObserver.ReceivedCalls().Any(),
                     TimeSpan.FromMilliseconds(1000));
                 
-                peerNeighborsResponseObserver.Received(1).OnNext(Arg.Is<IPeerClientMessageDto<PeerNeighborsResponse>>(p => p.Message.Peers.Contains(peers[0])));
-                peerNeighborsResponseObserver.Received(1).OnNext(Arg.Is<IPeerClientMessageDto<PeerNeighborsResponse>>(p => p.Message.Peers.Contains(peers[1])));
-                peerNeighborsResponseObserver.Received(1).OnNext(Arg.Is<IPeerClientMessageDto<PeerNeighborsResponse>>(p => p.Message.Peers.Contains(peers[2])));
+                peerNeighborsResponseObserver.Received(1).OnNext(Arg.Is<IPeerClientMessageDto>(p => test(p.Message, peers[0])));
+                peerNeighborsResponseObserver.Received(1).OnNext(Arg.Is<IPeerClientMessageDto>(p => test(p.Message, peers[1])));
+                peerNeighborsResponseObserver.Received(1).OnNext(Arg.Is<IPeerClientMessageDto>(p => test(p.Message, peers[2])));
             }
+        }
+
+        private bool test(IMessage msg, PeerId peerId)
+        {
+            var x = (PeerNeighborsResponse) msg;
+            return x.Peers.Contains(peerId);
         }
 
         public void Dispose()

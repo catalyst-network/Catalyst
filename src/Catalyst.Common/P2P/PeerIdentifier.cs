@@ -30,7 +30,9 @@ using Catalyst.Common.Network;
 using Catalyst.Common.Util;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Rpc;
+using Catalyst.Cryptography.BulletProofs.Wrapper;
 using Catalyst.Protocol.Common;
+using Dawn;
 using Google.Protobuf;
 using Microsoft.Extensions.Configuration;
 using Nethereum.Hex.HexConvertors.Extensions;
@@ -57,6 +59,8 @@ namespace Catalyst.Common.P2P
 
         public PeerIdentifier(PeerId peerId)
         {
+            var keyLength = FFI.GetPublicKeyLength();
+            Guard.Argument(peerId.PublicKey, nameof(peerId.PublicKey)).MinCount(keyLength).MaxCount(keyLength);
             PeerId = peerId;
         }
 
