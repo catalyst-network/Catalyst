@@ -34,15 +34,20 @@ namespace Catalyst.Common.Modules.KeySigner
     {
         private readonly IKeyStore _keyStore;
         private readonly ICryptoContext _cryptoContext;
+        private readonly bool _passAll;
 
         /// <summary>Initializes a new instance of the <see cref="KeySigner"/> class.</summary>
         /// <param name="keyStore">The key store.</param>
         /// <param name="cryptoContext">The crypto context.</param>
         public KeySigner(IKeyStore keyStore,
-            ICryptoContext cryptoContext)
+            ICryptoContext cryptoContext,
+            bool passAll = false)
         {
+            _passAll = passAll;
             _keyStore = keyStore;
             _cryptoContext = cryptoContext;
+
+            System.Diagnostics.Debug.WriteLine(GetHashCode());
         }
 
         /// <inheritdoc/>
@@ -64,6 +69,10 @@ namespace Catalyst.Common.Modules.KeySigner
         /// <inheritdoc/>
         public bool Verify(ISignature signature, byte[] message)
         {
+            if (_passAll)
+            {
+                return true;
+            }           
             return _cryptoContext.Verify(signature, message);
         }
 
