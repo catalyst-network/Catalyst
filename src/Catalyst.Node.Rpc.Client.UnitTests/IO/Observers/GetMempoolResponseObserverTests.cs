@@ -101,7 +101,6 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
         public async Task RpcClient_Can_Handle_GetMempoolResponse(IEnumerable<string> mempoolContent)
         {
             var txList = mempoolContent.ToList();
-
             var getMempoolResponse = new GetMempoolResponse
             {
                 Mempool = {txList}
@@ -115,7 +114,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
 
             _observer = new GetMempoolResponseObserver(_output, _logger);
             _observer.StartObserving(messageStream);
-            _observer.Subscribe((message) => messageStreamResponse = message);
+            _observer.Subscribe(message => messageStreamResponse = message);
 
             await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
 

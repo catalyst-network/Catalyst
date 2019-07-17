@@ -27,13 +27,11 @@ using Catalyst.Common.Interfaces.Cli.CommandTypes;
 using Catalyst.Common.Interfaces.Cli.Options;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Rpc;
-using Catalyst.Common.Interfaces.Rpc.IO.Messaging.Dto;
 using Catalyst.Common.IO.Events;
 using Catalyst.Common.P2P;
 using Catalyst.Protocol;
 using Google.Protobuf;
 using System;
-using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 
 namespace Catalyst.Cli.CommandTypes
@@ -43,7 +41,6 @@ namespace Catalyst.Cli.CommandTypes
         where TResponse : IMessage<TResponse>
         where TOption : IOptionsBase
     {
-
         protected BaseMessageCommand(ICommandContext commandContext) : base(commandContext)
         {
             CommandContext.SocketClientRegistry.EventStream.OfType<SocketClientRegistryClientAdded>().Subscribe(SocketClientRegistryClientAddedOnNext);
@@ -79,7 +76,7 @@ namespace Catalyst.Cli.CommandTypes
 
             if (sendMessage)
             {
-                SendMessage((TOption)optionsBase);
+                SendMessage((TOption) optionsBase);
             }
 
             return sendMessage;
