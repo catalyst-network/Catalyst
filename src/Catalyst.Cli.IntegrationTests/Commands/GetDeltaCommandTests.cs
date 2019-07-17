@@ -21,27 +21,31 @@
 
 #endregion
 
+using System.Text;
+using Catalyst.Common.Extensions;
 using Catalyst.Protocol.Rpc.Node;
 using FluentAssertions;
+using Multiformats.Hash;
 using Xunit;
 using Xunit.Abstractions;
 
 namespace Catalyst.Cli.IntegrationTests.Commands
 {
-    public sealed class GetPeerInfoCommandTests : CliCommandTestsBase
+    public sealed class GetDeltaCommandTests : CliCommandTestsBase
     {
-        public GetPeerInfoCommandTests(ITestOutputHelper output) : base(output) { }
+        public GetDeltaCommandTests(ITestOutputHelper output) : base(output) { }
 
         [Fact]
-        public void Cli_Can_Send_Get_Peer_Info_Request()
+        public void Cli_Can_Request_Node_Info()
         {
-            var publicKey = "fake_public_key";
-            var ipAddress = "127.0.0.1";
-            
-            var result = Shell.ParseCommand("getpeerinfo", NodeArgumentPrefix, ServerNodeName, "-i", ipAddress, "-p", publicKey);
+            var hashingAlgorithm = Common.Config.Constants.HashAlgorithm;
+            var hash = Multihash.Cast(hashingAlgorithm.ComputeHash(Encoding.UTF8.GetBytes("hello")));
+
+            var result = Shell.ParseCommand("getdelta", "-h", hash, NodeArgumentPrefix, ServerNodeName);
             result.Should().BeTrue();
 
-            AssertSentMessageAndGetMessageContent<GetPeerInfoRequest>();
+            var request = AssertSentMessageAndGetMessageContent<GetDeltaRequest>();
+            request.DeltaDfsHash.ToMultihash().Should().Be(hash);
         }
     }
 }

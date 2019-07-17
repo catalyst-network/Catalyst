@@ -31,7 +31,6 @@ using System.Threading.Tasks;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.IO.Messaging.Correlation;
-using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Node.Rpc.Client.IO.Observers;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.Protocol.Transaction;
@@ -104,30 +103,22 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
         {
             var txList = mempoolContent.ToList();
 
-            var response = new DtoFactory().GetDto(
-                new GetMempoolResponse
-                {
-                    Mempool = { txList }
-                },
-                PeerIdentifierHelper.GetPeerIdentifier("sender_key"),
-                PeerIdentifierHelper.GetPeerIdentifier("recipient_key"),
-                CorrelationId.GenerateCorrelationId()
-            );
+            var getMempoolResponse = new GetMempoolResponse
+            {
+                Mempool = {txList}
+            };
 
             var messageStream = MessageStreamHelper.CreateStreamWithMessages(_fakeContext,
-                response.Content.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender_key").PeerId,
-                    response.CorrelationId
-                )
-            );
+                getMempoolResponse.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender_key").PeerId,
+                    CorrelationId.GenerateCorrelationId()));
 
             GetMempoolResponse messageStreamResponse = null;
 
             _observer = new GetMempoolResponseObserver(_output, _logger);
             _observer.StartObserving(messageStream);
-
-            _observer.MessageResponseStream.Where(x => x.Message.GetType() == typeof(GetMempoolResponse)).SubscribeOn(NewThreadScheduler.Default).Subscribe((RpcClientMessageDto) =>
+            _observer.Subscribe((message) =>
             {
-                messageStreamResponse = (GetMempoolResponse)RpcClientMessageDto.Message;
+                messageStreamResponse = message;
             });
 
             await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();

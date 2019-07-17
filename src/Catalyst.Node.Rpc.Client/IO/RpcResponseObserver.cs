@@ -31,6 +31,7 @@ using DotNetty.Transport.Channels;
 using Google.Protobuf;
 using Serilog;
 using System;
+using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 
@@ -39,12 +40,12 @@ namespace Catalyst.Node.Rpc.Client.IO
     public abstract class RpcResponseObserver<TProto> : ResponseObserverBase<TProto>, IRpcResponseObserver where TProto : IMessage<TProto>
     {
         private readonly ReplaySubject<IRpcClientMessageDto<IMessage>> _messageResponse;
-        public IObservable<IRpcClientMessageDto<IMessage>> MessageResponseStream { private set; get; }
+        private IObservable<IRpcClientMessageDto<IMessage>> _messageResponseStream;
 
         public RpcResponseObserver(ILogger logger) : base(logger)
         {
             _messageResponse = new ReplaySubject<IRpcClientMessageDto<IMessage>>(1);
-            MessageResponseStream = _messageResponse.AsObservable();
+            _messageResponseStream = _messageResponse.AsObservable();
         }
 
         protected override void RedirectResponse(TProto messageDto, IChannelHandlerContext channelHandlerContext, IPeerIdentifier senderPeerIdentifier, ICorrelationId correlationId)
@@ -56,6 +57,14 @@ namespace Catalyst.Node.Rpc.Client.IO
         private void AddMessageToResponseStream(TProto message, IPeerIdentifier senderPeerIdentifier)
         {
             _messageResponse.OnNext(new RpcClientMessageDto<IMessage>(message, senderPeerIdentifier));
+        }
+
+        public void Subscribe(Action<TProto> onNext)
+        {
+            _messageResponseStream.Where(x => x.Message is TProto).SubscribeOn(NewThreadScheduler.Default).Subscribe(rpcClientMessageDto =>
+            {
+                onNext((TProto)rpcClientMessageDto.Message);
+            });
         }
     }
 }
