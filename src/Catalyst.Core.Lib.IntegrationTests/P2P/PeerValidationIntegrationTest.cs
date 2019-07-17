@@ -48,6 +48,7 @@ using Catalyst.Common.Interfaces.P2P.IO.Messaging.Broadcast;
 using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Common.Interfaces.Keystore;
 using Constants = Catalyst.Common.Config.Constants;
+using System.Linq;
 
 namespace Catalyst.Node.Core.IntegrationTests.P2P
 {
@@ -100,6 +101,21 @@ namespace Catalyst.Node.Core.IntegrationTests.P2P
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void PeerChallenge_PeerIdentifiers_Expect_To_Succeed_Valid_IP_Port_PublicKey()
         {
+            //var rubbishlist = new List<string>();
+
+            //if (rubbishlist.Any() && rubbishlist.ElementAt<string>(1) == "")
+            //{
+
+            //}
+
+            ////if (rubbishlist.ElementAt<string>(1) == "" && rubbishlist.Any())
+            ////{
+
+            ////}
+
+
+
+
             var peerSettings = new PeerSettings(_config);
 
             var valid = RunPeerChallenge(peerSettings.PublicKey, peerSettings.BindAddress, peerSettings.Port);

@@ -115,14 +115,6 @@
             ]
         },
         //P2P request handlers
-        //{
-        //    "type": "Catalyst.Core.Lib.P2P.PeerValidator",
-        //    "services": [
-        //        {
-        //            "type": "Catalyst.Common.Interfaces.P2P.IPeerValidator, Catalyst.Common"
-        //        }
-        //    ]
-        //},
         {
             "type": "Catalyst.Core.Lib.P2P.IO.Observers.PingRequestObserver",
             "services": [

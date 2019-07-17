@@ -115,13 +115,10 @@ namespace Catalyst.Core.Lib.P2P
 
                 Task.WaitAll(tasks, TimeSpan.FromMilliseconds(20000));
 
-                if (_receivedResponses.Any())
-                {
-                    if (_receivedResponses.Last().Payload.PeerId.PublicKey.ToStringUtf8() ==
+                if (_receivedResponses.Any() && _receivedResponses.Last().Payload.PeerId.PublicKey.ToStringUtf8() ==
                         recipientPeerIdentifier.PeerId.PublicKey.ToStringUtf8())
-                    {
+                {
                         return true;
-                    }
                 }                
             }
             catch (Exception e)
