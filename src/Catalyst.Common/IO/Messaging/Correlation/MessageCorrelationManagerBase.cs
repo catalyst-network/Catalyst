@@ -22,8 +22,10 @@
 #endregion
 
 using System;
+using System.IO;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.Util;
+using Catalyst.Protocol;
 using Catalyst.Protocol.Common;
 using Dawn;
 using Microsoft.Extensions.Caching.Memory;
@@ -78,7 +80,34 @@ namespace Catalyst.Common.IO.Messaging.Correlation
         {
             Guard.Argument(response, nameof(response)).NotNull();
 
-            return PendingRequests.TryGetValue(response.CorrelationId, out _);
+            var correlationIdMatch = PendingRequests.TryGetValue(response.CorrelationId, out CorrelatableMessage<ProtocolMessage> match);
+            if (!correlationIdMatch)
+            {
+                return false;
+            }
+
+            ValidateResponseType(response, match);
+
+            return true;
+        }
+
+        /// <remarks>
+        /// Do we want to create reputation events if the response type doesn't match?
+        /// https://github.com/catalyst-network/Catalyst.Node/issues/674
+        /// This might be OK if we can be sure that the person responding is actually
+        /// the one with the PeerId mentioned in the response. Is the correlationId
+        /// enough to ensure that?
+        /// </remarks>
+        protected static void ValidateResponseType(ProtocolMessage response, CorrelatableMessage<ProtocolMessage> responseFromCache)
+        {
+            if (responseFromCache.Content.TypeUrl.GetResponseType() == response.TypeUrl)
+            {
+                return;
+            }
+
+            throw new InvalidDataException(
+                $"{responseFromCache?.Content?.TypeUrl?.GetResponseType() ?? "invalid cache entry"} " +
+                $"is not a valid match for {response.TypeUrl ?? "invalid response"}");
         }
 
         protected virtual void Dispose(bool disposing)
