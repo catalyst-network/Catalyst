@@ -28,14 +28,12 @@ using System.Runtime.Loader;
 using System.Threading;
 using Autofac;
 using Autofac.Configuration;
-using Autofac.Extensions.DependencyInjection;
 using AutofacSerilogIntegration;
 using Catalyst.Common.Config;
 using Catalyst.Common.FileSystem;
 using Catalyst.Common.Util;
 using Catalyst.Common.Interfaces;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using SharpRepository.Ioc.Autofac;
 using SharpRepository.Repository;
@@ -88,12 +86,6 @@ namespace Catalyst.Node
                    .AddJsonFile(Path.Combine(targetConfigFolder, Constants.SerilogJsonConfigFile))
                    .Build();
 
-                //.Net Core service collection
-                var serviceCollection = new ServiceCollection();
-
-                //Add .Net Core services (if any) first
-                serviceCollection.AddLogging().AddDistributedMemoryCache();
-
                 // register components from config file
                 var configurationModule = new ConfigurationModule(config);
                 var containerBuilder = new ContainerBuilder();
@@ -115,10 +107,7 @@ namespace Catalyst.Node
                 containerBuilder.RegisterSharpRepository(repoFactory);
 
                 var container = containerBuilder.Build();
-                using (container.BeginLifetimeScope(LifetimeTag,
-
-                    //Add .Net Core serviceCollection to the Autofac container.
-                    b => { b.Populate(serviceCollection, LifetimeTag); }))
+                using (container.BeginLifetimeScope(LifetimeTag))
                 {
                     var node = container.Resolve<ICatalystNode>();
                     node.RunAsync(_cancellationSource.Token).Wait(_cancellationSource.Token);
@@ -138,23 +127,6 @@ namespace Catalyst.Node
         static void CurrentDomain_ProcessExit(object sender, EventArgs e)
         {
             _cancellationSource.Cancel();
-        }
-
-        public static Assembly TryLoadAssemblyFromExecutionDirectory(AssemblyLoadContext context,
-            AssemblyName assemblyName)
-        {
-            try
-            {
-                var assemblyFilePath = Path.Combine(ExecutionDirectory, $"{assemblyName.Name}.dll");
-                _logger.Debug("Resolving assembly {0} from file {1}", assemblyName, assemblyFilePath);
-                var assembly = context.LoadFromAssemblyPath(assemblyFilePath);
-                return assembly;
-            }
-            catch (Exception e)
-            {
-                _logger.Warning(e, "Failed to load assembly {0} from file {1}.", e);
-                return null;
-            }
         }
     }
 }
