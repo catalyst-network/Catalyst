@@ -13,6 +13,6 @@
     <Import Project="../Common.TestProjects.props" />
     <ItemGroup>
         <ProjectReference Include="..\Catalyst.Common\Catalyst.Common.csproj" />
-        <ProjectReference Include="..\Catalyst.Node.Core\Catalyst.Node.Core.csproj" />
+        <ProjectReference Include="..\Catalyst.Core.Lib\Catalyst.Core.Lib.csproj" />
     </ItemGroup>
 </Project>
