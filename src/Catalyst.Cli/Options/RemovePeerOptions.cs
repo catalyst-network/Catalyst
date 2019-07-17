@@ -35,11 +35,11 @@ namespace Catalyst.Cli.Options
     public sealed class RemovePeerOptions : OptionsBase, IRemovePeerOptions
     {
         /// <inheritdoc />
-        [Option('k', "publickey", HelpText = "The peer public key", Required = false)]
+        [Option('p', "publickey", HelpText = "Public key of the peer to remove.", Required = false)]
         public string PublicKey { get; set; }
 
         /// <inheritdoc />
-        [Option('i', "ip", HelpText = "The peer IP", Required = true)]
+        [Option('i', "ip", HelpText = "IP address of the peer to remove.", Required = true)]
         public string Ip { get; set; }
 
         /// <summary>
