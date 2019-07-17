@@ -50,18 +50,16 @@ namespace Catalyst.Common.UnitTests.IO.Observers
         private readonly TransferFileBytesRequestObserver _observer;
         private readonly IDownloadFileTransferFactory _downloadFileTransferFactory;
         private readonly IChannelHandlerContext _context;
-        private readonly ILogger _logger;
 
         public TransferFileBytesRequestObserverTests()
         {
-            _logger = Substitute.For<ILogger>();
             _context = Substitute.For<IChannelHandlerContext>();
             _context.Channel.Returns(Substitute.For<IChannel>());
             _downloadFileTransferFactory = Substitute.For<IDownloadFileTransferFactory>();
             var peerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("Test");
             _observer = new TransferFileBytesRequestObserver(_downloadFileTransferFactory,
                 peerIdentifier,
-                _logger);
+                Substitute.For<ILogger>());
         }
 
         [Fact]
