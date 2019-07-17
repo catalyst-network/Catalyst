@@ -49,5 +49,8 @@ namespace Catalyst.Node.Core.Modules.Ledger
 
         /// <inheritdoc />
         public byte[] StateRoot { get; set; } = Constants.EmptyTrieHash;
+
+        public string Hash => throw new System.NotImplementedException();
+
     }
 }

@@ -29,7 +29,7 @@ namespace Catalyst.Common.Interfaces.P2P
     {
         /// <summary>Gets or sets the primary key identifier.</summary>
         /// <value>The primary key identifier.</value>
-        int PkId { get; set; }
+        string PkId { get; }
 
         /// <summary>Gets the reputation.</summary>
         /// <value>The reputation.</value>
