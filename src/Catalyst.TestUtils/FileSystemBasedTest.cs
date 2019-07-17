@@ -101,6 +101,14 @@ namespace Catalyst.TestUtils
                 var filePath = Path.Combine(_testDirectory.FullName, (string) ci[1], (string) ci[0]);
                 return File.Exists(filePath) ? File.ReadAllText(filePath) : null;
             });
+
+            result.DataFileExistsInSubDirectory(Arg.Any<string>(),
+                Arg.Any<string>()).Returns(ci =>
+            {
+                var filePath = Path.Combine(_testDirectory.FullName, (string) ci[1], (string) ci[0]);
+                return File.Exists(filePath);
+            });
+
             return result;
         }
 

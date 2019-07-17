@@ -139,6 +139,10 @@ namespace Catalyst.Common.UnitTests.Keystore
 
             IPrivateKey privateKey = _context.GeneratePrivateKey();
             await _keystore.KeyStoreEncryptAsync(privateKey, KeyRegistryKey.DefaultKey);
+            await TaskHelper.WaitForAsync(
+                () => FileSystem.DataFileExistsInSubDirectory(KeyRegistryKey.DefaultKey.Name,
+                    Constants.CatalystDataDir),
+                TimeSpan.FromSeconds(3));
             _passwordReader.ReadSecurePassword(default, default)
                .ReturnsForAnyArgs(TestPasswordReader.BuildSecureStringPassword("a different test password"));
             Assert.Throws<AuthenticationException>(() =>_keystore.KeyStoreDecrypt(KeyRegistryKey.DefaultKey));
