@@ -65,7 +65,7 @@ namespace Catalyst.Cli.IntegrationTests.Commands
 
             if (expectedResult)
             {
-                AssertSentMessage<GetFileFromDfsRequest>();
+                AssertSentMessageAndGetMessageContent<GetFileFromDfsRequest>();
             }
         }
     }

@@ -21,24 +21,14 @@
 
 #endregion
 
-using Catalyst.Protocol.Rpc.Node;
-using FluentAssertions;
-using Xunit;
-using Xunit.Abstractions;
+using CommandLine;
 
-namespace Catalyst.Cli.IntegrationTests.Commands
+namespace Catalyst.Cli.Options
 {
-    public sealed class PeerCommandCommandTests : CliCommandTestsBase
+    [Verb("getdelta", HelpText = "Request the node for the full content of a Delta, identified by its hash / address on the Dfs")]
+    public class GetDeltaOptions : OptionsBase
     {
-        public PeerCommandCommandTests(ITestOutputHelper output) : base(output) { }
-
-        [Fact]
-        public void Cli_Can_Send_Peers_Count_Request()
-        {
-            var result = Shell.ParseCommand("peercount", NodeArgumentPrefix, ServerNodeName);
-            result.Should().BeTrue();
-
-            AssertSentMessageAndGetMessageContent<GetPeerCountRequest>();
-        }
+        [Option('h', "hash", HelpText = "The hash of the delta being requested.", Required = true)]
+        public string Hash { get; set; }
     }
 }

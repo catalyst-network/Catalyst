@@ -1,0 +1,152 @@
+#region LICENSE
+
+/**
+* Copyright (c) 2019 Catalyst Network
+*
+* This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
+*
+* Catalyst.Node is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 2 of the License, or
+* (at your option) any later version.
+*
+* Catalyst.Node is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
+*/
+
+#endregion
+
+using System;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Catalyst.Common.Extensions;
+using Catalyst.Common.Interfaces.IO.Messaging.Dto;
+using Catalyst.Common.Interfaces.Modules.Consensus.Deltas;
+using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.Util;
+using Catalyst.Node.Core.Rpc.IO.Observers;
+using Catalyst.Protocol;
+using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Deltas;
+using Catalyst.Protocol.Rpc.Node;
+using Catalyst.TestUtils;
+using DotNetty.Transport.Channels;
+using Multiformats.Hash;
+using NSubstitute;
+using Serilog;
+using Xunit;
+
+namespace Catalyst.Node.Core.UnitTests.P2P.IO.Observers
+{
+    public class GetDeltaRequestObserverTests
+    {
+        private readonly ILogger _logger;
+        private readonly IPeerIdentifier _peerIdentifier;
+        private readonly IDeltaCache _deltaCache;
+        private readonly GetDeltaRequestObserver _observer;
+        private readonly IChannelHandlerContext _fakeContext;
+
+        public GetDeltaRequestObserverTests()
+        {
+            _logger = Substitute.For<ILogger>();
+            _peerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("responder");
+            _deltaCache = Substitute.For<IDeltaCache>();
+            _observer = new GetDeltaRequestObserver(_deltaCache, _peerIdentifier, _logger);
+            _fakeContext = Substitute.For<IChannelHandlerContext>();
+        }
+
+        [Fact]
+        public async Task GetDeltaRequestObserver_Should_Not_Hit_The_Cache_On_Invalid_Hash()
+        {
+            var invalidHash = "abcd";
+            var invalidHashBytes = Encoding.UTF8.GetBytes(invalidHash);
+            var delta = CreateAndExpectDeltaFromCache(invalidHash);
+
+            var observable = CreateStreamWithDeltaRequest(invalidHashBytes);
+
+            _observer.StartObserving(observable);
+
+            await observable.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
+
+            _deltaCache.DidNotReceiveWithAnyArgs().TryGetDelta(default, out _);
+            await _fakeContext.Channel.DidNotReceiveWithAnyArgs().WriteAndFlushAsync(default);
+        }
+
+        [Fact]
+        public async Task GetDeltaRequestObserver_Should_Send_Response_When_Delta_Found_In_Cache()
+        {
+            var multiHash = GetMultiHash("abcd");
+
+            var delta = CreateAndExpectDeltaFromCache(multiHash);
+
+            var observable = CreateStreamWithDeltaRequest(multiHash);
+
+            _observer.StartObserving(observable);
+
+            await observable.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
+
+            _deltaCache.Received(1).TryGetDelta(Arg.Is<string>(
+                s => s.Equals(multiHash.ToString())), out Arg.Any<Delta>());
+
+            await _fakeContext.Channel.ReceivedWithAnyArgs(1)
+               .WriteAndFlushAsync(Arg.Is<IMessageDto<ProtocolMessage>>(pm => 
+                    pm.Content.FromProtocolMessage<GetDeltaResponse>().Delta.PreviousDeltaDfsHash == delta.PreviousDeltaDfsHash));
+        }
+
+        [Fact]
+        public async Task GetDeltaRequestObserver_Should_Send_Response_With_Null_Content_If_Not_Retrieved_In_Cache()
+        {
+            var multiHash = GetMultiHash("defg");
+
+            var observable = CreateStreamWithDeltaRequest(multiHash);
+
+            _observer.StartObserving(observable);
+
+            await observable.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
+
+            _deltaCache.Received(1).TryGetDelta(Arg.Is<string>(
+                s => s.Equals(multiHash.ToString())), out Arg.Any<Delta>());
+
+            await _fakeContext.Channel.ReceivedWithAnyArgs(1)
+               .WriteAndFlushAsync(Arg.Is<IMessageDto<ProtocolMessage>>(pm =>
+                    pm.Content.FromProtocolMessage<GetDeltaResponse>().Delta == null));
+        }
+
+        private static Multihash GetMultiHash(string content)
+        {
+            var hashBytes = Common.Config.Constants.HashAlgorithm.ComputeHash(Encoding.UTF8.GetBytes(content));
+            var multiHash = Multihash.Cast(hashBytes);
+            return multiHash;
+        }
+
+        private IObservable<IObserverDto<ProtocolMessage>> CreateStreamWithDeltaRequest(byte[] hash)
+        {
+            var deltaRequest = new GetDeltaRequest {DeltaDfsHash = hash.ToByteString()};
+
+            var message = deltaRequest.ToProtocolMessage(PeerIdHelper.GetPeerId("sender"));
+
+            var observable = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, message);
+            return observable;
+        }
+
+        private Delta CreateAndExpectDeltaFromCache(string hash)
+        {
+            var delta = DeltaHelper.GetDelta();
+
+            _deltaCache.TryGetDelta(Arg.Is(hash), out Arg.Any<Delta>())
+               .Returns(ci =>
+                {
+                    ci[1] = delta;
+                    return true;
+                });
+            return delta;
+        }
+    }
+}
+
