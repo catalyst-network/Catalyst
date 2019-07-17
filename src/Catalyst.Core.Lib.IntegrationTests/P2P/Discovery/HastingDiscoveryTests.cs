@@ -50,6 +50,7 @@ using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
 using Catalyst.TestUtils;
 using FluentAssertions;
+using FluentAssertions.Common;
 using Google.Protobuf;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
@@ -77,13 +78,13 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
         }
 
         [Fact]
-        public void Evicted_Known_Ping_Message_Sets_Contacted_Neighbour_As_UnReachable()
+        public async Task Evicted_Known_Ping_Message_Sets_Contacted_Neighbour_As_UnReachable()
         {
             var cacheEntriesByRequest = new Dictionary<ByteString, ICacheEntry>();
             var pr = new PingResponseObserver(Substitute.For<ILogger>());
             var peerClientObservers = new List<IPeerClientObservable> {pr};
 
-            var seedState = HastingDiscoveryHelper.SubSeedState(_ownNode, _settings.SeedServers.ToList(), _settings);
+            var seedState = HastingDiscoveryHelper.MockSeedState(_ownNode, _settings.SeedServers.ToList(), _settings);
             var seedOrigin = new HastingsOriginator();
             seedOrigin.SetMemento(seedState);
             var stateCareTaker = new HastingCareTaker();
@@ -119,7 +120,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
                 peerMessageCorrelationManager.AddPendingRequest(msg);
             });
             
-            using (var walker = new HastingsDiscovery(
+            using (var walker = new HastingDiscoveryTest(
                 Substitute.For<ILogger>(),
                 Substitute.For<IRepository<Peer>>(),
                 HastingDiscoveryHelper.SubDnsClient(_settings.SeedServers.ToList(), _settings),
@@ -146,9 +147,20 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
                 }
 
                 walker.StateCandidate.UnreachableNeighbour.Should().Be(5);
+
+                walker.HasValidCandidate().Should().BeFalse();
+
+                var expectedCurrentState = walker.HastingCareTaker.HastingMementoList.Peek();
+                
+                walker.WalkBack();
+
+                walker.State.Peer.Should().Be(expectedCurrentState.Peer);
+                walker.State.ContactedNeighbours.Count.Should().Be(0);
+                walker.State.CurrentPeersNeighbours.Count.Should().Be(0);
+                walker.State.UnreachableNeighbour.Should().Be(0);
             }
         }
-
+        
         [Fact]
         public async Task Expected_Ping_Response_From_All_Contacted_Nodes_Produces_Valid_State_Candidate()
         {
@@ -170,7 +182,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
             stateCandidate.ExpectedPnr = knownPnr;
             stateCandidate.CurrentPeersNeighbours.Clear();
 
-            using (var walker = new HastingsDiscovery(
+            using (var walker = new HastingDiscoveryTest(
                 Substitute.For<ILogger>(),
                 Substitute.For<IRepository<Peer>>(),
                 HastingDiscoveryHelper.SubDnsClient(_settings.SeedServers.ToList(), _settings),
@@ -239,7 +251,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
             var stateCandidate = HastingDiscoveryHelper.MockOriginator(default, default, knownPnr);
             stateCandidate.CurrentPeersNeighbours.Clear();
 
-            using (var walker = new HastingsDiscovery(
+            using (var walker = new HastingDiscoveryTest(
                 Substitute.For<ILogger>(),
                 Substitute.For<IRepository<Peer>>(),
                 HastingDiscoveryHelper.SubDnsClient(_settings.SeedServers.ToList(), _settings),

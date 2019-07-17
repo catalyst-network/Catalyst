@@ -80,6 +80,12 @@ namespace Catalyst.TestUtils
 
             return subbedOriginator;
         }
+
+        public static IHastingMemento MockSeedState(IPeerIdentifier ownNode, List<string> domains, IPeerSettings peerSettings)
+        {
+            return MockMemento(ownNode, SubDnsClient(domains, peerSettings)
+               .GetSeedNodesFromDns(peerSettings.SeedServers).ToList());
+        }
         
         public static IHastingMemento SubSeedState(IPeerIdentifier ownNode, List<string> domains, IPeerSettings peerSettings)
         {

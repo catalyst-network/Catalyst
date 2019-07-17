@@ -46,7 +46,45 @@ using SharpRepository.Repository;
 
 namespace Catalyst.Core.Lib.P2P.Discovery
 {
-    public sealed class HastingsDiscovery 
+    public sealed class HastingDiscoveryTest : HastingsDiscovery
+    {
+        public HastingDiscoveryTest(ILogger logger,
+            IRepository<Peer> peerRepository,
+            IDns dns,
+            IPeerSettings peerSettings,
+            IPeerClient peerClient,
+            IDtoFactory dtoFactory,
+            IPeerMessageCorrelationManager peerMessageCorrelationManager,
+            ICancellationTokenProvider cancellationTokenProvider,
+            IEnumerable<IPeerClientObservable> peerClientObservables,
+            bool autoStart = true,
+            int peerDiscoveryBurnIn = 10,
+            IHastingsOriginator state = default,
+            IHastingCareTaker hastingCareTaker = default,
+            IHastingsOriginator stateCandidate = default) 
+            : base(logger,
+                peerRepository,
+                dns,
+                peerSettings,
+                peerClient,
+                dtoFactory,
+                peerMessageCorrelationManager,
+                cancellationTokenProvider,
+                peerClientObservables,
+                autoStart,
+                peerDiscoveryBurnIn,
+                state,
+                hastingCareTaker,
+                stateCandidate) { }
+
+        public new void WalkForward() { base.WalkForward(); }
+
+        public new void WalkBack() { base.WalkBack(); }
+
+        public new bool HasValidCandidate() { return base.HasValidCandidate(); }
+    }
+    
+    public class HastingsDiscovery 
         : IHastingsDiscovery, IDisposable
     {
         public readonly IDns Dns;
@@ -59,7 +97,7 @@ namespace Catalyst.Core.Lib.P2P.Discovery
         private readonly int _peerDiscoveryBurnIn;
         public readonly IHastingsOriginator StateCandidate;
         public readonly IHastingCareTaker HastingCareTaker;
-        public readonly IRepository<Peer> _peerRepository;
+        public readonly IRepository<Peer> PeerRepository;
         private readonly ICancellationTokenProvider _cancellationTokenProvider;
         private readonly IDisposable _evictionSubscription;
 
@@ -67,6 +105,25 @@ namespace Catalyst.Core.Lib.P2P.Discovery
 
         private static readonly SemaphoreSlim SemaphoreSlim = new SemaphoreSlim(1, 1);
 
+        internal HastingsDiscovery(ILogger logger = default,
+            IRepository<Peer> peerRepository = default,
+            IDns dns = default,
+            IPeerSettings peerSettings = default,
+            IPeerClient peerClient = default,
+            IDtoFactory dtoFactory = default,
+            IPeerMessageCorrelationManager peerMessageCorrelationManager = default,
+            ICancellationTokenProvider cancellationTokenProvider = default,
+            IEnumerable<IPeerClientObservable> peerClientObservables = default) : this(logger,
+            peerRepository,
+            dns,
+            peerSettings,
+            peerClient,
+            dtoFactory,
+            peerMessageCorrelationManager,
+            cancellationTokenProvider,
+            peerClientObservables,
+            false, 0) { }
+        
         public HastingsDiscovery(ILogger logger,
             IRepository<Peer> peerRepository,
             IDns dns,
@@ -86,7 +143,7 @@ namespace Catalyst.Core.Lib.P2P.Discovery
             Logger = logger;
             PeerClient = peerClient;
             DtoFactory = dtoFactory;
-            _peerRepository = peerRepository;
+            PeerRepository = peerRepository;
             _discoveredPeerInCurrentWalk = 0;
             _peerDiscoveryBurnIn = peerDiscoveryBurnIn;
             _cancellationTokenProvider = cancellationTokenProvider;
@@ -218,11 +275,11 @@ namespace Catalyst.Core.Lib.P2P.Discovery
             } while (!_cancellationTokenProvider.HasTokenCancelled());
         }
 
-        private bool HasValidCandidate()
+        protected bool HasValidCandidate()
         {
             lock (StateCandidate)
             {
-                if (StateCandidate.ContactedNeighbours.Count < 1)
+                if (StateCandidate.ContactedNeighbours.Count < 1 || StateCandidate.CurrentPeersNeighbours.Count > 0 || StateCandidate.UnreachableNeighbour == 5)
                 {
                     // if we haven't contacted neighbours don't try compare.
                     return false;
@@ -238,7 +295,7 @@ namespace Catalyst.Core.Lib.P2P.Discovery
         ///     Transitions StateCandidate to state,
         ///     then start to try building next StateCandidate.
         /// </summary>
-        private void WalkForward()
+        protected void WalkForward()
         {
             lock (State) 
             lock (StateCandidate)
@@ -275,7 +332,7 @@ namespace Catalyst.Core.Lib.P2P.Discovery
         /// <summary>
         ///     Transition back to last state.
         /// </summary>
-        private void WalkBack()
+        protected void WalkBack()
         {
             lock (State)
             lock (StateCandidate)
@@ -412,7 +469,7 @@ namespace Catalyst.Core.Lib.P2P.Discovery
                 return;
             }
             
-            _peerRepository.Add(new Peer
+            PeerRepository.Add(new Peer
             {
                 Reputation = 0,
                 LastSeen = DateTime.UtcNow,
@@ -425,7 +482,7 @@ namespace Catalyst.Core.Lib.P2P.Discovery
         public void Dispose()
         {
             PeerClient?.Dispose();
-            _peerRepository?.Dispose();
+            PeerRepository?.Dispose();
             _evictionSubscription?.Dispose();
         }
     }
