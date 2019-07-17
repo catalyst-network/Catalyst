@@ -1,3 +1,4 @@
+
 #region LICENSE
 
 /**
@@ -27,6 +28,7 @@ using System.Reactive.Subjects;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.IO.Observers;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.Interfaces.P2P.IO;
 using Catalyst.Common.Interfaces.P2P.IO.Messaging.Dto;
 using Catalyst.Common.IO.Observers;
 using Catalyst.Node.Core.P2P.IO.Messaging.Dto;
@@ -38,14 +40,15 @@ namespace Catalyst.Node.Core.P2P.IO.Observers
 {
     public sealed class GetNeighbourResponseObserver
         : ResponseObserverBase<PeerNeighborsResponse>,
-            IP2PMessageObserver
+            IP2PMessageObserver,
+            IPeerClientObservable
     {
-        private readonly ReplaySubject<IPeerClientMessageDto<PeerNeighborsResponse>> _peerNeighborsResponse;
-        public IObservable<IPeerClientMessageDto<PeerNeighborsResponse>> PeerNeighborsResponseStream => _peerNeighborsResponse.AsObservable();
+        public ReplaySubject<IPeerClientMessageDto> _responseMessageSubject { get; }
+        public IObservable<IPeerClientMessageDto> MessageStream => _responseMessageSubject.AsObservable();
         
         public GetNeighbourResponseObserver(ILogger logger) : base(logger)
         {
-            _peerNeighborsResponse = new ReplaySubject<IPeerClientMessageDto<PeerNeighborsResponse>>(1);
+            _responseMessageSubject = new ReplaySubject<IPeerClientMessageDto>(1);
         }
 
         /// <summary>
@@ -60,7 +63,7 @@ namespace Catalyst.Node.Core.P2P.IO.Observers
             IPeerIdentifier senderPeerIdentifier,
             ICorrelationId correlationId)
         {
-            _peerNeighborsResponse.OnNext(new PeerClientMessageDto<PeerNeighborsResponse>(messageDto, senderPeerIdentifier));
+            _responseMessageSubject.OnNext(new PeerClientMessageDto(messageDto, senderPeerIdentifier, correlationId));
         }
     }
 }

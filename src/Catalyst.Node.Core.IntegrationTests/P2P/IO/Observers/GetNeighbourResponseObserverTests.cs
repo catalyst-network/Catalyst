@@ -24,21 +24,13 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reactive.Linq;
 using Autofac;
 using Catalyst.Common.Config;
-using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Observers;
-using Catalyst.Common.IO.Messaging.Correlation;
-using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Node.Core.P2P.IO.Observers;
-using Catalyst.Protocol.IPPN;
 using Catalyst.TestUtils;
-using DotNetty.Transport.Channels;
 using FluentAssertions;
 using Microsoft.Extensions.Configuration;
-using NSubstitute;
-using Serilog;
 using Xunit;
 using Xunit.Abstractions;
 

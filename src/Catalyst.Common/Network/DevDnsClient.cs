@@ -1,3 +1,4 @@
+
 #region LICENSE
 
 /**
@@ -24,12 +25,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.Network;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.P2P;
 using DnsClient;
-using Microsoft.Extensions.Configuration;
 using Nethereum.Hex.HexConvertors.Extensions;
 
 namespace Catalyst.Common.Network
@@ -39,10 +38,17 @@ namespace Catalyst.Common.Network
         private readonly IList<string> _seedServers;
         private readonly IList<string> _dnsQueryAnswerValues;
 
-        public DevDnsClient(IConfigurationRoot configurationRoot)
+        public DevDnsClient(IPeerSettings peerSettings)
         {
-            _seedServers = ConfigValueParser.GetStringArrValues(configurationRoot, "SeedServers");
-            _dnsQueryAnswerValues = configurationRoot.GetSection("QueryAnswerValues").GetChildren().Select(p => p.Value).ToArray();
+            _seedServers = peerSettings.SeedServers;
+            _dnsQueryAnswerValues = new string[]
+            {
+                "0x41437c30317c39322e3230372e3137382e3139387c34323036397c3031323334353637383930313233343536373839",
+                "0x41437c30317c39322e3230372e3137382e3139387c34323036397c3031323334353637383930313233343536373839",
+                "0x41437c30317c39322e3230372e3137382e3139387c34323036397c3031323334353637383930313233343536373839",
+                "0x41437c30317c39322e3230372e3137382e3139387c34323036397c3031323334353637383930313233343536373839",
+                "0x41437c30317c39322e3230372e3137382e3139387c34323036397c3031323334353637383930313233343536373839"
+            };
         }
 
         public async Task<IList<IDnsQueryResponse>> GetTxtRecordsAsync(IList<string> hostnames = null)

@@ -22,6 +22,7 @@
 #endregion
 
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Security.Cryptography.X509Certificates;
 using Autofac;
@@ -45,7 +46,7 @@ namespace Catalyst.Cli.IntegrationTests.Commands
     /// This test is the base to all other tests.  If the Cli cannot connect to a node then all other commands
     /// will fail
     /// </summary>
-    public abstract class CliCommandTestBase : ConfigFileBasedTest
+    public abstract class CliCommandTestsBase : ConfigFileBasedTest
     {
         private protected static readonly string ServerNodeName = "node1";
         private protected static readonly string NodeArgumentPrefix = "-n";
@@ -54,7 +55,7 @@ namespace Catalyst.Cli.IntegrationTests.Commands
         protected ICatalystCli Shell;
         private IContainer _container;
 
-        protected CliCommandTestBase(ITestOutputHelper output) : base(output)
+        protected CliCommandTestsBase(ITestOutputHelper output) : base(output)
         {
             var config = new ConfigurationBuilder()
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ShellComponentsJsonConfigFile))
@@ -102,13 +103,18 @@ namespace Catalyst.Cli.IntegrationTests.Commands
             ContainerBuilder.RegisterInstance(nodeRpcClientFactory).As<INodeRpcClientFactory>();
         }
 
-        protected void AssertSentMessage<T>() where T : IMessage<T>
+        protected T AssertSentMessageAndGetMessageContent<T>() where T : IMessage<T>
         {
             NodeRpcClient.Received(1).SendMessage(Arg.Is<IMessageDto<ProtocolMessage>>(x =>
                 x.Content != null &&
                 x.Content.GetType().IsAssignableTo<ProtocolMessage>() &&
                 x.Content.FromProtocolMessage<T>() != null
             ));
+            var sentMessageDto = (IMessageDto<ProtocolMessage>) NodeRpcClient.ReceivedCalls()
+               .Single(c => c.GetMethodInfo().Name == nameof(INodeRpcClient.SendMessage))
+               .GetArguments()[0];
+            var requestSent = sentMessageDto.Content.FromProtocolMessage<T>();
+            return requestSent;
         }
 
         protected override void Dispose(bool disposing)

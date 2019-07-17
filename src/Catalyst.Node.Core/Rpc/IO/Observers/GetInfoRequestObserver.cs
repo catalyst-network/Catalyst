@@ -48,14 +48,6 @@ namespace Catalyst.Node.Core.Rpc.IO.Observers
             _config = config;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="getInfoRequest"></param>
-        /// <param name="channelHandlerContext"></param>
-        /// <param name="senderPeerIdentifier"></param>
-        /// <param name="correlationId"></param>
-        /// <returns></returns>
         protected override GetInfoResponse HandleRequest(GetInfoRequest getInfoRequest,
             IChannelHandlerContext channelHandlerContext,
             IPeerIdentifier senderPeerIdentifier,
