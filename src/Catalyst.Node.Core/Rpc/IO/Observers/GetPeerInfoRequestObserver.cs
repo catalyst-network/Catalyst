@@ -21,7 +21,6 @@
 
 #endregion
 
-using System.Collections.Generic;
 using System.Linq;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.IO.Observers;
@@ -33,7 +32,6 @@ using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using DotNetty.Transport.Channels;
 using Google.Protobuf.WellKnownTypes;
-using Nethereum.RLP;
 using SharpRepository.Repository;
 using ILogger = Serilog.ILogger;
 
@@ -46,7 +44,6 @@ namespace Catalyst.Node.Core.RPC.IO.Observers
         : RequestObserverBase<GetPeerInfoRequest, GetPeerInfoResponse>,
             IRpcRequestObserver
     {
-
         private readonly IRepository<Peer> _peerRepository;
 
         public GetPeerInfoRequestObserver(IPeerIdentifier peerIdentifier,
@@ -78,19 +75,19 @@ namespace Catalyst.Node.Core.RPC.IO.Observers
             var ip = getPeerInfoRequest.Ip;
 
             var peerInfo = _peerRepository.FindAll(m => m.PeerIdentifier.PeerId.Ip == ip
-                     && m.PeerIdentifier.PeerId.PublicKey == getPeerInfoRequest.PublicKey)
-                .Select(x =>
-                new PeerInfo
-                {
-                    PeerId = x.PeerIdentifier.PeerId,
-                    Reputation = x.Reputation,
-                    BlackListed = x.BlackListed,
-                    IsAwolPeer = x.IsAwolPeer,
-                    InactiveFor = x.InactiveFor.ToDuration(),
-                    LastSeen = x.LastSeen.ToTimestamp(),
-                    Modified = x.Modified.HasValue ? x.Modified.Value.ToTimestamp() : null,
-                    Created = x.Created.ToTimestamp()
-                }).ToList();
+                 && m.PeerIdentifier.PeerId.PublicKey == getPeerInfoRequest.PublicKey)
+               .Select(x =>
+                    new PeerInfo
+                    {
+                        PeerId = x.PeerIdentifier.PeerId,
+                        Reputation = x.Reputation,
+                        BlackListed = x.BlackListed,
+                        IsAwolPeer = x.IsAwolPeer,
+                        InactiveFor = x.InactiveFor.ToDuration(),
+                        LastSeen = x.LastSeen.ToTimestamp(),
+                        Modified = x.Modified.HasValue ? x.Modified.Value.ToTimestamp() : null,
+                        Created = x.Created.ToTimestamp()
+                    }).ToList();
 
             var response = new GetPeerInfoResponse();
             response.PeerInfo.AddRange(peerInfo);

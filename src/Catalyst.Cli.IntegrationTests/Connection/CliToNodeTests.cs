@@ -26,21 +26,18 @@ using Catalyst.Common.Interfaces.Cli;
 using FluentAssertions;
 using Xunit;
 using Xunit.Abstractions;
-using System;
 using Catalyst.Common.Interfaces.Cryptography;
 using Microsoft.Extensions.Configuration;
 using Catalyst.Node.Core.Modules.Dfs;
 using Catalyst.Common.Config;
 using System.Linq;
 using System.IO;
-using Autofac.Core.Lifetime;
 using Catalyst.Common.Interfaces;
 using NSubstitute;
 using Serilog;
 using Catalyst.TestUtils;
 using Ipfs.CoreApi;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Cli.IntegrationTests.Commands;
 using Constants = Catalyst.Common.Config.Constants;
 
 namespace Catalyst.Cli.IntegrationTests.Connection
