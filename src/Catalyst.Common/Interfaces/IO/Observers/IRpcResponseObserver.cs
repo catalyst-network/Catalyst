@@ -27,7 +27,7 @@ using System;
 
 namespace Catalyst.Common.Interfaces.IO.Observers
 {
-    public interface IRpcResponseObserver<TProto> : IRpcResponseObserver where TProto : IMessage
+    public interface IRpcResponseObserver<out TProto> : IRpcResponseObserver where TProto : IMessage
     {
         void Subscribe(Action<TProto> onNext);
     }
