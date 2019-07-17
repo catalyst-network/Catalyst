@@ -36,7 +36,7 @@ namespace Catalyst.Cli.IntegrationTests.Commands
         public void Cli_Can_Verify_Message()
         {
             var result = Shell.ParseCommand(
-                "verify", "-m", "test message", "-k", "public_key", "-s", "signature", NodeArgumentPrefix, ServerNodeName);
+                "verify", "-m", "test message", "-p", "public_key", "-s", "signature", NodeArgumentPrefix, ServerNodeName);
             result.Should().BeTrue();
 
             AssertSentMessageAndGetMessageContent<VerifyMessageRequest>();
