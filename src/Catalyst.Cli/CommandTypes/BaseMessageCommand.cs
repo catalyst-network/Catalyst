@@ -91,15 +91,15 @@ namespace Catalyst.Cli.CommandTypes
             CommandContext.UserOutput.WriteLine($"{response.ToJsonString()}");
         }
 
-        private void CommandResponseOnNext(IRpcClientMessageDto<IMessage> value)
+        private void CommandResponseOnNext(TResponse value)
         {
-            ResponseMessage((TResponse)value.Message);
+            ResponseMessage(value);
         }
 
         private void SocketClientRegistryClientAddedOnNext(SocketClientRegistryClientAdded value)
         {
             INodeRpcClient client = CommandContext.SocketClientRegistry.GetClientFromRegistry(value.SocketHashCode);
-            client.MessageResponseStream.Where(x => x.Message.GetType() == typeof(TResponse)).SubscribeOn(NewThreadScheduler.Default).Subscribe(CommandResponseOnNext);
+            client.Subscribe<TResponse>(CommandResponseOnNext);
         }
     }
 }

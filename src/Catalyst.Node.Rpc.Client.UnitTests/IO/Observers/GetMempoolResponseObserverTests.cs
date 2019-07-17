@@ -24,7 +24,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -116,10 +115,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
 
             _observer = new GetMempoolResponseObserver(_output, _logger);
             _observer.StartObserving(messageStream);
-            _observer.Subscribe((message) =>
-            {
-                messageStreamResponse = message;
-            });
+            _observer.Subscribe((message) => messageStreamResponse = message);
 
             await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
 

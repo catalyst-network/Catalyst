@@ -51,7 +51,12 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
             IPeerIdentifier senderPeerIdentifier,
             ICorrelationId correlationId)
         {
+            if (deltaResponse.Delta == null)
+            {
+                _output.WriteLine(UnableToRetrieveDeltaMessage);
+            }
 
+            _output.WriteLine(deltaResponse.Delta.ToJsonString());
         }
     }
 }

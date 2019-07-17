@@ -27,8 +27,13 @@ using System;
 
 namespace Catalyst.Common.Interfaces.IO.Observers
 {
+    public interface IRpcResponseObserver<TProto> : IRpcResponseObserver where TProto : IMessage
+    {
+        void Subscribe(Action<TProto> onNext);
+    }
+
     public interface IRpcResponseObserver : IResponseMessageObserver
     {
-        IObservable<IRpcClientMessageDto<IMessage>> _messageResponseStream { get; }
+        IObservable<IRpcClientMessageDto<IMessage>> MessageResponseStream { get; }
     }
 }
