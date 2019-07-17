@@ -89,7 +89,7 @@ namespace Catalyst.Common.UnitTests.Modules.KeySigner
 
             var keySigner = new Common.Modules.KeySigner.KeySigner(_keystore, new CryptoContext(_wrapper), _keyRegistry);
             _keystore.Received(1).KeyStoreDecrypt(Arg.Any<KeyRegistryKey>());
-            _keystore.Received(1).KeyStoreGenerateAsync(Arg.Any<KeyRegistryKey>());
+            _keystore.Received(1).KeyStoreGenerate(Arg.Any<KeyRegistryKey>());
             _keyRegistry.ReceivedWithAnyArgs(1).AddItemToRegistry(default, default);
             keySigner.Should().NotBe(null);
         }
@@ -111,7 +111,7 @@ namespace Catalyst.Common.UnitTests.Modules.KeySigner
 
             _keyRegistry.ReceivedWithAnyArgs(1).GetItemFromRegistry(default);
             _keystore.Received(0).KeyStoreDecrypt(Arg.Any<KeyRegistryKey>());
-            _keystore.Received(0).KeyStoreGenerateAsync(Arg.Any<KeyRegistryKey>());
+            _keystore.Received(0).KeyStoreGenerate(Arg.Any<KeyRegistryKey>());
             _keyRegistry.ReceivedWithAnyArgs(0).AddItemToRegistry(default, default);
             
             Assert.Equal(_signature, actualSignature);

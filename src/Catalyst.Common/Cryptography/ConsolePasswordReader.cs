@@ -66,7 +66,7 @@ namespace Catalyst.Common.Cryptography
         {
             var pwd = new SecureString();
             ReadCharsFromConsole(_userOutput, prompt, (c, i) => pwd.AppendChar(c), i => pwd.RemoveAt(i));
-            return pwd.Length == 0 ? null : pwd;
+            return pwd;
         }
 
         public bool AddPasswordToRegistry(PasswordRegistryKey passwordIdentifier, SecureString password)

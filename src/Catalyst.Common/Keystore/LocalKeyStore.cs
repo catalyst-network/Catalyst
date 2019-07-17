@@ -120,7 +120,7 @@ namespace Catalyst.Common.Keystore
             throw new AuthenticationException("Password incorrect for keystore.");
         }
 
-        public async Task<IPrivateKey> KeyStoreGenerateAsync(KeyRegistryKey keyIdentifier)
+        public IPrivateKey KeyStoreGenerate(KeyRegistryKey keyIdentifier)
         {
             var privateKey = _cryptoContext.GeneratePrivateKey();
 

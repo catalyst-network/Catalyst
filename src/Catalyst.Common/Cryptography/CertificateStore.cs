@@ -128,9 +128,12 @@ namespace Catalyst.Common.Cryptography
                 {
                     using (var passwordFromConsole = _passwordReader.ReadSecurePassword(CertificatePasswordIdentifier, passwordPromptMessage))
                     {
-                        certificate = passwordFromConsole == null ? new X509Certificate2(fileInBytes) : new X509Certificate2(fileInBytes, passwordFromConsole);
-                        _passwordReader.AddPasswordToRegistry(CertificatePasswordIdentifier, passwordFromConsole);
-                        return true;
+                        certificate = new X509Certificate2(fileInBytes, passwordFromConsole);
+                        if (certificate != null)
+                        {
+                            _passwordReader.AddPasswordToRegistry(CertificatePasswordIdentifier, passwordFromConsole);
+                            return true;
+                        }         
                     }
                 }
                 catch (CryptographicException ex)

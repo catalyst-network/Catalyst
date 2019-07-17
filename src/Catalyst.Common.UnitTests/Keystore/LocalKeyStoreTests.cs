@@ -88,7 +88,7 @@ namespace Catalyst.Common.UnitTests.Keystore
         {
             Ensure_No_Keystore_File_Exists();
             
-            var privateKey = _keystore.KeyStoreGenerateAsync(KeyRegistryKey.DefaultKey);
+            var privateKey = _keystore.KeyStoreGenerate(KeyRegistryKey.DefaultKey);
             privateKey.Should().NotBe(null);
         }
 
@@ -116,10 +116,12 @@ namespace Catalyst.Common.UnitTests.Keystore
         {
             Ensure_No_Keystore_File_Exists();
             
-            _keystore.KeyStoreGenerateAsync(KeyRegistryKey.DefaultKey).Wait();
+            var privateKey = _keystore.KeyStoreGenerate(KeyRegistryKey.DefaultKey);
+            
             var storedKey = _keystore.KeyStoreDecrypt(KeyRegistryKey.DefaultKey);
 
             storedKey.Should().NotBe(null);
+            Assert.Equal(privateKey.Bytes.RawBytes, storedKey.Bytes.RawBytes);
         }
 
         [Fact]

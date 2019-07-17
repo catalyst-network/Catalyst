@@ -64,7 +64,7 @@ namespace Catalyst.Common.Modules.KeySigner
 
         private void GenerateKeyAndPopulateRegistryWithDefault()
         {
-            var privateKey = _keyStore.KeyStoreGenerateAsync(_defaultKey).Result;
+            var privateKey = _keyStore.KeyStoreGenerate(_defaultKey);
             if (privateKey != null)
             { 
                 _keyRegistry.AddItemToRegistry(_defaultKey, privateKey);
