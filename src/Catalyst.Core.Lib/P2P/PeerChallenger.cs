@@ -34,21 +34,15 @@ using System.Linq;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Catalyst.Common.Util;
-using Catalyst.Common.Interfaces.IO.Messaging.Dto;
-using System.Collections.Concurrent;
 using Catalyst.Protocol;
 
 namespace Catalyst.Core.Lib.P2P
 {
-    public class PeerChallenger : IPeerChallenger, IDisposable
+    public class PeerChallenger : IPeerChallenger
     {
         private readonly IPeerService _peerService;
         private readonly ILogger _logger;
         private readonly IPeerIdentifier _senderIdentifier;
-
-        private readonly IDisposable _incomingPingResponseSubscription;
-        private readonly ConcurrentStack<IObserverDto<ProtocolMessage>> _receivedResponses;
-
         private readonly IPeerClient _peerClient;
         private readonly string _messageType = PingResponse.Descriptor.ShortenedFullName();
 
@@ -60,80 +54,15 @@ namespace Catalyst.Core.Lib.P2P
             IPeerClient peerClient,
             IPeerIdentifier senderIdentifier) 
         {
-            _receivedResponses = new ConcurrentStack<IObserverDto<ProtocolMessage>>();
-            _incomingPingResponseSubscription = peerService.MessageStream.Subscribe(this);
-
             _peerService = peerService;
             _senderIdentifier = senderIdentifier;
             _logger = logger;
             _peerClient = peerClient;
         }
 
-        public void OnNext(IObserverDto<ProtocolMessage> messageDto)
+        async public Task<bool> ChallengePeerAsync(IPeerIdentifier recipientPeerIdentifier)
         {
-            if (messageDto.Payload.Equals(NullObjects.ProtocolMessage))
-            {
-                return;
-            }
-
-            if (messageDto.Payload.TypeUrl == _messageType)
-            {
-                _receivedResponses.Push(messageDto);
-            }
-        }
-
-        public void OnCompleted() { _logger.Information("End of {0} stream.", nameof(ProtocolMessage)); }
-
-        public void OnError(Exception error)
-        {
-            _logger.Error(error, "Error occured in {0} stream.", nameof(ProtocolMessage));
-        }
-
-        public bool ChallengePeer(IPeerIdentifier recipientPeerIdentifier)
-        {
-            try
-            {
-                var correlationId = CorrelationId.GenerateCorrelationId();
-
-                var protocolMessage = new PingRequest().ToProtocolMessage(_senderIdentifier.PeerId, correlationId);
-                var messageDto = new MessageDto<ProtocolMessage>(
-                    protocolMessage,
-                    _senderIdentifier,
-                    recipientPeerIdentifier,
-                  correlationId
-                );
-
-                ((PeerClient)_peerClient).SendMessage(messageDto);
-
-                var tasks = new IObservableMessageStreamer<ProtocolMessage>[]
-                    {
-                        _peerService
-                    }
-                    .Select(async (p, n) =>                    
-                        await p.MessageStream.FirstAsync(a => a != null && a != NullObjects.ObserverDto
-                        && a.Payload.TypeUrl == _messageType
-                        && a.Payload.PeerId.PublicKey.ToStringUtf8() == recipientPeerIdentifier.PeerId.PublicKey.ToStringUtf8())                        )
-                   .ToArray();              
-
-                Task.WaitAny(tasks, TimeSpan.FromMilliseconds(20000));
-
-                if (_receivedResponses.Any() && _receivedResponses.Last().Payload.PeerId.PublicKey.ToStringUtf8() ==
-                        recipientPeerIdentifier.PeerId.PublicKey.ToStringUtf8())
-                {
-                    return true;
-                }
-            }
-            catch (Exception e)
-            {
-                _logger.Error(e.Message);
-            }
-
-            return false;
-        }
-
-
-        public bool PeerChallengeResponseA(IPeerIdentifier recipientPeerIdentifier)
-        {
+            bool valid = false;
             try
             {
                 var correlationId = CorrelationId.GenerateCorrelationId();
@@ -153,29 +82,25 @@ namespace Catalyst.Core.Lib.P2P
                         _peerService
                     }
                     .Select(async p =>
-                        await p.MessageStream.FirstAsync(a => a != null  && a != NullObjects.ObserverDto
-                        && a.Payload.TypeUrl == _messageType))
-                   .ToArray();
+                        await p.MessageStream.FirstAsync(a => a != null && a != NullObjects.ObserverDto
+                        && a.Payload.TypeUrl == _messageType
+                        && a.Payload.PeerId.PublicKey.ToStringUtf8() == recipientPeerIdentifier.PeerId.PublicKey.ToStringUtf8())
+                        ).FirstOrDefault();
 
-                Task.WaitAll(tasks, TimeSpan.FromMilliseconds(20000));
 
-                if (_receivedResponses.Any() && _receivedResponses.Last().Payload.PeerId.PublicKey.ToStringUtf8() ==
-                        recipientPeerIdentifier.PeerId.PublicKey.ToStringUtf8())
+                await Task.WhenAny(tasks, Task.Delay(10000));
+
+                if (tasks.IsCompleted)
                 {
-                        return true;
-                }                
+                    valid = true;
+                }
             }
             catch (Exception e)
             {
                 _logger.Error(e.Message);
             }
 
-            return false;
-        }
-
-        public void Dispose()
-        {
-            _incomingPingResponseSubscription?.Dispose();
+            return valid;
         }
     }
 }

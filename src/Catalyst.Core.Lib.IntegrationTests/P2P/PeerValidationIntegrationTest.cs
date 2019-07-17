@@ -47,8 +47,8 @@ using Catalyst.Common.Interfaces.P2P.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.P2P.IO.Messaging.Broadcast;
 using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Common.Interfaces.Keystore;
+using System.Threading.Tasks;
 using Constants = Catalyst.Common.Config.Constants;
-
 
 namespace Catalyst.Node.Core.IntegrationTests.P2P
 {
@@ -99,11 +99,11 @@ namespace Catalyst.Node.Core.IntegrationTests.P2P
 
         [Fact]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
-        public void PeerChallenge_PeerIdentifiers_Expect_To_Succeed_Valid_IP_Port_PublicKey()
+        async public void PeerChallenge_PeerIdentifiers_Expect_To_Succeed_Valid_IP_Port_PublicKey()
         {
             var peerSettings = new PeerSettings(_config);
 
-            var valid = RunPeerChallenge(peerSettings.PublicKey, peerSettings.BindAddress, peerSettings.Port);
+            var valid = await RunPeerChallenge(peerSettings.PublicKey, peerSettings.BindAddress, peerSettings.Port);
 
             valid.Should().BeTrue();
         }
@@ -112,14 +112,14 @@ namespace Catalyst.Node.Core.IntegrationTests.P2P
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         [InlineData("Fr2a300k06032b657793", "92.207.178.198", 1574)]
         [InlineData("pp2a300k55032b657791", "198.51.100.3", 2524)]
-        public void PeerChallenge_PeerIdentifiers_Expect_To_Fail_IP_Port_PublicKey(string publicKey, string ip, int port)
+        async public void PeerChallenge_PeerIdentifiers_Expect_To_Fail_IP_Port_PublicKey(string publicKey, string ip, int port)
         {
-            var valid = RunPeerChallenge(publicKey, IPAddress.Parse(ip), port);
+            var valid = await RunPeerChallenge(publicKey, IPAddress.Parse(ip), port);
 
             valid.Should().BeFalse();
         }
 
-       private bool RunPeerChallenge(string publicKey, IPAddress ip, int port)
+       async private Task<bool> RunPeerChallenge(string publicKey, IPAddress ip, int port)
         {
             var peerSettings = new PeerSettings(_config);
 
@@ -131,7 +131,7 @@ namespace Catalyst.Node.Core.IntegrationTests.P2P
             var peerClientSingleInstance = _container.Resolve<IPeerClient>();
             var peerValidator = new PeerChallenger(peerSettings, _peerService, _logger, peerClientSingleInstance, sender);
 
-            return peerValidator.ChallengePeer(recipient);
+            return await peerValidator.ChallengePeerAsync(recipient);
         }
 
         public new void Dispose()

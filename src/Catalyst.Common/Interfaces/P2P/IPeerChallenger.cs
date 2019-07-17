@@ -24,13 +24,14 @@
 using System;
 using Catalyst.Protocol.Common;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
+using System.Threading.Tasks;
 
 namespace Catalyst.Common.Interfaces.P2P
 {
     /// <summary>
     /// This class is used to validate peers by carrying out a peer challenge response
     /// </summary>
-    public interface IPeerChallenger : IObserver<IObserverDto<ProtocolMessage>>
+    public interface IPeerChallenger 
     {
         /// <summary>
         /// Used to challenge a peer for a response based on the provided public key, ip and port chunks 
@@ -38,6 +39,6 @@ namespace Catalyst.Common.Interfaces.P2P
         /// <param name="recipientPeerIdentifier">The recipient peer identifier.
         /// PeerIdentifier holds the chunks we want to validate.</param>
         /// <returns>bool true means valid and false means not valid</returns>
-        bool ChallengePeer(IPeerIdentifier recipientPeerIdentifier);
+        Task<bool> ChallengePeerAsync(IPeerIdentifier recipientPeerIdentifier);
     }
 }

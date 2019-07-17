@@ -246,10 +246,10 @@
             ]
         },
         {
-            "type": "Catalyst.Core.Lib.P2P.PeerValidator",
+            "type": "Catalyst.Core.Lib.P2P.PeerChallenger",
             "services": [
                 {
-                    "type": "Catalyst.Common.Interfaces.P2P.IPeerValidator, Catalyst.Common"
+                    "type": "Catalyst.Common.Interfaces.P2P.IPeerChallenger, Catalyst.Common"
                 }
             ]
         },
