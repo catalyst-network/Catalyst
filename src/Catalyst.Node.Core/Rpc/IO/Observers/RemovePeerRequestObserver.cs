@@ -45,14 +45,14 @@ namespace Catalyst.Node.Core.Rpc.IO.Observers
             IRpcRequestObserver
     {
         /// <summary>The peer discovery</summary>
-        private readonly IRepository<Peer> _peerRepository;
+        private readonly IRepository<Peer, string> _peerRepository;
 
         /// <summary>Initializes a new instance of the <see cref="RemovePeerRequestObserver"/> class.</summary>
         /// <param name="peerIdentifier">The peer identifier.</param>
         /// <param name="peerRepository">The peer discovery.</param>
         /// <param name="logger">The logger.</param>
         public RemovePeerRequestObserver(IPeerIdentifier peerIdentifier,
-            IRepository<Peer> peerRepository,
+            IRepository<Peer, string> peerRepository,
             ILogger logger) : base(logger, peerIdentifier)
         {
             _peerRepository = peerRepository;

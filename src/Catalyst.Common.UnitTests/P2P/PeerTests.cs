@@ -34,10 +34,10 @@ namespace Catalyst.Common.UnitTests.P2P
         [Fact]
         public void EntityStoreAuditsCreateTime()
         {
-            var repo = new InMemoryRepository<Peer>();
+            var repo = new InMemoryRepository<Peer, string>();
             var peer = new Peer();
             repo.Add(peer);
-            var retrievedPeer = repo.Get(peer.PkId);
+            var retrievedPeer = repo.Get(peer.DocumentId);
             DateTime now = DateTime.UtcNow.Date;
             var datecomparer = retrievedPeer.Created.Date.ToString("MM/dd/yyyy");
             datecomparer.Should().Equals(now.ToString("MM/dd/yyyy"));
@@ -47,13 +47,13 @@ namespace Catalyst.Common.UnitTests.P2P
         [Fact]
         public void EntityStoreAuditsModifiedTime()
         {
-            var repo = new InMemoryRepository<Peer>();
+            var repo = new InMemoryRepository<Peer, string>();
             var peer = new Peer();
             repo.Add(peer);
-            var retrievedPeer = repo.Get(peer.PkId);
+            var retrievedPeer = repo.Get(peer.DocumentId);
             retrievedPeer.Touch();
             repo.Update(retrievedPeer);
-            var retrievedmodified = repo.Get(peer.PkId);
+            var retrievedmodified = repo.Get(peer.DocumentId);
             var now = DateTime.UtcNow.Date;
             
             if (retrievedmodified.Modified != null) 

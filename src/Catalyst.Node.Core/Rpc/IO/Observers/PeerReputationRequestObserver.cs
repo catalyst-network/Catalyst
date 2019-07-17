@@ -43,11 +43,11 @@ namespace Catalyst.Node.Core.Rpc.IO.Observers
         /// <summary>
         /// The PeerReputationRequestHandler 
         /// </summary>
-        private readonly IRepository<Peer> _peerRepository;
+        private readonly IRepository<Peer, string> _peerRepository;
 
         public PeerReputationRequestObserver(IPeerIdentifier peerIdentifier,
             ILogger logger,
-            IRepository<Peer> peerRepository)
+            IRepository<Peer, string> peerRepository)
             : base(logger, peerIdentifier)
         {
             _peerRepository = peerRepository;

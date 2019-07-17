@@ -27,6 +27,7 @@ using System.Linq;
 using Catalyst.Common.Interfaces.Modules.Mempool;
 using Catalyst.Node.Core.Modules.Consensus;
 using Catalyst.Node.Core.Modules.Consensus.Deltas;
+using Catalyst.Node.Core.Modules.Mempool;
 using Catalyst.Protocol.Transaction;
 using Catalyst.TestUtils;
 using FluentAssertions;
@@ -37,7 +38,7 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Consensus.Deltas
 {
     public class DeltaTransactionRetrieverTests
     {
-        private readonly IList<TransactionBroadcast> _transactions;
+        private readonly IList<MempoolDocument> _transactions;
         private readonly DeltaTransactionRetriever _transactionRetriever;
 
         public DeltaTransactionRetrieverTests()
@@ -47,12 +48,14 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Consensus.Deltas
             var mempool = Substitute.For<IMempool>();
             _transactions = Enumerable.Range(0, 20).Select(i =>
             {
-                var transaction = TransactionHelper.GetTransaction(
-                    version: (uint) i,
-                    transactionFees: (ulong) random.Next(),
-                    timeStamp: (ulong) random.Next(),
-                    signature: i.ToString());
-                return transaction;
+                return new MempoolDocument()
+                {
+                    Transaction = TransactionHelper.GetTransaction(
+                    version: (uint)i,
+                    transactionFees: (ulong)random.Next(),
+                    timeStamp: (ulong)random.Next(),
+                    signature: i.ToString())
+                };
             }).ToList();
 
             mempool.GetMemPoolContent().Returns(_transactions);
@@ -92,7 +95,7 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Consensus.Deltas
         {
             var maxCount = _transactions.Count / 2;
             var expectedTransactions = _transactions
-               .OrderByDescending(t => t, _transactionRetriever.TransactionComparer)
+               .OrderByDescending(t => t.Transaction, _transactionRetriever.TransactionComparer)
                .Take(maxCount).ToList();
 
             var retrievedTransactions = _transactionRetriever
@@ -100,16 +103,16 @@ namespace Catalyst.Node.Core.UnitTests.Modules.Consensus.Deltas
 
             var excludedTransactionCount = _transactions.Count - maxCount;
 
-            var unexpectedTransactions = _transactions.OrderBy(t => t, _transactionRetriever.TransactionComparer)
+            var unexpectedTransactions = _transactions.OrderBy(t => t.Transaction, _transactionRetriever.TransactionComparer)
                .Take(excludedTransactionCount).ToList();
 
             unexpectedTransactions
-               .ForEach(t => retrievedTransactions.Any(r => t.Version == r.Version).Should()
+               .ForEach(t => retrievedTransactions.Any(r => t.Transaction.Version == r.Version).Should()
                    .BeFalse("No unexpected transactions should have been retrieved"));
 
             for (var i = 0; i < maxCount; i++)
             {
-                retrievedTransactions[i].Version.Should().Be(expectedTransactions[i].Version);
+                retrievedTransactions[i].Version.Should().Be(expectedTransactions[i].Transaction.Version);
                 if (i == 0)
                 {
                     continue;

@@ -112,7 +112,7 @@ namespace Catalyst.Node.Core.UnitTests.Rpc.IO.Observers
 
         private async Task<SetPeerBlackListResponse> ApplyBlackListingToPeerTest(string publicKey, string ipAddress, string blacklist)
         {
-            var peerRepository = Substitute.For<IRepository<Peer>>();
+            var peerRepository = Substitute.For<IRepository<Peer, string>>();
 
             var fakePeers = Enumerable.Range(0, 5).Select(i => new Peer
             {

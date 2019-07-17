@@ -46,11 +46,11 @@ namespace Catalyst.Node.Core.Rpc.IO.Observers
         /// <summary>
         /// The PeerBlackListingRequestHandler 
         /// </summary>
-        private readonly IRepository<Peer> _peerRepository;
+        private readonly IRepository<Peer, string> _peerRepository;
         
         public PeerBlackListingRequestObserver(IPeerIdentifier peerIdentifier,
             ILogger logger,
-            IRepository<Peer> peerRepository)
+            IRepository<Peer, string> peerRepository)
             : base(logger, peerIdentifier)
         {
             _peerRepository = peerRepository;

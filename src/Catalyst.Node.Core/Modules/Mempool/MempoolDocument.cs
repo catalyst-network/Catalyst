@@ -21,19 +21,16 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.Attributes;
-using Catalyst.Common.Interfaces.Repository;
+using Catalyst.Common.Interfaces.Modules.Mempool;
+using Catalyst.Protocol.Transaction;
+using Google.Protobuf;
 
-namespace Catalyst.Common.Interfaces.Rpc.Authentication
+namespace Catalyst.Node.Core.Modules.Mempool
 {
-    public interface IAuthCredentials : IAuditable, IDocumentStorable
+    public class MempoolDocument : IMempoolDocument
     {
-        /// <summary>Gets or sets the public key.</summary>
-        /// <value>The public key.</value>
-        string PublicKey { get; set; }
+        public TransactionBroadcast Transaction { get; set; }
 
-        /// <summary>Gets or sets the ip address.</summary>
-        /// <value>The ip address.</value>
-        string IpAddress { get; set; }
+        public string DocumentId => Transaction.Signature.ToByteString().ToBase64();
     }
 }

@@ -22,9 +22,11 @@
 #endregion
 
 using System;
+using System.Text;
 using Catalyst.Common.Attributes;
 using Catalyst.Common.Interfaces.Attributes;
 using Catalyst.Common.Interfaces.Rpc.Authentication;
+using Catalyst.Common.Util;
 
 namespace Catalyst.Node.Core.Rpc.Authentication
 {
@@ -47,5 +49,7 @@ namespace Catalyst.Node.Core.Rpc.Authentication
 
         /// <inheritdoc cref="IAuditable.Modified"/>
         public DateTime? Modified { get; set; }
+
+        public string DocumentId => Encoding.UTF8.GetBytes($"{PublicKey}:{IpAddress}").ToByteString().ToBase64();
     }
 }

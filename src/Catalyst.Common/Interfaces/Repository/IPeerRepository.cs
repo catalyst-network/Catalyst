@@ -21,19 +21,12 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.Attributes;
-using Catalyst.Common.Interfaces.Repository;
+using Catalyst.Common.Interfaces.P2P;
+using SharpRepository.Repository;
 
-namespace Catalyst.Common.Interfaces.Rpc.Authentication
+namespace Catalyst.Common.Interfaces.Repository
 {
-    public interface IAuthCredentials : IAuditable, IDocumentStorable
+    public interface IPeerRepository : IRepository<IPeer, string>
     {
-        /// <summary>Gets or sets the public key.</summary>
-        /// <value>The public key.</value>
-        string PublicKey { get; set; }
-
-        /// <summary>Gets or sets the ip address.</summary>
-        /// <value>The ip address.</value>
-        string IpAddress { get; set; }
     }
 }

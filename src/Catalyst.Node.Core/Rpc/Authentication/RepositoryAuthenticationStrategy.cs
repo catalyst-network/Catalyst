@@ -35,11 +35,11 @@ namespace Catalyst.Node.Core.Rpc.Authentication
     public class RepositoryAuthenticationStrategy : IAuthenticationStrategy
     {
         /// <summary>The trusted peers</summary>
-        private readonly IRepository<AuthCredentials> _trustedPeers;
+        private readonly IRepository<AuthCredentials, string> _trustedPeers;
 
         /// <summary>Initializes a new instance of the <see cref="RepositoryAuthenticationStrategy"/> class.</summary>
         /// <param name="trustedPeers">The trusted peers.</param>
-        public RepositoryAuthenticationStrategy(IRepository<AuthCredentials> trustedPeers)
+        public RepositoryAuthenticationStrategy(IRepository<AuthCredentials, string> trustedPeers)
         {
             _trustedPeers = trustedPeers;
         }

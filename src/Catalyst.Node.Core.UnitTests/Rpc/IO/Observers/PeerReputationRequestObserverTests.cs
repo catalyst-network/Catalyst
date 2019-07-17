@@ -105,7 +105,7 @@ namespace Catalyst.Node.Core.UnitTests.Rpc.IO.Observers
 
         private async Task<GetPeerReputationResponse> GetPeerReputationTest(string publicKey, string ipAddress)
         {
-            var peerRepository = Substitute.For<IRepository<Peer>>();
+            var peerRepository = Substitute.For<IRepository<Peer, string>>();
 
             var fakePeers = Enumerable.Range(0, 5).Select(i => new Peer
             {

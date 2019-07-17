@@ -1,5 +1,11 @@
 #region LICENSE
 
+
+
+#endregion
+
+using Catalyst.Common.Interfaces.Repository;
+using Catalyst.Protocol.Transaction;
 /**
 * Copyright (c) 2019 Catalyst Network
 *
@@ -18,22 +24,10 @@
 * You should have received a copy of the GNU General Public License
 * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
-
-#endregion
-
-using Catalyst.Common.Interfaces.Attributes;
-using Catalyst.Common.Interfaces.Repository;
-
-namespace Catalyst.Common.Interfaces.Rpc.Authentication
+namespace Catalyst.Common.Interfaces.Modules.Mempool
 {
-    public interface IAuthCredentials : IAuditable, IDocumentStorable
+    public interface IMempoolDocument : IDocumentStorable
     {
-        /// <summary>Gets or sets the public key.</summary>
-        /// <value>The public key.</value>
-        string PublicKey { get; set; }
-
-        /// <summary>Gets or sets the ip address.</summary>
-        /// <value>The ip address.</value>
-        string IpAddress { get; set; }
+        TransactionBroadcast Transaction { get; set; }
     }
 }

@@ -46,7 +46,7 @@ namespace Catalyst.Node.Core.Rpc.IO.Observers
         /// <summary>
         ///     repository interface to storage
         /// </summary>
-        private readonly IRepository<Peer> _peerRepository;
+        private readonly IRepository<Peer, string> _peerRepository;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="PeerListRequestObserver"/> class.
@@ -56,7 +56,7 @@ namespace Catalyst.Node.Core.Rpc.IO.Observers
         /// <param name="peerRepository"></param>
         public PeerListRequestObserver(IPeerIdentifier peerIdentifier,
             ILogger logger,
-            IRepository<Peer> peerRepository)
+            IRepository<Peer, string> peerRepository)
             : base(logger, peerIdentifier)
         {
             _peerRepository = peerRepository;

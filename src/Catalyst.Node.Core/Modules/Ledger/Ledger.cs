@@ -35,12 +35,12 @@ namespace Catalyst.Node.Core.Modules.Ledger
     /// <seealso cref="Catalyst.Common.Interfaces.Modules.Ledger.ILedger" />
     public class Ledger : ILedger
     {
-        public IRepository<Account> Accounts { get; }
+        public IRepository<Account, string> Accounts { get; }
         private readonly ILogger _logger;
 
         public byte[] LedgerStateUpdate { get; set; }
  
-        public Ledger(IRepository<Account> accounts, ILogger logger)
+        public Ledger(IRepository<Account, string> accounts, ILogger logger)
         {
             Accounts = accounts;
             _logger = logger;

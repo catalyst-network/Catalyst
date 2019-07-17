@@ -78,7 +78,7 @@ namespace Catalyst.Node.Core.UnitTests.Rpc.IO.Observers
         [InlineData("FakePeer1002", "FakePeer6000", "FakePeerSataoshi")]
         public async Task TestPeerListRequestResponse(params string[] fakePeers)
         {
-            var peerRepository = Substitute.For<IRepository<Peer>>();
+            var peerRepository = Substitute.For<IRepository<Peer, string>>();
             var peerList = new List<Peer>();
 
             fakePeers.ToList().ForEach(fakePeer =>

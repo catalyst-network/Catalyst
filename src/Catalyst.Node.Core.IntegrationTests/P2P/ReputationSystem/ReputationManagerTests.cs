@@ -58,7 +58,7 @@ namespace Catalyst.Node.Core.IntegrationTests.P2P.ReputationSystem
             }
         }
 
-        private void SavePeerInRepo(IPeerIdentifier pid, int initialRep = 100)
+        private Peer SavePeerInRepo(IPeerIdentifier pid, int initialRep = 100)
         {
             var subbedPeer = new Peer
             {
@@ -66,6 +66,7 @@ namespace Catalyst.Node.Core.IntegrationTests.P2P.ReputationSystem
                 Reputation = initialRep
             };
             _reputationManager.PeerRepository.Add(subbedPeer);
+            return subbedPeer;
         }
 
         [Fact]
@@ -73,13 +74,13 @@ namespace Catalyst.Node.Core.IntegrationTests.P2P.ReputationSystem
         {
             var pid = PeerIdentifierHelper.GetPeerIdentifier("some_peer");
 
-            SavePeerInRepo(pid);
+            var savedPeer = SavePeerInRepo(pid);
             var peerReputationChange = Substitute.For<IPeerReputationChange>();
             peerReputationChange.PeerIdentifier.Returns(pid);
             peerReputationChange.ReputationEvent.Returns(Substitute.For<IReputationEvents>());
             peerReputationChange.ReputationEvent.Amount.Returns(100);
             _reputationManager.OnNext(peerReputationChange);
-            var updatedSubbedPeer = _reputationManager.PeerRepository.Get(1);
+            var updatedSubbedPeer = _reputationManager.PeerRepository.Get(savedPeer.DocumentId);
             updatedSubbedPeer.Reputation.Should().Be(200);
         }
         
@@ -88,13 +89,13 @@ namespace Catalyst.Node.Core.IntegrationTests.P2P.ReputationSystem
         {
             var pid = PeerIdentifierHelper.GetPeerIdentifier("some_peer");
 
-            SavePeerInRepo(pid);
+            var savedPeer = SavePeerInRepo(pid);
             var peerReputationChange = Substitute.For<IPeerReputationChange>();
             peerReputationChange.PeerIdentifier.Returns(pid);
             peerReputationChange.ReputationEvent.Returns(Substitute.For<IReputationEvents>());
             peerReputationChange.ReputationEvent.Amount.Returns(-100);
             _reputationManager.OnNext(peerReputationChange);
-            var updatedSubbedPeer = _reputationManager.PeerRepository.Get(1);
+            var updatedSubbedPeer = _reputationManager.PeerRepository.Get(savedPeer.DocumentId);
             updatedSubbedPeer.Reputation.Should().Be(0);
         }
         
@@ -103,13 +104,13 @@ namespace Catalyst.Node.Core.IntegrationTests.P2P.ReputationSystem
         {
             var pid = PeerIdentifierHelper.GetPeerIdentifier("some_peer");
 
-            SavePeerInRepo(pid);
+            var savedPeer = SavePeerInRepo(pid);
             var peerReputationChange = Substitute.For<IPeerReputationChange>();
             peerReputationChange.PeerIdentifier.Returns(pid);
             peerReputationChange.ReputationEvent.Returns(Substitute.For<IReputationEvents>());
             peerReputationChange.ReputationEvent.Amount.Returns(-200);
             _reputationManager.OnNext(peerReputationChange);
-            var updatedSubbedPeer = _reputationManager.PeerRepository.Get(1);
+            var updatedSubbedPeer = _reputationManager.PeerRepository.Get(savedPeer.DocumentId);
             updatedSubbedPeer.Reputation.Should().Be(-100);
         }
         
@@ -118,13 +119,13 @@ namespace Catalyst.Node.Core.IntegrationTests.P2P.ReputationSystem
         {
             var pid = PeerIdentifierHelper.GetPeerIdentifier("some_peer");
 
-            SavePeerInRepo(pid, -100);
+            var savedPeer = SavePeerInRepo(pid, -100);
             var peerReputationChange = Substitute.For<IPeerReputationChange>();
             peerReputationChange.PeerIdentifier.Returns(pid);
             peerReputationChange.ReputationEvent.Returns(Substitute.For<IReputationEvents>());
             peerReputationChange.ReputationEvent.Amount.Returns(200);
             _reputationManager.OnNext(peerReputationChange);
-            var updatedSubbedPeer = _reputationManager.PeerRepository.Get(1);
+            var updatedSubbedPeer = _reputationManager.PeerRepository.Get(savedPeer.DocumentId);
             updatedSubbedPeer.Reputation.Should().Be(100);
         }
     }

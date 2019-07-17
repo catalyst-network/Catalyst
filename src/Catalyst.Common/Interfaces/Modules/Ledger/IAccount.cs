@@ -22,7 +22,6 @@
 #endregion
 
 using Catalyst.Common.Config;
-using SharpRepository.Repository;
 using Catalyst.Common.Util;
 using Catalyst.Common.Interfaces.Repository;
 
@@ -32,13 +31,8 @@ namespace Catalyst.Common.Interfaces.Modules.Ledger
     /// This class represent a user account of which there can be the following types:
     /// confidential account, non-confidential account and smart contract account
     /// </summary>
-    public interface IAccount : IDocumentHashable
+    public interface IAccount : IDocumentStorable
     {
-        /// <summary>Gets or sets the primary key identifier.</summary>
-        /// <value>The primary key identifier.</value>
-        [RepositoryPrimaryKey(Order = 1)]
-        string PkId { get; set; }
-
         /// <summary>
         /// Gets or sets the public address.
         /// </summary>

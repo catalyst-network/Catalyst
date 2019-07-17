@@ -44,6 +44,6 @@ namespace Catalyst.Common.Interfaces.Modules.Consensus.Deltas
         /// <summary>
         /// A peer repository containing peers eligible for the production of the next delta.
         /// </summary>
-        IRepository<Peer> PeerRepository { get; }
+        IRepository<Peer, string> PeerRepository { get; }
     }
 }

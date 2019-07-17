@@ -53,7 +53,7 @@ namespace Catalyst.Node.Core.P2P.IO.Messaging.Broadcast
         private readonly IDtoFactory _dtoFactory;
 
         /// <summary>The peers</summary>
-        private readonly IRepository<Peer> _peers;
+        private readonly IRepository<Peer, string> _peers;
 
         /// <summary>The pending requests</summary>
         private readonly IMemoryCache _pendingRequests;
@@ -72,7 +72,7 @@ namespace Catalyst.Node.Core.P2P.IO.Messaging.Broadcast
         /// <param name="peers">The peers.</param>
         /// <param name="memoryCache">The memory cache.</param>
         /// <param name="peerClient">The peer client.</param>
-        public BroadcastManager(IPeerIdentifier peerIdentifier, IRepository<Peer> peers, IMemoryCache memoryCache, IPeerClient peerClient)
+        public BroadcastManager(IPeerIdentifier peerIdentifier, IRepository<Peer, string> peers, IMemoryCache memoryCache, IPeerClient peerClient)
         {
             _peerIdentifier = peerIdentifier;
             _pendingRequests = memoryCache;
@@ -152,7 +152,7 @@ namespace Catalyst.Node.Core.P2P.IO.Messaging.Broadcast
         {
             return _peers
                .AsQueryable()
-               .Select(c => c.PkId).Shuffle().Take(count).Select(_peers.Get).Select(p => p.PeerIdentifier).ToList();
+               .Select(c => c.DocumentId).Shuffle().Take(count).Select(_peers.Get).Select(p => p.PeerIdentifier).ToList();
         }
 
         /// <summary>Determines whether this instance can gossip the specified correlation identifier.</summary>

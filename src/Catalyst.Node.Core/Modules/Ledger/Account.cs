@@ -25,6 +25,8 @@ using Catalyst.Common.Config;
 using Catalyst.Common.Util;
 using SharpRepository.Repository;
 using Catalyst.Common.Interfaces.Modules.Ledger;
+using System.Text;
+using Newtonsoft.Json;
 
 namespace Catalyst.Node.Core.Modules.Ledger
 {
@@ -33,7 +35,8 @@ namespace Catalyst.Node.Core.Modules.Ledger
     {
         /// <inheritdoc />
         [RepositoryPrimaryKey(Order = 1)]
-        public int PkId { get; set; }
+        [JsonProperty("id")]
+        public string PkId => DocumentId;
 
         /// <inheritdoc />
         public string PublicAddress { get; set; }
@@ -50,7 +53,7 @@ namespace Catalyst.Node.Core.Modules.Ledger
         /// <inheritdoc />
         public byte[] StateRoot { get; set; } = Constants.EmptyTrieHash;
 
-        public string Hash => throw new System.NotImplementedException();
-
+        public string DocumentId => Encoding.UTF8.GetBytes($"{PublicAddress}-{CoinType}-{AccountType.Name}").ToByteString().ToBase64();
+        
     }
 }

@@ -44,11 +44,11 @@ namespace Catalyst.Node.Core.RPC.IO.Observers
         : RequestObserverBase<GetPeerInfoRequest, GetPeerInfoResponse>,
             IRpcRequestObserver
     {
-        private readonly IRepository<Peer> _peerRepository;
+        private readonly IRepository<Peer, string> _peerRepository;
 
         public GetPeerInfoRequestObserver(IPeerIdentifier peerIdentifier,
             ILogger logger,
-            IRepository<Peer> peerRepository)
+            IRepository<Peer, string> peerRepository)
             : base(logger, peerIdentifier)
         {
             _peerRepository = peerRepository;

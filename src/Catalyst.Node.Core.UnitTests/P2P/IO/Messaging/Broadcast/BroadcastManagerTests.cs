@@ -45,12 +45,12 @@ namespace Catalyst.Node.Core.UnitTests.P2P.IO.Messaging.Broadcast
 {
     public sealed class BroadcastManagerTests : IDisposable
     {
-        private readonly IRepository<Peer> _peers;
+        private readonly IRepository<Peer, string> _peers;
         private readonly IMemoryCache _cache;
 
         public BroadcastManagerTests()
         {
-            _peers = new InMemoryRepository<Peer>();
+            _peers = new InMemoryRepository<Peer, string>();
             _cache = new MemoryCache(new MemoryCacheOptions());
         }
 
