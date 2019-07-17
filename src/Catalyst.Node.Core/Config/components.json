@@ -217,7 +217,7 @@
             "type": "Catalyst.Node.Core.P2P.PeerDiscovery",
             "services": [
                 {
-                    "type": "Catalyst.Common.Interfaces.P2P.IPeerDiscovery, Catalyst.Common"
+                    "type": "Catalyst.Common.Interfaces.P2P.Discovery.IPeerDiscovery, Catalyst.Common"
                 }
             ]
         },

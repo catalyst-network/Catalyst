@@ -47,6 +47,7 @@ using Catalyst.Common.Interfaces.P2P.IO.Messaging.Broadcast;
 using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Common.Interfaces.Keystore;
 using Constants = Catalyst.Common.Config.Constants;
+using Catalyst.Common.Interfaces.P2P.Discovery;
 
 namespace Catalyst.Node.Core.IntegrationTests.P2P
 {

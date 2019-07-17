@@ -21,47 +21,43 @@
 
 #endregion
 
-using System;
-using System.Reactive.Linq;
-using System.Reactive.Subjects;
+using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.IO.Observers;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.Interfaces.P2P.IO.Messaging.Dto;
 using Catalyst.Common.IO.Observers;
-using Catalyst.Node.Core.P2P.IO.Messaging.Dto;
-using Catalyst.Protocol.IPPN;
+using Catalyst.Protocol;
+using Catalyst.Protocol.Rpc.Node;
 using DotNetty.Transport.Channels;
 using Serilog;
 
-namespace Catalyst.Node.Core.P2P.IO.Observers
+namespace Catalyst.Node.Rpc.Client.IO.Observers
 {
-    public sealed class PingResponseObserver
-        : ResponseObserverBase<PingResponse>,
-            IP2PMessageObserver
+    /// <inheritdoc cref="IRpcResponseObserver"/>
+    /// <inheritdoc cref="ResponseObserverBase{TProto}"/>
+    public class GetDeltaResponseObserver : ResponseObserverBase<GetDeltaResponse>,
+        IRpcResponseObserver
     {
-        private readonly ReplaySubject<IPeerClientMessageDto> _pingResponse;
-        public IObservable<IPeerClientMessageDto> PingResponseStream => _pingResponse.AsObservable();
+        public static readonly string UnableToRetrieveDeltaMessage = "Unable to retrieve delta.";
+        private readonly IUserOutput _output;
 
-        public PingResponseObserver(ILogger logger)
-            : base(logger)
+        public GetDeltaResponseObserver(IUserOutput output, ILogger logger) : base(logger)
         {
-            _pingResponse = new ReplaySubject<IPeerClientMessageDto>(1);
+            _output = output;
         }
-        
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="pingResponse"></param>
-        /// <param name="channelHandlerContext"></param>
-        /// <param name="senderPeerIdentifier"></param>
-        /// <param name="correlationId"></param>
-        protected override void HandleResponse(PingResponse pingResponse,
+
+        /// <inheritdoc />
+        protected override void HandleResponse(GetDeltaResponse deltaResponse,
             IChannelHandlerContext channelHandlerContext,
             IPeerIdentifier senderPeerIdentifier,
             ICorrelationId correlationId)
         {
-            _pingResponse.OnNext(new PeerClientMessageDto(pingResponse, senderPeerIdentifier, correlationId));
+            if (deltaResponse.Delta == null)
+            {
+                _output.WriteLine(UnableToRetrieveDeltaMessage);
+            }
+
+            _output.WriteLine(deltaResponse.Delta.ToJsonString());
         }
     }
 }

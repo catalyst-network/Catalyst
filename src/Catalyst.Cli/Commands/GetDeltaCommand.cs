@@ -24,19 +24,28 @@
 using Catalyst.Cli.CommandTypes;
 using Catalyst.Cli.Options;
 using Catalyst.Common.Interfaces.Cli.Commands;
+using Catalyst.Common.Util;
 using Catalyst.Protocol.Rpc.Node;
+using Serilog;
 
 namespace Catalyst.Cli.Commands
 {
-    public sealed class GetInfoCommand : BaseMessageCommand<GetInfoRequest, GetInfoOptions>
+    public sealed class GetDeltaCommand : BaseMessageCommand<GetDeltaRequest, GetDeltaOptions>
     {
-        public GetInfoCommand(ICommandContext commandContext) : base(commandContext) { }
+        public GetDeltaCommand(ICommandContext commandContext) : base(commandContext) { }
 
-        protected override GetInfoRequest GetMessage(GetInfoOptions option)
+        protected override GetDeltaRequest GetMessage(GetDeltaOptions option)
         {
-            return new GetInfoRequest 
+            if (!Multiformats.Hash.Multihash.TryParse(option.Hash, out var hash))
             {
-                Query = true
+                Log.Warning("Unable to parse hash {0} as a Multihash", option.Hash);
+                CommandContext.UserOutput.WriteLine($"Unable to parse hash {option.Hash} as a Multihash");
+                return default;
+            }
+
+            return new GetDeltaRequest
+            {
+                DeltaDfsHash = hash.ToBytes().ToByteString()
             };
         }
     }

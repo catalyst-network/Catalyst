@@ -22,25 +22,19 @@
 #endregion
 
 using System;
-using System.Net;
 using System.Threading.Tasks;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Common.IO.Messaging.Dto;
-using Catalyst.Common.Network;
-using Catalyst.Common.P2P;
 using Catalyst.Common.Util;
 using Catalyst.Node.Rpc.Client.IO.Observers;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
-using FizzWare.NBuilder;
-using Google.Protobuf;
 using Google.Protobuf.Collections;
 using Google.Protobuf.WellKnownTypes;
-using Nethereum.RLP;
 using NSubstitute;
 using Serilog;
 using Xunit;
@@ -59,7 +53,10 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
         private GetPeerInfoResponseObserver _observer;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="GetPeerInfoResponseObserverTest"/> class. </summary>
+        /// Initializes a new instance of the <see>
+        ///     <cref>GetPeerInfoResponseObserverTest</cref>
+        /// </see>
+        /// class. </summary>
         public GetPeerInfoResponseObserverTests()
         {
             _logger = Substitute.For<ILogger>();
@@ -91,7 +88,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
 
             await TestGetPeerInfoResponse(peerInfo).ConfigureAwait(false);
 
-            var repeatedPeerInfo = new RepeatedField<PeerInfo> { peerInfo };
+            var repeatedPeerInfo = new RepeatedField<PeerInfo> {peerInfo};
             _output.Received(1).WriteLine(CommandFormatHelper.FormatRepeatedPeerInfoResponse(repeatedPeerInfo));
         }
 
@@ -107,7 +104,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
 
             await TestGetPeerInfoResponse(peerInfo).ConfigureAwait(false);
 
-            var repeatedPeerInfo = new RepeatedField<PeerInfo> { peerInfo };
+            var repeatedPeerInfo = new RepeatedField<PeerInfo> {peerInfo};
             _output.Received(1).WriteLine(CommandFormatHelper.FormatRepeatedPeerInfoResponse(repeatedPeerInfo));
         }
 

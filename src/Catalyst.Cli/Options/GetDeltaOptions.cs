@@ -21,18 +21,14 @@
 
 #endregion
 
-using System;
-using System.Collections.Generic;
-using System.Reactive.Subjects;
-using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
-using Catalyst.Common.Interfaces.P2P.ReputationSystem;
+using CommandLine;
 
-namespace Catalyst.Common.Interfaces.P2P.IO.Messaging.Correlation
+namespace Catalyst.Cli.Options
 {
-    public interface IPeerMessageCorrelationManager : IMessageCorrelationManager
+    [Verb("getdelta", HelpText = "Request the node for the full content of a Delta, identified by its hash / address on the Dfs")]
+    public class GetDeltaOptions : OptionsBase
     {
-        ReplaySubject<KeyValuePair<ICorrelationId, IPeerIdentifier>> _evictionEvent { get; }
-        IObservable<IPeerReputationChange> ReputationEventStream { get; }
-        IObservable<KeyValuePair<ICorrelationId, IPeerIdentifier>> EvictionEventStream { get; }
+        [Option('h', "hash", HelpText = "The hash of the delta being requested.", Required = true)]
+        public string Hash { get; set; }
     }
 }
