@@ -37,15 +37,15 @@ using System.Reactive.Subjects;
 
 namespace Catalyst.Node.Rpc.Client.IO
 {
-    public abstract class RpcResponseObserver<TProto> : ResponseObserverBase<TProto>, IRpcResponseObserver where TProto : IMessage<TProto>
+    public abstract class RpcResponseObserver<TProto> : ResponseObserverBase<TProto>, IRpcResponseObserver<TProto>, IRpcResponseObserver where TProto : IMessage<TProto>
     {
         private readonly ReplaySubject<IRpcClientMessageDto<IMessage>> _messageResponse;
-        private IObservable<IRpcClientMessageDto<IMessage>> _messageResponseStream;
+        public IObservable<IRpcClientMessageDto<IMessage>> MessageResponseStream { private set; get; }
 
         public RpcResponseObserver(ILogger logger) : base(logger)
         {
             _messageResponse = new ReplaySubject<IRpcClientMessageDto<IMessage>>(1);
-            _messageResponseStream = _messageResponse.AsObservable();
+            MessageResponseStream = _messageResponse.AsObservable();
         }
 
         protected override void RedirectResponse(TProto messageDto, IChannelHandlerContext channelHandlerContext, IPeerIdentifier senderPeerIdentifier, ICorrelationId correlationId)
@@ -61,7 +61,7 @@ namespace Catalyst.Node.Rpc.Client.IO
 
         public void Subscribe(Action<TProto> onNext)
         {
-            _messageResponseStream.Where(x => x.Message is TProto).SubscribeOn(NewThreadScheduler.Default).Subscribe(rpcClientMessageDto =>
+            MessageResponseStream.Where(x => x.Message is TProto).SubscribeOn(NewThreadScheduler.Default).Subscribe(rpcClientMessageDto =>
             {
                 onNext((TProto)rpcClientMessageDto.Message);
             });

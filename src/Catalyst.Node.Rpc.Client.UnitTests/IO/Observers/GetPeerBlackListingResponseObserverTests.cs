@@ -22,24 +22,18 @@
 #endregion
 
 using System;
-using System.Net;
-using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Common.IO.Messaging.Dto;
-using Catalyst.Common.Network;
-using Catalyst.Common.Util;
 using Catalyst.Node.Rpc.Client.IO.Observers;
 using Catalyst.Protocol;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using FluentAssertions;
-using Google.Protobuf;
-using Nethereum.RLP;
 using NSubstitute;
 using Serilog;
 using Xunit;
@@ -125,11 +119,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
 
             _observer = new PeerBlackListingResponseObserver(_output, _logger);
             _observer.StartObserving(messageStream);
-
-            _observer.MessageResponseStream.Where(x => x.Message.GetType() == typeof(SetPeerBlackListResponse)).SubscribeOn(NewThreadScheduler.Default).Subscribe((RpcClientMessageDto) =>
-            {
-                messageStreamResponse = (SetPeerBlackListResponse)RpcClientMessageDto.Message;
-            });
+            _observer.Subscribe((message) => messageStreamResponse = message);
 
             await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
 

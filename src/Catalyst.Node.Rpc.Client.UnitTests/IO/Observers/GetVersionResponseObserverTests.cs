@@ -27,7 +27,6 @@ using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Cli;
-using Catalyst.Common.Interfaces.Rpc.IO.Messaging.Dto;
 using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Node.Rpc.Client.IO.Observers;
@@ -38,7 +37,6 @@ using NSubstitute;
 using Serilog;
 using Xunit;
 using FluentAssertions;
-using System.Reactive.Concurrency;
 
 namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
 {
@@ -92,10 +90,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
 
             _observer = new GetVersionResponseObserver(_output, _logger);
             _observer.StartObserving(messageStream);
-            _observer.MessageResponseStream.Where(x => x.Message.GetType() == typeof(VersionResponse)).SubscribeOn(NewThreadScheduler.Default).Subscribe((RpcClientMessageDto) =>
-            {
-                messageStreamResponse = (VersionResponse)RpcClientMessageDto.Message;
-            });
+            _observer.Subscribe((message) => messageStreamResponse = message);
 
             await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
 

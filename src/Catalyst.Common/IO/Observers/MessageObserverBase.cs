@@ -69,6 +69,7 @@ namespace Catalyst.Common.IO.Observers
 
         public virtual void OnError(Exception exception)
         {
+
             Logger.Error(exception, "Failed to process message.");
             ChannelHandlerContext?.CloseAsync().ConfigureAwait(false);
         }

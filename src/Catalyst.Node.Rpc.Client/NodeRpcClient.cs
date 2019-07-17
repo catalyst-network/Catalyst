@@ -32,6 +32,7 @@ using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Reflection;
@@ -78,6 +79,14 @@ namespace Catalyst.Node.Rpc.Client
             });
 
             Channel = socket.Channel;
+        }
+
+        public void Subscribe<T>(Action<T> onNext)
+        {
+            MessageResponseStream.Where(x => x.Message.GetType() == typeof(T)).SubscribeOn(NewThreadScheduler.Default).Subscribe(rpcClientMessageDto =>
+            {
+                onNext((T)rpcClientMessageDto.Message);
+            });
         }
     }
 }
