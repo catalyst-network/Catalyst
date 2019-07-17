@@ -65,7 +65,7 @@ namespace Catalyst.Node.Core.P2P.IO.Messaging.Broadcast
         private readonly IPeerIdentifier _peerIdentifier;
 
         /// <summary>The peer client</summary>
-        public IPeerClient _peerClient;
+        private readonly IPeerClient _peerClient;
 
         /// <summary>Initializes a new instance of the <see cref="BroadcastManager"/> class.</summary>
         /// <param name="peerIdentifier">The peer identifier.</param>

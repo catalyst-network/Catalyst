@@ -34,8 +34,7 @@ namespace Catalyst.Common.IO.Transport
 {
     public class SocketBase : ISocket
     {
-        public readonly IChannelFactory ChannelFactory;
-        //protected readonly IChannelFactory ChannelFactory;
+        protected readonly IChannelFactory ChannelFactory;
         private readonly ILogger _logger;
         protected readonly IEventLoopGroupFactory EventLoopGroupFactory;
 

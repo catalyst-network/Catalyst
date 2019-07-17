@@ -39,7 +39,7 @@ using System.Collections.Concurrent;
 
 namespace Catalyst.Node.Core.P2P
 {
-    public class PeerValidator : IPeerValidator
+    public class PeerValidator : IPeerValidator, IDisposable
     {
         private readonly IPeerService _peerService;
         private readonly ILogger _logger;
@@ -68,10 +68,6 @@ namespace Catalyst.Node.Core.P2P
             _peerClient = peerClient;
         }
 
-        //this may well be responding to outbound messages rather than inbound
-        //when code was commented out RequestObserverBase, in wireshark there was no pingresponse
-        //however in all cases the onext worked but with sender message
-        //need to ensure pingresponse reach this
         public void OnNext(IObserverDto<ProtocolMessage> messageDto)
         {
             if (messageDto.Payload.Equals(NullObjects.ProtocolMessage))
@@ -106,10 +102,6 @@ namespace Catalyst.Node.Core.P2P
                   correlationId
                 );
 
-                var sendPubKey = _senderIdentifier.PeerId.PublicKey.ToStringUtf8();
-                var recPubKey = recipientPeerIdentifier.PeerId.PublicKey.ToStringUtf8();
-
-
                 ((PeerClient)_peerClient).SendMessage(messageDto);
 
                 var tasks = new IObservableMessageStreamer<ProtocolMessage>[]
@@ -125,9 +117,6 @@ namespace Catalyst.Node.Core.P2P
 
                 if (_receivedResponses.Any())
                 {
-                    var recippientPubKey = recipientPeerIdentifier.PeerId.PublicKey.ToStringUtf8();
-                    var receivedPubKey = _receivedResponses.Last().Payload.PeerId.PublicKey.ToStringUtf8();
-
                     if (_receivedResponses.Last().Payload.PeerId.PublicKey.ToStringUtf8() ==
                         recipientPeerIdentifier.PeerId.PublicKey.ToStringUtf8())
                     {
