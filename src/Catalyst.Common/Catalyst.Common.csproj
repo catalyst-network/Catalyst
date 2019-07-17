@@ -34,6 +34,7 @@
         <PackageReference Include="libsodium" Version="[1.0.17]" />
         <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
         <PackageReference Include="Serilog.Sinks.File" Version="4.0.0" />
+        <PackageReference Include="SharpRepository.AzureDocumentDbRepository" Version="2.0.2-alpha4" />
         <PackageReference Include="SharpRepository.InMemoryRepository" Version="2.0.3.1" />
         <PackageReference Include="SharpRepository.XmlRepository" Version="1.5.0.3" />
         <PackageReference Include="System.IO.Abstractions" Version="6.0.3" />

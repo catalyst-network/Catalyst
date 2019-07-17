@@ -27,15 +27,19 @@ using Catalyst.Common.Util;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Attributes;
 using SharpRepository.Repository;
+using Newtonsoft.Json;
+using Catalyst.Common.Interfaces.Repository;
+using Google.Protobuf;
 
 namespace Catalyst.Common.P2P
 {
     [Audit]
-    public sealed class Peer : IPeer, IAuditable
+    public sealed class Peer : IPeer, IDocumentHashable, IAuditable
     {
         /// <inheritdoc />
         [RepositoryPrimaryKey(Order = 1)]
-        public int PkId { get; set; }
+        [JsonProperty("id")]
+        public string PkId => Hash;
 
         /// <inheritdoc />
         public int Reputation { get; set; }
@@ -63,6 +67,8 @@ namespace Catalyst.Common.P2P
 
         /// <inheritdoc />
         public TimeSpan InactiveFor => DateTimeUtil.UtcNow - LastSeen;
+
+        public string Hash => PeerIdentifier.PeerId.ToByteString().ToBase64();
 
         /// <inheritdoc />
         public void Touch() { LastSeen = DateTimeUtil.UtcNow; }
