@@ -36,11 +36,11 @@ namespace Catalyst.Cli.Options
         public string Message { get; set; }
 
         /// <inheritdoc />
-        [Option('k', "address", HelpText = "A valid public key.")]
+        [Option('p', "publickey", HelpText = "Public key of the peer.")]
         public string Address { get; set; }
 
         /// <inheritdoc />
-        [Option('s', "signature", HelpText = "A valid signature.")]
+        [Option('s', "signature", HelpText = "Signature from the signer.")]
         public string Signature { get; set; }
         
         [Usage(ApplicationAlias = "")]

@@ -28,7 +28,7 @@ using Xunit;
 using Xunit.Abstractions;
 using Catalyst.Common.Interfaces.Cryptography;
 using Microsoft.Extensions.Configuration;
-using Catalyst.Node.Core.Modules.Dfs;
+using Catalyst.Core.Lib.Modules.Dfs;
 using Catalyst.Common.Config;
 using System.Linq;
 using System.IO;

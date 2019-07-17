@@ -37,7 +37,8 @@ namespace Catalyst.Cli.IntegrationTests.Commands
         {
             var result = Shell.ParseCommand("getmempool", NodeArgumentPrefix, ServerNodeName);
             result.Should().BeTrue();
-            AssertSentMessage<GetMempoolRequest>();
+            
+            AssertSentMessageAndGetMessageContent<GetMempoolRequest>();
         }
     }
 }
