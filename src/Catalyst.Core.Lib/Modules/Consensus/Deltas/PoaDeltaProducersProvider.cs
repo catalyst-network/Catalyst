@@ -21,12 +21,9 @@
 
 #endregion
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
 using Catalyst.Common.Interfaces.Modules.Consensus.Deltas;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.Interfaces.Repository;
 using Catalyst.Common.Util;
 using Dawn;
 using Google.Protobuf;
@@ -35,8 +32,10 @@ using Microsoft.Extensions.Primitives;
 using Multiformats.Hash.Algorithms;
 using Nethereum.Hex.HexConvertors.Extensions;
 using Serilog;
-using SharpRepository.Repository;
-using Peer = Catalyst.Common.P2P.Peer;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
 
 namespace Catalyst.Core.Lib.Modules.Consensus.Deltas
 {
@@ -51,9 +50,9 @@ namespace Catalyst.Core.Lib.Modules.Consensus.Deltas
         public IMultihashAlgorithm HashAlgorithm { get; }
 
         /// <inheritdoc />
-        public IRepository<Peer, string> PeerRepository { get; }
+        public IPeerRepository PeerRepository { get; }
 
-        public PoaDeltaProducersProvider(IRepository<Peer, string> peerRepository,
+        public PoaDeltaProducersProvider(IPeerRepository peerRepository,
             IMemoryCache producersByPreviousDelta,
             IMultihashAlgorithm hashAlgorithm,
             ILogger logger)
@@ -81,7 +80,7 @@ namespace Catalyst.Core.Lib.Modules.Consensus.Deltas
 
             _logger.Information("Calculating favourite delta producers for the successor of {0}.", previousDeltaHashAsHex);
 
-            var allPeers = PeerRepository.GetAll();
+            var allPeers = PeerRepository.Repository.GetAll();
 
             var peerIdsInPriorityOrder = allPeers.Select(p =>
                 {

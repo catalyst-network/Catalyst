@@ -65,7 +65,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.ReputationSystem
                 PeerIdentifier = pid,
                 Reputation = initialRep
             };
-            _reputationManager.PeerRepository.Add(subbedPeer);
+            _reputationManager.PeerRepository.Repository.Add(subbedPeer);
             return subbedPeer;
         }
 
@@ -80,7 +80,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.ReputationSystem
             peerReputationChange.ReputationEvent.Returns(Substitute.For<IReputationEvents>());
             peerReputationChange.ReputationEvent.Amount.Returns(100);
             _reputationManager.OnNext(peerReputationChange);
-            var updatedSubbedPeer = _reputationManager.PeerRepository.Get(savedPeer.DocumentId);
+            var updatedSubbedPeer = _reputationManager.PeerRepository.Repository.Get(savedPeer.DocumentId);
             updatedSubbedPeer.Reputation.Should().Be(200);
         }
         
@@ -95,7 +95,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.ReputationSystem
             peerReputationChange.ReputationEvent.Returns(Substitute.For<IReputationEvents>());
             peerReputationChange.ReputationEvent.Amount.Returns(-100);
             _reputationManager.OnNext(peerReputationChange);
-            var updatedSubbedPeer = _reputationManager.PeerRepository.Get(savedPeer.DocumentId);
+            var updatedSubbedPeer = _reputationManager.PeerRepository.Repository.Get(savedPeer.DocumentId);
             updatedSubbedPeer.Reputation.Should().Be(0);
         }
         
@@ -110,7 +110,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.ReputationSystem
             peerReputationChange.ReputationEvent.Returns(Substitute.For<IReputationEvents>());
             peerReputationChange.ReputationEvent.Amount.Returns(-200);
             _reputationManager.OnNext(peerReputationChange);
-            var updatedSubbedPeer = _reputationManager.PeerRepository.Get(savedPeer.DocumentId);
+            var updatedSubbedPeer = _reputationManager.PeerRepository.Repository.Get(savedPeer.DocumentId);
             updatedSubbedPeer.Reputation.Should().Be(-100);
         }
         
@@ -125,7 +125,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.ReputationSystem
             peerReputationChange.ReputationEvent.Returns(Substitute.For<IReputationEvents>());
             peerReputationChange.ReputationEvent.Amount.Returns(200);
             _reputationManager.OnNext(peerReputationChange);
-            var updatedSubbedPeer = _reputationManager.PeerRepository.Get(savedPeer.DocumentId);
+            var updatedSubbedPeer = _reputationManager.PeerRepository.Repository.Get(savedPeer.DocumentId);
             updatedSubbedPeer.Reputation.Should().Be(100);
         }
     }

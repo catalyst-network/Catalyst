@@ -1,11 +1,4 @@
 #region LICENSE
-
-
-
-#endregion
-
-using Newtonsoft.Json;
-using SharpRepository.Repository;
 /**
 * Copyright (c) 2019 Catalyst Network
 *
@@ -24,6 +17,11 @@ using SharpRepository.Repository;
 * You should have received a copy of the GNU General Public License
 * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
+#endregion
+
+using Newtonsoft.Json;
+using SharpRepository.Repository;
+
 namespace Catalyst.Common.Interfaces.Repository
 {
     public interface IDocumentStorable

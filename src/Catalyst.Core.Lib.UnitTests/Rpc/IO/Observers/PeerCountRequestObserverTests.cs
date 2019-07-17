@@ -27,6 +27,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
+using Catalyst.Common.Interfaces.Repository;
 using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.Network;
 using Catalyst.Common.P2P;
@@ -78,7 +79,7 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Observers
         [InlineData(20)]
         public async Task TestPeerListRequestResponse(int fakePeers)
         {
-            var peerRepository = Substitute.For<IRepository<Peer, string>>();
+            var peerRepository = Substitute.For<IPeerRepository>();
             var peerList = new List<Peer>();
 
             for (var i = 0; i < fakePeers; i++)
@@ -94,7 +95,7 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Observers
             // Build a fake remote endpoint
             _fakeContext.Channel.RemoteAddress.Returns(EndpointBuilder.BuildNewEndPoint("192.0.0.1", 42042));
 
-            peerRepository.GetAll().Returns(peerList);
+            peerRepository.Repository.GetAll().Returns(peerList);
 
             var sendPeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("sender");
 

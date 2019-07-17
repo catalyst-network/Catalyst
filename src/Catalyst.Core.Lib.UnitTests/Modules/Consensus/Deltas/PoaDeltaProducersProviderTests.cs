@@ -25,6 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.Interfaces.Repository;
 using Catalyst.Common.Util;
 using Catalyst.Core.Lib.Modules.Consensus.Deltas;
 using Catalyst.TestUtils;
@@ -66,8 +67,8 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Consensus.Deltas
 
             var logger = Substitute.For<ILogger>();
 
-            var peerRepository = Substitute.For<IRepository<Peer, string>>();
-            peerRepository.GetAll().Returns(_ => _peers);
+            var peerRepository = Substitute.For<IPeerRepository>();
+            peerRepository.Repository.GetAll().Returns(_ => _peers);
 
             _previousDeltaHash = new byte[32];
             rand.NextBytes(_previousDeltaHash);

@@ -25,6 +25,7 @@ using System.Linq;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.IO.Observers;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.Interfaces.Repository;
 using Catalyst.Common.IO.Observers;
 using Catalyst.Common.P2P;
 using Catalyst.Protocol.Rpc.Node;
@@ -43,11 +44,11 @@ namespace Catalyst.Core.Lib.Rpc.IO.Observers
         /// <summary>
         /// The PeerReputationRequestHandler 
         /// </summary>
-        private readonly IRepository<Peer, string> _peerRepository;
+        private readonly IPeerRepository _peerRepository;
 
         public PeerReputationRequestObserver(IPeerIdentifier peerIdentifier,
             ILogger logger,
-            IRepository<Peer, string> peerRepository)
+            IPeerRepository peerRepository)
             : base(logger, peerIdentifier)
         {
             _peerRepository = peerRepository;
@@ -75,7 +76,7 @@ namespace Catalyst.Core.Lib.Rpc.IO.Observers
 
             return new GetPeerReputationResponse
             {
-                Reputation = _peerRepository.GetAll().Where(m => m.PeerIdentifier.Ip.ToString() == ip.ToString()
+                Reputation = _peerRepository.Repository.GetAll().Where(m => m.PeerIdentifier.Ip.ToString() == ip.ToString()
                      && m.PeerIdentifier.PublicKey.ToStringFromRLPDecoded() == getPeerReputationRequest.PublicKey.ToStringUtf8())
                    .Select(x => x.Reputation).DefaultIfEmpty(int.MinValue).First()
             };

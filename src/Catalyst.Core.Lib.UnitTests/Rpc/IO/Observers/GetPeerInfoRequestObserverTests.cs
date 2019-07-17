@@ -29,6 +29,8 @@ using System.Net;
 using System.Threading.Tasks;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
+using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.Interfaces.Repository;
 using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.Network;
 using Catalyst.Common.P2P;
@@ -41,7 +43,6 @@ using DotNetty.Transport.Channels;
 using FluentAssertions;
 using NSubstitute;
 using Serilog;
-using SharpRepository.Repository;
 using Xunit;
 
 namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Observers
@@ -53,7 +54,7 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Observers
     {
         private readonly ILogger _logger;
         private readonly IChannelHandlerContext _fakeContext;
-        private readonly IRepository<Peer, string> _peerRepository;
+        private readonly IPeerRepository _peerRepository;
 
         public GetPeerInfoRequestObserverTests()
         {
@@ -65,11 +66,11 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Observers
 
             var peers = GetPeerTestData();
 
-            _peerRepository = Substitute.For<IRepository<Peer, string>>();
-            _peerRepository.FindAll(Arg.Any<Expression<Func<Peer, bool>>>())
+            _peerRepository = Substitute.For<IPeerRepository>();
+            _peerRepository.Repository.FindAll(Arg.Any<Expression<Func<Peer, bool>>>())
                .Returns(ci =>
                 {
-                    return peers.Where(p => ((Expression<Func<Peer, bool>>) ci[0]).Compile()(p));
+                    return peers.Where(p => ((Expression<Func<IPeer, bool>>) ci[0]).Compile()(p));
                 });
         }
 

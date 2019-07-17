@@ -27,7 +27,7 @@ using System.Linq;
 using Catalyst.Common.Interfaces.Modules.Mempool;
 using Catalyst.Core.Lib.Modules.Consensus;
 using Catalyst.Core.Lib.Modules.Consensus.Deltas;
-using Catalyst.Protocol.Transaction;
+using Catalyst.Node.Core.Modules.Mempool;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using NSubstitute;

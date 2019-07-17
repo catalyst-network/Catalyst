@@ -22,11 +22,11 @@
 #endregion
 
 using Catalyst.Common.Interfaces.P2P;
-using SharpRepository.Repository;
+using Catalyst.Common.P2P;
 
 namespace Catalyst.Common.Interfaces.Repository
 {
-    public interface IPeerRepository : IRepository<IPeer, string>
+    public interface IPeerRepository : IRepositoryWrapper<Peer, string>
     {
     }
 }

@@ -26,6 +26,7 @@ using System.Linq;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.IO.Observers;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.Interfaces.Repository;
 using Catalyst.Common.IO.Observers;
 using Catalyst.Common.P2P;
 using Catalyst.Protocol;
@@ -46,11 +47,11 @@ namespace Catalyst.Core.Lib.Rpc.IO.Observers
         /// <summary>
         /// The PeerBlackListingRequestHandler 
         /// </summary>
-        private readonly IRepository<Peer, string> _peerRepository;
+        private readonly IPeerRepository _peerRepository;
         
         public PeerBlackListingRequestObserver(IPeerIdentifier peerIdentifier,
             ILogger logger,
-            IRepository<Peer, string> peerRepository)
+            IPeerRepository peerRepository)
             : base(logger, peerIdentifier)
         {
             _peerRepository = peerRepository;
@@ -74,7 +75,7 @@ namespace Catalyst.Core.Lib.Rpc.IO.Observers
             Guard.Argument(senderPeerIdentifier, nameof(senderPeerIdentifier)).NotNull();
             Logger.Information("received message of type PeerBlackListingRequest");
             
-            var peerItem = _peerRepository.GetAll().FirstOrDefault(m => m.PeerIdentifier.Ip.ToString() == setPeerBlackListRequest.Ip.ToStringUtf8() 
+            var peerItem = _peerRepository.Repository.GetAll().FirstOrDefault(m => m.PeerIdentifier.Ip.ToString() == setPeerBlackListRequest.Ip.ToStringUtf8() 
              && ConvertorForRLPEncodingExtensions.ToStringFromRLPDecoded(m.PeerIdentifier.PublicKey) == setPeerBlackListRequest.PublicKey.ToStringUtf8());
 
             return peerItem == null
