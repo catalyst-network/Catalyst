@@ -93,8 +93,7 @@ namespace Catalyst.Node.Core.IntegrationTests.P2P
                   _container.Resolve<IBroadcastManager>(),
                    keysStore,
                    _container.Resolve<IPeerIdValidator>()), _container.Resolve<IPeerDiscovery>(),
-                   _container.Resolve<IEnumerable<IP2PMessageObserver>>(), _container.Resolve<IPeerSettings>(), _container.Resolve<ILogger>()
-                   );
+                   _container.Resolve<IEnumerable<IP2PMessageObserver>>(), _container.Resolve<IPeerSettings>(), _container.Resolve<ILogger>());
         }
 
         [Fact]

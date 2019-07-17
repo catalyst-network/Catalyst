@@ -113,7 +113,7 @@ namespace Catalyst.Node.Core.P2P
                         && a.Payload.TypeUrl == _messageType))
                    .ToArray();
 
-                Task.WaitAll(tasks, TimeSpan.FromMilliseconds(10000));
+                Task.WaitAll(tasks, TimeSpan.FromMilliseconds(20000));
 
                 if (_receivedResponses.Any())
                 {
