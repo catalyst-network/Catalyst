@@ -28,6 +28,7 @@ using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.IO.Messaging.Broadcast;
+using Catalyst.Common.Interfaces.Repository;
 using Catalyst.Common.IO.Messaging.Broadcast;
 using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Common.IO.Messaging.Dto;
@@ -45,12 +46,12 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Messaging.Broadcast
 {
     public sealed class BroadcastManagerTests : IDisposable
     {
-        private readonly IRepository<Peer, string> _peers;
+        private readonly IPeerRepository _peers;
         private readonly IMemoryCache _cache;
 
         public BroadcastManagerTests()
         {
-            _peers = new InMemoryRepository<Peer, string>();
+            _peers = (IPeerRepository) new InMemoryRepository<Peer, string>();
             _cache = new MemoryCache(new MemoryCacheOptions());
         }
 
@@ -130,19 +131,19 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Messaging.Broadcast
         {
             for (var i = 10; i < count + 10; i++)
             {
-                _peers.Add(new Peer
+                _peers.Repository.Add(new Peer
                 {
                     PeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier(i.ToString())
                 });
             }
 
-            _peers.Count().Should().Be(count);
+            _peers.Repository.Count().Should().Be(count);
         }
 
         public void Dispose()
         {
             _cache.Dispose();
-            _peers.Dispose();
+            _peers.Repository.Dispose();
         }
     }
 }

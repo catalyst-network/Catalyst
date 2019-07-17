@@ -61,9 +61,9 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Mempool
         private static void AddKeyValueStoreEntryExpectation(IMempoolDocument document,
             IMempoolRepository store)
         {
-            store.Get(Arg.Is<string>(k => k.Equals(document.DocumentId)))
+            store.Repository.Get(Arg.Is<string>(k => k.Equals(document.DocumentId)))
                .Returns(document);
-            store.TryGet(Arg.Is<string>(k => k.Equals(document.Transaction.Signature)),
+            store.Repository.TryGet(Arg.Is<string>(k => k.Equals(document.Transaction.Signature)),
                     out Arg.Any<IMempoolDocument>())
                .Returns(ci =>
                 {
@@ -153,7 +153,7 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Mempool
         [Fact]
         public void GetNonExistentKey()
         {
-            _transactionStore.Get(Arg.Any<string>()).ThrowsForAnyArgs(new KeyNotFoundException());
+            _transactionStore.Repository.Get(Arg.Any<string>()).ThrowsForAnyArgs(new KeyNotFoundException());
             new Action(() => _memPool.GetMempoolDocument(TransactionHelper.GetTransactionSignature("signature that doesn't exist")))
                .Should().Throw<KeyNotFoundException>();
         }

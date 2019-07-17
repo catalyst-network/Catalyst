@@ -21,25 +21,24 @@
 
 #endregion
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.IO.Messaging.Broadcast;
+using Catalyst.Common.Interfaces.Repository;
 using Catalyst.Common.IO.Messaging.Broadcast;
 using Catalyst.Common.IO.Messaging.Dto;
-using Catalyst.Common.P2P;
 using Catalyst.Protocol;
 using Catalyst.Protocol.Common;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Primitives;
-using SharpRepository.Repository;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
 {
@@ -53,7 +52,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
         private readonly IDtoFactory _dtoFactory;
 
         /// <summary>The peers</summary>
-        private readonly IRepository<Peer, string> _peers;
+        private readonly IPeerRepository _peers;
 
         /// <summary>The pending requests</summary>
         private readonly IMemoryCache _pendingRequests;
@@ -72,7 +71,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
         /// <param name="peers">The peers.</param>
         /// <param name="memoryCache">The memory cache.</param>
         /// <param name="peerClient">The peer client.</param>
-        public BroadcastManager(IPeerIdentifier peerIdentifier, IRepository<Peer, string> peers, IMemoryCache memoryCache, IPeerClient peerClient)
+        public BroadcastManager(IPeerIdentifier peerIdentifier, IPeerRepository peers, IMemoryCache memoryCache, IPeerClient peerClient)
         {
             _peerIdentifier = peerIdentifier;
             _pendingRequests = memoryCache;
@@ -123,14 +122,14 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
 
                 foreach (var peerIdentifier in peersToGossip)
                 {
-                    _peerClient.SendMessage(_dtoFactory.GetDto(message, 
-                        peerIdentifier, 
+                    _peerClient.SendMessage(_dtoFactory.GetDto(message,
+                        peerIdentifier,
                         _peerIdentifier,
                         correlationId)
                     );
                 }
 
-                var updateCount = (uint) peersToGossip.Count;
+                var updateCount = (uint)peersToGossip.Count;
                 if (updateCount <= 0)
                 {
                     return;
@@ -151,8 +150,9 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
         private List<IPeerIdentifier> GetRandomPeers(int count)
         {
             return _peers
+                .Repository
                .AsQueryable()
-               .Select(c => c.DocumentId).Shuffle().Take(count).Select(_peers.Get).Select(p => p.PeerIdentifier).ToList();
+               .Select(c => c.DocumentId).Shuffle().Take(count).Select(_peers.Repository.Get).Select(p => p.PeerIdentifier).ToList();
         }
 
         /// <summary>Determines whether this instance can gossip the specified correlation identifier.</summary>
@@ -177,7 +177,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
         private uint GetMaxGossipCycles(BroadcastMessage broadcastMessage)
         {
             var peerNetworkSize = broadcastMessage.PeerNetworkSize;
-            return (uint) (Math.Log(Math.Max(10, peerNetworkSize) / (double) Constants.MaxGossipPeersPerRound) /
+            return (uint)(Math.Log(Math.Max(10, peerNetworkSize) / (double)Constants.MaxGossipPeersPerRound) /
                 Math.Max(1, broadcastMessage.BroadcastCount / Constants.MaxGossipPeersPerRound));
         }
 
@@ -192,7 +192,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
                 {
                     ReceivedCount = 0,
                     BroadcastCount = 0,
-                    PeerNetworkSize = _peers.GetAll().Count()
+                    PeerNetworkSize = _peers.Repository.GetAll().Count()
                 }).ConfigureAwait(false);
                 entry.Value = gossipRequest;
                 return gossipRequest;

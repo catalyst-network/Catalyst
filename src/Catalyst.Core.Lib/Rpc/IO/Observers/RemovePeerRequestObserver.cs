@@ -25,6 +25,7 @@ using System.Linq;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.IO.Observers;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.Interfaces.Repository;
 using Catalyst.Common.IO.Observers;
 using Catalyst.Common.Network;
 using Catalyst.Common.P2P;
@@ -45,14 +46,14 @@ namespace Catalyst.Core.Lib.Rpc.IO.Observers
             IRpcRequestObserver
     {
         /// <summary>The peer discovery</summary>
-        private readonly IRepository<Peer, string> _peerRepository;
+        private readonly IPeerRepository _peerRepository;
 
         /// <summary>Initializes a new instance of the <see cref="RemovePeerRequestObserver"/> class.</summary>
         /// <param name="peerIdentifier">The peer identifier.</param>
         /// <param name="peerRepository">The peer discovery.</param>
         /// <param name="logger">The logger.</param>
         public RemovePeerRequestObserver(IPeerIdentifier peerIdentifier,
-            IRepository<Peer, string> peerRepository,
+            IPeerRepository peerRepository,
             ILogger logger) : base(logger, peerIdentifier)
         {
             _peerRepository = peerRepository;
@@ -80,13 +81,13 @@ namespace Catalyst.Core.Lib.Rpc.IO.Observers
 
             var publicKeyIsEmpty = removePeerRequest.PublicKey.IsEmpty;
             
-            var peersToDelete = _peerRepository.GetAll().TakeWhile(peer =>
+            var peersToDelete = _peerRepository.Repository.GetAll().TakeWhile(peer =>
                 peer.PeerIdentifier.Ip.To16Bytes().SequenceEqual(removePeerRequest.PeerIp.ToByteArray()) &&
                 (publicKeyIsEmpty || peer.PeerIdentifier.PublicKey.SequenceEqual(removePeerRequest.PublicKey.ToByteArray()))).ToArray();
 
             foreach (var peerToDelete in peersToDelete)
             {
-                _peerRepository.Delete(peerToDelete);
+                _peerRepository.Repository.Delete(peerToDelete);
                 peerDeletedCount += 1;
             }
 

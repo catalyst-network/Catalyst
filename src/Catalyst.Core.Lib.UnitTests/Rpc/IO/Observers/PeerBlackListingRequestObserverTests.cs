@@ -27,6 +27,7 @@ using System.Net;
 using System.Threading.Tasks;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
+using Catalyst.Common.Interfaces.Repository;
 using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.Network;
 using Catalyst.Common.P2P;
@@ -112,7 +113,7 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Observers
 
         private async Task<SetPeerBlackListResponse> ApplyBlackListingToPeerTest(string publicKey, string ipAddress, string blacklist)
         {
-            var peerRepository = Substitute.For<IRepository<Peer, string>>();
+            var peerRepository = Substitute.For<IPeerRepository>();
 
             var fakePeers = Enumerable.Range(0, 5).Select(i => new Peer
             {
@@ -131,7 +132,7 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Observers
             }));
 
             // Let peerRepository return the fake peer list
-            peerRepository.GetAll().Returns(fakePeers.ToArray());
+            peerRepository.Repository.GetAll().Returns(fakePeers.ToArray());
 
             // Build a fake remote endpoint
             _fakeContext.Channel.RemoteAddress.Returns(EndpointBuilder.BuildNewEndPoint("192.0.0.1", 42042));

@@ -25,6 +25,7 @@ using System.Linq;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.IO.Observers;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.Interfaces.Repository;
 using Catalyst.Common.IO.Observers;
 using Catalyst.Common.P2P;
 using Catalyst.Protocol.Rpc.Node;
@@ -46,7 +47,7 @@ namespace Catalyst.Core.Lib.Rpc.IO.Observers
         /// <summary>
         ///     repository interface to storage
         /// </summary>
-        private readonly IRepository<Peer, string> _peerRepository;
+        private readonly IPeerRepository _peerRepository;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="PeerListRequestObserver"/> class.
@@ -56,7 +57,7 @@ namespace Catalyst.Core.Lib.Rpc.IO.Observers
         /// <param name="peerRepository"></param>
         public PeerListRequestObserver(IPeerIdentifier peerIdentifier,
             ILogger logger,
-            IRepository<Peer, string> peerRepository)
+            IPeerRepository peerRepository)
             : base(logger, peerIdentifier)
         {
             _peerRepository = peerRepository;
@@ -80,7 +81,7 @@ namespace Catalyst.Core.Lib.Rpc.IO.Observers
             Guard.Argument(senderPeerIdentifier, nameof(senderPeerIdentifier)).NotNull();
             Logger.Debug("received message of type PeerListRequest");
 
-            var peers = _peerRepository.GetAll().Select(x => x.PeerIdentifier.PeerId);
+            var peers = _peerRepository.Repository.GetAll().Select(x => x.PeerIdentifier.PeerId);
 
             var response = new GetPeerListResponse();
             response.Peers.AddRange(peers);

@@ -22,11 +22,10 @@
 #endregion
 
 using Catalyst.Common.Interfaces.Modules.Mempool;
-using SharpRepository.Repository;
 
 namespace Catalyst.Common.Interfaces.Repository
 {
-    public interface IMempoolRepository : IRepository<IMempoolDocument, string>
+    public interface IMempoolRepository : IRepositoryWrapper<IMempoolDocument, string>
     {
     }
 }
