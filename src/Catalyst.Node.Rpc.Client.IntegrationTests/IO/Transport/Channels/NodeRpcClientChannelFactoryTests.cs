@@ -43,7 +43,7 @@ using FluentAssertions;
 using NSubstitute;
 using Serilog;
 using Xunit;
-using NodeRpcServerChannelFactoryTests = Catalyst.Node.Core.UnitTests.Rpc.IO.Transport.Channels.NodeRpcServerChannelFactoryTests;
+using NodeRpcServerChannelFactoryTests = Catalyst.Core.Lib.UnitTests.Rpc.IO.Transport.Channels.NodeRpcServerChannelFactoryTests;
 
 namespace Catalyst.Node.Rpc.Client.IntegrationTests.IO.Transport.Channels
 {
