@@ -35,7 +35,7 @@ namespace Catalyst.Cli.Options
     public sealed class PeerReputationOptions : OptionsBase, IPeerReputationOptions
     {
         /// <inheritdoc />
-        [Option('l', "ip", HelpText = "IP address of the peer whose reputation is of interest.")]
+        [Option('i', "ip", HelpText = "IP address of the peer whose reputation is of interest.")]
         public string IpAddress { get; set; }
 
         /// <inheritdoc />
