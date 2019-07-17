@@ -24,7 +24,6 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.Rpc.IO.Messaging.Correlation;
 using Catalyst.Common.Rpc.IO.Messaging.Correlation;
@@ -32,7 +31,6 @@ using Catalyst.Common.UnitTests.IO.Messaging.Correlation;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
-using FluentAssertions;
 using NSubstitute;
 using Xunit;
 using Xunit.Abstractions;
