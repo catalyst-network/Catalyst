@@ -40,6 +40,7 @@ namespace Catalyst.Common.IO.Transport
     {
         public IObservable<ISocketClientRegistryEvent> EventStream { private set;  get; }
         private readonly ReplaySubject<ISocketClientRegistryEvent> _eventReplySubject;
+
         public IDictionary<int, TSocketChannel> Registry { get; }
 
         public SocketClientRegistry()
@@ -68,8 +69,9 @@ namespace Catalyst.Common.IO.Transport
             var addedToRegistry = Registry.TryAdd(socketHashCode, socket);
             if (addedToRegistry)
             {
-                _eventReplySubject.OnNext(new SocketClientRegistryClientAdded { SocketHashCode = socketHashCode });
+                _eventReplySubject.OnNext(new SocketClientRegistryClientAdded {SocketHashCode = socketHashCode});
             }
+
             return addedToRegistry;
         }
 
@@ -90,8 +92,9 @@ namespace Catalyst.Common.IO.Transport
             var removedFromRegistry = Registry.Remove(socketHashCode);
             if (removedFromRegistry)
             {
-                _eventReplySubject.OnNext(new SocketClientRegistryClientRemoved { SocketHashCode = socketHashCode });
+                _eventReplySubject.OnNext(new SocketClientRegistryClientRemoved {SocketHashCode = socketHashCode});
             }
+
             return removedFromRegistry;
         }
 

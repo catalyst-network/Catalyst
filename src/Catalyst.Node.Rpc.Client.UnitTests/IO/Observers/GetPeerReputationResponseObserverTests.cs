@@ -103,7 +103,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
                     Reputation = rep
                 },
                 PeerIdentifierHelper.GetPeerIdentifier("sender"),
-                PeerIdentifierHelper.GetPeerIdentifier("recpient"),
+                PeerIdentifierHelper.GetPeerIdentifier("recipient"),
                 CorrelationId.GenerateCorrelationId()
             );
 
@@ -115,7 +115,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
 
             _observer = new PeerReputationResponseObserver(_output, _logger);
             _observer.StartObserving(messageStream);
-            _observer.Subscribe((message) => messageStreamResponse = message);
+            _observer.Subscribe(message => messageStreamResponse = message);
 
             await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync().ConfigureAwait(false);
 

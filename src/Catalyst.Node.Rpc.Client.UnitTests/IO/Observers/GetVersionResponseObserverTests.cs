@@ -73,9 +73,9 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
         public async Task RpcClient_Can_Handle_GetVersionResponse(string version)
         {
             var response = new DtoFactory().GetDto(new VersionResponse
-            {
-                Version = version
-            },
+                {
+                    Version = version
+                },
                 PeerIdentifierHelper.GetPeerIdentifier("sender"),
                 PeerIdentifierHelper.GetPeerIdentifier("recpient"),
                 CorrelationId.GenerateCorrelationId()
@@ -90,7 +90,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
 
             _observer = new GetVersionResponseObserver(_output, _logger);
             _observer.StartObserving(messageStream);
-            _observer.Subscribe((message) => messageStreamResponse = message);
+            _observer.Subscribe(message => messageStreamResponse = message);
 
             await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
 
