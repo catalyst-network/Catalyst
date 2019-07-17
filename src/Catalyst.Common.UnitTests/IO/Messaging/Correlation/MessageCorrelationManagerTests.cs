@@ -24,17 +24,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reactive.Concurrency;
 using System.Threading.Tasks;
-using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.Interfaces.P2P.ReputationSystem;
 using Catalyst.Common.Interfaces.Util;
 using Catalyst.Common.IO.Handlers;
 using Catalyst.Common.IO.Messaging.Correlation;
-using Catalyst.Common.P2P;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
 using Catalyst.TestUtils;
@@ -45,8 +41,16 @@ using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Primitives;
 using NSubstitute;
 using Serilog;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
+using Catalyst.Node.Core.P2P.IO.Observers;
+using Catalyst.Protocol;
 using Xunit;
 using Xunit.Abstractions;
+using PendingRequest = Catalyst.Common.IO.Messaging.Correlation.CorrelatableMessage<Catalyst.Protocol.Common.ProtocolMessage>;
 
 namespace Catalyst.Common.UnitTests.IO.Messaging.Correlation
 {
@@ -54,14 +58,17 @@ namespace Catalyst.Common.UnitTests.IO.Messaging.Correlation
         where T : IMessageCorrelationManager
     {
         protected readonly IPeerIdentifier[] PeerIds;
-        protected IList<CorrelatableMessage<ProtocolMessage>> PendingRequests;
+        protected List<PendingRequest> PendingRequests;
 
         protected T CorrelationManager;
         protected readonly ILogger SubbedLogger;
         protected readonly IChangeTokenProvider ChangeTokenProvider;
         protected readonly IChangeToken ChangeToken;
-        protected MemoryCache Cache;
+        protected readonly IMemoryCache Cache;
         protected readonly PeerId SenderPeerId;
+
+        protected readonly Dictionary<ByteString, ICacheEntry> CacheEntriesByRequest 
+            = new Dictionary<ByteString, ICacheEntry>();
         
         protected MessageCorrelationManagerTests(ITestOutputHelper output)
         {
@@ -69,7 +76,7 @@ namespace Catalyst.Common.UnitTests.IO.Messaging.Correlation
             ChangeTokenProvider = Substitute.For<IChangeTokenProvider>();
             ChangeToken = Substitute.For<IChangeToken>();
             ChangeTokenProvider.GetChangeToken().Returns(ChangeToken);
-            Cache = new MemoryCache(new MemoryCacheOptions());
+            Cache = Substitute.For<IMemoryCache>();
 
             SenderPeerId = PeerIdHelper.GetPeerId("sender");
             PeerIds = new[]
@@ -78,24 +85,93 @@ namespace Catalyst.Common.UnitTests.IO.Messaging.Correlation
                 PeerIdentifierHelper.GetPeerIdentifier("peer2"),
                 PeerIdentifierHelper.GetPeerIdentifier("peer3"),
             };
-            
-            var responseStore = Substitute.For<IMemoryCache>();
-            responseStore.TryGetValue(Arg.Any<ByteString>(), out Arg.Any<CorrelatableMessage<ProtocolMessage>>())
+        }
+
+        protected void PrepareCacheWithPendingRequests<T>()
+            where T : IMessage, new()
+        {
+            PendingRequests = PeerIds.Select((p, i) => new PendingRequest
+            {
+                Content = new T().ToProtocolMessage(SenderPeerId, CorrelationId.GenerateCorrelationId()),
+                Recipient = p,
+                SentAt = DateTimeOffset.MinValue.Add(TimeSpan.FromMilliseconds(100 * i))
+            }).ToList();
+
+            PendingRequests.ForEach(AddRequestExpectation);
+        }
+
+        private void AddRequestExpectation(PendingRequest pendingRequest)
+        {
+            Cache.TryGetValue(pendingRequest.Content.CorrelationId, out Arg.Any<object>())
                .Returns(ci =>
                 {
-                    output.WriteLine("");
-                    ci[1] = PendingRequests.SingleOrDefault(
-                        r => Equals(r.Content.CorrelationId, ci[0]));
-                    return ci[1] != null;
+                    ci[1] = pendingRequest;
+                    return true;
                 });
         }
 
-        public abstract Task RequestStore_Should_Not_Keep_Records_For_Longer_Than_Ttl();
+        private void AddCreateEntryExpectation(object key)
+        {
+            var correlationId = (ByteString) key;
+            var cacheEntry = Substitute.For<ICacheEntry>();
+            var expirationTokens = new List<IChangeToken>();
+            cacheEntry.ExpirationTokens.Returns(expirationTokens);
+            var expirationCallbacks = new List<PostEvictionCallbackRegistration>();
+            cacheEntry.PostEvictionCallbacks.Returns(expirationCallbacks);
+
+            Cache.CreateEntry(correlationId).Returns(cacheEntry);
+            CacheEntriesByRequest.Add(correlationId, cacheEntry);
+        }
 
         [Fact]
-        public void TryMatchResponseAsync_should_match_existing_records_with_matching_correlation_id()
+        public virtual async Task New_Entries_Should_Be_Added_With_Individual_Entry_Options()
         {
-            var responseMatchingIndex1 = new PingResponse().ToProtocolMessage(
+            PendingRequests.ForEach(p => AddCreateEntryExpectation(p.Content.CorrelationId));
+            PendingRequests.ForEach(CorrelationManager.AddPendingRequest);
+
+            Cache.Received(PendingRequests.Count).CreateEntry(
+                Arg.Is<object>(o => ((ByteString) o).ToCorrelationId().Id != Guid.Empty));
+
+            var createEntryCalls = Cache.ReceivedCalls()
+               .Where(ci => ci.GetMethodInfo().Name == nameof(IMemoryCache.CreateEntry));
+
+            createEntryCalls.Select(c => c.GetArguments()[0]).Cast<ByteString>()
+               .Should().BeEquivalentTo(PendingRequests.Select(p => p.Content.CorrelationId));
+
+            foreach (var cacheEntry in CacheEntriesByRequest.Values)
+            {
+                cacheEntry.ExpirationTokens.Count.Should().Be(1);
+                cacheEntry.PostEvictionCallbacks.Count.Should().Be(1);
+            }
+
+            CheckExpirationTokensAreDifferentForEachEntry();
+
+            await CheckCacheEntriesCallback().ConfigureAwait(false);
+        }
+
+        private void CheckExpirationTokensAreDifferentForEachEntry()
+        {
+            for (var i = 0; i < CacheEntriesByRequest.Count; i++)
+            for (var j = i + 1; j < CacheEntriesByRequest.Count; j++)
+            {
+                CacheEntriesByRequest[PendingRequests[i].Content.CorrelationId]
+                   .Should().NotBeSameAs(CacheEntriesByRequest[PendingRequests[j].Content.CorrelationId]);
+            }
+        }
+
+        protected abstract Task CheckCacheEntriesCallback();
+
+        protected void FireEvictionCallBackByCorrelationId(ByteString correlationId)
+        {
+            var pendingRequest = PendingRequests.Single(p => p.Content.CorrelationId == correlationId);
+            CacheEntriesByRequest[correlationId].PostEvictionCallbacks[0].EvictionCallback
+               .Invoke(null, pendingRequest, EvictionReason.Expired, null);
+        }
+
+        protected void TryMatchResponseAsync_Should_Match_Existing_Records_With_Matching_Correlation_Id<T>()
+            where T : IMessage, new()
+        {
+            var responseMatchingIndex1 = new T().ToProtocolMessage(
                 PeerIds[1].PeerId,
                 PendingRequests[1].Content.CorrelationId.ToCorrelationId());
 
@@ -103,8 +179,16 @@ namespace Catalyst.Common.UnitTests.IO.Messaging.Correlation
             request.Should().BeTrue();
         }
 
+        public void TryMatchResponseAsync_Should_Not_Match_Existing_Records_With_Non_Matching_Correlation_Id<T>() where T : IMessage, new()
+        {
+            var responseMatchingNothing = new T().ToProtocolMessage(PeerIds[1].PeerId, CorrelationId.GenerateCorrelationId());
+         
+            var request = CorrelationManager.TryMatchResponse(responseMatchingNothing);
+            request.Should().BeFalse();
+        }
+
         [Fact]
-        public void UncorrelatedMessage_should_not_propagate_to_next_pipeline()
+        public void UncorrelatedMessage_Should_Not_Propagate_To_Next_Pipeline()
         {
             var correlationManager = Substitute.For<IMessageCorrelationManager>();
             correlationManager.TryMatchResponse(Arg.Any<ProtocolMessage>()).Returns(false);
@@ -117,22 +201,16 @@ namespace Catalyst.Common.UnitTests.IO.Messaging.Correlation
             channelHandlerContext.DidNotReceive().FireChannelRead(nonCorrelatedMessage);
         }
 
-        [Fact]
-        public void TryMatchResponseAsync_should_not_match_existing_records_with_non_matching_correlation_id()
+        [Fact] 
+        public void TryMatchResponseAsync_Should_Not_Match_On_Wrong_Response_Type()
         {
-            var responseMatchingNothing = new PingResponse().ToProtocolMessage(PeerIds[1].PeerId, CorrelationId.GenerateCorrelationId());
-         
-            var request = CorrelationManager.TryMatchResponse(responseMatchingNothing);
-            request.Should().BeFalse();
-        }
+            var matchingRequest = PendingRequests[2].Content;
+            var matchingRequestWithWrongType =
+                new PeerNeighborsResponse().ToProtocolMessage(matchingRequest.PeerId, matchingRequest.CorrelationId.ToCorrelationId());
 
-        [Fact(Skip = "Think underlying functionality changed considerably since this was written need to confirm")] // @TODO 
-        public void TryMatchResponseAsync_should_not_match_on_wrong_response_type()
-        {
-            var matchingRequest = PendingRequests[3].Content;
-         
-            new Action(() => CorrelationManager.TryMatchResponse(matchingRequest))
-               .Should().Throw<ArgumentException>();
+            new Action(() => CorrelationManager.TryMatchResponse(matchingRequestWithWrongType))
+               .Should().Throw<InvalidDataException>()
+               .And.Message.Should().Contain(PeerNeighborsResponse.Descriptor.ShortenedFullName());
         }
 
         protected virtual void Dispose(bool disposing)

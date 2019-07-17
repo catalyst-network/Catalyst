@@ -56,7 +56,7 @@ namespace Catalyst.Common.Extensions
             return new ProtocolMessage
             {
                 PeerId = senderId,
-                CorrelationId = (correlationId == default ? CorrelationId.GenerateCorrelationId().Id : correlationId.Id).ToByteString(),
+                CorrelationId = (correlationId?.Id ?? CorrelationId.GenerateCorrelationId().Id).ToByteString(),
 
                 TypeUrl = typeUrl,
                 Value = protobufObject.ToByteString()
@@ -94,25 +94,6 @@ namespace Catalyst.Common.Extensions
         public static string ToMultihashString(this ByteString byteString)
         {
             return ToMultihash(byteString).ToString();
-        }
-
-        public static string GetRequestType(this string responseTypeUrl)
-        {
-            return SwapSuffixes(responseTypeUrl, MessageTypes.Response.Name, MessageTypes.Request.Name);
-        }
-
-        public static string GetResponseType(this string requestTypeUrl)
-        {
-            return SwapSuffixes(requestTypeUrl, MessageTypes.Request.Name, MessageTypes.Response.Name);
-        }
-
-        private static string SwapSuffixes(string requestTypeUrl, string originalSuffix, string targetSuffix)
-        {
-            Guard.Argument(requestTypeUrl, nameof(requestTypeUrl)).NotNull()
-               .Require(t => t.EndsWith(originalSuffix), t => $"{t} should end with {originalSuffix}");
-            return requestTypeUrl
-                   .Remove(requestTypeUrl.Length - originalSuffix.Length, originalSuffix.Length)
-              + targetSuffix;
         }
 
         public static ByteString PublicKeyToProtobuf(this string publicKey)

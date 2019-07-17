@@ -25,5 +25,8 @@ using Catalyst.Common.Interfaces.IO.Observables;
 
 namespace Catalyst.Common.IO.Events
 {
-    public class SocketClientRegistryEvent : IObservableEvent { }
+    public class SocketClientRegistryEvent : ISocketClientRegistryEvent
+    {
+        public int SocketHashCode { set; get; }
+    }
 }

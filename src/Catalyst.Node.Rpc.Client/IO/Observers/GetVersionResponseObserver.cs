@@ -86,8 +86,6 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
             Guard.Argument(versionResponse, nameof(versionResponse)).NotNull("The VersionResponse cannot be null")
                .Require(d => d.Version != null,
                     d => $"{nameof(versionResponse)} must have a valid Version.");
-
-            SendMessage(versionResponse, senderPeerIdentifier);
         }
     }
 }

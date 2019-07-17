@@ -21,11 +21,13 @@
 
 #endregion
 
+using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.IO.Observers;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Rpc.IO.Messaging.Dto;
 using Catalyst.Common.IO.Observers;
 using Catalyst.Node.Rpc.Client.IO.Messaging.Dto;
+using DotNetty.Transport.Channels;
 using Google.Protobuf;
 using Serilog;
 using System;
@@ -45,7 +47,13 @@ namespace Catalyst.Node.Rpc.Client.IO
             MessageResponseStream = _messageResponse.AsObservable();
         }
 
-        protected void SendMessage(TProto message, IPeerIdentifier senderPeerIdentifier)
+        protected override void RedirectResponse(TProto messageDto, IChannelHandlerContext channelHandlerContext, IPeerIdentifier senderPeerIdentifier, ICorrelationId correlationId)
+        {
+            base.RedirectResponse(messageDto, channelHandlerContext, senderPeerIdentifier, correlationId);
+            AddMessageToResponseStream(messageDto, senderPeerIdentifier);
+        }
+
+        private void AddMessageToResponseStream(TProto message, IPeerIdentifier senderPeerIdentifier)
         {
             _messageResponse.OnNext(new RpcClientMessageDto<IMessage>(message, senderPeerIdentifier));
         }

@@ -102,8 +102,6 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
             {
                 Logger.Information("Press Enter to continue ...");
             }
-
-            SendMessage(signMessageRequest, senderPeerIdentifier);
         }
     }
 }

@@ -102,8 +102,6 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
                     _rpcFileTransferFactory.Remove(correlationId);
                 }
             }
-
-            SendMessage(addFileToDfsResponse, senderPeerIdentifier);
         }
     }
 }

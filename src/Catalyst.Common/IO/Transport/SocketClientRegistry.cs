@@ -38,13 +38,13 @@ namespace Catalyst.Common.IO.Transport
         : ISocketClientRegistry<TSocketChannel>
         where TSocketChannel : class, ISocketClient
     {
-        public IObservable<IObservableEvent> EventStream { private set;  get; }
-        private readonly ReplaySubject<IObservableEvent> _eventReplySubject;
+        public IObservable<ISocketClientRegistryEvent> EventStream { private set;  get; }
+        private readonly ReplaySubject<ISocketClientRegistryEvent> _eventReplySubject;
         public IDictionary<int, TSocketChannel> Registry { get; }
 
         public SocketClientRegistry()
         {
-            _eventReplySubject = new ReplaySubject<IObservableEvent>(1);
+            _eventReplySubject = new ReplaySubject<ISocketClientRegistryEvent>(1);
             EventStream = _eventReplySubject.AsObservable();
 
             Registry = new ConcurrentDictionary<int, TSocketChannel>();
