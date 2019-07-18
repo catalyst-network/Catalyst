@@ -80,10 +80,10 @@ namespace Catalyst.Node.Rpc.Client
             Channel = socket.Channel;
         }
 
-        public void Subscribe<T>(Action<T> onNext)
+        public void SubscribeToResponse<T>(Action<T> onNext)
         {
             _messageSubscriptions.Add(_messageResponseStream.Where(x => x.Message.GetType() == typeof(T)).SubscribeOn(NewThreadScheduler.Default).Subscribe(rpcClientMessageDto =>
-                onNext((T)rpcClientMessageDto.Message)
+                onNext((T) rpcClientMessageDto.Message)
             ));
         }
 
@@ -93,6 +93,7 @@ namespace Catalyst.Node.Rpc.Client
             {
                 subscription?.Dispose();
             }
+
             _messageSubscriptions.Clear();
             _messageResponse?.Dispose();
             base.Dispose(disposing);
