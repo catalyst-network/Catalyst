@@ -40,7 +40,7 @@ namespace Catalyst.Node.Rpc.Client.IO
 {
     public abstract class RpcResponseObserver<TProto> : ResponseObserverBase<TProto>, IRpcResponseObserver<TProto>, IRpcResponseObserver where TProto : IMessage<TProto>
     {
-        private ConcurrentBag<IDisposable> _messageResponseSubscriptions;
+        private readonly ConcurrentBag<IDisposable> _messageResponseSubscriptions;
         private readonly ReplaySubject<IRpcClientMessageDto<IMessage>> _messageResponse;
         public IObservable<IRpcClientMessageDto<IMessage>> MessageResponseStream { private set; get; }
 

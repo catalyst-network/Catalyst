@@ -47,8 +47,8 @@ namespace Catalyst.Node.Rpc.Client
     /// </summary>
     internal sealed class NodeRpcClient : TcpClient, INodeRpcClient
     {
-        private ConcurrentBag<IDisposable> _messageSubscriptions;
-        private ReplaySubject<IRpcClientMessageDto<IMessage>> _messageResponse;
+        private readonly ConcurrentBag<IDisposable> _messageSubscriptions;
+        private readonly ReplaySubject<IRpcClientMessageDto<IMessage>> _messageResponse;
         private IObservable<IRpcClientMessageDto<IMessage>> _messageResponseStream;
 
         /// <summary>
