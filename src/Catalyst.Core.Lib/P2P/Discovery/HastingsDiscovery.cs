@@ -46,44 +46,6 @@ using SharpRepository.Repository;
 
 namespace Catalyst.Core.Lib.P2P.Discovery
 {
-    public sealed class HastingDiscoveryTest : HastingsDiscovery
-    {
-        public HastingDiscoveryTest(ILogger logger,
-            IRepository<Peer> peerRepository,
-            IDns dns,
-            IPeerSettings peerSettings,
-            IPeerClient peerClient,
-            IDtoFactory dtoFactory,
-            IPeerMessageCorrelationManager peerMessageCorrelationManager,
-            ICancellationTokenProvider cancellationTokenProvider,
-            IEnumerable<IPeerClientObservable> peerClientObservables,
-            bool autoStart = true,
-            int peerDiscoveryBurnIn = 10,
-            IHastingsOriginator state = default,
-            IHastingCareTaker hastingCareTaker = default,
-            IHastingsOriginator stateCandidate = default) 
-            : base(logger,
-                peerRepository,
-                dns,
-                peerSettings,
-                peerClient,
-                dtoFactory,
-                peerMessageCorrelationManager,
-                cancellationTokenProvider,
-                peerClientObservables,
-                autoStart,
-                peerDiscoveryBurnIn,
-                state,
-                hastingCareTaker,
-                stateCandidate) { }
-
-        public new void WalkForward() { base.WalkForward(); }
-
-        public new void WalkBack() { base.WalkBack(); }
-
-        public new bool HasValidCandidate() { return base.HasValidCandidate(); }
-    }
-    
     public class HastingsDiscovery 
         : IHastingsDiscovery, IDisposable
     {

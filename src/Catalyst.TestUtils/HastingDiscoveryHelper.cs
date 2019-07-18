@@ -30,20 +30,112 @@ using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.Network;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.Discovery;
+using Catalyst.Common.Interfaces.P2P.IO;
+using Catalyst.Common.Interfaces.P2P.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.P2P.IO.Messaging.Dto;
+using Catalyst.Common.Interfaces.P2P.ReputationSystem;
 using Catalyst.Common.Interfaces.Util;
 using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Common.IO.Messaging.Dto;
+using Catalyst.Common.P2P;
 using Catalyst.Common.Util;
 using Catalyst.Core.Lib.P2P.Discovery;
+using Catalyst.Core.Lib.P2P.IO.Messaging.Correlation;
 using Catalyst.Protocol.IPPN;
 using DnsClient;
+using Microsoft.Extensions.Caching.Memory;
 using NSubstitute;
+using Serilog;
+using SharpRepository.Repository;
 
 namespace Catalyst.TestUtils
 {
     public static class HastingDiscoveryHelper
     {
+        public class HastingDiscoveryTestBuilder
+        {
+            private readonly List<Action<HastingDiscoveryTest>> _builderActions;
+
+            public static HastingDiscoveryTestBuilder CreateHastingDiscoveryTestBuilder()
+            {
+                return new HastingDiscoveryTestBuilder();
+            }
+        
+            public HastingDiscoveryTestBuilder()
+            {
+                _builderActions = new List<Action<HastingDiscoveryTest>>();
+            }
+        }
+
+        public sealed class HastingDiscoveryTest : HastingsDiscovery
+        {
+            internal HastingDiscoveryTest(ILogger logger = default,
+                IRepository<Peer> peerRepository = default,
+                IDns dns = default,
+                IPeerSettings peerSettings = default,
+                IPeerClient peerClient = default,
+                IDtoFactory dtoFactory = default,
+                IPeerMessageCorrelationManager peerMessageCorrelationManager = default,
+                ICancellationTokenProvider cancellationTokenProvider = default,
+                IEnumerable<IPeerClientObservable> peerClientObservables = default,
+                bool autoStart = true,
+                int peerDiscoveryBurnIn = 10,
+                IHastingsOriginator state = default,
+                IHastingCareTaker hastingCareTaker = default,
+                IHastingsOriginator stateCandidate = default) 
+                : base(logger ?? Substitute.For<ILogger>(),
+                    peerRepository ?? Substitute.For<IRepository<Peer>>(),
+                    dns ?? MockDnsClient(peerSettings),
+                    peerSettings ?? PeerSettingsHelper.TestPeerSettings(),
+                    peerClient ?? Substitute.For<IPeerClient>(),
+                    dtoFactory ?? Substitute.For<IDtoFactory>(),
+                    peerMessageCorrelationManager ?? MockCorrelationManager(),
+                    cancellationTokenProvider ?? new CancellationTokenProvider(),
+                    peerClientObservables,
+                    autoStart,
+                    peerDiscoveryBurnIn,
+                    state ?? Substitute.For<IHastingsOriginator>(),
+                    hastingCareTaker ?? Substitute.For<IHastingCareTaker>(),
+                    stateCandidate ?? Substitute.For<IHastingsOriginator>()) { }
+
+            public new void WalkForward() { base.WalkForward(); }
+
+            public new void WalkBack() { base.WalkBack(); }
+
+            public new bool HasValidCandidate() { return base.HasValidCandidate(); }
+        }
+
+        public static HastingDiscoveryTest GetTestInstanceOfDiscovery(ILogger logger,
+            IRepository<Peer> peerRepository,
+            IDns dns,
+            IPeerSettings peerSettings,
+            IPeerClient peerClient,
+            IDtoFactory dtoFactory,
+            IPeerMessageCorrelationManager peerMessageCorrelationManager,
+            ICancellationTokenProvider cancellationTokenProvider,
+            IEnumerable<IPeerClientObservable> peerClientObservables,
+            bool autoStart = true,
+            int peerDiscoveryBurnIn = 10,
+            IHastingsOriginator state = default,
+            IHastingCareTaker hastingCareTaker = default,
+            IHastingsOriginator stateCandidate = default)
+        {
+            return new HastingDiscoveryTest(logger,
+                peerRepository,
+                dns,
+                peerSettings,
+                peerClient,
+                dtoFactory,
+                peerMessageCorrelationManager,
+                cancellationTokenProvider,
+                peerClientObservables,
+                autoStart,
+                peerDiscoveryBurnIn,
+                state,
+                hastingCareTaker,
+                stateCandidate);
+        }
+
         public static IHastingsOriginator MockOriginator(IPeerIdentifier peer = default,
             IList<IPeerIdentifier> currentPeersNeighbours = default,
             KeyValuePair<ICorrelationId, IPeerIdentifier> expectedPnr = default,
@@ -83,13 +175,13 @@ namespace Catalyst.TestUtils
 
         public static IHastingMemento MockSeedState(IPeerIdentifier ownNode, List<string> domains, IPeerSettings peerSettings)
         {
-            return MockMemento(ownNode, SubDnsClient(domains, peerSettings)
+            return MockMemento(ownNode, MockDnsClient(peerSettings, domains)
                .GetSeedNodesFromDns(peerSettings.SeedServers).ToList());
         }
         
         public static IHastingMemento SubSeedState(IPeerIdentifier ownNode, List<string> domains, IPeerSettings peerSettings)
         {
-            return SubMemento(ownNode, SubDnsClient(domains, peerSettings)
+            return SubMemento(ownNode, MockDnsClient(peerSettings, domains)
                .GetSeedNodesFromDns(peerSettings.SeedServers).ToList());
         }
         
@@ -101,7 +193,7 @@ namespace Catalyst.TestUtils
         public static IList<IPeerIdentifier> MockNeighbours(int amount = 5)
         {
             return Enumerable.Range(0, amount).Select(i =>
-                PeerIdentifierHelper.GetPeerIdentifier($"neighbour-{i.ToString()}")).ToList();
+                PeerIdentifierHelper.GetPeerIdentifier($"neighbour-{i.ToString()}-{Helper.RandomString()}")).ToList();
         }
 
         public static IList<KeyValuePair<ICorrelationId, IPeerIdentifier>> MockContactedNeighboursValuePairs(IEnumerable<IPeerIdentifier> neighbours = default)
@@ -144,10 +236,16 @@ namespace Catalyst.TestUtils
             return state.Count >= depth ? MockMementoHistory(state) : state;
         }
         
-        public static IDns SubDnsClient(List<string> domains,
-            IPeerSettings settings,
-            string seedPid = "0x41437c30317c39322e3230372e3137382e3139387c34323036397c3031323334353637383930313233343536373839")
+        public static IDns MockDnsClient(IPeerSettings settings,
+            List<string> domains = default,
+            string seedPid =
+                "0x41437c30317c39322e3230372e3137382e3139387c34323036397c3031323334353637383930313233343536373839")
         {
+            if (domains == default)
+            {
+                domains = Enumerable.Range(0, 5).Select(i => Helper.RandomString()).ToList();
+            }
+            
             domains.ForEach(domain =>
             {
                 MockQueryResponse.CreateFakeLookupResult(domain, seedPid, Substitute.For<ILookupClient>());
@@ -221,6 +319,18 @@ namespace Catalyst.TestUtils
             });
 
             return subbedDtoFactory;
+        }
+
+        public static IPeerMessageCorrelationManager MockCorrelationManager(IReputationManager reputationManager = default,
+            IMemoryCache memoryCache = default,
+            IChangeTokenProvider changeTokenProvider = default,
+            ILogger logger = default)
+        {
+            return new PeerMessageCorrelationManager(
+                reputationManager ?? Substitute.For<IReputationManager>(),
+                memoryCache ?? Substitute.For<IMemoryCache>(),
+                Substitute.For<ILogger>(),
+                changeTokenProvider ?? new TtlChangeTokenProvider(3));
         }
     }
 }

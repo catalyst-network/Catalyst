@@ -78,7 +78,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
         }
 
         [Fact]
-        public async Task Evicted_Known_Ping_Message_Sets_Contacted_Neighbour_As_UnReachable()
+        public async Task Evicted_Known_Ping_Message_Sets_Contacted_Neighbour_As_UnReachable_And_Can_RollBack_State()
         {
             var cacheEntriesByRequest = new Dictionary<ByteString, ICacheEntry>();
             var pr = new PingResponseObserver(Substitute.For<ILogger>());
@@ -100,11 +100,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
 
             var memoryCache = Substitute.For<IMemoryCache>();
             
-            var peerMessageCorrelationManager = new PeerMessageCorrelationManager(
-                Substitute.For<IReputationManager>(),
-                memoryCache,
-                Substitute.For<ILogger>(),
-                new TtlChangeTokenProvider(3));
+            var peerMessageCorrelationManager = HastingDiscoveryHelper.MockCorrelationManager(default, memoryCache);
                 
             var correlatableMessages = new List<CorrelatableMessage<ProtocolMessage>>();
             stateCandidate.ContactedNeighbours.ToList().ForEach(i =>
@@ -120,10 +116,10 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
                 peerMessageCorrelationManager.AddPendingRequest(msg);
             });
             
-            using (var walker = new HastingDiscoveryTest(
+            using (var walker = HastingDiscoveryHelper.GetTestInstanceOfDiscovery(
                 Substitute.For<ILogger>(),
                 Substitute.For<IRepository<Peer>>(),
-                HastingDiscoveryHelper.SubDnsClient(_settings.SeedServers.ToList(), _settings),
+                HastingDiscoveryHelper.MockDnsClient(_settings, _settings.SeedServers.ToList()),
                 _settings,
                 Substitute.For<IPeerClient>(),
                 Substitute.For<IDtoFactory>(),
@@ -182,10 +178,10 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
             stateCandidate.ExpectedPnr = knownPnr;
             stateCandidate.CurrentPeersNeighbours.Clear();
 
-            using (var walker = new HastingDiscoveryTest(
+            using (var walker = HastingDiscoveryHelper.GetTestInstanceOfDiscovery(
                 Substitute.For<ILogger>(),
                 Substitute.For<IRepository<Peer>>(),
-                HastingDiscoveryHelper.SubDnsClient(_settings.SeedServers.ToList(), _settings),
+                HastingDiscoveryHelper.MockDnsClient(_settings, _settings.SeedServers.ToList()),
                 _settings,
                 Substitute.For<IPeerClient>(),
                 Substitute.For<IDtoFactory>(),
@@ -251,10 +247,10 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
             var stateCandidate = HastingDiscoveryHelper.MockOriginator(default, default, knownPnr);
             stateCandidate.CurrentPeersNeighbours.Clear();
 
-            using (var walker = new HastingDiscoveryTest(
+            using (var walker = HastingDiscoveryHelper.GetTestInstanceOfDiscovery(
                 Substitute.For<ILogger>(),
                 Substitute.For<IRepository<Peer>>(),
-                HastingDiscoveryHelper.SubDnsClient(_settings.SeedServers.ToList(), _settings),
+                HastingDiscoveryHelper.MockDnsClient(_settings, _settings.SeedServers.ToList()),
                 _settings,
                 Substitute.For<IPeerClient>(),
                 Substitute.For<IDtoFactory>(),

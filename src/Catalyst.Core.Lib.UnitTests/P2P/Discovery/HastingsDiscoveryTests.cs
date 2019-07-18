@@ -100,7 +100,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
         {   
             using (var walker = new HastingsDiscovery(_logger,
                 Substitute.For<IRepository<Peer>>(),
-                HastingDiscoveryHelper.SubDnsClient(_dnsDomains, _settings),
+                HastingDiscoveryHelper.MockDnsClient(_settings, _dnsDomains),
                 _settings,
                 Substitute.For<IPeerClient>(),
                 Substitute.For<IDtoFactory>(),
@@ -129,7 +129,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
                 (IPeerClientObservable) Activator.CreateInstance(observer, _logger)
             };
 
-            var initialMemento = HastingDiscoveryHelper.SubMemento(_ownNode, HastingDiscoveryHelper.SubDnsClient(_dnsDomains, _settings)
+            var initialMemento = HastingDiscoveryHelper.SubMemento(_ownNode, HastingDiscoveryHelper.MockDnsClient(_settings, _dnsDomains)
                .GetSeedNodesFromDns(_settings.SeedServers).ToList()
             );
             
@@ -143,7 +143,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
             
             using (var walker = new HastingsDiscovery(_logger,
                 Substitute.For<IRepository<Peer>>(),
-                HastingDiscoveryHelper.SubDnsClient(_dnsDomains, _settings),
+                HastingDiscoveryHelper.MockDnsClient(_settings, _dnsDomains),
                 _settings,
                 Substitute.For<IPeerClient>(),
                 Substitute.For<IDtoFactory>(),
@@ -183,7 +183,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
             };
 
             var initialMemento = HastingDiscoveryHelper.SubMemento(_ownNode, 
-                HastingDiscoveryHelper.SubDnsClient(_dnsDomains, _settings)
+                HastingDiscoveryHelper.MockDnsClient(_settings, _dnsDomains)
                    .GetSeedNodesFromDns(_settings.SeedServers).ToList()
             );
             
@@ -195,7 +195,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
 
             using (var walker = new HastingsDiscovery(_logger,
                 Substitute.For<IRepository<Peer>>(),
-                HastingDiscoveryHelper.SubDnsClient(_dnsDomains, _settings),
+                HastingDiscoveryHelper.MockDnsClient(_settings, _dnsDomains),
                 _settings,
                 Substitute.For<IPeerClient>(),
                 Substitute.For<IDtoFactory>(),
@@ -252,7 +252,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
             
             using (var walker = new HastingsDiscovery(_logger,
                 Substitute.For<IRepository<Peer>>(),
-                HastingDiscoveryHelper.SubDnsClient(_dnsDomains, _settings),
+                HastingDiscoveryHelper.MockDnsClient(_settings, _dnsDomains),
                 _settings,
                 Substitute.For<IPeerClient>(),
                 Substitute.For<IDtoFactory>(),
@@ -294,7 +294,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
                 new GetNeighbourResponseObserver(_logger)
             };
 
-            var initialMemento = HastingDiscoveryHelper.SubMemento(_ownNode, HastingDiscoveryHelper.SubDnsClient(_dnsDomains, _settings)
+            var initialMemento = HastingDiscoveryHelper.SubMemento(_ownNode, HastingDiscoveryHelper.MockDnsClient(_settings, _dnsDomains)
                .GetSeedNodesFromDns(_settings.SeedServers).ToList()
             );
             
@@ -305,7 +305,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
 
             using (var walker = new HastingsDiscovery(_logger,
                 Substitute.For<IRepository<Peer>>(),
-                HastingDiscoveryHelper.SubDnsClient(_dnsDomains, _settings),
+                HastingDiscoveryHelper.MockDnsClient(_settings, _dnsDomains),
                 _settings,
                 Substitute.For<IPeerClient>(),
                 Substitute.For<IDtoFactory>(),
@@ -345,7 +345,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
             
             var subbedDtoFactory = HastingDiscoveryHelper.SubDtoFactory(_ownNode, contactedNeighboursValuePairs, new PingResponse());
             
-            var initialMemento = HastingDiscoveryHelper.SubMemento(_ownNode, HastingDiscoveryHelper.SubDnsClient(_dnsDomains, _settings)
+            var initialMemento = HastingDiscoveryHelper.SubMemento(_ownNode, HastingDiscoveryHelper.MockDnsClient(_settings, _dnsDomains)
                .GetSeedNodesFromDns(_settings.SeedServers).ToList()
             );
             
@@ -360,7 +360,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
             
             using (var walker = new HastingsDiscovery(_logger,
                 Substitute.For<IRepository<Peer>>(),
-                HastingDiscoveryHelper.SubDnsClient(_dnsDomains, _settings),
+                HastingDiscoveryHelper.MockDnsClient(_settings, _dnsDomains),
                 _settings,
                 Substitute.For<IPeerClient>(),
                 subbedDtoFactory,
@@ -424,7 +424,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
 
             evictionEvent.OnNext(pnr);
             
-            var initialMemento = HastingDiscoveryHelper.SubMemento(_ownNode, HastingDiscoveryHelper.SubDnsClient(_dnsDomains, _settings)
+            var initialMemento = HastingDiscoveryHelper.SubMemento(_ownNode, HastingDiscoveryHelper.MockDnsClient(_settings, _dnsDomains)
                .GetSeedNodesFromDns(_settings.SeedServers).ToList()
             );
             
@@ -441,7 +441,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
 
             using (var walker = new HastingsDiscovery(_logger,
                 Substitute.For<IRepository<Peer>>(),
-                HastingDiscoveryHelper.SubDnsClient(_dnsDomains, _settings),
+                HastingDiscoveryHelper.MockDnsClient(_settings, _dnsDomains),
                 _settings,
                 Substitute.For<IPeerClient>(),
                 Substitute.For<IDtoFactory>(),
@@ -489,7 +489,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
             evictionEvent.OnNext(pnr);
             using (var walker = new HastingsDiscovery(_logger,
                 Substitute.For<IRepository<Peer>>(),
-                HastingDiscoveryHelper.SubDnsClient(_dnsDomains, _settings),
+                HastingDiscoveryHelper.MockDnsClient(_settings, _dnsDomains),
                 _settings,
                 Substitute.For<IPeerClient>(),
                 Substitute.For<IDtoFactory>(),
