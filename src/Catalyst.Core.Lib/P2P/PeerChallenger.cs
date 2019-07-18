@@ -25,20 +25,20 @@ using System;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
-using Catalyst.Common.Interfaces.IO.Observers;
 using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.Extensions;
 using Serilog;
-using System.Linq;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Catalyst.Common.Util;
 using Catalyst.Protocol;
+using System.Threading;
+using Catalyst.Common.Config;
 
 namespace Catalyst.Core.Lib.P2P
 {
-    public class PeerChallenger : IPeerChallenger
+    public class PeerChallenger : IPeerChallenger, IDisposable
     {
         private readonly IPeerService _peerService;
         private readonly ILogger _logger;
@@ -46,13 +46,16 @@ namespace Catalyst.Core.Lib.P2P
         private readonly IPeerClient _peerClient;
         private readonly string _messageType = PingResponse.Descriptor.ShortenedFullName();
 
+        private readonly CancellationTokenSource _cancellationTokenSource 
+            = new CancellationTokenSource(TimeSpan.FromMilliseconds(Constants.WaitTimeForPeerChallengeMilliseconds));
+
         public object PeerIdentifierHelper { get; private set; }
 
         public PeerChallenger(IPeerSettings peerSettings,
             IPeerService peerService,
             ILogger logger,
             IPeerClient peerClient,
-            IPeerIdentifier senderIdentifier) 
+            IPeerIdentifier senderIdentifier)
         {
             _peerService = peerService;
             _senderIdentifier = senderIdentifier;
@@ -62,7 +65,6 @@ namespace Catalyst.Core.Lib.P2P
 
         async public Task<bool> ChallengePeerAsync(IPeerIdentifier recipientPeerIdentifier)
         {
-            bool valid = false;
             try
             {
                 var correlationId = CorrelationId.GenerateCorrelationId();
@@ -75,32 +77,26 @@ namespace Catalyst.Core.Lib.P2P
                   correlationId
                 );
 
-                ((PeerClient)_peerClient).SendMessage(messageDto);
+                _peerClient.SendMessage(messageDto);
 
-                var tasks = new IObservableMessageStreamer<ProtocolMessage>[]
-                    {
-                        _peerService
-                    }
-                    .Select(async p =>
-                        await p.MessageStream.FirstAsync(a => a != null && a != NullObjects.ObserverDto
-                        && a.Payload.TypeUrl == _messageType
-                        && a.Payload.PeerId.PublicKey.ToStringUtf8() == recipientPeerIdentifier.PeerId.PublicKey.ToStringUtf8())
-                        ).FirstOrDefault();
+                var t = _peerService.MessageStream.FirstAsync(a => a != null && a != NullObjects.ObserverDto
+                    && a.Payload.TypeUrl == _messageType
+                    && a.Payload.PeerId.PublicKey.ToStringUtf8() == recipientPeerIdentifier.PeerId.PublicKey.ToStringUtf8());
 
-
-                await Task.WhenAny(tasks, Task.Delay(10000));
-
-                if (tasks.IsCompleted)
-                {
-                    valid = true;
-                }
+                await t.RunAsync(_cancellationTokenSource.Token);
             }
             catch (Exception e)
             {
                 _logger.Error(e.Message);
+                return false;
             }
+            return true;
+        }
 
-            return valid;
+        public void Dispose()
+        {
+            _cancellationTokenSource?.Cancel();
+            _cancellationTokenSource?.Dispose();
         }
     }
 }

@@ -149,9 +149,9 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P
             return await peerValidator.ChallengePeerAsync(recipient);
         }
 
-        public new void Dispose()
+        protected override void Dispose(bool disposing)
         {
-            base.Dispose();
+            base.Dispose(true);
             _peerService?.Dispose();
         }
     }   
