@@ -35,7 +35,7 @@ using System.Linq.Expressions;
 
 namespace Catalyst.Common.Repository
 {
-    public class RepositoryWrapper<T> : IRepositoryWrapper<T> where T : class, IDocument, new()
+    public class RepositoryWrapper<T> : IRepositoryWrapper<T> where T : class, IDocument
     {
         public RepositoryWrapper(IRepository<T, string> repository)
         {
@@ -46,7 +46,7 @@ namespace Catalyst.Common.Repository
 
         public IRepositoryConventions Conventions
         {
-            get { return _repository.Conventions; }
+            get => _repository.Conventions;
             set => _repository.Conventions = value;
         }
 

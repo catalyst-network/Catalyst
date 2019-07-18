@@ -29,8 +29,6 @@ namespace Catalyst.Common.Repository
 {
     public class AccountRepository : RepositoryWrapper<Account>, IAccountRepository
     {
-        public AccountRepository(IRepository<Account, string> repository) : base(repository)
-        {
-        }
+        public AccountRepository(IRepository<Account, string> repository) : base(repository) { }
     }
 }

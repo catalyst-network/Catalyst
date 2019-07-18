@@ -21,19 +21,9 @@
 
 #endregion
 
-using System.IO;
-using Catalyst.Common.Interfaces.FileSystem;
-using SharpRepository.XmlRepository;
+using Catalyst.Common.Rpc.Authentication;
 
-namespace Catalyst.Common.FileSystem
+namespace Catalyst.Common.Interfaces.Repository
 {
-    /// <summary>
-    /// Xml Repository where base folder is derived from the file system <see cref="IFileSystem"/>
-    /// </summary>
-    /// <typeparam name="T">Type of object</typeparam>
-    /// <seealso cref="SharpRepository.XmlRepository.XmlRepository{T}" />
-    public class FileSystemAwareXmlRepository<T> : XmlRepository<T, string> where T : class, new()
-    {
-        public FileSystemAwareXmlRepository(IFileSystem fileSystem, string path = "") : base(Path.Combine(fileSystem.GetCatalystDataDir().ToString(), path)) { }
-    }
+    public interface IAuthCredentialRepository : IRepositoryWrapper<AuthCredentials> { }
 }

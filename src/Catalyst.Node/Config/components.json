@@ -18,6 +18,14 @@
             ]
         },
         {
+            "type": "Catalyst.Common.Repository.AuthCredentialRepository, Catalyst.Common",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.Repository.IAuthCredentialRepository, Catalyst.Common"
+                }
+            ]
+        },
+        {
             "type": "Catalyst.Common.Repository.AccountRepository, Catalyst.Common",
             "services": [
                 {
@@ -198,10 +206,10 @@
             ]
         },
         {
-            "type": "Catalyst.Common.FileSystem.FileSystemAwareXmlRepository`1[[Catalyst.Core.Lib.Rpc.Authentication.AuthCredentials, Catalyst.Core.Lib]], Catalyst.Common",
+            "type": "Catalyst.Common.FileSystem.FileSystemAwareXmlRepository`1[[Catalyst.Common.Rpc.Authentication.AuthCredentials, Catalyst.Common]], Catalyst.Common",
             "services": [
                 {
-                    "type": "SharpRepository.Repository.IRepository`1[[Catalyst.Core.Lib.Rpc.Authentication.AuthCredentials, Catalyst.Core.Lib]], SharpRepository.Repository"
+                    "type": "SharpRepository.Repository.IRepository`2[[Catalyst.Common.Rpc.Authentication.AuthCredentials, Catalyst.Common], [System.String, mscorlib]], SharpRepository.Repository"
                 }
             ]
         },
@@ -210,14 +218,6 @@
             "services": [
                 {
                     "type": "Microsoft.Extensions.Caching.Memory.IMemoryCache, Microsoft.Extensions.Caching.Abstractions"
-                }
-            ]
-        },
-        {
-            "type": "Catalyst.Core.Lib.Rpc.Authentication.AuthCredentials",
-            "services": [
-                {
-                    "type": "Catalyst.Common.Interfaces.Rpc.Authentication.IAuthCredentials, Catalyst.Common"
                 }
             ]
         },
