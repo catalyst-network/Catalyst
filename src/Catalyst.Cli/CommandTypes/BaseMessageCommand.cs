@@ -84,7 +84,7 @@ namespace Catalyst.Cli.CommandTypes
 
         protected virtual void ResponseMessage(TResponse response)
         {
-            CommandContext.UserOutput.WriteLine($"Response: {typeof(TResponse).ToString()}");
+            CommandContext.UserOutput.WriteLine($"Response: {typeof(TResponse)}");
             CommandContext.UserOutput.WriteLine($"{response.ToJsonString()}");
         }
 
@@ -96,7 +96,7 @@ namespace Catalyst.Cli.CommandTypes
         private void SocketClientRegistryClientAddedOnNext(SocketClientRegistryClientAdded value)
         {
             INodeRpcClient client = CommandContext.SocketClientRegistry.GetClientFromRegistry(value.SocketHashCode);
-            client.Subscribe<TResponse>(CommandResponseOnNext);
+            client.SubscribeToResponse<TResponse>(CommandResponseOnNext);
         }
     }
 }

@@ -22,14 +22,12 @@
 #endregion
 
 using Catalyst.Common.Interfaces.IO.Transport;
-using Catalyst.Common.Interfaces.Rpc.IO.Messaging.Dto;
-using Google.Protobuf;
 using System;
 
 namespace Catalyst.Common.Interfaces.Rpc
 {
     public interface INodeRpcClient : ISocketClient
     {
-        void Subscribe<T>(Action<T> onNext);
+        void SubscribeToResponse<T>(Action<T> onNext);
     }
 }
