@@ -36,25 +36,25 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.TestUtils", "Catal
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Core.Lib.UnitTests", "Catalyst.Core.Lib.UnitTests\Catalyst.Core.Lib.UnitTests.csproj", "{C5D8FAA9-B2AC-4D5B-91AA-07E6D1FC9183}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Cli", "Catalyst.Cli\Catalyst.Cli.csproj", "{065CC0E0-1DE7-4692-990C-B4663A62F044}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Cli", "Catalyst.Cli\Catalyst.Cli.csproj", "{065CC0E0-1DE7-4692-990C-B4663A62F044}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Cli.IntegrationTests", "Catalyst.Cli.IntegrationTests\Catalyst.Cli.IntegrationTests.csproj", "{402730AA-14E5-4C71-9A50-F1EB5B4180E1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Cli.IntegrationTests", "Catalyst.Cli.IntegrationTests\Catalyst.Cli.IntegrationTests.csproj", "{402730AA-14E5-4C71-9A50-F1EB5B4180E1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Cli.UnitTests", "Catalyst.Cli.UnitTests\Catalyst.Cli.UnitTests.csproj", "{3E239CE8-A45A-4DD9-ADE3-4DB337F50B44}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Cli.UnitTests", "Catalyst.Cli.UnitTests\Catalyst.Cli.UnitTests.csproj", "{3E239CE8-A45A-4DD9-ADE3-4DB337F50B44}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Core.Lib", "Catalyst.Core.Lib\Catalyst.Core.Lib.csproj", "{D6C7A736-518A-4719-87F4-D63827285E9E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Core.Lib", "Catalyst.Core.Lib\Catalyst.Core.Lib.csproj", "{D6C7A736-518A-4719-87F4-D63827285E9E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Node.Rpc.Client", "Catalyst.Node.Rpc.Client\Catalyst.Node.Rpc.Client.csproj", "{B5B8247B-3BEA-4EA9-A845-34FE5397AEAB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Node.Rpc.Client", "Catalyst.Node.Rpc.Client\Catalyst.Node.Rpc.Client.csproj", "{B5B8247B-3BEA-4EA9-A845-34FE5397AEAB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Node.Rpc.Client.IntegrationTests", "Catalyst.Node.Rpc.Client.IntegrationTests\Catalyst.Node.Rpc.Client.IntegrationTests.csproj", "{2103F104-1AFE-4700-A321-DB9F1FD9293E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Node.Rpc.Client.IntegrationTests", "Catalyst.Node.Rpc.Client.IntegrationTests\Catalyst.Node.Rpc.Client.IntegrationTests.csproj", "{2103F104-1AFE-4700-A321-DB9F1FD9293E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Node.Rpc.Client.UnitTests", "Catalyst.Node.Rpc.Client.UnitTests\Catalyst.Node.Rpc.Client.UnitTests.csproj", "{E858FC53-A318-4B17-8013-465B4F742736}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Node.Rpc.Client.UnitTests", "Catalyst.Node.Rpc.Client.UnitTests\Catalyst.Node.Rpc.Client.UnitTests.csproj", "{E858FC53-A318-4B17-8013-465B4F742736}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Node", "Catalyst.Node\Catalyst.Node.csproj", "{D3CCB18E-2C8C-4D69-B090-F39C8420ED54}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Node", "Catalyst.Node\Catalyst.Node.csproj", "{D3CCB18E-2C8C-4D69-B090-F39C8420ED54}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Node.UnitTests", "Catalyst.Node.UnitTests\Catalyst.Node.UnitTests.csproj", "{4B03A2FD-8898-44A1-89E0-C386E17F1909}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Node.UnitTests", "Catalyst.Node.UnitTests\Catalyst.Node.UnitTests.csproj", "{4B03A2FD-8898-44A1-89E0-C386E17F1909}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Node.IntegrationTests", "Catalyst.Node.IntegrationTests\Catalyst.Node.IntegrationTests.csproj", "{C1F2BB90-BEF9-463D-85AF-95A27069C2AB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Node.IntegrationTests", "Catalyst.Node.IntegrationTests\Catalyst.Node.IntegrationTests.csproj", "{C1F2BB90-BEF9-463D-85AF-95A27069C2AB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

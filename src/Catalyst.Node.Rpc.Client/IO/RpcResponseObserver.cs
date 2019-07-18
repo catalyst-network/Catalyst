@@ -31,6 +31,7 @@ using DotNetty.Transport.Channels;
 using Google.Protobuf;
 using Serilog;
 using System;
+using System.Collections.Concurrent;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
@@ -39,11 +40,13 @@ namespace Catalyst.Node.Rpc.Client.IO
 {
     public abstract class RpcResponseObserver<TProto> : ResponseObserverBase<TProto>, IRpcResponseObserver<TProto>, IRpcResponseObserver where TProto : IMessage<TProto>
     {
+        private ConcurrentBag<IDisposable> _messageResponseSubscriptions;
         private readonly ReplaySubject<IRpcClientMessageDto<IMessage>> _messageResponse;
         public IObservable<IRpcClientMessageDto<IMessage>> MessageResponseStream { private set; get; }
 
         protected RpcResponseObserver(ILogger logger) : base(logger)
         {
+            _messageResponseSubscriptions = new ConcurrentBag<IDisposable>();
             _messageResponse = new ReplaySubject<IRpcClientMessageDto<IMessage>>(1);
             MessageResponseStream = _messageResponse.AsObservable();
         }
@@ -61,10 +64,20 @@ namespace Catalyst.Node.Rpc.Client.IO
 
         public void Subscribe(Action<TProto> onNext)
         {
-            MessageResponseStream.Where(x => x.Message is TProto).SubscribeOn(NewThreadScheduler.Default).Subscribe(rpcClientMessageDto =>
+            _messageResponseSubscriptions.Add(MessageResponseStream.Where(x => x.Message is TProto).SubscribeOn(NewThreadScheduler.Default).Subscribe(rpcClientMessageDto =>
+                onNext((TProto)rpcClientMessageDto.Message)
+            ));
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            foreach (var subscription in _messageResponseSubscriptions)
             {
-                onNext((TProto)rpcClientMessageDto.Message);
-            });
+                subscription?.Dispose();
+            }
+            _messageResponseSubscriptions.Clear();
+            _messageResponse?.Dispose();
+            base.Dispose(disposing);
         }
     }
 }
