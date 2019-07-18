@@ -48,10 +48,7 @@ namespace Catalyst.Core.Lib.Modules.Mempool
         {
             Guard.Argument(transactionStore, nameof(transactionStore)).NotNull();
             _transactionStore = transactionStore;
-            _transactionStore.Conventions.GetPrimaryKeyName = _ => nameof(TransactionBroadcast.Signature);
-
             _logger = logger;
-            _transactionStore.CachingEnabled = true;
         }
 
         /// <inheritdoc />

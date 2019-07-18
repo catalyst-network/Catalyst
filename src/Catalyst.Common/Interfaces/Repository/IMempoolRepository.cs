@@ -26,7 +26,7 @@ using Catalyst.Common.Modules.Mempool;
 
 namespace Catalyst.Common.Interfaces.Repository
 {
-    public interface IMempoolRepository : IRepositoryWrapper<MempoolDocument, string>
+    public interface IMempoolRepository : IRepositoryWrapper<MempoolDocument>
     {
     }
 }

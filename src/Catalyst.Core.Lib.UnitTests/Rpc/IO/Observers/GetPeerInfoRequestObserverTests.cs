@@ -70,7 +70,7 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Observers
             _peerRepository.FindAll(Arg.Any<Expression<Func<Peer, bool>>>())
                .Returns(ci =>
                 {
-                    return peers.Where(p => ((Expression<Func<IPeer, bool>>) ci[0]).Compile()(p));
+                    return peers.Where(p => ((Expression<Func<Peer, bool>>) ci[0]).Compile()(p));
                 });
         }
 

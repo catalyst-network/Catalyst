@@ -60,7 +60,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.Modules.Mempool
                 var mempool = container.Resolve<IMempool>();
 
                 var guid = CorrelationId.GenerateCorrelationId().ToString();
-                var mempoolDocument = new MempoolDocument { Transaction = TransactionHelper.GetTransaction(signature: guid) };
+                var mempoolDocument = new MempoolDocument {Transaction = TransactionHelper.GetTransaction(signature: guid)};
 
                 mempool.SaveMempoolDocument(mempoolDocument);
 

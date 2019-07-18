@@ -27,7 +27,7 @@ using System;
 
 namespace Catalyst.Common.Interfaces.P2P
 {
-    public interface IPeer : IDocumentStorable, IAuditable
+    public interface IPeer : IDocument, IAuditable
     {
         /// <summary>Gets the reputation.</summary>
         /// <value>The reputation.</value>

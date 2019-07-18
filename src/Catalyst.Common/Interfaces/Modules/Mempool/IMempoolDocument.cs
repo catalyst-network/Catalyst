@@ -1,11 +1,5 @@
 #region LICENSE
 
-
-
-#endregion
-
-using Catalyst.Common.Interfaces.Repository;
-using Catalyst.Protocol.Transaction;
 /**
 * Copyright (c) 2019 Catalyst Network
 *
@@ -24,9 +18,15 @@ using Catalyst.Protocol.Transaction;
 * You should have received a copy of the GNU General Public License
 * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
+
+#endregion
+
+using Catalyst.Common.Interfaces.Repository;
+using Catalyst.Protocol.Transaction;
+
 namespace Catalyst.Common.Interfaces.Modules.Mempool
 {
-    public interface IMempoolDocument : IDocumentStorable
+    public interface IMempoolDocument : IDocument
     {
         TransactionBroadcast Transaction { get; set; }
     }
