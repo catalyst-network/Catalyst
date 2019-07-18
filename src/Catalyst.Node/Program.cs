@@ -102,11 +102,8 @@ namespace Catalyst.Node
 
                 containerBuilder.RegisterLogger(_logger);
                 containerBuilder.RegisterInstance(config);
-                var persistenceConfiguration = config
-                   .GetSection("CatalystNodeConfiguration")
-                   .GetSection("PersistenceConfiguration");
                 
-                var repoFactory = RepositoryFactory.BuildSharpRepositoryConfiguation(persistenceConfiguration);
+                var repoFactory = RepositoryFactory.BuildSharpRepositoryConfiguation(config.GetSection("CatalystNodeConfiguration:PersistenceConfiguration"));
                 containerBuilder.RegisterSharpRepository(repoFactory);
 
                 var container = containerBuilder.Build();
