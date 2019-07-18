@@ -51,7 +51,7 @@ using System.Threading.Tasks;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
 using Constants = Catalyst.Common.Config.Constants;
 
-namespace Catalyst.Node.Core.IntegrationTests.P2P
+namespace Catalyst.Core.Lib.IntegrationTests.P2P
 {
     public sealed class PeerValidationIntegrationTest : ConfigFileBasedTest, IDisposable
     {
