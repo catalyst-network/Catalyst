@@ -27,6 +27,8 @@ using Catalyst.Common.Attributes;
 using Catalyst.Common.Interfaces.Attributes;
 using Catalyst.Common.Interfaces.Rpc.Authentication;
 using Catalyst.Common.Util;
+using Newtonsoft.Json;
+using SharpRepository.Repository;
 
 namespace Catalyst.Common.Rpc.Authentication
 {
@@ -69,6 +71,8 @@ namespace Catalyst.Common.Rpc.Authentication
         /// <inheritdoc cref="IAuditable.Modified"/>
         public DateTime? Modified { get; set; }
 
+        [RepositoryPrimaryKey(Order = 1)]
+        [JsonProperty("id")]
         public string DocumentId { get; set; }
 
         private void UpdateKey()
