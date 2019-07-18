@@ -27,7 +27,7 @@ using SharpRepository.Repository;
 
 namespace Catalyst.Common.Repository
 {
-    public class MempoolRepository : RepositoryWrapper<MempoolDocument, string>, IMempoolRepository
+    public class MempoolRepository : RepositoryWrapper<MempoolDocument>, IMempoolRepository
     {
         public MempoolRepository(IRepository<MempoolDocument, string> repository) : base(repository)
         {

@@ -25,7 +25,7 @@ using Catalyst.Common.Modules.Ledger;
 
 namespace Catalyst.Common.Interfaces.Repository
 {
-    public interface IAccountRepository : IRepositoryWrapper<Account, string>
+    public interface IAccountRepository : IRepositoryWrapper<Account>
     {
     }
 }

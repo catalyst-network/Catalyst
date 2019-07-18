@@ -125,8 +125,8 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Observers
 
             var removePeerRequest = new RemovePeerRequest
             {
-                PeerIp = targetPeerToDelete.PeerIdentifier.Ip.To16Bytes().ToByteString(),
-                PublicKey = withPublicKey ? targetPeerToDelete.PeerIdentifier.PublicKey.ToByteString() : ByteString.Empty
+                PeerIp = targetPeerToDelete.PeerIdentifier.PeerId.Ip,
+                PublicKey = withPublicKey ? targetPeerToDelete.PeerIdentifier.PeerId.PublicKey : ByteString.Empty
             };
 
             var requestMessage = messageFactory.GetDto(
@@ -147,7 +147,7 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Observers
 
             var sentResponseDto = (IMessageDto<ProtocolMessage>)receivedCalls[0].GetArguments().Single();
 
-            var signResponseMessage = sentResponseDto.FromIMessageDto().FromProtocolMessage<RemovePeerResponse>();
+            var signResponseMessage = sentResponseDto.Content.FromProtocolMessage<RemovePeerResponse>();
 
             signResponseMessage.DeletedCount.Should().Be(withPublicKey ? 1 : (uint)fakePeers.Count);
         }

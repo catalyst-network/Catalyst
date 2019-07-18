@@ -31,7 +31,7 @@ namespace Catalyst.Common.Interfaces.Modules.Ledger
     /// This class represent a user account of which there can be the following types:
     /// confidential account, non-confidential account and smart contract account
     /// </summary>
-    public interface IAccount : IDocumentStorable
+    public interface IAccount : IDocument
     {
         /// <summary>
         /// Gets or sets the public address.

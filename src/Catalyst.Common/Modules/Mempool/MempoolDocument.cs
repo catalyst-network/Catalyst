@@ -23,7 +23,6 @@
 
 using Catalyst.Common.Interfaces.Modules.Mempool;
 using Catalyst.Protocol.Transaction;
-using Dawn;
 using Google.Protobuf;
 using Newtonsoft.Json;
 using SharpRepository.Repository;
@@ -32,7 +31,20 @@ namespace Catalyst.Common.Modules.Mempool
 {
     public class MempoolDocument : IMempoolDocument
     {
+        [RepositoryPrimaryKey(Order = 1)]
+        [JsonProperty("id")]
+        public string DocumentId
+        {
+            get;
+            set;
+        }
+
         private TransactionBroadcast _transaction;
+
+        public MempoolDocument()
+        {
+            DocumentId = string.Empty;
+        }
 
         public TransactionBroadcast Transaction
         {
@@ -40,16 +52,8 @@ namespace Catalyst.Common.Modules.Mempool
             set
             {
                 _transaction = value;
-                DocumentId = Transaction.Signature.ToByteString().ToBase64();
+                DocumentId = Transaction?.Signature?.ToByteString()?.ToBase64();
             }
-        }
-
-        [RepositoryPrimaryKey(Order = 1)]
-        [JsonProperty("id")]
-        public string DocumentId
-        {
-            get;
-            set;
         }
     }
 }

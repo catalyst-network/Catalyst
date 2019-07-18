@@ -27,7 +27,7 @@ using SharpRepository.Repository;
 
 namespace Catalyst.Common.Repository
 {
-    public class PeerRepository : RepositoryWrapper<Peer, string>, IPeerRepository
+    public class PeerRepository : RepositoryWrapper<Peer>, IPeerRepository
     {
         public PeerRepository(IRepository<Peer, string> repository) : base(repository)
         {

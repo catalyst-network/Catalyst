@@ -26,7 +26,7 @@ using Catalyst.Common.Interfaces.Repository;
 
 namespace Catalyst.Common.Interfaces.Rpc.Authentication
 {
-    public interface IAuthCredentials : IAuditable, IDocumentStorable
+    public interface IAuthCredentials : IAuditable, IDocument
     {
         /// <summary>Gets or sets the public key.</summary>
         /// <value>The public key.</value>

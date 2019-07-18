@@ -1,3 +1,26 @@
+#region LICENSE
+
+/**
+* Copyright (c) 2019 Catalyst Network
+*
+* This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
+*
+* Catalyst.Node is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 2 of the License, or
+* (at your option) any later version.
+*
+* Catalyst.Node is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
+*/
+
+#endregion
+
 using Catalyst.Common.Interfaces.Repository;
 using SharpRepository.Repository;
 using SharpRepository.Repository.Caching;
@@ -9,26 +32,29 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
 
 namespace Catalyst.Common.Repository
 {
-    public class RepositoryWrapper<T, TKey> : IRepositoryWrapper<T, TKey> where T : class
+    public class RepositoryWrapper<T> : IRepositoryWrapper<T> where T : class, IDocument, new()
     {
-        public RepositoryWrapper(IRepository<T, TKey> repository)
+        public RepositoryWrapper(IRepository<T, string> repository)
         {
             _repository = repository;
         }
 
-        private readonly IRepository<T, TKey> _repository;
+        private readonly IRepository<T, string> _repository;
 
-        public IRepositoryConventions Conventions { get => _repository.Conventions; set => _repository.Conventions = value; }
+        public IRepositoryConventions Conventions
+        {
+            get { return _repository.Conventions; }
+            set => _repository.Conventions = value;
+        }
 
         public Type EntityType => _repository.EntityType;
 
         public Type KeyType => _repository.KeyType;
 
-        public ICachingStrategy<T, TKey> CachingStrategy { get => _repository.CachingStrategy; set => _repository.CachingStrategy = value; }
+        public ICachingStrategy<T, string> CachingStrategy { get => _repository.CachingStrategy; set => _repository.CachingStrategy = value; }
         public bool CachingEnabled { get => _repository.CachingEnabled; set => _repository.CachingEnabled = value; }
 
         public bool CacheUsed => _repository.CacheUsed;
@@ -227,17 +253,17 @@ namespace Catalyst.Common.Repository
             return _repository.Count(predicate);
         }
 
-        public void Delete(TKey key)
+        public void Delete(string key)
         {
             _repository.Delete(key);
         }
 
-        public void Delete(IEnumerable<TKey> keys)
+        public void Delete(IEnumerable<string> keys)
         {
             _repository.Delete(keys);
         }
 
-        public void Delete(params TKey[] keys)
+        public void Delete(params string[] keys)
         {
             _repository.Delete(keys);
         }
@@ -272,7 +298,7 @@ namespace Catalyst.Common.Repository
             _repository.Dispose();
         }
 
-        public bool Exists(TKey key)
+        public bool Exists(string key)
         {
             return _repository.Exists(key);
         }
@@ -327,42 +353,42 @@ namespace Catalyst.Common.Repository
             return _repository.FindAll(criteria, selector, queryOptions);
         }
 
-        public T Get(TKey key)
+        public T Get(string key)
         {
             return _repository.Get(key);
         }
 
-        public T Get(TKey key, IFetchStrategy<T> fetchStrategy)
+        public T Get(string key, IFetchStrategy<T> fetchStrategy)
         {
             return _repository.Get(key, fetchStrategy);
         }
 
-        public T Get(TKey key, params string[] includePaths)
+        public T Get(string key, params string[] includePaths)
         {
             return _repository.Get(key, includePaths);
         }
 
-        public T Get(TKey key, params Expression<Func<T, object>>[] includePaths)
+        public T Get(string key, params Expression<Func<T, object>>[] includePaths)
         {
             return _repository.Get(key, includePaths);
         }
 
-        public TResult Get<TResult>(TKey key, Expression<Func<T, TResult>> selector)
+        public TResult Get<TResult>(string key, Expression<Func<T, TResult>> selector)
         {
             return _repository.Get(key, selector);
         }
 
-        public TResult Get<TResult>(TKey key, Expression<Func<T, TResult>> selector, IFetchStrategy<T> fetchStrategy)
+        public TResult Get<TResult>(string key, Expression<Func<T, TResult>> selector, IFetchStrategy<T> fetchStrategy)
         {
             return _repository.Get(key, selector, fetchStrategy);
         }
 
-        public TResult Get<TResult>(TKey key, Expression<Func<T, TResult>> selector, params Expression<Func<T, object>>[] includePaths)
+        public TResult Get<TResult>(string key, Expression<Func<T, TResult>> selector, params Expression<Func<T, object>>[] includePaths)
         {
             return _repository.Get(key, selector, includePaths);
         }
 
-        public TResult Get<TResult>(TKey key, Expression<Func<T, TResult>> selector, params string[] includePaths)
+        public TResult Get<TResult>(string key, Expression<Func<T, TResult>> selector, params string[] includePaths)
         {
             return _repository.Get(key, selector, includePaths);
         }
@@ -447,47 +473,47 @@ namespace Catalyst.Common.Repository
             return _repository.GetAll(selector, queryOptions, includePaths);
         }
 
-        public IEnumerable<T> GetMany(params TKey[] keys)
+        public IEnumerable<T> GetMany(params string[] keys)
         {
             return _repository.GetMany(keys);
         }
 
-        public IEnumerable<T> GetMany(IEnumerable<TKey> keys)
+        public IEnumerable<T> GetMany(IEnumerable<string> keys)
         {
             return _repository.GetMany(keys);
         }
 
-        public IEnumerable<T> GetMany(IEnumerable<TKey> keys, IFetchStrategy<T> fetchStrategy)
+        public IEnumerable<T> GetMany(IEnumerable<string> keys, IFetchStrategy<T> fetchStrategy)
         {
             return _repository.GetMany(keys, fetchStrategy);
         }
 
-        public IEnumerable<TResult> GetMany<TResult>(Expression<Func<T, TResult>> selector, params TKey[] keys)
+        public IEnumerable<TResult> GetMany<TResult>(Expression<Func<T, TResult>> selector, params string[] keys)
         {
             return _repository.GetMany(selector, keys);
         }
 
-        public IEnumerable<TResult> GetMany<TResult>(IEnumerable<TKey> keys, Expression<Func<T, TResult>> selector)
+        public IEnumerable<TResult> GetMany<TResult>(IEnumerable<string> keys, Expression<Func<T, TResult>> selector)
         {
             return _repository.GetMany(keys, selector);
         }
 
-        public IDictionary<TKey, T> GetManyAsDictionary(params TKey[] keys)
+        public IDictionary<string, T> GetManyAsDictionary(params string[] keys)
         {
             return _repository.GetManyAsDictionary(keys);
         }
 
-        public IDictionary<TKey, T> GetManyAsDictionary(IEnumerable<TKey> keys)
+        public IDictionary<string, T> GetManyAsDictionary(IEnumerable<string> keys)
         {
             return _repository.GetManyAsDictionary(keys);
         }
 
-        public IDictionary<TKey, T> GetManyAsDictionary(IEnumerable<TKey> keys, IFetchStrategy<T> fetchStrategy)
+        public IDictionary<string, T> GetManyAsDictionary(IEnumerable<string> keys, IFetchStrategy<T> fetchStrategy)
         {
             return _repository.GetManyAsDictionary(keys, fetchStrategy);
         }
 
-        public TKey GetPrimaryKey(T entity)
+        public string GetPrimaryKey(T entity)
         {
             return _repository.GetPrimaryKey(entity);
         }
@@ -779,12 +805,12 @@ namespace Catalyst.Common.Repository
             return _repository.TryFind(criteria, selector, queryOptions, out entity);
         }
 
-        public bool TryGet(TKey key, out T entity)
+        public bool TryGet(string key, out T entity)
         {
             return _repository.TryGet(key, out entity);
         }
 
-        public bool TryGet<TResult>(TKey key, Expression<Func<T, TResult>> selector, out TResult entity)
+        public bool TryGet<TResult>(string key, Expression<Func<T, TResult>> selector, out TResult entity)
         {
             return _repository.TryGet(key, selector, out entity);
         }

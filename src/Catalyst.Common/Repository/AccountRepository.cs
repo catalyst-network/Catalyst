@@ -27,7 +27,7 @@ using SharpRepository.Repository;
 
 namespace Catalyst.Common.Repository
 {
-    public class AccountRepository : RepositoryWrapper<Account, string>, IAccountRepository
+    public class AccountRepository : RepositoryWrapper<Account>, IAccountRepository
     {
         public AccountRepository(IRepository<Account, string> repository) : base(repository)
         {
