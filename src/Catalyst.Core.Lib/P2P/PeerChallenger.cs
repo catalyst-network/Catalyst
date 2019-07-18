@@ -38,7 +38,7 @@ using Catalyst.Common.Config;
 
 namespace Catalyst.Core.Lib.P2P
 {
-    public class PeerChallenger : IPeerChallenger, IDisposable
+    public sealed class PeerChallenger : IPeerChallenger, IDisposable
     {
         private readonly IPeerService _peerService;
         private readonly ILogger _logger;
@@ -94,7 +94,7 @@ namespace Catalyst.Core.Lib.P2P
         }
 
         public void Dispose()
-        {
+        {            
             _cancellationTokenSource?.Cancel();
             _cancellationTokenSource?.Dispose();
         }
