@@ -73,7 +73,7 @@ namespace Catalyst.Common.IO.Observers
             ChannelHandlerContext?.CloseAsync().ConfigureAwait(false);
         }
 
-        private void Dispose(bool disposing)
+        protected virtual void Dispose(bool disposing)
         {
             if (!disposing)
             {
@@ -87,6 +87,7 @@ namespace Catalyst.Common.IO.Observers
         public void Dispose()
         {
             Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 }
