@@ -32,7 +32,7 @@ using System.Collections.Generic;
 
 namespace Catalyst.Common.Repository
 {
-    public class CosmosDbRepository<T, TKey> : DocumentDbRepository<T, TKey>
+    public class CosmosDbRepository<T> : DocumentDbRepository<T, string>
         where T : class, new()
     {
         public new DocumentClient Client => base.Client;
@@ -44,7 +44,7 @@ namespace Catalyst.Common.Repository
             string databaseId,
             bool createIfNotExists,
             string collectionId = null,
-            ICachingStrategy<T, TKey> cachingStrategy = null) :
+            ICachingStrategy<T, string> cachingStrategy = null) :
             base(endpointUrl, authorizationKey, databaseId, createIfNotExists, collectionId, cachingStrategy)
         {
             base.Client.Dispose();
