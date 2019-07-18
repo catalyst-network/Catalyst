@@ -22,7 +22,9 @@
 #endregion
 
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.Interfaces.Repository;
 using Catalyst.Common.Interfaces.Rpc.Authentication;
+using Catalyst.Common.Rpc.Authentication;
 using Nethereum.RLP;
 using SharpRepository.Repository;
 
@@ -35,11 +37,11 @@ namespace Catalyst.Core.Lib.Rpc.Authentication
     public class RepositoryAuthenticationStrategy : IAuthenticationStrategy
     {
         /// <summary>The trusted peers</summary>
-        private readonly IRepository<AuthCredentials, string> _trustedPeers;
+        private readonly IAuthCredentialRepository _trustedPeers;
 
         /// <summary>Initializes a new instance of the <see cref="RepositoryAuthenticationStrategy"/> class.</summary>
         /// <param name="trustedPeers">The trusted peers.</param>
-        public RepositoryAuthenticationStrategy(IRepository<AuthCredentials, string> trustedPeers)
+        public RepositoryAuthenticationStrategy(IAuthCredentialRepository trustedPeers)
         {
             _trustedPeers = trustedPeers;
         }

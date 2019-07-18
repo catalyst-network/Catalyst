@@ -29,8 +29,6 @@ namespace Catalyst.Common.Repository
 {
     public class PeerRepository : RepositoryWrapper<Peer>, IPeerRepository
     {
-        public PeerRepository(IRepository<Peer, string> repository) : base(repository)
-        {
-        }
+        public PeerRepository(IRepository<Peer, string> repository) : base(repository) { }
     }
 }

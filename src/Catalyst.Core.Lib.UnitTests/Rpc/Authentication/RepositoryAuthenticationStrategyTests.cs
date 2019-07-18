@@ -23,6 +23,8 @@
 
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Rpc.Authentication;
+using Catalyst.Common.Repository;
+using Catalyst.Common.Rpc.Authentication;
 using Catalyst.Core.Lib.Rpc.Authentication;
 using Catalyst.TestUtils;
 using FluentAssertions;
@@ -36,11 +38,11 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc.Authentication
     {
         private readonly IAuthenticationStrategy _repositoryAuthenticationStrategy;
         private readonly IPeerIdentifier _trustedPeer;
-        
+
         public RepositoryAuthenticationHandlerTests()
         {
             _trustedPeer = PeerIdentifierHelper.GetPeerIdentifier("Trusted");
-            var whiteListRepo = new InMemoryRepository<AuthCredentials, string>();
+            var whiteListRepo = new AuthCredentialRepository(new InMemoryRepository<AuthCredentials, string>());
 
             whiteListRepo.Add(new AuthCredentials()
             {

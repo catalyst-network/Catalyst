@@ -29,8 +29,6 @@ namespace Catalyst.Common.Repository
 {
     public class MempoolRepository : RepositoryWrapper<MempoolDocument>, IMempoolRepository
     {
-        public MempoolRepository(IRepository<MempoolDocument, string> repository) : base(repository)
-        {
-        }
+        public MempoolRepository(IRepository<MempoolDocument, string> repository) : base(repository) { }
     }
 }

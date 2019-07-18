@@ -28,7 +28,7 @@ using Catalyst.Common.Interfaces.Attributes;
 using Catalyst.Common.Interfaces.Rpc.Authentication;
 using Catalyst.Common.Util;
 
-namespace Catalyst.Core.Lib.Rpc.Authentication
+namespace Catalyst.Common.Rpc.Authentication
 {
     /// <summary>
     /// Credentials to authenticate
@@ -36,13 +36,32 @@ namespace Catalyst.Core.Lib.Rpc.Authentication
     [Audit]
     public class AuthCredentials : IAuthCredentials
     {
+        private string _publicKey;
+        private string _ipAddress;
+
         /// <summary>Gets or sets the public key.</summary>
         /// <value>The public key.</value>
-        public string PublicKey { get; set; }
+        public string PublicKey
+        {
+            get => _publicKey;
+            set
+            {
+                _publicKey = value;
+                UpdateKey();
+            }
+        }
 
         /// <summary>Gets or sets the ip address.</summary>
         /// <value>The ip address.</value>
-        public string IpAddress { get; set; }
+        public string IpAddress
+        {
+            get => _ipAddress;
+            set
+            {
+                _ipAddress = value;
+                UpdateKey();
+            }
+        }
 
         /// <inheritdoc cref="IAuditable.Created"/>
         public DateTime Created { get; set; }
@@ -50,10 +69,11 @@ namespace Catalyst.Core.Lib.Rpc.Authentication
         /// <inheritdoc cref="IAuditable.Modified"/>
         public DateTime? Modified { get; set; }
 
-        public string DocumentId
+        public string DocumentId { get; set; }
+
+        private void UpdateKey()
         {
-            get => Encoding.UTF8.GetBytes($"{PublicKey}:{IpAddress}").ToByteString().ToBase64();
-            set { }
+            DocumentId = Encoding.UTF8.GetBytes($"{PublicKey}:{IpAddress}").ToByteString().ToBase64();
         }
     }
 }
