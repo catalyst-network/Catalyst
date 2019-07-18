@@ -22,25 +22,53 @@
 #endregion
 
 using Catalyst.Common.Config;
-using Catalyst.Common.Util;
 using Catalyst.Common.Interfaces.Modules.Ledger;
-using System.Text;
-using SharpRepository.Repository;
+using Catalyst.Common.Util;
 using Newtonsoft.Json;
+using SharpRepository.Repository;
+using System.Text;
 
 namespace Catalyst.Common.Modules.Ledger
 {
     /// <inheritdoc />
     public sealed class Account : IAccount
     {
-        /// <inheritdoc />
-        public string PublicAddress { get; set; }
+        private string _publicAddress;
+        private uint _coinType;
+        private AccountTypes _accountType;
 
         /// <inheritdoc />
-        public uint CoinType { get; set; }
+        public string PublicAddress
+        {
+            get => _publicAddress;
+            set
+            {
+                _publicAddress = value;
+                UpdateKey();
+            }
+        }
 
         /// <inheritdoc />
-        public AccountTypes AccountType { get; set; }
+        public uint CoinType
+        {
+            get => _coinType;
+            set
+            {
+                _coinType = value;
+                UpdateKey();
+            }
+        }
+
+        /// <inheritdoc />
+        public AccountTypes AccountType
+        {
+            get => _accountType;
+            set
+            {
+                _accountType = value;
+                UpdateKey();
+            }
+        }
 
         /// <inheritdoc />
         public BigDecimal Balance { get; set; }
@@ -48,9 +76,13 @@ namespace Catalyst.Common.Modules.Ledger
         /// <inheritdoc />
         public byte[] StateRoot { get; set; } = Constants.EmptyTrieHash;
 
+        public void UpdateKey()
+        {
+            DocumentId = Encoding.UTF8.GetBytes($"{PublicAddress}-{CoinType}-{AccountType?.Name}")?.ToByteString()?.ToBase64();
+        }
+
         [RepositoryPrimaryKey(Order = 1)]
         [JsonProperty("id")]
-        public string DocumentId => Encoding.UTF8.GetBytes($"{PublicAddress}-{CoinType}-{AccountType.Name}").ToByteString().ToBase64();
-        
+        public string DocumentId { get; set; }
     }
 }

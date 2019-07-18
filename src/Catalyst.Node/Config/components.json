@@ -26,14 +26,6 @@
             ]
         },
         {
-            "type": "Catalyst.Common.Repository.MempoolRepository, Catalyst.Common",
-            "services": [
-                {
-                    "type": "Catalyst.Common.Interfaces.Repository.IMempoolRepository, Catalyst.Common"
-                }
-            ]
-        },
-        {
             "type": "Catalyst.Common.IO.EventLoop.EventLoopGroupFactoryConfiguration, Catalyst.Common",
             "services": [
                 {

@@ -108,14 +108,14 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Observers
                     PeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier(fakePeer)
                 };
 
-                peerRepository.Repository.Add(peer);
+                peerRepository.Add(peer);
                 if (targetPeerToDelete == null)
                 {
                     targetPeerToDelete = peer;
                 }
             });
 
-            peerRepository.Repository.GetAll().Count().Should().Be(fakePeers.Count);
+            peerRepository.GetAll().Count().Should().Be(fakePeers.Count);
 
             // Build a fake remote endpoint
             _fakeContext.Channel.RemoteAddress.Returns(EndpointBuilder.BuildNewEndPoint("192.0.0.1", 42042));

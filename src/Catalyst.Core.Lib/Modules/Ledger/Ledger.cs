@@ -54,7 +54,7 @@ namespace Catalyst.Core.Lib.Modules.Ledger
 
             try
             {
-                Accounts.Repository.Add((Account) account);
+                Accounts.Add((Account) account);
                 return true;
             }
             catch (Exception e)

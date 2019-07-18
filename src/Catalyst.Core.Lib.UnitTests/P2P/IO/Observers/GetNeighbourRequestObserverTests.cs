@@ -60,8 +60,8 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Observers
         private static void AddMockPeerToDbAndSetReturnExpectation(IReadOnlyList<Peer> peer,
             IPeerRepository store)
         {
-            store.Repository.Add(peer);
-            store.Repository.FindAll(Arg.Any<Specification<Peer>>()).Returns(peer);
+            store.Add(peer);
+            store.FindAll(Arg.Any<Specification<Peer>>()).Returns(peer);
         }
 
         [Fact]

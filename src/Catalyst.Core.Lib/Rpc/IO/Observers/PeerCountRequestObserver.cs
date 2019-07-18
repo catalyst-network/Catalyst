@@ -75,7 +75,7 @@ namespace Catalyst.Core.Lib.Rpc.IO.Observers
             Guard.Argument(getPeerCountRequest, nameof(getPeerCountRequest)).NotNull();
             Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
             Guard.Argument(senderPeerIdentifier, nameof(senderPeerIdentifier)).NotNull();
-            var peerCount = _peerRepository.Repository.GetAll().Count();
+            var peerCount = _peerRepository.GetAll().Count();
 
             return new GetPeerCountResponse
             {

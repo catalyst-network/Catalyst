@@ -93,7 +93,7 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Observers
             });
 
             // Let peerRepository return the fake peer list
-            peerRepository.Repository.GetAll().Returns(peerList.ToArray());
+            peerRepository.GetAll().Returns(peerList.ToArray());
 
             // Build a fake remote endpoint
             _fakeContext.Channel.RemoteAddress.Returns(EndpointBuilder.BuildNewEndPoint("192.0.0.1", 42042));

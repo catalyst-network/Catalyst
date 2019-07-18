@@ -150,9 +150,8 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
         private List<IPeerIdentifier> GetRandomPeers(int count)
         {
             return _peers
-                .Repository
                .AsQueryable()
-               .Select(c => c.DocumentId).Shuffle().Take(count).Select(_peers.Repository.Get).Select(p => p.PeerIdentifier).ToList();
+               .Select(c => c.DocumentId).Shuffle().Take(count).Select(_peers.Get).Select(p => p.PeerIdentifier).ToList();
         }
 
         /// <summary>Determines whether this instance can gossip the specified correlation identifier.</summary>
@@ -192,7 +191,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
                 {
                     ReceivedCount = 0,
                     BroadcastCount = 0,
-                    PeerNetworkSize = _peers.Repository.GetAll().Count()
+                    PeerNetworkSize = _peers.GetAll().Count()
                 }).ConfigureAwait(false);
                 entry.Value = gossipRequest;
                 return gossipRequest;

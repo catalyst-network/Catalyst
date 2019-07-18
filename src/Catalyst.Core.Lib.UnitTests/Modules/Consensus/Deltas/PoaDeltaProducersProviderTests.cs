@@ -68,7 +68,7 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Consensus.Deltas
             var logger = Substitute.For<ILogger>();
 
             var peerRepository = Substitute.For<IPeerRepository>();
-            peerRepository.Repository.GetAll().Returns(_ => _peers);
+            peerRepository.GetAll().Returns(_ => _peers);
 
             _previousDeltaHash = new byte[32];
             rand.NextBytes(_previousDeltaHash);

@@ -59,8 +59,8 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Ledger
                 _ledger.SaveAccountState(account);
             }
 
-            _ledger.Accounts.Repository.GetAll().Should().HaveCount(10);
-            _ledger.Accounts.Repository.GetAll().Should().NotContainNulls();            
+            _ledger.Accounts.GetAll().Should().HaveCount(1);
+            _ledger.Accounts.GetAll().Should().NotContainNulls();            
         }
     }
 }

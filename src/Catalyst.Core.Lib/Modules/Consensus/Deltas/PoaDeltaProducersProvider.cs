@@ -80,7 +80,7 @@ namespace Catalyst.Core.Lib.Modules.Consensus.Deltas
 
             _logger.Information("Calculating favourite delta producers for the successor of {0}.", previousDeltaHashAsHex);
 
-            var allPeers = PeerRepository.Repository.GetAll();
+            var allPeers = PeerRepository.GetAll();
 
             var peerIdsInPriorityOrder = allPeers.Select(p =>
                 {
