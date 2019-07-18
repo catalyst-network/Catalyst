@@ -22,7 +22,7 @@
 #endregion
 
 using System.Collections.Generic;
-using System.Threading;
+using System.Linq;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.Discovery;
@@ -32,11 +32,9 @@ namespace Catalyst.Core.Lib.P2P.Discovery
     public sealed class HastingsOriginator : IHastingsOriginator
     {
         private IPeerIdentifier _peer;
-        private int _unreachableNeighbour;
-        public int UnreachableNeighbour => _unreachableNeighbour;
         public IList<IPeerIdentifier> CurrentPeersNeighbours { get; set; }
         public KeyValuePair<ICorrelationId, IPeerIdentifier> ExpectedPnr { get; set; }
-        public IList<KeyValuePair<ICorrelationId, IPeerIdentifier>> ContactedNeighbours { get; set; }
+        public IDictionary<IPeerIdentifier, ICorrelationId> UnResponsivePeers { get; set; }
 
         /// <summary>
         ///     if setting a new peer, clean counters
@@ -64,16 +62,16 @@ namespace Catalyst.Core.Lib.P2P.Discovery
         }
         
         /// <inheritdoc />
-        public void SetMemento(IHastingMemento hastingMemento)
+        public void RestoreMemento(IHastingMemento hastingMemento)
         {
             Peer = hastingMemento.Peer;
-            CurrentPeersNeighbours = new List<IPeerIdentifier>(hastingMemento.Neighbours);
-        }
-
-        /// <inheritdoc />
-        public void IncrementUnreachablePeer()
-        {
-            Interlocked.Increment(ref _unreachableNeighbour);
+            
+            hastingMemento.Neighbours
+               .ToList()
+               .ForEach(i =>
+                {
+                    UnResponsivePeers.Add(new KeyValuePair<IPeerIdentifier, ICorrelationId>(i, null));
+                });
         }
 
         /// <summary>
@@ -81,10 +79,9 @@ namespace Catalyst.Core.Lib.P2P.Discovery
         /// </summary>
         private void CleanUp()
         {
-            _unreachableNeighbour = 0;
             CurrentPeersNeighbours = new List<IPeerIdentifier>();
             ExpectedPnr = new KeyValuePair<ICorrelationId, IPeerIdentifier>();
-            ContactedNeighbours = new List<KeyValuePair<ICorrelationId, IPeerIdentifier>>();
+            UnResponsivePeers = new Dictionary<IPeerIdentifier, ICorrelationId>();
         }
     }
 }

@@ -28,18 +28,11 @@ namespace Catalyst.Common.Interfaces.P2P.Discovery
 {
     public interface IHastingsOriginator
     {
-        int UnreachableNeighbour { get; }
         IPeerIdentifier Peer { get; set; }
         IList<IPeerIdentifier> CurrentPeersNeighbours { get; }
         KeyValuePair<ICorrelationId, IPeerIdentifier> ExpectedPnr { get; set; }
-        IList<KeyValuePair<ICorrelationId, IPeerIdentifier>> ContactedNeighbours { get; }
+        IDictionary<IPeerIdentifier, ICorrelationId> UnResponsivePeers { get; }
         
-        /// <summary>
-        ///     called when ContactedNeighbour doesn't respond
-        /// </summary>
-        /// <returns></returns>
-        void IncrementUnreachablePeer();
-
         /// <summary>
         ///     creates a memento from current state
         /// </summary>
@@ -50,6 +43,6 @@ namespace Catalyst.Common.Interfaces.P2P.Discovery
         ///     Restores the state from a memento
         /// </summary>
         /// <param name="hastingMemento"></param>
-        void SetMemento(IHastingMemento hastingMemento);
+        void RestoreMemento(IHastingMemento hastingMemento);
     }
 }

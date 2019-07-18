@@ -241,15 +241,15 @@ namespace Catalyst.Core.Lib.P2P.Discovery
         {
             lock (StateCandidate)
             {
-                if (StateCandidate.ContactedNeighbours.Count < 1 || StateCandidate.CurrentPeersNeighbours.Count > 0 || StateCandidate.UnreachableNeighbour == 5)
+                if (StateCandidate.CurrentPeersNeighbours.Count < 1 || StateCandidate.UnResponsivePeers.Count == 5)
                 {
                     // if we haven't contacted neighbours don't try compare.
                     return false;
                 }
 
                 // see if sum of unreachable peers and reachable peers equals the total contacted number.
-                return StateCandidate.ContactedNeighbours.Count
-                   .Equals(StateCandidate.UnreachableNeighbour + StateCandidate.CurrentPeersNeighbours.Count);
+                return StateCandidate.UnResponsivePeers.Count
+                   .Equals(StateCandidate.UnResponsivePeers.Count + StateCandidate.CurrentPeersNeighbours.Count);
             }
         }
 
@@ -274,7 +274,7 @@ namespace Catalyst.Core.Lib.P2P.Discovery
                 HastingCareTaker.Add(newState);
             
                 // transition to valid new state.
-                State.SetMemento(newState);
+                State.RestoreMemento(newState);
 
                 // continue walk by proposing next degree.
                 StateCandidate.Peer = State.CurrentPeersNeighbours.RandomElement();
@@ -300,10 +300,11 @@ namespace Catalyst.Core.Lib.P2P.Discovery
             lock (StateCandidate)
             {
                 // transitions to last state.
-                State.SetMemento(HastingCareTaker.Get());
+                var lastState = HastingCareTaker.Get();
+                State.RestoreMemento(lastState);
 
                 // continues walk by proposing a new degree.
-                StateCandidate.Peer = State.CurrentPeersNeighbours.RandomElement();
+                StateCandidate.Peer = lastState.Neighbours.RandomElement();
 
                 var peerNeighbourRequestDto = DtoFactory.GetDto(new PeerNeighborsRequest(),
                     _ownNode,
@@ -331,11 +332,6 @@ namespace Catalyst.Core.Lib.P2P.Discovery
                     // state candidate didn't give any neighbours so go back a step.
                     WalkBack();
                 }
-                else if (StateCandidate.ContactedNeighbours.Contains(item))
-                {
-                    // peer hasn't responded to ping so assume un-responsive.
-                    StateCandidate.IncrementUnreachablePeer();
-                }
             }
         }
 
@@ -351,7 +347,7 @@ namespace Catalyst.Core.Lib.P2P.Discovery
             
             lock (StateCandidate)
             {
-                if (!StateCandidate.ContactedNeighbours.Contains(new KeyValuePair<ICorrelationId, IPeerIdentifier>(obj.CorrelationId, obj.Sender)))
+                if (!StateCandidate.UnResponsivePeers.Contains(new KeyValuePair<IPeerIdentifier, ICorrelationId>(obj.Sender, obj.CorrelationId)))
                 {
                     // a pingResponse that isn't known to discovery.
                     Logger.Debug("UnKnownMessage");
@@ -392,7 +388,7 @@ namespace Catalyst.Core.Lib.P2P.Discovery
                     
                     // our total expected responses should be same as number of pings sent out,
                     // potential neighbours, can either send response, or we will see them evicted from cache.
-                    StateCandidate.ContactedNeighbours.Add(req);
+                    StateCandidate.UnResponsivePeers[req.Value] = req.Key;
                 });
             }
         }

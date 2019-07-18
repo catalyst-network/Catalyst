@@ -43,6 +43,7 @@ using Catalyst.Core.Lib.P2P.Discovery;
 using Catalyst.Core.Lib.P2P.IO.Messaging.Correlation;
 using Catalyst.Protocol.IPPN;
 using DnsClient;
+using Google.Protobuf;
 using Microsoft.Extensions.Caching.Memory;
 using NSubstitute;
 using Serilog;
@@ -139,7 +140,7 @@ namespace Catalyst.TestUtils
         public static IHastingsOriginator MockOriginator(IPeerIdentifier peer = default,
             IList<IPeerIdentifier> currentPeersNeighbours = default,
             KeyValuePair<ICorrelationId, IPeerIdentifier> expectedPnr = default,
-            IList<KeyValuePair<ICorrelationId, IPeerIdentifier>> contactedNeighbour = default)
+            IDictionary<IPeerIdentifier, ICorrelationId> unResponsivePeers = null)
         {
             return new HastingsOriginator
             {
@@ -147,14 +148,14 @@ namespace Catalyst.TestUtils
                     peer ?? PeerIdentifierHelper.GetPeerIdentifier(ByteUtil.GenerateRandomByteArray(32).ToString()),
                 CurrentPeersNeighbours = currentPeersNeighbours ?? MockNeighbours(),
                 ExpectedPnr = expectedPnr,
-                ContactedNeighbours = contactedNeighbour ?? MockContactedNeighboursValuePairs()
+                UnResponsivePeers = unResponsivePeers ?? MockContactedNeighboursValuePairs()
             }; 
         }
         
         public static IHastingsOriginator SubOriginator(IPeerIdentifier peer = default,
             IList<IPeerIdentifier> currentPeersNeighbours = default,
             KeyValuePair<ICorrelationId, IPeerIdentifier> expectedPnr = default,
-            IList<KeyValuePair<ICorrelationId, IPeerIdentifier>> contactedNeighbour = default)
+            IDictionary<IPeerIdentifier, ICorrelationId> contactedNeighbour = default)
         {
             var peerParam = peer ?? PeerIdentifierHelper.GetPeerIdentifier(ByteUtil.GenerateRandomByteArray(32).ToString());
             var currentPeerNeighboursParam = currentPeersNeighbours ?? MockNeighbours();
@@ -164,11 +165,11 @@ namespace Catalyst.TestUtils
 
             var subbedOriginator = Substitute.For<IHastingsOriginator>();
             
-            subbedOriginator.UnreachableNeighbour.Returns(0);
+            subbedOriginator.UnResponsivePeers.Count.Returns(0);
             subbedOriginator.Peer.Returns(peerParam);
             subbedOriginator.CurrentPeersNeighbours.Returns(currentPeerNeighboursParam);
             subbedOriginator.ExpectedPnr.Returns(expectedPnrParam);
-            subbedOriginator.ContactedNeighbours.Returns(contactedNeighbourParam);
+            subbedOriginator.UnResponsivePeers.Returns(contactedNeighbourParam);
 
             return subbedOriginator;
         }
@@ -193,21 +194,38 @@ namespace Catalyst.TestUtils
         public static IList<IPeerIdentifier> MockNeighbours(int amount = 5)
         {
             return Enumerable.Range(0, amount).Select(i =>
-                PeerIdentifierHelper.GetPeerIdentifier($"neighbour-{i.ToString()}-{Helper.RandomString()}")).ToList();
+                PeerIdentifierHelper.GetPeerIdentifier(Helper.RandomString())).ToList();
         }
 
-        public static IList<KeyValuePair<ICorrelationId, IPeerIdentifier>> MockContactedNeighboursValuePairs(IEnumerable<IPeerIdentifier> neighbours = default)
+        public static IDictionary<IPeerIdentifier, ICorrelationId> MockUnResponsiveNeighbours(IEnumerable<IPeerIdentifier> neighbours = default)
         {
             if (neighbours == null || neighbours.Equals(default))
             {
                 neighbours = MockNeighbours();
             }
             
-            var mockContactedNeighboursList = new List<KeyValuePair<ICorrelationId, IPeerIdentifier>>();
+            var mockUnResponsiveNeighboursList = new Dictionary<IPeerIdentifier, ICorrelationId>();
             
             (neighbours ?? throw new ArgumentNullException(nameof(neighbours))).ToList().ForEach(i =>
             {
-                mockContactedNeighboursList.Add(new KeyValuePair<ICorrelationId, IPeerIdentifier>(CorrelationId.GenerateCorrelationId(), i));
+                mockUnResponsiveNeighboursList.Add(i, null);
+            });
+
+            return mockUnResponsiveNeighboursList;
+        }
+
+        public static IDictionary<IPeerIdentifier, ICorrelationId> MockContactedNeighboursValuePairs(IEnumerable<IPeerIdentifier> neighbours = default)
+        {
+            if (neighbours == null || neighbours.Equals(default))
+            {
+                neighbours = MockNeighbours();
+            }
+            
+            var mockContactedNeighboursList = new Dictionary<IPeerIdentifier, ICorrelationId>();
+            
+            (neighbours ?? throw new ArgumentNullException(nameof(neighbours))).ToList().ForEach(i =>
+            {
+                mockContactedNeighboursList.Add(i, CorrelationId.GenerateCorrelationId());
             });
 
             return mockContactedNeighboursList;
@@ -215,7 +233,7 @@ namespace Catalyst.TestUtils
 
         public static IHastingMemento MockMemento(IPeerIdentifier identifier = default, IEnumerable<IPeerIdentifier> neighbours = default)
         {
-            var peerParam = identifier ?? PeerIdentifierHelper.GetPeerIdentifier(ByteUtil.GenerateRandomByteArray(32).ToString());
+            var peerParam = identifier ?? PeerIdentifierHelper.GetPeerIdentifier(Helper.RandomString());
             var neighbourParam = neighbours ?? MockNeighbours();
             return new HastingMemento(peerParam, neighbourParam);
         }
@@ -223,7 +241,7 @@ namespace Catalyst.TestUtils
         public static IHastingMemento SubMemento(IPeerIdentifier identifier = default, IEnumerable<IPeerIdentifier> neighbours = default)
         {
             var subbedMemento = Substitute.For<IHastingMemento>();
-            subbedMemento.Peer.Returns(identifier ?? PeerIdentifierHelper.GetPeerIdentifier(ByteUtil.GenerateRandomByteArray(32).ToString()));
+            subbedMemento.Peer.Returns(identifier ?? PeerIdentifierHelper.GetPeerIdentifier(Helper.RandomString()));
             subbedMemento.Neighbours.Returns(neighbours ?? MockNeighbours());
 
             return subbedMemento;
@@ -270,51 +288,21 @@ namespace Catalyst.TestUtils
             provider.HasTokenCancelled().Returns(result);
             return provider;
         }
-
-        public static IDtoFactory SubDtoFactory(IPeerIdentifier sender,
-            IPeerIdentifier recipient,
-            PeerNeighborsResponse peerNeighborsResponse)
-        {
-            var subbedDtoFactory = Substitute.For<IDtoFactory>();
-
-            subbedDtoFactory.GetDto(Arg.Any<PeerNeighborsResponse>(),
-                sender,
-                recipient
-            ).Returns(
-                new MessageDto<PeerNeighborsResponse>(peerNeighborsResponse, sender, recipient)
-            );
-
-            return subbedDtoFactory;
-        }
         
-        public static IDtoFactory SubDtoFactory(IPeerIdentifier sender,
-            IPeerIdentifier recipient,
-            PingResponse pingResponse)
-        {
-            var subbedDtoFactory = Substitute.For<IDtoFactory>();
-
-            subbedDtoFactory.GetDto(Arg.Any<PingResponse>(),
-                sender,
-                recipient
-            ).Returns(
-                new MessageDto<PingResponse>(pingResponse, sender, recipient)
-            );
-
-            return subbedDtoFactory;
-        }
-        
-        public static IDtoFactory SubDtoFactory(IPeerIdentifier sender, IList<KeyValuePair<ICorrelationId, IPeerIdentifier>> knownRequests, PingResponse pingResponse)
+        public static IDtoFactory SubDtoFactory<T>(IPeerIdentifier sender,
+            IDictionary<IPeerIdentifier, ICorrelationId> knownRequests,
+            T message) where T : IMessage<T>
         {
             var subbedDtoFactory = Substitute.For<IDtoFactory>();
          
             knownRequests.ToList().ForEach(r =>
             {
-                var (_, value) = r;
-                subbedDtoFactory.GetDto(Arg.Any<PingResponse>(),
+                var (key, _) = r;
+                subbedDtoFactory.GetDto(Arg.Any<T>(),
                     sender,
-                    value
+                    key
                 ).Returns(
-                    new MessageDto<PingResponse>(pingResponse, sender, value)
+                    new MessageDto<T>(message, sender, key)
                 );
             });
 

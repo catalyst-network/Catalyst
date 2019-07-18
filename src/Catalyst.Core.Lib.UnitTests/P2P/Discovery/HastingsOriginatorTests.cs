@@ -23,11 +23,13 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.Discovery;
 using Catalyst.Core.Lib.P2P.Discovery;
 using Catalyst.TestUtils;
 using FluentAssertions;
+using NSubstitute;
 using Xunit;
 
 namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
@@ -39,13 +41,6 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
         public HastingsOriginatorTests()
         {
             _peer = PeerIdentifierHelper.GetPeerIdentifier("current_peer");
-        }
-        
-        private IHastingMemento BuildMemento()
-        {
-            var memento = new HastingMemento(_peer, HastingDiscoveryHelper.MockNeighbours());
-
-            return memento;
         }
 
         [Fact]
@@ -70,13 +65,23 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
         [Fact]
         public void Can_Restore_State_From_Memento()
         {
-            var memento = BuildMemento();
+            var memento = HastingDiscoveryHelper.MockMemento();
             var originator = new HastingsOriginator();
             
-            originator.SetMemento(memento);
+            originator.RestoreMemento(memento);
 
-            originator.Peer.Should().Be(_peer);
-            originator.CurrentPeersNeighbours.Should().Contain(memento.Neighbours);
+            originator.Peer
+               .Should()
+               .Be(memento.Peer);
+            
+            originator.CurrentPeersNeighbours.Count
+               .Should()
+               .Be(0);
+            
+            originator.UnResponsivePeers.Select(i => i.Key)
+               .ToList()
+               .Should()
+               .BeSubsetOf(memento.Neighbours);
         }
 
         [Fact]
@@ -84,9 +89,16 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
         {
             var originator = new HastingsOriginator();
             
-            Enumerable.Range(0, 100).ToList().ForEach(i => originator.IncrementUnreachablePeer());
+            Enumerable.Range(0, 100)
+               .ToList()
+               .ForEach(i =>
+                {
+                    originator.UnResponsivePeers.Add(
+                        new KeyValuePair<IPeerIdentifier, ICorrelationId>(Substitute.For<IPeerIdentifier>(), Substitute.For<ICorrelationId>())
+                    );
+                });
 
-            originator.UnreachableNeighbour.Should().Be(100);
+            originator.UnResponsivePeers.Count.Should().Be(100);
         }
 
         [Fact]
@@ -97,20 +109,20 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
             var memento1 = HastingDiscoveryHelper.SubMemento();
             var memento2 = HastingDiscoveryHelper.SubMemento();
             
-            originator.SetMemento(memento1);
-            originator.IncrementUnreachablePeer();
+            originator.RestoreMemento(memento1);
             originator.CurrentPeersNeighbours = HastingDiscoveryHelper.MockNeighbours().ToList();
-            originator.ContactedNeighbours = HastingDiscoveryHelper.MockContactedNeighboursValuePairs(HastingDiscoveryHelper.MockNeighbours());
+            originator.UnResponsivePeers = HastingDiscoveryHelper.MockUnResponsiveNeighbours();
             originator.ExpectedPnr = HastingDiscoveryHelper.MockPnr();
-            originator.CurrentPeersNeighbours.Should().Contain(memento1.Neighbours);
-            
-            originator.SetMemento(memento2);
 
-            originator.UnreachableNeighbour.Should().Be(0);
-            originator.ContactedNeighbours.Count.Should().Be(0);
+            originator.RestoreMemento(memento2);
+            
+            originator.UnResponsivePeers.Select(i => i.Key).Should()
+               .BeSubsetOf(memento2.Neighbours.Select(p => p));
+
+            originator.UnResponsivePeers.Count.Should().Be(5);
             originator.ExpectedPnr.Key.Should().Be(null);
             originator.ExpectedPnr.Value.Should().Be(null);
-            originator.CurrentPeersNeighbours.Should().Contain(memento2.Neighbours);
+            originator.CurrentPeersNeighbours.Should().BeSubsetOf(memento2.Neighbours);
         }
         
         [Fact]
@@ -120,16 +132,14 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
 
             var memento1 = HastingDiscoveryHelper.SubMemento();
             
-            originator.SetMemento(memento1);
-            originator.IncrementUnreachablePeer();
+            originator.RestoreMemento(memento1);
             originator.CurrentPeersNeighbours = HastingDiscoveryHelper.MockNeighbours().ToList();
-            originator.ContactedNeighbours = HastingDiscoveryHelper.MockContactedNeighboursValuePairs(HastingDiscoveryHelper.MockNeighbours());
+            originator.UnResponsivePeers = HastingDiscoveryHelper.MockContactedNeighboursValuePairs(HastingDiscoveryHelper.MockNeighbours());
             originator.ExpectedPnr = HastingDiscoveryHelper.MockPnr();
 
             originator.Peer = PeerIdentifierHelper.GetPeerIdentifier("new_peer");
 
-            originator.UnreachableNeighbour.Should().Be(0);
-            originator.ContactedNeighbours.Count.Should().Be(0);
+            originator.UnResponsivePeers.Count.Should().Be(0);
             originator.ExpectedPnr.Key.Should().Be(null);
             originator.ExpectedPnr.Value.Should().Be(null);
         }

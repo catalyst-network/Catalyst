@@ -86,7 +86,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
 
             var seedState = HastingDiscoveryHelper.MockSeedState(_ownNode, _settings.SeedServers.ToList(), _settings);
             var seedOrigin = new HastingsOriginator();
-            seedOrigin.SetMemento(seedState);
+            seedOrigin.RestoreMemento(seedState);
             var stateCareTaker = new HastingCareTaker();
             var stateHistory = new Stack<IHastingMemento>();
             stateHistory.Push(seedState);
@@ -103,14 +103,14 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
             var peerMessageCorrelationManager = HastingDiscoveryHelper.MockCorrelationManager(default, memoryCache);
                 
             var correlatableMessages = new List<CorrelatableMessage<ProtocolMessage>>();
-            stateCandidate.ContactedNeighbours.ToList().ForEach(i =>
+            stateCandidate.UnResponsivePeers.ToList().ForEach(i =>
             {
-                cacheEntriesByRequest = CacheHelper.MockCacheEvictionCallback(i.Key.Id.ToByteString(), memoryCache, cacheEntriesByRequest);
+                cacheEntriesByRequest = CacheHelper.MockCacheEvictionCallback(i.Value.Id.ToByteString(), memoryCache, cacheEntriesByRequest);
 
                 var msg = new CorrelatableMessage<ProtocolMessage>
                 {
-                    Content = new PingRequest().ToProtocolMessage(_ownNode.PeerId, i.Key),
-                    Recipient = i.Value
+                    Content = new PingRequest().ToProtocolMessage(_ownNode.PeerId, i.Value),
+                    Recipient = i.Key
                 };
                 correlatableMessages.Add(msg);
                 peerMessageCorrelationManager.AddPendingRequest(msg);
@@ -132,17 +132,31 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
                 stateCareTaker,
                 stateCandidate))
             {
-                for (var i = 0; i < cacheEntriesByRequest.Count; i++)
+                stateCandidate.UnResponsivePeers.ToList().ForEach(p =>
                 {
-                    cacheEntriesByRequest[stateCandidate.ContactedNeighbours[i].Key.Id.ToByteString()]
+                    var (key, _) = p;
+                    cacheEntriesByRequest[key.PeerId.ToByteString()]
                        .PostEvictionCallbacks[0]
                        .EvictionCallback
                        .Invoke(
-                            stateCandidate.ContactedNeighbours[i].Key, correlatableMessages[i], EvictionReason.Expired, new object()
-                        );   
-                }
+                            key,
+                            correlatableMessages.Where(i => i.Recipient.Equals(key)),
+                            EvictionReason.Expired,
+                            new object()
+                        );
+                });
+                
+                // for (var i = 0; i < cacheEntriesByRequest.Count; i++)
+                // {
+                //     cacheEntriesByRequest[stateCandidate.UnResponsivePeers[i].Value.Id.ToByteString()]
+                //        .PostEvictionCallbacks[0]
+                //        .EvictionCallback
+                //        .Invoke(
+                //             stateCandidate.UnResponsivePeers[i].Value, correlatableMessages[i], EvictionReason.Expired, new object()
+                //         );   
+                // }
 
-                walker.StateCandidate.UnreachableNeighbour.Should().Be(5);
+                walker.StateCandidate.UnResponsivePeers.Count.Should().Be(5);
 
                 walker.HasValidCandidate().Should().BeFalse();
 
@@ -151,9 +165,9 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
                 walker.WalkBack();
 
                 walker.State.Peer.Should().Be(expectedCurrentState.Peer);
-                walker.State.ContactedNeighbours.Count.Should().Be(0);
+                walker.State.UnResponsivePeers.Count.Should().Be(0);
                 walker.State.CurrentPeersNeighbours.Count.Should().Be(0);
-                walker.State.UnreachableNeighbour.Should().Be(0);
+                walker.State.UnResponsivePeers.Count.Should().Be(0);
             }
         }
         
@@ -165,7 +179,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
 
             var seedState = HastingDiscoveryHelper.SubSeedState(_ownNode, _settings.SeedServers.ToList(), _settings);
             var seedOrigin = new HastingsOriginator();
-            seedOrigin.SetMemento(seedState);
+            seedOrigin.RestoreMemento(seedState);
             
             var stateCareTaker = new HastingCareTaker();
             var stateHistory = new Stack<IHastingMemento>();
@@ -202,11 +216,11 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
 
                 IList<IPeerClientMessageDto> dtoList = new List<IPeerClientMessageDto>();
                 
-                stateCandidate.ContactedNeighbours.ToList().ForEach(i =>
+                stateCandidate.UnResponsivePeers.ToList().ForEach(i =>
                 {
                     var dto = new PeerClientMessageDto(new PingResponse(),
-                        stateCandidate.ContactedNeighbours.FirstOrDefault().Value,
-                        stateCandidate.ContactedNeighbours.FirstOrDefault().Key
+                        stateCandidate.UnResponsivePeers.FirstOrDefault().Key,
+                        stateCandidate.UnResponsivePeers.FirstOrDefault().Value
                     );
                     
                     dtoList.Add(dto);
@@ -220,8 +234,8 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
                        .Select(i => i.PeerId)
                        .Should()
                        .BeSubsetOf(
-                            stateCandidate.ContactedNeighbours
-                               .Select(i => i.Value.PeerId)
+                            stateCandidate.UnResponsivePeers
+                               .Select(i => i.Key.PeerId)
                         );
                 }
             }
@@ -235,7 +249,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
 
             var seedState = HastingDiscoveryHelper.SubSeedState(_ownNode, _settings.SeedServers.ToList(), _settings);
             var seedOrigin = new HastingsOriginator();
-            seedOrigin.SetMemento(seedState);
+            seedOrigin.RestoreMemento(seedState);
 
             var stateCareTaker = new HastingCareTaker();
             var stateHistory = new Stack<IHastingMemento>();
@@ -273,8 +287,8 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
                    .Subscribe(streamObserver.OnNext))
                 {
                     var pingDto = new PeerClientMessageDto(new PingResponse(), 
-                        stateCandidate.ContactedNeighbours.FirstOrDefault().Value,
-                        stateCandidate.ContactedNeighbours.FirstOrDefault().Key
+                        stateCandidate.UnResponsivePeers.FirstOrDefault().Key,
+                        stateCandidate.UnResponsivePeers.FirstOrDefault().Value
                     );
                     
                     pr._responseMessageSubject.OnNext(pingDto);

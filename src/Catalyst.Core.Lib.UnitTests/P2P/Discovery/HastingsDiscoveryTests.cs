@@ -191,7 +191,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
             initialStateCandidate.Peer = initialMemento.Peer;
             initialStateCandidate.CreateMemento().Returns(initialMemento);
             var expectedResponses = HastingDiscoveryHelper.MockContactedNeighboursValuePairs();
-            initialStateCandidate.ContactedNeighbours.Returns(expectedResponses);
+            initialStateCandidate.UnResponsivePeers.Returns(expectedResponses);
 
             using (var walker = new HastingsDiscovery(_logger,
                 Substitute.For<IRepository<Peer>>(),
@@ -219,7 +219,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
                         peerClientObservers.ToList()
                            .ForEach(o =>
                             {
-                                o._responseMessageSubject.OnNext(HastingDiscoveryHelper.SubDto(typeof(PingResponse), r.Key, r.Value));
+                                o._responseMessageSubject.OnNext(HastingDiscoveryHelper.SubDto(typeof(PingResponse), r.Value, r.Key));
                             });    
                     });
 
@@ -233,11 +233,11 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
                        .Should()
                        .NotContain(expectedResponses);
                     
-                    walker.StateCandidate.ContactedNeighbours
+                    walker.StateCandidate.UnResponsivePeers
                        .Should()
                        .Contain(expectedResponses);
 
-                    walker.StateCandidate.ContactedNeighbours.Count.Should().Be(5);
+                    walker.StateCandidate.UnResponsivePeers.Count.Should().Be(5);
                 }
             }
         }
@@ -341,9 +341,9 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
                 new GetNeighbourResponseObserver(_logger)
             };
 
-            var contactedNeighboursValuePairs = HastingDiscoveryHelper.MockContactedNeighboursValuePairs();
+            var contactedNeighbours = HastingDiscoveryHelper.MockContactedNeighboursValuePairs();
             
-            var subbedDtoFactory = HastingDiscoveryHelper.SubDtoFactory(_ownNode, contactedNeighboursValuePairs, new PingResponse());
+            var subbedDtoFactory = HastingDiscoveryHelper.SubDtoFactory(_ownNode, contactedNeighbours, new PingResponse());
             
             var initialMemento = HastingDiscoveryHelper.SubMemento(_ownNode, HastingDiscoveryHelper.MockDnsClient(_settings, _dnsDomains)
                .GetSeedNodesFromDns(_settings.SeedServers).ToList()
@@ -382,7 +382,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
                     var subbedDto = HastingDiscoveryHelper.SubDto(typeof(PeerNeighborsResponse), pnr.Key, pnr.Value);
                     
                     var peerNeighborsResponse = new PeerNeighborsResponse();
-                    peerNeighborsResponse.Peers.Add(contactedNeighboursValuePairs.ToList().Select(kv => kv.Value.PeerId));
+                    peerNeighborsResponse.Peers.Add(contactedNeighbours.ToList().Select(kv => kv.Key.PeerId));
                    
                     subbedDto.Message.Returns(peerNeighborsResponse);
                     
@@ -394,7 +394,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
 
                     await walker.DiscoveryStream.WaitForItemsOnDelayedStreamOnTaskPoolSchedulerAsync(1);
 
-                    walker.StateCandidate.ContactedNeighbours.Received(5).Add(Arg.Any<KeyValuePair<ICorrelationId, IPeerIdentifier>>());
+                    walker.StateCandidate.UnResponsivePeers.Received(5).Add(Arg.Any<KeyValuePair<IPeerIdentifier, ICorrelationId>>());
 
                     walker.DtoFactory
                        .Received(5)
@@ -408,7 +408,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
                        .Received(5)
                        .SendMessage(Arg.Any<IMessageDto<PingRequest>>());
                     
-                    walker.StateCandidate.UnreachableNeighbour.Should().Be(0);
+                    walker.StateCandidate.UnResponsivePeers.Count.Should().Be(0);
                 }
             }
         }
@@ -434,8 +434,8 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
             
             initialStateCandidate.CreateMemento().Returns(initialMemento);
             
-            initialStateCandidate.ContactedNeighbours.Contains(
-                Arg.Any<KeyValuePair<ICorrelationId, IPeerIdentifier>>()).Returns(true);
+            initialStateCandidate.UnResponsivePeers.Contains(
+                Arg.Any<KeyValuePair<IPeerIdentifier, ICorrelationId>>()).Returns(true);
 
             initialStateCandidate.ExpectedPnr.ReturnsForAnyArgs(pnr);
 
@@ -455,7 +455,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
                 initialStateCandidate
             ))
             {
-                walker.StateCandidate.ReceivedWithAnyArgs(1).IncrementUnreachablePeer();
+                walker.StateCandidate.ReceivedWithAnyArgs(1).UnResponsivePeers.Count();
             }
         }
 
