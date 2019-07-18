@@ -34,8 +34,19 @@ namespace Catalyst.Common.Extensions
         public static async Task<Multihash> ComputeMultihashAsync(this IEnumerable<byte> bytes, IMultihashAlgorithm algorithm)
         {
             var hashBytes = await algorithm.ComputeHashAsync(bytes.ToArray()).ConfigureAwait(false);
-            var multihash = Multihash.Cast(hashBytes);
-            return multihash;
+            return hashBytes.ToMultihash();
+        }
+
+        public static Multihash ComputeMultihash(this IEnumerable<byte> bytes, IMultihashAlgorithm algorithm)
+        {
+            var hashBytes = algorithm.ComputeHash(bytes.ToArray());
+            return hashBytes.ToMultihash();
+        }
+
+        public static Multihash ToMultihash(this IEnumerable<byte> bytes)
+        {
+            var array = bytes as byte[] ?? bytes.ToArray();
+            return Multihash.Cast(array);
         }
     }
 }

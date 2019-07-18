@@ -29,7 +29,7 @@ using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces;
 using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Node.Core.Modules.Dfs;
+using Catalyst.Core.Lib.Modules.Dfs;
 using Catalyst.TestUtils;
 using Ipfs.CoreApi;
 using Microsoft.Extensions.Configuration;
