@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFramework>netcoreapp2.2</TargetFramework>
         <RootNamespace>Catalyst.Cli.IntegrationTests</RootNamespace>
@@ -10,7 +10,9 @@
     <Import Project="../Common.IntegrationTests.props" />
     <ItemGroup>
         <ProjectReference Include="..\Catalyst.Cli\Catalyst.Cli.csproj" />
-        <ProjectReference Include="..\Catalyst.Node.Core\Catalyst.Node.Core.csproj" />
+        <ProjectReference Include="..\Catalyst.Common\Catalyst.Common.csproj" />
+        <ProjectReference Include="..\Catalyst.Core.Lib.IntegrationTests\Catalyst.Core.Lib.IntegrationTests.csproj" />
+        <ProjectReference Include="..\Catalyst.Core.Lib\Catalyst.Core.Lib.csproj" />
         <ProjectReference Include="..\Catalyst.TestUtils\Catalyst.TestUtils.csproj" />
     </ItemGroup>
     <ItemGroup>

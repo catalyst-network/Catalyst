@@ -27,12 +27,13 @@ using System.Linq;
 using System.Threading;
 using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.FileTransfer;
+using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.P2P;
 using DotNetty.Transport.Channels;
 
 namespace Catalyst.Common.FileTransfer
 {
-    public class BaseFileTransferInformation : IDisposable, IFileTransferInformation
+    public class BaseFileTransferInformation : IFileTransferInformation
     {
         /// <inheritdoc />
         public string TempPath { get; }
@@ -41,7 +42,7 @@ namespace Catalyst.Common.FileTransfer
         public string DfsHash { get; set; }
         
         /// <inheritdoc />
-        public Guid CorrelationGuid { get; set; }
+        public ICorrelationId CorrelationId { get; set; }
         
         /// <inheritdoc />
         public string FileOutputPath { get; set; }
@@ -81,17 +82,22 @@ namespace Catalyst.Common.FileTransfer
         /// <param name="peerIdentifier">The peer identifier</param>
         /// <param name="recipientIdentifier">The recipient identifier.</param>
         /// <param name="recipientChannel">The recipient channel.</param>
-        /// <param name="correlationGuid">The correlation unique identifier.</param>
+        /// <param name="correlationId">The correlation unique identifier.</param>
         /// <param name="fileName">Name of the file.</param>
         /// <param name="fileSize">Size of the file.</param>
-        protected BaseFileTransferInformation(IPeerIdentifier peerIdentifier, IPeerIdentifier recipientIdentifier, IChannel recipientChannel, Guid correlationGuid, string fileName, ulong fileSize)
+        protected BaseFileTransferInformation(IPeerIdentifier peerIdentifier,
+            IPeerIdentifier recipientIdentifier,
+            IChannel recipientChannel,
+            ICorrelationId correlationId,
+            string fileName,
+            ulong fileSize)
         {
-            TempPath = Path.GetTempPath() + correlationGuid + ".tmp";
+            TempPath = Path.GetTempPath() + correlationId.Id + ".tmp";
             MaxChunk = (uint) Math.Max(1, (int) Math.Ceiling((double) fileSize / Constants.FileTransferChunkSize));
             RecipientChannel = recipientChannel;
             RecipientIdentifier = recipientIdentifier;
             PeerIdentifier = peerIdentifier;
-            CorrelationGuid = correlationGuid;
+            CorrelationId = correlationId;
             FileOutputPath = fileName;
             ChunkIndicators = new bool[MaxChunk];
             TimeSinceLastChunk = DateTime.Now;

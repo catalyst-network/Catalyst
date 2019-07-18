@@ -21,9 +21,11 @@
 
 #endregion
 
+using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Linq;
+using System.Net;
+using System.Security.Cryptography.X509Certificates;
 using Catalyst.Common.Interfaces.IO.EventLoop;
 using Dawn;
 using DotNetty.Handlers.Logging;
@@ -32,35 +34,44 @@ using DotNetty.Transport.Channels;
 
 namespace Catalyst.Common.IO.Transport.Channels
 {
-    public class ChannelInitializerBase<T>
+    public abstract class ChannelInitializerBase<T>
         : ChannelInitializer<T>
         where T : IChannel
     {
-        private readonly IImmutableList<IChannelHandler> _handlers;
-        private readonly TlsHandler _tlsHandler;
         private readonly IEventLoopGroupFactory _eventLoopGroupFactory;
+        private readonly IPAddress _targetHost;
+        private readonly X509Certificate _certificate;
+        private readonly Func<IList<IChannelHandler>> _handlerGenerationFunction;
 
-        protected ChannelInitializerBase(IList<IChannelHandler> handlers,
-            TlsHandler tlsHandler,
-            IEventLoopGroupFactory eventLoopGroupFactory)
+        protected ChannelInitializerBase(Func<IList<IChannelHandler>> handlerGenerationFunction,
+            IEventLoopGroupFactory eventLoopGroupFactory,
+            IPAddress targetHost = default,
+            X509Certificate certificate = null)
         {
-            Guard.Argument(handlers, nameof(handlers)).NotNull().NotEmpty();
-            _handlers = handlers.ToImmutableList();
+            Guard.Argument(handlerGenerationFunction).NotNull();
+            _handlerGenerationFunction = handlerGenerationFunction;
             _eventLoopGroupFactory = eventLoopGroupFactory;
-            _tlsHandler = tlsHandler;
+            _targetHost = targetHost;
+            _certificate = certificate;
         }
 
         protected override void InitChannel(T channel)
         {
             var pipeline = channel.Pipeline;
+            var tlsHandler = NewTlsHandler(_targetHost, _certificate);
 
-            if (_tlsHandler != null)
+            if (tlsHandler != null)
             {
-                pipeline.AddLast(_tlsHandler);
+                pipeline.AddLast(tlsHandler);
             }
 
             pipeline.AddLast(new LoggingHandler(LogLevel.TRACE));
-            pipeline.AddLast(_eventLoopGroupFactory.GetOrCreateHandlerWorkerEventLoopGroup(), _handlers.ToArray());
+
+            pipeline.AddLast(_eventLoopGroupFactory.GetOrCreateHandlerWorkerEventLoopGroup(), _handlerGenerationFunction().ToArray());
         }
+
+        /// <summary>Creates a new TlsHandler.</summary>
+        /// <returns><see cref="TlsHandler"/></returns>
+        public abstract TlsHandler NewTlsHandler(IPAddress targetHost, X509Certificate certificate);
     }
 }

@@ -21,19 +21,17 @@
 
 #endregion
 
-using System;
-using Catalyst.Common.Config;
+using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.P2P;
+using DotNetty.Transport.Channels;
 using Google.Protobuf;
 
 namespace Catalyst.Common.Interfaces.IO.Messaging.Dto
 {
-    public interface IMessageDto
+    public interface IMessageDto<out T> : IAddressedEnvelope<T> where T : IMessage<T>
     {
-        Guid CorrelationId { get; }
-        MessageTypes MessageType { get; }
-        IMessage Message { get; }
-        IPeerIdentifier Recipient { get; }
-        IPeerIdentifier Sender { get; }
+        ICorrelationId CorrelationId { get; }
+        IPeerIdentifier RecipientPeerIdentifier { get; }
+        IPeerIdentifier SenderPeerIdentifier { get; }
     }
 }

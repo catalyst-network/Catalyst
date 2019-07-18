@@ -22,135 +22,60 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Reflection;
 using Catalyst.Common.Config;
+using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
+using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Common.Util;
+using Catalyst.Protocol;
 using Catalyst.Protocol.Common;
 using Dawn;
-using DotNetty.Buffers;
-using DotNetty.Transport.Channels.Sockets;
 using Google.Protobuf;
-using Google.Protobuf.Reflection;
-using Type = System.Type;
+using Multiformats.Hash;
 
 namespace Catalyst.Common.Extensions
 {
     public static class ProtobufExtensions
     {
-        private const string CatalystProtocol = "Catalyst.Protocol";
-
-        private static readonly List<string> ProtoBroadcastAllowedMessages;
-        private static readonly List<string> ProtoRequestAllowedMessages;
-        private static readonly List<string> ProtoResponseAllowedMessages;
-        
-        static ProtobufExtensions()
-        {
-            var protoToClrNameMapper = typeof(ProtocolMessage).Assembly.ExportedTypes
-               .Where(t => typeof(IMessage).IsAssignableFrom(t))
-               .Select(t => ((IMessage) Activator.CreateInstance(t)).Descriptor)
-               .ToDictionary(d => d.ShortenedFullName(), d => d.ClrType.FullName);
-
-            ProtoBroadcastAllowedMessages = protoToClrNameMapper.Keys
-               .Where(t => t.EndsWith(MessageTypes.Broadcast.Name))
-               .ToList();
-
-            ProtoRequestAllowedMessages = protoToClrNameMapper.Keys
-               .Where(t => t.EndsWith(MessageTypes.Request.Name))
-               .ToList();
-
-            ProtoResponseAllowedMessages = protoToClrNameMapper.Keys
-               .Where(t => t.EndsWith(MessageTypes.Response.Name))
-               .ToList();
-        }
-
-        public static string ShortenedFullName(this MessageDescriptor descriptor)
-        {
-            //we don't need to serialise the complete full name of our own types
-            return descriptor.FullName.Remove(0, CatalystProtocol.Length + 1);
-        }
-
-        public static string ShortenedProtoFullName(this Type protoType)
-        {
-            Guard.Argument(protoType, nameof(protoType)).Require(t => typeof(IMessage).IsAssignableFrom(t));
-            
-            //get the static field Descriptor from T
-            var descriptor = (MessageDescriptor) protoType
-               .GetProperty("Descriptor", BindingFlags.Static | BindingFlags.Public)
-               .GetValue(null);
-            return ShortenedFullName(descriptor);
-        }
-
         public static ProtocolMessage ToProtocolMessage(this IMessage protobufObject,
             PeerId senderId,
-            Guid correlationId = default)
+            ICorrelationId correlationId = default)
         {
             var typeUrl = protobufObject.Descriptor.ShortenedFullName();
             Guard.Argument(senderId, nameof(senderId)).NotNull();
-            Guard.Argument(correlationId, nameof(correlationId))
-               .Require(c => !typeUrl.EndsWith(MessageTypes.Response.Name) || c != default,
-                    g => $"{typeUrl} is a response type and needs a correlationId");
-
-            var protocolMessage = new ProtocolMessage
+            
+            if (typeUrl.EndsWith(MessageTypes.Response.Name))
+            {
+                Guard.Argument(correlationId, nameof(correlationId)).NotNull();
+            }
+            
+            return new ProtocolMessage
             {
                 PeerId = senderId,
-                CorrelationId = (correlationId == default ? Guid.NewGuid() : correlationId).ToByteString(),
-                
+                CorrelationId = (correlationId?.Id ?? CorrelationId.GenerateCorrelationId().Id).ToByteString(),
+
                 TypeUrl = typeUrl,
                 Value = protobufObject.ToByteString()
             };
-            return protocolMessage;
         }
-
-        public static bool IsRequestType(this Type type)
-        {
-            var shortType = ShortenedProtoFullName(type);
-            return ProtoRequestAllowedMessages.Contains(shortType);
-        }
-
-        public static bool IsResponseType(this Type type)
-        {
-            var shortType = ShortenedProtoFullName(type);
-            return ProtoResponseAllowedMessages.Contains(shortType);
-        }
-
-        public static bool IsBroadcastType(this Type type)
-        {
-            var shortType = ShortenedProtoFullName(type);
-            return ProtoBroadcastAllowedMessages.Contains(shortType);
-        }
-
-        public static bool CheckIfMessageIsBroadcast(this ProtocolMessage message)
-        {
-            return message.TypeUrl.EndsWith(nameof(ProtocolMessage)) &&
-                ProtoBroadcastAllowedMessages.Contains(ProtocolMessage.Parser.ParseFrom(message.Value).TypeUrl);
-        }
-
-        public static T FromProtocolMessage<T>(this ProtocolMessage message) where T : IMessage<T>
+        
+        public static T FromIMessageDto<T>(this IMessageDto<T> message) where T : IMessage<T>
         {
             var empty = (T) Activator.CreateInstance(typeof(T));
-            var typed = (T) empty.Descriptor.Parser.ParseFrom(message.Value);
+            var typed = (T) empty.Descriptor.Parser.ParseFrom(message.Content.ToByteString());
             return typed;
         }
 
-        public static T FromIMessageDto<T>(this IMessageDto message) where T : IMessage<T>
+        public static ICorrelationId ToCorrelationId(this ByteString guidBytes)
         {
-            var empty = (T) Activator.CreateInstance(typeof(T));
-            var typed = (T) empty.Descriptor.Parser.ParseFrom(message.Message.ToByteString());
-            return typed;
-        }
+            var bytes = guidBytes?.ToByteArray();
+            
+            var validBytes = bytes?.Length == CorrelationId.GuidByteLength
+                ? bytes
+                : (bytes ?? new byte[0]).Concat(Enumerable.Repeat((byte) 0, CorrelationId.GuidByteLength)).Take(CorrelationId.GuidByteLength).ToArray();
 
-        public static ByteString ToUtf8ByteString(this string utf8String)
-        {
-            return ByteString.CopyFromUtf8(utf8String);
-        }
-
-        public static Guid ToGuid(this ByteString guidBytes)
-        {
-            return new Guid(guidBytes.ToByteArray());
+            return new CorrelationId(new Guid(validBytes));
         }
 
         public static ByteString ToByteString(this Guid guid)
@@ -158,28 +83,14 @@ namespace Catalyst.Common.Extensions
             return guid.ToByteArray().ToByteString();
         }
 
-        public static DatagramPacket ToDatagram(this IMessage<ProtocolMessageSigned> anySignedMessage, IPEndPoint recipient)
+        public static Multihash ToMultihash(this ByteString byteString)
         {
-            return new DatagramPacket(Unpooled.WrappedBuffer(anySignedMessage.ToByteArray()), recipient);
+            return Multihash.Decode(byteString.ToByteArray());
         }
 
-        public static string GetRequestType(this string responseTypeUrl)
+        public static string ToMultihashString(this ByteString byteString)
         {
-            return SwapSuffixes(responseTypeUrl, MessageTypes.Response.Name, MessageTypes.Request.Name);
-        }
-
-        public static string GetResponseType(this string requestTypeUrl)
-        {
-            return SwapSuffixes(requestTypeUrl, MessageTypes.Request.Name, MessageTypes.Response.Name);
-        }
-
-        private static string SwapSuffixes(string requestTypeUrl, string originalSuffix, string targetSuffix)
-        {
-            Guard.Argument(requestTypeUrl, nameof(requestTypeUrl)).NotNull()
-               .Require(t => t.EndsWith(originalSuffix), t => $"{t} should end with {originalSuffix}");
-            return requestTypeUrl
-                   .Remove(requestTypeUrl.Length - originalSuffix.Length, originalSuffix.Length)
-              + targetSuffix;
+            return ToMultihash(byteString).ToString();
         }
     }
 }

@@ -24,4 +24,7 @@
         <ProjectReference Include="..\Catalyst.Common\Catalyst.Common.csproj" />
         <ProjectReference Include="..\Catalyst.TestUtils\Catalyst.TestUtils.csproj" />
     </ItemGroup>
+    <ItemGroup>
+      <Folder Include="RPC\IO" />
+    </ItemGroup>
 </Project>

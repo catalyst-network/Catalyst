@@ -25,9 +25,9 @@ using System;
 using System.Linq;
 using System.Net;
 using System.Text;
-using Catalyst.Common.Extensions;
 using Catalyst.Common.Network;
 using Catalyst.Common.Util;
+using Catalyst.Protocol;
 using Catalyst.Protocol.Common;
 
 namespace Catalyst.TestUtils
@@ -40,7 +40,7 @@ namespace Catalyst.TestUtils
             IPAddress ipAddress = null,
             int port = 12345)
         {
-            var peerIdentifier = new PeerId()
+            var peerIdentifier = new PeerId
             {
                 PublicKey = (publicKey ?? new byte[32]).ToByteString(),
                 ClientId = clientId.ToUtf8ByteString(),
@@ -58,9 +58,14 @@ namespace Catalyst.TestUtils
             int port = 12345)
         {
             var publicKeyBytes = Encoding.UTF8.GetBytes(publicKeySeed)
-               .Concat(Enumerable.Repeat(default(byte), 32))
-               .Take(32).ToArray();
+               .Concat(Enumerable.Repeat(default(byte), Cryptography.BulletProofs.Wrapper.FFI.GetPublicKeyLength()))
+               .Take(Cryptography.BulletProofs.Wrapper.FFI.GetPublicKeyLength()).ToArray();
             return GetPeerId(publicKeyBytes, clientId, clientVersion, ipAddress, port);
+        }
+
+        public static PeerId GetPeerId(string publicKey, string clientId, int clientVersion, string ipAddress, int port)
+        {
+            return GetPeerId(publicKey, clientId, clientVersion, IPAddress.Parse(ipAddress), port);
         }
     }
 }

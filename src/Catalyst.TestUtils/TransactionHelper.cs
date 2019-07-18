@@ -21,7 +21,7 @@
 
 #endregion
 
-using Catalyst.Common.Extensions;
+using Catalyst.Protocol;
 using Catalyst.Protocol.Transaction;
 
 namespace Catalyst.TestUtils
@@ -39,7 +39,7 @@ namespace Catalyst.TestUtils
             ulong transactionFees = 2,
             ulong lockTime = 9876)
         {
-            var transaction = new TransactionBroadcast()
+            var transaction = new TransactionBroadcast
             {
                 STEntries =
                 {

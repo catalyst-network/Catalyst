@@ -29,24 +29,20 @@ using CommandLine.Text;
 namespace Catalyst.Cli.Options
 {
     [Verb("verify", HelpText = "verifies a message")]
-    internal sealed class VerifyOptions : IVerifyOptions
+    public sealed class VerifyOptions : OptionsBase, IVerifyOptions
     {
         /// <inheritdoc />
         [Option('m', "message", HelpText = "Directs the CLI to verify the message to be provided as the value")]
         public string Message { get; set; }
 
         /// <inheritdoc />
-        [Option('k', "address", HelpText = "A valid public key.")]
+        [Option('p', "publickey", HelpText = "Public key of the peer.")]
         public string Address { get; set; }
 
         /// <inheritdoc />
-        [Option('s', "signature", HelpText = "A valid signature.")]
+        [Option('s', "signature", HelpText = "Signature from the signer.")]
         public string Signature { get; set; }
-
-        /// <inheritdoc />
-        [Option('n', "node", HelpText = "A valid node ID as listed in the nodes.json config file.")]
-        public string Node { get; set; }
-
+        
         [Usage(ApplicationAlias = "")]
         public static IEnumerable<Example> Examples =>
             new List<Example>

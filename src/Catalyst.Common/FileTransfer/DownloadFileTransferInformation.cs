@@ -25,6 +25,7 @@ using System;
 using System.IO;
 using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.FileTransfer;
+using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.P2P;
 using DotNetty.Transport.Channels;
 
@@ -50,7 +51,7 @@ namespace Catalyst.Common.FileTransfer
         public DownloadFileTransferInformation(IPeerIdentifier peerIdentifier,
             IPeerIdentifier recipientIdentifier,
             IChannel recipientChannel,
-            Guid correlationGuid,
+            ICorrelationId correlationGuid,
             string fileOutputPath,
             ulong fileSize) :
             base(peerIdentifier, recipientIdentifier, recipientChannel,

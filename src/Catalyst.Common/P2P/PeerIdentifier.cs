@@ -25,12 +25,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Reflection;
 using System.Text;
-using System.Text.RegularExpressions;
 using Catalyst.Common.Network;
 using Catalyst.Common.Util;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.Interfaces.Rpc;
+using Catalyst.Cryptography.BulletProofs.Wrapper;
 using Catalyst.Protocol.Common;
 using Dawn;
 using Google.Protobuf;
@@ -49,10 +49,6 @@ namespace Catalyst.Common.P2P
     /// </summary>
     public sealed class PeerIdentifier : IPeerIdentifier
     {
-        private static readonly string AssemblyMajorVersion2Digits = Assembly.GetExecutingAssembly().GetName().Version.Major.ToString("D2");
-        private static readonly byte[] AssemblyMajorVersion2Bytes = Encoding.UTF8.GetBytes(AssemblyMajorVersion2Digits);
-        private static readonly byte[] AtlasClientId = Encoding.UTF8.GetBytes("AC");
-
         public string ClientId => PeerId.ClientId.ToStringUtf8();
         public string ClientVersion => PeerId.ClientVersion.ToStringUtf8();
         public IPAddress Ip => new IPAddress(PeerId.Ip.ToByteArray()).MapToIPv4();
@@ -63,11 +59,18 @@ namespace Catalyst.Common.P2P
 
         public PeerIdentifier(PeerId peerId)
         {
-            Guard.Argument(peerId, nameof(peerId)).Require(ValidatePeerId);
+            var keyLength = FFI.GetPublicKeyLength();
+            Guard.Argument(peerId.PublicKey, nameof(peerId.PublicKey)).MinCount(keyLength).MaxCount(keyLength);
             PeerId = peerId;
         }
+
+        public static IPeerIdentifier BuildPeerIdFromConfig(IRpcNodeConfig nodeConfig, IPeerIdClientId clientId)
+        {
+            return new PeerIdentifier(Encoding.ASCII.GetBytes(nodeConfig.PublicKey),
+                nodeConfig.HostAddress, nodeConfig.Port, clientId);
+        }
         
-        public static IPeerIdentifier BuildPeerIdFromConfig(IConfiguration configuration)
+        public static IPeerIdentifier BuildPeerIdFromConfig(IConfiguration configuration, IPeerIdClientId clientId)
         {
             //TODO: Handle different scenarios to get the IPAddress and Port depending
             //on you whether you are connecting to a local node, or a remote one.
@@ -75,7 +78,7 @@ namespace Catalyst.Common.P2P
 
             return new PeerIdentifier(configuration.GetSection("CatalystCliConfig")
                    .GetSection("PublicKey").Value.ToBytesForRLPEncoding(),
-                IPAddress.Loopback, IPEndPoint.MaxPort);
+                IPAddress.Loopback, IPEndPoint.MaxPort, clientId);
         }
 
         /// <summary>
@@ -85,13 +88,6 @@ namespace Catalyst.Common.P2P
         /// <returns></returns>
         internal static PeerIdentifier ParseHexPeerIdentifier(IReadOnlyList<string> rawPidChunks)
         {
-            Guard.Argument(rawPidChunks).Count(5);
-            Guard.Argument(rawPidChunks[0]).Length(2);
-            Guard.Argument(rawPidChunks[1]).Length(2);
-            Guard.Argument(rawPidChunks[2]).Length(14);
-            Guard.Argument(rawPidChunks[3]).MinLength(4).MaxLength(5);
-            Guard.Argument(rawPidChunks[4]).Length(32);
-            
             var peerByteChunks = new List<ByteString>();
             rawPidChunks.ToList().ForEach(chunk => peerByteChunks.Add(chunk.ToBytesForRLPEncoding().ToByteString()));
 
@@ -105,72 +101,22 @@ namespace Catalyst.Common.P2P
             });
         }
         
-        public PeerIdentifier(IPeerSettings settings)
-            : this(settings.PublicKey.ToBytesForRLPEncoding(), new IPEndPoint(settings.BindAddress.MapToIPv4(), settings.Port)) { }
+        public PeerIdentifier(IPeerSettings settings, IPeerIdClientId clientId)
+            : this(settings.PublicKey.ToBytesForRLPEncoding(), new IPEndPoint(settings.BindAddress.MapToIPv4(), settings.Port), clientId) { }
         
-        public PeerIdentifier(IEnumerable<byte> publicKey, IPAddress ipAddress, int port)
-            : this(publicKey, EndpointBuilder.BuildNewEndPoint(ipAddress, port)) { }
+        public PeerIdentifier(IEnumerable<byte> publicKey, IPAddress ipAddress, int port, IPeerIdClientId clientId)
+            : this(publicKey, EndpointBuilder.BuildNewEndPoint(ipAddress, port), clientId) { }
         
-        private PeerIdentifier(IEnumerable<byte> publicKey, IPEndPoint endPoint)
+        private PeerIdentifier(IEnumerable<byte> publicKey, IPEndPoint endPoint, IPeerIdClientId clientId)
         {
             PeerId = new PeerId
             {
                 PublicKey = publicKey.ToByteString(),
                 Port = BitConverter.GetBytes(endPoint.Port).ToByteString(),
                 Ip = endPoint.Address.To16Bytes().ToByteString(),
-                ClientId = AtlasClientId.ToByteString(),
-                ClientVersion = AssemblyMajorVersion2Bytes.ToByteString()
+                ClientId = clientId.ClientVersion.ToByteString(),
+                ClientVersion = clientId.AssemblyMajorVersion.ToByteString()
             };
-        }
-
-        private static bool ValidatePeerId(PeerId peerId)
-        {
-            Guard.Argument(peerId, nameof(peerId)).NotNull()
-               .Require(p => p.PublicKey.Length == 32, _ => "PublicKey should be 32 bytes")
-               .Require(p => p.Ip.Length == 16 && ValidateIp(p.Ip.ToByteArray()), _ => "Ip should be 16 bytes")
-               .Require(p => ValidatePort(p.Port.ToByteArray()), _ => "Port should be between 1025 and 65535")
-               .Require(p => ValidateClientId(p.ClientId.ToByteArray()),
-                    _ => "ClientId should only be 2 alphabetical letters")
-               .Require(p => ValidateClientVersion(p.ClientVersion.ToByteArray()),
-                    _ => $"ClientVersion doesn't match {AssemblyMajorVersion2Digits}");
-            return true;
-        }
-
-        /// <summary>
-        /// </summary>
-        /// <param name="clientId"></param>
-        /// <exception cref="ArgumentException"></exception>
-        private static bool ValidateClientId(byte[] clientId)
-        {
-            return Regex.IsMatch(ByteUtil.ByteToString(clientId), @"^[a-zA-Z]{1,2}$");
-        }
-
-        /// <summary>
-        /// </summary>
-        /// <param name="clientVersion"></param>
-        /// <exception cref="ArgumentException"></exception>
-        private static bool ValidateClientVersion(byte[] clientVersion)
-        {
-            Guard.Argument(clientVersion, nameof(clientVersion))
-               .NotNull().NotEmpty().Count(2);
-            var intVersion = int.Parse(Encoding.UTF8.GetString(clientVersion));
-            return 0 <= intVersion && intVersion <= 99;
-        }
-
-        /// <summary>
-        /// </summary>
-        /// <param name="clientIp"></param>
-        private static bool ValidateIp(byte[] clientIp)
-        {
-            return IPAddress.TryParse(new IPAddress(clientIp).ToString(), out _);
-        }
-
-        /// <summary>
-        /// </summary>
-        /// <param name="portBytes"></param>
-        private static bool ValidatePort(byte[] portBytes)
-        {
-            return Common.Network.Ip.ValidPortRange(BitConverter.ToUInt16(portBytes));
         }
 
         public override string ToString()

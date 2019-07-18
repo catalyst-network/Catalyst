@@ -22,12 +22,10 @@
 #endregion
 
 using System;
-using System.Reflection;
 using Catalyst.Common.Interfaces.Attributes;
 using Catalyst.Common.Util;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Attributes;
-using Serilog;
 using SharpRepository.Repository;
 
 namespace Catalyst.Common.P2P
@@ -35,8 +33,6 @@ namespace Catalyst.Common.P2P
     [Audit]
     public sealed class Peer : IPeer, IAuditable
     {
-        private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
-
         /// <inheritdoc />
         [RepositoryPrimaryKey(Order = 1)]
         public int PkId { get; set; }
@@ -70,17 +66,5 @@ namespace Catalyst.Common.P2P
 
         /// <inheritdoc />
         public void Touch() { LastSeen = DateTimeUtil.UtcNow; }
-
-        /// <inheritdoc />
-        public void IncreaseReputation(int mer = 1)
-        {
-            Reputation += mer;
-        }
-
-        /// <inheritdoc />
-        public void DecreaseReputation(int mer = 1)
-        {
-            Reputation += mer;
-        }
     }
 }

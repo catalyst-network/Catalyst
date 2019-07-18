@@ -21,7 +21,7 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.Modules.Consensus.Delta;
+using Catalyst.Common.Interfaces.Modules.Consensus.Deltas;
 
 namespace Catalyst.Common.Interfaces.Modules.Consensus
 {
@@ -32,5 +32,8 @@ namespace Catalyst.Common.Interfaces.Modules.Consensus
 
         /// <see cref="IDeltaHub" />
         IDeltaHub DeltaHub { get; }
+
+        /// <see cref="IDeltaHashProvider"/>
+        IDeltaHashProvider DeltaHashProvider { get; }
     }
 }

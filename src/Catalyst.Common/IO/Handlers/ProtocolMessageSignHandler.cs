@@ -22,7 +22,6 @@
 #endregion
 
 using System.Threading.Tasks;
-using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.IO.Messaging.Dto;
@@ -33,7 +32,7 @@ using Google.Protobuf;
 
 namespace Catalyst.Common.IO.Handlers
 {
-    public sealed class ProtocolMessageSignHandler : OutboundChannelHandlerBase<IMessageDto>
+    public sealed class ProtocolMessageSignHandler : OutboundChannelHandlerBase<IMessageDto<ProtocolMessage>>
     {
         private readonly IKeySigner _keySigner;
 
@@ -48,17 +47,22 @@ namespace Catalyst.Common.IO.Handlers
         /// <param name="context"></param>
         /// <param name="message"></param>
         /// <returns></returns>
-        protected override Task WriteAsync0(IChannelHandlerContext context, IMessageDto message)
+        protected override Task WriteAsync0(IChannelHandlerContext context, IMessageDto<ProtocolMessage> message)
         {
-            var sig = _keySigner.Sign(message.Message.ToByteArray());
+            var sig = _keySigner.Sign(message.Content.ToByteArray());
             
             var protocolMessageSigned = new ProtocolMessageSigned
             {
-                Signature = sig.Bytes.RawBytes.ToByteString(),
-                Message = message.Message.ToProtocolMessage(message.Sender.PeerId, message.CorrelationId)
+                Signature = sig.SignatureBytes.RawBytes.ToByteString(),
+                Message = message.Content
             };
 
-            return context.WriteAsync(new MessageSignedDto(protocolMessageSigned, message.MessageType, message.Recipient, message.Sender));
+            var signedDto = new MessageDto<ProtocolMessageSigned>(protocolMessageSigned,
+                message.SenderPeerIdentifier,
+                message.RecipientPeerIdentifier,
+                message.CorrelationId);
+            
+            return context.WriteAsync(signedDto);
         }
     }
 }

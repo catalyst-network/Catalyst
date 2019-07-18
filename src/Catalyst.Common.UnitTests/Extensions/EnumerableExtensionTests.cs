@@ -21,10 +21,10 @@
 
 #endregion
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Catalyst.Common.Extensions;
+using Catalyst.Common.IO.Messaging.Correlation;
 using FluentAssertions;
 using Xunit;
 
@@ -36,8 +36,8 @@ namespace Catalyst.Common.UnitTests.Extensions
         public static void RandomElementReturnsCorrectTypeOfString()
         {
             var randomList = new List<string>();
-            randomList.Add(Guid.NewGuid().ToString());
-            string returnedElement = RandomElementExtension.RandomElement(randomList);
+            randomList.Add(CorrelationId.GenerateCorrelationId().Id.ToString());
+            var returnedElement = randomList.RandomElement();
 
             returnedElement.Should().BeOfType<string>();
         }
@@ -45,9 +45,8 @@ namespace Catalyst.Common.UnitTests.Extensions
         [Fact]
         public static void RandomElementReturnsCorrectTypeOfBool()
         {
-            var randomList = new List<bool>();
-            randomList.Add(false);
-            bool returnedElement = RandomElementExtension.RandomElement(randomList);
+            var randomList = new List<bool> {false};
+            var returnedElement = RandomElementExtension.RandomElement(randomList);
 
             returnedElement.Should().BeFalse();
         }
@@ -58,12 +57,12 @@ namespace Catalyst.Common.UnitTests.Extensions
             var randomList = new List<string>();
             var checkElementList = new List<string>();
 
-            for (int i = 0; i < 50; i++)
+            for (var i = 0; i < 50; i++)
             {
-                randomList.Add(Guid.NewGuid().ToString());
+                randomList.Add(CorrelationId.GenerateCorrelationId().Id.ToString());
             }
 
-            for (int i = 0; i < 5; i++)
+            for (var i = 0; i < 5; i++)
             {
                 checkElementList.Add(randomList.RandomElement());
             }

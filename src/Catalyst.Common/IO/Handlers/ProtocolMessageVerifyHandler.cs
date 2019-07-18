@@ -29,7 +29,7 @@ using Google.Protobuf;
 
 namespace Catalyst.Common.IO.Handlers
 {
-    public sealed class ProtocolMessageVerifyHandler : SimpleChannelInboundHandler<ProtocolMessageSigned>
+    public sealed class ProtocolMessageVerifyHandler : InboundChannelHandlerBase<ProtocolMessageSigned>
     {
         private readonly IKeySigner _keySigner;
 
@@ -40,19 +40,15 @@ namespace Catalyst.Common.IO.Handlers
 
         protected override void ChannelRead0(IChannelHandlerContext ctx, ProtocolMessageSigned signedMessage)
         {
-            if (_keySigner.Verify(
-                new PublicKey(signedMessage.Message.PeerId.PublicKey.ToByteArray()),
-                signedMessage.Message.ToByteString().ToByteArray(),
-                new Signature(signedMessage.Signature.ToByteArray()))
-            )
+            var sig = signedMessage.Signature.ToByteArray();
+            var pub = signedMessage.Message.PeerId.PublicKey.ToByteArray();
+            var signature = new Signature(sig, pub);
+
+            var message = signedMessage.Message.ToByteString().ToByteArray();
+            
+            if (_keySigner.Verify(signature, message))
             {
-                ctx.FireChannelRead(signedMessage.Message);                
-            }
-            else
-            {
-                // @TODO maybe we want to send a message why we close the channel, if we do we will need a Correlation handler for Tcp && Udp to write back correctly.
-                // ctx.Channel.WriteAndFlushAsync(datagramEnvelope);
-                ctx.CloseAsync().ConfigureAwait(false);
+                ctx.FireChannelRead(signedMessage.Message);
             }
         }
     }

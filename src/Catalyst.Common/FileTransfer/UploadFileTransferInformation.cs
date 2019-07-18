@@ -21,12 +21,11 @@
 
 #endregion
 
-using System;
 using System.IO;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.FileTransfer;
-using Catalyst.Common.Interfaces.IO.Messaging;
+using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Protocol.Rpc.Node;
@@ -51,7 +50,7 @@ namespace Catalyst.Common.FileTransfer
             IPeerIdentifier peerIdentifier,
             IPeerIdentifier recipientIdentifier,
             IChannel recipientChannel,
-            Guid correlationGuid,
+            ICorrelationId correlationGuid,
             IDtoFactory uploadDtoFactory) :
             base(peerIdentifier, recipientIdentifier, recipientChannel,
                 correlationGuid, string.Empty, (ulong) stream.Length)
@@ -62,7 +61,7 @@ namespace Catalyst.Common.FileTransfer
         }
 
         /// <inheritdoc />
-        public IMessageDto GetUploadMessageDto(uint index)
+        public IMessageDto<TransferFileBytesRequest> GetUploadMessageDto(uint index)
         {
             var chunkId = index + 1;
             var startPos = index * Constants.FileTransferChunkSize;
@@ -94,7 +93,7 @@ namespace Catalyst.Common.FileTransfer
             {
                 ChunkBytes = ByteString.CopyFrom(chunk),
                 ChunkId = chunkId,
-                CorrelationFileName = CorrelationGuid.ToByteString()
+                CorrelationFileName = CorrelationId.Id.ToByteString()
             };
             
             return _uploadDtoFactory.GetDto(transferMessage,
@@ -108,12 +107,7 @@ namespace Catalyst.Common.FileTransfer
         /// <inheritdoc />
         public bool CanRetry()
         {
-            if (RetryCount >= Constants.FileTransferMaxChunkRetryCount)
-            {
-                return false;
-            }
-
-            return true;
+            return RetryCount < Constants.FileTransferMaxChunkRetryCount;
         }
     }
 }

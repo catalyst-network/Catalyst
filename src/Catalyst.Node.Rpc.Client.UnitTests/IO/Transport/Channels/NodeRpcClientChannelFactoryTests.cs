@@ -21,17 +21,19 @@
 
 #endregion
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Catalyst.Common.Extensions;
-using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.Interfaces.Rpc.IO.Messaging.Correlation;
+using Catalyst.Common.IO.Codecs;
 using Catalyst.Common.IO.Handlers;
+using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Node.Rpc.Client.IO.Transport.Channels;
+using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
 using Catalyst.TestUtils;
 using DotNetty.Buffers;
@@ -45,49 +47,55 @@ using Xunit;
 
 namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Transport.Channels
 {
-    public class NodeRpcClientChannelFactoryTests
+    public sealed class NodeRpcClientChannelFactoryTests
     {
         public sealed class TestNodeRpcClientChannelFactory : NodeRpcClientChannelFactory
         {
             private readonly List<IChannelHandler> _handlers;
 
-            public TestNodeRpcClientChannelFactory(IKeySigner keySigner, IMessageCorrelationManager correlationManager)
-                : base(keySigner, correlationManager)
+            public TestNodeRpcClientChannelFactory(IKeySigner keySigner, IRpcMessageCorrelationManager correlationManager, IPeerIdValidator peerIdValidator)
+                : base(keySigner, correlationManager, peerIdValidator)
             {
-                _handlers = Handlers;
+                _handlers = HandlerGenerationFunction();
             }
 
             public IReadOnlyCollection<IChannelHandler> InheritedHandlers => _handlers;
         }
 
-        private readonly IMessageCorrelationManager _correlationManager;
+        private readonly IRpcMessageCorrelationManager _correlationManager;
         private readonly TestNodeRpcClientChannelFactory _factory;
         private readonly IKeySigner _keySigner;
 
         public NodeRpcClientChannelFactoryTests()
         {
-            _correlationManager = Substitute.For<IMessageCorrelationManager>();
+            _correlationManager = Substitute.For<IRpcMessageCorrelationManager>();
             _keySigner = Substitute.For<IKeySigner>();
 
             var peerSettings = Substitute.For<IPeerSettings>();
-
             peerSettings.BindAddress.Returns(IPAddress.Parse("127.0.0.1"));
             peerSettings.Port.Returns(1234);
-            _factory = new TestNodeRpcClientChannelFactory(_keySigner, _correlationManager);
+
+            var peerIdValidator = Substitute.For<IPeerIdValidator>();
+            peerIdValidator.ValidatePeerIdFormat(Arg.Any<PeerId>()).Returns(true);
+
+            _factory = new TestNodeRpcClientChannelFactory(_keySigner, _correlationManager, peerIdValidator);
         }
 
         [Fact]
         public void NodeRpcClientChannelFactory_should_have_correct_handlers()
         {
-            _factory.InheritedHandlers.Count(h => h != null).Should().Be(7);
+            _factory.InheritedHandlers.Count(h => h != null).Should().Be(10);
             var handlers = _factory.InheritedHandlers.ToArray();
-            handlers[0].Should().BeOfType<ProtobufVarint32LengthFieldPrepender>();
-            handlers[1].Should().BeOfType<ProtobufEncoder>();
-            handlers[2].Should().BeOfType<ProtobufVarint32FrameDecoder>();
-            handlers[3].Should().BeOfType<ProtobufDecoder>();
-            handlers[4].Should().BeOfType<CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>>();
-            handlers[5].Should().BeOfType<CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>>();
-            handlers[6].Should().BeOfType<ObservableServiceHandler>();
+            handlers[0].Should().BeOfType<FlushPipelineHandler<IByteBuffer>>();
+            handlers[1].Should().BeOfType<ProtobufVarint32LengthFieldPrepender>();
+            handlers[2].Should().BeOfType<ProtobufEncoder>();
+            handlers[3].Should().BeOfType<ProtobufVarint32FrameDecoder>();
+            handlers[4].Should().BeOfType<ProtobufDecoder>();
+            handlers[5].Should().BeOfType<PeerIdValidationHandler>();
+            handlers[6].Should().BeOfType<AddressedEnvelopeToIMessageEncoder>();
+            handlers[7].Should().BeOfType<CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>>();
+            handlers[8].Should().BeOfType<CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>>();
+            handlers[9].Should().BeOfType<ObservableServiceHandler>();
         }
 
         [Fact]
@@ -97,7 +105,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Transport.Channels
                 true, _factory.InheritedHandlers.ToArray());
 
             var senderId = PeerIdHelper.GetPeerId("sender");
-            var correlationId = Guid.NewGuid();
+            var correlationId = CorrelationId.GenerateCorrelationId();
             
             var protocolMessage = new PingResponse().ToProtocolMessage(senderId, correlationId);
             _correlationManager.TryMatchResponse(protocolMessage).Returns(true);
@@ -110,15 +118,14 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Transport.Channels
             {
                 testingChannel.WriteInbound(protocolMessage);
 
-                // @TODO in bound server shouldn't try and correlate a request, lets do another test to check this logic
                 _correlationManager.Received(1).TryMatchResponse(protocolMessage);
 
-                _keySigner.DidNotReceiveWithAnyArgs().Verify(null, null, null);
+                _keySigner.DidNotReceiveWithAnyArgs().Verify(null, null);
 
                 await messageStream.WaitForItemsOnDelayedStreamOnTaskPoolSchedulerAsync();
 
                 observer.Received.Count.Should().Be(1);
-                observer.Received.Single().Payload.CorrelationId.ToGuid().Should().Be(correlationId);
+                observer.Received.Single().Payload.CorrelationId.ToCorrelationId().Id.Should().Be(correlationId.Id);
             }
         }
 
@@ -129,7 +136,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Transport.Channels
                 true, _factory.InheritedHandlers.ToArray());
 
             var senderId = PeerIdHelper.GetPeerId("sender");
-            var correlationId = Guid.NewGuid();
+            var correlationId = CorrelationId.GenerateCorrelationId();
             var protocolMessage = new PingRequest().ToProtocolMessage(senderId, correlationId);
 
             testingChannel.WriteOutbound(protocolMessage);

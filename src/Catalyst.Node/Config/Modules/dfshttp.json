@@ -1,0 +1,13 @@
+{
+    "defaultAssembly": "Catalyst.Core.Lib",
+    "components": [
+        {
+            "type": "Catalyst.Core.Lib.Modules.Dfs.DfsHttp",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.Modules.Dfs.IDfsHttp, Catalyst.Common"
+                }
+            ]
+        }
+    ]
+}

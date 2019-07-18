@@ -1,0 +1,86 @@
+{
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": false,
+  "contributors": [
+    {
+      "login": "nshCore",
+      "name": "nshCore",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/21375475?v=4",
+      "profile": "https://hub.docker.com/u/jkirkby91",
+      "contributions": [
+        "infra",
+        "ideas",
+        "test",
+        "code"
+      ]
+    },
+    {
+      "login": "franssl",
+      "name": "franssl",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/46971650?v=4",
+      "profile": "https://github.com/franssl",
+      "contributions": [
+        "test",
+        "code"
+      ]
+    },
+    {
+      "login": "monsieurleberre",
+      "name": "monsieurleberre",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/4638821?v=4",
+      "profile": "https://github.com/monsieurleberre",
+      "contributions": [
+        "test",
+        "code"
+      ]
+    },
+    {
+      "login": "atlassanjay",
+      "name": "atlassanjay",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/49910176?v=4",
+      "profile": "https://github.com/atlassanjay",
+      "contributions": [
+        "test",
+        "code"
+      ]
+    },
+    {
+      "login": "Millymanz",
+      "name": "Millymanz",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/5070123?v=4",
+      "profile": "https://github.com/Millymanz",
+      "contributions": [
+        "test",
+        "code"
+      ]
+    },
+    {
+      "login": "richardschneider",
+      "name": "Richard Schneider",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/631061?v=4",
+      "profile": "https://github.com/richardschneider",
+      "contributions": [
+        "test",
+        "code"
+      ]
+    },
+    {
+      "login": "Xela101",
+      "name": "Alex",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/11431881?v=4",
+      "profile": "https://github.com/Xela101",
+      "contributions": [
+        "code",
+        "test"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7,
+  "projectName": "Catalyst.Node",
+  "projectOwner": "catalyst-network",
+  "repoType": "github",
+  "repoHost": "https://github.com"
+}

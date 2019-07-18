@@ -21,54 +21,17 @@
 
 #endregion
 
-using System;
-using System.Text;
-using Catalyst.Common.Interfaces.Cli.Options;
-using Catalyst.Common.Interfaces.Rpc;
-using Catalyst.Common.P2P;
+using Catalyst.Cli.CommandTypes;
+using Catalyst.Cli.Options;
+using Catalyst.Common.Interfaces.Cli.Commands;
 using Catalyst.Protocol.Rpc.Node;
-using Dawn;
 
 namespace Catalyst.Cli.Commands
 {
-    internal partial class Commands
+    public sealed class PeerCountCommand : BaseMessageCommand<GetPeerCountRequest, PeerCountOptions>
     {
-        /// <inheritdoc cref="PeerCountCommand" />
-        public bool PeerCountCommand(IPeerCountOptions opts)
-        {
-            Guard.Argument(opts).NotNull().Compatible<IPeerCountOptions>();
+        public PeerCountCommand(ICommandContext commandContext) : base(commandContext) { }
 
-            INodeRpcClient node;
-            try
-            {
-                node = GetConnectedNode(opts.Node);
-            }
-            catch (Exception e)
-            {
-                _logger.Error(e.Message);
-                return false;
-            }
-            
-            var nodeConfig = GetNodeConfig(opts.Node);
-            Guard.Argument(nodeConfig, nameof(nodeConfig)).NotNull("The node configuration cannot be null");
-            
-            try
-            {
-                var requestMessage = _dtoFactory.GetDto(new GetPeerCountRequest(),
-                    _peerIdentifier,
-                    new PeerIdentifier(Encoding.ASCII.GetBytes(nodeConfig.PublicKey), nodeConfig.HostAddress,
-                        nodeConfig.Port)
-                );
-
-                node.SendMessage(requestMessage);
-            }
-            catch (Exception e)
-            {
-                _logger.Debug(e.Message);
-                return false;
-            }
-
-            return true;
-        }
+        protected override GetPeerCountRequest GetMessage(PeerCountOptions option) { return new GetPeerCountRequest(); }
     }
 }

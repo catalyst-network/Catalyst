@@ -22,7 +22,6 @@
 #endregion
 
 using System;
-using System.IO;
 using System.Security.Cryptography.X509Certificates;
 using Catalyst.Common.Cryptography;
 using Catalyst.Common.Interfaces.Cryptography;
@@ -42,7 +41,6 @@ namespace Catalyst.Common.UnitTests.Cryptography
         }
 
         private string _fileWithPassName;
-        private DirectoryInfo _directoryInfo;
         private CertificateStore _certificateStore;
         private X509Certificate2 _createdCertificate;
         private X509Certificate2 _retrievedCertificate;
@@ -51,21 +49,19 @@ namespace Catalyst.Common.UnitTests.Cryptography
 
         private void Create_certificate_store()
         {
-            var dataFolder = FileSystem.GetCatalystDataDir().FullName;
-            _directoryInfo = new DirectoryInfo(dataFolder);
             _certificateStore = new CertificateStore(FileSystem, _passwordReader);
         }
 
         private void Ensure_no_certificate_file_exists()
         {
-            _directoryInfo = FileSystem.GetCatalystDataDir();
-            if (_directoryInfo.Exists)
+            var directoryInfo = FileSystem.GetCatalystDataDir();
+            if (directoryInfo.Exists)
             {
-                _directoryInfo.Delete(true);
+                directoryInfo.Delete(true);
             }
 
-            _directoryInfo.Create();
-            _directoryInfo.EnumerateFiles().Should().BeEmpty();
+            directoryInfo.Create();
+            directoryInfo.EnumerateFiles().Should().BeEmpty();
         }
 
         private void Create_a_certificate_file_with_password()

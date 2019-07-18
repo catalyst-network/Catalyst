@@ -24,31 +24,35 @@
 using System;
 using System.Threading.Tasks;
 using Catalyst.Common.Config;
-using Catalyst.Common.Extensions;
-using Catalyst.Common.Interfaces.IO.Messaging;
+using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
-using Catalyst.Common.IO.Messaging;
+using Catalyst.Common.IO.Messaging.Correlation;
+using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;
 
 namespace Catalyst.Common.IO.Handlers
 {
-    public sealed class CorrelatableHandler : OutboundChannelHandlerBase<IMessageDto>
+    public sealed class CorrelatableHandler<T> :
+        OutboundChannelHandlerBase<IMessageDto<ProtocolMessage>>
+        where T : IMessageCorrelationManager
     {
-        private readonly IMessageCorrelationManager _messageCorrelationManager;
-
-        public CorrelatableHandler(IMessageCorrelationManager messageCorrelationManager)
+        private readonly T _messageCorrelationManager;
+        
+        /// <param name="messageCorrelationManager"></param>
+        public CorrelatableHandler(T messageCorrelationManager)
         {
             _messageCorrelationManager = messageCorrelationManager;
         }
-
-        protected override Task WriteAsync0(IChannelHandlerContext context, IMessageDto message)
+        
+        /// <inheritdoc />
+        protected override Task WriteAsync0(IChannelHandlerContext context, IMessageDto<ProtocolMessage> message)
         {
-            if (message.MessageType.Name.Equals(MessageTypes.Request.Name))
+            if (message.Content.TypeUrl.EndsWith(MessageTypes.Request.Name))
             {
-                _messageCorrelationManager.AddPendingRequest(new CorrelatableMessage
+                _messageCorrelationManager.AddPendingRequest(new CorrelatableMessage<ProtocolMessage>
                 {
-                    Recipient = message.Recipient,
-                    Content = message.Message.ToProtocolMessage(message.Sender.PeerId, Guid.NewGuid()),
+                    Recipient = message.RecipientPeerIdentifier,
+                    Content = message.Content,
                     SentAt = DateTimeOffset.UtcNow
                 });
             }

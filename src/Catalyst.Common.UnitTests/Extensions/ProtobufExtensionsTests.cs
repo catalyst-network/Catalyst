@@ -22,51 +22,26 @@
 #endregion
 
 using System;
+using System.Linq;
+using System.Text;
 using Catalyst.Common.Extensions;
+using Catalyst.Common.IO.Messaging.Correlation;
+using Catalyst.Common.Util;
+using Catalyst.Protocol;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.Protocol.Transaction;
 using Catalyst.TestUtils;
 using FluentAssertions;
+using Google.Protobuf;
+using Multiformats.Hash;
 using Xunit;
 
 namespace Catalyst.Common.UnitTests.Extensions
 {
     public class ProtobufExtensionsTests
     {
-        [Fact]
-        public static void ShortenedFullName_should_remove_namespace_start()
-        {
-            TransactionBroadcast.Descriptor.FullName.Should().Be("Catalyst.Protocol.Transaction.TransactionBroadcast");
-            TransactionBroadcast.Descriptor.ShortenedFullName().Should().Be("Transaction.TransactionBroadcast");
-        }
-
-        [Fact]
-        public static void ShortenedProtoFullName_should_remove_namespace_start()
-        {
-            PingRequest.Descriptor.FullName.Should().Be("Catalyst.Protocol.IPPN.PingRequest");
-            typeof(PingRequest).ShortenedProtoFullName().Should().Be("IPPN.PingRequest");
-        }
-
-        [Theory]
-        [InlineData("MyFunnyRequest", "MyFunnyResponse")]
-        [InlineData("Request", "Response")]
-        [InlineData("Some.Namespace.ClassRequest", "Some.Namespace.ClassResponse")]
-        public static void GetResponseType_should_swap_request_suffix_for_response_suffix(string requestType, string responseType)
-        {
-            requestType.GetResponseType().Should().Be(responseType);
-        }
-
-        [Theory]
-        [InlineData("MyFunnyResponse", "MyFunnyRequest")]
-        [InlineData("Response", "Request")]
-        [InlineData("Some.Namespace.ClassResponse", "Some.Namespace.ClassRequest")]
-        public static void GetRequestType_should_swap_request_suffix_for_response_suffix(string responseType, string requestType)
-        {
-            responseType.GetRequestType().Should().Be(requestType);
-        }
-
         [Fact]
         public static void ToAnySigned_should_happen_new_guid_to_request_if_not_specified()
         {
@@ -78,7 +53,7 @@ namespace Catalyst.Common.UnitTests.Extensions
         [Fact]
         public static void ToAnySigned_should_set_the_wrapper_fields()
         {
-            var guid = Guid.NewGuid();
+            var guid = CorrelationId.GenerateCorrelationId();
             var peerId = PeerIdHelper.GetPeerId("blablabla");
             var expectedContent = "content";
             var wrapped = new PeerId()
@@ -86,7 +61,7 @@ namespace Catalyst.Common.UnitTests.Extensions
                 ClientId = expectedContent.ToUtf8ByteString()
             }.ToProtocolMessage(peerId, guid);
 
-            wrapped.CorrelationId.ToGuid().Should().Be(guid);
+            wrapped.CorrelationId.ToCorrelationId().Id.Should().Be(guid.Id);
             wrapped.PeerId.Should().Be(peerId);
             wrapped.TypeUrl.Should().Be(PeerId.Descriptor.ShortenedFullName());
             wrapped.FromProtocolMessage<PeerId>().ClientId.Should().Equal(expectedContent.ToUtf8ByteString());
@@ -97,11 +72,11 @@ namespace Catalyst.Common.UnitTests.Extensions
         {
             var peerId = PeerIdHelper.GetPeerId("someone");
             var request = new GetPeerCountRequest().ToProtocolMessage(peerId);
-            request.CorrelationId.ToGuid().Should().NotBe(default);
+            request.CorrelationId.ToCorrelationId().Should().NotBe(default);
         }
 
         [Fact]
-        public static void ToProtocolMessage_When_Processing_Request_Should_Fail_If_No_CorrelationId_Specified()
+        public static void ToProtocolMessage_When_Processing_Response_Should_Fail_If_No_CorrelationId_Specified()
         {
             var peerId = PeerIdHelper.GetPeerId("someone");
             var response = new GetPeerCountResponse
@@ -116,16 +91,48 @@ namespace Catalyst.Common.UnitTests.Extensions
         public void Can_Recognize_Gossip_Message()
         {
             var peerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("1");
-            var gossipMessage = new TransactionBroadcast().ToProtocolMessage(peerIdentifier.PeerId, Guid.NewGuid())
-               .ToProtocolMessage(peerIdentifier.PeerId, Guid.NewGuid());
-            gossipMessage.CheckIfMessageIsBroadcast().Should().BeTrue();
+            var gossipMessage = new TransactionBroadcast().ToProtocolMessage(peerIdentifier.PeerId, CorrelationId.GenerateCorrelationId())
+               .ToProtocolMessage(peerIdentifier.PeerId, CorrelationId.GenerateCorrelationId());
+            gossipMessage.IsBroadCastMessage().Should().BeTrue();
 
-            var nonGossipMessage = new PingRequest().ToProtocolMessage(peerIdentifier.PeerId, Guid.NewGuid());
-            nonGossipMessage.CheckIfMessageIsBroadcast().Should().BeFalse();
+            var nonGossipMessage = new PingRequest().ToProtocolMessage(peerIdentifier.PeerId, CorrelationId.GenerateCorrelationId());
+            nonGossipMessage.IsBroadCastMessage().Should().BeFalse();
 
-            var secondNonGossipMessage = new PingRequest().ToProtocolMessage(peerIdentifier.PeerId, Guid.NewGuid())
-               .ToProtocolMessage(peerIdentifier.PeerId, Guid.NewGuid());
-            secondNonGossipMessage.CheckIfMessageIsBroadcast().Should().BeFalse();
+            var secondNonGossipMessage = new PingRequest().ToProtocolMessage(peerIdentifier.PeerId, CorrelationId.GenerateCorrelationId())
+               .ToProtocolMessage(peerIdentifier.PeerId, CorrelationId.GenerateCorrelationId());
+            secondNonGossipMessage.IsBroadCastMessage().Should().BeFalse();
+        }
+
+        [Fact]
+        public void ToMultihash_Can_Convert_Valid_ByteString_To_Multihash()
+        {
+            var initialHash = Multihash.Sum(HashType.BLAKE2B_256, Encoding.UTF8.GetBytes("hello"));
+            var byteString = initialHash.ToBytes().ToByteString();
+
+            var convertedHash = byteString.ToMultihash();
+
+            convertedHash.Should().Be(initialHash);
+        }
+
+        [Fact]
+        public void ToMultihashString_Can_Convert_Valid_ByteString_To_String()
+        {
+            var initialHash = Multihash.Encode("hello", HashType.BLAKE2B_256);
+            var byteString = initialHash.ToBytes().ToByteString();
+
+            var multihash = byteString.ToMultihashString();
+            multihash.Should().NotBe(null);
+        }
+
+        [Fact]
+        public void ToCorrelationId_Should_Take_Care_Of_All_ByteStrings()
+        {
+            var tooLong = ByteUtil.GenerateRandomByteArray(43).ToByteString();
+            var tooShort = ByteUtil.GenerateRandomByteArray(14).ToByteString();
+
+            tooLong.ToCorrelationId().Should().Be(new CorrelationId(tooLong.ToByteArray().Take(16).ToArray()));
+            tooShort.ToCorrelationId().Should().Be(new CorrelationId(tooShort.ToByteArray().Concat(new byte[] {0, 0}).ToArray()));
+            ((ByteString) null).ToCorrelationId().Should().Be(new CorrelationId(Guid.Empty));
         }
     }
 }

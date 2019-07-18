@@ -26,11 +26,15 @@ using System.Linq;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
+using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
+using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Common.IO.Messaging.Dto;
-using Catalyst.Common.IO.Observables;
+using Catalyst.Common.IO.Observers;
 using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;
+using Google.Protobuf;
+using NSubstitute;
 
 namespace Catalyst.TestUtils 
 {
@@ -41,25 +45,36 @@ namespace Catalyst.TestUtils
             handler.OnNext(CreateChanneledMessage(fakeContext, messages));
         }
 
-        public static IObservable<IProtocolMessageDto<ProtocolMessage>> CreateStreamWithMessage(IChannelHandlerContext fakeContext, ProtocolMessage response)
+        public static IObservable<IObserverDto<ProtocolMessage>> CreateStreamWithMessage(IChannelHandlerContext fakeContext, ProtocolMessage response)
         {   
-            var channeledAny = new ProtocolMessageDto(fakeContext, response);
+            var channeledAny = new ObserverDto(fakeContext, response);
             var messageStream = new[] {channeledAny}.ToObservable();
             return messageStream;
         }
 
-        public static IObservable<IProtocolMessageDto<ProtocolMessage>> CreateStreamWithMessages(IChannelHandlerContext fakeContext, params ProtocolMessage[] responseMessages)
+        public static IObservable<IObserverDto<ProtocolMessage>> CreateStreamWithMessages<T>(params T[] messages)
+            where T : IMessage<T>, IMessage
+        {
+            var protoMessages = messages.Select(m =>
+                m.ToProtocolMessage(PeerIdHelper.GetPeerId(), CorrelationId.GenerateCorrelationId()));
+
+            var context = Substitute.For<IChannelHandlerContext>();
+
+            return CreateStreamWithMessages(context, protoMessages.ToArray());
+        }
+
+        public static IObservable<IObserverDto<ProtocolMessage>> CreateStreamWithMessages(IChannelHandlerContext fakeContext, params ProtocolMessage[] responseMessages)
         {
             var stream = responseMessages
-               .Select(message => new ProtocolMessageDto(fakeContext, message));
+               .Select(message => new ObserverDto(fakeContext, message));
 
             var messageStream = stream.ToObservable();
             return messageStream;
         }
 
-        private static ProtocolMessageDto CreateChanneledMessage(IChannelHandlerContext fakeContext, ProtocolMessage responseMessage)
+        private static ObserverDto CreateChanneledMessage(IChannelHandlerContext fakeContext, ProtocolMessage responseMessage)
         {
-            return new ProtocolMessageDto(fakeContext, responseMessage);
+            return new ObserverDto(fakeContext, responseMessage);
         }
 
         public static IObservable<T> DelayAndSubscribeOnTaskPool<T>(this IObservable<T> messageStream, TimeSpan customDelay = default)

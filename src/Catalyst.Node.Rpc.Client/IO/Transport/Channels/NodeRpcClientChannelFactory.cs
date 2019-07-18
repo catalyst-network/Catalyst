@@ -21,19 +21,23 @@
 
 #endregion
 
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Reactive.Linq;
 using System.Security.Cryptography.X509Certificates;
 using Catalyst.Common.Interfaces.IO.EventLoop;
 using Catalyst.Common.Interfaces.IO.Handlers;
-using Catalyst.Common.Interfaces.IO.Messaging;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Transport.Channels;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
+using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.Interfaces.Rpc.IO.Messaging.Correlation;
+using Catalyst.Common.IO.Codecs;
 using Catalyst.Common.IO.Handlers;
 using Catalyst.Common.IO.Transport.Channels;
 using Catalyst.Protocol.Common;
+using DotNetty.Buffers;
 using DotNetty.Codecs.Protobuf;
 using DotNetty.Transport.Channels;
 
@@ -42,25 +46,51 @@ namespace Catalyst.Node.Rpc.Client.IO.Transport.Channels
     public class NodeRpcClientChannelFactory : TcpClientChannelFactory
     {
         private readonly IKeySigner _keySigner;
-        private readonly IMessageCorrelationManager _messageCorrelationCache;
+        private readonly IRpcMessageCorrelationManager _messageCorrelationCache;
+        private readonly IPeerIdValidator _peerIdValidator;
+        private readonly IObservableServiceHandler _observableServiceHandler;
 
-        public NodeRpcClientChannelFactory(IKeySigner keySigner, IMessageCorrelationManager messageCorrelationCache, int backLogValue = 100) : base(backLogValue)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="keySigner"></param>
+        /// <param name="messageCorrelationCache"></param>
+        /// <param name="peerIdValidator"></param>
+        /// <param name="backLogValue"></param>
+        public NodeRpcClientChannelFactory(IKeySigner keySigner,
+            IRpcMessageCorrelationManager messageCorrelationCache,
+            IPeerIdValidator peerIdValidator,
+            int backLogValue = 100) : base(backLogValue)
         {
             _keySigner = keySigner;
             _messageCorrelationCache = messageCorrelationCache;
+            _peerIdValidator = peerIdValidator;
+            _observableServiceHandler = new ObservableServiceHandler();
         }
 
-        protected override List<IChannelHandler> Handlers =>
-            new List<IChannelHandler>
+        protected override Func<List<IChannelHandler>> HandlerGenerationFunction
+        {
+            get
             {
-                new ProtobufVarint32LengthFieldPrepender(),
-                new ProtobufEncoder(),
-                new ProtobufVarint32FrameDecoder(),
-                new ProtobufDecoder(ProtocolMessageSigned.Parser),
-                new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(new ProtocolMessageVerifyHandler(_keySigner), new ProtocolMessageSignHandler(_keySigner)),
-                new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(new CorrelationHandler(_messageCorrelationCache), new CorrelationHandler(_messageCorrelationCache)),
-                new ObservableServiceHandler()
-            };
+                return () => new List<IChannelHandler>
+                {
+                    new FlushPipelineHandler<IByteBuffer>(),
+                    new ProtobufVarint32LengthFieldPrepender(),
+                    new ProtobufEncoder(),
+                    new ProtobufVarint32FrameDecoder(),
+                    new ProtobufDecoder(ProtocolMessageSigned.Parser),
+                    new PeerIdValidationHandler(_peerIdValidator),
+                    new AddressedEnvelopeToIMessageEncoder(),
+                    new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
+                        new ProtocolMessageVerifyHandler(_keySigner), 
+                        new ProtocolMessageSignHandler(_keySigner)),
+                    new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
+                        new CorrelationHandler<IRpcMessageCorrelationManager>(_messageCorrelationCache),
+                        new CorrelatableHandler<IRpcMessageCorrelationManager>(_messageCorrelationCache)),
+                    _observableServiceHandler
+                };
+            }
+        }
 
         /// <param name="eventLoopGroupFactory"></param>
         /// <param name="targetAddress">Ignored</param>
@@ -72,11 +102,11 @@ namespace Catalyst.Node.Rpc.Client.IO.Transport.Channels
             X509Certificate2 certificate = null)
         {
             var channel = Bootstrap(eventLoopGroupFactory, targetAddress, targetPort, certificate);
-            
-            var messageStream = channel.Pipeline.Get<IObservableServiceHandler>()?.MessageStream;
+
+            var messageStream = _observableServiceHandler.MessageStream;
 
             return new ObservableChannel(messageStream
-             ?? Observable.Never<IProtocolMessageDto<ProtocolMessage>>(), channel);
+             ?? Observable.Never<IObserverDto<ProtocolMessage>>(), channel);
         }
     }
 }
