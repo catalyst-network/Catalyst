@@ -22,14 +22,10 @@
 #endregion
 
 using System;
-using System.IO;
-using System.Linq;
-using System.Reactive.Threading.Tasks;
 using System.Security.Authentication;
 using System.Threading.Tasks;
 using Catalyst.Common.Config;
 using Catalyst.Common.Cryptography;
-using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Common.Interfaces.Keystore;
 using Catalyst.Common.Keystore;
@@ -39,7 +35,6 @@ using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Multiformats.Hash.Algorithms;
-using Nethereum.Hex.HexConvertors.Extensions;
 using NSubstitute;
 using Serilog;
 using Xunit;
@@ -75,40 +70,23 @@ namespace Catalyst.Common.UnitTests.Keystore
                 addressHelper);
         }
 
-        private void Ensure_No_Keystore_File_Exists()
-        {
-            var directoryInfo = FileSystem.GetCatalystDataDir();
-            if (directoryInfo.Exists)
-            {
-                directoryInfo.Delete(true);
-            }
-
-            directoryInfo.Create();
-            directoryInfo.EnumerateFiles().Should().BeEmpty();
-        }
-
         [Fact]
         public void KeyStore_Can_Generate_Key_And_Create_Keystore_File()
         {
-            Ensure_No_Keystore_File_Exists();
-            
             var privateKey = _keystore.KeyStoreGenerate(KeyRegistryKey.DefaultKey);
             privateKey.Should().NotBe(null);
         }
 
         [Fact]
-        public void KeyStore_Throws_Exception_On_Invalid_KeyStore_File()
+        public async Task KeyStore_Throws_Exception_On_Invalid_KeyStore_File()
         {
-            Ensure_No_Keystore_File_Exists();
-            FileSystem.WriteFileToCddSubDirectoryAsync(KeyRegistryKey.DefaultKey.Name, Constants.KeyStoreDataSubDir, "bad contents");
-            Assert.Throws<System.Exception>(() =>_keystore.KeyStoreDecrypt(KeyRegistryKey.DefaultKey));
+            await FileSystem.WriteFileToCddSubDirectoryAsync(KeyRegistryKey.DefaultKey.Name, Constants.KeyStoreDataSubDir, "bad contents");
+            Assert.Throws<System.Exception>(() => _keystore.KeyStoreDecrypt(KeyRegistryKey.DefaultKey));
         }
 
         [Fact]
         public void Keystore_Can_Create_Keystore_File_From_Provided_Key()
         {
-            Ensure_No_Keystore_File_Exists();
-
             IPrivateKey privateKey = _context.GeneratePrivateKey();
             _keystore.KeyStoreEncryptAsync(privateKey, KeyRegistryKey.DefaultKey).Wait();
             var storedKey = _keystore.KeyStoreDecrypt(KeyRegistryKey.DefaultKey);
@@ -118,8 +96,6 @@ namespace Catalyst.Common.UnitTests.Keystore
         [Fact]
         public async Task Keystore_Can_Create_Keystore_File_From_Key_It_Generates()
         {
-            Ensure_No_Keystore_File_Exists();
-            
             var privateKey = _keystore.KeyStoreGenerate(KeyRegistryKey.DefaultKey);
 
             await TaskHelper.WaitForAsync(() => FileSystem.DataFileExistsInSubDirectory(KeyRegistryKey.DefaultKey.Name, Constants.CatalystDataDir),
@@ -135,8 +111,6 @@ namespace Catalyst.Common.UnitTests.Keystore
         [Fact]
         public async Task Keystore_Throws_Exception_If_Password_Incorrect()
         {
-            Ensure_No_Keystore_File_Exists();
-
             IPrivateKey privateKey = _context.GeneratePrivateKey();
             await _keystore.KeyStoreEncryptAsync(privateKey, KeyRegistryKey.DefaultKey);
             await TaskHelper.WaitForAsync(
@@ -145,14 +119,12 @@ namespace Catalyst.Common.UnitTests.Keystore
                 TimeSpan.FromSeconds(3));
             _passwordReader.ReadSecurePassword(default, default)
                .ReturnsForAnyArgs(TestPasswordReader.BuildSecureStringPassword("a different test password"));
-            Assert.Throws<AuthenticationException>(() =>_keystore.KeyStoreDecrypt(KeyRegistryKey.DefaultKey));
+            Assert.Throws<AuthenticationException>(() => _keystore.KeyStoreDecrypt(KeyRegistryKey.DefaultKey));
         }
 
         [Fact]
         public void Keystore_Returns_Null_If_Key_File_Doesnt_Exist()
         {
-            Ensure_No_Keystore_File_Exists();
-
             _keystore.KeyStoreDecrypt(KeyRegistryKey.DefaultKey).Should().Be(null);
         }
     }
