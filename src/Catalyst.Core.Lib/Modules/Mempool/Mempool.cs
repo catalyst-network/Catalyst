@@ -48,16 +48,16 @@ namespace Catalyst.Core.Lib.Modules.Mempool
         {
             Guard.Argument(transactionStore, nameof(transactionStore)).NotNull();
             _transactionStore = transactionStore;
-            _transactionStore.Repository.Conventions.GetPrimaryKeyName = _ => nameof(TransactionBroadcast.Signature);
+            _transactionStore.Conventions.GetPrimaryKeyName = _ => nameof(TransactionBroadcast.Signature);
 
             _logger = logger;
-            _transactionStore.Repository.CachingEnabled = true;
+            _transactionStore.CachingEnabled = true;
         }
 
         /// <inheritdoc />
         public IEnumerable<IMempoolDocument> GetMemPoolContent()
         {
-            var memPoolContent = _transactionStore.Repository.GetAll();
+            var memPoolContent = _transactionStore.GetAll();
             return memPoolContent;
         }
 
@@ -74,7 +74,7 @@ namespace Catalyst.Core.Lib.Modules.Mempool
         public IMempoolDocument GetMempoolDocument(TransactionSignature key)
         {
             Guard.Argument(key, nameof(key)).NotNull();
-            var found = _transactionStore.Repository.Get(key.ToByteString().ToBase64());
+            var found = _transactionStore.Get(key.ToByteString().ToBase64());
             return found;
         }
 
@@ -88,12 +88,12 @@ namespace Catalyst.Core.Lib.Modules.Mempool
             Guard.Argument(transaction.Signature, nameof(transaction.Signature)).NotNull();
             try
             {
-                if (_transactionStore.Repository.TryGet(mempoolDocument.DocumentId, out _))
+                if (_transactionStore.TryGet(mempoolDocument.DocumentId, out _))
                 {
                     return false;
                 }
 
-                _transactionStore.Repository.Add((MempoolDocument) mempoolDocument);
+                _transactionStore.Add((MempoolDocument) mempoolDocument);
                 return true;
             }
             catch (Exception e)

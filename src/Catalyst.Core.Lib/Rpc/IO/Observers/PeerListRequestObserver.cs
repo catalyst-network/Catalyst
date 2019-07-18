@@ -81,7 +81,7 @@ namespace Catalyst.Core.Lib.Rpc.IO.Observers
             Guard.Argument(senderPeerIdentifier, nameof(senderPeerIdentifier)).NotNull();
             Logger.Debug("received message of type PeerListRequest");
 
-            var peers = _peerRepository.Repository.GetAll().Select(x => x.PeerIdentifier.PeerId);
+            var peers = _peerRepository.GetAll().Select(x => x.PeerIdentifier.PeerId);
 
             var response = new GetPeerListResponse();
             response.Peers.AddRange(peers);

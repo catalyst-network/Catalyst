@@ -79,11 +79,11 @@ namespace Catalyst.Core.Lib.P2P.ReputationSystem
             await SemaphoreSlim.WaitAsync().ConfigureAwait(false);
             try
             {
-                var peer = PeerRepository.Repository.GetAll().FirstOrDefault(p => p.PeerIdentifier.Equals(peerReputationChange.PeerIdentifier));
+                var peer = PeerRepository.GetAll().FirstOrDefault(p => p.PeerIdentifier.Equals(peerReputationChange.PeerIdentifier));
                 Guard.Argument(peer, nameof(peer)).NotNull();
 
                 peer.Reputation += peerReputationChange.ReputationEvent.Amount;
-                PeerRepository.Repository.Update(peer);
+                PeerRepository.Update(peer);
             }
             finally
             {
@@ -94,7 +94,7 @@ namespace Catalyst.Core.Lib.P2P.ReputationSystem
         public void Dispose()
         {
             ReputationEvent?.Dispose();
-            PeerRepository?.Repository.Dispose();    
+            PeerRepository?.Dispose();    
         }
     }
 }

@@ -131,19 +131,19 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Messaging.Broadcast
         {
             for (var i = 10; i < count + 10; i++)
             {
-                _peers.Repository.Add(new Peer
+                _peers.Add(new Peer
                 {
                     PeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier(i.ToString())
                 });
             }
 
-            _peers.Repository.Count().Should().Be(count);
+            _peers.Count().Should().Be(count);
         }
 
         public void Dispose()
         {
             _cache.Dispose();
-            _peers.Repository.Dispose();
+            _peers.Dispose();
         }
     }
 }

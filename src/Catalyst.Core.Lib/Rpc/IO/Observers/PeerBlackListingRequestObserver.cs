@@ -75,7 +75,7 @@ namespace Catalyst.Core.Lib.Rpc.IO.Observers
             Guard.Argument(senderPeerIdentifier, nameof(senderPeerIdentifier)).NotNull();
             Logger.Information("received message of type PeerBlackListingRequest");
             
-            var peerItem = _peerRepository.Repository.GetAll().FirstOrDefault(m => m.PeerIdentifier.Ip.ToString() == setPeerBlackListRequest.Ip.ToStringUtf8() 
+            var peerItem = _peerRepository.GetAll().FirstOrDefault(m => m.PeerIdentifier.Ip.ToString() == setPeerBlackListRequest.Ip.ToStringUtf8() 
              && ConvertorForRLPEncodingExtensions.ToStringFromRLPDecoded(m.PeerIdentifier.PublicKey) == setPeerBlackListRequest.PublicKey.ToStringUtf8());
 
             return peerItem == null

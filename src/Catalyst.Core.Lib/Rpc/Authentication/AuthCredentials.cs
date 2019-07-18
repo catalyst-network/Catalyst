@@ -50,6 +50,10 @@ namespace Catalyst.Core.Lib.Rpc.Authentication
         /// <inheritdoc cref="IAuditable.Modified"/>
         public DateTime? Modified { get; set; }
 
-        public string DocumentId => Encoding.UTF8.GetBytes($"{PublicKey}:{IpAddress}").ToByteString().ToBase64();
+        public string DocumentId
+        {
+            get => Encoding.UTF8.GetBytes($"{PublicKey}:{IpAddress}").ToByteString().ToBase64();
+            set { }
+        }
     }
 }

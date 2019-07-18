@@ -72,8 +72,8 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.ReputationSystem
             
             reputationManager.OnNext(peerReputationChange);
 
-            _subbedPeerRepository.ReceivedWithAnyArgs(1).Repository.GetAll();
-            _subbedPeerRepository.ReceivedWithAnyArgs(1).Repository.Update(Arg.Is(subbedPeer));
+            _subbedPeerRepository.ReceivedWithAnyArgs(1).GetAll();
+            _subbedPeerRepository.ReceivedWithAnyArgs(1).Update(Arg.Is(subbedPeer));
         }
         
         [Fact]
@@ -98,8 +98,8 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.ReputationSystem
             
             reputationManager.OnNext(peerReputationChange);
 
-            _subbedPeerRepository.ReceivedWithAnyArgs(1).Repository.GetAll();
-            _subbedPeerRepository.ReceivedWithAnyArgs(1).Repository.Update(Arg.Is<Peer>(r => r.Reputation == 200));
+            _subbedPeerRepository.ReceivedWithAnyArgs(1).GetAll();
+            _subbedPeerRepository.ReceivedWithAnyArgs(1).Update(Arg.Is<Peer>(r => r.Reputation == 200));
         }
         
         [Fact]
@@ -125,8 +125,8 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.ReputationSystem
             
             reputationManager.OnNext(peerReputationChange);
 
-            _subbedPeerRepository.ReceivedWithAnyArgs(1).Repository.GetAll();
-            _subbedPeerRepository.ReceivedWithAnyArgs(1).Repository.Update(Arg.Is<Peer>(r => r.Reputation == 0));
+            _subbedPeerRepository.ReceivedWithAnyArgs(1).GetAll();
+            _subbedPeerRepository.ReceivedWithAnyArgs(1).Update(Arg.Is<Peer>(r => r.Reputation == 0));
         }
 
         [Fact]
@@ -186,7 +186,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.ReputationSystem
         
         private void SetRepoReturnValue(IEnumerable<Peer> list)
         {
-            _subbedPeerRepository.Repository.GetAll().Returns(list);
+            _subbedPeerRepository.GetAll().Returns(list);
         }
     }
 }
