@@ -146,16 +146,6 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
                         );
                 });
                 
-                // for (var i = 0; i < cacheEntriesByRequest.Count; i++)
-                // {
-                //     cacheEntriesByRequest[stateCandidate.UnResponsivePeers[i].Value.Id.ToByteString()]
-                //        .PostEvictionCallbacks[0]
-                //        .EvictionCallback
-                //        .Invoke(
-                //             stateCandidate.UnResponsivePeers[i].Value, correlatableMessages[i], EvictionReason.Expired, new object()
-                //         );   
-                // }
-
                 walker.StateCandidate.UnResponsivePeers.Count.Should().Be(5);
 
                 walker.HasValidCandidate().Should().BeFalse();

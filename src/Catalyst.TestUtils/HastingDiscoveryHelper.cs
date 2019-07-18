@@ -317,7 +317,7 @@ namespace Catalyst.TestUtils
             return new PeerMessageCorrelationManager(
                 reputationManager ?? Substitute.For<IReputationManager>(),
                 memoryCache ?? Substitute.For<IMemoryCache>(),
-                Substitute.For<ILogger>(),
+                logger ?? Substitute.For<ILogger>(),
                 changeTokenProvider ?? new TtlChangeTokenProvider(3));
         }
     }
