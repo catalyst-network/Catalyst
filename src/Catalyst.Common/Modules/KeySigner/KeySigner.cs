@@ -34,7 +34,6 @@ namespace Catalyst.Common.Modules.KeySigner
     {
         private readonly IKeyStore _keyStore;
         private readonly ICryptoContext _cryptoContext;
-        private readonly bool _passAll;
 
         /// <summary>Initializes a new instance of the <see cref="KeySigner"/> class.</summary>
         /// <param name="keyStore">The key store.</param>
@@ -44,7 +43,6 @@ namespace Catalyst.Common.Modules.KeySigner
         {
             _keyStore = keyStore;
             _cryptoContext = cryptoContext;
-
         }
 
         /// <inheritdoc/>

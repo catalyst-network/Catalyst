@@ -61,7 +61,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P
         private IPeerService _peerService;
         private PeerSettings _peerSettings;
         private IPeerClient _peerClientSingleInstance;
-        private class TemporaryKeySigner : KeySigner
+        public class TemporaryKeySigner : KeySigner
         {
             public TemporaryKeySigner(IKeyStore keyStore,
                      ICryptoContext cryptoContext)
@@ -121,9 +121,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         async public Task PeerChallenge_PeerIdentifiers_Expect_To_Succeed_Valid_IP_Port_PublicKey()
         {
-            var peerSettings = new PeerSettings(_config);
-
-            var valid = await RunPeerChallengeTask(peerSettings.PublicKey, peerSettings.BindAddress, peerSettings.Port).ConfigureAwait(false); ;
+            var valid = await RunPeerChallengeTask(_peerSettings.PublicKey, _peerSettings.BindAddress, _peerSettings.Port).ConfigureAwait(false); 
 
             valid.Should().BeTrue();
         }
