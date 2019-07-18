@@ -40,14 +40,11 @@ namespace Catalyst.Common.Modules.KeySigner
         /// <param name="keyStore">The key store.</param>
         /// <param name="cryptoContext">The crypto context.</param>
         public KeySigner(IKeyStore keyStore,
-            ICryptoContext cryptoContext,
-            bool passAll = false)
+            ICryptoContext cryptoContext)
         {
-            _passAll = passAll;
             _keyStore = keyStore;
             _cryptoContext = cryptoContext;
 
-            System.Diagnostics.Debug.WriteLine(GetHashCode());
         }
 
         /// <inheritdoc/>
@@ -67,12 +64,8 @@ namespace Catalyst.Common.Modules.KeySigner
         }
 
         /// <inheritdoc/>
-        public bool Verify(ISignature signature, byte[] message)
-        {
-            if (_passAll)
-            {
-                return true;
-            }           
+        public virtual bool Verify(ISignature signature, byte[] message)
+        {          
             return _cryptoContext.Verify(signature, message);
         }
 

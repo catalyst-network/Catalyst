@@ -48,6 +48,7 @@ using Catalyst.Common.Interfaces.P2P.IO.Messaging.Broadcast;
 using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Common.Interfaces.Keystore;
 using System.Threading.Tasks;
+using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
 using Constants = Catalyst.Common.Config.Constants;
 
 namespace Catalyst.Node.Core.IntegrationTests.P2P
@@ -57,7 +58,22 @@ namespace Catalyst.Node.Core.IntegrationTests.P2P
         private readonly ILogger _logger;
         private readonly IContainer _container;
         private readonly IConfigurationRoot _config;
-        private readonly IPeerService _peerService;
+        private IPeerService _peerService;
+        private PeerSettings _peerSettings;
+        private IPeerClient _peerClientSingleInstance;
+        private class TemporaryKeySigner : KeySigner
+        {
+            public TemporaryKeySigner(IKeyStore keyStore,
+                     ICryptoContext cryptoContext)
+                : base(keyStore, cryptoContext)
+            {
+
+            }
+            public override bool Verify(ISignature signature, byte[] message)
+            {
+                return true;
+            }
+        }
 
         public PeerValidationIntegrationTest(ITestOutputHelper output) : base(output)
         {
@@ -74,11 +90,15 @@ namespace Catalyst.Node.Core.IntegrationTests.P2P
 
             _container = ContainerBuilder.Build();
 
-            _peerService = Setup();
+             Setup();
         }
 
-        private IPeerService Setup()
+        private void Setup()
         {
+            _peerSettings = new PeerSettings(_config);
+
+            _peerClientSingleInstance = _container.Resolve<IPeerClient>();
+
             var eventLoopGroupFactoryConfiguration = new EventLoopGroupFactoryConfiguration
             {
                 TcpClientHandlerWorkerThreads = 2,
@@ -87,9 +107,9 @@ namespace Catalyst.Node.Core.IntegrationTests.P2P
                 UdpClientHandlerWorkerThreads = 5
             };
 
-            var keysStore = new KeySigner(_container.Resolve<IKeyStore>(), _container.Resolve<ICryptoContext>(), true);
+            var keysStore = new TemporaryKeySigner(_container.Resolve<IKeyStore>(), _container.Resolve<ICryptoContext>());
 
-            return new PeerService(new UdpServerEventLoopGroupFactory(eventLoopGroupFactoryConfiguration),
+            _peerService = new PeerService(new UdpServerEventLoopGroupFactory(eventLoopGroupFactoryConfiguration),
                   new PeerServerChannelFactory(_container.Resolve<IPeerMessageCorrelationManager>(),
                   _container.Resolve<IBroadcastManager>(),
                    keysStore,
@@ -99,11 +119,11 @@ namespace Catalyst.Node.Core.IntegrationTests.P2P
 
         [Fact]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
-        async public void PeerChallenge_PeerIdentifiers_Expect_To_Succeed_Valid_IP_Port_PublicKey()
+        async public Task PeerChallenge_PeerIdentifiers_Expect_To_Succeed_Valid_IP_Port_PublicKey()
         {
             var peerSettings = new PeerSettings(_config);
 
-            var valid = await RunPeerChallenge(peerSettings.PublicKey, peerSettings.BindAddress, peerSettings.Port);
+            var valid = await RunPeerChallengeTask(peerSettings.PublicKey, peerSettings.BindAddress, peerSettings.Port).ConfigureAwait(false); ;
 
             valid.Should().BeTrue();
         }
@@ -112,24 +132,21 @@ namespace Catalyst.Node.Core.IntegrationTests.P2P
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         [InlineData("Fr2a300k06032b657793", "92.207.178.198", 1574)]
         [InlineData("pp2a300k55032b657791", "198.51.100.3", 2524)]
-        async public void PeerChallenge_PeerIdentifiers_Expect_To_Fail_IP_Port_PublicKey(string publicKey, string ip, int port)
+        async public Task PeerChallenge_PeerIdentifiers_Expect_To_Fail_IP_Port_PublicKey(string publicKey, string ip, int port)
         {
-            var valid = await RunPeerChallenge(publicKey, IPAddress.Parse(ip), port);
+            var valid = await RunPeerChallengeTask(publicKey, IPAddress.Parse(ip), port).ConfigureAwait(false);
 
             valid.Should().BeFalse();
         }
 
-       async private Task<bool> RunPeerChallenge(string publicKey, IPAddress ip, int port)
+       async private Task<bool> RunPeerChallengeTask(string publicKey, IPAddress ip, int port)
         {
-            var peerSettings = new PeerSettings(_config);
-
             var recipient = new PeerIdentifier(Encoding.UTF8.GetBytes(publicKey), ip,
                 port, Substitute.For<IPeerIdClientId>());
 
-            var sender = PeerIdentifierHelper.GetPeerIdentifier("sender", "Tc", 1, peerSettings.BindAddress, peerSettings.Port);
+            var sender = PeerIdentifierHelper.GetPeerIdentifier("sender", "Tc", 1, _peerSettings.BindAddress, _peerSettings.Port);
 
-            var peerClientSingleInstance = _container.Resolve<IPeerClient>();
-            var peerValidator = new PeerChallenger(peerSettings, _peerService, _logger, peerClientSingleInstance, sender);
+            var peerValidator = new PeerChallenger(_peerSettings, _peerService, _logger, _peerClientSingleInstance, sender);
 
             return await peerValidator.ChallengePeerAsync(recipient);
         }
