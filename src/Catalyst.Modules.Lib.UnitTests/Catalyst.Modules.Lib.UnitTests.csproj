@@ -10,7 +10,7 @@
     </PropertyGroup>
     <Import Project="../Common.UnitTests.props" />
     <ItemGroup>
-        <ProjectReference Include="..\Catalyst.Modules\Catalyst.Modules.Lib.csproj" />
+        <ProjectReference Include="..\Catalyst.Modules.Lib\Catalyst.Modules.Lib.csproj" />
         <ProjectReference Include="..\Catalyst.TestUtils\Catalyst.TestUtils.csproj" />
     </ItemGroup>
 </Project>

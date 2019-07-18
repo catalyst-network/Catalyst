@@ -26,10 +26,11 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Common.Extensions;
+using Catalyst.Common.Interfaces.FileSystem;
 using Catalyst.Common.Interfaces.Modules.Dfs;
 using Multiformats.Hash.Algorithms;
 
-namespace Catalyst.Modules.Dfs
+namespace Catalyst.Modules.Lib.Dfs
 {
     /// <summary>
     /// A very naive implementation of the IDfs interface that simply relies on the file system.
@@ -43,17 +44,24 @@ namespace Catalyst.Modules.Dfs
     public class FileSystemDfs : IDfs
     {
         private readonly DirectoryInfo _baseFolder;
-        private readonly BLAKE2B_32 _hashingAlgorithm;
+        private readonly IMultihashAlgorithm _hashingAlgorithm;
+        private readonly IFileSystem _fileSystem;
 
-        public FileSystemDfs(string baseFolder)
+        public FileSystemDfs(IMultihashAlgorithm hashingAlgorithm, 
+            IFileSystem fileSystem, 
+            string baseFolder = null)
         {
-            _baseFolder = new DirectoryInfo(baseFolder);
+            var dfsBaseFolder = baseFolder ?? Path.Combine(fileSystem.GetCatalystDataDir().FullName,
+                Common.Config.Constants.DfsDataSubDir);
+
+            _baseFolder = new DirectoryInfo(dfsBaseFolder);
             if (!_baseFolder.Exists)
             {
                 _baseFolder.Create();
             }
 
-            _hashingAlgorithm = new BLAKE2B_32();
+            _hashingAlgorithm = hashingAlgorithm;
+            _fileSystem = fileSystem;
         }
 
         /// <inheritdoc />
@@ -61,7 +69,8 @@ namespace Catalyst.Modules.Dfs
         {
             var bytes = Encoding.UTF8.GetBytes(utf8Content);
             var contentHash = await bytes.ComputeMultihashAsync(_hashingAlgorithm);
-            await File.WriteAllTextAsync(Path.Combine(_baseFolder.FullName, contentHash),
+            
+            await _fileSystem.File.WriteAllTextAsync(Path.Combine(_baseFolder.FullName, contentHash),
                 utf8Content, Encoding.UTF8, cancellationToken);
 
             return contentHash;
@@ -70,7 +79,7 @@ namespace Catalyst.Modules.Dfs
         /// <inheritdoc />
         public async Task<string> ReadTextAsync(string id, CancellationToken cancellationToken = default)
         {
-            return await File.ReadAllTextAsync(Path.Combine(_baseFolder.FullName, id), cancellationToken);
+            return await _fileSystem.File.ReadAllTextAsync(Path.Combine(_baseFolder.FullName, id), Encoding.UTF8, cancellationToken);
         }
 
         /// <inheritdoc />
@@ -78,14 +87,14 @@ namespace Catalyst.Modules.Dfs
         {
             var bytes = await content.ReadAllBytesAsync(cancellationToken);
             var contentHash = await bytes.ComputeMultihashAsync(_hashingAlgorithm);
-            await File.WriteAllBytesAsync(Path.Combine(_baseFolder.FullName, contentHash), bytes, cancellationToken);
+            await _fileSystem.File.WriteAllBytesAsync(Path.Combine(_baseFolder.FullName, contentHash), bytes, cancellationToken);
             return contentHash;
         }
 
         /// <inheritdoc />
         public async Task<Stream> ReadAsync(string id, CancellationToken cancellationToken = default)
         {
-            return await Task.FromResult(File.OpenRead(Path.Combine(_baseFolder.FullName, id)) as Stream);
+            return await Task.FromResult(_fileSystem.File.OpenRead(Path.Combine(_baseFolder.FullName, id)) as Stream);
         }
     }
 }
