@@ -62,7 +62,6 @@ namespace Catalyst.Common.P2P
             var keyLength = FFI.GetPublicKeyLength();
             Guard.Argument(peerId.PublicKey, nameof(peerId.PublicKey)).MinCount(keyLength).MaxCount(keyLength);
             PeerId = peerId;
-
         }
 
         public static IPeerIdentifier BuildPeerIdFromConfig(IRpcNodeConfig nodeConfig, IPeerIdClientId clientId)
