@@ -49,7 +49,7 @@ namespace Catalyst.Common.Rpc.Authentication
             set
             {
                 _publicKey = value;
-                UpdateKey();
+                GenerateDocumentId();
             }
         }
 
@@ -61,7 +61,7 @@ namespace Catalyst.Common.Rpc.Authentication
             set
             {
                 _ipAddress = value;
-                UpdateKey();
+                GenerateDocumentId();
             }
         }
 
@@ -75,9 +75,9 @@ namespace Catalyst.Common.Rpc.Authentication
         [JsonProperty("id")]
         public string DocumentId { get; set; }
 
-        private void UpdateKey()
+        public string GenerateDocumentId()
         {
-            DocumentId = Encoding.UTF8.GetBytes($"{PublicKey}:{IpAddress}").ToByteString().ToBase64();
+            return DocumentId = Encoding.UTF8.GetBytes($"{PublicKey}:{IpAddress}").ToByteString().ToBase64();
         }
     }
 }

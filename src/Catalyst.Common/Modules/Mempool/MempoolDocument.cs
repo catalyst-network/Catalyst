@@ -39,6 +39,8 @@ namespace Catalyst.Common.Modules.Mempool
             set;
         }
 
+        public string GenerateDocumentId() { return DocumentId = Transaction?.Signature?.ToByteString()?.ToBase64(); }
+
         private TransactionBroadcast _transaction;
 
         public MempoolDocument()
@@ -52,7 +54,7 @@ namespace Catalyst.Common.Modules.Mempool
             set
             {
                 _transaction = value;
-                DocumentId = Transaction?.Signature?.ToByteString()?.ToBase64();
+                GenerateDocumentId();
             }
         }
     }

@@ -26,7 +26,5 @@ using Catalyst.Common.P2P;
 
 namespace Catalyst.Common.Interfaces.Repository
 {
-    public interface IPeerRepository : IRepositoryWrapper<Peer>
-    {
-    }
+    public interface IPeerRepository : IRepositoryWrapper<Peer> { }
 }
