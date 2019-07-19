@@ -79,7 +79,7 @@ namespace Catalyst.Node
 #elif (RELEASE)
                 new ConfigCopier().RunConfigStartUp(targetConfigFolder, network);
 #endif
-                
+
                 var config = new ConfigurationBuilder()
                    .AddJsonFile(Path.Combine(targetConfigFolder, Constants.NetworkConfigFile(network)))
                    .AddJsonFile(Path.Combine(targetConfigFolder, Constants.ComponentsJsonConfigFile))
@@ -95,15 +95,15 @@ namespace Catalyst.Node
                     new LoggerConfiguration().ReadFrom.Configuration(configurationModule.Configuration);
 
                 _logger = loggerConfiguration.WriteTo
-                   .File(Path.Combine(targetConfigFolder, LogFileName), 
+                   .File(Path.Combine(targetConfigFolder, LogFileName),
                         rollingInterval: RollingInterval.Day,
                         outputTemplate: "{Timestamp:HH:mm:ss} [{Level:u3}] ({MachineName}/{ThreadId}) {Message} ({SourceContext}){NewLine}{Exception}")
                    .CreateLogger().ForContext(DeclaringType);
 
                 containerBuilder.RegisterLogger(_logger);
                 containerBuilder.RegisterInstance(config);
-
-                var repoFactory = RepositoryFactory.BuildSharpRepositoryConfiguation(config.GetSection("PersistenceConfiguration"));
+                
+                var repoFactory = RepositoryFactory.BuildSharpRepositoryConfiguation(config.GetSection("CatalystNodeConfiguration:PersistenceConfiguration"));
                 containerBuilder.RegisterSharpRepository(repoFactory);
 
                 var container = containerBuilder.Build();
