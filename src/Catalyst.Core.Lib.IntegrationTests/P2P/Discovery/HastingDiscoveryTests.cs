@@ -85,7 +85,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
             var pr = new PingResponseObserver(Substitute.For<ILogger>());
             var peerClientObservers = new List<IPeerClientObservable> {pr};
 
-            var seedState = DiscoveryHelper.MockSeedState(_ownNode, _settings.SeedServers.ToList(), _settings);
+            var seedState = DiscoveryHelper.MockSeedState(_ownNode, _settings);
             var seedOrigin = new HastingsOriginator();
             seedOrigin.RestoreMemento(seedState);
             var stateCareTaker = new HastingCareTaker();
@@ -121,7 +121,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
             using (var walker = DiscoveryHelper.GetTestInstanceOfDiscovery(
                 Substitute.For<ILogger>(),
                 Substitute.For<IRepository<Peer>>(),
-                DiscoveryHelper.MockDnsClient(_settings, _settings.SeedServers.ToList()),
+                DiscoveryHelper.MockDnsClient(_settings),
                 _settings,
                 Substitute.For<IPeerClient>(),
                 Substitute.For<IDtoFactory>(),
@@ -168,7 +168,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
             var pr = new PingResponseObserver(Substitute.For<ILogger>());
             var peerClientObservers = new List<IPeerClientObservable> {pr};
 
-            var seedState = DiscoveryHelper.SubSeedState(_ownNode, _settings.SeedServers.ToList(), _settings);
+            var seedState = DiscoveryHelper.SubSeedState(_ownNode, _settings);
             var seedOrigin = new HastingsOriginator();
             seedOrigin.RestoreMemento(seedState);
             
@@ -186,7 +186,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
             using (var walker = DiscoveryHelper.GetTestInstanceOfDiscovery(
                 Substitute.For<ILogger>(),
                 Substitute.For<IRepository<Peer>>(),
-                DiscoveryHelper.MockDnsClient(_settings, _settings.SeedServers.ToList()),
+                DiscoveryHelper.MockDnsClient(_settings),
                 _settings,
                 Substitute.For<IPeerClient>(),
                 Substitute.For<IDtoFactory>(),
@@ -238,7 +238,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
             var pr = new PingResponseObserver(Substitute.For<ILogger>());
             var peerClientObservers = new List<IPeerClientObservable> {pr};
 
-            var seedState = DiscoveryHelper.SubSeedState(_ownNode, _settings.SeedServers.ToList(), _settings);
+            var seedState = DiscoveryHelper.SubSeedState(_ownNode, _settings);
             var seedOrigin = new HastingsOriginator();
             seedOrigin.RestoreMemento(seedState);
 
@@ -255,7 +255,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
             using (var walker = DiscoveryHelper.GetTestInstanceOfDiscovery(
                 Substitute.For<ILogger>(),
                 Substitute.For<IRepository<Peer>>(),
-                DiscoveryHelper.MockDnsClient(_settings, _settings.SeedServers.ToList()),
+                DiscoveryHelper.MockDnsClient(_settings),
                 _settings,
                 Substitute.For<IPeerClient>(),
                 Substitute.For<IDtoFactory>(),

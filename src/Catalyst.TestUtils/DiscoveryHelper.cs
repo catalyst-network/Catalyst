@@ -93,15 +93,21 @@ namespace Catalyst.TestUtils
             return subbedOriginator;
         }
 
-        public static IHastingMemento MockSeedState(IPeerIdentifier ownNode, List<string> domains, IPeerSettings peerSettings)
+        public static IHastingMemento MockSeedState(IPeerIdentifier ownNode, IPeerSettings peerSettings)
         {
-            return MockMemento(ownNode, MockDnsClient(peerSettings, domains)
+            return MockMemento(ownNode, MockDnsClient(peerSettings)
                .GetSeedNodesFromDns(peerSettings.SeedServers).ToList());
         }
-        
-        public static IHastingMemento SubSeedState(IPeerIdentifier ownNode, List<string> domains, IPeerSettings peerSettings)
+
+        public static IHastingsOriginator SubSeedOriginator(IPeerIdentifier ownNode, IPeerSettings peerSettings)
         {
-            return SubMemento(ownNode, MockDnsClient(peerSettings, domains)
+            var m = SubSeedState(ownNode, peerSettings);
+            return SubOriginator(m.Peer, m.Neighbours);
+        }
+
+        public static IHastingMemento SubSeedState(IPeerIdentifier ownNode, IPeerSettings peerSettings)
+        {
+            return SubMemento(ownNode, MockDnsClient(peerSettings)
                .GetSeedNodesFromDns(peerSettings.SeedServers).ToList());
         }
         
@@ -190,16 +196,17 @@ namespace Catalyst.TestUtils
             return careTaker;
         }
         
-        public static IDns MockDnsClient(IPeerSettings settings, List<string> domains = default)
+        public static IDns MockDnsClient(IPeerSettings settings = default, ILookupClient lookupClient = default)
         {
-            if (domains == default)
+            var peerSetting = settings ?? PeerSettingsHelper.TestPeerSettings();
+             
+            peerSetting.SeedServers.ToList().ForEach(domain =>
             {
-                domains = Enumerable.Range(0, 5).Select(i => Helper.RandomString()).ToList();
-            }
-            
-            domains.ForEach(domain =>
-            {
-                MockQueryResponse.CreateFakeLookupResult(domain, "0x" + PeerIdentifierHelper.GetPeerIdentifier(Helper.RandomString(32)).ToString().ToHexUTF8(), Substitute.For<ILookupClient>());
+                MockQueryResponse.CreateFakeLookupResult(domain, 
+                    "0x" + PeerIdentifierHelper.GetPeerIdentifier(
+                        Helper.RandomString(32)).ToString().ToHexUTF8(),
+                    lookupClient ?? Substitute.For<ILookupClient>()
+                );
             });
         
             return new Common.Network.DevDnsClient(settings);
@@ -225,46 +232,6 @@ namespace Catalyst.TestUtils
             var provider = Substitute.For<ICancellationTokenProvider>();
             provider.HasTokenCancelled().Returns(result);
             return provider;
-        }
-
-        public static IDtoFactory SubDtoFactory(IPeerIdentifier sender,
-            IDictionary<IPeerIdentifier, ICorrelationId> knownRequests,
-            PeerNeighborsResponse message)
-        {
-            var subbedDtoFactory = Substitute.For<IDtoFactory>();
-         
-            knownRequests.ToList().ForEach(r =>
-            {
-                var (key, _) = r;
-                subbedDtoFactory.GetDto(Arg.Any<PeerNeighborsResponse>(),
-                    sender,
-                    key
-                ).Returns(
-                    new MessageDto<PeerNeighborsResponse>(message, sender, key)
-                );
-            });
-
-            return subbedDtoFactory;
-        }
-        
-        public static IDtoFactory SubDtoFactory(IPeerIdentifier sender,
-            IDictionary<IPeerIdentifier, ICorrelationId> knownRequests,
-            PingResponse message)
-        {
-            var subbedDtoFactory = Substitute.For<IDtoFactory>();
-         
-            knownRequests.ToList().ForEach(r =>
-            {
-                var (key, _) = r;
-                subbedDtoFactory.GetDto(Arg.Any<PingResponse>(),
-                    sender,
-                    key
-                ).Returns(
-                    new MessageDto<PingResponse>(message, sender, key)
-                );
-            });
-
-            return subbedDtoFactory;
         }
 
         public static IPeerMessageCorrelationManager MockCorrelationManager(IReputationManager reputationManager = default,

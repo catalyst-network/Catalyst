@@ -59,42 +59,17 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
 {
     public sealed class HastingsDiscoveryTests
     {
-        private readonly string _seedPid;
-        private readonly List<string> _dnsDomains;
         private readonly IPeerSettings _settings;
-        private ILookupClient _lookupClient;
         private ILogger _logger;
-        private IPeerIdentifier _ownNode;
-        private IHastingsOriginator _seedState;
+        private readonly IPeerIdentifier _ownNode;
 
         public HastingsDiscoveryTests()
         {
             _settings = PeerSettingsHelper.TestPeerSettings();
             _logger = Substitute.For<ILogger>();
             _ownNode = PeerIdentifierHelper.GetPeerIdentifier("ownNode");
-            _seedState = DiscoveryHelper.SubOriginator(_ownNode);
         }
 
-        [Fact(Skip = "if we have tests for Dns.GetSeedNodesFromDns this seems redundant")]
-        public void Discovery_Can_Query_Dns_For_Seed_Nodes()
-        {
-            using (var walker = new HastingsDiscovery(Substitute.For<ILogger>(),
-                Substitute.For<IRepository<Peer>>(),
-                Substitute.For<IDns>(),
-                _settings,
-                Substitute.For<IPeerClient>(),
-                Substitute.For<IDtoFactory>(),
-                Substitute.For<IPeerMessageCorrelationManager>(),
-                DiscoveryHelper.SubCancellationProvider(),
-                Substitute.For<IEnumerable<IPeerClientObservable>>(),
-                false,
-                0
-            ))
-            {
-                walker.Dns.GetSeedNodesFromDns(Arg.Any<IEnumerable<string>>()).ReceivedWithAnyArgs(1);
-            }
-        }
-        
         [Fact]
         public void Discovery_Can_Build_Initial_State_From_SeedNodes()
         {   
@@ -122,8 +97,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
 
         [Theory]
         [InlineData(typeof(PingResponse), typeof(PingResponseObserver), "OnPingResponse")]
-        
-        // [InlineData(typeof(PeerNeighborsResponse), typeof(GetNeighbourResponseObserver), "OnPeerNeighbourResponse")]
+        [InlineData(typeof(PeerNeighborsResponse), typeof(GetNeighbourResponseObserver), "OnPeerNeighbourResponse")]
         public async Task Can_Merge_PeerClientObservable_Stream_And_Read_Items_Pushed_On_Separate_Streams(Type discoveryMessage, Type observer, string logMsg)
         {
             var peerClientObservers = new List<IPeerClientObservable>
@@ -131,36 +105,28 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
                 (IPeerClientObservable) Activator.CreateInstance(observer, _logger)
             };
 
-            var initialMemento = DiscoveryHelper.SubMemento(_ownNode, DiscoveryHelper.MockDnsClient(_settings, _dnsDomains)
+            var initialMemento = DiscoveryHelper.SubMemento(_ownNode, DiscoveryHelper.MockDnsClient(_settings)
                .GetSeedNodesFromDns(_settings.SeedServers).ToList()
             );
             
-            var initialStateCandidate = Substitute.For<IHastingsOriginator>();
-            initialStateCandidate.Peer = initialMemento.Peer;
-            var isccpn = initialMemento.Neighbours;
-            initialStateCandidate.CurrentPeersNeighbours.Returns(isccpn);
-            initialStateCandidate.CreateMemento().Returns(initialMemento);
             var pnr = DiscoveryHelper.MockPnr();
-            initialStateCandidate.ExpectedPnr.Returns(pnr);
 
-            var msgInstance = Activator.CreateInstance(discoveryMessage);
-            
             var discoveryTestBuilder = DiscoveryTestBuilder.GetDiscoveryTestBuilder();
             discoveryTestBuilder
                .WithLogger()
                .WithPeerRepository()
                .WithDns()
                .WithPeerSettings()
-               .WithDtoFactory((PingResponse) msgInstance, _ownNode)
+               .WithDtoFactory()
                .WithPeerClient()
                .WithPeerMessageCorrelationManager()
                .WithCancellationProvider()
                .WithPeerClientObservables(default, observer)
                .WithAutoStart(false)
                .WithBurn(0)
-               .WithCurrentState()
+               .WithCurrentState(DiscoveryHelper.SubSeedOriginator(_ownNode, _settings))
                .WithCareTaker()
-               .WithStateCandidate();
+               .WithStateCandidate(default, false, initialMemento.Peer, initialMemento.Neighbours, pnr);
             
             using (var walker = discoveryTestBuilder.Build())
             {
@@ -169,9 +135,9 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
                 using (walker.DiscoveryStream.SubscribeOn(TaskPoolScheduler.Default)
                    .Subscribe(streamObserver.OnNext))
                 {
-                    var subbedDto = DiscoveryHelper.SubDto(discoveryMessage, initialStateCandidate.ExpectedPnr.Key, initialStateCandidate.ExpectedPnr.Value);
+                    var subbedDto = DiscoveryHelper.SubDto(discoveryMessage, pnr.Key, pnr.Value);
 
-                    peerClientObservers.ToList().ForEach(o => o._responseMessageSubject.OnNext(subbedDto));
+                    discoveryTestBuilder._peerClientObservables.ToList().ForEach(o => o._responseMessageSubject.OnNext(subbedDto));
 
                     await walker.DiscoveryStream.WaitForItemsOnDelayedStreamOnTaskPoolSchedulerAsync();
 
@@ -189,7 +155,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
             };
 
             var initialMemento = DiscoveryHelper.SubMemento(_ownNode, 
-                DiscoveryHelper.MockDnsClient(_settings, _dnsDomains)
+                DiscoveryHelper.MockDnsClient(_settings)
                    .GetSeedNodesFromDns(_settings.SeedServers).ToList()
             );
             
@@ -201,7 +167,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
 
             using (var walker = new HastingsDiscovery(_logger,
                 Substitute.For<IRepository<Peer>>(),
-                DiscoveryHelper.MockDnsClient(_settings, _dnsDomains),
+                DiscoveryHelper.MockDnsClient(_settings),
                 _settings,
                 Substitute.For<IPeerClient>(),
                 Substitute.For<IDtoFactory>(),
@@ -210,7 +176,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
                 peerClientObservers,
                 false,
                 0,
-                _seedState,
+                DiscoveryHelper.SubSeedOriginator(_ownNode, _settings),
                 Substitute.For<IHastingCareTaker>(),
                 initialStateCandidate
             ))
@@ -258,7 +224,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
             
             using (var walker = new HastingsDiscovery(_logger,
                 Substitute.For<IRepository<Peer>>(),
-                DiscoveryHelper.MockDnsClient(_settings, _dnsDomains),
+                DiscoveryHelper.MockDnsClient(_settings),
                 _settings,
                 Substitute.For<IPeerClient>(),
                 Substitute.For<IDtoFactory>(),
@@ -267,7 +233,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
                 peerClientObservers,
                 false,
                 0,
-                _seedState
+                DiscoveryHelper.SubSeedOriginator(_ownNode, _settings)
             ))
             {
                 var streamObserver = Substitute.For<IObserver<IPeerClientMessageDto>>();
@@ -300,7 +266,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
                 new GetNeighbourResponseObserver(_logger)
             };
 
-            var initialMemento = DiscoveryHelper.SubMemento(_ownNode, DiscoveryHelper.MockDnsClient(_settings, _dnsDomains)
+            var initialMemento = DiscoveryHelper.SubMemento(_ownNode, DiscoveryHelper.MockDnsClient(_settings)
                .GetSeedNodesFromDns(_settings.SeedServers).ToList()
             );
             
@@ -311,7 +277,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
 
             using (var walker = new HastingsDiscovery(_logger,
                 Substitute.For<IRepository<Peer>>(),
-                DiscoveryHelper.MockDnsClient(_settings, _dnsDomains),
+                DiscoveryHelper.MockDnsClient(_settings),
                 _settings,
                 Substitute.For<IPeerClient>(),
                 Substitute.For<IDtoFactory>(),
@@ -320,7 +286,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
                 peerClientObservers,
                 false,
                 0,
-                _seedState,
+                DiscoveryHelper.SubSeedOriginator(_ownNode, _settings),
                 Substitute.For<IHastingCareTaker>(),
                 initialStateCandidate
             ))
@@ -349,9 +315,11 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
 
             var contactedNeighbours = DiscoveryHelper.MockContactedNeighboursValuePairs();
             
-            var subbedDtoFactory = DiscoveryHelper.SubDtoFactory(_ownNode, contactedNeighbours, new PingResponse());
+            // var subbedDtoFactory = DiscoveryHelper.SubDtoFactory(_ownNode, contactedNeighbours, new PingResponse());
             
-            var initialMemento = DiscoveryHelper.SubMemento(_ownNode, DiscoveryHelper.MockDnsClient(_settings, _dnsDomains)
+            // not right see above no dto factory now though
+            var subbedDtoFactory = Substitute.For<IDtoFactory>();
+            var initialMemento = DiscoveryHelper.SubMemento(_ownNode, DiscoveryHelper.MockDnsClient(_settings)
                .GetSeedNodesFromDns(_settings.SeedServers).ToList()
             );
             
@@ -366,7 +334,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
             
             using (var walker = new HastingsDiscovery(_logger,
                 Substitute.For<IRepository<Peer>>(),
-                DiscoveryHelper.MockDnsClient(_settings, _dnsDomains),
+                DiscoveryHelper.MockDnsClient(_settings),
                 _settings,
                 Substitute.For<IPeerClient>(),
                 subbedDtoFactory,
@@ -430,7 +398,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
 
             evictionEvent.OnNext(pnr);
             
-            var initialMemento = DiscoveryHelper.SubMemento(_ownNode, DiscoveryHelper.MockDnsClient(_settings, _dnsDomains)
+            var initialMemento = DiscoveryHelper.SubMemento(_ownNode, DiscoveryHelper.MockDnsClient(_settings)
                .GetSeedNodesFromDns(_settings.SeedServers).ToList()
             );
             
@@ -447,7 +415,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
 
             using (var walker = new HastingsDiscovery(_logger,
                 Substitute.For<IRepository<Peer>>(),
-                DiscoveryHelper.MockDnsClient(_settings, _dnsDomains),
+                DiscoveryHelper.MockDnsClient(_settings),
                 _settings,
                 Substitute.For<IPeerClient>(),
                 Substitute.For<IDtoFactory>(),
@@ -482,11 +450,11 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
 
             var stateCandidate = DiscoveryHelper.SubMemento();
             var stateCandidateOriginator =
-                DiscoveryHelper.SubOriginator(stateCandidate.Peer, _seedState.CurrentPeersNeighbours);
+                DiscoveryHelper.SubOriginator(stateCandidate.Peer, DiscoveryHelper.SubSeedOriginator(_ownNode, _settings).CurrentPeersNeighbours);
 
             var mockedHistory = new Stack<IHastingMemento>();
 
-            var seed = DiscoveryHelper.SubSeedState(_ownNode, _dnsDomains, _settings);
+            var seed = DiscoveryHelper.SubSeedState(_ownNode, _settings);
             mockedHistory.Push(seed);
             subbedCareTaker.HastingMementoList.Returns(mockedHistory);
             subbedCareTaker.Get().Returns(seed);
@@ -495,7 +463,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
             evictionEvent.OnNext(pnr);
             using (var walker = new HastingsDiscovery(_logger,
                 Substitute.For<IRepository<Peer>>(),
-                DiscoveryHelper.MockDnsClient(_settings, _dnsDomains),
+                DiscoveryHelper.MockDnsClient(_settings),
                 _settings,
                 Substitute.For<IPeerClient>(),
                 Substitute.For<IDtoFactory>(),

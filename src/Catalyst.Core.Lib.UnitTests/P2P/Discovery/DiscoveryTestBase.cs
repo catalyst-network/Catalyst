@@ -58,7 +58,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
         private IHastingsOriginator _currentState;
         private IHastingsOriginator _stateCandidate;
         private ICancellationTokenProvider _cancellationProvider;
-        private IList<IPeerClientObservable> _peerClientObservables;
+        internal IList<IPeerClientObservable> _peerClientObservables;
         private IPeerMessageCorrelationManager _peerCorrelationManager;
         private IRepository<Peer> _peerRepository;
         protected DiscoveryTestBuilder() { }
@@ -126,20 +126,11 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
             return this;
         }
 
-        public DiscoveryTestBuilder WithDtoFactory(PeerNeighborsResponse pingRequest = default,
+        public DiscoveryTestBuilder WithDtoFactory(IDtoFactory dtoFactory = default,
             IPeerIdentifier sender = default,
             IDictionary<IPeerIdentifier, ICorrelationId> knownRequests = default)
         {
-            _dtoFactory = DiscoveryHelper.SubDtoFactory(sender, knownRequests, pingRequest ?? new PeerNeighborsResponse());
-            
-            return _dtoFactory == null ? throw new Exception("dtoFactory can't be null") : this;
-        }
-        
-        public DiscoveryTestBuilder WithDtoFactory(PingResponse pingRequest = default,
-            IPeerIdentifier sender = default,
-            IDictionary<IPeerIdentifier, ICorrelationId> knownRequests = default)
-        {
-            _dtoFactory = DiscoveryHelper.SubDtoFactory(sender, knownRequests, pingRequest ?? new PingResponse());
+            _dtoFactory = dtoFactory ?? Substitute.For<IDtoFactory>();
             
             return _dtoFactory == null ? throw new Exception("dtoFactory can't be null") : this;
         }
@@ -187,26 +178,36 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
             return this;
         }
 
-        public DiscoveryTestBuilder WithCurrentState(IHastingsOriginator currentState = default, bool mock = false)
+        public DiscoveryTestBuilder WithCurrentState(IHastingsOriginator currentState = default,
+            bool mock = false,
+            IPeerIdentifier peer = default,
+            IList<IPeerIdentifier> currentPeersNeighbours = default,
+            KeyValuePair<ICorrelationId, IPeerIdentifier> expectedPnr = default,
+            IDictionary<IPeerIdentifier, ICorrelationId> contactedNeighbour = default)
         {
             _currentState = 
                 currentState == default && mock == false 
-                    ? _currentState = DiscoveryHelper.SubOriginator() 
+                    ? _currentState = DiscoveryHelper.SubOriginator(peer, currentPeersNeighbours, expectedPnr, contactedNeighbour) 
                     : currentState == default && mock == true 
-                        ? _currentState = DiscoveryHelper.MockOriginator() 
-                        : _currentState = currentState; // fuck yeh
-
+                        ? _currentState = DiscoveryHelper.MockOriginator(peer, currentPeersNeighbours, expectedPnr, contactedNeighbour) 
+                        : _currentState = currentState;
+            
             return this;
         }
         
-        public DiscoveryTestBuilder WithStateCandidate(IHastingsOriginator currentState = default, bool mock = false)
+        public DiscoveryTestBuilder WithStateCandidate(IHastingsOriginator currentState = default,
+            bool mock = false,
+            IPeerIdentifier peer = default,
+            IList<IPeerIdentifier> currentPeersNeighbours = default,
+            KeyValuePair<ICorrelationId, IPeerIdentifier> expectedPnr = default,
+            IDictionary<IPeerIdentifier, ICorrelationId> contactedNeighbour = default)
         {
             _stateCandidate = 
                 currentState == default && mock == false 
-                    ? _currentState = DiscoveryHelper.SubOriginator() 
+                    ? _currentState = DiscoveryHelper.SubOriginator(peer, currentPeersNeighbours, expectedPnr, contactedNeighbour) 
                     : currentState == default && mock == true 
-                        ? _currentState = DiscoveryHelper.MockOriginator() 
-                        : _currentState = currentState; // fuck yeh I know you like that
+                        ? _currentState = DiscoveryHelper.MockOriginator(peer, currentPeersNeighbours, expectedPnr, contactedNeighbour) 
+                        : _currentState = currentState;
 
             return this;
         }
