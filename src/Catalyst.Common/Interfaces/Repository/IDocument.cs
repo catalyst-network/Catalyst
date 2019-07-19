@@ -23,8 +23,6 @@ namespace Catalyst.Common.Interfaces.Repository
 {
     public interface IDocument
     {
-        string DocumentId { get; set; }
-
-        string GenerateDocumentId();
+        string DocumentId { get; }
     }
 }

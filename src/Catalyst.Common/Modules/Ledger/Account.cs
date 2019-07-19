@@ -33,57 +33,25 @@ namespace Catalyst.Common.Modules.Ledger
     /// <inheritdoc />
     public sealed class Account : IAccount
     {
-        private string _publicAddress;
-        private uint _coinType;
-        private AccountTypes _accountType;
+        /// <inheritdoc />
+        public string PublicAddress { get; set; }
 
         /// <inheritdoc />
-        public string PublicAddress
-        {
-            get => _publicAddress;
-            set
-            {
-                _publicAddress = value;
-                GenerateDocumentId();
-            }
-        }
+        public uint CoinType { get; set; }
 
         /// <inheritdoc />
-        public uint CoinType
-        {
-            get => _coinType;
-            set
-            {
-                _coinType = value;
-                GenerateDocumentId();
-            }
-        }
-
-        /// <inheritdoc />
-        public AccountTypes AccountType
-        {
-            get => _accountType;
-            set
-            {
-                _accountType = value;
-                GenerateDocumentId();
-            }
-        }
+        public AccountTypes AccountType { get; set; }
 
         /// <inheritdoc />
         public BigDecimal Balance { get; set; }
 
         /// <inheritdoc />
         public byte[] StateRoot { get; set; } = Constants.EmptyTrieHash;
-        
+
         [RepositoryPrimaryKey(Order = 1)]
         [JsonProperty("id")]
-        public string DocumentId { get; set; }
-
-        public string GenerateDocumentId()
-        {
-            return (DocumentId = Encoding.UTF8.GetBytes($"{PublicAddress}-{CoinType}-{AccountType?.Name}")
-              ?.ToByteString()?.ToBase64());
-        }
+        public string DocumentId =>
+            Encoding.UTF8.GetBytes($"{PublicAddress}-{CoinType}-{AccountType?.Name}")
+              ?.ToByteString()?.ToBase64();
     }
 }

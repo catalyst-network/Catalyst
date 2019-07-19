@@ -34,8 +34,6 @@ namespace Catalyst.Common.P2P
     [Audit]
     public sealed class Peer : IPeer
     {
-        private IPeerIdentifier _peerIdentifier;
-
         /// <inheritdoc />
         public int Reputation { get; set; }
 
@@ -55,15 +53,7 @@ namespace Catalyst.Common.P2P
         public DateTime LastSeen { get; set; }
 
         /// <inheritdoc />
-        public IPeerIdentifier PeerIdentifier
-        {
-            get => _peerIdentifier;
-            set
-            {
-                _peerIdentifier = value;
-                GenerateDocumentId();
-            }
-        }
+        public IPeerIdentifier PeerIdentifier { get; set; }
 
         /// <inheritdoc />
         public bool IsAwolPeer => InactiveFor > TimeSpan.FromMinutes(30);
@@ -73,9 +63,7 @@ namespace Catalyst.Common.P2P
 
         [RepositoryPrimaryKey(Order = 1)]
         [JsonProperty("id")]
-        public string DocumentId { get; set; }
-
-        public string GenerateDocumentId() { return DocumentId = PeerIdentifier.PeerId?.ToByteString().ToBase64(); }
+        public string DocumentId => PeerIdentifier.PeerId?.ToByteString().ToBase64();
 
         /// <inheritdoc />
         public void Touch() { LastSeen = DateTimeUtil.UtcNow; }
