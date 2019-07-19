@@ -40,10 +40,13 @@ namespace Catalyst.Common.IO.Observers
 {
     public abstract class ResponseObserverBase<TProto> : MessageObserverBase, IResponseMessageObserver where TProto : IMessage<TProto>
     {
-        protected ResponseObserverBase(ILogger logger) : base(logger, typeof(TProto).ShortenedProtoFullName())
+        protected ResponseObserverBase(ILogger logger, bool assertMessageNameCheck = true) : base(logger, typeof(TProto).ShortenedProtoFullName())
         {
-            Guard.Argument(typeof(TProto), nameof(TProto)).Require(t => t.IsResponseType(),
-                t => $"{nameof(TProto)} is not of type {MessageTypes.Response.Name}");
+            if (assertMessageNameCheck)
+            {
+                Guard.Argument(typeof(TProto), nameof(TProto)).Require(t => t.IsResponseType(),
+                    t => $"{nameof(TProto)} is not of type {MessageTypes.Response.Name}");
+            }
         }
 
         protected abstract void HandleResponse(TProto messageDto, IChannelHandlerContext channelHandlerContext, IPeerIdentifier senderPeerIdentifier, ICorrelationId correlationId);
