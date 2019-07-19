@@ -84,23 +84,14 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
             // @TODO return int not byte
             // var responseCode = Enumeration.Parse<FileTransferResponseCodes>(deserialised.ResponseCode[0].ToString());
 
-            var responseCode = (FileTransferResponseCodes)addFileToDfsResponse.ResponseCode[0];
-
-            if (responseCode == FileTransferResponseCodes.Failed || responseCode == FileTransferResponseCodes.Finished)
+            var responseCode = (FileTransferResponseCodes) addFileToDfsResponse.ResponseCode[0];
+            if (responseCode == FileTransferResponseCodes.Successful)
             {
-                _userOutput.WriteLine("File transfer completed, Response: " + responseCode.Name + " Dfs Hash: " + addFileToDfsResponse.DfsHash);
+                _rpcFileTransferFactory.FileTransferAsync(correlationId, CancellationToken.None).ConfigureAwait(false);
             }
             else
             {
-                if (responseCode == FileTransferResponseCodes.Successful)
-                {
-                    _rpcFileTransferFactory.FileTransferAsync(correlationId, CancellationToken.None)
-                       .ConfigureAwait(false);
-                }
-                else
-                {
-                    _rpcFileTransferFactory.Remove(correlationId);
-                }
+                _rpcFileTransferFactory.Remove(correlationId);
             }
         }
     }

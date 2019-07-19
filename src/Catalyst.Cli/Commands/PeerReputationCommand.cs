@@ -25,6 +25,7 @@ using Catalyst.Cli.CommandTypes;
 using Catalyst.Cli.Options;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Cli.Commands;
+using Catalyst.Protocol;
 using Catalyst.Protocol.Rpc.Node;
 
 namespace Catalyst.Cli.Commands
@@ -40,6 +41,11 @@ namespace Catalyst.Cli.Commands
                 PublicKey = option.PublicKey.PublicKeyToProtobuf(),
                 Ip = option.IpAddress.IpAddressToProtobuf(),
             };
+        }
+
+        protected override void ResponseMessage(GetPeerReputationResponse response)
+        {
+            CommandContext.UserOutput.WriteLine(response.ToJsonString());
         }
     }
 }

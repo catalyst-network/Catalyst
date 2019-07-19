@@ -25,6 +25,7 @@ using Catalyst.Cli.CommandTypes;
 using Catalyst.Cli.Options;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Cli.Commands;
+using Catalyst.Protocol;
 using Catalyst.Protocol.Rpc.Node;
 
 namespace Catalyst.Cli.Commands
@@ -41,6 +42,11 @@ namespace Catalyst.Cli.Commands
                 Ip = option.IpAddress.IpAddressToProtobuf(),
                 Blacklist = option.BlackListFlag
             };
+        }
+
+        protected override void ResponseMessage(SetPeerBlackListResponse response)
+        {
+            CommandContext.UserOutput.WriteLine(response.ToJsonString());
         }
     }
 }

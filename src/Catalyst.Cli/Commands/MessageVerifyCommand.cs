@@ -26,6 +26,7 @@ using Catalyst.Cli.Options;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Cli.Commands;
 using Catalyst.Common.Util;
+using Catalyst.Protocol;
 using Catalyst.Protocol.Rpc.Node;
 using Nethereum.RLP;
 
@@ -44,6 +45,11 @@ namespace Catalyst.Cli.Commands
                 PublicKey = option.Address.PublicKeyToProtobuf(),
                 Signature = option.Signature.ToBytesForRLPEncoding().ToByteString()
             };
+        }
+
+        protected override void ResponseMessage(VerifyMessageResponse response)
+        {
+            CommandContext.UserOutput.WriteLine(response.ToJsonString());
         }
     }
 }

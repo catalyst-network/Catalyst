@@ -28,6 +28,7 @@ using Catalyst.Protocol.Rpc.Node;
 using Google.Protobuf;
 using System.Text;
 using Catalyst.Cli.CommandTypes;
+using Catalyst.Protocol;
 
 namespace Catalyst.Cli.Commands
 {
@@ -42,6 +43,11 @@ namespace Catalyst.Cli.Commands
                 Message = ByteString.CopyFrom(option.Message.Trim('\"'), Encoding.UTF8)
                    .ToByteString()
             };
+        }
+
+        protected override void ResponseMessage(SignMessageResponse response)
+        {
+            CommandContext.UserOutput.WriteLine(response.ToJsonString());
         }
     }
 }

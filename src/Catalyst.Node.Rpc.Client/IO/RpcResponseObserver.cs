@@ -62,7 +62,7 @@ namespace Catalyst.Node.Rpc.Client.IO
             _messageResponse.OnNext(new RpcClientMessageDto<IMessage>(message, senderPeerIdentifier));
         }
 
-        public void Subscribe(Action<TProto> onNext)
+        public void SubscribeToResponse(Action<TProto> onNext)
         {
             _messageResponseSubscriptions.Add(MessageResponseStream.Where(x => x.Message is TProto).SubscribeOn(NewThreadScheduler.Default).Subscribe(rpcClientMessageDto =>
                 onNext((TProto)rpcClientMessageDto.Message)

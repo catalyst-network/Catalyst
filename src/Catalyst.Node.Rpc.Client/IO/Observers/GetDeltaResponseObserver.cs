@@ -37,7 +37,6 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
     /// <inheritdoc cref="ResponseObserverBase{TProto}"/>
     public class GetDeltaResponseObserver : RpcResponseObserver<GetDeltaResponse>
     {
-        public static readonly string UnableToRetrieveDeltaMessage = "Unable to retrieve delta.";
         private readonly IUserOutput _output;
 
         public GetDeltaResponseObserver(IUserOutput output, ILogger logger) : base(logger)
@@ -49,14 +48,6 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
         protected override void HandleResponse(GetDeltaResponse deltaResponse,
             IChannelHandlerContext channelHandlerContext,
             IPeerIdentifier senderPeerIdentifier,
-            ICorrelationId correlationId)
-        {
-            if (deltaResponse.Delta == null)
-            {
-                _output.WriteLine(UnableToRetrieveDeltaMessage);
-            }
-
-            _output.WriteLine(deltaResponse.Delta.ToJsonString());
-        }
+            ICorrelationId correlationId) { }
     }
 }

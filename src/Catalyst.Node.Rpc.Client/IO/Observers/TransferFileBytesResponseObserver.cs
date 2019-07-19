@@ -24,17 +24,10 @@
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.IO.Observers;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.Interfaces.Rpc.IO.Messaging.Dto;
-using Catalyst.Common.IO.Observers;
-using Catalyst.Node.Rpc.Client.IO.Messaging.Dto;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using DotNetty.Transport.Channels;
-using Google.Protobuf;
 using Serilog;
-using System;
-using System.Reactive.Linq;
-using System.Reactive.Subjects;
 
 namespace Catalyst.Node.Rpc.Client.IO.Observers
 {
