@@ -46,10 +46,5 @@ namespace Catalyst.Cli.Commands
                 Signature = option.Signature.ToBytesForRLPEncoding().ToByteString()
             };
         }
-
-        protected override void ResponseMessage(VerifyMessageResponse response)
-        {
-            CommandContext.UserOutput.WriteLine(response.ToJsonString());
-        }
     }
 }

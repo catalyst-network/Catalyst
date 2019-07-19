@@ -43,10 +43,5 @@ namespace Catalyst.Cli.Commands
                 Blacklist = option.BlackListFlag
             };
         }
-
-        protected override void ResponseMessage(SetPeerBlackListResponse response)
-        {
-            CommandContext.UserOutput.WriteLine(response.ToJsonString());
-        }
     }
 }

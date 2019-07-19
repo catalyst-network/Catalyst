@@ -33,10 +33,5 @@ namespace Catalyst.Cli.Commands
     {
         public GetMempoolCommand(ICommandContext commandContext) : base(commandContext) { }
         protected override GetMempoolRequest GetMessage(GetMempoolOptions option) { return new GetMempoolRequest(); }
-
-        protected override void ResponseMessage(GetMempoolResponse response)
-        {
-            CommandContext.UserOutput.WriteLine(response.ToJsonString());
-        }
     }
 }

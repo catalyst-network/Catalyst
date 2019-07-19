@@ -40,10 +40,5 @@ namespace Catalyst.Cli.Commands
                 Query = true
             };
         }
-
-        protected override void ResponseMessage(GetInfoResponse response)
-        {
-            CommandContext.UserOutput.WriteLine(response.ToJsonString());
-        }
     }
 }

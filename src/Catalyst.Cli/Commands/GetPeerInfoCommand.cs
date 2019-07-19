@@ -42,10 +42,5 @@ namespace Catalyst.Cli.Commands
                 Ip = option.IpAddress.IpAddressToProtobuf(),
             };
         }
-
-        protected override void ResponseMessage(GetPeerInfoResponse response)
-        {
-            CommandContext.UserOutput.WriteLine(response.ToJsonString());
-        }
     }
 }

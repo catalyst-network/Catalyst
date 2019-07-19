@@ -89,10 +89,5 @@ namespace Catalyst.Cli.Commands
                 CommandContext.UserOutput.WriteLine("\nFile transfer expired.");
             }
         }
-
-        protected override void ResponseMessage(GetFileFromDfsResponse response)
-        {
-            CommandContext.UserOutput.WriteLine(response.ToJsonString());
-        }
     }
 }
