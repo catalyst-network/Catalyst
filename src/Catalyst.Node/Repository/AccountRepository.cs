@@ -22,13 +22,14 @@
 #endregion
 
 using Catalyst.Common.Interfaces.Repository;
-using Catalyst.Common.Modules.Mempool;
+using Catalyst.Common.Modules.Ledger;
+using Catalyst.Common.Repository;
 using SharpRepository.Repository;
 
-namespace Catalyst.Common.Repository
+namespace Catalyst.Node.Repository
 {
-    public class MempoolRepository : RepositoryWrapper<MempoolDocument>, IMempoolRepository
+    public class AccountRepository : RepositoryWrapper<Account>, IAccountRepository
     {
-        public MempoolRepository(IRepository<MempoolDocument, string> repository) : base(repository) { }
+        public AccountRepository(IRepository<Account, string> repository) : base(repository) { }
     }
 }

@@ -88,8 +88,8 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Observers
         /// </summary>
         /// <param name="fakePeers">The fake peers.</param>
         [Theory]
-        [InlineData("FakePeer1", "FakePeer2")]
-        [InlineData("FakePeer1002", "FakePeer6000", "FakePeerSataoshi")]
+        [InlineData("Fake1Peer1", "Fake2Peer2")]
+        [InlineData("Fake1Peer1002", "Fake2Peer6000", "FakePeer3Sataoshi")]
         public async Task TestRemovePeerWithoutPublicKey(params string[] fakePeers) { await ExecuteTestCase(fakePeers, false); }
 
         /// <summary>Executes the test case.</summary>
@@ -145,11 +145,11 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Observers
             var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();
             receivedCalls.Count().Should().Be(1);
 
-            var sentResponseDto = (IMessageDto<ProtocolMessage>)receivedCalls[0].GetArguments().Single();
+            var sentResponseDto = (IMessageDto<ProtocolMessage>) receivedCalls[0].GetArguments().Single();
 
             var signResponseMessage = sentResponseDto.Content.FromProtocolMessage<RemovePeerResponse>();
 
-            signResponseMessage.DeletedCount.Should().Be(withPublicKey ? 1 : (uint)fakePeers.Count);
+            signResponseMessage.DeletedCount.Should().Be(withPublicKey ? 1 : (uint) fakePeers.Count);
         }
     }
 }

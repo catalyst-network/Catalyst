@@ -10,7 +10,7 @@
             ]
         },
         {
-            "type": "Catalyst.Common.Repository.PeerRepository, Catalyst.Common",
+            "type": "Catalyst.Node.Repository.PeerRepository, Catalyst.Node",
             "services": [
                 {
                     "type": "Catalyst.Common.Interfaces.Repository.IPeerRepository, Catalyst.Common"
@@ -18,7 +18,7 @@
             ]
         },
         {
-            "type": "Catalyst.Common.Repository.AuthCredentialRepository, Catalyst.Common",
+            "type": "Catalyst.Node.Repository.AuthCredentialRepository, Catalyst.Node",
             "services": [
                 {
                     "type": "Catalyst.Common.Interfaces.Repository.IAuthCredentialRepository, Catalyst.Common"
@@ -26,7 +26,7 @@
             ]
         },
         {
-            "type": "Catalyst.Common.Repository.AccountRepository, Catalyst.Common",
+            "type": "Catalyst.Node.Repository.AccountRepository, Catalyst.Node",
             "services": [
                 {
                     "type": "Catalyst.Common.Interfaces.Repository.IAccountRepository, Catalyst.Common"
