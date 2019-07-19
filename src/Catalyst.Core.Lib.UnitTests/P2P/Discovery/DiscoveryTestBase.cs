@@ -233,7 +233,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
                 int peerDiscoveryBurnIn = 10,
                 IHastingsOriginator state = default,
                 IHastingCareTaker hastingCareTaker = default,
-                IHastingsOriginator stateCandidate = default)
+                IHastingsOriginator stateCandidate = null)
             {
                 return new HastingDiscoveryTest(logger,
                     peerRepository,
@@ -247,7 +247,8 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
                     autoStart,
                     peerDiscoveryBurnIn,
                     state,
-                    hastingCareTaker, stateCandidate);
+                    hastingCareTaker,
+                    stateCandidate);
             }
 
             private HastingDiscoveryTest(ILogger logger = default,
@@ -263,7 +264,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
                 int peerDiscoveryBurnIn = 10,
                 IHastingsOriginator state = default,
                 IHastingCareTaker hastingCareTaker = default,
-                IHastingsOriginator stateCandidate = default) 
+                IHastingsOriginator stateCandidate = null) 
                 : base(logger ?? Substitute.For<ILogger>(),
                     peerRepository ?? Substitute.For<IRepository<Peer>>(),
                     dns ?? DiscoveryHelper.MockDnsClient(peerSettings),
@@ -277,7 +278,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
                     peerDiscoveryBurnIn,
                     state ?? Substitute.For<IHastingsOriginator>(),
                     hastingCareTaker ?? Substitute.For<IHastingCareTaker>(),
-                    stateCandidate ?? Substitute.For<IHastingsOriginator>()) { }
+                    stateCandidate) { }
 
             public new void WalkForward() { base.WalkForward(); }
 

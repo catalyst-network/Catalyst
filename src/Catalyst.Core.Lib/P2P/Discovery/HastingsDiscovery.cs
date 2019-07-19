@@ -84,7 +84,11 @@ namespace Catalyst.Core.Lib.P2P.Discovery
             peerMessageCorrelationManager,
             cancellationTokenProvider,
             peerClientObservables,
-            false, 0) { }
+            false, 
+            0,
+            default,
+            default,
+            null) { }
         
         public HastingsDiscovery(ILogger logger,
             IRepository<Peer> peerRepository,
@@ -99,7 +103,7 @@ namespace Catalyst.Core.Lib.P2P.Discovery
             int peerDiscoveryBurnIn = 10,
             IHastingsOriginator state = default,
             IHastingCareTaker hastingCareTaker = default,
-            IHastingsOriginator stateCandidate = default)
+            IHastingsOriginator stateCandidate = null)
         {
             Dns = dns;
             Logger = logger;
@@ -114,12 +118,15 @@ namespace Catalyst.Core.Lib.P2P.Discovery
             
             // build the initial stateCandidate for walk,
             // which is our node and seed nodes
-            StateCandidate = stateCandidate ?? new HastingsOriginator
-            {
-                Peer = _ownNode,
-                CurrentPeersNeighbours = new List<IPeerIdentifier>(Dns.GetSeedNodesFromDns(peerSettings.SeedServers))
-            };
-            
+            StateCandidate = stateCandidate != null
+                ? stateCandidate
+                : new HastingsOriginator
+                {
+                    Peer = _ownNode,
+                    CurrentPeersNeighbours =
+                        new List<IPeerIdentifier>(Dns.GetSeedNodesFromDns(peerSettings.SeedServers))
+                };
+
             // create an empty stream for discovery messages
             DiscoveryStream = Observable.Empty<IPeerClientMessageDto>();
 

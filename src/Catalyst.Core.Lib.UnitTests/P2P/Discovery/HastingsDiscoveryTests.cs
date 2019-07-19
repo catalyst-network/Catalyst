@@ -77,21 +77,20 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
             discoveryTestBuilder
                .WithLogger()
                .WithPeerRepository()
-               .WithDns()
+               .WithDns(default, true)
                .WithPeerSettings()
                .WithPeerClient()
                .WithCancellationProvider()
                .WithPeerClientObservables()
                .WithAutoStart(false)
-               .WithBurn(0)
-               .WithCurrentState();
+               .WithBurn(0);
 
             using (var walker = discoveryTestBuilder.Build())
             {
                 walker.State.Peer.PublicKey.ToHex()
                    .Equals("33326b7373683569666c676b336a666d636a7330336c646a346866677338676e");
 
-                walker.State.CurrentPeersNeighbours.Should().HaveCount(5);   
+                walker.StateCandidate.CurrentPeersNeighbours.Should().HaveCount(5);   
             }
         }
 
@@ -100,33 +99,12 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
         [InlineData(typeof(PeerNeighborsResponse), typeof(GetNeighbourResponseObserver), "OnPeerNeighbourResponse")]
         public async Task Can_Merge_PeerClientObservable_Stream_And_Read_Items_Pushed_On_Separate_Streams(Type discoveryMessage, Type observer, string logMsg)
         {
-            var peerClientObservers = new List<IPeerClientObservable>
-            {
-                (IPeerClientObservable) Activator.CreateInstance(observer, _logger)
-            };
-
-            var initialMemento = DiscoveryHelper.SubMemento(_ownNode, DiscoveryHelper.MockDnsClient(_settings)
-               .GetSeedNodesFromDns(_settings.SeedServers).ToList()
-            );
-            
-            var pnr = DiscoveryHelper.MockPnr();
-
             var discoveryTestBuilder = DiscoveryTestBuilder.GetDiscoveryTestBuilder();
             discoveryTestBuilder
-               .WithLogger()
-               .WithPeerRepository()
                .WithDns()
-               .WithPeerSettings()
-               .WithDtoFactory()
-               .WithPeerClient()
-               .WithPeerMessageCorrelationManager()
-               .WithCancellationProvider()
                .WithPeerClientObservables(default, observer)
-               .WithAutoStart(false)
-               .WithBurn(0)
                .WithCurrentState(DiscoveryHelper.SubSeedOriginator(_ownNode, _settings))
-               .WithCareTaker()
-               .WithStateCandidate(default, false, initialMemento.Peer, initialMemento.Neighbours, pnr);
+               .WithStateCandidate(default, false, default, default, DiscoveryHelper.MockPnr());
             
             using (var walker = discoveryTestBuilder.Build())
             {
@@ -135,9 +113,14 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
                 using (walker.DiscoveryStream.SubscribeOn(TaskPoolScheduler.Default)
                    .Subscribe(streamObserver.OnNext))
                 {
-                    var subbedDto = DiscoveryHelper.SubDto(discoveryMessage, pnr.Key, pnr.Value);
+                    var subbedDto = DiscoveryHelper.SubDto(discoveryMessage, walker.StateCandidate.ExpectedPnr.Key, walker.StateCandidate.ExpectedPnr.Value);
 
-                    discoveryTestBuilder._peerClientObservables.ToList().ForEach(o => o._responseMessageSubject.OnNext(subbedDto));
+                    discoveryTestBuilder._peerClientObservables
+                       .ToList()
+                       .ForEach(o =>
+                        {
+                            o._responseMessageSubject.OnNext(subbedDto);
+                        });
 
                     await walker.DiscoveryStream.WaitForItemsOnDelayedStreamOnTaskPoolSchedulerAsync();
 
