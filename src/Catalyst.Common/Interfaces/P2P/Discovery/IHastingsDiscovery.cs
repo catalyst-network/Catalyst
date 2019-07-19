@@ -21,21 +21,7 @@
 
 #endregion
 
-using Catalyst.Common.Config;
-using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
-using Catalyst.Protocol.Rpc.Node;
-
-namespace Catalyst.Common.Interfaces.FileTransfer
+namespace Catalyst.Common.Interfaces.P2P.Discovery
 {
-    /// <summary>
-    /// Handles storing of the file downloads
-    /// </summary>
-    /// <seealso cref="IFileTransferFactory{IDownloadFileInformation}" />
-    public interface IDownloadFileTransferFactory : IFileTransferFactory<IDownloadFileInformation>
-    {
-        /// <summary>Downloads the chunk.</summary>
-        /// <param name="request">The chunk file bytes request.</param>
-        /// <returns></returns>
-        FileTransferResponseCodes DownloadChunk(TransferFileBytesRequest request);
-    }
+    public interface IHastingsDiscovery : IPeerDiscovery { }
 }

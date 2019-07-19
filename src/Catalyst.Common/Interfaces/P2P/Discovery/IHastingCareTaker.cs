@@ -21,21 +21,31 @@
 
 #endregion
 
-using Catalyst.Common.Config;
-using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
-using Catalyst.Protocol.Rpc.Node;
+using System;
+using System.Collections.Generic;
 
-namespace Catalyst.Common.Interfaces.FileTransfer
+namespace Catalyst.Common.Interfaces.P2P.Discovery
 {
     /// <summary>
-    /// Handles storing of the file downloads
+    ///     Caretaker of memento pattern is responsible for the memento's safekeeping,
+    ///     never operates on or examines the contents of a memento.
+    ///     https://www.dofactory.com/net/memento-design-pattern
     /// </summary>
-    /// <seealso cref="IFileTransferFactory{IDownloadFileInformation}" />
-    public interface IDownloadFileTransferFactory : IFileTransferFactory<IDownloadFileInformation>
+    public interface IHastingCareTaker
     {
-        /// <summary>Downloads the chunk.</summary>
-        /// <param name="request">The chunk file bytes request.</param>
+        Stack<IHastingMemento> HastingMementoList { get; }
+
+        /// <summary>
+        ///     Adds a new state from the walk to the queue
+        /// </summary>
+        /// <param name="hastingMemento"></param>
+        void Add(IHastingMemento hastingMemento);
+
+        /// <summary>
+        ///     Gets the last state of the walk from the queue
+        /// </summary>
         /// <returns></returns>
-        FileTransferResponseCodes DownloadChunk(TransferFileBytesRequest request);
+        /// <exception cref="Exception"></exception>
+        IHastingMemento Get();
     }
 }
