@@ -26,14 +26,14 @@ using Catalyst.Common.Config;
 
 namespace Catalyst.Common.Interfaces.Registry
 {
-    public interface IRegistryBase<in T, K>
+    public interface IRegistryBase<in TKey, TValue>
     {
-        bool AddItemToRegistry(T identifier, K item);
+        bool AddItemToRegistry(TKey identifier, TValue item);
 
-        K GetItemFromRegistry(T identifier);
+        TValue GetItemFromRegistry(TKey identifier);
 
-        bool RegistryContainsKey(T identifier);
+        bool RegistryContainsKey(TKey identifier);
 
-        bool RemoveItemFromRegistry(T identifier);
+        bool RemoveItemFromRegistry(TKey identifier);
     }
 }

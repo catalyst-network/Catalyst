@@ -31,30 +31,28 @@ using Dawn;
 
 namespace Catalyst.Common.Registry
 {
-    public class RegistryBase<T, K> : IRegistryBase<T, K>
-        where T : Enumeration
-        where K : class
+    public class RegistryBase<TKey, TValue> : IRegistryBase<TKey, TValue>
+        where TKey : Enumeration
+        where TValue : class
     {
         protected RegistryBase() { }
-        protected IDictionary<T, K> Registry { get; set; }
+        protected IDictionary<TKey, TValue> Registry { get; set; }
 
-        public bool AddItemToRegistry(T identifier, K item)
+        public bool AddItemToRegistry(TKey identifier, TValue item)
         {
             Guard.Argument(item, nameof(item)).NotNull();
             return Registry.TryAdd(identifier, item);
         }
 
-        public K GetItemFromRegistry(T identifier)
+        public TValue GetItemFromRegistry(TKey identifier)
         {
-            var retItem = Registry.TryGetValue(identifier, out var item)
-                ? item
-                : null;
-            return retItem;
+            Registry.TryGetValue(identifier, out var item);
+            return item;
         }
 
-        public bool RegistryContainsKey(T identifier) { return Registry.ContainsKey(identifier); }
+        public bool RegistryContainsKey(TKey identifier) { return Registry.ContainsKey(identifier); }
 
-        public bool RemoveItemFromRegistry(T identifier)
+        public bool RemoveItemFromRegistry(TKey identifier)
         {
             return Registry.Remove(identifier);
         }

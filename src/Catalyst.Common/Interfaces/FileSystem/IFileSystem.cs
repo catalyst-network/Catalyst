@@ -30,8 +30,8 @@ namespace Catalyst.Common.Interfaces.FileSystem
     public interface IFileSystem
     {
         DirectoryInfo GetCatalystDataDir();
-        Task<IFileInfo> WriteFileToCddAsync(string fileName, string contents);
-        Task<IFileInfo> WriteFileToCddSubDirectoryAsync(string fileName, string subDirectory, string contents);
+        Task<IFileInfo> WriteTextFileToCddAsync(string fileName, string contents);
+        Task<IFileInfo> WriteTextFileToCddSubDirectoryAsync(string fileName, string subDirectory, string contents);
         bool DataFileExists(string fileName);
 
         bool DataFileExistsInSubDirectory(string fileName, string subDirectory);

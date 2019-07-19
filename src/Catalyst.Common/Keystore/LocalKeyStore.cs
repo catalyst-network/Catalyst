@@ -147,7 +147,7 @@ namespace Catalyst.Common.Keystore
 
                 _passwordReader.AddPasswordToRegistry(_defaultNodePassword, securePassword);
 
-                await _fileSystem.WriteFileToCddSubDirectoryAsync(keyIdentifier.Name, Constants.KeyStoreDataSubDir, json);
+                await _fileSystem.WriteTextFileToCddSubDirectoryAsync(keyIdentifier.Name, Constants.KeyStoreDataSubDir, json);
             }
             catch (Exception e)
             {

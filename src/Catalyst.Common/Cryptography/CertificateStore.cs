@@ -117,46 +117,45 @@ namespace Catalyst.Common.Cryptography
                 return false;
             }
 
-            var fileInBytes = File.ReadAllBytes(fullPath);
-
-            var passwordPromptMessage =
-                $"Please type in the password for the certificate at {fullPath} (optional):";
-
-            while (PasswordTries < MaxTries)
+            try
             {
-                try
+                var fileInBytes = File.ReadAllBytes(fullPath);
+
+                var passwordPromptMessage =
+                    $"Please type in the password for the certificate at {fullPath} (optional):";
+
+                while (PasswordTries < MaxTries)
                 {
-                    using (var passwordFromConsole = _passwordReader.ReadSecurePassword(CertificatePasswordIdentifier, passwordPromptMessage))
+                    try
                     {
-                        certificate = new X509Certificate2(fileInBytes, passwordFromConsole);
-                        if (certificate != null)
+                        using (var passwordFromConsole =
+                            _passwordReader.ReadSecurePassword(CertificatePasswordIdentifier, passwordPromptMessage))
                         {
-                            _passwordReader.AddPasswordToRegistry(CertificatePasswordIdentifier, passwordFromConsole);
-                            return true;
-                        }         
+                            certificate = new X509Certificate2(fileInBytes, passwordFromConsole);
+                            _passwordReader.AddPasswordToRegistry(CertificatePasswordIdentifier,
+                                passwordFromConsole);
+                        }
+                    }
+                    catch (CryptographicException ex)
+                    {
+                        PasswordTries++;
+                        if (PasswordTries == MaxTries)
+                        {
+                            Logger.Warning("The certificate at {0} requires a password to be read.", fullPath);
+                            return false;
+                        }
+                            
+                        Logger.Warning(ex.Message);
                     }
                 }
-                catch (CryptographicException ex)
-                {
-                    PasswordAttemptCounter(ex.Message, fullPath);
-                }
             }
-            
-            Logger.Error("Failed to read certificate {0}", fullPath);
-            return false;
-        }
+            catch
+            {
+                Logger.Error("Failed to read certificate {0}", fullPath);
+                return false;
+            }
 
-        private void PasswordAttemptCounter(string msg, string path)
-        {
-            PasswordTries++;
-            if (PasswordTries == MaxTries)
-            {
-                Logger.Warning("The certificate at {0} requires a password to be read.", path);
-            }
-            else
-            {
-                Logger.Warning(msg);
-            }
+            return true;
         }
 
         public static X509Certificate2 BuildSelfSignedServerCertificate(SecureString password,

@@ -68,18 +68,6 @@ namespace Catalyst.Common.IntegrationTests.Modules.KeySigner
 
         private readonly IKeySigner _keySigner;
 
-        private void Ensure_No_Keystore_File_Exists()
-        {
-            var directoryInfo = FileSystem.GetCatalystDataDir();
-            if (directoryInfo.Exists)
-            {
-                directoryInfo.Delete(true);
-            }
-
-            directoryInfo.Create();
-            directoryInfo.EnumerateFiles().Should().BeEmpty();
-        }
-
         private void Ensure_A_KeyStore_File_Exists()
         {
             string json = @"""{""crypto"":{""cipher"":""aes-128-ctr"",""ciphertext"":""58e1617da38fc002816268967fea4d8d2f1dd51c8b638de5265bf06d781226a5""
@@ -87,14 +75,13 @@ namespace Catalyst.Common.IntegrationTests.Modules.KeySigner
                             4b67745ac5f7d749989344cfa4ee4b71"",""kdfparams"":{""n"":""262144,""r"":""1,""p"":""8,""dklen"":32,""salt"":""2a03d9840dec04e0
                             1538df649f61958be4015a97f14b765ec0a46feed88cc5f4""}},""id"":""b4b82bc3-a495-49cd-b3bc-e022f936e6ff"",""address"":""987080731d
                             e5a56833d2edc37458a53e3fec68cd"",""version"":3}";
-            FileSystem.WriteFileToCddSubDirectoryAsync(KeyRegistryKey.DefaultKey.Name, Constants.KeyStoreDataSubDir, json);
+            FileSystem.WriteTextFileToCddSubDirectoryAsync(KeyRegistryKey.DefaultKey.Name, Constants.KeyStoreDataSubDir, json);
         }
 
         [Fact]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void KeySigner_Can_Sign_If_There_Is_No_Keystore_File()
         {
-            Ensure_No_Keystore_File_Exists();
             _keySigner.Sign(Encoding.UTF8.GetBytes("sign this plz"));
         }
 

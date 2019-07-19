@@ -69,33 +69,24 @@ namespace Catalyst.Core.Lib.Rpc.IO.Observers
             Guard.Argument(senderPeerIdentifier, nameof(senderPeerIdentifier)).NotNull();
             Logger.Debug("received message of type SignMessageRequest");
 
-            try
+            var decodedMessage = signMessageRequest.Message.ToByteArray();
+
+            var signature = _keySigner.Sign(decodedMessage);
+
+            var publicKey = _keySigner.CryptoContext.ImportPublicKey(signature.PublicKeyBytes.RawBytes);
+
+            Guard.Argument(signature).NotNull("Failed to sign message. The signature cannot be null.");
+
+            Guard.Argument(publicKey).NotNull("Failed to get the public key. Public key cannot be null.");
+
+            Logger.Debug("message content is {0}", signMessageRequest.Message);
+
+            return new SignMessageResponse
             {
-                var decodedMessage = signMessageRequest.Message.ToByteArray();
-
-                var signature = _keySigner.Sign(decodedMessage);
-
-                var publicKey = _keySigner.CryptoContext.ImportPublicKey(signature.PublicKeyBytes.RawBytes);
-    
-                Guard.Argument(signature).NotNull("Failed to sign message. The signature cannot be null.");
-    
-                Guard.Argument(publicKey).NotNull("Failed to get the public key. Public key cannot be null.");
-    
-                Logger.Debug("message content is {0}", signMessageRequest.Message);
-
-                return new SignMessageResponse
-                {
-                    OriginalMessage = signMessageRequest.Message,
-                    PublicKey = publicKey.Bytes.RawBytes.ToByteString(),
-                    Signature = signature.SignatureBytes.RawBytes.ToByteString()
-                };
-            }
-            catch (Exception ex)
-            {
-                Logger.Error(ex,
-                    "Failed to handle SignMessageRequest after receiving message {0}", signMessageRequest);
-                throw;
-            }
+                OriginalMessage = signMessageRequest.Message,
+                PublicKey = publicKey.Bytes.RawBytes.ToByteString(),
+                Signature = signature.SignatureBytes.RawBytes.ToByteString()
+            };
         }
     }
 }
