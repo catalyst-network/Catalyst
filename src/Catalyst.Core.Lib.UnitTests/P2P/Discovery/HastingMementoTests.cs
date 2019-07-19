@@ -33,27 +33,17 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
     {
         private readonly IPeerIdentifier _peer;
 
-        public HastingMementoTests() { _peer = PeerIdentifierHelper.GetPeerIdentifier("current_peer"); }
-
-        [Fact]
-        public void Can_Add_Peers_To_Memento_List()
+        public HastingMementoTests()
         {
-            var neighbours = HastingDiscoveryHelper.GenerateNeighbours();
-
-            var memento = new HastingMemento(_peer, neighbours);
-            
-            memento.Peer.Should().Be(_peer);
-            memento.Neighbours.Should().Contain(neighbours);
-            memento.Neighbours.Should().HaveCount(5);
+            _peer = PeerIdentifierHelper.GetPeerIdentifier("current_peer");
         }
-
+        
         [Fact]
         public void Can_Init_Memento_With_Existing_Params()
         {
             var neighbours = HastingDiscoveryHelper.GenerateNeighbours();
-
             var memento = new HastingMemento(_peer, neighbours);
-
+            
             memento.Peer.Should().Be(_peer);
             memento.Neighbours.Should().Contain(neighbours);
             memento.Neighbours.Should().HaveCount(5);

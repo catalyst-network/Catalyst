@@ -21,23 +21,29 @@
 
 #endregion
 
+using System;
 using System.Threading;
 using Catalyst.Common.Interfaces.Util;
 
 namespace Catalyst.Common.Util
 {
-    public class CancellationTokenProvider : ICancellationTokenProvider
+    public class CancellationTokenProvider : ICancellationTokenProvider, IDisposable
     {
-        public CancellationToken CancellationToken { get; set; }
+        public CancellationTokenSource CancellationTokenSource { get; set; }
 
         public CancellationTokenProvider()
         {
-            CancellationToken = new CancellationTokenSource().Token;
+            CancellationTokenSource = new CancellationTokenSource();
         }
 
         public bool HasTokenCancelled()
         {
-            return CancellationToken.IsCancellationRequested;
+            return CancellationTokenSource.Token.IsCancellationRequested;
+        }
+        
+        public void Dispose()
+        {
+            CancellationTokenSource?.Dispose();
         }
     }
 }
