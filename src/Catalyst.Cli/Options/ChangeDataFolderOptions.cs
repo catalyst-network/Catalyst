@@ -32,11 +32,11 @@ namespace Catalyst.Cli.Options
     /// Class contains the options for the peer list command
     /// </summary>
     [Verb("changedatafolder", HelpText = "update node data folder")]
-    internal sealed class ChangeDataFolderOptions : IChangeDataFolderOptions
+    public sealed class ChangeDataFolderOptions : OptionsBase, IChangeDataFolderOptions
     {
-        /// <inheritdoc />
-        [Option('n', "node", HelpText = "A valid node ID as listed in the nodes.json config file.")]
-        public string Node { get; set; }
+        ///// <inheritdoc />
+        //[Option('n', "node", HelpText = "A valid node ID as listed in the nodes.json config file.")]
+        //public string Node { get; set; }
 
         /// <inheritdoc />
         [Option('c', "datafolder", HelpText = "Data folder for the peer.")]

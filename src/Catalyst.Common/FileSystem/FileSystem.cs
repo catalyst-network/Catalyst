@@ -26,7 +26,6 @@ using System.IO;
 using System.IO.Abstractions;
 using System.Threading.Tasks;
 using Catalyst.Common.Config;
-//using DirectoryInfoStandard = System.IO.DirectoryInfo;
 using IFileSystem = Catalyst.Common.Interfaces.FileSystem.IFileSystem;
 using ILogger = Serilog.ILogger;
 
@@ -65,9 +64,13 @@ namespace Catalyst.Common.FileSystem
                         CreateConfigPointerFile(DataDir, configFilePointer);
                     }
                 }
+                else if (!File.Exists(_currentDataDirPointer))
+                {
+                    CreateConfigPointerFile(DataDir, _currentDataDirPointer);
+                }
                 else
                 {
-                    _currentDataDirPointer = ReadConfigFilePointer();
+                    DataDir = ReadConfigFilePointer();
                 }
                 _logger = logger;
             }

@@ -138,6 +138,14 @@
                 }
             ]
         },
+        {
+            "type": "Catalyst.Cli.Commands.ChangeDataFolderCommand",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.Cli.CommandTypes.ICommand, Catalyst.Common"
+                }
+            ]
+        },
         //End Commands
         {
             "type": "Catalyst.Common.IO.EventLoop.EventLoopGroupFactoryConfiguration, Catalyst.Common",

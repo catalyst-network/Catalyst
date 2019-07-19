@@ -21,72 +21,43 @@
 
 #endregion
 
-using System;
-using System.Collections.Generic;
-using System.Text;
-using Catalyst.Common.Config;
-using Catalyst.Common.Interfaces.Cli.Options;
-using Catalyst.Common.Interfaces.Rpc;
-using Catalyst.Common.IO.Messaging;
-using Catalyst.Common.IO.Messaging.Dto;
-using Catalyst.Common.P2P;
-using Catalyst.Common.Util;
+using Catalyst.Cli.Options;
+using Catalyst.Common.Interfaces.Cli.Commands;
 using Catalyst.Protocol.Rpc.Node;
-using Dawn;
+using Google.Protobuf;
 using Nethereum.RLP;
+using System.Net;
+using Catalyst.Cli.CommandTypes;
+using Catalyst.Common.Extensions;
+using Catalyst.Common.Network;
+using Catalyst.Common.Util;
 
 namespace Catalyst.Cli.Commands
 {
-    internal partial class Commands
+    public sealed class ChangeDataFolderCommand : BaseMessageCommand<SetPeerDataFolderRequest, ChangeDataFolderOptions>
     {
-        /// <inheritdoc cref="ChangeDataFolderCommand" />
-        public bool ChangeDataFolderCommand(IChangeDataFolderOptions opts)
+        public ChangeDataFolderCommand(ICommandContext commandContext) : base(commandContext) { }
+
+        protected override SetPeerDataFolderRequest GetMessage(ChangeDataFolderOptions option)
         {
-            Guard.Argument(opts).NotNull().Compatible<IChangeDataFolderOptions>();
-            try
+            return new SetPeerDataFolderRequest
             {
-                INodeRpcClient node;
-                try
-                {
-                    node = GetConnectedNode(opts.Node);
-                }
-                catch (Exception e)
-                {
-                    _logger.Error(e.Message, "Failed to get connected node {0} while trying to set the peer blacklist flag", opts.Node);
-                    return false;
-                }
+                PublicKey = option.PublicKey.ToBytesForRLPEncoding().ToByteString(),
+                Ip = ByteString.CopyFrom(IPAddress.Parse(option.IpAddress).To16Bytes()),
+                Datafolder = option.DataFolder
+            };
+        }
 
-                var nodeConfig = GetNodeConfig(opts.Node);
-                if (nodeConfig == null)
-                {
-                    throw new KeyNotFoundException($"Unable to find configuration for node {opts.Node}");
-                }
+        public override void SendMessage(ChangeDataFolderOptions options)
+        {
+            var request = GetMessage(options);
 
-                var peerPublicKey = opts.PublicKey;
-                var peerIp = opts.IpAddress;
+            var requestMessage = CommandContext.DtoFactory.GetDto(
+              request.ToProtocolMessage(SenderPeerIdentifier.PeerId),
+              SenderPeerIdentifier,
+              RecipientPeerIdentifier);
 
-                var dataFolder = opts.DataFolder;
-
-                var requestMessage = _dtoFactory.GetDto(new SetPeerDataFolderRequest
-                {
-                    PublicKey = peerPublicKey.ToBytesForRLPEncoding().ToByteString(),
-                    Ip = peerIp.ToBytesForRLPEncoding().ToByteString(),
-                    Datafolder = dataFolder
-                },
-                    new PeerIdentifier(Encoding.ASCII.GetBytes(nodeConfig.PublicKey), nodeConfig.HostAddress,
-                        nodeConfig.Port),
-                    _peerIdentifier
-                );
-
-                node.SendMessage(requestMessage);
-            }
-            catch (Exception e)
-            {
-                _logger.Debug(e.Message);
-                return false;
-            }
-
-            return true;
+            Target.SendMessage(requestMessage);
         }
     }
 }

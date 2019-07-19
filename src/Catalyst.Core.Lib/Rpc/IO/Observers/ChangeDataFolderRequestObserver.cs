@@ -21,18 +21,15 @@
 
 #endregion
 
-using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.FileSystem;
-using Catalyst.Common.Interfaces.IO.Messaging.Dto;
-using Catalyst.Common.Interfaces.IO.Observables;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Rpc;
-using Catalyst.Common.IO.Observables;
-using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
-using Google.Protobuf;
-using System;
+using DotNetty.Transport.Channels;
+using Catalyst.Common.Interfaces.IO.Observers;
+using Catalyst.Common.IO.Observers;
+using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using ILogger = Serilog.ILogger;
 
 namespace Catalyst.Node.Core.RPC.Observables
@@ -41,7 +38,6 @@ namespace Catalyst.Node.Core.RPC.Observables
         : RequestObserverBase<SetPeerDataFolderRequest, GetPeerDataFolderResponse>,
             IRpcRequestObserver
     {
-        private readonly IRpcServerSettings _config;
         private readonly IFileSystem _fileSystem;
 
         public ChangeDataFolderRequestObserver(IPeerIdentifier peerIdentifier,
@@ -51,29 +47,21 @@ namespace Catalyst.Node.Core.RPC.Observables
             _config = config;
         }
 
-        protected override IMessage<GetPeerDataFolderResponse> HandleRequest(IProtocolMessageDto<ProtocolMessage> messageDto)
+        protected override GetPeerDataFolderResponse HandleRequest(SetPeerDataFolderRequest setDataFolderRequest,
+            IChannelHandlerContext channelHandlerContext,
+            IPeerIdentifier senderPeerIdentifier,
+            ICorrelationId correlationId)
         {
+            Guard.Argument(setDataFolderRequest, nameof(setDataFolderRequest)).NotNull();
+            Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
+            Guard.Argument(senderPeerIdentifier, nameof(senderPeerIdentifier)).NotNull();
+
             Logger.Debug("received message of type SetPeerDataFolderRequest");
 
-            try
+            return new GetPeerDataFolderResponse
             {
-                var deserialised = messageDto.Payload.FromProtocolMessage<SetPeerDataFolderRequest>();
-
-                Guard.Argument(deserialised).NotNull();
-
-                Logger.Debug("message content is {0}", deserialised);
-
-                return new GetPeerDataFolderResponse
-                {
-                    Query = _fileSystem.SetCurrentPath(deserialised.Datafolder)
-                };
-            }
-            catch (Exception ex)
-            {
-                Logger.Error(ex,
-                    "Failed to handle SetPeerDataFolderRequest after receiving message {0}", messageDto);
-                throw;
-            }
+                Query = _fileSystem.SetCurrentPath(setDataFolderRequest.Datafolder)
+            };
         }
     }
 }
