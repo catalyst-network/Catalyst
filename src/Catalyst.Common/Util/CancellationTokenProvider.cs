@@ -21,21 +21,29 @@
 
 #endregion
 
-using Catalyst.Common.Config;
-using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
-using Catalyst.Protocol.Rpc.Node;
+using System;
+using System.Threading;
+using Catalyst.Common.Interfaces.Util;
 
-namespace Catalyst.Common.Interfaces.FileTransfer
+namespace Catalyst.Common.Util
 {
-    /// <summary>
-    /// Handles storing of the file downloads
-    /// </summary>
-    /// <seealso cref="IFileTransferFactory{IDownloadFileInformation}" />
-    public interface IDownloadFileTransferFactory : IFileTransferFactory<IDownloadFileInformation>
+    public class CancellationTokenProvider : ICancellationTokenProvider, IDisposable
     {
-        /// <summary>Downloads the chunk.</summary>
-        /// <param name="request">The chunk file bytes request.</param>
-        /// <returns></returns>
-        FileTransferResponseCodes DownloadChunk(TransferFileBytesRequest request);
+        public CancellationTokenSource CancellationTokenSource { get; set; }
+
+        public CancellationTokenProvider()
+        {
+            CancellationTokenSource = new CancellationTokenSource();
+        }
+
+        public bool HasTokenCancelled()
+        {
+            return CancellationTokenSource.Token.IsCancellationRequested;
+        }
+        
+        public void Dispose()
+        {
+            CancellationTokenSource?.Dispose();
+        }
     }
 }
