@@ -79,7 +79,7 @@ namespace Catalyst.Core.Lib.Rpc.IO.Observers
     
                 Guard.Argument(signature).NotNull("Failed to sign message. The signature cannot be null.");
     
-                Guard.Argument(publicKey).NotNull("Failed to get the public key.  Public key cannot be null.");
+                Guard.Argument(publicKey).NotNull("Failed to get the public key. Public key cannot be null.");
     
                 Logger.Debug("message content is {0}", signMessageRequest.Message);
 

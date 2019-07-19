@@ -21,7 +21,9 @@
 
 #endregion
 
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Xml;
 using Catalyst.Common.Interfaces.Registry;
 using Catalyst.Common.Config;
 using Catalyst.Common.Enumerator;
