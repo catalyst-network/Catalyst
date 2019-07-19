@@ -24,6 +24,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
@@ -45,6 +46,8 @@ using NSubstitute;
 using Serilog;
 using SharpRepository.InMemoryRepository;
 using SharpRepository.Repository;
+using SharpRepository.Repository.Queries;
+using SharpRepository.Repository.Specifications;
 using Xunit;
 
 namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Observers
@@ -97,9 +100,9 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Observers
         /// <param name="withPublicKey">if set to <c>true</c> [send message to handler with the public key].</param>
         private async Task ExecuteTestCase(IReadOnlyCollection<string> fakePeers, bool withPublicKey)
         {
-            IPeerRepository peerRepository = new PeerRepository(new InMemoryRepository<Peer, string>());
+            IPeerRepository peerRepository = Substitute.For<IPeerRepository>();
             Peer targetPeerToDelete = null;
-            fakePeers.ToList().ForEach(fakePeer =>
+            var fakePeerList = fakePeers.ToList().Select(fakePeer =>
             {
                 var peer = new Peer
                 {
@@ -108,15 +111,16 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Observers
                     PeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier(fakePeer)
                 };
 
-                peerRepository.Add(peer);
                 if (targetPeerToDelete == null)
                 {
                     targetPeerToDelete = peer;
                 }
-            });
 
-            peerRepository.GetAll().Count().Should().Be(fakePeers.Count);
+                return peer;
+            }).ToList();
 
+            peerRepository.FindAll(Arg.Any<ISpecification<Peer>>()).Returns(withPublicKey ? new List<Peer>() {targetPeerToDelete} : fakePeerList);
+            
             // Build a fake remote endpoint
             _fakeContext.Channel.RemoteAddress.Returns(EndpointBuilder.BuildNewEndPoint("192.0.0.1", 42042));
 

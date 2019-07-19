@@ -206,7 +206,7 @@
             ]
         },
         {
-            "type": "Catalyst.Common.FileSystem.FileSystemAwareXmlRepository`1[[Catalyst.Common.Rpc.Authentication.AuthCredentials, Catalyst.Common]], Catalyst.Common",
+            "type": "Catalyst.Common.Repository.FileSystemAwareXmlRepository`1[[Catalyst.Common.Rpc.Authentication.AuthCredentials, Catalyst.Common]], Catalyst.Common",
             "services": [
                 {
                     "type": "SharpRepository.Repository.IRepository`2[[Catalyst.Common.Rpc.Authentication.AuthCredentials, Catalyst.Common], [System.String, mscorlib]], SharpRepository.Repository"

@@ -23,23 +23,23 @@
 
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Rpc.Authentication;
-using Catalyst.Common.Repository;
 using Catalyst.Common.Rpc.Authentication;
 using Catalyst.Core.Lib.Rpc.Authentication;
+using Catalyst.Node.Repository;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Nethereum.RLP;
 using SharpRepository.InMemoryRepository;
 using Xunit;
 
-namespace Catalyst.Core.Lib.UnitTests.Rpc.Authentication
+namespace Catalyst.Node.UnitTests.Repository
 {
-    public class RepositoryAuthenticationHandlerTests
+    public class AuthenticationRepositoryTests
     {
         private readonly IAuthenticationStrategy _repositoryAuthenticationStrategy;
         private readonly IPeerIdentifier _trustedPeer;
 
-        public RepositoryAuthenticationHandlerTests()
+        public AuthenticationRepositoryTests()
         {
             _trustedPeer = PeerIdentifierHelper.GetPeerIdentifier("Trusted");
             var whiteListRepo = new AuthCredentialRepository(new InMemoryRepository<AuthCredentials, string>());

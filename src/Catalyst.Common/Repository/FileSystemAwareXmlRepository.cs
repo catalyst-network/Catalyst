@@ -25,7 +25,7 @@ using System.IO;
 using Catalyst.Common.Interfaces.FileSystem;
 using SharpRepository.XmlRepository;
 
-namespace Catalyst.Common.FileSystem
+namespace Catalyst.Common.Repository
 {
     /// <summary>
     /// Xml Repository where base folder is derived from the file system <see cref="IFileSystem"/>

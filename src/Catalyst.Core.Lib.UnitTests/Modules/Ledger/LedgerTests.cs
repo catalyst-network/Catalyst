@@ -23,13 +23,9 @@
 
 using Catalyst.Common.Interfaces.Repository;
 using Catalyst.Common.Modules.Ledger;
-using Catalyst.Common.Repository;
 using Catalyst.TestUtils;
-using FluentAssertions;
 using NSubstitute;
 using Serilog;
-using SharpRepository.InMemoryRepository;
-using SharpRepository.Repository;
 using Xunit;
 using LedgerService = Catalyst.Core.Lib.Modules.Ledger.Ledger;
 
@@ -38,15 +34,14 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Ledger
     public sealed class LedgerTests
     {
         private readonly LedgerService _ledger;
+        private readonly IAccountRepository _fakeRepository;
 
         public LedgerTests()
         {
-            IAccountRepository accounts 
-                = new AccountRepository(new InMemoryRepository<Account, string>());
+            _fakeRepository = Substitute.For<IAccountRepository>();
 
             var logger = Substitute.For<ILogger>();
-
-            _ledger = new LedgerService(accounts, logger);
+            _ledger = new LedgerService(_fakeRepository, logger);
         }
 
         [Fact]
@@ -59,8 +54,7 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Ledger
                 _ledger.SaveAccountState(account);
             }
 
-            _ledger.Accounts.GetAll().Should().HaveCount(1);
-            _ledger.Accounts.GetAll().Should().NotContainNulls();            
+            _fakeRepository.Received(10).Add(Arg.Any<Account>());
         }
     }
 }
