@@ -21,30 +21,18 @@
 
 #endregion
 
-using System.IO;
-using System.Text;
 using Multiformats.Hash;
 using Multiformats.Hash.Algorithms;
 
 namespace Catalyst.Common.Extensions
 {
-    public static class StringExtensions
+    public static class MultihashExtensions
     {
-        public static Stream ToMemoryStream(this string s)
+        public static string ToTrimmedString(this Multihash multihash, IMultihashAlgorithm altAlgorithm)
         {
-            var stream = new MemoryStream();
-            var writer = new StreamWriter(stream);
-            writer.Write(s);
-            writer.Flush();
-            stream.Position = 0;
-            return stream;
-        }
-
-        public static Multihash ComputeUtf8Multihash(this string content, IMultihashAlgorithm algorithm)
-        {
-            var bytes = algorithm.ComputeHash(Encoding.UTF8.GetBytes(content));
-            var multihash = Multihash.Cast(bytes);
-            return multihash;
+            var trimmed = multihash.ToString()
+               .Substring(altAlgorithm.DefaultLength);
+            return trimmed;
         }
     }
 }
