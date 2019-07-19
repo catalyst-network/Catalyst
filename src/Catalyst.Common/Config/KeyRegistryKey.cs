@@ -21,23 +21,18 @@
 
 #endregion
 
-using System.IO;
-using System.IO.Abstractions;
-using System.Threading.Tasks;
+using Catalyst.Common.Enumerator;
 
-namespace Catalyst.Common.Interfaces.FileSystem
+namespace Catalyst.Common.Config
 {
-    public interface IFileSystem : System.IO.Abstractions.IFileSystem
+    public class KeyRegistryKey : Enumeration
     {
-        DirectoryInfo GetCatalystDataDir();
-        Task<IFileInfo> WriteTextFileToCddAsync(string fileName, string contents);
-        Task<IFileInfo> WriteTextFileToCddSubDirectoryAsync(string fileName, string subDirectory, string contents);
-        bool DataFileExists(string fileName);
+        public static readonly KeyRegistryKey DefaultKey = new DefaultSigningKey();
+        private KeyRegistryKey(int id, string name) : base(id, name) { }
 
-        bool DataFileExistsInSubDirectory(string fileName, string subDirectory);
-
-        string ReadTextFromCddFile(string fileName);
-
-        string ReadTextFromCddSubDirectoryFile(string fileName, string subDirectory);
+        private sealed class DefaultSigningKey : KeyRegistryKey
+        {
+            public DefaultSigningKey() : base(1, "defaultSigningKey") { }
+        }
     }
 }

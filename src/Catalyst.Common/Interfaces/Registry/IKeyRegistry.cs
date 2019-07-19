@@ -21,23 +21,11 @@
 
 #endregion
 
-using System.IO;
-using System.IO.Abstractions;
-using System.Threading.Tasks;
+using Catalyst.Common.Config;
+using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
+using Catalyst.Cryptography.BulletProofs.Wrapper.Types;
 
-namespace Catalyst.Common.Interfaces.FileSystem
+namespace Catalyst.Common.Interfaces.Registry
 {
-    public interface IFileSystem : System.IO.Abstractions.IFileSystem
-    {
-        DirectoryInfo GetCatalystDataDir();
-        Task<IFileInfo> WriteTextFileToCddAsync(string fileName, string contents);
-        Task<IFileInfo> WriteTextFileToCddSubDirectoryAsync(string fileName, string subDirectory, string contents);
-        bool DataFileExists(string fileName);
-
-        bool DataFileExistsInSubDirectory(string fileName, string subDirectory);
-
-        string ReadTextFromCddFile(string fileName);
-
-        string ReadTextFromCddSubDirectoryFile(string fileName, string subDirectory);
-    }
+    public interface IKeyRegistry : IRegistryBase<KeyRegistryKey, IPrivateKey> { }
 }
