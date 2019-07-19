@@ -577,9 +577,7 @@ namespace Catalyst.Common.Repository
         public IRepositoryQueryable<TResult> Join<TJoinKey, TInner, TResult>(IRepositoryQueryable<TInner> innerRepository, 
             Expression<Func<T, TJoinKey>> outerKeySelector, 
             Expression<Func<TInner, TJoinKey>> innerKeySelector, 
-            Expression<Func<T, TInner, TResult>> resultSelector)
-            where TInner : class
-            where TResult : class
+            Expression<Func<T, TInner, TResult>> resultSelector) where TInner : class where TResult : class
         {
             return _repository.Join(innerRepository, outerKeySelector, innerKeySelector, resultSelector);
         }
