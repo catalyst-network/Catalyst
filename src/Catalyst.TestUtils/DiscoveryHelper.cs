@@ -24,6 +24,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
@@ -36,15 +37,20 @@ using Catalyst.Common.Interfaces.P2P.ReputationSystem;
 using Catalyst.Common.Interfaces.Util;
 using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Common.IO.Messaging.Dto;
+using Catalyst.Common.P2P;
 using Catalyst.Common.Util;
 using Catalyst.Core.Lib.P2P.Discovery;
 using Catalyst.Core.Lib.P2P.IO.Messaging.Correlation;
+using Catalyst.Protocol.IPPN;
 using DnsClient;
 using Google.Protobuf;
 using Microsoft.Extensions.Caching.Memory;
 using Nethereum.Hex.HexConvertors.Extensions;
 using NSubstitute;
 using Serilog;
+using SharpRepository.InMemoryRepository;
+using SharpRepository.Repository;
+using Tmds.Linux;
 
 namespace Catalyst.TestUtils
 {
@@ -102,6 +108,11 @@ namespace Catalyst.TestUtils
         public static KeyValuePair<ICorrelationId, IPeerIdentifier> MockPnr(IPeerIdentifier peerIdentifier = default, ICorrelationId correlationId = default)
         {
             return new KeyValuePair<ICorrelationId, IPeerIdentifier>(correlationId ?? CorrelationId.GenerateCorrelationId(), peerIdentifier ?? PeerIdentifierHelper.GetPeerIdentifier("sender"));
+        }
+        
+        public static IList<IPeerIdentifier> SubNeighbours(int amount = 5)
+        {
+            return Enumerable.Range(0, amount).Select(i => Substitute.For<IPeerIdentifier>()).ToList();
         }
         
         public static IList<IPeerIdentifier> MockNeighbours(int amount = 5)
@@ -166,6 +177,18 @@ namespace Catalyst.TestUtils
 
             return state.Count >= depth ? MockMementoHistory(state) : state;
         }
+
+        public static IHastingCareTaker MockCareTaker(IEnumerable<IHastingMemento> history = default)
+        {
+            var careTaker = new HastingCareTaker();
+
+            history?.ToList().ForEach(m =>
+            {
+                careTaker.Add(m);
+            });
+
+            return careTaker;
+        }
         
         public static IDns MockDnsClient(IPeerSettings settings, List<string> domains = default)
         {
@@ -180,6 +203,11 @@ namespace Catalyst.TestUtils
             });
         
             return new Common.Network.DevDnsClient(settings);
+        }
+
+        public static IRepository<Peer> MockPeerRepository()
+        {
+            return new InMemoryRepository<Peer>();
         }
         
         public static IPeerClientMessageDto SubDto(Type discoveryMessage, ICorrelationId correlationId = default, IPeerIdentifier sender = default)
@@ -198,21 +226,41 @@ namespace Catalyst.TestUtils
             provider.HasTokenCancelled().Returns(result);
             return provider;
         }
-        
-        public static IDtoFactory SubDtoFactory<T>(IPeerIdentifier sender,
+
+        public static IDtoFactory SubDtoFactory(IPeerIdentifier sender,
             IDictionary<IPeerIdentifier, ICorrelationId> knownRequests,
-            T message) where T : IMessage<T>
+            PeerNeighborsResponse message)
         {
             var subbedDtoFactory = Substitute.For<IDtoFactory>();
          
             knownRequests.ToList().ForEach(r =>
             {
                 var (key, _) = r;
-                subbedDtoFactory.GetDto(Arg.Any<T>(),
+                subbedDtoFactory.GetDto(Arg.Any<PeerNeighborsResponse>(),
                     sender,
                     key
                 ).Returns(
-                    new MessageDto<T>(message, sender, key)
+                    new MessageDto<PeerNeighborsResponse>(message, sender, key)
+                );
+            });
+
+            return subbedDtoFactory;
+        }
+        
+        public static IDtoFactory SubDtoFactory(IPeerIdentifier sender,
+            IDictionary<IPeerIdentifier, ICorrelationId> knownRequests,
+            PingResponse message)
+        {
+            var subbedDtoFactory = Substitute.For<IDtoFactory>();
+         
+            knownRequests.ToList().ForEach(r =>
+            {
+                var (key, _) = r;
+                subbedDtoFactory.GetDto(Arg.Any<PingResponse>(),
+                    sender,
+                    key
+                ).Returns(
+                    new MessageDto<PingResponse>(message, sender, key)
                 );
             });
 

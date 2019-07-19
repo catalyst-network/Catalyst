@@ -46,6 +46,7 @@ using Catalyst.Core.Lib.P2P.Discovery;
 using Catalyst.Core.Lib.P2P.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.P2P.IO.Messaging.Dto;
 using Catalyst.Core.Lib.P2P.IO.Observers;
+using Catalyst.Core.Lib.UnitTests.P2P.Discovery;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
 using Catalyst.TestUtils;

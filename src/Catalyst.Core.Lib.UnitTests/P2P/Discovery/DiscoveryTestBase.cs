@@ -37,6 +37,7 @@ using Catalyst.Common.Util;
 using Catalyst.Core.Lib.P2P.Discovery;
 using Catalyst.Protocol.IPPN;
 using Catalyst.TestUtils;
+using Google.Protobuf;
 using Microsoft.Extensions.Caching.Memory;
 using NSubstitute;
 using Serilog;
@@ -44,35 +45,61 @@ using SharpRepository.Repository;
 
 namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
 {
-    public class DiscoveryTestBuilder
+    public class DiscoveryTestBuilder : IDisposable
     {
+        private int _burnIn;
+        private bool _autoStart;
         private ILogger _logger;
         private IDns _dnsClient;
-        private IPeerSettings _peerSettings;
         private IPeerClient _peerClient;
         private IDtoFactory _dtoFactory;
-        private IPeerMessageCorrelationManager _peerCorrelationManager;
+        private IPeerSettings _peerSettings;
+        private IHastingCareTaker _careTaker;
+        private IHastingsOriginator _currentState;
+        private IHastingsOriginator _stateCandidate;
         private ICancellationTokenProvider _cancellationProvider;
         private IList<IPeerClientObservable> _peerClientObservables;
-        private bool _autoStart;
-        private int _burnIn;
-        private IHastingsOriginator _currentState;
+        private IPeerMessageCorrelationManager _peerCorrelationManager;
+        private IRepository<Peer> _peerRepository;
+        protected DiscoveryTestBuilder() { }
 
-        public static DiscoveryTestBuilder CreateHastingDiscoveryTestBuilder()
+        public static DiscoveryTestBuilder GetDiscoveryTestBuilder()
         {
             return new DiscoveryTestBuilder();
         }
-        
-        public DiscoveryTestBuilder() { }
-        
+
         public HastingDiscoveryTest Build()
         {
-            return new HastingDiscoveryTest();
+            return HastingDiscoveryTest.GetTestInstanceOfDiscovery(_logger,
+                _peerRepository,
+                _dnsClient,
+                _peerSettings,
+                _peerClient,
+                _dtoFactory,
+                _peerCorrelationManager,
+                _cancellationProvider,
+                _peerClientObservables,
+                _autoStart,
+                _burnIn,
+                _currentState,
+                _careTaker,
+                _stateCandidate);
         }
 
         public DiscoveryTestBuilder WithLogger(ILogger logger = default)
         {
             _logger = logger ?? Substitute.For<ILogger>();
+            return this;
+        }
+
+        public DiscoveryTestBuilder WithPeerRepository(IRepository<Peer> peerRepository = default, bool mock = false)
+        {
+            _peerRepository = peerRepository == default && mock == false
+                ? Substitute.For<IRepository<Peer>>()
+                : peerRepository == default
+                    ? _peerRepository = DiscoveryHelper.MockPeerRepository()
+                    : _peerRepository = peerRepository;
+            
             return this;
         }
         
@@ -99,30 +126,22 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
             return this;
         }
 
-        public DiscoveryTestBuilder WithDtoFactory(IDtoFactory dtoFactory = default,
+        public DiscoveryTestBuilder WithDtoFactory(PeerNeighborsResponse pingRequest = default,
             IPeerIdentifier sender = default,
-            IDictionary<IPeerIdentifier, ICorrelationId> knownRequests = default,
-            PeerNeighborsRequest peerNeighborsRequest = default,
-            PingRequest pingRequest = default)
+            IDictionary<IPeerIdentifier, ICorrelationId> knownRequests = default)
         {
-            dynamic x = null;
-            if (peerNeighborsRequest.Equals(default) && pingRequest.Equals(default))
-            {
-                throw new ArgumentException();
-            }
-
-            if (peerNeighborsRequest.Equals(default))
-            {
-                x = peerNeighborsRequest;
-            }
-            else if (pingRequest.Equals(default))
-            {
-                x = pingRequest;
-            }
-
-            _dtoFactory = dtoFactory ?? DiscoveryHelper.SubDtoFactory(sender, knownRequests, x);
-
-            return this;
+            _dtoFactory = DiscoveryHelper.SubDtoFactory(sender, knownRequests, pingRequest ?? new PeerNeighborsResponse());
+            
+            return _dtoFactory == null ? throw new Exception("dtoFactory can't be null") : this;
+        }
+        
+        public DiscoveryTestBuilder WithDtoFactory(PingResponse pingRequest = default,
+            IPeerIdentifier sender = default,
+            IDictionary<IPeerIdentifier, ICorrelationId> knownRequests = default)
+        {
+            _dtoFactory = DiscoveryHelper.SubDtoFactory(sender, knownRequests, pingRequest ?? new PingResponse());
+            
+            return _dtoFactory == null ? throw new Exception("dtoFactory can't be null") : this;
         }
 
         public DiscoveryTestBuilder WithPeerMessageCorrelationManager(IReputationManager reputationManager = default,
@@ -175,14 +194,62 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
                     ? _currentState = DiscoveryHelper.SubOriginator() 
                     : currentState == default && mock == true 
                         ? _currentState = DiscoveryHelper.MockOriginator() 
+                        : _currentState = currentState; // fuck yeh
+
+            return this;
+        }
+        
+        public DiscoveryTestBuilder WithStateCandidate(IHastingsOriginator currentState = default, bool mock = false)
+        {
+            _stateCandidate = 
+                currentState == default && mock == false 
+                    ? _currentState = DiscoveryHelper.SubOriginator() 
+                    : currentState == default && mock == true 
+                        ? _currentState = DiscoveryHelper.MockOriginator() 
                         : _currentState = currentState; // fuck yeh I know you like that
 
             return this;
         }
 
+        public DiscoveryTestBuilder WithCareTaker(IHastingCareTaker hastingCareTaker = default, IEnumerable<IHastingMemento> history = default)
+        {
+            _careTaker = hastingCareTaker ?? DiscoveryHelper.MockCareTaker(history);
+            return this;
+        }
+
         public sealed class HastingDiscoveryTest : HastingsDiscovery
         {
-            internal HastingDiscoveryTest(ILogger logger = default,
+            internal static HastingDiscoveryTest GetTestInstanceOfDiscovery(ILogger logger,
+                IRepository<Peer> peerRepository,
+                IDns dns,
+                IPeerSettings peerSettings,
+                IPeerClient peerClient,
+                IDtoFactory dtoFactory,
+                IPeerMessageCorrelationManager peerMessageCorrelationManager,
+                ICancellationTokenProvider cancellationTokenProvider,
+                IEnumerable<IPeerClientObservable> peerClientObservables,
+                bool autoStart = true,
+                int peerDiscoveryBurnIn = 10,
+                IHastingsOriginator state = default,
+                IHastingCareTaker hastingCareTaker = default,
+                IHastingsOriginator stateCandidate = default)
+            {
+                return new HastingDiscoveryTest(logger,
+                    peerRepository,
+                    peerSettings,
+                    dns,
+                    peerClient,
+                    dtoFactory,
+                    peerMessageCorrelationManager,
+                    cancellationTokenProvider,
+                    peerClientObservables,
+                    autoStart,
+                    peerDiscoveryBurnIn,
+                    state,
+                    hastingCareTaker, stateCandidate);
+            }
+
+            private HastingDiscoveryTest(ILogger logger = default,
                 IRepository<Peer> peerRepository = default,
                 IPeerSettings peerSettings = default,
                 IDns dns = default,
@@ -218,34 +285,10 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
             public new bool HasValidCandidate() { return base.HasValidCandidate(); }
         }
 
-        internal static HastingDiscoveryTest GetTestInstanceOfDiscovery(ILogger logger,
-            IRepository<Peer> peerRepository,
-            IDns dns,
-            IPeerSettings peerSettings,
-            IPeerClient peerClient,
-            IDtoFactory dtoFactory,
-            IPeerMessageCorrelationManager peerMessageCorrelationManager,
-            ICancellationTokenProvider cancellationTokenProvider,
-            IEnumerable<IPeerClientObservable> peerClientObservables,
-            bool autoStart = true,
-            int peerDiscoveryBurnIn = 10,
-            IHastingsOriginator state = default,
-            IHastingCareTaker hastingCareTaker = default,
-            IHastingsOriginator stateCandidate = default)
+        public void Dispose()
         {
-            return new HastingDiscoveryTest(logger,
-                peerRepository,
-                peerSettings,
-                dns,
-                peerClient,
-                dtoFactory,
-                peerMessageCorrelationManager,
-                cancellationTokenProvider,
-                peerClientObservables,
-                autoStart,
-                peerDiscoveryBurnIn,
-                state,
-                hastingCareTaker, stateCandidate);
+            _peerClient?.Dispose();
+            _peerCorrelationManager?.Dispose();
         }
     }
 }
