@@ -26,8 +26,10 @@ using System.IO;
 using System.Net;
 using System.Reflection;
 using System.Security;
+using System.Security.Authentication;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
+using Catalyst.Common.Config;
 using Serilog;
 using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Common.Interfaces.FileSystem;
@@ -37,8 +39,8 @@ namespace Catalyst.Common.Cryptography
     public sealed class CertificateStore
         : ICertificateStore
     {
+        private readonly PasswordRegistryKey CertificatePasswordIdentifier = PasswordRegistryKey.CertificatePassword;
         private static int MaxTries => 5;
-        private static int PasswordReTries => 1;
         private const string LocalHost = "localhost";
         private readonly DirectoryInfo _storageFolder;
         private readonly IPasswordReader _passwordReader;
@@ -78,7 +80,8 @@ namespace Catalyst.Common.Cryptography
         {
             const string promptMessage = "Catalyst Node needs to create an SSL certificate." +
                 " Please enter a password to encrypt the certificate on disk:";
-            using (var password = _passwordReader.ReadSecurePassword(promptMessage))
+            
+            using (var password = _passwordReader.ReadSecurePassword(CertificatePasswordIdentifier, promptMessage))
             {
                 var certificate = BuildSelfSignedServerCertificate(password, commonName);
                 Save(certificate, filePath, password);
@@ -118,25 +121,35 @@ namespace Catalyst.Common.Cryptography
             try
             {
                 var fileInBytes = File.ReadAllBytes(fullPath);
+
                 var passwordPromptMessage =
                     $"Please type in the password for the certificate at {fullPath} (optional):";
-                var tryCount = 0;
-                while (tryCount <= MaxTries)
+
+                while (PasswordTries < MaxTries)
                 {
                     try
                     {
-                        using (var passwordFromConsole = _passwordReader.ReadSecurePassword(passwordPromptMessage))
+                        using (var passwordFromConsole =
+                            _passwordReader.ReadSecurePassword(CertificatePasswordIdentifier, passwordPromptMessage))
                         {
                             certificate = new X509Certificate2(fileInBytes, passwordFromConsole);
+                            _passwordReader.AddPasswordToRegistry(CertificatePasswordIdentifier,
+                                passwordFromConsole);
                             break;
                         }
                     }
                     catch (CryptographicException ex)
                     {
-                        PasswordAttemptCounter(ex.Message, fullPath);
-                    }
+                        PasswordTries++;
 
-                    tryCount++;
+                        if (PasswordTries >= MaxTries)
+                        {
+                            throw new InvalidCredentialException(
+                                $"Failed to obtain the correct password for certificate {fullPath} from the console after {MaxTries} attempts.");
+                        }
+                            
+                        Logger.Warning(ex.Message);
+                    }
                 }
             }
             catch (Exception exception)
@@ -146,19 +159,6 @@ namespace Catalyst.Common.Cryptography
             }
 
             return true;
-        }
-
-        private void PasswordAttemptCounter(string msg, string path)
-        {
-            PasswordTries++;
-            if (PasswordTries == PasswordReTries)
-            {
-                Logger.Warning("The certificate at {0} requires a password to be read.", path);
-            }
-            else
-            {
-                Logger.Warning(msg);
-            }
         }
 
         public static X509Certificate2 BuildSelfSignedServerCertificate(SecureString password,
