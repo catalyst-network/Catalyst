@@ -23,6 +23,7 @@
 
 using System;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
+using Dawn;
 using Google.Protobuf;
 
 namespace Catalyst.Common.IO.Messaging.Correlation
@@ -59,11 +60,28 @@ namespace Catalyst.Common.IO.Messaging.Correlation
         private CorrelationId() { Id = Guid.NewGuid(); }
 
         /// <summary>
+        /// Gets a new CorrelationId
+        /// </summary>
+        private CorrelationId(bool emptyCorrelationId = default)
+        {
+            Guard.Argument(emptyCorrelationId, nameof(emptyCorrelationId)).NotDefault();
+        }
+        
+        /// <summary>
         ///     Static helper to get new CorrelationId.
         /// </summary>
         public static ICorrelationId GenerateCorrelationId()
         {
             return new CorrelationId();
+        }
+        
+        /// <summary>
+        ///     Static helper to get empty correlation id
+        /// </summary>
+        /// <returns></returns>
+        public static ICorrelationId GenerateEmptyCorrelationId()
+        {
+            return new CorrelationId(true);
         }
 
         public override string ToString() { return Id.ToString(); }

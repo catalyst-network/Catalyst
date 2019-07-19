@@ -380,7 +380,7 @@ namespace Catalyst.Core.Lib.P2P.Discovery
                         new PeerIdentifier(p)
                     );
 
-                    var req = new KeyValuePair<ICorrelationId, IPeerIdentifier>(
+                    var (key, value) = new KeyValuePair<ICorrelationId, IPeerIdentifier>(
                         pingRequestDto.CorrelationId,
                         pingRequestDto.RecipientPeerIdentifier);
                     
@@ -388,7 +388,7 @@ namespace Catalyst.Core.Lib.P2P.Discovery
                     
                     // our total expected responses should be same as number of pings sent out,
                     // potential neighbours, can either send response, or we will see them evicted from cache.
-                    StateCandidate.UnResponsivePeers[req.Value] = req.Key;
+                    StateCandidate.UnResponsivePeers[value] = key;
                 });
             }
         }

@@ -45,6 +45,7 @@ using Catalyst.Protocol.IPPN;
 using DnsClient;
 using Google.Protobuf;
 using Microsoft.Extensions.Caching.Memory;
+using Nethereum.Hex.HexConvertors.Extensions;
 using NSubstitute;
 using Serilog;
 using SharpRepository.Repository;
@@ -176,8 +177,7 @@ namespace Catalyst.TestUtils
 
         public static IHastingMemento MockSeedState(IPeerIdentifier ownNode, List<string> domains, IPeerSettings peerSettings)
         {
-            return MockMemento(ownNode, MockDnsClient(peerSettings, domains)
-               .GetSeedNodesFromDns(peerSettings.SeedServers).ToList());
+            return MockMemento(ownNode, MockDnsClient(peerSettings, domains).GetSeedNodesFromDns(peerSettings.SeedServers).ToList());
         }
         
         public static IHastingMemento SubSeedState(IPeerIdentifier ownNode, List<string> domains, IPeerSettings peerSettings)
@@ -266,7 +266,8 @@ namespace Catalyst.TestUtils
             
             domains.ForEach(domain =>
             {
-                MockQueryResponse.CreateFakeLookupResult(domain, seedPid, Substitute.For<ILookupClient>());
+                MockQueryResponse.CreateFakeLookupResult(domain,
+                    $"0x{PeerIdentifierHelper.GetPeerIdentifier(Helper.RandomString(32)).ToString().ToHexUTF8()}", Substitute.For<ILookupClient>());
             });
         
             return new Common.Network.DevDnsClient(settings);

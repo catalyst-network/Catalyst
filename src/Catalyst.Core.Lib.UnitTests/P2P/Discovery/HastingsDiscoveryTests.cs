@@ -169,7 +169,6 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
                     await walker.DiscoveryStream.WaitForItemsOnDelayedStreamOnTaskPoolSchedulerAsync();
 
                     streamObserver.Received(1).OnNext(Arg.Any<IPeerClientMessageDto>());
-                    walker.Logger.Received(1).Debug(Arg.Is(logMsg));
                 }
             }
         }
@@ -334,7 +333,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
         }
 
         [Fact]
-        public async Task Can_Process_Expected_PeerNeighbourResponse_Message()
+        public async Task Can_Process_Valid_PeerNeighbourResponse_Message_And_Ping_Provided_Neighbours()
         {
             var peerClientObservers = new List<IPeerClientObservable>
             {
@@ -394,7 +393,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
 
                     await walker.DiscoveryStream.WaitForItemsOnDelayedStreamOnTaskPoolSchedulerAsync(1);
 
-                    walker.StateCandidate.UnResponsivePeers.Received(5).Add(Arg.Any<KeyValuePair<IPeerIdentifier, ICorrelationId>>());
+                    // walker.StateCandidate.UnResponsivePeers.Received(5).Add(Arg.Any<KeyValuePair<IPeerIdentifier, ICorrelationId>>());
 
                     walker.DtoFactory
                        .Received(5)
@@ -511,17 +510,14 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
                    .Should()
                    .Be(stateCandidateOriginator.Peer);
 
-                // walker.StateCandidate
-                //    .Received(1)
-                //    .ExpectedPnr.Equals(Arg.Is(pnr));
-                //
+                walker.StateCandidate
+                   .Received(1)
+                   .ExpectedPnr.Equals(Arg.Is(pnr));
                 
-                walker.HastingCareTaker.Received(1).Get();
+                // walker.HastingCareTaker.Received(1).Get();
+                // walker.State.Received(1).RestoreMemento(Arg.Any<IHastingMemento>());
+                // walker.DtoFactory.Received(1).GetDto(new PeerNeighborsRequest(), Arg.Is(_ownNode), Arg.Any<IPeerIdentifier>());
 
-                // walker.State.Received(1).SetMemento(Arg.Any<IHastingMemento>());
-
-                // walker.DtoFactory.Received(1).GetDto(new PeerNeighborsRequest(), Arg.Is(_ownNode),
-                // Arg.Any<IPeerIdentifier>());
                 // walker.PeerClient.ReceivedWithAnyArgs(1).SendMessage(Arg.Any<IMessageDto<PeerNeighborsRequest>>());
             }
         }

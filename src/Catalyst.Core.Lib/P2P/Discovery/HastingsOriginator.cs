@@ -26,6 +26,7 @@ using System.Linq;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.Discovery;
+using Catalyst.Common.IO.Messaging.Correlation;
 
 namespace Catalyst.Core.Lib.P2P.Discovery
 {
@@ -70,7 +71,7 @@ namespace Catalyst.Core.Lib.P2P.Discovery
                .ToList()
                .ForEach(i =>
                 {
-                    UnResponsivePeers.Add(new KeyValuePair<IPeerIdentifier, ICorrelationId>(i, null));
+                    UnResponsivePeers.TryAdd(i, CorrelationId.GenerateEmptyCorrelationId());
                 });
         }
 

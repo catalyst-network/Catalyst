@@ -103,14 +103,16 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
             var peerMessageCorrelationManager = HastingDiscoveryHelper.MockCorrelationManager(default, memoryCache);
                 
             var correlatableMessages = new List<CorrelatableMessage<ProtocolMessage>>();
+
             stateCandidate.UnResponsivePeers.ToList().ForEach(i =>
             {
-                cacheEntriesByRequest = CacheHelper.MockCacheEvictionCallback(i.Value.Id.ToByteString(), memoryCache, cacheEntriesByRequest);
+                var (key, value) = i;
+                cacheEntriesByRequest = CacheHelper.MockCacheEvictionCallback(value.Id.ToByteString(), memoryCache, cacheEntriesByRequest);
 
                 var msg = new CorrelatableMessage<ProtocolMessage>
                 {
-                    Content = new PingRequest().ToProtocolMessage(_ownNode.PeerId, i.Value),
-                    Recipient = i.Key
+                    Content = new PingRequest().ToProtocolMessage(_ownNode.PeerId, value),
+                    Recipient = key
                 };
                 correlatableMessages.Add(msg);
                 peerMessageCorrelationManager.AddPendingRequest(msg);
@@ -132,7 +134,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
                 stateCareTaker,
                 stateCandidate))
             {
-                stateCandidate.UnResponsivePeers.ToList().ForEach(p =>
+                stateCandidate.UnResponsivePeers.ToList().ForEach(action: p =>
                 {
                     var (key, _) = p;
                     cacheEntriesByRequest[key.PeerId.ToByteString()]
