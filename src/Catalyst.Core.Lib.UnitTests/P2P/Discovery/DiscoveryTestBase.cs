@@ -118,10 +118,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
             return this;
         }
 
-        public DiscoveryTestBuilder WithPeerMessageCorrelationManager()
-        {
-            
-        }
+        public DiscoveryTestBuilder WithPeerMessageCorrelationManager() { }
 
         public sealed class HastingDiscoveryTest : HastingsDiscovery
         {

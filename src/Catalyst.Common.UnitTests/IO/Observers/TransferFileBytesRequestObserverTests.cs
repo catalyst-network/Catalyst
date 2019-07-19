@@ -87,7 +87,7 @@ namespace Catalyst.Common.UnitTests.IO.Observers
 
             var sender = PeerIdentifierHelper.GetPeerIdentifier("sender");
             var requestDto = new DtoFactory().GetDto(new TransferFileBytesRequest().ToProtocolMessage(sender.PeerId)
-            , sender, PeerIdentifierHelper.GetPeerIdentifier("recipient"));
+              , sender, PeerIdentifierHelper.GetPeerIdentifier("recipient"));
 
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_context, requestDto.Content);
 
@@ -97,9 +97,9 @@ namespace Catalyst.Common.UnitTests.IO.Observers
 
             var receivedCalls = _context.Channel.ReceivedCalls().ToList();
             receivedCalls.Count.Should().Be(1);
-            var sentResponseDto = (IMessageDto<ProtocolMessage>)receivedCalls.Single().GetArguments().Single();
+            var sentResponseDto = (IMessageDto<ProtocolMessage>) receivedCalls.Single().GetArguments().Single();
             var transferFileBytesResponse = sentResponseDto.Content.FromProtocolMessage<TransferFileBytesResponse>();
-            transferFileBytesResponse.ResponseCode.Should().Equal((byte)FileTransferResponseCodes.Error);
+            transferFileBytesResponse.ResponseCode.Should().Equal((byte) FileTransferResponseCodes.Error);
         }
     }
 }
