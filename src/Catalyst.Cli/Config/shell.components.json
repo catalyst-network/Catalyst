@@ -315,6 +315,14 @@
             ]
         },
         {
+            "type": "Catalyst.Node.Rpc.Client.IO.Observers.TransferFileBytesResponseObserver, Catalyst.Node.Rpc.Client",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.IO.Observers.IRpcResponseObserver, Catalyst.Common"
+                }
+            ]
+        },
+        {
             "type": "Catalyst.Node.Rpc.Client.IO.Observers.GetPeerInfoResponseObserver, Catalyst.Node.Rpc.Client",
             "services": [
                 {
@@ -399,14 +407,6 @@
             "services": [
                 {
                     "type": "Catalyst.Common.Interfaces.IO.Observers.IRpcResponseObserver, Catalyst.Common"
-                }
-            ]
-        },
-        {
-            "type": "Catalyst.Common.Rpc.IO.Observers.TransferFileBytesRequestObserver, Catalyst.Common",
-            "services": [
-                {
-                    "type": "Catalyst.Common.Interfaces.IO.Observers.IRpcRequestObserver, Catalyst.Common"
                 }
             ]
         },

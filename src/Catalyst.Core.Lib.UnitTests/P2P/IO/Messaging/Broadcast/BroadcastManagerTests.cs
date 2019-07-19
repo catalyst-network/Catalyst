@@ -22,35 +22,38 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.IO.Messaging.Broadcast;
+using Catalyst.Common.Interfaces.Repository;
 using Catalyst.Common.IO.Messaging.Broadcast;
 using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.P2P;
+using Catalyst.Common.Repository;
 using Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Microsoft.Extensions.Caching.Memory;
 using NSubstitute;
 using SharpRepository.InMemoryRepository;
-using SharpRepository.Repository;
 using Xunit;
 
 namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Messaging.Broadcast
 {
     public sealed class BroadcastManagerTests : IDisposable
     {
-        private readonly IRepository<Peer> _peers;
+        private readonly IPeerRepository _peers;
         private readonly IMemoryCache _cache;
 
         public BroadcastManagerTests()
         {
-            _peers = new InMemoryRepository<Peer>();
+            _peers = Substitute.For<IPeerRepository>();
             _cache = new MemoryCache(new MemoryCacheOptions());
         }
 
@@ -128,15 +131,18 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Messaging.Broadcast
 
         private void PopulatePeers(int count)
         {
+            var peerList = new List<Peer>();
             for (var i = 10; i < count + 10; i++)
             {
-                _peers.Add(new Peer
+                var peer = new Peer
                 {
                     PeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier(i.ToString())
-                });
+                };
+                peerList.Add(peer);
+                _peers.Get(peer.DocumentId).Returns(peer);
             }
 
-            _peers.Count().Should().Be(count);
+            _peers.AsQueryable().Returns(peerList.AsQueryable());
         }
 
         public void Dispose()

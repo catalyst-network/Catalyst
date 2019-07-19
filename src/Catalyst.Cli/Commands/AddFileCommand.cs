@@ -65,10 +65,12 @@ namespace Catalyst.Cli.Commands
                 request.FileSize = (ulong)fileStream.Length;
             }
 
+            var protocolMessage = request.ToProtocolMessage(SenderPeerIdentifier.PeerId);
             var requestMessage = CommandContext.DtoFactory.GetDto(
-                request.ToProtocolMessage(SenderPeerIdentifier.PeerId),
+                protocolMessage,
                 SenderPeerIdentifier,
-                RecipientPeerIdentifier
+                RecipientPeerIdentifier,
+                protocolMessage.CorrelationId.ToCorrelationId()
             );
 
             IUploadFileInformation fileTransfer = new UploadFileTransferInformation(

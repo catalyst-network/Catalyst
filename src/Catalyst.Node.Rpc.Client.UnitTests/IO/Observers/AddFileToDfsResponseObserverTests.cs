@@ -81,7 +81,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
                 _userOutput
             );
             addFileToDfsResponseObserver.OnNext(GetAddFileToDfsResponse(FileTransferResponseCodes.Error));
-            _uploadFileTransferFactory.Received(Quantity.Exactly(1)).Remove(Arg.Any<ICorrelationId>());
+            _uploadFileTransferFactory.Received(Quantity.Exactly(1)).Remove(Arg.Any<IUploadFileInformation>(), true);
         }
 
         private IObserverDto<ProtocolMessage> GetAddFileToDfsResponse(FileTransferResponseCodes responseCode)

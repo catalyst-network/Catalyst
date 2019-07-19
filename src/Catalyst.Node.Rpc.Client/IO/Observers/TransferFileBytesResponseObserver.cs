@@ -21,48 +21,34 @@
 
 #endregion
 
+using Catalyst.Common.Interfaces.FileTransfer;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
-using Catalyst.Common.Interfaces.IO.Observers;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Protocol.Rpc.Node;
-using Dawn;
 using DotNetty.Transport.Channels;
 using Serilog;
 
 namespace Catalyst.Node.Rpc.Client.IO.Observers
 {
-    /// <summary>
-    /// The Transfer file bytes response handler
-    /// </summary>
-    /// <seealso cref="IRpcResponseObserver" />
-    public class TransferFileBytesResponseObserver
-        : RpcResponseObserver<TransferFileBytesResponse>
+    public sealed class TransferFileBytesResponseObserver
+        : RpcResponseObserver<TransferFileBytesRequest>
     {
+        /// <summary>The download file transfer factory</summary>
+        private readonly IDownloadFileTransferFactory _fileTransferFactory;
 
         /// <summary>Initializes a new instance of the <see cref="TransferFileBytesResponseObserver"/> class.</summary>
+        /// <param name="fileTransferFactory">The download transfer factory.</param>
         /// <param name="logger">The logger.</param>
-        public TransferFileBytesResponseObserver(ILogger logger) : base(logger) {
-
-        }
-        
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="transferFileBytesResponse"></param>
-        /// <param name="channelHandlerContext"></param>
-        /// <param name="senderPeerIdentifier"></param>
-        /// <param name="correlationId"></param>
-        protected override void HandleResponse(TransferFileBytesResponse transferFileBytesResponse,
-            IChannelHandlerContext channelHandlerContext,
-            IPeerIdentifier senderPeerIdentifier,
-            ICorrelationId correlationId)
+        public TransferFileBytesResponseObserver(IDownloadFileTransferFactory fileTransferFactory,
+            ILogger logger)
+            : base(logger, false)
         {
-            Guard.Argument(transferFileBytesResponse, nameof(transferFileBytesResponse)).NotNull();
-            Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
-            Guard.Argument(senderPeerIdentifier, nameof(senderPeerIdentifier)).NotNull();
+            _fileTransferFactory = fileTransferFactory;
+        }
 
-            // Response for a node writing a chunk via bytes transfer.
-            // Future logic if an error occurs via chunk transfer then preferably we want to stop file transfer
+        protected override void HandleResponse(TransferFileBytesRequest message, IChannelHandlerContext channelHandlerContext, IPeerIdentifier senderPeerIdentifier, ICorrelationId correlationId)
+        {
+            _ = _fileTransferFactory.DownloadChunk(message);
         }
     }
 }

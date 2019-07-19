@@ -74,6 +74,8 @@ namespace Catalyst.TestUtils
 
             FileSystem = Substitute.For<IFileSystem>();
             FileSystem.GetCatalystDataDir().Returns(_testDirectory);
+            var trueFileSystem = new System.IO.Abstractions.FileSystem();
+            FileSystem.File.Returns(trueFileSystem.File);
 
             Output.WriteLine("test running in folder {0}", _testDirectory.FullName);
         }

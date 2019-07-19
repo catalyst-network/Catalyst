@@ -87,11 +87,16 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
             var responseCode = (FileTransferResponseCodes) addFileToDfsResponse.ResponseCode[0];
             if (responseCode == FileTransferResponseCodes.Successful)
             {
-                _rpcFileTransferFactory.FileTransferAsync(correlationId, CancellationToken.None).ConfigureAwait(false);
+                _rpcFileTransferFactory.FileTransferAsync(correlationId, CancellationToken.None)
+                   .ConfigureAwait(false);
             }
             else
             {
-                _rpcFileTransferFactory.Remove(correlationId);
+                var fileTransferInformation = _rpcFileTransferFactory.GetFileTransferInformation(correlationId);
+                if (fileTransferInformation != null)
+                {
+                    _rpcFileTransferFactory.Remove(fileTransferInformation, true);
+                }
             }
         }
     }
