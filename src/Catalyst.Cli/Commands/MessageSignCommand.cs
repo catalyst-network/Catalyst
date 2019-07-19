@@ -44,10 +44,5 @@ namespace Catalyst.Cli.Commands
                    .ToByteString()
             };
         }
-
-        protected override void ResponseMessage(SignMessageResponse response)
-        {
-            CommandContext.UserOutput.WriteLine(response.ToJsonString());
-        }
     }
 }

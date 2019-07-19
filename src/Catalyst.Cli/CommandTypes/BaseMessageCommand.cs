@@ -82,7 +82,10 @@ namespace Catalyst.Cli.CommandTypes
             return sendMessage;
         }
 
-        protected virtual void ResponseMessage(TResponse response) { }
+        protected virtual void ResponseMessage(TResponse response)
+        {
+            CommandContext.UserOutput.WriteLine(response.ToJsonString());
+        }
 
         private void CommandResponseOnNext(TResponse value)
         {

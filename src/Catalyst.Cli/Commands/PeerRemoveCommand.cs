@@ -45,10 +45,5 @@ namespace Catalyst.Cli.Commands
                     : option.PublicKey.PublicKeyToProtobuf()
             };
         }
-
-        protected override void ResponseMessage(RemovePeerResponse response)
-        {
-            CommandContext.UserOutput.WriteLine(response.ToJsonString());
-        }
     }
 }
