@@ -21,16 +21,14 @@
 
 #endregion
 
+using Catalyst.Common.Interfaces.Attributes;
+using Catalyst.Common.Interfaces.Repository;
 using System;
 
 namespace Catalyst.Common.Interfaces.P2P
 {
-    public interface IPeer
+    public interface IPeer : IDocument, IAuditable
     {
-        /// <summary>Gets or sets the primary key identifier.</summary>
-        /// <value>The primary key identifier.</value>
-        int PkId { get; set; }
-
         /// <summary>Gets the reputation.</summary>
         /// <value>The reputation.</value>
         int Reputation { get; set; }
