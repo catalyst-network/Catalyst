@@ -25,11 +25,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Catalyst.Common.Interfaces.Modules.Mempool;
+using Catalyst.Common.Interfaces.Repository;
+using Catalyst.Common.Modules.Mempool;
 using Catalyst.Protocol.Transaction;
 using Dawn;
+using Google.Protobuf;
 using Nethereum.RLP;
 using Serilog;
-using SharpRepository.Repository;
 
 namespace Catalyst.Core.Lib.Modules.Mempool
 {
@@ -39,21 +41,18 @@ namespace Catalyst.Core.Lib.Modules.Mempool
     public sealed class Mempool : IMempool
     {
         private readonly ILogger _logger;
-        private readonly IRepository<TransactionBroadcast, TransactionSignature> _transactionStore;
+        private readonly IMempoolRepository _transactionStore;
 
         /// <inheritdoc />
-        public Mempool(IRepository<TransactionBroadcast, TransactionSignature> transactionStore, ILogger logger)
+        public Mempool(IMempoolRepository transactionStore, ILogger logger)
         {
             Guard.Argument(transactionStore, nameof(transactionStore)).NotNull();
             _transactionStore = transactionStore;
-            _transactionStore.Conventions.GetPrimaryKeyName = _ => nameof(TransactionBroadcast.Signature);
-
             _logger = logger;
-            _transactionStore.CachingEnabled = true;
         }
 
         /// <inheritdoc />
-        public IEnumerable<TransactionBroadcast> GetMemPoolContent()
+        public IEnumerable<IMempoolDocument> GetMemPoolContent()
         {
             var memPoolContent = _transactionStore.GetAll();
             return memPoolContent;
@@ -69,26 +68,29 @@ namespace Catalyst.Core.Lib.Modules.Mempool
         }
 
         /// <inheritdoc />
-        public TransactionBroadcast GetTransaction(TransactionSignature key)
+        public IMempoolDocument GetMempoolDocument(TransactionSignature key)
         {
             Guard.Argument(key, nameof(key)).NotNull();
-            var found = _transactionStore.Get(key);
+            var found = _transactionStore.Get(key.ToByteString().ToBase64());
             return found;
         }
 
         /// <inheritdoc />
-        public bool SaveTransaction(TransactionBroadcast transaction)
+        public bool SaveMempoolDocument(IMempoolDocument mempoolDocument)
         {
+            Guard.Argument(mempoolDocument, nameof(mempoolDocument)).NotNull();
+
+            var transaction = mempoolDocument.Transaction;
             Guard.Argument(transaction, nameof(transaction)).NotNull();
             Guard.Argument(transaction.Signature, nameof(transaction.Signature)).NotNull();
             try
             {
-                if (_transactionStore.TryGet(transaction.Signature, out _))
+                if (_transactionStore.TryGet(mempoolDocument.DocumentId, out _))
                 {
                     return false;
                 }
 
-                _transactionStore.Add(transaction);
+                _transactionStore.Add((MempoolDocument) mempoolDocument);
                 return true;
             }
             catch (Exception e)

@@ -1,21 +1,29 @@
 {
-  "defaultAssembly": "Catalyst.Core.Lib",
-  "components": [
-    {
-        "type": "SharpRepository.InMemoryRepository.InMemoryRepository`2[[Catalyst.Protocol.Transaction.TransactionBroadcast, Catalyst.Protocol], [Catalyst.Protocol.Transaction.TransactionSignature, Catalyst.Protocol]], SharpRepository.InMemoryRepository",
-        "services": [
-            {
-                "type": "SharpRepository.Repository.IRepository`2[[Catalyst.Protocol.Transaction.TransactionBroadcast, Catalyst.Protocol], [Catalyst.Protocol.Transaction.TransactionSignature, Catalyst.Protocol]], SharpRepository.Repository"
-            }
-        ]
-    },
-    {
-      "type": "Catalyst.Core.Lib.Modules.Mempool.Mempool",
-      "services": [
+    "defaultAssembly": "Catalyst.Core.Lib",
+    "components": [
         {
-          "type": "Catalyst.Common.Interfaces.Modules.Mempool.IMempool, Catalyst.Common"
+            "type": "SharpRepository.InMemoryRepository.InMemoryRepository`2[[Catalyst.Common.Modules.Mempool.MempoolDocument, Catalyst.Common], [System.String, mscorlib]], SharpRepository.InMemoryRepository",
+            "services": [
+                {
+                    "type": "SharpRepository.Repository.IRepository`2[[Catalyst.Common.Modules.Mempool.MempoolDocument, Catalyst.Common], [System.String, mscorlib]], SharpRepository.Repository"
+                }
+            ]
+        },
+        {
+            "type": "Catalyst.Node.Repository.MempoolRepository, Catalyst.Node",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.Repository.IMempoolRepository, Catalyst.Common"
+                }
+            ]
+        },
+        {
+            "type": "Catalyst.Core.Lib.Modules.Mempool.Mempool",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.Modules.Mempool.IMempool, Catalyst.Common"
+                }
+            ]
         }
-      ]
-    }
-  ]
+    ]
 }

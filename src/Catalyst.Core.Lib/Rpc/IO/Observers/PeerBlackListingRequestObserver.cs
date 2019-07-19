@@ -26,6 +26,7 @@ using System.Linq;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.IO.Observers;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.Interfaces.Repository;
 using Catalyst.Common.IO.Observers;
 using Catalyst.Common.P2P;
 using Catalyst.Protocol;
@@ -46,11 +47,11 @@ namespace Catalyst.Core.Lib.Rpc.IO.Observers
         /// <summary>
         /// The PeerBlackListingRequestHandler 
         /// </summary>
-        private readonly IRepository<Peer> _peerRepository;
+        private readonly IPeerRepository _peerRepository;
         
         public PeerBlackListingRequestObserver(IPeerIdentifier peerIdentifier,
             ILogger logger,
-            IRepository<Peer> peerRepository)
+            IPeerRepository peerRepository)
             : base(logger, peerIdentifier)
         {
             _peerRepository = peerRepository;

@@ -26,13 +26,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using Catalyst.Common.Interfaces.Modules.Mempool;
-using Catalyst.Protocol.Transaction;
+using Catalyst.Common.Interfaces.Repository;
+using Catalyst.Common.Modules.Mempool;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 using Serilog;
-using SharpRepository.Repository;
 using Xunit;
 
 namespace Catalyst.Core.Lib.UnitTests.Modules.Mempool
@@ -41,28 +41,31 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Mempool
     {
         public MempoolTests()
         {
-            _transactionStore = Substitute.For<IRepository<TransactionBroadcast, TransactionSignature>>();
+            _transactionStore = Substitute.For<IMempoolRepository>();
             var logger = Substitute.For<ILogger>();
             _memPool = new Catalyst.Core.Lib.Modules.Mempool.Mempool(_transactionStore, logger);
 
-            _transaction = TransactionHelper.GetTransaction();
+            _mempoolDocument = new MempoolDocument
+            {
+                Transaction = TransactionHelper.GetTransaction()
+            };
         }
 
         private readonly Catalyst.Core.Lib.Modules.Mempool.Mempool _memPool;
 
-        private readonly IRepository<TransactionBroadcast, TransactionSignature> _transactionStore;
-        private readonly TransactionBroadcast _transaction;
+        private readonly IMempoolRepository _transactionStore;
+        private readonly IMempoolDocument _mempoolDocument;
 
-        private static void AddKeyValueStoreEntryExpectation(TransactionBroadcast transaction,
-            IRepository<TransactionBroadcast, TransactionSignature> store)
+        private static void AddKeyValueStoreEntryExpectation(IMempoolDocument document,
+            IMempoolRepository store)
         {
-            store.Get(Arg.Is<TransactionSignature>(k => k.Equals(transaction.Signature)))
-               .Returns(transaction);
-            store.TryGet(Arg.Is<TransactionSignature>(k => k.Equals(transaction.Signature)),
-                    out Arg.Any<TransactionBroadcast>())
+            store.Get(Arg.Is<string>(k => k.Equals(document.DocumentId)))
+               .Returns(document);
+            store.TryGet(Arg.Is<string>(k => k.Equals(document.Transaction.Signature)),
+                    out Arg.Any<MempoolDocument>())
                .Returns(ci =>
                 {
-                    ci[1] = transaction;
+                    ci[1] = document.Transaction;
                     return true;
                 });
         }
@@ -70,11 +73,11 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Mempool
         private sealed class ProducerConsumer
         {
             private static readonly object Locker = new object();
-            private readonly IRepository<TransactionBroadcast, TransactionSignature> _keyValueStore;
+            private readonly IMempoolRepository _keyValueStore;
             private readonly IMempool _memPool;
             public int? FirstThreadId;
 
-            public ProducerConsumer(IMempool memPool, IRepository<TransactionBroadcast, TransactionSignature> keyValueStore)
+            public ProducerConsumer(IMempool memPool, IMempoolRepository keyValueStore)
             {
                 _memPool = memPool;
                 _keyValueStore = keyValueStore;
@@ -82,16 +85,19 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Mempool
 
             public void Writer()
             {
-                TransactionBroadcast transaction;
+                IMempoolDocument mempoolDocument;
                 lock (Locker)
                 {
                     var id = Thread.CurrentThread.ManagedThreadId;
-                    transaction = TransactionHelper.GetTransaction(standardAmount: (uint) id);
+                    mempoolDocument = new MempoolDocument
+                    {
+                        Transaction = TransactionHelper.GetTransaction(standardAmount: (uint) id)
+                    };
 
                     if (FirstThreadId == null)
                     {
                         FirstThreadId = id;
-                        AddKeyValueStoreEntryExpectation(transaction, _keyValueStore);
+                        AddKeyValueStoreEntryExpectation(mempoolDocument, _keyValueStore);
                     }
 
                     Thread.Sleep(5); //milliseconds
@@ -99,25 +105,27 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Mempool
 
                 // here there could be a context switch so second thread might call SaveTransaction failing the test
                 // so a little sleep was needed in the locked section
-                _memPool.SaveTransaction(transaction); // write same key but different tx amount, not under lock
+                _memPool.SaveMempoolDocument(mempoolDocument); // write same key but different tx amount, not under lock
             }
         }
 
         [Fact]
         public void Get_should_retrieve_a_saved_transaction()
         {
-            _memPool.SaveTransaction(_transaction);
-            AddKeyValueStoreEntryExpectation(_transaction, _transactionStore);
+            _memPool.SaveMempoolDocument(_mempoolDocument);
+            AddKeyValueStoreEntryExpectation(_mempoolDocument, _transactionStore);
 
-            var transactionFromMemPool = _memPool.GetTransaction(_transaction.Signature);
+            var mempoolDocument = _memPool.GetMempoolDocument(_mempoolDocument.Transaction.Signature);
+            var expectedTransaction = _mempoolDocument.Transaction;
+            var transactionFromMemPool = mempoolDocument.Transaction;
 
-            transactionFromMemPool.STEntries.Single().Amount.Should().Be(_transaction.STEntries.Single().Amount);
-            transactionFromMemPool.CFEntries.Single().PedersenCommit.Should().BeEquivalentTo(_transaction.CFEntries.Single().PedersenCommit);
-            transactionFromMemPool.Signature.Should().Be(_transaction.Signature);
-            transactionFromMemPool.Version.Should().Be(_transaction.Version);
-            transactionFromMemPool.LockTime.Should().Be(_transaction.LockTime);
-            transactionFromMemPool.TimeStamp.Should().Be(_transaction.TimeStamp);
-            transactionFromMemPool.TransactionFees.Should().Be(_transaction.TransactionFees);
+            transactionFromMemPool.STEntries.Single().Amount.Should().Be(expectedTransaction.STEntries.Single().Amount);
+            transactionFromMemPool.CFEntries.Single().PedersenCommit.Should().BeEquivalentTo(expectedTransaction.CFEntries.Single().PedersenCommit);
+            transactionFromMemPool.Signature.Should().Be(expectedTransaction.Signature);
+            transactionFromMemPool.Version.Should().Be(expectedTransaction.Version);
+            transactionFromMemPool.LockTime.Should().Be(expectedTransaction.LockTime);
+            transactionFromMemPool.TimeStamp.Should().Be(expectedTransaction.TimeStamp);
+            transactionFromMemPool.TransactionFees.Should().Be(expectedTransaction.TransactionFees);
         }
 
         [Fact]
@@ -126,40 +134,41 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Mempool
             const int numTx = 10;
             for (var i = 0; i < numTx; i++)
             {
-                var transaction = TransactionHelper.GetTransaction(standardAmount: (uint) i, signature: $"key{i}");
-                _memPool.SaveTransaction(transaction);
-                AddKeyValueStoreEntryExpectation(transaction, _transactionStore);
+                var mempoolDocument =
+                    new MempoolDocument {Transaction = TransactionHelper.GetTransaction(standardAmount: (uint) i, signature: $"key{i}")};
+                _memPool.SaveMempoolDocument(mempoolDocument);
+                AddKeyValueStoreEntryExpectation(mempoolDocument, _transactionStore);
             }
 
             for (var i = 0; i < numTx; i++)
             {
                 var signature = TransactionHelper.GetTransactionSignature(signature: $"key{i}");
-                var transaction = _memPool.GetTransaction(signature);
-                transaction.STEntries.Single().Amount.Should().Be((uint) i);
+                var mempoolDocument = _memPool.GetMempoolDocument(signature);
+                mempoolDocument.Transaction.STEntries.Single().Amount.Should().Be((uint) i);
             }
         }
 
         [Fact]
         public void GetNonExistentKey()
         {
-            _transactionStore.Get(Arg.Any<TransactionSignature>()).ThrowsForAnyArgs(new KeyNotFoundException());
-            new Action(() => _memPool.GetTransaction(TransactionHelper.GetTransactionSignature("signature that doesn't exist")))
+            _transactionStore.Get(Arg.Any<string>()).ThrowsForAnyArgs(new KeyNotFoundException());
+            new Action(() => _memPool.GetMempoolDocument(TransactionHelper.GetTransactionSignature("signature that doesn't exist")))
                .Should().Throw<KeyNotFoundException>();
         }
 
         [Fact]
         public void KeyAlreadyExists()
         {
-            var expectedAmount = _transaction.STEntries.Single().Amount;
-            _memPool.SaveTransaction(_transaction);
-            AddKeyValueStoreEntryExpectation(_transaction, _transactionStore);
+            var expectedAmount = _mempoolDocument.Transaction.STEntries.Single().Amount;
+            _memPool.SaveMempoolDocument(_mempoolDocument);
+            AddKeyValueStoreEntryExpectation(_mempoolDocument, _transactionStore);
 
-            var overridingTransaction = _transaction.Clone();
-            overridingTransaction.STEntries.Single().Amount = expectedAmount + 100;
-            _memPool.SaveTransaction(overridingTransaction);
+            var overridingTransaction = new MempoolDocument {Transaction = _mempoolDocument.Transaction.Clone()};
+            overridingTransaction.Transaction.STEntries.Single().Amount = expectedAmount + 100;
+            _memPool.SaveMempoolDocument(overridingTransaction);
 
-            var retrievedTransaction = _memPool.GetTransaction(_transaction.Signature);
-            retrievedTransaction.STEntries.Single().Amount.Should().Be(expectedAmount);
+            var retrievedTransaction = _memPool.GetMempoolDocument(_mempoolDocument.Transaction.Signature);
+            retrievedTransaction.Transaction.STEntries.Single().Amount.Should().Be(expectedAmount);
         }
 
         [Fact]
@@ -177,18 +186,18 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Mempool
 
             for (var i = 0; i < threadNum; i++) threadW[i].Join();
 
-            var transaction = _memPool.GetTransaction(_transaction.Signature);
+            var mempoolDocument = _memPool.GetMempoolDocument(_mempoolDocument.Transaction.Signature);
 
             // the first thread should set the amount and the value not overridden by other threads
             // trying to insert the same key
-            ((int) transaction.STEntries.Single().Amount).Should().Be(pc.FirstThreadId);
+            ((int) mempoolDocument.Transaction.STEntries.Single().Amount).Should().Be(pc.FirstThreadId);
         }
 
         [Fact]
         public void SaveNullKey()
         {
-            _transaction.Signature = null;
-            new Action(() => _memPool.SaveTransaction(_transaction))
+            _mempoolDocument.Transaction.Signature = null;
+            new Action(() => _memPool.SaveMempoolDocument(_mempoolDocument))
                .Should().Throw<ArgumentNullException>()
                .And.Message.Should().Contain("cannot be null");
         }
@@ -196,7 +205,7 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Mempool
         [Fact]
         public void SaveNullTx()
         {
-            new Action(() => _memPool.SaveTransaction(null))
+            new Action(() => _memPool.SaveMempoolDocument(null))
                .Should().Throw<ArgumentNullException>()
                .And.Message.Should().Contain("cannot be null"); // transaction is null so do not insert
         }
