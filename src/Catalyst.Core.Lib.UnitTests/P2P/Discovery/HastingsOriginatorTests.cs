@@ -65,7 +65,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
         [Fact]
         public void Can_Restore_State_From_Memento()
         {
-            var memento = HastingDiscoveryHelper.MockMemento();
+            var memento = DiscoveryHelper.MockMemento();
             var originator = new HastingsOriginator();
             
             originator.RestoreMemento(memento);
@@ -106,13 +106,13 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
         {
             var originator = new HastingsOriginator();
 
-            var memento1 = HastingDiscoveryHelper.SubMemento();
-            var memento2 = HastingDiscoveryHelper.SubMemento();
+            var memento1 = DiscoveryHelper.SubMemento();
+            var memento2 = DiscoveryHelper.SubMemento();
             
             originator.RestoreMemento(memento1);
-            originator.CurrentPeersNeighbours = HastingDiscoveryHelper.MockNeighbours().ToList();
-            originator.UnResponsivePeers = HastingDiscoveryHelper.MockUnResponsiveNeighbours();
-            originator.ExpectedPnr = HastingDiscoveryHelper.MockPnr();
+            originator.CurrentPeersNeighbours = DiscoveryHelper.MockNeighbours().ToList();
+            originator.UnResponsivePeers = DiscoveryHelper.MockUnResponsiveNeighbours();
+            originator.ExpectedPnr = DiscoveryHelper.MockPnr();
 
             originator.RestoreMemento(memento2);
             
@@ -130,12 +130,12 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
         {
             var originator = new HastingsOriginator();
 
-            var memento1 = HastingDiscoveryHelper.SubMemento();
+            var memento1 = DiscoveryHelper.SubMemento();
             
             originator.RestoreMemento(memento1);
-            originator.CurrentPeersNeighbours = HastingDiscoveryHelper.MockNeighbours().ToList();
-            originator.UnResponsivePeers = HastingDiscoveryHelper.MockContactedNeighboursValuePairs(HastingDiscoveryHelper.MockNeighbours());
-            originator.ExpectedPnr = HastingDiscoveryHelper.MockPnr();
+            originator.CurrentPeersNeighbours = DiscoveryHelper.MockNeighbours().ToList();
+            originator.UnResponsivePeers = DiscoveryHelper.MockContactedNeighboursValuePairs(DiscoveryHelper.MockNeighbours());
+            originator.ExpectedPnr = DiscoveryHelper.MockPnr();
 
             originator.Peer = PeerIdentifierHelper.GetPeerIdentifier("new_peer");
 

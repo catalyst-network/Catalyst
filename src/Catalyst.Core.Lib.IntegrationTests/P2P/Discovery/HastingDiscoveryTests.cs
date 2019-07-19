@@ -84,23 +84,23 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
             var pr = new PingResponseObserver(Substitute.For<ILogger>());
             var peerClientObservers = new List<IPeerClientObservable> {pr};
 
-            var seedState = HastingDiscoveryHelper.MockSeedState(_ownNode, _settings.SeedServers.ToList(), _settings);
+            var seedState = DiscoveryHelper.MockSeedState(_ownNode, _settings.SeedServers.ToList(), _settings);
             var seedOrigin = new HastingsOriginator();
             seedOrigin.RestoreMemento(seedState);
             var stateCareTaker = new HastingCareTaker();
             var stateHistory = new Stack<IHastingMemento>();
             stateHistory.Push(seedState);
             
-            HastingDiscoveryHelper.MockMementoHistory(stateHistory, 5).ToList().ForEach(i => stateCareTaker.Add(i));
+            DiscoveryHelper.MockMementoHistory(stateHistory, 5).ToList().ForEach(i => stateCareTaker.Add(i));
             
-            var knownPnr = HastingDiscoveryHelper.MockPnr();
-            var stateCandidate = HastingDiscoveryHelper.MockOriginator();
+            var knownPnr = DiscoveryHelper.MockPnr();
+            var stateCandidate = DiscoveryHelper.MockOriginator();
             stateCandidate.ExpectedPnr = knownPnr;
             stateCandidate.CurrentPeersNeighbours.Clear();
 
             var memoryCache = Substitute.For<IMemoryCache>();
             
-            var peerMessageCorrelationManager = HastingDiscoveryHelper.MockCorrelationManager(default, memoryCache);
+            var peerMessageCorrelationManager = DiscoveryHelper.MockCorrelationManager(default, memoryCache);
                 
             var correlatableMessages = new List<CorrelatableMessage<ProtocolMessage>>();
             stateCandidate.UnResponsivePeers.ToList().ForEach(i =>
@@ -117,10 +117,10 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
                 peerMessageCorrelationManager.AddPendingRequest(msg);
             });
             
-            using (var walker = HastingDiscoveryHelper.GetTestInstanceOfDiscovery(
+            using (var walker = DiscoveryHelper.GetTestInstanceOfDiscovery(
                 Substitute.For<ILogger>(),
                 Substitute.For<IRepository<Peer>>(),
-                HastingDiscoveryHelper.MockDnsClient(_settings, _settings.SeedServers.ToList()),
+                DiscoveryHelper.MockDnsClient(_settings, _settings.SeedServers.ToList()),
                 _settings,
                 Substitute.For<IPeerClient>(),
                 Substitute.For<IDtoFactory>(),
@@ -167,7 +167,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
             var pr = new PingResponseObserver(Substitute.For<ILogger>());
             var peerClientObservers = new List<IPeerClientObservable> {pr};
 
-            var seedState = HastingDiscoveryHelper.SubSeedState(_ownNode, _settings.SeedServers.ToList(), _settings);
+            var seedState = DiscoveryHelper.SubSeedState(_ownNode, _settings.SeedServers.ToList(), _settings);
             var seedOrigin = new HastingsOriginator();
             seedOrigin.RestoreMemento(seedState);
             
@@ -175,17 +175,17 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
             var stateHistory = new Stack<IHastingMemento>();
             stateHistory.Push(seedState);
             
-            HastingDiscoveryHelper.MockMementoHistory(stateHistory, 5).ToList().ForEach(i => stateCareTaker.Add(i));
+            DiscoveryHelper.MockMementoHistory(stateHistory, 5).ToList().ForEach(i => stateCareTaker.Add(i));
             
-            var knownPnr = HastingDiscoveryHelper.MockPnr();
-            var stateCandidate = HastingDiscoveryHelper.SubOriginator();
+            var knownPnr = DiscoveryHelper.MockPnr();
+            var stateCandidate = DiscoveryHelper.SubOriginator();
             stateCandidate.ExpectedPnr = knownPnr;
             stateCandidate.CurrentPeersNeighbours.Clear();
 
-            using (var walker = HastingDiscoveryHelper.GetTestInstanceOfDiscovery(
+            using (var walker = DiscoveryHelper.GetTestInstanceOfDiscovery(
                 Substitute.For<ILogger>(),
                 Substitute.For<IRepository<Peer>>(),
-                HastingDiscoveryHelper.MockDnsClient(_settings, _settings.SeedServers.ToList()),
+                DiscoveryHelper.MockDnsClient(_settings, _settings.SeedServers.ToList()),
                 _settings,
                 Substitute.For<IPeerClient>(),
                 Substitute.For<IDtoFactory>(),
@@ -237,7 +237,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
             var pr = new PingResponseObserver(Substitute.For<ILogger>());
             var peerClientObservers = new List<IPeerClientObservable> {pr};
 
-            var seedState = HastingDiscoveryHelper.SubSeedState(_ownNode, _settings.SeedServers.ToList(), _settings);
+            var seedState = DiscoveryHelper.SubSeedState(_ownNode, _settings.SeedServers.ToList(), _settings);
             var seedOrigin = new HastingsOriginator();
             seedOrigin.RestoreMemento(seedState);
 
@@ -245,16 +245,16 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
             var stateHistory = new Stack<IHastingMemento>();
             stateHistory.Push(seedState);
             
-            HastingDiscoveryHelper.MockMementoHistory(stateHistory, 5).ToList().ForEach(i => stateCareTaker.Add(i));
+            DiscoveryHelper.MockMementoHistory(stateHistory, 5).ToList().ForEach(i => stateCareTaker.Add(i));
             
-            var knownPnr = HastingDiscoveryHelper.MockPnr();
-            var stateCandidate = HastingDiscoveryHelper.MockOriginator(default, default, knownPnr);
+            var knownPnr = DiscoveryHelper.MockPnr();
+            var stateCandidate = DiscoveryHelper.MockOriginator(default, default, knownPnr);
             stateCandidate.CurrentPeersNeighbours.Clear();
 
-            using (var walker = HastingDiscoveryHelper.GetTestInstanceOfDiscovery(
+            using (var walker = DiscoveryHelper.GetTestInstanceOfDiscovery(
                 Substitute.For<ILogger>(),
                 Substitute.For<IRepository<Peer>>(),
-                HastingDiscoveryHelper.MockDnsClient(_settings, _settings.SeedServers.ToList()),
+                DiscoveryHelper.MockDnsClient(_settings, _settings.SeedServers.ToList()),
                 _settings,
                 Substitute.For<IPeerClient>(),
                 Substitute.For<IDtoFactory>(),
