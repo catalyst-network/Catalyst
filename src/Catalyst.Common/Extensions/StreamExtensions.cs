@@ -47,7 +47,7 @@ namespace Catalyst.Common.Extensions
 
             using (var memoryStream = new MemoryStream())
             {
-                await stream.CopyToAsync(memoryStream, cancellationToken);
+                await stream.CopyToAsync(memoryStream, cancellationToken).ConfigureAwait(false);
                 var contentBytes = memoryStream.ToArray();
                 return contentBytes;
             }
