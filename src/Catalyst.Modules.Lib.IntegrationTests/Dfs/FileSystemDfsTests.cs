@@ -39,13 +39,12 @@ namespace Catalyst.Modules.Lib.IntegrationTests.Dfs
     {
         private readonly IDfs _dfs;
         private readonly CancellationToken _cancellationToken;
-        private readonly IMultihashAlgorithm _hashingAlgorithm;
 
         public FileSystemDfsTests(ITestOutputHelper output) : base(output)
         {
             _cancellationToken = new CancellationTokenSource(TimeSpan.FromSeconds(200)).Token;
-            _hashingAlgorithm = new BLAKE2B_256();
-            _dfs = new FileSystemDfs(_hashingAlgorithm, FileSystem);
+            IMultihashAlgorithm hashingAlgorithm = new BLAKE2B_256();
+            _dfs = new FileSystemDfs(hashingAlgorithm, FileSystem);
         }
 
         [Fact]

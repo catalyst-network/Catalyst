@@ -29,8 +29,6 @@ using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.FileSystem;
 using Catalyst.Common.Interfaces.Modules.Dfs;
 using Dawn;
-using Multiformats.Base;
-using Multiformats.Hash;
 using Multiformats.Hash.Algorithms;
 
 namespace Catalyst.Modules.Lib.Dfs
@@ -103,7 +101,8 @@ namespace Catalyst.Modules.Lib.Dfs
         /// <inheritdoc />
         public async Task<Stream> ReadAsync(string id, CancellationToken cancellationToken = default)
         {
-            return await Task.FromResult(_fileSystem.File.OpenRead(Path.Combine(_baseFolder.FullName, id)));
+            return await Task.FromResult(_fileSystem.File.OpenRead(Path.Combine(_baseFolder.FullName, id)))
+               .ConfigureAwait(false);
         }
     }
 }
