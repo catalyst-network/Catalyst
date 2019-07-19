@@ -21,6 +21,7 @@
 
 #endregion
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -116,7 +117,7 @@ namespace Catalyst.Common.Config
         public static int StandardSaltSize => 100;
 
         /// <summary> Wait time for peer challenge </summary>
-        public static int WaitTimeForPeerChallengeMilliseconds => 4000;
+        public static TimeSpan WaitTimeForPeerChallengeMilliseconds => TimeSpan.FromMilliseconds(4000);
 
         public static IEnumerable<string> AllModuleFiles =>
             Enumeration.GetAll<ModuleName>()
