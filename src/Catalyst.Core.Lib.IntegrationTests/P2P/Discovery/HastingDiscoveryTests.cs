@@ -103,7 +103,6 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
             var peerMessageCorrelationManager = HastingDiscoveryHelper.MockCorrelationManager(default, memoryCache);
                 
             var correlatableMessages = new List<CorrelatableMessage<ProtocolMessage>>();
-
             stateCandidate.UnResponsivePeers.ToList().ForEach(i =>
             {
                 var (key, value) = i;
@@ -136,13 +135,12 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
             {
                 stateCandidate.UnResponsivePeers.ToList().ForEach(action: p =>
                 {
-                    var (key, _) = p;
-                    cacheEntriesByRequest[key.PeerId.ToByteString()]
+                    cacheEntriesByRequest[p.Value.Id.ToByteString()]
                        .PostEvictionCallbacks[0]
                        .EvictionCallback
                        .Invoke(
-                            key,
-                            correlatableMessages.Where(i => i.Recipient.Equals(key)),
+                            p.Key,
+                            (CorrelatableMessage<ProtocolMessage>) correlatableMessages.FirstOrDefault(i => i.Recipient.PeerId.Equals(p.Key.PeerId)),
                             EvictionReason.Expired,
                             new object()
                         );
@@ -157,9 +155,9 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
                 walker.WalkBack();
 
                 walker.State.Peer.Should().Be(expectedCurrentState.Peer);
-                walker.State.UnResponsivePeers.Count.Should().Be(0);
+                walker.State.UnResponsivePeers.Count.Should().Be(5);
                 walker.State.CurrentPeersNeighbours.Count.Should().Be(0);
-                walker.State.UnResponsivePeers.Count.Should().Be(0);
+                walker.State.UnResponsivePeers.Count.Should().Be(5);
             }
         }
         
