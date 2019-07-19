@@ -30,13 +30,14 @@ using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.Discovery;
 using Catalyst.Common.Interfaces.P2P.IO;
 using Catalyst.Common.Interfaces.P2P.IO.Messaging.Correlation;
+using Catalyst.Common.Interfaces.P2P.ReputationSystem;
 using Catalyst.Common.Interfaces.Util;
 using Catalyst.Common.P2P;
 using Catalyst.Common.Util;
 using Catalyst.Core.Lib.P2P.Discovery;
 using Catalyst.Protocol.IPPN;
 using Catalyst.TestUtils;
-using Google.Protobuf;
+using Microsoft.Extensions.Caching.Memory;
 using NSubstitute;
 using Serilog;
 using SharpRepository.Repository;
@@ -49,7 +50,13 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
         private IDns _dnsClient;
         private IPeerSettings _peerSettings;
         private IPeerClient _peerClient;
-        private object _dtoFactory;
+        private IDtoFactory _dtoFactory;
+        private IPeerMessageCorrelationManager _peerCorrelationManager;
+        private ICancellationTokenProvider _cancellationProvider;
+        private IList<IPeerClientObservable> _peerClientObservables;
+        private bool _autoStart;
+        private int _burnIn;
+        private IHastingsOriginator _currentState;
 
         public static DiscoveryTestBuilder CreateHastingDiscoveryTestBuilder()
         {
@@ -99,16 +106,16 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
             PingRequest pingRequest = default)
         {
             dynamic x = null;
-            if (peerNeighborsRequest == default && pingRequest == default)
+            if (peerNeighborsRequest.Equals(default) && pingRequest.Equals(default))
             {
                 throw new ArgumentException();
             }
 
-            if (peerNeighborsRequest != default)
+            if (peerNeighborsRequest.Equals(default))
             {
                 x = peerNeighborsRequest;
             }
-            else if (pingRequest != default)
+            else if (pingRequest.Equals(default))
             {
                 x = pingRequest;
             }
@@ -118,7 +125,60 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
             return this;
         }
 
-        public DiscoveryTestBuilder WithPeerMessageCorrelationManager() { }
+        public DiscoveryTestBuilder WithPeerMessageCorrelationManager(IReputationManager reputationManager = default,
+            IMemoryCache memoryCache = default,
+            IChangeTokenProvider changeTokenProvider = default,
+            ILogger logger = default)
+        {
+            _peerCorrelationManager =
+                DiscoveryHelper.MockCorrelationManager(reputationManager, memoryCache, changeTokenProvider, logger);
+            return this;
+        }
+
+        public DiscoveryTestBuilder WithCancellationProvider(ICancellationTokenProvider cancellationTokenProvider = default)
+        {
+            _cancellationProvider = cancellationTokenProvider;
+            return this;
+        }
+        
+        public DiscoveryTestBuilder WithPeerClientObservables(ILogger logger = default, params Type[] clientObservers)
+        {
+            if (_peerClientObservables == null) 
+            {
+                _peerClientObservables = new List<IPeerClientObservable>();
+            }
+
+            foreach (var observerType in clientObservers)
+            {
+                _peerClientObservables.Add((IPeerClientObservable) Activator.CreateInstance(observerType, logger ?? Substitute.For<ILogger>()));
+            }
+
+            return this;
+        }
+
+        public DiscoveryTestBuilder WithAutoStart(bool autoStart = false)
+        {
+            _autoStart = autoStart;
+            return this;
+        }
+
+        public DiscoveryTestBuilder WithBurn(int burnInPeriod = 0)
+        {
+            _burnIn = burnInPeriod;
+            return this;
+        }
+
+        public DiscoveryTestBuilder WithCurrentState(IHastingsOriginator currentState = default, bool mock = false)
+        {
+            _currentState = 
+                currentState == default && mock == false 
+                    ? _currentState = DiscoveryHelper.SubOriginator() 
+                    : currentState == default && mock == true 
+                        ? _currentState = DiscoveryHelper.MockOriginator() 
+                        : _currentState = currentState; // fuck yeh I know you like that
+
+            return this;
+        }
 
         public sealed class HastingDiscoveryTest : HastingsDiscovery
         {
