@@ -28,6 +28,9 @@ using System.Threading.Tasks;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.FileSystem;
 using Catalyst.Common.Interfaces.Modules.Dfs;
+using Dawn;
+using Multiformats.Base;
+using Multiformats.Hash;
 using Multiformats.Hash.Algorithms;
 
 namespace Catalyst.Modules.Lib.Dfs
@@ -51,6 +54,11 @@ namespace Catalyst.Modules.Lib.Dfs
             IFileSystem fileSystem, 
             string baseFolder = null)
         {
+            Guard.Argument(hashingAlgorithm, nameof(hashingAlgorithm))
+               .Require(h => h.DefaultLength <= 191, h => 
+                    $"The hashing algorithm needs to produce file names smaller than 255 base 64 characters or 191 bytes" +
+                    $"but the default length for {hashingAlgorithm.GetType().Name} is {h.DefaultLength}.");
+
             var dfsBaseFolder = baseFolder ?? Path.Combine(fileSystem.GetCatalystDataDir().FullName,
                 Common.Config.Constants.DfsDataSubDir);
 
@@ -68,9 +76,10 @@ namespace Catalyst.Modules.Lib.Dfs
         public async Task<string> AddTextAsync(string utf8Content, CancellationToken cancellationToken = default)
         {
             var bytes = Encoding.UTF8.GetBytes(utf8Content);
-            var contentHash = await bytes.ComputeMultihashAsync(_hashingAlgorithm);
-            
-            await _fileSystem.File.WriteAllTextAsync(Path.Combine(_baseFolder.FullName, contentHash),
+            var contentHash = bytes.ToMultihashBase64UrlString(_hashingAlgorithm);
+
+            await _fileSystem.File.WriteAllTextAsync(
+                Path.Combine(_baseFolder.FullName, contentHash),
                 utf8Content, Encoding.UTF8, cancellationToken);
 
             return contentHash;
@@ -86,7 +95,7 @@ namespace Catalyst.Modules.Lib.Dfs
         public async Task<string> AddAsync(Stream content, string name = "", CancellationToken cancellationToken = default)
         {
             var bytes = await content.ReadAllBytesAsync(cancellationToken);
-            var contentHash = await bytes.ComputeMultihashAsync(_hashingAlgorithm);
+            var contentHash = bytes.ToMultihashBase64UrlString(_hashingAlgorithm);
             await _fileSystem.File.WriteAllBytesAsync(Path.Combine(_baseFolder.FullName, contentHash), bytes, cancellationToken);
             return contentHash;
         }
@@ -94,7 +103,7 @@ namespace Catalyst.Modules.Lib.Dfs
         /// <inheritdoc />
         public async Task<Stream> ReadAsync(string id, CancellationToken cancellationToken = default)
         {
-            return await Task.FromResult(_fileSystem.File.OpenRead(Path.Combine(_baseFolder.FullName, id)) as Stream);
+            return await Task.FromResult(_fileSystem.File.OpenRead(Path.Combine(_baseFolder.FullName, id)));
         }
     }
 }
