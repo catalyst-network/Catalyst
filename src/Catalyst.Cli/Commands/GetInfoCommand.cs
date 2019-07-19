@@ -24,6 +24,7 @@
 using Catalyst.Cli.CommandTypes;
 using Catalyst.Cli.Options;
 using Catalyst.Common.Interfaces.Cli.Commands;
+using Catalyst.Protocol;
 using Catalyst.Protocol.Rpc.Node;
 
 namespace Catalyst.Cli.Commands
@@ -38,6 +39,11 @@ namespace Catalyst.Cli.Commands
             {
                 Query = true
             };
+        }
+
+        protected override void ResponseMessage(GetInfoResponse response)
+        {
+            CommandContext.UserOutput.WriteLine(response.ToJsonString());
         }
     }
 }

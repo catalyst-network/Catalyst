@@ -24,6 +24,7 @@
 using Catalyst.Cli.CommandTypes;
 using Catalyst.Cli.Options;
 using Catalyst.Common.Interfaces.Cli.Commands;
+using Catalyst.Protocol;
 using Catalyst.Protocol.Rpc.Node;
 namespace Catalyst.Cli.Commands
 {
@@ -41,7 +42,7 @@ namespace Catalyst.Cli.Commands
 
         protected override void ResponseMessage(VersionResponse response)
         {
-            CommandContext.UserOutput.WriteLine($"Version {response.Version}");
+            CommandContext.UserOutput.WriteLine(response.ToJsonString());
         }
     }
 }

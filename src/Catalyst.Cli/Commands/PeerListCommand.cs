@@ -24,6 +24,7 @@
 using Catalyst.Cli.CommandTypes;
 using Catalyst.Cli.Options;
 using Catalyst.Common.Interfaces.Cli.Commands;
+using Catalyst.Protocol;
 using Catalyst.Protocol.Rpc.Node;
 
 namespace Catalyst.Cli.Commands
@@ -33,5 +34,10 @@ namespace Catalyst.Cli.Commands
         public PeerListCommand(ICommandContext commandContext) : base(commandContext) { }
 
         protected override GetPeerListRequest GetMessage(PeerListOptions option) { return new GetPeerListRequest(); }
+
+        protected override void ResponseMessage(GetPeerCountResponse response)
+        {
+            CommandContext.UserOutput.WriteLine(response.ToJsonString());
+        }
     }
 }

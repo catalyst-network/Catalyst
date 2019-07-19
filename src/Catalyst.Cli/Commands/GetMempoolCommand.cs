@@ -24,6 +24,7 @@
 using Catalyst.Cli.CommandTypes;
 using Catalyst.Cli.Options;
 using Catalyst.Common.Interfaces.Cli.Commands;
+using Catalyst.Protocol;
 using Catalyst.Protocol.Rpc.Node;
 
 namespace Catalyst.Cli.Commands
@@ -32,5 +33,10 @@ namespace Catalyst.Cli.Commands
     {
         public GetMempoolCommand(ICommandContext commandContext) : base(commandContext) { }
         protected override GetMempoolRequest GetMessage(GetMempoolOptions option) { return new GetMempoolRequest(); }
+
+        protected override void ResponseMessage(GetMempoolResponse response)
+        {
+            CommandContext.UserOutput.WriteLine(response.ToJsonString());
+        }
     }
 }

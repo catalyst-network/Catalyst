@@ -23,8 +23,10 @@
 
 using Catalyst.Cli.CommandTypes;
 using Catalyst.Cli.Options;
+using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.Cli.Commands;
 using Catalyst.Common.Util;
+using Catalyst.Protocol;
 using Catalyst.Protocol.Rpc.Node;
 using Serilog;
 
@@ -32,6 +34,8 @@ namespace Catalyst.Cli.Commands
 {
     public sealed class GetDeltaCommand : BaseMessageCommand<GetDeltaRequest, GetDeltaResponse, GetDeltaOptions>
     {
+        private const string UnableToRetrieveDeltaMessage = "Unable to retrieve delta.";
+
         public GetDeltaCommand(ICommandContext commandContext) : base(commandContext) { }
 
         protected override GetDeltaRequest GetMessage(GetDeltaOptions option)
@@ -47,6 +51,16 @@ namespace Catalyst.Cli.Commands
             {
                 DeltaDfsHash = hash.ToBytes().ToByteString()
             };
+        }
+
+        protected override void ResponseMessage(GetDeltaResponse response)
+        {
+            if (response.Delta == null)
+            {
+                CommandContext.UserOutput.WriteLine(UnableToRetrieveDeltaMessage);
+            }
+
+            CommandContext.UserOutput.WriteLine(response.Delta.ToJsonString());
         }
     }
 }

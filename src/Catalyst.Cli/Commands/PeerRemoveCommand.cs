@@ -27,6 +27,7 @@ using Catalyst.Protocol.Rpc.Node;
 using Google.Protobuf;
 using Catalyst.Cli.CommandTypes;
 using Catalyst.Common.Extensions;
+using Catalyst.Protocol;
 
 namespace Catalyst.Cli.Commands
 {
@@ -43,6 +44,11 @@ namespace Catalyst.Cli.Commands
                     ? ByteString.Empty
                     : option.PublicKey.PublicKeyToProtobuf()
             };
+        }
+
+        protected override void ResponseMessage(RemovePeerResponse response)
+        {
+            CommandContext.UserOutput.WriteLine(response.ToJsonString());
         }
     }
 }

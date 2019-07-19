@@ -29,7 +29,7 @@ namespace Catalyst.Common.Interfaces.IO.Observers
 {
     public interface IRpcResponseObserver<out TProto> : IRpcResponseObserver where TProto : IMessage
     {
-        void Subscribe(Action<TProto> onNext);
+        void SubscribeToResponse(Action<TProto> onNext);
     }
 
     public interface IRpcResponseObserver : IResponseMessageObserver

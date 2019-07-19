@@ -27,6 +27,7 @@ using Catalyst.Common.Extensions;
 using Catalyst.Common.FileTransfer;
 using Catalyst.Common.Interfaces.Cli.Commands;
 using Catalyst.Common.Interfaces.FileTransfer;
+using Catalyst.Protocol;
 using Catalyst.Protocol.Rpc.Node;
 
 namespace Catalyst.Cli.Commands
@@ -84,6 +85,11 @@ namespace Catalyst.Cli.Commands
             {
                 CommandContext.UserOutput.WriteLine("\nFile transfer expired.");
             }
+        }
+
+        protected override void ResponseMessage(GetFileFromDfsResponse response)
+        {
+            CommandContext.UserOutput.WriteLine(response.ToJsonString());
         }
     }
 }
