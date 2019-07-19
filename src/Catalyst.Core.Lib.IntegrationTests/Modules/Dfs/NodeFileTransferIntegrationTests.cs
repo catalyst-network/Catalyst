@@ -35,10 +35,10 @@ using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.P2P;
-using Catalyst.Common.Rpc.IO.Observers;
 using Catalyst.Core.Lib.Modules.Dfs;
 using Catalyst.Core.Lib.P2P;
 using Catalyst.Core.Lib.Rpc.IO.Observers;
+using Catalyst.Node.Core.Rpc.IO.Observers;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
@@ -70,7 +70,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.Modules.Dfs
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
             Substitute.For<IDtoFactory>();
-            _nodeFileTransferFactory = new DownloadFileTransferFactory();
+            _nodeFileTransferFactory = new DownloadFileTransferFactory(_logger);
 
             var passwordReader = new TestPasswordReader("abcd");
 
@@ -151,7 +151,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.Modules.Dfs
                     fakeNode.Channel, uniqueFileKey, new DtoFactory());
                 for (uint i = 0; i < fileTransferInformation.MaxChunk; i++)
                 {
-                    fileUploadInformation.GetUploadMessageDto(i).Content.ToProtocolMessage(sender).SendToHandler(_fakeContext, transferBytesRequestHandler);
+                    fileUploadInformation.GetUploadMessageDto(i).Content.SendToHandler(_fakeContext, transferBytesRequestHandler);
                 }
             }
 
