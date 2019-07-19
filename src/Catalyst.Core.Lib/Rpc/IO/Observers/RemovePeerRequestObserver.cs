@@ -33,6 +33,7 @@ using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using DotNetty.Transport.Channels;
 using SharpRepository.Repository;
+using SharpRepository.Repository.Specifications;
 using ILogger = Serilog.ILogger;
 
 namespace Catalyst.Core.Lib.Rpc.IO.Observers
@@ -81,9 +82,9 @@ namespace Catalyst.Core.Lib.Rpc.IO.Observers
 
             var publicKeyIsEmpty = removePeerRequest.PublicKey.IsEmpty;
             
-            var peersToDelete = _peerRepository.FindAll(peer =>
+            var peersToDelete = _peerRepository.FindAll(new Specification<Peer>(peer =>
                 peer.PeerIdentifier.PeerId.Ip.SequenceEqual(removePeerRequest.PeerIp) &&
-                (publicKeyIsEmpty || peer.PeerIdentifier.PublicKey.SequenceEqual(removePeerRequest.PublicKey.ToByteArray()))).ToArray();
+                (publicKeyIsEmpty || peer.PeerIdentifier.PublicKey.SequenceEqual(removePeerRequest.PublicKey.ToByteArray())))).ToArray();
 
             foreach (var peerToDelete in peersToDelete)
             {
