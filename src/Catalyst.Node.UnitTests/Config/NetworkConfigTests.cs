@@ -56,8 +56,7 @@ namespace Catalyst.Node.UnitTests.Config
         {
             var networkConfiguration = new ConfigurationBuilder().AddJsonFile(networkConfig).Build();
             var configurationSection = networkConfiguration
-               .GetSection("CatalystNodeConfiguration")
-               .GetSection("PersistenceConfiguration");
+               .GetSection("CatalystNodeConfiguration:PersistenceConfiguration");
             var persistenceConfiguration = RepositoryFactory.BuildSharpRepositoryConfiguation(configurationSection);
 
             persistenceConfiguration.HasRepository.Should().BeTrue();

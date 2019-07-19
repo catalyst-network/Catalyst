@@ -28,6 +28,7 @@ using Catalyst.Common.Interfaces.FileTransfer;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using DotNetty.Transport.Channels;
 using Google.Protobuf;
@@ -61,7 +62,7 @@ namespace Catalyst.Common.FileTransfer
         }
 
         /// <inheritdoc />
-        public IMessageDto<TransferFileBytesRequest> GetUploadMessageDto(uint index)
+        public IMessageDto<ProtocolMessage> GetUploadMessageDto(uint index)
         {
             var chunkId = index + 1;
             var startPos = index * Constants.FileTransferChunkSize;
@@ -94,11 +95,11 @@ namespace Catalyst.Common.FileTransfer
                 ChunkBytes = ByteString.CopyFrom(chunk),
                 ChunkId = chunkId,
                 CorrelationFileName = CorrelationId.Id.ToByteString()
-            };
+            }.ToProtocolMessage(PeerIdentifier.PeerId);
             
             return _uploadDtoFactory.GetDto(transferMessage,
-                RecipientIdentifier,
-                PeerIdentifier
+                PeerIdentifier,
+                RecipientIdentifier
             );
         }
 

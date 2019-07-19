@@ -44,7 +44,7 @@ namespace Catalyst.Node.Rpc.Client.IO
         private readonly ReplaySubject<IRpcClientMessageDto<IMessage>> _messageResponse;
         public IObservable<IRpcClientMessageDto<IMessage>> MessageResponseStream { private set; get; }
 
-        protected RpcResponseObserver(ILogger logger) : base(logger)
+        protected RpcResponseObserver(ILogger logger, bool assertMessageNameCheck = true) : base(logger, assertMessageNameCheck)
         {
             _messageResponseSubscriptions = new ConcurrentBag<IDisposable>();
             _messageResponse = new ReplaySubject<IRpcClientMessageDto<IMessage>>(1);

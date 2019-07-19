@@ -1,4 +1,4 @@
-﻿#region LICENSE
+#region LICENSE
 
 /**
 * Copyright (c) 2019 Catalyst Network
@@ -21,16 +21,15 @@
 
 #endregion
 
+using Catalyst.Common.Interfaces.Repository;
 using System;
-using Catalyst.Common.P2P;
-using SharpRepository.Repository;
 
 namespace Catalyst.Common.Interfaces.P2P.ReputationSystem
 {
     public interface IReputationManager
-    { 
-        IRepository<Peer> PeerRepository { get; }
-        
+    {
+        IPeerRepository PeerRepository { get; }
+
         IObservable<IPeerReputationChange> ReputationEventStream { get; }
 
         IObservable<IPeerReputationChange> MergedEventStream { get; set; }

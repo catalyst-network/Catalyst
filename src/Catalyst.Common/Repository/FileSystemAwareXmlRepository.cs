@@ -21,31 +21,19 @@
 
 #endregion
 
-using System;
-using Catalyst.Common.Attributes;
-using Catalyst.Common.Interfaces.Attributes;
-using Catalyst.Common.Interfaces.Rpc.Authentication;
+using System.IO;
+using Catalyst.Common.Interfaces.FileSystem;
+using SharpRepository.XmlRepository;
 
-namespace Catalyst.Core.Lib.Rpc.Authentication
+namespace Catalyst.Common.Repository
 {
     /// <summary>
-    /// Credentials to authenticate
+    /// Xml Repository where base folder is derived from the file system <see cref="IFileSystem"/>
     /// </summary>
-    [Audit]
-    public class AuthCredentials : IAuthCredentials
+    /// <typeparam name="T">Type of object</typeparam>
+    /// <seealso cref="SharpRepository.XmlRepository.XmlRepository{T}" />
+    public class FileSystemAwareXmlRepository<T> : XmlRepository<T, string> where T : class, new()
     {
-        /// <summary>Gets or sets the public key.</summary>
-        /// <value>The public key.</value>
-        public string PublicKey { get; set; }
-
-        /// <summary>Gets or sets the ip address.</summary>
-        /// <value>The ip address.</value>
-        public string IpAddress { get; set; }
-
-        /// <inheritdoc cref="IAuditable.Created"/>
-        public DateTime Created { get; set; }
-
-        /// <inheritdoc cref="IAuditable.Modified"/>
-        public DateTime? Modified { get; set; }
+        public FileSystemAwareXmlRepository(IFileSystem fileSystem, string path = "") : base(Path.Combine(fileSystem.GetCatalystDataDir().ToString(), path)) { }
     }
 }

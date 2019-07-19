@@ -21,33 +21,7 @@
 
 #endregion
 
-using Catalyst.Common.Config;
-using Catalyst.Common.Util;
-using SharpRepository.Repository;
-using Catalyst.Common.Interfaces.Modules.Ledger;
-
-namespace Catalyst.Core.Lib.Modules.Ledger
+namespace Catalyst.Common.Interfaces.P2P.Discovery
 {
-    /// <inheritdoc />
-    public sealed class Account : IAccount
-    {
-        /// <inheritdoc />
-        [RepositoryPrimaryKey(Order = 1)]
-        public int PkId { get; set; }
-
-        /// <inheritdoc />
-        public string PublicAddress { get; set; }
-
-        /// <inheritdoc />
-        public uint CoinType { get; set; }
-
-        /// <inheritdoc />
-        public AccountTypes AccountType { get; set; }
-
-        /// <inheritdoc />
-        public BigDecimal Balance { get; set; }
-
-        /// <inheritdoc />
-        public byte[] StateRoot { get; set; } = Constants.EmptyTrieHash;
-    }
+    public interface IHastingsDiscovery : IPeerDiscovery { }
 }

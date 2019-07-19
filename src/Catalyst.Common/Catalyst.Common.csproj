@@ -34,8 +34,9 @@
         <PackageReference Include="libsodium" Version="[1.0.17]" />
         <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
         <PackageReference Include="Serilog.Sinks.File" Version="4.0.0" />
+        <PackageReference Include="SharpRepository.AzureDocumentDbRepository" Version="2.0.2-alpha4" />
         <PackageReference Include="SharpRepository.InMemoryRepository" Version="2.0.3.1" />
-        <PackageReference Include="SharpRepository.XmlRepository" Version="1.5.0.3" />
+        <PackageReference Include="SharpRepository.XmlRepository" Version="2.0.1-alpha3" />
         <PackageReference Include="System.IO.Abstractions" Version="6.0.3" />
         <PackageReference Include="System.IO.Abstractions.TestingHelpers" Version="6.0.3" />
         <PackageReference Include="System.Memory" Version="4.5.3" />
@@ -63,7 +64,6 @@
     </ItemGroup>
     <ItemGroup>
         <Folder Include="Interfaces\P2P\Messaging\Dto" />
-        <Folder Include="Interfaces\Util" />
     </ItemGroup>
     <ItemGroup>
         <Reference Include="System">
