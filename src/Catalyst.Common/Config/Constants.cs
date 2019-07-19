@@ -117,7 +117,7 @@ namespace Catalyst.Common.Config
         public static int StandardSaltSize => 100;
 
         /// <summary> Wait time for peer challenge </summary>
-        public static TimeSpan WaitTimeForPeerChallengeMilliseconds => TimeSpan.FromMilliseconds(4000);
+        public static TimeSpan PeerChallengeWaitTime => TimeSpan.FromMilliseconds(4000);
 
         public static IEnumerable<string> AllModuleFiles =>
             Enumeration.GetAll<ModuleName>()

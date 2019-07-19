@@ -47,7 +47,7 @@ namespace Catalyst.Core.Lib.P2P
         private readonly string _messageType = PingResponse.Descriptor.ShortenedFullName();
 
         private readonly CancellationTokenSource _cancellationTokenSource 
-            = new CancellationTokenSource(Constants.WaitTimeForPeerChallengeMilliseconds);
+            = new CancellationTokenSource(Constants.PeerChallengeWaitTime);
 
         public object PeerIdentifierHelper { get; private set; }
 
