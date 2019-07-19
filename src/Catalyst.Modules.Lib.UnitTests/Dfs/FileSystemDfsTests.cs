@@ -150,7 +150,7 @@ namespace Catalyst.Modules.Lib.UnitTests.Dfs
         [Fact]
         public async Task AddAsync_Should_Write_The_Correct_Content()
         {
-            var mickeyMouseContent = "<:3)~~~~".ToMemoryStream();
+            var fakeContent = "<:3)~~~~".ToMemoryStream();
             var expectedBytes = await mickeyMouseContent.ReadAllBytesAsync(CancellationToken.None);
 
             await _dfs.AddAsync(mickeyMouseContent);
