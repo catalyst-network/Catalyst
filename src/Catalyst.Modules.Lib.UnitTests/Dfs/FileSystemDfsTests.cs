@@ -153,7 +153,7 @@ namespace Catalyst.Modules.Lib.UnitTests.Dfs
             var fakeContent = "<:3)~~~~".ToMemoryStream();
             var expectedBytes = await fakeContent.ReadAllBytesAsync(CancellationToken.None);
 
-            await _dfs.AddAsync(mickeyMouseContent);
+            await _dfs.AddAsync(fakeContent);
 
             await _fileSystem.File.Received(1).WriteAllBytesAsync(
                 Arg.Any<string>(),
