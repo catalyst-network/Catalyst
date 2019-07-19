@@ -50,9 +50,10 @@ namespace Catalyst.Common.Interfaces.FileTransfer
         /// <returns></returns>
         T GetFileTransferInformation(ICorrelationId correlationId);
 
-        /// <summary>Removes the specified unique identifier.</summary>
-        /// <param name="guid">The unique identifier.</param>
-        void Remove(ICorrelationId guid);
+        /// <summary>Removes the specified file transfer information.</summary>
+        /// <param name="fileTransferInformation">The file transfer information.</param>
+        /// <param name="expiredOrCancelled">if set to <c>true</c> [expired or cancelled].</param>
+        void Remove(T fileTransferInformation, bool expiredOrCancelled);
 
         /// <summary>Gets the keys.</summary>
         /// <value>The keys.</value>
