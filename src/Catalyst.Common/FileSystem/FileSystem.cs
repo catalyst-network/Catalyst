@@ -30,24 +30,24 @@ using IFileSystem = Catalyst.Common.Interfaces.FileSystem.IFileSystem;
 
 namespace Catalyst.Common.FileSystem
 {
-    public sealed class FileSystem
+    public class FileSystem
         : System.IO.Abstractions.FileSystem,
             IFileSystem
     {
-        public DirectoryInfo GetCatalystDataDir()
+        public virtual DirectoryInfo GetCatalystDataDir()
         {
             var path = Path.Combine(GetUserHomeDir(), Constants.CatalystDataDir);
             return new DirectoryInfo(path);
         }
 
-        public Task<IFileInfo> WriteFileToCddAsync(string fileName, string contents)
+        public Task<IFileInfo> WriteTextFileToCddAsync(string fileName, string contents)
         {
             var fullPath = Path.Combine(GetCatalystDataDir().FullName, fileName);
 
             return WriteFileToPathAsync(fullPath, contents);
         }
 
-        public Task<IFileInfo> WriteFileToCddSubDirectoryAsync(string fileName, string subDirectory, string contents)
+        public Task<IFileInfo> WriteTextFileToCddSubDirectoryAsync(string fileName, string subDirectory, string contents)
         {
             var fullPath = Path.Combine(GetCatalystDataDir().FullName, subDirectory, fileName);
 

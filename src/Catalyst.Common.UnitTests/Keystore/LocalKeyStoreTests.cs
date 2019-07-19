@@ -21,15 +21,20 @@
 
 #endregion
 
+using System;
+using System.Security.Authentication;
+using System.Threading.Tasks;
+using Catalyst.Common.Config;
 using Catalyst.Common.Cryptography;
 using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Common.Interfaces.Keystore;
 using Catalyst.Common.Keystore;
 using Catalyst.Common.Util;
 using Catalyst.Cryptography.BulletProofs.Wrapper;
+using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
 using Catalyst.TestUtils;
+using FluentAssertions;
 using Multiformats.Hash.Algorithms;
-using Nethereum.Hex.HexConvertors.Extensions;
 using NSubstitute;
 using Serilog;
 using Xunit;
@@ -37,24 +42,27 @@ using Xunit.Abstractions;
 
 namespace Catalyst.Common.UnitTests.Keystore
 {
-    public sealed class LocalKeyStoreTests : ConfigFileBasedTest
+    public sealed class LocalKeyStoreTests : FileSystemBasedTest 
     {
         private readonly IKeyStore _keystore;
         private readonly ICryptoContext _context;
+        private readonly IPasswordReader _passwordReader;
 
         public LocalKeyStoreTests(ITestOutputHelper output) : base(output)
         {
             _context = new CryptoContext(new CryptoWrapper());
 
             var logger = Substitute.For<ILogger>();
-            var passwordReader = new TestPasswordReader("testPassword");
+            _passwordReader = Substitute.For<IPasswordReader>();
+            _passwordReader.ReadSecurePassword(default, default)
+               .ReturnsForAnyArgs(TestPasswordReader.BuildSecureStringPassword("test password"));
 
             var multiAlgo = Substitute.For<IMultihashAlgorithm>();
             multiAlgo.ComputeHash(Arg.Any<byte[]>()).Returns(new byte[32]);
 
             var addressHelper = new AddressHelper(multiAlgo);
 
-            _keystore = new LocalKeyStore(passwordReader,
+            _keystore = new LocalKeyStore(_passwordReader,
                 _context,
                 new KeyStoreServiceWrapped(_context),
                 FileSystem,
@@ -63,13 +71,61 @@ namespace Catalyst.Common.UnitTests.Keystore
         }
 
         [Fact]
-        public void Should_Generate_Account_And_Create_KeyStore_File_Scrypt()
+        public void KeyStore_Can_Generate_Key_And_Create_Keystore_File()
         {
-            var catKey = _context.GeneratePrivateKey();
+            var privateKey = _keystore.KeyStoreGenerate(KeyRegistryKey.DefaultKey);
+            privateKey.Should().NotBe(null);
+        }
 
-            var json = _keystore.KeyStoreGenerateAsync(catKey, "testPassword").GetAwaiter().GetResult();
-            var key = _keystore.KeyStoreDecrypt("testPassword", json);
-            Assert.Equal(catKey.Bytes.RawBytes.ToHex(), key.ToHex());
+        [Fact]
+        public async Task KeyStore_Throws_Exception_On_Invalid_KeyStore_File()
+        {
+            await FileSystem.WriteTextFileToCddSubDirectoryAsync(KeyRegistryKey.DefaultKey.Name, Constants.KeyStoreDataSubDir, "bad contents");
+            Assert.Throws<System.Exception>(() => _keystore.KeyStoreDecrypt(KeyRegistryKey.DefaultKey));
+        }
+
+        [Fact]
+        public void Keystore_Can_Create_Keystore_File_From_Provided_Key()
+        {
+            IPrivateKey privateKey = _context.GeneratePrivateKey();
+            _keystore.KeyStoreEncryptAsync(privateKey, KeyRegistryKey.DefaultKey).Wait();
+            var storedKey = _keystore.KeyStoreDecrypt(KeyRegistryKey.DefaultKey);
+            Assert.Equal(privateKey.Bytes.RawBytes, storedKey.Bytes.RawBytes);
+        } 
+
+        [Fact]
+        public async Task Keystore_Can_Create_Keystore_File_From_Key_It_Generates()
+        {
+            var privateKey = _keystore.KeyStoreGenerate(KeyRegistryKey.DefaultKey);
+
+            await TaskHelper.WaitForAsync(() => FileSystem.DataFileExistsInSubDirectory(KeyRegistryKey.DefaultKey.Name, Constants.CatalystDataDir),
+                    TimeSpan.FromSeconds(3))
+               .ConfigureAwait(false);
+            
+            var storedKey = _keystore.KeyStoreDecrypt(KeyRegistryKey.DefaultKey);
+
+            storedKey.Should().NotBe(null);
+            Assert.Equal(privateKey.Bytes.RawBytes, storedKey.Bytes.RawBytes);
+        }
+
+        [Fact]
+        public async Task Keystore_Throws_Exception_If_Password_Incorrect()
+        {
+            IPrivateKey privateKey = _context.GeneratePrivateKey();
+            await _keystore.KeyStoreEncryptAsync(privateKey, KeyRegistryKey.DefaultKey);
+            await TaskHelper.WaitForAsync(
+                () => FileSystem.DataFileExistsInSubDirectory(KeyRegistryKey.DefaultKey.Name,
+                    Constants.CatalystDataDir),
+                TimeSpan.FromSeconds(3));
+            _passwordReader.ReadSecurePassword(default, default)
+               .ReturnsForAnyArgs(TestPasswordReader.BuildSecureStringPassword("a different test password"));
+            Assert.Throws<AuthenticationException>(() => _keystore.KeyStoreDecrypt(KeyRegistryKey.DefaultKey));
+        }
+
+        [Fact]
+        public void Keystore_Returns_Null_If_Key_File_Doesnt_Exist()
+        {
+            _keystore.KeyStoreDecrypt(KeyRegistryKey.DefaultKey).Should().Be(null);
         }
     }
 }
