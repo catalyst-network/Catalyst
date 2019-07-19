@@ -22,20 +22,18 @@
 #endregion
 
 using Catalyst.Common.Interfaces.Attributes;
-using SharpRepository.Repository;
+using Catalyst.Common.Interfaces.Repository;
 
 namespace Catalyst.Common.Interfaces.Rpc.Authentication
 {
-    public interface IAuthCredentials : IAuditable
+    public interface IAuthCredentials : IAuditable, IDocument
     {
         /// <summary>Gets or sets the public key.</summary>
         /// <value>The public key.</value>
-        [RepositoryPrimaryKey(Order = 1)]
         string PublicKey { get; set; }
 
         /// <summary>Gets or sets the ip address.</summary>
         /// <value>The ip address.</value>
-        [RepositoryPrimaryKey(Order = 2)]
         string IpAddress { get; set; }
     }
 }

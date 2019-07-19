@@ -25,6 +25,7 @@ using System.Linq;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.IO.Observers;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.Interfaces.Repository;
 using Catalyst.Common.IO.Observers;
 using Catalyst.Common.Network;
 using Catalyst.Common.P2P;
@@ -32,6 +33,7 @@ using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using DotNetty.Transport.Channels;
 using SharpRepository.Repository;
+using SharpRepository.Repository.Specifications;
 using ILogger = Serilog.ILogger;
 
 namespace Catalyst.Core.Lib.Rpc.IO.Observers
@@ -45,14 +47,14 @@ namespace Catalyst.Core.Lib.Rpc.IO.Observers
             IRpcRequestObserver
     {
         /// <summary>The peer discovery</summary>
-        private readonly IRepository<Peer> _peerRepository;
+        private readonly IPeerRepository _peerRepository;
 
         /// <summary>Initializes a new instance of the <see cref="RemovePeerRequestObserver"/> class.</summary>
         /// <param name="peerIdentifier">The peer identifier.</param>
         /// <param name="peerRepository">The peer discovery.</param>
         /// <param name="logger">The logger.</param>
         public RemovePeerRequestObserver(IPeerIdentifier peerIdentifier,
-            IRepository<Peer> peerRepository,
+            IPeerRepository peerRepository,
             ILogger logger) : base(logger, peerIdentifier)
         {
             _peerRepository = peerRepository;
@@ -80,9 +82,9 @@ namespace Catalyst.Core.Lib.Rpc.IO.Observers
 
             var publicKeyIsEmpty = removePeerRequest.PublicKey.IsEmpty;
             
-            var peersToDelete = _peerRepository.GetAll().TakeWhile(peer =>
-                peer.PeerIdentifier.Ip.To16Bytes().SequenceEqual(removePeerRequest.PeerIp.ToByteArray()) &&
-                (publicKeyIsEmpty || peer.PeerIdentifier.PublicKey.SequenceEqual(removePeerRequest.PublicKey.ToByteArray()))).ToArray();
+            var peersToDelete = _peerRepository.FindAll(new Specification<Peer>(peer =>
+                peer.PeerIdentifier.PeerId.Ip.SequenceEqual(removePeerRequest.PeerIp) &&
+                (publicKeyIsEmpty || peer.PeerIdentifier.PublicKey.SequenceEqual(removePeerRequest.PublicKey.ToByteArray())))).ToArray();
 
             foreach (var peerToDelete in peersToDelete)
             {
