@@ -33,29 +33,8 @@ namespace Catalyst.Common.Modules.Mempool
     {
         [RepositoryPrimaryKey(Order = 1)]
         [JsonProperty("id")]
-        public string DocumentId
-        {
-            get;
-            set;
-        }
+        public string DocumentId => Transaction?.Signature?.ToByteString()?.ToBase64();
 
-        public string GenerateDocumentId() { return DocumentId = Transaction?.Signature?.ToByteString()?.ToBase64(); }
-
-        private TransactionBroadcast _transaction;
-
-        public MempoolDocument()
-        {
-            DocumentId = string.Empty;
-        }
-
-        public TransactionBroadcast Transaction
-        {
-            get => _transaction;
-            set
-            {
-                _transaction = value;
-                GenerateDocumentId();
-            }
-        }
+        public TransactionBroadcast Transaction { get; set; }
     }
 }

@@ -38,32 +38,13 @@ namespace Catalyst.Common.Rpc.Authentication
     [Audit]
     public class AuthCredentials : IAuthCredentials
     {
-        private string _publicKey;
-        private string _ipAddress;
-
         /// <summary>Gets or sets the public key.</summary>
         /// <value>The public key.</value>
-        public string PublicKey
-        {
-            get => _publicKey;
-            set
-            {
-                _publicKey = value;
-                GenerateDocumentId();
-            }
-        }
+        public string PublicKey { get; set; }
 
         /// <summary>Gets or sets the ip address.</summary>
         /// <value>The ip address.</value>
-        public string IpAddress
-        {
-            get => _ipAddress;
-            set
-            {
-                _ipAddress = value;
-                GenerateDocumentId();
-            }
-        }
+        public string IpAddress { get; set; }
 
         /// <inheritdoc cref="IAuditable.Created"/>
         public DateTime Created { get; set; }
@@ -73,11 +54,6 @@ namespace Catalyst.Common.Rpc.Authentication
 
         [RepositoryPrimaryKey(Order = 1)]
         [JsonProperty("id")]
-        public string DocumentId { get; set; }
-
-        public string GenerateDocumentId()
-        {
-            return DocumentId = Encoding.UTF8.GetBytes($"{PublicKey}:{IpAddress}").ToByteString().ToBase64();
-        }
+        public string DocumentId => Encoding.UTF8.GetBytes($"{PublicKey}:{IpAddress}").ToByteString().ToBase64();
     }
 }
