@@ -30,11 +30,11 @@ using IFileSystem = Catalyst.Common.Interfaces.FileSystem.IFileSystem;
 
 namespace Catalyst.Common.FileSystem
 {
-    public sealed class FileSystem
+    public class FileSystem
         : System.IO.Abstractions.FileSystem,
             IFileSystem
     {
-        public DirectoryInfo GetCatalystDataDir()
+        public virtual DirectoryInfo GetCatalystDataDir()
         {
             var path = Path.Combine(GetUserHomeDir(), Constants.CatalystDataDir);
             return new DirectoryInfo(path);
@@ -80,7 +80,7 @@ namespace Catalyst.Common.FileSystem
         {
             return File.Exists(Path.Combine(GetCatalystDataDir().FullName, subDirectory, fileName));
         }
-        
+
         private static string GetUserHomeDir()
         {
             return Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);

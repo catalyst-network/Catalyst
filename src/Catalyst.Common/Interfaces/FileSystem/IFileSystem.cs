@@ -27,7 +27,7 @@ using System.Threading.Tasks;
 
 namespace Catalyst.Common.Interfaces.FileSystem
 {
-    public interface IFileSystem
+    public interface IFileSystem : System.IO.Abstractions.IFileSystem
     {
         DirectoryInfo GetCatalystDataDir();
         Task<IFileInfo> WriteTextFileToCddAsync(string fileName, string contents);
