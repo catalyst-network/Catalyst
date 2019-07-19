@@ -21,23 +21,19 @@
 
 #endregion
 
-using System.IO;
-using System.IO.Abstractions;
-using System.Threading.Tasks;
+using System.Collections.Generic;
+using Catalyst.Common.Config;
 
-namespace Catalyst.Common.Interfaces.FileSystem
+namespace Catalyst.Common.Interfaces.Registry
 {
-    public interface IFileSystem : System.IO.Abstractions.IFileSystem
+    public interface IRegistryBase<in TKey, TValue>
     {
-        DirectoryInfo GetCatalystDataDir();
-        Task<IFileInfo> WriteTextFileToCddAsync(string fileName, string contents);
-        Task<IFileInfo> WriteTextFileToCddSubDirectoryAsync(string fileName, string subDirectory, string contents);
-        bool DataFileExists(string fileName);
+        bool AddItemToRegistry(TKey identifier, TValue item);
 
-        bool DataFileExistsInSubDirectory(string fileName, string subDirectory);
+        TValue GetItemFromRegistry(TKey identifier);
 
-        string ReadTextFromCddFile(string fileName);
+        bool RegistryContainsKey(TKey identifier);
 
-        string ReadTextFromCddSubDirectoryFile(string fileName, string subDirectory);
+        bool RemoveItemFromRegistry(TKey identifier);
     }
 }

@@ -24,6 +24,7 @@
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Core.Lib.Modules.Dfs;
@@ -52,7 +53,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.Modules.Dfs
             });
             
             var passwordReader = Substitute.For<IPasswordReader>();
-            passwordReader.ReadSecurePassword().ReturnsForAnyArgs(TestPasswordReader.BuildSecureStringPassword("abcd"));
+            passwordReader.ReadSecurePasswordAndAddToRegistry(Arg.Any<PasswordRegistryKey>(), Arg.Any<string>()).ReturnsForAnyArgs(TestPasswordReader.BuildSecureStringPassword("abcd"));
             var logger = Substitute.For<ILogger>();
             _ipfs = new IpfsAdapter(passwordReader, peerSettings, FileSystem, logger);
             _dfs = new Catalyst.Core.Lib.Modules.Dfs.Dfs(_ipfs, logger);

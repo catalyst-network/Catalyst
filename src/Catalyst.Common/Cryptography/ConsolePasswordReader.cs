@@ -23,26 +23,56 @@
 
 using System;
 using System.Security;
+using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.Cryptography;
+using Catalyst.Common.Interfaces.Registry;
 
 namespace Catalyst.Common.Cryptography
 {
-    public class ConsolePasswordReader
-        : IPasswordReader
+    public class ConsolePasswordReader : IPasswordReader
     {
         private const int MaxLength = 255;
 
         private readonly IUserOutput _userOutput;
-        public ConsolePasswordReader(IUserOutput userOutput) { _userOutput = userOutput; }
+        private readonly IPasswordRegistry _passwordRegistry;
         
-        public SecureString ReadSecurePassword(string passwordContext = "Please enter your password")
+        public ConsolePasswordReader(IUserOutput userOutput, IPasswordRegistry passwordRegistry) 
+        { 
+            _userOutput = userOutput;
+            _passwordRegistry = passwordRegistry;
+        }
+        
+        public SecureString ReadSecurePasswordAndAddToRegistry(PasswordRegistryKey passwordIdentifier, string prompt = "Please enter your password")
+        {
+            var password = ReadSecurePassword(passwordIdentifier, prompt);
+            if (password != null)
+            {
+                AddPasswordToRegistry(passwordIdentifier, password);
+            }
+
+            return password;
+        }
+
+        public SecureString ReadSecurePassword(PasswordRegistryKey passwordIdentifier, string prompt = "Please enter your password")
+        {
+            var password = _passwordRegistry.GetItemFromRegistry(passwordIdentifier) ??
+                ReadSecurePasswordFromConsole(prompt);
+
+            return password;
+        }
+                   
+        private SecureString ReadSecurePasswordFromConsole(string prompt)
         {
             var pwd = new SecureString();
-            ReadCharsFromConsole(_userOutput, passwordContext, (c, i) => pwd.AppendChar(c), i => pwd.RemoveAt(i));
-
+            ReadCharsFromConsole(_userOutput, prompt, (c, i) => pwd.AppendChar(c), i => pwd.RemoveAt(i));
             pwd.MakeReadOnly();
             return pwd;
+        }
+
+        public bool AddPasswordToRegistry(PasswordRegistryKey passwordIdentifier, SecureString password)
+        {
+            return _passwordRegistry.AddItemToRegistry(passwordIdentifier, password);
         }
 
         private static void ReadCharsFromConsole(IUserOutput userOutput,

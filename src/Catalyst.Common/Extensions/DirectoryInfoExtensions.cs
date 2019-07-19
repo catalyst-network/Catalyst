@@ -22,22 +22,14 @@
 #endregion
 
 using System.IO;
-using System.IO.Abstractions;
-using System.Threading.Tasks;
 
-namespace Catalyst.Common.Interfaces.FileSystem
+namespace Catalyst.Common.Extensions
 {
-    public interface IFileSystem : System.IO.Abstractions.IFileSystem
+    public static class DirectoryInfoExtensions
     {
-        DirectoryInfo GetCatalystDataDir();
-        Task<IFileInfo> WriteTextFileToCddAsync(string fileName, string contents);
-        Task<IFileInfo> WriteTextFileToCddSubDirectoryAsync(string fileName, string subDirectory, string contents);
-        bool DataFileExists(string fileName);
-
-        bool DataFileExistsInSubDirectory(string fileName, string subDirectory);
-
-        string ReadTextFromCddFile(string fileName);
-
-        string ReadTextFromCddSubDirectoryFile(string fileName, string subDirectory);
+        public static DirectoryInfo SubDirectoryInfo(this DirectoryInfo parentDirectory, string subDirectoryName)
+        {
+            return new DirectoryInfo(Path.Combine(parentDirectory.FullName, subDirectoryName));
+        }
     }
 }
