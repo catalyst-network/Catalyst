@@ -61,7 +61,7 @@ namespace Catalyst.Common.P2P
             set
             {
                 _peerIdentifier = value;
-                DocumentId = PeerIdentifier.PeerId?.ToByteString().ToBase64();
+                GenerateDocumentId();
             }
         }
 
@@ -74,6 +74,8 @@ namespace Catalyst.Common.P2P
         [RepositoryPrimaryKey(Order = 1)]
         [JsonProperty("id")]
         public string DocumentId { get; set; }
+
+        public string GenerateDocumentId() { return DocumentId = PeerIdentifier.PeerId?.ToByteString().ToBase64(); }
 
         /// <inheritdoc />
         public void Touch() { LastSeen = DateTimeUtil.UtcNow; }

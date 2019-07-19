@@ -44,7 +44,7 @@ namespace Catalyst.Common.Modules.Ledger
             set
             {
                 _publicAddress = value;
-                UpdateKey();
+                GenerateDocumentId();
             }
         }
 
@@ -55,7 +55,7 @@ namespace Catalyst.Common.Modules.Ledger
             set
             {
                 _coinType = value;
-                UpdateKey();
+                GenerateDocumentId();
             }
         }
 
@@ -66,7 +66,7 @@ namespace Catalyst.Common.Modules.Ledger
             set
             {
                 _accountType = value;
-                UpdateKey();
+                GenerateDocumentId();
             }
         }
 
@@ -75,14 +75,15 @@ namespace Catalyst.Common.Modules.Ledger
 
         /// <inheritdoc />
         public byte[] StateRoot { get; set; } = Constants.EmptyTrieHash;
-
-        public void UpdateKey()
-        {
-            DocumentId = Encoding.UTF8.GetBytes($"{PublicAddress}-{CoinType}-{AccountType?.Name}")?.ToByteString()?.ToBase64();
-        }
-
+        
         [RepositoryPrimaryKey(Order = 1)]
         [JsonProperty("id")]
         public string DocumentId { get; set; }
+
+        public string GenerateDocumentId()
+        {
+            return (DocumentId = Encoding.UTF8.GetBytes($"{PublicAddress}-{CoinType}-{AccountType?.Name}")
+              ?.ToByteString()?.ToBase64());
+        }
     }
 }

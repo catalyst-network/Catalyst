@@ -24,7 +24,5 @@ using System;
 
 namespace Catalyst.Common.Interfaces.Repository
 {
-    public interface IRepositoryWrapper<T> : IDisposable, IRepository<T, string> where T : class
-    {
-    }
+    public interface IRepositoryWrapper<T> : IDisposable, IRepository<T, string> where T : class { }
 }
