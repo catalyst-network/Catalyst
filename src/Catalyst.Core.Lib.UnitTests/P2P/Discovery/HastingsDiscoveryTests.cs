@@ -349,7 +349,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
 
             var contactedNeighbours = DiscoveryHelper.MockContactedNeighboursValuePairs();
             
-            var subbedDtoFactory = DiscoveryHelper.SubDtoFactory(_ownNode, contactedNeighbours, new PingRequest());
+            var subbedDtoFactory = DiscoveryHelper.SubDtoFactory(_ownNode, contactedNeighbours, new PingResponse());
             
             var initialMemento = DiscoveryHelper.SubMemento(_ownNode, DiscoveryHelper.MockDnsClient(_settings, _dnsDomains)
                .GetSeedNodesFromDns(_settings.SeedServers).ToList()
