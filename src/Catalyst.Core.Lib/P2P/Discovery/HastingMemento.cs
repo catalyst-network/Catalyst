@@ -21,21 +21,24 @@
 
 #endregion
 
-using Catalyst.Common.Config;
-using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
-using Catalyst.Protocol.Rpc.Node;
+using System.Collections.Generic;
+using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.Interfaces.P2P.Discovery;
 
-namespace Catalyst.Common.Interfaces.FileTransfer
+namespace Catalyst.Core.Lib.P2P.Discovery
 {
     /// <summary>
-    /// Handles storing of the file downloads
+    ///     Represents a single step within the hastings walk.
     /// </summary>
-    /// <seealso cref="IFileTransferFactory{IDownloadFileInformation}" />
-    public interface IDownloadFileTransferFactory : IFileTransferFactory<IDownloadFileInformation>
+    public sealed class HastingMemento : IHastingMemento
     {
-        /// <summary>Downloads the chunk.</summary>
-        /// <param name="request">The chunk file bytes request.</param>
-        /// <returns></returns>
-        FileTransferResponseCodes DownloadChunk(TransferFileBytesRequest request);
+        public IPeerIdentifier Peer { get; }
+        public IList<IPeerIdentifier> Neighbours { get; }
+
+        public HastingMemento(IPeerIdentifier peer, IEnumerable<IPeerIdentifier> neighbours)
+        {
+            Peer = peer;
+            Neighbours = new List<IPeerIdentifier>(neighbours);
+        }
     }
 }

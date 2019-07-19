@@ -21,28 +21,32 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.IO.Messaging.Dto;
-using Catalyst.Protocol.Common;
-using Catalyst.Protocol.Rpc.Node;
+using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Core.Lib.P2P.Discovery;
+using Catalyst.TestUtils;
+using FluentAssertions;
+using Xunit;
 
-namespace Catalyst.Common.Interfaces.FileTransfer
+namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
 {
-    /// <summary>
-    /// 
-    /// </summary>
-    public interface IUploadFileInformation : IFileTransferInformation
+    public sealed class HastingMementoTests
     {
-        /// <summary>Gets or sets the retry count.</summary>
-        /// <value>The retry count.</value>
-        int RetryCount { get; set; }
+        private readonly IPeerIdentifier _peer;
 
-        /// <summary>Retries the upload.</summary>
-        /// <returns></returns>
-        bool CanRetry();
+        public HastingMementoTests()
+        {
+            _peer = PeerIdentifierHelper.GetPeerIdentifier("current_peer");
+        }
         
-        /// <summary>Gets the upload message.</summary>
-        /// <param name="chunkId">The chunk identifier.</param>
-        /// <returns></returns>
-        IMessageDto<ProtocolMessage> GetUploadMessageDto(uint chunkId);
+        [Fact]
+        public void Can_Init_Memento_With_Existing_Params()
+        {
+            var neighbours = HastingDiscoveryHelper.GenerateNeighbours();
+            var memento = new HastingMemento(_peer, neighbours);
+            
+            memento.Peer.Should().Be(_peer);
+            memento.Neighbours.Should().Contain(neighbours);
+            memento.Neighbours.Should().HaveCount(5);
+        }
     }
 }
