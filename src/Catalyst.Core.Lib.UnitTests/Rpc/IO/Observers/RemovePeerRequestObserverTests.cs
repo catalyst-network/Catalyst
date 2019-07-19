@@ -119,7 +119,7 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Observers
                 return peer;
             }).ToList();
 
-            peerRepository.FindAll(Arg.Any<ISpecification<Peer>>()).Returns(withPublicKey ? new List<Peer>() {targetPeerToDelete} : fakePeerList);
+            peerRepository.FindAll(Arg.Any<ISpecification<Peer>>()).Returns(withPublicKey ? new List<Peer> {targetPeerToDelete} : fakePeerList);
             
             // Build a fake remote endpoint
             _fakeContext.Channel.RemoteAddress.Returns(EndpointBuilder.BuildNewEndPoint("192.0.0.1", 42042));

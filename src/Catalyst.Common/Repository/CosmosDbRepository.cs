@@ -53,7 +53,7 @@ namespace Catalyst.Common.Repository
                 new IpEndPointConverter(), new IpAddressConverter()
             };
             var client = new DocumentClient(new Uri(endpointUrl), authorizationKey,
-                new JsonSerializerSettings()
+                new JsonSerializerSettings
                 {
                     Converters = converters,
                     NullValueHandling = NullValueHandling.Ignore
