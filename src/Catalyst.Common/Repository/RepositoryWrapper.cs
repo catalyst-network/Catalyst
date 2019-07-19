@@ -535,7 +535,9 @@ namespace Catalyst.Common.Repository
             return _repository.GroupBy(criteria, keySelector, resultSelector);
         }
 
-        public IEnumerable<TResult> GroupBy<TGroupKey, TResult>(Expression<Func<T, bool>> predicate, Expression<Func<T, TGroupKey>> keySelector, Expression<Func<IGrouping<TGroupKey, T>, TResult>> resultSelector)
+        public IEnumerable<TResult> GroupBy<TGroupKey, TResult>(Expression<Func<T, bool>> predicate, 
+            Expression<Func<T, TGroupKey>> keySelector, 
+            Expression<Func<IGrouping<TGroupKey, T>, TResult>> resultSelector)
         {
             return _repository.GroupBy(predicate, keySelector, resultSelector);
         }
