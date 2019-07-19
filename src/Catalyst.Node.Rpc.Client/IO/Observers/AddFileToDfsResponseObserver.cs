@@ -95,7 +95,11 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
                 }
                 else
                 {
-                    _rpcFileTransferFactory.Remove(correlationId);
+                    var fileTransferInformation = _rpcFileTransferFactory.GetFileTransferInformation(correlationId);
+                    if (fileTransferInformation != null)
+                    {
+                        _rpcFileTransferFactory.Remove(fileTransferInformation, true);
+                    }
                 }
             }
         }
