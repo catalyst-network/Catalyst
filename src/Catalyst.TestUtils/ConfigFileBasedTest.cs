@@ -55,7 +55,7 @@ namespace Catalyst.TestUtils
             ContainerBuilder.RegisterInstance(config).As<IConfigurationRoot>();
 
             var repoFactory =
-                RepositoryFactory.BuildSharpRepositoryConfiguation(config.GetSection("PersistenceConfiguration"));
+                RepositoryFactory.BuildSharpRepositoryConfiguation(config.GetSection("CatalystNodeConfiguration:PersistenceConfiguration"));
             ContainerBuilder.RegisterSharpRepository(repoFactory);
 
             var passwordReader = new TestPasswordReader();
