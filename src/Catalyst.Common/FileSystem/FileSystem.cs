@@ -80,7 +80,12 @@ namespace Catalyst.Common.FileSystem
         {
             return File.Exists(Path.Combine(GetCatalystDataDir().FullName, subDirectory, fileName));
         }
-        
+
+        public bool DataFileExistsInSubDirectory(string fileName, string subDirectory)
+        {
+            return File.Exists(Path.Combine(GetCatalystDataDir().FullName, subDirectory, fileName));
+        }
+
         private static string GetUserHomeDir()
         {
             return Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
