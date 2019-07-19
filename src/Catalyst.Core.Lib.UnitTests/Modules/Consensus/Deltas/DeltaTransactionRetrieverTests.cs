@@ -45,16 +45,13 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Consensus.Deltas
             var random = new Random();
 
             var mempool = Substitute.For<IMempool>();
-            _transactions = Enumerable.Range(0, 20).Select(i =>
+            _transactions = Enumerable.Range(0, 20).Select(i => new MempoolDocument
             {
-                return new MempoolDocument()
-                {
-                    Transaction = TransactionHelper.GetTransaction(
-                    version: (uint)i,
-                    transactionFees: (ulong)random.Next(),
-                    timeStamp: (ulong)random.Next(),
+                Transaction = TransactionHelper.GetTransaction(
+                    version: (uint) i,
+                    transactionFees: (ulong) random.Next(),
+                    timeStamp: (ulong) random.Next(),
                     signature: i.ToString())
-                };
             }).ToList();
 
             mempool.GetMemPoolContent().Returns(_transactions);

@@ -54,7 +54,12 @@ namespace Catalyst.Common.Repository
 
         public Type KeyType => _repository.KeyType;
 
-        public ICachingStrategy<T, string> CachingStrategy { get => _repository.CachingStrategy; set => _repository.CachingStrategy = value; }
+        public ICachingStrategy<T, string> CachingStrategy
+        {
+            get => _repository.CachingStrategy;
+            set => _repository.CachingStrategy = value;
+        }
+
         public bool CachingEnabled { get => _repository.CachingEnabled; set => _repository.CachingEnabled = value; }
 
         public bool CacheUsed => _repository.CacheUsed;
@@ -523,7 +528,9 @@ namespace Catalyst.Common.Repository
             return _repository.GroupBy(keySelector, resultSelector);
         }
 
-        public IEnumerable<TResult> GroupBy<TGroupKey, TResult>(ISpecification<T> criteria, Expression<Func<T, TGroupKey>> keySelector, Expression<Func<IGrouping<TGroupKey, T>, TResult>> resultSelector)
+        public IEnumerable<TResult> GroupBy<TGroupKey, TResult>(ISpecification<T> criteria, 
+            Expression<Func<T, TGroupKey>> keySelector,
+            Expression<Func<IGrouping<TGroupKey, T>, TResult>> resultSelector)
         {
             return _repository.GroupBy(criteria, keySelector, resultSelector);
         }
@@ -558,12 +565,17 @@ namespace Catalyst.Common.Repository
             return _repository.GroupLongCount(criteria, selector);
         }
 
-        public IDictionary<TGroupKey, long> GroupLongCount<TGroupKey>(Expression<Func<T, bool>> predicate, Expression<Func<T, TGroupKey>> selector)
+        public IDictionary<TGroupKey, long> GroupLongCount<TGroupKey>(Expression<Func<T, bool>> predicate, 
+            Expression<Func<T, TGroupKey>> 
+                selector)
         {
             return _repository.GroupLongCount(predicate, selector);
         }
 
-        public IRepositoryQueryable<TResult> Join<TJoinKey, TInner, TResult>(IRepositoryQueryable<TInner> innerRepository, Expression<Func<T, TJoinKey>> outerKeySelector, Expression<Func<TInner, TJoinKey>> innerKeySelector, Expression<Func<T, TInner, TResult>> resultSelector)
+        public IRepositoryQueryable<TResult> Join<TJoinKey, TInner, TResult>(IRepositoryQueryable<TInner> innerRepository, 
+            Expression<Func<T, TJoinKey>> outerKeySelector, 
+            Expression<Func<TInner, TJoinKey>> innerKeySelector, 
+            Expression<Func<T, TInner, TResult>> resultSelector)
             where TInner : class
             where TResult : class
         {

@@ -89,9 +89,9 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Mempool
                 lock (Locker)
                 {
                     var id = Thread.CurrentThread.ManagedThreadId;
-                    mempoolDocument = new MempoolDocument()
+                    mempoolDocument = new MempoolDocument
                     {
-                        Transaction = TransactionHelper.GetTransaction(standardAmount: (uint)id)
+                        Transaction = TransactionHelper.GetTransaction(standardAmount: (uint) id)
                     };
 
                     if (FirstThreadId == null)
@@ -135,7 +135,7 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Mempool
             for (var i = 0; i < numTx; i++)
             {
                 var mempoolDocument =
-                    new MempoolDocument { Transaction = TransactionHelper.GetTransaction(standardAmount: (uint)i, signature: $"key{i}") };
+                    new MempoolDocument {Transaction = TransactionHelper.GetTransaction(standardAmount: (uint) i, signature: $"key{i}")};
                 _memPool.SaveMempoolDocument(mempoolDocument);
                 AddKeyValueStoreEntryExpectation(mempoolDocument, _transactionStore);
             }
@@ -144,7 +144,7 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Mempool
             {
                 var signature = TransactionHelper.GetTransactionSignature(signature: $"key{i}");
                 var mempoolDocument = _memPool.GetMempoolDocument(signature);
-                mempoolDocument.Transaction.STEntries.Single().Amount.Should().Be((uint)i);
+                mempoolDocument.Transaction.STEntries.Single().Amount.Should().Be((uint) i);
             }
         }
 
@@ -163,7 +163,7 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Mempool
             _memPool.SaveMempoolDocument(_mempoolDocument);
             AddKeyValueStoreEntryExpectation(_mempoolDocument, _transactionStore);
 
-            var overridingTransaction = new MempoolDocument() { Transaction = _mempoolDocument.Transaction.Clone() };
+            var overridingTransaction = new MempoolDocument {Transaction = _mempoolDocument.Transaction.Clone()};
             overridingTransaction.Transaction.STEntries.Single().Amount = expectedAmount + 100;
             _memPool.SaveMempoolDocument(overridingTransaction);
 
@@ -190,7 +190,7 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Mempool
 
             // the first thread should set the amount and the value not overridden by other threads
             // trying to insert the same key
-            ((int)mempoolDocument.Transaction.STEntries.Single().Amount).Should().Be(pc.FirstThreadId);
+            ((int) mempoolDocument.Transaction.STEntries.Single().Amount).Should().Be(pc.FirstThreadId);
         }
 
         [Fact]
