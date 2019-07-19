@@ -152,9 +152,9 @@ namespace Catalyst.Common.Cryptography
                     }
                 }
             }
-            catch
+            catch (Exception exception)
             {
-                Logger.Error("Failed to read certificate {0}", fullPath);
+                Logger.Error(exception, "Failed to read certificate {0}", fullPath);
                 return false;
             }
 
