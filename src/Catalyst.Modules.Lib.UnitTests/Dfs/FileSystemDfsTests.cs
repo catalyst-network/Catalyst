@@ -52,7 +52,7 @@ namespace Catalyst.Modules.Lib.UnitTests.Dfs
             var file = Substitute.For<IFile>();
             _fileSystem.File.Returns(file);
             _fileSystem.GetCatalystDataDir()
-               .Returns(new DirectoryInfo("whatever"));
+               .Returns(new DirectoryInfo("correct-information"));
             _hashingAlgorithm = new BLAKE2B_32();
             _dfs = new FileSystemDfs(_hashingAlgorithm, _fileSystem);
 
