@@ -30,7 +30,7 @@ namespace Catalyst.Common.Interfaces.Util
     /// </summary>
     public interface ICancellationTokenProvider
     {
-        CancellationToken CancellationToken { get; set; }
+        CancellationTokenSource CancellationTokenSource { get; set; }
 
         bool HasTokenCancelled();
     }
