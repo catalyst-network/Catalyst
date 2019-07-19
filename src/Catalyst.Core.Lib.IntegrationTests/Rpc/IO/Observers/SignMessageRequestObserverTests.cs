@@ -23,7 +23,6 @@
 
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Autofac;
 using Catalyst.Common.Config;
@@ -38,8 +37,8 @@ using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using FluentAssertions;
-using Google.Protobuf;
 using Microsoft.Extensions.Configuration;
+using Nethereum.RLP;
 using NSubstitute;
 using Serilog;
 using Xunit;
@@ -81,11 +80,11 @@ namespace Catalyst.Core.Lib.IntegrationTests.Rpc.IO.Observers
         public async Task RpcServer_Can_Handle_SignMessageRequest(string message)
         {
             var messageFactory = new DtoFactory();
-            
+
             var request = messageFactory.GetDto(
                 new SignMessageRequest
                 {
-                    Message = ByteString.CopyFrom(message.Trim('\"'), Encoding.UTF8)
+                    Message = message.ToUtf8ByteString()
                 },
                 PeerIdentifierHelper.GetPeerIdentifier("sender_key"),
                 PeerIdentifierHelper.GetPeerIdentifier("recipient_key")
