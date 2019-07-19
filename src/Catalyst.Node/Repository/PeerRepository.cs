@@ -22,13 +22,14 @@
 #endregion
 
 using Catalyst.Common.Interfaces.Repository;
-using Catalyst.Common.Modules.Ledger;
+using Catalyst.Common.P2P;
+using Catalyst.Common.Repository;
 using SharpRepository.Repository;
 
-namespace Catalyst.Common.Repository
+namespace Catalyst.Node.Repository
 {
-    public class AccountRepository : RepositoryWrapper<Account>, IAccountRepository
+    public class PeerRepository : RepositoryWrapper<Peer>, IPeerRepository
     {
-        public AccountRepository(IRepository<Account, string> repository) : base(repository) { }
+        public PeerRepository(IRepository<Peer, string> repository) : base(repository) { }
     }
 }

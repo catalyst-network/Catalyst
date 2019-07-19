@@ -22,13 +22,14 @@
 #endregion
 
 using Catalyst.Common.Interfaces.Repository;
-using Catalyst.Common.P2P;
+using Catalyst.Common.Repository;
+using Catalyst.Common.Rpc.Authentication;
 using SharpRepository.Repository;
 
-namespace Catalyst.Common.Repository
+namespace Catalyst.Node.Repository
 {
-    public class PeerRepository : RepositoryWrapper<Peer>, IPeerRepository
+    public class AuthCredentialRepository : RepositoryWrapper<AuthCredentials>, IAuthCredentialRepository
     {
-        public PeerRepository(IRepository<Peer, string> repository) : base(repository) { }
+        public AuthCredentialRepository(IRepository<AuthCredentials, string> repository) : base(repository) { }
     }
 }

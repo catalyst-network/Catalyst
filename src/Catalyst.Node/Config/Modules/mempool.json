@@ -10,7 +10,7 @@
             ]
         },
         {
-            "type": "Catalyst.Common.Repository.MempoolRepository, Catalyst.Common",
+            "type": "Catalyst.Node.Repository.MempoolRepository, Catalyst.Node",
             "services": [
                 {
                     "type": "Catalyst.Common.Interfaces.Repository.IMempoolRepository, Catalyst.Common"
