@@ -52,8 +52,8 @@ namespace Catalyst.Core.Lib.Modules.Consensus.Deltas
             Guard.Argument(maxCount, nameof(maxCount)).NotNegative().NotZero();
 
             var allTransactions = _mempool.GetMemPoolContent();
-            var mempoolPrioritised = allTransactions.OrderByDescending(t => t, TransactionComparer)
-               .Take(maxCount).ToList();
+            var mempoolPrioritised = allTransactions.OrderByDescending(t => t.Transaction, TransactionComparer)
+               .Take(maxCount).Select(t => t.Transaction).ToList();
 
             return mempoolPrioritised;
         }

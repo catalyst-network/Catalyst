@@ -32,7 +32,7 @@ namespace Catalyst.Common.Interfaces.Modules.Mempool
         ///     Gets a snapshot of the current mempool content.
         /// </summary>
         /// <returns></returns>
-        IEnumerable<TransactionBroadcast> GetMemPoolContent();
+        IEnumerable<IMempoolDocument> GetMemPoolContent();
 
         /// <summary>
         ///     Gets a snapshot of the current mempool content.
@@ -43,14 +43,14 @@ namespace Catalyst.Common.Interfaces.Modules.Mempool
         /// <summary>
         ///     Saves the transaction associated with a given key.
         /// </summary>
-        /// <param name="transaction"></param>
-        bool SaveTransaction(TransactionBroadcast transaction);
+        /// <param name="mempoolDocument"></param>
+        bool SaveMempoolDocument(IMempoolDocument mempoolDocument);
 
         /// <summary>
         ///     Retrieves the transaction corresponding the a given key.
         /// </summary>
         /// <param name="key">Key under which the transaction is stored.</param>
         /// <returns>The transaction matching the <see cref="key" /> if any.</returns>
-        TransactionBroadcast GetTransaction(TransactionSignature key);
+        IMempoolDocument GetMempoolDocument(TransactionSignature key);
     }
 }
