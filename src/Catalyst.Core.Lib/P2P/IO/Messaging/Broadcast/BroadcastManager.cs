@@ -102,16 +102,16 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
         }
 
         /// <inheritdoc/>
-        public async Task ReceiveAsync(ProtocolMessage protocolMessage)
+        public async Task ReceiveAsync(ProtocolMessageSigned protocolSignedMessage)
         {
-            var correlationId = protocolMessage.CorrelationId.ToCorrelationId();
+            var correlationId = protocolSignedMessage.Message.CorrelationId.ToCorrelationId();
             var gossipRequest = await GetOrCreateAsync(correlationId).ConfigureAwait(false);
             gossipRequest.ReceivedCount += 1;
             UpdatePendingRequest(correlationId, gossipRequest);
         }
 
         /// <summary>Sends gossips to random peers.</summary>
-        /// <param name="message">The message.</param>
+        /// <param name="message">The message</param>
         /// <param name="broadcastMessage">The gossip request</param>
         private void SendGossipMessages(ProtocolMessage message, BroadcastMessage broadcastMessage)
         {
@@ -122,14 +122,15 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
 
                 foreach (var peerIdentifier in peersToGossip)
                 {
-                    _peerClient.SendMessage(_dtoFactory.GetDto(message,
+                    _peerClient.SendMessage(_dtoFactory.GetDto(
+                        message.ToProtocolMessage(peerIdentifier.PeerId, correlationId),
                         peerIdentifier,
                         _peerIdentifier,
                         correlationId)
                     );
                 }
 
-                var updateCount = (uint)peersToGossip.Count;
+                var updateCount = (uint) peersToGossip.Count;
                 if (updateCount <= 0)
                 {
                     return;
@@ -176,7 +177,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
         private uint GetMaxGossipCycles(BroadcastMessage broadcastMessage)
         {
             var peerNetworkSize = broadcastMessage.PeerNetworkSize;
-            return (uint)(Math.Log(Math.Max(10, peerNetworkSize) / (double)Constants.MaxGossipPeersPerRound) /
+            return (uint) (Math.Log(Math.Max(10, peerNetworkSize) / (double) Constants.MaxGossipPeersPerRound) /
                 Math.Max(1, broadcastMessage.BroadcastCount / Constants.MaxGossipPeersPerRound));
         }
 

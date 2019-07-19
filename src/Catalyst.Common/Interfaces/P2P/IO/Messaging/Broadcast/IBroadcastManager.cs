@@ -34,6 +34,6 @@ namespace Catalyst.Common.Interfaces.P2P.IO.Messaging.Broadcast
 
         /// <summary>Handles Incoming gossip.</summary>
         /// <param name="anySigned">Any signed message.</param>
-        Task ReceiveAsync(ProtocolMessage anySigned);
+        Task ReceiveAsync(ProtocolMessageSigned anySigned);
     }
 }
