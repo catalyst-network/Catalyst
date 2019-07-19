@@ -26,6 +26,7 @@ using System.IO;
 using System.Net;
 using System.Reflection;
 using System.Security;
+using System.Security.Authentication;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using Catalyst.Common.Config;
@@ -134,15 +135,17 @@ namespace Catalyst.Common.Cryptography
                             certificate = new X509Certificate2(fileInBytes, passwordFromConsole);
                             _passwordReader.AddPasswordToRegistry(CertificatePasswordIdentifier,
                                 passwordFromConsole);
+                            break;
                         }
                     }
                     catch (CryptographicException ex)
                     {
                         PasswordTries++;
-                        if (PasswordTries == MaxTries)
+
+                        if (PasswordTries >= MaxTries)
                         {
-                            Logger.Warning("The certificate at {0} requires a password to be read.", fullPath);
-                            return false;
+                            throw new InvalidCredentialException(
+                                $"Failed to obtain the correct password for certificate {fullPath} from the console after {MaxTries} attempts.");
                         }
                             
                         Logger.Warning(ex.Message);
