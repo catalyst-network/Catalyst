@@ -46,15 +46,12 @@ namespace Catalyst.SeedNode
     ///   A catalyst seed node is a semi-trusted IPFS node that is used
     ///   to find other IPFS nodes in the catalyst private network.
     /// </remarks>
-    class Program
+    static class Program
     {
         private static ILogger _logger;
         private static readonly string LifetimeTag;
-        private static readonly string ExecutionDirectory;
         private static readonly Type DeclaringType;
         private static readonly string LogFileName = "Catalyst.SeedNode..log";
-
-        private static CancellationTokenSource _cancellationSource;
 
         static Program()
         {
@@ -65,7 +62,6 @@ namespace Catalyst.SeedNode
                 (sender, args) => ConsoleProgram.LogUnhandledException(_logger, sender, args);
 
             LifetimeTag = DeclaringType.AssemblyQualifiedName;
-            ExecutionDirectory = Path.GetDirectoryName(DeclaringType.Assembly.Location);
         }
 
         public static int Main(string[] args)
@@ -73,12 +69,9 @@ namespace Catalyst.SeedNode
             _logger.Information("Catalyst.SeedNode started with process id {0}",
                 System.Diagnostics.Process.GetCurrentProcess().Id.ToString());
 
-            _cancellationSource = new CancellationTokenSource();
+            var cts = new CancellationTokenSource();
             try
             {
-                //Enable after checking safety implications, if plugins become important.
-                // AssemblyLoadContext.Default.Resolving += TryLoadAssemblyFromExecutionDirectory;
-
                 var targetConfigFolder = new FileSystem().GetCatalystDataDir().FullName;
                 var network = Network.Dev;
 
@@ -96,9 +89,6 @@ namespace Catalyst.SeedNode
 
                 //.Net Core service collection
                 var serviceCollection = new ServiceCollection();
-
-                //Add .Net Core services (if any) first
-                //serviceCollection.AddLogging().AddDistributedMemoryCache();
 
                 // register components from config file
                 var configurationModule = new ConfigurationModule(config);
@@ -124,7 +114,7 @@ namespace Catalyst.SeedNode
                     b => { b.Populate(serviceCollection, LifetimeTag); }))
                 {
                     var node = container.Resolve<ICatalystNode>();
-                    node.RunAsync(_cancellationSource.Token).Wait(_cancellationSource.Token);
+                    node.RunAsync(cts.Token).Wait(cts.Token);
                 }
 
                 Environment.ExitCode = 0;
