@@ -37,8 +37,8 @@ namespace Catalyst.SeedNode
         private readonly ICoreApi _ipfs;
 
         public SeedNode(
-           ICoreApi ipfs,
-           ILogger logger)
+            ICoreApi ipfs,
+            ILogger logger)
         {
             _ipfs = ipfs;
             _logger = logger;

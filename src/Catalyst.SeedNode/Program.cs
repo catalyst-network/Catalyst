@@ -28,17 +28,26 @@ using AutofacSerilogIntegration;
 using Catalyst.Common.Config;
 using Catalyst.Common.FileSystem;
 using Catalyst.Common.Interfaces;
+using Catalyst.Common.Interfaces.Registry;
 using Catalyst.Common.Util;
+using CommandLine;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using System;
 using System.IO;
 using System.Reflection;
+using System.Security;
 using System.Threading;
 
 namespace Catalyst.SeedNode
 {
+    class Options
+    {
+        [Option('p', "ipfs-password", HelpText = "The password for IPFS.  Defaults to prompting for the password")]
+        public string IpfsPassword { get; set; }
+    }
+
     /// <summary>
     ///   An IPFS seed node.
     /// </summary>
@@ -46,26 +55,30 @@ namespace Catalyst.SeedNode
     ///   A catalyst seed node is a semi-trusted IPFS node that is used
     ///   to find other IPFS nodes in the catalyst private network.
     /// </remarks>
-    static class Program
+    internal static class Program
     {
         private static ILogger _logger;
-        private static readonly string LifetimeTag;
-        private static readonly Type DeclaringType;
         private static readonly string LogFileName = "Catalyst.SeedNode..log";
 
-        static Program()
+        public static int Main(string[] args)
         {
-            DeclaringType = MethodBase.GetCurrentMethod().DeclaringType;
-            _logger = ConsoleProgram.GetTempLogger(LogFileName, DeclaringType);
+            // Parse the arguments.
+            CommandLine.Parser.Default
+                .ParseArguments<Options>(args)
+                .WithParsed(Run);
+
+            return Environment.ExitCode;
+        }
+
+        static void Run(Options options)
+        {
+            var declaringType = MethodBase.GetCurrentMethod().DeclaringType;
+            var lifetimeTag = declaringType.AssemblyQualifiedName;
+            _logger = ConsoleProgram.GetTempLogger(LogFileName, declaringType);
 
             AppDomain.CurrentDomain.UnhandledException +=
                 (sender, args) => ConsoleProgram.LogUnhandledException(_logger, sender, args);
 
-            LifetimeTag = DeclaringType.AssemblyQualifiedName;
-        }
-
-        public static int Main(string[] args)
-        {
             _logger.Information("Catalyst.SeedNode started with process id {0}",
                 System.Diagnostics.Process.GetCurrentProcess().Id.ToString());
 
@@ -102,16 +115,30 @@ namespace Catalyst.SeedNode
                    .File(Path.Combine(targetConfigFolder, LogFileName),
                         rollingInterval: RollingInterval.Day,
                         outputTemplate: "{Timestamp:HH:mm:ss} [{Level:u3}] ({MachineName}/{ThreadId}) {Message} ({SourceContext}){NewLine}{Exception}")
-                   .CreateLogger().ForContext(DeclaringType);
+                   .CreateLogger().ForContext(declaringType);
 
                 containerBuilder.RegisterLogger(_logger);
                 containerBuilder.RegisterInstance(config);
 
                 var container = containerBuilder.Build();
-                using (container.BeginLifetimeScope(LifetimeTag,
+                
+                // Process options that need a container.
+                if (!String.IsNullOrWhiteSpace(options.IpfsPassword))
+                {
+                    var passwordRegistry = container.Resolve<IPasswordRegistry>();
+                    var pwd = new SecureString();
+                    foreach (var c in options.IpfsPassword)
+                    {
+                        pwd.AppendChar(c);
+                    }
+                    passwordRegistry.AddItemToRegistry(PasswordRegistryKey.IpfsPassword, pwd);
+                }
+
+                // Start the app.
+                using (container.BeginLifetimeScope(lifetimeTag,
 
                     //Add .Net Core serviceCollection to the Autofac container.
-                    b => { b.Populate(serviceCollection, LifetimeTag); }))
+                    b => { b.Populate(serviceCollection, lifetimeTag); }))
                 {
                     var node = container.Resolve<ICatalystNode>();
                     node.RunAsync(cts.Token).Wait(cts.Token);
@@ -124,8 +151,6 @@ namespace Catalyst.SeedNode
                 _logger.Fatal(e, "Catalyst.SeedNode stopped unexpectedly");
                 Environment.ExitCode = 1;
             }
-
-            return Environment.ExitCode;
         }
 
     }
