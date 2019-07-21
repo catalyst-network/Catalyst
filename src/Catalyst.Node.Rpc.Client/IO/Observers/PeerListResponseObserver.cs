@@ -25,7 +25,6 @@ using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.IO.Observers;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.IO.Observers;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using DotNetty.Transport.Channels;
@@ -38,8 +37,7 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
     /// </summary>
     /// <seealso cref="IRpcResponseObserver" />
     public sealed class PeerListResponseObserver
-        : ResponseObserverBase<GetPeerListResponse>,
-            IRpcResponseObserver
+        : RpcResponseObserver<GetPeerListResponse>
     {
         private readonly IUserOutput _output;
 
@@ -58,10 +56,6 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
             Guard.Argument(getPeerListResponse, nameof(getPeerListResponse)).NotNull();
             Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
             Guard.Argument(senderPeerIdentifier, nameof(senderPeerIdentifier)).NotNull();
-            Logger.Debug("Handling PeerListResponse");
-
-            var result = string.Join(", ", getPeerListResponse.Peers);
-            _output.WriteLine(result);
         }
     }
 }

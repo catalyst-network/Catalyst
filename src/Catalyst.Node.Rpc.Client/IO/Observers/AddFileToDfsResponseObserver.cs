@@ -21,6 +21,9 @@
 
 #endregion
 
+using System;
+using System.Reactive.Linq;
+using System.Reactive.Subjects;
 using System.Threading;
 using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.Cli;
@@ -28,10 +31,13 @@ using Catalyst.Common.Interfaces.FileTransfer;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.IO.Observers;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.Interfaces.Rpc.IO.Messaging.Dto;
 using Catalyst.Common.IO.Observers;
+using Catalyst.Node.Rpc.Client.IO.Messaging.Dto;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using DotNetty.Transport.Channels;
+using Google.Protobuf;
 using Serilog;
 
 namespace Catalyst.Node.Rpc.Client.IO.Observers
@@ -40,9 +46,7 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
     /// Add File to DFS Response handler
     /// </summary>
     /// <seealso cref="IRpcResponseObserver" />
-    public sealed class AddFileToDfsResponseObserver : 
-        ResponseObserverBase<AddFileToDfsResponse>,
-        IRpcResponseObserver
+    public sealed class AddFileToDfsResponseObserver : RpcResponseObserver<AddFileToDfsResponse>
     {
         /// <summary>The upload file transfer factory</summary>
         private readonly IUploadFileTransferFactory _rpcFileTransferFactory;
@@ -54,7 +58,7 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
         /// <param name="rpcFileTransferFactory">The upload file transfer factory</param>
         /// <param name="userOutput"></param>
         public AddFileToDfsResponseObserver(ILogger logger,
-            IUploadFileTransferFactory rpcFileTransferFactory, 
+            IUploadFileTransferFactory rpcFileTransferFactory,
             IUserOutput userOutput) : base(logger)
         {
             _userOutput = userOutput;
@@ -69,37 +73,29 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
         /// <param name="senderPeerIdentifier"></param>
         /// <param name="correlationId"></param>
         protected override void HandleResponse(AddFileToDfsResponse addFileToDfsResponse,
-            IChannelHandlerContext channelHandlerContext, 
+            IChannelHandlerContext channelHandlerContext,
             IPeerIdentifier senderPeerIdentifier,
             ICorrelationId correlationId)
         {
             Guard.Argument(addFileToDfsResponse, nameof(addFileToDfsResponse)).NotNull();
             Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
             Guard.Argument(senderPeerIdentifier, nameof(senderPeerIdentifier)).NotNull();
-            
+
             // @TODO return int not byte
             // var responseCode = Enumeration.Parse<FileTransferResponseCodes>(deserialised.ResponseCode[0].ToString());
 
             var responseCode = (FileTransferResponseCodes) addFileToDfsResponse.ResponseCode[0];
-
-            if (responseCode == FileTransferResponseCodes.Failed || responseCode == FileTransferResponseCodes.Finished)
+            if (responseCode == FileTransferResponseCodes.Successful)
             {
-                _userOutput.WriteLine("File transfer completed, Response: " + responseCode.Name + " Dfs Hash: " + addFileToDfsResponse.DfsHash);
+                _rpcFileTransferFactory.FileTransferAsync(correlationId, CancellationToken.None)
+                   .ConfigureAwait(false);
             }
             else
             {
-                if (responseCode == FileTransferResponseCodes.Successful)
+                var fileTransferInformation = _rpcFileTransferFactory.GetFileTransferInformation(correlationId);
+                if (fileTransferInformation != null)
                 {
-                    _rpcFileTransferFactory.FileTransferAsync(correlationId, CancellationToken.None)
-                       .ConfigureAwait(false);
-                }
-                else
-                {
-                    var fileTransferInformation = _rpcFileTransferFactory.GetFileTransferInformation(correlationId);
-                    if (fileTransferInformation != null)
-                    {
-                        _rpcFileTransferFactory.Remove(fileTransferInformation, true);
-                    }
+                    _rpcFileTransferFactory.Remove(fileTransferInformation, true);
                 }
             }
         }

@@ -24,11 +24,12 @@
 using Catalyst.Cli.CommandTypes;
 using Catalyst.Cli.Options;
 using Catalyst.Common.Interfaces.Cli.Commands;
+using Catalyst.Protocol;
 using Catalyst.Protocol.Rpc.Node;
 
 namespace Catalyst.Cli.Commands
 {
-    public sealed class PeerListCommand : BaseMessageCommand<GetPeerListRequest, PeerListOptions>
+    public sealed class PeerListCommand : BaseMessageCommand<GetPeerListRequest, GetPeerCountResponse, PeerListOptions>
     {
         public PeerListCommand(ICommandContext commandContext) : base(commandContext) { }
 

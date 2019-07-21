@@ -23,16 +23,15 @@
 
 using Catalyst.Cli.Options;
 using Catalyst.Common.Interfaces.Cli.Commands;
-using Catalyst.Common.Network;
 using Catalyst.Protocol.Rpc.Node;
 using Google.Protobuf;
-using Nethereum.RLP;
-using System.Net;
 using Catalyst.Cli.CommandTypes;
+using Catalyst.Common.Extensions;
+using Catalyst.Protocol;
 
 namespace Catalyst.Cli.Commands
 {
-    public sealed class PeerRemoveCommand : BaseMessageCommand<RemovePeerRequest, RemovePeerOptions>
+    public sealed class PeerRemoveCommand : BaseMessageCommand<RemovePeerRequest, RemovePeerResponse, RemovePeerOptions>
     {
         public PeerRemoveCommand(ICommandContext commandContext) : base(commandContext) { }
 
@@ -40,10 +39,10 @@ namespace Catalyst.Cli.Commands
         {
             return new RemovePeerRequest
             {
-                PeerIp = ByteString.CopyFrom(IPAddress.Parse(option.Ip).To16Bytes()),
+                PeerIp = option.Ip.IpAddressToProtobuf(),
                 PublicKey = string.IsNullOrEmpty(option.PublicKey)
                     ? ByteString.Empty
-                    : ByteString.CopyFrom(option.PublicKey.ToBytesForRLPEncoding())
+                    : option.PublicKey.PublicKeyToProtobuf()
             };
         }
     }
