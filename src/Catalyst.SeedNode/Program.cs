@@ -44,7 +44,7 @@ namespace Catalyst.SeedNode
 {
     class Options
     {
-        [Option('p', "ipfs-password", HelpText = "The password for IPFS.  Defaults to prompting for the password")]
+        [Option('p', "ipfs-password", HelpText = "The password for IPFS.  Defaults to prompting for the password.")]
         public string IpfsPassword { get; set; }
     }
 
