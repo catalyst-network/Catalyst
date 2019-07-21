@@ -21,17 +21,12 @@
 
 #endregion
 
-using Catalyst.Cli.CommandTypes;
-using Catalyst.Cli.Options;
-using Catalyst.Common.Interfaces.Cli.Commands;
-using Catalyst.Protocol;
-using Catalyst.Protocol.Rpc.Node;
+using Catalyst.Common.Interfaces.IO.Observables;
 
-namespace Catalyst.Cli.Commands
+namespace Catalyst.Common.IO.Events
 {
-    public sealed class GetMempoolCommand : BaseMessageCommand<GetMempoolRequest, GetMempoolResponse, GetMempoolOptions>
+    public class SocketClientRegistryEvent : ISocketClientRegistryEvent
     {
-        public GetMempoolCommand(ICommandContext commandContext) : base(commandContext) { }
-        protected override GetMempoolRequest GetMessage(GetMempoolOptions option) { return new GetMempoolRequest(); }
+        public int SocketHashCode { set; get; }
     }
 }

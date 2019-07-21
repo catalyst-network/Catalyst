@@ -22,8 +22,12 @@
 #endregion
 
 using Catalyst.Common.Interfaces.IO.Transport;
+using System;
 
 namespace Catalyst.Common.Interfaces.Rpc
 {
-    public interface INodeRpcClient : ISocketClient { }
+    public interface INodeRpcClient : ISocketClient
+    {
+        void SubscribeToResponse<T>(Action<T> onNext);
+    }
 }

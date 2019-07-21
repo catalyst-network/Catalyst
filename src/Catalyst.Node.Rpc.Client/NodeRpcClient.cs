@@ -25,10 +25,17 @@ using Catalyst.Common.Interfaces.IO.EventLoop;
 using Catalyst.Common.Interfaces.IO.Observers;
 using Catalyst.Common.Interfaces.IO.Transport.Channels;
 using Catalyst.Common.Interfaces.Rpc;
+using Catalyst.Common.Interfaces.Rpc.IO.Messaging.Dto;
 using Catalyst.Common.IO.Transport;
+using Google.Protobuf;
 using Serilog;
+using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive.Concurrency;
+using System.Reactive.Linq;
+using System.Reactive.Subjects;
 using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
 
@@ -40,6 +47,10 @@ namespace Catalyst.Node.Rpc.Client
     /// </summary>
     internal sealed class NodeRpcClient : TcpClient, INodeRpcClient
     {
+        private readonly ConcurrentBag<IDisposable> _messageSubscriptions;
+        private readonly ReplaySubject<IRpcClientMessageDto<IMessage>> _messageResponse;
+        private IObservable<IRpcClientMessageDto<IMessage>> _messageResponseStream;
+
         /// <summary>
         ///     Initialize a new instance of RPClient
         /// </summary>
@@ -56,9 +67,36 @@ namespace Catalyst.Node.Rpc.Client
             : base(channelFactory, Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType),
                 clientEventLoopGroupFactory)
         {
+            _messageSubscriptions = new ConcurrentBag<IDisposable>();
+            _messageResponse = new ReplaySubject<IRpcClientMessageDto<IMessage>>(1);
+            _messageResponseStream = _messageResponse.AsObservable();
+
             var socket = channelFactory.BuildChannel(EventLoopGroupFactory, nodeConfig.HostAddress, nodeConfig.Port, certificate);
-            handlers.ToList().ForEach(handler => handler.StartObserving(socket.MessageStream));
+            handlers.ToList().ForEach(handler =>
+            {
+                _messageResponseStream = _messageResponseStream.Merge(handler.MessageResponseStream);
+                handler.StartObserving(socket.MessageStream);
+            });
             Channel = socket.Channel;
+        }
+
+        public void SubscribeToResponse<T>(Action<T> onNext)
+        {
+            _messageSubscriptions.Add(_messageResponseStream.Where(x => x.Message.GetType() == typeof(T)).SubscribeOn(NewThreadScheduler.Default).Subscribe(rpcClientMessageDto =>
+                onNext((T) rpcClientMessageDto.Message)
+            ));
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            foreach (var subscription in _messageSubscriptions)
+            {
+                subscription?.Dispose();
+            }
+
+            _messageSubscriptions.Clear();
+            _messageResponse?.Dispose();
+            base.Dispose(disposing);
         }
     }
 }
