@@ -46,6 +46,7 @@ using DnsClient;
 using Google.Protobuf;
 using Microsoft.Extensions.Caching.Memory;
 using Nethereum.Hex.HexConvertors.Extensions;
+using Nito.Comparers.Linq;
 using NSubstitute;
 using Serilog;
 using SharpRepository.InMemoryRepository;
@@ -74,21 +75,15 @@ namespace Catalyst.TestUtils
         public static IHastingsOriginator SubOriginator(IPeerIdentifier peer = default,
             IList<IPeerIdentifier> currentPeersNeighbours = default,
             KeyValuePair<ICorrelationId, IPeerIdentifier> expectedPnr = default,
-            IDictionary<IPeerIdentifier, ICorrelationId> contactedNeighbour = default)
+            IDictionary<IPeerIdentifier, ICorrelationId> unresponsivePeers = default)
         {
-            var peerParam = peer ?? PeerIdentifierHelper.GetPeerIdentifier(ByteUtil.GenerateRandomByteArray(32).ToString());
-            var currentPeerNeighboursParam = currentPeersNeighbours ?? MockNeighbours();
-
-            var expectedPnrParam = expectedPnr;
-            var contactedNeighbourParam = contactedNeighbour ?? MockContactedNeighboursValuePairs();
-
             var subbedOriginator = Substitute.For<IHastingsOriginator>();
             
-            subbedOriginator.UnResponsivePeers.Count.Returns(0);
-            subbedOriginator.Peer.Returns(peerParam);
-            subbedOriginator.CurrentPeersNeighbours.Returns(currentPeerNeighboursParam);
-            subbedOriginator.ExpectedPnr.Returns(expectedPnrParam);
-            subbedOriginator.UnResponsivePeers.Returns(contactedNeighbourParam);
+            subbedOriginator.UnResponsivePeers.Count.Returns(5);
+            subbedOriginator.Peer.Returns(peer ?? Substitute.For<IPeerIdentifier>());
+            subbedOriginator.CurrentPeersNeighbours.Returns(currentPeersNeighbours ?? Substitute.For<IList<IPeerIdentifier>>());
+            subbedOriginator.ExpectedPnr.Returns(expectedPnr);
+            subbedOriginator.UnResponsivePeers.Returns(unresponsivePeers ?? Substitute.For<IDictionary<IPeerIdentifier, ICorrelationId>>());
 
             return subbedOriginator;
         }
@@ -144,6 +139,11 @@ namespace Catalyst.TestUtils
             return mockUnResponsiveNeighboursList;
         }
 
+        public static IDictionary<IPeerIdentifier, ICorrelationId> SubContactedNeighbours(int amount = 5)
+        {
+            return Enumerable.Range(0, amount).Select(i => Substitute.For<IPeerIdentifier>()).ToDictionary(v => v, k => Substitute.For<ICorrelationId>());
+        }
+
         public static IDictionary<IPeerIdentifier, ICorrelationId> MockContactedNeighboursValuePairs(IEnumerable<IPeerIdentifier> neighbours = default)
         {
             if (neighbours == null || neighbours.Equals(default))
@@ -160,6 +160,15 @@ namespace Catalyst.TestUtils
 
             return mockContactedNeighboursList;
         }
+        
+        public static IHastingMemento SubMemento(IPeerIdentifier identifier = default, IEnumerable<IPeerIdentifier> neighbours = default)
+        {
+            var subbedMemento = Substitute.For<IHastingMemento>();
+            subbedMemento.Peer.Returns(identifier ?? Substitute.For<IPeerIdentifier>());
+            subbedMemento.Neighbours.Returns(neighbours ?? SubNeighbours());
+
+            return subbedMemento;
+        }
 
         public static IHastingMemento MockMemento(IPeerIdentifier identifier = default, IEnumerable<IPeerIdentifier> neighbours = default)
         {
@@ -167,16 +176,7 @@ namespace Catalyst.TestUtils
             var neighbourParam = neighbours ?? MockNeighbours();
             return new HastingMemento(peerParam, neighbourParam);
         }
-        
-        public static IHastingMemento SubMemento(IPeerIdentifier identifier = default, IEnumerable<IPeerIdentifier> neighbours = default)
-        {
-            var subbedMemento = Substitute.For<IHastingMemento>();
-            subbedMemento.Peer.Returns(identifier ?? PeerIdentifierHelper.GetPeerIdentifier(Helper.RandomString()));
-            subbedMemento.Neighbours.Returns(neighbours ?? MockNeighbours());
 
-            return subbedMemento;
-        }
-        
         public static Stack<IHastingMemento> MockMementoHistory(Stack<IHastingMemento> state, int depth = 10)
         {
             state.Push(new HastingMemento(state.Last().Neighbours.RandomElement(), MockNeighbours()));

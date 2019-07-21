@@ -195,19 +195,19 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
             return this;
         }
         
-        public DiscoveryTestBuilder WithStateCandidate(IHastingsOriginator currentState = default,
+        public DiscoveryTestBuilder WithStateCandidate(IHastingsOriginator stateCandidate = default,
             bool mock = false,
             IPeerIdentifier peer = default,
             IList<IPeerIdentifier> currentPeersNeighbours = default,
             KeyValuePair<ICorrelationId, IPeerIdentifier> expectedPnr = default,
-            IDictionary<IPeerIdentifier, ICorrelationId> contactedNeighbour = default)
+            IDictionary<IPeerIdentifier, ICorrelationId> unresponsivePeers = default)
         {
             _stateCandidate = 
-                currentState == default && mock == false 
-                    ? _currentState = DiscoveryHelper.SubOriginator(peer, currentPeersNeighbours, expectedPnr, contactedNeighbour) 
-                    : currentState == default && mock == true 
-                        ? _currentState = DiscoveryHelper.MockOriginator(peer, currentPeersNeighbours, expectedPnr, contactedNeighbour) 
-                        : _currentState = currentState;
+                stateCandidate == default && mock == false 
+                    ? _currentState = DiscoveryHelper.SubOriginator(peer, currentPeersNeighbours, expectedPnr, unresponsivePeers) 
+                    : stateCandidate == default && mock == true 
+                        ? _currentState = DiscoveryHelper.MockOriginator(peer, currentPeersNeighbours, expectedPnr, unresponsivePeers) 
+                        : _currentState = stateCandidate;
 
             return this;
         }

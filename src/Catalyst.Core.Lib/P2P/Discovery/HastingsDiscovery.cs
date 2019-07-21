@@ -373,7 +373,7 @@ namespace Catalyst.Core.Lib.P2P.Discovery
             {
                 if (!StateCandidate.ExpectedPnr.Equals(new KeyValuePair<ICorrelationId, IPeerIdentifier>(obj.CorrelationId, obj.Sender)))
                 {
-                    // we shouldn't get here as we should always known about a pnr as only this class produces them.
+                    // we shouldn't get here as we should always know about a pnr as only this class produces them.
                     throw new ArgumentException();
                 }
 
