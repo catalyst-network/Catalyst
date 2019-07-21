@@ -10,7 +10,7 @@ communication among catalyst nodes.
 
 ## Usage
 
-```
+```console
 > dotnet Catalyst.SeedNode.dll --help
 Catalyst.SeedNode 0.0.1
 Copyright © 2019 AtlasCity.io
