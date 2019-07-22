@@ -21,9 +21,7 @@
 
 #endregion
 
-using System;
 using System.Threading;
-using System.Threading.Tasks;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Cli;
@@ -37,7 +35,6 @@ using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
-using FluentAssertions;
 using Google.Protobuf;
 using NSubstitute;
 using NSubstitute.ReceivedExtensions;
@@ -48,13 +45,11 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
 {
     public sealed class AddFileToDfsResponseObserverTests
     {
-        private readonly IUserOutput _userOutput;
         private readonly IUploadFileTransferFactory _uploadFileTransferFactory;
         private readonly IChannelHandlerContext _channelHandlerContext;
 
         public AddFileToDfsResponseObserverTests()
         {
-            _userOutput = Substitute.For<IUserOutput>();
             _uploadFileTransferFactory = Substitute.For<IUploadFileTransferFactory>();
             _channelHandlerContext = Substitute.For<IChannelHandlerContext>();
         }
@@ -64,8 +59,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
         {
             var addFileToDfsResponseObserver = new AddFileToDfsResponseObserver(
                 Substitute.For<ILogger>(),
-                _uploadFileTransferFactory,
-                _userOutput
+                _uploadFileTransferFactory
             );
             addFileToDfsResponseObserver.OnNext(GetAddFileToDfsResponse(FileTransferResponseCodes.Successful));
             _uploadFileTransferFactory.Received(Quantity.Exactly(1))
@@ -77,8 +71,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
         {
             var addFileToDfsResponseObserver = new AddFileToDfsResponseObserver(
                 Substitute.For<ILogger>(),
-                _uploadFileTransferFactory,
-                _userOutput
+                _uploadFileTransferFactory
             );
             addFileToDfsResponseObserver.OnNext(GetAddFileToDfsResponse(FileTransferResponseCodes.Error));
             _uploadFileTransferFactory.Received(Quantity.Exactly(1)).Remove(Arg.Any<IUploadFileInformation>(), true);

@@ -81,7 +81,7 @@ namespace Catalyst.Common.UnitTests.Keystore
         public async Task KeyStore_Throws_Exception_On_Invalid_KeyStore_File()
         {
             await FileSystem.WriteTextFileToCddSubDirectoryAsync(KeyRegistryKey.DefaultKey.Name, Constants.KeyStoreDataSubDir, "bad contents");
-            Assert.Throws<System.Exception>(() => _keystore.KeyStoreDecrypt(KeyRegistryKey.DefaultKey));
+            Assert.Throws<Exception>(() => _keystore.KeyStoreDecrypt(KeyRegistryKey.DefaultKey));
         }
 
         [Fact]

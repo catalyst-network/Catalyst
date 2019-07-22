@@ -24,7 +24,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
@@ -32,8 +31,6 @@ using Catalyst.Common.Interfaces.Repository;
 using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.Network;
 using Catalyst.Common.P2P;
-using Catalyst.Common.Repository;
-using Catalyst.Common.Util;
 using Catalyst.Core.Lib.Rpc.IO.Observers;
 using Catalyst.Protocol;
 using Catalyst.Protocol.Common;
@@ -44,9 +41,6 @@ using FluentAssertions;
 using Google.Protobuf;
 using NSubstitute;
 using Serilog;
-using SharpRepository.InMemoryRepository;
-using SharpRepository.Repository;
-using SharpRepository.Repository.Queries;
 using SharpRepository.Repository.Specifications;
 using Xunit;
 

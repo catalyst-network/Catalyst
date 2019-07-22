@@ -42,7 +42,6 @@ using FluentAssertions;
 using Nethereum.RLP;
 using NSubstitute;
 using Serilog;
-using SharpRepository.Repository;
 using Xunit;
 
 namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Observers

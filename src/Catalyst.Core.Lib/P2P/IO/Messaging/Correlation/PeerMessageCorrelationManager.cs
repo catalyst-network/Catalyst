@@ -46,9 +46,9 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Correlation
     public sealed class PeerMessageCorrelationManager : MessageCorrelationManagerBase, IPeerMessageCorrelationManager
     {
         private readonly ReplaySubject<IPeerReputationChange> _reputationEvent;
-        public ReplaySubject<KeyValuePair<ICorrelationId, IPeerIdentifier>> _evictionEvent { get; }
+        public ReplaySubject<KeyValuePair<ICorrelationId, IPeerIdentifier>> EvictionEvent { get; }
         public IObservable<IPeerReputationChange> ReputationEventStream => _reputationEvent.AsObservable();
-        public IObservable<KeyValuePair<ICorrelationId, IPeerIdentifier>> EvictionEventStream => _evictionEvent.AsObservable();
+        public IObservable<KeyValuePair<ICorrelationId, IPeerIdentifier>> EvictionEventStream => EvictionEvent.AsObservable();
 
         public PeerMessageCorrelationManager(IReputationManager reputationManager,
             IMemoryCache cache,
@@ -56,7 +56,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Correlation
             IChangeTokenProvider changeTokenProvider) : base(cache, logger, changeTokenProvider)
         {
             _reputationEvent = new ReplaySubject<IPeerReputationChange>(0);
-            _evictionEvent = new ReplaySubject<KeyValuePair<ICorrelationId, IPeerIdentifier>>(0);
+            EvictionEvent = new ReplaySubject<KeyValuePair<ICorrelationId, IPeerIdentifier>>(0);
 
             reputationManager.MergeReputationStream(ReputationEventStream);
         }
@@ -69,7 +69,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Correlation
             _reputationEvent.OnNext(new PeerReputationChange(new PeerIdentifier(message.Content.PeerId), 
                 ReputationEvents.NoResponseReceived));
             
-            _evictionEvent.OnNext(new KeyValuePair<ICorrelationId, IPeerIdentifier>(
+            EvictionEvent.OnNext(new KeyValuePair<ICorrelationId, IPeerIdentifier>(
                 new CorrelationId(message.Content.CorrelationId.ToByteArray()),
                 message.Recipient)
             );

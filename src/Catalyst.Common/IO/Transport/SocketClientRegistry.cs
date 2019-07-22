@@ -38,7 +38,7 @@ namespace Catalyst.Common.IO.Transport
         : ISocketClientRegistry<TSocketChannel>
         where TSocketChannel : class, ISocketClient
     {
-        public IObservable<ISocketClientRegistryEvent> EventStream { private set;  get; }
+        public IObservable<ISocketClientRegistryEvent> EventStream { get; }
         private readonly ReplaySubject<ISocketClientRegistryEvent> _eventReplySubject;
 
         public IDictionary<int, TSocketChannel> Registry { get; }
