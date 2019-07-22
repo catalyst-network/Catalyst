@@ -48,7 +48,6 @@ namespace Catalyst.Common.IO.Observers
             Logger.Verbose("Pre Handle Message Called");
             try
             {
-                ChannelHandlerContext = messageDto.Context;
                 HandleBroadcast(messageDto);
             }
             catch (Exception exception)
