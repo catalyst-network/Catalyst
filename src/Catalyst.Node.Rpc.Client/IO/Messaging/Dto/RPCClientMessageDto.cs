@@ -21,17 +21,24 @@
 
 #endregion
 
-using Catalyst.Cli.CommandTypes;
-using Catalyst.Cli.Options;
-using Catalyst.Common.Interfaces.Cli.Commands;
-using Catalyst.Protocol;
-using Catalyst.Protocol.Rpc.Node;
+using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.Interfaces.Rpc.IO.Messaging.Dto;
+using Dawn;
+using Google.Protobuf;
 
-namespace Catalyst.Cli.Commands
+namespace Catalyst.Node.Rpc.Client.IO.Messaging.Dto
 {
-    public sealed class GetMempoolCommand : BaseMessageCommand<GetMempoolRequest, GetMempoolResponse, GetMempoolOptions>
+    public sealed class RpcClientMessageDto<T> : IRpcClientMessageDto<T> where T : IMessage
     {
-        public GetMempoolCommand(ICommandContext commandContext) : base(commandContext) { }
-        protected override GetMempoolRequest GetMessage(GetMempoolOptions option) { return new GetMempoolRequest(); }
+        public IPeerIdentifier Sender { get; set; }
+        public T Message { get; set; }
+
+        public RpcClientMessageDto(T message, IPeerIdentifier sender)
+        {
+            Guard.Argument(message, nameof(message))
+            .Require(message.GetType().Namespace.Contains("Catalyst.Protocol.Rpc"));
+            Message = message;
+            Sender = sender;
+        }
     }
 }

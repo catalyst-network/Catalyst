@@ -25,7 +25,6 @@ using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.IO.Observers;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.IO.Observers;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using DotNetty.Transport.Channels;
@@ -38,8 +37,7 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
     /// </summary>
     /// <seealso cref="IRpcResponseObserver" />
     public sealed class PeerReputationResponseObserver
-        : ResponseObserverBase<GetPeerReputationResponse>,
-            IRpcResponseObserver
+        : RpcResponseObserver<GetPeerReputationResponse>
     {
         private readonly IUserOutput _output;
 
@@ -58,10 +56,6 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
             Guard.Argument(getPeerReputationResponse, nameof(getPeerReputationResponse)).NotNull();
             Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
             Guard.Argument(senderPeerIdentifier, nameof(senderPeerIdentifier)).NotNull();
-            Logger.Debug("Handling GetPeerReputation response");
-
-            var msg = getPeerReputationResponse.Reputation == int.MinValue ? "Peer not found" : getPeerReputationResponse.Reputation.ToString();
-            _output.WriteLine($@"Peer Reputation: {msg}");
         }
     }
 }

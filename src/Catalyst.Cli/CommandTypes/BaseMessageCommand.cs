@@ -27,16 +27,24 @@ using Catalyst.Common.Interfaces.Cli.CommandTypes;
 using Catalyst.Common.Interfaces.Cli.Options;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Rpc;
+using Catalyst.Common.IO.Events;
 using Catalyst.Common.P2P;
+using Catalyst.Protocol;
 using Google.Protobuf;
+using System;
+using System.Reactive.Linq;
 
 namespace Catalyst.Cli.CommandTypes
 {
-    public abstract class BaseMessageCommand<T, TOption> : BaseCommand<TOption>, IMessageCommand<T>
-        where T : IMessage<T>
+    public abstract class BaseMessageCommand<TRequest, TResponse, TOption> : BaseCommand<TOption>, IMessageCommand<TRequest>
+        where TRequest : IMessage<TRequest>
+        where TResponse : IMessage<TResponse>
         where TOption : IOptionsBase
     {
-        protected BaseMessageCommand(ICommandContext commandContext) : base(commandContext) { }
+        protected BaseMessageCommand(ICommandContext commandContext) : base(commandContext)
+        {
+            CommandContext.SocketClientRegistry.EventStream.OfType<SocketClientRegistryClientAdded>().Subscribe(SocketClientRegistryClientAddedOnNext);
+        }
 
         public virtual void SendMessage(TOption options)
         {
@@ -54,8 +62,8 @@ namespace Catalyst.Cli.CommandTypes
             Target.SendMessage(messageDto);
         }
 
-        protected abstract T GetMessage(TOption option);
-        
+        protected abstract TRequest GetMessage(TOption option);
+
         protected IPeerIdentifier RecipientPeerIdentifier => PeerIdentifier.BuildPeerIdFromConfig(CommandContext.GetNodeConfig(Options.Node), CommandContext.PeerIdClientId);
 
         protected IPeerIdentifier SenderPeerIdentifier => CommandContext.PeerIdentifier;
@@ -72,6 +80,22 @@ namespace Catalyst.Cli.CommandTypes
             }
 
             return sendMessage;
+        }
+
+        protected virtual void ResponseMessage(TResponse response)
+        {
+            CommandContext.UserOutput.WriteLine(response.ToJsonString());
+        }
+
+        private void CommandResponseOnNext(TResponse value)
+        {
+            ResponseMessage(value);
+        }
+
+        private void SocketClientRegistryClientAddedOnNext(SocketClientRegistryClientAdded value)
+        {
+            var client = CommandContext.SocketClientRegistry.GetClientFromRegistry(value.SocketHashCode);
+            client.SubscribeToResponse<TResponse>(CommandResponseOnNext);
         }
     }
 }
