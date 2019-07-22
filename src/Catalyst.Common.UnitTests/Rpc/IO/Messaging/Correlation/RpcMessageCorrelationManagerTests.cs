@@ -33,13 +33,12 @@ using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using NSubstitute;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace Catalyst.Common.UnitTests.Rpc.IO.Messaging.Correlation
 {
     public sealed class RpcMessageCorrelationManagerTests : MessageCorrelationManagerTests<IRpcMessageCorrelationManager>
     {
-        public RpcMessageCorrelationManagerTests(ITestOutputHelper output) : base(output)
+        public RpcMessageCorrelationManagerTests()
         {
             CorrelationManager = new RpcMessageCorrelationManager(Cache,
                 SubbedLogger,

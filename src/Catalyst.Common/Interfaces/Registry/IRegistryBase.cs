@@ -21,9 +21,6 @@
 
 #endregion
 
-using System.Collections.Generic;
-using Catalyst.Common.Config;
-
 namespace Catalyst.Common.Interfaces.Registry
 {
     public interface IRegistryBase<in TKey, TValue>

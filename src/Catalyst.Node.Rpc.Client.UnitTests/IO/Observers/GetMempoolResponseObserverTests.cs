@@ -24,7 +24,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reactive.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Catalyst.Common.Extensions;
@@ -49,7 +48,6 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
         private readonly IChannelHandlerContext _fakeContext;
         public static readonly List<object[]> QueryContents;
 
-        private readonly IUserOutput _output;
         private GetMempoolResponseObserver _observer;
 
         static GetMempoolResponseObserverTests()
@@ -73,7 +71,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
         {
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
-            _output = Substitute.For<IUserOutput>();
+            Substitute.For<IUserOutput>();
         }
 
         private static IEnumerable<string> CreateMemPoolData()
@@ -112,7 +110,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
 
             GetMempoolResponse messageStreamResponse = null;
 
-            _observer = new GetMempoolResponseObserver(_output, _logger);
+            _observer = new GetMempoolResponseObserver(_logger);
             _observer.StartObserving(messageStream);
             _observer.SubscribeToResponse(message => messageStreamResponse = message);
 

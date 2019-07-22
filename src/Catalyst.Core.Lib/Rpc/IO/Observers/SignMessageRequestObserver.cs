@@ -21,8 +21,6 @@
 
 #endregion
 
-using System;
-using System.Text;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.IO.Observers;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
@@ -32,7 +30,6 @@ using Catalyst.Common.Util;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using DotNetty.Transport.Channels;
-using Nethereum.RLP;
 using ILogger = Serilog.ILogger;
 
 namespace Catalyst.Core.Lib.Rpc.IO.Observers

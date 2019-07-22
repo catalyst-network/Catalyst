@@ -38,7 +38,6 @@ using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using FluentAssertions;
 using Microsoft.Extensions.Configuration;
-using Nethereum.RLP;
 using NSubstitute;
 using Serilog;
 using Xunit;

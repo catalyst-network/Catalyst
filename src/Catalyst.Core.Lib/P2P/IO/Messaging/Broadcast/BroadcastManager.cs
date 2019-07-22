@@ -129,7 +129,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
                     );
                 }
 
-                var updateCount = (uint)peersToGossip.Count;
+                var updateCount = (uint) peersToGossip.Count;
                 if (updateCount <= 0)
                 {
                     return;
@@ -176,7 +176,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
         private uint GetMaxGossipCycles(BroadcastMessage broadcastMessage)
         {
             var peerNetworkSize = broadcastMessage.PeerNetworkSize;
-            return (uint)(Math.Log(Math.Max(10, peerNetworkSize) / (double)Constants.MaxGossipPeersPerRound) /
+            return (uint) (Math.Log(Math.Max(10, peerNetworkSize) / (double) Constants.MaxGossipPeersPerRound) /
                 Math.Max(1, broadcastMessage.BroadcastCount / Constants.MaxGossipPeersPerRound));
         }
 
