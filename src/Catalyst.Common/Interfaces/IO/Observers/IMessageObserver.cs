@@ -30,8 +30,6 @@ namespace Catalyst.Common.Interfaces.IO.Observers
 {
     public interface IMessageObserver : IObserver<IObserverDto<ProtocolMessage>>
     {
-        IChannelHandlerContext ChannelHandlerContext { get; }
-
         void StartObserving(IObservable<IObserverDto<ProtocolMessage>> messageStream);
     }
 }
