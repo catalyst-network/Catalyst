@@ -21,7 +21,6 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.P2P;
 
 namespace Catalyst.Common.Interfaces.Repository

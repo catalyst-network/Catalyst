@@ -41,7 +41,7 @@ namespace Catalyst.Common.Network
         public DevDnsClient(IPeerSettings peerSettings)
         {
             _seedServers = peerSettings.SeedServers;
-            _dnsQueryAnswerValues = new string[]
+            _dnsQueryAnswerValues = new[]
             {
                 "0x41437c30317c39322e3230372e3137382e3139387c34323036397c3031323334353637383930313233343536373839",
                 "0x41437c30317c39322e3230372e3137382e3139387c34323036397c3031323334353637383930313233343536373839",

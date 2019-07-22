@@ -125,12 +125,14 @@ namespace Catalyst.Cli.IntegrationTests.Connection
             _node.RunNodeInstance();
 
             using (var container = ContainerBuilder.Build())
-            using (var scope = container.BeginLifetimeScope(CurrentTestName))
             {
-                var shell = scope.Resolve<ICatalystCli>();
-                var hasConnected = shell.ParseCommand("connect", "-n", "node1");
-                hasConnected.Should().BeTrue();
-            }   
+                using (var scope = container.BeginLifetimeScope(CurrentTestName))
+                {
+                    var shell = scope.Resolve<ICatalystCli>();
+                    var hasConnected = shell.ParseCommand("connect", "-n", "node1");
+                    hasConnected.Should().BeTrue();
+                }
+            }
         }
 
         protected override void Dispose(bool disposing)

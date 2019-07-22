@@ -23,7 +23,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Cli;
@@ -42,7 +41,6 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
 {
     public sealed class GetVersionResponseObserverTests : IDisposable
     {
-        private readonly IUserOutput _output;
         public static readonly List<object[]> QueryContents;
         private readonly IChannelHandlerContext _fakeContext;
 
@@ -65,7 +63,6 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
         {
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
-            _output = Substitute.For<IUserOutput>();
         }
 
         [Theory]
@@ -88,7 +85,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
 
             VersionResponse messageStreamResponse = null;
 
-            _observer = new GetVersionResponseObserver(_output, _logger);
+            _observer = new GetVersionResponseObserver(_logger);
             _observer.StartObserving(messageStream);
             _observer.SubscribeToResponse(message => messageStreamResponse = message);
 

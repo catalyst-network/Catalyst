@@ -22,8 +22,6 @@
 #endregion
 
 using System;
-using System.Reactive.Linq;
-using System.Reactive.Subjects;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Observers;
 using Catalyst.Common.Interfaces.P2P;
