@@ -21,12 +21,9 @@
 
 #endregion
 
-using System;
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
-using Catalyst.Common.Interfaces.IO.Observers;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.IO.Observers;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using DotNetty.Transport.Channels;
@@ -39,8 +36,7 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
     /// The handler reads the response's payload and formats it in user readable format and writes it to the console.
     /// </summary>
     public sealed class GetInfoResponseObserver
-        : ResponseObserverBase<GetInfoResponse>,
-            IRpcResponseObserver
+        : RpcResponseObserver<GetInfoResponse>
     {
         private readonly IUserOutput _output;
 
@@ -50,12 +46,12 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
         /// <param name="output"></param>
         /// <param name="logger">Logger to log debug related information.</param>
         public GetInfoResponseObserver(IUserOutput output,
-            ILogger logger) 
+            ILogger logger)
             : base(logger)
         {
             _output = output;
         }
-        
+
         /// <summary>
         /// 
         /// </summary>
@@ -71,22 +67,6 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
             Guard.Argument(getInfoResponse, nameof(getInfoResponse)).NotNull();
             Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
             Guard.Argument(senderPeerIdentifier, nameof(senderPeerIdentifier)).NotNull();
-            Logger.Debug("Handling GetInfoResponse");
-            
-            try
-            {
-                _output.WriteLine(getInfoResponse.Query);
-            }
-            catch (Exception ex)
-            {
-                Logger.Error(ex,
-                    "Failed to handle GetInfoResponse after receiving message {0}", getInfoResponse);
-                _output.WriteLine(ex.Message);
-            }
-            finally
-            {
-                Logger.Information("Press Enter to continue ...");
-            }
         }
     }
 }

@@ -21,17 +21,21 @@
 
 #endregion
 
-using Catalyst.Cli.CommandTypes;
-using Catalyst.Cli.Options;
-using Catalyst.Common.Interfaces.Cli.Commands;
-using Catalyst.Protocol;
-using Catalyst.Protocol.Rpc.Node;
+using Catalyst.Common.Interfaces.P2P;
+using Google.Protobuf;
+using System;
+using System.Collections.Generic;
+using System.Text;
 
-namespace Catalyst.Cli.Commands
+namespace Catalyst.Common.Interfaces.Rpc.IO.Messaging.Dto
 {
-    public sealed class GetMempoolCommand : BaseMessageCommand<GetMempoolRequest, GetMempoolResponse, GetMempoolOptions>
+    /// <summary>
+    ///     Dto to be used to push RPC protocol messages to an observable stream.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    public interface IRpcClientMessageDto<T> where T : IMessage
     {
-        public GetMempoolCommand(ICommandContext commandContext) : base(commandContext) { }
-        protected override GetMempoolRequest GetMessage(GetMempoolOptions option) { return new GetMempoolRequest(); }
+        IPeerIdentifier Sender { get; set; }
+        T Message { get; set; }
     }
 }

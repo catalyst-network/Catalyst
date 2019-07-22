@@ -23,6 +23,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Cli;
@@ -35,6 +36,7 @@ using DotNetty.Transport.Channels;
 using NSubstitute;
 using Serilog;
 using Xunit;
+using FluentAssertions;
 
 namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
 {
@@ -65,7 +67,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
             _fakeContext = Substitute.For<IChannelHandlerContext>();
             _output = Substitute.For<IUserOutput>();
         }
-        
+
         [Theory]
         [MemberData(nameof(QueryContents))]
         public async Task RpcClient_Can_Handle_GetVersionResponse(string version)
@@ -84,12 +86,16 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
                     response.CorrelationId)
             );
 
+            VersionResponse messageStreamResponse = null;
+
             _observer = new GetVersionResponseObserver(_output, _logger);
             _observer.StartObserving(messageStream);
+            _observer.SubscribeToResponse(message => messageStreamResponse = message);
 
             await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
 
-            _output.Received(1).WriteLine($"Node Version: {version}");
+            messageStreamResponse.Should().NotBeNull();
+            messageStreamResponse.Version.Should().Be(response.Content.Version);
         }
 
         public void Dispose()

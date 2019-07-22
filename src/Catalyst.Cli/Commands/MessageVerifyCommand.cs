@@ -23,14 +23,16 @@
 
 using Catalyst.Cli.CommandTypes;
 using Catalyst.Cli.Options;
+using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Cli.Commands;
 using Catalyst.Common.Util;
+using Catalyst.Protocol;
 using Catalyst.Protocol.Rpc.Node;
 using Nethereum.RLP;
 
 namespace Catalyst.Cli.Commands
 {
-    public sealed class MessageVerifyCommand : BaseMessageCommand<VerifyMessageRequest, VerifyOptions>
+    public sealed class MessageVerifyCommand : BaseMessageCommand<VerifyMessageRequest, VerifyMessageResponse, VerifyOptions>
     {
         public MessageVerifyCommand(ICommandContext commandContext) : base(commandContext) { }
 
@@ -40,7 +42,7 @@ namespace Catalyst.Cli.Commands
             {
                 Message =
                     RLP.EncodeElement(option.Message.Trim('\"').ToBytesForRLPEncoding()).ToByteString(),
-                PublicKey = option.Address.ToBytesForRLPEncoding().ToByteString(),
+                PublicKey = option.Address.PublicKeyToProtobuf(),
                 Signature = option.Signature.ToBytesForRLPEncoding().ToByteString()
             };
         }

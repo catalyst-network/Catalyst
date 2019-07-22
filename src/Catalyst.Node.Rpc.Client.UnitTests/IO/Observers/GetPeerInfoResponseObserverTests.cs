@@ -22,18 +22,18 @@
 #endregion
 
 using System;
+using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Common.IO.Messaging.Dto;
-using Catalyst.Common.Util;
 using Catalyst.Node.Rpc.Client.IO.Observers;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
-using Google.Protobuf.Collections;
+using FluentAssertions;
 using Google.Protobuf.WellKnownTypes;
 using NSubstitute;
 using Serilog;
@@ -84,15 +84,21 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
         [InlineData("publickey-10", "172.0.0.10")]
         public async Task RpcClient_Can_Handle_GetPeerInfoResponse(string publicKey, string ipAddress)
         {
-            var peerInfo = ConstructSamplePeerInfo(publicKey, ipAddress);
+            var peerInfoObj = ConstructSamplePeerInfo(publicKey, ipAddress);
 
-            await TestGetPeerInfoResponse(peerInfo).ConfigureAwait(false);
-
-            var repeatedPeerInfo = new RepeatedField<PeerInfo>
+            var getPeerInfoResponse = await TestGetPeerInfoResponse(peerInfoObj).ConfigureAwait(false);
+            foreach (var peerInfo in getPeerInfoResponse.PeerInfo)
             {
-                peerInfo
-            };
-            _output.Received(1).WriteLine(CommandFormatHelper.FormatRepeatedPeerInfoResponse(repeatedPeerInfo));
+                peerInfo.Should().NotBeNull();
+                peerInfo.BlackListed.Should().Be(peerInfo.BlackListed);
+                peerInfo.Reputation.Should().Be(peerInfo.Reputation);
+                peerInfo.InactiveFor.Should().Be(peerInfo.InactiveFor);
+                peerInfo.LastSeen.Should().Be(peerInfo.LastSeen);
+                peerInfo.Modified.Should().Be(peerInfo.Modified);
+                peerInfo.Created.Should().Be(peerInfo.Created);
+                peerInfo.PeerId.PublicKey.Should().BeEquivalentTo(peerInfoObj.PeerId.PublicKey);
+                peerInfo.PeerId.Ip.Should().BeEquivalentTo(peerInfoObj.PeerId.Ip);
+            }
         }
 
         /// <summary>
@@ -102,16 +108,23 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
         [InlineData("publickey-10", "172.0.0.10")]
         public async Task RpcClient_Can_Handle_Null_Modified_GetPeerInfoResponse(string publicKey, string ipAddress)
         {
-            var peerInfo = ConstructSamplePeerInfo(publicKey, ipAddress);
-            peerInfo.Modified = null;
+            var peerInfoObj = ConstructSamplePeerInfo(publicKey, ipAddress);
+            peerInfoObj.Modified = null;
 
-            await TestGetPeerInfoResponse(peerInfo).ConfigureAwait(false);
+            var getPeerInfoResponse = await TestGetPeerInfoResponse(peerInfoObj).ConfigureAwait(false);
 
-            var repeatedPeerInfo = new RepeatedField<PeerInfo>
+            foreach (var peerInfo in getPeerInfoResponse.PeerInfo)
             {
-                peerInfo
-            };
-            _output.Received(1).WriteLine(CommandFormatHelper.FormatRepeatedPeerInfoResponse(repeatedPeerInfo));
+                peerInfo.Should().NotBeNull();
+                peerInfo.BlackListed.Should().Be(peerInfo.BlackListed);
+                peerInfo.Reputation.Should().Be(peerInfo.Reputation);
+                peerInfo.InactiveFor.Should().Be(peerInfo.InactiveFor);
+                peerInfo.LastSeen.Should().Be(peerInfo.LastSeen);
+                peerInfo.Modified.Should().BeNull();
+                peerInfo.Created.Should().Be(peerInfo.Created);
+                peerInfo.PeerId.PublicKey.Should().BeEquivalentTo(peerInfoObj.PeerId.PublicKey);
+                peerInfo.PeerId.Ip.Should().BeEquivalentTo(peerInfoObj.PeerId.Ip);
+            }
         }
 
         /// <summary>
@@ -120,12 +133,11 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
         [Fact]
         public async Task RpcClient_Can_Handle_GetPeerInfoResponseNonExistentPeers()
         {
-            await TestGetPeerInfoResponse(null).ConfigureAwait(false);
-
-            _output.Received(1).WriteLine("Peer(s) not found");
+            var getPeerInfoResponse = await TestGetPeerInfoResponse(null).ConfigureAwait(false);
+            getPeerInfoResponse.PeerInfo.Count.Should().Be(0);
         }
 
-        private async Task TestGetPeerInfoResponse(PeerInfo peerInfo)
+        private async Task<GetPeerInfoResponse> TestGetPeerInfoResponse(PeerInfo peerInfo)
         {
             var getPeerInfoResponse = new GetPeerInfoResponse();
             if (peerInfo != null)
@@ -143,10 +155,15 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
                     response.CorrelationId)
             );
 
+            GetPeerInfoResponse messageStreamResponse = null;
+
             _observer = new GetPeerInfoResponseObserver(_output, _logger);
             _observer.StartObserving(messageStream);
+            _observer.SubscribeToResponse(message => messageStreamResponse = message);
 
             await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
+
+            return messageStreamResponse;
         }
 
         public void Dispose()
