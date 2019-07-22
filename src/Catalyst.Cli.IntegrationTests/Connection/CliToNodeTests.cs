@@ -27,7 +27,6 @@ using Catalyst.Common.Interfaces.Cli;
 using FluentAssertions;
 using Xunit;
 using Xunit.Abstractions;
-using Microsoft.Extensions.Configuration;
 using System.IO;
 using Catalyst.Common.Interfaces.FileSystem;
 using Catalyst.TestUtils;
@@ -60,7 +59,7 @@ namespace Catalyst.Cli.IntegrationTests.Connection
         [Fact]
         public void CliToNode_Connect_To_Node()
         {
-            _node.RunNodeInstance();
+            _node.BuildNode();
 
             using (var container = ContainerBuilder.Build())
             {
