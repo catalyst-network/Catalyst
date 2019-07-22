@@ -35,13 +35,11 @@ using Catalyst.Common.IO.Messaging.Broadcast;
 using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.P2P;
-using Catalyst.Common.Repository;
 using Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Microsoft.Extensions.Caching.Memory;
 using NSubstitute;
-using SharpRepository.InMemoryRepository;
 using Xunit;
 
 namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Messaging.Broadcast

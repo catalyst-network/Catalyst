@@ -36,7 +36,7 @@ namespace Catalyst.Node.Rpc.Client.IO.Messaging.Dto
         public RpcClientMessageDto(T message, IPeerIdentifier sender)
         {
             Guard.Argument(message, nameof(message))
-            .Require(message.GetType().Namespace.Contains("Catalyst.Protocol.Rpc"));
+               .Require(message.GetType().Namespace.Contains("Catalyst.Protocol.Rpc"));
             Message = message;
             Sender = sender;
         }

@@ -22,7 +22,6 @@
 #endregion
 
 using Catalyst.Common.Interfaces.Modules.Ledger;
-using SharpRepository.Repository;
 using Dawn;
 using Serilog;
 using System;

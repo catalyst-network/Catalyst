@@ -24,9 +24,7 @@
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Repository;
 using Catalyst.Common.Interfaces.Rpc.Authentication;
-using Catalyst.Common.Rpc.Authentication;
 using Nethereum.RLP;
-using SharpRepository.Repository;
 
 namespace Catalyst.Core.Lib.Rpc.Authentication
 {

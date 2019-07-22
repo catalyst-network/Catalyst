@@ -27,15 +27,10 @@ using System.Security;
 using System.Security.Authentication;
 using System.Threading.Tasks;
 using Catalyst.Common.Interfaces.Cryptography;
-using System.IO;
-using System.IO.Abstractions;
-using System.Linq;
 using Catalyst.Common.Interfaces.Keystore;
 using Catalyst.Common.Interfaces.Util;
 using Catalyst.Common.Config;
-using Catalyst.Common.Extensions;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
-using Catalyst.Cryptography.BulletProofs.Wrapper.Types;
 using Nethereum.KeyStore.Crypto;
 using Serilog;
 using IFileSystem = Catalyst.Common.Interfaces.FileSystem.IFileSystem;
@@ -50,7 +45,7 @@ namespace Catalyst.Common.Keystore
         private readonly ICryptoContext _cryptoContext;
         private readonly IPasswordReader _passwordReader;
         private readonly IKeyStoreService _keyStoreService;
-         private readonly PasswordRegistryKey _defaultNodePassword = PasswordRegistryKey.DefaultNodePassword;
+        private readonly PasswordRegistryKey _defaultNodePassword = PasswordRegistryKey.DefaultNodePassword;
 
         private static int MaxTries => 5;
 

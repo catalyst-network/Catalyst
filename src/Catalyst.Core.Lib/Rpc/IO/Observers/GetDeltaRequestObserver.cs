@@ -21,7 +21,6 @@
 
 #endregion
 
-using System.Collections.Generic;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.IO.Observers;
@@ -33,7 +32,7 @@ using Dawn;
 using DotNetty.Transport.Channels;
 using ILogger = Serilog.ILogger;
 
-namespace Catalyst.Node.Core.Rpc.IO.Observers
+namespace Catalyst.Core.Lib.Rpc.IO.Observers
 {
     public sealed class GetDeltaRequestObserver
         : RequestObserverBase<GetDeltaRequest, GetDeltaResponse>, IRpcRequestObserver
