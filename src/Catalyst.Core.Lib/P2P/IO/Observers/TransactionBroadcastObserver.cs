@@ -23,6 +23,7 @@
 
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Observers;
+using Catalyst.Common.Interfaces.P2P.IO.Messaging.Broadcast;
 using Catalyst.Common.IO.Observers;
 using Catalyst.Protocol;
 using Catalyst.Protocol.Common;
@@ -35,8 +36,8 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
         : BroadcastObserverBase<TransactionBroadcast>,
             IP2PMessageObserver
     {
-        public TransactionBroadcastObserver(ILogger logger)
-            : base(logger) { }
+        public TransactionBroadcastObserver(ILogger logger, IBroadcastManager broadcastManager)
+            : base(logger, broadcastManager) { }
 
         public override void HandleBroadcast(IObserverDto<ProtocolMessage> messageDto)
         {

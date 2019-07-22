@@ -60,9 +60,8 @@ namespace Catalyst.Common.IO.Handlers
         {
             var sig = signedMessage.Signature.ToByteArray();
             var pub = signedMessage.Message.PeerId.PublicKey.ToByteArray();
-            var innerSignedMessage = ProtocolMessageSigned.Parser.ParseFrom(signedMessage.Message.Value);
-            var innerSignature = new Signature(sig, pub);
-            return _keySigner.Verify(innerSignature, innerSignedMessage.Message.ToByteArray());
+            var signature = new Signature(sig, pub);
+            return _keySigner.Verify(signature, signedMessage.Message.ToByteArray());
         }
     }
 }

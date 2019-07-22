@@ -22,6 +22,7 @@
 #endregion
 
 using System.Threading.Tasks;
+using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Protocol.Common;
 
 namespace Catalyst.Common.Interfaces.P2P.IO.Messaging.Broadcast
@@ -35,5 +36,10 @@ namespace Catalyst.Common.Interfaces.P2P.IO.Messaging.Broadcast
         /// <summary>Handles Incoming gossip.</summary>
         /// <param name="anySigned">Any signed message.</param>
         Task ReceiveAsync(ProtocolMessageSigned anySigned);
+
+        /// <summary>Gets the original broadcast message.</summary>
+        /// <param name="correlationId">The correlation identifier.</param>
+        /// <returns></returns>
+        void RemoveSignedBroadcastMessageData(ICorrelationId correlationId);
     }
 }

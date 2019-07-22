@@ -26,6 +26,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
+using Catalyst.Common.Interfaces.P2P.IO.Messaging.Broadcast;
 using Catalyst.Common.IO.Observers;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Deltas;
@@ -44,7 +45,7 @@ namespace Catalyst.Common.UnitTests.IO.Observers
             private int _counter;
             public int Counter => _counter;
 
-            public FailingBroadCastObserver(ILogger logger) : base(logger) { }
+            public FailingBroadCastObserver(ILogger logger, IBroadcastManager broadcastManager) : base(logger, broadcastManager) { }
 
             public override void HandleBroadcast(IObserverDto<ProtocolMessage> messageDto)
             {
@@ -62,7 +63,7 @@ namespace Catalyst.Common.UnitTests.IO.Observers
             var candidateDeltaMessages = Enumerable.Repeat(DeltaHelper.GetCandidateDelta(), 10).ToArray();
 
             var messageStream = MessageStreamHelper.CreateStreamWithMessages(candidateDeltaMessages);
-            using (var observer = new FailingBroadCastObserver(Substitute.For<ILogger>()))
+            using (var observer = new FailingBroadCastObserver(Substitute.For<ILogger>(), Substitute.For<IBroadcastManager>()))
             {
                 observer.StartObserving(messageStream);
                 await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync(TimeSpan.FromSeconds(1));
