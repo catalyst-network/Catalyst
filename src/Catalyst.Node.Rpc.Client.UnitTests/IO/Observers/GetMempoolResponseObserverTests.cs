@@ -71,7 +71,6 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
         {
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
-            Substitute.For<IUserOutput>();
         }
 
         private static IEnumerable<string> CreateMemPoolData()
