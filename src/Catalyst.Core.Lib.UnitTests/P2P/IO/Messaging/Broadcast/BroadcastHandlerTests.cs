@@ -70,13 +70,16 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Messaging.Broadcast
             );
 
             var transaction = new TransactionBroadcast();
-            var anySigned = transaction.ToProtocolMessage(peerIdentifier.PeerId, guid)
+            var anySigned = new ProtocolMessageSigned
+                {
+                    Message = transaction.ToProtocolMessage(peerIdentifier.PeerId, guid)
+                }
                .ToProtocolMessage(peerIdentifier.PeerId, CorrelationId.GenerateCorrelationId());
 
             channel.WriteInbound(anySigned);
 
             await _fakeBroadcastManager.Received(Quantity.Exactly(1))
-               .ReceiveAsync(Arg.Any<ProtocolMessage>());
+               .ReceiveAsync(Arg.Any<ProtocolMessageSigned>());
         }
 
         [Fact]

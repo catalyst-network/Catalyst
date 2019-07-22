@@ -25,6 +25,7 @@ using System.Text;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.Modules.Consensus.Deltas;
+using Catalyst.Common.Interfaces.P2P.IO.Messaging.Broadcast;
 using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.Util;
 using Catalyst.Core.Lib.P2P.IO.Observers;
@@ -44,9 +45,11 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Observers
         private readonly IDeltaHashProvider _deltaHashProvider;
         private readonly IChannelHandlerContext _fakeChannelContext;
         private readonly ILogger _logger;
+        private readonly IBroadcastManager _broadcastManager;
 
         public DeltaDfsHashObserverTests()
         {
+            _broadcastManager = Substitute.For<IBroadcastManager>();
             _deltaHashProvider = Substitute.For<IDeltaHashProvider>();
             _fakeChannelContext = Substitute.For<IChannelHandlerContext>();
             _logger = Substitute.For<ILogger>();
@@ -59,7 +62,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Observers
             var prevHash = Multihash.Sum(HashType.ID, Encoding.UTF8.GetBytes("prevHash"));
             var receivedMessage = PrepareReceivedMessage(newHash, prevHash);
 
-            var deltaDfsHashObserver = new DeltaDfsHashObserver(_deltaHashProvider, _logger);
+            var deltaDfsHashObserver = new DeltaDfsHashObserver(_deltaHashProvider, _logger, _broadcastManager);
 
             deltaDfsHashObserver.HandleBroadcast(receivedMessage);
 
@@ -73,7 +76,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Observers
             var prevHash = Multihash.Sum(HashType.ID, Encoding.UTF8.GetBytes("prevHash"));
             var receivedMessage = PrepareReceivedMessage(invalidNewHash, prevHash);
 
-            var deltaDfsHashObserver = new DeltaDfsHashObserver(_deltaHashProvider, _logger);
+            var deltaDfsHashObserver = new DeltaDfsHashObserver(_deltaHashProvider, _logger, _broadcastManager);
 
             deltaDfsHashObserver.HandleBroadcast(receivedMessage);
 

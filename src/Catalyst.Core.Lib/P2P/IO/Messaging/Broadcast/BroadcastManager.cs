@@ -35,10 +35,14 @@ using Catalyst.Protocol.Common;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Primitives;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Catalyst.Common.Interfaces.Modules.KeySigner;
+using Catalyst.Common.Util;
+using Google.Protobuf;
 
 namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
 {
@@ -66,25 +70,34 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
         /// <summary>The peer client</summary>
         private readonly IPeerClient _peerClient;
 
+        /// <summary>The signer</summary>
+        private readonly IKeySigner _signer;
+
+        /// <summary>The signature concurrent dictionary</summary>
+        private readonly ConcurrentDictionary<ICorrelationId, ProtocolMessageSigned> _incomingBroadcastSignatureDictionary;
+
         /// <summary>Initializes a new instance of the <see cref="BroadcastManager"/> class.</summary>
         /// <param name="peerIdentifier">The peer identifier.</param>
         /// <param name="peers">The peers.</param>
         /// <param name="memoryCache">The memory cache.</param>
         /// <param name="peerClient">The peer client.</param>
-        public BroadcastManager(IPeerIdentifier peerIdentifier, IPeerRepository peers, IMemoryCache memoryCache, IPeerClient peerClient)
+        public BroadcastManager(IPeerIdentifier peerIdentifier, IPeerRepository peers, IMemoryCache memoryCache, IPeerClient peerClient, IKeySigner signer)
         {
             _peerIdentifier = peerIdentifier;
             _pendingRequests = memoryCache;
             _peers = peers;
             _peerClient = peerClient;
+            _signer = signer;
+            _incomingBroadcastSignatureDictionary = new ConcurrentDictionary<ICorrelationId, ProtocolMessageSigned>();
             _dtoFactory = new DtoFactory();
             _entryOptions = new MemoryCacheEntryOptions()
                .AddExpirationToken(new CancellationChangeToken(new CancellationTokenSource(TimeSpan.FromMinutes(10)).Token));
         }
 
-        /// <inheritdoc/>
-        public async Task BroadcastAsync(ProtocolMessage protocolMessage)
+        private async Task BroadcastAsync(ProtocolMessageSigned signedMessage)
         {
+            var protocolMessage = signedMessage.Message;
+
             if (protocolMessage.IsBroadCastMessage())
             {
                 throw new NotSupportedException("Cannot broadcast a message which is already a gossip type");
@@ -93,12 +106,38 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
             var correlationId = protocolMessage.CorrelationId.ToCorrelationId();
             var gossipRequest = await GetOrCreateAsync(correlationId).ConfigureAwait(false);
 
-            if (!CanGossip(gossipRequest))
+            if (!CanBroadcast(gossipRequest))
             {
                 return;
             }
 
             SendGossipMessages(protocolMessage, gossipRequest);
+        }
+
+        /// <inheritdoc/>
+        public async Task BroadcastAsync(ProtocolMessage message)
+        {
+            var correlationId = message.CorrelationId.ToCorrelationId();
+            bool containsOriginalMessage =
+                _incomingBroadcastSignatureDictionary.ContainsKey(correlationId);
+            if (containsOriginalMessage)
+            {
+                var originalSignedMessage =
+                    _incomingBroadcastSignatureDictionary[correlationId];
+                await BroadcastAsync(originalSignedMessage);
+            }
+            else
+            {
+                // This means the user of this method is the broadcast originator
+                // Required to wrap his own message in a signature
+                var signature = _signer.Sign(message.ToByteArray());
+                var protocolMessageSigned = new ProtocolMessageSigned
+                {
+                    Signature = signature.SignatureBytes.RawBytes.ToByteString(),
+                    Message = message
+                };
+                await BroadcastAsync(protocolMessageSigned);
+            }
         }
 
         /// <inheritdoc/>
@@ -108,6 +147,12 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
             var gossipRequest = await GetOrCreateAsync(correlationId).ConfigureAwait(false);
             gossipRequest.ReceivedCount += 1;
             UpdatePendingRequest(correlationId, gossipRequest);
+            _incomingBroadcastSignatureDictionary.GetOrAdd(correlationId, protocolSignedMessage);
+        }
+
+        public void RemoveSignedBroadcastMessageData(ICorrelationId correlationId)
+        {
+            _incomingBroadcastSignatureDictionary.Remove(correlationId, out _);
         }
 
         /// <summary>Sends gossips to random peers.</summary>
@@ -158,7 +203,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
         /// <summary>Determines whether this instance can gossip the specified correlation identifier.</summary>
         /// <param name="request">The gossip request</param>
         /// <returns><c>true</c> if this instance can gossip the specified correlation identifier; otherwise, <c>false</c>.</returns>
-        private bool CanGossip(BroadcastMessage request)
+        private bool CanBroadcast(BroadcastMessage request)
         {
             return request.BroadcastCount < GetMaxGossipCycles(request);
         }
