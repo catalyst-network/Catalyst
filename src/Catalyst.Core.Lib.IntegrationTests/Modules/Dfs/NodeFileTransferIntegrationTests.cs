@@ -59,13 +59,15 @@ namespace Catalyst.Core.Lib.IntegrationTests.Modules.Dfs
 
         public NodeFileTransferIntegrationTests(ITestOutputHelper testOutput) : base(testOutput)
         {
-            var config = SocketPortHelper.AlterConfigurationToGetUniquePort(new ConfigurationBuilder()
+            var configurationRoot = new ConfigurationBuilder()
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile))
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile))
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Network.Dev)))
-               .Build(), "NodeFileTransferIntegrationTest");
+               .Build();
 
-            var peerSettings = new PeerSettings(config);
+            SocketPortHelper.AlterConfigurationToGetUniquePort(configurationRoot, "NodeFileTransferIntegrationTest");
+
+            var peerSettings = new PeerSettings(configurationRoot);
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
             Substitute.For<IDtoFactory>();

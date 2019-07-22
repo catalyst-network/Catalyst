@@ -22,6 +22,7 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -56,29 +57,35 @@ namespace Catalyst.Core.Lib.IntegrationTests.Rpc.IO.Observers
         private readonly IKeySigner _keySigner;
         private readonly IChannelHandlerContext _fakeContext;
 
+        protected override IEnumerable<string> ConfigFilesUsed { get; }
+
         public VerifyMessageRequestObserverTests(ITestOutputHelper output) : base(output)
         {
-            var config = SocketPortHelper.AlterConfigurationToGetUniquePort(new ConfigurationBuilder()
-               .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile))
-               .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile))
-               .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Network.Dev)))
-               .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ShellNodesConfigFile))
-               .Build(), CurrentTestName);
+            ConfigFilesUsed = new[]
+            {
+                Path.Combine(Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile),
+                Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile),
+                Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Network.Dev)),
+                Path.Combine(Constants.ConfigSubFolder, Constants.ShellNodesConfigFile),
+            };
 
-            ConfigureContainerBuilder(config);
+            SocketPortHelper.AlterConfigurationToGetUniquePort(ConfigurationRoot, CurrentTestName);
+
+            ConfigureContainerBuilder();
 
             var container = ContainerBuilder.Build();
             _scope = container.BeginLifetimeScope(CurrentTestName);
             
-            _keySigner = container.Resolve<IKeySigner>();
+            _keySigner = _scope.Resolve<IKeySigner>();
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
             
             var fakeChannel = Substitute.For<IChannel>();
             _fakeContext.Channel.Returns(fakeChannel);
         }
-        
+
         //From http://ed25519.cr.yp.to/python/sign.input
+
         [Theory]
         [InlineData("", "e5564300c360ac729086e2cc806e828a84877f1eb8e5d974d873e065224901555fb8821590a33bacc61e39701cf9b46bd25bf5f0595bbe24655141438e7a100b", "d75a980182b10ab7d54bfed3c964073a0ee172f3daa62325af021a68f707511a", true)]
         [InlineData("72", "92a009a9f0d4cab8720e820b5f642540a2b27b5416503f8fb3762223ebdb69da085ac1e43e15996e458f3613d0f11d8c387b2eaeb4302aeeb00d291612bb0c0072", "3d4017c3e843895a92b70aa74d1b7ebc9c982ccf2ec4968cc0cd55f12af4660c", true)]
