@@ -32,7 +32,7 @@ using Catalyst.Common.IO.Observers;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using ILogger = Serilog.ILogger;
 
-namespace Catalyst.Node.Core.RPC.Observables
+namespace Catalyst.Core.Lib.Rpc.IO.Observers
 {
     public sealed class ChangeDataFolderRequestObserver
         : RequestObserverBase<SetPeerDataFolderRequest, GetPeerDataFolderResponse>,
@@ -44,7 +44,7 @@ namespace Catalyst.Node.Core.RPC.Observables
             IRpcServerSettings config, IFileSystem fileSystem,
             ILogger logger) : base(logger, peerIdentifier)
         {
-            _config = config;
+            _fileSystem = fileSystem;
         }
 
         protected override GetPeerDataFolderResponse HandleRequest(SetPeerDataFolderRequest setDataFolderRequest,
