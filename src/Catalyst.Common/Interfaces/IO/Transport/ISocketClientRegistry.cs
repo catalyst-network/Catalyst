@@ -33,7 +33,6 @@ namespace Catalyst.Common.Interfaces.IO.Transport
     {
         IObservable<ISocketClientRegistryEvent> EventStream { get; }
 
-
         IDictionary<int, TSocketChannel> Registry { get; }
 
         /// <summary>

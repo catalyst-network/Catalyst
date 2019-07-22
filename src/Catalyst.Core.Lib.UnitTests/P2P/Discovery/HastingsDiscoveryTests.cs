@@ -211,7 +211,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
                     streamObserver.Received(1).OnNext(Arg.Any<IPeerClientMessageDto>());
                     walker.Logger.Received(1).Debug(Arg.Is("UnKnownMessage"));
                     
-                    walker.StateCandidate.CurrentPeersNeighbours.Count.Should().Be(5);
+                    walker.StateCandidate.CurrentPeersNeighbours.Count.Should().Be(0);
                 }
             }
         }

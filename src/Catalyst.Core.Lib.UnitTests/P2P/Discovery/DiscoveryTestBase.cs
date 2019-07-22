@@ -137,7 +137,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
         {
             _dtoFactory = dtoFactory ?? Substitute.For<IDtoFactory>();
             
-            return _dtoFactory == null ? throw new Exception("dtoFactory can't be null") : this;
+            return _dtoFactory == null ? throw new ArgumentNullException(nameof(_dtoFactory), "dtoFactory can't be null") : this;
         }
 
         public DiscoveryTestBuilder WithPeerMessageCorrelationManager(IPeerMessageCorrelationManager peerMessageCorrelationManager = default,
@@ -195,7 +195,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
             _currentState = 
                 currentState == default && mock == false 
                     ? _currentState = DiscoveryHelper.SubOriginator(peer, currentPeersNeighbours, expectedPnr, contactedNeighbour) 
-                    : currentState == default && mock == true 
+                    : currentState == default 
                         ? _currentState = DiscoveryHelper.MockOriginator(peer, currentPeersNeighbours, expectedPnr, contactedNeighbour) 
                         : _currentState = currentState;
             
@@ -212,7 +212,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
             _stateCandidate = 
                 stateCandidate == default && mock == false 
                     ? _currentState = DiscoveryHelper.SubOriginator(peer, currentPeersNeighbours, expectedPnr, unresponsivePeers) 
-                    : stateCandidate == default && mock == true 
+                    : stateCandidate == default 
                         ? _currentState = DiscoveryHelper.MockOriginator(peer, currentPeersNeighbours, expectedPnr, unresponsivePeers) 
                         : _currentState = stateCandidate;
 

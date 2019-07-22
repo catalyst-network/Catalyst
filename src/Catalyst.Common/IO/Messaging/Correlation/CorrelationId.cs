@@ -62,10 +62,7 @@ namespace Catalyst.Common.IO.Messaging.Correlation
         /// <summary>
         /// Gets a new CorrelationId
         /// </summary>
-        private CorrelationId(bool emptyCorrelationId = default)
-        {
-            Guard.Argument(emptyCorrelationId, nameof(emptyCorrelationId)).NotDefault();
-        }
+        private CorrelationId(bool emptyCorrelationId) { }
         
         /// <summary>
         ///     Static helper to get new CorrelationId.

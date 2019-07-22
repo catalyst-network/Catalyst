@@ -49,7 +49,9 @@ namespace Catalyst.Core.Lib.P2P.Discovery
     public class HastingsDiscovery 
         : IHastingsDiscovery, IDisposable
     {
-        public readonly IDns Dns;
+        private static bool _isDiscovering;
+        private static readonly SemaphoreSlim SemaphoreSlim = new SemaphoreSlim(1, 1);
+        
         public readonly ILogger Logger;
         public readonly IHastingsOriginator State;
         private int _discoveredPeerInCurrentWalk;
@@ -59,13 +61,11 @@ namespace Catalyst.Core.Lib.P2P.Discovery
         private readonly int _peerDiscoveryBurnIn;
         public readonly IHastingsOriginator StateCandidate;
         public readonly IHastingCareTaker HastingCareTaker;
-        public readonly IRepository<Peer> PeerRepository;
+        private readonly IRepository<Peer> _peerRepository;
         private readonly ICancellationTokenProvider _cancellationTokenProvider;
         private readonly IDisposable _evictionSubscription;
 
         public IObservable<IPeerClientMessageDto> DiscoveryStream { get; private set; }
-
-        private static readonly SemaphoreSlim SemaphoreSlim = new SemaphoreSlim(1, 1);
 
         internal HastingsDiscovery(ILogger logger = default,
             IRepository<Peer> peerRepository = default,
@@ -85,10 +85,7 @@ namespace Catalyst.Core.Lib.P2P.Discovery
             cancellationTokenProvider,
             peerClientObservables,
             false, 
-            0,
-            default,
-            default,
-            null) { }
+            0) { }
         
         public HastingsDiscovery(ILogger logger,
             IRepository<Peer> peerRepository,
@@ -105,11 +102,10 @@ namespace Catalyst.Core.Lib.P2P.Discovery
             IHastingCareTaker hastingCareTaker = default,
             IHastingsOriginator stateCandidate = null)
         {
-            Dns = dns;
             Logger = logger;
             PeerClient = peerClient;
             DtoFactory = dtoFactory;
-            PeerRepository = peerRepository;
+            _peerRepository = peerRepository;
             _discoveredPeerInCurrentWalk = 0;
             _peerDiscoveryBurnIn = peerDiscoveryBurnIn;
             _cancellationTokenProvider = cancellationTokenProvider;
@@ -118,14 +114,12 @@ namespace Catalyst.Core.Lib.P2P.Discovery
             
             // build the initial stateCandidate for walk,
             // which is our node and seed nodes
-            StateCandidate = stateCandidate != null
-                ? stateCandidate
-                : new HastingsOriginator
-                {
-                    Peer = _ownNode,
-                    CurrentPeersNeighbours =
-                        new List<IPeerIdentifier>(Dns.GetSeedNodesFromDns(peerSettings.SeedServers))
-                };
+            StateCandidate = stateCandidate ?? new HastingsOriginator
+            {
+                Peer = _ownNode,
+                CurrentPeersNeighbours =
+                    new List<IPeerIdentifier>(dns.GetSeedNodesFromDns(peerSettings.SeedServers))
+            };
 
             // create an empty stream for discovery messages
             DiscoveryStream = Observable.Empty<IPeerClientMessageDto>();
@@ -163,18 +157,17 @@ namespace Catalyst.Core.Lib.P2P.Discovery
             // no state provide is assumed a "live run", instantiated with state assumes test run so don't start discovery
             State = state ?? new HastingsOriginator();
 
-            if (autoStart == false)
+            if (autoStart)
             {
-                return;
-            }
-            
-            WalkForward();
+                WalkForward();
                 
-            // should run until cancelled
-            Task.Run(async () =>
-            {
-                await DiscoveryAsync();
-            });
+                    // should run until cancelled
+                    Task.Run(async () =>
+                    {
+                        await DiscoveryAsync().ConfigureAwait(false);
+                    });   
+                
+            }
         }
 
         /// <summary>
@@ -192,56 +185,61 @@ namespace Catalyst.Core.Lib.P2P.Discovery
         /// <returns></returns>
         public async Task DiscoveryAsync()
         {
-            do
+            if (_isDiscovering == false)
             {
-                // only let one thread in at a time.
-                await SemaphoreSlim.WaitAsync();
-
-                try
+                do
                 {
-                    // spins until our expected result equals found and unreachable peers for this step.
-                    await WaitUntil(HasValidCandidate, 1000, -1);
+                    // only let one thread in at a time.
+                    await SemaphoreSlim.WaitAsync();
 
-                    lock (StateCandidate)
+                    _isDiscovering = true;
+
+                    try
                     {
-                        if (StateCandidate.CurrentPeersNeighbours.Count > 0)
+                        // spins until our expected result equals found and unreachable peers for this step.
+                        await WaitUntil(HasValidCandidate, 1000, -1);
+
+                        lock (StateCandidate)
                         {
-                            // have a walkable next step, so continue walk.
-                            WalkForward();   
-                        }
-                        else
-                        {
-                            // we've received enough matching events but no StateCandidate.CurrentPeersNeighbours
-                            // Assume all neighbours provided are un-reachable.
-                            WalkBack();
+                            if (StateCandidate.CurrentPeersNeighbours.Count > 0)
+                            {
+                                // have a walkable next step, so continue walk.
+                                WalkForward();   
+                            }
+                            else
+                            {
+                                // we've received enough matching events but no StateCandidate.CurrentPeersNeighbours
+                                // Assume all neighbours provided are un-reachable.
+                                WalkBack();
+                            }
                         }
                     }
-                }
-                catch (Exception e) // either an exception was thrown for un-known reason or the await on the condition timed out.
-                {
-                    Logger.Error(e, e.Message);
-                    lock (StateCandidate)
+                    catch (Exception e) // either an exception was thrown for un-known reason or the await on the condition timed out.
                     {
-                        if (StateCandidate.CurrentPeersNeighbours.Count > 0)
+                        Logger.Error(e, e.Message);
+                        lock (StateCandidate)
                         {
-                            // if we discovered at least some peers we can continue walk.
-                            WalkForward();
-                        }
-                        else
-                        {
-                            // we got an exception and found 0 contactable peers, so go back to previous state.
-                            WalkBack();   
+                            if (StateCandidate.CurrentPeersNeighbours.Count > 0)
+                            {
+                                // if we discovered at least some peers we can continue walk.
+                                WalkForward();
+                            }
+                            else
+                            {
+                                // we got an exception and found 0 contactable peers, so go back to previous state.
+                                WalkBack();   
+                            }
                         }
                     }
-                }
-                finally
-                {
-                    // step out lock block.
-                    SemaphoreSlim.Release();
-                }
+                    finally
+                    {
+                        // step out lock block.
+                        SemaphoreSlim.Release();
+                    }
                 
-                // discovery should run until canceled.
-            } while (!_cancellationTokenProvider.HasTokenCancelled());
+                    // discovery should run until canceled.
+                } while (!_cancellationTokenProvider.HasTokenCancelled());   
+            }
         }
 
         protected bool HasValidCandidate()
@@ -435,7 +433,7 @@ namespace Catalyst.Core.Lib.P2P.Discovery
                 return;
             }
             
-            PeerRepository.Add(new Peer
+            _peerRepository.Add(new Peer
             {
                 Reputation = 0,
                 LastSeen = DateTime.UtcNow,
@@ -447,8 +445,18 @@ namespace Catalyst.Core.Lib.P2P.Discovery
         
         public void Dispose()
         {
+            Dispose(true);
+        }
+
+        private void Dispose(bool disposing)
+        {
+            if (!disposing)
+            {
+                return;
+            }
+            
             PeerClient?.Dispose();
-            PeerRepository?.Dispose();
+            _peerRepository?.Dispose();
             _evictionSubscription?.Dispose();
         }
     }

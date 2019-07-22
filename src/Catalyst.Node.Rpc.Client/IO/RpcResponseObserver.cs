@@ -65,7 +65,7 @@ namespace Catalyst.Node.Rpc.Client.IO
         public void SubscribeToResponse(Action<TProto> onNext)
         {
             _messageResponseSubscriptions.Add(MessageResponseStream.Where(x => x.Message is TProto).SubscribeOn(NewThreadScheduler.Default).Subscribe(rpcClientMessageDto =>
-                onNext((TProto)rpcClientMessageDto.Message)
+                onNext((TProto) rpcClientMessageDto.Message)
             ));
         }
 
@@ -75,6 +75,7 @@ namespace Catalyst.Node.Rpc.Client.IO
             {
                 subscription?.Dispose();
             }
+
             _messageResponseSubscriptions.Clear();
             _messageResponse?.Dispose();
             base.Dispose(disposing);

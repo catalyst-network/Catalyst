@@ -34,7 +34,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
 {
     public sealed class HastingCareTakerTests
     {
-        private IPeerIdentifier _ownNode;
+        private readonly IPeerIdentifier _ownNode;
 
         public HastingCareTakerTests()
         {

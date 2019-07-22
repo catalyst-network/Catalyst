@@ -59,14 +59,12 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
 {
     public sealed class HastingDiscoveryTests
     {
-        private IPeerSettings _settings;
-        private ILogger _logger;
-        private IPeerIdentifier _ownNode;
+        private readonly IPeerSettings _settings;
+        private readonly IPeerIdentifier _ownNode;
 
         public HastingDiscoveryTests()
         {
             _settings = PeerSettingsHelper.TestPeerSettings();
-            _logger = Substitute.For<ILogger>();
             _ownNode = PeerIdentifierHelper.GetPeerIdentifier("ownNode");
         }
 

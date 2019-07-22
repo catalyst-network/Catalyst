@@ -26,6 +26,7 @@ using Catalyst.Cli.Options;
 using Catalyst.Common.Interfaces.Cli.Commands;
 using Catalyst.Protocol;
 using Catalyst.Protocol.Rpc.Node;
+
 namespace Catalyst.Cli.Commands
 {
     public sealed class GetVersionCommand : BaseMessageCommand<VersionRequest, VersionResponse, GetVersionOptions>
