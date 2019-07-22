@@ -21,6 +21,7 @@
 
 #endregion
 
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Autofac;
@@ -40,19 +41,23 @@ namespace Catalyst.Core.Lib.IntegrationTests.Modules.Mempool
 {
     public sealed class MempoolIntegrationTests : ConfigFileBasedTest
     {
+        private IEnumerable<string> _configFilesUsed;
+        protected override IEnumerable<string> ConfigFilesUsed => _configFilesUsed;
+
         public MempoolIntegrationTests(ITestOutputHelper output) : base(output) { }
 
         private async Task Mempool_can_save_and_retrieve(FileInfo mempoolModuleFile)
         {
             var alteredComponentsFile = await CreateAlteredConfigForMempool(mempoolModuleFile);
 
-            var config = new ConfigurationBuilder()
-               .AddJsonFile(alteredComponentsFile)
-               .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile))
-               .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Network.Dev)))
-               .Build();
+            _configFilesUsed = new[]
+            {
+                alteredComponentsFile,
+                Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile),
+                Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Network.Dev))
+            };
 
-            ConfigureContainerBuilder(config);
+            ConfigureContainerBuilder();
 
             var container = ContainerBuilder.Build();
             using (container.BeginLifetimeScope())

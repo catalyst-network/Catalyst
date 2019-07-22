@@ -21,6 +21,7 @@
 
 #endregion
 
+using System.Collections.Generic;
 using System.IO;
 using Autofac;
 using Catalyst.Common.Config;
@@ -35,21 +36,22 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P
 {
     public sealed class PeerSettingsTests : ConfigFileBasedTest
     {
-        private readonly IConfigurationRoot _config;
+        protected override IEnumerable<string> ConfigFilesUsed { get; }
 
         public PeerSettingsTests(ITestOutputHelper output) : base(output)
         {
-            _config = new ConfigurationBuilder()
-               .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile))
-               .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile))
-               .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Network.Test)))
-               .Build();
+            ConfigFilesUsed = new[]
+            {
+                Path.Combine(Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile),
+                Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile),
+                Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Network.Test))
+            };
         }
 
         [Fact]
         private void CanResolveIPeerSettings()
         {
-            ConfigureContainerBuilder(_config);
+            ConfigureContainerBuilder();
 
             var container = ContainerBuilder.Build();
             using (container.BeginLifetimeScope(CurrentTestName))
