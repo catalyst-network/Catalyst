@@ -93,7 +93,4 @@ namespace Catalyst.Common.IntegrationTests.Modules.KeySigner
             _keySigner.Sign(Encoding.UTF8.GetBytes("sign this plz"));
         }
     }
-
-
-    
 }

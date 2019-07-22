@@ -50,7 +50,7 @@ namespace Catalyst.Common.Keystore
         private readonly ICryptoContext _cryptoContext;
         private readonly IPasswordReader _passwordReader;
         private readonly IKeyStoreService _keyStoreService;
-         private readonly PasswordRegistryKey _defaultNodePassword = PasswordRegistryKey.DefaultNodePassword;
+        private readonly PasswordRegistryKey _defaultNodePassword = PasswordRegistryKey.DefaultNodePassword;
 
         private static int MaxTries => 5;
 

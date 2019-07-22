@@ -23,6 +23,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.Network;
@@ -32,9 +34,11 @@ using Catalyst.Common.Interfaces.P2P.IO;
 using Catalyst.Common.Interfaces.P2P.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.P2P.ReputationSystem;
 using Catalyst.Common.Interfaces.Util;
+using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Common.P2P;
 using Catalyst.Common.Util;
 using Catalyst.Core.Lib.P2P.Discovery;
+using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
 using Catalyst.TestUtils;
 using Google.Protobuf;
@@ -61,6 +65,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
         internal IList<IPeerClientObservable> _peerClientObservables;
         private IPeerMessageCorrelationManager _peerCorrelationManager;
         private IRepository<Peer> _peerRepository;
+        
         protected DiscoveryTestBuilder() { }
 
         public static DiscoveryTestBuilder GetDiscoveryTestBuilder()
@@ -135,13 +140,15 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
             return _dtoFactory == null ? throw new Exception("dtoFactory can't be null") : this;
         }
 
-        public DiscoveryTestBuilder WithPeerMessageCorrelationManager(IReputationManager reputationManager = default,
+        public DiscoveryTestBuilder WithPeerMessageCorrelationManager(IPeerMessageCorrelationManager peerMessageCorrelationManager = default,
+            IReputationManager reputationManager = default,
             IMemoryCache memoryCache = default,
             IChangeTokenProvider changeTokenProvider = default,
             ILogger logger = default)
         {
-            _peerCorrelationManager =
+            _peerCorrelationManager = peerMessageCorrelationManager ??
                 DiscoveryHelper.MockCorrelationManager(reputationManager, memoryCache, changeTokenProvider, logger);
+            
             return this;
         }
 
