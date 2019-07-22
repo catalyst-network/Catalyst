@@ -300,6 +300,14 @@
             ]
         },
         {
+            "type": "Catalyst.Common.Registry.PasswordRegistry, Catalyst.Common",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.Registry.IPasswordRegistry, Catalyst.Common"
+                }
+            ]
+        },
+        {
             "type": "Catalyst.Common.FileSystem.FileSystem, Catalyst.Common",
             "services": [
                 {
@@ -380,14 +388,14 @@
                 }
             ]
         },
-        {
-            "type": "Catalyst.Node.Rpc.Client.IO.Observers.TransferFileBytesResponseObserver, Catalyst.Node.Rpc.Client",
-            "services": [
-                {
-                    "type": "Catalyst.Common.Interfaces.IO.Observers.IRpcResponseObserver, Catalyst.Common"
-                }
-            ]
-        },
+        //{
+        //    "type": "Catalyst.Node.Rpc.Client.IO.Observers.TransferFileBytesResponseObserver, Catalyst.Node.Rpc.Client",
+        //    "services": [
+        //        {
+        //            "type": "Catalyst.Common.Interfaces.IO.Observers.IRpcResponseObserver, Catalyst.Common"
+        //        }
+        //    ]
+        //},
         {
             "type": "Catalyst.Node.Rpc.Client.IO.Observers.PeerListResponseObserver, Catalyst.Node.Rpc.Client",
             "services": [
