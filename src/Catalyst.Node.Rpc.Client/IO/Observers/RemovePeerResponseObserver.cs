@@ -25,11 +25,10 @@ using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.IO.Observers;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.IO.Observers;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using DotNetty.Transport.Channels;
-using Serilog;
+using ILogger = Serilog.ILogger;
 
 namespace Catalyst.Node.Rpc.Client.IO.Observers
 {
@@ -38,8 +37,7 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
     /// </summary>
     /// <seealso cref="IRpcResponseObserver" />
     public sealed class RemovePeerResponseObserver
-        : ResponseObserverBase<RemovePeerResponse>,
-            IRpcResponseObserver
+        : RpcResponseObserver<RemovePeerResponse>
     {
         private readonly IUserOutput _userOutput;
 
@@ -57,11 +55,6 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
             Guard.Argument(removePeerResponse, nameof(removePeerResponse)).NotNull();
             Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
             Guard.Argument(senderPeerIdentifier, nameof(senderPeerIdentifier)).NotNull();
-            Logger.Debug($@"Handling Remove Peer Response");
-            
-            var deletedCount = removePeerResponse.DeletedCount;
-
-            _userOutput.WriteLine($@"Deleted {deletedCount.ToString()} peers");
         }
     }
 }

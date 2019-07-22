@@ -9,6 +9,15 @@
                 }
             ]
         },
+        {
+            "type": "Catalyst.Common.Registry.KeyRegistry, Catalyst.Common",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.Registry.IKeyRegistry, Catalyst.Common"
+                }
+            ],
+            "instanceScope": "singleinstance"
+        },
         // Start Commands
         {
             "type": "Catalyst.Cli.Commands.AddFileCommand",
@@ -189,7 +198,8 @@
                 {
                     "type": "Catalyst.Common.Interfaces.Modules.KeySigner.IKeySigner, Catalyst.Common"
                 }
-            ]
+            ],
+            "instanceScope": "singleinstance"
         },
         {
             "type": "Catalyst.Common.Keystore.LocalKeyStore, Catalyst.Common",
@@ -315,7 +325,7 @@
             ]
         },
         {
-            "type": "Catalyst.Node.Rpc.Client.IO.Observers.TransferFileBytesRequestObserver, Catalyst.Node.Rpc.Client",
+            "type": "Catalyst.Node.Rpc.Client.IO.Observers.TransferFileBytesResponseObserver, Catalyst.Node.Rpc.Client",
             "services": [
                 {
                     "type": "Catalyst.Common.Interfaces.IO.Observers.IRpcResponseObserver, Catalyst.Common"

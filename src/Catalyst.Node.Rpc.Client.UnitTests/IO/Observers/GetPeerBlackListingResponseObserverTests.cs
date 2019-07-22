@@ -22,17 +22,18 @@
 #endregion
 
 using System;
+using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Common.IO.Messaging.Dto;
-using Catalyst.Common.Util;
 using Catalyst.Node.Rpc.Client.IO.Observers;
+using Catalyst.Protocol;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
-using Nethereum.RLP;
+using FluentAssertions;
 using NSubstitute;
 using Serilog;
 using Xunit;
@@ -71,11 +72,13 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
         [Theory]
         [InlineData("true", "198.51.100.22", "cne2+eRandomValuebeingusedherefprtestingIOp")]
         [InlineData("false", "198.51.100.14", "uebeingusedhere44j6jhdhdhandomValfprtestingItn")]
-        public async Task RpcClient_Can_Handle_GetBlackListingResponse(bool blacklist, string publicKey, string ip)
+        public async Task RpcClient_Can_Handle_GetBlackListingResponse(bool blacklist, string ip, string publicKey)
         {
-            await TestGetBlackListResponse(blacklist, publicKey, ip).ConfigureAwait(false);
-
-            _output.Received(1).WriteLine($"Peer Blacklisting Successful : {blacklist.ToString()}, {publicKey}, {ip}");
+            var setPeerBlackListResponse = await TestGetBlackListResponse(blacklist, ip, publicKey).ConfigureAwait(false);
+            setPeerBlackListResponse.Should().NotBeNull();
+            setPeerBlackListResponse.Blacklist.Should().Be(blacklist);
+            setPeerBlackListResponse.PublicKey.Should().BeEquivalentTo(publicKey.PublicKeyToProtobuf());
+            setPeerBlackListResponse.Ip.Should().BeEquivalentTo(ip.IpAddressToProtobuf());
         }
 
         /// <summary>
@@ -83,19 +86,25 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
         /// </summary>
         [Fact]
         public async Task RpcClient_Can_Handle_GetBlackListingResponseNonExistentPeers()
-        { 
-            await TestGetBlackListResponse(false, string.Empty, string.Empty);
+        {
+            var blacklist = false;
+            var ip = string.Empty;
+            var publicKey = string.Empty;
 
-            _output.Received(1).WriteLine("Peer not found");
+            var setPeerBlackListResponse = await TestGetBlackListResponse(blacklist, ip, publicKey).ConfigureAwait(false);
+            setPeerBlackListResponse.Should().NotBeNull();
+            setPeerBlackListResponse.Blacklist.Should().Be(blacklist);
+            setPeerBlackListResponse.PublicKey.Should().BeEquivalentTo(publicKey.ToUtf8ByteString());
+            setPeerBlackListResponse.Ip.Should().BeEquivalentTo(ip.ToUtf8ByteString());
         }
 
-        private async Task TestGetBlackListResponse(bool blacklist, string publicKey, string ip)
+        private async Task<SetPeerBlackListResponse> TestGetBlackListResponse(bool blacklist, string ip, string publicKey)
         {
             var response = new DtoFactory().GetDto(new SetPeerBlackListResponse
                 {
                     Blacklist = blacklist,
-                    Ip = ip.ToBytesForRLPEncoding().ToByteString(),
-                    PublicKey = publicKey.ToBytesForRLPEncoding().ToByteString()
+                    Ip = string.IsNullOrEmpty(ip) ? ip.ToUtf8ByteString() : ip.IpAddressToProtobuf(),
+                    PublicKey = string.IsNullOrEmpty(publicKey) ? publicKey.ToUtf8ByteString() : publicKey.PublicKeyToProtobuf()
                 },
                 PeerIdentifierHelper.GetPeerIdentifier("sender"),
                 PeerIdentifierHelper.GetPeerIdentifier("recipient"),
@@ -106,10 +115,15 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
                     response.CorrelationId)
             );
 
+            SetPeerBlackListResponse messageStreamResponse = null;
+
             _observer = new PeerBlackListingResponseObserver(_output, _logger);
             _observer.StartObserving(messageStream);
+            _observer.SubscribeToResponse(message => messageStreamResponse = message);
 
             await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
+
+            return messageStreamResponse;
         }
 
         public void Dispose()

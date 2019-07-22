@@ -21,12 +21,9 @@
 
 #endregion
 
-using System;
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
-using Catalyst.Common.Interfaces.IO.Observers;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.IO.Observers;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using DotNetty.Transport.Channels;
@@ -38,9 +35,7 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
     /// Handler responsible for handling the server's response for the GetVersion request.
     /// The handler reads the response's payload and formats it in user readable format and writes it to the console.
     /// </summary>
-    public sealed class GetVersionResponseObserver
-        : ResponseObserverBase<VersionResponse>,
-            IRpcResponseObserver
+    public sealed class GetVersionResponseObserver : RpcResponseObserver<VersionResponse>
     {
         private readonly IUserOutput _output;
 
@@ -58,7 +53,7 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
         {
             _output = output;
         }
-        
+
         /// <summary>
         /// 
         /// </summary>
@@ -71,31 +66,11 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
             IPeerIdentifier senderPeerIdentifier,
             ICorrelationId correlationId)
         {
-            Guard.Argument(versionResponse, nameof(versionResponse)).NotNull();
-            Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
-            Guard.Argument(senderPeerIdentifier, nameof(senderPeerIdentifier)).NotNull();
-            Logger.Debug("GetVersionResponseHandler starting ...");
-
             Guard.Argument(versionResponse, nameof(versionResponse)).NotNull("The message cannot be null");
-            
+
             Guard.Argument(versionResponse, nameof(versionResponse)).NotNull("The VersionResponse cannot be null")
                .Require(d => d.Version != null,
                     d => $"{nameof(versionResponse)} must have a valid Version.");
-            
-            try
-            {
-                _output.WriteLine($"Node Version: {versionResponse.Version}");
-            }
-            catch (Exception ex)
-            {
-                Logger.Error(ex,
-                    "Failed to handle GetInfoResponse after receiving message {0}", versionResponse);
-                _output.WriteLine(ex.Message);
-            }
-            finally
-            {
-                Logger.Information("Press Enter to continue ...");
-            }
         }
     }
 }

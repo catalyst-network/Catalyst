@@ -22,6 +22,9 @@
 #endregion
 
 using System.IO;
+using System.Text;
+using Multiformats.Hash;
+using Multiformats.Hash.Algorithms;
 
 namespace Catalyst.Common.Extensions
 {
@@ -35,6 +38,13 @@ namespace Catalyst.Common.Extensions
             writer.Flush();
             stream.Position = 0;
             return stream;
+        }
+
+        public static Multihash ComputeUtf8Multihash(this string content, IMultihashAlgorithm algorithm)
+        {
+            var bytes = algorithm.ComputeHash(Encoding.UTF8.GetBytes(content));
+            var multihash = Multihash.Cast(bytes);
+            return multihash;
         }
     }
 }

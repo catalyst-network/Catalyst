@@ -26,12 +26,13 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
-using Catalyst.Common.Interfaces.FileSystem;
+using Catalyst.Common.FileSystem;
 using Dawn;
 using FluentAssertions;
 using NSubstitute;
 using Xunit;
 using Xunit.Abstractions;
+using IFileSystem = Catalyst.Common.Interfaces.FileSystem.IFileSystem;
 
 namespace Catalyst.TestUtils
 {
@@ -72,10 +73,16 @@ namespace Catalyst.TestUtils
             _testDirectory.Exists.Should().BeFalse();
             _testDirectory.Create();
 
-            FileSystem = Substitute.For<IFileSystem>();
-            FileSystem.GetCatalystDataDir().Returns(_testDirectory);
+            FileSystem = GetFileSystemStub();
 
             Output.WriteLine("test running in folder {0}", _testDirectory.FullName);
+        }
+
+        private IFileSystem GetFileSystemStub()
+        {
+            var fileSystem = Substitute.ForPartsOf<FileSystem>();
+            fileSystem.GetCatalystDataDir().Returns(_testDirectory);
+            return fileSystem;
         }
 
         public void Dispose() { Dispose(true); }

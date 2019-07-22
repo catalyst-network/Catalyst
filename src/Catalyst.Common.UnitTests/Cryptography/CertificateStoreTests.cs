@@ -23,6 +23,7 @@
 
 using System;
 using System.Security.Cryptography.X509Certificates;
+using Catalyst.Common.Config;
 using Catalyst.Common.Cryptography;
 using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.TestUtils;
@@ -67,18 +68,19 @@ namespace Catalyst.Common.UnitTests.Cryptography
         private void Create_a_certificate_file_with_password()
         {
             _fileWithPassName = "test-with-pass.pfx";
-            _passwordReader.ReadSecurePassword().Returns(TestPasswordReader.BuildSecureStringPassword("password"));
+            _passwordReader.ReadSecurePassword(Arg.Any<PasswordRegistryKey>(), Arg.Any<string>()).Returns(TestPasswordReader.BuildSecureStringPassword("password"));
             _createdCertificate = _certificateStore.ReadOrCreateCertificateFile(_fileWithPassName);
         }
 
         private void The_store_should_have_asked_for_a_password_on_creation_and_loading()
         {
-            _passwordReader.ReceivedWithAnyArgs(2).ReadSecurePassword(null);
+            _passwordReader.ReceivedWithAnyArgs(2).ReadSecurePassword(default);
         }
 
         private void Read_the_certificate_file_with_password()
         {
-            _passwordReader.ReadSecurePassword().Returns(TestPasswordReader.BuildSecureStringPassword("password"));
+            _passwordReader.ReadSecurePassword(PasswordRegistryKey.CertificatePassword, Arg.Any<string>())
+               .Returns(TestPasswordReader.BuildSecureStringPassword("password"));
             _retrievedCertificate = _certificateStore.ReadOrCreateCertificateFile(_fileWithPassName);
         }
 
