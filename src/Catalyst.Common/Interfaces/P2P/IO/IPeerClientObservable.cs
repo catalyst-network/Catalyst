@@ -29,7 +29,7 @@ namespace Catalyst.Common.Interfaces.P2P.IO
 {
     public interface IPeerClientObservable
     {
-        ReplaySubject<IPeerClientMessageDto> _responseMessageSubject { get; }
+        ReplaySubject<IPeerClientMessageDto> ResponseMessageSubject { get; }
         IObservable<IPeerClientMessageDto> MessageStream { get; }
     }
 }

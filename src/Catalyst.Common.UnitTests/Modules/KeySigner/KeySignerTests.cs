@@ -21,13 +21,10 @@
 
 #endregion
 
-using System;
-using System.Linq;
 using System.Text;
 using Catalyst.Common.Config;
 using Catalyst.Common.Cryptography;
 using Catalyst.Common.Interfaces.Keystore;
-using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.Registry;
 using Catalyst.Common.Util;
 using Catalyst.Cryptography.BulletProofs.Wrapper;
@@ -35,9 +32,6 @@ using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Types;
 using FluentAssertions;
 using NSubstitute;
-using NSubstitute.Core;
-using NSubstitute.ReceivedExtensions;
-using NSubstitute.ReturnsExtensions;
 using Xunit;
 
 namespace Catalyst.Common.UnitTests.Modules.KeySigner

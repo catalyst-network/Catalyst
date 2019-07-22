@@ -126,6 +126,7 @@ namespace Catalyst.Core.Lib.Rpc.IO.Observers
                         "Failed to handle GetFileFromDfsRequestHandler after receiving message {0}", getFileFromDfsRequest);
                     responseCode = FileTransferResponseCodes.Error;
                 }
+
                 return ReturnResponse(responseCode, fileLen);
             });
 
@@ -153,8 +154,8 @@ namespace Catalyst.Core.Lib.Rpc.IO.Observers
             // Build Response
             var response = new GetFileFromDfsResponse
             {
-                ResponseCode = ByteString.CopyFrom((byte)responseCode.Id),
-                FileSize = (ulong)fileSize
+                ResponseCode = ByteString.CopyFrom((byte) responseCode.Id),
+                FileSize = (ulong) fileSize
             };
 
             return response;
