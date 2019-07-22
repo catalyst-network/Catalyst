@@ -27,7 +27,6 @@ using System.Threading.Tasks;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.Modules.Consensus.Deltas;
-using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Util;
 using Catalyst.Core.Lib.Rpc.IO.Observers;
 using Catalyst.Protocol;
@@ -45,18 +44,16 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Observers
 {
     public sealed class GetDeltaRequestObserverTests
     {
-        private readonly ILogger _logger;
-        private readonly IPeerIdentifier _peerIdentifier;
         private readonly IDeltaCache _deltaCache;
         private readonly GetDeltaRequestObserver _observer;
         private readonly IChannelHandlerContext _fakeContext;
 
         public GetDeltaRequestObserverTests()
         {
-            _logger = Substitute.For<ILogger>();
-            _peerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("responder");
+            var logger = Substitute.For<ILogger>();
+            var peerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("responder");
             _deltaCache = Substitute.For<IDeltaCache>();
-            _observer = new GetDeltaRequestObserver(_deltaCache, _peerIdentifier, _logger);
+            _observer = new GetDeltaRequestObserver(_deltaCache, peerIdentifier, logger);
             _fakeContext = Substitute.For<IChannelHandlerContext>();
         }
 
@@ -65,7 +62,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Observers
         {
             var invalidHash = "abcd";
             var invalidHashBytes = Encoding.UTF8.GetBytes(invalidHash);
-            var delta = CreateAndExpectDeltaFromCache(invalidHash);
+            CreateAndExpectDeltaFromCache(invalidHash);
 
             var observable = CreateStreamWithDeltaRequest(invalidHashBytes);
 

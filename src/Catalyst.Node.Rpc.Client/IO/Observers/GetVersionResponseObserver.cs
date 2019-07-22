@@ -21,7 +21,6 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Protocol.Rpc.Node;
@@ -37,22 +36,15 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
     /// </summary>
     public sealed class GetVersionResponseObserver : RpcResponseObserver<VersionResponse>
     {
-        private readonly IUserOutput _output;
-
         /// <summary>
         /// Handles the VersionResponse message sent from the <see>
         ///     <cref>GetVersionRequestHandler</cref>
         /// </see>
         /// .
         /// </summary>
-        /// <param name="output">A service used to output the result of the messages handling to the user.</param>
         /// <param name="logger">Logger to log debug related information.</param>
-        public GetVersionResponseObserver(IUserOutput output,
-            ILogger logger)
-            : base(logger)
-        {
-            _output = output;
-        }
+        public GetVersionResponseObserver(ILogger logger)
+            : base(logger) { }
 
         /// <summary>
         /// 

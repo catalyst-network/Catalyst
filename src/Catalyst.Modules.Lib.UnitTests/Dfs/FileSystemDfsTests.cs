@@ -31,7 +31,6 @@ using System.Threading.Tasks;
 using Catalyst.Common.Extensions;
 using Catalyst.Modules.Lib.Dfs;
 using FluentAssertions;
-using Multiformats.Hash;
 using Multiformats.Hash.Algorithms;
 using NSubstitute;
 using Xunit;

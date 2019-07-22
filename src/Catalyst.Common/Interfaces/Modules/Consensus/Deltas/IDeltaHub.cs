@@ -86,7 +86,7 @@ namespace Catalyst.Common.Interfaces.Modules.Consensus.Deltas
         /// </summary>
         /// <param name="delta">The delta which has been elected for this cycle.</param>
         /// <param name="cancellationToken">A cancellation token allowing to abort the tasks.</param>
-        Task<string> PublishDeltaToIpfsAsync(Protocol.Deltas.Delta delta, CancellationToken cancellationToken = default);
+        Task<string> PublishDeltaToIpfsAsync(Delta delta, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// This method should be called in order for the hub to start listening for incoming deltas on the

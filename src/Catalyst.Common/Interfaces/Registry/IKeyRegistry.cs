@@ -23,7 +23,6 @@
 
 using Catalyst.Common.Config;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
-using Catalyst.Cryptography.BulletProofs.Wrapper.Types;
 
 namespace Catalyst.Common.Interfaces.Registry
 {

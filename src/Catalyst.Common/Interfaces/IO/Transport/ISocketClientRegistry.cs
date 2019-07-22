@@ -22,7 +22,6 @@
 #endregion
 
 using Catalyst.Common.Interfaces.IO.Observables;
-using Catalyst.Common.IO.Transport;
 using System;
 using System.Collections.Generic;
 using System.Net;

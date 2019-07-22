@@ -21,7 +21,6 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.IO.Observers;
 using Catalyst.Common.Interfaces.P2P;
@@ -39,14 +38,8 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
     public sealed class PeerBlackListingResponseObserver
         : RpcResponseObserver<SetPeerBlackListResponse>
     {
-        private readonly IUserOutput _output;
-
-        public PeerBlackListingResponseObserver(IUserOutput output,
-            ILogger logger)
-            : base(logger)
-        {
-            _output = output;
-        }
+        public PeerBlackListingResponseObserver(ILogger logger)
+            : base(logger) { }
 
         protected override void HandleResponse(SetPeerBlackListResponse setPeerBlackListResponse,
             IChannelHandlerContext channelHandlerContext,

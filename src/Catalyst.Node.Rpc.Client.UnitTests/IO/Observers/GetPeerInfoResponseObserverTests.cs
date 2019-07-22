@@ -22,7 +22,6 @@
 #endregion
 
 using System;
-using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Cli;
@@ -46,7 +45,6 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
     /// </summary>
     public sealed class GetPeerInfoResponseObserverTests : IDisposable
     {
-        private readonly IUserOutput _output;
         private readonly IChannelHandlerContext _fakeContext;
 
         private readonly ILogger _logger;
@@ -61,7 +59,6 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
         {
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
-            _output = Substitute.For<IUserOutput>();
         }
 
         private PeerInfo ConstructSamplePeerInfo(string publicKey, string ipAddress)
@@ -157,7 +154,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
 
             GetPeerInfoResponse messageStreamResponse = null;
 
-            _observer = new GetPeerInfoResponseObserver(_output, _logger);
+            _observer = new GetPeerInfoResponseObserver(_logger);
             _observer.StartObserving(messageStream);
             _observer.SubscribeToResponse(message => messageStreamResponse = message);
 

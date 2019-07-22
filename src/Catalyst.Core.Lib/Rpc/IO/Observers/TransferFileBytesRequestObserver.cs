@@ -33,7 +33,7 @@ using DotNetty.Transport.Channels;
 using Google.Protobuf;
 using Serilog;
 
-namespace Catalyst.Node.Core.Rpc.IO.Observers
+namespace Catalyst.Core.Lib.Rpc.IO.Observers
 {
     public sealed class TransferFileBytesRequestObserver
         : RequestObserverBase<TransferFileBytesRequest, TransferFileBytesResponse>,

@@ -24,12 +24,10 @@
 
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
-using Catalyst.Common.FileTransfer;
 using Catalyst.Common.Interfaces.FileTransfer;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Common.IO.Messaging.Dto;
-using Catalyst.Node.Core.Rpc.IO.Observers;
 using Catalyst.Protocol;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
@@ -41,6 +39,7 @@ using NSubstitute;
 using Serilog;
 using System.Linq;
 using System.Threading.Tasks;
+using Catalyst.Core.Lib.Rpc.IO.Observers;
 using Xunit;
 
 namespace Catalyst.Common.UnitTests.IO.Observers

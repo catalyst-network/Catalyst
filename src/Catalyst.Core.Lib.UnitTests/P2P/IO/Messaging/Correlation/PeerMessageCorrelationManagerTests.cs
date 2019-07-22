@@ -40,7 +40,6 @@ using Google.Protobuf;
 using Microsoft.Extensions.Caching.Memory;
 using NSubstitute;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Messaging.Correlation
 {
@@ -48,7 +47,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Messaging.Correlation
     {
         private readonly Dictionary<IPeerIdentifier, int> _reputationByPeerIdentifier;
 
-        public PeerMessageCorrelationManagerTests(ITestOutputHelper output) : base(output)
+        public PeerMessageCorrelationManagerTests()
         {
             var subbedRepManager = Substitute.For<IReputationManager>();
             
@@ -112,7 +111,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Messaging.Correlation
                 PeerIds[1].PeerId,
                 CorrelationId.GenerateCorrelationId());
 
-            var request = CorrelationManager.TryMatchResponse(responseMatchingIndex1);
+            CorrelationManager.TryMatchResponse(responseMatchingIndex1);
             var reputationAfter = _reputationByPeerIdentifier[PeerIds[1]];
             reputationAfter.Should().BeLessThan(reputationBefore);
         }

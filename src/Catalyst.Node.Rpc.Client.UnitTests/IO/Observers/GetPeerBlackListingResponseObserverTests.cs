@@ -22,7 +22,6 @@
 #endregion
 
 using System;
-using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Cli;
@@ -45,7 +44,6 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
     /// </summary>
     public sealed class GetPeerBlackListingResponseObserverTests : IDisposable
     {
-        private readonly IUserOutput _output;
         private readonly IChannelHandlerContext _fakeContext;
 
         private readonly ILogger _logger;
@@ -60,7 +58,6 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
         {
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
-            _output = Substitute.For<IUserOutput>();
         }
 
         /// <summary>
@@ -117,7 +114,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
 
             SetPeerBlackListResponse messageStreamResponse = null;
 
-            _observer = new PeerBlackListingResponseObserver(_output, _logger);
+            _observer = new PeerBlackListingResponseObserver(_logger);
             _observer.StartObserving(messageStream);
             _observer.SubscribeToResponse(message => messageStreamResponse = message);
 

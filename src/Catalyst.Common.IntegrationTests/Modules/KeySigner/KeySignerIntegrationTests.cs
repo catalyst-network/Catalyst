@@ -24,17 +24,12 @@
 using System.Text;
 using Catalyst.Common.Config;
 using Catalyst.Common.Cryptography;
-using Catalyst.Common.Interfaces.Cryptography;
-using Catalyst.Common.Interfaces.Keystore;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
-using Catalyst.Common.Interfaces.Registry;
 using Catalyst.Common.Keystore;
 using Catalyst.Common.Registry;
 using Catalyst.Common.Util;
 using Catalyst.Cryptography.BulletProofs.Wrapper;
 using Catalyst.TestUtils;
-using FluentAssertions;
-using Ipfs;
 using Multiformats.Hash.Algorithms;
 using NSubstitute;
 using Serilog;
@@ -43,7 +38,7 @@ using Xunit.Abstractions;
 
 namespace Catalyst.Common.IntegrationTests.Modules.KeySigner
 {
-    public class KeySignerIntegrationTests : FileSystemBasedTest
+    public sealed class KeySignerIntegrationTests : FileSystemBasedTest
     {
         public KeySignerIntegrationTests(ITestOutputHelper output) : base(output)
         {

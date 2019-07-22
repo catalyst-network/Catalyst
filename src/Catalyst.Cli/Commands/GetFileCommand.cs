@@ -27,7 +27,6 @@ using Catalyst.Common.Extensions;
 using Catalyst.Common.FileTransfer;
 using Catalyst.Common.Interfaces.Cli.Commands;
 using Catalyst.Common.Interfaces.FileTransfer;
-using Catalyst.Protocol;
 using Catalyst.Protocol.Rpc.Node;
 
 namespace Catalyst.Cli.Commands

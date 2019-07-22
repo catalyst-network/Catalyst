@@ -22,7 +22,6 @@
 #endregion
 
 using Catalyst.Common.Config;
-using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Protocol.Rpc.Node;
 
 namespace Catalyst.Common.Interfaces.FileTransfer

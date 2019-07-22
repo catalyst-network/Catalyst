@@ -40,7 +40,6 @@ using DotNetty.Transport.Channels;
 using FluentAssertions;
 using NSubstitute;
 using Serilog;
-using SharpRepository.Repository;
 using Xunit;
 
 namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Observers

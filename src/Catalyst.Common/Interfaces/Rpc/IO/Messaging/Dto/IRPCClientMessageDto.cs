@@ -23,9 +23,6 @@
 
 using Catalyst.Common.Interfaces.P2P;
 using Google.Protobuf;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Catalyst.Common.Interfaces.Rpc.IO.Messaging.Dto
 {

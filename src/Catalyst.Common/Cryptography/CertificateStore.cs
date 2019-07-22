@@ -39,7 +39,7 @@ namespace Catalyst.Common.Cryptography
     public sealed class CertificateStore
         : ICertificateStore
     {
-        private readonly PasswordRegistryKey CertificatePasswordIdentifier = PasswordRegistryKey.CertificatePassword;
+        private readonly PasswordRegistryKey _certificatePasswordIdentifier = PasswordRegistryKey.CertificatePassword;
         private static int MaxTries => 5;
         private const string LocalHost = "localhost";
         private readonly DirectoryInfo _storageFolder;
@@ -81,7 +81,7 @@ namespace Catalyst.Common.Cryptography
             const string promptMessage = "Catalyst Node needs to create an SSL certificate." +
                 " Please enter a password to encrypt the certificate on disk:";
             
-            using (var password = _passwordReader.ReadSecurePassword(CertificatePasswordIdentifier, promptMessage))
+            using (var password = _passwordReader.ReadSecurePassword(_certificatePasswordIdentifier, promptMessage))
             {
                 var certificate = BuildSelfSignedServerCertificate(password, commonName);
                 Save(certificate, filePath, password);
@@ -130,10 +130,10 @@ namespace Catalyst.Common.Cryptography
                     try
                     {
                         using (var passwordFromConsole =
-                            _passwordReader.ReadSecurePassword(CertificatePasswordIdentifier, passwordPromptMessage))
+                            _passwordReader.ReadSecurePassword(_certificatePasswordIdentifier, passwordPromptMessage))
                         {
                             certificate = new X509Certificate2(fileInBytes, passwordFromConsole);
-                            _passwordReader.AddPasswordToRegistry(CertificatePasswordIdentifier,
+                            _passwordReader.AddPasswordToRegistry(_certificatePasswordIdentifier,
                                 passwordFromConsole);
                             break;
                         }
