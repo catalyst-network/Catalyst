@@ -30,6 +30,7 @@ using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Node.Rpc.Client.IO.Observers;
+using Catalyst.Protocol;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
@@ -44,15 +45,14 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
 {
     public class GetDeltaResponseObserverTests
     {
-        private readonly IUserOutput _output;
         private readonly GetDeltaResponseObserver _observer;
         private readonly Multihash _previousDeltaHash;
 
         public GetDeltaResponseObserverTests()
         {
-            _output = Substitute.For<IUserOutput>();
+            var output = Substitute.For<IUserOutput>();
             var logger = Substitute.For<ILogger>();
-            _observer = new GetDeltaResponseObserver(_output, logger);
+            _observer = new GetDeltaResponseObserver(output, logger);
             var hashingAlgorithm = Common.Config.Constants.HashAlgorithm;
             _previousDeltaHash = Multihash.Cast(hashingAlgorithm.ComputeHash(Encoding.UTF8.GetBytes("previous")));
         }
@@ -65,14 +65,14 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
 
             var messageStream = CreateMessageStream(deltaResponse);
 
+            GetDeltaResponse messageStreamResponse = null;
             _observer.StartObserving(messageStream);
+            _observer.SubscribeToResponse(message => messageStreamResponse = message);
 
             await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
 
-            _output.Received(1).WriteLine(Arg.Any<string>());
-
-            var messageOutput = (string) _output.ReceivedCalls().Single().GetArguments().Single();
-            messageOutput.Should().Be(deltaContent.ToString());
+            messageStreamResponse.Should().NotBeNull();
+            messageStreamResponse.ToJsonString().Should().Be(deltaResponse.ToJsonString());
         }
 
         [Fact]
@@ -82,14 +82,14 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
 
             var messageStream = CreateMessageStream(deltaResponse);
 
+            GetDeltaResponse messageStreamResponse = null;
             _observer.StartObserving(messageStream);
+            _observer.SubscribeToResponse(message => messageStreamResponse = message);
 
             await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
 
-            _output.Received(1).WriteLine(Arg.Any<string>());
-
-            var messageOutput = (string) _output.ReceivedCalls().Single().GetArguments().Single();
-            messageOutput.Should().Be(GetDeltaResponseObserver.UnableToRetrieveDeltaMessage);
+            messageStreamResponse.Should().NotBeNull();
+            messageStreamResponse.Delta.Should().BeNull();
         }
 
         private static IObservable<IObserverDto<ProtocolMessage>> CreateMessageStream(GetDeltaResponse deltaResponse)

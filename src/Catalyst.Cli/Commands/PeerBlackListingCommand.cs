@@ -23,17 +23,14 @@
 
 using Catalyst.Cli.CommandTypes;
 using Catalyst.Cli.Options;
+using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Cli.Commands;
-using Catalyst.Common.Network;
-using Catalyst.Common.Util;
+using Catalyst.Protocol;
 using Catalyst.Protocol.Rpc.Node;
-using Google.Protobuf;
-using Nethereum.RLP;
-using System.Net;
 
 namespace Catalyst.Cli.Commands
 {
-    public sealed class PeerBlackListingCommand : BaseMessageCommand<SetPeerBlackListRequest, PeerBlackListingOptions>
+    public sealed class PeerBlackListingCommand : BaseMessageCommand<SetPeerBlackListRequest, SetPeerBlackListResponse, PeerBlackListingOptions>
     {
         public PeerBlackListingCommand(ICommandContext commandContext) : base(commandContext) { }
 
@@ -41,8 +38,8 @@ namespace Catalyst.Cli.Commands
         {
             return new SetPeerBlackListRequest
             {
-                PublicKey = option.PublicKey.ToBytesForRLPEncoding().ToByteString(),
-                Ip = ByteString.CopyFrom(IPAddress.Parse(option.IpAddress).To16Bytes()),
+                PublicKey = option.PublicKey.PublicKeyToProtobuf(),
+                Ip = option.IpAddress.IpAddressToProtobuf(),
                 Blacklist = option.BlackListFlag
             };
         }
