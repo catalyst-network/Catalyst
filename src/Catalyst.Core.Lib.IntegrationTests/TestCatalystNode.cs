@@ -24,10 +24,13 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Autofac;
 using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces;
 using Catalyst.Common.Interfaces.Cryptography;
+using Catalyst.Common.Interfaces.Modules.Consensus;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Core.Lib.Modules.Dfs;
 using Catalyst.TestUtils;
@@ -38,11 +41,12 @@ using Xunit.Abstractions;
 
 namespace Catalyst.Core.Lib.IntegrationTests
 {
-    public class TestCatalystNode : ConfigFileBasedTest
+    public class TestCatalystNode : ConfigFileBasedTest, ICatalystNode
     {
         public string Name { get; }
         private ILifetimeScope _scope;
         private IContainer _container;
+        private ICatalystNode _catalystNode;
 
         protected override IEnumerable<string> ConfigFilesUsed { get; }
 
@@ -73,7 +77,17 @@ namespace Catalyst.Core.Lib.IntegrationTests
             return new IpfsAdapter(passwordReader, peerSettings, FileSystem, logger);
         }
 
-        public void RunNodeInstance()
+        public async Task RunAsync(CancellationToken cancellationSourceToken)
+        {
+            if (_catalystNode == null)
+            {
+                BuildNode();
+            }
+
+            await _catalystNode.RunAsync(cancellationSourceToken);
+        }
+
+        public void BuildNode()
         {
             this.ConfigureContainerBuilder();
 
@@ -83,7 +97,7 @@ namespace Catalyst.Core.Lib.IntegrationTests
             _container = ContainerBuilder.Build();
 
             _scope = _container.BeginLifetimeScope(CurrentTestName);
-            _ = _scope.Resolve<ICatalystNode>();
+            _catalystNode = _scope.Resolve<ICatalystNode>();
         }
 
         protected override void Dispose(bool disposing)
