@@ -16,7 +16,4 @@
         <ProjectReference Include="..\Catalyst.Modules.Lib\Catalyst.Modules.Lib.csproj" />
         <ProjectReference Include="..\Catalyst.TestUtils\Catalyst.TestUtils.csproj" />
     </ItemGroup>
-    <ItemGroup>
-      <Folder Include="Consensus\" />
-    </ItemGroup>
 </Project>
