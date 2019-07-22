@@ -30,37 +30,77 @@ using IFileSystem = Catalyst.Common.Interfaces.FileSystem.IFileSystem;
 
 namespace Catalyst.Common.FileSystem
 {
-    public sealed class FileSystem
+    public class FileSystem
         : System.IO.Abstractions.FileSystem,
             IFileSystem
     {
-        public DirectoryInfo GetCatalystDataDir()
+        public virtual DirectoryInfo GetCatalystDataDir()
         {
             var path = Path.Combine(GetUserHomeDir(), Constants.CatalystDataDir);
             return new DirectoryInfo(path);
         }
 
-        public async Task<IFileInfo> WriteFileToCddAsync(string fileName, string contents)
+        public Task<IFileInfo> WriteTextFileToCddAsync(string fileName, string contents)
         {
-            var fullPath = Path.Combine(GetCatalystDataDir().ToString(), fileName);
+            var fullPath = Path.Combine(GetCatalystDataDir().FullName, fileName);
 
-            using (var file = File.CreateText(fullPath))
+            return WriteFileToPathAsync(fullPath, contents);
+        }
+
+        public Task<IFileInfo> WriteTextFileToCddSubDirectoryAsync(string fileName, string subDirectory, string contents)
+        {
+            var fullPath = Path.Combine(GetCatalystDataDir().FullName, subDirectory, fileName);
+
+            return WriteFileToPathAsync(fullPath, contents);
+        }
+
+        private async Task<IFileInfo> WriteFileToPathAsync(string path, string contents)
+        {
+            var fileInfo = FileInfo.FromFileName(path);
+            if (!Directory.Exists(fileInfo.DirectoryName))
+            {
+                Directory.CreateDirectory(fileInfo.DirectoryName);
+            }
+
+            using (var file = File.CreateText(path))
             {
                 await file.WriteAsync(contents).ConfigureAwait(false);
                 await file.FlushAsync().ConfigureAwait(false);
             }
 
-            return FileInfo.FromFileName(fullPath);
+            return FileInfo.FromFileName(path);
         }
 
         public bool DataFileExists(string fileName)
         {
-            return File.Exists(Path.Combine(GetCatalystDataDir().ToString(), fileName));
+            return File.Exists(Path.Combine(GetCatalystDataDir().FullName, fileName));
         }
-        
+
+        public bool DataFileExistsInSubDirectory(string fileName, string subDirectory)
+        {
+            return File.Exists(Path.Combine(GetCatalystDataDir().FullName, subDirectory, fileName));
+        }
+
         private static string GetUserHomeDir()
         {
             return Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+        }
+
+        public string ReadTextFromCddFile(string fileName)
+        {
+            var path = Path.Combine(GetCatalystDataDir().FullName, fileName);
+            return ReadTextFromFile(path);
+        }
+
+        public string ReadTextFromCddSubDirectoryFile(string fileName, string subDirectory)
+        {
+            var path = Path.Combine(GetCatalystDataDir().FullName, subDirectory, fileName);
+            return ReadTextFromFile(path);
+        }
+
+        private string ReadTextFromFile(string filePath)
+        {
+            return File.Exists(filePath) ? File.ReadAllText(filePath) : null;
         }
     }
 }

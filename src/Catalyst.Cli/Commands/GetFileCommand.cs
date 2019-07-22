@@ -27,11 +27,12 @@ using Catalyst.Common.Extensions;
 using Catalyst.Common.FileTransfer;
 using Catalyst.Common.Interfaces.Cli.Commands;
 using Catalyst.Common.Interfaces.FileTransfer;
+using Catalyst.Protocol;
 using Catalyst.Protocol.Rpc.Node;
 
 namespace Catalyst.Cli.Commands
 {
-    public sealed class GetFileCommand : BaseMessageCommand<GetFileFromDfsRequest, GetFileOptions>
+    public sealed class GetFileCommand : BaseMessageCommand<GetFileFromDfsRequest, GetFileFromDfsResponse, GetFileOptions>
     {
         private readonly IDownloadFileTransferFactory _downloadFileTransferFactory;
 
