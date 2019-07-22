@@ -25,15 +25,18 @@ using System;
 using System.Net;
 using System.Threading.Tasks;
 using Catalyst.Common.Extensions;
+using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.IO.Messaging.Broadcast;
 using Catalyst.Common.IO.Handlers;
 using Catalyst.Common.IO.Messaging.Correlation;
+using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Transaction;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels.Embedded;
 using FluentAssertions;
+using Google.Protobuf;
 using NSubstitute;
 using NSubstitute.Exceptions;
 using NSubstitute.ReceivedExtensions;
@@ -64,19 +67,28 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Messaging.Broadcast
             recipientIdentifier.Ip.Returns(fakeIp);
             recipientIdentifier.IpEndPoint.Returns(new IPEndPoint(fakeIp, 10));
 
+            var keySigner = Substitute.For<IKeySigner>();
+            keySigner.Verify(Arg.Any<ISignature>(), Arg.Any<byte[]>()).Returns(true);
+
             EmbeddedChannel channel = new EmbeddedChannel(
+                new ProtocolMessageVerifyHandler(keySigner),
                 _broadcastHandler,
                 new ObservableServiceHandler()
             );
 
             var transaction = new TransactionBroadcast();
-            var anySigned = new ProtocolMessageSigned
+            var gossipMessage =
+                new ProtocolMessageSigned
                 {
-                    Message = transaction.ToProtocolMessage(peerIdentifier.PeerId, guid)
-                }
-               .ToProtocolMessage(peerIdentifier.PeerId, CorrelationId.GenerateCorrelationId());
+                    Message = new ProtocolMessageSigned
+                    {
+                        Message = transaction.ToProtocolMessage(peerIdentifier.PeerId, guid),
+                        Signature = ByteString.Empty
+                    }.ToProtocolMessage(peerIdentifier.PeerId, CorrelationId.GenerateCorrelationId()),
+                    Signature = ByteString.Empty
+                };
 
-            channel.WriteInbound(anySigned);
+            channel.WriteInbound(gossipMessage);
 
             await _fakeBroadcastManager.Received(Quantity.Exactly(1))
                .ReceiveAsync(Arg.Any<ProtocolMessageSigned>());
