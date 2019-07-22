@@ -57,7 +57,7 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Consensus.Deltas
         {
             DodgyCandidates = new List<object[]>
             {
-                new object[] {(CandidateDeltaBroadcast) null},
+                new object[] {null},
                 new object[] {new CandidateDeltaBroadcast()},
                 new object[] 
                 {
@@ -139,7 +139,7 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Consensus.Deltas
             _voter = new DeltaVoter(_cache, _producersProvider, Substitute.For<ILogger>());
 
             var candidate = DeltaHelper.GetCandidateDelta(
-                previousDeltaHash: _previousDeltaHash,
+                _previousDeltaHash,
                 producerId: _producerIds.First().PeerId);
 
             var candidateHashAsHex = candidate.Hash.ToByteArray().ToHex();
@@ -242,12 +242,12 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Consensus.Deltas
                 _voter = new DeltaVoter(realCache, _producersProvider, Substitute.For<ILogger>());
 
                 var candidate1 = DeltaHelper.GetCandidateDelta(
-                    previousDeltaHash: _previousDeltaHash,
+                    _previousDeltaHash,
                     producerId: _producerIds.First().PeerId);
                 var candidate1CacheKey = DeltaVoter.GetCandidateCacheKey(candidate1);
 
                 var candidate2 = DeltaHelper.GetCandidateDelta(
-                    previousDeltaHash: _previousDeltaHash,
+                    _previousDeltaHash,
                     producerId: _producerIds.Last().PeerId);
                 var candidate2CacheKey = DeltaVoter.GetCandidateCacheKey(candidate2);
 
@@ -261,7 +261,7 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Consensus.Deltas
 
                 realCache.TryGetValue(previousDeltaCacheKey, 
                     out ConcurrentBag<string> retrievedCandidateList).Should().BeTrue();
-                retrievedCandidateList.Should().BeEquivalentTo(new[] {candidate1CacheKey});
+                retrievedCandidateList.Should().BeEquivalentTo(candidate1CacheKey);
 
                 _voter.OnNext(candidate2);
 
@@ -271,10 +271,7 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Consensus.Deltas
 
                 realCache.TryGetValue(previousDeltaCacheKey,
                     out ConcurrentBag<string> retrievedUpdatedCandidateList).Should().BeTrue();
-                retrievedUpdatedCandidateList.Should().BeEquivalentTo(new[]
-                {
-                    candidate1CacheKey, candidate2CacheKey
-                });
+                retrievedUpdatedCandidateList.Should().BeEquivalentTo(candidate1CacheKey, candidate2CacheKey);
             }
         }
 
@@ -308,7 +305,7 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Consensus.Deltas
             {
                 _voter = new DeltaVoter(realCache, _producersProvider, Substitute.For<ILogger>());
 
-                var scoredCandidates = AddCandidatesToCacheAndVote(10, 500, realCache);
+                AddCandidatesToCacheAndVote(10, 500, realCache);
 
                 var found = _voter.TryGetFavouriteDelta(ByteUtil.GenerateRandomByteArray(32), out var favouriteCandidate);
 
