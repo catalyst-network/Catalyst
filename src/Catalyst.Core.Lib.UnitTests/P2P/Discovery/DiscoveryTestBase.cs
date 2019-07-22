@@ -49,7 +49,7 @@ using SharpRepository.Repository;
 
 namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
 {
-    public class DiscoveryTestBuilder : IDisposable
+    public sealed class DiscoveryTestBuilder : IDisposable
     {
         private int _burnIn;
         private bool _autoStart;
@@ -62,11 +62,11 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
         private IHastingsOriginator _currentState;
         private IHastingsOriginator _stateCandidate;
         private ICancellationTokenProvider _cancellationProvider;
-        internal IList<IPeerClientObservable> _peerClientObservables;
+        public IList<IPeerClientObservable> PeerClientObservables;
         private IPeerMessageCorrelationManager _peerCorrelationManager;
         private IRepository<Peer> _peerRepository;
-        
-        protected DiscoveryTestBuilder() { }
+
+        private DiscoveryTestBuilder() { }
 
         public static DiscoveryTestBuilder GetDiscoveryTestBuilder()
         {
@@ -83,7 +83,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
                 _dtoFactory,
                 _peerCorrelationManager,
                 _cancellationProvider,
-                _peerClientObservables,
+                PeerClientObservables,
                 _autoStart,
                 _burnIn,
                 _currentState,
@@ -160,14 +160,14 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
         
         public DiscoveryTestBuilder WithPeerClientObservables(ILogger logger = default, params Type[] clientObservers)
         {
-            if (_peerClientObservables == null) 
+            if (PeerClientObservables == null) 
             {
-                _peerClientObservables = new List<IPeerClientObservable>();
+                PeerClientObservables = new List<IPeerClientObservable>();
             }
 
             foreach (var observerType in clientObservers)
             {
-                _peerClientObservables.Add((IPeerClientObservable) Activator.CreateInstance(observerType, logger ?? Substitute.For<ILogger>()));
+                PeerClientObservables.Add((IPeerClientObservable) Activator.CreateInstance(observerType, logger ?? Substitute.For<ILogger>()));
             }
 
             return this;

@@ -34,38 +34,23 @@ namespace Catalyst.TestUtils
 {
     public static class CacheHelper
     {
-        public static MockedCache GetMockedCache()
+        /// <summary>
+        ///  clean up
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="cache"></param>
+        public static Dictionary<ByteString, ICacheEntry> MockCacheEvictionCallback(object key, IMemoryCache cache, Dictionary<ByteString, ICacheEntry> CacheEntriesByRequest)
         {
-            return new MockedCache();
-        }
+            var correlationId = (ByteString) key;
+            var cacheEntry = Substitute.For<ICacheEntry>();
+            var expirationTokens = new List<IChangeToken>();
+            cacheEntry.ExpirationTokens.Returns(expirationTokens);
+            var expirationCallbacks = new List<PostEvictionCallbackRegistration>();
+            cacheEntry.PostEvictionCallbacks.Returns(expirationCallbacks);
 
-        public sealed class MockedCache
-        {
-            private readonly IMemoryCache _memoryCache;
-            public readonly IDictionary<ByteString, ICacheEntry> _cacheEntries;
-            private readonly List<CorrelatableMessage<ProtocolMessage>> _correlatableMessages;
-
-            internal MockedCache(IDictionary<ByteString, ICacheEntry> cacheEntries = default, IMemoryCache memoryCache = default)
-            {
-                _cacheEntries = cacheEntries ?? new Dictionary<ByteString, ICacheEntry>();
-                _memoryCache = memoryCache ?? Substitute.For<IMemoryCache>();
-            }
-            
-            /// <summary>
-            ///      Registers mocked eviction call back behavior on cache entry.
-            /// </summary>
-            /// <param name="key"></param>
-            public void MockCacheEvictionCallback(object key)
-            {
-                var correlationId = (ByteString) key;
-                var cacheEntry = Substitute.For<ICacheEntry>();
-                cacheEntry.ExpirationTokens.Returns(new List<IChangeToken>());
-                var expirationCallbacks = new List<PostEvictionCallbackRegistration>();
-                cacheEntry.PostEvictionCallbacks.Returns(expirationCallbacks);
-
-                _memoryCache.CreateEntry(correlationId).Returns(cacheEntry);
-                _cacheEntries.Add(correlationId, cacheEntry);
-            }
+            cache.CreateEntry(correlationId).Returns(cacheEntry);
+            CacheEntriesByRequest.Add(correlationId, cacheEntry);
+            return CacheEntriesByRequest;
         }
     }
 }

@@ -109,7 +109,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
                 {
                     var subbedDto = DiscoveryHelper.SubDto(discoveryMessage, walker.StateCandidate.ExpectedPnr.Key, walker.StateCandidate.ExpectedPnr.Value);
 
-                    discoveryTestBuilder._peerClientObservables
+                    discoveryTestBuilder.PeerClientObservables
                        .ToList()
                        .ForEach(o =>
                         {
@@ -150,7 +150,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
                 {
                     expectedResponses.ToList().ForEach(r =>
                     {
-                        discoveryTestBuilder._peerClientObservables.ToList()
+                        discoveryTestBuilder.PeerClientObservables.ToList()
                            .ForEach(o =>
                             {
                                 o._responseMessageSubject.OnNext(DiscoveryHelper.SubDto(typeof(PingResponse), r.Value, r.Key));
@@ -204,7 +204,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
                     subbedDto1.CorrelationId.Returns(Substitute.For<ICorrelationId>());
                     subbedDto1.Message.Returns(new PingResponse());
 
-                    discoveryTestBuilder._peerClientObservables.ToList().ForEach(o => o._responseMessageSubject.OnNext(subbedDto1));
+                    discoveryTestBuilder.PeerClientObservables.ToList().ForEach(o => o._responseMessageSubject.OnNext(subbedDto1));
 
                     await walker.DiscoveryStream.WaitForItemsOnDelayedStreamOnTaskPoolSchedulerAsync(1);
 
@@ -240,7 +240,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
                 {
                     var subbedDto = DiscoveryHelper.SubDto(typeof(PingResponse));
 
-                    discoveryTestBuilder._peerClientObservables
+                    discoveryTestBuilder.PeerClientObservables
                        .ToList()
                        .ForEach(o =>
                         {
@@ -287,7 +287,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
                    
                     subbedDto.Message.Returns(peerNeighborsResponse);
                     
-                    discoveryTestBuilder._peerClientObservables.ToList()
+                    discoveryTestBuilder.PeerClientObservables.ToList()
                        .ForEach(o =>
                         {
                             o._responseMessageSubject.OnNext(subbedDto);

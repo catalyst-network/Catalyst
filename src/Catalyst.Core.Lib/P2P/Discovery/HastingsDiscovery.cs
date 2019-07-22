@@ -306,12 +306,13 @@ namespace Catalyst.Core.Lib.P2P.Discovery
             lock (State)
             lock (StateCandidate)
             {
-                // transitions to last state.
                 var lastState = HastingCareTaker.Get();
-                State.RestoreMemento(lastState);
-
+             
                 // continues walk by proposing a new degree.
                 StateCandidate.Peer = lastState.Neighbours.RandomElement();
+                
+                // transitions to last state.
+                State.RestoreMemento(lastState);
 
                 var peerNeighbourRequestDto = DtoFactory.GetDto(new PeerNeighborsRequest(),
                     _ownNode,

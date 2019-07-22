@@ -179,9 +179,19 @@ namespace Catalyst.TestUtils
 
         public static Stack<IHastingMemento> MockMementoHistory(Stack<IHastingMemento> state, int depth = 10)
         {
-            state.Push(new HastingMemento(state.Last().Neighbours.RandomElement(), MockNeighbours()));
+            while (true)
+            {
+                state.Push(new HastingMemento(state.Last().Neighbours.RandomElement(), MockNeighbours()));
 
-            return state.Count >= depth ? MockMementoHistory(state) : state;
+                if (state.Count == depth)
+                {
+                    depth = 10;
+                    continue;
+                }
+
+                return state;
+                break;
+            }
         }
 
         public static IHastingCareTaker MockCareTaker(IEnumerable<IHastingMemento> history = default)
