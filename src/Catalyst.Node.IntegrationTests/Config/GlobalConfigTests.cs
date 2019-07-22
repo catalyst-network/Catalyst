@@ -21,7 +21,6 @@
 
 #endregion
 
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -31,7 +30,6 @@ using Catalyst.Common.Enumerator;
 using Catalyst.Common.Interfaces;
 using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.TestUtils;
-using Microsoft.Extensions.Configuration;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -41,14 +39,18 @@ namespace Catalyst.Node.IntegrationTests.Config
     {
         public static readonly List<object[]> Networks = 
             Enumeration.GetAll<Network>().Select(n => new object[] {n}).ToList();
-        
+
+        private IEnumerable<string> _configFilesUsed;
+
+        protected override IEnumerable<string> ConfigFilesUsed => _configFilesUsed;
+
         public GlobalConfigTests(ITestOutputHelper output) : base(output) { }
 
         [Theory]
         [MemberData(nameof(Networks))]
         public void Registering_All_Configs_Should_Allow_Resolving_CatalystNode(Network network)
         {
-            var configFiles = new[]
+            _configFilesUsed = new[]
                 {
                     Constants.NetworkConfigFile(network),
                     Constants.ComponentsJsonConfigFile,
@@ -56,21 +58,9 @@ namespace Catalyst.Node.IntegrationTests.Config
                 }
                .Select(f => Path.Combine(Constants.ConfigSubFolder, f));
 
-            var configBuilder = new ConfigurationBuilder();
-            configFiles.ToList().ForEach(f => configBuilder.AddJsonFile(f));
-            var configRoot = configBuilder.Build();
+            SocketPortHelper.AlterConfigurationToGetUniquePort(ConfigurationRoot, CurrentTestName);
 
-            //assign a random port to rpc server
-            var random = new Random(network.Name.GetHashCode());
-            configRoot.GetSection("CatalystNodeConfiguration")
-                   .GetSection("Rpc").GetSection("Port").Value = 
-                random.Next(10000, 20000).ToString();
-
-            configRoot.GetSection("CatalystNodeConfiguration")
-                   .GetSection("Peer").GetSection("Port").Value =
-                random.Next(10000, 20000).ToString();
-
-            ConfigureContainerBuilder(configRoot);
+            ConfigureContainerBuilder();
 
             ContainerBuilder.RegisterInstance(new TestPasswordReader()).As<IPasswordReader>();
 
