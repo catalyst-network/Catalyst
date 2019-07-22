@@ -21,7 +21,17 @@
 
 #endregion
 
+using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
+using Catalyst.Common.Interfaces.P2P;
+using DotNetty.Transport.Channels;
+using Google.Protobuf;
+
 namespace Catalyst.Common.Interfaces.IO.Observers
 {
     public interface IResponseMessageObserver : IMessageObserver { }
+
+    public interface IResponseMessageObserver<in TProto> : IResponseMessageObserver where TProto : IMessage<TProto>
+    {
+        void HandleResponse(TProto messageDto, IChannelHandlerContext channelHandlerContext, IPeerIdentifier senderPeerIdentifier, ICorrelationId correlationId);
+    }
 }

@@ -21,19 +21,15 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.Rpc.IO.Messaging.Dto;
 using Google.Protobuf;
-using System;
+using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
+using Catalyst.Common.Interfaces.P2P;
+using DotNetty.Transport.Channels;
 
 namespace Catalyst.Common.Interfaces.IO.Observers
 {
-    public interface IRpcResponseObserver<out TProto> : IRpcResponseObserver where TProto : IMessage
-    {
-        void SubscribeToResponse(Action<TProto> onNext);
-    }
-
     public interface IRpcResponseObserver : IResponseMessageObserver
     {
-        IObservable<IRpcClientMessageDto<IMessage>> MessageResponseStream { get; }
+        void HandleResponseObserver(IMessage messageDto, IChannelHandlerContext channelHandlerContext, IPeerIdentifier senderPeerIdentifier, ICorrelationId correlationId);
     }
 }
