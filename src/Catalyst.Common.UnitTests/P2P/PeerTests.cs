@@ -36,7 +36,7 @@ namespace Catalyst.Common.UnitTests.P2P
         public void EntityStoreAuditsCreateTime()
         {
             var repo = new InMemoryRepository<Peer, string>();
-            var peer = new Peer {PeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier($"Test")};
+            var peer = new Peer {PeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("Test")};
             repo.Add(peer);
             var retrievedPeer = repo.Get(peer.DocumentId);
             DateTime now = DateTime.UtcNow.Date;
