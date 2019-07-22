@@ -62,6 +62,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Modules.Lib.Integr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Modules.Lib.UnitTests", "Catalyst.Modules.Lib.UnitTests\Catalyst.Modules.Lib.UnitTests.csproj", "{ADF6F76A-BB69-40AE-B711-C31A2E77AA7B}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.SeedNode", "Catalyst.SeedNode\Catalyst.SeedNode.csproj", "{7D351BD2-D9BE-4762-9CF8-3BA06D8A0412}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -144,6 +146,10 @@ Global
 		{ADF6F76A-BB69-40AE-B711-C31A2E77AA7B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ADF6F76A-BB69-40AE-B711-C31A2E77AA7B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ADF6F76A-BB69-40AE-B711-C31A2E77AA7B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7D351BD2-D9BE-4762-9CF8-3BA06D8A0412}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7D351BD2-D9BE-4762-9CF8-3BA06D8A0412}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7D351BD2-D9BE-4762-9CF8-3BA06D8A0412}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7D351BD2-D9BE-4762-9CF8-3BA06D8A0412}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
