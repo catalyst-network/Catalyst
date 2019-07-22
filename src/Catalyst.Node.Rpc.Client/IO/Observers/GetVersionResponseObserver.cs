@@ -21,7 +21,6 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Observers;
@@ -38,22 +37,15 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
     /// </summary>
     public sealed class GetVersionResponseObserver : RpcResponseObserver<VersionResponse>
     {
-        private readonly IUserOutput _output;
-
         /// <summary>
         /// Handles the VersionResponse message sent from the <see>
         ///     <cref>GetVersionRequestHandler</cref>
         /// </see>
         /// .
         /// </summary>
-        /// <param name="output">A service used to output the result of the messages handling to the user.</param>
         /// <param name="logger">Logger to log debug related information.</param>
-        public GetVersionResponseObserver(IUserOutput output,
-            ILogger logger)
-            : base(logger)
-        {
-            _output = output;
-        }
+        public GetVersionResponseObserver(ILogger logger)
+            : base(logger) { }
 
         /// <summary>
         /// 
@@ -72,8 +64,6 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
             Guard.Argument(versionResponse, nameof(versionResponse)).NotNull("The VersionResponse cannot be null")
                .Require(d => d.Version != null,
                     d => $"{nameof(versionResponse)} must have a valid Version.");
-
-            versionResponse.Version = "10.1.1.1";
         }
     }
 }

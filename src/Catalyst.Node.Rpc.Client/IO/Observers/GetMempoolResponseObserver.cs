@@ -21,7 +21,6 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Observers;
@@ -39,8 +38,6 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
     public sealed class GetMempoolResponseObserver
         : RpcResponseObserver<GetMempoolResponse>
     {
-        private readonly IUserOutput _output;
-
         /// <summary>
         /// <param name="output">
         ///     A service used to output the result of the messages handling to the user.
@@ -49,12 +46,8 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
         ///     Logger to log debug related information.
         /// </param>
         /// </summary>
-        public GetMempoolResponseObserver(IUserOutput output,
-            ILogger logger)
-            : base(logger)
-        {
-            _output = output;
-        }
+        public GetMempoolResponseObserver(ILogger logger)
+            : base(logger) { }
         
         /// <summary>
         /// 

@@ -67,10 +67,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
         {
             var careTaker = new HastingCareTaker();
             
-            Assert.Throws<Exception>(() =>
-            {
-                var previousState = careTaker.Get();
-            });
+            Assert.Throws<Exception>(() => { careTaker.Get(); });
         }
         
         [Fact]

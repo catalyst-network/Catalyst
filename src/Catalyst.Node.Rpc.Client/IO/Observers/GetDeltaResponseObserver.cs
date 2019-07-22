@@ -21,12 +21,10 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.IO.Observers;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Observers;
-using Catalyst.Protocol;
 using Catalyst.Protocol.Rpc.Node;
 using DotNetty.Transport.Channels;
 using Serilog;
@@ -35,14 +33,9 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
 {
     /// <inheritdoc cref="IRpcResponseObserver"/>
     /// <inheritdoc cref="ResponseObserverBase{TProto}"/>
-    public class GetDeltaResponseObserver : RpcResponseObserver<GetDeltaResponse>
+    public sealed class GetDeltaResponseObserver : RpcResponseObserver<GetDeltaResponse>
     {
-        private readonly IUserOutput _output;
-
-        public GetDeltaResponseObserver(IUserOutput output, ILogger logger) : base(logger)
-        {
-            _output = output;
-        }
+        public GetDeltaResponseObserver(ILogger logger) : base(logger) { }
 
         /// <inheritdoc />
         protected override void HandleResponse(GetDeltaResponse deltaResponse,

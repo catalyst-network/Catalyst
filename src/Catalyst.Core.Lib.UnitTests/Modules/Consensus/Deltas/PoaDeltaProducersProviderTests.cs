@@ -36,7 +36,6 @@ using Multiformats.Hash.Algorithms;
 using Nethereum.Hex.HexConvertors.Extensions;
 using NSubstitute;
 using Serilog;
-using SharpRepository.Repository;
 using Xunit;
 using Peer = Catalyst.Common.P2P.Peer;
 

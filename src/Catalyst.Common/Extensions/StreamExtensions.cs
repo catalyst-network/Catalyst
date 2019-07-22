@@ -32,7 +32,10 @@ namespace Catalyst.Common.Extensions
     {
         public static string ReadAllAsUtf8String(this Stream stream, bool leaveOpen)
         {
-            if (stream.CanSeek) { stream.Seek(0, SeekOrigin.Begin); }
+            if (stream.CanSeek)
+            {
+                stream.Seek(0, SeekOrigin.Begin);
+            }
 
             using (var reader = new StreamReader(stream, Encoding.UTF8,
                 true, 4096, leaveOpen))
@@ -43,7 +46,10 @@ namespace Catalyst.Common.Extensions
 
         public static async Task<byte[]> ReadAllBytesAsync(this Stream stream, CancellationToken cancellationToken)
         {
-            if (stream.CanSeek) { stream.Seek(0, SeekOrigin.Begin); }
+            if (stream.CanSeek)
+            {
+                stream.Seek(0, SeekOrigin.Begin);
+            }
 
             using (var memoryStream = new MemoryStream())
             {
