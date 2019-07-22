@@ -35,7 +35,6 @@ using Catalyst.Core.Lib.P2P.ReputationSystem;
 using Catalyst.TestUtils;
 using NSubstitute;
 using Serilog;
-using SharpRepository.Repository;
 using Xunit;
 
 namespace Catalyst.Core.Lib.UnitTests.P2P.ReputationSystem

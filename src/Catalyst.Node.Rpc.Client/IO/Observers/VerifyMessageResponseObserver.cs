@@ -21,7 +21,6 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Protocol.Rpc.Node;
@@ -38,19 +37,12 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
     public sealed class VerifyMessageResponseObserver
         : RpcResponseObserver<VerifyMessageResponse>
     {
-        private readonly IUserOutput _output;
-
         /// <summary>
         /// </summary>
         /// receive the response from the server.
-        /// <param name="output"></param>
         /// <param name="logger">Logger to log debug related information.</param>
-        public VerifyMessageResponseObserver(IUserOutput output,
-            ILogger logger)
-            : base(logger)
-        {
-            _output = output;
-        }
+        public VerifyMessageResponseObserver(ILogger logger)
+            : base(logger) { }
         
         /// <summary>
         /// 

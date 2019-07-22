@@ -22,7 +22,6 @@
 #endregion
 
 using System;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Catalyst.Common.Extensions;
@@ -43,16 +42,15 @@ using Xunit;
 
 namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
 {
-    public class GetDeltaResponseObserverTests
+    public sealed class GetDeltaResponseObserverTests
     {
         private readonly GetDeltaResponseObserver _observer;
         private readonly Multihash _previousDeltaHash;
 
         public GetDeltaResponseObserverTests()
         {
-            var output = Substitute.For<IUserOutput>();
             var logger = Substitute.For<ILogger>();
-            _observer = new GetDeltaResponseObserver(output, logger);
+            _observer = new GetDeltaResponseObserver(logger);
             var hashingAlgorithm = Common.Config.Constants.HashAlgorithm;
             _previousDeltaHash = Multihash.Cast(hashingAlgorithm.ComputeHash(Encoding.UTF8.GetBytes("previous")));
         }
