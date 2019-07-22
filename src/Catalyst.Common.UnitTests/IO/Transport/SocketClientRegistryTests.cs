@@ -121,9 +121,9 @@ namespace Catalyst.Common.UnitTests.IO.Transport
 
         private Dictionary<int, ISocketClient> ConstructSocketByEndpointSampleData()
         {
-            return new[] { 2000, 3000, 4000, 5000, 6000 }.ToDictionary(
-               p => new IPEndPoint(IPAddress.Loopback, p).GetHashCode(),
-               p => GetSubstituteForActiveSocketClient()
+            return new[] {2000, 3000, 4000, 5000, 6000}.ToDictionary(
+                p => new IPEndPoint(IPAddress.Loopback, p).GetHashCode(),
+                p => GetSubstituteForActiveSocketClient()
             );
         }
 

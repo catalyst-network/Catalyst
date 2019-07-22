@@ -1,4 +1,5 @@
 #region LICENSE
+
 /**
 * Copyright (c) 2019 Catalyst Network
 *
@@ -17,12 +18,12 @@
 * You should have received a copy of the GNU General Public License
 * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
+
 #endregion
 
 using SharpRepository.Repository;
-using System;
 
 namespace Catalyst.Common.Interfaces.Repository
 {
-    public interface IRepositoryWrapper<T> : IDisposable, IRepository<T, string> where T : class { }
+    public interface IRepositoryWrapper<T> : IRepository<T, string> where T : class { }
 }
