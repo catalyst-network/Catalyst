@@ -24,6 +24,7 @@
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.IO.Observers;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using DotNetty.Transport.Channels;
@@ -71,6 +72,8 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
             Guard.Argument(versionResponse, nameof(versionResponse)).NotNull("The VersionResponse cannot be null")
                .Require(d => d.Version != null,
                     d => $"{nameof(versionResponse)} must have a valid Version.");
+
+            versionResponse.Version = "10.1.1.1";
         }
     }
 }
