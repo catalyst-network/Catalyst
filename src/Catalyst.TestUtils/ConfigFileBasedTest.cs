@@ -26,6 +26,7 @@ using Autofac;
 using Autofac.Configuration;
 using AutofacSerilogIntegration;
 using Catalyst.Common.Interfaces.Cryptography;
+using Catalyst.Common.Interfaces.FileSystem;
 using Microsoft.Extensions.Configuration;
 using Serilog;
 using Serilog.Events;
@@ -63,6 +64,7 @@ namespace Catalyst.TestUtils
 
             var certificateStore = new TestCertificateStore();
             ContainerBuilder.RegisterInstance(certificateStore).As<ICertificateStore>();
+            ContainerBuilder.RegisterInstance(FileSystem).As<IFileSystem>();
 
             ConfigureLogging(config, writeLogsToTestOutput, writeLogsToFile);
         }
