@@ -38,8 +38,6 @@ namespace Catalyst.Common.IO.Observers
         protected IDisposable MessageSubscription;
         private readonly string _filterMessageType;
 
-        public IChannelHandlerContext ChannelHandlerContext { get; protected set; }
-
         protected MessageObserverBase(ILogger logger, string filterMessageType)
         {
             Logger = logger;
@@ -70,7 +68,6 @@ namespace Catalyst.Common.IO.Observers
         public virtual void OnError(Exception exception)
         {
             Logger.Error(exception, "Failed to process message.");
-            ChannelHandlerContext?.CloseAsync().ConfigureAwait(false);
         }
 
         protected virtual void Dispose(bool disposing)
@@ -81,7 +78,6 @@ namespace Catalyst.Common.IO.Observers
             }
 
             MessageSubscription?.Dispose();
-            ChannelHandlerContext?.CloseAsync().ConfigureAwait(false);
         }
 
         public void Dispose()
