@@ -45,18 +45,11 @@ namespace Catalyst.Core.Lib.IntegrationTests.Modules.Dfs
 
         public DfsTests(ITestOutputHelper output) : base(output)
         {
-            var peerSettings = Substitute.For<IPeerSettings>();
-            peerSettings.SeedServers.Returns(new[]
-            {
-                "seed1.server.va",
-                "island.domain.tv"
-            });
-            
             var passwordReader = Substitute.For<IPasswordReader>();
             passwordReader.ReadSecurePasswordAndAddToRegistry(Arg.Any<PasswordRegistryKey>(), Arg.Any<string>()).Returns(TestPasswordReader.BuildSecureStringPassword("abcd"));
 
             _logger = Substitute.For<ILogger>();
-            _ipfs = new IpfsAdapter(passwordReader, peerSettings, FileSystem, _logger);
+            _ipfs = new IpfsAdapter(passwordReader, FileSystem, _logger);
 
             // Starting IPFS takes a few seconds.  Do it here, so that individual
             // test times are not affected.
