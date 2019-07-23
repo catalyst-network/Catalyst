@@ -21,29 +21,23 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.IO.Messaging.Dto;
-using Catalyst.Common.Interfaces.IO.Observers;
+using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.P2P.IO.Messaging.Broadcast;
-using Catalyst.Common.IO.Observers;
-using Catalyst.Protocol;
 using Catalyst.Protocol.Common;
-using Catalyst.Protocol.Transaction;
-using Serilog;
+using DotNetty.Transport.Channels;
 
-namespace Catalyst.Core.Lib.P2P.IO.Observers
+namespace Catalyst.Common.IO.Handlers
 {
-    public sealed class TransactionBroadcastObserver
-        : BroadcastObserverBase<TransactionBroadcast>,
-            IP2PMessageObserver
+    public class BroadcastCleanupHandler : InboundChannelHandlerBase<ProtocolMessage>
     {
-        public TransactionBroadcastObserver(ILogger logger)
-            : base(logger) { }
+        private readonly IBroadcastManager _broadcastManager;
 
-        public override void HandleBroadcast(IObserverDto<ProtocolMessage> messageDto)
+        public BroadcastCleanupHandler(IBroadcastManager broadcastManager) { _broadcastManager = broadcastManager; }
+
+        protected override void ChannelRead0(IChannelHandlerContext ctx, ProtocolMessage msg)
         {
-            Logger.Debug("received broadcast");
-            var deserialised = messageDto.Payload.FromProtocolMessage<TransactionBroadcast>();
-            Logger.Debug("transaction signature is {0}", deserialised.Signature);
+            _broadcastManager.RemoveSignedBroadcastMessageData(msg.CorrelationId.ToCorrelationId());
+            ctx.FireChannelRead(msg);
         }
     }
 }

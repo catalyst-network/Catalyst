@@ -23,10 +23,11 @@
 
 using System.Threading.Tasks;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
+using Catalyst.Common.Interfaces.IO.Observers;
 using Catalyst.Protocol.Common;
 
 namespace Catalyst.Common.Interfaces.P2P.IO.Messaging.Broadcast
-{ 
+{
     public interface IBroadcastManager
     {
         /// <summary>Broadcasts a message.</summary>
@@ -37,9 +38,11 @@ namespace Catalyst.Common.Interfaces.P2P.IO.Messaging.Broadcast
         /// <param name="anySigned">Any signed message.</param>
         Task ReceiveAsync(ProtocolMessageSigned anySigned);
 
-        /// <summary>Gets the original broadcast message.</summary>
+        /// <summary>
+        /// Removes the temporary original signed broadcast message data once <see cref="IBroadcastObserver"/>
+        /// HandleBroadcast has been called.
+        /// </summary>
         /// <param name="correlationId">The correlation identifier.</param>
-        /// <returns></returns>
         void RemoveSignedBroadcastMessageData(ICorrelationId correlationId);
     }
 }

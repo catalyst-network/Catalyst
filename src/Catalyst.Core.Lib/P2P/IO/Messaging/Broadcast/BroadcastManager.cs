@@ -70,10 +70,10 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
         /// <summary>The peer client</summary>
         private readonly IPeerClient _peerClient;
 
-        /// <summary>The signer</summary>
+        /// <summary>This signer is in-charge of adding an extra signature wrapping to the broadcast message</summary>
         private readonly IKeySigner _signer;
 
-        /// <summary>The signature concurrent dictionary</summary>
+        /// <summary>This dictionary will store any original broadcast messages so they can be sent for rebroadcast</summary>
         private readonly ConcurrentDictionary<ICorrelationId, ProtocolMessageSigned> _incomingBroadcastSignatureDictionary;
 
         /// <summary>Initializes a new instance of the <see cref="BroadcastManager"/> class.</summary>
@@ -147,19 +147,17 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
         {
             var correlationId = protocolSignedMessage.Message.CorrelationId.ToCorrelationId();
             var gossipRequest = await GetOrCreateAsync(correlationId).ConfigureAwait(false);
-            gossipRequest.ReceivedCount += 1;
+            gossipRequest.IncrementReceivedCount();
             UpdatePendingRequest(correlationId, gossipRequest);
             _incomingBroadcastSignatureDictionary.GetOrAdd(correlationId, protocolSignedMessage);
         }
 
+        /// <inheritdoc />
         public void RemoveSignedBroadcastMessageData(ICorrelationId correlationId)
         {
             _incomingBroadcastSignatureDictionary.Remove(correlationId, out _);
         }
 
-        /// <summary>Sends gossips to random peers.</summary>
-        /// <param name="message">The message</param>
-        /// <param name="broadcastMessage">The gossip request</param>
         private void SendBroadcastMessages(ProtocolMessage message, BroadcastMessage broadcastMessage)
         {
             try
