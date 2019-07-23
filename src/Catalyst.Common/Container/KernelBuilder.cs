@@ -27,6 +27,7 @@ using Autofac;
 using Autofac.Configuration;
 using AutofacSerilogIntegration;
 using Catalyst.Common.Config;
+using Catalyst.Common.Interfaces.Config;
 using Catalyst.Common.Interfaces.Util;
 using Catalyst.Common.Util;
 using Microsoft.Extensions.Configuration;

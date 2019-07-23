@@ -26,6 +26,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using Catalyst.Common.Interfaces.Config;
 using Dawn;
 
 namespace Catalyst.Common.Config
