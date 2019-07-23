@@ -24,38 +24,24 @@
 using System;
 using System.IO;
 using System.Reflection;
-using System.Threading;
 using Autofac;
-using Autofac.Configuration;
-using AutofacSerilogIntegration;
-using Catalyst.Common.FileSystem;
 using Catalyst.Common.Config;
-using Catalyst.Common.Util;
+using Catalyst.Common.Container;
 using Catalyst.Common.Interfaces.Cli;
-using Microsoft.Extensions.Configuration;
-using Serilog;
-using Constants = Catalyst.Common.Config.Constants;
+using Catalyst.Common.Util;
 
 namespace Catalyst.Cli
 {
     internal static class Program
     {
-        private static ILogger _logger;
-        private static readonly string LifetimeTag;
-        private static readonly Type DeclaringType;
-        private static readonly CancellationTokenSource CancellationSource;
-        private static readonly string LogFileName = "Catalyst.Cli..log";
+        private static readonly KernelBuilder KernelBuilder;
 
         static Program()
         {
-            DeclaringType = MethodBase.GetCurrentMethod().DeclaringType;
-            _logger = ConsoleProgram.GetTempLogger(LogFileName, DeclaringType);
-            CancellationSource = new CancellationTokenSource();
+            KernelBuilder = KernelBuilder.GetContainerBuilder(default, "Catalyst.Cli..log");
 
             AppDomain.CurrentDomain.UnhandledException +=
-                (sender, args) => ConsoleProgram.LogUnhandledException(_logger, sender, args);
-
-            LifetimeTag = DeclaringType.AssemblyQualifiedName;
+                (sender, args) => ConsoleProgram.LogUnhandledException(KernelBuilder.Logger, sender, args);
         }
 
         /// <summary>
@@ -63,49 +49,13 @@ namespace Catalyst.Cli
         /// </summary>
         public static int Main()
         {
-            _logger.Information("Catalyst.Cli started with process id {0}",
+            KernelBuilder.Logger.Information("Catalyst.Cli started with process id {0}",
                 System.Diagnostics.Process.GetCurrentProcess().Id.ToString());
 
             const int bufferSize = 1024 * 67 + 128;
 
             try
             {
-                var targetConfigFolder = new FileSystem().GetCatalystDataDir().FullName;
-
-#if (DEBUG)
-                new CliConfigCopier().RunConfigStartUp(targetConfigFolder, Network.Dev, overwrite: true);
-#elif (RELEASE)
-                new CliConfigCopier().RunConfigStartUp(targetConfigFolder, Network.Dev);
-#endif
-
-                var config = new ConfigurationBuilder()
-                   .AddJsonFile(Path.Combine(targetConfigFolder, Constants.ShellComponentsJsonConfigFile))
-                   .AddJsonFile(Path.Combine(targetConfigFolder, Constants.SerilogJsonConfigFile))
-                   .AddJsonFile(Path.Combine(targetConfigFolder, Constants.ShellNodesConfigFile))
-                   .AddJsonFile(Path.Combine(targetConfigFolder, Constants.ShellConfigFile))
-                   .Build();
-
-                // register components from config file
-                var configurationModule = new ConfigurationModule(config);
-                var containerBuilder = new ContainerBuilder();
-
-                containerBuilder.RegisterModule(configurationModule);
-
-                var loggerConfiguration = new LoggerConfiguration();
-                loggerConfiguration.ReadFrom.Configuration(configurationModule.Configuration);
-
-                _logger = loggerConfiguration.WriteTo
-                   .File(Path.Combine(targetConfigFolder, LogFileName),
-                        rollingInterval: RollingInterval.Day,
-                        outputTemplate:
-                        "{Timestamp:HH:mm:ss} [{Level:u3}] ({MachineName}/{ThreadId}) {Message} ({SourceContext}){NewLine}{Exception}")
-                   .CreateLogger().ForContext(DeclaringType);
-
-                containerBuilder.RegisterLogger(_logger);
-                containerBuilder.RegisterInstance(config);
-
-                var container = containerBuilder.Build();
-
                 Console.SetIn(
                     new StreamReader(
                         Console.OpenStandardInput(bufferSize),
@@ -113,12 +63,20 @@ namespace Catalyst.Cli
                     )
                 );
 
-                // Add .Net Core serviceCollection to the Autofac container.
-                using (container.BeginLifetimeScope(LifetimeTag))
+                var kernel = KernelBuilder
+                   .WithDataDirectory()
+                   .WithComponentsConfigFile(Constants.ShellComponentsJsonConfigFile)
+                   .WithSerilogConfigFile()
+                   .WithConfigCopier(new CliConfigCopier())
+                   .WithConfigurationFile(Constants.ShellNodesConfigFile)
+                   .WithConfigurationFile(Constants.ShellConfigFile)
+                   .BuildContainer();
+                
+                using (kernel.BeginLifetimeScope(MethodBase.GetCurrentMethod().DeclaringType.AssemblyQualifiedName))
                 {
-                    var shell = container.Resolve<ICatalystCli>();
+                    var shell = kernel.Resolve<ICatalystCli>();
 
-                    shell.RunConsole(CancellationSource.Token);
+                    shell.RunConsole(KernelBuilder.CancellationTokenProvider.CancellationTokenSource.Token);
                 }
 
                 Environment.ExitCode = 0;
@@ -127,7 +85,7 @@ namespace Catalyst.Cli
             }
             catch (Exception e)
             {
-                _logger.Fatal(e, "Catalyst.Cli stopped unexpectedly");
+                KernelBuilder.Logger.Fatal(e, "Catalyst.Cli stopped unexpectedly");
                 Environment.ExitCode = 1;
             }
 
@@ -136,7 +94,7 @@ namespace Catalyst.Cli
 
         static void CurrentDomain_ProcessExit(object sender, EventArgs e)
         {
-            CancellationSource.Cancel();
+            KernelBuilder.CancellationTokenProvider.CancellationTokenSource.Cancel();
         }
     }
 }

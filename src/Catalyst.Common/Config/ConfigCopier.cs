@@ -30,10 +30,8 @@ using Dawn;
 
 namespace Catalyst.Common.Config
 {
-    public class ConfigCopier
+    public class ConfigCopier : IConfigCopier
     {
-        private const bool OverwriteFilesByDefault = false;
-
         /// <summary>
         ///     Finds out which config files are missing from the catalyst home directory and
         ///     copies them over if needed.
@@ -42,9 +40,14 @@ namespace Catalyst.Common.Config
         /// <param name="network">Network on which to run the node</param>
         /// <param name="sourceFolder"></param>
         /// <param name="overwrite">Should config existing config files be overwritten by default?</param>
-        public void RunConfigStartUp(string dataDir, Network network, string sourceFolder = null, bool overwrite = OverwriteFilesByDefault)
+        public void RunConfigStartUp(string dataDir, Network network = default, string sourceFolder = null, bool overwrite = false)
         {
             Guard.Argument(dataDir, nameof(dataDir)).NotNull().NotEmpty().NotWhiteSpace();
+
+            if (network == default)
+            {
+                network = Network.Dev;
+            }
 
             var dataDirInfo = new DirectoryInfo(dataDir);
             if (!dataDirInfo.Exists)
@@ -98,7 +101,7 @@ namespace Catalyst.Common.Config
         private static void CopyConfigFileToFolder(string targetFolder,
             string fileName,
             string sourceFolder,
-            bool overwrite = OverwriteFilesByDefault)
+            bool overwrite = false)
         {
             var sourceFile = Path.Combine(sourceFolder, Constants.ConfigSubFolder, fileName);
             var targetFile = Path.Combine(targetFolder, fileName);

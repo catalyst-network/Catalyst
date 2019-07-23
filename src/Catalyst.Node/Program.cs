@@ -22,110 +22,63 @@
 #endregion
 
 using System;
-using System.IO;
 using System.Reflection;
-using System.Threading;
 using Autofac;
-using Autofac.Configuration;
-using AutofacSerilogIntegration;
-using Catalyst.Common.Config;
-using Catalyst.Common.FileSystem;
-using Catalyst.Common.Util;
+using Catalyst.Common.Container;
 using Catalyst.Common.Interfaces;
-using Microsoft.Extensions.Configuration;
-using Serilog;
-using SharpRepository.Ioc.Autofac;
-using SharpRepository.Repository;
-using Constants = Catalyst.Common.Config.Constants;
+using Catalyst.Common.Util;
 
 namespace Catalyst.Node
 {
     internal static class Program
     {
-        private static ILogger _logger;
-        private static readonly string LifetimeTag;
-        private static readonly string ExecutionDirectory;
-        private static readonly Type DeclaringType;
-        private static readonly string LogFileName = "Catalyst.Node..log";
-
-        private static CancellationTokenSource _cancellationSource;
+        private static readonly KernelBuilder KernelBuilder;
 
         static Program()
         {
-            DeclaringType = MethodBase.GetCurrentMethod().DeclaringType;
-            _logger = ConsoleProgram.GetTempLogger(LogFileName, DeclaringType);
+            KernelBuilder = KernelBuilder.GetContainerBuilder();
 
             AppDomain.CurrentDomain.UnhandledException +=
-                (sender, args) => ConsoleProgram.LogUnhandledException(_logger, sender, args);
-
-            LifetimeTag = DeclaringType.AssemblyQualifiedName;
-            ExecutionDirectory = Path.GetDirectoryName(DeclaringType.Assembly.Location);
+                (sender, args) => ConsoleProgram.LogUnhandledException(KernelBuilder.Logger, sender, args);
         }
 
         public static int Main(string[] args)
         {
-            _logger.Information("Catalyst.Node started with process id {0}",
+            KernelBuilder.Logger.Information("Catalyst.Node started with process id {0}",
                 System.Diagnostics.Process.GetCurrentProcess().Id.ToString());
-
-            _cancellationSource = new CancellationTokenSource();
+            
             try
             {
-                var targetConfigFolder = new FileSystem().GetCatalystDataDir().FullName;
-                var network = Network.Dev;
-
-#if (DEBUG)                
-                new ConfigCopier().RunConfigStartUp(targetConfigFolder, network, overwrite: true);
-#elif (RELEASE)
-                new ConfigCopier().RunConfigStartUp(targetConfigFolder, network);
-#endif
-
-                var config = new ConfigurationBuilder()
-                   .AddJsonFile(Path.Combine(targetConfigFolder, Constants.NetworkConfigFile(network)))
-                   .AddJsonFile(Path.Combine(targetConfigFolder, Constants.ComponentsJsonConfigFile))
-                   .AddJsonFile(Path.Combine(targetConfigFolder, Constants.SerilogJsonConfigFile))
-                   .Build();
-
-                // register components from config file
-                var configurationModule = new ConfigurationModule(config);
-                var containerBuilder = new ContainerBuilder();
-                containerBuilder.RegisterModule(configurationModule);
-
-                var loggerConfiguration =
-                    new LoggerConfiguration().ReadFrom.Configuration(configurationModule.Configuration);
-
-                _logger = loggerConfiguration.WriteTo
-                   .File(Path.Combine(targetConfigFolder, LogFileName),
-                        rollingInterval: RollingInterval.Day,
-                        outputTemplate: "{Timestamp:HH:mm:ss} [{Level:u3}] ({MachineName}/{ThreadId}) {Message} ({SourceContext}){NewLine}{Exception}")
-                   .CreateLogger().ForContext(DeclaringType);
-
-                containerBuilder.RegisterLogger(_logger);
-                containerBuilder.RegisterInstance(config);
+                var kernel = KernelBuilder
+                   .WithDataDirectory()
+                   .WithNetworksConfigFile()
+                   .WithComponentsConfigFile()
+                   .WithSerilogConfigFile()
+                   .WithConfigCopier()
+                   .WithPersistenceConfiguration()
+                   .BuildContainer();
                 
-                var repoFactory = RepositoryFactory.BuildSharpRepositoryConfiguation(config.GetSection("CatalystNodeConfiguration:PersistenceConfiguration"));
-                containerBuilder.RegisterSharpRepository(repoFactory);
-
-                var container = containerBuilder.Build();
-                using (container.BeginLifetimeScope(LifetimeTag))
+                using (kernel.BeginLifetimeScope(MethodBase.GetCurrentMethod().DeclaringType.AssemblyQualifiedName))
                 {
-                    var node = container.Resolve<ICatalystNode>();
-                    node.RunAsync(_cancellationSource.Token).Wait(_cancellationSource.Token);
+                    kernel.Resolve<ICatalystNode>()
+                       .RunAsync(KernelBuilder.CancellationTokenProvider.CancellationTokenSource.Token)
+                       .Wait(KernelBuilder.CancellationTokenProvider.CancellationTokenSource.Token);
                 }
-
+                
                 Environment.ExitCode = 0;
             }
             catch (Exception e)
             {
-                _logger.Fatal(e, "Catalyst.Node stopped unexpectedly");
+                KernelBuilder.Logger.Fatal(e, "Catalyst.Node stopped unexpectedly");
                 Environment.ExitCode = 1;
             }
 
             return Environment.ExitCode;
         }
-
+        
         static void CurrentDomain_ProcessExit(object sender, EventArgs e)
         {
-            _cancellationSource.Cancel();
+            KernelBuilder.CancellationTokenProvider.CancellationTokenSource.Cancel();
         }
     }
 }

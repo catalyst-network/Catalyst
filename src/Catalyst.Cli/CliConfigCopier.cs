@@ -26,8 +26,7 @@ using Catalyst.Common.Config;
 
 namespace Catalyst.Cli
 {
-    public sealed class CliConfigCopier
-        : ConfigCopier
+    internal sealed class CliConfigCopier : ConfigCopier, IConfigCopier
     {
         protected override IEnumerable<string> RequiredConfigFiles(Network network)
         {

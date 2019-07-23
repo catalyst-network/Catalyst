@@ -35,7 +35,8 @@ namespace Catalyst.Common.Util
             var logger = new LoggerConfiguration()
                .WriteTo.Console()
                .WriteTo.File(tempLogFile, rollingInterval: RollingInterval.Day)
-               .CreateLogger().ForContext(declaringType);
+               .CreateLogger()
+               .ForContext(declaringType);
             return logger;
         }
 
