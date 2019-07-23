@@ -24,7 +24,6 @@
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Observers;
 using Catalyst.Protocol.Common;
-using DotNetty.Transport.Channels;
 using Serilog;
 using System;
 using System.Reactive.Concurrency;
