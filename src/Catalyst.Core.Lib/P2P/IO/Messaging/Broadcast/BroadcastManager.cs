@@ -81,6 +81,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
         /// <param name="peers">The peers.</param>
         /// <param name="memoryCache">The memory cache.</param>
         /// <param name="peerClient">The peer client.</param>
+        /// <param name="signer">The signature writer</param>
         public BroadcastManager(IPeerIdentifier peerIdentifier, IPeerRepository peers, IMemoryCache memoryCache, IPeerClient peerClient, IKeySigner signer)
         {
             _peerIdentifier = peerIdentifier;
@@ -111,7 +112,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
                 return;
             }
 
-            SendGossipMessages(protocolMessage, gossipRequest);
+            SendBroadcastMessages(protocolMessage, gossipRequest);
         }
 
         /// <inheritdoc/>
@@ -120,6 +121,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
             var correlationId = message.CorrelationId.ToCorrelationId();
             bool containsOriginalMessage =
                 _incomingBroadcastSignatureDictionary.ContainsKey(correlationId);
+
             if (containsOriginalMessage)
             {
                 var originalSignedMessage =
@@ -158,7 +160,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
         /// <summary>Sends gossips to random peers.</summary>
         /// <param name="message">The message</param>
         /// <param name="broadcastMessage">The gossip request</param>
-        private void SendGossipMessages(ProtocolMessage message, BroadcastMessage broadcastMessage)
+        private void SendBroadcastMessages(ProtocolMessage message, BroadcastMessage broadcastMessage)
         {
             try
             {
