@@ -37,10 +37,10 @@ using Serilog;
 
 namespace Catalyst.Node
 {
-    public class CatalystNode
-        : ICatalystNode
+    public class CatalystNode : ICatalystNode
     {
-        private readonly IConsensus _consensus;
+        public IConsensus Consensus { get; }
+
         private readonly IContract _contract;
         private readonly IDfs _dfs;
         private readonly ILedger _ledger;
@@ -60,8 +60,8 @@ namespace Catalyst.Node
             IMempool mempool = null,
             IContract contract = null)
         {
+            Consensus = consensus;
             _peer = peer;
-            _consensus = consensus;
             _dfs = dfs;
             _ledger = ledger;
             _keySigner = keySigner;

@@ -29,14 +29,8 @@ using System.Threading.Tasks;
 using Autofac;
 using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces;
-using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Common.Interfaces.Modules.Consensus;
-using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Core.Lib.Modules.Dfs;
 using Catalyst.TestUtils;
-using Ipfs.CoreApi;
-using NSubstitute;
-using Serilog;
 using Xunit.Abstractions;
 
 namespace Catalyst.Core.Lib.IntegrationTests
@@ -49,6 +43,8 @@ namespace Catalyst.Core.Lib.IntegrationTests
         private ICatalystNode _catalystNode;
 
         protected override IEnumerable<string> ConfigFilesUsed { get; }
+
+        public IConsensus Consensus => _catalystNode.Consensus;
 
         public TestCatalystNode(string name, ITestOutputHelper output) : base(output)
         {
@@ -71,21 +67,13 @@ namespace Catalyst.Core.Lib.IntegrationTests
             await _catalystNode.RunAsync(cancellationSourceToken);
         }
 
-        private IpfsAdapter ConfigureKeyTestDependency()
-        {
-            var passwordReader = Substitute.For<IPasswordReader>();
-            passwordReader.ReadSecurePasswordAndAddToRegistry(Arg.Any<PasswordRegistryKey>(), Arg.Any<string>())
-               .ReturnsForAnyArgs(TestPasswordReader.BuildSecureStringPassword("trendy"));
-            var logger = Substitute.For<ILogger>();
-            return new IpfsAdapter(passwordReader, FileSystem, logger);
-        }
+        protected virtual void OverrideContainerBuilderRegistrations() { }
 
         public void BuildNode()
         {
             ConfigureContainerBuilder();
 
-            var ipfs = ConfigureKeyTestDependency();
-            ContainerBuilder.RegisterInstance(ipfs).As<ICoreApi>();
+            OverrideContainerBuilderRegistrations();
 
             _container = ContainerBuilder.Build();
 

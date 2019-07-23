@@ -21,17 +21,27 @@
 
 #endregion
 
-using System.Threading;
-using System.Threading.Tasks;
-using Catalyst.Common.Interfaces.Modules.Consensus;
+using Autofac;
+using Catalyst.Common.Interfaces.Modules.Dfs;
+using Catalyst.Core.Lib.IntegrationTests;
+using Catalyst.Modules.Lib.Dfs;
+using Multiformats.Hash.Algorithms;
+using Xunit.Abstractions;
 
-namespace Catalyst.Common.Interfaces
+namespace Catalyst.Modules.Lib.IntegrationTests.Consensus
 {
-    public interface ICatalystNode
+    public class FileSystemDfsTestNode : TestCatalystNode
     {
-        /// <inheritdoc cref="IConsensus"/>
-        IConsensus Consensus { get; }
+        private readonly FileSystemDfs _dfs;
 
-        Task RunAsync(CancellationToken cancellationSourceToken);
+        public FileSystemDfsTestNode(string name, ITestOutputHelper output) : base(name, output)
+        {
+            _dfs = new FileSystemDfs(new BLAKE2B_128(), FileSystem);
+        }
+
+        protected override void OverrideContainerBuilderRegistrations()
+        {
+            ContainerBuilder.RegisterInstance(_dfs).As<IDfs>();
+        }
     }
 }
