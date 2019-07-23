@@ -126,7 +126,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
             {
                 var originalSignedMessage =
                     _incomingBroadcastSignatureDictionary[correlationId];
-                await BroadcastAsync(originalSignedMessage);
+                await BroadcastAsync(originalSignedMessage).ConfigureAwait(false);
             }
             else
             {
@@ -138,7 +138,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
                     Signature = signature.SignatureBytes.RawBytes.ToByteString(),
                     Message = message
                 };
-                await BroadcastAsync(protocolMessageSigned);
+                await BroadcastAsync(protocolMessageSigned).ConfigureAwait(false);
             }
         }
 
