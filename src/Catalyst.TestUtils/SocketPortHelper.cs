@@ -29,7 +29,7 @@ namespace Catalyst.TestUtils
 {
     public static class SocketPortHelper
     {
-        public static IConfigurationRoot AlterConfigurationToGetUniquePort(IConfigurationRoot config, string currentTestName)
+        public static void AlterConfigurationToGetUniquePort(IConfigurationRoot config, string currentTestName)
         {
             var serverSection = config.GetSection("CatalystNodeConfiguration").GetSection("Rpc");
             var peerSection = config.GetSection("CatalystNodeConfiguration").GetSection("Peer");
@@ -42,8 +42,6 @@ namespace Catalyst.TestUtils
 
             var clientSection = config.GetSection("CatalystCliRpcNodes").GetSection("nodes");
             clientSection.GetChildren().ToList().ForEach(c => { c.GetSection("port").Value = randomPort.ToString(); });
-
-            return config;
         }
     }
 }

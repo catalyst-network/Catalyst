@@ -27,6 +27,15 @@
             ],
             "instanceScope": "singleinstance"
         },
+        {
+            "type": "Catalyst.Common.Registry.PasswordRegistry, Catalyst.Common",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.Registry.IPasswordRegistry, Catalyst.Common"
+                }
+            ],
+            "instanceScope": "singleinstance"
+        },
         // Start Commands
         {
             "type": "Catalyst.Cli.Commands.AddFileCommand",

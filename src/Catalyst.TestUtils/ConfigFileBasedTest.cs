@@ -21,11 +21,15 @@
 
 #endregion
 
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Autofac;
 using Autofac.Configuration;
 using AutofacSerilogIntegration;
+using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.Cryptography;
+using Catalyst.Common.Interfaces.FileSystem;
 using Microsoft.Extensions.Configuration;
 using Serilog;
 using Serilog.Events;
@@ -35,9 +39,10 @@ using Xunit.Abstractions;
 
 namespace Catalyst.TestUtils
 {
-    public class ConfigFileBasedTest : FileSystemBasedTest
+    public abstract class ConfigFileBasedTest : FileSystemBasedTest
     {
         protected ContainerBuilder ContainerBuilder;
+        private IConfigurationRoot _configRoot;
         protected ConfigFileBasedTest(ITestOutputHelper output) : base(output) { }
 
         protected string LogOutputTemplate { get; set; } =
@@ -45,17 +50,35 @@ namespace Catalyst.TestUtils
 
         protected LogEventLevel LogEventLevel { get; set; } = LogEventLevel.Verbose;
 
-        protected void ConfigureContainerBuilder(IConfigurationRoot config,
-            bool writeLogsToTestOutput = false,
+        protected abstract IEnumerable<string> ConfigFilesUsed { get; }
+
+        protected IConfigurationRoot ConfigurationRoot
+        {
+            get
+            {
+                if (_configRoot != null)
+                {
+                    return _configRoot;
+                }
+
+                var configBuilder = new ConfigurationBuilder();
+                ConfigFilesUsed.ToList().ForEach(f => configBuilder.AddJsonFile(f));
+
+                _configRoot = configBuilder.Build();
+                return _configRoot;
+            }
+        }
+
+        protected void ConfigureContainerBuilder(bool writeLogsToTestOutput = false,
             bool writeLogsToFile = false)
         {
-            var configurationModule = new ConfigurationModule(config);
+            var configurationModule = new ConfigurationModule(ConfigurationRoot);
             ContainerBuilder = new ContainerBuilder();
             ContainerBuilder.RegisterModule(configurationModule);
-            ContainerBuilder.RegisterInstance(config).As<IConfigurationRoot>();
+            ContainerBuilder.RegisterInstance(ConfigurationRoot).As<IConfigurationRoot>();
 
             var repoFactory =
-                RepositoryFactory.BuildSharpRepositoryConfiguation(config.GetSection("CatalystNodeConfiguration:PersistenceConfiguration"));
+                RepositoryFactory.BuildSharpRepositoryConfiguation(ConfigurationRoot.GetSection("CatalystNodeConfiguration:PersistenceConfiguration"));
             ContainerBuilder.RegisterSharpRepository(repoFactory);
 
             var passwordReader = new TestPasswordReader();
@@ -63,13 +86,14 @@ namespace Catalyst.TestUtils
 
             var certificateStore = new TestCertificateStore();
             ContainerBuilder.RegisterInstance(certificateStore).As<ICertificateStore>();
+            ContainerBuilder.RegisterInstance(FileSystem).As<IFileSystem>();
 
-            ConfigureLogging(config, writeLogsToTestOutput, writeLogsToFile);
+            ConfigureLogging(writeLogsToTestOutput, writeLogsToFile);
         }
 
-        private void ConfigureLogging(IConfigurationRoot config, bool writeLogsToTestOutput, bool writeLogsToFile)
+        private void ConfigureLogging(bool writeLogsToTestOutput, bool writeLogsToFile)
         {
-            var loggerConfiguration = new LoggerConfiguration().ReadFrom.Configuration(config).MinimumLevel.Verbose();
+            var loggerConfiguration = new LoggerConfiguration().ReadFrom.Configuration(ConfigurationRoot).MinimumLevel.Verbose();
             
             if (writeLogsToTestOutput)
             {

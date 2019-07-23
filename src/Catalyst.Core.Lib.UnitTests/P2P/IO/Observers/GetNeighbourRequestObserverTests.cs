@@ -37,8 +37,6 @@ using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using NSubstitute;
 using Serilog;
-using SharpRepository.InMemoryRepository;
-using SharpRepository.Repository;
 using SharpRepository.Repository.Specifications;
 using Xunit;
 

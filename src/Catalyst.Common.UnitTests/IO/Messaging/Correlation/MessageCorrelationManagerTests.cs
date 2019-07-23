@@ -44,7 +44,6 @@ using Serilog;
 using System.IO;
 using Catalyst.Protocol;
 using Xunit;
-using Xunit.Abstractions;
 using PendingRequest = Catalyst.Common.IO.Messaging.Correlation.CorrelatableMessage<Catalyst.Protocol.Common.ProtocolMessage>;
 
 namespace Catalyst.Common.UnitTests.IO.Messaging.Correlation
@@ -58,22 +57,21 @@ namespace Catalyst.Common.UnitTests.IO.Messaging.Correlation
         protected T CorrelationManager;
         protected readonly ILogger SubbedLogger;
         protected readonly IChangeTokenProvider ChangeTokenProvider;
-        protected readonly IChangeToken ChangeToken;
         protected readonly IMemoryCache Cache;
-        protected readonly PeerId SenderPeerId;
+        private readonly PeerId _senderPeerId;
 
         protected readonly Dictionary<ByteString, ICacheEntry> CacheEntriesByRequest 
             = new Dictionary<ByteString, ICacheEntry>();
         
-        protected MessageCorrelationManagerTests(ITestOutputHelper output)
+        protected MessageCorrelationManagerTests()
         {
             SubbedLogger = Substitute.For<ILogger>();
             ChangeTokenProvider = Substitute.For<IChangeTokenProvider>();
-            ChangeToken = Substitute.For<IChangeToken>();
-            ChangeTokenProvider.GetChangeToken().Returns(ChangeToken);
+            var changeToken = Substitute.For<IChangeToken>();
+            ChangeTokenProvider.GetChangeToken().Returns(changeToken);
             Cache = Substitute.For<IMemoryCache>();
 
-            SenderPeerId = PeerIdHelper.GetPeerId("sender");
+            _senderPeerId = PeerIdHelper.GetPeerId("sender");
             PeerIds = new[]
             {
                 PeerIdentifierHelper.GetPeerIdentifier("peer1"),
@@ -87,7 +85,7 @@ namespace Catalyst.Common.UnitTests.IO.Messaging.Correlation
         {
             PendingRequests = PeerIds.Select((p, i) => new PendingRequest
             {
-                Content = new T().ToProtocolMessage(SenderPeerId, CorrelationId.GenerateCorrelationId()),
+                Content = new T().ToProtocolMessage(_senderPeerId, CorrelationId.GenerateCorrelationId()),
                 Recipient = p,
                 SentAt = DateTimeOffset.MinValue.Add(TimeSpan.FromMilliseconds(100 * i))
             }).ToList();
