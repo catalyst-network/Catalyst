@@ -21,6 +21,7 @@
 
 #endregion
 
+using System.Collections.Generic;
 using System.IO;
 using Autofac;
 using Catalyst.Common.Config;
@@ -43,13 +44,14 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.ReputationSystem
 
         public ReputationManagerTests(ITestOutputHelper output) : base(output)
         {
-            var config = new ConfigurationBuilder()
-               .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile))
-               .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile))
-               .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Network.Dev)))
-               .Build();
+            ConfigFilesUsed = new[]
+            {
+                Path.Combine(Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile),
+                Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile),
+                Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Network.Dev)),
+            };
             
-            ConfigureContainerBuilder(config);
+            ConfigureContainerBuilder();
             
             var container = ContainerBuilder.Build();
             using (container.BeginLifetimeScope(CurrentTestName))
@@ -98,7 +100,9 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.ReputationSystem
             var updatedSubbedPeer = _reputationManager.PeerRepository.Get(savedPeer.DocumentId);
             updatedSubbedPeer.Reputation.Should().Be(0);
         }
-        
+
+        protected override IEnumerable<string> ConfigFilesUsed { get; }
+
         [Fact]
         public void Can_Save_Decreased_Peer_To_Negative_Number()
         {
@@ -113,7 +117,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.ReputationSystem
             var updatedSubbedPeer = _reputationManager.PeerRepository.Get(savedPeer.DocumentId);
             updatedSubbedPeer.Reputation.Should().Be(-100);
         }
-        
+
         [Fact]
         public void Can_Save_Increased_Peer_From_Negative_Number_To_Positive_Number()
         {

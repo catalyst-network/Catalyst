@@ -89,7 +89,7 @@ namespace Catalyst.TestUtils
 
         protected virtual void Dispose(bool disposing)
         {
-            if (!disposing || _testDirectory.Parent == null)
+            if (!disposing || _testDirectory?.Parent == null)
             {
                 return;
             }
