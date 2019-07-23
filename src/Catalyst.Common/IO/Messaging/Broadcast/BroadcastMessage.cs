@@ -44,7 +44,7 @@ namespace Catalyst.Common.IO.Messaging.Broadcast
         /// <value>The size of the peer network at the moment of creating this request.</value>
         public int PeerNetworkSize { get; set; }
 
-        /// <summary>Increments the received count safely <inheritdoc cref="Interlocked"/>.</summary>
+        /// <summary>Increments the received count safely <seealso cref="Interlocked"/>.</summary>
         public void IncrementReceivedCount() { Interlocked.Increment(ref _receivedCount); }
     }
 }
