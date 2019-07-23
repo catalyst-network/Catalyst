@@ -26,7 +26,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
-using Catalyst.Common.Interfaces.P2P.IO.Messaging.Broadcast;
 using Catalyst.Common.IO.Observers;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Deltas;
