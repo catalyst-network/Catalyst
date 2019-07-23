@@ -10,15 +10,6 @@
             ]
         },
         {
-            "type": "Catalyst.Common.Registry.PasswordRegistry, Catalyst.Common",
-            "services": [
-                {
-                    "type": "Catalyst.Common.Interfaces.Registry.IPasswordRegistry, Catalyst.Common"
-                }
-            ],
-            "instanceScope": "singleinstance"
-        },
-        {
             "type": "Catalyst.Common.Registry.KeyRegistry, Catalyst.Common",
             "services": [
                 {
