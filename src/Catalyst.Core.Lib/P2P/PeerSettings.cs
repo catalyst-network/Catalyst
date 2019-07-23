@@ -58,13 +58,13 @@ namespace Catalyst.Core.Lib.P2P
                 Announce ? EndpointBuilder.BuildNewEndPoint(section.GetSection("AnnounceServer").Value) : null;
         }
 
+        public int Port { get; }
+        public bool Announce { get; }
         public Network Network { get; }
         public string PublicKey { get; }
-        public int Port { get; }
         public string PayoutAddress { get; }
-        public bool Announce { get; }
-        public IPEndPoint AnnounceServer { get; }
         public IPAddress BindAddress { get; }
+        public IPEndPoint AnnounceServer { get; }
         public IList<string> SeedServers { get; }
     }
 }
