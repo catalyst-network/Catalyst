@@ -23,6 +23,7 @@
 
 using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Types;
+using Catalyst.Protocol;
 using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;
 using Google.Protobuf;
@@ -40,16 +41,29 @@ namespace Catalyst.Common.IO.Handlers
 
         protected override void ChannelRead0(IChannelHandlerContext ctx, ProtocolMessageSigned signedMessage)
         {
+            if (!Verify(signedMessage))
+            {
+                return;
+            }
+
+            if (signedMessage.Message.IsBroadCastMessage())
+            {
+                var innerSignedMessage = ProtocolMessageSigned.Parser.ParseFrom(signedMessage.Message.Value);
+                if (!Verify(innerSignedMessage))
+                {
+                    return;
+                }
+            }
+
+            ctx.FireChannelRead(signedMessage.Message);
+        }
+
+        private bool Verify(ProtocolMessageSigned signedMessage)
+        {
             var sig = signedMessage.Signature.ToByteArray();
             var pub = signedMessage.Message.PeerId.PublicKey.ToByteArray();
             var signature = new Signature(sig, pub);
-
-            var message = signedMessage.Message.ToByteString().ToByteArray();
-            
-            if (_keySigner.Verify(signature, message))
-            {
-                ctx.FireChannelRead(signedMessage.Message);
-            }
+            return _keySigner.Verify(signature, signedMessage.Message.ToByteArray());
         }
     }
 }
