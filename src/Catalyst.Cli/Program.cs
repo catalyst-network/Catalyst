@@ -34,14 +34,14 @@ namespace Catalyst.Cli
 {
     internal static class Program
     {
-        private static readonly KernelBuilder KernelBuilder;
+        private static readonly Kernel Kernel;
 
         static Program()
         {
-            KernelBuilder = KernelBuilder.GetContainerBuilder(default, "Catalyst.Cli..log");
-
-            AppDomain.CurrentDomain.UnhandledException +=
-                (sender, args) => ConsoleProgram.LogUnhandledException(KernelBuilder.Logger, sender, args);
+            Kernel = Kernel.Initramfs(default, "Catalyst.Cli..log");
+            
+            AppDomain.CurrentDomain.UnhandledException += Kernel.LogUnhandledException;
+            AppDomain.CurrentDomain.ProcessExit += Kernel.CurrentDomain_ProcessExit;
         }
 
         /// <summary>
@@ -49,35 +49,19 @@ namespace Catalyst.Cli
         /// </summary>
         public static int Main()
         {
-            KernelBuilder.Logger.Information("Catalyst.Cli started with process id {0}",
+            Kernel.Logger.Information("Catalyst.Cli started with process id {0}",
                 System.Diagnostics.Process.GetCurrentProcess().Id.ToString());
-
-            const int bufferSize = 1024 * 67 + 128;
-
+            
             try
             {
-                Console.SetIn(
-                    new StreamReader(
-                        Console.OpenStandardInput(bufferSize),
-                        Console.InputEncoding, false, bufferSize
-                    )
-                );
-
-                var kernel = KernelBuilder
-                   .WithDataDirectory()
+                Kernel.WithDataDirectory()
                    .WithComponentsConfigFile(Constants.ShellComponentsJsonConfigFile)
                    .WithSerilogConfigFile()
                    .WithConfigCopier(new CliConfigCopier())
                    .WithConfigurationFile(Constants.ShellNodesConfigFile)
                    .WithConfigurationFile(Constants.ShellConfigFile)
-                   .BuildContainer();
-                
-                using (kernel.BeginLifetimeScope(MethodBase.GetCurrentMethod().DeclaringType.AssemblyQualifiedName))
-                {
-                    var shell = kernel.Resolve<ICatalystCli>();
-
-                    shell.RunConsole(KernelBuilder.CancellationTokenProvider.CancellationTokenSource.Token);
-                }
+                   .BuildKernel()
+                   .StartCli();
 
                 Environment.ExitCode = 0;
 
@@ -85,16 +69,11 @@ namespace Catalyst.Cli
             }
             catch (Exception e)
             {
-                KernelBuilder.Logger.Fatal(e, "Catalyst.Cli stopped unexpectedly");
+                Kernel.Logger.Fatal(e, "Catalyst.Cli stopped unexpectedly");
                 Environment.ExitCode = 1;
             }
 
             return Environment.ExitCode;
-        }
-
-        static void CurrentDomain_ProcessExit(object sender, EventArgs e)
-        {
-            KernelBuilder.CancellationTokenProvider.CancellationTokenSource.Cancel();
         }
     }
 }

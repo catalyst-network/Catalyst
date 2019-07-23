@@ -21,12 +21,15 @@
 
 #endregion
 
+using System;
 using System.IO;
 using System.Reflection;
 using Autofac;
 using Autofac.Configuration;
 using AutofacSerilogIntegration;
 using Catalyst.Common.Config;
+using Catalyst.Common.Interfaces;
+using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.Config;
 using Catalyst.Common.Interfaces.Util;
 using Catalyst.Common.Util;
@@ -37,9 +40,9 @@ using SharpRepository.Repository;
 
 namespace Catalyst.Common.Container
 {
-    public sealed class KernelBuilder
+    public sealed class Kernel
     {
-        public readonly ICancellationTokenProvider CancellationTokenProvider;
+        public static ICancellationTokenProvider CancellationTokenProvider;
         private readonly string _fileName;
         private Config.Network _network;
         private string _targetConfigFolder;
@@ -47,37 +50,54 @@ namespace Catalyst.Common.Container
         private readonly ContainerBuilder _containerBuilder;
         private readonly ConfigurationBuilder _configurationBuilder;
         public ILogger Logger;
-        private bool _withPersistence;
+        private string _withPersistence;
         private ConfigurationModule _configurationModule;
+        private readonly bool _overwrite;
 
-        public static KernelBuilder GetContainerBuilder(ICancellationTokenProvider cancellationTokenProvider = default, string fileName = "Catalyst.Node..log")
+        public static Kernel Initramfs(ICancellationTokenProvider cancellationTokenProvider = default, string fileName = "Catalyst.Node..log", bool overwrite = false)
         {
-            return new KernelBuilder(cancellationTokenProvider, fileName);
+            return new Kernel(cancellationTokenProvider, fileName, overwrite);
         }
 
-        private KernelBuilder(ICancellationTokenProvider cancellationTokenProvider, string fileName)
+        public void LogUnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
+            Logger.Fatal((Exception) e.ExceptionObject, "Unhandled exception, Terminating: {0}", e.IsTerminating);
+        }
+        
+        public void CurrentDomain_ProcessExit(object sender, EventArgs e)
+        {
+            CancellationTokenProvider.CancellationTokenSource.Cancel();
+        }
+        
+        private Kernel(ICancellationTokenProvider cancellationTokenProvider, string fileName, bool overwrite)
+        {
+            Logger = new LoggerConfiguration()
+               .WriteTo.Console()
+               .WriteTo.File(Path.Combine(Path.GetTempPath(), fileName), rollingInterval: RollingInterval.Day)
+               .CreateLogger()
+               .ForContext(MethodBase.GetCurrentMethod().DeclaringType);
+
             CancellationTokenProvider = cancellationTokenProvider ?? new CancellationTokenProvider();
+
+            _overwrite = overwrite;
             _fileName = fileName;
-            Logger = ConsoleProgram.GetTempLogger(_fileName, MethodBase.GetCurrentMethod().DeclaringType);
             _containerBuilder = new ContainerBuilder();
             _configurationBuilder = new ConfigurationBuilder();
         }
 
-        public IContainer BuildContainer()
+        public Kernel BuildKernel()
         {
-            _configCopier.RunConfigStartUp(_targetConfigFolder, _network, overwrite: true);
+            _configCopier.RunConfigStartUp(_targetConfigFolder, _network, null, _overwrite);
             
             var config = _configurationBuilder.Build();
             _configurationModule = new ConfigurationModule(config);
 
             _containerBuilder.RegisterLogger(Logger);
             _containerBuilder.RegisterInstance(config);
-
-            if (_withPersistence)
+            
+            if (!string.IsNullOrEmpty(_withPersistence))
             {
-                // told you
-                var repoFactory = RepositoryFactory.BuildSharpRepositoryConfiguation(config.GetSection("CatalystNodeConfiguration:PersistenceConfiguration"));
+                var repoFactory = RepositoryFactory.BuildSharpRepositoryConfiguation(config.GetSection(_withPersistence));
                 _containerBuilder.RegisterSharpRepository(repoFactory);
             }
             
@@ -92,16 +112,44 @@ namespace Catalyst.Common.Container
                .CreateLogger()
                .ForContext(MethodBase.GetCurrentMethod().DeclaringType);
             
-            return _containerBuilder.Build();
+            return this;
         }
 
-        public KernelBuilder WithDataDirectory()
+        public void StartNode()
+        {
+            using (var instance = _containerBuilder.Build().BeginLifetimeScope(MethodBase.GetCurrentMethod().DeclaringType.AssemblyQualifiedName))
+            {
+                instance.Resolve<ICatalystNode>()
+                   .RunAsync(CancellationTokenProvider.CancellationTokenSource.Token)
+                   .Wait(CancellationTokenProvider.CancellationTokenSource.Token);
+            }
+        }
+
+        public void StartCli()
+        {
+            const int bufferSize = 1024 * 67 + 128;
+
+            Console.SetIn(
+                new StreamReader(
+                    Console.OpenStandardInput(bufferSize),
+                    Console.InputEncoding, false, bufferSize
+                )
+            );
+            
+            using (var instance = _containerBuilder.Build().BeginLifetimeScope(MethodBase.GetCurrentMethod().DeclaringType.AssemblyQualifiedName))
+            {
+                instance.Resolve<ICatalystCli>()
+                   .RunConsole(CancellationTokenProvider.CancellationTokenSource.Token);
+            }
+        }
+
+        public Kernel WithDataDirectory()
         {
             _targetConfigFolder = new FileSystem.FileSystem().GetCatalystDataDir().FullName;
             return this;
         }
 
-        public KernelBuilder WithNetworksConfigFile(Config.Network network = default)
+        public Kernel WithNetworksConfigFile(Config.Network network = default)
         {
             _network = network ?? Config.Network.Dev;
             _configurationBuilder
@@ -112,7 +160,7 @@ namespace Catalyst.Common.Container
             return this;
         }
         
-        public KernelBuilder WithComponentsConfigFile(string components = default)
+        public Kernel WithComponentsConfigFile(string components = default)
         {
             _configurationBuilder
                .AddJsonFile(
@@ -122,7 +170,7 @@ namespace Catalyst.Common.Container
             return this;
         }
         
-        public KernelBuilder WithSerilogConfigFile(string serilog = default)
+        public Kernel WithSerilogConfigFile(string serilog = default)
         {
             _configurationBuilder
                .AddJsonFile(
@@ -132,7 +180,7 @@ namespace Catalyst.Common.Container
             return this;
         }
 
-        public KernelBuilder WithConfigurationFile(string configFileName)
+        public Kernel WithConfigurationFile(string configFileName)
         {
             _configurationBuilder
                .AddJsonFile(
@@ -142,15 +190,15 @@ namespace Catalyst.Common.Container
             return this;
         }
 
-        public KernelBuilder WithConfigCopier(IConfigCopier configCopier = default)
+        public Kernel WithConfigCopier(IConfigCopier configCopier = default)
         {
             _configCopier = configCopier ?? new ConfigCopier();
             return this;
         }
 
-        public KernelBuilder WithPersistenceConfiguration()
+        public Kernel WithPersistenceConfiguration(string configSection = null)
         {
-            _withPersistence = true; // I know this is gross
+            _withPersistence = configSection ?? "CatalystNodeConfiguration:PersistenceConfiguration";
 
             return this;
         }

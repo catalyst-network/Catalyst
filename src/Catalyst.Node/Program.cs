@@ -32,53 +32,41 @@ namespace Catalyst.Node
 {
     internal static class Program
     {
-        private static readonly KernelBuilder KernelBuilder;
+        private static readonly Kernel Kernel;
 
         static Program()
         {
-            KernelBuilder = KernelBuilder.GetContainerBuilder();
-
-            AppDomain.CurrentDomain.UnhandledException +=
-                (sender, args) => ConsoleProgram.LogUnhandledException(KernelBuilder.Logger, sender, args);
+            Kernel = Kernel.Initramfs();
+            AppDomain.CurrentDomain.UnhandledException += Kernel.LogUnhandledException;
+            AppDomain.CurrentDomain.ProcessExit += Kernel.CurrentDomain_ProcessExit;
         }
 
         public static int Main(string[] args)
         {
-            KernelBuilder.Logger.Information("Catalyst.Node started with process id {0}",
+            Kernel.Logger.Information("Catalyst.Node started with process id {0}",
                 System.Diagnostics.Process.GetCurrentProcess().Id.ToString());
             
             try
             {
-                var kernel = KernelBuilder
+                Kernel
                    .WithDataDirectory()
                    .WithNetworksConfigFile()
                    .WithComponentsConfigFile()
                    .WithSerilogConfigFile()
                    .WithConfigCopier()
                    .WithPersistenceConfiguration()
-                   .BuildContainer();
-                
-                using (kernel.BeginLifetimeScope(MethodBase.GetCurrentMethod().DeclaringType.AssemblyQualifiedName))
-                {
-                    kernel.Resolve<ICatalystNode>()
-                       .RunAsync(KernelBuilder.CancellationTokenProvider.CancellationTokenSource.Token)
-                       .Wait(KernelBuilder.CancellationTokenProvider.CancellationTokenSource.Token);
-                }
+                   .BuildKernel()
+                   .StartNode();
                 
                 Environment.ExitCode = 0;
             }
             catch (Exception e)
             {
-                KernelBuilder.Logger.Fatal(e, "Catalyst.Node stopped unexpectedly");
+                Kernel.Logger.Fatal(e, "Catalyst.Node stopped unexpectedly");
                 Environment.ExitCode = 1;
             }
 
             return Environment.ExitCode;
-        }
-        
-        static void CurrentDomain_ProcessExit(object sender, EventArgs e)
-        {
-            KernelBuilder.CancellationTokenProvider.CancellationTokenSource.Cancel();
         }
     }
 }
