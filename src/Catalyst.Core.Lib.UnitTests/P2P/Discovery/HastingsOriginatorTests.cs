@@ -117,7 +117,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
             originator.RestoreMemento(memento2);
             
             originator.UnResponsivePeers.Select(i => i.Key).Should()
-               .BeSubsetOf(memento2.Neighbours.Select(p => p));
+               .BeSubsetOf(memento2.Neighbours);
 
             originator.UnResponsivePeers.Count.Should().Be(5);
             originator.ExpectedPnr.Key.Should().Be(null);
