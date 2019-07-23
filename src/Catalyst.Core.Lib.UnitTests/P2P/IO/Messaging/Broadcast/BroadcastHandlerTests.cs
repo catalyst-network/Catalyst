@@ -41,7 +41,6 @@ using Catalyst.Protocol.Transaction;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels.Embedded;
 using FluentAssertions;
-using Google.Protobuf;
 using NSubstitute;
 using NSubstitute.Exceptions;
 using NSubstitute.ReceivedExtensions;
