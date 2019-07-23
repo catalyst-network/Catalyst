@@ -25,6 +25,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Net;
+using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using Catalyst.Common.Interfaces.IO.Observables;
@@ -35,17 +36,22 @@ using Dawn;
 namespace Catalyst.Common.IO.Transport
 {
     public sealed class SocketClientRegistry<TSocketChannel>
-        : ISocketClientRegistry<TSocketChannel>
+        : ISocketClientRegistry<TSocketChannel>, IDisposable
         where TSocketChannel : class, ISocketClient
     {
+        private bool _disposed;
+        private IScheduler _scheduler;
+
         public IObservable<ISocketClientRegistryEvent> EventStream { get; }
         private readonly ReplaySubject<ISocketClientRegistryEvent> _eventReplySubject;
 
         public IDictionary<int, TSocketChannel> Registry { get; }
 
-        public SocketClientRegistry()
+        public SocketClientRegistry(IScheduler scheduler = null)
         {
-            _eventReplySubject = new ReplaySubject<ISocketClientRegistryEvent>(1);
+            _scheduler = scheduler ?? Scheduler.Default;
+
+            _eventReplySubject = new ReplaySubject<ISocketClientRegistryEvent>(1, _scheduler);
             EventStream = _eventReplySubject.AsObservable();
 
             Registry = new ConcurrentDictionary<int, TSocketChannel>();
@@ -101,6 +107,23 @@ namespace Catalyst.Common.IO.Transport
         public string GetRegistryType()
         {
             return typeof(TSocketChannel).Name;
+        }
+
+        private void Dispose(bool disposing)
+        {
+            if (_disposed) return;
+
+            if (disposing)
+            {
+                _eventReplySubject.Dispose();
+            }
+
+            _disposed = true;
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
         }
     }
 }

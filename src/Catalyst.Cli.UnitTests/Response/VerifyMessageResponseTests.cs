@@ -23,79 +23,83 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.IO.Messaging.Correlation;
+using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Node.Rpc.Client.IO.Observers;
 using Catalyst.Protocol.Rpc.Node;
-using Catalyst.Protocol.Transaction;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using FluentAssertions;
-using Nethereum.RLP;
 using NSubstitute;
 using Serilog;
 using Xunit;
 
 namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
 {
-    public sealed class GetMempoolResponseObserverTests : IDisposable
+    public sealed class VerifyMessageResponseObserverTests : IDisposable
     {
         private readonly ILogger _logger;
         private readonly IChannelHandlerContext _fakeContext;
-        public static readonly List<object[]> QueryContents;
+        public static List<object[]> QueryContents;
+        private VerifyMessageResponseObserver _observer;
 
-        private GetMempoolResponseObserver _observer;
-
-        static GetMempoolResponseObserverTests()
+        static VerifyMessageResponseObserverTests()
         {
-            var memPoolData = CreateMemPoolData();
-
             QueryContents = new List<object[]>
             {
                 new object[]
                 {
-                    memPoolData
+                    true
                 },
                 new object[]
                 {
-                    new List<string>()
+                    false
                 }
             };
         }
 
-        public GetMempoolResponseObserverTests()
+        public VerifyMessageResponseObserverTests()
         {
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
         }
 
-        private static IEnumerable<string> CreateMemPoolData()
+        [Theory]
+        [MemberData(nameof(QueryContents))]
+        public async Task RpcClient_Can_Handle_VerifyMessageResponse(bool isSignedByNode)
         {
-            var txLst = new List<TransactionBroadcast>
-            {
-                TransactionHelper.GetTransaction(234, "standardPubKey", "sign1"),
-                TransactionHelper.GetTransaction(567, "standardPubKey", "sign2")
-            };
+            var response = new DtoFactory().GetDto(new VerifyMessageResponse
+                {
+                    IsSignedByKey = isSignedByNode
+                },
+                PeerIdentifierHelper.GetPeerIdentifier("sender"),
+                PeerIdentifierHelper.GetPeerIdentifier("recipient"),
+                CorrelationId.GenerateCorrelationId()
+            );
 
-            var txEncodedLst = txLst.Select(tx => tx.ToString().ToBytesForRLPEncoding()).ToList();
+            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext,
+                response.Content.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId,
+                    response.CorrelationId)
+            );
 
-            var mempoolList = new List<string>();
+            VerifyMessageResponse messageStreamResponse = null;
 
-            foreach (var tx in txEncodedLst)
-            {
-                mempoolList.Add(Encoding.Default.GetString(tx));
-            }
+            _observer = new VerifyMessageResponseObserver(_logger);
+            _observer.StartObserving(messageStream);
+            _observer.SubscribeToResponse(message => messageStreamResponse = message);
 
-            return mempoolList;
+            await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
+
+            messageStreamResponse.Should().NotBeNull();
+            messageStreamResponse.IsSignedByKey.Should().Be(response.Content.IsSignedByKey);
         }
 
         public void Dispose()
         {
-            _observer?.Dispose();
+            _observer.Dispose();
         }
     }
 }

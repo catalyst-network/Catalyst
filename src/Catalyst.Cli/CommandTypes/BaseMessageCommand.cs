@@ -36,14 +36,17 @@ using System.Reactive.Linq;
 
 namespace Catalyst.Cli.CommandTypes
 {
-    public abstract class BaseMessageCommand<TRequest, TResponse, TOption> : BaseCommand<TOption>, IMessageCommand<TRequest>
+    public abstract class BaseMessageCommand<TRequest, TResponse, TOption> : BaseCommand<TOption>, IMessageCommand<TRequest>, IDisposable
         where TRequest : IMessage<TRequest>
         where TResponse : IMessage<TResponse>
         where TOption : IOptionsBase
     {
+        private bool _disposed;
+        private readonly IDisposable _socketClientRegistryEventStreamObserver;
+
         protected BaseMessageCommand(ICommandContext commandContext) : base(commandContext)
         {
-            CommandContext.SocketClientRegistry.EventStream.OfType<SocketClientRegistryClientAdded>().Subscribe(SocketClientRegistryClientAddedOnNext);
+            _socketClientRegistryEventStreamObserver = CommandContext.SocketClientRegistry.EventStream.OfType<SocketClientRegistryClientAdded>().Subscribe(SocketClientRegistryClientAddedOnNext);
         }
 
         public virtual void SendMessage(TOption options)
@@ -96,6 +99,24 @@ namespace Catalyst.Cli.CommandTypes
         {
             var client = CommandContext.SocketClientRegistry.GetClientFromRegistry(value.SocketHashCode);
             client.SubscribeToResponse<TResponse>(CommandResponseOnNext);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_disposed) return;
+
+            if (disposing)
+            {
+                _socketClientRegistryEventStreamObserver?.Dispose();
+            }
+
+            _disposed = true;
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 }

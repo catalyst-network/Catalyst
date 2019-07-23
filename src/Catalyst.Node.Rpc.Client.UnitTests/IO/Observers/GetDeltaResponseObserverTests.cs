@@ -55,6 +55,41 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
             _previousDeltaHash = Multihash.Cast(hashingAlgorithm.ComputeHash(Encoding.UTF8.GetBytes("previous")));
         }
 
+        [Fact]
+        public async Task GetDeltaResponseObserver_Can_Output_Delta_As_Json()
+        {
+            var deltaContent = DeltaHelper.GetDelta(_previousDeltaHash);
+            var deltaResponse = new GetDeltaResponse {Delta = deltaContent};
+
+            var messageStream = CreateMessageStream(deltaResponse);
+
+            GetDeltaResponse messageStreamResponse = null;
+            _observer.StartObserving(messageStream);
+            _observer.SubscribeToResponse(message => messageStreamResponse = message);
+
+            await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
+
+            messageStreamResponse.Should().NotBeNull();
+            messageStreamResponse.ToJsonString().Should().Be(deltaResponse.ToJsonString());
+        }
+
+        [Fact]
+        public async Task GetDeltaResponseObserver_Treats_Null_Content_As_Not_Found()
+        {
+            var deltaResponse = new GetDeltaResponse {Delta = null};
+
+            var messageStream = CreateMessageStream(deltaResponse);
+
+            GetDeltaResponse messageStreamResponse = null;
+            _observer.StartObserving(messageStream);
+            _observer.SubscribeToResponse(message => messageStreamResponse = message);
+
+            await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
+
+            messageStreamResponse.Should().NotBeNull();
+            messageStreamResponse.Delta.Should().BeNull();
+        }
+
         private static IObservable<IObserverDto<ProtocolMessage>> CreateMessageStream(GetDeltaResponse deltaResponse)
         {
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(Substitute.For<IChannelHandlerContext>(),

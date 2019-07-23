@@ -35,6 +35,7 @@ namespace Catalyst.Cli.Commands
 {
     public sealed class AddFileCommand : BaseMessageCommand<AddFileToDfsRequest, AddFileToDfsResponse, AddFileOptions>
     {
+        public static string ErrorNoResponseCodes = "No response codes were found.";
         private readonly IUploadFileTransferFactory _uploadFileTransferFactory;
 
         public AddFileCommand(IUploadFileTransferFactory uploadFileTransferFactory,
@@ -62,7 +63,7 @@ namespace Catalyst.Cli.Commands
 
             using (var fileStream = File.Open(options.File, FileMode.Open))
             {
-                request.FileSize = (ulong) fileStream.Length;
+                request.FileSize = (ulong)fileStream.Length;
             }
 
             var protocolMessage = request.ToProtocolMessage(SenderPeerIdentifier.PeerId);
@@ -103,6 +104,12 @@ namespace Catalyst.Cli.Commands
 
         protected override void ResponseMessage(AddFileToDfsResponse response)
         {
+            if (response.ResponseCode.IsEmpty)
+            {
+                CommandContext.UserOutput.WriteLine(ErrorNoResponseCodes);
+                return;
+            }
+
             var responseCode = (FileTransferResponseCodes) response.ResponseCode[0];
             if (responseCode == FileTransferResponseCodes.Failed || responseCode == FileTransferResponseCodes.Finished)
             {

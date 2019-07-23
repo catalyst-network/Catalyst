@@ -67,6 +67,27 @@ namespace Catalyst.Cli.Commands
             UserOutput = userOutput;
         }
 
+        public CommandContext(IConfigurationRoot config,
+            ILogger logger,
+            IUserOutput userOutput,
+            IPeerIdClientId peerIdClientId,
+            IDtoFactory dtoFactory,
+            INodeRpcClientFactory nodeRpcClientFactory,
+            ICertificateStore certificateStore,
+            SocketClientRegistry<INodeRpcClient> socketClientRegistry)
+        {
+            _logger = logger;
+            _rpcNodeConfigs = NodeRpcConfig.BuildRpcNodeSettingList(config);
+
+            SocketClientRegistry = socketClientRegistry;
+            DtoFactory = dtoFactory;
+            PeerIdClientId = peerIdClientId;
+            PeerIdentifier = Common.P2P.PeerIdentifier.BuildPeerIdFromConfig(config, peerIdClientId);
+            NodeRpcClientFactory = nodeRpcClientFactory;
+            CertificateStore = certificateStore;
+            UserOutput = userOutput;
+        }
+
         public IDtoFactory DtoFactory { get; }
 
         public IPeerIdentifier PeerIdentifier { get; }

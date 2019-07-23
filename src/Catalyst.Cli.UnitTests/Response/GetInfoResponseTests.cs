@@ -21,24 +21,30 @@
 
 #endregion
 
-using System.Reactive.Concurrency;
-using Catalyst.Cli.CommandTypes;
-using Catalyst.Cli.Options;
-using Catalyst.Common.Interfaces.Cli.Commands;
+using Catalyst.Cli.Commands;
+using Catalyst.Cli.UnitTests.Helpers;
+using Catalyst.Protocol;
 using Catalyst.Protocol.Rpc.Node;
+using Microsoft.Reactive.Testing;
+using NSubstitute;
+using Xunit;
 
-namespace Catalyst.Cli.Commands
+namespace Catalyst.Cli.UnitTests.Response
 {
-    public sealed class GetVersionCommand : BaseMessageCommand<VersionRequest, VersionResponse, GetVersionOptions>
+    public sealed class GetInfoResponseTests
     {
-        public GetVersionCommand(ICommandContext commandContext) : base(commandContext) { }
+        private readonly TestScheduler _testScheduler = new TestScheduler();
 
-        protected override VersionRequest GetMessage(GetVersionOptions option)
+        [Fact]
+        public void GetInfoResponse_Can_Get_Output()
         {
-            return new VersionRequest
-            {
-                Query = true
-            };
+            var getInfoResponse = new GetInfoResponse {Query = "Test"};
+            var commandContext = TestResponseHelpers.GenerateResponse(_testScheduler, getInfoResponse);
+            var getInfoCommand = new GetInfoCommand(commandContext);
+
+            _testScheduler.Start();
+
+            commandContext.UserOutput.Received(1).WriteLine(getInfoResponse.ToJsonString());
         }
     }
 }

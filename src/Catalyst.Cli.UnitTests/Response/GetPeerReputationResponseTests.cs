@@ -21,38 +21,33 @@
 
 #endregion
 
-using System;
-using System.Threading.Tasks;
-using Catalyst.Common.Extensions;
-using Catalyst.Common.Interfaces.Cli;
-using Catalyst.Common.IO.Messaging.Correlation;
-using Catalyst.Common.IO.Messaging.Dto;
-using Catalyst.Node.Rpc.Client.IO.Observers;
+using Catalyst.Cli.Commands;
+using Catalyst.Cli.UnitTests.Helpers;
+using Catalyst.Protocol;
 using Catalyst.Protocol.Rpc.Node;
-using Catalyst.TestUtils;
-using DotNetty.Transport.Channels;
-using FluentAssertions;
+using Microsoft.Reactive.Testing;
 using NSubstitute;
-using Serilog;
 using Xunit;
 
-namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
+namespace Catalyst.Cli.UnitTests.Response
 {
-    public sealed class GetInfoResponseObserverTests : IDisposable
+    /// <summary>
+    /// Tests the CLI for peer reputation response
+    /// </summary>
+    public sealed class GetPeerReputationResponseTests
     {
-        private readonly ILogger _logger;
-        private GetInfoResponseObserver _observer;
-        private readonly IChannelHandlerContext _fakeContext;
+        private readonly TestScheduler _testScheduler = new TestScheduler();
 
-        public GetInfoResponseObserverTests()
+        [Fact]
+        public void GetPeerReputationResponse_Can_Get_Output()
         {
-            _logger = Substitute.For<ILogger>();
-            _fakeContext = Substitute.For<IChannelHandlerContext>();
-        }
+            var getPeerReputationResponse = new GetPeerReputationResponse {Reputation = 100};
+            var commandContext = TestResponseHelpers.GenerateResponse(_testScheduler, getPeerReputationResponse);
+            var getPeerReputationCommand = new PeerReputationCommand(commandContext);
 
-        public void Dispose()
-        {
-            _observer?.Dispose();
+            _testScheduler.Start();
+
+            commandContext.UserOutput.Received(1).WriteLine(getPeerReputationResponse.ToJsonString());
         }
     }
 }
