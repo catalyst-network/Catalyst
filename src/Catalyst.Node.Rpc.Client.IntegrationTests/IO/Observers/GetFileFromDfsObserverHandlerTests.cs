@@ -55,13 +55,6 @@ namespace Catalyst.Node.Rpc.Client.IntegrationTests.IO.Observers
 
         public GetFileFromDfsObserverHandlerTests(ITestOutputHelper testOutput) : base(testOutput)
         {
-            var peerSettings = Substitute.For<IPeerSettings>();
-            peerSettings.SeedServers.Returns(new List<string>
-            {
-                "catalyst.seedserver01.com",
-                "catalyst.seedserver02.com"
-            });
-
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
             _fileDownloadFactory = new DownloadFileTransferFactory(_logger);
