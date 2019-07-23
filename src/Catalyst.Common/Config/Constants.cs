@@ -97,9 +97,6 @@ namespace Catalyst.Common.Config
         public static HashType HashAlgorithmType => HashAlgorithm.Code;
 
         public static MultibaseEncoding EncodingAlgorithm => MultibaseEncoding.Base58Btc;
-        
-        /// <summary> Dfs Swarm Key </summary>
-        public static string SwarmKey => "07a8e9d0c43400927ab274b7fa443596b71e609bacae47bd958e5cd9f59d6ca3";
 
         public static int BaseReputationChange => 1;
         

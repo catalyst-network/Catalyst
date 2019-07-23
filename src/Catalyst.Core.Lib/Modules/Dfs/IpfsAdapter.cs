@@ -22,6 +22,7 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Catalyst.Common.Config;
@@ -59,14 +60,30 @@ namespace Catalyst.Core.Lib.Modules.Dfs
             global::Common.Logging.LogManager.Adapter = new SerilogFactoryAdapter(Log.Logger);
         }
 
-        public IpfsAdapter(IPasswordReader passwordReader, 
-            IPeerSettings peerSettings, 
-            IFileSystem fileSystem, 
-            ILogger logger)
+        public IpfsAdapter(IPasswordReader passwordReader,
+            IFileSystem fileSystem,
+            ILogger logger,
+            string swarmKey = "07a8e9d0c43400927ab274b7fa443596b71e609bacae47bd958e5cd9f59d6ca3",
+            IEnumerable<string> seedServers = null)
         {
-            Guard.Argument(peerSettings, nameof(peerSettings)).NotNull()
-               .Require(p => p.SeedServers != null && p.SeedServers.Count > 0,
-                    p => $"{nameof(peerSettings)} needs to specify at least one seed server.");
+            if (seedServers == null)
+            {
+                seedServers = new[]
+                {
+                    "catalystnetwork.co",
+                    "catalystnetwork.io",
+                    "catalystnetwork.info",
+                    "catalystnet.org",
+                    "cryptowallet.io",
+                    "catalystwallet.io",
+                    "catalystnet.io",
+                    "catalystnet.co.uk"
+                };
+            }
+            
+            Guard.Argument(seedServers, nameof(seedServers)).NotNull()
+               .Require(p => p != null && p.ToList().Count > 0,
+                    p => $"{nameof(seedServers)} needs to specify at least one seed server.");
 
             _logger = logger;
 
@@ -81,8 +98,7 @@ namespace Catalyst.Core.Lib.Modules.Dfs
                 Constants.DfsDataSubDir);
 
             // The seed nodes for the catalyst network.
-            _ipfs.Options.Discovery.BootstrapPeers = peerSettings
-               .SeedServers
+            _ipfs.Options.Discovery.BootstrapPeers = seedServers
                .Select(s => $"/dns/{s}/tcp/4001")
                .Select(ma => new MultiAddress(ma))
                .ToArray();
@@ -91,7 +107,7 @@ namespace Catalyst.Core.Lib.Modules.Dfs
             // of catalyst only nodes.
             _ipfs.Options.Swarm.PrivateNetworkKey = new PeerTalk.Cryptography.PreSharedKey
             {
-                Value = Constants.SwarmKey.ToHexBuffer()
+                Value = swarmKey.ToHexBuffer()
             };
 
             _logger.Information("IPFS configured.");
@@ -105,17 +121,21 @@ namespace Catalyst.Core.Lib.Modules.Dfs
         /// </returns>
         private IpfsEngine Start()
         {
-            if (!_isStarted)
+            if (_isStarted)
             {
-                lock (_startingLock)
+                return _ipfs;
+            }
+            
+            lock (_startingLock)
+            {
+                if (_isStarted)
                 {
-                    if (!_isStarted)
-                    {
-                        _ipfs.Start();
-                        _isStarted = true;
-                        _logger.Information("IPFS started.");
-                    }
+                    return _ipfs;
                 }
+                    
+                _ipfs.Start();
+                _isStarted = true;
+                _logger.Information("IPFS started.");
             }
 
             return _ipfs;
