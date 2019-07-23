@@ -48,8 +48,8 @@ namespace Catalyst.Node.Rpc.Client
     internal sealed class NodeRpcClient : TcpClient, INodeRpcClient
     {
         private readonly ConcurrentBag<IDisposable> _messageSubscriptions;
-        private readonly ReplaySubject<IRpcClientMessageDto<IMessage>> _messageResponse;
-        private IObservable<IRpcClientMessageDto<IMessage>> _messageResponseStream;
+        private readonly ReplaySubject<IRpcClientMessageDto<IMessage>> _allHandledRpcResponses;
+        private readonly IObservable<IRpcClientMessageDto<IMessage>> _allHandledRpcResponsesStream;
 
         /// <summary>
         ///     Initialize a new instance of RPClient
@@ -68,13 +68,13 @@ namespace Catalyst.Node.Rpc.Client
                 clientEventLoopGroupFactory)
         {
             _messageSubscriptions = new ConcurrentBag<IDisposable>();
-            _messageResponse = new ReplaySubject<IRpcClientMessageDto<IMessage>>(1);
-            _messageResponseStream = _messageResponse.AsObservable();
+            _allHandledRpcResponses = new ReplaySubject<IRpcClientMessageDto<IMessage>>(1);
+            _allHandledRpcResponsesStream = _allHandledRpcResponses.AsObservable();
 
             var socket = channelFactory.BuildChannel(EventLoopGroupFactory, nodeConfig.HostAddress, nodeConfig.Port, certificate);
             handlers.ToList().ForEach(handler =>
             {
-                _messageResponseStream = _messageResponseStream.Merge(handler.MessageResponseStream);
+                handler.MessageResponseStream.Subscribe(_allHandledRpcResponses);
                 handler.StartObserving(socket.MessageStream);
             });
             Channel = socket.Channel;
@@ -82,9 +82,12 @@ namespace Catalyst.Node.Rpc.Client
 
         public void SubscribeToResponse<T>(Action<T> onNext)
         {
-            _messageSubscriptions.Add(_messageResponseStream.Where(x => x.Message.GetType() == typeof(T)).SubscribeOn(NewThreadScheduler.Default).Subscribe(rpcClientMessageDto =>
-                onNext((T) rpcClientMessageDto.Message)
-            ));
+            _messageSubscriptions.Add(_allHandledRpcResponsesStream
+               .Where(x => x.Message.GetType() == typeof(T))
+               .SubscribeOn(NewThreadScheduler.Default)
+               .Subscribe(rpcClientMessageDto =>
+                    onNext((T) rpcClientMessageDto.Message)
+                ));
         }
 
         protected override void Dispose(bool disposing)
@@ -95,7 +98,7 @@ namespace Catalyst.Node.Rpc.Client
             }
 
             _messageSubscriptions.Clear();
-            _messageResponse?.Dispose();
+            _allHandledRpcResponses?.Dispose();
             base.Dispose(disposing);
         }
     }

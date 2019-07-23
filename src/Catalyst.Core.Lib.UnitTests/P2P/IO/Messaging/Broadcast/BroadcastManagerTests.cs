@@ -39,10 +39,6 @@ using Catalyst.TestUtils;
 using FluentAssertions;
 using Microsoft.Extensions.Caching.Memory;
 using NSubstitute;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Messaging.Broadcast

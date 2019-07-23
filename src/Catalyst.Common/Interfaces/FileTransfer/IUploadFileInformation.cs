@@ -23,7 +23,6 @@
 
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Protocol.Common;
-using Catalyst.Protocol.Rpc.Node;
 
 namespace Catalyst.Common.Interfaces.FileTransfer
 {

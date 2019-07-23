@@ -21,7 +21,6 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.IO.Observers;
 using Catalyst.Common.Interfaces.P2P;
@@ -39,19 +38,12 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
     public sealed class GetPeerInfoResponseObserver
         : RpcResponseObserver<GetPeerInfoResponse>
     {
-        private readonly IUserOutput _output;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="PeerReputationResponseObserver"/> class.
         /// </summary>
-        /// <param name="output">The output.</param>
         /// <param name="logger">The logger.</param>
-        public GetPeerInfoResponseObserver(IUserOutput output,
-            ILogger logger)
-            : base(logger)
-        {
-            _output = output;
-        }
+        public GetPeerInfoResponseObserver(ILogger logger)
+            : base(logger) { }
 
         /// <summary>
         /// Handle the response for GetPeerInfo

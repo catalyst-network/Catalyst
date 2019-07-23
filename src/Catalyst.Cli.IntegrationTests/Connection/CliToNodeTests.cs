@@ -21,116 +21,55 @@
 
 #endregion
 
+using System.Collections.Generic;
 using Autofac;
 using Catalyst.Common.Interfaces.Cli;
 using FluentAssertions;
 using Xunit;
 using Xunit.Abstractions;
-using Catalyst.Common.Interfaces.Cryptography;
-using Microsoft.Extensions.Configuration;
-using Catalyst.Core.Lib.Modules.Dfs;
-using Catalyst.Common.Config;
-using System.Linq;
 using System.IO;
-using Catalyst.Common.Interfaces;
-using NSubstitute;
-using Serilog;
+using Catalyst.Common.Interfaces.FileSystem;
 using Catalyst.TestUtils;
-using Ipfs.CoreApi;
-using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Core.Lib.IntegrationTests;
 using Constants = Catalyst.Common.Config.Constants;
 
 namespace Catalyst.Cli.IntegrationTests.Connection
 {
     public sealed class CliToNodeTests : ConfigFileBasedTest
     {
-        private readonly NodeTest _node;
+        private readonly TestCatalystNode _node;
+        protected override IEnumerable<string> ConfigFilesUsed { get; }
 
         public CliToNodeTests(ITestOutputHelper output) : base(output)
         {
-            _node = new NodeTest(output);
+            _node = new TestCatalystNode("server", output);
 
-            var config = new ConfigurationBuilder()
-               .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ShellComponentsJsonConfigFile))
-               .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ShellNodesConfigFile))
-               .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ShellConfigFile))
-               .Build();
-
-            ConfigureContainerBuilder(config);
-        }
-
-        private sealed class NodeTest : ConfigFileBasedTest
-        {
-            private ILifetimeScope _scope;
-            private IContainer _container;
-
-            public NodeTest(ITestOutputHelper output) : base(output) { }
-
-            private void NodeSetup()
+            ConfigFilesUsed = new[]
             {
-                var configFiles = new[]
-                {
-                    Constants.NetworkConfigFile(Network.Main),
-                    Constants.ComponentsJsonConfigFile,
-                    Constants.SerilogJsonConfigFile
-                }.Select(f => Path.Combine(Constants.ConfigSubFolder, f));
+                Path.Combine(Constants.ConfigSubFolder, Constants.ShellComponentsJsonConfigFile),
+                Path.Combine(Constants.ConfigSubFolder, Constants.ShellNodesConfigFile),
+                Path.Combine(Constants.ConfigSubFolder, Constants.ShellConfigFile)
+            };
 
-                var configBuilder = new ConfigurationBuilder();
-                configFiles.ToList().ForEach(f => configBuilder.AddJsonFile(f));
+            ConfigureContainerBuilder();
 
-                var configRoot = configBuilder.Build();
-                ConfigureContainerBuilder(configRoot);
-            }
-
-            private IpfsAdapter ConfigureKeyTestDependency()
-            {
-                var peerSettings = Substitute.For<IPeerSettings>();
-                peerSettings.SeedServers.Returns(new[]
-                {
-                    "seed1.server.va",
-                    "island.domain.tv"
-                });
-
-                var passwordReader = Substitute.For<IPasswordReader>();
-                passwordReader.ReadSecurePasswordAndAddToRegistry(Arg.Any<PasswordRegistryKey>(), Arg.Any<string>()).ReturnsForAnyArgs(TestPasswordReader.BuildSecureStringPassword("trendy"));
-                var logger = Substitute.For<ILogger>();
-                return new IpfsAdapter(passwordReader, peerSettings, FileSystem, logger);
-            }
-
-            public void RunNodeInstance()
-            {
-                NodeSetup();
-
-                var ipfs = ConfigureKeyTestDependency();
-                ContainerBuilder.RegisterInstance(ipfs).As<ICoreApi>();
-
-                _container = ContainerBuilder.Build();
-
-                _scope = _container.BeginLifetimeScope(CurrentTestName);
-                _ = _scope.Resolve<ICatalystNode>();
-            }
-
-            protected override void Dispose(bool disposing)
-            {
-                base.Dispose(disposing);
-
-                _container?.Dispose();
-                _scope?.Dispose();
-            }
+            ContainerBuilder.RegisterInstance(FileSystem).As<IFileSystem>();
         }
 
         [Fact]
         public void CliToNode_Connect_To_Node()
         {
-            _node.RunNodeInstance();
+            _node.BuildNode();
 
             using (var container = ContainerBuilder.Build())
-            using (var scope = container.BeginLifetimeScope(CurrentTestName))
             {
-                var shell = scope.Resolve<ICatalystCli>();
-                var hasConnected = shell.ParseCommand("connect", "-n", "node1");
-                hasConnected.Should().BeTrue();
-            }   
+                using (var scope = container.BeginLifetimeScope(CurrentTestName))
+                {
+                    var shell = scope.Resolve<ICatalystCli>();
+                    var hasConnected = shell.ParseCommand("connect", "-n", "node1");
+                    hasConnected.Should().BeTrue();
+                }
+            }
         }
 
         protected override void Dispose(bool disposing)

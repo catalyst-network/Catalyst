@@ -24,12 +24,10 @@
 
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
-using Catalyst.Common.FileTransfer;
 using Catalyst.Common.Interfaces.FileTransfer;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Common.IO.Messaging.Dto;
-using Catalyst.Node.Core.Rpc.IO.Observers;
 using Catalyst.Protocol;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
@@ -41,6 +39,7 @@ using NSubstitute;
 using Serilog;
 using System.Linq;
 using System.Threading.Tasks;
+using Catalyst.Core.Lib.Rpc.IO.Observers;
 using Xunit;
 
 namespace Catalyst.Common.UnitTests.IO.Observers
@@ -87,7 +86,7 @@ namespace Catalyst.Common.UnitTests.IO.Observers
 
             var sender = PeerIdentifierHelper.GetPeerIdentifier("sender");
             var requestDto = new DtoFactory().GetDto(new TransferFileBytesRequest().ToProtocolMessage(sender.PeerId)
-            , sender, PeerIdentifierHelper.GetPeerIdentifier("recipient"));
+              , sender, PeerIdentifierHelper.GetPeerIdentifier("recipient"));
 
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_context, requestDto.Content);
 
@@ -97,9 +96,9 @@ namespace Catalyst.Common.UnitTests.IO.Observers
 
             var receivedCalls = _context.Channel.ReceivedCalls().ToList();
             receivedCalls.Count.Should().Be(1);
-            var sentResponseDto = (IMessageDto<ProtocolMessage>)receivedCalls.Single().GetArguments().Single();
+            var sentResponseDto = (IMessageDto<ProtocolMessage>) receivedCalls.Single().GetArguments().Single();
             var transferFileBytesResponse = sentResponseDto.Content.FromProtocolMessage<TransferFileBytesResponse>();
-            transferFileBytesResponse.ResponseCode.Should().Equal((byte)FileTransferResponseCodes.Error);
+            transferFileBytesResponse.ResponseCode.Should().Equal((byte) FileTransferResponseCodes.Error);
         }
     }
 }

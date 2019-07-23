@@ -38,7 +38,7 @@ using System.Reactive.Subjects;
 
 namespace Catalyst.Node.Rpc.Client.IO
 {
-    public abstract class RpcResponseObserver<TProto> : ResponseObserverBase<TProto>, IRpcResponseObserver<TProto>, IRpcResponseObserver where TProto : IMessage<TProto>
+    public abstract class RpcResponseObserver<TProto> : ResponseObserverBase<TProto>, IRpcResponseObserver<TProto> where TProto : IMessage<TProto>
     {
         private readonly ConcurrentBag<IDisposable> _messageResponseSubscriptions;
         private readonly ReplaySubject<IRpcClientMessageDto<IMessage>> _messageResponse;
@@ -65,7 +65,7 @@ namespace Catalyst.Node.Rpc.Client.IO
         public void SubscribeToResponse(Action<TProto> onNext)
         {
             _messageResponseSubscriptions.Add(MessageResponseStream.Where(x => x.Message is TProto).SubscribeOn(NewThreadScheduler.Default).Subscribe(rpcClientMessageDto =>
-                onNext((TProto)rpcClientMessageDto.Message)
+                onNext((TProto) rpcClientMessageDto.Message)
             ));
         }
 
@@ -75,6 +75,7 @@ namespace Catalyst.Node.Rpc.Client.IO
             {
                 subscription?.Dispose();
             }
+
             _messageResponseSubscriptions.Clear();
             _messageResponse?.Dispose();
             base.Dispose(disposing);

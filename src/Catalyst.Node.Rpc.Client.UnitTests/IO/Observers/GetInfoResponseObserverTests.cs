@@ -22,8 +22,6 @@
 #endregion
 
 using System;
-using System.Reactive.Concurrency;
-using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Cli;
@@ -45,13 +43,11 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
         private readonly ILogger _logger;
         private GetInfoResponseObserver _observer;
         private readonly IChannelHandlerContext _fakeContext;
-        private readonly IUserOutput _output;
 
         public GetInfoResponseObserverTests()
         {
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
-            _output = Substitute.For<IUserOutput>();
         }
 
         [Theory]
@@ -78,7 +74,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
 
             GetInfoResponse messageStreamResponse = null;
 
-            _observer = new GetInfoResponseObserver(_output, _logger);
+            _observer = new GetInfoResponseObserver(_logger);
             _observer.StartObserving(messageStream);
             _observer.SubscribeToResponse(message => messageStreamResponse = message);
 
