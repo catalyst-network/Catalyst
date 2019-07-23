@@ -155,7 +155,10 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
         /// <inheritdoc />
         public void RemoveSignedBroadcastMessageData(ICorrelationId correlationId)
         {
-            _incomingBroadcastSignatureDictionary.Remove(correlationId, out _);
+            if (_incomingBroadcastSignatureDictionary.ContainsKey(correlationId))
+            {
+                _incomingBroadcastSignatureDictionary.Remove(correlationId, out _);
+            }
         }
 
         private void SendBroadcastMessages(ProtocolMessage message, BroadcastMessage broadcastMessage)
