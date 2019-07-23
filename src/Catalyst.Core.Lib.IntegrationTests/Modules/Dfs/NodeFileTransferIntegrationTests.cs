@@ -67,7 +67,6 @@ namespace Catalyst.Core.Lib.IntegrationTests.Modules.Dfs
 
             SocketPortHelper.AlterConfigurationToGetUniquePort(configurationRoot, "NodeFileTransferIntegrationTest");
 
-            var peerSettings = new PeerSettings(configurationRoot);
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
             Substitute.For<IDtoFactory>();
@@ -75,7 +74,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.Modules.Dfs
 
             var passwordReader = new TestPasswordReader("abcd");
 
-            var ipfsEngine = new IpfsAdapter(passwordReader, peerSettings, FileSystem, _logger);
+            var ipfsEngine = new IpfsAdapter(passwordReader, FileSystem, _logger);
             _logger = Substitute.For<ILogger>();
             _dfs = new Catalyst.Core.Lib.Modules.Dfs.Dfs(ipfsEngine, _logger);
         }
