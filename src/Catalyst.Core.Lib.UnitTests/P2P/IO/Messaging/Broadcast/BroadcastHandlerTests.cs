@@ -24,13 +24,16 @@
 using System;
 using System.Net;
 using System.Threading.Tasks;
+using Catalyst.Common.Cryptography;
 using Catalyst.Common.Extensions;
+using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.IO.Messaging.Broadcast;
 using Catalyst.Common.IO.Handlers;
 using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Common.Util;
+using Catalyst.Cryptography.BulletProofs.Wrapper;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Types;
 using Catalyst.Protocol.Common;
@@ -38,6 +41,7 @@ using Catalyst.Protocol.Transaction;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels.Embedded;
 using FluentAssertions;
+using Google.Protobuf;
 using NSubstitute;
 using NSubstitute.Exceptions;
 using NSubstitute.ReceivedExtensions;
@@ -51,23 +55,36 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Messaging.Broadcast
         private readonly IBroadcastManager _fakeBroadcastManager;
         private readonly BroadcastHandler _broadcastHandler;
         private readonly IKeySigner _keySigner;
+        private readonly ProtocolMessageSigned _broadcastMessageSigned;
 
         public BroadcastHandlerTests()
         {
+            ICryptoContext cryptoContext = new CryptoContext(new CryptoWrapper());
             _keySigner = Substitute.For<IKeySigner>();
             _keySigner.Verify(Arg.Any<ISignature>(), Arg.Any<byte[]>()).Returns(true);
             _fakeBroadcastManager = Substitute.For<IBroadcastManager>();
             _broadcastHandler = new BroadcastHandler(_fakeBroadcastManager);
+
+            var fakeSignature = new Signature(new byte[cryptoContext.SignatureLength], 
+                new byte[cryptoContext.PublicKeyLength]).SignatureBytes.RawBytes.ToByteString();
+            var peerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("Test");
+            _broadcastMessageSigned =
+                new ProtocolMessageSigned
+                {
+                    Message = new ProtocolMessageSigned
+                    {
+                        Message = new TransactionBroadcast().ToProtocolMessage(peerIdentifier.PeerId, CorrelationId.GenerateCorrelationId()),
+                        Signature = fakeSignature
+                    }.ToProtocolMessage(peerIdentifier.PeerId, CorrelationId.GenerateCorrelationId()),
+                    Signature = fakeSignature
+                };
         }
 
         [Fact]
         public async Task Broadcast_Handler_Can_Notify_Manager_On_Incoming_Broadcast()
         {
-            var peerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("1");
             var recipientIdentifier = Substitute.For<IPeerIdentifier>();
             var fakeIp = IPAddress.Any;
-            var guid = CorrelationId.GenerateCorrelationId();
-            var fakeSig = new Signature(new byte[64], new byte[32]).SignatureBytes.RawBytes.ToByteString();
 
             recipientIdentifier.Ip.Returns(fakeIp);
             recipientIdentifier.IpEndPoint.Returns(new IPEndPoint(fakeIp, 10));
@@ -78,18 +95,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Messaging.Broadcast
                 new ObservableServiceHandler()
             );
 
-            var gossipMessage =
-                new ProtocolMessageSigned
-                {
-                    Message = new ProtocolMessageSigned
-                    {
-                        Message = new TransactionBroadcast().ToProtocolMessage(peerIdentifier.PeerId, guid),
-                        Signature = fakeSig
-                    }.ToProtocolMessage(peerIdentifier.PeerId, CorrelationId.GenerateCorrelationId()),
-                    Signature = fakeSig
-                };
-
-            channel.WriteInbound(gossipMessage);
+            channel.WriteInbound(_broadcastMessageSigned);
 
             await _fakeBroadcastManager.Received(Quantity.Exactly(1))
                .ReceiveAsync(Arg.Any<ProtocolMessageSigned>());
@@ -99,26 +105,12 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Messaging.Broadcast
         public async Task Broadcast_Can_Execute_Proto_Handler()
         {
             var handler = new TestMessageObserver<TransactionBroadcast>(Substitute.For<ILogger>());
-            var fakeSig = new Signature(new byte[64], new byte[32]).SignatureBytes.RawBytes.ToByteString();
 
             var protoDatagramChannelHandler = new ObservableServiceHandler();
             handler.StartObserving(protoDatagramChannelHandler.MessageStream);
 
             var channel = new EmbeddedChannel(new ProtocolMessageVerifyHandler(_keySigner), _broadcastHandler, protoDatagramChannelHandler);
-
-            var peerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("Test");
-            var anySignedGossip =
-                new ProtocolMessageSigned
-                {
-                    Message = new ProtocolMessageSigned
-                    {
-                        Message = new TransactionBroadcast().ToProtocolMessage(peerIdentifier.PeerId, CorrelationId.GenerateCorrelationId()),
-                        Signature = fakeSig
-                    }.ToProtocolMessage(peerIdentifier.PeerId, CorrelationId.GenerateCorrelationId()),
-                    Signature = fakeSig
-                };
-
-            channel.WriteInbound(anySignedGossip);
+            channel.WriteInbound(_broadcastMessageSigned);
 
             var result = await TaskHelper.WaitForAsync(() =>
             {

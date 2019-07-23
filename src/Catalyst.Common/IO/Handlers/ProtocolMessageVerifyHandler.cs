@@ -41,19 +41,21 @@ namespace Catalyst.Common.IO.Handlers
 
         protected override void ChannelRead0(IChannelHandlerContext ctx, ProtocolMessageSigned signedMessage)
         {
-            if (Verify(signedMessage))
+            if (!Verify(signedMessage))
             {
-                if (signedMessage.Message.IsBroadCastMessage())
-                {
-                    var innerSignedMessage = ProtocolMessageSigned.Parser.ParseFrom(signedMessage.Message.Value);
-                    if (!Verify(innerSignedMessage))
-                    {
-                        return;
-                    }
-                }
-
-                ctx.FireChannelRead(signedMessage.Message);
+                return;
             }
+
+            if (signedMessage.Message.IsBroadCastMessage())
+            {
+                var innerSignedMessage = ProtocolMessageSigned.Parser.ParseFrom(signedMessage.Message.Value);
+                if (!Verify(innerSignedMessage))
+                {
+                    return;
+                }
+            }
+
+            ctx.FireChannelRead(signedMessage.Message);
         }
 
         private bool Verify(ProtocolMessageSigned signedMessage)

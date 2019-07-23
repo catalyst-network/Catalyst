@@ -30,20 +30,15 @@ using Dawn;
 using Google.Protobuf;
 using Serilog;
 using System;
-using Catalyst.Common.Extensions;
-using Catalyst.Common.Interfaces.P2P.IO.Messaging.Broadcast;
 
 namespace Catalyst.Common.IO.Observers
 {
     public abstract class BroadcastObserverBase<TProto> : MessageObserverBase, IBroadcastObserver where TProto : IMessage
     {
-        private readonly IBroadcastManager _broadcastManager;
-
-        protected BroadcastObserverBase(ILogger logger, IBroadcastManager broadcastManager) : base(logger, typeof(TProto).ShortenedProtoFullName())
+        protected BroadcastObserverBase(ILogger logger) : base(logger, typeof(TProto).ShortenedProtoFullName())
         {
             Guard.Argument(typeof(TProto), nameof(TProto)).Require(t => t.IsBroadcastType(),
                 t => $"{nameof(TProto)} is not of type {MessageTypes.Broadcast.Name}");
-            _broadcastManager = broadcastManager;
         }
 
         public abstract void HandleBroadcast(IObserverDto<ProtocolMessage> messageDto);
@@ -58,10 +53,6 @@ namespace Catalyst.Common.IO.Observers
             catch (Exception exception)
             {
                 Logger.Error(exception, "Failed to handle message");
-            }
-            finally
-            {
-                _broadcastManager.RemoveSignedBroadcastMessageData(messageDto.Payload.CorrelationId.ToCorrelationId());
             }
         }
     }

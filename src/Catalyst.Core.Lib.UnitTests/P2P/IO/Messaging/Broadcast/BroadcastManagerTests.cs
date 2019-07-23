@@ -122,7 +122,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Messaging.Broadcast
             }
 
             _cache.TryGetValue(messageDto.CorrelationId.Id, out value);
-            value.ReceivedCount.Should().Be((uint) receivedCount + 1);
+            value.ReceivedCount.Should().Be(receivedCount + 1);
         }
 
         private async Task<ICorrelationId> BroadcastMessage()
