@@ -21,6 +21,7 @@
 
 #endregion
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -160,6 +161,10 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Transport.Channels
 
                 Enumerable.Range(0, 10).ToList()
                    .ForEach(i => testingChannel.WriteInbound(GetSignedMessage()));
+
+                await TaskHelper.WaitForAsync(
+                    () => testingChannel.OutboundMessages.Count >= 5, 
+                    TimeSpan.FromSeconds(2));
 
                 var inboundMessagesThatWentThroughPipeline = 0;
                 while (testingChannel.OutboundMessages.Count > 0)
