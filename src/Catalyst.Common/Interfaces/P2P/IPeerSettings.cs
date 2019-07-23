@@ -28,14 +28,14 @@ namespace Catalyst.Common.Interfaces.P2P
 {
     public interface IPeerSettings
     {
-        Common.Config.Network Network { get; }
-        string PayoutAddress { get; }
-        string PublicKey { get; }
-        bool Announce { get; }
-        IPEndPoint AnnounceServer { get; }
         int Port { get; }
+        bool Announce { get; }
+        string PublicKey { get; }
+        string PayoutAddress { get; }
         IPAddress BindAddress { get; }
+        IPEndPoint AnnounceServer { get; }
         IList<string> SeedServers { get; }
+        Common.Config.Network Network { get; }
     }
 }
 

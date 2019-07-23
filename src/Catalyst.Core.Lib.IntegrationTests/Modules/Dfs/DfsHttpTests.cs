@@ -45,17 +45,10 @@ namespace Catalyst.Core.Lib.IntegrationTests.Modules.Dfs
 
         public DfsHttpTests(ITestOutputHelper output) : base(output)
         {
-            var peerSettings = Substitute.For<IPeerSettings>();
-            peerSettings.SeedServers.Returns(new[]
-            {
-                "seed1.server.va",
-                "island.domain.tv"
-            });
-            
             var passwordReader = Substitute.For<IPasswordReader>();
             passwordReader.ReadSecurePasswordAndAddToRegistry(Arg.Any<PasswordRegistryKey>(), Arg.Any<string>()).ReturnsForAnyArgs(TestPasswordReader.BuildSecureStringPassword("abcd"));
             var logger = Substitute.For<ILogger>();
-            _ipfs = new IpfsAdapter(passwordReader, peerSettings, FileSystem, logger);
+            _ipfs = new IpfsAdapter(passwordReader, FileSystem, logger);
             _dfs = new Catalyst.Core.Lib.Modules.Dfs.Dfs(_ipfs, logger);
             _dfsHttp = new DfsHttp(_ipfs);
         }
@@ -65,7 +58,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.Modules.Dfs
         public async Task Should_have_a_URL_for_content()
         {
             const string text = "good evening from IPFS!";
-            var id = await _dfs.AddTextAsync(text);
+            var id = await _dfs.AddTextAsync(text).ConfigureAwait(false);
             string url = _dfsHttp.ContentUrl(id);
             url.Should().StartWith("http");
         }
@@ -83,7 +76,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.Modules.Dfs
             // The gateway takes some time to startup.
             var end = DateTime.Now.AddSeconds(10);
             string content = null;
-            while (content != null && DateTime.Now < end)
+            while (content != null && DateTime.UtcNow < end)
             {
                 try
                 {
