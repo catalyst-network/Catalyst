@@ -41,7 +41,7 @@ namespace Catalyst.TestUtils
             peerSettings.PublicKey.Returns("302a300506032b65700321001783421742816abf");
             peerSettings.Port.Returns(42069);
             peerSettings.PayoutAddress.Returns("my_pay_out_address");
-            peerSettings.BindAddress.Returns(Ip.BuildIpAddress("127.0.0.1"));
+            peerSettings.BindAddress.Returns(IPAddress.Loopback);
             peerSettings.SeedServers.Returns(new List<string>
             {
                 "seed1.catalystnetwork.io",
