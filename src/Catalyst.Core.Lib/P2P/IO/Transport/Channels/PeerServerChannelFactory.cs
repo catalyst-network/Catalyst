@@ -91,7 +91,8 @@ namespace Catalyst.Core.Lib.P2P.IO.Transport.Channels
                             new CorrelatableHandler<IPeerMessageCorrelationManager>(_messageCorrelationManager)
                         ),
                         new BroadcastHandler(_broadcastManager),
-                        new ObservableServiceHandler()
+                        new ObservableServiceHandler(),
+                        new BroadcastCleanupHandler(_broadcastManager)
                     };
                 };
             }
