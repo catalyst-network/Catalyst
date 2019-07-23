@@ -66,7 +66,7 @@ namespace Catalyst.Core.Lib.Modules.Dfs
             string swarmKey = "07a8e9d0c43400927ab274b7fa443596b71e609bacae47bd958e5cd9f59d6ca3",
             IEnumerable<string> seedServers = null)
         {
-            if (seedServers == null)
+            if (seedServers == null || seedServers.Count().Equals(0))
             {
                 seedServers = new[]
                 {
@@ -121,21 +121,17 @@ namespace Catalyst.Core.Lib.Modules.Dfs
         /// </returns>
         private IpfsEngine Start()
         {
-            if (_isStarted)
+            if (!_isStarted)
             {
-                return _ipfs;
-            }
-            
-            lock (_startingLock)
-            {
-                if (_isStarted)
+                lock (_startingLock)
                 {
-                    return _ipfs;
+                    if (!_isStarted)
+                    {
+                        _ipfs.Start();
+                        _isStarted = true;
+                        _logger.Information("IPFS started.");
+                    }
                 }
-                    
-                _ipfs.Start();
-                _isStarted = true;
-                _logger.Information("IPFS started.");
             }
 
             return _ipfs;
