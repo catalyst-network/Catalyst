@@ -24,8 +24,8 @@
 using System;
 using System.Reflection;
 using Autofac;
-using Catalyst.Common.Container;
 using Catalyst.Common.Interfaces;
+using Catalyst.Common.Kernel;
 using Catalyst.Common.Util;
 
 namespace Catalyst.Node
@@ -41,6 +41,21 @@ namespace Catalyst.Node
             AppDomain.CurrentDomain.ProcessExit += Kernel.CurrentDomain_ProcessExit;
         }
 
+        /// <summary>
+        ///     For ref what passing custom boot logic looks like, this is the same as Kernel.StartNode()
+        /// </summary>
+        /// <param name="args"></param>
+        /// <returns></returns>
+
+        // private static void CustomBootLogic(Kernel kernel)
+        // {
+        //     using (var instance = kernel.ContainerBuilder.Build().BeginLifetimeScope(MethodBase.GetCurrentMethod().DeclaringType.AssemblyQualifiedName))
+        //     {
+        //         instance.Resolve<ICatalystNode>()
+        //            .RunAsync(kernel.CancellationTokenProvider.CancellationTokenSource.Token)
+        //            .Wait(kernel.CancellationTokenProvider.CancellationTokenSource.Token);
+        //     }
+        // }
         public static int Main(string[] args)
         {
             Kernel.Logger.Information("Catalyst.Node started with process id {0}",
@@ -57,6 +72,8 @@ namespace Catalyst.Node
                    .WithPersistenceConfiguration()
                    .BuildKernel()
                    .StartNode();
+                
+                // .StartCustom(CustomBootLogic);
                 
                 Environment.ExitCode = 0;
             }
