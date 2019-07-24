@@ -38,7 +38,8 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
     {
         private readonly IDeltaHashProvider _deltaHashProvider;
 
-        public DeltaDfsHashObserver(IDeltaHashProvider deltaHashProvider, ILogger logger) : base(logger)
+        public DeltaDfsHashObserver(IDeltaHashProvider deltaHashProvider, ILogger logger) 
+            : base(logger)
         {
             _deltaHashProvider = deltaHashProvider;
         }
