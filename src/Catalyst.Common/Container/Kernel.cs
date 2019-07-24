@@ -114,6 +114,8 @@ namespace Catalyst.Common.Container
             return this;
         }
 
+        public ContainerBuilder BuildCustom() { return BuildKernel()._containerBuilder; }
+
         public void StartNode()
         {
             using (var instance = _containerBuilder.Build().BeginLifetimeScope(MethodBase.GetCurrentMethod().DeclaringType.AssemblyQualifiedName))
