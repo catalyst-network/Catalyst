@@ -137,7 +137,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
         {
             _dtoFactory = dtoFactory ?? Substitute.For<IDtoFactory>();
             
-            return _dtoFactory == null ? throw new ArgumentNullException(nameof(_dtoFactory), "dtoFactory can't be null") : this;
+            return this;
         }
 
         public DiscoveryTestBuilder WithPeerMessageCorrelationManager(IPeerMessageCorrelationManager peerMessageCorrelationManager = default,
