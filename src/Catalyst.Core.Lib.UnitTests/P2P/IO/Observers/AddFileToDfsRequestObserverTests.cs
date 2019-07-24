@@ -105,13 +105,13 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Observers
         [Fact]
         public async Task Successful_Add_File_Can_Respond_With_Finished_Code()
         {
-            await Setup_File_Transfer_Response_Test(FileTransferResponseCodes.Finished);
+            await Setup_File_Transfer_Response_Test(FileTransferResponseCodes.Finished).ConfigureAwait(false);
         }
 
         [Fact]
         public async Task Dfs_Failure_Can_Respond_With_Failed_Code()
         {
-            await Setup_File_Transfer_Response_Test(FileTransferResponseCodes.Failed);
+            await Setup_File_Transfer_Response_Test(FileTransferResponseCodes.Failed).ConfigureAwait(false);
         }
 
         private async Task Setup_File_Transfer_Response_Test(FileTransferResponseCodes expectedResponse)
