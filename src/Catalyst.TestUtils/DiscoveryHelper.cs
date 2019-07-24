@@ -132,7 +132,7 @@ namespace Catalyst.TestUtils
             
             var mockUnResponsiveNeighboursList = new Dictionary<IPeerIdentifier, ICorrelationId>();
             
-            (neighbours ?? throw new ArgumentNullException(nameof(neighbours))).ToList().ForEach(i =>
+            neighbours?.ToList().ForEach(i =>
             {
                 mockUnResponsiveNeighboursList.Add(i, null);
             });
@@ -154,7 +154,7 @@ namespace Catalyst.TestUtils
             
             var mockContactedNeighboursList = new Dictionary<IPeerIdentifier, ICorrelationId>();
             
-            (neighbours ?? throw new ArgumentNullException(nameof(neighbours))).ToList().ForEach(i =>
+            neighbours?.ToList().ForEach(i =>
             {
                 mockContactedNeighboursList.Add(i, CorrelationId.GenerateCorrelationId());
             });

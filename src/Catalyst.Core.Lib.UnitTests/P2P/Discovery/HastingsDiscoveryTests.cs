@@ -54,13 +54,11 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
     public sealed class HastingsDiscoveryTests
     {
         private readonly IPeerSettings _settings;
-        private ILogger _logger;
         private readonly IPeerIdentifier _ownNode;
 
         public HastingsDiscoveryTests()
         {
             _settings = PeerSettingsHelper.TestPeerSettings();
-            _logger = Substitute.For<ILogger>();
             _ownNode = PeerIdentifierHelper.GetPeerIdentifier("ownNode");
         }
 
@@ -339,87 +337,23 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
 
             initialStateCandidate.ExpectedPnr.ReturnsForAnyArgs(pnr);
 
-            using (var walker = new HastingsDiscovery(_logger,
-                Substitute.For<IRepository<Peer>>(),
-                DiscoveryHelper.MockDnsClient(_settings),
-                _settings,
-                Substitute.For<IPeerClient>(),
-                Substitute.For<IDtoFactory>(),
-                Substitute.For<IPeerMessageCorrelationManager>(),
-                DiscoveryHelper.SubCancellationProvider(),
-                Substitute.For<IList<IPeerClientObservable>>(),
-                false,
-                0,
-                initialStateCandidate,
-                Substitute.For<IHastingCareTaker>(),
-                initialStateCandidate
-            ))
+            var discoveryTestBuilder = DiscoveryTestBuilder.GetDiscoveryTestBuilder();
+            
+            discoveryTestBuilder
+               .WithLogger()
+               .WithPeerRepository()
+               .WithDns(default, true)
+               .WithPeerSettings()
+               .WithPeerClient()
+               .WithCancellationProvider()
+               .WithPeerClientObservables(default, typeof(GetNeighbourResponseObserver))
+               .WithAutoStart(false)
+               .WithBurn(0)
+               .WithStateCandidate(initialStateCandidate);
+            
+            using (var walker = discoveryTestBuilder.Build())
             {
                 walker.StateCandidate.ReceivedWithAnyArgs(1).UnResponsivePeers.Count();
-            }
-        }
-
-        [Fact]
-        public void Known_Evicted_PeerNeighbourRequest_Walk_Backs_State()
-        {
-            var peerClientObservers = new List<IPeerClientObservable>
-            {
-                new GetNeighbourResponseObserver(_logger)
-            };
-
-            var pnr = DiscoveryHelper.MockPnr();
-
-            var subbedCareTaker = Substitute.For<IHastingCareTaker>();
-            
-            var currentState = DiscoveryHelper.SubMemento();
-            var currentOriginator = DiscoveryHelper.SubOriginator(currentState.Peer, currentState.Neighbours);
-
-            var stateCandidate = DiscoveryHelper.SubMemento();
-            var stateCandidateOriginator =
-                DiscoveryHelper.SubOriginator(stateCandidate.Peer, DiscoveryHelper.SubSeedOriginator(_ownNode, _settings).CurrentPeersNeighbours);
-
-            var mockedHistory = new Stack<IHastingMemento>();
-
-            var seed = DiscoveryHelper.SubSeedState(_ownNode, _settings);
-            mockedHistory.Push(seed);
-            subbedCareTaker.HastingMementoList.Returns(mockedHistory);
-            subbedCareTaker.Get().Returns(seed);
-            
-            var evictionEvent = new ReplaySubject<KeyValuePair<ICorrelationId, IPeerIdentifier>>(0);
-            evictionEvent.OnNext(pnr);
-            using (var walker = new HastingsDiscovery(_logger,
-                Substitute.For<IRepository<Peer>>(),
-                DiscoveryHelper.MockDnsClient(_settings),
-                _settings,
-                Substitute.For<IPeerClient>(),
-                Substitute.For<IDtoFactory>(),
-                Substitute.For<IPeerMessageCorrelationManager>(),
-                DiscoveryHelper.SubCancellationProvider(),
-                peerClientObservers,
-                false,
-                0,
-                currentOriginator,
-                subbedCareTaker,
-                stateCandidateOriginator
-            ))
-            {
-                walker.State.Peer
-                   .Should()
-                   .Be(currentOriginator.Peer);
-                
-                walker.StateCandidate.Peer
-                   .Should()
-                   .Be(stateCandidateOriginator.Peer);
-
-                walker.StateCandidate
-                   .Received(1)
-                   .ExpectedPnr.Equals(Arg.Is(pnr));
-                
-                // walker.HastingCareTaker.Received(1).Get();
-                // walker.State.Received(1).RestoreMemento(Arg.Any<IHastingMemento>());
-                // walker.DtoFactory.Received(1).GetDto(new PeerNeighborsRequest(), Arg.Is(_ownNode), Arg.Any<IPeerIdentifier>());
-
-                // walker.PeerClient.ReceivedWithAnyArgs(1).SendMessage(Arg.Any<IMessageDto<PeerNeighborsRequest>>());
             }
         }
     }

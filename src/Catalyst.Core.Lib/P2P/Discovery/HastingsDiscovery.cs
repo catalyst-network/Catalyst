@@ -53,12 +53,12 @@ namespace Catalyst.Core.Lib.P2P.Discovery
 
         private bool _isDiscovering;
         private readonly ILogger _logger;
-        public readonly IHastingsOriginator State;
+        public IHastingsOriginator State { get; }
         private int _discoveredPeerInCurrentWalk;
         private readonly IPeerIdentifier _ownNode;
         private readonly int _peerDiscoveryBurnIn;
-        public readonly IHastingsOriginator StateCandidate;
-        public readonly IHastingCareTaker HastingCareTaker;
+        public IHastingsOriginator StateCandidate { get; }
+        public IHastingCareTaker HastingCareTaker { get; }
         private readonly IRepository<Peer> _peerRepository;
         private readonly IDisposable _evictionSubscription;
         private readonly ICancellationTokenProvider _cancellationTokenProvider;
@@ -186,61 +186,64 @@ namespace Catalyst.Core.Lib.P2P.Discovery
         /// <returns></returns>
         public async Task DiscoveryAsync(int timeout = -1)
         {
-            if (!_isDiscovering)
+            if (_isDiscovering)
             {
-                do
-                {
-                    // only let one thread in at a time.
-                    await SemaphoreSlim.WaitAsync();
-
-                    _isDiscovering = true;
-
-                    try
-                    {
-                        // spins until our expected result equals found and unreachable peers for this step.
-                        await WaitUntil(HasValidCandidate, 1000, timeout).ConfigureAwait(false);
-
-                        lock (StateCandidate)
-                        {
-                            if (StateCandidate.CurrentPeersNeighbours.Count > 0)
-                            {
-                                // have a walkable next step, so continue walk.
-                                WalkForward();   
-                            }
-                            else
-                            {
-                                // we've received enough matching events but no StateCandidate.CurrentPeersNeighbours
-                                // Assume all neighbours provided are un-reachable.
-                                WalkBack();
-                            }
-                        }
-                    }
-                    catch (Exception e) // either an exception was thrown for un-known reason or the await on the condition timed out.
-                    {
-                        _logger.Error(e, e.Message);
-                        lock (StateCandidate)
-                        {
-                            if (StateCandidate.CurrentPeersNeighbours.Count > 0)
-                            {
-                                // if we discovered at least some peers we can continue walk.
-                                WalkForward();
-                            }
-                            else
-                            {
-                                // we got an exception and found 0 contactable peers, so go back to previous state.
-                                WalkBack();   
-                            }
-                        }
-                    }
-                    finally
-                    {
-                        // step out lock block.
-                        SemaphoreSlim.Release();
-                    }
-                
-                    // discovery should run until canceled.
-                } while (!_cancellationTokenProvider.HasTokenCancelled());   
+                return;
             }
+
+            do
+            {
+                // only let one thread in at a time.
+                await SemaphoreSlim.WaitAsync().ConfigureAwait(false);
+
+                _isDiscovering = true;
+
+                try
+                {
+                    // spins until our expected result equals found and unreachable peers for this step.
+                    await WaitUntil(HasValidCandidate, 1000, timeout).ConfigureAwait(false);
+
+                    lock (StateCandidate)
+                    {
+                        if (StateCandidate.CurrentPeersNeighbours.Count > 0)
+                        {
+                            // have a walkable next step, so continue walk.
+                            WalkForward();
+                        }
+                        else
+                        {
+                            // we've received enough matching events but no StateCandidate.CurrentPeersNeighbours
+                            // Assume all neighbours provided are un-reachable.
+                            WalkBack();
+                        }
+                    }
+                }
+                catch (Exception e
+                ) // either an exception was thrown for un-known reason or the await on the condition timed out.
+                {
+                    _logger.Error(e, e.Message);
+                    lock (StateCandidate)
+                    {
+                        if (StateCandidate.CurrentPeersNeighbours.Count > 0)
+                        {
+                            // if we discovered at least some peers we can continue walk.
+                            WalkForward();
+                        }
+                        else
+                        {
+                            // we got an exception and found 0 contactable peers, so go back to previous state.
+                            WalkBack();
+                        }
+                    }
+                }
+                finally
+                {
+                    // step out lock block.
+                    SemaphoreSlim.Release();
+                }
+
+                // discovery should run until canceled.
+            } while (!_cancellationTokenProvider.HasTokenCancelled());
         }
 
         protected bool HasValidCandidate()
@@ -417,8 +420,7 @@ namespace Catalyst.Core.Lib.P2P.Discovery
                 }
             });
 
-            if (waitTask != await Task.WhenAny(waitTask,
-                Task.Delay(timeout)))
+            if (waitTask != await Task.WhenAny(waitTask, Task.Delay(timeout)).ConfigureAwait(false))
             {
                 throw new TimeoutException();
             }

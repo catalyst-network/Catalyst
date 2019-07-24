@@ -298,6 +298,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
         {
             _peerClient?.Dispose();
             _peerCorrelationManager?.Dispose();
+            _peerRepository?.Dispose();
         }
     }
 }
