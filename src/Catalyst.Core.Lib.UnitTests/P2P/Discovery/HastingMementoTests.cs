@@ -21,6 +21,7 @@
 
 #endregion
 
+using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Core.Lib.P2P.Discovery;
 using Catalyst.TestUtils;
@@ -46,7 +47,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
             
             memento.Peer.Should().Be(_peer);
             memento.Neighbours.Should().Contain(neighbours);
-            memento.Neighbours.Should().HaveCount(5);
+            memento.Neighbours.Should().HaveCount(Constants.AngryPirate);
         }
     }
 }

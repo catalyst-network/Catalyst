@@ -23,6 +23,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.Discovery;
@@ -119,7 +120,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
             originator.UnResponsivePeers.Select(i => i.Key).Should()
                .BeSubsetOf(memento2.Neighbours);
 
-            originator.UnResponsivePeers.Count.Should().Be(5);
+            originator.UnResponsivePeers.Count.Should().Be(Constants.AngryPirate);
             originator.ExpectedPnr.Key.Should().Be(null);
             originator.ExpectedPnr.Value.Should().Be(null);
             originator.CurrentPeersNeighbours.Should().BeSubsetOf(memento2.Neighbours);

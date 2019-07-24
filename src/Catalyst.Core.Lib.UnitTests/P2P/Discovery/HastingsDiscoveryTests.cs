@@ -28,6 +28,7 @@ using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Threading.Tasks;
+using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.P2P;
@@ -82,7 +83,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
                 walker.State.Peer.PublicKey.ToHex()
                    .Equals("33326b7373683569666c676b336a666d636a7330336c646a346866677338676e");
 
-                walker.StateCandidate.CurrentPeersNeighbours.Should().HaveCount(5);   
+                walker.StateCandidate.CurrentPeersNeighbours.Should().HaveCount(Constants.AngryPirate);   
             }
         }
 
@@ -158,7 +159,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
                     await walker.DiscoveryStream.WaitForItemsOnDelayedStreamOnTaskPoolSchedulerAsync(1);
         
                     streamObserver
-                       .Received(5)
+                       .Received(Constants.AngryPirate)
                        .OnNext(Arg.Any<IPeerClientMessageDto>());
 
                     walker.StateCandidate.CurrentPeersNeighbours
@@ -169,7 +170,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
                        .Should()
                        .Contain(expectedResponses);
 
-                    walker.StateCandidate.UnResponsivePeers.Count.Should().Be(5);
+                    walker.StateCandidate.UnResponsivePeers.Count.Should().Be(Constants.AngryPirate);
                 }
             }
         }
@@ -295,7 +296,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
                     // walker.StateCandidate.UnResponsivePeers.Received(5).Add(Arg.Any<KeyValuePair<IPeerIdentifier, ICorrelationId>>());
 
                     walker.DtoFactory
-                       .Received(5)
+                       .Received(Constants.AngryPirate)
                        .GetDto(
                             Arg.Is(new PingRequest()),
                             Arg.Any<IPeerIdentifier>(),
@@ -303,10 +304,10 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
                         );
                     
                     walker.PeerClient
-                       .Received(5)
+                       .Received(Constants.AngryPirate)
                        .SendMessage(Arg.Any<IMessageDto<PingRequest>>());
                     
-                    walker.StateCandidate.UnResponsivePeers.Count.Should().Be(5);
+                    walker.StateCandidate.UnResponsivePeers.Count.Should().Be(Constants.AngryPirate);
                 }
             }
         }

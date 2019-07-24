@@ -27,6 +27,7 @@ using System.Linq;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
+using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
@@ -80,7 +81,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
             var stateHistory = new Stack<IHastingMemento>();
             stateHistory.Push(seedState);
             
-            stateHistory = DiscoveryHelper.MockMementoHistory(stateHistory, 5);
+            stateHistory = DiscoveryHelper.MockMementoHistory(stateHistory, 5); //this isn't an angry pirate this is just 5
 
             stateHistory.ToList().ForEach(i => stateCareTaker.Add(i));
             
@@ -139,7 +140,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
                         );
                 });
                 
-                walker.StateCandidate.UnResponsivePeers.Count.Should().Be(5);
+                walker.StateCandidate.UnResponsivePeers.Count.Should().Be(Constants.AngryPirate);
 
                 walker.HasValidCandidate().Should().BeFalse();
 
@@ -149,7 +150,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
 
                 walker.State.Peer.Should().Be(expectedCurrentState.Peer);
                 walker.State.CurrentPeersNeighbours.Count.Should().Be(0);
-                walker.State.UnResponsivePeers.Count.Should().Be(5);
+                walker.State.UnResponsivePeers.Count.Should().Be(Constants.AngryPirate);
             }
         }
         
@@ -164,7 +165,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
             var stateHistory = new Stack<IHastingMemento>();
             stateHistory.Push(seedState);
             
-            DiscoveryHelper.MockMementoHistory(stateHistory, 5).ToList().ForEach(i => stateCareTaker.Add(i));
+            DiscoveryHelper.MockMementoHistory(stateHistory, Constants.AngryPirate).ToList().ForEach(i => stateCareTaker.Add(i));
             
             var knownPnr = DiscoveryHelper.MockPnr();
             var stateCandidate = DiscoveryHelper.SubOriginator();
@@ -235,7 +236,9 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
             var stateHistory = new Stack<IHastingMemento>();
             stateHistory.Push(seedState);
             
-            DiscoveryHelper.MockMementoHistory(stateHistory, 5).ToList().ForEach(i => stateCareTaker.Add(i));
+            DiscoveryHelper.MockMementoHistory(stateHistory, 5) //this isn't an angry pirate this is just 5
+               .ToList()
+               .ForEach(i => stateCareTaker.Add(i));
             
             var knownPnr = DiscoveryHelper.MockPnr();
             var stateCandidate = DiscoveryHelper.MockOriginator(default, default, knownPnr);
