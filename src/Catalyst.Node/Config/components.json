@@ -286,7 +286,7 @@
                 }
             ],
             "parameters": {
-                "checkConfigPointer": true
+                "configDataDir": "C:\\Users\\Dennis\\.Catalyst"
             }
         },
         {

@@ -26,6 +26,9 @@ using System.IO;
 using System.IO.Abstractions;
 using System.Threading.Tasks;
 using Catalyst.Common.Config;
+using Microsoft.Extensions.Configuration;
+using System.Linq;
+using System.Threading;
 using IFileSystem = Catalyst.Common.Interfaces.FileSystem.IFileSystem;
 using ILogger = Serilog.ILogger;
 
@@ -43,38 +46,14 @@ namespace Catalyst.Common.FileSystem
         public string DataDir { get { return this._dataDir; } set { _dataDir = value; } }
         public static string FilePointerBaseLocation => Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
 
-        private bool _checkDataDirPointerFile = false;
-        public FileSystem()
+        public FileSystem(ILogger logger, string configDataDir = "")
         {
-            _currentDataDirPointer = string.Empty;
-        }
+            _currentDataDirPointer = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile);
 
-        public FileSystem(bool checkDataDirPointerFile, ILogger logger, string configFilePointer = "", string configDataDir = "\\.Catalyst")
-        {
-            if (checkDataDirPointerFile)
-            {
-                DataDir = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + configDataDir;
+            DataDir = File.Exists(_currentDataDirPointer) ?
+                GetCurrentDataDir(_currentDataDirPointer) : Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\" + Constants.CatalystDataDir;
 
-                _currentDataDirPointer = configFilePointer == string.Empty ? GetUserHomeDir() + Constants.ConfigFilePointer : configFilePointer;
-
-                if (!new DirectoryInfo(DataDir).Exists)
-                {
-                    if (CreateDataDirectory(DataDir))
-                    {
-                        CreateConfigPointerFile(DataDir, configFilePointer);
-                    }
-                }
-                else if (!File.Exists(_currentDataDirPointer))
-                {
-                    CreateConfigPointerFile(DataDir, _currentDataDirPointer);
-                }
-                else
-                {
-                    DataDir = ReadConfigFilePointer();
-                }
-                _logger = logger;
-            }
-            _checkDataDirPointerFile = checkDataDirPointerFile;
+            _logger = logger;
         }
 
         public DirectoryInfo GetCatalystDataDir()
@@ -83,7 +62,6 @@ namespace Catalyst.Common.FileSystem
 
             return new DirectoryInfo(_dataDirValid && string.IsNullOrEmpty(DataDir) == false ? DataDir : path);
         }
-
         public bool SetCurrentPath(string path)
         {
             if (new DirectoryInfo(path).Exists)
@@ -91,7 +69,7 @@ namespace Catalyst.Common.FileSystem
                 SaveConfigPointerFile(path, _currentDataDirPointer);
 
                 _dataDir = path;
-
+              
                 return true;
             }
             return false;
@@ -115,20 +93,14 @@ namespace Catalyst.Common.FileSystem
             return File.Exists(Path.Combine(GetCatalystDataDir().ToString(), fileName));
         }
 
-        private string GetHiddenCatalystDataDir()
+        private static string GetCurrentDataDir(string configFilePointer)
         {
-            try
-            {
-                using (var sr = new StreamReader(DataDir))
-                {
-                    return sr.ReadToEnd();
-                }
-            }
-            catch (Exception e)
-            {
-                _logger.Error(e.Message);
-            }
-            return string.Empty;
+            var configurationRoot = new ConfigurationBuilder().AddJsonFile(configFilePointer).Build();
+
+            return configurationRoot.GetSection("components").GetChildren()
+                .Select(p => p.GetSection("parameters:configDataDir").Value).ToArray()
+                .Where(m => string.IsNullOrEmpty(m) == false).FirstOrDefault();
+
         }
 
         private static string GetUserHomeDir()
@@ -136,51 +108,29 @@ namespace Catalyst.Common.FileSystem
             return Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
         }
 
-        private static void CreateConfigPointerFile(string configDirLocation, string configFilePointer)
-        {
-            using (System.IO.File.Create(configFilePointer)) { }
-
-            SaveConfigPointerFile(configDirLocation, configFilePointer);
-        }
-
         private static void SaveConfigPointerFile(string configDirLocation, string configFilePointer)
         {
-            using (StreamWriter writer = new StreamWriter(configFilePointer))
-            {
-                writer.Write(configDirLocation);
-            }
+            var configDataDir = GetCurrentDataDir(configFilePointer);
+
+            configDataDir = PrepDirectoryLocationFormat(configDataDir);
+            configDirLocation = PrepDirectoryLocationFormat(configDirLocation);
+
+            string text = System.IO.File.ReadAllText(configFilePointer);
+            text = text.Replace(configDataDir, configDirLocation);
+            System.IO.File.WriteAllText(configFilePointer, text);          
         }
 
-        private bool CreateDataDirectory(string path)
+        private static string PrepDirectoryLocationFormat(string dir)
         {
-            _dataDirValid = true;
-            try
+            var arrayText = dir.Split("\\").ToList();
+
+            var final = arrayText.FirstOrDefault();
+
+            foreach (var item in arrayText.Skip(1))
             {
-                System.IO.Directory.CreateDirectory(path);
+                final += "\\\\" + item;
             }
-            catch (Exception ex)
-            {
-                _dataDirValid = false;
-            }
-            return _dataDirValid;
-        }
-        private string ReadConfigFilePointer()
-        {
-            string ln = string.Empty;
-            try
-            {
-                using (StreamReader file = new StreamReader(_currentDataDirPointer))
-                {
-                    ln = file.ReadLine();
-                    file.Close();
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.Error(ex.ToString());
-            }
-            return ln;
-        }
-    
+            return final;
+        }   
     }
 }

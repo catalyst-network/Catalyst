@@ -72,7 +72,7 @@ namespace Catalyst.Cli
 
             try
             {
-                var targetConfigFolder = new FileSystem(false, _logger).GetCatalystDataDir().FullName;
+                var targetConfigFolder = new FileSystem(_logger).GetCatalystDataDir().FullName;
 
 #if (DEBUG)
                 new CliConfigCopier().RunConfigStartUp(targetConfigFolder, Network.Dev, overwrite: true);
