@@ -21,6 +21,8 @@
 
 #endregion
 
+using System.Threading;
+
 namespace Catalyst.Common.IO.Messaging.Broadcast
 {
     /// <summary>
@@ -28,16 +30,21 @@ namespace Catalyst.Common.IO.Messaging.Broadcast
     /// </summary>
     public sealed class BroadcastMessage
     {
+        private int _receivedCount;
+
         /// <summary>Gets or sets the gossip count.</summary>
         /// <value>The amount of messages sent due to gossiping.</value>
         public uint BroadcastCount { get; set; }
 
         /// <summary>Gets or sets the received count.</summary>
         /// <value>The amount of times the message has been received.</value>
-        public uint ReceivedCount { get; set; }
+        public int ReceivedCount { get => _receivedCount; set => _receivedCount = value; }
 
         /// <summary>Gets or sets the size of the peer network.</summary>
         /// <value>The size of the peer network at the moment of creating this request.</value>
         public int PeerNetworkSize { get; set; }
+
+        /// <summary>Increments the received count safely <seealso cref="Interlocked"/>.</summary>
+        public void IncrementReceivedCount() { Interlocked.Increment(ref _receivedCount); }
     }
 }

@@ -21,21 +21,23 @@
 
 #endregion
 
-using System.Collections.Generic;
-using System.Net;
+using Catalyst.Common.Extensions;
+using Catalyst.Common.Interfaces.P2P.IO.Messaging.Broadcast;
+using Catalyst.Protocol.Common;
+using DotNetty.Transport.Channels;
 
-namespace Catalyst.Common.Interfaces.P2P
+namespace Catalyst.Common.IO.Handlers
 {
-    public interface IPeerSettings
+    public class BroadcastCleanupHandler : InboundChannelHandlerBase<ProtocolMessage>
     {
-        int Port { get; }
-        bool Announce { get; }
-        string PublicKey { get; }
-        string PayoutAddress { get; }
-        IPAddress BindAddress { get; }
-        IPEndPoint AnnounceServer { get; }
-        IList<string> SeedServers { get; }
-        Common.Config.Network Network { get; }
+        private readonly IBroadcastManager _broadcastManager;
+
+        public BroadcastCleanupHandler(IBroadcastManager broadcastManager) { _broadcastManager = broadcastManager; }
+
+        protected override void ChannelRead0(IChannelHandlerContext ctx, ProtocolMessage msg)
+        {
+            _broadcastManager.RemoveSignedBroadcastMessageData(msg.CorrelationId.ToCorrelationId());
+            ctx.FireChannelRead(msg);
+        }
     }
 }
-
