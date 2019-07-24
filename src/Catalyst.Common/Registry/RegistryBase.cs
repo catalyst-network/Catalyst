@@ -23,14 +23,13 @@
 
 using System;
 using System.Collections.Generic;
-using Autofac.Core;
 using Catalyst.Common.Interfaces.Registry;
 using Catalyst.Common.Enumerator;
 using Dawn;
 
 namespace Catalyst.Common.Registry
 {
-    public class RegistryBase<TKey, TValue> : IRegistryBase<TKey, TValue>, IDisposable
+    public class RegistryBase<TKey, TValue> : IRegistryBase<TKey, TValue>
         where TKey : Enumeration
         where TValue : class
     {
