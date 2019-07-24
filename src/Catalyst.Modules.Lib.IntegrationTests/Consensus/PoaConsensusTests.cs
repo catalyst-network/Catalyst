@@ -21,15 +21,13 @@
 
 #endregion
 
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Catalyst.Core.Lib.IntegrationTests;
-using Catalyst.Modules.Lib.Dfs;
+using Catalyst.Common.Interfaces.P2P;
 using Catalyst.TestUtils;
-using FluentAssertions;
-using Multiformats.Hash.Algorithms;
-using NSubstitute;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -37,22 +35,37 @@ namespace Catalyst.Modules.Lib.IntegrationTests.Consensus
 {
     public class PoaConsensusTests : FileSystemBasedTest
     {
-        private readonly FileSystemDfsTestNode _producer1;
-        private readonly FileSystemDfsTestNode _producer2;
+        private readonly IDictionary<IPeerIdentifier, PoaTestNode> _nodesById;
+        private readonly CancellationTokenSource _endOfTestCancellationSource;
 
         public PoaConsensusTests(ITestOutputHelper output) : base(output)
         {
-            _producer1 = new FileSystemDfsTestNode("producer1", Output);
-            _producer2 = new FileSystemDfsTestNode("producer2", Output);
+            _endOfTestCancellationSource = new CancellationTokenSource();
+
+            var peerIdentifiers = Enumerable.Range(0, 3).Select(i => 
+                PeerIdentifierHelper.GetPeerIdentifier($"producer{i}")).ToList();
+
+            _nodesById = peerIdentifiers.ToDictionary(
+                p => p,
+                p => BuildPoaTestNode(output, p, peerIdentifiers));
+        }
+
+        private static PoaTestNode BuildPoaTestNode(ITestOutputHelper output,
+            IPeerIdentifier p,
+            List<IPeerIdentifier> peerIdentifiers)
+        {
+            var node = new PoaTestNode(p, peerIdentifiers.Except(new[] {p}), output);
+            node.BuildNode();
+            return node;
         }
 
         [Fact]
-        public async Task MyTestedMethod_Should_Be_Producing_This_Result_When_Some_Conditions_Are_Met()
+        public async Task Run_Consensus()
         {
-            var producerCancellationToken = new CancellationToken();
+            _nodesById.Values.AsParallel()
+               .ForAll(n => n.RunAsync(_endOfTestCancellationSource.Token));
 
-            _producer1.RunAsync(producerCancellationToken);
-            _producer2.RunAsync(producerCancellationToken);
+            _endOfTestCancellationSource.CancelAfter(TimeSpan.FromMinutes(3));
         }
 
         protected override void Dispose(bool disposing)
@@ -63,8 +76,14 @@ namespace Catalyst.Modules.Lib.IntegrationTests.Consensus
                 return;
             }
 
-            _producer1?.Dispose();
-            _producer2?.Dispose();
+            if (_endOfTestCancellationSource.Token.IsCancellationRequested
+             && _endOfTestCancellationSource.Token.CanBeCanceled)
+            {
+                _endOfTestCancellationSource.Cancel();
+            }
+
+            _endOfTestCancellationSource.Dispose();
+            _nodesById.Values.AsParallel().ForAll(n => n.Dispose());
         }
     }
 }
