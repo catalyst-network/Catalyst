@@ -122,9 +122,10 @@ namespace Catalyst.TestUtils
                 PeerIdentifierHelper.GetPeerIdentifier(Helper.RandomString())).ToList();
         }
 
-        public static IDictionary<IPeerIdentifier, ICorrelationId> MockUnResponsiveNeighbours(IEnumerable<IPeerIdentifier> neighbours = default)
+        public static IDictionary<IPeerIdentifier, ICorrelationId> MockUnResponsiveNeighbours(IEnumerable<IPeerIdentifier> neighboursParam = default)
         {
-            if (neighbours == null || neighbours.Equals(default))
+            IList<IPeerIdentifier> neighbours = null;
+            if (neighboursParam == null || neighboursParam.Equals(default))
             {
                 neighbours = MockNeighbours();
             }

@@ -167,7 +167,7 @@ namespace Catalyst.Core.Lib.P2P.Discovery
             // should run until cancelled
             Task.Run(async () =>
             {
-                await DiscoveryAsync().ConfigureAwait(false);
+                await DiscoveryAsync(1000).ConfigureAwait(false);
             });
         }
 
@@ -184,7 +184,7 @@ namespace Catalyst.Core.Lib.P2P.Discovery
         ///     if not the condition has not been met within a timeout then we walk back by taking the last known state from the IHastingCaretaker.
         /// </summary>
         /// <returns></returns>
-        public async Task DiscoveryAsync()
+        public async Task DiscoveryAsync(int timeout = -1)
         {
             if (!_isDiscovering)
             {
@@ -198,7 +198,7 @@ namespace Catalyst.Core.Lib.P2P.Discovery
                     try
                     {
                         // spins until our expected result equals found and unreachable peers for this step.
-                        await WaitUntil(HasValidCandidate, 1000, -1);
+                        await WaitUntil(HasValidCandidate, 1000, timeout).ConfigureAwait(false);
 
                         lock (StateCandidate)
                         {
