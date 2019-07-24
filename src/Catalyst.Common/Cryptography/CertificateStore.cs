@@ -80,13 +80,11 @@ namespace Catalyst.Common.Cryptography
         {
             const string promptMessage = "Catalyst Node needs to create an SSL certificate." +
                 " Please enter a password to encrypt the certificate on disk:";
-            
-            using (var password = _passwordReader.ReadSecurePassword(_certificatePasswordIdentifier, promptMessage))
-            {
-                var certificate = BuildSelfSignedServerCertificate(password, commonName);
-                Save(certificate, filePath, password);
-                return certificate;
-            }
+
+            var password = _passwordReader.ReadSecurePassword(_certificatePasswordIdentifier, promptMessage);
+            var certificate = BuildSelfSignedServerCertificate(password, commonName);
+            Save(certificate, filePath, password);
+            return certificate;
         }
 
         private void Save(X509Certificate certificate, string fileName, SecureString password)
@@ -129,14 +127,12 @@ namespace Catalyst.Common.Cryptography
                 {
                     try
                     {
-                        using (var passwordFromConsole =
-                            _passwordReader.ReadSecurePassword(_certificatePasswordIdentifier, passwordPromptMessage))
-                        {
-                            certificate = new X509Certificate2(fileInBytes, passwordFromConsole);
-                            _passwordReader.AddPasswordToRegistry(_certificatePasswordIdentifier,
-                                passwordFromConsole);
-                            break;
-                        }
+                        var passwordFromConsole =
+                            _passwordReader.ReadSecurePassword(_certificatePasswordIdentifier, passwordPromptMessage);
+                        certificate = new X509Certificate2(fileInBytes, passwordFromConsole);
+                        _passwordReader.AddPasswordToRegistry(_certificatePasswordIdentifier,
+                            passwordFromConsole);
+                        break;
                     }
                     catch (CryptographicException ex)
                     {
@@ -147,7 +143,7 @@ namespace Catalyst.Common.Cryptography
                             throw new InvalidCredentialException(
                                 $"Failed to obtain the correct password for certificate {fullPath} from the console after {MaxTries} attempts.");
                         }
-                            
+
                         Logger.Warning(ex.Message);
                     }
                 }

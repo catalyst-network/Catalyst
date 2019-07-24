@@ -21,14 +21,16 @@
 
 #endregion
 
+using System;
 using System.Collections.Generic;
+using Autofac.Core;
 using Catalyst.Common.Interfaces.Registry;
 using Catalyst.Common.Enumerator;
 using Dawn;
 
 namespace Catalyst.Common.Registry
 {
-    public class RegistryBase<TKey, TValue> : IRegistryBase<TKey, TValue>
+    public class RegistryBase<TKey, TValue> : IRegistryBase<TKey, TValue>, IDisposable
         where TKey : Enumeration
         where TValue : class
     {
@@ -39,6 +41,17 @@ namespace Catalyst.Common.Registry
         {
             Guard.Argument(item, nameof(item)).NotNull();
             return Registry.TryAdd(identifier, item);
+        }
+
+        public void Dispose()
+        {
+            foreach (var registryValue in Registry.Values)
+            {
+                if (registryValue is IDisposable disposable)
+                {
+                    disposable.Dispose();
+                }
+            }
         }
 
         public TValue GetItemFromRegistry(TKey identifier)
