@@ -113,7 +113,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
                        .ToList()
                        .ForEach(o =>
                         {
-                            o._responseMessageSubject.OnNext(subbedDto);
+                            o.ResponseMessageSubject.OnNext(subbedDto);
                         });
 
                     await walker.DiscoveryStream.WaitForItemsOnDelayedStreamOnTaskPoolSchedulerAsync();
@@ -153,7 +153,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
                         discoveryTestBuilder.PeerClientObservables.ToList()
                            .ForEach(o =>
                             {
-                                o._responseMessageSubject.OnNext(DiscoveryHelper.SubDto(typeof(PingResponse), r.Value, r.Key));
+                                o.ResponseMessageSubject.OnNext(DiscoveryHelper.SubDto(typeof(PingResponse), r.Value, r.Key));
                             });    
                     });
 
@@ -204,12 +204,11 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
                     subbedDto1.CorrelationId.Returns(Substitute.For<ICorrelationId>());
                     subbedDto1.Message.Returns(new PingResponse());
 
-                    discoveryTestBuilder.PeerClientObservables.ToList().ForEach(o => o._responseMessageSubject.OnNext(subbedDto1));
+                    discoveryTestBuilder.PeerClientObservables.ToList().ForEach(o => o.ResponseMessageSubject.OnNext(subbedDto1));
 
                     await walker.DiscoveryStream.WaitForItemsOnDelayedStreamOnTaskPoolSchedulerAsync(1);
 
                     streamObserver.Received(1).OnNext(Arg.Any<IPeerClientMessageDto>());
-                    walker.Logger.Received(1).Debug(Arg.Is("UnKnownMessage"));
                     
                     walker.StateCandidate.CurrentPeersNeighbours.Count.Should().Be(0);
                 }
@@ -244,7 +243,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
                        .ToList()
                        .ForEach(o =>
                         {
-                            o._responseMessageSubject.OnNext(subbedDto);
+                            o.ResponseMessageSubject.OnNext(subbedDto);
                         });
 
                     walker.StateCandidate.CurrentPeersNeighbours
@@ -290,7 +289,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
                     discoveryTestBuilder.PeerClientObservables.ToList()
                        .ForEach(o =>
                         {
-                            o._responseMessageSubject.OnNext(subbedDto);
+                            o.ResponseMessageSubject.OnNext(subbedDto);
                         });
 
                     await walker.DiscoveryStream.WaitForItemsOnDelayedStreamOnTaskPoolSchedulerAsync(1);

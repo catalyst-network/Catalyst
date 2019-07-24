@@ -206,7 +206,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
                        .ToList()
                        .ForEach(o =>
                         {
-                            o._responseMessageSubject.OnNext(dto);
+                            o.ResponseMessageSubject.OnNext(dto);
                         });
                 });
                 
@@ -273,7 +273,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
                        .ToList()
                        .ForEach(o =>
                         {
-                            o._responseMessageSubject.OnNext(pingDto);
+                            o.ResponseMessageSubject.OnNext(pingDto);
                         });
                     
                     await walker.DiscoveryStream.WaitForItemsOnDelayedStreamOnTaskPoolSchedulerAsync();

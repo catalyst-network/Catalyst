@@ -49,22 +49,22 @@ namespace Catalyst.Core.Lib.P2P.Discovery
     public class HastingsDiscovery 
         : IHastingsDiscovery, IDisposable
     {
-        private static bool _isDiscovering;
         private static readonly SemaphoreSlim SemaphoreSlim = new SemaphoreSlim(1, 1);
-        
-        public readonly ILogger Logger;
+
+        private bool _isDiscovering;
+        private readonly ILogger _logger;
         public readonly IHastingsOriginator State;
         private int _discoveredPeerInCurrentWalk;
-        public readonly IPeerClient PeerClient;
-        public readonly IDtoFactory DtoFactory;
         private readonly IPeerIdentifier _ownNode;
         private readonly int _peerDiscoveryBurnIn;
         public readonly IHastingsOriginator StateCandidate;
         public readonly IHastingCareTaker HastingCareTaker;
         private readonly IRepository<Peer> _peerRepository;
-        private readonly ICancellationTokenProvider _cancellationTokenProvider;
         private readonly IDisposable _evictionSubscription;
-
+        private readonly ICancellationTokenProvider _cancellationTokenProvider;
+        
+        public IPeerClient PeerClient { get; private set; }
+        public IDtoFactory DtoFactory { get; private set; }
         public IObservable<IPeerClientMessageDto> DiscoveryStream { get; private set; }
 
         internal HastingsDiscovery(ILogger logger = default,
@@ -102,7 +102,7 @@ namespace Catalyst.Core.Lib.P2P.Discovery
             IHastingCareTaker hastingCareTaker = default,
             IHastingsOriginator stateCandidate = null)
         {
-            Logger = logger;
+            _logger = logger;
             PeerClient = peerClient;
             DtoFactory = dtoFactory;
             _peerRepository = peerRepository;
@@ -157,17 +157,18 @@ namespace Catalyst.Core.Lib.P2P.Discovery
             // no state provide is assumed a "live run", instantiated with state assumes test run so don't start discovery
             State = state ?? new HastingsOriginator();
 
-            if (autoStart)
+            if (!autoStart)
             {
-                WalkForward();
-                
-                    // should run until cancelled
-                    Task.Run(async () =>
-                    {
-                        await DiscoveryAsync().ConfigureAwait(false);
-                    });   
-                
+                return;
             }
+            
+            WalkForward();
+                
+            // should run until cancelled
+            Task.Run(async () =>
+            {
+                await DiscoveryAsync().ConfigureAwait(false);
+            });
         }
 
         /// <summary>
@@ -185,7 +186,7 @@ namespace Catalyst.Core.Lib.P2P.Discovery
         /// <returns></returns>
         public async Task DiscoveryAsync()
         {
-            if (_isDiscovering == false)
+            if (!_isDiscovering)
             {
                 do
                 {
@@ -216,7 +217,7 @@ namespace Catalyst.Core.Lib.P2P.Discovery
                     }
                     catch (Exception e) // either an exception was thrown for un-known reason or the await on the condition timed out.
                     {
-                        Logger.Error(e, e.Message);
+                        _logger.Error(e, e.Message);
                         lock (StateCandidate)
                         {
                             if (StateCandidate.CurrentPeersNeighbours.Count > 0)
@@ -349,14 +350,14 @@ namespace Catalyst.Core.Lib.P2P.Discovery
         /// <param name="obj"></param>
         private void OnPingResponse(IPeerClientMessageDto obj)
         {
-            Logger.Debug("OnPingResponse");
+            _logger.Debug("OnPingResponse");
             
             lock (StateCandidate)
             {
                 if (!StateCandidate.UnResponsivePeers.Contains(new KeyValuePair<IPeerIdentifier, ICorrelationId>(obj.Sender, obj.CorrelationId)))
                 {
                     // a pingResponse that isn't known to discovery.
-                    Logger.Debug("UnKnownMessage");
+                    _logger.Debug("UnKnownMessage");
                     return;
                 }
 
@@ -366,7 +367,7 @@ namespace Catalyst.Core.Lib.P2P.Discovery
 
         private void OnPeerNeighbourResponse(IPeerClientMessageDto obj)
         {
-            Logger.Debug("OnPeerNeighbourResponse");
+            _logger.Debug("OnPeerNeighbourResponse");
             
             lock (StateCandidate)
             {
@@ -410,7 +411,10 @@ namespace Catalyst.Core.Lib.P2P.Discovery
         {
             var waitTask = Task.Run(async () =>
             {
-                while (!condition()) await Task.Delay(frequency);
+                while (!condition())
+                {
+                    await Task.Delay(frequency).ConfigureAwait(false);
+                }
             });
 
             if (waitTask != await Task.WhenAny(waitTask,

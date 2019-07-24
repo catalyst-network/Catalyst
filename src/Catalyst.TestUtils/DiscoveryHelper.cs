@@ -183,14 +183,12 @@ namespace Catalyst.TestUtils
             {
                 state.Push(new HastingMemento(state.Last().Neighbours.RandomElement(), MockNeighbours()));
 
-                if (state.Count == depth)
+                if (state.Count != depth)
                 {
-                    depth = 10;
-                    continue;
+                    return state;
                 }
-
-                return state;
-                break;
+                
+                depth = 10;
             }
         }
 
