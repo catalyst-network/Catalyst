@@ -49,10 +49,12 @@ namespace Catalyst.Common.Container
         private readonly string _fileName;
         private string _targetConfigFolder;
         private IConfigCopier _configCopier;
-        private readonly ContainerBuilder _containerBuilder;
+        public ContainerBuilder ContainerBuilder { get; set; }
         private readonly ConfigurationBuilder _configurationBuilder;
-        private readonly ICancellationTokenProvider _cancellationTokenProvider;
-        
+        public ICancellationTokenProvider CancellationTokenProvider { get; }
+
+        public delegate void CustomBootLogic(Kernel kernel);
+
         public static Kernel Initramfs(ICancellationTokenProvider cancellationTokenProvider = default, string fileName = "Catalyst.Node..log", bool overwrite = false)
         {
             return new Kernel(cancellationTokenProvider, fileName, overwrite);
@@ -65,7 +67,7 @@ namespace Catalyst.Common.Container
         
         public void CurrentDomain_ProcessExit(object sender, EventArgs e)
         {
-            _cancellationTokenProvider.CancellationTokenSource.Cancel();
+            CancellationTokenProvider.CancellationTokenSource.Cancel();
         }
         
         private Kernel(ICancellationTokenProvider cancellationTokenProvider, string fileName, bool overwrite)
@@ -76,11 +78,11 @@ namespace Catalyst.Common.Container
                .CreateLogger()
                .ForContext(MethodBase.GetCurrentMethod().DeclaringType);
 
-            _cancellationTokenProvider = cancellationTokenProvider ?? new CancellationTokenProvider();
+            CancellationTokenProvider = cancellationTokenProvider ?? new CancellationTokenProvider();
 
             _overwrite = overwrite;
             _fileName = fileName;
-            _containerBuilder = new ContainerBuilder();
+            ContainerBuilder = new ContainerBuilder();
             _configurationBuilder = new ConfigurationBuilder();
         }
 
@@ -91,16 +93,16 @@ namespace Catalyst.Common.Container
             var config = _configurationBuilder.Build();
             var configurationModule = new ConfigurationModule(config);
 
-            _containerBuilder.RegisterLogger(Logger);
-            _containerBuilder.RegisterInstance(config);
+            ContainerBuilder.RegisterLogger(Logger);
+            ContainerBuilder.RegisterInstance(config);
             
             if (!string.IsNullOrEmpty(_withPersistence))
             {
                 var repoFactory = RepositoryFactory.BuildSharpRepositoryConfiguation(config.GetSection(_withPersistence));
-                _containerBuilder.RegisterSharpRepository(repoFactory);
+                ContainerBuilder.RegisterSharpRepository(repoFactory);
             }
             
-            _containerBuilder.RegisterModule(configurationModule);
+            ContainerBuilder.RegisterModule(configurationModule);
             
             Logger = new LoggerConfiguration()
                .ReadFrom
@@ -113,17 +115,32 @@ namespace Catalyst.Common.Container
             
             return this;
         }
+        
+        /// <summary>
+        ///     Allows custom nodes to write custom code for containerBuilder
+        /// </summary>
+        /// <param name="customBootLogic"></param>
+        public void StartCustom(CustomBootLogic customBootLogic)
+        {
+            customBootLogic.Invoke(this);
+        }
 
+        /// <summary>
+        ///     Default container resolution for Catalyst.Node
+        /// </summary>
         public void StartNode()
         {
-            using (var instance = _containerBuilder.Build().BeginLifetimeScope(MethodBase.GetCurrentMethod().DeclaringType.AssemblyQualifiedName))
+            using (var instance = ContainerBuilder.Build().BeginLifetimeScope(MethodBase.GetCurrentMethod().DeclaringType.AssemblyQualifiedName))
             {
                 instance.Resolve<ICatalystNode>()
-                   .RunAsync(_cancellationTokenProvider.CancellationTokenSource.Token)
-                   .Wait(_cancellationTokenProvider.CancellationTokenSource.Token);
+                   .RunAsync(CancellationTokenProvider.CancellationTokenSource.Token)
+                   .Wait(CancellationTokenProvider.CancellationTokenSource.Token);
             }
         }
 
+        /// <summary>
+        ///     Default container resolution for advanced CLI.
+        /// </summary>
         public void StartCli()
         {
             const int bufferSize = 1024 * 67 + 128;
@@ -135,10 +152,10 @@ namespace Catalyst.Common.Container
                 )
             );
             
-            using (var instance = _containerBuilder.Build().BeginLifetimeScope(MethodBase.GetCurrentMethod().DeclaringType.AssemblyQualifiedName))
+            using (var instance = ContainerBuilder.Build().BeginLifetimeScope(MethodBase.GetCurrentMethod().DeclaringType.AssemblyQualifiedName))
             {
                 instance.Resolve<ICatalystCli>()
-                   .RunConsole(_cancellationTokenProvider.CancellationTokenSource.Token);
+                   .RunConsole(CancellationTokenProvider.CancellationTokenSource.Token);
             }
         }
 
