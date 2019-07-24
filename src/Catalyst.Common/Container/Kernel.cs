@@ -42,18 +42,17 @@ namespace Catalyst.Common.Container
 {
     public sealed class Kernel
     {
-        public static ICancellationTokenProvider CancellationTokenProvider;
-        private readonly string _fileName;
+        public ILogger Logger { get; private set; }
+        private string _withPersistence;
         private Config.Network _network;
+        private readonly bool _overwrite;
+        private readonly string _fileName;
         private string _targetConfigFolder;
         private IConfigCopier _configCopier;
         private readonly ContainerBuilder _containerBuilder;
         private readonly ConfigurationBuilder _configurationBuilder;
-        public ILogger Logger;
-        private string _withPersistence;
-        private ConfigurationModule _configurationModule;
-        private readonly bool _overwrite;
-
+        private readonly ICancellationTokenProvider _cancellationTokenProvider;
+        
         public static Kernel Initramfs(ICancellationTokenProvider cancellationTokenProvider = default, string fileName = "Catalyst.Node..log", bool overwrite = false)
         {
             return new Kernel(cancellationTokenProvider, fileName, overwrite);
@@ -66,7 +65,7 @@ namespace Catalyst.Common.Container
         
         public void CurrentDomain_ProcessExit(object sender, EventArgs e)
         {
-            CancellationTokenProvider.CancellationTokenSource.Cancel();
+            _cancellationTokenProvider.CancellationTokenSource.Cancel();
         }
         
         private Kernel(ICancellationTokenProvider cancellationTokenProvider, string fileName, bool overwrite)
@@ -77,7 +76,7 @@ namespace Catalyst.Common.Container
                .CreateLogger()
                .ForContext(MethodBase.GetCurrentMethod().DeclaringType);
 
-            CancellationTokenProvider = cancellationTokenProvider ?? new CancellationTokenProvider();
+            _cancellationTokenProvider = cancellationTokenProvider ?? new CancellationTokenProvider();
 
             _overwrite = overwrite;
             _fileName = fileName;
@@ -90,7 +89,7 @@ namespace Catalyst.Common.Container
             _configCopier.RunConfigStartUp(_targetConfigFolder, _network, null, _overwrite);
             
             var config = _configurationBuilder.Build();
-            _configurationModule = new ConfigurationModule(config);
+            var configurationModule = new ConfigurationModule(config);
 
             _containerBuilder.RegisterLogger(Logger);
             _containerBuilder.RegisterInstance(config);
@@ -101,11 +100,11 @@ namespace Catalyst.Common.Container
                 _containerBuilder.RegisterSharpRepository(repoFactory);
             }
             
-            _containerBuilder.RegisterModule(_configurationModule);
+            _containerBuilder.RegisterModule(configurationModule);
             
             Logger = new LoggerConfiguration()
                .ReadFrom
-               .Configuration(_configurationModule.Configuration).WriteTo
+               .Configuration(configurationModule.Configuration).WriteTo
                .File(Path.Combine(_targetConfigFolder, _fileName),
                     rollingInterval: RollingInterval.Day,
                     outputTemplate: "{Timestamp:HH:mm:ss} [{Level:u3}] ({MachineName}/{ThreadId}) {Message} ({SourceContext}){NewLine}{Exception}")
@@ -120,8 +119,8 @@ namespace Catalyst.Common.Container
             using (var instance = _containerBuilder.Build().BeginLifetimeScope(MethodBase.GetCurrentMethod().DeclaringType.AssemblyQualifiedName))
             {
                 instance.Resolve<ICatalystNode>()
-                   .RunAsync(CancellationTokenProvider.CancellationTokenSource.Token)
-                   .Wait(CancellationTokenProvider.CancellationTokenSource.Token);
+                   .RunAsync(_cancellationTokenProvider.CancellationTokenSource.Token)
+                   .Wait(_cancellationTokenProvider.CancellationTokenSource.Token);
             }
         }
 
@@ -139,7 +138,7 @@ namespace Catalyst.Common.Container
             using (var instance = _containerBuilder.Build().BeginLifetimeScope(MethodBase.GetCurrentMethod().DeclaringType.AssemblyQualifiedName))
             {
                 instance.Resolve<ICatalystCli>()
-                   .RunConsole(CancellationTokenProvider.CancellationTokenSource.Token);
+                   .RunConsole(_cancellationTokenProvider.CancellationTokenSource.Token);
             }
         }
 
