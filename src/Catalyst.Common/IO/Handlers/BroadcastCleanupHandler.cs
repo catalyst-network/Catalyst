@@ -21,27 +21,23 @@
 
 #endregion
 
-using System;
-using System.IO;
-using Serilog;
+using Catalyst.Common.Extensions;
+using Catalyst.Common.Interfaces.P2P.IO.Messaging.Broadcast;
+using Catalyst.Protocol.Common;
+using DotNetty.Transport.Channels;
 
-namespace Catalyst.Common.Util
+namespace Catalyst.Common.IO.Handlers
 {
-    public static class ConsoleProgram
+    public class BroadcastCleanupHandler : InboundChannelHandlerBase<ProtocolMessage>
     {
-        public static ILogger GetTempLogger(string logFileName, Type declaringType)
-        {
-            var tempLogFile = Path.Combine(Path.GetTempPath(), logFileName);
-            var logger = new LoggerConfiguration()
-               .WriteTo.Console()
-               .WriteTo.File(tempLogFile, rollingInterval: RollingInterval.Day)
-               .CreateLogger().ForContext(declaringType);
-            return logger;
-        }
+        private readonly IBroadcastManager _broadcastManager;
 
-        public static void LogUnhandledException(ILogger logger, object sender, UnhandledExceptionEventArgs e)
+        public BroadcastCleanupHandler(IBroadcastManager broadcastManager) { _broadcastManager = broadcastManager; }
+
+        protected override void ChannelRead0(IChannelHandlerContext ctx, ProtocolMessage msg)
         {
-            logger.Fatal((Exception) e.ExceptionObject, "Unhandled exception, Terminating: {0}", e.IsTerminating);
+            _broadcastManager.RemoveSignedBroadcastMessageData(msg.CorrelationId.ToCorrelationId());
+            ctx.FireChannelRead(msg);
         }
     }
 }

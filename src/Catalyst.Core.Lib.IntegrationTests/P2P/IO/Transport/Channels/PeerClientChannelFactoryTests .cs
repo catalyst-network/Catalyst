@@ -135,7 +135,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.IO.Transport.Channels
             using (messageStream.Subscribe(observer))
             {
                 _clientChannel.WriteInbound(sentBytes);
-                _clientChannel.ReadInbound<ProtocolMessageSigned>();
+                _clientChannel.ReadInbound<ProtocolMessage>();
                 _clientCorrelationManager.DidNotReceiveWithAnyArgs().TryMatchResponse(Arg.Any<ProtocolMessage>());
                 _clientKeySigner.ReceivedWithAnyArgs(1).Verify(null, null);
                 await messageStream.WaitForItemsOnDelayedStreamOnTaskPoolSchedulerAsync();

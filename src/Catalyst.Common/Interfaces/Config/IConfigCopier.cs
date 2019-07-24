@@ -21,23 +21,18 @@
 
 #endregion
 
-using System.Collections.Generic;
-using Catalyst.Common.Config;
-using Catalyst.Common.Interfaces.Config;
-
-namespace Catalyst.Cli
+namespace Catalyst.Common.Interfaces.Config
 {
-    internal sealed class CliConfigCopier : ConfigCopier, IConfigCopier
+    public interface IConfigCopier
     {
-        protected override IEnumerable<string> RequiredConfigFiles(Network network)
-        {
-            return new[]
-            {
-                Constants.ShellNodesConfigFile,
-                Constants.ShellComponentsJsonConfigFile,
-                Constants.SerilogJsonConfigFile,
-                Constants.ShellConfigFile
-            };
-        }
+        /// <summary>
+        ///     Finds out which config files are missing from the catalyst home directory and
+        ///     copies them over if needed.
+        /// </summary>
+        /// <param name="dataDir">Home catalyst directory</param>
+        /// <param name="network">Network on which to run the node</param>
+        /// <param name="sourceFolder"></param>
+        /// <param name="overwrite">Should config existing config files be overwritten by default?</param>
+        void RunConfigStartUp(string dataDir, Common.Config.Network network, string sourceFolder = null, bool overwrite = false);
     }
 }
