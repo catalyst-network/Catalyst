@@ -21,16 +21,9 @@
 
 #endregion
 
-using System;
-using System.IO;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.FileTransfer;
-using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
-using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.Modules.Dfs;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Messaging.Correlation;
@@ -44,6 +37,9 @@ using FluentAssertions;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 using Serilog;
+using System;
+using System.IO;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Observers
