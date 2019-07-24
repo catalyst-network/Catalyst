@@ -38,7 +38,7 @@ using Serilog;
 using SharpRepository.Ioc.Autofac;
 using SharpRepository.Repository;
 
-namespace Catalyst.Common.Container
+namespace Catalyst.Common.Kernel
 {
     public sealed class Kernel
     {

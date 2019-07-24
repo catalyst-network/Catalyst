@@ -24,8 +24,8 @@
 using System;
 using System.Reflection;
 using Autofac;
-using Catalyst.Common.Container;
 using Catalyst.Common.Interfaces;
+using Catalyst.Common.Kernel;
 using Catalyst.Common.Util;
 
 namespace Catalyst.Node
