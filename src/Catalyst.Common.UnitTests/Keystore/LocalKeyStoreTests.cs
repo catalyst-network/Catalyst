@@ -118,7 +118,7 @@ namespace Catalyst.Common.UnitTests.Keystore
                     Constants.CatalystDataDir),
                 TimeSpan.FromSeconds(3));
             _passwordReader.ReadSecurePassword(default, default)
-               .ReturnsForAnyArgs((t) => TestPasswordReader.BuildSecureStringPassword("a different test password"));
+               .ReturnsForAnyArgs(t => TestPasswordReader.BuildSecureStringPassword("a different test password"));
             
             Assert.Throws<AuthenticationException>(() => _keystore.KeyStoreDecrypt(KeyRegistryKey.DefaultKey));
         }
