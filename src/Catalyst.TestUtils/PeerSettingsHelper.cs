@@ -25,21 +25,22 @@ using System.Collections.Generic;
 using System.Net;
 using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.Network;
+using Catalyst.Common.Interfaces.Rpc;
 using NSubstitute;
 
 namespace Catalyst.TestUtils
 {
     public static class PeerSettingsHelper
     {
-        public static IPeerSettings TestPeerSettings()
+        public static IPeerSettings TestPeerSettings(string publicKey = "302a300506032b65700321001783421742816abf",
+            int port = 42069)
         {
             var peerSettings = Substitute.For<IPeerSettings>();
             peerSettings.Network.Returns(Network.Dev);
             peerSettings.Announce.Returns(false);
             peerSettings.AnnounceServer.Returns(new IPEndPoint(IPAddress.Loopback, 80));
-            peerSettings.PublicKey.Returns("302a300506032b65700321001783421742816abf");
-            peerSettings.Port.Returns(42069);
+            peerSettings.PublicKey.Returns(publicKey);
+            peerSettings.Port.Returns(port);
             peerSettings.PayoutAddress.Returns("my_pay_out_address");
             peerSettings.BindAddress.Returns(IPAddress.Loopback);
             peerSettings.SeedServers.Returns(new List<string>
@@ -51,6 +52,17 @@ namespace Catalyst.TestUtils
                 "seed5.catalystnetwork.io"
             });
             return peerSettings;
+        }
+    }
+
+    public static class RpcServerSettingsHelper
+    {
+        public static IRpcServerSettings GetRpcServerSettings(int port = 42051)
+        {
+            var settings = Substitute.For<IRpcServerSettings>();
+            settings.Port.Returns(port);
+            settings.BindAddress.Returns(IPAddress.Loopback);
+            return settings;
         }
     }
 }

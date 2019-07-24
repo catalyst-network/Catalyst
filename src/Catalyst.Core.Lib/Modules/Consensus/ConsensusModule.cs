@@ -24,6 +24,8 @@
 using Autofac;
 using Catalyst.Common.Cryptography;
 using Catalyst.Common.Interfaces.Cryptography;
+using Catalyst.Common.Interfaces.Modules.Consensus.Cycle;
+using Catalyst.Core.Lib.Modules.Consensus.Cycle;
 using Multiformats.Hash.Algorithms;
 
 namespace Catalyst.Core.Lib.Modules.Consensus
@@ -36,6 +38,7 @@ namespace Catalyst.Core.Lib.Modules.Consensus
         {
             builder.RegisterType<BLAKE2B_256>().As<IMultihashAlgorithm>();
             builder.RegisterType<IsaacRandomFactory>().As<IDeterministicRandomFactory>();
+            builder.RegisterInstance<ICycleConfiguration>(CycleConfiguration.Default);
             base.Load(builder);
         }
     }

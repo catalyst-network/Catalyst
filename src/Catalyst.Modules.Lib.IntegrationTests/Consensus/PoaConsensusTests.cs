@@ -24,9 +24,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive;
 using System.Threading;
 using System.Threading.Tasks;
+using Catalyst.Common.Interfaces.Modules.Consensus.Cycle;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.P2P;
+using Catalyst.Core.Lib.P2P;
 using Catalyst.TestUtils;
 using Xunit;
 using Xunit.Abstractions;
@@ -42,21 +46,18 @@ namespace Catalyst.Modules.Lib.IntegrationTests.Consensus
         {
             _endOfTestCancellationSource = new CancellationTokenSource();
 
-            var peerIdentifiers = Enumerable.Range(0, 3).Select(i => 
-                PeerIdentifierHelper.GetPeerIdentifier($"producer{i}")).ToList();
+            var peerSettings = Enumerable.Range(0, 3).Select(i =>
+                PeerSettingsHelper.TestPeerSettings($"producer{i}", port: 1000 + i)
+            ).ToList();
 
-            _nodesById = peerIdentifiers.ToDictionary(
-                p => p,
-                p => BuildPoaTestNode(output, p, peerIdentifiers));
-        }
+            var peerIdentifiers = peerSettings
+               .Select(p => new PeerIdentifier(p) as IPeerIdentifier)
+               .ToList();
 
-        private static PoaTestNode BuildPoaTestNode(ITestOutputHelper output,
-            IPeerIdentifier p,
-            List<IPeerIdentifier> peerIdentifiers)
-        {
-            var node = new PoaTestNode(p, peerIdentifiers.Except(new[] {p}), output);
-            node.BuildNode();
-            return node;
+            _nodesById = peerSettings
+               .Zip(peerIdentifiers, (settings, identifier) => new {Settings = settings, Identifier = identifier})
+               .ToDictionary(p => p.Identifier, 
+                    p => new PoaTestNode(p.Settings, peerIdentifiers.Except(new[] {p.Identifier}), output));
         }
 
         [Fact]
@@ -65,7 +66,19 @@ namespace Catalyst.Modules.Lib.IntegrationTests.Consensus
             _nodesById.Values.AsParallel()
                .ForAll(n => n.RunAsync(_endOfTestCancellationSource.Token));
 
+            var observer = Observer.Create<IPhase>(p => Output.WriteLine(p.ToString()));
+
+            _nodesById.Values.First().Consensus.CycleEventsProvider.PhaseChanges
+               .Subscribe(observer);
+
+            await Task.Delay(TimeSpan.FromSeconds(30));
+
             _endOfTestCancellationSource.CancelAfter(TimeSpan.FromMinutes(3));
+        }
+
+        private void ObservedPhase(IPhase phase)
+        {
+            Output.WriteLine(phase.ToString());
         }
 
         protected override void Dispose(bool disposing)

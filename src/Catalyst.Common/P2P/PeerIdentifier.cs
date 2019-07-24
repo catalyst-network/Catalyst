@@ -101,8 +101,10 @@ namespace Catalyst.Common.P2P
             });
         }
         
-        public PeerIdentifier(IPeerSettings settings, IPeerIdClientId clientId)
-            : this(settings.PublicKey.ToBytesForRLPEncoding(), new IPEndPoint(settings.BindAddress.MapToIPv4(), settings.Port), clientId) { }
+        public PeerIdentifier(IPeerSettings settings, IPeerIdClientId clientId = null)
+            : this(settings.PublicKey.ToBytesForRLPEncoding(), 
+                new IPEndPoint(settings.BindAddress.MapToIPv4(), settings.Port), 
+                clientId ?? new PeerIdClientId()) { }
         
         public PeerIdentifier(IEnumerable<byte> publicKey, IPAddress ipAddress, int port, IPeerIdClientId clientId)
             : this(publicKey, EndpointBuilder.BuildNewEndPoint(ipAddress, port), clientId) { }
