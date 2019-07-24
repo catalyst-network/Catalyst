@@ -23,20 +23,12 @@
 
 using System;
 using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Text.RegularExpressions;
-using Catalyst.Common.Interfaces.FileSystem;
-using Dawn;
 using FluentAssertions;
 using NSubstitute;
 using Xunit;
-using Xunit.Abstractions;
 using Catalyst.TestUtils;
 using Serilog;
-using System.Collections.Generic;
-
-
+using Catalyst.Common.Config;
 using CommonFileSystem = Catalyst.Common.FileSystem.FileSystem;
 
 namespace Catalyst.Common.IntegrationTests.IO
@@ -47,142 +39,54 @@ namespace Catalyst.Common.IntegrationTests.IO
     ///     to create files, logs, etc.
     /// </summary>
     [Trait(Traits.TestType, Traits.IntegrationTest)]
-    public sealed class FileSystemTest : IDisposable
+    public sealed class FileSystemTest 
     {
         private CommonFileSystem _fileSystem;
         private readonly ILogger _logger;
-        private readonly string _configFilePointerName = "ConfigFilePointerTester.txt";
-        private string _configFilepointerTestPath => Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\" + _configFilePointerName;
-       
-        public static IEnumerable<object[]> DirectoryNames;
 
-        private string _testDataDir = "\\.TestDir";
-        static FileSystemTest()
-        {
-            DirectoryNames = new List<object[]>
-            {
-                new object[]
-                {
-                    "\\.TestConFigDir",
-                },
-                new object[]
-                {
-                    "\\.MyLocalDir",
-                },
-                new object[]
-                {
-                    "\\.CoreAppFolder",
-                },
-                new object[]
-                {
-                    "\\.TemporaryTestFolder",
-                },
-            };
-        }
+        private string _sourceFolder => Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\" + Constants.CatalystDataDir;
 
         public FileSystemTest()
         {
             _logger = Substitute.For<ILogger>();
+            _fileSystem = new CommonFileSystem(_logger);
+
+            Setup();
         }
 
-        public void Dispose()
+        private void Setup()
         {
-            DeleteTestDirectories();
+            var targetConfigFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, Constants.ConfigSubFolder);
 
-            DeleteTestConfigFile();
-
-            DeleteDirectory(_testDataDir);
-        }
-
-        public void DeleteTestConfigFile()
-        {
-            try
-            {
-                System.IO.File.Delete(_configFilepointerTestPath);
-            }
-            catch (Exception ex)
-            {
-                //we are not concerned
-            }
-        }
-
-        private void DeleteTestDirectories()
-        {
-            try
-            {
-                DirectoryNames.SelectMany(m => m).ToList().Select(j => j as string)
-                    .ToList().ForEach(m => DeleteDirectory(m));
-            }
-            catch (Exception ex)
-            {
-                //We are not too concerned about this
-            }
-        }
-
-        private void DeleteDirectory(string path)
-        {
-            try
-            {
-                var dir = CommonFileSystem.FilePointerBaseLocation + path;
-
-                Directory.Delete(dir, true);
-            }
-            catch (Exception ex)
-            {
-                //We are not too concerned about this
-            }
+            new ConfigCopier().RunConfigStartUp(targetConfigFolder, Catalyst.Common.Config.Network.Dev, _sourceFolder, overwrite: true);
         }
 
         [Theory]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
-        [MemberData(nameof(DirectoryNames))]
-        public void ConfigFilePointer_Should_Be_Created_As_It_Does_Not_Exist(string name)
+        [InlineData("C:\\rubbishlocation\\fake\\technodisco")]
+        [InlineData("gandolf\\treasure")]
+        [InlineData("L:\\123\\fake")]
+        public void Save_NonExistant_Data_Directory_Must_Fail(string path)
         {
-            //_fileSystem = new CommonFileSystem(true, _logger, _configFilepointerTestPath, name);
-
-            //new DirectoryInfo(_fileSystem.DataDir).Exists.Should().BeTrue();
-            //_fileSystem.DataDir.Contains(name).Should().BeTrue();
+            _fileSystem.SetCurrentPath(path).Should().BeFalse();
+        }
+               
+        [Fact]
+        [Trait(Traits.TestType, Traits.IntegrationTest)]
+        public void Save_Existant_Data_Directory_Must_Succeed()
+        {
+            _fileSystem.SetCurrentPath(_sourceFolder).Should().BeTrue();
         }
 
         [Fact]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
-        public void ConfigFilePointer_There_Should_Only_Be_One_ConfigFilePointer_Irrespective_Of_No_Runs()
+        public void Save_Data_Directory_New_Instance_Must_Load_With_New_Data_Directory()
         {
-            //DeleteDirectory(_testDataDir);
+            _fileSystem.SetCurrentPath(_sourceFolder).Should().BeTrue();
 
-            //var pointerDir = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+            var fileSystem = new CommonFileSystem(_logger);
 
-            //_fileSystem = new CommonFileSystem(true, _logger, _configFilepointerTestPath, _testDataDir);
-
-            //for(int i = 0; i < 10; i++)
-            //{
-            //   new CommonFileSystem(true, _logger, _configFilepointerTestPath, _testDataDir);
-            //}
-
-            //Directory.GetFiles(pointerDir, _configFilePointerName).Should().HaveCount(1);
-        }
-
-        [Fact]
-        [Trait(Traits.TestType, Traits.IntegrationTest)]
-        public void Get_Data_Directory_Should_Successfully_Read_ConfigPointerFile()
-        {
-            //DeleteDirectory(_testDataDir);
-
-            //var fileSystem = new CommonFileSystem(true, _logger, _configFilepointerTestPath, _testDataDir);
-            //new DirectoryInfo(fileSystem.DataDir).Exists.Should().BeTrue();
-
-            //var fileSystemPreviousCheck = new CommonFileSystem(true, _logger, _configFilepointerTestPath, _testDataDir);
-            //fileSystemPreviousCheck.GetCatalystDataDir().FullName.Should().Be(fileSystem.GetCatalystDataDir().FullName);
-        }
-
-        [Fact]
-        [Trait(Traits.TestType, Traits.IntegrationTest)]
-        public void Get_Data_Directory_Should_Handle_NonExistant_File_Location()
-        {
-            //var fileSystem = new CommonFileSystem(true, _logger, _configFilepointerTestPath, "junkjunkie");
-
-            //var fileSystemTest = new CommonFileSystem();
-            //fileSystemTest.GetCatalystDataDir().FullName.Should().Be(fileSystem.GetCatalystDataDir().FullName);
+            fileSystem.GetCatalystDataDir().FullName.Should().Be(_fileSystem.GetCatalystDataDir().FullName);
         }
     }
 }

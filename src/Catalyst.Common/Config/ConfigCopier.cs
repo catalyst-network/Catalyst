@@ -100,7 +100,8 @@ namespace Catalyst.Common.Config
             string sourceFolder,
             bool overwrite = OverwriteFilesByDefault)
         {
-            var sourceFile = Path.Combine(sourceFolder, Constants.ConfigSubFolder, fileName);
+            var combinedSourceFolder = Path.Combine(sourceFolder, Constants.ConfigSubFolder, fileName);
+            var sourceFile = new DirectoryInfo(combinedSourceFolder).Exists ? combinedSourceFolder : Path.Combine(sourceFolder, fileName);
             var targetFile = Path.Combine(targetFolder, fileName);
             if (!overwrite && File.Exists(targetFile))
             {
