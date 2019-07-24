@@ -81,10 +81,12 @@ namespace Catalyst.Common.Cryptography
             const string promptMessage = "Catalyst Node needs to create an SSL certificate." +
                 " Please enter a password to encrypt the certificate on disk:";
 
-            var password = _passwordReader.ReadSecurePassword(_certificatePasswordIdentifier, promptMessage);
-            var certificate = BuildSelfSignedServerCertificate(password, commonName);
-            Save(certificate, filePath, password);
-            return certificate;
+            using (var password = _passwordReader.ReadSecurePassword(_certificatePasswordIdentifier, promptMessage))
+            {
+                var certificate = BuildSelfSignedServerCertificate(password, commonName);
+                Save(certificate, filePath, password);
+                return certificate;
+            }
         }
 
         private void Save(X509Certificate certificate, string fileName, SecureString password)
@@ -122,12 +124,12 @@ namespace Catalyst.Common.Cryptography
 
                 var passwordPromptMessage =
                     $"Please type in the password for the certificate at {fullPath} (optional):";
-
+                SecureString passwordFromConsole = null;
                 while (PasswordTries < MaxTries)
                 {
                     try
                     {
-                        var passwordFromConsole =
+                        passwordFromConsole =
                             _passwordReader.ReadSecurePassword(_certificatePasswordIdentifier, passwordPromptMessage);
                         certificate = new X509Certificate2(fileInBytes, passwordFromConsole);
                         _passwordReader.AddPasswordToRegistry(_certificatePasswordIdentifier,
@@ -136,6 +138,7 @@ namespace Catalyst.Common.Cryptography
                     }
                     catch (CryptographicException ex)
                     {
+                        passwordFromConsole?.Dispose();
                         PasswordTries++;
 
                         if (PasswordTries >= MaxTries)
