@@ -28,7 +28,6 @@ using System.Threading.Tasks;
 using Catalyst.Common.Config;
 using Microsoft.Extensions.Configuration;
 using System.Linq;
-using System.Threading;
 using IFileSystem = Catalyst.Common.Interfaces.FileSystem.IFileSystem;
 using ILogger = Serilog.ILogger;
 
