@@ -41,15 +41,11 @@ namespace Catalyst.Common.Config
         /// <param name="network">Network on which to run the node</param>
         /// <param name="sourceFolder"></param>
         /// <param name="overwrite">Should config existing config files be overwritten by default?</param>
-        public void RunConfigStartUp(string dataDir, Network networkParam = default, string sourceFolder = null, bool overwrite = false)
+        public void RunConfigStartUp(string dataDir, Network networkParam = null, string sourceFolder = null, bool overwrite = false)
         {
             Guard.Argument(dataDir, nameof(dataDir)).NotNull().NotEmpty().NotWhiteSpace();
 
-            Network network = null;
-            if (networkParam == default)
-            {
-                network = Network.Dev;
-            }
+            var network = networkParam == null ? Network.Dev : networkParam;
 
             var dataDirInfo = new DirectoryInfo(dataDir);
             if (!dataDirInfo.Exists)
