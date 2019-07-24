@@ -26,7 +26,7 @@ using System.Linq;
 
 namespace Catalyst.TestUtils
 {
-    public static class Helper
+    public static class StringHelper
     { 
         private static readonly Random Random = new Random();
 

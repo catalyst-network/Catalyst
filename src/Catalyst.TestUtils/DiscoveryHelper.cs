@@ -119,7 +119,7 @@ namespace Catalyst.TestUtils
         public static IList<IPeerIdentifier> MockNeighbours(int amount = 5)
         {
             return Enumerable.Range(0, amount).Select(i =>
-                PeerIdentifierHelper.GetPeerIdentifier(Helper.RandomString())).ToList();
+                PeerIdentifierHelper.GetPeerIdentifier(StringHelper.RandomString())).ToList();
         }
 
         public static IDictionary<IPeerIdentifier, ICorrelationId> MockUnResponsiveNeighbours(IEnumerable<IPeerIdentifier> neighboursParam = default)
@@ -173,7 +173,7 @@ namespace Catalyst.TestUtils
 
         public static IHastingMemento MockMemento(IPeerIdentifier identifier = default, IEnumerable<IPeerIdentifier> neighbours = default)
         {
-            var peerParam = identifier ?? PeerIdentifierHelper.GetPeerIdentifier(Helper.RandomString());
+            var peerParam = identifier ?? PeerIdentifierHelper.GetPeerIdentifier(StringHelper.RandomString());
             var neighbourParam = neighbours ?? MockNeighbours();
             return new HastingMemento(peerParam, neighbourParam);
         }
@@ -213,7 +213,7 @@ namespace Catalyst.TestUtils
             {
                 MockQueryResponse.CreateFakeLookupResult(domain, 
                     "0x" + PeerIdentifierHelper.GetPeerIdentifier(
-                        Helper.RandomString(32)).ToString().ToHexUTF8(),
+                        StringHelper.RandomString(32)).ToString().ToHexUTF8(),
                     lookupClient ?? Substitute.For<ILookupClient>()
                 );
             });
