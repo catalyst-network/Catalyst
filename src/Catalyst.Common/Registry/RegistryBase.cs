@@ -42,17 +42,6 @@ namespace Catalyst.Common.Registry
             return Registry.TryAdd(identifier, item);
         }
 
-        public void Dispose()
-        {
-            foreach (var registryValue in Registry.Values)
-            {
-                if (registryValue is IDisposable disposable)
-                {
-                    disposable.Dispose();
-                }
-            }
-        }
-
         public TValue GetItemFromRegistry(TKey identifier)
         {
             Registry.TryGetValue(identifier, out var item);
@@ -64,6 +53,17 @@ namespace Catalyst.Common.Registry
         public bool RemoveItemFromRegistry(TKey identifier)
         {
             return Registry.Remove(identifier);
+        }
+
+        void IDisposable.Dispose()
+        {
+            foreach (var registryValue in Registry.Values)
+            {
+                if (registryValue is IDisposable disposable)
+                {
+                    disposable.Dispose();
+                }
+            }
         }
     }
 }
