@@ -66,9 +66,84 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
             _settings = PeerSettingsHelper.TestPeerSettings();
             _ownNode = PeerIdentifierHelper.GetPeerIdentifier("ownNode");
         }
-        
-        // walker.GetIsDiscovering().Should()
-        //    .BeTrue("because starting discovery sets _isDiscovering true, to stop someone invoking the method again");
+
+        [Fact]
+        public void Can_WalkForward_With_Valid_Candidate()
+        {
+            var knownStepPid =
+                PeerIdentifierHelper.GetPeerIdentifier("hey_its_jimmys_brother_the_guy_with_the_beautiful_voice");
+
+            var knownNextCandidate =
+                PeerIdentifierHelper.GetPeerIdentifier("these_eyes....");
+            
+            var discoveryTestBuilder = DiscoveryTestBuilder.GetDiscoveryTestBuilder()
+               .WithLogger()
+               .WithPeerRepository()
+               .WithDns()
+               .WithPeerSettings()
+               .WithPeerClient()
+               .WithCancellationProvider()
+               .WithPeerClientObservables()
+               .WithStateCandidate(default,
+                    true,
+                    knownNextCandidate,
+                    DiscoveryHelper.MockNeighbours(Constants.AngryPirate, NeighbourState.Responsive))
+               .WithCurrentState(default, true, knownStepPid)
+               .WithAutoStart()
+               .WithBurn();
+
+            using (var walker = discoveryTestBuilder.Build())
+            {
+                walker.State.Peer
+                   .Should()
+                   .Be(knownStepPid);
+                
+                walker.WalkForward();
+                
+                walker.State.Peer
+                   .Should()
+                   .Be(knownNextCandidate);
+            }
+        }
+
+        [Fact]
+        public void Can_Not_WalkForward_With_InValid_Candidate()
+        {
+            var knownStepPid =
+                PeerIdentifierHelper.GetPeerIdentifier("hey_its_jimmys_brother_the_guy_with_the_beautiful_voice");
+
+            var knownNextCandidate =
+                PeerIdentifierHelper.GetPeerIdentifier("these_eyes....");
+            
+            var discoveryTestBuilder = DiscoveryTestBuilder.GetDiscoveryTestBuilder()
+               .WithLogger()
+               .WithPeerRepository()
+               .WithDns()
+               .WithPeerSettings()
+               .WithPeerClient()
+               .WithCancellationProvider()
+               .WithPeerClientObservables()
+               .WithStateCandidate(default,
+                    true,
+                    knownNextCandidate,
+                    DiscoveryHelper.MockNeighbours(Constants.AngryPirate, NeighbourState.UnResponsive))
+               .WithCurrentState(default, true, knownStepPid)
+               .WithAutoStart()
+               .WithBurn();
+
+            using (var walker = discoveryTestBuilder.Build())
+            {
+                walker.State.Peer
+                   .Should()
+                   .Be(knownStepPid);
+                
+                walker.WalkForward();
+                
+                walker.State.Peer
+                   .Should()
+                   .Be(knownStepPid);
+            }
+        }
 
         [Fact]
         public void HasValidCandidate_Can_Validate_Correct_State()

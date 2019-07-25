@@ -234,7 +234,8 @@ namespace Catalyst.Core.Lib.P2P.Discovery
             {
                 if (StateCandidate.Neighbours.ToList()
                    .Select(n => n.State)
-                   .Count(i => i == Enumeration.Parse<NeighbourState>("NotContacted")).Equals(Constants.AngryPirate))
+                   .Count(i => i == Enumeration.Parse<NeighbourState>("NotContacted") || i == Enumeration.Parse<NeighbourState>("UnResponsive"))
+                   .Equals(Constants.AngryPirate))
                 {
                     return false;
                 }
@@ -258,6 +259,11 @@ namespace Catalyst.Core.Lib.P2P.Discovery
             lock (State) 
             lock (StateCandidate)
             {
+                if (!HasValidCandidate())
+                {
+                    return;
+                }
+                
                 // store discovered peers.
                 StateCandidate.Neighbours
                    .ToList()
