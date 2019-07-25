@@ -82,8 +82,8 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
             var getFileResponse = GetResponseMessage(correlationId, responseCode);
             getFileResponse.SendToHandler(_fakeContext, getFileFromDfsResponseHandler);
 
-            _fileDownloadFactory.Received(0).FileTransferAsync(correlationId, CancellationToken.None);
-            _fakeContext.Channel.Received(0).WriteAndFlushAsync(Arg.Any<object>());
+            _fileDownloadFactory.DidNotReceiveWithAnyArgs().FileTransferAsync(correlationId, Arg.Any<CancellationToken>());
+            _fakeContext.Channel.DidNotReceiveWithAnyArgs().WriteAndFlushAsync(Arg.Any<object>());
         }
 
         private ICorrelationId SendResponseToHandler(FileTransferResponseCodes responseCode)
