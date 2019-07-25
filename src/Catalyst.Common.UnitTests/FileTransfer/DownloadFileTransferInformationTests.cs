@@ -33,7 +33,7 @@ using Xunit;
 
 namespace Catalyst.Common.UnitTests.FileTransfer
 {
-    public class DownloadFileTransferInformationTests : IDisposable
+    public sealed class DownloadFileTransferInformationTests : IDisposable
     {
         private readonly IDownloadFileInformation _downloadFileInformation;
 
