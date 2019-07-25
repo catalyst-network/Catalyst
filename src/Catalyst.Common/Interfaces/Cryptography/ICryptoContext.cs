@@ -77,9 +77,9 @@ namespace Catalyst.Common.Interfaces.Cryptography
         /// <param name="privateKey"></param>
         /// <param name=""></param>
         /// <returns></returns>
-        ISignature Sign(IPrivateKey privateKey, byte[] message);
+        ISignature Sign(IPrivateKey privateKey, ReadOnlySpan<byte> message);
 
-        bool Verify(ISignature signature, byte[] message);
+        bool Verify(ISignature signature, ReadOnlySpan<byte> message);
 
         /// <summary>
         ///     Given a private key returns corresponding public key.

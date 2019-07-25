@@ -75,15 +75,15 @@ namespace Catalyst.Common.Cryptography
         }
 
         /// <inheritdoc />
-        public ISignature Sign(IPrivateKey privateKey, byte[] message)
+        public ISignature Sign(IPrivateKey privateKey, ReadOnlySpan<byte> message)
         {
-            return _wrapper.StdSign(privateKey, message);
+            return _wrapper.StdSign(privateKey, message.ToArray());
         }
 
         /// <inheritdoc />
-        public bool Verify(ISignature signature, byte[] message)
+        public bool Verify(ISignature signature, ReadOnlySpan<byte> message)
         {
-            return _wrapper.StdVerify(signature, message);
+            return _wrapper.StdVerify(signature, message.ToArray());
         }
 
         /// <inheritdoc />
