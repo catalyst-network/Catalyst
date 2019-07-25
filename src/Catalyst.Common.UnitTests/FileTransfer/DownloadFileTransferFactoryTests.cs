@@ -33,9 +33,7 @@ using Catalyst.Common.Util;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using FluentAssertions;
-using Google.Protobuf;
 using NSubstitute;
-using NSubstitute.ReceivedExtensions;
 using Serilog;
 using Xunit;
 
