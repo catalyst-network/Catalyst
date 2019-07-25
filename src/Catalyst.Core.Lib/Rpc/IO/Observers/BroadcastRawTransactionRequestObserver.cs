@@ -66,10 +66,10 @@ namespace Catalyst.Core.Lib.Rpc.IO.Observers
                 // TODO: Check ledger to see if ledger already contains transaction, if so we need to send Successful/Fail response
                 if (_mempool.ContainsDocument(messageDto.Transaction.Signature))
                 {
-                    return new BroadcastRawTransactionResponse() {ResponseCode = responseCode};
+                    return new BroadcastRawTransactionResponse {ResponseCode = responseCode};
                 }
 
-                _mempool.SaveMempoolDocument(new MempoolDocument()
+                _mempool.SaveMempoolDocument(new MempoolDocument
                 {
                     Transaction = messageDto.Transaction
                 });
