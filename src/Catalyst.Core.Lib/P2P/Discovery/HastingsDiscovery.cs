@@ -60,10 +60,10 @@ namespace Catalyst.Core.Lib.P2P.Discovery
         public IHastingsOriginator State { get; }
         private int _discoveredPeerInCurrentWalk;
         private readonly IPeerIdentifier _ownNode;
-        private readonly int _peerDiscoveryBurnIn;
+        protected readonly int PeerDiscoveryBurnIn;
         public IHastingsOriginator StateCandidate { get; }
         public IHastingCareTaker HastingCareTaker { get; }
-        private readonly IRepository<Peer> _peerRepository;
+        public readonly IRepository<Peer> PeerRepository;
         private readonly IDisposable _evictionSubscription;
         private readonly ICancellationTokenProvider _cancellationTokenProvider;
         
@@ -89,9 +89,9 @@ namespace Catalyst.Core.Lib.P2P.Discovery
             _logger = logger;
             PeerClient = peerClient;
             DtoFactory = dtoFactory;
-            _peerRepository = peerRepository;
+            PeerRepository = peerRepository;
             _discoveredPeerInCurrentWalk = 0;
-            _peerDiscoveryBurnIn = peerDiscoveryBurnIn;
+            PeerDiscoveryBurnIn = peerDiscoveryBurnIn;
             _cancellationTokenProvider = cancellationTokenProvider;
             HastingCareTaker = hastingCareTaker ?? new HastingCareTaker();
             _ownNode = new PeerIdentifier(peerSettings, new PeerIdClientId("AC")); // this needs to be changed
@@ -434,15 +434,16 @@ namespace Catalyst.Core.Lib.P2P.Discovery
         /// </summary>
         /// <param name="peerIdentifier"></param>
         /// <returns></returns>
-        private void StorePeer(INeighbour neighbour)
+        protected void StorePeer(INeighbour neighbour)
         {
-            if (_discoveredPeerInCurrentWalk < _peerDiscoveryBurnIn)
+            if (_discoveredPeerInCurrentWalk < PeerDiscoveryBurnIn)
             {
                 // if where not past our burn in phase just continue.
+                Interlocked.Add(ref _discoveredPeerInCurrentWalk, 1);
                 return;
             }
             
-            _peerRepository.Add(new Peer
+            PeerRepository.Add(new Peer
             {
                 Reputation = 0,
                 LastSeen = DateTime.UtcNow,
@@ -465,7 +466,7 @@ namespace Catalyst.Core.Lib.P2P.Discovery
             }
             
             PeerClient?.Dispose();
-            _peerRepository?.Dispose();
+            PeerRepository?.Dispose();
             _evictionSubscription?.Dispose();
         }
     }

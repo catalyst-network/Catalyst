@@ -269,7 +269,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
                 int peerDiscoveryBurnIn = 10,
                 IHastingsOriginator state = default,
                 IHastingCareTaker hastingCareTaker = default,
-                IHastingsOriginator stateCandidate = null) 
+                IHastingsOriginator stateCandidate = null)
                 : base(logger ?? Substitute.For<ILogger>(),
                     peerRepository ?? Substitute.For<IRepository<Peer>>(),
                     dns ?? DiscoveryHelper.MockDnsClient(peerSettings),
@@ -290,6 +290,10 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
             public new void WalkBack() { base.WalkBack(); }
 
             public new bool HasValidCandidate() { return base.HasValidCandidate(); }
+
+            public int GetBurnInValue() { return PeerDiscoveryBurnIn; }
+            
+            public void TestStorePeer(INeighbour neighbour) { StorePeer(neighbour); }
 
             public bool GetIsDiscovering() { return IsDiscovering; }
         }

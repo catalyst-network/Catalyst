@@ -68,6 +68,78 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
         }
 
         [Fact]
+        public void Can_Store_Peer_After_Burn_In()
+        {
+            var discoveryTestBuilder = DiscoveryTestBuilder.GetDiscoveryTestBuilder()
+               .WithLogger()
+               .WithPeerRepository()
+               .WithDns()
+               .WithPeerSettings()
+               .WithPeerClient()
+               .WithCancellationProvider()
+               .WithPeerClientObservables()
+               .WithStateCandidate()
+               .WithCurrentState()
+               .WithAutoStart()
+               .WithBurn(10);
+
+            using (var walker = discoveryTestBuilder.Build())
+            {
+                walker.GetBurnInValue()
+                   .Should()
+                   .Be(10);
+                
+                Enumerable.Range(0, 5).ToList().ForEach(i =>
+                {
+                    walker.TestStorePeer(Substitute.For<INeighbour>());
+                
+                    walker.PeerRepository
+                       .Received(0)
+                       .Add(Arg.Any<Peer>()); 
+                });
+                
+                Enumerable.Range(0, 5).ToList().ForEach(i =>
+                {
+                    walker.TestStorePeer(Substitute.For<INeighbour>());
+                });
+                
+                walker.PeerRepository
+                   .Received(0)
+                   .Add(Arg.Any<Peer>()); 
+            }
+        }
+
+        [Fact]
+        public void Cant_Store_Peer_During_Burn_In()
+        {
+            var discoveryTestBuilder = DiscoveryTestBuilder.GetDiscoveryTestBuilder()
+               .WithLogger()
+               .WithPeerRepository()
+               .WithDns()
+               .WithPeerSettings()
+               .WithPeerClient()
+               .WithCancellationProvider()
+               .WithPeerClientObservables()
+               .WithStateCandidate()
+               .WithCurrentState()
+               .WithAutoStart()
+               .WithBurn(10);
+
+            using (var walker = discoveryTestBuilder.Build())
+            {
+                walker.GetBurnInValue()
+                   .Should()
+                   .Be(10);
+                
+                walker.TestStorePeer(Substitute.For<INeighbour>());
+                
+                walker.PeerRepository
+                   .Received(0)
+                   .Add(Arg.Any<Peer>());
+            }
+        }
+
+        [Fact]
         public void Can_WalkForward_With_Valid_Candidate()
         {
             var knownStepPid =
@@ -199,9 +271,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
         public void Can_Throw_Exception_In_WalkBack_When_Last_State_Has_No_Neighbours_To_Continue_Walk_Forward()
         {
             var ctp = new CancellationTokenProvider();
-            var discoveryTestBuilder = DiscoveryTestBuilder.GetDiscoveryTestBuilder();
-            
-            discoveryTestBuilder
+            var discoveryTestBuilder = DiscoveryTestBuilder.GetDiscoveryTestBuilder()
                .WithLogger()
                .WithPeerRepository()
                .WithDns(default, false)
