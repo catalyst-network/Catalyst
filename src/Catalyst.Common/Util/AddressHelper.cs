@@ -44,7 +44,7 @@ namespace Catalyst.Common.Util
         /// <returns></returns>
         public string GenerateAddress(IPublicKey publicKey)
         {
-            var addressHashBytes = _hashAlgorithm.ComputeHash(publicKey.Bytes.RawBytes);
+            var addressHashBytes = _hashAlgorithm.ComputeHash(publicKey.Bytes);
             var lastTwentyBytes = ByteUtil.Slice(addressHashBytes, 12, 32);
             return lastTwentyBytes.ToHex();
         }
