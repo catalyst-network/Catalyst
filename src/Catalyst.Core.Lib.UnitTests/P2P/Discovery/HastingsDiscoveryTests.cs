@@ -84,7 +84,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
                .WithStateCandidate(default,
                     true,
                     default,
-                    DiscoveryHelper.MockNeighbours(Constants.AngryPirate))
+                    DiscoveryHelper.MockNeighbours(Constants.AngryPirate, NeighbourState.Responsive))
                .WithCurrentState()
                .WithAutoStart()
                .WithBurn();
@@ -377,9 +377,9 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
                .WithPeerClient()
                .WithCancellationProvider()
                .WithPeerClientObservables(default, typeof(GetNeighbourResponseObserver))
-               .WithAutoStart(false)
-               .WithBurn(0)
-               .WithStateCandidate(default, false, _ownNode, default, pnr);
+               .WithAutoStart()
+               .WithBurn()
+               .WithStateCandidate(default, false, _ownNode, DiscoveryHelper.MockNeighbours(), pnr);
             
             using (var walker = discoveryTestBuilder.Build())
             {
@@ -392,17 +392,19 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
                     
                     var peerNeighborsResponse = new PeerNeighborsResponse();
                    
-                    // peerNeighborsResponse.Peers.Add(expectedResponses.ToList().Select(kv => kv.Key.PeerId));
+                    peerNeighborsResponse.Peers.Add(walker.StateCandidate.Neighbours
+                       .ToList()
+                       .Select(i => i.PeerIdentifier.PeerId)
+                    );
                    
                     subbedDto.Message.Returns(peerNeighborsResponse);
                     
-                    discoveryTestBuilder.PeerClientObservables.ToList()
-                       .ForEach(o =>
-                        {
-                            o.ResponseMessageSubject.OnNext(subbedDto);
-                        });
+                    discoveryTestBuilder.PeerClientObservables.ToList().ForEach(o =>
+                    {
+                        o.ResponseMessageSubject.OnNext(subbedDto);
+                    });
 
-                    await walker.DiscoveryStream.WaitForItemsOnDelayedStreamOnTaskPoolSchedulerAsync(1);
+                    await walker.DiscoveryStream.WaitForItemsOnDelayedStreamOnTaskPoolSchedulerAsync();
                     
                     walker.DtoFactory
                        .Received(Constants.AngryPirate)
@@ -416,7 +418,11 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
                        .Received(Constants.AngryPirate)
                        .SendMessage(Arg.Any<IMessageDto<PingRequest>>());
                     
-                    walker.StateCandidate.Neighbours.Count.Should().Be(Constants.AngryPirate);
+                    walker.StateCandidate.Neighbours
+                       .Where(n => n.State == NeighbourState.Contacted)
+                       .ToList().Count
+                       .Should()
+                       .Be(Constants.AngryPirate);
                 }
             }
         }

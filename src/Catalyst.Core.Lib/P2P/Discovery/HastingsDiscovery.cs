@@ -29,6 +29,7 @@ using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Common.Config;
+using Catalyst.Common.Enumerator;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
@@ -43,6 +44,7 @@ using Catalyst.Common.P2P;
 using Catalyst.Common.P2P.Discovery;
 using Catalyst.Protocol;
 using Catalyst.Protocol.IPPN;
+using Microsoft.Azure.Documents.Client;
 using Serilog;
 using SharpRepository.Repository;
 
@@ -230,15 +232,20 @@ namespace Catalyst.Core.Lib.P2P.Discovery
         {
             lock (StateCandidate)
             {
-                if (StateCandidate.Neighbours.Count < 1 || StateCandidate.Neighbours.Count == 5)
+                if (StateCandidate.Neighbours.ToList()
+                   .Select(n => n.State)
+                   .Count(i => i == Enumeration.Parse<NeighbourState>("NotContacted")).Equals(Constants.AngryPirate))
                 {
-                    // if we haven't contacted neighbours don't try compare.
                     return false;
                 }
 
                 // see if sum of unreachable peers and reachable peers equals the total contacted number.
-                return StateCandidate.Neighbours.Count
-                   .Equals(StateCandidate.Neighbours.Where(i => i.State != null).ToList().Count + StateCandidate.Neighbours.Count);
+                return StateCandidate.Neighbours
+                   .ToList()
+                   .Select(n => n.State)
+                   .Count(s => s == Enumeration.Parse<NeighbourState>("UnResponsive") ||
+                        s == Enumeration.Parse<NeighbourState>("Responsive"))
+                   .Equals(Constants.AngryPirate);
             }
         }
 
@@ -369,6 +376,12 @@ namespace Catalyst.Core.Lib.P2P.Discovery
                 }
 
                 var peerNeighbours = (PeerNeighborsResponse) obj.Message;
+
+                if (peerNeighbours.Peers.Count.Equals(0))
+                {
+                    // we should think of deducting reputation in this situation.
+                    return;
+                }
             
                 // state candidate provided us a list of neighbours, so now check they are reachable.
                 peerNeighbours.Peers.ToList().ForEach(p =>
@@ -382,7 +395,7 @@ namespace Catalyst.Core.Lib.P2P.Discovery
                     
                     // our total expected responses should be same as number of pings sent out,
                     // potential neighbours, can either send response, or we will see them evicted from cache.
-                    StateCandidate.Neighbours.Add(new Neighbour(new PeerIdentifier(p), NeighbourState.Contacted, pingRequestDto.CorrelationId));
+                    StateCandidate.Neighbours.First(n => n.PeerIdentifier.Equals(new PeerIdentifier(p))).State = NeighbourState.Contacted;
                 });
             }
         }

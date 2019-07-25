@@ -25,6 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
@@ -116,7 +117,7 @@ namespace Catalyst.TestUtils
             );
         }
         
-        public static IList<INeighbour> MockNeighbours(int amount = 5)
+        public static IList<INeighbour> MockNeighbours(int amount = 5, NeighbourState state = null)
         {
             var neighbourMock = new List<INeighbour>();
             
@@ -126,7 +127,8 @@ namespace Catalyst.TestUtils
                     new Neighbour(
                         PeerIdentifierHelper.GetPeerIdentifier(
                             StringHelper.RandomString()
-                        )
+                        ),
+                        state ?? NeighbourState.NotContacted
                     )
                 );
             });
