@@ -21,8 +21,11 @@
 
 #endregion
 
+using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Util;
+using Catalyst.Cryptography.BulletProofs.Wrapper;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
+using Multiformats.Hash;
 using Multiformats.Hash.Algorithms;
 using Nethereum.Hex.HexConvertors.Extensions;
 
@@ -38,14 +41,14 @@ namespace Catalyst.Common.Util
         }
 
         /// <summary>
-        ///     returns a 20byte
+        ///     Generates an address from the 20 last bytes of the hashed public key.
         /// </summary>
-        /// <param name="publicKey"></param>
-        /// <returns></returns>
+        /// <param name="publicKey">The public key from which the address is derived.</param>
+        /// <returns>The Hex encoded bytes corresponding to the address.</returns>
         public string GenerateAddress(IPublicKey publicKey)
         {
-            var addressHashBytes = _hashAlgorithm.ComputeHash(publicKey.Bytes.RawBytes);
-            var lastTwentyBytes = ByteUtil.Slice(addressHashBytes, 12, 32);
+            var addressHashBytes = publicKey.Bytes.RawBytes.ComputeRawHash(_hashAlgorithm);
+            var lastTwentyBytes = addressHashBytes.Slice(FFI.GetPublicKeyLength() - 20, FFI.GetPublicKeyLength());
             return lastTwentyBytes.ToHex();
         }
     }
