@@ -23,7 +23,7 @@
 
 using Catalyst.Cli.CommandTypes;
 using Catalyst.Cli.Options;
-using Catalyst.Common.Interfaces.Cli.Commands;
+using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Util;
 using Catalyst.Protocol;
 using Catalyst.Protocol.Rpc.Node;

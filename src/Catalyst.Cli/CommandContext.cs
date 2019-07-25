@@ -25,7 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Catalyst.Common.Interfaces.Cli;
-using Catalyst.Common.Interfaces.Cli.Commands;
+using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Transport;
@@ -38,7 +38,7 @@ using Dawn;
 using Microsoft.Extensions.Configuration;
 using Serilog;
 
-namespace Catalyst.Cli.Commands
+namespace Catalyst.Cli
 {
     public class CommandContext : ICommandContext
     {
@@ -74,7 +74,7 @@ namespace Catalyst.Cli.Commands
             IDtoFactory dtoFactory,
             INodeRpcClientFactory nodeRpcClientFactory,
             ICertificateStore certificateStore,
-            SocketClientRegistry<INodeRpcClient> socketClientRegistry)
+            ISocketClientRegistry<INodeRpcClient> socketClientRegistry)
         {
             _logger = logger;
             _rpcNodeConfigs = NodeRpcConfig.BuildRpcNodeSettingList(config);

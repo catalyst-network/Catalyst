@@ -29,34 +29,27 @@ using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Xunit;
 
-namespace Catalyst.Cli.UnitTests.Response
+namespace Catalyst.Cli.UnitTests.Commands.Response
 {
-    public sealed class AddFileToDfsResponseTests
+    public sealed class SignMessageResponseTests
     {
         private readonly TestScheduler _testScheduler = new TestScheduler();
 
         [Fact]
-        public void AddFileToDfsResponse_Can_Get_Output()
+        public void SignMessageResponse_Can_Get_Output()
         {
-            var addFileToDfsResponse = new AddFileToDfsResponse();
-            var commandContext = TestResponseHelpers.GenerateResponse(_testScheduler, addFileToDfsResponse);
-            var addFileToDfsCommand = new AddFileCommand(null, commandContext);
+            //Arrange
+            var signMessageResponse = new SignMessageResponse();
+            var commandContext = TestResponseHelpers.GenerateCliResponseCommandContext(_testScheduler);
+            var messageSignCommand = new MessageSignCommand(commandContext);
+
+            //Act
+            TestResponseHelpers.GenerateResponse(commandContext, signMessageResponse);
 
             _testScheduler.Start();
 
-            commandContext.UserOutput.Received(1).WriteLine(addFileToDfsResponse.ToJsonString());
-        }
-
-        [Fact]
-        public void AddFileToDfsResponse_No_Response_Codes()
-        {
-            var addFileToDfsResponse = new AddFileToDfsResponse();
-            var commandContext = TestResponseHelpers.GenerateResponse(_testScheduler, addFileToDfsResponse);
-            var addFileToDfsCommand = new AddFileCommand(null, commandContext);
-
-            _testScheduler.Start();
-
-            commandContext.UserOutput.Received(1).WriteLine(AddFileCommand.ErrorNoResponseCodes);
+            //Assert
+            commandContext.UserOutput.Received(1).WriteLine(signMessageResponse.ToJsonString());
         }
     }
 }

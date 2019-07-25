@@ -24,7 +24,7 @@
 using System;
 using Catalyst.Cli.CommandTypes;
 using Catalyst.Cli.Options;
-using Catalyst.Common.Interfaces.Cli.Commands;
+using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Network;
 using Dawn;
 using Serilog;
@@ -34,6 +34,7 @@ namespace Catalyst.Cli.Commands
     public class ConnectCommand : BaseCommand<ConnectOptions>
     {
         private readonly ILogger _logger;
+        public static string InvalidSocketChannel = "Inactive socket channel.";
 
         protected override bool ExecuteCommand(ConnectOptions option)
         {
@@ -48,7 +49,7 @@ namespace Catalyst.Cli.Commands
 
                 if (!CommandContext.IsSocketChannelActive(nodeRpcClient))
                 {
-                    CommandContext.UserOutput.WriteLine("Inactive socket channel.");
+                    CommandContext.UserOutput.WriteLine(InvalidSocketChannel);
                     return false;
                 }
 

@@ -24,16 +24,14 @@
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.IO.Observers;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.IO.Observers;
 using Catalyst.Protocol.Rpc.Node;
-using Dawn;
 using DotNetty.Transport.Channels;
-using ILogger = Serilog.ILogger;
+using Serilog;
 
 namespace Catalyst.Node.Rpc.Client.IO.Observers
 {
     /// <summary>
-    /// Handles the Peer reputation response
+    ///     Handles the Peer reputation response
     /// </summary>
     /// <seealso cref="IRpcResponseObserver" />
     public sealed class PeerBlackListingResponseObserver
@@ -45,11 +43,6 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
         protected override void HandleResponse(SetPeerBlackListResponse setPeerBlackListResponse,
             IChannelHandlerContext channelHandlerContext,
             IPeerIdentifier senderPeerIdentifier,
-            ICorrelationId correlationId)
-        {
-            Guard.Argument(setPeerBlackListResponse, nameof(setPeerBlackListResponse)).NotNull();
-            Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
-            Guard.Argument(senderPeerIdentifier, nameof(senderPeerIdentifier)).NotNull();
-        }
+            ICorrelationId correlationId) { }
     }
 }

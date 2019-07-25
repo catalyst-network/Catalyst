@@ -29,22 +29,27 @@ using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Xunit;
 
-namespace Catalyst.Cli.UnitTests.Response
+namespace Catalyst.Cli.UnitTests.Commands.Response
 {
-    public sealed class SignMessageResponseTests
+    public sealed class VerifyMessageResponseTests
     {
         private readonly TestScheduler _testScheduler = new TestScheduler();
 
         [Fact]
-        public void SignMessageResponse_Can_Get_Output()
+        public void VerifyMessageResponse_Can_Get_Output()
         {
-            var signMessageResponse = new SignMessageResponse();
-            var commandContext = TestResponseHelpers.GenerateResponse(_testScheduler, signMessageResponse);
-            var messageSignCommand = new MessageSignCommand(commandContext);
+            //Arrange
+            var verifyMessageResponse = new VerifyMessageResponse();
+            var commandContext = TestResponseHelpers.GenerateCliResponseCommandContext(_testScheduler);
+            var messageVerifyCommand = new MessageVerifyCommand(commandContext);
+
+            //Act
+            TestResponseHelpers.GenerateResponse(commandContext, verifyMessageResponse);
 
             _testScheduler.Start();
 
-            commandContext.UserOutput.Received(1).WriteLine(signMessageResponse.ToJsonString());
+            //Assert
+            commandContext.UserOutput.Received(1).WriteLine(verifyMessageResponse.ToJsonString());
         }
     }
 }

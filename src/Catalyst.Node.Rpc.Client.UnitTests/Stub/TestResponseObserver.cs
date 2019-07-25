@@ -21,30 +21,23 @@
 
 #endregion
 
-using Catalyst.Cli.Commands;
-using Catalyst.Cli.UnitTests.Helpers;
-using Catalyst.Protocol;
+using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
+using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Node.Rpc.Client.IO;
 using Catalyst.Protocol.Rpc.Node;
-using Microsoft.Reactive.Testing;
-using NSubstitute;
-using Xunit;
+using DotNetty.Transport.Channels;
+using Serilog;
 
-namespace Catalyst.Cli.UnitTests.Response
+namespace Catalyst.Node.Rpc.Client.UnitTests.Stub
 {
-    public sealed class GetMempoolResponseTests
+    public sealed class TestResponseObserver : RpcResponseObserver<VersionResponse>
     {
-        private readonly TestScheduler _testScheduler = new TestScheduler();
+        public TestResponseObserver(ILogger logger)
+            : base(logger) { }
 
-        [Fact]
-        public void GetMempoolResponse_Can_Get_Output()
-        {
-            var getMempoolResponse = new GetMempoolResponse();
-            var commandContext = TestResponseHelpers.GenerateResponse(_testScheduler, getMempoolResponse);
-            var getMempoolCommand = new GetMempoolCommand(commandContext);
-
-            _testScheduler.Start();
-
-            commandContext.UserOutput.Received(1).WriteLine(getMempoolResponse.ToJsonString());
-        }
+        protected override void HandleResponse(VersionResponse testResponse,
+            IChannelHandlerContext channelHandlerContext,
+            IPeerIdentifier senderPeerIdentifier,
+            ICorrelationId correlationId) { }
     }
 }

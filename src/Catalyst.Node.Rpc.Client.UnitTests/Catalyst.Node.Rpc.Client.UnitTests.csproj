@@ -17,8 +17,5 @@
     <ItemGroup>
       <PackageReference Include="Nethereum.RLP" Version="3.3.0" />
     </ItemGroup>
-    <ItemGroup>
-      <Folder Include="IO\Observers\" />
-    </ItemGroup>
     <Import Project="../Common.UnitTests.props" />
 </Project>

@@ -275,10 +275,10 @@
             ]
         },
         {
-            "type": "Catalyst.Cli.Commands.CommandContext",
+            "type": "Catalyst.Cli.CommandContext",
             "services": [
                 {
-                    "type": "Catalyst.Common.Interfaces.Cli.Commands.ICommandContext, Catalyst.Common"
+                    "type": "Catalyst.Common.Interfaces.Cli.ICommandContext, Catalyst.Common"
                 }
             ],
             "instanceScope": "singleinstance"

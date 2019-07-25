@@ -24,7 +24,7 @@
 using System.Reactive.Concurrency;
 using Catalyst.Cli.CommandTypes;
 using Catalyst.Cli.Options;
-using Catalyst.Common.Interfaces.Cli.Commands;
+using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Protocol.Rpc.Node;
 
 namespace Catalyst.Cli.Commands

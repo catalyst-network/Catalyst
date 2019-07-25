@@ -21,8 +21,10 @@
 
 #endregion
 
+using System;
+using System.Reactive.Linq;
 using Catalyst.Common.Extensions;
-using Catalyst.Common.Interfaces.Cli.Commands;
+using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.Cli.CommandTypes;
 using Catalyst.Common.Interfaces.Cli.Options;
 using Catalyst.Common.Interfaces.P2P;
@@ -31,32 +33,44 @@ using Catalyst.Common.IO.Events;
 using Catalyst.Common.P2P;
 using Catalyst.Protocol;
 using Google.Protobuf;
-using System;
-using System.Reactive.Linq;
 
 namespace Catalyst.Cli.CommandTypes
 {
-    public abstract class BaseMessageCommand<TRequest, TResponse, TOption> : BaseCommand<TOption>, IMessageCommand<TRequest>, IDisposable
+    public abstract class BaseMessageCommand<TRequest, TResponse, TOption> : BaseCommand<TOption>,
+        IMessageCommand<TRequest>, IDisposable
         where TRequest : IMessage<TRequest>
         where TResponse : IMessage<TResponse>
         where TOption : IOptionsBase
     {
-        private bool _disposed;
         private readonly IDisposable _socketClientRegistryEventStreamObserver;
+        private bool _disposed;
 
         protected BaseMessageCommand(ICommandContext commandContext) : base(commandContext)
         {
-            _socketClientRegistryEventStreamObserver = CommandContext.SocketClientRegistry.EventStream.OfType<SocketClientRegistryClientAdded>().Subscribe(SocketClientRegistryClientAddedOnNext);
+            _socketClientRegistryEventStreamObserver = CommandContext.SocketClientRegistry.EventStream
+               .OfType<SocketClientRegistryClientAdded>().Subscribe(SocketClientRegistryClientAddedOnNext);
         }
+
+        //This property breaks single responsibility principle
+        protected IPeerIdentifier RecipientPeerIdentifier =>
+            PeerIdentifier.BuildPeerIdFromConfig(CommandContext.GetNodeConfig(Options.Node),
+                CommandContext.PeerIdClientId);
+
+        protected IPeerIdentifier SenderPeerIdentifier => CommandContext.PeerIdentifier;
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        public INodeRpcClient Target => CommandContext.GetConnectedNode(Options.Node);
 
         public virtual void SendMessage(TOption options)
         {
             var message = GetMessage(options);
 
-            if (message == null)
-            {
-                return;
-            }
+            if (message == null) return;
 
             var messageDto = CommandContext.DtoFactory.GetDto(
                 message.ToProtocolMessage(SenderPeerIdentifier.PeerId),
@@ -67,20 +81,12 @@ namespace Catalyst.Cli.CommandTypes
 
         protected abstract TRequest GetMessage(TOption option);
 
-        protected IPeerIdentifier RecipientPeerIdentifier => PeerIdentifier.BuildPeerIdFromConfig(CommandContext.GetNodeConfig(Options.Node), CommandContext.PeerIdClientId);
-
-        protected IPeerIdentifier SenderPeerIdentifier => CommandContext.PeerIdentifier;
-
-        public INodeRpcClient Target => CommandContext.GetConnectedNode(Options.Node);
 
         protected override bool ExecuteCommandInner(IOptionsBase optionsBase)
         {
             var sendMessage = base.ExecuteCommandInner(optionsBase);
 
-            if (sendMessage)
-            {
-                SendMessage((TOption) optionsBase);
-            }
+            if (sendMessage) SendMessage((TOption) optionsBase);
 
             return sendMessage;
         }
@@ -90,10 +96,7 @@ namespace Catalyst.Cli.CommandTypes
             CommandContext.UserOutput.WriteLine(response.ToJsonString());
         }
 
-        private void CommandResponseOnNext(TResponse value)
-        {
-            ResponseMessage(value);
-        }
+        private void CommandResponseOnNext(TResponse value) { ResponseMessage(value); }
 
         private void SocketClientRegistryClientAddedOnNext(SocketClientRegistryClientAdded value)
         {
@@ -105,18 +108,9 @@ namespace Catalyst.Cli.CommandTypes
         {
             if (_disposed) return;
 
-            if (disposing)
-            {
-                _socketClientRegistryEventStreamObserver?.Dispose();
-            }
+            if (disposing) _socketClientRegistryEventStreamObserver?.Dispose();
 
             _disposed = true;
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
         }
     }
 }

@@ -29,22 +29,27 @@ using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Xunit;
 
-namespace Catalyst.Cli.UnitTests.Response
+namespace Catalyst.Cli.UnitTests.Commands.Response
 {
-    public sealed class GetVersionResponseTests
+    public sealed class RemovePeerResponseTests
     {
         private readonly TestScheduler _testScheduler = new TestScheduler();
 
         [Fact]
-        public void GetVersionResponse_Can_Get_Output()
+        public void RemovePeerResponse_Can_Get_Output()
         {
-            var versionResponse = new VersionResponse {Version = "1.2.3.4"};
-            var commandContext = TestResponseHelpers.GenerateResponse(_testScheduler, versionResponse);
-            var getVersionCommand = new GetVersionCommand(commandContext);
+            //Arrange
+            var removePeerResponse = new RemovePeerResponse();
+            var commandContext = TestResponseHelpers.GenerateCliResponseCommandContext(_testScheduler);
+            var removePeerCommand = new PeerRemoveCommand(commandContext);
+
+            //Act
+            TestResponseHelpers.GenerateResponse(commandContext, removePeerResponse);
 
             _testScheduler.Start();
 
-            commandContext.UserOutput.Received(1).WriteLine(versionResponse.ToJsonString());
+            //Assert
+            commandContext.UserOutput.Received(1).WriteLine(removePeerResponse.ToJsonString());
         }
     }
 }

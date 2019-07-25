@@ -23,7 +23,7 @@
 
 using Catalyst.Cli.Options;
 using Catalyst.Common.FileTransfer;
-using Catalyst.Common.Interfaces.Cli.Commands;
+using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.FileTransfer;
 using Catalyst.Protocol.Rpc.Node;
 using System.IO;
@@ -63,7 +63,7 @@ namespace Catalyst.Cli.Commands
 
             using (var fileStream = File.Open(options.File, FileMode.Open))
             {
-                request.FileSize = (ulong)fileStream.Length;
+                request.FileSize = (ulong) fileStream.Length;
             }
 
             var protocolMessage = request.ToProtocolMessage(SenderPeerIdentifier.PeerId);

@@ -29,22 +29,27 @@ using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Xunit;
 
-namespace Catalyst.Cli.UnitTests.Response
+namespace Catalyst.Cli.UnitTests.Commands.Response
 {
-    public sealed class GetInfoResponseTests
+    public sealed class GetPeerBlackListingResponseTests
     {
         private readonly TestScheduler _testScheduler = new TestScheduler();
 
         [Fact]
-        public void GetInfoResponse_Can_Get_Output()
+        public void GetPeerBlackListingResponse_Can_Get_Output()
         {
-            var getInfoResponse = new GetInfoResponse {Query = "Test"};
-            var commandContext = TestResponseHelpers.GenerateResponse(_testScheduler, getInfoResponse);
-            var getInfoCommand = new GetInfoCommand(commandContext);
+            //Arrange
+            var setPeerBlackListRequest = new SetPeerBlackListResponse();
+            var commandContext = TestResponseHelpers.GenerateCliResponseCommandContext(_testScheduler);
+            var getPeerBlackListingCommand = new PeerBlackListingCommand(commandContext);
+
+            //Act
+            TestResponseHelpers.GenerateResponse(commandContext, setPeerBlackListRequest);
 
             _testScheduler.Start();
 
-            commandContext.UserOutput.Received(1).WriteLine(getInfoResponse.ToJsonString());
+            //Assert
+            commandContext.UserOutput.Received(1).WriteLine(setPeerBlackListRequest.ToJsonString());
         }
     }
 }

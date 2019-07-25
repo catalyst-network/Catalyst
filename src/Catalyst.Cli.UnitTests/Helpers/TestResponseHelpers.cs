@@ -1,36 +1,70 @@
-using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Net;
 using System.Reactive.Concurrency;
-using System.Text;
-using Catalyst.Cli.Commands;
+using System.Security.Cryptography.X509Certificates;
 using Catalyst.Common.Interfaces.Cli;
-using Catalyst.Common.Interfaces.Cli.Commands;
-using Catalyst.Common.Interfaces.Cryptography;
-using Catalyst.Common.Interfaces.IO.Messaging.Dto;
-using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.Interfaces.Cli.CommandTypes;
 using Catalyst.Common.Interfaces.Rpc;
+using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.IO.Transport;
+using Catalyst.TestUtils;
 using Google.Protobuf;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Reactive.Testing;
 using NSubstitute;
-using Serilog;
 
 namespace Catalyst.Cli.UnitTests.Helpers
 {
     public static class TestResponseHelpers
     {
-        private static ICommandContext GenerateCommandContext(IScheduler testScheduler)
+        public static ICommandContext GenerateCliRequestCommandContext()
         {
-            var config = Substitute.For<IConfigurationRoot>();
-            var logger = Substitute.For<ILogger>();
+            var commandContext = Substitute.For<ICommandContext>();
+
             var userOutput = Substitute.For<IUserOutput>();
-            var peerIdClientId = Substitute.For<IPeerIdClientId>();
-            var dtoFactory = Substitute.For<IDtoFactory>();
+
+            var nodeRpcClient = Substitute.For<INodeRpcClient>();
+            nodeRpcClient.Channel.Active.Returns(true);
+            nodeRpcClient.Channel.RemoteAddress.Returns(new IPEndPoint(IPAddress.Loopback, IPEndPoint.MaxPort));
+
             var nodeRpcFactory = Substitute.For<INodeRpcClientFactory>();
-            var certificateStore = Substitute.For<ICertificateStore>();
+            nodeRpcFactory.GetClient(Arg.Any<X509Certificate2>(), Arg.Any<IRpcNodeConfig>()).Returns(nodeRpcClient);
+            commandContext.NodeRpcClientFactory.Returns(nodeRpcFactory);
+
+            commandContext.DtoFactory.Returns(new DtoFactory());
+
+            commandContext.IsSocketChannelActive(Arg.Any<INodeRpcClient>()).Returns(true);
+            commandContext.GetConnectedNode(Arg.Any<string>()).Returns(nodeRpcClient);
+            commandContext.UserOutput.Returns(userOutput);
+
+            commandContext.PeerIdentifier.Returns(
+                PeerIdentifierHelper.GetPeerIdentifier("", "", 0, IPAddress.Any, 1337));
+
+            var rpcNodeConfig = Substitute.For<IRpcNodeConfig>();
+            rpcNodeConfig.NodeId = "test";
+            rpcNodeConfig.HostAddress = IPAddress.Any;
+            rpcNodeConfig.PublicKey = "public key";
+            rpcNodeConfig.Port = 9000;
+            commandContext.GetNodeConfig(Arg.Any<string>()).Returns(rpcNodeConfig);
+            return commandContext;
+        }
+
+        public static bool GenerateRequest(ICommandContext commandContext,
+            ICommand command,
+            params string[] commandArgs)
+        {
+            var commands = new List<ICommand> {command};
+            var console = new CatalystCli(commandContext.UserOutput, commands);
+            commandArgs = commandArgs.ToList().Prepend(command.CommandName).ToArray();
+            return console.ParseCommand(commandArgs);
+        }
+
+        public static ICommandContext GenerateCliResponseCommandContext(IScheduler testScheduler)
+        {
+            var userOutput = Substitute.For<IUserOutput>();
             var clientSocketRegistry = new SocketClientRegistry<INodeRpcClient>(testScheduler);
-            var commandContext = new CommandContext(config, logger, userOutput, peerIdClientId, dtoFactory, nodeRpcFactory, certificateStore, clientSocketRegistry);
+            var commandContext = Substitute.For<ICommandContext>();
+            commandContext.SocketClientRegistry.Returns(clientSocketRegistry);
+            commandContext.UserOutput.Returns(userOutput);
             return commandContext;
         }
 
@@ -42,12 +76,10 @@ namespace Catalyst.Cli.UnitTests.Helpers
             return socket;
         }
 
-        public static ICommandContext GenerateResponse<T>(TestScheduler testScheduler, T response) where T : IMessage<T>
+        public static void GenerateResponse<T>(ICommandContext commandContext, T response) where T : IMessage<T>
         {
-            var commandContext = GenerateCommandContext(testScheduler);
             var nodeRpcClient = GenerateRpcResponseOnSubscription(response);
             commandContext.SocketClientRegistry.AddClientToRegistry(1111111111, nodeRpcClient);
-            return commandContext;
         }
     }
 }

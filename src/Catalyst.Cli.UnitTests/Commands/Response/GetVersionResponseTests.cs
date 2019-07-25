@@ -24,33 +24,32 @@
 using Catalyst.Cli.Commands;
 using Catalyst.Cli.UnitTests.Helpers;
 using Catalyst.Protocol;
-using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Microsoft.Reactive.Testing;
 using NSubstitute;
-using System;
-using Google.Protobuf;
 using Xunit;
 
-namespace Catalyst.Cli.UnitTests.Response
+namespace Catalyst.Cli.UnitTests.Commands.Response
 {
-    public sealed class GetPeerInfoResponseTests
+    public sealed class GetVersionResponseTests
     {
         private readonly TestScheduler _testScheduler = new TestScheduler();
 
         [Fact]
-        public void GetPeerInfoResponse_Can_Get_Output()
+        public void GetVersionResponse_Can_Get_Output()
         {
-            var peer = new PeerInfo();
-            var getPeerInfoResponse = new GetPeerInfoResponse();
-            getPeerInfoResponse.PeerInfo.Add(peer);
+            //Arrange
+            var versionResponse = new VersionResponse {Version = "1.2.3.4"};
+            var commandContext = TestResponseHelpers.GenerateCliResponseCommandContext(_testScheduler);
+            var getVersionCommand = new GetVersionCommand(commandContext);
 
-            var commandContext = TestResponseHelpers.GenerateResponse(_testScheduler, getPeerInfoResponse);
-            var getPeerInfoCommand = new GetPeerInfoCommand(commandContext);
+            //Act
+            TestResponseHelpers.GenerateResponse(commandContext, versionResponse);
 
             _testScheduler.Start();
 
-            commandContext.UserOutput.Received(1).WriteLine(getPeerInfoResponse.ToJsonString());
+            //Assert
+            commandContext.UserOutput.Received(1).WriteLine(versionResponse.ToJsonString());
         }
     }
 }

@@ -23,7 +23,6 @@
 
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.IO.Observers;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using DotNetty.Transport.Channels;
@@ -59,8 +58,6 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
             IPeerIdentifier senderPeerIdentifier,
             ICorrelationId correlationId)
         {
-            Guard.Argument(versionResponse, nameof(versionResponse)).NotNull("The message cannot be null");
-
             Guard.Argument(versionResponse, nameof(versionResponse)).NotNull("The VersionResponse cannot be null")
                .Require(d => d.Version != null,
                     d => $"{nameof(versionResponse)} must have a valid Version.");

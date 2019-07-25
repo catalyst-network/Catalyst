@@ -27,7 +27,7 @@ using Catalyst.Common.Interfaces.IO.Transport;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Rpc;
 
-namespace Catalyst.Common.Interfaces.Cli.Commands
+namespace Catalyst.Common.Interfaces.Cli
 {
     public interface ICommandContext
     {

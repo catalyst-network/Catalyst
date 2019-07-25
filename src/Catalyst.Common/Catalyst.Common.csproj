@@ -63,6 +63,7 @@
         </None>
     </ItemGroup>
     <ItemGroup>
+        <Folder Include="Interfaces\Cli\Commands\" />
         <Folder Include="Interfaces\P2P\Messaging\Dto" />
     </ItemGroup>
     <ItemGroup>

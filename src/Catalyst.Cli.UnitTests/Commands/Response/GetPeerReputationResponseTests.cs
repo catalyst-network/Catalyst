@@ -29,22 +29,30 @@ using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Xunit;
 
-namespace Catalyst.Cli.UnitTests.Response
+namespace Catalyst.Cli.UnitTests.Commands.Response
 {
-    public sealed class GetPeerBlackListingResponseTests
+    /// <summary>
+    ///     Tests the CLI for peer reputation response
+    /// </summary>
+    public sealed class GetPeerReputationResponseTests
     {
         private readonly TestScheduler _testScheduler = new TestScheduler();
 
         [Fact]
-        public void GetPeerBlackListingResponse_Can_Get_Output()
+        public void GetPeerReputationResponse_Can_Get_Output()
         {
-            var setPeerBlackListRequest = new SetPeerBlackListResponse();
-            var commandContext = TestResponseHelpers.GenerateResponse(_testScheduler, setPeerBlackListRequest);
-            var getPeerBlackListingCommand = new PeerBlackListingCommand(commandContext);
+            //Arrange
+            var getPeerReputationResponse = new GetPeerReputationResponse {Reputation = 100};
+            var commandContext = TestResponseHelpers.GenerateCliResponseCommandContext(_testScheduler);
+            var getPeerReputationCommand = new PeerReputationCommand(commandContext);
+
+            //Act
+            TestResponseHelpers.GenerateResponse(commandContext, getPeerReputationResponse);
 
             _testScheduler.Start();
 
-            commandContext.UserOutput.Received(1).WriteLine(setPeerBlackListRequest.ToJsonString());
+            //Assert
+            commandContext.UserOutput.Received(1).WriteLine(getPeerReputationResponse.ToJsonString());
         }
     }
 }
