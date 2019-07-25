@@ -24,10 +24,8 @@
 using System;
 using System.IO;
 using FluentAssertions;
-using NSubstitute;
 using Xunit;
 using Catalyst.TestUtils;
-using Serilog;
 using Catalyst.Common.Config;
 using CommonFileSystem = Catalyst.Common.FileSystem.FileSystem;
 
@@ -41,16 +39,11 @@ namespace Catalyst.Common.IntegrationTests.IO
     [Trait(Traits.TestType, Traits.IntegrationTest)]
     public sealed class FileSystemTest 
     {
-        private CommonFileSystem _fileSystem;
-        private readonly ILogger _logger;
-
-        private string _sourceFolder => Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\" + Constants.CatalystDataDir;
+        private readonly CommonFileSystem _fileSystem = new CommonFileSystem();
+        private string _sourceFolder => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "\\" , Constants.CatalystDataDir);
 
         public FileSystemTest()
         {
-            _logger = Substitute.For<ILogger>();
-            _fileSystem = new CommonFileSystem();
-
             Setup();
         }
 
