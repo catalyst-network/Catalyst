@@ -34,9 +34,9 @@ namespace Catalyst.Core.Lib.P2P.Discovery
     public sealed class HastingMemento : IHastingMemento
     {
         public IPeerIdentifier Peer { get; }
-        public IDictionary<IPeerIdentifier, KeyValuePair<ICorrelationId, bool>> Neighbours { get; }
+        public IList<INeighbour> Neighbours { get; }
 
-        public HastingMemento(IPeerIdentifier peer, IDictionary<IPeerIdentifier, KeyValuePair<ICorrelationId, bool>> neighbours)
+        public HastingMemento(IPeerIdentifier peer, IList<INeighbour> neighbours)
         {
             Peer = peer;
             Neighbours = neighbours;

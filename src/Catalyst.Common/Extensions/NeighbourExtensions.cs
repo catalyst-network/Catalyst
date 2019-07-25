@@ -22,26 +22,20 @@
 #endregion
 
 using System.Collections.Generic;
-using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
+using System.Linq;
+using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.Interfaces.P2P.Discovery;
+using Catalyst.Common.P2P.Discovery;
 
-namespace Catalyst.Common.Interfaces.P2P.Discovery
+namespace Catalyst.Common.Extensions
 {
-    public interface IHastingsOriginator
+    public static class NeighbourExtensions
     {
-        IPeerIdentifier Peer { get; set; }
-        KeyValuePair<ICorrelationId, IPeerIdentifier> ExpectedPnr { get; set; }
-        IList<INeighbour> Neighbours { get; set; }
-        
-        /// <summary>
-        ///     creates a memento from current state
-        /// </summary>
-        /// <returns></returns>
-        IHastingMemento CreateMemento();
-        
-        /// <summary>
-        ///     Restores the state from a memento
-        /// </summary>
-        /// <param name="hastingMemento"></param>
-        void RestoreMemento(IHastingMemento hastingMemento);
+        public static IEnumerable<INeighbour> ToNeighbours(this IEnumerable<IPeerIdentifier> peerIdentifier)
+        {
+            var neighbours = new List<INeighbour>();
+            peerIdentifier.ToList().ForEach(p => neighbours.Add(new Neighbour(p)));
+            return neighbours;
+        }
     }
 }

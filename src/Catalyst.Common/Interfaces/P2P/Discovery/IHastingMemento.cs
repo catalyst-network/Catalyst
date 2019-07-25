@@ -29,6 +29,6 @@ namespace Catalyst.Common.Interfaces.P2P.Discovery
     public interface IHastingMemento
     {
         IPeerIdentifier Peer { get; }
-        IDictionary<IPeerIdentifier, KeyValuePair<ICorrelationId, bool>> Neighbours { get; }
+        IList<INeighbour> Neighbours { get; }
     }
 }

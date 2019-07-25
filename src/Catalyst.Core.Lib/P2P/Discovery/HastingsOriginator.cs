@@ -33,8 +33,8 @@ namespace Catalyst.Core.Lib.P2P.Discovery
     public sealed class HastingsOriginator : IHastingsOriginator
     {
         private IPeerIdentifier _peer;
+        public IList<INeighbour> Neighbours { get; set; }
         public KeyValuePair<ICorrelationId, IPeerIdentifier> ExpectedPnr { get; set; }
-        public IDictionary<IPeerIdentifier, KeyValuePair<ICorrelationId, bool>> Neighbours { get; set; }
 
         /// <summary>
         ///     if setting a new peer, clean counters
@@ -57,7 +57,7 @@ namespace Catalyst.Core.Lib.P2P.Discovery
         public HastingsOriginator()
         {
             ExpectedPnr = new KeyValuePair<ICorrelationId, IPeerIdentifier>();
-            Neighbours = new Dictionary<IPeerIdentifier, KeyValuePair<ICorrelationId, bool>>();
+            Neighbours = new List<INeighbour>();
         }
 
         /// <inheritdoc />
@@ -69,6 +69,8 @@ namespace Catalyst.Core.Lib.P2P.Discovery
         /// <inheritdoc />
         public void RestoreMemento(IHastingMemento hastingMemento)
         {
+            Peer = hastingMemento.Peer;
+            
             hastingMemento.Neighbours
                .ToList()
                .ForEach(i =>

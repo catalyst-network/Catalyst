@@ -28,6 +28,7 @@ using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
@@ -39,6 +40,7 @@ using Catalyst.Common.Interfaces.P2P.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.P2P.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.Util;
 using Catalyst.Common.P2P;
+using Catalyst.Common.P2P.Discovery;
 using Catalyst.Protocol;
 using Catalyst.Protocol.IPPN;
 using Serilog;
@@ -97,8 +99,7 @@ namespace Catalyst.Core.Lib.P2P.Discovery
             StateCandidate = stateCandidate ?? new HastingsOriginator
             {
                 Peer = _ownNode,
-                Neighbours = 
-                    new Dictionary<IPeerIdentifier, KeyValuePair<ICorrelationId, bool>>(dns.GetSeedNodesFromDns(peerSettings.SeedServers))
+                Neighbours = dns.GetSeedNodesFromDns(peerSettings.SeedServers).ToNeighbours().ToList()
             };
 
             // create an empty stream for discovery messages
@@ -184,7 +185,7 @@ namespace Catalyst.Core.Lib.P2P.Discovery
 
                     lock (StateCandidate)
                     {
-                        if (StateCandidate.CurrentPeersNeighbours.Count > 0)
+                        if (StateCandidate.Neighbours.Count > 0)
                         {
                             // have a walkable next step, so continue walk.
                             WalkForward();
@@ -203,7 +204,7 @@ namespace Catalyst.Core.Lib.P2P.Discovery
                     _logger.Error(e, e.Message);
                     lock (StateCandidate)
                     {
-                        if (StateCandidate.CurrentPeersNeighbours.Count > 0)
+                        if (StateCandidate.Neighbours.Count > 0)
                         {
                             // if we discovered at least some peers we can continue walk.
                             WalkForward();
@@ -229,7 +230,7 @@ namespace Catalyst.Core.Lib.P2P.Discovery
         {
             lock (StateCandidate)
             {
-                if (StateCandidate.CurrentPeersNeighbours.Count < 1 || StateCandidate.Neighbours.Count == 5)
+                if (StateCandidate.Neighbours.Count < 1 || StateCandidate.Neighbours.Count == 5)
                 {
                     // if we haven't contacted neighbours don't try compare.
                     return false;
@@ -237,7 +238,7 @@ namespace Catalyst.Core.Lib.P2P.Discovery
 
                 // see if sum of unreachable peers and reachable peers equals the total contacted number.
                 return StateCandidate.Neighbours.Count
-                   .Equals(StateCandidate.Neighbours.Where(i => i.Value != null).ToList().Count + StateCandidate.CurrentPeersNeighbours.Count);
+                   .Equals(StateCandidate.Neighbours.Where(i => i.State != null).ToList().Count + StateCandidate.Neighbours.Count);
             }
         }
 
@@ -251,7 +252,7 @@ namespace Catalyst.Core.Lib.P2P.Discovery
             lock (StateCandidate)
             {
                 // store discovered peers.
-                StateCandidate.CurrentPeersNeighbours
+                StateCandidate.Neighbours
                    .ToList()
                    .ForEach(StorePeer);
 
@@ -265,7 +266,7 @@ namespace Catalyst.Core.Lib.P2P.Discovery
                 State.RestoreMemento(newState);
 
                 // continue walk by proposing next degree.
-                StateCandidate.Peer = State.CurrentPeersNeighbours.RandomElement();
+                StateCandidate.Peer = State.Neighbours.RandomElement().PeerIdentifier;
             
                 var peerNeighbourRequestDto = DtoFactory.GetDto(new PeerNeighborsRequest(),
                     _ownNode,
@@ -291,7 +292,7 @@ namespace Catalyst.Core.Lib.P2P.Discovery
              
                 // continues walk by proposing a new degree.
                 StateCandidate.Peer = lastState.Neighbours.Any()
-                    ? lastState.Neighbours.RandomElement()
+                    ? lastState.Neighbours.RandomElement().PeerIdentifier
                     : throw new InvalidOperationException();
 
                 // transitions to last state.
@@ -338,14 +339,20 @@ namespace Catalyst.Core.Lib.P2P.Discovery
             
             lock (StateCandidate)
             {
-                if (!StateCandidate.Neighbours.Contains(new KeyValuePair<IPeerIdentifier, ICorrelationId>(obj.Sender, obj.CorrelationId)))
+                if (!StateCandidate.Neighbours
+                   .Select(n => n.DiscoveryPingCorrelationId)
+                   .ToList()
+                   .Contains(obj.CorrelationId))
                 {
                     // a pingResponse that isn't known to discovery.
                     _logger.Debug("UnKnownMessage");
                     return;
                 }
 
-                StateCandidate.CurrentPeersNeighbours.Add(obj.Sender);
+                StateCandidate.Neighbours
+                   .Add(
+                        new Neighbour(obj.Sender)
+                    );
             }
         }
 
@@ -371,15 +378,11 @@ namespace Catalyst.Core.Lib.P2P.Discovery
                         new PeerIdentifier(p)
                     );
 
-                    var (key, value) = new KeyValuePair<ICorrelationId, IPeerIdentifier>(
-                        pingRequestDto.CorrelationId,
-                        pingRequestDto.RecipientPeerIdentifier);
-                    
                     PeerClient.SendMessage(pingRequestDto);
                     
                     // our total expected responses should be same as number of pings sent out,
                     // potential neighbours, can either send response, or we will see them evicted from cache.
-                    StateCandidate.Neighbours[value] = key;
+                    StateCandidate.Neighbours.Add(new Neighbour(new PeerIdentifier(p), NeighbourState.Contacted, pingRequestDto.CorrelationId));
                 });
             }
         }
@@ -412,7 +415,7 @@ namespace Catalyst.Core.Lib.P2P.Discovery
         /// </summary>
         /// <param name="peerIdentifier"></param>
         /// <returns></returns>
-        private void StorePeer(IPeerIdentifier peerIdentifier)
+        private void StorePeer(INeighbour neighbour)
         {
             if (_discoveredPeerInCurrentWalk < _peerDiscoveryBurnIn)
             {
@@ -424,7 +427,7 @@ namespace Catalyst.Core.Lib.P2P.Discovery
             {
                 Reputation = 0,
                 LastSeen = DateTime.UtcNow,
-                PeerIdentifier = peerIdentifier
+                PeerIdentifier = neighbour.PeerIdentifier
             });
                 
             Interlocked.Add(ref _discoveredPeerInCurrentWalk, 1);

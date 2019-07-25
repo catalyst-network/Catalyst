@@ -188,15 +188,14 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
         public DiscoveryTestBuilder WithCurrentState(IHastingsOriginator currentState = default,
             bool mock = false,
             IPeerIdentifier peer = default,
-            IList<IPeerIdentifier> currentPeersNeighbours = default,
-            KeyValuePair<ICorrelationId, IPeerIdentifier> expectedPnr = default,
-            IDictionary<IPeerIdentifier, ICorrelationId> contactedNeighbour = default)
+            IList<INeighbour> neighbours = default,
+            KeyValuePair<ICorrelationId, IPeerIdentifier> expectedPnr = default)
         {
             _currentState = 
                 currentState == default && mock == false 
-                    ? _currentState = DiscoveryHelper.SubOriginator(peer, currentPeersNeighbours, expectedPnr, contactedNeighbour) 
+                    ? _currentState = DiscoveryHelper.SubOriginator(peer, neighbours, expectedPnr) 
                     : currentState == default 
-                        ? _currentState = DiscoveryHelper.MockOriginator(peer, currentPeersNeighbours, expectedPnr, contactedNeighbour) 
+                        ? _currentState = DiscoveryHelper.MockOriginator(peer, neighbours, expectedPnr) 
                         : _currentState = currentState;
             
             return this;
@@ -205,15 +204,14 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
         public DiscoveryTestBuilder WithStateCandidate(IHastingsOriginator stateCandidate = default,
             bool mock = false,
             IPeerIdentifier peer = default,
-            IList<IPeerIdentifier> currentPeersNeighbours = default,
-            KeyValuePair<ICorrelationId, IPeerIdentifier> expectedPnr = default,
-            IDictionary<IPeerIdentifier, ICorrelationId> unresponsivePeers = default)
+            IList<INeighbour> neighbours = default,
+            KeyValuePair<ICorrelationId, IPeerIdentifier> expectedPnr = default)
         {
             _stateCandidate = 
                 stateCandidate == default && mock == false 
-                    ? _currentState = DiscoveryHelper.SubOriginator(peer, currentPeersNeighbours, expectedPnr, unresponsivePeers) 
+                    ? _currentState = DiscoveryHelper.SubOriginator(peer, neighbours, expectedPnr) 
                     : stateCandidate == default 
-                        ? _currentState = DiscoveryHelper.MockOriginator(peer, currentPeersNeighbours, expectedPnr, unresponsivePeers) 
+                        ? _currentState = DiscoveryHelper.MockOriginator(peer, neighbours, expectedPnr) 
                         : _currentState = stateCandidate;
 
             return this;

@@ -38,6 +38,7 @@ using Catalyst.Common.Interfaces.Util;
 using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.P2P;
+using Catalyst.Common.P2P.Discovery;
 using Catalyst.Common.Util;
 using Catalyst.Core.Lib.P2P.Discovery;
 using Catalyst.Core.Lib.P2P.IO.Messaging.Correlation;
@@ -58,32 +59,28 @@ namespace Catalyst.TestUtils
     public static class DiscoveryHelper
     {
         public static IHastingsOriginator MockOriginator(IPeerIdentifier peer = default,
-            IList<IPeerIdentifier> currentPeersNeighbours = default,
-            KeyValuePair<ICorrelationId, IPeerIdentifier> expectedPnr = default,
-            IDictionary<IPeerIdentifier, ICorrelationId> unResponsivePeers = null)
+            IList<INeighbour> neighbours = default,
+            KeyValuePair<ICorrelationId, IPeerIdentifier> expectedPnr = default)
         {
             return new HastingsOriginator
             {
                 Peer =
                     peer ?? PeerIdentifierHelper.GetPeerIdentifier(ByteUtil.GenerateRandomByteArray(32).ToString()),
-                Neighbours = currentPeersNeighbours ?? MockNeighbours(),
-                ExpectedPnr = expectedPnr,
-                UnResponsivePeers = unResponsivePeers ?? MockContactedNeighboursValuePairs()
+                Neighbours = neighbours ?? MockNeighbours(),
+                ExpectedPnr = expectedPnr
             }; 
         }
         
         public static IHastingsOriginator SubOriginator(IPeerIdentifier peer = default,
-            IList<IPeerIdentifier> currentPeersNeighbours = default,
-            KeyValuePair<ICorrelationId, IPeerIdentifier> expectedPnr = default,
-            IDictionary<IPeerIdentifier, ICorrelationId> unresponsivePeers = default)
+            IList<INeighbour> neighbours = default,
+            KeyValuePair<ICorrelationId, IPeerIdentifier> expectedPnr = default)
         {
             var subbedOriginator = Substitute.For<IHastingsOriginator>();
             
             subbedOriginator.Neighbours.Count.Returns(5);
             subbedOriginator.Peer.Returns(peer ?? Substitute.For<IPeerIdentifier>());
-            subbedOriginator.CurrentPeersNeighbours.Returns(currentPeersNeighbours ?? Substitute.For<IList<IPeerIdentifier>>());
+            subbedOriginator.Neighbours.Returns(neighbours ?? Substitute.For<IList<INeighbour>>());
             subbedOriginator.ExpectedPnr.Returns(expectedPnr);
-            subbedOriginator.Neighbours.Returns(unresponsivePeers ?? Substitute.For<IDictionary<IPeerIdentifier, ICorrelationId>>());
 
             return subbedOriginator;
         }
@@ -91,7 +88,10 @@ namespace Catalyst.TestUtils
         public static IHastingMemento MockSeedState(IPeerIdentifier ownNode, IPeerSettings peerSettings)
         {
             return MockMemento(ownNode, MockDnsClient(peerSettings)
-               .GetSeedNodesFromDns(peerSettings.SeedServers).ToList());
+               .GetSeedNodesFromDns(peerSettings.SeedServers)
+               .ToNeighbours()
+               .ToList()
+            );
         }
 
         public static IHastingsOriginator SubSeedOriginator(IPeerIdentifier ownNode, IPeerSettings peerSettings)
@@ -103,23 +103,32 @@ namespace Catalyst.TestUtils
         public static IHastingMemento SubSeedState(IPeerIdentifier ownNode, IPeerSettings peerSettings)
         {
             return SubMemento(ownNode, MockDnsClient(peerSettings)
-               .GetSeedNodesFromDns(peerSettings.SeedServers).ToList());
+               .GetSeedNodesFromDns(peerSettings.SeedServers)
+               .ToNeighbours()
+               .ToList()
+            );
         }
         
         public static KeyValuePair<ICorrelationId, IPeerIdentifier> MockPnr(IPeerIdentifier peerIdentifier = default, ICorrelationId correlationId = default)
         {
-            return new KeyValuePair<ICorrelationId, IPeerIdentifier>(correlationId ?? CorrelationId.GenerateCorrelationId(), peerIdentifier ?? PeerIdentifierHelper.GetPeerIdentifier("sender"));
+            return new KeyValuePair<ICorrelationId, IPeerIdentifier>(correlationId ?? CorrelationId.GenerateCorrelationId(),
+                peerIdentifier ?? PeerIdentifierHelper.GetPeerIdentifier("sender")
+            );
         }
         
-        public static IDictionary<IPeerIdentifier, KeyValuePair<ICorrelationId, bool>> MockNeighbours(int amount = 5)
+        public static IList<INeighbour> MockNeighbours(int amount = 5)
         {
-            var neighbourMock = new Dictionary<IPeerIdentifier, KeyValuePair<ICorrelationId, bool>>();
-
-            var counter = Enumerable.Range(0, amount).ToList();
+            var neighbourMock = new List<INeighbour>();
             
-            counter.ForEach(i =>
+            Enumerable.Range(0, amount).ToList().ForEach(i =>
             {
-                neighbourMock.Add(PeerIdentifierHelper.GetPeerIdentifier(StringHelper.RandomString()), default);
+                neighbourMock.Add(
+                    new Neighbour(
+                        PeerIdentifierHelper.GetPeerIdentifier(
+                            StringHelper.RandomString()
+                        )
+                    )
+                );
             });
             
             return neighbourMock;
@@ -127,10 +136,12 @@ namespace Catalyst.TestUtils
 
         public static IDictionary<IPeerIdentifier, ICorrelationId> SubContactedNeighbours(int amount = 5)
         {
-            return Enumerable.Range(0, amount).Select(i => Substitute.For<IPeerIdentifier>()).ToDictionary(v => v, k => Substitute.For<ICorrelationId>());
+            return Enumerable.Range(0, amount)
+               .Select(i => Substitute.For<IPeerIdentifier>())
+               .ToDictionary(v => v, k => Substitute.For<ICorrelationId>());
         }
         
-        public static IHastingMemento SubMemento(IPeerIdentifier identifier = default, IDictionary<IPeerIdentifier, KeyValuePair<ICorrelationId, bool>> neighbours = default)
+        public static IHastingMemento SubMemento(IPeerIdentifier identifier = default, IList<INeighbour> neighbours = default)
         {
             var subbedMemento = Substitute.For<IHastingMemento>();
             subbedMemento.Peer.Returns(identifier ?? Substitute.For<IPeerIdentifier>());
@@ -139,7 +150,7 @@ namespace Catalyst.TestUtils
             return subbedMemento;
         }
 
-        public static IHastingMemento MockMemento(IPeerIdentifier identifier = default, IDictionary<IPeerIdentifier, KeyValuePair<ICorrelationId, bool>> neighbours = default)
+        public static IHastingMemento MockMemento(IPeerIdentifier identifier = default, IList<INeighbour> neighbours = default)
         {
             var peerParam = identifier ?? PeerIdentifierHelper.GetPeerIdentifier(StringHelper.RandomString());
             var neighbourParam = neighbours ?? MockNeighbours();
@@ -150,7 +161,15 @@ namespace Catalyst.TestUtils
         {
             while (true)
             {
-                state.Push(new HastingMemento(state.Last().Neighbours.RandomElement(), MockNeighbours()));
+                state.Push(
+                    new HastingMemento(
+                        state.Last()
+                           .Neighbours
+                           .RandomElement()
+                           .PeerIdentifier, 
+                        MockNeighbours()
+                    )
+                );
 
                 if (state.Count != depth)
                 {

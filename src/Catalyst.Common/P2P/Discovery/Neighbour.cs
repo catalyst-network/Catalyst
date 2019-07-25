@@ -21,27 +21,28 @@
 
 #endregion
 
-using System.Collections.Generic;
+using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
+using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.Interfaces.P2P.Discovery;
 
-namespace Catalyst.Common.Interfaces.P2P.Discovery
+namespace Catalyst.Common.P2P.Discovery
 {
-    public interface IHastingsOriginator
+    public sealed class Neighbour : INeighbour
     {
-        IPeerIdentifier Peer { get; set; }
-        KeyValuePair<ICorrelationId, IPeerIdentifier> ExpectedPnr { get; set; }
-        IList<INeighbour> Neighbours { get; set; }
-        
-        /// <summary>
-        ///     creates a memento from current state
-        /// </summary>
-        /// <returns></returns>
-        IHastingMemento CreateMemento();
-        
-        /// <summary>
-        ///     Restores the state from a memento
-        /// </summary>
-        /// <param name="hastingMemento"></param>
-        void RestoreMemento(IHastingMemento hastingMemento);
+        public NeighbourState State { get; set; }
+        public IPeerIdentifier PeerIdentifier { get; }
+        public ICorrelationId DiscoveryPingCorrelationId { get; }
+
+        public Neighbour() { }
+
+        public Neighbour(IPeerIdentifier peerIdentifier,
+            NeighbourState state = default,
+            ICorrelationId discoveryPingCorrelationId = null)
+        {
+            PeerIdentifier = peerIdentifier;
+            State = state ?? NeighbourState.NotContacted;
+            DiscoveryPingCorrelationId = discoveryPingCorrelationId;
+        }
     }
 }
