@@ -33,7 +33,7 @@ using Catalyst.Common.IO.Handlers;
 using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.Util;
-using Catalyst.Cryptography.BulletProofs.Wrapper.Types;
+using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
 using Catalyst.TestUtils;
@@ -96,12 +96,11 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.IO.Transport.Channels
         {
             var recipient = PeerIdentifierHelper.GetPeerIdentifier("recipient");
             var sender = PeerIdentifierHelper.GetPeerIdentifier("sender");
-            var sigBytes = ByteUtil.GenerateRandomByteArray(Cryptography.BulletProofs.Wrapper.FFI.GetSignatureLength());
-            var pubBytes = ByteUtil.GenerateRandomByteArray(Cryptography.BulletProofs.Wrapper.FFI.GetPublicKeyLength());
-            var sig = new Signature(sigBytes, pubBytes);
+
+            var signature = Substitute.For<ISignature>();
             _peerIdValidator.ValidatePeerIdFormat(Arg.Any<PeerId>()).Returns(true);
 
-            _serverKeySigner.Sign(Arg.Any<byte[]>()).ReturnsForAnyArgs(sig);
+            _serverKeySigner.Sign(Arg.Any<byte[]>()).ReturnsForAnyArgs(signature);
             
             var correlationId = CorrelationId.GenerateCorrelationId();
 
@@ -123,7 +122,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.IO.Transport.Channels
             _serverKeySigner.ReceivedWithAnyArgs(1).Sign(Arg.Any<byte[]>());
             
             _clientKeySigner.Verify(
-                    Arg.Any<Signature>(),
+                    Arg.Any<ISignature>(),
                     Arg.Any<byte[]>())
                .ReturnsForAnyArgs(true);
             

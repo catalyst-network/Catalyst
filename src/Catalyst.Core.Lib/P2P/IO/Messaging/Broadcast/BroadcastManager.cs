@@ -135,7 +135,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
                 var signature = _signer.Sign(message.ToByteArray());
                 var protocolMessageSigned = new ProtocolMessageSigned
                 {
-                    Signature = signature.SignatureBytes.RawBytes.ToByteString(),
+                    Signature = signature.SignatureBytes.ToByteString(),
                     Message = message
                 };
                 await BroadcastAsync(protocolMessageSigned).ConfigureAwait(false);

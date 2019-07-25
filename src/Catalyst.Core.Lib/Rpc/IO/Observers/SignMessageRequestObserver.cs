@@ -70,7 +70,7 @@ namespace Catalyst.Core.Lib.Rpc.IO.Observers
 
             var signature = _keySigner.Sign(decodedMessage);
 
-            var publicKey = _keySigner.CryptoContext.ImportPublicKey(signature.PublicKeyBytes.RawBytes);
+            var publicKey = _keySigner.CryptoContext.PublicKeyFromBytes(signature.PublicKeyBytes);
 
             Guard.Argument(signature).NotNull("Failed to sign message. The signature cannot be null.");
 
@@ -81,8 +81,8 @@ namespace Catalyst.Core.Lib.Rpc.IO.Observers
             return new SignMessageResponse
             {
                 OriginalMessage = signMessageRequest.Message,
-                PublicKey = publicKey.Bytes.RawBytes.ToByteString(),
-                Signature = signature.SignatureBytes.RawBytes.ToByteString()
+                PublicKey = publicKey.Bytes.ToByteString(),
+                Signature = signature.SignatureBytes.ToByteString()
             };
         }
     }
