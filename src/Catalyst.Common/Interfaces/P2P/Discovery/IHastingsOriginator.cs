@@ -29,9 +29,8 @@ namespace Catalyst.Common.Interfaces.P2P.Discovery
     public interface IHastingsOriginator
     {
         IPeerIdentifier Peer { get; set; }
-        IList<IPeerIdentifier> CurrentPeersNeighbours { get; }
         KeyValuePair<ICorrelationId, IPeerIdentifier> ExpectedPnr { get; set; }
-        IDictionary<IPeerIdentifier, ICorrelationId> UnResponsivePeers { get; }
+        IDictionary<IPeerIdentifier, KeyValuePair<ICorrelationId, bool>> Neighbours { get; set; }
         
         /// <summary>
         ///     creates a memento from current state

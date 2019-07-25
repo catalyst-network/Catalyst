@@ -274,11 +274,11 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
                        .Should()
                        .NotContain(expectedResponses);
                     
-                    walker.StateCandidate.UnResponsivePeers
+                    walker.StateCandidate.Neighbours
                        .Should()
                        .Contain(expectedResponses);
 
-                    walker.StateCandidate.UnResponsivePeers.Count.Should().Be(Constants.AngryPirate);
+                    walker.StateCandidate.Neighbours.Count.Should().Be(Constants.AngryPirate);
                 }
             }
         }
@@ -413,7 +413,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
                        .Received(Constants.AngryPirate)
                        .SendMessage(Arg.Any<IMessageDto<PingRequest>>());
                     
-                    walker.StateCandidate.UnResponsivePeers.Count.Should().Be(Constants.AngryPirate);
+                    walker.StateCandidate.Neighbours.Count.Should().Be(Constants.AngryPirate);
                 }
             }
         }
@@ -439,7 +439,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
             
             initialStateCandidate.CreateMemento().Returns(initialMemento);
             
-            initialStateCandidate.UnResponsivePeers.Contains(
+            initialStateCandidate.Neighbours.Contains(
                 Arg.Any<KeyValuePair<IPeerIdentifier, ICorrelationId>>()).Returns(true);
 
             initialStateCandidate.ExpectedPnr.ReturnsForAnyArgs(pnr);
@@ -460,7 +460,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
             
             using (var walker = discoveryTestBuilder.Build())
             {
-                walker.StateCandidate.ReceivedWithAnyArgs(1).UnResponsivePeers.Count();
+                walker.StateCandidate.ReceivedWithAnyArgs(1).Neighbours.Count();
             }
         }
     }

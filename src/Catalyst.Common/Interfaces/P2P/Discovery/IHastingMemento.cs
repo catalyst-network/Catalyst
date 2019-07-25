@@ -22,12 +22,13 @@
 #endregion
 
 using System.Collections.Generic;
+using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 
 namespace Catalyst.Common.Interfaces.P2P.Discovery
 {
     public interface IHastingMemento
     {
         IPeerIdentifier Peer { get; }
-        IList<IPeerIdentifier> Neighbours { get; }
+        IDictionary<IPeerIdentifier, KeyValuePair<ICorrelationId, bool>> Neighbours { get; }
     }
 }

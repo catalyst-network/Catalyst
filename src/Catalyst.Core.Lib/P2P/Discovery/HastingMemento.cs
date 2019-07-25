@@ -22,6 +22,7 @@
 #endregion
 
 using System.Collections.Generic;
+using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.Discovery;
 
@@ -33,12 +34,12 @@ namespace Catalyst.Core.Lib.P2P.Discovery
     public sealed class HastingMemento : IHastingMemento
     {
         public IPeerIdentifier Peer { get; }
-        public IList<IPeerIdentifier> Neighbours { get; }
+        public IDictionary<IPeerIdentifier, KeyValuePair<ICorrelationId, bool>> Neighbours { get; }
 
-        public HastingMemento(IPeerIdentifier peer, IEnumerable<IPeerIdentifier> neighbours)
+        public HastingMemento(IPeerIdentifier peer, IDictionary<IPeerIdentifier, KeyValuePair<ICorrelationId, bool>> neighbours)
         {
             Peer = peer;
-            Neighbours = new List<IPeerIdentifier>(neighbours);
+            Neighbours = neighbours;
         }
     }
 }

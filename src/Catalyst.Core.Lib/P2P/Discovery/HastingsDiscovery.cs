@@ -51,7 +51,7 @@ namespace Catalyst.Core.Lib.P2P.Discovery
     {
         private static readonly SemaphoreSlim SemaphoreSlim = new SemaphoreSlim(1, 1);
 
-        protected bool _isDiscovering;
+        protected bool IsDiscovering;
         private readonly ILogger _logger;
         public IHastingsOriginator State { get; }
         private int _discoveredPeerInCurrentWalk;
@@ -97,8 +97,8 @@ namespace Catalyst.Core.Lib.P2P.Discovery
             StateCandidate = stateCandidate ?? new HastingsOriginator
             {
                 Peer = _ownNode,
-                CurrentPeersNeighbours =
-                    new List<IPeerIdentifier>(dns.GetSeedNodesFromDns(peerSettings.SeedServers))
+                Neighbours = 
+                    new Dictionary<IPeerIdentifier, KeyValuePair<ICorrelationId, bool>>(dns.GetSeedNodesFromDns(peerSettings.SeedServers))
             };
 
             // create an empty stream for discovery messages
@@ -165,7 +165,7 @@ namespace Catalyst.Core.Lib.P2P.Discovery
         /// <returns></returns>
         public async Task DiscoveryAsync(int timeout = -1)
         {
-            if (_isDiscovering)
+            if (IsDiscovering)
             {
                 return;
             }
@@ -175,7 +175,7 @@ namespace Catalyst.Core.Lib.P2P.Discovery
                 // only let one thread in at a time.
                 await SemaphoreSlim.WaitAsync().ConfigureAwait(false);
 
-                _isDiscovering = true;
+                IsDiscovering = true;
 
                 try
                 {
@@ -229,15 +229,15 @@ namespace Catalyst.Core.Lib.P2P.Discovery
         {
             lock (StateCandidate)
             {
-                if (StateCandidate.CurrentPeersNeighbours.Count < 1 || StateCandidate.UnResponsivePeers.Count == 5)
+                if (StateCandidate.CurrentPeersNeighbours.Count < 1 || StateCandidate.Neighbours.Count == 5)
                 {
                     // if we haven't contacted neighbours don't try compare.
                     return false;
                 }
 
                 // see if sum of unreachable peers and reachable peers equals the total contacted number.
-                return StateCandidate.UnResponsivePeers.Count
-                   .Equals(StateCandidate.UnResponsivePeers.Where(i => i.Value != null).ToList().Count + StateCandidate.CurrentPeersNeighbours.Count);
+                return StateCandidate.Neighbours.Count
+                   .Equals(StateCandidate.Neighbours.Where(i => i.Value != null).ToList().Count + StateCandidate.CurrentPeersNeighbours.Count);
             }
         }
 
@@ -338,7 +338,7 @@ namespace Catalyst.Core.Lib.P2P.Discovery
             
             lock (StateCandidate)
             {
-                if (!StateCandidate.UnResponsivePeers.Contains(new KeyValuePair<IPeerIdentifier, ICorrelationId>(obj.Sender, obj.CorrelationId)))
+                if (!StateCandidate.Neighbours.Contains(new KeyValuePair<IPeerIdentifier, ICorrelationId>(obj.Sender, obj.CorrelationId)))
                 {
                     // a pingResponse that isn't known to discovery.
                     _logger.Debug("UnKnownMessage");
@@ -379,7 +379,7 @@ namespace Catalyst.Core.Lib.P2P.Discovery
                     
                     // our total expected responses should be same as number of pings sent out,
                     // potential neighbours, can either send response, or we will see them evicted from cache.
-                    StateCandidate.UnResponsivePeers[value] = key;
+                    StateCandidate.Neighbours[value] = key;
                 });
             }
         }

@@ -33,9 +33,8 @@ namespace Catalyst.Core.Lib.P2P.Discovery
     public sealed class HastingsOriginator : IHastingsOriginator
     {
         private IPeerIdentifier _peer;
-        public IList<IPeerIdentifier> CurrentPeersNeighbours { get; set; }
         public KeyValuePair<ICorrelationId, IPeerIdentifier> ExpectedPnr { get; set; }
-        public IDictionary<IPeerIdentifier, ICorrelationId> UnResponsivePeers { get; set; }
+        public IDictionary<IPeerIdentifier, KeyValuePair<ICorrelationId, bool>> Neighbours { get; set; }
 
         /// <summary>
         ///     if setting a new peer, clean counters
@@ -47,42 +46,35 @@ namespace Catalyst.Core.Lib.P2P.Discovery
             {
                 if (_peer != null)
                 {
-                    CleanUp();
+                    Neighbours.Clear();
+                    ExpectedPnr = new KeyValuePair<ICorrelationId, IPeerIdentifier>();
                 }
                 
                 _peer = value;
             }
         }
-        
-        public HastingsOriginator() { CleanUp(); }
+
+        public HastingsOriginator()
+        {
+            ExpectedPnr = new KeyValuePair<ICorrelationId, IPeerIdentifier>();
+            Neighbours = new Dictionary<IPeerIdentifier, KeyValuePair<ICorrelationId, bool>>();
+        }
 
         /// <inheritdoc />
         public IHastingMemento CreateMemento()
         {
-            return new HastingMemento(Peer, CurrentPeersNeighbours);
+            return new HastingMemento(Peer, Neighbours);
         }
         
         /// <inheritdoc />
         public void RestoreMemento(IHastingMemento hastingMemento)
         {
-            Peer = hastingMemento.Peer;
-            
             hastingMemento.Neighbours
                .ToList()
                .ForEach(i =>
                 {
-                    UnResponsivePeers.TryAdd(i, CorrelationId.GenerateEmptyCorrelationId());
+                    Neighbours.Add(i);
                 });
-        }
-
-        /// <summary>
-        ///     sets originator to default value
-        /// </summary>
-        private void CleanUp()
-        {
-            CurrentPeersNeighbours = new List<IPeerIdentifier>();
-            ExpectedPnr = new KeyValuePair<ICorrelationId, IPeerIdentifier>();
-            UnResponsivePeers = new Dictionary<IPeerIdentifier, ICorrelationId>();
         }
     }
 }

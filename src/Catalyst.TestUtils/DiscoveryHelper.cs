@@ -66,7 +66,7 @@ namespace Catalyst.TestUtils
             {
                 Peer =
                     peer ?? PeerIdentifierHelper.GetPeerIdentifier(ByteUtil.GenerateRandomByteArray(32).ToString()),
-                CurrentPeersNeighbours = currentPeersNeighbours ?? MockNeighbours(),
+                Neighbours = currentPeersNeighbours ?? MockNeighbours(),
                 ExpectedPnr = expectedPnr,
                 UnResponsivePeers = unResponsivePeers ?? MockContactedNeighboursValuePairs()
             }; 
@@ -79,11 +79,11 @@ namespace Catalyst.TestUtils
         {
             var subbedOriginator = Substitute.For<IHastingsOriginator>();
             
-            subbedOriginator.UnResponsivePeers.Count.Returns(5);
+            subbedOriginator.Neighbours.Count.Returns(5);
             subbedOriginator.Peer.Returns(peer ?? Substitute.For<IPeerIdentifier>());
             subbedOriginator.CurrentPeersNeighbours.Returns(currentPeersNeighbours ?? Substitute.For<IList<IPeerIdentifier>>());
             subbedOriginator.ExpectedPnr.Returns(expectedPnr);
-            subbedOriginator.UnResponsivePeers.Returns(unresponsivePeers ?? Substitute.For<IDictionary<IPeerIdentifier, ICorrelationId>>());
+            subbedOriginator.Neighbours.Returns(unresponsivePeers ?? Substitute.For<IDictionary<IPeerIdentifier, ICorrelationId>>());
 
             return subbedOriginator;
         }
@@ -111,67 +111,35 @@ namespace Catalyst.TestUtils
             return new KeyValuePair<ICorrelationId, IPeerIdentifier>(correlationId ?? CorrelationId.GenerateCorrelationId(), peerIdentifier ?? PeerIdentifierHelper.GetPeerIdentifier("sender"));
         }
         
-        public static IList<IPeerIdentifier> SubNeighbours(int amount = 5)
+        public static IDictionary<IPeerIdentifier, KeyValuePair<ICorrelationId, bool>> MockNeighbours(int amount = 5)
         {
-            return Enumerable.Range(0, amount).Select(i => Substitute.For<IPeerIdentifier>()).ToList();
-        }
-        
-        public static IList<IPeerIdentifier> MockNeighbours(int amount = 5)
-        {
-            return Enumerable.Range(0, amount).Select(i =>
-                PeerIdentifierHelper.GetPeerIdentifier(StringHelper.RandomString())).ToList();
-        }
+            var neighbourMock = new Dictionary<IPeerIdentifier, KeyValuePair<ICorrelationId, bool>>();
 
-        public static IDictionary<IPeerIdentifier, ICorrelationId> MockUnResponsiveNeighbours(IEnumerable<IPeerIdentifier> neighboursParam = default)
-        {
-            IList<IPeerIdentifier> neighbours = null;
-            if (neighboursParam == null || neighboursParam.Equals(default))
-            {
-                neighbours = MockNeighbours();
-            }
+            var counter = Enumerable.Range(0, amount).ToList();
             
-            var mockUnResponsiveNeighboursList = new Dictionary<IPeerIdentifier, ICorrelationId>();
-            
-            neighbours?.ToList().ForEach(i =>
+            counter.ForEach(i =>
             {
-                mockUnResponsiveNeighboursList.Add(i, null);
+                neighbourMock.Add(PeerIdentifierHelper.GetPeerIdentifier(StringHelper.RandomString()), default);
             });
-
-            return mockUnResponsiveNeighboursList;
+            
+            return neighbourMock;
         }
 
         public static IDictionary<IPeerIdentifier, ICorrelationId> SubContactedNeighbours(int amount = 5)
         {
             return Enumerable.Range(0, amount).Select(i => Substitute.For<IPeerIdentifier>()).ToDictionary(v => v, k => Substitute.For<ICorrelationId>());
         }
-
-        public static IDictionary<IPeerIdentifier, ICorrelationId> MockContactedNeighboursValuePairs(IEnumerable<IPeerIdentifier> neighbours = default)
-        {
-            if (neighbours == null || neighbours.Equals(default))
-            {
-                neighbours = MockNeighbours();
-            }
-            
-            var mockContactedNeighboursList = new Dictionary<IPeerIdentifier, ICorrelationId>();
-            
-            neighbours?.ToList().ForEach(i =>
-            {
-                mockContactedNeighboursList.Add(i, CorrelationId.GenerateCorrelationId());
-            });
-
-            return mockContactedNeighboursList;
-        }
         
-        public static IHastingMemento SubMemento(IPeerIdentifier identifier = default, IEnumerable<IPeerIdentifier> neighbours = default)
+        public static IHastingMemento SubMemento(IPeerIdentifier identifier = default, IDictionary<IPeerIdentifier, KeyValuePair<ICorrelationId, bool>> neighbours = default)
         {
             var subbedMemento = Substitute.For<IHastingMemento>();
             subbedMemento.Peer.Returns(identifier ?? Substitute.For<IPeerIdentifier>());
-            subbedMemento.Neighbours.Returns(neighbours ?? SubNeighbours());
+            subbedMemento.Neighbours.Returns(neighbours ?? MockNeighbours());
 
             return subbedMemento;
         }
 
-        public static IHastingMemento MockMemento(IPeerIdentifier identifier = default, IEnumerable<IPeerIdentifier> neighbours = default)
+        public static IHastingMemento MockMemento(IPeerIdentifier identifier = default, IDictionary<IPeerIdentifier, KeyValuePair<ICorrelationId, bool>> neighbours = default)
         {
             var peerParam = identifier ?? PeerIdentifierHelper.GetPeerIdentifier(StringHelper.RandomString());
             var neighbourParam = neighbours ?? MockNeighbours();
