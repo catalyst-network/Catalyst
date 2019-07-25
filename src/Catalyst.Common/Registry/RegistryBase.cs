@@ -21,6 +21,7 @@
 
 #endregion
 
+using System;
 using System.Collections.Generic;
 using Catalyst.Common.Interfaces.Registry;
 using Catalyst.Common.Enumerator;
@@ -52,6 +53,17 @@ namespace Catalyst.Common.Registry
         public bool RemoveItemFromRegistry(TKey identifier)
         {
             return Registry.Remove(identifier);
+        }
+
+        void IDisposable.Dispose()
+        {
+            foreach (var registryValue in Registry.Values)
+            {
+                if (registryValue is IDisposable disposable)
+                {
+                    disposable.Dispose();
+                }
+            }
         }
     }
 }

@@ -21,27 +21,18 @@
 
 #endregion
 
-using System;
-using System.IO;
-using Serilog;
-
-namespace Catalyst.Common.Util
+namespace Catalyst.Common.Interfaces.Config
 {
-    public static class ConsoleProgram
+    public interface IConfigCopier
     {
-        public static ILogger GetTempLogger(string logFileName, Type declaringType)
-        {
-            var tempLogFile = Path.Combine(Path.GetTempPath(), logFileName);
-            var logger = new LoggerConfiguration()
-               .WriteTo.Console()
-               .WriteTo.File(tempLogFile, rollingInterval: RollingInterval.Day)
-               .CreateLogger().ForContext(declaringType);
-            return logger;
-        }
-
-        public static void LogUnhandledException(ILogger logger, object sender, UnhandledExceptionEventArgs e)
-        {
-            logger.Fatal((Exception) e.ExceptionObject, "Unhandled exception, Terminating: {0}", e.IsTerminating);
-        }
+        /// <summary>
+        ///     Finds out which config files are missing from the catalyst home directory and
+        ///     copies them over if needed.
+        /// </summary>
+        /// <param name="dataDir">Home catalyst directory</param>
+        /// <param name="network">Network on which to run the node</param>
+        /// <param name="sourceFolder"></param>
+        /// <param name="overwrite">Should config existing config files be overwritten by default?</param>
+        void RunConfigStartUp(string dataDir, Common.Config.Network network, string sourceFolder = null, bool overwrite = false);
     }
 }
