@@ -25,7 +25,7 @@ using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.IO.Handlers;
 using Catalyst.Common.Util;
 using Catalyst.Cryptography.BulletProofs.Wrapper;
-using Catalyst.Cryptography.BulletProofs.Wrapper.Types;
+using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
 using Catalyst.Protocol.Common;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
@@ -45,8 +45,8 @@ namespace Catalyst.Common.UnitTests.IO.Handlers
             _fakeContext = Substitute.For<IChannelHandlerContext>();
             _keySigner = Substitute.For<IKeySigner>();
 
-            var signatureBytes = ByteUtil.GenerateRandomByteArray(FFI.GetSignatureLength());
-            var publicKeyBytes = ByteUtil.GenerateRandomByteArray(FFI.GetPublicKeyLength());
+            var signatureBytes = ByteUtil.GenerateRandomByteArray(FFI.SignatureLength);
+            var publicKeyBytes = ByteUtil.GenerateRandomByteArray(FFI.PublicKeyLength);
 
             _protocolMessageSigned = new ProtocolMessageSigned
             {
@@ -61,7 +61,7 @@ namespace Catalyst.Common.UnitTests.IO.Handlers
         [Fact]
         private void CanFireNextPipelineOnValidSignature()
         {
-            _keySigner.Verify(Arg.Any<Signature>(), Arg.Any<byte[]>())
+            _keySigner.Verify(Arg.Any<ISignature>(), Arg.Any<byte[]>())
                .Returns(true);
 
             var signatureHandler = new ProtocolMessageVerifyHandler(_keySigner);
@@ -74,7 +74,7 @@ namespace Catalyst.Common.UnitTests.IO.Handlers
         [Fact]
         private void CanFireNextPipelineOnInvalidSignature()
         {
-            _keySigner.Verify(Arg.Any<Signature>(), Arg.Any<byte[]>())
+            _keySigner.Verify(Arg.Any<ISignature>(), Arg.Any<byte[]>())
                .Returns(false);
 
             var signatureHandler = new ProtocolMessageVerifyHandler(_keySigner);

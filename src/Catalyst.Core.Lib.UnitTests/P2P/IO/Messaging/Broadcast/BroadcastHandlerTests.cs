@@ -35,7 +35,6 @@ using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Common.Util;
 using Catalyst.Cryptography.BulletProofs.Wrapper;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
-using Catalyst.Cryptography.BulletProofs.Wrapper.Types;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Transaction;
 using Catalyst.TestUtils;
@@ -64,8 +63,9 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Messaging.Broadcast
             _fakeBroadcastManager = Substitute.For<IBroadcastManager>();
             _broadcastHandler = new BroadcastHandler(_fakeBroadcastManager);
 
-            var fakeSignature = new Signature(new byte[cryptoContext.SignatureLength], 
-                new byte[cryptoContext.PublicKeyLength]).SignatureBytes.RawBytes.ToByteString();
+            var fakeSignature = Substitute.For<ISignature>();
+            fakeSignature.SignatureBytes.Returns(ByteUtil.GenerateRandomByteArray(FFI.SignatureLength));
+
             var peerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("Test");
             _broadcastMessageSigned =
                 new ProtocolMessageSigned
@@ -73,9 +73,9 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Messaging.Broadcast
                     Message = new ProtocolMessageSigned
                     {
                         Message = new TransactionBroadcast().ToProtocolMessage(peerIdentifier.PeerId, CorrelationId.GenerateCorrelationId()),
-                        Signature = fakeSignature
+                        Signature = fakeSignature.SignatureBytes.ToByteString()
                     }.ToProtocolMessage(peerIdentifier.PeerId, CorrelationId.GenerateCorrelationId()),
-                    Signature = fakeSignature
+                    Signature = fakeSignature.SignatureBytes.ToByteString()
                 };
         }
 
