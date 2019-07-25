@@ -22,7 +22,7 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
+using System.Collections.Concurrent;
 
 namespace Catalyst.Common.Interfaces.P2P.Discovery
 {
@@ -33,7 +33,7 @@ namespace Catalyst.Common.Interfaces.P2P.Discovery
     /// </summary>
     public interface IHastingCareTaker
     {
-        Stack<IHastingMemento> HastingMementoList { get; }
+        ConcurrentStack<IHastingMemento> HastingMementoList { get; }
 
         /// <summary>
         ///     Adds a new state from the walk to the queue

@@ -35,7 +35,25 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
     public sealed class HastingCareTakerTests
     {
         [Fact]
-        public void Care_Taker_Can_Enqueue_State()
+        public void Can_Get_From_HastingMementoList()
+        {
+            var careTaker = new HastingCareTaker();
+            var subbedMemento = Substitute.For<IHastingMemento>();
+            
+            careTaker.Add(subbedMemento);
+
+            careTaker.HastingMementoList.Should().Contain(subbedMemento);
+        }
+        
+        [Fact]
+        public void Can_Get_Nothing_From_Empty_HastingMementoList()
+        {
+            var careTaker = new HastingCareTaker();
+            careTaker.HastingMementoList.Should().BeEmpty();
+        }
+        
+        [Fact]
+        public void Care_Taker_Can_Add_State_To_CareTaker()
         {
             var careTaker = new HastingCareTaker();
 
@@ -48,7 +66,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
         }
         
         [Fact]
-        public void Care_Taker_Can_Dequeue_State()
+        public void Care_Taker_Can_Get_Last_State()
         {
             var careTaker = new HastingCareTaker();
 
@@ -63,7 +81,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
         }
         
         [Fact]
-        public void Care_Taker_Should_Throw_Exception_Dequeuing_Empty_Queue()
+        public void Care_Taker_Should_Throw_Exception_Trying_To_Take_Last_State_From_Empty_CareTaker()
         {
             var careTaker = new HastingCareTaker();
             
@@ -71,7 +89,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
         }
         
         [Fact]
-        public void Can_Never_Take_Last_Memento()
+        public void Can_Never_Take_Last_State_From_CareTaker()
         {
             var careTaker = new HastingCareTaker();
 
@@ -83,7 +101,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
 
             careTaker.HastingMementoList.Count.Should().Be(1);
         }
-
+        
         [Fact]
         public void Can_LIFO_When_History_N_Plus2()
         {

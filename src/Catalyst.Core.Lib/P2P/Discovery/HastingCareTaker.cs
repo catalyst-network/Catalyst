@@ -22,18 +22,18 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
+using System.Collections.Concurrent;
 using Catalyst.Common.Interfaces.P2P.Discovery;
 
 namespace Catalyst.Core.Lib.P2P.Discovery
 {
     public sealed class HastingCareTaker : IHastingCareTaker
     {
-        public Stack<IHastingMemento> HastingMementoList { get; }
+        public ConcurrentStack<IHastingMemento> HastingMementoList { get; }
 
         public HastingCareTaker()
         {
-            HastingMementoList = new Stack<IHastingMemento>();
+            HastingMementoList = new ConcurrentStack<IHastingMemento>();
         }
 
         /// <inheritdoc />

@@ -130,19 +130,20 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
         public void Can_Clean_Up_When_Setting_Peer()
         {
             var originator = new HastingsOriginator();
-
             var memento1 = DiscoveryHelper.SubMemento();
             
             originator.RestoreMemento(memento1);
+            originator.ExpectedPnr = DiscoveryHelper.MockPnr();
             originator.CurrentPeersNeighbours = DiscoveryHelper.MockNeighbours().ToList();
             originator.UnResponsivePeers = DiscoveryHelper.MockContactedNeighboursValuePairs(DiscoveryHelper.MockNeighbours());
-            originator.ExpectedPnr = DiscoveryHelper.MockPnr();
+            
+            var newPeer = PeerIdentifierHelper.GetPeerIdentifier("new_peer");
+            originator.Peer = newPeer;
 
-            originator.Peer = PeerIdentifierHelper.GetPeerIdentifier("new_peer");
-
-            originator.UnResponsivePeers.Count.Should().Be(0);
+            originator.Peer.Should().Be(newPeer);
             originator.ExpectedPnr.Key.Should().Be(null);
             originator.ExpectedPnr.Value.Should().Be(null);
+            originator.UnResponsivePeers.Count.Should().Be(0);
         }
     }
 }

@@ -27,6 +27,7 @@ using System.Linq;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
+using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
@@ -38,6 +39,7 @@ using Catalyst.Common.Interfaces.P2P.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.P2P.IO.Messaging.Dto;
 using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Common.P2P;
+using Catalyst.Common.Util;
 using Catalyst.Core.Lib.P2P.Discovery;
 using Catalyst.Core.Lib.P2P.IO.Observers;
 using Catalyst.Protocol.IPPN;
@@ -45,6 +47,7 @@ using Catalyst.TestUtils;
 using FluentAssertions;
 using Nethereum.Hex.HexConvertors.Extensions;
 using NSubstitute;
+using NSubstitute.ReceivedExtensions;
 using Serilog;
 using SharpRepository.Repository;
 using Xunit;
@@ -61,6 +64,61 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
         {
             _settings = PeerSettingsHelper.TestPeerSettings();
             _ownNode = PeerIdentifierHelper.GetPeerIdentifier("ownNode");
+        }
+        
+        // walker.GetIsDiscovering().Should()
+        //    .BeTrue("because starting discovery sets _isDiscovering true, to stop someone invoking the method again");
+
+        [Fact]
+        public void Can_Throw_Exception_In_WalkBack_When_Last_State_Has_No_Neighbours_To_Continue_Walk_Forward()
+        {
+            var discoveryTestBuilder = DiscoveryTestBuilder.GetDiscoveryTestBuilder();
+            var ctp = new CancellationTokenProvider();
+            
+            discoveryTestBuilder
+               .WithLogger()
+               .WithPeerRepository()
+               .WithDns(default, false)
+               .WithPeerSettings()
+               .WithPeerClient()
+               .WithCancellationProvider(ctp)
+               .WithPeerClientObservables()
+               .WithStateCandidate()
+               .WithCurrentState()
+               .WithAutoStart(false)
+               .WithBurn(0);
+
+            using (var walker = discoveryTestBuilder.Build())
+            {
+                Assert.Throws<InvalidOperationException>(() =>
+                {
+                    walker.DiscoveryAsync(2).GetAwaiter().GetResult();
+                    Thread.Sleep(2);
+                    ctp.CancellationTokenSource.Cancel();
+                });
+            }
+        }
+
+        [Fact]
+        public void Can_Get_State_From_CareTaker()
+        {
+            var discoveryTestBuilder = DiscoveryTestBuilder.GetDiscoveryTestBuilder();
+            discoveryTestBuilder
+               .WithLogger()
+               .WithPeerRepository()
+               .WithDns(default, false)
+               .WithPeerSettings()
+               .WithPeerClient()
+               .WithCancellationProvider()
+               .WithPeerClientObservables()
+               .WithAutoStart(false)
+               .WithBurn(0);
+
+            using (var walker = discoveryTestBuilder.Build())
+            {
+                var lastState = walker.HastingCareTaker.Get();
+                lastState.Peer.Should().BeAssignableTo<IPeerIdentifier>();
+            }
         }
 
         [Fact]
@@ -236,7 +294,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
                 using (walker.DiscoveryStream.SubscribeOn(TaskPoolScheduler.Default)
                    .Subscribe(streamObserver.OnNext))
                 {
-                    var subbedDto = DiscoveryHelper.SubDto(typeof(PingResponse));
+                    var subbedDto = DiscoveryHelper.SubDto(typeof(PeerNeighborsResponse));
 
                     discoveryTestBuilder.PeerClientObservables
                        .ToList()
@@ -292,9 +350,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
                         });
 
                     await walker.DiscoveryStream.WaitForItemsOnDelayedStreamOnTaskPoolSchedulerAsync(1);
-
-                    // walker.StateCandidate.UnResponsivePeers.Received(5).Add(Arg.Any<KeyValuePair<IPeerIdentifier, ICorrelationId>>());
-
+                    
                     walker.DtoFactory
                        .Received(Constants.AngryPirate)
                        .GetDto(
@@ -313,7 +369,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
         }
 
         [Fact]
-        public async Task Known_Evicted_Correlation_Cache_PingRequest_Message_Increments_UnResponsivePeer()
+        public void Known_Evicted_Correlation_Cache_PingRequest_Message_Increments_UnResponsivePeer()
         {
             var pnr = new KeyValuePair<ICorrelationId, IPeerIdentifier>(CorrelationId.GenerateCorrelationId(),
                 PeerIdentifierHelper.GetPeerIdentifier("sender")

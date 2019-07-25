@@ -292,6 +292,8 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
             public new void WalkBack() { base.WalkBack(); }
 
             public new bool HasValidCandidate() { return base.HasValidCandidate(); }
+
+            public bool GetIsDiscovering() { return _isDiscovering; }
         }
 
         public void Dispose()

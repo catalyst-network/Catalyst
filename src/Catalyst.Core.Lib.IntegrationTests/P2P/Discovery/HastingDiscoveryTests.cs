@@ -144,7 +144,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
 
                 walker.HasValidCandidate().Should().BeFalse();
 
-                var expectedCurrentState = walker.HastingCareTaker.HastingMementoList.Peek();
+                walker.HastingCareTaker.HastingMementoList.TryPeek(out var expectedCurrentState);
                 
                 walker.WalkBack();
 

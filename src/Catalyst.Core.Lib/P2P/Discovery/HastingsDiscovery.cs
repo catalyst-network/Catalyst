@@ -51,7 +51,7 @@ namespace Catalyst.Core.Lib.P2P.Discovery
     {
         private static readonly SemaphoreSlim SemaphoreSlim = new SemaphoreSlim(1, 1);
 
-        private bool _isDiscovering;
+        protected bool _isDiscovering;
         private readonly ILogger _logger;
         public IHastingsOriginator State { get; }
         private int _discoveredPeerInCurrentWalk;
@@ -67,27 +67,7 @@ namespace Catalyst.Core.Lib.P2P.Discovery
         public IDtoFactory DtoFactory { get; private set; }
         public IObservable<IPeerClientMessageDto> DiscoveryStream { get; private set; }
 
-        internal HastingsDiscovery(ILogger logger = default,
-            IRepository<Peer> peerRepository = default,
-            IDns dns = default,
-            IPeerSettings peerSettings = default,
-            IPeerClient peerClient = default,
-            IDtoFactory dtoFactory = default,
-            IPeerMessageCorrelationManager peerMessageCorrelationManager = default,
-            ICancellationTokenProvider cancellationTokenProvider = default,
-            IEnumerable<IPeerClientObservable> peerClientObservables = default) : this(logger,
-            peerRepository,
-            dns,
-            peerSettings,
-            peerClient,
-            dtoFactory,
-            peerMessageCorrelationManager,
-            cancellationTokenProvider,
-            peerClientObservables,
-            false, 
-            0) { }
-        
-        public HastingsDiscovery(ILogger logger,
+        protected HastingsDiscovery(ILogger logger,
             IRepository<Peer> peerRepository,
             IDns dns,
             IPeerSettings peerSettings,
@@ -157,18 +137,17 @@ namespace Catalyst.Core.Lib.P2P.Discovery
             // no state provide is assumed a "live run", instantiated with state assumes test run so don't start discovery
             State = state ?? new HastingsOriginator();
 
-            if (!autoStart)
+            if (autoStart)
             {
-                return;
+                WalkForward();
+
+                // should run until cancelled
+                Task.Run(async () =>
+                {
+                    await DiscoveryAsync(1000)
+                       .ConfigureAwait(false);
+                });
             }
-            
-            WalkForward();
-                
-            // should run until cancelled
-            Task.Run(async () =>
-            {
-                await DiscoveryAsync(1000).ConfigureAwait(false);
-            });
         }
 
         /// <summary>
@@ -311,8 +290,10 @@ namespace Catalyst.Core.Lib.P2P.Discovery
                 var lastState = HastingCareTaker.Get();
              
                 // continues walk by proposing a new degree.
-                StateCandidate.Peer = lastState.Neighbours.RandomElement();
-                
+                StateCandidate.Peer = lastState.Neighbours.Any()
+                    ? lastState.Neighbours.RandomElement()
+                    : throw new InvalidOperationException();
+
                 // transitions to last state.
                 State.RestoreMemento(lastState);
 
@@ -377,7 +358,7 @@ namespace Catalyst.Core.Lib.P2P.Discovery
                 if (!StateCandidate.ExpectedPnr.Equals(new KeyValuePair<ICorrelationId, IPeerIdentifier>(obj.CorrelationId, obj.Sender)))
                 {
                     // we shouldn't get here as we should always know about a pnr as only this class produces them.
-                    throw new ArgumentException();
+                    return;
                 }
 
                 var peerNeighbours = (PeerNeighborsResponse) obj.Message;
