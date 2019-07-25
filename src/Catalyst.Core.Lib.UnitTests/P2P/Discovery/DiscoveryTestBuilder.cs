@@ -158,6 +158,17 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
             _cancellationProvider = cancellationTokenProvider;
             return this;
         }
+
+        public DiscoveryTestBuilder XXX(IPeerClientObservable lll)
+        {
+            if (PeerClientObservables == null) 
+            {
+                PeerClientObservables = new List<IPeerClientObservable>();
+            }
+            
+            PeerClientObservables.Add(lll);
+            return this;
+        }
         
         public DiscoveryTestBuilder WithPeerClientObservables(ILogger logger = default, params Type[] clientObservers)
         {

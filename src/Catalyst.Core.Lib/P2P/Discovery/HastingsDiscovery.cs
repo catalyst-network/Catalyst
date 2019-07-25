@@ -112,14 +112,14 @@ namespace Catalyst.Core.Lib.P2P.Discovery
                .GroupBy(p => p.MessageStream)
                .Select(p => p.Key)
                .ToList()
-               .ForEach(s => DiscoveryStream = DiscoveryStream.Merge(s));
+               .ForEach(s => DiscoveryStream = DiscoveryStream.Merge(s, TaskPoolScheduler.Default));
 
             // register subscription for ping response messages.
             DiscoveryStream
                .Where(i => i.Message.Descriptor.ShortenedFullName()
                    .Equals(PingResponse.Descriptor.ShortenedFullName())
                 )
-               .SubscribeOn(Scheduler.CurrentThread)
+               .SubscribeOn(TaskPoolScheduler.Default)
                .Subscribe(OnPingResponse);
 
             // register subscription from peerNeighbourResponse.
@@ -127,14 +127,14 @@ namespace Catalyst.Core.Lib.P2P.Discovery
                .Where(i => i.Message.Descriptor.ShortenedFullName()
                    .Equals(PeerNeighborsResponse.Descriptor.ShortenedFullName())
                 )
-               .SubscribeOn(Scheduler.CurrentThread)
+               .SubscribeOn(TaskPoolScheduler.Default)
                .Subscribe(OnPeerNeighbourResponse);
 
             // subscribe to evicted peer messages, so we can cross
             // reference them with discovery messages we sent
             _evictionSubscription = peerMessageCorrelationManager
                .EvictionEventStream
-               .SubscribeOn(Scheduler.CurrentThread)
+               .SubscribeOn(TaskPoolScheduler.Default)
                .Subscribe(EvictionCallback);
 
             // no state provide is assumed a "live run", instantiated with state assumes test run so don't start discovery
