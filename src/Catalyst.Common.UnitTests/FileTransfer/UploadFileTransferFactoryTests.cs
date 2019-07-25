@@ -49,7 +49,7 @@ namespace Catalyst.Common.UnitTests.FileTransfer
             var uploadFileInformation = Substitute.For<IUploadFileInformation>();
             var correlationId = CorrelationId.GenerateCorrelationId();
 
-            uploadFileInformation.MaxChunk.Returns((uint) numberOfChunks);
+            uploadFileInformation.MaxChunk.Returns(numberOfChunks);
             uploadFileInformation.CorrelationId.Returns(correlationId);
 
             _uploadFileTransferFactory.RegisterTransfer(uploadFileInformation);
