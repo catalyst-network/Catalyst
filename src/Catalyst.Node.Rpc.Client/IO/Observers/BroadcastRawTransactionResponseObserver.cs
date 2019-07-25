@@ -36,9 +36,6 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
         protected override void HandleResponse(BroadcastRawTransactionResponse messageDto,
             IChannelHandlerContext channelHandlerContext,
             IPeerIdentifier senderPeerIdentifier,
-            ICorrelationId correlationId)
-        {
-            // Do something
-        }
+            ICorrelationId correlationId) { }
     }
 }

@@ -21,28 +21,35 @@
 
 #endregion
 
+using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.IO.Observers;
-using Catalyst.Common.Interfaces.Modules.KeySigner;
+using Catalyst.Common.Interfaces.Modules.Mempool;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.Interfaces.P2P.IO.Messaging.Broadcast;
+using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Common.IO.Observers;
+using Catalyst.Common.Modules.Mempool;
 using Catalyst.Protocol.Rpc.Node;
 using DotNetty.Transport.Channels;
 using Serilog;
 
 namespace Catalyst.Core.Lib.Rpc.IO.Observers
 {
-    public class BroadcastRawTransactionRequestObserver 
+    public class BroadcastRawTransactionRequestObserver
         : RequestObserverBase<BroadcastRawTransactionRequest, BroadcastRawTransactionResponse>, IRpcRequestObserver
     {
-        private readonly IKeySigner _keySigner;
+        private readonly IMempool _mempool;
+        private readonly IBroadcastManager _broadcastManager;
 
         public BroadcastRawTransactionRequestObserver(ILogger logger,
             IPeerIdentifier peerIdentifier,
-            IKeySigner keySigner)
+            IMempool mempool,
+            IBroadcastManager broadcastManager)
             : base(logger, peerIdentifier)
         {
-            _keySigner = keySigner;
+            _mempool = mempool;
+            _broadcastManager = broadcastManager;
         }
 
         protected override BroadcastRawTransactionResponse HandleRequest(BroadcastRawTransactionRequest messageDto,
@@ -51,9 +58,32 @@ namespace Catalyst.Core.Lib.Rpc.IO.Observers
             ICorrelationId correlationId)
         {
             // TODO: Signature Check
+            var signatureValid = true;
+            var responseCode = ResponseCode.Pending;
 
-            // TODO: Response Code
-            return new BroadcastRawTransactionResponse();
+            if (signatureValid)
+            {
+                // TODO: Check ledger to see if ledger already contains transaction, if so we need to send Successful/Fail response
+                if (_mempool.ContainsDocument(messageDto.Transaction.Signature))
+                {
+                    return new BroadcastRawTransactionResponse() {ResponseCode = responseCode};
+                }
+
+                _mempool.SaveMempoolDocument(new MempoolDocument()
+                {
+                    Transaction = messageDto.Transaction
+                });
+
+                var transactionToBroadcast = messageDto.Transaction.ToProtocolMessage(PeerIdentifier.PeerId,
+                    CorrelationId.GenerateCorrelationId());
+                _broadcastManager.BroadcastAsync(transactionToBroadcast);
+            }
+            else
+            {
+                responseCode = ResponseCode.Error;
+            }
+
+            return new BroadcastRawTransactionResponse() {ResponseCode = responseCode};
         }
     }
 }
