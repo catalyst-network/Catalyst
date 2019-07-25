@@ -41,43 +41,49 @@ namespace Catalyst.Common.Cryptography
         /// <inheritdoc />
         public IPrivateKey GeneratePrivateKey()
         {
-            return _wrapper.GenerateKey();
+            return _wrapper.GeneratePrivateKey();
         }
 
         /// <inheritdoc />
-        public IPublicKey ImportPublicKey(ReadOnlySpan<byte> blob)
+        public IPublicKey PublicKeyFromBytes(byte[] publicKeyBytes)
         {
-            return new PublicKey(blob.ToArray());
+            return _wrapper.PublicKeyFromBytes(publicKeyBytes);
         }
 
         /// <inheritdoc />
-        public byte[] ExportPublicKey(IPublicKey key)
+        public IPrivateKey PrivateKeyFromBytes(byte[] privateKeyBytes)
         {
-            return key.Bytes.RawBytes;
+            return _wrapper.PrivateKeyFromBytes(privateKeyBytes);
         }
 
         /// <inheritdoc />
-        public IPrivateKey ImportPrivateKey(ReadOnlySpan<byte> blob)
+        public ISignature SignatureFromBytes(byte[] signatureBytes, byte[] publicKeyBytes)
         {
-            return new PrivateKey(blob.ToArray());
+            return _wrapper.SignatureFromBytes(signatureBytes, publicKeyBytes);
         }
 
         /// <inheritdoc />
-        public byte[] ExportPrivateKey(IPrivateKey key)
+        public byte[] ExportPrivateKey(IPrivateKey privateKey)
         {
-            return key.Bytes.RawBytes;
+            return privateKey.Bytes;
         }
 
         /// <inheritdoc />
-        public ISignature Sign(IPrivateKey privateKey, ReadOnlySpan<byte> data)
+        public byte[] ExportPublicKey(IPublicKey publicKey)
         {
-            return _wrapper.StdSign(privateKey, data.ToArray());
+            return publicKey.Bytes;
         }
 
         /// <inheritdoc />
-        public bool Verify(ISignature signature, ReadOnlySpan<byte> message)
+        public ISignature Sign(IPrivateKey privateKey, byte[] message)
         {
-            return _wrapper.StdVerify(signature, message.ToArray());
+            return _wrapper.StdSign(privateKey, message);
+        }
+
+        /// <inheritdoc />
+        public bool Verify(ISignature signature, byte[] message)
+        {
+            return _wrapper.StdVerify(signature, message);
         }
 
         /// <inheritdoc />

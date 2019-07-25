@@ -58,7 +58,7 @@ namespace Catalyst.Common.UnitTests.Cryptography
             var key2 = _context.GeneratePrivateKey();
             var publicKey2 = _context.GetPublicKey(key2);
 
-            var invalidSignature = new Signature(signature.SignatureBytes, publicKey2.Bytes);
+            var invalidSignature = _context.SignatureFromBytes(signature.SignatureBytes, publicKey2.Bytes);
 
             _context.Verify(invalidSignature, data)
                .Should().BeFalse("signature should not verify with incorrect key");
@@ -93,8 +93,8 @@ namespace Catalyst.Common.UnitTests.Cryptography
             var signature = _context.Sign(privateKey, data);
             var blob = _context.ExportPublicKey(publicKey);
 
-            var importedKey = _context.ImportPublicKey(blob);
-            var signatureWithImportedKey = new Signature(signature.SignatureBytes, importedKey.Bytes);
+            var importedKey = _context.PublicKeyFromBytes(blob);
+            var signatureWithImportedKey = _context.SignatureFromBytes(signature.SignatureBytes, importedKey.Bytes);
             _context.Verify(signatureWithImportedKey, data).Should()
                .BeTrue("signature should verify with imported public key");
         }
@@ -106,7 +106,7 @@ namespace Catalyst.Common.UnitTests.Cryptography
             IPublicKey publicKey = _context.GetPublicKey(privateKey);
             string invalidSignature = "mL9Z+e5gIfEdfhDWUxkUox886YuiZnhEj3om5AXmWVXJK7dl7/ESkjhbkJsrbzIbuWm8EPSjJ2YicTIcXvfzIA==";
             byte[] signatureBytes = Convert.FromBase64String(invalidSignature);
-            Signature invalidSig = new Signature(signatureBytes, publicKey.Bytes.RawBytes);
+            var invalidSig = _context.SignatureFromBytes(signatureBytes, publicKey.Bytes);
             byte[] message = Encoding.UTF8.GetBytes("fa la la la");
             Action action = () => { _context.Verify(invalidSig, message); };
             action.Should().Throw<SignatureException>();
