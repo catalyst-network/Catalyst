@@ -39,9 +39,10 @@ using Xunit;
 
 namespace Catalyst.Common.UnitTests.FileTransfer
 {
-    public class DownloadFileTransferFactoryTests
+    public sealed class DownloadFileTransferFactoryTests : IDisposable
     {
         private readonly IDownloadFileTransferFactory _downloadFileTransferFactory;
+        private IDownloadFileInformation _downloadFileInformation;
 
         public DownloadFileTransferFactoryTests()
         {
@@ -54,8 +55,8 @@ namespace Catalyst.Common.UnitTests.FileTransfer
             using (var cancellationTokenSource = new CancellationTokenSource())
             {
                 var token = cancellationTokenSource.Token;
-                var downloadFileTransfer = SetupDownload(token);
-                var correlationId = downloadFileTransfer.CorrelationId;
+                SetupDownload(token);
+                var correlationId = _downloadFileInformation.CorrelationId;
 
                 cancellationTokenSource.Cancel();
 
@@ -78,8 +79,8 @@ namespace Catalyst.Common.UnitTests.FileTransfer
         [Fact]
         public void Can_Download_Chunk()
         {
-            var downloadFileTransfer = SetupDownload(CancellationToken.None);
-            var correlationId = downloadFileTransfer.CorrelationId;
+            SetupDownload(CancellationToken.None);
+            var correlationId = _downloadFileInformation.CorrelationId;
 
             _downloadFileTransferFactory.DownloadChunk(new TransferFileBytesRequest
             {
@@ -88,20 +89,20 @@ namespace Catalyst.Common.UnitTests.FileTransfer
                 CorrelationFileName = correlationId.Id.ToByteString()
             }).Should().Be(FileTransferResponseCodes.Successful);
 
-            downloadFileTransfer.ReceivedWithAnyArgs().WriteToStream(default, default);
-            downloadFileTransfer.Received(1).UpdateChunkIndicator(0, true);
+            _downloadFileInformation.ReceivedWithAnyArgs().WriteToStream(default, default);
+            _downloadFileInformation.Received(1).UpdateChunkIndicator(0, true);
         }
 
         [Fact]
         public void Can_Send_Error_On_Chunk_Bytes_Overflow()
         {
-            var downloadFileTransfer = SetupDownload(CancellationToken.None);
+            SetupDownload(CancellationToken.None);
 
             _downloadFileTransferFactory.DownloadChunk(new TransferFileBytesRequest
             {
                 ChunkId = 0,
                 ChunkBytes = new byte[Constants.FileTransferChunkSize + 1].ToByteString(),
-                CorrelationFileName = downloadFileTransfer.CorrelationId.Id.ToByteString()
+                CorrelationFileName = _downloadFileInformation.CorrelationId.Id.ToByteString()
             }).Should().Be(FileTransferResponseCodes.Error);
         }
 
@@ -112,15 +113,20 @@ namespace Catalyst.Common.UnitTests.FileTransfer
                .Be(FileTransferResponseCodes.Error);
         }
 
-        public IDownloadFileInformation SetupDownload(CancellationToken token)
+        public void SetupDownload(CancellationToken token)
         {
             var correlationId = CorrelationId.GenerateCorrelationId();
-            var downloadFileTransfer = Substitute.For<IDownloadFileInformation>();
-            downloadFileTransfer.CorrelationId.Returns(correlationId);
-            downloadFileTransfer.MaxChunk.Returns((uint) 1);
-            _downloadFileTransferFactory.RegisterTransfer(downloadFileTransfer);
+            _downloadFileInformation = Substitute.For<IDownloadFileInformation>();
+            _downloadFileInformation.CorrelationId.Returns(correlationId);
+            _downloadFileInformation.MaxChunk.Returns((uint) 1);
+            _downloadFileTransferFactory.RegisterTransfer(_downloadFileInformation);
             _ = _downloadFileTransferFactory.FileTransferAsync(correlationId, token).ConfigureAwait(false);
-            return downloadFileTransfer;
+        }
+
+        public void Dispose()
+        {
+            // Stops file transfer thread
+            _downloadFileInformation?.IsExpired().Returns(true);
         }
     }
 }
