@@ -66,7 +66,7 @@ namespace Catalyst.TestUtils
             return new HastingsOriginator
             {
                 Peer =
-                    peer ?? PeerIdentifierHelper.GetPeerIdentifier(ByteUtil.GenerateRandomByteArray(32).ToString()),
+                    peer ?? PeerIdentifierHelper.GetPeerIdentifier(),
                 Neighbours = neighbours ?? MockNeighbours(),
                 ExpectedPnr = expectedPnr
             }; 
