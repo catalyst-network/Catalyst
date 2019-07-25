@@ -21,14 +21,15 @@
 
 #endregion
 
-using System.Collections.Generic;
+using System;
+using System.Threading;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
-using Catalyst.Common.FileTransfer;
 using Catalyst.Common.Interfaces.FileTransfer;
-using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Node.Rpc.Client.IO.Observers;
+using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
@@ -44,35 +45,73 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
         private readonly ILogger _logger;
         private readonly IChannelHandlerContext _fakeContext;
         private readonly IDownloadFileTransferFactory _fileDownloadFactory;
+        private readonly ulong ExpectedFileSize = 10;
 
         public GetFileFromDfsResponseObserverTests()
         {
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
-            _fileDownloadFactory = new DownloadFileTransferFactory(_logger);
+            _fileDownloadFactory = Substitute.For<IDownloadFileTransferFactory>();
             _logger = Substitute.For<ILogger>();
         }
 
         [Fact]
-        public void CanExpireDownloadFileTransferOnError()
+        public void Can_Expire_Download_File_Transfer_On_Error()
+        {
+            var correlationId = SendResponseToHandler(FileTransferResponseCodes.Error);
+            _fileDownloadFactory.GetFileTransferInformation(correlationId).Received(1).Expire();
+        }
+
+        [Fact]
+        public void Can_Start_File_Download_On_Successful_Response()
+        {
+            var correlationId = SendResponseToHandler(FileTransferResponseCodes.Successful);
+            _fileDownloadFactory.GetFileTransferInformation(correlationId).Received(1).SetLength(ExpectedFileSize);
+            _fileDownloadFactory.Received(1).FileTransferAsync(correlationId, CancellationToken.None);
+        }
+
+        [Fact]
+        public void Does_Nothing_If_File_Transfer_Does_Not_Exist()
+        {
+            var responseCode = FileTransferResponseCodes.Successful;
+            var correlationId = CorrelationId.GenerateCorrelationId();
+            _fileDownloadFactory.GetFileTransferInformation(correlationId).Returns(default(IDownloadFileInformation));
+
+            var getFileFromDfsResponseHandler =
+                new GetFileFromDfsResponseObserver(_logger, _fileDownloadFactory);
+            var getFileResponse = GetResponseMessage(correlationId, responseCode);
+            getFileResponse.SendToHandler(_fakeContext, getFileFromDfsResponseHandler);
+
+            _fileDownloadFactory.DidNotReceiveWithAnyArgs().FileTransferAsync(default, default);
+            _fakeContext.Channel.DidNotReceiveWithAnyArgs().WriteAndFlushAsync(default);
+        }
+
+        private ICorrelationId SendResponseToHandler(FileTransferResponseCodes responseCode)
+        {
+            var correlationId = CreateFakeDownloadFileTransfer();
+            var getFileFromDfsResponseHandler =
+                new GetFileFromDfsResponseObserver(_logger, _fileDownloadFactory);
+            var getFileResponse = GetResponseMessage(correlationId, responseCode);
+            getFileResponse.SendToHandler(_fakeContext, getFileFromDfsResponseHandler);
+            return correlationId;
+        }
+
+        private ICorrelationId CreateFakeDownloadFileTransfer()
         {
             var fakeFileTransfer = Substitute.For<IDownloadFileInformation>();
             var guid = CorrelationId.GenerateCorrelationId();
             fakeFileTransfer.CorrelationId.Returns(guid);
+            _fileDownloadFactory.GetFileTransferInformation(guid).Returns(fakeFileTransfer);
+            return guid;
+        }
 
-            _fileDownloadFactory.RegisterTransfer(fakeFileTransfer);
-
-            var getFileFromDfsResponseHandler =
-                new GetFileFromDfsResponseObserver(_logger, _fileDownloadFactory);
-
-            var getFileResponse = new GetFileFromDfsResponse
+        private ProtocolMessage GetResponseMessage(ICorrelationId correlationId, FileTransferResponseCodes responseCodes)
+        {
+            return new GetFileFromDfsResponse
             {
-                FileSize = 10,
-                ResponseCode = ByteString.CopyFrom((byte) FileTransferResponseCodes.Error.Id)
-            }.ToProtocolMessage(PeerIdHelper.GetPeerId("Test"), guid);
-            getFileResponse.SendToHandler(_fakeContext, getFileFromDfsResponseHandler);
-
-            fakeFileTransfer.Received(1).Expire();
+                FileSize = ExpectedFileSize,
+                ResponseCode = ByteString.CopyFrom((byte) responseCodes.Id)
+            }.ToProtocolMessage(PeerIdHelper.GetPeerId("Test"), correlationId);
         }
     }
 }
