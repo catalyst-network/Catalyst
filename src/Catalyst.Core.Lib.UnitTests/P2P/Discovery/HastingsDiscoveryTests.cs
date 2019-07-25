@@ -70,10 +70,60 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
         //    .BeTrue("because starting discovery sets _isDiscovering true, to stop someone invoking the method again");
 
         [Fact]
+        public void HasValidCandidate_Can_Validate_Correct_State()
+        {
+            var discoveryTestBuilder = DiscoveryTestBuilder.GetDiscoveryTestBuilder()
+               .WithLogger()
+               .WithPeerRepository()
+               .WithDns()
+               .WithPeerSettings()
+               .WithPeerClient()
+               .WithCancellationProvider()
+               .WithPeerClientObservables()
+               .WithStateCandidate(default,
+                    true,
+                    default,
+                    DiscoveryHelper.MockNeighbours(Constants.AngryPirate))
+               .WithCurrentState()
+               .WithAutoStart()
+               .WithBurn();
+
+            using (var walker = discoveryTestBuilder.Build())
+            {
+                walker.HasValidCandidate().Should().BeTrue();
+            }
+        }
+
+        [Fact]
+        public void HasValidCandidate_Can_Detect_Invalid_State()
+        {
+            var discoveryTestBuilder = DiscoveryTestBuilder.GetDiscoveryTestBuilder()
+               .WithLogger()
+               .WithPeerRepository()
+               .WithDns()
+               .WithPeerSettings()
+               .WithPeerClient()
+               .WithCancellationProvider()
+               .WithPeerClientObservables()
+               .WithStateCandidate(default,
+                    true,
+                    default,
+                    DiscoveryHelper.MockNeighbours(0))
+               .WithCurrentState()
+               .WithAutoStart()
+               .WithBurn();
+
+            using (var walker = discoveryTestBuilder.Build())
+            {
+                walker.HasValidCandidate().Should().BeFalse();
+            }
+        }
+        
+        [Fact]
         public void Can_Throw_Exception_In_WalkBack_When_Last_State_Has_No_Neighbours_To_Continue_Walk_Forward()
         {
-            var discoveryTestBuilder = DiscoveryTestBuilder.GetDiscoveryTestBuilder();
             var ctp = new CancellationTokenProvider();
+            var discoveryTestBuilder = DiscoveryTestBuilder.GetDiscoveryTestBuilder();
             
             discoveryTestBuilder
                .WithLogger()

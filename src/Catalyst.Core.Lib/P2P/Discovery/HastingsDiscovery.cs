@@ -237,7 +237,7 @@ namespace Catalyst.Core.Lib.P2P.Discovery
 
                 // see if sum of unreachable peers and reachable peers equals the total contacted number.
                 return StateCandidate.UnResponsivePeers.Count
-                   .Equals(StateCandidate.UnResponsivePeers.Count + StateCandidate.CurrentPeersNeighbours.Count);
+                   .Equals(StateCandidate.UnResponsivePeers.Where(i => i.Value != null).ToList().Count + StateCandidate.CurrentPeersNeighbours.Count);
             }
         }
 
