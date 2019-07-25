@@ -62,10 +62,10 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Observers
         }
 
         [Fact]
-        public void Can_Send_Pending_Response_If_Mempool_Contains_Transaction()
+        public void Can_Send_Success_Response_If_Mempool_Contains_Transaction()
         {
             SendTransactionToHandler(true);
-            _mempool.DidNotReceiveWithAnyArgs().SaveMempoolDocument(Arg.Any<IMempoolDocument>());
+            _mempool.DidNotReceiveWithAnyArgs().SaveMempoolDocument(default);
         }
 
         [Fact]
@@ -84,7 +84,7 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Observers
 
             _fakeContext.Channel.Received().WriteAndFlushAsync(
                 Arg.Is<DefaultAddressedEnvelope<ProtocolMessage>>(response =>
-                    response.Content.FromProtocolMessage<BroadcastRawTransactionResponse>().ResponseCode == ResponseCode.Pending));
+                    response.Content.FromProtocolMessage<BroadcastRawTransactionResponse>().ResponseCode == ResponseCode.Successful));
         }
 
         private ProtocolMessage GetTransactionBroadcastMessage()

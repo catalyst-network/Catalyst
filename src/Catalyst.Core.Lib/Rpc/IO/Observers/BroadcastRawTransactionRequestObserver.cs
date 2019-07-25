@@ -59,7 +59,7 @@ namespace Catalyst.Core.Lib.Rpc.IO.Observers
         {
             // TODO: Signature Check
             var signatureValid = true;
-            var responseCode = ResponseCode.Pending;
+            var responseCode = ResponseCode.Successful;
 
             if (signatureValid)
             {
