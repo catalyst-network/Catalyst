@@ -87,7 +87,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
         }
 
         [Fact]
-        public void Can_Clean_Up_When_Calling_SetMemento()
+        public void Can_Clean_Up_When_Calling_RestoreMemento()
         {
             var originator = new HastingsOriginator();
 
