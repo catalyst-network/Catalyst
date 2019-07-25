@@ -21,22 +21,23 @@
 
 #endregion
 
-using System.Collections.Generic;
-using Catalyst.Common.Config;
+using Catalyst.Common.Extensions;
+using Catalyst.Common.Interfaces.P2P.IO.Messaging.Broadcast;
+using Catalyst.Protocol.Common;
+using DotNetty.Transport.Channels;
 
-namespace Catalyst.SeedNode
+namespace Catalyst.Common.IO.Handlers
 {
-    public sealed class SeedNodeConfigCopier
-        : ConfigCopier
+    public class BroadcastCleanupHandler : InboundChannelHandlerBase<ProtocolMessage>
     {
-        protected override IEnumerable<string> RequiredConfigFiles(Network network)
+        private readonly IBroadcastManager _broadcastManager;
+
+        public BroadcastCleanupHandler(IBroadcastManager broadcastManager) { _broadcastManager = broadcastManager; }
+
+        protected override void ChannelRead0(IChannelHandlerContext ctx, ProtocolMessage msg)
         {
-            return new[]
-            {
-                Constants.SerilogJsonConfigFile,
-                Constants.NetworkConfigFile(network),
-                "seed.components.json"
-            };
+            _broadcastManager.RemoveSignedBroadcastMessageData(msg.CorrelationId.ToCorrelationId());
+            ctx.FireChannelRead(msg);
         }
     }
 }
