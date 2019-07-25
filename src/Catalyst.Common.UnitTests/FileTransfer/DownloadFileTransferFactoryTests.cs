@@ -81,7 +81,7 @@ namespace Catalyst.Common.UnitTests.FileTransfer
             var downloadFileTransfer = SetupDownload(CancellationToken.None);
             var correlationId = downloadFileTransfer.CorrelationId;
 
-            _downloadFileTransferFactory.DownloadChunk(new TransferFileBytesRequest()
+            _downloadFileTransferFactory.DownloadChunk(new TransferFileBytesRequest
             {
                 ChunkBytes = new byte[1].ToByteString(),
                 ChunkId = 1,
@@ -97,7 +97,7 @@ namespace Catalyst.Common.UnitTests.FileTransfer
         {
             var downloadFileTransfer = SetupDownload(CancellationToken.None);
 
-            _downloadFileTransferFactory.DownloadChunk(new TransferFileBytesRequest()
+            _downloadFileTransferFactory.DownloadChunk(new TransferFileBytesRequest
             {
                 ChunkId = 0,
                 ChunkBytes = new byte[Constants.FileTransferChunkSize + 1].ToByteString(),
