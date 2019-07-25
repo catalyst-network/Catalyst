@@ -328,7 +328,7 @@ namespace Catalyst.Core.Lib.P2P.Discovery
         ///     handles the discovery messages to see if there of interest to us.
         /// </summary>
         /// <param name="item"></param>
-        private void EvictionCallback(KeyValuePair<ICorrelationId, IPeerIdentifier> item)
+        protected void EvictionCallback(KeyValuePair<ICorrelationId, IPeerIdentifier> item)
         {
             lock (StateCandidate)
             {
@@ -336,6 +336,15 @@ namespace Catalyst.Core.Lib.P2P.Discovery
                 {
                     // state candidate didn't give any neighbours so go back a step.
                     WalkBack();
+                }
+                else
+                {
+                    StateCandidate.Neighbours
+                       .First(n => item.Key
+                               .Equals(n.DiscoveryPingCorrelationId)
+                         && item.Value
+                               .Equals(n.PeerIdentifier)
+                        ).State = NeighbourState.UnResponsive;
                 }
             }
         }

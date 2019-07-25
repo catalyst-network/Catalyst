@@ -78,7 +78,7 @@ namespace Catalyst.TestUtils
         {
             var subbedOriginator = Substitute.For<IHastingsOriginator>();
             
-            subbedOriginator.Neighbours.Count.Returns(5);
+            subbedOriginator.Neighbours.Count.Returns(Constants.AngryPirate);
             subbedOriginator.Peer.Returns(peer ?? Substitute.For<IPeerIdentifier>());
             subbedOriginator.Neighbours.Returns(neighbours ?? Substitute.For<IList<INeighbour>>());
             subbedOriginator.ExpectedPnr.Returns(expectedPnr);
@@ -117,10 +117,10 @@ namespace Catalyst.TestUtils
             );
         }
         
-        public static IList<INeighbour> MockNeighbours(int amount = 5, NeighbourState state = null)
+        public static IList<INeighbour> MockNeighbours(int amount = 5, NeighbourState state = null, ICorrelationId correlationId = default)
         {
             var neighbourMock = new List<INeighbour>();
-            
+
             Enumerable.Range(0, amount).ToList().ForEach(i =>
             {
                 neighbourMock.Add(
@@ -128,7 +128,8 @@ namespace Catalyst.TestUtils
                         PeerIdentifierHelper.GetPeerIdentifier(
                             StringHelper.RandomString()
                         ),
-                        state ?? NeighbourState.NotContacted
+                        state ?? NeighbourState.NotContacted,
+                        correlationId = correlationId == default ? null : CorrelationId.GenerateCorrelationId()
                     )
                 );
             });

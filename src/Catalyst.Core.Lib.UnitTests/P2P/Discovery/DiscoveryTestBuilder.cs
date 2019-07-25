@@ -23,6 +23,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
@@ -285,15 +286,20 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
                     hastingCareTaker ?? Substitute.For<IHastingCareTaker>(),
                     stateCandidate) { }
 
-            public new void WalkForward() { base.WalkForward(); }
+            internal new void WalkForward() { base.WalkForward(); }
 
             public new void WalkBack() { base.WalkBack(); }
 
             public new bool HasValidCandidate() { return base.HasValidCandidate(); }
 
-            public int GetBurnInValue() { return PeerDiscoveryBurnIn; }
-            
-            public void TestStorePeer(INeighbour neighbour) { StorePeer(neighbour); }
+            internal int GetBurnInValue() { return PeerDiscoveryBurnIn; }
+
+            internal void TestStorePeer(INeighbour neighbour) { StorePeer(neighbour); }
+
+            public void TestEvictionCallback(KeyValuePair<ICorrelationId, IPeerIdentifier> item)
+            {
+                EvictionCallback(item);
+            }
 
             public bool GetIsDiscovering() { return IsDiscovering; }
         }

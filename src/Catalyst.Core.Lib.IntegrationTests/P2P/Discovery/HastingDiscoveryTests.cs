@@ -86,8 +86,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
             stateHistory.ToList()
                .ForEach(i => stateCareTaker.Add(i));
             
-            var stateCandidate = DiscoveryHelper.MockOriginator();
-            stateCandidate.Neighbours.Clear();
+            var stateCandidate = DiscoveryHelper.MockOriginator(default, DiscoveryHelper.MockNeighbours(Constants.AngryPirate, NeighbourState.NotContacted, CorrelationId.GenerateCorrelationId()));
             
             stateCandidate.ExpectedPnr = DiscoveryHelper.MockPnr();
 
@@ -129,24 +128,20 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
             
             using (var walker = discoveryTestBuilder.Build())
             {
-                stateCandidate.Neighbours.ToList().ForEach(delegate(INeighbour n)
-                {
+                stateCandidate.Neighbours.ToList().ForEach(n =>
                     cacheEntriesByRequest[n.DiscoveryPingCorrelationId.Id.ToByteString()]
                        .PostEvictionCallbacks[0]
                        .EvictionCallback
                        .Invoke(
                             n.PeerIdentifier,
                             correlatableMessages.FirstOrDefault(i =>
-                                {
-                                    return i.Recipient.PeerId.Equals(n.PeerIdentifier.PeerId);
-                                }
-                            ),
+                                i.Recipient.PeerId.Equals(n.PeerIdentifier.PeerId)),
                             EvictionReason.Expired,
                             new object()
-                        );
-                });
+                        ));
                 
-                walker.StateCandidate.Neighbours.Count
+                walker.StateCandidate.Neighbours
+                   .Count(n => n.State == NeighbourState.UnResponsive)
                    .Should()
                    .Be(Constants.AngryPirate);
 
@@ -161,14 +156,6 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
                 walker.State.Peer
                    .Should()
                    .Be(expectedCurrentState.Peer);
-                
-                walker.State.Neighbours.Count
-                   .Should()
-                   .Be(0);
-                
-                walker.State.Neighbours.Count
-                   .Should()
-                   .Be(Constants.AngryPirate);
             }
         }
         
