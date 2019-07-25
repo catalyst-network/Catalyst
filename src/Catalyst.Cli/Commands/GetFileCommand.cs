@@ -21,6 +21,7 @@
 
 #endregion
 
+using System.Threading;
 using Catalyst.Cli.CommandTypes;
 using Catalyst.Cli.Options;
 using Catalyst.Common.Extensions;
@@ -31,7 +32,8 @@ using Catalyst.Protocol.Rpc.Node;
 
 namespace Catalyst.Cli.Commands
 {
-    public sealed class GetFileCommand : BaseMessageCommand<GetFileFromDfsRequest, GetFileFromDfsResponse, GetFileOptions>
+    public sealed class
+        GetFileCommand : BaseMessageCommand<GetFileFromDfsRequest, GetFileFromDfsResponse, GetFileOptions>
     {
         private readonly IDownloadFileTransferFactory _downloadFileTransferFactory;
 
@@ -76,17 +78,13 @@ namespace Catalyst.Cli.Commands
             while (!fileTransfer.ChunkIndicatorsTrue() && !fileTransfer.IsExpired())
             {
                 CommandContext.UserOutput.Write($"\rDownloaded: {fileTransfer.GetPercentage().ToString()}%");
-                System.Threading.Thread.Sleep(500);
+                Thread.Sleep(500);
             }
 
             if (fileTransfer.ChunkIndicatorsTrue())
-            {
                 CommandContext.UserOutput.Write($"\rDownloaded: {fileTransfer.GetPercentage().ToString()}%\n");
-            }
             else
-            {
                 CommandContext.UserOutput.WriteLine("\nFile transfer expired.");
-            }
         }
     }
 }

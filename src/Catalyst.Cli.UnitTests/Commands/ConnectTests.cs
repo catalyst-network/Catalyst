@@ -27,7 +27,6 @@ using System.Net;
 using System.Security.Cryptography.X509Certificates;
 using Catalyst.Cli.Commands;
 using Catalyst.Common.Interfaces.Cli;
-using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.Cli.CommandTypes;
 using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.IO.Transport;

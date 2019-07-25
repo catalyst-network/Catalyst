@@ -21,42 +21,8 @@
 
 #endregion
 
-using System.Linq;
-using Catalyst.Cli.Commands;
-using Catalyst.Cli.UnitTests.Helpers;
-using Catalyst.Common.Interfaces.IO.Messaging.Dto;
-using Catalyst.Common.Interfaces.Rpc;
-using Catalyst.Protocol;
-using Catalyst.Protocol.Common;
-using Catalyst.Protocol.Rpc.Node;
-using FluentAssertions;
-using NSubstitute;
-using Xunit;
-
+/* This class needs unit tests to test functionality */
 namespace Catalyst.Cli.UnitTests.Commands.Request
 {
-    public sealed class GetFileFromDfsRequestTests
-    {
-        [Fact]
-        public void GetFileFromDfsRequest_Can_Be_Sent()
-        {
-            //Arrange
-            var commandContext = TestResponseHelpers.GenerateCliRequestCommandContext();
-            var connectedNode = commandContext.GetConnectedNode(null);
-            var command = new AddFileCommand(null, commandContext);
-
-            //Act
-            TestResponseHelpers.GenerateRequest(commandContext, command, "-n", "node1");
-
-            //Assert
-            connectedNode.Received(1).SendMessage(Arg.Any<IMessageDto<ProtocolMessage>>());
-
-            var sentMessageDto = (IMessageDto<ProtocolMessage>) connectedNode.ReceivedCalls()
-               .Single(c => c.GetMethodInfo().Name == nameof(INodeRpcClient.SendMessage))
-               .GetArguments()[0];
-
-            var requestSent = sentMessageDto.Content.FromProtocolMessage<GetFileFromDfsRequest>();
-            requestSent.Should().BeOfType(typeof(GetFileFromDfsRequest));
-        }
-    }
+    public sealed class GetFileFromDfsRequestTests { }
 }
