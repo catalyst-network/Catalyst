@@ -21,6 +21,7 @@
 
 #endregion
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -103,7 +104,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Transport.Channels
         [Fact]
         public void PeerServerChannelFactory_should_have_correct_handlers()
         {
-            _factory.InheritedHandlers.Count(h => h != null).Should().Be(6);
+            _factory.InheritedHandlers.Count(h => h != null).Should().Be(7);
             var handlers = _factory.InheritedHandlers.ToArray();
             handlers[0].Should().BeOfType<CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>>();
             handlers[1].Should().BeOfType<PeerIdValidationHandler>();
@@ -111,6 +112,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Transport.Channels
             handlers[3].Should().BeOfType<CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>>();
             handlers[4].Should().BeOfType<BroadcastHandler>();
             handlers[5].Should().BeOfType<ObservableServiceHandler>();
+            handlers[6].Should().BeOfType<BroadcastCleanupHandler>();
         }
 
         [Fact]
@@ -129,7 +131,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Transport.Channels
 
             var observer = new ProtocolMessageObserver(0, Substitute.For<ILogger>());
            
-            var messageStream = ((ObservableServiceHandler) _factory.InheritedHandlers.Last()).MessageStream;
+            var messageStream = GetObservableServiceHandler().MessageStream;
             
             using (messageStream.Subscribe(observer))
             {
@@ -154,20 +156,14 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Transport.Channels
             var serverIdentifier = PeerIdentifierHelper.GetPeerIdentifier("server");
             using (var badHandler = new FailingRequestObserver(Substitute.For<ILogger>(), serverIdentifier))
             {
-                var messageStream = ((ObservableServiceHandler) _factory.InheritedHandlers.Last()).MessageStream;
+                var messageStream = GetObservableServiceHandler().MessageStream;
                 badHandler.StartObserving(messageStream);
 
-                Enumerable.Range(0, 10).ToList()
-                   .ForEach(i => testingChannel.WriteInbound(GetSignedMessage()));
+                Enumerable.Range(0, 10).AsParallel().ForAll(i => testingChannel.WriteInbound(GetSignedMessage()));
 
-                var inboundMessagesThatWentThroughPipeline = 0;
-                while (testingChannel.OutboundMessages.Count > 0)
-                {
-                    testingChannel.OutboundMessages.Dequeue();
-                    inboundMessagesThatWentThroughPipeline++;
-                }
-
-                inboundMessagesThatWentThroughPipeline.Should().Be(5);
+                await TaskHelper.WaitForAsync(
+                    () => testingChannel.OutboundMessages.Count >= 5, 
+                    TimeSpan.FromSeconds(2));
 
                 await messageStream.WaitForItemsOnDelayedStreamOnTaskPoolSchedulerAsync().ConfigureAwait(false);
 
@@ -186,6 +182,12 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Transport.Channels
                 Signature = _signature.ToByteString()
             };
             return signedMessage;
+        }
+
+        private ObservableServiceHandler GetObservableServiceHandler()
+        {
+            return _factory.InheritedHandlers
+               .OfType<ObservableServiceHandler>().FirstOrDefault();
         }
     }
 }

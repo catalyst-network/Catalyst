@@ -22,17 +22,20 @@
 #endregion
 
 using System;
+using System.Net;
 using System.Linq;
 using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.IO.Messaging.Correlation;
+using Catalyst.Common.Network;
 using Catalyst.Common.Util;
 using Catalyst.Protocol;
 using Catalyst.Protocol.Common;
 using Dawn;
 using Google.Protobuf;
 using Multiformats.Hash;
+using Nethereum.RLP;
 
 namespace Catalyst.Common.Extensions
 {
@@ -91,6 +94,21 @@ namespace Catalyst.Common.Extensions
         public static string ToMultihashString(this ByteString byteString)
         {
             return ToMultihash(byteString).ToString();
+        }
+
+        public static ByteString PublicKeyToProtobuf(this string publicKey)
+        {
+            return publicKey.ToBytesForRLPEncoding().ToByteString();
+        }
+
+        public static ByteString IpAddressToProtobuf(this IPAddress ipAddress)
+        {
+            return ByteString.CopyFrom(ipAddress.To16Bytes());
+        }
+
+        public static ByteString IpAddressToProtobuf(this string ipAddress)
+        {
+            return IPAddress.Parse(ipAddress).IpAddressToProtobuf();
         }
     }
 }

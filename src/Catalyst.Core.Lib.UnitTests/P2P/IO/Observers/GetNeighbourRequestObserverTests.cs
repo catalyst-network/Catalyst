@@ -27,6 +27,7 @@ using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.Interfaces.Repository;
 using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.P2P;
@@ -36,7 +37,6 @@ using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using NSubstitute;
 using Serilog;
-using SharpRepository.Repository;
 using SharpRepository.Repository.Specifications;
 using Xunit;
 
@@ -46,17 +46,17 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Observers
     {
         private readonly ILogger _subbedLogger;
         private readonly IPeerIdentifier _peerIdentifier;
-        private readonly IRepository<Peer> _subbedPeerRepository;
+        private readonly IPeerRepository _subbedPeerRepository;
 
         public GetNeighbourRequestObserverTests()
         {
             _subbedLogger = Substitute.For<ILogger>();
-            _subbedPeerRepository = Substitute.For<IRepository<Peer>>();
+            _subbedPeerRepository = Substitute.For<IPeerRepository>();
             _peerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("testPeer");
         }
         
         private static void AddMockPeerToDbAndSetReturnExpectation(IReadOnlyList<Peer> peer,
-            IRepository<Peer, int> store)
+            IPeerRepository store)
         {
             store.Add(peer);
             store.FindAll(Arg.Any<Specification<Peer>>()).Returns(peer);

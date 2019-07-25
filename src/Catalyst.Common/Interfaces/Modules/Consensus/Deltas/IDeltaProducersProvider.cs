@@ -21,10 +21,9 @@
 
 #endregion
 
-using System.Collections.Generic;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.P2P;
-using SharpRepository.Repository;
+using Catalyst.Common.Interfaces.Repository;
+using System.Collections.Generic;
 
 namespace Catalyst.Common.Interfaces.Modules.Consensus.Deltas
 {
@@ -44,6 +43,6 @@ namespace Catalyst.Common.Interfaces.Modules.Consensus.Deltas
         /// <summary>
         /// A peer repository containing peers eligible for the production of the next delta.
         /// </summary>
-        IRepository<Peer> PeerRepository { get; }
+        IPeerRepository PeerRepository { get; }
     }
 }

@@ -25,13 +25,12 @@ using System.Linq;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.IO.Observers;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.Interfaces.Repository;
 using Catalyst.Common.IO.Observers;
-using Catalyst.Common.P2P;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using DotNetty.Transport.Channels;
 using Nethereum.RLP;
-using SharpRepository.Repository;
 using ILogger = Serilog.ILogger;
 
 namespace Catalyst.Core.Lib.Rpc.IO.Observers
@@ -43,11 +42,11 @@ namespace Catalyst.Core.Lib.Rpc.IO.Observers
         /// <summary>
         /// The PeerReputationRequestHandler 
         /// </summary>
-        private readonly IRepository<Peer> _peerRepository;
+        private readonly IPeerRepository _peerRepository;
 
         public PeerReputationRequestObserver(IPeerIdentifier peerIdentifier,
             ILogger logger,
-            IRepository<Peer> peerRepository)
+            IPeerRepository peerRepository)
             : base(logger, peerIdentifier)
         {
             _peerRepository = peerRepository;

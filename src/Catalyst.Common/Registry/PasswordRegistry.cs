@@ -21,19 +21,15 @@
 
 #endregion
 
-using System.IO;
-using Catalyst.Common.Interfaces.FileSystem;
-using SharpRepository.XmlRepository;
+using System.Collections.Generic;
+using System.Security;
+using Catalyst.Common.Config;
+using Catalyst.Common.Interfaces.Registry;
 
-namespace Catalyst.Common.FileSystem
+namespace Catalyst.Common.Registry
 {
-    /// <summary>
-    /// Xml Repository where base folder is derived from the file system <see cref="IFileSystem"/>
-    /// </summary>
-    /// <typeparam name="T">Type of object</typeparam>
-    /// <seealso cref="SharpRepository.XmlRepository.XmlRepository{T}" />
-    public class FileSystemAwareXmlRepository<T> : XmlRepository<T> where T : class, new()
+    public class PasswordRegistry : RegistryBase<PasswordRegistryKey, SecureString>, IPasswordRegistry
     {
-        public FileSystemAwareXmlRepository(IFileSystem fileSystem, string path = "") : base(Path.Combine(fileSystem.GetCatalystDataDir().ToString(), path)) { }
+        public PasswordRegistry() { Registry = new Dictionary<PasswordRegistryKey, SecureString>(); }
     }
 }

@@ -27,10 +27,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
+using Catalyst.Common.Interfaces.Repository;
 using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.Network;
 using Catalyst.Common.P2P;
-using Catalyst.Common.Util;
 using Catalyst.Core.Lib.Rpc.IO.Observers;
 using Catalyst.Protocol;
 using Catalyst.Protocol.Common;
@@ -41,7 +41,7 @@ using FluentAssertions;
 using Google.Protobuf;
 using NSubstitute;
 using Serilog;
-using SharpRepository.InMemoryRepository;
+using SharpRepository.Repository.Specifications;
 using Xunit;
 
 namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Observers
@@ -85,8 +85,8 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Observers
         /// </summary>
         /// <param name="fakePeers">The fake peers.</param>
         [Theory]
-        [InlineData("FakePeer1", "FakePeer2")]
-        [InlineData("FakePeer1002", "FakePeer6000", "FakePeerSataoshi")]
+        [InlineData("Fake1Peer1", "Fake2Peer2")]
+        [InlineData("Fake1Peer1002", "Fake2Peer6000", "FakePeer3Sataoshi")]
         public async Task TestRemovePeerWithoutPublicKey(params string[] fakePeers) { await ExecuteTestCase(fakePeers, false); }
 
         /// <summary>Executes the test case.</summary>
@@ -94,9 +94,9 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Observers
         /// <param name="withPublicKey">if set to <c>true</c> [send message to handler with the public key].</param>
         private async Task ExecuteTestCase(IReadOnlyCollection<string> fakePeers, bool withPublicKey)
         {
-            var peerRepository = new InMemoryRepository<Peer>();
-
-            fakePeers.ToList().ForEach(fakePeer =>
+            IPeerRepository peerRepository = Substitute.For<IPeerRepository>();
+            Peer targetPeerToDelete = null;
+            var fakePeerList = fakePeers.ToList().Select(fakePeer =>
             {
                 var peer = new Peer
                 {
@@ -105,23 +105,28 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Observers
                     PeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier(fakePeer)
                 };
 
-                peerRepository.Add(peer);
-            });
+                if (targetPeerToDelete == null)
+                {
+                    targetPeerToDelete = peer;
+                }
 
-            peerRepository.GetAll().Count().Should().Be(fakePeers.Count);
+                return peer;
+            }).ToList();
 
+            peerRepository.FindAll(Arg.Any<ISpecification<Peer>>()).Returns(withPublicKey ? new List<Peer> {targetPeerToDelete} : fakePeerList);
+            
             // Build a fake remote endpoint
             _fakeContext.Channel.RemoteAddress.Returns(EndpointBuilder.BuildNewEndPoint("192.0.0.1", 42042));
 
             var messageFactory = new DtoFactory();
             var sendPeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("sender");
-            var peerToDelete = peerRepository.Get(1);
+
             var removePeerRequest = new RemovePeerRequest
             {
-                PeerIp = peerToDelete.PeerIdentifier.Ip.To16Bytes().ToByteString(),
-                PublicKey = withPublicKey ? peerToDelete.PeerIdentifier.PublicKey.ToByteString() : ByteString.Empty
+                PeerIp = targetPeerToDelete.PeerIdentifier.PeerId.Ip,
+                PublicKey = withPublicKey ? targetPeerToDelete.PeerIdentifier.PeerId.PublicKey : ByteString.Empty
             };
-            
+
             var requestMessage = messageFactory.GetDto(
                 removePeerRequest,
                 sendPeerIdentifier,
@@ -139,8 +144,8 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Observers
             receivedCalls.Count().Should().Be(1);
 
             var sentResponseDto = (IMessageDto<ProtocolMessage>) receivedCalls[0].GetArguments().Single();
-            
-            var signResponseMessage = sentResponseDto.FromIMessageDto().FromProtocolMessage<RemovePeerResponse>();
+
+            var signResponseMessage = sentResponseDto.Content.FromProtocolMessage<RemovePeerResponse>();
 
             signResponseMessage.DeletedCount.Should().Be(withPublicKey ? 1 : (uint) fakePeers.Count);
         }

@@ -23,8 +23,8 @@
 
 using Catalyst.Common.Config;
 using Catalyst.Common.Enumerator;
+using Catalyst.Common.Modules.Ledger;
 using Catalyst.Common.Util;
-using Catalyst.Core.Lib.Modules.Ledger;
 
 namespace Catalyst.TestUtils
 {

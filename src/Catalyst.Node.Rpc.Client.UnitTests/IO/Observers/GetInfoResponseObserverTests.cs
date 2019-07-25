@@ -31,6 +31,7 @@ using Catalyst.Node.Rpc.Client.IO.Observers;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
+using FluentAssertions;
 using NSubstitute;
 using Serilog;
 using Xunit;
@@ -42,13 +43,11 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
         private readonly ILogger _logger;
         private GetInfoResponseObserver _observer;
         private readonly IChannelHandlerContext _fakeContext;
-        private readonly IUserOutput _output;
 
         public GetInfoResponseObserverTests()
         {
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
-            _output = Substitute.For<IUserOutput>();
         }
 
         [Theory]
@@ -72,12 +71,17 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
                     response.CorrelationId
                 )
             );
-            
-            _observer = new GetInfoResponseObserver(_output, _logger);
+
+            GetInfoResponse messageStreamResponse = null;
+
+            _observer = new GetInfoResponseObserver(_logger);
             _observer.StartObserving(messageStream);
+            _observer.SubscribeToResponse(message => messageStreamResponse = message);
 
             await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
-            _output.Received(1).WriteLine(query);
+
+            messageStreamResponse.Should().NotBeNull();
+            messageStreamResponse.Query.Should().Be(response.Content.Query);
         }
 
         public void Dispose()

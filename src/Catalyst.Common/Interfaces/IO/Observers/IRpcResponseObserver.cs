@@ -21,7 +21,19 @@
 
 #endregion
 
+using Catalyst.Common.Interfaces.Rpc.IO.Messaging.Dto;
+using Google.Protobuf;
+using System;
+
 namespace Catalyst.Common.Interfaces.IO.Observers
 {
-    public interface IRpcResponseObserver : IResponseMessageObserver { }
+    public interface IRpcResponseObserver<out TProto> : IRpcResponseObserver where TProto : IMessage
+    {
+        void SubscribeToResponse(Action<TProto> onNext);
+    }
+
+    public interface IRpcResponseObserver : IResponseMessageObserver
+    {
+        IObservable<IRpcClientMessageDto<IMessage>> MessageResponseStream { get; }
+    }
 }

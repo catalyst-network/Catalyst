@@ -32,6 +32,7 @@ using Catalyst.Node.Rpc.Client.IO.Observers;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
+using FluentAssertions;
 using NSubstitute;
 using Serilog;
 using Xunit;
@@ -43,7 +44,6 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
     /// </summary>
     public sealed class GetPeerReputationResponseObserverTests : IDisposable
     {
-        private readonly IUserOutput _output;
         public static readonly List<object[]> QueryContents;
         private readonly IChannelHandlerContext _fakeContext;
 
@@ -76,7 +76,6 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
         {
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
-            _output = Substitute.For<IUserOutput>();
         }
 
         /// <summary>
@@ -85,34 +84,22 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
         /// <param name="rep">The rep.</param>
         [Theory]
         [MemberData(nameof(QueryContents))]
+        [InlineData(int.MinValue)]
         public async Task RpcClient_Can_Handle_GetReputationResponse(int rep)
         {
-            await TestGetReputationResponse(rep);
-
-            _output.Received(1).WriteLine($"Peer Reputation: {rep}");
+            var getPeerReputationResponse = await TestGetReputationResponse(rep).ConfigureAwait(false);
+            getPeerReputationResponse.Should().NotBeNull();
+            getPeerReputationResponse.Reputation.Should().Be(rep);
         }
 
-        /// <summary>
-        /// RPCs the client can handle get reputation response non existant peers.
-        /// </summary>
-        /// <param name="rep">The rep.</param>
-        [Theory]
-        [InlineData(int.MinValue)]
-        public async Task RpcClient_Can_Handle_GetReputationResponseNonExistantPeers(int rep)
-        {
-            await TestGetReputationResponse(rep);
-
-            _output.Received(1).WriteLine("Peer Reputation: Peer not found");
-        }
-
-        private async Task TestGetReputationResponse(int rep)
+        private async Task<GetPeerReputationResponse> TestGetReputationResponse(int rep)
         {
             var response = new DtoFactory().GetDto(new GetPeerReputationResponse
                 {
                     Reputation = rep
                 },
                 PeerIdentifierHelper.GetPeerIdentifier("sender"),
-                PeerIdentifierHelper.GetPeerIdentifier("recpient"),
+                PeerIdentifierHelper.GetPeerIdentifier("recipient"),
                 CorrelationId.GenerateCorrelationId()
             );
 
@@ -120,10 +107,15 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
                 response.Content.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId,
                     response.CorrelationId));
 
-            _observer = new PeerReputationResponseObserver(_output, _logger);
-            _observer.StartObserving(messageStream);
+            GetPeerReputationResponse messageStreamResponse = null;
 
-            await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
+            _observer = new PeerReputationResponseObserver(_logger);
+            _observer.StartObserving(messageStream);
+            _observer.SubscribeToResponse(message => messageStreamResponse = message);
+
+            await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync().ConfigureAwait(false);
+
+            return messageStreamResponse;
         }
 
         public void Dispose()

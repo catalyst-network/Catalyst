@@ -28,7 +28,7 @@ using Catalyst.Protocol.Rpc.Node;
 
 namespace Catalyst.Cli.Commands
 {
-    public sealed class PeerCountCommand : BaseMessageCommand<GetPeerCountRequest, PeerCountOptions>
+    public sealed class PeerCountCommand : BaseMessageCommand<GetPeerCountRequest, GetPeerCountResponse, PeerCountOptions>
     {
         public PeerCountCommand(ICommandContext commandContext) : base(commandContext) { }
 

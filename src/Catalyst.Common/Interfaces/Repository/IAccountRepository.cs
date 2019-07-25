@@ -21,27 +21,9 @@
 
 #endregion
 
-using System;
-using System.IO;
-using Serilog;
+using Catalyst.Common.Modules.Ledger;
 
-namespace Catalyst.Common.Util
+namespace Catalyst.Common.Interfaces.Repository
 {
-    public static class ConsoleProgram
-    {
-        public static ILogger GetTempLogger(string logFileName, Type declaringType)
-        {
-            var tempLogFile = Path.Combine(Path.GetTempPath(), logFileName);
-            var logger = new LoggerConfiguration()
-               .WriteTo.Console()
-               .WriteTo.File(tempLogFile, rollingInterval: RollingInterval.Day)
-               .CreateLogger().ForContext(declaringType);
-            return logger;
-        }
-
-        public static void LogUnhandledException(ILogger logger, object sender, UnhandledExceptionEventArgs e)
-        {
-            logger.Fatal((Exception) e.ExceptionObject, "Unhandled exception, Terminating: {0}", e.IsTerminating);
-        }
-    }
+    public interface IAccountRepository : IRepositoryWrapper<Account> { }
 }

@@ -27,16 +27,17 @@ using System.Security;
 using System.Security.Authentication;
 using System.Threading.Tasks;
 using Catalyst.Common.Interfaces.Cryptography;
-using Catalyst.Common.Interfaces.FileSystem;
 using Catalyst.Common.Interfaces.Keystore;
 using Catalyst.Common.Interfaces.Util;
+using Catalyst.Common.Config;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
 using Nethereum.KeyStore.Crypto;
 using Serilog;
+using IFileSystem = Catalyst.Common.Interfaces.FileSystem.IFileSystem;
 
 namespace Catalyst.Common.Keystore
 {
-    public sealed class LocalKeyStore : IKeyStore, IDisposable
+    public sealed class LocalKeyStore : IKeyStore
     {
         private readonly ILogger _logger;
         private readonly IAddressHelper _addressHelper;
@@ -44,26 +45,10 @@ namespace Catalyst.Common.Keystore
         private readonly ICryptoContext _cryptoContext;
         private readonly IPasswordReader _passwordReader;
         private readonly IKeyStoreService _keyStoreService;
+        private readonly PasswordRegistryKey _defaultNodePassword = PasswordRegistryKey.DefaultNodePassword;
 
-        private SecureString _password;
         private static int MaxTries => 5;
 
-        public string Password
-        {
-            get
-            {
-                if (_password == null)
-                {
-                    return string.Empty;
-                }
-
-                var stringPointer = Marshal.SecureStringToBSTR(_password);
-                var normalString = Marshal.PtrToStringBSTR(stringPointer);
-                Marshal.ZeroFreeBSTR(stringPointer);
-                return normalString;
-            }
-        }
-        
         public LocalKeyStore(IPasswordReader passwordReader,
             ICryptoContext cryptoContext,
             IKeyStoreService keyStoreService,
@@ -74,31 +59,56 @@ namespace Catalyst.Common.Keystore
             _passwordReader = passwordReader;
             _cryptoContext = cryptoContext;
             _keyStoreService = keyStoreService;
-            _logger = logger;
-            _addressHelper = addressHelper;
-            _keyStoreService = keyStoreService;
             _fileSystem = fileSystem;
+            _logger = logger;
+            _addressHelper = addressHelper;            
         }
-        
-        public byte[] KeyStoreDecrypt(string password, string json)
+
+        public IPrivateKey KeyStoreDecrypt(KeyRegistryKey keyIdentifier)
+        {
+            var json = GetJsonFromKeyStore(keyIdentifier);
+            if (json == null)
+            {
+                _logger.Error("No keystore exists for the given key");
+                return null;
+            }
+
+            var keyBytes = KeyStoreDecrypt(_defaultNodePassword, json);
+            IPrivateKey privateKey = null;
+            try
+            {
+                privateKey = _cryptoContext.ImportPrivateKey(keyBytes);
+            }
+            catch (ArgumentException)
+            {
+                _logger.Error("Keystore did not contain a valid key");
+            }
+
+            return privateKey;
+        }
+
+        private byte[] KeyStoreDecrypt(PasswordRegistryKey passwordIdentifier, string json)
         {
             var tries = 0;
 
             while (tries < MaxTries)
             {
-                _password = _passwordReader.ReadSecurePassword("Please enter key signer password");
-
+                var securePassword = _passwordReader.ReadSecurePassword(passwordIdentifier, "Please provide your node password");
+                var password = StringFromSecureString(securePassword);
+                
                 try
                 {
-                    var keyStore = _keyStoreService.DecryptKeyStoreFromJson(Password, json);
+                    var keyBytes = _keyStoreService.DecryptKeyStoreFromJson(password, json);
                     
-                    if (keyStore != null && keyStore.Length > 0)
+                    if (keyBytes != null && keyBytes.Length > 0)
                     {
-                        return keyStore;
+                        _passwordReader.AddPasswordToRegistry(passwordIdentifier, securePassword);
+                        return keyBytes;
                     }
                 }
                 catch (DecryptionException)
                 {
+                    securePassword.Dispose();
                     _logger.Error("Error decrypting keystore");
                 }
 
@@ -107,32 +117,52 @@ namespace Catalyst.Common.Keystore
 
             throw new AuthenticationException("Password incorrect for keystore.");
         }
-        
-        public async Task<string> KeyStoreGenerateAsync(IPrivateKey privateKey, string password)
+
+        public IPrivateKey KeyStoreGenerate(KeyRegistryKey keyIdentifier)
         {
-            var address = _addressHelper.GenerateAddress(privateKey.GetPublicKey());
-            
-            var json = _keyStoreService.EncryptAndGenerateDefaultKeyStoreAsJson(
-                password: password, 
-                key: _cryptoContext.ExportPrivateKey(privateKey),
-                address: address);
-            
+            var privateKey = _cryptoContext.GeneratePrivateKey();
+
+            KeyStoreEncryptAsync(privateKey, keyIdentifier);
+
+            return privateKey;
+        }
+
+        public async Task KeyStoreEncryptAsync(IPrivateKey privateKey, KeyRegistryKey keyIdentifier)
+        {
             try
             {
-                await _fileSystem.WriteFileToCddAsync(_keyStoreService.GenerateUtcFileName(address), json);
+                var address = _addressHelper.GenerateAddress(privateKey.GetPublicKey());        
+                var securePassword = _passwordReader.ReadSecurePassword(_defaultNodePassword, "Please create a password for this node");
+    
+                var password = StringFromSecureString(securePassword);
+    
+                var json = _keyStoreService.EncryptAndGenerateDefaultKeyStoreAsJson(
+                    password: password, 
+                    key: _cryptoContext.ExportPrivateKey(privateKey),
+                    address: address);
+
+                _passwordReader.AddPasswordToRegistry(_defaultNodePassword, securePassword);
+
+                await _fileSystem.WriteTextFileToCddSubDirectoryAsync(keyIdentifier.Name, Constants.KeyStoreDataSubDir, json);
             }
             catch (Exception e)
             {
                 _logger.Error(e.Message);
-                throw;
             }
-            
-            return json;
         }
 
-        public void Dispose()
+        private string GetJsonFromKeyStore(KeyRegistryKey keyIdentifier)
         {
-            _password?.Dispose();
+            return _fileSystem.ReadTextFromCddSubDirectoryFile(keyIdentifier.Name, Constants.KeyStoreDataSubDir);
+        }
+
+        private static string StringFromSecureString(SecureString secureString)
+        {
+            var stringPointer = Marshal.SecureStringToBSTR(secureString);
+            var password = Marshal.PtrToStringBSTR(stringPointer);
+            Marshal.ZeroFreeBSTR(stringPointer);
+
+            return password;
         }
     }
 }

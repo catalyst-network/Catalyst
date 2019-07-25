@@ -56,10 +56,11 @@ namespace Catalyst.Common.IO.Handlers
         {
             if (msg.IsBroadCastMessage())
             {
-                _broadcastManager.ReceiveAsync(msg).ConfigureAwait(false).GetAwaiter().GetResult();
+                var innerGossipMessageSigned = ProtocolMessageSigned.Parser.ParseFrom(msg.Value);
+                _broadcastManager.ReceiveAsync(innerGossipMessageSigned)
+                   .ConfigureAwait(false).GetAwaiter().GetResult();
 
-                var originalBroadcastMessage = ProtocolMessage.Parser.ParseFrom(msg.Value);
-                ctx.FireChannelRead(originalBroadcastMessage);
+                ctx.FireChannelRead(innerGossipMessageSigned.Message);
             }
             else
             {

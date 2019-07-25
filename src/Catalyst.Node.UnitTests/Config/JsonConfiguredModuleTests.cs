@@ -22,12 +22,10 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.IO;
-using System.Net;
 using Autofac;
-using Autofac.Configuration;
 using Catalyst.Common.Config;
-using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Common.Interfaces.Modules.Consensus;
 using Catalyst.Common.Interfaces.Modules.Contract;
 using Catalyst.Common.Interfaces.Modules.Dfs;
@@ -37,49 +35,24 @@ using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Core.Lib.Modules.Contract;
 using Catalyst.TestUtils;
 using FluentAssertions;
-using Microsoft.Extensions.Configuration;
-using NSubstitute;
-using Serilog;
 using Xunit;
+using Xunit.Abstractions;
 using LedgerService = Catalyst.Core.Lib.Modules.Ledger.Ledger;
 
 namespace Catalyst.Node.UnitTests.Config
 {
-    public sealed class JsonConfiguredModuleTests : IDisposable
+    public sealed class JsonConfiguredModuleTests : ConfigFileBasedTest
     {
-        private readonly IContainer _container;
+        protected override IEnumerable<string> ConfigFilesUsed { get; }
 
-        public JsonConfiguredModuleTests()
+        public JsonConfiguredModuleTests(ITestOutputHelper output) : base(output)
         {
-            var configuration = new ConfigurationBuilder()
-               .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile))
-               .Build();
+            ConfigFilesUsed = new[] {Path.Combine(Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile)};
 
-            var configurationModule = new ConfigurationModule(configuration);
-            var containerBuilder = new ContainerBuilder();
-            containerBuilder.RegisterInstance(configuration).As<IConfigurationRoot>();
-            containerBuilder.RegisterModule(configurationModule);
+            ConfigureContainerBuilder();
 
-            PerformExtraRegistrations(containerBuilder);
-
-            _container = containerBuilder.Build();
-        }
-
-        private static void PerformExtraRegistrations(ContainerBuilder builder)
-        {
-            builder.RegisterInstance(Substitute.For<ILogger>()).As<ILogger>();
-            builder.RegisterInstance(new TestPasswordReader()).As<IPasswordReader>();
-
-            var peerSettings = Substitute.For<IPeerSettings>();
-            peerSettings.SeedServers.Returns(new[] {"seed1.seedservers.bogus", "seed2.seedservers.bogus"});
-            peerSettings.BindAddress.Returns(IPAddress.Parse("124.220.98.2"));
-            peerSettings.Port.Returns(12);
-            builder.RegisterInstance(peerSettings).As<IPeerSettings>();
-        }
-
-        public void Dispose()
-        {
-            _container?.Dispose();
+            ContainerBuilder.RegisterInstance(PeerSettingsHelper.TestPeerSettings())
+               .As<IPeerSettings>();
         }
 
         [Theory]
@@ -91,9 +64,10 @@ namespace Catalyst.Node.UnitTests.Config
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         private void ComponentsJsonFile_should_configure_modules(Type interfaceType, Type resolutionType)
         {
-            using (_container.BeginLifetimeScope(Guid.NewGuid().ToString()))
+            using (var container = ContainerBuilder.Build())
+            using (var scope = container.BeginLifetimeScope(Guid.NewGuid().ToString()))
             {
-                var resolvedType = _container.Resolve(interfaceType);
+                var resolvedType = scope.Resolve(interfaceType);
                 resolvedType.Should().NotBeNull();
                 resolvedType.Should().BeOfType(resolutionType);
             }

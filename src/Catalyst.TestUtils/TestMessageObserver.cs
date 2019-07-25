@@ -25,6 +25,7 @@ using System;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Observers;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.Interfaces.Rpc.IO.Messaging.Dto;
 using Catalyst.Common.IO.Observers;
 using Catalyst.Protocol;
 using Catalyst.Protocol.Common;
@@ -38,6 +39,8 @@ namespace Catalyst.TestUtils
         IP2PMessageObserver, IRpcResponseObserver, IRpcRequestObserver
         where TProto : IMessage, IMessage<TProto>
     {
+        public IObservable<IRpcClientMessageDto<IMessage>> MessageResponseStream { private set; get; }
+
         public IObserver<TProto> SubstituteObserver { get; }
         public IPeerIdentifier PeerIdentifier { get; }
         

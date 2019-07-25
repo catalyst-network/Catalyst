@@ -28,7 +28,6 @@ using Catalyst.Common.Interfaces.FileTransfer;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.IO.Observers;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.IO.Observers;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using DotNetty.Transport.Channels;
@@ -40,9 +39,8 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
     /// Handles Get file from DFS response
     /// </summary>
     /// <seealso cref="IRpcResponseObserver" />
-    public sealed class GetFileFromDfsResponseObserver : 
-        ResponseObserverBase<GetFileFromDfsResponse>,
-        IRpcResponseObserver
+    public sealed class GetFileFromDfsResponseObserver :
+        RpcResponseObserver<GetFileFromDfsResponse>
     {
         /// <summary>The file transfer factory</summary>
         private readonly IDownloadFileTransferFactory _fileTransferFactory;
