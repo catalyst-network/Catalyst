@@ -28,11 +28,12 @@ using Catalyst.Common.Interfaces.FileTransfer;
 using Catalyst.Protocol.Rpc.Node;
 using System.IO;
 using Catalyst.Cli.CommandTypes;
+using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 
 namespace Catalyst.Cli.Commands
 {
-    public sealed class AddFileCommand : BaseMessageCommand<AddFileToDfsRequest, AddFileOptions>
+    public sealed class AddFileCommand : BaseMessageCommand<AddFileToDfsRequest, AddFileToDfsResponse, AddFileOptions>
     {
         private readonly IUploadFileTransferFactory _uploadFileTransferFactory;
 
@@ -64,10 +65,12 @@ namespace Catalyst.Cli.Commands
                 request.FileSize = (ulong) fileStream.Length;
             }
 
+            var protocolMessage = request.ToProtocolMessage(SenderPeerIdentifier.PeerId);
             var requestMessage = CommandContext.DtoFactory.GetDto(
-                request.ToProtocolMessage(SenderPeerIdentifier.PeerId),
+                protocolMessage,
                 SenderPeerIdentifier,
-                RecipientPeerIdentifier
+                RecipientPeerIdentifier,
+                protocolMessage.CorrelationId.ToCorrelationId()
             );
 
             IUploadFileInformation fileTransfer = new UploadFileTransferInformation(
@@ -95,6 +98,15 @@ namespace Catalyst.Cli.Commands
             else
             {
                 CommandContext.UserOutput.WriteLine("\nFile transfer expired.");
+            }
+        }
+
+        protected override void ResponseMessage(AddFileToDfsResponse response)
+        {
+            var responseCode = (FileTransferResponseCodes) response.ResponseCode[0];
+            if (responseCode == FileTransferResponseCodes.Failed || responseCode == FileTransferResponseCodes.Finished)
+            {
+                CommandContext.UserOutput.WriteLine("File transfer completed, Response: " + responseCode.Name + " Dfs Hash: " + response.DfsHash);
             }
         }
     }

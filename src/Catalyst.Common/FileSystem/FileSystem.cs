@@ -34,32 +34,24 @@ using ILogger = Serilog.ILogger;
 
 namespace Catalyst.Common.FileSystem
 {
-    public sealed class FileSystem
+    public class FileSystem
         : System.IO.Abstractions.FileSystem,
             IFileSystem
     {
-        private string _currentDataDirPointer;
-        private readonly ILogger _logger;
-        private bool _dataDirValid = true;
-        private string _dataDir;
-        public string DataDir { get { return this._dataDir; } set { _dataDir = value; } }
+        private string _currentDataDirPointer => Path.Combine(AppDomain.CurrentDomain.BaseDirectory, Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile);
+        private string _dataDir;     
         public static string FilePointerBaseLocation => Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
 
-        public FileSystem(ILogger logger, string configDataDir = "")
+        public FileSystem()
         {
-            _currentDataDirPointer = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile);
-
-            DataDir = File.Exists(_currentDataDirPointer) ?
-                GetCurrentDataDir(_currentDataDirPointer) : Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\" + Constants.CatalystDataDir;
-
-            _logger = logger;
+            _dataDir = File.Exists(_currentDataDirPointer) ?
+                GetCurrentDataDir(_currentDataDirPointer) : Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) , "\\", Constants.CatalystDataDir);
         }
-
-        public DirectoryInfo GetCatalystDataDir()
+        public virtual DirectoryInfo GetCatalystDataDir()
         {
             var path = Path.Combine(GetUserHomeDir(), Constants.CatalystDataDir);
 
-            return new DirectoryInfo(_dataDirValid && string.IsNullOrEmpty(DataDir) == false ? DataDir : path);
+            return new DirectoryInfo(string.IsNullOrEmpty(_dataDir) == false ? _dataDir : path);
         }
         public bool SetCurrentPath(string path)
         {
@@ -74,22 +66,45 @@ namespace Catalyst.Common.FileSystem
             return false;
         }
 
-        public async Task<IFileInfo> WriteFileToCddAsync(string fileName, string contents)
+        public Task<IFileInfo> WriteTextFileToCddAsync(string fileName, string contents)
         {
-            var fullPath = Path.Combine(GetCatalystDataDir().ToString(), fileName);
+            var fullPath = Path.Combine(GetCatalystDataDir().FullName, fileName);
 
-            using (var file = File.CreateText(fullPath))
+            return WriteFileToPathAsync(fullPath, contents);
+        }
+
+        public Task<IFileInfo> WriteTextFileToCddSubDirectoryAsync(string fileName, string subDirectory, string contents)
+        {
+            var fullPath = Path.Combine(GetCatalystDataDir().FullName, subDirectory, fileName);
+
+            return WriteFileToPathAsync(fullPath, contents);
+        }
+
+        private async Task<IFileInfo> WriteFileToPathAsync(string path, string contents)
+        {
+            var fileInfo = FileInfo.FromFileName(path);
+            if (!Directory.Exists(fileInfo.DirectoryName))
+            {
+                Directory.CreateDirectory(fileInfo.DirectoryName);
+            }
+
+            using (var file = File.CreateText(path))
             {
                 await file.WriteAsync(contents).ConfigureAwait(false);
                 await file.FlushAsync().ConfigureAwait(false);
             }
 
-            return FileInfo.FromFileName(fullPath);
+            return FileInfo.FromFileName(path);
         }
 
         public bool DataFileExists(string fileName)
         {
-            return File.Exists(Path.Combine(GetCatalystDataDir().ToString(), fileName));
+            return File.Exists(Path.Combine(GetCatalystDataDir().FullName, fileName));
+        }
+
+        public bool DataFileExistsInSubDirectory(string fileName, string subDirectory)
+        {
+            return File.Exists(Path.Combine(GetCatalystDataDir().FullName, subDirectory, fileName));
         }
 
         private static string GetCurrentDataDir(string configFilePointer)
@@ -99,12 +114,28 @@ namespace Catalyst.Common.FileSystem
             return configurationRoot.GetSection("components").GetChildren()
                 .Select(p => p.GetSection("parameters:configDataDir").Value).ToArray()
                 .Where(m => string.IsNullOrEmpty(m) == false).FirstOrDefault();
-
         }
 
         private static string GetUserHomeDir()
         {
             return Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+        }
+
+        public string ReadTextFromCddFile(string fileName)
+        {
+            var path = Path.Combine(GetCatalystDataDir().FullName, fileName);
+            return ReadTextFromFile(path);
+        }
+
+        public string ReadTextFromCddSubDirectoryFile(string fileName, string subDirectory)
+        {
+            var path = Path.Combine(GetCatalystDataDir().FullName, subDirectory, fileName);
+            return ReadTextFromFile(path);
+        }
+
+        private string ReadTextFromFile(string filePath)
+        {
+            return File.Exists(filePath) ? File.ReadAllText(filePath) : null;
         }
 
         private static void SaveConfigPointerFile(string configDirLocation, string configFilePointer)
@@ -116,7 +147,7 @@ namespace Catalyst.Common.FileSystem
 
             string text = System.IO.File.ReadAllText(configFilePointer);
             text = text.Replace(configDataDir, configDirLocation);
-            System.IO.File.WriteAllText(configFilePointer, text);          
+            System.IO.File.WriteAllText(configFilePointer, text);
         }
 
         private static string PrepDirectoryLocationFormat(string dir)
@@ -130,6 +161,6 @@ namespace Catalyst.Common.FileSystem
                 final += "\\\\" + item;
             }
             return final;
-        }   
+        }
     }
 }

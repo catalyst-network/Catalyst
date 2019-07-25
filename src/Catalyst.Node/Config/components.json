@@ -10,6 +10,30 @@
             ]
         },
         {
+            "type": "Catalyst.Node.Repository.PeerRepository, Catalyst.Node",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.Repository.IPeerRepository, Catalyst.Common"
+                }
+            ]
+        },
+        {
+            "type": "Catalyst.Node.Repository.AuthCredentialRepository, Catalyst.Node",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.Repository.IAuthCredentialRepository, Catalyst.Common"
+                }
+            ]
+        },
+        {
+            "type": "Catalyst.Node.Repository.AccountRepository, Catalyst.Node",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.Repository.IAccountRepository, Catalyst.Common"
+                }
+            ]
+        },
+        {
             "type": "Catalyst.Common.IO.EventLoop.EventLoopGroupFactoryConfiguration, Catalyst.Common",
             "services": [
                 {
@@ -166,10 +190,10 @@
             ]
         },
         {
-            "type": "SharpRepository.InMemoryRepository.InMemoryRepository`1[[Catalyst.Common.P2P.Peer, Catalyst.Common]], SharpRepository.InMemoryRepository",
+            "type": "SharpRepository.InMemoryRepository.InMemoryRepository`2[[Catalyst.Common.P2P.Peer, Catalyst.Common], [System.String, mscorlib]], SharpRepository.InMemoryRepository",
             "services": [
                 {
-                    "type": "SharpRepository.Repository.IRepository`1[[Catalyst.Common.P2P.Peer, Catalyst.Common]], SharpRepository.Repository"
+                    "type": "SharpRepository.Repository.IRepository`2[[Catalyst.Common.P2P.Peer, Catalyst.Common], [System.String, mscorlib]], SharpRepository.Repository"
                 }
             ]
         },
@@ -182,10 +206,10 @@
             ]
         },
         {
-            "type": "Catalyst.Common.FileSystem.FileSystemAwareXmlRepository`1[[Catalyst.Core.Lib.Rpc.Authentication.AuthCredentials, Catalyst.Core.Lib]], Catalyst.Common",
+            "type": "Catalyst.Common.Repository.FileSystemAwareXmlRepository`1[[Catalyst.Common.Rpc.Authentication.AuthCredentials, Catalyst.Common]], Catalyst.Common",
             "services": [
                 {
-                    "type": "SharpRepository.Repository.IRepository`1[[Catalyst.Core.Lib.Rpc.Authentication.AuthCredentials, Catalyst.Core.Lib]], SharpRepository.Repository"
+                    "type": "SharpRepository.Repository.IRepository`2[[Catalyst.Common.Rpc.Authentication.AuthCredentials, Catalyst.Common], [System.String, mscorlib]], SharpRepository.Repository"
                 }
             ]
         },
@@ -194,14 +218,6 @@
             "services": [
                 {
                     "type": "Microsoft.Extensions.Caching.Memory.IMemoryCache, Microsoft.Extensions.Caching.Abstractions"
-                }
-            ]
-        },
-        {
-            "type": "Catalyst.Core.Lib.Rpc.Authentication.AuthCredentials",
-            "services": [
-                {
-                    "type": "Catalyst.Common.Interfaces.Rpc.Authentication.IAuthCredentials, Catalyst.Common"
                 }
             ]
         },
@@ -262,12 +278,22 @@
             ]
         },
         {
+            "type": "Catalyst.Common.Registry.PasswordRegistry, Catalyst.Common",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.Registry.IPasswordRegistry, Catalyst.Common"
+                }
+            ],
+            "instanceScope": "singleinstance"
+        },
+        {
             "type": "Catalyst.Common.Cryptography.ConsolePasswordReader, Catalyst.Common",
             "services": [
                 {
                     "type": "Catalyst.Common.Interfaces.Cryptography.IPasswordReader, Catalyst.Common"
                 }
-            ]
+            ],
+            "instanceScope": "singleinstance"
         },
         // WHY USE CLI BASED CLASS AND NOT IN COMMON???
         {

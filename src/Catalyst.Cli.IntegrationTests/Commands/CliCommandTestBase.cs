@@ -21,6 +21,7 @@
 
 #endregion
 
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -55,16 +56,19 @@ namespace Catalyst.Cli.IntegrationTests.Commands
         protected ICatalystCli Shell;
         private IContainer _container;
 
+        protected override IEnumerable<string> ConfigFilesUsed { get; }
+
         protected CliCommandTestsBase(ITestOutputHelper output) : base(output)
         {
-            var config = new ConfigurationBuilder()
-               .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ShellComponentsJsonConfigFile))
-               .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile))
-               .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ShellNodesConfigFile))
-               .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ShellConfigFile))
-               .Build();
+            ConfigFilesUsed = new[]
+            {
+                Path.Combine(Constants.ConfigSubFolder, Constants.ShellComponentsJsonConfigFile),
+                Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile),
+                Path.Combine(Constants.ConfigSubFolder, Constants.ShellNodesConfigFile),
+                Path.Combine(Constants.ConfigSubFolder, Constants.ShellConfigFile)
+            };
 
-            ConfigureContainerBuilder(config);
+            ConfigureContainerBuilder();
 
             ConfigureNodeClient();
 

@@ -28,7 +28,7 @@ using Catalyst.Protocol.Rpc.Node;
 
 namespace Catalyst.Cli.Commands
 {
-    public sealed class GetVersionCommand : BaseMessageCommand<VersionRequest, GetVersionOptions>
+    public sealed class GetVersionCommand : BaseMessageCommand<VersionRequest, VersionResponse, GetVersionOptions>
     {
         public GetVersionCommand(ICommandContext commandContext) : base(commandContext) { }
 

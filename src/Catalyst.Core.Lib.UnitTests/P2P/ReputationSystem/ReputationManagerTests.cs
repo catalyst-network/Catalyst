@@ -29,12 +29,12 @@ using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using Catalyst.Common.Interfaces.Config;
 using Catalyst.Common.Interfaces.P2P.ReputationSystem;
+using Catalyst.Common.Interfaces.Repository;
 using Catalyst.Common.P2P;
 using Catalyst.Core.Lib.P2P.ReputationSystem;
 using Catalyst.TestUtils;
 using NSubstitute;
 using Serilog;
-using SharpRepository.Repository;
 using Xunit;
 
 namespace Catalyst.Core.Lib.UnitTests.P2P.ReputationSystem
@@ -42,12 +42,12 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.ReputationSystem
     public sealed class ReputationManagerTests
     {
         private readonly ILogger _subbedLogger;
-        private readonly IRepository<Peer> _subbedPeerRepository;
+        private readonly IPeerRepository _subbedPeerRepository;
 
         public ReputationManagerTests()
         {
             _subbedLogger = Substitute.For<ILogger>();
-            _subbedPeerRepository = Substitute.For<IRepository<Peer>>();
+            _subbedPeerRepository = Substitute.For<IPeerRepository>();
         }
 
         [Fact]

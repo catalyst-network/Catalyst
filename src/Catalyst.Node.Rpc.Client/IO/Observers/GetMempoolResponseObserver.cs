@@ -21,12 +21,8 @@
 
 #endregion
 
-using System;
-using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
-using Catalyst.Common.Interfaces.IO.Observers;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.IO.Observers;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using DotNetty.Transport.Channels;
@@ -39,11 +35,8 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
     /// The handler reads the response's payload and formats it in user readable format and writes it to the console.
     /// </summary>
     public sealed class GetMempoolResponseObserver
-        : ResponseObserverBase<GetMempoolResponse>,
-            IRpcResponseObserver
+        : RpcResponseObserver<GetMempoolResponse>
     {
-        private readonly IUserOutput _output;
-
         /// <summary>
         /// <param name="output">
         ///     A service used to output the result of the messages handling to the user.
@@ -52,12 +45,8 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
         ///     Logger to log debug related information.
         /// </param>
         /// </summary>
-        public GetMempoolResponseObserver(IUserOutput output,
-            ILogger logger)
-            : base(logger)
-        {
-            _output = output;
-        }
+        public GetMempoolResponseObserver(ILogger logger)
+            : base(logger) { }
         
         /// <summary>
         /// 
@@ -74,25 +63,9 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
             Guard.Argument(getMempoolResponse, nameof(getMempoolResponse)).NotNull();
             Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
             Guard.Argument(senderPeerIdentifier, nameof(senderPeerIdentifier)).NotNull();
-            Logger.Debug("GetMempoolResponseHandler starting ...");
-
             Guard.Argument(getMempoolResponse, nameof(getMempoolResponse)).NotNull("The GetMempoolResponse cannot be null")
                .Require(d => d.Mempool != null,
                     d => $"{nameof(getMempoolResponse)} must have a valid Mempool.");
-            
-            try
-            {
-                for (var i = 0; i < getMempoolResponse.Mempool.Count; i++)
-                {
-                    _output.WriteLine($"tx{i}: {getMempoolResponse.Mempool[i]},");
-                }
-            }
-            catch (Exception ex)
-            {
-                Logger.Error(ex,
-                    "Failed to handle GetMempoolResponse after receiving message {0}", getMempoolResponse);
-                _output.WriteLine(ex.Message);
-            }
         }
     }
 }

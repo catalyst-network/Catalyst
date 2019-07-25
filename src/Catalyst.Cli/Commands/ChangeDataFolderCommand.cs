@@ -34,10 +34,9 @@ using Catalyst.Common.Util;
 
 namespace Catalyst.Cli.Commands
 {
-    public sealed class ChangeDataFolderCommand : BaseMessageCommand<SetPeerDataFolderRequest, ChangeDataFolderOptions>
+    public sealed class ChangeDataFolderCommand : BaseMessageCommand<SetPeerDataFolderRequest, GetPeerDataFolderResponse, ChangeDataFolderOptions>
     {
         public ChangeDataFolderCommand(ICommandContext commandContext) : base(commandContext) { }
-
         protected override SetPeerDataFolderRequest GetMessage(ChangeDataFolderOptions option)
         {
             return new SetPeerDataFolderRequest

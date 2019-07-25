@@ -21,10 +21,15 @@
 
 #endregion
 
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Net;
+using System.Reactive.Linq;
+using System.Reactive.Subjects;
+using Catalyst.Common.Interfaces.IO.Observables;
 using Catalyst.Common.Interfaces.IO.Transport;
+using Catalyst.Common.IO.Events;
 using Dawn;
 
 namespace Catalyst.Common.IO.Transport
@@ -33,10 +38,16 @@ namespace Catalyst.Common.IO.Transport
         : ISocketClientRegistry<TSocketChannel>
         where TSocketChannel : class, ISocketClient
     {
+        public IObservable<ISocketClientRegistryEvent> EventStream { get; }
+        private readonly ReplaySubject<ISocketClientRegistryEvent> _eventReplySubject;
+
         public IDictionary<int, TSocketChannel> Registry { get; }
 
         public SocketClientRegistry()
         {
+            _eventReplySubject = new ReplaySubject<ISocketClientRegistryEvent>(1);
+            EventStream = _eventReplySubject.AsObservable();
+
             Registry = new ConcurrentDictionary<int, TSocketChannel>();
         }
 
@@ -54,7 +65,14 @@ namespace Catalyst.Common.IO.Transport
             Guard.Argument(socketHashCode, nameof(socketHashCode)).NotZero();
             Guard.Argument(socket.Channel.Active, nameof(socket))
                .True("Unable to add inactive client to the registry.");
-            return Registry.TryAdd(socketHashCode, socket);
+
+            var addedToRegistry = Registry.TryAdd(socketHashCode, socket);
+            if (addedToRegistry)
+            {
+                _eventReplySubject.OnNext(new SocketClientRegistryClientAdded {SocketHashCode = socketHashCode});
+            }
+
+            return addedToRegistry;
         }
 
         /// <inheritdoc />
@@ -71,7 +89,13 @@ namespace Catalyst.Common.IO.Transport
         public bool RemoveClientFromRegistry(int socketHashCode)
         {
             Guard.Argument(socketHashCode, nameof(socketHashCode)).NotZero();
-            return Registry.Remove(socketHashCode);
+            var removedFromRegistry = Registry.Remove(socketHashCode);
+            if (removedFromRegistry)
+            {
+                _eventReplySubject.OnNext(new SocketClientRegistryClientRemoved {SocketHashCode = socketHashCode});
+            }
+
+            return removedFromRegistry;
         }
 
         public string GetRegistryType()

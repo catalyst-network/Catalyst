@@ -27,6 +27,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
+using Catalyst.Common.Interfaces.Repository;
 using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.Network;
 using Catalyst.Common.P2P;
@@ -39,7 +40,6 @@ using DotNetty.Transport.Channels;
 using FluentAssertions;
 using NSubstitute;
 using Serilog;
-using SharpRepository.Repository;
 using Xunit;
 
 namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Observers
@@ -78,7 +78,7 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Observers
         [InlineData("FakePeer1002", "FakePeer6000", "FakePeerSataoshi")]
         public async Task TestPeerListRequestResponse(params string[] fakePeers)
         {
-            var peerRepository = Substitute.For<IRepository<Peer>>();
+            var peerRepository = Substitute.For<IPeerRepository>();
             var peerList = new List<Peer>();
 
             fakePeers.ToList().ForEach(fakePeer =>

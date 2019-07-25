@@ -24,7 +24,6 @@
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Observers;
 using Catalyst.Protocol.Common;
-using DotNetty.Transport.Channels;
 using Serilog;
 using System;
 using System.Reactive.Concurrency;
@@ -37,8 +36,6 @@ namespace Catalyst.Common.IO.Observers
         protected readonly ILogger Logger;
         protected IDisposable MessageSubscription;
         private readonly string _filterMessageType;
-
-        public IChannelHandlerContext ChannelHandlerContext { get; protected set; }
 
         protected MessageObserverBase(ILogger logger, string filterMessageType)
         {
@@ -70,10 +67,9 @@ namespace Catalyst.Common.IO.Observers
         public virtual void OnError(Exception exception)
         {
             Logger.Error(exception, "Failed to process message.");
-            ChannelHandlerContext?.CloseAsync().ConfigureAwait(false);
         }
 
-        private void Dispose(bool disposing)
+        protected virtual void Dispose(bool disposing)
         {
             if (!disposing)
             {
@@ -81,7 +77,6 @@ namespace Catalyst.Common.IO.Observers
             }
 
             MessageSubscription?.Dispose();
-            ChannelHandlerContext?.CloseAsync().ConfigureAwait(false);
         }
 
         public void Dispose()

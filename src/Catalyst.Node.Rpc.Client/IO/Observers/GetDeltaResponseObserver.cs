@@ -21,12 +21,10 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.IO.Observers;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Observers;
-using Catalyst.Protocol;
 using Catalyst.Protocol.Rpc.Node;
 using DotNetty.Transport.Channels;
 using Serilog;
@@ -35,29 +33,14 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
 {
     /// <inheritdoc cref="IRpcResponseObserver"/>
     /// <inheritdoc cref="ResponseObserverBase{TProto}"/>
-    public class GetDeltaResponseObserver : ResponseObserverBase<GetDeltaResponse>,
-        IRpcResponseObserver
+    public sealed class GetDeltaResponseObserver : RpcResponseObserver<GetDeltaResponse>
     {
-        public static readonly string UnableToRetrieveDeltaMessage = "Unable to retrieve delta.";
-        private readonly IUserOutput _output;
-
-        public GetDeltaResponseObserver(IUserOutput output, ILogger logger) : base(logger)
-        {
-            _output = output;
-        }
+        public GetDeltaResponseObserver(ILogger logger) : base(logger) { }
 
         /// <inheritdoc />
         protected override void HandleResponse(GetDeltaResponse deltaResponse,
             IChannelHandlerContext channelHandlerContext,
             IPeerIdentifier senderPeerIdentifier,
-            ICorrelationId correlationId)
-        {
-            if (deltaResponse.Delta == null)
-            {
-                _output.WriteLine(UnableToRetrieveDeltaMessage);
-            }
-
-            _output.WriteLine(deltaResponse.Delta.ToJsonString());
-        }
+            ICorrelationId correlationId) { }
     }
 }

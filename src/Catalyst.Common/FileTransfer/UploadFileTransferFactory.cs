@@ -28,6 +28,7 @@ using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.FileTransfer;
 using Polly;
 using Polly.Retry;
+using Serilog;
 
 namespace Catalyst.Common.FileTransfer
 {
@@ -44,7 +45,7 @@ namespace Catalyst.Common.FileTransfer
         /// <summary>The retry policy</summary>
         private readonly AsyncRetryPolicy _retryPolicy;
         
-        public UploadFileTransferFactory()
+        public UploadFileTransferFactory(ILogger logger) : base(logger)
         {
             _retryPolicy = Policy
                .Handle<Exception>()

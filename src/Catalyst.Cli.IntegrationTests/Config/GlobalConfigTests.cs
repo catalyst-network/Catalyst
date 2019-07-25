@@ -40,6 +40,9 @@ namespace Catalyst.Cli.IntegrationTests.Config
         public static readonly List<object[]> Networks =
             Enumeration.GetAll<Network>().Select(n => new object[] {n}).ToList();
 
+        private IEnumerable<string> _configFilesUsed;
+        protected override IEnumerable<string> ConfigFilesUsed => _configFilesUsed;
+
         public GlobalConfigTests(ITestOutputHelper output) : base(output) { }
 
         [Theory]
@@ -47,7 +50,7 @@ namespace Catalyst.Cli.IntegrationTests.Config
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void Registering_All_Configs_Should_Allow_Resolving_ICatalystCli(Network network)
         {
-            var configFiles = new[]
+            _configFilesUsed = new[]
                 {
                     Constants.NetworkConfigFile(network),
                     Constants.ShellComponentsJsonConfigFile,
@@ -57,11 +60,7 @@ namespace Catalyst.Cli.IntegrationTests.Config
                 }
                .Select(f => Path.Combine(Constants.ConfigSubFolder, f));
 
-            var configBuilder = new ConfigurationBuilder();
-            configFiles.ToList().ForEach(f => configBuilder.AddJsonFile(f));
-            var configRoot = configBuilder.Build();
-
-            ConfigureContainerBuilder(configRoot);
+            ConfigureContainerBuilder();
 
             var container = ContainerBuilder.Build();
 

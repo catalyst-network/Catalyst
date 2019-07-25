@@ -43,7 +43,7 @@ namespace Catalyst.Cli.Options
         public string DataFolder { get; set; }
 
         /// <inheritdoc />
-        [Option('l', "ip", HelpText = "IP address of the peer whose data folder is to be updated.")]
+        [Option('i', "ip", HelpText = "IP address of the peer whose data folder is to be updated.")]
         public string IpAddress { get; set; }
 
         /// <inheritdoc />

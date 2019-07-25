@@ -22,7 +22,7 @@
 #endregion
 
 using Catalyst.Common.Config;
-using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
+using Catalyst.Protocol.Rpc.Node;
 
 namespace Catalyst.Common.Interfaces.FileTransfer
 {
@@ -33,10 +33,8 @@ namespace Catalyst.Common.Interfaces.FileTransfer
     public interface IDownloadFileTransferFactory : IFileTransferFactory<IDownloadFileInformation>
     {
         /// <summary>Downloads the chunk.</summary>
-        /// <param name="fileName">Name of the file.</param>
-        /// <param name="chunkId">The chunk identifier.</param>
-        /// <param name="fileChunk">The file chunk.</param>
+        /// <param name="request">The chunk file bytes request.</param>
         /// <returns></returns>
-        FileTransferResponseCodes DownloadChunk(ICorrelationId fileName, uint chunkId, byte[] fileChunk);
+        FileTransferResponseCodes DownloadChunk(TransferFileBytesRequest request);
     }
 }

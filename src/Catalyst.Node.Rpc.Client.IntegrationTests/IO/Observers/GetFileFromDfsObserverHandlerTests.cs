@@ -34,8 +34,7 @@ using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.P2P;
-using Catalyst.Common.Rpc.IO.Observers;
-using Catalyst.Node.Rpc.Client.IO.Observers;
+using Catalyst.Core.Lib.Rpc.IO.Observers;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
@@ -56,16 +55,9 @@ namespace Catalyst.Node.Rpc.Client.IntegrationTests.IO.Observers
 
         public GetFileFromDfsObserverHandlerTests(ITestOutputHelper testOutput) : base(testOutput)
         {
-            var peerSettings = Substitute.For<IPeerSettings>();
-            peerSettings.SeedServers.Returns(new List<string>
-            {
-                "catalyst.seedserver01.com",
-                "catalyst.seedserver02.com"
-            });
-
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
-            _fileDownloadFactory = new DownloadFileTransferFactory();
+            _fileDownloadFactory = new DownloadFileTransferFactory(_logger);
             _logger = Substitute.For<ILogger>();
             _dfs = Substitute.For<IDfs>();
         }
@@ -93,7 +85,7 @@ namespace Catalyst.Node.Rpc.Client.IntegrationTests.IO.Observers
                     nodePeer,
                     _fakeContext.Channel, correlationId, fakeFileOutputPath, 0);
                 var getFileFromDfsResponseHandler =
-                    new GetFileFromDfsResponseObserver(_logger, _fileDownloadFactory);
+                    new Client.IO.Observers.GetFileFromDfsResponseObserver(_logger, _fileDownloadFactory);
                 var transferBytesHandler =
                     new TransferFileBytesRequestObserver(_fileDownloadFactory, rpcPeer, _logger);
                 
@@ -120,7 +112,7 @@ namespace Catalyst.Node.Rpc.Client.IntegrationTests.IO.Observers
                 {
                     var transferMessage = fileUploadInformation
                        .GetUploadMessageDto(i);
-                    transferMessage.Content.ToProtocolMessage(rpcPeerId).SendToHandler(_fakeContext, transferBytesHandler);
+                    transferMessage.Content.SendToHandler(_fakeContext, transferBytesHandler);
                 }
 
                 await TaskHelper.WaitForAsync(() => fileDownloadInformation.IsCompleted, TimeSpan.FromSeconds(10));

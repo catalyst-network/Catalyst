@@ -27,11 +27,19 @@ using System.Threading.Tasks;
 
 namespace Catalyst.Common.Interfaces.FileSystem
 {
-    public interface IFileSystem
+    public interface IFileSystem : System.IO.Abstractions.IFileSystem
     {
         DirectoryInfo GetCatalystDataDir();
-        Task<IFileInfo> WriteFileToCddAsync(string fileName, string contents);
+        Task<IFileInfo> WriteTextFileToCddAsync(string fileName, string contents);
+        Task<IFileInfo> WriteTextFileToCddSubDirectoryAsync(string fileName, string subDirectory, string contents);
         bool DataFileExists(string fileName);
+
+        bool DataFileExistsInSubDirectory(string fileName, string subDirectory);
+
+        string ReadTextFromCddFile(string fileName);
+
+        string ReadTextFromCddSubDirectoryFile(string fileName, string subDirectory);
+
         bool SetCurrentPath(string path);
     }
 }

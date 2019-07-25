@@ -28,7 +28,7 @@ using Catalyst.Protocol.Rpc.Node;
 
 namespace Catalyst.Cli.Commands
 {
-    public sealed class GetInfoCommand : BaseMessageCommand<GetInfoRequest, GetInfoOptions>
+    public sealed class GetInfoCommand : BaseMessageCommand<GetInfoRequest, GetInfoResponse, GetInfoOptions>
     {
         public GetInfoCommand(ICommandContext commandContext) : base(commandContext) { }
 

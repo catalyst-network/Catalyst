@@ -34,6 +34,7 @@ using Catalyst.Protocol.Rpc.Node;
 using Catalyst.Protocol.Transaction;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
+using FluentAssertions;
 using Nethereum.RLP;
 using NSubstitute;
 using Serilog;
@@ -47,7 +48,6 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
         private readonly IChannelHandlerContext _fakeContext;
         public static readonly List<object[]> QueryContents;
 
-        private readonly IUserOutput _output;
         private GetMempoolResponseObserver _observer;
 
         static GetMempoolResponseObserverTests()
@@ -71,7 +71,6 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
         {
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
-            _output = Substitute.For<IUserOutput>();
         }
 
         private static IEnumerable<string> CreateMemPoolData()
@@ -83,9 +82,9 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
             };
 
             var txEncodedLst = txLst.Select(tx => tx.ToString().ToBytesForRLPEncoding()).ToList();
-            
+
             var mempoolList = new List<string>();
-            
+
             foreach (var tx in txEncodedLst)
             {
                 mempoolList.Add(Encoding.Default.GetString(tx));
@@ -97,9 +96,8 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
         [Theory]
         [MemberData(nameof(QueryContents))]
         public async Task RpcClient_Can_Handle_GetMempoolResponse(IEnumerable<string> mempoolContent)
-        { 
+        {
             var txList = mempoolContent.ToList();
-
             var getMempoolResponse = new GetMempoolResponse
             {
                 Mempool = {txList}
@@ -109,12 +107,15 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
                 getMempoolResponse.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender_key").PeerId,
                     CorrelationId.GenerateCorrelationId()));
 
-            _observer = new GetMempoolResponseObserver(_output, _logger);
+            GetMempoolResponse messageStreamResponse = null;
+
+            _observer = new GetMempoolResponseObserver(_logger);
             _observer.StartObserving(messageStream);
+            _observer.SubscribeToResponse(message => messageStreamResponse = message);
 
             await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
 
-            _output.Received(txList.Count).WriteLine(Arg.Any<string>());
+            messageStreamResponse.Mempool.Count.Should().Be(txList.Count);
         }
 
         public void Dispose()

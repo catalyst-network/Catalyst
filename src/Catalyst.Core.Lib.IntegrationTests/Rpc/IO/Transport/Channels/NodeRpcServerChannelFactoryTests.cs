@@ -139,7 +139,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.Rpc.IO.Transport.Channels
             using (messageStream.Subscribe(observer))
             {
                 _clientChannel.WriteInbound(sentBytes);
-                _clientChannel.ReadInbound<ProtocolMessageSigned>();
+                _clientChannel.ReadInbound<ProtocolMessage>();
                 _clientCorrelationManager.ReceivedWithAnyArgs(1).TryMatchResponse(Arg.Any<ProtocolMessage>());
                 _clientKeySigner.ReceivedWithAnyArgs(1).Verify(null, null);
                 await messageStream.WaitForItemsOnDelayedStreamOnTaskPoolSchedulerAsync();

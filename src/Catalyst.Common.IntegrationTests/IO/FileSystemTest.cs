@@ -49,7 +49,7 @@ namespace Catalyst.Common.IntegrationTests.IO
         public FileSystemTest()
         {
             _logger = Substitute.For<ILogger>();
-            _fileSystem = new CommonFileSystem(_logger);
+            _fileSystem = new CommonFileSystem();
 
             Setup();
         }
@@ -84,7 +84,7 @@ namespace Catalyst.Common.IntegrationTests.IO
         {
             _fileSystem.SetCurrentPath(_sourceFolder).Should().BeTrue();
 
-            var fileSystem = new CommonFileSystem(_logger);
+            var fileSystem = new CommonFileSystem();
 
             fileSystem.GetCatalystDataDir().FullName.Should().Be(_fileSystem.GetCatalystDataDir().FullName);
         }

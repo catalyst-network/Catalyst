@@ -22,11 +22,16 @@
 #endregion
 
 using System.Security;
+using Catalyst.Common.Config;
 
 namespace Catalyst.Common.Interfaces.Cryptography
 {
     public interface IPasswordReader
     {
-        SecureString ReadSecurePassword(string passwordContext = "Please enter your password");
+        SecureString ReadSecurePassword(PasswordRegistryKey passwordIdentifier, string prompt = "Please enter your password");
+
+        SecureString ReadSecurePasswordAndAddToRegistry(PasswordRegistryKey passwordIdentifier, string prompt = "Please enter your password");
+
+        bool AddPasswordToRegistry(PasswordRegistryKey passwordIdentifier, SecureString password);
     }
 }

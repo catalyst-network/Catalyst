@@ -21,7 +21,6 @@
 
 #endregion
 
-using System.Text;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.IO.Observers;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
@@ -67,17 +66,15 @@ namespace Catalyst.Core.Lib.Rpc.IO.Observers
             Guard.Argument(senderPeerIdentifier, nameof(senderPeerIdentifier)).NotNull();
             Logger.Debug("received message of type SignMessageRequest");
 
-            var decodedMessage = signMessageRequest.Message.ToString(Encoding.UTF8);
+            var decodedMessage = signMessageRequest.Message.ToByteArray();
 
-            var privateKey = _keySigner.CryptoContext.GeneratePrivateKey(); //@TODO We shouldn't be generating a key here
-
-            var signature = _keySigner.CryptoContext.Sign(privateKey, Encoding.UTF8.GetBytes(decodedMessage));
+            var signature = _keySigner.Sign(decodedMessage);
 
             var publicKey = _keySigner.CryptoContext.ImportPublicKey(signature.PublicKeyBytes.RawBytes);
 
             Guard.Argument(signature).NotNull("Failed to sign message. The signature cannot be null.");
 
-            Guard.Argument(publicKey).NotNull("Failed to get the public key.  Public key cannot be null.");
+            Guard.Argument(publicKey).NotNull("Failed to get the public key. Public key cannot be null.");
 
             Logger.Debug("message content is {0}", signMessageRequest.Message);
 

@@ -21,11 +21,9 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.IO.Observers;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.IO.Observers;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using DotNetty.Transport.Channels;
@@ -38,17 +36,10 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
     /// </summary>
     /// <seealso cref="IRpcResponseObserver" />
     public sealed class PeerCountResponseObserver
-        : ResponseObserverBase<GetPeerCountResponse>,
-            IRpcResponseObserver
+        : RpcResponseObserver<GetPeerCountResponse>
     {
-        private readonly IUserOutput _output;
-
-        public PeerCountResponseObserver(IUserOutput output,
-            ILogger logger)
-            : base(logger)
-        {
-            _output = output;
-        }
+        public PeerCountResponseObserver(ILogger logger)
+            : base(logger) { }
         
         protected override void HandleResponse(GetPeerCountResponse getPeerCountResponse,
             IChannelHandlerContext channelHandlerContext,
@@ -58,9 +49,6 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
             Guard.Argument(getPeerCountResponse, nameof(getPeerCountResponse)).NotNull();
             Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
             Guard.Argument(senderPeerIdentifier, nameof(senderPeerIdentifier)).NotNull();
-            Logger.Debug("Handling GetPeerCount response");
-            
-            _output.WriteLine($@"Peer count: {getPeerCountResponse.PeerCount.ToString()}");
         }
     }
 }

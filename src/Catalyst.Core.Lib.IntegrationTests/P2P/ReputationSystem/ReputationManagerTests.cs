@@ -21,6 +21,7 @@
 
 #endregion
 
+using System.Collections.Generic;
 using System.IO;
 using Autofac;
 using Catalyst.Common.Config;
@@ -43,13 +44,14 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.ReputationSystem
 
         public ReputationManagerTests(ITestOutputHelper output) : base(output)
         {
-            var config = new ConfigurationBuilder()
-               .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile))
-               .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile))
-               .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Network.Dev)))
-               .Build();
+            ConfigFilesUsed = new[]
+            {
+                Path.Combine(Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile),
+                Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile),
+                Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Network.Dev)),
+            };
             
-            ConfigureContainerBuilder(config);
+            ConfigureContainerBuilder();
             
             var container = ContainerBuilder.Build();
             using (container.BeginLifetimeScope(CurrentTestName))
@@ -58,7 +60,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.ReputationSystem
             }
         }
 
-        private void SavePeerInRepo(IPeerIdentifier pid, int initialRep = 100)
+        private Peer SavePeerInRepo(IPeerIdentifier pid, int initialRep = 100)
         {
             var subbedPeer = new Peer
             {
@@ -66,6 +68,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.ReputationSystem
                 Reputation = initialRep
             };
             _reputationManager.PeerRepository.Add(subbedPeer);
+            return subbedPeer;
         }
 
         [Fact]
@@ -73,13 +76,13 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.ReputationSystem
         {
             var pid = PeerIdentifierHelper.GetPeerIdentifier("some_peer");
 
-            SavePeerInRepo(pid);
+            var savedPeer = SavePeerInRepo(pid);
             var peerReputationChange = Substitute.For<IPeerReputationChange>();
             peerReputationChange.PeerIdentifier.Returns(pid);
             peerReputationChange.ReputationEvent.Returns(Substitute.For<IReputationEvents>());
             peerReputationChange.ReputationEvent.Amount.Returns(100);
             _reputationManager.OnNext(peerReputationChange);
-            var updatedSubbedPeer = _reputationManager.PeerRepository.Get(1);
+            var updatedSubbedPeer = _reputationManager.PeerRepository.Get(savedPeer.DocumentId);
             updatedSubbedPeer.Reputation.Should().Be(200);
         }
         
@@ -88,43 +91,45 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.ReputationSystem
         {
             var pid = PeerIdentifierHelper.GetPeerIdentifier("some_peer");
 
-            SavePeerInRepo(pid);
+            var savedPeer = SavePeerInRepo(pid);
             var peerReputationChange = Substitute.For<IPeerReputationChange>();
             peerReputationChange.PeerIdentifier.Returns(pid);
             peerReputationChange.ReputationEvent.Returns(Substitute.For<IReputationEvents>());
             peerReputationChange.ReputationEvent.Amount.Returns(-100);
             _reputationManager.OnNext(peerReputationChange);
-            var updatedSubbedPeer = _reputationManager.PeerRepository.Get(1);
+            var updatedSubbedPeer = _reputationManager.PeerRepository.Get(savedPeer.DocumentId);
             updatedSubbedPeer.Reputation.Should().Be(0);
         }
-        
+
+        protected override IEnumerable<string> ConfigFilesUsed { get; }
+
         [Fact]
         public void Can_Save_Decreased_Peer_To_Negative_Number()
         {
             var pid = PeerIdentifierHelper.GetPeerIdentifier("some_peer");
 
-            SavePeerInRepo(pid);
+            var savedPeer = SavePeerInRepo(pid);
             var peerReputationChange = Substitute.For<IPeerReputationChange>();
             peerReputationChange.PeerIdentifier.Returns(pid);
             peerReputationChange.ReputationEvent.Returns(Substitute.For<IReputationEvents>());
             peerReputationChange.ReputationEvent.Amount.Returns(-200);
             _reputationManager.OnNext(peerReputationChange);
-            var updatedSubbedPeer = _reputationManager.PeerRepository.Get(1);
+            var updatedSubbedPeer = _reputationManager.PeerRepository.Get(savedPeer.DocumentId);
             updatedSubbedPeer.Reputation.Should().Be(-100);
         }
-        
+
         [Fact]
         public void Can_Save_Increased_Peer_From_Negative_Number_To_Positive_Number()
         {
             var pid = PeerIdentifierHelper.GetPeerIdentifier("some_peer");
 
-            SavePeerInRepo(pid, -100);
+            var savedPeer = SavePeerInRepo(pid, -100);
             var peerReputationChange = Substitute.For<IPeerReputationChange>();
             peerReputationChange.PeerIdentifier.Returns(pid);
             peerReputationChange.ReputationEvent.Returns(Substitute.For<IReputationEvents>());
             peerReputationChange.ReputationEvent.Amount.Returns(200);
             _reputationManager.OnNext(peerReputationChange);
-            var updatedSubbedPeer = _reputationManager.PeerRepository.Get(1);
+            var updatedSubbedPeer = _reputationManager.PeerRepository.Get(savedPeer.DocumentId);
             updatedSubbedPeer.Reputation.Should().Be(100);
         }
     }

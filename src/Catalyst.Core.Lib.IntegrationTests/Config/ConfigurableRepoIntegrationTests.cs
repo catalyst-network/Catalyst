@@ -21,6 +21,7 @@
 
 #endregion
 
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Autofac;
@@ -61,16 +62,20 @@ namespace Catalyst.Core.Lib.IntegrationTests.Config
     {
         public ConfigurableRepoIntegrationTests(ITestOutputHelper output) : base(output) { }
 
+        private IEnumerable<string> _configFilesUsed;
+        protected override IEnumerable<string> ConfigFilesUsed => _configFilesUsed;
+
         private async Task ModuleCanSaveAndRetrieveValuesFromRepository(FileInfo moduleFile)
         {
             var alteredComponentsFile = await CreateAlteredConfigForModule(moduleFile);
 
-            var config = new ConfigurationBuilder()
-               .AddJsonFile(alteredComponentsFile)
-               .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Network.Dev)))
-               .Build();
+            _configFilesUsed = new[]
+            {
+                alteredComponentsFile,
+                Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Network.Dev))
+            };
 
-            ConfigureContainerBuilder(config);
+            ConfigureContainerBuilder();
 
             var container = ContainerBuilder.Build();
             using (container.BeginLifetimeScope())

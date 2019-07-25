@@ -23,11 +23,11 @@
 
 using System.Collections.Generic;
 using Catalyst.Common.Config;
+using Catalyst.Common.Interfaces.Config;
 
 namespace Catalyst.Cli
 {
-    public sealed class CliConfigCopier
-        : ConfigCopier
+    internal sealed class CliConfigCopier : ConfigCopier, IConfigCopier
     {
         protected override IEnumerable<string> RequiredConfigFiles(Network network)
         {

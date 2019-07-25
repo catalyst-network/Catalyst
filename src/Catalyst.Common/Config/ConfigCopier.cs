@@ -26,14 +26,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using Catalyst.Common.Interfaces.Config;
 using Dawn;
 
 namespace Catalyst.Common.Config
 {
-    public class ConfigCopier
+    public class ConfigCopier : IConfigCopier
     {
-        private const bool OverwriteFilesByDefault = false;
-
         /// <summary>
         ///     Finds out which config files are missing from the catalyst home directory and
         ///     copies them over if needed.
@@ -42,9 +41,11 @@ namespace Catalyst.Common.Config
         /// <param name="network">Network on which to run the node</param>
         /// <param name="sourceFolder"></param>
         /// <param name="overwrite">Should config existing config files be overwritten by default?</param>
-        public void RunConfigStartUp(string dataDir, Network network, string sourceFolder = null, bool overwrite = OverwriteFilesByDefault)
+        public void RunConfigStartUp(string dataDir, Network networkParam = null, string sourceFolder = null, bool overwrite = false)
         {
             Guard.Argument(dataDir, nameof(dataDir)).NotNull().NotEmpty().NotWhiteSpace();
+
+            var network = networkParam == null ? Network.Dev : networkParam;
 
             var dataDirInfo = new DirectoryInfo(dataDir);
             if (!dataDirInfo.Exists)
@@ -98,7 +99,7 @@ namespace Catalyst.Common.Config
         private static void CopyConfigFileToFolder(string targetFolder,
             string fileName,
             string sourceFolder,
-            bool overwrite = OverwriteFilesByDefault)
+            bool overwrite = false)
         {
             var combinedSourceFolder = Path.Combine(sourceFolder, Constants.ConfigSubFolder);
             var sourceFile = new DirectoryInfo(combinedSourceFolder).Exists ? Path.Combine(combinedSourceFolder, fileName) : Path.Combine(sourceFolder, fileName);

@@ -21,11 +21,9 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.IO.Observers;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.IO.Observers;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using DotNetty.Transport.Channels;
@@ -38,17 +36,10 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
     /// </summary>
     /// <seealso cref="IRpcResponseObserver" />
     public sealed class PeerBlackListingResponseObserver
-        : ResponseObserverBase<SetPeerBlackListResponse>,
-            IRpcResponseObserver
+        : RpcResponseObserver<SetPeerBlackListResponse>
     {
-        private readonly IUserOutput _output;
-
-        public PeerBlackListingResponseObserver(IUserOutput output,
-            ILogger logger)
-            : base(logger)
-        {
-            _output = output;
-        }
+        public PeerBlackListingResponseObserver(ILogger logger)
+            : base(logger) { }
 
         protected override void HandleResponse(SetPeerBlackListResponse setPeerBlackListResponse,
             IChannelHandlerContext channelHandlerContext,
@@ -58,16 +49,6 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
             Guard.Argument(setPeerBlackListResponse, nameof(setPeerBlackListResponse)).NotNull();
             Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
             Guard.Argument(senderPeerIdentifier, nameof(senderPeerIdentifier)).NotNull();
-            Logger.Debug("Handling GetPeerBlackList response");
-
-            var msg = setPeerBlackListResponse.PublicKey.ToStringUtf8() == string.Empty
-                ? "Peer not found"
-                : $"Peer Blacklisting Successful : " +
-                $"{setPeerBlackListResponse.Blacklist.ToString()}, " +
-                $"{setPeerBlackListResponse.PublicKey.ToStringUtf8()}, " +
-                $"{setPeerBlackListResponse.Ip.ToStringUtf8()}";
-               
-            _output.WriteLine(msg);
         }
     }
 }

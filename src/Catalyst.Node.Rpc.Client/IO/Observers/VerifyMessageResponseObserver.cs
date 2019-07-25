@@ -21,12 +21,8 @@
 
 #endregion
 
-using System;
-using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
-using Catalyst.Common.Interfaces.IO.Observers;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.IO.Observers;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using DotNetty.Transport.Channels;
@@ -39,22 +35,14 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
     /// The handler reads the response's payload and formats it in user readable format and writes it to the console.
     /// </summary>
     public sealed class VerifyMessageResponseObserver
-        : ResponseObserverBase<VerifyMessageResponse>,
-            IRpcResponseObserver
+        : RpcResponseObserver<VerifyMessageResponse>
     {
-        private readonly IUserOutput _output;
-
         /// <summary>
         /// </summary>
         /// receive the response from the server.
-        /// <param name="output"></param>
         /// <param name="logger">Logger to log debug related information.</param>
-        public VerifyMessageResponseObserver(IUserOutput output,
-            ILogger logger)
-            : base(logger)
-        {
-            _output = output;
-        }
+        public VerifyMessageResponseObserver(ILogger logger)
+            : base(logger) { }
         
         /// <summary>
         /// 
@@ -71,26 +59,6 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
             Guard.Argument(verifyMessageResponse, nameof(verifyMessageResponse)).NotNull();
             Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
             Guard.Argument(senderPeerIdentifier, nameof(senderPeerIdentifier)).NotNull();
-            Logger.Debug($"Handling VerifyMessageResponse");
-
-            try
-            {
-                //decode the received message
-                var result = verifyMessageResponse.IsSignedByKey;
-
-                //return to the user the signature, public key and the original message that he sent to be signed
-                _output.WriteLine($@"{result.ToString()}");
-            }
-            catch (Exception ex)
-            {
-                Logger.Error(ex,
-                    "Failed to handle VerifyMessageResponse after receiving message {0}", verifyMessageResponse);
-                throw;
-            }
-            finally
-            {
-                Logger.Information(@"Press Enter to continue ...");
-            }
         }
     }
 }

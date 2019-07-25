@@ -27,13 +27,13 @@ using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.IO.Observers;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.Interfaces.Repository;
 using Catalyst.Common.IO.Observers;
 using Catalyst.Common.P2P;
 using Catalyst.Protocol.IPPN;
 using Dawn;
 using DotNetty.Transport.Channels;
 using Serilog;
-using SharpRepository.Repository;
 using SharpRepository.Repository.Specifications;
 
 namespace Catalyst.Core.Lib.P2P.IO.Observers
@@ -42,10 +42,10 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
         : RequestObserverBase<PeerNeighborsRequest, PeerNeighborsResponse>,
             IP2PMessageObserver
     {
-        private readonly IRepository<Peer> _repository;
+        private readonly IPeerRepository _repository;
 
         public GetNeighbourRequestObserver(IPeerIdentifier peerIdentifier,
-            IRepository<Peer> repository,
+            IPeerRepository repository,
             ILogger logger)
             : base(logger, peerIdentifier)
         { 

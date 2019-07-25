@@ -7,7 +7,8 @@
                 {
                     "type": "Catalyst.Common.Interfaces.Modules.KeySigner.IKeySigner, Catalyst.Common"
                 }
-            ]
+            ] ,
+            "instanceScope": "singleinstance"
         },
         {
             "type": "Multiformats.Hash.Algorithms.BLAKE2B_256, Multiformats.Hash",
@@ -56,6 +57,15 @@
                     "type": "Catalyst.Cryptography.BulletProofs.Wrapper.IWrapper, Catalyst.Cryptography.BulletProofs.Wrapper"
                 }
             ]
+        },
+        {
+            "type": "Catalyst.Common.Registry.KeyRegistry, Catalyst.Common",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.Registry.IKeyRegistry, Catalyst.Common"
+                }
+            ],
+            "instanceScope": "singleinstance"
         }
     ]
 }

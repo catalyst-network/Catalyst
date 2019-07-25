@@ -35,7 +35,6 @@ using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.P2P;
-using Catalyst.Common.Rpc.IO.Observers;
 using Catalyst.Core.Lib.Modules.Dfs;
 using Catalyst.Core.Lib.P2P;
 using Catalyst.Core.Lib.Rpc.IO.Observers;
@@ -60,21 +59,22 @@ namespace Catalyst.Core.Lib.IntegrationTests.Modules.Dfs
 
         public NodeFileTransferIntegrationTests(ITestOutputHelper testOutput) : base(testOutput)
         {
-            var config = SocketPortHelper.AlterConfigurationToGetUniquePort(new ConfigurationBuilder()
+            var configurationRoot = new ConfigurationBuilder()
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile))
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile))
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Network.Dev)))
-               .Build(), "NodeFileTransferIntegrationTest");
+               .Build();
 
-            var peerSettings = new PeerSettings(config);
+            SocketPortHelper.AlterConfigurationToGetUniquePort(configurationRoot, "NodeFileTransferIntegrationTest");
+
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
             Substitute.For<IDtoFactory>();
-            _nodeFileTransferFactory = new DownloadFileTransferFactory();
+            _nodeFileTransferFactory = new DownloadFileTransferFactory(_logger);
 
             var passwordReader = new TestPasswordReader("abcd");
 
-            var ipfsEngine = new IpfsAdapter(passwordReader, peerSettings, FileSystem, _logger);
+            var ipfsEngine = new IpfsAdapter(passwordReader, FileSystem, _logger);
             _logger = Substitute.For<ILogger>();
             _dfs = new Catalyst.Core.Lib.Modules.Dfs.Dfs(ipfsEngine, _logger);
         }
@@ -151,7 +151,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.Modules.Dfs
                     fakeNode.Channel, uniqueFileKey, new DtoFactory());
                 for (uint i = 0; i < fileTransferInformation.MaxChunk; i++)
                 {
-                    fileUploadInformation.GetUploadMessageDto(i).Content.ToProtocolMessage(sender).SendToHandler(_fakeContext, transferBytesRequestHandler);
+                    fileUploadInformation.GetUploadMessageDto(i).Content.SendToHandler(_fakeContext, transferBytesRequestHandler);
                 }
             }
 
