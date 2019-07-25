@@ -27,7 +27,7 @@ using Catalyst.Common.Interfaces.Util;
 
 namespace Catalyst.Common.Util
 {
-    public class CancellationTokenProvider : ICancellationTokenProvider, IDisposable
+    public sealed class CancellationTokenProvider : ICancellationTokenProvider, IDisposable
     {
         public CancellationTokenSource CancellationTokenSource { get; set; }
 

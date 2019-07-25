@@ -108,6 +108,7 @@ namespace Catalyst.Common.Keystore
                 }
                 catch (DecryptionException)
                 {
+                    securePassword.Dispose();
                     _logger.Error("Error decrypting keystore");
                 }
 
