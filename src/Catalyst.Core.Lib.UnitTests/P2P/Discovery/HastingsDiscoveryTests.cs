@@ -492,7 +492,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
 
             using (var walker = discoveryTestBuilder.Build())
             {
-                walker.TestEvictionCallback(new KeyValuePair<ICorrelationId, IPeerIdentifier>());
+                walker.TestEvictionCallback(new KeyValuePair<ICorrelationId, IPeerIdentifier>(CorrelationId.GenerateCorrelationId(), PeerIdentifierHelper.GetPeerIdentifier("random")));
 
                 walker.State.Peer
                    .Should()

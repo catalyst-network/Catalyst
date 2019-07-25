@@ -337,7 +337,7 @@ namespace Catalyst.Core.Lib.P2P.Discovery
                     // state candidate didn't give any neighbours so go back a step.
                     WalkBack();
                 }
-                else
+                else if (StateCandidate.Neighbours.ToList().Select(n => n.DiscoveryPingCorrelationId).Any())
                 {
                     StateCandidate.Neighbours
                        .First(n => item.Key
