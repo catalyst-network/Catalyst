@@ -83,7 +83,7 @@ namespace Catalyst.Core.Lib.Rpc.IO.Observers
                 responseCode = ResponseCode.Error;
             }
 
-            return new BroadcastRawTransactionResponse() {ResponseCode = responseCode};
+            return new BroadcastRawTransactionResponse {ResponseCode = responseCode};
         }
     }
 }
