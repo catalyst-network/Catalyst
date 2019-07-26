@@ -50,7 +50,7 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Consensus.Deltas
                 Transaction = TransactionHelper.GetTransaction(
                     version: (uint) i,
                     transactionFees: (ulong) random.Next(),
-                    timeStamp: (ulong) random.Next(),
+                    timeStamp: random.Next(),
                     signature: i.ToString())
             }).ToList();
 
