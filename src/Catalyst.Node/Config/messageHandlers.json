@@ -27,6 +27,14 @@
             ]
         },
         {
+            "type": "Catalyst.Core.Lib.RPC.IO.Observers.BroadcastRawTransactionRequestObserver",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.IO.Observers.IRpcRequestObserver, Catalyst.Common"
+                }
+            ]
+        },
+        {
             "type": "Catalyst.Core.Lib.Rpc.IO.Observers.GetVersionRequestObserver",
             "services": [
                 {
