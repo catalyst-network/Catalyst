@@ -164,13 +164,13 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.ReputationSystem
             var secondStreamSubject = new ReplaySubject<IPeerReputationChange>(1);
             var messageStream = secondStreamSubject.AsObservable();
 
-            messageStream.SubscribeOn(TaskPoolScheduler.Default).Subscribe((reputationChange) => Substitute.For<ILogger>());
+            messageStream.SubscribeOn(ImmediateScheduler.Instance).Subscribe((reputationChange) => Substitute.For<ILogger>());
             
             reputationManager.MergeReputationStream(messageStream);
 
             var streamObserver = Substitute.For<IObserver<IPeerReputationChange>>();
             
-            using (reputationManager.MergedEventStream.SubscribeOn(TaskPoolScheduler.Default).Subscribe(streamObserver.OnNext))
+            using (reputationManager.MergedEventStream.SubscribeOn(ImmediateScheduler.Instance).Subscribe(streamObserver.OnNext))
             {
                 reputationManager.ReputationEvent.OnNext(peerReputationChangeEvent1);
                 secondStreamSubject.OnNext(peerReputationChangeEvent2);
