@@ -49,6 +49,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
+using System.Linq;
 using Constants = Catalyst.Common.Config.Constants;
 
 namespace Catalyst.Core.Lib.IntegrationTests.P2P
@@ -61,18 +62,29 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P
         private IPeerService _peerService;
         private PeerSettings _peerSettings;
         private IPeerClient _peerClientSingleInstance;
+        protected override IEnumerable<string> ConfigFilesUsed { get; }
+
 
         public PeerValidationIntegrationTest(ITestOutputHelper output) : base(output)
         {
-            _config = SocketPortHelper.AlterConfigurationToGetUniquePort(new ConfigurationBuilder()
+            ConfigFilesUsed = new[]
+            {
+                Constants.ComponentsJsonConfigFile,
+                Constants.SerilogJsonConfigFile,
+                Constants.NetworkConfigFile(Network.Test)
+            }.Select(f => Path.Combine(Constants.ConfigSubFolder, f));
+
+            _config = new ConfigurationBuilder()
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile))
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile))
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Network.Test)))
-               .Build(), CurrentTestName);
+               .Build();
 
-            _logger = Substitute.For<ILogger>();
+            SocketPortHelper.AlterConfigurationToGetUniquePort(_config, CurrentTestName);
 
-            ConfigureContainerBuilder(_config, true, true);
+           _logger = Substitute.For<ILogger>();
+
+            ConfigureContainerBuilder(true, true);
             ContainerBuilder.RegisterType<KeySigner>().SingleInstance();
 
             _container = ContainerBuilder.Build();
@@ -103,7 +115,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P
                     _container.Resolve<IBroadcastManager>(),
                     keySigner,
                     _container.Resolve<IPeerIdValidator>()), _container.Resolve<IPeerDiscovery>(),
-                _container.Resolve<IEnumerable<IP2PMessageObserver>>(), _container.Resolve<IPeerSettings>(), _container.Resolve<ILogger>());
+                _container.Resolve<IEnumerable<IP2PMessageObserver>>(), _peerSettings, _container.Resolve<ILogger>());
         }
 
         [Fact]
