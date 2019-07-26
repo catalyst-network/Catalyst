@@ -118,7 +118,7 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Consensus.Deltas
                     standardPubKey: i.ToString(),
                     version: (uint) i % 2,
                     transactionFees: (ulong) _random.Next(),
-                    timeStamp: (ulong) _random.Next(),
+                    timeStamp: _random.Next(),
                     signature: i.ToString(),
                     lockTime: 0);
                 return transaction;
