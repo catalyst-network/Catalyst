@@ -25,7 +25,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Catalyst.Common.Interfaces.Cli;
-using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Transport;
@@ -67,27 +66,6 @@ namespace Catalyst.Cli
             UserOutput = userOutput;
         }
 
-        public CommandContext(IConfigurationRoot config,
-            ILogger logger,
-            IUserOutput userOutput,
-            IPeerIdClientId peerIdClientId,
-            IDtoFactory dtoFactory,
-            INodeRpcClientFactory nodeRpcClientFactory,
-            ICertificateStore certificateStore,
-            ISocketClientRegistry<INodeRpcClient> socketClientRegistry)
-        {
-            _logger = logger;
-            _rpcNodeConfigs = NodeRpcConfig.BuildRpcNodeSettingList(config);
-
-            SocketClientRegistry = socketClientRegistry;
-            DtoFactory = dtoFactory;
-            PeerIdClientId = peerIdClientId;
-            PeerIdentifier = Common.P2P.PeerIdentifier.BuildPeerIdFromConfig(config, peerIdClientId);
-            NodeRpcClientFactory = nodeRpcClientFactory;
-            CertificateStore = certificateStore;
-            UserOutput = userOutput;
-        }
-
         public IDtoFactory DtoFactory { get; }
 
         public IPeerIdentifier PeerIdentifier { get; }
@@ -105,7 +83,7 @@ namespace Catalyst.Cli
         /// <inheritdoc cref="GetConnectedNode" />
         public INodeRpcClient GetConnectedNode(string nodeId)
         {
-            Guard.Argument(nodeId, nameof(nodeId)).NotNull().NotEmpty().Compatible<string>();
+            Guard.Argument(nodeId, nameof(nodeId)).NotNull().NotEmpty();
             var nodeConfig = _rpcNodeConfigs.SingleOrDefault(node => node.NodeId.Equals(nodeId));
             Guard.Argument(nodeConfig, nameof(nodeConfig)).NotNull();
 
@@ -121,7 +99,7 @@ namespace Catalyst.Cli
         /// <inheritdoc cref="GetNodeConfig" />
         public IRpcNodeConfig GetNodeConfig(string nodeId)
         {
-            Guard.Argument(nodeId, nameof(nodeId)).NotNull().NotEmpty().Compatible<string>();
+            Guard.Argument(nodeId, nameof(nodeId)).NotNull().NotEmpty();
 
             var nodeConfig = _rpcNodeConfigs.SingleOrDefault(config => config.NodeId.Equals(nodeId));
 
@@ -137,7 +115,6 @@ namespace Catalyst.Cli
 
         public bool IsSocketChannelActive(INodeRpcClient node)
         {
-            Guard.Argument(node, nameof(node)).Compatible<INodeRpcClient>();
             try
             {
                 Guard.Argument(node.Channel.Active, nameof(node.Channel.Active)).True();

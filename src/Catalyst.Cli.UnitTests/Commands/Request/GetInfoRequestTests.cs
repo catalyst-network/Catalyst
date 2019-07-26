@@ -46,7 +46,7 @@ namespace Catalyst.Cli.UnitTests.Commands.Request
             var command = new GetInfoCommand(commandContext);
 
             //Act
-            TestCommandHelpers.GenerateRequest(commandContext, command, "-n", "node1");
+            TestCommandHelpers.GenerateRequest(commandContext, command, "-n", "node1", "-i", "true");
 
             //Assert
             var requestSent = TestCommandHelpers.GetRequest<GetInfoRequest>(connectedNode);

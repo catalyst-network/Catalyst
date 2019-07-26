@@ -90,10 +90,8 @@ namespace Catalyst.Cli.UnitTests.Commands
             var commands = new List<ICommand> {new ConnectCommand(logger, commandContext)};
             var console = new CatalystCli(userOutput, commands);
 
-            Assert.Throws<ArgumentNullException>(() =>
-            {
-                console.ParseCommand("connect", "-n", "node1");
-            });
+            var exception = Record.Exception(() => console.ParseCommand("connect", "-n", "node1"));
+            exception.Should().BeOfType<ArgumentNullException>();
         }
 
         [Fact]

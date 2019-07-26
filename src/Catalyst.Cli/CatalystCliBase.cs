@@ -22,7 +22,6 @@
 #endregion
 
 using System;
-using System.Globalization;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -41,15 +40,12 @@ namespace Catalyst.Cli
             UserOutput = userOutput;
         }
 
-        private static string Prompt => "Koopa";
-        private static string ServiceName => "Catalyst Distributed Shell";
-        private static CultureInfo AppCulture => new CultureInfo("en-GB", false);
+        private const string Prompt = "Koopa";
+        private const string ServiceName = "Catalyst Distributed Shell";
 
         /// <inheritdoc />
-        public bool RunConsole(CancellationToken ct)
+        public void RunConsole(CancellationToken ct)
         {
-            const bool running = true;
-
             Console.OutputEncoding = Encoding.Unicode;
             Console.ForegroundColor = ConsoleColor.DarkMagenta;
             var ver = Assembly.GetEntryAssembly()?.GetName().Version;
@@ -88,7 +84,6 @@ namespace Catalyst.Cli
             }
 
             Console.ResetColor();
-            return running;
         }
 
         /// <inheritdoc />

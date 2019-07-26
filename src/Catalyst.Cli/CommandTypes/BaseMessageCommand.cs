@@ -43,16 +43,17 @@ namespace Catalyst.Cli.CommandTypes
         where TResponse : IMessage<TResponse>
         where TOption : IOptionsBase
     {
-        private readonly IDisposable _socketClientRegistryEventStreamObserver;
+        private readonly IDisposable _eventStreamObserverClientAdded;
+        private readonly IDisposable _eventStreamObserverClientRemoved;
         private readonly ConcurrentDictionary<int, IDisposable> _subscriptions;
         private bool _disposed;
 
         protected BaseMessageCommand(ICommandContext commandContext) : base(commandContext)
         {
             _subscriptions = new ConcurrentDictionary<int, IDisposable>();
-            _socketClientRegistryEventStreamObserver = CommandContext.SocketClientRegistry.EventStream
+            _eventStreamObserverClientAdded = CommandContext.SocketClientRegistry.EventStream
                .OfType<SocketClientRegistryClientAdded>().Subscribe(SocketClientRegistryClientAddedOnNext);
-            _socketClientRegistryEventStreamObserver = CommandContext.SocketClientRegistry.EventStream
+            _eventStreamObserverClientRemoved = CommandContext.SocketClientRegistry.EventStream
                .OfType<SocketClientRegistryClientRemoved>().Subscribe(SocketClientRegistryClientRemovedOnNext);
         }
 
@@ -89,7 +90,10 @@ namespace Catalyst.Cli.CommandTypes
         {
             var sendMessage = base.ExecuteCommandInner(optionsBase);
 
-            if (sendMessage) SendMessage((TOption) optionsBase);
+            if (sendMessage)
+            {
+                SendMessage((TOption) optionsBase);
+            }
 
             return sendMessage;
         }
@@ -125,12 +129,16 @@ namespace Catalyst.Cli.CommandTypes
 
         protected virtual void Dispose(bool disposing)
         {
-            if (_disposed) return;
+            if (_disposed)
+            {
+                return;
+            }
 
             if (disposing)
             {
                 DisposeSubscriptions();
-                _socketClientRegistryEventStreamObserver?.Dispose();
+                _eventStreamObserverClientAdded?.Dispose();
+                _eventStreamObserverClientRemoved?.Dispose();
             }
 
             _disposed = true;

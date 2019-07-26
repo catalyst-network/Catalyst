@@ -39,23 +39,24 @@ namespace Catalyst.Common.IO.Transport
         : ISocketClientRegistry<TSocketChannel>, IDisposable
         where TSocketChannel : class, ISocketClient
     {
-        private bool _disposed;
-        private IScheduler _scheduler;
-
-        public IObservable<ISocketClientRegistryEvent> EventStream { get; }
         private readonly ReplaySubject<ISocketClientRegistryEvent> _eventReplySubject;
-
-        public IDictionary<int, TSocketChannel> Registry { get; }
+        private bool _disposed;
 
         public SocketClientRegistry(IScheduler scheduler = null)
         {
-            _scheduler = scheduler ?? Scheduler.Default;
+            scheduler = scheduler ?? Scheduler.Default;
 
-            _eventReplySubject = new ReplaySubject<ISocketClientRegistryEvent>(1, _scheduler);
+            _eventReplySubject = new ReplaySubject<ISocketClientRegistryEvent>(1, scheduler);
             EventStream = _eventReplySubject.AsObservable();
 
             Registry = new ConcurrentDictionary<int, TSocketChannel>();
         }
+
+        public void Dispose() { Dispose(true); }
+
+        public IObservable<ISocketClientRegistryEvent> EventStream { get; }
+
+        public IDictionary<int, TSocketChannel> Registry { get; }
 
         /// <inheritdoc />
         public int GenerateClientHashCode(IPEndPoint socketEndpoint)
@@ -104,14 +105,14 @@ namespace Catalyst.Common.IO.Transport
             return removedFromRegistry;
         }
 
-        public string GetRegistryType()
-        {
-            return typeof(TSocketChannel).Name;
-        }
+        public string GetRegistryType() { return typeof(TSocketChannel).Name; }
 
         private void Dispose(bool disposing)
         {
-            if (_disposed) return;
+            if (_disposed)
+            {
+                return;
+            }
 
             if (disposing)
             {
@@ -119,11 +120,6 @@ namespace Catalyst.Common.IO.Transport
             }
 
             _disposed = true;
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
         }
     }
 }

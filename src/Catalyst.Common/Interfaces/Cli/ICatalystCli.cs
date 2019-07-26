@@ -31,7 +31,7 @@ namespace Catalyst.Common.Interfaces.Cli
         ///     Runs the main cli ui.
         /// </summary>
         /// <returns></returns>
-        bool RunConsole(CancellationToken ct);
+        void RunConsole(CancellationToken ct);
 
         /// <summary>
         /// Parses the Options object sent and calls the correct message to handle the option a defined in the MapResult
