@@ -30,7 +30,6 @@ using Catalyst.Core.Lib.Modules.Consensus.Deltas;
 using Catalyst.Protocol.Deltas;
 using Catalyst.TestUtils;
 using FluentAssertions;
-using Multiformats.Base;
 using Multiformats.Hash;
 using Multiformats.Hash.Algorithms;
 using NSubstitute;

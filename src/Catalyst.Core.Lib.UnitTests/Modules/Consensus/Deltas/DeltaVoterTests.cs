@@ -37,7 +37,6 @@ using Catalyst.TestUtils;
 using FluentAssertions;
 using Microsoft.Extensions.Caching.Memory;
 using Multiformats.Hash.Algorithms;
-using Nethereum.Hex.HexConvertors.Extensions;
 using NSubstitute;
 using Serilog;
 using Xunit;
@@ -106,7 +105,7 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Consensus.Deltas
         public void When_candidate_is_dodgy_should_log_and_return_without_hitting_the_cache(CandidateDeltaBroadcast dodgyCandidate)
         {
             var logger = Substitute.For<ILogger>();
-            _voter = new DeltaVoter(_cache, _producersProvider, _multihashAlgorithm, logger);
+            _voter = new DeltaVoter(_cache, _producersProvider, logger);
 
             _voter.OnNext(dodgyCandidate);
 
@@ -124,7 +123,7 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Consensus.Deltas
                 producerId: PeerIdHelper.GetPeerId("unknown_producer"));
             var logger = Substitute.For<ILogger>();
 
-            _voter = new DeltaVoter(_cache, _producersProvider, _multihashAlgorithm, logger);
+            _voter = new DeltaVoter(_cache, _producersProvider, logger);
             _voter.OnNext(candidateFromUnknownProducer);
 
             logger.Received(1).Error(Arg.Is<Exception>(e => e is KeyNotFoundException),
@@ -137,7 +136,7 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Consensus.Deltas
         [Fact]
         public void When_candidate_not_in_cache_should_build_ScoredCandidate_with_ranking_and_store_it()
         {
-            _voter = new DeltaVoter(_cache, _producersProvider, _multihashAlgorithm, Substitute.For<ILogger>());
+            _voter = new DeltaVoter(_cache, _producersProvider, Substitute.For<ILogger>());
 
             var candidate = DeltaHelper.GetCandidateDelta(
                 _previousDeltaHash,
@@ -165,7 +164,7 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Consensus.Deltas
         [Fact]
         public void When_candidate_in_cache_should_retrieve_ScoredCandidate()
         {
-            _voter = new DeltaVoter(_cache, _producersProvider, _multihashAlgorithm, Substitute.For<ILogger>());
+            _voter = new DeltaVoter(_cache, _producersProvider, Substitute.For<ILogger>());
 
             var initialScore = 10;
             var cacheCandidate = ScoredCandidateDeltaHelper.GetScoredCandidateDelta(
@@ -194,7 +193,7 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Consensus.Deltas
         {
             using (var realCache = new MemoryCache(new MemoryCacheOptions()))
             {
-                _voter = new DeltaVoter(realCache, _producersProvider, _multihashAlgorithm, Substitute.For<ILogger>());
+                _voter = new DeltaVoter(realCache, _producersProvider, Substitute.For<ILogger>());
 
                 var firstVotesCount = 10;
                 var secondVotesCount = 100 + 100 / 2;
@@ -222,8 +221,8 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Consensus.Deltas
 
             using (candidateStream.Subscribe(_voter))
             {
-                var firstKey = _voter.GetCandidateCacheKey(firstCandidate);
-                var secondKey = _voter.GetCandidateCacheKey(secondCandidate);
+                var firstKey = DeltaVoter.GetCandidateCacheKey(firstCandidate);
+                var secondKey = DeltaVoter.GetCandidateCacheKey(secondCandidate);
 
                 realCache.TryGetValue(firstKey, out IScoredCandidateDelta firstRetrieved).Should().BeTrue();
                 realCache.TryGetValue(secondKey, out IScoredCandidateDelta secondRetrieved).Should().BeTrue();
@@ -240,19 +239,19 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Consensus.Deltas
         {
             using (var realCache = new MemoryCache(new MemoryCacheOptions()))
             {
-                _voter = new DeltaVoter(realCache, _producersProvider, _multihashAlgorithm, Substitute.For<ILogger>());
+                _voter = new DeltaVoter(realCache, _producersProvider, Substitute.For<ILogger>());
 
                 var candidate1 = DeltaHelper.GetCandidateDelta(
                     _previousDeltaHash,
                     producerId: _producerIds.First().PeerId);
-                var candidate1CacheKey = _voter.GetCandidateCacheKey(candidate1);
+                var candidate1CacheKey = DeltaVoter.GetCandidateCacheKey(candidate1);
 
                 var candidate2 = DeltaHelper.GetCandidateDelta(
                     _previousDeltaHash,
                     producerId: _producerIds.Last().PeerId);
-                var candidate2CacheKey = _voter.GetCandidateCacheKey(candidate2);
+                var candidate2CacheKey = DeltaVoter.GetCandidateCacheKey(candidate2);
 
-                var previousDeltaCacheKey = _voter.GetCandidateListCacheKey(candidate1);
+                var previousDeltaCacheKey = DeltaVoter.GetCandidateListCacheKey(candidate1);
 
                 _voter.OnNext(candidate1);
 
@@ -281,7 +280,7 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Consensus.Deltas
         {
             using (var realCache = new MemoryCache(new MemoryCacheOptions()))
             {
-                _voter = new DeltaVoter(realCache, _producersProvider, _multihashAlgorithm, Substitute.For<ILogger>());
+                _voter = new DeltaVoter(realCache, _producersProvider, Substitute.For<ILogger>());
 
                 var scoredCandidates = AddCandidatesToCacheAndVote(10, 500, realCache);
 
@@ -304,7 +303,7 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Consensus.Deltas
         {
             using (var realCache = new MemoryCache(new MemoryCacheOptions()))
             {
-                _voter = new DeltaVoter(realCache, _producersProvider, _multihashAlgorithm, Substitute.For<ILogger>());
+                _voter = new DeltaVoter(realCache, _producersProvider, Substitute.For<ILogger>());
 
                 AddCandidatesToCacheAndVote(10, 500, realCache);
 
@@ -321,7 +320,7 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Consensus.Deltas
         {
             using (var realCache = new MemoryCache(new MemoryCacheOptions()))
             {
-                _voter = new DeltaVoter(realCache, _producersProvider, _multihashAlgorithm, Substitute.For<ILogger>());
+                _voter = new DeltaVoter(realCache, _producersProvider, Substitute.For<ILogger>());
 
                 var scoredCandidates = AddCandidatesToCacheAndVote(10, 110, realCache);
 

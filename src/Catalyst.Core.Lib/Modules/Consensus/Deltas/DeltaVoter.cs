@@ -42,13 +42,13 @@ namespace Catalyst.Core.Lib.Modules.Consensus.Deltas
 {
     public class DeltaVoter : IDeltaVoter
     {
-        public string GetCandidateCacheKey(CandidateDeltaBroadcast candidate) => 
+        public static string GetCandidateCacheKey(CandidateDeltaBroadcast candidate) => 
             nameof(DeltaVoter) + "-" + candidate.Hash.AsMultihashBase64UrlString();
 
-        public string GetCandidateListCacheKey(CandidateDeltaBroadcast candidate) => 
+        public static string GetCandidateListCacheKey(CandidateDeltaBroadcast candidate) => 
             nameof(DeltaVoter) + "-" + candidate.PreviousDeltaDfsHash.AsMultihashBase64UrlString();
 
-        public string GetCandidateListCacheKey(byte[] previousDeltaHash) => 
+        public static string GetCandidateListCacheKey(byte[] previousDeltaHash) => 
             nameof(DeltaVoter) + "-" + previousDeltaHash.AsMultihashBase64UrlString();
 
         /// <summary>
@@ -58,18 +58,15 @@ namespace Catalyst.Core.Lib.Modules.Consensus.Deltas
         private readonly IMemoryCache _candidatesCache;
 
         private readonly IDeltaProducersProvider _deltaProducersProvider;
-        private readonly IMultihashAlgorithm _multihashAlgorithm;
         private readonly ILogger _logger;
         private readonly MemoryCacheEntryOptions _cacheEntryOptions;
 
         public DeltaVoter(IMemoryCache candidatesCache,
             IDeltaProducersProvider deltaProducersProvider,
-            IMultihashAlgorithm multihashAlgorithm,
             ILogger logger)
         {
             _candidatesCache = candidatesCache;
             _deltaProducersProvider = deltaProducersProvider;
-            _multihashAlgorithm = multihashAlgorithm;
             _cacheEntryOptions = new MemoryCacheEntryOptions()
                .AddExpirationToken(new CancellationChangeToken(new CancellationTokenSource(TimeSpan.FromMinutes(3)).Token));
             _logger = logger;
@@ -99,7 +96,7 @@ namespace Catalyst.Core.Lib.Modules.Consensus.Deltas
                     retrievedScoredDelta.IncreasePopularity(1);
                     return;
                 }
-
+                
                 AddCandidateToCandidateHashLookup(candidate, rankingFactor, candidateCacheKey);
                 AddCandidateToPreviousHashLookup(candidate, candidateCacheKey);
             }

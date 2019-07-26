@@ -21,12 +21,9 @@
 
 #endregion
 
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using Multiformats.Base;
 using Multiformats.Hash;
 using Multiformats.Hash.Algorithms;
 
@@ -34,11 +31,6 @@ namespace Catalyst.Common.Extensions
 {
     public static class BytesExtensions
     {
-        public static string ToUtf8String(this byte[] bytes)
-        {
-            return Encoding.UTF8.GetString(bytes);
-        }
-
         public static MemoryStream ToMemoryStream(this byte[] content)
         {
             var memoryStream = new MemoryStream();

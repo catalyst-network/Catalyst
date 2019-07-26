@@ -39,23 +39,5 @@ namespace Catalyst.Common.Interfaces.Modules.Consensus
 
         /// <see cref="ICycleEventsProvider"/>
         ICycleEventsProvider CycleEventsProvider { get; }
-
-        /// <summary>
-        /// Call this method to try and start acting as a delta producer.
-        /// In effect this will try to start a <see cref="ICycleEventsProvider"/>
-        /// if the node has been configured to have that feature.
-        /// </summary>
-        /// <returns><see cref="true"/> if the node can be a producer and
-        /// has managed to start its <see cref="ICycleEventsProvider"/>,
-        /// <see cref="false"/> otherwise.</returns>
-        // bool TryStartActingAsProducer();
-
-        /// <summary>
-        /// This method will cancel the delta production cycle started on the
-        /// node.
-        /// </summary>
-        /// <returns><see cref="true"/> if the production cycle stopped
-        /// <see cref="false"/> otherwise.</returns>
-        // bool StopActingAsProducer();
     }
 }
