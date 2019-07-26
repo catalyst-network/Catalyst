@@ -188,7 +188,7 @@ namespace Catalyst.Common.UnitTests.IO.Transport
         {
             var testScheduler = new TestScheduler();
             var socketsByEndpointHashCode = ConstructSocketByEndpointSampleData();
-            var clientSocketRegistry = ConstructPopulatedSocketRepository(socketsByEndpointHashCode);
+            var clientSocketRegistry = new SocketClientRegistry<ISocketClient>(testScheduler);
 
             var connectionEvents = new List<int>();
             clientSocketRegistry.EventStream.OfType<SocketClientRegistryClientAdded>().Subscribe(
