@@ -77,7 +77,7 @@ namespace Catalyst.Common.Keystore
             IPrivateKey privateKey = null;
             try
             {
-                privateKey = _cryptoContext.ImportPrivateKey(keyBytes);
+                privateKey = _cryptoContext.PrivateKeyFromBytes(keyBytes);
             }
             catch (ArgumentException)
             {

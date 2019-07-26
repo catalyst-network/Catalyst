@@ -21,29 +21,21 @@
 
 #endregion
 
-using System.IO;
-using System.Text;
-using Multiformats.Hash;
-using Multiformats.Hash.Algorithms;
+using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
+using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Protocol.Rpc.Node;
+using DotNetty.Transport.Channels;
+using Serilog;
 
-namespace Catalyst.Common.Extensions
+namespace Catalyst.Node.Rpc.Client.IO.Observers
 {
-    public static class StringExtensions
+    public class BroadcastRawTransactionResponseObserver : RpcResponseObserver<BroadcastRawTransactionResponse>
     {
-        public static Stream ToMemoryStream(this string s)
-        {
-            var stream = new MemoryStream();
-            var writer = new StreamWriter(stream);
-            writer.Write(s);
-            writer.Flush();
-            stream.Position = 0;
-            return stream;
-        }
+        public BroadcastRawTransactionResponseObserver(ILogger logger) : base(logger) { }
 
-        public static Multihash ComputeUtf8Multihash(this string content, IMultihashAlgorithm algorithm)
-        {
-            var multihash = Encoding.UTF8.GetBytes(content).ComputeMultihash(algorithm);
-            return multihash;
-        }
+        protected override void HandleResponse(BroadcastRawTransactionResponse messageDto,
+            IChannelHandlerContext channelHandlerContext,
+            IPeerIdentifier senderPeerIdentifier,
+            ICorrelationId correlationId) { }
     }
 }

@@ -52,7 +52,7 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Consensus
             var transactions = Enumerable.Range(0, 100)
                .Select(i => TransactionHelper.GetTransaction(
                     transactionFees: (ulong) _random.Next(int.MaxValue),
-                    timeStamp: (ulong) _random.Next(int.MaxValue),
+                    timeStamp: _random.Next(int.MaxValue),
                     signature: _random.Next(int.MaxValue).ToString())
                 ).ToList();
 
@@ -61,7 +61,7 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Consensus
                .ToArray();
 
             ordered.Should().BeInDescendingOrder(t => t.TransactionFees);
-            ordered.Select(t => t.TimeStamp).Should().NotBeAscendingInOrder();
+            ordered.Select(t => t.TimeStamp.ToDateTime()).Should().NotBeAscendingInOrder();
             ordered.Should().NotBeInDescendingOrder(t => t.Signature, SignatureComparer.Default);
         }
 
@@ -71,7 +71,7 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Consensus
             var transactions = Enumerable.Range(0, 100)
                .Select(i => TransactionHelper.GetTransaction(
                     transactionFees: (ulong) i % 3,
-                    timeStamp: (ulong) _random.Next(int.MaxValue),
+                    timeStamp: _random.Next(int.MaxValue),
                     signature: _random.Next(int.MaxValue).ToString())
                 ).ToList();
 
@@ -80,10 +80,11 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Consensus
                .ToArray();
 
             ordered.Should().BeInDescendingOrder(t => t.TransactionFees);
-            ordered.Select(t => t.TimeStamp).Should().NotBeDescendingInOrder();
+            ordered.Select(t => t.TimeStamp.ToDateTime()).Should().NotBeDescendingInOrder();
 
             Enumerable.Range(0, 3).ToList().ForEach(i =>
-                ordered.Where(t => t.TransactionFees == (ulong) i).Select(t => t.TimeStamp).Should().BeInAscendingOrder());
+                ordered.Where(t => t.TransactionFees == (ulong) i)
+                   .Select(t => t.TimeStamp.ToDateTime()).Should().BeInAscendingOrder());
             
             ordered.Should().NotBeInAscendingOrder(t => t.Signature, SignatureComparer.Default);
         }
@@ -94,7 +95,7 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Consensus
             var transactions = Enumerable.Range(0, 100)
                .Select(i => TransactionHelper.GetTransaction(
                     transactionFees: (ulong) i % 2,
-                    timeStamp: (ulong) i % 3,
+                    timeStamp: i % 3,
                     signature: _random.Next(int.MaxValue).ToString())
                 ).ToList();
 
@@ -112,14 +113,14 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Consensus
             Enumerable.Range(0, 2).ToList().ForEach(i =>
             {
                 ordered
-                   .Select(t => t.TransactionFees == (ulong) i ? t.TimeStamp : int.MaxValue)
+                   .Select(t => t.TransactionFees == (ulong) i ? t.TimeStamp.Seconds : int.MaxValue)
                    .ToArray()
                    .Where(z => z != int.MaxValue)
                    .Should().BeInAscendingOrder();
 
                 Enumerable.Range(0, 3).ToList().ForEach(j =>
                     ordered.Where(t => t.TransactionFees == (ulong) i
-                         && t.TimeStamp == (ulong) j).ToArray()
+                         && t.TimeStamp.ToDateTime() == DateTime.FromOADate(j)).ToArray()
                        .Should().BeInAscendingOrder(t => t.Signature, SignatureComparer.Default));
             });
             

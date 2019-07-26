@@ -75,7 +75,7 @@ namespace Catalyst.Core.Lib.Rpc.IO.Observers
             IPublicKey publicKey = null;
             try
             {
-                publicKey = _keySigner.CryptoContext.ImportPublicKey(decodedPublicKey);
+                publicKey = _keySigner.CryptoContext.PublicKeyFromBytes(decodedPublicKey);
 
                 Guard.Argument(publicKey).HasValue();
             }
@@ -87,7 +87,7 @@ namespace Catalyst.Core.Lib.Rpc.IO.Observers
             ISignature signature = null;
             try
             {
-                signature = new Signature(decodedSignature, decodedPublicKey);
+                signature = _keySigner.CryptoContext.SignatureFromBytes(decodedSignature, decodedPublicKey);
                 Guard.Argument(signature).HasValue();
             }
             catch (Exception ex)
