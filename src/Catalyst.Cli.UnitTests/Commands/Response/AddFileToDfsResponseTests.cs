@@ -45,11 +45,11 @@ namespace Catalyst.Cli.UnitTests.Commands.Response
                 ResponseCode = ByteString.CopyFrom((byte) FileTransferResponseCodes.Failed.Id)
             };
 
-            var commandContext = TestResponseHelpers.GenerateCliResponseCommandContext(_testScheduler);
+            var commandContext = TestCommandHelpers.GenerateCliResponseCommandContext(_testScheduler);
             var addFileToDfsCommand = new AddFileCommand(null, commandContext);
 
             //Act
-            TestResponseHelpers.GenerateResponse(commandContext, addFileToDfsResponse);
+            TestCommandHelpers.GenerateResponse(commandContext, addFileToDfsResponse);
 
             _testScheduler.Start();
 
@@ -67,11 +67,11 @@ namespace Catalyst.Cli.UnitTests.Commands.Response
                 ResponseCode = ByteString.CopyFrom((byte) FileTransferResponseCodes.Finished.Id)
             };
 
-            var commandContext = TestResponseHelpers.GenerateCliResponseCommandContext(_testScheduler);
+            var commandContext = TestCommandHelpers.GenerateCliResponseCommandContext(_testScheduler);
             var addFileToDfsCommand = new AddFileCommand(null, commandContext);
 
             //Act
-            TestResponseHelpers.GenerateResponse(commandContext, addFileToDfsResponse);
+            TestCommandHelpers.GenerateResponse(commandContext, addFileToDfsResponse);
 
             _testScheduler.Start();
 
@@ -85,11 +85,11 @@ namespace Catalyst.Cli.UnitTests.Commands.Response
         {
             //Arrange
             var addFileToDfsResponse = new AddFileToDfsResponse();
-            var commandContext = TestResponseHelpers.GenerateCliResponseCommandContext(_testScheduler);
+            var commandContext = TestCommandHelpers.GenerateCliResponseCommandContext(_testScheduler);
             var addFileToDfsCommand = new AddFileCommand(null, commandContext);
 
             //Act
-            TestResponseHelpers.GenerateResponse(commandContext, addFileToDfsResponse);
+            TestCommandHelpers.GenerateResponse(commandContext, addFileToDfsResponse);
 
             _testScheduler.Start();
 

@@ -21,7 +21,6 @@
 
 #endregion
 
-using System;
 using Catalyst.Cli.CommandTypes;
 using Catalyst.Cli.Options;
 using Catalyst.Common.Interfaces.Cli;
@@ -47,31 +46,23 @@ namespace Catalyst.Cli.Commands
             var rpcNodeConfigs = CommandContext.GetNodeConfig(option.Node);
             Guard.Argument(rpcNodeConfigs, nameof(rpcNodeConfigs)).NotNull();
 
-            try
+            //Connect to the node and store it in the socket client registry
+            var nodeRpcClient = CommandContext.NodeRpcClientFactory.GetClient(
+                CommandContext.CertificateStore.ReadOrCreateCertificateFile(rpcNodeConfigs.PfxFileName),
+                rpcNodeConfigs);
+
+            if (!CommandContext.IsSocketChannelActive(nodeRpcClient))
             {
-                //Connect to the node and store it in the socket client registry
-                var nodeRpcClient = CommandContext.NodeRpcClientFactory.GetClient(
-                    CommandContext.CertificateStore.ReadOrCreateCertificateFile(rpcNodeConfigs.PfxFileName),
-                    rpcNodeConfigs);
-
-                if (!CommandContext.IsSocketChannelActive(nodeRpcClient))
-                {
-                    CommandContext.UserOutput.WriteLine(InvalidSocketChannel);
-                    return false;
-                }
-
-                var clientHashCode = CommandContext.SocketClientRegistry.GenerateClientHashCode(
-                    EndpointBuilder.BuildNewEndPoint(rpcNodeConfigs.HostAddress, rpcNodeConfigs.Port));
-
-                CommandContext.SocketClientRegistry.AddClientToRegistry(clientHashCode, nodeRpcClient);
-                CommandContext.UserOutput.WriteLine($"Connected to Node {nodeRpcClient.Channel.RemoteAddress}");
-                return true;
-            }
-            catch (Exception e)
-            {
-                _logger.Debug(e.Message, e);
+                CommandContext.UserOutput.WriteLine(InvalidSocketChannel);
                 return false;
             }
+
+            var clientHashCode = CommandContext.SocketClientRegistry.GenerateClientHashCode(
+                EndpointBuilder.BuildNewEndPoint(rpcNodeConfigs.HostAddress, rpcNodeConfigs.Port));
+
+            CommandContext.SocketClientRegistry.AddClientToRegistry(clientHashCode, nodeRpcClient);
+            CommandContext.UserOutput.WriteLine($"Connected to Node {nodeRpcClient.Channel.RemoteAddress}");
+            return true;
         }
     }
 }

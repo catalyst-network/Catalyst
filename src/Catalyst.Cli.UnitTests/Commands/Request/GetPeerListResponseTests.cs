@@ -41,21 +41,15 @@ namespace Catalyst.Cli.UnitTests.Commands.Request
         public void GetPeerListResponse_Can_Be_Sent()
         {
             //Arrange
-            var commandContext = TestResponseHelpers.GenerateCliRequestCommandContext();
+            var commandContext = TestCommandHelpers.GenerateCliRequestCommandContext();
             var connectedNode = commandContext.GetConnectedNode(null);
             var command = new PeerListCommand(commandContext);
 
             //Act
-            TestResponseHelpers.GenerateRequest(commandContext, command, "-n", "node1");
+            TestCommandHelpers.GenerateRequest(commandContext, command, "-n", "node1");
 
             //Assert
-            connectedNode.Received(1).SendMessage(Arg.Any<IMessageDto<ProtocolMessage>>());
-
-            var sentMessageDto = (IMessageDto<ProtocolMessage>) connectedNode.ReceivedCalls()
-               .Single(c => c.GetMethodInfo().Name == nameof(INodeRpcClient.SendMessage))
-               .GetArguments()[0];
-
-            var requestSent = sentMessageDto.Content.FromProtocolMessage<GetPeerListRequest>();
+            var requestSent = TestCommandHelpers.GetRequest<GetPeerListRequest>(connectedNode);
             requestSent.Should().BeOfType(typeof(GetPeerListRequest));
         }
     }

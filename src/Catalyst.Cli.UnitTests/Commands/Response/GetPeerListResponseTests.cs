@@ -42,10 +42,10 @@ namespace Catalyst.Cli.UnitTests.Commands.Response
             var getPeerListResponse = new GetPeerListResponse();
             getPeerListResponse.Peers.Add(new PeerId());
 
-            var commandContext = TestResponseHelpers.GenerateCliResponseCommandContext(_testScheduler);
+            var commandContext = TestCommandHelpers.GenerateCliResponseCommandContext(_testScheduler);
 
             //Act
-            TestResponseHelpers.GenerateResponse(commandContext, getPeerListResponse);
+            TestCommandHelpers.GenerateResponse(commandContext, getPeerListResponse);
 
             var getPeerListCommand = new PeerListCommand(commandContext);
 

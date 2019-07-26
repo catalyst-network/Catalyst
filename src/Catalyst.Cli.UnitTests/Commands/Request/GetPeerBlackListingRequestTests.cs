@@ -41,22 +41,16 @@ namespace Catalyst.Cli.UnitTests.Commands.Request
         public void GetPeerBlackListingRequest_Can_Be_Sent()
         {
             //Arrange
-            var commandContext = TestResponseHelpers.GenerateCliRequestCommandContext();
+            var commandContext = TestCommandHelpers.GenerateCliRequestCommandContext();
             var connectedNode = commandContext.GetConnectedNode(null);
             var command = new PeerBlackListingCommand(commandContext);
 
             //Act
-            TestResponseHelpers.GenerateRequest(commandContext, command, "-n", "node1", "-b", "true", "-i", "10.1.1.1",
+            TestCommandHelpers.GenerateRequest(commandContext, command, "-n", "node1", "-b", "true", "-i", "10.1.1.1",
                 "-p", "public key");
 
             //Assert
-            connectedNode.Received(1).SendMessage(Arg.Any<IMessageDto<ProtocolMessage>>());
-
-            var sentMessageDto = (IMessageDto<ProtocolMessage>) connectedNode.ReceivedCalls()
-               .Single(c => c.GetMethodInfo().Name == nameof(INodeRpcClient.SendMessage))
-               .GetArguments()[0];
-
-            var requestSent = sentMessageDto.Content.FromProtocolMessage<SetPeerBlackListRequest>();
+            var requestSent = TestCommandHelpers.GetRequest<SetPeerBlackListRequest>(connectedNode);
             requestSent.Should().BeOfType(typeof(SetPeerBlackListRequest));
         }
     }

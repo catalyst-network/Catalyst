@@ -41,11 +41,11 @@ namespace Catalyst.Cli.UnitTests.Commands.Response
         {
             //Arrange
             var deltaResponse = new GetDeltaResponse {Delta = new Delta()};
-            var commandContext = TestResponseHelpers.GenerateCliResponseCommandContext(_testScheduler);
+            var commandContext = TestCommandHelpers.GenerateCliResponseCommandContext(_testScheduler);
             var getDeltaCommand = new GetDeltaCommand(commandContext);
 
             //Act
-            TestResponseHelpers.GenerateResponse(commandContext, deltaResponse);
+            TestCommandHelpers.GenerateResponse(commandContext, deltaResponse);
 
             _testScheduler.Start();
 
@@ -58,11 +58,11 @@ namespace Catalyst.Cli.UnitTests.Commands.Response
         {
             //Arrange
             var deltaResponse = new GetDeltaResponse();
-            var commandContext = TestResponseHelpers.GenerateCliResponseCommandContext(_testScheduler);
+            var commandContext = TestCommandHelpers.GenerateCliResponseCommandContext(_testScheduler);
             var getDeltaCommand = new GetDeltaCommand(commandContext);
 
             //Act
-            TestResponseHelpers.GenerateResponse(commandContext, deltaResponse);
+            TestCommandHelpers.GenerateResponse(commandContext, deltaResponse);
 
             _testScheduler.Start();
 

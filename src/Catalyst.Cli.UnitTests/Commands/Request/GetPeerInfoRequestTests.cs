@@ -41,21 +41,15 @@ namespace Catalyst.Cli.UnitTests.Commands.Request
         public void GetPeerInfoRequest_Can_Be_Sent()
         {
             //Arrange
-            var commandContext = TestResponseHelpers.GenerateCliRequestCommandContext();
+            var commandContext = TestCommandHelpers.GenerateCliRequestCommandContext();
             var connectedNode = commandContext.GetConnectedNode(null);
             var command = new GetPeerInfoCommand(commandContext);
 
             //Act
-            TestResponseHelpers.GenerateRequest(commandContext, command, "-n", "node1", "-i", "10.1.1.1", "-p", "publickey");
+            TestCommandHelpers.GenerateRequest(commandContext, command, "-n", "node1", "-i", "10.1.1.1", "-p", "publickey");
 
             //Assert
-            connectedNode.Received(1).SendMessage(Arg.Any<IMessageDto<ProtocolMessage>>());
-
-            var sentMessageDto = (IMessageDto<ProtocolMessage>) connectedNode.ReceivedCalls()
-               .Single(c => c.GetMethodInfo().Name == nameof(INodeRpcClient.SendMessage))
-               .GetArguments()[0];
-
-            var requestSent = sentMessageDto.Content.FromProtocolMessage<GetPeerInfoRequest>();
+            var requestSent = TestCommandHelpers.GetRequest<GetPeerInfoRequest>(connectedNode);
             requestSent.Should().BeOfType(typeof(GetPeerInfoRequest));
         }
     }

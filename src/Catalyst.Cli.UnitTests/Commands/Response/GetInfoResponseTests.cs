@@ -40,11 +40,11 @@ namespace Catalyst.Cli.UnitTests.Commands.Response
         {
             //Arrange
             var getInfoResponse = new GetInfoResponse {Query = "Test"};
-            var commandContext = TestResponseHelpers.GenerateCliResponseCommandContext(_testScheduler);
+            var commandContext = TestCommandHelpers.GenerateCliResponseCommandContext(_testScheduler);
             var getInfoCommand = new GetInfoCommand(commandContext);
 
             //Act
-            TestResponseHelpers.GenerateResponse(commandContext, getInfoResponse);
+            TestCommandHelpers.GenerateResponse(commandContext, getInfoResponse);
 
             _testScheduler.Start();
 

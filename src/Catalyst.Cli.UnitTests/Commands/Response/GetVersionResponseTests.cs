@@ -40,11 +40,11 @@ namespace Catalyst.Cli.UnitTests.Commands.Response
         {
             //Arrange
             var versionResponse = new VersionResponse {Version = "1.2.3.4"};
-            var commandContext = TestResponseHelpers.GenerateCliResponseCommandContext(_testScheduler);
+            var commandContext = TestCommandHelpers.GenerateCliResponseCommandContext(_testScheduler);
             var getVersionCommand = new GetVersionCommand(commandContext);
 
             //Act
-            TestResponseHelpers.GenerateResponse(commandContext, versionResponse);
+            TestCommandHelpers.GenerateResponse(commandContext, versionResponse);
 
             _testScheduler.Start();
 

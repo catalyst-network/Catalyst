@@ -43,11 +43,11 @@ namespace Catalyst.Cli.UnitTests.Commands.Response
         {
             //Arrange
             var getPeerReputationResponse = new GetPeerReputationResponse {Reputation = 100};
-            var commandContext = TestResponseHelpers.GenerateCliResponseCommandContext(_testScheduler);
+            var commandContext = TestCommandHelpers.GenerateCliResponseCommandContext(_testScheduler);
             var getPeerReputationCommand = new PeerReputationCommand(commandContext);
 
             //Act
-            TestResponseHelpers.GenerateResponse(commandContext, getPeerReputationResponse);
+            TestCommandHelpers.GenerateResponse(commandContext, getPeerReputationResponse);
 
             _testScheduler.Start();
 

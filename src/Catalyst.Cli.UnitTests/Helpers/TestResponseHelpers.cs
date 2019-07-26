@@ -28,16 +28,19 @@ using System.Reactive.Concurrency;
 using System.Security.Cryptography.X509Certificates;
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.Cli.CommandTypes;
+using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.IO.Transport;
+using Catalyst.Protocol;
+using Catalyst.Protocol.Common;
 using Catalyst.TestUtils;
 using Google.Protobuf;
 using NSubstitute;
 
 namespace Catalyst.Cli.UnitTests.Helpers
 {
-    public static class TestResponseHelpers
+    public static class TestCommandHelpers
     {
         public static ICommandContext GenerateCliRequestCommandContext()
         {
@@ -103,6 +106,17 @@ namespace Catalyst.Cli.UnitTests.Helpers
         {
             var nodeRpcClient = GenerateRpcResponseOnSubscription(response);
             commandContext.SocketClientRegistry.AddClientToRegistry(1111111111, nodeRpcClient);
+        }
+
+        public static T GetRequest<T>(INodeRpcClient connectedNode) where T : IMessage<T>
+        {
+            connectedNode.Received(1).SendMessage(Arg.Any<IMessageDto<ProtocolMessage>>());
+
+            var sentMessageDto = (IMessageDto<ProtocolMessage>) connectedNode.ReceivedCalls()
+               .Single(c => c.GetMethodInfo().Name == nameof(INodeRpcClient.SendMessage))
+               .GetArguments()[0];
+
+            return sentMessageDto.Content.FromProtocolMessage<T>();
         }
     }
 }

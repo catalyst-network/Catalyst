@@ -21,23 +21,21 @@
 
 #endregion
 
-using Catalyst.Cli.CommandTypes;
-using Catalyst.Cli.Options;
-using Catalyst.Common.Interfaces.Cli;
+using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
+using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Protocol.Rpc.Node;
+using DotNetty.Transport.Channels;
+using Serilog;
 
-namespace Catalyst.Cli.Commands
+namespace Catalyst.Node.Rpc.Client.IO.Observers
 {
-    public sealed class GetVersionCommand : BaseMessageCommand<VersionRequest, VersionResponse, GetVersionOptions>
+    public class BroadcastRawTransactionResponseObserver : RpcResponseObserver<BroadcastRawTransactionResponse>
     {
-        public GetVersionCommand(ICommandContext commandContext) : base(commandContext) { }
+        public BroadcastRawTransactionResponseObserver(ILogger logger) : base(logger) { }
 
-        protected override VersionRequest GetMessage(GetVersionOptions option)
-        {
-            return new VersionRequest
-            {
-                Query = true
-            };
-        }
+        protected override void HandleResponse(BroadcastRawTransactionResponse messageDto,
+            IChannelHandlerContext channelHandlerContext,
+            IPeerIdentifier senderPeerIdentifier,
+            ICorrelationId correlationId) { }
     }
 }

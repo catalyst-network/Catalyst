@@ -41,21 +41,15 @@ namespace Catalyst.Cli.UnitTests.Commands.Request
         public void SignMessageRequest_Can_Be_Sent()
         {
             //Arrange
-            var commandContext = TestResponseHelpers.GenerateCliRequestCommandContext();
+            var commandContext = TestCommandHelpers.GenerateCliRequestCommandContext();
             var connectedNode = commandContext.GetConnectedNode(null);
             var command = new MessageSignCommand(commandContext);
 
             //Act
-            TestResponseHelpers.GenerateRequest(commandContext, command, "-n", "node1", "-m", "hello world");
+            TestCommandHelpers.GenerateRequest(commandContext, command, "-n", "node1", "-m", "hello world");
 
             //Assert
-            connectedNode.Received(1).SendMessage(Arg.Any<IMessageDto<ProtocolMessage>>());
-
-            var sentMessageDto = (IMessageDto<ProtocolMessage>) connectedNode.ReceivedCalls()
-               .Single(c => c.GetMethodInfo().Name == nameof(INodeRpcClient.SendMessage))
-               .GetArguments()[0];
-
-            var requestSent = sentMessageDto.Content.FromProtocolMessage<SignMessageRequest>();
+            var requestSent = TestCommandHelpers.GetRequest<SignMessageRequest>(connectedNode);
             requestSent.Should().BeOfType(typeof(SignMessageRequest));
         }
     }

@@ -40,11 +40,11 @@ namespace Catalyst.Cli.UnitTests.Commands.Response
         {
             //Arrange
             var getFileFromDfsResponse = new GetFileFromDfsResponse();
-            var commandContext = TestResponseHelpers.GenerateCliResponseCommandContext(_testScheduler);
+            var commandContext = TestCommandHelpers.GenerateCliResponseCommandContext(_testScheduler);
             var getFileFromDfsCommand = new GetFileCommand(null, commandContext);
 
             //Act
-            TestResponseHelpers.GenerateResponse(commandContext, getFileFromDfsResponse);
+            TestCommandHelpers.GenerateResponse(commandContext, getFileFromDfsResponse);
 
             _testScheduler.Start();
 

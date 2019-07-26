@@ -41,21 +41,15 @@ namespace Catalyst.Cli.UnitTests.Commands.Request
         public void VerifyMessageRequest_Can_Be_Sent()
         {
             //Arrange
-            var commandContext = TestResponseHelpers.GenerateCliRequestCommandContext();
+            var commandContext = TestCommandHelpers.GenerateCliRequestCommandContext();
             var connectedNode = commandContext.GetConnectedNode(null);
             var command = new MessageVerifyCommand(commandContext);
 
             //Act
-            TestResponseHelpers.GenerateRequest(commandContext, command, "-n", "node1", "-m", "hello world", "-p", "public key", "-s", "signature");
+            TestCommandHelpers.GenerateRequest(commandContext, command, "-n", "node1", "-m", "hello world", "-p", "public key", "-s", "signature");
 
             //Assert
-            connectedNode.Received(1).SendMessage(Arg.Any<IMessageDto<ProtocolMessage>>());
-
-            var sentMessageDto = (IMessageDto<ProtocolMessage>) connectedNode.ReceivedCalls()
-               .Single(c => c.GetMethodInfo().Name == nameof(INodeRpcClient.SendMessage))
-               .GetArguments()[0];
-
-            var requestSent = sentMessageDto.Content.FromProtocolMessage<VerifyMessageRequest>();
+            var requestSent = TestCommandHelpers.GetRequest<VerifyMessageRequest>(connectedNode);
             requestSent.Should().BeOfType(typeof(VerifyMessageRequest));
         }
     }

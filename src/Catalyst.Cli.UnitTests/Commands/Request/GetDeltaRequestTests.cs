@@ -22,14 +22,17 @@
 #endregion
 
 using System.Linq;
+using System.Text;
 using Catalyst.Cli.Commands;
 using Catalyst.Cli.UnitTests.Helpers;
+using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Protocol;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using FluentAssertions;
+using Multiformats.Hash;
 using NSubstitute;
 using Xunit;
 
@@ -39,38 +42,34 @@ namespace Catalyst.Cli.UnitTests.Commands.Request
     public sealed class GetDeltaRequestTests
     {
         /* Commented out as I don't have a valid multihash */
-        //[Fact]
-        //public void GetDeltaRequest_Can_Be_Sent()
-        //{
-        //    //Arrange
-        //    var commandContext = TestResponseHelpers.GenerateCliRequestCommandContext();
-        //    var connectedNode = commandContext.GetConnectedNode(null);
-        //    var command = new GetDeltaCommand(commandContext);
+        [Fact]
+        public void GetDeltaRequest_Can_Be_Sent()
+        {
+            //Arrange
+            var hashingAlgorithm = Common.Config.Constants.HashAlgorithm;
+            var deltaMultiHash = Encoding.UTF8.GetBytes("previous").ComputeMultihash(hashingAlgorithm);
+            var commandContext = TestCommandHelpers.GenerateCliRequestCommandContext();
+            var connectedNode = commandContext.GetConnectedNode(null);
+            var command = new GetDeltaCommand(commandContext);
 
-        //    //Act
-        //    TestResponseHelpers.GenerateRequest(commandContext, command, "-n", "node1", "-h", "hash");
+            //Act
+            TestCommandHelpers.GenerateRequest(commandContext, command, "-n", "node1", "-h", deltaMultiHash);
 
-        //    //Assert
-        //    connectedNode.Received(1).SendMessage(Arg.Any<IMessageDto<ProtocolMessage>>());
-
-        //    var sentMessageDto = (IMessageDto<ProtocolMessage>) connectedNode.ReceivedCalls()
-        //       .Single(c => c.GetMethodInfo().Name == nameof(INodeRpcClient.SendMessage))
-        //       .GetArguments()[0];
-
-        //    var requestSent = sentMessageDto.Content.FromProtocolMessage<GetDeltaRequest>();
-        //    requestSent.Should().BeOfType(typeof(GetDeltaRequest));
-        //}
+            //Assert
+            var requestSent = TestCommandHelpers.GetRequest<GetDeltaRequest>(connectedNode);
+            requestSent.Should().BeOfType(typeof(GetDeltaRequest));
+        }
 
         [Fact]
         public void GetDeltaRequest_Should_Be_Invalid_Multihash()
         {
             //Arrange
             var hash = "test";
-            var commandContext = TestResponseHelpers.GenerateCliRequestCommandContext();
+            var commandContext = TestCommandHelpers.GenerateCliRequestCommandContext();
             var command = new GetDeltaCommand(commandContext);
 
             //Act
-            TestResponseHelpers.GenerateRequest(commandContext, command, "-n", "node1", "-h", hash);
+            TestCommandHelpers.GenerateRequest(commandContext, command, "-n", "node1", "-h", hash);
 
             //Assert
             commandContext.UserOutput.Received(1).WriteLine($"Unable to parse hash {hash} as a Multihash");

@@ -41,21 +41,15 @@ namespace Catalyst.Cli.UnitTests.Commands.Request
         public void GetPeerReputation_Can_Be_Sent()
         {
             //Arrange
-            var commandContext = TestResponseHelpers.GenerateCliRequestCommandContext();
+            var commandContext = TestCommandHelpers.GenerateCliRequestCommandContext();
             var connectedNode = commandContext.GetConnectedNode(null);
             var command = new PeerReputationCommand(commandContext);
 
             //Act
-            TestResponseHelpers.GenerateRequest(commandContext, command, "-n", "node1", "-i", "10.1.1.1", "-p", "public key");
+            TestCommandHelpers.GenerateRequest(commandContext, command, "-n", "node1", "-i", "10.1.1.1", "-p", "public key");
 
             //Assert
-            connectedNode.Received(1).SendMessage(Arg.Any<IMessageDto<ProtocolMessage>>());
-
-            var sentMessageDto = (IMessageDto<ProtocolMessage>) connectedNode.ReceivedCalls()
-               .Single(c => c.GetMethodInfo().Name == nameof(INodeRpcClient.SendMessage))
-               .GetArguments()[0];
-
-            var requestSent = sentMessageDto.Content.FromProtocolMessage<GetPeerReputationRequest>();
+            var requestSent = TestCommandHelpers.GetRequest<GetPeerReputationRequest>(connectedNode);
             requestSent.Should().BeOfType(typeof(GetPeerReputationRequest));
         }
     }
