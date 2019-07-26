@@ -37,6 +37,7 @@ using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.P2P;
 using Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast;
+using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Types;
 using Catalyst.Protocol.Common;
 using Catalyst.TestUtils;
@@ -56,7 +57,8 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Messaging.Broadcast
         public BroadcastManagerTests()
         {
             _keySigner = Substitute.For<IKeySigner>();
-            _keySigner.Sign(Arg.Any<byte[]>()).Returns(new Signature(new byte[64], new byte[32]));
+            var fakeSignature = Substitute.For<ISignature>();
+            _keySigner.Sign(Arg.Any<byte[]>()).Returns(fakeSignature);
             _peers = Substitute.For<IPeerRepository>();
             _cache = new MemoryCache(new MemoryCacheOptions());
         }

@@ -116,8 +116,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Observers
 
         private static Multihash GetMultiHash(string content)
         {
-            var hashBytes = Common.Config.Constants.HashAlgorithm.ComputeHash(Encoding.UTF8.GetBytes(content));
-            var multiHash = Multihash.Cast(hashBytes);
+            var multiHash = Encoding.UTF8.GetBytes(content).ComputeMultihash(Common.Config.Constants.HashAlgorithm);
             return multiHash;
         }
 

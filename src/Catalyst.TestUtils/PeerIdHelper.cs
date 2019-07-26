@@ -58,8 +58,8 @@ namespace Catalyst.TestUtils
             int port = 12345)
         {
             var publicKeyBytes = Encoding.UTF8.GetBytes(publicKeySeed)
-               .Concat(Enumerable.Repeat(default(byte), Cryptography.BulletProofs.Wrapper.FFI.GetPublicKeyLength()))
-               .Take(Cryptography.BulletProofs.Wrapper.FFI.GetPublicKeyLength()).ToArray();
+               .Concat(Enumerable.Repeat(default(byte), Cryptography.BulletProofs.Wrapper.FFI.PublicKeyLength))
+               .Take(Cryptography.BulletProofs.Wrapper.FFI.PublicKeyLength).ToArray();
             return GetPeerId(publicKeyBytes, clientId, clientVersion, ipAddress, port);
         }
 
