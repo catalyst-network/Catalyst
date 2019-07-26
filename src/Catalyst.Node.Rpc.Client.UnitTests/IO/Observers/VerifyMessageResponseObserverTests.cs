@@ -32,6 +32,7 @@ using Catalyst.Node.Rpc.Client.IO.Observers;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
+using FluentAssertions;
 using NSubstitute;
 using Serilog;
 using Xunit;
@@ -42,7 +43,6 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
     {
         private readonly ILogger _logger;
         private readonly IChannelHandlerContext _fakeContext;
-        private readonly IUserOutput _output;
         public static List<object[]> QueryContents;
         private VerifyMessageResponseObserver _observer;
 
@@ -65,7 +65,6 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
         {
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
-            _output = Substitute.For<IUserOutput>();
         }
 
         [Theory]
@@ -86,12 +85,16 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
                     response.CorrelationId)
             );
 
-            _observer = new VerifyMessageResponseObserver(_output, _logger);
+            VerifyMessageResponse messageStreamResponse = null;
+
+            _observer = new VerifyMessageResponseObserver(_logger);
             _observer.StartObserving(messageStream);
+            _observer.SubscribeToResponse(message => messageStreamResponse = message);
 
-            await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync().ConfigureAwait(false);
+            await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
 
-            _output.Received(1).WriteLine(isSignedByNode.ToString());
+            messageStreamResponse.Should().NotBeNull();
+            messageStreamResponse.IsSignedByKey.Should().Be(response.Content.IsSignedByKey);
         }
 
         public void Dispose()

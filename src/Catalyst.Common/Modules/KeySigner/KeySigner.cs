@@ -22,11 +22,13 @@
 #endregion
 
 using System;
+using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Common.Interfaces.Keystore;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
-using Catalyst.Cryptography.BulletProofs.Wrapper.Types;
+using Catalyst.Common.Interfaces.Registry;
+using Catalyst.Cryptography.BulletProofs.Wrapper.Exceptions;
 
 namespace Catalyst.Common.Modules.KeySigner
 {
@@ -34,15 +36,36 @@ namespace Catalyst.Common.Modules.KeySigner
     {
         private readonly IKeyStore _keyStore;
         private readonly ICryptoContext _cryptoContext;
+        private readonly IKeyRegistry _keyRegistry;
+        private readonly KeyRegistryKey _defaultKey = KeyRegistryKey.DefaultKey;
 
         /// <summary>Initializes a new instance of the <see cref="KeySigner"/> class.</summary>
         /// <param name="keyStore">The key store.</param>
         /// <param name="cryptoContext">The crypto context.</param>
-        public KeySigner(IKeyStore keyStore,
-            ICryptoContext cryptoContext)
+        /// /// <param name="keyRegistry">The key registry.</param>
+        public KeySigner(IKeyStore keyStore, ICryptoContext cryptoContext, IKeyRegistry keyRegistry)
         {
             _keyStore = keyStore;
             _cryptoContext = cryptoContext;
+            _keyRegistry = keyRegistry;
+            InitialiseKeyRegistry();
+        }
+
+        private void InitialiseKeyRegistry()
+        {
+            if (!TryPopulateDefaultKeyFromKeyStore(out _))
+            {
+                GenerateKeyAndPopulateRegistryWithDefault();
+            }   
+        }
+
+        private void GenerateKeyAndPopulateRegistryWithDefault()
+        {
+            var privateKey = _keyStore.KeyStoreGenerate(_defaultKey);
+            if (privateKey != null)
+            { 
+                _keyRegistry.AddItemToRegistry(_defaultKey, privateKey);
+            }
         }
 
         /// <inheritdoc/>
@@ -51,14 +74,25 @@ namespace Catalyst.Common.Modules.KeySigner
         /// <inheritdoc/>
         ICryptoContext IKeySigner.CryptoContext => _cryptoContext;
 
-        /// <inheritdoc/>
+        private ISignature Sign(byte[] data, KeyRegistryKey keyIdentifier)
+        {
+            var privateKey = _keyRegistry.GetItemFromRegistry(keyIdentifier);
+            if (privateKey == null && !TryPopulateRegistryFromKeyStore(keyIdentifier, out privateKey))
+            {
+                throw new SignatureException("The signature cannot be created because the key does not exist");
+            }
+
+            return Sign(data, privateKey);
+        }
+
         public ISignature Sign(byte[] data)
         {
-            {
-                // var key = _keyStore.KeyStoreDecrypt(_keyStore.Password);
-                // return Task.FromResult(_cryptoContext.Sign(key, new ReadOnlySpan<byte>(data))).GetAwaiter().GetResult();
-            }
-            return new Signature(new byte[64], new byte[32]);
+            return Sign(data, KeyRegistryKey.DefaultKey);
+        }
+
+        private ISignature Sign(byte[] data, IPrivateKey privateKey)
+        {
+            return _cryptoContext.Sign(privateKey, data);
         }
 
         /// <inheritdoc/>
@@ -71,6 +105,19 @@ namespace Catalyst.Common.Modules.KeySigner
         public void ExportKey()
         {
             throw new NotImplementedException();
-        }    
+        }
+
+        private bool TryPopulateRegistryFromKeyStore(KeyRegistryKey keyIdentifier, out IPrivateKey key)
+        {
+            key = _keyStore.KeyStoreDecrypt(keyIdentifier);
+            
+            return key != null && (_keyRegistry.RegistryContainsKey(keyIdentifier) || _keyRegistry.AddItemToRegistry(keyIdentifier, key));
+        }
+
+        private bool TryPopulateDefaultKeyFromKeyStore(out IPrivateKey key)
+        {
+            return TryPopulateRegistryFromKeyStore(_defaultKey, out key);
+        }   
     }
 }
+                                         

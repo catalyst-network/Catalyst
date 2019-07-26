@@ -22,7 +22,7 @@
 #endregion
 
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
-using Catalyst.Protocol.Rpc.Node;
+using Catalyst.Protocol.Common;
 
 namespace Catalyst.Common.Interfaces.FileTransfer
 {
@@ -42,6 +42,6 @@ namespace Catalyst.Common.Interfaces.FileTransfer
         /// <summary>Gets the upload message.</summary>
         /// <param name="chunkId">The chunk identifier.</param>
         /// <returns></returns>
-        IMessageDto<TransferFileBytesRequest> GetUploadMessageDto(uint chunkId);
+        IMessageDto<ProtocolMessage> GetUploadMessageDto(uint chunkId);
     }
 }

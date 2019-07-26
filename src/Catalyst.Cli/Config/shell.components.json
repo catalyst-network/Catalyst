@@ -9,6 +9,24 @@
                 }
             ]
         },
+        {
+            "type": "Catalyst.Common.Registry.KeyRegistry, Catalyst.Common",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.Registry.IKeyRegistry, Catalyst.Common"
+                }
+            ],
+            "instanceScope": "singleinstance"
+        },
+        {
+            "type": "Catalyst.Common.Registry.PasswordRegistry, Catalyst.Common",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.Registry.IPasswordRegistry, Catalyst.Common"
+                }
+            ],
+            "instanceScope": "singleinstance"
+        },
         // Start Commands
         {
             "type": "Catalyst.Cli.Commands.AddFileCommand",
@@ -189,7 +207,8 @@
                 {
                     "type": "Catalyst.Common.Interfaces.Modules.KeySigner.IKeySigner, Catalyst.Common"
                 }
-            ]
+            ],
+            "instanceScope": "singleinstance"
         },
         {
             "type": "Catalyst.Common.Keystore.LocalKeyStore, Catalyst.Common",
@@ -315,6 +334,14 @@
             ]
         },
         {
+            "type": "Catalyst.Node.Rpc.Client.IO.Observers.TransferFileBytesResponseObserver, Catalyst.Node.Rpc.Client",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.IO.Observers.IRpcResponseObserver, Catalyst.Common"
+                }
+            ]
+        },
+        {
             "type": "Catalyst.Node.Rpc.Client.IO.Observers.GetPeerInfoResponseObserver, Catalyst.Node.Rpc.Client",
             "services": [
                 {
@@ -399,14 +426,6 @@
             "services": [
                 {
                     "type": "Catalyst.Common.Interfaces.IO.Observers.IRpcResponseObserver, Catalyst.Common"
-                }
-            ]
-        },
-        {
-            "type": "Catalyst.Common.Rpc.IO.Observers.TransferFileBytesRequestObserver, Catalyst.Common",
-            "services": [
-                {
-                    "type": "Catalyst.Common.Interfaces.IO.Observers.IRpcRequestObserver, Catalyst.Common"
                 }
             ]
         },

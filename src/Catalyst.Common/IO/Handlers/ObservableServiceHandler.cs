@@ -52,6 +52,7 @@ namespace Catalyst.Common.IO.Handlers
         {
             var contextAny = new ObserverDto(ctx, message);
             _messageSubject.OnNext(contextAny);
+            ctx.FireChannelRead(message);
         }
         
         public override void ExceptionCaught(IChannelHandlerContext context, Exception e)

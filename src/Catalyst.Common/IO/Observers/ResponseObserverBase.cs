@@ -40,20 +40,28 @@ namespace Catalyst.Common.IO.Observers
 {
     public abstract class ResponseObserverBase<TProto> : MessageObserverBase, IResponseMessageObserver where TProto : IMessage<TProto>
     {
-        protected ResponseObserverBase(ILogger logger) : base(logger, typeof(TProto).ShortenedProtoFullName())
+        protected ResponseObserverBase(ILogger logger, bool assertMessageNameCheck = true) : base(logger, typeof(TProto).ShortenedProtoFullName())
         {
-            Guard.Argument(typeof(TProto), nameof(TProto)).Require(t => t.IsResponseType(),
-                t => $"{nameof(TProto)} is not of type {MessageTypes.Response.Name}");
+            if (assertMessageNameCheck)
+            {
+                Guard.Argument(typeof(TProto), nameof(TProto)).Require(t => t.IsResponseType(),
+                    t => $"{nameof(TProto)} is not of type {MessageTypes.Response.Name}");
+            }
         }
 
         protected abstract void HandleResponse(TProto messageDto, IChannelHandlerContext channelHandlerContext, IPeerIdentifier senderPeerIdentifier, ICorrelationId correlationId);
+
+        protected virtual void RedirectResponse(TProto messageDto, IChannelHandlerContext channelHandlerContext, IPeerIdentifier senderPeerIdentifier, ICorrelationId correlationId)
+        {
+            HandleResponse(messageDto, channelHandlerContext, senderPeerIdentifier, correlationId);
+        }
 
         public override void OnNext(IObserverDto<ProtocolMessage> messageDto)
         {
             Logger.Verbose("Pre Handle Message Called");
             try
             {
-                HandleResponse(messageDto.Payload.FromProtocolMessage<TProto>(), messageDto.Context,
+                RedirectResponse(messageDto.Payload.FromProtocolMessage<TProto>(), messageDto.Context,
                     new PeerIdentifier(messageDto.Payload.PeerId), messageDto.Payload.CorrelationId.ToCorrelationId());
             }
             catch (Exception exception)

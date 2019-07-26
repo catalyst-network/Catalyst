@@ -21,13 +21,9 @@
 
 #endregion
 
-using System;
-using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.IO.Observers;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.IO.Observers;
-using Catalyst.Common.Util;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using DotNetty.Transport.Channels;
@@ -40,22 +36,14 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
     /// </summary>
     /// <seealso cref="IRpcResponseObserver" />
     public sealed class GetPeerInfoResponseObserver
-        : ResponseObserverBase<GetPeerInfoResponse>,
-            IRpcResponseObserver
+        : RpcResponseObserver<GetPeerInfoResponse>
     {
-        private readonly IUserOutput _output;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="PeerReputationResponseObserver"/> class.
         /// </summary>
-        /// <param name="output">The output.</param>
         /// <param name="logger">The logger.</param>
-        public GetPeerInfoResponseObserver(IUserOutput output,
-            ILogger logger)
-            : base(logger)
-        {
-            _output = output;
-        }
+        public GetPeerInfoResponseObserver(ILogger logger)
+            : base(logger) { }
 
         /// <summary>
         /// Handle the response for GetPeerInfo
@@ -72,19 +60,6 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
             Guard.Argument(getPeerInfoResponse, nameof(getPeerInfoResponse)).NotNull();
             Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
             Guard.Argument(senderPeerIdentifier, nameof(senderPeerIdentifier)).NotNull();
-            Logger.Debug("Handling GetPeerInfo response");
-
-            try
-            {
-                var msg = getPeerInfoResponse.PeerInfo.Count == 0 ? "Peer(s) not found" : CommandFormatHelper.FormatRepeatedPeerInfoResponse(getPeerInfoResponse.PeerInfo);
-                _output.WriteLine(msg);
-            }
-            catch (Exception ex)
-            {
-                Logger.Error(ex,
-                    "Failed to handle GetPeerInfoResponse after receiving message {0}", getPeerInfoResponse);
-                throw;
-            }
         }
     }
 }

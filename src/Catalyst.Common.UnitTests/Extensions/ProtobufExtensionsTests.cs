@@ -88,22 +88,6 @@ namespace Catalyst.Common.UnitTests.Extensions
         }
 
         [Fact]
-        public void Can_Recognize_Gossip_Message()
-        {
-            var peerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("1");
-            var gossipMessage = new TransactionBroadcast().ToProtocolMessage(peerIdentifier.PeerId, CorrelationId.GenerateCorrelationId())
-               .ToProtocolMessage(peerIdentifier.PeerId, CorrelationId.GenerateCorrelationId());
-            gossipMessage.IsBroadCastMessage().Should().BeTrue();
-
-            var nonGossipMessage = new PingRequest().ToProtocolMessage(peerIdentifier.PeerId, CorrelationId.GenerateCorrelationId());
-            nonGossipMessage.IsBroadCastMessage().Should().BeFalse();
-
-            var secondNonGossipMessage = new PingRequest().ToProtocolMessage(peerIdentifier.PeerId, CorrelationId.GenerateCorrelationId())
-               .ToProtocolMessage(peerIdentifier.PeerId, CorrelationId.GenerateCorrelationId());
-            secondNonGossipMessage.IsBroadCastMessage().Should().BeFalse();
-        }
-
-        [Fact]
         public void ToMultihash_Can_Convert_Valid_ByteString_To_Multihash()
         {
             var initialHash = Multihash.Sum(HashType.BLAKE2B_256, Encoding.UTF8.GetBytes("hello"));

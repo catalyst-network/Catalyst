@@ -28,23 +28,22 @@ using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Threading;
 using Catalyst.Common.Interfaces.P2P.ReputationSystem;
-using Catalyst.Common.P2P;
+using Catalyst.Common.Interfaces.Repository;
 using Dawn;
 using Serilog;
-using SharpRepository.Repository;
 
 namespace Catalyst.Core.Lib.P2P.ReputationSystem
 {
     public sealed class ReputationManager : IReputationManager, IDisposable
     {
         private readonly ILogger _logger;
-        public IRepository<Peer> PeerRepository { get; }
+        public IPeerRepository PeerRepository { get; }
         public readonly ReplaySubject<IPeerReputationChange> ReputationEvent;
         public IObservable<IPeerReputationChange> ReputationEventStream => ReputationEvent.AsObservable();
         public IObservable<IPeerReputationChange> MergedEventStream { get; set; }
         static readonly SemaphoreSlim SemaphoreSlim = new SemaphoreSlim(1);
 
-        public ReputationManager(IRepository<Peer> peerRepository, ILogger logger)
+        public ReputationManager(IPeerRepository peerRepository, ILogger logger)
         {
             _logger = logger;
             PeerRepository = peerRepository;

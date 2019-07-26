@@ -21,6 +21,8 @@
 
 #endregion
 
+using Catalyst.Common.Interfaces.IO.Observables;
+using System;
 using System.Collections.Generic;
 using System.Net;
 
@@ -28,6 +30,8 @@ namespace Catalyst.Common.Interfaces.IO.Transport
 {
     public interface ISocketClientRegistry<TSocketChannel> where TSocketChannel : class, ISocketClient
     {
+        IObservable<ISocketClientRegistryEvent> EventStream { get; }
+
         IDictionary<int, TSocketChannel> Registry { get; }
 
         /// <summary>

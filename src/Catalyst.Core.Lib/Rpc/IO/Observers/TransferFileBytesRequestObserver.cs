@@ -21,13 +21,11 @@
 
 #endregion
 
-using System;
 using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.FileTransfer;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.IO.Observers;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Common.IO.Observers;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
@@ -35,7 +33,7 @@ using DotNetty.Transport.Channels;
 using Google.Protobuf;
 using Serilog;
 
-namespace Catalyst.Common.Rpc.IO.Observers
+namespace Catalyst.Core.Lib.Rpc.IO.Observers
 {
     public sealed class TransferFileBytesRequestObserver
         : RequestObserverBase<TransferFileBytesRequest, TransferFileBytesResponse>,
@@ -55,7 +53,7 @@ namespace Catalyst.Common.Rpc.IO.Observers
         {
             _fileTransferFactory = fileTransferFactory;
         }
-        
+
         /// <summary>
         /// 
         /// </summary>
@@ -74,19 +72,8 @@ namespace Catalyst.Common.Rpc.IO.Observers
             Guard.Argument(senderPeerIdentifier, nameof(senderPeerIdentifier)).NotNull();
             Logger.Debug("received message of type TransferFileBytesRequest");
 
-            FileTransferResponseCodes responseCode;
-            try
-            {
-                var fileTransferCorrelationId = new CorrelationId(transferFileBytesRequest.CorrelationFileName.ToByteArray());
-                responseCode = _fileTransferFactory.DownloadChunk(fileTransferCorrelationId, transferFileBytesRequest.ChunkId, transferFileBytesRequest.ChunkBytes.ToByteArray());
-            }
-            catch (Exception e)
-            {
-                Logger.Error(e,
-                    "Failed to handle TransferFileBytesRequestHandler after receiving message {0}", transferFileBytesRequest);
-                responseCode = FileTransferResponseCodes.Error;
-            }
-            
+            FileTransferResponseCodes responseCode = _fileTransferFactory.DownloadChunk(transferFileBytesRequest);
+
             return new TransferFileBytesResponse
             {
                 ResponseCode = ByteString.CopyFrom((byte) responseCode.Id)

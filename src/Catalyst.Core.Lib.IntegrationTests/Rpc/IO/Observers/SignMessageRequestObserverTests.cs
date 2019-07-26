@@ -21,9 +21,9 @@
 
 #endregion
 
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Autofac;
 using Catalyst.Common.Config;
@@ -38,7 +38,6 @@ using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using FluentAssertions;
-using Google.Protobuf;
 using Microsoft.Extensions.Configuration;
 using NSubstitute;
 using Serilog;
@@ -53,17 +52,22 @@ namespace Catalyst.Core.Lib.IntegrationTests.Rpc.IO.Observers
         private readonly ILogger _logger;
         private readonly IKeySigner _keySigner;
         private readonly IChannelHandlerContext _fakeContext;
-        
+
+        protected override IEnumerable<string> ConfigFilesUsed { get; }
+
         public SignMessageRequestObserverTests(ITestOutputHelper output) : base(output)
         {
-            var config = SocketPortHelper.AlterConfigurationToGetUniquePort(new ConfigurationBuilder()
-               .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile))
-               .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile))
-               .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Network.Dev)))
-               .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ShellNodesConfigFile))
-               .Build(), CurrentTestName);
+            ConfigFilesUsed = new[]
+            {
+                Path.Combine(Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile),
+                Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile),
+                Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Network.Dev)),
+                Path.Combine(Constants.ConfigSubFolder, Constants.ShellNodesConfigFile),
+            };
 
-            ConfigureContainerBuilder(config);
+            SocketPortHelper.AlterConfigurationToGetUniquePort(ConfigurationRoot, CurrentTestName);
+
+            ConfigureContainerBuilder();
 
             var container = ContainerBuilder.Build();
             _scope = container.BeginLifetimeScope(CurrentTestName);
@@ -73,7 +77,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.Rpc.IO.Observers
             var fakeChannel = Substitute.For<IChannel>();
             _fakeContext.Channel.Returns(fakeChannel);
         }
-        
+
         [Theory]
         [InlineData("Hello Catalyst")]
         [InlineData("")]
@@ -81,11 +85,11 @@ namespace Catalyst.Core.Lib.IntegrationTests.Rpc.IO.Observers
         public async Task RpcServer_Can_Handle_SignMessageRequest(string message)
         {
             var messageFactory = new DtoFactory();
-            
+
             var request = messageFactory.GetDto(
                 new SignMessageRequest
                 {
-                    Message = ByteString.CopyFrom(message.Trim('\"'), Encoding.UTF8)
+                    Message = message.ToUtf8ByteString()
                 },
                 PeerIdentifierHelper.GetPeerIdentifier("sender_key"),
                 PeerIdentifierHelper.GetPeerIdentifier("recipient_key")

@@ -21,19 +21,13 @@
 
 #endregion
 
-using System.IO;
-using Catalyst.Common.Interfaces.FileSystem;
-using SharpRepository.XmlRepository;
+using Catalyst.Common.Interfaces.Repository;
+using Catalyst.Protocol.Transaction;
 
-namespace Catalyst.Common.FileSystem
+namespace Catalyst.Common.Interfaces.Modules.Mempool
 {
-    /// <summary>
-    /// Xml Repository where base folder is derived from the file system <see cref="IFileSystem"/>
-    /// </summary>
-    /// <typeparam name="T">Type of object</typeparam>
-    /// <seealso cref="SharpRepository.XmlRepository.XmlRepository{T}" />
-    public class FileSystemAwareXmlRepository<T> : XmlRepository<T> where T : class, new()
+    public interface IMempoolDocument : IDocument
     {
-        public FileSystemAwareXmlRepository(IFileSystem fileSystem, string path = "") : base(Path.Combine(fileSystem.GetCatalystDataDir().ToString(), path)) { }
+        TransactionBroadcast Transaction { get; set; }
     }
 }
