@@ -27,7 +27,6 @@ using System.Linq;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.Discovery;
-using Catalyst.Common.IO.Messaging.Correlation;
 
 namespace Catalyst.Core.Lib.P2P.Discovery
 {
@@ -47,6 +46,10 @@ namespace Catalyst.Core.Lib.P2P.Discovery
             {
                 if (_peer != null)
                 {
+                    // kinda gross IProducerConsumerCollection doesn't have clear on IFace
+                    // @Todo make own iface extending IProducerConsumerCollection with this on.
+                    var bag = (ConcurrentBag<INeighbour>) Neighbours;
+                    bag.Clear(); 
                     ExpectedPnr = new KeyValuePair<ICorrelationId, IPeerIdentifier>();
                 }
                 
