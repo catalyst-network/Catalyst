@@ -35,7 +35,7 @@ namespace Catalyst.Cli.Commands
 {
     public sealed class AddFileCommand : BaseMessageCommand<AddFileToDfsRequest, AddFileToDfsResponse, AddFileOptions>
     {
-        public static string ErrorNoResponseCodes = "No response codes were found.";
+        public static string ErrorNoResponseCodes => "No response codes were found.";
         private readonly IUploadFileTransferFactory _uploadFileTransferFactory;
 
         public AddFileCommand(IUploadFileTransferFactory uploadFileTransferFactory,

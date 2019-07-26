@@ -21,25 +21,24 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.IO.EventLoop;
-using Catalyst.Common.Interfaces.IO.Observers;
-using Catalyst.Common.Interfaces.IO.Transport.Channels;
-using Catalyst.Common.Interfaces.Rpc;
-using Catalyst.Common.IO.Transport;
-using Google.Protobuf;
-using Serilog;
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
 using Catalyst.Common.Extensions;
+using Catalyst.Common.Interfaces.IO.EventLoop;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
+using Catalyst.Common.Interfaces.IO.Observers;
+using Catalyst.Common.Interfaces.IO.Transport.Channels;
+using Catalyst.Common.Interfaces.Rpc;
+using Catalyst.Common.IO.Transport;
 using Catalyst.Common.P2P;
 using Catalyst.Protocol;
 using Catalyst.Protocol.Common;
+using Google.Protobuf;
+using Serilog;
 
 namespace Catalyst.Node.Rpc.Client
 {
@@ -49,10 +48,10 @@ namespace Catalyst.Node.Rpc.Client
     /// </summary>
     internal sealed class NodeRpcClient : TcpClient, INodeRpcClient
     {
-        /* Thread safe collection, in the case multiple observers are subscribing on multiple threads at the same time, removes concurrency issues. */
-        private readonly ConcurrentBag<IDisposable> _messageSubscriptions;
-        private readonly IObservable<IObserverDto<ProtocolMessage>> _socketMessageStream;
         private readonly Dictionary<string, IRpcResponseObserver> _handlers;
+
+        /* Thread safe collection, in the case multiple observers are subscribing on multiple threads at the same time, removes concurrency issues. */
+        private readonly IObservable<IObserverDto<ProtocolMessage>> _socketMessageStream;
 
         /// <summary>
         ///     Initialize a new instance of RPClient
@@ -70,49 +69,33 @@ namespace Catalyst.Node.Rpc.Client
             : base(channelFactory, Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType),
                 clientEventLoopGroupFactory)
         {
-            _messageSubscriptions = new ConcurrentBag<IDisposable>();
-
-            var socket = channelFactory.BuildChannel(EventLoopGroupFactory, nodeConfig.HostAddress, nodeConfig.Port, certificate);
+            var socket = channelFactory.BuildChannel(EventLoopGroupFactory, nodeConfig.HostAddress, nodeConfig.Port,
+                certificate);
 
             _socketMessageStream = socket.MessageStream;
 
-            _handlers = handlers.ToDictionary(x => x.GetType().BaseType.GenericTypeArguments[0].ShortenedProtoFullName(), x => x);
+            _handlers = handlers.ToDictionary(
+                x => x.GetType().BaseType.GenericTypeArguments[0].ShortenedProtoFullName(), x => x);
 
             Channel = socket.Channel;
         }
 
-        public void SubscribeToResponse<T>(Action<T> onNext) where T : IMessage<T>
+        public IDisposable SubscribeToResponse<T>(Action<T> onNext) where T : IMessage<T>
         {
-            var subscription = _socketMessageStream.Where(x => x.Payload.TypeUrl == typeof(T).ShortenedProtoFullName())
-               .Select(x =>
-                {
-                    var obj = x.Payload.FromProtocolMessage<T>();
-                    if (!_handlers.ContainsKey(x.Payload.TypeUrl)) return obj;
-
-                    var handler = _handlers[x.Payload.TypeUrl];
-                    handler.HandleResponseObserver(obj, x.Context, new PeerIdentifier(x.Payload.PeerId),
-                        x.Payload.CorrelationId.ToCorrelationId());
-
-                    return obj;
-                }).Subscribe(onNext);
-
-            _messageSubscriptions.Add(subscription);
+            return _socketMessageStream.Where(x => x.Payload.TypeUrl == typeof(T).ShortenedProtoFullName())
+               .Select(SubscriptionOutPipeline<T>).Subscribe(onNext);
         }
 
-        private void DisposeMessageSubscriptions()
+        private T SubscriptionOutPipeline<T>(IObserverDto<ProtocolMessage> observer) where T : IMessage<T>
         {
-            foreach (var subscription in _messageSubscriptions)
-            {
-                subscription?.Dispose();
-            }
+            var message = observer.Payload.FromProtocolMessage<T>();
+            if (!_handlers.ContainsKey(observer.Payload.TypeUrl)) return message;
 
-            _messageSubscriptions.Clear();
-        }
+            var handler = _handlers[observer.Payload.TypeUrl];
+            handler.HandleResponseObserver(message, observer.Context, new PeerIdentifier(observer.Payload.PeerId),
+                observer.Payload.CorrelationId.ToCorrelationId());
 
-        protected override void Dispose(bool disposing)
-        {
-            DisposeMessageSubscriptions();
-            base.Dispose(disposing);
+            return message;
         }
     }
 }

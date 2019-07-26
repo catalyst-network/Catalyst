@@ -123,5 +123,27 @@ namespace Catalyst.Cli.UnitTests.Commands
 
             var connectCommand = new ConnectCommand(logger, commandContext);
         }
+
+        [Fact]
+        public void Connect_Exception_Should_Return_False_On_Parse_Command()
+        {
+            var logger = Substitute.For<ILogger>();
+            var userOutput = Substitute.For<IUserOutput>();
+
+            var commandContext = Substitute.For<ICommandContext>();
+            commandContext.UserOutput.Returns(userOutput);
+
+            var rpcNodeConfig = Substitute.For<IRpcNodeConfig>();
+            rpcNodeConfig.NodeId = "node1";
+            rpcNodeConfig.HostAddress = IPAddress.Any;
+            rpcNodeConfig.PublicKey = "0";
+            commandContext.GetNodeConfig(Arg.Any<string>()).Returns(rpcNodeConfig);
+
+            var commands = new List<ICommand> {new ConnectCommand(logger, commandContext)};
+            var console = new CatalystCli(userOutput, commands);
+
+            var isCommandParsed = console.ParseCommand("connect", "-n", "node1");
+            isCommandParsed.Should().BeFalse();
+        }
     }
 }

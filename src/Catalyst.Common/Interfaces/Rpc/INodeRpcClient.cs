@@ -29,6 +29,6 @@ namespace Catalyst.Common.Interfaces.Rpc
 {
     public interface INodeRpcClient : ISocketClient
     {
-        void SubscribeToResponse<T>(Action<T> onNext) where T : IMessage<T>;
+        IDisposable SubscribeToResponse<T>(Action<T> onNext) where T : IMessage<T>;
     }
 }

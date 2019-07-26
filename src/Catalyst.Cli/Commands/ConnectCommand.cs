@@ -34,7 +34,13 @@ namespace Catalyst.Cli.Commands
     public class ConnectCommand : BaseCommand<ConnectOptions>
     {
         private readonly ILogger _logger;
-        public static string InvalidSocketChannel = "Inactive socket channel.";
+
+        public ConnectCommand(ILogger logger, ICommandContext commandContext) : base(commandContext)
+        {
+            _logger = logger;
+        }
+
+        public static string InvalidSocketChannel => "Inactive socket channel.";
 
         protected override bool ExecuteCommand(ConnectOptions option)
         {
@@ -45,7 +51,8 @@ namespace Catalyst.Cli.Commands
             {
                 //Connect to the node and store it in the socket client registry
                 var nodeRpcClient = CommandContext.NodeRpcClientFactory.GetClient(
-                    CommandContext.CertificateStore.ReadOrCreateCertificateFile(rpcNodeConfigs.PfxFileName), rpcNodeConfigs);
+                    CommandContext.CertificateStore.ReadOrCreateCertificateFile(rpcNodeConfigs.PfxFileName),
+                    rpcNodeConfigs);
 
                 if (!CommandContext.IsSocketChannelActive(nodeRpcClient))
                 {
@@ -65,11 +72,6 @@ namespace Catalyst.Cli.Commands
                 _logger.Debug(e.Message, e);
                 return false;
             }
-        }
-
-        public ConnectCommand(ILogger logger, ICommandContext commandContext) : base(commandContext)
-        {
-            _logger = logger;
         }
     }
 }

@@ -22,6 +22,7 @@
 #endregion
 
 using System;
+using System.Collections.Concurrent;
 using System.Reactive.Linq;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Cli;
@@ -43,15 +44,18 @@ namespace Catalyst.Cli.CommandTypes
         where TOption : IOptionsBase
     {
         private readonly IDisposable _socketClientRegistryEventStreamObserver;
+        private readonly ConcurrentDictionary<int, IDisposable> _subscriptions;
         private bool _disposed;
 
         protected BaseMessageCommand(ICommandContext commandContext) : base(commandContext)
         {
+            _subscriptions = new ConcurrentDictionary<int, IDisposable>();
             _socketClientRegistryEventStreamObserver = CommandContext.SocketClientRegistry.EventStream
                .OfType<SocketClientRegistryClientAdded>().Subscribe(SocketClientRegistryClientAddedOnNext);
+            _socketClientRegistryEventStreamObserver = CommandContext.SocketClientRegistry.EventStream
+               .OfType<SocketClientRegistryClientRemoved>().Subscribe(SocketClientRegistryClientRemovedOnNext);
         }
 
-        //This property breaks single responsibility principle
         protected IPeerIdentifier RecipientPeerIdentifier =>
             PeerIdentifier.BuildPeerIdFromConfig(CommandContext.GetNodeConfig(Options.Node),
                 CommandContext.PeerIdClientId);
@@ -81,7 +85,6 @@ namespace Catalyst.Cli.CommandTypes
 
         protected abstract TRequest GetMessage(TOption option);
 
-
         protected override bool ExecuteCommandInner(IOptionsBase optionsBase)
         {
             var sendMessage = base.ExecuteCommandInner(optionsBase);
@@ -98,17 +101,37 @@ namespace Catalyst.Cli.CommandTypes
 
         private void CommandResponseOnNext(TResponse value) { ResponseMessage(value); }
 
-        private void SocketClientRegistryClientAddedOnNext(SocketClientRegistryClientAdded value)
+        private void SocketClientRegistryClientAddedOnNext(SocketClientRegistryClientAdded clientAddedEvent)
         {
-            var client = CommandContext.SocketClientRegistry.GetClientFromRegistry(value.SocketHashCode);
-            client.SubscribeToResponse<TResponse>(CommandResponseOnNext);
+            var client = CommandContext.SocketClientRegistry.GetClientFromRegistry(clientAddedEvent.SocketHashCode);
+            var subscription = client.SubscribeToResponse<TResponse>(CommandResponseOnNext);
+            _subscriptions.TryAdd(clientAddedEvent.SocketHashCode, subscription);
+        }
+
+        private void SocketClientRegistryClientRemovedOnNext(SocketClientRegistryClientRemoved clientRemovedEvent)
+        {
+            _subscriptions.TryRemove(clientRemovedEvent.SocketHashCode, out var outSubscription);
+        }
+
+        private void DisposeSubscriptions()
+        {
+            foreach (var subscriptionPair in _subscriptions)
+            {
+                subscriptionPair.Value.Dispose();
+            }
+
+            _subscriptions.Clear();
         }
 
         protected virtual void Dispose(bool disposing)
         {
             if (_disposed) return;
 
-            if (disposing) _socketClientRegistryEventStreamObserver?.Dispose();
+            if (disposing)
+            {
+                DisposeSubscriptions();
+                _socketClientRegistryEventStreamObserver?.Dispose();
+            }
 
             _disposed = true;
         }
