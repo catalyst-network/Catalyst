@@ -34,6 +34,11 @@ namespace Catalyst.Common.Interfaces.Modules.Mempool
         /// <returns></returns>
         IEnumerable<IMempoolDocument> GetMemPoolContent();
 
+        /// <summary>Determines whether the mempool contains document.</summary>
+        /// <param name="key"><see cref="TransactionSignature"/> key for the mempool document <seealso cref="IMempoolDocument"/>.</param>
+        /// <returns><c>true</c> if the specified key contains document; otherwise, <c>false</c>.</returns>
+        bool ContainsDocument(TransactionSignature key);
+
         /// <summary>
         ///     Gets a snapshot of the current mempool content.
         /// </summary>
