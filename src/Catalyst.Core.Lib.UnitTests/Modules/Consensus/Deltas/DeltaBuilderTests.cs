@@ -37,6 +37,7 @@ using Catalyst.Protocol.Transaction;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Google.Protobuf;
+using Multiformats.Hash;
 using Multiformats.Hash.Algorithms;
 using Nethereum.Hex.HexConvertors.Extensions;
 using NSubstitute;
@@ -143,7 +144,7 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Consensus.Deltas
                 t => t.STEntries.Select(e => new
                 {
                     RawEntry = e,
-                    SaltedAndHashedEntry = _hashAlgorithm.ComputeHash(e.ToByteArray().Concat(salt).ToArray())
+                    SaltedAndHashedEntry = e.ToByteArray().Concat(salt).ComputeRawHash(_hashAlgorithm)
                 }));
 
             var shuffledEntriesBytes = rawAndSaltedEntriesBySignature
@@ -166,14 +167,14 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Consensus.Deltas
             ValidateDeltaCandidate(candidate, expectedBytesToHash);
         }
 
-        private void ValidateDeltaCandidate(CandidateDeltaBroadcast candidate, byte[] expectedCandidateHash)
+        private void ValidateDeltaCandidate(CandidateDeltaBroadcast candidate, byte[] expectedBytesToHash)
         {
             candidate.Should().NotBeNull();
             candidate.ProducerId.Should().Be(_producerId.PeerId);
             candidate.PreviousDeltaDfsHash.ToByteArray().SequenceEqual(_previousDeltaHash).Should().BeTrue();
 
-            var expectedHash = _hashAlgorithm.ComputeHash(expectedCandidateHash);
-            candidate.Hash.SequenceEqual(expectedHash).Should().BeTrue();
+            var expectedHash = expectedBytesToHash.ComputeMultihash(_hashAlgorithm);
+            candidate.Hash.ToByteArray().SequenceEqual(expectedHash.ToBytes()).Should().BeTrue();
         }
     }
 }

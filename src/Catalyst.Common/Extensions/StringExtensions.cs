@@ -42,8 +42,7 @@ namespace Catalyst.Common.Extensions
 
         public static Multihash ComputeUtf8Multihash(this string content, IMultihashAlgorithm algorithm)
         {
-            var bytes = algorithm.ComputeHash(Encoding.UTF8.GetBytes(content));
-            var multihash = Multihash.Cast(bytes);
+            var multihash = Encoding.UTF8.GetBytes(content).ComputeMultihash(algorithm);
             return multihash;
         }
     }
