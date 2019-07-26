@@ -63,12 +63,6 @@ namespace Catalyst.Cli.CommandTypes
 
         protected IPeerIdentifier SenderPeerIdentifier => CommandContext.PeerIdentifier;
 
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
         public INodeRpcClient Target => CommandContext.GetConnectedNode(Options.Node);
 
         public virtual void SendMessage(TOption options)
@@ -125,6 +119,12 @@ namespace Catalyst.Cli.CommandTypes
             }
 
             _subscriptions.Clear();
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
         protected virtual void Dispose(bool disposing)
