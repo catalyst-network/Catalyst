@@ -220,6 +220,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
                    .Subscribe(streamObserver.OnNext))
                 {
                     walker.StateCandidate.Neighbours
+                       .Where(n => n.State == NeighbourState.Responsive)
                        .Select(i => i.PeerIdentifier.PeerId)
                        .Should()
                        .BeSubsetOf(
@@ -288,7 +289,10 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
         
                     streamObserver.Received(1).OnNext(Arg.Is(pingDto));
         
-                    walker.StateCandidate.Neighbours.Select(n => n.PeerIdentifier).Contains(pingDto.Sender);
+                    walker.StateCandidate.Neighbours
+                       .Where(n => n.State == NeighbourState.Responsive)
+                       .Select(n => n.PeerIdentifier)
+                       .Contains(pingDto.Sender);
                 }
             }
         }
