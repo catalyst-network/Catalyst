@@ -58,6 +58,11 @@ namespace Catalyst.Core.Lib.Modules.Mempool
             return memPoolContent;
         }
 
+        public bool ContainsDocument(TransactionSignature key)
+        {
+            return _transactionStore.TryGet(key.ToByteString().ToBase64(), out _);
+        }
+
         public List<byte[]> GetMemPoolContentEncoded()
         {
             var memPoolContent = GetMemPoolContent();
