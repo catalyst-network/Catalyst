@@ -454,7 +454,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
         }
         
         [Fact]
-        public void known_Pnr_Message_Does_Walk_Back()
+        public void Known_Pnr_Message_Does_Walk_Back()
         {
             var candidatePid = PeerIdentifierHelper.GetPeerIdentifier("candidate");
             var currentPid = PeerIdentifierHelper.GetPeerIdentifier("current");
