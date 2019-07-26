@@ -44,6 +44,7 @@ using Catalyst.TestUtils;
 using FluentAssertions;
 using Microsoft.Extensions.Caching.Memory;
 using NSubstitute;
+using Serilog;
 using Xunit;
 
 namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Messaging.Broadcast
@@ -70,19 +71,19 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Messaging.Broadcast
             var correlationId = await BroadcastMessage();
 
             _cache.TryGetValue(correlationId.Id, out BroadcastMessage value);
-            value.BroadcastCount.Should().Be((uint) Constants.MaxGossipPeersPerRound);
+            value.BroadcastCount.Should().Be((uint) BroadcastManager.BroadcastOwnerMaximumGossipPeersPerRound);
             value.ReceivedCount.Should().Be(0);
         }
 
         [Fact]
         public async Task Can_Broadcast_Message_When_Not_Enough_Peers_To_Gossip()
         {
-            PopulatePeers(Constants.MaxGossipPeersPerRound - 1);
+            PopulatePeers(BroadcastManager.MaxGossipPeersPerRound - 1);
             var correlationId = await BroadcastMessage();
 
             _cache.TryGetValue(correlationId.Id, out BroadcastMessage value);
 
-            value.BroadcastCount.Should().Be((uint) Constants.MaxGossipPeersPerRound - 1);
+            value.BroadcastCount.Should().Be((uint) BroadcastManager.MaxGossipPeersPerRound - 1);
             value.ReceivedCount.Should().Be(0);
         }
 
@@ -98,7 +99,13 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Messaging.Broadcast
             var senderIdentifier = PeerIdentifierHelper.GetPeerIdentifier("sender");
             var messageFactory = new DtoFactory();
 
-            IBroadcastManager broadcastMessageHandler = new BroadcastManager(peerIdentifier, _peers, _cache, Substitute.For<IPeerClient>(), _keySigner);
+            IBroadcastManager broadcastMessageHandler = new BroadcastManager(
+                peerIdentifier, 
+                _peers, 
+                _cache, 
+                Substitute.For<IPeerClient>(), 
+                _keySigner,
+                Substitute.For<ILogger>());
 
             var messageDto = messageFactory.GetDto(
                 TransactionHelper.GetTransaction(),
@@ -132,7 +139,12 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Messaging.Broadcast
             var senderPeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("sender");
 
             var gossipMessageHandler = new
-                BroadcastManager(senderPeerIdentifier, _peers, _cache, Substitute.For<IPeerClient>(), _keySigner);
+                BroadcastManager(senderPeerIdentifier, 
+                    _peers,
+                    _cache, 
+                    Substitute.For<IPeerClient>(), 
+                    _keySigner, 
+                    Substitute.For<ILogger>());
 
             var gossipMessage = TransactionHelper.GetTransaction().ToProtocolMessage(senderPeerIdentifier.PeerId);
 
