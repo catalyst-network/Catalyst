@@ -21,8 +21,7 @@
 
 #endregion
 
-using System.Collections.Generic;
-using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
+using System.Collections.Concurrent;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.Discovery;
 
@@ -34,9 +33,9 @@ namespace Catalyst.Core.Lib.P2P.Discovery
     public sealed class HastingMemento : IHastingMemento
     {
         public IPeerIdentifier Peer { get; }
-        public IList<INeighbour> Neighbours { get; }
+        public IProducerConsumerCollection<INeighbour> Neighbours { get; }
 
-        public HastingMemento(IPeerIdentifier peer, IList<INeighbour> neighbours)
+        public HastingMemento(IPeerIdentifier peer, IProducerConsumerCollection<INeighbour> neighbours)
         {
             Peer = peer;
             Neighbours = neighbours;

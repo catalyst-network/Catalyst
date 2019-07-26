@@ -21,6 +21,7 @@
 
 #endregion
 
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using Catalyst.Common.Interfaces.P2P;
@@ -31,9 +32,9 @@ namespace Catalyst.Common.Extensions
 {
     public static class NeighbourExtensions
     {
-        public static IEnumerable<INeighbour> ToNeighbours(this IEnumerable<IPeerIdentifier> peerIdentifier)
+        public static ConcurrentBag<INeighbour> ToNeighbours(this IEnumerable<IPeerIdentifier> peerIdentifier)
         {
-            var neighbours = new List<INeighbour>();
+            var neighbours = new ConcurrentBag<INeighbour>();
             peerIdentifier.ToList().ForEach(p => neighbours.Add(new Neighbour(p)));
             return neighbours;
         }

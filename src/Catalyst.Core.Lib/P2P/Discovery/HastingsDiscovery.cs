@@ -101,7 +101,7 @@ namespace Catalyst.Core.Lib.P2P.Discovery
             StateCandidate = stateCandidate ?? new HastingsOriginator
             {
                 Peer = _ownNode,
-                Neighbours = dns.GetSeedNodesFromDns(peerSettings.SeedServers).ToNeighbours().ToList()
+                Neighbours = dns.GetSeedNodesFromDns(peerSettings.SeedServers).ToNeighbours()
             };
 
             // create an empty stream for discovery messages

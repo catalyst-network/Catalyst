@@ -22,6 +22,7 @@
 #endregion
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -183,7 +184,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
         public DiscoveryTestBuilder WithCurrentState(IHastingsOriginator currentState = default,
             bool mock = false,
             IPeerIdentifier peer = default,
-            IList<INeighbour> neighbours = default,
+            IProducerConsumerCollection<INeighbour> neighbours = default,
             KeyValuePair<ICorrelationId, IPeerIdentifier> expectedPnr = default)
         {
             _currentState = 
@@ -199,7 +200,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
         public DiscoveryTestBuilder WithStateCandidate(IHastingsOriginator stateCandidate = default,
             bool mock = false,
             IPeerIdentifier peer = default,
-            IList<INeighbour> neighbours = default,
+            ConcurrentBag<INeighbour> neighbours = default,
             KeyValuePair<ICorrelationId, IPeerIdentifier> expectedPnr = default)
         {
             _stateCandidate = 

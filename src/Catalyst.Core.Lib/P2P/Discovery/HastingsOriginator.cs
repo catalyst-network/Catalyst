@@ -21,6 +21,7 @@
 
 #endregion
 
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
@@ -33,7 +34,7 @@ namespace Catalyst.Core.Lib.P2P.Discovery
     public sealed class HastingsOriginator : IHastingsOriginator
     {
         private IPeerIdentifier _peer;
-        public IList<INeighbour> Neighbours { get; set; }
+        public IProducerConsumerCollection<INeighbour> Neighbours { get; set; }
         public KeyValuePair<ICorrelationId, IPeerIdentifier> ExpectedPnr { get; set; }
 
         /// <summary>
@@ -46,7 +47,6 @@ namespace Catalyst.Core.Lib.P2P.Discovery
             {
                 if (_peer != null)
                 {
-                    Neighbours.Clear();
                     ExpectedPnr = new KeyValuePair<ICorrelationId, IPeerIdentifier>();
                 }
                 
@@ -57,7 +57,7 @@ namespace Catalyst.Core.Lib.P2P.Discovery
         public HastingsOriginator()
         {
             ExpectedPnr = new KeyValuePair<ICorrelationId, IPeerIdentifier>();
-            Neighbours = new List<INeighbour>();
+            Neighbours = new ConcurrentBag<INeighbour>();
         }
 
         /// <inheritdoc />
@@ -75,7 +75,7 @@ namespace Catalyst.Core.Lib.P2P.Discovery
                .ToList()
                .ForEach(i =>
                 {
-                    Neighbours.Add(i);
+                    Neighbours.TryAdd(i);
                 });
         }
     }

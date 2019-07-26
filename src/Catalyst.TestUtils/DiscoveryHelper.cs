@@ -22,6 +22,7 @@
 #endregion
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -60,7 +61,7 @@ namespace Catalyst.TestUtils
     public static class DiscoveryHelper
     {
         public static IHastingsOriginator MockOriginator(IPeerIdentifier peer = default,
-            IList<INeighbour> neighbours = default,
+            IProducerConsumerCollection<INeighbour> neighbours = default,
             KeyValuePair<ICorrelationId, IPeerIdentifier> expectedPnr = default)
         {
             return new HastingsOriginator
@@ -73,14 +74,14 @@ namespace Catalyst.TestUtils
         }
         
         public static IHastingsOriginator SubOriginator(IPeerIdentifier peer = default,
-            IList<INeighbour> neighbours = default,
+            IProducerConsumerCollection<INeighbour> neighbours = default,
             KeyValuePair<ICorrelationId, IPeerIdentifier> expectedPnr = default)
         {
             var subbedOriginator = Substitute.For<IHastingsOriginator>();
             
-            subbedOriginator.Neighbours.Count.Returns(Constants.AngryPirate);
+            subbedOriginator.Neighbours.Count.Returns(5);
             subbedOriginator.Peer.Returns(peer ?? Substitute.For<IPeerIdentifier>());
-            subbedOriginator.Neighbours.Returns(neighbours ?? Substitute.For<IList<INeighbour>>());
+            subbedOriginator.Neighbours.Returns(neighbours ?? Substitute.For<IProducerConsumerCollection<INeighbour>>());
             subbedOriginator.ExpectedPnr.Returns(expectedPnr);
 
             return subbedOriginator;
@@ -91,7 +92,6 @@ namespace Catalyst.TestUtils
             return MockMemento(ownNode, MockDnsClient(peerSettings)
                .GetSeedNodesFromDns(peerSettings.SeedServers)
                .ToNeighbours()
-               .ToList()
             );
         }
 
@@ -106,7 +106,6 @@ namespace Catalyst.TestUtils
             return SubMemento(ownNode, MockDnsClient(peerSettings)
                .GetSeedNodesFromDns(peerSettings.SeedServers)
                .ToNeighbours()
-               .ToList()
             );
         }
         
@@ -117,9 +116,9 @@ namespace Catalyst.TestUtils
             );
         }
         
-        public static IList<INeighbour> MockNeighbours(int amount = 5, NeighbourState state = null, ICorrelationId correlationId = default)
+        public static ConcurrentBag<INeighbour> MockNeighbours(int amount = 5, NeighbourState state = null, ICorrelationId correlationId = default)
         {
-            var neighbourMock = new List<INeighbour>();
+            var neighbourMock = new ConcurrentBag<INeighbour>();
 
             Enumerable.Range(0, amount).ToList().ForEach(i =>
             {
@@ -144,7 +143,7 @@ namespace Catalyst.TestUtils
                .ToDictionary(v => v, k => Substitute.For<ICorrelationId>());
         }
         
-        public static IHastingMemento SubMemento(IPeerIdentifier identifier = default, IList<INeighbour> neighbours = default)
+        public static IHastingMemento SubMemento(IPeerIdentifier identifier = default, ConcurrentBag<INeighbour> neighbours = default)
         {
             var subbedMemento = Substitute.For<IHastingMemento>();
             subbedMemento.Peer.Returns(identifier ?? Substitute.For<IPeerIdentifier>());
@@ -153,7 +152,7 @@ namespace Catalyst.TestUtils
             return subbedMemento;
         }
 
-        public static IHastingMemento MockMemento(IPeerIdentifier identifier = default, IList<INeighbour> neighbours = default)
+        public static IHastingMemento MockMemento(IPeerIdentifier identifier = default, ConcurrentBag<INeighbour> neighbours = default)
         {
             var peerParam = identifier ?? PeerIdentifierHelper.GetPeerIdentifier(StringHelper.RandomString());
             var neighbourParam = neighbours ?? MockNeighbours();

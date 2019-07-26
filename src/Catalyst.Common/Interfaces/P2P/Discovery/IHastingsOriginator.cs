@@ -21,6 +21,7 @@
 
 #endregion
 
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 
@@ -30,7 +31,7 @@ namespace Catalyst.Common.Interfaces.P2P.Discovery
     {
         IPeerIdentifier Peer { get; set; }
         KeyValuePair<ICorrelationId, IPeerIdentifier> ExpectedPnr { get; set; }
-        IList<INeighbour> Neighbours { get; set; }
+        IProducerConsumerCollection<INeighbour> Neighbours { get; set; }
         
         /// <summary>
         ///     creates a memento from current state

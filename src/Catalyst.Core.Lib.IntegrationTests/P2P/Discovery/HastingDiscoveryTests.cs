@@ -175,7 +175,6 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
             var knownPnr = DiscoveryHelper.MockPnr();
             var stateCandidate = DiscoveryHelper.SubOriginator();
             stateCandidate.ExpectedPnr = knownPnr;
-            stateCandidate.Neighbours.Clear();
         
             var discoveryTestBuilder = DiscoveryTestBuilder.GetDiscoveryTestBuilder();
             discoveryTestBuilder
@@ -248,8 +247,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
             
             var knownPnr = DiscoveryHelper.MockPnr();
             var stateCandidate = DiscoveryHelper.MockOriginator(default, default, knownPnr);
-            stateCandidate.Neighbours.Clear();
-        
+            
             var discoveryTestBuilder = DiscoveryTestBuilder.GetDiscoveryTestBuilder();
             discoveryTestBuilder
                .WithLogger()

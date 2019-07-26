@@ -95,7 +95,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
             var memento2 = DiscoveryHelper.SubMemento();
             
             originator.RestoreMemento(memento1);
-            originator.Neighbours = DiscoveryHelper.MockNeighbours().ToList();
+            originator.Neighbours = DiscoveryHelper.MockNeighbours();
             originator.ExpectedPnr = DiscoveryHelper.MockPnr();
 
             originator.RestoreMemento(memento2);
@@ -125,7 +125,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
             
             originator.RestoreMemento(memento1);
             originator.ExpectedPnr = DiscoveryHelper.MockPnr();
-            originator.Neighbours = DiscoveryHelper.MockNeighbours().ToList();
+            originator.Neighbours = DiscoveryHelper.MockNeighbours();
             
             var newPeer = PeerIdentifierHelper.GetPeerIdentifier("new_peer");
             originator.Peer = newPeer;
