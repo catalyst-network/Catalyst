@@ -22,18 +22,12 @@
 #endregion
 
 using System.Collections.Generic;
-using System.Net;
-using System.Security.Cryptography.X509Certificates;
 using Catalyst.Cli.Commands;
-using Catalyst.Common.Interfaces.Cli;
+using Catalyst.Cli.UnitTests.Helpers;
 using Catalyst.Common.Interfaces.Cli.CommandTypes;
-using Catalyst.Common.Interfaces.Rpc;
-using Catalyst.Common.IO.Transport;
 using Catalyst.Common.Network;
 using FluentAssertions;
 using Microsoft.Reactive.Testing;
-using NSubstitute;
-using Serilog;
 using Xunit;
 
 namespace Catalyst.Cli.UnitTests.Commands
@@ -45,41 +39,26 @@ namespace Catalyst.Cli.UnitTests.Commands
         [Fact]
         public void Disconnect_Should_Disconnect_From_Node()
         {
-            var logger = Substitute.For<ILogger>();
-            var userOutput = Substitute.For<IUserOutput>();
-            var nodeRpcFactory = Substitute.For<INodeRpcClientFactory>();
-            var clientSocketRegistry = new SocketClientRegistry<INodeRpcClient>(_testScheduler);
+            var commandContext = TestCommandHelpers.GenerateCliCommandContext();
 
-            var nodeRpcClient = Substitute.For<INodeRpcClient>();
-            nodeRpcClient.Channel.Active.Returns(true);
-
-            var commandContext = Substitute.For<ICommandContext>();
-            nodeRpcFactory.GetClient(Arg.Any<X509Certificate2>(), Arg.Any<IRpcNodeConfig>()).Returns(nodeRpcClient);
-            commandContext.IsSocketChannelActive(Arg.Any<INodeRpcClient>()).Returns(true);
-            commandContext.SocketClientRegistry.Returns(clientSocketRegistry);
-            commandContext.UserOutput.Returns(userOutput);
-            commandContext.NodeRpcClientFactory.Returns(nodeRpcFactory);
-
-            var rpcNodeConfig = Substitute.For<IRpcNodeConfig>();
-            rpcNodeConfig.NodeId = "node1";
-            rpcNodeConfig.HostAddress = IPAddress.Any;
-            rpcNodeConfig.PublicKey = "0";
-            rpcNodeConfig.Port = 1337;
+            var nodeRpcClient = TestCommandHelpers.MockNodeRpcClient(commandContext);
+            TestCommandHelpers.MockActiveConnection(commandContext, nodeRpcClient);
+            TestCommandHelpers.MockNodeRpcClientFactory(commandContext, nodeRpcClient);
+            var rpcNodeConfig = TestCommandHelpers.MockRpcNodeConfig(commandContext);
+            var socketClientRegistry = TestCommandHelpers.AddClientSocketRegistry(commandContext, _testScheduler);
 
             var clientHashCode =
-                clientSocketRegistry.GenerateClientHashCode(
+                socketClientRegistry.GenerateClientHashCode(
                     EndpointBuilder.BuildNewEndPoint(rpcNodeConfig.HostAddress, rpcNodeConfig.Port));
-            clientSocketRegistry.AddClientToRegistry(clientHashCode, nodeRpcClient);
-
-            commandContext.GetNodeConfig(Arg.Any<string>()).Returns(rpcNodeConfig);
+            socketClientRegistry.AddClientToRegistry(clientHashCode, nodeRpcClient);
 
             var commands = new List<ICommand> {new DisconnectCommand(commandContext)};
-            var console = new CatalystCli(userOutput, commands);
+            var console = new CatalystCli(commandContext.UserOutput, commands);
 
             var isCommandParsed = console.ParseCommand("disconnect", "-n", "node1");
             isCommandParsed.Should().BeTrue();
 
-            clientSocketRegistry.Registry.Count.Should().Be(0);
+            socketClientRegistry.Registry.Count.Should().Be(0);
         }
     }
 }

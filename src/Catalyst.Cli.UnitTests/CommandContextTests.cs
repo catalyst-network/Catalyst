@@ -55,13 +55,15 @@ namespace Catalyst.Cli.UnitTests
         [Fact]
         public void GetConnectedNode_Should_Throw_ArgumentException_On_Empty_NodeId()
         {
-            Assert.Throws<ArgumentException>(() => _commandContext.GetConnectedNode(string.Empty));
+            var exception = Record.Exception(() => _commandContext.GetConnectedNode(string.Empty));
+            exception.Should().BeOfType<ArgumentException>();
         }
 
         [Fact]
         public void GetConnectedNode_Should_Throw_ArgumentNullException_On_Null_NodeId()
         {
-            Assert.Throws<ArgumentNullException>(() => _commandContext.GetConnectedNode(null));
+            var exception = Record.Exception(() => _commandContext.GetConnectedNode(null));
+            exception.Should().BeOfType<ArgumentNullException>();
         }
 
         [Fact]
@@ -73,13 +75,15 @@ namespace Catalyst.Cli.UnitTests
         [Fact]
         public void GetNodeConfig_Should_Throw_ArgumentException_On_Empty_NodeId()
         {
-            Assert.Throws<ArgumentException>(() => _commandContext.GetNodeConfig(string.Empty));
+            var exception = Record.Exception(() => _commandContext.GetNodeConfig(string.Empty));
+            exception.Should().BeOfType<ArgumentException>();
         }
 
         [Fact]
         public void GetNodeConfig_Should_Throw_ArgumentNullException_On_Null_NodeId()
         {
-            Assert.Throws<ArgumentNullException>(() => _commandContext.GetNodeConfig(null));
+            var exception = Record.Exception(() => _commandContext.GetNodeConfig(null));
+            exception.Should().BeOfType<ArgumentNullException>();
         }
 
         [Fact]
@@ -88,7 +92,7 @@ namespace Catalyst.Cli.UnitTests
             var rpcClient = Substitute.For<INodeRpcClient>();
             rpcClient.Channel.Active.Returns(false);
 
-            _commandContext.IsSocketChannelActive(rpcClient);
+            _commandContext.IsSocketChannelActive(rpcClient).Should().BeFalse();
         }
 
         [Fact]
@@ -97,7 +101,7 @@ namespace Catalyst.Cli.UnitTests
             var rpcClient = Substitute.For<INodeRpcClient>();
             rpcClient.Channel.Active.Returns(true);
 
-            _commandContext.IsSocketChannelActive(rpcClient);
+            _commandContext.IsSocketChannelActive(rpcClient).Should().BeTrue();
         }
     }
 }

@@ -28,7 +28,10 @@ using System.Reactive.Concurrency;
 using System.Security.Cryptography.X509Certificates;
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.Cli.CommandTypes;
+using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
+using Catalyst.Common.Interfaces.IO.Transport;
+using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.IO.Transport;
@@ -44,34 +47,95 @@ namespace Catalyst.Cli.UnitTests.Helpers
     {
         public static ICommandContext GenerateCliRequestCommandContext()
         {
-            var commandContext = Substitute.For<ICommandContext>();
+            var commandContext = GenerateCliFullCommandContext();
+            return commandContext;
+        }
 
+        public static ICommandContext GenerateCliFullCommandContext()
+        {
             var userOutput = Substitute.For<IUserOutput>();
+            var peerIdClientId = Substitute.For<IPeerIdClientId>();
+            var dtoFactory = new DtoFactory();
+            var nodeRpcClientFactory = Substitute.For<INodeRpcClientFactory>();
+            var certificateStore = Substitute.For<ICertificateStore>();
 
-            var nodeRpcClient = Substitute.For<INodeRpcClient>();
-            nodeRpcClient.Channel.Active.Returns(true);
-            nodeRpcClient.Channel.RemoteAddress.Returns(new IPEndPoint(IPAddress.Loopback, IPEndPoint.MaxPort));
-
-            var nodeRpcFactory = Substitute.For<INodeRpcClientFactory>();
-            nodeRpcFactory.GetClient(Arg.Any<X509Certificate2>(), Arg.Any<IRpcNodeConfig>()).Returns(nodeRpcClient);
-            commandContext.NodeRpcClientFactory.Returns(nodeRpcFactory);
-
-            commandContext.DtoFactory.Returns(new DtoFactory());
-
-            commandContext.IsSocketChannelActive(Arg.Any<INodeRpcClient>()).Returns(true);
-            commandContext.GetConnectedNode(Arg.Any<string>()).Returns(nodeRpcClient);
+            var commandContext = Substitute.For<ICommandContext>();
             commandContext.UserOutput.Returns(userOutput);
+            commandContext.PeerIdClientId.Returns(peerIdClientId);
+            commandContext.DtoFactory.Returns(dtoFactory);
+            commandContext.NodeRpcClientFactory.Returns(nodeRpcClientFactory);
+            commandContext.CertificateStore.Returns(certificateStore);
 
             commandContext.PeerIdentifier.Returns(
-                PeerIdentifierHelper.GetPeerIdentifier("", "", 0, IPAddress.Any, 1337));
+                PeerIdentifierHelper.GetPeerIdentifier("public key", "1.2.3.4", 0, IPAddress.Any, 9010));
 
+            var nodeRpcClient = MockNodeRpcClient(commandContext);
+            MockRpcNodeConfig(commandContext);
+            MockNodeRpcClientFactory(commandContext, nodeRpcClient);
+            MockActiveConnection(commandContext, nodeRpcClient);
+
+            return commandContext;
+        }
+
+        public static ICommandContext GenerateCliCommandContext()
+        {
+            var userOutput = Substitute.For<IUserOutput>();
+            var peerIdClientId = Substitute.For<IPeerIdClientId>();
+            var dtoFactory = new DtoFactory();
+            var nodeRpcClientFactory = Substitute.For<INodeRpcClientFactory>();
+            var certificateStore = Substitute.For<ICertificateStore>();
+
+            var commandContext = Substitute.For<ICommandContext>();
+            commandContext.UserOutput.Returns(userOutput);
+            commandContext.PeerIdClientId.Returns(peerIdClientId);
+            commandContext.DtoFactory.Returns(dtoFactory);
+            commandContext.NodeRpcClientFactory.Returns(nodeRpcClientFactory);
+            commandContext.CertificateStore.Returns(certificateStore);
+
+            commandContext.PeerIdentifier.Returns(
+                PeerIdentifierHelper.GetPeerIdentifier("public key", "1.2.3.4", 0, IPAddress.Any, 9010));
+
+            return commandContext;
+        }
+
+        public static IRpcNodeConfig MockRpcNodeConfig(ICommandContext commandContext)
+        {
             var rpcNodeConfig = Substitute.For<IRpcNodeConfig>();
             rpcNodeConfig.NodeId = "test";
             rpcNodeConfig.HostAddress = IPAddress.Any;
             rpcNodeConfig.PublicKey = "public key";
             rpcNodeConfig.Port = 9000;
             commandContext.GetNodeConfig(Arg.Any<string>()).Returns(rpcNodeConfig);
-            return commandContext;
+            return rpcNodeConfig;
+        }
+
+        public static INodeRpcClientFactory MockNodeRpcClientFactory(ICommandContext commandContext,
+            INodeRpcClient nodeRpcClient)
+        {
+            commandContext.NodeRpcClientFactory.GetClient(Arg.Any<X509Certificate2>(), Arg.Any<IRpcNodeConfig>())
+               .Returns(nodeRpcClient);
+            return commandContext.NodeRpcClientFactory;
+        }
+
+        public static INodeRpcClient MockNodeRpcClient(ICommandContext commandContext)
+        {
+            var nodeRpcClient = Substitute.For<INodeRpcClient>();
+            nodeRpcClient.Channel.Active.Returns(true);
+            nodeRpcClient.Channel.RemoteAddress.Returns(new IPEndPoint(IPAddress.Loopback, IPEndPoint.MaxPort));
+            return nodeRpcClient;
+        }
+
+        public static void MockActiveConnection(ICommandContext commandContext, INodeRpcClient nodeRpcClient)
+        {
+            commandContext.IsSocketChannelActive(Arg.Any<INodeRpcClient>()).Returns(true);
+            commandContext.GetConnectedNode(Arg.Any<string>()).Returns(nodeRpcClient);
+        }
+
+        public static ISocketClientRegistry<INodeRpcClient> AddClientSocketRegistry(ICommandContext commandContext,
+            IScheduler testScheduler)
+        {
+            commandContext.SocketClientRegistry.Returns(new SocketClientRegistry<INodeRpcClient>(testScheduler));
+            return commandContext.SocketClientRegistry;
         }
 
         public static bool GenerateRequest(ICommandContext commandContext,
