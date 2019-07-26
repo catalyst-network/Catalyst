@@ -21,11 +21,10 @@
 
 #endregion
 
+using System.Linq;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Util;
-using Catalyst.Cryptography.BulletProofs.Wrapper;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
-using Multiformats.Hash;
 using Multiformats.Hash.Algorithms;
 using Nethereum.Hex.HexConvertors.Extensions;
 
@@ -47,8 +46,8 @@ namespace Catalyst.Common.Util
         /// <returns>The Hex encoded bytes corresponding to the address.</returns>
         public string GenerateAddress(IPublicKey publicKey)
         {
-            var addressHashBytes = publicKey.Bytes.RawBytes.ComputeRawHash(_hashAlgorithm);
-            var lastTwentyBytes = addressHashBytes.Slice(FFI.GetPublicKeyLength() - 20, FFI.GetPublicKeyLength());
+            var addressHashBytes = publicKey.Bytes.ComputeRawHash(_hashAlgorithm);
+            var lastTwentyBytes = addressHashBytes.TakeLast(20).ToArray();
             return lastTwentyBytes.ToHex();
         }
     }

@@ -62,7 +62,7 @@ namespace Catalyst.Common.IO.Handlers
         {
             var sig = signedMessage.Signature.ToByteArray();
             var pub = signedMessage.Message.PeerId.PublicKey.ToByteArray();
-            var signature = new Signature(sig, pub);
+            var signature = _keySigner.CryptoContext.SignatureFromBytes(sig, pub);
             return _keySigner.Verify(signature, signedMessage.Message.ToByteArray());
         }
     }
