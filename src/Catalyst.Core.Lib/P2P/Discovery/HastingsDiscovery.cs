@@ -371,10 +371,8 @@ namespace Catalyst.Core.Lib.P2P.Discovery
                     return;
                 }
 
-                StateCandidate.Neighbours
-                   .Add(
-                        new Neighbour(obj.Sender)
-                    );
+                StateCandidate.Neighbours.First(n => n.PeerIdentifier.Equals(obj.Sender)).State = NeighbourState.Responsive;
+                return;
             }
         }
 

@@ -379,57 +379,6 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
                 }
             }
         }
-        
-        // [Theory]
-        // [InlineData(typeof(PingResponse), typeof(PingResponseObserver))]
-        // public async Task Can_Correlate_Discovery_Ping_And_Store_Active_Peer_In_Originator(Type discoveryMessage, Type observer)
-        // {
-        //     var discoveryTestBuilder = DiscoveryTestBuilder.GetDiscoveryTestBuilder()
-        //        .WithLogger()
-        //        .WithPeerRepository()
-        //        .WithDns(default, true)
-        //        .WithPeerSettings()
-        //        .WithPeerClient()
-        //        .WithCancellationProvider()
-        //        .XXX(new PingResponseObserver(Substitute.For<ILogger>()))
-        //        .WithAutoStart(false)
-        //        .WithBurn(0)
-        //        .WithStateCandidate(default, true, _ownNode, DiscoveryHelper.MockNeighbours(), DiscoveryHelper.MockPnr());
-        //     
-        //     using (var walker = discoveryTestBuilder.Build())
-        //     {
-        //         var streamObserver = Substitute.For<IObserver<IPeerClientMessageDto>>();
-        //         
-        //         using (walker.DiscoveryStream
-        //            .Subscribe(streamObserver.OnNext))
-        //         {
-        //             walker.StateCandidate.Neighbours.ToList().ForEach(r =>
-        //             {
-        //                 var subbedDto = new PeerClientMessageDto(new PingResponse(), r.PeerIdentifier,
-        //                     r.DiscoveryPingCorrelationId);
-        //                 
-        //                 discoveryTestBuilder.PeerClientObservables
-        //                    .ToList()
-        //                    .ForEach(o =>
-        //                     {
-        //                         o.ResponseMessageSubject.OnNext(subbedDto);
-        //                     }); 
-        //             });
-        //             
-        //             walker.DiscoveryStream.WaitForItemsOnDelayedStreamOnTaskPoolSchedulerAsync(5).GetAwaiter().GetResult();
-        //
-        //             streamObserver
-        //                .Received(Constants.AngryPirate)
-        //                .OnNext(Arg.Any<IPeerClientMessageDto>());
-        //             
-        //             walker.StateCandidate.Neighbours
-        //                .Where(n => n.State == NeighbourState.Responsive)
-        //                .ToList().Count
-        //                .Should()
-        //                .Be(Constants.AngryPirate);
-        //         }
-        //     }
-        // }
 
         [Fact]
         public async Task Can_Discard_UnKnown_PingResponse()
@@ -587,8 +536,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
         {
             var pnr = DiscoveryHelper.MockPnr(_ownNode);
 
-            var discoveryTestBuilder = DiscoveryTestBuilder.GetDiscoveryTestBuilder();
-            discoveryTestBuilder
+            var discoveryTestBuilder = DiscoveryTestBuilder.GetDiscoveryTestBuilder()
                .WithLogger()
                .WithPeerRepository()
                .WithDns(default, true)
@@ -645,7 +593,51 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
                 }
             }
         }
+        
+        [Fact]
+        public async Task Can_Correlate_Known_Ping_And_Update_Neighbour_State()
+        {
+            var neighbours = DiscoveryHelper.MockNeighbours(Constants.AngryPirate, NeighbourState.Contacted, CorrelationId.GenerateCorrelationId());
 
+            var discoveryTestBuilder = DiscoveryTestBuilder.GetDiscoveryTestBuilder()
+               .WithLogger()
+               .WithPeerRepository()
+               .WithDns(default, true)
+               .WithPeerSettings()
+               .WithPeerClient()
+               .WithCancellationProvider()
+               .WithPeerClientObservables(default, typeof(PingResponseObserver))
+               .WithAutoStart()
+               .WithBurn()
+               .WithStateCandidate(default, false, _ownNode, neighbours, DiscoveryHelper.MockPnr(_ownNode));
+            
+            using (var walker = discoveryTestBuilder.Build())
+            {
+                var streamObserver = Substitute.For<IObserver<IPeerClientMessageDto>>();
+
+                using (walker.DiscoveryStream.SubscribeOn(TaskPoolScheduler.Default)
+                   .Subscribe(streamObserver.OnNext))
+                {
+                    neighbours.ToList().ForEach(n =>
+                    {
+                        var subbedDto = DiscoveryHelper.SubDto(typeof(PingResponse), n.DiscoveryPingCorrelationId, n.PeerIdentifier);
+                        var peerNeighborsResponse = new PingResponse();
+                        subbedDto.Message.Returns(peerNeighborsResponse);    
+                        
+                        discoveryTestBuilder.PeerClientObservables.ToList().ForEach(o =>
+                        {
+                            o.ResponseMessageSubject.OnNext(subbedDto);
+                        });
+                    });
+                    
+                    await walker.DiscoveryStream.WaitForItemsOnDelayedStreamOnTaskPoolSchedulerAsync();
+                    
+                    walker.StateCandidate.Neighbours.ToList()
+                       .ForEach(n => { n.State.Should().Be(NeighbourState.Responsive); });
+                }
+            }
+        }
+        
         [Fact]
         public void Known_Evicted_Correlation_Cache_PingRequest_Message_Increments_UnResponsivePeer()
         {

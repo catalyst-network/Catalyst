@@ -47,7 +47,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
         public PingResponseObserver(ILogger logger)
             : base(logger)
         {
-            ResponseMessageSubject = new ReplaySubject<IPeerClientMessageDto>(0);
+            ResponseMessageSubject = new ReplaySubject<IPeerClientMessageDto>(1);
         }
         
         /// <param name="pingResponse"></param>
