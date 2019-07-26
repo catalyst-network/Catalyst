@@ -161,8 +161,8 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Dfs
         {
             var cancellationToken = (CancellationToken) callInfo[cancellationTokenArgPosition];
             await TaskHelper.WaitForAsync(() => cancellationToken.IsCancellationRequested,
-                TimeSpan.FromMilliseconds(DelayInMs * DelayMultiplier));
-            await Task.Delay(DelayInMs, cancellationToken);
+                TimeSpan.FromMilliseconds(DelayInMs * DelayMultiplier)).ConfigureAwait(false);
+            await Task.Delay(DelayInMs, cancellationToken).ConfigureAwait(false);
             return returnValue;
         }
 
