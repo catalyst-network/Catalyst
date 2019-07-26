@@ -33,7 +33,8 @@ using Catalyst.Common.IO.Handlers;
 using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.Util;
-using Catalyst.Cryptography.BulletProofs.Wrapper.Types;
+using Catalyst.Cryptography.BulletProofs.Wrapper;
+using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
@@ -99,12 +100,12 @@ namespace Catalyst.Node.Rpc.Client.IntegrationTests.IO.Transport.Channels
         {
             var recipient = PeerIdentifierHelper.GetPeerIdentifier("recipient");
             var sender = PeerIdentifierHelper.GetPeerIdentifier("sender");
-            var sigBytes = ByteUtil.GenerateRandomByteArray(Cryptography.BulletProofs.Wrapper.FFI.GetSignatureLength());
-            var pubBytes = ByteUtil.GenerateRandomByteArray(Cryptography.BulletProofs.Wrapper.FFI.GetPublicKeyLength());
-            var sig = new Signature(sigBytes, pubBytes);
+            var signature = Substitute.For<ISignature>();
+            signature.SignatureBytes.Returns(ByteUtil.GenerateRandomByteArray(FFI.SignatureLength));
+
             _peerIdValidator.ValidatePeerIdFormat(Arg.Any<PeerId>()).Returns(true);
 
-            _clientKeySigner.Sign(Arg.Any<byte[]>()).ReturnsForAnyArgs(sig);
+            _clientKeySigner.Sign(Arg.Any<byte[]>()).ReturnsForAnyArgs(signature);
             
             var correlationId = CorrelationId.GenerateCorrelationId();
 
@@ -124,10 +125,10 @@ namespace Catalyst.Node.Rpc.Client.IntegrationTests.IO.Transport.Channels
             
             _clientCorrelationManager.ReceivedWithAnyArgs(1).AddPendingRequest(Arg.Is<CorrelatableMessage<ProtocolMessage>>(c => c.Content.CorrelationId.ToCorrelationId().Equals(correlationId)));
             
-            _clientKeySigner.ReceivedWithAnyArgs(1).Sign(Arg.Is(sig.SignatureBytes.RawBytes));
+            _clientKeySigner.ReceivedWithAnyArgs(1).Sign(Arg.Is(signature.SignatureBytes));
             
             _serverKeySigner.Verify(
-                    Arg.Any<Signature>(),
+                    Arg.Any<ISignature>(),
                     Arg.Any<byte[]>()
                 )
                .ReturnsForAnyArgs(true);

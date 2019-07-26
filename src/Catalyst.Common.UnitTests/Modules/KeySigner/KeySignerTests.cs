@@ -26,10 +26,7 @@ using Catalyst.Common.Config;
 using Catalyst.Common.Cryptography;
 using Catalyst.Common.Interfaces.Keystore;
 using Catalyst.Common.Interfaces.Registry;
-using Catalyst.Common.Util;
-using Catalyst.Cryptography.BulletProofs.Wrapper;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
-using Catalyst.Cryptography.BulletProofs.Wrapper.Types;
 using FluentAssertions;
 using NSubstitute;
 using Xunit;
@@ -43,12 +40,9 @@ namespace Catalyst.Common.UnitTests.Modules.KeySigner
             _keystore = Substitute.For<IKeyStore>();
             _keyRegistry = Substitute.For<IKeyRegistry>();
             _wrapper = Substitute.For<IWrapper>();
-            
-            var signatureBytes = ByteUtil.GenerateRandomByteArray(FFI.GetSignatureLength());
-            var publicKeyBytes = ByteUtil.GenerateRandomByteArray(FFI.GetPublicKeyLength());
-            _signature = new Signature(signatureBytes, publicKeyBytes);
-            var privateKeyBytes = ByteUtil.GenerateRandomByteArray(FFI.GetPrivateKeyLength());
-            _privateKey = new PrivateKey(privateKeyBytes);
+            _signature = Substitute.For<ISignature>();
+            _privateKey = Substitute.For<IPrivateKey>();
+
             _keystore.KeyStoreDecrypt(default).ReturnsForAnyArgs(_privateKey);
 
             _wrapper.StdSign(default, default).ReturnsForAnyArgs(_signature);

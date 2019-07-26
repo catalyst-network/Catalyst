@@ -39,7 +39,7 @@ namespace Catalyst.Cli.IntegrationTests.Commands
         public void Cli_Can_Request_Node_Info()
         {
             var hashingAlgorithm = Common.Config.Constants.HashAlgorithm;
-            var hash = Multihash.Cast(hashingAlgorithm.ComputeHash(Encoding.UTF8.GetBytes("hello")));
+            var hash = Encoding.UTF8.GetBytes("hello").ComputeMultihash(hashingAlgorithm);
 
             var result = Shell.ParseCommand("getdelta", "-h", hash, NodeArgumentPrefix, ServerNodeName);
             result.Should().BeTrue();

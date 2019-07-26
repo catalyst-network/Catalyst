@@ -52,7 +52,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
             var logger = Substitute.For<ILogger>();
             _observer = new GetDeltaResponseObserver(logger);
             var hashingAlgorithm = Common.Config.Constants.HashAlgorithm;
-            _previousDeltaHash = Multihash.Cast(hashingAlgorithm.ComputeHash(Encoding.UTF8.GetBytes("previous")));
+            _previousDeltaHash = Encoding.UTF8.GetBytes("previous").ComputeMultihash(hashingAlgorithm);
         }
 
         [Fact]
