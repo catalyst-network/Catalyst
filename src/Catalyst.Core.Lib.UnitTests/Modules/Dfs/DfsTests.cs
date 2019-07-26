@@ -29,10 +29,12 @@ using System.Threading.Tasks;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.IO.Messaging.Correlation;
+using Catalyst.TestUtils;
 using FluentAssertions;
 using Ipfs;
 using Ipfs.CoreApi;
 using NSubstitute;
+using NSubstitute.Core;
 using Serilog;
 using Xunit;
 
@@ -41,12 +43,12 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Dfs
     public sealed class DfsTests : IDisposable
     {
         private const int DelayInMs = 300;
-        private const int DelayMultiplier = 4;
+        private const int DelayMultiplier = 6;
         private readonly ICoreApi _ipfsEngine;
-        private readonly ILogger _logger;
         private readonly Cid _expectedCid;
         private readonly IFileSystemNode _addedRecord;
         private readonly CancellationTokenSource _cancellationTokenSource;
+        private readonly Lib.Modules.Dfs.Dfs _dfs;
 
         public DfsTests()
         {
@@ -54,7 +56,7 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Dfs
             var fileSystem = Substitute.For<IFileSystemApi>();
             _ipfsEngine.FileSystem.Returns(fileSystem);
 
-            _logger = Substitute.For<ILogger>();
+            var logger = Substitute.For<ILogger>();
             var hashBits = CorrelationId.GenerateCorrelationId().Id.ToByteArray().Concat(new byte[16]).ToArray();
             _expectedCid = new Cid
             {
@@ -65,122 +67,104 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Dfs
             _addedRecord = Substitute.For<IFileSystemNode>();
             _addedRecord.Id.ReturnsForAnyArgs(_expectedCid);
             _cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromMilliseconds(DelayInMs));
+
+            _dfs = new Lib.Modules.Dfs.Dfs(_ipfsEngine, logger);
         }
 
         [Fact]
-        public async Task AddTextAsync_should_rely_on_ipfsEngine_and_return_record_id()
+        public async Task AddTextAsync_Should_Rely_On_IpfsEngine_And_Return_Record_Id()
         {
             _ipfsEngine.FileSystem.AddTextAsync("good morning", Arg.Any<AddFileOptions>(), Arg.Any<CancellationToken>())
                .Returns(c => Task.FromResult(_addedRecord));
 
-            var dfs = new Catalyst.Core.Lib.Modules.Dfs.Dfs(_ipfsEngine, _logger);
-            var record = await dfs.AddTextAsync("good morning");
+            var record = await _dfs.AddTextAsync("good morning");
             Cid.Decode(record).Should().Be(_expectedCid);
         }
 
         [Fact]
-        public async Task AddAsync_should_rely_on_ipfsEngine_and_return_record_id()
+        public async Task AddAsync_Should_Rely_On_IpfsEngine_And_Return_Record_Id()
         {
             _ipfsEngine.FileSystem.AddAsync(Stream.Null, Arg.Any<string>(), Arg.Any<AddFileOptions>(), Arg.Any<CancellationToken>())
                .Returns(c => Task.FromResult(_addedRecord));
 
-            var dfs = new Catalyst.Core.Lib.Modules.Dfs.Dfs(_ipfsEngine, _logger);
-            var record = await dfs.AddAsync(Stream.Null);
+            var record = await _dfs.AddAsync(Stream.Null);
             Cid.Decode(record).Should().Be(_expectedCid);
         }
 
         [Fact]
-        public async Task ReadAsync_should_rely_on_ipfsEngine_and_return_streamed_content()
+        public async Task ReadAsync_Should_Rely_On_IpfsEngine_And_Return_Streamed_Content()
         {
             _ipfsEngine.FileSystem
                .ReadFileAsync("some path", Arg.Any<CancellationToken>())
                .Returns(c => "the content".ToMemoryStream());
 
-            var dfs = new Catalyst.Core.Lib.Modules.Dfs.Dfs(_ipfsEngine, _logger);
-            using (var stream = await dfs.ReadAsync("some path"))
+            using (var stream = await _dfs.ReadAsync("some path"))
             {
                 stream.ReadAllAsUtf8String(false).Should().Be("the content");
             }
         }
 
         [Fact]
-        public async Task ReadTextAsync_should_rely_on_ipfsEngine_and_return_text_content()
+        public async Task ReadTextAsync_Should_Rely_On_IpfsEngine_And_Return_Text_Content()
         {
             _ipfsEngine.FileSystem
                .ReadAllTextAsync("some path", Arg.Any<CancellationToken>())
                .Returns(c => "the other content");
 
-            var dfs = new Catalyst.Core.Lib.Modules.Dfs.Dfs(_ipfsEngine, _logger);
-            var text = await dfs.ReadTextAsync("some path");
+            var text = await _dfs.ReadTextAsync("some path");
             text.Should().Be("the other content");
         }
 
         [Fact]
-        public void AddTextAsync_should_be_cancellable()
+        public async Task AddTextAsync_Should_Be_Cancellable()
         {
-            _ipfsEngine.FileSystem.AddTextAsync(Arg.Any<string>(), Arg.Any<AddFileOptions>(), Arg.Any<CancellationToken>())
-               .Returns(c =>
-                {
-                    Task.Yield().GetAwaiter().GetResult();
-                    Task.Delay(DelayInMs * DelayMultiplier, (CancellationToken) c[2]).GetAwaiter().GetResult();
-                    return Task.FromResult(_addedRecord);
-                });
+            _ipfsEngine.FileSystem.AddTextAsync(default, default, default)
+               .ReturnsForAnyArgs(ci => SimulateTaskLongerThanCancellation(ci, 2, _addedRecord));
 
-            var dfs = new Catalyst.Core.Lib.Modules.Dfs.Dfs(_ipfsEngine, _logger);
-            new Action(() => dfs.AddTextAsync("this is taking too long", _cancellationTokenSource.Token)
-                   .GetAwaiter().GetResult()).Should().Throw<TaskCanceledException>()
-               .And.CancellationToken.Should().Be(_cancellationTokenSource.Token);
+            AssertAsyncCallGotCancelled(_dfs.AddTextAsync("this is taking too long", _cancellationTokenSource.Token));
         }
 
         [Fact]
-        public void AddAsync_should_be_cancellable()
+        public async Task AddAsync_Should_Be_Cancellable()
         {
-            _ipfsEngine.FileSystem.AddAsync(Arg.Any<Stream>(), Arg.Any<string>(), Arg.Any<AddFileOptions>(), Arg.Any<CancellationToken>())
-               .Returns(c =>
-                {
-                    Task.Yield().GetAwaiter().GetResult();
-                    Task.Delay(DelayInMs * DelayMultiplier, (CancellationToken) c[3]).GetAwaiter().GetResult();
-                    return Task.FromResult(_addedRecord);
-                });
+            _ipfsEngine.FileSystem.AddAsync(default, default, default, default)
+               .ReturnsForAnyArgs(ci => SimulateTaskLongerThanCancellation(ci, 3, _addedRecord));
 
-            var dfs = new Catalyst.Core.Lib.Modules.Dfs.Dfs(_ipfsEngine, _logger);
-            new Action(() => dfs.AddAsync(Stream.Null, "this is taking too long", _cancellationTokenSource.Token)
-                   .GetAwaiter().GetResult()).Should().Throw<TaskCanceledException>()
-               .And.CancellationToken.Should().Be(_cancellationTokenSource.Token);
+            AssertAsyncCallGotCancelled(_dfs.AddAsync(Stream.Null, "this is taking too long", _cancellationTokenSource.Token));
         }
 
         [Fact]
-        public void ReadTextAsync_should_be_cancellable()
+        public async Task ReadTextAsync_Should_Be_Cancellable()
         {
-            _ipfsEngine.FileSystem.ReadAllTextAsync(Arg.Any<string>(), Arg.Any<CancellationToken>())
-               .Returns(c =>
-                {
-                    Task.Yield().GetAwaiter().GetResult();
-                    Task.Delay(DelayInMs * DelayMultiplier, (CancellationToken) c[1]).GetAwaiter().GetResult();
-                    return Task.FromResult("some content");
-                });
+            _ipfsEngine.FileSystem.ReadAllTextAsync(default, default)
+               .ReturnsForAnyArgs(ci => SimulateTaskLongerThanCancellation(ci, 1, "some result"));
 
-            var dfs = new Catalyst.Core.Lib.Modules.Dfs.Dfs(_ipfsEngine, _logger);
-            new Action(() => dfs.ReadTextAsync("path", _cancellationTokenSource.Token)
-                   .GetAwaiter().GetResult()).Should().Throw<TaskCanceledException>()
-               .And.CancellationToken.Should().Be(_cancellationTokenSource.Token);
+            AssertAsyncCallGotCancelled(_dfs.ReadTextAsync("path", _cancellationTokenSource.Token));
         }
 
         [Fact]
-        public void ReadAsync_should_be_cancellable()
+        public async Task ReadAsync_Should_Be_Cancellable()
         {
-            _ipfsEngine.FileSystem.ReadFileAsync(Arg.Any<string>(), Arg.Any<CancellationToken>())
-               .Returns(c =>
-                {
-                    Task.Yield().GetAwaiter().GetResult();
-                    Task.Delay(DelayInMs * DelayMultiplier, (CancellationToken) c[1]).GetAwaiter().GetResult();
-                    return Task.FromResult(Stream.Null);
-                });
+            _ipfsEngine.FileSystem.ReadFileAsync(default, default)
+               .ReturnsForAnyArgs(ci => SimulateTaskLongerThanCancellation(ci, 1, Stream.Null));
 
-            var dfs = new Catalyst.Core.Lib.Modules.Dfs.Dfs(_ipfsEngine, _logger);
-            new Action(() => dfs.ReadAsync("path", _cancellationTokenSource.Token)
-                   .GetAwaiter().GetResult()).Should().Throw<TaskCanceledException>()
+            AssertAsyncCallGotCancelled(_dfs.ReadAsync("path", _cancellationTokenSource.Token));
+        }
+
+        private void AssertAsyncCallGotCancelled<T>(Task<T> asyncCall)
+        {
+            new Action(() => asyncCall.GetAwaiter().GetResult()).Should().Throw<TaskCanceledException>()
                .And.CancellationToken.Should().Be(_cancellationTokenSource.Token);
+        }
+
+        private async Task<T> SimulateTaskLongerThanCancellation<T>(CallInfo callInfo, int cancellationTokenArgPosition, T returnValue)
+        {
+            var cancellationToken = (CancellationToken) callInfo[cancellationTokenArgPosition];
+            await TaskHelper.WaitForAsync(() => cancellationToken.IsCancellationRequested,
+                TimeSpan.FromMilliseconds(DelayInMs * DelayMultiplier));
+            await Task.Yield();
+            await Task.Delay(DelayInMs, cancellationToken);
+            return returnValue;
         }
 
         private void Dispose(bool disposing)
