@@ -21,9 +21,11 @@
 
 #endregion
 
+using System;
+
 namespace Catalyst.Common.Interfaces.Registry
 {
-    public interface IRegistryBase<in TKey, TValue>
+    public interface IRegistryBase<in TKey, TValue> : IDisposable
     {
         bool AddItemToRegistry(TKey identifier, TValue item);
 

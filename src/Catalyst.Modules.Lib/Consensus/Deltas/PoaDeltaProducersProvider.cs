@@ -85,7 +85,7 @@ namespace Catalyst.Modules.Lib.Consensus.Deltas
             var peerIdsInPriorityOrder = allPeers.Select(p =>
                 {
                     var array = p.PeerIdentifier.PeerId.ToByteArray().Concat(previousDeltaHash).ToArray();
-                    var ranking = HashAlgorithm.ComputeHash(array);
+                    var ranking = array.ComputeRawHash(HashAlgorithm);
                     return new
                     {
                         p.PeerIdentifier,

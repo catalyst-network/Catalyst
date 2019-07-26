@@ -90,7 +90,7 @@ namespace Catalyst.Common.UnitTests.Keystore
             IPrivateKey privateKey = _context.GeneratePrivateKey();
             _keystore.KeyStoreEncryptAsync(privateKey, KeyRegistryKey.DefaultKey).Wait();
             var storedKey = _keystore.KeyStoreDecrypt(KeyRegistryKey.DefaultKey);
-            Assert.Equal(privateKey.Bytes.RawBytes, storedKey.Bytes.RawBytes);
+            Assert.Equal(privateKey.Bytes, storedKey.Bytes);
         } 
 
         [Fact]
@@ -105,7 +105,7 @@ namespace Catalyst.Common.UnitTests.Keystore
             var storedKey = _keystore.KeyStoreDecrypt(KeyRegistryKey.DefaultKey);
 
             storedKey.Should().NotBe(null);
-            Assert.Equal(privateKey.Bytes.RawBytes, storedKey.Bytes.RawBytes);
+            Assert.Equal(privateKey.Bytes, storedKey.Bytes);
         }
 
         [Fact]
@@ -118,7 +118,8 @@ namespace Catalyst.Common.UnitTests.Keystore
                     Constants.CatalystDataDir),
                 TimeSpan.FromSeconds(3));
             _passwordReader.ReadSecurePassword(default, default)
-               .ReturnsForAnyArgs(TestPasswordReader.BuildSecureStringPassword("a different test password"));
+               .ReturnsForAnyArgs(t => TestPasswordReader.BuildSecureStringPassword("a different test password"));
+            
             Assert.Throws<AuthenticationException>(() => _keystore.KeyStoreDecrypt(KeyRegistryKey.DefaultKey));
         }
 

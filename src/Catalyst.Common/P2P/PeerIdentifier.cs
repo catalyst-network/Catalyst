@@ -59,7 +59,7 @@ namespace Catalyst.Common.P2P
 
         public PeerIdentifier(PeerId peerId)
         {
-            var keyLength = FFI.GetPublicKeyLength();
+            var keyLength = FFI.PublicKeyLength;
             Guard.Argument(peerId.PublicKey, nameof(peerId.PublicKey)).MinCount(keyLength).MaxCount(keyLength);
             PeerId = peerId;
         }

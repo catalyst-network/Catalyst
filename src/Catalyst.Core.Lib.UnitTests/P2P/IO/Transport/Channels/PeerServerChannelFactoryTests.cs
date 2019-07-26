@@ -96,7 +96,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Transport.Channels
 
             _senderId = PeerIdHelper.GetPeerId("sender");
             _correlationId = CorrelationId.GenerateCorrelationId();
-            _signature = ByteUtil.GenerateRandomByteArray(Cryptography.BulletProofs.Wrapper.FFI.GetSignatureLength());
+            _signature = ByteUtil.GenerateRandomByteArray(Cryptography.BulletProofs.Wrapper.FFI.SignatureLength);
             _keySigner.Verify(Arg.Any<ISignature>(), Arg.Any<byte[]>())
                .Returns(true);
         }
@@ -159,21 +159,11 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Transport.Channels
                 var messageStream = GetObservableServiceHandler().MessageStream;
                 badHandler.StartObserving(messageStream);
 
-                Enumerable.Range(0, 10).ToList()
-                   .ForEach(i => testingChannel.WriteInbound(GetSignedMessage()));
+                Enumerable.Range(0, 10).AsParallel().ForAll(i => testingChannel.WriteInbound(GetSignedMessage()));
 
                 await TaskHelper.WaitForAsync(
                     () => testingChannel.OutboundMessages.Count >= 5, 
                     TimeSpan.FromSeconds(2));
-
-                var inboundMessagesThatWentThroughPipeline = 0;
-                while (testingChannel.OutboundMessages.Count > 0)
-                {
-                    testingChannel.OutboundMessages.Dequeue();
-                    inboundMessagesThatWentThroughPipeline++;
-                }
-
-                inboundMessagesThatWentThroughPipeline.Should().Be(5);
 
                 await messageStream.WaitForItemsOnDelayedStreamOnTaskPoolSchedulerAsync().ConfigureAwait(false);
 

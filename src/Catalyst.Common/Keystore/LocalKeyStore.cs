@@ -77,7 +77,7 @@ namespace Catalyst.Common.Keystore
             IPrivateKey privateKey = null;
             try
             {
-                privateKey = _cryptoContext.ImportPrivateKey(keyBytes);
+                privateKey = _cryptoContext.PrivateKeyFromBytes(keyBytes);
             }
             catch (ArgumentException)
             {
@@ -108,6 +108,7 @@ namespace Catalyst.Common.Keystore
                 }
                 catch (DecryptionException)
                 {
+                    securePassword.Dispose();
                     _logger.Error("Error decrypting keystore");
                 }
 
