@@ -68,14 +68,14 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Messaging.Broadcast
         public async Task Can_Increase_Broadcast_Count_When_Broadcast_Owner_Broadcasting()
         {
             await TestBroadcast(100, _senderPeerIdentifier,
-                BroadcastManager.BroadcastOwnerMaximumGossipPeersPerRound);
+                BroadcastManager.BroadcastOwnerMaximumGossipPeersPerRound).ConfigureAwait(false);
         }
 
         [Fact]
         public async Task Can_Increase_Broadcast_Count_When_Broadcasting()
         {
             await TestBroadcast(100, PeerIdentifierHelper.GetPeerIdentifier("AnotherBroadcaster"),
-                BroadcastManager.MaxGossipPeersPerRound);
+                BroadcastManager.MaxGossipPeersPerRound).ConfigureAwait(false);
         }
 
         [Fact]
@@ -83,7 +83,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Messaging.Broadcast
         {
             var peerCount = BroadcastManager.MaxGossipPeersPerRound - 1;
             await TestBroadcast(peerCount, _senderPeerIdentifier,
-                peerCount);
+                peerCount).ConfigureAwait(false);
         }
 
         private async Task TestBroadcast(int peerCount, IPeerIdentifier broadcaster, int expectedBroadcastCount)
