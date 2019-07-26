@@ -162,7 +162,11 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
         {
             try
             {
-                var peersToGossip = GetRandomPeers(Constants.MaxGossipPeersPerRound);
+                var isOwner = message.PeerId.Equals(_peerIdentifier.PeerId);
+                
+                // The fan out is how many peers to broadcast to
+                var fanOut = isOwner ? 10 : Constants.MaxGossipPeersPerRound;
+                var peersToGossip = GetRandomPeers(fanOut);
                 var correlationId = message.CorrelationId.ToCorrelationId();
 
                 foreach (var peerIdentifier in peersToGossip)
