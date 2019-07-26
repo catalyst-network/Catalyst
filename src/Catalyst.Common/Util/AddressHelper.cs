@@ -21,6 +21,8 @@
 
 #endregion
 
+using System.Linq;
+using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Util;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
 using Multiformats.Hash.Algorithms;
@@ -38,14 +40,14 @@ namespace Catalyst.Common.Util
         }
 
         /// <summary>
-        ///     returns a 20byte
+        ///     Generates an address from the 20 last bytes of the hashed public key.
         /// </summary>
-        /// <param name="publicKey"></param>
-        /// <returns></returns>
+        /// <param name="publicKey">The public key from which the address is derived.</param>
+        /// <returns>The Hex encoded bytes corresponding to the address.</returns>
         public string GenerateAddress(IPublicKey publicKey)
         {
-            var addressHashBytes = _hashAlgorithm.ComputeHash(publicKey.Bytes);
-            var lastTwentyBytes = ByteUtil.Slice(addressHashBytes, 12, 32);
+            var addressHashBytes = publicKey.Bytes.ComputeRawHash(_hashAlgorithm);
+            var lastTwentyBytes = addressHashBytes.TakeLast(20).ToArray();
             return lastTwentyBytes.ToHex();
         }
     }
