@@ -67,8 +67,8 @@ namespace Catalyst.Core.Lib.P2P.Discovery
         private readonly IDisposable _evictionSubscription;
         private readonly ICancellationTokenProvider _cancellationTokenProvider;
         
-        public IPeerClient PeerClient { get; private set; }
-        public IDtoFactory DtoFactory { get; private set; }
+        public IPeerClient PeerClient { get; }
+        public IDtoFactory DtoFactory { get; }
         public IObservable<IPeerClientMessageDto> DiscoveryStream { get; private set; }
 
         protected HastingsDiscovery(ILogger logger,
@@ -108,7 +108,7 @@ namespace Catalyst.Core.Lib.P2P.Discovery
             DiscoveryStream = Observable.Empty<IPeerClientMessageDto>();
 
             // merge the streams of all our IPeerClientObservable on to our empty DiscoveryStream.
-            peerClientObservables.ToList()
+            peerClientObservables
                .GroupBy(p => p.MessageStream)
                .Select(p => p.Key)
                .ToList()
@@ -232,7 +232,7 @@ namespace Catalyst.Core.Lib.P2P.Discovery
         {
             lock (StateCandidate)
             {
-                if (StateCandidate.Neighbours.ToList()
+                if (StateCandidate.Neighbours
                    .Select(n => n.State)
                    .Count(i => i == Enumeration.Parse<NeighbourState>("NotContacted") || i == Enumeration.Parse<NeighbourState>("UnResponsive"))
                    .Equals(Constants.AngryPirate))
@@ -242,7 +242,6 @@ namespace Catalyst.Core.Lib.P2P.Discovery
 
                 // see if sum of unreachable peers and reachable peers equals the total contacted number.
                 return StateCandidate.Neighbours
-                   .ToList()
                    .Select(n => n.State)
                    .Count(s => s == Enumeration.Parse<NeighbourState>("UnResponsive") ||
                         s == Enumeration.Parse<NeighbourState>("Responsive"))
@@ -337,7 +336,7 @@ namespace Catalyst.Core.Lib.P2P.Discovery
                     // state candidate didn't give any neighbours so go back a step.
                     WalkBack();
                 }
-                else if (StateCandidate.Neighbours.ToList().Select(n => n.DiscoveryPingCorrelationId).Any())
+                else if (StateCandidate.Neighbours.Select(n => n.DiscoveryPingCorrelationId).Any())
                 {
                     StateCandidate.Neighbours
                        .First(n => item.Key
@@ -438,7 +437,7 @@ namespace Catalyst.Core.Lib.P2P.Discovery
         /// <summary>
         ///     Stores a peer in the database unless we are in the burn-in phase.
         /// </summary>
-        /// <param name="peerIdentifier"></param>
+        /// <param name="neighbour"></param>
         /// <returns></returns>
         protected void StorePeer(INeighbour neighbour)
         {
@@ -464,7 +463,7 @@ namespace Catalyst.Core.Lib.P2P.Discovery
             Dispose(true);
         }
 
-        private void Dispose(bool disposing)
+        protected void Dispose(bool disposing)
         {
             if (!disposing)
             {
