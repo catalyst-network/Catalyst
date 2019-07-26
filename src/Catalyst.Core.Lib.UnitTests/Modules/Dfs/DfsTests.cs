@@ -116,7 +116,7 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Dfs
         }
 
         [Fact]
-        public async Task AddTextAsync_Should_Be_Cancellable()
+        public void AddTextAsync_Should_Be_Cancellable()
         {
             _ipfsEngine.FileSystem.AddTextAsync(default, default, default)
                .ReturnsForAnyArgs(ci => SimulateTaskLongerThanCancellation(ci, 2, _addedRecord));
@@ -125,7 +125,7 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Dfs
         }
 
         [Fact]
-        public async Task AddAsync_Should_Be_Cancellable()
+        public void AddAsync_Should_Be_Cancellable()
         {
             _ipfsEngine.FileSystem.AddAsync(default, default, default, default)
                .ReturnsForAnyArgs(ci => SimulateTaskLongerThanCancellation(ci, 3, _addedRecord));
@@ -134,7 +134,7 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Dfs
         }
 
         [Fact]
-        public async Task ReadTextAsync_Should_Be_Cancellable()
+        public void ReadTextAsync_Should_Be_Cancellable()
         {
             _ipfsEngine.FileSystem.ReadAllTextAsync(default, default)
                .ReturnsForAnyArgs(ci => SimulateTaskLongerThanCancellation(ci, 1, "some result"));
@@ -143,7 +143,7 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Dfs
         }
 
         [Fact]
-        public async Task ReadAsync_Should_Be_Cancellable()
+        public void ReadAsync_Should_Be_Cancellable()
         {
             _ipfsEngine.FileSystem.ReadFileAsync(default, default)
                .ReturnsForAnyArgs(ci => SimulateTaskLongerThanCancellation(ci, 1, Stream.Null));
@@ -162,7 +162,6 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Dfs
             var cancellationToken = (CancellationToken) callInfo[cancellationTokenArgPosition];
             await TaskHelper.WaitForAsync(() => cancellationToken.IsCancellationRequested,
                 TimeSpan.FromMilliseconds(DelayInMs * DelayMultiplier));
-            await Task.Yield();
             await Task.Delay(DelayInMs, cancellationToken);
             return returnValue;
         }
