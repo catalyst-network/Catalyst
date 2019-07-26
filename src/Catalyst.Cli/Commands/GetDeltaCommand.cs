@@ -33,7 +33,7 @@ namespace Catalyst.Cli.Commands
 {
     public sealed class GetDeltaCommand : BaseMessageCommand<GetDeltaRequest, GetDeltaResponse, GetDeltaOptions>
     {
-        public static string UnableToRetrieveDeltaMessage = "Unable to retrieve delta.";
+        public static string UnableToRetrieveDeltaMessage => "Unable to retrieve delta.";
 
         public GetDeltaCommand(ICommandContext commandContext) : base(commandContext) { }
 

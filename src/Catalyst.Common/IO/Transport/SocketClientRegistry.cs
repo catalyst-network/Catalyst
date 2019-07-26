@@ -44,9 +44,9 @@ namespace Catalyst.Common.IO.Transport
 
         public SocketClientRegistry(IScheduler scheduler = null)
         {
-            scheduler = scheduler ?? Scheduler.Default;
+            var eventScheduler = scheduler ?? Scheduler.Default;
 
-            _eventReplySubject = new ReplaySubject<ISocketClientRegistryEvent>(1, scheduler);
+            _eventReplySubject = new ReplaySubject<ISocketClientRegistryEvent>(1, eventScheduler);
             EventStream = _eventReplySubject.AsObservable();
 
             Registry = new ConcurrentDictionary<int, TSocketChannel>();

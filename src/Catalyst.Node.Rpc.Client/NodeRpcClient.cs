@@ -89,7 +89,10 @@ namespace Catalyst.Node.Rpc.Client
         private T SubscriptionOutPipeline<T>(IObserverDto<ProtocolMessage> observer) where T : IMessage<T>
         {
             var message = observer.Payload.FromProtocolMessage<T>();
-            if (!_handlers.ContainsKey(observer.Payload.TypeUrl)) return message;
+            if (!_handlers.ContainsKey(observer.Payload.TypeUrl))
+            {
+                return message;
+            }
 
             var handler = _handlers[observer.Payload.TypeUrl];
             handler.HandleResponseObserver(message, observer.Context, new PeerIdentifier(observer.Payload.PeerId),

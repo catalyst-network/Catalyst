@@ -30,11 +30,21 @@ using Serilog;
 
 namespace Catalyst.Node.Rpc.Client.UnitTests.Stub
 {
+    /// <summary>
+    /// Stub Test Response Observer
+    /// </summary>
     public sealed class TestResponseObserver : RpcResponseObserver<VersionResponse>
     {
         public TestResponseObserver(ILogger logger)
             : base(logger) { }
 
+        /// <summary>
+        /// Stub Handle Response
+        /// </summary>
+        /// <param name="testResponse"></param>
+        /// <param name="channelHandlerContext"></param>
+        /// <param name="senderPeerIdentifier"></param>
+        /// <param name="correlationId"></param>
         protected override void HandleResponse(VersionResponse testResponse,
             IChannelHandlerContext channelHandlerContext,
             IPeerIdentifier senderPeerIdentifier,
