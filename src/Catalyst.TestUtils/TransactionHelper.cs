@@ -23,6 +23,7 @@
 
 using Catalyst.Protocol;
 using Catalyst.Protocol.Transaction;
+using Google.Protobuf.WellKnownTypes;
 
 namespace Catalyst.TestUtils
 {
@@ -35,7 +36,7 @@ namespace Catalyst.TestUtils
             string confidentialCommitment = "confidentialCommitment",
             string confidentialPubKey = "confidentialPubKey",
             uint version = 1,
-            ulong timeStamp = 12345,
+            long timeStamp = 12345,
             ulong transactionFees = 2,
             ulong lockTime = 9876)
         {
@@ -59,7 +60,7 @@ namespace Catalyst.TestUtils
                 },
                 Signature = GetTransactionSignature(signature, challenge),
                 Version = version,
-                TimeStamp = timeStamp,
+                TimeStamp = new Timestamp { Seconds = timeStamp },
                 TransactionFees = transactionFees,
                 LockTime = lockTime
             };

@@ -35,7 +35,6 @@ using Catalyst.Common.P2P;
 using Catalyst.Core.Lib.P2P;
 using Catalyst.Core.Lib.P2P.IO.Transport.Channels;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
-using Catalyst.Cryptography.BulletProofs.Wrapper.Types;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Microsoft.Extensions.Configuration;
@@ -108,7 +107,8 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P
 
             var keySigner = Substitute.For<IKeySigner>();
             keySigner.Verify(Arg.Any<ISignature>(), Arg.Any<byte[]>()).Returns(true);
-            keySigner.Sign(Arg.Any<byte[]>()).Returns(new Signature(new byte[64], new byte[32]));
+            var signature = Substitute.For<ISignature>();
+            keySigner.Sign(Arg.Any<byte[]>()).ReturnsForAnyArgs(signature);
 
             _peerService = new PeerService(new UdpServerEventLoopGroupFactory(eventLoopGroupFactoryConfiguration),
                 new PeerServerChannelFactory(_container.Resolve<IPeerMessageCorrelationManager>(),
