@@ -89,7 +89,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Messaging.Broadcast
         private async Task TestBroadcast(int peerCount, IPeerIdentifier broadcaster, int expectedBroadcastCount)
         {
             PopulatePeers(peerCount);
-            var correlationId = await BroadcastMessage(broadcaster);
+            var correlationId = await BroadcastMessage(broadcaster).ConfigureAwait(false);
 
             _cache.TryGetValue(correlationId.Id, out BroadcastMessage value);
 
