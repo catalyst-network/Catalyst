@@ -22,6 +22,7 @@
 #endregion
 
 using System;
+using System.Buffers;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
 
 namespace Catalyst.Common.Interfaces.Cryptography
@@ -29,55 +30,63 @@ namespace Catalyst.Common.Interfaces.Cryptography
     public interface ICryptoContext
     {
         /// <summary>
-        ///     Generates a wrapped private key using underlying crypto context.
+        ///     Generates a new private key.
         /// </summary>
         /// <returns></returns>
         IPrivateKey GeneratePrivateKey();
 
         /// <summary>
-        ///     Creates wrapped public key from keyblob.
+        ///     Creates public key from public key bytes.
         /// </summary>
-        /// <param name="blob"></param>
+        /// <param name="publicKeyBytes"></param>
         /// <returns></returns>
-        IPublicKey ImportPublicKey(ReadOnlySpan<byte> blob);
+        IPublicKey PublicKeyFromBytes(byte[] publicKeyBytes);
 
         /// <summary>
-        ///     Creates keyblob from public key.
+        ///     Creates private key from key bytes.
         /// </summary>
-        /// <param name="key"></param>
+        /// <param name="privateKeyBytes"></param>
         /// <returns></returns>
-        byte[] ExportPublicKey(IPublicKey key);
+        IPrivateKey PrivateKeyFromBytes(byte[] privateKeyBytes);
 
         /// <summary>
-        ///     Creates wrapped private key from keyblob.
+        ///     Takes signature bytes and corresponding public key bytes and creates a signature.
         /// </summary>
-        /// <param name="blob"></param>
+        /// <param name="signatureBytes"></param>
+        /// <param name="publicKeyBytes"></param>
         /// <returns></returns>
-        IPrivateKey ImportPrivateKey(ReadOnlySpan<byte> blob);
+        ISignature SignatureFromBytes(byte[] signatureBytes, byte[] publicKeyBytes);
 
         /// <summary>
-        ///     Creates keyblob from private key.
-        /// </summary>
-        /// <param name="key"></param>
-        /// <returns></returns>
-        byte[] ExportPrivateKey(IPrivateKey key);
-
-        /// <summary>
-        ///     Creates signature using data and provided private key.
+        /// Returns private key bytes.
         /// </summary>
         /// <param name="privateKey"></param>
-        /// <param name="data"></param>
         /// <returns></returns>
-        ISignature Sign(IPrivateKey privateKey, ReadOnlySpan<byte> data);
+        byte[] ExportPrivateKey(IPrivateKey privateKey);
+
+        /// <summary>
+        /// Returns public key bytes.
+        /// </summary>
+        /// <param name="publicKey"></param>
+        /// <returns></returns>
+        byte[] ExportPublicKey(IPublicKey publicKey);
+
+        /// <summary>
+        ///     Signs message using provided private key and returns the signature.
+        /// </summary>
+        /// <param name="privateKey"></param>
+        /// <param name=""></param>
+        /// <returns></returns>
+        ISignature Sign(IPrivateKey privateKey, ReadOnlySpan<byte> message);
 
         bool Verify(ISignature signature, ReadOnlySpan<byte> message);
 
         /// <summary>
         ///     Given a private key returns corresponding public key.
         /// </summary>
-        /// <param name="key"></param>
+        /// <param name="privateKey"></param>
         /// <returns></returns>
-        IPublicKey GetPublicKey(IPrivateKey key);
+        IPublicKey GetPublicKey(IPrivateKey privateKey);
 
         /// <summary>
         /// Private key byte length.

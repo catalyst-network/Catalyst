@@ -238,7 +238,7 @@
             "type": "Catalyst.Cryptography.BulletProofs.Wrapper.CryptoWrapper, Catalyst.Cryptography.BulletProofs.Wrapper",
             "services": [
                 {
-                    "type": "Catalyst.Cryptography.BulletProofs.Wrapper.IWrapper, Catalyst.Cryptography.BulletProofs.Wrapper"
+                    "type": "Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces.IWrapper, Catalyst.Cryptography.BulletProofs.Wrapper"
                 }
             ]
         },
