@@ -84,13 +84,13 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
                .WithStateCandidate()
                .WithCurrentState()
                .WithAutoStart()
-               .WithBurn(10);
+               .WithBurn(5);
 
             using (var walker = discoveryTestBuilder.Build())
             {
                 walker.GetBurnInValue()
                    .Should()
-                   .Be(10);
+                   .Be(5);
                 
                 Enumerable.Range(0, 5).ToList().ForEach(i =>
                 {
@@ -107,7 +107,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
                 });
                 
                 walker.PeerRepository
-                   .Received(0)
+                   .Received(5)
                    .Add(Arg.Any<Peer>()); 
             }
         }
