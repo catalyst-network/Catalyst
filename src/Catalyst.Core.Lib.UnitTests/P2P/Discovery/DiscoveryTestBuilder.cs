@@ -161,16 +161,10 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
         
         public DiscoveryTestBuilder WithPeerClientObservables(ILogger logger = default, params Type[] clientObservers)
         {
-            if (PeerClientObservables == null) 
-            {
-                PeerClientObservables = new List<IPeerClientObservable>();
-            }
-
-            foreach (var observerType in clientObservers)
-            {
-                PeerClientObservables.Add((IPeerClientObservable) Activator.CreateInstance(observerType, logger ?? Substitute.For<ILogger>()));
-            }
-
+            PeerClientObservables = clientObservers
+               .Select(ot => (IPeerClientObservable) Activator.CreateInstance(ot, logger ?? Substitute.For<ILogger>()))
+               .ToList();
+            
             return this;
         }
 
