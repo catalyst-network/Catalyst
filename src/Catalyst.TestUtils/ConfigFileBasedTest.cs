@@ -43,6 +43,8 @@ namespace Catalyst.TestUtils
     {
         protected ContainerBuilder ContainerBuilder;
         private IConfigurationRoot _configRoot;
+        protected virtual bool WriteLogsToTestOutput => false;
+        protected virtual bool WriteLogsToFile => false;
         protected ConfigFileBasedTest(ITestOutputHelper output) : base(output) { }
 
         protected string LogOutputTemplate { get; set; } =
@@ -69,8 +71,7 @@ namespace Catalyst.TestUtils
             }
         }
 
-        protected void ConfigureContainerBuilder(bool writeLogsToTestOutput = false,
-            bool writeLogsToFile = false)
+        protected virtual void ConfigureContainerBuilder()
         {
             var configurationModule = new ConfigurationModule(ConfigurationRoot);
             ContainerBuilder = new ContainerBuilder();
@@ -88,19 +89,19 @@ namespace Catalyst.TestUtils
             ContainerBuilder.RegisterInstance(certificateStore).As<ICertificateStore>();
             ContainerBuilder.RegisterInstance(FileSystem).As<IFileSystem>();
 
-            ConfigureLogging(writeLogsToTestOutput, writeLogsToFile);
+            ConfigureLogging();
         }
 
-        private void ConfigureLogging(bool writeLogsToTestOutput, bool writeLogsToFile)
+        private void ConfigureLogging()
         {
             var loggerConfiguration = new LoggerConfiguration().ReadFrom.Configuration(ConfigurationRoot).MinimumLevel.Verbose();
             
-            if (writeLogsToTestOutput)
+            if (WriteLogsToTestOutput)
             {
                 loggerConfiguration.WriteTo.TestOutput(Output, LogEventLevel, LogOutputTemplate);
             }
 
-            if (writeLogsToFile)
+            if (WriteLogsToFile)
             {
                 loggerConfiguration.WriteTo.File(Path.Combine(FileSystem.GetCatalystDataDir().FullName, "Catalyst.Node.log"), LogEventLevel,
                     LogOutputTemplate);

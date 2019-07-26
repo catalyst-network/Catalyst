@@ -146,7 +146,7 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Consensus.Deltas
                     RawEntry = e,
                     SaltedAndHashedEntry = e.ToByteArray().Concat(salt).ComputeRawHash(_hashAlgorithm)
                 }));
-
+             
             var shuffledEntriesBytes = rawAndSaltedEntriesBySignature
                .OrderBy(v => v.SaltedAndHashedEntry, ByteUtil.ByteListComparer.Default)
                .SelectMany(v => v.RawEntry.ToByteArray())
@@ -171,7 +171,8 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Consensus.Deltas
         {
             candidate.Should().NotBeNull();
             candidate.ProducerId.Should().Be(_producerId.PeerId);
-            candidate.PreviousDeltaDfsHash.ToByteArray().SequenceEqual(_previousDeltaHash).Should().BeTrue();
+            candidate.PreviousDeltaDfsHash.ToByteArray().SequenceEqual(_previousDeltaHash)
+               .Should().BeTrue();
 
             var expectedHash = expectedBytesToHash.ComputeMultihash(_hashAlgorithm);
             candidate.Hash.ToByteArray().SequenceEqual(expectedHash.ToBytes()).Should().BeTrue();

@@ -24,24 +24,27 @@
 using Catalyst.Core.Lib.Modules.Consensus.Deltas;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Deltas;
+using Multiformats.Hash.Algorithms;
 
 namespace Catalyst.TestUtils
 {
     public static class ScoredCandidateDeltaHelper
     {
         public static ScoredCandidateDelta GetScoredCandidateDelta(CandidateDeltaBroadcast candidate = default,
+            IMultihashAlgorithm hashAlgorithm = null,
             int score = 0)
         {
-            var candidateDelta = candidate ?? DeltaHelper.GetCandidateDelta();
+            var candidateDelta = candidate ?? DeltaHelper.GetCandidateDelta(hashAlgorithm: hashAlgorithm);
             return new ScoredCandidateDelta(candidateDelta, score);
         }
 
         public static ScoredCandidateDelta GetScoredCandidateDelta(byte[] previousDeltaHash = null,
+            IMultihashAlgorithm hashAlgorithm = null,
             byte[] hash = null,
             PeerId producerId = null,
             int score = 0)
         {
-            var candidateDelta = DeltaHelper.GetCandidateDelta(previousDeltaHash, hash, producerId);
+            var candidateDelta = DeltaHelper.GetCandidateDelta(previousDeltaHash, hash, producerId, hashAlgorithm);
             return new ScoredCandidateDelta(candidateDelta, score);
         }
     }

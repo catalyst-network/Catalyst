@@ -47,7 +47,7 @@ namespace Catalyst.Modules.Lib.IntegrationTests.Consensus
             {
                 var utcNow = DateTime.UtcNow;  
                 var tenSecondSlot = 1 + utcNow.Second / 10;
-                var tx = TransactionHelper.GetTransaction(timeStamp: (ulong) utcNow.ToOADate());
+                var tx = TransactionHelper.GetTransaction(timeStamp: (long) utcNow.ToOADate());
                 var transactionBroadcasts = Enumerable.Repeat(new MempoolDocument {Transaction = tx}, tenSecondSlot);
 
                 return transactionBroadcasts;
@@ -55,6 +55,8 @@ namespace Catalyst.Modules.Lib.IntegrationTests.Consensus
 
             return _fakeMempool.GetMemPoolContent();
         }
+
+        public bool ContainsDocument(TransactionSignature key) { throw new NotImplementedException(); }
 
         public List<byte[]> GetMemPoolContentEncoded() { return _fakeMempool.GetMemPoolContentEncoded(); }
         public bool SaveMempoolDocument(IMempoolDocument mempoolDocument) { throw new NotImplementedException(); }

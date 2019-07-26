@@ -25,7 +25,6 @@ using System.Text;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.Modules.Consensus.Deltas;
-using Catalyst.Common.Interfaces.P2P.IO.Messaging.Broadcast;
 using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.Util;
 using Catalyst.Core.Lib.P2P.IO.Observers;

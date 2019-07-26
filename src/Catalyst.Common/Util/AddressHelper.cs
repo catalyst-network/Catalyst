@@ -24,7 +24,9 @@
 using System.Linq;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Util;
+using Catalyst.Cryptography.BulletProofs.Wrapper;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
+using Multiformats.Hash;
 using Multiformats.Hash.Algorithms;
 using Nethereum.Hex.HexConvertors.Extensions;
 

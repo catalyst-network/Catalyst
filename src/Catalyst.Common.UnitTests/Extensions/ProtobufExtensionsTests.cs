@@ -93,7 +93,7 @@ namespace Catalyst.Common.UnitTests.Extensions
             var initialHash = Multihash.Sum(HashType.BLAKE2B_256, Encoding.UTF8.GetBytes("hello"));
             var byteString = initialHash.ToBytes().ToByteString();
 
-            var convertedHash = byteString.ToMultihash();
+            var convertedHash = byteString.AsMultihash();
 
             convertedHash.Should().Be(initialHash);
         }
@@ -104,7 +104,7 @@ namespace Catalyst.Common.UnitTests.Extensions
             var initialHash = Multihash.Encode("hello", HashType.BLAKE2B_256);
             var byteString = initialHash.ToBytes().ToByteString();
 
-            var multihash = byteString.ToMultihashString();
+            var multihash = byteString.AsMultihashString();
             multihash.Should().NotBe(null);
         }
 

@@ -74,7 +74,7 @@ namespace Catalyst.Modules.Lib.Dfs
         public async Task<string> AddTextAsync(string utf8Content, CancellationToken cancellationToken = default)
         {
             var bytes = Encoding.UTF8.GetBytes(utf8Content);
-            var contentHash = bytes.ToMultihashBase64UrlString(_hashingAlgorithm);
+            var contentHash = bytes.ComputeMultihash(_hashingAlgorithm);
 
             await _fileSystem.File.WriteAllTextAsync(
                 Path.Combine(_baseFolder.FullName, contentHash),
@@ -93,7 +93,7 @@ namespace Catalyst.Modules.Lib.Dfs
         public async Task<string> AddAsync(Stream content, string name = "", CancellationToken cancellationToken = default)
         {
             var bytes = await content.ReadAllBytesAsync(cancellationToken);
-            var contentHash = bytes.ToMultihashBase64UrlString(_hashingAlgorithm);
+            var contentHash = bytes.ComputeMultihash(_hashingAlgorithm);
             await _fileSystem.File.WriteAllBytesAsync(Path.Combine(_baseFolder.FullName, contentHash), bytes, cancellationToken);
             return contentHash;
         }

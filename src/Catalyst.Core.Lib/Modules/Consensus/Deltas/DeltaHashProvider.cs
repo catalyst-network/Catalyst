@@ -28,7 +28,9 @@ using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Modules.Consensus.Deltas;
+using Catalyst.Common.Util;
 using Google.Protobuf.WellKnownTypes;
+using Multiformats.Base;
 using Multiformats.Hash;
 using Nito.Comparers;
 using Serilog;
@@ -65,12 +67,12 @@ namespace Catalyst.Core.Lib.Modules.Consensus.Deltas
         /// <inheritdoc />
         public bool TryUpdateLatestHash(Multihash previousHash, Multihash newHash)
         {
-            var foundNewDelta = _deltaCache.TryGetDelta(newHash, out var newDelta);
-            var foundPreviousDelta = _deltaCache.TryGetDelta(previousHash, out var previousDelta);
+            var foundNewDelta = _deltaCache.TryGetDelta(newHash.AsBase64UrlString(), out var newDelta);
+            var foundPreviousDelta = _deltaCache.TryGetDelta(previousHash.AsBase64UrlString(), out var previousDelta);
 
             if (!foundNewDelta 
              || !foundPreviousDelta
-             || newDelta.PreviousDeltaDfsHash.ToMultihashString() != previousHash
+             || newDelta.PreviousDeltaDfsHash != previousHash.ToBytes().ToByteString()
              || previousDelta.TimeStamp >= newDelta.TimeStamp)
             {
                 _logger.Warning("Failed to update latest hash from {previousHash} to {newHash}",

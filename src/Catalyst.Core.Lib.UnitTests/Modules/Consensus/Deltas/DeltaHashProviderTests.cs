@@ -24,11 +24,13 @@
 using System;
 using System.Linq;
 using System.Reflection;
+using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Modules.Consensus.Deltas;
 using Catalyst.Core.Lib.Modules.Consensus.Deltas;
 using Catalyst.Protocol.Deltas;
 using Catalyst.TestUtils;
 using FluentAssertions;
+using Multiformats.Base;
 using Multiformats.Hash;
 using Multiformats.Hash.Algorithms;
 using NSubstitute;
@@ -143,7 +145,7 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Consensus.Deltas
 
         private Multihash GetHash(int i)
         {
-            var hash = Multihash.Sum(HashType.ID, BitConverter.GetBytes(i));
+            var hash = BitConverter.GetBytes(i).ComputeMultihash(new ID());
             return hash;
         }
 
@@ -153,7 +155,7 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Consensus.Deltas
                .Select(i =>
                 {
                     var delta = DeltaHelper.GetDelta(
-                        previousDeltaHash: GetHash(i - 1).ToBytes(),
+                        previousDeltaHash: GetHash(i - 1),
                         timestamp: GetDateTimeForIndex(i));
                     return delta;
                 })
@@ -161,7 +163,7 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Consensus.Deltas
 
             Enumerable.Range(0, deltaCount).ToList().ForEach(i =>
             {
-                ExpectTryGetDelta(GetHash(i).ToString(), deltas[i]);
+                ExpectTryGetDelta(GetHash(i).AsBase64UrlString(), deltas[i]);
             });
         }
 
