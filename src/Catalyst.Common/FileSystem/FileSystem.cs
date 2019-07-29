@@ -143,25 +143,48 @@ namespace Catalyst.Common.FileSystem
         {
             var configDataDir = GetCurrentDataDir(configFilePointer);
 
-            configDataDir = PrepDirectoryLocationFormat(configDataDir);
-            configDirLocation = PrepDirectoryLocationFormat(configDirLocation);
+            configDataDir = PrepDirectoryLocationFormatAlt(configDataDir);
+            configDirLocation = PrepDirectoryLocationFormatAlt(configDirLocation);
 
             string text = System.IO.File.ReadAllText(configFilePointer);
             text = text.Replace(configDataDir, configDirLocation);
             System.IO.File.WriteAllText(configFilePointer, text);
         }
 
-        private string PrepDirectoryLocationFormat(string dir)
+        private string PrepDirectoryLocationFormatAlt(string dir)
         {
-            var arrayText = dir.Split(System.IO.Path.AltDirectorySeparatorChar.ToString()).ToList();
+            var seperatorType = System.Environment.OSVersion.Platform == System.PlatformID.Unix ? "////" : "\\\\";
+
+            var arrayText = dir.Split(System.IO.Path.DirectorySeparatorChar.ToString()).ToList();
 
             var final = arrayText.FirstOrDefault();
 
             foreach (var item in arrayText.Skip(1))
             {
-                final += Path.Combine(System.IO.Path.AltDirectorySeparatorChar.ToString(), item);
+                final += Path.Combine(seperatorType, item);
             }
             return final;
+        }
+
+        private string PrepDirectoryLocationFormat(string dir)
+        {
+            if (string.IsNullOrEmpty(dir) == false)
+            {
+                var seperatorType = System.Environment.OSVersion.Platform == System.PlatformID.Unix ? 
+                    System.IO.Path.AltDirectorySeparatorChar.ToString() : System.IO.Path.DirectorySeparatorChar.ToString();
+
+                var arrayText = dir.Split(seperatorType).ToList();
+
+                var final = arrayText.FirstOrDefault();
+
+                foreach (var item in arrayText.Skip(1))
+                {
+                    final += Path.Combine(seperatorType, seperatorType, seperatorType, seperatorType
+                        , item);
+                }
+                return final;
+            }
+            return dir;            
         }
     }
 }

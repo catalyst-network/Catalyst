@@ -28,6 +28,7 @@ using Xunit;
 using Catalyst.TestUtils;
 using Catalyst.Common.Config;
 using CommonFileSystem = Catalyst.Common.FileSystem.FileSystem;
+using Xunit.Abstractions;
 
 namespace Catalyst.Common.IntegrationTests.IO
 {
@@ -37,28 +38,39 @@ namespace Catalyst.Common.IntegrationTests.IO
     ///     to create files, logs, etc.
     /// </summary>
     [Trait(Traits.TestType, Traits.IntegrationTest)]
-    public sealed class FileSystemTest 
+    public sealed class FileSystemTest : FileSystemBasedTest
     {
         private readonly CommonFileSystem _fileSystem;
         private readonly string _sourceFolder;
 
-        public FileSystemTest()
+        public FileSystemTest(ITestOutputHelper output) : base(output)
         {
             _fileSystem = new CommonFileSystem();
 
-            _sourceFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), Constants.CatalystDataDir);
+            //_sourceFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), Constants.CatalystDataDir);
 
-            Setup();
+            _sourceFolder = Setup();
         }
 
-        private void Setup()
-        {          
-            var targetConfigFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, Constants.ConfigSubFolder);
+        private string Setup()
+        {
+            var currentDirectory = FileSystem.GetCatalystDataDir();
+            currentDirectory.Exists.Should().BeFalse("otherwise the test is not relevant");
 
-            Console.WriteLine("DISPLAY Setup() targetConfigFolder :: " + targetConfigFolder);
-            Console.WriteLine("DISPLAY Setup() _sourceFolder :: " + _sourceFolder);
+            var modulesDirectory =
+                new DirectoryInfo(Path.Combine(currentDirectory.FullName, Constants.ModulesSubFolder));
 
-            new ConfigCopier().RunConfigStartUp(targetConfigFolder, Catalyst.Common.Config.Network.Dev, _sourceFolder, overwrite: true);
+            var network = Catalyst.Common.Config.Network.Dev;
+            new ConfigCopier().RunConfigStartUp(currentDirectory.FullName, network);
+            return currentDirectory.FullName;
+
+
+            //var targetConfigFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, Constants.ConfigSubFolder);
+
+            //Console.WriteLine("DISPLAY Setup() targetConfigFolder :: " + targetConfigFolder);
+            //Console.WriteLine("DISPLAY Setup() _sourceFolder :: " + _sourceFolder);
+
+            //new ConfigCopier().RunConfigStartUp(targetConfigFolder, Catalyst.Common.Config.Network.Dev, _sourceFolder, overwrite: true);
         }
 
         [Theory]
