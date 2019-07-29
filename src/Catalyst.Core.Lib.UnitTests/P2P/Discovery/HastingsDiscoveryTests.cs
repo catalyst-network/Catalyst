@@ -624,13 +624,13 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
                         });
                     });
                     
-                    await TaskHelper.WaitForAsync(() => streamObserver.ReceivedCalls().Any(c => c.GetMethodInfo().Name == nameof(streamObserver.OnCompleted)),
+                    await TaskHelper.WaitForAsync(() => streamObserver.ReceivedCalls()
+                           .Count(c => c.GetMethodInfo().Name == nameof(streamObserver.OnNext)) == neighbours.Count,
                         TimeSpan.FromSeconds(2)).ConfigureAwait(false);
-                    streamObserver.Received(neighbours.Count).OnNext(Arg.Any<IPeerClientMessageDto>());
 
                     await TaskHelper.WaitForAsync(
                         () => walker.StateCandidate.Neighbours.All(n => n.State == NeighbourState.Responsive),
-                        TimeSpan.FromSeconds(2));
+                        TimeSpan.FromSeconds(2)).ConfigureAwait(false);
                 }
             }
         }
