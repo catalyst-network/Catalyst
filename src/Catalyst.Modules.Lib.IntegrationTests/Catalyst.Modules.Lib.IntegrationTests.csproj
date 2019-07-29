@@ -16,4 +16,7 @@
         <ProjectReference Include="..\Catalyst.Modules.Lib\Catalyst.Modules.Lib.csproj" />
         <ProjectReference Include="..\Catalyst.TestUtils\Catalyst.TestUtils.csproj" />
     </ItemGroup>
+    <ItemGroup>
+      <PackageReference Update="NSubstitute" Version="4.2.1" />
+    </ItemGroup>
 </Project>
