@@ -115,8 +115,11 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
                .WithCareTaker(stateCareTaker)
                .WithCurrentState(seedOrigin)
                .WithStateCandidate(stateCandidate);
-            
+
+            var streamObserver = Substitute.For<IObserver<IPeerClientMessageDto>>();
+
             using (var walker = discoveryTestBuilder.Build())
+            using (walker.DiscoveryStream.SubscribeOn(TaskPoolScheduler.Default).Subscribe(streamObserver))
             {
                 stateCandidate.Neighbours.ToList().ForEach(n =>
                     cacheEntriesByRequest[n.DiscoveryPingCorrelationId.Id.ToByteString()]
@@ -129,11 +132,14 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
                             EvictionReason.Expired,
                             new object()
                         ));
-                
-                walker.StateCandidate.Neighbours
-                   .Count(n => n.State == NeighbourState.UnResponsive)
-                   .Should()
-                   .Be(Constants.AngryPirate);
+
+                await TaskHelper.WaitForAsync(() => streamObserver.ReceivedCalls()
+                       .Count(c => c.GetMethodInfo().Name == nameof(streamObserver.OnNext)) == stateCandidate.Neighbours.Count,
+                    TimeSpan.FromSeconds(2)).ConfigureAwait(false);
+
+                await TaskHelper.WaitForAsync(
+                    () => walker.StateCandidate.Neighbours.All(n => n.State == NeighbourState.Responsive),
+                    TimeSpan.FromSeconds(2)).ConfigureAwait(false);
 
                 walker.HasValidCandidate()
                    .Should()
