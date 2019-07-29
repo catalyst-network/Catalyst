@@ -262,6 +262,22 @@
             ]
         },
         {
+            "type": "Catalyst.Core.Lib.P2P.PeerChallenger",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.P2P.IPeerChallenger, Catalyst.Common"
+                }
+            ]
+        },
+        {
+            "type": "Catalyst.Core.Lib.P2P.PeerClient",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.P2P.IPeerClient, Catalyst.Common"
+                }
+            ]
+        },
+        {
             "type": "Catalyst.Common.Cryptography.CertificateStore, Catalyst.Common",
             "services": [
                 {
@@ -378,7 +394,7 @@
                 }
             ],
             "parameters": {
-                "timeToLiveInMs": 10000
+                "timeToLiveInMs": 8000
             }
         }
     ],
