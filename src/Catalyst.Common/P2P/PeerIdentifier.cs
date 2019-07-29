@@ -37,6 +37,7 @@ using Google.Protobuf;
 using Microsoft.Extensions.Configuration;
 using Nethereum.Hex.HexConvertors.Extensions;
 using Nethereum.RLP;
+using Newtonsoft.Json;
 
 namespace Catalyst.Common.P2P
 {
@@ -49,13 +50,15 @@ namespace Catalyst.Common.P2P
     /// </summary>
     public sealed class PeerIdentifier : IPeerIdentifier
     {
+        public PeerId PeerId { get; set; }
         public string ClientId => PeerId.ClientId.ToStringUtf8();
         public string ClientVersion => PeerId.ClientVersion.ToStringUtf8();
-        public IPAddress Ip => new IPAddress(PeerId.Ip.ToByteArray()).MapToIPv4();
+        public IPAddress Ip => new IPAddress(PeerId.Ip.ToByteArray())?.MapToIPv4();
         public int Port => BitConverter.ToUInt16(PeerId.Port.ToByteArray());
         public byte[] PublicKey => PeerId.PublicKey.ToByteArray();
         public IPEndPoint IpEndPoint => EndpointBuilder.BuildNewEndPoint(Ip, Port);
-        public PeerId PeerId { get; }
+        
+        public PeerIdentifier() { }
 
         public PeerIdentifier(PeerId peerId)
         {

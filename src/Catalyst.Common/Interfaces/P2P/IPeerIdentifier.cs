@@ -29,7 +29,7 @@ namespace Catalyst.Common.Interfaces.P2P
 {
     public interface IPeerIdentifier : IEquatable<IPeerIdentifier>
     {
-        PeerId PeerId { get; }
+        PeerId PeerId { get; set; }
         string ClientId { get; }
         string ClientVersion { get; }
         IPAddress Ip { get; }
