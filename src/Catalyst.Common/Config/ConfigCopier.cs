@@ -110,6 +110,8 @@ namespace Catalyst.Common.Config
                 return;
             }
 
+            Console.WriteLine("CopyConfigFileToFolder() :: " + sourceFile);
+
             File.Copy(sourceFile, targetFile, overwrite);
         }
     }

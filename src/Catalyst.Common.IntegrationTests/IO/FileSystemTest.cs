@@ -55,6 +55,9 @@ namespace Catalyst.Common.IntegrationTests.IO
         {          
             var targetConfigFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, Constants.ConfigSubFolder);
 
+            Console.WriteLine("DISPLAY Setup() targetConfigFolder :: " + targetConfigFolder);
+            Console.WriteLine("DISPLAY Setup() _sourceFolder :: " + _sourceFolder);
+
             new ConfigCopier().RunConfigStartUp(targetConfigFolder, Catalyst.Common.Config.Network.Dev, _sourceFolder, overwrite: true);
         }
 
@@ -65,6 +68,7 @@ namespace Catalyst.Common.IntegrationTests.IO
         [InlineData("L:\\123\\fake")]
         public void Save_NonExistant_Data_Directory_Must_Fail(string path)
         {
+            Console.WriteLine("DISPLAY path :: " + path);
             _fileSystem.SetCurrentPath(path).Should().BeFalse();
         }
                
@@ -72,6 +76,8 @@ namespace Catalyst.Common.IntegrationTests.IO
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void Save_Existant_Data_Directory_Must_Succeed()
         {
+            Console.WriteLine("DISPLAY _sourceFolder :: " + _sourceFolder);
+
             _fileSystem.SetCurrentPath(_sourceFolder).Should().BeTrue();
         }
 
@@ -79,6 +85,7 @@ namespace Catalyst.Common.IntegrationTests.IO
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void Save_Data_Directory_New_Instance_Must_Load_With_New_Data_Directory()
         {
+            Console.WriteLine("DISPLAY _sourceFolder :: " + _sourceFolder);
             _fileSystem.SetCurrentPath(_sourceFolder).Should().BeTrue();
 
             var fileSystem = new CommonFileSystem();
