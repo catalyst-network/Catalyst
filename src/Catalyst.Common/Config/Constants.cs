@@ -120,8 +120,5 @@ namespace Catalyst.Common.Config
                .Select(m => Path.Combine(ModulesSubFolder, string.Format(JsonFilePattern, m.Name.ToLower())));
 
         public static string NetworkConfigFile(Network network) { return string.Format(JsonFilePattern, network.Name); }
-
-        /// <summary>The maximum peers the node can gossip to for a single message, per gossip cycle</summary>
-        public static int MaxGossipPeersPerRound => 3;
     }
 }
