@@ -90,7 +90,7 @@ namespace Catalyst.Common.IntegrationTests.IO
 
             var fileSystem = new CommonFileSystem();
 
-            fileSystem.GetCatalystDataDir().FullName.Should().Be(_fileSystem.GetCatalystDataDir().FullName);
+            fileSystem.GetCatalystDataDir().FullName.ToLower().Should().Be(_fileSystem.GetCatalystDataDir().FullName.ToLower());
         }
     }
 }
