@@ -46,7 +46,6 @@ namespace Catalyst.Cli.CommandTypes
         private readonly IDisposable _eventStreamObserverClientAdded;
         private readonly IDisposable _eventStreamObserverClientRemoved;
         private readonly ConcurrentDictionary<int, IDisposable> _subscriptions;
-        private bool _disposed;
 
         protected BaseMessageCommand(ICommandContext commandContext) : base(commandContext)
         {
@@ -62,12 +61,6 @@ namespace Catalyst.Cli.CommandTypes
                 CommandContext.PeerIdClientId);
 
         protected IPeerIdentifier SenderPeerIdentifier => CommandContext.PeerIdentifier;
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
 
         public INodeRpcClient Target => CommandContext.GetConnectedNode(Options.Node);
 
@@ -130,21 +123,11 @@ namespace Catalyst.Cli.CommandTypes
             _subscriptions.Clear();
         }
 
-        protected virtual void Dispose(bool disposing)
+        public void Dispose()
         {
-            if (_disposed)
-            {
-                return;
-            }
-
-            if (disposing)
-            {
-                DisposeSubscriptions();
-                _eventStreamObserverClientAdded?.Dispose();
-                _eventStreamObserverClientRemoved?.Dispose();
-            }
-
-            _disposed = true;
+            DisposeSubscriptions();
+            _eventStreamObserverClientAdded?.Dispose();
+            _eventStreamObserverClientRemoved?.Dispose();
         }
     }
 }
