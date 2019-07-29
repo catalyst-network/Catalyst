@@ -52,7 +52,7 @@ namespace Catalyst.Common.Config
         public static string JsonFilePattern => "{0}.json";
         
         // <summary> Default Catalyst data directory </summary>
-        public static string CatalystDataDir => ".Catalyst";
+        public static string CatalystDataDir => ".catalyst";
         
         // <summary> Default dfs data directory inside the Catalyst data directory </summary>
         public static string DfsDataSubDir => "dfs";
