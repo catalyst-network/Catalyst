@@ -39,16 +39,20 @@ namespace Catalyst.Common.IntegrationTests.IO
     [Trait(Traits.TestType, Traits.IntegrationTest)]
     public sealed class FileSystemTest 
     {
-        private readonly CommonFileSystem _fileSystem = new CommonFileSystem();
-        private string _sourceFolder => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "\\" , Constants.CatalystDataDir);
+        private readonly CommonFileSystem _fileSystem;
+        private readonly string _sourceFolder;
 
         public FileSystemTest()
         {
+            _fileSystem = new CommonFileSystem();
+
+            _sourceFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), Constants.CatalystDataDir);
+
             Setup();
         }
 
         private void Setup()
-        {
+        {          
             var targetConfigFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, Constants.ConfigSubFolder);
 
             new ConfigCopier().RunConfigStartUp(targetConfigFolder, Catalyst.Common.Config.Network.Dev, _sourceFolder, overwrite: true);

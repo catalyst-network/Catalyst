@@ -41,22 +41,10 @@ namespace Catalyst.Cli.Commands
         {
             return new SetPeerDataFolderRequest
             {
-                PublicKey = option.PublicKey.ToBytesForRLPEncoding().ToByteString(),
-                Ip = ByteString.CopyFrom(IPAddress.Parse(option.IpAddress).To16Bytes()),
+                PublicKey = option.PublicKey.PublicKeyToProtobuf(),
+                Ip = option.IpAddress.IpAddressToProtobuf(),
                 Datafolder = option.DataFolder
             };
-        }
-
-        public override void SendMessage(ChangeDataFolderOptions options)
-        {
-            var request = GetMessage(options);
-
-            var requestMessage = CommandContext.DtoFactory.GetDto(
-              request.ToProtocolMessage(SenderPeerIdentifier.PeerId),
-              SenderPeerIdentifier,
-              RecipientPeerIdentifier);
-
-            Target.SendMessage(requestMessage);
         }
     }
 }

@@ -38,14 +38,15 @@ namespace Catalyst.Common.FileSystem
         : System.IO.Abstractions.FileSystem,
             IFileSystem
     {
-        private string _currentDataDirPointer => Path.Combine(AppDomain.CurrentDomain.BaseDirectory, Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile);
+        private string _currentDataDirPointer;
         private string _dataDir;     
-        public static string FilePointerBaseLocation => Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
 
         public FileSystem()
         {
+            _currentDataDirPointer  = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile);
+
             _dataDir = File.Exists(_currentDataDirPointer) ?
-                GetCurrentDataDir(_currentDataDirPointer) : Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) , "\\", Constants.CatalystDataDir);
+                GetCurrentDataDir(_currentDataDirPointer) : Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), Constants.CatalystDataDir);
         }
         public virtual DirectoryInfo GetCatalystDataDir()
         {
@@ -138,12 +139,12 @@ namespace Catalyst.Common.FileSystem
             return File.Exists(filePath) ? File.ReadAllText(filePath) : null;
         }
 
-        private static void SaveConfigPointerFile(string configDirLocation, string configFilePointer)
+        private void SaveConfigPointerFile(string configDirLocation, string configFilePointer)
         {
             var configDataDir = GetCurrentDataDir(configFilePointer);
 
-            configDataDir = PrepDirectoryLocationFormat(configDataDir);
-            configDirLocation = PrepDirectoryLocationFormat(configDirLocation);
+            configDataDir = PrepDirectoryLocationFormatB(configDataDir);
+            configDirLocation = PrepDirectoryLocationFormatB(configDirLocation);
 
             string text = System.IO.File.ReadAllText(configFilePointer);
             text = text.Replace(configDataDir, configDirLocation);
@@ -152,6 +153,7 @@ namespace Catalyst.Common.FileSystem
 
         private static string PrepDirectoryLocationFormat(string dir)
         {
+            //Can Path combine address this, issue
             var arrayText = dir.Split("\\").ToList();
 
             var final = arrayText.FirstOrDefault();
@@ -159,6 +161,21 @@ namespace Catalyst.Common.FileSystem
             foreach (var item in arrayText.Skip(1))
             {
                 final += "\\\\" + item;
+            }
+            return final;
+        }
+
+        private string PrepDirectoryLocationFormatB(string dir)
+        {
+            //Can Path combine address this, issue
+            var arrayText = dir.Split(System.IO.Path.DirectorySeparatorChar.ToString()).ToList();
+
+            var final = arrayText.FirstOrDefault();
+
+            foreach (var item in arrayText.Skip(1))
+            {
+                //final += "\\\\" + item;
+                final += Path.Combine(System.IO.Path.DirectorySeparatorChar.ToString(), item);
             }
             return final;
         }
