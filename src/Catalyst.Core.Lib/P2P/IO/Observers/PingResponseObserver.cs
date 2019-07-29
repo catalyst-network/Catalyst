@@ -50,10 +50,6 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
             ResponseMessageSubject = new ReplaySubject<IPeerClientMessageDto>(1);
         }
         
-        /// <param name="pingResponse"></param>
-        /// <param name="channelHandlerContext"></param>
-        /// <param name="senderPeerIdentifier"></param>
-        /// <param name="correlationId"></param>
         protected override void HandleResponse(PingResponse pingResponse,
             IChannelHandlerContext channelHandlerContext,
             IPeerIdentifier senderPeerIdentifier,

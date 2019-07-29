@@ -36,24 +36,16 @@ using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.Discovery;
-using Catalyst.Common.Interfaces.P2P.IO;
-using Catalyst.Common.Interfaces.P2P.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.P2P.IO.Messaging.Dto;
 using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Common.P2P;
-using Catalyst.Common.P2P.Discovery;
 using Catalyst.Common.Util;
-using Catalyst.Core.Lib.P2P.Discovery;
-using Catalyst.Core.Lib.P2P.IO.Messaging.Dto;
 using Catalyst.Core.Lib.P2P.IO.Observers;
 using Catalyst.Protocol.IPPN;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Nethereum.Hex.HexConvertors.Extensions;
 using NSubstitute;
-using NSubstitute.ReceivedExtensions;
-using Serilog;
-using SharpRepository.Repository;
 using Xunit;
 using Type = System.Type;
 
@@ -616,8 +608,9 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
             {
                 var streamObserver = Substitute.For<IObserver<IPeerClientMessageDto>>();
 
-                using (walker.DiscoveryStream.SubscribeOn(TaskPoolScheduler.Default)
-                   .Subscribe(streamObserver.OnNext))
+                using (walker.DiscoveryStream.Take(5)
+                   .SubscribeOn(TaskPoolScheduler.Default)
+                   .Subscribe(streamObserver))
                 {
                     neighbours.ToList().ForEach(n =>
                     {
@@ -631,10 +624,13 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
                         });
                     });
                     
-                    await walker.DiscoveryStream.WaitForItemsOnDelayedStreamOnTaskPoolSchedulerAsync();
-                    
-                    walker.StateCandidate.Neighbours.ToList()
-                       .ForEach(n => { n.State.Should().Be(NeighbourState.Responsive); });
+                    await TaskHelper.WaitForAsync(() => streamObserver.ReceivedCalls().Any(c => c.GetMethodInfo().Name == nameof(streamObserver.OnCompleted)),
+                        TimeSpan.FromSeconds(2)).ConfigureAwait(false);
+                    streamObserver.Received(neighbours.Count).OnNext(Arg.Any<IPeerClientMessageDto>());
+
+                    await TaskHelper.WaitForAsync(
+                        () => walker.StateCandidate.Neighbours.All(n => n.State == NeighbourState.Responsive),
+                        TimeSpan.FromSeconds(2));
                 }
             }
         }

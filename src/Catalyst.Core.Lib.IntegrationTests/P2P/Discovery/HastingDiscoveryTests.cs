@@ -29,19 +29,11 @@ using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
-using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
-using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.Discovery;
-using Catalyst.Common.Interfaces.P2P.IO;
 using Catalyst.Common.Interfaces.P2P.IO.Messaging.Dto;
-using Catalyst.Common.Interfaces.P2P.ReputationSystem;
-using Catalyst.Common.Interfaces.Util;
 using Catalyst.Common.IO.Messaging.Correlation;
-using Catalyst.Common.P2P;
-using Catalyst.Common.Util;
 using Catalyst.Core.Lib.P2P.Discovery;
-using Catalyst.Core.Lib.P2P.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.P2P.IO.Messaging.Dto;
 using Catalyst.Core.Lib.P2P.IO.Observers;
 using Catalyst.Core.Lib.UnitTests.P2P.Discovery;
@@ -52,8 +44,6 @@ using FluentAssertions;
 using Google.Protobuf;
 using Microsoft.Extensions.Caching.Memory;
 using NSubstitute;
-using Serilog;
-using SharpRepository.Repository;
 using Xunit;
 
 namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
