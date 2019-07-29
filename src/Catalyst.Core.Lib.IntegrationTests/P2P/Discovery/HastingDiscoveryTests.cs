@@ -138,8 +138,13 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
                     TimeSpan.FromSeconds(2)).ConfigureAwait(false);
 
                 await TaskHelper.WaitForAsync(
-                    () => walker.StateCandidate.Neighbours.All(n => n.State == NeighbourState.Responsive),
+                    () => walker.StateCandidate.Neighbours.All(n => n.State == NeighbourState.UnResponsive),
                     TimeSpan.FromSeconds(2)).ConfigureAwait(false);
+
+                walker.StateCandidate.Neighbours
+                   .Count(n => n.State == NeighbourState.UnResponsive)
+                   .Should()
+                   .Be(Constants.AngryPirate);
 
                 walker.HasValidCandidate()
                    .Should()

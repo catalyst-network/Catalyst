@@ -631,6 +631,8 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
                     await TaskHelper.WaitForAsync(
                         () => walker.StateCandidate.Neighbours.All(n => n.State == NeighbourState.Responsive),
                         TimeSpan.FromSeconds(2)).ConfigureAwait(false);
+
+                    walker.StateCandidate.Neighbours.All(n => n.State == NeighbourState.Responsive).Should().BeTrue();
                 }
             }
         }
