@@ -143,39 +143,23 @@ namespace Catalyst.Common.FileSystem
         {
             var configDataDir = GetCurrentDataDir(configFilePointer);
 
-            configDataDir = PrepDirectoryLocationFormatB(configDataDir);
-            configDirLocation = PrepDirectoryLocationFormatB(configDirLocation);
+            configDataDir = PrepDirectoryLocationFormat(configDataDir);
+            configDirLocation = PrepDirectoryLocationFormat(configDirLocation);
 
             string text = System.IO.File.ReadAllText(configFilePointer);
             text = text.Replace(configDataDir, configDirLocation);
             System.IO.File.WriteAllText(configFilePointer, text);
         }
 
-        private static string PrepDirectoryLocationFormat(string dir)
+        private string PrepDirectoryLocationFormat(string dir)
         {
-            //Can Path combine address this, issue
-            var arrayText = dir.Split("\\").ToList();
+            var arrayText = dir.Split(System.IO.Path.AltDirectorySeparatorChar.ToString()).ToList();
 
             var final = arrayText.FirstOrDefault();
 
             foreach (var item in arrayText.Skip(1))
             {
-                final += "\\\\" + item;
-            }
-            return final;
-        }
-
-        private string PrepDirectoryLocationFormatB(string dir)
-        {
-            //Can Path combine address this, issue
-            var arrayText = dir.Split(System.IO.Path.DirectorySeparatorChar.ToString()).ToList();
-
-            var final = arrayText.FirstOrDefault();
-
-            foreach (var item in arrayText.Skip(1))
-            {
-                //final += "\\\\" + item;
-                final += Path.Combine(System.IO.Path.DirectorySeparatorChar.ToString(), item);
+                final += Path.Combine(System.IO.Path.AltDirectorySeparatorChar.ToString(), item);
             }
             return final;
         }
