@@ -49,11 +49,9 @@ namespace Catalyst.Node
         private readonly ILogger _logger;
         private readonly IMempool _mempool;
         private readonly IPeerService _peer;
-        private readonly IPeerDiscovery _peerDiscovery;
         private readonly INodeRpcServer _nodeRpcServer;
 
         public CatalystNode(IPeerService peer,
-            IPeerDiscovery peerDiscovery,
             IConsensus consensus,
             IDfs dfs,
             ILedger ledger,
@@ -63,7 +61,6 @@ namespace Catalyst.Node
             IMempool mempool = null,
             IContract contract = null)
         {
-            _peerDiscovery = peerDiscovery;
             _peer = peer;
             _consensus = consensus;
             _dfs = dfs;
