@@ -101,7 +101,7 @@ namespace Catalyst.Common.FileSystem
         {
             if (new DirectoryInfo(path).Exists)
             {
-                SaveConfigPointerFile(path, _currentDataDirPointer);
+                SaveConfigPointerFile("FULL_REPLACED!", _currentDataDirPointer);
 
                 _dataDir = path;
               

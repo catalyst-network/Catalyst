@@ -106,7 +106,7 @@ namespace Catalyst.Node.IntegrationTests.IO
             Console.WriteLine("DISPLAY _sourceFolder :: " + _sourceFolder);
             _fileSystem.SetCurrentPath(_sourceFolder).Should().BeTrue();
 
-            var fileSystem = new CommonFileSystem("RETRIEVER");
+            var fileSystem = new CommonFileSystem("");
 
             Console.WriteLine("Stored :: " + _fileSystem.GetCatalystDataDir().FullName.ToLower());
             Console.WriteLine("Retrieve :: " + fileSystem.GetCatalystDataDir().FullName.ToLower());

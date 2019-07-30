@@ -328,7 +328,7 @@
                 }
             ],
             "parameters": {
-                "configDataDir": "C://Users//.Catalyst"
+                "configDataDir": "LINUX_REPLACE_ME"
             }
         },
         {
