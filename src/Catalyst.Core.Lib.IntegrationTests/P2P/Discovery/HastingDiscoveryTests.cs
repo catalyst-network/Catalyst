@@ -96,8 +96,8 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
             var correlatableMessages = new List<CorrelatableMessage<ProtocolMessage>>();
             var peerMessageCorrelationManager = DiscoveryHelper.MockCorrelationManager(default, memoryCache, logger: _logger);    
             
-            _logger.Debug("Seed StateCandidate has peerId {peerIdentifier}", _ownNode);
-            _logger.Debug("StateCandidate has peerId {peerIdentifier}", stateCandidate.Peer);
+            _logger.Debug("Seed StepProposal has peerId {peerIdentifier}", _ownNode);
+            _logger.Debug("StepProposal has peerId {peerIdentifier}", stateCandidate.Peer);
 
             stateCandidate.Neighbours.ToList().ForEach(n =>
             {
@@ -131,8 +131,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
                .WithAutoStart(false)
                .WithBurn(0)
                .WithCareTaker(stateCareTaker)
-               .WithCurrentState(seedOrigin)
-               .WithStateCandidate(stateCandidate);
+               .WithStepProposal(stateCandidate);
 
             _logger.Information("Building Hasting discovery for test.");
             using (var walker = discoveryTestBuilder.Build())
@@ -154,7 +153,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
                     TimeSpan.FromSeconds(2)).ConfigureAwait(false);
                 _logger.Verbose("Succeeded waiting for neighbour state change to Unresponsive? {success}", success);
 
-                walker.StateCandidate.Neighbours
+                walker.StepProposal.Neighbours
                    .Count(n => n.State == NeighbourState.UnResponsive)
                    .Should()
                    .Be(Constants.AngryPirate);
@@ -167,7 +166,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
                 
                 walker.WalkBack();
 
-                walker.State.Peer
+                walker.CurrentStep.Peer
                    .Should()
                    .Be(expectedCurrentState.Peer);
             }
@@ -201,8 +200,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
                .WithAutoStart(false)
                .WithBurn(0)
                .WithCareTaker(stateCareTaker)
-               .WithCurrentState(seedOrigin)
-               .WithStateCandidate(stateCandidate);
+               .WithStepProposal(stateCandidate);
             
             using (var walker = discoveryTestBuilder.Build())
             {
@@ -230,7 +228,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
                 using (walker.DiscoveryStream.SubscribeOn(TaskPoolScheduler.Default)
                    .Subscribe(streamObserver.OnNext))
                 {
-                    walker.StateCandidate.Neighbours
+                    walker.StepProposal.Neighbours
                        .Where(n => n.State == NeighbourState.Responsive)
                        .Select(i => i.PeerIdentifier.PeerId)
                        .Should()
@@ -272,8 +270,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
                .WithAutoStart(false)
                .WithBurn(0)
                .WithCareTaker(stateCareTaker)
-               .WithCurrentState(seedOrigin)
-               .WithStateCandidate(stateCandidate);
+               .WithStepProposal(stateCandidate);
             
             using (var walker = discoveryTestBuilder.Build())
             {
@@ -298,7 +295,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
         
                     streamObserver.Received(1).OnNext(Arg.Is(pingDto));
         
-                    walker.StateCandidate.Neighbours
+                    walker.StepProposal.Neighbours
                        .Where(n => n.State == NeighbourState.Responsive)
                        .Select(n => n.PeerIdentifier)
                        .Contains(pingDto.Sender);

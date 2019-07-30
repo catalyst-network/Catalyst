@@ -22,5 +22,5 @@ using System.Collections.Generic;
 
 namespace Catalyst.Common.Interfaces.P2P.Discovery
 {
-    public interface INeighbours : IReadOnlyList<INeighbour> { }
+    public interface INeighbours : IReadOnlyCollection<INeighbour> { }
 }

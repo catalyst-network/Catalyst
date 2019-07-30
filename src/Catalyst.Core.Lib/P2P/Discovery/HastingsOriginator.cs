@@ -23,10 +23,13 @@
 
 using System.Linq;
 using System.Reflection;
+using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.Discovery;
 using Catalyst.Common.IO.Messaging.Correlation;
+using Catalyst.Common.P2P.Discovery;
+using Makaretu.Dns.Resolving;
 using Serilog;
 
 namespace Catalyst.Core.Lib.P2P.Discovery
@@ -52,9 +55,11 @@ namespace Catalyst.Core.Lib.P2P.Discovery
         /// <inheritdoc />
         public IHastingMemento CreateMemento()
         {
+            var worthyNeighbours = Neighbours.Where(n => n.State != NeighbourState.UnResponsive).ToList();
+
             Logger.Debug("Creating new memento with Peer {peer} and neighbours [{neighbours}]", 
-                Peer, string.Join(", ", Neighbours.Select(n => n.PeerIdentifier)));
-            return new HastingMemento(Peer, Neighbours);
+                Peer, string.Join(", ", worthyNeighbours));
+            return new HastingMemento(Peer, new Neighbours(worthyNeighbours));
         }
         
         /// <inheritdoc />
@@ -64,6 +69,23 @@ namespace Catalyst.Core.Lib.P2P.Discovery
             Peer = hastingMemento.Peer;
             Neighbours = hastingMemento.Neighbours;
             PnrCorrelationId = CorrelationId.GenerateCorrelationId();
+        }
+
+        public bool HasValidCandidate()
+        {
+            if (Neighbours
+               .Select(n => n.State)
+               .Count(s => s == NeighbourState.NotContacted || s == NeighbourState.UnResponsive)
+               .Equals(Constants.AngryPirate))
+            {
+                return false;
+            }
+
+            // see if sum of unreachable peers and reachable peers equals the total contacted number.
+            return Neighbours
+               .Select(n => n.State)
+               .Count(s => s == NeighbourState.Responsive || s == NeighbourState.UnResponsive)
+               .Equals(Constants.AngryPirate);
         }
     }
 }

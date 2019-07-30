@@ -21,8 +21,6 @@
 
 #endregion
 
-using System.Collections.Concurrent;
-using System.Collections.Generic;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 
 namespace Catalyst.Common.Interfaces.P2P.Discovery
@@ -37,7 +35,7 @@ namespace Catalyst.Common.Interfaces.P2P.Discovery
         /// This field stores the details for that request. 
         /// </summary>
         ICorrelationId PnrCorrelationId { get; }
-
+        
         INeighbours Neighbours { get; }
         
         /// <summary>
@@ -45,11 +43,13 @@ namespace Catalyst.Common.Interfaces.P2P.Discovery
         /// </summary>
         /// <returns></returns>
         IHastingMemento CreateMemento();
-        
+
         /// <summary>
         ///     Restores the state from a memento
         /// </summary>
         /// <param name="hastingMemento"></param>
         void RestoreMemento(IHastingMemento hastingMemento);
+
+        bool HasValidCandidate();
     }
 }

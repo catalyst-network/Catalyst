@@ -30,15 +30,21 @@ namespace Catalyst.Common.P2P.Discovery
 {
     public sealed class Neighbour : INeighbour
     {
-        public NeighbourState State { get; set; }
+        private readonly object _stateLocker = new object();
+        private NeighbourState _state;
+
+        public NeighbourState State
+        {
+            get { lock (_stateLocker) {return _state;} }
+            set { lock (_stateLocker) {_state = value;} }
+        }
+
         public IPeerIdentifier PeerIdentifier { get; }
         public ICorrelationId DiscoveryPingCorrelationId { get; }
 
-        public Neighbour() { }
-
         public Neighbour(IPeerIdentifier peerIdentifier,
             NeighbourState state = default,
-            ICorrelationId discoveryPingCorrelationId = null)
+            ICorrelationId discoveryPingCorrelationId = default)
         {
             PeerIdentifier = peerIdentifier;
             State = state ?? NeighbourState.NotContacted;

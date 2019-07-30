@@ -35,6 +35,7 @@ using Catalyst.Common.Interfaces.P2P.ReputationSystem;
 using Catalyst.Common.Interfaces.Util;
 using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Common.P2P;
+using Catalyst.Common.P2P.Discovery;
 using Catalyst.Common.Util;
 using Catalyst.Core.Lib.P2P.Discovery;
 using Catalyst.TestUtils;
@@ -56,7 +57,6 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
         private IPeerSettings _peerSettings;
         private IHastingCareTaker _careTaker;
         private IHastingsOriginator _currentState;
-        private IHastingsOriginator _stateCandidate;
         private ICancellationTokenProvider _cancellationProvider;
         public IList<IPeerClientObservable> PeerClientObservables;
         private IPeerMessageCorrelationManager _peerCorrelationManager;
@@ -83,8 +83,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
                 _autoStart,
                 _burnIn,
                 _currentState,
-                _careTaker,
-                _stateCandidate);
+                _careTaker);
         }
 
         public DiscoveryTestBuilder WithLogger(ILogger logger = default)
@@ -174,34 +173,35 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
             return this;
         }
 
-        public DiscoveryTestBuilder WithCurrentState(IHastingsOriginator currentState = default,
+        public DiscoveryTestBuilder WithCurrentStep(IHastingMemento currentStep = default,
             bool mock = false,
             IPeerIdentifier peer = default,
-            INeighbours neighbours = default,
-            ICorrelationId expectedPnr = default)
+            INeighbours neighbours = default)
         {
-            var pnrCorrelationId = expectedPnr ?? CorrelationId.GenerateCorrelationId();
-            _currentState = (currentState == default && mock == false)
-                ? DiscoveryHelper.SubOriginator(peer, neighbours, pnrCorrelationId) 
-                : currentState == default 
-                    ? _currentState = DiscoveryHelper.MockOriginator(peer, neighbours) 
-                    : _currentState = currentState;
+            if (mock)
+            {
+                _careTaker.Add(new HastingMemento(peer ?? PeerIdentifierHelper.GetPeerIdentifier(default),
+                    neighbours ?? new Neighbours()));
+            }
+
+            var latestMemento = (currentStep == default && mock == false)
+                ? DiscoveryHelper.SubMemento(peer, neighbours) 
+                : currentStep ?? DiscoveryHelper.MockMemento(peer, neighbours);
             
             return this;
         }
         
-        public DiscoveryTestBuilder WithStateCandidate(IHastingsOriginator stateCandidate = default,
+        public DiscoveryTestBuilder WithStepProposal(IHastingsOriginator stateCandidate = default,
             bool mock = false,
             IPeerIdentifier peer = default,
             INeighbours neighbours = default,
             ICorrelationId expectedPnr = default)
         {
             var pnrCorrelationId = expectedPnr ?? CorrelationId.GenerateCorrelationId();
-            _stateCandidate = (stateCandidate == default && mock == false)
+
+            _currentState = (stateCandidate == default && mock == false)
                 ? DiscoveryHelper.SubOriginator(peer, neighbours, pnrCorrelationId) 
-                : stateCandidate == default 
-                    ? _currentState = DiscoveryHelper.MockOriginator(peer, neighbours) 
-                    : _currentState = stateCandidate;
+                : stateCandidate ?? DiscoveryHelper.MockOriginator(peer, neighbours);
 
             return this;
         }
@@ -226,8 +226,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
                 bool autoStart = true,
                 int peerDiscoveryBurnIn = 10,
                 IHastingsOriginator state = default,
-                IHastingCareTaker hastingCareTaker = default,
-                IHastingsOriginator stateCandidate = null)
+                IHastingCareTaker hastingCareTaker = default)
             {
                 return new HastingDiscoveryTest(logger,
                     peerRepository,
@@ -241,8 +240,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
                     autoStart,
                     peerDiscoveryBurnIn,
                     state,
-                    hastingCareTaker,
-                    stateCandidate);
+                    hastingCareTaker);
             }
 
             private HastingDiscoveryTest(ILogger logger = default,
@@ -257,8 +255,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
                 bool autoStart = true,
                 int peerDiscoveryBurnIn = 10,
                 IHastingsOriginator state = default,
-                IHastingCareTaker hastingCareTaker = default,
-                IHastingsOriginator stateCandidate = null)
+                IHastingCareTaker hastingCareTaker = default)
                 : base(logger ?? Substitute.For<ILogger>(),
                     peerRepository ?? Substitute.For<IRepository<Peer>>(),
                     dns ?? DiscoveryHelper.MockDnsClient(peerSettings),
@@ -271,8 +268,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
                     autoStart,
                     peerDiscoveryBurnIn,
                     state ?? Substitute.For<IHastingsOriginator>(),
-                    hastingCareTaker ?? Substitute.For<IHastingCareTaker>(),
-                    stateCandidate) { }
+                    hastingCareTaker ?? Substitute.For<IHastingCareTaker>()) { }
 
             internal new void WalkForward() { base.WalkForward(); }
 

@@ -47,5 +47,7 @@ namespace Catalyst.Common.Interfaces.P2P.Discovery
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
         IHastingMemento Get();
+        IHastingMemento Peek();
+
     }
 }

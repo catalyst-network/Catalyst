@@ -42,6 +42,16 @@ namespace Catalyst.Core.Lib.P2P.Discovery
             HastingMementoList.Push(hastingMemento);
         }
 
+        public IHastingMemento Peek()
+        {
+            if (!HastingMementoList.TryPeek(out IHastingMemento latest))
+            {
+                throw new InvalidOperationException("No memento found in queue");
+            }
+
+            return latest;
+        }
+
         /// <inheritdoc />
         public IHastingMemento Get()
         {

@@ -18,31 +18,21 @@
 // along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 #endregion
 
-using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using Catalyst.Common.Interfaces.P2P.Discovery;
 
 namespace Catalyst.Common.P2P.Discovery
 {
-    public class Neighbours : INeighbours
+    public class Neighbours : ConcurrentQueue<INeighbour>, INeighbours
     {
-        private readonly IReadOnlyList<INeighbour> _readOnlyCollectionImplementation;
-        public IEnumerator<INeighbour> GetEnumerator() { return _readOnlyCollectionImplementation.GetEnumerator(); }
-        IEnumerator IEnumerable.GetEnumerator() { return ((IEnumerable) _readOnlyCollectionImplementation).GetEnumerator(); }
-        public int Count => _readOnlyCollectionImplementation.Count;
-        public INeighbour this[int index] => _readOnlyCollectionImplementation[index];
-
-        public Neighbours(IEnumerable<INeighbour> readOnlyCollectionImplementation = default)
-        {
-            _readOnlyCollectionImplementation = (readOnlyCollectionImplementation ?? Enumerable.Empty<INeighbour>())
-               .ToList().AsReadOnly();
-        }
+        public Neighbours(IEnumerable<INeighbour> neighbours = default) : base(neighbours ?? Enumerable.Empty<INeighbour>()) { }
 
         public override string ToString()
         {
             return string.Join(", ",
-                _readOnlyCollectionImplementation.Select(n =>
+                this.Select(n =>
                     n.PeerIdentifier + "|" + n.DiscoveryPingCorrelationId + "|" + n.State.Name));
         }
     }
