@@ -45,18 +45,18 @@ namespace Catalyst.Common.FileSystem
 
         public FileSystem()
         {
-            _testingName = "";
+            _testingName  = "";
 
             _currentDataDirPointer = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile);
             Console.WriteLine("_currentDataDirPointer :: " + _currentDataDirPointer);
 
             if (File.Exists(_currentDataDirPointer))
             {
-                Console.WriteLine("_currentDataDirPointer EXIST :: " + _testingName + " => " + _currentDataDirPointer);
+                Console.WriteLine("_currentDataDirPointer EXIST :: " + _testingName + GetHashCode() + " => " + _currentDataDirPointer);
             }
             else
             {
-                Console.WriteLine("_currentDataDirPointer NOT FOUND :: " + _testingName + " => " + _currentDataDirPointer);
+                Console.WriteLine("_currentDataDirPointer NOT FOUND :: " + _testingName + GetHashCode() + " => " + _currentDataDirPointer);
             }
 
             _dataDir = File.Exists(_currentDataDirPointer) ?
@@ -73,15 +73,18 @@ namespace Catalyst.Common.FileSystem
 
             if (File.Exists(_currentDataDirPointer))
             {
-                Console.WriteLine("_currentDataDirPointer EXIST :: " + _testingName + " => " + _currentDataDirPointer);
+                Console.WriteLine("_currentDataDirPointer EXIST :: " + _testingName + GetHashCode() + " => " + _currentDataDirPointer);
             }
             else
             {
-                Console.WriteLine("_currentDataDirPointer NOT FOUND :: " + _testingName + " => " + _currentDataDirPointer);
+                Console.WriteLine("_currentDataDirPointer NOT FOUND :: " + _testingName + GetHashCode() + " => " + _currentDataDirPointer);
             }
 
             _dataDir = File.Exists(_currentDataDirPointer) ?
                 GetCurrentDataDir(_currentDataDirPointer) : Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), Constants.CatalystDataDir);
+
+            Console.WriteLine("_dataDir Constructor :: " + _testingName + GetHashCode() +  " => " + _dataDir);
+            Console.WriteLine("\n");
         }
         public virtual DirectoryInfo GetCatalystDataDir()
         {
@@ -89,7 +92,7 @@ namespace Catalyst.Common.FileSystem
 
             if (string.IsNullOrEmpty(_dataDir) == false)
             {
-                Console.WriteLine("_dataDir Is Empty Using this Instead :: " + _testingName + " => " + path);
+                Console.WriteLine("_dataDir Is Empty Using this Instead :: " + _testingName + GetHashCode() + " => " + path);
             }
 
             return new DirectoryInfo(string.IsNullOrEmpty(_dataDir) == false ? _dataDir : path);
@@ -190,8 +193,8 @@ namespace Catalyst.Common.FileSystem
             text = text.Replace(configDataDir, configDirLocation);
             System.IO.File.WriteAllText(configFilePointer, text);
 
-            Console.WriteLine("Saved on this place :: " + _testingName + " => " + _currentDataDirPointer);
-            Console.WriteLine("New ConfigDir :: " + _testingName + " => " + configDirLocation);
+            Console.WriteLine("Saved on this place :: " + _testingName + GetHashCode() + " => " + _currentDataDirPointer);
+            Console.WriteLine("New ConfigDir :: " + _testingName + GetHashCode() + " => " + configDirLocation);
 
         }
 
