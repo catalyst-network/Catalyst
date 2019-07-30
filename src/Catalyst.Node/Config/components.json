@@ -328,7 +328,7 @@
                 }
             ],
             "parameters": {
-                "configDataDir": "REPLACE_ME"
+                "configDataDir": "Data_Directory"
             }
         },
         {
