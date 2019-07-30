@@ -25,6 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Catalyst.Common.Interfaces.Cli;
+using Catalyst.Common.Interfaces.Cli.Commands;
 using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Transport;
@@ -37,7 +38,7 @@ using Dawn;
 using Microsoft.Extensions.Configuration;
 using Serilog;
 
-namespace Catalyst.Cli
+namespace Catalyst.Cli.Commands
 {
     public class CommandContext : ICommandContext
     {
@@ -83,7 +84,7 @@ namespace Catalyst.Cli
         /// <inheritdoc cref="GetConnectedNode" />
         public INodeRpcClient GetConnectedNode(string nodeId)
         {
-            Guard.Argument(nodeId, nameof(nodeId)).NotNull().NotEmpty();
+            Guard.Argument(nodeId, nameof(nodeId)).NotNull().NotEmpty().Compatible<string>();
             var nodeConfig = _rpcNodeConfigs.SingleOrDefault(node => node.NodeId.Equals(nodeId));
             Guard.Argument(nodeConfig, nameof(nodeConfig)).NotNull();
 
@@ -99,7 +100,7 @@ namespace Catalyst.Cli
         /// <inheritdoc cref="GetNodeConfig" />
         public IRpcNodeConfig GetNodeConfig(string nodeId)
         {
-            Guard.Argument(nodeId, nameof(nodeId)).NotNull().NotEmpty();
+            Guard.Argument(nodeId, nameof(nodeId)).NotNull().NotEmpty().Compatible<string>();
 
             var nodeConfig = _rpcNodeConfigs.SingleOrDefault(config => config.NodeId.Equals(nodeId));
 
@@ -115,6 +116,7 @@ namespace Catalyst.Cli
 
         public bool IsSocketChannelActive(INodeRpcClient node)
         {
+            Guard.Argument(node, nameof(node)).Compatible<INodeRpcClient>();
             try
             {
                 Guard.Argument(node.Channel.Active, nameof(node.Channel.Active)).True();

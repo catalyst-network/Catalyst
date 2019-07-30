@@ -22,7 +22,9 @@
 #endregion
 
 using System;
+using Catalyst.Cli.Commands;
 using Catalyst.Common.Interfaces.Cli;
+using Catalyst.Common.Interfaces.Cli.Commands;
 using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.P2P;

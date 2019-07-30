@@ -15,7 +15,4 @@
         <ProjectReference Include="..\Catalyst.Common\Catalyst.Common.csproj" />
         <ProjectReference Include="..\Catalyst.Core.Lib\Catalyst.Core.Lib.csproj" />
     </ItemGroup>
-    <ItemGroup>
-      <PackageReference Update="NSubstitute" Version="4.2.1" />
-    </ItemGroup>
 </Project>

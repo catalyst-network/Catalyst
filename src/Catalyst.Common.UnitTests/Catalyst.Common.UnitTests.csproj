@@ -12,7 +12,7 @@
     <Import Project="../Common.UnitTests.props" />
     <ItemGroup>
         <PackageReference Include="Autofac.Configuration" Version="4.1.0" />
-        <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="4.4.0" />
+        <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="4.3.1" />
         <PackageReference Include="AutofacSerilogIntegration" Version="2.0.0" />
         <PackageReference Include="Microsoft.Reactive.Testing" Version="4.1.5" />
         <PackageReference Include="Nethereum.KeyStore" Version="3.3.0" />
@@ -27,12 +27,5 @@
     </ItemGroup>
     <ItemGroup>
       <Folder Include="RPC\IO" />
-    </ItemGroup>
-    <ItemGroup>
-      <PackageReference Update="coverlet.msbuild" Version="2.6.3">
-        <PrivateAssets>all</PrivateAssets>
-        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      </PackageReference>
-      <PackageReference Update="NSubstitute" Version="4.2.1" />
     </ItemGroup>
 </Project>

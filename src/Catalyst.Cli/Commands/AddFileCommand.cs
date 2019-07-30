@@ -30,6 +30,7 @@ using System.IO;
 using Catalyst.Cli.CommandTypes;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
+using Catalyst.Common.Interfaces.Cli.Commands;
 
 namespace Catalyst.Cli.Commands
 {
