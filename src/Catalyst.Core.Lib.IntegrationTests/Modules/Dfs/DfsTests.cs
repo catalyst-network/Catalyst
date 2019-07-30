@@ -95,7 +95,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.Modules.Dfs
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public async Task DFS_should_connect_to_a_seednode()
         {
-            var seeds = (await _ipfs.Bootstrap.ListAsync())
+            var seeds = (await _ipfs.Bootstrap.ListAsync().ConfigureAwait(false))
                 .Select(a => a.PeerId)
                 .ToArray();
             Assert.True(seeds.Length > 0, "no seed nodes defined");
@@ -106,9 +106,9 @@ namespace Catalyst.Core.Lib.IntegrationTests.Modules.Dfs
             while (!found)
             {
                 Assert.True(DateTime.Now <= end, "timeout");
-                var peers = await _ipfs.Swarm.PeersAsync();
+                var peers = await _ipfs.Swarm.PeersAsync().ConfigureAwait(false);
                 found = peers.Any(p => seeds.Contains(p.Id));
-                await Task.Delay(100);
+                await Task.Delay(100).ConfigureAwait(false);
             }
         }
 
