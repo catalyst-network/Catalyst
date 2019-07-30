@@ -55,6 +55,9 @@ namespace Catalyst.Node.IntegrationTests.IO
         private string Setup()
         {
             var currentDirectory = FileSystem.GetCatalystDataDir();
+            Console.WriteLine("Setup GetCatalystDataDir :: " + currentDirectory);
+            Console.WriteLine("\n\n");
+
             currentDirectory.Exists.Should().BeFalse("otherwise the test is not relevant");
 
             var modulesDirectory =
@@ -82,6 +85,7 @@ namespace Catalyst.Node.IntegrationTests.IO
         {
             Console.WriteLine("DISPLAY path :: " + path);
             _fileSystem.SetCurrentPath(path).Should().BeFalse();
+            Console.WriteLine("\n\n");
         }
                
         [Fact]
@@ -91,6 +95,8 @@ namespace Catalyst.Node.IntegrationTests.IO
             Console.WriteLine("DISPLAY _sourceFolder :: " + _sourceFolder);
 
             _fileSystem.SetCurrentPath(_sourceFolder).Should().BeTrue();
+
+            Console.WriteLine("\n\n");
         }
 
         [Fact]
@@ -103,6 +109,7 @@ namespace Catalyst.Node.IntegrationTests.IO
             var fileSystem = new CommonFileSystem();
 
             fileSystem.GetCatalystDataDir().FullName.ToLower().Should().Be(_fileSystem.GetCatalystDataDir().FullName.ToLower());
+            Console.WriteLine("\n\n");
         }
     }
 }
