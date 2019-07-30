@@ -52,6 +52,11 @@ namespace Catalyst.Common.FileSystem
         {
             var path = Path.Combine(GetUserHomeDir(), Constants.CatalystDataDir);
 
+            if (string.IsNullOrEmpty(_dataDir) == false)
+            {
+                Console.WriteLine("_dataDir Is Empty Using this Instead :: " + path);
+            }
+
             return new DirectoryInfo(string.IsNullOrEmpty(_dataDir) == false ? _dataDir : path);
         }
         public bool SetCurrentPath(string path)
