@@ -93,11 +93,9 @@ namespace Catalyst.Common.P2P
             {
                 return publicKeyBytes;
             }
-            else
-            {
-                userOutput.WriteLine($"Public key not found. Using the default key {publicKeyBytes.KeyToString()}");
-                return registry.GetItemFromRegistry(KeyRegistryKey.DefaultKey).GetPublicKey().Bytes;
-            }
+
+            userOutput.WriteLine($"Public key not found. Using the default key {publicKeyBytes.KeyToString()}");
+            return registry.GetItemFromRegistry(KeyRegistryKey.DefaultKey).GetPublicKey().Bytes;
         }
 
         /// <summary>
