@@ -328,7 +328,7 @@
                 }
             ],
             "parameters": {
-                "configDataDir": "LINUX_REPLACE_ME"
+                "configDataDir": "REPLACE_ME"
             }
         },
         {
