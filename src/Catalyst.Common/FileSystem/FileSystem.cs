@@ -44,6 +44,16 @@ namespace Catalyst.Common.FileSystem
         public FileSystem()
         {
             _currentDataDirPointer  = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile);
+            Console.WriteLine("_currentDataDirPointer :: " + _currentDataDirPointer);
+
+            if (File.Exists(_currentDataDirPointer))
+            {
+                Console.WriteLine("_currentDataDirPointer EXIST :: " + _currentDataDirPointer);
+            }
+            else
+            {
+                Console.WriteLine("_currentDataDirPointer NOT FOUND :: " + _currentDataDirPointer);
+            }
 
             _dataDir = File.Exists(_currentDataDirPointer) ?
                 GetCurrentDataDir(_currentDataDirPointer) : Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), Constants.CatalystDataDir);
