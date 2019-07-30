@@ -58,7 +58,7 @@ namespace Catalyst.Core.Lib.P2P
         private void LoadPoaPeers()
         {
             var copiedPath = CopyPoaFile();
-            var poaPeers = JsonConvert.DeserializeObject<List<Peer>>(File.ReadAllText(copiedPath), new JsonSerializerSettings()
+            var poaPeers = JsonConvert.DeserializeObject<List<Peer>>(File.ReadAllText(copiedPath), new JsonSerializerSettings
             {
                 TypeNameHandling = TypeNameHandling.All,
                 NullValueHandling = NullValueHandling.Ignore,
