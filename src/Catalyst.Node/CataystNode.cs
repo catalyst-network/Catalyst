@@ -32,7 +32,6 @@ using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.Modules.Ledger;
 using Catalyst.Common.Interfaces.Modules.Mempool;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.Interfaces.P2P.Discovery;
 using Catalyst.Common.Interfaces.Rpc;
 using Serilog;
 
