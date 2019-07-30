@@ -28,14 +28,14 @@ namespace Catalyst.Common.Util
 {
     public static class KeyUtil
     {
-        public static string KeyToString(this byte[] publicKeyBytes)
+        public static string KeyToString(this byte[] keyBytes)
         {
-            return Multihash.Sum(HashType.ID, publicKeyBytes).ToString(MultibaseEncoding.Base58Btc);
+            return Multihash.Sum(HashType.ID, keyBytes).ToString(MultibaseEncoding.Base58Btc);
         }
 
-        public static byte[] KeyToBytes(this string publicKeyBase58)
+        public static byte[] KeyToBytes(this string base58Key)
         {
-            var publicKeyMultiHash = Multihash.Parse(publicKeyBase58.Trim());
+            var publicKeyMultiHash = Multihash.Parse(base58Key.Trim());
             var rawPublicKeyBytes = publicKeyMultiHash.ToBytes().Slice(2, publicKeyMultiHash.ToBytes().Length);
             return rawPublicKeyBytes;
         }
