@@ -45,7 +45,7 @@ namespace Catalyst.Node.IntegrationTests.IO
 
         public FileSystemTest(ITestOutputHelper output) : base(output)
         {
-            _fileSystem = new CommonFileSystem();
+            _fileSystem = new CommonFileSystem("SAVER");
 
             //_sourceFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), Constants.CatalystDataDir);
 
@@ -106,7 +106,7 @@ namespace Catalyst.Node.IntegrationTests.IO
             Console.WriteLine("DISPLAY _sourceFolder :: " + _sourceFolder);
             _fileSystem.SetCurrentPath(_sourceFolder).Should().BeTrue();
 
-            var fileSystem = new CommonFileSystem();
+            var fileSystem = new CommonFileSystem("RETRIEVER");
 
             Console.WriteLine("Stored :: " + _fileSystem.GetCatalystDataDir().FullName.ToLower());
             Console.WriteLine("Retrieve :: " + fileSystem.GetCatalystDataDir().FullName.ToLower());

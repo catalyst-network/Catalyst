@@ -39,20 +39,24 @@ namespace Catalyst.Common.FileSystem
             IFileSystem
     {
         private string _currentDataDirPointer;
-        private string _dataDir;     
+        private string _dataDir;
 
-        public FileSystem()
+        private string _testingName;
+
+        public FileSystem(string test = "")
         {
+            _testingName = test;
+
             _currentDataDirPointer  = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile);
             Console.WriteLine("_currentDataDirPointer :: " + _currentDataDirPointer);
 
             if (File.Exists(_currentDataDirPointer))
             {
-                Console.WriteLine("_currentDataDirPointer EXIST :: " + _currentDataDirPointer);
+                Console.WriteLine("_currentDataDirPointer EXIST :: " + _testingName + " => " + _currentDataDirPointer);
             }
             else
             {
-                Console.WriteLine("_currentDataDirPointer NOT FOUND :: " + _currentDataDirPointer);
+                Console.WriteLine("_currentDataDirPointer NOT FOUND :: " + _testingName + " => " + _currentDataDirPointer);
             }
 
             _dataDir = File.Exists(_currentDataDirPointer) ?
@@ -64,7 +68,7 @@ namespace Catalyst.Common.FileSystem
 
             if (string.IsNullOrEmpty(_dataDir) == false)
             {
-                Console.WriteLine("_dataDir Is Empty Using this Instead :: " + path);
+                Console.WriteLine("_dataDir Is Empty Using this Instead :: " + _testingName + " => " + path);
             }
 
             return new DirectoryInfo(string.IsNullOrEmpty(_dataDir) == false ? _dataDir : path);
@@ -165,8 +169,8 @@ namespace Catalyst.Common.FileSystem
             text = text.Replace(configDataDir, configDirLocation);
             System.IO.File.WriteAllText(configFilePointer, text);
 
-            Console.WriteLine("Saved on this place :: " + _currentDataDirPointer);
-            Console.WriteLine("New ConfigDir :: " + configDirLocation);
+            Console.WriteLine("Saved on this place :: " + _testingName + " => " + _currentDataDirPointer);
+            Console.WriteLine("New ConfigDir :: " + _testingName + " => " + configDirLocation);
 
         }
 
