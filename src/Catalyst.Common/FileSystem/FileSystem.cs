@@ -198,6 +198,9 @@ namespace Catalyst.Common.FileSystem
             Console.WriteLine("Saved on this place :: " + _testingName + GetHashCode() + " => " + _currentDataDirPointer);
             Console.WriteLine("New ConfigDir :: " + _testingName + GetHashCode() + " => " + configDirLocation);
 
+            var testRes = GetCurrentDataDir(configFilePointer, _testingName);
+            Console.WriteLine("Get ConfigDir Saved :: " + _testingName + GetHashCode() + " => " + testRes);
+            Console.WriteLine("");
         }
 
         private string PrepDirectoryLocationFormatAlt(string dir)
