@@ -230,7 +230,7 @@
             ]
         },
         {
-            "type": "Catalyst.Core.Lib.P2P.PeerDiscovery",
+            "type": "Catalyst.Core.Lib.P2P.PoaDiscovery",
             "services": [
                 {
                     "type": "Catalyst.Common.Interfaces.P2P.Discovery.IPeerDiscovery, Catalyst.Common"

@@ -1,0 +1,23 @@
+[
+    {
+        "$type": "Catalyst.Common.P2P.Peer, Catalyst.Common",
+        "Reputation": 0,
+        "BlackListed": false,
+        "Created": "0001-01-01T00:00:00",
+        "Modified": null,
+        "LastSeen": "0001-01-01T00:00:00",
+        "PeerIdentifier": {
+            "$type": "Catalyst.Common.P2P.PeerIdentifier, Catalyst.Common",
+            "PeerId": {
+                "clientId": "VGM=",
+                "clientVersion": "MDE=",
+                "ip": "AAAAAAAAAAAAAAAAfwAAAQ==",
+                "port": "OTA=",
+                "publicKey": "VEVTVAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="
+            }
+        },
+        "IsAwolPeer": true,
+        "InactiveFor": "737268.16:03:53.6249526",
+        "id": "CgJUYxICMDEaEAAAAAAAAAAAAAAAAH8AAAEiAjkwKiBURVNUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="
+    }
+]
