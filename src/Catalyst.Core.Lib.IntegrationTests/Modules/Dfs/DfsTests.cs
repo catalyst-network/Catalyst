@@ -98,6 +98,9 @@ namespace Catalyst.Core.Lib.IntegrationTests.Modules.Dfs
             var seeds = (await _ipfs.Bootstrap.ListAsync())
                 .Select(a => a.PeerId)
                 .ToArray();
+            Assert.True(seeds.Length > 0, "no seed nodes defined");
+
+            // Wait for a connection to a seed node.
             var end = DateTime.Now.AddSeconds(15);
             var found = false;
             while (!found)
