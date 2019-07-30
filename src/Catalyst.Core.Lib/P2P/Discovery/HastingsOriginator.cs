@@ -21,13 +21,12 @@
 
 #endregion
 
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.Discovery;
-using Catalyst.Common.P2P.Discovery;
+using Catalyst.Common.IO.Messaging.Correlation;
 using Serilog;
 
 namespace Catalyst.Core.Lib.P2P.Discovery
@@ -36,33 +35,18 @@ namespace Catalyst.Core.Lib.P2P.Discovery
     {
         private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private IPeerIdentifier _peer;
         public INeighbours Neighbours { get; private set; }
-        public KeyValuePair<ICorrelationId, IPeerIdentifier> ExpectedPnr { get; private set; }
+        public ICorrelationId PnrCorrelationId { get; private set; }
 
-        /// <summary>
-        ///     if setting a new peer, clean counters
-        /// </summary>
-        public IPeerIdentifier Peer
-        {
-            get => _peer;
-            set
-            {
-                if (_peer != null)
-                {
-                    Neighbours = new Neighbours();
-                    ExpectedPnr = new KeyValuePair<ICorrelationId, IPeerIdentifier>();
-                }
-                
-                _peer = value;
-            }
-        }
+        public IPeerIdentifier Peer { get; private set; }
 
-        public HastingsOriginator(IPeerIdentifier peer, KeyValuePair<ICorrelationId, IPeerIdentifier> expectedPnr, INeighbours neighbours)
+        public static readonly HastingsOriginator Default = new HastingsOriginator(default);
+
+        public HastingsOriginator(IHastingMemento hastingMemento)
         {
-            _peer = Peer;
-            ExpectedPnr = expectedPnr;
-            Neighbours = neighbours;
+            PnrCorrelationId = CorrelationId.GenerateCorrelationId();
+            Peer = hastingMemento.Peer;
+            Neighbours = hastingMemento.Neighbours;
         }
 
         /// <inheritdoc />
@@ -79,6 +63,7 @@ namespace Catalyst.Core.Lib.P2P.Discovery
             Logger.Debug("Restoring memento with Peer {peer} and neighbours [{neighbours}]", hastingMemento.Peer);
             Peer = hastingMemento.Peer;
             Neighbours = hastingMemento.Neighbours;
+            PnrCorrelationId = CorrelationId.GenerateCorrelationId();
         }
     }
 }

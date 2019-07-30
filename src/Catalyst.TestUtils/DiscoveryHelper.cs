@@ -61,25 +61,22 @@ namespace Catalyst.TestUtils
     public static class DiscoveryHelper
     {
         public static IHastingsOriginator MockOriginator(IPeerIdentifier peer = default,
-            INeighbours neighbours = default,
-            KeyValuePair<ICorrelationId, IPeerIdentifier> expectedPnr = default)
+            INeighbours neighbours = default)
         {
-            return new HastingsOriginator(
-                PeerIdentifierHelper.GetPeerIdentifier("someSeed"),
-                expectedPnr,
-                neighbours ?? MockNeighbours()); 
+            var memento = new HastingMemento(peer, neighbours);
+            return new HastingsOriginator(memento); 
         }
         
         public static IHastingsOriginator SubOriginator(IPeerIdentifier peer = default,
             INeighbours neighbours = default,
-            KeyValuePair<ICorrelationId, IPeerIdentifier> expectedPnr = default)
+            ICorrelationId expectedPnr = default)
         {
             var subbedOriginator = Substitute.For<IHastingsOriginator>();
             
             subbedOriginator.Neighbours.Count.Returns(5);
             subbedOriginator.Peer.Returns(peer ?? Substitute.For<IPeerIdentifier>());
-            subbedOriginator.Neighbours.Returns(neighbours ?? Substitute.For<Neighbours>());
-            subbedOriginator.ExpectedPnr.Returns(expectedPnr);
+            subbedOriginator.Neighbours.Returns(neighbours ?? Substitute.For<INeighbours>());
+            subbedOriginator.PnrCorrelationId.Returns(expectedPnr ?? CorrelationId.GenerateCorrelationId());
 
             return subbedOriginator;
         }
@@ -100,17 +97,11 @@ namespace Catalyst.TestUtils
 
         public static IHastingMemento SubSeedState(IPeerIdentifier ownNode, IPeerSettings peerSettings)
         {
-            return SubMemento(ownNode, MockDnsClient(peerSettings)
+            var neighbours = MockDnsClient(peerSettings)
                .GetSeedNodesFromDns(peerSettings.SeedServers)
-               .ToNeighbours()
-            );
-        }
-        
-        public static KeyValuePair<ICorrelationId, IPeerIdentifier> MockPnr(IPeerIdentifier peerIdentifier = default, ICorrelationId correlationId = default)
-        {
-            return new KeyValuePair<ICorrelationId, IPeerIdentifier>(correlationId ?? CorrelationId.GenerateCorrelationId(),
-                peerIdentifier ?? PeerIdentifierHelper.GetPeerIdentifier("sender")
-            );
+               .ToNeighbours();
+
+            return SubMemento(ownNode, neighbours);
         }
         
         public static INeighbours MockNeighbours(int amount = 5, NeighbourState state = null, ICorrelationId correlationId = default)

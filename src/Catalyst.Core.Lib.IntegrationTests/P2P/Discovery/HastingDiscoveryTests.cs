@@ -79,7 +79,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
             var cacheEntriesByRequest = new Dictionary<ByteString, ICacheEntry>();
 
             var seedState = DiscoveryHelper.MockSeedState(_ownNode, _settings);
-            var seedOrigin = new HastingsOriginator();
+            var seedOrigin = HastingsOriginator.Default;
             seedOrigin.RestoreMemento(seedState);
             var stateCareTaker = new HastingCareTaker();
             var stateHistory = new Stack<IHastingMemento>();
@@ -89,10 +89,9 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
 
             stateHistory.ToList().ForEach(i => stateCareTaker.Add(i));
             
-            var stateCandidate = DiscoveryHelper.MockOriginator(default, DiscoveryHelper.MockNeighbours(Constants.AngryPirate, NeighbourState.NotContacted, CorrelationId.GenerateCorrelationId()));
+            var stateCandidate = DiscoveryHelper.MockOriginator(default, 
+                DiscoveryHelper.MockNeighbours(Constants.AngryPirate, NeighbourState.NotContacted, CorrelationId.GenerateCorrelationId()));
             
-            stateCandidate.ExpectedPnr = DiscoveryHelper.MockPnr();
-
             var memoryCache = Substitute.For<IMemoryCache>();
             var correlatableMessages = new List<CorrelatableMessage<ProtocolMessage>>();
             var peerMessageCorrelationManager = DiscoveryHelper.MockCorrelationManager(default, memoryCache, logger: _logger);    
@@ -178,19 +177,17 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
         public async Task Expected_Ping_Response_From_All_Contacted_Nodes_Produces_Valid_State_Candidate()
         {
             var seedState = DiscoveryHelper.SubSeedState(_ownNode, _settings);
-            var seedOrigin = new HastingsOriginator(default, default, default);
-            seedOrigin.RestoreMemento(seedState);
+            var seedOrigin = new HastingsOriginator(seedState);
             
             var stateCareTaker = new HastingCareTaker();
             var stateHistory = new Stack<IHastingMemento>();
             stateHistory.Push(seedState);
             
             DiscoveryHelper.MockMementoHistory(stateHistory, Constants.AngryPirate).ToList().ForEach(i => stateCareTaker.Add(i));
-            
-            var knownPnr = DiscoveryHelper.MockPnr();
-            var stateCandidate = DiscoveryHelper.SubOriginator();
-            stateCandidate.ExpectedPnr = knownPnr;
-        
+
+            var knownPnr = CorrelationId.GenerateCorrelationId();
+            var stateCandidate = DiscoveryHelper.SubOriginator(expectedPnr: knownPnr);
+
             var discoveryTestBuilder = DiscoveryTestBuilder.GetDiscoveryTestBuilder();
             discoveryTestBuilder
                .WithLogger(_logger)
@@ -249,7 +246,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
         public async Task Expected_Ping_Response_Sets_Neighbour_As_Reachable()
         {
             var seedState = DiscoveryHelper.SubSeedState(_ownNode, _settings);
-            var seedOrigin = new HastingsOriginator();
+            var seedOrigin = HastingsOriginator.Default;
             seedOrigin.RestoreMemento(seedState);
         
             var stateCareTaker = new HastingCareTaker();
@@ -259,10 +256,9 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
             DiscoveryHelper.MockMementoHistory(stateHistory, 5) //this isn't an angry pirate this is just 5
                .ToList()
                .ForEach(i => stateCareTaker.Add(i));
-            
-            var knownPnr = DiscoveryHelper.MockPnr();
-            var stateCandidate = DiscoveryHelper.MockOriginator(default, default, knownPnr);
-            
+
+            var stateCandidate = DiscoveryHelper.MockOriginator();
+
             var discoveryTestBuilder = DiscoveryTestBuilder.GetDiscoveryTestBuilder();
             discoveryTestBuilder
                .WithLogger(_logger)

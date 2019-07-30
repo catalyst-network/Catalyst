@@ -30,6 +30,6 @@ namespace Catalyst.Common.Interfaces.P2P.Discovery
     public interface IHastingMemento
     {
         IPeerIdentifier Peer { get; }
-        Neighbours Neighbours { get; }
+        INeighbours Neighbours { get; }
     }
 }

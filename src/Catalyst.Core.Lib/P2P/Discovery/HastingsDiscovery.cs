@@ -23,6 +23,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
@@ -60,6 +61,7 @@ namespace Catalyst.Core.Lib.P2P.Discovery
         private readonly IPeerIdentifier _ownNode;
         protected readonly int PeerDiscoveryBurnIn;
         public IHastingsOriginator StateCandidate { get; }
+
         public IHastingCareTaker HastingCareTaker { get; }
         public readonly IRepository<Peer> PeerRepository;
         private readonly IDisposable _evictionSubscription;
@@ -98,11 +100,9 @@ namespace Catalyst.Core.Lib.P2P.Discovery
 
             // build the initial stateCandidate for walk,
             // which is our node and seed nodes
-            StateCandidate = stateCandidate ?? new HastingsOriginator
-            {
-                Peer = _ownNode,
-                Neighbours = dns.GetSeedNodesFromDns(peerSettings.SeedServers).ToNeighbours()
-            };
+            var neighbours = dns.GetSeedNodesFromDns(peerSettings.SeedServers).ToNeighbours();
+
+            StateCandidate = stateCandidate ?? new HastingsOriginator(new HastingMemento(_ownNode, neighbours));
 
             // create an empty stream for discovery messages
             DiscoveryStream = Observable.Empty<IPeerClientMessageDto>();
@@ -133,24 +133,25 @@ namespace Catalyst.Core.Lib.P2P.Discovery
             // subscribe to evicted peer messages, so we can cross
             // reference them with discovery messages we sent
             _evictionSubscription = peerMessageCorrelationManager
-               .EvictionEventStream
+               .EvictionEventStream.Select(e => e.Key)
                .SubscribeOn(TaskPoolScheduler.Default)
                .Subscribe(EvictionCallback);
 
             // no state provide is assumed a "live run", instantiated with state assumes test run so don't start discovery
-            State = state ?? new HastingsOriginator();
+            State = state ?? HastingsOriginator.Default;
 
-            if (autoStart)
-            {
-                WalkForward();
-
-                // should run until cancelled
-                Task.Run(async () =>
-                {
-                    await DiscoveryAsync(1000)
-                       .ConfigureAwait(false);
-                });
+            if (!autoStart) {
+                return;
             }
+
+            WalkForward();
+
+            // should run until cancelled
+            Task.Run(async () =>
+            {
+                await DiscoveryAsync(1000)
+                   .ConfigureAwait(false);
+            });
         }
 
         /// <summary>
@@ -230,23 +231,19 @@ namespace Catalyst.Core.Lib.P2P.Discovery
 
         protected bool HasValidCandidate()
         {
-            lock (StateCandidate)
+            if (StateCandidate.Neighbours
+               .Select(n => n.State)
+               .Count(s => s == NeighbourState.NotContacted || s == NeighbourState.UnResponsive)
+               .Equals(Constants.AngryPirate))
             {
-                if (StateCandidate.Neighbours
-                   .Select(n => n.State)
-                   .Count(i => i == Enumeration.Parse<NeighbourState>("NotContacted") || i == Enumeration.Parse<NeighbourState>("UnResponsive"))
-                   .Equals(Constants.AngryPirate))
-                {
-                    return false;
-                }
-
-                // see if sum of unreachable peers and reachable peers equals the total contacted number.
-                return StateCandidate.Neighbours
-                   .Select(n => n.State)
-                   .Count(s => s == Enumeration.Parse<NeighbourState>("UnResponsive") ||
-                        s == Enumeration.Parse<NeighbourState>("Responsive"))
-                   .Equals(Constants.AngryPirate);
+                return false;
             }
+
+            // see if sum of unreachable peers and reachable peers equals the total contacted number.
+            return StateCandidate.Neighbours
+               .Select(n => n.State)
+               .Count(s => s == NeighbourState.Responsive || s == NeighbourState.UnResponsive)
+               .Equals(Constants.AngryPirate);
         }
 
         /// <summary>
@@ -278,7 +275,7 @@ namespace Catalyst.Core.Lib.P2P.Discovery
                 State.RestoreMemento(newState);
 
                 // continue walk by proposing next degree.
-                StateCandidate.Peer = State.Neighbours.RandomElement().PeerIdentifier;
+                StateCandidate.Peer = State.Neighbours.Where(n => n.State == NeighbourState.Responsive).RandomElement().PeerIdentifier;
 
                 var peerNeighbourRequestDto = DtoFactory.GetDto(new PeerNeighborsRequest(),
                     _ownNode,
@@ -286,7 +283,7 @@ namespace Catalyst.Core.Lib.P2P.Discovery
                 );
 
                 // make discovery wait for this pnr response.
-                StateCandidate.ExpectedPnr = new KeyValuePair<ICorrelationId, IPeerIdentifier>(peerNeighbourRequestDto.CorrelationId, StateCandidate.Peer);
+                StateCandidate.PnrCorrelationId = peerNeighbourRequestDto.CorrelationId;
 
                 PeerClient.SendMessage(peerNeighbourRequestDto);
             }
@@ -303,8 +300,12 @@ namespace Catalyst.Core.Lib.P2P.Discovery
                 var lastState = HastingCareTaker.Get();
 
                 // continues walk by proposing a new degree.
-                StateCandidate.Peer = lastState.Neighbours.Any()
-                    ? lastState.Neighbours.RandomElement().PeerIdentifier
+                var responsiveNeighbours = lastState.Neighbours
+                   .Where(n => n.State == NeighbourState.Responsive)
+                   .ToList();
+
+                var newCandidate = responsiveNeighbours.Any() 
+                    ? responsiveNeighbours.RandomElement().PeerIdentifier
                     : throw new InvalidOperationException();
 
                 // transitions to last state.
@@ -318,7 +319,7 @@ namespace Catalyst.Core.Lib.P2P.Discovery
                 PeerClient.SendMessage(peerNeighbourRequestDto);
 
                 // make discovery wait for this pnr response
-                StateCandidate.ExpectedPnr = new KeyValuePair<ICorrelationId, IPeerIdentifier>(peerNeighbourRequestDto.CorrelationId, StateCandidate.Peer);
+                StateCandidate.PnrCorrelationId = peerNeighbourRequestDto.CorrelationId;
             }
         }
 
@@ -327,7 +328,7 @@ namespace Catalyst.Core.Lib.P2P.Discovery
         ///     handles the discovery messages to see if there of interest to us.
         /// </summary>
         /// <param name="item"></param>
-        protected void EvictionCallback(KeyValuePair<ICorrelationId, IPeerIdentifier> item)
+        protected void EvictionCallback(ICorrelationId requestCorrelationId)
         {
             _logger.Debug("Eviction callback called.");
             
@@ -335,18 +336,18 @@ namespace Catalyst.Core.Lib.P2P.Discovery
             {
                 //lock (StateCandidate)
                 {
-                    if (StateCandidate.ExpectedPnr.Equals(item))
+                    if (StateCandidate.PnrCorrelationId.Equals(requestCorrelationId))
                     {
                         // state candidate didn't give any neighbours so go back a step.
                         _logger.Verbose("StateCandidate {n.PeerIdentifier} unresponsive.");
                         WalkBack();
                     }
 
-                    var neighbour = StateCandidate.Neighbours.SingleOrDefault(n => n.DiscoveryPingCorrelationId.Equals(item.Key));
+                    var neighbour = StateCandidate.Neighbours.SingleOrDefault(n => n.DiscoveryPingCorrelationId.Equals(requestCorrelationId));
                     if (neighbour == null)
                     {
-                        _logger.Debug("EvictionCallback received for {correlationId}, but not correlated to neighbours of {stateCandidate}", 
-                            item.Key, State.Peer);
+                        _logger.Debug("EvictionCallback received for {correlationId}, but not correlated to neighbours of {stateCandidate}",
+                            requestCorrelationId, State.Peer);
                         return;
                     }
 
@@ -361,7 +362,7 @@ namespace Catalyst.Core.Lib.P2P.Discovery
         }
 
         /// <summary>
-        ///     OnNext for PingResponse discovery messagemessages that are of interest to us.
+        ///     OnNext for PingResponse discovery messages that are of interest to us.
         ///     If it's not continue, if expecting this message it means a potential neighbour is reachable,
         ///     and should be added to the next state candidate.
         /// </summary>
@@ -400,7 +401,7 @@ namespace Catalyst.Core.Lib.P2P.Discovery
             {
                 lock (StateCandidate)
                 {
-                    if (!StateCandidate.ExpectedPnr.Equals(new KeyValuePair<ICorrelationId, IPeerIdentifier>(obj.CorrelationId, obj.Sender)))
+                    if (!StateCandidate.PnrCorrelationId.Equals(obj.CorrelationId))
                     {
                         // we shouldn't get here as we should always know about a pnr as only this class produces them.
                         return;

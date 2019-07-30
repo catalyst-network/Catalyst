@@ -36,7 +36,7 @@ namespace Catalyst.Common.Interfaces.P2P.Discovery
         /// its neighbours sending a new <see cref="Catalyst.Protocol.IPPN.PeerNeighborsRequest"/>.
         /// This field stores the details for that request. 
         /// </summary>
-        KeyValuePair<ICorrelationId, IPeerIdentifier> ExpectedPnr { get; }
+        ICorrelationId PnrCorrelationId { get; }
 
         INeighbours Neighbours { get; }
         

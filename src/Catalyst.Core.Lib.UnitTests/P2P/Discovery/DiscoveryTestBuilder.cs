@@ -33,6 +33,7 @@ using Catalyst.Common.Interfaces.P2P.IO;
 using Catalyst.Common.Interfaces.P2P.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.P2P.ReputationSystem;
 using Catalyst.Common.Interfaces.Util;
+using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Common.P2P;
 using Catalyst.Common.Util;
 using Catalyst.Core.Lib.P2P.Discovery;
@@ -177,14 +178,14 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
             bool mock = false,
             IPeerIdentifier peer = default,
             INeighbours neighbours = default,
-            KeyValuePair<ICorrelationId, IPeerIdentifier> expectedPnr = default)
+            ICorrelationId expectedPnr = default)
         {
-            _currentState = 
-                currentState == default && mock == false 
-                    ? _currentState = DiscoveryHelper.SubOriginator(peer, neighbours, expectedPnr) 
-                    : currentState == default 
-                        ? _currentState = DiscoveryHelper.MockOriginator(peer, neighbours, expectedPnr) 
-                        : _currentState = currentState;
+            var pnrCorrelationId = expectedPnr ?? CorrelationId.GenerateCorrelationId();
+            _currentState = (currentState == default && mock == false)
+                ? DiscoveryHelper.SubOriginator(peer, neighbours, pnrCorrelationId) 
+                : currentState == default 
+                    ? _currentState = DiscoveryHelper.MockOriginator(peer, neighbours) 
+                    : _currentState = currentState;
             
             return this;
         }
@@ -193,14 +194,14 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
             bool mock = false,
             IPeerIdentifier peer = default,
             INeighbours neighbours = default,
-            KeyValuePair<ICorrelationId, IPeerIdentifier> expectedPnr = default)
+            ICorrelationId expectedPnr = default)
         {
-            _stateCandidate = 
-                stateCandidate == default && mock == false 
-                    ? _currentState = DiscoveryHelper.SubOriginator(peer, neighbours, expectedPnr) 
-                    : stateCandidate == default 
-                        ? _currentState = DiscoveryHelper.MockOriginator(peer, neighbours, expectedPnr) 
-                        : _currentState = stateCandidate;
+            var pnrCorrelationId = expectedPnr ?? CorrelationId.GenerateCorrelationId();
+            _stateCandidate = (stateCandidate == default && mock == false)
+                ? DiscoveryHelper.SubOriginator(peer, neighbours, pnrCorrelationId) 
+                : stateCandidate == default 
+                    ? _currentState = DiscoveryHelper.MockOriginator(peer, neighbours) 
+                    : _currentState = stateCandidate;
 
             return this;
         }
@@ -283,7 +284,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
 
             internal void TestStorePeer(INeighbour neighbour) { StorePeer(neighbour); }
 
-            public void TestEvictionCallback(KeyValuePair<ICorrelationId, IPeerIdentifier> item)
+            public void TestEvictionCallback(ICorrelationId item)
             {
                 EvictionCallback(item);
             }
