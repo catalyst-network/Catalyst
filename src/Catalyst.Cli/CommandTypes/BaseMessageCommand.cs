@@ -25,7 +25,6 @@ using System;
 using System.Collections.Concurrent;
 using System.Reactive.Linq;
 using Catalyst.Common.Extensions;
-using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.Cli.Commands;
 using Catalyst.Common.Interfaces.Cli.CommandTypes;
 using Catalyst.Common.Interfaces.Cli.Options;
@@ -62,6 +61,11 @@ namespace Catalyst.Cli.CommandTypes
                 CommandContext.PeerIdClientId);
 
         protected IPeerIdentifier SenderPeerIdentifier => CommandContext.PeerIdentifier;
+
+        public void Dispose()
+        {
+            Dispose(true);
+        }
 
         public INodeRpcClient Target => CommandContext.GetConnectedNode(Options.Node);
 
@@ -124,11 +128,16 @@ namespace Catalyst.Cli.CommandTypes
             _subscriptions.Clear();
         }
 
-        public void Dispose()
+        protected virtual void Dispose(bool disposing)
         {
-            DisposeSubscriptions();
+            if (!disposing)
+            {
+                return;
+            }
+
             _eventStreamObserverClientAdded?.Dispose();
             _eventStreamObserverClientRemoved?.Dispose();
+            DisposeSubscriptions();
         }
     }
 }
