@@ -60,7 +60,7 @@ namespace Catalyst.Common.FileSystem
             }
 
             _dataDir = File.Exists(_currentDataDirPointer) ?
-                GetCurrentDataDir(_currentDataDirPointer) : Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), Constants.CatalystDataDir);
+                GetCurrentDataDir(_currentDataDirPointer, "") : Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), Constants.CatalystDataDir);
         }
 
 
@@ -81,7 +81,7 @@ namespace Catalyst.Common.FileSystem
             }
 
             _dataDir = File.Exists(_currentDataDirPointer) ?
-                GetCurrentDataDir(_currentDataDirPointer) : Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), Constants.CatalystDataDir);
+                GetCurrentDataDir(_currentDataDirPointer, _testingName + GetHashCode()) : Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), Constants.CatalystDataDir);
 
             Console.WriteLine("_dataDir Constructor :: " + _testingName + GetHashCode() +  " => " + _dataDir);
             Console.WriteLine("\n");
@@ -151,9 +151,11 @@ namespace Catalyst.Common.FileSystem
             return File.Exists(Path.Combine(GetCatalystDataDir().FullName, subDirectory, fileName));
         }
 
-        private static string GetCurrentDataDir(string configFilePointer)
+        private static string GetCurrentDataDir(string configFilePointer, string testName)
         {
             var configurationRoot = new ConfigurationBuilder().AddJsonFile(configFilePointer).Build();
+
+            Console.WriteLine("GetCurrentDataDir :: " + testName);
 
             return configurationRoot.GetSection("components").GetChildren()
                 .Select(p => p.GetSection("parameters:configDataDir").Value).ToArray()
@@ -184,7 +186,7 @@ namespace Catalyst.Common.FileSystem
 
         private void SaveConfigPointerFile(string configDirLocation, string configFilePointer)
         {
-            var configDataDir = GetCurrentDataDir(configFilePointer);
+            var configDataDir = GetCurrentDataDir(configFilePointer, _testingName + GetHashCode());
 
             configDataDir = PrepDirectoryLocationFormatAlt(configDataDir);
             configDirLocation = PrepDirectoryLocationFormatAlt(configDirLocation);
