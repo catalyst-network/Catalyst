@@ -76,7 +76,7 @@ namespace Catalyst.Node.IntegrationTests.IO
             //new ConfigCopier().RunConfigStartUp(targetConfigFolder, Catalyst.Common.Config.Network.Dev, _sourceFolder, overwrite: true);
         }
 
-        [Theory]
+        [Theory(Skip = "Do not Run")]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         [InlineData("C:\\rubbishlocation\\fake\\technodisco")]
         [InlineData("gandolf\\treasure")]
@@ -88,7 +88,7 @@ namespace Catalyst.Node.IntegrationTests.IO
             Console.WriteLine("\n\n");
         }
                
-        [Fact]
+        [Fact (Skip = "Do not Run")]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void Save_Existant_Data_Directory_Must_Succeed()
         {
@@ -107,6 +107,9 @@ namespace Catalyst.Node.IntegrationTests.IO
             _fileSystem.SetCurrentPath(_sourceFolder).Should().BeTrue();
 
             var fileSystem = new CommonFileSystem();
+
+            Console.WriteLine("Stored :: " + _fileSystem.GetCatalystDataDir().FullName.ToLower());
+            Console.WriteLine("Retrieve :: " + fileSystem.GetCatalystDataDir().FullName.ToLower());
 
             fileSystem.GetCatalystDataDir().FullName.ToLower().Should().Be(_fileSystem.GetCatalystDataDir().FullName.ToLower());
             Console.WriteLine("\n\n");
