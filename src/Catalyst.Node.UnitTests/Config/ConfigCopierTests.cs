@@ -126,8 +126,6 @@ namespace Catalyst.Node.UnitTests.Config
             var network = Network.Dev;
             new ConfigCopier().RunConfigStartUp(currentDirectory.FullName, network);
 
-            Console.WriteLine("DISPLAY RunConfigStartUp() currentDirectory.FullName :: " + currentDirectory.FullName);
-
             var expectedFileList = GetExpectedFileList(network);
             var configFiles = EnumerateConfigFiles(currentDirectory, modulesDirectory);
             configFiles.Should().BeEquivalentTo(expectedFileList);

@@ -149,6 +149,10 @@ namespace Catalyst.Common.FileSystem
             string text = System.IO.File.ReadAllText(configFilePointer);
             text = text.Replace(configDataDir, configDirLocation);
             System.IO.File.WriteAllText(configFilePointer, text);
+
+            Console.WriteLine("Saved on this place :: " + _currentDataDirPointer);
+            Console.WriteLine("New ConfigDir :: " + configDirLocation);
+
         }
 
         private string PrepDirectoryLocationFormatAlt(string dir)
