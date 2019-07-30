@@ -36,11 +36,11 @@ namespace Catalyst.Node
     internal static class Program
     {
         private static Options _options;
-        private static readonly Kernel Kernel;
+        private static Kernel Kernel;
 
         static Program()
         {
-            Kernel = Kernel.Initramfs(_options.OverwriteConfig);
+            Kernel = Kernel.Initramfs();
             AppDomain.CurrentDomain.UnhandledException += Kernel.LogUnhandledException;
             AppDomain.CurrentDomain.ProcessExit += Kernel.CurrentDomain_ProcessExit;
         }
@@ -66,12 +66,13 @@ namespace Catalyst.Node
             Parser.Default
                .ParseArguments<Options>(args)
                .WithParsed(Run);
-            
+
             return Environment.ExitCode;
         }
         
         private static void Run(Options options)
         {
+            _options = options;
             Kernel.Logger.Information("Catalyst.Node started with process id {0}",
                 System.Diagnostics.Process.GetCurrentProcess().Id.ToString());
             
@@ -84,7 +85,7 @@ namespace Catalyst.Node
                    .WithSerilogConfigFile()
                    .WithConfigCopier()
                    .WithPersistenceConfiguration()
-                   .BuildKernel()
+                   .BuildKernel(_options.OverwriteConfig)
                    .StartNode();
 
                 // .StartCustom(CustomBootLogic);
