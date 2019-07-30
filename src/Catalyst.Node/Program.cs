@@ -22,21 +22,25 @@
 #endregion
 
 using System;
-using System.Reflection;
-using Autofac;
-using Catalyst.Common.Interfaces;
 using Catalyst.Common.Kernel;
-using Catalyst.Common.Util;
+using CommandLine;
 
 namespace Catalyst.Node
 {
+    class Options
+    {
+        [Option('o', "overwrite-config", HelpText = "Overwrite the data directory configs.")]
+        public bool OverwriteConfig { get; set; }
+    }
+    
     internal static class Program
     {
+        private static Options _options;
         private static readonly Kernel Kernel;
 
         static Program()
         {
-            Kernel = Kernel.Initramfs();
+            Kernel = Kernel.Initramfs(_options.OverwriteConfig);
             AppDomain.CurrentDomain.UnhandledException += Kernel.LogUnhandledException;
             AppDomain.CurrentDomain.ProcessExit += Kernel.CurrentDomain_ProcessExit;
         }
@@ -72,7 +76,7 @@ namespace Catalyst.Node
                    .WithPersistenceConfiguration()
                    .BuildKernel()
                    .StartNode();
-                
+
                 // .StartCustom(CustomBootLogic);
                 
                 Environment.ExitCode = 0;

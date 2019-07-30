@@ -55,7 +55,9 @@ namespace Catalyst.Common.Kernel
 
         public delegate void CustomBootLogic(Kernel kernel);
 
-        public static Kernel Initramfs(ICancellationTokenProvider cancellationTokenProvider = default, string fileName = "Catalyst.Node..log", bool overwrite = false)
+        public static Kernel Initramfs(bool overwrite = false,
+            string fileName = "Catalyst.Node..log",
+            ICancellationTokenProvider cancellationTokenProvider = default)
         {
             return new Kernel(cancellationTokenProvider, fileName, overwrite);
         }
