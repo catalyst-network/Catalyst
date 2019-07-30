@@ -30,7 +30,7 @@ using Catalyst.Common.Config;
 using CommonFileSystem = Catalyst.Common.FileSystem.FileSystem;
 using Xunit.Abstractions;
 
-namespace Catalyst.Common.IntegrationTests.IO
+namespace Catalyst.Node.IntegrationTests.IO
 {
     /// <inheritdoc />
     /// <summary>
