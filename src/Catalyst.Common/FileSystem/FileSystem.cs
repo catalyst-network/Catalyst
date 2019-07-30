@@ -43,6 +43,27 @@ namespace Catalyst.Common.FileSystem
 
         private string _testingName;
 
+        public FileSystem()
+        {
+            _testingName = "";
+
+            _currentDataDirPointer = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile);
+            Console.WriteLine("_currentDataDirPointer :: " + _currentDataDirPointer);
+
+            if (File.Exists(_currentDataDirPointer))
+            {
+                Console.WriteLine("_currentDataDirPointer EXIST :: " + _testingName + " => " + _currentDataDirPointer);
+            }
+            else
+            {
+                Console.WriteLine("_currentDataDirPointer NOT FOUND :: " + _testingName + " => " + _currentDataDirPointer);
+            }
+
+            _dataDir = File.Exists(_currentDataDirPointer) ?
+                GetCurrentDataDir(_currentDataDirPointer) : Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), Constants.CatalystDataDir);
+        }
+
+
         public FileSystem(string test = "")
         {
             _testingName = test;
