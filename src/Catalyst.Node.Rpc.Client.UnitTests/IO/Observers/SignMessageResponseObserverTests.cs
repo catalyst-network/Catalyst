@@ -21,7 +21,7 @@
 
 #endregion
 
-namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers 
+namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
 {
     // public sealed class SignMessageResponseHandlerTests : IDisposable
     // {

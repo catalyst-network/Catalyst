@@ -22,105 +22,31 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Catalyst.Common.Extensions;
-using Catalyst.Common.Interfaces.Cli;
+using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Node.Rpc.Client.IO.Observers;
-using Catalyst.Protocol.Rpc.Node;
-using Catalyst.Protocol.Transaction;
-using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
-using FluentAssertions;
-using Nethereum.RLP;
 using NSubstitute;
 using Serilog;
 using Xunit;
 
 namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
 {
-    public sealed class GetMempoolResponseObserverTests : IDisposable
+    public sealed class GetMempoolResponseObserverTests
     {
-        private readonly ILogger _logger;
-        private readonly IChannelHandlerContext _fakeContext;
-        public static readonly List<object[]> QueryContents;
-
-        private GetMempoolResponseObserver _observer;
-
-        static GetMempoolResponseObserverTests()
+        [Fact]
+        public void Null_Mempool_Throws_Exception()
         {
-            var memPoolData = CreateMemPoolData();
+            var channelHandlerContext = Substitute.For<IChannelHandlerContext>();
+            var senderPeerIdentifier = Substitute.For<IPeerIdentifier>();
+            var correlationId = CorrelationId.GenerateCorrelationId();
 
-            QueryContents = new List<object[]>
-            {
-                new object[]
-                {
-                    memPoolData
-                },
-                new object[]
-                {
-                    new List<string>()
-                }
-            };
-        }
+            var logger = Substitute.For<ILogger>();
+            var getMempoolResponseObserver = new GetMempoolResponseObserver(logger);
 
-        public GetMempoolResponseObserverTests()
-        {
-            _logger = Substitute.For<ILogger>();
-            _fakeContext = Substitute.For<IChannelHandlerContext>();
-        }
-
-        private static IEnumerable<string> CreateMemPoolData()
-        {
-            var txLst = new List<TransactionBroadcast>
-            {
-                TransactionHelper.GetTransaction(234, "standardPubKey", "sign1"),
-                TransactionHelper.GetTransaction(567, "standardPubKey", "sign2")
-            };
-
-            var txEncodedLst = txLst.Select(tx => tx.ToString().ToBytesForRLPEncoding()).ToList();
-
-            var mempoolList = new List<string>();
-
-            foreach (var tx in txEncodedLst)
-            {
-                mempoolList.Add(Encoding.Default.GetString(tx));
-            }
-
-            return mempoolList;
-        }
-
-        [Theory]
-        [MemberData(nameof(QueryContents))]
-        public async Task RpcClient_Can_Handle_GetMempoolResponse(IEnumerable<string> mempoolContent)
-        {
-            var txList = mempoolContent.ToList();
-            var getMempoolResponse = new GetMempoolResponse
-            {
-                Mempool = {txList}
-            };
-
-            var messageStream = MessageStreamHelper.CreateStreamWithMessages(_fakeContext,
-                getMempoolResponse.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender_key").PeerId,
-                    CorrelationId.GenerateCorrelationId()));
-
-            GetMempoolResponse messageStreamResponse = null;
-
-            _observer = new GetMempoolResponseObserver(_logger);
-            _observer.StartObserving(messageStream);
-            _observer.SubscribeToResponse(message => messageStreamResponse = message);
-
-            await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
-
-            messageStreamResponse.Mempool.Count.Should().Be(txList.Count);
-        }
-
-        public void Dispose()
-        {
-            _observer?.Dispose();
+            Assert.Throws<ArgumentNullException>(() => getMempoolResponseObserver
+               .HandleResponseObserver(null, channelHandlerContext,
+                    senderPeerIdentifier, correlationId));
         }
     }
 }

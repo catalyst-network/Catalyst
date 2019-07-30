@@ -22,13 +22,14 @@
 #endregion
 
 using System;
+using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Observers;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.Interfaces.Rpc.IO.Messaging.Dto;
 using Catalyst.Common.IO.Observers;
 using Catalyst.Protocol;
 using Catalyst.Protocol.Common;
+using DotNetty.Transport.Channels;
 using Google.Protobuf;
 using NSubstitute;
 using Serilog;
@@ -39,8 +40,6 @@ namespace Catalyst.TestUtils
         IP2PMessageObserver, IRpcResponseObserver, IRpcRequestObserver
         where TProto : IMessage, IMessage<TProto>
     {
-        public IObservable<IRpcClientMessageDto<IMessage>> MessageResponseStream { private set; get; }
-
         public IObserver<TProto> SubstituteObserver { get; }
         public IPeerIdentifier PeerIdentifier { get; }
         
@@ -61,14 +60,15 @@ namespace Catalyst.TestUtils
         {
             SubstituteObserver.OnNext(messageDto.Payload.FromProtocolMessage<TProto>());
         }
-        
-        public IMessage HandleRequest(IObserverDto<ProtocolMessage> messageDto)
+
+        public void HandleResponseObserver(IMessage messageDto,
+            IChannelHandlerContext channelHandlerContext,
+            IPeerIdentifier senderPeerIdentifier,
+            ICorrelationId correlationId)
         {
-            return messageDto.Payload.FromProtocolMessage<TProto>();
+            throw new NotImplementedException();
         }
-                
+
         public override void OnCompleted() { SubstituteObserver.OnCompleted(); }
-        
-        public void SendChannelContextResponse(IMessageDto<TProto> messageDto) { throw new NotImplementedException(); }
     }
 }

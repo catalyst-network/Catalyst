@@ -23,18 +23,20 @@
 
 using Catalyst.Cli.Options;
 using Catalyst.Common.FileTransfer;
-using Catalyst.Common.Interfaces.Cli.Commands;
+using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.FileTransfer;
 using Catalyst.Protocol.Rpc.Node;
 using System.IO;
 using Catalyst.Cli.CommandTypes;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
+using Catalyst.Common.Interfaces.Cli.Commands;
 
 namespace Catalyst.Cli.Commands
 {
     public sealed class AddFileCommand : BaseMessageCommand<AddFileToDfsRequest, AddFileToDfsResponse, AddFileOptions>
     {
+        public static string ErrorNoResponseCodes => "No response codes were found.";
         private readonly IUploadFileTransferFactory _uploadFileTransferFactory;
 
         public AddFileCommand(IUploadFileTransferFactory uploadFileTransferFactory,
@@ -103,6 +105,12 @@ namespace Catalyst.Cli.Commands
 
         protected override void ResponseMessage(AddFileToDfsResponse response)
         {
+            if (response.ResponseCode.IsEmpty)
+            {
+                CommandContext.UserOutput.WriteLine(ErrorNoResponseCodes);
+                return;
+            }
+
             var responseCode = (FileTransferResponseCodes) response.ResponseCode[0];
             if (responseCode == FileTransferResponseCodes.Failed || responseCode == FileTransferResponseCodes.Finished)
             {

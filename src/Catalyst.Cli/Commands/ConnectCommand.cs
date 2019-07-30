@@ -21,9 +21,9 @@
 
 #endregion
 
-using System;
 using Catalyst.Cli.CommandTypes;
 using Catalyst.Cli.Options;
+using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.Cli.Commands;
 using Catalyst.Common.Network;
 using Dawn;
@@ -35,40 +35,35 @@ namespace Catalyst.Cli.Commands
     {
         private readonly ILogger _logger;
 
+        public ConnectCommand(ILogger logger, ICommandContext commandContext) : base(commandContext)
+        {
+            _logger = logger;
+        }
+
+        public static string InvalidSocketChannel => "Inactive socket channel.";
+
         protected override bool ExecuteCommand(ConnectOptions option)
         {
             var rpcNodeConfigs = CommandContext.GetNodeConfig(option.Node);
             Guard.Argument(rpcNodeConfigs, nameof(rpcNodeConfigs)).NotNull();
 
-            try
+            //Connect to the node and store it in the socket client registry
+            var nodeRpcClient = CommandContext.NodeRpcClientFactory.GetClient(
+                CommandContext.CertificateStore.ReadOrCreateCertificateFile(rpcNodeConfigs.PfxFileName),
+                rpcNodeConfigs);
+
+            if (!CommandContext.IsSocketChannelActive(nodeRpcClient))
             {
-                //Connect to the node and store it in the socket client registry
-                var nodeRpcClient = CommandContext.NodeRpcClientFactory.GetClient(
-                    CommandContext.CertificateStore.ReadOrCreateCertificateFile(rpcNodeConfigs.PfxFileName), rpcNodeConfigs);
-
-                if (!CommandContext.IsSocketChannelActive(nodeRpcClient))
-                {
-                    CommandContext.UserOutput.WriteLine("Inactive socket channel.");
-                    return false;
-                }
-
-                var clientHashCode = CommandContext.SocketClientRegistry.GenerateClientHashCode(
-                    EndpointBuilder.BuildNewEndPoint(rpcNodeConfigs.HostAddress, rpcNodeConfigs.Port));
-
-                CommandContext.SocketClientRegistry.AddClientToRegistry(clientHashCode, nodeRpcClient);
-                CommandContext.UserOutput.WriteLine($"Connected to Node {nodeRpcClient.Channel.RemoteAddress}");
-                return true;
-            }
-            catch (Exception e)
-            {
-                _logger.Debug(e.Message, e);
+                CommandContext.UserOutput.WriteLine(InvalidSocketChannel);
                 return false;
             }
-        }
 
-        public ConnectCommand(ILogger logger, ICommandContext commandContext) : base(commandContext)
-        {
-            _logger = logger;
+            var clientHashCode = CommandContext.SocketClientRegistry.GenerateClientHashCode(
+                EndpointBuilder.BuildNewEndPoint(rpcNodeConfigs.HostAddress, rpcNodeConfigs.Port));
+
+            CommandContext.SocketClientRegistry.AddClientToRegistry(clientHashCode, nodeRpcClient);
+            CommandContext.UserOutput.WriteLine($"Connected to Node {nodeRpcClient.Channel.RemoteAddress}");
+            return true;
         }
     }
 }

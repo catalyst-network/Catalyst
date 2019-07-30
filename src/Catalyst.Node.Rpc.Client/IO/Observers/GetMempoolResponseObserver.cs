@@ -26,30 +26,29 @@ using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using DotNetty.Transport.Channels;
-using ILogger = Serilog.ILogger;
+using Serilog;
 
 namespace Catalyst.Node.Rpc.Client.IO.Observers
 {
     /// <summary>
-    /// Handler responsible for handling the server's response for the GetMempool request.
-    /// The handler reads the response's payload and formats it in user readable format and writes it to the console.
+    ///     Handler responsible for handling the server's response for the GetMempool request.
+    ///     The handler reads the response's payload and formats it in user readable format and writes it to the console.
     /// </summary>
     public sealed class GetMempoolResponseObserver
         : RpcResponseObserver<GetMempoolResponse>
     {
         /// <summary>
-        /// <param name="output">
-        ///     A service used to output the result of the messages handling to the user.
-        /// </param>
-        /// <param name="logger">
-        ///     Logger to log debug related information.
-        /// </param>
+        ///     <param name="output">
+        ///         A service used to output the result of the messages handling to the user.
+        ///     </param>
+        ///     <param name="logger">
+        ///         Logger to log debug related information.
+        ///     </param>
         /// </summary>
         public GetMempoolResponseObserver(ILogger logger)
             : base(logger) { }
-        
+
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="getMempoolResponse"></param>
         /// <param name="channelHandlerContext"></param>
@@ -60,10 +59,8 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
             IPeerIdentifier senderPeerIdentifier,
             ICorrelationId correlationId)
         {
-            Guard.Argument(getMempoolResponse, nameof(getMempoolResponse)).NotNull();
-            Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
-            Guard.Argument(senderPeerIdentifier, nameof(senderPeerIdentifier)).NotNull();
-            Guard.Argument(getMempoolResponse, nameof(getMempoolResponse)).NotNull("The GetMempoolResponse cannot be null")
+            Guard.Argument(getMempoolResponse, nameof(getMempoolResponse))
+               .NotNull("The GetMempoolResponse cannot be null")
                .Require(d => d.Mempool != null,
                     d => $"{nameof(getMempoolResponse)} must have a valid Mempool.");
         }

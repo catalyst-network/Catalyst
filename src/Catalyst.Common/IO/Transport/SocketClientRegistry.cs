@@ -25,6 +25,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Net;
+using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using Catalyst.Common.Interfaces.IO.Observables;
@@ -35,21 +36,27 @@ using Dawn;
 namespace Catalyst.Common.IO.Transport
 {
     public sealed class SocketClientRegistry<TSocketChannel>
-        : ISocketClientRegistry<TSocketChannel>
+        : ISocketClientRegistry<TSocketChannel>, IDisposable
         where TSocketChannel : class, ISocketClient
     {
-        public IObservable<ISocketClientRegistryEvent> EventStream { get; }
         private readonly ReplaySubject<ISocketClientRegistryEvent> _eventReplySubject;
+        private bool _disposed;
 
-        public IDictionary<int, TSocketChannel> Registry { get; }
-
-        public SocketClientRegistry()
+        public SocketClientRegistry(IScheduler scheduler = null)
         {
-            _eventReplySubject = new ReplaySubject<ISocketClientRegistryEvent>(1);
+            var eventScheduler = scheduler ?? Scheduler.Default;
+
+            _eventReplySubject = new ReplaySubject<ISocketClientRegistryEvent>(1, eventScheduler);
             EventStream = _eventReplySubject.AsObservable();
 
             Registry = new ConcurrentDictionary<int, TSocketChannel>();
         }
+
+        public void Dispose() { Dispose(true); }
+
+        public IObservable<ISocketClientRegistryEvent> EventStream { get; }
+
+        public IDictionary<int, TSocketChannel> Registry { get; }
 
         /// <inheritdoc />
         public int GenerateClientHashCode(IPEndPoint socketEndpoint)
@@ -98,9 +105,21 @@ namespace Catalyst.Common.IO.Transport
             return removedFromRegistry;
         }
 
-        public string GetRegistryType()
+        public string GetRegistryType() { return typeof(TSocketChannel).Name; }
+
+        private void Dispose(bool disposing)
         {
-            return typeof(TSocketChannel).Name;
+            if (_disposed)
+            {
+                return;
+            }
+
+            if (disposing)
+            {
+                _eventReplySubject.Dispose();
+            }
+
+            _disposed = true;
         }
     }
 }
