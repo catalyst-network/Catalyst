@@ -328,7 +328,7 @@
                 }
             ],
             "parameters": {
-                "configDataDir": "C:\\Users\\Dennis\\.Catalyst"
+                "configDataDir": "C://Users//.Catalyst"
             }
         },
         {
