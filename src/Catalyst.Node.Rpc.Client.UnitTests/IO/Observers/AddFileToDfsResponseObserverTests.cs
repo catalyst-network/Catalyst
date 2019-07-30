@@ -23,17 +23,12 @@
 
 using System.Threading;
 using Catalyst.Common.Config;
-using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.FileTransfer;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
-using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Messaging.Correlation;
-using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Node.Rpc.Client.IO.Observers;
-using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
-using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using Google.Protobuf;
 using NSubstitute;
@@ -54,19 +49,6 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
         private readonly IUploadFileTransferFactory _uploadFileTransferFactory;
         private readonly IChannelHandlerContext _channelHandlerContext;
 
-        private IObserverDto<ProtocolMessage> GetAddFileToDfsResponse(FileTransferResponseCodes responseCode)
-        {
-            var addFileResponse = new AddFileToDfsResponse
-            {
-                DfsHash = "Test",
-                ResponseCode = ByteString.CopyFrom((byte) responseCode)
-            };
-
-            var protocolMessage = addFileResponse.ToProtocolMessage(PeerIdHelper.GetPeerId("Test"),
-                CorrelationId.GenerateCorrelationId());
-            return new ObserverDto(_channelHandlerContext, protocolMessage);
-        }
-
         [Fact]
         public void HandlerRemovesFileTransferOnError()
         {
@@ -84,7 +66,8 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
                 Substitute.For<ILogger>(),
                 _uploadFileTransferFactory
             );
-            addFileToDfsResponseObserver.HandleResponseObserver(addFileResponse, channelHandlerContext, senderPeerIdentifier, correlationId);
+            addFileToDfsResponseObserver.HandleResponseObserver(addFileResponse, channelHandlerContext,
+                senderPeerIdentifier, correlationId);
             _uploadFileTransferFactory.Received(Quantity.Exactly(1)).Remove(Arg.Any<IUploadFileInformation>(), true);
         }
 
@@ -106,7 +89,8 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
                 _uploadFileTransferFactory
             );
 
-            addFileToDfsResponseObserver.HandleResponseObserver(addFileResponse, channelHandlerContext, senderPeerIdentifier, correlationId);
+            addFileToDfsResponseObserver.HandleResponseObserver(addFileResponse, channelHandlerContext,
+                senderPeerIdentifier, correlationId);
             _uploadFileTransferFactory.Received(Quantity.Exactly(1))
                .FileTransferAsync(Arg.Any<ICorrelationId>(), Arg.Any<CancellationToken>());
         }

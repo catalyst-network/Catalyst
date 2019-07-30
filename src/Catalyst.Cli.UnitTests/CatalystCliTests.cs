@@ -68,17 +68,6 @@ namespace Catalyst.Cli.UnitTests
         }
 
         [Fact]
-        public void RunConsole_Stops_On_Cancellation_Token2()
-        {
-            var userOutput = Substitute.For<IUserOutput>();
-            var catalystCli = new CatalystCli(userOutput, null);
-            var cancellationTokenSource = new CancellationTokenSource();
-            var cancellationToken = cancellationTokenSource.Token;
-            cancellationTokenSource.Cancel();
-            catalystCli.RunConsole(cancellationToken);
-        }
-
-        [Fact]
         public void ParseCommand_That_Does_Exist_Should_Return_True()
         {
             var userOutput = Substitute.For<IUserOutput>();

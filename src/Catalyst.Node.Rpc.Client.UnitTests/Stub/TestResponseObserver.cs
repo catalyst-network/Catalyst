@@ -21,6 +21,7 @@
 
 #endregion
 
+using System;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Node.Rpc.Client.IO;
@@ -48,6 +49,10 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.Stub
         protected override void HandleResponse(VersionResponse testResponse,
             IChannelHandlerContext channelHandlerContext,
             IPeerIdentifier senderPeerIdentifier,
-            ICorrelationId correlationId) { }
+            ICorrelationId correlationId)
+        {
+            /* Empty method as this is a Stub class for testing base */
+            throw new NotSupportedException();
+        }
     }
 }
