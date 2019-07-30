@@ -79,8 +79,8 @@ namespace Catalyst.Common.P2P
             //on you whether you are connecting to a local node, or a remote one.
             //https://github.com/catalyst-network/Catalyst.Node/issues/307
 
-            var publicKeyStr = config.GetSection("CatalystCliConfig")?
-               .GetSection("PublicKey")?.Value;
+            var publicKeyStr = config.GetSection("CatalystCliConfig")
+               .GetSection("PublicKey").Value;
             var publicKey = GetIfRegistryContainsPublicKey(publicKeyStr.KeyToBytes(), registry, userOutput);
 
             return new PeerIdentifier(publicKey,
