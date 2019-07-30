@@ -113,6 +113,8 @@ namespace Catalyst.Common.Kernel
                     outputTemplate: "{Timestamp:HH:mm:ss} [{Level:u3}] ({MachineName}/{ThreadId}) {Message} ({SourceContext}){NewLine}{Exception}")
                .CreateLogger()
                .ForContext(MethodBase.GetCurrentMethod().DeclaringType);
+
+            Log.Logger = Logger;
             
             return this;
         }
