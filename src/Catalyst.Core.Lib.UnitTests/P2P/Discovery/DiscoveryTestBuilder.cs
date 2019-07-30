@@ -22,11 +22,8 @@
 #endregion
 
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.Network;
@@ -36,14 +33,10 @@ using Catalyst.Common.Interfaces.P2P.IO;
 using Catalyst.Common.Interfaces.P2P.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.P2P.ReputationSystem;
 using Catalyst.Common.Interfaces.Util;
-using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Common.P2P;
 using Catalyst.Common.Util;
 using Catalyst.Core.Lib.P2P.Discovery;
-using Catalyst.Protocol.Common;
-using Catalyst.Protocol.IPPN;
 using Catalyst.TestUtils;
-using Google.Protobuf;
 using Microsoft.Extensions.Caching.Memory;
 using NSubstitute;
 using Serilog;
@@ -145,11 +138,10 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
         public DiscoveryTestBuilder WithPeerMessageCorrelationManager(IPeerMessageCorrelationManager peerMessageCorrelationManager = default,
             IReputationManager reputationManager = default,
             IMemoryCache memoryCache = default,
-            IChangeTokenProvider changeTokenProvider = default,
-            ILogger logger = default)
+            IChangeTokenProvider changeTokenProvider = default)
         {
             _peerCorrelationManager = peerMessageCorrelationManager ??
-                DiscoveryHelper.MockCorrelationManager(reputationManager, memoryCache, changeTokenProvider, logger);
+                DiscoveryHelper.MockCorrelationManager(reputationManager, memoryCache, changeTokenProvider, _logger);
             
             return this;
         }
@@ -160,10 +152,10 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
             return this;
         }
         
-        public DiscoveryTestBuilder WithPeerClientObservables(ILogger logger = default, params Type[] clientObservers)
+        public DiscoveryTestBuilder WithPeerClientObservables(params Type[] clientObservers)
         {
             PeerClientObservables = clientObservers
-               .Select(ot => (IPeerClientObservable) Activator.CreateInstance(ot, logger ?? Substitute.For<ILogger>()))
+               .Select(ot => (IPeerClientObservable) Activator.CreateInstance(ot, _logger ?? Substitute.For<ILogger>()))
                .ToList();
             
             return this;
@@ -184,7 +176,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
         public DiscoveryTestBuilder WithCurrentState(IHastingsOriginator currentState = default,
             bool mock = false,
             IPeerIdentifier peer = default,
-            IProducerConsumerCollection<INeighbour> neighbours = default,
+            INeighbours neighbours = default,
             KeyValuePair<ICorrelationId, IPeerIdentifier> expectedPnr = default)
         {
             _currentState = 
@@ -200,7 +192,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
         public DiscoveryTestBuilder WithStateCandidate(IHastingsOriginator stateCandidate = default,
             bool mock = false,
             IPeerIdentifier peer = default,
-            ConcurrentBag<INeighbour> neighbours = default,
+            INeighbours neighbours = default,
             KeyValuePair<ICorrelationId, IPeerIdentifier> expectedPnr = default)
         {
             _stateCandidate = 

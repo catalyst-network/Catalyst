@@ -61,27 +61,24 @@ namespace Catalyst.TestUtils
     public static class DiscoveryHelper
     {
         public static IHastingsOriginator MockOriginator(IPeerIdentifier peer = default,
-            IProducerConsumerCollection<INeighbour> neighbours = default,
+            INeighbours neighbours = default,
             KeyValuePair<ICorrelationId, IPeerIdentifier> expectedPnr = default)
         {
-            return new HastingsOriginator
-            {
-                Peer =
-                    peer ?? PeerIdentifierHelper.GetPeerIdentifier("someSeed"),
-                Neighbours = neighbours ?? MockNeighbours(),
-                ExpectedPnr = expectedPnr
-            }; 
+            return new HastingsOriginator(
+                PeerIdentifierHelper.GetPeerIdentifier("someSeed"),
+                expectedPnr,
+                neighbours ?? MockNeighbours()); 
         }
         
         public static IHastingsOriginator SubOriginator(IPeerIdentifier peer = default,
-            IProducerConsumerCollection<INeighbour> neighbours = default,
+            INeighbours neighbours = default,
             KeyValuePair<ICorrelationId, IPeerIdentifier> expectedPnr = default)
         {
             var subbedOriginator = Substitute.For<IHastingsOriginator>();
             
             subbedOriginator.Neighbours.Count.Returns(5);
             subbedOriginator.Peer.Returns(peer ?? Substitute.For<IPeerIdentifier>());
-            subbedOriginator.Neighbours.Returns(neighbours ?? Substitute.For<IProducerConsumerCollection<INeighbour>>());
+            subbedOriginator.Neighbours.Returns(neighbours ?? Substitute.For<Neighbours>());
             subbedOriginator.ExpectedPnr.Returns(expectedPnr);
 
             return subbedOriginator;
@@ -116,24 +113,17 @@ namespace Catalyst.TestUtils
             );
         }
         
-        public static ConcurrentBag<INeighbour> MockNeighbours(int amount = 5, NeighbourState state = null, ICorrelationId correlationId = default)
+        public static INeighbours MockNeighbours(int amount = 5, NeighbourState state = null, ICorrelationId correlationId = default)
         {
-            var neighbourMock = new ConcurrentBag<INeighbour>();
-
-            Enumerable.Range(0, amount).ToList().ForEach(i =>
-            {
-                neighbourMock.Add(
-                    new Neighbour(
-                        PeerIdentifierHelper.GetPeerIdentifier(
-                            StringHelper.RandomString()
-                        ),
-                        state ?? NeighbourState.NotContacted,
-                        correlationId = correlationId == default ? null : CorrelationId.GenerateCorrelationId()
-                    )
-                );
-            });
+            var neighbours = Enumerable.Range(0, amount).Select(i =>
+                new Neighbour(
+                    PeerIdentifierHelper.GetPeerIdentifier(
+                        StringHelper.RandomString()
+                    ),
+                    state ?? NeighbourState.NotContacted,
+                    correlationId ?? CorrelationId.GenerateCorrelationId()));
             
-            return neighbourMock;
+            return new Neighbours(neighbours);
         }
 
         public static IDictionary<IPeerIdentifier, ICorrelationId> SubContactedNeighbours(int amount = 5)
@@ -143,7 +133,7 @@ namespace Catalyst.TestUtils
                .ToDictionary(v => v, k => Substitute.For<ICorrelationId>());
         }
         
-        public static IHastingMemento SubMemento(IPeerIdentifier identifier = default, ConcurrentBag<INeighbour> neighbours = default)
+        public static IHastingMemento SubMemento(IPeerIdentifier identifier = default, INeighbours neighbours = default)
         {
             var subbedMemento = Substitute.For<IHastingMemento>();
             subbedMemento.Peer.Returns(identifier ?? Substitute.For<IPeerIdentifier>());
@@ -152,7 +142,7 @@ namespace Catalyst.TestUtils
             return subbedMemento;
         }
 
-        public static IHastingMemento MockMemento(IPeerIdentifier identifier = default, ConcurrentBag<INeighbour> neighbours = default)
+        public static IHastingMemento MockMemento(IPeerIdentifier identifier = default, INeighbours neighbours = default)
         {
             var peerParam = identifier ?? PeerIdentifierHelper.GetPeerIdentifier(StringHelper.RandomString());
             var neighbourParam = neighbours ?? MockNeighbours();

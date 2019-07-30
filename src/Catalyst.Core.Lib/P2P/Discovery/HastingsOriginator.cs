@@ -21,20 +21,24 @@
 
 #endregion
 
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.Discovery;
+using Catalyst.Common.P2P.Discovery;
+using Serilog;
 
 namespace Catalyst.Core.Lib.P2P.Discovery
 {
     public sealed class HastingsOriginator : IHastingsOriginator
     {
+        private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
+
         private IPeerIdentifier _peer;
-        public IProducerConsumerCollection<INeighbour> Neighbours { get; set; }
-        public KeyValuePair<ICorrelationId, IPeerIdentifier> ExpectedPnr { get; set; }
+        public INeighbours Neighbours { get; private set; }
+        public KeyValuePair<ICorrelationId, IPeerIdentifier> ExpectedPnr { get; private set; }
 
         /// <summary>
         ///     if setting a new peer, clean counters
@@ -46,10 +50,7 @@ namespace Catalyst.Core.Lib.P2P.Discovery
             {
                 if (_peer != null)
                 {
-                    // kinda gross IProducerConsumerCollection doesn't have clear on IFace
-                    // @Todo make own iface extending IProducerConsumerCollection with this on.
-                    var bag = (ConcurrentBag<INeighbour>) Neighbours;
-                    bag.Clear(); 
+                    Neighbours = new Neighbours();
                     ExpectedPnr = new KeyValuePair<ICorrelationId, IPeerIdentifier>();
                 }
                 
@@ -57,29 +58,27 @@ namespace Catalyst.Core.Lib.P2P.Discovery
             }
         }
 
-        public HastingsOriginator()
+        public HastingsOriginator(IPeerIdentifier peer, KeyValuePair<ICorrelationId, IPeerIdentifier> expectedPnr, INeighbours neighbours)
         {
-            ExpectedPnr = new KeyValuePair<ICorrelationId, IPeerIdentifier>();
-            Neighbours = new ConcurrentBag<INeighbour>();
+            _peer = Peer;
+            ExpectedPnr = expectedPnr;
+            Neighbours = neighbours;
         }
 
         /// <inheritdoc />
         public IHastingMemento CreateMemento()
         {
+            Logger.Debug("Creating new memento with Peer {peer} and neighbours [{neighbours}]", 
+                Peer, string.Join(", ", Neighbours.Select(n => n.PeerIdentifier)));
             return new HastingMemento(Peer, Neighbours);
         }
         
         /// <inheritdoc />
         public void RestoreMemento(IHastingMemento hastingMemento)
         {
+            Logger.Debug("Restoring memento with Peer {peer} and neighbours [{neighbours}]", hastingMemento.Peer);
             Peer = hastingMemento.Peer;
-            
-            hastingMemento.Neighbours
-               .ToList()
-               .ForEach(i =>
-                {
-                    Neighbours.TryAdd(i);
-                });
+            Neighbours = hastingMemento.Neighbours;
         }
     }
 }

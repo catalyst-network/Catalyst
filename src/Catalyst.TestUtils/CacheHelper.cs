@@ -22,9 +22,6 @@
 #endregion
 
 using System.Collections.Generic;
-using System.Linq;
-using Catalyst.Common.IO.Messaging.Correlation;
-using Catalyst.Protocol.Common;
 using Google.Protobuf;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Primitives;
@@ -34,12 +31,7 @@ namespace Catalyst.TestUtils
 {
     public static class CacheHelper
     {
-        /// <summary>
-        ///  clean up
-        /// </summary>
-        /// <param name="key"></param>
-        /// <param name="cache"></param>
-        public static Dictionary<ByteString, ICacheEntry> MockCacheEvictionCallback(object key, IMemoryCache cache, Dictionary<ByteString, ICacheEntry> CacheEntriesByRequest)
+        public static Dictionary<ByteString, ICacheEntry> MockCacheEvictionCallback(object key, IMemoryCache cache, Dictionary<ByteString, ICacheEntry> cacheEntriesByRequest)
         {
             var correlationId = (ByteString) key;
             var cacheEntry = Substitute.For<ICacheEntry>();
@@ -49,8 +41,8 @@ namespace Catalyst.TestUtils
             cacheEntry.PostEvictionCallbacks.Returns(expirationCallbacks);
 
             cache.CreateEntry(correlationId).Returns(cacheEntry);
-            CacheEntriesByRequest.Add(correlationId, cacheEntry);
-            return CacheEntriesByRequest;
+            cacheEntriesByRequest.Add(correlationId, cacheEntry);
+            return cacheEntriesByRequest;
         }
     }
 }

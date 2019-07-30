@@ -58,7 +58,7 @@ namespace Catalyst.Core.Lib.P2P.Discovery
                 return hastingMemento;
             }
 
-            throw new Exception();
+            throw new InvalidOperationException("No memento found in queue");
         }
     }
 }

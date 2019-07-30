@@ -85,7 +85,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
         {
             var careTaker = new HastingCareTaker();
             
-            Assert.Throws<Exception>(() => { careTaker.Get(); });
+            Assert.Throws<InvalidOperationException>(() => { careTaker.Get(); });
         }
         
         [Fact]

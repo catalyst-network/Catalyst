@@ -22,12 +22,14 @@
 #endregion
 
 using System.Collections.Concurrent;
+using System.Collections.Generic;
+using Catalyst.Common.P2P.Discovery;
 
 namespace Catalyst.Common.Interfaces.P2P.Discovery
 {
     public interface IHastingMemento
     {
         IPeerIdentifier Peer { get; }
-        IProducerConsumerCollection<INeighbour> Neighbours { get; }
+        Neighbours Neighbours { get; }
     }
 }

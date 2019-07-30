@@ -29,9 +29,16 @@ namespace Catalyst.Common.Interfaces.P2P.Discovery
 {
     public interface IHastingsOriginator
     {
-        IPeerIdentifier Peer { get; set; }
-        KeyValuePair<ICorrelationId, IPeerIdentifier> ExpectedPnr { get; set; }
-        IProducerConsumerCollection<INeighbour> Neighbours { get; set; }
+        IPeerIdentifier Peer { get; }
+
+        /// <summary>
+        /// Every time you the walk moves forward with a new Peer, it will ask that peer for
+        /// its neighbours sending a new <see cref="Catalyst.Protocol.IPPN.PeerNeighborsRequest"/>.
+        /// This field stores the details for that request. 
+        /// </summary>
+        KeyValuePair<ICorrelationId, IPeerIdentifier> ExpectedPnr { get; }
+
+        INeighbours Neighbours { get; }
         
         /// <summary>
         ///     creates a memento from current state

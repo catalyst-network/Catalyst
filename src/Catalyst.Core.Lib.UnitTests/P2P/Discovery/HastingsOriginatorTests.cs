@@ -47,11 +47,9 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
         [Fact]
         public void Can_Create_Memento_From_Current_State()
         {
-            var originator = new HastingsOriginator();
-            var state = DiscoveryHelper.MockNeighbours();
+            var neighbours = DiscoveryHelper.MockNeighbours();
 
-            originator.Peer = _peer;
-            originator.Neighbours = state;
+            var originator = new HastingsOriginator(_peer, default, neighbours);
 
             var stateMemento = originator.CreateMemento();
 
@@ -61,42 +59,33 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
             
             stateMemento.Neighbours
                .Should()
-               .Contain(state);
+               .Contain(neighbours);
         }
 
         [Fact]
         public void Can_Restore_State_From_Memento()
         {
             var memento = DiscoveryHelper.MockMemento();
-            var originator = new HastingsOriginator();
+            var originator = new HastingsOriginator(default, default, default);
             
             originator.RestoreMemento(memento);
 
             originator.Peer
                .Should()
                .Be(memento.Peer);
-            
-            originator.Neighbours.Count
-               .Should()
-               .Be(5);
-            
-            originator.Neighbours.ToList()
-               .ToList()
-               .Should()
-               .BeSubsetOf(memento.Neighbours);
+            originator.Neighbours.Should().BeEquivalentTo(memento.Neighbours);
+            originator.ExpectedPnr.Should().Be(default);
         }
 
         [Fact]
         public void Can_Clean_Up_When_Calling_RestoreMemento()
         {
-            var originator = new HastingsOriginator();
+            var originator = new HastingsOriginator(default, default, default);
 
             var memento1 = DiscoveryHelper.SubMemento();
             var memento2 = DiscoveryHelper.SubMemento();
             
             originator.RestoreMemento(memento1);
-            originator.Neighbours = DiscoveryHelper.MockNeighbours();
-            originator.ExpectedPnr = DiscoveryHelper.MockPnr();
 
             originator.RestoreMemento(memento2);
 
@@ -104,35 +93,29 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
                .Should()
                .Be(Constants.AngryPirate);
             
-            originator.ExpectedPnr.Key
-               .Should()
-               .Be(null);
+            originator.ExpectedPnr.Should().Be(default);
             
-            originator.ExpectedPnr.Value
-               .Should()
-               .Be(null);
-            
-            originator.Neighbours
-               .Should()
-               .BeSubsetOf(memento2.Neighbours);
+            originator.Neighbours.Should().BeEquivalentTo(memento2.Neighbours);
         }
         
         [Fact]
         public void Can_Clean_Up_When_Setting_Peer()
         {
-            var originator = new HastingsOriginator();
+            var originator = new HastingsOriginator(default, default, default);
             var memento1 = DiscoveryHelper.SubMemento();
             
             originator.RestoreMemento(memento1);
-            originator.ExpectedPnr = DiscoveryHelper.MockPnr();
-            originator.Neighbours = DiscoveryHelper.MockNeighbours();
+
+            originator.Neighbours.Count.Should().NotBe(0);
             
             var newPeer = PeerIdentifierHelper.GetPeerIdentifier("new_peer");
             originator.Peer = newPeer;
 
             originator.Peer.Should().Be(newPeer);
+
             originator.ExpectedPnr.Key.Should().Be(null);
             originator.ExpectedPnr.Value.Should().Be(null);
+
             originator.Neighbours.Count.Should().Be(0);
         }
     }

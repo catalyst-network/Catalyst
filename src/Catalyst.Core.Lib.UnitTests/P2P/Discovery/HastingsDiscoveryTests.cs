@@ -517,9 +517,9 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
                             o.ResponseMessageSubject.OnNext(subbedDto);
                         });
 
-                    walker.StateCandidate.Neighbours
-                       .Received(0)
-                       .TryAdd(Arg.Any<INeighbour>());
+                    //walker.StateCandidate.Neighbours
+                    //   .Received(0)
+                    //   .Add(Arg.Any<INeighbour>());
                 }
             }
         }
@@ -655,8 +655,8 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
             );
             
             var initialStateCandidate = Substitute.For<IHastingsOriginator>();
-            initialStateCandidate.Peer = initialMemento.Peer;
-            initialStateCandidate.Neighbours.Returns(Substitute.For<IProducerConsumerCollection<INeighbour>>());
+            initialStateCandidate.Peer.Returns(initialMemento.Peer);
+            initialStateCandidate.Neighbours.Returns(Substitute.For<INeighbours>());
             
             initialStateCandidate.CreateMemento().Returns(initialMemento);
             

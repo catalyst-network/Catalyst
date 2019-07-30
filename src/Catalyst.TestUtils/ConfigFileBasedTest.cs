@@ -27,7 +27,6 @@ using System.Linq;
 using Autofac;
 using Autofac.Configuration;
 using AutofacSerilogIntegration;
-using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Common.Interfaces.FileSystem;
 using Microsoft.Extensions.Configuration;
@@ -93,20 +92,23 @@ namespace Catalyst.TestUtils
 
         private void ConfigureLogging(bool writeLogsToTestOutput, bool writeLogsToFile)
         {
-            var loggerConfiguration = new LoggerConfiguration().ReadFrom.Configuration(ConfigurationRoot).MinimumLevel.Verbose();
+            var loggerConfiguration = new LoggerConfiguration()
+               .ReadFrom.Configuration(ConfigurationRoot).MinimumLevel.Verbose()
+               .Enrich.WithThreadId();
             
             if (writeLogsToTestOutput)
             {
-                loggerConfiguration.WriteTo.TestOutput(Output, LogEventLevel, LogOutputTemplate);
+                loggerConfiguration = loggerConfiguration.WriteTo.TestOutput(Output, LogEventLevel, LogOutputTemplate);
             }
 
             if (writeLogsToFile)
             {
-                loggerConfiguration.WriteTo.File(Path.Combine(FileSystem.GetCatalystDataDir().FullName, "Catalyst.Node.log"), LogEventLevel,
+                loggerConfiguration = loggerConfiguration.WriteTo.File(Path.Combine(FileSystem.GetCatalystDataDir().FullName, "Catalyst.Node.log"), LogEventLevel,
                     LogOutputTemplate);
             }
 
-            ContainerBuilder.RegisterLogger(loggerConfiguration.CreateLogger());
+            var logger = loggerConfiguration.CreateLogger();
+            ContainerBuilder.RegisterLogger(logger);
         }
     }
 }
