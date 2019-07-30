@@ -35,9 +35,11 @@ using Catalyst.Common.Interfaces.P2P.IO.Messaging.Correlation;
 using Catalyst.Common.IO.Handlers;
 using Catalyst.Common.IO.Transport.Channels;
 using Catalyst.Protocol.Common;
+using DotNetty.Buffers;
 using DotNetty.Codecs;
 using DotNetty.Codecs.Protobuf;
 using DotNetty.Transport.Channels;
+using DotNetty.Transport.Channels.Sockets;
 using Google.Protobuf;
 
 namespace Catalyst.Core.Lib.P2P.IO.Transport.Channels
@@ -56,6 +58,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Transport.Channels
                 {
                     return new List<IChannelHandler>
                     {
+                        new FlushPipelineHandler<DatagramPacket>(),
                         new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
                             new DatagramPacketDecoder(new ProtobufDecoder(ProtocolMessageSigned.Parser)),
                             new DatagramPacketEncoder<IMessage>(new ProtobufEncoder())
@@ -67,7 +70,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Transport.Channels
                         ),
                         new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
                             new CorrelationHandler<IPeerMessageCorrelationManager>(_correlationManager),
-                            new CorrelationHandler<IPeerMessageCorrelationManager>(_correlationManager)
+                            new CorrelatableHandler<IPeerMessageCorrelationManager>(_correlationManager)
                         ),
                         new ObservableServiceHandler()
                     };

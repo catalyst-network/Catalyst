@@ -41,6 +41,7 @@ using Catalyst.Protocol.IPPN;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Embedded;
+using DotNetty.Transport.Channels.Sockets;
 using FluentAssertions;
 using NSubstitute;
 using Serilog;
@@ -92,13 +93,14 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Transport.Channels
         [Fact]
         public void PeerClientChannelFactory_should_have_correct_handlers()
         {
-            _factory.InheritedHandlers.Count(h => h != null).Should().Be(5);
+            _factory.InheritedHandlers.Count(h => h != null).Should().Be(6);
             var handlers = _factory.InheritedHandlers.ToArray();
-            handlers[0].Should().BeOfType<CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>>();
-            handlers[1].Should().BeOfType<PeerIdValidationHandler>();
-            handlers[2].Should().BeOfType<CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>>();
+            handlers[0].Should().BeOfType<FlushPipelineHandler<DatagramPacket>>();
+            handlers[1].Should().BeOfType<CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>>();
+            handlers[2].Should().BeOfType<PeerIdValidationHandler>();
             handlers[3].Should().BeOfType<CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>>();
-            handlers[4].Should().BeOfType<ObservableServiceHandler>();
+            handlers[4].Should().BeOfType<CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>>();
+            handlers[5].Should().BeOfType<ObservableServiceHandler>();
         }
 
         [Fact(Skip = "true")]
