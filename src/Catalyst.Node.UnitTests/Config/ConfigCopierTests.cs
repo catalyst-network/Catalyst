@@ -131,8 +131,6 @@ namespace Catalyst.Node.UnitTests.Config
             var expectedFileList = GetExpectedFileList(network);
             var configFiles = EnumerateConfigFiles(currentDirectory, modulesDirectory);
             configFiles.Should().BeEquivalentTo(expectedFileList);
-
-            configFiles.Should().BeEmpty();
         }
     }
 }
