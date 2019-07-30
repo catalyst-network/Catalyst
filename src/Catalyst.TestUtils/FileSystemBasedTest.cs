@@ -45,9 +45,9 @@ namespace Catalyst.TestUtils
     public class FileSystemBasedTest : IDisposable
     {
         protected readonly string CurrentTestName;
-        protected readonly IFileSystem FileSystem;
+        protected IFileSystem FileSystem;
         protected readonly ITestOutputHelper Output;
-        private readonly DirectoryInfo _testDirectory;
+        private DirectoryInfo _testDirectory;
 
         protected FileSystemBasedTest(ITestOutputHelper output)
         {
@@ -64,6 +64,25 @@ namespace Catalyst.TestUtils
             }
 
             CurrentTestName = currentTest.TestCase.TestMethod.Method.Name;
+
+            GenerateFileSystem();
+
+            //var testStartTime = DateTime.Now;
+            //_testDirectory = new DirectoryInfo(Path.Combine(Environment.CurrentDirectory,
+
+            //    //get a unique folder for this run
+            //    CurrentTestName + $"_{testStartTime:yyMMddHHmmssffff}"));
+
+            //_testDirectory.Exists.Should().BeFalse();
+            //_testDirectory.Create();
+
+            //FileSystem = GetFileSystemStub();
+
+            Output.WriteLine("test running in folder {0}", _testDirectory.FullName);
+        }
+
+        protected void GenerateFileSystem()
+        {
             var testStartTime = DateTime.Now;
             _testDirectory = new DirectoryInfo(Path.Combine(Environment.CurrentDirectory,
 
@@ -74,8 +93,6 @@ namespace Catalyst.TestUtils
             _testDirectory.Create();
 
             FileSystem = GetFileSystemStub();
-
-            Output.WriteLine("test running in folder {0}", _testDirectory.FullName);
         }
 
         private IFileSystem GetFileSystemStub()

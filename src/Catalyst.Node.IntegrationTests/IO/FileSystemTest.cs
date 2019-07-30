@@ -91,5 +91,25 @@ namespace Catalyst.Node.IntegrationTests.IO
 
             fileSystem.GetCatalystDataDir().FullName.ToLower().Should().Be(_fileSystem.GetCatalystDataDir().FullName.ToLower());
         }
+
+        [Fact]
+        [Trait(Traits.TestType, Traits.IntegrationTest)]
+        public void Save_Data_Directory_Several_Times_New_Instance_Must_Load_With_New_Data_Directory()
+        {
+            _fileSystem.SetCurrentPath(_sourceFolder).Should().BeTrue();
+
+            var fileSystem = new CommonFileSystem();
+            fileSystem.GetCatalystDataDir().FullName.ToLower().Should().Be(_fileSystem.GetCatalystDataDir().FullName.ToLower());
+
+            GenerateFileSystem();
+
+            var changeDataDir = Setup(); 
+            fileSystem.SetCurrentPath(changeDataDir).Should().BeTrue();
+
+            var fileSystemRetriever = new CommonFileSystem();
+
+            fileSystem.GetCatalystDataDir().FullName.ToLower().Should()
+                .Be(fileSystemRetriever.GetCatalystDataDir().FullName.ToLower());
+        }
     }
 }

@@ -58,11 +58,11 @@ namespace Catalyst.Common.FileSystem
         {
             if (new DirectoryInfo(path).Exists)
             {
-                SaveConfigPointerFile(path, _currentDataDirPointer);
-
-                _dataDir = path;
-              
-                return true;
+                if (SaveConfigPointerFile(path, _currentDataDirPointer))
+                {
+                    _dataDir = path;
+                    return true;
+                }
             }
             return false;
         }
@@ -139,16 +139,19 @@ namespace Catalyst.Common.FileSystem
             return File.Exists(filePath) ? File.ReadAllText(filePath) : null;
         }
 
-        private void SaveConfigPointerFile(string configDirLocation, string configFilePointer)
+        private bool SaveConfigPointerFile(string configDirLocation, string configFilePointer)
         {
             var configDataDir = GetCurrentDataDir(configFilePointer);
 
             configDataDir = PrepDirectoryLocationFormatAlt(configDataDir);
             configDirLocation = PrepDirectoryLocationFormatAlt(configDirLocation);
 
-            string text = System.IO.File.ReadAllText(configFilePointer);
+            var text = System.IO.File.ReadAllText(configFilePointer);
             text = text.Replace(configDataDir, configDirLocation);
             System.IO.File.WriteAllText(configFilePointer, text);
+
+            var textAlt = System.IO.File.ReadAllText(configFilePointer);
+            return textAlt.Contains(configDirLocation);
         }
 
         private string PrepDirectoryLocationFormatAlt(string dir)
