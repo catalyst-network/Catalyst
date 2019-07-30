@@ -27,7 +27,7 @@ using CommandLine;
 
 namespace Catalyst.Node
 {
-    class Options
+    internal class Options
     {
         [Option('o', "overwrite-config", HelpText = "Overwrite the data directory configs.")]
         public bool OverwriteConfig { get; set; }
@@ -62,6 +62,16 @@ namespace Catalyst.Node
         // }
         public static int Main(string[] args)
         {
+            // Parse the arguments.
+            Parser.Default
+               .ParseArguments<Options>(args)
+               .WithParsed(Run);
+            
+            return Environment.ExitCode;
+        }
+        
+        private static void Run(Options options)
+        {
             Kernel.Logger.Information("Catalyst.Node started with process id {0}",
                 System.Diagnostics.Process.GetCurrentProcess().Id.ToString());
             
@@ -86,8 +96,6 @@ namespace Catalyst.Node
                 Kernel.Logger.Fatal(e, "Catalyst.Node stopped unexpectedly");
                 Environment.ExitCode = 1;
             }
-
-            return Environment.ExitCode;
         }
     }
 }
