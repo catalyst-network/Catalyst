@@ -22,6 +22,7 @@
 #endregion
 
 using System;
+using System.Linq;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -87,6 +88,24 @@ namespace Catalyst.Core.Lib.IntegrationTests.Modules.Dfs
                 var content = new byte[binary.Length];
                 stream.Read(content, 0, content.Length);
                 content.Should().Equal(binary);
+            }
+        }
+
+        [Fact]
+        [Trait(Traits.TestType, Traits.IntegrationTest)]
+        public async Task DFS_should_connect_to_a_seednode()
+        {
+            var seeds = (await _ipfs.Bootstrap.ListAsync())
+                .Select(a => a.PeerId)
+                .ToArray();
+            var end = DateTime.Now.AddSeconds(15);
+            var found = false;
+            while (!found)
+            {
+                Assert.True(DateTime.Now <= end, "timeout");
+                var peers = await _ipfs.Swarm.PeersAsync();
+                found = peers.Any(p => seeds.Contains(p.Id));
+                await Task.Delay(100);
             }
         }
 
