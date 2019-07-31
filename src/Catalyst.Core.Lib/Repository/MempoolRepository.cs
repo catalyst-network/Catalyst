@@ -22,14 +22,14 @@
 #endregion
 
 using Catalyst.Common.Interfaces.Repository;
-using Catalyst.Common.P2P;
+using Catalyst.Common.Modules.Mempool;
 using Catalyst.Common.Repository;
 using SharpRepository.Repository;
 
-namespace Catalyst.Node.Repository
+namespace Catalyst.Core.Lib.Repository
 {
-    public class PeerRepository : RepositoryWrapper<Peer>, IPeerRepository
+    public class MempoolRepository : RepositoryWrapper<MempoolDocument>, IMempoolRepository
     {
-        public PeerRepository(IRepository<Peer, string> repository) : base(repository) { }
+        public MempoolRepository(IRepository<MempoolDocument, string> repository) : base(repository) { }
     }
 }
