@@ -37,7 +37,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
         [Fact]
         public void Can_Get_From_HastingMementoList()
         {
-            var careTaker = new HastingsesCareTaker();
+            var careTaker = new HastingsCareTaker();
             var subbedMemento = Substitute.For<IHastingsMemento>();
             
             careTaker.Add(subbedMemento);
@@ -48,14 +48,14 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
         [Fact]
         public void Can_Get_Nothing_From_Empty_HastingMementoList()
         {
-            var careTaker = new HastingsesCareTaker();
+            var careTaker = new HastingsCareTaker();
             careTaker.HastingMementoList.Should().BeEmpty();
         }
         
         [Fact]
         public void Care_Taker_Can_Add_State_To_CareTaker()
         {
-            var careTaker = new HastingsesCareTaker();
+            var careTaker = new HastingsCareTaker();
 
             var subbedMemento = Substitute.For<IHastingsMemento>();
             
@@ -68,7 +68,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
         [Fact]
         public void Care_Taker_Can_Get_Last_State()
         {
-            var careTaker = new HastingsesCareTaker();
+            var careTaker = new HastingsCareTaker();
 
             var subbedMemento = Substitute.For<IHastingsMemento>();
             
@@ -83,7 +83,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
         [Fact]
         public void Care_Taker_Should_Throw_Exception_Trying_To_Take_Last_State_From_Empty_CareTaker()
         {
-            var careTaker = new HastingsesCareTaker();
+            var careTaker = new HastingsCareTaker();
             
             Assert.Throws<InvalidOperationException>(() => { careTaker.Get(); });
         }
@@ -91,7 +91,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
         [Fact]
         public void Can_Never_Take_Last_State_From_CareTaker()
         {
-            var careTaker = new HastingsesCareTaker();
+            var careTaker = new HastingsCareTaker();
 
             var subbedMemento = Substitute.For<IHastingsMemento>();
             
@@ -105,7 +105,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
         [Fact]
         public void Can_LIFO_When_History_N_Plus2()
         {
-            var careTaker = new HastingsesCareTaker();
+            var careTaker = new HastingsCareTaker();
 
             var subbedMemento1 = Substitute.For<IHastingsMemento>();
             subbedMemento1.Peer.Returns(PeerIdentifierHelper.GetPeerIdentifier("step1"));

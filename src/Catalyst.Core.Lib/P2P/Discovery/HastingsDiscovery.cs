@@ -101,7 +101,7 @@ namespace Catalyst.Core.Lib.P2P.Discovery
 
             var neighbours = dns.GetSeedNodesFromDns(peerSettings.SeedServers).ToNeighbours();
             
-            HastingsCareTaker = hastingsCareTaker ?? new HastingsesCareTaker();
+            HastingsCareTaker = hastingsCareTaker ?? new HastingsCareTaker();
             if (HastingsCareTaker.HastingMementoList.IsEmpty)
             {
                 var rootMemento = stepProposal?.CreateMemento() ?? new HastingsMemento(_ownNode, neighbours);
@@ -176,7 +176,7 @@ namespace Catalyst.Core.Lib.P2P.Discovery
         ///     if not the condition has not been met within a timeout then we walk back by taking the last known state from the IHastingCaretaker.
         /// </summary>
         /// <returns></returns>
-        public async Task DiscoveryAsync(int timeout = -1)
+        public async Task DiscoveryAsync(int millisecondsTimeout = -1)
         {
             if (IsDiscovering)
             {

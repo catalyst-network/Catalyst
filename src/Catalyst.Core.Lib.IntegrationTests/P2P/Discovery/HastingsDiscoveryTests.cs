@@ -78,7 +78,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
             var seedState = DiscoveryHelper.MockSeedState(_ownNode, _settings);
             var seedOrigin = HastingsOriginator.Default;
             seedOrigin.RestoreMemento(seedState);
-            var stateCareTaker = new HastingsesCareTaker();
+            var stateCareTaker = new HastingsCareTaker();
             var stateHistory = new Stack<IHastingsMemento>();
             stateHistory.Push(seedState);
             
@@ -177,7 +177,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
         {
             var seedState = DiscoveryHelper.SubSeedState(_ownNode, _settings);
             
-            var stateCareTaker = new HastingsesCareTaker();
+            var stateCareTaker = new HastingsCareTaker();
             var stateHistory = new Stack<IHastingsMemento>();
             stateHistory.Push(seedState);
             
@@ -245,7 +245,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
             var seedOrigin = HastingsOriginator.Default;
             seedOrigin.RestoreMemento(seedState);
         
-            var stateCareTaker = new HastingsesCareTaker();
+            var stateCareTaker = new HastingsCareTaker();
             var stateHistory = new Stack<IHastingsMemento>();
             stateHistory.Push(seedState);
             

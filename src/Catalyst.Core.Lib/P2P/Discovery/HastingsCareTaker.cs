@@ -27,11 +27,11 @@ using Catalyst.Common.Interfaces.P2P.Discovery;
 
 namespace Catalyst.Core.Lib.P2P.Discovery
 {
-    public sealed class HastingsesCareTaker : IHastingsCareTaker
+    public sealed class HastingsCareTaker : IHastingsCareTaker
     {
         public ConcurrentStack<IHastingsMemento> HastingMementoList { get; }
 
-        public HastingsesCareTaker()
+        public HastingsCareTaker()
         {
             HastingMementoList = new ConcurrentStack<IHastingsMemento>();
         }

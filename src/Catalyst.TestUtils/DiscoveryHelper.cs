@@ -165,7 +165,7 @@ namespace Catalyst.TestUtils
 
         public static IHastingsCareTaker MockCareTaker(IEnumerable<IHastingsMemento> history = default)
         {
-            var careTaker = new HastingsesCareTaker();
+            var careTaker = new HastingsCareTaker();
 
             history?.ToList().ForEach(m =>
             {

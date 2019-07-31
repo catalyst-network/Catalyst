@@ -44,7 +44,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
         [Fact]
         public void Can_Add_New_Mementos_To_Caretaker()
         {
-            var careTaker = new HastingsesCareTaker();
+            var careTaker = new HastingsCareTaker();
 
             var stack = new Stack<IHastingsMemento>();
             stack.Push(DiscoveryHelper.SubMemento(_ownNode));
@@ -59,7 +59,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
         [Fact]
         public void Taking_From_Memento_List_Takes_LIFO()
         {
-            var careTaker = new HastingsesCareTaker();
+            var careTaker = new HastingsCareTaker();
 
             var stack = new Stack<IHastingsMemento>();
             stack.Push(DiscoveryHelper.SubMemento(_ownNode));

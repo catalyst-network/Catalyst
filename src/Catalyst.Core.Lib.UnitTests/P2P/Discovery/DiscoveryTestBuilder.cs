@@ -170,7 +170,8 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
             IPeerIdentifier peer = default,
             INeighbours neighbours = default)
         {
-            if (_careTaker == null) WithCareTaker();
+            if (_careTaker == null) {WithCareTaker();}
+
             var memento = mock
                 ? currentStep ?? DiscoveryHelper.MockMemento(peer, neighbours)
                 : currentStep ?? DiscoveryHelper.SubMemento(peer, neighbours);

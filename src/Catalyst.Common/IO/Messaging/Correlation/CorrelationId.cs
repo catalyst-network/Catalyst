@@ -23,7 +23,6 @@
 
 using System;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
-using Dawn;
 using Google.Protobuf;
 
 namespace Catalyst.Common.IO.Messaging.Correlation
