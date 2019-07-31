@@ -46,7 +46,7 @@ namespace Catalyst.Common.FileSystem
             _currentDataDirPointer = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile);
 
             _dataDir = File.Exists(_currentDataDirPointer) ?
-                GetCurrentDataDir(_currentDataDirPointer) : Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), Constants.CatalystDataDir);
+                GetCurrentDataDir(_currentDataDirPointer, out _) : Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), Constants.CatalystDataDir);
         }
         public virtual DirectoryInfo GetCatalystDataDir()
         {
@@ -108,13 +108,17 @@ namespace Catalyst.Common.FileSystem
             return File.Exists(Path.Combine(GetCatalystDataDir().FullName, subDirectory, fileName));
         }
 
-        private static string GetCurrentDataDir(string configFilePointer)
+        private static string GetCurrentDataDir(string configFilePointer, out bool successfulRead)
         {
             var configurationRoot = new ConfigurationBuilder().AddJsonFile(configFilePointer).Build();
 
-            return configurationRoot.GetSection("components").GetChildren()
+            var path = configurationRoot.GetSection("components").GetChildren()
                 .Select(p => p.GetSection("parameters:configDataDir").Value).ToArray()
                 .Where(m => string.IsNullOrEmpty(m) == false).FirstOrDefault();
+
+            successfulRead = string.IsNullOrEmpty(path) ? false : true;
+
+            return path;
         }
 
         private static string GetUserHomeDir()
@@ -141,7 +145,7 @@ namespace Catalyst.Common.FileSystem
 
         private bool SaveConfigPointerFile(string configDirLocation, string configFilePointer)
         {
-            var configDataDir = GetCurrentDataDir(configFilePointer);
+            var configDataDir = GetCurrentDataDir(configFilePointer, out _);
 
             configDataDir = PrepDirectoryLocationFormatAlt(configDataDir);
             configDirLocation = PrepDirectoryLocationFormatAlt(configDirLocation);
@@ -150,15 +154,18 @@ namespace Catalyst.Common.FileSystem
             text = text.Replace(configDataDir, configDirLocation);
             System.IO.File.WriteAllText(configFilePointer, text);
 
-            var textAlt = System.IO.File.ReadAllText(configFilePointer);
-            return textAlt.Contains(configDirLocation);
+            var dirFound = false;
+            GetCurrentDataDir(configFilePointer, out dirFound); 
+            return dirFound;
         }
 
         private string PrepDirectoryLocationFormatAlt(string dir)
         {
             var seperatorType = System.Environment.OSVersion.Platform == System.PlatformID.Unix ? "////" : "\\\\";
 
-            var arrayText = dir.Split(System.IO.Path.DirectorySeparatorChar.ToString()).ToList();
+            var arrayText = dir.Split(System.Environment.OSVersion.Platform == System.PlatformID.Unix ?
+                System.IO.Path.AltDirectorySeparatorChar.ToString()
+                : System.IO.Path.DirectorySeparatorChar.ToString()).ToList();
 
             var final = arrayText.FirstOrDefault();
 
