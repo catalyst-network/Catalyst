@@ -64,6 +64,9 @@ namespace Catalyst.Common.FileSystem
                 {
                     Console.WriteLine("Save :: " + GetHashCode());
                     Console.WriteLine("Save Successful :: " + path);
+                    Console.WriteLine("Saved Here :: " + _currentDataDirPointer);
+                    Console.WriteLine("\n");
+
                     _dataDir = path;
                     return true;
                 }
