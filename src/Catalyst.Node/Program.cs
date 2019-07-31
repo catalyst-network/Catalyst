@@ -41,7 +41,7 @@ namespace Catalyst.Node
 
         static Program()
         {
-            Kernel = Kernel.Initramfs(_options.OverwriteConfig);
+            Kernel = Kernel.Initramfs();
             AppDomain.CurrentDomain.UnhandledException += Kernel.LogUnhandledException;
             AppDomain.CurrentDomain.ProcessExit += Kernel.CurrentDomain_ProcessExit;
         }
