@@ -21,9 +21,6 @@
 
 #endregion
 
-using System;
-using Catalyst.Protocol.Common;
-using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using System.Threading.Tasks;
 
 namespace Catalyst.Common.Interfaces.P2P

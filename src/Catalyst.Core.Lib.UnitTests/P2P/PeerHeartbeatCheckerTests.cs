@@ -1,3 +1,26 @@
+#region LICENSE
+
+/**
+* Copyright (c) 2019 Catalyst Network
+*
+* This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
+*
+* Catalyst.Node is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 2 of the License, or
+* (at your option) any later version.
+*
+* Catalyst.Node is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
+*/
+
+#endregion
+
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Repository;
 using Catalyst.Common.P2P;
@@ -11,7 +34,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.IO.Messaging.Correlation;
-using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
 using DotNetty.Transport.Channels;
 using Xunit;
@@ -20,7 +42,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P
 {
     public class PeerHeartbeatCheckerTests
     {
-        private readonly IPeerHeartbeatChecker _peerHeatbeatChecker;
+        private IPeerHeartbeatChecker _peerHeartbeatChecker;
         private readonly IPeerService _peerService;
         private readonly IPeerClient _peerClient;
         private readonly IPeerIdentifier _senderIdentifier;
@@ -31,9 +53,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P
         public PeerHeartbeatCheckerTests()
         {
             _peerHeartbeatCheckTimeSpan = TimeSpan.FromSeconds(5);
-
-            var peers = new List<Peer>();
-
+            
             _peerRepository = Substitute.For<IPeerRepository>();
             _senderIdentifier = PeerIdentifierHelper.GetPeerIdentifier("Sender");
             _peerClient = Substitute.For<IPeerClient>();
@@ -42,8 +62,6 @@ namespace Catalyst.Core.Lib.UnitTests.P2P
             {
                 PeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("TestPeer")
             };
-
-            peers.Add(_testPeer);
         }
 
         [Fact]
@@ -68,14 +86,16 @@ namespace Catalyst.Core.Lib.UnitTests.P2P
 
         private async Task RunHeartbeatChecker()
         {
-            /*_peerRepository.GetAll().Returns(peers);
+            var peers = new List<Peer> {_testPeer};
+
+            _peerRepository.GetAll().Returns(peers);
             _peerRepository.AsQueryable().Returns(peers.AsQueryable());
-            _peerHeatbeatChecker = new PeerHeartbeatChecker(_peerRepository,
-                new PeerChallenger(_peerService, logger, _peerClient, _senderIdentifier),
+            _peerHeartbeatChecker = new PeerHeartbeatChecker(_peerRepository,
+                new PeerChallenger(_peerService, Substitute.For<ILogger>(), _peerClient, _senderIdentifier),
                 _peerHeartbeatCheckTimeSpan);
 
-            _peerHeatbeatChecker.Run();
-            await Task.Delay(_peerHeartbeatCheckTimeSpan).ConfigureAwait(false);*/
+            _peerHeartbeatChecker.Run();
+            await Task.Delay(_peerHeartbeatCheckTimeSpan / 2).ConfigureAwait(false);
         }
     }
 }
