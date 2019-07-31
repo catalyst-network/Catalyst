@@ -92,7 +92,7 @@ namespace Catalyst.Node.IntegrationTests.IO
             fileSystem.GetCatalystDataDir().FullName.ToLower().Should().Be(_fileSystem.GetCatalystDataDir().FullName.ToLower());
         }
 
-        [Fact (Skip="Temporary Skip")]
+        [Fact]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void Save_Data_Directory_Several_Times_New_Instance_Must_Load_With_New_Data_Directory()
         {
