@@ -70,7 +70,7 @@ namespace Catalyst.Core.Lib.P2P
             foreach (var pid in poaPeers)
             {
                 var peerIdentifier = PeerIdentifier.ParseHexPeerIdentifier(pid.Split(PeerIdentifier.PidDelimiter));
-                var poaPeer = new Peer { PeerIdentifier = peerIdentifier };
+                var poaPeer = new Peer {PeerIdentifier = peerIdentifier};
 
                 _logger.Information($"Adding POA Peer: {peerIdentifier.Ip} Public Key: {peerIdentifier.PublicKey.KeyToString()}");
 
