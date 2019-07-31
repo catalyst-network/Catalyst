@@ -27,7 +27,8 @@ using CommandLine;
 
 namespace Catalyst.Node
 {
-    internal class Options
+    class Options
+
     {
         [Option('o', "overwrite-config", HelpText = "Overwrite the data directory configs.")]
         public bool OverwriteConfig { get; set; }
@@ -36,11 +37,11 @@ namespace Catalyst.Node
     internal static class Program
     {
         private static Options _options;
-        private static Kernel Kernel;
+        private static readonly Kernel Kernel;
 
         static Program()
         {
-            Kernel = Kernel.Initramfs();
+            Kernel = Kernel.Initramfs(_options.OverwriteConfig);
             AppDomain.CurrentDomain.UnhandledException += Kernel.LogUnhandledException;
             AppDomain.CurrentDomain.ProcessExit += Kernel.CurrentDomain_ProcessExit;
         }

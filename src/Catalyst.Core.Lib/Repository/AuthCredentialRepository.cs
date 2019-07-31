@@ -22,14 +22,14 @@
 #endregion
 
 using Catalyst.Common.Interfaces.Repository;
-using Catalyst.Common.Modules.Mempool;
 using Catalyst.Common.Repository;
+using Catalyst.Common.Rpc.Authentication;
 using SharpRepository.Repository;
 
-namespace Catalyst.Node.Repository
+namespace Catalyst.Core.Lib.Repository
 {
-    public class MempoolRepository : RepositoryWrapper<MempoolDocument>, IMempoolRepository
+    public class AuthCredentialRepository : RepositoryWrapper<AuthCredentials>, IAuthCredentialRepository
     {
-        public MempoolRepository(IRepository<MempoolDocument, string> repository) : base(repository) { }
+        public AuthCredentialRepository(IRepository<AuthCredentials, string> repository) : base(repository) { }
     }
 }
