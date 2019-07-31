@@ -193,7 +193,6 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
                .WithLogger()
                .WithPeerRepository()
                .WithDns()
-               //.WithPeerSettings()
                .WithPeerClient()
                .WithCancellationProvider()
                .WithPeerClientObservables()
@@ -569,7 +568,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
                    
                     subbedDto.Message.Returns(peerNeighborsResponse);
                     
-                    discoveryTestBuilder.PeerClientObservables.ToList().ForEach(o =>
+                    discoveryTestBuilder.PeerClientObservables.AsParallel().ForAll(o =>
                     {
                         o.ResponseMessageSubject.OnNext(subbedDto);
                     });
@@ -623,7 +622,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
                    .SubscribeOn(TaskPoolScheduler.Default)
                    .Subscribe(streamObserver))
                 {
-                    neighbours.ToList().ForEach(n =>
+                    neighbours.AsParallel().ForAll(n =>
                     {
                         var subbedDto = DiscoveryHelper.SubDto(typeof(PingResponse), n.DiscoveryPingCorrelationId, n.PeerIdentifier);
                         var peerNeighborsResponse = new PingResponse();
