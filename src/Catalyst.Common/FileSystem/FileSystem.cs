@@ -60,6 +60,7 @@ namespace Catalyst.Common.FileSystem
             {
                 if (SaveConfigPointerFile(path, _currentDataDirPointer))
                 {
+                    Console.WriteLine("Save Successful :: " + path);
                     _dataDir = path;
                     return true;
                 }
