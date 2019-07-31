@@ -40,7 +40,7 @@ using Xunit;
 
 namespace Catalyst.Core.Lib.UnitTests.P2P
 {
-    public class PeerHeartbeatCheckerTests
+    public sealed class PeerHeartbeatCheckerTests : IDisposable
     {
         private IPeerHeartbeatChecker _peerHeartbeatChecker;
         private readonly IPeerService _peerService;
@@ -96,6 +96,11 @@ namespace Catalyst.Core.Lib.UnitTests.P2P
 
             _peerHeartbeatChecker.Run();
             await Task.Delay(_peerHeartbeatCheckTimeSpan / 2).ConfigureAwait(false);
+        }
+
+        public void Dispose()
+        {
+            _peerHeartbeatChecker?.Dispose();
         }
     }
 }
