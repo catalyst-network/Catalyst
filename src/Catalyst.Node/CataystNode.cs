@@ -47,20 +47,20 @@ namespace Catalyst.Node
         private readonly IKeySigner _keySigner;
         private readonly ILogger _logger;
         private readonly IMempool _mempool;
-        private readonly IPeerService _peerService;
+        private readonly IPeerService _peer;
         private readonly INodeRpcServer _nodeRpcServer;
 
-        public CatalystNode(IPeerService peerService,
+        public CatalystNode(IKeySigner keySigner,
+            IPeerService peer,
             IConsensus consensus,
             IDfs dfs,
             ILedger ledger,
-            IKeySigner keySigner,
             ILogger logger,
             INodeRpcServer nodeRpcServer,
             IMempool mempool = null,
             IContract contract = null)
         {
-            _peerService = peerService;
+            _peer = peer;
             _consensus = consensus;
             _dfs = dfs;
             _ledger = ledger;

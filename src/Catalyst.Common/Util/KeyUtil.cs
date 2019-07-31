@@ -21,25 +21,23 @@
 
 #endregion
 
-using System.Collections.Generic;
-using System.Linq;
-using Catalyst.Common.Config;
-using Catalyst.Common.Interfaces.Cryptography;
-using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
-using Catalyst.Common.Interfaces.Registry;
+using Multiformats.Base;
+using Multiformats.Hash;
 
-namespace Catalyst.Common.Registry
+namespace Catalyst.Common.Util
 {
-    public class KeyRegistry : RegistryBase<KeyRegistryKey, IPrivateKey>, IKeyRegistry
+    public static class KeyUtil
     {
-        public KeyRegistry()
+        public static string KeyToString(this byte[] keyBytes)
         {
-            Registry = new Dictionary<KeyRegistryKey, IPrivateKey>();
+            return Multihash.Sum(HashType.ID, keyBytes).ToString(MultibaseEncoding.Base58Btc);
         }
-        
-        public bool Contains(byte[] publicKeyBytes)
+
+        public static byte[] KeyToBytes(this string base58Key)
         {
-            return Registry.Values.Any(privateKey => privateKey.GetPublicKey().Bytes.SequenceEqual(publicKeyBytes));
+            var publicKeyMultiHash = Multihash.Parse(base58Key.Trim());
+            var rawPublicKeyBytes = publicKeyMultiHash.ToBytes().Slice(2, publicKeyMultiHash.ToBytes().Length);
+            return rawPublicKeyBytes;
         }
-    };
+    }
 }

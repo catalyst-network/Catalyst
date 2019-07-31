@@ -26,7 +26,7 @@ using System.Net;
 using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Network;
-using Catalyst.Core.Lib.P2P;
+using NSubstitute;
 
 namespace Catalyst.TestUtils
 {
@@ -34,22 +34,23 @@ namespace Catalyst.TestUtils
     {
         public static IPeerSettings TestPeerSettings()
         {
-            return new PeerSettings(Network.Dev,
-                "302a300506032b65700321001783421742816abf",
-                42069,
-                "my_pay_out_address",
-                false,
-                new IPEndPoint(Ip.BuildIpAddress("127.0.0.1"), 80),
-                Ip.BuildIpAddress("127.0.0.1"),
-                new List<string>
-                {
-                    "seed1.catalystnetwork.io",
-                    "seed2.catalystnetwork.io",
-                    "seed3.catalystnetwork.io",
-                    "seed4.catalystnetwork.io",
-                    "seed5.catalystnetwork.io"
-                }
-            );
+            var peerSettings = Substitute.For<IPeerSettings>();
+            peerSettings.Network.Returns(Network.Dev);
+            peerSettings.Announce.Returns(false);
+            peerSettings.AnnounceServer.Returns(new IPEndPoint(IPAddress.Loopback, 80));
+            peerSettings.PublicKey.Returns(TestKeyRegistry.TestPublicKey);
+            peerSettings.Port.Returns(42069);
+            peerSettings.PayoutAddress.Returns("my_pay_out_address");
+            peerSettings.BindAddress.Returns(IPAddress.Loopback);
+            peerSettings.SeedServers.Returns(new List<string>
+            {
+                "seed1.catalystnetwork.io",
+                "seed2.catalystnetwork.io",
+                "seed3.catalystnetwork.io",
+                "seed4.catalystnetwork.io",
+                "seed5.catalystnetwork.io"
+            });
+            return peerSettings;
         }
     }
 }

@@ -97,7 +97,7 @@ namespace Catalyst.Core.Lib.P2P.Discovery
             _discoveredPeerInCurrentWalk = 0;
 
             // build the initial step proposal for the walk, which is our node and seed nodes
-            _ownNode = new PeerIdentifier(peerSettings, new PeerIdClientId("AC")); // this needs to be changed
+            _ownNode = new PeerIdentifier(peerSettings); // this needs to be changed
 
             var neighbours = dns.GetSeedNodesFromDns(peerSettings.SeedServers).ToNeighbours();
             

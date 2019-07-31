@@ -49,6 +49,8 @@ using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
 using System.Linq;
+using Catalyst.Common.Interfaces.Registry;
+using Catalyst.Common.Util;
 using Constants = Catalyst.Common.Config.Constants;
 
 namespace Catalyst.Core.Lib.IntegrationTests.P2P
@@ -62,8 +64,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P
         private PeerSettings _peerSettings;
         private IPeerClient _peerClientSingleInstance;
         protected override IEnumerable<string> ConfigFilesUsed { get; }
-
-
+        
         public PeerValidationIntegrationTest(ITestOutputHelper output) : base(output)
         {
             ConfigFilesUsed = new[]
@@ -81,9 +82,13 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P
 
             SocketPortHelper.AlterConfigurationToGetUniquePort(_config, CurrentTestName);
 
-           _logger = Substitute.For<ILogger>();
+            _logger = Substitute.For<ILogger>();
 
             ConfigureContainerBuilder(true, true);
+            
+            var keyRegistry = TestKeyRegistry.MockKeyRegistry();
+            ContainerBuilder.RegisterInstance(keyRegistry).As<IKeyRegistry>();
+
             ContainerBuilder.RegisterType<KeySigner>().SingleInstance();
 
             _container = ContainerBuilder.Build();
@@ -140,12 +145,12 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P
 
         private async Task<bool> RunPeerChallengeTask(string publicKey, IPAddress ip, int port)
         {
-            var recipient = new PeerIdentifier(Encoding.UTF8.GetBytes(publicKey), ip,
+            var recipient = new PeerIdentifier(publicKey.KeyToBytes(), ip,
                 port, Substitute.For<IPeerIdClientId>());
 
             var sender = PeerIdentifierHelper.GetPeerIdentifier("sender", "Tc", 1, _peerSettings.BindAddress, _peerSettings.Port);
 
-            var peerValidator = new PeerChallenger(_peerSettings, _peerService, _logger, _peerClientSingleInstance, sender);
+            var peerValidator = new PeerChallenger(_peerService, _logger, _peerClientSingleInstance, sender);
 
             return await peerValidator.ChallengePeerAsync(recipient);
         }
