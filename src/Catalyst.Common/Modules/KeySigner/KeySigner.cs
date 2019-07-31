@@ -22,6 +22,7 @@
 #endregion
 
 using System;
+using System.Text;
 using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Common.Interfaces.Keystore;
@@ -92,13 +93,13 @@ namespace Catalyst.Common.Modules.KeySigner
 
         private ISignature Sign(byte[] data, IPrivateKey privateKey)
         {
-            return _cryptoContext.Sign(privateKey, data);
+            return _cryptoContext.Sign(privateKey, data, Encoding.UTF8.GetBytes("Catalyst"));
         }
 
         /// <inheritdoc/>
         public bool Verify(ISignature signature, byte[] message)
         {          
-            return _cryptoContext.Verify(signature, message);
+            return _cryptoContext.Verify(signature, message, Encoding.UTF8.GetBytes("Catalyst"));
         }
 
         /// <inheritdoc/>

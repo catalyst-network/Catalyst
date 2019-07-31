@@ -22,6 +22,7 @@
 #endregion
 
 using System;
+using System.Text;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.IO.Observers;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
@@ -95,7 +96,7 @@ namespace Catalyst.Core.Lib.Rpc.IO.Observers
                 Logger.Error(ex, "{0} {1}", SignatureInvalid, verifyMessageRequest);
             }
 
-            var result = _keySigner.CryptoContext.Verify(signature, decodedMessage);
+            var result = _keySigner.CryptoContext.Verify(signature, decodedMessage, Encoding.UTF8.GetBytes("Catalyst"));
 
             Logger.Debug("message content is {0}", verifyMessageRequest.Message);
             
