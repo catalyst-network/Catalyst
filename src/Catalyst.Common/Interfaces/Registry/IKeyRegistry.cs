@@ -26,5 +26,10 @@ using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
 
 namespace Catalyst.Common.Interfaces.Registry
 {
-    public interface IKeyRegistry : IRegistryBase<KeyRegistryKey, IPrivateKey> { }
+    public interface IKeyRegistry : IRegistryBase<KeyRegistryKey, IPrivateKey>
+    {
+        /// <summary>Determines whether this instance contains the public key.</summary>
+        /// <returns><c>true</c> if [contains] [the specified public key]; otherwise, <c>false</c>.</returns>
+        bool Contains(byte[] publicKeyBytes);
+    }
 }
