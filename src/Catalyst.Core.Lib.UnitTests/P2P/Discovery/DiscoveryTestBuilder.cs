@@ -178,15 +178,12 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
             IPeerIdentifier peer = default,
             INeighbours neighbours = default)
         {
-            if (mock)
-            {
-                _careTaker.Add(new HastingMemento(peer ?? PeerIdentifierHelper.GetPeerIdentifier(default),
-                    neighbours ?? new Neighbours()));
-            }
+            if (_careTaker == null) WithCareTaker();
+            var memento = mock
+                ? currentStep ?? DiscoveryHelper.MockMemento(peer, neighbours)
+                : currentStep ?? DiscoveryHelper.SubMemento(peer, neighbours);
 
-            var latestMemento = (currentStep == default && mock == false)
-                ? DiscoveryHelper.SubMemento(peer, neighbours) 
-                : currentStep ?? DiscoveryHelper.MockMemento(peer, neighbours);
+            _careTaker.Add(memento);
             
             return this;
         }
@@ -199,9 +196,9 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
         {
             var pnrCorrelationId = expectedPnr ?? CorrelationId.GenerateCorrelationId();
 
-            _currentState = (stateCandidate == default && mock == false)
-                ? DiscoveryHelper.SubOriginator(peer, neighbours, pnrCorrelationId) 
-                : stateCandidate ?? DiscoveryHelper.MockOriginator(peer, neighbours);
+            _currentState = mock
+                ? stateCandidate ?? DiscoveryHelper.MockOriginator(peer, neighbours)
+                : stateCandidate ?? DiscoveryHelper.SubOriginator(peer, neighbours, pnrCorrelationId);
 
             return this;
         }
@@ -267,14 +264,12 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
                     peerClientObservables,
                     autoStart,
                     peerDiscoveryBurnIn,
-                    state ?? Substitute.For<IHastingsOriginator>(),
-                    hastingCareTaker ?? Substitute.For<IHastingCareTaker>()) { }
+                    state,
+                    hastingCareTaker) { }
 
             internal new void WalkForward() { base.WalkForward(); }
 
             public new void WalkBack() { base.WalkBack(); }
-
-            public new bool HasValidCandidate() { return base.HasValidCandidate(); }
 
             internal int GetBurnInValue() { return PeerDiscoveryBurnIn; }
 

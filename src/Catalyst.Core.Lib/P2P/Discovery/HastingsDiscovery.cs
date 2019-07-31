@@ -23,14 +23,12 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Linq;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Common.Config;
-using Catalyst.Common.Enumerator;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
@@ -85,26 +83,32 @@ namespace Catalyst.Core.Lib.P2P.Discovery
             IEnumerable<IPeerClientObservable> peerClientObservables,
             bool autoStart = true,
             int peerDiscoveryBurnIn = 10,
-            IHastingsOriginator state = default,
+            IHastingsOriginator stepProposal = default,
             IHastingCareTaker hastingCareTaker = default)
         {
             _logger = logger;
+            _cancellationTokenProvider = cancellationTokenProvider;
+
             PeerClient = peerClient;
             DtoFactory = dtoFactory;
             PeerRepository = peerRepository;
-            _discoveredPeerInCurrentWalk = 0;
             PeerDiscoveryBurnIn = peerDiscoveryBurnIn;
-            _cancellationTokenProvider = cancellationTokenProvider;
-            HastingCareTaker = hastingCareTaker ?? new HastingCareTaker();
+
+            _discoveredPeerInCurrentWalk = 0;
+
+            // build the initial step proposal for the walk, which is our node and seed nodes
             _ownNode = new PeerIdentifier(peerSettings, new PeerIdClientId("AC")); // this needs to be changed
 
-            // build the initial stateCandidate for walk,
-            // which is our node and seed nodes
             var neighbours = dns.GetSeedNodesFromDns(peerSettings.SeedServers).ToNeighbours();
-
-            var rootMemento = state == default ? default : new HastingMemento(_ownNode, neighbours);
-            HastingCareTaker.Add(rootMemento);
-            StepProposal = state ?? new HastingsOriginator(rootMemento ?? CurrentStep);
+            
+            HastingCareTaker = hastingCareTaker ?? new HastingCareTaker();
+            if (HastingCareTaker.HastingMementoList.IsEmpty)
+            {
+                var rootMemento = stepProposal?.CreateMemento() ?? new HastingMemento(_ownNode, neighbours);
+                HastingCareTaker.Add(rootMemento);
+            }
+            
+            StepProposal = stepProposal ?? new HastingsOriginator(CurrentStep);
 
             // create an empty stream for discovery messages
             DiscoveryStream = Observable.Empty<IPeerClientMessageDto>();
@@ -135,8 +139,13 @@ namespace Catalyst.Core.Lib.P2P.Discovery
             // subscribe to evicted peer messages, so we can cross
             // reference them with discovery messages we sent
             _evictionSubscription = peerMessageCorrelationManager
-               .EvictionEventStream.Select(e => e.Key)
+               .EvictionEventStream
                .SubscribeOn(TaskPoolScheduler.Default)
+               .Select(e =>
+                {
+                    _logger.Debug("Eviction stream receiving {key}", e.Key);
+                    return e.Key;
+                })
                .Subscribe(EvictionCallback);
 
             if (!autoStart)
@@ -229,7 +238,6 @@ namespace Catalyst.Core.Lib.P2P.Discovery
             } while (!_cancellationTokenProvider.HasTokenCancelled());
         }
 
-
         /// <summary>
         ///     Transitions StepProposal to state,
         ///     then start to try building next StepProposal.
@@ -288,7 +296,7 @@ namespace Catalyst.Core.Lib.P2P.Discovery
                 do
                 {
                     responsiveNeighbours = CurrentStep.Neighbours
-                       .Where(n => n.PeerIdentifier.Equals(unresponsiveNeighbour)
+                       .Where(n => !n.PeerIdentifier.Equals(unresponsiveNeighbour)
                          && n.State == NeighbourState.Responsive)
                        .ToList();
 
@@ -298,7 +306,13 @@ namespace Catalyst.Core.Lib.P2P.Discovery
                         //has no more potentially valid peers to suggest.
                         HastingCareTaker.Get();
                     }
-                } while (!responsiveNeighbours.Any());
+                } while (!responsiveNeighbours.Any() && HastingCareTaker.HastingMementoList.Count > 1);
+
+                if (!responsiveNeighbours.Any())
+                {
+                    throw new InvalidOperationException(
+                        "Peer discovery walked failed reaching its starting point with no responsive neighbours.");
+                }
 
                 var newCandidate = responsiveNeighbours.RandomElement().PeerIdentifier;
 
@@ -430,6 +444,10 @@ namespace Catalyst.Core.Lib.P2P.Discovery
                             _logger.Error(e, "Failed to send ping request to neighbour {neighbour}, marked as {state}", n, n.State);
                         }
                     });
+
+                    var newValidState = new HastingMemento(StepProposal.Peer, new Neighbours(newNeighbours));
+
+                    StepProposal.RestoreMemento(newValidState);
                 }
             }
             catch (Exception e)

@@ -29,7 +29,6 @@ using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.Discovery;
 using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Common.P2P.Discovery;
-using Makaretu.Dns.Resolving;
 using Serilog;
 
 namespace Catalyst.Core.Lib.P2P.Discovery
@@ -48,8 +47,8 @@ namespace Catalyst.Core.Lib.P2P.Discovery
         public HastingsOriginator(IHastingMemento hastingMemento)
         {
             PnrCorrelationId = CorrelationId.GenerateCorrelationId();
-            Peer = hastingMemento.Peer;
-            Neighbours = hastingMemento.Neighbours;
+            Peer = hastingMemento?.Peer;
+            Neighbours = hastingMemento?.Neighbours ?? new Neighbours();
         }
 
         /// <inheritdoc />

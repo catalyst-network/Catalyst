@@ -48,14 +48,12 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
         [Fact]
         public void Can_Create_Memento_From_Current_State()
         {
-            var memento = DiscoveryHelper.SubMemento();
+            var memento = DiscoveryHelper.SubMemento(_peer);
             var originator = new HastingsOriginator(memento);
 
             var stateMemento = originator.CreateMemento();
 
-            stateMemento.Peer
-               .Should()
-               .Be(_peer);
+            stateMemento.Peer.Should().Be(_peer);
             
             stateMemento.Neighbours
                .Should()
@@ -91,27 +89,6 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
             
             originator.Peer.Should().BeEquivalentTo(memento2.Peer);
             originator.Neighbours.Should().BeEquivalentTo(memento2.Neighbours);
-        }
-        
-        [Fact(Skip = "Not relevant if refactor goes well")]
-        public void Can_Clean_Up_When_Setting_Peer()
-        {
-            //var originator = new HastingsOriginator(default, default, default);
-            //var memento1 = DiscoveryHelper.SubMemento();
-            
-            //originator.RestoreMemento(memento1);
-
-            //originator.Neighbours.Count.Should().NotBe(0);
-            
-            //var newPeer = PeerIdentifierHelper.GetPeerIdentifier("new_peer");
-            //originator.Peer = newPeer;
-
-            //originator.Peer.Should().Be(newPeer);
-
-            //originator.ExpectedPnr.Key.Should().Be(null);
-            //originator.ExpectedPnr.Value.Should().Be(null);
-
-            //originator.Neighbours.Count.Should().Be(0);
         }
     }
 }

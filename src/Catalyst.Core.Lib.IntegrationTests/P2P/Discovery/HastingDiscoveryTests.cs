@@ -27,7 +27,6 @@ using System.IO;
 using System.Linq;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using Autofac;
 using Catalyst.Common.Config;
@@ -48,8 +47,6 @@ using Google.Protobuf;
 using Microsoft.Extensions.Caching.Memory;
 using NSubstitute;
 using Serilog;
-using Serilog.Core;
-using Serilog.Events;
 using Xunit;
 using Xunit.Abstractions;
 using Constants = Catalyst.Common.Config.Constants;
@@ -87,10 +84,12 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
             
             stateHistory = DiscoveryHelper.MockMementoHistory(stateHistory, 5); //this isn't an angry pirate this is just 5
 
+            stateHistory.Last().Neighbours.First().State = NeighbourState.Responsive;
+
             stateHistory.ToList().ForEach(i => stateCareTaker.Add(i));
-            
+
             var stateCandidate = DiscoveryHelper.MockOriginator(default, 
-                DiscoveryHelper.MockNeighbours(Constants.AngryPirate, NeighbourState.NotContacted, CorrelationId.GenerateCorrelationId()));
+                DiscoveryHelper.MockNeighbours(Constants.AngryPirate, NeighbourState.NotContacted));
             
             var memoryCache = Substitute.For<IMemoryCache>();
             var correlatableMessages = new List<CorrelatableMessage<ProtocolMessage>>();
@@ -103,6 +102,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
             {
                 _logger.Debug("Setting up neighbour {neighbour}", n.PeerIdentifier);
                 _logger.Debug("Adding eviction callbacks expectation for correlationId {correlationId}", n.DiscoveryPingCorrelationId);
+
                 cacheEntriesByRequest = CacheHelper.MockCacheEvictionCallback(n.DiscoveryPingCorrelationId.Id.ToByteString(),
                     memoryCache,
                     cacheEntriesByRequest
@@ -150,7 +150,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
 
                 var success = await TaskHelper.WaitForAsync(
                     () => stateCandidate.Neighbours.All(n => n.State == NeighbourState.UnResponsive),
-                    TimeSpan.FromSeconds(2)).ConfigureAwait(false);
+                    TimeSpan.FromSeconds(3)).ConfigureAwait(false);
                 _logger.Verbose("Succeeded waiting for neighbour state change to Unresponsive? {success}", success);
 
                 walker.StepProposal.Neighbours
@@ -158,7 +158,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
                    .Should()
                    .Be(Constants.AngryPirate);
 
-                walker.HasValidCandidate()
+                walker.StepProposal.HasValidCandidate()
                    .Should()
                    .BeFalse();
 
@@ -304,5 +304,11 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
         }
 
         protected override IEnumerable<string> ConfigFilesUsed => new[] {Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Network.Dev))};
+
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+            _container.Dispose();
+        }
     }
 }

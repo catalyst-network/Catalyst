@@ -38,7 +38,6 @@ using Catalyst.Common.P2P;
 using Catalyst.Core.Lib.P2P.ReputationSystem;
 using Catalyst.Protocol.Common;
 using Dawn;
-using Google.Protobuf;
 using Microsoft.Extensions.Caching.Memory;
 using Serilog;
 
