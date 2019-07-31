@@ -21,6 +21,7 @@
 
 #endregion
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -52,7 +53,7 @@ namespace Catalyst.Common.Config
         public static string JsonFilePattern => "{0}.json";
         
         // <summary> Default Catalyst data directory </summary>
-        public static string CatalystDataDir => ".Catalyst";
+        public static string CatalystDataDir => ".catalyst";
         
         // <summary> Default dfs data directory inside the Catalyst data directory </summary>
         public static string DfsDataSubDir => "dfs";
@@ -115,13 +116,13 @@ namespace Catalyst.Common.Config
         /// <summary> This is the standard size for salt byte array </summary>
         public static int StandardSaltSize => 100;
 
+        /// <summary> Wait time for peer challenge </summary>
+        public static TimeSpan PeerChallengeWaitTime => TimeSpan.FromMilliseconds(4000);
+
         public static IEnumerable<string> AllModuleFiles =>
             Enumeration.GetAll<ModuleName>()
                .Select(m => Path.Combine(ModulesSubFolder, string.Format(JsonFilePattern, m.Name.ToLower())));
 
         public static string NetworkConfigFile(Network network) { return string.Format(JsonFilePattern, network.Name); }
-
-        /// <summary>The maximum peers the node can gossip to for a single message, per gossip cycle</summary>
-        public static int MaxGossipPeersPerRound => 3;
     }
 }

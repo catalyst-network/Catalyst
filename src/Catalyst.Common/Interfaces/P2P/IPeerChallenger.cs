@@ -21,25 +21,24 @@
 
 #endregion
 
-using System.Collections.Generic;
-using System.Linq;
-using Catalyst.Common.Config;
-using Catalyst.Common.Interfaces.Cryptography;
-using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
-using Catalyst.Common.Interfaces.Registry;
+using System;
+using Catalyst.Protocol.Common;
+using Catalyst.Common.Interfaces.IO.Messaging.Dto;
+using System.Threading.Tasks;
 
-namespace Catalyst.Common.Registry
+namespace Catalyst.Common.Interfaces.P2P
 {
-    public class KeyRegistry : RegistryBase<KeyRegistryKey, IPrivateKey>, IKeyRegistry
+    /// <summary>
+    /// This class is used to validate peers by carrying out a peer challenge response
+    /// </summary>
+    public interface IPeerChallenger 
     {
-        public KeyRegistry()
-        {
-            Registry = new Dictionary<KeyRegistryKey, IPrivateKey>();
-        }
-        
-        public bool Contains(byte[] publicKeyBytes)
-        {
-            return Registry.Values.Any(privateKey => privateKey.GetPublicKey().Bytes.SequenceEqual(publicKeyBytes));
-        }
-    };
+        /// <summary>
+        /// Used to challenge a peer for a response based on the provided public key, ip and port chunks 
+        /// </summary>
+        /// <param name="recipientPeerIdentifier">The recipient peer identifier.
+        /// PeerIdentifier holds the chunks we want to validate.</param>
+        /// <returns>bool true means valid and false means not valid</returns>
+        Task<bool> ChallengePeerAsync(IPeerIdentifier recipientPeerIdentifier);
+    }
 }

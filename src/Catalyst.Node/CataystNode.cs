@@ -50,11 +50,11 @@ namespace Catalyst.Node
         private readonly IPeerService _peer;
         private readonly INodeRpcServer _nodeRpcServer;
 
-        public CatalystNode(IPeerService peer,
+        public CatalystNode(IKeySigner keySigner,
+            IPeerService peer,
             IConsensus consensus,
             IDfs dfs,
             ILedger ledger,
-            IKeySigner keySigner,
             ILogger logger,
             INodeRpcServer nodeRpcServer,
             IMempool mempool = null,

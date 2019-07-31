@@ -21,25 +21,15 @@
 
 #endregion
 
-using System.Collections.Generic;
-using System.Linq;
-using Catalyst.Common.Config;
-using Catalyst.Common.Interfaces.Cryptography;
-using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
-using Catalyst.Common.Interfaces.Registry;
+using Catalyst.Common.Interfaces.Repository;
+using Catalyst.Common.Repository;
+using Catalyst.Common.Rpc.Authentication;
+using SharpRepository.Repository;
 
-namespace Catalyst.Common.Registry
+namespace Catalyst.Core.Lib.Repository
 {
-    public class KeyRegistry : RegistryBase<KeyRegistryKey, IPrivateKey>, IKeyRegistry
+    public class AuthCredentialRepository : RepositoryWrapper<AuthCredentials>, IAuthCredentialRepository
     {
-        public KeyRegistry()
-        {
-            Registry = new Dictionary<KeyRegistryKey, IPrivateKey>();
-        }
-        
-        public bool Contains(byte[] publicKeyBytes)
-        {
-            return Registry.Values.Any(privateKey => privateKey.GetPublicKey().Bytes.SequenceEqual(publicKeyBytes));
-        }
-    };
+        public AuthCredentialRepository(IRepository<AuthCredentials, string> repository) : base(repository) { }
+    }
 }

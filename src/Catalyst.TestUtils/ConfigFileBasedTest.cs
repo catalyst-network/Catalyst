@@ -27,9 +27,9 @@ using System.Linq;
 using Autofac;
 using Autofac.Configuration;
 using AutofacSerilogIntegration;
-using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Common.Interfaces.FileSystem;
+using Catalyst.Common.Interfaces.Registry;
 using Microsoft.Extensions.Configuration;
 using Serilog;
 using Serilog.Events;
@@ -88,6 +88,9 @@ namespace Catalyst.TestUtils
             var certificateStore = new TestCertificateStore();
             ContainerBuilder.RegisterInstance(certificateStore).As<ICertificateStore>();
             ContainerBuilder.RegisterInstance(FileSystem).As<IFileSystem>();
+
+            var keyRegistry = TestKeyRegistry.MockKeyRegistry();
+            ContainerBuilder.RegisterInstance(keyRegistry).As<IKeyRegistry>();
 
             ConfigureLogging();
         }

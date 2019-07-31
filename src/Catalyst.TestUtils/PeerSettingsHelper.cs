@@ -32,14 +32,13 @@ namespace Catalyst.TestUtils
 {
     public static class PeerSettingsHelper
     {
-        public static IPeerSettings TestPeerSettings(string publicKey = "302a300506032b65700321001783421742816abf",
-            int port = 42069)
+        public static IPeerSettings TestPeerSettings(string publicKey = null, int port = 42069)
         {
             var peerSettings = Substitute.For<IPeerSettings>();
             peerSettings.Network.Returns(Network.Dev);
             peerSettings.Announce.Returns(false);
             peerSettings.AnnounceServer.Returns(new IPEndPoint(IPAddress.Loopback, 80));
-            peerSettings.PublicKey.Returns(publicKey);
+            peerSettings.PublicKey.Returns(publicKey ?? TestKeyRegistry.TestPublicKey);
             peerSettings.Port.Returns(port);
             peerSettings.PayoutAddress.Returns("my_pay_out_address");
             peerSettings.BindAddress.Returns(IPAddress.Loopback);

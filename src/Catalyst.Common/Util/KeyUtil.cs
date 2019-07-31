@@ -21,15 +21,23 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.Repository;
-using Catalyst.Common.P2P;
-using Catalyst.Common.Repository;
-using SharpRepository.Repository;
+using Multiformats.Base;
+using Multiformats.Hash;
 
-namespace Catalyst.Node.Repository
+namespace Catalyst.Common.Util
 {
-    public class PeerRepository : RepositoryWrapper<Peer>, IPeerRepository
+    public static class KeyUtil
     {
-        public PeerRepository(IRepository<Peer, string> repository) : base(repository) { }
+        public static string KeyToString(this byte[] keyBytes)
+        {
+            return Multihash.Sum(HashType.ID, keyBytes).ToString(MultibaseEncoding.Base58Btc);
+        }
+
+        public static byte[] KeyToBytes(this string base58Key)
+        {
+            var publicKeyMultiHash = Multihash.Parse(base58Key.Trim());
+            var rawPublicKeyBytes = publicKeyMultiHash.ToBytes().Slice(2, publicKeyMultiHash.ToBytes().Length);
+            return rawPublicKeyBytes;
+        }
     }
 }
