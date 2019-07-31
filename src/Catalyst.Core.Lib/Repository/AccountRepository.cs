@@ -26,7 +26,7 @@ using Catalyst.Common.Modules.Ledger;
 using Catalyst.Common.Repository;
 using SharpRepository.Repository;
 
-namespace Catalyst.Node.Repository
+namespace Catalyst.Core.Lib.Repository
 {
     public class AccountRepository : RepositoryWrapper<Account>, IAccountRepository
     {
