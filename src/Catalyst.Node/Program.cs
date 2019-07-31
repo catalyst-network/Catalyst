@@ -22,17 +22,21 @@
 #endregion
 
 using System;
-using System.Reflection;
-using Autofac;
-using Catalyst.Common.Interfaces;
 using Catalyst.Common.Kernel;
-using Catalyst.Common.Util;
+using CommandLine;
 
 namespace Catalyst.Node
 {
+    internal class Options
+    {
+        [Option('o', "overwrite-config", HelpText = "Overwrite the data directory configs.")]
+        public bool OverwriteConfig { get; set; }
+    }
+    
     internal static class Program
     {
-        private static readonly Kernel Kernel;
+        private static Options _options;
+        private static Kernel Kernel;
 
         static Program()
         {
@@ -58,6 +62,17 @@ namespace Catalyst.Node
         // }
         public static int Main(string[] args)
         {
+            // Parse the arguments.
+            Parser.Default
+               .ParseArguments<Options>(args)
+               .WithParsed(Run);
+
+            return Environment.ExitCode;
+        }
+        
+        private static void Run(Options options)
+        {
+            _options = options;
             Kernel.Logger.Information("Catalyst.Node started with process id {0}",
                 System.Diagnostics.Process.GetCurrentProcess().Id.ToString());
             
@@ -70,9 +85,9 @@ namespace Catalyst.Node
                    .WithSerilogConfigFile()
                    .WithConfigCopier()
                    .WithPersistenceConfiguration()
-                   .BuildKernel()
+                   .BuildKernel(_options.OverwriteConfig)
                    .StartNode();
-                
+
                 // .StartCustom(CustomBootLogic);
                 
                 Environment.ExitCode = 0;
@@ -82,8 +97,6 @@ namespace Catalyst.Node
                 Kernel.Logger.Fatal(e, "Catalyst.Node stopped unexpectedly");
                 Environment.ExitCode = 1;
             }
-
-            return Environment.ExitCode;
         }
     }
 }
