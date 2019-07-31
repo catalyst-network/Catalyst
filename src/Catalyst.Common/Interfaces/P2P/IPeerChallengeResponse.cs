@@ -21,24 +21,12 @@
 
 #endregion
 
-using System.Reactive.Subjects;
-using System.Threading.Tasks;
+using Catalyst.Protocol.Common;
 
 namespace Catalyst.Common.Interfaces.P2P
 {
-    /// <summary>
-    /// This class is used to validate peers by carrying out a peer challenge response
-    /// </summary>
-    public interface IPeerChallenger 
+    public interface IPeerChallengeResponse
     {
-        /// <summary>
-        /// Used to challenge a peer for a response based on the provided public key, ip and port chunks 
-        /// </summary>
-        /// <param name="recipientPeerIdentifier">The recipient peer identifier.
-        /// PeerIdentifier holds the chunks we want to validate.</param>
-        /// <returns>bool true means valid and false means not valid</returns>
-        Task<bool> ChallengePeerAsync(IPeerIdentifier recipientPeerIdentifier);
-
-        ReplaySubject<IPeerChallengeResponse> ChallengeResponseMessageStreamer { get; }
+        PeerId PeerId { get; }
     }
 }

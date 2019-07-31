@@ -46,8 +46,8 @@ namespace Catalyst.Core.Lib.P2P
             IPeerDiscovery peerDiscovery,
             IEnumerable<IP2PMessageObserver> messageHandlers,
             IPeerSettings peerSettings,
-            IPeerHeartbeatChecker heartbeatChecker,
-            ILogger logger)
+            ILogger logger,
+            IPeerHeartbeatChecker heartbeatChecker)
             : base(serverChannelFactory, logger, udpServerEventLoopGroupFactory)
         {
             Discovery = peerDiscovery;

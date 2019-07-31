@@ -120,7 +120,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P
                     _container.Resolve<IBroadcastManager>(),
                     keySigner,
                     _container.Resolve<IPeerIdValidator>()), _container.Resolve<IPeerDiscovery>(),
-                _container.Resolve<IEnumerable<IP2PMessageObserver>>(), _peerSettings, _container.Resolve<IPeerHeartbeatChecker>(), _container.Resolve<ILogger>());
+                _container.Resolve<IEnumerable<IP2PMessageObserver>>(), _peerSettings, _container.Resolve<ILogger>(), _container.Resolve<IPeerHeartbeatChecker>());
         }
 
         [Fact]
@@ -150,7 +150,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P
 
             var sender = PeerIdentifierHelper.GetPeerIdentifier("sender", "Tc", 1, _peerSettings.BindAddress, _peerSettings.Port);
 
-            var peerValidator = new PeerChallenger(_peerService, _logger, _peerClientSingleInstance, sender, TimeSpan.FromSeconds(2));
+            var peerValidator = new PeerChallenger(_logger, _peerClientSingleInstance, sender, 5);
 
             return await peerValidator.ChallengePeerAsync(recipient);
         }

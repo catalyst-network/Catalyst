@@ -37,11 +37,11 @@ namespace Catalyst.Core.Lib.P2P
         private readonly IPeerChallenger _peerChallenger;
         private IDisposable _subscription;
 
-        public PeerHeartbeatChecker(IPeerRepository peerRepository, IPeerChallenger peerChallenger, TimeSpan checkHeartbeatInterval)
+        public PeerHeartbeatChecker(IPeerRepository peerRepository, IPeerChallenger peerChallenger, int checkHeartbeatIntervalSeconds)
         {
             _peerRepository = peerRepository;
             _peerChallenger = peerChallenger;
-            _checkHeartbeatInterval = checkHeartbeatInterval;
+            _checkHeartbeatInterval = TimeSpan.FromSeconds(checkHeartbeatIntervalSeconds);
         }
 
         public void Run()

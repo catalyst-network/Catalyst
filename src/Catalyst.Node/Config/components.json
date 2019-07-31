@@ -270,8 +270,9 @@
                 }
             ],
             "parameters": {
-                "peerChallengeWaitTime": "00:00:30"
-            }
+                "peerChallengeWaitTimeSeconds": "30"
+            },
+            "instanceScope": "singleinstance"
         },
         {
             "type": "Catalyst.Core.Lib.P2P.PeerHeartbeatChecker",
@@ -281,7 +282,7 @@
                 }
             ],
             "parameters": {
-                "checkHeartbeatInterval": "00:00:60"
+                "checkHeartbeatIntervalSeconds": "60"
             }
         },
         {

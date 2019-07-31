@@ -31,30 +31,30 @@ using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.Extensions;
 using Serilog;
 using System.Reactive.Linq;
+using System.Reactive.Subjects;
 using System.Threading.Tasks;
-using Catalyst.Common.Util;
-using Catalyst.Protocol;
 using System.Threading;
 
 namespace Catalyst.Core.Lib.P2P
 {
     public sealed class PeerChallenger : IPeerChallenger, IDisposable
     {
-        private readonly IPeerService _peerService;
         private readonly ILogger _logger;
         private readonly IPeerIdentifier _senderIdentifier;
         private readonly IPeerClient _peerClient;
-        private readonly string _messageType = PingResponse.Descriptor.ShortenedFullName();
         private readonly CancellationTokenSource _cancellationTokenSource;
-        
-        public PeerChallenger(IPeerService peerService,
-            ILogger logger,
+        private readonly IObservable<IPeerChallengeResponse> _challengeResponseObservable;
+
+        public ReplaySubject<IPeerChallengeResponse> ChallengeResponseMessageStreamer { get; }
+
+        public PeerChallenger(ILogger logger,
             IPeerClient peerClient,
             IPeerIdentifier senderIdentifier,
-            TimeSpan peerChallengeWaitTime)
+            int peerChallengeWaitTimeSeconds)
         {
-            _cancellationTokenSource = new CancellationTokenSource(peerChallengeWaitTime);
-            _peerService = peerService;
+            ChallengeResponseMessageStreamer = new ReplaySubject<IPeerChallengeResponse>(1);
+            _challengeResponseObservable = ChallengeResponseMessageStreamer.AsObservable();
+            _cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(peerChallengeWaitTimeSeconds));
             _senderIdentifier = senderIdentifier;
             _logger = logger;
             _peerClient = peerClient;
@@ -76,9 +76,8 @@ namespace Catalyst.Core.Lib.P2P
 
                 _peerClient.SendMessage(messageDto);
 
-                var t = _peerService.MessageStream.FirstAsync(a => a != null && a != NullObjects.ObserverDto
-                 && a.Payload.TypeUrl == _messageType
-                 && a.Payload.PeerId.PublicKey.SequenceEqual(recipientPeerIdentifier.PeerId.PublicKey));
+                var t = _challengeResponseObservable.FirstAsync(a => a != null
+                 && a.PeerId.PublicKey.SequenceEqual(recipientPeerIdentifier.PeerId.PublicKey));
 
                 await t.RunAsync(_cancellationTokenSource.Token);
             }
@@ -92,9 +91,10 @@ namespace Catalyst.Core.Lib.P2P
         }
 
         public void Dispose()
-        {            
+        {
             _cancellationTokenSource?.Cancel();
             _cancellationTokenSource?.Dispose();
+            ChallengeResponseMessageStreamer?.Dispose();
         }
     }
 }

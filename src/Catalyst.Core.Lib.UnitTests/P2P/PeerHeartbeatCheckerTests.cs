@@ -42,18 +42,16 @@ namespace Catalyst.Core.Lib.UnitTests.P2P
 {
     public sealed class PeerHeartbeatCheckerTests : IDisposable
     {
+        private readonly int _peerHeartbeatCheckSeconds = 5;
         private IPeerHeartbeatChecker _peerHeartbeatChecker;
         private readonly IPeerService _peerService;
         private readonly IPeerClient _peerClient;
         private readonly IPeerIdentifier _senderIdentifier;
-        private readonly TimeSpan _peerHeartbeatCheckTimeSpan;
         private readonly IPeerRepository _peerRepository;
         private readonly Peer _testPeer;
 
         public PeerHeartbeatCheckerTests()
         {
-            _peerHeartbeatCheckTimeSpan = TimeSpan.FromSeconds(5);
-            
             _peerRepository = Substitute.For<IPeerRepository>();
             _senderIdentifier = PeerIdentifierHelper.GetPeerIdentifier("Sender");
             _peerClient = Substitute.For<IPeerClient>();
@@ -91,11 +89,11 @@ namespace Catalyst.Core.Lib.UnitTests.P2P
             _peerRepository.GetAll().Returns(peers);
             _peerRepository.AsQueryable().Returns(peers.AsQueryable());
             _peerHeartbeatChecker = new PeerHeartbeatChecker(_peerRepository,
-                new PeerChallenger(_peerService, Substitute.For<ILogger>(), _peerClient, _senderIdentifier, _peerHeartbeatCheckTimeSpan),
-                _peerHeartbeatCheckTimeSpan);
+                new PeerChallenger(Substitute.For<ILogger>(), _peerClient, _senderIdentifier, _peerHeartbeatCheckSeconds),
+                _peerHeartbeatCheckSeconds);
 
             _peerHeartbeatChecker.Run();
-            await Task.Delay(_peerHeartbeatCheckTimeSpan / 2).ConfigureAwait(false);
+            await Task.Delay(TimeSpan.FromSeconds(_peerHeartbeatCheckSeconds / 2D)).ConfigureAwait(false);
         }
 
         public void Dispose()
