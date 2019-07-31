@@ -45,7 +45,7 @@ namespace Catalyst.Common.Kernel
         public ILogger Logger { get; private set; }
         private string _withPersistence;
         private Config.Network _network;
-        private readonly bool _overwrite;
+        private bool _overwrite;
         private readonly string _fileName;
         private string _targetConfigFolder;
         private IConfigCopier _configCopier;
@@ -55,9 +55,10 @@ namespace Catalyst.Common.Kernel
 
         public delegate void CustomBootLogic(Kernel kernel);
 
-        public static Kernel Initramfs(ICancellationTokenProvider cancellationTokenProvider = default, string fileName = "Catalyst.Node..log", bool overwrite = false)
+        public static Kernel Initramfs(string fileName = "Catalyst.Node..log",
+            ICancellationTokenProvider cancellationTokenProvider = default)
         {
-            return new Kernel(cancellationTokenProvider, fileName, overwrite);
+            return new Kernel(cancellationTokenProvider, fileName);
         }
 
         public void LogUnhandledException(object sender, UnhandledExceptionEventArgs e)
@@ -70,7 +71,7 @@ namespace Catalyst.Common.Kernel
             CancellationTokenProvider.CancellationTokenSource.Cancel();
         }
         
-        private Kernel(ICancellationTokenProvider cancellationTokenProvider, string fileName, bool overwrite)
+        private Kernel(ICancellationTokenProvider cancellationTokenProvider, string fileName)
         {
             Logger = new LoggerConfiguration()
                .WriteTo.Console()
@@ -80,14 +81,14 @@ namespace Catalyst.Common.Kernel
 
             CancellationTokenProvider = cancellationTokenProvider ?? new CancellationTokenProvider();
 
-            _overwrite = overwrite;
             _fileName = fileName;
             ContainerBuilder = new ContainerBuilder();
             _configurationBuilder = new ConfigurationBuilder();
         }
 
-        public Kernel BuildKernel()
+        public Kernel BuildKernel(bool overwrite = false)
         {
+            _overwrite = overwrite;
             _configCopier.RunConfigStartUp(_targetConfigFolder, _network, null, _overwrite);
             
             var config = _configurationBuilder.Build();
@@ -112,6 +113,8 @@ namespace Catalyst.Common.Kernel
                     outputTemplate: "{Timestamp:HH:mm:ss} [{Level:u3}] ({MachineName}/{ThreadId}) {Message} ({SourceContext}){NewLine}{Exception}")
                .CreateLogger()
                .ForContext(MethodBase.GetCurrentMethod().DeclaringType);
+
+            Log.Logger = Logger;
             
             return this;
         }
