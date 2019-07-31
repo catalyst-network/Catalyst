@@ -21,10 +21,22 @@
 
 #endregion
 
-namespace Catalyst.Common.Interfaces.P2P.Discovery
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Linq;
+using Catalyst.Common.Interfaces.P2P.Discovery;
+
+namespace Catalyst.Common.P2P.Discovery
 {
-    /// <summary>
-    /// A service used to discover peers on the network using the delayed Hastings-Metropolis algorithm.
-    /// </summary>
-    public interface IHastingsDiscovery : IPeerDiscovery { }
+    public class Neighbours : ConcurrentQueue<INeighbour>, INeighbours
+    {
+        public Neighbours(IEnumerable<INeighbour> neighbours = default) : base(neighbours ?? Enumerable.Empty<INeighbour>()) { }
+
+        public override string ToString()
+        {
+            return string.Join(", ",
+                this.Select(n =>
+                    n.PeerIdentifier + "|" + n.DiscoveryPingCorrelationId + "|" + n.State.Name));
+        }
+    }
 }
