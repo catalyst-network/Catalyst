@@ -24,6 +24,7 @@
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Rpc.Authentication;
 using Catalyst.Common.Rpc.Authentication;
+using Catalyst.Common.Util;
 using Catalyst.Core.Lib.Rpc.Authentication;
 using Catalyst.Node.Repository;
 using Catalyst.TestUtils;
@@ -46,7 +47,7 @@ namespace Catalyst.Node.UnitTests.Repository
 
             whiteListRepo.Add(new AuthCredentials()
             {
-                PublicKey = _trustedPeer.PublicKey.ToStringFromRLPDecoded(),
+                PublicKey = _trustedPeer.PublicKey.KeyToString(),
                 IpAddress = _trustedPeer.Ip.ToString(),
             });
 
