@@ -21,10 +21,11 @@
 
 #endregion
 
+using System.Linq;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Repository;
 using Catalyst.Common.Interfaces.Rpc.Authentication;
-using Nethereum.RLP;
+using Catalyst.Common.Util;
 
 namespace Catalyst.Core.Lib.Rpc.Authentication
 {
@@ -47,9 +48,8 @@ namespace Catalyst.Core.Lib.Rpc.Authentication
         /// <inheritdoc cref="IAuthenticationStrategy"/>
         public bool Authenticate(IPeerIdentifier peerIdentifier)
         {
-            return _trustedPeers.TryFind(t =>
-                t.IpAddress.Equals(peerIdentifier.Ip.ToString()) &&
-                t.PublicKey.Equals(peerIdentifier.PublicKey.ToStringFromRLPDecoded()), out _);
+            return _trustedPeers.TryFind(t => t.IpAddress.Equals(peerIdentifier.Ip.ToString()) &&
+                t.PublicKey.KeyToBytes().SequenceEqual(peerIdentifier.PublicKey), out _);
         }
     }
 }
