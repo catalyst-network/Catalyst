@@ -26,7 +26,7 @@ using Catalyst.Common.Modules.Mempool;
 using Catalyst.Common.Repository;
 using SharpRepository.Repository;
 
-namespace Catalyst.Node.Repository
+namespace Catalyst.Core.Lib.Repository
 {
     public class MempoolRepository : RepositoryWrapper<MempoolDocument>, IMempoolRepository
     {
