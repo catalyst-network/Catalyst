@@ -52,7 +52,7 @@ namespace Catalyst.Common.P2P
     /// </summary>
     public sealed class PeerIdentifier : IPeerIdentifier
     {
-        public const char PidDelimiter = '|';
+        public static char PidDelimiter => '|';
         public PeerId PeerId { get; }
         public string ClientId => PeerId.ClientId.ToStringUtf8();
         public string ClientVersion => PeerId.ClientVersion.ToStringUtf8();
