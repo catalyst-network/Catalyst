@@ -64,9 +64,7 @@ namespace Catalyst.Core.Lib.P2P
             return target;
         }
 
-        public Task DiscoveryAsync(int millisecondsTimeout) { return Task.FromResult(Task.Run(DiscoverySync).Wait(millisecondsTimeout)); }
-
-        private void DiscoverySync()
+        public Task DiscoveryAsync()
         {
             var copiedPath = CopyPoaFile();
             var poaPeers = JsonConvert.DeserializeObject<List<string>>(File.ReadAllText(copiedPath));
@@ -84,6 +82,8 @@ namespace Catalyst.Core.Lib.P2P
                     _peerRepository.Add(poaPeer);
                 }
             }
+
+            return Task.CompletedTask;
         }
     }
 }

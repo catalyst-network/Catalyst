@@ -30,8 +30,6 @@ namespace Catalyst.Common.Interfaces.P2P.Discovery
         /// <summary>
         ///     Runs the discovery implementation.
         /// </summary>
-        /// <param name="millisecondsTimeout">A timeout delay for the Discovery task, expressed in milliseconds.</param>
-        /// <returns></returns>
-        Task DiscoveryAsync(int millisecondsTimeout);
+        Task DiscoveryAsync();
     }
 }

@@ -67,6 +67,8 @@ namespace Catalyst.Core.Lib.P2P.Discovery
         private readonly ICancellationTokenProvider _cancellationTokenProvider;
         private readonly IDisposable _pingResponseSubscriptions;
         private readonly IDisposable _neigbourResponseSubscription;
+        private readonly int _hasValidCandidatesCheckMillisecondsFrequency;
+        private readonly int _millisecondsTimeout;
 
         public IPeerClient PeerClient { get; }
         public IDtoFactory DtoFactory { get; }
@@ -84,7 +86,9 @@ namespace Catalyst.Core.Lib.P2P.Discovery
             bool autoStart = true,
             int peerDiscoveryBurnIn = 10,
             IHastingsOriginator stepProposal = default,
-            IHastingsCareTaker hastingsCareTaker = default)
+            IHastingsCareTaker hastingsCareTaker = default,
+            int millisecondsTimeout = 10_000,
+            int hasValidCandidatesCheckMillisecondsFrequency = 1_000)
         {
             _logger = logger;
             _cancellationTokenProvider = cancellationTokenProvider;
@@ -93,6 +97,8 @@ namespace Catalyst.Core.Lib.P2P.Discovery
             DtoFactory = dtoFactory;
             PeerRepository = peerRepository;
             PeerDiscoveryBurnIn = peerDiscoveryBurnIn;
+            _millisecondsTimeout = millisecondsTimeout;
+            _hasValidCandidatesCheckMillisecondsFrequency = hasValidCandidatesCheckMillisecondsFrequency;
 
             _discoveredPeerInCurrentWalk = 0;
 
@@ -158,7 +164,7 @@ namespace Catalyst.Core.Lib.P2P.Discovery
             // should run until cancelled
             Task.Run(async () =>
             {
-                await DiscoveryAsync(1000)
+                await DiscoveryAsync()
                    .ConfigureAwait(false);
             });
         }
@@ -176,7 +182,7 @@ namespace Catalyst.Core.Lib.P2P.Discovery
         ///     if not the condition has not been met within a timeout then we walk back by taking the last known state from the IHastingCaretaker.
         /// </summary>
         /// <returns></returns>
-        public async Task DiscoveryAsync(int millisecondsTimeout = -1)
+        public async Task DiscoveryAsync()
         {
             if (IsDiscovering)
             {
@@ -193,7 +199,7 @@ namespace Catalyst.Core.Lib.P2P.Discovery
                 try
                 {
                     // spins until our expected result equals found and unreachable peers for this step.
-                    await WaitUntil(StepProposal.HasValidCandidate, 1000, timeout).ConfigureAwait(false);
+                    await WaitUntil(StepProposal.HasValidCandidate, _hasValidCandidatesCheckMillisecondsFrequency, _millisecondsTimeout).ConfigureAwait(false);
 
                     //lock (StepProposal)
                     {

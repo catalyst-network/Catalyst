@@ -30,6 +30,6 @@ namespace Catalyst.Core.Lib.P2P
     public sealed class PeerDiscovery
         : IPeerDiscovery
     {
-        public Task DiscoveryAsync(int millisecondsTimeout) { throw new NotImplementedException(); }
+        public Task DiscoveryAsync() { throw new NotImplementedException(); }
     }
 }

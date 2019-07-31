@@ -52,7 +52,6 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
         private ILogger _logger;
         private IDns _dnsClient;
         private IPeerClient _peerClient;
-        private IDtoFactory _dtoFactory;
         private IPeerSettings _peerSettings;
         private IHastingsCareTaker _careTaker;
         private IHastingsOriginator _currentState;
@@ -60,6 +59,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
         public IList<IPeerClientObservable> PeerClientObservables;
         private IPeerMessageCorrelationManager _peerCorrelationManager;
         private IRepository<Peer> _peerRepository;
+        private int _timeout;
 
         public HastingDiscoveryTest Build()
         {
@@ -68,14 +68,14 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
                 _dnsClient,
                 _peerSettings,
                 _peerClient,
-                _dtoFactory,
                 _peerCorrelationManager,
                 _cancellationProvider,
                 PeerClientObservables,
                 _autoStart,
                 _burnIn,
                 _currentState,
-                _careTaker);
+                _careTaker,
+                _timeout);
         }
 
         public DiscoveryTestBuilder WithLogger(ILogger logger = default)
@@ -118,11 +118,9 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
             return this;
         }
 
-        public DiscoveryTestBuilder WithDtoFactory(IDtoFactory dtoFactory = default,
-            IPeerIdentifier sender = default,
-            IDictionary<IPeerIdentifier, ICorrelationId> knownRequests = default)
+        public DiscoveryTestBuilder WithTimeout(int timeoutMilliseconds)
         {
-            _dtoFactory = dtoFactory ?? Substitute.For<IDtoFactory>();
+            _timeout = timeoutMilliseconds;
             
             return this;
         }
@@ -209,28 +207,28 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
                 IDns dns,
                 IPeerSettings peerSettings,
                 IPeerClient peerClient,
-                IDtoFactory dtoFactory,
                 IPeerMessageCorrelationManager peerMessageCorrelationManager,
                 ICancellationTokenProvider cancellationTokenProvider,
                 IEnumerable<IPeerClientObservable> peerClientObservables,
                 bool autoStart = true,
                 int peerDiscoveryBurnIn = 10,
                 IHastingsOriginator state = default,
-                IHastingsCareTaker hastingsCareTaker = default)
+                IHastingsCareTaker hastingsCareTaker = default,
+                int millisecondsTimeout = 10_000)
             {
                 return new HastingDiscoveryTest(logger,
                     peerRepository,
                     peerSettings,
                     dns,
                     peerClient,
-                    dtoFactory,
                     peerMessageCorrelationManager,
                     cancellationTokenProvider,
                     peerClientObservables,
                     autoStart,
                     peerDiscoveryBurnIn,
                     state,
-                    hastingsCareTaker);
+                    hastingsCareTaker,
+                    millisecondsTimeout);
             }
 
             private HastingDiscoveryTest(ILogger logger = default,
@@ -238,27 +236,28 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
                 IPeerSettings peerSettings = default,
                 IDns dns = default,
                 IPeerClient peerClient = default,
-                IDtoFactory dtoFactory = default,
                 IPeerMessageCorrelationManager peerMessageCorrelationManager = default,
                 ICancellationTokenProvider cancellationTokenProvider = default,
                 IEnumerable<IPeerClientObservable> peerClientObservables = default,
                 bool autoStart = true,
                 int peerDiscoveryBurnIn = 10,
                 IHastingsOriginator state = default,
-                IHastingsCareTaker hastingsCareTaker = default)
+                IHastingsCareTaker hastingsCareTaker = default,
+                int millisecondsTimeout = 10_000)
                 : base(logger ?? Substitute.For<ILogger>(),
                     peerRepository ?? Substitute.For<IRepository<Peer>>(),
                     dns ?? DiscoveryHelper.MockDnsClient(peerSettings),
                     peerSettings ?? PeerSettingsHelper.TestPeerSettings(),
                     peerClient ?? Substitute.For<IPeerClient>(),
-                    dtoFactory ?? Substitute.For<IDtoFactory>(),
+                    Substitute.For<IDtoFactory>(),
                     peerMessageCorrelationManager ?? DiscoveryHelper.MockCorrelationManager(),
                     cancellationTokenProvider ?? new CancellationTokenProvider(),
                     peerClientObservables,
                     autoStart,
                     peerDiscoveryBurnIn,
                     state,
-                    hastingsCareTaker) { }
+                    hastingsCareTaker,
+                    millisecondsTimeout) { }
 
             internal new void WalkForward() { base.WalkForward(); }
 

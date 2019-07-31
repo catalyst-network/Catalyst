@@ -287,7 +287,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
             {
                 Assert.Throws<InvalidOperationException>(() =>
                 {
-                    walker.DiscoveryAsync(2).GetAwaiter().GetResult();
+                    walker.DiscoveryAsync().GetAwaiter().GetResult();
                     Thread.Sleep(2);
                     ctp.CancellationTokenSource.Cancel();
                 });
