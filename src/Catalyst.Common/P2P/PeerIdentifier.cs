@@ -52,7 +52,8 @@ namespace Catalyst.Common.P2P
     /// </summary>
     public sealed class PeerIdentifier : IPeerIdentifier
     {
-        public PeerId PeerId { get; set; }
+        public const char PidDelimiter = '|';
+        public PeerId PeerId { get; }
         public string ClientId => PeerId.ClientId.ToStringUtf8();
         public string ClientVersion => PeerId.ClientVersion.ToStringUtf8();
         public IPAddress Ip => new IPAddress(PeerId.Ip.ToByteArray())?.MapToIPv4();
@@ -106,7 +107,7 @@ namespace Catalyst.Common.P2P
         /// </summary>
         /// <param name="rawPidChunks"></param>
         /// <returns></returns>
-        internal static PeerIdentifier ParseHexPeerIdentifier(IReadOnlyList<string> rawPidChunks)
+        public static PeerIdentifier ParseHexPeerIdentifier(IReadOnlyList<string> rawPidChunks)
         {
             var peerByteChunks = new List<ByteString>();
             rawPidChunks.ToList().ForEach(chunk => peerByteChunks.Add(chunk.ToBytesForRLPEncoding().ToByteString()));

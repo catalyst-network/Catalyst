@@ -32,6 +32,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Util;
 using Catalyst.Protocol.Common;
 
@@ -39,12 +40,12 @@ namespace Catalyst.Core.Lib.P2P
 {
     public class PoaDiscovery : IPeerDiscovery
     {
+        private const string PoaPeerFile = "poaPeers.json";
         private readonly IPeerRepository _peerRepository;
         private readonly IFileSystem _fileSystem;
-        private const string PoaPeerFile = "poaPeers.json";
         private readonly ILogger _logger;
 
-        public PoaDiscovery(IPeerRepository peerRepository, IFileSystem fileSystem, ILogger logger)
+        public PoaDiscovery(IPeerRepository peerRepository, IFileSystem fileSystem, ILogger logger, IPeerIdentifier identifier)
         {
             _peerRepository = peerRepository;
             _fileSystem = fileSystem;
@@ -58,16 +59,15 @@ namespace Catalyst.Core.Lib.P2P
         private void LoadPoaPeers()
         {
             var copiedPath = CopyPoaFile();
-            var poaPeers = JsonConvert.DeserializeObject<List<Peer>>(File.ReadAllText(copiedPath), new JsonSerializerSettings
-            {
-                TypeNameHandling = TypeNameHandling.All,
-                NullValueHandling = NullValueHandling.Ignore,
-                Converters = {new IpAddressConverter(), new IpEndPointConverter(), new ProtoObjectConverter<PeerId>()}
-            });
+            var poaPeers = JsonConvert.DeserializeObject<List<string>>(File.ReadAllText(copiedPath));
 
-            foreach (var poaPeer in poaPeers)
+            foreach (var pid in poaPeers)
             {
-                _logger.Information($"Adding POA Peer: {poaPeer.PeerIdentifier.Ip} Public Key: {poaPeer.PeerIdentifier.PublicKey.KeyToString()}");
+                var peerIdentifier = PeerIdentifier.ParseHexPeerIdentifier(pid.Split(PeerIdentifier.PidDelimiter));
+                var poaPeer = new Peer {PeerIdentifier = peerIdentifier};
+
+                _logger.Information($"Adding POA Peer: {peerIdentifier.Ip} Public Key: {peerIdentifier.PublicKey.KeyToString()}");
+
                 if (!_peerRepository.Exists(poaPeer.DocumentId))
                 {
                     _peerRepository.Add(poaPeer);
@@ -79,6 +79,11 @@ namespace Catalyst.Core.Lib.P2P
         {
             var poaPeerFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Config", PoaPeerFile);
             var target = Path.Combine(_fileSystem.GetCatalystDataDir().ToString(), PoaPeerFile);
+            if (File.Exists(target))
+            {
+                return target;
+            }
+
             File.Copy(poaPeerFile, target, true);
             return target;
         }
