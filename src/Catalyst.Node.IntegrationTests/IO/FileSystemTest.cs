@@ -117,8 +117,9 @@ namespace Catalyst.Node.IntegrationTests.IO
             fileSystem.SetCurrentPath(changeDataDir).Should().BeTrue();
             Console.WriteLine("\n\n");
 
-            Console.WriteLine("Perform Check");
+            Console.WriteLine("Perform Check");            
             var fileSystemRetriever = new CommonFileSystem();
+            Console.WriteLine("Compare : {0} vs {1}", fileSystem.GetHashCode(), fileSystemRetriever.GetHashCode());
             fileSystem.GetCatalystDataDir().FullName.ToLower().Should()
                 .Be(fileSystemRetriever.GetCatalystDataDir().FullName.ToLower());
 
