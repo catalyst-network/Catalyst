@@ -96,12 +96,15 @@ namespace Catalyst.Node.IntegrationTests.IO
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void Save_Data_Directory_Several_Times_New_Instance_Must_Load_With_New_Data_Directory()
         {
+            Console.WriteLine("\n\n");
             Console.WriteLine("DISPLAY _sourceFolder :: " + _sourceFolder);
             _fileSystem.SetCurrentPath(_sourceFolder).Should().BeTrue();
             Console.WriteLine("\n\n");
 
+            Console.WriteLine("Perform Check");
             var fileSystem = new CommonFileSystem();
             fileSystem.GetCatalystDataDir().FullName.ToLower().Should().Be(_fileSystem.GetCatalystDataDir().FullName.ToLower());
+            Console.WriteLine("\n\n");
 
             Console.WriteLine("GenerateFileSystem");
             GenerateFileSystem();
@@ -114,8 +117,8 @@ namespace Catalyst.Node.IntegrationTests.IO
             fileSystem.SetCurrentPath(changeDataDir).Should().BeTrue();
             Console.WriteLine("\n\n");
 
+            Console.WriteLine("Perform Check");
             var fileSystemRetriever = new CommonFileSystem();
-
             fileSystem.GetCatalystDataDir().FullName.ToLower().Should()
                 .Be(fileSystemRetriever.GetCatalystDataDir().FullName.ToLower());
 
