@@ -46,13 +46,15 @@ namespace Catalyst.Core.Lib.P2P
             IPeerDiscovery peerDiscovery,
             IEnumerable<IP2PMessageObserver> messageHandlers,
             IPeerSettings peerSettings,
+            IPeerHeartbeatChecker heartbeatChecker,
             ILogger logger)
             : base(serverChannelFactory, logger, udpServerEventLoopGroupFactory)
         {
             Discovery = peerDiscovery;
             var observableChannel = ChannelFactory.BuildChannel(EventLoopGroupFactory, peerSettings.BindAddress, peerSettings.Port);
             Channel = observableChannel.Channel;
-            
+
+            heartbeatChecker.Run();
             MessageStream = observableChannel.MessageStream;
             messageHandlers.ToList()
                .ForEach(h => h.StartObserving(MessageStream));

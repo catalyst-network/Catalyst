@@ -25,7 +25,6 @@ using Catalyst.Common.Interfaces.FileSystem;
 using Catalyst.Common.Interfaces.P2P.Discovery;
 using Catalyst.Common.Interfaces.Repository;
 using Catalyst.Common.P2P;
-using Nethereum.RLP;
 using Newtonsoft.Json;
 using Serilog;
 using System;

@@ -91,7 +91,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P
             _peerRepository.GetAll().Returns(peers);
             _peerRepository.AsQueryable().Returns(peers.AsQueryable());
             _peerHeartbeatChecker = new PeerHeartbeatChecker(_peerRepository,
-                new PeerChallenger(_peerService, Substitute.For<ILogger>(), _peerClient, _senderIdentifier),
+                new PeerChallenger(_peerService, Substitute.For<ILogger>(), _peerClient, _senderIdentifier, _peerHeartbeatCheckTimeSpan),
                 _peerHeartbeatCheckTimeSpan);
 
             _peerHeartbeatChecker.Run();

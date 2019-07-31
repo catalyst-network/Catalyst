@@ -35,7 +35,6 @@ using System.Threading.Tasks;
 using Catalyst.Common.Util;
 using Catalyst.Protocol;
 using System.Threading;
-using Catalyst.Common.Config;
 
 namespace Catalyst.Core.Lib.P2P
 {
@@ -46,15 +45,15 @@ namespace Catalyst.Core.Lib.P2P
         private readonly IPeerIdentifier _senderIdentifier;
         private readonly IPeerClient _peerClient;
         private readonly string _messageType = PingResponse.Descriptor.ShortenedFullName();
-
-        private readonly CancellationTokenSource _cancellationTokenSource 
-            = new CancellationTokenSource(Constants.PeerChallengeWaitTime);
+        private readonly CancellationTokenSource _cancellationTokenSource;
         
         public PeerChallenger(IPeerService peerService,
             ILogger logger,
             IPeerClient peerClient,
-            IPeerIdentifier senderIdentifier)
+            IPeerIdentifier senderIdentifier,
+            TimeSpan peerChallengeWaitTime)
         {
+            _cancellationTokenSource = new CancellationTokenSource(peerChallengeWaitTime);
             _peerService = peerService;
             _senderIdentifier = senderIdentifier;
             _logger = logger;

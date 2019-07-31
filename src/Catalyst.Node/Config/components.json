@@ -268,7 +268,21 @@
                 {
                     "type": "Catalyst.Common.Interfaces.P2P.IPeerChallenger, Catalyst.Common"
                 }
-            ]
+            ],
+            "parameters": {
+                "peerChallengeWaitTime": "00:00:30"
+            }
+        },
+        {
+            "type": "Catalyst.Core.Lib.P2P.PeerHeartbeatChecker",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.P2P.IPeerHeartbeatChecker, Catalyst.Common"
+                }
+            ],
+            "parameters": {
+                "checkHeartbeatInterval": "00:00:60"
+            }
         },
         {
             "type": "Catalyst.Core.Lib.P2P.PeerClient",
