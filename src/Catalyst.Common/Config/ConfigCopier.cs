@@ -92,7 +92,7 @@ namespace Catalyst.Common.Config
                 Constants.ComponentsJsonConfigFile,
                 Constants.SerilogJsonConfigFile,
                 Constants.MessageHandlersConfigFile
-            }.Concat(Constants.AllModuleFiles);
+            };
             return requiredConfigFiles;
         }
 
