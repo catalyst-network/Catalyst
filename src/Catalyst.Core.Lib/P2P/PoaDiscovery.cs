@@ -67,7 +67,7 @@ namespace Catalyst.Core.Lib.P2P
 
             foreach (var poaPeer in poaPeers)
             {
-                _logger.Information($"Adding POA Peer: {poaPeer.PeerIdentifier.Ip} Public Key: {poaPeer.PeerIdentifier.PublicKey.ToStringFromRLPDecoded()}");
+                _logger.Information($"Adding POA Peer: {poaPeer.PeerIdentifier.Ip} Public Key: {poaPeer.PeerIdentifier.PublicKey.KeyToString()}");
                 if (!_peerRepository.Exists(poaPeer.DocumentId))
                 {
                     _peerRepository.Add(poaPeer);
