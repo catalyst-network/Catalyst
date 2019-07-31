@@ -119,7 +119,11 @@ namespace Catalyst.Common.P2P
                 PublicKey = peerByteChunks[4]
             });
         }
-        
+
+        public PeerIdentifier(IPeerSettings settings) : this(settings.PublicKey.KeyToBytes(), 
+            new IPEndPoint(settings.BindAddress, settings.Port), 
+            new PeerIdClientId("AC")) { }
+
         public PeerIdentifier(IPeerSettings settings, IKeyRegistry registry, IUserOutput userOutput, IPeerIdClientId clientId)
             : this(
                 GetIfRegistryContainsPublicKey(settings.PublicKey.KeyToBytes(), registry, userOutput), 

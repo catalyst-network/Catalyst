@@ -52,18 +52,22 @@ namespace Catalyst.Common.IO.Messaging.Correlation
         ///     Provides a correlation Id from a protobuf byte string.
         /// </summary>
         public CorrelationId(ByteString byteString) : this(byteString.ToByteArray()) { }
-
-        /// <summary>
-        /// Gets a new CorrelationId
-        /// </summary>
-        private CorrelationId() { Id = Guid.NewGuid(); }
-
+        
         /// <summary>
         ///     Static helper to get new CorrelationId.
         /// </summary>
         public static ICorrelationId GenerateCorrelationId()
         {
-            return new CorrelationId();
+            return new CorrelationId(Guid.NewGuid());
+        }
+        
+        /// <summary>
+        ///     Static helper to get empty correlation id
+        /// </summary>
+        /// <returns></returns>
+        public static ICorrelationId GenerateEmptyCorrelationId()
+        {
+            return new CorrelationId(default(Guid));
         }
 
         public override string ToString() { return Id.ToString(); }
