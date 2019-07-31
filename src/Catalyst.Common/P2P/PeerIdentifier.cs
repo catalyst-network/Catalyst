@@ -21,15 +21,13 @@
 
 #endregion
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Text;
+using Catalyst.Common.Config;
+using Catalyst.Common.Interfaces.Cli;
+using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.Interfaces.Registry;
+using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.Network;
 using Catalyst.Common.Util;
-using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Cryptography.BulletProofs.Wrapper;
 using Catalyst.Protocol.Common;
 using Dawn;
@@ -37,7 +35,11 @@ using Google.Protobuf;
 using Microsoft.Extensions.Configuration;
 using Nethereum.Hex.HexConvertors.Extensions;
 using Nethereum.RLP;
-using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Text;
 
 namespace Catalyst.Common.P2P
 {
@@ -73,15 +75,29 @@ namespace Catalyst.Common.P2P
                 nodeConfig.HostAddress, nodeConfig.Port, clientId);
         }
         
-        public static IPeerIdentifier BuildPeerIdFromConfig(IConfiguration configuration, IPeerIdClientId clientId)
+        public static IPeerIdentifier BuildPeerIdFromConfig(IConfigurationRoot config, IUserOutput userOutput, IKeyRegistry registry, IPeerIdClientId clientId)
         {
             //TODO: Handle different scenarios to get the IPAddress and Port depending
             //on you whether you are connecting to a local node, or a remote one.
             //https://github.com/catalyst-network/Catalyst.Node/issues/307
 
-            return new PeerIdentifier(configuration.GetSection("CatalystCliConfig")
-                   .GetSection("PublicKey").Value.ToBytesForRLPEncoding(),
+            var publicKeyStr = config.GetSection("CatalystCliConfig")
+               .GetSection("PublicKey").Value;
+            var publicKey = GetIfRegistryContainsPublicKey(publicKeyStr.KeyToBytes(), registry, userOutput);
+
+            return new PeerIdentifier(publicKey,
                 IPAddress.Loopback, IPEndPoint.MaxPort, clientId);
+        }
+
+        internal static byte[] GetIfRegistryContainsPublicKey(byte[] publicKeyBytes, IKeyRegistry registry, IUserOutput userOutput)
+        {
+            if (registry.Contains(publicKeyBytes))
+            {
+                return publicKeyBytes;
+            }
+
+            userOutput.WriteLine($"Public key not found. Using the default key {publicKeyBytes.KeyToString()}");
+            return registry.GetItemFromRegistry(KeyRegistryKey.DefaultKey).GetPublicKey().Bytes;
         }
 
         /// <summary>
@@ -104,8 +120,10 @@ namespace Catalyst.Common.P2P
             });
         }
         
-        public PeerIdentifier(IPeerSettings settings, IPeerIdClientId clientId)
-            : this(settings.PublicKey.ToBytesForRLPEncoding(), new IPEndPoint(settings.BindAddress.MapToIPv4(), settings.Port), clientId) { }
+        public PeerIdentifier(IPeerSettings settings, IKeyRegistry registry, IUserOutput userOutput, IPeerIdClientId clientId)
+            : this(
+                GetIfRegistryContainsPublicKey(settings.PublicKey.KeyToBytes(), registry, userOutput), 
+                new IPEndPoint(settings.BindAddress.MapToIPv4(), settings.Port), clientId) { }
         
         public PeerIdentifier(IEnumerable<byte> publicKey, IPAddress ipAddress, int port, IPeerIdClientId clientId)
             : this(publicKey, EndpointBuilder.BuildNewEndPoint(ipAddress, port), clientId) { }

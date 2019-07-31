@@ -8,7 +8,7 @@
         },
         "Peer": {
             "Network": "devnet",
-            "PublicKey": "32kssh5iflgk3jfmcjs03ldj4hfgs8gn",
+            "PublicKey": "1AemkEe4z3rZHr7RWSUyZHPuVozyCQnT1H7SfpzcGCQRuT",
             "Announce": true,
             "AnnounceServer": "127.0.0.1:21420",
             "Port": 42076,

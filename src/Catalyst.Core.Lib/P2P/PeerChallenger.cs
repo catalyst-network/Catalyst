@@ -48,11 +48,8 @@ namespace Catalyst.Core.Lib.P2P
 
         private readonly CancellationTokenSource _cancellationTokenSource 
             = new CancellationTokenSource(Constants.PeerChallengeWaitTime);
-
-        public object PeerIdentifierHelper { get; private set; }
-
-        public PeerChallenger(IPeerSettings peerSettings,
-            IPeerService peerService,
+        
+        public PeerChallenger(IPeerService peerService,
             ILogger logger,
             IPeerClient peerClient,
             IPeerIdentifier senderIdentifier)
@@ -63,7 +60,7 @@ namespace Catalyst.Core.Lib.P2P
             _peerClient = peerClient;
         }
 
-        async public Task<bool> ChallengePeerAsync(IPeerIdentifier recipientPeerIdentifier)
+        public async Task<bool> ChallengePeerAsync(IPeerIdentifier recipientPeerIdentifier)
         {
             try
             {
@@ -74,14 +71,14 @@ namespace Catalyst.Core.Lib.P2P
                     protocolMessage,
                     _senderIdentifier,
                     recipientPeerIdentifier,
-                  correlationId
+                    correlationId
                 );
 
                 _peerClient.SendMessage(messageDto);
 
                 var t = _peerService.MessageStream.FirstAsync(a => a != null && a != NullObjects.ObserverDto
-                    && a.Payload.TypeUrl == _messageType
-                    && a.Payload.PeerId.PublicKey.ToStringUtf8() == recipientPeerIdentifier.PeerId.PublicKey.ToStringUtf8());
+                 && a.Payload.TypeUrl == _messageType
+                 && a.Payload.PeerId.PublicKey.ToStringUtf8() == recipientPeerIdentifier.PeerId.PublicKey.ToStringUtf8());
 
                 await t.RunAsync(_cancellationTokenSource.Token);
             }
@@ -90,6 +87,7 @@ namespace Catalyst.Core.Lib.P2P
                 _logger.Error(e.Message);
                 return false;
             }
+
             return true;
         }
 
