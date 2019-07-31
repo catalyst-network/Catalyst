@@ -27,24 +27,24 @@ using Catalyst.Common.Interfaces.P2P.Discovery;
 
 namespace Catalyst.Core.Lib.P2P.Discovery
 {
-    public sealed class HastingCareTaker : IHastingCareTaker
+    public sealed class HastingsesCareTaker : IHastingsCareTaker
     {
-        public ConcurrentStack<IHastingMemento> HastingMementoList { get; }
+        public ConcurrentStack<IHastingsMemento> HastingMementoList { get; }
 
-        public HastingCareTaker()
+        public HastingsesCareTaker()
         {
-            HastingMementoList = new ConcurrentStack<IHastingMemento>();
+            HastingMementoList = new ConcurrentStack<IHastingsMemento>();
         }
 
         /// <inheritdoc />
-        public void Add(IHastingMemento hastingMemento)
+        public void Add(IHastingsMemento hastingsMemento)
         {
-            HastingMementoList.Push(hastingMemento);
+            HastingMementoList.Push(hastingsMemento);
         }
 
-        public IHastingMemento Peek()
+        public IHastingsMemento Peek()
         {
-            if (!HastingMementoList.TryPeek(out IHastingMemento latest))
+            if (!HastingMementoList.TryPeek(out IHastingsMemento latest))
             {
                 throw new InvalidOperationException("No memento found in queue");
             }
@@ -53,7 +53,7 @@ namespace Catalyst.Core.Lib.P2P.Discovery
         }
 
         /// <inheritdoc />
-        public IHastingMemento Get()
+        public IHastingsMemento Get()
         {
             if (HastingMementoList.Count >= 2)
             {

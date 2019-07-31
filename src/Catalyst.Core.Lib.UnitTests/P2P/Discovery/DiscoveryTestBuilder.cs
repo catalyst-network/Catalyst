@@ -35,7 +35,6 @@ using Catalyst.Common.Interfaces.P2P.ReputationSystem;
 using Catalyst.Common.Interfaces.Util;
 using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Common.P2P;
-using Catalyst.Common.P2P.Discovery;
 using Catalyst.Common.Util;
 using Catalyst.Core.Lib.P2P.Discovery;
 using Catalyst.TestUtils;
@@ -55,19 +54,12 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
         private IPeerClient _peerClient;
         private IDtoFactory _dtoFactory;
         private IPeerSettings _peerSettings;
-        private IHastingCareTaker _careTaker;
+        private IHastingsCareTaker _careTaker;
         private IHastingsOriginator _currentState;
         private ICancellationTokenProvider _cancellationProvider;
         public IList<IPeerClientObservable> PeerClientObservables;
         private IPeerMessageCorrelationManager _peerCorrelationManager;
         private IRepository<Peer> _peerRepository;
-
-        private DiscoveryTestBuilder() { }
-
-        public static DiscoveryTestBuilder GetDiscoveryTestBuilder()
-        {
-            return new DiscoveryTestBuilder();
-        }
 
         public HastingDiscoveryTest Build()
         {
@@ -173,7 +165,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
             return this;
         }
 
-        public DiscoveryTestBuilder WithCurrentStep(IHastingMemento currentStep = default,
+        public DiscoveryTestBuilder WithCurrentStep(IHastingsMemento currentStep = default,
             bool mock = false,
             IPeerIdentifier peer = default,
             INeighbours neighbours = default)
@@ -203,9 +195,9 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
             return this;
         }
 
-        public DiscoveryTestBuilder WithCareTaker(IHastingCareTaker hastingCareTaker = default, IEnumerable<IHastingMemento> history = default)
+        public DiscoveryTestBuilder WithCareTaker(IHastingsCareTaker hastingsCareTaker = default, IEnumerable<IHastingsMemento> history = default)
         {
-            _careTaker = hastingCareTaker ?? DiscoveryHelper.MockCareTaker(history);
+            _careTaker = hastingsCareTaker ?? DiscoveryHelper.MockCareTaker(history);
             return this;
         }
 
@@ -223,7 +215,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
                 bool autoStart = true,
                 int peerDiscoveryBurnIn = 10,
                 IHastingsOriginator state = default,
-                IHastingCareTaker hastingCareTaker = default)
+                IHastingsCareTaker hastingsCareTaker = default)
             {
                 return new HastingDiscoveryTest(logger,
                     peerRepository,
@@ -237,7 +229,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
                     autoStart,
                     peerDiscoveryBurnIn,
                     state,
-                    hastingCareTaker);
+                    hastingsCareTaker);
             }
 
             private HastingDiscoveryTest(ILogger logger = default,
@@ -252,7 +244,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
                 bool autoStart = true,
                 int peerDiscoveryBurnIn = 10,
                 IHastingsOriginator state = default,
-                IHastingCareTaker hastingCareTaker = default)
+                IHastingsCareTaker hastingsCareTaker = default)
                 : base(logger ?? Substitute.For<ILogger>(),
                     peerRepository ?? Substitute.For<IRepository<Peer>>(),
                     dns ?? DiscoveryHelper.MockDnsClient(peerSettings),
@@ -265,7 +257,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
                     autoStart,
                     peerDiscoveryBurnIn,
                     state,
-                    hastingCareTaker) { }
+                    hastingsCareTaker) { }
 
             internal new void WalkForward() { base.WalkForward(); }
 
@@ -279,8 +271,6 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
             {
                 EvictionCallback(item);
             }
-
-            public bool GetIsDiscovering() { return IsDiscovering; }
         }
 
         public void Dispose()

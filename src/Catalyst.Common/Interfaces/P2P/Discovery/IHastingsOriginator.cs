@@ -21,7 +21,9 @@
 
 #endregion
 
+using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
+using Catalyst.Protocol.IPPN;
 
 namespace Catalyst.Common.Interfaces.P2P.Discovery
 {
@@ -31,25 +33,33 @@ namespace Catalyst.Common.Interfaces.P2P.Discovery
 
         /// <summary>
         /// Every time you the walk moves forward with a new Peer, it will ask that peer for
-        /// its neighbours sending a new <see cref="Catalyst.Protocol.IPPN.PeerNeighborsRequest"/>.
+        /// its neighbours sending a new <see cref="Protocol.IPPN.PeerNeighborsRequest"/>.
         /// This field stores the details for that request. 
         /// </summary>
         ICorrelationId PnrCorrelationId { get; }
         
+        /// <summary>
+        /// A readonly list of the neighbours considered for <see cref="PingRequest"/> at that stage of the node.
+        /// This list will be used to progress if any of them is valid (<see cref="HasValidCandidate"/>).
+        /// </summary>
         INeighbours Neighbours { get; }
         
         /// <summary>
         ///     creates a memento from current state
         /// </summary>
         /// <returns></returns>
-        IHastingMemento CreateMemento();
+        IHastingsMemento CreateMemento();
 
         /// <summary>
         ///     Restores the state from a memento
         /// </summary>
-        /// <param name="hastingMemento"></param>
-        void RestoreMemento(IHastingMemento hastingMemento);
+        /// <param name="hastingsMemento"></param>
+        void RestoreMemento(IHastingsMemento hastingsMemento);
 
+        /// <summary>
+        /// Find out if the current state has any neighbour in a <see cref="NeighbourState.Responsive"/>
+        /// </summary>
+        /// <returns><see cref="true"/> if <see cref="Neighbours"/> contains a <see cref="NeighbourState.Responsive"/> neighbour, <see cref="false"/> otherwise.</returns>
         bool HasValidCandidate();
     }
 }

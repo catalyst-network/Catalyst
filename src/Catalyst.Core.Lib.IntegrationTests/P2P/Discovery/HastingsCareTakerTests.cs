@@ -32,11 +32,11 @@ using Xunit;
 
 namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
 {
-    public sealed class HastingCareTakerTests
+    public sealed class HastingsCareTakerTests
     {
         private readonly IPeerIdentifier _ownNode;
 
-        public HastingCareTakerTests()
+        public HastingsCareTakerTests()
         {
             _ownNode = PeerIdentifierHelper.GetPeerIdentifier("own_node");
         }
@@ -44,9 +44,9 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
         [Fact]
         public void Can_Add_New_Mementos_To_Caretaker()
         {
-            var careTaker = new HastingCareTaker();
+            var careTaker = new HastingsesCareTaker();
 
-            var stack = new Stack<IHastingMemento>();
+            var stack = new Stack<IHastingsMemento>();
             stack.Push(DiscoveryHelper.SubMemento(_ownNode));
             
             var history = DiscoveryHelper.MockMementoHistory(stack);
@@ -59,9 +59,9 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
         [Fact]
         public void Taking_From_Memento_List_Takes_LIFO()
         {
-            var careTaker = new HastingCareTaker();
+            var careTaker = new HastingsesCareTaker();
 
-            var stack = new Stack<IHastingMemento>();
+            var stack = new Stack<IHastingsMemento>();
             stack.Push(DiscoveryHelper.SubMemento(_ownNode));
             
             var history = DiscoveryHelper.MockMementoHistory(stack);

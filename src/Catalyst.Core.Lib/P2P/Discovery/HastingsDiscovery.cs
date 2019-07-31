@@ -55,13 +55,13 @@ namespace Catalyst.Core.Lib.P2P.Discovery
 
         protected bool IsDiscovering;
         private readonly ILogger _logger;
-        public IHastingMemento CurrentStep => HastingCareTaker.Peek();
+        public IHastingsMemento CurrentStep => HastingsCareTaker.Peek();
         private int _discoveredPeerInCurrentWalk;
         private readonly IPeerIdentifier _ownNode;
         protected readonly int PeerDiscoveryBurnIn;
         public IHastingsOriginator StepProposal { get; }
 
-        public IHastingCareTaker HastingCareTaker { get; }
+        public IHastingsCareTaker HastingsCareTaker { get; }
         public readonly IRepository<Peer> PeerRepository;
         private readonly IDisposable _evictionSubscription;
         private readonly ICancellationTokenProvider _cancellationTokenProvider;
@@ -84,7 +84,7 @@ namespace Catalyst.Core.Lib.P2P.Discovery
             bool autoStart = true,
             int peerDiscoveryBurnIn = 10,
             IHastingsOriginator stepProposal = default,
-            IHastingCareTaker hastingCareTaker = default)
+            IHastingsCareTaker hastingsCareTaker = default)
         {
             _logger = logger;
             _cancellationTokenProvider = cancellationTokenProvider;
@@ -101,11 +101,11 @@ namespace Catalyst.Core.Lib.P2P.Discovery
 
             var neighbours = dns.GetSeedNodesFromDns(peerSettings.SeedServers).ToNeighbours();
             
-            HastingCareTaker = hastingCareTaker ?? new HastingCareTaker();
-            if (HastingCareTaker.HastingMementoList.IsEmpty)
+            HastingsCareTaker = hastingsCareTaker ?? new HastingsesCareTaker();
+            if (HastingsCareTaker.HastingMementoList.IsEmpty)
             {
-                var rootMemento = stepProposal?.CreateMemento() ?? new HastingMemento(_ownNode, neighbours);
-                HastingCareTaker.Add(rootMemento);
+                var rootMemento = stepProposal?.CreateMemento() ?? new HastingsMemento(_ownNode, neighbours);
+                HastingsCareTaker.Add(rootMemento);
             }
             
             StepProposal = stepProposal ?? new HastingsOriginator(CurrentStep);
@@ -257,14 +257,14 @@ namespace Catalyst.Core.Lib.P2P.Discovery
             var newState = StepProposal.CreateMemento();
 
             // store state with caretaker.
-            HastingCareTaker.Add(newState);
+            HastingsCareTaker.Add(newState);
             
             // continue walk by proposing next degree.
             var newCandidate = CurrentStep.Neighbours
                .Where(n => n.State == NeighbourState.Responsive)
                .RandomElement().PeerIdentifier;
 
-            StepProposal.RestoreMemento(new HastingMemento(newCandidate, new Neighbours()));
+            StepProposal.RestoreMemento(new HastingsMemento(newCandidate, new Neighbours()));
 
             var peerNeighbourRequestDto = DtoFactory.GetDto(new PeerNeighborsRequest(),
                 _ownNode,
@@ -294,9 +294,9 @@ namespace Catalyst.Core.Lib.P2P.Discovery
                 {
                     //move back one step if the current step
                     //has no more potentially valid peers to suggest.
-                    HastingCareTaker.Get();
+                    HastingsCareTaker.Get();
                 }
-            } while (!responsiveNeighbours.Any() && HastingCareTaker.HastingMementoList.Count > 1);
+            } while (!responsiveNeighbours.Any() && HastingsCareTaker.HastingMementoList.Count > 1);
 
             if (!responsiveNeighbours.Any())
             {
@@ -306,7 +306,7 @@ namespace Catalyst.Core.Lib.P2P.Discovery
 
             var newCandidate = responsiveNeighbours.RandomElement().PeerIdentifier;
 
-            StepProposal.RestoreMemento(new HastingMemento(newCandidate, new Neighbours()));
+            StepProposal.RestoreMemento(new HastingsMemento(newCandidate, new Neighbours()));
 
             var peerNeighbourRequestDto = DtoFactory.GetDto(new PeerNeighborsRequest(),
                 _ownNode,
@@ -426,7 +426,7 @@ namespace Catalyst.Core.Lib.P2P.Discovery
                     }
                 });
 
-                var newValidState = new HastingMemento(StepProposal.Peer, new Neighbours(newNeighbours));
+                var newValidState = new HastingsMemento(StepProposal.Peer, new Neighbours(newNeighbours));
 
                 StepProposal.RestoreMemento(newValidState);
             }

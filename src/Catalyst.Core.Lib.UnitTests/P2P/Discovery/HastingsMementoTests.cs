@@ -30,11 +30,11 @@ using Xunit;
 
 namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
 {
-    public sealed class HastingMementoTests
+    public sealed class HastingsMementoTests
     {
         private readonly IPeerIdentifier _peer;
 
-        public HastingMementoTests()
+        public HastingsMementoTests()
         {
             _peer = PeerIdentifierHelper.GetPeerIdentifier("current_peer");
         }
@@ -43,7 +43,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
         public void Can_Init_Memento_With_Existing_Params()
         {
             var neighbours = DiscoveryHelper.MockNeighbours();
-            var memento = new HastingMemento(_peer, neighbours);
+            var memento = new HastingsMemento(_peer, neighbours);
             
             memento.Peer.Should().Be(_peer);
             memento.Neighbours.Should().Contain(neighbours);

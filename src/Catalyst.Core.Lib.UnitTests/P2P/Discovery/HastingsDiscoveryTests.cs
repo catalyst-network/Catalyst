@@ -67,7 +67,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
         [Fact]
         public void Can_Store_Peer_After_Burn_In()
         {
-            var discoveryTestBuilder = DiscoveryTestBuilder.GetDiscoveryTestBuilder()
+            var discoveryTestBuilder = new DiscoveryTestBuilder()
                .WithLogger()
                .WithPeerRepository()
                .WithDns()
@@ -109,7 +109,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
         [Fact]
         public void Cant_Store_Peer_During_Burn_In()
         {
-            var discoveryTestBuilder = DiscoveryTestBuilder.GetDiscoveryTestBuilder()
+            var discoveryTestBuilder = new DiscoveryTestBuilder()
                .WithLogger()
                .WithPeerRepository()
                .WithDns()
@@ -144,7 +144,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
             var knownNextCandidate =
                 PeerIdentifierHelper.GetPeerIdentifier("these_eyes....");
 
-            var discoveryTestBuilder = DiscoveryTestBuilder.GetDiscoveryTestBuilder()
+            var discoveryTestBuilder = new DiscoveryTestBuilder()
                .WithLogger()
                .WithPeerRepository()
                .WithDns()
@@ -182,14 +182,14 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
             var knownStepPid =
                 PeerIdentifierHelper.GetPeerIdentifier("hey_its_jimmys_brother_the_guy_with_the_beautiful_voice");
             var knownStepNeighbours = new Neighbours(new[] {new Neighbour(proposalCandidateId)});
-            var latestStep = new HastingMemento(knownStepPid, knownStepNeighbours);
+            var latestStep = new HastingsMemento(knownStepPid, knownStepNeighbours);
 
             var proposal = Substitute.For<IHastingsOriginator>();
             var unresponsiveNeighbours = DiscoveryHelper.MockNeighbours(Constants.AngryPirate, NeighbourState.UnResponsive);
             proposal.Neighbours.Returns(unresponsiveNeighbours);
             proposal.Peer.Returns(proposalCandidateId);
 
-            var discoveryTestBuilder = DiscoveryTestBuilder.GetDiscoveryTestBuilder()
+            var discoveryTestBuilder = new DiscoveryTestBuilder()
                .WithLogger()
                .WithPeerRepository()
                .WithDns()
@@ -219,7 +219,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
         [Fact]
         public void HasValidCandidate_Can_Validate_Correct_State()
         {
-            var discoveryTestBuilder = DiscoveryTestBuilder.GetDiscoveryTestBuilder()
+            var discoveryTestBuilder = new DiscoveryTestBuilder()
                .WithLogger()
                .WithPeerRepository()
                .WithDns()
@@ -244,7 +244,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
         [Fact]
         public void HasValidCandidate_Can_Detect_Invalid_State()
         {
-            var discoveryTestBuilder = DiscoveryTestBuilder.GetDiscoveryTestBuilder()
+            var discoveryTestBuilder = new DiscoveryTestBuilder()
                .WithLogger()
                .WithPeerRepository()
                .WithDns()
@@ -270,7 +270,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
         public void Can_Throw_Exception_In_WalkBack_When_Last_State_Has_No_Neighbours_To_Continue_Walk_Forward()
         {
             var ctp = new CancellationTokenProvider();
-            var discoveryTestBuilder = DiscoveryTestBuilder.GetDiscoveryTestBuilder()
+            var discoveryTestBuilder = new DiscoveryTestBuilder()
                .WithLogger()
                .WithPeerRepository()
                .WithDns(default, false)
@@ -297,8 +297,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
         [Fact]
         public void Can_Get_State_From_CareTaker()
         {
-            var discoveryTestBuilder = DiscoveryTestBuilder.GetDiscoveryTestBuilder();
-            discoveryTestBuilder
+            var discoveryTestBuilder = new DiscoveryTestBuilder()
                .WithLogger()
                .WithPeerRepository()
                .WithDns(default, false)
@@ -312,16 +311,15 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
 
             using (var walker = discoveryTestBuilder.Build())
             {
-                var lastState = walker.HastingCareTaker.Get();
+                var lastState = walker.HastingsCareTaker.Get();
                 lastState.Peer.Should().BeAssignableTo<IPeerIdentifier>();
             }
         }
 
         [Fact]
         public void Discovery_Can_Build_Initial_State_From_SeedNodes()
-        {   
-            var discoveryTestBuilder = DiscoveryTestBuilder.GetDiscoveryTestBuilder();
-            discoveryTestBuilder
+        {
+            var discoveryTestBuilder = new DiscoveryTestBuilder()
                .WithLogger()
                .WithPeerRepository()
                .WithDns(default, true)
@@ -349,7 +347,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
         [InlineData(typeof(PeerNeighborsResponse), typeof(GetNeighbourResponseObserver), "OnPeerNeighbourResponse")]
         public async Task Can_Merge_PeerClientObservable_Stream_And_Read_Items_Pushed_On_Separate_Streams(Type discoveryMessage, Type observer, string logMsg)
         {
-            var discoveryTestBuilder = DiscoveryTestBuilder.GetDiscoveryTestBuilder();
+            var discoveryTestBuilder = new DiscoveryTestBuilder();
             var subSeedOriginator = DiscoveryHelper.SubSeedOriginator(_ownNode, _settings);
             discoveryTestBuilder
                .WithDns()
@@ -383,8 +381,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
         [Fact]
         public async Task Can_Discard_UnKnown_PingResponse()
         {
-            var discoveryTestBuilder = DiscoveryTestBuilder.GetDiscoveryTestBuilder();
-            discoveryTestBuilder
+            var discoveryTestBuilder = new DiscoveryTestBuilder()
                .WithLogger()
                .WithPeerRepository()
                .WithDns(default, true)
@@ -426,7 +423,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
             var candidatePid = PeerIdentifierHelper.GetPeerIdentifier("candidate");
             var currentPid = PeerIdentifierHelper.GetPeerIdentifier("current");
 
-            var discoveryTestBuilder = DiscoveryTestBuilder.GetDiscoveryTestBuilder()
+            var discoveryTestBuilder = new DiscoveryTestBuilder()
                .WithLogger()
                .WithPeerRepository()
                .WithDns()
@@ -462,10 +459,10 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
             var mockNeighbours = DiscoveryHelper.MockNeighbours(4, NeighbourState.Responsive)
                .Concat(new[] {new Neighbour(currentPid, NeighbourState.Contacted, CorrelationId.GenerateEmptyCorrelationId())});
             var previousState = DiscoveryHelper.SubMemento(lastPid, new Neighbours(mockNeighbours));
-            var history = new Stack<IHastingMemento>();
+            var history = new Stack<IHastingsMemento>();
             history.Push(previousState);
 
-            var discoveryTestBuilder = DiscoveryTestBuilder.GetDiscoveryTestBuilder()
+            var discoveryTestBuilder = new DiscoveryTestBuilder()
                .WithLogger()
                .WithPeerRepository()
                .WithDns()
@@ -496,7 +493,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
         [Fact]
         public void Can_Discard_UnKnown_PeerNeighbourResponse_Message()
         {
-            var discoveryTestBuilder = DiscoveryTestBuilder.GetDiscoveryTestBuilder()
+            var discoveryTestBuilder = new DiscoveryTestBuilder()
                .WithLogger()
                .WithPeerRepository()
                .WithDns(default, true)
@@ -516,7 +513,8 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
                 using (walker.DiscoveryStream.SubscribeOn(TaskPoolScheduler.Default)
                    .Subscribe(streamObserver.OnNext))
                 {
-                    var subbedDto = DiscoveryHelper.SubDto(typeof(PeerNeighborsResponse));
+                    var subbedDto = GetPeerNeighbourResponse(walker, DiscoveryHelper.MockNeighbours());
+                    ((PeerNeighborsResponse) subbedDto.Message).Peers.Count.Should().BeGreaterThan(0);
 
                     discoveryTestBuilder.PeerClientObservables
                        .ToList()
@@ -525,9 +523,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
                             o.ResponseMessageSubject.OnNext(subbedDto);
                         });
 
-                    //walker.StepProposal.Neighbours
-                    //   .Received(0)
-                    //   .Add(Arg.Any<INeighbour>());
+                    walker.StepProposal.Neighbours.Count.Should().Be(0);
                 }
             }
         }
@@ -535,7 +531,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
         [Fact]
         public async Task Can_Process_Valid_PeerNeighbourResponse_Message_And_Ping_Provided_Neighbours()
         {
-            var discoveryTestBuilder = DiscoveryTestBuilder.GetDiscoveryTestBuilder()
+            var discoveryTestBuilder = new DiscoveryTestBuilder()
                .WithLogger()
                .WithPeerRepository()
                .WithDns(default, true)
@@ -555,19 +551,8 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
                 using (walker.DiscoveryStream.SubscribeOn(TaskPoolScheduler.Default)
                    .Subscribe(streamObserver.OnNext))
                 {
-                    var subbedDto = DiscoveryHelper.SubDto(
-                        typeof(PeerNeighborsResponse), 
-                        walker.StepProposal.PnrCorrelationId, 
-                        _ownNode);
-                    
-                    var peerNeighborsResponse = new PeerNeighborsResponse();
-                   
-                    peerNeighborsResponse.Peers.Add(walker.StepProposal.Neighbours
-                       .Select(i => i.PeerIdentifier.PeerId)
-                    );
-                   
-                    subbedDto.Message.Returns(peerNeighborsResponse);
-                    
+                    var subbedDto = GetPeerNeighbourResponse(walker, walker.StepProposal.Neighbours);
+
                     discoveryTestBuilder.PeerClientObservables.AsParallel().ForAll(o =>
                     {
                         o.ResponseMessageSubject.OnNext(subbedDto);
@@ -595,13 +580,31 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
                 }
             }
         }
-        
+
+        private IPeerClientMessageDto GetPeerNeighbourResponse(DiscoveryTestBuilder.HastingDiscoveryTest walker, 
+            INeighbours neighbours)
+        {
+            var subbedDto = DiscoveryHelper.SubDto(
+                typeof(PeerNeighborsResponse),
+                walker.StepProposal.PnrCorrelationId,
+                _ownNode);
+
+            var peerNeighborsResponse = new PeerNeighborsResponse();
+
+            peerNeighborsResponse.Peers.Add(neighbours
+               .Select(i => i.PeerIdentifier.PeerId)
+            );
+
+            subbedDto.Message.Returns(peerNeighborsResponse);
+            return subbedDto;
+        }
+
         [Fact]
         public async Task Can_Correlate_Known_Ping_And_Update_Neighbour_State()
         {
             var neighbours = DiscoveryHelper.MockNeighbours(Constants.AngryPirate, NeighbourState.Contacted, CorrelationId.GenerateCorrelationId());
 
-            var discoveryTestBuilder = DiscoveryTestBuilder.GetDiscoveryTestBuilder()
+            var discoveryTestBuilder = new DiscoveryTestBuilder()
                .WithLogger()
                .WithPeerRepository()
                .WithDns(default, true)
@@ -673,9 +676,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
 
             initialStateCandidate.PnrCorrelationId.ReturnsForAnyArgs(pnr);
 
-            var discoveryTestBuilder = DiscoveryTestBuilder.GetDiscoveryTestBuilder();
-            
-            discoveryTestBuilder
+            var discoveryTestBuilder = new DiscoveryTestBuilder()
                .WithLogger()
                .WithPeerRepository()
                .WithDns(default, true)

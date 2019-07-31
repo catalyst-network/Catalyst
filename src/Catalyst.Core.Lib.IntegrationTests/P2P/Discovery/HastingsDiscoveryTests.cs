@@ -53,14 +53,14 @@ using Constants = Catalyst.Common.Config.Constants;
 
 namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
 {
-    public sealed class HastingDiscoveryTests : ConfigFileBasedTest
+    public sealed class HastingsDiscoveryTests : ConfigFileBasedTest
     {
         private readonly IPeerSettings _settings;
         private readonly IPeerIdentifier _ownNode;
         private readonly ILogger _logger;
         private readonly IContainer _container;
 
-        public HastingDiscoveryTests(ITestOutputHelper output) : base(output)
+        public HastingsDiscoveryTests(ITestOutputHelper output) : base(output)
         {
             _settings = PeerSettingsHelper.TestPeerSettings();
             _ownNode = PeerIdentifierHelper.GetPeerIdentifier("ownNode");
@@ -78,8 +78,8 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
             var seedState = DiscoveryHelper.MockSeedState(_ownNode, _settings);
             var seedOrigin = HastingsOriginator.Default;
             seedOrigin.RestoreMemento(seedState);
-            var stateCareTaker = new HastingCareTaker();
-            var stateHistory = new Stack<IHastingMemento>();
+            var stateCareTaker = new HastingsesCareTaker();
+            var stateHistory = new Stack<IHastingsMemento>();
             stateHistory.Push(seedState);
             
             stateHistory = DiscoveryHelper.MockMementoHistory(stateHistory, 5); //this isn't an angry pirate this is just 5
@@ -119,7 +119,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
                 peerMessageCorrelationManager.AddPendingRequest(msg);
             });
 
-            var discoveryTestBuilder = DiscoveryTestBuilder.GetDiscoveryTestBuilder()
+            var discoveryTestBuilder = new DiscoveryTestBuilder()
                .WithLogger(_logger)
                .WithPeerRepository()
                .WithDns(default, true)
@@ -162,7 +162,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
                    .Should()
                    .BeFalse();
 
-                walker.HastingCareTaker.HastingMementoList.TryPeek(out var expectedCurrentState);
+                walker.HastingsCareTaker.HastingMementoList.TryPeek(out var expectedCurrentState);
                 
                 walker.WalkBack();
 
@@ -176,10 +176,9 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
         public async Task Expected_Ping_Response_From_All_Contacted_Nodes_Produces_Valid_State_Candidate()
         {
             var seedState = DiscoveryHelper.SubSeedState(_ownNode, _settings);
-            var seedOrigin = new HastingsOriginator(seedState);
             
-            var stateCareTaker = new HastingCareTaker();
-            var stateHistory = new Stack<IHastingMemento>();
+            var stateCareTaker = new HastingsesCareTaker();
+            var stateHistory = new Stack<IHastingsMemento>();
             stateHistory.Push(seedState);
             
             DiscoveryHelper.MockMementoHistory(stateHistory, Constants.AngryPirate).ToList().ForEach(i => stateCareTaker.Add(i));
@@ -187,8 +186,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
             var knownPnr = CorrelationId.GenerateCorrelationId();
             var stateCandidate = DiscoveryHelper.SubOriginator(expectedPnr: knownPnr);
 
-            var discoveryTestBuilder = DiscoveryTestBuilder.GetDiscoveryTestBuilder();
-            discoveryTestBuilder
+            var discoveryTestBuilder = new DiscoveryTestBuilder()
                .WithLogger(_logger)
                .WithPeerRepository()
                .WithDns(default, true)
@@ -247,8 +245,8 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
             var seedOrigin = HastingsOriginator.Default;
             seedOrigin.RestoreMemento(seedState);
         
-            var stateCareTaker = new HastingCareTaker();
-            var stateHistory = new Stack<IHastingMemento>();
+            var stateCareTaker = new HastingsesCareTaker();
+            var stateHistory = new Stack<IHastingsMemento>();
             stateHistory.Push(seedState);
             
             DiscoveryHelper.MockMementoHistory(stateHistory, 5) //this isn't an angry pirate this is just 5
@@ -257,7 +255,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
 
             var stateCandidate = DiscoveryHelper.MockOriginator();
 
-            var discoveryTestBuilder = DiscoveryTestBuilder.GetDiscoveryTestBuilder();
+            var discoveryTestBuilder = new DiscoveryTestBuilder();
             discoveryTestBuilder
                .WithLogger(_logger)
                .WithPeerRepository()

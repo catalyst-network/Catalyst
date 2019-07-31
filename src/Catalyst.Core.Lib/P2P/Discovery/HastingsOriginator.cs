@@ -44,29 +44,29 @@ namespace Catalyst.Core.Lib.P2P.Discovery
 
         public static readonly HastingsOriginator Default = new HastingsOriginator(default);
 
-        public HastingsOriginator(IHastingMemento hastingMemento)
+        public HastingsOriginator(IHastingsMemento hastingsMemento)
         {
             PnrCorrelationId = CorrelationId.GenerateCorrelationId();
-            Peer = hastingMemento?.Peer;
-            Neighbours = hastingMemento?.Neighbours ?? new Neighbours();
+            Peer = hastingsMemento?.Peer;
+            Neighbours = hastingsMemento?.Neighbours ?? new Neighbours();
         }
 
         /// <inheritdoc />
-        public IHastingMemento CreateMemento()
+        public IHastingsMemento CreateMemento()
         {
             var worthyNeighbours = Neighbours.Where(n => n.State != NeighbourState.UnResponsive).ToList();
 
             Logger.Debug("Creating new memento with Peer {peer} and neighbours [{neighbours}]", 
                 Peer, string.Join(", ", worthyNeighbours));
-            return new HastingMemento(Peer, new Neighbours(worthyNeighbours));
+            return new HastingsMemento(Peer, new Neighbours(worthyNeighbours));
         }
         
         /// <inheritdoc />
-        public void RestoreMemento(IHastingMemento hastingMemento)
+        public void RestoreMemento(IHastingsMemento hastingsMemento)
         {
-            Logger.Debug("Restoring memento with Peer {peer} and neighbours [{neighbours}]", hastingMemento.Peer);
-            Peer = hastingMemento.Peer;
-            Neighbours = hastingMemento.Neighbours;
+            Logger.Debug("Restoring memento with Peer {peer} and neighbours [{neighbours}]", hastingsMemento.Peer);
+            Peer = hastingsMemento.Peer;
+            Neighbours = hastingsMemento.Neighbours;
             PnrCorrelationId = CorrelationId.GenerateCorrelationId();
         }
 
