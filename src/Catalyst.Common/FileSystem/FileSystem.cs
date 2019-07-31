@@ -169,6 +169,8 @@ namespace Catalyst.Common.FileSystem
 
             var final = arrayText.FirstOrDefault();
 
+            //final = Path.Combine(arrayText.Skip(0).ToArray());
+
             foreach (var item in arrayText.Skip(1))
             {
                 final += Path.Combine(seperatorType, item);
