@@ -162,7 +162,8 @@ namespace Catalyst.Common.FileSystem
             System.IO.File.WriteAllText(configFilePointer, text);
 
             var dirFound = false;
-            //dirFound = GetCurrentDataDir(configFilePointer, out _).Equals(configDirLocation); 
+            //dirFound = GetCurrentDataDir(configFilePointer, out _)
+            //    .Equals(System.Environment.OSVersion.Platform == System.PlatformID.Unix ? configDirLocationPrep : configDirLocation); 
 
             var dataFi = GetCurrentDataDir(configFilePointer, out _);
 
@@ -170,8 +171,10 @@ namespace Catalyst.Common.FileSystem
             Console.WriteLine("configDirLocation :: " + configDirLocation);
             Console.WriteLine("configDirLocationPrep :: " + configDirLocationPrep);
 
+            var compareVal = System.Environment.OSVersion.Platform == System.PlatformID.Unix ? configDirLocationPrep : configDirLocation;
 
-            if (dataFi == configDirLocation)
+
+            if (dataFi == compareVal)
             {
                 Console.WriteLine("Match true");
                 return true;
