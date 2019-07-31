@@ -37,7 +37,7 @@ namespace Catalyst.Core.Lib.P2P
 {
     public class PoaDiscovery : IPeerDiscovery
     {
-        public const string PoaPeerFile = "poaPeers.json";
+        public static string PoaPeerFile => "poaPeers.json";
         private readonly IPeerRepository _peerRepository;
         private readonly IFileSystem _fileSystem;
         private readonly ILogger _logger;
