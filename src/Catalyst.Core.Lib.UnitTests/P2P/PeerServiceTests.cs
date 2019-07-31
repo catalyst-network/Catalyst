@@ -56,7 +56,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P
         private readonly IPeerDiscovery _peerDiscovery;
         private readonly List<IP2PMessageObserver> _p2PMessageHandlers;
         private readonly EmbeddedObservableChannel _serverChannel;
-        private PeerService _peerService;
+        private IPeerService _peerService;
         private IPeerSettings _peerSettings;
 
         public PeerServiceTests(ITestOutputHelper output) : base(output)
