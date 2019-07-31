@@ -43,6 +43,8 @@ namespace Catalyst.Common.FileSystem
 
         public FileSystem()
         {
+            Console.WriteLine("FileSystem :: " + GetHashCode());
+
             _currentDataDirPointer = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile);
 
             _dataDir = File.Exists(_currentDataDirPointer) ?
@@ -60,6 +62,7 @@ namespace Catalyst.Common.FileSystem
             {
                 if (SaveConfigPointerFile(path, _currentDataDirPointer))
                 {
+                    Console.WriteLine("Save :: " + GetHashCode());
                     Console.WriteLine("Save Successful :: " + path);
                     _dataDir = path;
                     return true;
