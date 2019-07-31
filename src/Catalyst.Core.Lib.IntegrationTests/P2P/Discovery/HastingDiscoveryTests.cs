@@ -136,7 +136,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
             _logger.Information("Building Hasting discovery for test.");
             using (var walker = discoveryTestBuilder.Build())
             {
-                stateCandidate.Neighbours.ToList().ForEach(n =>
+                stateCandidate.Neighbours.AsParallel().ForAll(n =>
                     cacheEntriesByRequest[n.DiscoveryPingCorrelationId.Id.ToByteString()]
                        .PostEvictionCallbacks[0]
                        .EvictionCallback
