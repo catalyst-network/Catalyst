@@ -89,7 +89,7 @@ namespace Catalyst.Common.Network
                 Guard.Argument(answerSection.EscapedText).NotNull().Count(1);        
                 answerSection.EscapedText.ToList().ForEach(hexPid =>
                 {
-                    var peerChunks = hexPid.HexToUTF8String().Split("|");
+                    var peerChunks = hexPid.HexToUTF8String().Split(PeerIdentifier.PidDelimiter);
                     _peerIdValidator.ValidateRawPidChunks(peerChunks);
 
                     var peerIdentifier = PeerIdentifier.ParseHexPeerIdentifier(peerChunks);
