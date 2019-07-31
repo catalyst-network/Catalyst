@@ -1,10 +1,5 @@
 #region LICENSE
 
-
-
-#endregion
-
-using System;
 /**
 * Copyright (c) 2019 Catalyst Network
 *
@@ -23,6 +18,11 @@ using System;
 * You should have received a copy of the GNU General Public License
 * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
+
+#endregion
+
+using System;
+
 namespace Catalyst.Common.Interfaces.P2P
 {
     public interface IPeerHeartbeatChecker : IDisposable

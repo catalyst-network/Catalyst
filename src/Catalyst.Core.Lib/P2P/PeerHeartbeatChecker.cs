@@ -26,7 +26,7 @@ namespace Catalyst.Core.Lib.P2P
             _subscription = Observable
                .Interval(_checkHeartbeatInterval)
                .SubscribeOn(TaskPoolScheduler.Default)
-               .Repeat()
+               .StartWith(-1L)
                .Subscribe(interval => CheckHeartbeat());
         }
 
@@ -41,7 +41,7 @@ namespace Catalyst.Core.Lib.P2P
                     {
                         _peerRepository.Delete(peer.DocumentId);
                     }
-                });
+                }).ConfigureAwait(false);
             }
         }
 

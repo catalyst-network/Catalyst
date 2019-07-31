@@ -22,6 +22,7 @@
 #endregion
 
 using System;
+using System.Linq;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
@@ -78,7 +79,7 @@ namespace Catalyst.Core.Lib.P2P
 
                 var t = _peerService.MessageStream.FirstAsync(a => a != null && a != NullObjects.ObserverDto
                  && a.Payload.TypeUrl == _messageType
-                 && a.Payload.PeerId.PublicKey.ToStringUtf8() == recipientPeerIdentifier.PeerId.PublicKey.ToStringUtf8());
+                 && a.Payload.PeerId.PublicKey.SequenceEqual(recipientPeerIdentifier.PeerId.PublicKey));
 
                 await t.RunAsync(_cancellationTokenSource.Token);
             }
