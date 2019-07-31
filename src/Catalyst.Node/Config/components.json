@@ -178,7 +178,8 @@
                 {
                     "type": "Catalyst.Common.Interfaces.P2P.IPeerIdentifier, Catalyst.Common"
                 }
-            ]
+            ],
+            "instanceScope": "singleinstance"
         },
 
         {
