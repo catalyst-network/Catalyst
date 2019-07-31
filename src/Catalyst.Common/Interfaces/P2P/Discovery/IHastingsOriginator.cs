@@ -21,35 +21,45 @@
 
 #endregion
 
-using System.Collections.Generic;
+using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
+using Catalyst.Protocol.IPPN;
 
 namespace Catalyst.Common.Interfaces.P2P.Discovery
 {
     public interface IHastingsOriginator
     {
-        int UnreachableNeighbour { get; }
-        IPeerIdentifier Peer { get; set; }
-        IList<IPeerIdentifier> CurrentPeersNeighbours { get; }
-        KeyValuePair<ICorrelationId, IPeerIdentifier> ExpectedPnr { get; set; }
-        IList<KeyValuePair<ICorrelationId, IPeerIdentifier>> ContactedNeighbours { get; }
+        IPeerIdentifier Peer { get; }
+
+        /// <summary>
+        /// Every time you the walk moves forward with a new Peer, it will ask that peer for
+        /// its neighbours sending a new <see cref="Protocol.IPPN.PeerNeighborsRequest"/>.
+        /// This field stores the details for that request. 
+        /// </summary>
+        ICorrelationId PnrCorrelationId { get; }
         
         /// <summary>
-        ///     called when ContactedNeighbour doesn't respond
+        /// A readonly list of the neighbours considered for <see cref="PingRequest"/> at that stage of the node.
+        /// This list will be used to progress if any of them is valid (<see cref="HasValidCandidate"/>).
         /// </summary>
-        /// <returns></returns>
-        void IncrementUnreachablePeer();
-
+        INeighbours Neighbours { get; }
+        
         /// <summary>
         ///     creates a memento from current state
         /// </summary>
         /// <returns></returns>
-        IHastingMemento CreateMemento();
-        
+        IHastingsMemento CreateMemento();
+
         /// <summary>
         ///     Restores the state from a memento
         /// </summary>
-        /// <param name="hastingMemento"></param>
-        void SetMemento(IHastingMemento hastingMemento);
+        /// <param name="hastingsMemento"></param>
+        void RestoreMemento(IHastingsMemento hastingsMemento);
+
+        /// <summary>
+        /// Find out if the current state has any neighbour in a <see cref="NeighbourState.Responsive"/>
+        /// </summary>
+        /// <returns><see cref="true"/> if <see cref="Neighbours"/> contains a <see cref="NeighbourState.Responsive"/> neighbour, <see cref="false"/> otherwise.</returns>
+        bool HasValidCandidate();
     }
 }
