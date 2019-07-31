@@ -5,7 +5,7 @@ using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 
-namespace Catalyst.Node.P2P
+namespace Catalyst.Core.Lib.P2P
 {
     public class PeerHeartbeatChecker : IPeerHeartbeatChecker
     {
