@@ -37,7 +37,7 @@ namespace Catalyst.Core.Lib.P2P
 {
     public class PoaDiscovery : IPeerDiscovery
     {
-        private const string PoaPeerFile = "poaPeers.json";
+        public const string PoaPeerFile = "poaPeers.json";
         private readonly IPeerRepository _peerRepository;
         private readonly IFileSystem _fileSystem;
         private readonly ILogger _logger;
@@ -47,29 +47,6 @@ namespace Catalyst.Core.Lib.P2P
             _peerRepository = peerRepository;
             _fileSystem = fileSystem;
             _logger = logger;
-            LoadPoaPeers();
-        }
-
-        /// <summary>
-        /// Loads the POA peers from the JSON file <see cref="PoaPeerFile"/>
-        /// </summary>
-        private void LoadPoaPeers()
-        {
-            var copiedPath = CopyPoaFile();
-            var poaPeers = JsonConvert.DeserializeObject<List<string>>(File.ReadAllText(copiedPath));
-
-            foreach (var pid in poaPeers)
-            {
-                var peerIdentifier = PeerIdentifier.ParseHexPeerIdentifier(pid.Split(PeerIdentifier.PidDelimiter));
-                var poaPeer = new Peer {PeerIdentifier = peerIdentifier};
-
-                _logger.Information($"Adding POA Peer: {peerIdentifier.Ip} Public Key: {peerIdentifier.PublicKey.KeyToString()}");
-
-                if (!_peerRepository.Exists(poaPeer.DocumentId))
-                {
-                    _peerRepository.Add(poaPeer);
-                }
-            }
         }
 
         private string CopyPoaFile()
@@ -85,6 +62,25 @@ namespace Catalyst.Core.Lib.P2P
             return target;
         }
 
-        public Task DiscoveryAsync() { return Task.CompletedTask; }
+        public Task DiscoveryAsync()
+        {
+            var copiedPath = CopyPoaFile();
+            var poaPeers = JsonConvert.DeserializeObject<List<string>>(File.ReadAllText(copiedPath));
+
+            foreach (var pid in poaPeers)
+            {
+                var peerIdentifier = PeerIdentifier.ParseHexPeerIdentifier(pid.Split(PeerIdentifier.PidDelimiter));
+                var poaPeer = new Peer { PeerIdentifier = peerIdentifier };
+
+                _logger.Information($"Adding POA Peer: {peerIdentifier.Ip} Public Key: {peerIdentifier.PublicKey.KeyToString()}");
+
+                if (!_peerRepository.Exists(poaPeer.DocumentId))
+                {
+                    _peerRepository.Add(poaPeer);
+                }
+            }
+
+            return Task.CompletedTask;
+        }
     }
 }
