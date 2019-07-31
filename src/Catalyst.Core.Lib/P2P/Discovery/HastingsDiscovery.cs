@@ -339,26 +339,23 @@ namespace Catalyst.Core.Lib.P2P.Discovery
             
             try
             {
-                //lock (StepProposal)
+                if (StepProposal.PnrCorrelationId.Equals(requestCorrelationId))
                 {
-                    if (StepProposal.PnrCorrelationId.Equals(requestCorrelationId))
-                    {
-                        // state candidate didn't give any neighbours so go back a step.
-                        _logger.Verbose("StepProposal {n.PeerIdentifier} unresponsive.");
-                        WalkBack();
-                    }
-
-                    var neighbour = StepProposal.Neighbours.SingleOrDefault(n => n.DiscoveryPingCorrelationId.Equals(requestCorrelationId));
-                    if (neighbour == null)
-                    {
-                        _logger.Debug("EvictionCallback received for {correlationId}, but not correlated to neighbours of {stateCandidate}",
-                            requestCorrelationId, CurrentStep.Peer);
-                        return;
-                    }
-
-                    _logger.Verbose("Neighbour {peerIdentifier} unresponsive.", neighbour.PeerIdentifier);
-                    neighbour.State = NeighbourState.UnResponsive;
+                    // state candidate didn't give any neighbours so go back a step.
+                    _logger.Verbose("StepProposal {n.PeerIdentifier} unresponsive.");
+                    WalkBack();
                 }
+
+                var neighbour = StepProposal.Neighbours.SingleOrDefault(n => n.DiscoveryPingCorrelationId.Equals(requestCorrelationId));
+                if (neighbour == null)
+                {
+                    _logger.Debug("EvictionCallback received for {correlationId}, but not correlated to neighbours of {stateCandidate}",
+                        requestCorrelationId, CurrentStep.Peer);
+                    return;
+                }
+
+                _logger.Verbose("Neighbour {peerIdentifier} unresponsive.", neighbour.PeerIdentifier);
+                neighbour.State = NeighbourState.UnResponsive;
             }
             catch (Exception e)
             {
