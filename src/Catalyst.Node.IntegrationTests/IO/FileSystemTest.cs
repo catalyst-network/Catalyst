@@ -104,6 +104,9 @@ namespace Catalyst.Node.IntegrationTests.IO
             Console.WriteLine("Perform Check");
             var fileSystem = new CommonFileSystem();
             Console.WriteLine("Compare : {0} vs {1}", fileSystem.GetHashCode(), _fileSystem.GetHashCode());
+            Console.WriteLine("{0}::{1}", fileSystem.GetHashCode(), fileSystem.GetCatalystDataDir().FullName);
+            Console.WriteLine("{0}::{1}", _fileSystem.GetHashCode(), _fileSystem.GetCatalystDataDir().FullName);
+
             fileSystem.GetCatalystDataDir().FullName.ToLower().Should().Be(_fileSystem.GetCatalystDataDir().FullName.ToLower());
             Console.WriteLine("\n\n");
 
@@ -121,6 +124,9 @@ namespace Catalyst.Node.IntegrationTests.IO
             Console.WriteLine("Perform Check");            
             var fileSystemRetriever = new CommonFileSystem();
             Console.WriteLine("Compare : {0} vs {1}", fileSystem.GetHashCode(), fileSystemRetriever.GetHashCode());
+            Console.WriteLine("{0}::{1}", fileSystem.GetHashCode(), fileSystem.GetCatalystDataDir().FullName);
+            Console.WriteLine("{0}::{1}", fileSystemRetriever.GetHashCode(), fileSystemRetriever.GetCatalystDataDir().FullName);
+
             fileSystem.GetCatalystDataDir().FullName.ToLower().Should()
                 .Be(fileSystemRetriever.GetCatalystDataDir().FullName.ToLower());
 
