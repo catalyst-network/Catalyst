@@ -98,20 +98,28 @@ namespace Catalyst.Node.IntegrationTests.IO
         {
             Console.WriteLine("DISPLAY _sourceFolder :: " + _sourceFolder);
             _fileSystem.SetCurrentPath(_sourceFolder).Should().BeTrue();
+            Console.WriteLine("\n\n");
 
             var fileSystem = new CommonFileSystem();
             fileSystem.GetCatalystDataDir().FullName.ToLower().Should().Be(_fileSystem.GetCatalystDataDir().FullName.ToLower());
 
+            Console.WriteLine("GenerateFileSystem");
             GenerateFileSystem();
-
             var changeDataDir = Setup();
+            Console.WriteLine("Setup");
+            Console.WriteLine("\n\n");
+
+
             Console.WriteLine("DISPLAY changeDataDir :: " + changeDataDir);
             fileSystem.SetCurrentPath(changeDataDir).Should().BeTrue();
+            Console.WriteLine("\n\n");
 
             var fileSystemRetriever = new CommonFileSystem();
 
             fileSystem.GetCatalystDataDir().FullName.ToLower().Should()
                 .Be(fileSystemRetriever.GetCatalystDataDir().FullName.ToLower());
+
+            Console.WriteLine("\n\n");
         }
     }
 }
