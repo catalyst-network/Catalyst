@@ -81,16 +81,16 @@ namespace Catalyst.Node.IntegrationTests.IO
             _fileSystem.SetCurrentPath(_sourceFolder).Should().BeTrue();
         }
 
-        [Fact(Skip ="Hold")]
-        [Trait(Traits.TestType, Traits.IntegrationTest)]
-        public void Save_Data_Directory_New_Instance_Must_Load_With_New_Data_Directory()
-        {
-            _fileSystem.SetCurrentPath(_sourceFolder).Should().BeTrue();
+        //[Fact(Skip ="Hold")]
+        //[Trait(Traits.TestType, Traits.IntegrationTest)]
+        //public void Save_Data_Directory_New_Instance_Must_Load_With_New_Data_Directory()
+        //{
+        //    _fileSystem.SetCurrentPath(_sourceFolder).Should().BeTrue();
 
-            var fileSystem = new CommonFileSystem();
+        //    var fileSystem = new CommonFileSystem();
 
-            fileSystem.GetCatalystDataDir().FullName.ToLower().Should().Be(_fileSystem.GetCatalystDataDir().FullName.ToLower());
-        }
+        //    fileSystem.GetCatalystDataDir().FullName.ToLower().Should().Be(_fileSystem.GetCatalystDataDir().FullName.ToLower());
+        //}
 
         [Fact]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
@@ -103,6 +103,7 @@ namespace Catalyst.Node.IntegrationTests.IO
 
             Console.WriteLine("Perform Check");
             var fileSystem = new CommonFileSystem();
+            Console.WriteLine("Compare : {0} vs {1}", fileSystem.GetHashCode(), _fileSystem.GetHashCode());
             fileSystem.GetCatalystDataDir().FullName.ToLower().Should().Be(_fileSystem.GetCatalystDataDir().FullName.ToLower());
             Console.WriteLine("\n\n");
 
