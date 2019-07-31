@@ -60,7 +60,6 @@ namespace Catalyst.Common.P2P
         public IPEndPoint IpEndPoint => EndpointBuilder.BuildNewEndPoint(Ip, Port);
         public PeerId PeerId { get; }
 
-
         public PeerIdentifier(PeerId peerId)
         {
             var keyLength = FFI.PublicKeyLength;
