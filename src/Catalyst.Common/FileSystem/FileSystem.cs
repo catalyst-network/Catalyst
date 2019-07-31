@@ -155,14 +155,21 @@ namespace Catalyst.Common.FileSystem
             var configDataDir = GetCurrentDataDir(configFilePointer, out _);
 
             configDataDir = PrepDirectoryLocationFormatAlt(configDataDir);
-            configDirLocation = PrepDirectoryLocationFormatAlt(configDirLocation);
+            var configDirLocationPrep = PrepDirectoryLocationFormatAlt(configDirLocation);
 
             var text = System.IO.File.ReadAllText(configFilePointer);
-            text = text.Replace(configDataDir, configDirLocation);
+            text = text.Replace(configDataDir, configDirLocationPrep);
             System.IO.File.WriteAllText(configFilePointer, text);
 
             var dirFound = false;
-            GetCurrentDataDir(configFilePointer, out dirFound); 
+            //dirFound = GetCurrentDataDir(configFilePointer, out _).Equals(configDirLocation); 
+
+            var dataFi = GetCurrentDataDir(configFilePointer, out _);
+
+            if (dataFi == configDirLocation)
+            {
+                return true;
+            }
             return dirFound;
         }
 
