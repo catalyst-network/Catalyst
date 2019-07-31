@@ -168,6 +168,8 @@ namespace Catalyst.Common.FileSystem
 
             Console.WriteLine("dataFi :: " + dataFi);
             Console.WriteLine("configDirLocation :: " + configDirLocation);
+            Console.WriteLine("configDirLocationPrep :: " + configDirLocationPrep);
+
 
             if (dataFi == configDirLocation)
             {
