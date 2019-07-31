@@ -166,8 +166,12 @@ namespace Catalyst.Common.FileSystem
 
             var dataFi = GetCurrentDataDir(configFilePointer, out _);
 
+            Console.WriteLine("dataFi :: " + dataFi);
+            Console.WriteLine("configDirLocation :: " + configDirLocation);
+
             if (dataFi == configDirLocation)
             {
+                Console.WriteLine("Match true");
                 return true;
             }
             return dirFound;
