@@ -25,16 +25,13 @@ using Catalyst.Common.Interfaces.FileSystem;
 using Catalyst.Common.Interfaces.P2P.Discovery;
 using Catalyst.Common.Interfaces.Repository;
 using Catalyst.Common.P2P;
-using Nethereum.RLP;
+using Catalyst.Common.Util;
 using Newtonsoft.Json;
 using Serilog;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
-using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.Util;
-using Catalyst.Protocol.Common;
 
 namespace Catalyst.Core.Lib.P2P
 {
@@ -45,7 +42,7 @@ namespace Catalyst.Core.Lib.P2P
         private readonly IFileSystem _fileSystem;
         private readonly ILogger _logger;
 
-        public PoaDiscovery(IPeerRepository peerRepository, IFileSystem fileSystem, ILogger logger, IPeerIdentifier identifier)
+        public PoaDiscovery(IPeerRepository peerRepository, IFileSystem fileSystem, ILogger logger)
         {
             _peerRepository = peerRepository;
             _fileSystem = fileSystem;
