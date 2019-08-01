@@ -47,8 +47,6 @@ namespace Catalyst.Core.Lib.Rpc
             var section = rootSection.GetSection("CatalystNodeConfiguration").GetSection("Rpc");
 
             Port = int.Parse(section.GetSection("Port").Value);
-            AcceptInvalidCerts = bool.Parse(section.GetSection("AcceptInvalidCerts").Value);
-            MutualAuthentication = bool.Parse(section.GetSection("MutualAuthentication").Value);
             PfxFileName = section.GetSection("PfxFileName").Value;
             BindAddress = IPAddress.Parse(section.GetSection("BindAddress").Value);
         }
@@ -57,7 +55,5 @@ namespace Catalyst.Core.Lib.Rpc
         public int Port { get; }
         public IPAddress BindAddress { get; }
         public string PfxFileName { get; }
-        public bool MutualAuthentication { get; }
-        public bool AcceptInvalidCerts { get; }
     }
 }
