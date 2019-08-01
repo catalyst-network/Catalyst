@@ -294,24 +294,6 @@
                 }
             ]
         },
-        {
-            "type": "Catalyst.Common.Registry.PasswordRegistry, Catalyst.Common",
-            "services": [
-                {
-                    "type": "Catalyst.Common.Interfaces.Registry.IPasswordRegistry, Catalyst.Common"
-                }
-            ],
-            "instanceScope": "singleinstance"
-        },
-        {
-            "type": "Catalyst.Common.Cryptography.ConsolePasswordReader, Catalyst.Common",
-            "services": [
-                {
-                    "type": "Catalyst.Common.Interfaces.Cryptography.IPasswordReader, Catalyst.Common"
-                }
-            ],
-            "instanceScope": "singleinstance"
-        },
         // WHY USE CLI BASED CLASS AND NOT IN COMMON???
         {
             "type": "Catalyst.Common.Shell.ConsoleUserOutput, Catalyst.Common",

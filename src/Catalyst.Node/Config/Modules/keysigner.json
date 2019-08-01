@@ -2,6 +2,24 @@
   "defaultAssembly": "Catalyst.Core.Lib",
     "components": [
         {
+            "type": "Catalyst.Common.Registry.PasswordRegistry, Catalyst.Common",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.Registry.IPasswordRegistry, Catalyst.Common"
+                }
+            ],
+            "instanceScope": "singleinstance"
+        },
+        {
+            "type": "Catalyst.Common.Cryptography.ConsolePasswordReader, Catalyst.Common",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.Cryptography.IPasswordReader, Catalyst.Common"
+                }
+            ],
+            "instanceScope": "singleinstance"
+        },
+        {
             "type": "Catalyst.Common.Modules.KeySigner.KeySigner, Catalyst.Common",
             "services": [
                 {
