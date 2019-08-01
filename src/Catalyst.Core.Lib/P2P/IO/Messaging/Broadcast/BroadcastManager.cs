@@ -43,6 +43,7 @@ using System.Threading.Tasks;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Util;
 using Google.Protobuf;
+using Serilog;
 
 namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
 {
@@ -76,14 +77,24 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
         /// <summary>This dictionary will store any original broadcast messages so they can be sent for rebroadcast</summary>
         private readonly ConcurrentDictionary<ICorrelationId, ProtocolMessageSigned> _incomingBroadcastSignatureDictionary;
 
+        private readonly ILogger _logger;
+
+        /// <summary>The maximum peers the node can gossip to for a single message, per gossip cycle</summary>
+        public static int MaxGossipPeersPerRound => 3;
+
+        /// <summary>The maximum peers a broadcast originator can gossip to for a single message, per gossip cycle.</summary>
+        public static int BroadcastOwnerMaximumGossipPeersPerRound => 10;
+
         /// <summary>Initializes a new instance of the <see cref="BroadcastManager"/> class.</summary>
         /// <param name="peerIdentifier">The peer identifier.</param>
         /// <param name="peers">The peers.</param>
         /// <param name="memoryCache">The memory cache.</param>
         /// <param name="peerClient">The peer client.</param>
         /// <param name="signer">The signature writer</param>
-        public BroadcastManager(IPeerIdentifier peerIdentifier, IPeerRepository peers, IMemoryCache memoryCache, IPeerClient peerClient, IKeySigner signer)
+        /// <param name="logger"></param>
+        public BroadcastManager(IPeerIdentifier peerIdentifier, IPeerRepository peers, IMemoryCache memoryCache, IPeerClient peerClient, IKeySigner signer, ILogger logger)
         {
+            _logger = logger;
             _peerIdentifier = peerIdentifier;
             _pendingRequests = memoryCache;
             _peers = peers;
@@ -135,7 +146,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
                 var signature = _signer.Sign(message.ToByteArray());
                 var protocolMessageSigned = new ProtocolMessageSigned
                 {
-                    Signature = signature.SignatureBytes.RawBytes.ToByteString(),
+                    Signature = signature.SignatureBytes.ToByteString(),
                     Message = message
                 };
                 await BroadcastAsync(protocolMessageSigned).ConfigureAwait(false);
@@ -162,7 +173,14 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
         {
             try
             {
-                var peersToGossip = GetRandomPeers(Constants.MaxGossipPeersPerRound);
+                var isOwnerOfBroadcast = message.PeerId.Equals(_peerIdentifier.PeerId);
+                
+                // The fan out is how many peers to broadcast to
+                var fanOut = isOwnerOfBroadcast 
+                    ? BroadcastOwnerMaximumGossipPeersPerRound
+                    : (int) Math.Max(GetMaxGossipCycles(broadcastMessage), MaxGossipPeersPerRound);
+
+                var peersToGossip = GetRandomPeers(fanOut);
                 var correlationId = message.CorrelationId.ToCorrelationId();
 
                 foreach (var peerIdentifier in peersToGossip)
@@ -186,7 +204,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
             }
             catch (Exception e)
             {
-                //@TODO log
+                _logger.Error(e, nameof(SendBroadcastMessages));
             }
         }
 
@@ -222,8 +240,8 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
         private uint GetMaxGossipCycles(BroadcastMessage broadcastMessage)
         {
             var peerNetworkSize = broadcastMessage.PeerNetworkSize;
-            return (uint) (Math.Log(Math.Max(10, peerNetworkSize) / (double) Constants.MaxGossipPeersPerRound) /
-                Math.Max(1, broadcastMessage.BroadcastCount / Constants.MaxGossipPeersPerRound));
+            return (uint) (Math.Log(Math.Max(10, peerNetworkSize) / (double) MaxGossipPeersPerRound) /
+                Math.Max(1, broadcastMessage.BroadcastCount / MaxGossipPeersPerRound));
         }
 
         /// <summary>Increments the received count.</summary>
@@ -237,7 +255,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
                 {
                     ReceivedCount = 0,
                     BroadcastCount = 0,
-                    PeerNetworkSize = _peers.GetAll().Count()
+                    PeerNetworkSize = _peers.AsQueryable().Count()
                 }).ConfigureAwait(false);
                 entry.Value = gossipRequest;
                 return gossipRequest;

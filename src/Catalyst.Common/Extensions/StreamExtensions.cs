@@ -46,7 +46,7 @@ namespace Catalyst.Common.Extensions
 
         public static async Task<byte[]> ReadAllBytesAsync(this Stream stream, CancellationToken cancellationToken)
         {
-            if (stream.CanSeek)
+            if (stream.CanSeek) 
             {
                 stream.Seek(0, SeekOrigin.Begin);
             }

@@ -30,6 +30,8 @@ using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Common.Interfaces.IO.Observers;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.Interfaces.Registry;
+using Catalyst.Common.Util;
 using Catalyst.Core.Lib.P2P.IO.Observers;
 using Catalyst.TestUtils;
 using FluentAssertions;
@@ -45,7 +47,6 @@ namespace Catalyst.Node.UnitTests.Config
     {
         private readonly string _componentsConfig;
         private const string PeerMiniConfigFile = "peerConfigSection.json";
-        private const string PublicKeyAsString = "302a300506032b65700321001783421742816abf";
 
         public ComponentsConfigTests()
         {
@@ -57,7 +58,7 @@ namespace Catalyst.Node.UnitTests.Config
             var configBuilder = new ConfigurationBuilder();
             configFiles.ToList().ForEach(f => configBuilder.AddJsonFile(f));
 
-            configBuilder.AddJsonFile(Path.Combine(Constants.ConfigSubFolder, PeerMiniConfigFile));
+            configBuilder.AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Network.Dev + ".json"));
 
             var configRoot = configBuilder.Build();
             var configModule = new ConfigurationModule(configRoot);
@@ -72,6 +73,9 @@ namespace Catalyst.Node.UnitTests.Config
             var passwordReader = new TestPasswordReader();
             containerBuilder.RegisterInstance(passwordReader).As<IPasswordReader>();
             
+            var keyRegistry = TestKeyRegistry.MockKeyRegistry();
+            containerBuilder.RegisterInstance(keyRegistry).As<IKeyRegistry>();
+
             var container = containerBuilder.Build();
             return container;
         }
@@ -81,17 +85,17 @@ namespace Catalyst.Node.UnitTests.Config
         {
             var container = ConfigureAndBuildContainer(_componentsConfig);
             var resolved = container.Resolve<IPeerSettings>();
-            resolved.PublicKey.Should().Be(PublicKeyAsString);
+            resolved.PublicKey.Should().Be(TestKeyRegistry.TestPublicKey);
         }
 
         [Fact]
         public void Components_config_should_allow_resolving_IPeerIdentifier()
         {
             var container = ConfigureAndBuildContainer(_componentsConfig);
-
             var resolved = container.Resolve<IPeerIdentifier>();
-            resolved.PublicKey.Should()
-               .BeEquivalentTo(PublicKeyAsString.ToBytesForRLPEncoding());
+
+            resolved.PublicKey.KeyToString().Should()
+               .Be(TestKeyRegistry.TestPublicKey);
         }
 
         [Fact]

@@ -21,15 +21,21 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.Repository;
-using Catalyst.Common.Repository;
-using Catalyst.Common.Rpc.Authentication;
-using SharpRepository.Repository;
+using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
+using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Protocol.Rpc.Node;
+using DotNetty.Transport.Channels;
+using Serilog;
 
-namespace Catalyst.Node.Repository
+namespace Catalyst.Node.Rpc.Client.IO.Observers
 {
-    public class AuthCredentialRepository : RepositoryWrapper<AuthCredentials>, IAuthCredentialRepository
+    public class BroadcastRawTransactionResponseObserver : RpcResponseObserver<BroadcastRawTransactionResponse>
     {
-        public AuthCredentialRepository(IRepository<AuthCredentials, string> repository) : base(repository) { }
+        public BroadcastRawTransactionResponseObserver(ILogger logger) : base(logger) { }
+
+        protected override void HandleResponse(BroadcastRawTransactionResponse messageDto,
+            IChannelHandlerContext channelHandlerContext,
+            IPeerIdentifier senderPeerIdentifier,
+            ICorrelationId correlationId) { }
     }
 }

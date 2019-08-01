@@ -21,24 +21,15 @@
 
 #endregion
 
-using System.Collections.Generic;
-using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.Interfaces.P2P.Discovery;
+using Catalyst.Common.Interfaces.Repository;
+using Catalyst.Common.P2P;
+using Catalyst.Common.Repository;
+using SharpRepository.Repository;
 
-namespace Catalyst.Core.Lib.P2P.Discovery
+namespace Catalyst.Core.Lib.Repository
 {
-    /// <summary>
-    ///     Represents a single step within the hastings walk.
-    /// </summary>
-    public sealed class HastingMemento : IHastingMemento
+    public class PeerRepository : RepositoryWrapper<Peer>, IPeerRepository
     {
-        public IPeerIdentifier Peer { get; }
-        public IList<IPeerIdentifier> Neighbours { get; }
-
-        public HastingMemento(IPeerIdentifier peer, IEnumerable<IPeerIdentifier> neighbours)
-        {
-            Peer = peer;
-            Neighbours = new List<IPeerIdentifier>(neighbours);
-        }
+        public PeerRepository(IRepository<Peer, string> repository) : base(repository) { }
     }
 }

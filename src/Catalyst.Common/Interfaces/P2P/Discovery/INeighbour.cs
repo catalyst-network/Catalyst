@@ -21,15 +21,15 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.Repository;
-using Catalyst.Common.Modules.Mempool;
-using Catalyst.Common.Repository;
-using SharpRepository.Repository;
+using Catalyst.Common.Config;
+using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 
-namespace Catalyst.Node.Repository
+namespace Catalyst.Common.Interfaces.P2P.Discovery
 {
-    public class MempoolRepository : RepositoryWrapper<MempoolDocument>, IMempoolRepository
+    public interface INeighbour
     {
-        public MempoolRepository(IRepository<MempoolDocument, string> repository) : base(repository) { }
+        NeighbourState State { get; set; }
+        IPeerIdentifier PeerIdentifier { get; }
+        ICorrelationId DiscoveryPingCorrelationId { get; }
     }
 }

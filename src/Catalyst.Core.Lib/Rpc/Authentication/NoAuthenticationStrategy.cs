@@ -21,15 +21,28 @@
 
 #endregion
 
+using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Repository;
-using Catalyst.Common.Modules.Ledger;
-using Catalyst.Common.Repository;
-using SharpRepository.Repository;
+using Catalyst.Common.Interfaces.Rpc.Authentication;
 
-namespace Catalyst.Node.Repository
+namespace Catalyst.Core.Lib.Rpc.Authentication
 {
-    public class AccountRepository : RepositoryWrapper<Account>, IAccountRepository
+    /// <summary>
+    ///     For node runners who don't like to use protection.
+    /// </summary>
+    /// <seealso cref="IAuthenticationStrategy" />
+    public class NoAuthenticationStrategy : IAuthenticationStrategy
     {
-        public AccountRepository(IRepository<Account, string> repository) : base(repository) { }
+        /// <summary>The trusted peers</summary>
+        private readonly IAuthCredentialRepository _trustedPeers;
+
+        /// <param name="trustedPeers">The trusted peers.</param>
+        public NoAuthenticationStrategy(IAuthCredentialRepository trustedPeers)
+        {
+            _trustedPeers = trustedPeers;
+        }
+
+        /// <inheritdoc cref="IAuthenticationStrategy"/>
+        public bool Authenticate(IPeerIdentifier peerIdentifier) { return true; }
     }
 }
