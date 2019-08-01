@@ -50,6 +50,7 @@ namespace Catalyst.Common.FileSystem
 
             _dataDir = File.Exists(_currentDataDirPointer) ? GetCurrentDataDir(_currentDataDirPointer) : Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), Constants.CatalystDataDir);
         }
+
         public virtual DirectoryInfo GetCatalystDataDir()
         {
             var path = Path.Combine(GetUserHomeDir(), Constants.CatalystDataDir);
@@ -72,6 +73,7 @@ namespace Catalyst.Common.FileSystem
                     return true;
                 }
             }
+
             return false;
         }
 

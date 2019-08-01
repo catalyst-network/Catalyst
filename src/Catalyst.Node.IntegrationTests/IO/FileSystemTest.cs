@@ -55,10 +55,8 @@ namespace Catalyst.Node.IntegrationTests.IO
         {
             var currentDirectory = FileSystem.GetCatalystDataDir();
 
-            currentDirectory.Exists.Should().BeFalse("otherwise the test is not relevant");
-
-            var modulesDirectory =
-                new DirectoryInfo(Path.Combine(currentDirectory.FullName, Constants.ModulesSubFolder));
+            //var modulesDirectory =
+            //    new DirectoryInfo(Path.Combine(currentDirectory.FullName, Constants.ModulesSubFolder));
 
             var network = Catalyst.Common.Config.Network.Dev;
             new ConfigCopier().RunConfigStartUp(currentDirectory.FullName, network);
@@ -70,14 +68,14 @@ namespace Catalyst.Node.IntegrationTests.IO
         [InlineData("C:\\rubbishlocation\\fake\\technodisco")]
         [InlineData("gandolf\\treasure")]
         [InlineData("L:\\123\\fake")]
-        public void Save_NonExistant_Data_Directory_Must_Fail(string path)
+        public void Save_NonExistent_Data_Directory_Must_Fail(string path)
         {
             _fileSystem.SetCurrentPath(path).Should().BeFalse();
         }
                
         [Fact]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
-        public void Save_Existant_Data_Directory_Must_Succeed()
+        public void Save_Existent_Data_Directory_Must_Succeed()
         {
             _fileSystem.SetCurrentPath(_sourceFolder).Should().BeTrue();
         }
@@ -97,41 +95,20 @@ namespace Catalyst.Node.IntegrationTests.IO
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void Save_Data_Directory_Several_Times_New_Instance_Must_Load_With_New_Data_Directory()
         {
-            Console.WriteLine("\n\n");
-            Console.WriteLine("DISPLAY _sourceFolder :: " + _sourceFolder);
             _fileSystem.SetCurrentPath(_sourceFolder).Should().BeTrue();
-            Console.WriteLine("\n\n");
 
-            Console.WriteLine("Perform Check");
             var fileSystem = new CommonFileSystem();
-            Console.WriteLine("Compare : {0} vs {1}", fileSystem.GetHashCode(), _fileSystem.GetHashCode());
-            Console.WriteLine("{0}::{1}", fileSystem.GetHashCode(), fileSystem.GetCatalystDataDir().FullName);
-            Console.WriteLine("{0}::{1}", _fileSystem.GetHashCode(), _fileSystem.GetCatalystDataDir().FullName);
 
             fileSystem.GetCatalystDataDir().FullName.ToLower().Should().Be(_fileSystem.GetCatalystDataDir().FullName.ToLower());
-            Console.WriteLine("\n\n");
 
-            Console.WriteLine("GenerateFileSystem");
             GenerateFileSystem();
             var changeDataDir = Setup();
-            Console.WriteLine("Setup");
-            Console.WriteLine("\n\n");
 
-
-            Console.WriteLine("DISPLAY changeDataDir :: " + changeDataDir);
             fileSystem.SetCurrentPath(changeDataDir).Should().BeTrue();
-            Console.WriteLine("\n\n");
 
-            Console.WriteLine("Perform Check");            
             var fileSystemRetriever = new CommonFileSystem();
-            Console.WriteLine("Compare : {0} vs {1}", fileSystem.GetHashCode(), fileSystemRetriever.GetHashCode());
-            Console.WriteLine("{0}::{1}", fileSystem.GetHashCode(), fileSystem.GetCatalystDataDir().FullName);
-            Console.WriteLine("{0}::{1}", fileSystemRetriever.GetHashCode(), fileSystemRetriever.GetCatalystDataDir().FullName);
 
-            fileSystem.GetCatalystDataDir().FullName.ToLower().Should()
-                .Be(fileSystemRetriever.GetCatalystDataDir().FullName.ToLower());
-
-            Console.WriteLine("\n\n");
+            fileSystem.GetCatalystDataDir().FullName.ToLower().Should().Be(fileSystemRetriever.GetCatalystDataDir().FullName.ToLower());
         }
     }
 }
