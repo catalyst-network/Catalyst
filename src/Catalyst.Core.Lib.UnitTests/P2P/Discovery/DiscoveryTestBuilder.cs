@@ -145,7 +145,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
         public DiscoveryTestBuilder WithPeerClientObservables(params Type[] clientObservers)
         {
             PeerClientObservables = clientObservers
-               .Select(ot => (IPeerClientObservable) Activator.CreateInstance(ot, _logger ?? Substitute.For<ILogger>()))
+               .Select(ot => (IPeerClientObservable) Activator.CreateInstance(ot, _logger ?? Substitute.For<ILogger>(), Substitute.For<IPeerChallenger>()))
                .ToList();
             
             return this;

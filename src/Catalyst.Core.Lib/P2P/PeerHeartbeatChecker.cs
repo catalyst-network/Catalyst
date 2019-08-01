@@ -67,12 +67,9 @@ namespace Catalyst.Core.Lib.P2P
         {
             foreach (var peer in _peerRepository.GetAll())
             {
-                Console.WriteLine("MATE GETTING HELD UP");
                 Task.Run(async () =>
                 {
-                    Console.WriteLine("MATE GETTING HELD UP2");
                     var result = await _peerChallenger.ChallengePeerAsync(peer.PeerIdentifier).ConfigureAwait(false);
-                    Console.WriteLine("MATE GETTING HELD UP3");
                     var counterValue = _nonResponsivePeerMap.GetOrAdd(peer.DocumentId, 0);
                     _logger.Verbose($"Heartbeat result: {result} Peer: {peer.PeerIdentifier} Non-Responsive Counter: {counterValue}");
                     if (!result)
