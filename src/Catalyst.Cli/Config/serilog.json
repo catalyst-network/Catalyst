@@ -11,7 +11,7 @@
     ],
     "Enrich": [ "FromLogContext", "WithMachineName", "WithThreadId", "SourceContext" ],
     "Properties": {
-      "Application": "Catalyst.Node"
+      "Application": "Catalyst.Cli"
     }
   }
 }

@@ -72,7 +72,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Observers
                .Subscribe(pingResponseObserver.OnNext))
             {
                 await TaskHelper.WaitForAsync(() => pingResponseObserver.ReceivedCalls().Any(),
-                    TimeSpan.FromMilliseconds(1000));
+                    TimeSpan.FromMilliseconds(5000));
                 pingResponseObserver.Received(1).OnNext(Arg.Any<IPeerClientMessageDto>());
             }
         }

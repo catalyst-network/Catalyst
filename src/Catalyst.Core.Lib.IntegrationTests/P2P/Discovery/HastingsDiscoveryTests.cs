@@ -150,7 +150,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
 
                 var success = await TaskHelper.WaitForAsync(
                     () => stateCandidate.Neighbours.All(n => n.State == NeighbourState.UnResponsive),
-                    TimeSpan.FromSeconds(3)).ConfigureAwait(false);
+                    TimeSpan.FromSeconds(5)).ConfigureAwait(false);
                 _logger.Verbose("Succeeded waiting for neighbour state change to Unresponsive? {success}", success);
 
                 walker.StepProposal.Neighbours
