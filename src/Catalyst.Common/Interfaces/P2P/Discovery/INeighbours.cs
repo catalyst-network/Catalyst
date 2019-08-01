@@ -21,10 +21,9 @@
 
 #endregion
 
+using System.Collections.Generic;
+
 namespace Catalyst.Common.Interfaces.P2P.Discovery
 {
-    /// <summary>
-    /// A service used to discover peers on the network using the delayed Hastings-Metropolis algorithm.
-    /// </summary>
-    public interface IHastingsDiscovery : IPeerDiscovery { }
+    public interface INeighbours : IReadOnlyCollection<INeighbour> { }
 }

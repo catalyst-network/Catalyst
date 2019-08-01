@@ -21,10 +21,20 @@
 
 #endregion
 
-namespace Catalyst.Common.Interfaces.P2P.Discovery
+using System;
+using System.Linq;
+
+namespace Catalyst.TestUtils
 {
-    /// <summary>
-    /// A service used to discover peers on the network using the delayed Hastings-Metropolis algorithm.
-    /// </summary>
-    public interface IHastingsDiscovery : IPeerDiscovery { }
+    public static class StringHelper
+    { 
+        private static readonly Random Random = new Random();
+
+        public static string RandomString(int length = 15)
+        {
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            return new string(Enumerable.Repeat(chars, length)
+               .Select(s => s[Random.Next(s.Length)]).ToArray());
+        }
+    }
 }

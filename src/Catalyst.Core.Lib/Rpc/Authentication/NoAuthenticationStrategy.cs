@@ -21,31 +21,28 @@
 
 #endregion
 
-using System;
-using System.Collections.Generic;
+using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.Interfaces.Repository;
+using Catalyst.Common.Interfaces.Rpc.Authentication;
 
-namespace Catalyst.Common.Interfaces.P2P.Discovery
+namespace Catalyst.Core.Lib.Rpc.Authentication
 {
     /// <summary>
-    ///     Caretaker of memento pattern is responsible for the memento's safekeeping,
-    ///     never operates on or examines the contents of a memento.
-    ///     https://www.dofactory.com/net/memento-design-pattern
+    ///     For node runners who don't like to use protection.
     /// </summary>
-    public interface IHastingCareTaker
+    /// <seealso cref="IAuthenticationStrategy" />
+    public class NoAuthenticationStrategy : IAuthenticationStrategy
     {
-        Stack<IHastingMemento> HastingMementoList { get; }
+        /// <summary>The trusted peers</summary>
+        private readonly IAuthCredentialRepository _trustedPeers;
 
-        /// <summary>
-        ///     Adds a new state from the walk to the queue
-        /// </summary>
-        /// <param name="hastingMemento"></param>
-        void Add(IHastingMemento hastingMemento);
+        /// <param name="trustedPeers">The trusted peers.</param>
+        public NoAuthenticationStrategy(IAuthCredentialRepository trustedPeers)
+        {
+            _trustedPeers = trustedPeers;
+        }
 
-        /// <summary>
-        ///     Gets the last state of the walk from the queue
-        /// </summary>
-        /// <returns></returns>
-        /// <exception cref="Exception"></exception>
-        IHastingMemento Get();
+        /// <inheritdoc cref="IAuthenticationStrategy"/>
+        public bool Authenticate(IPeerIdentifier peerIdentifier) { return true; }
     }
 }

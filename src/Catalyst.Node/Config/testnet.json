@@ -1,18 +1,9 @@
 {
     "CatalystNodeConfiguration": {
-        "Consensus": {
-            "nDepth": 100
-        },
-        "Contract": {
-            "StorageType": "Catalyst.Helpers.Ipfs"
-        },
         "Peer": {
             "Network": "devnet",
-            "PayoutAddress": "Some_cool_payout_address",
             "PublicKey": "1AemkEe4z3rZHr7RWSUyZHPuVozyCQnT1H7SfpzcGCQRuT",
-            "Announce": true,
-            "AnnounceServer": "127.0.0.1:21420",
-            "Port": 42054,
+            "Port": 42076,
             "BindAddress": "127.0.0.1",
             "DnsServers": [
                 "127.0.0.1:5053"
@@ -27,9 +18,7 @@
         },
         "Rpc": {
             "BindAddress": "127.0.0.1",
-            "Port": 42051,
-            "MutualAuthentication": false,
-            "AcceptInvalidCerts": false,
+            "Port": 42066,
             "PfxFileName": "mycert.pfx"
         },
         "PersistenceConfiguration": {

@@ -10,7 +10,7 @@
             ]
         },
         {
-            "type": "Catalyst.Node.Repository.PeerRepository, Catalyst.Node",
+            "type": "Catalyst.Core.Lib.Repository.PeerRepository, Catalyst.Core.Lib",
             "services": [
                 {
                     "type": "Catalyst.Common.Interfaces.Repository.IPeerRepository, Catalyst.Common"
@@ -19,7 +19,7 @@
             "instanceScope": "singleinstance"
         },
         {
-            "type": "Catalyst.Node.Repository.AuthCredentialRepository, Catalyst.Node",
+            "type": "Catalyst.Core.Lib.Repository.AuthCredentialRepository, Catalyst.Core.Lib",
             "services": [
                 {
                     "type": "Catalyst.Common.Interfaces.Repository.IAuthCredentialRepository, Catalyst.Common"
@@ -27,7 +27,7 @@
             ]
         },
         {
-            "type": "Catalyst.Node.Repository.AccountRepository, Catalyst.Node",
+            "type": "Catalyst.Core.Lib.Repository.AccountRepository, Catalyst.Core.Lib",
             "services": [
                 {
                     "type": "Catalyst.Common.Interfaces.Repository.IAccountRepository, Catalyst.Common"
@@ -184,7 +184,7 @@
         },
 
         {
-            "type": "Catalyst.Core.Lib.Rpc.Authentication.RepositoryAuthenticationStrategy",
+            "type": "Catalyst.Core.Lib.Rpc.Authentication.NoAuthenticationStrategy",
             "services": [
                 {
                     "type": "Catalyst.Common.Interfaces.Rpc.Authentication.IAuthenticationStrategy, Catalyst.Common"

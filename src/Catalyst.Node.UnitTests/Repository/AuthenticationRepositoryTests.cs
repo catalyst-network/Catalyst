@@ -26,16 +26,15 @@ using Catalyst.Common.Interfaces.Rpc.Authentication;
 using Catalyst.Common.Rpc.Authentication;
 using Catalyst.Common.Util;
 using Catalyst.Core.Lib.Rpc.Authentication;
-using Catalyst.Node.Repository;
+using Catalyst.Core.Lib.Repository;
 using Catalyst.TestUtils;
 using FluentAssertions;
-using Nethereum.RLP;
 using SharpRepository.InMemoryRepository;
 using Xunit;
 
 namespace Catalyst.Node.UnitTests.Repository
 {
-    public class AuthenticationRepositoryTests
+    public sealed class AuthenticationRepositoryTests
     {
         private readonly IAuthenticationStrategy _repositoryAuthenticationStrategy;
         private readonly IPeerIdentifier _trustedPeer;

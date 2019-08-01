@@ -69,11 +69,11 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Observers
             _observer.StartObserving(messageStream);
             await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
 
-            using (_observer.PingResponseStream.SubscribeOn(ImmediateScheduler.Instance)
+            using (_observer.MessageStream.SubscribeOn(ImmediateScheduler.Instance)
                .Subscribe(pingResponseObserver.OnNext))
             {
                 await TaskHelper.WaitForAsync(() => pingResponseObserver.ReceivedCalls().Any(),
-                    TimeSpan.FromMilliseconds(1000));
+                    TimeSpan.FromMilliseconds(5000));
                 pingResponseObserver.Received(1).OnNext(Arg.Any<IPeerClientMessageDto>());
             }
         }

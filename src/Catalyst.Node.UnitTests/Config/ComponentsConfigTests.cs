@@ -58,7 +58,7 @@ namespace Catalyst.Node.UnitTests.Config
             var configBuilder = new ConfigurationBuilder();
             configFiles.ToList().ForEach(f => configBuilder.AddJsonFile(f));
 
-            configBuilder.AddJsonFile(Path.Combine(Constants.ConfigSubFolder, PeerMiniConfigFile));
+            configBuilder.AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Network.Dev + ".json"));
 
             var configRoot = configBuilder.Build();
             var configModule = new ConfigurationModule(configRoot);

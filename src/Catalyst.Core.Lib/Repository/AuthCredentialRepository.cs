@@ -21,10 +21,15 @@
 
 #endregion
 
-namespace Catalyst.Common.Interfaces.P2P.Discovery
+using Catalyst.Common.Interfaces.Repository;
+using Catalyst.Common.Repository;
+using Catalyst.Common.Rpc.Authentication;
+using SharpRepository.Repository;
+
+namespace Catalyst.Core.Lib.Repository
 {
-    /// <summary>
-    /// A service used to discover peers on the network using the delayed Hastings-Metropolis algorithm.
-    /// </summary>
-    public interface IHastingsDiscovery : IPeerDiscovery { }
+    public class AuthCredentialRepository : RepositoryWrapper<AuthCredentials>, IAuthCredentialRepository
+    {
+        public AuthCredentialRepository(IRepository<AuthCredentials, string> repository) : base(repository) { }
+    }
 }

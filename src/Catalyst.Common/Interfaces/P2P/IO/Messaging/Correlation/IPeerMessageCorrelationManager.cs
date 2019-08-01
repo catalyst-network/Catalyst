@@ -23,7 +23,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Reactive.Subjects;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.P2P.ReputationSystem;
 
@@ -31,7 +30,6 @@ namespace Catalyst.Common.Interfaces.P2P.IO.Messaging.Correlation
 {
     public interface IPeerMessageCorrelationManager : IMessageCorrelationManager
     {
-        ReplaySubject<KeyValuePair<ICorrelationId, IPeerIdentifier>> EvictionEvent { get; }
         IObservable<IPeerReputationChange> ReputationEventStream { get; }
         IObservable<KeyValuePair<ICorrelationId, IPeerIdentifier>> EvictionEventStream { get; }
     }

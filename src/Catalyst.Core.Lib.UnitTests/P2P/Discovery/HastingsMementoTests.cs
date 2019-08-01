@@ -21,6 +21,7 @@
 
 #endregion
 
+using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Core.Lib.P2P.Discovery;
 using Catalyst.TestUtils;
@@ -29,11 +30,11 @@ using Xunit;
 
 namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
 {
-    public sealed class HastingMementoTests
+    public sealed class HastingsMementoTests
     {
         private readonly IPeerIdentifier _peer;
 
-        public HastingMementoTests()
+        public HastingsMementoTests()
         {
             _peer = PeerIdentifierHelper.GetPeerIdentifier("current_peer");
         }
@@ -41,12 +42,12 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
         [Fact]
         public void Can_Init_Memento_With_Existing_Params()
         {
-            var neighbours = HastingDiscoveryHelper.GenerateNeighbours();
-            var memento = new HastingMemento(_peer, neighbours);
+            var neighbours = DiscoveryHelper.MockNeighbours();
+            var memento = new HastingsMemento(_peer, neighbours);
             
             memento.Peer.Should().Be(_peer);
             memento.Neighbours.Should().Contain(neighbours);
-            memento.Neighbours.Should().HaveCount(5);
+            memento.Neighbours.Should().HaveCount(Constants.AngryPirate);
         }
     }
 }

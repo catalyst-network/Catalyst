@@ -21,70 +21,70 @@
 
 #endregion
 
-using System.Collections.Generic;
-using System.Threading;
+using System.Linq;
+using System.Reflection;
+using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.Discovery;
+using Catalyst.Common.IO.Messaging.Correlation;
+using Catalyst.Common.P2P.Discovery;
+using Serilog;
 
 namespace Catalyst.Core.Lib.P2P.Discovery
 {
     public sealed class HastingsOriginator : IHastingsOriginator
     {
-        private IPeerIdentifier _peer;
-        private int _unreachableNeighbour;
-        public int UnreachableNeighbour => _unreachableNeighbour;
-        public IList<IPeerIdentifier> CurrentPeersNeighbours { get; set; }
-        public KeyValuePair<ICorrelationId, IPeerIdentifier> ExpectedPnr { get; set; }
-        public IList<KeyValuePair<ICorrelationId, IPeerIdentifier>> ContactedNeighbours { get; set; }
+        private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
 
-        /// <summary>
-        ///     if setting a new peer, clean counters
-        /// </summary>
-        public IPeerIdentifier Peer
+        public INeighbours Neighbours { get; private set; }
+        public ICorrelationId PnrCorrelationId { get; private set; }
+
+        public IPeerIdentifier Peer { get; private set; }
+
+        public static readonly HastingsOriginator Default = new HastingsOriginator(default);
+
+        public HastingsOriginator(IHastingsMemento hastingsMemento)
         {
-            get => _peer;
-            set
+            PnrCorrelationId = CorrelationId.GenerateCorrelationId();
+            Peer = hastingsMemento?.Peer;
+            Neighbours = hastingsMemento?.Neighbours ?? new Neighbours();
+        }
+
+        /// <inheritdoc />
+        public IHastingsMemento CreateMemento()
+        {
+            var worthyNeighbours = Neighbours.Where(n => n.State != NeighbourState.UnResponsive).ToList();
+
+            Logger.Debug("Creating new memento with Peer {peer} and neighbours [{neighbours}]", 
+                Peer, string.Join(", ", worthyNeighbours));
+            return new HastingsMemento(Peer, new Neighbours(worthyNeighbours));
+        }
+        
+        /// <inheritdoc />
+        public void RestoreMemento(IHastingsMemento hastingsMemento)
+        {
+            Logger.Debug("Restoring memento with Peer {peer} and neighbours [{neighbours}]", hastingsMemento.Peer);
+            Peer = hastingsMemento.Peer;
+            Neighbours = hastingsMemento.Neighbours;
+            PnrCorrelationId = CorrelationId.GenerateCorrelationId();
+        }
+
+        public bool HasValidCandidate()
+        {
+            if (Neighbours
+               .Select(n => n.State)
+               .Count(s => s == NeighbourState.NotContacted || s == NeighbourState.UnResponsive)
+               .Equals(Constants.AngryPirate))
             {
-                if (_peer != null)
-                {
-                    CleanUp();
-                }
-                
-                _peer = value;
+                return false;
             }
-        }
-        
-        public HastingsOriginator() { CleanUp(); }
 
-        /// <inheritdoc />
-        public IHastingMemento CreateMemento()
-        {
-            return new HastingMemento(Peer, CurrentPeersNeighbours);
-        }
-        
-        /// <inheritdoc />
-        public void SetMemento(IHastingMemento hastingMemento)
-        {
-            Peer = hastingMemento.Peer;
-            CurrentPeersNeighbours = new List<IPeerIdentifier>(hastingMemento.Neighbours);
-        }
-
-        /// <inheritdoc />
-        public void IncrementUnreachablePeer()
-        {
-            Interlocked.Increment(ref _unreachableNeighbour);
-        }
-
-        /// <summary>
-        ///     sets originator to default value
-        /// </summary>
-        private void CleanUp()
-        {
-            _unreachableNeighbour = 0;
-            CurrentPeersNeighbours = new List<IPeerIdentifier>();
-            ExpectedPnr = new KeyValuePair<ICorrelationId, IPeerIdentifier>();
-            ContactedNeighbours = new List<KeyValuePair<ICorrelationId, IPeerIdentifier>>();
+            // see if sum of unreachable peers and reachable peers equals the total contacted number.
+            return Neighbours
+               .Select(n => n.State)
+               .Count(s => s == NeighbourState.Responsive || s == NeighbourState.UnResponsive)
+               .Equals(Constants.AngryPirate);
         }
     }
 }

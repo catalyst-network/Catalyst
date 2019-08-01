@@ -36,8 +36,6 @@ namespace Catalyst.TestUtils
         {
             var peerSettings = Substitute.For<IPeerSettings>();
             peerSettings.Network.Returns(Network.Dev);
-            peerSettings.Announce.Returns(false);
-            peerSettings.AnnounceServer.Returns(new IPEndPoint(IPAddress.Loopback, 80));
             peerSettings.PublicKey.Returns(TestKeyRegistry.TestPublicKey);
             peerSettings.Port.Returns(42069);
             peerSettings.PayoutAddress.Returns("my_pay_out_address");
