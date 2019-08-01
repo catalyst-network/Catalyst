@@ -82,6 +82,11 @@ namespace Catalyst.Common.IO.EventLoop
 
         protected virtual void Dispose(bool disposing)
         {
+            if (!disposing)
+            {
+                return;
+            }
+
             Task[] disposeTasks = _eventLoopGroupList.Select(t =>
                     t.ShutdownGracefullyAsync(TimeSpan.FromMilliseconds(QuietPeriod), TimeSpan.FromMilliseconds(QuietPeriod * 3)))
                .ToArray();
