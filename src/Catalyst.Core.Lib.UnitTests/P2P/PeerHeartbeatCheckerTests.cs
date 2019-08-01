@@ -58,21 +58,21 @@ namespace Catalyst.Core.Lib.UnitTests.P2P
         [Fact]
         public async Task Can_Remove_Peer_On_Non_Responsive_Heartbeat()
         {
-            await RunHeartbeatChecker();
+            await RunHeartbeatChecker().ConfigureAwait(false);
             _peerRepository.Received(1).Delete(_testPeer.DocumentId);
         }
 
         [Fact]
         public async Task Can_Keep_Peer_On_Valid_Heartbeat_Response()
         {
-            await RunHeartbeatChecker(true);
+            await RunHeartbeatChecker(true).ConfigureAwait(false);
             _peerRepository.DidNotReceive().Delete(_testPeer.DocumentId);
         }
 
         [Fact]
         public async Task Can_Remove_Peer_On_Max_Counter()
         {
-            await RunHeartbeatChecker(maxNonResponsiveCounter: 2);
+            await RunHeartbeatChecker(maxNonResponsiveCounter: 2).ConfigureAwait(false);
             _peerRepository.Received(1).Delete(_testPeer.DocumentId);
         }
 
@@ -104,7 +104,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P
             await Task.Delay(TimeSpan.FromSeconds(_peerHeartbeatCheckSeconds * (maxNonResponsiveCounter + 1)).Add(TimeSpan.FromSeconds(1))).ConfigureAwait(false);
         }
 
-        public void Dispose()
+        void IDisposable.Dispose()
         {
             _peerHeartbeatChecker?.Dispose();
         }

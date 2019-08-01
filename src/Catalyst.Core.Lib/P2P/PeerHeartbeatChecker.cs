@@ -33,7 +33,7 @@ using Serilog;
 
 namespace Catalyst.Core.Lib.P2P
 {
-    public class PeerHeartbeatChecker : IPeerHeartbeatChecker
+    public sealed class PeerHeartbeatChecker : IPeerHeartbeatChecker
     {
         private readonly TimeSpan _checkHeartbeatInterval;
         private readonly IPeerRepository _peerRepository;
@@ -90,7 +90,7 @@ namespace Catalyst.Core.Lib.P2P
             }
         }
 
-        public void Dispose()
+        void IDisposable.Dispose()
         {
             _subscription?.Dispose();
         }
