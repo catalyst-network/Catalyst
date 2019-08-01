@@ -33,7 +33,7 @@ using Xunit.Sdk;
 
 namespace Catalyst.TestUtils
 {
-    public class TaskHelper
+    public static class TaskHelper
     {
         public static async Task<bool> WaitForAsync(Func<bool> condition, TimeSpan timespan)
         {
@@ -116,7 +116,6 @@ namespace Catalyst.TestUtils
             int attempts = 0;
 
             var timeout = TimeSpan.FromSeconds(1);
-            var waitDelay = TimeSpan.FromMilliseconds(100);
 
             var watch = new Stopwatch();
             watch.Start();
