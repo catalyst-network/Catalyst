@@ -59,7 +59,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P
         public async Task Can_Remove_Peer_On_Non_Responsive_Heartbeat()
         {
             await RunHeartbeatChecker().ConfigureAwait(false);
-            _peerRepository.Received(1).Delete(_testPeer.DocumentId);
+            _peerRepository.Received().Delete(_testPeer.DocumentId);
         }
 
         [Fact]
@@ -73,7 +73,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P
         public async Task Can_Remove_Peer_On_Max_Counter()
         {
             await RunHeartbeatChecker(maxNonResponsiveCounter: 2).ConfigureAwait(false);
-            _peerRepository.Received(1).Delete(_testPeer.DocumentId);
+            _peerRepository.Received().Delete(_testPeer.DocumentId);
         }
 
         private async Task RunHeartbeatChecker(bool sendResponse = false, int maxNonResponsiveCounter = 1)
