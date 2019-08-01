@@ -67,26 +67,26 @@ namespace Catalyst.Core.Lib.P2P
         {
             foreach (var peer in _peerRepository.GetAll())
             {
-                Task.Run(async () =>
-                {
-                    var result = await _peerChallenger.ChallengePeerAsync(peer.PeerIdentifier).ConfigureAwait(false);
-                    var counterValue = _nonResponsivePeerMap.GetOrAdd(peer.DocumentId, 0);
-                    _logger.Verbose($"Heartbeat result: {result} Peer: {peer.PeerIdentifier} Non-Responsive Counter: {counterValue}");
-                    if (!result)
-                    {
-                        counterValue = _nonResponsivePeerMap[peer.DocumentId] += 1;
-                        if (counterValue >= _maxNonResponsiveCounter)
-                        {
-                            _peerRepository.Delete(peer.DocumentId);
-                            _nonResponsivePeerMap.TryRemove(peer.DocumentId, out _);
-                            _logger.Verbose($"Peer reached maximum non-responsive count: {peer.PeerIdentifier}. Evicted from repository");
-                        }
-                    }
-                    else
-                    {
-                        _nonResponsivePeerMap[peer.DocumentId] = 0;
-                    }
-                }).ConfigureAwait(false);
+                //Task.Run(async () =>
+                //{
+                //    var result = await _peerChallenger.ChallengePeerAsync(peer.PeerIdentifier).ConfigureAwait(false);
+                //    var counterValue = _nonResponsivePeerMap.GetOrAdd(peer.DocumentId, 0);
+                //    _logger.Verbose($"Heartbeat result: {result} Peer: {peer.PeerIdentifier} Non-Responsive Counter: {counterValue}");
+                //    if (!result)
+                //    {
+                //        counterValue = _nonResponsivePeerMap[peer.DocumentId] += 1;
+                //        if (counterValue >= _maxNonResponsiveCounter)
+                //        {
+                //            _peerRepository.Delete(peer.DocumentId);
+                //            _nonResponsivePeerMap.TryRemove(peer.DocumentId, out _);
+                //            _logger.Verbose($"Peer reached maximum non-responsive count: {peer.PeerIdentifier}. Evicted from repository");
+                //        }
+                //    }
+                //    else
+                //    {
+                //        _nonResponsivePeerMap[peer.DocumentId] = 0;
+                //    }
+                //}).ConfigureAwait(false);
             }
         }
 
