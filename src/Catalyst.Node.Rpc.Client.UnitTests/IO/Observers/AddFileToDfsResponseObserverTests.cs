@@ -43,11 +43,9 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
         public AddFileToDfsResponseObserverTests()
         {
             _uploadFileTransferFactory = Substitute.For<IUploadFileTransferFactory>();
-            _channelHandlerContext = Substitute.For<IChannelHandlerContext>();
         }
 
         private readonly IUploadFileTransferFactory _uploadFileTransferFactory;
-        private readonly IChannelHandlerContext _channelHandlerContext;
 
         [Fact]
         public void HandlerRemovesFileTransferOnError()
