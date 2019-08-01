@@ -82,27 +82,21 @@ namespace Catalyst.Node.IntegrationTests.IO
             _fileSystem.SetCurrentPath(_sourceFolder).Should().BeTrue();
         }
 
-        //[Fact(Skip ="Hold")]
-        //[Trait(Traits.TestType, Traits.IntegrationTest)]
-        //public void Save_Data_Directory_New_Instance_Must_Load_With_New_Data_Directory()
-        //{
-        //    _fileSystem.SetCurrentPath(_sourceFolder).Should().BeTrue();
+        [Fact]
+        [Trait(Traits.TestType, Traits.IntegrationTest)]
+        public void Save_Data_Directory_New_Instance_Must_Load_With_New_Data_Directory()
+        {
+            _fileSystem.SetCurrentPath(_sourceFolder).Should().BeTrue();
 
-        //    var fileSystem = new CommonFileSystem();
+            var fileSystem = new CommonFileSystem();
 
-        //    fileSystem.GetCatalystDataDir().FullName.ToLower().Should().Be(_fileSystem.GetCatalystDataDir().FullName.ToLower());
-        //}
+            fileSystem.GetCatalystDataDir().FullName.ToLower().Should().Be(_fileSystem.GetCatalystDataDir().FullName.ToLower());
+        }
 
         [Fact]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void Save_Data_Directory_Several_Times_New_Instance_Must_Load_With_New_Data_Directory()
         {
-            var test = @"C:\Matthieu\Dennis/Sajay.com\hello";
-            var testAgain = @"~/matt/dennis/and_that_OK";
-            var jsonConvert = JsonConvert.SerializeObject(test);
-            var jsonConvertAgain = JsonConvert.SerializeObject(testAgain);
-
-
             Console.WriteLine("\n\n");
             Console.WriteLine("DISPLAY _sourceFolder :: " + _sourceFolder);
             _fileSystem.SetCurrentPath(_sourceFolder).Should().BeTrue();

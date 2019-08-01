@@ -56,6 +56,7 @@ namespace Catalyst.Common.FileSystem
 
             return new DirectoryInfo(string.IsNullOrEmpty(_dataDir) == false ? _dataDir : path);
         }
+
         public bool SetCurrentPath(string path)
         {
             if (new DirectoryInfo(path).Exists)
@@ -119,7 +120,7 @@ namespace Catalyst.Common.FileSystem
         {
             var configurationRoot = new ConfigurationBuilder().AddJsonFile(configFilePointer).Build();
 
-            var path = configurationRoot.GetSection("components").GetChildren().Select(p => p.GetSection("parameters:configDataDir").Value).ToArray().Where(m => string.IsNullOrEmpty(m) == false).Single();
+            var path = configurationRoot.GetSection("components").GetChildren().Select(p => p.GetSection("parameters:configDataDir").Value).ToArray().Single(m => string.IsNullOrEmpty(m) == false);
 
             return path;
         }
