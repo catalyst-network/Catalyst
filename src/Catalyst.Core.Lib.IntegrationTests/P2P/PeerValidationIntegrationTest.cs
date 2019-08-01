@@ -29,9 +29,11 @@ using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.Discovery;
 using Catalyst.Common.Interfaces.P2P.IO.Messaging.Broadcast;
 using Catalyst.Common.Interfaces.P2P.IO.Messaging.Correlation;
+using Catalyst.Common.Interfaces.Registry;
 using Catalyst.Common.IO.EventLoop;
 using Catalyst.Common.Modules.KeySigner;
 using Catalyst.Common.P2P;
+using Catalyst.Common.Util;
 using Catalyst.Core.Lib.P2P;
 using Catalyst.Core.Lib.P2P.IO.Transport.Channels;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
@@ -43,28 +45,25 @@ using Serilog;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
-using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
-using System.Linq;
-using Catalyst.Common.Interfaces.Registry;
-using Catalyst.Common.Util;
 using Constants = Catalyst.Common.Config.Constants;
+using IContainer = Autofac.IContainer;
 
 namespace Catalyst.Core.Lib.IntegrationTests.P2P
 {
     public sealed class PeerValidationIntegrationTest : ConfigFileBasedTest, IDisposable
     {
-        private readonly ILogger _logger;
         private readonly IContainer _container;
-        private readonly IConfigurationRoot _config;
         private IPeerService _peerService;
-        private PeerSettings _peerSettings;
-        private IPeerClient _peerClientSingleInstance;
+        private IPeerChallenger _peerChallenger;
+        private readonly PeerSettings _peerSettings;
+
         protected override IEnumerable<string> ConfigFilesUsed { get; }
-        
+
         public PeerValidationIntegrationTest(ITestOutputHelper output) : base(output)
         {
             ConfigFilesUsed = new[]
@@ -74,23 +73,24 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P
                 Constants.NetworkConfigFile(Network.Test)
             }.Select(f => Path.Combine(Constants.ConfigSubFolder, f));
 
-            _config = new ConfigurationBuilder()
+            var config = new ConfigurationBuilder()
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile))
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile))
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Network.Test)))
                .Build();
+            _peerSettings = new PeerSettings(config);
 
-            SocketPortHelper.AlterConfigurationToGetUniquePort(_config, CurrentTestName);
-
-            _logger = Substitute.For<ILogger>();
-
-            ConfigureContainerBuilder(true, true);
-            
+            var sender = PeerIdentifierHelper.GetPeerIdentifier("sender", "Tc", 1, _peerSettings.BindAddress, _peerSettings.Port);
+            var logger = Substitute.For<ILogger>();
             var keyRegistry = TestKeyRegistry.MockKeyRegistry();
+
+            SocketPortHelper.AlterConfigurationToGetUniquePort(config, CurrentTestName);
+            ConfigureContainerBuilder(true, true);
+
             ContainerBuilder.RegisterInstance(keyRegistry).As<IKeyRegistry>();
-
             ContainerBuilder.RegisterType<KeySigner>().SingleInstance();
-
+            ContainerBuilder.Register(c => new PeerChallenger(logger, c.Resolve<IPeerClient>(), sender, 5))
+               .As<IPeerChallenger>().SingleInstance();
             _container = ContainerBuilder.Build();
 
             Setup();
@@ -98,9 +98,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P
 
         private void Setup()
         {
-            _peerSettings = new PeerSettings(_config);
-
-            _peerClientSingleInstance = _container.Resolve<IPeerClient>();
+            _peerChallenger = _container.Resolve<IPeerChallenger>();
 
             var eventLoopGroupFactoryConfiguration = new EventLoopGroupFactoryConfiguration
             {
@@ -147,12 +145,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P
         {
             var recipient = new PeerIdentifier(publicKey.KeyToBytes(), ip,
                 port, Substitute.For<IPeerIdClientId>());
-
-            var sender = PeerIdentifierHelper.GetPeerIdentifier("sender", "Tc", 1, _peerSettings.BindAddress, _peerSettings.Port);
-
-            var peerValidator = new PeerChallenger(_logger, _peerClientSingleInstance, sender, 5);
-
-            return await peerValidator.ChallengePeerAsync(recipient);
+            return await _peerChallenger.ChallengePeerAsync(recipient);
         }
 
         protected override void Dispose(bool disposing)

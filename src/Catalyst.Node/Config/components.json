@@ -270,7 +270,7 @@
                 }
             ],
             "parameters": {
-                "peerChallengeWaitTimeSeconds": "30"
+                "peerChallengeWaitTimeSeconds": 30
             },
             "instanceScope": "singleinstance"
         },
@@ -282,7 +282,7 @@
                 }
             ],
             "parameters": {
-                "checkHeartbeatIntervalSeconds": "60"
+                "checkHeartbeatIntervalSeconds": 60
             }
         },
         {

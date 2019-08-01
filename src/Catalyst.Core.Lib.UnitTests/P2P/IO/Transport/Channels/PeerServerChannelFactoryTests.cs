@@ -163,7 +163,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Transport.Channels
 
                 await TaskHelper.WaitForAsync(
                     () => testingChannel.OutboundMessages.Count >= 5, 
-                    TimeSpan.FromSeconds(2));
+                    TimeSpan.FromSeconds(5));
 
                 await messageStream.WaitForItemsOnDelayedStreamOnTaskPoolSchedulerAsync().ConfigureAwait(false);
 
