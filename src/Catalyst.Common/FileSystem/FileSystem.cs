@@ -46,25 +46,25 @@ namespace Catalyst.Common.FileSystem
         {
             _currentDataDirPointer = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile);
 
-            _dataDir = File.Exists(_currentDataDirPointer) ? GetCurrentDataDir(_currentDataDirPointer) : Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), Constants.CatalystDataDir);
+            _dataDir = File.Exists(_currentDataDirPointer) 
+                ? GetCurrentDataDir(_currentDataDirPointer) 
+                : Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), Constants.CatalystDataDir);
         }
 
         public virtual DirectoryInfo GetCatalystDataDir()
         {
             var path = Path.Combine(GetUserHomeDir(), Constants.CatalystDataDir);
 
-            return new DirectoryInfo(string.IsNullOrEmpty(_dataDir) == false ? _dataDir : path);
+            return new DirectoryInfo(!string.IsNullOrEmpty(_dataDir) ? _dataDir : path);
         }
 
         public bool SetCurrentPath(string path)
         {
-            if (new DirectoryInfo(path).Exists)
+            if (new DirectoryInfo(path).Exists && SaveConfigPointerFile(path, _currentDataDirPointer))
             {
-                if (SaveConfigPointerFile(path, _currentDataDirPointer))
-                {
-                    _dataDir = path;
-                    return true;
-                }
+                _dataDir = path;
+
+                return true;
             }
 
             return false;
@@ -115,7 +115,7 @@ namespace Catalyst.Common.FileSystem
         {
             var configurationRoot = new ConfigurationBuilder().AddJsonFile(configFilePointer).Build();
 
-            var path = configurationRoot.GetSection("components").GetChildren().Select(p => p.GetSection("parameters:configDataDir").Value).ToArray().Single(m => string.IsNullOrEmpty(m) == false);
+            var path = configurationRoot.GetSection("components").GetChildren().Select(p => p.GetSection("parameters:configDataDir").Value).ToArray().Single(m => !string.IsNullOrEmpty(m));
 
             return path;
         }
@@ -146,14 +146,14 @@ namespace Catalyst.Common.FileSystem
         {
             var configDataDir = GetCurrentDataDir(configFilePointer);
 
-            configDataDir = JsonConvert.SerializeObject(configDataDir);
-            configDirLocation = JsonConvert.SerializeObject(configDirLocation);
+            var configDataDirJson = JsonConvert.SerializeObject(configDataDir);
+            var configDirLocationJson = JsonConvert.SerializeObject(configDirLocation);
 
             var text = System.IO.File.ReadAllText(configFilePointer);
-            text = text.Replace(configDataDir, configDirLocation);
+            text = text.Replace(configDataDirJson, configDirLocationJson);
             System.IO.File.WriteAllText(configFilePointer, text);
 
-            return JsonConvert.SerializeObject(GetCurrentDataDir(configFilePointer)).Equals(configDirLocation);
+            return JsonConvert.SerializeObject(GetCurrentDataDir(configFilePointer)).Equals(configDirLocationJson);
         }
     }
 }

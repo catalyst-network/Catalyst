@@ -21,13 +21,10 @@
 
 #endregion
 
-using System;
-using System.IO;
 using FluentAssertions;
 using Xunit;
 using Catalyst.TestUtils;
 using Catalyst.Common.Config;
-using Newtonsoft.Json;
 using CommonFileSystem = Catalyst.Common.FileSystem.FileSystem;
 using Xunit.Abstractions;
 
@@ -54,9 +51,6 @@ namespace Catalyst.Node.IntegrationTests.IO
         private string Setup()
         {
             var currentDirectory = FileSystem.GetCatalystDataDir();
-
-            //var modulesDirectory =
-            //    new DirectoryInfo(Path.Combine(currentDirectory.FullName, Constants.ModulesSubFolder));
 
             var network = Catalyst.Common.Config.Network.Dev;
             new ConfigCopier().RunConfigStartUp(currentDirectory.FullName, network);
