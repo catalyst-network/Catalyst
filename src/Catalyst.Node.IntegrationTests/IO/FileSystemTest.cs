@@ -101,7 +101,8 @@ namespace Catalyst.Node.IntegrationTests.IO
 
             fileSystem.GetCatalystDataDir().FullName.ToLower().Should().Be(_fileSystem.GetCatalystDataDir().FullName.ToLower());
 
-            GenerateFileSystem();
+            GenerateConfigFilesDirectory();
+
             var changeDataDir = Setup();
 
             fileSystem.SetCurrentPath(changeDataDir).Should().BeTrue();

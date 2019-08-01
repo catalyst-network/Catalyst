@@ -53,8 +53,7 @@ namespace Catalyst.TestUtils
         {
             Guard.Argument(output, nameof(output)).NotNull();
             Output = output;
-            var currentTest = Output.GetType()
-               .GetField("test", BindingFlags.Instance | BindingFlags.NonPublic)
+            var currentTest = Output.GetType().GetField("test", BindingFlags.Instance | BindingFlags.NonPublic)
                .GetValue(Output) as ITest;
 
             if (currentTest == null)
@@ -65,23 +64,12 @@ namespace Catalyst.TestUtils
 
             CurrentTestName = currentTest.TestCase.TestMethod.Method.Name;
 
-            GenerateFileSystem();
-
-            //var testStartTime = DateTime.Now;
-            //_testDirectory = new DirectoryInfo(Path.Combine(Environment.CurrentDirectory,
-
-            //    //get a unique folder for this run
-            //    CurrentTestName + $"_{testStartTime:yyMMddHHmmssffff}"));
-
-            //_testDirectory.Exists.Should().BeFalse();
-            //_testDirectory.Create();
-
-            //FileSystem = GetFileSystemStub();
+            GenerateConfigFilesDirectory();
 
             Output.WriteLine("test running in folder {0}", _testDirectory.FullName);
         }
 
-        protected void GenerateFileSystem()
+        protected void GenerateConfigFilesDirectory()
         {
             var testStartTime = DateTime.Now;
             _testDirectory = new DirectoryInfo(Path.Combine(Environment.CurrentDirectory,

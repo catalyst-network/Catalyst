@@ -39,13 +39,11 @@ namespace Catalyst.Common.FileSystem
         : System.IO.Abstractions.FileSystem,
             IFileSystem
     {
-        private string _currentDataDirPointer;
+        private readonly string _currentDataDirPointer;
         private string _dataDir;
 
         public FileSystem()
         {
-            Console.WriteLine("FileSystem :: " + GetHashCode());
-
             _currentDataDirPointer = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile);
 
             _dataDir = File.Exists(_currentDataDirPointer) ? GetCurrentDataDir(_currentDataDirPointer) : Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), Constants.CatalystDataDir);
@@ -64,11 +62,6 @@ namespace Catalyst.Common.FileSystem
             {
                 if (SaveConfigPointerFile(path, _currentDataDirPointer))
                 {
-                    Console.WriteLine("Save :: " + GetHashCode());
-                    Console.WriteLine("Save Successful :: " + path);
-                    Console.WriteLine("Saved Here :: " + _currentDataDirPointer);
-                    Console.WriteLine("\n");
-
                     _dataDir = path;
                     return true;
                 }
@@ -160,67 +153,7 @@ namespace Catalyst.Common.FileSystem
             text = text.Replace(configDataDir, configDirLocation);
             System.IO.File.WriteAllText(configFilePointer, text);
 
-            var dirFound = false;
-            //dirFound = GetCurrentDataDir(configFilePointer, out _)
-            //    .Equals(System.Environment.OSVersion.Platform == System.PlatformID.Unix ? configDirLocationPrep : configDirLocation); 
-
-            var dataFi = JsonConvert.SerializeObject(GetCurrentDataDir(configFilePointer));
-
-            Console.WriteLine("dataFi :: " + dataFi);
-            Console.WriteLine("configDirLocation :: " + configDirLocation);
-            Console.WriteLine("configDirLocationPrep :: " + configDirLocation);
-
-            var compareVal = configDirLocation;
-
-            if (dataFi == compareVal)
-            {
-                Console.WriteLine("Match true");
-                return true;
-            }
-
-            return dirFound;
-        }
-
-        private string PrepDirectoryLocationFormatAlt(string dir)
-        {
-            return JsonConvert.SerializeObject(dir);
-            var seperatorType = System.Environment.OSVersion.Platform == System.PlatformID.Unix ? "////" : "\\\\";
-
-            var arrayText = dir.Split(System.Environment.OSVersion.Platform == System.PlatformID.Unix
-                ? System.IO.Path.AltDirectorySeparatorChar.ToString()
-                : System.IO.Path.DirectorySeparatorChar.ToString()).ToList();
-
-            var final = arrayText.FirstOrDefault();
-
-            //final = Path.Combine(arrayText.Skip(0).ToArray());
-
-            foreach (var item in arrayText.Skip(1))
-            {
-                final += Path.Combine(seperatorType, item);
-            }
-
-            return final;
-        }
-
-        private string PrepDirectoryLocationFormat(string dir)
-        {
-            if (string.IsNullOrEmpty(dir) == false)
-            {
-                var seperatorType = System.Environment.OSVersion.Platform == System.PlatformID.Unix ? 
-                    System.IO.Path.AltDirectorySeparatorChar.ToString() : System.IO.Path.DirectorySeparatorChar.ToString();
-
-                var arrayText = dir.Split(seperatorType).ToList();
-
-                var final = arrayText.FirstOrDefault();
-
-                foreach (var item in arrayText.Skip(1))
-                {
-                    final += Path.Combine(seperatorType, seperatorType, seperatorType, seperatorType
-                        , item);
-                }
-                return final;
-            }
-            return dir;            
+            return JsonConvert.SerializeObject(GetCurrentDataDir(configFilePointer)).Equals(configDirLocation);
         }
     }
 }
