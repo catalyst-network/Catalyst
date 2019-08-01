@@ -329,7 +329,7 @@
                 }
             ],
             "parameters": {
-                "configDataDir": "Data_Dict"
+                "configDataDir": "C:\\Data_Directory"
             }
         },
         {

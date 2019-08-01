@@ -153,24 +153,24 @@ namespace Catalyst.Common.FileSystem
         {
             var configDataDir = GetCurrentDataDir(configFilePointer);
 
-            configDataDir = PrepDirectoryLocationFormatAlt(configDataDir);
-            var configDirLocationPrep = PrepDirectoryLocationFormatAlt(configDirLocation);
+            configDataDir = JsonConvert.SerializeObject(configDataDir);
+            configDirLocation = JsonConvert.SerializeObject(configDirLocation);
 
             var text = System.IO.File.ReadAllText(configFilePointer);
-            text = text.Replace(configDataDir, configDirLocationPrep);
+            text = text.Replace(configDataDir, configDirLocation);
             System.IO.File.WriteAllText(configFilePointer, text);
 
             var dirFound = false;
             //dirFound = GetCurrentDataDir(configFilePointer, out _)
             //    .Equals(System.Environment.OSVersion.Platform == System.PlatformID.Unix ? configDirLocationPrep : configDirLocation); 
 
-            var dataFi = GetCurrentDataDir(configFilePointer);
+            var dataFi = JsonConvert.SerializeObject(GetCurrentDataDir(configFilePointer));
 
             Console.WriteLine("dataFi :: " + dataFi);
             Console.WriteLine("configDirLocation :: " + configDirLocation);
-            Console.WriteLine("configDirLocationPrep :: " + configDirLocationPrep);
+            Console.WriteLine("configDirLocationPrep :: " + configDirLocation);
 
-            var compareVal = System.Environment.OSVersion.Platform == System.PlatformID.Unix ? configDirLocationPrep : configDirLocation;
+            var compareVal = configDirLocation;
 
             if (dataFi == compareVal)
             {
