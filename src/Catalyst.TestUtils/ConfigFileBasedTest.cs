@@ -27,9 +27,9 @@ using System.Linq;
 using Autofac;
 using Autofac.Configuration;
 using AutofacSerilogIntegration;
-using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Common.Interfaces.FileSystem;
+using Catalyst.Common.Interfaces.Registry;
 using Microsoft.Extensions.Configuration;
 using Serilog;
 using Serilog.Events;
@@ -88,25 +88,31 @@ namespace Catalyst.TestUtils
             ContainerBuilder.RegisterInstance(certificateStore).As<ICertificateStore>();
             ContainerBuilder.RegisterInstance(FileSystem).As<IFileSystem>();
 
+            var keyRegistry = TestKeyRegistry.MockKeyRegistry();
+            ContainerBuilder.RegisterInstance(keyRegistry).As<IKeyRegistry>();
+
             ConfigureLogging(writeLogsToTestOutput, writeLogsToFile);
         }
-
+        
         private void ConfigureLogging(bool writeLogsToTestOutput, bool writeLogsToFile)
         {
-            var loggerConfiguration = new LoggerConfiguration().ReadFrom.Configuration(ConfigurationRoot).MinimumLevel.Verbose();
+            var loggerConfiguration = new LoggerConfiguration()
+               .ReadFrom.Configuration(ConfigurationRoot).MinimumLevel.Verbose()
+               .Enrich.WithThreadId();
             
             if (writeLogsToTestOutput)
             {
-                loggerConfiguration.WriteTo.TestOutput(Output, LogEventLevel, LogOutputTemplate);
+                loggerConfiguration = loggerConfiguration.WriteTo.TestOutput(Output, LogEventLevel, LogOutputTemplate);
             }
 
             if (writeLogsToFile)
             {
-                loggerConfiguration.WriteTo.File(Path.Combine(FileSystem.GetCatalystDataDir().FullName, "Catalyst.Node.log"), LogEventLevel,
+                loggerConfiguration = loggerConfiguration.WriteTo.File(Path.Combine(FileSystem.GetCatalystDataDir().FullName, "Catalyst.Node.log"), LogEventLevel,
                     LogOutputTemplate);
             }
 
-            ContainerBuilder.RegisterLogger(loggerConfiguration.CreateLogger());
+            var logger = loggerConfiguration.CreateLogger();
+            ContainerBuilder.RegisterLogger(logger);
         }
     }
 }

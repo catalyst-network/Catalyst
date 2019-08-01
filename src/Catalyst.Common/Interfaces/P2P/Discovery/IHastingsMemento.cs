@@ -21,15 +21,24 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.Repository;
-using Catalyst.Common.Modules.Ledger;
-using Catalyst.Common.Repository;
-using SharpRepository.Repository;
+using Catalyst.Protocol.IPPN;
 
-namespace Catalyst.Node.Repository
+namespace Catalyst.Common.Interfaces.P2P.Discovery
 {
-    public class AccountRepository : RepositoryWrapper<Account>, IAccountRepository
+    /// <summary>
+    /// A memento object used to store and restore the valid states of the Hastings walk.
+    /// More information on <seealso cref="https://en.wikipedia.org/wiki/Memento_pattern"/>
+    /// </summary>
+    public interface IHastingsMemento
     {
-        public AccountRepository(IRepository<Account, string> repository) : base(repository) { }
+        /// <summary>
+        /// The peer identifier of the node used to discover new nodes.
+        /// </summary>
+        IPeerIdentifier Peer { get; }
+
+        /// <summary>
+        /// A list of neighbours, provided by <see cref="Peer"/> through a <see cref="PeerNeighborsResponse"/>
+        /// </summary>
+        INeighbours Neighbours { get; }
     }
 }

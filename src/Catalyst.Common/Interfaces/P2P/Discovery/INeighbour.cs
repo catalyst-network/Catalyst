@@ -21,15 +21,15 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.Repository;
-using Catalyst.Common.P2P;
-using Catalyst.Common.Repository;
-using SharpRepository.Repository;
+using Catalyst.Common.Config;
+using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 
-namespace Catalyst.Node.Repository
+namespace Catalyst.Common.Interfaces.P2P.Discovery
 {
-    public class PeerRepository : RepositoryWrapper<Peer>, IPeerRepository
+    public interface INeighbour
     {
-        public PeerRepository(IRepository<Peer, string> repository) : base(repository) { }
+        NeighbourState State { get; set; }
+        IPeerIdentifier PeerIdentifier { get; }
+        ICorrelationId DiscoveryPingCorrelationId { get; }
     }
 }

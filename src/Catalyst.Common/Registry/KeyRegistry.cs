@@ -22,7 +22,9 @@
 #endregion
 
 using System.Collections.Generic;
+using System.Linq;
 using Catalyst.Common.Config;
+using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
 using Catalyst.Common.Interfaces.Registry;
 
@@ -30,6 +32,14 @@ namespace Catalyst.Common.Registry
 {
     public class KeyRegistry : RegistryBase<KeyRegistryKey, IPrivateKey>, IKeyRegistry
     {
-        public KeyRegistry() { Registry = new Dictionary<KeyRegistryKey, IPrivateKey>(); }
+        public KeyRegistry()
+        {
+            Registry = new Dictionary<KeyRegistryKey, IPrivateKey>();
+        }
+        
+        public bool Contains(byte[] publicKeyBytes)
+        {
+            return Registry.Values.Any(privateKey => privateKey.GetPublicKey().Bytes.SequenceEqual(publicKeyBytes));
+        }
     };
 }

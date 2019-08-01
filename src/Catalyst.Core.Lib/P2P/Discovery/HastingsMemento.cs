@@ -21,15 +21,23 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.Repository;
-using Catalyst.Common.Repository;
-using Catalyst.Common.Rpc.Authentication;
-using SharpRepository.Repository;
+using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.Interfaces.P2P.Discovery;
 
-namespace Catalyst.Node.Repository
+namespace Catalyst.Core.Lib.P2P.Discovery
 {
-    public class AuthCredentialRepository : RepositoryWrapper<AuthCredentials>, IAuthCredentialRepository
+    /// <summary>
+    ///     Represents a single step within the hastings walk.
+    /// </summary>
+    public sealed class HastingsMemento : IHastingsMemento
     {
-        public AuthCredentialRepository(IRepository<AuthCredentials, string> repository) : base(repository) { }
+        public IPeerIdentifier Peer { get; }
+        public INeighbours Neighbours { get; }
+
+        public HastingsMemento(IPeerIdentifier peer, INeighbours neighbours)
+        {
+            Peer = peer;
+            Neighbours = neighbours;
+        }
     }
 }

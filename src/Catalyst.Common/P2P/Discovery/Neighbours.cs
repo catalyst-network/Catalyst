@@ -21,24 +21,22 @@
 
 #endregion
 
+using System.Collections.Concurrent;
 using System.Collections.Generic;
-using Catalyst.Common.Interfaces.P2P;
+using System.Linq;
 using Catalyst.Common.Interfaces.P2P.Discovery;
 
-namespace Catalyst.Core.Lib.P2P.Discovery
+namespace Catalyst.Common.P2P.Discovery
 {
-    /// <summary>
-    ///     Represents a single step within the hastings walk.
-    /// </summary>
-    public sealed class HastingMemento : IHastingMemento
+    public class Neighbours : ConcurrentQueue<INeighbour>, INeighbours
     {
-        public IPeerIdentifier Peer { get; }
-        public IList<IPeerIdentifier> Neighbours { get; }
+        public Neighbours(IEnumerable<INeighbour> neighbours = default) : base(neighbours ?? Enumerable.Empty<INeighbour>()) { }
 
-        public HastingMemento(IPeerIdentifier peer, IEnumerable<IPeerIdentifier> neighbours)
+        public override string ToString()
         {
-            Peer = peer;
-            Neighbours = new List<IPeerIdentifier>(neighbours);
+            return string.Join(", ",
+                this.Select(n =>
+                    n.PeerIdentifier + "|" + n.DiscoveryPingCorrelationId + "|" + n.State.Name));
         }
     }
 }
