@@ -27,6 +27,7 @@ using FluentAssertions;
 using Xunit;
 using Catalyst.TestUtils;
 using Catalyst.Common.Config;
+using Newtonsoft.Json;
 using CommonFileSystem = Catalyst.Common.FileSystem.FileSystem;
 using Xunit.Abstractions;
 
@@ -96,6 +97,12 @@ namespace Catalyst.Node.IntegrationTests.IO
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void Save_Data_Directory_Several_Times_New_Instance_Must_Load_With_New_Data_Directory()
         {
+            var test = @"C:\Matthieu\Dennis/Sajay.com\hello";
+            var testAgain = @"~/matt/dennis/and_that_OK";
+            var jsonConvert = JsonConvert.SerializeObject(test);
+            var jsonConvertAgain = JsonConvert.SerializeObject(testAgain);
+
+
             Console.WriteLine("\n\n");
             Console.WriteLine("DISPLAY _sourceFolder :: " + _sourceFolder);
             _fileSystem.SetCurrentPath(_sourceFolder).Should().BeTrue();

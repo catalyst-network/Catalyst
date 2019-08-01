@@ -328,7 +328,7 @@
                 }
             ],
             "parameters": {
-                "configDataDir": "Data_Directory"
+                "configDataDir": "Data_Dict"
             }
         },
         {

@@ -28,6 +28,7 @@ using System.Threading.Tasks;
 using Catalyst.Common.Config;
 using Microsoft.Extensions.Configuration;
 using System.Linq;
+using Newtonsoft.Json;
 using IFileSystem = Catalyst.Common.Interfaces.FileSystem.IFileSystem;
 using ILogger = Serilog.ILogger;
 
@@ -47,8 +48,7 @@ namespace Catalyst.Common.FileSystem
 
             _currentDataDirPointer = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile);
 
-            _dataDir = File.Exists(_currentDataDirPointer) ?
-                GetCurrentDataDir(_currentDataDirPointer, out _) : Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), Constants.CatalystDataDir);
+            _dataDir = File.Exists(_currentDataDirPointer) ? GetCurrentDataDir(_currentDataDirPointer) : Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), Constants.CatalystDataDir);
         }
         public virtual DirectoryInfo GetCatalystDataDir()
         {
@@ -115,15 +115,11 @@ namespace Catalyst.Common.FileSystem
             return File.Exists(Path.Combine(GetCatalystDataDir().FullName, subDirectory, fileName));
         }
 
-        private static string GetCurrentDataDir(string configFilePointer, out bool successfulRead)
+        private static string GetCurrentDataDir(string configFilePointer)
         {
             var configurationRoot = new ConfigurationBuilder().AddJsonFile(configFilePointer).Build();
 
-            var path = configurationRoot.GetSection("components").GetChildren()
-                .Select(p => p.GetSection("parameters:configDataDir").Value).ToArray()
-                .Where(m => string.IsNullOrEmpty(m) == false).FirstOrDefault();
-
-            successfulRead = string.IsNullOrEmpty(path) ? false : true;
+            var path = configurationRoot.GetSection("components").GetChildren().Select(p => p.GetSection("parameters:configDataDir").Value).ToArray().Where(m => string.IsNullOrEmpty(m) == false).Single();
 
             return path;
         }
@@ -152,7 +148,7 @@ namespace Catalyst.Common.FileSystem
 
         private bool SaveConfigPointerFile(string configDirLocation, string configFilePointer)
         {
-            var configDataDir = GetCurrentDataDir(configFilePointer, out _);
+            var configDataDir = GetCurrentDataDir(configFilePointer);
 
             configDataDir = PrepDirectoryLocationFormatAlt(configDataDir);
             var configDirLocationPrep = PrepDirectoryLocationFormatAlt(configDirLocation);
@@ -165,7 +161,7 @@ namespace Catalyst.Common.FileSystem
             //dirFound = GetCurrentDataDir(configFilePointer, out _)
             //    .Equals(System.Environment.OSVersion.Platform == System.PlatformID.Unix ? configDirLocationPrep : configDirLocation); 
 
-            var dataFi = GetCurrentDataDir(configFilePointer, out _);
+            var dataFi = GetCurrentDataDir(configFilePointer);
 
             Console.WriteLine("dataFi :: " + dataFi);
             Console.WriteLine("configDirLocation :: " + configDirLocation);
@@ -173,21 +169,22 @@ namespace Catalyst.Common.FileSystem
 
             var compareVal = System.Environment.OSVersion.Platform == System.PlatformID.Unix ? configDirLocationPrep : configDirLocation;
 
-
             if (dataFi == compareVal)
             {
                 Console.WriteLine("Match true");
                 return true;
             }
+
             return dirFound;
         }
 
         private string PrepDirectoryLocationFormatAlt(string dir)
         {
+            return JsonConvert.SerializeObject(dir);
             var seperatorType = System.Environment.OSVersion.Platform == System.PlatformID.Unix ? "////" : "\\\\";
 
-            var arrayText = dir.Split(System.Environment.OSVersion.Platform == System.PlatformID.Unix ?
-                System.IO.Path.AltDirectorySeparatorChar.ToString()
+            var arrayText = dir.Split(System.Environment.OSVersion.Platform == System.PlatformID.Unix
+                ? System.IO.Path.AltDirectorySeparatorChar.ToString()
                 : System.IO.Path.DirectorySeparatorChar.ToString()).ToList();
 
             var final = arrayText.FirstOrDefault();
@@ -198,6 +195,7 @@ namespace Catalyst.Common.FileSystem
             {
                 final += Path.Combine(seperatorType, item);
             }
+
             return final;
         }
 
