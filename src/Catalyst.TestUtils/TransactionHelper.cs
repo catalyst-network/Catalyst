@@ -60,10 +60,12 @@ namespace Catalyst.TestUtils
                 },
                 Signature = GetTransactionSignature(signature, challenge),
                 Version = version,
+
                 TimeStamp = new Timestamp
                 {
                     Seconds = timeStamp
                 },
+              
                 TransactionFees = transactionFees,
                 LockTime = lockTime
             };
