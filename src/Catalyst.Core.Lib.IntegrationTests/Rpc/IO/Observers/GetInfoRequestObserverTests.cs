@@ -50,7 +50,6 @@ namespace Catalyst.Core.Lib.IntegrationTests.Rpc.IO.Observers
         private readonly ILogger _logger;
         private readonly IChannelHandlerContext _fakeContext;
         private readonly IConfigurationRoot _config;
-        private readonly IRpcServerSettings _rpcServerSettings;
 
         public GetInfoRequestObserverTests()
         {
@@ -65,9 +64,6 @@ namespace Catalyst.Core.Lib.IntegrationTests.Rpc.IO.Observers
             var fakeChannel = Substitute.For<IChannel>();
             _fakeContext.Channel.Returns(fakeChannel);
             _fakeContext.Channel.RemoteAddress.Returns(new IPEndPoint(IPAddress.Loopback, IPEndPoint.MaxPort));
-
-            _rpcServerSettings = Substitute.For<IRpcServerSettings>();
-            _rpcServerSettings.NodeConfig.Returns(_config);
         }
 
         [Fact]
@@ -92,7 +88,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.Rpc.IO.Observers
             );
             
             var handler = new GetInfoRequestObserver(
-                PeerIdentifierHelper.GetPeerIdentifier("sender"), _rpcServerSettings, _logger);
+                PeerIdentifierHelper.GetPeerIdentifier("sender"), _config, _logger);
 
             handler.StartObserving(messageStream);
 
