@@ -25,14 +25,13 @@ using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.IO.Observers;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Protocol.Rpc.Node;
-using Dawn;
 using DotNetty.Transport.Channels;
-using ILogger = Serilog.ILogger;
+using Serilog;
 
 namespace Catalyst.Node.Rpc.Client.IO.Observers
 {
     /// <summary>
-    /// The response handler for removing a peer
+    ///     The response handler for removing a peer
     /// </summary>
     /// <seealso cref="IRpcResponseObserver" />
     public sealed class RemovePeerResponseObserver
@@ -43,11 +42,6 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
         protected override void HandleResponse(RemovePeerResponse removePeerResponse,
             IChannelHandlerContext channelHandlerContext,
             IPeerIdentifier senderPeerIdentifier,
-            ICorrelationId correlationId)
-        {
-            Guard.Argument(removePeerResponse, nameof(removePeerResponse)).NotNull();
-            Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
-            Guard.Argument(senderPeerIdentifier, nameof(senderPeerIdentifier)).NotNull();
-        }
+            ICorrelationId correlationId) { }
     }
 }

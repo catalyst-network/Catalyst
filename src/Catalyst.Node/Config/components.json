@@ -183,7 +183,7 @@
         },
 
         {
-            "type": "Catalyst.Core.Lib.Rpc.Authentication.NoAuthenticationStrategy",
+            "type": "Catalyst.Core.Lib.Rpc.Authentication.RepositoryAuthenticationStrategy",
             "services": [
                 {
                     "type": "Catalyst.Common.Interfaces.Rpc.Authentication.IAuthenticationStrategy, Catalyst.Common"
