@@ -21,31 +21,23 @@
 
 #endregion
 
-using System;
-using System.Collections.Generic;
+using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.Interfaces.P2P.Discovery;
 
-namespace Catalyst.Common.Interfaces.P2P.Discovery
+namespace Catalyst.Core.Lib.P2P.Discovery
 {
     /// <summary>
-    ///     Caretaker of memento pattern is responsible for the memento's safekeeping,
-    ///     never operates on or examines the contents of a memento.
-    ///     https://www.dofactory.com/net/memento-design-pattern
+    ///     Represents a single step within the hastings walk.
     /// </summary>
-    public interface IHastingCareTaker
+    public sealed class HastingsMemento : IHastingsMemento
     {
-        Stack<IHastingMemento> HastingMementoList { get; }
+        public IPeerIdentifier Peer { get; }
+        public INeighbours Neighbours { get; }
 
-        /// <summary>
-        ///     Adds a new state from the walk to the queue
-        /// </summary>
-        /// <param name="hastingMemento"></param>
-        void Add(IHastingMemento hastingMemento);
-
-        /// <summary>
-        ///     Gets the last state of the walk from the queue
-        /// </summary>
-        /// <returns></returns>
-        /// <exception cref="Exception"></exception>
-        IHastingMemento Get();
+        public HastingsMemento(IPeerIdentifier peer, INeighbours neighbours)
+        {
+            Peer = peer;
+            Neighbours = neighbours;
+        }
     }
 }
