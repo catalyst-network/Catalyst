@@ -41,6 +41,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
         : ResponseObserverBase<PingResponse>,
             IP2PMessageObserver, IPeerClientObservable
     {
+        private readonly IPeerChallenger _peerChallenger;
         public ReplaySubject<IPeerClientMessageDto> ResponseMessageSubject { get; }
         public IObservable<IPeerClientMessageDto> MessageStream => ResponseMessageSubject.AsObservable();
 
