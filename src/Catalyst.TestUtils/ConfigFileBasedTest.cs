@@ -97,20 +97,23 @@ namespace Catalyst.TestUtils
 
         private void ConfigureLogging()
         {
-            var loggerConfiguration = new LoggerConfiguration().ReadFrom.Configuration(ConfigurationRoot).MinimumLevel.Verbose();
+            var loggerConfiguration = new LoggerConfiguration()
+               .ReadFrom.Configuration(ConfigurationRoot).MinimumLevel.Verbose()
+               .Enrich.WithThreadId();
             
             if (WriteLogsToTestOutput)
             {
-                loggerConfiguration.WriteTo.TestOutput(Output, LogEventLevel, LogOutputTemplate);
+                loggerConfiguration = loggerConfiguration.WriteTo.TestOutput(Output, LogEventLevel, LogOutputTemplate);
             }
 
             if (WriteLogsToFile)
             {
-                loggerConfiguration.WriteTo.File(Path.Combine(FileSystem.GetCatalystDataDir().FullName, "Catalyst.Node.log"), LogEventLevel,
+                loggerConfiguration = loggerConfiguration.WriteTo.File(Path.Combine(FileSystem.GetCatalystDataDir().FullName, "Catalyst.Node.log"), LogEventLevel,
                     LogOutputTemplate);
             }
 
-            ContainerBuilder.RegisterLogger(loggerConfiguration.CreateLogger());
+            var logger = loggerConfiguration.CreateLogger();
+            ContainerBuilder.RegisterLogger(logger);
         }
     }
 }

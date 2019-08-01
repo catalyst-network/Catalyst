@@ -27,6 +27,7 @@ using System.Reactive.Subjects;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.IO.Observers;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.Interfaces.P2P.IO;
 using Catalyst.Common.Interfaces.P2P.IO.Messaging.Dto;
 using Catalyst.Common.IO.Observers;
 using Catalyst.Core.Lib.P2P.IO.Messaging.Dto;
@@ -38,30 +39,23 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
 {
     public sealed class PingResponseObserver
         : ResponseObserverBase<PingResponse>,
-            IP2PMessageObserver
+            IP2PMessageObserver, IPeerClientObservable
     {
-        private readonly ReplaySubject<IPeerClientMessageDto> _pingResponse;
-        public IObservable<IPeerClientMessageDto> PingResponseStream => _pingResponse.AsObservable();
+        public ReplaySubject<IPeerClientMessageDto> ResponseMessageSubject { get; }
+        public IObservable<IPeerClientMessageDto> MessageStream => ResponseMessageSubject.AsObservable();
 
         public PingResponseObserver(ILogger logger)
             : base(logger)
         {
-            _pingResponse = new ReplaySubject<IPeerClientMessageDto>(1);
+            ResponseMessageSubject = new ReplaySubject<IPeerClientMessageDto>(1);
         }
         
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="pingResponse"></param>
-        /// <param name="channelHandlerContext"></param>
-        /// <param name="senderPeerIdentifier"></param>
-        /// <param name="correlationId"></param>
         protected override void HandleResponse(PingResponse pingResponse,
             IChannelHandlerContext channelHandlerContext,
             IPeerIdentifier senderPeerIdentifier,
             ICorrelationId correlationId)
         {
-            _pingResponse.OnNext(new PeerClientMessageDto(pingResponse, senderPeerIdentifier, correlationId));
+            ResponseMessageSubject.OnNext(new PeerClientMessageDto(pingResponse, senderPeerIdentifier, correlationId));
         }
     }
 }

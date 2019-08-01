@@ -27,6 +27,9 @@ namespace Catalyst.Common.Interfaces.P2P.Discovery
 {
     public interface IPeerDiscovery
     {
+        /// <summary>
+        ///     Runs the discovery implementation.
+        /// </summary>
         Task DiscoveryAsync();
     }
 }
