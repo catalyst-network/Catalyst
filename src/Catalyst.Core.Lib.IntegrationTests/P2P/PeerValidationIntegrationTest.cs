@@ -42,7 +42,6 @@ using FluentAssertions;
 using Microsoft.Extensions.Configuration;
 using NSubstitute;
 using Serilog;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -55,7 +54,7 @@ using IContainer = Autofac.IContainer;
 
 namespace Catalyst.Core.Lib.IntegrationTests.P2P
 {
-    public sealed class PeerValidationIntegrationTest : ConfigFileBasedTest, IDisposable
+    public sealed class PeerValidationIntegrationTest : ConfigFileBasedTest
     {
         private readonly IContainer _container;
         private IPeerService _peerService;
@@ -121,7 +120,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P
                 _container.Resolve<IEnumerable<IP2PMessageObserver>>(), _peerSettings, _container.Resolve<ILogger>(), _container.Resolve<IPeerHeartbeatChecker>());
         }
 
-        [Fact]
+        [Fact(Skip = "true")]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public async Task PeerChallenge_PeerIdentifiers_Expect_To_Succeed_Valid_IP_Port_PublicKey()
         {
@@ -130,7 +129,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P
             valid.Should().BeTrue();
         }
 
-        [Theory]
+        [Theory(Skip = "true")]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         [InlineData("Fr2a300k06032b657793", "92.207.178.198", 1574)]
         [InlineData("pp2a300k55032b657791", "198.51.100.3", 2524)]
