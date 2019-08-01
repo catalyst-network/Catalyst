@@ -39,7 +39,7 @@ namespace Catalyst.Core.Lib.P2P
 {
     public class PoaDiscovery : IPeerDiscovery
     {
-        public static string PoaPeerFile => "poaPeers.json";
+        public static string PoaPeerFile => "poa.nodes.json";
         private readonly IPeerRepository _peerRepository;
         private readonly IFileSystem _fileSystem;
         private readonly ILogger _logger;
@@ -51,6 +51,10 @@ namespace Catalyst.Core.Lib.P2P
             _logger = logger;
         }
 
+        /// <summary>
+        ///     @TODO get from container eventually 
+        /// </summary>
+        /// <returns></returns>
         private string CopyPoaFile()
         {
             var poaPeerFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Config", PoaPeerFile);
