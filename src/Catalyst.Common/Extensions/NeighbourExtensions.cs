@@ -22,12 +22,18 @@
 #endregion
 
 using System.Collections.Generic;
+using System.Linq;
+using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.Interfaces.P2P.Discovery;
+using Catalyst.Common.P2P.Discovery;
 
-namespace Catalyst.Common.Interfaces.P2P.Discovery
+namespace Catalyst.Common.Extensions
 {
-    public interface IHastingMemento
+    public static class NeighbourExtensions
     {
-        IPeerIdentifier Peer { get; }
-        IList<IPeerIdentifier> Neighbours { get; }
+        public static INeighbours ToNeighbours(this IEnumerable<IPeerIdentifier> peerIdentifier)
+        {
+            return new Neighbours(peerIdentifier.Select(p => new Neighbour(p) as INeighbour));
+        }
     }
 }

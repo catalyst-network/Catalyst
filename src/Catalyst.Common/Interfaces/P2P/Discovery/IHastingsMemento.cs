@@ -21,24 +21,24 @@
 
 #endregion
 
-using System.Collections.Generic;
-using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.Interfaces.P2P.Discovery;
+using Catalyst.Protocol.IPPN;
 
-namespace Catalyst.Core.Lib.P2P.Discovery
+namespace Catalyst.Common.Interfaces.P2P.Discovery
 {
     /// <summary>
-    ///     Represents a single step within the hastings walk.
+    /// A memento object used to store and restore the valid states of the Hastings walk.
+    /// More information on <seealso cref="https://en.wikipedia.org/wiki/Memento_pattern"/>
     /// </summary>
-    public sealed class HastingMemento : IHastingMemento
+    public interface IHastingsMemento
     {
-        public IPeerIdentifier Peer { get; }
-        public IList<IPeerIdentifier> Neighbours { get; }
+        /// <summary>
+        /// The peer identifier of the node used to discover new nodes.
+        /// </summary>
+        IPeerIdentifier Peer { get; }
 
-        public HastingMemento(IPeerIdentifier peer, IEnumerable<IPeerIdentifier> neighbours)
-        {
-            Peer = peer;
-            Neighbours = new List<IPeerIdentifier>(neighbours);
-        }
+        /// <summary>
+        /// A list of neighbours, provided by <see cref="Peer"/> through a <see cref="PeerNeighborsResponse"/>
+        /// </summary>
+        INeighbours Neighbours { get; }
     }
 }

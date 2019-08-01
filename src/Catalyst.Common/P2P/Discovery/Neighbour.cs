@@ -21,10 +21,26 @@
 
 #endregion
 
-namespace Catalyst.Common.Interfaces.P2P.Discovery
+using Catalyst.Common.Config;
+using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
+using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.Interfaces.P2P.Discovery;
+
+namespace Catalyst.Common.P2P.Discovery
 {
-    /// <summary>
-    /// A service used to discover peers on the network using the delayed Hastings-Metropolis algorithm.
-    /// </summary>
-    public interface IHastingsDiscovery : IPeerDiscovery { }
+    public sealed class Neighbour : INeighbour
+    {
+        public NeighbourState State { get; set; }
+        public IPeerIdentifier PeerIdentifier { get; }
+        public ICorrelationId DiscoveryPingCorrelationId { get; }
+
+        public Neighbour(IPeerIdentifier peerIdentifier,
+            NeighbourState state = default,
+            ICorrelationId discoveryPingCorrelationId = default)
+        {
+            PeerIdentifier = peerIdentifier;
+            State = state ?? NeighbourState.NotContacted;
+            DiscoveryPingCorrelationId = discoveryPingCorrelationId;
+        }
+    }
 }
