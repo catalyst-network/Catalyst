@@ -7,15 +7,15 @@
                 "port": 42066,
                 "PfxFileName": "mycert.pfx",
                 "SslCertPassword": "test",
-                "PublicKey": "32kssh5iflgk3jfmcjs03ldj4hfgs8gn"
+                "PublicKey": "1AemkEe4z3rZHr7RWSUyZHPuVozyCQnT1H7SfpzcGCQRuT"
             },
             {
                 "nodeId": "node2",
                 "host": "127.0.0.2",
-                "port": 42084,
+                "port": 42066,
                 "PfxFileName": "mycert.pfx",
                 "SslCertPassword": "test",
-                "PublicKey": "32kssh5iflgk3jfmcjs03ldj4hfgs8gn"
+                "PublicKey": "1AemkEe4z3rZHr7RWSUyZHPuVozyCQnT1H7SfpzcGCQRuT"
             }
         ]
     }

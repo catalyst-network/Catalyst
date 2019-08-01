@@ -636,16 +636,12 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
                             o.ResponseMessageSubject.OnNext(subbedDto);
                         });
                     });
-                    
-                    await TaskHelper.WaitForAsync(() => streamObserver.ReceivedCalls()
-                           .Count(c => c.GetMethodInfo().Name == nameof(streamObserver.OnNext)) == neighbours.Count,
-                        TimeSpan.FromSeconds(2)).ConfigureAwait(false);
 
                     await TaskHelper.WaitForAsync(
                         () => walker.StepProposal.Neighbours.All(n => n.State == NeighbourState.Responsive),
-                        TimeSpan.FromSeconds(2)).ConfigureAwait(false);
+                        TimeSpan.FromSeconds(5)).ConfigureAwait(false);
 
-                    walker.StepProposal.Neighbours.All(n => n.State == NeighbourState.Responsive).Should().BeTrue();
+                    walker.StepProposal.Neighbours.Count(n => n.State == NeighbourState.Responsive).Should().Be(neighbours.Count);
                 }
             }
         }
