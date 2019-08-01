@@ -47,10 +47,6 @@ namespace Catalyst.Core.Lib.P2P
         public int Port => _port;
         private readonly string _payoutAddress;
         public string PayoutAddress => _payoutAddress;
-        private readonly bool _announce;
-        public bool Announce => _announce;
-        private readonly IPEndPoint _announceServer;
-        public IPEndPoint AnnounceServer => _announceServer;
         private readonly IPAddress _bindAddress;
         public IPAddress BindAddress => _bindAddress;
         private readonly IList<string> _seedServers;
@@ -60,8 +56,6 @@ namespace Catalyst.Core.Lib.P2P
             string publicKey,
             int port,
             string payoutAddress,
-            bool announce,
-            IPEndPoint announceServer,
             IPAddress bindAddress,
             IList<string> seedServers)
         {
@@ -69,8 +63,6 @@ namespace Catalyst.Core.Lib.P2P
             _publicKey = publicKey;
             _port = port;
             _payoutAddress = payoutAddress;
-            _announce = announce;
-            _announceServer = announceServer;
             _bindAddress = bindAddress;
             _seedServers = seedServers;
         }
@@ -87,11 +79,8 @@ namespace Catalyst.Core.Lib.P2P
             _publicKey = section.GetSection("PublicKey").Value;
             _port = int.Parse(section.GetSection("Port").Value);
             _payoutAddress = section.GetSection("PayoutAddress").Value;
-            _announce = bool.Parse(section.GetSection("Announce").Value);
             _bindAddress = IPAddress.Parse(section.GetSection("BindAddress").Value);
             _seedServers = section.GetSection("SeedServers").GetChildren().Select(p => p.Value).ToList();
-            _announceServer =
-                Announce ? EndpointBuilder.BuildNewEndPoint(section.GetSection("AnnounceServer").Value) : null;
         }
     }
 }
