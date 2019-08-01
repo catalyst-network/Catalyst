@@ -55,7 +55,5 @@ namespace Catalyst.Core.Lib.Rpc
         public int Port { get; }
         public IPAddress BindAddress { get; }
         public string PfxFileName { get; }
-        public bool MutualAuthentication { get; }
-        public bool AcceptInvalidCerts { get; }
     }
 }
