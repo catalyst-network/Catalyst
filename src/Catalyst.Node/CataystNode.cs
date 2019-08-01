@@ -51,12 +51,12 @@ namespace Catalyst.Node
         private readonly INodeRpcServer _nodeRpcServer;
 
         public CatalystNode(IKeySigner keySigner,
+            INodeRpcServer nodeRpcServer,
             IPeerService peer,
             IConsensus consensus,
             IDfs dfs,
             ILedger ledger,
             ILogger logger,
-            INodeRpcServer nodeRpcServer,
             IMempool mempool = null,
             IContract contract = null)
         {

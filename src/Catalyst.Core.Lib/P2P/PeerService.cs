@@ -54,11 +54,11 @@ namespace Catalyst.Core.Lib.P2P
             var observableChannel = ChannelFactory.BuildChannel(EventLoopGroupFactory, peerSettings.BindAddress, peerSettings.Port);
             Channel = observableChannel.Channel;
 
-            heartbeatChecker.Run();
             MessageStream = observableChannel.MessageStream;
             messageHandlers.ToList()
                .ForEach(h => h.StartObserving(MessageStream));
             peerDiscovery.DiscoveryAsync();
+            heartbeatChecker.Run();
         }
     }
 }

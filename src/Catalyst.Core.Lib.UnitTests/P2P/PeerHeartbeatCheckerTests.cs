@@ -32,32 +32,23 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Catalyst.Common.Extensions;
-using Catalyst.Common.IO.Messaging.Correlation;
-using Catalyst.Protocol.Common;
-using Catalyst.Protocol.IPPN;
-using DotNetty.Transport.Channels;
 using Xunit;
 
 namespace Catalyst.Core.Lib.UnitTests.P2P
 {
     public sealed class PeerHeartbeatCheckerTests : IDisposable
     {
-        private readonly int _peerHeartbeatCheckSeconds = 5;
-        private readonly int _peerChallengeTimeoutSeconds = 2;
+        private readonly int _peerHeartbeatCheckSeconds = 3;
+        private readonly int _peerChallengeTimeoutSeconds = 1;
         private IPeerHeartbeatChecker _peerHeartbeatChecker;
-        private readonly IPeerService _peerService;
         private readonly IPeerClient _peerClient;
-        private readonly IPeerIdentifier _senderIdentifier;
         private readonly IPeerRepository _peerRepository;
         private readonly Peer _testPeer;
 
         public PeerHeartbeatCheckerTests()
         {
             _peerRepository = Substitute.For<IPeerRepository>();
-            _senderIdentifier = PeerIdentifierHelper.GetPeerIdentifier("Sender");
             _peerClient = Substitute.For<IPeerClient>();
-            _peerService = Substitute.For<IPeerService>();
             _testPeer = new Peer
             {
                 PeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("TestPeer")
@@ -74,28 +65,43 @@ namespace Catalyst.Core.Lib.UnitTests.P2P
         [Fact]
         public async Task Can_Keep_Peer_On_Valid_Heartbeat_Response()
         {
-            await RunHeartbeatChecker(new PeerIdentifier(_testPeer.PeerIdentifier.PeerId));
+            await RunHeartbeatChecker(true);
             _peerRepository.DidNotReceive().Delete(_testPeer.DocumentId);
         }
 
-        private async Task RunHeartbeatChecker(IPeerIdentifier senderIdentifier = null)
+        [Fact]
+        public async Task Can_Remove_Peer_On_Max_Counter()
+        {
+            await RunHeartbeatChecker(maxNonResponsiveCounter: 2);
+            _peerRepository.Received(1).Delete(_testPeer.DocumentId);
+        }
+
+        private async Task RunHeartbeatChecker(bool sendResponse = false, int maxNonResponsiveCounter = 1)
         {
             var peers = new List<Peer> {_testPeer};
-            var peerChallenger = new PeerChallenger(Substitute.For<ILogger>(), _peerClient, senderIdentifier,
+
+            var peerChallenger = new PeerChallenger(
+                Substitute.For<ILogger>(), 
+                _peerClient, 
+                _testPeer.PeerIdentifier, 
                 _peerChallengeTimeoutSeconds);
-            if (senderIdentifier != null)
+
+            if (sendResponse)
             {
-                peerChallenger.ChallengeResponseMessageStreamer.OnNext(new PeerChallengerResponse(senderIdentifier.PeerId));
+                peerChallenger.ChallengeResponseMessageStreamer.OnNext(new PeerChallengerResponse(_testPeer.PeerIdentifier.PeerId));
             }
 
             _peerRepository.GetAll().Returns(peers);
             _peerRepository.AsQueryable().Returns(peers.AsQueryable());
-            _peerHeartbeatChecker = new PeerHeartbeatChecker(_peerRepository,
+            _peerHeartbeatChecker = new PeerHeartbeatChecker(
+                Substitute.For<ILogger>(),
+                _peerRepository,
                 peerChallenger,
-                _peerHeartbeatCheckSeconds);
+                _peerHeartbeatCheckSeconds,
+                maxNonResponsiveCounter);
 
             _peerHeartbeatChecker.Run();
-            await Task.Delay(TimeSpan.FromSeconds(_peerChallengeTimeoutSeconds).Add(TimeSpan.FromSeconds(2))).ConfigureAwait(false);
+            await Task.Delay(TimeSpan.FromSeconds(_peerHeartbeatCheckSeconds * (maxNonResponsiveCounter + 1)).Add(TimeSpan.FromSeconds(1))).ConfigureAwait(false);
         }
 
         public void Dispose()

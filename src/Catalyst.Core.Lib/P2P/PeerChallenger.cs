@@ -72,6 +72,7 @@ namespace Catalyst.Core.Lib.P2P
                     correlationId
                 );
 
+                _logger.Verbose($"Sending peer challenge request to IP: {recipientPeerIdentifier}");
                 _peerClient.SendMessage(messageDto);
                 using (var cancellationTokenSource =
                     new CancellationTokenSource(TimeSpan.FromSeconds(_peerChallengeWaitTimeSeconds)))
@@ -84,9 +85,8 @@ namespace Catalyst.Core.Lib.P2P
                        .ConfigureAwait(false);
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                _logger.Error(e.Message);
                 return false;
             }
 

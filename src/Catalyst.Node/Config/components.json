@@ -15,7 +15,8 @@
                 {
                     "type": "Catalyst.Common.Interfaces.Repository.IPeerRepository, Catalyst.Common"
                 }
-            ]
+            ],
+            "instanceScope": "singleinstance"
         },
         {
             "type": "Catalyst.Node.Repository.AuthCredentialRepository, Catalyst.Node",
@@ -270,7 +271,7 @@
                 }
             ],
             "parameters": {
-                "peerChallengeWaitTimeSeconds": 30
+                "peerChallengeWaitTimeSeconds": 5
             },
             "instanceScope": "singleinstance"
         },
@@ -282,7 +283,8 @@
                 }
             ],
             "parameters": {
-                "checkHeartbeatIntervalSeconds": 60
+                "checkHeartbeatIntervalSeconds": 10,
+                "maxNonResponsiveCounter": 3
             }
         },
         {
