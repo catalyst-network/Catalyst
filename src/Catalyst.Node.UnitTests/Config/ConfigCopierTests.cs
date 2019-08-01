@@ -109,7 +109,7 @@ namespace Catalyst.Node.UnitTests.Config
                 Constants.ComponentsJsonConfigFile,
                 Constants.SerilogJsonConfigFile,
                 Constants.MessageHandlersConfigFile
-            }.Concat(Constants.AllModuleFiles);
+            };
             return requiredConfigFiles;
         }
 

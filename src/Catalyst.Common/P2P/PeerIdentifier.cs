@@ -52,14 +52,15 @@ namespace Catalyst.Common.P2P
     /// </summary>
     public sealed class PeerIdentifier : IPeerIdentifier
     {
+        public static char PidDelimiter => '|';
+        public PeerId PeerId { get; }
         public string ClientId => PeerId.ClientId.ToStringUtf8();
         public string ClientVersion => PeerId.ClientVersion.ToStringUtf8();
         public IPAddress Ip => new IPAddress(PeerId.Ip.ToByteArray()).MapToIPv4();
         public int Port => BitConverter.ToUInt16(PeerId.Port.ToByteArray());
         public byte[] PublicKey => PeerId.PublicKey.ToByteArray();
         public IPEndPoint IpEndPoint => EndpointBuilder.BuildNewEndPoint(Ip, Port);
-        public PeerId PeerId { get; }
-
+        
         public PeerIdentifier(PeerId peerId)
         {
             var keyLength = FFI.PublicKeyLength;
@@ -94,8 +95,9 @@ namespace Catalyst.Common.P2P
                 return publicKeyBytes;
             }
 
-            userOutput.WriteLine($"Public key not found. Using the default key {publicKeyBytes.KeyToString()}");
-            return registry.GetItemFromRegistry(KeyRegistryKey.DefaultKey).GetPublicKey().Bytes;
+            var defaultKeyBytes = registry.GetItemFromRegistry(KeyRegistryKey.DefaultKey).GetPublicKey().Bytes;
+            userOutput.WriteLine($"Public key {publicKeyBytes.KeyToString()} not found. Using the default key: {defaultKeyBytes.KeyToString()}");
+            return defaultKeyBytes;
         }
 
         /// <summary>
@@ -103,7 +105,7 @@ namespace Catalyst.Common.P2P
         /// </summary>
         /// <param name="rawPidChunks"></param>
         /// <returns></returns>
-        internal static PeerIdentifier ParseHexPeerIdentifier(IReadOnlyList<string> rawPidChunks)
+        public static PeerIdentifier ParseHexPeerIdentifier(IReadOnlyList<string> rawPidChunks)
         {
             var peerByteChunks = new List<ByteString>();
             rawPidChunks.ToList().ForEach(chunk => peerByteChunks.Add(chunk.ToBytesForRLPEncoding().ToByteString()));
