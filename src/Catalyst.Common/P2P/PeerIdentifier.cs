@@ -82,6 +82,7 @@ namespace Catalyst.Common.P2P
 
             var publicKeyStr = config.GetSection("CatalystCliConfig")
                .GetSection("PublicKey").Value;
+
             var publicKey = GetIfRegistryContainsPublicKey(publicKeyStr.KeyToBytes(), registry, userOutput);
 
             return new PeerIdentifier(publicKey,
