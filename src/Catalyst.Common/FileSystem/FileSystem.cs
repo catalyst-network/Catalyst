@@ -111,7 +111,7 @@ namespace Catalyst.Common.FileSystem
             return File.Exists(Path.Combine(GetCatalystDataDir().FullName, subDirectory, fileName));
         }
 
-        private static string GetCurrentDataDir(string configFilePointer)
+        private string GetCurrentDataDir(string configFilePointer)
         {
             var configurationRoot = new ConfigurationBuilder().AddJsonFile(configFilePointer).Build();
 
