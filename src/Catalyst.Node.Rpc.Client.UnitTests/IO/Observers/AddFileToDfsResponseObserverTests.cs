@@ -23,17 +23,12 @@
 
 using System.Threading;
 using Catalyst.Common.Config;
-using Catalyst.Common.Extensions;
-using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.FileTransfer;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
-using Catalyst.Common.Interfaces.IO.Messaging.Dto;
+using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Messaging.Correlation;
-using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Node.Rpc.Client.IO.Observers;
-using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
-using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using Google.Protobuf;
 using NSubstitute;
@@ -45,48 +40,57 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
 {
     public sealed class AddFileToDfsResponseObserverTests
     {
-        private readonly IUploadFileTransferFactory _uploadFileTransferFactory;
-        private readonly IChannelHandlerContext _channelHandlerContext;
-
         public AddFileToDfsResponseObserverTests()
         {
             _uploadFileTransferFactory = Substitute.For<IUploadFileTransferFactory>();
-            _channelHandlerContext = Substitute.For<IChannelHandlerContext>();
+        }
+
+        private readonly IUploadFileTransferFactory _uploadFileTransferFactory;
+
+        [Fact]
+        public void HandlerRemovesFileTransferOnError()
+        {
+            var channelHandlerContext = Substitute.For<IChannelHandlerContext>();
+            var senderPeerIdentifier = Substitute.For<IPeerIdentifier>();
+            var correlationId = CorrelationId.GenerateCorrelationId();
+
+            var addFileResponse = new AddFileToDfsResponse
+            {
+                DfsHash = "Test",
+                ResponseCode = ByteString.CopyFrom((byte) FileTransferResponseCodes.Error)
+            };
+
+            var addFileToDfsResponseObserver = new AddFileToDfsResponseObserver(
+                Substitute.For<ILogger>(),
+                _uploadFileTransferFactory
+            );
+            addFileToDfsResponseObserver.HandleResponseObserver(addFileResponse, channelHandlerContext,
+                senderPeerIdentifier, correlationId);
+            _uploadFileTransferFactory.Received(Quantity.Exactly(1)).Remove(Arg.Any<IUploadFileInformation>(), true);
         }
 
         [Fact]
         public void InitializesFileTransferOnSuccessResponse()
         {
-            var addFileToDfsResponseObserver = new AddFileToDfsResponseObserver(
-                Substitute.For<ILogger>(),
-                _uploadFileTransferFactory
-            );
-            addFileToDfsResponseObserver.OnNext(GetAddFileToDfsResponse(FileTransferResponseCodes.Successful));
-            _uploadFileTransferFactory.Received(Quantity.Exactly(1))
-               .FileTransferAsync(Arg.Any<ICorrelationId>(), Arg.Any<CancellationToken>());
-        }
+            var channelHandlerContext = Substitute.For<IChannelHandlerContext>();
+            var senderPeerIdentifier = Substitute.For<IPeerIdentifier>();
+            var correlationId = CorrelationId.GenerateCorrelationId();
 
-        [Fact]
-        public void HandlerRemovesFileTransferOnError()
-        {
-            var addFileToDfsResponseObserver = new AddFileToDfsResponseObserver(
-                Substitute.For<ILogger>(),
-                _uploadFileTransferFactory
-            );
-            addFileToDfsResponseObserver.OnNext(GetAddFileToDfsResponse(FileTransferResponseCodes.Error));
-            _uploadFileTransferFactory.Received(Quantity.Exactly(1)).Remove(Arg.Any<IUploadFileInformation>(), true);
-        }
-
-        private IObserverDto<ProtocolMessage> GetAddFileToDfsResponse(FileTransferResponseCodes responseCode)
-        {
-            AddFileToDfsResponse addFileResponse = new AddFileToDfsResponse
+            var addFileResponse = new AddFileToDfsResponse
             {
                 DfsHash = "Test",
-                ResponseCode = ByteString.CopyFrom((byte) responseCode)
+                ResponseCode = ByteString.CopyFrom((byte) FileTransferResponseCodes.Successful)
             };
 
-            var protocolMessage = addFileResponse.ToProtocolMessage(PeerIdHelper.GetPeerId("Test"), CorrelationId.GenerateCorrelationId());
-            return new ObserverDto(_channelHandlerContext, protocolMessage);
+            var addFileToDfsResponseObserver = new AddFileToDfsResponseObserver(
+                Substitute.For<ILogger>(),
+                _uploadFileTransferFactory
+            );
+
+            addFileToDfsResponseObserver.HandleResponseObserver(addFileResponse, channelHandlerContext,
+                senderPeerIdentifier, correlationId);
+            _uploadFileTransferFactory.Received(Quantity.Exactly(1))
+               .FileTransferAsync(Arg.Any<ICorrelationId>(), Arg.Any<CancellationToken>());
         }
     }
 }

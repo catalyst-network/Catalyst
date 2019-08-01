@@ -25,6 +25,7 @@ using Catalyst.Common.Interfaces.Cli.Options;
 using CommandLine;
 using System;
 using System.Reflection;
+using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.Cli.Commands;
 using Catalyst.Common.Interfaces.Cli.CommandTypes;
 
