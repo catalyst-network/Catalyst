@@ -120,7 +120,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P
                 _container.Resolve<IEnumerable<IP2PMessageObserver>>(), _peerSettings, _container.Resolve<ILogger>(), _container.Resolve<IPeerHeartbeatChecker>());
         }
 
-        [Fact(Skip = "true")]
+        [Fact]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public async Task PeerChallenge_PeerIdentifiers_Expect_To_Succeed_Valid_IP_Port_PublicKey()
         {
@@ -129,7 +129,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P
             valid.Should().BeTrue();
         }
 
-        [Theory(Skip = "true")]
+        [Theory]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         [InlineData("Fr2a300k06032b657793", "92.207.178.198", 1574)]
         [InlineData("pp2a300k55032b657791", "198.51.100.3", 2524)]
