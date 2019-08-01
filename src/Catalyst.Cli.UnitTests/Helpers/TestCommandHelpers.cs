@@ -26,6 +26,9 @@ using System.Linq;
 using System.Net;
 using System.Reactive.Concurrency;
 using System.Security.Cryptography.X509Certificates;
+using System.Text;
+using Catalyst.Common.Config;
+using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.Cli.Commands;
 using Catalyst.Common.Interfaces.Cli.CommandTypes;
@@ -93,10 +96,10 @@ namespace Catalyst.Cli.UnitTests.Helpers
             commandContext.NodeRpcClientFactory.Returns(nodeRpcClientFactory);
             commandContext.CertificateStore.Returns(certificateStore);
 
+            var hashingAlgorithm = Constants.HashAlgorithm;
+            var deltaMultiHash = Encoding.UTF8.GetBytes("previous").ComputeMultihash(hashingAlgorithm);
             commandContext.PeerIdentifier.Returns(
-
-
-                PeerIdentifierHelper.GetPeerIdentifier("public key", "1.2.3.4", 0, IPAddress.Any, 9010));
+                PeerIdentifierHelper.GetPeerIdentifier(deltaMultiHash, "1.2.3.4", 0, IPAddress.Any, 9010));
 
             return commandContext;
         }

@@ -50,6 +50,10 @@ namespace Catalyst.Cli.UnitTests
             var nodeRpcClientFactory = Substitute.For<INodeRpcClientFactory>();
             var certificateStore = Substitute.For<ICertificateStore>();
             var keyRegistry = Substitute.For<IKeyRegistry>();
+
+            configRoot.GetSection("CatalystCliConfig").GetSection("PublicKey").Value
+               .Returns("1AemkEe4z3rZHr7RWSUyZHPuVozyCQnT1H7SfpzcGCQRuT");
+
             _commandContext = new CommandContext(configRoot, logger, userOutput, peerIdClientId, dtoFactory,
                 nodeRpcClientFactory, certificateStore, keyRegistry);
         }

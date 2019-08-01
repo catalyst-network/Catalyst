@@ -52,22 +52,15 @@ namespace Catalyst.Cli.UnitTests
             var nodeRpcClientFactory = Substitute.For<INodeRpcClientFactory>();
             var certificateStore = Substitute.For<ICertificateStore>();
             var keyRegistry = Substitute.For<IKeyRegistry>();
+
+            configRoot.GetSection("CatalystCliConfig").GetSection("PublicKey").Value
+               .Returns("1AemkEe4z3rZHr7RWSUyZHPuVozyCQnT1H7SfpzcGCQRuT");
+
             _commandContext = new CommandContext(configRoot, logger, userOutput, peerIdClientId, dtoFactory,
                 nodeRpcClientFactory, certificateStore, keyRegistry);
         }
 
         private readonly ICommandContext _commandContext;
-
-        [Fact]
-        public void RunConsole_Stops_On_Cancellation_Token()
-        {
-            var userOutput = Substitute.For<IUserOutput>();
-            var catalystCli = new CatalystCli(userOutput, null);
-            var cancellationTokenSource = new CancellationTokenSource();
-            var cancellationToken = cancellationTokenSource.Token;
-            cancellationTokenSource.Cancel();
-            catalystCli.RunConsole(cancellationToken);
-        }
 
         [Fact]
         public void ParseCommand_That_Does_Exist_Should_Return_True()
@@ -90,6 +83,17 @@ namespace Catalyst.Cli.UnitTests
             var commands = new List<ICommand> {command};
             var catalystCli = new CatalystCli(userOutput, commands);
             catalystCli.ParseCommand("test").Should().BeFalse();
+        }
+
+        [Fact]
+        public void RunConsole_Stops_On_Cancellation_Token()
+        {
+            var userOutput = Substitute.For<IUserOutput>();
+            var catalystCli = new CatalystCli(userOutput, null);
+            var cancellationTokenSource = new CancellationTokenSource();
+            var cancellationToken = cancellationTokenSource.Token;
+            cancellationTokenSource.Cancel();
+            catalystCli.RunConsole(cancellationToken);
         }
     }
 }
