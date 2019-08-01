@@ -28,6 +28,7 @@ using Catalyst.Common.Interfaces.Cli.Commands;
 using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.Interfaces.Registry;
 using Catalyst.Common.Interfaces.Rpc;
 using FluentAssertions;
 using Microsoft.Extensions.Configuration;
@@ -48,8 +49,9 @@ namespace Catalyst.Cli.UnitTests
             var dtoFactory = Substitute.For<IDtoFactory>();
             var nodeRpcClientFactory = Substitute.For<INodeRpcClientFactory>();
             var certificateStore = Substitute.For<ICertificateStore>();
+            var keyRegistry = Substitute.For<IKeyRegistry>();
             _commandContext = new CommandContext(configRoot, logger, userOutput, peerIdClientId, dtoFactory,
-                nodeRpcClientFactory, certificateStore);
+                nodeRpcClientFactory, certificateStore, keyRegistry);
         }
 
         private readonly ICommandContext _commandContext;

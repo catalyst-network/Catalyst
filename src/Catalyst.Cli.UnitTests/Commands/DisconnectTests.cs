@@ -41,7 +41,7 @@ namespace Catalyst.Cli.UnitTests.Commands
         {
             var commandContext = TestCommandHelpers.GenerateCliCommandContext();
 
-            var nodeRpcClient = TestCommandHelpers.MockNodeRpcClient(commandContext);
+            var nodeRpcClient = TestCommandHelpers.MockNodeRpcClient();
             TestCommandHelpers.MockActiveConnection(commandContext, nodeRpcClient);
             TestCommandHelpers.MockNodeRpcClientFactory(commandContext, nodeRpcClient);
             var rpcNodeConfig = TestCommandHelpers.MockRpcNodeConfig(commandContext);

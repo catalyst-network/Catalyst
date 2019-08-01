@@ -70,7 +70,7 @@ namespace Catalyst.Cli.UnitTests.Helpers
             commandContext.PeerIdentifier.Returns(
                 PeerIdentifierHelper.GetPeerIdentifier("public key", "1.2.3.4", 0, IPAddress.Any, 9010));
 
-            var nodeRpcClient = MockNodeRpcClient(commandContext);
+            var nodeRpcClient = MockNodeRpcClient();
             MockRpcNodeConfig(commandContext);
             MockNodeRpcClientFactory(commandContext, nodeRpcClient);
             MockActiveConnection(commandContext, nodeRpcClient);
@@ -94,6 +94,8 @@ namespace Catalyst.Cli.UnitTests.Helpers
             commandContext.CertificateStore.Returns(certificateStore);
 
             commandContext.PeerIdentifier.Returns(
+
+
                 PeerIdentifierHelper.GetPeerIdentifier("public key", "1.2.3.4", 0, IPAddress.Any, 9010));
 
             return commandContext;
@@ -118,7 +120,7 @@ namespace Catalyst.Cli.UnitTests.Helpers
             return commandContext.NodeRpcClientFactory;
         }
 
-        public static INodeRpcClient MockNodeRpcClient(ICommandContext commandContext)
+        public static INodeRpcClient MockNodeRpcClient()
         {
             var nodeRpcClient = Substitute.For<INodeRpcClient>();
             nodeRpcClient.Channel.Active.Returns(true);
@@ -139,14 +141,14 @@ namespace Catalyst.Cli.UnitTests.Helpers
             return commandContext.SocketClientRegistry;
         }
 
-        public static bool GenerateRequest(ICommandContext commandContext,
+        public static void GenerateRequest(ICommandContext commandContext,
             ICommand command,
             params string[] commandArgs)
         {
             var commands = new List<ICommand> {command};
             var console = new CatalystCli(commandContext.UserOutput, commands);
             commandArgs = commandArgs.ToList().Prepend(command.CommandName).ToArray();
-            return console.ParseCommand(commandArgs);
+            console.ParseCommand(commandArgs);
         }
 
         public static ICommandContext GenerateCliResponseCommandContext(IScheduler testScheduler)
