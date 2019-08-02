@@ -85,7 +85,7 @@ namespace Catalyst.Node
         {
             _logger.Information("Starting the Catalyst Node");
 
-            await StartSockets();
+            await StartSockets().ConfigureAwait(false);
 
             bool exit;
             do

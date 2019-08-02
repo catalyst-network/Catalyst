@@ -74,7 +74,9 @@ namespace Catalyst.Core.Lib.P2P
                     _logger.Verbose($"Heartbeat result: {result} Peer: {peer.PeerIdentifier} Non-Responsive Counter: {counterValue}");
                     if (!result)
                     {
-                        counterValue = _nonResponsivePeerMap[peer.DocumentId] += 1;
+                        _nonResponsivePeerMap[peer.DocumentId] += 1;
+                        counterValue += 1;
+
                         if (counterValue >= _maxNonResponsiveCounter)
                         {
                             _peerRepository.Delete(peer.DocumentId);
