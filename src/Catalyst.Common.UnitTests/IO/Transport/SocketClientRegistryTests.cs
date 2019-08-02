@@ -33,6 +33,7 @@ using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.IO.Events;
 using Catalyst.Common.IO.Transport;
 using FluentAssertions;
+using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Xunit;
 
@@ -40,83 +41,11 @@ namespace Catalyst.Common.UnitTests.IO.Transport
 {
     public sealed class SocketClientRegistryTests
     {
-        [Fact]
-        public void Can_init_tcp_client_registry()
-        {
-            var socketRegistry = new SocketClientRegistry<ITcpClient>();
-            Assert.Equal(socketRegistry.GetRegistryType(), typeof(ITcpClient).Name);
-        }
-
-        [Fact]
-        public void Can_init_udp_client_registry()
-        {
-            var socketRegistry = new SocketClientRegistry<IUdpClient>();
-            Assert.Equal(socketRegistry.GetRegistryType(), typeof(IUdpClient).Name);
-        }
-
-        [Fact]
-        public void Can_init_peer_client_registry()
-        {
-            var socketRegistry = new SocketClientRegistry<IPeerClient>();
-            Assert.Equal(socketRegistry.GetRegistryType(), typeof(IPeerClient).Name);
-        }
-
-        [Fact]
-        public void Can_init_rcp_client_registry()
-        {
-            var socketRegistry = new SocketClientRegistry<INodeRpcClient>();
-            Assert.Equal(socketRegistry.GetRegistryType(), typeof(INodeRpcClient).Name);
-        }
-
-        [Fact]
-        public void Socket_Registry_Has_A_List()
-        {
-            new SocketClientRegistry<ISocketClient>().Registry
-               .Should().NotBeNull()
-               .And
-               .BeEmpty()
-               .And
-               .BeOfType(typeof(ConcurrentDictionary<int, ISocketClient>));
-        }
-
-        [Fact]
-        public void Cannot_Add_Inactive_Client()
-        {
-            var clientSocketRegistry = new SocketClientRegistry<ISocketClient>();
-            var socket = Substitute.For<ISocketClient>();
-            socket.Channel.Active.Returns(false);
-            var hashcode = new IPEndPoint(IPAddress.Loopback, IPEndPoint.MaxPort).GetHashCode();
-
-            new Action(() => clientSocketRegistry.AddClientToRegistry(hashcode, socket)).Should()
-               .Throw<ArgumentException>();
-        }
-
         private static ISocketClient GetSubstituteForActiveSocketClient()
         {
             var substitute = Substitute.For<ISocketClient>();
             substitute.Channel.Active.Returns(true);
             return substitute;
-        }
-
-        [Fact]
-        public void Can_Add_Socket_To_Registry_And_Get_Same_Client_From_HashCode()
-        {
-            var clientSocketRegistry = new SocketClientRegistry<ISocketClient>();
-            var socket = GetSubstituteForActiveSocketClient();
-            var hashcode = new IPEndPoint(IPAddress.Loopback, IPEndPoint.MaxPort).GetHashCode();
-
-            clientSocketRegistry.AddClientToRegistry(hashcode, socket);
-
-            clientSocketRegistry.Registry
-               .Should().ContainKey(hashcode);
-
-            clientSocketRegistry.Registry
-               .Should().ContainValue(socket);
-
-            clientSocketRegistry.GetClientFromRegistry(hashcode)
-               .Should().NotBeNull()
-               .And
-               .BeAssignableTo<ISocketClient>();
         }
 
         private Dictionary<int, ISocketClient> ConstructSocketByEndpointSampleData()
@@ -127,7 +56,8 @@ namespace Catalyst.Common.UnitTests.IO.Transport
             );
         }
 
-        private ISocketClientRegistry<ISocketClient> ConstructPopulatedSocketRepository(Dictionary<int, ISocketClient> socketsByEndpointHashCode)
+        private ISocketClientRegistry<ISocketClient> ConstructPopulatedSocketRepository(
+            Dictionary<int, ISocketClient> socketsByEndpointHashCode)
         {
             var clientSocketRegistry = new SocketClientRegistry<ISocketClient>();
             socketsByEndpointHashCode.ToList().ForEach(element =>
@@ -154,11 +84,130 @@ namespace Catalyst.Common.UnitTests.IO.Transport
             var socketsByEndpointHashCode = ConstructSocketByEndpointSampleData();
             var clientSocketRegistry = ConstructPopulatedSocketRepository(socketsByEndpointHashCode);
 
-            var socketClient = clientSocketRegistry.GetClientFromRegistry(new IPEndPoint(IPAddress.Loopback, 2000).GetHashCode());
+            var socketClient =
+                clientSocketRegistry.GetClientFromRegistry(new IPEndPoint(IPAddress.Loopback, 2000).GetHashCode());
             socketClient.Should()
                .NotBeNull()
                .And
                .BeAssignableTo<ISocketClient>();
+        }
+
+        [Fact]
+        public void Can_Add_Multiple_Sockets_To_Registry_And_Remove_One()
+        {
+            var socketsByEndpointHashCode = ConstructSocketByEndpointSampleData();
+            var clientSocketRegistry = ConstructPopulatedSocketRepository(socketsByEndpointHashCode);
+
+            socketsByEndpointHashCode.Remove(new IPEndPoint(IPAddress.Loopback, 2000).GetHashCode(), out _);
+
+            var socketClient =
+                clientSocketRegistry.RemoveClientFromRegistry(new IPEndPoint(IPAddress.Loopback, 2000).GetHashCode());
+            socketClient.Should().BeTrue();
+
+            clientSocketRegistry.Registry
+               .Should().NotBeEmpty()
+               .And
+               .HaveCount(4)
+               .And.ContainValues(socketsByEndpointHashCode.Values);
+        }
+
+        [Fact]
+        public void Can_Add_Socket_To_Registry_And_Get_Same_Client_From_HashCode()
+        {
+            var clientSocketRegistry = new SocketClientRegistry<ISocketClient>();
+            var socket = GetSubstituteForActiveSocketClient();
+            var hashcode = new IPEndPoint(IPAddress.Loopback, IPEndPoint.MaxPort).GetHashCode();
+
+            clientSocketRegistry.AddClientToRegistry(hashcode, socket);
+
+            clientSocketRegistry.Registry
+               .Should().ContainKey(hashcode);
+
+            clientSocketRegistry.Registry
+               .Should().ContainValue(socket);
+
+            clientSocketRegistry.GetClientFromRegistry(hashcode)
+               .Should().NotBeNull()
+               .And
+               .BeAssignableTo<ISocketClient>();
+        }
+
+        [Fact]
+        public void Can_init_peer_client_registry()
+        {
+            var socketRegistry = new SocketClientRegistry<IPeerClient>();
+            Assert.Equal(socketRegistry.GetRegistryType(), typeof(IPeerClient).Name);
+        }
+
+        [Fact]
+        public void Can_init_rcp_client_registry()
+        {
+            var socketRegistry = new SocketClientRegistry<INodeRpcClient>();
+            Assert.Equal(socketRegistry.GetRegistryType(), typeof(INodeRpcClient).Name);
+        }
+
+        [Fact]
+        public void Can_init_tcp_client_registry()
+        {
+            var socketRegistry = new SocketClientRegistry<ITcpClient>();
+            Assert.Equal(socketRegistry.GetRegistryType(), typeof(ITcpClient).Name);
+        }
+
+        [Fact]
+        public void Can_init_udp_client_registry()
+        {
+            var socketRegistry = new SocketClientRegistry<IUdpClient>();
+            Assert.Equal(socketRegistry.GetRegistryType(), typeof(IUdpClient).Name);
+        }
+
+        [Fact]
+        public void Can_Listen_To_Registry_Client_Added_Events()
+        {
+            var testScheduler = new TestScheduler();
+            var socketsByEndpointHashCode = ConstructSocketByEndpointSampleData();
+            var clientSocketRegistry = new SocketClientRegistry<ISocketClient>(testScheduler);
+
+            var connectionEvents = new List<int>();
+            clientSocketRegistry.EventStream.OfType<SocketClientRegistryClientAdded>().Subscribe(
+                socketClientRegistryClientAdded =>
+                {
+                    connectionEvents.Add(socketClientRegistryClientAdded.SocketHashCode);
+                });
+
+            socketsByEndpointHashCode.ToList().ForEach(element =>
+                clientSocketRegistry.AddClientToRegistry(element.Key, element.Value)
+            );
+
+            testScheduler.Start();
+
+            connectionEvents.Should().NotBeEmpty().And.HaveCount(5);
+        }
+
+        [Fact]
+        public void Can_Listen_To_Registry_Client_Removed_Events()
+        {
+            var testScheduler = new TestScheduler();
+            var socketsByEndpointHashCode = ConstructSocketByEndpointSampleData();
+            var clientSocketRegistry = new SocketClientRegistry<ISocketClient>(testScheduler);
+
+            var connectionEvents = new List<int>();
+            clientSocketRegistry.EventStream.OfType<SocketClientRegistryClientAdded>().Subscribe(
+                socketClientRegistryClientAdded =>
+                    connectionEvents.Add(socketClientRegistryClientAdded.SocketHashCode)
+            );
+
+            clientSocketRegistry.EventStream.OfType<SocketClientRegistryClientRemoved>().Subscribe(
+                socketClientRegistryClientAddedRemoved =>
+                    connectionEvents.Remove(socketClientRegistryClientAddedRemoved.SocketHashCode)
+            );
+
+            socketsByEndpointHashCode.ToList().ForEach(element =>
+                clientSocketRegistry.RemoveClientFromRegistry(element.Key)
+            );
+
+            testScheduler.Start();
+
+            connectionEvents.Should().BeEmpty();
         }
 
         [Fact]
@@ -188,65 +237,26 @@ namespace Catalyst.Common.UnitTests.IO.Transport
         }
 
         [Fact]
-        public void Can_Add_Multiple_Sockets_To_Registry_And_Remove_One()
+        public void Cannot_Add_Inactive_Client()
         {
-            var socketsByEndpointHashCode = ConstructSocketByEndpointSampleData();
-            var clientSocketRegistry = ConstructPopulatedSocketRepository(socketsByEndpointHashCode);
-
-            socketsByEndpointHashCode.Remove(new IPEndPoint(IPAddress.Loopback, 2000).GetHashCode(), out _);
-
-            var socketClient = clientSocketRegistry.RemoveClientFromRegistry(new IPEndPoint(IPAddress.Loopback, 2000).GetHashCode());
-            socketClient.Should().BeTrue();
-
-            clientSocketRegistry.Registry
-               .Should().NotBeEmpty()
-               .And
-               .HaveCount(4)
-               .And.ContainValues(socketsByEndpointHashCode.Values);
-        }
-
-        [Fact]
-        public void Can_Listen_To_Registry_Client_Added_Events()
-        {
-            var socketsByEndpointHashCode = ConstructSocketByEndpointSampleData();
             var clientSocketRegistry = new SocketClientRegistry<ISocketClient>();
+            var socket = Substitute.For<ISocketClient>();
+            socket.Channel.Active.Returns(false);
+            var hashcode = new IPEndPoint(IPAddress.Loopback, IPEndPoint.MaxPort).GetHashCode();
 
-            var connectionEvents = new List<int>();
-            clientSocketRegistry.EventStream.OfType<SocketClientRegistryClientAdded>().Subscribe((socketClientRegistryClientAdded) =>
-            {
-                connectionEvents.Add(socketClientRegistryClientAdded.SocketHashCode);
-            });
-
-            socketsByEndpointHashCode.ToList().ForEach(element =>
-                clientSocketRegistry.AddClientToRegistry(element.Key, element.Value)
-            );
-
-            connectionEvents.Should().NotBeEmpty().And.HaveCount(5);
+            new Action(() => clientSocketRegistry.AddClientToRegistry(hashcode, socket)).Should()
+               .Throw<ArgumentException>();
         }
 
         [Fact]
-        public void Can_Listen_To_Registry_Client_Removed_Events()
+        public void Socket_Registry_Has_A_List()
         {
-            var socketsByEndpointHashCode = ConstructSocketByEndpointSampleData();
-            var clientSocketRegistry = ConstructPopulatedSocketRepository(socketsByEndpointHashCode);
-
-            var connectionEvents = new List<int>();
-            clientSocketRegistry.EventStream.OfType<SocketClientRegistryClientAdded>().Subscribe((socketClientRegistryClientAdded) =>
-            {
-                connectionEvents.Add(socketClientRegistryClientAdded.SocketHashCode);
-            });
-
-            clientSocketRegistry.EventStream.OfType<SocketClientRegistryClientRemoved>().Subscribe((socketClientRegistryClientAddedRemoved) =>
-            {
-                connectionEvents.Remove(socketClientRegistryClientAddedRemoved.SocketHashCode);
-            });
-
-            socketsByEndpointHashCode.ToList().ForEach(element =>
-            {
-                clientSocketRegistry.RemoveClientFromRegistry(element.Key);
-            });
-
-            connectionEvents.Should().BeEmpty();
+            new SocketClientRegistry<ISocketClient>().Registry
+               .Should().NotBeNull()
+               .And
+               .BeEmpty()
+               .And
+               .BeOfType(typeof(ConcurrentDictionary<int, ISocketClient>));
         }
     }
 }
