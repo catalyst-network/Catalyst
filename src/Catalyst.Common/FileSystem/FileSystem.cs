@@ -30,8 +30,6 @@ using Microsoft.Extensions.Configuration;
 using System.Linq;
 using Newtonsoft.Json;
 using IFileSystem = Catalyst.Common.Interfaces.FileSystem.IFileSystem;
-using ILogger = Serilog.ILogger;
-
 
 namespace Catalyst.Common.FileSystem
 {

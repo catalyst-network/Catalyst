@@ -35,7 +35,7 @@ namespace Catalyst.Cli.IntegrationTests.Commands
         [Fact]
         public void Cli_Can_Send_Change_Data_Folder_Request()
         {
-            var result = Shell.ParseCommand("changedatafolder", NodeArgumentPrefix, ServerNodeName, "-c", "C:\\TemporaryFolder", "-i", "127.0.0.1", "-p", "public_key");
+            var result = Shell.ParseCommand("changedatafolder", NodeArgumentPrefix, ServerNodeName, "-c", "C:\\TemporaryFolder");
             result.Should().BeTrue();
 
             AssertSentMessageAndGetMessageContent<GetPeerDataFolderResponse>();

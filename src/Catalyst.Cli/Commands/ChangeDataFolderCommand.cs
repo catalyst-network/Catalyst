@@ -24,25 +24,18 @@
 using Catalyst.Cli.Options;
 using Catalyst.Common.Interfaces.Cli.Commands;
 using Catalyst.Protocol.Rpc.Node;
-using Google.Protobuf;
-using Nethereum.RLP;
-using System.Net;
 using Catalyst.Cli.CommandTypes;
-using Catalyst.Common.Extensions;
-using Catalyst.Common.Network;
-using Catalyst.Common.Util;
 
 namespace Catalyst.Cli.Commands
 {
     public sealed class ChangeDataFolderCommand : BaseMessageCommand<SetPeerDataFolderRequest, GetPeerDataFolderResponse, ChangeDataFolderOptions>
     {
         public ChangeDataFolderCommand(ICommandContext commandContext) : base(commandContext) { }
+
         protected override SetPeerDataFolderRequest GetMessage(ChangeDataFolderOptions option)
         {
             return new SetPeerDataFolderRequest
             {
-                PublicKey = option.PublicKey.PublicKeyToProtobuf(),
-                Ip = option.IpAddress.IpAddressToProtobuf(),
                 Datafolder = option.DataFolder
             };
         }
