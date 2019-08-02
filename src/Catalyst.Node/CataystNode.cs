@@ -76,9 +76,9 @@ namespace Catalyst.Node
 
         public async Task StartSockets()
         {
-            await _nodeRpcServer.StartAsync();
-            await _peer.StartAsync();
-            await _peerClient.StartAsync();
+            await _nodeRpcServer.StartAsync().ConfigureAwait(false);
+            await _peer.StartAsync().ConfigureAwait(false);
+            await _peerClient.StartAsync().ConfigureAwait(false);
         }
 
         public async Task RunAsync(CancellationToken ct)

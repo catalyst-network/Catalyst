@@ -128,7 +128,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public async Task PeerChallenge_PeerIdentifiers_Expect_To_Succeed_Valid_IP_Port_PublicKey()
         {
-            await Setup();
+            await Setup().ConfigureAwait(false);
             var valid = await RunPeerChallengeTask(_peerSettings.PublicKey, _peerSettings.BindAddress, _peerSettings.Port).ConfigureAwait(false);
 
             valid.Should().BeTrue();
@@ -140,7 +140,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P
         [InlineData("pp2a300k55032b657791", "198.51.100.3", 2524)]
         public async Task PeerChallenge_PeerIdentifiers_Expect_To_Fail_IP_Port_PublicKey(string publicKey, string ip, int port)
         {
-            await Setup();
+            await Setup().ConfigureAwait(false);
             var valid = await RunPeerChallengeTask(publicKey, IPAddress.Parse(ip), port).ConfigureAwait(false);
 
             valid.Should().BeFalse();
