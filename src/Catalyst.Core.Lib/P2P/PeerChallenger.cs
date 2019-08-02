@@ -48,14 +48,13 @@ namespace Catalyst.Core.Lib.P2P
         public ReplaySubject<IPeerChallengeResponse> ChallengeResponseMessageStreamer { get; }
 
         public PeerChallenger(ILogger logger,
-            IPeerClient peerClient,
             IPeerIdentifier senderIdentifier,
             int peerChallengeWaitTimeSeconds)
         {
             ChallengeResponseMessageStreamer = new ReplaySubject<IPeerChallengeResponse>(1);
             _senderIdentifier = senderIdentifier;
             _logger = logger;
-            _peerClient = peerClient;
+            _peerClient = _peerClient;
             _peerChallengeWaitTimeSeconds = peerChallengeWaitTimeSeconds;
         }
 
