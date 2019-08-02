@@ -23,6 +23,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Net;
 using System.Reactive.Linq;
 using System.Security.Cryptography.X509Certificates;
@@ -103,6 +104,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Transport.Channels
             X509Certificate2 certificate = null)
         {
             Console.WriteLine("Bootstrapping Peer Client to " + targetAddress + " Port: " + targetPort);
+            Console.WriteLine(System.Environment.StackTrace);
             var channel = BootStrapChannel(handlerEventLoopGroupFactory, targetAddress, targetPort);
 
             Console.WriteLine("Finish Bootstrapping Peer Client");
