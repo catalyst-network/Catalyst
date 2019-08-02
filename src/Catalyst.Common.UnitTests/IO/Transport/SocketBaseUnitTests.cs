@@ -21,28 +21,30 @@
 
 #endregion
 
+using System.Diagnostics;
 using Catalyst.Common.Interfaces.IO.EventLoop;
-using Catalyst.Common.Interfaces.IO.Transport;
 using Catalyst.Common.Interfaces.IO.Transport.Channels;
+using Catalyst.Common.UnitTests.Stub;
+using DotNetty.Transport.Channels;
+using NSubstitute;
 using Serilog;
+using Xunit;
 
-namespace Catalyst.Common.IO.Transport
+namespace Catalyst.Common.UnitTests.IO.Transport
 {
-    public class TcpServer : SocketBase, ITcpServer
+    public sealed class SocketBaseUnitTests
     {
-        protected TcpServer(ITcpServerChannelFactory tcpChannelFactory,
-            ILogger logger,
-            IEventLoopGroupFactory eventLoopGroupFactory)
-            : base(tcpChannelFactory, logger, eventLoopGroupFactory) { }
-
-        protected override void Dispose(bool disposing)
+        [Fact]
+        public void SocketBase_Should_Dispose()
         {
-            if (!disposing)
-            {
-                return;
-            }
+            var channelFactory = Substitute.For<ITcpClientChannelFactory>();
+            var logger = Substitute.For<ILogger>();
+            var eventLoopGroupFactory = Substitute.For<IEventLoopGroupFactory>();
+            var testSocketBase = new TestSocketBase(channelFactory, logger, eventLoopGroupFactory);
 
-            base.Dispose(true);
+            //var isChannelActive = testSocketBase.Channel.Active;
+
+            //testSocketBase.Dispose();
         }
     }
 }
