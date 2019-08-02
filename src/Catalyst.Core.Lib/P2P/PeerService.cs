@@ -32,14 +32,18 @@ using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Catalyst.Common.Interfaces.P2P.Discovery;
 
 namespace Catalyst.Core.Lib.P2P
 {
     public sealed class PeerService : UdpServer, IPeerService
     {
+        private readonly IEnumerable<IP2PMessageObserver> _messageHandlers;
+        private readonly IPeerSettings _peerSettings;
+        private readonly IPeerHeartbeatChecker _heartbeatChecker;
         public IPeerDiscovery Discovery { get; }
-        public IObservable<IObserverDto<ProtocolMessage>> MessageStream { get; }
+        public IObservable<IObserverDto<ProtocolMessage>> MessageStream { get; private set; }
 
         public PeerService(IUdpServerEventLoopGroupFactory udpServerEventLoopGroupFactory,
             IUdpServerChannelFactory serverChannelFactory,
@@ -50,15 +54,22 @@ namespace Catalyst.Core.Lib.P2P
             IPeerHeartbeatChecker heartbeatChecker)
             : base(serverChannelFactory, logger, udpServerEventLoopGroupFactory)
         {
+            _messageHandlers = messageHandlers;
+            _peerSettings = peerSettings;
+            _heartbeatChecker = heartbeatChecker;
             Discovery = peerDiscovery;
-            var observableChannel = ChannelFactory.BuildChannel(EventLoopGroupFactory, peerSettings.BindAddress, peerSettings.Port);
+        }
+
+        public override async Task StartAsync()
+        {
+            var observableChannel = await ChannelFactory.BuildChannel(EventLoopGroupFactory, _peerSettings.BindAddress, _peerSettings.Port);
             Channel = observableChannel.Channel;
 
             MessageStream = observableChannel.MessageStream;
-            messageHandlers.ToList()
+            _messageHandlers.ToList()
                .ForEach(h => h.StartObserving(MessageStream));
-            peerDiscovery.DiscoveryAsync();
-            heartbeatChecker.Run();
+            Discovery?.DiscoveryAsync();
+            _heartbeatChecker.Run();
         }
     }
 }

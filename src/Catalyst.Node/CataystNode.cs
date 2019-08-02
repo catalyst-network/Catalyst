@@ -49,6 +49,7 @@ namespace Catalyst.Node
         private readonly IMempool _mempool;
         private readonly IPeerService _peer;
         private readonly INodeRpcServer _nodeRpcServer;
+        private readonly IPeerClient _peerClient;
 
         public CatalystNode(IKeySigner keySigner,
             INodeRpcServer nodeRpcServer,
@@ -57,10 +58,12 @@ namespace Catalyst.Node
             IDfs dfs,
             ILedger ledger,
             ILogger logger,
+            IPeerClient peerClient,
             IMempool mempool = null,
             IContract contract = null)
         {
             _peer = peer;
+            _peerClient = peerClient;
             _consensus = consensus;
             _dfs = dfs;
             _ledger = ledger;
@@ -71,9 +74,19 @@ namespace Catalyst.Node
             _contract = contract;
         }
 
+        public async Task StartSockets()
+        {
+            await _nodeRpcServer.StartAsync();
+            await _peer.StartAsync();
+            await _peerClient.StartAsync();
+        }
+
         public async Task RunAsync(CancellationToken ct)
         {
             _logger.Information("Starting the Catalyst Node");
+
+            await StartSockets();
+
             bool exit;
             do
             {

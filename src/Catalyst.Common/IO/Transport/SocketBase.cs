@@ -32,13 +32,14 @@ using System.Threading.Tasks;
 
 namespace Catalyst.Common.IO.Transport
 {
-    public class SocketBase : ISocket
+    public abstract class SocketBase : ISocket
     {
         protected readonly IChannelFactory ChannelFactory;
         private readonly ILogger _logger;
         private bool _disposing;
         protected readonly IEventLoopGroupFactory EventLoopGroupFactory;
-        
+        public abstract Task StartAsync();
+
         public IChannel Channel { get; protected set; }
 
         protected SocketBase(IChannelFactory channelFactory, ILogger logger, IEventLoopGroupFactory eventLoopGroupFactory)

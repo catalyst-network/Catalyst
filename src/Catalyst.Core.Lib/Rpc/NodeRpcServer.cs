@@ -26,6 +26,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading;
+using System.Threading.Tasks;
 using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Common.Interfaces.IO.EventLoop;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
@@ -40,11 +41,12 @@ namespace Catalyst.Core.Lib.Rpc
 {
     public class NodeRpcServer : TcpServer, INodeRpcServer
     {
+        private readonly IEnumerable<IRpcRequestObserver> _requestHandlers;
         private readonly CancellationTokenSource _cancellationSource;
         private readonly X509Certificate2 _certificate;
 
         public IRpcServerSettings Settings { get; }
-        public IObservable<IObserverDto<ProtocolMessage>> MessageStream { get; }
+        public IObservable<IObserverDto<ProtocolMessage>> MessageStream { get; private set; }
 
         public NodeRpcServer(IRpcServerSettings settings,
             ILogger logger,
@@ -54,14 +56,18 @@ namespace Catalyst.Core.Lib.Rpc
             ITcpServerEventLoopGroupFactory eventEventLoopGroupFactory) 
             : base(channelFactory, logger, eventEventLoopGroupFactory)
         {
+            _requestHandlers = requestHandlers;
             Settings = settings;
             _cancellationSource = new CancellationTokenSource();
             _certificate = certificateStore.ReadOrCreateCertificateFile(settings.PfxFileName);
+        }
 
-            var observableSocket = ChannelFactory.BuildChannel(EventLoopGroupFactory, Settings.BindAddress, Settings.Port, _certificate);
+        public override async Task StartAsync()
+        {
+            var observableSocket = await ChannelFactory.BuildChannel(EventLoopGroupFactory, Settings.BindAddress, Settings.Port, _certificate);
             Channel = observableSocket.Channel;
             MessageStream = observableSocket.MessageStream;
-            requestHandlers.ToList().ForEach(h => h.StartObserving(MessageStream));
+            _requestHandlers.ToList().ForEach(h => h.StartObserving(MessageStream));
         }
 
         protected override void Dispose(bool disposing)

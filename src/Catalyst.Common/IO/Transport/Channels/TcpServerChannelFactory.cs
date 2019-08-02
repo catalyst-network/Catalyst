@@ -25,6 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Security.Cryptography.X509Certificates;
+using System.Threading.Tasks;
 using Catalyst.Common.Interfaces.IO.EventLoop;
 using Catalyst.Common.Interfaces.IO.Transport.Channels;
 using Catalyst.Common.IO.Transport.Bootstrapping;
@@ -45,12 +46,12 @@ namespace Catalyst.Common.IO.Transport.Channels
             _backLogValue = backLogValue;
         }
         
-        public abstract IObservableChannel BuildChannel(IEventLoopGroupFactory eventLoopGroupFactory,
+        public abstract Task<IObservableChannel> BuildChannel(IEventLoopGroupFactory eventLoopGroupFactory,
             IPAddress targetAddress,
             int targetPort,
             X509Certificate2 certificate = null);
 
-        protected IChannel Bootstrap(IEventLoopGroupFactory handlerEventLoopGroupFactory,
+        protected async Task<IChannel> Bootstrap(IEventLoopGroupFactory handlerEventLoopGroupFactory,
             IPAddress targetAddress,
             int targetPort,
             X509Certificate2 certificate)
@@ -59,15 +60,13 @@ namespace Catalyst.Common.IO.Transport.Channels
                .GetOrCreateSupervisorEventLoopGroup();
             var channelHandler = new ServerChannelInitializerBase<IChannel>(HandlerGenerationFunction, handlerEventLoopGroupFactory, certificate);
 
-            return new ServerBootstrap()
+            return await new ServerBootstrap()
                .Group(handlerEventLoopGroupFactory.GetOrCreateSocketIoEventLoopGroup(), supervisorLoopGroup)
                .ChannelFactory(() => new TcpServerSocketChannel())
                .Option(ChannelOption.SoBacklog, _backLogValue)
                .Handler(new LoggingHandler(LogLevel.DEBUG))
                .ChildHandler(channelHandler)
-               .BindAsync(targetAddress, targetPort)
-               .GetAwaiter()
-               .GetResult();
+               .BindAsync(targetAddress, targetPort);
         }
     }
 }

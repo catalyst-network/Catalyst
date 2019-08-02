@@ -21,6 +21,7 @@
 
 #endregion
 
+using System.Threading.Tasks;
 using Catalyst.Common.Interfaces.IO.EventLoop;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Transport;
@@ -30,7 +31,7 @@ using Serilog;
 
 namespace Catalyst.Common.IO.Transport
 {
-    public class ClientBase : SocketBase, ISocketClient
+    public abstract class ClientBase : SocketBase, ISocketClient
     {
         protected ClientBase(IChannelFactory channelFactory, ILogger logger, IEventLoopGroupFactory handlerEventEventLoopGroupFactory)
             : base(channelFactory, logger, handlerEventEventLoopGroupFactory) { }

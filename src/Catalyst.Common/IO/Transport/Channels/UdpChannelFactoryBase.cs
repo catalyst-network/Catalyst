@@ -25,6 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
+using System.Threading.Tasks;
 using Catalyst.Common.Interfaces.IO.EventLoop;
 using Catalyst.Common.IO.Transport.Bootstrapping;
 using DotNetty.Handlers.Logging;
@@ -38,22 +39,20 @@ namespace Catalyst.Common.IO.Transport.Channels
     {
         protected abstract Func<List<IChannelHandler>> HandlerGenerationFunction { get; }
 
-        protected IChannel BootStrapChannel(IEventLoopGroupFactory handlerEventLoopGroupFactory,
+        protected async Task<IChannel> BootStrapChannel(IEventLoopGroupFactory handlerEventLoopGroupFactory,
             IPAddress address,
             int port)
         {
             var channelHandler = new ServerChannelInitializerBase<IChannel>(HandlerGenerationFunction, handlerEventLoopGroupFactory);
 
-            return new Bootstrap()
+            return await new Bootstrap()
                .Group(handlerEventLoopGroupFactory.GetOrCreateSocketIoEventLoopGroup())
                .ChannelFactory(() => new SocketDatagramChannel(AddressFamily.InterNetwork))
                .Option(ChannelOption.SoBroadcast, true)
                .Handler(new LoggingHandler(LogLevel.DEBUG))
                .Handler(channelHandler)
                .BindAsync(address, port)
-               .ConfigureAwait(false)
-               .GetAwaiter()
-               .GetResult();
+               .ConfigureAwait(false);
         }
     }
 }

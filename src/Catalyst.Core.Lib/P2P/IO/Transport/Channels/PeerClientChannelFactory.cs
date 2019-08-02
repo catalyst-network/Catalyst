@@ -23,10 +23,10 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Net;
 using System.Reactive.Linq;
 using System.Security.Cryptography.X509Certificates;
+using System.Threading.Tasks;
 using Catalyst.Common.Interfaces.IO.EventLoop;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Transport.Channels;
@@ -36,7 +36,6 @@ using Catalyst.Common.Interfaces.P2P.IO.Messaging.Correlation;
 using Catalyst.Common.IO.Handlers;
 using Catalyst.Common.IO.Transport.Channels;
 using Catalyst.Protocol.Common;
-using DotNetty.Buffers;
 using DotNetty.Codecs;
 using DotNetty.Codecs.Protobuf;
 using DotNetty.Transport.Channels;
@@ -98,16 +97,12 @@ namespace Catalyst.Core.Lib.P2P.IO.Transport.Channels
         /// <param name="targetAddress">Ignored</param>
         /// <param name="targetPort">Ignored</param>
         /// <param name="certificate">Local TLS certificate</param>
-        public override IObservableChannel BuildChannel(IEventLoopGroupFactory handlerEventLoopGroupFactory,
+        public override async Task<IObservableChannel> BuildChannel(IEventLoopGroupFactory handlerEventLoopGroupFactory,
             IPAddress targetAddress,
             int targetPort,
             X509Certificate2 certificate = null)
         {
-            Console.WriteLine("Bootstrapping Peer Client to " + targetAddress + " Port: " + targetPort);
-            Console.WriteLine(System.Environment.StackTrace);
-            var channel = BootStrapChannel(handlerEventLoopGroupFactory, targetAddress, targetPort);
-
-            Console.WriteLine("Finish Bootstrapping Peer Client");
+            var channel = await BootStrapChannel(handlerEventLoopGroupFactory, targetAddress, targetPort);
             return new ObservableChannel(Observable.Never<IObserverDto<ProtocolMessage>>(), channel);
         }
     }

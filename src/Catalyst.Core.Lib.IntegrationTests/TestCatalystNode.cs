@@ -30,8 +30,6 @@ using Autofac;
 using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces;
 using Catalyst.Common.Interfaces.Cryptography;
-using Catalyst.Common.Interfaces.Modules.Consensus;
-using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Core.Lib.Modules.Dfs;
 using Catalyst.TestUtils;
 using Ipfs.CoreApi;
@@ -67,9 +65,11 @@ namespace Catalyst.Core.Lib.IntegrationTests
             {
                 BuildNode();
             }
-
+                    
             await _catalystNode.RunAsync(cancellationSourceToken);
         }
+
+        public async Task StartSockets() => await _catalystNode.StartSockets();
 
         private IpfsAdapter ConfigureKeyTestDependency()
         {

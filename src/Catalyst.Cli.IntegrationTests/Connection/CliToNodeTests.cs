@@ -28,6 +28,7 @@ using FluentAssertions;
 using Xunit;
 using Xunit.Abstractions;
 using System.IO;
+using System.Threading.Tasks;
 using Catalyst.Common.Interfaces.FileSystem;
 using Catalyst.TestUtils;
 using Catalyst.Core.Lib.IntegrationTests;
@@ -57,9 +58,10 @@ namespace Catalyst.Cli.IntegrationTests.Connection
         }
 
         [Fact]
-        public void CliToNode_Connect_To_Node()
+        public async Task CliToNode_Connect_To_Node()
         {
             _node.BuildNode();
+            await _node.StartSockets();
 
             using (var container = ContainerBuilder.Build())
             {

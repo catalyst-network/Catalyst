@@ -141,6 +141,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P
                 _logger,
                 Substitute.For<IPeerHeartbeatChecker>());
 
+            await _peerService.StartAsync();
             await _serverChannel.SimulateReceivingMessagesAsync(message).ConfigureAwait(false);
         }
 
