@@ -35,14 +35,13 @@ using Xunit.Abstractions;
 
 namespace Catalyst.Node.IntegrationTests.Config
 {
-    public class GlobalConfigTests : ConfigFileBasedTest
+    public class GlobalConfigTests : FileSystemBasedTest
     {
         public static readonly List<object[]> Networks = 
             Enumeration.GetAll<Network>().Select(n => new object[] {n}).ToList();
 
         private IEnumerable<string> _configFilesUsed;
-
-        protected override IEnumerable<string> ConfigFilesUsed => _configFilesUsed;
+        private ContainerProvider _containerProvider;
 
         public GlobalConfigTests(ITestOutputHelper output) : base(output) { }
 
@@ -58,18 +57,29 @@ namespace Catalyst.Node.IntegrationTests.Config
                 }
                .Select(f => Path.Combine(Constants.ConfigSubFolder, f));
 
-            SocketPortHelper.AlterConfigurationToGetUniquePort(ConfigurationRoot, CurrentTestName);
+            _containerProvider = new ContainerProvider(_configFilesUsed, FileSystem, Output);
 
-            ConfigureContainerBuilder();
+            SocketPortHelper.AlterConfigurationToGetUniquePort(_containerProvider.ConfigurationRoot, CurrentTestName);
 
-            ContainerBuilder.RegisterInstance(new TestPasswordReader()).As<IPasswordReader>();
+            _containerProvider.ConfigureContainerBuilder();
 
-            var container = ContainerBuilder.Build();
+            _containerProvider.ContainerBuilder.RegisterInstance(new TestPasswordReader()).As<IPasswordReader>();
 
-            using (var scope = container.BeginLifetimeScope(CurrentTestName + network.Name))
+            using (var scope = _containerProvider.Container.BeginLifetimeScope(CurrentTestName + network.Name))
             {
                 _ = scope.Resolve<ICatalystNode>();
             }
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+            if (!disposing)
+            {
+                return;
+            }
+
+            _containerProvider?.Dispose();
         }
     }
 }
