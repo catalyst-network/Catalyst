@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFramework>netcoreapp2.2</TargetFramework>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -10,11 +10,6 @@
         <AssemblyName>Catalyst.Modules.Lib</AssemblyName>
         <AssemblyOriginatorKeyFile>Catalyst.Modules.Lib.snk</AssemblyOriginatorKeyFile>
     </PropertyGroup>
-    <ItemGroup>
-      <Compile Remove="Consensus\**" />
-      <EmbeddedResource Remove="Consensus\**" />
-      <None Remove="Consensus\**" />
-    </ItemGroup>
     <ItemGroup>
       <ProjectReference Include="..\Catalyst.Common\Catalyst.Common.csproj" />
     </ItemGroup>
