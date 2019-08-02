@@ -90,11 +90,13 @@ namespace Catalyst.Common.IO.EventLoop
             }
 
             _disposing = true;
-            Task[] disposeTasks = _eventLoopGroupList.Select(t =>
-                    t.ShutdownGracefullyAsync(TimeSpan.FromMilliseconds(QuietPeriod), TimeSpan.FromMilliseconds(QuietPeriod * 3)))
-               .ToArray();
 
-            Task.WaitAll(disposeTasks, TimeSpan.FromMilliseconds(QuietPeriod * 4 * disposeTasks.Length));
+            //Task[] disposeTasks = _eventLoopGroupList.Select(t =>
+            //        t.ShutdownGracefullyAsync(TimeSpan.FromMilliseconds(QuietPeriod), TimeSpan.FromMilliseconds(QuietPeriod * 3)))
+            //   .ToArray();
+
+            //Task.WaitAll(disposeTasks, TimeSpan.FromMilliseconds(QuietPeriod * 4 * disposeTasks.Length));
+
             _eventLoopGroupList.Clear();
             HandlerWorkerEventLoopGroup = null;
             SocketIoEventLoopGroup = null;
