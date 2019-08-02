@@ -21,6 +21,11 @@
 
 #endregion
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Modules.Consensus.Deltas;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Repository;
@@ -32,13 +37,8 @@ using Microsoft.Extensions.Primitives;
 using Multiformats.Hash.Algorithms;
 using Nethereum.Hex.HexConvertors.Extensions;
 using Serilog;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using Catalyst.Common.Extensions;
 
-namespace Catalyst.Core.Lib.Modules.Consensus.Deltas
+namespace Catalyst.Modules.Lib.Consensus.Deltas
 {
     public class PoaDeltaProducersProvider : IDeltaProducersProvider
     {
