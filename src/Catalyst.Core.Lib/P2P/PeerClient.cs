@@ -43,10 +43,12 @@ namespace Catalyst.Core.Lib.P2P
                 Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType),
                 eventLoopGroupFactory)
         {
+            System.Console.WriteLine("Initializing Peer Client " + GetHashCode());
             var bindingEndpoint = new IPEndPoint(ipAddress ?? IPAddress.Loopback, IPEndPoint.MinPort);
             Channel = ChannelFactory.BuildChannel(EventLoopGroupFactory,
                 bindingEndpoint.Address,
                 bindingEndpoint.Port).Channel;
+            System.Console.WriteLine("Initialized Peer Client " + GetHashCode());
         }
     }
 }
