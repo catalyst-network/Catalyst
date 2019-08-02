@@ -66,7 +66,8 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
         {
             _settings = PeerSettingsHelper.TestPeerSettings();
             _ownNode = PeerIdentifierHelper.GetPeerIdentifier("ownNode");
-            
+
+            ContainerProvider.ConfigureContainerBuilder(true, true);
             _logger = ContainerProvider.Container.Resolve<ILogger>();
         }
 

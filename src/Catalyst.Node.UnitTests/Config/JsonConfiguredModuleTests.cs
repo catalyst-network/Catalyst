@@ -52,7 +52,7 @@ namespace Catalyst.Node.UnitTests.Config
                 Path.Combine(Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile)
             };
 
-            _containerProvider = new ContainerProvider(configFilesUsed, output: output);
+            _containerProvider = new ContainerProvider(configFilesUsed, FileSystem, Output);
             _containerProvider.ConfigureContainerBuilder();
 
             _containerProvider.ContainerBuilder.RegisterInstance(PeerSettingsHelper.TestPeerSettings())
@@ -78,7 +78,7 @@ namespace Catalyst.Node.UnitTests.Config
 
         protected override void Dispose(bool disposing)
         {
-            _containerProvider.Dispose();
+            _containerProvider?.Dispose();
         }
     }
 }

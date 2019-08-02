@@ -52,7 +52,7 @@ namespace Catalyst.TestUtils
         private IContainer _container;
 
         public ContainerProvider(IEnumerable<string> configFilesUsed,
-            IFileSystem fileSystem = null,
+            IFileSystem fileSystem,
             ITestOutputHelper output = null)
         {
             _configFilesUsed = configFilesUsed;
