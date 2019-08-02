@@ -21,14 +21,12 @@
 
 #endregion
 
-using System.Collections.Generic;
 using System.IO;
 using Autofac;
 using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.TestUtils;
 using FluentAssertions;
-using Microsoft.Extensions.Configuration;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -36,25 +34,19 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P
 {
     public sealed class PeerSettingsTests : ConfigFileBasedTest
     {
-        protected override IEnumerable<string> ConfigFilesUsed { get; }
-
-        public PeerSettingsTests(ITestOutputHelper output) : base(output)
+        public PeerSettingsTests(ITestOutputHelper output) : base(new[]
         {
-            ConfigFilesUsed = new[]
-            {
-                Path.Combine(Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile),
-                Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile),
-                Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Network.Test))
-            };
-        }
+            Path.Combine(Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile),
+            Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile),
+            Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Network.Test))
+        }, output) { }
 
         [Fact]
         private void CanResolveIPeerSettings()
         {
-            ConfigureContainerBuilder();
+            ContainerProvider.ConfigureContainerBuilder();
 
-            using (var container = ContainerBuilder.Build())
-            using (var scope = container.BeginLifetimeScope(CurrentTestName))
+            using (var scope = ContainerProvider.Container.BeginLifetimeScope(CurrentTestName))
             {
                 var peerDiscovery = scope.Resolve<IPeerSettings>();
                 peerDiscovery.Network.Name.Should().Equals("testnet");

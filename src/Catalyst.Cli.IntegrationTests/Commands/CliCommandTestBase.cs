@@ -54,21 +54,16 @@ namespace Catalyst.Cli.IntegrationTests.Commands
         protected INodeRpcClient NodeRpcClient;
         protected ILifetimeScope Scope;
         protected ICatalystCli Shell;
-        private IContainer _container;
 
-        protected override IEnumerable<string> ConfigFilesUsed { get; }
-
-        protected CliCommandTestsBase(ITestOutputHelper output) : base(output)
+        protected CliCommandTestsBase(ITestOutputHelper output) : base(new[]
         {
-            ConfigFilesUsed = new[]
-            {
-                Path.Combine(Constants.ConfigSubFolder, Constants.ShellComponentsJsonConfigFile),
-                Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile),
-                Path.Combine(Constants.ConfigSubFolder, Constants.ShellNodesConfigFile),
-                Path.Combine(Constants.ConfigSubFolder, Constants.ShellConfigFile)
-            };
-
-            ConfigureContainerBuilder();
+            Path.Combine(Constants.ConfigSubFolder, Constants.ShellComponentsJsonConfigFile),
+            Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile),
+            Path.Combine(Constants.ConfigSubFolder, Constants.ShellNodesConfigFile),
+            Path.Combine(Constants.ConfigSubFolder, Constants.ShellConfigFile)
+        }, output)
+        {
+            ContainerProvider.ConfigureContainerBuilder();
 
             ConfigureNodeClient();
 
@@ -79,8 +74,7 @@ namespace Catalyst.Cli.IntegrationTests.Commands
 
         private void CreateResolutionScope()
         {
-            _container = ContainerBuilder.Build();
-            Scope = _container.BeginLifetimeScope(CurrentTestName);
+            Scope = ContainerProvider.Container.BeginLifetimeScope(CurrentTestName);
         }
 
         private void ConnectShell()
@@ -104,7 +98,7 @@ namespace Catalyst.Cli.IntegrationTests.Commands
                .GetClient(Arg.Any<X509Certificate2>(), Arg.Is<IRpcNodeConfig>(c => c.NodeId == ServerNodeName))
                .Returns(NodeRpcClient);
 
-            ContainerBuilder.RegisterInstance(nodeRpcClientFactory).As<INodeRpcClientFactory>();
+            ContainerProvider.ContainerBuilder.RegisterInstance(nodeRpcClientFactory).As<INodeRpcClientFactory>();
         }
 
         protected T AssertSentMessageAndGetMessageContent<T>() where T : IMessage<T>
@@ -123,9 +117,12 @@ namespace Catalyst.Cli.IntegrationTests.Commands
 
         protected override void Dispose(bool disposing)
         {
+            if (disposing)
+            {
+                Scope?.Dispose();
+            }
+
             base.Dispose(disposing);
-            Scope?.Dispose();
-            _container.Dispose();
         }
     }
 }
