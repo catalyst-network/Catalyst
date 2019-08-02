@@ -47,7 +47,7 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc
 
             var rpcSeverSettings = new RpcServerSettings(config);
 
-            rpcSeverSettings.NodeConfig.Should().Be(rpcSection);
+            rpcSeverSettings.NodeConfig.Should().Be(config);
             rpcSeverSettings.PfxFileName.Should().Be(pfxFileName);
             rpcSeverSettings.Port.Should().Be(port);
             rpcSeverSettings.BindAddress.Should().Be(IPAddress.Parse(bindAddress));

@@ -21,22 +21,27 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.IO.EventLoop;
-using Catalyst.Common.Interfaces.IO.Transport.Channels;
-using Catalyst.Common.IO.Transport;
-using DotNetty.Transport.Channels;
-using NSubstitute;
-using Serilog;
+using System.Diagnostics;
+using System.Net;
+using System.Threading.Tasks;
+using Catalyst.Common.IO.Transport.Bootstrapping;
+using Xunit;
 
-namespace Catalyst.Common.UnitTests.Stub
+namespace Catalyst.Common.UnitTests.IO.Transport.Bootstrapping
 {
-    public class TestSocketBase : SocketBase
+    public sealed class BootstrapUnitTests
     {
-        public TestSocketBase(IChannelFactory channelFactory,
-            ILogger logger,
-            IEventLoopGroupFactory eventLoopGroupFactory) : base(channelFactory, logger, eventLoopGroupFactory)
+        [Fact]
+        public async Task BindAsync_Should_Bind_To_NettyBootstrap_BindAsync()
         {
-            Channel = Substitute.For<IChannel>();
+            var ipAddress = IPAddress.Loopback;
+            var port = 9000;
+
+            var bootstrap = new Bootstrap();
+            var nettyBootstrap = (DotNetty.Transport.Bootstrapping.Bootstrap) bootstrap;
+            var channel = await bootstrap.BindAsync(ipAddress, port);
+
+            Debugger.Break();
         }
     }
 }

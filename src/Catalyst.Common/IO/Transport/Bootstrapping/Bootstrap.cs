@@ -32,7 +32,7 @@ using Polly.Retry;
 
 namespace Catalyst.Common.IO.Transport.Bootstrapping
 {
-    internal sealed class Bootstrap
+    public sealed class Bootstrap
         : DotNetty.Transport.Bootstrapping.Bootstrap,
             IServerBootstrap
     {
