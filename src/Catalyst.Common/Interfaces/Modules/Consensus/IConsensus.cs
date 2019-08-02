@@ -21,7 +21,6 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.Modules.Consensus.Cycle;
 using Catalyst.Common.Interfaces.Modules.Consensus.Deltas;
 
 namespace Catalyst.Common.Interfaces.Modules.Consensus
@@ -36,8 +35,5 @@ namespace Catalyst.Common.Interfaces.Modules.Consensus
 
         /// <see cref="IDeltaHashProvider"/>
         IDeltaHashProvider DeltaHashProvider { get; }
-
-        /// <see cref="ICycleEventsProvider"/>
-        ICycleEventsProvider CycleEventsProvider { get; }
     }
 }

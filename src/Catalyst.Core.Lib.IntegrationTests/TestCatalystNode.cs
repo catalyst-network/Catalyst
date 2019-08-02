@@ -29,7 +29,6 @@ using System.Threading.Tasks;
 using Autofac;
 using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces;
-using Catalyst.Common.Interfaces.Modules.Consensus;
 using Catalyst.TestUtils;
 using Xunit.Abstractions;
 
@@ -43,8 +42,6 @@ namespace Catalyst.Core.Lib.IntegrationTests
         private ICatalystNode _catalystNode;
 
         protected override IEnumerable<string> ConfigFilesUsed { get; }
-
-        public IConsensus Consensus => _catalystNode.Consensus;
 
         public TestCatalystNode(string name, ITestOutputHelper output) : base(output)
         {
@@ -67,13 +64,9 @@ namespace Catalyst.Core.Lib.IntegrationTests
             await _catalystNode.RunAsync(cancellationSourceToken);
         }
 
-        protected virtual void OverrideContainerBuilderRegistrations() { }
-
         public void BuildNode()
         {
             ConfigureContainerBuilder();
-
-            OverrideContainerBuilderRegistrations();
 
             _container = ContainerBuilder.Build();
 

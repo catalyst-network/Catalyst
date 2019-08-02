@@ -84,7 +84,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P
 
             _logger = Substitute.For<ILogger>();
 
-            ConfigureContainerBuilder();
+            ConfigureContainerBuilder(true, true);
             
             var keyRegistry = TestKeyRegistry.MockKeyRegistry();
             ContainerBuilder.RegisterInstance(keyRegistry).As<IKeyRegistry>();
