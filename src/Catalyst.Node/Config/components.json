@@ -288,14 +288,6 @@
             }
         },
         {
-            "type": "Catalyst.Core.Lib.P2P.PeerClient",
-            "services": [
-                {
-                    "type": "Catalyst.Common.Interfaces.P2P.IPeerClient, Catalyst.Common"
-                }
-            ]
-        },
-        {
             "type": "Catalyst.Common.Cryptography.CertificateStore, Catalyst.Common",
             "services": [
                 {
