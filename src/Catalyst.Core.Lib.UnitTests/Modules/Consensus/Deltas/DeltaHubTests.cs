@@ -201,7 +201,7 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Consensus.Deltas
         {
             public BadDeltas()
             {
-                var noPreviousHash = DeltaHelper.GetDelta(previousDeltaHash: new byte[0]);
+                var noPreviousHash = new Delta {PreviousDeltaDfsHash = (new byte[0]).ToByteString()};
                 var noMerkleRoot = DeltaHelper.GetDelta(merkleRoot: new byte[0]);
                 
                 AddRow(noMerkleRoot, typeof(InvalidDataException));

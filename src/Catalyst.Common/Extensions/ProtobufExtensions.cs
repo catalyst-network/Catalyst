@@ -34,6 +34,7 @@ using Catalyst.Protocol;
 using Catalyst.Protocol.Common;
 using Dawn;
 using Google.Protobuf;
+using Multiformats.Base;
 using Multiformats.Hash;
 using Nethereum.RLP;
 
@@ -86,14 +87,19 @@ namespace Catalyst.Common.Extensions
             return guid.ToByteArray().ToByteString();
         }
 
-        public static Multihash ToMultihash(this ByteString byteString)
+        public static Multihash AsMultihash(this ByteString byteString)
         {
             return Multihash.Decode(byteString.ToByteArray());
         }
 
-        public static string ToMultihashString(this ByteString byteString)
+        public static string AsMultihashString(this ByteString byteString)
         {
-            return ToMultihash(byteString).ToString();
+            return AsMultihash(byteString).ToString();
+        }
+
+        public static string AsMultihashBase64UrlString(this ByteString byteString)
+        {
+            return AsMultihash(byteString).AsBase64UrlString();
         }
 
         public static ByteString PublicKeyToProtobuf(this string publicKey)

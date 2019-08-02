@@ -27,7 +27,7 @@ using System.Linq;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Repository;
 using Catalyst.Common.Util;
-using Catalyst.Core.Lib.Modules.Consensus.Deltas;
+using Catalyst.Modules.Lib.Consensus.Deltas;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Google.Protobuf;
@@ -39,7 +39,7 @@ using Serilog;
 using Xunit;
 using Peer = Catalyst.Common.P2P.Peer;
 
-namespace Catalyst.Core.Lib.UnitTests.Modules.Consensus.Deltas
+namespace Catalyst.Modules.Lib.UnitTests.Consensus.Deltas
 {
     public class PoaDeltaProducersProviderTests
     {

@@ -93,13 +93,13 @@ namespace Catalyst.TestUtils
 
             ConfigureLogging(writeLogsToTestOutput, writeLogsToFile);
         }
-        
+
         private void ConfigureLogging(bool writeLogsToTestOutput, bool writeLogsToFile)
         {
             var loggerConfiguration = new LoggerConfiguration()
                .ReadFrom.Configuration(ConfigurationRoot).MinimumLevel.Verbose()
                .Enrich.WithThreadId();
-            
+
             if (writeLogsToTestOutput)
             {
                 loggerConfiguration = loggerConfiguration.WriteTo.TestOutput(Output, LogEventLevel, LogOutputTemplate);

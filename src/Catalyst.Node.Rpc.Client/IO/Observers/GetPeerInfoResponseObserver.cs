@@ -25,28 +25,27 @@ using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.IO.Observers;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Protocol.Rpc.Node;
-using Dawn;
 using DotNetty.Transport.Channels;
-using ILogger = Serilog.ILogger;
+using Serilog;
 
 namespace Catalyst.Node.Rpc.Client.IO.Observers
 {
     /// <summary>
-    /// Handles the Peer reputation response
+    ///     Handles the Peer reputation response
     /// </summary>
     /// <seealso cref="IRpcResponseObserver" />
     public sealed class GetPeerInfoResponseObserver
         : RpcResponseObserver<GetPeerInfoResponse>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="PeerReputationResponseObserver"/> class.
+        ///     Initializes a new instance of the <see cref="PeerReputationResponseObserver" /> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
         public GetPeerInfoResponseObserver(ILogger logger)
             : base(logger) { }
 
         /// <summary>
-        /// Handle the response for GetPeerInfo
+        ///     Handle the response for GetPeerInfo
         /// </summary>
         /// <param name="getPeerInfoResponse">The response</param>
         /// <param name="channelHandlerContext">The channel handler context</param>
@@ -55,11 +54,6 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
         protected override void HandleResponse(GetPeerInfoResponse getPeerInfoResponse,
             IChannelHandlerContext channelHandlerContext,
             IPeerIdentifier senderPeerIdentifier,
-            ICorrelationId correlationId)
-        {
-            Guard.Argument(getPeerInfoResponse, nameof(getPeerInfoResponse)).NotNull();
-            Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
-            Guard.Argument(senderPeerIdentifier, nameof(senderPeerIdentifier)).NotNull();
-        }
+            ICorrelationId correlationId) { }
     }
 }
