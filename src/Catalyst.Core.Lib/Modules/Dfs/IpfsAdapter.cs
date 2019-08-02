@@ -64,27 +64,23 @@ namespace Catalyst.Core.Lib.Modules.Dfs
             IFileSystem fileSystem,
             ILogger logger,
             string swarmKey = "07a8e9d0c43400927ab274b7fa443596b71e609bacae47bd958e5cd9f59d6ca3",
-            IEnumerable<string> seedServers = null)
+            IEnumerable<MultiAddress> seedServers = null)
         {
-            if (seedServers == null || seedServers.Count().Equals(0))
+            if (seedServers == null || seedServers.Count() == 0)
             {
                 seedServers = new[]
                 {
-                    "catalystnetwork.co",
-                    "catalystnetwork.io",
-                    "catalystnetwork.info",
-                    "catalystnet.org",
-                    "cryptowallet.io",
-                    "catalystwallet.io",
-                    "catalystnet.io",
-                    "catalystnet.co.uk"
+                    new MultiAddress("/ip4/165.22.209.154/tcp/4001/ipfs/18n3naE9kBZoVvgYMV6saMZdzVq4jUMZsJKddJPrwWjkcwtf23ZcGFW2xUCmSE29ABRs"),
+                    new MultiAddress("/ip4/165.22.226.50/tcp/4001/ipfs/18n3naE9kBZoVvgYMV6saMZe2jBdLcqbqE6qLfApXJLPr855vycKygWXnRsMVXuW8o1E"),
+                    new MultiAddress("/ip4/167.71.129.154/tcp/4001/ipfs/18n3naE9kBZoVvgYMV6saMZe79QPeKgXsvTvVTPV732TnSya3MqQ5YUMcGHZFxW1VAEC"),
+                    new MultiAddress("/ip4/167.71.79.54/tcp/4001/ipfs/18n3naE9kBZoVvgYMV6saMZe4BowwZZyjRazPAMd5VhWBfvM88Qcyy3viWGQ8fzEhcvc"),
+                    new MultiAddress("/ip4/167.71.79.77/tcp/4001/ipfs/18n3naE9kBZoVvgYMV6saMZe64FqVyvgWoLYBktgShFe6oEYeDWox8o2WhA8brQu5dBA"),
+                    new MultiAddress("/ip4/165.22.175.71/tcp/4001/ipfs/18n3naE9kBZoVvgYMV6saMZdwHHKV44GJfKE9ecyRXHcXY4yNtEExgPSvvwsDtvZspZj"),
+                    new MultiAddress("/ip4/165.22.234.49/tcp/4001/ipfs/18n3naE9kBZoVvgYMV6saMZdxSv6GpHsHAVYb51xvH3y4xvGVztM1h1GEsUjEzqc8Wh4"),
+                    new MultiAddress("/ip4/167.71.134.31/tcp/4001/ipfs/18n3naE9kBZoVvgYMV6saMZe4SkF2tXtZbBMUSsmbosM5SAJaU3oxUAbReFDBaKeHqR3")
                 };
             }
             
-            Guard.Argument(seedServers, nameof(seedServers)).NotNull()
-               .Require(p => p != null && p.ToList().Count > 0,
-                    p => $"{nameof(seedServers)} needs to specify at least one seed server.");
-
             _logger = logger;
 
             // The passphrase is used to access the private keys.
@@ -98,10 +94,7 @@ namespace Catalyst.Core.Lib.Modules.Dfs
                 Constants.DfsDataSubDir);
 
             // The seed nodes for the catalyst network.
-            _ipfs.Options.Discovery.BootstrapPeers = seedServers
-               .Select(s => $"/dns/{s}/tcp/4001")
-               .Select(ma => new MultiAddress(ma))
-               .ToArray();
+            _ipfs.Options.Discovery.BootstrapPeers = seedServers;
 
             // Do not use the public IPFS network, use a private network
             // of catalyst only nodes.

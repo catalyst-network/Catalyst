@@ -22,9 +22,9 @@
         <PackageReference Include="DotNetty.Codecs.Protobuf" Version="0.6.0" />
         <PackageReference Include="DotNetty.Common" Version="0.6.0" />
         <PackageReference Include="DotNetty.Handlers" Version="0.6.0" />
-        <PackageReference Include="Ipfs.Core" Version="0.52.1" />
-        <PackageReference Include="Ipfs.Engine" Version="0.11.1" />
-        <PackageReference Include="Ipfs.HttpGateway" Version="0.3.0" />
+        <PackageReference Include="Ipfs.Core" Version="0.52.2" />
+        <PackageReference Include="Ipfs.Engine" Version="0.11.3" />
+        <PackageReference Include="Ipfs.HttpGateway" Version="0.4.0" />
         <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="2.2.0" />
         <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.2.0" />
         <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="2.2.0" />
