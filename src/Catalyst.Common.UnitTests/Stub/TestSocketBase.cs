@@ -22,27 +22,16 @@
 #endregion
 
 using Catalyst.Common.Interfaces.IO.EventLoop;
-using Catalyst.Common.Interfaces.IO.Transport;
 using Catalyst.Common.Interfaces.IO.Transport.Channels;
+using Catalyst.Common.IO.Transport;
 using Serilog;
 
-namespace Catalyst.Common.IO.Transport
+namespace Catalyst.Common.UnitTests.Stub
 {
-    public class TcpServer : SocketBase, ITcpServer
+    public class TestSocketBase : SocketBase
     {
-        protected TcpServer(ITcpServerChannelFactory tcpChannelFactory,
+        public TestSocketBase(IChannelFactory channelFactory,
             ILogger logger,
-            IEventLoopGroupFactory eventLoopGroupFactory)
-            : base(tcpChannelFactory, logger, eventLoopGroupFactory) { }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (!disposing)
-            {
-                return;
-            }
-
-            base.Dispose(true);
-        }
+            IEventLoopGroupFactory eventLoopGroupFactory) : base(channelFactory, logger, eventLoopGroupFactory) { }
     }
 }
