@@ -88,10 +88,10 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P
 
             ContainerBuilder.RegisterInstance(keyRegistry).As<IKeyRegistry>();
             ContainerBuilder.RegisterType<KeySigner>().SingleInstance();
-            ContainerBuilder.Register(async c =>
+            ContainerBuilder.Register(c =>
                 {
                     var peerClient = c.Resolve<IPeerClient>();
-                    await peerClient.StartAsync();
+                    peerClient.StartAsync().ConfigureAwait(false).GetAwaiter().GetResult();
                     return new PeerChallenger(logger, peerClient, sender, 5);
                 })
                .As<IPeerChallenger>().SingleInstance();
