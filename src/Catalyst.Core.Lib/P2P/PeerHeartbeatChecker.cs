@@ -58,7 +58,6 @@ namespace Catalyst.Core.Lib.P2P
         {
             _subscription = Observable
                .Interval(_checkHeartbeatInterval)
-               .SubscribeOn(NewThreadScheduler.Default)
                .StartWith(-1L)
                .Subscribe(interval => CheckHeartbeat());
         }
