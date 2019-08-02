@@ -102,7 +102,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Transport.Channels
             int targetPort,
             X509Certificate2 certificate = null)
         {
-            Console.WriteLine("Bootstrapping Peer Client");
+            Console.WriteLine("Bootstrapping Peer Client to " + targetAddress + " Port: " + targetPort);
             var channel = BootStrapChannel(handlerEventLoopGroupFactory, targetAddress, targetPort);
 
             Console.WriteLine("Finish Bootstrapping Peer Client");
