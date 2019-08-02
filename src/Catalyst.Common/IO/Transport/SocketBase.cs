@@ -72,13 +72,13 @@ namespace Catalyst.Common.IO.Transport
 
             try
             {
-                Channel?.Flush();
-                var closeChannelTask = Channel?.CloseAsync();
+                //Channel?.Flush();
+                //var closeChannelTask = Channel?.CloseAsync();
 
-                Task.WaitAll(new[] {closeChannelTask}.Where(t => t != null).ToArray(),
-                    quietPeriod * 2);
+                //Task.WaitAll(new[] {closeChannelTask}.Where(t => t != null).ToArray(),
+                //    quietPeriod * 2);
 
-                EventLoopGroupFactory.Dispose();
+                //EventLoopGroupFactory.Dispose();
             }
             catch (Exception e)
             {
