@@ -29,12 +29,7 @@ using System.Threading.Tasks;
 using Autofac;
 using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces;
-using Catalyst.Common.Interfaces.Cryptography;
-using Catalyst.Core.Lib.Modules.Dfs;
 using Catalyst.TestUtils;
-using Ipfs.CoreApi;
-using NSubstitute;
-using Serilog;
 using Xunit.Abstractions;
 
 namespace Catalyst.Core.Lib.IntegrationTests
@@ -71,21 +66,9 @@ namespace Catalyst.Core.Lib.IntegrationTests
 
         public async Task StartSockets() => await _catalystNode.StartSockets();
 
-        private IpfsAdapter ConfigureKeyTestDependency()
-        {
-            var passwordReader = Substitute.For<IPasswordReader>();
-            passwordReader.ReadSecurePasswordAndAddToRegistry(Arg.Any<PasswordRegistryKey>(), Arg.Any<string>())
-               .ReturnsForAnyArgs(TestPasswordReader.BuildSecureStringPassword("trendy"));
-            var logger = Substitute.For<ILogger>();
-            return new IpfsAdapter(passwordReader, FileSystem, logger);
-        }
-
         public void BuildNode()
         {
             ConfigureContainerBuilder();
-
-            var ipfs = ConfigureKeyTestDependency();
-            ContainerBuilder.RegisterInstance(ipfs).As<ICoreApi>();
 
             _container = ContainerBuilder.Build();
 

@@ -37,7 +37,6 @@ using Catalyst.Protocol.Transaction;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Google.Protobuf;
-using Multiformats.Hash;
 using Multiformats.Hash.Algorithms;
 using Nethereum.Hex.HexConvertors.Extensions;
 using NSubstitute;
