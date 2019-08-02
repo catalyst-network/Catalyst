@@ -74,13 +74,9 @@ namespace Catalyst.Core.Lib.IntegrationTests
             await _catalystNode.RunAsync(cancellationSourceToken);
         }
 
-        protected virtual void OverrideContainerBuilderRegistrations() { }
-
         public void BuildNode()
         {
             _configProvider.ConfigureContainerBuilder();
-
-            OverrideContainerBuilderRegistrations();
 
             _scope = _configProvider.Container.BeginLifetimeScope(CurrentTestName);
             _catalystNode = _scope.Resolve<ICatalystNode>();
@@ -89,8 +85,9 @@ namespace Catalyst.Core.Lib.IntegrationTests
         protected override void Dispose(bool disposing)
         {
             base.Dispose(disposing);
-            _configProvider.Dispose();
-            _scope.Dispose();
+            _scope?.Dispose();
+            _configProvider?.Dispose();
+
         }
     }
 }
