@@ -13,7 +13,6 @@
     </PropertyGroup>
     <Import Project="../Common.IntegrationTests.props" />
     <ItemGroup>
-        <ProjectReference Include="..\Catalyst.Core.Lib.IntegrationTests\Catalyst.Core.Lib.IntegrationTests.csproj" />
         <ProjectReference Include="..\Catalyst.Modules.Lib\Catalyst.Modules.Lib.csproj" />
         <ProjectReference Include="..\Catalyst.TestUtils\Catalyst.TestUtils.csproj" />
     </ItemGroup>

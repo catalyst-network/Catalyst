@@ -48,9 +48,7 @@ namespace Catalyst.Core.Lib.IntegrationTests
             Constants.SerilogJsonConfigFile
         }.Select(f => Path.Combine(Constants.ConfigSubFolder, f));
 
-        private ContainerProvider _configProvider;
-
-        public IConsensus Consensus => _catalystNode.Consensus;
+        private readonly ContainerProvider _configProvider;
 
         public TestCatalystNode(string name, ITestOutputHelper output) 
             : base(new[]
@@ -85,9 +83,13 @@ namespace Catalyst.Core.Lib.IntegrationTests
         protected override void Dispose(bool disposing)
         {
             base.Dispose(disposing);
+            if (!disposing)
+            {
+                return;
+            }
+
             _scope?.Dispose();
             _configProvider?.Dispose();
-
         }
     }
 }
