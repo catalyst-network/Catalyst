@@ -23,11 +23,12 @@
 
 using Catalyst.Common.Interfaces.IO.Transport;
 using System;
+using Google.Protobuf;
 
 namespace Catalyst.Common.Interfaces.Rpc
 {
     public interface INodeRpcClient : ISocketClient
     {
-        void SubscribeToResponse<T>(Action<T> onNext);
+        IDisposable SubscribeToResponse<T>(Action<T> onNext) where T : IMessage<T>;
     }
 }

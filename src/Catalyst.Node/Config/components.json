@@ -183,7 +183,7 @@
         },
 
         {
-            "type": "Catalyst.Core.Lib.Rpc.Authentication.NoAuthenticationStrategy",
+            "type": "Catalyst.Core.Lib.Rpc.Authentication.RepositoryAuthenticationStrategy",
             "services": [
                 {
                     "type": "Catalyst.Common.Interfaces.Rpc.Authentication.IAuthenticationStrategy, Catalyst.Common"
@@ -293,24 +293,6 @@
                     "type": "Catalyst.Common.Interfaces.Cryptography.IDeterministicRandom, Catalyst.Common"
                 }
             ]
-        },
-        {
-            "type": "Catalyst.Common.Registry.PasswordRegistry, Catalyst.Common",
-            "services": [
-                {
-                    "type": "Catalyst.Common.Interfaces.Registry.IPasswordRegistry, Catalyst.Common"
-                }
-            ],
-            "instanceScope": "singleinstance"
-        },
-        {
-            "type": "Catalyst.Common.Cryptography.ConsolePasswordReader, Catalyst.Common",
-            "services": [
-                {
-                    "type": "Catalyst.Common.Interfaces.Cryptography.IPasswordReader, Catalyst.Common"
-                }
-            ],
-            "instanceScope": "singleinstance"
         },
         // WHY USE CLI BASED CLASS AND NOT IN COMMON???
         {
