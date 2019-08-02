@@ -58,12 +58,12 @@ namespace Catalyst.Core.Lib.IntegrationTests.Config
         }
     }
 
-    public sealed class ConfigurableRepoIntegrationTests : ConfigFileBasedTest
+    public sealed class ConfigurableRepoIntegrationTests : FileSystemBasedTest
     {
         public ConfigurableRepoIntegrationTests(ITestOutputHelper output) : base(output) { }
 
         private IEnumerable<string> _configFilesUsed;
-        protected override IEnumerable<string> ConfigFilesUsed => _configFilesUsed;
+        private ContainerProvider _containerProvider;
 
         private async Task ModuleCanSaveAndRetrieveValuesFromRepository(FileInfo moduleFile)
         {
@@ -75,12 +75,12 @@ namespace Catalyst.Core.Lib.IntegrationTests.Config
                 Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Network.Dev))
             };
 
-            ConfigureContainerBuilder();
+            _containerProvider = new ContainerProvider(_configFilesUsed, FileSystem, Output);
+            _containerProvider.ConfigureContainerBuilder();
 
-            var container = ContainerBuilder.Build();
-            using (container.BeginLifetimeScope())
+            using (var scope = _containerProvider.Container.BeginLifetimeScope(CurrentTestName + moduleFile))
             {
-                var component = container.Resolve<IComponentWithRepository>();
+                var component = scope.Resolve<IComponentWithRepository>();
 
                 var guid = CorrelationId.GenerateCorrelationId().ToString();
                 var storedItem = new StoredItem {Name = guid, Value = 10};
@@ -134,6 +134,17 @@ namespace Catalyst.Core.Lib.IntegrationTests.Config
             var mempoolConfigFile = "moduleWithRepository.xml.json";
             var resultFile = await PointXmlConfigToLocalTestFolder(mempoolConfigFile);
             await ModuleCanSaveAndRetrieveValuesFromRepository(new FileInfo(resultFile));
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+            if (!disposing)
+            {
+                return;
+            }
+
+            _containerProvider?.Dispose();
         }
     }
 }
