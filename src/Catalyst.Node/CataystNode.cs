@@ -37,8 +37,7 @@ using Serilog;
 
 namespace Catalyst.Node
 {
-    public class CatalystNode
-        : ICatalystNode
+    public class CatalystNode : ICatalystNode
     {
         private readonly IConsensus _consensus;
         private readonly IContract _contract;
@@ -49,7 +48,7 @@ namespace Catalyst.Node
         private readonly IMempool _mempool;
         private readonly IPeerService _peer;
         private readonly INodeRpcServer _nodeRpcServer;
-
+        
         public CatalystNode(IKeySigner keySigner,
             IPeerService peer,
             IConsensus consensus,
@@ -60,8 +59,8 @@ namespace Catalyst.Node
             IMempool mempool = null,
             IContract contract = null)
         {
-            _peer = peer;
             _consensus = consensus;
+            _peer = peer;
             _dfs = dfs;
             _ledger = ledger;
             _keySigner = keySigner;

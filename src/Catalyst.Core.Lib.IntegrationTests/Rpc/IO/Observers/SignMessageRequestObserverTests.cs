@@ -53,25 +53,19 @@ namespace Catalyst.Core.Lib.IntegrationTests.Rpc.IO.Observers
         private readonly IKeySigner _keySigner;
         private readonly IChannelHandlerContext _fakeContext;
 
-        protected override IEnumerable<string> ConfigFilesUsed { get; }
-
-        public SignMessageRequestObserverTests(ITestOutputHelper output) : base(output)
+        public SignMessageRequestObserverTests(ITestOutputHelper output) : base(new[]
         {
-            ConfigFilesUsed = new[]
-            {
-                Path.Combine(Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile),
-                Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile),
-                Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Network.Dev)),
-                Path.Combine(Constants.ConfigSubFolder, Constants.ShellNodesConfigFile),
-            };
+            Path.Combine(Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile),
+            Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile),
+            Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Network.Dev)),
+            Path.Combine(Constants.ConfigSubFolder, Constants.ShellNodesConfigFile),
+        }, output)
+        {
+            ContainerProvider.ConfigureContainerBuilder();
+            SocketPortHelper.AlterConfigurationToGetUniquePort(ContainerProvider.ConfigurationRoot, CurrentTestName);
 
-            SocketPortHelper.AlterConfigurationToGetUniquePort(ConfigurationRoot, CurrentTestName);
-
-            ConfigureContainerBuilder();
-
-            var container = ContainerBuilder.Build();
-            _scope = container.BeginLifetimeScope(CurrentTestName);
-            _keySigner = container.Resolve<IKeySigner>();
+            _scope = ContainerProvider.Container.BeginLifetimeScope(CurrentTestName);
+            _keySigner = ContainerProvider.Container.Resolve<IKeySigner>();
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
             var fakeChannel = Substitute.For<IChannel>();
