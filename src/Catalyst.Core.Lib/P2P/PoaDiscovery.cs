@@ -71,11 +71,11 @@ namespace Catalyst.Core.Lib.P2P
         public Task DiscoveryAsync()
         {
             var copiedPath = CopyPoaFile();
-            var poaPeers = JsonConvert.DeserializeObject<List<string>>(File.ReadAllText(copiedPath));
+            var poaPeers = JsonConvert.DeserializeObject<List<PoaPeer>>(File.ReadAllText(copiedPath));
 
             foreach (var pid in poaPeers)
             {
-                var peerIdentifier = PeerIdentifier.ParseHexPeerIdentifier(pid.Split(PeerIdentifier.PidDelimiter));
+                var peerIdentifier = pid.ToPeerIdentifier();
                 var poaPeer = new Peer {PeerIdentifier = peerIdentifier};
 
                 _logger.Information(
