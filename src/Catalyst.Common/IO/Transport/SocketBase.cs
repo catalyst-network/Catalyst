@@ -36,8 +36,9 @@ namespace Catalyst.Common.IO.Transport
     {
         protected readonly IChannelFactory ChannelFactory;
         private readonly ILogger _logger;
+        private bool _disposing;
         protected readonly IEventLoopGroupFactory EventLoopGroupFactory;
-
+        
         public IChannel Channel { get; protected set; }
 
         protected SocketBase(IChannelFactory channelFactory, ILogger logger, IEventLoopGroupFactory eventLoopGroupFactory)
@@ -54,6 +55,12 @@ namespace Catalyst.Common.IO.Transport
 
         protected virtual void Dispose(bool disposing)
         {
+            if (_disposing)
+            {
+                return;
+            }
+
+            _disposing = true;
             if (!disposing)
             {
                 return;
