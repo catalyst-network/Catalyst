@@ -51,6 +51,7 @@ namespace Catalyst.Common.IO.Transport.Channels
                .Handler(new LoggingHandler(LogLevel.DEBUG))
                .Handler(channelHandler)
                .BindAsync(address, port)
+               .ConfigureAwait(false)
                .GetAwaiter()
                .GetResult();
         }
