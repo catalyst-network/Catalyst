@@ -34,7 +34,7 @@
             ]
         },
         {
-            "type": "Catalyst.Core.Lib.Modules.Consensus.Deltas.PoaDeltaProducersProvider",
+            "type": "Catalyst.Modules.Lib.Consensus.Deltas.PoaDeltaProducersProvider, Catalyst.Modules.Lib",
             "services": [
                 {
                     "type": "Catalyst.Common.Interfaces.Modules.Consensus.Deltas.IDeltaProducersProvider, Catalyst.Common"
@@ -120,6 +120,30 @@
             "parameters": {
                 "timeToLiveInMs": 600000 //10mn
             }
+        },
+        {
+            "type": "Catalyst.Core.Lib.Modules.Consensus.Cycle.CycleEventsProvider",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.Modules.Consensus.Cycle.ICycleEventsProvider, Catalyst.Common"
+                }
+            ]
+        },
+        {
+            "type": "Catalyst.Core.Lib.Modules.Consensus.Cycle.CycleSchedulerProvider",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.Modules.Consensus.Cycle.ICycleSchedulerProvider, Catalyst.Common"
+                }
+            ]
+        },
+        {
+            "type": "Catalyst.Core.Lib.Modules.Consensus.DateTimeProvider",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.Modules.Consensus.IDateTimeProvider, Catalyst.Common"
+                }
+            ]
         }
     ]
 }

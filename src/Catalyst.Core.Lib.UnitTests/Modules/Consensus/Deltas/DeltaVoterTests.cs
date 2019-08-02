@@ -36,7 +36,7 @@ using Catalyst.Protocol.Deltas;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Microsoft.Extensions.Caching.Memory;
-using Nethereum.Hex.HexConvertors.Extensions;
+using Multiformats.Hash.Algorithms;
 using NSubstitute;
 using Serilog;
 using Xunit;
@@ -46,7 +46,7 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Consensus.Deltas
     public sealed class DeltaVoterTests : IDisposable
     {
         public static readonly List<object[]> DodgyCandidates;
-
+        private readonly IMultihashAlgorithm _multihashAlgorithm = new BLAKE2B_128();
         private readonly IMemoryCache _cache;
         private readonly IDeltaProducersProvider _producersProvider;
         private DeltaVoter _voter;
@@ -90,7 +90,7 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Consensus.Deltas
         {
             _cache = Substitute.For<IMemoryCache>();
 
-            _previousDeltaHash = ByteUtil.GenerateRandomByteArray(32);
+            _previousDeltaHash = ByteUtil.GenerateRandomByteArray(32).ComputeMultihash(_multihashAlgorithm);
 
             _producerIds = "1234"
                .Select((c, i) => PeerIdentifierHelper.GetPeerIdentifier(c.ToString(), clientVersion: i))
@@ -142,18 +142,18 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Consensus.Deltas
                 _previousDeltaHash,
                 producerId: _producerIds.First().PeerId);
 
-            var candidateHashAsHex = candidate.Hash.ToByteArray().ToHex();
+            var candidateHashAsString = candidate.Hash.AsMultihashBase64UrlString();
 
             var addedEntry = Substitute.For<ICacheEntry>();
-            _cache.CreateEntry(Arg.Is<string>(s => s.EndsWith(candidateHashAsHex)))
+            _cache.CreateEntry(Arg.Is<string>(s => s.EndsWith(candidateHashAsString)))
                .Returns(addedEntry);
 
             _voter.OnNext(candidate);
 
-            _cache.Received(1).TryGetValue(Arg.Is<string>(s => s.EndsWith(candidateHashAsHex)), out Arg.Any<object>());
+            _cache.Received(1).TryGetValue(Arg.Is<string>(s => s.EndsWith(candidateHashAsString)), out Arg.Any<object>());
 
             _cache.ReceivedWithAnyArgs(2).CreateEntry(Arg.Any<object>());
-            _cache.Received(1).CreateEntry(Arg.Is<string>(s => s.EndsWith(candidateHashAsHex)));
+            _cache.Received(1).CreateEntry(Arg.Is<string>(s => s.EndsWith(candidateHashAsString)));
 
             addedEntry.Value.Should().BeAssignableTo<IScoredCandidateDelta>();
             var scoredCandidateDelta = (IScoredCandidateDelta) addedEntry.Value;
@@ -172,7 +172,7 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Consensus.Deltas
                 previousDeltaHash: _previousDeltaHash,
                 score: initialScore);
 
-            var candidateHashAsHex = cacheCandidate.Candidate.Hash.ToByteArray().ToHex();
+            var candidateHashAsString = cacheCandidate.Candidate.Hash.AsMultihashBase64UrlString();
 
             _cache.TryGetValue(Arg.Any<string>(), out Arg.Any<object>()).Returns(ci =>
             {
@@ -182,7 +182,7 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Consensus.Deltas
 
             _voter.OnNext(cacheCandidate.Candidate);
 
-            _cache.Received(1).TryGetValue(Arg.Is<string>(s => s.EndsWith(candidateHashAsHex)), out Arg.Any<object>());
+            _cache.Received(1).TryGetValue(Arg.Is<string>(s => s.EndsWith(candidateHashAsString)), out Arg.Any<object>());
             _cache.DidNotReceiveWithAnyArgs().CreateEntry(Arg.Any<string>());
 
             cacheCandidate.Score.Should().Be(initialScore + 1);
@@ -307,7 +307,8 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Consensus.Deltas
 
                 AddCandidatesToCacheAndVote(10, 500, realCache);
 
-                var found = _voter.TryGetFavouriteDelta(ByteUtil.GenerateRandomByteArray(32), out var favouriteCandidate);
+                var found = _voter.TryGetFavouriteDelta(ByteUtil.GenerateRandomByteArray(32)
+                   .ComputeMultihash(_multihashAlgorithm), out var favouriteCandidate);
 
                 found.Should().BeFalse();
                 favouriteCandidate.Should().BeNull();
