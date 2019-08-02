@@ -29,19 +29,15 @@ using Catalyst.Common.Config;
 using Catalyst.Common.Enumerator;
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.TestUtils;
-using Microsoft.Extensions.Configuration;
 using Xunit;
 using Xunit.Abstractions;
 
 namespace Catalyst.Cli.IntegrationTests.Config
 {
-    public sealed class GlobalConfigTests : ConfigFileBasedTest
+    public sealed class GlobalConfigTests : FileSystemBasedTest
     {
         public static readonly List<object[]> Networks =
             Enumeration.GetAll<Network>().Select(n => new object[] {n}).ToList();
-
-        private IEnumerable<string> _configFilesUsed;
-        protected override IEnumerable<string> ConfigFilesUsed => _configFilesUsed;
 
         public GlobalConfigTests(ITestOutputHelper output) : base(output) { }
 
@@ -50,7 +46,7 @@ namespace Catalyst.Cli.IntegrationTests.Config
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void Registering_All_Configs_Should_Allow_Resolving_ICatalystCli(Network network)
         {
-            _configFilesUsed = new[]
+            var configFilesUsed = new[]
                 {
                     Constants.NetworkConfigFile(network),
                     Constants.ShellComponentsJsonConfigFile,
@@ -60,13 +56,14 @@ namespace Catalyst.Cli.IntegrationTests.Config
                 }
                .Select(f => Path.Combine(Constants.ConfigSubFolder, f));
 
-            ConfigureContainerBuilder();
-
-            var container = ContainerBuilder.Build();
-
-            using (var scope = container.BeginLifetimeScope(CurrentTestName + network.Name))
+            using (var containerProvider = new ContainerProvider(configFilesUsed, FileSystem, Output))
             {
-                scope.Resolve<ICatalystCli>();
+                containerProvider.ConfigureContainerBuilder();
+
+                using (var scope = containerProvider.Container.BeginLifetimeScope(CurrentTestName + network.Name))
+                {
+                    scope.Resolve<ICatalystCli>();
+                }
             }
         }
     }

@@ -41,17 +41,21 @@ using LedgerService = Catalyst.Core.Lib.Modules.Ledger.Ledger;
 
 namespace Catalyst.Node.UnitTests.Config
 {
-    public sealed class JsonConfiguredModuleTests : ConfigFileBasedTest
+    public sealed class JsonConfiguredModuleTests : FileSystemBasedTest
     {
-        protected override IEnumerable<string> ConfigFilesUsed { get; }
+        private readonly ContainerProvider _containerProvider;
 
         public JsonConfiguredModuleTests(ITestOutputHelper output) : base(output)
         {
-            ConfigFilesUsed = new[] {Path.Combine(Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile)};
+            var configFilesUsed = new[]
+            {
+                Path.Combine(Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile)
+            };
 
-            ConfigureContainerBuilder();
+            _containerProvider = new ContainerProvider(configFilesUsed, output: output);
+            _containerProvider.ConfigureContainerBuilder();
 
-            ContainerBuilder.RegisterInstance(PeerSettingsHelper.TestPeerSettings())
+            _containerProvider.ContainerBuilder.RegisterInstance(PeerSettingsHelper.TestPeerSettings())
                .As<IPeerSettings>();
         }
 
@@ -64,13 +68,17 @@ namespace Catalyst.Node.UnitTests.Config
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         private void ComponentsJsonFile_should_configure_modules(Type interfaceType, Type resolutionType)
         {
-            using (var container = ContainerBuilder.Build())
-            using (var scope = container.BeginLifetimeScope(Guid.NewGuid().ToString()))
+            using (var scope = _containerProvider.Container.BeginLifetimeScope(Guid.NewGuid().ToString()))
             {
                 var resolvedType = scope.Resolve(interfaceType);
                 resolvedType.Should().NotBeNull();
                 resolvedType.Should().BeOfType(resolutionType);
             }
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            _containerProvider.Dispose();
         }
     }
 }

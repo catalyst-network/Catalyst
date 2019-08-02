@@ -58,16 +58,16 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
         private readonly IPeerSettings _settings;
         private readonly IPeerIdentifier _ownNode;
         private readonly ILogger _logger;
-        private readonly IContainer _container;
 
-        public HastingsDiscoveryTests(ITestOutputHelper output) : base(output)
+        public HastingsDiscoveryTests(ITestOutputHelper output) : base(new[]
+        {
+            Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Network.Dev))
+        }, output)
         {
             _settings = PeerSettingsHelper.TestPeerSettings();
             _ownNode = PeerIdentifierHelper.GetPeerIdentifier("ownNode");
             
-            ConfigureContainerBuilder(true, true);
-            _container = ContainerBuilder.Build();
-            _logger = _container.Resolve<ILogger>();
+            _logger = ContainerProvider.Container.Resolve<ILogger>();
         }
 
         [Fact]
@@ -299,14 +299,6 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
                        .Contains(pingDto.Sender);
                 }
             }
-        }
-
-        protected override IEnumerable<string> ConfigFilesUsed => new[] {Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Network.Dev))};
-
-        protected override void Dispose(bool disposing)
-        {
-            base.Dispose(disposing);
-            _container.Dispose();
         }
     }
 }
