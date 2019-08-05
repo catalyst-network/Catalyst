@@ -25,7 +25,6 @@ using System.Text;
 using Catalyst.Common.Extensions;
 using Catalyst.Protocol.Rpc.Node;
 using FluentAssertions;
-using Multiformats.Hash;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -45,7 +44,7 @@ namespace Catalyst.Cli.IntegrationTests.Commands
             result.Should().BeTrue();
 
             var request = AssertSentMessageAndGetMessageContent<GetDeltaRequest>();
-            request.DeltaDfsHash.ToMultihash().Should().Be(hash);
+            request.DeltaDfsHash.AsMultihash().Should().Be(hash);
         }
     }
 }

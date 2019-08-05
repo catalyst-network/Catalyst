@@ -50,6 +50,7 @@
     <ItemGroup>
         <ProjectReference Include="..\Catalyst.Core.Lib.UnitTests\Catalyst.Core.Lib.UnitTests.csproj" />
         <ProjectReference Include="..\Catalyst.Common\Catalyst.Common.csproj" />
+        <ProjectReference Include="..\Catalyst.Modules.Lib\Catalyst.Modules.Lib.csproj" />
         <ProjectReference Include="..\Catalyst.Node.Rpc.Client\Catalyst.Node.Rpc.Client.csproj" />
     </ItemGroup>
     <ItemGroup>

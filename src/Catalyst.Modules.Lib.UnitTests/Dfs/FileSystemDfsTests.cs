@@ -73,9 +73,9 @@ namespace Catalyst.Modules.Lib.UnitTests.Dfs
                 Arg.Any<CancellationToken>());
 
             var utf8Hash = Encoding.UTF8.GetBytes(someGoodUtf8Content)
-               .ToMultihashBase64UrlString(_hashingAlgorithm);
+               .ComputeMultihash(_hashingAlgorithm);
             var uf32Hash = Encoding.UTF32.GetBytes(someGoodUtf8Content)
-               .ToMultihashBase64UrlString(_hashingAlgorithm);
+               .ComputeMultihash(_hashingAlgorithm);
 
             contentHash.Should().Be(utf8Hash);
             contentHash.Should().NotBe(uf32Hash);
@@ -89,7 +89,7 @@ namespace Catalyst.Modules.Lib.UnitTests.Dfs
             var filename = await _dfs.AddTextAsync(someGoodUtf8Content);
 
             var expectedFileName = Encoding.UTF8.GetBytes(someGoodUtf8Content)
-               .ToMultihashBase64UrlString(_hashingAlgorithm);
+               .ComputeMultihash(_hashingAlgorithm);
 
             await _fileSystem.File.Received(1).WriteAllTextAsync(
                 Arg.Is(Path.Combine(_baseFolder, expectedFileName)),
@@ -169,7 +169,7 @@ namespace Catalyst.Modules.Lib.UnitTests.Dfs
                .ReadAllBytesAsync(CancellationToken.None);
 
             var expectedFileName = contentBytes
-               .ToMultihashBase64UrlString(_hashingAlgorithm);
+               .ComputeMultihash(_hashingAlgorithm);
 
             var filename = await _dfs.AddAsync(streamed);
 
