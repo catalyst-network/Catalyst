@@ -40,6 +40,20 @@ namespace Catalyst.Common.UnitTests.IO.Transport
             var eventLoopGroupFactory = Substitute.For<IEventLoopGroupFactory>();
             var testSocketBase = new TestSocketBase(channelFactory, logger, eventLoopGroupFactory);
             testSocketBase.Dispose();
+
+            logger.Received(1).Debug($"Disposing{typeof(TestSocketBase).Name}");
+        }
+
+        [Fact]
+        public void SocketBase_Should_Not_Dispose()
+        {
+            var channelFactory = Substitute.For<ITcpClientChannelFactory>();
+            var logger = Substitute.For<ILogger>();
+            var eventLoopGroupFactory = Substitute.For<IEventLoopGroupFactory>();
+            var testSocketBase = new TestSocketBase(channelFactory, logger, eventLoopGroupFactory);
+            testSocketBase.DisposeProxy(false);
+
+            logger.DidNotReceive().Debug($"Disposing{typeof(TestSocketBase).Name}");
         }
     }
 }
