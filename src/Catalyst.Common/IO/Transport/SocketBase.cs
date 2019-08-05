@@ -57,12 +57,10 @@ namespace Catalyst.Common.IO.Transport
 
         protected virtual void Dispose(bool disposing)
         {
-            if (!disposing || _disposeCounter > 0)
+            if (!disposing || Interlocked.Increment(ref _disposeCounter) > 0)
             {
                 return;
             }
-
-            Interlocked.Increment(ref _disposeCounter);
             
             _logger.Debug($"Disposing{GetType().Name}");
 
