@@ -63,7 +63,8 @@ namespace Catalyst.Common.IO.Transport.Channels
                .Option(ChannelOption.SoBacklog, _backLogValue)
                .Handler(new LoggingHandler(LogLevel.DEBUG))
                .Handler(channelHandler)
-               .ConnectAsync(targetAddress, targetPort);
+               .ConnectAsync(targetAddress, targetPort)
+               .ConfigureAwait(false);
         }
     }
 }

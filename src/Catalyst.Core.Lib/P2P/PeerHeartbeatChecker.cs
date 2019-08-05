@@ -45,7 +45,6 @@ namespace Catalyst.Core.Lib.P2P
 
         public PeerHeartbeatChecker(ILogger logger, IPeerRepository peerRepository, IPeerChallenger peerChallenger, int checkHeartbeatIntervalSeconds, int maxNonResponsiveCounter)
         {
-            Guard.Argument(checkHeartbeatIntervalSeconds, nameof(checkHeartbeatIntervalSeconds)).Require(val => val > maxNonResponsiveCounter);
             _logger = logger;
             _nonResponsivePeerMap = new ConcurrentDictionary<string, int>();
             _peerRepository = peerRepository;

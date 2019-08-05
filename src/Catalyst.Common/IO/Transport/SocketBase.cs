@@ -28,6 +28,7 @@ using DotNetty.Transport.Channels;
 using Serilog;
 using System;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Catalyst.Common.IO.Transport
@@ -36,7 +37,7 @@ namespace Catalyst.Common.IO.Transport
     {
         protected readonly IChannelFactory ChannelFactory;
         private readonly ILogger _logger;
-        private bool _disposing;
+        private int _disposeCounter;
         protected readonly IEventLoopGroupFactory EventLoopGroupFactory;
         public abstract Task StartAsync();
 
@@ -56,17 +57,13 @@ namespace Catalyst.Common.IO.Transport
 
         protected virtual void Dispose(bool disposing)
         {
-            if (_disposing)
+            if (!disposing || _disposeCounter > 0)
             {
                 return;
             }
 
-            _disposing = true;
-            if (!disposing)
-            {
-                return;
-            }
-
+            Interlocked.Increment(ref _disposeCounter);
+            
             _logger.Debug($"Disposing{GetType().Name}");
 
             var quietPeriod = TimeSpan.FromMilliseconds(100);

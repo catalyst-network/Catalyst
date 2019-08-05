@@ -85,8 +85,13 @@ namespace Catalyst.Core.Lib.P2P
                        .ConfigureAwait(false);
                 }
             }
-            catch (Exception)
+            catch (OperationCanceledException)
             {
+                return false;
+            }
+            catch (Exception e)
+            {
+                _logger.Error(e, nameof(ChallengePeerAsync));
                 return false;
             }
 
