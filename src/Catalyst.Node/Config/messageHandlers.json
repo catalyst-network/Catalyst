@@ -136,6 +136,9 @@
             "services": [
                 {
                     "type": "Catalyst.Common.Interfaces.IO.Observers.IP2PMessageObserver, Catalyst.Common"
+                },
+                {
+                    "type": "Catalyst.Common.Interfaces.P2P.IO.IPeerClientObservable, Catalyst.Common"
                 }
             ]
         },
@@ -152,6 +155,9 @@
             "services": [
                 {
                     "type": "Catalyst.Common.Interfaces.IO.Observers.IP2PMessageObserver, Catalyst.Common"
+                },
+                {
+                    "type": "Catalyst.Common.Interfaces.P2P.IO.IPeerClientObservable, Catalyst.Common"
                 }
             ]
         },

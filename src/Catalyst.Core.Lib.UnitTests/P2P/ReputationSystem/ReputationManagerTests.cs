@@ -175,7 +175,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.ReputationSystem
                 reputationManager.ReputationEvent.OnNext(peerReputationChangeEvent1);
                 secondStreamSubject.OnNext(peerReputationChangeEvent2);
 
-                await TaskHelper.WaitForAsync(() => streamObserver.ReceivedCalls().Any(),
+                await TaskHelper.WaitForAsync(() => streamObserver.ReceivedCalls().Count() >= 2,
                     TimeSpan.FromMilliseconds(1000));
                 
                 streamObserver.Received(1).OnNext(Arg.Is<IPeerReputationChange>(r => r.PeerIdentifier.Equals(pid1)));

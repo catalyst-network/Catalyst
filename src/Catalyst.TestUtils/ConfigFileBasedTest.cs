@@ -22,94 +22,33 @@
 #endregion
 
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using Autofac;
-using Autofac.Configuration;
-using AutofacSerilogIntegration;
-using Catalyst.Common.Interfaces.Cryptography;
-using Catalyst.Common.Interfaces.FileSystem;
-using Catalyst.Common.Interfaces.Registry;
-using Microsoft.Extensions.Configuration;
-using Serilog;
-using Serilog.Events;
-using SharpRepository.Ioc.Autofac;
-using SharpRepository.Repository;
+using SharpRepository.Repository.Caching.Hash;
 using Xunit.Abstractions;
 
 namespace Catalyst.TestUtils
 {
     public abstract class ConfigFileBasedTest : FileSystemBasedTest
     {
-        protected ContainerBuilder ContainerBuilder;
-        private IConfigurationRoot _configRoot;
-        protected ConfigFileBasedTest(ITestOutputHelper output) : base(output) { }
+        protected List<string> ConfigFilesUsed { get; }
 
-        protected string LogOutputTemplate { get; set; } =
-            "{Timestamp:HH:mm:ss} [{Level:u3}] ({ThreadId}) {Message} ({SourceContext}){NewLine}{Exception}";
+        protected ContainerProvider ContainerProvider;
 
-        protected LogEventLevel LogEventLevel { get; set; } = LogEventLevel.Verbose;
-
-        protected abstract IEnumerable<string> ConfigFilesUsed { get; }
-
-        protected IConfigurationRoot ConfigurationRoot
+        protected ConfigFileBasedTest(IEnumerable<string> configFilesUsed, ITestOutputHelper output) : base(output)
         {
-            get
-            {
-                if (_configRoot != null)
-                {
-                    return _configRoot;
-                }
-
-                var configBuilder = new ConfigurationBuilder();
-                ConfigFilesUsed.ToList().ForEach(f => configBuilder.AddJsonFile(f));
-
-                _configRoot = configBuilder.Build();
-                return _configRoot;
-            }
+            ConfigFilesUsed = configFilesUsed as List<string> ?? configFilesUsed?.ToList() ?? new List<string>();
+            ContainerProvider = new ContainerProvider(ConfigFilesUsed, FileSystem, Output);
         }
 
-        protected void ConfigureContainerBuilder(bool writeLogsToTestOutput = false,
-            bool writeLogsToFile = false)
+        protected override void Dispose(bool disposing)
         {
-            var configurationModule = new ConfigurationModule(ConfigurationRoot);
-            ContainerBuilder = new ContainerBuilder();
-            ContainerBuilder.RegisterModule(configurationModule);
-            ContainerBuilder.RegisterInstance(ConfigurationRoot).As<IConfigurationRoot>();
-
-            var repoFactory =
-                RepositoryFactory.BuildSharpRepositoryConfiguation(ConfigurationRoot.GetSection("CatalystNodeConfiguration:PersistenceConfiguration"));
-            ContainerBuilder.RegisterSharpRepository(repoFactory);
-
-            var passwordReader = new TestPasswordReader();
-            ContainerBuilder.RegisterInstance(passwordReader).As<IPasswordReader>();
-
-            var certificateStore = new TestCertificateStore();
-            ContainerBuilder.RegisterInstance(certificateStore).As<ICertificateStore>();
-            ContainerBuilder.RegisterInstance(FileSystem).As<IFileSystem>();
-
-            var keyRegistry = TestKeyRegistry.MockKeyRegistry();
-            ContainerBuilder.RegisterInstance(keyRegistry).As<IKeyRegistry>();
-
-            ConfigureLogging(writeLogsToTestOutput, writeLogsToFile);
-        }
-        
-        private void ConfigureLogging(bool writeLogsToTestOutput, bool writeLogsToFile)
-        {
-            var loggerConfiguration = new LoggerConfiguration().ReadFrom.Configuration(ConfigurationRoot).MinimumLevel.Verbose();
-            
-            if (writeLogsToTestOutput)
+            base.Dispose(disposing);
+            if (!disposing)
             {
-                loggerConfiguration.WriteTo.TestOutput(Output, LogEventLevel, LogOutputTemplate);
+                return;
             }
 
-            if (writeLogsToFile)
-            {
-                loggerConfiguration.WriteTo.File(Path.Combine(FileSystem.GetCatalystDataDir().FullName, "Catalyst.Node.log"), LogEventLevel,
-                    LogOutputTemplate);
-            }
-
-            ContainerBuilder.RegisterLogger(loggerConfiguration.CreateLogger());
+            ContainerProvider?.Dispose();
         }
     }
 }

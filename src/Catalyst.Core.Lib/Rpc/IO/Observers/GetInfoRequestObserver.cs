@@ -39,10 +39,10 @@ namespace Catalyst.Core.Lib.Rpc.IO.Observers
         : RequestObserverBase<GetInfoRequest, GetInfoResponse>,
             IRpcRequestObserver
     {
-        private readonly IRpcServerSettings _config;
+        private readonly IConfigurationRoot _config;
 
         public GetInfoRequestObserver(IPeerIdentifier peerIdentifier,
-            IRpcServerSettings config,
+            IConfigurationRoot config,
             ILogger logger) : base(logger, peerIdentifier)
         {
             _config = config;
@@ -60,8 +60,9 @@ namespace Catalyst.Core.Lib.Rpc.IO.Observers
 
             Logger.Debug("message content is {0}", getInfoRequest);
 
+            // @TODO not sure why we serialise this server side?
             var serializedList = JsonConvert.SerializeObject(
-                _config.NodeConfig.GetSection("CatalystNodeConfiguration").AsEnumerable(),
+                _config.GetSection("CatalystNodeConfiguration").AsEnumerable(),
                 Formatting.Indented);
 
             return new GetInfoResponse

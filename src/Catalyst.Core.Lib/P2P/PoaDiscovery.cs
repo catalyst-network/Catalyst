@@ -31,13 +31,15 @@ using Serilog;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
+using Nito.AsyncEx;
 
 namespace Catalyst.Core.Lib.P2P
 {
     public class PoaDiscovery : IPeerDiscovery
     {
-        public static string PoaPeerFile => "poaPeers.json";
+        public static string PoaPeerFile => "poa.nodes.json";
         private readonly IPeerRepository _peerRepository;
         private readonly IFileSystem _fileSystem;
         private readonly ILogger _logger;
@@ -49,6 +51,10 @@ namespace Catalyst.Core.Lib.P2P
             _logger = logger;
         }
 
+        /// <summary>
+        ///     @TODO get from container eventually 
+        /// </summary>
+        /// <returns></returns>
         private string CopyPoaFile()
         {
             var poaPeerFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Config", PoaPeerFile);
@@ -65,14 +71,15 @@ namespace Catalyst.Core.Lib.P2P
         public Task DiscoveryAsync()
         {
             var copiedPath = CopyPoaFile();
-            var poaPeers = JsonConvert.DeserializeObject<List<string>>(File.ReadAllText(copiedPath));
+            var poaPeers = JsonConvert.DeserializeObject<List<PoaPeer>>(File.ReadAllText(copiedPath));
 
             foreach (var pid in poaPeers)
             {
-                var peerIdentifier = PeerIdentifier.ParseHexPeerIdentifier(pid.Split(PeerIdentifier.PidDelimiter));
-                var poaPeer = new Peer { PeerIdentifier = peerIdentifier };
+                var peerIdentifier = pid.ToPeerIdentifier();
+                var poaPeer = new Peer {PeerIdentifier = peerIdentifier};
 
-                _logger.Information($"Adding POA Peer: {peerIdentifier.Ip} Public Key: {peerIdentifier.PublicKey.KeyToString()}");
+                _logger.Information(
+                    $"Adding POA Peer: {peerIdentifier.Ip} Public Key: {peerIdentifier.PublicKey.KeyToString()}");
 
                 if (!_peerRepository.Exists(poaPeer.DocumentId))
                 {

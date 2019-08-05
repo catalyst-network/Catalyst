@@ -27,7 +27,7 @@ using Google.Protobuf;
 
 namespace Catalyst.Common.Interfaces.IO.Observers
 {
-    public interface IObservableMessageStreamer<out T> where T : IMessage
+    public interface IObservableMessageStreamer<out T> where T : IMessage<T>
     {
         /// <summary>
         ///     Message stream

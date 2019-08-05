@@ -85,6 +85,11 @@ namespace Catalyst.Common.Config
         /// <summary>The maximum chunk read tries </summary>
         public static int FileTransferMaxChunkReadTries => 30;
 
+        /// <summary>
+        ///     https://www.urbandictionary.com/define.php?term=angry+pirate
+        /// </summary>
+        public static int AngryPirate => 5;
+        
         /// <summary> How many peers node discovers before saving for burn in value </summary>
         public static int PeerDiscoveryBurnIn => 25;
         

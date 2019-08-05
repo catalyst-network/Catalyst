@@ -21,6 +21,7 @@
 
 #endregion
 
+using Multiformats.Base;
 using Multiformats.Hash;
 using Multiformats.Hash.Algorithms;
 
@@ -28,11 +29,10 @@ namespace Catalyst.Common.Extensions
 {
     public static class MultihashExtensions
     {
-        public static string ToTrimmedString(this Multihash multihash, IMultihashAlgorithm altAlgorithm)
+        public static string AsBase64UrlString(this Multihash multihash)
         {
-            var trimmed = multihash.ToString()
-               .Substring(altAlgorithm.DefaultLength);
-            return trimmed;
+            var result = multihash.ToString(MultibaseEncoding.Base64Url);
+            return result;
         }
     }
 }

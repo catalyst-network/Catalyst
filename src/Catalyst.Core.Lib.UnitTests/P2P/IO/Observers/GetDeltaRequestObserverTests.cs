@@ -35,6 +35,7 @@ using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
+using Multiformats.Base;
 using Multiformats.Hash;
 using NSubstitute;
 using Serilog;
@@ -79,7 +80,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Observers
         {
             var multiHash = GetMultiHash("abcd");
 
-            var delta = CreateAndExpectDeltaFromCache(multiHash);
+            var delta = CreateAndExpectDeltaFromCache(multiHash.AsBase64UrlString());
 
             var observable = CreateStreamWithDeltaRequest(multiHash);
 
@@ -88,7 +89,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Observers
             await observable.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
 
             _deltaCache.Received(1).TryGetDelta(Arg.Is<string>(
-                s => s.Equals(multiHash.ToString())), out Arg.Any<Delta>());
+                s => s.Equals(multiHash.AsBase64UrlString())), out Arg.Any<Delta>());
 
             await _fakeContext.Channel.ReceivedWithAnyArgs(1)
                .WriteAndFlushAsync(Arg.Is<IMessageDto<ProtocolMessage>>(pm => 
@@ -107,7 +108,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Observers
             await observable.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
 
             _deltaCache.Received(1).TryGetDelta(Arg.Is<string>(
-                s => s.Equals(multiHash.ToString())), out Arg.Any<Delta>());
+                s => s.Equals(multiHash.AsBase64UrlString())), out Arg.Any<Delta>());
 
             await _fakeContext.Channel.ReceivedWithAnyArgs(1)
                .WriteAndFlushAsync(Arg.Is<IMessageDto<ProtocolMessage>>(pm =>

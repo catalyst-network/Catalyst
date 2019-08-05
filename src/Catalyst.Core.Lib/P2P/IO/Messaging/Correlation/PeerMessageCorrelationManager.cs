@@ -37,7 +37,6 @@ using Catalyst.Common.P2P;
 using Catalyst.Core.Lib.P2P.ReputationSystem;
 using Catalyst.Protocol.Common;
 using Dawn;
-using Google.Protobuf;
 using Microsoft.Extensions.Caching.Memory;
 using Serilog;
 
@@ -46,9 +45,9 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Correlation
     public sealed class PeerMessageCorrelationManager : MessageCorrelationManagerBase, IPeerMessageCorrelationManager
     {
         private readonly ReplaySubject<IPeerReputationChange> _reputationEvent;
-        public ReplaySubject<KeyValuePair<ICorrelationId, IPeerIdentifier>> EvictionEvent { get; }
-        public IObservable<IPeerReputationChange> ReputationEventStream => _reputationEvent.AsObservable();
-        public IObservable<KeyValuePair<ICorrelationId, IPeerIdentifier>> EvictionEventStream => EvictionEvent.AsObservable();
+        private readonly ReplaySubject<KeyValuePair<ICorrelationId, IPeerIdentifier>> _evictionEvent;
+        public IObservable<IPeerReputationChange> ReputationEventStream { get; }
+        public IObservable<KeyValuePair<ICorrelationId, IPeerIdentifier>> EvictionEventStream { get; }
 
         public PeerMessageCorrelationManager(IReputationManager reputationManager,
             IMemoryCache cache,
@@ -56,23 +55,30 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Correlation
             IChangeTokenProvider changeTokenProvider) : base(cache, logger, changeTokenProvider)
         {
             _reputationEvent = new ReplaySubject<IPeerReputationChange>(0);
-            EvictionEvent = new ReplaySubject<KeyValuePair<ICorrelationId, IPeerIdentifier>>(0);
+            ReputationEventStream = _reputationEvent.AsObservable();
+            _evictionEvent = new ReplaySubject<KeyValuePair<ICorrelationId, IPeerIdentifier>>(0);
+            EvictionEventStream = _evictionEvent.AsObservable();
 
             reputationManager.MergeReputationStream(ReputationEventStream);
         }
 
         protected override void EvictionCallback(object key, object value, EvictionReason reason, object state)
         {
-            Logger.Verbose("{key} message evicted", (key as ByteString).ToCorrelationId());
-            var message = (CorrelatableMessage<ProtocolMessage>) value;
+            if (!(value is CorrelatableMessage<ProtocolMessage> message))
+            {
+                Log.Warning("EvictionCallback called with unknown valued {value}", value);
+                return;
+            }
+
+            var correlationId = message.Content.CorrelationId.ToCorrelationId();
+            Logger.Verbose("{correlationId} message originally sent to {peer} is getting evicted", correlationId, message.Recipient);
 
             _reputationEvent.OnNext(new PeerReputationChange(new PeerIdentifier(message.Content.PeerId), 
                 ReputationEvents.NoResponseReceived));
+            Logger.Verbose("PeerReputationChange sent for {correlationId}", correlationId);
             
-            EvictionEvent.OnNext(new KeyValuePair<ICorrelationId, IPeerIdentifier>(
-                new CorrelationId(message.Content.CorrelationId.ToByteArray()),
-                message.Recipient)
-            );
+            _evictionEvent.OnNext(new KeyValuePair<ICorrelationId, IPeerIdentifier>(correlationId, message.Recipient));
+            Logger.Verbose("EvictionEvent sent for {correlationId}", correlationId);
         }
 
         /// <summary>

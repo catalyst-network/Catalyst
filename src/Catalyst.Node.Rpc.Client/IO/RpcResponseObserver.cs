@@ -24,61 +24,32 @@
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.IO.Observers;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.Interfaces.Rpc.IO.Messaging.Dto;
 using Catalyst.Common.IO.Observers;
-using Catalyst.Node.Rpc.Client.IO.Messaging.Dto;
+using Dawn;
 using DotNetty.Transport.Channels;
 using Google.Protobuf;
 using Serilog;
-using System;
-using System.Collections.Concurrent;
-using System.Reactive.Concurrency;
-using System.Reactive.Linq;
-using System.Reactive.Subjects;
 
 namespace Catalyst.Node.Rpc.Client.IO
 {
-    public abstract class RpcResponseObserver<TProto> : ResponseObserverBase<TProto>, IRpcResponseObserver<TProto> where TProto : IMessage<TProto>
+    public abstract class RpcResponseObserver<TProto> : ResponseObserverBase<TProto>, IRpcResponseObserver
+        where TProto : IMessage<TProto>
     {
-        private readonly ConcurrentBag<IDisposable> _messageResponseSubscriptions;
-        private readonly ReplaySubject<IRpcClientMessageDto<IMessage>> _messageResponse;
-        public IObservable<IRpcClientMessageDto<IMessage>> MessageResponseStream { private set; get; }
+        protected RpcResponseObserver(ILogger logger, bool assertMessageNameCheck = true) : base(logger,
+            assertMessageNameCheck) { }
 
-        protected RpcResponseObserver(ILogger logger, bool assertMessageNameCheck = true) : base(logger, assertMessageNameCheck)
+        protected abstract override void HandleResponse(TProto messageDto, IChannelHandlerContext channelHandlerContext, IPeerIdentifier senderPeerIdentifier, ICorrelationId correlationId);
+
+        public void HandleResponseObserver(IMessage message,
+            IChannelHandlerContext channelHandlerContext,
+            IPeerIdentifier senderPeerIdentifier,
+            ICorrelationId correlationId)
         {
-            _messageResponseSubscriptions = new ConcurrentBag<IDisposable>();
-            _messageResponse = new ReplaySubject<IRpcClientMessageDto<IMessage>>(1);
-            MessageResponseStream = _messageResponse.AsObservable();
-        }
+            Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
+            Guard.Argument(senderPeerIdentifier, nameof(senderPeerIdentifier)).NotNull();
+            Guard.Argument(message, nameof(message)).NotNull("The message cannot be null");
 
-        protected override void RedirectResponse(TProto messageDto, IChannelHandlerContext channelHandlerContext, IPeerIdentifier senderPeerIdentifier, ICorrelationId correlationId)
-        {
-            base.RedirectResponse(messageDto, channelHandlerContext, senderPeerIdentifier, correlationId);
-            AddMessageToResponseStream(messageDto, senderPeerIdentifier);
-        }
-
-        private void AddMessageToResponseStream(TProto message, IPeerIdentifier senderPeerIdentifier)
-        {
-            _messageResponse.OnNext(new RpcClientMessageDto<IMessage>(message, senderPeerIdentifier));
-        }
-
-        public void SubscribeToResponse(Action<TProto> onNext)
-        {
-            _messageResponseSubscriptions.Add(MessageResponseStream.Where(x => x.Message is TProto).SubscribeOn(NewThreadScheduler.Default).Subscribe(rpcClientMessageDto =>
-                onNext((TProto) rpcClientMessageDto.Message)
-            ));
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            foreach (var subscription in _messageResponseSubscriptions)
-            {
-                subscription?.Dispose();
-            }
-
-            _messageResponseSubscriptions.Clear();
-            _messageResponse?.Dispose();
-            base.Dispose(disposing);
+            HandleResponse((TProto) message, channelHandlerContext, senderPeerIdentifier, correlationId);
         }
     }
 }

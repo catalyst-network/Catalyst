@@ -28,12 +28,9 @@ namespace Catalyst.Common.Interfaces.Rpc
 {
     public interface IRpcServerSettings
     {
-        IConfigurationRoot NodeConfig { get; }
-
         int Port { get; }
-        IPAddress BindAddress { get; }
-        bool MutualAuthentication { get; }
-        bool AcceptInvalidCerts { get; }
         string PfxFileName { get; }
+        IPAddress BindAddress { get; }
+        IConfigurationRoot NodeConfig { get; }
     }
 }

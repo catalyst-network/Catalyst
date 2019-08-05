@@ -21,7 +21,6 @@
 
 #endregion
 
-using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Autofac;
@@ -32,37 +31,35 @@ using Catalyst.Common.Modules.Mempool;
 using Catalyst.Protocol;
 using Catalyst.TestUtils;
 using FluentAssertions;
-using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using Xunit;
 using Xunit.Abstractions;
 
 namespace Catalyst.Core.Lib.IntegrationTests.Modules.Mempool
 {
-    public sealed class MempoolIntegrationTests : ConfigFileBasedTest
+    public sealed class MempoolIntegrationTests : FileSystemBasedTest
     {
-        private IEnumerable<string> _configFilesUsed;
-        protected override IEnumerable<string> ConfigFilesUsed => _configFilesUsed;
-
+        private ContainerProvider _containerProvider;
         public MempoolIntegrationTests(ITestOutputHelper output) : base(output) { }
 
         private async Task Mempool_can_save_and_retrieve(FileInfo mempoolModuleFile)
         {
             var alteredComponentsFile = await CreateAlteredConfigForMempool(mempoolModuleFile);
 
-            _configFilesUsed = new[]
+            var configFilesUsed = new[]
             {
                 alteredComponentsFile,
                 Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile),
                 Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Network.Dev))
             };
 
-            ConfigureContainerBuilder();
+            _containerProvider = new ContainerProvider(configFilesUsed, FileSystem, Output);
 
-            var container = ContainerBuilder.Build();
-            using (container.BeginLifetimeScope())
+            _containerProvider.ConfigureContainerBuilder();
+
+            using (var scope = _containerProvider.Container.BeginLifetimeScope(mempoolModuleFile))
             {
-                var mempool = container.Resolve<IMempool>();
+                var mempool = scope.Resolve<IMempool>();
 
                 var guid = CorrelationId.GenerateCorrelationId().ToString();
                 var mempoolDocument = new MempoolDocument {Transaction = TransactionHelper.GetTransaction(signature: guid)};
@@ -95,6 +92,17 @@ namespace Catalyst.Core.Lib.IntegrationTests.Modules.Mempool
             var fi = new FileInfo(Path.Combine(Constants.ConfigSubFolder, Constants.ModulesSubFolder,
                 "mempool.inmemory.json"));
             await Mempool_can_save_and_retrieve(fi);
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+            if (!disposing)
+            {
+                return;
+            }
+
+            _containerProvider?.Dispose();
         }
     }
 }

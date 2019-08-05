@@ -39,6 +39,34 @@ namespace Catalyst.Core.Lib.P2P
     public sealed class PeerSettings
         : IPeerSettings
     {
+        private readonly Network _network;
+        public Network Network => _network;
+        private readonly string _publicKey;
+        public string PublicKey => _publicKey;
+        private readonly int _port;
+        public int Port => _port;
+        private readonly string _payoutAddress;
+        public string PayoutAddress => _payoutAddress;
+        private readonly IPAddress _bindAddress;
+        public IPAddress BindAddress => _bindAddress;
+        private readonly IList<string> _seedServers;
+        public IList<string> SeedServers => _seedServers;
+        
+        public PeerSettings(Network network,
+            string publicKey,
+            int port,
+            string payoutAddress,
+            IPAddress bindAddress,
+            IList<string> seedServers)
+        {
+            _network = network;
+            _publicKey = publicKey;
+            _port = port;
+            _payoutAddress = payoutAddress;
+            _bindAddress = bindAddress;
+            _seedServers = seedServers;
+        }
+            
         /// <summary>
         ///     Set attributes
         /// </summary>
@@ -47,24 +75,12 @@ namespace Catalyst.Core.Lib.P2P
         {
             Guard.Argument(rootSection, nameof(rootSection)).NotNull();
             var section = rootSection.GetSection("CatalystNodeConfiguration").GetSection("Peer");
-            Network = Enumeration.Parse<Network>(section.GetSection("Network").Value);
-            PublicKey = section.GetSection("PublicKey").Value;
-            Port = int.Parse(section.GetSection("Port").Value);
-            PayoutAddress = section.GetSection("PayoutAddress").Value;
-            Announce = bool.Parse(section.GetSection("Announce").Value);
-            BindAddress = IPAddress.Parse(section.GetSection("BindAddress").Value);
-            SeedServers = section.GetSection("SeedServers").GetChildren().Select(p => p.Value).ToList();
-            AnnounceServer =
-                Announce ? EndpointBuilder.BuildNewEndPoint(section.GetSection("AnnounceServer").Value) : null;
+            _network = Enumeration.Parse<Network>(section.GetSection("Network").Value);
+            _publicKey = section.GetSection("PublicKey").Value;
+            _port = int.Parse(section.GetSection("Port").Value);
+            _payoutAddress = section.GetSection("PayoutAddress").Value;
+            _bindAddress = IPAddress.Parse(section.GetSection("BindAddress").Value);
+            _seedServers = section.GetSection("SeedServers").GetChildren().Select(p => p.Value).ToList();
         }
-
-        public int Port { get; }
-        public bool Announce { get; }
-        public Network Network { get; }
-        public string PublicKey { get; }
-        public string PayoutAddress { get; }
-        public IPAddress BindAddress { get; }
-        public IPEndPoint AnnounceServer { get; }
-        public IList<string> SeedServers { get; }
     }
 }

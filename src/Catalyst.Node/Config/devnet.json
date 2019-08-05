@@ -1,16 +1,8 @@
 {
     "CatalystNodeConfiguration": {
-        "Consensus": {
-            "nDepth": 100
-        },
-        "Contract": {
-            "StorageType": "Catalyst.Helpers.Ipfs"
-        },
         "Peer": {
             "Network": "devnet",
             "PublicKey": "1AemkEe4z3rZHr7RWSUyZHPuVozyCQnT1H7SfpzcGCQRuT",
-            "Announce": true,
-            "AnnounceServer": "127.0.0.1:21420",
             "Port": 42076,
             "BindAddress": "127.0.0.1",
             "DnsServers": [
@@ -22,20 +14,11 @@
                 "seed3.catalystnetwork.io",
                 "seed4.catalystnetwork.io",
                 "seed5.catalystnetwork.io"
-            ],
-            "QueryAnswerValues": [ // Only use for development
-                "0x41437c30317c39322e3230372e3137382e3139387c34323036397c3031323334353637383930313233343536373839",
-                "0x41437c30317c39322e3230372e3137382e3139387c34323036397c3031323334353637383930313233343536373839",
-                "0x41437c30317c39322e3230372e3137382e3139387c34323036397c3031323334353637383930313233343536373839",
-                "0x41437c30317c39322e3230372e3137382e3139387c34323036397c3031323334353637383930313233343536373839",
-                "0x41437c30317c39322e3230372e3137382e3139387c34323036397c3031323334353637383930313233343536373839"
             ]
         },
         "Rpc": {
             "BindAddress": "127.0.0.1",
             "Port": 42066,
-            "MutualAuthentication": false,
-            "AcceptInvalidCerts": false,
             "PfxFileName": "mycert.pfx"
         },
         "PersistenceConfiguration": {

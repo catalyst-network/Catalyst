@@ -22,13 +22,16 @@
 #endregion
 
 using Catalyst.Common.Interfaces.Modules.Consensus;
+using Catalyst.Common.Interfaces.Modules.Consensus.Cycle;
 using Catalyst.Common.Interfaces.Modules.Consensus.Deltas;
+using Catalyst.Core.Lib.Modules.Consensus.Cycle;
 using Serilog;
 
 namespace Catalyst.Core.Lib.Modules.Consensus
 {
     public sealed class Consensus : IConsensus
     {
+        public ICycleEventsProvider CycleEventsProvider { get; }
         public IDeltaBuilder DeltaBuilder { get; }
         public IDeltaHub DeltaHub { get; }
         public IDeltaHashProvider DeltaHashProvider { get; }
@@ -36,8 +39,10 @@ namespace Catalyst.Core.Lib.Modules.Consensus
         public Consensus(IDeltaBuilder deltaBuilder,
             IDeltaHub deltaHub,
             ILogger logger,
-            IDeltaHashProvider deltaHashProvider)
+            IDeltaHashProvider deltaHashProvider,
+            ICycleEventsProvider cycleEventsProvider)
         {
+            CycleEventsProvider = cycleEventsProvider;
             DeltaBuilder = deltaBuilder;
             DeltaHub = deltaHub;
             DeltaHashProvider = deltaHashProvider;

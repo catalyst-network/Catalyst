@@ -27,21 +27,31 @@ using CommandLine;
 
 namespace Catalyst.Node
 {
-    class Options
-
+    internal class Options
     {
+        [Option('p', "dfs-password", HelpText = "The password for Dfs.  Defaults to prompting for the password.")]
+        public string DfsPassword { get; set; }
+        
+        [Option('p', "ipfs-password", HelpText = "The password for IPFS.  Defaults to prompting for the password.")]
+        public string IpfsPassword { get; set; }
+        
+        [Option('c', "ssl-cert-password", HelpText = "The password for ssl cert.  Defaults to prompting for the password.")]
+        public string SslCertPassword { get; set; }
+        
+        [Option('c', "node-password", HelpText = "The password for the node.  Defaults to prompting for the password.")]
+        public string NodePassword { get; set; }
+        
         [Option('o', "overwrite-config", HelpText = "Overwrite the data directory configs.")]
         public bool OverwriteConfig { get; set; }
     }
     
     internal static class Program
     {
-        private static Options _options;
         private static readonly Kernel Kernel;
 
         static Program()
         {
-            Kernel = Kernel.Initramfs(_options.OverwriteConfig);
+            Kernel = Kernel.Initramfs();
             AppDomain.CurrentDomain.UnhandledException += Kernel.LogUnhandledException;
             AppDomain.CurrentDomain.ProcessExit += Kernel.CurrentDomain_ProcessExit;
         }
@@ -73,7 +83,6 @@ namespace Catalyst.Node
         
         private static void Run(Options options)
         {
-            _options = options;
             Kernel.Logger.Information("Catalyst.Node started with process id {0}",
                 System.Diagnostics.Process.GetCurrentProcess().Id.ToString());
             
@@ -86,7 +95,8 @@ namespace Catalyst.Node
                    .WithSerilogConfigFile()
                    .WithConfigCopier()
                    .WithPersistenceConfiguration()
-                   .BuildKernel(_options.OverwriteConfig)
+                   .BuildKernel(options.OverwriteConfig)
+                   .WithPasswordOverRide(options.SslCertPassword, options.IpfsPassword, options.DfsPassword, options.NodePassword)
                    .StartNode();
 
                 // .StartCustom(CustomBootLogic);

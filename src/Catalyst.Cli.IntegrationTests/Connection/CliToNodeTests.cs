@@ -38,22 +38,19 @@ namespace Catalyst.Cli.IntegrationTests.Connection
     public sealed class CliToNodeTests : ConfigFileBasedTest
     {
         private readonly TestCatalystNode _node;
-        protected override IEnumerable<string> ConfigFilesUsed { get; }
 
-        public CliToNodeTests(ITestOutputHelper output) : base(output)
+        public CliToNodeTests(ITestOutputHelper output) : base(new[]
+        {
+            Path.Combine(Constants.ConfigSubFolder, Constants.ShellComponentsJsonConfigFile),
+            Path.Combine(Constants.ConfigSubFolder, Constants.ShellNodesConfigFile),
+            Path.Combine(Constants.ConfigSubFolder, Constants.ShellConfigFile)
+        }, output)
         {
             _node = new TestCatalystNode("server", output);
 
-            ConfigFilesUsed = new[]
-            {
-                Path.Combine(Constants.ConfigSubFolder, Constants.ShellComponentsJsonConfigFile),
-                Path.Combine(Constants.ConfigSubFolder, Constants.ShellNodesConfigFile),
-                Path.Combine(Constants.ConfigSubFolder, Constants.ShellConfigFile)
-            };
+            ContainerProvider.ConfigureContainerBuilder();
 
-            ConfigureContainerBuilder();
-
-            ContainerBuilder.RegisterInstance(FileSystem).As<IFileSystem>();
+            ContainerProvider.ContainerBuilder.RegisterInstance(FileSystem).As<IFileSystem>();
         }
 
         [Fact]
@@ -61,14 +58,11 @@ namespace Catalyst.Cli.IntegrationTests.Connection
         {
             _node.BuildNode();
 
-            using (var container = ContainerBuilder.Build())
+            using (var scope = ContainerProvider.Container.BeginLifetimeScope(CurrentTestName))
             {
-                using (var scope = container.BeginLifetimeScope(CurrentTestName))
-                {
-                    var shell = scope.Resolve<ICatalystCli>();
-                    var hasConnected = shell.ParseCommand("connect", "-n", "node1");
-                    hasConnected.Should().BeTrue();
-                }
+                var shell = scope.Resolve<ICatalystCli>();
+                var hasConnected = shell.ParseCommand("connect", "-n", "node1");
+                hasConnected.Should().BeTrue();
             }
         }
 
