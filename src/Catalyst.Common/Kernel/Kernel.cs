@@ -99,7 +99,6 @@ namespace Catalyst.Common.Kernel
             var config = _configurationBuilder.Build();
             var configurationModule = new ConfigurationModule(config);
 
-            ContainerBuilder.RegisterLogger(Logger);
             ContainerBuilder.RegisterInstance(config);
             
             if (!string.IsNullOrEmpty(_withPersistence))
@@ -118,6 +117,7 @@ namespace Catalyst.Common.Kernel
                     outputTemplate: "{Timestamp:HH:mm:ss} [{Level:u3}] ({MachineName}/{ThreadId}) {Message} ({SourceContext}){NewLine}{Exception}")
                .CreateLogger()
                .ForContext(MethodBase.GetCurrentMethod().DeclaringType);
+            ContainerBuilder.RegisterLogger(Logger);
 
             Log.Logger = Logger;
             
