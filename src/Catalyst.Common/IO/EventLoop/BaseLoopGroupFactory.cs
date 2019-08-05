@@ -85,7 +85,7 @@ namespace Catalyst.Common.IO.EventLoop
 
         protected virtual void Dispose(bool disposing)
         {
-            if (!disposing || Interlocked.Increment(ref _disposeCounter) > 0)
+            if (!disposing || Interlocked.Increment(ref _disposeCounter) > 1)
             {
                 return;
             }
