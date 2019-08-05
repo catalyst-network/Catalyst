@@ -26,6 +26,7 @@ using System.Net;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Security.Cryptography.X509Certificates;
+using System.Threading.Tasks;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.EventLoop;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
@@ -94,12 +95,12 @@ namespace Catalyst.Node.Rpc.Client.UnitTests
         private readonly ReplaySubject<IObserverDto<ProtocolMessage>> _mockSocketReplySubject;
 
         [Fact]
-        public void SubscribeToResponse_Should_Not_Return_Invalid_Response()
+        public async Task SubscribeToResponse_Should_Not_Return_Invalid_Response()
         {
             var nodeRpcClientFactory = new NodeRpcClientFactory(_channelFactory, _clientEventLoopGroupFactory,
                 new List<IRpcResponseObserver> {new GetVersionResponseObserver(_logger)});
 
-            var nodeRpcClient = nodeRpcClientFactory.GetClient(null, _rpcNodeConfig);
+            var nodeRpcClient = await nodeRpcClientFactory.GetClient(null, _rpcNodeConfig);
 
             var receivedResponse = false;
             var targetVersionResponse = new VersionResponse {Version = "1.2.3.4"};
@@ -119,12 +120,12 @@ namespace Catalyst.Node.Rpc.Client.UnitTests
         }
 
         [Fact]
-        public void SubscribeToResponse_Should_Return_Response()
+        public async Task SubscribeToResponse_Should_Return_Response()
         {
             var nodeRpcClientFactory = new NodeRpcClientFactory(_channelFactory, _clientEventLoopGroupFactory,
                 new List<IRpcResponseObserver> {new GetVersionResponseObserver(_logger)});
 
-            var nodeRpcClient = nodeRpcClientFactory.GetClient(null, _rpcNodeConfig);
+            var nodeRpcClient = await nodeRpcClientFactory.GetClient(null, _rpcNodeConfig);
 
             VersionResponse returnedVersionResponse = null;
             var targetVersionResponse = new VersionResponse {Version = "1.2.3.4"};
@@ -144,12 +145,12 @@ namespace Catalyst.Node.Rpc.Client.UnitTests
         }
 
         [Fact]
-        public void SubscribeToResponse_Without_Response_Handler_Should_Throw_Exception()
+        public async Task SubscribeToResponse_Without_Response_Handler_Should_Throw_Exception()
         {
             var nodeRpcClientFactory = new NodeRpcClientFactory(_channelFactory, _clientEventLoopGroupFactory,
                 new List<IRpcResponseObserver>());
 
-            var nodeRpcClient = nodeRpcClientFactory.GetClient(null, _rpcNodeConfig);
+            var nodeRpcClient = await nodeRpcClientFactory.GetClient(null, _rpcNodeConfig);
 
             var targetVersionResponse = new VersionResponse {Version = "1.2.3.4"};
 

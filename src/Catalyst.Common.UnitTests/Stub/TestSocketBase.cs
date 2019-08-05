@@ -21,6 +21,7 @@
 
 #endregion
 
+using System.Threading.Tasks;
 using Catalyst.Common.Interfaces.IO.EventLoop;
 using Catalyst.Common.Interfaces.IO.Transport.Channels;
 using Catalyst.Common.IO.Transport;
@@ -38,5 +39,7 @@ namespace Catalyst.Common.UnitTests.Stub
         {
             Channel = Substitute.For<IChannel>();
         }
+
+        public override Task StartAsync() { throw new System.NotImplementedException(); }
     }
 }

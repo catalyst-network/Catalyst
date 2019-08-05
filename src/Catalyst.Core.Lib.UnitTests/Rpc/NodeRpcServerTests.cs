@@ -24,10 +24,10 @@
 using System;
 using System.Collections.Generic;
 using System.Net;
-using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Security.Cryptography.X509Certificates;
+using System.Threading.Tasks;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Common.Interfaces.IO.EventLoop;
@@ -63,14 +63,15 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc
             _peerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("", "", 0);
             _channelHandlerContext = Substitute.For<IChannelHandlerContext>();
 
-            _clientEventLoopGroupFactory = Substitute.For<ITcpClientEventLoopGroupFactory>();
+            _tcpServerEventLoopGroupFactory = Substitute.For<ITcpServerEventLoopGroupFactory>();
 
             _mockSocketReplySubject = new ReplaySubject<IObserverDto<ProtocolMessage>>(1, _testScheduler);
             var mockChannel = Substitute.For<IChannel>();
             var mockEventStream = _mockSocketReplySubject.AsObservable();
             var observableChannel = new ObservableChannel(mockEventStream, mockChannel);
 
-            _tcpServerChannelFactory.BuildChannel(_clientEventLoopGroupFactory, Arg.Any<IPAddress>(), Arg.Any<int>(),
+            _tcpServerChannelFactory = Substitute.For<ITcpServerChannelFactory>();
+            _tcpServerChannelFactory.BuildChannel(_tcpServerEventLoopGroupFactory, Arg.Any<IPAddress>(), Arg.Any<int>(),
                 Arg.Any<X509Certificate2>()).Returns(observableChannel);
 
             var certificateStore = Substitute.For<ICertificateStore>();
@@ -81,7 +82,7 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc
         }
 
         private readonly ITcpServerChannelFactory _tcpServerChannelFactory;
-        private readonly ITcpClientEventLoopGroupFactory _clientEventLoopGroupFactory;
+        private readonly ITcpServerEventLoopGroupFactory _tcpServerEventLoopGroupFactory;
         private readonly ReplaySubject<IObserverDto<ProtocolMessage>> _mockSocketReplySubject;
 
         private readonly TestScheduler _testScheduler;
@@ -98,8 +99,10 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc
         }
 
         [Fact]
-        public void Subscribe_To_Message_Stream_Should_Return_VersionRequest()
+        public async Task Subscribe_To_Message_Stream_Should_Return_VersionRequest()
         {
+            await _nodeRpcServer.StartAsync();
+
             VersionRequest returnedVersionRequest = null;
             var targetVersionRequest = new VersionRequest();
 
@@ -109,7 +112,7 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc
             var observerDto = new ObserverDto(_channelHandlerContext, protocolMessage);
 
             var iDisposable = _nodeRpcServer.MessageStream
-               .Where(x => x.Payload.TypeUrl == typeof(VersionRequest).ShortenedProtoFullName())
+               .Where(x => x?.Payload.TypeUrl == typeof(VersionRequest).ShortenedProtoFullName())
                .SubscribeOn(_testScheduler)
                .Subscribe(request => returnedVersionRequest = request.Payload.FromProtocolMessage<VersionRequest>());
 

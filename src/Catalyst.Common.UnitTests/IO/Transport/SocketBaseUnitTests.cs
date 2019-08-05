@@ -21,11 +21,9 @@
 
 #endregion
 
-using System.Diagnostics;
 using Catalyst.Common.Interfaces.IO.EventLoop;
 using Catalyst.Common.Interfaces.IO.Transport.Channels;
 using Catalyst.Common.UnitTests.Stub;
-using DotNetty.Transport.Channels;
 using NSubstitute;
 using Serilog;
 using Xunit;
@@ -41,11 +39,7 @@ namespace Catalyst.Common.UnitTests.IO.Transport
             var logger = Substitute.For<ILogger>();
             var eventLoopGroupFactory = Substitute.For<IEventLoopGroupFactory>();
             var testSocketBase = new TestSocketBase(channelFactory, logger, eventLoopGroupFactory);
-
-
-            //var isChannelActive = testSocketBase.Channel.Active;
-
-            //testSocketBase.Dispose();
+            testSocketBase.Dispose();
         }
     }
 }

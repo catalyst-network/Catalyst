@@ -22,6 +22,7 @@
 #endregion
 
 using System;
+using System.Threading.Tasks;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Transport.Channels;
 using Catalyst.Protocol.Common;
@@ -41,6 +42,7 @@ namespace Catalyst.Common.IO.Transport.Channels
         }
 
         public IChannel Channel { get; }
+        public Task StartAsync() { return Task.CompletedTask; }
         public IObservable<IObserverDto<ProtocolMessage>> MessageStream { get; }
 
         void IDisposable.Dispose()

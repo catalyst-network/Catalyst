@@ -21,23 +21,15 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.IO.EventLoop;
-using Catalyst.Common.Interfaces.IO.Messaging.Dto;
-using Catalyst.Common.Interfaces.IO.Transport;
-using Catalyst.Common.Interfaces.IO.Transport.Channels;
-using Google.Protobuf;
-using Serilog;
+using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Protocol.Common;
 
-namespace Catalyst.Common.IO.Transport
+namespace Catalyst.Core.Lib.P2P
 {
-    public abstract class ClientBase : SocketBase, ISocketClient
+    public class PeerChallengerResponse : IPeerChallengeResponse
     {
-        protected ClientBase(IChannelFactory channelFactory, ILogger logger, IEventLoopGroupFactory handlerEventEventLoopGroupFactory)
-            : base(channelFactory, logger, handlerEventEventLoopGroupFactory) { }
+        public PeerId PeerId { get; }
 
-        public virtual void SendMessage<T>(IMessageDto<T> message) where T : IMessage<T>
-        {
-            Channel.WriteAsync(message).ConfigureAwait(false);
-        }
+        public PeerChallengerResponse(PeerId peerId) { PeerId = peerId; }
     }
 }
