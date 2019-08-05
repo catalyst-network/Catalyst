@@ -36,6 +36,8 @@ using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.IO.Transport.Channels;
+using Catalyst.Node.Rpc.Client.IO.Exceptions;
+using Catalyst.Node.Rpc.Client.IO.Observers;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
@@ -43,6 +45,7 @@ using DotNetty.Transport.Channels;
 using FluentAssertions;
 using Microsoft.Reactive.Testing;
 using NSubstitute;
+using Serilog;
 using Xunit;
 
 namespace Catalyst.Node.Rpc.Client.UnitTests
@@ -52,44 +55,52 @@ namespace Catalyst.Node.Rpc.Client.UnitTests
         public NodeRpcClientTests()
         {
             _testScheduler = new TestScheduler();
+            _logger = Substitute.For<ILogger>();
             _peerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("", "", 0);
             _channelHandlerContext = Substitute.For<IChannelHandlerContext>();
 
-            var channelFactory = Substitute.For<ITcpClientChannelFactory>();
-            var clientEventLoopGroupFactory = Substitute.For<ITcpClientEventLoopGroupFactory>();
-            var nodeRpcClientFactory = new NodeRpcClientFactory(channelFactory, clientEventLoopGroupFactory,
-                new List<IRpcResponseObserver>());
+            _channelFactory = Substitute.For<ITcpClientChannelFactory>();
+            _clientEventLoopGroupFactory = Substitute.For<ITcpClientEventLoopGroupFactory>();
 
             _mockSocketReplySubject = new ReplaySubject<IObserverDto<ProtocolMessage>>(1, _testScheduler);
             var mockChannel = Substitute.For<IChannel>();
             var mockEventStream = _mockSocketReplySubject.AsObservable();
             var observableChannel = new ObservableChannel(mockEventStream, mockChannel);
 
-            channelFactory.BuildChannel(clientEventLoopGroupFactory, Arg.Any<IPAddress>(), Arg.Any<int>(),
+            _channelFactory.BuildChannel(_clientEventLoopGroupFactory, Arg.Any<IPAddress>(), Arg.Any<int>(),
                 Arg.Any<X509Certificate2>()).Returns(observableChannel);
 
-            var nodeRpcConfig = Substitute.For<IRpcNodeConfig>();
-            nodeRpcConfig.HostAddress = IPAddress.Any;
-            nodeRpcConfig.NodeId = "0";
-            nodeRpcConfig.PfxFileName = "pfx";
-            nodeRpcConfig.Port = 9000;
-
-            _nodeRpcClient = nodeRpcClientFactory.GetClient(null, nodeRpcConfig);
+            _rpcNodeConfig = Substitute.For<IRpcNodeConfig>();
+            _rpcNodeConfig.HostAddress = IPAddress.Any;
+            _rpcNodeConfig.NodeId = "0";
+            _rpcNodeConfig.PfxFileName = "pfx";
+            _rpcNodeConfig.Port = 9000;
         }
+
+        private readonly ILogger _logger;
 
         private readonly TestScheduler _testScheduler;
 
         private readonly IPeerIdentifier _peerIdentifier;
 
+        private readonly ITcpClientChannelFactory _channelFactory;
+
+        private readonly ITcpClientEventLoopGroupFactory _clientEventLoopGroupFactory;
+
+        private readonly IRpcNodeConfig _rpcNodeConfig;
+
         private readonly IChannelHandlerContext _channelHandlerContext;
 
         private readonly ReplaySubject<IObserverDto<ProtocolMessage>> _mockSocketReplySubject;
 
-        private readonly INodeRpcClient _nodeRpcClient;
-
         [Fact]
         public void SubscribeToResponse_Should_Not_Return_Invalid_Response()
         {
+            var nodeRpcClientFactory = new NodeRpcClientFactory(_channelFactory, _clientEventLoopGroupFactory,
+                new List<IRpcResponseObserver> {new GetVersionResponseObserver(_logger)});
+
+            var nodeRpcClient = nodeRpcClientFactory.GetClient(null, _rpcNodeConfig);
+
             var receivedResponse = false;
             var targetVersionResponse = new VersionResponse {Version = "1.2.3.4"};
 
@@ -100,7 +111,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests
 
             _mockSocketReplySubject.OnNext(observerDto);
 
-            _nodeRpcClient.SubscribeToResponse<GetDeltaResponse>(response => receivedResponse = true);
+            nodeRpcClient.SubscribeToResponse<GetDeltaResponse>(response => receivedResponse = true);
 
             _testScheduler.Start();
 
@@ -110,6 +121,11 @@ namespace Catalyst.Node.Rpc.Client.UnitTests
         [Fact]
         public void SubscribeToResponse_Should_Return_Response()
         {
+            var nodeRpcClientFactory = new NodeRpcClientFactory(_channelFactory, _clientEventLoopGroupFactory,
+                new List<IRpcResponseObserver> {new GetVersionResponseObserver(_logger)});
+
+            var nodeRpcClient = nodeRpcClientFactory.GetClient(null, _rpcNodeConfig);
+
             VersionResponse returnedVersionResponse = null;
             var targetVersionResponse = new VersionResponse {Version = "1.2.3.4"};
 
@@ -120,11 +136,37 @@ namespace Catalyst.Node.Rpc.Client.UnitTests
 
             _mockSocketReplySubject.OnNext(observerDto);
 
-            _nodeRpcClient.SubscribeToResponse<VersionResponse>(response => returnedVersionResponse = response);
+            nodeRpcClient.SubscribeToResponse<VersionResponse>(response => returnedVersionResponse = response);
 
             _testScheduler.Start();
 
             targetVersionResponse.Should().Be(returnedVersionResponse);
+        }
+
+        [Fact]
+        public void SubscribeToResponse_Without_Response_Handler_Should_Throw_Exception()
+        {
+            var nodeRpcClientFactory = new NodeRpcClientFactory(_channelFactory, _clientEventLoopGroupFactory,
+                new List<IRpcResponseObserver>());
+
+            var nodeRpcClient = nodeRpcClientFactory.GetClient(null, _rpcNodeConfig);
+
+            var targetVersionResponse = new VersionResponse {Version = "1.2.3.4"};
+
+            var protocolMessage =
+                targetVersionResponse.ToProtocolMessage(_peerIdentifier.PeerId, CorrelationId.GenerateCorrelationId());
+
+            var observerDto = new ObserverDto(_channelHandlerContext, protocolMessage);
+            var exception = Record.Exception(() =>
+            {
+                _mockSocketReplySubject.OnNext(observerDto);
+
+                nodeRpcClient.SubscribeToResponse<VersionResponse>(response => { });
+
+                _testScheduler.Start();
+            });
+
+            exception.Should().BeOfType<ResponseHandlerDoesNotExistException>();
         }
     }
 }

@@ -35,6 +35,7 @@ using Catalyst.Common.Interfaces.IO.Transport.Channels;
 using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.IO.Transport;
 using Catalyst.Common.P2P;
+using Catalyst.Node.Rpc.Client.IO.Exceptions;
 using Catalyst.Protocol;
 using Catalyst.Protocol.Common;
 using Google.Protobuf;
@@ -90,7 +91,8 @@ namespace Catalyst.Node.Rpc.Client
             var message = observer.Payload.FromProtocolMessage<T>();
             if (!_handlers.ContainsKey(observer.Payload.TypeUrl))
             {
-                return message;
+                throw new ResponseHandlerDoesNotExistException(
+                    $"Response Handler does not exist for message type {observer.Payload.TypeUrl}");
             }
 
             var handler = _handlers[observer.Payload.TypeUrl];
