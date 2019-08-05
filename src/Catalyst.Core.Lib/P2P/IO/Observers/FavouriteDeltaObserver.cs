@@ -31,33 +31,34 @@ using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Deltas;
 using Serilog;
 using Catalyst.Common.Extensions;
+using Catalyst.Common.Interfaces.P2P;
 
 namespace Catalyst.Core.Lib.P2P.IO.Observers
 {
-    public class CandidateDeltaObserver : BroadcastObserverBase<CandidateDeltaBroadcast>, IP2PMessageObserver
+    public class FavouriteDeltaObserver : BroadcastObserverBase<FavouriteDeltaBroadcast>, IP2PMessageObserver
     {
-        private readonly IDeltaVoter _deltaVoter;
+        private readonly IDeltaElector _deltaElector;
 
-        public CandidateDeltaObserver(IDeltaVoter deltaVoter, ILogger logger) 
+        public FavouriteDeltaObserver(IDeltaElector deltaElector, ILogger logger) 
             : base(logger)
         {
-            _deltaVoter = deltaVoter;
+            _deltaElector = deltaElector;
         }
 
         public override void HandleBroadcast(IObserverDto<ProtocolMessage> messageDto)
         {
             try
             {
-                var deserialised = messageDto.Payload.FromProtocolMessage<CandidateDeltaBroadcast>();
+                var deserialised = messageDto.Payload.FromProtocolMessage<FavouriteDeltaBroadcast>();
 
-                _ = deserialised.PreviousDeltaDfsHash.ToByteArray().AsMultihash();
+                _ = deserialised.Candidate.PreviousDeltaDfsHash.ToByteArray().AsMultihash();
                 deserialised.IsValid();
                 
-                _deltaVoter.OnNext(deserialised);
+                _deltaElector.OnNext(deserialised);
             }
             catch (Exception exception)
             {
-                Logger.Error(exception, $"Failed to process candidate delta broadcast {messageDto.Payload.ToJsonString()}.");
+                Logger.Error(exception, $"Failed to process favourite delta broadcast {messageDto.Payload.ToJsonString()}.");
             }
         }
     }
