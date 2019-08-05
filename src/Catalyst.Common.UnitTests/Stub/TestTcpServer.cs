@@ -32,18 +32,16 @@ using Serilog;
 
 namespace Catalyst.Common.UnitTests.Stub
 {
-    public class TestSocketBase : SocketBase
+    public class TestTcpServer : TcpServer
     {
-        public TestSocketBase(IChannelFactory channelFactory,
+        public TestTcpServer(ITcpServerChannelFactory tcpServerChannelFactory,
             ILogger logger,
-            IEventLoopGroupFactory eventLoopGroupFactory) : base(channelFactory, logger, eventLoopGroupFactory)
+            IEventLoopGroupFactory eventLoopGroupFactory) : base(tcpServerChannelFactory, logger, eventLoopGroupFactory)
         {
             Channel = Substitute.For<IChannel>();
         }
 
         public void DisposeProxy(bool disposing) => Dispose(disposing);
-
-        protected override void Dispose(bool disposing) { base.Dispose(disposing); }
 
         public override Task StartAsync() { throw new NotImplementedException(); }
     }
