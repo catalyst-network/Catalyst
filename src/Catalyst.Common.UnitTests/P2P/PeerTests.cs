@@ -23,6 +23,7 @@
 
 using System;
 using Catalyst.Common.P2P;
+using Catalyst.Common.P2P.Models;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using SharpRepository.InMemoryRepository;

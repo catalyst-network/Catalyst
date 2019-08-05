@@ -29,6 +29,7 @@ using Newtonsoft.Json;
 using NSubstitute;
 using Serilog;
 using System.Threading.Tasks;
+using Catalyst.Common.P2P.Models;
 using Xunit;
 using Xunit.Abstractions;
 

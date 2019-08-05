@@ -1,0 +1,13 @@
+{
+    "defaultAssembly": "Catalyst.Modules.Lib",
+    "components": [
+        {
+            "type": "Catalyst.Modules.Lib.Web3Api.Web3Api",
+            "services": [
+                {
+                    "type": "Catalyst.Modules.Lib.Web3Api.IWeb3Api"
+                }
+            ]
+        }
+    ]
+}

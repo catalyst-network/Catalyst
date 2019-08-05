@@ -16,6 +16,7 @@
         <PackageReference Include="Catalyst.Cryptography.BulletProofs.Wrapper" Version="0.0.1.8962-beta" />
         <PackageReference Include="Catalyst.Protocol" Version="0.0.1.9075-beta" />
         <PackageReference Include="DotNetty.Codecs.Protobuf" Version="0.6.0" />
+        <PackageReference Include="GraphQL" Version="2.4.0" />
         <PackageReference Include="Ipfs.Api" Version="0.23.6" />
         <PackageReference Include="Ipfs.Core" Version="0.52.2" />
         <PackageReference Include="Ipfs.Engine" Version="0.11.3" />

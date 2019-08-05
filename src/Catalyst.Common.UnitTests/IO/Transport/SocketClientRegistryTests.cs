@@ -56,8 +56,7 @@ namespace Catalyst.Common.UnitTests.IO.Transport
             );
         }
 
-        private ISocketClientRegistry<ISocketClient> ConstructPopulatedSocketRepository(
-            Dictionary<int, ISocketClient> socketsByEndpointHashCode)
+        private ISocketClientRegistry<ISocketClient> ConstructPopulatedSocketRepository(Dictionary<int, ISocketClient> socketsByEndpointHashCode)
         {
             var clientSocketRegistry = new SocketClientRegistry<ISocketClient>();
             socketsByEndpointHashCode.ToList().ForEach(element =>

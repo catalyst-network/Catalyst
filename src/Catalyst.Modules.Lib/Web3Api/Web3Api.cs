@@ -21,20 +21,39 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.Modules.Mempool;
-using Catalyst.Protocol.Transaction;
-using Google.Protobuf;
-using Newtonsoft.Json;
-using SharpRepository.Repository;
+using System;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore;
+using Microsoft.AspNetCore.Hosting;
+using Autofac.Extensions.DependencyInjection;
 
-namespace Catalyst.Common.Modules.Mempool
+namespace Catalyst.Modules.Lib.Web3Api
 {
-    public class MempoolDocument : IMempoolDocument
+    public interface IWeb3Api : IDisposable
     {
-        [RepositoryPrimaryKey(Order = 1)]
-        [JsonProperty("id")]
-        public string DocumentId => Transaction?.Signature?.ToByteString()?.ToBase64();
+        Task StartApiAsync();
+    }
 
-        public TransactionBroadcast Transaction { get; set; }
+    public class Web3Api : IWeb3Api
+    {
+        private readonly IWebHost _host;
+
+        public Web3Api()
+        {
+            _host = WebHost.CreateDefaultBuilder()
+               .ConfigureServices(services => services.AddAutofac())
+               .UseStartup<Startup>()
+               .Build();
+        }
+
+        public Task StartApiAsync()
+        {
+            return _host.StartAsync();
+        }
+        
+        public void Dispose()
+        {
+            _host?.Dispose();
+        }
     }
 }

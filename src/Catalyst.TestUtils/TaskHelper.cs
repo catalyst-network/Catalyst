@@ -95,7 +95,7 @@ namespace Catalyst.TestUtils
             var watch = new Stopwatch();
             watch.Start();
             var success = await TaskHelper.WaitForAsync(
-                    () => IncreaseAndCheckIfAboveLimit(ref attempts, (int)(timeout.TotalMilliseconds / waitDelay.TotalMilliseconds) + 1), timeout)
+                    () => IncreaseAndCheckIfAboveLimit(ref attempts, (int) (timeout.TotalMilliseconds / waitDelay.TotalMilliseconds) + 1), timeout)
                .ConfigureAwait(false);
             watch.Stop();
 
@@ -140,7 +140,7 @@ namespace Catalyst.TestUtils
             var watch = new Stopwatch();
             watch.Start();
             new Func<Task>(async () => await TaskHelper.WaitForAsyncOrThrow(
-                        () => IncreaseAndCheckIfAboveLimit(ref attempts, (int)(timeout.TotalMilliseconds / waitDelay.TotalMilliseconds) + 1), timeout, waitDelay)
+                        () => IncreaseAndCheckIfAboveLimit(ref attempts, (int) (timeout.TotalMilliseconds / waitDelay.TotalMilliseconds) + 1), timeout, waitDelay)
                    .ConfigureAwait(false)).Should().Throw<XunitException>()
                .And.Message.Should().Contain(nameof(IncreaseAndCheckIfAboveLimit));
             watch.Stop();

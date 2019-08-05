@@ -41,6 +41,7 @@ using Catalyst.Common.Interfaces.P2P.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.Util;
 using Catalyst.Common.P2P;
 using Catalyst.Common.P2P.Discovery;
+using Catalyst.Common.P2P.Models;
 using Catalyst.Protocol;
 using Catalyst.Protocol.IPPN;
 using Serilog;

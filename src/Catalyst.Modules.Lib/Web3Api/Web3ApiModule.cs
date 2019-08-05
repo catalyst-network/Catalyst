@@ -21,10 +21,21 @@
 
 #endregion
 
-using Catalyst.Common.P2P;
-using Catalyst.Common.P2P.Models;
+using Autofac;
 
-namespace Catalyst.Common.Interfaces.Repository
+namespace Catalyst.Modules.Lib.Web3Api
 {
-    public interface IPeerRepository : IRepositoryWrapper<Peer> { }
+    public class Web3ApiModule : Module
+    {
+        protected override void Load(ContainerBuilder builder)
+        {
+            // The generic ILogger<TCategoryName> service was added to the ServiceCollection by ASP.NET Core.
+            // It was then registered with Autofac using the Populate method. All of this starts
+            // with the services.AddAutofac() that happens in Program and registers Autofac
+            // as the service provider.
+            // builder.Register(c => new ValuesService(c.Resolve<ILogger<ValuesService>>()))
+            //    .As<IValuesService>()
+            //    .SingleInstance();
+        }
+    }
 }

@@ -21,10 +21,30 @@
 
 #endregion
 
-using Catalyst.Common.P2P;
+using Catalyst.Common.Interfaces.Repository;
 using Catalyst.Common.P2P.Models;
+using GraphQL.Types;
 
-namespace Catalyst.Common.Interfaces.Repository
+namespace Catalyst.Modules.Lib.Web3Api.Models
 {
-    public interface IPeerRepository : IRepositoryWrapper<Peer> { }
+    internal sealed class NodeQuery : ObjectGraphType
+    {
+        public NodeQuery() { }
+
+        public NodeQuery(IMempoolRepository mempoolRepository,
+            IPeerRepository peerRepository,
+            IAccountRepository accountRepository)
+        {
+            Name = "Query";
+
+            Field<Peer>(
+                "peers",
+                arguments: null,
+                resolve: context =>
+                {
+                    return peerRepository.GetAll();
+                }
+            );
+        }
+    }
 }

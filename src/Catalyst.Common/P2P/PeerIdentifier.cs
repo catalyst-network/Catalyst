@@ -50,6 +50,9 @@ namespace Catalyst.Common.P2P
     ///     clientID [2] + clientVersion[2] + Ip[16] + Port[2] + pub[20]
     ///     The client ID for this implementation is "AC" or hexadecimal 4143
     /// </summary>
+    /// <summary>
+    ///     @TODO move to SDK
+    /// </summary>
     public sealed class PeerIdentifier : IPeerIdentifier
     {
         public static char PidDelimiter => '|';

@@ -21,10 +21,18 @@
 
 #endregion
 
-using Catalyst.Common.P2P;
-using Catalyst.Common.P2P.Models;
+using System;
+using GraphQL;
+using GraphQL.Types;
 
-namespace Catalyst.Common.Interfaces.Repository
+namespace Catalyst.Modules.Lib.Web3Api.Models
 {
-    public interface IPeerRepository : IRepositoryWrapper<Peer> { }
+    public class NodeSchema : Schema
+    {
+        public NodeSchema(Func<Type, GraphType> resolveType)
+            : base(new FuncDependencyResolver(resolveType))
+        {
+            Query = (NodeQuery) resolveType(typeof(NodeQuery));
+        }
+    }
 }
