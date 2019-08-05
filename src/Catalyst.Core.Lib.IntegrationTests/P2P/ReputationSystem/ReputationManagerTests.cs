@@ -41,23 +41,19 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.ReputationSystem
     public sealed class ReputationManagerTests : ConfigFileBasedTest
     {
         private readonly IReputationManager _reputationManager;
+        private ILifetimeScope _scope;
 
-        public ReputationManagerTests(ITestOutputHelper output) : base(output)
+        public ReputationManagerTests(ITestOutputHelper output) : base(new[]
         {
-            ConfigFilesUsed = new[]
-            {
-                Path.Combine(Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile),
-                Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile),
-                Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Network.Dev)),
-            };
-            
-            ConfigureContainerBuilder();
-            
-            var container = ContainerBuilder.Build();
-            using (container.BeginLifetimeScope(CurrentTestName))
-            {
-                _reputationManager = container.Resolve<IReputationManager>();
-            }
+            Path.Combine(Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile),
+            Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile),
+            Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Network.Dev)),
+        }, output)
+        {
+            ContainerProvider.ConfigureContainerBuilder();
+
+            _scope = ContainerProvider.Container.BeginLifetimeScope(CurrentTestName);
+            _reputationManager = _scope.Resolve<IReputationManager>();
         }
 
         private Peer SavePeerInRepo(IPeerIdentifier pid, int initialRep = 100)
@@ -100,9 +96,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.ReputationSystem
             var updatedSubbedPeer = _reputationManager.PeerRepository.Get(savedPeer.DocumentId);
             updatedSubbedPeer.Reputation.Should().Be(0);
         }
-
-        protected override IEnumerable<string> ConfigFilesUsed { get; }
-
+        
         [Fact]
         public void Can_Save_Decreased_Peer_To_Negative_Number()
         {
@@ -131,6 +125,16 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.ReputationSystem
             _reputationManager.OnNext(peerReputationChange);
             var updatedSubbedPeer = _reputationManager.PeerRepository.Get(savedPeer.DocumentId);
             updatedSubbedPeer.Reputation.Should().Be(100);
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _scope?.Dispose();
+            }
+
+            base.Dispose(disposing);
         }
     }
 }

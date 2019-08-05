@@ -29,14 +29,8 @@ using System.Threading.Tasks;
 using Autofac;
 using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces;
-using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Common.Interfaces.Modules.Consensus;
-using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Core.Lib.Modules.Dfs;
 using Catalyst.TestUtils;
-using Ipfs.CoreApi;
-using NSubstitute;
-using Serilog;
 using Xunit.Abstractions;
 
 namespace Catalyst.Core.Lib.IntegrationTests
@@ -45,20 +39,27 @@ namespace Catalyst.Core.Lib.IntegrationTests
     {
         public string Name { get; }
         private ILifetimeScope _scope;
-        private IContainer _container;
         private ICatalystNode _catalystNode;
 
-        protected override IEnumerable<string> ConfigFilesUsed { get; }
-
-        public TestCatalystNode(string name, ITestOutputHelper output) : base(output)
+        private readonly IEnumerable<string> _configFilesUsed = new[]
         {
-            Name = name;
-            ConfigFilesUsed = new[]
+            Constants.NetworkConfigFile(Network.Dev),
+            Constants.ComponentsJsonConfigFile,
+            Constants.SerilogJsonConfigFile
+        }.Select(f => Path.Combine(Constants.ConfigSubFolder, f));
+
+        private readonly ContainerProvider _configProvider;
+
+        public TestCatalystNode(string name, ITestOutputHelper output) 
+            : base(new[]
             {
-                Constants.NetworkConfigFile(Network.Main),
+                Constants.NetworkConfigFile(Network.Dev),
                 Constants.ComponentsJsonConfigFile,
                 Constants.SerilogJsonConfigFile
-            }.Select(f => Path.Combine(Constants.ConfigSubFolder, f));
+            }.Select(f => Path.Combine(Constants.ConfigSubFolder, f)), output)
+        {
+            Name = name;
+            _configProvider = new ContainerProvider(_configFilesUsed, FileSystem, output);
         }
 
         public async Task RunAsync(CancellationToken cancellationSourceToken)
@@ -71,33 +72,24 @@ namespace Catalyst.Core.Lib.IntegrationTests
             await _catalystNode.RunAsync(cancellationSourceToken);
         }
 
-        private IpfsAdapter ConfigureKeyTestDependency()
-        {
-            var passwordReader = Substitute.For<IPasswordReader>();
-            passwordReader.ReadSecurePasswordAndAddToRegistry(Arg.Any<PasswordRegistryKey>(), Arg.Any<string>())
-               .ReturnsForAnyArgs(TestPasswordReader.BuildSecureStringPassword("trendy"));
-            var logger = Substitute.For<ILogger>();
-            return new IpfsAdapter(passwordReader, FileSystem, logger);
-        }
-
         public void BuildNode()
         {
-            ConfigureContainerBuilder();
+            _configProvider.ConfigureContainerBuilder();
 
-            var ipfs = ConfigureKeyTestDependency();
-            ContainerBuilder.RegisterInstance(ipfs).As<ICoreApi>();
-
-            _container = ContainerBuilder.Build();
-
-            _scope = _container.BeginLifetimeScope(CurrentTestName);
+            _scope = _configProvider.Container.BeginLifetimeScope(CurrentTestName);
             _catalystNode = _scope.Resolve<ICatalystNode>();
         }
 
         protected override void Dispose(bool disposing)
         {
             base.Dispose(disposing);
-            _container.Dispose();
-            _scope.Dispose();
+            if (!disposing)
+            {
+                return;
+            }
+
+            _scope?.Dispose();
+            _configProvider?.Dispose();
         }
     }
 }

@@ -21,18 +21,26 @@
 
 #endregion
 
-using Multiformats.Base;
-using Multiformats.Hash;
-using Multiformats.Hash.Algorithms;
+using System.Net;
+using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.P2P;
+using Catalyst.Common.Util;
 
-namespace Catalyst.Common.Extensions
+namespace Catalyst.Core.Lib.P2P
 {
-    public static class MultihashExtensions
+    public sealed class PoaPeer
     {
-        public static string AsBase64UrlString(this Multihash multihash)
+        private string ClientVersion => "AC";
+
+        public string Ip { get; set; }
+
+        public int Port { get; set; }
+
+        public string PublicKey { get; set; }
+
+        public IPeerIdentifier ToPeerIdentifier()
         {
-            var result = multihash.ToString(MultibaseEncoding.Base64Url);
-            return result;
+            return new PeerIdentifier(PublicKey.KeyToBytes(), IPAddress.Parse(Ip), Port, new PeerIdClientId(ClientVersion));
         }
     }
 }
