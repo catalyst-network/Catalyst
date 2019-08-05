@@ -112,7 +112,7 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc
             var observerDto = new ObserverDto(_channelHandlerContext, protocolMessage);
 
             var iDisposable = _nodeRpcServer.MessageStream
-               .Where(x => x?.Payload.TypeUrl == typeof(VersionRequest).ShortenedProtoFullName())
+               .Where(x => x.Payload != null && x.Payload.TypeUrl == typeof(VersionRequest).ShortenedProtoFullName())
                .SubscribeOn(_testScheduler)
                .Subscribe(request => returnedVersionRequest = request.Payload.FromProtocolMessage<VersionRequest>());
 

@@ -55,7 +55,6 @@ namespace Catalyst.Common.IO.Transport
             Dispose(true);
         }
 
-        /*NEED TO LOOK OVER*/
         protected virtual void Dispose(bool disposing)
         {
             if (!disposing || Interlocked.Increment(ref _disposeCounter) > 1)

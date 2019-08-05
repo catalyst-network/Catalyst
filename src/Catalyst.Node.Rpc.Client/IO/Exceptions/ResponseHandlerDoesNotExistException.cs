@@ -25,8 +25,10 @@ using System;
 
 namespace Catalyst.Node.Rpc.Client.IO.Exceptions
 {
+    [Serializable]
     public class ResponseHandlerDoesNotExistException : Exception
     {
+        public ResponseHandlerDoesNotExistException() { }
         public ResponseHandlerDoesNotExistException(string message) : base(message) { }
     }
 }
