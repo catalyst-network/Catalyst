@@ -42,6 +42,7 @@ namespace Catalyst.Common.UnitTests.IO.Transport
             var eventLoopGroupFactory = Substitute.For<IEventLoopGroupFactory>();
             var testSocketBase = new TestSocketBase(channelFactory, logger, eventLoopGroupFactory);
 
+
             //var isChannelActive = testSocketBase.Channel.Active;
 
             //testSocketBase.Dispose();
