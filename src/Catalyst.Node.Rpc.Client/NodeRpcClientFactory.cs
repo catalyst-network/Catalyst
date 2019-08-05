@@ -27,6 +27,7 @@ using Catalyst.Common.Interfaces.IO.Transport.Channels;
 using Catalyst.Common.Interfaces.Rpc;
 using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
+using System.Threading.Tasks;
 
 namespace Catalyst.Node.Rpc.Client
 {
@@ -45,9 +46,12 @@ namespace Catalyst.Node.Rpc.Client
             _handlers = handlers;
         }
 
-        public INodeRpcClient GetClient(X509Certificate2 certificate, IRpcNodeConfig nodeConfig)
+        public async Task<INodeRpcClient> GetClient(X509Certificate2 certificate, IRpcNodeConfig nodeConfig)
         {
-            return new NodeRpcClient(_channelFactory, certificate, nodeConfig, _handlers, _clientEventLoopGroupFactory);
+            var nodeRpcClient = new NodeRpcClient(_channelFactory, certificate, nodeConfig, _handlers, _clientEventLoopGroupFactory);
+
+            await nodeRpcClient.StartAsync();
+            return nodeRpcClient;
         }
     }
 }

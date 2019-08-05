@@ -26,6 +26,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Reactive.Linq;
 using System.Security.Cryptography.X509Certificates;
+using System.Threading.Tasks;
 using Catalyst.Common.Interfaces.IO.EventLoop;
 using Catalyst.Common.Interfaces.IO.Handlers;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
@@ -103,12 +104,12 @@ namespace Catalyst.Core.Lib.P2P.IO.Transport.Channels
         /// <param name="targetPort">Ignored</param>
         /// <param name="certificate">Ignored</param>
         /// <returns></returns>
-        public override IObservableChannel BuildChannel(IEventLoopGroupFactory handlerEventLoopGroupFactory,
+        public override async Task<IObservableChannel> BuildChannel(IEventLoopGroupFactory handlerEventLoopGroupFactory,
             IPAddress targetAddress,
             int targetPort,
             X509Certificate2 certificate = null)
         {
-            var channel = BootStrapChannel(handlerEventLoopGroupFactory, targetAddress, targetPort);
+            var channel = await BootStrapChannel(handlerEventLoopGroupFactory, targetAddress, targetPort);
 
             var messageStream = channel.Pipeline.Get<IObservableServiceHandler>()?.MessageStream;
 

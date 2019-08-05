@@ -21,23 +21,28 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.IO.EventLoop;
-using Catalyst.Common.Interfaces.IO.Messaging.Dto;
-using Catalyst.Common.Interfaces.IO.Transport;
-using Catalyst.Common.Interfaces.IO.Transport.Channels;
-using Google.Protobuf;
-using Serilog;
+using System;
+using System.Net;
+using System.Threading.Tasks;
+using DotNetty.Transport.Bootstrapping;
+using FluentAssertions;
+using Xunit;
 
-namespace Catalyst.Common.IO.Transport
+namespace Catalyst.Common.UnitTests.IO.Transport.Bootstrapping
 {
-    public abstract class ClientBase : SocketBase, ISocketClient
+    public sealed class ServerBootstrapUnitTests
     {
-        protected ClientBase(IChannelFactory channelFactory, ILogger logger, IEventLoopGroupFactory handlerEventEventLoopGroupFactory)
-            : base(channelFactory, logger, handlerEventEventLoopGroupFactory) { }
-
-        public virtual void SendMessage<T>(IMessageDto<T> message) where T : IMessage<T>
+        [Fact]
+        public async Task BindAsync_Should_Bind_To_NettyServerBootstrap_BindAsync()
         {
-            Channel.WriteAsync(message).ConfigureAwait(false);
+            var ipAddress = IPAddress.Loopback;
+            var port = 9000;
+
+            var serverBootstrap = new ServerBootstrap();
+
+            //We have not set the group for bootstrap so we know that code will trigger an exception, if BindAsync calls Base BindAsync
+            var exception = await Record.ExceptionAsync(async () => { await serverBootstrap.BindAsync(ipAddress, port); });
+            exception.Should().BeOfType<InvalidOperationException>("group not set");
         }
     }
 }

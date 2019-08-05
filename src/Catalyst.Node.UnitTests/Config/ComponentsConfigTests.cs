@@ -29,6 +29,7 @@ using Autofac.Configuration;
 using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Common.Interfaces.IO.Observers;
+using Catalyst.Common.Interfaces.Keystore;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Registry;
 using Catalyst.Common.Util;
@@ -36,7 +37,6 @@ using Catalyst.Core.Lib.P2P.IO.Observers;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Microsoft.Extensions.Configuration;
-using Nethereum.RLP;
 using NSubstitute;
 using Serilog;
 using Xunit;
@@ -75,6 +75,9 @@ namespace Catalyst.Node.UnitTests.Config
             
             var keyRegistry = TestKeyRegistry.MockKeyRegistry();
             containerBuilder.RegisterInstance(keyRegistry).As<IKeyRegistry>();
+
+            var keyStore = Substitute.For<IKeyStore>();
+            containerBuilder.RegisterInstance(keyStore).As<IKeyStore>();
 
             var container = containerBuilder.Build();
             return container;

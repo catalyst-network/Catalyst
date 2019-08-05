@@ -23,6 +23,7 @@
 
 using System.Collections.Generic;
 using System.Net;
+using System.Threading.Tasks;
 using Catalyst.Common.Interfaces.IO.EventLoop;
 using Catalyst.Common.Interfaces.IO.Observers;
 using Catalyst.Common.Interfaces.IO.Transport.Channels;
@@ -46,14 +47,14 @@ namespace Catalyst.Node.Rpc.Client.UnitTests
         private readonly NodeRpcClientFactory _nodeRpcClientFactory;
 
         [Fact]
-        public void GetClient_Should_Return_NodeRpcClient()
+        public async Task GetClient_Should_Return_NodeRpcClient()
         {
             var nodeRpcConfig = Substitute.For<IRpcNodeConfig>();
             nodeRpcConfig.HostAddress = IPAddress.Any;
             nodeRpcConfig.NodeId = "0";
             nodeRpcConfig.PfxFileName = "pfx";
             nodeRpcConfig.Port = 9000;
-            var rpcClient = _nodeRpcClientFactory.GetClient(null, nodeRpcConfig);
+            var rpcClient = await _nodeRpcClientFactory.GetClient(null, nodeRpcConfig);
 
             rpcClient.Should().BeAssignableTo<INodeRpcClient>();
         }

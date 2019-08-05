@@ -28,15 +28,18 @@ using DotNetty.Transport.Channels;
 using Serilog;
 using System;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Catalyst.Common.IO.Transport
 {
-    public class SocketBase : ISocket
+    public abstract class SocketBase : ISocket
     {
         protected readonly IChannelFactory ChannelFactory;
         private readonly ILogger _logger;
+        private int _disposeCounter;
         protected readonly IEventLoopGroupFactory EventLoopGroupFactory;
+        public abstract Task StartAsync();
 
         public IChannel Channel { get; protected set; }
 
@@ -52,13 +55,14 @@ namespace Catalyst.Common.IO.Transport
             Dispose(true);
         }
 
+        /*NEED TO LOOK OVER*/
         protected virtual void Dispose(bool disposing)
         {
-            if (!disposing)
+            if (!disposing || Interlocked.Increment(ref _disposeCounter) > 1)
             {
                 return;
             }
-
+            
             _logger.Debug($"Disposing{GetType().Name}");
 
             var quietPeriod = TimeSpan.FromMilliseconds(100);

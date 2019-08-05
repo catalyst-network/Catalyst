@@ -29,6 +29,9 @@ using Newtonsoft.Json;
 using NSubstitute;
 using Serilog;
 using System.Threading.Tasks;
+using Catalyst.Common.Extensions;
+using Multiformats.Base;
+using Multiformats.Hash.Algorithms;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -38,16 +41,23 @@ namespace Catalyst.Core.Lib.UnitTests.P2P
     {
         public PoaDiscoveryTests(ITestOutputHelper output) : base(output) { }
 
-        [Theory]
-        [InlineData("AC|01|92.207.178.198|42069|01234567890123456789222222222222", "AC|01|127.0.0.1|42069|01234567890123456789222222222222")]
-        public async Task Can_Populate_Peers_Correctly(params string[] pids)
+        [Fact]
+        public async Task Can_Populate_Peers_Correctly()
         {
             var peerRepository = Substitute.For<IPeerRepository>();
-            await FileSystem.WriteTextFileToCddAsync(PoaDiscovery.PoaPeerFile, JsonConvert.SerializeObject(pids));
+            var pubkey = "hello".ComputeUtf8Multihash(new ID()).ToString(MultibaseEncoding.Base58Btc);
+
+            var peers = new[]
+            {
+                new PoaPeer {Ip = "92.207.178.198", Port = 42069, PublicKey = pubkey},
+                new PoaPeer {Ip = "127.0.0.1", Port = 42069, PublicKey = pubkey},
+            };
+
+            await FileSystem.WriteTextFileToCddAsync(PoaDiscovery.PoaPeerFile, JsonConvert.SerializeObject(peers));
 
             var peerDiscovery = new PoaDiscovery(peerRepository, FileSystem, Substitute.For<ILogger>());
             await peerDiscovery.DiscoveryAsync().ConfigureAwait(false);
-            peerRepository.Received(pids.Length).Add(Arg.Any<Peer>());
+            peerRepository.Received(peers.Length).Add(Arg.Any<Peer>());
         }
     }
 }

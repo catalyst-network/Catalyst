@@ -23,7 +23,6 @@
 
 using Catalyst.Cli.CommandTypes;
 using Catalyst.Cli.Options;
-using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.Cli.Commands;
 using Catalyst.Common.Network;
 using Dawn;
@@ -50,7 +49,7 @@ namespace Catalyst.Cli.Commands
             //Connect to the node and store it in the socket client registry
             var nodeRpcClient = CommandContext.NodeRpcClientFactory.GetClient(
                 CommandContext.CertificateStore.ReadOrCreateCertificateFile(rpcNodeConfigs.PfxFileName),
-                rpcNodeConfigs);
+                rpcNodeConfigs).ConfigureAwait(false).GetAwaiter().GetResult();
 
             if (!CommandContext.IsSocketChannelActive(nodeRpcClient))
             {

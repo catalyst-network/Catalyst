@@ -21,29 +21,34 @@
 
 #endregion
 
-using System;
-using System.Diagnostics;
 using System.Net;
 using System.Threading.Tasks;
-using Catalyst.Common.IO.Transport.Bootstrapping;
+using Catalyst.Common.IO.EventLoop;
+using Catalyst.Common.IO.Transport.Channels;
+using Catalyst.Common.UnitTests.Stub;
 using FluentAssertions;
 using Xunit;
 
-namespace Catalyst.Common.UnitTests.IO.Transport.Bootstrapping
+namespace Catalyst.Common.UnitTests.IO.Transport.Channels
 {
-    public sealed class BootstrapUnitTests
+    public sealed class TcpClientChannelFactoryTests
     {
         [Fact]
-        public async Task BindAsync_Should_Bind_To_NettyBootstrap_BindAsync()
+        public async Task TcpClientChannelFactory_BuildChannel_Should_Return_IObservableChannel()
         {
+            var eventLoopGroupFactoryConfiguration = new EventLoopGroupFactoryConfiguration
+            {
+                TcpClientHandlerWorkerThreads = 2
+            };
+
+            var eventLoopGroupFactory = new TcpClientEventLoopGroupFactory(eventLoopGroupFactoryConfiguration);
             var ipAddress = IPAddress.Loopback;
             var port = 9000;
 
-            var bootstrap = new Bootstrap();
+            var testTcpClientChannelFactory = new TestTcpClientChannelFactory();
+            var channel = await testTcpClientChannelFactory.BuildChannel(eventLoopGroupFactory, ipAddress, port);
 
-            //We have not set the group for bootstrap so we know that code will trigger an exception, if BindAsync calls Base BindAsync
-            var exception = await Record.ExceptionAsync(async () => { await bootstrap.BindAsync(ipAddress, port); });
-            exception.Should().BeOfType<InvalidOperationException>("group not set");
+            channel.Should().BeOfType<ObservableChannel>();
         }
     }
 }
