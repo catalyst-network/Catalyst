@@ -53,7 +53,6 @@ namespace Catalyst.Common.Kernel
         private IConfigCopier _configCopier;
         public ContainerBuilder ContainerBuilder { get; set; }
         private readonly ConfigurationBuilder _configurationBuilder;
-        private bool _pwOverride;
         private ILifetimeScope _instance;
         public ICancellationTokenProvider CancellationTokenProvider { get; }
 
@@ -247,8 +246,6 @@ namespace Catalyst.Common.Kernel
             {
                 return this;
             }
-
-            _pwOverride = true;
 
             _instance = ContainerBuilder.Build()
                .BeginLifetimeScope(MethodBase.GetCurrentMethod().DeclaringType.AssemblyQualifiedName);
