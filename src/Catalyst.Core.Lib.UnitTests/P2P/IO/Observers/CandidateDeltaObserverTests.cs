@@ -51,7 +51,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Observers
 
         public CandidateDeltaObserverTests()
         {
-            IMultihashAlgorithm multihashAlgorithm = new BLAKE2B_128();
+            var multihashAlgorithm = new BLAKE2B_128();
             _deltaVoter = Substitute.For<IDeltaVoter>();
             _fakeChannelContext = Substitute.For<IChannelHandlerContext>();
             var logger = Substitute.For<ILogger>();
