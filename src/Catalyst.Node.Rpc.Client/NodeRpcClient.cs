@@ -50,7 +50,6 @@ namespace Catalyst.Node.Rpc.Client
     {
         private readonly Dictionary<string, IRpcResponseObserver> _handlers;
 
-        /* Thread safe collection, in the case multiple observers are subscribing on multiple threads at the same time, removes concurrency issues. */
         private readonly IObservable<IObserverDto<ProtocolMessage>> _socketMessageStream;
 
         /// <summary>
