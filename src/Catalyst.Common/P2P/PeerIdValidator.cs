@@ -51,7 +51,7 @@ namespace Catalyst.Common.P2P
         {
             var publicKeyLength = _cryptoContext.PublicKeyLength;
             Guard.Argument(peerId, nameof(peerId)).NotNull()
-               .Require(p => p.PublicKey.Length == publicKeyLength, _ => $"PublicKey should be {publicKeyLength} bytes")
+               .Require(p => p.PublicKey.Length == publicKeyLength, p => $"PublicKey should be {publicKeyLength} bytes but was {p.PublicKey.Length}")
                .Require(p => p.Ip.Length == 16 && ValidateIp(p.Ip.ToByteArray()), _ => "Ip should be 16 bytes")
                .Require(p => ValidatePort(p.Port.ToByteArray()), _ => "Port should be between 1025 and 65535")
                .Require(p => ValidateClientId(p.ClientId.ToByteArray()),

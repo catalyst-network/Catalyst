@@ -21,17 +21,25 @@
 
 #endregion
 
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Autofac;
+using Catalyst.Common.Config;
+using Catalyst.Common.Extensions;
+using Catalyst.Common.FileSystem;
+using Catalyst.Common.Interfaces;
+using Catalyst.Common.Interfaces.FileSystem;
+using Catalyst.Common.Interfaces.Modules.Consensus;
 using Catalyst.Common.Interfaces.Modules.Dfs;
 using Catalyst.Common.Interfaces.Modules.Mempool;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Repository;
 using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.P2P;
-using Catalyst.Core.Lib.IntegrationTests;
-using Catalyst.Core.Lib.Rpc;
 using Catalyst.Modules.Lib.Dfs;
 using Catalyst.TestUtils;
 using Multiformats.Hash.Algorithms;
@@ -40,37 +48,88 @@ using Xunit.Abstractions;
 
 namespace Catalyst.Modules.Lib.IntegrationTests.Consensus
 {
-    public class PoaTestNode : TestCatalystNode
+    public class PoaTestNode : ICatalystNode, IDisposable
     {
+        public string Name { get; }
         private readonly FileSystemDfs _dfs;
         private readonly AutoFillingMempool _mempool;
         private readonly IPeerRepository _peerRepository;
         private readonly IPeerSettings _nodeSettings;
         private readonly IPeerIdentifier _nodePeerId;
         private readonly IRpcServerSettings _rpcSettings;
+        private readonly ContainerProvider _containerProvider;
+        private readonly ICatalystNode _node;
+        private readonly ILifetimeScope _scope;
+        private readonly IFileSystem _nodeFileSystem;
 
-        public PoaTestNode(IPeerSettings nodeSettings, IEnumerable<IPeerIdentifier> knownPeerIds, ITestOutputHelper output) 
-            : base(nodeSettings.PublicKey, output)
+        public PoaTestNode(string name,
+            IPeerSettings nodeSettings,
+            IEnumerable<IPeerIdentifier> knownPeerIds,
+            IFileSystem parentTestFileSystem,
+            ITestOutputHelper output)
         {
+            Name = name;
             _nodeSettings = nodeSettings;
+
+            _nodeFileSystem = Substitute.ForPartsOf<FileSystem>();
+            _nodeFileSystem.GetCatalystDataDir().Returns(parentTestFileSystem.GetCatalystDataDir().SubDirectoryInfo(Name));
 
             _rpcSettings = RpcServerSettingsHelper.GetRpcServerSettings(nodeSettings.Port + 100);
             _nodePeerId = new PeerIdentifier(nodeSettings);
-            _dfs = new FileSystemDfs(new BLAKE2B_128(), FileSystem);
+            var baseDfsFolder = Path.Combine(parentTestFileSystem.GetCatalystDataDir().FullName, "dfs");
+            _dfs = new FileSystemDfs(new BLAKE2B_128(), parentTestFileSystem, baseDfsFolder);
             _mempool = new AutoFillingMempool();
             _peerRepository = Substitute.For<IPeerRepository>();
             var peersInRepo = knownPeerIds.Select(p => new Peer {PeerIdentifier = p});
             _peerRepository.GetAll().Returns(peersInRepo);
+
+            _containerProvider = new ContainerProvider(new[]
+                {
+                    Constants.NetworkConfigFile(Network.Dev),
+                    Constants.ComponentsJsonConfigFile,
+                    Constants.SerilogJsonConfigFile
+                }
+               .Select(f => Path.Combine(Constants.ConfigSubFolder, f)), parentTestFileSystem, output);
+
+            _containerProvider.ConfigureContainerBuilder(true, true);
+            OverrideContainerBuilderRegistrations();
+
+            _scope = _containerProvider.Container.BeginLifetimeScope(Name);
+            _node = _scope.Resolve<ICatalystNode>();
         }
 
-        protected override void OverrideContainerBuilderRegistrations()
+        protected void OverrideContainerBuilderRegistrations()
         {
-            ContainerBuilder.RegisterInstance(_nodeSettings).As<IPeerSettings>();
-            ContainerBuilder.RegisterInstance(_rpcSettings).As<IRpcServerSettings>();
-            ContainerBuilder.RegisterInstance(_nodePeerId).As<IPeerIdentifier>();
-            ContainerBuilder.RegisterInstance(_dfs).As<IDfs>();
-            ContainerBuilder.RegisterInstance(_mempool).As<IMempool>();
-            ContainerBuilder.RegisterInstance(_peerRepository).As<IPeerRepository>();
+            _containerProvider.ContainerBuilder.RegisterInstance(_nodeSettings).As<IPeerSettings>();
+            _containerProvider.ContainerBuilder.RegisterInstance(_rpcSettings).As<IRpcServerSettings>();
+            _containerProvider.ContainerBuilder.RegisterInstance(_nodePeerId).As<IPeerIdentifier>();
+            _containerProvider.ContainerBuilder.RegisterInstance(_dfs).As<IDfs>();
+            _containerProvider.ContainerBuilder.RegisterInstance(_mempool).As<IMempool>();
+            _containerProvider.ContainerBuilder.RegisterInstance(_peerRepository).As<IPeerRepository>();
+            _containerProvider.ContainerBuilder.RegisterInstance(_nodeFileSystem);
+        }
+
+        public IConsensus Consensus => _node.Consensus;
+
+        public async Task RunAsync(CancellationToken cancellationSourceToken) { await _node.RunAsync(cancellationSourceToken).ConfigureAwait(false); }
+
+        public async Task StartSockets() { await _node.StartSockets(); }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposing)
+            {
+                return;
+            }
+
+            _scope?.Dispose();   
+            _peerRepository?.Dispose();
+            _containerProvider?.Dispose();
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
         }
     }
 }

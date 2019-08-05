@@ -47,31 +47,31 @@ namespace Catalyst.Modules.Lib.IntegrationTests.Consensus
             _endOfTestCancellationSource = new CancellationTokenSource();
 
             var peerSettings = Enumerable.Range(0, 3).Select(i =>
-                PeerSettingsHelper.TestPeerSettings($"producer{i}", port: 1000 + i)
+                PeerSettingsHelper.TestPeerSettings($"producer{i}", port: 2000 + i)
             ).ToList();
 
             var peerIdentifiers = peerSettings
                .Select(p => new PeerIdentifier(p) as IPeerIdentifier)
                .ToList();
 
-            _nodesById = peerSettings
-               .Zip(peerIdentifiers, (settings, identifier) => new {Settings = settings, Identifier = identifier})
-               .ToDictionary(p => p.Identifier, 
-                    p => new PoaTestNode(p.Settings, peerIdentifiers.Except(new[] {p.Identifier}), output));
+            _nodesById = peerSettings.Select((p, i) => new {Settings = p, Index = i, Identifier = new PeerIdentifier(p) as IPeerIdentifier})
+               .ToDictionary(
+                    p => p.Identifier, 
+                    p => new PoaTestNode($"producer{p.Index}", p.Settings, peerIdentifiers.Except(new[] {p.Identifier}), FileSystem, output));
         }
 
         [Fact]
         public async Task Run_Consensus()
         {
-            _nodesById.Values.AsParallel()
-               .ForAll(n => n.RunAsync(_endOfTestCancellationSource.Token));
-
             var observer = Observer.Create<IPhase>(p => Output.WriteLine(p.ToString()));
+            _nodesById.Values.AsParallel()
+               .ForAll(async n =>
+                {
+                    n.Consensus.CycleEventsProvider.PhaseChanges.Subscribe(observer);
+                    n.RunAsync(_endOfTestCancellationSource.Token);
+                });
 
-            _nodesById.Values.First().Consensus.CycleEventsProvider.PhaseChanges
-               .Subscribe(observer);
-
-            await Task.Delay(TimeSpan.FromSeconds(30));
+            await Task.Delay(TimeSpan.FromSeconds(5));
 
             _endOfTestCancellationSource.CancelAfter(TimeSpan.FromMinutes(3));
         }
