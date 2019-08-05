@@ -51,6 +51,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
                 var deserialised = messageDto.Payload.FromProtocolMessage<CandidateDeltaBroadcast>();
 
                 _ = deserialised.PreviousDeltaDfsHash.ToByteArray().AsMultihash();
+                _ = deserialised.Hash.ToByteArray().AsMultihash();
                 deserialised.IsValid();
                 
                 _deltaVoter.OnNext(deserialised);
