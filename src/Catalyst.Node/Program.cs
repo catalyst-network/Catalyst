@@ -29,16 +29,16 @@ namespace Catalyst.Node
 {
     internal class Options
     {
-        [Option('p', "dfs-password", HelpText = "The password for Dfs.  Defaults to prompting for the password.")]
+        [Option("dfs-password", HelpText = "The password for Dfs.  Defaults to prompting for the password.")]
         public string DfsPassword { get; set; }
         
-        [Option('p', "ipfs-password", HelpText = "The password for IPFS.  Defaults to prompting for the password.")]
+        [Option("ipfs-password", HelpText = "The password for IPFS.  Defaults to prompting for the password.")]
         public string IpfsPassword { get; set; }
         
-        [Option('c', "ssl-cert-password", HelpText = "The password for ssl cert.  Defaults to prompting for the password.")]
+        [Option("ssl-cert-password", HelpText = "The password for ssl cert.  Defaults to prompting for the password.")]
         public string SslCertPassword { get; set; }
         
-        [Option('c', "node-password", HelpText = "The password for the node.  Defaults to prompting for the password.")]
+        [Option("node-password", HelpText = "The password for the node.  Defaults to prompting for the password.")]
         public string NodePassword { get; set; }
         
         [Option('o', "overwrite-config", HelpText = "Overwrite the data directory configs.")]
