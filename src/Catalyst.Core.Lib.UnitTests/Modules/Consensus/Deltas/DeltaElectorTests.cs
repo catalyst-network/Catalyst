@@ -144,6 +144,24 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Consensus.Deltas
         }
 
         [Fact]
+        public void When_voter_not_a_producer_should_not_save_vote()
+        {
+            var favourite = FavouriteDeltaHelper.GetFavouriteDelta();
+
+            _deltaProducersProvider
+               .GetDeltaProducersFromPreviousDelta(Arg.Any<byte[]>())
+               .Returns(new List<IPeerIdentifier> {PeerIdentifierHelper.GetPeerIdentifier("the only known producer")});
+
+            var elector = new DeltaElector(_cache, _deltaProducersProvider, _logger);
+
+            elector.OnNext(favourite);
+
+            _deltaProducersProvider.Received(1)
+               .GetDeltaProducersFromPreviousDelta(Arg.Is<byte[]>(h => favourite.Candidate.PreviousDeltaDfsHash.Equals(h.ToByteString())));
+            _cache.DidNotReceiveWithAnyArgs().TryGetValue(default, out _);
+        }
+
+        [Fact]
         public void When_favourite_has_different_producer_it_should_not_create_duplicate_entries()
         {
             using (var realCache = new MemoryCache(new MemoryCacheOptions()))
