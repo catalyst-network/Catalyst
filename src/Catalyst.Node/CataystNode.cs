@@ -33,6 +33,7 @@ using Catalyst.Common.Interfaces.Modules.Ledger;
 using Catalyst.Common.Interfaces.Modules.Mempool;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Rpc;
+using Catalyst.Modules.Lib.Web3Api;
 using Serilog;
 
 namespace Catalyst.Node
@@ -48,7 +49,8 @@ namespace Catalyst.Node
         private readonly IMempool _mempool;
         private readonly IPeerService _peer;
         private readonly INodeRpcServer _nodeRpcServer;
-        
+        private readonly IWeb3Api _web3Api;
+
         public CatalystNode(IKeySigner keySigner,
             IPeerService peer,
             IConsensus consensus,
@@ -56,6 +58,7 @@ namespace Catalyst.Node
             ILedger ledger,
             ILogger logger,
             INodeRpcServer nodeRpcServer,
+            IWeb3Api web3Api,
             IMempool mempool = null,
             IContract contract = null)
         {
@@ -66,6 +69,7 @@ namespace Catalyst.Node
             _keySigner = keySigner;
             _logger = logger;
             _nodeRpcServer = nodeRpcServer;
+            _web3Api = web3Api;
             _mempool = mempool;
             _contract = contract;
         }
@@ -73,6 +77,7 @@ namespace Catalyst.Node
         public async Task RunAsync(CancellationToken ct)
         {
             _logger.Information("Starting the Catalyst Node");
+            await _web3Api.StartApiAsync();
             bool exit;
             do
             {

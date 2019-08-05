@@ -13,5 +13,13 @@
     <ItemGroup>
       <ProjectReference Include="..\Catalyst.Common\Catalyst.Common.csproj" />
     </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Autofac" Version="4.8.1" />
+        <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="4.3.1" />
+        <PackageReference Include="GraphQL" Version="2.4.0" />
+        <PackageReference Include="Microsoft.AspNetCore" Version="2.2.0" />
+        <PackageReference Include="Microsoft.AspNetCore.App" />
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
+    </ItemGroup>
     <Import Project="../Common.Projects.props" />
 </Project>

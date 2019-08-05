@@ -391,6 +391,12 @@
         {
             "type": "Catalyst.Core.Lib.Modules.JsonConfiguredModule",
             "parameters": {
+                "configFilePath": "Config/Modules/web3api.json"
+            }
+        },
+        {
+            "type": "Catalyst.Core.Lib.Modules.JsonConfiguredModule",
+            "parameters": {
                 "configFilePath": "Config/Modules/dfs.json"
             }
         },

@@ -98,8 +98,8 @@ namespace Catalyst.Core.Lib.IntegrationTests.Modules.Dfs
         public async Task DFS_should_connect_to_a_seednode()
         {
             var seeds = (await _ipfs.Bootstrap.ListAsync().ConfigureAwait(false))
-                .Select(a => a.PeerId)
-                .ToArray();
+               .Select(a => a.PeerId)
+               .ToArray();
             Assert.True(seeds.Length > 0, "no seed nodes defined");
 
             // Wait for a connection to a seed node.
@@ -114,7 +114,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.Modules.Dfs
                 await Task.Delay(100).ConfigureAwait(false);
             }
 
-            _output.WriteLine($"Found in {(DateTime.Now - start).TotalSeconds} seconds.");
+            _output.WriteLine($"Found in {(DateTime.Now - start).TotalSeconds.ToString()} seconds.");
         }
 
         protected override void Dispose(bool disposing)
