@@ -29,9 +29,6 @@ namespace Catalyst.Node
 {
     internal class Options
     {
-        [Option("dfs-password", HelpText = "The password for Dfs.  Defaults to prompting for the password.")]
-        public string DfsPassword { get; set; }
-        
         [Option("ipfs-password", HelpText = "The password for IPFS.  Defaults to prompting for the password.")]
         public string IpfsPassword { get; set; }
         
@@ -96,7 +93,7 @@ namespace Catalyst.Node
                    .WithConfigCopier()
                    .WithPersistenceConfiguration()
                    .BuildKernel(options.OverwriteConfig)
-                   .WithPasswordOverRide(options.SslCertPassword, options.IpfsPassword, options.DfsPassword, options.NodePassword)
+                   .WithPasswordOverRide(options.SslCertPassword, options.IpfsPassword, options.NodePassword)
                    .StartNode();
 
                 // .StartCustom(CustomBootLogic);

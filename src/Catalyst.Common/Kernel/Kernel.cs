@@ -240,11 +240,10 @@ namespace Catalyst.Common.Kernel
         
         public Kernel WithPasswordOverRide(string certificatePasswordKey = null,
             string ipfsPasswordKey = null,
-            string dfsPasswordKey = null,
             string defaultNodePasswordKey = null)
         {
             if (certificatePasswordKey == null && ipfsPasswordKey == null 
-             && dfsPasswordKey == null && defaultNodePasswordKey == null)
+             && defaultNodePasswordKey == null)
             {
                 return this;
             }
@@ -279,19 +278,7 @@ namespace Catalyst.Common.Kernel
                     
                 passwordRegistry.AddItemToRegistry(PasswordRegistryKey.IpfsPassword, ipk);
             }
-                
-            if (dfsPasswordKey != null)
-            {
-                var dpk = new SecureString();
-                    
-                foreach (var c in dfsPasswordKey)
-                {
-                    dpk.AppendChar(c);
-                }
-                    
-                passwordRegistry.AddItemToRegistry(PasswordRegistryKey.DfsPassword, dpk);
-            }
-                
+                              
             if (defaultNodePasswordKey != null)
             {
                 var dnpk = new SecureString();
