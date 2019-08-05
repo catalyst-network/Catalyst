@@ -24,6 +24,7 @@
 using System;
 using System.IO;
 using System.Reflection;
+using System.Security;
 using Autofac;
 using Autofac.Configuration;
 using AutofacSerilogIntegration;
@@ -31,6 +32,7 @@ using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces;
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.Config;
+using Catalyst.Common.Interfaces.Registry;
 using Catalyst.Common.Interfaces.Util;
 using Catalyst.Common.Util;
 using Microsoft.Extensions.Configuration;
@@ -40,7 +42,7 @@ using SharpRepository.Repository;
 
 namespace Catalyst.Common.Kernel
 {
-    public sealed class Kernel
+    public sealed class Kernel : IDisposable
     {
         public ILogger Logger { get; private set; }
         private string _withPersistence;
@@ -51,6 +53,8 @@ namespace Catalyst.Common.Kernel
         private IConfigCopier _configCopier;
         public ContainerBuilder ContainerBuilder { get; set; }
         private readonly ConfigurationBuilder _configurationBuilder;
+        private bool _pwOverride;
+        private ILifetimeScope _instance;
         public ICancellationTokenProvider CancellationTokenProvider { get; }
 
         public delegate void CustomBootLogic(Kernel kernel);
@@ -95,7 +99,6 @@ namespace Catalyst.Common.Kernel
             var config = _configurationBuilder.Build();
             var configurationModule = new ConfigurationModule(config);
 
-            ContainerBuilder.RegisterLogger(Logger);
             ContainerBuilder.RegisterInstance(config);
             
             if (!string.IsNullOrEmpty(_withPersistence))
@@ -114,53 +117,11 @@ namespace Catalyst.Common.Kernel
                     outputTemplate: "{Timestamp:HH:mm:ss} [{Level:u3}] ({MachineName}/{ThreadId}) {Message} ({SourceContext}){NewLine}{Exception}")
                .CreateLogger()
                .ForContext(MethodBase.GetCurrentMethod().DeclaringType);
+            ContainerBuilder.RegisterLogger(Logger);
 
             Log.Logger = Logger;
             
             return this;
-        }
-        
-        /// <summary>
-        ///     Allows custom nodes to write custom code for containerBuilder
-        /// </summary>
-        /// <param name="customBootLogic"></param>
-        public void StartCustom(CustomBootLogic customBootLogic)
-        {
-            customBootLogic.Invoke(this);
-        }
-
-        /// <summary>
-        ///     Default container resolution for Catalyst.Node
-        /// </summary>
-        public void StartNode()
-        {
-            using (var instance = ContainerBuilder.Build().BeginLifetimeScope(MethodBase.GetCurrentMethod().DeclaringType.AssemblyQualifiedName))
-            {
-                instance.Resolve<ICatalystNode>()
-                   .RunAsync(CancellationTokenProvider.CancellationTokenSource.Token)
-                   .Wait(CancellationTokenProvider.CancellationTokenSource.Token);
-            }
-        }
-
-        /// <summary>
-        ///     Default container resolution for advanced CLI.
-        /// </summary>
-        public void StartCli()
-        {
-            const int bufferSize = 1024 * 67 + 128;
-
-            Console.SetIn(
-                new StreamReader(
-                    Console.OpenStandardInput(bufferSize),
-                    Console.InputEncoding, false, bufferSize
-                )
-            );
-            
-            using (var instance = ContainerBuilder.Build().BeginLifetimeScope(MethodBase.GetCurrentMethod().DeclaringType.AssemblyQualifiedName))
-            {
-                instance.Resolve<ICatalystCli>()
-                   .RunConsole(CancellationTokenProvider.CancellationTokenSource.Token);
-            }
         }
 
         public Kernel WithDataDirectory()
@@ -219,6 +180,130 @@ namespace Catalyst.Common.Kernel
         public Kernel WithPersistenceConfiguration(string configSection = null)
         {
             _withPersistence = configSection ?? "CatalystNodeConfiguration:PersistenceConfiguration";
+
+            return this;
+        }
+
+        /// <summary>
+        ///     Allows custom nodes to write custom code for containerBuilder
+        /// </summary>
+        /// <param name="customBootLogic"></param>
+        public void StartCustom(CustomBootLogic customBootLogic)
+        {
+            customBootLogic.Invoke(this);
+        }
+
+        /// <summary>
+        ///     Default container resolution for Catalyst.Node
+        /// </summary>
+        public void StartNode()
+        {
+            if (_instance == null)
+            {
+                _instance = ContainerBuilder.Build()
+                   .BeginLifetimeScope(MethodBase.GetCurrentMethod().DeclaringType.AssemblyQualifiedName);
+            }
+            
+            _instance.Resolve<ICatalystNode>()
+               .RunAsync(CancellationTokenProvider.CancellationTokenSource.Token)
+               .Wait(CancellationTokenProvider.CancellationTokenSource.Token);
+        }
+
+        public void Dispose()
+        {
+            _instance?.Dispose();
+        }
+
+        /// <summary>
+        ///     Default container resolution for advanced CLI.
+        /// </summary>
+        public void StartCli()
+        {
+            const int bufferSize = 1024 * 67 + 128;
+
+            Console.SetIn(
+                new StreamReader(
+                    Console.OpenStandardInput(bufferSize),
+                    Console.InputEncoding, false, bufferSize
+                )
+            );
+            
+            if (_instance == null)
+            {
+                _instance = ContainerBuilder.Build()
+                   .BeginLifetimeScope(MethodBase.GetCurrentMethod().DeclaringType.AssemblyQualifiedName);
+            }
+
+            _instance.Resolve<ICatalystCli>()
+               .RunConsole(CancellationTokenProvider.CancellationTokenSource.Token);
+        }
+        
+        public Kernel WithPasswordOverRide(string certificatePasswordKey = null,
+            string ipfsPasswordKey = null,
+            string dfsPasswordKey = null,
+            string defaultNodePasswordKey = null)
+        {
+            if (certificatePasswordKey == null && ipfsPasswordKey == null 
+             && dfsPasswordKey == null && defaultNodePasswordKey == null)
+            {
+                return this;
+            }
+
+            _pwOverride = true;
+
+            _instance = ContainerBuilder.Build()
+               .BeginLifetimeScope(MethodBase.GetCurrentMethod().DeclaringType.AssemblyQualifiedName);
+            
+            var passwordRegistry = _instance.Resolve<IPasswordRegistry>();
+
+            if (certificatePasswordKey != null)
+            {
+                var cpk = new SecureString();
+                    
+                foreach (var c in certificatePasswordKey)
+                {
+                    cpk.AppendChar(c);
+                }
+                    
+                passwordRegistry.AddItemToRegistry(PasswordRegistryKey.CertificatePassword, cpk);
+            }
+                
+            if (ipfsPasswordKey != null)
+            {
+                var ipk = new SecureString();
+                    
+                foreach (var c in ipfsPasswordKey)
+                {
+                    ipk.AppendChar(c);
+                }
+                    
+                passwordRegistry.AddItemToRegistry(PasswordRegistryKey.IpfsPassword, ipk);
+            }
+                
+            if (dfsPasswordKey != null)
+            {
+                var dpk = new SecureString();
+                    
+                foreach (var c in dfsPasswordKey)
+                {
+                    dpk.AppendChar(c);
+                }
+                    
+                passwordRegistry.AddItemToRegistry(PasswordRegistryKey.DfsPassword, dpk);
+            }
+                
+            if (defaultNodePasswordKey != null)
+            {
+                var dnpk = new SecureString();
+                    
+                foreach (var c in defaultNodePasswordKey)
+                {
+                    dnpk.AppendChar(c);
+                }
+                    
+                passwordRegistry.AddItemToRegistry(PasswordRegistryKey.DefaultNodePassword, dnpk);
+            }
+            
 
             return this;
         }

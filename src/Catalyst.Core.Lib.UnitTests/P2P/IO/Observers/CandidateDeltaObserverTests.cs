@@ -91,7 +91,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Observers
 
         private IObserverDto<ProtocolMessage> PrepareReceivedMessage(byte[] newHash, byte[] prevHash, PeerId producerId)
         {
-            var message = new CandidateDeltaBroadcast()
+            var message = new CandidateDeltaBroadcast
             {
                 Hash = newHash.ToByteString(),
                 PreviousDeltaDfsHash = prevHash.ToByteString(),

@@ -22,22 +22,29 @@
 #endregion
 
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Net;
 using Catalyst.Common.Config;
+using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Rpc;
+using Catalyst.Common.Util;
+using Multiformats.Hash.Algorithms;
 using NSubstitute;
 
 namespace Catalyst.TestUtils
 {
     public static class PeerSettingsHelper
     {
-        public static IPeerSettings TestPeerSettings(string publicKey = null, int port = 42069)
+        public static IPeerSettings TestPeerSettings(string publicKey = "publicKey", int port = 42069)
         {
             var peerSettings = Substitute.For<IPeerSettings>();
             peerSettings.Network.Returns(Network.Dev);
-            peerSettings.PublicKey.Returns(TestKeyRegistry.TestPublicKey);
-            peerSettings.Port.Returns(42069);
+            peerSettings.PublicKey.Returns(
+                publicKey?.ComputeUtf8Multihash(new ID()).ToBytes().KeyToString() 
+             ?? TestKeyRegistry.TestPublicKey);
+            peerSettings.Port.Returns(port);
             peerSettings.PayoutAddress.Returns("my_pay_out_address");
             peerSettings.BindAddress.Returns(IPAddress.Loopback);
             peerSettings.SeedServers.Returns(new List<string>

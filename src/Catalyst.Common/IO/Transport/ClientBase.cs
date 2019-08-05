@@ -30,7 +30,7 @@ using Serilog;
 
 namespace Catalyst.Common.IO.Transport
 {
-    public class ClientBase : SocketBase, ISocketClient
+    public abstract class ClientBase : SocketBase, ISocketClient
     {
         protected ClientBase(IChannelFactory channelFactory, ILogger logger, IEventLoopGroupFactory handlerEventEventLoopGroupFactory)
             : base(channelFactory, logger, handlerEventEventLoopGroupFactory) { }

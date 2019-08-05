@@ -21,14 +21,14 @@
 
 #endregion
 
-using System;
 using Catalyst.Common.Interfaces.IO.Observers;
+using Catalyst.Common.Interfaces.IO.Transport;
 using Catalyst.Common.Interfaces.P2P.Discovery;
 using Catalyst.Protocol.Common;
 
 namespace Catalyst.Common.Interfaces.P2P
 {
-    public interface IPeerService : IObservableMessageStreamer<ProtocolMessage>, IDisposable
+    public interface IPeerService : IObservableMessageStreamer<ProtocolMessage>, ISocket
     {
         /// <summary>
         ///     The discovery mechanism for the peer network.

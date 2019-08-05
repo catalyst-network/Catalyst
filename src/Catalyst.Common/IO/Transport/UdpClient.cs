@@ -28,7 +28,7 @@ using Serilog;
 
 namespace Catalyst.Common.IO.Transport
 {
-    public class UdpClient : ClientBase, IUdpClient
+    public abstract class UdpClient : ClientBase, IUdpClient
     {
         protected UdpClient(IUdpClientChannelFactory clientChannelFactory, ILogger logger, IUdpClientEventLoopGroupFactory eventLoopGroupFactory)
             : base(clientChannelFactory, logger, eventLoopGroupFactory) { }

@@ -33,5 +33,7 @@ namespace Catalyst.Common.Interfaces
         IConsensus Consensus { get; }
 
         Task RunAsync(CancellationToken cancellationSourceToken);
+
+        Task StartSockets();
     }
 }

@@ -1,5 +1,0 @@
-seed1.catalystnetwork.io  TXT     172.26.0.101:42069
-seed2.catalystnetwork.io  TXT     172.26.0.102:42069
-seed3.catalystnetwork.io  TXT     172.26.0.103:42069
-seed4.catalystnetwork.io  TXT     172.26.0.104:42069
-seed5.catalystnetwork.io  TXT     172.26.0.105:42069

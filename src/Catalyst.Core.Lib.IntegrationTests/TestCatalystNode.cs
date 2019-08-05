@@ -39,22 +39,27 @@ namespace Catalyst.Core.Lib.IntegrationTests
     {
         public string Name { get; }
         private ILifetimeScope _scope;
-        private IContainer _container;
         private ICatalystNode _catalystNode;
 
-        protected override IEnumerable<string> ConfigFilesUsed { get; }
-
-        public IConsensus Consensus => _catalystNode.Consensus;
-
-        public TestCatalystNode(string name, ITestOutputHelper output) : base(output)
+        private readonly IEnumerable<string> _configFilesUsed = new[]
         {
-            Name = name;
-            ConfigFilesUsed = new[]
+            Constants.NetworkConfigFile(Network.Dev),
+            Constants.ComponentsJsonConfigFile,
+            Constants.SerilogJsonConfigFile
+        }.Select(f => Path.Combine(Constants.ConfigSubFolder, f));
+
+        private readonly ContainerProvider _configProvider;
+
+        public TestCatalystNode(string name, ITestOutputHelper output) 
+            : base(new[]
             {
-                Constants.NetworkConfigFile(Network.Main),
+                Constants.NetworkConfigFile(Network.Dev),
                 Constants.ComponentsJsonConfigFile,
                 Constants.SerilogJsonConfigFile
-            }.Select(f => Path.Combine(Constants.ConfigSubFolder, f));
+            }.Select(f => Path.Combine(Constants.ConfigSubFolder, f)), output)
+        {
+            Name = name;
+            _configProvider = new ContainerProvider(_configFilesUsed, FileSystem, output);
         }
 
         public async Task RunAsync(CancellationToken cancellationSourceToken)
@@ -63,29 +68,30 @@ namespace Catalyst.Core.Lib.IntegrationTests
             {
                 BuildNode();
             }
-
+                    
             await _catalystNode.RunAsync(cancellationSourceToken);
         }
 
-        protected virtual void OverrideContainerBuilderRegistrations() { }
+        public async Task StartSockets() => await _catalystNode.StartSockets();
 
         public void BuildNode()
         {
-            ConfigureContainerBuilder();
+            _configProvider.ConfigureContainerBuilder();
 
-            OverrideContainerBuilderRegistrations();
-
-            _container = ContainerBuilder.Build();
-
-            _scope = _container.BeginLifetimeScope(CurrentTestName);
+            _scope = _configProvider.Container.BeginLifetimeScope(CurrentTestName);
             _catalystNode = _scope.Resolve<ICatalystNode>();
         }
 
         protected override void Dispose(bool disposing)
         {
             base.Dispose(disposing);
-            _container.Dispose();
-            _scope.Dispose();
+            if (!disposing)
+            {
+                return;
+            }
+
+            _scope?.Dispose();
+            _configProvider?.Dispose();
         }
     }
 }

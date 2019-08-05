@@ -82,6 +82,7 @@ namespace Catalyst.Common.P2P
 
             var publicKeyStr = config.GetSection("CatalystCliConfig")
                .GetSection("PublicKey").Value;
+
             var publicKey = GetIfRegistryContainsPublicKey(publicKeyStr.KeyToBytes(), registry, userOutput);
 
             return new PeerIdentifier(publicKey,
@@ -129,11 +130,6 @@ namespace Catalyst.Common.P2P
                 GetIfRegistryContainsPublicKey(settings.PublicKey.KeyToBytes(), registry, userOutput), 
                 new IPEndPoint(settings.BindAddress.MapToIPv4(), settings.Port), clientId) { }
 
-        public PeerIdentifier(IPeerSettings settings, IPeerIdClientId clientId = null)
-            : this(settings.PublicKey.ToBytesForRLPEncoding(), 
-                new IPEndPoint(settings.BindAddress.MapToIPv4(), settings.Port), 
-                clientId ?? new PeerIdClientId()) { }
-        
         public PeerIdentifier(IEnumerable<byte> publicKey, IPAddress ipAddress, int port, IPeerIdClientId clientId)
             : this(publicKey, EndpointBuilder.BuildNewEndPoint(ipAddress, port), clientId) { }
         
@@ -151,7 +147,7 @@ namespace Catalyst.Common.P2P
 
         public override string ToString()
         {
-            return ClientId + ClientVersion + $"@{Ip}:{Port.ToString()}" + $"|{PublicKey.ToHex()}";
+            return ClientId + ClientVersion + $"@{Ip}:{Port.ToString()}" + $"|{PublicKey.KeyToString()}";
         }
 
         public bool Equals(IPeerIdentifier other)

@@ -21,23 +21,25 @@
 
 #endregion
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reactive.Linq;
+using System.Reflection;
+using System.Security.Cryptography.X509Certificates;
+using System.Threading.Tasks;
+using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.EventLoop;
+using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Observers;
 using Catalyst.Common.Interfaces.IO.Transport.Channels;
 using Catalyst.Common.Interfaces.Rpc;
-using Catalyst.Common.Interfaces.Rpc.IO.Messaging.Dto;
 using Catalyst.Common.IO.Transport;
+using Catalyst.Common.P2P;
+using Catalyst.Protocol;
+using Catalyst.Protocol.Common;
 using Google.Protobuf;
 using Serilog;
-using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reactive.Concurrency;
-using System.Reactive.Linq;
-using System.Reactive.Subjects;
-using System.Reflection;
-using System.Security.Cryptography.X509Certificates;
 
 namespace Catalyst.Node.Rpc.Client
 {
@@ -47,9 +49,14 @@ namespace Catalyst.Node.Rpc.Client
     /// </summary>
     internal sealed class NodeRpcClient : TcpClient, INodeRpcClient
     {
-        private readonly ConcurrentBag<IDisposable> _messageSubscriptions;
-        private readonly ReplaySubject<IRpcClientMessageDto<IMessage>> _allHandledRpcResponses;
-        private readonly IObservable<IRpcClientMessageDto<IMessage>> _allHandledRpcResponsesStream;
+        private readonly ITcpClientChannelFactory _channelFactory;
+        private readonly IEnumerable<IRpcResponseObserver> _rpcResponseObservers;
+        private readonly X509Certificate2 _certificate;
+        private readonly IRpcNodeConfig _nodeConfig;
+        private Dictionary<string, IRpcResponseObserver> _handlers;
+
+        /* Thread safe collection, in the case multiple observers are subscribing on multiple threads at the same time, removes concurrency issues. */
+        private IObservable<IObserverDto<ProtocolMessage>> _socketMessageStream;
 
         /// <summary>
         ///     Initialize a new instance of RPClient
@@ -67,39 +74,44 @@ namespace Catalyst.Node.Rpc.Client
             : base(channelFactory, Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType),
                 clientEventLoopGroupFactory)
         {
-            _messageSubscriptions = new ConcurrentBag<IDisposable>();
-            _allHandledRpcResponses = new ReplaySubject<IRpcClientMessageDto<IMessage>>(1);
-            _allHandledRpcResponsesStream = _allHandledRpcResponses.AsObservable();
-
-            var socket = channelFactory.BuildChannel(EventLoopGroupFactory, nodeConfig.HostAddress, nodeConfig.Port, certificate);
-            handlers.ToList().ForEach(handler =>
-            {
-                handler.MessageResponseStream.Subscribe(_allHandledRpcResponses);
-                handler.StartObserving(socket.MessageStream);
-            });
-            Channel = socket.Channel;
+            _channelFactory = channelFactory;
+            _rpcResponseObservers = handlers;
+            _certificate = certificate;
+            _nodeConfig = nodeConfig;
         }
 
-        public void SubscribeToResponse<T>(Action<T> onNext)
+        public IDisposable SubscribeToResponse<T>(Action<T> onNext) where T : IMessage<T>
         {
-            _messageSubscriptions.Add(_allHandledRpcResponsesStream
-               .Where(x => x.Message.GetType() == typeof(T))
-               .SubscribeOn(NewThreadScheduler.Default)
-               .Subscribe(rpcClientMessageDto =>
-                    onNext((T) rpcClientMessageDto.Message)
-                ));
+            return _socketMessageStream.Where(x => x.Payload.TypeUrl == typeof(T).ShortenedProtoFullName())
+               .Select(SubscriptionOutPipeline<T>).Subscribe(onNext);
         }
 
-        protected override void Dispose(bool disposing)
+        private T SubscriptionOutPipeline<T>(IObserverDto<ProtocolMessage> observer) where T : IMessage<T>
         {
-            foreach (var subscription in _messageSubscriptions)
+            var message = observer.Payload.FromProtocolMessage<T>();
+            if (!_handlers.ContainsKey(observer.Payload.TypeUrl))
             {
-                subscription?.Dispose();
+                return message;
             }
 
-            _messageSubscriptions.Clear();
-            _allHandledRpcResponses?.Dispose();
-            base.Dispose(disposing);
+            var handler = _handlers[observer.Payload.TypeUrl];
+            handler.HandleResponseObserver(message, observer.Context, new PeerIdentifier(observer.Payload.PeerId),
+                observer.Payload.CorrelationId.ToCorrelationId());
+
+            return message;
+        }
+
+        public override async Task StartAsync()
+        {
+            var socket = await _channelFactory.BuildChannel(EventLoopGroupFactory, _nodeConfig.HostAddress, _nodeConfig.Port,
+                _certificate);
+
+            _socketMessageStream = socket.MessageStream;
+
+            _handlers = _rpcResponseObservers.ToDictionary(
+                x => x.GetType().BaseType.GenericTypeArguments[0].ShortenedProtoFullName(), x => x);
+
+            Channel = socket.Channel;
         }
     }
 }

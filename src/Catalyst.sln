@@ -15,7 +15,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Common.UnitTests.props = Common.UnitTests.props
 		..\CONTRIBUTING.md = ..\CONTRIBUTING.md
 		..\COPYING = ..\COPYING
-		..\devnet_dnszone.txt = ..\devnet_dnszone.txt
 		..\dns-docker-compose.yml = ..\dns-docker-compose.yml
 		..\Dockerfile = ..\Dockerfile
 		..\entrypoint.sh = ..\entrypoint.sh

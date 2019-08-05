@@ -15,7 +15,8 @@
                 {
                     "type": "Catalyst.Common.Interfaces.Repository.IPeerRepository, Catalyst.Common"
                 }
-            ]
+            ],
+            "instanceScope": "singleinstance"
         },
         {
             "type": "Catalyst.Core.Lib.Repository.AuthCredentialRepository, Catalyst.Core.Lib",
@@ -183,7 +184,7 @@
         },
 
         {
-            "type": "Catalyst.Core.Lib.Rpc.Authentication.NoAuthenticationStrategy",
+            "type": "Catalyst.Core.Lib.Rpc.Authentication.RepositoryAuthenticationStrategy",
             "services": [
                 {
                     "type": "Catalyst.Common.Interfaces.Rpc.Authentication.IAuthenticationStrategy, Catalyst.Common"
@@ -268,15 +269,23 @@
                 {
                     "type": "Catalyst.Common.Interfaces.P2P.IPeerChallenger, Catalyst.Common"
                 }
-            ]
+            ],
+            "parameters": {
+                "peerChallengeWaitTimeSeconds": 5
+            },
+            "instanceScope": "singleinstance"
         },
         {
-            "type": "Catalyst.Core.Lib.P2P.PeerClient",
+            "type": "Catalyst.Core.Lib.P2P.PeerHeartbeatChecker",
             "services": [
                 {
-                    "type": "Catalyst.Common.Interfaces.P2P.IPeerClient, Catalyst.Common"
+                    "type": "Catalyst.Common.Interfaces.P2P.IPeerHeartbeatChecker, Catalyst.Common"
                 }
-            ]
+            ],
+            "parameters": {
+                "checkHeartbeatIntervalSeconds": 10,
+                "maxNonResponsiveCounter": 3
+            }
         },
         {
             "type": "Catalyst.Common.Cryptography.CertificateStore, Catalyst.Common",
@@ -293,24 +302,6 @@
                     "type": "Catalyst.Common.Interfaces.Cryptography.IDeterministicRandom, Catalyst.Common"
                 }
             ]
-        },
-        {
-            "type": "Catalyst.Common.Registry.PasswordRegistry, Catalyst.Common",
-            "services": [
-                {
-                    "type": "Catalyst.Common.Interfaces.Registry.IPasswordRegistry, Catalyst.Common"
-                }
-            ],
-            "instanceScope": "singleinstance"
-        },
-        {
-            "type": "Catalyst.Common.Cryptography.ConsolePasswordReader, Catalyst.Common",
-            "services": [
-                {
-                    "type": "Catalyst.Common.Interfaces.Cryptography.IPasswordReader, Catalyst.Common"
-                }
-            ],
-            "instanceScope": "singleinstance"
         },
         // WHY USE CLI BASED CLASS AND NOT IN COMMON???
         {
