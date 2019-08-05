@@ -22,11 +22,12 @@
 #endregion
 
 using System.Security.Cryptography.X509Certificates;
+using System.Threading.Tasks;
 
 namespace Catalyst.Common.Interfaces.Rpc
 {
     public interface INodeRpcClientFactory
     {
-        INodeRpcClient GetClient(X509Certificate2 certificate, IRpcNodeConfig nodeConfig);
+        Task<INodeRpcClient> GetClient(X509Certificate2 certificate, IRpcNodeConfig nodeConfig);
     }
 }

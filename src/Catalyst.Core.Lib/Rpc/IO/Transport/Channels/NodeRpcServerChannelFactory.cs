@@ -26,6 +26,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Reactive.Linq;
 using System.Security.Cryptography.X509Certificates;
+using System.Threading.Tasks;
 using Catalyst.Common.Interfaces.IO.EventLoop;
 using Catalyst.Common.Interfaces.IO.Handlers;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
@@ -100,12 +101,12 @@ namespace Catalyst.Core.Lib.Rpc.IO.Transport.Channels
         /// <param name="targetPort"></param>
         /// <param name="certificate">Local TLS certificate</param>
         /// <param name="targetAddress"></param>
-        public override IObservableChannel BuildChannel(IEventLoopGroupFactory handlerEventLoopGroupFactory,
+        public override async Task<IObservableChannel> BuildChannel(IEventLoopGroupFactory handlerEventLoopGroupFactory,
             IPAddress targetAddress,
             int targetPort,
             X509Certificate2 certificate = null)
         {
-            var channel = Bootstrap(handlerEventLoopGroupFactory, targetAddress, targetPort, certificate);
+            var channel = await Bootstrap(handlerEventLoopGroupFactory, targetAddress, targetPort, certificate);
             
             var messageStream = _observableServiceHandler.MessageStream;
 

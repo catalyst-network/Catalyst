@@ -26,6 +26,7 @@ using System.Linq;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using Catalyst.Common.Extensions;
+using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.IO.Messaging.Dto;
 using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Common.IO.Messaging.Dto;
@@ -47,7 +48,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Observers
         public PingResponseObserverTests()
         {
             _fakeContext = Substitute.For<IChannelHandlerContext>();
-            _observer = new PingResponseObserver(Substitute.For<ILogger>());
+            _observer = new PingResponseObserver(Substitute.For<ILogger>(), Substitute.For<IPeerChallenger>());
         }
 
         [Fact]
