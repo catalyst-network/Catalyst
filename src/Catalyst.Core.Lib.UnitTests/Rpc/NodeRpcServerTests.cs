@@ -59,34 +59,31 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc
         {
             _testScheduler = new TestScheduler();
             _rpcServerSettings = Substitute.For<IRpcServerSettings>();
-            _logger = Substitute.For<ILogger>();
+            var logger = Substitute.For<ILogger>();
             _peerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("", "", 0);
             _channelHandlerContext = Substitute.For<IChannelHandlerContext>();
 
-            _tcpServerEventLoopGroupFactory = Substitute.For<ITcpServerEventLoopGroupFactory>();
+            var tcpServerEventLoopGroupFactory1 = Substitute.For<ITcpServerEventLoopGroupFactory>();
 
             _mockSocketReplySubject = new ReplaySubject<IObserverDto<ProtocolMessage>>(1, _testScheduler);
             var mockChannel = Substitute.For<IChannel>();
             var mockEventStream = _mockSocketReplySubject.AsObservable();
             var observableChannel = new ObservableChannel(mockEventStream, mockChannel);
 
-            _tcpServerChannelFactory = Substitute.For<ITcpServerChannelFactory>();
-            _tcpServerChannelFactory.BuildChannel(_tcpServerEventLoopGroupFactory, Arg.Any<IPAddress>(), Arg.Any<int>(),
+            var tcpServerChannelFactory = Substitute.For<ITcpServerChannelFactory>();
+            tcpServerChannelFactory.BuildChannel(tcpServerEventLoopGroupFactory1, Arg.Any<IPAddress>(), Arg.Any<int>(),
                 Arg.Any<X509Certificate2>()).Returns(observableChannel);
 
             var certificateStore = Substitute.For<ICertificateStore>();
             var requestHandlers = new List<IRpcRequestObserver>();
             var tcpServerEventLoopGroupFactory = Substitute.For<ITcpServerEventLoopGroupFactory>();
-            _nodeRpcServer = new NodeRpcServer(_rpcServerSettings, _logger, _tcpServerChannelFactory, certificateStore,
+            _nodeRpcServer = new NodeRpcServer(_rpcServerSettings, logger, tcpServerChannelFactory, certificateStore,
                 requestHandlers, tcpServerEventLoopGroupFactory);
         }
 
-        private readonly ITcpServerChannelFactory _tcpServerChannelFactory;
-        private readonly ITcpServerEventLoopGroupFactory _tcpServerEventLoopGroupFactory;
         private readonly ReplaySubject<IObserverDto<ProtocolMessage>> _mockSocketReplySubject;
 
         private readonly TestScheduler _testScheduler;
-        private readonly ILogger _logger;
         private readonly IPeerIdentifier _peerIdentifier;
         private readonly NodeRpcServer _nodeRpcServer;
         private readonly IRpcServerSettings _rpcServerSettings;
@@ -111,7 +108,7 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc
 
             var observerDto = new ObserverDto(_channelHandlerContext, protocolMessage);
 
-            var iDisposable = _nodeRpcServer.MessageStream
+            _nodeRpcServer.MessageStream
                .Where(x => x.Payload != null && x.Payload.TypeUrl == typeof(VersionRequest).ShortenedProtoFullName())
                .SubscribeOn(_testScheduler)
                .Subscribe(request => returnedVersionRequest = request.Payload.FromProtocolMessage<VersionRequest>());

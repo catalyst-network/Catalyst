@@ -37,7 +37,7 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc
         {
             const string pfxFileName = "pfx";
             const int port = 9000;
-            const string bindAddress = "127.0.0.1";
+            var bindAddress = IPAddress.Loopback.ToString();
 
             var config = Substitute.For<IConfigurationRoot>();
             var rpcSection = config.GetSection("CatalystNodeConfiguration").GetSection("Rpc");
