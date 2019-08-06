@@ -40,7 +40,6 @@ using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.IO.Transport.Channels;
 using Catalyst.Core.Lib.Rpc;
-using Catalyst.Protocol;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;

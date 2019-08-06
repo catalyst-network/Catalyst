@@ -34,42 +34,41 @@ namespace Catalyst.Common.UnitTests.IO.Transport
 {
     public sealed class SocketBaseUnitTests
     {
+        public SocketBaseUnitTests()
+        {
+            _logger = Substitute.For<ILogger>();
+            var channelFactory = Substitute.For<ITcpClientChannelFactory>();
+            var eventLoopGroupFactory = Substitute.For<IEventLoopGroupFactory>();
+            _testSocketBase = new TestSocketBase(channelFactory, _logger, eventLoopGroupFactory);
+        }
+
+        private readonly ILogger _logger;
+        private readonly TestSocketBase _testSocketBase;
+
         [Fact]
         public void SocketBase_Should_Dispose()
         {
-            var channelFactory = Substitute.For<ITcpClientChannelFactory>();
-            var logger = Substitute.For<ILogger>();
-            var eventLoopGroupFactory = Substitute.For<IEventLoopGroupFactory>();
-            var testSocketBase = new TestSocketBase(channelFactory, logger, eventLoopGroupFactory);
-            testSocketBase.Dispose();
+            _testSocketBase.Dispose();
 
-            logger.Received(1).Debug($"Disposing{typeof(TestSocketBase).Name}");
+            _logger.Received(1).Debug($"Disposing{typeof(TestSocketBase).Name}");
         }
 
         [Fact]
         public void SocketBase_Should_Log_On_Dispose_Exception()
         {
-            var channelFactory = Substitute.For<ITcpClientChannelFactory>();
-            var logger = Substitute.For<ILogger>();
-            var eventLoopGroupFactory = Substitute.For<IEventLoopGroupFactory>();
-            var testSocketBase = new TestSocketBase(channelFactory, logger, eventLoopGroupFactory);
             var socketException = new SocketException();
-            testSocketBase.Channel.CloseAsync().Throws(socketException);
-            testSocketBase.DisposeProxy(true);
+            _testSocketBase.Channel.CloseAsync().Throws(socketException);
+            _testSocketBase.DisposeProxy(true);
 
-            logger.Received(1).Error(socketException, "Dispose failed to complete.");
+            _logger.Received(1).Error(socketException, "Dispose failed to complete.");
         }
 
         [Fact]
         public void SocketBase_Should_Not_Dispose()
         {
-            var channelFactory = Substitute.For<ITcpClientChannelFactory>();
-            var logger = Substitute.For<ILogger>();
-            var eventLoopGroupFactory = Substitute.For<IEventLoopGroupFactory>();
-            var testSocketBase = new TestSocketBase(channelFactory, logger, eventLoopGroupFactory);
-            testSocketBase.DisposeProxy(false);
+            _testSocketBase.DisposeProxy(false);
 
-            logger.DidNotReceive().Debug($"Disposing{typeof(TestSocketBase).Name}");
+            _logger.DidNotReceive().Debug($"Disposing{typeof(TestSocketBase).Name}");
         }
     }
 }
