@@ -99,21 +99,15 @@ namespace Catalyst.Node.Rpc.Client.UnitTests
         {
             var nodeRpcClientFactory = new NodeRpcClientFactory(_channelFactory, _clientEventLoopGroupFactory,
                 new List<IRpcResponseObserver> {new GetVersionResponseObserver(_logger)});
-
             var nodeRpcClient = await nodeRpcClientFactory.GetClient(null, _rpcNodeConfig);
-
             var receivedResponse = false;
             var targetVersionResponse = new VersionResponse {Version = "1.2.3.4"};
-
             var protocolMessage =
                 targetVersionResponse.ToProtocolMessage(_peerIdentifier.PeerId, CorrelationId.GenerateCorrelationId());
-
             var observerDto = new ObserverDto(_channelHandlerContext, protocolMessage);
 
             _mockSocketReplySubject.OnNext(observerDto);
-
             nodeRpcClient.SubscribeToResponse<GetDeltaResponse>(response => receivedResponse = true);
-
             _testScheduler.Start();
 
             receivedResponse.Should().BeFalse();
@@ -124,21 +118,15 @@ namespace Catalyst.Node.Rpc.Client.UnitTests
         {
             var nodeRpcClientFactory = new NodeRpcClientFactory(_channelFactory, _clientEventLoopGroupFactory,
                 new List<IRpcResponseObserver> {new GetVersionResponseObserver(_logger)});
-
             var nodeRpcClient = await nodeRpcClientFactory.GetClient(null, _rpcNodeConfig);
-
             VersionResponse returnedVersionResponse = null;
             var targetVersionResponse = new VersionResponse {Version = "1.2.3.4"};
-
             var protocolMessage =
                 targetVersionResponse.ToProtocolMessage(_peerIdentifier.PeerId, CorrelationId.GenerateCorrelationId());
-
             var observerDto = new ObserverDto(_channelHandlerContext, protocolMessage);
 
             _mockSocketReplySubject.OnNext(observerDto);
-
             nodeRpcClient.SubscribeToResponse<VersionResponse>(response => returnedVersionResponse = response);
-
             _testScheduler.Start();
 
             targetVersionResponse.Should().Be(returnedVersionResponse);
@@ -149,21 +137,16 @@ namespace Catalyst.Node.Rpc.Client.UnitTests
         {
             var nodeRpcClientFactory = new NodeRpcClientFactory(_channelFactory, _clientEventLoopGroupFactory,
                 new List<IRpcResponseObserver>());
-
             var nodeRpcClient = await nodeRpcClientFactory.GetClient(null, _rpcNodeConfig);
-
             var targetVersionResponse = new VersionResponse {Version = "1.2.3.4"};
-
             var protocolMessage =
                 targetVersionResponse.ToProtocolMessage(_peerIdentifier.PeerId, CorrelationId.GenerateCorrelationId());
-
             var observerDto = new ObserverDto(_channelHandlerContext, protocolMessage);
+
             var exception = Record.Exception(() =>
             {
                 _mockSocketReplySubject.OnNext(observerDto);
-
                 nodeRpcClient.SubscribeToResponse<VersionResponse>(response => { });
-
                 _testScheduler.Start();
             });
 
