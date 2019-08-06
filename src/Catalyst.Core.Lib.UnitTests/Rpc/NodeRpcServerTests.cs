@@ -38,8 +38,8 @@ using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Common.IO.Messaging.Dto;
-using Catalyst.Common.IO.Transport.Channels;
 using Catalyst.Core.Lib.Rpc;
+using Catalyst.Core.Lib.UnitTests.Helpers;
 using Catalyst.Protocol;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
@@ -57,22 +57,17 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc
     {
         public NodeRpcServerTests()
         {
+            var logger = Substitute.For<ILogger>();
             _testScheduler = new TestScheduler();
             _rpcServerSettings = Substitute.For<IRpcServerSettings>();
-            var logger = Substitute.For<ILogger>();
             _peerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("", "", 0);
             _channelHandlerContext = Substitute.For<IChannelHandlerContext>();
+            _mockSocketReplySubject = new ReplaySubject<IObserverDto<ProtocolMessage>>(1, _testScheduler);
 
             var tcpServerEventLoopGroupFactory = Substitute.For<ITcpServerEventLoopGroupFactory>();
-
-            _mockSocketReplySubject = new ReplaySubject<IObserverDto<ProtocolMessage>>(1, _testScheduler);
-            var mockChannel = Substitute.For<IChannel>();
-            var mockEventStream = _mockSocketReplySubject.AsObservable();
-            var observableChannel = new ObservableChannel(mockEventStream, mockChannel);
-
             var tcpServerChannelFactory = Substitute.For<ITcpServerChannelFactory>();
             tcpServerChannelFactory.BuildChannel(tcpServerEventLoopGroupFactory, Arg.Any<IPAddress>(), Arg.Any<int>(),
-                Arg.Any<X509Certificate2>()).Returns(observableChannel);
+                Arg.Any<X509Certificate2>()).Returns(ObservableHelpers.MockObservableChannel(_mockSocketReplySubject));
 
             var certificateStore = Substitute.For<ICertificateStore>();
             var requestHandlers = new List<IRpcRequestObserver>();
@@ -82,7 +77,6 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc
         }
 
         private readonly ReplaySubject<IObserverDto<ProtocolMessage>> _mockSocketReplySubject;
-
         private readonly TestScheduler _testScheduler;
         private readonly IPeerIdentifier _peerIdentifier;
         private readonly NodeRpcServer _nodeRpcServer;
