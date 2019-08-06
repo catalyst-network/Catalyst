@@ -27,9 +27,9 @@ using Google.Protobuf;
 using Newtonsoft.Json;
 using SharpRepository.Repository;
 
-namespace Catalyst.Common.Modules.Mempool
+namespace Catalyst.Common.Modules.Mempool.Models
 {
-    public class MempoolDocument : IMempoolDocument
+    public sealed class MempoolDocument : IMempoolDocument
     {
         [RepositoryPrimaryKey(Order = 1)]
         [JsonProperty("id")]

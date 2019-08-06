@@ -25,7 +25,7 @@ using System.Text;
 
 namespace Catalyst.Modules.Lib.Web3Api.Models
 {
-    public class Web3Query
+    public sealed class Web3Query
     {
         public string OperationName { get; set; }
         public string NamedQuery { get; set; }
@@ -35,7 +35,9 @@ namespace Catalyst.Modules.Lib.Web3Api.Models
         public override string ToString()
         {
             var builder = new StringBuilder();
+            
             builder.AppendLine();
+            
             if (!string.IsNullOrWhiteSpace(OperationName))
             {
                 builder.AppendLine($"OperationName = {OperationName}");

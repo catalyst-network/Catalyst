@@ -21,18 +21,61 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.IO.Handlers;
+using System;
+using System.Threading.Tasks;
+using Catalyst.Modules.Lib.Web3Api.Models;
+using GraphQL;
+using GraphQL.Types;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using Serilog;
 
 namespace Catalyst.Modules.Lib.Web3Api.Controllers
 {
     public sealed class Web3Controller : Controller
     {
-        private readonly IObservableServiceHandler _observableServiceHandler;
-        
-        public Web3Controller(IObservableServiceHandler observableServiceHandler)
+        private IDocumentExecuter DocumentExecutor { get; set; }
+        private ISchema Schema { get; set; }
+        private readonly ILogger _logger;
+
+        public Web3Controller(IDocumentExecuter documentExecutor, ISchema schema, ILogger logger)
         {
-            _observableServiceHandler = observableServiceHandler;
+            DocumentExecutor = documentExecutor;
+            Schema = schema;
+            _logger = logger;
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Post([FromBody] Web3Query query)
+        {
+            if (query == null)
+            {
+                throw new ArgumentNullException(nameof(query));
+            }
+
+            var executionOptions = new ExecutionOptions
+            {
+                Schema = Schema, Query = query.Query
+            };
+
+            try
+            {
+                var result = await DocumentExecutor.ExecuteAsync(executionOptions).ConfigureAwait(false);
+
+                if (result.Errors?.Count > 0)
+                {
+                    _logger.Debug("Web3Api errors: {0}", result.Errors);
+                    return BadRequest(result);
+                }
+
+                _logger.Debug("Web3Api execution result: {result}", JsonConvert.SerializeObject(result.Data));
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.Debug("Document exexutor exception", ex);
+                return BadRequest(ex);
+            }
         }
     }
 }

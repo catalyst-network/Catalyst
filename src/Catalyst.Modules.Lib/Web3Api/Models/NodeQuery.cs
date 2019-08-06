@@ -21,6 +21,8 @@
 
 #endregion
 
+using Catalyst.Common.Interfaces.Repository;
+using Catalyst.Common.P2P.Models;
 using GraphQL.Types;
 
 namespace Catalyst.Modules.Lib.Web3Api.Models
@@ -28,5 +30,21 @@ namespace Catalyst.Modules.Lib.Web3Api.Models
     internal sealed class NodeQuery : ObjectGraphType
     {
         public NodeQuery() { }
+
+        public NodeQuery(IMempoolRepository mempoolRepository,
+            IPeerRepository peerRepository,
+            IAccountRepository accountRepository)
+        {
+            Name = "Query";
+
+            Field<Peer>(
+                "peers",
+                arguments: null,
+                resolve: context =>
+                {
+                    return peerRepository.GetAll();
+                }
+            );
+        }
     }
 }

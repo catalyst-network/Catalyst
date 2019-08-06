@@ -36,11 +36,11 @@ namespace Catalyst.Modules.Lib.Web3Api
 
     public class Web3Api : IWeb3Api
     {
-        readonly IWebHost host;
+        private readonly IWebHost _host;
 
         public Web3Api()
         {
-            host = WebHost.CreateDefaultBuilder()
+            _host = WebHost.CreateDefaultBuilder()
                .ConfigureServices(services => services.AddAutofac())
                .UseStartup<Startup>()
                .Build();
@@ -48,12 +48,12 @@ namespace Catalyst.Modules.Lib.Web3Api
 
         public Task StartApiAsync()
         {
-            return host.StartAsync();
+            return _host.StartAsync();
         }
         
         public void Dispose()
         {
-            host?.Dispose();
+            _host?.Dispose();
         }
     }
 }

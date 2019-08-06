@@ -21,19 +21,41 @@
 
 #endregion
 
+using System;
 using Catalyst.Common.Attributes;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Util;
 using Google.Protobuf;
+using GraphQL.Types;
 using Newtonsoft.Json;
 using SharpRepository.Repository;
-using System;
 
-namespace Catalyst.Common.P2P
+namespace Catalyst.Common.P2P.Models
 {
     [Audit]
-    public sealed class Peer : IPeer
+    public sealed class Peer : InterfaceGraphType<Peer>, IPeer
     {
+        public Peer()
+        {
+            Name = "Peer";
+
+            Field(d => d.PeerIdentifier).Description("PID of node.");
+            Field(d => d.Reputation).Description("Reputation of node.");
+            Field(d => d.BlackListed).Description("Blacklist status of node.");
+            Field(d => d.Created).Description("Date node first seen.");
+            Field(d => d.Modified).Description("Date node last modified.");
+            Field(d => d.LastSeen).Description("Date node last seen.");
+            Field(d => d.IsAwolPeer).Description("Is the node missing.");
+            Field(d => d.InactiveFor).Description("Is the node inactive.");
+        }
+        
+        [RepositoryPrimaryKey(Order = 1)]
+        [JsonProperty("id")]
+        public string DocumentId => PeerIdentifier.PeerId?.ToByteString().ToBase64();
+        
+        /// <inheritdoc />
+        public IPeerIdentifier PeerIdentifier { get; set; }
+            
         /// <inheritdoc />
         public int Reputation { get; set; }
 
@@ -53,17 +75,10 @@ namespace Catalyst.Common.P2P
         public DateTime LastSeen { get; set; }
 
         /// <inheritdoc />
-        public IPeerIdentifier PeerIdentifier { get; set; }
-
-        /// <inheritdoc />
         public bool IsAwolPeer => InactiveFor > TimeSpan.FromMinutes(30);
 
         /// <inheritdoc />
         public TimeSpan InactiveFor => DateTimeUtil.UtcNow - LastSeen;
-
-        [RepositoryPrimaryKey(Order = 1)]
-        [JsonProperty("id")]
-        public string DocumentId => PeerIdentifier.PeerId?.ToByteString().ToBase64();
 
         /// <inheritdoc />
         public void Touch() { LastSeen = DateTimeUtil.UtcNow; }
