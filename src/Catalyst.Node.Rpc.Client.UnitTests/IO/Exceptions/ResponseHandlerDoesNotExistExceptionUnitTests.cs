@@ -37,7 +37,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Exceptions
         {
             var exception =
                 new ResponseHandlerDoesNotExistException(
-                    "Message", new Exception("Inner exception."));
+                    "Message");
 
             var exceptionToString = exception.ToString();
 
