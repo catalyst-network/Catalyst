@@ -35,21 +35,17 @@ namespace Catalyst.Common.UnitTests.Utils
         {
             var maxTimeSpan = TimeSpan.MaxValue;
             var retryCount = 0;
+            var milliseconds = Math.Pow(2, retryCount);
 
-            while (true)
+            while (milliseconds < maxTimeSpan.TotalMilliseconds)
             {
-                var milliseconds = Math.Pow(2, retryCount);
-                if (milliseconds > maxTimeSpan.TotalMilliseconds)
-                {
-                    break;
-                }
-
                 var result = DateTimeUtil.GetExponentialTimeSpan(retryCount);
                 var target = TimeSpan.FromMilliseconds(milliseconds);
                 var comparison = TimeSpan.Compare(result, target);
                 comparison.Should().Be(0);
 
                 retryCount++;
+                milliseconds = Math.Pow(2, retryCount);
             }
         }
     }
