@@ -15,7 +15,8 @@
                 {
                     "type": "Catalyst.Common.Interfaces.Repository.IPeerRepository, Catalyst.Common"
                 }
-            ]
+            ],
+            "instanceScope": "singleinstance"
         },
         {
             "type": "Catalyst.Core.Lib.Repository.AuthCredentialRepository, Catalyst.Core.Lib",
@@ -268,15 +269,23 @@
                 {
                     "type": "Catalyst.Common.Interfaces.P2P.IPeerChallenger, Catalyst.Common"
                 }
-            ]
+            ],
+            "parameters": {
+                "peerChallengeWaitTimeSeconds": 5
+            },
+            "instanceScope": "singleinstance"
         },
         {
-            "type": "Catalyst.Core.Lib.P2P.PeerClient",
+            "type": "Catalyst.Core.Lib.P2P.PeerHeartbeatChecker",
             "services": [
                 {
-                    "type": "Catalyst.Common.Interfaces.P2P.IPeerClient, Catalyst.Common"
+                    "type": "Catalyst.Common.Interfaces.P2P.IPeerHeartbeatChecker, Catalyst.Common"
                 }
-            ]
+            ],
+            "parameters": {
+                "checkHeartbeatIntervalSeconds": 10,
+                "maxNonResponsiveCounter": 3
+            }
         },
         {
             "type": "Catalyst.Common.Cryptography.CertificateStore, Catalyst.Common",

@@ -41,12 +41,14 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
         : ResponseObserverBase<PingResponse>,
             IP2PMessageObserver, IPeerClientObservable
     {
+        private readonly IPeerChallenger _peerChallenger;
         public ReplaySubject<IPeerClientMessageDto> ResponseMessageSubject { get; }
         public IObservable<IPeerClientMessageDto> MessageStream => ResponseMessageSubject.AsObservable();
 
-        public PingResponseObserver(ILogger logger)
+        public PingResponseObserver(ILogger logger, IPeerChallenger peerChallenger)
             : base(logger)
         {
+            _peerChallenger = peerChallenger;
             ResponseMessageSubject = new ReplaySubject<IPeerClientMessageDto>(1);
         }
         
@@ -56,6 +58,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
             ICorrelationId correlationId)
         {
             ResponseMessageSubject.OnNext(new PeerClientMessageDto(pingResponse, senderPeerIdentifier, correlationId));
+            _peerChallenger.ChallengeResponseMessageStreamer.OnNext(new PeerChallengerResponse(senderPeerIdentifier.PeerId));
         }
     }
 }

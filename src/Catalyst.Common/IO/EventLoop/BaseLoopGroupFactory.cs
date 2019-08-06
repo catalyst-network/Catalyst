@@ -24,6 +24,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Dawn;
 using DotNetty.Transport.Channels;
@@ -39,6 +40,8 @@ namespace Catalyst.Common.IO.EventLoop
     {
         /// <summary>The quiet period for the event loop group before shutdown</summary>
         private readonly long QuietPeriod = 100;
+
+        private int _disposeCounter;
 
         /// <summary>The event loop group list</summary>
         private readonly List<IEventLoopGroup> _eventLoopGroupList;
@@ -82,6 +85,11 @@ namespace Catalyst.Common.IO.EventLoop
 
         protected virtual void Dispose(bool disposing)
         {
+            if (!disposing || Interlocked.Increment(ref _disposeCounter) > 1)
+            {
+                return;
+            }
+            
             Task[] disposeTasks = _eventLoopGroupList.Select(t =>
                     t.ShutdownGracefullyAsync(TimeSpan.FromMilliseconds(QuietPeriod), TimeSpan.FromMilliseconds(QuietPeriod * 3)))
                .ToArray();
