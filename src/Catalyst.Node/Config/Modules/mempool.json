@@ -2,10 +2,10 @@
     "defaultAssembly": "Catalyst.Core.Lib",
     "components": [
         {
-            "type": "SharpRepository.InMemoryRepository.InMemoryRepository`2[[Catalyst.Common.Modules.Mempool.MempoolDocument, Catalyst.Common], [System.String, mscorlib]], SharpRepository.InMemoryRepository",
+            "type": "SharpRepository.InMemoryRepository.InMemoryRepository`2[[Catalyst.Common.Modules.Mempool.Models.MempoolDocument, Catalyst.Common], [System.String, mscorlib]], SharpRepository.InMemoryRepository",
             "services": [
                 {
-                    "type": "SharpRepository.Repository.IRepository`2[[Catalyst.Common.Modules.Mempool.MempoolDocument, Catalyst.Common], [System.String, mscorlib]], SharpRepository.Repository"
+                    "type": "SharpRepository.Repository.IRepository`2[[Catalyst.Common.Modules.Mempool.Models.MempoolDocument, Catalyst.Common], [System.String, mscorlib]], SharpRepository.Repository"
                 }
             ]
         },

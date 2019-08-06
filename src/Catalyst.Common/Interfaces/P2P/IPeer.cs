@@ -24,6 +24,7 @@
 using Catalyst.Common.Interfaces.Attributes;
 using Catalyst.Common.Interfaces.Repository;
 using System;
+using GraphQL.Types;
 
 namespace Catalyst.Common.Interfaces.P2P
 {

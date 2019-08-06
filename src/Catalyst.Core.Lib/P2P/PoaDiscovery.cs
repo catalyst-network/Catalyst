@@ -33,6 +33,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using Catalyst.Common.P2P.Models;
 using Nito.AsyncEx;
 
 namespace Catalyst.Core.Lib.P2P

@@ -22,7 +22,7 @@
 #endregion
 
 using Catalyst.Common.Interfaces.Repository;
-using Catalyst.Common.Modules.Ledger;
+using Catalyst.Common.Modules.Ledger.Models;
 using Catalyst.Common.Repository;
 using SharpRepository.Repository;
 

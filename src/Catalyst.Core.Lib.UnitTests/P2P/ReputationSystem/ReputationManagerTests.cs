@@ -31,6 +31,7 @@ using Catalyst.Common.Interfaces.Config;
 using Catalyst.Common.Interfaces.P2P.ReputationSystem;
 using Catalyst.Common.Interfaces.Repository;
 using Catalyst.Common.P2P;
+using Catalyst.Common.P2P.Models;
 using Catalyst.Core.Lib.P2P.ReputationSystem;
 using Catalyst.TestUtils;
 using NSubstitute;

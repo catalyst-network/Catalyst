@@ -32,6 +32,7 @@ using System.Threading.Tasks;
 using Catalyst.Common.Extensions;
 using Multiformats.Base;
 using Multiformats.Hash.Algorithms;
+using Catalyst.Common.P2P.Models;
 using Xunit;
 using Xunit.Abstractions;
 

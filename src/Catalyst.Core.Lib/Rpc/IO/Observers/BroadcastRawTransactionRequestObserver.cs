@@ -29,7 +29,7 @@ using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.IO.Messaging.Broadcast;
 using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Common.IO.Observers;
-using Catalyst.Common.Modules.Mempool;
+using Catalyst.Common.Modules.Mempool.Models;
 using Catalyst.Protocol.Rpc.Node;
 using DotNetty.Transport.Channels;
 using Serilog;
