@@ -54,24 +54,36 @@ namespace Catalyst.Node.IntegrationTests.IO
 
             var network = Catalyst.Common.Config.Network.Dev;
             new ConfigCopier().RunConfigStartUp(currentDirectory.FullName, network);
+
             return currentDirectory.FullName;
+        }
+
+        private bool CheckSavedPath(string path)
+        {
+            var fileSystem = new CommonFileSystem();
+
+            return fileSystem.GetCatalystDataDir().FullName.ToLower().Equals(path.ToLower());
         }
 
         [Theory]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
-        [InlineData("C:\\rubbishlocation\\fake\\technodisco")]
-        [InlineData("gandolf\\treasure")]
-        [InlineData("L:\\123\\fake")]
+        [InlineData("prgo**%£bmevevo")]
+        [InlineData("xxx://gandolf\\treasure*&+")]
+        [InlineData("q*PencilL:\\123\\fake")]
         public void Save_NonExistent_Data_Directory_Must_Fail(string path)
         {
             _fileSystem.SetCurrentPath(path).Should().BeFalse();
+
+            CheckSavedPath(path).Should().BeFalse();
         }
-               
+
         [Fact]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void Save_Existent_Data_Directory_Must_Succeed()
         {
             _fileSystem.SetCurrentPath(_sourceFolder).Should().BeTrue();
+
+            CheckSavedPath(_sourceFolder).Should().BeTrue();
         }
 
         [Fact]
@@ -80,30 +92,26 @@ namespace Catalyst.Node.IntegrationTests.IO
         {
             _fileSystem.SetCurrentPath(_sourceFolder).Should().BeTrue();
 
-            var fileSystem = new CommonFileSystem();
-
-            fileSystem.GetCatalystDataDir().FullName.ToLower().Should().Be(_fileSystem.GetCatalystDataDir().FullName.ToLower());
+            CheckSavedPath(_sourceFolder).Should().BeTrue();
         }
 
         [Fact]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void Save_Data_Directory_Several_Times_New_Instance_Must_Load_With_New_Data_Directory()
         {
-            _fileSystem.SetCurrentPath(_sourceFolder).Should().BeTrue();
+            _fileSystem.SetCurrentPath(_sourceFolder).Should().BeTrue(); 
 
             var fileSystem = new CommonFileSystem();
 
-            fileSystem.GetCatalystDataDir().FullName.ToLower().Should().Be(_fileSystem.GetCatalystDataDir().FullName.ToLower());
+            CheckSavedPath(_sourceFolder).Should().BeTrue();
 
             GenerateConfigFilesDirectory();
 
             var changeDataDir = Setup();
 
-            fileSystem.SetCurrentPath(changeDataDir).Should().BeTrue();
+            fileSystem.SetCurrentPath(changeDataDir).Should().BeTrue(); 
 
-            var fileSystemRetriever = new CommonFileSystem();
-
-            fileSystem.GetCatalystDataDir().FullName.ToLower().Should().Be(fileSystemRetriever.GetCatalystDataDir().FullName.ToLower());
+            CheckSavedPath(changeDataDir).Should().BeTrue();
         }
     }
 }

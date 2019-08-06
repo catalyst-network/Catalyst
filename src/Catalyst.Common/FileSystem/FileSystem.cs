@@ -58,14 +58,27 @@ namespace Catalyst.Common.FileSystem
 
         public bool SetCurrentPath(string path)
         {
-            if (new DirectoryInfo(path).Exists && SaveConfigPointerFile(path, _currentDataDirPointer))
+            try
             {
-                _dataDir = path;
+                var fullPath = Path.GetFullPath(path);
 
-                return true;
+                var dirInfo = new DirectoryInfo(fullPath);
+                if (!dirInfo.Exists)
+                {
+                    dirInfo.Create();
+                }
+
+                SaveConfigPointerFile(path, _currentDataDirPointer);
+
+                _dataDir = path;
+            }
+            catch (Exception ex)
+            {
+                //Exception Logging ignored
+                return false;
             }
 
-            return false;
+            return true;
         }
 
         public Task<IFileInfo> WriteTextFileToCddAsync(string fileName, string contents)
@@ -140,7 +153,7 @@ namespace Catalyst.Common.FileSystem
             return File.Exists(filePath) ? File.ReadAllText(filePath) : null;
         }
 
-        private bool SaveConfigPointerFile(string configDirLocation, string configFilePointer)
+        private void SaveConfigPointerFile(string configDirLocation, string configFilePointer)
         {
             var configDataDir = GetCurrentDataDir(configFilePointer);
 
@@ -150,8 +163,6 @@ namespace Catalyst.Common.FileSystem
             var text = System.IO.File.ReadAllText(configFilePointer);
             text = text.Replace(configDataDirJson, configDirLocationJson);
             System.IO.File.WriteAllText(configFilePointer, text);
-
-            return JsonConvert.SerializeObject(GetCurrentDataDir(configFilePointer)).Equals(configDirLocationJson);
         }
     }
 }

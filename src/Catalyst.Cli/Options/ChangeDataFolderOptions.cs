@@ -22,7 +22,7 @@
 #endregion
 
 using System.Collections.Generic;
-using Catalyst.Common.Interfaces.Cli.Options;
+using System.IO;
 using CommandLine;
 using CommandLine.Text;
 
@@ -34,10 +34,25 @@ namespace Catalyst.Cli.Options
     [Verb("changedatafolder", HelpText = "update node data folder")]
     public sealed class ChangeDataFolderOptions : OptionsBase
     {
+        private string _dataFolder;
+
         /// <inheritdoc />
         [Option('c', "datafolder", HelpText = "Data folder for the node.")]
-        public string DataFolder { get; set; }
-    
+        public string DataFolder
+        {
+            get
+            {
+                return _dataFolder;
+            }
+            set
+            {
+                if (Path.IsPathFullyQualified(value))
+                {
+                    _dataFolder = value;
+                }
+            }
+        }
+
         /// <summary>
         /// Gets the examples.
         /// </summary>

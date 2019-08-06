@@ -41,7 +41,8 @@ namespace Catalyst.Core.Lib.Rpc.IO.Observers
         private readonly IFileSystem _fileSystem;
 
         public ChangeDataFolderRequestObserver(IPeerIdentifier peerIdentifier,
-            IRpcServerSettings config, IFileSystem fileSystem,
+            IRpcServerSettings config, 
+            IFileSystem fileSystem,
             ILogger logger) : base(logger, peerIdentifier)
         {
             _fileSystem = fileSystem;
