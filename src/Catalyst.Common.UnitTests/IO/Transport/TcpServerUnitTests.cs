@@ -32,28 +32,33 @@ namespace Catalyst.Common.UnitTests.IO.Transport
 {
     public sealed class TcpServerUnitTests
     {
+        public TcpServerUnitTests()
+        {
+            _tcpServerChannelFactory = Substitute.For<ITcpServerChannelFactory>();
+            _logger = Substitute.For<ILogger>();
+            _eventLoopGroupFactory = Substitute.For<IEventLoopGroupFactory>();
+        }
+
+        private readonly ITcpServerChannelFactory _tcpServerChannelFactory;
+        private readonly ILogger _logger;
+        private readonly IEventLoopGroupFactory _eventLoopGroupFactory;
+
         [Fact]
         public void TcpServer_Should_Dispose()
         {
-            var tcpServerChannelFactory = Substitute.For<ITcpServerChannelFactory>();
-            var logger = Substitute.For<ILogger>();
-            var eventLoopGroupFactory = Substitute.For<IEventLoopGroupFactory>();
-            var tcpServer = new TestTcpServer(tcpServerChannelFactory, logger, eventLoopGroupFactory);
+            var tcpServer = new TestTcpServer(_tcpServerChannelFactory, _logger, _eventLoopGroupFactory);
             tcpServer.DisposeProxy(true);
 
-            logger.Received(1).Debug($"Disposing{typeof(TestTcpServer).Name}");
+            _logger.Received(1).Debug($"Disposing{typeof(TestTcpServer).Name}");
         }
 
         [Fact]
         public void TcpServer_Should_Not_Dispose()
         {
-            var tcpServerChannelFactory = Substitute.For<ITcpServerChannelFactory>();
-            var logger = Substitute.For<ILogger>();
-            var eventLoopGroupFactory = Substitute.For<IEventLoopGroupFactory>();
-            var tcpServer = new TestTcpServer(tcpServerChannelFactory, logger, eventLoopGroupFactory);
+            var tcpServer = new TestTcpServer(_tcpServerChannelFactory, _logger, _eventLoopGroupFactory);
             tcpServer.DisposeProxy(false);
 
-            logger.DidNotReceive().Debug($"Disposing{typeof(TestTcpServer).Name}");
+            _logger.DidNotReceive().Debug($"Disposing{typeof(TestTcpServer).Name}");
         }
     }
 }
