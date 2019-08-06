@@ -31,6 +31,7 @@ using AutofacSerilogIntegration;
 using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Common.Interfaces.FileSystem;
 using Catalyst.Common.Interfaces.Registry;
+using DotNetty.Transport.Channels;
 using Microsoft.Extensions.Configuration;
 using Serilog;
 using Serilog.Core;
@@ -134,6 +135,11 @@ namespace Catalyst.TestUtils
 
             var logger = loggerConfiguration.CreateLogger();
             ContainerBuilder.RegisterLogger(logger);
+
+            if (Log.Logger == Logger.None)
+            {
+                Log.Logger = logger;
+            }
 
             if (logDotNettyTraffic)
             {

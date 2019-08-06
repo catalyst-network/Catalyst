@@ -30,18 +30,24 @@ using System.Threading.Tasks;
 using Autofac;
 using Autofac.Builder;
 using Catalyst.Common.Config;
+using Catalyst.Common.Cryptography;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.FileSystem;
 using Catalyst.Common.Interfaces;
+using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Common.Interfaces.FileSystem;
+using Catalyst.Common.Interfaces.Keystore;
 using Catalyst.Common.Interfaces.Modules.Consensus;
 using Catalyst.Common.Interfaces.Modules.Dfs;
 using Catalyst.Common.Interfaces.Modules.Mempool;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.Discovery;
+using Catalyst.Common.Interfaces.Registry;
 using Catalyst.Common.Interfaces.Repository;
 using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.P2P;
+using Catalyst.Cryptography.BulletProofs.Wrapper;
+using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
 using Catalyst.Modules.Lib.Dfs;
 using Catalyst.TestUtils;
 using Multiformats.Hash.Algorithms;
@@ -64,8 +70,10 @@ namespace Catalyst.Modules.Lib.IntegrationTests.Consensus
         private readonly ILifetimeScope _scope;
         private readonly IFileSystem _nodeFileSystem;
         private readonly DirectoryInfo _nodeDirectory;
+        private readonly IKeyRegistry _keyRegistry;
 
         public PoaTestNode(string name,
+            IPrivateKey privateKey,
             IPeerSettings nodeSettings,
             IEnumerable<IPeerIdentifier> knownPeerIds,
             IFileSystem parentTestFileSystem,
@@ -102,10 +110,17 @@ namespace Catalyst.Modules.Lib.IntegrationTests.Consensus
 
             _scope = _containerProvider.Container.BeginLifetimeScope(Name);
             _node = _scope.Resolve<ICatalystNode>();
+            
+            var keyStore = _scope.Resolve<IKeyStore>();
+            _keyRegistry = _scope.Resolve<IKeyRegistry>();
+            _keyRegistry.AddItemToRegistry(KeyRegistryKey.DefaultKey, privateKey);
+
+            keyStore.KeyStoreEncryptAsync(privateKey, KeyRegistryKey.DefaultKey).ConfigureAwait(false).GetAwaiter().GetResult();
         }
 
         protected void OverrideContainerBuilderRegistrations()
         {
+            _containerProvider.ContainerBuilder.RegisterInstance(new TestPasswordReader()).As<IPasswordReader>();
             _containerProvider.ContainerBuilder.RegisterInstance(_nodeSettings).As<IPeerSettings>();
             _containerProvider.ContainerBuilder.RegisterInstance(_rpcSettings).As<IRpcServerSettings>();
             _containerProvider.ContainerBuilder.RegisterInstance(_nodePeerId).As<IPeerIdentifier>();
@@ -113,6 +128,7 @@ namespace Catalyst.Modules.Lib.IntegrationTests.Consensus
             _containerProvider.ContainerBuilder.RegisterInstance(_mempool).As<IMempool>();
             _containerProvider.ContainerBuilder.RegisterInstance(_peerRepository).As<IPeerRepository>();
             _containerProvider.ContainerBuilder.RegisterType<TestFileSystem>().As<IFileSystem>().WithParameter("rootPath", _nodeDirectory.FullName);
+            _containerProvider.ContainerBuilder.RegisterInstance(new NoDiscovery()).As<IPeerDiscovery>();
             _containerProvider.ContainerBuilder.RegisterInstance(new NoDiscovery()).As<IPeerDiscovery>();
         }
 

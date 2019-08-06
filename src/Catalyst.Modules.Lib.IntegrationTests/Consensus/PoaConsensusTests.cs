@@ -30,12 +30,14 @@ using System.Threading;
 using System.Threading.Tasks;
 using Autofac;
 using Catalyst.Common.Config;
+using Catalyst.Common.Cryptography;
 using Catalyst.Common.Interfaces.Modules.Consensus.Cycle;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.P2P;
+using Catalyst.Common.Util;
+using Catalyst.Cryptography.BulletProofs.Wrapper;
 using Catalyst.TestUtils;
 using Serilog;
-using Serilog.Extensions.Logging;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -43,11 +45,10 @@ namespace Catalyst.Modules.Lib.IntegrationTests.Consensus
 {
     public class PoaConsensusTests : ConfigFileBasedTest
     {
-        private readonly IDictionary<IPeerIdentifier, PoaTestNode> _nodesById;
         private readonly CancellationTokenSource _endOfTestCancellationSource;
-        private readonly List<IPeerSettings> _nodeSettings;
         private readonly ILifetimeScope _scope;
         private readonly ILogger _logger;
+        private readonly List<PoaTestNode> _nodes;
 
         public PoaConsensusTests(ITestOutputHelper output) : base(new[]
         {
@@ -58,27 +59,37 @@ namespace Catalyst.Modules.Lib.IntegrationTests.Consensus
             _scope = ContainerProvider.Container.BeginLifetimeScope(CurrentTestName);
             _logger = _scope.Resolve<ILogger>();
 
+            var context = new CryptoContext(new CryptoWrapper());
+
             _endOfTestCancellationSource = new CancellationTokenSource();
 
-            _nodeSettings = Enumerable.Range(0, 3).Select(i =>
-                PeerSettingsHelper.TestPeerSettings($"producer{i}", port: 2000 + i)
+            var poaNodeDetails = Enumerable.Range(0, 3).Select(i =>
+                {
+                    var privateKey = context.GeneratePrivateKey();
+                    var publicKey = privateKey.GetPublicKey();
+                    var nodeSettings = PeerSettingsHelper.TestPeerSettings(publicKey.Bytes.KeyToString(), port: 2000 + i);
+                    var peerIdentifier = new PeerIdentifier(nodeSettings) as IPeerIdentifier;
+                    var name = $"producer{i}";
+                    return new {index = i, name, privateKey, nodeSettings, peerIdentifier};
+                }
             ).ToList();
 
-            var peerIdentifiers = _nodeSettings
-               .Select(p => new PeerIdentifier(p) as IPeerIdentifier)
-               .ToList();
+            var peerIdentifiers = poaNodeDetails.Select(n => n.peerIdentifier).ToList();
 
-            _nodesById = _nodeSettings.Select((p, i) => new {Settings = p, Index = i, Identifier = new PeerIdentifier(p) as IPeerIdentifier})
-               .ToDictionary(
-                    p => p.Identifier, 
-                    p => new PoaTestNode($"producer{p.Index}", p.Settings, peerIdentifiers.Except(new[] {p.Identifier}), FileSystem, output));
+            _nodes = poaNodeDetails.Select(
+                p => new PoaTestNode($"producer{p.index}",
+                    p.privateKey,
+                    p.nodeSettings,
+                    peerIdentifiers.Except(new[] {p.peerIdentifier}), 
+                    FileSystem, 
+                    output)).ToList();
         }
 
         [Fact]
         public async Task Run_Consensus()
         {
             var observer = Observer.Create<IPhase>(ObservedPhase);
-            _nodesById.Values.AsParallel()
+            _nodes.AsParallel()
                .ForAll(async n =>
                 {
                     n.Consensus.CycleEventsProvider.PhaseChanges.Subscribe(observer);
@@ -86,11 +97,6 @@ namespace Catalyst.Modules.Lib.IntegrationTests.Consensus
                 });
 
             await Task.Delay(TimeSpan.FromSeconds(20));
-
-            //var transaction = TransactionHelper.GetTransaction(1, _nodesById[0].)
-            //{
-                
-            //}
 
             _endOfTestCancellationSource.CancelAfter(TimeSpan.FromMinutes(3));
         }
@@ -115,7 +121,7 @@ namespace Catalyst.Modules.Lib.IntegrationTests.Consensus
             }
 
             _endOfTestCancellationSource.Dispose();
-            _nodesById.Values.AsParallel().ForAll(n => n.Dispose());
+            _nodes.AsParallel().ForAll(n => n.Dispose());
 
             _scope.Dispose();
         }
