@@ -24,7 +24,7 @@
 using System;
 using System.Net;
 using System.Threading.Tasks;
-using DotNetty.Transport.Bootstrapping;
+using Catalyst.Common.IO.Transport.Bootstrapping;
 using FluentAssertions;
 using Xunit;
 
