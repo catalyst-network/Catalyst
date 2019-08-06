@@ -57,24 +57,19 @@ namespace Catalyst.Core.Lib.IntegrationTests.Rpc.IO.Observers
         private readonly IKeySigner _keySigner;
         private readonly IChannelHandlerContext _fakeContext;
 
-        protected override IEnumerable<string> ConfigFilesUsed { get; }
-
-        public VerifyMessageRequestObserverTests(ITestOutputHelper output) : base(output)
+        public VerifyMessageRequestObserverTests(ITestOutputHelper output) : base(new[]
         {
-            ConfigFilesUsed = new[]
-            {
-                Path.Combine(Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile),
-                Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile),
-                Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Common.Config.Network.Dev)),
-                Path.Combine(Constants.ConfigSubFolder, Constants.ShellNodesConfigFile),
-            };
+            Path.Combine(Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile),
+            Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile),
+            Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Common.Config.Network.Dev)),
+            Path.Combine(Constants.ConfigSubFolder, Constants.ShellNodesConfigFile),
+        }, output)
+        {
+            ContainerProvider.ConfigureContainerBuilder();
 
-            SocketPortHelper.AlterConfigurationToGetUniquePort(ConfigurationRoot, CurrentTestName);
+            SocketPortHelper.AlterConfigurationToGetUniquePort(ContainerProvider.ConfigurationRoot, CurrentTestName);
 
-            ConfigureContainerBuilder();
-
-            var container = ContainerBuilder.Build();
-            _scope = container.BeginLifetimeScope(CurrentTestName);
+            _scope = ContainerProvider.Container.BeginLifetimeScope(CurrentTestName);
             
             _keySigner = _scope.Resolve<IKeySigner>();
             _logger = Substitute.For<ILogger>();
@@ -135,13 +130,12 @@ namespace Catalyst.Core.Lib.IntegrationTests.Rpc.IO.Observers
 
         protected override void Dispose(bool disposing)
         {
-            base.Dispose(disposing);
-            if (!disposing)
+            if (disposing)
             {
-                return;
+                _scope?.Dispose();
             }
-            
-            _scope?.Dispose();
+
+            base.Dispose(disposing);
         }
     }
 }

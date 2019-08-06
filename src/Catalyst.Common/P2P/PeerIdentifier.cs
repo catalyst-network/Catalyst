@@ -129,7 +129,7 @@ namespace Catalyst.Common.P2P
             : this(
                 GetIfRegistryContainsPublicKey(settings.PublicKey.KeyToBytes(), registry, userOutput), 
                 new IPEndPoint(settings.BindAddress.MapToIPv4(), settings.Port), clientId) { }
-        
+
         public PeerIdentifier(IEnumerable<byte> publicKey, IPAddress ipAddress, int port, IPeerIdClientId clientId)
             : this(publicKey, EndpointBuilder.BuildNewEndPoint(ipAddress, port), clientId) { }
         
@@ -147,7 +147,7 @@ namespace Catalyst.Common.P2P
 
         public override string ToString()
         {
-            return ClientId + ClientVersion + $"@{Ip}:{Port.ToString()}" + $"|{PublicKey.ToHex()}";
+            return ClientId + ClientVersion + $"@{Ip}:{Port.ToString()}" + $"|{PublicKey.KeyToString()}";
         }
 
         public bool Equals(IPeerIdentifier other)

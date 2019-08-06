@@ -26,6 +26,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Modules.Consensus.Deltas;
 using Catalyst.Common.Util;
 using Catalyst.Protocol.Deltas;
@@ -42,18 +43,20 @@ namespace Catalyst.Core.Lib.Modules.Consensus.Deltas
     public class DeltaElector : IDeltaElector
     {
         private readonly IMemoryCache _candidatesCache;
+        private readonly IDeltaProducersProvider _deltaProducersProvider;
         private readonly ILogger _logger;
         private readonly MemoryCacheEntryOptions _cacheEntryOptions;
 
         public static string GetCandidateListCacheKey(FavouriteDeltaBroadcast candidate) =>
-            nameof(DeltaElector) + "-" + candidate.Candidate.PreviousDeltaDfsHash.ToByteArray().ToHex();
+            nameof(DeltaElector) + "-" + candidate.Candidate.PreviousDeltaDfsHash.AsMultihashBase64UrlString();
 
         public static string GetCandidateListCacheKey(byte[] previousDeltaHash) =>
-            nameof(DeltaElector) + "-" + previousDeltaHash.ToHex();
+            nameof(DeltaElector) + "-" + previousDeltaHash.AsMultihashBase64UrlString();
         
-        public DeltaElector(IMemoryCache candidatesCache, ILogger logger)
+        public DeltaElector(IMemoryCache candidatesCache, IDeltaProducersProvider deltaProducersProvider, ILogger logger)
         {
             _candidatesCache = candidatesCache;
+            _deltaProducersProvider = deltaProducersProvider;
             _cacheEntryOptions = new MemoryCacheEntryOptions()
                .AddExpirationToken(new CancellationChangeToken(new CancellationTokenSource(TimeSpan.FromMinutes(3)).Token));
 
@@ -75,6 +78,15 @@ namespace Catalyst.Core.Lib.Modules.Consensus.Deltas
             try
             {
                 Guard.Argument(candidate, nameof(candidate)).NotNull().Require(f => f.IsValid());
+                if (!_deltaProducersProvider
+                   .GetDeltaProducersFromPreviousDelta(candidate.Candidate.PreviousDeltaDfsHash.ToByteArray())
+                   .Any(p => p.PeerId.Equals(candidate.VoterId)))
+                {
+                    //https://github.com/catalyst-network/Catalyst.Node/issues/827
+                    _logger.Debug("Voter {voter} is not a producer for this cycle succeeding {deltaHash} and its vote has been discarded.",
+                        candidate.VoterId, candidate.Candidate.PreviousDeltaDfsHash);
+                    return;
+                }
 
                 var candidateListKey = GetCandidateListCacheKey(candidate);
 

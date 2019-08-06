@@ -24,6 +24,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.Network;
@@ -37,6 +38,7 @@ using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Common.P2P;
 using Catalyst.Common.Util;
 using Catalyst.Core.Lib.P2P.Discovery;
+using Catalyst.Core.Lib.P2P.IO.Observers;
 using Catalyst.TestUtils;
 using Microsoft.Extensions.Caching.Memory;
 using NSubstitute;
@@ -145,10 +147,25 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
         public DiscoveryTestBuilder WithPeerClientObservables(params Type[] clientObservers)
         {
             PeerClientObservables = clientObservers
-               .Select(ot => (IPeerClientObservable) Activator.CreateInstance(ot, _logger ?? Substitute.For<ILogger>()))
+               .Select(ot => GetPeerClientObservable(_logger ?? Substitute.For<ILogger>(), ot))
                .ToList();
             
             return this;
+        }
+
+        private IPeerClientObservable GetPeerClientObservable(ILogger logger, MemberInfo type)
+        {
+            switch (type.Name)
+            {
+                case nameof(PingResponseObserver):
+                    return new PingResponseObserver(logger, Substitute.For<IPeerChallenger>());
+
+                case nameof(GetNeighbourResponseObserver):
+                    return new GetNeighbourResponseObserver(logger);
+
+                default:
+                    throw new NotImplementedException($"{type.Name} type not supported.");
+            }
         }
 
         public DiscoveryTestBuilder WithAutoStart(bool autoStart = false)

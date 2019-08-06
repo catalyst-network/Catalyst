@@ -21,18 +21,26 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.IO.EventLoop;
-using Catalyst.Common.Interfaces.IO.Transport;
-using Catalyst.Common.Interfaces.IO.Transport.Channels;
-using Serilog;
+using System.Net;
+using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.P2P;
+using Catalyst.Common.Util;
 
-namespace Catalyst.Common.IO.Transport
+namespace Catalyst.Core.Lib.P2P
 {
-    public abstract class TcpServer : SocketBase, ITcpServer
+    public sealed class PoaPeer
     {
-        protected TcpServer(ITcpServerChannelFactory tcpChannelFactory,
-            ILogger logger,
-            IEventLoopGroupFactory eventLoopGroupFactory)
-            : base(tcpChannelFactory, logger, eventLoopGroupFactory) { }
+        private string ClientVersion => "AC";
+
+        public string Ip { get; set; }
+
+        public int Port { get; set; }
+
+        public string PublicKey { get; set; }
+
+        public IPeerIdentifier ToPeerIdentifier()
+        {
+            return new PeerIdentifier(PublicKey.KeyToBytes(), IPAddress.Parse(Ip), Port, new PeerIdClientId(ClientVersion));
+        }
     }
 }

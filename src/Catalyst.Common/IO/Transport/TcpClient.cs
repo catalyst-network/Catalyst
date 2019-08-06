@@ -28,7 +28,7 @@ using Serilog;
 
 namespace Catalyst.Common.IO.Transport
 {
-    public class TcpClient : ClientBase, ITcpClient
+    public abstract class TcpClient : ClientBase, ITcpClient
     {
         protected TcpClient(ITcpClientChannelFactory channelFactory, ILogger logger, ITcpClientEventLoopGroupFactory loopGroupFactory)
             : base(channelFactory, logger, loopGroupFactory) { }
