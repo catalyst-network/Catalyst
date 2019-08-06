@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFramework>netcoreapp2.2</TargetFramework>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -20,6 +20,10 @@
         <PackageReference Include="Microsoft.AspNetCore" Version="2.2.0" />
         <PackageReference Include="Microsoft.AspNetCore.App" />
         <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
+        <PackageReference Include="System.Reactive" Version="4.1.6" />
+        <PackageReference Include="System.Reactive.Core" Version="4.1.6" />
+        <PackageReference Include="System.Reactive.Interfaces" Version="4.1.6" />
+        <PackageReference Include="System.Reactive.Linq" Version="4.1.6" />
     </ItemGroup>
     <Import Project="../Common.Projects.props" />
 </Project>
