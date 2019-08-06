@@ -301,7 +301,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
             }
         }
 
-        protected override IEnumerable<string> ConfigFilesUsed => new[] {Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Network.Dev))};
+        protected override IEnumerable<string> ConfigFilesUsed => new[] {Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Common.Config.Network.Dev))};
 
         protected override void Dispose(bool disposing)
         {

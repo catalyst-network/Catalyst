@@ -35,7 +35,7 @@ using ILogger = Serilog.ILogger;
 namespace Catalyst.Core.Lib.Rpc.IO.Observers
 {
     public sealed class ChangeDataFolderRequestObserver
-        : RequestObserverBase<SetPeerDataFolderRequest, GetPeerDataFolderResponse>,
+        : RequestObserverBase<SetPeerDataFolderRequest, SetPeerDataFolderResponse>,
             IRpcRequestObserver
     {
         private readonly IFileSystem _fileSystem;
@@ -48,7 +48,7 @@ namespace Catalyst.Core.Lib.Rpc.IO.Observers
             _fileSystem = fileSystem;
         }
 
-        protected override GetPeerDataFolderResponse HandleRequest(SetPeerDataFolderRequest setDataFolderRequest,
+        protected override SetPeerDataFolderResponse HandleRequest(SetPeerDataFolderRequest setDataFolderRequest,
             IChannelHandlerContext channelHandlerContext,
             IPeerIdentifier senderPeerIdentifier,
             ICorrelationId correlationId)
@@ -59,7 +59,7 @@ namespace Catalyst.Core.Lib.Rpc.IO.Observers
 
             Logger.Debug("received message of type SetPeerDataFolderRequest");
 
-            return new GetPeerDataFolderResponse
+            return new SetPeerDataFolderResponse
             {
                 Query = _fileSystem.SetCurrentPath(setDataFolderRequest.Datafolder)
             };

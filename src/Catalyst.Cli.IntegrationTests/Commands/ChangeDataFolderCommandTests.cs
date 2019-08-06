@@ -38,7 +38,7 @@ namespace Catalyst.Cli.IntegrationTests.Commands
             var result = Shell.ParseCommand("changedatafolder", NodeArgumentPrefix, ServerNodeName, "-c", "C:\\TemporaryFolder");
             result.Should().BeTrue();
 
-            AssertSentMessageAndGetMessageContent<GetPeerDataFolderResponse>();
+            AssertSentMessageAndGetMessageContent<SetPeerDataFolderResponse>();
         }
     }
 }

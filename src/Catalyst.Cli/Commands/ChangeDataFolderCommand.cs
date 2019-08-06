@@ -28,7 +28,7 @@ using Catalyst.Cli.CommandTypes;
 
 namespace Catalyst.Cli.Commands
 {
-    public sealed class ChangeDataFolderCommand : BaseMessageCommand<SetPeerDataFolderRequest, GetPeerDataFolderResponse, ChangeDataFolderOptions>
+    public sealed class ChangeDataFolderCommand : BaseMessageCommand<SetPeerDataFolderRequest, SetPeerDataFolderResponse, ChangeDataFolderOptions>
     {
         public ChangeDataFolderCommand(ICommandContext commandContext) : base(commandContext) { }
 

@@ -55,7 +55,7 @@ namespace Catalyst.Common.P2P
         public static char PidDelimiter => '|';
         public PeerId PeerId { get; }
         public string ClientId => PeerId.ClientId.ToStringUtf8();
-        public string ClientVersion => PeerId.ClientVersion.ToStringUtf8();
+        public string ClientVersion => PeerId.ProtocolVersion.ToStringUtf8();
         public IPAddress Ip => new IPAddress(PeerId.Ip.ToByteArray()).MapToIPv4();
         public int Port => BitConverter.ToUInt16(PeerId.Port.ToByteArray());
         public byte[] PublicKey => PeerId.PublicKey.ToByteArray();
@@ -114,7 +114,7 @@ namespace Catalyst.Common.P2P
             return new PeerIdentifier(new PeerId
             {
                 ClientId = peerByteChunks[0],
-                ClientVersion = peerByteChunks[1],
+                ProtocolVersion = peerByteChunks[1],
                 Ip = IPAddress.Parse(rawPidChunks[2]).MapToIPv4().To16Bytes().ToByteString(),
                 Port = peerByteChunks[3],
                 PublicKey = peerByteChunks[4]
@@ -141,7 +141,7 @@ namespace Catalyst.Common.P2P
                 Port = BitConverter.GetBytes(endPoint.Port).ToByteString(),
                 Ip = endPoint.Address.To16Bytes().ToByteString(),
                 ClientId = clientId.ClientVersion.ToByteString(),
-                ClientVersion = clientId.AssemblyMajorVersion.ToByteString()
+                ProtocolVersion = clientId.AssemblyMajorVersion.ToByteString()
             };
         }
 
