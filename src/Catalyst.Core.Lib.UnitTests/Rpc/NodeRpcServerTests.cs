@@ -40,6 +40,7 @@ using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.IO.Transport.Channels;
 using Catalyst.Core.Lib.Rpc;
+using Catalyst.Protocol;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
@@ -62,7 +63,7 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc
             _peerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("", "", 0);
             _channelHandlerContext = Substitute.For<IChannelHandlerContext>();
 
-            var tcpServerEventLoopGroupFactory1 = Substitute.For<ITcpServerEventLoopGroupFactory>();
+            var tcpServerEventLoopGroupFactory = Substitute.For<ITcpServerEventLoopGroupFactory>();
 
             _mockSocketReplySubject = new ReplaySubject<IObserverDto<ProtocolMessage>>(1, _testScheduler);
             var mockChannel = Substitute.For<IChannel>();
@@ -70,12 +71,12 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc
             var observableChannel = new ObservableChannel(mockEventStream, mockChannel);
 
             var tcpServerChannelFactory = Substitute.For<ITcpServerChannelFactory>();
-            tcpServerChannelFactory.BuildChannel(tcpServerEventLoopGroupFactory1, Arg.Any<IPAddress>(), Arg.Any<int>(),
+            tcpServerChannelFactory.BuildChannel(tcpServerEventLoopGroupFactory, Arg.Any<IPAddress>(), Arg.Any<int>(),
                 Arg.Any<X509Certificate2>()).Returns(observableChannel);
 
             var certificateStore = Substitute.For<ICertificateStore>();
             var requestHandlers = new List<IRpcRequestObserver>();
-            var tcpServerEventLoopGroupFactory = Substitute.For<ITcpServerEventLoopGroupFactory>();
+
             _nodeRpcServer = new NodeRpcServer(_rpcServerSettings, logger, tcpServerChannelFactory, certificateStore,
                 requestHandlers, tcpServerEventLoopGroupFactory);
         }
@@ -99,7 +100,7 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc
         {
             await _nodeRpcServer.StartAsync();
 
-            ProtocolMessage returnedVersionRequest = null;
+            VersionRequest returnedVersionRequest = null;
             var targetVersionRequest = new VersionRequest {Query = true};
 
             var protocolMessage =
@@ -107,13 +108,10 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc
 
             var observerDto = new ObserverDto(_channelHandlerContext, protocolMessage);
 
-            //.Where(x => x.Payload != null && x.Payload.TypeUrl == typeof(VersionRequest).ShortenedProtoFullName())
             _nodeRpcServer.MessageStream
+               .Where(x => x.Payload != null && x.Payload.TypeUrl == typeof(VersionRequest).ShortenedProtoFullName())
                .SubscribeOn(_testScheduler)
-               .Subscribe(request =>
-                {
-                    returnedVersionRequest = request.Payload;
-                });
+               .Subscribe(request => returnedVersionRequest = request.Payload.FromProtocolMessage<VersionRequest>());
 
             _mockSocketReplySubject.OnNext(observerDto);
 
