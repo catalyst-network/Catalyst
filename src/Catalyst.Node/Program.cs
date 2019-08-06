@@ -22,6 +22,7 @@
 #endregion
 
 using System;
+using Catalyst.Common.Config;
 using Catalyst.Common.Kernel;
 using CommandLine;
 
@@ -93,7 +94,9 @@ namespace Catalyst.Node
                    .WithConfigCopier()
                    .WithPersistenceConfiguration()
                    .BuildKernel(options.OverwriteConfig)
-                   .WithPasswordOverRide(options.SslCertPassword, options.IpfsPassword, options.NodePassword)
+                   .WithPassword(PasswordRegistryKey.DefaultNodePassword, options.NodePassword)
+                   .WithPassword(PasswordRegistryKey.IpfsPassword, options.IpfsPassword)
+                   .WithPassword(PasswordRegistryKey.CertificatePassword, options.SslCertPassword)
                    .StartNode();
 
                 // .StartCustom(CustomBootLogic);
