@@ -22,6 +22,7 @@
 #endregion
 
 using System;
+using System.Runtime.Serialization;
 
 namespace Catalyst.Node.Rpc.Client.IO.Exceptions
 {
@@ -30,5 +31,11 @@ namespace Catalyst.Node.Rpc.Client.IO.Exceptions
     {
         public ResponseHandlerDoesNotExistException() { }
         public ResponseHandlerDoesNotExistException(string message) : base(message) { }
+
+        public ResponseHandlerDoesNotExistException(string message, Exception innerException)
+            : base(message, innerException) { }
+
+        protected ResponseHandlerDoesNotExistException(SerializationInfo info, StreamingContext context)
+            : base(info, context) { }
     }
 }
