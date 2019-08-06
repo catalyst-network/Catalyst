@@ -21,10 +21,41 @@
 
 #endregion
 
-using Catalyst.Common.P2P;
-using Catalyst.Common.P2P.Models;
+using System;
+using System.Threading.Tasks;
+using Autofac.Extensions.DependencyInjection;
+using Microsoft.AspNetCore;
+using Microsoft.AspNetCore.Hosting;
+using Serilog;
 
-namespace Catalyst.Common.Interfaces.Repository
+namespace Catalyst.Modules.Lib.Api
 {
-    public interface IPeerRepository : IRepositoryWrapper<Peer> { }
+    public interface IApi : IDisposable
+    {
+        Task StartApiAsync();
+    }
+
+    public class Api : IApi
+    {
+        private readonly IWebHost _host;
+
+        public Api()
+        {
+            _host = WebHost.CreateDefaultBuilder()
+               .ConfigureServices(services => services.AddAutofac())
+               .UseStartup<Startup>()
+               .UseSerilog()
+               .Build();
+        }
+
+        public Task StartApiAsync()
+        {
+            return _host.StartAsync();
+        }
+        
+        public void Dispose()
+        {
+            _host?.Dispose();
+        }
+    }
 }

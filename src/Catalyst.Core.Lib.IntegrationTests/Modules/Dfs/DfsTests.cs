@@ -114,7 +114,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.Modules.Dfs
                 await Task.Delay(100).ConfigureAwait(false);
             }
 
-            _output.WriteLine($"Found in {(DateTime.Now - start).TotalSeconds} seconds.");
+            _output.WriteLine($"Found in {(DateTime.Now - start).TotalSeconds.ToString()} seconds.");
         }
 
         protected override void Dispose(bool disposing)
