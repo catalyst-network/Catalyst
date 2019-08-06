@@ -21,10 +21,12 @@
 
 #endregion
 
+using System.Net.Sockets;
 using Catalyst.Common.Interfaces.IO.EventLoop;
 using Catalyst.Common.Interfaces.IO.Transport.Channels;
 using Catalyst.Common.UnitTests.Stub;
 using NSubstitute;
+using NSubstitute.ExceptionExtensions;
 using Serilog;
 using Xunit;
 
@@ -42,6 +44,20 @@ namespace Catalyst.Common.UnitTests.IO.Transport
             testSocketBase.Dispose();
 
             logger.Received(1).Debug($"Disposing{typeof(TestSocketBase).Name}");
+        }
+
+        [Fact]
+        public void SocketBase_Should_Log_On_Dispose_Exception()
+        {
+            var channelFactory = Substitute.For<ITcpClientChannelFactory>();
+            var logger = Substitute.For<ILogger>();
+            var eventLoopGroupFactory = Substitute.For<IEventLoopGroupFactory>();
+            var testSocketBase = new TestSocketBase(channelFactory, logger, eventLoopGroupFactory);
+            var socketException = new SocketException();
+            testSocketBase.Channel.CloseAsync().Throws(socketException);
+            testSocketBase.DisposeProxy(true);
+
+            logger.Received(1).Error(socketException, "Dispose failed to complete.");
         }
 
         [Fact]

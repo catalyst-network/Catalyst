@@ -22,8 +22,8 @@
 #endregion
 
 using System;
-using System.Diagnostics;
 using System.Net;
+using System.Net.Sockets;
 using System.Threading.Tasks;
 using Catalyst.Common.IO.Transport.Bootstrapping;
 using FluentAssertions;
@@ -40,6 +40,20 @@ namespace Catalyst.Common.UnitTests.IO.Transport.Bootstrapping
             var port = 9000;
 
             var bootstrap = new Bootstrap();
+
+            //We have not set the group for bootstrap so we know that code will trigger an exception, if BindAsync calls Base BindAsync
+            var exception = await Record.ExceptionAsync(async () => { await bootstrap.BindAsync(ipAddress, port); });
+            exception.Should().BeOfType<InvalidOperationException>("group not set");
+        }
+
+        [Fact]
+        public async Task BindAsync_Should_Retry_On_Socket_Exception()
+        {
+            var ipAddress = IPAddress.Loopback;
+            var port = 9000;
+
+            TimeSpan RetryPolicy(int retryAttempt) => throw new SocketException();
+            var bootstrap = new Bootstrap(3, RetryPolicy);
 
             //We have not set the group for bootstrap so we know that code will trigger an exception, if BindAsync calls Base BindAsync
             var exception = await Record.ExceptionAsync(async () => { await bootstrap.BindAsync(ipAddress, port); });

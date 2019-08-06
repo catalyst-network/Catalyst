@@ -100,18 +100,21 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc
         {
             await _nodeRpcServer.StartAsync();
 
-            VersionRequest returnedVersionRequest = null;
-            var targetVersionRequest = new VersionRequest();
+            ProtocolMessage returnedVersionRequest = null;
+            var targetVersionRequest = new VersionRequest {Query = true};
 
             var protocolMessage =
                 targetVersionRequest.ToProtocolMessage(_peerIdentifier.PeerId, CorrelationId.GenerateCorrelationId());
 
             var observerDto = new ObserverDto(_channelHandlerContext, protocolMessage);
 
+            //.Where(x => x.Payload != null && x.Payload.TypeUrl == typeof(VersionRequest).ShortenedProtoFullName())
             _nodeRpcServer.MessageStream
-               .Where(x => x.Payload != null && x.Payload.TypeUrl == typeof(VersionRequest).ShortenedProtoFullName())
                .SubscribeOn(_testScheduler)
-               .Subscribe(request => returnedVersionRequest = request.Payload.FromProtocolMessage<VersionRequest>());
+               .Subscribe(request =>
+                {
+                    returnedVersionRequest = request.Payload;
+                });
 
             _mockSocketReplySubject.OnNext(observerDto);
 

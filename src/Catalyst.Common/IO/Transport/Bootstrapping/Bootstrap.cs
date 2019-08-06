@@ -36,14 +36,19 @@ namespace Catalyst.Common.IO.Transport.Bootstrapping
         : DotNetty.Transport.Bootstrapping.Bootstrap,
             IServerBootstrap
     {
+        private static TimeSpan DefaultRetryPolicy(int retryAttempt) => TimeSpan.FromMilliseconds(Math.Pow(2, retryAttempt));
+
         private readonly AsyncRetryPolicy _exponentialBackOffRetryPolicy;
 
-        public Bootstrap()
+        public Bootstrap(int retryCount = 10) : this(retryCount, DefaultRetryPolicy)
+        {
+            AsyncRetryPolicy retryPolicy = Policy.Handle<SocketException>().WaitAndRetryAsync(retryCount, DefaultRetryPolicy);
+        }
+
+        public Bootstrap(int retryCount, Func<int, TimeSpan> retryPolicy)
         {
             _exponentialBackOffRetryPolicy = Policy.Handle<SocketException>()
-               .WaitAndRetryAsync(10, retryAttempt =>
-                    TimeSpan.FromMilliseconds(Math.Pow(2, retryAttempt))
-                );
+               .WaitAndRetryAsync(retryCount, retryPolicy);
         }
 
         public new Task<IChannel> BindAsync(IPAddress ipAddress, int port)
