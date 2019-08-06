@@ -303,7 +303,6 @@ namespace Catalyst.Common.Kernel
                     
                 passwordRegistry.AddItemToRegistry(PasswordRegistryKey.DefaultNodePassword, dnpk);
             }
-            
 
             return this;
         }

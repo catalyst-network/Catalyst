@@ -113,7 +113,9 @@ namespace Catalyst.Node.UnitTests.Config
                 typeof(GetNeighbourRequestObserver),
                 typeof(GetNeighbourResponseObserver),
                 typeof(TransactionBroadcastObserver),
-                typeof(DeltaDfsHashObserver)
+                typeof(DeltaDfsHashObserver),
+                typeof(CandidateDeltaObserver),
+                typeof(FavouriteDeltaObserver)
             );
         }
     }
