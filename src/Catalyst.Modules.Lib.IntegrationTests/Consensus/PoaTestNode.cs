@@ -118,7 +118,10 @@ namespace Catalyst.Modules.Lib.IntegrationTests.Consensus
 
         public IConsensus Consensus => _node.Consensus;
 
-        public async Task RunAsync(CancellationToken cancellationSourceToken) { await _node.RunAsync(cancellationSourceToken).ConfigureAwait(false); }
+        public async Task RunAsync(CancellationToken cancellationSourceToken)
+        {
+            await _node.RunAsync(cancellationSourceToken).ConfigureAwait(false);
+        }
 
         public async Task StartSockets() { await _node.StartSockets(); }
 

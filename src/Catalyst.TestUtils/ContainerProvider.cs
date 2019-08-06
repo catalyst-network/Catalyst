@@ -33,7 +33,10 @@ using Catalyst.Common.Interfaces.FileSystem;
 using Catalyst.Common.Interfaces.Registry;
 using Microsoft.Extensions.Configuration;
 using Serilog;
+using Serilog.Core;
+using Serilog.Data;
 using Serilog.Events;
+using Serilog.Extensions.Logging;
 using SharpRepository.Ioc.Autofac;
 using SharpRepository.Repository;
 using Xunit.Abstractions;
@@ -83,7 +86,7 @@ namespace Catalyst.TestUtils
 
         public IContainer Container => _container ?? (_container = ContainerBuilder.Build());
 
-        public void ConfigureContainerBuilder(bool writeLogsToTestOutput = false, bool writeLogsToFile = false)
+        public void ConfigureContainerBuilder(bool writeLogsToTestOutput = false, bool writeLogsToFile = false, bool logDotNettyTraffic = false)
         {
             var configurationModule = new ConfigurationModule(ConfigurationRoot);
             ContainerBuilder.RegisterModule(configurationModule);
@@ -103,10 +106,10 @@ namespace Catalyst.TestUtils
             var keyRegistry = TestKeyRegistry.MockKeyRegistry();
             ContainerBuilder.RegisterInstance(keyRegistry).As<IKeyRegistry>();
 
-            ConfigureLogging(writeLogsToTestOutput, writeLogsToFile);
+            ConfigureLogging(writeLogsToTestOutput, writeLogsToFile, logDotNettyTraffic);
         }
 
-        private void ConfigureLogging(bool writeLogsToTestOutput, bool writeLogsToFile)
+        private void ConfigureLogging(bool writeLogsToTestOutput, bool writeLogsToFile, bool logDotNettyTraffic = false)
         {
             var loggerConfiguration = new LoggerConfiguration()
                .ReadFrom.Configuration(ConfigurationRoot).MinimumLevel.Verbose()
@@ -125,18 +128,17 @@ namespace Catalyst.TestUtils
 
             if (writeLogsToFile)
             {
-                if (_fileSystem == null)
-                {
-                    throw new NullReferenceException(
-                        $"An instance of {typeof(IFileSystem)} is needed in order to log to the test output");
-                }
-
                 loggerConfiguration = loggerConfiguration.WriteTo.File(Path.Combine(_fileSystem.GetCatalystDataDir().FullName, "Catalyst.Node.log"), LogEventLevel,
                     LogOutputTemplate);
             }
 
             var logger = loggerConfiguration.CreateLogger();
             ContainerBuilder.RegisterLogger(logger);
+
+            if (logDotNettyTraffic)
+            {
+                DotNetty.Common.Internal.Logging.InternalLoggerFactory.DefaultFactory.AddProvider(new SerilogLoggerProvider(logger));
+            }
         }
 
         protected virtual void Dispose(bool disposing)
