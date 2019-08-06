@@ -21,9 +21,7 @@
 
 #endregion
 
-using System;
-using Catalyst.Protocol.Common;
-using Catalyst.Common.Interfaces.IO.Messaging.Dto;
+using System.Reactive.Subjects;
 using System.Threading.Tasks;
 
 namespace Catalyst.Common.Interfaces.P2P
@@ -40,5 +38,7 @@ namespace Catalyst.Common.Interfaces.P2P
         /// PeerIdentifier holds the chunks we want to validate.</param>
         /// <returns>bool true means valid and false means not valid</returns>
         Task<bool> ChallengePeerAsync(IPeerIdentifier recipientPeerIdentifier);
+
+        ReplaySubject<IPeerChallengeResponse> ChallengeResponseMessageStreamer { get; }
     }
 }

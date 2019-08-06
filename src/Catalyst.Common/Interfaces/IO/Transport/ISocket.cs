@@ -22,6 +22,7 @@
 #endregion
 
 using System;
+using System.Threading.Tasks;
 using IChannel = DotNetty.Transport.Channels.IChannel;
 
 namespace Catalyst.Common.Interfaces.IO.Transport
@@ -29,5 +30,7 @@ namespace Catalyst.Common.Interfaces.IO.Transport
     public interface ISocket : IDisposable
     {
         IChannel Channel { get; }
+
+        Task StartAsync();
     }
 }

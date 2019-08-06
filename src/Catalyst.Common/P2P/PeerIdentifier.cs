@@ -151,7 +151,7 @@ namespace Catalyst.Common.P2P
 
         public override string ToString()
         {
-            return ClientId + ClientVersion + $"@{Ip}:{Port.ToString()}" + $"|{PublicKey.ToHex()}";
+            return ClientId + ClientVersion + $"@{Ip}:{Port.ToString()}" + $"|{PublicKey.KeyToString()}";
         }
 
         public bool Equals(IPeerIdentifier other)

@@ -38,7 +38,8 @@ using Serilog;
 
 namespace Catalyst.Node
 {
-    public class CatalystNode : ICatalystNode
+    public class CatalystNode
+        : ICatalystNode
     {
         private readonly IConsensus _consensus;
         private readonly IContract _contract;
@@ -49,6 +50,8 @@ namespace Catalyst.Node
         private readonly IMempool _mempool;
         private readonly IPeerService _peer;
         private readonly INodeRpcServer _nodeRpcServer;
+        private readonly IPeerClient _peerClient;
+
         private readonly IApi _api;
 
         public CatalystNode(IKeySigner keySigner,
@@ -59,11 +62,13 @@ namespace Catalyst.Node
             ILogger logger,
             INodeRpcServer nodeRpcServer,
             IApi api,
+            IPeerClient peerClient,
             IMempool mempool = null,
             IContract contract = null)
         {
-            _consensus = consensus;
             _peer = peer;
+            _peerClient = peerClient;
+            _consensus = consensus;
             _dfs = dfs;
             _ledger = ledger;
             _keySigner = keySigner;
@@ -74,12 +79,20 @@ namespace Catalyst.Node
             _contract = contract;
         }
 
+        public async Task StartSockets()
+        {
+            await _nodeRpcServer.StartAsync().ConfigureAwait(false);
+            await _peerClient.StartAsync().ConfigureAwait(false);
+            await _peer.StartAsync().ConfigureAwait(false);
+            await _api.StartApiAsync().ConfigureAwait(false);
+        }
+
         public async Task RunAsync(CancellationToken ct)
         {
-            _logger.Debug("Starting the Catalyst Node");
+            _logger.Information("Starting the Catalyst Node");
 
-            await _api.StartApiAsync();
-            
+            await StartSockets().ConfigureAwait(false);
+
             bool exit;
             
             do

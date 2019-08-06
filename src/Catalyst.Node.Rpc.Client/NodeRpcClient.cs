@@ -27,6 +27,7 @@ using System.Linq;
 using System.Reactive.Linq;
 using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
+using System.Threading.Tasks;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.EventLoop;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
@@ -48,10 +49,14 @@ namespace Catalyst.Node.Rpc.Client
     /// </summary>
     internal sealed class NodeRpcClient : TcpClient, INodeRpcClient
     {
-        private readonly Dictionary<string, IRpcResponseObserver> _handlers;
+        private readonly ITcpClientChannelFactory _channelFactory;
+        private readonly IEnumerable<IRpcResponseObserver> _rpcResponseObservers;
+        private readonly X509Certificate2 _certificate;
+        private readonly IRpcNodeConfig _nodeConfig;
+        private Dictionary<string, IRpcResponseObserver> _handlers;
 
         /* Thread safe collection, in the case multiple observers are subscribing on multiple threads at the same time, removes concurrency issues. */
-        private readonly IObservable<IObserverDto<ProtocolMessage>> _socketMessageStream;
+        private IObservable<IObserverDto<ProtocolMessage>> _socketMessageStream;
 
         /// <summary>
         ///     Initialize a new instance of RPClient
@@ -69,15 +74,10 @@ namespace Catalyst.Node.Rpc.Client
             : base(channelFactory, Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType),
                 clientEventLoopGroupFactory)
         {
-            var socket = channelFactory.BuildChannel(EventLoopGroupFactory, nodeConfig.HostAddress, nodeConfig.Port,
-                certificate);
-
-            _socketMessageStream = socket.MessageStream;
-
-            _handlers = handlers.ToDictionary(
-                x => x.GetType().BaseType.GenericTypeArguments[0].ShortenedProtoFullName(), x => x);
-
-            Channel = socket.Channel;
+            _channelFactory = channelFactory;
+            _rpcResponseObservers = handlers;
+            _certificate = certificate;
+            _nodeConfig = nodeConfig;
         }
 
         public IDisposable SubscribeToResponse<T>(Action<T> onNext) where T : IMessage<T>
@@ -99,6 +99,19 @@ namespace Catalyst.Node.Rpc.Client
                 observer.Payload.CorrelationId.ToCorrelationId());
 
             return message;
+        }
+
+        public override async Task StartAsync()
+        {
+            var socket = await _channelFactory.BuildChannel(EventLoopGroupFactory, _nodeConfig.HostAddress, _nodeConfig.Port,
+                _certificate);
+
+            _socketMessageStream = socket.MessageStream;
+
+            _handlers = _rpcResponseObservers.ToDictionary(
+                x => x.GetType().BaseType.GenericTypeArguments[0].ShortenedProtoFullName(), x => x);
+
+            Channel = socket.Channel;
         }
     }
 }

@@ -28,11 +28,14 @@ using Catalyst.Common.IO.Transport;
 using Serilog;
 using System.Net;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace Catalyst.Core.Lib.P2P
 {
     public sealed class PeerClient : UdpClient, IPeerClient
     {
+        private readonly IPAddress _ipAddress;
+
         /// <param name="clientChannelFactory">A factory used to build the appropriate kind of channel for a udp client.</param>
         /// <param name="eventLoopGroupFactory"></param>
         /// <param name="ipAddress">The Peer client NIC binding</param>
@@ -43,10 +46,16 @@ namespace Catalyst.Core.Lib.P2P
                 Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType),
                 eventLoopGroupFactory)
         {
-            var bindingEndpoint = new IPEndPoint(ipAddress ?? IPAddress.Loopback, IPEndPoint.MinPort);
-            Channel = ChannelFactory.BuildChannel(EventLoopGroupFactory,
+            _ipAddress = ipAddress;
+        }
+
+        public override async Task StartAsync()
+        {
+            var bindingEndpoint = new IPEndPoint(_ipAddress ?? IPAddress.Loopback, IPEndPoint.MinPort);
+            var observableChannel = await ChannelFactory.BuildChannel(EventLoopGroupFactory,
                 bindingEndpoint.Address,
-                bindingEndpoint.Port).Channel;
+                bindingEndpoint.Port);
+            Channel = observableChannel.Channel;
         }
     }
 }

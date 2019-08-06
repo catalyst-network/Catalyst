@@ -120,10 +120,7 @@ namespace Catalyst.Common.Config
 
         /// <summary> This is the standard size for salt byte array </summary>
         public static int StandardSaltSize => 100;
-
-        /// <summary> Wait time for peer challenge </summary>
-        public static TimeSpan PeerChallengeWaitTime => TimeSpan.FromMilliseconds(4000);
-
+        
         public static IEnumerable<string> AllModuleFiles =>
             Enumeration.GetAll<ModuleName>()
                .Select(m => Path.Combine(ModulesSubFolder, string.Format(JsonFilePattern, m.Name.ToLower())));
