@@ -25,7 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Catalyst.Common.Interfaces.Modules.Mempool;
-using Catalyst.Common.Modules.Mempool;
+using Catalyst.Common.Modules.Mempool.Models;
 using Catalyst.Core.Lib.Modules.Consensus;
 using Catalyst.Core.Lib.Modules.Consensus.Deltas;
 using Catalyst.TestUtils;

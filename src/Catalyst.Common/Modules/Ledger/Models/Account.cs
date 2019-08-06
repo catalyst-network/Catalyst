@@ -21,51 +21,37 @@
 
 #endregion
 
-using Catalyst.Common.Attributes;
-using Catalyst.Common.Interfaces.P2P;
+using System.Text;
+using Catalyst.Common.Config;
+using Catalyst.Common.Interfaces.Modules.Ledger;
 using Catalyst.Common.Util;
-using Google.Protobuf;
 using Newtonsoft.Json;
 using SharpRepository.Repository;
-using System;
 
-namespace Catalyst.Common.P2P
+namespace Catalyst.Common.Modules.Ledger.Models
 {
-    [Audit]
-    public sealed class Peer : IPeer
+    /// <inheritdoc />
+    public sealed class Account : IAccount
     {
         /// <inheritdoc />
-        public int Reputation { get; set; }
+        public string PublicAddress { get; set; }
 
         /// <inheritdoc />
-        public bool BlackListed { get; set; }
+        public uint CoinType { get; set; }
 
         /// <inheritdoc />
-        /// <summary>
-        ///     When peer was first seen by the peer.
-        /// </summary>
-        public DateTime Created { get; set; }
+        public AccountTypes AccountType { get; set; }
 
         /// <inheritdoc />
-        public DateTime? Modified { get; set; }
+        public BigDecimal Balance { get; set; }
 
         /// <inheritdoc />
-        public DateTime LastSeen { get; set; }
-
-        /// <inheritdoc />
-        public IPeerIdentifier PeerIdentifier { get; set; }
-
-        /// <inheritdoc />
-        public bool IsAwolPeer => InactiveFor > TimeSpan.FromMinutes(30);
-
-        /// <inheritdoc />
-        public TimeSpan InactiveFor => DateTimeUtil.UtcNow - LastSeen;
+        public byte[] StateRoot { get; set; } = Constants.EmptyTrieHash;
 
         [RepositoryPrimaryKey(Order = 1)]
         [JsonProperty("id")]
-        public string DocumentId => PeerIdentifier.PeerId?.ToByteString().ToBase64();
-
-        /// <inheritdoc />
-        public void Touch() { LastSeen = DateTimeUtil.UtcNow; }
+        public string DocumentId =>
+            Encoding.UTF8.GetBytes($"{PublicAddress}-{CoinType}-{AccountType?.Name}")
+              ?.ToByteString()?.ToBase64();
     }
 }

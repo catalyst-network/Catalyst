@@ -27,7 +27,7 @@ using Autofac;
 using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.Modules.Mempool;
 using Catalyst.Common.IO.Messaging.Correlation;
-using Catalyst.Common.Modules.Mempool;
+using Catalyst.Common.Modules.Mempool.Models;
 using Catalyst.Protocol;
 using Catalyst.TestUtils;
 using FluentAssertions;

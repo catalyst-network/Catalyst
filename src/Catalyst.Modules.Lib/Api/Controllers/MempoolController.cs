@@ -21,10 +21,27 @@
 
 #endregion
 
-using Catalyst.Common.P2P;
-using Catalyst.Common.P2P.Models;
+using System.Linq;
+using Catalyst.Common.Interfaces.Repository;
+using Microsoft.AspNetCore.Mvc;
 
-namespace Catalyst.Common.Interfaces.Repository
+namespace Catalyst.Modules.Lib.Api.Controllers
 {
-    public interface IPeerRepository : IRepositoryWrapper<Peer> { }
+    [Route("api/mempool")]
+    public sealed class MempoolController : Controller
+    {
+        private readonly IMempoolRepository _mempoolRepository;
+
+        public MempoolController(IMempoolRepository mempoolRepository)
+        {
+            _mempoolRepository = mempoolRepository;
+        }
+
+        // GET: api/values
+        [HttpGet]
+        public OkObjectResult GetMempool()
+        {
+            return Ok(Json(_mempoolRepository.GetAll().ToList()));
+        }
+    }
 }
