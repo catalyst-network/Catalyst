@@ -53,7 +53,6 @@ namespace Catalyst.Common.Kernel
         private IConfigCopier _configCopier;
         public ContainerBuilder ContainerBuilder { get; set; }
         private readonly ConfigurationBuilder _configurationBuilder;
-        private bool _pwOverride;
         private ILifetimeScope _instance;
         public ICancellationTokenProvider CancellationTokenProvider { get; }
 
@@ -238,73 +237,28 @@ namespace Catalyst.Common.Kernel
                .RunConsole(CancellationTokenProvider.CancellationTokenSource.Token);
         }
         
-        public Kernel WithPasswordOverRide(string certificatePasswordKey = null,
-            string ipfsPasswordKey = null,
-            string dfsPasswordKey = null,
-            string defaultNodePasswordKey = null)
+        public Kernel WithPassword(PasswordRegistryKey key, string password)
         {
-            if (certificatePasswordKey == null && ipfsPasswordKey == null 
-             && dfsPasswordKey == null && defaultNodePasswordKey == null)
+            if (password == null)
             {
                 return this;
             }
 
-            _pwOverride = true;
-
-            _instance = ContainerBuilder.Build()
-               .BeginLifetimeScope(MethodBase.GetCurrentMethod().DeclaringType.AssemblyQualifiedName);
-            
+            if (_instance == null)
+            {
+                _instance = ContainerBuilder.Build()
+                    .BeginLifetimeScope(MethodBase.GetCurrentMethod().DeclaringType.AssemblyQualifiedName);
+            }
             var passwordRegistry = _instance.Resolve<IPasswordRegistry>();
-
-            if (certificatePasswordKey != null)
+            var ss = new SecureString();
+            foreach (var c in password)
             {
-                var cpk = new SecureString();
-                    
-                foreach (var c in certificatePasswordKey)
-                {
-                    cpk.AppendChar(c);
-                }
-                    
-                passwordRegistry.AddItemToRegistry(PasswordRegistryKey.CertificatePassword, cpk);
+                ss.AppendChar(c);
             }
-                
-            if (ipfsPasswordKey != null)
-            {
-                var ipk = new SecureString();
-                    
-                foreach (var c in ipfsPasswordKey)
-                {
-                    ipk.AppendChar(c);
-                }
-                    
-                passwordRegistry.AddItemToRegistry(PasswordRegistryKey.IpfsPassword, ipk);
-            }
-                
-            if (dfsPasswordKey != null)
-            {
-                var dpk = new SecureString();
-                    
-                foreach (var c in dfsPasswordKey)
-                {
-                    dpk.AppendChar(c);
-                }
-                    
-                passwordRegistry.AddItemToRegistry(PasswordRegistryKey.DfsPassword, dpk);
-            }
-                
-            if (defaultNodePasswordKey != null)
-            {
-                var dnpk = new SecureString();
-                    
-                foreach (var c in defaultNodePasswordKey)
-                {
-                    dnpk.AppendChar(c);
-                }
-                    
-                passwordRegistry.AddItemToRegistry(PasswordRegistryKey.DefaultNodePassword, dnpk);
-            }
+            passwordRegistry.AddItemToRegistry(key, ss);
 
             return this;
         }
+
     }
 }
