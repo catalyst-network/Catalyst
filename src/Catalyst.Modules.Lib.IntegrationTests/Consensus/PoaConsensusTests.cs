@@ -30,7 +30,6 @@ using System.Threading.Tasks;
 using Catalyst.Common.Interfaces.Modules.Consensus.Cycle;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.P2P;
-using Catalyst.Core.Lib.P2P;
 using Catalyst.TestUtils;
 using Xunit;
 using Xunit.Abstractions;
@@ -63,7 +62,7 @@ namespace Catalyst.Modules.Lib.IntegrationTests.Consensus
         [Fact]
         public async Task Run_Consensus()
         {
-            var observer = Observer.Create<IPhase>(p => Output.WriteLine(p.ToString()));
+            var observer = Observer.Create<IPhase>(ObservedPhase);
             _nodesById.Values.AsParallel()
                .ForAll(async n =>
                 {

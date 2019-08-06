@@ -28,6 +28,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Autofac;
+using Autofac.Builder;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.FileSystem;
@@ -37,6 +38,7 @@ using Catalyst.Common.Interfaces.Modules.Consensus;
 using Catalyst.Common.Interfaces.Modules.Dfs;
 using Catalyst.Common.Interfaces.Modules.Mempool;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.Interfaces.P2P.Discovery;
 using Catalyst.Common.Interfaces.Repository;
 using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.P2P;
@@ -61,6 +63,7 @@ namespace Catalyst.Modules.Lib.IntegrationTests.Consensus
         private readonly ICatalystNode _node;
         private readonly ILifetimeScope _scope;
         private readonly IFileSystem _nodeFileSystem;
+        private readonly DirectoryInfo _nodeDirectory;
 
         public PoaTestNode(string name,
             IPeerSettings nodeSettings,
@@ -71,13 +74,16 @@ namespace Catalyst.Modules.Lib.IntegrationTests.Consensus
             Name = name;
             _nodeSettings = nodeSettings;
 
+            _nodeDirectory = parentTestFileSystem.GetCatalystDataDir().SubDirectoryInfo(Name);
             _nodeFileSystem = Substitute.ForPartsOf<FileSystem>();
-            _nodeFileSystem.GetCatalystDataDir().Returns(parentTestFileSystem.GetCatalystDataDir().SubDirectoryInfo(Name));
+            _nodeFileSystem.GetCatalystDataDir().Returns(_nodeDirectory);
 
             _rpcSettings = RpcServerSettingsHelper.GetRpcServerSettings(nodeSettings.Port + 100);
             _nodePeerId = new PeerIdentifier(nodeSettings);
+
             var baseDfsFolder = Path.Combine(parentTestFileSystem.GetCatalystDataDir().FullName, "dfs");
             _dfs = new FileSystemDfs(new BLAKE2B_128(), parentTestFileSystem, baseDfsFolder);
+
             _mempool = new AutoFillingMempool();
             _peerRepository = Substitute.For<IPeerRepository>();
             var peersInRepo = knownPeerIds.Select(p => new Peer {PeerIdentifier = p});
@@ -106,7 +112,8 @@ namespace Catalyst.Modules.Lib.IntegrationTests.Consensus
             _containerProvider.ContainerBuilder.RegisterInstance(_dfs).As<IDfs>();
             _containerProvider.ContainerBuilder.RegisterInstance(_mempool).As<IMempool>();
             _containerProvider.ContainerBuilder.RegisterInstance(_peerRepository).As<IPeerRepository>();
-            _containerProvider.ContainerBuilder.RegisterInstance(_nodeFileSystem);
+            _containerProvider.ContainerBuilder.RegisterType<TestFileSystem>().As<IFileSystem>().WithParameter("rootPath", _nodeDirectory.FullName);
+            _containerProvider.ContainerBuilder.RegisterInstance(new NoDiscovery()).As<IPeerDiscovery>();
         }
 
         public IConsensus Consensus => _node.Consensus;
