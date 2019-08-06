@@ -33,8 +33,6 @@ using Catalyst.Protocol.Deltas;
 using Dawn;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Primitives;
-using Multiformats.Hash.Algorithms;
-using Nethereum.Hex.HexConvertors.Extensions;
 using Newtonsoft.Json;
 using Serilog;
 
