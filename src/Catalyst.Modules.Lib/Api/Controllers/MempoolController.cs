@@ -21,18 +21,27 @@
 
 #endregion
 
-using System;
-using GraphQL;
-using GraphQL.Types;
+using System.Linq;
+using Catalyst.Common.Interfaces.Repository;
+using Microsoft.AspNetCore.Mvc;
 
-namespace Catalyst.Modules.Lib.Web3Api.Models
+namespace Catalyst.Modules.Lib.Api.Controllers
 {
-    public class NodeSchema : Schema
+    [Route("api/mempool")]
+    public sealed class MempoolController : Controller
     {
-        public NodeSchema(Func<Type, GraphType> resolveType)
-            : base(new FuncDependencyResolver(resolveType))
+        private readonly IMempoolRepository _mempoolRepository;
+
+        public MempoolController(IMempoolRepository mempoolRepository)
         {
-            Query = (NodeQuery) resolveType(typeof(NodeQuery));
+            _mempoolRepository = mempoolRepository;
+        }
+
+        // GET: api/values
+        [HttpGet]
+        public OkObjectResult GetMempool()
+        {
+            return Ok(Json(_mempoolRepository.GetAll().ToList()));
         }
     }
 }

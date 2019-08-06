@@ -21,39 +21,27 @@
 
 #endregion
 
-using System;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore;
-using Microsoft.AspNetCore.Hosting;
-using Autofac.Extensions.DependencyInjection;
+using System.Linq;
+using Catalyst.Common.Interfaces.Repository;
+using Microsoft.AspNetCore.Mvc;
 
-namespace Catalyst.Modules.Lib.Web3Api
+namespace Catalyst.Modules.Lib.Api.Controllers
 {
-    public interface IWeb3Api : IDisposable
+    [Route("api/peer")]
+    public sealed class PeerController : Controller
     {
-        Task StartApiAsync();
-    }
+        private readonly IPeerRepository _peerRepository;
 
-    public class Web3Api : IWeb3Api
-    {
-        private readonly IWebHost _host;
-
-        public Web3Api()
+        public PeerController(IPeerRepository peerRepository)
         {
-            _host = WebHost.CreateDefaultBuilder()
-               .ConfigureServices(services => services.AddAutofac())
-               .UseStartup<Startup>()
-               .Build();
+            _peerRepository = peerRepository;
         }
 
-        public Task StartApiAsync()
+        // GET: api/values
+        [HttpGet]
+        public OkObjectResult GetAllPeers()
         {
-            return _host.StartAsync();
-        }
-        
-        public void Dispose()
-        {
-            _host?.Dispose();
+            return Ok(Json(_peerRepository.GetAll().ToList()));
         }
     }
 }

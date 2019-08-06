@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFramework>netcoreapp2.2</TargetFramework>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -41,6 +41,7 @@
         <PackageReference Include="SharpRepository.AzureDocumentDbRepository" Version="2.0.2-alpha4" />
         <PackageReference Include="SharpRepository.InMemoryRepository" Version="2.0.3.1" />
         <PackageReference Include="SharpRepository.Ioc.Autofac" Version="2.0.4.2" />
+        <PackageReference Include="SharpRepository.Repository" Version="2.0.4.6" />
         <PackageReference Include="SharpRepository.XmlRepository" Version="2.0.1-alpha3" />
         <PackageReference Include="System.IO.Abstractions" Version="6.0.3" />
         <PackageReference Include="System.IO.Abstractions.TestingHelpers" Version="6.0.3" />

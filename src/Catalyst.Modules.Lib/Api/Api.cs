@@ -21,30 +21,41 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.Repository;
-using Catalyst.Common.P2P.Models;
-using GraphQL.Types;
+using System;
+using System.Threading.Tasks;
+using Autofac.Extensions.DependencyInjection;
+using Microsoft.AspNetCore;
+using Microsoft.AspNetCore.Hosting;
+using Serilog;
 
-namespace Catalyst.Modules.Lib.Web3Api.Models
+namespace Catalyst.Modules.Lib.Api
 {
-    internal sealed class NodeQuery : ObjectGraphType
+    public interface IApi : IDisposable
     {
-        public NodeQuery() { }
+        Task StartApiAsync();
+    }
 
-        public NodeQuery(IMempoolRepository mempoolRepository,
-            IPeerRepository peerRepository,
-            IAccountRepository accountRepository)
+    public class Api : IApi
+    {
+        private readonly IWebHost _host;
+
+        public Api()
         {
-            Name = "Query";
+            _host = WebHost.CreateDefaultBuilder()
+               .ConfigureServices(services => services.AddAutofac())
+               .UseStartup<Startup>()
+               .UseSerilog()
+               .Build();
+        }
 
-            Field<Peer>(
-                "peers",
-                arguments: null,
-                resolve: context =>
-                {
-                    return peerRepository.GetAll();
-                }
-            );
+        public Task StartApiAsync()
+        {
+            return _host.StartAsync();
+        }
+        
+        public void Dispose()
+        {
+            _host?.Dispose();
         }
     }
 }

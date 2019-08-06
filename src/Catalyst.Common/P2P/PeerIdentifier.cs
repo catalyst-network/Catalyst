@@ -40,6 +40,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Text;
+using GraphQL.Types;
 
 namespace Catalyst.Common.P2P
 {

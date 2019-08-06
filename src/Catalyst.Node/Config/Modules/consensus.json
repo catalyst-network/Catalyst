@@ -66,10 +66,10 @@
             ]
         },
         {
-            "type": "SharpRepository.InMemoryRepository.InMemoryRepository`2[[Catalyst.Common.P2P.Peer, Catalyst.Common], [System.String, mscorlib]], SharpRepository.InMemoryRepository",
+            "type": "SharpRepository.InMemoryRepository.InMemoryRepository`2[[Catalyst.Common.P2P.Models.Peer, Catalyst.Common], [System.String, mscorlib]], SharpRepository.InMemoryRepository",
             "services": [
                 {
-                    "type": "SharpRepository.Repository.IRepository`2[[Catalyst.Common.P2P.Peer, Catalyst.Common], [System.String, mscorlib]], SharpRepository.Repository"
+                    "type": "SharpRepository.Repository.IRepository`2[[Catalyst.Common.P2P.Models.Peer, Catalyst.Common], [System.String, mscorlib]], SharpRepository.Repository"
                 }
             ]
         },
