@@ -22,27 +22,30 @@
 #endregion
 
 using Catalyst.Common.Interfaces.IO.EventLoop;
-using Catalyst.Common.Interfaces.IO.Transport;
+using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Transport.Channels;
+using Catalyst.Common.UnitTests.Stub;
+using Catalyst.Protocol.Common;
+using NSubstitute;
 using Serilog;
+using Xunit;
 
-namespace Catalyst.Common.IO.Transport
+namespace Catalyst.Common.UnitTests.IO.Transport
 {
-    public abstract class TcpServer : SocketBase, ITcpServer
+    public sealed class ClientBaseUnitTests
     {
-        protected TcpServer(ITcpServerChannelFactory tcpChannelFactory,
-            ILogger logger,
-            IEventLoopGroupFactory eventLoopGroupFactory)
-            : base(tcpChannelFactory, logger, eventLoopGroupFactory) { }
-
-        protected override void Dispose(bool disposing)
+        [Fact]
+        public void SendMessage_Should_Write_Message_To_Channel()
         {
-            if (!disposing)
-            {
-                return;
-            }
+            var messageDto = Substitute.For<IMessageDto<ProtocolMessage>>();
+            var channelFactory = Substitute.For<ITcpClientChannelFactory>();
+            var logger = Substitute.For<ILogger>();
+            var eventLoopGroupFactory = Substitute.For<IEventLoopGroupFactory>();
 
-            base.Dispose(true);
+            var testClientBase = new TestClientBase(channelFactory, logger, eventLoopGroupFactory);
+            testClientBase.SendMessage(messageDto);
+
+            testClientBase.Channel.Received(1).WriteAsync(messageDto);
         }
     }
 }

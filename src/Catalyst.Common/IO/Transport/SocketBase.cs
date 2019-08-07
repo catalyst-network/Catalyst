@@ -27,7 +27,6 @@ using Catalyst.Common.Interfaces.IO.Transport.Channels;
 using DotNetty.Transport.Channels;
 using Serilog;
 using System;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -69,11 +68,7 @@ namespace Catalyst.Common.IO.Transport
             try
             {
                 Channel?.Flush();
-                var closeChannelTask = Channel?.CloseAsync();
-
-                Task.WaitAll(new[] {closeChannelTask}.Where(t => t != null).ToArray(),
-                    quietPeriod * 2);
-
+                Channel?.CloseAsync().Wait(quietPeriod);
                 EventLoopGroupFactory.Dispose();
             }
             catch (Exception e)

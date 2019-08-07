@@ -21,34 +21,28 @@
 
 #endregion
 
+using System;
 using System.Net;
-using System.Net.Sockets;
 using System.Threading.Tasks;
-using Catalyst.Common.Interfaces.IO.Transport.Bootstrapping;
-using Catalyst.Common.Util;
-using DotNetty.Transport.Channels;
-using Polly;
-using Polly.Retry;
+using Catalyst.Common.IO.Transport.Bootstrapping;
+using FluentAssertions;
+using Xunit;
 
-namespace Catalyst.Common.IO.Transport.Bootstrapping
+namespace Catalyst.Common.UnitTests.IO.Transport.Bootstrapping
 {
-    public sealed class Bootstrap
-        : DotNetty.Transport.Bootstrapping.Bootstrap,
-            IServerBootstrap
+    public sealed class BootstrapUnitTests
     {
-        private readonly AsyncRetryPolicy _exponentialBackOffRetryPolicy;
-
-        public Bootstrap()
+        [Fact]
+        public async Task BindAsync_Should_Bind_To_NettyBootstrap_BindAsync()
         {
-            _exponentialBackOffRetryPolicy = Policy.Handle<SocketException>()
-               .WaitAndRetryAsync(10, DateTimeUtil.GetExponentialTimeSpan);
-        }
+            var ipAddress = IPAddress.Loopback;
+            var port = 9000;
 
-        public new Task<IChannel> BindAsync(IPAddress ipAddress, int port)
-        {
-            return _exponentialBackOffRetryPolicy.ExecuteAsync(
-                () => base.BindAsync(ipAddress, port)
-            );
+            var bootstrap = new Bootstrap();
+
+            //We have not set the group for bootstrap so we know that code will trigger an exception, if BindAsync calls Base BindAsync
+            var exception = await Record.ExceptionAsync(async () => { await bootstrap.BindAsync(ipAddress, port); });
+            exception.Should().BeOfType<InvalidOperationException>("group not set");
         }
     }
 }
