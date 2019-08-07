@@ -21,6 +21,9 @@
 
 #endregion
 
+using System;
+using System.Collections.Generic;
+using System.IO;
 using Catalyst.Cli.Options;
 using FluentAssertions;
 using Xunit;
@@ -31,16 +34,22 @@ namespace Catalyst.Cli.UnitTests
     {
         private ChangeDataFolderOptions _changeDataFolderOptions;
 
+        public static IEnumerable<object[]> WorkingPaths =>
+            new List<object[]>
+            {
+                new object[] {Path.Combine("H:", "forward", "Path", "Allocation")},
+                new object[] {Path.Combine("F:", "Data", "Concept")},
+                new object[] {Path.Combine("G:", "Azure", "CloudTechnology")},
+                new object[] {Path.Combine("C:", "PencilCamera", "FolderFriend")},
+            };
+
         public CatalystCliOptionsTest()
         {
             _changeDataFolderOptions = new ChangeDataFolderOptions();
         }
 
         [Theory]
-        [InlineData("H:/forward/Path/Allocation/")]
-        [InlineData("F:\\Data\\Concept")]
-        [InlineData("G:\\Azure\\CloudTechnology")]
-        [InlineData("C:\\PencilCamera\\FolderFriend")]
+        [MemberData(nameof(WorkingPaths))]
         public void ChangeDataFolder_Set_Data_Folder_Property_Valid_Path_Must_Store_Successfully(string path)
         {
             _changeDataFolderOptions.DataFolder = path;
