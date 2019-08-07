@@ -21,28 +21,21 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.IO.EventLoop;
-using Catalyst.Common.Interfaces.IO.Transport;
-using Catalyst.Common.Interfaces.IO.Transport.Channels;
-using Serilog;
+using System;
+using System.Runtime.Serialization;
 
-namespace Catalyst.Common.IO.Transport
+namespace Catalyst.Node.Rpc.Client.IO.Exceptions
 {
-    public abstract class TcpServer : SocketBase, ITcpServer
+    [Serializable]
+    public class ResponseHandlerDoesNotExistException : Exception
     {
-        protected TcpServer(ITcpServerChannelFactory tcpChannelFactory,
-            ILogger logger,
-            IEventLoopGroupFactory eventLoopGroupFactory)
-            : base(tcpChannelFactory, logger, eventLoopGroupFactory) { }
+        public ResponseHandlerDoesNotExistException() { }
+        public ResponseHandlerDoesNotExistException(string message) : base(message) { }
 
-        protected override void Dispose(bool disposing)
-        {
-            if (!disposing)
-            {
-                return;
-            }
+        public ResponseHandlerDoesNotExistException(string message, Exception innerException)
+            : base(message, innerException) { }
 
-            base.Dispose(true);
-        }
+        protected ResponseHandlerDoesNotExistException(SerializationInfo info, StreamingContext context)
+            : base(info, context) { }
     }
 }

@@ -21,34 +21,25 @@
 
 #endregion
 
-using System.Net;
-using System.Net.Sockets;
-using System.Threading.Tasks;
-using Catalyst.Common.Interfaces.IO.Transport.Bootstrapping;
-using Catalyst.Common.Util;
+using System;
+using System.Reactive.Linq;
+using Catalyst.Common.Interfaces.IO.Messaging.Dto;
+using Catalyst.Common.Interfaces.IO.Transport.Channels;
+using Catalyst.Common.IO.Transport.Channels;
+using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;
-using Polly;
-using Polly.Retry;
+using NSubstitute;
 
-namespace Catalyst.Common.IO.Transport.Bootstrapping
+namespace Catalyst.Core.Lib.UnitTests.Helpers
 {
-    public sealed class Bootstrap
-        : DotNetty.Transport.Bootstrapping.Bootstrap,
-            IServerBootstrap
+    public static class ObservableHelpers
     {
-        private readonly AsyncRetryPolicy _exponentialBackOffRetryPolicy;
-
-        public Bootstrap()
+        public static IObservableChannel MockObservableChannel(IObservable<IObserverDto<ProtocolMessage>> replaySubject)
         {
-            _exponentialBackOffRetryPolicy = Policy.Handle<SocketException>()
-               .WaitAndRetryAsync(10, DateTimeUtil.GetExponentialTimeSpan);
-        }
-
-        public new Task<IChannel> BindAsync(IPAddress ipAddress, int port)
-        {
-            return _exponentialBackOffRetryPolicy.ExecuteAsync(
-                () => base.BindAsync(ipAddress, port)
-            );
+            var mockChannel = Substitute.For<IChannel>();
+            var mockEventStream = replaySubject.AsObservable();
+            var observableChannel = new ObservableChannel(mockEventStream, mockChannel);
+            return observableChannel;
         }
     }
 }
