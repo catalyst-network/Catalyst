@@ -37,10 +37,10 @@ namespace Catalyst.Cli.UnitTests
         public static IEnumerable<object[]> WorkingPaths =>
             new List<object[]>
             {
-                new object[] {Path.Combine("H:", "forward", "Path", "Allocation")},
-                new object[] {Path.Combine("F:", "Data", "Concept")},
-                new object[] {Path.Combine("G:", "Azure", "CloudTechnology")},
-                new object[] {Path.Combine("C:", "PencilCamera", "FolderFriend")},
+                new object[] {Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "forward", "Path", "Allocation")},
+                new object[] {Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Data", "Concept")},
+                new object[] {Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Azure", "CloudTechnology")},
+                new object[] {Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "PencilCamera", "FolderFriend")},
             };
 
         public CatalystCliOptionsTest()
