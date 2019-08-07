@@ -21,6 +21,9 @@
 
 #endregion
 
+using System;
+using System.IO;
+using Catalyst.Common.Config;
 using Catalyst.Protocol.Rpc.Node;
 using FluentAssertions;
 using Xunit;
@@ -35,7 +38,8 @@ namespace Catalyst.Cli.IntegrationTests.Commands
         [Fact]
         public void Cli_Can_Send_Change_Data_Folder_Request()
         {
-            var result = Shell.ParseCommand("changedatafolder", NodeArgumentPrefix, ServerNodeName, "-c", "C:\\TemporaryFolder");
+            var path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), Constants.CatalystDataDir);
+            var result = Shell.ParseCommand("changedatafolder", NodeArgumentPrefix, ServerNodeName, "-c", path);
             result.Should().BeTrue();
 
             AssertSentMessageAndGetMessageContent<SetPeerDataFolderResponse>();
