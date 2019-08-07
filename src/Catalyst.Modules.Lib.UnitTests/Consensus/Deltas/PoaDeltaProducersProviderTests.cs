@@ -37,7 +37,7 @@ using Nethereum.Hex.HexConvertors.Extensions;
 using NSubstitute;
 using Serilog;
 using Xunit;
-using Peer = Catalyst.Common.P2P.Peer;
+using Peer = Catalyst.Common.P2P.Models.Peer;
 
 namespace Catalyst.Modules.Lib.UnitTests.Consensus.Deltas
 {

@@ -25,8 +25,8 @@ using Catalyst.Common.Interfaces.Modules.Ledger;
 using Dawn;
 using Serilog;
 using System;
-using Catalyst.Common.Modules.Ledger;
 using Catalyst.Common.Interfaces.Repository;
+using Catalyst.Common.Modules.Ledger.Models;
 
 namespace Catalyst.Core.Lib.Modules.Ledger
 {

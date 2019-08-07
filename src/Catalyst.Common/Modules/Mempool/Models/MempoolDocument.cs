@@ -21,37 +21,20 @@
 
 #endregion
 
-using Catalyst.Common.Config;
-using Catalyst.Common.Interfaces.Modules.Ledger;
-using Catalyst.Common.Util;
+using Catalyst.Common.Interfaces.Modules.Mempool;
+using Catalyst.Protocol.Transaction;
+using Google.Protobuf;
 using Newtonsoft.Json;
 using SharpRepository.Repository;
-using System.Text;
 
-namespace Catalyst.Common.Modules.Ledger
+namespace Catalyst.Common.Modules.Mempool.Models
 {
-    /// <inheritdoc />
-    public sealed class Account : IAccount
+    public sealed class MempoolDocument : IMempoolDocument
     {
-        /// <inheritdoc />
-        public string PublicAddress { get; set; }
-
-        /// <inheritdoc />
-        public uint CoinType { get; set; }
-
-        /// <inheritdoc />
-        public AccountTypes AccountType { get; set; }
-
-        /// <inheritdoc />
-        public BigDecimal Balance { get; set; }
-
-        /// <inheritdoc />
-        public byte[] StateRoot { get; set; } = Constants.EmptyTrieHash;
-
         [RepositoryPrimaryKey(Order = 1)]
         [JsonProperty("id")]
-        public string DocumentId =>
-            Encoding.UTF8.GetBytes($"{PublicAddress}-{CoinType}-{AccountType?.Name}")
-              ?.ToByteString()?.ToBase64();
+        public string DocumentId => Transaction?.Signature?.ToByteString()?.ToBase64();
+
+        public TransactionBroadcast Transaction { get; set; }
     }
 }

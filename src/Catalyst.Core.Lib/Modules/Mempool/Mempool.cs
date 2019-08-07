@@ -26,7 +26,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Catalyst.Common.Interfaces.Modules.Mempool;
 using Catalyst.Common.Interfaces.Repository;
-using Catalyst.Common.Modules.Mempool;
+using Catalyst.Common.Modules.Mempool.Models;
 using Catalyst.Protocol.Transaction;
 using Dawn;
 using Google.Protobuf;

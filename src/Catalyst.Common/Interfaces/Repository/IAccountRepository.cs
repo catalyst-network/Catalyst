@@ -21,7 +21,7 @@
 
 #endregion
 
-using Catalyst.Common.Modules.Ledger;
+using Catalyst.Common.Modules.Ledger.Models;
 
 namespace Catalyst.Common.Interfaces.Repository
 {
