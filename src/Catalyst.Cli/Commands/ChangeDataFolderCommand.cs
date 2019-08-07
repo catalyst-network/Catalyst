@@ -25,6 +25,7 @@ using Catalyst.Cli.Options;
 using Catalyst.Common.Interfaces.Cli.Commands;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.Cli.CommandTypes;
+using Catalyst.Protocol;
 
 namespace Catalyst.Cli.Commands
 {
@@ -38,6 +39,17 @@ namespace Catalyst.Cli.Commands
             {
                 Datafolder = option.DataFolder
             };
+        }
+
+        protected override void ResponseMessage(SetPeerDataFolderResponse response)
+        {
+            if (!response.Query)
+            {
+                CommandContext.UserOutput.WriteLine("Directory change failed, please check directory path");
+                return;
+            }
+
+            CommandContext.UserOutput.WriteLine("Directory change successful!");
         }
     }
 }
