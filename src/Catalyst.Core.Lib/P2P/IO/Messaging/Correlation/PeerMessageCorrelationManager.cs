@@ -23,6 +23,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using Catalyst.Common.Config;
@@ -44,46 +45,32 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Correlation
 {
     public sealed class PeerMessageCorrelationManager : MessageCorrelationManagerBase, IPeerMessageCorrelationManager
     {
-        private readonly ReplaySubject<IPeerReputationChange> _reputationEvent;
         private readonly ReplaySubject<KeyValuePair<ICorrelationId, IPeerIdentifier>> _evictionEvent;
-        public IObservable<IPeerReputationChange> ReputationEventStream { get; }
-        public IObservable<KeyValuePair<ICorrelationId, IPeerIdentifier>> EvictionEventStream { get; }
+        private readonly ReplaySubject<IPeerReputationChange> _reputationEvent;
+        private readonly IScheduler _scheduler;
 
         public PeerMessageCorrelationManager(IReputationManager reputationManager,
             IMemoryCache cache,
             ILogger logger,
-            IChangeTokenProvider changeTokenProvider) : base(cache, logger, changeTokenProvider)
+            IChangeTokenProvider changeTokenProvider,
+            IScheduler scheduler = null) : base(cache, logger, changeTokenProvider)
         {
-            _reputationEvent = new ReplaySubject<IPeerReputationChange>(0);
+            _scheduler = scheduler ?? Scheduler.Default;
+            _reputationEvent = new ReplaySubject<IPeerReputationChange>(0, _scheduler);
             ReputationEventStream = _reputationEvent.AsObservable();
-            _evictionEvent = new ReplaySubject<KeyValuePair<ICorrelationId, IPeerIdentifier>>(0);
+            _evictionEvent = new ReplaySubject<KeyValuePair<ICorrelationId, IPeerIdentifier>>(0, _scheduler);
             EvictionEventStream = _evictionEvent.AsObservable();
 
             reputationManager.MergeReputationStream(ReputationEventStream);
         }
 
-        protected override void EvictionCallback(object key, object value, EvictionReason reason, object state)
-        {
-            if (!(value is CorrelatableMessage<ProtocolMessage> message))
-            {
-                Log.Warning("EvictionCallback called with unknown valued {value}", value);
-                return;
-            }
-
-            var correlationId = message.Content.CorrelationId.ToCorrelationId();
-            Logger.Verbose("{correlationId} message originally sent to {peer} is getting evicted", correlationId, message.Recipient);
-
-            _reputationEvent.OnNext(new PeerReputationChange(new PeerIdentifier(message.Content.PeerId), 
-                ReputationEvents.NoResponseReceived));
-            Logger.Verbose("PeerReputationChange sent for {correlationId}", correlationId);
-            
-            _evictionEvent.OnNext(new KeyValuePair<ICorrelationId, IPeerIdentifier>(correlationId, message.Recipient));
-            Logger.Verbose("EvictionEvent sent for {correlationId}", correlationId);
-        }
+        public IObservable<IPeerReputationChange> ReputationEventStream { get; }
+        public IObservable<KeyValuePair<ICorrelationId, IPeerIdentifier>> EvictionEventStream { get; }
 
         /// <summary>
-        ///     Takes a generic request type of IMessage, and generic response type of IMessage and the message and look them up in the cache.
-        ///     Return what's found or emit an-uncorrectable event 
+        ///     Takes a generic request type of IMessage, and generic response type of IMessage and the message and look them up in
+        ///     the cache.
+        ///     Return what's found or emit an-uncorrectable event
         /// </summary>
         /// <param name="response"></param>
         /// <returns></returns>
@@ -110,10 +97,30 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Correlation
             return true;
         }
 
+        protected override void EvictionCallback(object key, object value, EvictionReason reason, object state)
+        {
+            if (!(value is CorrelatableMessage<ProtocolMessage> message))
+            {
+                Log.Warning("EvictionCallback called with unknown valued {value}", value);
+                return;
+            }
+
+            var correlationId = message.Content.CorrelationId.ToCorrelationId();
+            Logger.Verbose("{correlationId} message originally sent to {peer} is getting evicted", correlationId,
+                message.Recipient);
+
+            _reputationEvent.OnNext(new PeerReputationChange(new PeerIdentifier(message.Content.PeerId),
+                ReputationEvents.NoResponseReceived));
+            Logger.Verbose("PeerReputationChange sent for {correlationId}", correlationId);
+
+            _evictionEvent.OnNext(new KeyValuePair<ICorrelationId, IPeerIdentifier>(correlationId, message.Recipient));
+            Logger.Verbose("EvictionEvent sent for {correlationId}", correlationId);
+        }
+
         protected override void Dispose(bool disposing)
         {
             base.Dispose(disposing);
-            
+
             if (!disposing)
             {
                 return;

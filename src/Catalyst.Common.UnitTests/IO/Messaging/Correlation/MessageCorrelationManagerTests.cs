@@ -43,6 +43,7 @@ using NSubstitute;
 using Serilog;
 using System.IO;
 using Catalyst.Protocol;
+using Microsoft.Reactive.Testing;
 using Xunit;
 using PendingRequest = Catalyst.Common.IO.Messaging.Correlation.CorrelatableMessage<Catalyst.Protocol.Common.ProtocolMessage>;
 
@@ -58,6 +59,7 @@ namespace Catalyst.Common.UnitTests.IO.Messaging.Correlation
         protected readonly ILogger SubbedLogger;
         protected readonly IChangeTokenProvider ChangeTokenProvider;
         protected readonly IMemoryCache Cache;
+        private readonly TestScheduler _testScheduler;
         private readonly PeerId _senderPeerId;
 
         protected readonly Dictionary<ByteString, ICacheEntry> CacheEntriesByRequest 
@@ -65,6 +67,8 @@ namespace Catalyst.Common.UnitTests.IO.Messaging.Correlation
         
         protected MessageCorrelationManagerTests()
         {
+            _testScheduler = new TestScheduler();
+
             SubbedLogger = Substitute.For<ILogger>();
             ChangeTokenProvider = Substitute.For<IChangeTokenProvider>();
             var changeToken = Substitute.For<IChangeToken>();
