@@ -47,7 +47,6 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Correlation
     {
         private readonly ReplaySubject<KeyValuePair<ICorrelationId, IPeerIdentifier>> _evictionEvent;
         private readonly ReplaySubject<IPeerReputationChange> _reputationEvent;
-        private readonly IScheduler _scheduler;
 
         public PeerMessageCorrelationManager(IReputationManager reputationManager,
             IMemoryCache cache,
@@ -55,10 +54,10 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Correlation
             IChangeTokenProvider changeTokenProvider,
             IScheduler scheduler = null) : base(cache, logger, changeTokenProvider)
         {
-            _scheduler = scheduler ?? Scheduler.Default;
-            _reputationEvent = new ReplaySubject<IPeerReputationChange>(0, _scheduler);
+            var streamScheduler = scheduler ?? Scheduler.Default;
+            _reputationEvent = new ReplaySubject<IPeerReputationChange>(0, streamScheduler);
             ReputationEventStream = _reputationEvent.AsObservable();
-            _evictionEvent = new ReplaySubject<KeyValuePair<ICorrelationId, IPeerIdentifier>>(0, _scheduler);
+            _evictionEvent = new ReplaySubject<KeyValuePair<ICorrelationId, IPeerIdentifier>>(0, streamScheduler);
             EvictionEventStream = _evictionEvent.AsObservable();
 
             reputationManager.MergeReputationStream(ReputationEventStream);
