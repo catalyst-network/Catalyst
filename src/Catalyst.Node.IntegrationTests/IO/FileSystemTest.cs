@@ -21,6 +21,7 @@
 
 #endregion
 
+using System.Globalization;
 using FluentAssertions;
 using Xunit;
 using Catalyst.TestUtils;
@@ -62,7 +63,7 @@ namespace Catalyst.Node.IntegrationTests.IO
         {
             var fileSystem = new CommonFileSystem();
 
-            return fileSystem.GetCatalystDataDir().FullName.ToLower().Equals(path.ToLower());
+            return fileSystem.GetCatalystDataDir().FullName.ToLower(CultureInfo.InvariantCulture).Equals(path.ToLower(CultureInfo.InvariantCulture));
         }
 
         [Theory]
