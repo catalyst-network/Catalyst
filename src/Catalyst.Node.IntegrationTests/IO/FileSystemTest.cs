@@ -67,9 +67,9 @@ namespace Catalyst.Node.IntegrationTests.IO
 
         [Theory]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
-        [InlineData("prgo**%£bmevevo")]
-        [InlineData("xxx://gandolf\\treasure*&+")]
-        [InlineData("q*PencilL:\\123\\fake")]
+        [InlineData("pr/go**%£b/meve\vo")]
+        [InlineData("xxx://gandolf\\treasu\re*&+")]
+        [InlineData("q*PencilL:\\123\\fak/e")]
         public void Save_NonExistent_Data_Directory_Must_Fail(string path)
         {
             _fileSystem.SetCurrentPath(path).Should().BeFalse();
