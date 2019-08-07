@@ -21,34 +21,26 @@
 
 #endregion
 
-using System.Net;
-using System.Net.Sockets;
 using System.Threading.Tasks;
-using Catalyst.Common.Interfaces.IO.Transport.Bootstrapping;
-using Catalyst.Common.Util;
+using Catalyst.Common.Interfaces.IO.EventLoop;
+using Catalyst.Common.Interfaces.IO.Transport.Channels;
+using Catalyst.Common.IO.Transport;
 using DotNetty.Transport.Channels;
-using Polly;
-using Polly.Retry;
+using NSubstitute;
+using Serilog;
 
-namespace Catalyst.Common.IO.Transport.Bootstrapping
+namespace Catalyst.Common.UnitTests.Stub
 {
-    public sealed class Bootstrap
-        : DotNetty.Transport.Bootstrapping.Bootstrap,
-            IServerBootstrap
+    public class TestClientBase : ClientBase
     {
-        private readonly AsyncRetryPolicy _exponentialBackOffRetryPolicy;
-
-        public Bootstrap()
+        public TestClientBase(IChannelFactory channelFactory,
+            ILogger logger,
+            IEventLoopGroupFactory handlerEventEventLoopGroupFactory) : base(channelFactory, logger,
+            handlerEventEventLoopGroupFactory)
         {
-            _exponentialBackOffRetryPolicy = Policy.Handle<SocketException>()
-               .WaitAndRetryAsync(10, DateTimeUtil.GetExponentialTimeSpan);
+            Channel = Substitute.For<IChannel>();
         }
 
-        public new Task<IChannel> BindAsync(IPAddress ipAddress, int port)
-        {
-            return _exponentialBackOffRetryPolicy.ExecuteAsync(
-                () => base.BindAsync(ipAddress, port)
-            );
-        }
+        public override Task StartAsync() { throw new System.NotImplementedException(); }
     }
 }

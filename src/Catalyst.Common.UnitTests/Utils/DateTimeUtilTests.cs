@@ -21,34 +21,32 @@
 
 #endregion
 
-using System.Net;
-using System.Net.Sockets;
-using System.Threading.Tasks;
-using Catalyst.Common.Interfaces.IO.Transport.Bootstrapping;
+using System;
 using Catalyst.Common.Util;
-using DotNetty.Transport.Channels;
-using Polly;
-using Polly.Retry;
+using FluentAssertions;
+using Xunit;
 
-namespace Catalyst.Common.IO.Transport.Bootstrapping
+namespace Catalyst.Common.UnitTests.Utils
 {
-    public sealed class Bootstrap
-        : DotNetty.Transport.Bootstrapping.Bootstrap,
-            IServerBootstrap
+    public sealed class DateTimeUtilTests
     {
-        private readonly AsyncRetryPolicy _exponentialBackOffRetryPolicy;
-
-        public Bootstrap()
+        [Fact]
+        public void ExponentialTimeSpan_Should_Return_Exponential_TimeSpan()
         {
-            _exponentialBackOffRetryPolicy = Policy.Handle<SocketException>()
-               .WaitAndRetryAsync(10, DateTimeUtil.GetExponentialTimeSpan);
-        }
+            var maxTimeSpan = TimeSpan.MaxValue;
+            var retryCount = 0;
+            var milliseconds = Math.Pow(2, retryCount);
 
-        public new Task<IChannel> BindAsync(IPAddress ipAddress, int port)
-        {
-            return _exponentialBackOffRetryPolicy.ExecuteAsync(
-                () => base.BindAsync(ipAddress, port)
-            );
+            while (milliseconds < maxTimeSpan.TotalMilliseconds)
+            {
+                var result = DateTimeUtil.GetExponentialTimeSpan(retryCount);
+                var target = TimeSpan.FromMilliseconds(milliseconds);
+                var comparison = TimeSpan.Compare(result, target);
+                comparison.Should().Be(0);
+
+                retryCount++;
+                milliseconds = Math.Pow(2, retryCount);
+            }
         }
     }
 }
