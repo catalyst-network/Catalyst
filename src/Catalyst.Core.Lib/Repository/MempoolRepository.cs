@@ -22,7 +22,7 @@
 #endregion
 
 using Catalyst.Common.Interfaces.Repository;
-using Catalyst.Common.Modules.Mempool;
+using Catalyst.Common.Modules.Mempool.Models;
 using Catalyst.Common.Repository;
 using SharpRepository.Repository;
 

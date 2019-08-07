@@ -27,7 +27,7 @@ using System.Linq;
 using System.Threading;
 using Catalyst.Common.Interfaces.Modules.Mempool;
 using Catalyst.Common.Interfaces.Repository;
-using Catalyst.Common.Modules.Mempool;
+using Catalyst.Common.Modules.Mempool.Models;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using NSubstitute;

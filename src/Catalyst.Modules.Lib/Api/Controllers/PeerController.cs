@@ -21,20 +21,27 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.Modules.Mempool;
-using Catalyst.Protocol.Transaction;
-using Google.Protobuf;
-using Newtonsoft.Json;
-using SharpRepository.Repository;
+using System.Linq;
+using Catalyst.Common.Interfaces.Repository;
+using Microsoft.AspNetCore.Mvc;
 
-namespace Catalyst.Common.Modules.Mempool
+namespace Catalyst.Modules.Lib.Api.Controllers
 {
-    public class MempoolDocument : IMempoolDocument
+    [Route("api/peer")]
+    public sealed class PeerController : Controller
     {
-        [RepositoryPrimaryKey(Order = 1)]
-        [JsonProperty("id")]
-        public string DocumentId => Transaction?.Signature?.ToByteString()?.ToBase64();
+        private readonly IPeerRepository _peerRepository;
 
-        public TransactionBroadcast Transaction { get; set; }
+        public PeerController(IPeerRepository peerRepository)
+        {
+            _peerRepository = peerRepository;
+        }
+
+        // GET: api/values
+        [HttpGet]
+        public OkObjectResult GetAllPeers()
+        {
+            return Ok(Json(_peerRepository.GetAll().ToList()));
+        }
     }
 }

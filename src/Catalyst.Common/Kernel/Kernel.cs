@@ -247,18 +247,19 @@ namespace Catalyst.Common.Kernel
             if (_instance == null)
             {
                 _instance = ContainerBuilder.Build()
-                    .BeginLifetimeScope(MethodBase.GetCurrentMethod().DeclaringType.AssemblyQualifiedName);
+                   .BeginLifetimeScope(MethodBase.GetCurrentMethod().DeclaringType.AssemblyQualifiedName);
             }
+
             var passwordRegistry = _instance.Resolve<IPasswordRegistry>();
             var ss = new SecureString();
             foreach (var c in password)
             {
                 ss.AppendChar(c);
             }
+
             passwordRegistry.AddItemToRegistry(key, ss);
 
             return this;
         }
-
     }
 }
