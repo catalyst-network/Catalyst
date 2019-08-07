@@ -60,5 +60,10 @@ namespace Catalyst.Common.Util
             Guard.Argument(milliSecs, nameof(milliSecs)).Min(1);
             return TimeSpan.FromMilliseconds(milliSecs);
         }
+
+        public static TimeSpan GetExponentialTimeSpan(int seed)
+        {
+            return TimeSpan.FromMilliseconds(Math.Pow(2, seed));
+        }
     }
 }
