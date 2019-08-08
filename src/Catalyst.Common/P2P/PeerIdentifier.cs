@@ -58,8 +58,6 @@ namespace Catalyst.Common.P2P
     {
         public static char PidDelimiter => '|';
         public PeerId PeerId { get; }
-        public string ClientId => PeerId.ClientId.ToStringUtf8();
-        public string ClientVersion => PeerId.ClientVersion.ToStringUtf8();
         public IPAddress Ip => new IPAddress(PeerId.Ip.ToByteArray()).MapToIPv4();
         public int Port => BitConverter.ToUInt16(PeerId.Port.ToByteArray());
         public byte[] PublicKey => PeerId.PublicKey.ToByteArray();
@@ -72,13 +70,13 @@ namespace Catalyst.Common.P2P
             PeerId = peerId;
         }
 
-        public static IPeerIdentifier BuildPeerIdFromConfig(IRpcNodeConfig nodeConfig, IPeerIdClientId clientId)
+        public static IPeerIdentifier BuildPeerIdFromConfig(IRpcNodeConfig nodeConfig)
         {
             return new PeerIdentifier(Encoding.ASCII.GetBytes(nodeConfig.PublicKey),
-                nodeConfig.HostAddress, nodeConfig.Port, clientId);
+                nodeConfig.HostAddress, nodeConfig.Port);
         }
         
-        public static IPeerIdentifier BuildPeerIdFromConfig(IConfigurationRoot config, IUserOutput userOutput, IKeyRegistry registry, IPeerIdClientId clientId)
+        public static IPeerIdentifier BuildPeerIdFromConfig(IConfigurationRoot config, IUserOutput userOutput, IKeyRegistry registry)
         {
             //TODO: Handle different scenarios to get the IPAddress and Port depending
             //on you whether you are connecting to a local node, or a remote one.
@@ -90,7 +88,7 @@ namespace Catalyst.Common.P2P
             var publicKey = GetIfRegistryContainsPublicKey(publicKeyStr.KeyToBytes(), registry, userOutput);
 
             return new PeerIdentifier(publicKey,
-                IPAddress.Loopback, IPEndPoint.MaxPort, clientId);
+                IPAddress.Loopback, IPEndPoint.MaxPort);
         }
 
         internal static byte[] GetIfRegistryContainsPublicKey(byte[] publicKeyBytes, IKeyRegistry registry, IUserOutput userOutput)
@@ -117,8 +115,7 @@ namespace Catalyst.Common.P2P
 
             return new PeerIdentifier(new PeerId
             {
-                ClientId = peerByteChunks[0],
-                ClientVersion = peerByteChunks[1],
+                ProtocolVersion = peerByteChunks[1],
                 Ip = IPAddress.Parse(rawPidChunks[2]).MapToIPv4().To16Bytes().ToByteString(),
                 Port = peerByteChunks[3],
                 PublicKey = peerByteChunks[4]
@@ -126,32 +123,29 @@ namespace Catalyst.Common.P2P
         }
 
         public PeerIdentifier(IPeerSettings settings) : this(settings.PublicKey.KeyToBytes(), 
-            new IPEndPoint(settings.BindAddress, settings.Port), 
-            new PeerIdClientId("AC")) { }
+            new IPEndPoint(settings.BindAddress, settings.Port)) { }
 
-        public PeerIdentifier(IPeerSettings settings, IKeyRegistry registry, IUserOutput userOutput, IPeerIdClientId clientId)
+        public PeerIdentifier(IPeerSettings settings, IKeyRegistry registry, IUserOutput userOutput)
             : this(
                 GetIfRegistryContainsPublicKey(settings.PublicKey.KeyToBytes(), registry, userOutput), 
-                new IPEndPoint(settings.BindAddress.MapToIPv4(), settings.Port), clientId) { }
+                new IPEndPoint(settings.BindAddress.MapToIPv4(), settings.Port)) { }
 
-        public PeerIdentifier(IEnumerable<byte> publicKey, IPAddress ipAddress, int port, IPeerIdClientId clientId)
-            : this(publicKey, EndpointBuilder.BuildNewEndPoint(ipAddress, port), clientId) { }
+        public PeerIdentifier(IEnumerable<byte> publicKey, IPAddress ipAddress, int port)
+            : this(publicKey, EndpointBuilder.BuildNewEndPoint(ipAddress, port)) { }
         
-        private PeerIdentifier(IEnumerable<byte> publicKey, IPEndPoint endPoint, IPeerIdClientId clientId)
+        private PeerIdentifier(IEnumerable<byte> publicKey, IPEndPoint endPoint)
         {
             PeerId = new PeerId
             {
                 PublicKey = publicKey.ToByteString(),
                 Port = BitConverter.GetBytes(endPoint.Port).ToByteString(),
-                Ip = endPoint.Address.To16Bytes().ToByteString(),
-                ClientId = clientId.ClientVersion.ToByteString(),
-                ClientVersion = clientId.AssemblyMajorVersion.ToByteString()
+                Ip = endPoint.Address.To16Bytes().ToByteString()
             };
         }
 
         public override string ToString()
         {
-            return ClientId + ClientVersion + $"@{Ip}:{Port.ToString()}" + $"|{PublicKey.KeyToString()}";
+            return $"V:{PeerId.ProtocolVersion} @{Ip}:{Port.ToString()}" + $"|{PublicKey.KeyToString()}";
         }
 
         public bool Equals(IPeerIdentifier other)

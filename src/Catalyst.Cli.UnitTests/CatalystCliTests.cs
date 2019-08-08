@@ -47,7 +47,6 @@ namespace Catalyst.Cli.UnitTests
             var configRoot = Substitute.For<IConfigurationRoot>();
             var logger = Substitute.For<ILogger>();
             var userOutput = Substitute.For<IUserOutput>();
-            var peerIdClientId = Substitute.For<IPeerIdClientId>();
             var dtoFactory = Substitute.For<IDtoFactory>();
             var nodeRpcClientFactory = Substitute.For<INodeRpcClientFactory>();
             var certificateStore = Substitute.For<ICertificateStore>();
@@ -56,7 +55,7 @@ namespace Catalyst.Cli.UnitTests
             configRoot.GetSection("CatalystCliConfig").GetSection("PublicKey").Value
                .Returns("1AemkEe4z3rZHr7RWSUyZHPuVozyCQnT1H7SfpzcGCQRuT");
 
-            _commandContext = new CommandContext(configRoot, logger, userOutput, peerIdClientId, dtoFactory,
+            _commandContext = new CommandContext(configRoot, logger, userOutput, dtoFactory,
                 nodeRpcClientFactory, certificateStore, keyRegistry);
         }
 

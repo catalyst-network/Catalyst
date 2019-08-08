@@ -48,7 +48,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P
         {
             _output = output;
             _validPeerId = PeerIdHelper.GetPeerId();
-            _peerIdValidator = new PeerIdValidator(new CryptoContext(new CryptoWrapper()), new PeerIdClientId("AC"));
+            _peerIdValidator = new PeerIdValidator(new CryptoContext(new CryptoWrapper()));
         }
 
         [Fact]
@@ -59,8 +59,6 @@ namespace Catalyst.Core.Lib.UnitTests.P2P
             _output.WriteLine(string.Join(" ", _validPeerId.ToByteArray()));
             var fieldsInBytes = new[]
             {
-                _validPeerId.ClientId.ToByteArray(),
-                _validPeerId.ClientVersion.ToByteArray(),
                 _validPeerId.Ip.ToByteArray(), _validPeerId.Port.ToByteArray(),
                 _validPeerId.PublicKey.ToByteArray()
             };
@@ -118,7 +116,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P
         {
             var invalidPeer = new PeerId(_validPeerId)
             {
-                ClientId = clientId.ToUtf8ByteString()
+                ProtocolVersion = clientId.ToUtf8ByteString()
             };
 
             new Action(() => _peerIdValidator.ValidatePeerIdFormat(invalidPeer))
@@ -135,7 +133,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P
         {
             var invalidPeer = new PeerId(_validPeerId)
             {
-                ClientVersion = version.ToUtf8ByteString()
+                ProtocolVersion = BitConverter.GetBytes(100).ToByteString()
             };
 
             new Action(() => _peerIdValidator.ValidatePeerIdFormat(invalidPeer))
