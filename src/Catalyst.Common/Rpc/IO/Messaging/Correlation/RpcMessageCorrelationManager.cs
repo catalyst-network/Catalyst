@@ -22,6 +22,7 @@
 #endregion
 
 using System;
+using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using Catalyst.Common.Extensions;
@@ -40,15 +41,17 @@ namespace Catalyst.Common.Rpc.IO.Messaging.Correlation
     {
         private readonly ReplaySubject<ICacheEvictionEvent<ProtocolMessage>> _evictionEvent;
 
-        public IObservable<ICacheEvictionEvent<ProtocolMessage>> EvictionEvents => _evictionEvent.AsObservable();
-
         public RpcMessageCorrelationManager(IMemoryCache cache,
             ILogger logger,
-            IChangeTokenProvider changeTokenProvider)
+            IChangeTokenProvider changeTokenProvider,
+            IScheduler scheduler = null)
             : base(cache, logger, changeTokenProvider)
         {
-            _evictionEvent = new ReplaySubject<ICacheEvictionEvent<ProtocolMessage>>(0);
+            var observableScheduler = scheduler ?? Scheduler.Default;
+            _evictionEvent = new ReplaySubject<ICacheEvictionEvent<ProtocolMessage>>(0, observableScheduler);
         }
+
+        public IObservable<ICacheEvictionEvent<ProtocolMessage>> EvictionEvents => _evictionEvent.AsObservable();
 
         protected override void EvictionCallback(object key, object value, EvictionReason reason, object state)
         {
@@ -56,7 +59,7 @@ namespace Catalyst.Common.Rpc.IO.Messaging.Correlation
             var message = (CorrelatableMessage<ProtocolMessage>) value;
             _evictionEvent.OnNext(new MessageEvictionEvent<ProtocolMessage>(message, message.Content.PeerId));
         }
-        
+
         protected override void Dispose(bool disposing)
         {
             base.Dispose(disposing);

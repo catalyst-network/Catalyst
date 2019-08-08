@@ -24,8 +24,10 @@
 using Catalyst.Common.Interfaces.Util;
 using Catalyst.Common.Rpc.IO.Messaging.Correlation;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
+using Xunit;
 
 namespace Catalyst.Common.UnitTests.IO.Messaging.Correlation
 {
@@ -33,10 +35,18 @@ namespace Catalyst.Common.UnitTests.IO.Messaging.Correlation
     {
         protected RpcMessageCorrelationManagerTests()
         {
+            var testScheduler = new TestScheduler();
             var memoryCache = Substitute.For<IMemoryCache>();
             var logger = Substitute.For<ILogger>();
             var changeTokenProvider = Substitute.For<IChangeTokenProvider>();
-            var rpcMessageCorrelationManager = new RpcMessageCorrelationManager(memoryCache, logger, changeTokenProvider);
+
+            _rpcMessageCorrelationManager =
+                new RpcMessageCorrelationManager(memoryCache, logger, changeTokenProvider, testScheduler);
         }
+
+        private readonly RpcMessageCorrelationManager _rpcMessageCorrelationManager;
+
+        [Fact]
+        public void Dispose_Should_Dispose_RpcMessageCorrelationManager() { _rpcMessageCorrelationManager.Dispose(); }
     }
 }

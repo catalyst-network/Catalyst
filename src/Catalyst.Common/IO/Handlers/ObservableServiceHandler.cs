@@ -22,6 +22,7 @@
 #endregion
 
 using System;
+using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using Catalyst.Common.Interfaces.IO.Handlers;
@@ -38,10 +39,26 @@ namespace Catalyst.Common.IO.Handlers
     /// </summary>
     public sealed class ObservableServiceHandler : InboundChannelHandlerBase<ProtocolMessage>, IObservableServiceHandler
     {
-        public IObservable<IObserverDto<ProtocolMessage>> MessageStream => _messageSubject.AsObservable();
+        private readonly ReplaySubject<IObserverDto<ProtocolMessage>> _messageSubject;
 
-        private readonly ReplaySubject<IObserverDto<ProtocolMessage>> _messageSubject 
-            = new ReplaySubject<IObserverDto<ProtocolMessage>>(1);
+        public ObservableServiceHandler(IScheduler scheduler = null)
+        {
+            var observableScheduler = scheduler ?? Scheduler.Default;
+            _messageSubject = new ReplaySubject<IObserverDto<ProtocolMessage>>(1, observableScheduler);
+            MessageStream = _messageSubject.AsObservable();
+        }
+
+        public override bool IsSharable => true;
+
+        public IObservable<IObserverDto<ProtocolMessage>> MessageStream { get; }
+
+        public override void ExceptionCaught(IChannelHandlerContext context, Exception e)
+        {
+            Logger.Error(e, "Error in ObservableServiceHandler");
+            context.CloseAsync().ContinueWith(_ => _messageSubject.OnError(e));
+        }
+
+        public void Dispose() { Dispose(true); }
 
         /// <summary>
         ///     Reads the channel once accepted and pushed into a stream.
@@ -54,12 +71,6 @@ namespace Catalyst.Common.IO.Handlers
             _messageSubject.OnNext(contextAny);
             ctx.FireChannelRead(message);
         }
-        
-        public override void ExceptionCaught(IChannelHandlerContext context, Exception e)
-        {
-            Logger.Error(e, "Error in ObservableServiceHandler");
-            context.CloseAsync().ContinueWith(_ => _messageSubject.OnError(e));
-        }
 
         private void Dispose(bool disposing)
         {
@@ -68,12 +79,5 @@ namespace Catalyst.Common.IO.Handlers
                 _messageSubject?.Dispose();
             }
         }
-
-        public void Dispose()
-        {
-            Dispose(true);
-        }
-
-        public override bool IsSharable => true;
     }
 }
