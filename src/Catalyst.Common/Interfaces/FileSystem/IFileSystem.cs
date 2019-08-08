@@ -39,5 +39,7 @@ namespace Catalyst.Common.Interfaces.FileSystem
         string ReadTextFromCddFile(string fileName);
 
         string ReadTextFromCddSubDirectoryFile(string fileName, string subDirectory);
+
+        bool SetCurrentPath(string path);
     }
 }

@@ -60,7 +60,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P
             var fieldsInBytes = new[]
             {
                 _validPeerId.ClientId.ToByteArray(),
-                _validPeerId.ClientVersion.ToByteArray(),
+                _validPeerId.ProtocolVersion.ToByteArray(),
                 _validPeerId.Ip.ToByteArray(), _validPeerId.Port.ToByteArray(),
                 _validPeerId.PublicKey.ToByteArray()
             };
@@ -135,7 +135,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P
         {
             var invalidPeer = new PeerId(_validPeerId)
             {
-                ClientVersion = version.ToUtf8ByteString()
+                ProtocolVersion = version.ToUtf8ByteString()
             };
 
             new Action(() => _peerIdValidator.ValidatePeerIdFormat(invalidPeer))

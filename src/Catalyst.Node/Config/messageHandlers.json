@@ -122,6 +122,14 @@
                 }
             ]
         },
+        {
+            "type": "Catalyst.Core.Lib.Rpc.IO.Observers.ChangeDataFolderRequestObserver",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.IO.Observers.IRpcRequestObserver, Catalyst.Common"
+                }
+            ]
+        },
         //P2P request handlers
         {
             "type": "Catalyst.Core.Lib.P2P.IO.Observers.PingRequestObserver",

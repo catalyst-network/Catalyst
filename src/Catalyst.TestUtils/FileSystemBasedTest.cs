@@ -23,15 +23,17 @@
 
 using System;
 using System.IO;
+using System.IO.Abstractions;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
-using Catalyst.Common.FileSystem;
 using Dawn;
 using FluentAssertions;
 using NSubstitute;
+using Serilog;
 using Xunit;
 using Xunit.Abstractions;
+using FileSystem = Catalyst.Common.FileSystem.FileSystem;
 using IFileSystem = Catalyst.Common.Interfaces.FileSystem.IFileSystem;
 
 namespace Catalyst.TestUtils
@@ -45,16 +47,15 @@ namespace Catalyst.TestUtils
     public class FileSystemBasedTest : IDisposable
     {
         protected readonly string CurrentTestName;
-        protected readonly IFileSystem FileSystem;
+        protected IFileSystem FileSystem;
         protected readonly ITestOutputHelper Output;
-        private readonly DirectoryInfo _testDirectory;
+        private DirectoryInfo _testDirectory;
 
         protected FileSystemBasedTest(ITestOutputHelper output)
         {
             Guard.Argument(output, nameof(output)).NotNull();
             Output = output;
-            var currentTest = Output.GetType()
-               .GetField("test", BindingFlags.Instance | BindingFlags.NonPublic)
+            var currentTest = Output.GetType().GetField("test", BindingFlags.Instance | BindingFlags.NonPublic)
                .GetValue(Output) as ITest;
 
             if (currentTest == null)
@@ -64,6 +65,14 @@ namespace Catalyst.TestUtils
             }
 
             CurrentTestName = currentTest.TestCase.TestMethod.Method.Name;
+
+            GenerateConfigFilesDirectory();
+
+            Output.WriteLine("test running in folder {0}", _testDirectory.FullName);
+        }
+
+        protected void GenerateConfigFilesDirectory()
+        {
             var testStartTime = DateTime.Now;
             _testDirectory = new DirectoryInfo(Path.Combine(Environment.CurrentDirectory,
 
@@ -74,8 +83,6 @@ namespace Catalyst.TestUtils
             _testDirectory.Create();
 
             FileSystem = GetFileSystemStub();
-
-            Output.WriteLine("test running in folder {0}", _testDirectory.FullName);
         }
 
         private IFileSystem GetFileSystemStub()
