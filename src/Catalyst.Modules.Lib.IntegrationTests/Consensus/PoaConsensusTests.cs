@@ -25,13 +25,11 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reactive;
 using System.Threading;
 using System.Threading.Tasks;
 using Autofac;
 using Catalyst.Common.Config;
 using Catalyst.Common.Cryptography;
-using Catalyst.Common.Interfaces.Modules.Consensus.Cycle;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.P2P;
 using Catalyst.Common.Util;
@@ -47,7 +45,6 @@ namespace Catalyst.Modules.Lib.IntegrationTests.Consensus
     {
         private readonly CancellationTokenSource _endOfTestCancellationSource;
         private readonly ILifetimeScope _scope;
-        private readonly ILogger _logger;
         private readonly List<PoaTestNode> _nodes;
 
         public PoaConsensusTests(ITestOutputHelper output) : base(new[]
@@ -57,7 +54,6 @@ namespace Catalyst.Modules.Lib.IntegrationTests.Consensus
         {
             ContainerProvider.ConfigureContainerBuilder(true, true, true);
             _scope = ContainerProvider.Container.BeginLifetimeScope(CurrentTestName);
-            _logger = _scope.Resolve<ILogger>();
 
             var context = new CryptoContext(new CryptoWrapper());
 
@@ -98,11 +94,6 @@ namespace Catalyst.Modules.Lib.IntegrationTests.Consensus
             await Task.Delay(TimeSpan.FromSeconds(20)).ConfigureAwait(false);
 
             _endOfTestCancellationSource.CancelAfter(TimeSpan.FromMinutes(3));
-        }
-
-        private void ObservedPhase(IPhase phase)
-        {
-            _logger.Debug(phase.ToString());
         }
 
         protected override void Dispose(bool disposing)
