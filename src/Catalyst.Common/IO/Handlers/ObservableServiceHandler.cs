@@ -34,7 +34,7 @@ using DotNetty.Transport.Channels;
 namespace Catalyst.Common.IO.Handlers
 {
     /// <summary>
-    ///     This handler terminates dotnetty involvement and passes service messages into rx land,
+    ///     This handler terminates DotNetty involvement and passes service messages into rx land,
     ///     by this point all messages should be treated as genuine and sanitised.
     /// </summary>
     public sealed class ObservableServiceHandler : InboundChannelHandlerBase<ProtocolMessage>, IObservableServiceHandler
@@ -67,6 +67,7 @@ namespace Catalyst.Common.IO.Handlers
         /// <param name="message"></param>
         protected override void ChannelRead0(IChannelHandlerContext ctx, ProtocolMessage message)
         {
+            Logger.Verbose("Received {message}", message);
             var contextAny = new ObserverDto(ctx, message);
             _messageSubject.OnNext(contextAny);
             ctx.FireChannelRead(message);

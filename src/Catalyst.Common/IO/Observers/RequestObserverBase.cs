@@ -49,6 +49,7 @@ namespace Catalyst.Common.IO.Observers
             Guard.Argument(typeof(TProtoReq), nameof(TProtoReq)).Require(t => t.IsRequestType(),
                 t => $"{nameof(TProtoReq)} is not of type {MessageTypes.Request.Name}");
             PeerIdentifier = peerIdentifier;
+            logger.Verbose("{interface} instantiated", nameof(IRequestMessageObserver<TProtoRes>));
         }
 
         protected abstract TProtoRes HandleRequest(TProtoReq messageDto, IChannelHandlerContext channelHandlerContext, IPeerIdentifier senderPeerIdentifier, ICorrelationId correlationId);

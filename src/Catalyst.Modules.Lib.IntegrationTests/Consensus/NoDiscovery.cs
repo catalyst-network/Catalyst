@@ -21,25 +21,13 @@
 
 #endregion
 
-using System.Linq;
-using Catalyst.Cryptography.BulletProofs.Wrapper;
-using Multiformats.Base;
-using Multiformats.Hash;
+using System.Threading.Tasks;
+using Catalyst.Common.Interfaces.P2P.Discovery;
 
-namespace Catalyst.Common.Util
+namespace Catalyst.Modules.Lib.IntegrationTests.Consensus
 {
-    public static class KeyUtil
+    public class NoDiscovery : IPeerDiscovery
     {
-        public static string KeyToString(this byte[] keyBytes)
-        {
-            return Multihash.Sum(HashType.ID, keyBytes).ToString(MultibaseEncoding.Base58Btc);
-        }
-
-        public static byte[] KeyToBytes(this string base58Key)
-        {
-            var publicKeyMultiHash = Multihash.Parse(base58Key.Trim());
-            var rawPublicKeyBytes = publicKeyMultiHash.ToBytes().Slice(2, publicKeyMultiHash.ToBytes().Length);
-            return rawPublicKeyBytes;
-        }
+        public async Task DiscoveryAsync() { await Task.CompletedTask; }
     }
 }

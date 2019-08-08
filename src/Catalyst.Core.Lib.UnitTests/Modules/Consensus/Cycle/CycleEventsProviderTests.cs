@@ -37,6 +37,7 @@ using FluentAssertions;
 using Microsoft.Reactive.Testing;
 using Multiformats.Hash;
 using NSubstitute;
+using Serilog;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -55,6 +56,7 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Consensus.Cycle
         private readonly ITestOutputHelper _output;
         private readonly IStopwatch _stopWatch;
         private readonly IDeltaHashProvider _deltaHashProvider;
+        private readonly ILogger _logger;
 
         public CycleEventsProviderTests(ITestOutputHelper output)
         {
@@ -65,12 +67,13 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Consensus.Cycle
             _schedulerProvider.Scheduler.Returns(_testScheduler);
             _dateTimeProvider = Substitute.For<IDateTimeProvider>();
             _deltaHashProvider = Substitute.For<IDeltaHashProvider>();
+            _logger = Substitute.For<ILogger>();
 
             _deltaHashProvider.GetLatestDeltaHash(Arg.Any<DateTime>())
                .Returns(Multihash.Sum(HashType.ID, ByteUtil.GenerateRandomByteArray(32)));
 
             _dateTimeProvider.UtcNow.Returns(_ => _testScheduler.Now.DateTime);
-            _cycleProvider = new CycleEventsProvider(CycleConfiguration.Default, _dateTimeProvider, _schedulerProvider, _deltaHashProvider);
+            _cycleProvider = new CycleEventsProvider(CycleConfiguration.Default, _dateTimeProvider, _schedulerProvider, _deltaHashProvider, _logger);
 
             _spy = Substitute.For<IObserver<IPhase>>();
 
@@ -167,7 +170,7 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Consensus.Cycle
             _testScheduler.AdvanceBy(secondProviderStartOffset.Ticks);
 
             var spy2 = Substitute.For<IObserver<IPhase>>();
-            using (var cycleProvider2 = new CycleEventsProvider(CycleConfiguration.Default, _dateTimeProvider, _schedulerProvider, _deltaHashProvider))
+            using (var cycleProvider2 = new CycleEventsProvider(CycleConfiguration.Default, _dateTimeProvider, _schedulerProvider, _deltaHashProvider, _logger))
             using (cycleProvider2.PhaseChanges.Take(50 - PhaseCountPerCycle)
                .Subscribe(p =>
                 {

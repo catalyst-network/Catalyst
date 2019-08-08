@@ -33,6 +33,7 @@ namespace Catalyst.Common.Interfaces.Modules.Consensus.Deltas
         /// has been the most popular for a given cycle. If the candidate is popular enough, it
         /// will then be appointed as the next official delta.
         /// </summary>
+        /// <remarks>This function will be called at the beginning of a Voting cycle.</remarks>
         /// <param name="previousDeltaDfsHash">The DFS hash of the delta for which we are
         /// trying to produce a successor.</param>
         /// <returns>The most popular candidate for a given cycle.</returns>
