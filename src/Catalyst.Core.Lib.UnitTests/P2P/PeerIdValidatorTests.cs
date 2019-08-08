@@ -109,31 +109,14 @@ namespace Catalyst.Core.Lib.UnitTests.P2P
         }
 
         [Theory]
-        [InlineData("20")]
-        [InlineData("I2")]
-        [InlineData("M+")]
-        public void Can_Throw_Argument_Exception_On_Invalid_Client_Id(string clientId)
+        [InlineData(200)]
+        [InlineData(201)]
+        [InlineData(-55)]
+        public void Can_Throw_Argument_Exception_On_Wrong_Client_Version(int version)
         {
             var invalidPeer = new PeerId(_validPeerId)
             {
-                ProtocolVersion = clientId.ToUtf8ByteString()
-            };
-
-            new Action(() => _peerIdValidator.ValidatePeerIdFormat(invalidPeer))
-               .Should().Throw<ArgumentException>().WithMessage("*ClientId*");
-        }
-
-        [Theory]
-        [InlineData("1")]
-        [InlineData("123")]
-        [InlineData("1.6")]
-        [InlineData("1.6.5")]
-        [InlineData("0.0.1")]
-        public void Can_Throw_Argument_Exception_On_Wrong_Client_Version(string version)
-        {
-            var invalidPeer = new PeerId(_validPeerId)
-            {
-                ProtocolVersion = BitConverter.GetBytes(100).ToByteString()
+                ProtocolVersion = BitConverter.GetBytes(version).ToByteString()
             };
 
             new Action(() => _peerIdValidator.ValidatePeerIdFormat(invalidPeer))

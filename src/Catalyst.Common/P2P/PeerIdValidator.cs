@@ -74,15 +74,6 @@ namespace Catalyst.Common.P2P
 
         /// <summary>
         /// </summary>
-        /// <param name="clientId"></param>
-        /// <exception cref="ArgumentException"></exception>
-        private bool ValidateClientId(byte[] clientId)
-        {
-            return Regex.IsMatch(ByteUtil.ByteToString(clientId), @"^[a-zA-Z]{1,2}$");
-        }
-
-        /// <summary>
-        /// </summary>
         /// <param name="clientVersion"></param>
         /// <exception cref="ArgumentException"></exception>
         private bool ValidateClientVersion(byte[] clientVersion)
