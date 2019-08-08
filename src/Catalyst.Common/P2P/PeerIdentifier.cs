@@ -33,14 +33,12 @@ using Catalyst.Protocol.Common;
 using Dawn;
 using Google.Protobuf;
 using Microsoft.Extensions.Configuration;
-using Nethereum.Hex.HexConvertors.Extensions;
 using Nethereum.RLP;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Text;
-using GraphQL.Types;
 
 namespace Catalyst.Common.P2P
 {
