@@ -152,7 +152,7 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Transport.Channels
 
             //commented is the expected behaviour.
             //_keySigner.ReceivedWithAnyArgs(1).Sign(Arg.Any<byte[]>());
-            _keySigner.DidNotReceiveWithAnyArgs().Sign(Arg.Any<byte[]>());
+            _keySigner.DidNotReceiveWithAnyArgs().Sign(Arg.Any<byte[]>(), default);
 
             var outboundMessageBytes = testingChannel.ReadOutbound<IByteBuffer>();
 

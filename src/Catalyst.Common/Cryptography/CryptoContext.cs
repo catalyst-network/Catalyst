@@ -97,5 +97,8 @@ namespace Catalyst.Common.Cryptography
         public int PublicKeyLength => _wrapper.PublicKeyLength;
 
         public int SignatureLength => _wrapper.SignatureLength;
+
+        public int SignatureContextMaxLength => _wrapper.SignatureContextMaxLength;
     }
+
 }

@@ -98,7 +98,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P
             var keySigner = Substitute.For<IKeySigner>();
             keySigner.Verify(Arg.Any<ISignature>(), Arg.Any<byte[]>()).Returns(true);
             var signature = Substitute.For<ISignature>();
-            keySigner.Sign(Arg.Any<byte[]>()).ReturnsForAnyArgs(signature);
+            keySigner.Sign(Arg.Any<byte[]>(), default).ReturnsForAnyArgs(signature);
 
             _peerService = new PeerService(new UdpServerEventLoopGroupFactory(eventLoopGroupFactoryConfiguration),
                 new PeerServerChannelFactory(container.Resolve<IPeerMessageCorrelationManager>(),

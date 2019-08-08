@@ -56,7 +56,7 @@ namespace Catalyst.Common.P2P
                .Require(p => ValidatePort(p.Port.ToByteArray()), _ => "Port should be between 1025 and 65535")
                .Require(p => ValidateClientId(p.ClientId.ToByteArray()),
                     _ => "ClientId should only be 2 alphabetical letters")
-               .Require(p => ValidateClientVersion(p.ClientVersion.ToByteArray()),
+               .Require(p => ValidateClientVersion(p.ProtocolVersion.ToByteArray()),
                     _ => $"ClientVersion doesn't match {_peerIdClientId.AssemblyMajorVersion}");
             return true;
         }

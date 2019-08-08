@@ -104,5 +104,7 @@ namespace Catalyst.Common.Interfaces.Cryptography
         /// Signature byte length.
         /// </summary>
         int SignatureLength { get; }
+
+        int SignatureContextMaxLength { get; }
     }
 }

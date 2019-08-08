@@ -57,7 +57,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.Rpc.IO.Observers
         {
             Path.Combine(Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile),
             Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile),
-            Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Network.Dev)),
+            Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Common.Config.Network.Dev)),
             Path.Combine(Constants.ConfigSubFolder, Constants.ShellNodesConfigFile),
         }, output)
         {
@@ -83,7 +83,8 @@ namespace Catalyst.Core.Lib.IntegrationTests.Rpc.IO.Observers
             var request = messageFactory.GetDto(
                 new SignMessageRequest
                 {
-                    Message = message.ToUtf8ByteString()
+                    Message = message.ToUtf8ByteString(),
+                    SigningContext = new SigningContext()
                 },
                 PeerIdentifierHelper.GetPeerIdentifier("sender_key"),
                 PeerIdentifierHelper.GetPeerIdentifier("recipient_key")

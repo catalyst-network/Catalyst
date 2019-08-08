@@ -49,7 +49,12 @@ namespace Catalyst.Common.IO.Handlers
         /// <returns></returns>
         protected override Task WriteAsync0(IChannelHandlerContext context, IMessageDto<ProtocolMessage> message)
         {
-            var sig = _keySigner.Sign(message.Content.ToByteArray());
+            var signingContext = new SigningContext
+            {
+                Network = Protocol.Common.Network.Devnet,
+                SignatureType = SignatureType.ProtocolPeer
+            };
+            var sig = _keySigner.Sign(message.Content.ToByteArray(), signingContext);
             
             var protocolMessageSigned = new ProtocolMessageSigned
             {

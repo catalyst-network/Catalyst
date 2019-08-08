@@ -30,6 +30,8 @@ using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.Registry;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Exceptions;
+using Catalyst.Protocol.Common;
+using Google.Protobuf;
 
 namespace Catalyst.Common.Modules.KeySigner
 {
@@ -75,7 +77,7 @@ namespace Catalyst.Common.Modules.KeySigner
         /// <inheritdoc/>
         ICryptoContext IKeySigner.CryptoContext => _cryptoContext;
 
-        private ISignature Sign(byte[] data, KeyRegistryKey keyIdentifier)
+        private ISignature Sign(byte[] data, SigningContext signingContext, KeyRegistryKey keyIdentifier)
         {
             var privateKey = _keyRegistry.GetItemFromRegistry(keyIdentifier);
             if (privateKey == null && !TryPopulateRegistryFromKeyStore(keyIdentifier, out privateKey))
@@ -83,17 +85,17 @@ namespace Catalyst.Common.Modules.KeySigner
                 throw new SignatureException("The signature cannot be created because the key does not exist");
             }
 
-            return Sign(data, privateKey);
+            return Sign(data, signingContext, privateKey);
         }
 
-        public ISignature Sign(byte[] data)
+        public ISignature Sign(byte[] data, SigningContext signingContext)
         {
-            return Sign(data, KeyRegistryKey.DefaultKey);
+            return Sign(data, signingContext, KeyRegistryKey.DefaultKey);
         }
 
-        private ISignature Sign(byte[] data, IPrivateKey privateKey)
+        private ISignature Sign(byte[] data, SigningContext signingContext, IPrivateKey privateKey)
         {
-            return _cryptoContext.Sign(privateKey, data, Encoding.UTF8.GetBytes("Catalyst"));
+            return _cryptoContext.Sign(privateKey, data, signingContext.ToByteArray());
         }
 
         /// <inheritdoc/>
