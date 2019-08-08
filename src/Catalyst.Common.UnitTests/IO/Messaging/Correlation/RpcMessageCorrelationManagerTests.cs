@@ -21,17 +21,22 @@
 
 #endregion
 
-using System;
-using Catalyst.Common.Interfaces.IO.Messaging.Dto;
-using Catalyst.Protocol.Common;
-using DotNetty.Transport.Channels;
+using Catalyst.Common.Interfaces.Util;
+using Catalyst.Common.Rpc.IO.Messaging.Correlation;
+using Microsoft.Extensions.Caching.Memory;
+using NSubstitute;
+using Serilog;
 
-namespace Catalyst.Common.Interfaces.IO.Transport.Channels
+namespace Catalyst.Common.UnitTests.IO.Messaging.Correlation
 {
-    public interface IObservableChannel
+    public class RpcMessageCorrelationManagerTests
     {
-        IChannel Channel { get; }
-        IObservable<IObserverDto<ProtocolMessage>> MessageStream { get; }
+        protected RpcMessageCorrelationManagerTests()
+        {
+            var memoryCache = Substitute.For<IMemoryCache>();
+            var logger = Substitute.For<ILogger>();
+            var changeTokenProvider = Substitute.For<IChangeTokenProvider>();
+            var rpcMessageCorrelationManager = new RpcMessageCorrelationManager(memoryCache, logger, changeTokenProvider);
+        }
     }
 }
-

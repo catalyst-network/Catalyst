@@ -21,17 +21,17 @@
 
 #endregion
 
-using System;
-using Catalyst.Common.Interfaces.IO.Messaging.Dto;
-using Catalyst.Protocol.Common;
-using DotNetty.Transport.Channels;
+using Catalyst.Common.IO.Handlers;
+using Xunit;
 
-namespace Catalyst.Common.Interfaces.IO.Transport.Channels
+namespace Catalyst.Common.UnitTests.IO.Handlers
 {
-    public interface IObservableChannel
+    public sealed class ObservableServiceHandlerUnitTests
     {
-        IChannel Channel { get; }
-        IObservable<IObserverDto<ProtocolMessage>> MessageStream { get; }
+        [Fact]
+        public void Test()
+        {
+            var observableServiceHandler = new ObservableServiceHandler();
+        }
     }
 }
-
