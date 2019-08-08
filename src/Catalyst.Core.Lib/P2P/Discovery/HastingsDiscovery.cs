@@ -61,7 +61,6 @@ namespace Catalyst.Core.Lib.P2P.Discovery
         private readonly IDisposable _neigbourResponseSubscription;
         private readonly IPeerIdentifier _ownNode;
         private readonly IDisposable _pingResponseSubscriptions;
-        private readonly IScheduler _scheduler;
         protected readonly int PeerDiscoveryBurnIn;
         public readonly IRepository<Peer> PeerRepository;
         private int _discoveredPeerInCurrentWalk;
@@ -82,10 +81,8 @@ namespace Catalyst.Core.Lib.P2P.Discovery
             IHastingsOriginator stepProposal = default,
             IHastingsCareTaker hastingsCareTaker = default,
             int millisecondsTimeout = 10_000,
-            int hasValidCandidatesCheckMillisecondsFrequency = 1_000,
-            IScheduler scheduler = null)
+            int hasValidCandidatesCheckMillisecondsFrequency = 1_000)
         {
-            _scheduler = scheduler ?? TaskPoolScheduler.Default;
             _logger = logger;
             _cancellationTokenProvider = cancellationTokenProvider;
 

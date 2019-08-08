@@ -56,6 +56,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
         private IHastingsCareTaker _careTaker;
         private IHastingsOriginator _currentState;
         private IDns _dnsClient;
+        private int _hasValidCandidatesCheckMillisecondsFrequency;
         private ILogger _logger;
         private IPeerClient _peerClient;
         private IPeerMessageCorrelationManager _peerCorrelationManager;
@@ -63,7 +64,6 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
         private IPeerSettings _peerSettings;
         private IScheduler _scheduler;
         private int _timeout;
-        private int _hasValidCandidatesCheckMillisecondsFrequency = 1_000;
         public IList<IPeerClientObservable> PeerClientObservables;
 
         public void Dispose()
@@ -143,6 +143,13 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
         public DiscoveryTestBuilder WithTimeout(int timeoutMilliseconds)
         {
             _timeout = timeoutMilliseconds;
+
+            return this;
+        }
+
+        public DiscoveryTestBuilder WithCandidatesCheckMillisecondsFrequency(int candidatesCheckMillisecondsFrequency)
+        {
+            _hasValidCandidatesCheckMillisecondsFrequency = candidatesCheckMillisecondsFrequency;
 
             return this;
         }
@@ -275,8 +282,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
                     state,
                     hastingsCareTaker,
                     millisecondsTimeout,
-                    hasValidCandidatesCheckMillisecondsFrequency,
-                    scheduler) { }
+                    hasValidCandidatesCheckMillisecondsFrequency) { }
 
             internal static HastingDiscoveryTest GetTestInstanceOfDiscovery(ILogger logger,
                 IRepository<Peer> peerRepository,
