@@ -35,12 +35,12 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
     /// </summary>
     /// <seealso cref="IRpcResponseObserver" />
     public sealed class ChangeDataFolderResponseObserver
-        : RpcResponseObserver<GetPeerCountResponse>
+        : RpcResponseObserver<SetPeerDataFolderResponse>
     {
         public ChangeDataFolderResponseObserver(ILogger logger)
             : base(logger) { }
 
-        protected override void HandleResponse(GetPeerCountResponse getPeerCountResponse,
+        protected override void HandleResponse(SetPeerDataFolderResponse getPeerCountResponse,
             IChannelHandlerContext channelHandlerContext,
             IPeerIdentifier senderPeerIdentifier,
             ICorrelationId correlationId) { }
