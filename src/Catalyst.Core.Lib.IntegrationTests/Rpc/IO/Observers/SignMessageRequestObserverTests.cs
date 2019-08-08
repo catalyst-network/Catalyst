@@ -43,6 +43,7 @@ using NSubstitute;
 using Serilog;
 using Xunit;
 using Xunit.Abstractions;
+using Network = Catalyst.Common.Config.Network;
 
 namespace Catalyst.Core.Lib.IntegrationTests.Rpc.IO.Observers
 {

@@ -21,23 +21,28 @@
 
 #endregion
 
-using Catalyst.Cli.CommandTypes;
-using Catalyst.Cli.Options;
-using Catalyst.Common.Interfaces.Cli.Commands;
+using System;
+using System.IO;
+using Catalyst.Common.Config;
 using Catalyst.Protocol.Rpc.Node;
+using FluentAssertions;
+using Xunit;
+using Xunit.Abstractions;
 
-namespace Catalyst.Cli.Commands
+namespace Catalyst.Cli.IntegrationTests.Commands
 {
-    public sealed class GetInfoCommand : BaseMessageCommand<GetInfoRequest, GetInfoResponse, GetInfoOptions>
+    public sealed class ChangeDataFolderCommandTests : CliCommandTestsBase
     {
-        public GetInfoCommand(ICommandContext commandContext) : base(commandContext) { }
+        public ChangeDataFolderCommandTests(ITestOutputHelper output) : base(output) { }
 
-        protected override GetInfoRequest GetMessage(GetInfoOptions option)
+        [Fact]
+        public void Cli_Can_Send_Change_Data_Folder_Request()
         {
-            return new GetInfoRequest 
-            {
-                Query = true
-            };
+            var path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), Constants.CatalystDataDir);
+            var result = Shell.ParseCommand("changedatafolder", NodeArgumentPrefix, ServerNodeName, "-c", path);
+            result.Should().BeTrue();
+
+            AssertSentMessageAndGetMessageContent<SetPeerDataFolderResponse>();
         }
     }
 }
