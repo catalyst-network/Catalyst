@@ -93,7 +93,7 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Consensus.Deltas
             _previousDeltaHash = ByteUtil.GenerateRandomByteArray(32).ComputeMultihash(_multihashAlgorithm);
 
             _producerIds = "1234"
-               .Select((c, i) => PeerIdentifierHelper.GetPeerIdentifier(c.ToString(), clientVersion: i))
+               .Select((c, i) => PeerIdentifierHelper.GetPeerIdentifier(c.ToString()))
                .Shuffle();
             _producersProvider = Substitute.For<IDeltaProducersProvider>();
             _producersProvider.GetDeltaProducersFromPreviousDelta(Arg.Any<byte[]>())
