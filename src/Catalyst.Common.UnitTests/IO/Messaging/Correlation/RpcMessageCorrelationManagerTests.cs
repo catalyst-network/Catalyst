@@ -47,6 +47,9 @@ namespace Catalyst.Common.UnitTests.IO.Messaging.Correlation
         private readonly RpcMessageCorrelationManager _rpcMessageCorrelationManager;
 
         [Fact]
-        public void Dispose_Should_Dispose_RpcMessageCorrelationManager() { _rpcMessageCorrelationManager.Dispose(); }
+        public void Dispose_Should_Dispose_RpcMessageCorrelationManager()
+        {
+            _rpcMessageCorrelationManager.Dispose();
+        }
     }
 }

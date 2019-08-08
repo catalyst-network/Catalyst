@@ -48,7 +48,7 @@ namespace Catalyst.Common.UnitTests.IO.Handlers
         public void MessageStream_Should_Call_OnError_On_ExceptionCaught()
         {
             var channelHandlerContext = Substitute.For<IChannelHandlerContext>();
-            var exception = new Exception("X.X");
+            var exception = new NotImplementedException("X.X");
 
             _observableServiceHandler.MessageStream.Subscribe(
                 nextResponse => { },

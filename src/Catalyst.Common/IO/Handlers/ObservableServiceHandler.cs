@@ -58,7 +58,7 @@ namespace Catalyst.Common.IO.Handlers
             context.CloseAsync().ContinueWith(_ => _messageSubject.OnError(e));
         }
 
-        public void Dispose() { Dispose(true); }
+        public void Dispose() { _messageSubject?.Dispose(); }
 
         /// <summary>
         ///     Reads the channel once accepted and pushed into a stream.
@@ -70,14 +70,6 @@ namespace Catalyst.Common.IO.Handlers
             var contextAny = new ObserverDto(ctx, message);
             _messageSubject.OnNext(contextAny);
             ctx.FireChannelRead(message);
-        }
-
-        private void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                _messageSubject?.Dispose();
-            }
         }
     }
 }
