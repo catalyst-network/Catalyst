@@ -49,8 +49,11 @@ namespace Catalyst.Cli.UnitTests
             var certificateStore = Substitute.For<ICertificateStore>();
             var keyRegistry = Substitute.For<IKeyRegistry>();
 
-            configRoot.GetSection("CatalystCliConfig").GetSection("PublicKey").Value
+            var cliSettings = configRoot.GetSection("CatalystCliConfig");
+            cliSettings.GetSection("PublicKey").Value
                .Returns("1AemkEe4z3rZHr7RWSUyZHPuVozyCQnT1H7SfpzcGCQRuT");
+            cliSettings.GetSection("BindAddress").Value.Returns("127.0.0.1");
+            cliSettings.GetSection("Port").Value.Returns("5632");
 
             _commandContext = new CommandContext(configRoot, logger, userOutput, dtoFactory,
                 nodeRpcClientFactory, certificateStore, keyRegistry);
