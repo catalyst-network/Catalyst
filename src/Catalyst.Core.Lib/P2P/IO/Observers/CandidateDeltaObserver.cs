@@ -22,18 +22,15 @@
 #endregion
 
 using System;
-using System.Linq;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Observers;
 using Catalyst.Common.Interfaces.Modules.Consensus.Deltas;
 using Catalyst.Common.IO.Observers;
-using Catalyst.Common.Util;
 using Catalyst.Protocol;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Deltas;
-using Multiformats.Hash;
 using Serilog;
-using BinaryEncoding;
+using Catalyst.Common.Extensions;
 
 namespace Catalyst.Core.Lib.P2P.IO.Observers
 {
@@ -53,13 +50,10 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
             {
                 var deserialised = messageDto.Payload.FromProtocolMessage<CandidateDeltaBroadcast>();
 
-                var byteArray = deserialised.PreviousDeltaDfsHash.ToByteArray();
-                var offset = Binary.Varint.Read(byteArray, 0, out uint code);
-                offset += Binary.Varint.Read(byteArray, offset, out uint length);
-
-                Multihash.Cast(byteArray
-                   .Concat(ByteUtil.InitialiseEmptyByteArray(256)).Take(256).ToArray());
-                Multihash.Cast(deserialised.Hash.ToByteArray());
+                _ = deserialised.PreviousDeltaDfsHash.ToByteArray().AsMultihash();
+                _ = deserialised.Hash.ToByteArray().AsMultihash();
+                deserialised.IsValid();
+                
                 _deltaVoter.OnNext(deserialised);
             }
             catch (Exception exception)

@@ -29,5 +29,7 @@ namespace Catalyst.Common.Interfaces
     public interface ICatalystNode
     {
         Task RunAsync(CancellationToken cancellationSourceToken);
+
+        Task StartSockets();
     }
 }

@@ -37,7 +37,6 @@ using Multiformats.Hash.Algorithms;
 using NSubstitute;
 using Serilog;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Observers
 {
@@ -45,46 +44,54 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Observers
     {
         private readonly IDeltaVoter _deltaVoter;
         private readonly IChannelHandlerContext _fakeChannelContext;
-        private readonly ILogger _logger;
-        private readonly IMultihashAlgorithm _multihashAlgorithm;
+        private readonly byte[] _newHash;
+        private readonly byte[] _prevHash;
+        private readonly PeerId _producerId;
+        private readonly CandidateDeltaObserver _candidateDeltaObserver;
 
         public CandidateDeltaObserverTests()
         {
-            _multihashAlgorithm = new BLAKE2B_128();
+            var multihashAlgorithm = new BLAKE2B_128();
             _deltaVoter = Substitute.For<IDeltaVoter>();
             _fakeChannelContext = Substitute.For<IChannelHandlerContext>();
-            _logger = Substitute.For<ILogger>();
+            var logger = Substitute.For<ILogger>();
+            _newHash = Encoding.UTF8.GetBytes("newHash").ComputeMultihash(multihashAlgorithm).ToBytes();
+            _prevHash = Encoding.UTF8.GetBytes("prevHash").ComputeMultihash(multihashAlgorithm).ToBytes();
+            _producerId = PeerIdHelper.GetPeerId("candidate delta producer");
+            _candidateDeltaObserver = new CandidateDeltaObserver(_deltaVoter, logger);
         }
 
         [Fact]
         public void HandleBroadcast_Should_Cast_Hashes_To_Multihash_And_Send_To_Voter()
         {
-            var newHash = Encoding.UTF8.GetBytes("newHash").ComputeMultihash(_multihashAlgorithm);
-            var prevHash = Encoding.UTF8.GetBytes("prevHash").ComputeMultihash(_multihashAlgorithm);
+            var receivedMessage = PrepareReceivedMessage(_newHash, _prevHash, _producerId);
 
-            var producerId = PeerIdHelper.GetPeerId("candidate delta producer");
-            var receivedMessage = PrepareReceivedMessage(newHash.ToBytes(), prevHash.ToBytes(), producerId);
+            _candidateDeltaObserver.HandleBroadcast(receivedMessage);
 
-            var candidateDeltaObserver = new CandidateDeltaObserver(_deltaVoter, _logger);
-
-            candidateDeltaObserver.HandleBroadcast(receivedMessage);
-            
             _deltaVoter.Received(1).OnNext(Arg.Is<CandidateDeltaBroadcast>(c =>
-                c.Hash.SequenceEqual(newHash.ToBytes().ToByteString())
-             && c.PreviousDeltaDfsHash.Equals(prevHash.ToBytes().ToByteString())
-             && c.ProducerId.Equals(producerId)));
+                c.Hash.SequenceEqual(_newHash.ToByteString())
+             && c.PreviousDeltaDfsHash.Equals(_prevHash.ToByteString())
+             && c.ProducerId.Equals(_producerId)));
         }
 
         [Fact]
         public void HandleBroadcast_Should_Not_Try_Forwarding_Invalid_Hash()
         {
             var invalidNewHash = Encoding.UTF8.GetBytes("invalid hash");
-            var prevHash = Encoding.UTF8.GetBytes("prevHash").ComputeMultihash(_multihashAlgorithm);
-            var receivedMessage = PrepareReceivedMessage(invalidNewHash, prevHash, PeerIdHelper.GetPeerId("candidate delta producer"));
+            var receivedMessage = PrepareReceivedMessage(invalidNewHash, _prevHash, _producerId);
 
-            var deltaDfsHashObserver = new CandidateDeltaObserver(_deltaVoter, _logger);
+            _candidateDeltaObserver.HandleBroadcast(receivedMessage);
 
-            deltaDfsHashObserver.HandleBroadcast(receivedMessage);
+            _deltaVoter.DidNotReceiveWithAnyArgs().OnNext(default);
+        }
+
+        [Fact]
+        public void HandleBroadcast_Should_Not_Try_Forwarding_Invalid_PreviousHash()
+        {
+            var invalidPreviousHash = Encoding.UTF8.GetBytes("invalid previous hash");
+            var receivedMessage = PrepareReceivedMessage(_newHash, invalidPreviousHash, _producerId);
+
+            _candidateDeltaObserver.HandleBroadcast(receivedMessage);
 
             _deltaVoter.DidNotReceiveWithAnyArgs().OnNext(default);
         }

@@ -28,11 +28,21 @@ using Serilog;
 
 namespace Catalyst.Common.IO.Transport
 {
-    public class TcpServer : SocketBase, ITcpServer
+    public abstract class TcpServer : SocketBase, ITcpServer
     {
         protected TcpServer(ITcpServerChannelFactory tcpChannelFactory,
             ILogger logger,
             IEventLoopGroupFactory eventLoopGroupFactory)
             : base(tcpChannelFactory, logger, eventLoopGroupFactory) { }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (!disposing)
+            {
+                return;
+            }
+
+            base.Dispose(true);
+        }
     }
 }

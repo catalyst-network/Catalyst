@@ -41,6 +41,7 @@ using Catalyst.Common.Interfaces.P2P.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.Util;
 using Catalyst.Common.P2P;
 using Catalyst.Common.P2P.Discovery;
+using Catalyst.Common.P2P.Models;
 using Catalyst.Protocol;
 using Catalyst.Protocol.IPPN;
 using Serilog;
@@ -52,27 +53,19 @@ namespace Catalyst.Core.Lib.P2P.Discovery
         : IHastingsDiscovery, IDisposable
     {
         private static readonly SemaphoreSlim SemaphoreSlim = new SemaphoreSlim(1, 1);
+        private readonly ICancellationTokenProvider _cancellationTokenProvider;
+        private readonly IDisposable _evictionSubscription;
+        private readonly int _hasValidCandidatesCheckMillisecondsFrequency;
+        private readonly ILogger _logger;
+        private readonly int _millisecondsTimeout;
+        private readonly IDisposable _neigbourResponseSubscription;
+        private readonly IPeerIdentifier _ownNode;
+        private readonly IDisposable _pingResponseSubscriptions;
+        protected readonly int PeerDiscoveryBurnIn;
+        public readonly IRepository<Peer> PeerRepository;
+        private int _discoveredPeerInCurrentWalk;
 
         protected bool IsDiscovering;
-        private readonly ILogger _logger;
-        public IHastingsMemento CurrentStep => HastingsCareTaker.Peek();
-        private int _discoveredPeerInCurrentWalk;
-        private readonly IPeerIdentifier _ownNode;
-        protected readonly int PeerDiscoveryBurnIn;
-        public IHastingsOriginator StepProposal { get; }
-
-        public IHastingsCareTaker HastingsCareTaker { get; }
-        public readonly IRepository<Peer> PeerRepository;
-        private readonly IDisposable _evictionSubscription;
-        private readonly ICancellationTokenProvider _cancellationTokenProvider;
-        private readonly IDisposable _pingResponseSubscriptions;
-        private readonly IDisposable _neigbourResponseSubscription;
-        private readonly int _hasValidCandidatesCheckMillisecondsFrequency;
-        private readonly int _millisecondsTimeout;
-
-        public IPeerClient PeerClient { get; }
-        public IDtoFactory DtoFactory { get; }
-        public IObservable<IPeerClientMessageDto> DiscoveryStream { get; private set; }
 
         protected HastingsDiscovery(ILogger logger,
             IRepository<Peer> peerRepository,
@@ -106,14 +99,14 @@ namespace Catalyst.Core.Lib.P2P.Discovery
             _ownNode = new PeerIdentifier(peerSettings); // this needs to be changed
 
             var neighbours = dns.GetSeedNodesFromDns(peerSettings.SeedServers).ToNeighbours();
-            
+
             HastingsCareTaker = hastingsCareTaker ?? new HastingsCareTaker();
             if (HastingsCareTaker.HastingMementoList.IsEmpty)
             {
                 var rootMemento = stepProposal?.CreateMemento() ?? new HastingsMemento(_ownNode, neighbours);
                 HastingsCareTaker.Add(rootMemento);
             }
-            
+
             StepProposal = stepProposal ?? new HastingsOriginator(CurrentStep);
 
             // create an empty stream for discovery messages
@@ -131,7 +124,6 @@ namespace Catalyst.Core.Lib.P2P.Discovery
                .Where(i => i.Message.Descriptor.ShortenedFullName()
                    .Equals(PingResponse.Descriptor.ShortenedFullName())
                 )
-               .SubscribeOn(TaskPoolScheduler.Default)
                .Subscribe(OnPingResponse);
 
             // register subscription from peerNeighbourResponse.
@@ -139,14 +131,12 @@ namespace Catalyst.Core.Lib.P2P.Discovery
                .Where(i => i.Message.Descriptor.ShortenedFullName()
                    .Equals(PeerNeighborsResponse.Descriptor.ShortenedFullName())
                 )
-               .SubscribeOn(TaskPoolScheduler.Default)
                .Subscribe(OnPeerNeighbourResponse);
 
             // subscribe to evicted peer messages, so we can cross
             // reference them with discovery messages we sent
             _evictionSubscription = peerMessageCorrelationManager
                .EvictionEventStream
-               .SubscribeOn(TaskPoolScheduler.Default)
                .Select(e =>
                 {
                     _logger.Debug("Eviction stream receiving {key}", e.Key);
@@ -169,6 +159,17 @@ namespace Catalyst.Core.Lib.P2P.Discovery
             });
         }
 
+        public IHastingsMemento CurrentStep => HastingsCareTaker.Peek();
+        public IHastingsOriginator StepProposal { get; }
+
+        public IHastingsCareTaker HastingsCareTaker { get; }
+
+        public IPeerClient PeerClient { get; }
+        public IDtoFactory DtoFactory { get; }
+        public IObservable<IPeerClientMessageDto> DiscoveryStream { get; private set; }
+
+        public void Dispose() { Dispose(true); }
+
         /// <summary>
         ///     Discovery mechanism for Hasting metropolis walk.
         ///     method loops until we can build up a valid next state,
@@ -178,8 +179,10 @@ namespace Catalyst.Core.Lib.P2P.Discovery
         ///     and PingResponses. Expected PingResponse messages indicate a potential neighbour has responded to our ping,
         ///     so we assume it is reachable, so we add this to the StepProposal.CurrentNeighbours.
         ///     Once the sum of StepProposal.CurrentNeighbours and EvictedPingResponses equals the total expected responses,
-        ///     At this point we received all the potential messages we could, if we have potential peers for the next step, then we can walk forward.
-        ///     if not the condition has not been met within a timeout then we walk back by taking the last known state from the IHastingCaretaker.
+        ///     At this point we received all the potential messages we could, if we have potential peers for the next step, then
+        ///     we can walk forward.
+        ///     if not the condition has not been met within a timeout then we walk back by taking the last known state from the
+        ///     IHastingCaretaker.
         /// </summary>
         /// <returns></returns>
         public async Task DiscoveryAsync()
@@ -199,7 +202,8 @@ namespace Catalyst.Core.Lib.P2P.Discovery
                 try
                 {
                     // spins until our expected result equals found and unreachable peers for this step.
-                    await WaitUntil(StepProposal.HasValidCandidate, _hasValidCandidatesCheckMillisecondsFrequency, _millisecondsTimeout).ConfigureAwait(false);
+                    await WaitUntil(StepProposal.HasValidCandidate, _hasValidCandidatesCheckMillisecondsFrequency,
+                        _millisecondsTimeout).ConfigureAwait(false);
 
                     //lock (StepProposal)
                     {
@@ -264,7 +268,7 @@ namespace Catalyst.Core.Lib.P2P.Discovery
 
             // store state with caretaker.
             HastingsCareTaker.Add(newState);
-            
+
             // continue walk by proposing next degree.
             var newCandidate = CurrentStep.Neighbours
                .Where(n => n.State == NeighbourState.Responsive)
@@ -327,11 +331,14 @@ namespace Catalyst.Core.Lib.P2P.Discovery
         ///     OnNext method for _evictionSubscription
         ///     handles the discovery messages to see if there of interest to us.
         /// </summary
-        /// /// <param name="requestCorrelationId">Correlation Id for the request getting evicted.</param>
+        /// /
+        /// /
+        /// /
+        /// <param name="requestCorrelationId">Correlation Id for the request getting evicted.</param>
         protected void EvictionCallback(ICorrelationId requestCorrelationId)
         {
             _logger.Debug("Eviction callback called.");
-            
+
             try
             {
                 if (StepProposal.PnrCorrelationId.Equals(requestCorrelationId))
@@ -341,10 +348,13 @@ namespace Catalyst.Core.Lib.P2P.Discovery
                     WalkBack();
                 }
 
-                var neighbour = StepProposal.Neighbours.SingleOrDefault(n => n.DiscoveryPingCorrelationId.Equals(requestCorrelationId));
+                var neighbour =
+                    StepProposal.Neighbours.SingleOrDefault(n =>
+                        n.DiscoveryPingCorrelationId.Equals(requestCorrelationId));
                 if (neighbour == null)
                 {
-                    _logger.Debug("EvictionCallback received for {correlationId}, but not correlated to neighbours of {stateCandidate}",
+                    _logger.Debug(
+                        "EvictionCallback received for {correlationId}, but not correlated to neighbours of {stateCandidate}",
                         requestCorrelationId, CurrentStep.Peer);
                     return;
                 }
@@ -379,7 +389,8 @@ namespace Catalyst.Core.Lib.P2P.Discovery
                     return;
                 }
 
-                StepProposal.Neighbours.First(n => n.PeerIdentifier.Equals(obj.Sender)).State = NeighbourState.Responsive;
+                StepProposal.Neighbours.First(n => n.PeerIdentifier.Equals(obj.Sender)).State =
+                    NeighbourState.Responsive;
             }
             catch (Exception e)
             {
@@ -428,7 +439,8 @@ namespace Catalyst.Core.Lib.P2P.Discovery
                     catch (Exception e)
                     {
                         n.State = NeighbourState.UnResponsive;
-                        _logger.Error(e, "Failed to send ping request to neighbour {neighbour}, marked as {state}", n, n.State);
+                        _logger.Error(e, "Failed to send ping request to neighbour {neighbour}, marked as {state}", n,
+                            n.State);
                     }
                 });
 
@@ -487,11 +499,6 @@ namespace Catalyst.Core.Lib.P2P.Discovery
             });
 
             Interlocked.Add(ref _discoveredPeerInCurrentWalk, 1);
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
         }
 
         protected virtual void Dispose(bool disposing)

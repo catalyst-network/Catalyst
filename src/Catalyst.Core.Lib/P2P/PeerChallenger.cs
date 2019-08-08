@@ -22,6 +22,7 @@
 #endregion
 
 using System;
+using System.Linq;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
@@ -30,34 +31,32 @@ using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.Extensions;
 using Serilog;
 using System.Reactive.Linq;
+using System.Reactive.Subjects;
+using System.Reactive.Threading.Tasks;
 using System.Threading.Tasks;
-using Catalyst.Common.Util;
-using Catalyst.Protocol;
 using System.Threading;
-using Catalyst.Common.Config;
 
 namespace Catalyst.Core.Lib.P2P
 {
     public sealed class PeerChallenger : IPeerChallenger, IDisposable
     {
-        private readonly IPeerService _peerService;
         private readonly ILogger _logger;
         private readonly IPeerIdentifier _senderIdentifier;
         private readonly IPeerClient _peerClient;
-        private readonly string _messageType = PingResponse.Descriptor.ShortenedFullName();
+        private readonly int _peerChallengeWaitTimeSeconds;
 
-        private readonly CancellationTokenSource _cancellationTokenSource 
-            = new CancellationTokenSource(Constants.PeerChallengeWaitTime);
-        
-        public PeerChallenger(IPeerService peerService,
-            ILogger logger,
+        public ReplaySubject<IPeerChallengeResponse> ChallengeResponseMessageStreamer { get; }
+
+        public PeerChallenger(ILogger logger,
             IPeerClient peerClient,
-            IPeerIdentifier senderIdentifier)
+            IPeerIdentifier senderIdentifier,
+            int peerChallengeWaitTimeSeconds)
         {
-            _peerService = peerService;
+            ChallengeResponseMessageStreamer = new ReplaySubject<IPeerChallengeResponse>(1);
             _senderIdentifier = senderIdentifier;
             _logger = logger;
             _peerClient = peerClient;
+            _peerChallengeWaitTimeSeconds = peerChallengeWaitTimeSeconds;
         }
 
         public async Task<bool> ChallengePeerAsync(IPeerIdentifier recipientPeerIdentifier)
@@ -65,7 +64,6 @@ namespace Catalyst.Core.Lib.P2P
             try
             {
                 var correlationId = CorrelationId.GenerateCorrelationId();
-
                 var protocolMessage = new PingRequest().ToProtocolMessage(_senderIdentifier.PeerId, correlationId);
                 var messageDto = new MessageDto<ProtocolMessage>(
                     protocolMessage,
@@ -74,17 +72,26 @@ namespace Catalyst.Core.Lib.P2P
                     correlationId
                 );
 
+                _logger.Verbose($"Sending peer challenge request to IP: {recipientPeerIdentifier}");
                 _peerClient.SendMessage(messageDto);
-
-                var t = _peerService.MessageStream.FirstAsync(a => a != null && a != NullObjects.ObserverDto
-                 && a.Payload.TypeUrl == _messageType
-                 && a.Payload.PeerId.PublicKey.ToStringUtf8() == recipientPeerIdentifier.PeerId.PublicKey.ToStringUtf8());
-
-                await t.RunAsync(_cancellationTokenSource.Token);
+                using (var cancellationTokenSource =
+                    new CancellationTokenSource(TimeSpan.FromSeconds(_peerChallengeWaitTimeSeconds)))
+                {
+                    await ChallengeResponseMessageStreamer
+                       .FirstAsync(a => a != null 
+                         && a.PeerId.PublicKey.SequenceEqual(recipientPeerIdentifier.PeerId.PublicKey) 
+                         && a.PeerId.Ip.SequenceEqual(recipientPeerIdentifier.PeerId.Ip))
+                       .ToTask(cancellationTokenSource.Token)
+                       .ConfigureAwait(false);
+                }
+            }
+            catch (OperationCanceledException)
+            {
+                return false;
             }
             catch (Exception e)
             {
-                _logger.Error(e.Message);
+                _logger.Error(e, nameof(ChallengePeerAsync));
                 return false;
             }
 
@@ -92,9 +99,8 @@ namespace Catalyst.Core.Lib.P2P
         }
 
         public void Dispose()
-        {            
-            _cancellationTokenSource?.Cancel();
-            _cancellationTokenSource?.Dispose();
+        {
+            ChallengeResponseMessageStreamer?.Dispose();
         }
     }
 }

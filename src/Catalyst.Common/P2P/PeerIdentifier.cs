@@ -40,6 +40,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Text;
+using GraphQL.Types;
 
 namespace Catalyst.Common.P2P
 {
@@ -49,6 +50,9 @@ namespace Catalyst.Common.P2P
     ///     the leading 12 bytes should be padded 0x0
     ///     clientID [2] + clientVersion[2] + Ip[16] + Port[2] + pub[20]
     ///     The client ID for this implementation is "AC" or hexadecimal 4143
+    /// </summary>
+    /// <summary>
+    ///     @TODO move to SDK
     /// </summary>
     public sealed class PeerIdentifier : IPeerIdentifier
     {
@@ -147,7 +151,7 @@ namespace Catalyst.Common.P2P
 
         public override string ToString()
         {
-            return ClientId + ClientVersion + $"@{Ip}:{Port.ToString()}" + $"|{PublicKey.ToHex()}";
+            return ClientId + ClientVersion + $"@{Ip}:{Port.ToString()}" + $"|{PublicKey.KeyToString()}";
         }
 
         public bool Equals(IPeerIdentifier other)

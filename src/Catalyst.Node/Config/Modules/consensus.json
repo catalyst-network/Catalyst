@@ -66,10 +66,10 @@
             ]
         },
         {
-            "type": "SharpRepository.InMemoryRepository.InMemoryRepository`2[[Catalyst.Common.P2P.Peer, Catalyst.Common], [System.String, mscorlib]], SharpRepository.InMemoryRepository",
+            "type": "SharpRepository.InMemoryRepository.InMemoryRepository`2[[Catalyst.Common.P2P.Models.Peer, Catalyst.Common], [System.String, mscorlib]], SharpRepository.InMemoryRepository",
             "services": [
                 {
-                    "type": "SharpRepository.Repository.IRepository`2[[Catalyst.Common.P2P.Peer, Catalyst.Common], [System.String, mscorlib]], SharpRepository.Repository"
+                    "type": "SharpRepository.Repository.IRepository`2[[Catalyst.Common.P2P.Models.Peer, Catalyst.Common], [System.String, mscorlib]], SharpRepository.Repository"
                 }
             ]
         },
@@ -104,6 +104,22 @@
         },
         {
             "type": "Catalyst.Core.Lib.P2P.IO.Observers.DeltaDfsHashObserver",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.IO.Observers.IP2PMessageObserver, Catalyst.Common"
+                }
+            ]
+        },
+        {
+            "type": "Catalyst.Core.Lib.P2P.IO.Observers.CandidateDeltaObserver",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.IO.Observers.IP2PMessageObserver, Catalyst.Common"
+                }
+            ]
+        },
+        {
+            "type": "Catalyst.Core.Lib.P2P.IO.Observers.FavouriteDeltaObserver",
             "services": [
                 {
                     "type": "Catalyst.Common.Interfaces.IO.Observers.IP2PMessageObserver, Catalyst.Common"

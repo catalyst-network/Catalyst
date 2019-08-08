@@ -21,20 +21,12 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.Modules.Mempool;
-using Catalyst.Protocol.Transaction;
-using Google.Protobuf;
-using Newtonsoft.Json;
-using SharpRepository.Repository;
+using Catalyst.Protocol.Common;
 
-namespace Catalyst.Common.Modules.Mempool
+namespace Catalyst.Common.Interfaces.P2P
 {
-    public class MempoolDocument : IMempoolDocument
+    public interface IPeerChallengeResponse
     {
-        [RepositoryPrimaryKey(Order = 1)]
-        [JsonProperty("id")]
-        public string DocumentId => Transaction?.Signature?.ToByteString()?.ToBase64();
-
-        public TransactionBroadcast Transaction { get; set; }
+        PeerId PeerId { get; }
     }
 }

@@ -15,7 +15,8 @@
                 {
                     "type": "Catalyst.Common.Interfaces.Repository.IPeerRepository, Catalyst.Common"
                 }
-            ]
+            ],
+            "instanceScope": "singleinstance"
         },
         {
             "type": "Catalyst.Core.Lib.Repository.AuthCredentialRepository, Catalyst.Core.Lib",
@@ -191,10 +192,10 @@
             ]
         },
         {
-            "type": "SharpRepository.InMemoryRepository.InMemoryRepository`2[[Catalyst.Common.P2P.Peer, Catalyst.Common], [System.String, mscorlib]], SharpRepository.InMemoryRepository",
+            "type": "SharpRepository.InMemoryRepository.InMemoryRepository`2[[Catalyst.Common.P2P.Models.Peer, Catalyst.Common], [System.String, mscorlib]], SharpRepository.InMemoryRepository",
             "services": [
                 {
-                    "type": "SharpRepository.Repository.IRepository`2[[Catalyst.Common.P2P.Peer, Catalyst.Common], [System.String, mscorlib]], SharpRepository.Repository"
+                    "type": "SharpRepository.Repository.IRepository`2[[Catalyst.Common.P2P.Models.Peer, Catalyst.Common], [System.String, mscorlib]], SharpRepository.Repository"
                 }
             ]
         },
@@ -223,7 +224,7 @@
             ]
         },
         {
-            "type": "Catalyst.Common.P2P.Peer, Catalyst.Common",
+            "type": "Catalyst.Common.P2P.Models.Peer, Catalyst.Common",
             "services": [
                 {
                     "type": "Catalyst.Common.Interfaces.P2P.IPeer, Catalyst.Common"
@@ -268,15 +269,23 @@
                 {
                     "type": "Catalyst.Common.Interfaces.P2P.IPeerChallenger, Catalyst.Common"
                 }
-            ]
+            ],
+            "parameters": {
+                "peerChallengeWaitTimeSeconds": 5
+            },
+            "instanceScope": "singleinstance"
         },
         {
-            "type": "Catalyst.Core.Lib.P2P.PeerClient",
+            "type": "Catalyst.Core.Lib.P2P.PeerHeartbeatChecker",
             "services": [
                 {
-                    "type": "Catalyst.Common.Interfaces.P2P.IPeerClient, Catalyst.Common"
+                    "type": "Catalyst.Common.Interfaces.P2P.IPeerHeartbeatChecker, Catalyst.Common"
                 }
-            ]
+            ],
+            "parameters": {
+                "checkHeartbeatIntervalSeconds": 10,
+                "maxNonResponsiveCounter": 3
+            }
         },
         {
             "type": "Catalyst.Common.Cryptography.CertificateStore, Catalyst.Common",
@@ -309,7 +318,10 @@
                 {
                     "type": "Catalyst.Common.Interfaces.FileSystem.IFileSystem, Catalyst.Common"
                 }
-            ]
+            ],
+            "parameters": {
+                "configDataDir": "Data_Directory"
+            }
         },
         {
             "type": "Catalyst.Common.FileTransfer.UploadFileTransferFactory, Catalyst.Common",
@@ -388,6 +400,12 @@
         // The following modules are not only modules in the sense of Autofac,
         // but also in the sense of the catalyst node architecture, i.e. swappable
         // components that can customized for different use cases.
+        {
+            "type": "Catalyst.Core.Lib.Modules.JsonConfiguredModule",
+            "parameters": {
+                "configFilePath": "Config/Modules/api.json"
+            }
+        },
         {
             "type": "Catalyst.Core.Lib.Modules.JsonConfiguredModule",
             "parameters": {

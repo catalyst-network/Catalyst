@@ -33,11 +33,13 @@ using Catalyst.Common.Interfaces.Modules.Ledger;
 using Catalyst.Common.Interfaces.Modules.Mempool;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Rpc;
+using Catalyst.Modules.Lib.Api;
 using Serilog;
 
 namespace Catalyst.Node
 {
-    public class CatalystNode : ICatalystNode
+    public class CatalystNode
+        : ICatalystNode
     {
         private readonly IConsensus _consensus;
         private readonly IContract _contract;
@@ -48,7 +50,10 @@ namespace Catalyst.Node
         private readonly IMempool _mempool;
         private readonly IPeerService _peer;
         private readonly INodeRpcServer _nodeRpcServer;
-        
+        private readonly IPeerClient _peerClient;
+
+        private readonly IApi _api;
+
         public CatalystNode(IKeySigner keySigner,
             IPeerService peer,
             IConsensus consensus,
@@ -56,33 +61,49 @@ namespace Catalyst.Node
             ILedger ledger,
             ILogger logger,
             INodeRpcServer nodeRpcServer,
+            IApi api,
+            IPeerClient peerClient,
             IMempool mempool = null,
             IContract contract = null)
         {
-            _consensus = consensus;
             _peer = peer;
+            _peerClient = peerClient;
+            _consensus = consensus;
             _dfs = dfs;
             _ledger = ledger;
             _keySigner = keySigner;
             _logger = logger;
             _nodeRpcServer = nodeRpcServer;
+            _api = api;
             _mempool = mempool;
             _contract = contract;
+        }
+
+        public async Task StartSockets()
+        {
+            await _nodeRpcServer.StartAsync().ConfigureAwait(false);
+            await _peerClient.StartAsync().ConfigureAwait(false);
+            await _peer.StartAsync().ConfigureAwait(false);
+            await _api.StartApiAsync().ConfigureAwait(false);
         }
 
         public async Task RunAsync(CancellationToken ct)
         {
             _logger.Information("Starting the Catalyst Node");
+
+            await StartSockets().ConfigureAwait(false);
+
             bool exit;
+            
             do
             {
                 await Task.Delay(300, ct); //just to get the exit message at the bottom
 
-                _logger.Information("Type 'exit' to exit, anything else to continue");
+                _logger.Debug("Type 'exit' to exit, anything else to continue");
                 exit = string.Equals(Console.ReadLine(), "exit", StringComparison.OrdinalIgnoreCase);
             } while (!ct.IsCancellationRequested && !exit);
 
-            _logger.Information("Stopping the Catalyst Node");
+            _logger.Debug("Stopping the Catalyst Node");
         }
     }
 }
