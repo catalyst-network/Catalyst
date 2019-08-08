@@ -82,13 +82,15 @@ namespace Catalyst.Common.P2P
             //on you whether you are connecting to a local node, or a remote one.
             //https://github.com/catalyst-network/Catalyst.Node/issues/307
 
-            var publicKeyStr = config.GetSection("CatalystCliConfig")
-               .GetSection("PublicKey").Value;
+            var catalystCliConfig = config.GetSection("CatalystCliConfig");
+            var publicKeyStr = catalystCliConfig.GetSection("PublicKey").Value;
+            var bindIp = catalystCliConfig.GetSection("BindAddress").Value;
+            var port = catalystCliConfig.GetSection("Port").Value;
 
             var publicKey = GetIfRegistryContainsPublicKey(publicKeyStr.KeyToBytes(), registry, userOutput);
 
             return new PeerIdentifier(publicKey,
-                IPAddress.Loopback, IPEndPoint.MaxPort);
+                IPAddress.Parse(bindIp), int.Parse(port));
         }
 
         internal static byte[] GetIfRegistryContainsPublicKey(byte[] publicKeyBytes, IKeyRegistry registry, IUserOutput userOutput)
