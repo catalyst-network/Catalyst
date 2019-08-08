@@ -1,0 +1,6 @@
+schedules:
+- cron: '0 * * * *'
+  displayName: Hourly dev build
+  branches:
+    include:
+    - develop
