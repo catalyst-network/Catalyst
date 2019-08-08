@@ -24,6 +24,7 @@
 using System;
 using System.Net;
 using Catalyst.Protocol.Common;
+using GraphQL.Types;
 
 namespace Catalyst.Common.Interfaces.P2P
 {

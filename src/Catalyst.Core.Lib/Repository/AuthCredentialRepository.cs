@@ -28,7 +28,7 @@ using SharpRepository.Repository;
 
 namespace Catalyst.Core.Lib.Repository
 {
-    public class AuthCredentialRepository : RepositoryWrapper<AuthCredentials>, IAuthCredentialRepository
+    public sealed class AuthCredentialRepository : RepositoryWrapper<AuthCredentials>, IAuthCredentialRepository
     {
         public AuthCredentialRepository(IRepository<AuthCredentials, string> repository) : base(repository) { }
     }

@@ -34,5 +34,15 @@ namespace Catalyst.Common.IO.Transport
             ILogger logger,
             IEventLoopGroupFactory eventLoopGroupFactory)
             : base(tcpChannelFactory, logger, eventLoopGroupFactory) { }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (!disposing)
+            {
+                return;
+            }
+
+            base.Dispose(true);
+        }
     }
 }

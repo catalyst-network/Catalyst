@@ -21,7 +21,7 @@
 
 #endregion
 
-using Catalyst.Common.Modules.Mempool;
+using Catalyst.Common.Modules.Mempool.Models;
 
 namespace Catalyst.Common.Interfaces.Repository
 {

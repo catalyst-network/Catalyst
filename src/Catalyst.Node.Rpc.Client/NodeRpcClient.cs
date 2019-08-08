@@ -36,6 +36,7 @@ using Catalyst.Common.Interfaces.IO.Transport.Channels;
 using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.IO.Transport;
 using Catalyst.Common.P2P;
+using Catalyst.Node.Rpc.Client.IO.Exceptions;
 using Catalyst.Protocol;
 using Catalyst.Protocol.Common;
 using Google.Protobuf;
@@ -54,8 +55,6 @@ namespace Catalyst.Node.Rpc.Client
         private readonly X509Certificate2 _certificate;
         private readonly IRpcNodeConfig _nodeConfig;
         private Dictionary<string, IRpcResponseObserver> _handlers;
-
-        /* Thread safe collection, in the case multiple observers are subscribing on multiple threads at the same time, removes concurrency issues. */
         private IObservable<IObserverDto<ProtocolMessage>> _socketMessageStream;
 
         /// <summary>
@@ -91,7 +90,8 @@ namespace Catalyst.Node.Rpc.Client
             var message = observer.Payload.FromProtocolMessage<T>();
             if (!_handlers.ContainsKey(observer.Payload.TypeUrl))
             {
-                return message;
+                throw new ResponseHandlerDoesNotExistException(
+                    $"Response Handler does not exist for message type {observer.Payload.TypeUrl}");
             }
 
             var handler = _handlers[observer.Payload.TypeUrl];

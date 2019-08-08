@@ -23,6 +23,7 @@
 
 using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
+using Catalyst.Common.P2P;
 
 namespace Catalyst.Common.Interfaces.P2P.Discovery
 {

@@ -27,7 +27,10 @@ using Catalyst.Common.Interfaces.P2P;
 
 namespace Catalyst.Common.P2P
 {
-    public class PeerIdClientId : IPeerIdClientId
+    /// <summary>
+    ///     @TODO move to SDK
+    /// </summary>
+    public sealed class PeerIdClientId : IPeerIdClientId
     {
         public PeerIdClientId(string clientVersion = "AC")
         {

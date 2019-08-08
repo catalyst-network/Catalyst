@@ -32,6 +32,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Catalyst.Common.P2P.Models;
 using Xunit;
 
 namespace Catalyst.Core.Lib.UnitTests.P2P
