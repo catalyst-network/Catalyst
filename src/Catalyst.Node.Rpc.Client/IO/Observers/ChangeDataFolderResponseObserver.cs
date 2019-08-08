@@ -21,23 +21,31 @@
 
 #endregion
 
-using Catalyst.Cli.CommandTypes;
-using Catalyst.Cli.Options;
-using Catalyst.Common.Interfaces.Cli.Commands;
+using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
+using Catalyst.Common.Interfaces.IO.Observers;
+using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Protocol.Rpc.Node;
+using DotNetty.Transport.Channels;
+using Serilog;
 
-namespace Catalyst.Cli.Commands
+namespace Catalyst.Node.Rpc.Client.IO.Observers
 {
-    public sealed class GetInfoCommand : BaseMessageCommand<GetInfoRequest, GetInfoResponse, GetInfoOptions>
+    /// <summary>
+    ///     Handles the Peer count response
+    /// </summary>
+    /// <seealso cref="IRpcResponseObserver" />
+    public sealed class ChangeDataFolderResponseObserver
+        : RpcResponseObserver<SetPeerDataFolderResponse>
     {
-        public GetInfoCommand(ICommandContext commandContext) : base(commandContext) { }
+        public ChangeDataFolderResponseObserver(ILogger logger)
+            : base(logger) { }
 
-        protected override GetInfoRequest GetMessage(GetInfoOptions option)
+        protected override void HandleResponse(SetPeerDataFolderResponse setPeerDataFolderResponse,
+            IChannelHandlerContext channelHandlerContext,
+            IPeerIdentifier senderPeerIdentifier,
+            ICorrelationId correlationId)
         {
-            return new GetInfoRequest 
-            {
-                Query = true
-            };
+            //Overriden code
         }
     }
 }

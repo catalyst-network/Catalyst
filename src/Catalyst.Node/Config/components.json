@@ -318,7 +318,10 @@
                 {
                     "type": "Catalyst.Common.Interfaces.FileSystem.IFileSystem, Catalyst.Common"
                 }
-            ]
+            ],
+            "parameters": {
+                "configDataDir": "Data_Directory"
+            }
         },
         {
             "type": "Catalyst.Common.FileTransfer.UploadFileTransferFactory, Catalyst.Common",
