@@ -70,7 +70,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P
             ContainerProvider.ConfigureContainerBuilder(true, true);
             _peerSettings = new PeerSettings(ContainerProvider.ConfigurationRoot);
 
-            var sender = PeerIdentifierHelper.GetPeerIdentifier("sender", "Tc", 1, _peerSettings.BindAddress, _peerSettings.Port);
+            var sender = PeerIdentifierHelper.GetPeerIdentifier("sender", _peerSettings.BindAddress, _peerSettings.Port);
             var logger = Substitute.For<ILogger>();
             var keyRegistry = TestKeyRegistry.MockKeyRegistry();
 
@@ -142,7 +142,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P
         private async Task<bool> RunPeerChallengeTask(string publicKey, IPAddress ip, int port)
         {
             var recipient = new PeerIdentifier(publicKey.KeyToBytes(), ip,
-                port, Substitute.For<IPeerIdClientId>());
+                port);
             return await _peerChallenger.ChallengePeerAsync(recipient);
         }
 
