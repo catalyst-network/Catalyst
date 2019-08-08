@@ -32,11 +32,21 @@ namespace Catalyst.Common.Interfaces.Modules.Consensus.Deltas
     public interface IDeltaBuilder
     {
         /// <summary>
-        /// Builds a new candidate delta based on the content of its predecessor
+        /// Builds a new candidate delta based on the content of its predecessor, and cache the full content
+        /// of the delta locally. If the delta is elected at the end of the cycle, the cache will be used to retrieve
+        /// and publish the whole delta onto the DFS.
         /// </summary>
         /// <param name="previousDeltaHash">The content based address of the previous delta on the Dfs.</param>
         /// <returns>Returns a candidate delta object that contains the hash for the update,
         /// the hash for the previous delta and the producer's PeerId</returns>
         CandidateDeltaBroadcast BuildCandidateDelta(byte[] previousDeltaHash);
+
+        /// <summary>
+        /// Adds the delta built for the cycle succeeding <param name="previousDeltaHash" /> to a cache.
+        /// Once a delta has been elected, this cache can be queried to try and retrieve the full content
+        /// and post it on the DFS.
+        /// </summary>
+        /// <param name="previousDeltaHash">The content based address of the previous delta on the Dfs.</param>
+        Delta TryFindCachedBuiltDelta(byte[] previousDeltaHash);
     }
 }

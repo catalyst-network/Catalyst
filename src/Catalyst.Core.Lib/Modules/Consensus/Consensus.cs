@@ -21,32 +21,89 @@
 
 #endregion
 
+using System;
+using System.Reactive.Concurrency;
+using System.Reactive.Linq;
 using Catalyst.Common.Interfaces.Modules.Consensus;
 using Catalyst.Common.Interfaces.Modules.Consensus.Cycle;
 using Catalyst.Common.Interfaces.Modules.Consensus.Deltas;
-using Catalyst.Core.Lib.Modules.Consensus.Cycle;
+using Catalyst.Common.Modules.Consensus.Cycle;
+using Catalyst.Protocol.Deltas;
 using Serilog;
 
 namespace Catalyst.Core.Lib.Modules.Consensus
 {
-    public sealed class Consensus : IConsensus
+    /// <inheritdoc cref="IDisposable"/>
+    /// <inheritdoc cref="IConsensus"/>
+    public sealed class Consensus : IConsensus, IDisposable
     {
-        public ICycleEventsProvider CycleEventsProvider { get; }
-        public IDeltaBuilder DeltaBuilder { get; }
-        public IDeltaHub DeltaHub { get; }
-        public IDeltaHashProvider DeltaHashProvider { get; }
+        private readonly IDeltaVoter _deltaVoter;
+        private readonly IDeltaElector _deltaElector;
+        private IDisposable _constructionProducingSubscription;
+        private IDisposable _campaigningProductionSubscription;
+
+        private readonly ICycleEventsProvider _cycleEventsProvider;
+        private readonly IDeltaBuilder DeltaBuilder;
+        private readonly IDeltaHub _deltaHub;
+        private IDeltaHashProvider _deltaHashProvider;
+        private IDeltaCache _deltaCache;
+        private IDisposable _votingProductionSubscription;
 
         public Consensus(IDeltaBuilder deltaBuilder,
+            IDeltaVoter deltaVoter,
+            IDeltaElector deltaElector,
+            IDeltaCache deltaCache,
             IDeltaHub deltaHub,
-            ILogger logger,
             IDeltaHashProvider deltaHashProvider,
-            ICycleEventsProvider cycleEventsProvider)
+            ICycleEventsProvider cycleEventsProvider,
+            ILogger logger)
         {
-            CycleEventsProvider = cycleEventsProvider;
+            _deltaVoter = deltaVoter;
+            _deltaElector = deltaElector;
+            _cycleEventsProvider = cycleEventsProvider;
             DeltaBuilder = deltaBuilder;
-            DeltaHub = deltaHub;
-            DeltaHashProvider = deltaHashProvider;
+            _deltaHub = deltaHub;
+            _deltaHashProvider = deltaHashProvider;
+            _deltaCache = deltaCache;
             logger.Information("Consensus service initialised.");
+        }
+
+        public void StartProducing()
+        {
+            _constructionProducingSubscription = _cycleEventsProvider.PhaseChanges
+               .Where(p => p.Name == PhaseName.Construction && p.Status == PhaseStatus.Producing)
+               .Select(p => DeltaBuilder.BuildCandidateDelta(p.PreviousDeltaDfsHash))
+               .Subscribe(_deltaHub.BroadcastCandidate);
+
+            _campaigningProductionSubscription = _cycleEventsProvider.PhaseChanges
+               .Where(p => p.Name == PhaseName.Campaigning && p.Status == PhaseStatus.Producing)
+               .Select(p =>
+                {
+                    _deltaVoter.TryGetFavouriteDelta(p.PreviousDeltaDfsHash, out var favourite);
+                    return favourite;
+                })
+               .Where(f => f != null)
+               .Subscribe(_deltaHub.BroadcastFavouriteCandidateDelta);
+
+            _votingProductionSubscription = _cycleEventsProvider.PhaseChanges
+               .Where(p => p.Name == PhaseName.Voting && p.Status == PhaseStatus.Producing)
+               .Select(p => _deltaElector.GetMostPopularCandidateDelta(p.PreviousDeltaDfsHash))
+               .Where(c => c != null)
+               .Select(c =>
+                {
+                    _deltaCache.TryGetLocalDelta(c, out var delta);
+                    return delta;
+                })
+               .Where(d => d != null)
+               .SubscribeOn(TaskPoolScheduler.Default)
+               .Subscribe(d => _deltaHub.PublishDeltaToDfsAsync(d));
+        }
+        
+        public void Dispose()
+        {
+            _constructionProducingSubscription?.Dispose();
+            _campaigningProductionSubscription?.Dispose();
+            _votingProductionSubscription?.Dispose();
         }
     }
 }

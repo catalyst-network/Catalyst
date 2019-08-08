@@ -31,8 +31,9 @@ namespace Catalyst.Common.Interfaces.Modules.Consensus.Deltas
     /// about the different candidate deltas observed on the network, in order to be
     /// able to determine which candidate should eventually make it to the DFS.
     /// </summary>
+    /// <remarks>A producer will call that method at the start of the Campaigning phase.</remarks>
     public interface IDeltaVoter : IObserver<CandidateDeltaBroadcast>
     {
-        bool TryGetFavouriteDelta(byte[] previousDeltaDfsHash, out CandidateDeltaBroadcast favourite);
+        bool TryGetFavouriteDelta(byte[] previousDeltaDfsHash, out FavouriteDeltaBroadcast favourite);
     }
 }

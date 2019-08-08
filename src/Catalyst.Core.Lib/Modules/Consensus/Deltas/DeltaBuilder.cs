@@ -44,16 +44,19 @@ namespace Catalyst.Core.Lib.Modules.Consensus.Deltas
         private readonly IDeterministicRandomFactory _randomFactory;
         private readonly IMultihashAlgorithm _hashAlgorithm;
         private readonly IPeerIdentifier _producerUniqueId;
-        
+        private readonly IDeltaCache _deltaCache;
+
         public DeltaBuilder(IDeltaTransactionRetriever transactionRetriever,
             IDeterministicRandomFactory randomFactory,
             IMultihashAlgorithm hashAlgorithm,
-            IPeerIdentifier producerUniqueId)
+            IPeerIdentifier producerUniqueId,
+            IDeltaCache deltaCache)
         {
             _transactionRetriever = transactionRetriever;
             _randomFactory = randomFactory;
             _hashAlgorithm = hashAlgorithm;
             _producerUniqueId = producerUniqueId;
+            _deltaCache = deltaCache;
         }
 
         ///<inheritdoc />
@@ -88,15 +91,24 @@ namespace Catalyst.Core.Lib.Modules.Consensus.Deltas
                .Sum(t => t.TransactionFees);
 
             //∆Ln,j = L(f/E) + dn + E(xf, j)
+            var coinbaseEntry = new CoinbaseEntry
+            {
+                Amount = summedFees,
+                PubKey = _producerUniqueId.PublicKey.ToByteString(),
+                Version = 1
+            };
             var globalLedgerStateUpdate = shuffledEntriesBytes
                .Concat(signaturesInOrder)
-               .Concat(new CoinbaseEntry
-                {
-                    Amount = summedFees,
-                    PubKey = _producerUniqueId.PublicKey.ToByteString(),
-                    Version = 1
-                }.ToByteArray())
+               .Concat(coinbaseEntry.ToByteArray())
                .ToArray();
+
+            var producedDelta = new Delta
+            {
+                PreviousDeltaDfsHash = previousDeltaHash.ToByteString(),
+                CBEntries = {coinbaseEntry},
+                STEntries = {includedTransactions.SelectMany(t => t.STEntries)},
+                Version = 1
+            };
 
             //hj
             var candidate = new CandidateDeltaBroadcast
@@ -109,8 +121,13 @@ namespace Catalyst.Core.Lib.Modules.Consensus.Deltas
                 PreviousDeltaDfsHash = previousDeltaHash.ToByteString()
             };
 
+            _deltaCache.AddLocalDelta(candidate, producedDelta);
+
             return candidate;
         }
+
+        ///<inheritdoc />
+        public Delta TryFindCachedBuiltDelta(byte[] previousDeltaHash) { throw new NotImplementedException(); }
 
         private IEnumerable<byte> GetSaltFromPreviousDelta(byte[] previousDeltaHash)
         {

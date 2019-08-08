@@ -28,9 +28,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Autofac;
-using Autofac.Builder;
 using Catalyst.Common.Config;
-using Catalyst.Common.Cryptography;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.FileSystem;
 using Catalyst.Common.Interfaces;
@@ -39,6 +37,7 @@ using Catalyst.Common.Interfaces.FileSystem;
 using Catalyst.Common.Interfaces.Keystore;
 using Catalyst.Common.Interfaces.Modules.Consensus;
 using Catalyst.Common.Interfaces.Modules.Dfs;
+using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.Modules.Mempool;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.Discovery;
@@ -46,7 +45,6 @@ using Catalyst.Common.Interfaces.Registry;
 using Catalyst.Common.Interfaces.Repository;
 using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.P2P;
-using Catalyst.Cryptography.BulletProofs.Wrapper;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
 using Catalyst.Modules.Lib.Dfs;
 using Catalyst.TestUtils;
@@ -129,7 +127,9 @@ namespace Catalyst.Modules.Lib.IntegrationTests.Consensus
             _containerProvider.ContainerBuilder.RegisterInstance(_peerRepository).As<IPeerRepository>();
             _containerProvider.ContainerBuilder.RegisterType<TestFileSystem>().As<IFileSystem>().WithParameter("rootPath", _nodeDirectory.FullName);
             _containerProvider.ContainerBuilder.RegisterInstance(new NoDiscovery()).As<IPeerDiscovery>();
-            _containerProvider.ContainerBuilder.RegisterInstance(new NoDiscovery()).As<IPeerDiscovery>();
+            var keySigner = Substitute.For<IKeySigner>();
+            keySigner.Verify(Arg.Any<ISignature>(), Arg.Any<byte[]>()).Returns(true);
+            _containerProvider.ContainerBuilder.RegisterInstance(keySigner).As<IKeySigner>();
         }
 
         public IConsensus Consensus => _node.Consensus;
