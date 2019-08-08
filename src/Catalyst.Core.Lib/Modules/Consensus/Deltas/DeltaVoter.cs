@@ -28,6 +28,7 @@ using System.Linq;
 using System.Threading;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Modules.Consensus.Deltas;
+using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Util;
 using Catalyst.Protocol.Deltas;
 using Dawn;
@@ -56,15 +57,18 @@ namespace Catalyst.Core.Lib.Modules.Consensus.Deltas
         private readonly IMemoryCache _candidatesCache;
 
         private readonly IDeltaProducersProvider _deltaProducersProvider;
+        private readonly IPeerIdentifier _localPeerIdentifier;
         private readonly ILogger _logger;
         private readonly MemoryCacheEntryOptions _cacheEntryOptions;
 
         public DeltaVoter(IMemoryCache candidatesCache,
             IDeltaProducersProvider deltaProducersProvider,
+            IPeerIdentifier localPeerIdentifier,
             ILogger logger)
         {
             _candidatesCache = candidatesCache;
             _deltaProducersProvider = deltaProducersProvider;
+            _localPeerIdentifier = localPeerIdentifier;
             _cacheEntryOptions = new MemoryCacheEntryOptions()
                .AddExpirationToken(new CancellationChangeToken(new CancellationTokenSource(TimeSpan.FromMinutes(3)).Token));
             _logger = logger;
@@ -124,7 +128,7 @@ namespace Catalyst.Core.Lib.Modules.Consensus.Deltas
             candidatesByPreviousHash.Add(candidateCacheKey);
         }
 
-        public bool TryGetFavouriteDelta(byte[] previousDeltaDfsHash, out CandidateDeltaBroadcast favourite)
+        public bool TryGetFavouriteDelta(byte[] previousDeltaDfsHash, out FavouriteDeltaBroadcast favourite)
         {
             Guard.Argument(previousDeltaDfsHash, nameof(previousDeltaDfsHash)).NotNull().NotEmpty();
             Log.Debug("Retrieving favourite candidate delta for the successor of delta {0}", 
@@ -139,11 +143,17 @@ namespace Catalyst.Core.Lib.Modules.Consensus.Deltas
                 return false;
             }
 
-            favourite = candidates.Select(c => _candidatesCache.Get(c) as IScoredCandidateDelta)
+            var bestCandidate = candidates.Select(c => _candidatesCache.Get(c) as IScoredCandidateDelta)
                .Where(c => c != null)
                .OrderByDescending(c => c.Score)
                .ThenBy(c => c.Candidate.Hash.ToByteArray(), ByteUtil.ByteListMinSizeComparer.Default)
                .First().Candidate;
+
+            favourite = new FavouriteDeltaBroadcast
+            {
+                Candidate = bestCandidate,
+                VoterId = _localPeerIdentifier.PeerId
+            };
 
             return true;
         }

@@ -23,11 +23,15 @@
 
 using System.Threading;
 using System.Threading.Tasks;
+using Catalyst.Common.Interfaces.Modules.Consensus;
 
 namespace Catalyst.Common.Interfaces
 {
     public interface ICatalystNode
     {
+        /// <inheritdoc cref="IConsensus"/>
+        IConsensus Consensus { get; }
+
         Task RunAsync(CancellationToken cancellationSourceToken);
 
         Task StartSockets();

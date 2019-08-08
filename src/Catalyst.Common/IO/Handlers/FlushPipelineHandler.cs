@@ -21,13 +21,21 @@
 
 #endregion
 
+using System.Reflection;
 using System.Threading.Tasks;
 using DotNetty.Transport.Channels;
+using Serilog;
 
 namespace Catalyst.Common.IO.Handlers
 {
     public sealed class FlushPipelineHandler<T> : OutboundChannelHandlerBase<T>
     {
-        protected override Task WriteAsync0(IChannelHandlerContext ctx, T msg) { return ctx.WriteAndFlushAsync(msg); }
+        private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
+
+        protected override Task WriteAsync0(IChannelHandlerContext ctx, T msg)
+        {
+            Logger.Verbose("Received {msg}", msg);
+            return ctx.WriteAndFlushAsync(msg);
+        }
     }
 }
