@@ -43,6 +43,9 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
         protected override void HandleResponse(SetPeerDataFolderResponse setPeerDataFolderResponse,
             IChannelHandlerContext channelHandlerContext,
             IPeerIdentifier senderPeerIdentifier,
-            ICorrelationId correlationId) { }
+            ICorrelationId correlationId)
+        {
+            //Overriden code
+        }
     }
 }
