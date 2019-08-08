@@ -59,7 +59,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
     {
         public HastingsDiscoveryTests(ITestOutputHelper output) : base(new[]
         {
-            Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Network.Dev))
+            Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Common.Config.Network.Dev))
         }, output)
         {
             _testScheduler = new TestScheduler();

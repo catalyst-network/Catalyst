@@ -44,7 +44,7 @@ namespace Catalyst.TestUtils
             {
                 PublicKey = (publicKey ?? new byte[32]).ToByteString(),
                 ClientId = clientId.ToUtf8ByteString(),
-                ClientVersion = clientVersion.ToString("D2").ToUtf8ByteString(),
+                ProtocolVersion = clientVersion.ToString("D2").ToUtf8ByteString(),
                 Ip = (ipAddress ?? IPAddress.Parse("127.0.0.1")).To16Bytes().ToByteString(),
                 Port = BitConverter.GetBytes((ushort) port).ToByteString()
             };

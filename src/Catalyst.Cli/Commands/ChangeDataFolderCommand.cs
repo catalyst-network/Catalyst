@@ -21,23 +21,35 @@
 
 #endregion
 
-using Catalyst.Cli.CommandTypes;
 using Catalyst.Cli.Options;
 using Catalyst.Common.Interfaces.Cli.Commands;
 using Catalyst.Protocol.Rpc.Node;
+using Catalyst.Cli.CommandTypes;
+using Catalyst.Protocol;
 
 namespace Catalyst.Cli.Commands
 {
-    public sealed class GetInfoCommand : BaseMessageCommand<GetInfoRequest, GetInfoResponse, GetInfoOptions>
+    public sealed class ChangeDataFolderCommand : BaseMessageCommand<SetPeerDataFolderRequest, SetPeerDataFolderResponse, ChangeDataFolderOptions>
     {
-        public GetInfoCommand(ICommandContext commandContext) : base(commandContext) { }
+        public ChangeDataFolderCommand(ICommandContext commandContext) : base(commandContext) { }
 
-        protected override GetInfoRequest GetMessage(GetInfoOptions option)
+        protected override SetPeerDataFolderRequest GetMessage(ChangeDataFolderOptions option)
         {
-            return new GetInfoRequest 
+            return new SetPeerDataFolderRequest
             {
-                Query = true
+                Datafolder = option.DataFolder
             };
+        }
+
+        protected override void ResponseMessage(SetPeerDataFolderResponse response)
+        {
+            if (!response.Query)
+            {
+                CommandContext.UserOutput.WriteLine("Directory change failed, please check directory path");
+                return;
+            }
+
+            CommandContext.UserOutput.WriteLine("Directory change successful!");
         }
     }
 }

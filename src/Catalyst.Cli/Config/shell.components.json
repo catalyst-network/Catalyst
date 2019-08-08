@@ -156,6 +156,14 @@
                 }
             ]
         },
+        {
+            "type": "Catalyst.Cli.Commands.ChangeDataFolderCommand",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.Cli.CommandTypes.ICommand, Catalyst.Common"
+                }
+            ]
+        },
         //End Commands
         {
             "type": "Catalyst.Common.IO.EventLoop.EventLoopGroupFactoryConfiguration, Catalyst.Common",
@@ -423,6 +431,14 @@
         },
         {
             "type": "Catalyst.Node.Rpc.Client.IO.Observers.GetFileFromDfsResponseObserver, Catalyst.Node.Rpc.Client",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.IO.Observers.IRpcResponseObserver, Catalyst.Common"
+                }
+            ]
+        },
+        {
+            "type": "Catalyst.Node.Rpc.Client.IO.Observers.ChangeDataFolderResponseObserver, Catalyst.Node.Rpc.Client",
             "services": [
                 {
                     "type": "Catalyst.Common.Interfaces.IO.Observers.IRpcResponseObserver, Catalyst.Common"
