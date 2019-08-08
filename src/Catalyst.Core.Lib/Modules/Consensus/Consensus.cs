@@ -28,7 +28,6 @@ using Catalyst.Common.Interfaces.Modules.Consensus;
 using Catalyst.Common.Interfaces.Modules.Consensus.Cycle;
 using Catalyst.Common.Interfaces.Modules.Consensus.Deltas;
 using Catalyst.Common.Modules.Consensus.Cycle;
-using Catalyst.Protocol.Deltas;
 using Serilog;
 
 namespace Catalyst.Core.Lib.Modules.Consensus
@@ -53,7 +52,6 @@ namespace Catalyst.Core.Lib.Modules.Consensus
             IDeltaElector deltaElector,
             IDeltaCache deltaCache,
             IDeltaHub deltaHub,
-            IDeltaHashProvider deltaHashProvider,
             ICycleEventsProvider cycleEventsProvider,
             ILogger logger)
         {
