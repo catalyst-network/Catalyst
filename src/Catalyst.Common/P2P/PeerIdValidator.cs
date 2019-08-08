@@ -56,6 +56,7 @@ namespace Catalyst.Common.P2P
                .Require(p => p.Ip.Length == 16 && ValidateIp(p.Ip.ToByteArray()), _ => "Ip should be 16 bytes")
                .Require(p => ValidatePort(p.Port.ToByteArray()), _ => "Port should be between 1025 and 65535")
                .Require(p => ValidateProtocolVersion(p.ProtocolVersion.ToByteArray()));
+
             return true;
         }
 
