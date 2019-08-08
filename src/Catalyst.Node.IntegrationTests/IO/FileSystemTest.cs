@@ -71,7 +71,7 @@ namespace Catalyst.Node.IntegrationTests.IO
         [InlineData("'\0'")]
         [InlineData("'xxx://gan\0'dolf\\treasu\re*&+'")]
         [InlineData("'q*Pen\0'cilL:\\123\\fak/e'")]
-        public void Save_NonExistent_Data_Directory_Must_Fail(string path)
+        public void Save_Invalid_Data_Directory_Must_Fail(string path)
         {
             _fileSystem.SetCurrentPath(path).Should().BeFalse();
 
@@ -81,15 +81,6 @@ namespace Catalyst.Node.IntegrationTests.IO
         [Fact]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void Save_Existent_Data_Directory_Must_Succeed()
-        {
-            _fileSystem.SetCurrentPath(_sourceFolder).Should().BeTrue();
-
-            CheckSavedPath(_sourceFolder).Should().BeTrue();
-        }
-
-        [Fact]
-        [Trait(Traits.TestType, Traits.IntegrationTest)]
-        public void Save_Data_Directory_New_Instance_Must_Load_With_New_Data_Directory()
         {
             _fileSystem.SetCurrentPath(_sourceFolder).Should().BeTrue();
 
