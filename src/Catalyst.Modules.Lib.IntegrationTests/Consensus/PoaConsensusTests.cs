@@ -88,7 +88,6 @@ namespace Catalyst.Modules.Lib.IntegrationTests.Consensus
         [Fact(Skip = "WIP 🧐")]
         public async Task Run_Consensus()
         {
-            var observer = Observer.Create<IPhase>(ObservedPhase);
             _nodes.AsParallel()
                .ForAll(async n =>
                 {
@@ -96,7 +95,7 @@ namespace Catalyst.Modules.Lib.IntegrationTests.Consensus
                     n.Consensus.StartProducing();
                 });
 
-            await Task.Delay(TimeSpan.FromSeconds(20));
+            await Task.Delay(TimeSpan.FromSeconds(20)).ConfigureAwait(false);
 
             _endOfTestCancellationSource.CancelAfter(TimeSpan.FromMinutes(3));
         }

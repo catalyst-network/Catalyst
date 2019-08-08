@@ -41,13 +41,12 @@ namespace Catalyst.Core.Lib.Modules.Consensus
         private readonly IDeltaElector _deltaElector;
         private IDisposable _constructionProducingSubscription;
         private IDisposable _campaigningProductionSubscription;
+        private IDisposable _votingProductionSubscription;
 
         private readonly ICycleEventsProvider _cycleEventsProvider;
-        private readonly IDeltaBuilder DeltaBuilder;
+        private readonly IDeltaBuilder _deltaBuilder;
         private readonly IDeltaHub _deltaHub;
-        private IDeltaHashProvider _deltaHashProvider;
-        private IDeltaCache _deltaCache;
-        private IDisposable _votingProductionSubscription;
+        private readonly IDeltaCache _deltaCache;
 
         public Consensus(IDeltaBuilder deltaBuilder,
             IDeltaVoter deltaVoter,
@@ -61,9 +60,8 @@ namespace Catalyst.Core.Lib.Modules.Consensus
             _deltaVoter = deltaVoter;
             _deltaElector = deltaElector;
             _cycleEventsProvider = cycleEventsProvider;
-            DeltaBuilder = deltaBuilder;
+            _deltaBuilder = deltaBuilder;
             _deltaHub = deltaHub;
-            _deltaHashProvider = deltaHashProvider;
             _deltaCache = deltaCache;
             logger.Information("Consensus service initialised.");
         }
@@ -72,7 +70,7 @@ namespace Catalyst.Core.Lib.Modules.Consensus
         {
             _constructionProducingSubscription = _cycleEventsProvider.PhaseChanges
                .Where(p => p.Name == PhaseName.Construction && p.Status == PhaseStatus.Producing)
-               .Select(p => DeltaBuilder.BuildCandidateDelta(p.PreviousDeltaDfsHash))
+               .Select(p => _deltaBuilder.BuildCandidateDelta(p.PreviousDeltaDfsHash))
                .Subscribe(_deltaHub.BroadcastCandidate);
 
             _campaigningProductionSubscription = _cycleEventsProvider.PhaseChanges

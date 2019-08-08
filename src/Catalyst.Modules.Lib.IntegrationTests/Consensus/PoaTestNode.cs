@@ -67,9 +67,7 @@ namespace Catalyst.Modules.Lib.IntegrationTests.Consensus
         private readonly ContainerProvider _containerProvider;
         private readonly ICatalystNode _node;
         private readonly ILifetimeScope _scope;
-        private readonly IFileSystem _nodeFileSystem;
         private readonly DirectoryInfo _nodeDirectory;
-        private readonly IKeyRegistry _keyRegistry;
 
         public PoaTestNode(string name,
             IPrivateKey privateKey,
@@ -82,8 +80,8 @@ namespace Catalyst.Modules.Lib.IntegrationTests.Consensus
             _nodeSettings = nodeSettings;
 
             _nodeDirectory = parentTestFileSystem.GetCatalystDataDir().SubDirectoryInfo(Name);
-            _nodeFileSystem = Substitute.ForPartsOf<FileSystem>();
-            _nodeFileSystem.GetCatalystDataDir().Returns(_nodeDirectory);
+            IFileSystem nodeFileSystem = Substitute.ForPartsOf<FileSystem>();
+            nodeFileSystem.GetCatalystDataDir().Returns(_nodeDirectory);
 
             _rpcSettings = RpcServerSettingsHelper.GetRpcServerSettings(nodeSettings.Port + 100);
             _nodePeerId = new PeerIdentifier(nodeSettings);
@@ -111,8 +109,8 @@ namespace Catalyst.Modules.Lib.IntegrationTests.Consensus
             _node = _scope.Resolve<ICatalystNode>();
             
             var keyStore = _scope.Resolve<IKeyStore>();
-            _keyRegistry = _scope.Resolve<IKeyRegistry>();
-            _keyRegistry.AddItemToRegistry(KeyRegistryKey.DefaultKey, privateKey);
+            var keyRegistry = _scope.Resolve<IKeyRegistry>();
+            keyRegistry.AddItemToRegistry(KeyRegistryKey.DefaultKey, privateKey);
 
             keyStore.KeyStoreEncryptAsync(privateKey, KeyRegistryKey.DefaultKey).ConfigureAwait(false).GetAwaiter().GetResult();
         }

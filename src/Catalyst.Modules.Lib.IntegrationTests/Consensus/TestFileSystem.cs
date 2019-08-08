@@ -59,7 +59,14 @@ namespace Catalyst.Modules.Lib.IntegrationTests.Consensus
 
         public DirectoryInfo GetCatalystDataDir() { return _fileSystem.GetCatalystDataDir(); }
         public async Task<IFileInfo> WriteTextFileToCddAsync(string fileName, string contents) { return await _fileSystem.WriteTextFileToCddAsync(fileName, contents); }
-        public async Task<IFileInfo> WriteTextFileToCddSubDirectoryAsync(string fileName, string subDirectory, string contents) { return await _fileSystem.WriteTextFileToCddSubDirectoryAsync(fileName, subDirectory, contents); }
+
+        public async Task<IFileInfo> WriteTextFileToCddSubDirectoryAsync(string fileName,
+            string subDirectory,
+            string contents)
+        {
+            return await _fileSystem.WriteTextFileToCddSubDirectoryAsync(fileName, subDirectory, contents);
+        }
+
         public bool DataFileExists(string fileName) { return _fileSystem.DataFileExists(fileName); }
         public bool DataFileExistsInSubDirectory(string fileName, string subDirectory) { return _fileSystem.DataFileExistsInSubDirectory(fileName, subDirectory); }
         public string ReadTextFromCddFile(string fileName) { return _fileSystem.ReadTextFromCddFile(fileName); }
