@@ -37,9 +37,11 @@ using Catalyst.Protocol.Transaction;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Google.Protobuf;
+using Microsoft.Extensions.Caching.Memory;
 using Multiformats.Hash.Algorithms;
 using Nethereum.Hex.HexConvertors.Extensions;
 using NSubstitute;
+using NSubstitute.ReceivedExtensions;
 using Xunit;
 
 namespace Catalyst.Core.Lib.UnitTests.Modules.Consensus.Deltas
@@ -52,6 +54,7 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Consensus.Deltas
         private readonly IPeerIdentifier _producerId;
         private readonly byte[] _previousDeltaHash;
         private readonly CoinbaseEntry _zeroCoinbaseEntry;
+        private readonly IDeltaCache _cache;
 
         public DeltaBuilderTests()
         {
@@ -68,6 +71,8 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Consensus.Deltas
 
             _previousDeltaHash = Encoding.UTF8.GetBytes("previousDelta");
             _zeroCoinbaseEntry = new CoinbaseEntry {Amount = 0, PubKey = _producerId.PublicKey.ToByteString(), Version = 1};
+
+            _cache = Substitute.For<IDeltaCache>();
         }
 
         [Fact]
@@ -76,11 +81,13 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Consensus.Deltas
             var transactionRetriever = Substitute.For<IDeltaTransactionRetriever>();
             transactionRetriever.GetMempoolTransactionsByPriority().Returns(new List<TransactionBroadcast>());
             
-            var deltaBuilder = new DeltaBuilder(transactionRetriever, _randomFactory, _hashAlgorithm, _producerId);
+            var deltaBuilder = new DeltaBuilder(transactionRetriever, _randomFactory, _hashAlgorithm, _producerId, _cache);
 
             var candidate = deltaBuilder.BuildCandidateDelta(_previousDeltaHash);
 
             ValidateDeltaCandidate(candidate, _zeroCoinbaseEntry.ToByteArray());
+
+            _cache.Received(1).AddLocalDelta(Arg.Is(candidate), Arg.Any<Delta>());
         }
 
         [Fact]
@@ -102,10 +109,12 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Consensus.Deltas
             var transactionRetriever = Substitute.For<IDeltaTransactionRetriever>();
             transactionRetriever.GetMempoolTransactionsByPriority().Returns(invalidTransactionList);
 
-            var deltaBuilder = new DeltaBuilder(transactionRetriever, _randomFactory, _hashAlgorithm, _producerId);
+            var deltaBuilder = new DeltaBuilder(transactionRetriever, _randomFactory, _hashAlgorithm, _producerId, _cache);
             var candidate = deltaBuilder.BuildCandidateDelta(_previousDeltaHash);
 
             ValidateDeltaCandidate(candidate, _zeroCoinbaseEntry.ToByteArray());
+
+            _cache.Received(1).AddLocalDelta(Arg.Is(candidate), Arg.Any<Delta>());
         }
 
         [Fact]
@@ -160,10 +169,12 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Consensus.Deltas
             var expectedBytesToHash = shuffledEntriesBytes.Concat(signaturesInOrder)
                .Concat(expectedCoinBase.ToByteArray()).ToArray();
 
-            var deltaBuilder = new DeltaBuilder(transactionRetriever, _randomFactory, _hashAlgorithm, _producerId);
+            var deltaBuilder = new DeltaBuilder(transactionRetriever, _randomFactory, _hashAlgorithm, _producerId, _cache);
             var candidate = deltaBuilder.BuildCandidateDelta(_previousDeltaHash);
 
             ValidateDeltaCandidate(candidate, expectedBytesToHash);
+
+            _cache.Received(1).AddLocalDelta(Arg.Is(candidate), Arg.Any<Delta>());
         }
 
         private void ValidateDeltaCandidate(CandidateDeltaBroadcast candidate, byte[] expectedBytesToHash)
