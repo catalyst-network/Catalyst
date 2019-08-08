@@ -38,6 +38,7 @@ using Catalyst.TestUtils;
 using FluentAssertions;
 using Google.Protobuf;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Xunit;
 
@@ -45,16 +46,20 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Messaging.Correlation
 {
     public sealed class PeerMessageCorrelationManagerTests : MessageCorrelationManagerTests<IPeerMessageCorrelationManager>
     {
+        private readonly TestScheduler _testScheduler;
         private readonly Dictionary<IPeerIdentifier, int> _reputationByPeerIdentifier;
 
         public PeerMessageCorrelationManagerTests()
         {
+            _testScheduler = new TestScheduler();
+
             var subbedRepManager = Substitute.For<IReputationManager>();
             
             CorrelationManager = new PeerMessageCorrelationManager(subbedRepManager,
                 Cache,
                 SubbedLogger,
-                ChangeTokenProvider
+                ChangeTokenProvider,
+                _testScheduler
             );
 
             _reputationByPeerIdentifier = PeerIds.ToDictionary(p => p, p => 0);
@@ -95,7 +100,9 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Messaging.Correlation
 
             var request = CorrelationManager.TryMatchResponse(responseMatchingIndex1);
             request.Should().BeTrue();
-            
+
+            _testScheduler.Start();
+
             var reputationAfter = _reputationByPeerIdentifier[PeerIds[1]];
             reputationAfter.Should().BeGreaterThan(reputationBefore);
 
@@ -112,6 +119,9 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Messaging.Correlation
                 CorrelationId.GenerateCorrelationId());
 
             CorrelationManager.TryMatchResponse(responseMatchingIndex1);
+
+            _testScheduler.Start();
+
             var reputationAfter = _reputationByPeerIdentifier[PeerIds[1]];
             reputationAfter.Should().BeLessThan(reputationBefore);
         }
@@ -124,8 +134,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Messaging.Correlation
                 var firstCorrelationId = PendingRequests[0].Content.CorrelationId;
                 FireEvictionCallBackByCorrelationId(firstCorrelationId);
 
-                await TaskHelper.WaitForAsync(() => observer.ReceivedCalls().Any(), TimeSpan.FromSeconds(2))
-                   .ConfigureAwait(false);
+                _testScheduler.Start();
 
                 observer.Received(1).OnNext(Arg.Is<IPeerReputationChange>(c => c.PeerIdentifier.PeerId.Equals(PendingRequests[0].Content.PeerId) 
                  && c.ReputationEvent.Equals(ReputationEvents.NoResponseReceived)));

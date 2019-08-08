@@ -43,6 +43,7 @@ using NSubstitute;
 using Serilog;
 using System.IO;
 using Catalyst.Protocol;
+using Microsoft.Reactive.Testing;
 using Xunit;
 using PendingRequest = Catalyst.Common.IO.Messaging.Correlation.CorrelatableMessage<Catalyst.Protocol.Common.ProtocolMessage>;
 
