@@ -40,7 +40,7 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
         public ChangeDataFolderResponseObserver(ILogger logger)
             : base(logger) { }
 
-        protected override void HandleResponse(SetPeerDataFolderResponse getPeerCountResponse,
+        protected override void HandleResponse(SetPeerDataFolderResponse setPeerDataFolderResponse,
             IChannelHandlerContext channelHandlerContext,
             IPeerIdentifier senderPeerIdentifier,
             ICorrelationId correlationId) { }
