@@ -51,7 +51,6 @@ namespace Catalyst.Cli.Commands
         public CommandContext(IConfigurationRoot config,
             ILogger logger,
             IUserOutput userOutput,
-            IPeerIdClientId peerIdClientId,
             IDtoFactory dtoFactory,
             INodeRpcClientFactory nodeRpcClientFactory,
             ICertificateStore certificateStore,
@@ -62,8 +61,7 @@ namespace Catalyst.Cli.Commands
 
             SocketClientRegistry = new SocketClientRegistry<INodeRpcClient>();
             DtoFactory = dtoFactory;
-            PeerIdClientId = peerIdClientId;
-            PeerIdentifier = Common.P2P.PeerIdentifier.BuildPeerIdFromConfig(config, userOutput, keyRegistry, peerIdClientId);
+            PeerIdentifier = Common.P2P.PeerIdentifier.BuildPeerIdFromConfig(config, userOutput, keyRegistry);
             NodeRpcClientFactory = nodeRpcClientFactory;
             CertificateStore = certificateStore;
             UserOutput = userOutput;
@@ -78,9 +76,7 @@ namespace Catalyst.Cli.Commands
         public ICertificateStore CertificateStore { get; }
 
         public IUserOutput UserOutput { get; }
-
-        public IPeerIdClientId PeerIdClientId { get; }
-
+        
         public ISocketClientRegistry<INodeRpcClient> SocketClientRegistry { get; }
 
         /// <inheritdoc cref="GetConnectedNode" />
