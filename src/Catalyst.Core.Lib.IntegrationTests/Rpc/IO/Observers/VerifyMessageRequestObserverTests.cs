@@ -133,7 +133,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.Rpc.IO.Observers
             var verifyResponseMessage = sentResponseDto.FromIMessageDto().FromProtocolMessage<VerifyMessageResponse>();
 
             verifyResponseMessage.IsSignedByKey.Should().Be(expectedResult);
-            */
+
         }
 
         protected override void Dispose(bool disposing)
