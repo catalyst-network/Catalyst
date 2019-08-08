@@ -45,6 +45,7 @@ using Catalyst.Common.Interfaces.Registry;
 using Catalyst.Common.Interfaces.Repository;
 using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.P2P;
+using Catalyst.Common.P2P.Models;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
 using Catalyst.Modules.Lib.Dfs;
 using Catalyst.TestUtils;

@@ -40,13 +40,5 @@ namespace Catalyst.Common.Interfaces.Modules.Consensus.Deltas
         /// <returns>Returns a candidate delta object that contains the hash for the update,
         /// the hash for the previous delta and the producer's PeerId</returns>
         CandidateDeltaBroadcast BuildCandidateDelta(byte[] previousDeltaHash);
-
-        /// <summary>
-        /// Adds the delta built for the cycle succeeding <param name="previousDeltaHash" /> to a cache.
-        /// Once a delta has been elected, this cache can be queried to try and retrieve the full content
-        /// and post it on the DFS.
-        /// </summary>
-        /// <param name="previousDeltaHash">The content based address of the previous delta on the Dfs.</param>
-        Delta TryFindCachedBuiltDelta(byte[] previousDeltaHash);
     }
 }

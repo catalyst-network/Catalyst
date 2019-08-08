@@ -32,7 +32,7 @@ namespace Catalyst.Common.P2P
     /// </summary>
     public sealed class PeerIdClientId : IPeerIdClientId
     {
-        public PeerIdClientId(string clientVersion = "AC")
+        public PeerIdClientId(string clientVersion)
         {
             var assemblyMajorVersion2Digits = Assembly.GetExecutingAssembly().GetName().Version.Major.ToString("D2");
             AssemblyMajorVersion = Encoding.UTF8.GetBytes(assemblyMajorVersion2Digits);

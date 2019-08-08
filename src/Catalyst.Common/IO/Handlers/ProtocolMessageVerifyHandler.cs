@@ -44,8 +44,7 @@ namespace Catalyst.Common.IO.Handlers
             if (!Verify(signedMessage))
             {
                 Logger.Warning("Failed to verify {msg} signature.", signedMessage);
-                if (!Verify(signedMessage))
-                    return;
+                return;
             }
 
             if (signedMessage.Message.IsBroadCastMessage())

@@ -126,9 +126,6 @@ namespace Catalyst.Core.Lib.Modules.Consensus.Deltas
             return candidate;
         }
 
-        ///<inheritdoc />
-        public Delta TryFindCachedBuiltDelta(byte[] previousDeltaHash) { throw new NotImplementedException(); }
-
         private IEnumerable<byte> GetSaltFromPreviousDelta(byte[] previousDeltaHash)
         {
             var isaac = _randomFactory.GetDeterministicRandomFromSeed(previousDeltaHash);

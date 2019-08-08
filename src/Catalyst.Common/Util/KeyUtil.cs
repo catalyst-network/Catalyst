@@ -38,8 +38,7 @@ namespace Catalyst.Common.Util
         public static byte[] KeyToBytes(this string base58Key)
         {
             var publicKeyMultiHash = Multihash.Parse(base58Key.Trim());
-            var rawPublicKeyBytes = publicKeyMultiHash.ToBytes().Slice(2, publicKeyMultiHash.ToBytes().Length)
-               .Concat(Enumerable.Repeat((byte) 0, FFI.PublicKeyLength)).Take(FFI.PublicKeyLength).ToArray();
+            var rawPublicKeyBytes = publicKeyMultiHash.ToBytes().Slice(2, publicKeyMultiHash.ToBytes().Length);
             return rawPublicKeyBytes;
         }
     }

@@ -30,9 +30,9 @@ namespace Catalyst.Common.Interfaces.Modules.Consensus.Deltas
 {
     /// <summary>
     /// For lack of a better name, this <see cref="IDeltaHub"/> is meant to be the service used to
-    /// publish new candidate deltas get notified about the election of a
-    /// new delta on the Dfs, etc. It is basically the interface between the node and the rest of the
-    /// network, through which all delta related messages should be passed.
+    /// publish new candidate deltas, favourite deltas, or publish newly elected deltas
+    /// on the Dfs, etc. It is basically the outbound interface between the node and the rest of the
+    /// network, through which all delta building related messages should be broadcast.
     /// </summary>
     public interface IDeltaHub
     {
