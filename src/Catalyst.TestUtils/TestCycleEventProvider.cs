@@ -26,7 +26,6 @@ using Catalyst.Common.Interfaces.Modules.Consensus;
 using Catalyst.Common.Interfaces.Modules.Consensus.Cycle;
 using Catalyst.Common.Interfaces.Modules.Consensus.Deltas;
 using Catalyst.Common.Modules.Consensus.Cycle;
-using Catalyst.Common.Util;
 using Catalyst.Core.Lib.Modules.Consensus.Cycle;
 using Microsoft.Reactive.Testing;
 using Multiformats.Hash;
@@ -35,9 +34,10 @@ using Serilog;
 
 namespace Catalyst.TestUtils
 {
-    public class TestCycleEventProvider : ICycleEventsProvider
+    public class TestCycleEventProvider : ICycleEventsProvider, IDisposable
     {
         private readonly ICycleEventsProvider _cycleEventsProvider;
+        private readonly IDisposable _deltaUpdatesSubscription;
 
         public TestCycleEventProvider(ILogger logger = null)
         {
@@ -48,17 +48,17 @@ namespace Catalyst.TestUtils
 
             var dateTimeProvider = Substitute.For<IDateTimeProvider>();
             var deltaHashProvider = Substitute.For<IDeltaHashProvider>();
-            var logger1 = logger ?? Substitute.For<ILogger>();
-
-            deltaHashProvider.GetLatestDeltaHash(Arg.Any<DateTime>())
-               .Returns(Multihash.Sum(HashType.ID, ByteUtil.GenerateRandomByteArray(32)));
 
             dateTimeProvider.UtcNow.Returns(_ => Scheduler.Now.DateTime);
 
             _cycleEventsProvider = new CycleEventsProvider(
-                CycleConfiguration.Default, dateTimeProvider, schedulerProvider, deltaHashProvider, logger1);
+                CycleConfiguration.Default, dateTimeProvider, schedulerProvider, deltaHashProvider, logger ?? Substitute.For<ILogger>());
 
-            PhaseChanges.Subscribe(p => CurrentPhase = p);
+            deltaHashProvider.GetLatestDeltaHash(Arg.Any<DateTime>())
+               .Returns(ci => Multihash.Sum(HashType.BLAKE2B_256, 
+                    BitConverter.GetBytes(((DateTime) ci[0]).Ticks / (int) _cycleEventsProvider.Configuration.CycleDuration.Ticks)));
+
+            _deltaUpdatesSubscription = PhaseChanges.Subscribe(p => CurrentPhase = p);
         }
 
         public ICycleConfiguration Configuration => _cycleEventsProvider.Configuration;
@@ -73,8 +73,22 @@ namespace Catalyst.TestUtils
         {
             var offset = GetTimeSpanUntilNextCycleStart()
                .Add(Configuration.TimingsByName[phaseName].Offset)
-               .Add(TimeSpan.FromTicks(1));
+               .Add(TimeSpan.FromTicks(100));
+
             Scheduler.AdvanceBy(offset.Ticks);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _deltaUpdatesSubscription?.Dispose();
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
         }
     }
 }

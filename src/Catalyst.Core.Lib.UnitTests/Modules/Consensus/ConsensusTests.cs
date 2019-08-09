@@ -21,19 +21,19 @@
 
 #endregion
 
-using Catalyst.Common.Extensions;
+using System;
+using System.Linq;
 using Catalyst.Common.Interfaces.Modules.Consensus.Deltas;
 using Catalyst.Common.Modules.Consensus.Cycle;
-using Catalyst.Protocol;
+using Catalyst.Protocol.Deltas;
 using Catalyst.TestUtils;
-using Multiformats.Hash;
-using Multiformats.Hash.Algorithms;
 using NSubstitute;
 using Serilog;
+using Xunit;
 
 namespace Catalyst.Core.Lib.UnitTests.Modules.Consensus
 {
-    public class ConsensusTests
+    public class ConsensusTests : IDisposable
     {
         private readonly IDeltaBuilder _deltaBuilder;
         private readonly IDeltaVoter _deltaVoter;
@@ -43,7 +43,6 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Consensus
         private readonly ILogger _logger;
         private readonly TestCycleEventProvider _cycleEventProvider;
         private readonly Lib.Modules.Consensus.Consensus _consensus;
-        private readonly Multihash _previousDeltaHash;
 
         public ConsensusTests()
         {
@@ -57,18 +56,137 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Consensus
             _consensus = new Lib.Modules.Consensus.Consensus(
                 _deltaBuilder, 
                 _deltaVoter, 
-                _deltaElector, 
+                _deltaElector,
                 _deltaCache,
                 _deltaHub, 
                 _cycleEventProvider, 
                 _logger);
 
-            _previousDeltaHash = "previousDelta".ToUtf8ByteString().ComputeMultihash(new BLAKE2B_256());
+            _consensus.StartProducing();
         }
 
-        public void StartProducing_Should_Trigger_BuildDeltaCandidate_On_Construction_Producing_Phase()
+        private byte[] PreviousDeltaBytes => _cycleEventProvider.CurrentPhase.PreviousDeltaDfsHash.ToBytes();
+
+        [Fact]
+        public void ConstructionProducingSubscription_Should_Trigger_BuildDeltaCandidate_On_Construction_Producing_Phase()
         {
+            var builtCandidate = DeltaHelper.GetCandidateDelta();
+            _deltaBuilder.BuildCandidateDelta(Arg.Any<byte[]>()).Returns(builtCandidate);
+            
             _cycleEventProvider.MovePastNextPhase(PhaseName.Construction);
+
+            _deltaBuilder.Received(1).BuildCandidateDelta(
+                Arg.Is<byte[]>(b => b.SequenceEqual(PreviousDeltaBytes)));
+            _deltaHub.Received(1).BroadcastCandidate(Arg.Is(builtCandidate));
+        }
+
+        [Fact]
+        public void CampaigningProductionSubscription_Should_Trigger_TryGetFavouriteDelta_On_Campaigning_Producing_Phase()
+        {
+            var favourite = DeltaHelper.GetFavouriteDelta();
+            _deltaVoter.TryGetFavouriteDelta(Arg.Any<byte[]>(), out Arg.Any<FavouriteDeltaBroadcast>())
+               .Returns(ci =>
+                {
+                    ci[1] = favourite;
+                    return true;
+                });
+
+            _cycleEventProvider.MovePastNextPhase(PhaseName.Campaigning);
+
+            _deltaVoter.Received(1).TryGetFavouriteDelta(
+                Arg.Is<byte[]>(b => b.SequenceEqual(PreviousDeltaBytes)), 
+                out Arg.Any<FavouriteDeltaBroadcast>());
+            _deltaHub.Received(1).BroadcastFavouriteCandidateDelta(Arg.Is(favourite));
+        }
+
+        [Fact]
+        public void CampaigningProductionSubscription_Should_Not_Broadcast_On_TryGetFavouriteDelta_Null()
+        {
+            _deltaVoter.TryGetFavouriteDelta(Arg.Any<byte[]>(), out Arg.Any<FavouriteDeltaBroadcast>())
+               .Returns(ci =>
+                {
+                    ci[1] = null;
+                    return false;
+                });
+
+            _cycleEventProvider.MovePastNextPhase(PhaseName.Campaigning);
+
+            _deltaVoter.Received(1).TryGetFavouriteDelta(
+                Arg.Is<byte[]>(b => b.SequenceEqual(PreviousDeltaBytes)),
+                out Arg.Any<FavouriteDeltaBroadcast>());
+
+            _deltaHub.DidNotReceiveWithAnyArgs().BroadcastFavouriteCandidateDelta(default);
+        }
+
+        [Fact]
+        public void VotingProductionSubscription_Should_Hit_Cache_And_Publish_To_Dfs()
+        {
+            var popularCandidate = DeltaHelper.GetCandidateDelta();
+            var localDelta = DeltaHelper.GetDelta();
+
+            _deltaElector.GetMostPopularCandidateDelta(Arg.Any<byte[]>())
+               .Returns(popularCandidate);
+            _deltaCache.TryGetLocalDelta(Arg.Any<CandidateDeltaBroadcast>(), out Arg.Any<Delta>())
+               .Returns(ci =>
+                {
+                    ci[1] = localDelta;
+                    return true;
+                });
+
+            _cycleEventProvider.MovePastNextPhase(PhaseName.Voting);
+            _cycleEventProvider.Scheduler.Stop();
+
+            _deltaElector.Received(1).GetMostPopularCandidateDelta(
+                Arg.Is<byte[]>(b => b.SequenceEqual(PreviousDeltaBytes)));
+
+            _deltaCache.Received(1).TryGetLocalDelta(popularCandidate, out _);
+            _deltaHub.Received(1).PublishDeltaToDfsAsync(localDelta);
+        }
+
+        [Fact]
+        public void VotingProductionSubscription_Should_Not_Hit_Cache_Or_Publish_To_Dfs_On_GetMostPopularCandidateDelta_Null()
+        {
+            _deltaElector.GetMostPopularCandidateDelta(Arg.Any<byte[]>())
+               .Returns((CandidateDeltaBroadcast) null);
+
+            _cycleEventProvider.MovePastNextPhase(PhaseName.Voting);
+            _cycleEventProvider.Scheduler.Stop();
+
+            _deltaElector.Received(1).GetMostPopularCandidateDelta(
+                Arg.Is<byte[]>(b => b.SequenceEqual(PreviousDeltaBytes)));
+
+            _deltaCache.DidNotReceiveWithAnyArgs().TryGetLocalDelta(default, out _);
+            _deltaHub.DidNotReceiveWithAnyArgs().PublishDeltaToDfsAsync(default);
+        }
+
+        [Fact]
+        public void VotingProductionSubscription_Should_Not_Publish_To_Dfs_On_GetMostPopularCandidateDelta_Null()
+        {
+            var popularCandidate = DeltaHelper.GetCandidateDelta();
+
+            _deltaElector.GetMostPopularCandidateDelta(Arg.Any<byte[]>())
+               .Returns(popularCandidate);
+            _deltaCache.TryGetLocalDelta(Arg.Any<CandidateDeltaBroadcast>(), out Arg.Any<Delta>())
+               .Returns(ci =>
+                {
+                    ci[1] = null;
+                    return false;
+                });
+
+            _cycleEventProvider.MovePastNextPhase(PhaseName.Voting);
+            _cycleEventProvider.Scheduler.Stop();
+
+            _deltaElector.Received(1).GetMostPopularCandidateDelta(
+                Arg.Is<byte[]>(b => b.SequenceEqual(PreviousDeltaBytes)));
+
+            _deltaCache.Received(1).TryGetLocalDelta(popularCandidate, out _);
+            _deltaHub.DidNotReceiveWithAnyArgs().PublishDeltaToDfsAsync(default);
+        }
+
+        public void Dispose()
+        {
+            _cycleEventProvider?.Dispose();
+            _consensus?.Dispose();
         }
     }
 }
