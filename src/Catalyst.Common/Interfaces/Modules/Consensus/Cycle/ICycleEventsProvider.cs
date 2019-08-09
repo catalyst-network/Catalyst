@@ -42,6 +42,12 @@ namespace Catalyst.Common.Interfaces.Modules.Consensus.Cycle
         IObservable<IPhase> PhaseChanges { get; }
 
         /// <summary>
+        /// Use this method to find out in how much time the next production cycle will start.
+        /// </summary>
+        /// <returns>A TimeSpan representing the time to wait until next delta production cycle starts.</returns>
+        TimeSpan GetTimeSpanUntilNextCycleStart();
+
+        /// <summary>
         /// Terminate the emission of state changes events on the <see cref="PhaseChanges"/> stream
         /// </summary>
         void Close();
