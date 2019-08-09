@@ -123,12 +123,12 @@ namespace Catalyst.Common.P2P
         }
 
         public PeerIdentifier(IPeerSettings settings) : this(settings.PublicKey.KeyToBytes(), 
-            new IPEndPoint(settings.BindAddress, settings.Port)) { }
+            new IPEndPoint(settings.PublicAddress, settings.Port)) { }
 
         public PeerIdentifier(IPeerSettings settings, IKeyRegistry registry, IUserOutput userOutput)
             : this(
                 GetIfRegistryContainsPublicKey(settings.PublicKey.KeyToBytes(), registry, userOutput), 
-                new IPEndPoint(settings.BindAddress.MapToIPv4(), settings.Port)) { }
+                new IPEndPoint(settings.PublicAddress.MapToIPv4(), settings.Port)) { }
 
         public PeerIdentifier(IEnumerable<byte> publicKey, IPAddress ipAddress, int port)
             : this(publicKey, EndpointBuilder.BuildNewEndPoint(ipAddress, port)) { }

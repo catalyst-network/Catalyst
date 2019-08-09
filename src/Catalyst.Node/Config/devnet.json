@@ -5,6 +5,7 @@
             "PublicKey": "1AemkEe4z3rZHr7RWSUyZHPuVozyCQnT1H7SfpzcGCQRuT",
             "Port": 42076,
             "BindAddress": "127.0.0.1",
+            "PublicAddress":  "127.0.0.1", 
             "DnsServers": [
                 "127.0.0.1:5053"
             ],
