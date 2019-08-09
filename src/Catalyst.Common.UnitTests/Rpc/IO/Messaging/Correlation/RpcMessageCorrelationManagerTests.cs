@@ -23,94 +23,57 @@
 
 using System;
 using System.Linq;
-using System.Threading;
-using Catalyst.Common.Extensions;
-using Catalyst.Common.Interfaces.Util;
-using Catalyst.Common.IO.Messaging.Correlation;
+using System.Threading.Tasks;
+using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
+using Catalyst.Common.Interfaces.Rpc.IO.Messaging.Correlation;
 using Catalyst.Common.Rpc.IO.Messaging.Correlation;
+using Catalyst.Common.UnitTests.IO.Messaging.Correlation;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
-using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Primitives;
-using Microsoft.Reactive.Testing;
 using NSubstitute;
-using Serilog;
 using Xunit;
 
 namespace Catalyst.Common.UnitTests.Rpc.IO.Messaging.Correlation
 {
-    public sealed class RpcMessageCorrelationManagerTests
+    public sealed class RpcMessageCorrelationManagerTests : MessageCorrelationManagerTests<IRpcMessageCorrelationManager>
     {
         public RpcMessageCorrelationManagerTests()
         {
-            _testScheduler = new TestScheduler();
-            _memoryCache = Substitute.For<IMemoryCache>();
-            var logger = Substitute.For<ILogger>();
-            var changeTokenProvider = Substitute.For<IChangeTokenProvider>();
+            CorrelationManager = new RpcMessageCorrelationManager(Cache,
+                SubbedLogger,
+                ChangeTokenProvider
+            );
 
-            var expirationMinutes = 60;
-            //var expirationTime = DateTime.Now.AddMinutes(expirationMinutes);
-            var expirationToken = new CancellationChangeToken(
-                new CancellationTokenSource(TimeSpan.FromMinutes(expirationMinutes + .01)).Token);
-            changeTokenProvider.GetChangeToken().Returns(expirationToken);
-
-            _rpcMessageCorrelationManager =
-                new RpcMessageCorrelationManager(_memoryCache, logger, changeTokenProvider, _testScheduler);
+            PrepareCacheWithPendingRequests<GetInfoRequest>();
         }
 
-        private readonly TestScheduler _testScheduler;
-
-        private readonly IMemoryCache _memoryCache;
-
-        private readonly RpcMessageCorrelationManager _rpcMessageCorrelationManager;
-
         [Fact]
-        public void Dispose_Should_Dispose_RpcMessageCorrelationManager() { _rpcMessageCorrelationManager.Dispose(); }
-
-        [Fact]
-        public void Message_Eviction_Should_Cause_Eviction_Event()
+        public void TryMatchResponseAsync_Should_Match_Existing_Records_With_Matching_Correlation_Id()
         {
-            var peerIds = new[]
+            TryMatchResponseAsync_Should_Match_Existing_Records_With_Matching_Correlation_Id<GetInfoResponse>();
+        }
+
+        [Fact]
+        public void TryMatchResponseAsync_Should_Not_Match_Existing_Records_With_Non_Matching_Correlation_Id()
+        {
+            TryMatchResponseAsync_Should_Not_Match_Existing_Records_With_Non_Matching_Correlation_Id<GetInfoResponse>();
+        }
+
+        protected override async Task CheckCacheEntriesCallback()
+        {
+            var observer = Substitute.For<IObserver<ICacheEvictionEvent<ProtocolMessage>>>();
+            using (CorrelationManager.EvictionEvents.Subscribe(observer))
             {
-                PeerIdentifierHelper.GetPeerIdentifier("peer1"),
-                PeerIdentifierHelper.GetPeerIdentifier("peer2"),
-                PeerIdentifierHelper.GetPeerIdentifier("peer3")
-            };
+                var firstCorrelationId = PendingRequests[0].Content.CorrelationId;
+                FireEvictionCallBackByCorrelationId(firstCorrelationId);
 
-            var pendingRequests = peerIds.Select((p, i) => new CorrelatableMessage<ProtocolMessage>
-            {
-                Content = new VersionRequest().ToProtocolMessage(PeerIdHelper.GetPeerId("sender"),
-                    CorrelationId.GenerateCorrelationId()),
-                Recipient = p,
-                SentAt = DateTimeOffset.MinValue.Add(TimeSpan.FromMilliseconds(100 * i))
-            }).ToList();
+                await TaskHelper.WaitForAsync(() => observer.ReceivedCalls().Any(), TimeSpan.FromSeconds(2));
 
-            pendingRequests.ForEach(pendingRequest =>
-            {
-                _rpcMessageCorrelationManager.AddPendingRequest(pendingRequest);
-            });
-
-            pendingRequests.ForEach(pendingRequest =>
-            {
-                _rpcMessageCorrelationManager.TryMatchResponse(pendingRequest.Content);
-            });
-
-            _rpcMessageCorrelationManager.EvictionEvents.Subscribe(response =>
-            {
-                var a = 0;
-            });
-
-            _testScheduler.Start();
-
-            var b = 0;
+                observer.Received(1).OnNext(Arg.Is<ICacheEvictionEvent<ProtocolMessage>>(p =>
+                    p.EvictedContent.CorrelationId == firstCorrelationId
+                 && p.PeerIdentifier.PeerId.Equals(PendingRequests[0].Content.PeerId)));
+            }
         }
     }
 }
-
-//_memoryCache.TryGetValue(pendingRequest.Content.CorrelationId, out Arg.Any<object>())
-//                  .Returns(ci =>
-//                   {
-//                       ci[1] = pendingRequest;
-//                       return true;
-//                   });
