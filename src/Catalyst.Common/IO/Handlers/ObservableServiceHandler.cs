@@ -22,8 +22,10 @@
 #endregion
 
 using System;
+using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
+using System.Threading;
 using Catalyst.Common.Interfaces.IO.Handlers;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.IO.Messaging.Dto;
@@ -38,28 +40,24 @@ namespace Catalyst.Common.IO.Handlers
     /// </summary>
     public sealed class ObservableServiceHandler : InboundChannelHandlerBase<ProtocolMessage>, IObservableServiceHandler
     {
-        public IObservable<IObserverDto<ProtocolMessage>> MessageStream => _messageSubject.AsObservable();
+        private readonly ReplaySubject<IObserverDto<ProtocolMessage>> _messageSubject;
 
-        private readonly ReplaySubject<IObserverDto<ProtocolMessage>> _messageSubject 
-            = new ReplaySubject<IObserverDto<ProtocolMessage>>(1);
-
-        /// <summary>
-        ///     Reads the channel once accepted and pushed into a stream.
-        /// </summary>
-        /// <param name="ctx"></param>
-        /// <param name="message"></param>
-        protected override void ChannelRead0(IChannelHandlerContext ctx, ProtocolMessage message)
+        public ObservableServiceHandler(IScheduler scheduler = null)
         {
-            Logger.Verbose("Received {message}", message);
-            var contextAny = new ObserverDto(ctx, message);
-            _messageSubject.OnNext(contextAny);
-            ctx.FireChannelRead(message);
+            var observableScheduler = scheduler ?? Scheduler.Default;
+            _messageSubject = new ReplaySubject<IObserverDto<ProtocolMessage>>(1, observableScheduler);
+            MessageStream = _messageSubject.AsObservable();
         }
-        
+
+        public override bool IsSharable => true;
+
+        public IObservable<IObserverDto<ProtocolMessage>> MessageStream { get; }
+
         public override void ExceptionCaught(IChannelHandlerContext context, Exception e)
         {
             Logger.Error(e, "Error in ObservableServiceHandler");
-            context.CloseAsync().ContinueWith(_ => _messageSubject.OnError(e));
+            context.CloseAsync();
+            _messageSubject.OnError(e);
         }
 
         private void Dispose(bool disposing)
@@ -75,6 +73,17 @@ namespace Catalyst.Common.IO.Handlers
             Dispose(true);
         }
 
-        public override bool IsSharable => true;
+        /// <summary>
+        ///     Reads the channel once accepted and pushed into a stream.
+        /// </summary>
+        /// <param name="ctx"></param>
+        /// <param name="message"></param>
+        protected override void ChannelRead0(IChannelHandlerContext ctx, ProtocolMessage message)
+        {
+            Logger.Verbose("Received {message}", message);
+            var contextAny = new ObserverDto(ctx, message);
+            _messageSubject.OnNext(contextAny);
+            ctx.FireChannelRead(message);
+        }
     }
 }
