@@ -143,7 +143,13 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
             {
                 // This means the user of this method is the broadcast originator
                 // Required to wrap his own message in a signature
-                var signature = _signer.Sign(message.ToByteArray());
+                var signingContext = new SigningContext
+                {
+                    Network = Protocol.Common.Network.Devnet,
+                    SignatureType = SignatureType.ProtocolPeer
+                };
+
+                var signature = _signer.Sign(message.ToByteArray(), signingContext);
                 var protocolMessageSigned = new ProtocolMessageSigned
                 {
                     Signature = signature.SignatureBytes.ToByteString(),

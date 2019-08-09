@@ -29,6 +29,7 @@ using Catalyst.Common.Keystore;
 using Catalyst.Common.Registry;
 using Catalyst.Common.Util;
 using Catalyst.Cryptography.BulletProofs.Wrapper;
+using Catalyst.Protocol.Common;
 using Catalyst.TestUtils;
 using Multiformats.Hash.Algorithms;
 using NSubstitute;
@@ -77,7 +78,7 @@ namespace Catalyst.Common.IntegrationTests.Modules.KeySigner
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void KeySigner_Can_Sign_If_There_Is_No_Keystore_File()
         {
-            _keySigner.Sign(Encoding.UTF8.GetBytes("sign this plz"));
+            _keySigner.Sign(Encoding.UTF8.GetBytes("sign this plz"), new SigningContext());
         }
 
         [Fact]
@@ -85,7 +86,7 @@ namespace Catalyst.Common.IntegrationTests.Modules.KeySigner
         public void KeySigner_Can_Sign_If_There_Is_An_Existing_Keystore_File()
         {
             Ensure_A_KeyStore_File_Exists();
-            _keySigner.Sign(Encoding.UTF8.GetBytes("sign this plz"));
+            _keySigner.Sign(Encoding.UTF8.GetBytes("sign this plz"), new SigningContext());
         }
     }
 }

@@ -75,15 +75,15 @@ namespace Catalyst.Common.Cryptography
         }
 
         /// <inheritdoc />
-        public ISignature Sign(IPrivateKey privateKey, ReadOnlySpan<byte> message)
+        public ISignature Sign(IPrivateKey privateKey, ReadOnlySpan<byte> message, ReadOnlySpan<byte> context)
         {
-            return _wrapper.StdSign(privateKey, message.ToArray());
+            return _wrapper.StdSign(privateKey, message.ToArray(), context.ToArray());
         }
 
         /// <inheritdoc />
-        public bool Verify(ISignature signature, ReadOnlySpan<byte> message)
+        public bool Verify(ISignature signature, ReadOnlySpan<byte> message, ReadOnlySpan<byte> context)
         {
-            return _wrapper.StdVerify(signature, message.ToArray());
+            return _wrapper.StdVerify(signature, message.ToArray(), context.ToArray());
         }
 
         /// <inheritdoc />
@@ -97,5 +97,8 @@ namespace Catalyst.Common.Cryptography
         public int PublicKeyLength => _wrapper.PublicKeyLength;
 
         public int SignatureLength => _wrapper.SignatureLength;
+
+        public int SignatureContextMaxLength => _wrapper.SignatureContextMaxLength;
     }
+
 }
