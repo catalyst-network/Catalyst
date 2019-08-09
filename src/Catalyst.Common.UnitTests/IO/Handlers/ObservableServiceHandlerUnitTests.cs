@@ -35,9 +35,11 @@ namespace Catalyst.Common.UnitTests.IO.Handlers
     {
         public ObservableServiceHandlerUnitTests()
         {
-            var testScheduler = new TestScheduler();
-            _observableServiceHandler = new ObservableServiceHandler(testScheduler);
+            _testScheduler = new TestScheduler();
+            _observableServiceHandler = new ObservableServiceHandler(_testScheduler);
         }
+
+        private readonly TestScheduler _testScheduler;
 
         private readonly ObservableServiceHandler _observableServiceHandler;
 
@@ -49,12 +51,16 @@ namespace Catalyst.Common.UnitTests.IO.Handlers
         {
             var channelHandlerContext = Substitute.For<IChannelHandlerContext>();
             var exception = new NotImplementedException("X.X");
-
+            Exception exceptionResponse = null;
             _observableServiceHandler.MessageStream.Subscribe(
                 nextResponse => { },
-                errorResponse => { exception.Should().Be(errorResponse); });
+                response => exceptionResponse = response);
 
             _observableServiceHandler.ExceptionCaught(channelHandlerContext, exception);
+
+            _testScheduler.Start();
+
+            exception.Should().Be(exceptionResponse);
         }
     }
 }
