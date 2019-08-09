@@ -21,6 +21,7 @@
 
 #endregion
 
+using System.Linq;
 using BinaryEncoding;
 using Multiformats.Base;
 using Multiformats.Hash;
@@ -41,7 +42,7 @@ namespace Catalyst.Common.Util
             var offset = Binary.Varint.Read(buf, 0, out uint _);
             offset += Binary.Varint.Read(buf, offset, out uint _);
             
-            var rawPublicKeyBytes = publicKeyMultiHash.ToBytes().Slice(offset);
+            var rawPublicKeyBytes = publicKeyMultiHash.ToBytes().Skip(offset).ToArray();
             return rawPublicKeyBytes;
         }
     }
