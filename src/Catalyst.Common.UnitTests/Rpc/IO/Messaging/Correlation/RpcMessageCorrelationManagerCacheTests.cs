@@ -118,7 +118,7 @@ namespace Catalyst.Common.UnitTests.Rpc.IO.Messaging.Correlation
             while (evictedEvents <= 0)
             {
                 _testScheduler.AdvanceBy(milliseconds);
-                await Task.Delay(milliseconds);
+                await Task.Delay(milliseconds).ConfigureAwait(false);
             }
 
             evictedEvents.Should().Be(3);
