@@ -42,7 +42,7 @@ using Xunit;
 
 namespace Catalyst.Common.UnitTests.Rpc.IO.Messaging.Correlation
 {
-    public sealed class RpcMessageCorrelationManagerCacheTests
+    public sealed class RpcMessageCorrelationManagerCacheTests : IDisposable
     {
         public RpcMessageCorrelationManagerCacheTests()
         {
@@ -122,6 +122,12 @@ namespace Catalyst.Common.UnitTests.Rpc.IO.Messaging.Correlation
             }
 
             evictedEvents.Should().Be(3);
+        }
+
+        public void Dispose()
+        {
+            _cancellationTokenSource?.Dispose();
+            _rpcMessageCorrelationManager?.Dispose();
         }
     }
 }
