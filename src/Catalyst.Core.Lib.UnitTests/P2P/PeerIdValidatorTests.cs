@@ -48,7 +48,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P
         {
             _output = output;
             _validPeerId = PeerIdHelper.GetPeerId();
-            _peerIdValidator = new PeerIdValidator(new CryptoContext(new CryptoWrapper()), new PeerIdClientId("AC"));
+            _peerIdValidator = new PeerIdValidator(new CryptoContext(new CryptoWrapper()));
         }
 
         [Fact]
@@ -59,8 +59,6 @@ namespace Catalyst.Core.Lib.UnitTests.P2P
             _output.WriteLine(string.Join(" ", _validPeerId.ToByteArray()));
             var fieldsInBytes = new[]
             {
-                _validPeerId.ClientId.ToByteArray(),
-                _validPeerId.ClientVersion.ToByteArray(),
                 _validPeerId.Ip.ToByteArray(), _validPeerId.Port.ToByteArray(),
                 _validPeerId.PublicKey.ToByteArray()
             };
@@ -111,31 +109,14 @@ namespace Catalyst.Core.Lib.UnitTests.P2P
         }
 
         [Theory]
-        [InlineData("20")]
-        [InlineData("I2")]
-        [InlineData("M+")]
-        public void Can_Throw_Argument_Exception_On_Invalid_Client_Id(string clientId)
+        [InlineData(200)]
+        [InlineData(201)]
+        [InlineData(-55)]
+        public void Can_Throw_Argument_Exception_On_Wrong_Client_Version(int version)
         {
             var invalidPeer = new PeerId(_validPeerId)
             {
-                ClientId = clientId.ToUtf8ByteString()
-            };
-
-            new Action(() => _peerIdValidator.ValidatePeerIdFormat(invalidPeer))
-               .Should().Throw<ArgumentException>().WithMessage("*ClientId*");
-        }
-
-        [Theory]
-        [InlineData("1")]
-        [InlineData("123")]
-        [InlineData("1.6")]
-        [InlineData("1.6.5")]
-        [InlineData("0.0.1")]
-        public void Can_Throw_Argument_Exception_On_Wrong_Client_Version(string version)
-        {
-            var invalidPeer = new PeerId(_validPeerId)
-            {
-                ClientVersion = version.ToUtf8ByteString()
+                ProtocolVersion = BitConverter.GetBytes(version).ToByteString()
             };
 
             new Action(() => _peerIdValidator.ValidatePeerIdFormat(invalidPeer))

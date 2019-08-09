@@ -36,6 +36,8 @@ using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Deltas;
 using Catalyst.TestUtils;
 using FluentAssertions;
+using Google.Protobuf;
+using Ipfs;
 using NSubstitute;
 using Polly;
 using Polly.Retry;
@@ -44,7 +46,7 @@ using Xunit;
 
 namespace Catalyst.Core.Lib.UnitTests.Modules.Consensus.Deltas
 {
-    public sealed class DeltaHubTests : IDisposable
+    public sealed class DeltaHubTests
     {
         private readonly IBroadcastManager _broadcastManager;
         private readonly IPeerIdentifier _peerIdentifier;
@@ -61,7 +63,7 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Consensus.Deltas
                 IDfs dfs,
                 ILogger logger) : base(broadcastManager, peerIdentifier, deltaVoter, deltaElector, dfs, logger) { }
 
-            protected override AsyncRetryPolicy<string> IpfsRetryPolicy => 
+            protected override AsyncRetryPolicy<string> DfsRetryPolicy => 
                 Policy<string>.Handle<Exception>()
                    .WaitAndRetryAsync(4, retryAttempt => 
                         TimeSpan.FromMilliseconds(Math.Pow(2, retryAttempt)));
@@ -97,34 +99,21 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Consensus.Deltas
 
             _hub.BroadcastCandidate(myCandidate);
             _broadcastManager.Received(1).BroadcastAsync(Arg.Is<ProtocolMessage>(
-                m => IsExpectedCandidateMessage(m, myCandidate, _peerIdentifier.PeerId)));
+                m => IsExpectedCandidateMessage<CandidateDeltaBroadcast>(m, myCandidate, _peerIdentifier.PeerId)));
         }
-
+        
         [Fact]
-        public void BroadcastFavouriteCandidateDelta_should_not_broadcast_if_not_found()
+        public void BroadcastFavouriteCandidateDelta_Should_Broadcast()
         {
-            _deltaVoter.TryGetFavouriteDelta(Arg.Any<byte[]>(), 
-                out Arg.Any<CandidateDeltaBroadcast>()).Returns(false);
-
-            _hub.BroadcastFavouriteCandidateDelta(ByteUtil.GenerateRandomByteArray(32));
-            _broadcastManager.DidNotReceiveWithAnyArgs().BroadcastAsync(default);
-        }
-
-        [Fact]
-        public void BroadcastFavouriteCandidateDelta_should_broadcast_if_found()
-        {
-            var someCandidate = DeltaHelper.GetCandidateDelta();
-
-            _deltaVoter.TryGetFavouriteDelta(Arg.Any<byte[]>(),
-                out Arg.Any<CandidateDeltaBroadcast>()).Returns(ci =>
+            var favourite = new FavouriteDeltaBroadcast
             {
-                ci[1] = someCandidate;
-                return true;
-            });
+                Candidate = DeltaHelper.GetCandidateDelta(),
+                VoterId = _peerIdentifier.PeerId
+            };
 
-            _hub.BroadcastFavouriteCandidateDelta(ByteUtil.GenerateRandomByteArray(32));
+            _hub.BroadcastFavouriteCandidateDelta(favourite);
             _broadcastManager.Received(1).BroadcastAsync(Arg.Is<ProtocolMessage>(
-                c => IsExpectedCandidateMessage(c, someCandidate, _peerIdentifier.PeerId)));
+                c => IsExpectedCandidateMessage<FavouriteDeltaBroadcast>(c, favourite, _peerIdentifier.PeerId)));
         }
 
         [Fact]
@@ -136,7 +125,7 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Consensus.Deltas
 
             _dfs.AddAsync(Arg.Any<Stream>(), Arg.Any<string>(), cancellationToken).Returns(dfsHash);
 
-            var deltaHash = await _hub.PublishDeltaToIpfsAsync(delta, cancellationToken);
+            var deltaHash = await _hub.PublishDeltaToDfsAsync(delta, cancellationToken);
             deltaHash.Should().NotBeNullOrEmpty();
             deltaHash.Should().Be(dfsHash);
         }
@@ -154,7 +143,7 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Consensus.Deltas
             _dfs.AddAsync(Arg.Any<Stream>(), Arg.Any<string>())
                .Returns(ci => dfsResults.Next());
 
-            var deltaHash = await _hub.PublishDeltaToIpfsAsync(delta);
+            var deltaHash = await _hub.PublishDeltaToDfsAsync(delta);
             deltaHash.Should().NotBeNullOrEmpty();
             deltaHash.Should().Be(dfsHash);
 
@@ -181,7 +170,7 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Consensus.Deltas
             _dfs.AddAsync(Arg.Any<Stream>(), Arg.Any<string>(), cancellationToken)
                .Returns(ci => dfsResults.Next());
 
-            new Action(() => _hub.PublishDeltaToIpfsAsync(delta, cancellationToken).GetAwaiter().GetResult())
+            new Action(() => _hub.PublishDeltaToDfsAsync(delta, cancellationToken).GetAwaiter().GetResult())
                .Should().Throw<TaskCanceledException>();
 
             await _dfs.ReceivedWithAnyArgs(3).AddAsync(Arg.Any<Stream>(), Arg.Any<string>());
@@ -191,7 +180,7 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Consensus.Deltas
         [ClassData(typeof(BadDeltas))]
         public async Task PublishDeltaToIpfsAsync_should_not_send_invalid_deltas(Delta badDelta, Type exceptionType)
         {
-            new Action(() => _hub.PublishDeltaToIpfsAsync(badDelta).GetAwaiter().GetResult())
+            new Action(() => _hub.PublishDeltaToDfsAsync(badDelta).GetAwaiter().GetResult())
                .Should().Throw<Exception>().And.GetType().Should().Be(exceptionType);
 
             await _dfs.DidNotReceiveWithAnyArgs().AddAsync(default);
@@ -210,16 +199,14 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Consensus.Deltas
             }
         }
         
-        private bool IsExpectedCandidateMessage(ProtocolMessage protocolMessage,
-            CandidateDeltaBroadcast expected, 
-            PeerId senderId)
+        private bool IsExpectedCandidateMessage<T>(ProtocolMessage protocolMessage,
+            T expected, 
+            PeerId senderId) where T : IMessage<T>
         {
             var hasExpectedSender = protocolMessage.PeerId.Equals(senderId);
-            var candidate = protocolMessage.FromProtocolMessage<CandidateDeltaBroadcast>();
+            var candidate = protocolMessage.FromProtocolMessage<T>();
             var hasExpectedCandidate = candidate.Equals(expected);
             return hasExpectedSender && hasExpectedCandidate;
         }
-
-        public void Dispose() { _hub?.Dispose(); }
     }
 }

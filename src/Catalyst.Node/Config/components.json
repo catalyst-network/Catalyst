@@ -318,7 +318,10 @@
                 {
                     "type": "Catalyst.Common.Interfaces.FileSystem.IFileSystem, Catalyst.Common"
                 }
-            ]
+            ],
+            "parameters": {
+                "configDataDir": "Data_Directory"
+            }
         },
         {
             "type": "Catalyst.Common.FileTransfer.UploadFileTransferFactory, Catalyst.Common",
@@ -363,17 +366,6 @@
                     "type": "Catalyst.Common.Interfaces.P2P.IPeerIdValidator, Catalyst.Common"
                 }
             ]
-        },
-        {
-            "type": "Catalyst.Common.P2P.PeerIdClientId, Catalyst.Common",
-            "services": [
-                {
-                    "type": "Catalyst.Common.Interfaces.P2P.IPeerIdClientId, Catalyst.Common"
-                }
-            ],
-            "parameters": {
-                "clientVersion": "AC"
-            }
         },
         {
             "type": "Catalyst.Common.Util.TtlChangeTokenProvider, Catalyst.Common",

@@ -26,6 +26,9 @@ using System.IO;
 using System.IO.Abstractions;
 using System.Threading.Tasks;
 using Catalyst.Common.Config;
+using Microsoft.Extensions.Configuration;
+using System.Linq;
+using Newtonsoft.Json;
 using IFileSystem = Catalyst.Common.Interfaces.FileSystem.IFileSystem;
 
 namespace Catalyst.Common.FileSystem
@@ -34,10 +37,46 @@ namespace Catalyst.Common.FileSystem
         : System.IO.Abstractions.FileSystem,
             IFileSystem
     {
+        private readonly string _currentDataDirPointer;
+        private string _dataDir;
+
+        public FileSystem()
+        {
+            _currentDataDirPointer = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile);
+
+            _dataDir = File.Exists(_currentDataDirPointer) 
+                ? GetCurrentDataDir(_currentDataDirPointer) 
+                : Path.Combine(GetUserHomeDir(), Constants.CatalystDataDir); 
+        }
+
         public virtual DirectoryInfo GetCatalystDataDir()
         {
-            var path = Path.Combine(GetUserHomeDir(), Constants.CatalystDataDir);
-            return new DirectoryInfo(path);
+            return new DirectoryInfo(_dataDir);
+        }
+
+        public bool SetCurrentPath(string path)
+        {
+            try
+            {
+                var fullPath = Path.GetFullPath(path);
+
+                var dirInfo = new DirectoryInfo(fullPath);
+                if (!dirInfo.Exists)
+                {
+                    dirInfo.Create();
+                }
+
+                SaveConfigPointerFile(path, _currentDataDirPointer);
+
+                _dataDir = path;
+            }
+            catch (Exception ex)
+            {
+                //Exception Logging ignored
+                return false;
+            }
+
+            return true;
         }
 
         public Task<IFileInfo> WriteTextFileToCddAsync(string fileName, string contents)
@@ -81,6 +120,15 @@ namespace Catalyst.Common.FileSystem
             return File.Exists(Path.Combine(GetCatalystDataDir().FullName, subDirectory, fileName));
         }
 
+        private string GetCurrentDataDir(string configFilePointer)
+        {
+            var configurationRoot = new ConfigurationBuilder().AddJsonFile(configFilePointer).Build();
+
+            var path = configurationRoot.GetSection("components").GetChildren().Select(p => p.GetSection("parameters:configDataDir").Value).ToArray().Single(m => !string.IsNullOrEmpty(m));
+
+            return path;
+        }
+
         private static string GetUserHomeDir()
         {
             return Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
@@ -101,6 +149,18 @@ namespace Catalyst.Common.FileSystem
         private string ReadTextFromFile(string filePath)
         {
             return File.Exists(filePath) ? File.ReadAllText(filePath) : null;
+        }
+
+        private void SaveConfigPointerFile(string configDirLocation, string configFilePointer)
+        {
+            var configDataDir = GetCurrentDataDir(configFilePointer);
+
+            var configDataDirJson = JsonConvert.SerializeObject(configDataDir);
+            var configDirLocationJson = JsonConvert.SerializeObject(configDirLocation);
+
+            var text = System.IO.File.ReadAllText(configFilePointer);
+            text = text.Replace(configDataDirJson, configDirLocationJson);
+            System.IO.File.WriteAllText(configFilePointer, text);
         }
     }
 }

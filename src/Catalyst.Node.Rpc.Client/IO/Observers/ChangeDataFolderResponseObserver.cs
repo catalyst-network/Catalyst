@@ -21,26 +21,31 @@
 
 #endregion
 
-using System.Reflection;
-using System.Text;
+using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
+using Catalyst.Common.Interfaces.IO.Observers;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Protocol.Rpc.Node;
+using DotNetty.Transport.Channels;
+using Serilog;
 
-namespace Catalyst.Common.P2P
+namespace Catalyst.Node.Rpc.Client.IO.Observers
 {
     /// <summary>
-    ///     @TODO move to SDK
+    ///     Handles the Peer count response
     /// </summary>
-    public sealed class PeerIdClientId : IPeerIdClientId
+    /// <seealso cref="IRpcResponseObserver" />
+    public sealed class ChangeDataFolderResponseObserver
+        : RpcResponseObserver<SetPeerDataFolderResponse>
     {
-        public PeerIdClientId(string clientVersion)
+        public ChangeDataFolderResponseObserver(ILogger logger)
+            : base(logger) { }
+
+        protected override void HandleResponse(SetPeerDataFolderResponse setPeerDataFolderResponse,
+            IChannelHandlerContext channelHandlerContext,
+            IPeerIdentifier senderPeerIdentifier,
+            ICorrelationId correlationId)
         {
-            var assemblyMajorVersion2Digits = Assembly.GetExecutingAssembly().GetName().Version.Major.ToString("D2");
-            AssemblyMajorVersion = Encoding.UTF8.GetBytes(assemblyMajorVersion2Digits);
-            ClientVersion = Encoding.UTF8.GetBytes(clientVersion);
+            //Overriden code
         }
-
-        public byte[] ClientVersion { get; }
-
-        public byte[] AssemblyMajorVersion { get; }
     }
 }

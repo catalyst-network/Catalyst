@@ -21,25 +21,28 @@
 
 #endregion
 
-using System.Linq;
-using Catalyst.Cryptography.BulletProofs.Wrapper;
-using Multiformats.Base;
-using Multiformats.Hash;
+using System;
+using System.IO;
+using Catalyst.Common.Config;
+using Catalyst.Protocol.Rpc.Node;
+using FluentAssertions;
+using Xunit;
+using Xunit.Abstractions;
 
-namespace Catalyst.Common.Util
+namespace Catalyst.Cli.IntegrationTests.Commands
 {
-    public static class KeyUtil
+    public sealed class ChangeDataFolderCommandTests : CliCommandTestsBase
     {
-        public static string KeyToString(this byte[] keyBytes)
-        {
-            return Multihash.Sum(HashType.ID, keyBytes).ToString(MultibaseEncoding.Base58Btc);
-        }
+        public ChangeDataFolderCommandTests(ITestOutputHelper output) : base(output) { }
 
-        public static byte[] KeyToBytes(this string base58Key)
+        [Fact]
+        public void Cli_Can_Send_Change_Data_Folder_Request()
         {
-            var publicKeyMultiHash = Multihash.Parse(base58Key.Trim());
-            var rawPublicKeyBytes = publicKeyMultiHash.ToBytes().Slice(2, publicKeyMultiHash.ToBytes().Length);
-            return rawPublicKeyBytes;
+            var path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), Constants.CatalystDataDir);
+            var result = Shell.ParseCommand("changedatafolder", NodeArgumentPrefix, ServerNodeName, "-c", path);
+            result.Should().BeTrue();
+
+            AssertSentMessageAndGetMessageContent<SetPeerDataFolderResponse>();
         }
     }
 }

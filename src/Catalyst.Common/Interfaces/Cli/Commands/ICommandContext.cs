@@ -46,11 +46,7 @@ namespace Catalyst.Common.Interfaces.Cli.Commands
         /// <summary>Gets the socket client registry.</summary>
         /// <value>The socket client registry.</value>
         ISocketClientRegistry<INodeRpcClient> SocketClientRegistry { get; }
-
-        /// <summary>Gets the peer client version.</summary>
-        /// <value>The peer identifier peer client version.</value>
-        IPeerIdClientId PeerIdClientId { get; }
-
+        
         /// <summary>Gets the dto factory.</summary>
         /// <value>The dto factory.</value>
         IDtoFactory DtoFactory { get; }

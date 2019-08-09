@@ -41,12 +41,10 @@ namespace Catalyst.Common.P2P
     public sealed class PeerIdValidator : IPeerIdValidator
     {
         private readonly ICryptoContext _cryptoContext;
-        private readonly IPeerIdClientId _peerIdClientId;
 
-        public PeerIdValidator(ICryptoContext cryptoContext, IPeerIdClientId clientId)
+        public PeerIdValidator(ICryptoContext cryptoContext)
         {
             _cryptoContext = cryptoContext;
-            _peerIdClientId = clientId;
         }
 
         /// <inheritdoc cref="IPeerIdValidator"/>
@@ -54,13 +52,11 @@ namespace Catalyst.Common.P2P
         {
             var publicKeyLength = _cryptoContext.PublicKeyLength;
             Guard.Argument(peerId, nameof(peerId)).NotNull()
-               .Require(p => p.PublicKey.Length == publicKeyLength, _ => $"PublicKey should be {publicKeyLength} bytes")
+               .Require(p => p.PublicKey.Length == publicKeyLength, p => $"PublicKey should be {publicKeyLength} bytes but was {p.PublicKey.Length}")
                .Require(p => p.Ip.Length == 16 && ValidateIp(p.Ip.ToByteArray()), _ => "Ip should be 16 bytes")
                .Require(p => ValidatePort(p.Port.ToByteArray()), _ => "Port should be between 1025 and 65535")
-               .Require(p => ValidateClientId(p.ClientId.ToByteArray()),
-                    _ => "ClientId should only be 2 alphabetical letters")
-               .Require(p => ValidateClientVersion(p.ClientVersion.ToByteArray()),
-                    _ => $"ClientVersion doesn't match {_peerIdClientId.AssemblyMajorVersion}");
+               .Require(p => ValidateProtocolVersion(p.ProtocolVersion.ToByteArray()));
+
             return true;
         }
 
@@ -79,23 +75,14 @@ namespace Catalyst.Common.P2P
 
         /// <summary>
         /// </summary>
-        /// <param name="clientId"></param>
-        /// <exception cref="ArgumentException"></exception>
-        private bool ValidateClientId(byte[] clientId)
-        {
-            return Regex.IsMatch(ByteUtil.ByteToString(clientId), @"^[a-zA-Z]{1,2}$");
-        }
-
-        /// <summary>
-        /// </summary>
         /// <param name="clientVersion"></param>
         /// <exception cref="ArgumentException"></exception>
-        private bool ValidateClientVersion(byte[] clientVersion)
+        private bool ValidateProtocolVersion(byte[] clientVersion)
         {
             Guard.Argument(clientVersion, nameof(clientVersion))
                .NotNull().NotEmpty().Count(2);
-            var intVersion = int.Parse(Encoding.UTF8.GetString(clientVersion));
-            return 0 <= intVersion && intVersion <= 99;
+            var shortVersion = BitConverter.ToUInt16(clientVersion);
+            return shortVersion <= 99;
         }
 
         /// <summary>

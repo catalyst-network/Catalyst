@@ -23,6 +23,7 @@
 
 using System;
 using System.Threading;
+using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Modules.Consensus.Deltas;
 using Catalyst.Common.Interfaces.Util;
 using Catalyst.Protocol.Deltas;
@@ -59,7 +60,7 @@ namespace Catalyst.Core.Lib.Modules.Consensus.Deltas
         }
 
         /// <inheritdoc />
-        public bool TryGetDelta(string hash, out Delta delta)
+        public bool TryGetConfirmedDelta(string hash, out Delta delta)
         {
             //this calls for a TryGetOrCreate IMemoryCache extension function
             if (_memoryCache.TryGetValue(hash, out delta))
@@ -74,6 +75,16 @@ namespace Catalyst.Core.Lib.Modules.Consensus.Deltas
 
             _memoryCache.Set(hash, delta, _entryOptions());
             return true;
+        }
+
+        public bool TryGetLocalDelta(CandidateDeltaBroadcast candidate, out Delta delta)
+        {
+            return _memoryCache.TryGetValue(candidate.Hash.AsMultihashBase64UrlString(), out delta);
+        }
+
+        public void AddLocalDelta(CandidateDeltaBroadcast localCandidate, Delta delta)
+        {
+            _memoryCache.Set(localCandidate.Hash.AsMultihashBase64UrlString(), delta, _entryOptions());
         }
 
         protected virtual void Dispose(bool disposing) { _memoryCache.Dispose(); }

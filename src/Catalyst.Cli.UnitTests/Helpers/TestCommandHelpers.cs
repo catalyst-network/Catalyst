@@ -58,20 +58,18 @@ namespace Catalyst.Cli.UnitTests.Helpers
         public static ICommandContext GenerateCliFullCommandContext()
         {
             var userOutput = Substitute.For<IUserOutput>();
-            var peerIdClientId = Substitute.For<IPeerIdClientId>();
             var dtoFactory = new DtoFactory();
             var nodeRpcClientFactory = Substitute.For<INodeRpcClientFactory>();
             var certificateStore = Substitute.For<ICertificateStore>();
 
             var commandContext = Substitute.For<ICommandContext>();
             commandContext.UserOutput.Returns(userOutput);
-            commandContext.PeerIdClientId.Returns(peerIdClientId);
             commandContext.DtoFactory.Returns(dtoFactory);
             commandContext.NodeRpcClientFactory.Returns(nodeRpcClientFactory);
             commandContext.CertificateStore.Returns(certificateStore);
 
             commandContext.PeerIdentifier.Returns(
-                PeerIdentifierHelper.GetPeerIdentifier("public key", "1.2.3.4", 0, IPAddress.Any, 9010));
+                PeerIdentifierHelper.GetPeerIdentifier("public key", IPAddress.Any, 9010));
 
             var nodeRpcClient = MockNodeRpcClient();
             MockRpcNodeConfig(commandContext);
@@ -84,14 +82,12 @@ namespace Catalyst.Cli.UnitTests.Helpers
         public static ICommandContext GenerateCliCommandContext()
         {
             var userOutput = Substitute.For<IUserOutput>();
-            var peerIdClientId = Substitute.For<IPeerIdClientId>();
             var dtoFactory = new DtoFactory();
             var nodeRpcClientFactory = Substitute.For<INodeRpcClientFactory>();
             var certificateStore = Substitute.For<ICertificateStore>();
 
             var commandContext = Substitute.For<ICommandContext>();
             commandContext.UserOutput.Returns(userOutput);
-            commandContext.PeerIdClientId.Returns(peerIdClientId);
             commandContext.DtoFactory.Returns(dtoFactory);
             commandContext.NodeRpcClientFactory.Returns(nodeRpcClientFactory);
             commandContext.CertificateStore.Returns(certificateStore);
@@ -99,7 +95,7 @@ namespace Catalyst.Cli.UnitTests.Helpers
             var hashingAlgorithm = Constants.HashAlgorithm;
             var deltaMultiHash = Encoding.UTF8.GetBytes("previous").ComputeMultihash(hashingAlgorithm);
             commandContext.PeerIdentifier.Returns(
-                PeerIdentifierHelper.GetPeerIdentifier(deltaMultiHash, "1.2.3.4", 0, IPAddress.Any, 9010));
+                PeerIdentifierHelper.GetPeerIdentifier(deltaMultiHash, IPAddress.Any, 9010));
 
             return commandContext;
         }

@@ -21,46 +21,48 @@
 
 #endregion
 
-using Catalyst.Common.Extensions;
-using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
-using Catalyst.Common.Interfaces.IO.Observers;
-using Catalyst.Common.Interfaces.Modules.Consensus.Deltas;
+using Catalyst.Common.Interfaces.FileSystem;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.IO.Observers;
+using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using DotNetty.Transport.Channels;
+using Catalyst.Common.Interfaces.IO.Observers;
+using Catalyst.Common.IO.Observers;
+using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using ILogger = Serilog.ILogger;
 
 namespace Catalyst.Core.Lib.Rpc.IO.Observers
 {
-    public sealed class GetDeltaRequestObserver
-        : RequestObserverBase<GetDeltaRequest, GetDeltaResponse>, IRpcRequestObserver
+    public sealed class ChangeDataFolderRequestObserver
+        : RequestObserverBase<SetPeerDataFolderRequest, SetPeerDataFolderResponse>,
+            IRpcRequestObserver
     {
-        private readonly IDeltaCache _deltaCache;
+        private readonly IFileSystem _fileSystem;
 
-        public GetDeltaRequestObserver(IDeltaCache deltaCache,
-            IPeerIdentifier peerIdentifier,
+        public ChangeDataFolderRequestObserver(IPeerIdentifier peerIdentifier,
+            IRpcServerSettings config, 
+            IFileSystem fileSystem,
             ILogger logger) : base(logger, peerIdentifier)
         {
-            _deltaCache = deltaCache;
+            _fileSystem = fileSystem;
         }
 
-        protected override GetDeltaResponse HandleRequest(GetDeltaRequest getDeltaRequest,
+        protected override SetPeerDataFolderResponse HandleRequest(SetPeerDataFolderRequest setDataFolderRequest,
             IChannelHandlerContext channelHandlerContext,
             IPeerIdentifier senderPeerIdentifier,
             ICorrelationId correlationId)
         {
-            Guard.Argument(getDeltaRequest, nameof(getDeltaRequest)).NotNull();
+            Guard.Argument(setDataFolderRequest, nameof(setDataFolderRequest)).NotNull();
             Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
             Guard.Argument(senderPeerIdentifier, nameof(senderPeerIdentifier)).NotNull();
-            Logger.Verbose("received message of type GetDeltaRequest:");
-            Logger.Verbose("{getDeltaRequest}", getDeltaRequest);
 
-            var multiHash = getDeltaRequest.DeltaDfsHash.AsMultihashBase64UrlString();
+            Logger.Debug("received message of type SetPeerDataFolderRequest");
 
-            _deltaCache.TryGetConfirmedDelta(multiHash, out var delta);
-            return new GetDeltaResponse {Delta = delta};
+            return new SetPeerDataFolderResponse
+            {
+                Query = _fileSystem.SetCurrentPath(setDataFolderRequest.Datafolder)
+            };
         }
     }
 }

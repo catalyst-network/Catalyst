@@ -21,23 +21,13 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.Modules.Consensus.Cycle;
-using Catalyst.Common.Interfaces.Modules.Consensus.Deltas;
-
 namespace Catalyst.Common.Interfaces.Modules.Consensus
 {
     public interface IConsensus
     {
-        /// <see cref="IDeltaBuilder" />
-        IDeltaBuilder DeltaBuilder { get; }
-
-        /// <see cref="IDeltaHub" />
-        IDeltaHub DeltaHub { get; }
-
-        /// <see cref="IDeltaHashProvider"/>
-        IDeltaHashProvider DeltaHashProvider { get; }
-
-        /// <see cref="ICycleEventsProvider"/>
-        ICycleEventsProvider CycleEventsProvider { get; }
+        /// <summary>
+        /// Call this method to start acting as a producer of ledger state update.
+        /// </summary>
+        void StartProducing();
     }
 }

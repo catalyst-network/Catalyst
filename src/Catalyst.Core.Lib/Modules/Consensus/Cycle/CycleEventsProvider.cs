@@ -28,6 +28,7 @@ using Catalyst.Common.Interfaces.Modules.Consensus;
 using Catalyst.Common.Interfaces.Modules.Consensus.Cycle;
 using Catalyst.Common.Interfaces.Modules.Consensus.Deltas;
 using Catalyst.Common.Modules.Consensus.Cycle;
+using Serilog;
 
 namespace Catalyst.Core.Lib.Modules.Consensus.Cycle
 {
@@ -35,13 +36,16 @@ namespace Catalyst.Core.Lib.Modules.Consensus.Cycle
     /// <inheritdoc cref="IDisposable"/>
     public class CycleEventsProvider : ICycleEventsProvider, IDisposable
     {
+        private readonly ILogger _logger;
         private readonly CancellationTokenSource _cancellationTokenSource;
 
         public CycleEventsProvider(ICycleConfiguration configuration,
             IDateTimeProvider timeProvider,
             ICycleSchedulerProvider schedulerProvider,
-            IDeltaHashProvider deltaHashProvider)
+            IDeltaHashProvider deltaHashProvider,
+            ILogger logger)
         {
+            _logger = logger;
             _cancellationTokenSource = new CancellationTokenSource();
             
             Configuration = configuration;
@@ -67,6 +71,7 @@ namespace Catalyst.Core.Lib.Modules.Consensus.Cycle
                .Merge(synchronisationStatusChanges, scheduler)
                .Delay(TimeSpan.FromTicks(synchronisationOffset), scheduler)
                .Select(s => new Phase(deltaHashProvider.GetLatestDeltaHash(timeProvider.UtcNow), s.Name, s.Status, timeProvider.UtcNow))
+               .Do(p => _logger.Debug("Current delta production phase {phase}", p))
                .TakeWhile(_ => !_cancellationTokenSource.IsCancellationRequested);
         }
 

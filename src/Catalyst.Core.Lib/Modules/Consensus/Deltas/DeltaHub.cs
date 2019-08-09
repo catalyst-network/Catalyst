@@ -26,11 +26,13 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Common.Extensions;
+using Catalyst.Common.Interfaces.Modules.Consensus.Cycle;
 using Catalyst.Common.Interfaces.Modules.Consensus.Deltas;
 using Catalyst.Common.Interfaces.Modules.Dfs;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.IO.Messaging.Broadcast;
 using Catalyst.Common.IO.Messaging.Correlation;
+using Catalyst.Common.Modules.Consensus.Cycle;
 using Catalyst.Protocol.Deltas;
 using Dawn;
 using Google.Protobuf;
@@ -42,7 +44,7 @@ namespace Catalyst.Core.Lib.Modules.Consensus.Deltas
 {
     /// <inheritdoc cref="IDeltaHub" />
     /// <inheritdoc cref="IDisposable" />
-    public class DeltaHub : IDeltaHub, IDisposable
+    public class DeltaHub : IDeltaHub
     {
         private readonly IBroadcastManager _broadcastManager;
         private readonly IPeerIdentifier _peerIdentifier;
@@ -50,10 +52,8 @@ namespace Catalyst.Core.Lib.Modules.Consensus.Deltas
         private readonly IDeltaElector _deltaElector;
         private readonly IDfs _dfs;
         private readonly ILogger _logger;
-        private IDisposable _incomingCandidateSubscription;
-        private IDisposable _incomingFavouriteCandidateSubscription;
 
-        protected virtual AsyncRetryPolicy<string> IpfsRetryPolicy { get; }
+        protected virtual AsyncRetryPolicy<string> DfsRetryPolicy { get; }
 
         public DeltaHub(IBroadcastManager broadcastManager,
             IPeerIdentifier peerIdentifier,
@@ -69,7 +69,7 @@ namespace Catalyst.Core.Lib.Modules.Consensus.Deltas
             _dfs = dfs;
             _logger = logger;
 
-            IpfsRetryPolicy = Policy<string>.Handle<Exception>()
+            DfsRetryPolicy = Policy<string>.Handle<Exception>()
                .WaitAndRetryAsync(4, retryAttempt =>
                     TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)));
         }
@@ -90,18 +90,13 @@ namespace Catalyst.Core.Lib.Modules.Consensus.Deltas
             var protocolMessage = candidate.ToProtocolMessage(_peerIdentifier.PeerId, CorrelationId.GenerateCorrelationId());
             _broadcastManager.BroadcastAsync(protocolMessage);
 
-            _logger.Debug("Started broadcasting candidate {0}", candidate);
+            _logger.Debug("Broadcast candidate {0} done.", candidate);
         }
 
         /// <inheritdoc />
-        public void BroadcastFavouriteCandidateDelta(byte[] previousDeltaDfsHash)
+        public void BroadcastFavouriteCandidateDelta(FavouriteDeltaBroadcast favourite)
         {
-            if (!_deltaVoter.TryGetFavouriteDelta(previousDeltaDfsHash, out var favourite))
-            {
-                _logger.Debug("No favourite delta has been retrieved for broadcast.");
-                return;
-            } 
-
+            Guard.Argument(favourite, nameof(favourite)).NotNull().Require(c => c.IsValid());
             var protocolMessage = favourite.ToProtocolMessage(_peerIdentifier.PeerId, CorrelationId.GenerateCorrelationId());
             _broadcastManager.BroadcastAsync(protocolMessage);
 
@@ -109,26 +104,12 @@ namespace Catalyst.Core.Lib.Modules.Consensus.Deltas
         }
 
         /// <inheritdoc />
-        public void SubscribeToFavouriteCandidateStream(IObservable<FavouriteDeltaBroadcast> favouriteCandidateStream)
-        {
-            _incomingFavouriteCandidateSubscription = favouriteCandidateStream.Subscribe(_deltaElector);
-            _logger.Debug("Subscribed to favourite candidate delta incoming stream.");
-        }
-
-        /// <inheritdoc />
-        public void SubscribeToCandidateStream(IObservable<CandidateDeltaBroadcast> candidateStream)
-        {
-            _incomingCandidateSubscription = candidateStream.Subscribe(_deltaVoter);
-            _logger.Debug("Subscribed to candidate delta incoming stream.");
-        }
-
-        /// <inheritdoc />
-        public async Task<string> PublishDeltaToIpfsAsync(Delta delta, CancellationToken cancellationToken = default)
+        public async Task<string> PublishDeltaToDfsAsync(Delta delta, CancellationToken cancellationToken = default)
         {
             Guard.Argument(delta, nameof(delta)).NotNull().Require(c => c.IsValid());
 
             var deltaAsArray = delta.ToByteArray();
-            var ipfsFileAddress = await IpfsRetryPolicy.ExecuteAsync(
+            var ipfsFileAddress = await DfsRetryPolicy.ExecuteAsync(
                 async c => await TryPublishIpfsFileAsync(deltaAsArray, cancellationToken: c).ConfigureAwait(false),
                 cancellationToken).ConfigureAwait(false);
 
@@ -147,26 +128,6 @@ namespace Catalyst.Core.Lib.Modules.Consensus.Deltas
 
                 return address;
             }
-        }
-
-        /// <inheritdoc />
-        public void SubscribeToDfsDeltaStream(IObservable<byte[]> dfsDeltaAddressStream) { throw new NotImplementedException(); }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!disposing)
-            {
-                return;
-            }
-
-            _incomingCandidateSubscription?.Dispose();
-            _incomingFavouriteCandidateSubscription?.Dispose();
-        }
-
-        /// <inheritdoc />
-        public void Dispose()
-        {
-            Dispose(true);
         }
     }
 }
