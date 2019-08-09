@@ -30,6 +30,7 @@ using Catalyst.Cryptography.BulletProofs.Wrapper.Exceptions;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Types;
 using FluentAssertions;
+using Nethereum.Hex.HexConvertors.Extensions;
 using Xunit;
 
 namespace Catalyst.Common.UnitTests.Cryptography
@@ -53,14 +54,15 @@ namespace Catalyst.Common.UnitTests.Cryptography
             var key1 = _context.GeneratePrivateKey();
 
             var data = Encoding.UTF8.GetBytes("Testing testing 1 2 3");
-            var signature = _context.Sign(key1, data);
+            var signingContext = Encoding.UTF8.GetBytes("Testing testing 1 2 3 context");
+            var signature = _context.Sign(key1, data, signingContext);
 
             var key2 = _context.GeneratePrivateKey();
             var publicKey2 = _context.GetPublicKey(key2);
 
             var invalidSignature = _context.SignatureFromBytes(signature.SignatureBytes, publicKey2.Bytes);
 
-            _context.Verify(invalidSignature, data)
+            _context.Verify(invalidSignature, data, signingContext)
                .Should().BeFalse("signature should not verify with incorrect key");
         }
 
@@ -78,9 +80,10 @@ namespace Catalyst.Common.UnitTests.Cryptography
         {
             var privateKey = _context.GeneratePrivateKey();
             var data = Encoding.UTF8.GetBytes("Testing testing 1 2 3");
-            var signature = _context.Sign(privateKey, data);
+            var signingContext = Encoding.UTF8.GetBytes("Testing testing 1 2 3 context");
+            var signature = _context.Sign(privateKey, data, signingContext);
 
-            _context.Verify(signature, data)
+            _context.Verify(signature, data, signingContext)
                .Should().BeTrue("signature generated with private key should verify with corresponding public key");
         }
 
@@ -90,13 +93,29 @@ namespace Catalyst.Common.UnitTests.Cryptography
             var privateKey = _context.GeneratePrivateKey();
             var publicKey = _context.GetPublicKey(privateKey);
             var data = Encoding.UTF8.GetBytes("Testing testing 1 2 3");
-            var signature = _context.Sign(privateKey, data);
+            var signingContext = Encoding.UTF8.GetBytes("Testing testing 1 2 3 context");
+            var signature = _context.Sign(privateKey, data, signingContext);
+
             var blob = _context.ExportPublicKey(publicKey);
 
             var importedKey = _context.PublicKeyFromBytes(blob);
             var signatureWithImportedKey = _context.SignatureFromBytes(signature.SignatureBytes, importedKey.Bytes);
-            _context.Verify(signatureWithImportedKey, data).Should()
+            _context.Verify(signatureWithImportedKey, data, signingContext).Should()
                .BeTrue("signature should verify with imported public key");
+        }
+
+        [Fact]
+        public void Does_Verify_Fail_With_Incorrect_Signing_Context()
+        {
+            var privateKey = _context.GeneratePrivateKey();
+            var data = Encoding.UTF8.GetBytes("Testing testing 1 2 3");
+            var signingContext = Encoding.UTF8.GetBytes("Testing testing 1 2 3 context");
+            var incorrectSigningContext = Encoding.UTF8.GetBytes("This is a different string");
+ 
+            var signature = _context.Sign(privateKey, data, signingContext);
+
+            _context.Verify(signature, data, incorrectSigningContext).Should()
+               .BeFalse("signature should not verify with incorrect signing context");
         }
 
         [Fact] 
@@ -108,8 +127,41 @@ namespace Catalyst.Common.UnitTests.Cryptography
             byte[] signatureBytes = Convert.FromBase64String(invalidSignature);
             var invalidSig = _context.SignatureFromBytes(signatureBytes, publicKey.Bytes);
             byte[] message = Encoding.UTF8.GetBytes("fa la la la");
-            Action action = () => { _context.Verify(invalidSig, message); };
+            Action action = () => { _context.Verify(invalidSig, message, Encoding.UTF8.GetBytes("")); };
             action.Should().Throw<SignatureException>();
+        }
+
+        [Theory]
+        [InlineData("616263",
+            "98a70222f0b8121aa9d30f813d683f809e462b469c7ff87639499bb94e6dae4131f85042463c2a355a2003d062adf5aaa10b8c61e636062aaad11c2a26083406",
+            "ec172b93ad5e563bf4932c70e1245034c35467ef2efd4d64ebf819683467e2bf", "", true)]
+        [InlineData("616263",
+            "98a70222f0b8121aa9d30f813d683f809e462b469c7ff87639499bb94e6dae4131f85042463c2a355a2003d062adf5aaa10b8c61e636062aaad11c2a26083406",
+            "ec172b93ad5e563bf4932c70e1245034c35467ef2efd4d64ebf819683467e2bf", "a", false)]
+        [InlineData("616261",
+            "98a70222f0b8121aa9d30f813d683f809e462b469c7ff87639499bb94e6dae4131f85042463c2a355a2003d062adf5aaa10b8c61e636062aaad11c2a26083406",
+            "ec172b93ad5e563bf4932c70e1245034c35467ef2efd4d64ebf819683467e2bf", "", false)]
+        [InlineData("616263",
+            "98a70222f0b8121aa9d30f813d683f809e462b469c7ff87639499bb94e6dae4131f85042463c2a355a2003d062adf5aaa10b8c61e636062aaad11c2a26083406",
+            "0f1d1274943b91415889152e893d80e93275a1fc0b65fd71b4b0dda10ad7d772", "", false)]
+        [InlineData("616263",
+            "98a70222f0b8121aa9d30f813d683f809e462b469c7ff87639499bb94e6dae4131f85042463c2a355a2003d062adf5aaa10b8c61e636062aaad11c2a26083405",
+            "ec172b93ad5e563bf4932c70e1245034c35467ef2efd4d64ebf819683467e2bf", "", false)]
+        public void Verify_Validates_Correct_Test_Vector(string message,
+            string signatureAndMessage,
+            string publicKey,
+            string context,
+            bool expectedResult)
+        {
+            var signatureMessageBytes = signatureAndMessage.HexToByteArray();
+            ArraySegment<byte> signatureBytes =
+                new ArraySegment<byte>(signatureMessageBytes, 0, _context.SignatureLength);
+            var publicKeyBytes = publicKey.HexToByteArray();
+            var messageBytes = message.HexToByteArray();
+            var contextBytes = Encoding.UTF8.GetBytes(context);
+            var signature = _context.SignatureFromBytes(signatureBytes.Array, publicKeyBytes);
+            
+            _context.Verify(signature, messageBytes, contextBytes).Should().Be(expectedResult);
         }
 
         [Fact]
@@ -128,6 +180,12 @@ namespace Catalyst.Common.UnitTests.Cryptography
         public void Is_Signature_Length_Positive()
         {
             _context.SignatureLength.Should().BePositive();
+        }
+
+        [Fact]
+        public void Is_Signature_Context_Max_Length_Positive()
+        {
+            _context.SignatureContextMaxLength.Should().BePositive();
         }
     }
 }

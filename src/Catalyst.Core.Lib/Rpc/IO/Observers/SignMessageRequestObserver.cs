@@ -67,8 +67,9 @@ namespace Catalyst.Core.Lib.Rpc.IO.Observers
             Logger.Debug("received message of type SignMessageRequest");
 
             var decodedMessage = signMessageRequest.Message.ToByteArray();
+            var signingContext = signMessageRequest.SigningContext;
 
-            var signature = _keySigner.Sign(decodedMessage);
+            var signature = _keySigner.Sign(decodedMessage, signingContext);
 
             var publicKey = _keySigner.CryptoContext.PublicKeyFromBytes(signature.PublicKeyBytes);
 

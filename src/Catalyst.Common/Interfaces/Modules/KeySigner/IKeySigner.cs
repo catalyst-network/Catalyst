@@ -24,6 +24,7 @@
 using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Common.Interfaces.Keystore;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
+using Catalyst.Protocol.Common;
 
 namespace Catalyst.Common.Interfaces.Modules.KeySigner
 {
@@ -39,7 +40,7 @@ namespace Catalyst.Common.Interfaces.Modules.KeySigner
         /// </summary>
         ICryptoContext CryptoContext { get; }
         
-        ISignature Sign(byte[] data);
+        ISignature Sign(byte[] data, SigningContext signingContext);
 
         /// <summary>Verifies a message signature.</summary>
         /// <returns></returns>
