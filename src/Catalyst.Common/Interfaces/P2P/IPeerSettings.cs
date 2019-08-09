@@ -28,7 +28,7 @@ namespace Catalyst.Common.Interfaces.P2P
 {
     public interface IPeerSettings
     {
-        IPAddress PublicAddress { get; }
+        IPAddress PublicIpAddress { get; }
         int Port { get; }
         string PublicKey { get; }
         string PayoutAddress { get; }
