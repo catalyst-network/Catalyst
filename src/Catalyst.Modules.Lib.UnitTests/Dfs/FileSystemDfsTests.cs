@@ -155,7 +155,7 @@ namespace Catalyst.Modules.Lib.UnitTests.Dfs
 
             await _dfs.AddAsync(fakeContent);
 
-            await mockStream.Received(1).CopyTo()
+            await mockStream.Received(1).CopyTo(Arg.Any<Stream>());
 
             await _fileSystem.File.Received(1).WriteAllBytesAsync(
                 Arg.Any<string>(),
