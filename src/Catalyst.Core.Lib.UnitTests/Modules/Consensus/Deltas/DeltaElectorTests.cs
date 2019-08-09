@@ -99,7 +99,7 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Consensus.Deltas
         [Fact]
         public void When_receiving_new_valid_favourite_should_store_in_cache()
         {
-            var favourite = FavouriteDeltaHelper.GetFavouriteDelta();
+            var favourite = DeltaHelper.GetFavouriteDelta();
             var candidateListKey = DeltaElector.GetCandidateListCacheKey(favourite);
 
             AddVoterAsExpectedProducer(favourite.VoterId);
@@ -125,7 +125,7 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Consensus.Deltas
         {
             using (var realCache = new MemoryCache(new MemoryCacheOptions()))
             {
-                var favourite = FavouriteDeltaHelper.GetFavouriteDelta();
+                var favourite = DeltaHelper.GetFavouriteDelta();
                 var candidateListKey = DeltaElector.GetCandidateListCacheKey(favourite);
 
                 AddVoterAsExpectedProducer(favourite.VoterId);
@@ -146,7 +146,7 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Consensus.Deltas
         [Fact]
         public void When_voter_not_a_producer_should_not_save_vote()
         {
-            var favourite = FavouriteDeltaHelper.GetFavouriteDelta();
+            var favourite = DeltaHelper.GetFavouriteDelta();
 
             _deltaProducersProvider
                .GetDeltaProducersFromPreviousDelta(Arg.Any<byte[]>())
