@@ -21,8 +21,7 @@
 
 #endregion
 
-using System.Linq;
-using Catalyst.Cryptography.BulletProofs.Wrapper;
+using BinaryEncoding;
 using Multiformats.Base;
 using Multiformats.Hash;
 
@@ -38,7 +37,11 @@ namespace Catalyst.Common.Util
         public static byte[] KeyToBytes(this string base58Key)
         {
             var publicKeyMultiHash = Multihash.Parse(base58Key.Trim());
-            var rawPublicKeyBytes = publicKeyMultiHash.ToBytes().Slice(2, publicKeyMultiHash.ToBytes().Length);
+            byte[] buf = publicKeyMultiHash.ToBytes();
+            var offset = Binary.Varint.Read(buf, 0, out uint _);
+            offset += Binary.Varint.Read(buf, offset, out uint _);
+            
+            var rawPublicKeyBytes = publicKeyMultiHash.ToBytes().Slice(offset);
             return rawPublicKeyBytes;
         }
     }
