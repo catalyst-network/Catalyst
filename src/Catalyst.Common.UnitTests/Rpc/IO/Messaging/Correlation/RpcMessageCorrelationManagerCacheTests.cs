@@ -74,7 +74,6 @@ namespace Catalyst.Common.UnitTests.Rpc.IO.Messaging.Correlation
         [Fact]
         public async Task Message_Eviction_Should_Cause_Eviction_Event()
         {
-            var autoResetEvent = new AutoResetEvent(false);
             var peerIds = new[]
             {
                 PeerIdentifierHelper.GetPeerIdentifier("peer1"),
@@ -115,19 +114,12 @@ namespace Catalyst.Common.UnitTests.Rpc.IO.Messaging.Correlation
                 _rpcMessageCorrelationManager.TryMatchResponse(pendingResponse.Content));
 
             //To prevent cache eviction multi threading delay
-            await Task.Run(async () =>
+            const int milliseconds = 100;
+            while (evictedEvents <= 0)
             {
-                const int milliseconds = 100;
-                while (evictedEvents <= 0)
-                {
-                    _testScheduler.AdvanceBy(milliseconds);
-                    await Task.Delay(milliseconds);
-                }
-
-                autoResetEvent.Set();
-            });
-
-            autoResetEvent.WaitOne();
+                _testScheduler.AdvanceBy(milliseconds);
+                await Task.Delay(milliseconds);
+            }
 
             evictedEvents.Should().Be(3);
         }
