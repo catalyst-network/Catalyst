@@ -84,7 +84,8 @@ namespace Catalyst.Core.Lib.IntegrationTests.Rpc.IO.Observers
             var request = messageFactory.GetDto(
                 new SignMessageRequest
                 {
-                    Message = message.ToUtf8ByteString()
+                    Message = message.ToUtf8ByteString(),
+                    SigningContext = new SigningContext()
                 },
                 PeerIdentifierHelper.GetPeerIdentifier("sender_key"),
                 PeerIdentifierHelper.GetPeerIdentifier("recipient_key")

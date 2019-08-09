@@ -28,6 +28,7 @@ using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.Util;
 using Catalyst.Cryptography.BulletProofs.Wrapper;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
+using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
@@ -42,12 +43,14 @@ namespace Catalyst.Common.UnitTests.IO.Handlers
         private readonly IMessageDto<PingRequest> _dto;
         private readonly IKeySigner _keySigner;
         private readonly ISignature _signature;
+        private readonly SigningContext _signingContext;
 
         public ProtocolMessageSignHandlerTests()
         {
             _fakeContext = Substitute.For<IChannelHandlerContext>();
             _keySigner = Substitute.For<IKeySigner>();
             _signature = Substitute.For<ISignature>();
+            
             _signature.SignatureBytes.Returns(ByteUtil.GenerateRandomByteArray(FFI.SignatureLength));
             _signature.PublicKeyBytes.Returns(ByteUtil.GenerateRandomByteArray(FFI.PublicKeyLength));
 
@@ -55,6 +58,12 @@ namespace Catalyst.Common.UnitTests.IO.Handlers
                 PeerIdentifierHelper.GetPeerIdentifier("recipient"), 
                 PeerIdentifierHelper.GetPeerIdentifier("sender")
             );
+
+            _signingContext = new SigningContext
+            {
+                Network = Protocol.Common.Network.Devnet,
+                SignatureType = SignatureType.ProtocolPeer
+            };
         }
 
         [Fact]
@@ -64,14 +73,14 @@ namespace Catalyst.Common.UnitTests.IO.Handlers
 
             protocolMessageSignHandler.WriteAsync(_fakeContext, new object());
 
-            _keySigner.DidNotReceiveWithAnyArgs().Sign(Arg.Any<byte[]>());
+            _keySigner.DidNotReceiveWithAnyArgs().Sign(Arg.Any<byte[]>(), _signingContext);
             _fakeContext.ReceivedWithAnyArgs().WriteAsync(new object());
         }
 
         [Fact]
         public void CanWriteAsyncOnSigningMessage()
         {
-            _keySigner.Sign(Arg.Any<byte[]>()).Returns(_signature);
+            _keySigner.Sign(Arg.Any<byte[]>(), default).ReturnsForAnyArgs(_signature);
 
             var protocolMessageSignHandler = new ProtocolMessageSignHandler(_keySigner);
 
