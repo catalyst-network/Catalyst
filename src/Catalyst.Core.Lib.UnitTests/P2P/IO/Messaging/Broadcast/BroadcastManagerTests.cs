@@ -60,7 +60,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Messaging.Broadcast
             _senderPeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("Test");
             _keySigner = Substitute.For<IKeySigner>();
             var fakeSignature = Substitute.For<ISignature>();
-            _keySigner.Sign(Arg.Any<byte[]>()).Returns(fakeSignature);
+            _keySigner.Sign(Arg.Any<byte[]>(), default).ReturnsForAnyArgs(fakeSignature);
             _peers = Substitute.For<IPeerRepository>();
             _cache = new MemoryCache(new MemoryCacheOptions());
         }
