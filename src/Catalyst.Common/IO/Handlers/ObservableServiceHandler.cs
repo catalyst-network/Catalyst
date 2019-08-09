@@ -58,7 +58,18 @@ namespace Catalyst.Common.IO.Handlers
             context.CloseAsync().ContinueWith(_ => _messageSubject.OnError(e));
         }
 
-        public void Dispose() { _messageSubject?.Dispose(); }
+        private void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _messageSubject?.Dispose();
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+        }
 
         /// <summary>
         ///     Reads the channel once accepted and pushed into a stream.
