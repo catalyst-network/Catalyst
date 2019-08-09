@@ -21,19 +21,13 @@
 
 #endregion
 
-namespace Catalyst.Common.Interfaces.P2P
-{
-    /// <summary>
-    /// Handles peerId client information
-    /// </summary>
-    public interface IPeerIdClientId
-    {
-        /// <summary>Gets the client identifier.</summary>
-        /// <returns></returns>
-        byte[] ClientVersion { get; }
+using System.Threading.Tasks;
+using Catalyst.Common.Interfaces.P2P.Discovery;
 
-        /// <summary>Gets the get assembly major version.</summary>
-        /// <value>Gets assembly major version.</value>
-        byte[] AssemblyMajorVersion { get; }
+namespace Catalyst.Modules.Lib.IntegrationTests.Consensus
+{
+    public class NoDiscovery : IPeerDiscovery
+    {
+        public async Task DiscoveryAsync() { await Task.CompletedTask; }
     }
 }

@@ -62,6 +62,8 @@ namespace Catalyst.Core.Lib.IntegrationTests
             _configProvider = new ContainerProvider(_configFilesUsed, FileSystem, output);
         }
 
+        public IConsensus Consensus => _catalystNode.Consensus;
+
         public async Task RunAsync(CancellationToken cancellationSourceToken)
         {
             if (_catalystNode == null)

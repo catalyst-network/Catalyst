@@ -35,16 +35,12 @@ namespace Catalyst.TestUtils
     public static class PeerIdHelper
     {
         public static PeerId GetPeerId(byte[] publicKey = null,
-            string clientId = "Tc",
-            int clientVersion = 1,
             IPAddress ipAddress = null,
             int port = 12345)
         {
             var peerIdentifier = new PeerId
             {
                 PublicKey = (publicKey ?? new byte[32]).ToByteString(),
-                ClientId = clientId.ToUtf8ByteString(),
-                ProtocolVersion = clientVersion.ToString("D2").ToUtf8ByteString(),
                 Ip = (ipAddress ?? IPAddress.Parse("127.0.0.1")).To16Bytes().ToByteString(),
                 Port = BitConverter.GetBytes((ushort) port).ToByteString()
             };
@@ -52,20 +48,18 @@ namespace Catalyst.TestUtils
         }
 
         public static PeerId GetPeerId(string publicKeySeed,
-            string clientId = "Tc",
-            int clientVersion = 1,
             IPAddress ipAddress = null,
             int port = 12345)
         {
             var publicKeyBytes = Encoding.UTF8.GetBytes(publicKeySeed)
                .Concat(Enumerable.Repeat(default(byte), Cryptography.BulletProofs.Wrapper.FFI.PublicKeyLength))
                .Take(Cryptography.BulletProofs.Wrapper.FFI.PublicKeyLength).ToArray();
-            return GetPeerId(publicKeyBytes, clientId, clientVersion, ipAddress, port);
+            return GetPeerId(publicKeyBytes, ipAddress, port);
         }
 
-        public static PeerId GetPeerId(string publicKey, string clientId, int clientVersion, string ipAddress, int port)
+        public static PeerId GetPeerId(string publicKey, string ipAddress, int port)
         {
-            return GetPeerId(publicKey, clientId, clientVersion, IPAddress.Parse(ipAddress), port);
+            return GetPeerId(publicKey, IPAddress.Parse(ipAddress), port);
         }
     }
 }

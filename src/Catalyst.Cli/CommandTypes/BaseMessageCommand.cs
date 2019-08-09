@@ -57,8 +57,7 @@ namespace Catalyst.Cli.CommandTypes
         }
 
         protected IPeerIdentifier RecipientPeerIdentifier =>
-            PeerIdentifier.BuildPeerIdFromConfig(CommandContext.GetNodeConfig(Options.Node),
-                CommandContext.PeerIdClientId);
+            PeerIdentifier.BuildPeerIdFromConfig(CommandContext.GetNodeConfig(Options.Node));
 
         protected IPeerIdentifier SenderPeerIdentifier => CommandContext.PeerIdentifier;
 

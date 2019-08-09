@@ -57,7 +57,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests
         {
             _testScheduler = new TestScheduler();
             _logger = Substitute.For<ILogger>();
-            _peerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("", "", 0);
+            _peerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("Test");
             _channelHandlerContext = Substitute.For<IChannelHandlerContext>();
 
             _channelFactory = Substitute.For<ITcpClientChannelFactory>();

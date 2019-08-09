@@ -40,7 +40,7 @@ namespace Catalyst.Core.Lib.P2P
 
         public IPeerIdentifier ToPeerIdentifier()
         {
-            return new PeerIdentifier(PublicKey.KeyToBytes(), IPAddress.Parse(Ip), Port, new PeerIdClientId(ClientVersion));
+            return new PeerIdentifier(PublicKey.KeyToBytes(), IPAddress.Parse(Ip), Port);
         }
     }
 }
