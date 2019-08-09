@@ -25,6 +25,7 @@ using System;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
+using System.Threading;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.Rpc.IO.Messaging.Correlation;
@@ -49,9 +50,10 @@ namespace Catalyst.Common.Rpc.IO.Messaging.Correlation
         {
             var observableScheduler = scheduler ?? Scheduler.Default;
             _evictionEvent = new ReplaySubject<ICacheEvictionEvent<ProtocolMessage>>(0, observableScheduler);
+            EvictionEvents = _evictionEvent.AsObservable();
         }
 
-        public IObservable<ICacheEvictionEvent<ProtocolMessage>> EvictionEvents => _evictionEvent.AsObservable();
+        public IObservable<ICacheEvictionEvent<ProtocolMessage>> EvictionEvents { get; }
 
         protected override void EvictionCallback(object key, object value, EvictionReason reason, object state)
         {

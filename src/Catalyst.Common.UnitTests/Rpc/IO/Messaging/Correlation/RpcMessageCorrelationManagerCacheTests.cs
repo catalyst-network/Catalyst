@@ -74,6 +74,7 @@ namespace Catalyst.Common.UnitTests.Rpc.IO.Messaging.Correlation
         [Fact]
         public async Task Message_Eviction_Should_Cause_Eviction_Event()
         {
+            var autoResetEvent = new AutoResetEvent(false);
             var peerIds = new[]
             {
                 PeerIdentifierHelper.GetPeerIdentifier("peer1"),
@@ -103,21 +104,30 @@ namespace Catalyst.Common.UnitTests.Rpc.IO.Messaging.Correlation
             var evictedEvents = 0;
 
             //Subscribe to eviction events, so we can count them and assert against them.
-            _rpcMessageCorrelationManager.EvictionEvents.Subscribe(response => { evictedEvents++; });
+            _rpcMessageCorrelationManager.EvictionEvents.Subscribe(response => evictedEvents++);
 
             //Evict all messages.
             _cancellationTokenSource.Cancel();
 
-            //Required to evict the cache, microsoft removed the timer in newer versions but read will if the cache has expired https://referencesource.microsoft.com/#System.Runtime.Caching/System/Caching/MemoryCacheStore.cs,ae04d12e168ec1ab
+            //Required to evict the cache, microsoft removed the timer in newer versions but read will if the cache has expired
+            //https://referencesource.microsoft.com/#System.Runtime.Caching/System/Caching/MemoryCacheStore.cs,ae04d12e168ec1ab
             pendingResponses.ForEach(pendingResponse =>
                 _rpcMessageCorrelationManager.TryMatchResponse(pendingResponse.Content));
 
             //To prevent cache eviction multi threading delay
-            while (evictedEvents <= 0)
+            await Task.Run(async () =>
             {
-                await Task.Delay(100);
-                _testScheduler.Start();
-            }
+                const int milliseconds = 100;
+                while (evictedEvents <= 0)
+                {
+                    _testScheduler.AdvanceBy(milliseconds);
+                    await Task.Delay(milliseconds);
+                }
+
+                autoResetEvent.Set();
+            });
+
+            autoResetEvent.WaitOne();
 
             evictedEvents.Should().Be(3);
         }
