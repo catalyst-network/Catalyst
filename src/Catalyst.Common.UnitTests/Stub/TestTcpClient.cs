@@ -22,16 +22,25 @@
 #endregion
 
 using System;
-using Catalyst.Common.Interfaces.IO.Messaging.Dto;
-using Catalyst.Protocol.Common;
+using System.Threading.Tasks;
+using Catalyst.Common.Interfaces.IO.EventLoop;
+using Catalyst.Common.Interfaces.IO.Transport.Channels;
+using Catalyst.Common.IO.Transport;
 using DotNetty.Transport.Channels;
+using NSubstitute;
+using Serilog;
 
-namespace Catalyst.Common.Interfaces.IO.Transport.Channels
+namespace Catalyst.Common.UnitTests.Stub
 {
-    public interface IObservableChannel
+    public class TestTcpClient : TcpClient
     {
-        IChannel Channel { get; }
-        IObservable<IObserverDto<ProtocolMessage>> MessageStream { get; }
+        public TestTcpClient(ITcpClientChannelFactory tcpClientChannelFactory,
+            ILogger logger,
+            ITcpClientEventLoopGroupFactory eventLoopGroupFactory) : base(tcpClientChannelFactory, logger, eventLoopGroupFactory)
+        {
+            Channel = Substitute.For<IChannel>();
+        }
+
+        public override Task StartAsync() { throw new NotImplementedException(); }
     }
 }
-
