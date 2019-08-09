@@ -31,6 +31,8 @@ using System.Threading.Tasks;
 using Catalyst.Common.Extensions;
 using Catalyst.Modules.Lib.Dfs;
 using FluentAssertions;
+using Ipfs;
+using Ipfs.Registry;
 using Multiformats.Hash.Algorithms;
 using NSubstitute;
 using Xunit;
@@ -41,7 +43,7 @@ namespace Catalyst.Modules.Lib.UnitTests.Dfs
     public class FileSystemDfsTests
     {
         private readonly IFileSystem _fileSystem;
-        private readonly IMultihashAlgorithm _hashingAlgorithm;
+        private readonly HashingAlgorithm _hashingAlgorithm;
         private readonly FileSystemDfs _dfs;
         private readonly string _baseFolder;
 
@@ -52,7 +54,7 @@ namespace Catalyst.Modules.Lib.UnitTests.Dfs
             _fileSystem.File.Returns(file);
             _fileSystem.GetCatalystDataDir()
                .Returns(new DirectoryInfo("correct-information"));
-            _hashingAlgorithm = new BLAKE2B_32();
+            _hashingAlgorithm = HashingAlgorithm.All.First(x => x.Name == "blake2b-512");
             _dfs = new FileSystemDfs(_hashingAlgorithm, _fileSystem);
 
             _baseFolder = Path.Combine(_fileSystem.GetCatalystDataDir().FullName,
@@ -72,13 +74,11 @@ namespace Catalyst.Modules.Lib.UnitTests.Dfs
                 Arg.Is(Encoding.UTF8), 
                 Arg.Any<CancellationToken>());
 
-            var utf8Hash = Encoding.UTF8.GetBytes(someGoodUtf8Content)
-               .ComputeMultihash(_hashingAlgorithm);
-            var uf32Hash = Encoding.UTF32.GetBytes(someGoodUtf8Content)
-               .ComputeMultihash(_hashingAlgorithm);
+            var utf8Hash = MultiHash.ComputeHash(Encoding.UTF8.GetBytes(someGoodUtf8Content), _hashingAlgorithm.Name);
+            var uf32Hash = MultiHash.ComputeHash(Encoding.UTF32.GetBytes(someGoodUtf8Content), _hashingAlgorithm.Name);
 
-            contentHash.Should().Be(utf8Hash);
-            contentHash.Should().NotBe(uf32Hash);
+            contentHash.Should().Be(utf8Hash.ToString());
+            contentHash.Should().NotBe(uf32Hash.ToString());
         }
 
         [Fact]
@@ -87,17 +87,15 @@ namespace Catalyst.Modules.Lib.UnitTests.Dfs
             var someGoodUtf8Content = "some good utf8 content!";
 
             var filename = await _dfs.AddTextAsync(someGoodUtf8Content);
-
-            var expectedFileName = Encoding.UTF8.GetBytes(someGoodUtf8Content)
-               .ComputeMultihash(_hashingAlgorithm);
+            var expectedFileName = MultiHash.ComputeHash(Encoding.UTF8.GetBytes(someGoodUtf8Content), _hashingAlgorithm.Name);
 
             await _fileSystem.File.Received(1).WriteAllTextAsync(
-                Arg.Is(Path.Combine(_baseFolder, expectedFileName)),
+                Arg.Is(Path.Combine(_baseFolder, expectedFileName.ToString())),
                 Arg.Any<string>(),
                 Arg.Is(Encoding.UTF8),
                 Arg.Any<CancellationToken>());
 
-            filename.Should().Be(expectedFileName);
+            filename.Should().Be(expectedFileName.ToString());
         }
 
         [Fact]
@@ -149,10 +147,15 @@ namespace Catalyst.Modules.Lib.UnitTests.Dfs
         [Fact]
         public async Task AddAsync_Should_Write_The_Correct_Content()
         {
+            var mockStream = Substitute.For<Stream>();
             var fakeContent = "<:3)~~~~".ToMemoryStream();
+            fakeContent.CopyTo(mockStream);
+
             var expectedBytes = await fakeContent.ReadAllBytesAsync(CancellationToken.None);
 
             await _dfs.AddAsync(fakeContent);
+
+            await mockStream.Received(1).CopyTo()
 
             await _fileSystem.File.Received(1).WriteAllBytesAsync(
                 Arg.Any<string>(),
@@ -168,17 +171,16 @@ namespace Catalyst.Modules.Lib.UnitTests.Dfs
             var contentBytes = await streamed
                .ReadAllBytesAsync(CancellationToken.None);
 
-            var expectedFileName = contentBytes
-               .ComputeMultihash(_hashingAlgorithm);
+            var expectedFileName = MultiHash.ComputeHash(contentBytes, _hashingAlgorithm.Name);
 
             var filename = await _dfs.AddAsync(streamed);
 
             await _fileSystem.File.Received(1).WriteAllBytesAsync(
-                Arg.Is(Path.Combine(_baseFolder, expectedFileName)),
+                Arg.Is(Path.Combine(_baseFolder, expectedFileName.ToString())),
                 Arg.Any<byte[]>(),
                 Arg.Any<CancellationToken>());
 
-            filename.Should().Be(expectedFileName);
+            filename.Should().Be(expectedFileName.ToString());
         }
 
         [Fact]
@@ -203,14 +205,17 @@ namespace Catalyst.Modules.Lib.UnitTests.Dfs
         }
 
         [Fact]
-        public async Task Constructor_Should_Throw_On_Hash_Default_Size_Above_191()
+        public async Task Constructor_Should_Throw_On_Hash_Default_Size_Above_60()
         {
-            var tooLong = new SKEIN1024_192();
-            new Action(() => new FileSystemDfs(tooLong, _fileSystem)).Should().Throw<ArgumentException>()
-               .And.Message.Should().Contain(nameof(SKEIN1024_192));
+            HashingAlgorithm.Register("ToLong", 0x9999, 500);
 
-            var longEnough = new SKEIN1024_184();
-            new Action(() => new FileSystemDfs(longEnough, _fileSystem)).Should().NotThrow<ArgumentException>();
+            var toLongHashingAlgorithm = HashingAlgorithm.All.First(x => x.DigestSize > 191);
+            var longEnoughHashingAlgorithm = HashingAlgorithm.All.First(x => x.DigestSize <= 191);
+
+            new Action(() => new FileSystemDfs(toLongHashingAlgorithm, _fileSystem)).Should().Throw<ArgumentException>()
+               .And.Message.Should().Contain(nameof(HashingAlgorithm));
+
+            new Action(() => new FileSystemDfs(longEnoughHashingAlgorithm, _fileSystem)).Should().NotThrow<ArgumentException>();
         }
     }
 }
