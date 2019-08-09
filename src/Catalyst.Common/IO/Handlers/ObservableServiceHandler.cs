@@ -25,6 +25,7 @@ using System;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
+using System.Threading;
 using Catalyst.Common.Interfaces.IO.Handlers;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.IO.Messaging.Dto;
@@ -55,7 +56,8 @@ namespace Catalyst.Common.IO.Handlers
         public override void ExceptionCaught(IChannelHandlerContext context, Exception e)
         {
             Logger.Error(e, "Error in ObservableServiceHandler");
-            context.CloseAsync().ContinueWith(_ => _messageSubject.OnError(e));
+            context.CloseAsync();
+            _messageSubject.OnError(e);
         }
 
         private void Dispose(bool disposing)

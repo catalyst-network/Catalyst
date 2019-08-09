@@ -22,6 +22,7 @@
 #endregion
 
 using System;
+using System.Threading;
 using Catalyst.Common.IO.Handlers;
 using DotNetty.Transport.Channels;
 using FluentAssertions;
@@ -52,6 +53,7 @@ namespace Catalyst.Common.UnitTests.IO.Handlers
             var channelHandlerContext = Substitute.For<IChannelHandlerContext>();
             var exception = new NotImplementedException("X.X");
             Exception exceptionResponse = null;
+
             _observableServiceHandler.MessageStream.Subscribe(
                 nextResponse => { },
                 response => exceptionResponse = response);
