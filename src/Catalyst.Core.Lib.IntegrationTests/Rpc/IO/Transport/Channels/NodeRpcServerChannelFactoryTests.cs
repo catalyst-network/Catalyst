@@ -124,7 +124,8 @@ namespace Catalyst.Core.Lib.IntegrationTests.Rpc.IO.Transport.Channels
             
             _clientKeySigner.Verify(
                     Arg.Any<ISignature>(),
-                    Arg.Any<byte[]>())
+                    Arg.Any<byte[]>(), 
+                    default)
                .ReturnsForAnyArgs(true);
             
             _authenticationStrategy.Authenticate(Arg.Any<IPeerIdentifier>()).Returns(true);
@@ -138,7 +139,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.Rpc.IO.Transport.Channels
                 _clientChannel.WriteInbound(sentBytes);
                 _clientChannel.ReadInbound<ProtocolMessage>();
                 _clientCorrelationManager.ReceivedWithAnyArgs(1).TryMatchResponse(Arg.Any<ProtocolMessage>());
-                _clientKeySigner.ReceivedWithAnyArgs(1).Verify(null, null);
+                _clientKeySigner.ReceivedWithAnyArgs(1).Verify(null, null, null);
                 await messageStream.WaitForItemsOnDelayedStreamOnTaskPoolSchedulerAsync();
                 observer.Received.Count.Should().Be(1);
                 observer.Received.Single().Payload.CorrelationId.ToCorrelationId().Id.Should().Be(correlationId.Id);
