@@ -75,11 +75,13 @@ namespace Catalyst.Common.Interfaces.Cryptography
         ///     Signs message using provided private key and returns the signature.
         /// </summary>
         /// <param name="privateKey"></param>
+        /// <param name="message"></param>
+        /// <param name="context"></param>
         /// <param name=""></param>
         /// <returns></returns>
-        ISignature Sign(IPrivateKey privateKey, ReadOnlySpan<byte> message);
+        ISignature Sign(IPrivateKey privateKey, ReadOnlySpan<byte> message, ReadOnlySpan<byte> context);
 
-        bool Verify(ISignature signature, ReadOnlySpan<byte> message);
+        bool Verify(ISignature signature, ReadOnlySpan<byte> message, ReadOnlySpan<byte> context);
 
         /// <summary>
         ///     Given a private key returns corresponding public key.
@@ -102,5 +104,7 @@ namespace Catalyst.Common.Interfaces.Cryptography
         /// Signature byte length.
         /// </summary>
         int SignatureLength { get; }
+
+        int SignatureContextMaxLength { get; }
     }
 }

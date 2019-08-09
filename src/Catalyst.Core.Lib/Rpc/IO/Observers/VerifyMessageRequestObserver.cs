@@ -22,6 +22,7 @@
 #endregion
 
 using System;
+using System.Text;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.IO.Observers;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
@@ -71,6 +72,7 @@ namespace Catalyst.Core.Lib.Rpc.IO.Observers
             var decodedMessage = RLP.Decode(verifyMessageRequest.Message.ToByteArray()).RLPData;
             var decodedPublicKey = RLP.Decode(verifyMessageRequest.PublicKey.ToByteArray()).RLPData;
             var decodedSignature = RLP.Decode(verifyMessageRequest.Signature.ToByteArray()).RLPData;
+            var signatureContext = verifyMessageRequest.SigningContext;
 
             IPublicKey publicKey = null;
             try
@@ -95,12 +97,15 @@ namespace Catalyst.Core.Lib.Rpc.IO.Observers
                 Logger.Error(ex, "{0} {1}", SignatureInvalid, verifyMessageRequest);
             }
 
-            var result = _keySigner.CryptoContext.Verify(signature, decodedMessage);
+            var signatureContextBytes = Encoding.UTF8.GetBytes(signatureContext.ToString());
+
+            var result = _keySigner.CryptoContext.Verify(signature, decodedMessage, signatureContextBytes);
 
             Logger.Debug("message content is {0}", verifyMessageRequest.Message);
             
             return ReturnResponse(result);
         }
+
 
         private VerifyMessageResponse ReturnResponse(bool result)
         {

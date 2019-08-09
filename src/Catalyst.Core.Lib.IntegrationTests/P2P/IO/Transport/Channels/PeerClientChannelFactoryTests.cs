@@ -100,7 +100,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.IO.Transport.Channels
             var sender = PeerIdentifierHelper.GetPeerIdentifier("sender");
             _peerIdValidator.ValidatePeerIdFormat(Arg.Any<PeerId>()).Returns(true);
 
-            _serverKeySigner.Sign(Arg.Any<byte[]>()).ReturnsForAnyArgs(_signature);
+            _serverKeySigner.Sign(Arg.Any<byte[]>(), default).ReturnsForAnyArgs(_signature);
             
             var correlationId = CorrelationId.GenerateCorrelationId();
 
@@ -119,7 +119,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.IO.Transport.Channels
 
             _serverCorrelationManager.ReceivedWithAnyArgs(1).AddPendingRequest(Arg.Any<CorrelatableMessage<ProtocolMessage>>());
             
-            _serverKeySigner.ReceivedWithAnyArgs(1).Sign(Arg.Any<byte[]>());
+            _serverKeySigner.ReceivedWithAnyArgs(1).Sign(Arg.Any<byte[]>(), default);
             
             _clientKeySigner.Verify(
                     Arg.Any<ISignature>(),
