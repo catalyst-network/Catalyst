@@ -21,24 +21,25 @@
 
 #endregion
 
-using System.Linq;
-using Multiformats.Base;
-using Multiformats.Hash;
+using Catalyst.Common.Cryptography;
+using Catalyst.Common.Util;
+using Catalyst.Cryptography.BulletProofs.Wrapper;
+using FluentAssertions;
+using Xunit;
 
-namespace Catalyst.Common.Util
+namespace Catalyst.Common.UnitTests.Utils
 {
-    public static class KeyUtil
+    public class KeyUtilTest
     {
-        public static string KeyToString(this byte[] keyBytes)
+        [Fact]
+        public void Can_Encode_And_Decode_Correctly()
         {
-            return Multihash.Sum(HashType.ID, keyBytes).ToString(MultibaseEncoding.Base58Btc);
-        }
+            var cryptoContext = new CryptoContext(new CryptoWrapper());
+            var privateKey = cryptoContext.GeneratePrivateKey();
+            var publicKey = privateKey.GetPublicKey();
 
-        public static byte[] KeyToBytes(this string base58Key)
-        {
-            var publicKeyMultiHash = Multihash.Parse(base58Key);
-            var rawPublicKeyBytes = publicKeyMultiHash.ToBytes().TakeLast(publicKeyMultiHash.Length).ToArray();
-            return rawPublicKeyBytes;
+            var publicKeyAfterEncodeDecode = publicKey.Bytes.KeyToString().KeyToBytes();
+            publicKeyAfterEncodeDecode.Should().BeEquivalentTo(publicKey.Bytes);
         }
     }
 }
