@@ -64,6 +64,7 @@ namespace Catalyst.Core.Lib.Modules.Consensus.Deltas
             {
                 Capacity = _capacity,
             };
+            _hashesByTimeDescending.Add(Timestamp.FromDateTime(DateTime.MinValue.ToUniversalTime()), GenesisAddress);
         }
 
         /// <inheritdoc />

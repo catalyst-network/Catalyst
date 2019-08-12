@@ -82,8 +82,7 @@ namespace Catalyst.Modules.Lib.IntegrationTests.Consensus
                     FileSystem, 
                     output)).ToList();
         }
-
-
+        
         [Fact]
         public async Task Run_Consensus()
         {
