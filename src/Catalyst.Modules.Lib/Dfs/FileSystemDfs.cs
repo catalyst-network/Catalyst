@@ -106,7 +106,7 @@ namespace Catalyst.Modules.Lib.Dfs
             using (var file = _fileSystem.File.Create(filePath))
             {
                 content.Position = 0;
-                content.CopyTo(file);
+                await content.CopyToAsync(file, cancellationToken);
             }
 
             return contentHash.ToString();
