@@ -24,8 +24,8 @@
 using System;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Messaging.Correlation;
-using Catalyst.Node.Rpc.Client.UnitTests.Stub;
 using Catalyst.Protocol.Rpc.Node;
+using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using NSubstitute;
 using Serilog;
@@ -44,7 +44,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests
             var correlationId = CorrelationId.GenerateCorrelationId();
 
             var logger = Substitute.For<ILogger>();
-            var responseObserver = new TestResponseObserver(logger);
+            var responseObserver = new TestRpcResponseObserver(logger);
 
             Assert.Throws<ArgumentNullException>(() => responseObserver
                .HandleResponseObserver(null, channelHandlerContext,
@@ -58,7 +58,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests
             var correlationId = CorrelationId.GenerateCorrelationId();
 
             var logger = Substitute.For<ILogger>();
-            var responseObserver = new TestResponseObserver(logger);
+            var responseObserver = new TestRpcResponseObserver(logger);
 
             Assert.Throws<ArgumentNullException>(() => responseObserver
                .HandleResponseObserver(new VersionResponse(), null,
@@ -72,7 +72,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests
             var correlationId = CorrelationId.GenerateCorrelationId();
 
             var logger = Substitute.For<ILogger>();
-            var responseObserver = new TestResponseObserver(logger);
+            var responseObserver = new TestRpcResponseObserver(logger);
 
             Assert.Throws<ArgumentNullException>(() => responseObserver
                .HandleResponseObserver(new VersionResponse(), channelHandlerContext,

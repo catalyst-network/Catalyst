@@ -29,14 +29,14 @@ using Catalyst.Protocol.Rpc.Node;
 using DotNetty.Transport.Channels;
 using Serilog;
 
-namespace Catalyst.Node.Rpc.Client.UnitTests.Stub
+namespace Catalyst.TestUtils
 {
     /// <summary>
     /// Stub Test Response Observer
     /// </summary>
-    public sealed class TestResponseObserver : RpcResponseObserver<VersionResponse>
+    public sealed class TestRpcResponseObserver : RpcResponseObserver<VersionResponse>
     {
-        public TestResponseObserver(ILogger logger)
+        public TestRpcResponseObserver(ILogger logger)
             : base(logger) { }
 
         /// <summary>

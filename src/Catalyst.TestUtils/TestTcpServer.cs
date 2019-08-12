@@ -30,7 +30,7 @@ using DotNetty.Transport.Channels;
 using NSubstitute;
 using Serilog;
 
-namespace Catalyst.Common.UnitTests.Stub
+namespace Catalyst.TestUtils
 {
     public class TestTcpServer : TcpServer
     {

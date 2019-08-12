@@ -34,7 +34,7 @@ using Catalyst.Common.IO.Transport.Channels;
 using DotNetty.Transport.Channels;
 using NSubstitute;
 
-namespace Catalyst.Common.UnitTests.Stub
+namespace Catalyst.TestUtils
 {
     public class TestTcpClientChannelFactory : TcpClientChannelFactory
     {
