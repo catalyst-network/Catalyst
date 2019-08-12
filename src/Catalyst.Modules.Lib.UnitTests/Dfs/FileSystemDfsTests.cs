@@ -127,15 +127,15 @@ namespace Catalyst.Modules.Lib.UnitTests.Dfs
 
             var filename = await _dfs.AddTextAsync(someGoodUtf8Content);
             var expectedFileName =
-                MultiHash.ComputeHash(Encoding.UTF8.GetBytes(someGoodUtf8Content), _hashingAlgorithm.Name);
+                MultiHash.ComputeHash(Encoding.UTF8.GetBytes(someGoodUtf8Content), _hashingAlgorithm.Name).ToBase32();
 
             await _fileSystem.File.Received(1).WriteAllTextAsync(
-                Arg.Is(Path.Combine(_baseFolder, expectedFileName.ToString())),
+                Arg.Is(Path.Combine(_baseFolder, expectedFileName)),
                 Arg.Any<string>(),
                 Arg.Is(Encoding.UTF8),
                 Arg.Any<CancellationToken>());
 
-            filename.Should().Be(expectedFileName.ToBase32());
+            filename.Should().Be(expectedFileName);
         }
 
         [Fact]
