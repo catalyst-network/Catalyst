@@ -38,7 +38,7 @@ namespace Catalyst.TestUtils
         
         static TestKeyRegistry()
         {
-            TestPrivateKey = "1AkF3HgddsuQYdgELdbCpRJwWKhFYvscTX2XBjR1c5FHgG";
+            TestPrivateKey = "1WG487E925TDYDG37DBBSHCVJQ7PT1TZK9TF2KS8CBPNBZAYQXQG";
 
             var cryptoContext = new CryptoContext(new CryptoWrapper());
             var fakePrivateKey = cryptoContext.PrivateKeyFromBytes(TestPrivateKey.KeyToBytes());
