@@ -32,6 +32,7 @@ using Catalyst.Common.Interfaces.IO.Observers;
 using Catalyst.Common.Interfaces.Keystore;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Registry;
+using Catalyst.Common.Types;
 using Catalyst.Common.Util;
 using Catalyst.Core.Lib.P2P.IO.Observers;
 using Catalyst.TestUtils;
@@ -58,7 +59,7 @@ namespace Catalyst.Node.UnitTests.Config
             var configBuilder = new ConfigurationBuilder();
             configFiles.ToList().ForEach(f => configBuilder.AddJsonFile(f));
 
-            configBuilder.AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Network.Dev + ".json"));
+            configBuilder.AddJsonFile(Path.Combine(Constants.ConfigSubFolder, NetworkTypes.Dev + ".json"));
 
             var configRoot = configBuilder.Build();
             var configModule = new ConfigurationModule(configRoot);

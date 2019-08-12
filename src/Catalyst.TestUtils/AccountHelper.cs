@@ -24,6 +24,7 @@
 using Catalyst.Common.Config;
 using Catalyst.Common.Enumerator;
 using Catalyst.Common.Modules.Ledger.Models;
+using Catalyst.Common.Types;
 using Catalyst.Common.Util;
 
 namespace Catalyst.TestUtils

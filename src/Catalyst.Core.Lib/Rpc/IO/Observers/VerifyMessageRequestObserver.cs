@@ -106,7 +106,6 @@ namespace Catalyst.Core.Lib.Rpc.IO.Observers
             return ReturnResponse(result);
         }
 
-
         private VerifyMessageResponse ReturnResponse(bool result)
         {
             return new VerifyMessageResponse

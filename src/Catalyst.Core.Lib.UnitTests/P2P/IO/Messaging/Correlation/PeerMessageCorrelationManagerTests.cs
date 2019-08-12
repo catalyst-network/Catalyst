@@ -31,6 +31,7 @@ using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.P2P.ReputationSystem;
 using Catalyst.Common.IO.Messaging.Correlation;
+using Catalyst.Common.Types;
 using Catalyst.Common.UnitTests.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.P2P.IO.Messaging.Correlation;
 using Catalyst.Protocol.IPPN;
@@ -137,7 +138,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Messaging.Correlation
                 _testScheduler.Start();
 
                 observer.Received(1).OnNext(Arg.Is<IPeerReputationChange>(c => c.PeerIdentifier.PeerId.Equals(PendingRequests[0].Content.PeerId) 
-                 && c.ReputationEvent.Equals(ReputationEvents.NoResponseReceived)));
+                 && c.ReputationEvent.Equals(ReputationEventType.NoResponseReceived)));
             }
         }
 

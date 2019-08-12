@@ -24,35 +24,35 @@
 using Catalyst.Common.Enumerator;
 using Catalyst.Common.Interfaces.Config;
 
-namespace Catalyst.Common.Config
+namespace Catalyst.Common.Types
 {
-    public class ReputationEvents : Enumeration, IReputationEvents
+    public class ReputationEventType : Enumeration, IReputationEvents
     {
-        public static readonly ReputationEvents NoResponseReceived = new NoResponseReceivedEvent();
-        public static readonly ReputationEvents ResponseReceived = new ResponseReceivedEvent();
-        public static readonly ReputationEvents UnCorrelatableMessage = new UnCorrelatableMessageEvent();
-        public static readonly ReputationEvents InvalidMessageSignature = new InvalidMessageSignatureEvent();
+        public static readonly ReputationEventType NoResponseReceived = new NoResponseReceivedEventType();
+        public static readonly ReputationEventType ResponseReceived = new ResponseReceivedEventType();
+        public static readonly ReputationEventType UnCorrelatableMessage = new UnCorrelatableMessageEventType();
+        public static readonly ReputationEventType InvalidMessageSignature = new InvalidMessageSignatureEventType();
         
         public int Amount { get; set; }
 
-        private ReputationEvents(int id, string name) : base(id, name) { }
+        private ReputationEventType(int id, string name) : base(id, name) { }
         
         /// <summary>
         ///     Fires when a message is evicted for the PeerMessageCorrelationManager cache.
         ///     This means a node has failed to respond to a message.
         /// </summary>
-        private sealed class NoResponseReceivedEvent : ReputationEvents
+        private sealed class NoResponseReceivedEventType : ReputationEventType
         {
-            public NoResponseReceivedEvent() : base(1, "noResponseReceived") { Amount = -10; }
+            public NoResponseReceivedEventType() : base(1, "noResponseReceived") { Amount = -10; }
         }
         
         /// <summary>
         ///     Fires when a message is matched PeerMessageCorrelationManager cache.
         ///     This means a node has correctly respond to a message.
         /// </summary>
-        private sealed class ResponseReceivedEvent : ReputationEvents
+        private sealed class ResponseReceivedEventType : ReputationEventType
         {
-            public ResponseReceivedEvent() : base(2, "responseReceived") { Amount = 10; }
+            public ResponseReceivedEventType() : base(2, "responseReceived") { Amount = 10; }
         }
         
         /// <summary>
@@ -60,17 +60,17 @@ namespace Catalyst.Common.Config
         ///     This means a node has either sent a message with an invalid CorrelationId, it's responded too late,
         ///     or sent a message to the wrong node.
         /// </summary>
-        private sealed class UnCorrelatableMessageEvent : ReputationEvents
+        private sealed class UnCorrelatableMessageEventType : ReputationEventType
         {
-            public UnCorrelatableMessageEvent() : base(3, "unCorrelatableMessage") { Amount = -100; }
+            public UnCorrelatableMessageEventType() : base(3, "unCorrelatableMessage") { Amount = -100; }
         }
         
         /// <summary>
         ///     Fired when node receives a message with an invalid signature.
         /// </summary>
-        private sealed class InvalidMessageSignatureEvent : ReputationEvents
+        private sealed class InvalidMessageSignatureEventType : ReputationEventType
         {
-            public InvalidMessageSignatureEvent() : base(4, "invalidMessageSignature") { Amount = -1000; }
+            public InvalidMessageSignatureEventType() : base(4, "invalidMessageSignature") { Amount = -1000; }
         }
     }
 }

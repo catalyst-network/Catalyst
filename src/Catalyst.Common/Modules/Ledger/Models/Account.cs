@@ -24,6 +24,7 @@
 using System.Text;
 using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.Modules.Ledger;
+using Catalyst.Common.Types;
 using Catalyst.Common.Util;
 using Newtonsoft.Json;
 using SharpRepository.Repository;

@@ -39,6 +39,7 @@ using NSubstitute;
 using Serilog;
 using System.Linq;
 using System.Threading.Tasks;
+using Catalyst.Common.Types;
 using Catalyst.Core.Lib.Rpc.IO.Observers;
 using Xunit;
 
@@ -73,7 +74,7 @@ namespace Catalyst.Common.UnitTests.IO.Observers
             }.ToProtocolMessage(PeerIdHelper.GetPeerId("Test"), guid);
 
             _downloadFileTransferFactory.DownloadChunk(Arg.Any<TransferFileBytesRequest>())
-               .Returns(FileTransferResponseCodes.Successful);
+               .Returns(FileTransferResponseCodeTypes.Successful);
 
             request.SendToHandler(_context, _observer);
             _downloadFileTransferFactory.Received(1).DownloadChunk(Arg.Any<TransferFileBytesRequest>());
@@ -82,7 +83,7 @@ namespace Catalyst.Common.UnitTests.IO.Observers
         [Fact]
         public async Task HandlerCanSendErrorOnException()
         {
-            _downloadFileTransferFactory.DownloadChunk(Arg.Any<TransferFileBytesRequest>()).Returns(FileTransferResponseCodes.Error);
+            _downloadFileTransferFactory.DownloadChunk(Arg.Any<TransferFileBytesRequest>()).Returns(FileTransferResponseCodeTypes.Error);
 
             var sender = PeerIdentifierHelper.GetPeerIdentifier("sender");
             var requestDto = new DtoFactory().GetDto(new TransferFileBytesRequest().ToProtocolMessage(sender.PeerId)
@@ -98,7 +99,7 @@ namespace Catalyst.Common.UnitTests.IO.Observers
             receivedCalls.Count.Should().Be(1);
             var sentResponseDto = (IMessageDto<ProtocolMessage>) receivedCalls.Single().GetArguments().Single();
             var transferFileBytesResponse = sentResponseDto.Content.FromProtocolMessage<TransferFileBytesResponse>();
-            transferFileBytesResponse.ResponseCode.Should().Equal((byte) FileTransferResponseCodes.Error);
+            transferFileBytesResponse.ResponseCode.Should().Equal((byte) FileTransferResponseCodeTypes.Error);
         }
     }
 }

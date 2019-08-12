@@ -28,6 +28,7 @@ using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.FileTransfer;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.IO.Messaging.Correlation;
+using Catalyst.Common.Types;
 using Catalyst.Node.Rpc.Client.IO.Observers;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
@@ -58,14 +59,14 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
         [Fact]
         public void Can_Expire_Download_File_Transfer_On_Error()
         {
-            var correlationId = SendResponseToHandler(FileTransferResponseCodes.Error);
+            var correlationId = SendResponseToHandler(FileTransferResponseCodeTypes.Error);
             _fileDownloadFactory.GetFileTransferInformation(correlationId).Received(1).Expire();
         }
 
         [Fact]
         public void Can_Start_File_Download_On_Successful_Response()
         {
-            var correlationId = SendResponseToHandler(FileTransferResponseCodes.Successful);
+            var correlationId = SendResponseToHandler(FileTransferResponseCodeTypes.Successful);
             _fileDownloadFactory.GetFileTransferInformation(correlationId).Received(1).SetLength(ExpectedFileSize);
             _fileDownloadFactory.Received(1).FileTransferAsync(correlationId, CancellationToken.None);
         }
@@ -73,7 +74,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
         [Fact]
         public void Does_Nothing_If_File_Transfer_Does_Not_Exist()
         {
-            var responseCode = FileTransferResponseCodes.Successful;
+            var responseCode = FileTransferResponseCodeTypes.Successful;
             var correlationId = CorrelationId.GenerateCorrelationId();
             _fileDownloadFactory.GetFileTransferInformation(correlationId).Returns(default(IDownloadFileInformation));
 
@@ -86,12 +87,12 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
             _fakeContext.Channel.DidNotReceiveWithAnyArgs().WriteAndFlushAsync(default);
         }
 
-        private ICorrelationId SendResponseToHandler(FileTransferResponseCodes responseCode)
+        private ICorrelationId SendResponseToHandler(FileTransferResponseCodeTypes responseCodeType)
         {
             var correlationId = CreateFakeDownloadFileTransfer();
             var getFileFromDfsResponseHandler =
                 new GetFileFromDfsResponseObserver(_logger, _fileDownloadFactory);
-            var getFileResponse = GetResponseMessage(correlationId, responseCode);
+            var getFileResponse = GetResponseMessage(correlationId, responseCodeType);
             getFileResponse.SendToHandler(_fakeContext, getFileFromDfsResponseHandler);
             return correlationId;
         }
@@ -105,12 +106,12 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
             return guid;
         }
 
-        private ProtocolMessage GetResponseMessage(ICorrelationId correlationId, FileTransferResponseCodes responseCodes)
+        private ProtocolMessage GetResponseMessage(ICorrelationId correlationId, FileTransferResponseCodeTypes responseCodeTypes)
         {
             return new GetFileFromDfsResponse
             {
                 FileSize = ExpectedFileSize,
-                ResponseCode = ByteString.CopyFrom((byte) responseCodes.Id)
+                ResponseCode = ByteString.CopyFrom((byte) responseCodeTypes.Id)
             }.ToProtocolMessage(PeerIdHelper.GetPeerId("Test"), correlationId);
         }
     }

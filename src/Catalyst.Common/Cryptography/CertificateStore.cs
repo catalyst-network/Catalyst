@@ -33,13 +33,14 @@ using Catalyst.Common.Config;
 using Serilog;
 using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Common.Interfaces.FileSystem;
+using Catalyst.Common.Types;
 
 namespace Catalyst.Common.Cryptography
 {
     public sealed class CertificateStore
         : ICertificateStore
     {
-        private readonly PasswordRegistryKey _certificatePasswordIdentifier = PasswordRegistryKey.CertificatePassword;
+        private readonly PasswordRegistryTypes _certificatePasswordIdentifier = PasswordRegistryTypes.CertificatePassword;
         private static int MaxTries => 5;
         private const string LocalHost = "localhost";
         private readonly DirectoryInfo _storageFolder;

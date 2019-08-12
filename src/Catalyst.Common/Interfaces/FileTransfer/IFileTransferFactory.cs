@@ -26,6 +26,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
+using Catalyst.Common.Types;
 
 namespace Catalyst.Common.Interfaces.FileTransfer
 {
@@ -37,7 +38,7 @@ namespace Catalyst.Common.Interfaces.FileTransfer
         /// <summary>Registers the transfer.</summary>
         /// <param name="fileTransferInformation">The file transfer information.</param>
         /// <returns>Initialization response code</returns>
-        FileTransferResponseCodes RegisterTransfer(T fileTransferInformation);
+        FileTransferResponseCodeTypes RegisterTransfer(T fileTransferInformation);
 
         /// <summary>Files the transfer asynchronous.</summary>
         /// <param name="correlationId">The correlation unique identifier.</param>
