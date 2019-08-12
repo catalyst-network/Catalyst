@@ -83,7 +83,7 @@ namespace Catalyst.Modules.Lib.UnitTests.Dfs
             var expectedFileName = MultiHash.ComputeHash(contentBytes, _hashingAlgorithm.Name);
             var filename = await _dfs.AddAsync(contentStream);
 
-            filename.Should().Be(expectedFileName.ToString());
+            filename.Should().Be(expectedFileName.ToBase32());
         }
 
         [Fact]
@@ -135,7 +135,7 @@ namespace Catalyst.Modules.Lib.UnitTests.Dfs
                 Arg.Is(Encoding.UTF8),
                 Arg.Any<CancellationToken>());
 
-            filename.Should().Be(expectedFileName.ToString());
+            filename.Should().Be(expectedFileName.ToBase32());
         }
 
         [Fact]
@@ -154,8 +154,8 @@ namespace Catalyst.Modules.Lib.UnitTests.Dfs
             var utf8Hash = MultiHash.ComputeHash(Encoding.UTF8.GetBytes(someGoodUtf8Content), _hashingAlgorithm.Name);
             var uf32Hash = MultiHash.ComputeHash(Encoding.UTF32.GetBytes(someGoodUtf8Content), _hashingAlgorithm.Name);
 
-            contentHash.Should().Be(utf8Hash.ToString());
-            contentHash.Should().NotBe(uf32Hash.ToString());
+            contentHash.Should().Be(utf8Hash.ToBase32());
+            contentHash.Should().NotBe(uf32Hash.ToBase32());
         }
 
         [Fact]

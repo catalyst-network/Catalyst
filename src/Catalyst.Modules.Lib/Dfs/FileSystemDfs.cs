@@ -78,14 +78,14 @@ namespace Catalyst.Modules.Lib.Dfs
         public async Task<string> AddTextAsync(string utf8Content, CancellationToken cancellationToken = default)
         {
             var bytes = Encoding.UTF8.GetBytes(utf8Content);
-            var contentHash = MultiHash.ComputeHash(bytes, _hashingAlgorithm.Name);
-            var filePath = Path.Combine(_baseFolder.FullName, contentHash.ToString());
+            var contentHash = MultiHash.ComputeHash(bytes, _hashingAlgorithm.Name).ToBase32();
+            var filePath = Path.Combine(_baseFolder.FullName, contentHash);
 
             await _fileSystem.File.WriteAllTextAsync(
                 filePath,
                 utf8Content, Encoding.UTF8, cancellationToken);
 
-            return contentHash.ToBase32();
+            return contentHash;
         }
 
         /// <inheritdoc />
@@ -100,8 +100,8 @@ namespace Catalyst.Modules.Lib.Dfs
             string name = "",
             CancellationToken cancellationToken = default)
         {
-            var contentHash = MultiHash.ComputeHash(content, _hashingAlgorithm.Name);
-            var filePath = Path.Combine(_baseFolder.FullName, contentHash.ToString());
+            var contentHash = MultiHash.ComputeHash(content, _hashingAlgorithm.Name).ToBase32();
+            var filePath = Path.Combine(_baseFolder.FullName, contentHash);
 
             using (var file = _fileSystem.File.Create(filePath))
             {
@@ -109,7 +109,7 @@ namespace Catalyst.Modules.Lib.Dfs
                 await content.CopyToAsync(file, cancellationToken).ConfigureAwait(false);
             }
 
-            return contentHash.ToBase32();
+            return contentHash;
         }
 
         /// <inheritdoc />
