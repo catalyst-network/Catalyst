@@ -47,15 +47,18 @@ namespace Catalyst.Core.Lib.Modules.Consensus.Deltas
         private readonly int _capacity;
 
         public IObservable<Multihash> DeltaHashUpdates => _deltaHashUpdatesSubject.AsObservable();
+        public Multihash GenesisAddress { get; }
 
         public DeltaHashProvider(IDeltaCache deltaCache, 
             ILogger logger,
             int capacity = 10_000)
         {
+            GenesisAddress = Multihash.Parse("oOQCIKFCdksuNerofEzIB4BnQHEDUl9Mr9o9lR5wVMAlutnD");
+
             _deltaCache = deltaCache;
             _logger = logger;
             _deltaHashUpdatesSubject = new ReplaySubject<Multihash>(0);
-            var comparer = ComparerBuilder.For<Timestamp>().OrderBy(u => u, @descending: true);
+            var comparer = ComparerBuilder.For<Timestamp>().OrderBy(u => u, descending: true);
             _capacity = capacity;
             _hashesByTimeDescending = new SortedList<Timestamp, Multihash>(comparer)
             {

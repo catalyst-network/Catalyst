@@ -30,12 +30,14 @@ using System.Threading.Tasks;
 using Autofac;
 using Catalyst.Common.Config;
 using Catalyst.Common.Cryptography;
+using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.P2P;
 using Catalyst.Common.Util;
+using Catalyst.Core.Lib.Modules.Consensus.Cycle;
 using Catalyst.Cryptography.BulletProofs.Wrapper;
 using Catalyst.TestUtils;
-using Serilog;
+using Multiformats.Hash.Algorithms;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -63,7 +65,7 @@ namespace Catalyst.Modules.Lib.IntegrationTests.Consensus
                 {
                     var privateKey = context.GeneratePrivateKey();
                     var publicKey = privateKey.GetPublicKey();
-                    var nodeSettings = PeerSettingsHelper.TestPeerSettings(publicKey.Bytes.KeyToString(), port: 2000 + i);
+                    var nodeSettings = PeerSettingsHelper.TestPeerSettings(publicKey.Bytes, port: 2000 + i);
                     var peerIdentifier = new PeerIdentifier(nodeSettings) as IPeerIdentifier;
                     var name = $"producer{i}";
                     return new {index = i, name, privateKey, nodeSettings, peerIdentifier};
@@ -81,7 +83,8 @@ namespace Catalyst.Modules.Lib.IntegrationTests.Consensus
                     output)).ToList();
         }
 
-        [Fact(Skip = "WIP 🧐")]
+
+        [Fact]
         public async Task Run_Consensus()
         {
             _nodes.AsParallel()
@@ -91,7 +94,8 @@ namespace Catalyst.Modules.Lib.IntegrationTests.Consensus
                     n.Consensus.StartProducing();
                 });
 
-            await Task.Delay(TimeSpan.FromSeconds(20)).ConfigureAwait(false);
+            await Task.Delay(CycleConfiguration.Default.CycleDuration.Multiply(2))
+               .ConfigureAwait(false);
 
             _endOfTestCancellationSource.CancelAfter(TimeSpan.FromMinutes(3));
         }

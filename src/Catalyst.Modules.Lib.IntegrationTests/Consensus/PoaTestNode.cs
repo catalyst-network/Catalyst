@@ -81,7 +81,7 @@ namespace Catalyst.Modules.Lib.IntegrationTests.Consensus
             _nodeSettings = nodeSettings;
 
             _nodeDirectory = parentTestFileSystem.GetCatalystDataDir().SubDirectoryInfo(Name);
-            IFileSystem nodeFileSystem = Substitute.ForPartsOf<FileSystem>();
+            var nodeFileSystem = Substitute.ForPartsOf<FileSystem>();
             nodeFileSystem.GetCatalystDataDir().Returns(_nodeDirectory);
 
             _rpcSettings = RpcServerSettingsHelper.GetRpcServerSettings(nodeSettings.Port + 100);
