@@ -100,5 +100,20 @@ namespace Catalyst.Common.IntegrationTests.Modules.KeySigner
 
             _keySigner.Verify(signature, toSign, new SigningContext()).Should().BeTrue();
         }
+
+        [Fact]
+        [Trait(Traits.TestType, Traits.IntegrationTest)]
+        public void KeySigner_Cant_Verify_An_Incorrect_Signature()
+        {
+            byte[] toSign = Encoding.UTF8.GetBytes("sign this plz");
+            var signature = _keySigner.Sign(toSign, new SigningContext());
+            var signingContext = new SigningContext
+            {
+                Network = Protocol.Common.Network.Mainet,
+                SignatureType = SignatureType.ProtocolRpc
+            };
+
+            _keySigner.Verify(signature, toSign, signingContext).Should().BeFalse();
+        }
     }
 }
