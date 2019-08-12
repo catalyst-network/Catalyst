@@ -26,7 +26,7 @@ using Catalyst.Common.Config;
 using Catalyst.Common.Kernel;
 using CommandLine;
 
-namespace Catalyst.Node
+namespace Catalyst.Node.Poa.CE
 {
     internal class Options
     {

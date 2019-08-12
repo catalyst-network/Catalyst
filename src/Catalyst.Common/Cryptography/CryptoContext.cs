@@ -100,5 +100,4 @@ namespace Catalyst.Common.Cryptography
 
         public int SignatureContextMaxLength => _wrapper.SignatureContextMaxLength;
     }
-
 }

@@ -36,7 +36,7 @@ using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Modules.Lib.Api;
 using Serilog;
 
-namespace Catalyst.Node
+namespace Catalyst.Node.Poa.CE
 {
     public class CatalystNode
         : ICatalystNode
