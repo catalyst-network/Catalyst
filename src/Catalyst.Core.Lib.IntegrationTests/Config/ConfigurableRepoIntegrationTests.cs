@@ -27,6 +27,7 @@ using System.Threading.Tasks;
 using Autofac;
 using Catalyst.Common.Config;
 using Catalyst.Common.IO.Messaging.Correlation;
+using Catalyst.Common.Types;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Microsoft.Extensions.Configuration;
@@ -72,7 +73,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.Config
             _configFilesUsed = new[]
             {
                 alteredComponentsFile,
-                Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Network.Dev))
+                Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(NetworkTypes.Dev))
             };
 
             _containerProvider = new ContainerProvider(_configFilesUsed, FileSystem, Output);

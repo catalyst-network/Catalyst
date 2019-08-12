@@ -27,6 +27,7 @@ using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.FileTransfer;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.IO.Messaging.Correlation;
+using Catalyst.Common.Types;
 using Catalyst.Protocol.Rpc.Node;
 using Serilog;
 
@@ -52,25 +53,25 @@ namespace Catalyst.Common.FileTransfer
         /// <param name="fileName">Name of the file.</param>
         /// <param name="chunkId">The chunk identifier.</param>
         /// <param name="fileChunk">The file chunk bytes.</param>
-        /// <returns><see cref="FileTransferResponseCodes"/></returns>
-        private FileTransferResponseCodes DownloadChunkResponse(ICorrelationId fileName, uint chunkId, byte[] fileChunk)
+        /// <returns><see cref="FileTransferResponseCodeTypes"/></returns>
+        private FileTransferResponseCodeTypes DownloadChunkResponse(ICorrelationId fileName, uint chunkId, byte[] fileChunk)
         {
             EnsureKeyExists(fileName);
             var fileTransferInformation = GetFileTransferInformation(fileName);
 
             if (fileTransferInformation == null)
             {
-                return FileTransferResponseCodes.Expired;
+                return FileTransferResponseCodeTypes.Expired;
             }
 
             if (fileChunk.Length > Constants.FileTransferChunkSize)
             {
-                return FileTransferResponseCodes.Error;
+                return FileTransferResponseCodeTypes.Error;
             }
 
             fileTransferInformation.WriteToStream(chunkId, fileChunk);
             fileTransferInformation.UpdateChunkIndicator(chunkId - 1, true);
-            return FileTransferResponseCodes.Successful;
+            return FileTransferResponseCodeTypes.Successful;
         }
 
         /// <summary>Downloads the specified file transfer information.</summary>
@@ -86,22 +87,22 @@ namespace Catalyst.Common.FileTransfer
         }
 
         /// <inheritdoc />
-        public FileTransferResponseCodes DownloadChunk(TransferFileBytesRequest transferFileBytesRequest)
+        public FileTransferResponseCodeTypes DownloadChunk(TransferFileBytesRequest transferFileBytesRequest)
         {
-            FileTransferResponseCodes responseCode;
+            FileTransferResponseCodeTypes responseCodeType;
             try
             {
                 var fileTransferCorrelationId = new CorrelationId(transferFileBytesRequest.CorrelationFileName.ToByteArray());
-                responseCode = DownloadChunkResponse(fileTransferCorrelationId, transferFileBytesRequest.ChunkId, transferFileBytesRequest.ChunkBytes.ToByteArray());
+                responseCodeType = DownloadChunkResponse(fileTransferCorrelationId, transferFileBytesRequest.ChunkId, transferFileBytesRequest.ChunkBytes.ToByteArray());
             }
             catch (Exception e)
             {
                 Logger.Error(e,
                     "Failed to handle TransferFileBytesRequestHandler after receiving message {0}", transferFileBytesRequest);
-                responseCode = FileTransferResponseCodes.Error;
+                responseCodeType = FileTransferResponseCodeTypes.Error;
             }
 
-            return responseCode;
+            return responseCodeType;
         }
     }
 }

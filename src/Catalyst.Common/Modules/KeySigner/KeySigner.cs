@@ -29,6 +29,7 @@ using Catalyst.Common.Interfaces.Keystore;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.Registry;
+using Catalyst.Common.Types;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Exceptions;
 using Catalyst.Protocol.Common;
 using Google.Protobuf;
@@ -40,7 +41,7 @@ namespace Catalyst.Common.Modules.KeySigner
         private readonly IKeyStore _keyStore;
         private readonly ICryptoContext _cryptoContext;
         private readonly IKeyRegistry _keyRegistry;
-        private readonly KeyRegistryKey _defaultKey = KeyRegistryKey.DefaultKey;
+        private readonly KeyRegistryTypes _defaultKey = KeyRegistryTypes.DefaultKey;
 
         /// <summary>Initializes a new instance of the <see cref="KeySigner"/> class.</summary>
         /// <param name="keyStore">The key store.</param>
@@ -77,7 +78,7 @@ namespace Catalyst.Common.Modules.KeySigner
         /// <inheritdoc/>
         ICryptoContext IKeySigner.CryptoContext => _cryptoContext;
 
-        private ISignature Sign(byte[] data, SigningContext signingContext, KeyRegistryKey keyIdentifier)
+        private ISignature Sign(byte[] data, SigningContext signingContext, KeyRegistryTypes keyIdentifier)
         {
             var privateKey = _keyRegistry.GetItemFromRegistry(keyIdentifier);
             if (privateKey == null && !TryPopulateRegistryFromKeyStore(keyIdentifier, out privateKey))
@@ -90,7 +91,7 @@ namespace Catalyst.Common.Modules.KeySigner
 
         public ISignature Sign(byte[] data, SigningContext signingContext)
         {
-            return Sign(data, signingContext, KeyRegistryKey.DefaultKey);
+            return Sign(data, signingContext, KeyRegistryTypes.DefaultKey);
         }
 
         private ISignature Sign(byte[] data, SigningContext signingContext, IPrivateKey privateKey)
@@ -110,7 +111,7 @@ namespace Catalyst.Common.Modules.KeySigner
             throw new NotImplementedException();
         }
 
-        private bool TryPopulateRegistryFromKeyStore(KeyRegistryKey keyIdentifier, out IPrivateKey key)
+        private bool TryPopulateRegistryFromKeyStore(KeyRegistryTypes keyIdentifier, out IPrivateKey key)
         {
             key = _keyStore.KeyStoreDecrypt(keyIdentifier);
             

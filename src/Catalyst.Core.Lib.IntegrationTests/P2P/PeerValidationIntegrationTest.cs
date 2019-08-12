@@ -47,6 +47,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using Catalyst.Common.Types;
 using Xunit;
 using Xunit.Abstractions;
 using Constants = Catalyst.Common.Config.Constants;
@@ -64,7 +65,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P
         {
             Constants.ComponentsJsonConfigFile,
             Constants.SerilogJsonConfigFile,
-            Constants.NetworkConfigFile(Network.Test)
+            Constants.NetworkConfigFile(NetworkTypes.Test)
         }.Select(f => Path.Combine(Constants.ConfigSubFolder, f)), output)
         {
             ContainerProvider.ConfigureContainerBuilder(true, true);

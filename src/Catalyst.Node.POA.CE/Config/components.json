@@ -1,0 +1,435 @@
+{
+    "defaultAssembly": "Catalyst.Core.Lib",
+    "components": [
+        {
+            "type": "Catalyst.Node.POA.CE.CatalystNodePoa, Catalyst.Node.POA.CE",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.ICatalystNode, Catalyst.Common"
+                }
+            ]
+        },
+        {
+            "type": "Catalyst.Core.Lib.Repository.PeerRepository, Catalyst.Core.Lib",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.Repository.IPeerRepository, Catalyst.Common"
+                }
+            ],
+            "instanceScope": "singleinstance"
+        },
+        {
+            "type": "Catalyst.Core.Lib.Repository.AuthCredentialRepository, Catalyst.Core.Lib",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.Repository.IAuthCredentialRepository, Catalyst.Common"
+                }
+            ]
+        },
+        {
+            "type": "Catalyst.Core.Lib.Repository.AccountRepository, Catalyst.Core.Lib",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.Repository.IAccountRepository, Catalyst.Common"
+                }
+            ]
+        },
+        {
+            "type": "Catalyst.Common.IO.EventLoop.EventLoopGroupFactoryConfiguration, Catalyst.Common",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.IO.EventLoop.IEventLoopGroupFactoryConfiguration, Catalyst.Common"
+                }
+            ],
+            "properties": {
+                "TcpServerHandlerWorkerThreads": 4,
+                "UdpServerHandlerWorkerThreads": 8,
+                "UdpClientHandlerWorkerThreads": 2
+            }
+        },
+        {
+            "type": "Catalyst.Common.IO.EventLoop.TcpServerEventLoopGroupFactory, Catalyst.Common",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.IO.EventLoop.ITcpServerEventLoopGroupFactory, Catalyst.Common"
+                }
+            ],
+            "instanceScope": "singleinstance"
+        },
+        {
+            "type": "Catalyst.Common.IO.EventLoop.UdpClientEventLoopGroupFactory, Catalyst.Common",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.IO.EventLoop.IUdpClientEventLoopGroupFactory, Catalyst.Common"
+                }
+            ],
+            "instanceScope": "singleinstance"
+        },
+        {
+            "type": "Catalyst.Common.IO.EventLoop.UdpServerEventLoopGroupFactory, Catalyst.Common",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.IO.EventLoop.IUdpServerEventLoopGroupFactory, Catalyst.Common"
+                }
+            ],
+            "instanceScope": "singleinstance"
+        },
+        {
+            "type": "Catalyst.Core.Lib.P2P.PeerClient",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.P2P.IPeerClient, Catalyst.Common"
+                }
+            ],
+            "instanceScope": "singleinstance"
+        },
+        {
+            "type": "Catalyst.Common.IO.Messaging.Dto.DtoFactory, Catalyst.Common",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.IO.Messaging.Dto.IDtoFactory, Catalyst.Common"
+                }
+            ]
+        },
+        {
+            "type": "Catalyst.Node.Rpc.Client.IO.Transport.Channels.NodeRpcClientChannelFactory, Catalyst.Node.Rpc.Client",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.IO.Transport.Channels.ITcpClientChannelFactory, Catalyst.Common"
+                }
+            ]
+        },
+        {
+            "type": "Catalyst.Core.Lib.Rpc.IO.Transport.Channels.NodeRpcServerChannelFactory",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.IO.Transport.Channels.ITcpServerChannelFactory, Catalyst.Common"
+                }
+            ]
+        },
+        {
+            "type": "Catalyst.Core.Lib.P2P.IO.Transport.Channels.PeerClientChannelFactory",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.IO.Transport.Channels.IUdpClientChannelFactory, Catalyst.Common"
+                }
+            ]
+        },
+        {
+            "type": "Catalyst.Core.Lib.P2P.IO.Transport.Channels.PeerServerChannelFactory",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.IO.Transport.Channels.IUdpServerChannelFactory, Catalyst.Common"
+                }
+            ]
+        },
+        {
+            "type": "Catalyst.Core.Lib.Rpc.NodeRpcServer",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.Rpc.INodeRpcServer, Catalyst.Common"
+                }
+            ]
+        },
+        {
+            "type": "Catalyst.Common.IO.Handlers.ObservableServiceHandler, Catalyst.Common",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.IO.Handlers.IObservableServiceHandler, Catalyst.Common"
+                }
+            ]
+        },
+        {
+            "type": "Catalyst.Core.Lib.Rpc.RpcServerSettings",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.Rpc.IRpcServerSettings, Catalyst.Common"
+                }
+            ]
+        },
+        {
+            "type": "Catalyst.Common.Rpc.IO.Messaging.Correlation.RpcMessageCorrelationManager, Catalyst.Common",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.Rpc.IO.Messaging.Correlation.IRpcMessageCorrelationManager, Catalyst.Common"
+                }
+            ],
+            "instanceScope": "singleinstance"
+        },
+        {
+            "type": "Catalyst.Core.Lib.P2P.IO.Messaging.Correlation.PeerMessageCorrelationManager",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.P2P.IO.Messaging.Correlation.IPeerMessageCorrelationManager, Catalyst.Common"
+                }
+            ],
+            "instanceScope": "singleinstance"
+        },
+        {
+            "type": "Catalyst.Core.Lib.P2P.PeerSettings",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.P2P.IPeerSettings, Catalyst.Common"
+                }
+            ]
+        },
+        {
+            "type": "Catalyst.Common.P2P.PeerIdentifier, Catalyst.Common",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.P2P.IPeerIdentifier, Catalyst.Common"
+                }
+            ],
+            "instanceScope": "singleinstance"
+        },
+
+        {
+            "type": "Catalyst.Core.Lib.Rpc.Authentication.RepositoryAuthenticationStrategy",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.Rpc.Authentication.IAuthenticationStrategy, Catalyst.Common"
+                }
+            ]
+        },
+        {
+            "type": "SharpRepository.InMemoryRepository.InMemoryRepository`2[[Catalyst.Common.P2P.Models.Peer, Catalyst.Common], [System.String, mscorlib]], SharpRepository.InMemoryRepository",
+            "services": [
+                {
+                    "type": "SharpRepository.Repository.IRepository`2[[Catalyst.Common.P2P.Models.Peer, Catalyst.Common], [System.String, mscorlib]], SharpRepository.Repository"
+                }
+            ]
+        },
+        {
+            "type": "Microsoft.Extensions.Caching.Memory.MemoryCacheOptions, Microsoft.Extensions.Caching.Memory",
+            "services": [
+                {
+                    "type": "Microsoft.Extensions.Options.IOptions`1[[Microsoft.Extensions.Caching.Memory.MemoryCacheOptions, Microsoft.Extensions.Caching.Memory]], Microsoft.Extensions.Options"
+                }
+            ]
+        },
+        {
+            "type": "Catalyst.Common.Repository.FileSystemAwareXmlRepository`1[[Catalyst.Common.Rpc.Authentication.AuthCredentials, Catalyst.Common]], Catalyst.Common",
+            "services": [
+                {
+                    "type": "SharpRepository.Repository.IRepository`2[[Catalyst.Common.Rpc.Authentication.AuthCredentials, Catalyst.Common], [System.String, mscorlib]], SharpRepository.Repository"
+                }
+            ]
+        },
+        {
+            "type": "Microsoft.Extensions.Caching.Memory.MemoryCache, Microsoft.Extensions.Caching.Memory",
+            "services": [
+                {
+                    "type": "Microsoft.Extensions.Caching.Memory.IMemoryCache, Microsoft.Extensions.Caching.Abstractions"
+                }
+            ]
+        },
+        {
+            "type": "Catalyst.Common.P2P.Models.Peer, Catalyst.Common",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.P2P.IPeer, Catalyst.Common"
+                }
+            ]
+        },
+        {
+            "type": "Catalyst.Core.Lib.P2P.PoaDiscovery",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.P2P.Discovery.IPeerDiscovery, Catalyst.Common"
+                }
+            ]
+        },
+        {
+            "type": "Catalyst.Common.Network.DevDnsClient, Catalyst.Common",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.Network.IDns, Catalyst.Common"
+                }
+            ]
+        },
+        {
+            "type": "Catalyst.Common.Network.InjectableLookupClient, Catalyst.Common",
+            "services": [
+                {
+                    "type": "DnsClient.ILookupClient, DnsClient"
+                }
+            ]
+        },
+        {
+            "type": "Catalyst.Core.Lib.P2P.PeerService",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.P2P.IPeerService, Catalyst.Common"
+                }
+            ]
+        },
+        {
+            "type": "Catalyst.Core.Lib.P2P.PeerChallenger",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.P2P.IPeerChallenger, Catalyst.Common"
+                }
+            ],
+            "parameters": {
+                "peerChallengeWaitTimeSeconds": 5
+            },
+            "instanceScope": "singleinstance"
+        },
+        {
+            "type": "Catalyst.Core.Lib.P2P.PeerHeartbeatChecker",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.P2P.IPeerHeartbeatChecker, Catalyst.Common"
+                }
+            ],
+            "parameters": {
+                "checkHeartbeatIntervalSeconds": 10,
+                "maxNonResponsiveCounter": 3
+            }
+        },
+        {
+            "type": "Catalyst.Common.Cryptography.CertificateStore, Catalyst.Common",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.Cryptography.ICertificateStore, Catalyst.Common"
+                }
+            ]
+        },
+        {
+            "type": "Catalyst.Common.Cryptography.IsaacRandom, Catalyst.Common",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.Cryptography.IDeterministicRandom, Catalyst.Common"
+                }
+            ]
+        },
+        // WHY USE CLI BASED CLASS AND NOT IN COMMON???
+        {
+            "type": "Catalyst.Common.Shell.ConsoleUserOutput, Catalyst.Common",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.Cli.IUserOutput, Catalyst.Common"
+                }
+            ]
+        },
+        {
+            "type": "Catalyst.Common.FileSystem.FileSystem, Catalyst.Common",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.FileSystem.IFileSystem, Catalyst.Common"
+                }
+            ],
+            "parameters": {
+                "configDataDir": "Data_Directory"
+            }
+        },
+        {
+            "type": "Catalyst.Common.FileTransfer.UploadFileTransferFactory, Catalyst.Common",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.FileTransfer.IUploadFileTransferFactory, Catalyst.Common"
+                }
+            ],
+            "instanceScope": "singleinstance"
+        },
+        {
+            "type": "Catalyst.Common.FileTransfer.DownloadFileTransferFactory, Catalyst.Common",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.FileTransfer.IDownloadFileTransferFactory, Catalyst.Common"
+                }
+            ],
+            "instanceScope": "singleinstance"
+        },
+        {
+            "type": "Catalyst.Core.Lib.P2P.ReputationSystem.ReputationManager",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.P2P.ReputationSystem.IReputationManager, Catalyst.Common"
+                }
+            ],
+            "instanceScope": "singleinstance"
+        },
+        {
+            "type": "Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast.BroadcastManager",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.P2P.IO.Messaging.Broadcast.IBroadcastManager, Catalyst.Common"
+                }
+            ],
+            "instanceScope": "singleinstance"
+        },
+        {
+            "type": "Catalyst.Common.P2P.PeerIdValidator, Catalyst.Common",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.P2P.IPeerIdValidator, Catalyst.Common"
+                }
+            ]
+        },
+        {
+            "type": "Catalyst.Common.Util.TtlChangeTokenProvider, Catalyst.Common",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.Util.IChangeTokenProvider, Catalyst.Common"
+                }
+            ],
+            "parameters": {
+                "timeToLiveInMs": 8000
+            }
+        }
+    ],
+    "modules": [
+        {
+            "type": "Catalyst.Core.Lib.Modules.JsonConfiguredModule",
+            "parameters": {
+                "configFilePath": "Config/messageHandlers.json"
+            }
+        },
+        // The following modules are not only modules in the sense of Autofac,
+        // but also in the sense of the catalyst node architecture, i.e. swappable
+        // components that can customized for different use cases.
+        {
+            "type": "Catalyst.Core.Lib.Modules.JsonConfiguredModule",
+            "parameters": {
+                "configFilePath": "Config/Modules/api.json"
+            }
+        },
+        {
+            "type": "Catalyst.Core.Lib.Modules.JsonConfiguredModule",
+            "parameters": {
+                "configFilePath": "Config/Modules/dfs.json"
+            }
+        },
+        {
+            "type": "Catalyst.Core.Lib.Modules.Consensus.ConsensusModule",
+            "parameters": {
+                "configFilePath": "Config/Modules/consensus.json"
+            }
+        },
+        {
+            "type": "Catalyst.Core.Lib.Modules.JsonConfiguredModule",
+            "parameters": {
+                "configFilePath": "Config/Modules/contract.json"
+            }
+        },
+        {
+            "type": "Catalyst.Core.Lib.Modules.JsonConfiguredModule",
+            "parameters": {
+                "configFilePath": "Config/Modules/ledger.json"
+            }
+        },
+        {
+            "type": "Catalyst.Core.Lib.Modules.JsonConfiguredModule",
+            "parameters": {
+                "configFilePath": "Config/Modules/keysigner.json"
+            }
+        },
+        {
+            "type": "Catalyst.Core.Lib.Modules.JsonConfiguredModule",
+            "parameters": {
+                "configFilePath": "Config/Modules/mempool.json"
+            }
+        }
+    ]
+}

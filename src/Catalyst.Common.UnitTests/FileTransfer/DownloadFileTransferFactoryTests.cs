@@ -29,6 +29,7 @@ using Catalyst.Common.Extensions;
 using Catalyst.Common.FileTransfer;
 using Catalyst.Common.Interfaces.FileTransfer;
 using Catalyst.Common.IO.Messaging.Correlation;
+using Catalyst.Common.Types;
 using Catalyst.Common.Util;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
@@ -87,7 +88,7 @@ namespace Catalyst.Common.UnitTests.FileTransfer
                 ChunkBytes = new byte[1].ToByteString(),
                 ChunkId = 1,
                 CorrelationFileName = correlationId.Id.ToByteString()
-            }).Should().Be(FileTransferResponseCodes.Successful);
+            }).Should().Be(FileTransferResponseCodeTypes.Successful);
 
             _downloadFileInformation.ReceivedWithAnyArgs().WriteToStream(default, default);
             _downloadFileInformation.Received(1).UpdateChunkIndicator(0, true);
@@ -103,14 +104,14 @@ namespace Catalyst.Common.UnitTests.FileTransfer
                 ChunkId = 0,
                 ChunkBytes = new byte[Constants.FileTransferChunkSize + 1].ToByteString(),
                 CorrelationFileName = _downloadFileInformation.CorrelationId.Id.ToByteString()
-            }).Should().Be(FileTransferResponseCodes.Error);
+            }).Should().Be(FileTransferResponseCodeTypes.Error);
         }
 
         [Fact]
         public void Can_Send_Error_Response_When_Downloading_Bad_Chunk()
         {
             _downloadFileTransferFactory.DownloadChunk(new TransferFileBytesRequest()).Should()
-               .Be(FileTransferResponseCodes.Error);
+               .Be(FileTransferResponseCodeTypes.Error);
         }
 
         public void SetupDownload(CancellationToken token)

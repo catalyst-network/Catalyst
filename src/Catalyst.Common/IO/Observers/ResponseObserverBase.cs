@@ -35,6 +35,7 @@ using DotNetty.Transport.Channels;
 using Google.Protobuf;
 using Serilog;
 using System;
+using Catalyst.Common.Types;
 
 namespace Catalyst.Common.IO.Observers
 {
