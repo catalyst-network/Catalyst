@@ -29,7 +29,6 @@ using Catalyst.Common.Interfaces.Cli.Commands;
 using Catalyst.Common.Interfaces.Cli.CommandTypes;
 using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
-using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Registry;
 using Catalyst.Common.Interfaces.Rpc;
 using FluentAssertions;
@@ -54,7 +53,7 @@ namespace Catalyst.Cli.UnitTests
 
             var cliSettings = configRoot.GetSection("CatalystCliConfig");
             cliSettings.GetSection("PublicKey").Value
-               .Returns("1AemkEe4z3rZHr7RWSUyZHPuVozyCQnT1H7SfpzcGCQRuT");
+               .Returns("9TEJQF7Y6Z31RB7XBPDYZT1ACPEK9BEC7N8R1E41GNZXT85RX20G");
             cliSettings.GetSection("BindAddress").Value.Returns("127.0.0.1");
             cliSettings.GetSection("Port").Value.Returns("5632");
 
