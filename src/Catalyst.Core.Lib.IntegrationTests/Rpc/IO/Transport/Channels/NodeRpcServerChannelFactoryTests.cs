@@ -140,12 +140,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.Rpc.IO.Transport.Channels
                 _clientChannel.ReadInbound<ProtocolMessage>();
                 _clientCorrelationManager.ReceivedWithAnyArgs(1).TryMatchResponse(Arg.Any<ProtocolMessage>());
                 
-                /**
-                 * See Issue:
-                 * https://github.com/catalyst-network/Catalyst.Node/issues/841
-                 **/
-
-                // _clientKeySigner.ReceivedWithAnyArgs(1).Verify(null, null);
+                _clientKeySigner.ReceivedWithAnyArgs(1).Verify(null, null, null);
 
                 await messageStream.WaitForItemsOnDelayedStreamOnTaskPoolSchedulerAsync();
                 observer.Received.Count.Should().Be(1);

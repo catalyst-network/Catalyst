@@ -81,12 +81,7 @@ namespace Catalyst.Common.UnitTests.IO.Handlers
 
             signatureHandler.ChannelRead(_fakeContext, _protocolMessageSigned);
             
-            /**
-             * See Issue:
-             * https://github.com/catalyst-network/Catalyst.Node/issues/841
-             **/
-            
-            //_fakeContext.DidNotReceiveWithAnyArgs().FireChannelRead(_protocolMessageSigned).Received(0);
+            _fakeContext.DidNotReceiveWithAnyArgs().FireChannelRead(_protocolMessageSigned).Received(0);
         }
     }
 }

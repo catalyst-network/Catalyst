@@ -139,11 +139,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Transport.Channels
                 _correlationManager.DidNotReceiveWithAnyArgs().TryMatchResponse(protocolMessage);
                 await _gossipManager.DidNotReceiveWithAnyArgs().BroadcastAsync(null);
 
-                /**
-                 * See Issue:
-                 * https://github.com/catalyst-network/Catalyst.Node/issues/841
-                 **/
-                // _keySigner.ReceivedWithAnyArgs(1).Verify(null, null);
+                _keySigner.ReceivedWithAnyArgs(1).Verify(null, null, null);
 
                 await messageStream.WaitForItemsOnDelayedStreamOnTaskPoolSchedulerAsync();
 

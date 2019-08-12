@@ -127,7 +127,7 @@ namespace Catalyst.Modules.Lib.IntegrationTests.Consensus
             _containerProvider.ContainerBuilder.RegisterType<TestFileSystem>().As<IFileSystem>().WithParameter("rootPath", _nodeDirectory.FullName);
             _containerProvider.ContainerBuilder.RegisterInstance(new NoDiscovery()).As<IPeerDiscovery>();
             var keySigner = Substitute.For<IKeySigner>();
-            keySigner.Verify(Arg.Any<ISignature>(), Arg.Any<byte[]>()).Returns(true);
+            keySigner.Verify(Arg.Any<ISignature>(), Arg.Any<byte[]>(), default).ReturnsForAnyArgs(true);
             _containerProvider.ContainerBuilder.RegisterInstance(keySigner).As<IKeySigner>();
         }
 
