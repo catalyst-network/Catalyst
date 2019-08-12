@@ -46,6 +46,7 @@ using Catalyst.Common.Interfaces.Repository;
 using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.P2P;
 using Catalyst.Common.P2P.Models;
+using Catalyst.Common.Types;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
 using Catalyst.Modules.Lib.Dfs;
 using Catalyst.TestUtils;
@@ -86,10 +87,7 @@ namespace Catalyst.Modules.Lib.IntegrationTests.Consensus
             _nodePeerId = new PeerIdentifier(nodeSettings);
 
             var baseDfsFolder = Path.Combine(parentTestFileSystem.GetCatalystDataDir().FullName, "dfs");
-
             var blake2B512HashingAlgorithm = HashingAlgorithm.All.First(x => x.Name == "blake2b-512");
-
-            //var blake2B512HashingAlgorithm = HashingAlgorithm.GetAlgorithm("blake2b-512");
             _dfs = new FileSystemDfs(blake2B512HashingAlgorithm, parentTestFileSystem, baseDfsFolder);
 
             _mempool = new AutoFillingMempool();
@@ -99,7 +97,7 @@ namespace Catalyst.Modules.Lib.IntegrationTests.Consensus
 
             _containerProvider = new ContainerProvider(new[]
                 {
-                    Constants.NetworkConfigFile(Network.Dev),
+                    Constants.NetworkConfigFile(NetworkTypes.Dev),
                     Constants.ComponentsJsonConfigFile,
                     Constants.SerilogJsonConfigFile
                 }
@@ -113,9 +111,9 @@ namespace Catalyst.Modules.Lib.IntegrationTests.Consensus
 
             var keyStore = _scope.Resolve<IKeyStore>();
             var keyRegistry = _scope.Resolve<IKeyRegistry>();
-            keyRegistry.AddItemToRegistry(KeyRegistryKey.DefaultKey, privateKey);
+            keyRegistry.AddItemToRegistry(KeyRegistryTypes.DefaultKey, privateKey);
 
-            keyStore.KeyStoreEncryptAsync(privateKey, KeyRegistryKey.DefaultKey).ConfigureAwait(false).GetAwaiter()
+            keyStore.KeyStoreEncryptAsync(privateKey, KeyRegistryTypes.DefaultKey).ConfigureAwait(false).GetAwaiter()
                .GetResult();
         }
 

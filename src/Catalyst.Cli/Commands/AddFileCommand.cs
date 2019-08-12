@@ -31,6 +31,7 @@ using Catalyst.Cli.CommandTypes;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Cli.Commands;
+using Catalyst.Common.Types;
 
 namespace Catalyst.Cli.Commands
 {
@@ -111,8 +112,8 @@ namespace Catalyst.Cli.Commands
                 return;
             }
 
-            var responseCode = (FileTransferResponseCodes) response.ResponseCode[0];
-            if (responseCode == FileTransferResponseCodes.Failed || responseCode == FileTransferResponseCodes.Finished)
+            var responseCode = (FileTransferResponseCodeTypes) response.ResponseCode[0];
+            if (responseCode == FileTransferResponseCodeTypes.Failed || responseCode == FileTransferResponseCodeTypes.Finished)
             {
                 CommandContext.UserOutput.WriteLine("File transfer completed, Response: " + responseCode.Name + " Dfs Hash: " + response.DfsHash);
             }

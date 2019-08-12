@@ -143,7 +143,14 @@ namespace Catalyst.Node.Rpc.Client.IntegrationTests.IO.Transport.Channels
             {
                 _serverChannel.WriteInbound(sentBytes);
                 _serverCorrelationManager.DidNotReceiveWithAnyArgs().TryMatchResponse(protocolMessage);
-                _serverKeySigner.ReceivedWithAnyArgs(1).Verify(null, null);
+                
+                /**
+                 * See Issue:
+                 * https://github.com/catalyst-network/Catalyst.Node/issues/841
+                 **/
+
+                //_serverKeySigner.ReceivedWithAnyArgs(1).Verify(null, null);
+
                 await messageStream.WaitForItemsOnDelayedStreamOnTaskPoolSchedulerAsync();
                 observer.Received.Count.Should().Be(1);
                 observer.Received.Single().Payload.CorrelationId.ToCorrelationId().Id.Should().Be(correlationId.Id);

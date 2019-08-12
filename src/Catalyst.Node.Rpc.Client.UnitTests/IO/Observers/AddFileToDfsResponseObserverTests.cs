@@ -27,6 +27,7 @@ using Catalyst.Common.Interfaces.FileTransfer;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Messaging.Correlation;
+using Catalyst.Common.Types;
 using Catalyst.Node.Rpc.Client.IO.Observers;
 using Catalyst.Protocol.Rpc.Node;
 using DotNetty.Transport.Channels;
@@ -57,7 +58,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
             var addFileResponse = new AddFileToDfsResponse
             {
                 DfsHash = "Test",
-                ResponseCode = ByteString.CopyFrom((byte) FileTransferResponseCodes.Error)
+                ResponseCode = ByteString.CopyFrom((byte) FileTransferResponseCodeTypes.Error)
             };
 
             var addFileToDfsResponseObserver = new AddFileToDfsResponseObserver(
@@ -79,7 +80,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Observers
             var addFileResponse = new AddFileToDfsResponse
             {
                 DfsHash = "Test",
-                ResponseCode = ByteString.CopyFrom((byte) FileTransferResponseCodes.Successful)
+                ResponseCode = ByteString.CopyFrom((byte) FileTransferResponseCodeTypes.Successful)
             };
 
             var addFileToDfsResponseObserver = new AddFileToDfsResponseObserver(

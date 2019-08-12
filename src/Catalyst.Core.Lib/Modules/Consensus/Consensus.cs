@@ -21,15 +21,14 @@
 
 #endregion
 
-using System;
-using System.Reactive.Concurrency;
-using System.Reactive.Linq;
 using Catalyst.Common.Interfaces.Modules.Consensus;
 using Catalyst.Common.Interfaces.Modules.Consensus.Cycle;
 using Catalyst.Common.Interfaces.Modules.Consensus.Deltas;
 using Catalyst.Common.Modules.Consensus.Cycle;
-using Catalyst.Protocol.Deltas;
 using Serilog;
+using System;
+using System.Reactive.Concurrency;
+using System.Reactive.Linq;
 
 namespace Catalyst.Core.Lib.Modules.Consensus
 {
@@ -53,7 +52,6 @@ namespace Catalyst.Core.Lib.Modules.Consensus
             IDeltaElector deltaElector,
             IDeltaCache deltaCache,
             IDeltaHub deltaHub,
-            IDeltaHashProvider deltaHashProvider,
             ICycleEventsProvider cycleEventsProvider,
             ILogger logger)
         {
@@ -93,8 +91,7 @@ namespace Catalyst.Core.Lib.Modules.Consensus
                     return delta;
                 })
                .Where(d => d != null)
-               .SubscribeOn(TaskPoolScheduler.Default)
-               .Subscribe(d => _deltaHub.PublishDeltaToDfsAsync(d));
+               .Subscribe(d => _deltaHub.PublishDeltaToDfsAsync(d).ConfigureAwait(false));
         }
         
         public void Dispose()

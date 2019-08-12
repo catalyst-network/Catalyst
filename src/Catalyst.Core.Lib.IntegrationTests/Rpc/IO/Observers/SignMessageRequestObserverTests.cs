@@ -31,6 +31,7 @@ using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.IO.Messaging.Dto;
+using Catalyst.Common.Types;
 using Catalyst.Core.Lib.Rpc.IO.Observers;
 using Catalyst.Protocol;
 using Catalyst.Protocol.Common;
@@ -43,7 +44,6 @@ using NSubstitute;
 using Serilog;
 using Xunit;
 using Xunit.Abstractions;
-using Network = Catalyst.Common.Config.Network;
 
 namespace Catalyst.Core.Lib.IntegrationTests.Rpc.IO.Observers
 {
@@ -58,7 +58,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.Rpc.IO.Observers
         {
             Path.Combine(Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile),
             Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile),
-            Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Common.Config.Network.Dev)),
+            Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(NetworkTypes.Dev)),
             Path.Combine(Constants.ConfigSubFolder, Constants.ShellNodesConfigFile),
         }, output)
         {

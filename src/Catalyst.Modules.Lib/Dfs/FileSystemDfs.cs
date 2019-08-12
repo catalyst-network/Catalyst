@@ -85,7 +85,7 @@ namespace Catalyst.Modules.Lib.Dfs
                 filePath,
                 utf8Content, Encoding.UTF8, cancellationToken);
 
-            return contentHash.ToString();
+            return contentHash.ToBase32();
         }
 
         /// <inheritdoc />
@@ -106,10 +106,10 @@ namespace Catalyst.Modules.Lib.Dfs
             using (var file = _fileSystem.File.Create(filePath))
             {
                 content.Position = 0;
-                await content.CopyToAsync(file, cancellationToken);
+                await content.CopyToAsync(file, cancellationToken).ConfigureAwait(false);
             }
 
-            return contentHash.ToString();
+            return contentHash.ToBase32();
         }
 
         /// <inheritdoc />
@@ -118,16 +118,5 @@ namespace Catalyst.Modules.Lib.Dfs
             return await Task.FromResult(_fileSystem.File.OpenRead(Path.Combine(_baseFolder.FullName, id)))
                .ConfigureAwait(false);
         }
-
-        ///// <inheritdoc />
-        //public async Task<string> AddAsync(byte[] content,
-        //    string name = "",
-        //    CancellationToken cancellationToken = default)
-        //{
-        //    var contentHash = MultiHash.ComputeHash(content, _hashingAlgorithm.Name);
-        //    var filePath = Path.Combine(_baseFolder.FullName, contentHash.ToString());
-        //    await _fileSystem.File.WriteAllBytesAsync(filePath, content, cancellationToken);
-        //    return contentHash.ToString();
-        //}
     }
 }

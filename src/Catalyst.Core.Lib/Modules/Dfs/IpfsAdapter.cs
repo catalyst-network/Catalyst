@@ -29,6 +29,7 @@ using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Common.Interfaces.FileSystem;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.Types;
 using Common.Logging.Serilog;
 using Dawn;
 using Ipfs;
@@ -84,7 +85,7 @@ namespace Catalyst.Core.Lib.Modules.Dfs
             _logger = logger;
 
             // The passphrase is used to access the private keys.
-            var passphrase = passwordReader.ReadSecurePasswordAndAddToRegistry(PasswordRegistryKey.IpfsPassword, "Please provide your IPFS password");
+            var passphrase = passwordReader.ReadSecurePasswordAndAddToRegistry(PasswordRegistryTypes.IpfsPassword, "Please provide your IPFS password");
             _ipfs = new IpfsEngine(passphrase);
             _ipfs.Options.KeyChain.DefaultKeyType = Constants.KeyChainDefaultKeyType;
 

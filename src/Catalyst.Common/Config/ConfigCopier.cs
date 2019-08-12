@@ -41,11 +41,11 @@ namespace Catalyst.Common.Config
         /// <param name="network">Network on which to run the node</param>
         /// <param name="sourceFolder"></param>
         /// <param name="overwrite">Should config existing config files be overwritten by default?</param>
-        public void RunConfigStartUp(string dataDir, Network networkParam = null, string sourceFolder = null, bool overwrite = false)
+        public void RunConfigStartUp(string dataDir, Types.NetworkTypes networkTypesParam = null, string sourceFolder = null, bool overwrite = false)
         {
             Guard.Argument(dataDir, nameof(dataDir)).NotNull().NotEmpty().NotWhiteSpace();
 
-            var network = networkParam == null ? Network.Dev : networkParam;
+            var network = networkTypesParam == null ? Types.NetworkTypes.Dev : networkTypesParam;
 
             var dataDirInfo = new DirectoryInfo(dataDir);
             if (!dataDirInfo.Exists)
@@ -84,11 +84,11 @@ namespace Catalyst.Common.Config
             }
         }
 
-        protected virtual IEnumerable<string> RequiredConfigFiles(Network network)
+        protected virtual IEnumerable<string> RequiredConfigFiles(Types.NetworkTypes networkTypes)
         {
             var requiredConfigFiles = new[]
             {
-                Constants.NetworkConfigFile(network),
+                Constants.NetworkConfigFile(networkTypes),
                 Constants.ComponentsJsonConfigFile,
                 Constants.SerilogJsonConfigFile,
                 Constants.MessageHandlersConfigFile

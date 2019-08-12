@@ -39,6 +39,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Text;
+using Catalyst.Common.Types;
 
 namespace Catalyst.Common.P2P
 {
@@ -98,7 +99,7 @@ namespace Catalyst.Common.P2P
                 return publicKeyBytes;
             }
 
-            var defaultKeyBytes = registry.GetItemFromRegistry(KeyRegistryKey.DefaultKey).GetPublicKey().Bytes;
+            var defaultKeyBytes = registry.GetItemFromRegistry(KeyRegistryTypes.DefaultKey).GetPublicKey().Bytes;
             userOutput.WriteLine($"Public key {publicKeyBytes.KeyToString()} not found. Using the default key: {defaultKeyBytes.KeyToString()}");
             return defaultKeyBytes;
         }
@@ -123,12 +124,12 @@ namespace Catalyst.Common.P2P
         }
 
         public PeerIdentifier(IPeerSettings settings) : this(settings.PublicKey.KeyToBytes(), 
-            new IPEndPoint(settings.BindAddress, settings.Port)) { }
+            new IPEndPoint(settings.PublicIpAddress, settings.Port)) { }
 
         public PeerIdentifier(IPeerSettings settings, IKeyRegistry registry, IUserOutput userOutput)
             : this(
                 GetIfRegistryContainsPublicKey(settings.PublicKey.KeyToBytes(), registry, userOutput), 
-                new IPEndPoint(settings.BindAddress.MapToIPv4(), settings.Port)) { }
+                new IPEndPoint(settings.PublicIpAddress.MapToIPv4(), settings.Port)) { }
 
         public PeerIdentifier(IEnumerable<byte> publicKey, IPAddress ipAddress, int port)
             : this(publicKey, EndpointBuilder.BuildNewEndPoint(ipAddress, port)) { }
