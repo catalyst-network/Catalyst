@@ -25,7 +25,7 @@ using System;
 using System.Threading.Tasks;
 using Catalyst.Common.Interfaces.IO.EventLoop;
 using Catalyst.Common.Interfaces.IO.Transport.Channels;
-using Catalyst.Common.UnitTests.Stub;
+using Catalyst.TestUtils;
 using FluentAssertions;
 using NSubstitute;
 using Serilog;

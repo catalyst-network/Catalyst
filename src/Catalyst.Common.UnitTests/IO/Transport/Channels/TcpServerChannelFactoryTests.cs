@@ -26,7 +26,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using Catalyst.Common.IO.EventLoop;
 using Catalyst.Common.IO.Transport.Channels;
-using Catalyst.Common.UnitTests.Stub;
+using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using FluentAssertions;
 using NSubstitute;
