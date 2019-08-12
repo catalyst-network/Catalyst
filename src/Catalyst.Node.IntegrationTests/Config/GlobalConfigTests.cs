@@ -29,6 +29,7 @@ using Catalyst.Common.Config;
 using Catalyst.Common.Enumerator;
 using Catalyst.Common.Interfaces;
 using Catalyst.Common.Interfaces.Cryptography;
+using Catalyst.Common.Types;
 using Catalyst.TestUtils;
 using Xunit;
 using Xunit.Abstractions;
@@ -38,7 +39,7 @@ namespace Catalyst.Node.IntegrationTests.Config
     public class GlobalConfigTests : FileSystemBasedTest
     {
         public static readonly List<object[]> Networks = 
-            Enumeration.GetAll<Network>().Select(n => new object[] {n}).ToList();
+            Enumeration.GetAll<NetworkTypes>().Select(n => new object[] {n}).ToList();
 
         private IEnumerable<string> _configFilesUsed;
         private ContainerProvider _containerProvider;
@@ -47,11 +48,11 @@ namespace Catalyst.Node.IntegrationTests.Config
 
         [Theory]
         [MemberData(nameof(Networks))]
-        public void Registering_All_Configs_Should_Allow_Resolving_CatalystNode(Network network)
+        public void Registering_All_Configs_Should_Allow_Resolving_CatalystNode(NetworkTypes networkTypes)
         {
             _configFilesUsed = new[]
                 {
-                    Constants.NetworkConfigFile(network),
+                    Constants.NetworkConfigFile(networkTypes),
                     Constants.ComponentsJsonConfigFile,
                     Constants.SerilogJsonConfigFile
                 }
@@ -65,7 +66,7 @@ namespace Catalyst.Node.IntegrationTests.Config
 
             _containerProvider.ContainerBuilder.RegisterInstance(new TestPasswordReader()).As<IPasswordReader>();
 
-            using (var scope = _containerProvider.Container.BeginLifetimeScope(CurrentTestName + network.Name))
+            using (var scope = _containerProvider.Container.BeginLifetimeScope(CurrentTestName + networkTypes.Name))
             {
                 _ = scope.Resolve<ICatalystNode>();
             }

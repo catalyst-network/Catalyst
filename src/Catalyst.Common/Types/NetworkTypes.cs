@@ -23,30 +23,29 @@
 
 using Catalyst.Common.Enumerator;
 
-namespace Catalyst.Common.Config
+namespace Catalyst.Common.Types
 {
-    public class AccountTypes
+    public class NetworkTypes
         : Enumeration
     {
-        public static readonly AccountTypes Confidential = new ConfidentialAccount();
-        public static readonly AccountTypes NonConfidential = new NonConfidentialAccount();
-        public static readonly AccountTypes Contract = new SmartContractAccount();
+        public static readonly NetworkTypes Main = new MainNet();
+        public static readonly NetworkTypes Test = new TestNet();
+        public static readonly NetworkTypes Dev = new DevNet();
+        private NetworkTypes(int id, string name) : base(id, name) { }
 
-        private AccountTypes(int id, string name) : base(id, name) { }
-
-        private sealed class ConfidentialAccount : AccountTypes
+        private sealed class DevNet : NetworkTypes
         {
-            public ConfidentialAccount() : base(1, "ConfidentialAccounts") { }
+            public DevNet() : base(1, "devnet") { }
         }
 
-        private sealed class NonConfidentialAccount : AccountTypes
+        private sealed class TestNet : NetworkTypes
         {
-            public NonConfidentialAccount() : base(2, "NonConfidentialAccount") { }
+            public TestNet() : base(2, "testnet") { }
         }
-        
-        private sealed class SmartContractAccount : AccountTypes
+
+        private sealed class MainNet : NetworkTypes
         {
-            public SmartContractAccount() : base(3, "SmartContractAccount") { }
+            public MainNet() : base(3, "mainnet") { }
         }
     }
 }

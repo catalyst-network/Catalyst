@@ -27,6 +27,7 @@ using Catalyst.Common.Cryptography;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Keystore;
 using Catalyst.Common.Registry;
+using Catalyst.Common.Types;
 using Catalyst.Common.Util;
 using Catalyst.Cryptography.BulletProofs.Wrapper;
 using Catalyst.Protocol.Common;
@@ -71,7 +72,7 @@ namespace Catalyst.Common.IntegrationTests.Modules.KeySigner
                             4b67745ac5f7d749989344cfa4ee4b71"",""kdfparams"":{""n"":""262144,""r"":""1,""p"":""8,""dklen"":32,""salt"":""2a03d9840dec04e0
                             1538df649f61958be4015a97f14b765ec0a46feed88cc5f4""}},""id"":""b4b82bc3-a495-49cd-b3bc-e022f936e6ff"",""address"":""987080731d
                             e5a56833d2edc37458a53e3fec68cd"",""version"":3}";
-            FileSystem.WriteTextFileToCddSubDirectoryAsync(KeyRegistryKey.DefaultKey.Name, Constants.KeyStoreDataSubDir, json);
+            FileSystem.WriteTextFileToCddSubDirectoryAsync(KeyRegistryTypes.DefaultKey.Name, Constants.KeyStoreDataSubDir, json);
         }
 
         [Fact]

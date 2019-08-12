@@ -23,8 +23,9 @@
 
 using System.Security;
 using Catalyst.Common.Config;
+using Catalyst.Common.Types;
 
 namespace Catalyst.Common.Interfaces.Registry
 {
-    public interface IPasswordRegistry : IRegistryBase<PasswordRegistryKey, SecureString> { }
+    public interface IPasswordRegistry : IRegistryBase<PasswordRegistryTypes, SecureString> { }
 }

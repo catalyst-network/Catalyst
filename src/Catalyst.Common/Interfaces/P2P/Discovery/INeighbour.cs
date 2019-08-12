@@ -24,12 +24,13 @@
 using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.P2P;
+using Catalyst.Common.Types;
 
 namespace Catalyst.Common.Interfaces.P2P.Discovery
 {
     public interface INeighbour
     {
-        NeighbourState State { get; set; }
+        NeighbourStateTypes StateTypes { get; set; }
         IPeerIdentifier PeerIdentifier { get; }
         ICorrelationId DiscoveryPingCorrelationId { get; }
     }

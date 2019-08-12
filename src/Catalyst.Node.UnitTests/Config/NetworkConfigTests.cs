@@ -29,6 +29,7 @@ using Autofac;
 using Autofac.Configuration;
 using Catalyst.Common.Config;
 using Catalyst.Common.Enumerator;
+using Catalyst.Common.Types;
 using Catalyst.Core.Lib.P2P;
 using FluentAssertions;
 using Microsoft.Extensions.Configuration;
@@ -43,7 +44,7 @@ namespace Catalyst.Node.UnitTests.Config
 
         static NetworkConfigTests()
         {
-            NetworkFiles = Enumeration.GetAll<Network>()
+            NetworkFiles = Enumeration.GetAll<NetworkTypes>()
                .Select(n => new[]
                 {
                     Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(n)) as object
@@ -79,12 +80,12 @@ namespace Catalyst.Node.UnitTests.Config
             var peerSettings = new PeerSettings(configRoot);
 
             peerSettings.Should().NotBeNull();
-            peerSettings.Network.Name.Should().NotBeNullOrWhiteSpace().Should().Equals(networkConfig);
+            peerSettings.NetworkTypes.Name.Should().NotBeNullOrWhiteSpace().Should().Equals(networkConfig);
             peerSettings.Port.Should().BeInRange(1025, 65535);
             peerSettings.BindAddress.Should().BeOfType<IPAddress>();
             peerSettings.PublicKey.Should().NotBeNullOrWhiteSpace();
             peerSettings.SeedServers.Should().NotBeEmpty();
-            peerSettings.Network.Name.Should().NotBeNullOrWhiteSpace();
+            peerSettings.NetworkTypes.Name.Should().NotBeNullOrWhiteSpace();
         }
     }
 }

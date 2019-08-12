@@ -23,29 +23,16 @@
 
 using Catalyst.Common.Enumerator;
 
-namespace Catalyst.Common.Config
+namespace Catalyst.Common.Types
 {
-    public class MessageTypes : Enumeration
+    public class KeyRegistryTypes : Enumeration
     {
-        public static readonly MessageTypes Request = new RequestMessage();
-        public static readonly MessageTypes Response = new ResponseMessage();
-        public static readonly MessageTypes Broadcast = new BroadcastMessage();
+        public static readonly KeyRegistryTypes DefaultKey = new DefaultSigningKey();
+        private KeyRegistryTypes(int id, string name) : base(id, name) { }
 
-        private MessageTypes(int id, string name) : base(id, name) { }
-        
-        private sealed class RequestMessage : MessageTypes
+        private sealed class DefaultSigningKey : KeyRegistryTypes
         {
-            public RequestMessage() : base(1, "Request") { }
-        }
-        
-        private sealed class ResponseMessage : MessageTypes
-        {
-            public ResponseMessage() : base(2, "Response") { }
-        }
-        
-        private sealed class BroadcastMessage : MessageTypes
-        {
-            public BroadcastMessage() : base(3, "Broadcast") { }
+            public DefaultSigningKey() : base(1, "defaultSigningKey") { }
         }
     }
 }

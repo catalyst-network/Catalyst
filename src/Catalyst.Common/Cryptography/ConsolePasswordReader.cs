@@ -27,6 +27,7 @@ using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Common.Interfaces.Registry;
+using Catalyst.Common.Types;
 
 namespace Catalyst.Common.Cryptography
 {
@@ -43,7 +44,7 @@ namespace Catalyst.Common.Cryptography
             _passwordRegistry = passwordRegistry;
         }
         
-        public SecureString ReadSecurePasswordAndAddToRegistry(PasswordRegistryKey passwordIdentifier, string prompt = "Please enter your password")
+        public SecureString ReadSecurePasswordAndAddToRegistry(PasswordRegistryTypes passwordIdentifier, string prompt = "Please enter your password")
         {
             var password = ReadSecurePassword(passwordIdentifier, prompt);
             if (password != null)
@@ -54,7 +55,7 @@ namespace Catalyst.Common.Cryptography
             return password;
         }
 
-        public SecureString ReadSecurePassword(PasswordRegistryKey passwordIdentifier, string prompt = "Please enter your password")
+        public SecureString ReadSecurePassword(PasswordRegistryTypes passwordIdentifier, string prompt = "Please enter your password")
         {
             var password = _passwordRegistry.GetItemFromRegistry(passwordIdentifier) ??
                 ReadSecurePasswordFromConsole(prompt);
@@ -70,7 +71,7 @@ namespace Catalyst.Common.Cryptography
             return pwd;
         }
 
-        public bool AddPasswordToRegistry(PasswordRegistryKey passwordIdentifier, SecureString password)
+        public bool AddPasswordToRegistry(PasswordRegistryTypes passwordIdentifier, SecureString password)
         {
             return _passwordRegistry.AddItemToRegistry(passwordIdentifier, password);
         }

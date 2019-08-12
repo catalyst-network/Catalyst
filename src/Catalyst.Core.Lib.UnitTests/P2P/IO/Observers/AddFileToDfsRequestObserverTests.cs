@@ -40,6 +40,7 @@ using Serilog;
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using Catalyst.Common.Types;
 using Xunit;
 
 namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Observers
@@ -68,7 +69,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Observers
         [Fact]
         public void Handler_Can_Initialize_Download_File_Transfer()
         {
-            _nodeFileTransferFactory.RegisterTransfer(Arg.Any<IDownloadFileInformation>()).Returns(FileTransferResponseCodes.Successful);
+            _nodeFileTransferFactory.RegisterTransfer(Arg.Any<IDownloadFileInformation>()).Returns(FileTransferResponseCodeTypes.Successful);
 
             var correlationId = CorrelationId.GenerateCorrelationId();
 
@@ -84,7 +85,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Observers
             _nodeFileTransferFactory.RegisterTransfer(
                 Arg.Is<IDownloadFileInformation>(
                     info => info.CorrelationId.Id.Equals(correlationId.Id)));
-            AssertResponse(FileTransferResponseCodes.Successful);
+            AssertResponse(FileTransferResponseCodeTypes.Successful);
         }
 
         [Fact]
@@ -99,27 +100,27 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Observers
             }.ToProtocolMessage(_senderIdentifier.PeerId, CorrelationId.GenerateCorrelationId());
 
             request.SendToHandler(_fakeContext, _addFileToDfsRequestObserver);
-            AssertResponse(FileTransferResponseCodes.Error);
+            AssertResponse(FileTransferResponseCodeTypes.Error);
         }
 
         [Fact]
         public async Task Successful_Add_File_Can_Respond_With_Finished_Code()
         {
-            await Setup_File_Transfer_Response_Test(FileTransferResponseCodes.Finished).ConfigureAwait(false);
+            await Setup_File_Transfer_Response_Test(FileTransferResponseCodeTypes.Finished).ConfigureAwait(false);
         }
 
         [Fact]
         public async Task Dfs_Failure_Can_Respond_With_Failed_Code()
         {
-            await Setup_File_Transfer_Response_Test(FileTransferResponseCodes.Failed).ConfigureAwait(false);
+            await Setup_File_Transfer_Response_Test(FileTransferResponseCodeTypes.Failed).ConfigureAwait(false);
         }
 
-        private async Task Setup_File_Transfer_Response_Test(FileTransferResponseCodes expectedResponse)
+        private async Task Setup_File_Transfer_Response_Test(FileTransferResponseCodeTypes expectedResponse)
         {
             IDownloadFileInformation fileTransferInformation = null;
             var expectedHash = string.Empty;
 
-            if (expectedResponse == FileTransferResponseCodes.Finished)
+            if (expectedResponse == FileTransferResponseCodeTypes.Finished)
             {
                 expectedHash = "expectedHash";
                 _fakeDfs.AddAsync(Arg.Any<Stream>(), Arg.Any<string>()).Returns(expectedHash);
@@ -160,7 +161,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Observers
             success.Should().BeTrue();
         }
 
-        private void AssertResponse(FileTransferResponseCodes sentResponse)
+        private void AssertResponse(FileTransferResponseCodeTypes sentResponse)
         {
             _fakeContext.Channel.Received(1).WriteAndFlushAsync(
                 Arg.Is<DefaultAddressedEnvelope<ProtocolMessage>>(

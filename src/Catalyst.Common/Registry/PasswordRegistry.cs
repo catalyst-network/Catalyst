@@ -25,11 +25,12 @@ using System.Collections.Generic;
 using System.Security;
 using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.Registry;
+using Catalyst.Common.Types;
 
 namespace Catalyst.Common.Registry
 {
-    public class PasswordRegistry : RegistryBase<PasswordRegistryKey, SecureString>, IPasswordRegistry
+    public class PasswordRegistry : RegistryBase<PasswordRegistryTypes, SecureString>, IPasswordRegistry
     {
-        public PasswordRegistry() { Registry = new Dictionary<PasswordRegistryKey, SecureString>(); }
+        public PasswordRegistry() { Registry = new Dictionary<PasswordRegistryTypes, SecureString>(); }
     }
 }

@@ -23,16 +23,17 @@
 
 using System.Threading.Tasks;
 using Catalyst.Common.Config;
+using Catalyst.Common.Types;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
 
 namespace Catalyst.Common.Interfaces.Keystore
 {
     public interface IKeyStore
     {
-        IPrivateKey KeyStoreDecrypt(KeyRegistryKey keyIdentifier);
+        IPrivateKey KeyStoreDecrypt(KeyRegistryTypes keyIdentifier);
 
-        IPrivateKey KeyStoreGenerate(KeyRegistryKey keyIdentifier);
+        IPrivateKey KeyStoreGenerate(KeyRegistryTypes keyIdentifier);
 
-        Task KeyStoreEncryptAsync(IPrivateKey privateKey, KeyRegistryKey keyIdentifier);
+        Task KeyStoreEncryptAsync(IPrivateKey privateKey, KeyRegistryTypes keyIdentifier);
     }
 }
