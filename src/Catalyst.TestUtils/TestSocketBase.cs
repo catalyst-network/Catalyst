@@ -30,16 +30,20 @@ using DotNetty.Transport.Channels;
 using NSubstitute;
 using Serilog;
 
-namespace Catalyst.Common.UnitTests.Stub
+namespace Catalyst.TestUtils
 {
-    public class TestTcpClient : TcpClient
+    public class TestSocketBase : SocketBase
     {
-        public TestTcpClient(ITcpClientChannelFactory tcpClientChannelFactory,
+        public TestSocketBase(IChannelFactory channelFactory,
             ILogger logger,
-            ITcpClientEventLoopGroupFactory eventLoopGroupFactory) : base(tcpClientChannelFactory, logger, eventLoopGroupFactory)
+            IEventLoopGroupFactory eventLoopGroupFactory) : base(channelFactory, logger, eventLoopGroupFactory)
         {
             Channel = Substitute.For<IChannel>();
         }
+
+        public void DisposeProxy(bool disposing) => Dispose(disposing);
+
+        protected override void Dispose(bool disposing) { base.Dispose(disposing); }
 
         public override Task StartAsync() { throw new NotImplementedException(); }
     }

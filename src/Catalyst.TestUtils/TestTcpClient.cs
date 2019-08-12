@@ -21,6 +21,7 @@
 
 #endregion
 
+using System;
 using System.Threading.Tasks;
 using Catalyst.Common.Interfaces.IO.EventLoop;
 using Catalyst.Common.Interfaces.IO.Transport.Channels;
@@ -29,18 +30,17 @@ using DotNetty.Transport.Channels;
 using NSubstitute;
 using Serilog;
 
-namespace Catalyst.Common.UnitTests.Stub
+namespace Catalyst.TestUtils
 {
-    public class TestClientBase : ClientBase
+    public class TestTcpClient : TcpClient
     {
-        public TestClientBase(IChannelFactory channelFactory,
+        public TestTcpClient(ITcpClientChannelFactory tcpClientChannelFactory,
             ILogger logger,
-            IEventLoopGroupFactory handlerEventEventLoopGroupFactory) : base(channelFactory, logger,
-            handlerEventEventLoopGroupFactory)
+            ITcpClientEventLoopGroupFactory eventLoopGroupFactory) : base(tcpClientChannelFactory, logger, eventLoopGroupFactory)
         {
             Channel = Substitute.For<IChannel>();
         }
 
-        public override Task StartAsync() { throw new System.NotImplementedException(); }
+        public override Task StartAsync() { throw new NotImplementedException(); }
     }
 }
