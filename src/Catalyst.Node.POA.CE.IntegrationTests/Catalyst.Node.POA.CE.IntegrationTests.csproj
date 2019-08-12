@@ -3,11 +3,11 @@
         <TargetFramework>netcoreapp2.2</TargetFramework>
         <Title>James Kirby (nshcore@protonmail.com)</Title>
         <SignAssembly>true</SignAssembly>
-        <AssemblyOriginatorKeyFile>Catalyst.Node.IntegrationTests.snk</AssemblyOriginatorKeyFile>
+        <AssemblyOriginatorKeyFile>Catalyst.Node.POA.CE.IntegrationTests.snk</AssemblyOriginatorKeyFile>
         <PublicSign>true</PublicSign>
     </PropertyGroup>
     <PropertyGroup>
-        <RootNamespace>Catalyst.Node.IntegrationTests</RootNamespace>
+        <RootNamespace>Catalyst.Node.POA.CE.IntegrationTests</RootNamespace>
     </PropertyGroup>
     <Import Project="../Common.IntegrationTests.props" />
     <ItemGroup>

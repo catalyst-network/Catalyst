@@ -22,15 +22,15 @@
 #endregion
 
 using System.Globalization;
-using FluentAssertions;
-using Xunit;
-using Catalyst.TestUtils;
 using Catalyst.Common.Config;
 using Catalyst.Common.Types;
-using CommonFileSystem = Catalyst.Common.FileSystem.FileSystem;
+using Catalyst.TestUtils;
+using FluentAssertions;
+using Xunit;
 using Xunit.Abstractions;
+using CommonFileSystem = Catalyst.Common.FileSystem.FileSystem;
 
-namespace Catalyst.Node.IntegrationTests.IO
+namespace Catalyst.Node.POA.CE.IntegrationTests.IO
 {
     /// <inheritdoc />
     /// <summary>

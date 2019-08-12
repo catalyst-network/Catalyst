@@ -21,7 +21,6 @@
 
 #endregion
 
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -32,7 +31,7 @@ using FluentAssertions;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Catalyst.Node.UnitTests.Config
+namespace Catalyst.Node.POA.CE.UnitTests.Config
 {
     public sealed class ConfigCopierTests : FileSystemBasedTest
     {

@@ -42,7 +42,7 @@ using NSubstitute;
 using Serilog;
 using Xunit;
 
-namespace Catalyst.Node.UnitTests.Config
+namespace Catalyst.Node.POA.CE.UnitTests.Config
 {
     public sealed class ComponentsConfigTests
     {

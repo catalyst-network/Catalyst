@@ -7,7 +7,7 @@
         <AssemblyCopyrightAttribute>Copyright © 2019 AtlasCity.io</AssemblyCopyrightAttribute>
         <OutputType>Exe</OutputType>
         <SignAssembly>true</SignAssembly>
-        <AssemblyOriginatorKeyFile>Catalyst.Node.snk</AssemblyOriginatorKeyFile>
+        <AssemblyOriginatorKeyFile>Catalyst.Node.POA.CE.snk</AssemblyOriginatorKeyFile>
         <PublicSign>true</PublicSign>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <RootNamespace>Catalyst.Node.POA.CE</RootNamespace>
