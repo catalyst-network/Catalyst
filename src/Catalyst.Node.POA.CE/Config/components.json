@@ -2,7 +2,7 @@
     "defaultAssembly": "Catalyst.Core.Lib",
     "components": [
         {
-            "type": "Catalyst.Node.CatalystNode, Catalyst.Node",
+            "type": "Catalyst.Node.POA.CE.CatalystNodePoa, Catalyst.Node.POA.CE",
             "services": [
                 {
                     "type": "Catalyst.Common.Interfaces.ICatalystNode, Catalyst.Common"

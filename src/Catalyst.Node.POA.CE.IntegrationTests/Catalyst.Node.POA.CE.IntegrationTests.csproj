@@ -12,8 +12,8 @@
     <Import Project="../Common.IntegrationTests.props" />
     <ItemGroup>
         <ProjectReference Include="..\Catalyst.Common.UnitTests\Catalyst.Common.UnitTests.csproj" />
-        <ProjectReference Include="..\Catalyst.Node.UnitTests\Catalyst.Node.UnitTests.csproj" />
-        <ProjectReference Include="..\Catalyst.Node\Catalyst.Node.csproj" />
+        <ProjectReference Include="..\Catalyst.Node.POA.CE.UnitTests\Catalyst.Node.POA.CE.UnitTests.csproj" />
+        <ProjectReference Include="..\Catalyst.Node.POA.CE\Catalyst.Node.POA.CE.csproj" />
         <ProjectReference Include="..\Catalyst.Node.Rpc.Client.UnitTests\Catalyst.Node.Rpc.Client.UnitTests.csproj" />
         <ProjectReference Include="..\Catalyst.Node.Rpc.Client\Catalyst.Node.Rpc.Client.csproj" />
         <ProjectReference Include="..\Catalyst.TestUtils\Catalyst.TestUtils.csproj" />

@@ -36,9 +36,9 @@ using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Modules.Lib.Api;
 using Serilog;
 
-namespace Catalyst.Node
+namespace Catalyst.Node.POA.CE
 {
-    public class CatalystNode
+    public class CatalystNodePoa
         : ICatalystNode
     {
         public IConsensus Consensus { get; }
@@ -54,7 +54,7 @@ namespace Catalyst.Node
 
         private readonly IApi _api;
 
-        public CatalystNode(IKeySigner keySigner,
+        public CatalystNodePoa(IKeySigner keySigner,
             IPeerService peer,
             IConsensus consensus,
             IDfs dfs,
