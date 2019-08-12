@@ -50,7 +50,7 @@ using Catalyst.Common.Types;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
 using Catalyst.Modules.Lib.Dfs;
 using Catalyst.TestUtils;
-using Multiformats.Hash.Algorithms;
+using Ipfs.Registry;
 using NSubstitute;
 using Xunit.Abstractions;
 
@@ -58,17 +58,16 @@ namespace Catalyst.Modules.Lib.IntegrationTests.Consensus
 {
     public class PoaTestNode : ICatalystNode, IDisposable
     {
-        public string Name { get; }
+        private readonly ContainerProvider _containerProvider;
         private readonly FileSystemDfs _dfs;
         private readonly AutoFillingMempool _mempool;
-        private readonly IPeerRepository _peerRepository;
-        private readonly IPeerSettings _nodeSettings;
-        private readonly IPeerIdentifier _nodePeerId;
-        private readonly IRpcServerSettings _rpcSettings;
-        private readonly ContainerProvider _containerProvider;
         private readonly ICatalystNode _node;
-        private readonly ILifetimeScope _scope;
         private readonly DirectoryInfo _nodeDirectory;
+        private readonly IPeerIdentifier _nodePeerId;
+        private readonly IPeerSettings _nodeSettings;
+        private readonly IPeerRepository _peerRepository;
+        private readonly IRpcServerSettings _rpcSettings;
+        private readonly ILifetimeScope _scope;
 
         public PoaTestNode(string name,
             IPrivateKey privateKey,
@@ -88,7 +87,8 @@ namespace Catalyst.Modules.Lib.IntegrationTests.Consensus
             _nodePeerId = new PeerIdentifier(nodeSettings);
 
             var baseDfsFolder = Path.Combine(parentTestFileSystem.GetCatalystDataDir().FullName, "dfs");
-            _dfs = new FileSystemDfs(new BLAKE2B_128(), parentTestFileSystem, baseDfsFolder);
+            var blake2B512HashingAlgorithm = HashingAlgorithm.All.First(x => x.Name == "blake2b-512");
+            _dfs = new FileSystemDfs(blake2B512HashingAlgorithm, parentTestFileSystem, baseDfsFolder);
 
             _mempool = new AutoFillingMempool();
             _peerRepository = Substitute.For<IPeerRepository>();
@@ -108,29 +108,16 @@ namespace Catalyst.Modules.Lib.IntegrationTests.Consensus
 
             _scope = _containerProvider.Container.BeginLifetimeScope(Name);
             _node = _scope.Resolve<ICatalystNode>();
-            
+
             var keyStore = _scope.Resolve<IKeyStore>();
             var keyRegistry = _scope.Resolve<IKeyRegistry>();
             keyRegistry.AddItemToRegistry(KeyRegistryTypes.DefaultKey, privateKey);
 
-            keyStore.KeyStoreEncryptAsync(privateKey, KeyRegistryTypes.DefaultKey).ConfigureAwait(false).GetAwaiter().GetResult();
+            keyStore.KeyStoreEncryptAsync(privateKey, KeyRegistryTypes.DefaultKey).ConfigureAwait(false).GetAwaiter()
+               .GetResult();
         }
 
-        protected void OverrideContainerBuilderRegistrations()
-        {
-            _containerProvider.ContainerBuilder.RegisterInstance(new TestPasswordReader()).As<IPasswordReader>();
-            _containerProvider.ContainerBuilder.RegisterInstance(_nodeSettings).As<IPeerSettings>();
-            _containerProvider.ContainerBuilder.RegisterInstance(_rpcSettings).As<IRpcServerSettings>();
-            _containerProvider.ContainerBuilder.RegisterInstance(_nodePeerId).As<IPeerIdentifier>();
-            _containerProvider.ContainerBuilder.RegisterInstance(_dfs).As<IDfs>();
-            _containerProvider.ContainerBuilder.RegisterInstance(_mempool).As<IMempool>();
-            _containerProvider.ContainerBuilder.RegisterInstance(_peerRepository).As<IPeerRepository>();
-            _containerProvider.ContainerBuilder.RegisterType<TestFileSystem>().As<IFileSystem>().WithParameter("rootPath", _nodeDirectory.FullName);
-            _containerProvider.ContainerBuilder.RegisterInstance(new NoDiscovery()).As<IPeerDiscovery>();
-            var keySigner = Substitute.For<IKeySigner>();
-            keySigner.Verify(Arg.Any<ISignature>(), Arg.Any<byte[]>()).Returns(true);
-            _containerProvider.ContainerBuilder.RegisterInstance(keySigner).As<IKeySigner>();
-        }
+        public string Name { get; }
 
         public IConsensus Consensus => _node.Consensus;
 
@@ -141,6 +128,25 @@ namespace Catalyst.Modules.Lib.IntegrationTests.Consensus
 
         public async Task StartSockets() { await _node.StartSockets(); }
 
+        public void Dispose() { Dispose(true); }
+
+        protected void OverrideContainerBuilderRegistrations()
+        {
+            _containerProvider.ContainerBuilder.RegisterInstance(new TestPasswordReader()).As<IPasswordReader>();
+            _containerProvider.ContainerBuilder.RegisterInstance(_nodeSettings).As<IPeerSettings>();
+            _containerProvider.ContainerBuilder.RegisterInstance(_rpcSettings).As<IRpcServerSettings>();
+            _containerProvider.ContainerBuilder.RegisterInstance(_nodePeerId).As<IPeerIdentifier>();
+            _containerProvider.ContainerBuilder.RegisterInstance(_dfs).As<IDfs>();
+            _containerProvider.ContainerBuilder.RegisterInstance(_mempool).As<IMempool>();
+            _containerProvider.ContainerBuilder.RegisterInstance(_peerRepository).As<IPeerRepository>();
+            _containerProvider.ContainerBuilder.RegisterType<TestFileSystem>().As<IFileSystem>()
+               .WithParameter("rootPath", _nodeDirectory.FullName);
+            _containerProvider.ContainerBuilder.RegisterInstance(new NoDiscovery()).As<IPeerDiscovery>();
+            var keySigner = Substitute.For<IKeySigner>();
+            keySigner.Verify(Arg.Any<ISignature>(), Arg.Any<byte[]>()).Returns(true);
+            _containerProvider.ContainerBuilder.RegisterInstance(keySigner).As<IKeySigner>();
+        }
+
         protected virtual void Dispose(bool disposing)
         {
             if (!disposing)
@@ -148,14 +154,9 @@ namespace Catalyst.Modules.Lib.IntegrationTests.Consensus
                 return;
             }
 
-            _scope?.Dispose();   
+            _scope?.Dispose();
             _peerRepository?.Dispose();
             _containerProvider?.Dispose();
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
         }
     }
 }
