@@ -1,32 +1,26 @@
-FROM mcr.microsoft.com/dotnet/core/sdk:2.2 AS dev-build-env
-WORKDIR /app
+FROM mcr.microsoft.com/dotnet/core/sdk:2.2 AS build-env
 
-RUN mkdir output
-
+WORKDIR /opt
 COPY ./ ./
-WORKDIR /app/src
+RUN mkdir output
+WORKDIR /opt/src/Catalyst.Node
 RUN dotnet restore
 
 # Copy everything else and build
+WORKDIR /opt
 COPY . ./
-RUN dotnet publish -c Debug -o output
+RUN dotnet publish src/Catalyst.Node/Catalyst.Node.csproj -c Debug -o output
 
 # Build runtime image
-FROM mcr.microsoft.com/dotnet/core/sdk:2.2 as dev-env
-RUN useradd -ms /bin/bash kat
-WORKDIR /home/kat
+FROM mcr.microsoft.com/dotnet/core/sdk:2.2
 
-RUN mkdir /home/kat/.Catalyst
-COPY --from=dev-build-env /app/src/Catalyst.Node/output .
-COPY mycert.pfx /home/kat/.Catalyst/
-COPY private.pem /home/kat/.Catalyst/
-COPY public.pem /home/kat/.Catalyst/
-RUN ls -la /home/kat/.Catalyst/
-RUN chown -Rf kat:kat /home/kat
-USER kat
-ENTRYPOINT ["dotnet", "Catalyst.Node.dll"]
+WORKDIR /opt
 
-## test application
-#FROM build-env AS test-env
-#WORKDIR /srv/src
-#ENTRYPOINT ["dotnet", "test"]
+RUN apt update -y; apt-get install dnsutils lsof htop -y
+
+RUN mkdir /root/.catalyst
+COPY scripts/run-node.sh /tmp/run-node.sh
+RUN chmod +x /tmp/run-node.sh
+COPY --from=build-env /opt/output .
+
+CMD ["/tmp/run-node.sh"]
