@@ -23,24 +23,29 @@
 
 using Catalyst.Common.Enumerator;
 
-namespace Catalyst.Common.Config
+namespace Catalyst.Common.Types
 {
-    public class IoClients
-        : Enumeration
+    public class MessageTypes : Enumeration
     {
-        public static readonly IoClients NodeRpcTcpClient = new NodeRpcTcp();
-        public static readonly IoClients NodePeerUdpClient = new NodePeerUdp();
+        public static readonly MessageTypes Request = new RequestMessage();
+        public static readonly MessageTypes Response = new ResponseMessage();
+        public static readonly MessageTypes Broadcast = new BroadcastMessage();
 
-        private IoClients(int id, string name) : base(id, name) { }
-
-        private sealed class NodeRpcTcp : IoClients
+        private MessageTypes(int id, string name) : base(id, name) { }
+        
+        private sealed class RequestMessage : MessageTypes
         {
-            public NodeRpcTcp() : base(1, "NodeRpcTcp") { }
+            public RequestMessage() : base(1, "Request") { }
         }
-
-        private sealed class NodePeerUdp : IoClients
+        
+        private sealed class ResponseMessage : MessageTypes
         {
-            public NodePeerUdp() : base(2, "NodePeerUdp") { }
+            public ResponseMessage() : base(2, "Response") { }
+        }
+        
+        private sealed class BroadcastMessage : MessageTypes
+        {
+            public BroadcastMessage() : base(3, "Broadcast") { }
         }
     }
 }

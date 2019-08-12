@@ -34,6 +34,7 @@ using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.Config;
 using Catalyst.Common.Interfaces.Registry;
 using Catalyst.Common.Interfaces.Util;
+using Catalyst.Common.Types;
 using Catalyst.Common.Util;
 using Microsoft.Extensions.Configuration;
 using Serilog;
@@ -46,7 +47,7 @@ namespace Catalyst.Common.Kernel
     {
         public ILogger Logger { get; private set; }
         private string _withPersistence;
-        private Config.Network _network;
+        private Types.NetworkTypes _networkTypes;
         private bool _overwrite;
         private readonly string _fileName;
         private string _targetConfigFolder;
@@ -93,7 +94,7 @@ namespace Catalyst.Common.Kernel
         public Kernel BuildKernel(bool overwrite = false)
         {
             _overwrite = overwrite;
-            _configCopier.RunConfigStartUp(_targetConfigFolder, _network, null, _overwrite);
+            _configCopier.RunConfigStartUp(_targetConfigFolder, _networkTypes, null, _overwrite);
             
             var config = _configurationBuilder.Build();
             var configurationModule = new ConfigurationModule(config);
@@ -129,12 +130,12 @@ namespace Catalyst.Common.Kernel
             return this;
         }
 
-        public Kernel WithNetworksConfigFile(Config.Network network = default)
+        public Kernel WithNetworksConfigFile(Types.NetworkTypes networkTypes = default)
         {
-            _network = network ?? Config.Network.Dev;
+            _networkTypes = networkTypes ?? Types.NetworkTypes.Dev;
             _configurationBuilder
                .AddJsonFile(
-                    Path.Combine(_targetConfigFolder, Constants.NetworkConfigFile(_network))
+                    Path.Combine(_targetConfigFolder, Constants.NetworkConfigFile(_networkTypes))
                 );
 
             return this;
@@ -237,7 +238,7 @@ namespace Catalyst.Common.Kernel
                .RunConsole(CancellationTokenProvider.CancellationTokenSource.Token);
         }
         
-        public Kernel WithPassword(PasswordRegistryKey key, string password)
+        public Kernel WithPassword(PasswordRegistryTypes types, string password)
         {
             if (password == null)
             {
@@ -257,7 +258,7 @@ namespace Catalyst.Common.Kernel
                 ss.AppendChar(c);
             }
 
-            passwordRegistry.AddItemToRegistry(key, ss);
+            passwordRegistry.AddItemToRegistry(types, ss);
 
             return this;
         }

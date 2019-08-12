@@ -26,6 +26,7 @@ using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.Repository;
 using Catalyst.Common.Modules.Mempool.Models;
 using Catalyst.Common.P2P.Models;
+using Catalyst.Common.Types;
 using Catalyst.Core.Lib.Repository;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -45,7 +46,7 @@ namespace Catalyst.Modules.Lib.Api
             var builder = new ConfigurationBuilder()
                .SetBasePath(env.ContentRootPath)
                .AddEnvironmentVariables()
-               .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Network.Dev + ".json"));
+               .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, NetworkTypes.Dev + ".json"));
 
             Configuration = builder.Build();
         }

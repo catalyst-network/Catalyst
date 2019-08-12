@@ -24,6 +24,7 @@
 using Catalyst.Common.Config;
 using Catalyst.Common.Util;
 using Catalyst.Common.Interfaces.Repository;
+using Catalyst.Common.Types;
 
 namespace Catalyst.Common.Interfaces.Modules.Ledger
 {

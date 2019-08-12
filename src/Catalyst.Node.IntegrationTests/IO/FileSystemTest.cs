@@ -26,6 +26,7 @@ using FluentAssertions;
 using Xunit;
 using Catalyst.TestUtils;
 using Catalyst.Common.Config;
+using Catalyst.Common.Types;
 using CommonFileSystem = Catalyst.Common.FileSystem.FileSystem;
 using Xunit.Abstractions;
 
@@ -53,7 +54,7 @@ namespace Catalyst.Node.IntegrationTests.IO
         {
             var currentDirectory = FileSystem.GetCatalystDataDir();
 
-            var network = Catalyst.Common.Config.Network.Dev;
+            var network = NetworkTypes.Dev;
             new ConfigCopier().RunConfigStartUp(currentDirectory.FullName, network);
 
             return currentDirectory.FullName;

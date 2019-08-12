@@ -23,29 +23,30 @@
 
 using Catalyst.Common.Enumerator;
 
-namespace Catalyst.Common.Config
+namespace Catalyst.Common.Types
 {
-    public class PasswordRegistryKey : Enumeration
+    public class AccountTypes
+        : Enumeration
     {
-        public static readonly PasswordRegistryKey CertificatePassword = new CertificatePasswordKey();
-        public static readonly PasswordRegistryKey IpfsPassword = new IpfsPasswordKey();
-        public static readonly PasswordRegistryKey DefaultNodePassword = new DefaultNodePasswordKey();
+        public static readonly AccountTypes Confidential = new ConfidentialAccount();
+        public static readonly AccountTypes NonConfidential = new NonConfidentialAccount();
+        public static readonly AccountTypes Contract = new SmartContractAccount();
 
-        private PasswordRegistryKey(int id, string name) : base(id, name) { }
+        private AccountTypes(int id, string name) : base(id, name) { }
 
-        private sealed class CertificatePasswordKey : PasswordRegistryKey
+        private sealed class ConfidentialAccount : AccountTypes
         {
-            public CertificatePasswordKey() : base(1, "certificatePasswordKey") { }
+            public ConfidentialAccount() : base(1, "ConfidentialAccounts") { }
         }
 
-        private sealed class IpfsPasswordKey : PasswordRegistryKey
+        private sealed class NonConfidentialAccount : AccountTypes
         {
-            public IpfsPasswordKey() : base(2, "ipfsPasswordKey") { }
+            public NonConfidentialAccount() : base(2, "NonConfidentialAccount") { }
         }
-
-        private sealed class DefaultNodePasswordKey : PasswordRegistryKey
+        
+        private sealed class SmartContractAccount : AccountTypes
         {
-            public DefaultNodePasswordKey() : base(4, "defaultNodePasswordKey") { }
+            public SmartContractAccount() : base(3, "SmartContractAccount") { }
         }
     }
 }
