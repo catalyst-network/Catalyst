@@ -58,13 +58,13 @@ namespace Catalyst.Common.UnitTests.Extensions
             var expectedContent = "content";
             var wrapped = new PeerId()
             {
-                ClientId = expectedContent.ToUtf8ByteString()
+                ProtocolVersion = expectedContent.ToUtf8ByteString()
             }.ToProtocolMessage(peerId, guid);
 
             wrapped.CorrelationId.ToCorrelationId().Id.Should().Be(guid.Id);
             wrapped.PeerId.Should().Be(peerId);
             wrapped.TypeUrl.Should().Be(PeerId.Descriptor.ShortenedFullName());
-            wrapped.FromProtocolMessage<PeerId>().ClientId.Should().Equal(expectedContent.ToUtf8ByteString());
+            wrapped.FromProtocolMessage<PeerId>().ProtocolVersion.Should().Equal(expectedContent.ToUtf8ByteString());
         }
 
         [Fact]

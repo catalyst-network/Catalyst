@@ -21,6 +21,8 @@
 
 #endregion
 
+using System.Linq;
+using Catalyst.Cryptography.BulletProofs.Wrapper;
 using Multiformats.Base;
 using Multiformats.Hash;
 

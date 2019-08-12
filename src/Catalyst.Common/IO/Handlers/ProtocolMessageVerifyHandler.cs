@@ -22,7 +22,6 @@
 #endregion
 
 using Catalyst.Common.Interfaces.Modules.KeySigner;
-using Catalyst.Cryptography.BulletProofs.Wrapper.Types;
 using Catalyst.Protocol;
 using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;
@@ -47,8 +46,10 @@ namespace Catalyst.Common.IO.Handlers
 
         protected override void ChannelRead0(IChannelHandlerContext ctx, ProtocolMessageSigned signedMessage)
         {
+            Logger.Verbose("Received {msg}", signedMessage);
             if (!Verify(signedMessage))
             {
+                Logger.Warning("Failed to verify {msg} signature.", signedMessage);
                 return;
             }
 
@@ -57,6 +58,7 @@ namespace Catalyst.Common.IO.Handlers
                 var innerSignedMessage = ProtocolMessageSigned.Parser.ParseFrom(signedMessage.Message.Value);
                 if (!Verify(innerSignedMessage))
                 {
+                    Logger.Warning("Failed to verify inner signature in broadcast message {msg}.", innerSignedMessage);
                     return;
                 }
             }

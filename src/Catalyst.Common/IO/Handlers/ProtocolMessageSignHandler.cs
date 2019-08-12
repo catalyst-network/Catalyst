@@ -21,6 +21,7 @@
 
 #endregion
 
+using System.Reflection;
 using System.Threading.Tasks;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
@@ -29,11 +30,14 @@ using Catalyst.Common.Util;
 using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;
 using Google.Protobuf;
+using Serilog;
 
 namespace Catalyst.Common.IO.Handlers
 {
     public sealed class ProtocolMessageSignHandler : OutboundChannelHandlerBase<IMessageDto<ProtocolMessage>>
     {
+        private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
+
         private readonly IKeySigner _keySigner;
 
         public ProtocolMessageSignHandler(IKeySigner keySigner)
@@ -49,6 +53,7 @@ namespace Catalyst.Common.IO.Handlers
         /// <returns></returns>
         protected override Task WriteAsync0(IChannelHandlerContext context, IMessageDto<ProtocolMessage> message)
         {
+            Logger.Verbose("Signing message {message}", message);
             var signingContext = new SigningContext
             {
                 Network = Protocol.Common.Network.Devnet,

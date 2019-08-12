@@ -59,7 +59,7 @@ namespace Catalyst.Core.Lib.Rpc.IO.Observers
 
             var multiHash = getDeltaRequest.DeltaDfsHash.AsMultihashBase64UrlString();
 
-            _deltaCache.TryGetDelta(multiHash, out var delta);
+            _deltaCache.TryGetConfirmedDelta(multiHash, out var delta);
             return new GetDeltaResponse {Delta = delta};
         }
     }

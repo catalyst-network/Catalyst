@@ -47,6 +47,7 @@ namespace Catalyst.Common.IO.Handlers
         /// <param name="message"></param>
         protected override void ChannelRead0(IChannelHandlerContext ctx, ProtocolMessage message)
         {
+            Logger.Verbose("Received {message}", message);
             if (message.TypeUrl.EndsWith(MessageTypes.Response.Name))
             {
                 if (_messageCorrelationManager.TryMatchResponse(message))

@@ -56,6 +56,7 @@ namespace Catalyst.Common.IO.Handlers
         {
             if (msg.IsBroadCastMessage())
             {
+                Logger.Verbose("Broadcasting message {msg}", msg);
                 var innerGossipMessageSigned = ProtocolMessageSigned.Parser.ParseFrom(msg.Value);
                 _broadcastManager.ReceiveAsync(innerGossipMessageSigned)
                    .ConfigureAwait(false).GetAwaiter().GetResult();

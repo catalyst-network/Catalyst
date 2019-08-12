@@ -124,9 +124,7 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Observers
             //peers we are interested in
             fakePeers.AddRange(Enumerable.Range(0, 23).Select(i => new Peer
             {
-                Reputation = 125, PeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier($"highscored-{i}", 
-                    "Tc", 
-                    1,
+                Reputation = 125, PeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier($"highscored-{i}",
                     IPAddress.Parse("198.51.100." + i)
                 )
             }));

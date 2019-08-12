@@ -41,7 +41,7 @@ namespace Catalyst.Node
     public class CatalystNode
         : ICatalystNode
     {
-        private readonly IConsensus _consensus;
+        public IConsensus Consensus { get; }
         private readonly IContract _contract;
         private readonly IDfs _dfs;
         private readonly ILedger _ledger;
@@ -68,7 +68,7 @@ namespace Catalyst.Node
         {
             _peer = peer;
             _peerClient = peerClient;
-            _consensus = consensus;
+            Consensus = consensus;
             _dfs = dfs;
             _ledger = ledger;
             _keySigner = keySigner;

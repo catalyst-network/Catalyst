@@ -71,7 +71,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Observers
 
             await observable.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
 
-            _deltaCache.DidNotReceiveWithAnyArgs().TryGetDelta(default, out _);
+            _deltaCache.DidNotReceiveWithAnyArgs().TryGetConfirmedDelta(default, out _);
             await _fakeContext.Channel.DidNotReceiveWithAnyArgs().WriteAndFlushAsync(default);
         }
 
@@ -88,7 +88,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Observers
 
             await observable.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
 
-            _deltaCache.Received(1).TryGetDelta(Arg.Is<string>(
+            _deltaCache.Received(1).TryGetConfirmedDelta(Arg.Is<string>(
                 s => s.Equals(multiHash.AsBase64UrlString())), out Arg.Any<Delta>());
 
             await _fakeContext.Channel.ReceivedWithAnyArgs(1)
@@ -107,7 +107,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Observers
 
             await observable.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
 
-            _deltaCache.Received(1).TryGetDelta(Arg.Is<string>(
+            _deltaCache.Received(1).TryGetConfirmedDelta(Arg.Is<string>(
                 s => s.Equals(multiHash.AsBase64UrlString())), out Arg.Any<Delta>());
 
             await _fakeContext.Channel.ReceivedWithAnyArgs(1)
@@ -135,7 +135,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Observers
         {
             var delta = DeltaHelper.GetDelta();
 
-            _deltaCache.TryGetDelta(Arg.Is(hash), out Arg.Any<Delta>())
+            _deltaCache.TryGetConfirmedDelta(Arg.Is(hash), out Arg.Any<Delta>())
                .Returns(ci =>
                 {
                     ci[1] = delta;

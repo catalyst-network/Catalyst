@@ -45,7 +45,7 @@ namespace Catalyst.Common.UnitTests.Network
         {
             _lookupClient = Substitute.For<ILookupClient>();
             _dns = new Common.Network.DnsClient(_lookupClient, 
-                new PeerIdValidator(new CryptoContext(new CryptoWrapper()), new PeerIdClientId("AC")));
+                new PeerIdValidator(new CryptoContext(new CryptoWrapper())));
         }
 
         private readonly IDns _dns;

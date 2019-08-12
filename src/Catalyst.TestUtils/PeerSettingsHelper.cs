@@ -42,7 +42,7 @@ namespace Catalyst.TestUtils
             var peerSettings = Substitute.For<IPeerSettings>();
             peerSettings.Network.Returns(Network.Dev);
             peerSettings.PublicKey.Returns(
-                publicKey?.ComputeUtf8Multihash(new ID()).ToBytes().KeyToString() 
+                publicKey?.ComputeUtf8Multihash(new BLAKE2B_256()).ToBytes().KeyToString() 
              ?? TestKeyRegistry.TestPublicKey);
             peerSettings.Port.Returns(port);
             peerSettings.PayoutAddress.Returns("my_pay_out_address");

@@ -32,15 +32,13 @@ namespace Catalyst.TestUtils
     public static class PeerIdentifierHelper
     {
         public static IPeerIdentifier GetPeerIdentifier(string publicKeySeed,
-            string clientId = "Tc",
-            int clientVersion = 1,
             IPAddress ipAddress = null,
             int port = 12345)
         {
             var publicKeyBytes = Encoding.UTF8.GetBytes(publicKeySeed)
                .Concat(Enumerable.Repeat(default(byte), 32))
                .Take(32).ToArray();
-            var peerIdentifier = PeerIdHelper.GetPeerId(publicKeyBytes, clientId, clientVersion, ipAddress, port);
+            var peerIdentifier = PeerIdHelper.GetPeerId(publicKeyBytes, ipAddress, port);
             return new PeerIdentifier(peerIdentifier);
         }
     }
