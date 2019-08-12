@@ -115,5 +115,21 @@ namespace Catalyst.Common.IntegrationTests.Modules.KeySigner
 
             _keySigner.Verify(signature, toSign, signingContext).Should().BeFalse();
         }
+
+        [Fact]
+        [Trait(Traits.TestType, Traits.IntegrationTest)]
+        public void KeySigner_Can_Verify_A_Signature_With_Non_Default_Context()
+        {
+            byte[] toSign = Encoding.UTF8.GetBytes("sign this plz");
+
+            var signingContext = new SigningContext
+            {
+                Network = Protocol.Common.Network.Mainet,
+                SignatureType = SignatureType.ProtocolRpc
+            };
+            var signature = _keySigner.Sign(toSign, signingContext);
+
+            _keySigner.Verify(signature, toSign, signingContext).Should().BeTrue();
+        }
     }
 }
