@@ -35,6 +35,7 @@ using Catalyst.Common.Interfaces.Modules.Dfs;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.IO.Observers;
+using Catalyst.Common.Types;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using DotNetty.Transport.Channels;
@@ -92,21 +93,21 @@ namespace Catalyst.Core.Lib.Rpc.IO.Observers
                 senderPeerIdentifier, channelHandlerContext.Channel,
                 correlationId, addFileToDfsRequest.FileName, addFileToDfsRequest.FileSize);
 
-            FileTransferResponseCodes responseCode;
+            FileTransferResponseCodeTypes responseCodeType;
             try
             {
-                responseCode = _fileTransferFactory.RegisterTransfer(fileTransferInformation);
+                responseCodeType = _fileTransferFactory.RegisterTransfer(fileTransferInformation);
             }
             catch (Exception e)
             {
                 Logger.Error(e,
                     "Failed to handle AddFileToDfsRequestHandler after receiving message {0}", addFileToDfsRequest);
-                responseCode = FileTransferResponseCodes.Error;
+                responseCodeType = FileTransferResponseCodeTypes.Error;
             }
 
-            var message = ReturnResponse(fileTransferInformation, responseCode);
+            var message = ReturnResponse(fileTransferInformation, responseCodeType);
 
-            if (responseCode == FileTransferResponseCodes.Successful)
+            if (responseCodeType == FileTransferResponseCodeTypes.Successful)
             {
                 _fileTransferFactory.FileTransferAsync(fileTransferInformation.CorrelationId, CancellationToken.None).ContinueWith(task =>
                 {
@@ -128,7 +129,7 @@ namespace Catalyst.Core.Lib.Rpc.IO.Observers
         {
             var addFileResponseCode = Task.Run(async () =>
             {
-                var responseCode = FileTransferResponseCodes.Finished;
+                var responseCode = FileTransferResponseCodeTypes.Finished;
 
                 try
                 {
@@ -146,7 +147,7 @@ namespace Catalyst.Core.Lib.Rpc.IO.Observers
                 catch (Exception e)
                 {
                     Logger.Error(e, "Failed to handle file download OnSuccess {0}", fileTransferInformation.CorrelationId.Id);
-                    responseCode = FileTransferResponseCodes.Failed;
+                    responseCode = FileTransferResponseCodeTypes.Failed;
                 }
                 finally
                 {
@@ -174,12 +175,12 @@ namespace Catalyst.Core.Lib.Rpc.IO.Observers
         private AddFileToDfsResponse ReturnResponse(IFileTransferInformation fileTransferInformation, Enumeration responseCode)
         {
             Logger.Information("File transfer response code: " + responseCode);
-            if (responseCode == FileTransferResponseCodes.Successful)
+            if (responseCode == FileTransferResponseCodeTypes.Successful)
             {
                 Logger.Information($"Initialised file transfer, FileName: {fileTransferInformation.FileOutputPath}, Chunks: {fileTransferInformation.MaxChunk.ToString()}");
             }
 
-            var dfsHash = responseCode == FileTransferResponseCodes.Finished ? fileTransferInformation.DfsHash : string.Empty;
+            var dfsHash = responseCode == FileTransferResponseCodeTypes.Finished ? fileTransferInformation.DfsHash : string.Empty;
 
             // Build Response
             var response = new AddFileToDfsResponse

@@ -35,6 +35,7 @@ using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.Discovery;
 using Catalyst.Common.Interfaces.P2P.IO.Messaging.Dto;
 using Catalyst.Common.IO.Messaging.Correlation;
+using Catalyst.Common.Types;
 using Catalyst.Core.Lib.P2P.Discovery;
 using Catalyst.Core.Lib.P2P.IO.Messaging.Dto;
 using Catalyst.Core.Lib.P2P.IO.Observers;
@@ -59,7 +60,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
     {
         public HastingsDiscoveryTests(ITestOutputHelper output) : base(new[]
         {
-            Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Common.Config.Network.Dev))
+            Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(NetworkTypes.Dev))
         }, output)
         {
             _testScheduler = new TestScheduler();
@@ -90,12 +91,12 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
             stateHistory =
                 DiscoveryHelper.MockMementoHistory(stateHistory, 5); //this isn't an angry pirate this is just 5
 
-            stateHistory.Last().Neighbours.First().State = NeighbourState.Responsive;
+            stateHistory.Last().Neighbours.First().StateTypes = NeighbourStateTypes.Responsive;
 
             stateHistory.ToList().ForEach(i => stateCareTaker.Add(i));
 
             var stateCandidate = DiscoveryHelper.MockOriginator(default,
-                DiscoveryHelper.MockNeighbours(Constants.AngryPirate, NeighbourState.NotContacted));
+                DiscoveryHelper.MockNeighbours(Constants.AngryPirate, NeighbourStateTypes.NotContacted));
 
             var memoryCache = Substitute.For<IMemoryCache>();
             var correlatableMessages = new List<CorrelatableMessage<ProtocolMessage>>();
@@ -163,11 +164,11 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
 
                 _testScheduler.Start();
 
-                var success = stateCandidate.Neighbours.All(n => n.State == NeighbourState.UnResponsive);
+                var success = stateCandidate.Neighbours.All(n => n.StateTypes == NeighbourStateTypes.UnResponsive);
                 _logger.Verbose("Succeeded waiting for neighbour state change to Unresponsive? {success}", success);
 
                 walker.StepProposal.Neighbours
-                   .Count(n => n.State == NeighbourState.UnResponsive)
+                   .Count(n => n.StateTypes == NeighbourStateTypes.UnResponsive)
                    .Should()
                    .Be(Constants.AngryPirate);
 
@@ -238,7 +239,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
                    .Subscribe(streamObserver.OnNext))
                 {
                     walker.StepProposal.Neighbours
-                       .Where(n => n.State == NeighbourState.Responsive)
+                       .Where(n => n.StateTypes == NeighbourStateTypes.Responsive)
                        .Select(i => i.PeerIdentifier.PeerId)
                        .Should()
                        .BeSubsetOf(
@@ -302,7 +303,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
                     streamObserver.Received(1).OnNext(Arg.Is(pingDto));
 
                     walker.StepProposal.Neighbours
-                       .Where(n => n.State == NeighbourState.Responsive)
+                       .Where(n => n.StateTypes == NeighbourStateTypes.Responsive)
                        .Select(n => n.PeerIdentifier)
                        .Contains(pingDto.Sender);
                 }

@@ -25,7 +25,7 @@ using System.Net;
 using System.Threading.Tasks;
 using Catalyst.Common.IO.EventLoop;
 using Catalyst.Common.IO.Transport.Channels;
-using Catalyst.Common.UnitTests.Stub;
+using Catalyst.TestUtils;
 using FluentAssertions;
 using Xunit;
 

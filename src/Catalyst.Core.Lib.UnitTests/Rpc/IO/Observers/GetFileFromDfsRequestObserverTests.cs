@@ -32,6 +32,7 @@ using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.Modules.Dfs;
 using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Common.IO.Messaging.Dto;
+using Catalyst.Common.Types;
 using Catalyst.Core.Lib.Rpc.IO.Observers;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
@@ -61,7 +62,7 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Observers
         [Fact]
         public void GetFileRequestHandlerInitializesFileUpload()
         {
-            using (GetFakeDfsStream(FileTransferResponseCodes.Successful))
+            using (GetFakeDfsStream(FileTransferResponseCodeTypes.Successful))
             {
                 _observer.OnNext(GetFileFromDfsRequestMessage());
                 _dfs.Received(1).ReadAsync(Arg.Any<string>());
@@ -72,7 +73,7 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Observers
         [Fact]
         public void FileTransferStreamIsDisposedOnError()
         {
-            using (var fakeStream = GetFakeDfsStream(FileTransferResponseCodes.Error))
+            using (var fakeStream = GetFakeDfsStream(FileTransferResponseCodeTypes.Error))
             {
                 var message = GetFileFromDfsRequestMessage();
                 _observer.OnNext(message);
@@ -80,7 +81,7 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Observers
             }
         }
         
-        private MemoryStream GetFakeDfsStream(FileTransferResponseCodes fakeResponse)
+        private MemoryStream GetFakeDfsStream(FileTransferResponseCodeTypes fakeResponse)
         {
             var fakeStream = new MemoryStream();
             fakeStream.Write(new byte[50]);

@@ -23,6 +23,7 @@
 
 using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
+using Catalyst.Common.Types;
 using Catalyst.Protocol.IPPN;
 
 namespace Catalyst.Common.Interfaces.P2P.Discovery
@@ -57,9 +58,9 @@ namespace Catalyst.Common.Interfaces.P2P.Discovery
         void RestoreMemento(IHastingsMemento hastingsMemento);
 
         /// <summary>
-        /// Find out if the current state has any neighbour in a <see cref="NeighbourState.Responsive"/>
+        /// Find out if the current state has any neighbour in a <see cref="NeighbourStateTypes.Responsive"/>
         /// </summary>
-        /// <returns><see cref="true"/> if <see cref="Neighbours"/> contains a <see cref="NeighbourState.Responsive"/> neighbour, <see cref="false"/> otherwise.</returns>
+        /// <returns><see cref="true"/> if <see cref="Neighbours"/> contains a <see cref="NeighbourStateTypes.Responsive"/> neighbour, <see cref="false"/> otherwise.</returns>
         bool HasValidCandidate();
     }
 }

@@ -39,6 +39,7 @@ using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Common.Network;
 using Catalyst.Common.P2P.Discovery;
 using Catalyst.Common.P2P.Models;
+using Catalyst.Common.Types;
 using Catalyst.Common.Util;
 using Catalyst.Core.Lib.P2P.Discovery;
 using Catalyst.Core.Lib.P2P.IO.Messaging.Correlation;
@@ -99,7 +100,7 @@ namespace Catalyst.TestUtils
         }
 
         public static INeighbours MockNeighbours(int amount = 5,
-            NeighbourState state = null,
+            NeighbourStateTypes stateTypes = null,
             ICorrelationId correlationId = default)
         {
             var neighbours = Enumerable.Range(0, amount).Select(i =>
@@ -107,7 +108,7 @@ namespace Catalyst.TestUtils
                     PeerIdentifierHelper.GetPeerIdentifier(
                         StringHelper.RandomString()
                     ),
-                    state ?? NeighbourState.NotContacted,
+                    stateTypes ?? NeighbourStateTypes.NotContacted,
                     correlationId ?? CorrelationId.GenerateCorrelationId()));
 
             return new Neighbours(neighbours);

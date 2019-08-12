@@ -35,6 +35,7 @@ using Catalyst.Common.Interfaces.P2P.ReputationSystem;
 using Catalyst.Common.Interfaces.Util;
 using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Common.P2P;
+using Catalyst.Common.Types;
 using Catalyst.Core.Lib.P2P.ReputationSystem;
 using Catalyst.Protocol.Common;
 using Dawn;
@@ -82,7 +83,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Correlation
                 Logger.Debug($"{response.CorrelationId} message not found");
 
                 _reputationEvent.OnNext(new PeerReputationChange(new PeerIdentifier(response.PeerId),
-                    ReputationEvents.UnCorrelatableMessage)
+                    ReputationEventType.UnCorrelatableMessage)
                 );
                 return false;
             }
@@ -91,7 +92,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Correlation
 
             Logger.Debug($"{response.CorrelationId} message found");
             _reputationEvent.OnNext(new PeerReputationChange(message.Recipient,
-                ReputationEvents.ResponseReceived)
+                ReputationEventType.ResponseReceived)
             );
             return true;
         }
@@ -109,7 +110,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Correlation
                 message.Recipient);
 
             _reputationEvent.OnNext(new PeerReputationChange(new PeerIdentifier(message.Content.PeerId),
-                ReputationEvents.NoResponseReceived));
+                ReputationEventType.NoResponseReceived));
             Logger.Verbose("PeerReputationChange sent for {correlationId}", correlationId);
 
             _evictionEvent.OnNext(new KeyValuePair<ICorrelationId, IPeerIdentifier>(correlationId, message.Recipient));

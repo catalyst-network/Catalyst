@@ -22,6 +22,7 @@
 #endregion
 
 using Catalyst.Common.Config;
+using Catalyst.Common.Types;
 using Catalyst.Protocol.Rpc.Node;
 
 namespace Catalyst.Common.Interfaces.FileTransfer
@@ -35,6 +36,6 @@ namespace Catalyst.Common.Interfaces.FileTransfer
         /// <summary>Downloads the chunk.</summary>
         /// <param name="request">The chunk file bytes request.</param>
         /// <returns></returns>
-        FileTransferResponseCodes DownloadChunk(TransferFileBytesRequest request);
+        FileTransferResponseCodeTypes DownloadChunk(TransferFileBytesRequest request);
     }
 }

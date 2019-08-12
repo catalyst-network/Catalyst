@@ -24,12 +24,13 @@
 using System.Collections.Generic;
 using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.Config;
+using Catalyst.Common.Types;
 
 namespace Catalyst.Cli
 {
     internal sealed class CliConfigCopier : ConfigCopier, IConfigCopier
     {
-        protected override IEnumerable<string> RequiredConfigFiles(Network network)
+        protected override IEnumerable<string> RequiredConfigFiles(NetworkTypes networkTypes)
         {
             return new[]
             {

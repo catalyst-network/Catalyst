@@ -25,6 +25,7 @@ using System.IO;
 using Autofac;
 using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.Types;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Xunit;
@@ -38,7 +39,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P
         {
             Path.Combine(Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile),
             Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile),
-            Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Network.Test))
+            Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(NetworkTypes.Test))
         }, output) { }
 
         [Fact]
@@ -49,7 +50,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P
             using (var scope = ContainerProvider.Container.BeginLifetimeScope(CurrentTestName))
             {
                 var peerDiscovery = scope.Resolve<IPeerSettings>();
-                peerDiscovery.Network.Name.Should().Equals("testnet");
+                peerDiscovery.NetworkTypes.Name.Should().Equals("testnet");
             }
         }
     }
