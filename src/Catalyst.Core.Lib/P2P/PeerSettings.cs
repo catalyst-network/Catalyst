@@ -52,11 +52,14 @@ namespace Catalyst.Core.Lib.P2P
         private readonly IList<string> _seedServers;
         public IList<string> SeedServers => _seedServers;
         
+        public IPAddress PublicIpAddress { get; }
+
         public PeerSettings(Network network,
             string publicKey,
             int port,
             string payoutAddress,
             IPAddress bindAddress,
+            IPAddress publicAddress,
             IList<string> seedServers)
         {
             _network = network;
@@ -64,6 +67,7 @@ namespace Catalyst.Core.Lib.P2P
             _port = port;
             _payoutAddress = payoutAddress;
             _bindAddress = bindAddress;
+            PublicIpAddress = publicAddress;
             _seedServers = seedServers;
         }
             
@@ -80,6 +84,7 @@ namespace Catalyst.Core.Lib.P2P
             _port = int.Parse(section.GetSection("Port").Value);
             _payoutAddress = section.GetSection("PayoutAddress").Value;
             _bindAddress = IPAddress.Parse(section.GetSection("BindAddress").Value);
+            PublicIpAddress = IPAddress.Parse(section.GetSection("PublicIpAddress").Value);
             _seedServers = section.GetSection("SeedServers").GetChildren().Select(p => p.Value).ToList();
         }
     }

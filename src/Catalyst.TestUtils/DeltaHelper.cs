@@ -83,10 +83,7 @@ namespace Catalyst.TestUtils
                 ProducerId = producer
             };
         }
-    }
 
-    public static class FavouriteDeltaHelper
-    {
         public static FavouriteDeltaBroadcast GetFavouriteDelta(byte[] previousDeltaHash = null,
             byte[] hash = null,
             IMultihashAlgorithm hashAlgorithm = null,

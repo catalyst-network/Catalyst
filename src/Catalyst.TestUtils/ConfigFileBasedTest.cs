@@ -23,7 +23,6 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using SharpRepository.Repository.Caching.Hash;
 using Xunit.Abstractions;
 
 namespace Catalyst.TestUtils

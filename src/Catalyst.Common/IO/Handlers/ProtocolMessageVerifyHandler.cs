@@ -68,6 +68,15 @@ namespace Catalyst.Common.IO.Handlers
 
         private bool Verify(ProtocolMessageSigned signedMessage)
         {
+            /**
+             * See Issue:
+             * https://github.com/catalyst-network/Catalyst.Node/issues/841
+             **/
+            if (true)
+            {
+                return true;
+            }
+
             var sig = signedMessage.Signature.ToByteArray();
             var pub = signedMessage.Message.PeerId.PublicKey.ToByteArray();
             var signature = _keySigner.CryptoContext.SignatureFromBytes(sig, pub);

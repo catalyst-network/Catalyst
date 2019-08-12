@@ -24,11 +24,13 @@
 using System;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Protocol.Common;
+using DotNetty.Transport.Channels;
 
 namespace Catalyst.Common.Interfaces.IO.Transport.Channels
 {
-    public interface IObservableChannel : ISocket
+    public interface IObservableChannel
     {
+        IChannel Channel { get; }
         IObservable<IObserverDto<ProtocolMessage>> MessageStream { get; }
     }
 }

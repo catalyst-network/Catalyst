@@ -21,24 +21,26 @@
 
 #endregion
 
-using System.Linq;
-using Multiformats.Base;
-using Multiformats.Hash;
+using System;
+using System.Threading.Tasks;
+using Catalyst.Common.Interfaces.IO.EventLoop;
+using Catalyst.Common.Interfaces.IO.Transport.Channels;
+using Catalyst.Common.IO.Transport;
+using DotNetty.Transport.Channels;
+using NSubstitute;
+using Serilog;
 
-namespace Catalyst.Common.Util
+namespace Catalyst.Common.UnitTests.Stub
 {
-    public static class KeyUtil
+    public class TestTcpClient : TcpClient
     {
-        public static string KeyToString(this byte[] keyBytes)
+        public TestTcpClient(ITcpClientChannelFactory tcpClientChannelFactory,
+            ILogger logger,
+            ITcpClientEventLoopGroupFactory eventLoopGroupFactory) : base(tcpClientChannelFactory, logger, eventLoopGroupFactory)
         {
-            return Multihash.Sum(HashType.ID, keyBytes).ToString(MultibaseEncoding.Base58Btc);
+            Channel = Substitute.For<IChannel>();
         }
 
-        public static byte[] KeyToBytes(this string base58Key)
-        {
-            var publicKeyMultiHash = Multihash.Parse(base58Key);
-            var rawPublicKeyBytes = publicKeyMultiHash.ToBytes().TakeLast(publicKeyMultiHash.Length).ToArray();
-            return rawPublicKeyBytes;
-        }
+        public override Task StartAsync() { throw new NotImplementedException(); }
     }
 }
