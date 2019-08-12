@@ -22,6 +22,7 @@
 #endregion
 
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Common.Extensions;
@@ -29,6 +30,7 @@ using Catalyst.Common.Interfaces.Modules.Dfs;
 using Catalyst.Modules.Lib.Dfs;
 using Catalyst.TestUtils;
 using FluentAssertions;
+using Ipfs.Registry;
 using Multiformats.Hash.Algorithms;
 using Xunit;
 using Xunit.Abstractions;
@@ -43,7 +45,7 @@ namespace Catalyst.Modules.Lib.IntegrationTests.Dfs
         public FileSystemDfsTests(ITestOutputHelper output) : base(output)
         {
             _cancellationToken = new CancellationTokenSource(TimeSpan.FromSeconds(200)).Token;
-            IMultihashAlgorithm hashingAlgorithm = new BLAKE2B_256();
+            var hashingAlgorithm = HashingAlgorithm.All.First(x => x.Name == "blake2b-512");
             _dfs = new FileSystemDfs(hashingAlgorithm, FileSystem);
         }
 
@@ -69,8 +71,9 @@ namespace Catalyst.Modules.Lib.IntegrationTests.Dfs
             Thread.Sleep(100);
 
             var retrievedContent = await _dfs.ReadAsync(fileName, _cancellationToken);
+            var fileContent = await retrievedContent.ReadAllBytesAsync(_cancellationToken);
 
-            (await retrievedContent.ReadAllBytesAsync(_cancellationToken)).Should().BeEquivalentTo(content);
+            fileContent.Should().BeEquivalentTo(content);
         }
     }
 }
