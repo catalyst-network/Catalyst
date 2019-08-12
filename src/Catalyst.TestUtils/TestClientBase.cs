@@ -21,7 +21,6 @@
 
 #endregion
 
-using System;
 using System.Threading.Tasks;
 using Catalyst.Common.Interfaces.IO.EventLoop;
 using Catalyst.Common.Interfaces.IO.Transport.Channels;
@@ -30,21 +29,18 @@ using DotNetty.Transport.Channels;
 using NSubstitute;
 using Serilog;
 
-namespace Catalyst.Common.UnitTests.Stub
+namespace Catalyst.TestUtils
 {
-    public class TestSocketBase : SocketBase
+    public class TestClientBase : ClientBase
     {
-        public TestSocketBase(IChannelFactory channelFactory,
+        public TestClientBase(IChannelFactory channelFactory,
             ILogger logger,
-            IEventLoopGroupFactory eventLoopGroupFactory) : base(channelFactory, logger, eventLoopGroupFactory)
+            IEventLoopGroupFactory handlerEventEventLoopGroupFactory) : base(channelFactory, logger,
+            handlerEventEventLoopGroupFactory)
         {
             Channel = Substitute.For<IChannel>();
         }
 
-        public void DisposeProxy(bool disposing) => Dispose(disposing);
-
-        protected override void Dispose(bool disposing) { base.Dispose(disposing); }
-
-        public override Task StartAsync() { throw new NotImplementedException(); }
+        public override Task StartAsync() { throw new System.NotImplementedException(); }
     }
 }
