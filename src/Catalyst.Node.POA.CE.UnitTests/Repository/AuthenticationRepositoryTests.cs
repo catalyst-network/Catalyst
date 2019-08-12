@@ -25,14 +25,14 @@ using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Rpc.Authentication;
 using Catalyst.Common.Rpc.Authentication;
 using Catalyst.Common.Util;
-using Catalyst.Core.Lib.Rpc.Authentication;
 using Catalyst.Core.Lib.Repository;
+using Catalyst.Core.Lib.Rpc.Authentication;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using SharpRepository.InMemoryRepository;
 using Xunit;
 
-namespace Catalyst.Node.UnitTests.Repository
+namespace Catalyst.Node.POA.CE.UnitTests.Repository
 {
     public sealed class AuthenticationRepositoryTests
     {

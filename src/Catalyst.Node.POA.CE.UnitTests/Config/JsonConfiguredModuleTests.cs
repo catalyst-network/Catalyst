@@ -22,7 +22,6 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
 using System.IO;
 using Autofac;
 using Catalyst.Common.Config;
@@ -39,7 +38,7 @@ using Xunit;
 using Xunit.Abstractions;
 using LedgerService = Catalyst.Core.Lib.Modules.Ledger.Ledger;
 
-namespace Catalyst.Node.UnitTests.Config
+namespace Catalyst.Node.POA.CE.UnitTests.Config
 {
     public sealed class JsonConfiguredModuleTests : FileSystemBasedTest
     {

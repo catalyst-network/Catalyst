@@ -34,7 +34,7 @@ using Catalyst.TestUtils;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Catalyst.Node.IntegrationTests.Config
+namespace Catalyst.Node.POA.CE.IntegrationTests.Config
 {
     public class GlobalConfigTests : FileSystemBasedTest
     {

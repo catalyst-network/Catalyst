@@ -36,7 +36,7 @@ using Microsoft.Extensions.Configuration;
 using SharpRepository.Repository;
 using Xunit;
 
-namespace Catalyst.Node.UnitTests.Config
+namespace Catalyst.Node.POA.CE.UnitTests.Config
 {
     public sealed class NetworkConfigTests
     {
