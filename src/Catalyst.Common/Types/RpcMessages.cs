@@ -28,22 +28,24 @@ using Catalyst.Common.Enumerator;
 using Catalyst.Common.Interfaces.Config;
 using Google.Protobuf;
 
-namespace Catalyst.Common.Config
+namespace Catalyst.Common.Types
 {
-    public sealed class P2PMessages
+    /// <summary>
+    /// The Rpc Messages
+    /// </summary>
+    /// <seealso cref="Catalyst.Common.Enumerator.Enumeration" />
+    /// <seealso cref="IEnumerableMessageType" />
+    public class RpcMessages
         : Enumeration,
             IEnumerableMessageType
     {
-        /// <summary>The message map</summary>
-        private static readonly Dictionary<string, P2PMessages> MessageMap;
+        /// <summary>The RPC message namespace</summary>
+        private const string MessageNamespace = "Catalyst.Protocol.Rpc.Node";
 
-        /// <summary>The message namespace</summary>
-        private const string MessageNamespace = "Catalyst.Protocol.IPPN";
-
-        /// <summary>Initializes the <see cref="P2PMessages"/> class.</summary>
-        static P2PMessages()
+        /// <summary>Initializes the <see cref="RpcMessages"/> class.</summary>
+        static RpcMessages()
         {
-            MessageMap = new Dictionary<string, P2PMessages>();
+            var messageMap = new Dictionary<string, RpcMessages>();
             var types = AppDomain.CurrentDomain.GetAssemblies()
                .SelectMany(t => t.GetTypes())
                .Where(t => t.IsClass && t.Namespace == MessageNamespace
@@ -52,18 +54,14 @@ namespace Catalyst.Common.Config
             var id = 0;
             foreach (var type in types)
             {
-                MessageMap.Add(type.Name, new P2PMessages(id, type.Name));
+                messageMap.Add(type.Name, new RpcMessages(id, type.Name));
                 id += 1;
             }
         }
 
-        /// <summary>Gets the messages.</summary>
-        /// <value>The messages.</value>
-        public IEnumerable<P2PMessages> Messages => MessageMap.Values.AsEnumerable();
-
-        /// <summary>Initializes a new instance of the <see cref="P2PMessages"/> class.</summary>
+        /// <summary>Initializes a new instance of the <see cref="RpcMessages"/> class.</summary>
         /// <param name="id">The identifier.</param>
         /// <param name="name">The name.</param>
-        private P2PMessages(int id, string name) : base(id, name) { }
+        protected RpcMessages(int id, string name) : base(id, name) { }
     }
 }

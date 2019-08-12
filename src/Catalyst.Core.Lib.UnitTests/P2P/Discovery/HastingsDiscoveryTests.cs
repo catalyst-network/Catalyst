@@ -41,6 +41,7 @@ using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Common.P2P;
 using Catalyst.Common.P2P.Discovery;
 using Catalyst.Common.P2P.Models;
+using Catalyst.Common.Types;
 using Catalyst.Common.Util;
 using Catalyst.Core.Lib.P2P.Discovery;
 using Catalyst.Core.Lib.P2P.IO.Observers;
@@ -157,7 +158,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
                .WithStepProposal(default,
                     true,
                     knownNextCandidate,
-                    DiscoveryHelper.MockNeighbours(Constants.AngryPirate, NeighbourState.Responsive))
+                    DiscoveryHelper.MockNeighbours(Constants.AngryPirate, NeighbourStateTypes.Responsive))
                .WithAutoStart()
                .WithBurn();
 
@@ -186,7 +187,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
             var latestStep = new HastingsMemento(knownStepPid, knownStepNeighbours);
 
             var proposal = Substitute.For<IHastingsOriginator>();
-            var unresponsiveNeighbours = DiscoveryHelper.MockNeighbours(Constants.AngryPirate, NeighbourState.UnResponsive);
+            var unresponsiveNeighbours = DiscoveryHelper.MockNeighbours(Constants.AngryPirate, NeighbourStateTypes.UnResponsive);
             proposal.Neighbours.Returns(unresponsiveNeighbours);
             proposal.Peer.Returns(proposalCandidateId);
 
@@ -232,7 +233,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
                .WithCurrentStep(default,
                     true,
                     default,
-                    DiscoveryHelper.MockNeighbours(Constants.AngryPirate, NeighbourState.Responsive))
+                    DiscoveryHelper.MockNeighbours(Constants.AngryPirate, NeighbourStateTypes.Responsive))
                .WithAutoStart()
                .WithBurn();
 
@@ -457,8 +458,8 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
         {
             var currentPid = PeerIdentifierHelper.GetPeerIdentifier("current");
             var lastPid = PeerIdentifierHelper.GetPeerIdentifier("last");
-            var mockNeighbours = DiscoveryHelper.MockNeighbours(4, NeighbourState.Responsive)
-               .Concat(new[] {new Neighbour(currentPid, NeighbourState.Contacted, CorrelationId.GenerateEmptyCorrelationId())});
+            var mockNeighbours = DiscoveryHelper.MockNeighbours(4, NeighbourStateTypes.Responsive)
+               .Concat(new[] {new Neighbour(currentPid, NeighbourStateTypes.Contacted, CorrelationId.GenerateEmptyCorrelationId())});
             var previousState = DiscoveryHelper.SubMemento(lastPid, new Neighbours(mockNeighbours));
             var history = new Stack<IHastingsMemento>();
             history.Push(previousState);
@@ -574,7 +575,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
                        .SendMessage(Arg.Any<IMessageDto<PingRequest>>());
                     
                     walker.StepProposal.Neighbours
-                       .Where(n => n.State == NeighbourState.Contacted)
+                       .Where(n => n.StateTypes == NeighbourStateTypes.Contacted)
                        .ToList().Count
                        .Should()
                        .Be(Constants.AngryPirate);
@@ -603,7 +604,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
         [Fact]
         public async Task Can_Correlate_Known_Ping_And_Update_Neighbour_State()
         {
-            var neighbours = DiscoveryHelper.MockNeighbours(Constants.AngryPirate, NeighbourState.Contacted, CorrelationId.GenerateCorrelationId());
+            var neighbours = DiscoveryHelper.MockNeighbours(Constants.AngryPirate, NeighbourStateTypes.Contacted, CorrelationId.GenerateCorrelationId());
 
             var discoveryTestBuilder = new DiscoveryTestBuilder()
                .WithLogger()
@@ -639,10 +640,10 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
                     });
 
                     await TaskHelper.WaitForAsync(
-                        () => walker.StepProposal.Neighbours.All(n => n.State == NeighbourState.Responsive),
+                        () => walker.StepProposal.Neighbours.All(n => n.StateTypes == NeighbourStateTypes.Responsive),
                         TimeSpan.FromSeconds(5)).ConfigureAwait(false);
 
-                    walker.StepProposal.Neighbours.Count(n => n.State == NeighbourState.Responsive).Should().Be(neighbours.Count);
+                    walker.StepProposal.Neighbours.Count(n => n.StateTypes == NeighbourStateTypes.Responsive).Should().Be(neighbours.Count);
                 }
             }
         }

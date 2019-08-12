@@ -27,6 +27,7 @@ using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.IO.Observers;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Observers;
+using Catalyst.Common.Types;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using DotNetty.Transport.Channels;
@@ -72,11 +73,11 @@ namespace Catalyst.Core.Lib.Rpc.IO.Observers
             Guard.Argument(senderPeerIdentifier, nameof(senderPeerIdentifier)).NotNull();
             Logger.Debug("received message of type TransferFileBytesRequest");
 
-            FileTransferResponseCodes responseCode = _fileTransferFactory.DownloadChunk(transferFileBytesRequest);
+            FileTransferResponseCodeTypes responseCodeType = _fileTransferFactory.DownloadChunk(transferFileBytesRequest);
 
             return new TransferFileBytesResponse
             {
-                ResponseCode = ByteString.CopyFrom((byte) responseCode.Id)
+                ResponseCode = ByteString.CopyFrom((byte) responseCodeType.Id)
             };
         }
     }

@@ -26,6 +26,7 @@ using Catalyst.Common.Config;
 using Catalyst.Common.Cryptography;
 using Catalyst.Common.Interfaces.Keystore;
 using Catalyst.Common.Interfaces.Registry;
+using Catalyst.Common.Types;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
 using Catalyst.Protocol.Common;
 using FluentAssertions;
@@ -66,7 +67,7 @@ namespace Catalyst.Common.UnitTests.Modules.KeySigner
             _keyRegistry.AddItemToRegistry(default, default).ReturnsForAnyArgs(true);
 
             var keySigner = new Common.Modules.KeySigner.KeySigner(_keystore, new CryptoContext(_wrapper), _keyRegistry);
-            _keystore.Received(1).KeyStoreDecrypt(Arg.Any<KeyRegistryKey>());
+            _keystore.Received(1).KeyStoreDecrypt(Arg.Any<KeyRegistryTypes>());
             _keyRegistry.ReceivedWithAnyArgs(1).AddItemToRegistry(default, default);
             keySigner.Should().NotBe(null);
         }
@@ -81,8 +82,8 @@ namespace Catalyst.Common.UnitTests.Modules.KeySigner
             _keystore.KeyStoreDecrypt(default).ReturnsForAnyArgs((IPrivateKey) null);
 
             var keySigner = new Common.Modules.KeySigner.KeySigner(_keystore, new CryptoContext(_wrapper), _keyRegistry);
-            _keystore.Received(1).KeyStoreDecrypt(Arg.Any<KeyRegistryKey>());
-            _keystore.Received(1).KeyStoreGenerate(Arg.Any<KeyRegistryKey>());
+            _keystore.Received(1).KeyStoreDecrypt(Arg.Any<KeyRegistryTypes>());
+            _keystore.Received(1).KeyStoreGenerate(Arg.Any<KeyRegistryTypes>());
             _keyRegistry.ReceivedWithAnyArgs(1).AddItemToRegistry(default, default);
             keySigner.Should().NotBe(null);
         }
@@ -103,8 +104,8 @@ namespace Catalyst.Common.UnitTests.Modules.KeySigner
             var actualSignature = keySigner.Sign(Encoding.UTF8.GetBytes("sign this please"), _signingContext);
 
             _keyRegistry.ReceivedWithAnyArgs(1).GetItemFromRegistry(default);
-            _keystore.Received(0).KeyStoreDecrypt(Arg.Any<KeyRegistryKey>());
-            _keystore.Received(0).KeyStoreGenerate(Arg.Any<KeyRegistryKey>());
+            _keystore.Received(0).KeyStoreDecrypt(Arg.Any<KeyRegistryTypes>());
+            _keystore.Received(0).KeyStoreGenerate(Arg.Any<KeyRegistryTypes>());
             _keyRegistry.ReceivedWithAnyArgs(0).AddItemToRegistry(default, default);
             
             Assert.Equal(_signature, actualSignature);
@@ -123,7 +124,7 @@ namespace Catalyst.Common.UnitTests.Modules.KeySigner
 
             var actualSignature = keySigner.Sign(Encoding.UTF8.GetBytes("sign this please"), _signingContext);
 
-            _keystore.Received(1).KeyStoreDecrypt(Arg.Any<KeyRegistryKey>());
+            _keystore.Received(1).KeyStoreDecrypt(Arg.Any<KeyRegistryTypes>());
 
             Assert.Equal(_signature, actualSignature);
         }

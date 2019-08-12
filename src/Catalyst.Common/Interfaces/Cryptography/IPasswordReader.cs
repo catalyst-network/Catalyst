@@ -23,15 +23,16 @@
 
 using System.Security;
 using Catalyst.Common.Config;
+using Catalyst.Common.Types;
 
 namespace Catalyst.Common.Interfaces.Cryptography
 {
     public interface IPasswordReader
     {
-        SecureString ReadSecurePassword(PasswordRegistryKey passwordIdentifier, string prompt = "Please enter your password");
+        SecureString ReadSecurePassword(PasswordRegistryTypes passwordIdentifier, string prompt = "Please enter your password");
 
-        SecureString ReadSecurePasswordAndAddToRegistry(PasswordRegistryKey passwordIdentifier, string prompt = "Please enter your password");
+        SecureString ReadSecurePasswordAndAddToRegistry(PasswordRegistryTypes passwordIdentifier, string prompt = "Please enter your password");
 
-        bool AddPasswordToRegistry(PasswordRegistryKey passwordIdentifier, SecureString password);
+        bool AddPasswordToRegistry(PasswordRegistryTypes passwordIdentifier, SecureString password);
     }
 }

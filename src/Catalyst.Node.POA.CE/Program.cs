@@ -24,6 +24,7 @@
 using System;
 using Catalyst.Common.Config;
 using Catalyst.Common.Kernel;
+using Catalyst.Common.Types;
 using CommandLine;
 
 namespace Catalyst.Node.POA.CE
@@ -94,9 +95,9 @@ namespace Catalyst.Node.POA.CE
                    .WithConfigCopier()
                    .WithPersistenceConfiguration()
                    .BuildKernel(options.OverwriteConfig)
-                   .WithPassword(PasswordRegistryKey.DefaultNodePassword, options.NodePassword)
-                   .WithPassword(PasswordRegistryKey.IpfsPassword, options.IpfsPassword)
-                   .WithPassword(PasswordRegistryKey.CertificatePassword, options.SslCertPassword)
+                   .WithPassword(PasswordRegistryTypes.DefaultNodePassword, options.NodePassword)
+                   .WithPassword(PasswordRegistryTypes.IpfsPassword, options.IpfsPassword)
+                   .WithPassword(PasswordRegistryTypes.CertificatePassword, options.SslCertPassword)
                    .StartNode();
 
                 // .StartCustom(CustomBootLogic);

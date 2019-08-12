@@ -35,6 +35,7 @@ using Catalyst.Common.Interfaces.IO.Observers;
 using Catalyst.Common.Interfaces.Modules.Dfs;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Observers;
+using Catalyst.Common.Types;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
@@ -97,13 +98,13 @@ namespace Catalyst.Core.Lib.Rpc.IO.Observers
 
             long fileLen = 0;
 
-            FileTransferResponseCodes responseCode;
+            FileTransferResponseCodeTypes responseCodeType;
 
             var task = Task.Run(async () =>
             {
                 try
                 {
-                    responseCode = await Task.Run(async () =>
+                    responseCodeType = await Task.Run(async () =>
                     {
                         var stream = await _dfs.ReadAsync(getFileFromDfsRequest.DfsHash).ConfigureAwait(false);
                         fileLen = stream.Length;
@@ -124,10 +125,10 @@ namespace Catalyst.Core.Lib.Rpc.IO.Observers
                 {
                     Logger.Error(e,
                         "Failed to handle GetFileFromDfsRequestHandler after receiving message {0}", getFileFromDfsRequest);
-                    responseCode = FileTransferResponseCodes.Error;
+                    responseCodeType = FileTransferResponseCodeTypes.Error;
                 }
 
-                return ReturnResponse(responseCode, fileLen);
+                return ReturnResponse(responseCodeType, fileLen);
             });
 
             return task.Result;

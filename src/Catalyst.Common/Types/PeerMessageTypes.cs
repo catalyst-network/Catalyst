@@ -28,24 +28,22 @@ using Catalyst.Common.Enumerator;
 using Catalyst.Common.Interfaces.Config;
 using Google.Protobuf;
 
-namespace Catalyst.Common.Config
+namespace Catalyst.Common.Types
 {
-    /// <summary>
-    /// The Rpc Messages
-    /// </summary>
-    /// <seealso cref="Catalyst.Common.Enumerator.Enumeration" />
-    /// <seealso cref="IEnumerableMessageType" />
-    public class RpcMessages
+    public sealed class PeerMessageTypes
         : Enumeration,
             IEnumerableMessageType
     {
-        /// <summary>The RPC message namespace</summary>
-        private const string MessageNamespace = "Catalyst.Protocol.Rpc.Node";
+        /// <summary>The message map</summary>
+        private static readonly Dictionary<string, PeerMessageTypes> MessageMap;
 
-        /// <summary>Initializes the <see cref="RpcMessages"/> class.</summary>
-        static RpcMessages()
+        /// <summary>The message namespace</summary>
+        private const string MessageNamespace = "Catalyst.Protocol.IPPN";
+
+        /// <summary>Initializes the <see cref="PeerMessageTypes"/> class.</summary>
+        static PeerMessageTypes()
         {
-            var messageMap = new Dictionary<string, RpcMessages>();
+            MessageMap = new Dictionary<string, PeerMessageTypes>();
             var types = AppDomain.CurrentDomain.GetAssemblies()
                .SelectMany(t => t.GetTypes())
                .Where(t => t.IsClass && t.Namespace == MessageNamespace
@@ -54,14 +52,18 @@ namespace Catalyst.Common.Config
             var id = 0;
             foreach (var type in types)
             {
-                messageMap.Add(type.Name, new RpcMessages(id, type.Name));
+                MessageMap.Add(type.Name, new PeerMessageTypes(id, type.Name));
                 id += 1;
             }
         }
 
-        /// <summary>Initializes a new instance of the <see cref="RpcMessages"/> class.</summary>
+        /// <summary>Gets the messages.</summary>
+        /// <value>The messages.</value>
+        public IEnumerable<PeerMessageTypes> Messages => MessageMap.Values.AsEnumerable();
+
+        /// <summary>Initializes a new instance of the <see cref="PeerMessageTypes"/> class.</summary>
         /// <param name="id">The identifier.</param>
         /// <param name="name">The name.</param>
-        protected RpcMessages(int id, string name) : base(id, name) { }
+        private PeerMessageTypes(int id, string name) : base(id, name) { }
     }
 }

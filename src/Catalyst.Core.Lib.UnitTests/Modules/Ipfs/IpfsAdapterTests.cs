@@ -27,6 +27,7 @@ using System.Linq;
 using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.Types;
 using Catalyst.Core.Lib.Modules.Dfs;
 using Catalyst.TestUtils;
 using FluentAssertions;
@@ -45,7 +46,7 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Ipfs
         public IpfsAdapterTests(ITestOutputHelper output) : base(output)
         {
             _passwordReader = Substitute.For<IPasswordReader>();
-            _passwordReader.ReadSecurePasswordAndAddToRegistry(PasswordRegistryKey.IpfsPassword, Arg.Any<string>()).ReturnsForAnyArgs(TestPasswordReader.BuildSecureStringPassword("abcd"));
+            _passwordReader.ReadSecurePasswordAndAddToRegistry(PasswordRegistryTypes.IpfsPassword, Arg.Any<string>()).ReturnsForAnyArgs(TestPasswordReader.BuildSecureStringPassword("abcd"));
 
             _logger = Substitute.For<ILogger>();
         }
@@ -64,7 +65,7 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Ipfs
         {
             using (new IpfsAdapter(_passwordReader, FileSystem, _logger))
             {
-                _passwordReader.ReceivedWithAnyArgs(1).ReadSecurePasswordAndAddToRegistry(PasswordRegistryKey.IpfsPassword);
+                _passwordReader.ReceivedWithAnyArgs(1).ReadSecurePasswordAndAddToRegistry(PasswordRegistryTypes.IpfsPassword);
             }
         }
 

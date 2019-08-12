@@ -27,14 +27,15 @@ using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
 using Catalyst.Common.Interfaces.Registry;
+using Catalyst.Common.Types;
 
 namespace Catalyst.Common.Registry
 {
-    public class KeyRegistry : RegistryBase<KeyRegistryKey, IPrivateKey>, IKeyRegistry
+    public class KeyRegistry : RegistryBase<KeyRegistryTypes, IPrivateKey>, IKeyRegistry
     {
         public KeyRegistry()
         {
-            Registry = new Dictionary<KeyRegistryKey, IPrivateKey>();
+            Registry = new Dictionary<KeyRegistryTypes, IPrivateKey>();
         }
         
         public bool Contains(byte[] publicKeyBytes)

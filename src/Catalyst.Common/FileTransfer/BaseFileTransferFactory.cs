@@ -29,6 +29,7 @@ using System.Threading.Tasks;
 using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.FileTransfer;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
+using Catalyst.Common.Types;
 using Serilog;
 
 namespace Catalyst.Common.FileTransfer
@@ -72,7 +73,7 @@ namespace Catalyst.Common.FileTransfer
         /// <param name="fileTransferInformation">The file transfer information.</param>
         /// <returns>Initialization response code</returns>
         /// <exception cref="InvalidOperationException">This instance cannot be registered to the factory due to IsDownload flag.</exception>
-        public FileTransferResponseCodes RegisterTransfer(T fileTransferInformation)
+        public FileTransferResponseCodeTypes RegisterTransfer(T fileTransferInformation)
         {
             var fileHash = fileTransferInformation.CorrelationId;
 
@@ -80,11 +81,11 @@ namespace Catalyst.Common.FileTransfer
             {
                 if (_pendingFileTransfers.ContainsKey(fileHash.Id))
                 {
-                    return FileTransferResponseCodes.TransferPending;
+                    return FileTransferResponseCodeTypes.TransferPending;
                 }
 
                 _pendingFileTransfers.Add(fileHash.Id, fileTransferInformation);
-                return FileTransferResponseCodes.Successful;
+                return FileTransferResponseCodeTypes.Successful;
             }
         }
 

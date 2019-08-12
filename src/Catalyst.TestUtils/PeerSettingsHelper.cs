@@ -29,6 +29,7 @@ using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Rpc;
+using Catalyst.Common.Types;
 using Catalyst.Common.Util;
 using Multiformats.Hash.Algorithms;
 using NSubstitute;
@@ -40,7 +41,7 @@ namespace Catalyst.TestUtils
         public static IPeerSettings TestPeerSettings(string publicKey = "publicKey", int port = 42069)
         {
             var peerSettings = Substitute.For<IPeerSettings>();
-            peerSettings.Network.Returns(Network.Dev);
+            peerSettings.NetworkTypes.Returns(NetworkTypes.Dev);
             peerSettings.PublicKey.Returns(
                 publicKey?.ComputeUtf8Multihash(new BLAKE2B_256()).ToBytes().KeyToString() 
              ?? TestKeyRegistry.TestPublicKey);

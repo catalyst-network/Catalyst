@@ -21,18 +21,26 @@
 
 #endregion
 
-using Catalyst.Common.Enumerator;
+using System.Threading.Tasks;
+using Catalyst.Common.Interfaces.IO.EventLoop;
+using Catalyst.Common.Interfaces.IO.Transport.Channels;
+using Catalyst.Common.IO.Transport;
+using DotNetty.Transport.Channels;
+using NSubstitute;
+using Serilog;
 
-namespace Catalyst.Common.Config
+namespace Catalyst.TestUtils
 {
-    public class KeyRegistryKey : Enumeration
+    public class TestClientBase : ClientBase
     {
-        public static readonly KeyRegistryKey DefaultKey = new DefaultSigningKey();
-        private KeyRegistryKey(int id, string name) : base(id, name) { }
-
-        private sealed class DefaultSigningKey : KeyRegistryKey
+        public TestClientBase(IChannelFactory channelFactory,
+            ILogger logger,
+            IEventLoopGroupFactory handlerEventEventLoopGroupFactory) : base(channelFactory, logger,
+            handlerEventEventLoopGroupFactory)
         {
-            public DefaultSigningKey() : base(1, "defaultSigningKey") { }
+            Channel = Substitute.For<IChannel>();
         }
+
+        public override Task StartAsync() { throw new System.NotImplementedException(); }
     }
 }
