@@ -10,7 +10,7 @@
         <AssemblyOriginatorKeyFile>Catalyst.Node.snk</AssemblyOriginatorKeyFile>
         <PublicSign>true</PublicSign>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <RootNamespace>Catalyst.Node.Poa.CE</RootNamespace>
+        <RootNamespace>Catalyst.Node.POA.CE</RootNamespace>
     </PropertyGroup>
     <Import Project="../Common.Projects.props" />
     <ItemGroup>
