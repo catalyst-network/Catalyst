@@ -28,6 +28,7 @@ using Autofac;
 using Catalyst.Common.Config;
 using Catalyst.Common.Enumerator;
 using Catalyst.Common.Interfaces.Cli;
+using Catalyst.Common.Types;
 using Catalyst.TestUtils;
 using Xunit;
 using Xunit.Abstractions;
@@ -37,18 +38,18 @@ namespace Catalyst.Cli.IntegrationTests.Config
     public sealed class GlobalConfigTests : FileSystemBasedTest
     {
         public static readonly List<object[]> Networks =
-            Enumeration.GetAll<Network>().Select(n => new object[] {n}).ToList();
+            Enumeration.GetAll<NetworkTypes>().Select(n => new object[] {n}).ToList();
 
         public GlobalConfigTests(ITestOutputHelper output) : base(output) { }
 
         [Theory]
         [MemberData(nameof(Networks))]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
-        public void Registering_All_Configs_Should_Allow_Resolving_ICatalystCli(Network network)
+        public void Registering_All_Configs_Should_Allow_Resolving_ICatalystCli(NetworkTypes networkTypes)
         {
             var configFilesUsed = new[]
                 {
-                    Constants.NetworkConfigFile(network),
+                    Constants.NetworkConfigFile(networkTypes),
                     Constants.ShellComponentsJsonConfigFile,
                     Constants.SerilogJsonConfigFile,
                     Constants.ShellNodesConfigFile,
@@ -60,7 +61,7 @@ namespace Catalyst.Cli.IntegrationTests.Config
             {
                 containerProvider.ConfigureContainerBuilder();
 
-                using (var scope = containerProvider.Container.BeginLifetimeScope(CurrentTestName + network.Name))
+                using (var scope = containerProvider.Container.BeginLifetimeScope(CurrentTestName + networkTypes.Name))
                 {
                     scope.Resolve<ICatalystCli>();
                 }

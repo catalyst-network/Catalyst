@@ -29,6 +29,7 @@ using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Common.Network;
+using Catalyst.Common.Types;
 using Catalyst.Common.Util;
 using Catalyst.Protocol;
 using Catalyst.Protocol.Common;

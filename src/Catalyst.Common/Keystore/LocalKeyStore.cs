@@ -30,6 +30,7 @@ using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Common.Interfaces.Keystore;
 using Catalyst.Common.Interfaces.Util;
 using Catalyst.Common.Config;
+using Catalyst.Common.Types;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
 using Nethereum.KeyStore.Crypto;
 using Serilog;
@@ -45,7 +46,7 @@ namespace Catalyst.Common.Keystore
         private readonly ICryptoContext _cryptoContext;
         private readonly IPasswordReader _passwordReader;
         private readonly IKeyStoreService _keyStoreService;
-        private readonly PasswordRegistryKey _defaultNodePassword = PasswordRegistryKey.DefaultNodePassword;
+        private readonly PasswordRegistryTypes _defaultNodePassword = PasswordRegistryTypes.DefaultNodePassword;
 
         private static int MaxTries => 5;
 
@@ -64,7 +65,7 @@ namespace Catalyst.Common.Keystore
             _addressHelper = addressHelper;            
         }
 
-        public IPrivateKey KeyStoreDecrypt(KeyRegistryKey keyIdentifier)
+        public IPrivateKey KeyStoreDecrypt(KeyRegistryTypes keyIdentifier)
         {
             var json = GetJsonFromKeyStore(keyIdentifier);
             if (json == null)
@@ -87,7 +88,7 @@ namespace Catalyst.Common.Keystore
             return privateKey;
         }
 
-        private byte[] KeyStoreDecrypt(PasswordRegistryKey passwordIdentifier, string json)
+        private byte[] KeyStoreDecrypt(PasswordRegistryTypes passwordIdentifier, string json)
         {
             var tries = 0;
 
@@ -118,7 +119,7 @@ namespace Catalyst.Common.Keystore
             throw new AuthenticationException("Password incorrect for keystore.");
         }
 
-        public IPrivateKey KeyStoreGenerate(KeyRegistryKey keyIdentifier)
+        public IPrivateKey KeyStoreGenerate(KeyRegistryTypes keyIdentifier)
         {
             var privateKey = _cryptoContext.GeneratePrivateKey();
 
@@ -127,7 +128,7 @@ namespace Catalyst.Common.Keystore
             return privateKey;
         }
 
-        public async Task KeyStoreEncryptAsync(IPrivateKey privateKey, KeyRegistryKey keyIdentifier)
+        public async Task KeyStoreEncryptAsync(IPrivateKey privateKey, KeyRegistryTypes keyIdentifier)
         {
             try
             {
@@ -151,7 +152,7 @@ namespace Catalyst.Common.Keystore
             }
         }
 
-        private string GetJsonFromKeyStore(KeyRegistryKey keyIdentifier)
+        private string GetJsonFromKeyStore(KeyRegistryTypes keyIdentifier)
         {
             return _fileSystem.ReadTextFromCddSubDirectoryFile(keyIdentifier.Name, Constants.KeyStoreDataSubDir);
         }

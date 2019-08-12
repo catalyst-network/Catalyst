@@ -49,11 +49,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Node.Rpc.Client.In
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Node.Rpc.Client.UnitTests", "Catalyst.Node.Rpc.Client.UnitTests\Catalyst.Node.Rpc.Client.UnitTests.csproj", "{E858FC53-A318-4B17-8013-465B4F742736}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Node", "Catalyst.Node\Catalyst.Node.csproj", "{D3CCB18E-2C8C-4D69-B090-F39C8420ED54}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Node.POA.CE", "Catalyst.Node.POA.CE\Catalyst.Node.POA.CE.csproj", "{D3CCB18E-2C8C-4D69-B090-F39C8420ED54}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Node.UnitTests", "Catalyst.Node.UnitTests\Catalyst.Node.UnitTests.csproj", "{4B03A2FD-8898-44A1-89E0-C386E17F1909}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Node.POA.CE.UnitTests", "Catalyst.Node.POA.CE.UnitTests\Catalyst.Node.POA.CE.UnitTests.csproj", "{4B03A2FD-8898-44A1-89E0-C386E17F1909}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Node.IntegrationTests", "Catalyst.Node.IntegrationTests\Catalyst.Node.IntegrationTests.csproj", "{C1F2BB90-BEF9-463D-85AF-95A27069C2AB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Node.POA.CE.IntegrationTests", "Catalyst.Node.POA.CE.IntegrationTests\Catalyst.Node.POA.CE.IntegrationTests.csproj", "{C1F2BB90-BEF9-463D-85AF-95A27069C2AB}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Modules.Lib", "Catalyst.Modules.Lib\Catalyst.Modules.Lib.csproj", "{13F8A972-C331-470B-9B1F-2BB55369E0A7}"
 EndProject

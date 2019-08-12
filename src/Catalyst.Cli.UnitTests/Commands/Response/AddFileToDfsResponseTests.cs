@@ -24,6 +24,7 @@
 using Catalyst.Cli.Commands;
 using Catalyst.Cli.UnitTests.Helpers;
 using Catalyst.Common.Config;
+using Catalyst.Common.Types;
 using Catalyst.Protocol.Rpc.Node;
 using Google.Protobuf;
 using Microsoft.Reactive.Testing;
@@ -42,7 +43,7 @@ namespace Catalyst.Cli.UnitTests.Commands.Response
             //Arrange
             var addFileToDfsResponse = new AddFileToDfsResponse
             {
-                ResponseCode = ByteString.CopyFrom((byte) FileTransferResponseCodes.Failed.Id)
+                ResponseCode = ByteString.CopyFrom((byte) FileTransferResponseCodeTypes.Failed.Id)
             };
 
             var commandContext = TestCommandHelpers.GenerateCliResponseCommandContext(_testScheduler);
@@ -55,7 +56,7 @@ namespace Catalyst.Cli.UnitTests.Commands.Response
 
             //Assert
             commandContext.UserOutput.Received(1).WriteLine("File transfer completed, Response: " +
-                FileTransferResponseCodes.Failed.Name + " Dfs Hash: " + addFileToDfsResponse.DfsHash);
+                FileTransferResponseCodeTypes.Failed.Name + " Dfs Hash: " + addFileToDfsResponse.DfsHash);
         }
 
         [Fact]
@@ -64,7 +65,7 @@ namespace Catalyst.Cli.UnitTests.Commands.Response
             //Arrange
             var addFileToDfsResponse = new AddFileToDfsResponse
             {
-                ResponseCode = ByteString.CopyFrom((byte) FileTransferResponseCodes.Finished.Id)
+                ResponseCode = ByteString.CopyFrom((byte) FileTransferResponseCodeTypes.Finished.Id)
             };
 
             var commandContext = TestCommandHelpers.GenerateCliResponseCommandContext(_testScheduler);
@@ -77,7 +78,7 @@ namespace Catalyst.Cli.UnitTests.Commands.Response
 
             //Assert
             commandContext.UserOutput.Received(1).WriteLine("File transfer completed, Response: " +
-                FileTransferResponseCodes.Finished.Name + " Dfs Hash: " + addFileToDfsResponse.DfsHash);
+                FileTransferResponseCodeTypes.Finished.Name + " Dfs Hash: " + addFileToDfsResponse.DfsHash);
         }
 
         [Fact]

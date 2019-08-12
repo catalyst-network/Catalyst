@@ -42,6 +42,7 @@ using Catalyst.Common.Interfaces.Util;
 using Catalyst.Common.P2P;
 using Catalyst.Common.P2P.Discovery;
 using Catalyst.Common.P2P.Models;
+using Catalyst.Common.Types;
 using Catalyst.Protocol;
 using Catalyst.Protocol.IPPN;
 using Serilog;
@@ -257,7 +258,7 @@ namespace Catalyst.Core.Lib.P2P.Discovery
             }
 
             var responsiveNeighbours = StepProposal.Neighbours
-               .Where(n => n.State == NeighbourState.Responsive)
+               .Where(n => n.StateTypes == NeighbourStateTypes.Responsive)
                .ToList();
 
             // store discovered peers.
@@ -271,7 +272,7 @@ namespace Catalyst.Core.Lib.P2P.Discovery
 
             // continue walk by proposing next degree.
             var newCandidate = CurrentStep.Neighbours
-               .Where(n => n.State == NeighbourState.Responsive)
+               .Where(n => n.StateTypes == NeighbourStateTypes.Responsive)
                .RandomElement().PeerIdentifier;
 
             StepProposal.RestoreMemento(new HastingsMemento(newCandidate, new Neighbours()));
@@ -297,7 +298,7 @@ namespace Catalyst.Core.Lib.P2P.Discovery
             {
                 responsiveNeighbours = CurrentStep.Neighbours
                    .Where(n => !n.PeerIdentifier.Equals(unresponsiveNeighbour)
-                     && n.State == NeighbourState.Responsive)
+                     && n.StateTypes == NeighbourStateTypes.Responsive)
                    .ToList();
 
                 if (!responsiveNeighbours.Any())
@@ -360,7 +361,7 @@ namespace Catalyst.Core.Lib.P2P.Discovery
                 }
 
                 _logger.Verbose("Neighbour {peerIdentifier} unresponsive.", neighbour.PeerIdentifier);
-                neighbour.State = NeighbourState.UnResponsive;
+                neighbour.StateTypes = NeighbourStateTypes.UnResponsive;
             }
             catch (Exception e)
             {
@@ -389,8 +390,8 @@ namespace Catalyst.Core.Lib.P2P.Discovery
                     return;
                 }
 
-                StepProposal.Neighbours.First(n => n.PeerIdentifier.Equals(obj.Sender)).State =
-                    NeighbourState.Responsive;
+                StepProposal.Neighbours.First(n => n.PeerIdentifier.Equals(obj.Sender)).StateTypes =
+                    NeighbourStateTypes.Responsive;
             }
             catch (Exception e)
             {
@@ -434,13 +435,13 @@ namespace Catalyst.Core.Lib.P2P.Discovery
 
                         // our total expected responses should be same as number of pings sent out,
                         // potential neighbours, can either send response, or we will see them evicted from cache.
-                        n.State = NeighbourState.Contacted;
+                        n.StateTypes = NeighbourStateTypes.Contacted;
                     }
                     catch (Exception e)
                     {
-                        n.State = NeighbourState.UnResponsive;
+                        n.StateTypes = NeighbourStateTypes.UnResponsive;
                         _logger.Error(e, "Failed to send ping request to neighbour {neighbour}, marked as {state}", n,
-                            n.State);
+                            n.StateTypes);
                     }
                 });
 

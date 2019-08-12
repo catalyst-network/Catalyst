@@ -28,6 +28,7 @@ using Catalyst.Common.Interfaces.FileTransfer;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.IO.Observers;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.Types;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using DotNetty.Transport.Channels;
@@ -73,7 +74,7 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
             // @TODO return int not byte
             // var responseCode = Enumeration.Parse<FileTransferResponseCodes>(deserialised.ResponseCode[0].ToString());
 
-            var responseCode = (FileTransferResponseCodes) getFileFromDfsResponse.ResponseCode[0];
+            var responseCode = (FileTransferResponseCodeTypes) getFileFromDfsResponse.ResponseCode[0];
 
             var fileTransferInformation = _fileTransferFactory.GetFileTransferInformation(correlationId);
 
@@ -82,7 +83,7 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
                 return;
             }
 
-            if (responseCode == FileTransferResponseCodes.Successful)
+            if (responseCode == FileTransferResponseCodeTypes.Successful)
             {
                 fileTransferInformation.SetLength(getFileFromDfsResponse.FileSize);
 

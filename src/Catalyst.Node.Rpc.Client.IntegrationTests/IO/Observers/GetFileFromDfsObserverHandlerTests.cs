@@ -34,6 +34,7 @@ using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.P2P;
+using Catalyst.Common.Types;
 using Catalyst.Core.Lib.Rpc.IO.Observers;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
@@ -94,7 +95,7 @@ namespace Catalyst.Node.Rpc.Client.IntegrationTests.IO.Observers
                 var getFileResponse = new GetFileFromDfsResponse
                 {
                     FileSize = (ulong) byteSize,
-                    ResponseCode = ByteString.CopyFrom((byte) FileTransferResponseCodes.Successful.Id)
+                    ResponseCode = ByteString.CopyFrom((byte) FileTransferResponseCodeTypes.Successful.Id)
                 }.ToProtocolMessage(nodePeer.PeerId, correlationId);
 
                 getFileResponse.SendToHandler(_fakeContext, getFileFromDfsResponseHandler);

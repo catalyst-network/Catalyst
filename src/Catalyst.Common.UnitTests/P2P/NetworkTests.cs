@@ -33,7 +33,7 @@ namespace Catalyst.Common.UnitTests.P2P
     {
         static NetworkTests()
         {
-            NetworksAndExpectations = Enumeration.GetAll<Config.Network>()
+            NetworksAndExpectations = Enumeration.GetAll<Types.NetworkTypes>()
                .Select(n => new[] {n.Name, n as object}).ToList();
         }
 
@@ -41,16 +41,16 @@ namespace Catalyst.Common.UnitTests.P2P
 
         [Theory]
         [MemberData(nameof(NetworksAndExpectations))]
-        public static void Network_can_be_parsed_from_string(string value, Config.Network expectedNetwork)
+        public static void Network_can_be_parsed_from_string(string value, Types.NetworkTypes expectedNetworkTypes)
         {
-            var parsed = Enumeration.Parse<Config.Network>(value);
-            parsed.Should().Be(expectedNetwork);
+            var parsed = Enumeration.Parse<Types.NetworkTypes>(value);
+            parsed.Should().Be(expectedNetworkTypes);
         }
 
         [Fact]
         public static void All_should_return_all_declared_names()
         {
-            var allModuleNames = Enumeration.GetAll<Config.Network>().Select(m => m.Name);
+            var allModuleNames = Enumeration.GetAll<Types.NetworkTypes>().Select(m => m.Name);
 
             var expectedList = new List<string> {"mainnet", "devnet", "testnet"};
 
