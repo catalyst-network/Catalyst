@@ -29,6 +29,7 @@ using System.Security;
 using System.Threading.Tasks;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Registry;
+using Catalyst.Common.Shell;
 using Catalyst.Common.Types;
 using Catalyst.Node.Rpc.Client;
 using CommandLine;
@@ -40,7 +41,8 @@ namespace Catalyst.Simulator
     {
         public static async Task<int> Main(string[] args)
         {
-            Console.WriteLine("Catalyst Network Simulator");
+            ConsoleUserOutput consoleUserOutput = new ConsoleUserOutput();
+            consoleUserOutput.WriteLine("Catalyst Network Simulator");
 
             var simulationClientFile =
                 Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Config", "simulation.client.json");
