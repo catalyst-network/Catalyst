@@ -61,8 +61,8 @@ namespace Catalyst.Common.UnitTests.IO.Handlers
         [Fact]
         private void CanFireNextPipelineOnValidSignature()
         {
-            _keySigner.Verify(Arg.Any<ISignature>(), Arg.Any<byte[]>())
-               .Returns(true);
+            _keySigner.Verify(Arg.Any<ISignature>(), Arg.Any<byte[]>(), default)
+               .ReturnsForAnyArgs(true);
 
             var signatureHandler = new ProtocolMessageVerifyHandler(_keySigner);
 
@@ -74,19 +74,14 @@ namespace Catalyst.Common.UnitTests.IO.Handlers
         [Fact]
         private void CanFireNextPipelineOnInvalidSignature()
         {
-            _keySigner.Verify(Arg.Any<ISignature>(), Arg.Any<byte[]>())
-               .Returns(false);
+            _keySigner.Verify(Arg.Any<ISignature>(), Arg.Any<byte[]>(), default)
+               .ReturnsForAnyArgs(false);
 
             var signatureHandler = new ProtocolMessageVerifyHandler(_keySigner);
 
             signatureHandler.ChannelRead(_fakeContext, _protocolMessageSigned);
             
-            /**
-             * See Issue:
-             * https://github.com/catalyst-network/Catalyst.Node/issues/841
-             **/
-            
-            //_fakeContext.DidNotReceiveWithAnyArgs().FireChannelRead(_protocolMessageSigned).Received(0);
+            _fakeContext.DidNotReceiveWithAnyArgs().FireChannelRead(_protocolMessageSigned).Received(0);
         }
     }
 }

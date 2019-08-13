@@ -129,7 +129,8 @@ namespace Catalyst.Node.Rpc.Client.IntegrationTests.IO.Transport.Channels
             
             _serverKeySigner.Verify(
                     Arg.Any<ISignature>(),
-                    Arg.Any<byte[]>()
+                    Arg.Any<byte[]>(),
+                    default
                 )
                .ReturnsForAnyArgs(true);
             
@@ -143,13 +144,8 @@ namespace Catalyst.Node.Rpc.Client.IntegrationTests.IO.Transport.Channels
             {
                 _serverChannel.WriteInbound(sentBytes);
                 _serverCorrelationManager.DidNotReceiveWithAnyArgs().TryMatchResponse(protocolMessage);
-                
-                /**
-                 * See Issue:
-                 * https://github.com/catalyst-network/Catalyst.Node/issues/841
-                 **/
-
-                //_serverKeySigner.ReceivedWithAnyArgs(1).Verify(null, null);
+               
+                _serverKeySigner.ReceivedWithAnyArgs(1).Verify(null, null, null);
 
                 await messageStream.WaitForItemsOnDelayedStreamOnTaskPoolSchedulerAsync();
                 observer.Received.Count.Should().Be(1);
