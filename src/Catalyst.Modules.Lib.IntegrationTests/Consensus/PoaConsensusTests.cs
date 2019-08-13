@@ -36,6 +36,7 @@ using Catalyst.Common.P2P;
 using Catalyst.Core.Lib.Modules.Consensus.Cycle;
 using Catalyst.Cryptography.BulletProofs.Wrapper;
 using Catalyst.TestUtils;
+using FluentAssertions;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -93,9 +94,11 @@ namespace Catalyst.Modules.Lib.IntegrationTests.Consensus
             
             await Task.Delay(Debugger.IsAttached
                     ? TimeSpan.FromHours(3)
-                    //? CycleConfiguration.Default.CycleDuration.Multiply(1.1)
-                    : CycleConfiguration.Default.CycleDuration.Multiply(1.1))
+                    : CycleConfiguration.Default.CycleDuration.Multiply(1.5))
                .ConfigureAwait(false);
+
+            var dfsDir = Path.Combine(FileSystem.GetCatalystDataDir().FullName, "dfs");
+            Directory.GetFiles(dfsDir).Length.Should().Be(1);
 
             _endOfTestCancellationSource.CancelAfter(TimeSpan.FromMinutes(3));
         }

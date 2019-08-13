@@ -116,11 +116,8 @@ namespace Catalyst.Core.Lib.Modules.Consensus.Deltas
 
         private async Task<string> PublishDeltaToDfs(Delta delta, CancellationToken cancellationToken)
         {
-            _logger.Debug("Publishing new delta to DFS: {delta}", delta);
             try
             {
-                Guard.Argument(delta, nameof(delta)).NotNull().Require(c => c.IsValid());
-
                 var deltaAsArray = delta.ToByteArray();
                 var dfsFileAddress = await DfsRetryPolicy.ExecuteAsync(
                     async c => await PublishDfsFileAsync(deltaAsArray, cancellationToken: c).ConfigureAwait(false),
@@ -153,9 +150,9 @@ namespace Catalyst.Core.Lib.Modules.Consensus.Deltas
 
                 await _broadcastManager.BroadcastAsync(newDeltaHashOnDfs).ConfigureAwait(false);
             }
-            catch (Exception)
+            catch (Exception exception)
             {
-                _logger.Error("Failed to broadcast new dfs address {dfsAddress}");
+                _logger.Error(exception, "Failed to broadcast new dfs address {dfsAddress}");
             }
         }
 

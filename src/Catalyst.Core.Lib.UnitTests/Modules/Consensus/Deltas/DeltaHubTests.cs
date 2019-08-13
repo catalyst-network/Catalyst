@@ -171,19 +171,9 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Consensus.Deltas
                .Returns(ci => dfsResults.Next());
 
             new Action(() => _hub.PublishDeltaToDfsAndBroadcastAddressAsync(delta, cancellationToken).GetAwaiter().GetResult())
-               .Should().Throw<TaskCanceledException>();
+               .Should().NotThrow<TaskCanceledException>();
 
             await _dfs.ReceivedWithAnyArgs(3).AddAsync(Arg.Any<Stream>(), Arg.Any<string>());
-        }
-
-        [Theory]
-        [ClassData(typeof(BadDeltas))]
-        public async Task PublishDeltaToIpfsAsync_should_not_send_invalid_deltas(Delta badDelta, Type exceptionType)
-        {
-            new Action(() => _hub.PublishDeltaToDfsAndBroadcastAddressAsync(badDelta).GetAwaiter().GetResult())
-               .Should().Throw<Exception>().And.GetType().Should().Be(exceptionType);
-
-            await _dfs.DidNotReceiveWithAnyArgs().AddAsync(default);
         }
 
         public class BadDeltas : TheoryData<Delta>
