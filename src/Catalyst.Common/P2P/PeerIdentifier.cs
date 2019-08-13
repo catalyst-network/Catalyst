@@ -21,7 +21,6 @@
 
 #endregion
 
-using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Registry;
@@ -56,7 +55,7 @@ namespace Catalyst.Common.P2P
     public sealed class PeerIdentifier : IPeerIdentifier
     {
         public static char PidDelimiter => '|';
-        public PeerId PeerId { get; }
+        public PeerId PeerId { get; set; }
         public IPAddress Ip => new IPAddress(PeerId.Ip.ToByteArray()).MapToIPv4();
         public int Port => BitConverter.ToUInt16(PeerId.Port.ToByteArray());
         public byte[] PublicKey => PeerId.PublicKey.ToByteArray();

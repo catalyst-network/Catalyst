@@ -24,6 +24,7 @@
         <PackageReference Include="Multiformats.Hash" Version="1.5.0" />
         <PackageReference Include="Nethereum.KeyStore" Version="3.3.0" />
         <PackageReference Include="Nethereum.RLP" Version="3.3.0" />
+        <PackageReference Include="Newtonsoft.Json.Bson" Version="1.0.2" />
         <PackageReference Include="Polly" Version="7.1.0" />
         <PackageReference Include="Portable.BouncyCastle" Version="1.8.5" />
         <PackageReference Include="Dawn.Guard" Version="1.8.0" />
@@ -41,6 +42,7 @@
         <PackageReference Include="SharpRepository.AzureDocumentDbRepository" Version="2.0.2-alpha4" />
         <PackageReference Include="SharpRepository.InMemoryRepository" Version="2.0.3.1" />
         <PackageReference Include="SharpRepository.Ioc.Autofac" Version="2.0.4.2" />
+        <PackageReference Include="SharpRepository.MongoDbRepository" Version="2.0.7.3" />
         <PackageReference Include="SharpRepository.Repository" Version="2.0.4.6" />
         <PackageReference Include="SharpRepository.XmlRepository" Version="2.0.1-alpha3" />
         <PackageReference Include="System.IO.Abstractions" Version="6.0.3" />
