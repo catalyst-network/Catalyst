@@ -71,7 +71,7 @@ namespace Catalyst.Common.P2P
 
         public static IPeerIdentifier BuildPeerIdFromConfig(IRpcNodeConfig nodeConfig)
         {
-            return new PeerIdentifier(Encoding.ASCII.GetBytes(nodeConfig.PublicKey),
+            return new PeerIdentifier(nodeConfig.PublicKey.KeyToBytes(),
                 nodeConfig.HostAddress, nodeConfig.Port);
         }
         
