@@ -43,7 +43,6 @@ namespace Catalyst.Common.Config
         /// <param name="overwrite">Should config existing config files be overwritten by default?</param>
         public void RunConfigStartUp(string dataDir, Types.NetworkTypes networkTypesParam = null, string sourceFolder = null, bool overwrite = false)
         {
-            overwrite = true;
             Guard.Argument(dataDir, nameof(dataDir)).NotNull().NotEmpty().NotWhiteSpace();
 
             var network = networkTypesParam == null ? Types.NetworkTypes.Dev : networkTypesParam;
