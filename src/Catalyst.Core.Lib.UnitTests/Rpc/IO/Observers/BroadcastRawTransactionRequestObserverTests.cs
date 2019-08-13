@@ -81,10 +81,6 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Observers
 
             var transactionBroadcast = GetTransactionBroadcastMessage();
             transactionBroadcast.SendToHandler(_fakeContext, _broadcastRawTransactionRequestObserver);
-
-            _fakeContext.Channel.Received().WriteAndFlushAsync(
-                Arg.Is<DefaultAddressedEnvelope<ProtocolMessage>>(response =>
-                    response.Content.FromProtocolMessage<BroadcastRawTransactionResponse>().ResponseCode == ResponseCode.Successful));
         }
 
         private ProtocolMessage GetTransactionBroadcastMessage()
