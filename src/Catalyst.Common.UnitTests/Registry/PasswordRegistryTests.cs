@@ -30,7 +30,7 @@ using Xunit;
 
 namespace Catalyst.Common.UnitTests.Registry
 {
-    public class PasswordRegistryTests: IDisposable
+    public sealed class PasswordRegistryTests : IDisposable
     {
         private readonly SecureString _secureString = new SecureString();
         private readonly PasswordRegistry passwordRegistry;
