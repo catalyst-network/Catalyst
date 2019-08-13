@@ -21,8 +21,9 @@
 
 #endregion
 
+using System;
 using System.Collections.Generic;
-using System.Net;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using Catalyst.Common.Cryptography;
 using Catalyst.Common.Extensions;
@@ -52,33 +53,42 @@ using Serilog;
 
 namespace Catalyst.Simulator
 {
+    public class NodeSocketInfo
+    {
+        public INodeRpcClient NodeRpcClient;
+        public IPeerIdentifier PeerIdentifier;
+    }
+
     public class Simulator
     {
+        private readonly Random _random;
         private readonly ILogger _logger;
         private readonly FileSystem _fileSystem;
-        private readonly ConsolePasswordReader _consolePasswordReader;
-        private IPeerIdentifier _sender;
-        private IPeerIdentifier _recipient;
-        private INodeRpcClient _client;
         private readonly NodeRpcClientFactory _nodeRpcClientFactory;
         private readonly ConsoleUserOutput _userOutput;
+        private readonly X509Certificate2 _certificate;
 
         public Simulator(PasswordRegistry passwordRegistry)
         {
+            _random = new Random();
             _logger = new LoggerConfiguration().WriteTo.Console().CreateLogger();
             _fileSystem = new FileSystem();
             _userOutput = new ConsoleUserOutput();
-            _consolePasswordReader = new ConsolePasswordReader(_userOutput, passwordRegistry);
+            var consolePasswordReader = new ConsolePasswordReader(_userOutput, passwordRegistry);
+
+            var certificateStore = new CertificateStore(_fileSystem, consolePasswordReader);
+            _certificate = certificateStore.ReadOrCreateCertificateFile("mycert.pfx");
 
             var wrapper = new CryptoWrapper();
             var cryptoContext = new CryptoContext(wrapper);
 
             var keyServiceStore = new KeyStoreServiceWrapped(cryptoContext);
             var fileSystem = new FileSystem();
-            
+
             var multiHashAlgorithm = new BLAKE2B_256();
             var addressHelper = new AddressHelper(multiHashAlgorithm);
-            var localKeyStore = new LocalKeyStore(_consolePasswordReader, cryptoContext, keyServiceStore, fileSystem, _logger, addressHelper);
+            var localKeyStore = new LocalKeyStore(consolePasswordReader, cryptoContext, keyServiceStore, fileSystem,
+                _logger, addressHelper);
             var keyRegistry = new KeyRegistry();
             var keySigner = new KeySigner(localKeyStore, cryptoContext, keyRegistry);
 
@@ -104,45 +114,45 @@ namespace Catalyst.Simulator
                 new NodeRpcClientFactory(nodeRpcClientChannelFactory, tcpClientEventLoopGroupFactory, handlers);
         }
 
-        public async Task Simulate()
+        public async Task Simulate(IRpcNodeConfig simulationClientRpcConfig,
+            List<IPeerIdentifier> simulationNodePeerIdentifiers)
         {
-            var nodeRpcConfig = new NodeRpcConfig
+            var isRunning = true;
+            var nodeSocketInfo = new List<NodeSocketInfo>();
+
+            var sender = PeerIdentifier.BuildPeerIdFromConfig(simulationClientRpcConfig);
+            foreach (var simulationNodePeerIdentifier in simulationNodePeerIdentifiers)
             {
-                NodeId = "Node1",
-                HostAddress = IPAddress.Loopback,
-                Port = 42066,
-                PfxFileName = "mycert.pfx",
-                SslCertPassword = "test",
-                PublicKey = "1AemkEe4z3rZHr7RWSUyZHPuVozyCQnT1H7SfpzcGCQRuT"
-            };
+                var nodeIndex = nodeSocketInfo.Count;
+                var nodeRpcConfig = new NodeRpcConfig
+                {
+                    HostAddress = simulationNodePeerIdentifier.Ip,
+                    Port = simulationNodePeerIdentifier.Port,
+                    PublicKey = simulationNodePeerIdentifier.PublicKey.KeyToString()
+                };
 
-            var clientRpcConfig = new NodeRpcConfig
-            {
-                HostAddress = IPAddress.Loopback,
-                Port = 5266,
-                PublicKey = "1AemkEe4z3rZHr7RWSUyZHPuVozyCQnT1H7SfpzcGCQRuT"
-            };
+                var socket = await _nodeRpcClientFactory.GetClient(_certificate, nodeRpcConfig);
+                socket.SubscribeToResponse<BroadcastRawTransactionResponse>(response =>
+                {
+                    _userOutput.WriteLine($"[{nodeIndex}] Transaction response: {response.ResponseCode}");
+                });
 
-            var certificateStore = new CertificateStore(_fileSystem, _consolePasswordReader);
-            var certificate = certificateStore.ReadOrCreateCertificateFile(nodeRpcConfig.PfxFileName);
-
-            _client = await _nodeRpcClientFactory.GetClient(certificate, nodeRpcConfig);
-
-            _sender = PeerIdentifier.BuildPeerIdFromConfig(clientRpcConfig);
-            _recipient = PeerIdentifier.BuildPeerIdFromConfig(nodeRpcConfig);
+                var socketInfo = new NodeSocketInfo
+                    {NodeRpcClient = socket, PeerIdentifier = simulationNodePeerIdentifier};
+                nodeSocketInfo.Add(socketInfo);
+            }
 
             var dtoFactory = new DtoFactory();
 
-            _client.SubscribeToResponse<BroadcastRawTransactionResponse>(response =>
-            {
-                _userOutput.WriteLine($"Transaction response: {response.ResponseCode}");
-            });
-
             var i = 0;
+
             await Task.Run(async () =>
             {
-                while (true)
+                while (isRunning)
                 {
+                    var randomNodeIndex = _random.Next(nodeSocketInfo.Count);
+                    var nodeInfo = nodeSocketInfo[randomNodeIndex];
+
                     var req = new BroadcastRawTransactionRequest();
                     var transaction = new TransactionBroadcast();
                     transaction.Signature = new TransactionSignature
@@ -152,12 +162,15 @@ namespace Catalyst.Simulator
                     };
                     req.Transaction = transaction;
 
-                    var messageDto = dtoFactory.GetDto(req.ToProtocolMessage(_sender.PeerId), _sender, _recipient);
+                    var messageDto = dtoFactory.GetDto(req.ToProtocolMessage(sender.PeerId), sender,
+                        nodeInfo.PeerIdentifier);
 
-                    _userOutput.WriteLine("Sending transaction");
-                    _client.SendMessage(messageDto);
+                    _userOutput.WriteLine($"[{randomNodeIndex}] Sending transaction");
+                    nodeInfo.NodeRpcClient.SendMessage(messageDto);
                     i++;
+
                     await Task.Delay(500);
+                    i++;
                 }
             });
         }

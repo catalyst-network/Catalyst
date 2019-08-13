@@ -1,8 +1,7 @@
 {
   "profiles": {
     "Catalyst.Simulator": {
-      "commandName": "Project",
-      "commandLineArgs": "--ssl-cert-password test --node-password test"
+      "commandName": "Project"
     }
   }
 }

@@ -22,11 +22,22 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Net;
 using System.Security;
 using System.Threading.Tasks;
+using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.P2P;
+using Catalyst.Common.P2P.Models;
 using Catalyst.Common.Registry;
 using Catalyst.Common.Types;
+using Catalyst.Node.Rpc.Client;
+using Catalyst.Protocol.Common;
 using CommandLine;
+using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
+using SharpRepository.Repository;
 
 namespace Catalyst.Simulator
 {
@@ -36,27 +47,46 @@ namespace Catalyst.Simulator
         {
             Console.WriteLine("Catalyst Network Simulator");
 
+            var simulationClientFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Config", "simulation.client.json");
+            var simulationClient = JsonConvert.DeserializeObject<SimulationNode>(File.ReadAllText(simulationClientFile));
+
+            var simulationClientRpcConfig = new NodeRpcConfig
+            {
+                HostAddress = IPAddress.Parse(simulationClient.Ip),
+                Port = simulationClient.Port,
+                PublicKey = simulationClient.PublicKey
+            };
+
+            var simulationNodesFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Config", "simulation.nodes.json");
+            var simulationNodes = JsonConvert.DeserializeObject<List<SimulationNode>>(File.ReadAllText(simulationNodesFile));
+            var simulationNodePeerIdentifiers = new List<IPeerIdentifier>();
+
+            foreach (var simulationNode in simulationNodes)
+            {
+                simulationNodePeerIdentifiers.Add(simulationNode.ToPeerIdentifier());
+            }
+
             var passwordRegistry = new PasswordRegistry();
             Parser.Default.ParseArguments<Options>(args).WithParsed(options =>
             {
                 if (!string.IsNullOrEmpty(options.NodePassword))
                 {
-                    AddPassword(passwordRegistry, options.NodePassword);
+                    AddPassword(passwordRegistry, PasswordRegistryTypes.DefaultNodePassword, options.NodePassword);
                 }
 
                 if (!string.IsNullOrEmpty(options.SslCertPassword))
                 {
-                    AddPassword(passwordRegistry, options.SslCertPassword);
+                    AddPassword(passwordRegistry, PasswordRegistryTypes.CertificatePassword, options.SslCertPassword);
                 }
             });
 
             var simulator = new Simulator(passwordRegistry);
-            await simulator.Simulate();
+            await simulator.Simulate(simulationClientRpcConfig, simulationNodePeerIdentifiers);
 
             return Environment.ExitCode;
         }
 
-        private static void AddPassword(PasswordRegistry passwordRegistry, string password)
+        private static void AddPassword(PasswordRegistry passwordRegistry, PasswordRegistryTypes passwordRegistryTypes, string password)
         {
             var secureString = new SecureString();
             foreach (var character in password)
@@ -64,7 +94,7 @@ namespace Catalyst.Simulator
                 secureString.AppendChar(character);
             }
 
-            passwordRegistry.AddItemToRegistry(PasswordRegistryTypes.CertificatePassword, secureString);
+            passwordRegistry.AddItemToRegistry(passwordRegistryTypes, secureString);
         }
     }
 }
