@@ -100,9 +100,9 @@ namespace Catalyst.Common.Modules.KeySigner
         }
 
         /// <inheritdoc/>
-        public bool Verify(ISignature signature, byte[] message)
+        public bool Verify(ISignature signature, byte[] message, SigningContext signingContext)
         {          
-            return _cryptoContext.Verify(signature, message, Encoding.UTF8.GetBytes("Catalyst"));
+            return _cryptoContext.Verify(signature, message, signingContext.ToByteArray());
         }
 
         /// <inheritdoc/>
