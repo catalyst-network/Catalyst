@@ -33,12 +33,12 @@ namespace Catalyst.Common.IO.Handlers
         private readonly bool _autoRelease;
         protected readonly ILogger Logger;
 
-        protected InboundChannelHandlerBase(ILogger logger)
+        protected InboundChannelHandlerBase(ILogger logger) : this(true)
         {
             Logger = logger;
         }
         
-        private InboundChannelHandlerBase(bool autoRelease, ILogger logger)
+        private InboundChannelHandlerBase(bool autoRelease)
         {
             _autoRelease = autoRelease;
         }

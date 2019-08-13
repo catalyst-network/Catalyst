@@ -56,7 +56,7 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Consensus.Deltas
                .ForContext(MethodBase.GetCurrentMethod().DeclaringType);
         }
 
-        [Fact]
+        [Fact(Skip = "Just run it if you need as a one off")]
         public void GenerateGenesis()
         {
             var hash = "some singularity before the big bang, even before the creation of Texas"
