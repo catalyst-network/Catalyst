@@ -28,27 +28,24 @@ using System.Net;
 using System.Security;
 using System.Threading.Tasks;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.P2P;
-using Catalyst.Common.P2P.Models;
 using Catalyst.Common.Registry;
 using Catalyst.Common.Types;
 using Catalyst.Node.Rpc.Client;
-using Catalyst.Protocol.Common;
 using CommandLine;
-using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
-using SharpRepository.Repository;
 
 namespace Catalyst.Simulator
 {
-    public class Program
+    internal static class Program
     {
         public static async Task<int> Main(string[] args)
         {
             Console.WriteLine("Catalyst Network Simulator");
 
-            var simulationClientFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Config", "simulation.client.json");
-            var simulationClient = JsonConvert.DeserializeObject<SimulationNode>(File.ReadAllText(simulationClientFile));
+            var simulationClientFile =
+                Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Config", "simulation.client.json");
+            var simulationClient =
+                JsonConvert.DeserializeObject<SimulationNode>(File.ReadAllText(simulationClientFile));
 
             var simulationClientRpcConfig = new NodeRpcConfig
             {
@@ -57,8 +54,10 @@ namespace Catalyst.Simulator
                 PublicKey = simulationClient.PublicKey
             };
 
-            var simulationNodesFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Config", "simulation.nodes.json");
-            var simulationNodes = JsonConvert.DeserializeObject<List<SimulationNode>>(File.ReadAllText(simulationNodesFile));
+            var simulationNodesFile =
+                Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Config", "simulation.nodes.json");
+            var simulationNodes =
+                JsonConvert.DeserializeObject<List<SimulationNode>>(File.ReadAllText(simulationNodesFile));
             var simulationNodePeerIdentifiers = new List<IPeerIdentifier>();
 
             foreach (var simulationNode in simulationNodes)
@@ -86,7 +85,9 @@ namespace Catalyst.Simulator
             return Environment.ExitCode;
         }
 
-        private static void AddPassword(PasswordRegistry passwordRegistry, PasswordRegistryTypes passwordRegistryTypes, string password)
+        private static void AddPassword(PasswordRegistry passwordRegistry,
+            PasswordRegistryTypes passwordRegistryTypes,
+            string password)
         {
             var secureString = new SecureString();
             foreach (var character in password)

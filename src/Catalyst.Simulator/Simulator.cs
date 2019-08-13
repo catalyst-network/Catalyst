@@ -55,15 +55,13 @@ namespace Catalyst.Simulator
 {
     public class NodeSocketInfo
     {
-        public INodeRpcClient NodeRpcClient;
-        public IPeerIdentifier PeerIdentifier;
+        public INodeRpcClient NodeRpcClient { set; get; }
+        public IPeerIdentifier PeerIdentifier { set; get; }
     }
 
     public class Simulator
     {
         private readonly Random _random;
-        private readonly ILogger _logger;
-        private readonly FileSystem _fileSystem;
         private readonly NodeRpcClientFactory _nodeRpcClientFactory;
         private readonly ConsoleUserOutput _userOutput;
         private readonly X509Certificate2 _certificate;
@@ -71,12 +69,12 @@ namespace Catalyst.Simulator
         public Simulator(PasswordRegistry passwordRegistry)
         {
             _random = new Random();
-            _logger = new LoggerConfiguration().WriteTo.Console().CreateLogger();
-            _fileSystem = new FileSystem();
+            ILogger logger = new LoggerConfiguration().WriteTo.Console().CreateLogger();
+            var fileSystem1 = new FileSystem();
             _userOutput = new ConsoleUserOutput();
             var consolePasswordReader = new ConsolePasswordReader(_userOutput, passwordRegistry);
 
-            var certificateStore = new CertificateStore(_fileSystem, consolePasswordReader);
+            var certificateStore = new CertificateStore(fileSystem1, consolePasswordReader);
             _certificate = certificateStore.ReadOrCreateCertificateFile("mycert.pfx");
 
             var wrapper = new CryptoWrapper();
@@ -88,27 +86,27 @@ namespace Catalyst.Simulator
             var multiHashAlgorithm = new BLAKE2B_256();
             var addressHelper = new AddressHelper(multiHashAlgorithm);
             var localKeyStore = new LocalKeyStore(consolePasswordReader, cryptoContext, keyServiceStore, fileSystem,
-                _logger, addressHelper);
+                logger, addressHelper);
             var keyRegistry = new KeyRegistry();
             var keySigner = new KeySigner(localKeyStore, cryptoContext, keyRegistry);
 
             var memoryCacheOptions = new MemoryCacheOptions();
             var memoryCache = new MemoryCache(memoryCacheOptions);
             var changeTokenProvider = new TtlChangeTokenProvider(10000);
-            var messageCorrelationManager = new RpcMessageCorrelationManager(memoryCache, _logger, changeTokenProvider);
+            var messageCorrelationManager = new RpcMessageCorrelationManager(memoryCache, logger, changeTokenProvider);
             var peerIdValidator = new PeerIdValidator(cryptoContext);
             var nodeRpcClientChannelFactory =
                 new NodeRpcClientChannelFactory(keySigner, messageCorrelationManager, peerIdValidator);
 
             var eventLoopGroupFactoryConfiguration = new EventLoopGroupFactoryConfiguration
             {
-                TcpClientHandlerWorkerThreads = 2
+                TcpClientHandlerWorkerThreads = 4
             };
 
             var tcpClientEventLoopGroupFactory = new TcpClientEventLoopGroupFactory(eventLoopGroupFactoryConfiguration);
 
             var handlers = new List<IRpcResponseObserver>
-                {new BroadcastRawTransactionResponseObserver(_logger)};
+                {new BroadcastRawTransactionResponseObserver(logger)};
 
             _nodeRpcClientFactory =
                 new NodeRpcClientFactory(nodeRpcClientChannelFactory, tcpClientEventLoopGroupFactory, handlers);
@@ -169,7 +167,7 @@ namespace Catalyst.Simulator
                     nodeInfo.NodeRpcClient.SendMessage(messageDto);
                     i++;
 
-                    await Task.Delay(500);
+                    await Task.Delay(500).ConfigureAwait(false);
                     i++;
                 }
             });
