@@ -34,11 +34,17 @@ namespace Catalyst.Common.IO.Handlers
     public sealed class ProtocolMessageVerifyHandler : InboundChannelHandlerBase<ProtocolMessageSigned>
     {
         private readonly IKeySigner _keySigner;
+        private readonly SigningContext _signingContext;
 
         public ProtocolMessageVerifyHandler(IKeySigner keySigner)
             : base(Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType))
         {
             _keySigner = keySigner;
+            _signingContext = new SigningContext
+            {
+                Network = Protocol.Common.Network.Devnet,
+                SignatureType = SignatureType.ProtocolPeer
+            };
         }
 
         protected override void ChannelRead0(IChannelHandlerContext ctx, ProtocolMessageSigned signedMessage)
@@ -65,19 +71,10 @@ namespace Catalyst.Common.IO.Handlers
 
         private bool Verify(ProtocolMessageSigned signedMessage)
         {
-            /**
-             * See Issue:
-             * https://github.com/catalyst-network/Catalyst.Node/issues/841
-             **/
-            if (true)
-            {
-                return true;
-            }
-
             var sig = signedMessage.Signature.ToByteArray();
             var pub = signedMessage.Message.PeerId.PublicKey.ToByteArray();
             var signature = _keySigner.CryptoContext.SignatureFromBytes(sig, pub);
-            return _keySigner.Verify(signature, signedMessage.Message.ToByteArray());
+            return _keySigner.Verify(signature, signedMessage.Message.ToByteArray(), _signingContext);
         }
     }
 }
