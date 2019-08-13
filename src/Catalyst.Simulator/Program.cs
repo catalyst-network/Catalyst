@@ -39,7 +39,7 @@ namespace Catalyst.Simulator
 {
     internal static class Program
     {
-        public static async Task<int> Main(string[] args)
+        public static int Main(string[] args)
         {
             ConsoleUserOutput consoleUserOutput = new ConsoleUserOutput();
             consoleUserOutput.WriteLine("Catalyst Network Simulator");
@@ -82,7 +82,7 @@ namespace Catalyst.Simulator
             });
 
             var simulator = new Simulator(passwordRegistry);
-            await simulator.Simulate(simulationClientRpcConfig, simulationNodePeerIdentifiers);
+            simulator.Simulate(simulationClientRpcConfig, simulationNodePeerIdentifiers).Wait();
 
             return Environment.ExitCode;
         }
