@@ -29,6 +29,7 @@ using Serilog;
 using System;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
+using Google.Protobuf.WellKnownTypes;
 
 namespace Catalyst.Core.Lib.Modules.Consensus
 {
@@ -43,6 +44,7 @@ namespace Catalyst.Core.Lib.Modules.Consensus
         private IDisposable _votingProductionSubscription;
 
         private readonly ICycleEventsProvider _cycleEventsProvider;
+        private readonly IDateTimeProvider _dateTimeProvider;
         private readonly IDeltaBuilder _deltaBuilder;
         private readonly IDeltaHub _deltaHub;
         private readonly IDeltaCache _deltaCache;
@@ -53,11 +55,13 @@ namespace Catalyst.Core.Lib.Modules.Consensus
             IDeltaCache deltaCache,
             IDeltaHub deltaHub,
             ICycleEventsProvider cycleEventsProvider,
+            IDateTimeProvider dateTimeProvider,
             ILogger logger)
         {
             _deltaVoter = deltaVoter;
             _deltaElector = deltaElector;
             _cycleEventsProvider = cycleEventsProvider;
+            _dateTimeProvider = dateTimeProvider;
             _deltaBuilder = deltaBuilder;
             _deltaHub = deltaHub;
             _deltaCache = deltaCache;
@@ -91,7 +95,11 @@ namespace Catalyst.Core.Lib.Modules.Consensus
                     return delta;
                 })
                .Where(d => d != null)
-               .Subscribe(d => _deltaHub.PublishDeltaToDfsAsync(d).ConfigureAwait(false));
+               .Subscribe(d =>
+                {
+                    d.TimeStamp = Timestamp.FromDateTime(_dateTimeProvider.UtcNow);
+                    _deltaHub.PublishDeltaToDfsAsync(d).ConfigureAwait(false);
+                });
         }
         
         public void Dispose()

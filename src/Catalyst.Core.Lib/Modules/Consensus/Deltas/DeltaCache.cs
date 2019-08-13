@@ -41,9 +41,12 @@ namespace Catalyst.Core.Lib.Modules.Consensus.Deltas
         private readonly ILogger _logger;
         private readonly Func<MemoryCacheEntryOptions> _entryOptions;
 
+        public static string GetLocalDeltaCacheKey(CandidateDeltaBroadcast candidate) =>
+            nameof(DeltaCache) + "-LocalDelta-" + candidate.Hash.AsMultihashBase64UrlString();
+
         public DeltaCache(IMemoryCache memoryCache,
             IDeltaDfsReader dfsReader,
-            IChangeTokenProvider changeTokenProvider,
+            IDeltaCacheChangeTokenProvider changeTokenProvider,
             ILogger logger)
         {
             _memoryCache = memoryCache;
@@ -79,12 +82,16 @@ namespace Catalyst.Core.Lib.Modules.Consensus.Deltas
 
         public bool TryGetLocalDelta(CandidateDeltaBroadcast candidate, out Delta delta)
         {
-            return _memoryCache.TryGetValue(candidate.Hash.AsMultihashBase64UrlString(), out delta);
+            _logger.Verbose("Trying to retrieve full details of candidate delta {candidate}", candidate);
+            var tryGetLocalDelta = _memoryCache.TryGetValue(GetLocalDeltaCacheKey(candidate), out delta);
+            _logger.Verbose("Retrieved full details {delta}", delta?.ToString() ?? "nothing");
+            return tryGetLocalDelta;
         }
 
         public void AddLocalDelta(CandidateDeltaBroadcast localCandidate, Delta delta)
         {
-            _memoryCache.Set(localCandidate.Hash.AsMultihashBase64UrlString(), delta, _entryOptions());
+            _logger.Verbose("Adding full details of candidate delta {candidate}", localCandidate);
+            _memoryCache.Set(GetLocalDeltaCacheKey(localCandidate), delta, _entryOptions());
         }
 
         protected virtual void Dispose(bool disposing) { _memoryCache.Dispose(); }

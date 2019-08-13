@@ -106,14 +106,26 @@ namespace Catalyst.Core.Lib.Modules.Consensus.Deltas
         /// <inheritdoc />
         public async Task<string> PublishDeltaToDfsAsync(Delta delta, CancellationToken cancellationToken = default)
         {
-            Guard.Argument(delta, nameof(delta)).NotNull().Require(c => c.IsValid());
+            _logger.Debug("Publishing new delta to DFS: {delta}", delta);
+            try
+            {
+                Guard.Argument(delta, nameof(delta)).NotNull().Require(c => c.IsValid());
+                _logger.Debug("Delta {delta} was valid", delta);
 
-            var deltaAsArray = delta.ToByteArray();
-            var ipfsFileAddress = await DfsRetryPolicy.ExecuteAsync(
-                async c => await TryPublishIpfsFileAsync(deltaAsArray, cancellationToken: c).ConfigureAwait(false),
-                cancellationToken).ConfigureAwait(false);
+                var deltaAsArray = delta.ToByteArray();
+                var ipfsFileAddress = await DfsRetryPolicy.ExecuteAsync(
+                    async c => await TryPublishIpfsFileAsync(deltaAsArray, cancellationToken: c).ConfigureAwait(false),
+                    cancellationToken).ConfigureAwait(false);
 
-            return ipfsFileAddress;
+                _logger.Debug("New delta published to DFS at address: {ipfsFileAddress}", ipfsFileAddress);
+                
+                return ipfsFileAddress;
+            }
+            catch (Exception e)
+            {
+                _logger.Error(e, "Failed to publish Delta {delta} to ipfs", delta);
+                return null;
+            }
         }
 
         private async Task<string> TryPublishIpfsFileAsync(byte[] deltaAsBytes, CancellationToken cancellationToken)

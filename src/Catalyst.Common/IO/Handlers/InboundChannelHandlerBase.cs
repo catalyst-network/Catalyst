@@ -22,7 +22,6 @@
 #endregion
 
 using System;
-using System.Reflection;
 using DotNetty.Common.Utilities;
 using DotNetty.Transport.Channels;
 using Serilog;
@@ -31,15 +30,15 @@ namespace Catalyst.Common.IO.Handlers
 {
     public abstract class InboundChannelHandlerBase<T> : ChannelHandlerAdapter
     {
-        protected static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
-
         private readonly bool _autoRelease;
+        protected readonly ILogger Logger;
+
+        protected InboundChannelHandlerBase(ILogger logger)
+        {
+            Logger = logger;
+        }
         
-        protected InboundChannelHandlerBase()
-            : this(true) { }
-        
-        /// <param name="autoRelease"></param>
-        private InboundChannelHandlerBase(bool autoRelease)
+        private InboundChannelHandlerBase(bool autoRelease, ILogger logger)
         {
             _autoRelease = autoRelease;
         }

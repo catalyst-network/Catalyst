@@ -165,6 +165,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
             var correlationId = protocolSignedMessage.Message.CorrelationId.ToCorrelationId();
             var gossipRequest = await GetOrCreateAsync(correlationId).ConfigureAwait(false);
             gossipRequest.IncrementReceivedCount();
+            _logger.Verbose("Received broadcast message {message} {gossipCount} times.", gossipRequest.ReceivedCount);
             UpdatePendingRequest(correlationId, gossipRequest);
             _incomingBroadcastSignatureDictionary.GetOrAdd(correlationId, protocolSignedMessage);
         }
@@ -191,6 +192,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
 
                 foreach (var peerIdentifier in peersToGossip)
                 {
+                    _logger.Verbose("Broadcasting message {message}", message);
                     _peerClient.SendMessage(_dtoFactory.GetDto(
                         message.ToProtocolMessage(peerIdentifier.PeerId, correlationId),
                         peerIdentifier,

@@ -102,14 +102,6 @@ namespace Catalyst.Core.Lib.Modules.Consensus.Deltas
                .Concat(coinbaseEntry.ToByteArray())
                .ToArray();
 
-            var producedDelta = new Delta
-            {
-                PreviousDeltaDfsHash = previousDeltaHash.ToByteString(),
-                CBEntries = {coinbaseEntry},
-                STEntries = {includedTransactions.SelectMany(t => t.STEntries)},
-                Version = 1
-            };
-
             //hj
             var candidate = new CandidateDeltaBroadcast
             {
@@ -119,6 +111,15 @@ namespace Catalyst.Core.Lib.Modules.Consensus.Deltas
                 // Idj
                 ProducerId = _producerUniqueId.PeerId,
                 PreviousDeltaDfsHash = previousDeltaHash.ToByteString()
+            };
+
+            var producedDelta = new Delta
+            {
+                PreviousDeltaDfsHash = previousDeltaHash.ToByteString(),
+                MerkleRoot = candidate.Hash,
+                CBEntries = {coinbaseEntry},
+                STEntries = {includedTransactions.SelectMany(t => t.STEntries)},
+                Version = 1
             };
 
             _deltaCache.AddLocalDelta(candidate, producedDelta);

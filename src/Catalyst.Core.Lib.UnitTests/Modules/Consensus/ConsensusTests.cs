@@ -23,6 +23,7 @@
 
 using System;
 using System.Linq;
+using Catalyst.Common.Interfaces.Modules.Consensus;
 using Catalyst.Common.Interfaces.Modules.Consensus.Deltas;
 using Catalyst.Common.Modules.Consensus.Cycle;
 using Catalyst.Protocol.Deltas;
@@ -40,7 +41,6 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Consensus
         private readonly IDeltaElector _deltaElector;
         private readonly IDeltaCache _deltaCache;
         private readonly IDeltaHub _deltaHub;
-        private readonly ILogger _logger;
         private readonly TestCycleEventProvider _cycleEventProvider;
         private readonly Lib.Modules.Consensus.Consensus _consensus;
 
@@ -52,15 +52,17 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Consensus
             _deltaElector = Substitute.For<IDeltaElector>();
             _deltaCache = Substitute.For<IDeltaCache>();
             _deltaHub = Substitute.For<IDeltaHub>();
-            _logger = Substitute.For<ILogger>();
+            var dateTimeProvider = Substitute.For<IDateTimeProvider>();
+            var logger = Substitute.For<ILogger>();
             _consensus = new Lib.Modules.Consensus.Consensus(
                 _deltaBuilder, 
                 _deltaVoter, 
                 _deltaElector,
                 _deltaCache,
                 _deltaHub, 
-                _cycleEventProvider, 
-                _logger);
+                _cycleEventProvider,
+                dateTimeProvider,
+                logger);
 
             _consensus.StartProducing();
         }

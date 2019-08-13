@@ -21,11 +21,13 @@
 
 #endregion
 
+using System.Reflection;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Protocol;
 using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;
 using Google.Protobuf;
+using Serilog;
 
 namespace Catalyst.Common.IO.Handlers
 {
@@ -34,6 +36,7 @@ namespace Catalyst.Common.IO.Handlers
         private readonly IKeySigner _keySigner;
 
         public ProtocolMessageVerifyHandler(IKeySigner keySigner)
+            : base(Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType))
         {
             _keySigner = keySigner;
         }
@@ -47,7 +50,9 @@ namespace Catalyst.Common.IO.Handlers
                 return;
             }
 
-            if (signedMessage.Message.IsBroadCastMessage())
+            if (signedMessage.Message.IsBroadCastMessage()
+             //|| signedMessage.Message.TypeUrl.Equals("Common.ProtocolMessage"))
+             )
             {
                 var innerSignedMessage = ProtocolMessageSigned.Parser.ParseFrom(signedMessage.Message.Value);
                 if (!Verify(innerSignedMessage))
