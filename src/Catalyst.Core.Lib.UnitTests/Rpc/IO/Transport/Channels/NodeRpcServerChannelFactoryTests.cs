@@ -128,7 +128,7 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Transport.Channels
             {
                 testingChannel.WriteInbound(protocolMessage);
                 _correlationManager.DidNotReceiveWithAnyArgs().TryMatchResponse(protocolMessage);
-                _keySigner.DidNotReceiveWithAnyArgs().Verify(null, null);
+                _keySigner.DidNotReceiveWithAnyArgs().Verify(null, null, null);
                 await messageStream.WaitForItemsOnDelayedStreamOnTaskPoolSchedulerAsync();
                 observer.Received.Count.Should().Be(1);
                 observer.Received.Single().Payload.CorrelationId.ToCorrelationId().Id.Should().Be(correlationId.Id);

@@ -123,7 +123,8 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.IO.Transport.Channels
             
             _clientKeySigner.Verify(
                     Arg.Any<ISignature>(),
-                    Arg.Any<byte[]>())
+                    Arg.Any<byte[]>(),
+                    default)
                .ReturnsForAnyArgs(true);
             
             var observer = new ProtocolMessageObserver(0, Substitute.For<ILogger>());
@@ -136,12 +137,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.IO.Transport.Channels
                 _clientChannel.ReadInbound<ProtocolMessage>();
                 _clientCorrelationManager.ReceivedWithAnyArgs(1).TryMatchResponse(Arg.Any<ProtocolMessage>());
                 
-                /**
-                 * See Issue:
-                 * https://github.com/catalyst-network/Catalyst.Node/issues/841
-                 **/
-
-                //_clientKeySigner.ReceivedWithAnyArgs(1).Verify(null, null);
+                _clientKeySigner.ReceivedWithAnyArgs(1).Verify(null, null, null);
 
                 await messageStream.WaitForItemsOnDelayedStreamOnTaskPoolSchedulerAsync();
                 observer.Received.Count.Should().Be(1);

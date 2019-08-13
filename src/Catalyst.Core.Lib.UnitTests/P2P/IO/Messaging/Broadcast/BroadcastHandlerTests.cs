@@ -59,7 +59,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Messaging.Broadcast
         {
             ICryptoContext cryptoContext = new CryptoContext(new CryptoWrapper());
             _keySigner = Substitute.For<IKeySigner>();
-            _keySigner.Verify(Arg.Any<ISignature>(), Arg.Any<byte[]>()).Returns(true);
+            _keySigner.Verify(Arg.Any<ISignature>(), Arg.Any<byte[]>(), default).ReturnsForAnyArgs(true);
             _fakeBroadcastManager = Substitute.For<IBroadcastManager>();
             _broadcastHandler = new BroadcastHandler(_fakeBroadcastManager);
 
