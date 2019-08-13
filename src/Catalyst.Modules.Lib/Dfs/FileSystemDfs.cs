@@ -29,6 +29,7 @@ using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.FileSystem;
 using Catalyst.Common.Interfaces.Modules.Dfs;
 using Dawn;
+using Multiformats.Base;
 using Multiformats.Hash.Algorithms;
 
 namespace Catalyst.Modules.Lib.Dfs
@@ -74,7 +75,7 @@ namespace Catalyst.Modules.Lib.Dfs
         public async Task<string> AddTextAsync(string utf8Content, CancellationToken cancellationToken = default)
         {
             var bytes = Encoding.UTF8.GetBytes(utf8Content);
-            var contentHash = bytes.ComputeMultihash(_hashingAlgorithm);
+            var contentHash = GetContentBasedFileName(bytes);
 
             await _fileSystem.File.WriteAllTextAsync(
                 Path.Combine(_baseFolder.FullName, contentHash),
@@ -93,7 +94,7 @@ namespace Catalyst.Modules.Lib.Dfs
         public async Task<string> AddAsync(Stream content, string name = "", CancellationToken cancellationToken = default)
         {
             var bytes = await content.ReadAllBytesAsync(cancellationToken);
-            var contentHash = bytes.ComputeMultihash(_hashingAlgorithm);
+            var contentHash = GetContentBasedFileName(bytes);
             await _fileSystem.File.WriteAllBytesAsync(Path.Combine(_baseFolder.FullName, contentHash), bytes, cancellationToken);
             return contentHash;
         }
@@ -103,6 +104,11 @@ namespace Catalyst.Modules.Lib.Dfs
         {
             return await Task.FromResult(_fileSystem.File.OpenRead(Path.Combine(_baseFolder.FullName, id)))
                .ConfigureAwait(false);
+        }
+
+        private string GetContentBasedFileName(byte[] content)
+        {
+            return content.ComputeMultihash(_hashingAlgorithm).ToString(MultibaseEncoding.Base64Url);
         }
     }
 }

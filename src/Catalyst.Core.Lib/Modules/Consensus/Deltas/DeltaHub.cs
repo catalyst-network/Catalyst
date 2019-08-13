@@ -33,9 +33,11 @@ using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.IO.Messaging.Broadcast;
 using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Common.Modules.Consensus.Cycle;
+using Catalyst.Common.Util;
 using Catalyst.Protocol.Deltas;
 using Dawn;
 using Google.Protobuf;
+using Multiformats.Hash;
 using Polly;
 using Polly.Retry;
 using Serilog;
@@ -104,22 +106,27 @@ namespace Catalyst.Core.Lib.Modules.Consensus.Deltas
         }
 
         /// <inheritdoc />
-        public async Task<string> PublishDeltaToDfsAsync(Delta delta, CancellationToken cancellationToken = default)
+        public async Task<string> PublishDeltaToDfsAndBroadcastAddressAsync(Delta delta, CancellationToken cancellationToken = default)
+        {
+            var newAddress = await PublishDeltaToDfs(delta, cancellationToken).ConfigureAwait(false);
+            await BroadcastNewDfsFileAddressAsync(newAddress, delta.PreviousDeltaDfsHash).ConfigureAwait(false);
+            return newAddress;
+        }
+
+        private async Task<string> PublishDeltaToDfs(Delta delta, CancellationToken cancellationToken)
         {
             _logger.Debug("Publishing new delta to DFS: {delta}", delta);
             try
             {
                 Guard.Argument(delta, nameof(delta)).NotNull().Require(c => c.IsValid());
-                _logger.Debug("Delta {delta} was valid", delta);
 
                 var deltaAsArray = delta.ToByteArray();
-                var ipfsFileAddress = await DfsRetryPolicy.ExecuteAsync(
-                    async c => await TryPublishIpfsFileAsync(deltaAsArray, cancellationToken: c).ConfigureAwait(false),
+                var dfsFileAddress = await DfsRetryPolicy.ExecuteAsync(
+                    async c => await PublishDfsFileAsync(deltaAsArray, cancellationToken: c).ConfigureAwait(false),
                     cancellationToken).ConfigureAwait(false);
 
-                _logger.Debug("New delta published to DFS at address: {ipfsFileAddress}", ipfsFileAddress);
-                
-                return ipfsFileAddress;
+                _logger.Debug("New delta published to DFS at address: {ipfsFileAddress}", dfsFileAddress);
+                return dfsFileAddress;
             }
             catch (Exception e)
             {
@@ -128,7 +135,30 @@ namespace Catalyst.Core.Lib.Modules.Consensus.Deltas
             }
         }
 
-        private async Task<string> TryPublishIpfsFileAsync(byte[] deltaAsBytes, CancellationToken cancellationToken)
+        private async Task BroadcastNewDfsFileAddressAsync(string dfsFileAddress, ByteString previousDeltaHash)
+        {
+            if (dfsFileAddress == null) {return;}
+
+            try
+            {
+                _logger.Verbose("Broadcasting new delta dfs address {dfsAddress} for delta with previous delta hash {previousDeltaHash}",
+                    dfsFileAddress, previousDeltaHash.AsMultihashBase64UrlString());
+
+                var newDeltaHashOnDfs = new DeltaDfsHashBroadcast
+                {
+                    DeltaDfsHash = Multihash.Parse(dfsFileAddress).ToBytes().ToByteString(),
+                    PreviousDeltaDfsHash = previousDeltaHash
+                }.ToProtocolMessage(_peerIdentifier.PeerId, CorrelationId.GenerateCorrelationId());
+
+                await _broadcastManager.BroadcastAsync(newDeltaHashOnDfs).ConfigureAwait(false);
+            }
+            catch (Exception)
+            {
+                _logger.Error("Failed to broadcast new dfs address {dfsAddress}");
+            }
+        }
+
+        private async Task<string> PublishDfsFileAsync(byte[] deltaAsBytes, CancellationToken cancellationToken)
         {
             using (var memoryStream = new MemoryStream())
             {
