@@ -70,6 +70,8 @@ namespace Catalyst.Core.Lib.Modules.Consensus.Deltas
         /// <inheritdoc />
         public bool TryUpdateLatestHash(Multihash previousHash, Multihash newHash)
         {
+            _logger.Debug("New hash {hash} received for previous hash {previousHash}", 
+                newHash.AsBase64UrlString(), previousHash.AsBase64UrlString());
             var foundNewDelta = _deltaCache.TryGetConfirmedDelta(newHash.AsBase64UrlString(), out var newDelta);
             var foundPreviousDelta = _deltaCache.TryGetConfirmedDelta(previousHash.AsBase64UrlString(), out var previousDelta);
 
@@ -103,6 +105,7 @@ namespace Catalyst.Core.Lib.Modules.Consensus.Deltas
         /// <inheritdoc />
         public Multihash GetLatestDeltaHash(DateTime? asOf = null)
         {
+            _logger.Verbose("Trying to retrieve latest delta as of {asOf}", asOf);
             if (!asOf.HasValue)
             {
                 return _hashesByTimeDescending.FirstOrDefault().Value;

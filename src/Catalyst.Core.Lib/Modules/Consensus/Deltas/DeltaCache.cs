@@ -25,7 +25,6 @@ using System;
 using System.Threading;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Modules.Consensus.Deltas;
-using Catalyst.Common.Interfaces.Util;
 using Catalyst.Protocol.Deltas;
 using Microsoft.Extensions.Caching.Memory;
 using Serilog;

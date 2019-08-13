@@ -125,9 +125,10 @@ namespace Catalyst.TestUtils
                 loggerConfiguration = loggerConfiguration.WriteTo.TestOutput(_output, LogEventLevel, LogOutputTemplate);
             }
 
+            var logFile = Path.Combine(_fileSystem.GetCatalystDataDir().FullName, "Catalyst.Node.log");
             if (writeLogsToFile)
             {
-                loggerConfiguration = loggerConfiguration.WriteTo.File(Path.Combine(_fileSystem.GetCatalystDataDir().FullName, "Catalyst.Node.log"), LogEventLevel,
+                loggerConfiguration = loggerConfiguration.WriteTo.File(logFile, LogEventLevel,
                     LogOutputTemplate);
             }
 
@@ -142,6 +143,11 @@ namespace Catalyst.TestUtils
             if (logDotNettyTraffic)
             {
                 DotNetty.Common.Internal.Logging.InternalLoggerFactory.DefaultFactory.AddProvider(new SerilogLoggerProvider(logger));
+            }
+
+            if (writeLogsToFile)
+            {
+                _output?.WriteLine(logFile);
             }
         }
 

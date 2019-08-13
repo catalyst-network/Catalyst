@@ -69,41 +69,8 @@ namespace Catalyst.Common.IO.Handlers
                 return;
             }
 
-            if (msg.TypeUrl.Equals(ProtocolMessage.Descriptor.ShortenedFullName()))
-            {
-                Logger.Verbose("Maybe Broadcast {msg} received.", msg);
-                var innerMessage = ProtocolMessage.Parser.ParseFrom(msg.Value);
-                if (innerMessage.TypeUrl.EndsWith("Broadcast")) Logger.Warning("message {innerMessage} not seen as broadcast", innerMessage);
-
-                // 🍖🍖🍖🌮🌮🥐🥓🥫🍤☕☕🍍🍒🍒🌳🌳🌿😚😏😏😘🥰😛🙃🤓👾🙀😺🐭🍗
-
-                if (innerMessage.TypeUrl == CandidateDeltaBroadcast.Descriptor.ShortenedFullName())
-                {
-                    ctx.FireChannelRead(innerMessage.FromProtocolMessage<CandidateDeltaBroadcast>());
-                    return;
-                }
-
-                if (innerMessage.TypeUrl == FavouriteDeltaBroadcast.Descriptor.ShortenedFullName())
-                {
-                    ctx.FireChannelRead(innerMessage.FromProtocolMessage<FavouriteDeltaBroadcast>());
-                    return;
-                }
-
-                if (innerMessage.TypeUrl == DeltaDfsHashBroadcast.Descriptor.ShortenedFullName())
-                {
-                    ctx.FireChannelRead(innerMessage.FromProtocolMessage<DeltaDfsHashBroadcast>());
-                    return;
-                }
-
-                // 🚲🚃🚘🚚🚇🚦⛩👩‍🦰👩‍🦰🤴👮‍♂️👨‍🏭👨‍🍳🧛‍♂️🧝‍♂️👰🤰🧛‍♀️💁‍♀️🕺🕺🚶‍♂️👩‍🦯🤸‍♀️👏🙌👱‍♀️👼👨‍💻
-
-                ctx.FireChannelRead(innerMessage);
-            }
-            else
-            {
-                Logger.Verbose("Message {msg} was not a broadcast message.", msg);
-                ctx.FireChannelRead(msg);
-            }
+            Logger.Verbose("Message {msg} was not a broadcast message.", msg);
+            ctx.FireChannelRead(msg);
         }
     }
 }

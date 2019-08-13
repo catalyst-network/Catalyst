@@ -34,6 +34,7 @@ using Catalyst.Common.Interfaces.P2P.IO.Messaging.Broadcast;
 using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Common.Modules.Consensus.Cycle;
 using Catalyst.Common.Util;
+using Catalyst.Protocol;
 using Catalyst.Protocol.Deltas;
 using Dawn;
 using Google.Protobuf;
@@ -120,7 +121,7 @@ namespace Catalyst.Core.Lib.Modules.Consensus.Deltas
             {
                 Guard.Argument(delta, nameof(delta)).NotNull().Require(c => c.IsValid());
 
-                var deltaAsArray = delta.ToByteArray();
+                var deltaAsArray = delta.ToString().ToUtf8ByteString().ToByteArray();
                 var dfsFileAddress = await DfsRetryPolicy.ExecuteAsync(
                     async c => await PublishDfsFileAsync(deltaAsArray, cancellationToken: c).ConfigureAwait(false),
                     cancellationToken).ConfigureAwait(false);

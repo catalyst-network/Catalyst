@@ -23,6 +23,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -93,7 +94,9 @@ namespace Catalyst.Modules.Lib.IntegrationTests.Consensus
                     n.Consensus.StartProducing();
                 });
 
-            await Task.Delay(CycleConfiguration.Default.CycleDuration.Multiply(2))
+            await Task.Delay(Debugger.IsAttached 
+                    ? TimeSpan.FromHours(3)
+                    : CycleConfiguration.Default.CycleDuration.Multiply(1.1))
                .ConfigureAwait(false);
 
             _endOfTestCancellationSource.CancelAfter(TimeSpan.FromMinutes(3));
