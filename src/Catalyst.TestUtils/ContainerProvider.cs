@@ -128,8 +128,7 @@ namespace Catalyst.TestUtils
             var logFile = Path.Combine(_fileSystem.GetCatalystDataDir().FullName, "Catalyst.Node.log");
             if (writeLogsToFile)
             {
-                loggerConfiguration = loggerConfiguration.WriteTo.File(logFile, LogEventLevel,
-                    LogOutputTemplate);
+                loggerConfiguration = loggerConfiguration.WriteTo.File(logFile, LogEventLevel, LogOutputTemplate);
             }
 
             var logger = loggerConfiguration.CreateLogger();

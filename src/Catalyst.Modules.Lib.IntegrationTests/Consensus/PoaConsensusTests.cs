@@ -31,14 +31,11 @@ using System.Threading.Tasks;
 using Autofac;
 using Catalyst.Common.Config;
 using Catalyst.Common.Cryptography;
-using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.P2P;
-using Catalyst.Common.Util;
 using Catalyst.Core.Lib.Modules.Consensus.Cycle;
 using Catalyst.Cryptography.BulletProofs.Wrapper;
 using Catalyst.TestUtils;
-using Multiformats.Hash.Algorithms;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -55,7 +52,7 @@ namespace Catalyst.Modules.Lib.IntegrationTests.Consensus
             Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile)
         }, output)
         {
-            ContainerProvider.ConfigureContainerBuilder(true, true, true);
+            ContainerProvider.ConfigureContainerBuilder(true, true, false);
             _scope = ContainerProvider.Container.BeginLifetimeScope(CurrentTestName);
 
             var context = new CryptoContext(new CryptoWrapper());
@@ -93,9 +90,10 @@ namespace Catalyst.Modules.Lib.IntegrationTests.Consensus
                     n.RunAsync(_endOfTestCancellationSource.Token);
                     n.Consensus.StartProducing();
                 });
-
-            await Task.Delay(Debugger.IsAttached 
+            
+            await Task.Delay(Debugger.IsAttached
                     ? TimeSpan.FromHours(3)
+                    //? CycleConfiguration.Default.CycleDuration.Multiply(1.1)
                     : CycleConfiguration.Default.CycleDuration.Multiply(1.1))
                .ConfigureAwait(false);
 

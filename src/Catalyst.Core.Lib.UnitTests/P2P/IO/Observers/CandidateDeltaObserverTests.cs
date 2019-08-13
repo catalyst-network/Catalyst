@@ -58,6 +58,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Observers
             _newHash = Encoding.UTF8.GetBytes("newHash").ComputeMultihash(multihashAlgorithm).ToBytes();
             _prevHash = Encoding.UTF8.GetBytes("prevHash").ComputeMultihash(multihashAlgorithm).ToBytes();
             _producerId = PeerIdHelper.GetPeerId("candidate delta producer");
+            var peerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("hello");
             _candidateDeltaObserver = new CandidateDeltaObserver(_deltaVoter, logger);
         }
 

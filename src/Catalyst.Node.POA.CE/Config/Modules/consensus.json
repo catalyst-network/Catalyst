@@ -66,14 +66,6 @@
             ]
         },
         {
-            "type": "SharpRepository.InMemoryRepository.InMemoryRepository`2[[Catalyst.Common.P2P.Models.Peer, Catalyst.Common], [System.String, mscorlib]], SharpRepository.InMemoryRepository",
-            "services": [
-                {
-                    "type": "SharpRepository.Repository.IRepository`2[[Catalyst.Common.P2P.Models.Peer, Catalyst.Common], [System.String, mscorlib]], SharpRepository.Repository"
-                }
-            ]
-        },
-        {
             "type": "Catalyst.Core.Lib.Modules.Consensus.Deltas.DeltaHashProvider",
             "services": [
                 {

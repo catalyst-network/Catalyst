@@ -31,6 +31,7 @@ using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Deltas;
 using Serilog;
 using Catalyst.Common.Extensions;
+using Catalyst.Common.Interfaces.P2P;
 
 namespace Catalyst.Core.Lib.P2P.IO.Observers
 {
@@ -48,6 +49,8 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
         {
             try
             {
+                Logger.Verbose("received {message} from {port}", messageDto.Payload.CorrelationId.ToCorrelationId(), 
+                    BitConverter.ToInt16(messageDto.Payload.PeerId.Port.ToByteArray()));
                 var deserialised = messageDto.Payload.FromProtocolMessage<CandidateDeltaBroadcast>();
 
                 _ = deserialised.PreviousDeltaDfsHash.ToByteArray().AsMultihash();

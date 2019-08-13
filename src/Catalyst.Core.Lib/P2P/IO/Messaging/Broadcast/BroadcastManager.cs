@@ -63,7 +63,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
         private readonly IMemoryCache _pendingRequests;
 
         /// <summary>The entry options</summary>
-        private readonly MemoryCacheEntryOptions _entryOptions;
+        private readonly Func<MemoryCacheEntryOptions> _entryOptions;
 
         /// <summary>The peer identifier</summary>
         private readonly IPeerIdentifier _peerIdentifier;
@@ -92,7 +92,12 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
         /// <param name="peerClient">The peer client.</param>
         /// <param name="signer">The signature writer</param>
         /// <param name="logger"></param>
-        public BroadcastManager(IPeerIdentifier peerIdentifier, IPeerRepository peers, IMemoryCache memoryCache, IPeerClient peerClient, IKeySigner signer, ILogger logger)
+        public BroadcastManager(IPeerIdentifier peerIdentifier,
+            IPeerRepository peers, 
+            IMemoryCache memoryCache, 
+            IPeerClient peerClient,
+            IKeySigner signer, 
+            ILogger logger)
         {
             _logger = logger;
             _peerIdentifier = peerIdentifier;
@@ -102,7 +107,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
             _signer = signer;
             _incomingBroadcastSignatureDictionary = new ConcurrentDictionary<ICorrelationId, ProtocolMessageSigned>();
             _dtoFactory = new DtoFactory();
-            _entryOptions = new MemoryCacheEntryOptions()
+            _entryOptions = () => new MemoryCacheEntryOptions()
                .AddExpirationToken(new CancellationChangeToken(new CancellationTokenSource(TimeSpan.FromMinutes(10)).Token));
         }
 
@@ -195,8 +200,8 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
                     _logger.Verbose("Broadcasting message {message}", message);
                     _peerClient.SendMessage(_dtoFactory.GetDto(
                         message.ToProtocolMessage(peerIdentifier.PeerId, correlationId),
-                        peerIdentifier,
                         _peerIdentifier,
+                        peerIdentifier,
                         correlationId)
                     );
                 }
@@ -239,7 +244,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
         /// <param name="correlationId">The message correlation ID</param>
         private void UpdatePendingRequest(ICorrelationId correlationId, BroadcastMessage broadcastMessage)
         {
-            _pendingRequests.Set(correlationId.Id, broadcastMessage, _entryOptions);
+            _pendingRequests.Set(correlationId.Id, broadcastMessage, _entryOptions());
         }
 
         /// <summary>Gets the maximum gossip cycles.</summary>
@@ -258,7 +263,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
         {
             var request = await _pendingRequests.GetOrCreateAsync(correlationId.Id, async entry =>
             {
-                entry.SetOptions(_entryOptions);
+                entry.SetOptions(_entryOptions());
                 var gossipRequest = await Task.FromResult(new BroadcastMessage
                 {
                     ReceivedCount = 0,

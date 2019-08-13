@@ -21,11 +21,6 @@
 
 #endregion
 
-using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Modules.Consensus.Deltas;
 using Catalyst.Common.Interfaces.P2P;
@@ -36,6 +31,11 @@ using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Primitives;
 using Newtonsoft.Json;
 using Serilog;
+using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
 
 namespace Catalyst.Core.Lib.Modules.Consensus.Deltas
 {
@@ -88,14 +88,13 @@ namespace Catalyst.Core.Lib.Modules.Consensus.Deltas
         {
             try
             {
-                Guard.Argument(candidate, nameof(candidate)).NotNull().Require(c => c.IsValid());
-
                 var rankingFactor = GetProducerRankFactor(candidate);
 
                 var candidateCacheKey = GetCandidateCacheKey(candidate);
                 if (_candidatesCache.TryGetValue<IScoredCandidateDelta>(candidateCacheKey, out var retrievedScoredDelta))
                 {
                     retrievedScoredDelta.IncreasePopularity(1);
+                    _logger.Debug("Candidate {candidate} increased popularity to {score}", candidate, retrievedScoredDelta.Score);
                     return;
                 }
                 
