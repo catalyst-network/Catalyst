@@ -1,7 +1,8 @@
 {
   "profiles": {
     "Catalyst.Core": {
-      "commandName": "Project"
+      "commandName": "Project",
+      "commandLineArgs": "-o true"
     }
   }
 }
