@@ -123,7 +123,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
                 return;
             }
 
-            SendBroadcastMessages(protocolMessage, gossipRequest);
+            SendBroadcastMessages(signedMessage, gossipRequest);
         }
 
         /// <inheritdoc/>
@@ -176,11 +176,11 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
             _incomingBroadcastSignatureDictionary.TryRemove(correlationId, out _);
         }
 
-        private void SendBroadcastMessages(ProtocolMessage message, BroadcastMessage broadcastMessage)
+        private void SendBroadcastMessages(ProtocolMessageSigned message, BroadcastMessage broadcastMessage)
         {
             try
             {
-                var isOwnerOfBroadcast = message.PeerId.Equals(_peerIdentifier.PeerId);
+                var isOwnerOfBroadcast = message.Message.PeerId.Equals(_peerIdentifier.PeerId);
                 
                 // The fan out is how many peers to broadcast to
                 var fanOut = isOwnerOfBroadcast 
@@ -188,7 +188,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
                     : (int) Math.Max(GetMaxGossipCycles(broadcastMessage), MaxGossipPeersPerRound);
 
                 var peersToGossip = GetRandomPeers(fanOut);
-                var correlationId = message.CorrelationId.ToCorrelationId();
+                var correlationId = message.Message.CorrelationId.ToCorrelationId();
 
                 foreach (var peerIdentifier in peersToGossip)
                 {

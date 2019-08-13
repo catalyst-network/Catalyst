@@ -66,6 +66,7 @@ namespace Catalyst.Common.IO.Handlers
                    .ConfigureAwait(false).GetAwaiter().GetResult();
 
                 ctx.FireChannelRead(innerGossipMessageSigned.Message);
+                return;
             }
 
             if (msg.TypeUrl.Equals(ProtocolMessage.Descriptor.ShortenedFullName()))
@@ -79,16 +80,19 @@ namespace Catalyst.Common.IO.Handlers
                 if (innerMessage.TypeUrl == CandidateDeltaBroadcast.Descriptor.ShortenedFullName())
                 {
                     ctx.FireChannelRead(innerMessage.FromProtocolMessage<CandidateDeltaBroadcast>());
+                    return;
                 }
 
                 if (innerMessage.TypeUrl == FavouriteDeltaBroadcast.Descriptor.ShortenedFullName())
                 {
                     ctx.FireChannelRead(innerMessage.FromProtocolMessage<FavouriteDeltaBroadcast>());
+                    return;
                 }
 
                 if (innerMessage.TypeUrl == DeltaDfsHashBroadcast.Descriptor.ShortenedFullName())
                 {
                     ctx.FireChannelRead(innerMessage.FromProtocolMessage<DeltaDfsHashBroadcast>());
+                    return;
                 }
 
                 // 🚲🚃🚘🚚🚇🚦⛩👩‍🦰👩‍🦰🤴👮‍♂️👨‍🏭👨‍🍳🧛‍♂️🧝‍♂️👰🤰🧛‍♀️💁‍♀️🕺🕺🚶‍♂️👩‍🦯🤸‍♀️👏🙌👱‍♀️👼👨‍💻

@@ -50,9 +50,7 @@ namespace Catalyst.Common.IO.Handlers
                 return;
             }
 
-            if (signedMessage.Message.IsBroadCastMessage()
-             //|| signedMessage.Message.TypeUrl.Equals("Common.ProtocolMessage"))
-             )
+            if (signedMessage.Message.IsBroadCastMessage())
             {
                 var innerSignedMessage = ProtocolMessageSigned.Parser.ParseFrom(signedMessage.Message.Value);
                 if (!Verify(innerSignedMessage))
