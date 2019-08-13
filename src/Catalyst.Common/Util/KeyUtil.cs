@@ -21,24 +21,21 @@
 
 #endregion
 
-using System.Linq;
-using Multiformats.Base;
-using Multiformats.Hash;
+using SimpleBase;
 
 namespace Catalyst.Common.Util
 {
+    // https://github.com/catalyst-network/Catalyst.Node/issues/847
     public static class KeyUtil
     {
-        public static string KeyToString(this byte[] keyBytes)
+        public static string KeyToString(this byte[] keyAsBytes)
         {
-            return Multihash.Sum(HashType.ID, keyBytes).ToString(MultibaseEncoding.Base58Btc);
+            return Base32.Crockford.Encode(keyAsBytes, false);
         }
 
-        public static byte[] KeyToBytes(this string base58Key)
+        public static byte[] KeyToBytes(this string keyAsString)
         {
-            var publicKeyMultiHash = Multihash.Parse(base58Key);
-            var rawPublicKeyBytes = publicKeyMultiHash.ToBytes().TakeLast(publicKeyMultiHash.Length).ToArray();
-            return rawPublicKeyBytes;
+            return Base32.Crockford.Decode(keyAsString);
         }
     }
 }
