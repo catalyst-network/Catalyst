@@ -321,7 +321,7 @@
                 }
             ],
             "parameters": {
-                "configDataDir": "Data_Directory"
+                "configDataDir": "/root/.catalyst"
             }
         },
         {
