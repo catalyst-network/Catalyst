@@ -26,7 +26,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
-using Castle.DynamicProxy.Generators.Emitters.SimpleAST;
 using Catalyst.Common.Interfaces.Modules.Mempool;
 using Catalyst.Common.Interfaces.Repository;
 using Catalyst.Common.Modules.Mempool.Models;

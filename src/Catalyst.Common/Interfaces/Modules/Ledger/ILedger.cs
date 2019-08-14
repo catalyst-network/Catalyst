@@ -21,7 +21,6 @@
 
 #endregion
 
-using Ipfs;
 using Multiformats.Hash;
 
 namespace Catalyst.Common.Interfaces.Modules.Ledger

@@ -23,7 +23,6 @@
 
 using System.Collections.Generic;
 using Catalyst.Protocol.Transaction;
-using MongoDB.Driver.Core.Clusters;
 
 namespace Catalyst.Common.Interfaces.Modules.Mempool
 {

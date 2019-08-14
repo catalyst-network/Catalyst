@@ -29,7 +29,6 @@ using Catalyst.Common.Interfaces.Modules.Consensus.Deltas;
 using Catalyst.Common.Interfaces.Modules.Mempool;
 using Catalyst.Common.Interfaces.Repository;
 using Catalyst.Common.Modules.Ledger.Models;
-using Ipfs;
 using Multiformats.Hash;
 
 namespace Catalyst.Core.Lib.Modules.Ledger
