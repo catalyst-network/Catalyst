@@ -21,7 +21,11 @@
 
 #endregion
 
+using System;
 using System.IO;
+using Autofac;
+using Autofac.Core;
+using Autofac.Extensions.DependencyInjection;
 using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.Repository;
 using Catalyst.Common.Modules.Mempool.Models;
@@ -41,13 +45,15 @@ namespace Catalyst.Modules.Lib.Api
 {
     public sealed class Startup
     {
-        public Startup(IHostingEnvironment env)
+        private readonly IContainerProvider _containerProvider;
+
+        public Startup(IHostingEnvironment env, IContainerProvider containerProvider)
         {
             var builder = new ConfigurationBuilder()
                .SetBasePath(env.ContentRootPath)
                .AddEnvironmentVariables()
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, NetworkTypes.Dev + ".json"));
-
+            _containerProvider = containerProvider;
             Configuration = builder.Build();
         }
 
@@ -56,10 +62,16 @@ namespace Catalyst.Modules.Lib.Api
             services.AddMvc()
                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
-            services.AddScoped<IRepository<MempoolDocument, string>, InMemoryRepository<MempoolDocument, string>>();
-            services.AddScoped<IRepository<Peer, string>, InMemoryRepository<Peer, string>>();
-            services.AddScoped<IPeerRepository, PeerRepository>();
-            services.AddScoped<IMempoolRepository, MempoolRepository>();
+            var container = _containerProvider.Container;
+
+            if (container != null)
+            {
+                services.AddSingleton(container.Resolve<IRepository<MempoolDocument, string>>());
+                services.AddSingleton(container.Resolve<IRepository<Peer, string>>());
+
+                services.AddSingleton(container.Resolve<IPeerRepository>());
+                services.AddSingleton(container.Resolve<IMempoolRepository>());
+            }
         }
 
         public IConfigurationRoot Configuration { get; private set; }

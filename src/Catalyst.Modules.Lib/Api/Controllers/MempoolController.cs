@@ -23,7 +23,10 @@
 
 using System.Linq;
 using Catalyst.Common.Interfaces.Repository;
+using Catalyst.Common.Util;
+using Catalyst.Protocol.Common;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace Catalyst.Modules.Lib.Api.Controllers
 {
@@ -39,9 +42,12 @@ namespace Catalyst.Modules.Lib.Api.Controllers
 
         // GET: api/values
         [HttpGet]
-        public OkObjectResult GetMempool()
+        public IActionResult GetMempool()
         {
-            return Ok(Json(_mempoolRepository.GetAll().ToList()));
+            return Json(_mempoolRepository.GetAll(), new JsonSerializerSettings
+            {
+                Converters = {new JsonProtoObjectConverter<PeerId>(), new IpEndPointConverter(), new IpAddressConverter()}
+            });
         }
     }
 }

@@ -23,7 +23,10 @@
 
 using System.Linq;
 using Catalyst.Common.Interfaces.Repository;
+using Catalyst.Common.Util;
+using Catalyst.Protocol.Common;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace Catalyst.Modules.Lib.Api.Controllers
 {
@@ -41,7 +44,10 @@ namespace Catalyst.Modules.Lib.Api.Controllers
         [HttpGet]
         public IActionResult GetAllPeers()
         {
-            return Ok(_peerRepository.GetAll().ToList());
+            return Json(_peerRepository.GetAll(), new JsonSerializerSettings
+            {
+                Converters = {new JsonProtoObjectConverter<PeerId>(), new IpEndPointConverter(), new IpAddressConverter()}
+            });
         }
     }
 }
