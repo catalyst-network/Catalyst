@@ -90,7 +90,7 @@ namespace Catalyst.Modules.Lib.IntegrationTests.Consensus
 
             var baseDfsFolder = Path.Combine(parentTestFileSystem.GetCatalystDataDir().FullName, "dfs");
             var blake2B512HashingAlgorithm = HashingAlgorithm.All.First(x => x.Name == "blake2b-512");
-            _dfs = new FileSystemDfs(blake2B512HashingAlgorithm, parentTestFileSystem, baseDfsFolder);
+            _dfs = new FileSystemDfs(parentTestFileSystem, blake2B512HashingAlgorithm, baseDfsFolder);
 
             _mempool = new AutoFillingMempool();
             _peerRepository = Substitute.For<IPeerRepository>();
