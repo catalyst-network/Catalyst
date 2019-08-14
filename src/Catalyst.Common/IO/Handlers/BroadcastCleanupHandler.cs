@@ -21,10 +21,12 @@
 
 #endregion
 
+using System.Reflection;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.P2P.IO.Messaging.Broadcast;
 using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;
+using Serilog;
 
 namespace Catalyst.Common.IO.Handlers
 {
@@ -32,7 +34,11 @@ namespace Catalyst.Common.IO.Handlers
     {
         private readonly IBroadcastManager _broadcastManager;
 
-        public BroadcastCleanupHandler(IBroadcastManager broadcastManager) { _broadcastManager = broadcastManager; }
+        public BroadcastCleanupHandler(IBroadcastManager broadcastManager)
+            : base(Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType))
+        {
+            _broadcastManager = broadcastManager;
+        }
 
         protected override void ChannelRead0(IChannelHandlerContext ctx, ProtocolMessage msg)
         {
