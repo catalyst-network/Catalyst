@@ -41,7 +41,7 @@ using NSubstitute;
 using Serilog;
 using Xunit;
 
-namespace Catalyst.Core.Lib.IntegrationTests.Rpc.IO.Observers
+namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Observers
 {
     public sealed class SignMessageRequestObserverTests
     {
