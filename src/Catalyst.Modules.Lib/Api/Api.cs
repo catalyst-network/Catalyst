@@ -23,33 +23,35 @@
 
 using System;
 using System.Threading.Tasks;
+using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 
 namespace Catalyst.Modules.Lib.Api
 {
     public interface IApi : IDisposable
     {
-        Task StartApiAsync();
+        Task StartApiAsync(IContainer container);
     }
 
     public class Api : IApi
     {
-        private readonly IWebHost _host;
-
-        public Api()
+        private IWebHost _host;
+        
+        public Task StartApiAsync(IContainer container)
         {
             _host = WebHost.CreateDefaultBuilder()
-               .ConfigureServices(services => services.AddAutofac())
+               .ConfigureServices(services =>
+                {
+                    services.AddSingleton<IContainerProvider>(new ContainerProvider(container));
+                    services.AddAutofac();
+                })
                .UseStartup<Startup>()
                .UseSerilog()
                .Build();
-        }
-
-        public Task StartApiAsync()
-        {
             return _host.StartAsync();
         }
         
