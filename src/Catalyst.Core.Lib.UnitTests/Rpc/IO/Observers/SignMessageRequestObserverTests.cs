@@ -21,16 +21,12 @@
 
 #endregion
 
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Autofac;
-using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.IO.Messaging.Dto;
-using Catalyst.Common.Types;
 using Catalyst.Common.Util;
 using Catalyst.Core.Lib.Rpc.IO.Observers;
 using Catalyst.Cryptography.BulletProofs.Wrapper;
@@ -44,7 +40,6 @@ using FluentAssertions;
 using NSubstitute;
 using Serilog;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace Catalyst.Core.Lib.IntegrationTests.Rpc.IO.Observers
 {
