@@ -25,6 +25,8 @@ using Catalyst.Common.Interfaces.Repository;
 using Catalyst.Common.Util;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System.Linq;
+
 
 namespace Catalyst.Modules.Lib.Api.Controllers
 {
@@ -32,15 +34,23 @@ namespace Catalyst.Modules.Lib.Api.Controllers
     [Route("api/[controller]/[action]")]
     public sealed class MempoolController : Controller
     {
-
         private readonly IMempoolRepository _mempoolRepository;
 
         public MempoolController(IMempoolRepository mempoolRepository)
         {
             _mempoolRepository = mempoolRepository;
         }
-        
-        // GET: api/values
+
+        [HttpGet]
+        public IActionResult GetBalance(string publicKey)
+        {
+            return Ok(_mempoolRepository.GetAll().Where(t =>
+                t.Transaction.STEntries != null
+                    && t.Transaction.STEntries.Count > 0
+                    && t.Transaction.STEntries.Any(stEntries => stEntries.PubKey.ToByteArray().SequenceEqual(publicKey.KeyToBytes())))
+                        .Sum(t => t.Transaction.STEntries.Sum(entries => entries.Amount)));
+        }
+
         [HttpGet]
         public JsonResult GetMempool()
         {
