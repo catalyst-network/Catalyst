@@ -54,7 +54,14 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Consensus.Deltas
                .WriteTo.TestOutput(output)
                .CreateLogger()
                .ForContext(MethodBase.GetCurrentMethod().DeclaringType);
-            new ID();
+        }
+
+        [Fact(Skip = "Just run it if you need as a one off")]
+        public void GenerateGenesis()
+        {
+            var hash = "some singularity before the big bang, even before the creation of Texas"
+               .ComputeUtf8Multihash(new BLAKE2B_256()).ToString(Multiformats.Base.MultibaseEncoding.Base64Url);
+            Output.WriteLine(hash);
         }
 
         [Fact]

@@ -31,6 +31,7 @@ using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.Types;
 using Catalyst.Common.Util;
+using Catalyst.Cryptography.BulletProofs.Wrapper;
 using Multiformats.Hash.Algorithms;
 using NSubstitute;
 
@@ -38,13 +39,12 @@ namespace Catalyst.TestUtils
 {
     public static class PeerSettingsHelper
     {
-        public static IPeerSettings TestPeerSettings(string publicKey = "publicKey", int port = 42069)
+        public static IPeerSettings TestPeerSettings(byte[] publicKey = default, int port = 42069)
         {
             var peerSettings = Substitute.For<IPeerSettings>();
             peerSettings.NetworkTypes.Returns(NetworkTypes.Dev);
             peerSettings.PublicKey.Returns(
-                publicKey?.ComputeUtf8Multihash(new BLAKE2B_256()).ToBytes().KeyToString() 
-             ?? TestKeyRegistry.TestPublicKey);
+                publicKey?.KeyToString() ?? TestKeyRegistry.TestPublicKey);
             peerSettings.Port.Returns(port);
             peerSettings.PayoutAddress.Returns("my_pay_out_address");
             peerSettings.BindAddress.Returns(IPAddress.Loopback);

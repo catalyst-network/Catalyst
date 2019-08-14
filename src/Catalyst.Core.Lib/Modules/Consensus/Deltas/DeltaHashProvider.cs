@@ -47,25 +47,31 @@ namespace Catalyst.Core.Lib.Modules.Consensus.Deltas
         private readonly int _capacity;
 
         public IObservable<Multihash> DeltaHashUpdates => _deltaHashUpdatesSubject.AsObservable();
+        public Multihash GenesisAddress { get; }
 
         public DeltaHashProvider(IDeltaCache deltaCache, 
             ILogger logger,
             int capacity = 10_000)
         {
+            GenesisAddress = Multihash.Parse("oOQCIKFCdksuNerofEzIB4BnQHEDUl9Mr9o9lR5wVMAlutnD");
+
             _deltaCache = deltaCache;
             _logger = logger;
             _deltaHashUpdatesSubject = new ReplaySubject<Multihash>(0);
-            var comparer = ComparerBuilder.For<Timestamp>().OrderBy(u => u, @descending: true);
+            var comparer = ComparerBuilder.For<Timestamp>().OrderBy(u => u, descending: true);
             _capacity = capacity;
             _hashesByTimeDescending = new SortedList<Timestamp, Multihash>(comparer)
             {
                 Capacity = _capacity,
             };
+            _hashesByTimeDescending.Add(Timestamp.FromDateTime(DateTime.MinValue.ToUniversalTime()), GenesisAddress);
         }
 
         /// <inheritdoc />
         public bool TryUpdateLatestHash(Multihash previousHash, Multihash newHash)
         {
+            _logger.Debug("New hash {hash} received for previous hash {previousHash}", 
+                newHash.AsBase64UrlString(), previousHash.AsBase64UrlString());
             var foundNewDelta = _deltaCache.TryGetConfirmedDelta(newHash.AsBase64UrlString(), out var newDelta);
             var foundPreviousDelta = _deltaCache.TryGetConfirmedDelta(previousHash.AsBase64UrlString(), out var previousDelta);
 
@@ -99,6 +105,7 @@ namespace Catalyst.Core.Lib.Modules.Consensus.Deltas
         /// <inheritdoc />
         public Multihash GetLatestDeltaHash(DateTime? asOf = null)
         {
+            _logger.Verbose("Trying to retrieve latest delta as of {asOf}", asOf);
             if (!asOf.HasValue)
             {
                 return _hashesByTimeDescending.FirstOrDefault().Value;
