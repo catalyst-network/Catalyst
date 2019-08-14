@@ -33,6 +33,7 @@ namespace Catalyst.Common.Interfaces.Config
         /// <param name="networkTypes">Network on which to run the node</param>
         /// <param name="sourceFolder"></param>
         /// <param name="overwrite">Should config existing config files be overwritten by default?</param>
-        void RunConfigStartUp(string dataDir, Types.NetworkTypes networkTypes, string sourceFolder = null, bool overwrite = false);
+        /// <param name="index">index of the node getting started</param>
+        void RunConfigStartUp(string dataDir, Types.NetworkTypes networkTypes, string sourceFolder = null, bool overwrite = false, int index = 0);
     }
 }

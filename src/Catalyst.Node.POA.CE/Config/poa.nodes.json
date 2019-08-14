@@ -1,7 +1,17 @@
 [
     {
-        "Ip": "92.207.178.198",
+        "Ip": "68.183.197.18",
         "Port": 42069,
-        "PublicKey": "9TEJQF7Y6Z31RB7XBPDYZT1ACPEK9BEC7N8R1E41GNZXT85RX20G"
+        "PublicKey": "HN4SCY4W2C0WETEE9A0FR8DGJDKVAXWK55YDF2NT46CAVMRXRYJ0"
+    },
+    {
+        "Ip": "167.71.113.173",
+        "Port": 42069,
+        "PublicKey": "CM0M10S0N9R5YMJ358WFZD08H0TSR74B9RC20FY1AV0HES95RNB0"
+    },
+    {
+        "Ip": "167.71.235.166",
+        "Port": 42069,
+        "PublicKey": "SN7SG1JGXBDB4VZGWV74WJ5EEEMSS500DBK4FWJTNPZ8F6QRPM9G"
     }
 ]

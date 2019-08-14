@@ -33,15 +33,8 @@ namespace Catalyst.Common.Config
 {
     public class ConfigCopier : IConfigCopier
     {
-        /// <summary>
-        ///     Finds out which config files are missing from the catalyst home directory and
-        ///     copies them over if needed.
-        /// </summary>
-        /// <param name="dataDir">Home catalyst directory</param>
-        /// <param name="network">Network on which to run the node</param>
-        /// <param name="sourceFolder"></param>
-        /// <param name="overwrite">Should config existing config files be overwritten by default?</param>
-        public void RunConfigStartUp(string dataDir, Types.NetworkTypes networkTypesParam = null, string sourceFolder = null, bool overwrite = false)
+        /// <inheritdoc />
+        public void RunConfigStartUp(string dataDir, Types.NetworkTypes networkTypesParam = null, string sourceFolder = null, bool overwrite = false, int index = 0)
         {
             Guard.Argument(dataDir, nameof(dataDir)).NotNull().NotEmpty().NotWhiteSpace();
 
@@ -66,7 +59,7 @@ namespace Catalyst.Common.Config
                     modulesFolderInfo.EnumerateFiles(jsonSearchPattern)
                        .Select(m => Path.Combine(Constants.ModulesSubFolder, m.Name)));
 
-            var requiredConfigFiles = RequiredConfigFiles(network);
+            var requiredConfigFiles = RequiredConfigFiles(network, index);
 
             //TODO: think about case sensitivity of the environment we are in, this is oversimplified
             var filenameComparer = RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
@@ -84,11 +77,11 @@ namespace Catalyst.Common.Config
             }
         }
 
-        protected virtual IEnumerable<string> RequiredConfigFiles(Types.NetworkTypes networkTypes)
+        protected virtual IEnumerable<string> RequiredConfigFiles(Types.NetworkTypes networkTypes, int index)
         {
             var requiredConfigFiles = new[]
             {
-                Constants.NetworkConfigFile(networkTypes),
+                Constants.NetworkConfigFile(networkTypes, index),
                 Constants.ComponentsJsonConfigFile,
                 Constants.SerilogJsonConfigFile,
                 Constants.MessageHandlersConfigFile

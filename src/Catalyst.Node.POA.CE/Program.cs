@@ -22,7 +22,6 @@
 #endregion
 
 using System;
-using Catalyst.Common.Config;
 using Catalyst.Common.Kernel;
 using Catalyst.Common.Types;
 using CommandLine;
@@ -31,6 +30,9 @@ namespace Catalyst.Node.POA.CE
 {
     internal class Options
     {
+        [Option("index", HelpText = "An index to point to the correct config file for that node.")]
+        public int Index { get; set; }
+
         [Option("ipfs-password", HelpText = "The password for IPFS.  Defaults to prompting for the password.")]
         public string IpfsPassword { get; set; }
         
@@ -89,12 +91,12 @@ namespace Catalyst.Node.POA.CE
             {
                 Kernel
                    .WithDataDirectory()
-                   .WithNetworksConfigFile()
+                   .WithNetworksConfigFile(options.Index)
                    .WithComponentsConfigFile()
                    .WithSerilogConfigFile()
                    .WithConfigCopier()
                    .WithPersistenceConfiguration()
-                   .BuildKernel(options.OverwriteConfig)
+                   .BuildKernel(options.OverwriteConfig, options.Index)
                    .WithPassword(PasswordRegistryTypes.DefaultNodePassword, options.NodePassword)
                    .WithPassword(PasswordRegistryTypes.IpfsPassword, options.IpfsPassword)
                    .WithPassword(PasswordRegistryTypes.CertificatePassword, options.SslCertPassword)
