@@ -1,6 +1,6 @@
 {
   "profiles": {
-    "Catalyst.Core": {
+    "Catalyst.Simulator": {
       "commandName": "Project"
     }
   }

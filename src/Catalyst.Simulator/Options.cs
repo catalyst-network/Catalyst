@@ -21,24 +21,16 @@
 
 #endregion
 
-using System.Net;
-using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.P2P;
-using Catalyst.Common.Util;
+using CommandLine;
 
-namespace Catalyst.Core.Lib.P2P
+namespace Catalyst.Simulator
 {
-    public sealed class PoaPeer
+    public class Options
     {
-        public string Ip { get; set; }
+        [Option("ssl-cert-password", HelpText = "The password for ssl cert.  Defaults to prompting for the password.")]
+        public string SslCertPassword { get; set; }
 
-        public int Port { get; set; }
-
-        public string PublicKey { get; set; }
-
-        public IPeerIdentifier ToPeerIdentifier()
-        {
-            return new PeerIdentifier(PublicKey.KeyToBytes(), IPAddress.Parse(Ip), Port);
-        }
+        [Option("node-password", HelpText = "The password for the node.  Defaults to prompting for the password.")]
+        public string NodePassword { get; set; }
     }
 }

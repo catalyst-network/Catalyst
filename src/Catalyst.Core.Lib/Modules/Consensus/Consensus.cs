@@ -29,6 +29,7 @@ using Serilog;
 using System;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
+using Google.Protobuf.WellKnownTypes;
 
 namespace Catalyst.Core.Lib.Modules.Consensus
 {
@@ -91,7 +92,10 @@ namespace Catalyst.Core.Lib.Modules.Consensus
                     return delta;
                 })
                .Where(d => d != null)
-               .Subscribe(d => _deltaHub.PublishDeltaToDfsAsync(d).ConfigureAwait(false));
+               .Subscribe(d =>
+                {
+                    _deltaHub.PublishDeltaToDfsAndBroadcastAddressAsync(d);
+                });
         }
         
         public void Dispose()

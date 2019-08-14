@@ -26,9 +26,9 @@ using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.P2P;
 using Catalyst.Common.Util;
 
-namespace Catalyst.Core.Lib.P2P
+namespace Catalyst.Simulator
 {
-    public sealed class PoaPeer
+    public sealed class SimulationNode
     {
         public string Ip { get; set; }
 

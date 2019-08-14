@@ -69,7 +69,7 @@ namespace Catalyst.Cli.UnitTests.Helpers
             commandContext.CertificateStore.Returns(certificateStore);
 
             commandContext.PeerIdentifier.Returns(
-                PeerIdentifierHelper.GetPeerIdentifier("public key", IPAddress.Any, 9010));
+                PeerIdentifierHelper.GetPeerIdentifier("9TEJQF7Y6Z31RB7XBPDYZT1ACPEK9BEC7N8R1E41GNZXT85RX20G", IPAddress.Any, 9010));
 
             var nodeRpcClient = MockNodeRpcClient();
             MockRpcNodeConfig(commandContext);
@@ -105,7 +105,7 @@ namespace Catalyst.Cli.UnitTests.Helpers
             var rpcNodeConfig = Substitute.For<IRpcNodeConfig>();
             rpcNodeConfig.NodeId = "test";
             rpcNodeConfig.HostAddress = IPAddress.Any;
-            rpcNodeConfig.PublicKey = "public key";
+            rpcNodeConfig.PublicKey = "9TEJQF7Y6Z31RB7XBPDYZT1ACPEK9BEC7N8R1E41GNZXT85RX20G";
             rpcNodeConfig.Port = 9000;
             commandContext.GetNodeConfig(Arg.Any<string>()).Returns(rpcNodeConfig);
             return rpcNodeConfig;

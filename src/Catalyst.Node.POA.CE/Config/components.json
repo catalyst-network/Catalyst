@@ -221,7 +221,8 @@
                 {
                     "type": "Microsoft.Extensions.Caching.Memory.IMemoryCache, Microsoft.Extensions.Caching.Abstractions"
                 }
-            ]
+            ],
+            "instanceScope": "singleinstance"
         },
         {
             "type": "Catalyst.Common.P2P.Models.Peer, Catalyst.Common",

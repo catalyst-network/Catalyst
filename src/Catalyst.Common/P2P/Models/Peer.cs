@@ -26,6 +26,7 @@ using Catalyst.Common.Attributes;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Util;
 using Google.Protobuf;
+using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
 using SharpRepository.Repository;
 
@@ -36,6 +37,7 @@ namespace Catalyst.Common.P2P.Models
     {
         [RepositoryPrimaryKey(Order = 1)]
         [JsonProperty("id")]
+        [BsonId]
         public string DocumentId => PeerIdentifier.PeerId?.ToByteString().ToBase64();
         
         /// <inheritdoc />

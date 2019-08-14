@@ -48,6 +48,7 @@ using Catalyst.Common.P2P;
 using Catalyst.Common.P2P.Models;
 using Catalyst.Common.Types;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
+using Catalyst.Modules.Lib.Api;
 using Catalyst.Modules.Lib.Dfs;
 using Catalyst.TestUtils;
 using Ipfs.Registry;
@@ -80,7 +81,7 @@ namespace Catalyst.Modules.Lib.IntegrationTests.Consensus
             _nodeSettings = nodeSettings;
 
             _nodeDirectory = parentTestFileSystem.GetCatalystDataDir().SubDirectoryInfo(Name);
-            IFileSystem nodeFileSystem = Substitute.ForPartsOf<FileSystem>();
+            var nodeFileSystem = Substitute.ForPartsOf<FileSystem>();
             nodeFileSystem.GetCatalystDataDir().Returns(_nodeDirectory);
 
             _rpcSettings = RpcServerSettingsHelper.GetRpcServerSettings(nodeSettings.Port + 100);
@@ -92,8 +93,13 @@ namespace Catalyst.Modules.Lib.IntegrationTests.Consensus
 
             _mempool = new AutoFillingMempool();
             _peerRepository = Substitute.For<IPeerRepository>();
-            var peersInRepo = knownPeerIds.Select(p => new Peer {PeerIdentifier = p});
+            var peersInRepo = knownPeerIds.Select(p => new Peer {PeerIdentifier = p}).ToList();
+            _peerRepository.AsQueryable().Returns(peersInRepo.AsQueryable());
             _peerRepository.GetAll().Returns(peersInRepo);
+            _peerRepository.Get(Arg.Any<string>()).Returns(ci =>
+            {
+                return peersInRepo.First(p => p.DocumentId.Equals((string) ci[0]));
+            });
 
             _containerProvider = new ContainerProvider(new[]
                 {
@@ -142,8 +148,9 @@ namespace Catalyst.Modules.Lib.IntegrationTests.Consensus
             _containerProvider.ContainerBuilder.RegisterType<TestFileSystem>().As<IFileSystem>()
                .WithParameter("rootPath", _nodeDirectory.FullName);
             _containerProvider.ContainerBuilder.RegisterInstance(new NoDiscovery()).As<IPeerDiscovery>();
+            _containerProvider.ContainerBuilder.RegisterInstance(Substitute.For<IApi>()).As<IApi>();
             var keySigner = Substitute.For<IKeySigner>();
-            keySigner.Verify(Arg.Any<ISignature>(), Arg.Any<byte[]>()).Returns(true);
+            keySigner.Verify(Arg.Any<ISignature>(), Arg.Any<byte[]>(), default).ReturnsForAnyArgs(true);
             _containerProvider.ContainerBuilder.RegisterInstance(keySigner).As<IKeySigner>();
         }
 

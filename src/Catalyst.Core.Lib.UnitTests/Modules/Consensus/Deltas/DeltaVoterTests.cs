@@ -113,9 +113,6 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Consensus.Deltas
 
             _voter.OnNext(dodgyCandidate);
 
-            _logger.Received(1).Error(Arg.Is<Exception>(e => e is ArgumentException || e is InvalidDataException),
-                Arg.Any<string>(), Arg.Any<string>());
-
             _cache.DidNotReceiveWithAnyArgs().TryGetValue(Arg.Any<object>(), out Arg.Any<object>());
             _cache.DidNotReceiveWithAnyArgs().CreateEntry(Arg.Any<object>());
         }

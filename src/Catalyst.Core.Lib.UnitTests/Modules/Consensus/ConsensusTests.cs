@@ -23,6 +23,7 @@
 
 using System;
 using System.Linq;
+using Catalyst.Common.Interfaces.Modules.Consensus;
 using Catalyst.Common.Interfaces.Modules.Consensus.Deltas;
 using Catalyst.Common.Modules.Consensus.Cycle;
 using Catalyst.Protocol.Deltas;
@@ -40,7 +41,6 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Consensus
         private readonly IDeltaElector _deltaElector;
         private readonly IDeltaCache _deltaCache;
         private readonly IDeltaHub _deltaHub;
-        private readonly ILogger _logger;
         private readonly TestCycleEventProvider _cycleEventProvider;
         private readonly Lib.Modules.Consensus.Consensus _consensus;
 
@@ -52,15 +52,15 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Consensus
             _deltaElector = Substitute.For<IDeltaElector>();
             _deltaCache = Substitute.For<IDeltaCache>();
             _deltaHub = Substitute.For<IDeltaHub>();
-            _logger = Substitute.For<ILogger>();
+            var logger = Substitute.For<ILogger>();
             _consensus = new Lib.Modules.Consensus.Consensus(
                 _deltaBuilder, 
                 _deltaVoter, 
                 _deltaElector,
                 _deltaCache,
                 _deltaHub, 
-                _cycleEventProvider, 
-                _logger);
+                _cycleEventProvider,
+                logger);
 
             _consensus.StartProducing();
         }
@@ -140,7 +140,7 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Consensus
                 Arg.Is<byte[]>(b => b.SequenceEqual(PreviousDeltaBytes)));
 
             _deltaCache.Received(1).TryGetLocalDelta(popularCandidate, out _);
-            _deltaHub.Received(1).PublishDeltaToDfsAsync(localDelta);
+            _deltaHub.Received(1).PublishDeltaToDfsAndBroadcastAddressAsync(localDelta);
         }
 
         [Fact]
@@ -156,7 +156,7 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Consensus
                 Arg.Is<byte[]>(b => b.SequenceEqual(PreviousDeltaBytes)));
 
             _deltaCache.DidNotReceiveWithAnyArgs().TryGetLocalDelta(default, out _);
-            _deltaHub.DidNotReceiveWithAnyArgs().PublishDeltaToDfsAsync(default);
+            _deltaHub.DidNotReceiveWithAnyArgs().PublishDeltaToDfsAndBroadcastAddressAsync(default);
         }
 
         [Fact]
@@ -180,7 +180,7 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Consensus
                 Arg.Is<byte[]>(b => b.SequenceEqual(PreviousDeltaBytes)));
 
             _deltaCache.Received(1).TryGetLocalDelta(popularCandidate, out _);
-            _deltaHub.DidNotReceiveWithAnyArgs().PublishDeltaToDfsAsync(default);
+            _deltaHub.DidNotReceiveWithAnyArgs().PublishDeltaToDfsAndBroadcastAddressAsync(default);
         }
 
         public void Dispose()
