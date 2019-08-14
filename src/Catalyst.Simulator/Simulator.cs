@@ -28,6 +28,7 @@ using System.Threading.Tasks;
 using Catalyst.Common.Cryptography;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.FileSystem;
+using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Observers;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Rpc;
@@ -44,6 +45,7 @@ using Catalyst.Cryptography.BulletProofs.Wrapper;
 using Catalyst.Node.Rpc.Client;
 using Catalyst.Node.Rpc.Client.IO.Observers;
 using Catalyst.Node.Rpc.Client.IO.Transport.Channels;
+using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.Protocol.Transaction;
 using Google.Protobuf;
@@ -62,6 +64,7 @@ namespace Catalyst.Simulator
     public class Simulator
     {
         private readonly Random _random;
+        private readonly KeySigner _keySigner;
         private readonly NodeRpcClientFactory _nodeRpcClientFactory;
         private readonly ConsoleUserOutput _userOutput;
         private readonly X509Certificate2 _certificate;
@@ -88,7 +91,7 @@ namespace Catalyst.Simulator
             var localKeyStore = new LocalKeyStore(consolePasswordReader, cryptoContext, keyServiceStore, fileSystem,
                 logger, addressHelper);
             var keyRegistry = new KeyRegistry();
-            var keySigner = new KeySigner(localKeyStore, cryptoContext, keyRegistry);
+            _keySigner = new KeySigner(localKeyStore, cryptoContext, keyRegistry);
 
             var memoryCacheOptions = new MemoryCacheOptions();
             var memoryCache = new MemoryCache(memoryCacheOptions);
@@ -96,7 +99,7 @@ namespace Catalyst.Simulator
             var messageCorrelationManager = new RpcMessageCorrelationManager(memoryCache, logger, changeTokenProvider);
             var peerIdValidator = new PeerIdValidator(cryptoContext);
             var nodeRpcClientChannelFactory =
-                new NodeRpcClientChannelFactory(keySigner, messageCorrelationManager, peerIdValidator);
+                new NodeRpcClientChannelFactory(_keySigner, messageCorrelationManager, peerIdValidator);
 
             var eventLoopGroupFactoryConfiguration = new EventLoopGroupFactoryConfiguration
             {
@@ -106,7 +109,10 @@ namespace Catalyst.Simulator
             var tcpClientEventLoopGroupFactory = new TcpClientEventLoopGroupFactory(eventLoopGroupFactoryConfiguration);
 
             var handlers = new List<IRpcResponseObserver>
-                {new BroadcastRawTransactionResponseObserver(logger)};
+            {
+                new GetVersionResponseObserver(logger),
+                new BroadcastRawTransactionResponseObserver(logger)
+            };
 
             _nodeRpcClientFactory =
                 new NodeRpcClientFactory(nodeRpcClientChannelFactory, tcpClientEventLoopGroupFactory, handlers);
@@ -130,9 +136,9 @@ namespace Catalyst.Simulator
                 };
 
                 var socket = await _nodeRpcClientFactory.GetClient(_certificate, nodeRpcConfig);
-                socket.SubscribeToResponse<BroadcastRawTransactionResponse>(response =>
+                socket.SubscribeToResponse<VersionResponse>(response =>
                 {
-                    _userOutput.WriteLine($"[{nodeIndex}] Transaction response: {response.ResponseCode}");
+                    _userOutput.WriteLine($"[{nodeIndex}] Transaction response: {response}");
                 });
 
                 var socketInfo = new NodeSocketInfo
@@ -160,15 +166,17 @@ namespace Catalyst.Simulator
                     };
                     req.Transaction = transaction;
 
-                    var messageDto = dtoFactory.GetDto(req.ToProtocolMessage(sender.PeerId), sender,
+                    var messageDto = dtoFactory.GetDto(
+                        new VersionRequest().ToProtocolMessage(sender.PeerId), sender,
                         nodeInfo.PeerIdentifier);
 
                     _userOutput.WriteLine($"[{randomNodeIndex}] Sending transaction");
+
                     nodeInfo.NodeRpcClient.SendMessage(messageDto);
+
                     i++;
 
                     await Task.Delay(500).ConfigureAwait(false);
-                    i++;
                 }
             });
         }

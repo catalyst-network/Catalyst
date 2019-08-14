@@ -39,6 +39,7 @@ namespace Catalyst.Core.Lib.Rpc.IO.Observers
     public class BroadcastRawTransactionRequestObserver
         : RequestObserverBase<BroadcastRawTransactionRequest, BroadcastRawTransactionResponse>, IRpcRequestObserver
     {
+        private readonly ILogger _logger;
         private readonly IMempool _mempool;
         private readonly IBroadcastManager _broadcastManager;
 
@@ -48,6 +49,7 @@ namespace Catalyst.Core.Lib.Rpc.IO.Observers
             IBroadcastManager broadcastManager)
             : base(logger, peerIdentifier)
         {
+            _logger = logger;
             _mempool = mempool;
             _broadcastManager = broadcastManager;
         }
@@ -61,11 +63,13 @@ namespace Catalyst.Core.Lib.Rpc.IO.Observers
             var signatureValid = true;
             var responseCode = ResponseCode.Successful;
 
+            _logger.Information("Adding transaction to mempool");
             if (signatureValid)
             {
                 // TODO: Check ledger to see if ledger already contains transaction, if so we need to send Successful/Fail response
                 if (_mempool.ContainsDocument(messageDto.Transaction.Signature))
                 {
+                    _logger.Information("Transaction already exists in mempool");
                     responseCode = ResponseCode.Error;
                     return new BroadcastRawTransactionResponse {ResponseCode = responseCode};
                 }
@@ -75,12 +79,14 @@ namespace Catalyst.Core.Lib.Rpc.IO.Observers
                     Transaction = messageDto.Transaction
                 });
 
+                _logger.Information("Broadcasting transaction");
                 var transactionToBroadcast = messageDto.Transaction.ToProtocolMessage(PeerIdentifier.PeerId,
                     CorrelationId.GenerateCorrelationId());
                 _broadcastManager.BroadcastAsync(transactionToBroadcast);
             }
             else
             {
+                _logger.Information("Error adding transaction");
                 responseCode = ResponseCode.Error;
             }
 
