@@ -39,9 +39,9 @@ namespace Catalyst.Modules.Lib.Api.Controllers
 
         // GET: api/values
         [HttpGet]
-        public OkObjectResult GetAllPeers()
+        public IActionResult GetAllPeers()
         {
-            return Ok(Json(_peerRepository.GetAll().ToList()));
+            return Ok(_peerRepository.GetAll().ToList());
         }
     }
 }

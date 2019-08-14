@@ -2,7 +2,7 @@
     "defaultAssembly": "Catalyst.Core.Lib",
     "components": [
         {
-            "type": "SharpRepository.InMemoryRepository.InMemoryRepository`2[[Catalyst.Common.Modules.Mempool.Models.MempoolDocument, Catalyst.Common], [System.String, mscorlib]], SharpRepository.InMemoryRepository",
+            "type": "Catalyst.Common.Repository.MongoDbRepository`1[[Catalyst.Common.Modules.Mempool.Models.MempoolDocument, Catalyst.Common]], Catalyst.Common",
             "services": [
                 {
                     "type": "SharpRepository.Repository.IRepository`2[[Catalyst.Common.Modules.Mempool.Models.MempoolDocument, Catalyst.Common], [System.String, mscorlib]], SharpRepository.Repository"
