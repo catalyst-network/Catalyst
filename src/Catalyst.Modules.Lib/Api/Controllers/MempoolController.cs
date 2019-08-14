@@ -25,6 +25,7 @@ using System.Linq;
 using Catalyst.Common.Interfaces.Repository;
 using Catalyst.Common.Util;
 using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Transaction;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
@@ -46,7 +47,15 @@ namespace Catalyst.Modules.Lib.Api.Controllers
         {
             return Json(_mempoolRepository.GetAll(), new JsonSerializerSettings
             {
-                Converters = {new JsonProtoObjectConverter<PeerId>(), new IpEndPointConverter(), new IpAddressConverter()}
+                Converters =
+                {
+                    new JsonProtoObjectConverter<TransactionBroadcast>(),
+                    new IpEndPointConverter(),
+                    new IpAddressConverter(),
+                    new JsonProtoObjectConverter<STTransactionEntry>(),
+                    new JsonProtoObjectConverter<CFTransactionEntry>(),
+                    new JsonProtoObjectConverter<EntryRangeProof>()
+                }
             });
         }
     }
