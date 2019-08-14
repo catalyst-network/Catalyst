@@ -55,6 +55,11 @@ namespace Catalyst.Modules.Lib.Api
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(c =>
+            {
+                c.AddPolicy("AllowOrigin", options => options.AllowAnyOrigin());
+            });
+
             services.AddMvc()
                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddSwaggerGen(swagger =>
@@ -80,6 +85,7 @@ namespace Catalyst.Modules.Lib.Api
             loggerFactory.AddConsole();
 
             app.UseDeveloperExceptionPage();
+            app.UseCors(options => options.AllowAnyOrigin());
             app.UseMvc(routes =>
             {
                 routes.MapRoute(name: "CatalystApi", template: "api/{controller}/{action}/{id}");
