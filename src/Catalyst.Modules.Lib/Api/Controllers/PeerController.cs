@@ -21,16 +21,15 @@
 
 #endregion
 
-using System.Linq;
 using Catalyst.Common.Interfaces.Repository;
 using Catalyst.Common.Util;
-using Catalyst.Protocol.Common;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
 namespace Catalyst.Modules.Lib.Api.Controllers
 {
-    [Route("api/peer")]
+    [ApiController]
+    [Route("api/[controller]/[action]")]
     public sealed class PeerController : Controller
     {
         private readonly IPeerRepository _peerRepository;
@@ -42,7 +41,7 @@ namespace Catalyst.Modules.Lib.Api.Controllers
 
         // GET: api/values
         [HttpGet]
-        public IActionResult GetAllPeers()
+        public JsonResult GetAllPeers()
         {
             return Json(_peerRepository.GetAll(), new JsonSerializerSettings
             {

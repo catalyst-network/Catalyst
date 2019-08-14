@@ -21,30 +21,28 @@
 
 #endregion
 
-using System.Linq;
 using Catalyst.Common.Interfaces.Repository;
 using Catalyst.Common.Util;
-using Catalyst.Protocol.Common;
-using Catalyst.Protocol.Transaction;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
 namespace Catalyst.Modules.Lib.Api.Controllers
 {
-    [Route("api/mempool")]
+    [ApiController]
+    [Route("api/[controller]/[action]")]
     public sealed class MempoolController : Controller
     {
-        
+
         private readonly IMempoolRepository _mempoolRepository;
 
         public MempoolController(IMempoolRepository mempoolRepository)
         {
             _mempoolRepository = mempoolRepository;
         }
-
+        
         // GET: api/values
         [HttpGet]
-        public IActionResult GetMempool()
+        public JsonResult GetMempool()
         {
             return Json(_mempoolRepository.GetAll(), new JsonSerializerSettings
             {

@@ -21,25 +21,21 @@
 
 #endregion
 
-using System;
 using System.IO;
 using Autofac;
-using Autofac.Core;
-using Autofac.Extensions.DependencyInjection;
 using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.Repository;
 using Catalyst.Common.Modules.Mempool.Models;
 using Catalyst.Common.P2P.Models;
 using Catalyst.Common.Types;
-using Catalyst.Core.Lib.Repository;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using SharpRepository.InMemoryRepository;
 using SharpRepository.Repository;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace Catalyst.Modules.Lib.Api
 {
@@ -61,7 +57,10 @@ namespace Catalyst.Modules.Lib.Api
         {
             services.AddMvc()
                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-
+            services.AddSwaggerGen(swagger =>
+            {
+                swagger.SwaggerDoc("v1", new Info { Title = "Catalyst API", Description = "Catalyst" });
+            });
             var container = _containerProvider.Container;
 
             if (container != null)
@@ -79,9 +78,18 @@ namespace Catalyst.Modules.Lib.Api
         public void Configure(IApplicationBuilder app, ILoggerFactory loggerFactory)
         {
             loggerFactory.AddConsole();
-            
+
             app.UseDeveloperExceptionPage();
-            app.UseMvc();
+            app.UseMvc(routes =>
+            {
+                routes.MapRoute(name: "CatalystApi", template: "api/{controller}/{action}/{id}");
+            });
+
+            app.UseSwagger();
+            app.UseSwaggerUI(swagger =>
+            {
+                swagger.SwaggerEndpoint("/swagger/v1/swagger.json", "Catalyst API");
+            });
         }
     }
 }
