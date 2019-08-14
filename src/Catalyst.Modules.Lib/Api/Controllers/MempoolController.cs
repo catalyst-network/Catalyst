@@ -52,6 +52,19 @@ namespace Catalyst.Modules.Lib.Api.Controllers
         }
 
         [HttpGet]
+        public JsonResult GetMempoolTransaction(string publicKey)
+        {
+            var result = _mempoolRepository.GetAll().Where(t =>
+              t.Transaction.STEntries != null
+                  && t.Transaction.STEntries.Count > 0
+                  && t.Transaction.STEntries.Any(stEntries => stEntries.PubKey.ToByteArray().SequenceEqual(publicKey.KeyToBytes())));
+            return Json(result, new JsonSerializerSettings
+            {
+                Converters = JsonConverterProviders.Converters
+            });
+        }
+
+        [HttpGet]
         public JsonResult GetMempool()
         {
             return Json(_mempoolRepository.GetAll(), new JsonSerializerSettings
