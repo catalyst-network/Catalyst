@@ -21,11 +21,13 @@
 
 #endregion
 
+using System.Reflection;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Protocol;
 using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;
 using Google.Protobuf;
+using Serilog;
 
 namespace Catalyst.Common.IO.Handlers
 {
@@ -35,6 +37,7 @@ namespace Catalyst.Common.IO.Handlers
         private readonly SigningContext _signingContext;
 
         public ProtocolMessageVerifyHandler(IKeySigner keySigner)
+            : base(Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType))
         {
             _keySigner = keySigner;
             _signingContext = new SigningContext
