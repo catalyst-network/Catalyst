@@ -192,7 +192,7 @@
             ]
         },
         {
-            "type": "Catalyst.Common.Repository.MongoDbRepository`1[[Catalyst.Common.P2P.Models.Peer, Catalyst.Common]], Catalyst.Common.Repository",
+            "type": "Catalyst.Common.Repository.MongoDbRepository`1[[Catalyst.Common.P2P.Models.Peer, Catalyst.Common]], Catalyst.Common",
             "services": [
                 {
                     "type": "SharpRepository.Repository.IRepository`2[[Catalyst.Common.P2P.Models.Peer, Catalyst.Common], [System.String, mscorlib]], SharpRepository.Repository"

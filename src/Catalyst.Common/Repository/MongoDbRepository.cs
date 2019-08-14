@@ -34,14 +34,16 @@ namespace Catalyst.Common.Repository
     public class MongoDbRepository<T> : MongoDbRepository<T, string>
         where T : class, new()
     {
-        public MongoDbRepository(ICachingStrategy<T, string> cachingStrategy = null)
-            : base(cachingStrategy)
+        static MongoDbRepository()
         {
             BsonClassMap.RegisterClassMap<PeerIdentifier>();
-            BsonSerializer.RegisterSerializer(typeof(PeerId), 
+            BsonSerializer.RegisterSerializer(typeof(PeerId),
                 new ProtoBsonSerializer<PeerId>());
             BsonSerializer.RegisterSerializer(typeof(TransactionBroadcast),
                 new ProtoBsonSerializer<TransactionBroadcast>());
         }
+
+        public MongoDbRepository(ICachingStrategy<T, string> cachingStrategy = null)
+            : base(cachingStrategy) { }
     }
 }
