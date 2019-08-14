@@ -145,7 +145,7 @@ namespace Catalyst.Common.P2P
 
         public override string ToString()
         {
-            return $"V:{PeerId.ProtocolVersion} @{Ip}:{Port.ToString()}" + $"|{PublicKey.KeyToString()}";
+            return $"V:{BitConverter.ToInt16(PeerId.ProtocolVersion.ToByteArray())}@{Ip}:{Port.ToString()}" + $"|{PublicKey.KeyToString()}";
         }
 
         public bool Equals(IPeerIdentifier other)
