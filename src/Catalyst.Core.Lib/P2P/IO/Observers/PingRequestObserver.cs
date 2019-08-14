@@ -54,7 +54,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
             Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
             Guard.Argument(senderPeerIdentifier, nameof(senderPeerIdentifier)).NotNull();
             
-            Logger.Debug("message content is {0}", pingRequest);
+            Logger.Debug("message content is {0} IP: {1} PeerId: {2}", pingRequest, senderPeerIdentifier.Ip, senderPeerIdentifier.PeerId);
 
             return new PingResponse();
         }

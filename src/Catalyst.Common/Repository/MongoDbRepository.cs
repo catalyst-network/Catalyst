@@ -21,24 +21,27 @@
 
 #endregion
 
-using System.Net;
-using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.P2P;
 using Catalyst.Common.Util;
+using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Transaction;
+using MongoDB.Bson.Serialization;
+using SharpRepository.MongoDbRepository;
+using SharpRepository.Repository.Caching;
 
-namespace Catalyst.Core.Lib.P2P
+namespace Catalyst.Common.Repository
 {
-    public sealed class PoaPeer
+    public class MongoDbRepository<T> : MongoDbRepository<T, string>
+        where T : class, new()
     {
-        public string Ip { get; set; }
-
-        public int Port { get; set; }
-
-        public string PublicKey { get; set; }
-
-        public IPeerIdentifier ToPeerIdentifier()
+        public MongoDbRepository(ICachingStrategy<T, string> cachingStrategy = null)
+            : base(cachingStrategy)
         {
-            return new PeerIdentifier(PublicKey.KeyToBytes(), IPAddress.Parse(Ip), Port);
+            BsonClassMap.RegisterClassMap<PeerIdentifier>();
+            BsonSerializer.RegisterSerializer(typeof(PeerId), 
+                new ProtoBsonSerializer<PeerId>());
+            BsonSerializer.RegisterSerializer(typeof(TransactionBroadcast),
+                new ProtoBsonSerializer<TransactionBroadcast>());
         }
     }
 }

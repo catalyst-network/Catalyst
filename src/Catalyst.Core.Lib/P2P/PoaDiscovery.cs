@@ -24,17 +24,14 @@
 using Catalyst.Common.Interfaces.FileSystem;
 using Catalyst.Common.Interfaces.P2P.Discovery;
 using Catalyst.Common.Interfaces.Repository;
-using Catalyst.Common.P2P;
 using Catalyst.Common.Util;
 using Newtonsoft.Json;
 using Serilog;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Common.P2P.Models;
-using Nito.AsyncEx;
 
 namespace Catalyst.Core.Lib.P2P
 {
