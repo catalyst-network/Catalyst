@@ -34,6 +34,7 @@ namespace Catalyst.Modules.Lib.Api.Controllers
     [Route("api/mempool")]
     public sealed class MempoolController : Controller
     {
+        
         private readonly IMempoolRepository _mempoolRepository;
 
         public MempoolController(IMempoolRepository mempoolRepository)
@@ -47,15 +48,7 @@ namespace Catalyst.Modules.Lib.Api.Controllers
         {
             return Json(_mempoolRepository.GetAll(), new JsonSerializerSettings
             {
-                Converters =
-                {
-                    new JsonProtoObjectConverter<TransactionBroadcast>(),
-                    new IpEndPointConverter(),
-                    new IpAddressConverter(),
-                    new JsonProtoObjectConverter<STTransactionEntry>(),
-                    new JsonProtoObjectConverter<CFTransactionEntry>(),
-                    new JsonProtoObjectConverter<EntryRangeProof>()
-                }
+                Converters = JsonConverterProviders.Converters
             });
         }
     }

@@ -21,33 +21,21 @@
 
 #endregion
 
-using System.Linq;
-using Catalyst.Common.Interfaces.Repository;
-using Catalyst.Common.Util;
-using Catalyst.Protocol.Common;
-using Microsoft.AspNetCore.Mvc;
+using Catalyst.Protocol.Transaction;
 using Newtonsoft.Json;
 
-namespace Catalyst.Modules.Lib.Api.Controllers
+namespace Catalyst.Common.Util
 {
-    [Route("api/peer")]
-    public sealed class PeerController : Controller
+    public static class JsonConverterProviders
     {
-        private readonly IPeerRepository _peerRepository;
-
-        public PeerController(IPeerRepository peerRepository)
+        public static readonly JsonConverter[] Converters =
         {
-            _peerRepository = peerRepository;
-        }
-
-        // GET: api/values
-        [HttpGet]
-        public IActionResult GetAllPeers()
-        {
-            return Json(_peerRepository.GetAll(), new JsonSerializerSettings
-            {
-                Converters = JsonConverterProviders.Converters
-            });
-        }
+            new JsonProtoObjectConverter<TransactionBroadcast>(),
+            new IpEndPointConverter(),
+            new IpAddressConverter(),
+            new JsonProtoObjectConverter<STTransactionEntry>(),
+            new JsonProtoObjectConverter<CFTransactionEntry>(),
+            new JsonProtoObjectConverter<EntryRangeProof>()
+        };
     }
 }
