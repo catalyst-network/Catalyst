@@ -24,6 +24,7 @@
 using Catalyst.Common.P2P;
 using Catalyst.Common.Util;
 using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Transaction;
 using MongoDB.Bson.Serialization;
 using SharpRepository.MongoDbRepository;
 using SharpRepository.Repository.Caching;
@@ -39,6 +40,8 @@ namespace Catalyst.Common.Repository
             BsonClassMap.RegisterClassMap<PeerIdentifier>();
             BsonSerializer.RegisterSerializer(typeof(PeerId), 
                 new ProtoBsonSerializer<PeerId>());
+            BsonSerializer.RegisterSerializer(typeof(TransactionBroadcast),
+                new ProtoBsonSerializer<TransactionBroadcast>());
         }
     }
 }
