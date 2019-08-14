@@ -198,14 +198,16 @@ namespace Catalyst.Common.Kernel
         /// </summary>
         public void StartNode()
         {
+            IContainer container = null;
             if (_instance == null)
             {
-                _instance = ContainerBuilder.Build()
+                container = ContainerBuilder.Build();
+                _instance = container
                    .BeginLifetimeScope(MethodBase.GetCurrentMethod().DeclaringType.AssemblyQualifiedName);
             }
             
             _instance.Resolve<ICatalystNode>()
-               .RunAsync(CancellationTokenProvider.CancellationTokenSource.Token)
+               .RunAsync(CancellationTokenProvider.CancellationTokenSource.Token, container)
                .Wait(CancellationTokenProvider.CancellationTokenSource.Token);
         }
 

@@ -24,6 +24,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Autofac;
 using Catalyst.Common.Interfaces;
 using Catalyst.Common.Interfaces.Modules.Consensus;
 using Catalyst.Common.Interfaces.Modules.Contract;
@@ -79,19 +80,19 @@ namespace Catalyst.Node.POA.CE
             _contract = contract;
         }
 
-        public async Task StartSockets()
+        public async Task StartSockets(IContainer serviceProvider)
         {
             await _nodeRpcServer.StartAsync().ConfigureAwait(false);
             await _peerClient.StartAsync().ConfigureAwait(false);
             await _peer.StartAsync().ConfigureAwait(false);
-            await _api.StartApiAsync().ConfigureAwait(false);
+            await _api.StartApiAsync(serviceProvider).ConfigureAwait(false);
         }
 
-        public async Task RunAsync(CancellationToken ct)
+        public async Task RunAsync(CancellationToken ct, IContainer serviceProvider)
         {
             _logger.Information("Starting the Catalyst Node");
 
-            await StartSockets().ConfigureAwait(false);
+            await StartSockets(serviceProvider).ConfigureAwait(false);
 
             bool exit;
             

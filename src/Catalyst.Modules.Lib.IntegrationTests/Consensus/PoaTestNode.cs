@@ -54,6 +54,7 @@ using Catalyst.TestUtils;
 using Ipfs.Registry;
 using NSubstitute;
 using Xunit.Abstractions;
+using ContainerProvider = Catalyst.TestUtils.ContainerProvider;
 
 namespace Catalyst.Modules.Lib.IntegrationTests.Consensus
 {
@@ -127,12 +128,12 @@ namespace Catalyst.Modules.Lib.IntegrationTests.Consensus
 
         public IConsensus Consensus => _node.Consensus;
 
-        public async Task RunAsync(CancellationToken cancellationSourceToken)
+        public async Task RunAsync(CancellationToken cancellationSourceToken, IContainer serviceProvider)
         {
-            await _node.RunAsync(cancellationSourceToken).ConfigureAwait(false);
+            await _node.RunAsync(cancellationSourceToken, serviceProvider).ConfigureAwait(false);
         }
 
-        public async Task StartSockets() { await _node.StartSockets(); }
+        public async Task StartSockets(IContainer serviceProvider) { await _node.StartSockets(serviceProvider); }
 
         public void Dispose() { Dispose(true); }
 
