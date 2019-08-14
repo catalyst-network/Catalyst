@@ -23,6 +23,7 @@
 
 using System.Collections.Generic;
 using Catalyst.Protocol.Transaction;
+using MongoDB.Driver.Core.Clusters;
 
 namespace Catalyst.Common.Interfaces.Modules.Mempool
 {
@@ -57,5 +58,10 @@ namespace Catalyst.Common.Interfaces.Modules.Mempool
         /// <param name="key">Key under which the transaction is stored.</param>
         /// <returns>The transaction matching the <see cref="key" /> if any.</returns>
         IMempoolDocument GetMempoolDocument(TransactionSignature key);
+
+        /// <summary>
+        /// Clear the mempool content.
+        /// </summary>
+        void Clear();
     }
 }

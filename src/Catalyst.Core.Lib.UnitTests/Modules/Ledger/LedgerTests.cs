@@ -21,9 +21,15 @@
 
 #endregion
 
+using System.Reactive.Linq;
+using System.Threading.Tasks;
+using Catalyst.Common.Extensions;
+using Catalyst.Common.Interfaces.Modules.Consensus.Deltas;
+using Catalyst.Common.Interfaces.Modules.Mempool;
 using Catalyst.Common.Interfaces.Repository;
 using Catalyst.Common.Modules.Ledger.Models;
 using Catalyst.TestUtils;
+using Multiformats.Hash.Algorithms;
 using NSubstitute;
 using Serilog;
 using Xunit;
@@ -33,20 +39,25 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Ledger
 {
     public sealed class LedgerTests
     {
-        private readonly LedgerService _ledger;
+        private LedgerService _ledger;
         private readonly IAccountRepository _fakeRepository;
+        private readonly IDeltaHashProvider _deltaHashProvider;
+        private readonly IMempool _mempool;
+        private readonly ILogger _logger;
 
         public LedgerTests()
         {
             _fakeRepository = Substitute.For<IAccountRepository>();
 
-            var logger = Substitute.For<ILogger>();
-            _ledger = new LedgerService(_fakeRepository, logger);
+            _logger = Substitute.For<ILogger>();
+            _mempool = Substitute.For<IMempool>();
+            _deltaHashProvider = Substitute.For<IDeltaHashProvider>();
         }
 
         [Fact]
         public void Save_Account_State_To_Ledger_Repository()
         {
+            _ledger = new LedgerService(_fakeRepository, _deltaHashProvider, _mempool, _logger);
             const int numAccounts = 10;
             for (var i = 0; i < numAccounts; i++)
             {
@@ -55,6 +66,23 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Ledger
             }
 
             _fakeRepository.Received(10).Add(Arg.Any<Account>());
+        }
+
+        [Fact]
+        public async Task Should_Reconcile_On_New_Delta_Hash()
+        {
+            var blake2B256 = new BLAKE2B_256();
+            var hash1 = "update".ComputeUtf8Multihash(blake2B256);
+            var hash2 = "update again".ComputeUtf8Multihash(blake2B256);
+            var updates = new[] {hash1, hash2};
+
+            _deltaHashProvider.DeltaHashUpdates.Returns(updates.ToObservable());
+
+            _ledger = new LedgerService(_fakeRepository, _deltaHashProvider, _mempool, _logger);
+
+            await _deltaHashProvider.DeltaHashUpdates.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
+
+            _mempool.Received(updates.Length).Clear();
         }
     }
 }

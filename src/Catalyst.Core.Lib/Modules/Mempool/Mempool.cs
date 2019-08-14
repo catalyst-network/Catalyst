@@ -80,6 +80,29 @@ namespace Catalyst.Core.Lib.Modules.Mempool
             return found;
         }
 
+        public void Clear()
+        {
+            _logger.Debug("Clearing mempool");
+            var keysToDelete = _transactionStore.GetAll(e => e.DocumentId).ToArray();
+            var cleared = 0;
+
+            foreach (var key in keysToDelete)
+            {
+                try
+                {
+                    _transactionStore.Delete(key);
+                    cleared++;
+                }
+                catch (Exception e)
+                {
+                    _logger.Warning(e, "Could not delete transaction {0} from mempool.", key);
+                }    
+            }
+
+            _logger.Debug("Cleared {cleared} out of {total} transactions from the mempool.", 
+                cleared, keysToDelete.Length);
+        }
+
         /// <inheritdoc />
         public bool SaveMempoolDocument(IMempoolDocument mempoolDocument)
         {

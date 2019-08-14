@@ -24,7 +24,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading;
+using Castle.DynamicProxy.Generators.Emitters.SimpleAST;
 using Catalyst.Common.Interfaces.Modules.Mempool;
 using Catalyst.Common.Interfaces.Repository;
 using Catalyst.Common.Modules.Mempool.Models;
@@ -146,6 +148,15 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Mempool
                 var mempoolDocument = _memPool.GetMempoolDocument(signature);
                 mempoolDocument.Transaction.STEntries.Single().Amount.Should().Be((uint) i);
             }
+        }
+
+        [Fact]
+        public void Clear_should_delete_all_transactions()
+        {
+            var keys = Enumerable.Range(0, 10).Select(i => $"key{i}");
+            _transactionStore.GetAll(Arg.Any<Expression<Func<MempoolDocument, string>>>()).ReturnsForAnyArgs(keys);
+            _memPool.Clear();
+            _transactionStore.Received(10).Delete(Arg.Any<string>());
         }
 
         [Fact]
