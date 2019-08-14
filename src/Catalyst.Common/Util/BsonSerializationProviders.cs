@@ -22,25 +22,42 @@
 #endregion
 
 using Catalyst.Common.P2P;
-using Catalyst.Common.Util;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Transaction;
 using Google.Protobuf;
 using MongoDB.Bson.Serialization;
-using SharpRepository.MongoDbRepository;
-using SharpRepository.Repository.Caching;
 
-namespace Catalyst.Common.Repository
+namespace Catalyst.Common.Util
 {
-    public class MongoDbRepository<T> : MongoDbRepository<T, string>
-        where T : class, new()
+    public static class BsonSerializationProviders
     {
-        static MongoDbRepository()
+        private static bool _initialized = false;
+
+        public static void Init()
         {
-            BsonSerializationProviders.Init();
+            if (_initialized)
+            {
+                return;
+            }
+
+            _initialized = true;
+            
+            if (!BsonClassMap.IsClassMapRegistered(typeof(PeerIdentifier)))
+            {
+                BsonClassMap.RegisterClassMap<PeerIdentifier>();
+            }
+
+            AddSerializer<TransactionBroadcast>();
+            AddSerializer<PeerId>();
+            AddSerializer<STTransactionEntry>();
+            AddSerializer<CFTransactionEntry>();
+            AddSerializer<EntryRangeProof>();
         }
         
-        public MongoDbRepository(ICachingStrategy<T, string> cachingStrategy = null)
-            : base(cachingStrategy) { }
+        static void AddSerializer<TType>() where TType : IMessage, new()
+        {
+            BsonSerializer.RegisterSerializer(typeof(TType),
+                new ProtoBsonSerializer<TType>());
+        }
     }
 }
