@@ -45,7 +45,7 @@ namespace Catalyst.Core.Lib.Modules.Consensus.Deltas
         private readonly IMemoryCache _candidatesCache;
         private readonly IDeltaProducersProvider _deltaProducersProvider;
         private readonly ILogger _logger;
-        private readonly MemoryCacheEntryOptions _cacheEntryOptions;
+        private readonly Func<MemoryCacheEntryOptions> _cacheEntryOptions;
 
         public static string GetCandidateListCacheKey(FavouriteDeltaBroadcast candidate) =>
             nameof(DeltaElector) + "-" + candidate.Candidate.PreviousDeltaDfsHash.AsMultihashBase64UrlString();
@@ -57,7 +57,7 @@ namespace Catalyst.Core.Lib.Modules.Consensus.Deltas
         {
             _candidatesCache = candidatesCache;
             _deltaProducersProvider = deltaProducersProvider;
-            _cacheEntryOptions = new MemoryCacheEntryOptions()
+            _cacheEntryOptions = () => new MemoryCacheEntryOptions()
                .AddExpirationToken(new CancellationChangeToken(new CancellationTokenSource(TimeSpan.FromMinutes(3)).Token));
 
             _logger = logger;
@@ -75,6 +75,7 @@ namespace Catalyst.Core.Lib.Modules.Consensus.Deltas
 
         public void OnNext(FavouriteDeltaBroadcast candidate)
         {
+            _logger.Verbose("Favourite candidate delta received {favourite}", candidate);
             try
             {
                 Guard.Argument(candidate, nameof(candidate)).NotNull().Require(f => f.IsValid());
@@ -98,7 +99,7 @@ namespace Catalyst.Core.Lib.Modules.Consensus.Deltas
 
                 _candidatesCache.Set(candidateListKey,
                     new ConcurrentDictionary<FavouriteDeltaBroadcast, bool>(
-                        new[] {new KeyValuePair<FavouriteDeltaBroadcast, bool>(candidate, false)}, FavouriteByHashAndVoterComparer.Default), _cacheEntryOptions);
+                        new[] {new KeyValuePair<FavouriteDeltaBroadcast, bool>(candidate, false)}, FavouriteByHashAndVoterComparer.Default), _cacheEntryOptions());
             }
             catch (Exception e)
             {
@@ -124,9 +125,10 @@ namespace Catalyst.Core.Lib.Modules.Consensus.Deltas
                .Where(f => f.TotalVotes >= votesThreshold)
                .OrderByDescending(h => h.TotalVotes)
                .ThenByDescending(h => h.Favourite.Candidate.Hash.ToByteArray(), 
-                    ByteUtil.ByteListMinSizeComparer.Default);
+                    ByteUtil.ByteListMinSizeComparer.Default)
+               .ToList();
 
-            _logger.Debug("Found {candidates} popular candidates suitable for confirmation.");
+            _logger.Debug("Found {candidates} popular candidates suitable for confirmation.", favourites.Count);
 
             return favourites.FirstOrDefault()?.Favourite.Candidate;
         }

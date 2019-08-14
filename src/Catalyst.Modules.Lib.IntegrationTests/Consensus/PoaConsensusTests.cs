@@ -23,6 +23,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -32,10 +33,10 @@ using Catalyst.Common.Config;
 using Catalyst.Common.Cryptography;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.P2P;
-using Catalyst.Common.Util;
+using Catalyst.Core.Lib.Modules.Consensus.Cycle;
 using Catalyst.Cryptography.BulletProofs.Wrapper;
 using Catalyst.TestUtils;
-using Serilog;
+using FluentAssertions;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -52,7 +53,7 @@ namespace Catalyst.Modules.Lib.IntegrationTests.Consensus
             Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile)
         }, output)
         {
-            ContainerProvider.ConfigureContainerBuilder(true, true, true);
+            ContainerProvider.ConfigureContainerBuilder(true, true, false);
             _scope = ContainerProvider.Container.BeginLifetimeScope(CurrentTestName);
 
             var context = new CryptoContext(new CryptoWrapper());
@@ -63,7 +64,7 @@ namespace Catalyst.Modules.Lib.IntegrationTests.Consensus
                 {
                     var privateKey = context.GeneratePrivateKey();
                     var publicKey = privateKey.GetPublicKey();
-                    var nodeSettings = PeerSettingsHelper.TestPeerSettings(publicKey.Bytes.KeyToString(), port: 2000 + i);
+                    var nodeSettings = PeerSettingsHelper.TestPeerSettings(publicKey.Bytes, port: 2000 + i);
                     var peerIdentifier = new PeerIdentifier(nodeSettings) as IPeerIdentifier;
                     var name = $"producer{i}";
                     return new {index = i, name, privateKey, nodeSettings, peerIdentifier};
@@ -80,8 +81,8 @@ namespace Catalyst.Modules.Lib.IntegrationTests.Consensus
                     FileSystem, 
                     output)).ToList();
         }
-
-        [Fact(Skip = "WIP 🧐")]
+        
+        [Fact]
         public async Task Run_Consensus()
         {
             _nodes.AsParallel()
@@ -90,8 +91,14 @@ namespace Catalyst.Modules.Lib.IntegrationTests.Consensus
                     n.RunAsync(_endOfTestCancellationSource.Token);
                     n.Consensus.StartProducing();
                 });
+            
+            await Task.Delay(Debugger.IsAttached
+                    ? TimeSpan.FromHours(3)
+                    : CycleConfiguration.Default.CycleDuration.Multiply(1.5))
+               .ConfigureAwait(false);
 
-            await Task.Delay(TimeSpan.FromSeconds(20)).ConfigureAwait(false);
+            var dfsDir = Path.Combine(FileSystem.GetCatalystDataDir().FullName, "dfs");
+            Directory.GetFiles(dfsDir).Length.Should().Be(1);
 
             _endOfTestCancellationSource.CancelAfter(TimeSpan.FromMinutes(3));
         }

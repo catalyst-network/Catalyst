@@ -21,11 +21,13 @@
 
 #endregion
 
+using System.Reflection;
 using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Types;
 using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;
+using Serilog;
 
 namespace Catalyst.Common.IO.Handlers
 {
@@ -36,6 +38,7 @@ namespace Catalyst.Common.IO.Handlers
         private readonly T _messageCorrelationManager;
 
         public CorrelationHandler(T messageCorrelationManager)
+            : base(Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType))
         {
             _messageCorrelationManager = messageCorrelationManager;
         }

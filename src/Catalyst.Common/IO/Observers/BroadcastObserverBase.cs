@@ -46,7 +46,6 @@ namespace Catalyst.Common.IO.Observers
 
         public override void OnNext(IObserverDto<ProtocolMessage> messageDto)
         {
-            Logger.Verbose("Pre Handle Message Called");
             try
             {
                 HandleBroadcast(messageDto);

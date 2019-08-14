@@ -125,7 +125,7 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Consensus.Deltas
 
             _dfs.AddAsync(Arg.Any<Stream>(), Arg.Any<string>(), cancellationToken).Returns(dfsHash);
 
-            var deltaHash = await _hub.PublishDeltaToDfsAsync(delta, cancellationToken);
+            var deltaHash = await _hub.PublishDeltaToDfsAndBroadcastAddressAsync(delta, cancellationToken);
             deltaHash.Should().NotBeNullOrEmpty();
             deltaHash.Should().Be(dfsHash);
         }
@@ -143,7 +143,7 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Consensus.Deltas
             _dfs.AddAsync(Arg.Any<Stream>(), Arg.Any<string>())
                .Returns(ci => dfsResults.Next());
 
-            var deltaHash = await _hub.PublishDeltaToDfsAsync(delta);
+            var deltaHash = await _hub.PublishDeltaToDfsAndBroadcastAddressAsync(delta);
             deltaHash.Should().NotBeNullOrEmpty();
             deltaHash.Should().Be(dfsHash);
 
@@ -170,20 +170,10 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Consensus.Deltas
             _dfs.AddAsync(Arg.Any<Stream>(), Arg.Any<string>(), cancellationToken)
                .Returns(ci => dfsResults.Next());
 
-            new Action(() => _hub.PublishDeltaToDfsAsync(delta, cancellationToken).GetAwaiter().GetResult())
-               .Should().Throw<TaskCanceledException>();
+            new Action(() => _hub.PublishDeltaToDfsAndBroadcastAddressAsync(delta, cancellationToken).GetAwaiter().GetResult())
+               .Should().NotThrow<TaskCanceledException>();
 
             await _dfs.ReceivedWithAnyArgs(3).AddAsync(Arg.Any<Stream>(), Arg.Any<string>());
-        }
-
-        [Theory]
-        [ClassData(typeof(BadDeltas))]
-        public async Task PublishDeltaToIpfsAsync_should_not_send_invalid_deltas(Delta badDelta, Type exceptionType)
-        {
-            new Action(() => _hub.PublishDeltaToDfsAsync(badDelta).GetAwaiter().GetResult())
-               .Should().Throw<Exception>().And.GetType().Should().Be(exceptionType);
-
-            await _dfs.DidNotReceiveWithAnyArgs().AddAsync(default);
         }
 
         public class BadDeltas : TheoryData<Delta>

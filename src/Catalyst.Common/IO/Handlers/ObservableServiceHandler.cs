@@ -25,12 +25,13 @@ using System;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
-using System.Threading;
+using System.Reflection;
 using Catalyst.Common.Interfaces.IO.Handlers;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;
+using Serilog;
 
 namespace Catalyst.Common.IO.Handlers
 {
@@ -43,6 +44,7 @@ namespace Catalyst.Common.IO.Handlers
         private readonly ReplaySubject<IObserverDto<ProtocolMessage>> _messageSubject;
 
         public ObservableServiceHandler(IScheduler scheduler = null)
+            : base(Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType))
         {
             var observableScheduler = scheduler ?? Scheduler.Default;
             _messageSubject = new ReplaySubject<IObserverDto<ProtocolMessage>>(1, observableScheduler);
