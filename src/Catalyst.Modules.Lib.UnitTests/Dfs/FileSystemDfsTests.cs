@@ -50,7 +50,7 @@ namespace Catalyst.Modules.Lib.UnitTests.Dfs
             _fileSystem.GetCatalystDataDir()
                .Returns(new DirectoryInfo("correct-information"));
             _hashingAlgorithm = HashingAlgorithm.All.First(x => x.Name == "blake2b-512");
-            _dfs = new FileSystemDfs(_hashingAlgorithm, _fileSystem);
+            _dfs = new FileSystemDfs(_fileSystem, _hashingAlgorithm);
 
             _baseFolder = Path.Combine(_fileSystem.GetCatalystDataDir().FullName,
                 Constants.DfsDataSubDir);
@@ -166,10 +166,10 @@ namespace Catalyst.Modules.Lib.UnitTests.Dfs
             var toLongHashingAlgorithm = HashingAlgorithm.All.First(x => x.DigestSize > 191);
             var longEnoughHashingAlgorithm = HashingAlgorithm.All.First(x => x.DigestSize <= 191);
 
-            new Action(() => new FileSystemDfs(toLongHashingAlgorithm, _fileSystem)).Should().Throw<ArgumentException>()
+            new Action(() => new FileSystemDfs(_fileSystem, toLongHashingAlgorithm)).Should().Throw<ArgumentException>()
                .And.Message.Should().Contain(nameof(HashingAlgorithm));
 
-            new Action(() => new FileSystemDfs(longEnoughHashingAlgorithm, _fileSystem)).Should()
+            new Action(() => new FileSystemDfs(_fileSystem, longEnoughHashingAlgorithm)).Should()
                .NotThrow<ArgumentException>();
         }
 
