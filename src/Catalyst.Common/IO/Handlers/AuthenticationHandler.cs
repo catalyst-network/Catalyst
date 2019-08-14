@@ -51,6 +51,9 @@ namespace Catalyst.Common.IO.Handlers
         /// <inheritdoc cref="SimpleChannelInboundHandler{I}"/>>
         protected override void ChannelRead0(IChannelHandlerContext ctx, ProtocolMessageSigned msg)
         {
+            ctx.FireChannelRead(msg);
+            return;
+
             if (_authenticationStrategy.Authenticate(new PeerIdentifier(msg.Message.PeerId)))
             {
                 ctx.FireChannelRead(msg);
