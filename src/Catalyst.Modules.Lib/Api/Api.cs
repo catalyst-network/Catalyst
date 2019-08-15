@@ -25,6 +25,7 @@ using System;
 using System.Threading.Tasks;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using Catalyst.Common.Interfaces.Rpc;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
@@ -40,7 +41,10 @@ namespace Catalyst.Modules.Lib.Api
     public class Api : IApi
     {
         private IWebHost _host;
-        
+        private readonly IRpcServerSettings _rpcServerSettings;
+
+        public Api(IRpcServerSettings rpcServerSettings) { _rpcServerSettings = rpcServerSettings; }
+
         public Task StartApiAsync(IContainer container)
         {
             _host = WebHost.CreateDefaultBuilder()
@@ -49,6 +53,7 @@ namespace Catalyst.Modules.Lib.Api
                     services.AddSingleton<IContainerProvider>(new ContainerProvider(container));
                     services.AddAutofac();
                 })
+               .UseUrls(_rpcServerSettings.ApiBindUrl)
                .UseStartup<Startup>()
                .UseSerilog()
                .Build();

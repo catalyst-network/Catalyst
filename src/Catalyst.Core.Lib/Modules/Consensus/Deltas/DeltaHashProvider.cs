@@ -47,6 +47,7 @@ namespace Catalyst.Core.Lib.Modules.Consensus.Deltas
         private readonly int _capacity;
 
         public IObservable<Multihash> DeltaHashUpdates => _deltaHashUpdatesSubject.AsObservable();
+        public int GetDeltaHashCount => _hashesByTimeDescending.Count;
         public Multihash GenesisAddress { get; }
 
         public DeltaHashProvider(IDeltaCache deltaCache, 

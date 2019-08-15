@@ -61,6 +61,8 @@ namespace Catalyst.Common.Interfaces.Modules.Consensus.Deltas
         /// </summary>
         IObservable<Multihash> DeltaHashUpdates { get; }
 
+        int GetDeltaHashCount { get; }
+
         /// <summary>
         /// Dfs address of the first ever state of the ledger.
         /// </summary>

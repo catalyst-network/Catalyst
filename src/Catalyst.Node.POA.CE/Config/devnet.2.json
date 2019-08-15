@@ -20,7 +20,8 @@
         "Rpc": {
             "BindAddress": "167.71.113.173",
             "Port": 42066,
-            "PfxFileName": "mycert.pfx"
+            "PfxFileName": "mycert.pfx",
+            "ApiBinding": "http://*:5006"
         },
         "PersistenceConfiguration": {
             "repositories": {
