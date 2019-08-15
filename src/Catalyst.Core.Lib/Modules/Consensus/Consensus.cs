@@ -49,6 +49,7 @@ namespace Catalyst.Core.Lib.Modules.Consensus
         private readonly IDeltaBuilder _deltaBuilder;
         private readonly IDeltaHub _deltaHub;
         private readonly IDeltaCache _deltaCache;
+        private readonly ILogger _logger;
 
         public Consensus(IDeltaBuilder deltaBuilder,
             IDeltaVoter deltaVoter,
@@ -66,6 +67,7 @@ namespace Catalyst.Core.Lib.Modules.Consensus
             _deltaBuilder = deltaBuilder;
             _deltaHub = deltaHub;
             _deltaCache = deltaCache;
+            _logger = logger;
             logger.Information("Consensus service initialised.");
         }
 
@@ -101,11 +103,13 @@ namespace Catalyst.Core.Lib.Modules.Consensus
                .Select(c =>
                 {
                     _deltaCache.TryGetLocalDelta(c, out var delta);
+                    _logger.Debug("Local Delta found {delta} Key {key}", delta, c);
                     return delta;
                 })
                .Where(d => d != null)
                .Subscribe(d =>
                 {
+                    _logger.Debug("New Delta getting published");
                     var newHash = _deltaHub.PublishDeltaToDfsAndBroadcastAddressAsync(d)
                        .ConfigureAwait(false).GetAwaiter().GetResult();
                     var newMultiHash = Multihash.Parse(newHash);

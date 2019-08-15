@@ -26,6 +26,8 @@ using Dawn;
 using Serilog;
 using System;
 using System.Linq;
+using System.Reactive.Concurrency;
+using System.Reactive.Linq;
 using Catalyst.Common.Interfaces.Modules.Consensus.Deltas;
 using Catalyst.Common.Interfaces.Modules.Mempool;
 using Catalyst.Common.Interfaces.Repository;
@@ -53,13 +55,17 @@ namespace Catalyst.Core.Lib.Modules.Ledger
             _mempool = mempool;
             _logger = logger;
 
-            _deltaUpdatesSubscription = deltaHashProvider.DeltaHashUpdates.Subscribe(FlushTransactionsFromDelta);
+            _deltaUpdatesSubscription = deltaHashProvider.DeltaHashUpdates
+               .SubscribeOn(NewThreadScheduler.Default)
+               .Subscribe(FlushTransactionsFromDelta);
         }
 
         public void FlushTransactionsFromDelta(Multihash confirmedDelta)
         {
+            _logger.Debug("Trying to flush the mempool");
             var transactionsToFlush = _mempool.GetMemPoolContent().Select(d => d.DocumentId);
             _mempool.Delete(transactionsToFlush.ToArray());
+            _logger.Debug("Flushed the mempool");
         }
 
         public bool SaveAccountState(IAccount account)
