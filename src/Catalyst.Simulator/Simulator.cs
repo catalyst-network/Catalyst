@@ -148,12 +148,11 @@ namespace Catalyst.Simulator
 
             var dtoFactory = new DtoFactory();
 
-            var i = 0;
-
             await Task.Run(async () =>
             {
                 while (isRunning)
                 {
+                    var guid = Guid.NewGuid();
                     var randomNodeIndex = _random.Next(nodeSocketInfo.Count);
                     var nodeInfo = nodeSocketInfo[randomNodeIndex];
 
@@ -161,14 +160,16 @@ namespace Catalyst.Simulator
                     var transaction = new TransactionBroadcast();
 
                     var stTransactionEntry = new STTransactionEntry();
-                    stTransactionEntry.PubKey = sender.PublicKey.ToByteString();
+
+                    stTransactionEntry.PubKey = ByteString.FromBase64("eOzdzqY+BQHCu6Puno48ujea1Sb+696E31qH21qLmg8=");
+                    //stTransactionEntry.PubKey = sender.PublicKey.ToByteString();
                     stTransactionEntry.Amount = _random.Next(100);
                     transaction.STEntries.Add(stTransactionEntry);
 
                     transaction.Signature = new TransactionSignature
                     {
-                        SchnorrSignature = ByteString.CopyFromUtf8($"Signature{i}"),
-                        SchnorrComponent = ByteString.CopyFromUtf8($"Component{i}")
+                        SchnorrSignature = ByteString.CopyFromUtf8($"Signature{guid}"),
+                        SchnorrComponent = ByteString.CopyFromUtf8($"Component{guid}")
                     };
                     req.Transaction = transaction;
 
@@ -179,8 +180,6 @@ namespace Catalyst.Simulator
                     _userOutput.WriteLine($"[{randomNodeIndex}] Sending transaction");
 
                     nodeInfo.NodeRpcClient.SendMessage(messageDto);
-
-                    i++;
 
                     await Task.Delay(500).ConfigureAwait(false);
                 }
