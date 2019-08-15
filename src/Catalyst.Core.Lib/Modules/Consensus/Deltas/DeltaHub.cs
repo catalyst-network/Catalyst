@@ -134,7 +134,7 @@ namespace Catalyst.Core.Lib.Modules.Consensus.Deltas
             try
             {
                 _logger.Verbose("Broadcasting new delta dfs address {dfsAddress} for delta with previous delta hash {previousDeltaHash}",
-                    dfsFileAddress, previousDeltaHash.AsMultihashBase64UrlString());
+                    dfsFileAddress, previousDeltaHash.AsBase32Address());
 
                 var newDeltaHashOnDfs = new DeltaDfsHashBroadcast
                 {

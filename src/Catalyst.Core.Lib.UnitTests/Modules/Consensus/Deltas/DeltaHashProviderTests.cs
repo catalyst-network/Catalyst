@@ -169,7 +169,7 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Consensus.Deltas
 
             Enumerable.Range(0, deltaCount).ToList().ForEach(i =>
             {
-                ExpectTryGetDelta(GetHash(i).AsBase64UrlString(), deltas[i]);
+                ExpectTryGetDelta(GetHash(i).AsBase32Address(), deltas[i]);
             });
         }
 

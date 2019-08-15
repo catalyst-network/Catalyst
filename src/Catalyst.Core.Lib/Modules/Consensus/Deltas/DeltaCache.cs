@@ -45,7 +45,7 @@ namespace Catalyst.Core.Lib.Modules.Consensus.Deltas
         private Delta _genesisDelta;
 
         public static string GetLocalDeltaCacheKey(CandidateDeltaBroadcast candidate) =>
-            nameof(DeltaCache) + "-LocalDelta-" + candidate.Hash.AsMultihashBase64UrlString();
+            nameof(DeltaCache) + "-LocalDelta-" + candidate.Hash.AsBase32Address();
 
         public DeltaCache(IMemoryCache memoryCache,
             IDeltaDfsReader dfsReader,

@@ -48,10 +48,10 @@ namespace Catalyst.Core.Lib.Modules.Consensus.Deltas
         private readonly Func<MemoryCacheEntryOptions> _cacheEntryOptions;
 
         public static string GetCandidateListCacheKey(FavouriteDeltaBroadcast candidate) =>
-            nameof(DeltaElector) + "-" + candidate.Candidate.PreviousDeltaDfsHash.AsMultihashBase64UrlString();
+            nameof(DeltaElector) + "-" + candidate.Candidate.PreviousDeltaDfsHash.AsBase32Address();
 
         public static string GetCandidateListCacheKey(byte[] previousDeltaHash) =>
-            nameof(DeltaElector) + "-" + previousDeltaHash.AsMultihashBase64UrlString();
+            nameof(DeltaElector) + "-" + previousDeltaHash.AsBase32Address();
         
         public DeltaElector(IMemoryCache candidatesCache, IDeltaProducersProvider deltaProducersProvider, ILogger logger)
         {

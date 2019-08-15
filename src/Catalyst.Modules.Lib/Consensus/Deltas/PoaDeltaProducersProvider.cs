@@ -74,7 +74,7 @@ namespace Catalyst.Modules.Lib.Consensus.Deltas
         {
             Guard.Argument(previousDeltaHash, nameof(previousDeltaHash)).NotNull();
 
-            var previousDeltaHashAsString = previousDeltaHash.AsMultihashBase64UrlString();
+            var previousDeltaHashAsString = previousDeltaHash.AsBase32Address();
 
             if (_producersByPreviousDelta.TryGetValue(GetCacheKey(previousDeltaHashAsString),
                 out IList<IPeerIdentifier> cachedPeerIdsInPriorityOrder))
