@@ -58,7 +58,7 @@ namespace Catalyst.Core.Lib.Modules.Ledger
 
         public void FlushTransactionsFromDelta(Multihash confirmedDelta)
         {
-            var transactionsToFlush = _mempool.GetMemPoolContent().Select(d => d.Transaction.Signature);
+            var transactionsToFlush = _mempool.GetMemPoolContent().Select(d => d.DocumentId);
             _mempool.Delete(transactionsToFlush.ToArray());
         }
 

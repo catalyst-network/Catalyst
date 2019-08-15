@@ -62,6 +62,6 @@ namespace Catalyst.Common.Interfaces.Modules.Mempool
         ///     Remove transactions with the given signatures from the mempool. This can be called once transactions
         ///     have been confirmed by appearing in the ledger.
         /// </summary>
-        void Delete(params TransactionSignature[] transactionSignatures);
+        void Delete(params string[] transactionSignatures);
     }
 }

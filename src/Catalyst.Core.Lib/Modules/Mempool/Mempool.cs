@@ -80,7 +80,7 @@ namespace Catalyst.Core.Lib.Modules.Mempool
             return found;
         }
 
-        public void Delete(params TransactionSignature[] transactionSignatures)
+        public void Delete(params string[] transactionSignatures)
         {
             _logger.Debug("Deleting transactions from the mempool.");
             var cleared = 0;
@@ -89,7 +89,7 @@ namespace Catalyst.Core.Lib.Modules.Mempool
             {
                 try
                 {
-                    _transactionStore.Delete(t => t.Transaction.Signature.Equals(key));
+                    _transactionStore.Delete(key);
                     cleared++;
                 }
                 catch (Exception e)
