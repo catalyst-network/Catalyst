@@ -38,12 +38,10 @@ namespace Catalyst.Modules.Lib.Api.Controllers
     public sealed class MempoolController : Controller
     {
         private readonly IMempoolRepository _mempoolRepository;
-        private readonly ILogger _logger;
 
-        public MempoolController(IMempoolRepository mempoolRepository, ILogger logger)
+        public MempoolController(IMempoolRepository mempoolRepository)
         {
             _mempoolRepository = mempoolRepository;
-            _logger = logger;
         }
 
         [HttpGet]
