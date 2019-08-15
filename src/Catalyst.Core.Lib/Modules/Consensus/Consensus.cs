@@ -29,7 +29,9 @@ using Serilog;
 using System;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
+using Catalyst.Protocol.Deltas;
 using Google.Protobuf.WellKnownTypes;
+using GraphQL.Introspection;
 using Multiformats.Hash;
 
 namespace Catalyst.Core.Lib.Modules.Consensus
@@ -78,22 +80,44 @@ namespace Catalyst.Core.Lib.Modules.Consensus
                .Select(p => _deltaBuilder.BuildCandidateDelta(p.PreviousDeltaDfsHash))
                .Subscribe(c =>
                 {
-                    _deltaVoter.OnNext(c);
-                    _deltaHub.BroadcastCandidate(c);
+                    try
+                    {
+                        _deltaVoter.OnNext(c);
+                        _deltaHub.BroadcastCandidate(c);
+                    }
+                    catch (Exception e)
+                    {
+                        _logger.Error(e, "failed to vote");
+                    }
                 });
 
             _campaigningProductionSubscription = _cycleEventsProvider.PhaseChanges
                .Where(p => p.Name == PhaseName.Campaigning && p.Status == PhaseStatus.Producing)
                .Select(p =>
                 {
-                    _deltaVoter.TryGetFavouriteDelta(p.PreviousDeltaDfsHash, out var favourite);
-                    return favourite;
+                    try
+                    {
+                        _deltaVoter.TryGetFavouriteDelta(p.PreviousDeltaDfsHash, out var favourite);
+                        return favourite;
+                    }
+                    catch (Exception e)
+                    {
+                        _logger.Error(e, "failed to get favourite");
+                        return null;
+                    }
                 })
                .Where(f => f != null)
                .Subscribe(f =>
                 {
-                    _deltaHub.BroadcastFavouriteCandidateDelta(f);
-                    _deltaElector.OnNext(f);
+                    try
+                    {
+                        _deltaHub.BroadcastFavouriteCandidateDelta(f);
+                        _deltaElector.OnNext(f);
+                    }
+                    catch (Exception e)
+                    {
+                        _logger.Error(e, "failed to broadcast favourite");
+                    }
                 });
 
             _votingProductionSubscription = _cycleEventsProvider.PhaseChanges
@@ -102,7 +126,16 @@ namespace Catalyst.Core.Lib.Modules.Consensus
                .Where(c => c != null)
                .Select(c =>
                 {
-                    _deltaCache.TryGetLocalDelta(c, out var delta);
+                    Delta delta = null;
+                    try
+                    {
+                        _deltaCache.TryGetLocalDelta(c, out delta);
+                    }
+                    catch (Exception exception)
+                    {
+                        _logger.Error(exception, "failed");
+                    }
+
                     _logger.Debug("Local Delta found {delta} Key {key}", delta, c);
                     return delta;
                 })
