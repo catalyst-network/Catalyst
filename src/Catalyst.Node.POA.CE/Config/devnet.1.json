@@ -3,9 +3,9 @@
         "Peer": {
             "Network": "devnet",
             "PublicKey": "HN4SCY4W2C0WETEE9A0FR8DGJDKVAXWK55YDF2NT46CAVMRXRYJ0",
-            "Port": 42076,
-            "BindAddress": "127.0.0.1",
-            "PublicIpAddress": "127.0.0.1",
+            "Port": 42069,
+            "BindAddress": "68.183.197.18",
+            "PublicIpAddress": "68.183.197.18",
             "DnsServers": [
                 "127.0.0.1:5053"
             ],
