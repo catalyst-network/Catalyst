@@ -321,7 +321,7 @@
                 }
             ],
             "parameters": {
-                "configDataDir": "/root/.catalyst"
+                "configDataDir": "C:\\Users\\matthieu\\.catalyst"
             }
         },
         {
