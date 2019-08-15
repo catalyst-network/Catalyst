@@ -57,5 +57,11 @@ namespace Catalyst.Common.Interfaces.Modules.Mempool
         /// <param name="key">Key under which the transaction is stored.</param>
         /// <returns>The transaction matching the <see cref="key" /> if any.</returns>
         IMempoolDocument GetMempoolDocument(TransactionSignature key);
+
+        /// <summary>
+        ///     Remove transactions with the given signatures from the mempool. This can be called once transactions
+        ///     have been confirmed by appearing in the ledger.
+        /// </summary>
+        void Delete(params TransactionSignature[] transactionSignatures);
     }
 }
