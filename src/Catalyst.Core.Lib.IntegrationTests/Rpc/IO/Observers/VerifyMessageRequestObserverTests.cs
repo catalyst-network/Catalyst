@@ -84,7 +84,9 @@ namespace Catalyst.Core.Lib.IntegrationTests.Rpc.IO.Observers
         //From https://tools.ietf.org/html/rfc8032#section-7.3
         [Theory]
         [InlineData("616263", "98a70222f0b8121aa9d30f813d683f809e462b469c7ff87639499bb94e6dae4131f85042463c2a355a2003d062adf5aaa10b8c61e636062aaad11c2a26083406", "ec172b93ad5e563bf4932c70e1245034c35467ef2efd4d64ebf819683467e2bf", true)]
-        public async Task VerifyMessageRequest_UsingValidRequest_ShouldSendVerifyMessageResponse(string message, string signatureAndMessage, string publicKey, bool expectedResult)
+        [InlineData("616263", "98a70222f0b8121aa9d30f813d683f809e462b469c7ff87639499bb94e6dae4131f85042463c2a355a2003d062adf5aaa10b8c61e636062aaad11c2a26083403", "ec172b93ad5e563bf4932c70e1245034c35467ef2efd4d64ebf819683467e2bf", false)]
+
+        public async Task VerifyMessageRequestObserver_Should_Send_Correct_Response(string message, string signatureAndMessage, string publicKey, bool expectedResult)
         {
             var signatureMessageBytes = signatureAndMessage.HexToByteArray();
             ArraySegment<byte> signatureBytes = new ArraySegment<byte>(signatureMessageBytes, 0, FFI.SignatureLength);
@@ -132,6 +134,80 @@ namespace Catalyst.Core.Lib.IntegrationTests.Rpc.IO.Observers
 
             verifyResponseMessage.IsSignedByKey.Should().Be(expectedResult);
         }
+
+        [Fact]
+        public async Task VerifyMessageRequest_Can_Verify_Valid_SignMessageResponse()
+        {
+            var signingContext = new SigningContext
+            {
+                Network = Network.Devnet, SignatureType = SignatureType.ProtocolRpc
+            };
+
+            var message = "something something something";
+
+            var messageFactory = new DtoFactory();
+
+            var signRequest = messageFactory.GetDto(
+                new SignMessageRequest
+                {
+                    Message = message.ToUtf8ByteString(),
+                    SigningContext = signingContext
+                },
+                PeerIdentifierHelper.GetPeerIdentifier("sender_key"),
+                PeerIdentifierHelper.GetPeerIdentifier("recipient_key")
+            );
+
+            var signMessageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, signRequest.Content.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId));
+            var signHandler = new SignMessageRequestObserver(PeerIdentifierHelper.GetPeerIdentifier("sender"), _logger, _keySigner);
+            signHandler.StartObserving(signMessageStream);
+
+            await signMessageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
+
+            var receivedCallsSign = _fakeContext.Channel.ReceivedCalls().ToList();
+            receivedCallsSign.Count.Should().Be(1);
+            
+            var sentSignResponseDto = (IMessageDto<ProtocolMessage>) receivedCallsSign.Single().GetArguments().Single();
+            var signResponseMessage = sentSignResponseDto.FromIMessageDto().FromProtocolMessage<SignMessageResponse>();
+
+            signResponseMessage.OriginalMessage.Should().Equal(message);
+            signResponseMessage.Signature.Should().NotBeEmpty();
+            signResponseMessage.PublicKey.Should().NotBeEmpty();
+
+            _fakeContext.Channel.ClearReceivedCalls();
+
+            var verifyRequest = messageFactory.GetDto(
+                new VerifyMessageRequest
+                {
+                    Message = RLP.EncodeElement(signResponseMessage.OriginalMessage.ToByteArray()).ToByteString(),
+                    PublicKey = RLP.EncodeElement(signResponseMessage.PublicKey.ToByteArray()).ToByteString(),
+                    Signature = RLP.EncodeElement(signResponseMessage.Signature.ToByteArray()).ToByteString(),
+                    SigningContext = signingContext
+                },
+                PeerIdentifierHelper.GetPeerIdentifier("sender_key"),
+                PeerIdentifierHelper.GetPeerIdentifier("recipient_key")
+            );
+            
+            var verifyMessageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, 
+                verifyRequest.Content.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId)
+            );
+            
+            var verifyHandler = new VerifyMessageRequestObserver(PeerIdentifierHelper.GetPeerIdentifier("sender"),
+                _logger,
+                _keySigner
+            );
+
+            verifyHandler.StartObserving(verifyMessageStream);
+
+            await verifyMessageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
+
+            var receivedCallsVerify = _fakeContext.Channel.ReceivedCalls().ToList();
+
+            var sentVerifyResponseDto = (IMessageDto<ProtocolMessage>) receivedCallsVerify.Single().GetArguments().Single();
+            var verifyResponseMessage = sentVerifyResponseDto.FromIMessageDto().FromProtocolMessage<VerifyMessageResponse>();
+
+            verifyResponseMessage.IsSignedByKey.Should().Be(true);
+        }
+
 
         protected override void Dispose(bool disposing)
         {
