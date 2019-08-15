@@ -25,8 +25,12 @@ using Catalyst.Common.Interfaces.Modules.Ledger;
 using Dawn;
 using Serilog;
 using System;
+using System.Linq;
+using Catalyst.Common.Interfaces.Modules.Consensus.Deltas;
+using Catalyst.Common.Interfaces.Modules.Mempool;
 using Catalyst.Common.Interfaces.Repository;
 using Catalyst.Common.Modules.Ledger.Models;
+using Multiformats.Hash;
 
 namespace Catalyst.Core.Lib.Modules.Ledger
 {
@@ -34,17 +38,28 @@ namespace Catalyst.Core.Lib.Modules.Ledger
     ///  This class represents a ledger and is a collection of accounts and data store.
     /// </summary>
     /// <seealso cref="Catalyst.Common.Interfaces.Modules.Ledger.ILedger" />
-    public class Ledger : ILedger
+    public class Ledger : ILedger, IDisposable
     {
         public IAccountRepository Accounts { get; }
+        private readonly IMempool _mempool;
         private readonly ILogger _logger;
+        private readonly IDisposable _deltaUpdatesSubscription;
 
         public byte[] LedgerStateUpdate { get; set; }
  
-        public Ledger(IAccountRepository accounts, ILogger logger)
+        public Ledger(IAccountRepository accounts, IDeltaHashProvider deltaHashProvider, IMempool mempool, ILogger logger)
         {
             Accounts = accounts;
+            _mempool = mempool;
             _logger = logger;
+
+            _deltaUpdatesSubscription = deltaHashProvider.DeltaHashUpdates.Subscribe(FlushTransactionsFromDelta);
+        }
+
+        public void FlushTransactionsFromDelta(Multihash confirmedDelta)
+        {
+            var transactionsToFlush = _mempool.GetMemPoolContent().Select(d => d.Transaction.Signature);
+            _mempool.Delete(transactionsToFlush.ToArray());
         }
 
         public bool SaveAccountState(IAccount account)
@@ -61,6 +76,22 @@ namespace Catalyst.Core.Lib.Modules.Ledger
                 _logger.Error(e, "Failed to add account state to the Ledger");
                 return false;
             }
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposing)
+            {
+                return;
+            }
+
+            Accounts?.Dispose();
+            _deltaUpdatesSubscription?.Dispose();
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
         }
     }
 }
