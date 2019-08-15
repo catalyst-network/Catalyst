@@ -21,6 +21,7 @@
 
 #endregion
 
+using System;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Catalyst.Common.Extensions;
@@ -37,7 +38,7 @@ using LedgerService = Catalyst.Core.Lib.Modules.Ledger.Ledger;
 
 namespace Catalyst.Core.Lib.UnitTests.Modules.Ledger
 {
-    public sealed class LedgerTests
+    public sealed class LedgerTests : IDisposable
     {
         private LedgerService _ledger;
         private readonly IAccountRepository _fakeRepository;
@@ -82,7 +83,13 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Ledger
 
             await _deltaHashProvider.DeltaHashUpdates.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
 
-            _mempool.Received(updates.Length).Clear();
+            _mempool.ReceivedWithAnyArgs(updates.Length).Delete(default);
+        }
+
+        public void Dispose()
+        {
+            _ledger?.Dispose();
+            _fakeRepository?.Dispose();
         }
     }
 }

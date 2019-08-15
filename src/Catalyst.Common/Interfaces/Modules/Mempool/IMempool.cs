@@ -59,8 +59,9 @@ namespace Catalyst.Common.Interfaces.Modules.Mempool
         IMempoolDocument GetMempoolDocument(TransactionSignature key);
 
         /// <summary>
-        /// Clear the mempool content.
+        ///     Remove transactions with the given signatures from the mempool. This can be called once transactions
+        ///     have been confirmed by appearing in the ledger.
         /// </summary>
-        void Clear();
+        void Delete(params TransactionSignature[] transactionSignatures);
     }
 }

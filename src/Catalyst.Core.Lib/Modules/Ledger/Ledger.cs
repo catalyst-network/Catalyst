@@ -25,6 +25,7 @@ using Catalyst.Common.Interfaces.Modules.Ledger;
 using Dawn;
 using Serilog;
 using System;
+using System.Linq;
 using Catalyst.Common.Interfaces.Modules.Consensus.Deltas;
 using Catalyst.Common.Interfaces.Modules.Mempool;
 using Catalyst.Common.Interfaces.Repository;
@@ -57,7 +58,8 @@ namespace Catalyst.Core.Lib.Modules.Ledger
 
         public void FlushTransactionsFromDelta(Multihash confirmedDelta)
         {
-            _mempool.Clear();
+            var transactionsToFlush = _mempool.GetMemPoolContent().Select(d => d.Transaction.Signature);
+            _mempool.Delete(transactionsToFlush.ToArray());
         }
 
         public bool SaveAccountState(IAccount account)

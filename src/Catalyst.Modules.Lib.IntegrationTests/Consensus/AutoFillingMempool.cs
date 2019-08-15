@@ -61,6 +61,6 @@ namespace Catalyst.Modules.Lib.IntegrationTests.Consensus
         public List<byte[]> GetMemPoolContentEncoded() { return _fakeMempool.GetMemPoolContentEncoded(); }
         public bool SaveMempoolDocument(IMempoolDocument mempoolDocument) { throw new NotImplementedException(); }
         public IMempoolDocument GetMempoolDocument(TransactionSignature key) { throw new NotImplementedException(); }
-        public void Clear() { _fakeMempool.Clear(); }
+        public void Delete(params TransactionSignature[] transactionSignatures) { _fakeMempool.Delete(transactionSignatures); }
     }
 }

@@ -80,17 +80,16 @@ namespace Catalyst.Core.Lib.Modules.Mempool
             return found;
         }
 
-        public void Clear()
+        public void Delete(params TransactionSignature[] transactionSignatures)
         {
-            _logger.Debug("Clearing mempool");
-            var keysToDelete = _transactionStore.GetAll(e => e.DocumentId).ToArray();
+            _logger.Debug("Deleting transactions from the mempool.");
             var cleared = 0;
 
-            foreach (var key in keysToDelete)
+            foreach (var key in transactionSignatures)
             {
                 try
                 {
-                    _transactionStore.Delete(key);
+                    _transactionStore.Delete(t => t.Transaction.Signature.Equals(key));
                     cleared++;
                 }
                 catch (Exception e)
@@ -100,7 +99,7 @@ namespace Catalyst.Core.Lib.Modules.Mempool
             }
 
             _logger.Debug("Cleared {cleared} out of {total} transactions from the mempool.", 
-                cleared, keysToDelete.Length);
+                cleared, transactionSignatures.Length);
         }
 
         /// <inheritdoc />
