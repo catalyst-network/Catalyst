@@ -7,8 +7,7 @@
                 {
                     "type": "Catalyst.Common.Interfaces.Modules.Consensus.IConsensus, Catalyst.Common"
                 }
-            ],
-            "instanceScope": "singleinstance"
+            ]
         },
         {
             "type": "Catalyst.Core.Lib.Modules.Consensus.Deltas.DeltaBuilder",
@@ -16,8 +15,7 @@
                 {
                     "type": "Catalyst.Common.Interfaces.Modules.Consensus.Deltas.IDeltaBuilder, Catalyst.Common"
                 }
-            ],
-            "instanceScope": "singleinstance"
+            ]
         },
         {
             "type": "Catalyst.Core.Lib.Modules.Consensus.TransactionComparerByFeeTimestampAndHash",
@@ -33,8 +31,7 @@
                 {
                     "type": "Catalyst.Common.Interfaces.Modules.Consensus.Deltas.IDeltaTransactionRetriever, Catalyst.Common"
                 }
-            ],
-            "instanceScope": "singleinstance"
+            ]
         },
         {
             "type": "Catalyst.Modules.Lib.Consensus.Deltas.PoaDeltaProducersProvider, Catalyst.Modules.Lib",
@@ -42,8 +39,7 @@
                 {
                     "type": "Catalyst.Common.Interfaces.Modules.Consensus.Deltas.IDeltaProducersProvider, Catalyst.Common"
                 }
-            ],
-            "instanceScope": "singleinstance"
+            ]
         },
         {
             "type": "Catalyst.Core.Lib.Modules.Consensus.Deltas.DeltaHub",
@@ -51,8 +47,7 @@
                 {
                     "type": "Catalyst.Common.Interfaces.Modules.Consensus.Deltas.IDeltaHub, Catalyst.Common"
                 }
-            ],
-            "instanceScope": "singleinstance"
+            ]
         },
         {
             "type": "Catalyst.Core.Lib.Modules.Consensus.Deltas.DeltaVoter",
@@ -60,8 +55,7 @@
                 {
                     "type": "Catalyst.Common.Interfaces.Modules.Consensus.Deltas.IDeltaVoter, Catalyst.Common"
                 }
-            ],
-            "instanceScope": "singleinstance"
+            ]
         },
         {
             "type": "Catalyst.Core.Lib.Modules.Consensus.Deltas.DeltaElector",
@@ -69,8 +63,7 @@
                 {
                     "type": "Catalyst.Common.Interfaces.Modules.Consensus.Deltas.IDeltaElector, Catalyst.Common"
                 }
-            ],
-            "instanceScope": "singleinstance"
+            ]
         },
         {
             "type": "Catalyst.Core.Lib.Modules.Consensus.Deltas.DeltaHashProvider",
@@ -81,8 +74,7 @@
             ],
             "parameters": {
                 "capacity": 10000
-            },
-            "instanceScope": "singleinstance"
+            }
         },
         {
             "type": "Catalyst.Core.Lib.Modules.Consensus.Deltas.DeltaCache",

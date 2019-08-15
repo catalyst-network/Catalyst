@@ -52,7 +52,6 @@ namespace Catalyst.Modules.Lib.Dfs
         private readonly DirectoryInfo _baseFolder;
         private readonly IFileSystem _fileSystem;
         private readonly HashingAlgorithm _hashingAlgorithm;
-
         public FileSystemDfs(IFileSystem fileSystem,
             HashingAlgorithm hashingAlgorithm = null,
             string baseFolder = null)
