@@ -123,7 +123,7 @@ namespace Catalyst.Simulator
             IRpcNodeConfig nodeRpcConfig)
         {
             var retry = 5;
-            while (retry > 0)
+            while (true)
             {
                 try
                 {
@@ -135,7 +135,7 @@ namespace Catalyst.Simulator
                     });
 
                     var socketInfo = new NodeSocketInfo
-                    { NodeRpcClient = socket, PeerIdentifier = peerIdentifier };
+                        {NodeRpcClient = socket, PeerIdentifier = peerIdentifier};
                     return socketInfo;
                 }
                 catch (ConnectException)
@@ -146,9 +146,9 @@ namespace Catalyst.Simulator
                 }
             }
 
-            _logger.Error($"Could not connect to {peerIdentifier.Ip}:{peerIdentifier.Port}");
+            //_logger.Error($"Could not connect to {peerIdentifier.Ip}:{peerIdentifier.Port}");
 
-            return null;
+            //return null;
         }
 
         public async Task Simulate(IRpcNodeConfig simulationClientRpcConfig,
@@ -194,8 +194,6 @@ namespace Catalyst.Simulator
                     var stTransactionEntry = new STTransactionEntry();
 
                     stTransactionEntry.PubKey = ByteString.FromBase64("eOzdzqY+BQHCu6Puno48ujea1Sb+696E31qH21qLmg8=");
-
-                    //stTransactionEntry.PubKey = sender.PublicKey.ToByteString();
                     stTransactionEntry.Amount = _random.Next(100);
                     transaction.STEntries.Add(stTransactionEntry);
 
@@ -204,6 +202,7 @@ namespace Catalyst.Simulator
                         SchnorrSignature = ByteString.CopyFromUtf8($"Signature{guid}"),
                         SchnorrComponent = ByteString.CopyFromUtf8($"Component{guid}")
                     };
+
                     req.Transaction = transaction;
 
                     var messageDto = dtoFactory.GetDto(
@@ -214,7 +213,7 @@ namespace Catalyst.Simulator
 
                     nodeInfo.NodeRpcClient.SendMessage(messageDto);
 
-                    await Task.Delay(500).ConfigureAwait(false);
+                    await Task.Delay(1000).ConfigureAwait(false);
                 }
             });
         }

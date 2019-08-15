@@ -42,15 +42,12 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
             IP2PMessageObserver, IPeerClientObservable
     {
         private readonly IPeerChallenger _peerChallenger;
-        private readonly ILogger _logger;
-
         public ReplaySubject<IPeerClientMessageDto> ResponseMessageSubject { get; }
         public IObservable<IPeerClientMessageDto> MessageStream => ResponseMessageSubject.AsObservable();
 
         public PingResponseObserver(ILogger logger, IPeerChallenger peerChallenger)
             : base(logger)
         {
-            _logger = logger;
             _peerChallenger = peerChallenger;
             ResponseMessageSubject = new ReplaySubject<IPeerClientMessageDto>(1);
         }
@@ -60,7 +57,6 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
             IPeerIdentifier senderPeerIdentifier,
             ICorrelationId correlationId)
         {
-            _logger.Verbose("Received {0} from IP {1} Peer {2}", nameof(PingResponse), senderPeerIdentifier.Ip, senderPeerIdentifier.PeerId);
             ResponseMessageSubject.OnNext(new PeerClientMessageDto(pingResponse, senderPeerIdentifier, correlationId));
             _peerChallenger.ChallengeResponseMessageStreamer.OnNext(new PeerChallengerResponse(senderPeerIdentifier.PeerId));
         }

@@ -80,7 +80,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Observers
         {
             var multiHash = GetMultiHash("abcd");
 
-            var delta = CreateAndExpectDeltaFromCache(multiHash.AsBase64UrlString());
+            var delta = CreateAndExpectDeltaFromCache(multiHash.AsBase32Address());
 
             var observable = CreateStreamWithDeltaRequest(multiHash);
 
@@ -89,7 +89,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Observers
             await observable.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
 
             _deltaCache.Received(1).TryGetConfirmedDelta(Arg.Is<string>(
-                s => s.Equals(multiHash.AsBase64UrlString())), out Arg.Any<Delta>());
+                s => s.Equals(multiHash.AsBase32Address())), out Arg.Any<Delta>());
 
             await _fakeContext.Channel.ReceivedWithAnyArgs(1)
                .WriteAndFlushAsync(Arg.Is<IMessageDto<ProtocolMessage>>(pm => 
@@ -108,7 +108,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Observers
             await observable.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
 
             _deltaCache.Received(1).TryGetConfirmedDelta(Arg.Is<string>(
-                s => s.Equals(multiHash.AsBase64UrlString())), out Arg.Any<Delta>());
+                s => s.Equals(multiHash.AsBase32Address())), out Arg.Any<Delta>());
 
             await _fakeContext.Channel.ReceivedWithAnyArgs(1)
                .WriteAndFlushAsync(Arg.Is<IMessageDto<ProtocolMessage>>(pm =>
