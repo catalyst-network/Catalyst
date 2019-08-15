@@ -51,6 +51,8 @@ namespace Catalyst.Core.Lib.Modules.Consensus.Deltas
     {
         private readonly IBroadcastManager _broadcastManager;
         private readonly IPeerIdentifier _peerIdentifier;
+        private readonly IDeltaVoter _deltaVoter;
+        private readonly IDeltaElector _deltaElector;
         private readonly IDfs _dfs;
         private readonly ILogger _logger;
 
@@ -58,11 +60,15 @@ namespace Catalyst.Core.Lib.Modules.Consensus.Deltas
 
         public DeltaHub(IBroadcastManager broadcastManager,
             IPeerIdentifier peerIdentifier,
+            IDeltaVoter deltaVoter,
+            IDeltaElector deltaElector,
             IDfs dfs,
             ILogger logger)
         {
             _broadcastManager = broadcastManager;
             _peerIdentifier = peerIdentifier;
+            _deltaVoter = deltaVoter;
+            _deltaElector = deltaElector;
             _dfs = dfs;
             _logger = logger;
 

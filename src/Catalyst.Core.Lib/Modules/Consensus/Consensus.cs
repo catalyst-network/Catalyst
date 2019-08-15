@@ -30,7 +30,6 @@ using System;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using Google.Protobuf.WellKnownTypes;
-using Multiformats.Hash;
 
 namespace Catalyst.Core.Lib.Modules.Consensus
 {
@@ -45,7 +44,6 @@ namespace Catalyst.Core.Lib.Modules.Consensus
         private IDisposable _votingProductionSubscription;
 
         private readonly ICycleEventsProvider _cycleEventsProvider;
-        private readonly IDeltaHashProvider _deltaHashProvider;
         private readonly IDeltaBuilder _deltaBuilder;
         private readonly IDeltaHub _deltaHub;
         private readonly IDeltaCache _deltaCache;
@@ -56,13 +54,11 @@ namespace Catalyst.Core.Lib.Modules.Consensus
             IDeltaCache deltaCache,
             IDeltaHub deltaHub,
             ICycleEventsProvider cycleEventsProvider,
-            IDeltaHashProvider deltaHashProvider,
             ILogger logger)
         {
             _deltaVoter = deltaVoter;
             _deltaElector = deltaElector;
             _cycleEventsProvider = cycleEventsProvider;
-            _deltaHashProvider = deltaHashProvider;
             _deltaBuilder = deltaBuilder;
             _deltaHub = deltaHub;
             _deltaCache = deltaCache;
@@ -74,11 +70,7 @@ namespace Catalyst.Core.Lib.Modules.Consensus
             _constructionProducingSubscription = _cycleEventsProvider.PhaseChanges
                .Where(p => p.Name == PhaseName.Construction && p.Status == PhaseStatus.Producing)
                .Select(p => _deltaBuilder.BuildCandidateDelta(p.PreviousDeltaDfsHash))
-               .Subscribe(c =>
-                {
-                    _deltaVoter.OnNext(c);
-                    _deltaHub.BroadcastCandidate(c);
-                });
+               .Subscribe(_deltaHub.BroadcastCandidate);
 
             _campaigningProductionSubscription = _cycleEventsProvider.PhaseChanges
                .Where(p => p.Name == PhaseName.Campaigning && p.Status == PhaseStatus.Producing)
@@ -88,11 +80,7 @@ namespace Catalyst.Core.Lib.Modules.Consensus
                     return favourite;
                 })
                .Where(f => f != null)
-               .Subscribe(f =>
-                {
-                    _deltaHub.BroadcastFavouriteCandidateDelta(f);
-                    _deltaElector.OnNext(f);
-                });
+               .Subscribe(_deltaHub.BroadcastFavouriteCandidateDelta);
 
             _votingProductionSubscription = _cycleEventsProvider.PhaseChanges
                .Where(p => p.Name == PhaseName.Voting && p.Status == PhaseStatus.Producing)
@@ -106,11 +94,7 @@ namespace Catalyst.Core.Lib.Modules.Consensus
                .Where(d => d != null)
                .Subscribe(d =>
                 {
-                    var newHash = _deltaHub.PublishDeltaToDfsAndBroadcastAddressAsync(d)
-                       .ConfigureAwait(false).GetAwaiter().GetResult();
-                    var newMultiHash = Multihash.Parse(newHash);
-                    var previousHash = Multihash.Cast(d.PreviousDeltaDfsHash.ToByteArray());
-                    _deltaHashProvider.TryUpdateLatestHash(previousHash, newMultiHash);
+                    _deltaHub.PublishDeltaToDfsAndBroadcastAddressAsync(d);
                 });
         }
         

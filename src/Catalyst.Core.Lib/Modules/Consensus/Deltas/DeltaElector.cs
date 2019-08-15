@@ -119,7 +119,7 @@ namespace Catalyst.Core.Lib.Modules.Consensus.Deltas
                 return null;
             }
 
-            var votesThreshold = _deltaProducersProvider.GetDeltaProducersFromPreviousDelta(previousDeltaDfsHash).Count / 10;
+            var votesThreshold = _deltaProducersProvider.GetDeltaProducersFromPreviousDelta(previousDeltaDfsHash).Count / 3;
             var favourites = retrieved.Keys.GroupBy(k => k.Candidate.Hash)
                .Select(g => new {Favourite = g.First(), TotalVotes = g.Count()})
                .Where(f => f.TotalVotes >= votesThreshold)
