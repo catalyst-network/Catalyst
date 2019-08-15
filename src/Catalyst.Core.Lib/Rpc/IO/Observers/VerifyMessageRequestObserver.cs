@@ -97,8 +97,6 @@ namespace Catalyst.Core.Lib.Rpc.IO.Observers
                 Logger.Error(ex, "{0} {1}", SignatureInvalid, verifyMessageRequest);
             }
 
-            //var signatureContextBytes = Encoding.UTF8.GetBytes(signatureContext.ToString());
-
             var result = _keySigner.Verify(signature, decodedMessage, signatureContext);
 
             Logger.Debug("message content is {0}", verifyMessageRequest.Message);
