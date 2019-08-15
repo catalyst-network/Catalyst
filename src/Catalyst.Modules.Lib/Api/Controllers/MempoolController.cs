@@ -26,6 +26,7 @@ using Catalyst.Common.Util;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Linq;
+using Google.Protobuf;
 
 namespace Catalyst.Modules.Lib.Api.Controllers
 {
@@ -43,20 +44,24 @@ namespace Catalyst.Modules.Lib.Api.Controllers
         [HttpGet]
         public IActionResult GetBalance(string publicKey)
         {
+            var publicKeyByteString = ByteString.CopyFromUtf8(publicKey).ToByteArray();
+
             return Ok(_mempoolRepository.GetAll().Where(t =>
                     t.Transaction.STEntries != null
                  && t.Transaction.STEntries.Count > 0
-                 && t.Transaction.STEntries.Any(stEntries => stEntries.PubKey.ToByteArray().SequenceEqual(publicKey.KeyToBytes())))
+                 && t.Transaction.STEntries.Any(stEntries => stEntries.PubKey.ToByteArray().SequenceEqual(publicKeyByteString)))
                .Sum(t => t.Transaction.STEntries.Sum(entries => entries.Amount)));
         }
 
         [HttpGet]
         public JsonResult GetMempoolTransaction(string publicKey)
         {
+            var publicKeyByteString = ByteString.CopyFromUtf8(publicKey);
+
             var result = _mempoolRepository.GetAll().Where(t =>
                 t.Transaction.STEntries != null
              && t.Transaction.STEntries.Count > 0
-             && t.Transaction.STEntries.Any(stEntries => stEntries.PubKey.ToByteArray().SequenceEqual(publicKey.KeyToBytes())));
+             && t.Transaction.STEntries.Any(stEntries => stEntries.PubKey.ToByteArray().SequenceEqual(publicKeyByteString)));
             return Json(result, new JsonSerializerSettings
             {
                 Converters = JsonConverterProviders.Converters
