@@ -32,5 +32,6 @@ namespace Catalyst.Common.Interfaces.Rpc
         string PfxFileName { get; }
         IPAddress BindAddress { get; }
         IConfigurationRoot NodeConfig { get; }
+        string ApiBindUrl { get; }
     }
 }
