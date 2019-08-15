@@ -36,6 +36,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using Catalyst.Common.P2P;
 
 namespace Catalyst.Core.Lib.Modules.Consensus.Deltas
 {
@@ -173,6 +174,10 @@ namespace Catalyst.Core.Lib.Modules.Consensus.Deltas
                .GetDeltaProducersFromPreviousDelta(candidate.PreviousDeltaDfsHash.ToByteArray());
             var ranking = preferredProducers.ToList()
                .FindIndex(p => p.PeerId.Equals(candidate.ProducerId));
+
+            var identifier = new PeerIdentifier(candidate.ProducerId);
+            _logger.Verbose("ranking for block produced by {producerId} = {ranking}",
+                identifier, ranking);
 
             if (ranking == -1)
             {

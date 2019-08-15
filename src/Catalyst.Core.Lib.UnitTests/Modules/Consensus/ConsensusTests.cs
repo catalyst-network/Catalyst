@@ -52,6 +52,7 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Consensus
             _deltaElector = Substitute.For<IDeltaElector>();
             _deltaCache = Substitute.For<IDeltaCache>();
             _deltaHub = Substitute.For<IDeltaHub>();
+            var hashProvider = Substitute.For<IDeltaHashProvider>();
             var logger = Substitute.For<ILogger>();
             _consensus = new Lib.Modules.Consensus.Consensus(
                 _deltaBuilder, 
@@ -60,6 +61,7 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Consensus
                 _deltaCache,
                 _deltaHub, 
                 _cycleEventProvider,
+                hashProvider,
                 logger);
 
             _consensus.StartProducing();

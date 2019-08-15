@@ -26,7 +26,9 @@ using System.Threading;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Modules.Consensus.Deltas;
 using Catalyst.Protocol.Deltas;
+using Google.Protobuf.WellKnownTypes;
 using Microsoft.Extensions.Caching.Memory;
+using Multiformats.Hash;
 using Serilog;
 
 namespace Catalyst.Core.Lib.Modules.Consensus.Deltas
@@ -39,6 +41,8 @@ namespace Catalyst.Core.Lib.Modules.Consensus.Deltas
         private readonly IDeltaDfsReader _dfsReader;
         private readonly ILogger _logger;
         private readonly Func<MemoryCacheEntryOptions> _entryOptions;
+        private string _genesisHash;
+        private Delta _genesisDelta;
 
         public static string GetLocalDeltaCacheKey(CandidateDeltaBroadcast candidate) =>
             nameof(DeltaCache) + "-LocalDelta-" + candidate.Hash.AsBase32Address();
@@ -48,6 +52,9 @@ namespace Catalyst.Core.Lib.Modules.Consensus.Deltas
             IDeltaCacheChangeTokenProvider changeTokenProvider,
             ILogger logger)
         {
+            _genesisHash = "ydsaeqfmry4m547hwbiasfmgkygthnbynk2hfurmuy4xwnilsuv3tlkt3g5zpoq6oatk5vscg5e6s5yzu4thpm6qv3tk3odvjy6ptzqcwklas";
+            _genesisDelta = new Delta {TimeStamp = Timestamp.FromDateTime(DateTime.MinValue.ToUniversalTime())};
+
             _memoryCache = memoryCache;
             _dfsReader = dfsReader;
             _logger = logger;
@@ -67,6 +74,12 @@ namespace Catalyst.Core.Lib.Modules.Consensus.Deltas
             //this calls for a TryGetOrCreate IMemoryCache extension function
             if (_memoryCache.TryGetValue(hash, out delta))
             {
+                return true;
+            }
+
+            if (hash.Equals(_genesisHash))
+            {
+                delta = _genesisDelta;
                 return true;
             }
 
