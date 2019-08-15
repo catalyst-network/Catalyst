@@ -136,7 +136,7 @@ namespace Catalyst.Simulator
                 };
 
                 var socket = await _nodeRpcClientFactory.GetClient(_certificate, nodeRpcConfig);
-                socket.SubscribeToResponse<VersionResponse>(response =>
+                socket.SubscribeToResponse<BroadcastRawTransactionResponse>(response =>
                 {
                     _userOutput.WriteLine($"[{nodeIndex}] Transaction response: {response}");
                 });
@@ -159,6 +159,12 @@ namespace Catalyst.Simulator
 
                     var req = new BroadcastRawTransactionRequest();
                     var transaction = new TransactionBroadcast();
+
+                    var stTransactionEntry = new STTransactionEntry();
+                    stTransactionEntry.PubKey = sender.PublicKey.ToByteString();
+                    stTransactionEntry.Amount = _random.Next(100);
+                    transaction.STEntries.Add(stTransactionEntry);
+
                     transaction.Signature = new TransactionSignature
                     {
                         SchnorrSignature = ByteString.CopyFromUtf8($"Signature{i}"),
@@ -167,7 +173,7 @@ namespace Catalyst.Simulator
                     req.Transaction = transaction;
 
                     var messageDto = dtoFactory.GetDto(
-                        new VersionRequest().ToProtocolMessage(sender.PeerId), sender,
+                        req.ToProtocolMessage(sender.PeerId), sender,
                         nodeInfo.PeerIdentifier);
 
                     _userOutput.WriteLine($"[{randomNodeIndex}] Sending transaction");

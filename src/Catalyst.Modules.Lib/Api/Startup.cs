@@ -24,6 +24,8 @@
 using System.IO;
 using Autofac;
 using Catalyst.Common.Config;
+using Catalyst.Common.Interfaces.Modules.Consensus.Deltas;
+using Catalyst.Common.Interfaces.Modules.Dfs;
 using Catalyst.Common.Interfaces.Repository;
 using Catalyst.Common.Modules.Mempool.Models;
 using Catalyst.Common.P2P.Models;
@@ -36,6 +38,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using SharpRepository.Repository;
 using Swashbuckle.AspNetCore.Swagger;
+using ILogger = Serilog.ILogger;
 
 namespace Catalyst.Modules.Lib.Api
 {
@@ -72,7 +75,9 @@ namespace Catalyst.Modules.Lib.Api
             {
                 services.AddSingleton(container.Resolve<IRepository<MempoolDocument, string>>());
                 services.AddSingleton(container.Resolve<IRepository<Peer, string>>());
-
+                services.AddSingleton(container.Resolve<IDeltaHashProvider>());
+                services.AddSingleton(container.Resolve<IDfs>());
+                services.AddSingleton(container.Resolve<ILogger>());
                 services.AddSingleton(container.Resolve<IPeerRepository>());
                 services.AddSingleton(container.Resolve<IMempoolRepository>());
             }
