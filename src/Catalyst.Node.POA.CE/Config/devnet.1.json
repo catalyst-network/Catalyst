@@ -18,7 +18,7 @@
             ]
         },
         "Rpc": {
-            "BindAddress": "127.0.0.1",
+            "BindAddress": "68.183.197.18",
             "Port": 42066,
             "PfxFileName": "mycert.pfx",
             "ApiBinding": "http://*:5005"
