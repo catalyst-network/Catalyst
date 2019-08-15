@@ -48,6 +48,7 @@ using Catalyst.Protocol.Rpc.Node;
 using Catalyst.Protocol.Transaction;
 using DotNetty.Transport.Channels;
 using Google.Protobuf;
+using Google.Protobuf.WellKnownTypes;
 using Microsoft.Extensions.Caching.Memory;
 using Multiformats.Hash.Algorithms;
 using Serilog;
@@ -197,6 +198,10 @@ namespace Catalyst.Simulator
                     stTransactionEntry.Amount = _random.Next(100);
                     transaction.STEntries.Add(stTransactionEntry);
 
+                    transaction.TransactionFees = (ulong) _random.Next(2);
+                    transaction.TimeStamp = Timestamp.FromDateTime(DateTime.UtcNow);
+                    transaction.LockTime = 0;
+                    transaction.Version = 1;
                     transaction.Signature = new TransactionSignature
                     {
                         SchnorrSignature = ByteString.CopyFromUtf8($"Signature{guid}"),
