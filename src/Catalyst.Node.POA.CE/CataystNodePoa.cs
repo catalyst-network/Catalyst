@@ -98,6 +98,7 @@ namespace Catalyst.Node.POA.CE
             _logger.Information("using PeerIdentifier: {0}", new PeerIdentifier(_peerSettings));
 
             await StartSockets(serviceProvider).ConfigureAwait(false);
+            Consensus.StartProducing();
 
             bool exit;
             
