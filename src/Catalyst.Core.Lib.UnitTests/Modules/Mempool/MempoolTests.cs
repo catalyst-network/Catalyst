@@ -24,6 +24,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading;
 using Catalyst.Common.Interfaces.Modules.Mempool;
 using Catalyst.Common.Interfaces.Repository;
@@ -146,6 +147,14 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Mempool
                 var mempoolDocument = _memPool.GetMempoolDocument(signature);
                 mempoolDocument.Transaction.STEntries.Single().Amount.Should().Be((uint) i);
             }
+        }
+
+        [Fact]
+        public void Clear_should_delete_all_transactions()
+        {
+            var keys = Enumerable.Range(0, 10).Select(i => TransactionHelper.GetTransactionSignature($"{i}"));
+            _memPool.Delete(keys.ToArray());
+            _transactionStore.Received(10).Delete(Arg.Any<Expression<Func<MempoolDocument, bool>>>());
         }
 
         [Fact]
