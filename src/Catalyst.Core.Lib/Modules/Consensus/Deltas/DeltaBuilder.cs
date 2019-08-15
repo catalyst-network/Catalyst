@@ -24,6 +24,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Common.Interfaces.Modules.Consensus;
@@ -36,6 +37,7 @@ using Dawn;
 using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
 using Multiformats.Hash.Algorithms;
+using Serilog;
 
 namespace Catalyst.Core.Lib.Modules.Consensus.Deltas
 {
@@ -48,6 +50,7 @@ namespace Catalyst.Core.Lib.Modules.Consensus.Deltas
         private readonly IPeerIdentifier _producerUniqueId;
         private readonly IDeltaCache _deltaCache;
         private readonly IDateTimeProvider _dateTimeProvider;
+        private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
 
         public DeltaBuilder(IDeltaTransactionRetriever transactionRetriever,
             IDeterministicRandomFactory randomFactory,
@@ -67,6 +70,8 @@ namespace Catalyst.Core.Lib.Modules.Consensus.Deltas
         ///<inheritdoc />
         public CandidateDeltaBroadcast BuildCandidateDelta(byte[] previousDeltaHash)
         {
+            Logger.Debug("Building candidate delta locally");
+
             var allTransactions = _transactionRetriever.GetMempoolTransactionsByPriority();
 
             Guard.Argument(allTransactions, nameof(allTransactions))
@@ -118,6 +123,8 @@ namespace Catalyst.Core.Lib.Modules.Consensus.Deltas
                 PreviousDeltaDfsHash = previousDeltaHash.ToByteString()
             };
 
+            Logger.Debug("Building full delta locally");
+
             var producedDelta = new Delta
             {
                 PreviousDeltaDfsHash = previousDeltaHash.ToByteString(),
@@ -127,6 +134,8 @@ namespace Catalyst.Core.Lib.Modules.Consensus.Deltas
                 Version = 1,
                 TimeStamp = Timestamp.FromDateTime(_dateTimeProvider.UtcNow)
             };
+
+            Logger.Debug("Adding local candidate delta");
 
             _deltaCache.AddLocalDelta(candidate, producedDelta);
 
