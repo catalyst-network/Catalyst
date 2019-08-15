@@ -82,7 +82,7 @@ namespace Catalyst.Core.Lib.Rpc.IO.Observers
             return new SignMessageResponse
             {
                 OriginalMessage = signMessageRequest.Message,
-                PublicKey = publicKey.Bytes.ToByteString(),
+                PublicKey = signature.PublicKeyBytes.ToByteString(),
                 Signature = signature.SignatureBytes.ToByteString()
             };
         }
