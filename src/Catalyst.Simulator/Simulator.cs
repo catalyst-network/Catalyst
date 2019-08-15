@@ -135,7 +135,7 @@ namespace Catalyst.Simulator
                     });
 
                     var socketInfo = new NodeSocketInfo
-                        {NodeRpcClient = socket, PeerIdentifier = peerIdentifier};
+                    { NodeRpcClient = socket, PeerIdentifier = peerIdentifier };
                     return socketInfo;
                 }
                 catch (ConnectException)
