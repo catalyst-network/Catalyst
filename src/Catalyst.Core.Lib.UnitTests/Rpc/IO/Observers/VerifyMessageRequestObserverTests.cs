@@ -63,10 +63,12 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Observers
             _fakeContext.Channel.Returns(fakeChannel);
         }
 
-        [Fact]
-        public async Task VerifyMessageRequest_Can_Send_VerifyMessageResponse_True()
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task VerifyMessageRequest_Can_Send_VerifyMessageResponse(bool expectedResponse)
         {
-            _keySigner.Verify(default, default, default).ReturnsForAnyArgs(true);
+            _keySigner.Verify(default, default, default).ReturnsForAnyArgs(expectedResponse);
 
             var messageFactory = new DtoFactory();
 
@@ -101,48 +103,7 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Observers
             var sentResponseDto = (IMessageDto<ProtocolMessage>) receivedCalls.Single().GetArguments().Single();
             var verifyResponseMessage = sentResponseDto.FromIMessageDto().FromProtocolMessage<VerifyMessageResponse>();
 
-            verifyResponseMessage.IsSignedByKey.Should().Be(true);
-        }
-
-        [Fact]
-        public async Task VerifyMessageRequest_Can_Send_VerifyMessageResponse_False()
-        {
-            _keySigner.Verify(default, default, default).ReturnsForAnyArgs(false);
-
-            var messageFactory = new DtoFactory();
-
-            var request = messageFactory.GetDto(
-                new VerifyMessageRequest
-                {
-                    Message = _message.ToUtf8ByteString(),
-                    PublicKey = RLP.EncodeElement(_publicKeyBytes).ToByteString(),
-                    Signature = RLP.EncodeElement(_signatureBytes).ToByteString(),
-                    SigningContext = _signingContext
-                },
-                PeerIdentifierHelper.GetPeerIdentifier("sender_key"),
-                PeerIdentifierHelper.GetPeerIdentifier("recipient_key")
-            );
-            
-            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, 
-                request.Content.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId)
-            );
-            
-            var handler = new VerifyMessageRequestObserver(PeerIdentifierHelper.GetPeerIdentifier("sender"),
-                _logger,
-                _keySigner
-            );
-
-            handler.StartObserving(messageStream);
-
-            await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
-
-            var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();
-            receivedCalls.Count.Should().Be(1);
-
-            var sentResponseDto = (IMessageDto<ProtocolMessage>) receivedCalls.Single().GetArguments().Single();
-            var verifyResponseMessage = sentResponseDto.FromIMessageDto().FromProtocolMessage<VerifyMessageResponse>();
-
-            verifyResponseMessage.IsSignedByKey.Should().Be(false);
+            verifyResponseMessage.IsSignedByKey.Should().Be(expectedResponse);
         }
     }
 }
