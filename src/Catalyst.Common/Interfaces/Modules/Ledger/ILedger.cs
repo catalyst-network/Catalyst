@@ -21,10 +21,14 @@
 
 #endregion
 
+using Multiformats.Hash;
+
 namespace Catalyst.Common.Interfaces.Modules.Ledger
 {
     public interface ILedger
     {
         bool SaveAccountState(IAccount account);
+
+        void FlushTransactionsFromDelta(Multihash confirmedDelta);
     }
 }
