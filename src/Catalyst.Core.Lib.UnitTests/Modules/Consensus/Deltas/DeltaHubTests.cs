@@ -50,6 +50,7 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Consensus.Deltas
     {
         private readonly IBroadcastManager _broadcastManager;
         private readonly IPeerIdentifier _peerIdentifier;
+        private readonly IDeltaVoter _deltaVoter;
         private readonly DeltaHub _hub;
         private readonly IDfs _dfs;
 
@@ -60,8 +61,7 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Consensus.Deltas
                 IDeltaVoter deltaVoter,
                 IDeltaElector deltaElector,
                 IDfs dfs,
-                IDeltaHashProvider hashProvider,
-                ILogger logger) : base(broadcastManager, peerIdentifier, dfs, logger) { }
+                ILogger logger) : base(broadcastManager, peerIdentifier, deltaVoter, deltaElector, dfs, logger) { }
 
             protected override AsyncRetryPolicy<string> DfsRetryPolicy => 
                 Policy<string>.Handle<Exception>()
@@ -74,12 +74,11 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Consensus.Deltas
             _broadcastManager = Substitute.For<IBroadcastManager>();
             var logger = Substitute.For<ILogger>();
             _peerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("me");
-            var deltaVoter = Substitute.For<IDeltaVoter>();
+            _deltaVoter = Substitute.For<IDeltaVoter>();
             var deltaElector = Substitute.For<IDeltaElector>();
             var dfs = Substitute.For<IDfs>();
-            var hashProvider = Substitute.For<IDeltaHashProvider>();
             _dfs = dfs;
-            _hub = new DeltaHubWithFastRetryPolicy(_broadcastManager, _peerIdentifier, deltaVoter, deltaElector, _dfs, hashProvider, logger);
+            _hub = new DeltaHubWithFastRetryPolicy(_broadcastManager, _peerIdentifier, _deltaVoter, deltaElector, _dfs, logger);
         }
 
         [Fact]
