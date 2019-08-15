@@ -194,7 +194,7 @@ namespace Catalyst.Simulator
 
                     var stTransactionEntry = new STTransactionEntry();
 
-                    stTransactionEntry.PubKey = ByteString.FromBase64("eOzdzqY+BQHCu6Puno48ujea1Sb+696E31qH21qLmg8=");
+                    stTransactionEntry.PubKey = ByteString.FromBase64("VkC84TBQOVjrcX81NYV5swPVrE4RN+nKGzIjxNT2AY0=");
                     stTransactionEntry.Amount = _random.Next(100);
                     transaction.STEntries.Add(stTransactionEntry);
 
@@ -218,7 +218,7 @@ namespace Catalyst.Simulator
 
                     nodeInfo.NodeRpcClient.SendMessage(messageDto);
 
-                    await Task.Delay(1000).ConfigureAwait(false);
+                    await Task.Delay(5000).ConfigureAwait(false);
                 }
             });
         }
