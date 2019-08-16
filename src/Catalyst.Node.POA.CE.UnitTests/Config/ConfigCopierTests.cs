@@ -108,7 +108,8 @@ namespace Catalyst.Node.POA.CE.UnitTests.Config
                 Constants.NetworkConfigFile(networkTypes),
                 Constants.ComponentsJsonConfigFile,
                 Constants.SerilogJsonConfigFile,
-                Constants.MessageHandlersConfigFile
+                Constants.MessageHandlersConfigFile,
+                Constants.RpcAuthenticationCredentialsFile
             };
             return requiredConfigFiles;
         }
