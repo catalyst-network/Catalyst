@@ -59,28 +59,32 @@ namespace Catalyst.Common.Config
                 modulesFolderInfo.Create();
             }
 
-            const string jsonSearchPattern = "*.json";
-            var existingConfigs = dataDirInfo
-               .EnumerateFiles(jsonSearchPattern, SearchOption.TopDirectoryOnly)
-               .Select(fi => fi.Name).Concat(
-                    modulesFolderInfo.EnumerateFiles(jsonSearchPattern)
+            string[] searchPatterns = {"*.json", "*.xml"};
+
+            foreach (var searchPattern in searchPatterns)
+            {
+                var existingConfigs = dataDirInfo
+                   .EnumerateFiles(searchPattern, SearchOption.TopDirectoryOnly)
+                   .Select(fi => fi.Name)
+                   .Concat(modulesFolderInfo.EnumerateFiles(searchPattern)
                        .Select(m => Path.Combine(Constants.ModulesSubFolder, m.Name)));
 
-            var requiredConfigFiles = RequiredConfigFiles(network);
+                var requiredConfigFiles = RequiredConfigFiles(network);
 
-            //TODO: think about case sensitivity of the environment we are in, this is oversimplified
-            var filenameComparer = RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
-                ? StringComparer.InvariantCultureIgnoreCase
-                : StringComparer.InvariantCulture;
+                //TODO: think about case sensitivity of the environment we are in, this is oversimplified
+                var filenameComparer = RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
+                    ? StringComparer.InvariantCultureIgnoreCase
+                    : StringComparer.InvariantCulture;
 
-            var filesToCopy = overwrite
-                ? requiredConfigFiles
-                : requiredConfigFiles.Except(existingConfigs, filenameComparer);
+                var filesToCopy = overwrite
+                    ? requiredConfigFiles
+                    : requiredConfigFiles.Except(existingConfigs, filenameComparer);
 
-            foreach (var fileName in filesToCopy)
-            {
-                CopyConfigFileToFolder(dataDir, fileName,
-                    sourceFolder ?? AppDomain.CurrentDomain.BaseDirectory, overwrite);
+                foreach (var fileName in filesToCopy)
+                {
+                    CopyConfigFileToFolder(dataDir, fileName,
+                        sourceFolder ?? AppDomain.CurrentDomain.BaseDirectory, overwrite);
+                }
             }
         }
 
@@ -91,7 +95,8 @@ namespace Catalyst.Common.Config
                 Constants.NetworkConfigFile(networkTypes),
                 Constants.ComponentsJsonConfigFile,
                 Constants.SerilogJsonConfigFile,
-                Constants.MessageHandlersConfigFile
+                Constants.MessageHandlersConfigFile,
+                Constants.RpcAuthenticationCredentialsFile
             };
             return requiredConfigFiles;
         }
