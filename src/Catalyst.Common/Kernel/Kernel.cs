@@ -91,10 +91,10 @@ namespace Catalyst.Common.Kernel
             _configurationBuilder = new ConfigurationBuilder();
         }
 
-        public Kernel BuildKernel(bool overwrite = false, int index = 0)
+        public Kernel BuildKernel(bool overwrite = false)
         {
             _overwrite = overwrite;
-            _configCopier.RunConfigStartUp(_targetConfigFolder, _networkTypes, null, _overwrite, index);
+            _configCopier.RunConfigStartUp(_targetConfigFolder, _networkTypes, null, _overwrite);
             
             var config = _configurationBuilder.Build();
             var configurationModule = new ConfigurationModule(config);
@@ -130,10 +130,10 @@ namespace Catalyst.Common.Kernel
             return this;
         }
 
-        public Kernel WithNetworksConfigFile(int index = 0, Types.NetworkTypes networkTypes = default)
+        public Kernel WithNetworksConfigFile(NetworkTypes networkTypes = default)
         {
             _networkTypes = networkTypes ?? Types.NetworkTypes.Dev;
-            var fileName = Constants.NetworkConfigFile(_networkTypes, index);
+            var fileName = Constants.NetworkConfigFile(_networkTypes);
 
             _configurationBuilder
                .AddJsonFile(
@@ -200,16 +200,17 @@ namespace Catalyst.Common.Kernel
         /// </summary>
         public void StartNode()
         {
-            IContainer container = null;
             if (_instance == null)
             {
-                container = ContainerBuilder.Build();
+                var container = ContainerBuilder.Build();
                 _instance = container
                    .BeginLifetimeScope(MethodBase.GetCurrentMethod().DeclaringType.AssemblyQualifiedName);
             }
-            
+
+            BsonSerializationProviders.Init();
+
             _instance.Resolve<ICatalystNode>()
-               .RunAsync(CancellationTokenProvider.CancellationTokenSource.Token, container)
+               .RunAsync(CancellationTokenProvider.CancellationTokenSource.Token)
                .Wait(CancellationTokenProvider.CancellationTokenSource.Token);
         }
 

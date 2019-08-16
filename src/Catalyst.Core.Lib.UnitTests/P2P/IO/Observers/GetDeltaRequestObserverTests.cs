@@ -35,7 +35,6 @@ using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
-using Multiformats.Base;
 using Multiformats.Hash;
 using NSubstitute;
 using Serilog;

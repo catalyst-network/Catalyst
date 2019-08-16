@@ -128,12 +128,12 @@ namespace Catalyst.Modules.Lib.IntegrationTests.Consensus
 
         public IConsensus Consensus => _node.Consensus;
 
-        public async Task RunAsync(CancellationToken cancellationSourceToken, IContainer serviceProvider)
+        public async Task RunAsync(CancellationToken cancellationSourceToken)
         {
-            await _node.RunAsync(cancellationSourceToken, serviceProvider).ConfigureAwait(false);
+            await _node.RunAsync(cancellationSourceToken).ConfigureAwait(false);
         }
 
-        public async Task StartSockets(IContainer serviceProvider) { await _node.StartSockets(serviceProvider); }
+        public async Task StartSockets() { await _node.StartSockets(); }
 
         public void Dispose() { Dispose(true); }
 

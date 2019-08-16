@@ -49,9 +49,6 @@ namespace Catalyst.Modules.Lib.Api.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetTotalDeltaCount() { return Ok(_hashProvider.GetDeltaHashCount); }
-
-        [HttpGet]
         public async Task<JsonResult> GetLatestDelta(DateTime? asOf)
         {
             var latest = _hashProvider.GetLatestDeltaHash(asOf?.ToUniversalTime());

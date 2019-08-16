@@ -50,14 +50,15 @@ namespace Catalyst.Core.Lib.Modules.Consensus.Deltas
         private readonly IPeerIdentifier _producerUniqueId;
         private readonly IDeltaCache _deltaCache;
         private readonly IDateTimeProvider _dateTimeProvider;
-        private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
+        private readonly ILogger _logger;
 
         public DeltaBuilder(IDeltaTransactionRetriever transactionRetriever,
             IDeterministicRandomFactory randomFactory,
             IMultihashAlgorithm hashAlgorithm,
             IPeerIdentifier producerUniqueId,
             IDeltaCache deltaCache, 
-            IDateTimeProvider dateTimeProvider)
+            IDateTimeProvider dateTimeProvider,
+            ILogger logger)
         {
             _transactionRetriever = transactionRetriever;
             _randomFactory = randomFactory;
@@ -65,12 +66,13 @@ namespace Catalyst.Core.Lib.Modules.Consensus.Deltas
             _producerUniqueId = producerUniqueId;
             _deltaCache = deltaCache;
             _dateTimeProvider = dateTimeProvider;
+            _logger = logger;
         }
 
         ///<inheritdoc />
         public CandidateDeltaBroadcast BuildCandidateDelta(byte[] previousDeltaHash)
         {
-            Logger.Debug("Building candidate delta locally");
+            _logger.Debug("Building candidate delta locally");
 
             var allTransactions = _transactionRetriever.GetMempoolTransactionsByPriority();
 
@@ -123,7 +125,7 @@ namespace Catalyst.Core.Lib.Modules.Consensus.Deltas
                 PreviousDeltaDfsHash = previousDeltaHash.ToByteString()
             };
 
-            Logger.Debug("Building full delta locally");
+            _logger.Debug("Building full delta locally");
 
             var producedDelta = new Delta
             {
@@ -135,7 +137,7 @@ namespace Catalyst.Core.Lib.Modules.Consensus.Deltas
                 TimeStamp = Timestamp.FromDateTime(_dateTimeProvider.UtcNow)
             };
 
-            Logger.Debug("Adding local candidate delta");
+            _logger.Debug("Adding local candidate delta");
 
             _deltaCache.AddLocalDelta(candidate, producedDelta);
 
@@ -164,13 +166,15 @@ namespace Catalyst.Core.Lib.Modules.Consensus.Deltas
         /// Gets the valid transactions for delta.
         /// This method can be used to extract the collection of transactions that meet the criteria for validating delta.
         /// </summary>
-        /// <param name="allTransactions">All transactions.</param>
-        /// <returns></returns>
-        public static IList<TransactionBroadcast> GetValidTransactionsForDelta(IEnumerable<TransactionBroadcast> allTransactions)
+        private IList<TransactionBroadcast> GetValidTransactionsForDelta(IList<TransactionBroadcast> allTransactions)
         {
             //lock time equals 0 or less than ledger cycle time
             //we assume all transactions are of type non-confidential for now
-            return allTransactions.Where(m => m.LockTime <= 0 && m.Version == 1).ToList();
+
+            var validTransactionsForDelta = allTransactions.Where(m => m.LockTime <= 0 && m.Version == 1).ToList();
+            var rejectedTransactions = allTransactions.Except(validTransactionsForDelta);
+            _logger.Debug("Delta builder rejected the following transactions {rejectedTransactions}", rejectedTransactions);
+            return validTransactionsForDelta;
         }
     }
 }

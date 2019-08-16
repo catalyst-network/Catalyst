@@ -58,7 +58,7 @@ namespace Catalyst.Cli.IntegrationTests.Connection
         public async Task CliToNode_Connect_To_Node()
         {
             _node.BuildNode();
-            await _node.StartSockets(null);
+            await _node.StartSockets();
 
             using (var scope = ContainerProvider.Container.BeginLifetimeScope(CurrentTestName))
             {

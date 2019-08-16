@@ -21,6 +21,7 @@
 
 #endregion
 
+using System.Collections.Generic;
 using Catalyst.Common.Interfaces.IO.Observers;
 using Catalyst.Common.Interfaces.IO.Transport;
 using Catalyst.Common.Interfaces.P2P.Discovery;

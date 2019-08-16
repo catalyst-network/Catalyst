@@ -21,12 +21,7 @@
 
 #endregion
 
-using Catalyst.Common.P2P;
 using Catalyst.Common.Util;
-using Catalyst.Protocol.Common;
-using Catalyst.Protocol.Transaction;
-using Google.Protobuf;
-using MongoDB.Bson.Serialization;
 using SharpRepository.MongoDbRepository;
 using SharpRepository.Repository.Caching;
 
@@ -35,11 +30,6 @@ namespace Catalyst.Common.Repository
     public class MongoDbRepository<T> : MongoDbRepository<T, string>
         where T : class, new()
     {
-        static MongoDbRepository()
-        {
-            BsonSerializationProviders.Init();
-        }
-        
         public MongoDbRepository(ICachingStrategy<T, string> cachingStrategy = null)
             : base(cachingStrategy) { }
     }

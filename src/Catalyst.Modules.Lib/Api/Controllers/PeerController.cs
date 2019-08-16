@@ -21,6 +21,7 @@
 
 #endregion
 
+using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Repository;
 using Catalyst.Common.Util;
 using Microsoft.AspNetCore.Mvc;

@@ -27,11 +27,8 @@ using Catalyst.Common.Interfaces.Modules.Consensus.Deltas;
 using Catalyst.Common.Modules.Consensus.Cycle;
 using Serilog;
 using System;
-using System.Reactive.Concurrency;
 using System.Reactive.Linq;
-using Catalyst.Protocol.Deltas;
-using Google.Protobuf.WellKnownTypes;
-using GraphQL.Introspection;
+using Catalyst.Common.Extensions;
 using Multiformats.Hash;
 
 namespace Catalyst.Core.Lib.Modules.Consensus
@@ -80,44 +77,22 @@ namespace Catalyst.Core.Lib.Modules.Consensus
                .Select(p => _deltaBuilder.BuildCandidateDelta(p.PreviousDeltaDfsHash))
                .Subscribe(c =>
                 {
-                    try
-                    {
-                        _deltaVoter.OnNext(c);
-                        _deltaHub.BroadcastCandidate(c);
-                    }
-                    catch (Exception e)
-                    {
-                        _logger.Error(e, "failed to vote");
-                    }
+                    _deltaVoter.OnNext(c);
+                    _deltaHub.BroadcastCandidate(c);
                 });
 
             _campaigningProductionSubscription = _cycleEventsProvider.PhaseChanges
                .Where(p => p.Name == PhaseName.Campaigning && p.Status == PhaseStatus.Producing)
                .Select(p =>
                 {
-                    try
-                    {
-                        _deltaVoter.TryGetFavouriteDelta(p.PreviousDeltaDfsHash, out var favourite);
-                        return favourite;
-                    }
-                    catch (Exception e)
-                    {
-                        _logger.Error(e, "failed to get favourite");
-                        return null;
-                    }
+                    _deltaVoter.TryGetFavouriteDelta(p.PreviousDeltaDfsHash, out var favourite);
+                    return favourite;
                 })
                .Where(f => f != null)
                .Subscribe(f =>
                 {
-                    try
-                    {
-                        _deltaHub.BroadcastFavouriteCandidateDelta(f);
-                        _deltaElector.OnNext(f);
-                    }
-                    catch (Exception e)
-                    {
-                        _logger.Error(e, "failed to broadcast favourite");
-                    }
+                    _deltaHub.BroadcastFavouriteCandidateDelta(f);
+                    _deltaElector.OnNext(f);
                 });
 
             _votingProductionSubscription = _cycleEventsProvider.PhaseChanges
@@ -126,27 +101,20 @@ namespace Catalyst.Core.Lib.Modules.Consensus
                .Where(c => c != null)
                .Select(c =>
                 {
-                    Delta delta = null;
-                    try
-                    {
-                        _deltaCache.TryGetLocalDelta(c, out delta);
-                    }
-                    catch (Exception exception)
-                    {
-                        _logger.Error(exception, "failed");
-                    }
-
-                    _logger.Debug("Local Delta found {delta} Key {key}", delta, c);
+                    _deltaCache.TryGetLocalDelta(c, out var delta);
                     return delta;
                 })
                .Where(d => d != null)
                .Subscribe(d =>
                 {
-                    _logger.Debug("New Delta getting published");
+                    _logger.Information("New Delta following {deltaHash} published", 
+                        d.PreviousDeltaDfsHash.AsBase32Address());
+
                     var newHash = _deltaHub.PublishDeltaToDfsAndBroadcastAddressAsync(d)
                        .ConfigureAwait(false).GetAwaiter().GetResult();
                     var newMultiHash = Multihash.Parse(newHash);
                     var previousHash = Multihash.Cast(d.PreviousDeltaDfsHash.ToByteArray());
+
                     _deltaHashProvider.TryUpdateLatestHash(previousHash, newMultiHash);
                 });
         }

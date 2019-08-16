@@ -96,7 +96,7 @@ namespace Catalyst.Core.Lib.Modules.Consensus.Deltas
                 {
                     retrievedScoredDelta.IncreasePopularity(1);
                     _logger.Debug("Candidate {candidate} increased popularity to {score}", candidate, retrievedScoredDelta.Score);
-                    //return;
+                    return;
                 }
                 
                 AddCandidateToCandidateHashLookup(candidate, rankingFactor, candidateCacheKey);

@@ -88,7 +88,7 @@ namespace Catalyst.Modules.Lib.IntegrationTests.Consensus
             _nodes.AsParallel()
                .ForAll(async n =>
                 {
-                    n.RunAsync(_endOfTestCancellationSource.Token, null);
+                    n.RunAsync(_endOfTestCancellationSource.Token);
                     n.Consensus.StartProducing();
                 });
             

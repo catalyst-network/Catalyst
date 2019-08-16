@@ -30,7 +30,6 @@ using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Modules.Consensus.Deltas;
 using Catalyst.Common.Util;
 using Google.Protobuf.WellKnownTypes;
-using Multiformats.Base;
 using Multiformats.Hash;
 using Nito.Comparers;
 using Serilog;
@@ -48,15 +47,11 @@ namespace Catalyst.Core.Lib.Modules.Consensus.Deltas
         private readonly int _capacity;
 
         public IObservable<Multihash> DeltaHashUpdates => _deltaHashUpdatesSubject.AsObservable();
-        public int GetDeltaHashCount => _hashesByTimeDescending.Count;
-        public Multihash GenesisAddress { get; }
 
         public DeltaHashProvider(IDeltaCache deltaCache, 
             ILogger logger,
             int capacity = 10_000)
         {
-            GenesisAddress = Multihash.Parse("ydsaeqfmry4m547hwbiasfmgkygthnbynk2hfurmuy4xwnilsuv3tlkt3g5zpoq6oatk5vscg5e6s5yzu4thpm6qv3tk3odvjy6ptzqcwklas");
-
             _deltaCache = deltaCache;
             _logger = logger;
             _deltaHashUpdatesSubject = new ReplaySubject<Multihash>(0);
@@ -66,19 +61,13 @@ namespace Catalyst.Core.Lib.Modules.Consensus.Deltas
             {
                 Capacity = _capacity,
             };
-            _hashesByTimeDescending.Add(Timestamp.FromDateTime(DateTime.MinValue.ToUniversalTime()), GenesisAddress);
-        }
-
-        public string ToFileAddress(Multihash hash)
-        {
-            return SimpleBase.Base32.Rfc4648.Encode(hash.ToBytes(), false).ToLowerInvariant();
         }
 
         /// <inheritdoc />
         public bool TryUpdateLatestHash(Multihash previousHash, Multihash newHash)
         {
-            var newAddress = ToFileAddress(newHash);
-            var previousAddress = ToFileAddress(previousHash);
+            var newAddress = newHash.AsBase32Address();
+            var previousAddress = previousHash.AsBase32Address();
             _logger.Debug("New hash {hash} received for previous hash {previousHash}", 
                 newAddress, previousAddress);
             var foundNewDelta = _deltaCache.TryGetConfirmedDelta(newAddress, out var newDelta);
@@ -99,16 +88,11 @@ namespace Catalyst.Core.Lib.Modules.Consensus.Deltas
 
             lock (_hashesByTimeDescending)
             {
-                try
+                _hashesByTimeDescending.Add(newDelta.TimeStamp, newHash);
+                if (_hashesByTimeDescending.Count > _capacity)
                 {
-                    if (!_hashesByTimeDescending.ContainsKey(newDelta.TimeStamp))
-                        _hashesByTimeDescending.Add(newDelta.TimeStamp, newAddress);
-                    if (_hashesByTimeDescending.Count > _capacity)
-                    {
-                        _hashesByTimeDescending.RemoveAt(_capacity);
-                    }
+                    _hashesByTimeDescending.RemoveAt(_capacity);
                 }
-                catch (Exception) {}
             }
             
             _deltaHashUpdatesSubject.OnNext(newAddress);

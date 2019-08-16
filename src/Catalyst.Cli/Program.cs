@@ -22,13 +22,8 @@
 #endregion
 
 using System;
-using System.IO;
-using System.Reflection;
-using Autofac;
 using Catalyst.Common.Config;
-using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Kernel;
-using Catalyst.Common.Util;
 
 namespace Catalyst.Cli
 {

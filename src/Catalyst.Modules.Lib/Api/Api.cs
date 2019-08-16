@@ -23,37 +23,33 @@
 
 using System;
 using System.Threading.Tasks;
-using Autofac;
 using Autofac.Extensions.DependencyInjection;
-using Catalyst.Common.Interfaces.Rpc;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 
 namespace Catalyst.Modules.Lib.Api
 {
     public interface IApi : IDisposable
     {
-        Task StartApiAsync(IContainer container);
+        Task StartApiAsync();
     }
 
     public class Api : IApi
     {
         private IWebHost _host;
-        private readonly IRpcServerSettings _rpcServerSettings;
+        private readonly string _apiBindingAddress;
 
-        public Api(IRpcServerSettings rpcServerSettings) { _rpcServerSettings = rpcServerSettings; }
+        public Api(string apiBindingAddress) { _apiBindingAddress = apiBindingAddress; }
 
-        public Task StartApiAsync(IContainer container)
+        public Task StartApiAsync()
         {
             _host = WebHost.CreateDefaultBuilder()
                .ConfigureServices(services =>
                 {
-                    services.AddSingleton<IContainerProvider>(new ContainerProvider(container));
                     services.AddAutofac();
                 })
-               .UseUrls(_rpcServerSettings.ApiBindUrl)
+               .UseUrls(_apiBindingAddress)
                .UseStartup<Startup>()
                .UseSerilog()
                .Build();

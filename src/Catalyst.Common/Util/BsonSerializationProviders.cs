@@ -31,22 +31,10 @@ namespace Catalyst.Common.Util
 {
     public static class BsonSerializationProviders
     {
-        private static bool _initialized = false;
-
         public static void Init()
         {
-            if (_initialized)
-            {
-                return;
-            }
-
-            _initialized = true;
+            BsonClassMap.RegisterClassMap<PeerIdentifier>();
             
-            if (!BsonClassMap.IsClassMapRegistered(typeof(PeerIdentifier)))
-            {
-                BsonClassMap.RegisterClassMap<PeerIdentifier>();
-            }
-
             AddSerializer<TransactionBroadcast>();
             AddSerializer<PeerId>();
             AddSerializer<STTransactionEntry>();

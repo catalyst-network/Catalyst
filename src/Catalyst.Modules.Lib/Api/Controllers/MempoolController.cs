@@ -21,15 +21,12 @@
 
 #endregion
 
-using System;
 using Catalyst.Common.Interfaces.Repository;
 using Catalyst.Common.Util;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Linq;
-using Catalyst.Protocol;
 using Google.Protobuf;
-using Serilog;
 
 namespace Catalyst.Modules.Lib.Api.Controllers
 {
@@ -50,7 +47,8 @@ namespace Catalyst.Modules.Lib.Api.Controllers
             return Ok(_mempoolRepository.GetAll().Where(t =>
                     t.Transaction.STEntries != null
                  && t.Transaction.STEntries.Count > 0
-                 && t.Transaction.STEntries.Any(stEntries => stEntries.PubKey.ToByteArray().SequenceEqual(ByteString.FromBase64(publicKey).ToByteArray())))
+                 && t.Transaction.STEntries.Any(stEntries => stEntries.PubKey.ToByteArray()
+                       .SequenceEqual(ByteString.FromBase64(publicKey).ToByteArray())))
                .Sum(t => t.Transaction.STEntries.Sum(entries => entries.Amount)));
         }
 
@@ -60,7 +58,9 @@ namespace Catalyst.Modules.Lib.Api.Controllers
             var result = _mempoolRepository.GetAll().Where(t =>
                 t.Transaction.STEntries != null
              && t.Transaction.STEntries.Count > 0
-             && t.Transaction.STEntries.Any(stEntries => stEntries.PubKey.ToByteArray().SequenceEqual(ByteString.FromBase64(publicKey).ToByteArray())));
+             && t.Transaction.STEntries.Any(stEntries => stEntries.PubKey.ToByteArray()
+                   .SequenceEqual(ByteString.FromBase64(publicKey).ToByteArray())));
+
             return Json(result, new JsonSerializerSettings
             {
                 Converters = JsonConverterProviders.Converters

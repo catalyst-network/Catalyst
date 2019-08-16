@@ -21,7 +21,6 @@
 
 #endregion
 
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -66,17 +65,17 @@ namespace Catalyst.Core.Lib.IntegrationTests
 
         public IConsensus Consensus => _catalystNode.Consensus;
 
-        public async Task RunAsync(CancellationToken cancellationSourceToken, IContainer serviceProvider)
+        public async Task RunAsync(CancellationToken cancellationSourceToken)
         {
             if (_catalystNode == null)
             {
                 BuildNode();
             }
                     
-            await _catalystNode.RunAsync(cancellationSourceToken, serviceProvider);
+            await _catalystNode.RunAsync(cancellationSourceToken);
         }
         
-        public async Task StartSockets(IContainer serviceProvider) => await _catalystNode.StartSockets(serviceProvider);
+        public async Task StartSockets() => await _catalystNode.StartSockets();
 
         public void BuildNode()
         {

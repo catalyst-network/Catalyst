@@ -34,7 +34,7 @@ namespace Catalyst.Common.Config
     public class ConfigCopier : IConfigCopier
     {
         /// <inheritdoc />
-        public void RunConfigStartUp(string dataDir, Types.NetworkTypes networkTypesParam = null, string sourceFolder = null, bool overwrite = false, int index = 0)
+        public void RunConfigStartUp(string dataDir, Types.NetworkTypes networkTypesParam = null, string sourceFolder = null, bool overwrite = false)
         {
             Guard.Argument(dataDir, nameof(dataDir)).NotNull().NotEmpty().NotWhiteSpace();
 

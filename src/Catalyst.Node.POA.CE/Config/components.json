@@ -184,7 +184,7 @@
         },
 
         {
-            "type": "Catalyst.Core.Lib.Rpc.Authentication.NoAuthenticationStrategy",
+            "type": "Catalyst.Core.Lib.Rpc.Authentication.RepositoryAuthenticationStrategy",
             "services": [
                 {
                     "type": "Catalyst.Common.Interfaces.Rpc.Authentication.IAuthenticationStrategy, Catalyst.Common"
@@ -192,7 +192,7 @@
             ]
         },
         {
-            "type": "Catalyst.Common.Repository.MongoDbRepository`1[[Catalyst.Common.P2P.Models.Peer, Catalyst.Common]], Catalyst.Common",
+            "type": "SharpRepository.InMemoryRepository.InMemoryRepository`2[[Catalyst.Common.P2P.Models.Peer, Catalyst.Common], [System.String, mscorlib]], SharpRepository.InMemoryRepository",
             "services": [
                 {
                     "type": "SharpRepository.Repository.IRepository`2[[Catalyst.Common.P2P.Models.Peer, Catalyst.Common], [System.String, mscorlib]], SharpRepository.Repository"
@@ -321,7 +321,7 @@
                 }
             ],
             "parameters": {
-                "configDataDir": "C:\\Users\\matthieu\\.catalyst"
+                "configDataDir": "Data_Directory"
             }
         },
         {

@@ -28,7 +28,6 @@ using Catalyst.Common.Interfaces.Modules.Consensus.Deltas;
 using Catalyst.Protocol.Deltas;
 using Google.Protobuf.WellKnownTypes;
 using Microsoft.Extensions.Caching.Memory;
-using Multiformats.Hash;
 using Serilog;
 
 namespace Catalyst.Core.Lib.Modules.Consensus.Deltas
@@ -41,8 +40,6 @@ namespace Catalyst.Core.Lib.Modules.Consensus.Deltas
         private readonly IDeltaDfsReader _dfsReader;
         private readonly ILogger _logger;
         private readonly Func<MemoryCacheEntryOptions> _entryOptions;
-        private string _genesisHash;
-        private Delta _genesisDelta;
 
         public static string GetLocalDeltaCacheKey(CandidateDeltaBroadcast candidate) =>
             nameof(DeltaCache) + "-LocalDelta-" + candidate.Hash.AsBase32Address();
@@ -52,10 +49,12 @@ namespace Catalyst.Core.Lib.Modules.Consensus.Deltas
             IDeltaCacheChangeTokenProvider changeTokenProvider,
             ILogger logger)
         {
-            _genesisHash = "ydsaeqfmry4m547hwbiasfmgkygthnbynk2hfurmuy4xwnilsuv3tlkt3g5zpoq6oatk5vscg5e6s5yzu4thpm6qv3tk3odvjy6ptzqcwklas";
-            _genesisDelta = new Delta {TimeStamp = Timestamp.FromDateTime(DateTime.MinValue.ToUniversalTime())};
+            var genesisHash = "ydsaeqfmry4m547hwbiasfmgkygthnbynk2hfurmuy4xwnilsuv3tlkt3g5zpoq6oatk5vscg5e6s5yzu4thpm6qv3tk3odvjy6ptzqcwklas";
+            var genesisDelta = new Delta {TimeStamp = Timestamp.FromDateTime(DateTime.MinValue.ToUniversalTime())};
 
             _memoryCache = memoryCache;
+            _memoryCache.Set(genesisHash, genesisDelta);
+
             _dfsReader = dfsReader;
             _logger = logger;
             _entryOptions = () => new MemoryCacheEntryOptions()
@@ -77,12 +76,6 @@ namespace Catalyst.Core.Lib.Modules.Consensus.Deltas
                 return true;
             }
 
-            if (hash.Equals(_genesisHash))
-            {
-                delta = _genesisDelta;
-                return true;
-            }
-
             if (!_dfsReader.TryReadDeltaFromDfs(hash, out delta, CancellationToken.None))
             {
                 return false;
@@ -94,7 +87,6 @@ namespace Catalyst.Core.Lib.Modules.Consensus.Deltas
 
         public bool TryGetLocalDelta(CandidateDeltaBroadcast candidate, out Delta delta)
         {
-            _logger.Verbose("Trying to retrieve full details of candidate delta {candidate}", candidate);
             var tryGetLocalDelta = _memoryCache.TryGetValue(GetLocalDeltaCacheKey(candidate), out delta);
             _logger.Verbose("Retrieved full details {delta}", delta?.ToString() ?? "nothing");
             return tryGetLocalDelta;

@@ -31,7 +31,7 @@ namespace Catalyst.Common.Extensions
     {
         public static string AsBase32Address(this Multihash multihash)
         {
-            var result = SimpleBase.Base32.Rfc4648.Encode(multihash.ToBytes(), false).ToLowerInvariant();
+            var result = SimpleBase.Base32.Crockford.Encode(multihash.ToBytes(), false).ToLowerInvariant();
             return result;
         }
     }

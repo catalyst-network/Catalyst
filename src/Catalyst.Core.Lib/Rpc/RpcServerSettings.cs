@@ -49,11 +49,9 @@ namespace Catalyst.Core.Lib.Rpc
             Port = int.Parse(section.GetSection("Port").Value);
             PfxFileName = section.GetSection("PfxFileName").Value;
             BindAddress = IPAddress.Parse(section.GetSection("BindAddress").Value);
-            ApiBindUrl = section.GetSection("ApiBinding").Value;
         }
 
         public IConfigurationRoot NodeConfig { get; }
-        public string ApiBindUrl { get; }
         public int Port { get; }
         public IPAddress BindAddress { get; }
         public string PfxFileName { get; }

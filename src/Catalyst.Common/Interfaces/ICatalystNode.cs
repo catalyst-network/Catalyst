@@ -21,7 +21,6 @@
 
 #endregion
 
-using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Autofac;
@@ -34,8 +33,8 @@ namespace Catalyst.Common.Interfaces
         /// <inheritdoc cref="IConsensus"/>
         IConsensus Consensus { get; }
 
-        Task RunAsync(CancellationToken cancellationSourceToken, IContainer serviceProvider);
+        Task RunAsync(CancellationToken cancellationSourceToken);
 
-        Task StartSockets(IContainer serviceProvider);
+        Task StartSockets();
     }
 }

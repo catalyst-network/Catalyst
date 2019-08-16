@@ -30,9 +30,6 @@ namespace Catalyst.Node.POA.CE
 {
     internal class Options
     {
-        [Option("index", HelpText = "An index to point to the correct config file for that node.")]
-        public int Index { get; set; }
-
         [Option("ipfs-password", HelpText = "The password for IPFS.  Defaults to prompting for the password.")]
         public string IpfsPassword { get; set; }
         
@@ -91,12 +88,12 @@ namespace Catalyst.Node.POA.CE
             {
                 Kernel
                    .WithDataDirectory()
-                   .WithNetworksConfigFile(options.Index)
+                   .WithNetworksConfigFile()
                    .WithComponentsConfigFile()
                    .WithSerilogConfigFile()
                    .WithConfigCopier()
                    .WithPersistenceConfiguration()
-                   .BuildKernel(options.OverwriteConfig, options.Index)
+                   .BuildKernel(options.OverwriteConfig)
                    .WithPassword(PasswordRegistryTypes.DefaultNodePassword, options.NodePassword)
                    .WithPassword(PasswordRegistryTypes.IpfsPassword, options.IpfsPassword)
                    .WithPassword(PasswordRegistryTypes.CertificatePassword, options.SslCertPassword)

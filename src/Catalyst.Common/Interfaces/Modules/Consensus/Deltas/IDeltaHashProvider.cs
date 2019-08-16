@@ -60,12 +60,5 @@ namespace Catalyst.Common.Interfaces.Modules.Consensus.Deltas
         /// Subscribe to these updates to get live notifications for the hashes of new deltas as they get published on the Dfs.
         /// </summary>
         IObservable<Multihash> DeltaHashUpdates { get; }
-
-        int GetDeltaHashCount { get; }
-
-        /// <summary>
-        /// Dfs address of the first ever state of the ledger.
-        /// </summary>
-        Multihash GenesisAddress { get; }
     }
 }
