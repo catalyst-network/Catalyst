@@ -58,5 +58,10 @@ namespace Catalyst.Common.Interfaces.Modules.Consensus.Deltas
         /// <param name="localCandidate">The candidate produced locally (<see cref="IDeltaBuilder.BuildCandidateDelta(byte[])"/>>)</param>
         /// <param name="delta">The full content of the produced delta.</param>
         void AddLocalDelta(CandidateDeltaBroadcast localCandidate, Delta delta);
+
+        /// <summary>
+        /// Hash / Dfs address of the first delta ever generated.
+        /// </summary>
+        string GenesisHash { get; }
     }
 }

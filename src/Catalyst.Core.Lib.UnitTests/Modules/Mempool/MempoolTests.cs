@@ -152,9 +152,9 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Mempool
         [Fact]
         public void Clear_should_delete_all_transactions()
         {
-            var keys = Enumerable.Range(0, 10).Select(i => i.ToString());
-            _memPool.Delete(keys.ToArray());
-            _transactionStore.Received(10).Delete(Arg.Any<Expression<Func<MempoolDocument, bool>>>());
+            var keys = Enumerable.Range(0, 10).Select(i => i.ToString()).ToArray();
+            _memPool.Delete(keys);
+            _transactionStore.Received(1).Delete(Arg.Is<string[]>(s => s.SequenceEqual(keys)));
         }
 
         [Fact]

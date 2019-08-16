@@ -30,6 +30,7 @@ using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Modules.Consensus.Deltas;
 using Catalyst.Common.Util;
 using Google.Protobuf.WellKnownTypes;
+using Multiformats.Base;
 using Multiformats.Hash;
 using Nito.Comparers;
 using Serilog;
@@ -61,6 +62,8 @@ namespace Catalyst.Core.Lib.Modules.Consensus.Deltas
             {
                 Capacity = _capacity,
             };
+            _hashesByTimeDescending.Add(Timestamp.FromDateTime(DateTime.MinValue.ToUniversalTime()),
+                Multihash.Parse(_deltaCache.GenesisHash, MultibaseEncoding.Base32HexLower));
         }
 
         /// <inheritdoc />

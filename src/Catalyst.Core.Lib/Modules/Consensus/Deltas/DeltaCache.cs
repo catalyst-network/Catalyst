@@ -40,6 +40,7 @@ namespace Catalyst.Core.Lib.Modules.Consensus.Deltas
         private readonly IDeltaDfsReader _dfsReader;
         private readonly ILogger _logger;
         private readonly Func<MemoryCacheEntryOptions> _entryOptions;
+        public string GenesisHash => "ydsaeqfmry4m547hwbiasfmgkygthnbynk2hfurmuy4xwnilsuv3tlkt3g5zpoq6oatk5vscg5e6s5yzu4thpm6qv3tk3odvjy6ptzqcwklas";
 
         public static string GetLocalDeltaCacheKey(CandidateDeltaBroadcast candidate) =>
             nameof(DeltaCache) + "-LocalDelta-" + candidate.Hash.AsBase32Address();
@@ -49,11 +50,10 @@ namespace Catalyst.Core.Lib.Modules.Consensus.Deltas
             IDeltaCacheChangeTokenProvider changeTokenProvider,
             ILogger logger)
         {
-            var genesisHash = "ydsaeqfmry4m547hwbiasfmgkygthnbynk2hfurmuy4xwnilsuv3tlkt3g5zpoq6oatk5vscg5e6s5yzu4thpm6qv3tk3odvjy6ptzqcwklas";
             var genesisDelta = new Delta {TimeStamp = Timestamp.FromDateTime(DateTime.MinValue.ToUniversalTime())};
 
             _memoryCache = memoryCache;
-            _memoryCache.Set(genesisHash, genesisDelta);
+            _memoryCache.Set(GenesisHash, genesisDelta);
 
             _dfsReader = dfsReader;
             _logger = logger;

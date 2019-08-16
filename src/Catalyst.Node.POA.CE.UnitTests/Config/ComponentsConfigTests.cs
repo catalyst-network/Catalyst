@@ -47,7 +47,6 @@ namespace Catalyst.Node.POA.CE.UnitTests.Config
     public sealed class ComponentsConfigTests
     {
         private readonly string _componentsConfig;
-        private const string PeerMiniConfigFile = "peerConfigSection.json";
 
         public ComponentsConfigTests()
         {

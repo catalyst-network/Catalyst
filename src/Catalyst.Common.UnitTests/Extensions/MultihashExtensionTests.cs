@@ -21,19 +21,26 @@
 
 #endregion
 
-using System.Linq;
+using Catalyst.Common.Extensions;
+using Catalyst.Common.Util;
+using FluentAssertions;
 using Multiformats.Base;
 using Multiformats.Hash;
-using Multiformats.Hash.Algorithms;
+using NSubstitute;
+using Xunit;
 
-namespace Catalyst.Common.Extensions
+namespace Catalyst.Common.UnitTests.Extensions
 {
-    public static class MultihashExtensions
+    public class MultihashExtensionTests
     {
-        public static string AsBase32Address(this Multihash multihash)
+        [Fact]
+        public void MyTestedMethod_Should_Be_Producing_This_Result_When_Some_Conditions_Are_Met()
         {
-            var result = SimpleBase.Base32.Rfc4648.Encode(multihash.ToBytes().TakeLast(multihash.Length).ToArray(), false).ToLowerInvariant();
-            return result;
+            var bytes = ByteUtil.GenerateRandomByteArray(345);
+            var hash = Multihash.Sum(HashType.BLAKE2B_256, bytes);
+            var address = hash.AsBase32Address();
+            Multihash.TryParse(address, MultibaseEncoding.Base32Lower, out var mh).Should().BeTrue();
         }
     }
 }
+

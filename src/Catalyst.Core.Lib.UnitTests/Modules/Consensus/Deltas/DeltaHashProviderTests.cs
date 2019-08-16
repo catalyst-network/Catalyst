@@ -26,6 +26,7 @@ using System.Linq;
 using System.Reflection;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Modules.Consensus.Deltas;
+using Catalyst.Common.Util;
 using Catalyst.Core.Lib.Modules.Consensus.Deltas;
 using Catalyst.Protocol.Deltas;
 using Catalyst.TestUtils;
@@ -54,14 +55,8 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Consensus.Deltas
                .WriteTo.TestOutput(output)
                .CreateLogger()
                .ForContext(MethodBase.GetCurrentMethod().DeclaringType);
-        }
 
-        [Fact(Skip = "Just run it if you need as a one off")]
-        public void GenerateGenesis()
-        {
-            var hash = "some singularity before the big bang, even before the creation of Texas"
-               .ComputeUtf8Multihash(new BLAKE2B_256()).ToString(Multiformats.Base.MultibaseEncoding.Base64Url);
-            Output.WriteLine(hash);
+            _deltaCache.GenesisHash.Returns("27d6t7vp3qfsqptcknq560zbtgfp31cd19b4f8d7qzg8kfwj3fmg");
         }
 
         [Fact]
@@ -151,7 +146,7 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Consensus.Deltas
 
         private Multihash GetHash(int i)
         {
-            var hash = BitConverter.GetBytes(i).ComputeMultihash(new ID());
+            var hash = BitConverter.GetBytes(i).ComputeMultihash(new BLAKE2B_256());
             return hash;
         }
 
@@ -161,7 +156,7 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Consensus.Deltas
                .Select(i =>
                 {
                     var delta = DeltaHelper.GetDelta(
-                        previousDeltaHash: GetHash(i - 1),
+                        previousDeltaHash: GetHash(i - 1).AsBase32Address(),
                         timestamp: GetDateTimeForIndex(i));
                     return delta;
                 })
