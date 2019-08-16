@@ -82,7 +82,6 @@ namespace Catalyst.Core.Lib.Modules.Mempool
 
         public void Delete(params string[] transactionSignatures)
         {
-            _logger.Debug("Deleting transactions from the mempool.");
             var cleared = 0;
 
             foreach (var key in transactionSignatures)

@@ -55,17 +55,13 @@ namespace Catalyst.Core.Lib.Modules.Ledger
             _mempool = mempool;
             _logger = logger;
 
-            _deltaUpdatesSubscription = deltaHashProvider.DeltaHashUpdates
-               .SubscribeOn(NewThreadScheduler.Default)
-               .Subscribe(FlushTransactionsFromDelta);
+            _deltaUpdatesSubscription = deltaHashProvider.DeltaHashUpdates.Subscribe(FlushTransactionsFromDelta);
         }
 
         public void FlushTransactionsFromDelta(Multihash confirmedDelta)
         {
-            _logger.Debug("Trying to flush the mempool");
             var transactionsToFlush = _mempool.GetMemPoolContent().Select(d => d.DocumentId);
             _mempool.Delete(transactionsToFlush.ToArray());
-            _logger.Debug("Flushed the mempool");
         }
 
         public bool SaveAccountState(IAccount account)

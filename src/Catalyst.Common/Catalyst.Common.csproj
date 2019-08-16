@@ -18,7 +18,7 @@
         <PackageReference Include="DotNetty.Codecs.Protobuf" Version="0.6.0" />
         <PackageReference Include="GraphQL" Version="2.4.0" />
         <PackageReference Include="Ipfs.Api" Version="0.23.6" />
-        <PackageReference Include="Ipfs.Core" Version="0.52.2" />
+        <PackageReference Include="Ipfs.Core" Version="0.53.1" />
         <PackageReference Include="Ipfs.Engine" Version="0.11.3" />
         <PackageReference Include="Ipfs.HttpGateway" Version="0.4.0" />
         <PackageReference Include="Multiformats.Hash" Version="1.5.0" />

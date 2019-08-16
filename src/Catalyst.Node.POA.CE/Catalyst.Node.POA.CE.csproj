@@ -27,8 +27,8 @@
         <PackageReference Include="DotNetty.Codecs.Protobuf" Version="0.6.0" />
         <PackageReference Include="DotNetty.Common" Version="0.6.0" />
         <PackageReference Include="DotNetty.Handlers" Version="0.6.0" />
-        <PackageReference Include="Ipfs.Core" Version="0.52.2" />
-        <PackageReference Include="Ipfs.Engine" Version="0.11.3" />
+        <PackageReference Include="Ipfs.Core" Version="0.53.1" />
+        <PackageReference Include="Ipfs.Engine" Version="0.12.0" />
         <PackageReference Include="Ipfs.HttpGateway" Version="0.4.0" />
         <PackageReference Include="CommandLineParser" Version="2.5.0" />
         <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="2.2.0" />
@@ -62,5 +62,10 @@
         <None Update="Config\Modules\*.json">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
+    </ItemGroup>
+    <ItemGroup>
+      <None Update="Config\AuthCredentials.xml">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
     </ItemGroup>
 </Project>

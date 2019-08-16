@@ -73,6 +73,9 @@ namespace Catalyst.Common.Config
         // <summary> Registration of message handlers for autofac </summary>
         public static string MessageHandlersConfigFile => "messageHandlers.json";
 
+        /// <summary>The allowed RPC node operators default XML configuration.</summary>
+        public static string RpcAuthenticationCredentialsFile => "AuthCredentials.xml";
+
         /// <summary>The expiry minutes of initialization </summary>
         public static int FileTransferExpirySeconds => 60;
 
