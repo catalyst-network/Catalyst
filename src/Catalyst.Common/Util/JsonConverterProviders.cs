@@ -29,7 +29,7 @@ namespace Catalyst.Common.Util
 {
     public static class JsonConverterProviders
     {
-        public static readonly IList<JsonConverter> Converters = new List<JsonConverter>
+        public static readonly IReadOnlyList<JsonConverter> Converters = new List<JsonConverter>
         {
             new JsonProtoObjectConverter<TransactionBroadcast>(),
             new IpEndPointConverter(),
