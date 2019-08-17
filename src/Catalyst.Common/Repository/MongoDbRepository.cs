@@ -21,7 +21,6 @@
 
 #endregion
 
-using Catalyst.Common.Util;
 using SharpRepository.MongoDbRepository;
 using SharpRepository.Repository.Caching;
 

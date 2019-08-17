@@ -21,6 +21,7 @@
 
 #endregion
 
+using System.Collections.Generic;
 using Catalyst.Protocol.Transaction;
 using Newtonsoft.Json;
 
@@ -28,7 +29,7 @@ namespace Catalyst.Common.Util
 {
     public static class JsonConverterProviders
     {
-        public static readonly JsonConverter[] Converters =
+        public static readonly IList<JsonConverter> Converters = new List<JsonConverter>
         {
             new JsonProtoObjectConverter<TransactionBroadcast>(),
             new IpEndPointConverter(),
@@ -36,6 +37,6 @@ namespace Catalyst.Common.Util
             new JsonProtoObjectConverter<STTransactionEntry>(),
             new JsonProtoObjectConverter<CFTransactionEntry>(),
             new JsonProtoObjectConverter<EntryRangeProof>()
-        };
+        }.AsReadOnly();
     }
 }
