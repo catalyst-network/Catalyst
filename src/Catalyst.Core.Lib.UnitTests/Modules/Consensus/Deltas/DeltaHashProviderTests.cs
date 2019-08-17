@@ -31,6 +31,7 @@ using Catalyst.Core.Lib.Modules.Consensus.Deltas;
 using Catalyst.Protocol.Deltas;
 using Catalyst.TestUtils;
 using FluentAssertions;
+using Google.Protobuf;
 using Multiformats.Hash;
 using Multiformats.Hash.Algorithms;
 using NSubstitute;
@@ -56,7 +57,17 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Consensus.Deltas
                .CreateLogger()
                .ForContext(MethodBase.GetCurrentMethod().DeclaringType);
 
-            _deltaCache.GenesisHash.Returns("27d6t7vp3qfsqptcknq560zbtgfp31cd19b4f8d7qzg8kfwj3fmg");
+            _deltaCache.GenesisAddress.Returns(DeltaCache.GenesisHash.AsBase32Address());
+        }
+
+        [Fact]
+        public void Generate_Genesis_Hash()
+        {
+            var emptyDelta = new Delta();
+            var hash = emptyDelta.ToByteArray().ComputeMultihash(new BLAKE2B_256());
+            var dfsAddress = hash.AsBase32Address();
+
+            Output.WriteLine(dfsAddress);
         }
 
         [Fact]

@@ -21,10 +21,7 @@
 
 #endregion
 
-using System.Linq;
-using Multiformats.Base;
 using Multiformats.Hash;
-using Multiformats.Hash.Algorithms;
 
 namespace Catalyst.Common.Extensions
 {
@@ -32,7 +29,7 @@ namespace Catalyst.Common.Extensions
     {
         public static string AsBase32Address(this Multihash multihash)
         {
-            var result = SimpleBase.Base32.Rfc4648.Encode(multihash.ToBytes().TakeLast(multihash.Length).ToArray(), false).ToLowerInvariant();
+            var result = SimpleBase.Base32.Rfc4648.Encode(multihash.ToBytes(), false).ToLowerInvariant();
             return result;
         }
     }

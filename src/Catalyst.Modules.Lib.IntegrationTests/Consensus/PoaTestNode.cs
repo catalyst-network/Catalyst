@@ -89,8 +89,8 @@ namespace Catalyst.Modules.Lib.IntegrationTests.Consensus
             _nodePeerId = new PeerIdentifier(nodeSettings);
 
             var baseDfsFolder = Path.Combine(parentTestFileSystem.GetCatalystDataDir().FullName, "dfs");
-            var blake2B512HashingAlgorithm = HashingAlgorithm.All.First(x => x.Name == "blake2b-512");
-            _dfs = new FileSystemDfs(parentTestFileSystem, blake2B512HashingAlgorithm, baseDfsFolder);
+            var hashingAlgorithm = HashingAlgorithm.All.First(x => x.Name == "blake2b-256");
+            _dfs = new FileSystemDfs(parentTestFileSystem, hashingAlgorithm, baseDfsFolder);
 
             _mempool = new AutoFillingMempool();
             _peerRepository = Substitute.For<IPeerRepository>();

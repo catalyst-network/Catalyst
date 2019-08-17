@@ -23,6 +23,7 @@
 
 using System.IO;
 using System.Text;
+using Multiformats.Base;
 using Multiformats.Hash;
 using Multiformats.Hash.Algorithms;
 
@@ -43,6 +44,13 @@ namespace Catalyst.Common.Extensions
         public static Multihash ComputeUtf8Multihash(this string content, IMultihashAlgorithm algorithm)
         {
             var multihash = Encoding.UTF8.GetBytes(content).ComputeMultihash(algorithm);
+            return multihash;
+        }
+
+        public static Multihash FromBase32Address(this string address)
+        {
+            var success = Multihash.TryParse(address, MultibaseEncoding.Base32Lower, out var multihash);
+            if (!success) throw new InvalidDataException($"{address} is not valid");
             return multihash;
         }
     }

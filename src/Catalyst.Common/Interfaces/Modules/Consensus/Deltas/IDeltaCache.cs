@@ -60,8 +60,8 @@ namespace Catalyst.Common.Interfaces.Modules.Consensus.Deltas
         void AddLocalDelta(CandidateDeltaBroadcast localCandidate, Delta delta);
 
         /// <summary>
-        /// Hash / Dfs address of the first delta ever generated.
+        /// Dfs address of the content for the very first delta.
         /// </summary>
-        string GenesisHash { get; }
+        string GenesisAddress { get; }
     }
 }

@@ -23,11 +23,15 @@
 
 using System;
 using System.Threading;
+using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Modules.Consensus.Deltas;
 using Catalyst.Protocol.Deltas;
+using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
 using Microsoft.Extensions.Caching.Memory;
+using Multiformats.Hash;
+using Multiformats.Hash.Algorithms;
 using Serilog;
 
 namespace Catalyst.Core.Lib.Modules.Consensus.Deltas
@@ -40,7 +44,11 @@ namespace Catalyst.Core.Lib.Modules.Consensus.Deltas
         private readonly IDeltaDfsReader _dfsReader;
         private readonly ILogger _logger;
         private readonly Func<MemoryCacheEntryOptions> _entryOptions;
-        public string GenesisHash => "ydsaeqfmry4m547hwbiasfmgkygthnbynk2hfurmuy4xwnilsuv3tlkt3g5zpoq6oatk5vscg5e6s5yzu4thpm6qv3tk3odvjy6ptzqcwklas";
+
+        public static readonly Multihash GenesisHash 
+            = new Delta().ToByteArray().ComputeMultihash(Constants.HashAlgorithm);
+
+        public string GenesisAddress => GenesisHash.AsBase32Address();
 
         public static string GetLocalDeltaCacheKey(CandidateDeltaBroadcast candidate) =>
             nameof(DeltaCache) + "-LocalDelta-" + candidate.Hash.AsBase32Address();

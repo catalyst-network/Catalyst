@@ -21,12 +21,12 @@
 
 #endregion
 
+using System;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Util;
 using FluentAssertions;
 using Multiformats.Base;
 using Multiformats.Hash;
-using NSubstitute;
 using Xunit;
 
 namespace Catalyst.Common.UnitTests.Extensions
@@ -34,12 +34,26 @@ namespace Catalyst.Common.UnitTests.Extensions
     public class MultihashExtensionTests
     {
         [Fact]
-        public void MyTestedMethod_Should_Be_Producing_This_Result_When_Some_Conditions_Are_Met()
+        public void AsBase32Address_Should_Produce_Parsable_Addresses()
         {
-            var bytes = ByteUtil.GenerateRandomByteArray(345);
+            var random = new Random();
+            
+            for (var i = 0; i <= 50; i++)
+            {
+                EnsureBytesRandomBytesCanBeHashedAndReadBack(random.Next(10, 2000));
+            }
+        }
+
+        private static void EnsureBytesRandomBytesCanBeHashedAndReadBack(int length)
+        {
+            var bytes = ByteUtil.GenerateRandomByteArray(length);
             var hash = Multihash.Sum(HashType.BLAKE2B_256, bytes);
             var address = hash.AsBase32Address();
-            Multihash.TryParse(address, MultibaseEncoding.Base32Lower, out var mh).Should().BeTrue();
+
+            Multihash.TryParse(address, MultibaseEncoding.Base32Lower, out var parsedHash)
+               .Should().BeTrue();
+
+            parsedHash.Verify(bytes).Should().BeTrue();
         }
     }
 }

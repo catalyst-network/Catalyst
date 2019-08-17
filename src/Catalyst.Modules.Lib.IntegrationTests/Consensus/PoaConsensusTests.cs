@@ -94,7 +94,7 @@ namespace Catalyst.Modules.Lib.IntegrationTests.Consensus
             
             await Task.Delay(Debugger.IsAttached
                     ? TimeSpan.FromHours(3)
-                    : CycleConfiguration.Default.CycleDuration.Multiply(1.1))
+                    : CycleConfiguration.Default.CycleDuration.Multiply(1.2))
                .ConfigureAwait(false);
 
             var dfsDir = Path.Combine(FileSystem.GetCatalystDataDir().FullName, "dfs");

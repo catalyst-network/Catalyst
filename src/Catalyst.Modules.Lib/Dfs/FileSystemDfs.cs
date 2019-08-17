@@ -57,10 +57,10 @@ namespace Catalyst.Modules.Lib.Dfs
             HashingAlgorithm hashingAlgorithm = null,
             string baseFolder = null)
         {
-            var hashingAlgo = hashingAlgorithm ?? HashingAlgorithm.All.First(x => x.Name == "blake2b-512");
+            var hashingAlgo = hashingAlgorithm ?? HashingAlgorithm.All.First(x => x.Name == "blake2b-256");
             Guard.Argument(hashingAlgo, nameof(hashingAlgo))
-               .Require(h => h.DigestSize <= 191, h =>
-                    "The hashing algorithm needs to produce file names smaller than 255 base 64 characters or 191 bytes" +
+               .Require(h => h.DigestSize <= 159, h =>
+                    "The hashing algorithm needs to produce file names smaller than 255 base 32 characters or 160 bytes" +
                     $"but the default length for {hashingAlgo.GetType().Name} is {h.DigestSize}.");
 
             var dfsBaseFolder = baseFolder ?? Path.Combine(fileSystem.GetCatalystDataDir().FullName,
