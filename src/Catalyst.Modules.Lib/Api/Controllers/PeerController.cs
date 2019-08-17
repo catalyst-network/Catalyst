@@ -21,7 +21,7 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.P2P;
+using System.Linq;
 using Catalyst.Common.Interfaces.Repository;
 using Catalyst.Common.Util;
 using Microsoft.AspNetCore.Mvc;
@@ -46,7 +46,7 @@ namespace Catalyst.Modules.Lib.Api.Controllers
         {
             return Json(_peerRepository.GetAll(), new JsonSerializerSettings
             {
-                Converters = JsonConverterProviders.Converters
+                Converters = JsonConverterProviders.Converters.ToList()
             });
         }
     }

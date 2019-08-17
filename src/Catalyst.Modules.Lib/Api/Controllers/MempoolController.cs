@@ -63,7 +63,7 @@ namespace Catalyst.Modules.Lib.Api.Controllers
 
             return Json(result, new JsonSerializerSettings
             {
-                Converters = JsonConverterProviders.Converters
+                Converters = JsonConverterProviders.Converters.ToList()
             });
         }
 
@@ -72,7 +72,7 @@ namespace Catalyst.Modules.Lib.Api.Controllers
         {
             return Json(_mempoolRepository.GetAll(), new JsonSerializerSettings
             {
-                Converters = JsonConverterProviders.Converters
+                Converters = JsonConverterProviders.Converters.ToList()
             });
         }
     }
