@@ -34,7 +34,7 @@ namespace Catalyst.Simulator
             RpcClient = rpcClient;
         }
 
-        public IPeerIdentifier PeerIdentifier { private set; get; }
-        public IRpcClient RpcClient { private set; get; }
+        public IPeerIdentifier PeerIdentifier { get; }
+        public IRpcClient RpcClient { get; }
     }
 }
