@@ -58,11 +58,13 @@ namespace Catalyst.Core.Lib.Modules.Mempool
             return memPoolContent;
         }
 
+        /// <inheritdoc />
         public bool ContainsDocument(TransactionSignature key)
         {
             return _transactionStore.TryGet(key.ToByteString().ToBase64(), out _);
         }
 
+        /// <inheritdoc />
         public List<byte[]> GetMemPoolContentEncoded()
         {
             var memPoolContent = GetMemPoolContent();
@@ -80,6 +82,7 @@ namespace Catalyst.Core.Lib.Modules.Mempool
             return found;
         }
 
+        /// <inheritdoc />
         public void Delete(params string[] transactionSignatures)
         {
             try
