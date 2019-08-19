@@ -142,7 +142,7 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Consensus.Deltas
                 _previousDeltaHash,
                 producerId: _producerIds.First().PeerId);
 
-            var candidateHashAsString = candidate.Hash.AsMultihashBase64UrlString();
+            var candidateHashAsString = candidate.Hash.AsBase32Address();
 
             var addedEntry = Substitute.For<ICacheEntry>();
             _cache.CreateEntry(Arg.Is<string>(s => s.EndsWith(candidateHashAsString)))
@@ -172,7 +172,7 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Consensus.Deltas
                 previousDeltaHash: _previousDeltaHash,
                 score: initialScore);
 
-            var candidateHashAsString = cacheCandidate.Candidate.Hash.AsMultihashBase64UrlString();
+            var candidateHashAsString = cacheCandidate.Candidate.Hash.AsBase32Address();
 
             _cache.TryGetValue(Arg.Any<string>(), out Arg.Any<object>()).Returns(ci =>
             {

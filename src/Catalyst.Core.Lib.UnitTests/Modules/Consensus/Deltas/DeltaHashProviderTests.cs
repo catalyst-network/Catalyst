@@ -26,10 +26,12 @@ using System.Linq;
 using System.Reflection;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Modules.Consensus.Deltas;
+using Catalyst.Common.Util;
 using Catalyst.Core.Lib.Modules.Consensus.Deltas;
 using Catalyst.Protocol.Deltas;
 using Catalyst.TestUtils;
 using FluentAssertions;
+using Google.Protobuf;
 using Multiformats.Hash;
 using Multiformats.Hash.Algorithms;
 using NSubstitute;
@@ -54,14 +56,18 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Consensus.Deltas
                .WriteTo.TestOutput(output)
                .CreateLogger()
                .ForContext(MethodBase.GetCurrentMethod().DeclaringType);
+
+            _deltaCache.GenesisAddress.Returns(DeltaCache.GenesisHash.AsBase32Address());
         }
 
-        [Fact(Skip = "Just run it if you need as a one off")]
-        public void GenerateGenesis()
+        [Fact]
+        public void Generate_Genesis_Hash()
         {
-            var hash = "some singularity before the big bang, even before the creation of Texas"
-               .ComputeUtf8Multihash(new BLAKE2B_256()).ToString(Multiformats.Base.MultibaseEncoding.Base64Url);
-            Output.WriteLine(hash);
+            var emptyDelta = new Delta();
+            var hash = emptyDelta.ToByteArray().ComputeMultihash(new BLAKE2B_256());
+            var dfsAddress = hash.AsBase32Address();
+
+            Output.WriteLine(dfsAddress);
         }
 
         [Fact]
@@ -151,7 +157,7 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Consensus.Deltas
 
         private Multihash GetHash(int i)
         {
-            var hash = BitConverter.GetBytes(i).ComputeMultihash(new ID());
+            var hash = BitConverter.GetBytes(i).ComputeMultihash(new BLAKE2B_256());
             return hash;
         }
 
@@ -161,7 +167,7 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Consensus.Deltas
                .Select(i =>
                 {
                     var delta = DeltaHelper.GetDelta(
-                        previousDeltaHash: GetHash(i - 1),
+                        previousDeltaHash: GetHash(i - 1).AsBase32Address(),
                         timestamp: GetDateTimeForIndex(i));
                     return delta;
                 })
@@ -169,7 +175,7 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Consensus.Deltas
 
             Enumerable.Range(0, deltaCount).ToList().ForEach(i =>
             {
-                ExpectTryGetDelta(GetHash(i).AsBase64UrlString(), deltas[i]);
+                ExpectTryGetDelta(GetHash(i).AsBase32Address(), deltas[i]);
             });
         }
 

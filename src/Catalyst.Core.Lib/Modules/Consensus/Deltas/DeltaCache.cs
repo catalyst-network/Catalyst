@@ -23,10 +23,15 @@
 
 using System;
 using System.Threading;
+using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Modules.Consensus.Deltas;
 using Catalyst.Protocol.Deltas;
+using Google.Protobuf;
+using Google.Protobuf.WellKnownTypes;
 using Microsoft.Extensions.Caching.Memory;
+using Multiformats.Hash;
+using Multiformats.Hash.Algorithms;
 using Serilog;
 
 namespace Catalyst.Core.Lib.Modules.Consensus.Deltas
@@ -40,15 +45,24 @@ namespace Catalyst.Core.Lib.Modules.Consensus.Deltas
         private readonly ILogger _logger;
         private readonly Func<MemoryCacheEntryOptions> _entryOptions;
 
+        public static readonly Multihash GenesisHash 
+            = new Delta().ToByteArray().ComputeMultihash(Constants.HashAlgorithm);
+
+        public string GenesisAddress => GenesisHash.AsBase32Address();
+
         public static string GetLocalDeltaCacheKey(CandidateDeltaBroadcast candidate) =>
-            nameof(DeltaCache) + "-LocalDelta-" + candidate.Hash.AsMultihashBase64UrlString();
+            nameof(DeltaCache) + "-LocalDelta-" + candidate.Hash.AsBase32Address();
 
         public DeltaCache(IMemoryCache memoryCache,
             IDeltaDfsReader dfsReader,
             IDeltaCacheChangeTokenProvider changeTokenProvider,
             ILogger logger)
         {
+            var genesisDelta = new Delta {TimeStamp = Timestamp.FromDateTime(DateTime.MinValue.ToUniversalTime())};
+
             _memoryCache = memoryCache;
+            _memoryCache.Set(GenesisHash, genesisDelta);
+
             _dfsReader = dfsReader;
             _logger = logger;
             _entryOptions = () => new MemoryCacheEntryOptions()
@@ -81,7 +95,6 @@ namespace Catalyst.Core.Lib.Modules.Consensus.Deltas
 
         public bool TryGetLocalDelta(CandidateDeltaBroadcast candidate, out Delta delta)
         {
-            _logger.Verbose("Trying to retrieve full details of candidate delta {candidate}", candidate);
             var tryGetLocalDelta = _memoryCache.TryGetValue(GetLocalDeltaCacheKey(candidate), out delta);
             _logger.Verbose("Retrieved full details {delta}", delta?.ToString() ?? "nothing");
             return tryGetLocalDelta;

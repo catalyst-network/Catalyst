@@ -21,17 +21,15 @@
 
 #endregion
 
-using Multiformats.Base;
 using Multiformats.Hash;
-using Multiformats.Hash.Algorithms;
 
 namespace Catalyst.Common.Extensions
 {
     public static class MultihashExtensions
     {
-        public static string AsBase64UrlString(this Multihash multihash)
+        public static string AsBase32Address(this Multihash multihash)
         {
-            var result = multihash.ToString(MultibaseEncoding.Base64Url);
+            var result = SimpleBase.Base32.Rfc4648.Encode(multihash.ToBytes(), false).ToLowerInvariant();
             return result;
         }
     }

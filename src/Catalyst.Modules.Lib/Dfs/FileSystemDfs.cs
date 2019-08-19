@@ -22,6 +22,7 @@
 #endregion
 
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -52,14 +53,15 @@ namespace Catalyst.Modules.Lib.Dfs
         private readonly IFileSystem _fileSystem;
         private readonly HashingAlgorithm _hashingAlgorithm;
 
-        public FileSystemDfs(HashingAlgorithm hashingAlgorithm,
-            IFileSystem fileSystem,
+        public FileSystemDfs(IFileSystem fileSystem,
+            HashingAlgorithm hashingAlgorithm = null,
             string baseFolder = null)
         {
-            Guard.Argument(hashingAlgorithm, nameof(hashingAlgorithm))
-               .Require(h => h.DigestSize <= 191, h =>
-                    "The hashing algorithm needs to produce file names smaller than 255 base 64 characters or 191 bytes" +
-                    $"but the default length for {hashingAlgorithm.GetType().Name} is {h.DigestSize}.");
+            var hashingAlgo = hashingAlgorithm ?? HashingAlgorithm.All.First(x => x.Name == "blake2b-256");
+            Guard.Argument(hashingAlgo, nameof(hashingAlgo))
+               .Require(h => h.DigestSize <= 159, h =>
+                    "The hashing algorithm needs to produce file names smaller than 255 base 32 characters or 160 bytes" +
+                    $"but the default length for {hashingAlgo.GetType().Name} is {h.DigestSize}.");
 
             var dfsBaseFolder = baseFolder ?? Path.Combine(fileSystem.GetCatalystDataDir().FullName,
                 Constants.DfsDataSubDir);
@@ -70,7 +72,7 @@ namespace Catalyst.Modules.Lib.Dfs
                 _baseFolder.Create();
             }
 
-            _hashingAlgorithm = hashingAlgorithm;
+            _hashingAlgorithm = hashingAlgo;
             _fileSystem = fileSystem;
         }
 

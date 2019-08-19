@@ -30,6 +30,7 @@ using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Modules.Consensus.Deltas;
 using Catalyst.Common.Util;
 using Google.Protobuf.WellKnownTypes;
+using Multiformats.Base;
 using Multiformats.Hash;
 using Nito.Comparers;
 using Serilog;
@@ -47,14 +48,11 @@ namespace Catalyst.Core.Lib.Modules.Consensus.Deltas
         private readonly int _capacity;
 
         public IObservable<Multihash> DeltaHashUpdates => _deltaHashUpdatesSubject.AsObservable();
-        public Multihash GenesisAddress { get; }
 
         public DeltaHashProvider(IDeltaCache deltaCache, 
             ILogger logger,
             int capacity = 10_000)
         {
-            GenesisAddress = Multihash.Parse("oOQCIKFCdksuNerofEzIB4BnQHEDUl9Mr9o9lR5wVMAlutnD");
-
             _deltaCache = deltaCache;
             _logger = logger;
             _deltaHashUpdatesSubject = new ReplaySubject<Multihash>(0);
@@ -64,16 +62,20 @@ namespace Catalyst.Core.Lib.Modules.Consensus.Deltas
             {
                 Capacity = _capacity,
             };
-            _hashesByTimeDescending.Add(Timestamp.FromDateTime(DateTime.MinValue.ToUniversalTime()), GenesisAddress);
+
+            _hashesByTimeDescending.Add(Timestamp.FromDateTime(DateTime.MinValue.ToUniversalTime()),
+                _deltaCache.GenesisAddress.FromBase32Address());
         }
 
         /// <inheritdoc />
         public bool TryUpdateLatestHash(Multihash previousHash, Multihash newHash)
         {
+            var newAddress = newHash.AsBase32Address();
+            var previousAddress = previousHash.AsBase32Address();
             _logger.Debug("New hash {hash} received for previous hash {previousHash}", 
-                newHash.AsBase64UrlString(), previousHash.AsBase64UrlString());
-            var foundNewDelta = _deltaCache.TryGetConfirmedDelta(newHash.AsBase64UrlString(), out var newDelta);
-            var foundPreviousDelta = _deltaCache.TryGetConfirmedDelta(previousHash.AsBase64UrlString(), out var previousDelta);
+                newAddress, previousAddress);
+            var foundNewDelta = _deltaCache.TryGetConfirmedDelta(newAddress, out var newDelta);
+            var foundPreviousDelta = _deltaCache.TryGetConfirmedDelta(previousAddress, out var previousDelta);
 
             if (!foundNewDelta 
              || !foundPreviousDelta
@@ -81,12 +83,12 @@ namespace Catalyst.Core.Lib.Modules.Consensus.Deltas
              || previousDelta.TimeStamp >= newDelta.TimeStamp)
             {
                 _logger.Warning("Failed to update latest hash from {previousHash} to {newHash}",
-                    previousHash, newHash);
+                    previousAddress, newAddress);
                 return false;
             }
 
             _logger.Debug("Successfully to updated latest hash from {previousHash} to {newHash}",
-                previousHash, newHash);
+                previousAddress, newAddress);
 
             lock (_hashesByTimeDescending)
             {
@@ -97,7 +99,7 @@ namespace Catalyst.Core.Lib.Modules.Consensus.Deltas
                 }
             }
             
-            _deltaHashUpdatesSubject.OnNext(newHash);
+            _deltaHashUpdatesSubject.OnNext(newAddress);
 
             return true;
         }

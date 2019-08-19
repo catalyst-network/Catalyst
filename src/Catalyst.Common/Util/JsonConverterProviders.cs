@@ -22,22 +22,21 @@
 #endregion
 
 using System.Collections.Generic;
-using Catalyst.Common.Config;
-using Catalyst.Common.Types;
+using Catalyst.Protocol.Transaction;
+using Newtonsoft.Json;
 
-namespace Catalyst.Cli
+namespace Catalyst.Common.Util
 {
-    internal sealed class CliConfigCopier : ConfigCopier
+    public static class JsonConverterProviders
     {
-        protected override IEnumerable<string> RequiredConfigFiles(NetworkTypes networkTypes)
+        public static readonly IReadOnlyList<JsonConverter> Converters = new List<JsonConverter>
         {
-            return new[]
-            {
-                Constants.ShellNodesConfigFile,
-                Constants.ShellComponentsJsonConfigFile,
-                Constants.SerilogJsonConfigFile,
-                Constants.ShellConfigFile
-            };
-        }
+            new JsonProtoObjectConverter<TransactionBroadcast>(),
+            new IpEndPointConverter(),
+            new IpAddressConverter(),
+            new JsonProtoObjectConverter<STTransactionEntry>(),
+            new JsonProtoObjectConverter<CFTransactionEntry>(),
+            new JsonProtoObjectConverter<EntryRangeProof>()
+        }.AsReadOnly();
     }
 }

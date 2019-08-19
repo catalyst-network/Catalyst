@@ -20,8 +20,6 @@
 */
 
 #endregion
-
-using Catalyst.Common.Config;
 using Catalyst.Common.Cryptography;
 using Catalyst.Common.Interfaces.Registry;
 using Catalyst.Common.Types;
@@ -33,13 +31,11 @@ namespace Catalyst.TestUtils
 {
     public static class TestKeyRegistry
     {
-        public static readonly string TestPrivateKey;
-        public static readonly string TestPublicKey;
-        
+        public static readonly string TestPrivateKey = "9tejqf7y6z31rb7xbpdyzt1acpek9bec7n8r1e41gnzxt85rx20g";
+        public static readonly string TestPublicKey; // = "qnb9bw3b2yj4hpjcmsvgp12bkwff313v9gaqb18atvwfpevrmmf0"
+
         static TestKeyRegistry()
         {
-            TestPrivateKey = "1WG487E925TDYDG37DBBSHCVJQ7PT1TZK9TF2KS8CBPNBZAYQXQG";
-
             var cryptoContext = new CryptoContext(new CryptoWrapper());
             var fakePrivateKey = cryptoContext.PrivateKeyFromBytes(TestPrivateKey.KeyToBytes());
             TestPublicKey = fakePrivateKey.GetPublicKey().Bytes.KeyToString();

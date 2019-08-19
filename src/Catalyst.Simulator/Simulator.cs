@@ -135,8 +135,7 @@ namespace Catalyst.Simulator
                     _userOutput.WriteLine($"[{nodeIndex}] Transaction response: {response.ResponseCode}");
                 });
 
-                var socketInfo = new NodeSocketInfo
-                    {NodeRpcClient = socket, PeerIdentifier = simulationNodePeerIdentifier};
+                var socketInfo = new NodeSocketInfo {NodeRpcClient = socket, PeerIdentifier = simulationNodePeerIdentifier};
                 nodeSocketInfo.Add(socketInfo);
             }
 

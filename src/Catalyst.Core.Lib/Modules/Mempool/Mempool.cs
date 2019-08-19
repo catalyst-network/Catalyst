@@ -80,26 +80,17 @@ namespace Catalyst.Core.Lib.Modules.Mempool
             return found;
         }
 
-        public void Delete(params TransactionSignature[] transactionSignatures)
+        public void Delete(params string[] transactionSignatures)
         {
-            _logger.Debug("Deleting transactions from the mempool.");
-            var cleared = 0;
-
-            foreach (var key in transactionSignatures)
+            try
             {
-                try
-                {
-                    _transactionStore.Delete(t => t.Transaction.Signature.Equals(key));
-                    cleared++;
-                }
-                catch (Exception e)
-                {
-                    _logger.Warning(e, "Could not delete transaction {0} from mempool.", key);
-                }    
+                _transactionStore.Delete(transactionSignatures);
             }
-
-            _logger.Debug("Cleared {cleared} out of {total} transactions from the mempool.", 
-                cleared, transactionSignatures.Length);
+            catch (Exception exception)
+            {
+                _logger.Error(exception, "Failed to delete transactions from the mempool {transactionSignatures}",
+                    transactionSignatures);
+            }
         }
 
         /// <inheritdoc />

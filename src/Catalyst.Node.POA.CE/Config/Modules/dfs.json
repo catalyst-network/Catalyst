@@ -2,21 +2,12 @@
     "defaultAssembly": "Catalyst.Core.Lib",
     "components": [
         {
-            "type": "Catalyst.Core.Lib.Modules.Dfs.Dfs",
+            "type": "Catalyst.Modules.Lib.Dfs.FileSystemDfs, Catalyst.Modules.Lib",
             "services": [
                 {
                     "type": "Catalyst.Common.Interfaces.Modules.Dfs.IDfs, Catalyst.Common"
                 }
             ]
-        },
-        {
-            "type": "Catalyst.Core.Lib.Modules.Dfs.IpfsAdapter",
-            "services": [
-                {
-                    "type": "Ipfs.CoreApi.ICoreApi, Ipfs.Core"
-                }
-            ],
-            "instanceScope": "singleinstance"
         }
     ]
 }
