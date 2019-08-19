@@ -30,7 +30,6 @@ using Catalyst.Common.Modules.Mempool.Models;
 using Catalyst.Protocol.Transaction;
 using Dawn;
 using Google.Protobuf;
-using Nethereum.RLP;
 using Serilog;
 
 namespace Catalyst.Core.Lib.Modules.Mempool
