@@ -29,9 +29,15 @@ using System.Threading;
 using Catalyst.Common.Interfaces.Modules.Mempool;
 using Catalyst.Common.Interfaces.Repository;
 using Catalyst.Common.Modules.Mempool.Models;
+using Catalyst.Common.Util;
 using Catalyst.TestUtils;
+using DotNetty.Transport.Channels;
 using FluentAssertions;
 using Google.Protobuf;
+using GraphQL;
+using MongoDB.Driver;
+using MongoDB.Driver.Core.Connections;
+using MongoDB.Driver.Core.Servers;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 using Serilog;
@@ -44,12 +50,13 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Mempool
         private readonly Lib.Modules.Mempool.Mempool _memPool;
         private readonly IMempoolRepository _transactionStore;
         private readonly IMempoolDocument _mempoolDocument;
+        private readonly ILogger _logger;
 
         public MempoolTests()
         {
             _transactionStore = Substitute.For<IMempoolRepository>();
-            var logger = Substitute.For<ILogger>();
-            _memPool = new Lib.Modules.Mempool.Mempool(_transactionStore, logger);
+            _logger = Substitute.For<ILogger>();
+            _memPool = new Lib.Modules.Mempool.Mempool(_transactionStore, _logger);
 
             _mempoolDocument = new MempoolDocument
             {
@@ -94,13 +101,8 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Mempool
         public void Get_should_retrieve_saved_transaction_matching_their_keys()
         {
             const int numTx = 10;
-            for (var i = 0; i < numTx; i++)
-            {
-                var mempoolDocument =
-                    new MempoolDocument {Transaction = TransactionHelper.GetTransaction(standardAmount: (uint) i, signature: $"key{i}")};
-                _memPool.SaveMempoolDocument(mempoolDocument);
-                AddKeyValueStoreEntryExpectation(mempoolDocument, _transactionStore);
-            }
+            var documents = GetTestingMempoolDocuments(numTx);
+            documents.ForEach(mempoolDocument => AddKeyValueStoreEntryExpectation(mempoolDocument, _transactionStore));
 
             for (var i = 0; i < numTx; i++)
             {
@@ -111,11 +113,28 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Mempool
         }
 
         [Fact]
-        public void Clear_should_delete_all_transactions()
+        public void Delete_should_delete_all_transactions()
         {
             var keys = Enumerable.Range(0, 10).Select(i => i.ToString()).ToArray();
             _memPool.Delete(keys);
             _transactionStore.Received(1).Delete(Arg.Is<string[]>(s => s.SequenceEqual(keys)));
+        }
+
+        [Fact]
+        public void Delete_should_log_deletion_errors()
+        {
+            var keys = Enumerable.Range(0, 3).Select(i => i.ToString()).ToArray();
+            var connectTimeoutException = new TimeoutException("that mempool connection was too slow");  
+            _transactionStore.WhenForAnyArgs(t => t.Delete())
+               .Throw(connectTimeoutException);
+
+            _memPool.Delete(keys);
+
+            var calls = _logger.ReceivedCalls().ToList();
+
+            _logger.Received(1).Error(Arg.Any<Exception>(),
+                Arg.Any<string>(),
+                Arg.Any<string[]>());
         }
 
         [Fact]
@@ -135,7 +154,9 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Mempool
 
             var overridingTransaction = new MempoolDocument {Transaction = _mempoolDocument.Transaction.Clone()};
             overridingTransaction.Transaction.STEntries.Single().Amount = expectedAmount + 100;
-            _memPool.SaveMempoolDocument(overridingTransaction);
+            var saved = _memPool.SaveMempoolDocument(overridingTransaction);
+
+            saved.Should().BeFalse();
 
             var retrievedTransaction = _memPool.GetMempoolDocument(_mempoolDocument.Transaction.Signature);
             retrievedTransaction.Transaction.STEntries.Single().Amount.Should().Be(expectedAmount);
@@ -223,17 +244,42 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Mempool
         public void GetMempoolContent_should_return_all_documents_from_mempool()
         {
             var documentCount = 13;
-            var mempoolDocs = Enumerable.Range(0, documentCount).Select(i =>
-                    new MempoolDocument {Transaction = TransactionHelper.GetTransaction((uint) i, signature: $"key{i}")})
-               .ToList();
+            var mempoolDocs = GetTestingMempoolDocuments(documentCount);
 
             _transactionStore.GetAll().Returns(mempoolDocs);
 
             var content = _memPool.GetMemPoolContent().ToList();
 
+            _transactionStore.ReceivedWithAnyArgs(1).GetAll();
+
             content.Count.Should().Be(documentCount);
             content.Select(d => d.Transaction.ToByteString()).Should()
                .BeEquivalentTo(mempoolDocs.Select(d => d.Transaction.ToByteString()));
+        }
+
+        private static List<MempoolDocument> GetTestingMempoolDocuments(int documentCount)
+        {
+            return Enumerable.Range(0, documentCount).Select(i =>
+                    new MempoolDocument {Transaction = TransactionHelper.GetTransaction((uint) i, signature: $"key{i}")})
+               .ToList();
+        }
+
+        [Fact]
+        public void GetMempoolContentEncoded_should_return_an_array_of_bytes_of_strings_of_all_transactions()
+        {
+            var documentCount = 7;
+            var mempoolDocs = GetTestingMempoolDocuments(documentCount);
+
+            _transactionStore.GetAll().Returns(mempoolDocs);
+
+            var content = _memPool.GetMemPoolContentAsTransactions().ToList();
+
+            _transactionStore.ReceivedWithAnyArgs(1).GetAll();
+
+            content.Count.Should().Be(documentCount);
+            content.Select(d => d.ToByteString()).Should()
+               .BeEquivalentTo(mempoolDocs.Select(d => d.Transaction.ToByteString()));
+
         }
     }
 }

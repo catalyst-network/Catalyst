@@ -65,11 +65,13 @@ namespace Catalyst.Core.Lib.Modules.Mempool
         }
 
         /// <inheritdoc />
-        public List<byte[]> GetMemPoolContentEncoded()
+        public List<TransactionBroadcast> GetMemPoolContentAsTransactions()
         {
             var memPoolContent = GetMemPoolContent();
 
-            var encodedTxs = memPoolContent.Select(tx => tx.ToString().ToBytesForRLPEncoding()).ToList();
+            var encodedTxs = memPoolContent
+               .Select(tx => tx.Transaction)
+               .ToList();
 
             return encodedTxs;
         }
