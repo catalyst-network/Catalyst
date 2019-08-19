@@ -56,13 +56,13 @@ namespace Catalyst.Modules.Lib.Consensus.Deltas
         public IPeerRepository PeerRepository { get; }
 
         public PoaDeltaProducersProvider(IPeerRepository peerRepository,
-            IPeerSettings peerSettings,
+            IPeerIdentifier peerIdentifier,
             IMemoryCache producersByPreviousDelta,
             IMultihashAlgorithm hashAlgorithm,
             ILogger logger)
         {
             _logger = logger;
-            _selfAsPeer = new Peer {PeerIdentifier = new PeerIdentifier(peerSettings)};
+            _selfAsPeer = new Peer {PeerIdentifier = peerIdentifier};
             PeerRepository = peerRepository;
             HashAlgorithm = hashAlgorithm;
             _cacheEntryOptions = new MemoryCacheEntryOptions()
@@ -74,7 +74,7 @@ namespace Catalyst.Modules.Lib.Consensus.Deltas
         {
             Guard.Argument(previousDeltaHash, nameof(previousDeltaHash)).NotNull();
 
-            var previousDeltaHashAsString = previousDeltaHash.AsMultihashBase64UrlString();
+            var previousDeltaHashAsString = previousDeltaHash.AsBase32Address();
 
             if (_producersByPreviousDelta.TryGetValue(GetCacheKey(previousDeltaHashAsString),
                 out IList<IPeerIdentifier> cachedPeerIdsInPriorityOrder))

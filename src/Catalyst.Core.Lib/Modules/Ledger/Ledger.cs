@@ -45,8 +45,6 @@ namespace Catalyst.Core.Lib.Modules.Ledger
         private readonly ILogger _logger;
         private readonly IDisposable _deltaUpdatesSubscription;
 
-        public byte[] LedgerStateUpdate { get; set; }
- 
         public Ledger(IAccountRepository accounts, IDeltaHashProvider deltaHashProvider, IMempool mempool, ILogger logger)
         {
             Accounts = accounts;
@@ -56,9 +54,9 @@ namespace Catalyst.Core.Lib.Modules.Ledger
             _deltaUpdatesSubscription = deltaHashProvider.DeltaHashUpdates.Subscribe(FlushTransactionsFromDelta);
         }
 
-        public void FlushTransactionsFromDelta(Multihash confirmedDelta)
+        private void FlushTransactionsFromDelta(Multihash confirmedDelta)
         {
-            var transactionsToFlush = _mempool.GetMemPoolContent().Select(d => d.Transaction.Signature);
+            var transactionsToFlush = _mempool.GetMemPoolContent().Select(d => d.DocumentId);
             _mempool.Delete(transactionsToFlush.ToArray());
         }
 

@@ -45,8 +45,8 @@ namespace Catalyst.Modules.Lib.IntegrationTests.Dfs
         public FileSystemDfsTests(ITestOutputHelper output) : base(output)
         {
             _cancellationToken = new CancellationTokenSource(TimeSpan.FromSeconds(200)).Token;
-            var hashingAlgorithm = HashingAlgorithm.All.First(x => x.Name == "blake2b-512");
-            _dfs = new FileSystemDfs(hashingAlgorithm, FileSystem);
+            var hashingAlgorithm = HashingAlgorithm.All.First(x => x.Name == "blake2b-256");
+            _dfs = new FileSystemDfs(FileSystem, hashingAlgorithm);
         }
 
         [Fact]

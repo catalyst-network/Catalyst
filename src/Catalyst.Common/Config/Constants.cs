@@ -73,6 +73,9 @@ namespace Catalyst.Common.Config
         // <summary> Registration of message handlers for autofac </summary>
         public static string MessageHandlersConfigFile => "messageHandlers.json";
 
+        /// <summary>The allowed RPC node operators default XML configuration.</summary>
+        public static string RpcAuthenticationCredentialsFile => "AuthCredentials.xml";
+
         /// <summary>The expiry minutes of initialization </summary>
         public static int FileTransferExpirySeconds => 60;
 
@@ -125,6 +128,10 @@ namespace Catalyst.Common.Config
             Enumeration.GetAll<ModuleName>()
                .Select(m => Path.Combine(ModulesSubFolder, string.Format(JsonFilePattern, m.Name.ToLower())));
 
-        public static string NetworkConfigFile(Types.NetworkTypes networkTypes) { return string.Format(JsonFilePattern, networkTypes.Name); }
+        public static string NetworkConfigFile(Types.NetworkTypes networkTypes)
+        {
+            var networkConfigFile = string.Format(JsonFilePattern, networkTypes.Name);
+            return networkConfigFile;
+        }
     }
 }

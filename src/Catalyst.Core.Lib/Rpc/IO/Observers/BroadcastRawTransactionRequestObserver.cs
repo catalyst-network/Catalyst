@@ -39,6 +39,7 @@ namespace Catalyst.Core.Lib.Rpc.IO.Observers
     public class BroadcastRawTransactionRequestObserver
         : RequestObserverBase<BroadcastRawTransactionRequest, BroadcastRawTransactionResponse>, IRpcRequestObserver
     {
+        private readonly ILogger _logger;
         private readonly IMempool _mempool;
         private readonly IBroadcastManager _broadcastManager;
 
@@ -48,6 +49,7 @@ namespace Catalyst.Core.Lib.Rpc.IO.Observers
             IBroadcastManager broadcastManager)
             : base(logger, peerIdentifier)
         {
+            _logger = logger;
             _mempool = mempool;
             _broadcastManager = broadcastManager;
         }
@@ -61,11 +63,14 @@ namespace Catalyst.Core.Lib.Rpc.IO.Observers
             var signatureValid = true;
             var responseCode = ResponseCode.Successful;
 
+            var transactionSignature = messageDto.Transaction.Signature;
+            _logger.Verbose("Adding transaction {signature} to mempool", transactionSignature);
             if (signatureValid)
             {
                 // TODO: Check ledger to see if ledger already contains transaction, if so we need to send Successful/Fail response
-                if (_mempool.ContainsDocument(messageDto.Transaction.Signature))
+                if (_mempool.ContainsDocument(transactionSignature))
                 {
+                    _logger.Information("Transaction {signature} already exists in mempool", transactionSignature);
                     responseCode = ResponseCode.Error;
                     return new BroadcastRawTransactionResponse {ResponseCode = responseCode};
                 }
@@ -75,12 +80,16 @@ namespace Catalyst.Core.Lib.Rpc.IO.Observers
                     Transaction = messageDto.Transaction
                 });
 
+                _logger.Information("Broadcasting {signature} transaction", transactionSignature);
                 var transactionToBroadcast = messageDto.Transaction.ToProtocolMessage(PeerIdentifier.PeerId,
                     CorrelationId.GenerateCorrelationId());
                 _broadcastManager.BroadcastAsync(transactionToBroadcast);
             }
             else
             {
+                _logger.Information(
+                    "Transaction {signature} doesn't have a valid signature and was not added to the mempool.",
+                    transactionSignature);
                 responseCode = ResponseCode.Error;
             }
 

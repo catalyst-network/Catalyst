@@ -71,14 +71,14 @@ namespace Catalyst.Modules.Lib.UnitTests.Consensus.Deltas
             peerRepository.GetAll().Returns(_ => _peers);
 
             _previousDeltaHash = ByteUtil.GenerateRandomByteArray(32).ComputeMultihash(new BLAKE2B_256());
-            _previousDeltaHashString = _previousDeltaHash.AsMultihashBase64UrlString();
+            _previousDeltaHashString = _previousDeltaHash.AsBase32Address();
 
             _hashAlgorithm = Substitute.For<IMultihashAlgorithm>();
             _hashAlgorithm.ComputeHash(Arg.Any<byte[]>()).Returns(ci => (byte[]) ci[0]);
 
             _producersByPreviousDelta = Substitute.For<IMemoryCache>();
 
-            _poaDeltaProducerProvider = new PoaDeltaProducersProvider(peerRepository, PeerSettingsHelper.TestPeerSettings(), _producersByPreviousDelta, _hashAlgorithm, logger);
+            _poaDeltaProducerProvider = new PoaDeltaProducersProvider(peerRepository, PeerIdentifierHelper.GetPeerIdentifier("TEST"), _producersByPreviousDelta, _hashAlgorithm, logger);
         }
 
         [Fact]

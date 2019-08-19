@@ -21,23 +21,31 @@
 
 #endregion
 
-using System.Collections.Generic;
-using Catalyst.Common.Config;
-using Catalyst.Common.Types;
+using Catalyst.Common.P2P;
+using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Transaction;
+using Google.Protobuf;
+using MongoDB.Bson.Serialization;
 
-namespace Catalyst.Cli
+namespace Catalyst.Common.Util
 {
-    internal sealed class CliConfigCopier : ConfigCopier
+    public static class BsonSerializationProviders
     {
-        protected override IEnumerable<string> RequiredConfigFiles(NetworkTypes networkTypes)
+        public static void Init()
         {
-            return new[]
-            {
-                Constants.ShellNodesConfigFile,
-                Constants.ShellComponentsJsonConfigFile,
-                Constants.SerilogJsonConfigFile,
-                Constants.ShellConfigFile
-            };
+            BsonClassMap.RegisterClassMap<PeerIdentifier>();
+            
+            AddSerializer<TransactionBroadcast>();
+            AddSerializer<PeerId>();
+            AddSerializer<STTransactionEntry>();
+            AddSerializer<CFTransactionEntry>();
+            AddSerializer<EntryRangeProof>();
+        }
+        
+        static void AddSerializer<TType>() where TType : IMessage, new()
+        {
+            BsonSerializer.RegisterSerializer(typeof(TType),
+                new ProtoBsonSerializer<TType>());
         }
     }
 }

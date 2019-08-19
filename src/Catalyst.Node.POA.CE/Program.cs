@@ -22,7 +22,6 @@
 #endregion
 
 using System;
-using Catalyst.Common.Config;
 using Catalyst.Common.Kernel;
 using Catalyst.Common.Types;
 using CommandLine;

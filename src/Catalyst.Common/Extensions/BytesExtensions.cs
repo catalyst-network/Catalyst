@@ -74,10 +74,10 @@ namespace Catalyst.Common.Extensions
             return Multihash.Decode(array);
         }
 
-        public static string AsMultihashBase64UrlString(this IEnumerable<byte> bytes)
+        public static string AsBase32Address(this IEnumerable<byte> bytes)
         {
             var hash = AsMultihash(bytes);
-            var trimmedString = hash.AsBase64UrlString();
+            var trimmedString = hash.AsBase32Address();
             return trimmedString;
         }
     }

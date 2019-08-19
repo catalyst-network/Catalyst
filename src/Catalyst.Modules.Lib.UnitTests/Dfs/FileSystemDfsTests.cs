@@ -49,8 +49,8 @@ namespace Catalyst.Modules.Lib.UnitTests.Dfs
             _fileSystem.File.Returns(file);
             _fileSystem.GetCatalystDataDir()
                .Returns(new DirectoryInfo("correct-information"));
-            _hashingAlgorithm = HashingAlgorithm.All.First(x => x.Name == "blake2b-512");
-            _dfs = new FileSystemDfs(_hashingAlgorithm, _fileSystem);
+            _hashingAlgorithm = HashingAlgorithm.All.First(x => x.Name == "blake2b-256");
+            _dfs = new FileSystemDfs(_fileSystem, _hashingAlgorithm);
 
             _baseFolder = Path.Combine(_fileSystem.GetCatalystDataDir().FullName,
                 Constants.DfsDataSubDir);
@@ -159,17 +159,17 @@ namespace Catalyst.Modules.Lib.UnitTests.Dfs
         }
 
         [Fact]
-        public async Task Constructor_Should_Throw_On_Hash_Default_Size_Above_191()
+        public async Task Constructor_Should_Throw_On_Hash_Default_Size_Above_159()
         {
-            HashingAlgorithm.Register("TooLong", 0x9999, 500);
+            HashingAlgorithm.Register("TooLong", 0x9999, 160);
 
-            var toLongHashingAlgorithm = HashingAlgorithm.All.First(x => x.DigestSize > 191);
-            var longEnoughHashingAlgorithm = HashingAlgorithm.All.First(x => x.DigestSize <= 191);
+            var toLongHashingAlgorithm = HashingAlgorithm.All.First(x => x.DigestSize > 159);
+            var longEnoughHashingAlgorithm = HashingAlgorithm.All.First(x => x.DigestSize <= 159);
 
-            new Action(() => new FileSystemDfs(toLongHashingAlgorithm, _fileSystem)).Should().Throw<ArgumentException>()
+            new Action(() => new FileSystemDfs(_fileSystem, toLongHashingAlgorithm)).Should().Throw<ArgumentException>()
                .And.Message.Should().Contain(nameof(HashingAlgorithm));
 
-            new Action(() => new FileSystemDfs(longEnoughHashingAlgorithm, _fileSystem)).Should()
+            new Action(() => new FileSystemDfs(_fileSystem, longEnoughHashingAlgorithm)).Should()
                .NotThrow<ArgumentException>();
         }
 
