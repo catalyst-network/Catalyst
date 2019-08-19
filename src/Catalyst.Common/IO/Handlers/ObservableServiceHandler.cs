@@ -58,8 +58,6 @@ namespace Catalyst.Common.IO.Handlers
         public override void ExceptionCaught(IChannelHandlerContext context, Exception e)
         {
             Logger.Error(e, "Error in ObservableServiceHandler");
-            context.CloseAsync();
-            _messageSubject.OnError(e);
         }
 
         private void Dispose(bool disposing)
@@ -70,10 +68,7 @@ namespace Catalyst.Common.IO.Handlers
             }
         }
 
-        public void Dispose()
-        {
-            Dispose(true);
-        }
+        public void Dispose() { Dispose(true); }
 
         /// <summary>
         ///     Reads the channel once accepted and pushed into a stream.
