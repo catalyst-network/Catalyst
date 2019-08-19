@@ -26,11 +26,9 @@ using System.Threading;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Modules.Dfs;
 using Catalyst.Core.Lib.Modules.Consensus.Deltas;
-using Catalyst.Protocol.Deltas;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Google.Protobuf;
-using MongoDB.Bson.Serialization.Serializers;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 using Serilog;
@@ -91,7 +89,7 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Consensus.Deltas
             _dfs.ReadAsync(goodHash, CancellationToken.None)
                .Returns(matchingDelta.ToByteArray().ToMemoryStream());
 
-            var found = _dfsReader.TryReadDeltaFromDfs(goodHash, out var delta, CancellationToken.None);
+            _dfsReader.TryReadDeltaFromDfs(goodHash, out var delta, CancellationToken.None);
 
             _dfs.Received(1).ReadAsync(Arg.Is(goodHash), Arg.Is(cancellationToken));
         }
