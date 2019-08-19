@@ -23,7 +23,6 @@
 
 using System;
 using System.Security;
-using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Common.Interfaces.Registry;
@@ -82,7 +81,7 @@ namespace Catalyst.Common.Cryptography
             Action<int> removeChar,
             int maxLength = MaxLength)
         {
-            Console.WriteLine(passwordContext);
+            userOutput.WriteLine(passwordContext);
             var waitForInput = true;
             var inputLength = 0;
             while (waitForInput)
