@@ -46,7 +46,7 @@ namespace Catalyst.Simulator
         {
             try
             {
-                await Task.Run(async () => { await _simulation.SimulateAsync(clientRpcInfoList).ConfigureAwait(false); });
+                await _simulation.SimulateAsync(clientRpcInfoList).ConfigureAwait(false);
             }
             catch (Exception exc)
             {
