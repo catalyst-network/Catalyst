@@ -25,11 +25,15 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.Cryptography;
+using Catalyst.Common.FileSystem;
 using Catalyst.Common.Registry;
 using Catalyst.Common.Shell;
 using Catalyst.Common.Types;
+using Catalyst.Simulator.Extensions;
 using Catalyst.Simulator.Helpers;
+using Catalyst.Simulator.RpcClients;
+using Catalyst.Simulator.Simulations;
 using CommandLine;
 using Newtonsoft.Json;
 using Serilog;
@@ -42,33 +46,23 @@ namespace Catalyst.Simulator
         {
             var logger = new LoggerConfiguration().WriteTo.Console().CreateLogger();
 
-            var consoleUserOutput = new ConsoleUserOutput();
-            consoleUserOutput.WriteLine("Catalyst Network Simulator");
-
-            var simulationNodesFile =
-                Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Config", "simulation.nodes.json");
-            var simulationNodes =
-                JsonConvert.DeserializeObject<List<SimulationNode>>(File.ReadAllText(simulationNodesFile));
-            var simulationNodePeerIdentifiers = simulationNodes.Select(x => x.ToPeerIdentifier());
+            var userOutput = new ConsoleUserOutput();
+            userOutput.WriteLine("Catalyst Network Simulator");
 
             var passwordRegistry = new PasswordRegistry();
-            Parser.Default.ParseArguments<Options>(args).WithParsed(options =>
-            {
-                if (!string.IsNullOrEmpty(options.NodePassword))
-                {
-                    PasswordRegistryHelper.AddPassword(passwordRegistry, PasswordRegistryTypes.DefaultNodePassword,
-                        options.NodePassword);
-                }
+            Parser.Default.ParseArguments<Options>(args).WithParsed(options => passwordRegistry.SetFromOptions(options));
 
-                if (!string.IsNullOrEmpty(options.SslCertPassword))
-                {
-                    PasswordRegistryHelper.AddPassword(passwordRegistry, PasswordRegistryTypes.CertificatePassword,
-                        options.SslCertPassword);
-                }
-            });
+            var fileSystem = new FileSystem();
+            var consolePasswordReader = new ConsolePasswordReader(userOutput, passwordRegistry);
+            var certificateStore = new CertificateStore(fileSystem, consolePasswordReader);
+            var certificate = certificateStore.ReadOrCreateCertificateFile("mycert.pfx");
 
-            var simulator = new Simulator(consoleUserOutput, passwordRegistry, logger);
-            simulator.Simulate(simulationNodePeerIdentifiers).Wait();
+            var clientRpcInfoList =
+                ConfigHelper.GenerateClientRpcInfoFromConfig(userOutput, passwordRegistry, certificate, logger).ToList();
+
+            var simulation = new TransactionSimulation(userOutput);
+            var simulator = new Simulator(simulation, logger);
+            simulator.SimulateAsync(clientRpcInfoList).Wait();
 
             return Environment.ExitCode;
         }

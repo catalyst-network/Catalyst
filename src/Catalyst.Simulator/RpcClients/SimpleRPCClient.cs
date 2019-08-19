@@ -25,15 +25,16 @@ using Catalyst.Cryptography.BulletProofs.Wrapper;
 using Catalyst.Node.Rpc.Client;
 using Catalyst.Node.Rpc.Client.IO.Observers;
 using Catalyst.Node.Rpc.Client.IO.Transport.Channels;
+using Catalyst.Simulator.Interfaces;
 using DotNetty.Transport.Channels;
 using Google.Protobuf;
 using Microsoft.Extensions.Caching.Memory;
 using Multiformats.Hash.Algorithms;
 using Serilog;
 
-namespace Catalyst.Simulator
+namespace Catalyst.Simulator.RpcClients
 {
-    public class SimpleRpcClient
+    public class SimpleRpcClient : IRpcClient
     {
         private readonly ILogger _logger;
         private readonly IPeerIdentifier _senderPeerIdentifier;
@@ -142,7 +143,7 @@ namespace Catalyst.Simulator
             return true;
         }
 
-        public bool IsActive() { return _nodeRpcClient.Channel.Active; }
+        public bool IsConnected() { return _nodeRpcClient.Channel.Active; }
 
         public void SendMessage<T>(T message) where T : IMessage
         {
