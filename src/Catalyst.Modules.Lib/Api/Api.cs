@@ -37,19 +37,22 @@ namespace Catalyst.Modules.Lib.Api
 
     public class Api : IApi
     {
-        private readonly IWebHost _host;
+        private IWebHost _host;
+        private readonly string _apiBindingAddress;
 
-        public Api()
-        {
-            _host = WebHost.CreateDefaultBuilder()
-               .ConfigureServices(services => services.AddAutofac())
-               .UseStartup<Startup>()
-               .UseSerilog()
-               .Build();
-        }
+        public Api(string apiBindingAddress) { _apiBindingAddress = apiBindingAddress; }
 
         public Task StartApiAsync()
         {
+            _host = WebHost.CreateDefaultBuilder()
+               .ConfigureServices(services =>
+                {
+                    services.AddAutofac();
+                })
+               .UseUrls(_apiBindingAddress)
+               .UseStartup<Startup>()
+               .UseSerilog()
+               .Build();
             return _host.StartAsync();
         }
         

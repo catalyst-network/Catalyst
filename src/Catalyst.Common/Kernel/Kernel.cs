@@ -130,12 +130,14 @@ namespace Catalyst.Common.Kernel
             return this;
         }
 
-        public Kernel WithNetworksConfigFile(Types.NetworkTypes networkTypes = default)
+        public Kernel WithNetworksConfigFile(NetworkTypes networkTypes = default)
         {
             _networkTypes = networkTypes ?? Types.NetworkTypes.Dev;
+            var fileName = Constants.NetworkConfigFile(_networkTypes);
+
             _configurationBuilder
                .AddJsonFile(
-                    Path.Combine(_targetConfigFolder, Constants.NetworkConfigFile(_networkTypes))
+                    Path.Combine(_targetConfigFolder, fileName)
                 );
 
             return this;
@@ -200,10 +202,13 @@ namespace Catalyst.Common.Kernel
         {
             if (_instance == null)
             {
-                _instance = ContainerBuilder.Build()
+                var container = ContainerBuilder.Build();
+                _instance = container
                    .BeginLifetimeScope(MethodBase.GetCurrentMethod().DeclaringType.AssemblyQualifiedName);
             }
-            
+
+            BsonSerializationProviders.Init();
+
             _instance.Resolve<ICatalystNode>()
                .RunAsync(CancellationTokenProvider.CancellationTokenSource.Token)
                .Wait(CancellationTokenProvider.CancellationTokenSource.Token);

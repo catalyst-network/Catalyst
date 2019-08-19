@@ -26,15 +26,12 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Common.Extensions;
-using Catalyst.Common.Interfaces.Modules.Consensus.Cycle;
 using Catalyst.Common.Interfaces.Modules.Consensus.Deltas;
 using Catalyst.Common.Interfaces.Modules.Dfs;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.IO.Messaging.Broadcast;
 using Catalyst.Common.IO.Messaging.Correlation;
-using Catalyst.Common.Modules.Consensus.Cycle;
 using Catalyst.Common.Util;
-using Catalyst.Protocol;
 using Catalyst.Protocol.Deltas;
 using Dawn;
 using Google.Protobuf;
@@ -51,8 +48,6 @@ namespace Catalyst.Core.Lib.Modules.Consensus.Deltas
     {
         private readonly IBroadcastManager _broadcastManager;
         private readonly IPeerIdentifier _peerIdentifier;
-        private readonly IDeltaVoter _deltaVoter;
-        private readonly IDeltaElector _deltaElector;
         private readonly IDfs _dfs;
         private readonly ILogger _logger;
 
@@ -60,15 +55,11 @@ namespace Catalyst.Core.Lib.Modules.Consensus.Deltas
 
         public DeltaHub(IBroadcastManager broadcastManager,
             IPeerIdentifier peerIdentifier,
-            IDeltaVoter deltaVoter,
-            IDeltaElector deltaElector,
             IDfs dfs,
             ILogger logger)
         {
             _broadcastManager = broadcastManager;
             _peerIdentifier = peerIdentifier;
-            _deltaVoter = deltaVoter;
-            _deltaElector = deltaElector;
             _dfs = dfs;
             _logger = logger;
 
@@ -140,7 +131,7 @@ namespace Catalyst.Core.Lib.Modules.Consensus.Deltas
             try
             {
                 _logger.Verbose("Broadcasting new delta dfs address {dfsAddress} for delta with previous delta hash {previousDeltaHash}",
-                    dfsFileAddress, previousDeltaHash.AsMultihashBase64UrlString());
+                    dfsFileAddress, previousDeltaHash.AsBase32Address());
 
                 var newDeltaHashOnDfs = new DeltaDfsHashBroadcast
                 {

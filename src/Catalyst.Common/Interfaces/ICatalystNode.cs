@@ -23,6 +23,7 @@
 
 using System.Threading;
 using System.Threading.Tasks;
+using Autofac;
 using Catalyst.Common.Interfaces.Modules.Consensus;
 
 namespace Catalyst.Common.Interfaces
