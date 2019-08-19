@@ -105,7 +105,7 @@ namespace Catalyst.Simulator.RpcClients
             {
                 try
                 {
-                    var isConnectionSuccessful = await ConnectAsync(peerIdentifier);
+                    var isConnectionSuccessful = await ConnectAsync(peerIdentifier).ConfigureAwait(false);
                     if (isConnectionSuccessful)
                     {
                         return true;

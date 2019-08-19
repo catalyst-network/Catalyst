@@ -51,7 +51,7 @@ namespace Catalyst.Simulator.Simulations
 
         public async Task SimulateAsync(IList<ClientRpcInfo> clientRpcInfoList)
         {
-            var isConnectionSuccessful = await ConnectToAllPeerIdentifiersAsync(clientRpcInfoList);
+            var isConnectionSuccessful = await ConnectToAllPeerIdentifiersAsync(clientRpcInfoList).ConfigureAwait(false);
             if (!isConnectionSuccessful)
             {
                 return;
