@@ -23,73 +23,35 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using Catalyst.Common.Cryptography;
-using Catalyst.Common.FileSystem;
-using Catalyst.Common.Interfaces.Cli;
-using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.Interfaces.Registry;
-using Catalyst.Protocol.Rpc.Node;
-using Catalyst.Simulator.Helpers;
+using Catalyst.Simulator.Interfaces;
 using Serilog;
 
 namespace Catalyst.Simulator
 {
     public class Simulator
     {
-        private readonly Random _random;
+        private readonly ISimulation _simulation;
         private readonly ILogger _logger;
-        private readonly IUserOutput _userOutput;
-        private readonly SimpleRpcClient _simpleRpcClient;
 
-        public Simulator(IUserOutput userOutput, IPasswordRegistry passwordRegistry, ILogger logger)
+        public Simulator(ISimulation simulation) : this(simulation, null) { }
+
+        public Simulator(ISimulation simulation, ILogger logger)
         {
+            _simulation = simulation;
             _logger = logger;
-            _random = new Random();
-            _userOutput = userOutput;
-
-            var fileSystem = new FileSystem();
-            var consolePasswordReader = new ConsolePasswordReader(_userOutput, passwordRegistry);
-            var certificateStore = new CertificateStore(fileSystem, consolePasswordReader);
-            var certificate = certificateStore.ReadOrCreateCertificateFile("mycert.pfx");
-
-            _simpleRpcClient = new SimpleRpcClient(_userOutput, passwordRegistry, certificate, logger);
         }
 
-        public async Task Simulate(IEnumerable<IPeerIdentifier> simulationNodePeerIdentifiers)
+        public async Task SimulateAsync(IList<ClientRpcInfo> clientRpcInfoList)
         {
-            var isConnectionSuccessful = await _simpleRpcClient
-               .ConnectRetryAsync(simulationNodePeerIdentifiers.ElementAt(0)).ConfigureAwait(false);
-            if (!isConnectionSuccessful)
+            try
             {
-                _logger.Error("Could not connect to node");
-                return;
+                await Task.Run(async () => { await _simulation.SimulateAsync(clientRpcInfoList); });
             }
-
-            _simpleRpcClient.ReceiveMessage<BroadcastRawTransactionResponse>(ReceiveTransactionResponse);
-
-            await RunSimulation();
-        }
-
-        private async Task RunSimulation()
-        {
-            await Task.Run(async () =>
+            catch (Exception exc)
             {
-                while (_simpleRpcClient.IsActive())
-                {
-                    _userOutput.WriteLine("Sending transaction");
-                    var transaction = TransactionHelper.GenerateTransaction(_random.Next(100), _random.Next(2));
-                    _simpleRpcClient.SendMessage(transaction);
-
-                    await Task.Delay(100).ConfigureAwait(false);
-                }
-            });
-        }
-
-        public void ReceiveTransactionResponse(BroadcastRawTransactionResponse response)
-        {
-            _userOutput.WriteLine($"Transaction response: {response.ResponseCode}");
+                _logger?.Error(exc, "An exception has occured in Simulator.Simulate, aborting simulation");
+            }
         }
     }
 }
