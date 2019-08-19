@@ -43,7 +43,7 @@ namespace Catalyst.Simulator.Simulations
             _userOutput = userOutput;
         }
 
-        public async Task<bool> ConnectAsync(ClientRpcInfo clientRpcInfo)
+        private async Task<bool> ConnectAsync(ClientRpcInfo clientRpcInfo)
         {
             var isConnectionSuccessful = await clientRpcInfo.RpcClient
                .ConnectRetryAsync(clientRpcInfo.PeerIdentifier).ConfigureAwait(false);
