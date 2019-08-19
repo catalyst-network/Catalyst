@@ -123,8 +123,6 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Mempool
 
             _memPool.Delete(keys);
 
-            var calls = _logger.ReceivedCalls().ToList();
-
             _logger.Received(1).Error(Arg.Any<Exception>(),
                 Arg.Any<string>(),
                 Arg.Any<string[]>());
@@ -160,7 +158,7 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Mempool
         [Fact]
         public void SaveMempoolDocument_Should_Return_False_And_Log_On_Store_Exception()
         {
-            var exception = new Exception("underlying store is not connected");
+            var exception = new TimeoutException("underlying store is not connected");
             _transactionStore.TryGet(default, out Arg.Any<MempoolDocument>())
                .ThrowsForAnyArgs(exception);
             var saved = _memPool.SaveMempoolDocument(_mempoolDocument);
@@ -213,7 +211,7 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Mempool
                     var id = Thread.CurrentThread.ManagedThreadId;
                     mempoolDocument = new MempoolDocument
                     {
-                        Transaction = TransactionHelper.GetTransaction(standardAmount: (uint)id)
+                        Transaction = TransactionHelper.GetTransaction(standardAmount: (uint) id)
                     };
 
                     if (FirstThreadId == null)
