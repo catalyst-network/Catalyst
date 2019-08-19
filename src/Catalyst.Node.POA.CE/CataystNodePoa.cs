@@ -33,13 +33,13 @@ using Catalyst.Common.Interfaces.Modules.Ledger;
 using Catalyst.Common.Interfaces.Modules.Mempool;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Rpc;
+using Catalyst.Common.P2P;
 using Catalyst.Modules.Lib.Api;
 using Serilog;
 
 namespace Catalyst.Node.POA.CE
 {
-    public class CatalystNodePoa
-        : ICatalystNode
+    public class CatalystNodePoa : ICatalystNode
     {
         public IConsensus Consensus { get; }
         private readonly IContract _contract;
@@ -51,6 +51,7 @@ namespace Catalyst.Node.POA.CE
         private readonly IPeerService _peer;
         private readonly INodeRpcServer _nodeRpcServer;
         private readonly IPeerClient _peerClient;
+        private readonly IPeerSettings _peerSettings;
 
         private readonly IApi _api;
 
@@ -63,11 +64,13 @@ namespace Catalyst.Node.POA.CE
             INodeRpcServer nodeRpcServer,
             IApi api,
             IPeerClient peerClient,
+            IPeerSettings peerSettings,
             IMempool mempool = null,
             IContract contract = null)
         {
             _peer = peer;
             _peerClient = peerClient;
+            _peerSettings = peerSettings;
             Consensus = consensus;
             _dfs = dfs;
             _ledger = ledger;
@@ -90,8 +93,10 @@ namespace Catalyst.Node.POA.CE
         public async Task RunAsync(CancellationToken ct)
         {
             _logger.Information("Starting the Catalyst Node");
+            _logger.Information("using PeerIdentifier: {0}", new PeerIdentifier(_peerSettings));
 
             await StartSockets().ConfigureAwait(false);
+            Consensus.StartProducing();
 
             bool exit;
             

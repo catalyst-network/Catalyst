@@ -23,11 +23,14 @@
 
 using System;
 using System.Linq;
+using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Modules.Consensus;
 using Catalyst.Common.Interfaces.Modules.Consensus.Deltas;
 using Catalyst.Common.Modules.Consensus.Cycle;
+using Catalyst.Common.Util;
 using Catalyst.Protocol.Deltas;
 using Catalyst.TestUtils;
+using Multiformats.Hash.Algorithms;
 using NSubstitute;
 using Serilog;
 using Xunit;
@@ -52,6 +55,7 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Consensus
             _deltaElector = Substitute.For<IDeltaElector>();
             _deltaCache = Substitute.For<IDeltaCache>();
             _deltaHub = Substitute.For<IDeltaHub>();
+            var hashProvider = Substitute.For<IDeltaHashProvider>();
             var logger = Substitute.For<ILogger>();
             _consensus = new Lib.Modules.Consensus.Consensus(
                 _deltaBuilder, 
@@ -60,6 +64,7 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Consensus
                 _deltaCache,
                 _deltaHub, 
                 _cycleEventProvider,
+                hashProvider,
                 logger);
 
             _consensus.StartProducing();
@@ -132,6 +137,10 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Consensus
                     ci[1] = localDelta;
                     return true;
                 });
+
+            _deltaHub.PublishDeltaToDfsAndBroadcastAddressAsync(default, default)
+               .ReturnsForAnyArgs(ByteUtil.GenerateRandomByteArray(1000).ComputeMultihash(new BLAKE2B_256())
+                   .AsBase32Address());
 
             _cycleEventProvider.MovePastNextPhase(PhaseName.Voting);
             _cycleEventProvider.Scheduler.Stop();

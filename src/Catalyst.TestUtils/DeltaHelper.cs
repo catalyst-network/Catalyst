@@ -41,7 +41,7 @@ namespace Catalyst.TestUtils
             DateTime? timestamp = default)
         {
             var previousHash = previousDeltaHash ?? ByteUtil.GenerateRandomByteArray(32)
-               .ComputeMultihash(hashAlgorithm ?? new ID());
+               .ComputeMultihash(hashAlgorithm ?? new BLAKE2B_256());
             return GetDelta(previousHash, merkleRoot, merklePoda, timestamp);
         }
 
@@ -71,8 +71,8 @@ namespace Catalyst.TestUtils
             PeerId producerId = null,
             IMultihashAlgorithm hashAlgorithm = null)
         {
-            var candidateHash = hash ?? ByteUtil.GenerateRandomByteArray(32).ComputeMultihash(hashAlgorithm ?? new ID());
-            var previousHash = previousDeltaHash ?? ByteUtil.GenerateRandomByteArray(32).ComputeMultihash(hashAlgorithm ?? new ID());
+            var candidateHash = hash ?? ByteUtil.GenerateRandomByteArray(32).ComputeMultihash(hashAlgorithm ?? new BLAKE2B_256());
+            var previousHash = previousDeltaHash ?? ByteUtil.GenerateRandomByteArray(32).ComputeMultihash(hashAlgorithm ?? new BLAKE2B_256());
             var producer = producerId 
              ?? PeerIdHelper.GetPeerId(publicKey: ByteUtil.GenerateRandomByteArray(32));
 

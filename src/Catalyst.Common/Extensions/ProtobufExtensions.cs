@@ -98,9 +98,9 @@ namespace Catalyst.Common.Extensions
             return AsMultihash(byteString).ToString();
         }
 
-        public static string AsMultihashBase64UrlString(this ByteString byteString)
+        public static string AsBase32Address(this ByteString byteString)
         {
-            return AsMultihash(byteString).AsBase64UrlString();
+            return AsMultihash(byteString).AsBase32Address();
         }
 
         public static ByteString PublicKeyToProtobuf(this string publicKey)

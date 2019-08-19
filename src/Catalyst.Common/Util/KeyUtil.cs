@@ -30,7 +30,7 @@ namespace Catalyst.Common.Util
     {
         public static string KeyToString(this byte[] keyAsBytes)
         {
-            return Base32.Crockford.Encode(keyAsBytes, false);
+            return Base32.Crockford.Encode(keyAsBytes, false).ToLowerInvariant();
         }
 
         public static byte[] KeyToBytes(this string keyAsString)

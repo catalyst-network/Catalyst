@@ -24,6 +24,7 @@
 using Catalyst.Common.Interfaces.Modules.Mempool;
 using Catalyst.Protocol.Transaction;
 using Google.Protobuf;
+using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
 using SharpRepository.Repository;
 
@@ -33,6 +34,7 @@ namespace Catalyst.Common.Modules.Mempool.Models
     {
         [RepositoryPrimaryKey(Order = 1)]
         [JsonProperty("id")]
+        [BsonId]
         public string DocumentId => Transaction?.Signature?.ToByteString()?.ToBase64();
 
         public TransactionBroadcast Transaction { get; set; }
