@@ -69,11 +69,11 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Mempool
         {
             store.Get(Arg.Is<string>(k => k.Equals(document.DocumentId)))
                .Returns(document);
-            store.TryGet(Arg.Is<string>(k => k.Equals(document.Transaction.Signature)),
+            store.TryGet(Arg.Is<string>(k => k.Equals(document.DocumentId)),
                     out Arg.Any<MempoolDocument>())
                .Returns(ci =>
                 {
-                    ci[1] = document.Transaction;
+                    ci[1] = document;
                     return true;
                 });
         }
@@ -149,19 +149,34 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Mempool
         public void SaveMempoolDocument_Should_Not_Override_Existing_Record()
         {
             var expectedAmount = _mempoolDocument.Transaction.STEntries.Single().Amount;
-            _memPool.SaveMempoolDocument(_mempoolDocument);
+
+            var saved = _memPool.SaveMempoolDocument(_mempoolDocument);
             AddKeyValueStoreEntryExpectation(_mempoolDocument, _transactionStore);
+            saved.Should().BeTrue();
 
             var overridingTransaction = new MempoolDocument {Transaction = _mempoolDocument.Transaction.Clone()};
             overridingTransaction.Transaction.STEntries.Single().Amount = expectedAmount + 100;
-            var saved = _memPool.SaveMempoolDocument(overridingTransaction);
+            var overriden = _memPool.SaveMempoolDocument(overridingTransaction);
 
-            saved.Should().BeFalse();
+            overriden.Should().BeFalse();
 
             var retrievedTransaction = _memPool.GetMempoolDocument(_mempoolDocument.Transaction.Signature);
             retrievedTransaction.Transaction.STEntries.Single().Amount.Should().Be(expectedAmount);
         }
 
+        [Fact]
+        public void SaveMempoolDocument_Should_Return_False_And_Log_On_Store_Exception()
+        {
+            var exception = new Exception("underlying store is not connected");
+            _transactionStore.TryGet(default, out Arg.Any<MempoolDocument>())
+               .ThrowsForAnyArgs(exception);
+            var saved = _memPool.SaveMempoolDocument(_mempoolDocument);
+
+            saved.Should().BeFalse();
+
+            _logger.Received(1).Error(exception, Arg.Any<string>());
+        }
+        
         [Fact]
         public void SaveMempoolDocument_When_Called_Multiple_Times_Concurrently_Should_Not_Override_Existing_Record()
         {
@@ -279,7 +294,20 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Mempool
             content.Count.Should().Be(documentCount);
             content.Select(d => d.ToByteString()).Should()
                .BeEquivalentTo(mempoolDocs.Select(d => d.Transaction.ToByteString()));
+        }
 
+        [Fact]
+        public void ContainsDocument_Should_Return_True_On_Known_DocumentId()
+        {
+            AddKeyValueStoreEntryExpectation(_mempoolDocument, _transactionStore);
+            _memPool.ContainsDocument(_mempoolDocument.Transaction.Signature).Should().BeTrue();
+        }
+
+        [Fact]
+        public void ContainsDocument_Should_Return_False_On_Unknown_DocumentId()
+        {
+            var unknownTransaction = TransactionHelper.GetTransactionSignature("key not in the mempool");
+            _memPool.ContainsDocument(unknownTransaction).Should().BeFalse();
         }
     }
 }
