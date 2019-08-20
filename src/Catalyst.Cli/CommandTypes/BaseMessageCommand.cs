@@ -114,7 +114,11 @@ namespace Catalyst.Cli.CommandTypes
 
         private void SocketClientRegistryClientRemovedOnNext(SocketClientRegistryClientRemoved clientRemovedEvent)
         {
-            _subscriptions.TryRemove(clientRemovedEvent.SocketHashCode, out var outSubscription);
+            var subscriptionRemoved = _subscriptions.TryRemove(clientRemovedEvent.SocketHashCode, out var outSubscription);
+            if (subscriptionRemoved)
+            {
+                outSubscription.Dispose();
+            }
         }
 
         private void DisposeSubscriptions()
