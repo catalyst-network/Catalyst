@@ -47,7 +47,7 @@ namespace Catalyst.Common.IO.Handlers
             : base(Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType))
         {
             var observableScheduler = scheduler ?? Scheduler.Default;
-            _messageSubject = new ReplaySubject<IObserverDto<ProtocolMessage>>(0, observableScheduler);
+            _messageSubject = new ReplaySubject<IObserverDto<ProtocolMessage>>(1, observableScheduler);
             MessageStream = _messageSubject.AsObservable();
         }
 
