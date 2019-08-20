@@ -65,7 +65,7 @@ namespace Catalyst.Common.Kernel
         public static Kernel Instance { get; private set; }
 
         public static void Initramfs(bool overwrite = false,
-            string fileName = "Catalyst.Node.log",
+            string fileName = "Catalyst.Node..log",
             ICancellationTokenProvider cancellationTokenProvider = default)
         {
             Instance = new Kernel(cancellationTokenProvider, fileName);
