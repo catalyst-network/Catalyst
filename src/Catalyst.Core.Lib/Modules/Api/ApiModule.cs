@@ -36,7 +36,6 @@ namespace Catalyst.Core.Lib.Modules.Api
     {
         private readonly string _apiBindingAddress;
         private readonly string[] _controllerModules;
-        private IWebHost _host;
 
         public ApiModule(string configFilePath, string apiBindingAddress, List<string> controllerModules) : base(configFilePath)
         {
@@ -46,7 +45,7 @@ namespace Catalyst.Core.Lib.Modules.Api
 
         protected override void Load(ContainerBuilder builder)
         {
-            _host = WebHost.CreateDefaultBuilder()
+            var host = WebHost.CreateDefaultBuilder()
                .ConfigureServices(services =>
                 {
                     services.AddSingleton(builder);
@@ -74,7 +73,7 @@ namespace Catalyst.Core.Lib.Modules.Api
                .UseSerilog()
                .Build();
 
-            builder.RegisterInstance(_host).As<IWebHost>();
+            builder.RegisterInstance(host).As<IWebHost>();
             base.Load(builder);
         }
     }
