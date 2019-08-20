@@ -27,7 +27,6 @@ using System.Reflection;
 using System.Security;
 using Autofac;
 using Autofac.Configuration;
-using Autofac.Extensions.DependencyInjection;
 using AutofacSerilogIntegration;
 using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces;
@@ -52,7 +51,6 @@ namespace Catalyst.Common.Kernel
         private readonly string _fileName;
         private string _targetConfigFolder;
         private IConfigCopier _configCopier;
-        private IContainer _container;
         private readonly ConfigurationBuilder _configurationBuilder;
         private ILifetimeScope _instance;
 
@@ -62,13 +60,11 @@ namespace Catalyst.Common.Kernel
 
         public delegate void CustomBootLogic(Kernel kernel);
 
-        public static Kernel Instance { get; private set; }
-
-        public static void Initramfs(bool overwrite = false,
+        public static Kernel Initramfs(bool overwrite = false,
             string fileName = "Catalyst.Node..log",
             ICancellationTokenProvider cancellationTokenProvider = default)
         {
-            Instance = new Kernel(cancellationTokenProvider, fileName);
+            return new Kernel(cancellationTokenProvider, fileName);
         }
 
         public void LogUnhandledException(object sender, UnhandledExceptionEventArgs e)
@@ -113,7 +109,6 @@ namespace Catalyst.Common.Kernel
             }
             
             ContainerBuilder.RegisterModule(configurationModule);
-            ContainerBuilder.RegisterInstance(this);
 
             Logger = new LoggerConfiguration()
                .ReadFrom
@@ -129,12 +124,7 @@ namespace Catalyst.Common.Kernel
             
             return this;
         }
-
-        public IServiceProvider NewServiceCollection()
-        {
-            return new AutofacServiceProvider(_container);
-        }
-
+        
         public Kernel WithDataDirectory()
         {
             _targetConfigFolder = new FileSystem.FileSystem().GetCatalystDataDir().FullName;
@@ -268,13 +258,7 @@ namespace Catalyst.Common.Kernel
 
         private void StartContainer()
         {
-            if (_container != null)
-            {
-                return;
-            }
-
-            _container = ContainerBuilder.Build();
-            _instance = _container
+            _instance = ContainerBuilder.Build()
                .BeginLifetimeScope(MethodBase.GetCurrentMethod().DeclaringType.AssemblyQualifiedName);
         }
     }
