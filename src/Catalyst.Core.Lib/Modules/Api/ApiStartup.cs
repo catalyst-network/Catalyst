@@ -60,6 +60,11 @@ namespace Catalyst.Core.Lib.Modules.Api
 
         public void Configure(IApplicationBuilder app, ILoggerFactory loggerFactory)
         {
+            if (Kernel.Instance == null)
+            {
+                return;
+            }
+
             app.ApplicationServices = Kernel.Instance.NewServiceCollection();
             app.UseDeveloperExceptionPage();
             app.UseCors(options => options.AllowAnyOrigin());

@@ -46,7 +46,6 @@ namespace Catalyst.Common.Kernel
 {
     public sealed class Kernel : IDisposable
     {
-        public ILogger Logger { get; private set; }
         private string _withPersistence;
         private Types.NetworkTypes _networkTypes;
         private bool _overwrite;
@@ -54,9 +53,11 @@ namespace Catalyst.Common.Kernel
         private string _targetConfigFolder;
         private IConfigCopier _configCopier;
         private IContainer _container;
-        public ContainerBuilder ContainerBuilder { get; set; }
         private readonly ConfigurationBuilder _configurationBuilder;
         private ILifetimeScope _instance;
+
+        public ILogger Logger { get; private set; }
+        public ContainerBuilder ContainerBuilder { get; set; }
         public ICancellationTokenProvider CancellationTokenProvider { get; }
 
         public delegate void CustomBootLogic(Kernel kernel);
