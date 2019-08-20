@@ -56,7 +56,7 @@ namespace Catalyst.Core.Lib.Modules.Api
             return null;
         }
 
-        public IConfigurationRoot Configuration { get; private set; }
+        public IConfigurationRoot Configuration { get; }
 
         public void Configure(IApplicationBuilder app, ILoggerFactory loggerFactory)
         {
