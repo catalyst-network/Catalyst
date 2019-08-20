@@ -21,37 +21,29 @@
 
 #endregion
 
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Catalyst.Simulator.Interfaces;
-using Serilog;
+using Catalyst.Common.Registry;
+using Catalyst.Common.Types;
+using Catalyst.Simulator.Helpers;
 
-namespace Catalyst.Simulator
+namespace Catalyst.Simulator.Extensions
 {
-    public class Simulator
+    public static class PasswordRegistryExtensions
     {
-        private readonly ISimulation _simulation;
-        private readonly ILogger _logger;
-
-        public Simulator(ISimulation simulation) : this(simulation, null) { }
-
-        public Simulator(ISimulation simulation, ILogger logger)
+        public static PasswordRegistry SetFromOptions(this PasswordRegistry passwordRegistry, Options options)
         {
-            _simulation = simulation;
-            _logger = logger;
-        }
+            if (!string.IsNullOrEmpty(options.NodePassword))
+            {
+                PasswordRegistryHelper.AddPassword(passwordRegistry, PasswordRegistryTypes.DefaultNodePassword,
+                    options.NodePassword);
+            }
 
-        public async Task SimulateAsync(IList<ClientRpcInfo> clientRpcInfoList)
-        {
-            try
+            if (!string.IsNullOrEmpty(options.SslCertPassword))
             {
-                await _simulation.SimulateAsync(clientRpcInfoList).ConfigureAwait(false);
+                PasswordRegistryHelper.AddPassword(passwordRegistry, PasswordRegistryTypes.CertificatePassword,
+                    options.SslCertPassword);
             }
-            catch (Exception exc)
-            {
-                _logger?.Error(exc, "An exception has occured in Simulator.Simulate, aborting simulation");
-            }
+
+            return passwordRegistry;
         }
     }
 }
