@@ -28,6 +28,7 @@ using System.Threading.Tasks;
 using Catalyst.Common.Cryptography;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.FileSystem;
+using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.IO.Observers;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Rpc;
@@ -72,7 +73,9 @@ namespace Catalyst.Simulator
             ILogger logger = new LoggerConfiguration().WriteTo.Console().CreateLogger();
             var fileSystem1 = new FileSystem();
             _userOutput = new ConsoleUserOutput();
-            var consolePasswordReader = new ConsolePasswordReader(_userOutput, passwordRegistry);
+            var userInput = new ConsoleUserInput();
+            var passwordReader = new ConsolePasswordReader(_userOutput, userInput);
+            var consolePasswordReader = new PasswordManager(passwordReader, passwordRegistry);
 
             var certificateStore = new CertificateStore(fileSystem1, consolePasswordReader);
             _certificate = certificateStore.ReadOrCreateCertificateFile("mycert.pfx");

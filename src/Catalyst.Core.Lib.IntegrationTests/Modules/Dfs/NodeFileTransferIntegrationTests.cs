@@ -28,6 +28,7 @@ using System.Threading.Tasks;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.FileTransfer;
+using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Common.Interfaces.FileTransfer;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.Modules.Dfs;
@@ -72,7 +73,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.Modules.Dfs
             Substitute.For<IDtoFactory>();
             _nodeFileTransferFactory = new DownloadFileTransferFactory(_logger);
 
-            var passwordReader = new TestPasswordReader("abcd");
+            var passwordReader = Substitute.For<IPasswordManager>();
 
             var ipfsEngine = new IpfsAdapter(passwordReader, FileSystem, _logger);
             _logger = Substitute.For<ILogger>();

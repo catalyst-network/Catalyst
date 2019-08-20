@@ -25,65 +25,72 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Security;
-using System.Transactions;
 using Catalyst.Common.Cryptography;
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.Registry;
 using Catalyst.Common.Types;
+using FluentAssertions;
 using NSubstitute;
 using Xunit;
 
 namespace Catalyst.Common.UnitTests.Cryptography
 {
-    public class ConsolePasswordReaderTests : IDisposable
+    public class ConsolePasswordReaderTests
     {
-        private Stream _inputStream;
-        private readonly IPasswordRegistry _passwordRegistry;
+        private readonly IUserInput _userInput;
         private readonly IUserOutput _userOutput;
-        private TextReader _consoleInput;
         private readonly ConsolePasswordReader _consolePasswordReader;
 
         public ConsolePasswordReaderTests()
         {
-            _passwordRegistry = Substitute.For<IPasswordRegistry>();
+            _userInput = Substitute.For<IUserInput>();
             _userOutput = Substitute.For<IUserOutput>();
-            _consoleInput = Console.In;
 
-            _consolePasswordReader = new ConsolePasswordReader(_userOutput, _passwordRegistry);
+            _consolePasswordReader = new ConsolePasswordReader(_userOutput, _userInput);
         }
 
         [Fact]
-        public void ReadSecurePasswordAndAddToRegistry_When_Pass_In_Registry_Should_Not_Prompt_Password_From_Console()
+        public void ReadSecurePassword_Should_Prompt_Context_And_Get_Password_From_Console()
         {
-            var registryType = PasswordRegistryTypes.DefaultNodePassword;
-            _passwordRegistry.GetItemFromRegistry(Arg.Is(registryType)).Returns(new SecureString());
+            var prompt = "hello give me a password";
+            var keysPressed = new ConsoleKeyInfo[]
+            {
+                new ConsoleKeyInfo('?', ConsoleKey.Backspace, false, false, false),
+                new ConsoleKeyInfo('p', ConsoleKey.P, false, false, false),
+                new ConsoleKeyInfo('a', ConsoleKey.A, false, false, false),
+                new ConsoleKeyInfo('?', ConsoleKey.Backspace, false, false, false),
+                new ConsoleKeyInfo('@', ConsoleKey.A, false, false, false),
+                new ConsoleKeyInfo('s', ConsoleKey.S, false, false, false),
+                new ConsoleKeyInfo('s', ConsoleKey.S, false, false, false),
+                new ConsoleKeyInfo('?', ConsoleKey.Enter, false, false, false),
+            };
+            _userInput.ReadKey().Returns(keysPressed.First(), keysPressed.Skip(1).ToArray());
 
-            _consolePasswordReader.ReadSecurePasswordAndAddToRegistry(registryType);
-
-            _userOutput.DidNotReceiveWithAnyArgs().WriteLine(default);
+            using (var pass = _consolePasswordReader.ReadSecurePassword(prompt))
+            {
+                _userOutput.Received(1).WriteLine(prompt);
+                pass.Length.Should().Be(4);
+                pass.IsReadOnly().Should().BeTrue();
+            }
         }
 
         [Fact]
-        public void ReadSecurePasswordAndAddToRegistry_When_Pass_Not_In_Registry_Should_Prompt_Password_From_Console()
+        public void ReadSecurePassword_Should_Not_Accept_Password_Above_MaxLength_Chars()
         {
-            //var registryType = PasswordRegistryTypes.DefaultNodePassword;
-            //_passwordRegistry.GetItemFromRegistry(Arg.Is(registryType)).Returns(new SecureString());
+            var prompt = "hello give me a password";
+            var keysPressed = Enumerable.Repeat(0, ConsolePasswordReader.MaxLength + 1)
+               .Select(_ => new ConsoleKeyInfo('a', ConsoleKey.A, false, false, false))
+               .ToArray();
 
-            //using (var inputMemStream = new MemoryStream())
-            //using (var inputWriter = new StreamWriter(inputMemStream))
-            //using (var inputReader = new StreamReader(inputMemStream))
-            //{
-            //    Console.SetIn(inputReader);
-            //    Interop.
-            //    "passwe\bord\r\n".ToList().ForEach(c => inputWriter.Write(c));
+            _userInput.ReadKey().Returns(keysPressed.First(), keysPressed.Skip(1).ToArray());
 
-            //    _consolePasswordReader.ReadSecurePasswordAndAddToRegistry(registryType);
-            //    _userOutput.ReceivedWithAnyArgs(1).WriteLine(default);
-            //}
-        }
-
-        public void Dispose()
-        {
+            using (var pass = _consolePasswordReader.ReadSecurePassword(prompt))
+            {
+                _userOutput.Received(1).WriteLine(
+                    Arg.Is<string>(s => s.Contains(ConsolePasswordReader.MaxLength.ToString())));
+                pass.Length.Should().Be(255);
+                pass.IsReadOnly().Should().BeTrue();
+            }
         }
     }
 }
