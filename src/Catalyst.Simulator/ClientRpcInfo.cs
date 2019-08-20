@@ -21,37 +21,20 @@
 
 #endregion
 
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Simulator.Interfaces;
-using Serilog;
 
 namespace Catalyst.Simulator
 {
-    public class Simulator
+    public class ClientRpcInfo
     {
-        private readonly ISimulation _simulation;
-        private readonly ILogger _logger;
-
-        public Simulator(ISimulation simulation) : this(simulation, null) { }
-
-        public Simulator(ISimulation simulation, ILogger logger)
+        public ClientRpcInfo(IPeerIdentifier peerIdentifier, IRpcClient rpcClient)
         {
-            _simulation = simulation;
-            _logger = logger;
+            PeerIdentifier = peerIdentifier;
+            RpcClient = rpcClient;
         }
 
-        public async Task SimulateAsync(IList<ClientRpcInfo> clientRpcInfoList)
-        {
-            try
-            {
-                await _simulation.SimulateAsync(clientRpcInfoList).ConfigureAwait(false);
-            }
-            catch (Exception exc)
-            {
-                _logger?.Error(exc, "An exception has occured in Simulator.Simulate, aborting simulation");
-            }
-        }
+        public IPeerIdentifier PeerIdentifier { get; }
+        public IRpcClient RpcClient { get; }
     }
 }
