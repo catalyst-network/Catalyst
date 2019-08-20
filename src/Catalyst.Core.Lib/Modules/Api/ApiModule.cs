@@ -40,11 +40,13 @@ namespace Catalyst.Core.Lib.Modules.Api
         private readonly string _apiBindingAddress;
         private readonly string[] _controllerModules;
         private IContainer _container;
+        private readonly bool _addSwagger;
 
-        public ApiModule(string apiBindingAddress, List<string> controllerModules)
+        public ApiModule(string apiBindingAddress, List<string> controllerModules, bool addSwagger = true)
         {
             _apiBindingAddress = apiBindingAddress;
             _controllerModules = controllerModules.ToArray();
+            _addSwagger = addSwagger;
         }
 
         protected override void Load(ContainerBuilder builder)
@@ -81,10 +83,13 @@ namespace Catalyst.Core.Lib.Modules.Api
 
             mvcBuilder.AddControllersAsServices();
 
-            services.AddSwaggerGen(swagger =>
+            if (_addSwagger)
             {
-                swagger.SwaggerDoc("v1", new Info {Title = "Catalyst API", Description = "Catalyst"});
-            });
+                services.AddSwaggerGen(swagger =>
+                {
+                    swagger.SwaggerDoc("v1", new Info {Title = "Catalyst API", Description = "Catalyst"});
+                });
+            }
 
             containerBuilder.Populate(services);
         }
@@ -99,11 +104,11 @@ namespace Catalyst.Core.Lib.Modules.Api
                 routes.MapRoute(name: "CatalystApi", template: "api/{controller}/{action}/{id}");
             });
 
-            app.UseSwagger();
-            app.UseSwaggerUI(swagger =>
+            if (_addSwagger)
             {
-                swagger.SwaggerEndpoint("/swagger/v1/swagger.json", "Catalyst API");
-            });
+                app.UseSwagger();
+                app.UseSwaggerUI(swagger => { swagger.SwaggerEndpoint("/swagger/v1/swagger.json", "Catalyst API"); });
+            }
         }
     }
 }

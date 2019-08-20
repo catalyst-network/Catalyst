@@ -394,7 +394,8 @@
             "type": "Catalyst.Core.Lib.Modules.Api.ApiModule",
             "parameters": {
                 "apiBindingAddress": "http://*:5005",
-                "controllerModules": ["Catalyst.Modules.Lib"]
+                "controllerModules": [ "Catalyst.Modules.Lib" ],
+                "addSwagger":  true 
             }
         },
         {
