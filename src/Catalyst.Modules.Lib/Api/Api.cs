@@ -35,7 +35,8 @@ namespace Catalyst.Modules.Lib.Api
 {
     public class Api : IApi
     {
-        private readonly IWebHost _host;
+        private IWebHost _host;
+        private readonly string _apiBindingAddress;
 
         public Api(IWebHost host)
         {

@@ -7,7 +7,10 @@
                 {
                     "type": "Catalyst.Common.Modules.Api.IApi, Catalyst.Common"
                 }
-            ]
+            ],
+            "parameters": {
+                    "apiBindingAddress": "http://*:5005"
+            }
         }
     ]
 }
