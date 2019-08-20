@@ -21,6 +21,7 @@
 
 #endregion
 
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 using Autofac;
@@ -58,11 +59,20 @@ namespace Catalyst.Core.Lib.Modules.Api
                .UseSerilog()
                .Build();
 
-            builder.RegisterInstance(host);
+            builder.RegisterInstance(host).As<IWebHost>();
             builder.RegisterBuildCallback(async container =>
             {
                 _container = container;
-                await host.StartAsync();
+                var logger = _container.Resolve<ILogger>();
+
+                try
+                {
+                    await host.StartAsync();
+                }
+                catch (Exception e)
+                {
+                    logger.Error(e, "Error loading API");
+                }
             });
             base.Load(builder);
         }
