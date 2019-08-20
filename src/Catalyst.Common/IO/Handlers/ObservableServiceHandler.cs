@@ -58,8 +58,6 @@ namespace Catalyst.Common.IO.Handlers
         public override void ExceptionCaught(IChannelHandlerContext context, Exception e)
         {
             Logger.Error(e, "Error in ObservableServiceHandler");
-            context.CloseAsync();
-            _messageSubject.OnError(e);
         }
 
         private void Dispose(bool disposing)
