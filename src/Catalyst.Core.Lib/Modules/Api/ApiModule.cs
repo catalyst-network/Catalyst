@@ -56,6 +56,7 @@ namespace Catalyst.Core.Lib.Modules.Api
                .UseSerilog()
                .Build();
 
+            builder.RegisterInstance(host);
             builder.RegisterBuildCallback(async container =>
             {
                 _container = container;
