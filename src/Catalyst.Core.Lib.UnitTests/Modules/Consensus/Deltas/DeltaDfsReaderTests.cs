@@ -65,7 +65,7 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Consensus.Deltas
         }
 
         [Fact]
-        public void TryReadDeltaFromDfs_Should_Return_False_When_Hash_Not_Found_On_Dfs()
+        public void TryReadDeltaFromDfs_Should_Return_True_When_Hash_Found_On_Dfs()
         {
             var goodHash = "good hash";
             var matchingDelta = DeltaHelper.GetDelta();
