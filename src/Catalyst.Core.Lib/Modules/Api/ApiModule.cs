@@ -21,6 +21,7 @@
 
 #endregion
 
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 using Autofac;
@@ -36,6 +37,7 @@ namespace Catalyst.Core.Lib.Modules.Api
     {
         private readonly string _apiBindingAddress;
         private readonly string[] _controllerModules;
+        private IWebHost _host;
 
         public ApiModule(string configFilePath, string apiBindingAddress, List<string> controllerModules) : base(configFilePath)
         {
@@ -45,7 +47,7 @@ namespace Catalyst.Core.Lib.Modules.Api
 
         protected override void Load(ContainerBuilder builder)
         {
-            var webHost = WebHost.CreateDefaultBuilder()
+            _host = WebHost.CreateDefaultBuilder()
                .ConfigureServices(services =>
                 {
                     services.AddSingleton(builder);
@@ -72,8 +74,8 @@ namespace Catalyst.Core.Lib.Modules.Api
                .UseStartup<ApiStartup>()
                .UseSerilog()
                .Build();
-            builder.RegisterInstance(webHost).As<IWebHost>();
 
+            builder.RegisterInstance(_host).As<IWebHost>();
             base.Load(builder);
         }
     }

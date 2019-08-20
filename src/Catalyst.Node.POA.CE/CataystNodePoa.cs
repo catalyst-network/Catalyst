@@ -33,8 +33,8 @@ using Catalyst.Common.Interfaces.Modules.Ledger;
 using Catalyst.Common.Interfaces.Modules.Mempool;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Rpc;
+using Catalyst.Common.Modules.Api;
 using Catalyst.Common.P2P;
-using Catalyst.Modules.Lib.Api;
 using Serilog;
 
 namespace Catalyst.Node.POA.CE
@@ -52,7 +52,6 @@ namespace Catalyst.Node.POA.CE
         private readonly INodeRpcServer _nodeRpcServer;
         private readonly IPeerClient _peerClient;
         private readonly IPeerSettings _peerSettings;
-
         private readonly IApi _api;
 
         public CatalystNodePoa(IKeySigner keySigner,
@@ -62,9 +61,9 @@ namespace Catalyst.Node.POA.CE
             ILedger ledger,
             ILogger logger,
             INodeRpcServer nodeRpcServer,
-            IApi api,
             IPeerClient peerClient,
             IPeerSettings peerSettings,
+            IApi api = null,
             IMempool mempool = null,
             IContract contract = null)
         {
@@ -87,7 +86,11 @@ namespace Catalyst.Node.POA.CE
             await _nodeRpcServer.StartAsync().ConfigureAwait(false);
             await _peerClient.StartAsync().ConfigureAwait(false);
             await _peer.StartAsync().ConfigureAwait(false);
-            await _api.StartApiAsync().ConfigureAwait(false);
+
+            if (_api != null)
+            {
+                await _api.StartApiAsync().ConfigureAwait(false);
+            }
         }
 
         public async Task RunAsync(CancellationToken ct)

@@ -22,21 +22,14 @@
 #endregion
 
 using System.Threading.Tasks;
-using Catalyst.Common.Kernel;
 using Catalyst.Common.Modules.Api;
-using Catalyst.Core.Lib.Modules.Api;
-using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
-using Serilog;
 
-namespace Catalyst.Modules.Lib.Api
+namespace Catalyst.Core.Lib.Modules.Api
 {
     public class Api : IApi
     {
-        private IWebHost _host;
-        private readonly string _apiBindingAddress;
+        private readonly IWebHost _host;
 
         public Api(IWebHost host)
         {

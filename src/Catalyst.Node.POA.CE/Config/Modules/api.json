@@ -1,16 +1,13 @@
 {
-    "defaultAssembly": "Catalyst.Modules.Lib",
+    "defaultAssembly": "Catalyst.Core.Lib",
     "components": [
         {
-            "type": "Catalyst.Modules.Lib.Api.Api",
+            "type": "Catalyst.Core.Lib.Modules.Api.Api",
             "services": [
                 {
                     "type": "Catalyst.Common.Modules.Api.IApi, Catalyst.Common"
                 }
-            ],
-            "parameters": {
-                    "apiBindingAddress": "http://*:5005"
-            }
+            ]
         }
     ]
 }
