@@ -21,37 +21,13 @@
 
 #endregion
 
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Catalyst.Simulator.Interfaces;
-using Serilog;
 
-namespace Catalyst.Simulator
+namespace Catalyst.Simulator.Interfaces
 {
-    public class Simulator
+    public interface ISimulation
     {
-        private readonly ISimulation _simulation;
-        private readonly ILogger _logger;
-
-        public Simulator(ISimulation simulation) : this(simulation, null) { }
-
-        public Simulator(ISimulation simulation, ILogger logger)
-        {
-            _simulation = simulation;
-            _logger = logger;
-        }
-
-        public async Task SimulateAsync(IList<ClientRpcInfo> clientRpcInfoList)
-        {
-            try
-            {
-                await _simulation.SimulateAsync(clientRpcInfoList).ConfigureAwait(false);
-            }
-            catch (Exception exc)
-            {
-                _logger?.Error(exc, "An exception has occured in Simulator.Simulate, aborting simulation");
-            }
-        }
+        Task SimulateAsync(IList<ClientRpcInfo> clientRpcInfoList);
     }
 }
