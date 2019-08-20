@@ -96,10 +96,10 @@ namespace Catalyst.Node.POA.CE
                    .WithConfigCopier()
                    .WithPersistenceConfiguration()
                    .BuildKernel(options.OverwriteConfig)
-                   .StartNode()
                    .WithPassword(PasswordRegistryTypes.DefaultNodePassword, options.NodePassword)
                    .WithPassword(PasswordRegistryTypes.IpfsPassword, options.IpfsPassword)
-                   .WithPassword(PasswordRegistryTypes.CertificatePassword, options.SslCertPassword);
+                   .WithPassword(PasswordRegistryTypes.CertificatePassword, options.SslCertPassword)
+                   .StartNode();
 
                 // .StartCustom(CustomBootLogic);
                 
