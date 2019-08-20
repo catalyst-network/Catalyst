@@ -44,7 +44,6 @@ using Catalyst.Common.Interfaces.P2P.Discovery;
 using Catalyst.Common.Interfaces.Registry;
 using Catalyst.Common.Interfaces.Repository;
 using Catalyst.Common.Interfaces.Rpc;
-using Catalyst.Common.Modules.Api;
 using Catalyst.Common.P2P;
 using Catalyst.Common.P2P.Models;
 using Catalyst.Common.Types;
