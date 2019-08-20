@@ -63,8 +63,6 @@ namespace Catalyst.Common.UnitTests.IO.Handlers
 
             _testScheduler.Start();
 
-            var a = Log.Logger.Received();
-
             Log.Logger.Received(1).Error(exception, "Error in ObservableServiceHandler");
         }
     }
