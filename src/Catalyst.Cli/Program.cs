@@ -33,7 +33,7 @@ namespace Catalyst.Cli
 
         static Program()
         {
-            Kernel.Initramfs(false, "Catalyst.Cli.log");
+            Kernel.Initramfs(false, "Catalyst.Cli..log");
             Kernel = Kernel.Instance;
 
             AppDomain.CurrentDomain.UnhandledException += Kernel.LogUnhandledException;
