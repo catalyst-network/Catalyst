@@ -58,7 +58,7 @@ namespace Catalyst.Modules.Lib.IntegrationTests.Consensus
 
         public bool ContainsDocument(TransactionSignature key) { throw new NotImplementedException(); }
 
-        public List<byte[]> GetMemPoolContentEncoded() { return _fakeMempool.GetMemPoolContentEncoded(); }
+        public List<TransactionBroadcast> GetMemPoolContentAsTransactions() { return _fakeMempool.GetMemPoolContentAsTransactions(); }
         public bool SaveMempoolDocument(IMempoolDocument mempoolDocument) { throw new NotImplementedException(); }
         public IMempoolDocument GetMempoolDocument(TransactionSignature key) { throw new NotImplementedException(); }
         public void Delete(params string[] transactionSignatures) { _fakeMempool.Delete(transactionSignatures); }

@@ -43,7 +43,7 @@ namespace Catalyst.Common.Interfaces.Modules.Mempool
         ///     Gets a snapshot of the current mempool content.
         /// </summary>
         /// <returns></returns>
-        List<byte[]> GetMemPoolContentEncoded();
+        List<TransactionBroadcast> GetMemPoolContentAsTransactions();
 
         /// <summary>
         ///     Saves the transaction associated with a given key.
