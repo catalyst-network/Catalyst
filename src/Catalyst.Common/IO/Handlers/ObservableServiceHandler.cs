@@ -68,7 +68,10 @@ namespace Catalyst.Common.IO.Handlers
             }
         }
 
-        public void Dispose() { Dispose(true); }
+        public void Dispose()
+        {
+            Dispose(true);
+        }
 
         /// <summary>
         ///     Reads the channel once accepted and pushed into a stream.
