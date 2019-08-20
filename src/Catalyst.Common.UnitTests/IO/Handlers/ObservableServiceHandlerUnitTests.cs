@@ -22,12 +22,11 @@
 #endregion
 
 using System;
-using System.Threading;
 using Catalyst.Common.IO.Handlers;
 using DotNetty.Transport.Channels;
-using FluentAssertions;
 using Microsoft.Reactive.Testing;
 using NSubstitute;
+using Serilog;
 using Xunit;
 
 namespace Catalyst.Common.UnitTests.IO.Handlers
@@ -36,6 +35,8 @@ namespace Catalyst.Common.UnitTests.IO.Handlers
     {
         public ObservableServiceHandlerUnitTests()
         {
+            Log.Logger = Substitute.For<ILogger>();
+            Log.Logger.ForContext(Arg.Any<Type>()).Returns(Log.Logger);
             _testScheduler = new TestScheduler();
             _observableServiceHandler = new ObservableServiceHandler(_testScheduler);
         }
@@ -62,7 +63,9 @@ namespace Catalyst.Common.UnitTests.IO.Handlers
 
             _testScheduler.Start();
 
-            exception.Should().Be(exceptionResponse);
+            var a = Log.Logger.Received();
+
+            Log.Logger.Received(1).Error(exception, "Error in ObservableServiceHandler");
         }
     }
 }
