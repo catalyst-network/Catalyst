@@ -29,13 +29,15 @@ namespace Catalyst.Cli
 {
     internal static class Program
     {
+        private static readonly Kernel Kernel;
+
         static Program()
         {
             Kernel.Initramfs(false, "Catalyst.Cli.log");
-            var kernel = Kernel.Instance;
+            Kernel = Kernel.Instance;
 
-            AppDomain.CurrentDomain.UnhandledException += kernel.LogUnhandledException;
-            AppDomain.CurrentDomain.ProcessExit += kernel.CurrentDomain_ProcessExit;
+            AppDomain.CurrentDomain.UnhandledException += Kernel.LogUnhandledException;
+            AppDomain.CurrentDomain.ProcessExit += Kernel.CurrentDomain_ProcessExit;
         }
 
         /// <summary>
@@ -43,13 +45,12 @@ namespace Catalyst.Cli
         /// </summary>
         public static int Main()
         {
-            var kernel = Kernel.Instance;
-            kernel.Logger.Information("Catalyst.Cli started with process id {0}",
+            Kernel.Logger.Information("Catalyst.Cli started with process id {0}",
                 System.Diagnostics.Process.GetCurrentProcess().Id.ToString());
             
             try
             {
-                kernel.WithDataDirectory()
+                Kernel.WithDataDirectory()
                    .WithComponentsConfigFile(Constants.ShellComponentsJsonConfigFile)
                    .WithSerilogConfigFile()
                    .WithConfigCopier(new CliConfigCopier())
@@ -64,7 +65,7 @@ namespace Catalyst.Cli
             }
             catch (Exception e)
             {
-                kernel.Logger.Fatal(e, "Catalyst.Cli stopped unexpectedly");
+                Kernel.Logger.Fatal(e, "Catalyst.Cli stopped unexpectedly");
                 Environment.ExitCode = 1;
             }
 

@@ -45,13 +45,15 @@ namespace Catalyst.Node.POA.CE
     
     internal static class Program
     {
+        private static readonly Kernel Kernel;
+
         static Program()
         {
             Kernel.Initramfs();
+            Kernel = Kernel.Instance;
 
-            var kernel = Kernel.Instance;
-            AppDomain.CurrentDomain.UnhandledException += kernel.LogUnhandledException;
-            AppDomain.CurrentDomain.ProcessExit += kernel.CurrentDomain_ProcessExit;
+            AppDomain.CurrentDomain.UnhandledException += Kernel.LogUnhandledException;
+            AppDomain.CurrentDomain.ProcessExit += Kernel.CurrentDomain_ProcessExit;
         }
 
         /// <summary>
@@ -81,14 +83,12 @@ namespace Catalyst.Node.POA.CE
         
         private static void Run(Options options)
         {
-            var kernel = Kernel.Instance;
-
-            kernel.Logger.Information("Catalyst.Node started with process id {0}",
+            Kernel.Logger.Information("Catalyst.Node started with process id {0}",
                 System.Diagnostics.Process.GetCurrentProcess().Id.ToString());
             
             try
             {
-                kernel
+                Kernel
                    .WithDataDirectory()
                    .WithNetworksConfigFile()
                    .WithComponentsConfigFile()
@@ -107,7 +107,7 @@ namespace Catalyst.Node.POA.CE
             }
             catch (Exception e)
             {
-                kernel.Logger.Fatal(e, "Catalyst.Node stopped unexpectedly");
+                Kernel.Logger.Fatal(e, "Catalyst.Node stopped unexpectedly");
                 Environment.ExitCode = 1;
             }
         }
