@@ -126,24 +126,19 @@ namespace Catalyst.Simulator.RpcClients
             var retryCountDown = retryAttempts;
             while (retryCountDown > 0)
             {
-                try
+                var isConnectionSuccessful = await ConnectAsync(peerIdentifier).ConfigureAwait(false);
+                if (isConnectionSuccessful)
                 {
-                    var isConnectionSuccessful = await ConnectAsync(peerIdentifier).ConfigureAwait(false);
-                    if (isConnectionSuccessful)
-                    {
-                        return true;
-                    }
+                    return true;
                 }
-                catch (ConnectException)
-                {
-                    _logger.Error("Connection failed retrying...");
-                    if (retryAttempts != 0)
-                    {
-                        retryCountDown--;
-                    }
 
-                    await Task.Delay(5000).ConfigureAwait(false);
+                _logger.Error("Connection failed retrying...");
+                if (retryAttempts != 0)
+                {
+                    retryCountDown--;
                 }
+
+                await Task.Delay(5000).ConfigureAwait(false);
             }
 
             return false;
@@ -162,8 +157,22 @@ namespace Catalyst.Simulator.RpcClients
 
             _logger.Information($"Connecting to {_recipientPeerIdentifier.Ip}:{_recipientPeerIdentifier.Port}");
 
-            _nodeRpcClient = await _nodeRpcClientFactory.GetClient(_certificate, peerRpcConfig).ConfigureAwait(false);
-            return true;
+            try
+            {
+                _nodeRpcClient =
+                    await _nodeRpcClientFactory.GetClient(_certificate, peerRpcConfig).ConfigureAwait(false);
+                return _nodeRpcClient.Channel.Open;
+            }
+            catch (ConnectException connectionException)
+            {
+                _logger.Error(connectionException, "Could not connect to node");
+            }
+            catch (Exception exception)
+            {
+                _logger.Error(exception, "Error attempting to connect to node");
+            }
+
+            return false;
         }
 
         public bool IsConnected() { return _nodeRpcClient.Channel.Active; }
