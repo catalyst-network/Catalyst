@@ -86,11 +86,7 @@ namespace Catalyst.Node.POA.CE
             await _nodeRpcServer.StartAsync().ConfigureAwait(false);
             await _peerClient.StartAsync().ConfigureAwait(false);
             await _peer.StartAsync().ConfigureAwait(false);
-
-            if (_api != null)
-            {
-                await _api.StartApiAsync().ConfigureAwait(false);
-            }
+            _api?.StartApiAsync()?.ConfigureAwait(false);
         }
 
         public async Task RunAsync(CancellationToken ct)
@@ -102,7 +98,7 @@ namespace Catalyst.Node.POA.CE
             Consensus.StartProducing();
 
             bool exit;
-            
+
             do
             {
                 await Task.Delay(300, ct); //just to get the exit message at the bottom

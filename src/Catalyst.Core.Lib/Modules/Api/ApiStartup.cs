@@ -50,10 +50,9 @@ namespace Catalyst.Core.Lib.Modules.Api
             Configuration = builder.Build();
         }
 
-        public IServiceProvider ConfigureServices(IServiceCollection services)
+        public void ConfigureServices(IServiceCollection services)
         {
             _containerBuilder.Populate(services);
-            return null;
         }
 
         public IConfigurationRoot Configuration { get; }
