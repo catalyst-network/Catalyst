@@ -21,23 +21,28 @@
 
 #endregion
 
+using System;
 using System.IO;
+using Autofac;
+using Autofac.Extensions.DependencyInjection;
 using Catalyst.Common.Config;
+using Catalyst.Common.Kernel;
 using Catalyst.Common.Types;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Swashbuckle.AspNetCore.Swagger;
 
-namespace Catalyst.Modules.Lib.Api
+namespace Catalyst.Core.Lib.Modules.Api
 {
-    public sealed class Startup
+    public sealed class ApiStartup
     {
-        public Startup(IHostingEnvironment env)
+        private readonly ContainerBuilder _containerBuilder;
+
+        public ApiStartup(IHostingEnvironment env, ContainerBuilder containerBuilder)
         {
+            _containerBuilder = containerBuilder;
             var builder = new ConfigurationBuilder()
                .SetBasePath(env.ContentRootPath)
                .AddEnvironmentVariables()
@@ -45,25 +50,17 @@ namespace Catalyst.Modules.Lib.Api
             Configuration = builder.Build();
         }
 
-        public void ConfigureServices(IServiceCollection services)
+        public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            services.AddCors(c =>
-            {
-                c.AddPolicy("AllowOrigin", options => options.AllowAnyOrigin());
-            });
-
-            services.AddMvc()
-               .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-            services.AddSwaggerGen(swagger =>
-            {
-                swagger.SwaggerDoc("v1", new Info {Title = "Catalyst API", Description = "Catalyst"});
-            });
+            _containerBuilder.Populate(services);
+            return null;
         }
 
         public IConfigurationRoot Configuration { get; private set; }
 
         public void Configure(IApplicationBuilder app, ILoggerFactory loggerFactory)
         {
+            app.ApplicationServices = Kernel.Instance.NewServiceCollection();
             app.UseDeveloperExceptionPage();
             app.UseCors(options => options.AllowAnyOrigin());
             app.UseMvc(routes =>

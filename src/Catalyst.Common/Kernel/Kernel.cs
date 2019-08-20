@@ -27,6 +27,7 @@ using System.Reflection;
 using System.Security;
 using Autofac;
 using Autofac.Configuration;
+using Autofac.Extensions.DependencyInjection;
 using AutofacSerilogIntegration;
 using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces;
@@ -52,6 +53,7 @@ namespace Catalyst.Common.Kernel
         private readonly string _fileName;
         private string _targetConfigFolder;
         private IConfigCopier _configCopier;
+        private IContainer _container;
         public ContainerBuilder ContainerBuilder { get; set; }
         private readonly ConfigurationBuilder _configurationBuilder;
         private ILifetimeScope _instance;
@@ -59,11 +61,13 @@ namespace Catalyst.Common.Kernel
 
         public delegate void CustomBootLogic(Kernel kernel);
 
-        public static Kernel Initramfs(bool overwrite = false,
-            string fileName = "Catalyst.Node..log",
+        public static Kernel Instance { get; private set; }
+
+        public static void Initramfs(bool overwrite = false,
+            string fileName = "Catalyst.Node.log",
             ICancellationTokenProvider cancellationTokenProvider = default)
         {
-            return new Kernel(cancellationTokenProvider, fileName);
+            Instance = new Kernel(cancellationTokenProvider, fileName);
         }
 
         public void LogUnhandledException(object sender, UnhandledExceptionEventArgs e)
@@ -108,7 +112,8 @@ namespace Catalyst.Common.Kernel
             }
             
             ContainerBuilder.RegisterModule(configurationModule);
-            
+            ContainerBuilder.RegisterInstance(this);
+
             Logger = new LoggerConfiguration()
                .ReadFrom
                .Configuration(configurationModule.Configuration).WriteTo
@@ -124,12 +129,17 @@ namespace Catalyst.Common.Kernel
             return this;
         }
 
+        public IServiceProvider NewServiceCollection()
+        {
+            return new AutofacServiceProvider(_container);
+        }
+
         public Kernel WithDataDirectory()
         {
             _targetConfigFolder = new FileSystem.FileSystem().GetCatalystDataDir().FullName;
             return this;
         }
-
+        
         public Kernel WithNetworksConfigFile(NetworkTypes networkTypes = default)
         {
             _networkTypes = networkTypes ?? Types.NetworkTypes.Dev;
@@ -198,20 +208,14 @@ namespace Catalyst.Common.Kernel
         /// <summary>
         ///     Default container resolution for Catalyst.Node
         /// </summary>
-        public void StartNode()
+        public Kernel StartNode()
         {
-            if (_instance == null)
-            {
-                var container = ContainerBuilder.Build();
-                _instance = container
-                   .BeginLifetimeScope(MethodBase.GetCurrentMethod().DeclaringType.AssemblyQualifiedName);
-            }
-
+            StartContainer();
             BsonSerializationProviders.Init();
-
             _instance.Resolve<ICatalystNode>()
                .RunAsync(CancellationTokenProvider.CancellationTokenSource.Token)
                .Wait(CancellationTokenProvider.CancellationTokenSource.Token);
+            return this;
         }
 
         public void Dispose()
@@ -232,12 +236,8 @@ namespace Catalyst.Common.Kernel
                     Console.InputEncoding, false, bufferSize
                 )
             );
-            
-            if (_instance == null)
-            {
-                _instance = ContainerBuilder.Build()
-                   .BeginLifetimeScope(MethodBase.GetCurrentMethod().DeclaringType.AssemblyQualifiedName);
-            }
+
+            StartContainer();
 
             _instance.Resolve<ICatalystCli>()
                .RunConsole(CancellationTokenProvider.CancellationTokenSource.Token);
@@ -250,22 +250,31 @@ namespace Catalyst.Common.Kernel
                 return this;
             }
 
-            if (_instance == null)
+            ContainerBuilder.RegisterBuildCallback(buildCallback =>
             {
-                _instance = ContainerBuilder.Build()
-                   .BeginLifetimeScope(MethodBase.GetCurrentMethod().DeclaringType.AssemblyQualifiedName);
-            }
+                var passwordRegistry = buildCallback.Resolve<IPasswordRegistry>();
+                var ss = new SecureString();
+                foreach (var c in password)
+                {
+                    ss.AppendChar(c);
+                }
 
-            var passwordRegistry = _instance.Resolve<IPasswordRegistry>();
-            var ss = new SecureString();
-            foreach (var c in password)
-            {
-                ss.AppendChar(c);
-            }
-
-            passwordRegistry.AddItemToRegistry(types, ss);
-
+                passwordRegistry.AddItemToRegistry(types, ss);
+            });
+            
             return this;
+        }
+
+        private void StartContainer()
+        {
+            if (_container != null)
+            {
+                return;
+            }
+
+            _container = ContainerBuilder.Build();
+            _instance = _container
+               .BeginLifetimeScope(MethodBase.GetCurrentMethod().DeclaringType.AssemblyQualifiedName);
         }
     }
 }

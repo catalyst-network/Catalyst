@@ -21,35 +21,13 @@
 
 #endregion
 
+using System;
 using System.Threading.Tasks;
-using Catalyst.Common.Kernel;
-using Catalyst.Common.Modules.Api;
-using Catalyst.Core.Lib.Modules.Api;
-using Microsoft.AspNetCore;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
-using Serilog;
 
-namespace Catalyst.Modules.Lib.Api
+namespace Catalyst.Common.Modules.Api
 {
-    public class Api : IApi
+    public interface IApi : IDisposable
     {
-        private readonly IWebHost _host;
-
-        public Api(IWebHost host)
-        {
-            _host = host;
-        }
-
-        public Task StartApiAsync()
-        {
-            return _host.StartAsync();
-        }
-        
-        public void Dispose()
-        {
-            _host?.Dispose();
-        }
+        Task StartApiAsync();
     }
 }

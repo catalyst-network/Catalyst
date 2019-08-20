@@ -18,13 +18,23 @@
         <PackageReference Include="DotNetty.Codecs.Protobuf" Version="0.6.0" />
         <PackageReference Include="DotNetty.Common" Version="0.6.0" />
         <PackageReference Include="DotNetty.Handlers" Version="0.6.0" />
+        <PackageReference Include="Microsoft.AspNetCore.App" Version="2.2.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
         <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="2.2.0" />
         <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.2.0" />
         <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="2.2.0" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.2.0" />
         <PackageReference Include="Microsoft.Reactive.Testing" Version="4.1.5" />
         <PackageReference Include="Nito.Comparers" Version="6.0.0" />
+        <PackageReference Include="Serilog.AspNetCore" Version="2.1.1" />
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="4.0.1" />
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\Catalyst.Common\Catalyst.Common.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+      <Reference Include="Microsoft.AspNetCore">
+        <HintPath>..\..\..\..\..\..\..\Program Files\dotnet\sdk\NuGetFallbackFolder\microsoft.aspnetcore\2.2.0\lib\netstandard2.0\Microsoft.AspNetCore.dll</HintPath>
+      </Reference>
     </ItemGroup>
 </Project>

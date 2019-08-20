@@ -45,13 +45,13 @@ namespace Catalyst.Node.POA.CE
     
     internal static class Program
     {
-        private static readonly Kernel Kernel;
-
         static Program()
         {
-            Kernel = Kernel.Initramfs();
-            AppDomain.CurrentDomain.UnhandledException += Kernel.LogUnhandledException;
-            AppDomain.CurrentDomain.ProcessExit += Kernel.CurrentDomain_ProcessExit;
+            Kernel.Initramfs();
+
+            var kernel = Kernel.Instance;
+            AppDomain.CurrentDomain.UnhandledException += kernel.LogUnhandledException;
+            AppDomain.CurrentDomain.ProcessExit += kernel.CurrentDomain_ProcessExit;
         }
 
         /// <summary>
@@ -81,12 +81,14 @@ namespace Catalyst.Node.POA.CE
         
         private static void Run(Options options)
         {
-            Kernel.Logger.Information("Catalyst.Node started with process id {0}",
+            var kernel = Kernel.Instance;
+
+            kernel.Logger.Information("Catalyst.Node started with process id {0}",
                 System.Diagnostics.Process.GetCurrentProcess().Id.ToString());
             
             try
             {
-                Kernel
+                kernel
                    .WithDataDirectory()
                    .WithNetworksConfigFile()
                    .WithComponentsConfigFile()
@@ -94,10 +96,10 @@ namespace Catalyst.Node.POA.CE
                    .WithConfigCopier()
                    .WithPersistenceConfiguration()
                    .BuildKernel(options.OverwriteConfig)
+                   .StartNode()
                    .WithPassword(PasswordRegistryTypes.DefaultNodePassword, options.NodePassword)
                    .WithPassword(PasswordRegistryTypes.IpfsPassword, options.IpfsPassword)
-                   .WithPassword(PasswordRegistryTypes.CertificatePassword, options.SslCertPassword)
-                   .StartNode();
+                   .WithPassword(PasswordRegistryTypes.CertificatePassword, options.SslCertPassword);
 
                 // .StartCustom(CustomBootLogic);
                 
@@ -105,7 +107,7 @@ namespace Catalyst.Node.POA.CE
             }
             catch (Exception e)
             {
-                Kernel.Logger.Fatal(e, "Catalyst.Node stopped unexpectedly");
+                kernel.Logger.Fatal(e, "Catalyst.Node stopped unexpectedly");
                 Environment.ExitCode = 1;
             }
         }

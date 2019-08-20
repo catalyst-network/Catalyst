@@ -5,12 +5,9 @@
             "type": "Catalyst.Modules.Lib.Api.Api",
             "services": [
                 {
-                    "type": "Catalyst.Modules.Lib.Api.IApi"
+                    "type": "Catalyst.Common.Modules.Api.IApi, Catalyst.Common"
                 }
-            ],
-            "parameters": {
-                    "apiBindingAddress": "http://*:5005"
-            }
+            ]
         }
     ]
 }
