@@ -57,12 +57,11 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Mempool
             };
         }
 
-        private static void AddKeyValueStoreEntryExpectation(IMempoolDocument document,
-            IMempoolRepository store)
+        private void AddKeyValueStoreEntryExpectation(IMempoolDocument document)
         {
-            store.Get(Arg.Is<string>(k => k.Equals(document.DocumentId)))
+            _transactionStore.Get(Arg.Is<string>(k => k.Equals(document.DocumentId)))
                .Returns(document);
-            store.TryGet(Arg.Is<string>(k => k.Equals(document.DocumentId)),
+            _transactionStore.TryGet(Arg.Is<string>(k => k.Equals(document.DocumentId)),
                     out Arg.Any<MempoolDocument>())
                .Returns(ci =>
                 {
@@ -75,7 +74,7 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Mempool
         public void Get_should_retrieve_a_saved_transaction()
         {
             _memPool.SaveMempoolDocument(_mempoolDocument);
-            AddKeyValueStoreEntryExpectation(_mempoolDocument, _transactionStore);
+            AddKeyValueStoreEntryExpectation(_mempoolDocument);
 
             var mempoolDocument = _memPool.GetMempoolDocument(_mempoolDocument.Transaction.Signature);
             var expectedTransaction = _mempoolDocument.Transaction;
@@ -95,7 +94,7 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Mempool
         {
             const int numTx = 10;
             var documents = GetTestingMempoolDocuments(numTx);
-            documents.ForEach(mempoolDocument => AddKeyValueStoreEntryExpectation(mempoolDocument, _transactionStore));
+            documents.ForEach(AddKeyValueStoreEntryExpectation);
 
             for (var i = 0; i < numTx; i++)
             {
@@ -142,7 +141,7 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Mempool
             var expectedAmount = _mempoolDocument.Transaction.STEntries.Single().Amount;
 
             var saved = _memPool.SaveMempoolDocument(_mempoolDocument);
-            AddKeyValueStoreEntryExpectation(_mempoolDocument, _transactionStore);
+            AddKeyValueStoreEntryExpectation(_mempoolDocument);
             saved.Should().BeTrue();
 
             var overridingTransaction = new MempoolDocument {Transaction = _mempoolDocument.Transaction.Clone()};
@@ -168,67 +167,6 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Mempool
             _logger.Received(1).Error(exception, Arg.Any<string>());
         }
         
-        [Fact]
-        public void SaveMempoolDocument_When_Called_Multiple_Times_Concurrently_Should_Not_Override_Existing_Record()
-        {
-            const int threadNum = 8;
-            var threadW = new Thread[threadNum];
-            var pc = new ProducerConsumer(_memPool, _transactionStore);
-
-            // Set up writer
-            for (var i = 0; i < threadNum; i++) threadW[i] = new Thread(pc.Writer);
-
-            // Writers need to put stuff in the DB first
-            for (var i = 0; i < threadNum; i++) threadW[i].Start();
-
-            for (var i = 0; i < threadNum; i++) threadW[i].Join();
-
-            var mempoolDocument = _memPool.GetMempoolDocument(_mempoolDocument.Transaction.Signature);
-
-            // the first thread should set the amount and the value not overridden by other threads
-            // trying to insert the same key
-            ((int) mempoolDocument.Transaction.STEntries.Single().Amount).Should().Be(pc.FirstThreadId);
-        }
-
-        private sealed class ProducerConsumer
-        {
-            private static readonly object Locker = new object();
-            private readonly IMempoolRepository _keyValueStore;
-            private readonly IMempool _memPool;
-            public int? FirstThreadId;
-
-            public ProducerConsumer(IMempool memPool, IMempoolRepository keyValueStore)
-            {
-                _memPool = memPool;
-                _keyValueStore = keyValueStore;
-            }
-
-            public void Writer()
-            {
-                IMempoolDocument mempoolDocument;
-                lock (Locker)
-                {
-                    var id = Thread.CurrentThread.ManagedThreadId;
-                    mempoolDocument = new MempoolDocument
-                    {
-                        Transaction = TransactionHelper.GetTransaction(standardAmount: (uint) id)
-                    };
-
-                    if (FirstThreadId == null)
-                    {
-                        FirstThreadId = id;
-                        AddKeyValueStoreEntryExpectation(mempoolDocument, _keyValueStore);
-                    }
-
-                    Thread.Sleep(5); //milliseconds
-                }
-
-                // here there could be a context switch so second thread might call SaveTransaction failing the test
-                // so a little sleep was needed in the locked section
-                _memPool.SaveMempoolDocument(mempoolDocument); // write same key but different tx amount, not under lock
-            }
-        }
-
         [Fact]
         public void SaveMempoolDocument_Should_Throw_On_Document_With_Null_Transaction()
         {
@@ -290,7 +228,7 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Mempool
         [Fact]
         public void ContainsDocument_Should_Return_True_On_Known_DocumentId()
         {
-            AddKeyValueStoreEntryExpectation(_mempoolDocument, _transactionStore);
+            AddKeyValueStoreEntryExpectation(_mempoolDocument);
             _memPool.ContainsDocument(_mempoolDocument.Transaction.Signature).Should().BeTrue();
         }
 
