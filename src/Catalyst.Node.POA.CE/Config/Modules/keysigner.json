@@ -20,12 +20,20 @@
             "instanceScope": "singleinstance"
         },
         {
+            "type": "Catalyst.Common.Cryptography.PasswordManager, Catalyst.Common",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.Cryptography.IPasswordManager, Catalyst.Common"
+                }
+            ]
+        },
+        {
             "type": "Catalyst.Common.Modules.KeySigner.KeySigner, Catalyst.Common",
             "services": [
                 {
                     "type": "Catalyst.Common.Interfaces.Modules.KeySigner.IKeySigner, Catalyst.Common"
                 }
-            ] ,
+            ],
             "instanceScope": "singleinstance"
         },
         {
