@@ -58,6 +58,7 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Consensus.Deltas
         [Fact]
         public void TryGetDelta_Should_Not_Hit_The_Dfs_Or_Store_Delta_When_Delta_Is_In_Cache()
         {
+            _memoryCache.ClearReceivedCalls();
             var deltaFromCache = DeltaHelper.GetDelta();
             var deltaHash = "abc";
 

@@ -58,11 +58,11 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Observers
             _fakeContext.Channel.RemoteAddress.Returns(new IPEndPoint(IPAddress.Loopback, IPEndPoint.MaxPort));
         }
         
-        public static IEnumerable<object[]> QueryContents =>
+        public static IEnumerable<object[]> MempoolTransactions =>
             new List<object[]>
             {
-                new object[] {CreateTestTransactions(), 2},
-                new object[] {new List<TransactionBroadcast>(), 0}
+                new object[] {CreateTestTransactions()},
+                new object[] {new List<TransactionBroadcast>()}
             };
 
         private static List<TransactionBroadcast> CreateTestTransactions()
@@ -77,16 +77,11 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Observers
         }
 
         [Theory]
-        [MemberData(nameof(QueryContents))]
-        public async Task GetMempool_UsingFilledMempool_ShouldSendGetMempoolResponse(List<TransactionBroadcast> txLst, int expectedTxs)
+        [MemberData(nameof(MempoolTransactions))]
+        public async Task GetMempool_UsingFilledMempool_ShouldSendGetMempoolResponse(List<TransactionBroadcast> mempoolTransactions)
         {
             var mempool = Substitute.For<IMempool>();
-            mempool.GetMemPoolContentEncoded().Returns(x =>
-                {
-                    var txEncodedLst = txLst.Select(tx => tx.ToString().ToBytesForRLPEncoding()).ToList();
-                    return txEncodedLst;
-                }
-            );
+            mempool.GetMemPoolContentAsTransactions().Returns(mempoolTransactions);
 
             var request = new DtoFactory().GetDto(
                 new GetMempoolRequest(),
@@ -107,24 +102,8 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Observers
             var sentResponseDto = (IMessageDto<ProtocolMessage>) receivedCalls.Single().GetArguments().Single();
             
             var responseContent = sentResponseDto.FromIMessageDto().FromProtocolMessage<GetMempoolResponse>();
-            
-            if (expectedTxs == 0)
-            {
-                responseContent.Mempool.Should().BeEmpty();
-                return;
-            }
 
-            responseContent.Mempool.Should().NotBeEmpty();
-            responseContent.Mempool.Count.Should().Be(expectedTxs);
-            
-            var mempoolContent = responseContent.Mempool.ToList();
-
-            for (var i = 0; i < mempoolContent.Count; i++)
-            {
-                var tx = mempoolContent[i];
-
-                tx.Should().NotBeEmpty().And.ContainEquivalentOf(txLst[i].Signature.ToString());
-            }
+            responseContent.Transactions.Should().BeEquivalentTo(mempoolTransactions);
         }
     }
 }

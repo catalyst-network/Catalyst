@@ -36,19 +36,20 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using Catalyst.Common.P2P;
 
 namespace Catalyst.Core.Lib.Modules.Consensus.Deltas
 {
     public class DeltaVoter : IDeltaVoter
     {
         public static string GetCandidateCacheKey(CandidateDeltaBroadcast candidate) => 
-            nameof(DeltaVoter) + "-" + candidate.Hash.AsMultihashBase64UrlString();
+            nameof(DeltaVoter) + "-" + candidate.Hash.AsBase32Address();
 
         public static string GetCandidateListCacheKey(CandidateDeltaBroadcast candidate) => 
-            nameof(DeltaVoter) + "-" + candidate.PreviousDeltaDfsHash.AsMultihashBase64UrlString();
+            nameof(DeltaVoter) + "-" + candidate.PreviousDeltaDfsHash.AsBase32Address();
 
         public static string GetCandidateListCacheKey(byte[] previousDeltaHash) => 
-            nameof(DeltaVoter) + "-" + previousDeltaHash.AsMultihashBase64UrlString();
+            nameof(DeltaVoter) + "-" + previousDeltaHash.AsBase32Address();
 
         /// <summary>
         /// This cache is used to maintain the candidates with their scores, and for each previous delta hash we found,
@@ -114,8 +115,8 @@ namespace Catalyst.Core.Lib.Modules.Consensus.Deltas
             var scoredDelta = new ScoredCandidateDelta(candidate, 100 * rankingFactor + 1);
             _candidatesCache.Set(candidateCacheKey, scoredDelta, _cacheEntryOptions());
             _logger.Verbose("Candidate {hash} with previous hash {previousHash} has score {scored}", 
-                candidate.Hash.AsMultihashBase64UrlString(), 
-                candidate.PreviousDeltaDfsHash.AsMultihashBase64UrlString(),
+                candidate.Hash.AsBase32Address(), 
+                candidate.PreviousDeltaDfsHash.AsBase32Address(),
                 scoredDelta.Score);
         }
 
@@ -130,20 +131,20 @@ namespace Catalyst.Core.Lib.Modules.Consensus.Deltas
                     });
             candidatesForPreviousHash.Add(candidateCacheKey);
             _logger.Verbose("Candidates for previous hash {previousHash} are {candidates}",
-                candidate.PreviousDeltaDfsHash.AsMultihashBase64UrlString(), candidatesForPreviousHash);
+                candidate.PreviousDeltaDfsHash.AsBase32Address(), candidatesForPreviousHash);
         }
 
         public bool TryGetFavouriteDelta(byte[] previousDeltaDfsHash, out FavouriteDeltaBroadcast favourite)
         {
             Guard.Argument(previousDeltaDfsHash, nameof(previousDeltaDfsHash)).NotNull().NotEmpty();
             _logger.Debug("Retrieving favourite candidate delta for the successor of delta {0}", 
-                previousDeltaDfsHash.AsMultihashBase64UrlString());
+                previousDeltaDfsHash.AsBase32Address());
 
             var cacheKey = GetCandidateListCacheKey(previousDeltaDfsHash);
             if (!_candidatesCache.TryGetValue(cacheKey, out ConcurrentBag<string> candidates))
             {
                 _logger.Debug("Failed to retrieve any scored candidate with previous delta {0}",
-                    previousDeltaDfsHash.AsMultihashBase64UrlString());
+                    previousDeltaDfsHash.AsBase32Address());
                 favourite = default;
                 return false;
             }
@@ -161,8 +162,8 @@ namespace Catalyst.Core.Lib.Modules.Consensus.Deltas
             };
 
             _logger.Debug("Retrieved favourite candidate delta {candidate} for the successor of delta {previousDelta}",
-                bestCandidate.Hash.AsMultihashBase64UrlString(),
-                previousDeltaDfsHash.AsMultihashBase64UrlString());
+                bestCandidate.Hash.AsBase32Address(),
+                previousDeltaDfsHash.AsBase32Address());
 
             return true;
         }
@@ -174,12 +175,16 @@ namespace Catalyst.Core.Lib.Modules.Consensus.Deltas
             var ranking = preferredProducers.ToList()
                .FindIndex(p => p.PeerId.Equals(candidate.ProducerId));
 
+            var identifier = new PeerIdentifier(candidate.ProducerId);
+            _logger.Verbose("ranking for block produced by {producerId} = {ranking}",
+                identifier, ranking);
+
             if (ranking == -1)
             {
                 throw new KeyNotFoundException(
                     $"Producer {candidate.ProducerId} " +
                     $"should not be sending candidate deltas with previous hash " +
-                    $"{candidate.PreviousDeltaDfsHash.AsMultihashBase64UrlString()}");
+                    $"{candidate.PreviousDeltaDfsHash.AsBase32Address()}");
             }
 
             return preferredProducers.Count - ranking;

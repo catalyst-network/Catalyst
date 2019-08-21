@@ -23,11 +23,14 @@
 
 using System.Linq;
 using Catalyst.Common.Interfaces.Repository;
+using Catalyst.Common.Util;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace Catalyst.Modules.Lib.Api.Controllers
 {
-    [Route("api/peer")]
+    [ApiController]
+    [Route("api/[controller]/[action]")]
     public sealed class PeerController : Controller
     {
         private readonly IPeerRepository _peerRepository;
@@ -39,9 +42,12 @@ namespace Catalyst.Modules.Lib.Api.Controllers
 
         // GET: api/values
         [HttpGet]
-        public OkObjectResult GetAllPeers()
+        public JsonResult GetAllPeers()
         {
-            return Ok(Json(_peerRepository.GetAll().ToList()));
+            return Json(_peerRepository.GetAll(), new JsonSerializerSettings
+            {
+                Converters = JsonConverterProviders.Converters.ToList()
+            });
         }
     }
 }

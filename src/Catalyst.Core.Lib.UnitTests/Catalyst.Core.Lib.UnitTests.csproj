@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFramework>netcoreapp2.2</TargetFramework>
         <Authors>James Kirby (nshcore@protonmail.com)</Authors>
@@ -19,5 +19,8 @@
         <ProjectReference Include="..\Catalyst.Common.UnitTests\Catalyst.Common.UnitTests.csproj" />
         <ProjectReference Include="..\Catalyst.Core.Lib\Catalyst.Core.Lib.csproj" />
         <ProjectReference Include="..\Catalyst.TestUtils\Catalyst.TestUtils.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+      <Folder Include="Repository\" />
     </ItemGroup>
 </Project>

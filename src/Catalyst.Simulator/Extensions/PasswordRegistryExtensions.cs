@@ -21,41 +21,29 @@
 
 #endregion
 
-using System;
-using System.Threading.Tasks;
-using Autofac.Extensions.DependencyInjection;
-using Microsoft.AspNetCore;
-using Microsoft.AspNetCore.Hosting;
-using Serilog;
+using Catalyst.Common.Registry;
+using Catalyst.Common.Types;
+using Catalyst.Simulator.Helpers;
 
-namespace Catalyst.Modules.Lib.Api
+namespace Catalyst.Simulator.Extensions
 {
-    public interface IApi : IDisposable
+    public static class PasswordRegistryExtensions
     {
-        Task StartApiAsync();
-    }
-
-    public class Api : IApi
-    {
-        private readonly IWebHost _host;
-
-        public Api()
+        public static PasswordRegistry SetFromOptions(this PasswordRegistry passwordRegistry, Options options)
         {
-            _host = WebHost.CreateDefaultBuilder()
-               .ConfigureServices(services => services.AddAutofac())
-               .UseStartup<Startup>()
-               .UseSerilog()
-               .Build();
-        }
+            if (!string.IsNullOrEmpty(options.NodePassword))
+            {
+                PasswordRegistryHelper.AddPassword(passwordRegistry, PasswordRegistryTypes.DefaultNodePassword,
+                    options.NodePassword);
+            }
 
-        public Task StartApiAsync()
-        {
-            return _host.StartAsync();
-        }
-        
-        public void Dispose()
-        {
-            _host?.Dispose();
+            if (!string.IsNullOrEmpty(options.SslCertPassword))
+            {
+                PasswordRegistryHelper.AddPassword(passwordRegistry, PasswordRegistryTypes.CertificatePassword,
+                    options.SslCertPassword);
+            }
+
+            return passwordRegistry;
         }
     }
 }

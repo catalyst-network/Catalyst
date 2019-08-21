@@ -48,12 +48,12 @@ using Catalyst.Common.P2P;
 using Catalyst.Common.P2P.Models;
 using Catalyst.Common.Types;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
-using Catalyst.Modules.Lib.Api;
 using Catalyst.Modules.Lib.Dfs;
 using Catalyst.TestUtils;
 using Ipfs.Registry;
 using NSubstitute;
 using Xunit.Abstractions;
+using ContainerProvider = Catalyst.TestUtils.ContainerProvider;
 
 namespace Catalyst.Modules.Lib.IntegrationTests.Consensus
 {
@@ -88,8 +88,8 @@ namespace Catalyst.Modules.Lib.IntegrationTests.Consensus
             _nodePeerId = new PeerIdentifier(nodeSettings);
 
             var baseDfsFolder = Path.Combine(parentTestFileSystem.GetCatalystDataDir().FullName, "dfs");
-            var blake2B512HashingAlgorithm = HashingAlgorithm.All.First(x => x.Name == "blake2b-512");
-            _dfs = new FileSystemDfs(blake2B512HashingAlgorithm, parentTestFileSystem, baseDfsFolder);
+            var hashingAlgorithm = HashingAlgorithm.All.First(x => x.Name == "blake2b-256");
+            _dfs = new FileSystemDfs(parentTestFileSystem, hashingAlgorithm, baseDfsFolder);
 
             _mempool = new AutoFillingMempool();
             _peerRepository = Substitute.For<IPeerRepository>();
@@ -148,7 +148,6 @@ namespace Catalyst.Modules.Lib.IntegrationTests.Consensus
             _containerProvider.ContainerBuilder.RegisterType<TestFileSystem>().As<IFileSystem>()
                .WithParameter("rootPath", _nodeDirectory.FullName);
             _containerProvider.ContainerBuilder.RegisterInstance(new NoDiscovery()).As<IPeerDiscovery>();
-            _containerProvider.ContainerBuilder.RegisterInstance(Substitute.For<IApi>()).As<IApi>();
             var keySigner = Substitute.For<IKeySigner>();
             keySigner.Verify(Arg.Any<ISignature>(), Arg.Any<byte[]>(), default).ReturnsForAnyArgs(true);
             _containerProvider.ContainerBuilder.RegisterInstance(keySigner).As<IKeySigner>();

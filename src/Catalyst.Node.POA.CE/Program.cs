@@ -22,7 +22,6 @@
 #endregion
 
 using System;
-using Catalyst.Common.Config;
 using Catalyst.Common.Kernel;
 using Catalyst.Common.Types;
 using CommandLine;
@@ -46,13 +45,14 @@ namespace Catalyst.Node.POA.CE
     
     internal static class Program
     {
-        private static readonly Kernel Kernel;
+        private static readonly Kernel _kernel;
 
         static Program()
         {
-            Kernel = Kernel.Initramfs();
-            AppDomain.CurrentDomain.UnhandledException += Kernel.LogUnhandledException;
-            AppDomain.CurrentDomain.ProcessExit += Kernel.CurrentDomain_ProcessExit;
+            _kernel = Kernel.Initramfs();
+
+            AppDomain.CurrentDomain.UnhandledException += _kernel.LogUnhandledException;
+            AppDomain.CurrentDomain.ProcessExit += _kernel.CurrentDomain_ProcessExit;
         }
 
         /// <summary>
@@ -82,12 +82,12 @@ namespace Catalyst.Node.POA.CE
         
         private static void Run(Options options)
         {
-            Kernel.Logger.Information("Catalyst.Node started with process id {0}",
+            _kernel.Logger.Information("Catalyst.Node started with process id {0}",
                 System.Diagnostics.Process.GetCurrentProcess().Id.ToString());
             
             try
             {
-                Kernel
+                _kernel
                    .WithDataDirectory()
                    .WithNetworksConfigFile()
                    .WithComponentsConfigFile()
@@ -106,7 +106,7 @@ namespace Catalyst.Node.POA.CE
             }
             catch (Exception e)
             {
-                Kernel.Logger.Fatal(e, "Catalyst.Node stopped unexpectedly");
+                _kernel.Logger.Fatal(e, "Catalyst.Node stopped unexpectedly");
                 Environment.ExitCode = 1;
             }
         }

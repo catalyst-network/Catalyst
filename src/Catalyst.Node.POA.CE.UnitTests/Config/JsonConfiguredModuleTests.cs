@@ -32,6 +32,7 @@ using Catalyst.Common.Interfaces.Modules.Ledger;
 using Catalyst.Common.Interfaces.Modules.Mempool;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Core.Lib.Modules.Contract;
+using Catalyst.Modules.Lib.Dfs;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Xunit;
@@ -59,9 +60,9 @@ namespace Catalyst.Node.POA.CE.UnitTests.Config
         }
 
         [Theory]
-        [InlineData(typeof(IConsensus), typeof(Catalyst.Core.Lib.Modules.Consensus.Consensus))]
+        [InlineData(typeof(IConsensus), typeof(Core.Lib.Modules.Consensus.Consensus))]
         [InlineData(typeof(IContract), typeof(Contract))]
-        [InlineData(typeof(IDfs), typeof(Catalyst.Core.Lib.Modules.Dfs.Dfs))]
+        [InlineData(typeof(IDfs), typeof(FileSystemDfs))]
         [InlineData(typeof(ILedger), typeof(LedgerService))]
         [InlineData(typeof(IMempool), typeof(Catalyst.Core.Lib.Modules.Mempool.Mempool))]
         [Trait(Traits.TestType, Traits.IntegrationTest)]

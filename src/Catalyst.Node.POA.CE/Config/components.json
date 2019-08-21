@@ -391,9 +391,11 @@
         // but also in the sense of the catalyst node architecture, i.e. swappable
         // components that can customized for different use cases.
         {
-            "type": "Catalyst.Core.Lib.Modules.JsonConfiguredModule",
+            "type": "Catalyst.Core.Lib.Modules.Api.ApiModule",
             "parameters": {
-                "configFilePath": "Config/Modules/api.json"
+                "apiBindingAddress": "http://*:5005",
+                "controllerModules": [ "Catalyst.Modules.Lib" ],
+                "addSwagger":  true 
             }
         },
         {

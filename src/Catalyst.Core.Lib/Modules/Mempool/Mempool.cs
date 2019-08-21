@@ -30,7 +30,6 @@ using Catalyst.Common.Modules.Mempool.Models;
 using Catalyst.Protocol.Transaction;
 using Dawn;
 using Google.Protobuf;
-using Nethereum.RLP;
 using Serilog;
 
 namespace Catalyst.Core.Lib.Modules.Mempool
@@ -58,16 +57,20 @@ namespace Catalyst.Core.Lib.Modules.Mempool
             return memPoolContent;
         }
 
+        /// <inheritdoc />
         public bool ContainsDocument(TransactionSignature key)
         {
             return _transactionStore.TryGet(key.ToByteString().ToBase64(), out _);
         }
 
-        public List<byte[]> GetMemPoolContentEncoded()
+        /// <inheritdoc />
+        public List<TransactionBroadcast> GetMemPoolContentAsTransactions()
         {
             var memPoolContent = GetMemPoolContent();
 
-            var encodedTxs = memPoolContent.Select(tx => tx.ToString().ToBytesForRLPEncoding()).ToList();
+            var encodedTxs = memPoolContent
+               .Select(tx => tx.Transaction)
+               .ToList();
 
             return encodedTxs;
         }
@@ -80,26 +83,18 @@ namespace Catalyst.Core.Lib.Modules.Mempool
             return found;
         }
 
-        public void Delete(params TransactionSignature[] transactionSignatures)
+        /// <inheritdoc />
+        public void Delete(params string[] transactionSignatures)
         {
-            _logger.Debug("Deleting transactions from the mempool.");
-            var cleared = 0;
-
-            foreach (var key in transactionSignatures)
+            try
             {
-                try
-                {
-                    _transactionStore.Delete(t => t.Transaction.Signature.Equals(key));
-                    cleared++;
-                }
-                catch (Exception e)
-                {
-                    _logger.Warning(e, "Could not delete transaction {0} from mempool.", key);
-                }    
+                _transactionStore.Delete(transactionSignatures);
             }
-
-            _logger.Debug("Cleared {cleared} out of {total} transactions from the mempool.", 
-                cleared, transactionSignatures.Length);
+            catch (Exception exception)
+            {
+                _logger.Error(exception, "Failed to delete transactions from the mempool {transactionSignatures}",
+                    transactionSignatures);
+            }
         }
 
         /// <inheritdoc />
