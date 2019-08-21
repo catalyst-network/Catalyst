@@ -29,6 +29,7 @@ using SharpRepository.AzureDocumentDb;
 using SharpRepository.Repository.Caching;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Catalyst.Common.Repository
 {
@@ -48,14 +49,11 @@ namespace Catalyst.Common.Repository
             base(endpointUrl, authorizationKey, databaseId, createIfNotExists, collectionId, cachingStrategy)
         {
             base.Client.Dispose();
-            var converters = new List<JsonConverter>
-            {
-                new IpEndPointConverter(), new IpAddressConverter()
-            };
+
             var client = new DocumentClient(new Uri(endpointUrl), authorizationKey,
                 new JsonSerializerSettings
                 {
-                    Converters = converters,
+                    Converters = JsonConverterProviders.Converters.ToList(),
                     NullValueHandling = NullValueHandling.Ignore
                 });
             base.Client = client;
