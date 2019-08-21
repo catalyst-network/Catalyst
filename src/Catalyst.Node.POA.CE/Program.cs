@@ -41,6 +41,9 @@ namespace Catalyst.Node.POA.CE
         
         [Option('o', "overwrite-config", HelpText = "Overwrite the data directory configs.")]
         public bool OverwriteConfig { get; set; }
+
+        [Option("network-file", HelpText = "The name of the network file")]
+        public string OverrideNetworkFile { get; set; }
     }
     
     internal static class Program
@@ -89,7 +92,7 @@ namespace Catalyst.Node.POA.CE
             {
                 _kernel
                    .WithDataDirectory()
-                   .WithNetworksConfigFile()
+                   .WithNetworksConfigFile(NetworkTypes.Dev, options.OverrideNetworkFile)
                    .WithComponentsConfigFile()
                    .WithSerilogConfigFile()
                    .WithConfigCopier()
