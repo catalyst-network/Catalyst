@@ -14,9 +14,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Config\simulation.client.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Update="Config\simulation.nodes.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

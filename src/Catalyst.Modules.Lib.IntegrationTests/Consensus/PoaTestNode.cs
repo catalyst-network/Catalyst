@@ -48,7 +48,6 @@ using Catalyst.Common.P2P;
 using Catalyst.Common.P2P.Models;
 using Catalyst.Common.Types;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
-using Catalyst.Modules.Lib.Api;
 using Catalyst.Modules.Lib.Dfs;
 using Catalyst.TestUtils;
 using Ipfs.Registry;
@@ -149,7 +148,6 @@ namespace Catalyst.Modules.Lib.IntegrationTests.Consensus
             _containerProvider.ContainerBuilder.RegisterType<TestFileSystem>().As<IFileSystem>()
                .WithParameter("rootPath", _nodeDirectory.FullName);
             _containerProvider.ContainerBuilder.RegisterInstance(new NoDiscovery()).As<IPeerDiscovery>();
-            _containerProvider.ContainerBuilder.RegisterInstance(Substitute.For<IApi>()).As<IApi>();
             var keySigner = Substitute.For<IKeySigner>();
             keySigner.Verify(Arg.Any<ISignature>(), Arg.Any<byte[]>(), default).ReturnsForAnyArgs(true);
             _containerProvider.ContainerBuilder.RegisterInstance(keySigner).As<IKeySigner>();

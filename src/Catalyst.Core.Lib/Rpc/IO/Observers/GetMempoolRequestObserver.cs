@@ -73,9 +73,11 @@ namespace Catalyst.Core.Lib.Rpc.IO.Observers
             {
                 Logger.Debug("Received GetMempoolRequest message with content {0}", getMempoolRequest);
 
+                var mempoolTransactions = _mempool.GetMemPoolContentAsTransactions();
+
                 return new GetMempoolResponse
                 {
-                    Mempool = {GetMempoolContent()}
+                    Transactions = {mempoolTransactions}
                 };
             }
             catch (Exception ex)
@@ -84,12 +86,6 @@ namespace Catalyst.Core.Lib.Rpc.IO.Observers
                     "Failed to handle GetInfoRequest after receiving message {0}", getMempoolRequest);
                 return new GetMempoolResponse();
             }
-        }
-
-        private IEnumerable<string> GetMempoolContent()
-        {
-            return _mempool.GetMemPoolContentEncoded()
-               .Select(Encoding.Default.GetString);
         }
     }
 }

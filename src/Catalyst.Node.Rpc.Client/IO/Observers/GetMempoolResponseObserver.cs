@@ -61,7 +61,7 @@ namespace Catalyst.Node.Rpc.Client.IO.Observers
         {
             Guard.Argument(getMempoolResponse, nameof(getMempoolResponse))
                .NotNull("The GetMempoolResponse cannot be null")
-               .Require(d => d.Mempool != null,
+               .Require(d => d.Transactions != null,
                     d => $"{nameof(getMempoolResponse)} must have a valid Mempool.");
         }
     }
