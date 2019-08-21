@@ -69,7 +69,8 @@ namespace Catalyst.Simulator.RpcClients
         public SimpleRpcClient(IUserOutput userOutput,
             IPasswordRegistry passwordRegistry,
             X509Certificate2 certificate,
-            ILogger logger)
+            ILogger logger,
+            IPeerSettings peerSettings)
         {
             _logger = logger;
             _certificate = certificate;
@@ -97,7 +98,7 @@ namespace Catalyst.Simulator.RpcClients
             var messageCorrelationManager = new RpcMessageCorrelationManager(memoryCache, _logger, changeTokenProvider);
             var peerIdValidator = new PeerIdValidator(cryptoContext);
             var nodeRpcClientChannelFactory =
-                new NodeRpcClientChannelFactory(keySigner, messageCorrelationManager, peerIdValidator);
+                new NodeRpcClientChannelFactory(keySigner, messageCorrelationManager, peerIdValidator, peerSettings);
 
             var eventLoopGroupFactoryConfiguration = new EventLoopGroupFactoryConfiguration
             {

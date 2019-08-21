@@ -80,12 +80,11 @@ namespace Catalyst.Node.POA.CE.UnitTests.Config
             var peerSettings = new PeerSettings(configRoot);
 
             peerSettings.Should().NotBeNull();
-            peerSettings.NetworkTypes.Name.Should().NotBeNullOrWhiteSpace().Should().Equals(networkConfig);
+            peerSettings.Network.Should().NotBeNull();
             peerSettings.Port.Should().BeInRange(1025, 65535);
             peerSettings.BindAddress.Should().BeOfType<IPAddress>();
             peerSettings.PublicKey.Should().NotBeNullOrWhiteSpace();
             peerSettings.SeedServers.Should().NotBeEmpty();
-            peerSettings.NetworkTypes.Name.Should().NotBeNullOrWhiteSpace();
         }
     }
 }

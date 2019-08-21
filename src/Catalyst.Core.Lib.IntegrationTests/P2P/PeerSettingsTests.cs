@@ -50,7 +50,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P
             using (var scope = ContainerProvider.Container.BeginLifetimeScope(CurrentTestName))
             {
                 var peerDiscovery = scope.Resolve<IPeerSettings>();
-                peerDiscovery.NetworkTypes.Name.Should().Equals("testnet");
+                peerDiscovery.Network.Should().Equals("Devnet");
             }
         }
     }

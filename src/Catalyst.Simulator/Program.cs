@@ -27,6 +27,7 @@ using System.IO;
 using System.Linq;
 using Catalyst.Common.Cryptography;
 using Catalyst.Common.FileSystem;
+using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Registry;
 using Catalyst.Common.Shell;
 using Catalyst.Common.Types;
@@ -56,9 +57,11 @@ namespace Catalyst.Simulator
             var consolePasswordReader = new ConsolePasswordReader(userOutput, passwordRegistry);
             var certificateStore = new CertificateStore(fileSystem, consolePasswordReader);
             var certificate = certificateStore.ReadOrCreateCertificateFile("mycert.pfx");
+            var peerSettings = new PeerSettings();
 
             var clientRpcInfoList =
-                ConfigHelper.GenerateClientRpcInfoFromConfig(userOutput, passwordRegistry, certificate, logger).ToList();
+                ConfigHelper.GenerateClientRpcInfoFromConfig(userOutput, passwordRegistry, certificate, logger
+                ).ToList();
 
             var simulation = new TransactionSimulation(userOutput);
             var simulator = new Simulator(simulation, logger);
