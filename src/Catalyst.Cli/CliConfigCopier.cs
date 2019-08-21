@@ -29,7 +29,7 @@ namespace Catalyst.Cli
 {
     internal sealed class CliConfigCopier : ConfigCopier
     {
-        protected override IEnumerable<string> RequiredConfigFiles(NetworkTypes networkTypes)
+        protected override IEnumerable<string> RequiredConfigFiles(NetworkTypes networkTypes, string overrideNetworkFile = null)
         {
             return new[]
             {
