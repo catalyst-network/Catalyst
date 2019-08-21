@@ -53,7 +53,7 @@ namespace Catalyst.Common.UnitTests.Cryptography
         public void ReadSecurePassword_Should_Prompt_Context_And_Get_Password_From_Console()
         {
             var prompt = "hello give me a password";
-            var keysPressed = new ConsoleKeyInfo[]
+            var keysPressed = new[]
             {
                 new ConsoleKeyInfo('?', ConsoleKey.Backspace, false, false, false),
                 new ConsoleKeyInfo('p', ConsoleKey.P, false, false, false),

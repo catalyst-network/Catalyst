@@ -22,10 +22,8 @@
 #endregion
 
 using System;
-using System.IO;
 using System.Security;
 using Catalyst.Common.Cryptography;
-using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Common.Interfaces.Registry;
 using Catalyst.Common.Types;
@@ -36,7 +34,7 @@ using Xunit;
 
 namespace Catalyst.Common.UnitTests.Cryptography
 {
-    public class PasswordManagerTests : IDisposable
+    public sealed class PasswordManagerTests : IDisposable
     {
         private readonly IPasswordRegistry _passwordRegistry;
         private readonly IPasswordReader _passwordReader;
@@ -89,12 +87,14 @@ namespace Catalyst.Common.UnitTests.Cryptography
         public void AddPasswordToRegistry_Should_Add_Passwords_To_The_Correct_Registry()
         {
             _passwordReader.ReadSecurePassword().ReturnsForAnyArgs(_secureString);
+            _passwordRegistry.AddItemToRegistry(default, default).ReturnsForAnyArgs(true);
 
             var registryType = PasswordRegistryTypes.DefaultNodePassword;
             
-            var retrievedPassword = _passwordManager.AddPasswordToRegistry(registryType, _secureString);
+            var allGood = _passwordManager.AddPasswordToRegistry(registryType, _secureString);
 
             _passwordRegistry.Received(1).AddItemToRegistry(registryType, _secureString);
+            allGood.Should().BeTrue();
         }
 
         [Fact]

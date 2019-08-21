@@ -54,43 +54,41 @@ namespace Catalyst.Common.Cryptography
             Action<int> removeChar)
         {
             _userOutput.WriteLine(passwordContext);
-            var waitForInput = true;
+
             var inputLength = 0;
-            while (waitForInput)
+            while (true)
             {
                 var keyInfo = _userInput.ReadKey();
-                if (keyInfo.Key != ConsoleKey.Enter)
-                {
-                    if (keyInfo.Key != ConsoleKey.Backspace)
-                    {
-                        appendChar(keyInfo.KeyChar, inputLength);
-                        inputLength++;
-                        _userOutput.Write(@"*");
-                        if (inputLength != MaxLength)
-                        {
-                            continue;
-                        }
-
-                        _userOutput.WriteLine($"Max password length reached ({MaxLength})");
-                        waitForInput = false;
-                    }
-                    else
-                    {
-                        if (inputLength == 0)
-                        {
-                            continue;
-                        }
-
-                        removeChar(inputLength - 1);
-                        inputLength--;
-                        _userOutput.Write(@" ");
-                    }
-                }
-                else
+                if (keyInfo.Key == ConsoleKey.Enter)
                 {
                     _userOutput.WriteLine(string.Empty);
-                    waitForInput = false;
+                    break;
                 }
+
+                if (keyInfo.Key == ConsoleKey.Backspace)
+                {
+                    if (inputLength == 0)
+                    {
+                        continue;
+                    }
+
+                    removeChar(inputLength - 1);
+                    inputLength--;
+                    _userOutput.Write(@" ");
+                    continue;
+                }
+
+                appendChar(keyInfo.KeyChar, inputLength);
+                inputLength++;
+                _userOutput.Write(@"*");
+
+                if (inputLength != MaxLength)
+                {
+                    continue;
+                }
+
+                _userOutput.WriteLine($"Max password length reached ({MaxLength})");
+                break;
             }
         }
     }
