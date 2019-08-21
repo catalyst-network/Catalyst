@@ -137,8 +137,7 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Observers
             };
 
             var requestMessage = messageFactory.GetDto(
-                request,
-                sendPeerIdentifier,
+                request.ToProtocolMessage(sendPeerIdentifier.PeerId),
                 PeerIdentifierHelper.GetPeerIdentifier("recipient")
             );
 
@@ -154,7 +153,7 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Observers
 
             var sentResponseDto = (IMessageDto<ProtocolMessage>) receivedCalls[0].GetArguments().Single();
             
-            return sentResponseDto.FromIMessageDto().FromProtocolMessage<GetPeerReputationResponse>();
+            return sentResponseDto.Content.FromProtocolMessage<GetPeerReputationResponse>();
         }
     }
 }

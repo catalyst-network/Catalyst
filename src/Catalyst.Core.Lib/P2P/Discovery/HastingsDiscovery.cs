@@ -277,10 +277,8 @@ namespace Catalyst.Core.Lib.P2P.Discovery
 
             StepProposal.RestoreMemento(new HastingsMemento(newCandidate, new Neighbours()));
 
-            var peerNeighbourRequestDto = DtoFactory.GetDto(new PeerNeighborsRequest(),
-                _ownNode,
-                StepProposal.Peer,
-                StepProposal.PnrCorrelationId
+            var peerNeighbourRequestDto = DtoFactory.GetDto(new PeerNeighborsRequest().ToProtocolMessage(_ownNode.PeerId),
+                StepProposal.Peer
             );
 
             PeerClient.SendMessage(peerNeighbourRequestDto);
@@ -319,10 +317,8 @@ namespace Catalyst.Core.Lib.P2P.Discovery
 
             StepProposal.RestoreMemento(new HastingsMemento(newCandidate, new Neighbours()));
 
-            var peerNeighbourRequestDto = DtoFactory.GetDto(new PeerNeighborsRequest(),
-                _ownNode,
-                StepProposal.Peer,
-                StepProposal.PnrCorrelationId
+            var peerNeighbourRequestDto = DtoFactory.GetDto(new PeerNeighborsRequest().ToProtocolMessage(_ownNode.PeerId, StepProposal.PnrCorrelationId),
+                StepProposal.Peer
             );
 
             PeerClient.SendMessage(peerNeighbourRequestDto);
@@ -426,10 +422,8 @@ namespace Catalyst.Core.Lib.P2P.Discovery
                 {
                     try
                     {
-                        var pingRequestDto = DtoFactory.GetDto(new PingRequest(),
-                            _ownNode,
-                            n.PeerIdentifier,
-                            n.DiscoveryPingCorrelationId);
+                        var pingRequestDto = DtoFactory.GetDto(new PingRequest().ToProtocolMessage(_ownNode.PeerId, n.DiscoveryPingCorrelationId),
+                            n.PeerIdentifier);
 
                         PeerClient.SendMessage(pingRequestDto);
 

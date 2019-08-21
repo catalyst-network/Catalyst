@@ -60,9 +60,7 @@ namespace Catalyst.Cli.Commands
 
             var messageDto = CommandContext.DtoFactory.GetDto(
                 protocolMessage,
-                SenderPeerIdentifier,
-                RecipientPeerIdentifier,
-                correlationId);
+                RecipientPeerIdentifier);
 
             var fileTransfer = new DownloadFileTransferInformation(
                 SenderPeerIdentifier,

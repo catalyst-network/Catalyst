@@ -565,8 +565,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
                     walker.DtoFactory
                        .Received(Constants.AngryPirate)
                        .GetDto(
-                            Arg.Is(new PingRequest()),
-                            Arg.Any<IPeerIdentifier>(),
+                            Arg.Is(new PingRequest().ToProtocolMessage(Arg.Any<IPeerIdentifier>().PeerId)),
                             Arg.Any<IPeerIdentifier>()
                         );
                     

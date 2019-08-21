@@ -200,9 +200,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
                     _logger.Verbose("Broadcasting message {message}", message);
                     _peerClient.SendMessage(_dtoFactory.GetDto(
                         message.ToProtocolMessage(peerIdentifier.PeerId, correlationId),
-                        _peerIdentifier,
-                        peerIdentifier,
-                        correlationId)
+                        peerIdentifier)
                     );
                 }
 

@@ -21,9 +21,8 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.P2P;
-using Google.Protobuf;
+using Catalyst.Protocol.Common;
 
 namespace Catalyst.Common.Interfaces.IO.Messaging.Dto
 {
@@ -31,13 +30,9 @@ namespace Catalyst.Common.Interfaces.IO.Messaging.Dto
     {
         /// <summary>Gets the message.</summary>
         /// <param name="messageDto">The message.</param>
-        /// <param name="senderPeerIdentifier"></param>
         /// <param name="recipientPeerIdentifier"></param>
-        /// <param name="correlationId">The correlation identifier.</param>
         /// <returns>ProtocolMessage message</returns>
-        IMessageDto<T> GetDto<T>(T messageDto,
-            IPeerIdentifier senderPeerIdentifier,
-            IPeerIdentifier recipientPeerIdentifier,
-            ICorrelationId correlationId = default) where T : IMessage<T>;
+        IMessageDto<ProtocolMessage> GetDto(ProtocolMessage messageDto,
+            IPeerIdentifier recipientPeerIdentifier);
     }
 }

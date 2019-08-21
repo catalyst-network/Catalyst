@@ -34,7 +34,7 @@ using DotNetty.Transport.Channels;
 
 namespace Catalyst.Common.IO.Messaging.Dto
 {
-    public sealed class MessageDto : DefaultAddressedEnvelope<ProtocolMessage>, IMessageDto<ProtocolMessage>
+    public sealed class SignedMessageDto : DefaultAddressedEnvelope<ProtocolMessageSigned>, IMessageDto<ProtocolMessageSigned>
     {
         public ICorrelationId CorrelationId { get; }
         public IPeerIdentifier RecipientPeerIdentifier { get; }
@@ -45,17 +45,17 @@ namespace Catalyst.Common.IO.Messaging.Dto
         /// </summary>
         /// <param name="content"></param>
         /// <param name="recipientPeerIdentifier"></param>
-        public MessageDto(ProtocolMessage content,
+        public SignedMessageDto(ProtocolMessageSigned content,
             IPeerIdentifier recipientPeerIdentifier)
-            : base(content, content.PeerId.ToIpEndPoint(), recipientPeerIdentifier.IpEndPoint)
+            : base(content, content.Message.PeerId.ToIpEndPoint(), recipientPeerIdentifier.IpEndPoint)
         {
             var senderIpEndPoint = (IPEndPoint) Sender;
             Guard.Argument(recipientPeerIdentifier.IpEndPoint.Address, nameof(recipientPeerIdentifier.IpEndPoint.Address)).NotNull();
             Guard.Argument(senderIpEndPoint.Address, nameof(senderIpEndPoint.Address)).NotNull();
 
-            CorrelationId = new CorrelationId(content.CorrelationId);
+            CorrelationId = new CorrelationId(content.Message.CorrelationId);
             RecipientPeerIdentifier = recipientPeerIdentifier;
-            SenderPeerIdentifier = new PeerIdentifier(content.PeerId);
+            SenderPeerIdentifier = new PeerIdentifier(content.Message.PeerId);
         }
     }
 }

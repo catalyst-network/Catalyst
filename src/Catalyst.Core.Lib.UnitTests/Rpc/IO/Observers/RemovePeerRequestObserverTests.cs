@@ -129,8 +129,7 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Observers
             };
 
             var requestMessage = messageFactory.GetDto(
-                removePeerRequest,
-                sendPeerIdentifier,
+                removePeerRequest.ToProtocolMessage(sendPeerIdentifier.PeerId),
                 PeerIdentifierHelper.GetPeerIdentifier("recipient")
             );
 

@@ -86,8 +86,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.Rpc.IO.Observers
                 {
                     Message = message.ToUtf8ByteString(),
                     SigningContext = new SigningContext()
-                },
-                PeerIdentifierHelper.GetPeerIdentifier("sender_key"),
+                }.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender_key").PeerId),
                 PeerIdentifierHelper.GetPeerIdentifier("recipient_key")
             );
             
@@ -101,7 +100,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.Rpc.IO.Observers
             receivedCalls.Count.Should().Be(1);
             
             var sentResponseDto = (IMessageDto<ProtocolMessage>) receivedCalls.Single().GetArguments().Single();
-            var signResponseMessage = sentResponseDto.FromIMessageDto().FromProtocolMessage<SignMessageResponse>();
+            var signResponseMessage = sentResponseDto.Content.FromProtocolMessage<SignMessageResponse>();
 
             signResponseMessage.OriginalMessage.Should().Equal(message);
             signResponseMessage.Signature.Should().NotBeEmpty();

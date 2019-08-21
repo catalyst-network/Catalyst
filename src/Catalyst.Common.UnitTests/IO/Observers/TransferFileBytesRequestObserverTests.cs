@@ -87,7 +87,7 @@ namespace Catalyst.Common.UnitTests.IO.Observers
 
             var sender = PeerIdentifierHelper.GetPeerIdentifier("sender");
             var requestDto = new DtoFactory().GetDto(new TransferFileBytesRequest().ToProtocolMessage(sender.PeerId)
-              , sender, PeerIdentifierHelper.GetPeerIdentifier("recipient"));
+              , PeerIdentifierHelper.GetPeerIdentifier("recipient"));
 
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_context, requestDto.Content);
 

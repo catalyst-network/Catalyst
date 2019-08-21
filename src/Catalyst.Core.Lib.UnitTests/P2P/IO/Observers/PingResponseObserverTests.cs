@@ -54,10 +54,8 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Observers
         [Fact]
         public async void Observer_Can_Process_PingResponse_Correctly()
         {
-            var response = new DtoFactory().GetDto(new PingResponse(),
-                PeerIdentifierHelper.GetPeerIdentifier("sender"),
-                PeerIdentifierHelper.GetPeerIdentifier("recipient"),
-                CorrelationId.GenerateCorrelationId()
+            var response = new DtoFactory().GetDto(new PingResponse().ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId),
+                PeerIdentifierHelper.GetPeerIdentifier("recipient")
             );
             
             var pingResponseObserver = Substitute.For<IObserver<IPeerClientMessageDto>>();

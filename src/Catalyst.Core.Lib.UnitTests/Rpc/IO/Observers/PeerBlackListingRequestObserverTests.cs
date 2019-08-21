@@ -146,9 +146,8 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Observers
             };
 
             var requestMessage = messageFactory.GetDto(
-                request,
-                PeerIdentifierHelper.GetPeerIdentifier("recipient"),
-                PeerIdentifierHelper.GetPeerIdentifier("sender")
+                request.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId),
+                PeerIdentifierHelper.GetPeerIdentifier("recipient")
             );
             
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, 
@@ -165,7 +164,7 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Observers
             
             var sentResponseDto = (IMessageDto<ProtocolMessage>) receivedCalls.Single().GetArguments().Single();
             
-            return sentResponseDto.FromIMessageDto().FromProtocolMessage<SetPeerBlackListResponse>();
+            return sentResponseDto.Content.FromProtocolMessage<SetPeerBlackListResponse>();
         }
     }
 }

@@ -98,7 +98,6 @@ namespace Catalyst.Common.FileTransfer
             }.ToProtocolMessage(PeerIdentifier.PeerId);
             
             return _uploadDtoFactory.GetDto(transferMessage,
-                PeerIdentifier,
                 RecipientIdentifier
             );
         }

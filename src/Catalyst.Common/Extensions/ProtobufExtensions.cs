@@ -22,9 +22,8 @@
 #endregion
 
 using System;
-using System.Net;
 using System.Linq;
-using Catalyst.Common.Config;
+using System.Net;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.IO.Messaging.Correlation;
@@ -35,7 +34,6 @@ using Catalyst.Protocol;
 using Catalyst.Protocol.Common;
 using Dawn;
 using Google.Protobuf;
-using Multiformats.Base;
 using Multiformats.Hash;
 using Nethereum.RLP;
 
@@ -43,18 +41,51 @@ namespace Catalyst.Common.Extensions
 {
     public static class ProtobufExtensions
     {
+        public static IPAddress ToIpAddress(this ByteString ipAddressByteString)
+        {
+            const int ipv4Length = 4;
+            const int ipv6Length = 16;
+            var ipAddressByteArray = ipAddressByteString.ToByteArray();
+            var lastIndex = Array.FindLastIndex(ipAddressByteArray, b => b != 0);
+            if (lastIndex <= ipv4Length)
+            {
+                Array.Resize(ref ipAddressByteArray, ipv4Length);
+                return new IPAddress(ipAddressByteArray);
+            }
+
+            if (lastIndex <= ipv6Length)
+            {
+                Array.Resize(ref ipAddressByteArray, ipv6Length);
+                return new IPAddress(ipAddressByteArray);
+            }
+
+            throw new FormatException($"{ipAddressByteString} is not a valid IP address");
+        }
+
+        public static ushort ToPort(this ByteString portByteString)
+        {
+            return BitConverter.ToUInt16(portByteString.ToByteArray());
+        }
+
+        public static IPEndPoint ToIpEndPoint(this PeerId peerId)
+        {
+            var ipAddress = peerId.Ip.ToIpAddress();
+            var port = peerId.Port.ToPort();
+            return new IPEndPoint(ipAddress, port);
+        }
+
         public static ProtocolMessage ToProtocolMessage(this IMessage protobufObject,
             PeerId senderId,
             ICorrelationId correlationId = default)
         {
             var typeUrl = protobufObject.Descriptor.ShortenedFullName();
             Guard.Argument(senderId, nameof(senderId)).NotNull();
-            
+
             if (typeUrl.EndsWith(MessageTypes.Response.Name))
             {
                 Guard.Argument(correlationId, nameof(correlationId)).NotNull();
             }
-            
+
             return new ProtocolMessage
             {
                 PeerId = senderId,
@@ -64,29 +95,27 @@ namespace Catalyst.Common.Extensions
                 Value = protobufObject.ToByteString()
             };
         }
-        
-        public static T FromIMessageDto<T>(this IMessageDto<T> message) where T : IMessage<T>
-        {
-            var empty = (T) Activator.CreateInstance(typeof(T));
-            var typed = (T) empty.Descriptor.Parser.ParseFrom(message.Content.ToByteString());
-            return typed;
-        }
+
+        //public static T FromIMessageDto<T>(this IMessageDto<ProtocolMessage> message) where T : IMessage<T>
+        //{
+        //    var empty = (T) Activator.CreateInstance(typeof(T));
+        //    var typed = (T) empty.Descriptor.Parser.ParseFrom(MessageExtensions.ToByteString(message.Content));
+        //    return typed;
+        //}
 
         public static ICorrelationId ToCorrelationId(this ByteString guidBytes)
         {
             var bytes = guidBytes?.ToByteArray();
-            
+
             var validBytes = bytes?.Length == CorrelationId.GuidByteLength
                 ? bytes
-                : (bytes ?? new byte[0]).Concat(Enumerable.Repeat((byte) 0, CorrelationId.GuidByteLength)).Take(CorrelationId.GuidByteLength).ToArray();
+                : (bytes ?? new byte[0]).Concat(Enumerable.Repeat((byte) 0, CorrelationId.GuidByteLength))
+               .Take(CorrelationId.GuidByteLength).ToArray();
 
             return new CorrelationId(new Guid(validBytes));
         }
 
-        public static ByteString ToByteString(this Guid guid)
-        {
-            return guid.ToByteArray().ToByteString();
-        }
+        public static ByteString ToByteString(this Guid guid) { return guid.ToByteArray().ToByteString(); }
 
         public static Multihash AsMultihash(this ByteString byteString)
         {

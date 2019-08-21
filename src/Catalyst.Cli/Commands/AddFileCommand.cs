@@ -71,9 +71,7 @@ namespace Catalyst.Cli.Commands
             var protocolMessage = request.ToProtocolMessage(SenderPeerIdentifier.PeerId);
             var requestMessage = CommandContext.DtoFactory.GetDto(
                 protocolMessage,
-                SenderPeerIdentifier,
-                RecipientPeerIdentifier,
-                protocolMessage.CorrelationId.ToCorrelationId()
+                RecipientPeerIdentifier
             );
 
             IUploadFileInformation fileTransfer = new UploadFileTransferInformation(

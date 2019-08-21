@@ -119,10 +119,8 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Messaging.Broadcast
                 Substitute.For<ILogger>());
 
             var messageDto = messageFactory.GetDto(
-                TransactionHelper.GetTransaction(),
-                peerIdentifier,
-                senderIdentifier,
-                CorrelationId.GenerateCorrelationId()
+                TransactionHelper.GetTransaction().ToProtocolMessage(senderIdentifier.PeerId),
+                peerIdentifier
             );
 
             var gossipDto =

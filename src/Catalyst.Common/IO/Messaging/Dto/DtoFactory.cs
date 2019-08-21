@@ -41,28 +41,24 @@ namespace Catalyst.Common.IO.Messaging.Dto
     {
         /// <summary>Gets the message.</summary>
         /// <param name="message">Should be an IMessage with type.</param>
-        /// <param name="senderPeerIdentifier">The senders PeerIdentifier</param>
         /// <param name="recipientPeerIdentifier">The recipients PeerIdentifier</param>
-        /// <param name="correlationId">The correlation id of the originating message.</param>
         /// <returns>IMessageDto</returns>
-        public IMessageDto<T> GetDto<T>(T message,
-            IPeerIdentifier senderPeerIdentifier,
-            IPeerIdentifier recipientPeerIdentifier,
-            ICorrelationId correlationId = default) where T : IMessage<T>
+        public IMessageDto<ProtocolMessage> GetDto(ProtocolMessage message,
+            IPeerIdentifier recipientPeerIdentifier)
         {
-            if (message.Descriptor.Name.EndsWith(MessageTypes.Request.Name))
+            if (message.TypeUrl.EndsWith(MessageTypes.Request.Name))
             {
-                return BuildRequestMessage(message, senderPeerIdentifier, recipientPeerIdentifier);
+                return BuildRequestMessage(message, recipientPeerIdentifier);
             }
             
-            if (message.Descriptor.Name.EndsWith(MessageTypes.Response.Name))
+            if (message.TypeUrl.EndsWith(MessageTypes.Response.Name))
             {
-                return BuildResponseMessage(message, senderPeerIdentifier, recipientPeerIdentifier, correlationId);   
+                return BuildResponseMessage(message, recipientPeerIdentifier);   
             }
 
-            if (message.Descriptor.Name.EndsWith(MessageTypes.Broadcast.Name) || message.Descriptor.Name == nameof(ProtocolMessage))
+            if (message.TypeUrl.EndsWith(MessageTypes.Broadcast.Name))
             {
-                return BuildBroadcastMessage(message, senderPeerIdentifier, recipientPeerIdentifier, correlationId);
+                return BuildBroadcastMessage(message, recipientPeerIdentifier);
             }
 
             throw new ArgumentException("Cannot resolve message type");
@@ -71,57 +67,38 @@ namespace Catalyst.Common.IO.Messaging.Dto
         /// <summary>Builds the tell message.</summary>
         /// <param name="message">The dto.</param>
         /// <param name="recipientPeerIdentifier"></param>
-        /// <param name="senderPeerIdentifier"></param>
-        /// <param name="correlationId">The correlation id of the originating message.</param>
         /// <returns>ProtocolMessage message</returns>
-        private IMessageDto<T> BuildResponseMessage<T>(T message, 
-            IPeerIdentifier senderPeerIdentifier,
-            IPeerIdentifier recipientPeerIdentifier,
-            ICorrelationId correlationId) 
-            where T : IMessage<T>
+        private IMessageDto<ProtocolMessage> BuildResponseMessage(ProtocolMessage message,
+            IPeerIdentifier recipientPeerIdentifier)
         {
-            Guard.Argument(correlationId.Id, nameof(correlationId)).NotDefault();
+            //Guard.Argument(correlationId.Id, nameof(correlationId)).NotDefault();
             
-            return new MessageDto<T>(message,
-                senderPeerIdentifier,
-                recipientPeerIdentifier,
-                correlationId
+            return new MessageDto(message,
+                recipientPeerIdentifier
             );
         }
 
         /// <summary>Builds the ask message.</summary>
         /// <param name="message">The dto.</param>
-        /// <param name="senderPeerIdentifier"></param>
         /// <param name="recipientPeerIdentifier"></param>
         /// <returns>ProtocolMessage message</returns>
-        private IMessageDto<T> BuildRequestMessage<T>(T message,
-            IPeerIdentifier senderPeerIdentifier,
+        private IMessageDto<ProtocolMessage> BuildRequestMessage(ProtocolMessage message,
             IPeerIdentifier recipientPeerIdentifier)
-            where T : IMessage<T>
         {
-            return new MessageDto<T>(message,
-                senderPeerIdentifier,
-                recipientPeerIdentifier,
-                CorrelationId.GenerateCorrelationId()
+            return new MessageDto(message,
+                recipientPeerIdentifier
             );
         }
 
         /// <summary>Builds the gossip message.</summary>
         /// <param name="message">The dto.</param>
-        /// <param name="senderPeerIdentifier"></param>
         /// <param name="recipientPeerIdentifier"></param>
-        /// <param name="correlationId"></param>
         /// <returns>ProtocolMessage message</returns>
-        private IMessageDto<T> BuildBroadcastMessage<T>(T message,
-            IPeerIdentifier senderPeerIdentifier,
-            IPeerIdentifier recipientPeerIdentifier,
-            ICorrelationId correlationId)
-            where T : IMessage<T>
+        private IMessageDto<ProtocolMessage> BuildBroadcastMessage(ProtocolMessage message,
+            IPeerIdentifier recipientPeerIdentifier)
         {
-            return new MessageDto<T>(message,
-                senderPeerIdentifier,
-                recipientPeerIdentifier,
-                correlationId ?? CorrelationId.GenerateCorrelationId()
+            return new MessageDto(message,
+                recipientPeerIdentifier
             );
         }
     }

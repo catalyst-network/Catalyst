@@ -75,9 +75,8 @@ namespace Catalyst.Core.Lib.IntegrationTests.Rpc.IO.Observers
                 new GetInfoRequest
                 {
                     Query = true
-                },
-                PeerIdentifierHelper.GetPeerIdentifier("recipient"),
-                PeerIdentifierHelper.GetPeerIdentifier("sender")
+                }.ToProtocolMessage( PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId),
+                PeerIdentifierHelper.GetPeerIdentifier("recipient")
             );
 
             var expectedResponseContent = JsonConvert
@@ -102,7 +101,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.Rpc.IO.Observers
                 "the only call should be the one we checked above");
 
             var response = ((IMessageDto<ProtocolMessage>) receivedCalls.Single().GetArguments()[0])
-               .FromIMessageDto().FromProtocolMessage<GetInfoResponse>();
+               .Content.FromProtocolMessage<GetInfoResponse>();
             response.Query.Should().Match(expectedResponseContent,
                 "the expected response should contain config information");
         }

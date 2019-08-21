@@ -67,10 +67,7 @@ namespace Catalyst.Common.IO.Handlers
                 Message = message.Content
             };
 
-            var signedDto = new MessageDto<ProtocolMessageSigned>(protocolMessageSigned,
-                message.SenderPeerIdentifier,
-                message.RecipientPeerIdentifier,
-                message.CorrelationId);
+            var signedDto = new SignedMessageDto(protocolMessageSigned, message.RecipientPeerIdentifier);
             
             return context.WriteAsync(signedDto);
         }

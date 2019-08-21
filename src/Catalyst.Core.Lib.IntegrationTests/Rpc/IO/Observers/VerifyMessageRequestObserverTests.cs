@@ -108,8 +108,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.Rpc.IO.Observers
                     PublicKey = RLP.EncodeElement(publicKeyBytes).ToByteString(),
                     Signature = RLP.EncodeElement(signatureBytes.ToArray()).ToByteString(),
                     SigningContext = signingContext
-                },
-                PeerIdentifierHelper.GetPeerIdentifier("sender_key"),
+                }.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender_key").PeerId),
                 PeerIdentifierHelper.GetPeerIdentifier("recipient_key")
             );
             
@@ -130,7 +129,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.Rpc.IO.Observers
             receivedCalls.Count.Should().Be(1);
 
             var sentResponseDto = (IMessageDto<ProtocolMessage>) receivedCalls.Single().GetArguments().Single();
-            var verifyResponseMessage = sentResponseDto.FromIMessageDto().FromProtocolMessage<VerifyMessageResponse>();
+            var verifyResponseMessage = sentResponseDto.Content.FromProtocolMessage<VerifyMessageResponse>();
 
             verifyResponseMessage.IsSignedByKey.Should().Be(expectedResult);
         }
@@ -152,8 +151,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.Rpc.IO.Observers
                 {
                     Message = message.ToUtf8ByteString(),
                     SigningContext = signingContext
-                },
-                PeerIdentifierHelper.GetPeerIdentifier("sender_key"),
+                }.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender_key").PeerId),
                 PeerIdentifierHelper.GetPeerIdentifier("recipient_key")
             );
 
@@ -167,7 +165,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.Rpc.IO.Observers
             receivedCallsSign.Count.Should().Be(1);
             
             var sentSignResponseDto = (IMessageDto<ProtocolMessage>) receivedCallsSign.Single().GetArguments().Single();
-            var signResponseMessage = sentSignResponseDto.FromIMessageDto().FromProtocolMessage<SignMessageResponse>();
+            var signResponseMessage = sentSignResponseDto.Content.FromProtocolMessage<SignMessageResponse>();
 
             signResponseMessage.OriginalMessage.Should().Equal(message);
             signResponseMessage.Signature.Should().NotBeEmpty();
@@ -203,7 +201,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.Rpc.IO.Observers
             var receivedCallsVerify = _fakeContext.Channel.ReceivedCalls().ToList();
 
             var sentVerifyResponseDto = (IMessageDto<ProtocolMessage>) receivedCallsVerify.Single().GetArguments().Single();
-            var verifyResponseMessage = sentVerifyResponseDto.FromIMessageDto().FromProtocolMessage<VerifyMessageResponse>();
+            var verifyResponseMessage = sentVerifyResponseDto.Content.FromProtocolMessage<VerifyMessageResponse>();
 
             verifyResponseMessage.IsSignedByKey.Should().Be(true);
         }

@@ -21,6 +21,7 @@
 
 #endregion
 
+using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Messaging.Correlation;
@@ -39,9 +40,8 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Messaging.Dto
         [Fact]
         public void Can_Produce_a_Valid_Request_Dto()
         {
-            var pingRequestDto = new DtoFactory().GetDto(new PingRequest(),
-                PeerIdentifierHelper.GetPeerIdentifier("im_a_recipient"),
-                PeerIdentifierHelper.GetPeerIdentifier("im_a_sender")
+            var pingRequestDto = new DtoFactory().GetDto(new PingRequest().ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("im_a_sender").PeerId),
+                PeerIdentifierHelper.GetPeerIdentifier("im_a_recipient")
             );
             
             pingRequestDto.Should().BeAssignableTo<IMessageDto<PingRequest>>();
@@ -53,10 +53,8 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Messaging.Dto
         [Fact]
         public void Can_Produce_a_Valid_Response_Dto()
         {
-            var pingResponseDto = new DtoFactory().GetDto(new PingResponse(),
-                PeerIdentifierHelper.GetPeerIdentifier("im_a_recipient"),
-                PeerIdentifierHelper.GetPeerIdentifier("im_a_sender"),
-                CorrelationId.GenerateCorrelationId()
+            var pingResponseDto = new DtoFactory().GetDto(new PingResponse().ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("im_a_sender").PeerId),
+                PeerIdentifierHelper.GetPeerIdentifier("im_a_recipient")
             );
 
             pingResponseDto.Should().BeAssignableTo<IMessageDto<PingResponse>>();
@@ -70,9 +68,8 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Messaging.Dto
         public void Can_Produce_a_Valid_Broadcast_Dto()
         {
             var transactionDto = new DtoFactory().GetDto(
-                new TransactionBroadcast(),
-                PeerIdentifierHelper.GetPeerIdentifier("im_a_recipient"),
-                PeerIdentifierHelper.GetPeerIdentifier("im_a_sender")
+                new TransactionBroadcast().ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("im_a_sender").PeerId),
+                PeerIdentifierHelper.GetPeerIdentifier("im_a_recipient")
             );
             
             transactionDto.Should().BeAssignableTo<IMessageDto<TransactionBroadcast>>();

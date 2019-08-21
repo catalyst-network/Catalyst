@@ -79,7 +79,6 @@ namespace Catalyst.Cli.CommandTypes
 
             var messageDto = CommandContext.DtoFactory.GetDto(
                 message.ToProtocolMessage(SenderPeerIdentifier.PeerId),
-                SenderPeerIdentifier,
                 RecipientPeerIdentifier);
             Target.SendMessage(messageDto);
         }

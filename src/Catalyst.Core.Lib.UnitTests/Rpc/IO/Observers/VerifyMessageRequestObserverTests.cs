@@ -79,8 +79,7 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Observers
                     PublicKey = RLP.EncodeElement(_publicKeyBytes).ToByteString(),
                     Signature = RLP.EncodeElement(_signatureBytes).ToByteString(),
                     SigningContext = _signingContext
-                },
-                PeerIdentifierHelper.GetPeerIdentifier("sender_key"),
+                }.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender_key").PeerId),
                 PeerIdentifierHelper.GetPeerIdentifier("recipient_key")
             );
             
@@ -101,7 +100,7 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Observers
             receivedCalls.Count.Should().Be(1);
 
             var sentResponseDto = (IMessageDto<ProtocolMessage>) receivedCalls.Single().GetArguments().Single();
-            var verifyResponseMessage = sentResponseDto.FromIMessageDto().FromProtocolMessage<VerifyMessageResponse>();
+            var verifyResponseMessage = sentResponseDto.Content.FromProtocolMessage<VerifyMessageResponse>();
 
             verifyResponseMessage.IsSignedByKey.Should().Be(expectedResponse);
         }

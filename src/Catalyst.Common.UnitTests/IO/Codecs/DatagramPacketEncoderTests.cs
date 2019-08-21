@@ -77,25 +77,26 @@ namespace Catalyst.Common.UnitTests.IO.Codecs
             );
         }
         
-        [Fact]
-        public void DatagramPacketEncoder_Can_Encode_IMessage_With_ProtobufEncoder()
-        {
-            Assert.True(_channel.WriteOutbound(new MessageDto<ProtocolMessageSigned>(
-                _protocolMessageSigned,
-                _senderPid,
-                _recipientPid,
-                CorrelationId.GenerateCorrelationId()
-            )));
+        //DAM
+        //[Fact]
+        //public void DatagramPacketEncoder_Can_Encode_IMessage_With_ProtobufEncoder()
+        //{
+        //    Assert.True(_channel.WriteOutbound(new MessageDto<ProtocolMessageSigned>(
+        //        _protocolMessageSigned,
+        //        _senderPid,
+        //        _recipientPid,
+        //        CorrelationId.GenerateCorrelationId()
+        //    )));
 
-            var datagramPacket = _channel.ReadOutbound<DatagramPacket>();
-            Assert.NotNull(datagramPacket);
+        //    var datagramPacket = _channel.ReadOutbound<DatagramPacket>();
+        //    Assert.NotNull(datagramPacket);
             
-            Assert.Equal(_datagramPacket.Content, datagramPacket.Content);
-            Assert.Equal(_datagramPacket.Sender, datagramPacket.Sender);
-            Assert.Equal(_datagramPacket.Recipient, datagramPacket.Recipient);
-            datagramPacket.Release();
-            Assert.False(_channel.Finish());
-        }
+        //    Assert.Equal(_datagramPacket.Content, datagramPacket.Content);
+        //    Assert.Equal(_datagramPacket.Sender, datagramPacket.Sender);
+        //    Assert.Equal(_datagramPacket.Recipient, datagramPacket.Recipient);
+        //    datagramPacket.Release();
+        //    Assert.False(_channel.Finish());
+        //}
 
         [Fact]
         public void DatagramPacketEncoder_Will_Not_Encode_UnmatchedMessageType()

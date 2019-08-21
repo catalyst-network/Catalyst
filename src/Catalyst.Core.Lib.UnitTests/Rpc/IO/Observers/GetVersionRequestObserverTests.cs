@@ -59,8 +59,7 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Observers
         [Fact]
         public async Task Valid_GetVersion_Request_Should_Send_VersionResponse()
         {
-            var versionRequest = new DtoFactory().GetDto(new VersionRequest(), 
-                PeerIdentifierHelper.GetPeerIdentifier("sender"), 
+            var versionRequest = new DtoFactory().GetDto(new VersionRequest().ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId),
                 PeerIdentifierHelper.GetPeerIdentifier("recipient")
             );
             
@@ -78,7 +77,7 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Observers
             receivedCalls.Count.Should().Be(1);
 
             var sentResponseDto = (IMessageDto<ProtocolMessage>) receivedCalls.Single().GetArguments().Single();
-            var versionResponseMessage = sentResponseDto.FromIMessageDto().FromProtocolMessage<VersionResponse>();
+            var versionResponseMessage = sentResponseDto.Content.FromProtocolMessage<VersionResponse>();
             versionResponseMessage.Version.Should().Be(NodeUtil.GetVersion());
         }
     }

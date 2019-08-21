@@ -71,9 +71,7 @@ namespace Catalyst.Common.IO.Observers
 
                 var responseDto = new DtoFactory().GetDto(
                     response.ToProtocolMessage(PeerIdentifier.PeerId, correlationId),
-                    PeerIdentifier,
-                    recipientPeerIdentifier,
-                    correlationId);
+                    recipientPeerIdentifier);
 
                 messageDto.Context.Channel.WriteAndFlushAsync(responseDto);
             }

@@ -21,10 +21,11 @@
 
 #endregion
 
+using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Common.IO.Messaging.Dto;
+using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
 using Catalyst.TestUtils;
 using FluentAssertions;
@@ -35,15 +36,13 @@ namespace Catalyst.Common.UnitTests.IO.Messaging.Dto
 {
     public sealed class MessageDtoTests
     {
-        private readonly IMessageDto<PingRequest> _messageDto;
+        private readonly IMessageDto<ProtocolMessage> _messageDto;
 
         public MessageDtoTests()
         {
             var pingRequest = new PingRequest();
-            _messageDto = new MessageDto<PingRequest>(pingRequest, 
-                PeerIdentifierHelper.GetPeerIdentifier("Sender_Key"),
-                PeerIdentifierHelper.GetPeerIdentifier("Recipient_Key"),
-                CorrelationId.GenerateCorrelationId()
+            _messageDto = new MessageDto(pingRequest.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("Sender_Key").PeerId),
+                PeerIdentifierHelper.GetPeerIdentifier("Recipient_Key")
             );
         }
 
@@ -52,7 +51,7 @@ namespace Catalyst.Common.UnitTests.IO.Messaging.Dto
         {
             Assert.NotNull(_messageDto);
 
-            _messageDto.Should().BeOfType<MessageDto<PingRequest>>();
+            _messageDto.Should().BeOfType<MessageDto>();
             _messageDto.Content.Should().NotBeNull().And.BeAssignableTo(typeof(IMessage<PingRequest>));
             _messageDto.RecipientPeerIdentifier.Should().NotBeNull().And.BeAssignableTo(typeof(IPeerIdentifier));
             _messageDto.SenderPeerIdentifier.Should().NotBeNull().And.BeAssignableTo(typeof(IPeerIdentifier));

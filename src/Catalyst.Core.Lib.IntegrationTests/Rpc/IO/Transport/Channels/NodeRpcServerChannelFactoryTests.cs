@@ -106,11 +106,9 @@ namespace Catalyst.Core.Lib.IntegrationTests.Rpc.IO.Transport.Channels
             var correlationId = CorrelationId.GenerateCorrelationId();
 
             var protocolMessage = new GetPeerCountResponse().ToProtocolMessage(sender.PeerId, correlationId);
-            var dto = new MessageDto<ProtocolMessage>(
+            var dto = new MessageDto(
                 protocolMessage,
-                sender,
-                recipient,
-                CorrelationId.GenerateCorrelationId()
+                recipient
             );
 
             _clientCorrelationManager.TryMatchResponse(Arg.Any<ProtocolMessage>()).Returns(true);

@@ -68,10 +68,8 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Observers
                     {
                         peers
                     }
-                },
-                PeerIdentifierHelper.GetPeerIdentifier("sender"),
-                PeerIdentifierHelper.GetPeerIdentifier("recipient"),
-                CorrelationId.GenerateCorrelationId()
+                }.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId),
+                PeerIdentifierHelper.GetPeerIdentifier("recipient")
             );
             
             var peerNeighborsResponseObserver = Substitute.For<IObserver<IPeerClientMessageDto>>();
