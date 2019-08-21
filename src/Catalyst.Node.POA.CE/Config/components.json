@@ -313,6 +313,15 @@
                 }
             ]
         },
+        // WHY USE CLI BASED CLASS AND NOT IN COMMON???
+        {
+            "type": "Catalyst.Common.Shell.ConsoleUserInput, Catalyst.Common",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.Cli.IUserInput, Catalyst.Common"
+                }
+            ]
+        },
         {
             "type": "Catalyst.Common.FileSystem.FileSystem, Catalyst.Common",
             "services": [

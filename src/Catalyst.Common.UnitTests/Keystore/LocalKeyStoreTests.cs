@@ -55,7 +55,7 @@ namespace Catalyst.Common.UnitTests.Keystore
 
             var logger = Substitute.For<ILogger>();
             _passwordManager = Substitute.For<IPasswordManager>();
-            _passwordManager.RetrieveOrPromptAndAddPasswordToRegistry(default, default)
+            _passwordManager.RetrieveOrPromptPassword(default, default)
                .ReturnsForAnyArgs(TestPasswordReader.BuildSecureStringPassword("test password"));
 
             var multiAlgo = Substitute.For<IMultihashAlgorithm>();

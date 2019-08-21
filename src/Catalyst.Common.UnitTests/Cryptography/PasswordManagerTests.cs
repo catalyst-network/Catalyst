@@ -54,6 +54,50 @@ namespace Catalyst.Common.UnitTests.Cryptography
         }
 
         [Fact]
+        public void ReadAndAddPasswordToRegistry_Should_Prompt_And_Add_Non_Null_Passwords()
+        {
+            _passwordReader.ReadSecurePassword().ReturnsForAnyArgs(_secureString);
+
+            var registryType = PasswordRegistryTypes.CertificatePassword;
+            _passwordReader.ReadSecurePassword(Arg.Any<string>()).Returns(_secureString);
+
+            var retrievedPassword = _passwordManager.RetrieveOrPromptAndAddPasswordToRegistry(registryType);
+
+            _passwordReader.Received(1).ReadSecurePassword(Arg.Is<string>(s => s.Contains(registryType.Name.Humanize())));
+            _passwordRegistry.Received(1).AddItemToRegistry(registryType, _secureString);
+
+            retrievedPassword.Should().Be(_secureString);
+        }
+
+        [Fact]
+        public void ReadAndAddPasswordToRegistry_Should_Prompt_And_Not_Add_Null_Passwords()
+        {
+            _passwordReader.ReadSecurePassword().ReturnsForAnyArgs(_secureString);
+
+            var registryType = PasswordRegistryTypes.IpfsPassword;
+            _passwordReader.ReadSecurePassword(Arg.Any<string>()).Returns((SecureString) null);
+
+            var retrievedPassword = _passwordManager.RetrieveOrPromptAndAddPasswordToRegistry(registryType);
+
+            _passwordReader.Received(1).ReadSecurePassword(Arg.Is<string>(s => s.Contains(registryType.Name.Humanize())));
+            _passwordRegistry.DidNotReceiveWithAnyArgs().AddItemToRegistry(default, default);
+
+            retrievedPassword.Should().BeNull();
+        }
+
+        [Fact]
+        public void AddPasswordToRegistry_Should_Add_Passwords_To_The_Correct_Registry()
+        {
+            _passwordReader.ReadSecurePassword().ReturnsForAnyArgs(_secureString);
+
+            var registryType = PasswordRegistryTypes.DefaultNodePassword;
+            
+            var retrievedPassword = _passwordManager.AddPasswordToRegistry(registryType, _secureString);
+
+            _passwordRegistry.Received(1).AddItemToRegistry(registryType, _secureString);
+        }
+
+        [Fact]
         public void RetrieveOrPromptPassword_When_Pass_In_Registry_Should_Not_Prompt_Password_From_Console()
         {
             var registryType = PasswordRegistryTypes.DefaultNodePassword;
@@ -77,39 +121,7 @@ namespace Catalyst.Common.UnitTests.Cryptography
 
             var retrievedPassword = _passwordManager.RetrieveOrPromptPassword(registryType);
 
-            _passwordReader.Received(1).ReadSecurePassword(Arg.Is(registryType.Name.Humanize()));
-            retrievedPassword.Should().Be(_secureString);
-        }
-
-        [Fact]
-        public void ReadAndAddPasswordToRegistry_Should_Prompt_And_Add_Non_Null_Passwords()
-        {
-            _passwordReader.ReadSecurePassword().ReturnsForAnyArgs(_secureString);
-
-            var registryType = PasswordRegistryTypes.IpfsPassword;
-            _passwordReader.ReadSecurePassword(Arg.Any<string>()).Returns(_secureString);
-
-            var retrievedPassword = _passwordManager.RetrieveOrPromptAndAddPasswordToRegistry(registryType);
-
-            _passwordReader.Received(1).ReadSecurePassword(Arg.Is(registryType.Name.Humanize()));
-            _passwordRegistry.Received(1).AddItemToRegistry(registryType, _secureString);
-
-            retrievedPassword.Should().Be(_secureString);
-        }
-
-        [Fact]
-        public void ReadAndAddPasswordToRegistry_Should_Prompt_And_Not_Add_Null_Passwords()
-        {
-            _passwordReader.ReadSecurePassword().ReturnsForAnyArgs(_secureString);
-
-            var registryType = PasswordRegistryTypes.IpfsPassword;
-            _passwordReader.ReadSecurePassword(Arg.Any<string>()).Returns((SecureString) null);
-
-            var retrievedPassword = _passwordManager.RetrieveOrPromptAndAddPasswordToRegistry(registryType);
-
-            _passwordReader.Received(1).ReadSecurePassword(Arg.Is(registryType.Name.Humanize()));
-            _passwordRegistry.Received(1).AddItemToRegistry(registryType, _secureString);
-
+            _passwordReader.Received(1).ReadSecurePassword(Arg.Is<string>(s => s.Contains(registryType.Name.Humanize())));
             retrievedPassword.Should().Be(_secureString);
         }
 

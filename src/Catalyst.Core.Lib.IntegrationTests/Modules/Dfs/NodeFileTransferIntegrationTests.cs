@@ -73,9 +73,12 @@ namespace Catalyst.Core.Lib.IntegrationTests.Modules.Dfs
             Substitute.For<IDtoFactory>();
             _nodeFileTransferFactory = new DownloadFileTransferFactory(_logger);
 
-            var passwordReader = Substitute.For<IPasswordManager>();
+            var passwordManager = Substitute.For<IPasswordManager>();
+            passwordManager.RetrieveOrPromptAndAddPasswordToRegistry(PasswordRegistryTypes.IpfsPassword, Arg.Any<string>())
+               .Returns(TestPasswordReader.BuildSecureStringPassword("abcd"));
 
-            var ipfsEngine = new IpfsAdapter(passwordReader, FileSystem, _logger);
+            var ipfsEngine = new IpfsAdapter(passwordManager, FileSystem, _logger);
+            
             _logger = Substitute.For<ILogger>();
             _dfs = new Catalyst.Core.Lib.Modules.Dfs.Dfs(ipfsEngine, _logger);
         }
