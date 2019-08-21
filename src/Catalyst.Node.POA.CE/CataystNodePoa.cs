@@ -34,7 +34,6 @@ using Catalyst.Common.Interfaces.Modules.Mempool;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.P2P;
-using Catalyst.Modules.Lib.Api;
 using Serilog;
 
 namespace Catalyst.Node.POA.CE
@@ -53,8 +52,6 @@ namespace Catalyst.Node.POA.CE
         private readonly IPeerClient _peerClient;
         private readonly IPeerSettings _peerSettings;
 
-        private readonly IApi _api;
-
         public CatalystNodePoa(IKeySigner keySigner,
             IPeerService peer,
             IConsensus consensus,
@@ -62,7 +59,6 @@ namespace Catalyst.Node.POA.CE
             ILedger ledger,
             ILogger logger,
             INodeRpcServer nodeRpcServer,
-            IApi api,
             IPeerClient peerClient,
             IPeerSettings peerSettings,
             IMempool mempool = null,
@@ -77,7 +73,6 @@ namespace Catalyst.Node.POA.CE
             _keySigner = keySigner;
             _logger = logger;
             _nodeRpcServer = nodeRpcServer;
-            _api = api;
             _mempool = mempool;
             _contract = contract;
         }
@@ -87,7 +82,6 @@ namespace Catalyst.Node.POA.CE
             await _nodeRpcServer.StartAsync().ConfigureAwait(false);
             await _peerClient.StartAsync().ConfigureAwait(false);
             await _peer.StartAsync().ConfigureAwait(false);
-            await _api.StartApiAsync().ConfigureAwait(false);
         }
 
         public async Task RunAsync(CancellationToken ct)
@@ -99,7 +93,7 @@ namespace Catalyst.Node.POA.CE
             Consensus.StartProducing();
 
             bool exit;
-            
+
             do
             {
                 await Task.Delay(300, ct); //just to get the exit message at the bottom
