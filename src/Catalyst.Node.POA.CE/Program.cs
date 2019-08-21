@@ -92,7 +92,7 @@ namespace Catalyst.Node.POA.CE
             {
                 _kernel
                    .WithDataDirectory()
-                   .WithNetworksConfigFile(NetworkTypes.Dev, options.OverrideNetworkFile)
+                   .WithNetworksConfigFile(default, options.OverrideNetworkFile)
                    .WithComponentsConfigFile()
                    .WithSerilogConfigFile()
                    .WithConfigCopier()
