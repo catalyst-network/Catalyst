@@ -21,29 +21,19 @@
 
 #endregion
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 using Autofac;
-using Autofac.Core;
 using Catalyst.Core.Lib.Modules.Api;
 using FluentAssertions;
 using Microsoft.AspNetCore.Cors.Infrastructure;
-using Microsoft.AspNetCore.Hosting.Server;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ApplicationParts;
-using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Internal;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Mvc.Razor.Compilation;
 using Microsoft.AspNetCore.Razor.Language;
 using Microsoft.Extensions.DependencyInjection;
-using NSubstitute;
-using Serilog;
 using Swashbuckle.AspNetCore.Swagger;
-using Swashbuckle.AspNetCore.SwaggerGen;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using Xunit;
 
 namespace Catalyst.Core.Lib.UnitTests.Modules.Api
@@ -51,9 +41,9 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Api
     public class ApiModuleTests
     {
         private ApiModule _apiModule;
-        private ContainerBuilder _containerBuilder;
-        private IServiceCollection _serviceCollection;
-        
+        private readonly ContainerBuilder _containerBuilder;
+        private readonly IServiceCollection _serviceCollection;
+
         public ApiModuleTests()
         {
             _containerBuilder = new ContainerBuilder();
@@ -69,7 +59,7 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Api
         [Fact]
         public void Can_Add_Api()
         {
-            Type[] serviceTypes = 
+            Type[] serviceTypes =
             {
                 typeof(IRazorPageActivator),
                 typeof(ICorsService),
