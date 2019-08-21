@@ -51,6 +51,7 @@ namespace Catalyst.Core.Lib.Rpc.IO.Transport.Channels
         private readonly IKeySigner _keySigner;
         private readonly IPeerIdValidator _peerIdValidator;
         private readonly IObservableServiceHandler _observableServiceHandler;
+        private readonly IPeerSettings _peerSettings;
 
         protected override Func<List<IChannelHandler>> HandlerGenerationFunction
         {
@@ -67,7 +68,7 @@ namespace Catalyst.Core.Lib.Rpc.IO.Transport.Channels
                     new AddressedEnvelopeToIMessageEncoder(),
                     new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
                         new ProtocolMessageVerifyHandler(_keySigner),
-                        new ProtocolMessageSignHandler(_keySigner)
+                        new ProtocolMessageSignHandler(_keySigner, _peerSettings)
                     ),
                     new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
                         new CorrelationHandler<IRpcMessageCorrelationManager>(_correlationManger),
@@ -88,12 +89,14 @@ namespace Catalyst.Core.Lib.Rpc.IO.Transport.Channels
         public NodeRpcServerChannelFactory(IRpcMessageCorrelationManager correlationManger,
             IKeySigner keySigner,
             IAuthenticationStrategy authenticationStrategy,
-            IPeerIdValidator peerIdValidator)
+            IPeerIdValidator peerIdValidator,
+            IPeerSettings peerSettings)
         {
             _correlationManger = correlationManger;
             _authenticationStrategy = authenticationStrategy;
             _keySigner = keySigner;
             _peerIdValidator = peerIdValidator;
+            _peerSettings = peerSettings;
             _observableServiceHandler = new ObservableServiceHandler();
         }
 

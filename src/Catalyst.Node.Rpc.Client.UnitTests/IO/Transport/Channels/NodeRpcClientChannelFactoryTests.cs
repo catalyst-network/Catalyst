@@ -53,8 +53,8 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Transport.Channels
         {
             private readonly List<IChannelHandler> _handlers;
 
-            public TestNodeRpcClientChannelFactory(IKeySigner keySigner, IRpcMessageCorrelationManager correlationManager, IPeerIdValidator peerIdValidator)
-                : base(keySigner, correlationManager, peerIdValidator)
+            public TestNodeRpcClientChannelFactory(IKeySigner keySigner, IRpcMessageCorrelationManager correlationManager, IPeerIdValidator peerIdValidator, IPeerSettings peerSettings)
+                : base(keySigner, correlationManager, peerIdValidator, peerSettings)
             {
                 _handlers = HandlerGenerationFunction();
             }
@@ -65,20 +65,21 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Transport.Channels
         private readonly IRpcMessageCorrelationManager _correlationManager;
         private readonly TestNodeRpcClientChannelFactory _factory;
         private readonly IKeySigner _keySigner;
+        private readonly IPeerSettings _peerSettings;
 
         public NodeRpcClientChannelFactoryTests()
         {
             _correlationManager = Substitute.For<IRpcMessageCorrelationManager>();
             _keySigner = Substitute.For<IKeySigner>();
+            _peerSettings = Substitute.For<IPeerSettings>();
 
-            var peerSettings = Substitute.For<IPeerSettings>();
-            peerSettings.BindAddress.Returns(IPAddress.Parse("127.0.0.1"));
-            peerSettings.Port.Returns(1234);
+            _peerSettings.BindAddress.Returns(IPAddress.Parse("127.0.0.1"));
+            _peerSettings.Port.Returns(1234);
 
             var peerIdValidator = Substitute.For<IPeerIdValidator>();
             peerIdValidator.ValidatePeerIdFormat(Arg.Any<PeerId>()).Returns(true);
 
-            _factory = new TestNodeRpcClientChannelFactory(_keySigner, _correlationManager, peerIdValidator);
+            _factory = new TestNodeRpcClientChannelFactory(_keySigner, _correlationManager, peerIdValidator, _peerSettings);
         }
 
         [Fact]

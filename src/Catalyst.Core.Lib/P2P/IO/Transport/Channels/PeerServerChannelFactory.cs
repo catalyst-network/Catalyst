@@ -51,6 +51,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Transport.Channels
         private readonly IBroadcastManager _broadcastManager;
         private readonly IKeySigner _keySigner;
         private readonly IPeerIdValidator _peerIdValidator;
+        private readonly IPeerSettings _peerSettings;
 
         /// <summary>
         /// 
@@ -62,12 +63,14 @@ namespace Catalyst.Core.Lib.P2P.IO.Transport.Channels
         public PeerServerChannelFactory(IPeerMessageCorrelationManager messageCorrelationManager,
             IBroadcastManager broadcastManager,
             IKeySigner keySigner,
-            IPeerIdValidator peerIdValidator)
+            IPeerIdValidator peerIdValidator,
+            IPeerSettings peerSettings)
         {
             _messageCorrelationManager = messageCorrelationManager;
             _broadcastManager = broadcastManager;
             _keySigner = keySigner;
             _peerIdValidator = peerIdValidator;
+            _peerSettings = peerSettings;
         }
 
         protected override Func<List<IChannelHandler>> HandlerGenerationFunction
@@ -85,7 +88,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Transport.Channels
                         new PeerIdValidationHandler(_peerIdValidator),
                         new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
                             new ProtocolMessageVerifyHandler(_keySigner),
-                            new ProtocolMessageSignHandler(_keySigner)
+                            new ProtocolMessageSignHandler(_keySigner, _peerSettings)
                         ),
                         new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
                             new CorrelationHandler<IPeerMessageCorrelationManager>(_messageCorrelationManager),

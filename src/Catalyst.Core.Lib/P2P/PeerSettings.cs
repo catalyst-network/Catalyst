@@ -29,6 +29,7 @@ using Catalyst.Common.Enumerator;
 using Catalyst.Common.Network;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Types;
+using Catalyst.Protocol.Common;
 using Dawn;
 using Microsoft.Extensions.Configuration;
 
@@ -40,8 +41,8 @@ namespace Catalyst.Core.Lib.P2P
     public sealed class PeerSettings
         : IPeerSettings
     {
-        private readonly NetworkTypes _networkTypes;
-        public NetworkTypes NetworkTypes => _networkTypes;
+        private readonly Network _network;
+        public Network Network => _network;
         private readonly string _publicKey;
         public string PublicKey => _publicKey;
         private readonly int _port;
@@ -55,7 +56,7 @@ namespace Catalyst.Core.Lib.P2P
         
         public IPAddress PublicIpAddress { get; }
 
-        public PeerSettings(NetworkTypes networkTypes,
+        public PeerSettings(Network network,
             string publicKey,
             int port,
             string payoutAddress,
@@ -63,7 +64,7 @@ namespace Catalyst.Core.Lib.P2P
             IPAddress publicAddress,
             IList<string> seedServers)
         {
-            _networkTypes = networkTypes;
+            _network = network;
             _publicKey = publicKey;
             _port = port;
             _payoutAddress = payoutAddress;
@@ -80,7 +81,9 @@ namespace Catalyst.Core.Lib.P2P
         {
             Guard.Argument(rootSection, nameof(rootSection)).NotNull();
             var section = rootSection.GetSection("CatalystNodeConfiguration").GetSection("Peer");
-            _networkTypes = Enumeration.Parse<NetworkTypes>(section.GetSection("Network").Value);
+            //_network = Enumeration.Parse<Network>(section.GetSection("Network").Value);
+            Network.TryParse(section.GetSection("Network").Value, out _network);
+            
             _publicKey = section.GetSection("PublicKey").Value;
             _port = int.Parse(section.GetSection("Port").Value);
             _payoutAddress = section.GetSection("PayoutAddress").Value;

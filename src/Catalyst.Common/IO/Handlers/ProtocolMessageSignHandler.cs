@@ -25,6 +25,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
+using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.Util;
 using Catalyst.Protocol.Common;
@@ -39,10 +40,12 @@ namespace Catalyst.Common.IO.Handlers
         private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
 
         private readonly IKeySigner _keySigner;
+        private readonly IPeerSettings _peerSettings;
 
-        public ProtocolMessageSignHandler(IKeySigner keySigner)
+        public ProtocolMessageSignHandler(IKeySigner keySigner, IPeerSettings peerSettings)
         {
             _keySigner = keySigner;
+            _peerSettings = peerSettings;
         }
 
         /// <summary>
@@ -56,7 +59,7 @@ namespace Catalyst.Common.IO.Handlers
             Logger.Verbose("Signing message {message}", message);
             var signingContext = new SigningContext
             {
-                Network = Protocol.Common.Network.Devnet,
+                Network = _peerSettings.Network,
                 SignatureType = SignatureType.ProtocolPeer
             };
             var sig = _keySigner.Sign(message.Content.ToByteArray(), signingContext);
