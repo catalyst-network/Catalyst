@@ -24,6 +24,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Catalyst.Common.Enumerator;
+using Catalyst.Protocol.Common;
 using FluentAssertions;
 using Xunit;
 
@@ -50,11 +51,14 @@ namespace Catalyst.Common.UnitTests.P2P
         [Fact]
         public static void All_should_return_all_declared_names()
         {
+            //Protocol.Common.Network.??
             var allModuleNames = Enumeration.GetAll<Types.NetworkTypes>().Select(m => m.Name);
 
             var expectedList = new List<string> {"mainnet", "devnet", "testnet"};
 
             allModuleNames.Should().BeEquivalentTo(expectedList);
+
+            
         }
     }
 }

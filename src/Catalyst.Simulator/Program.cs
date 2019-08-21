@@ -22,21 +22,17 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using Catalyst.Common.Cryptography;
 using Catalyst.Common.FileSystem;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Registry;
 using Catalyst.Common.Shell;
-using Catalyst.Common.Types;
 using Catalyst.Simulator.Extensions;
 using Catalyst.Simulator.Helpers;
-using Catalyst.Simulator.RpcClients;
 using Catalyst.Simulator.Simulations;
 using CommandLine;
-using Newtonsoft.Json;
+using NSubstitute;
 using Serilog;
 
 namespace Catalyst.Simulator
@@ -57,10 +53,10 @@ namespace Catalyst.Simulator
             var consolePasswordReader = new ConsolePasswordReader(userOutput, passwordRegistry);
             var certificateStore = new CertificateStore(fileSystem, consolePasswordReader);
             var certificate = certificateStore.ReadOrCreateCertificateFile("mycert.pfx");
-            var peerSettings = new PeerSettings();
+            var peerSettings = Substitute.For<IPeerSettings>();
 
             var clientRpcInfoList =
-                ConfigHelper.GenerateClientRpcInfoFromConfig(userOutput, passwordRegistry, certificate, logger
+                ConfigHelper.GenerateClientRpcInfoFromConfig(userOutput, passwordRegistry, certificate, logger, peerSettings
                 ).ToList();
 
             var simulation = new TransactionSimulation(userOutput);
