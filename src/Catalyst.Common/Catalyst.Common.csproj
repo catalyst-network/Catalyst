@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFramework>netcoreapp2.2</TargetFramework>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -18,6 +18,7 @@
         <PackageReference Include="Catalyst.Protocol" Version="0.0.1.11110-beta" />
         <PackageReference Include="DotNetty.Codecs.Protobuf" Version="0.6.0" />
         <PackageReference Include="GraphQL" Version="2.4.0" />
+        <PackageReference Include="Humanizer" Version="2.6.2" />
         <PackageReference Include="Ipfs.Api" Version="0.23.6" />
         <PackageReference Include="Ipfs.Core" Version="0.53.1" />
         <PackageReference Include="Ipfs.Engine" Version="0.11.3" />

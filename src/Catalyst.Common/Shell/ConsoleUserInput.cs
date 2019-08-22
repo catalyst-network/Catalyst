@@ -21,21 +21,13 @@
 
 #endregion
 
-using System.Security;
+using System;
+using Catalyst.Common.Interfaces.Cli;
 
-namespace Catalyst.Common.Interfaces.Cryptography
+namespace Catalyst.Common.Shell
 {
-    public interface IPasswordReader
+    public class ConsoleUserInput : IUserInput
     {
-        /// <summary>
-        /// Prompt user for a password.
-        /// </summary>
-        /// <param name="prompt">A message providing some context to the user,
-        /// for instance which password is being requested.</param>
-        /// <returns>The password read and stored as a <c>SecureString</c></returns>
-        /// <remarks>Once the password has been use, it is recommended to dispose of it.
-        /// <seealso cref="https://docs.microsoft.com/en-us/dotnet/api/system.security.securestring?view=netcore-2.2"/>
-        /// </remarks>
-        SecureString ReadSecurePassword(string prompt = "Please enter your password");
+        public ConsoleKeyInfo ReadKey() => Console.ReadKey(true);
     }
 }

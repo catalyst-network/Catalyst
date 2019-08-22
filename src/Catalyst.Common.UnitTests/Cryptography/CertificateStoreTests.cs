@@ -39,7 +39,7 @@ namespace Catalyst.Common.UnitTests.Cryptography
     {
         public CertificateStoreTests(ITestOutputHelper output) : base(output)
         {
-            _passwordReader = Substitute.For<IPasswordReader>();
+            _passwordManager = Substitute.For<IPasswordManager>();
         }
 
         private string _fileWithPassName;
@@ -47,11 +47,11 @@ namespace Catalyst.Common.UnitTests.Cryptography
         private X509Certificate2 _createdCertificate;
         private X509Certificate2 _retrievedCertificate;
 
-        private readonly IPasswordReader _passwordReader;
+        private readonly IPasswordManager _passwordManager;
 
         private void Create_certificate_store()
         {
-            _certificateStore = new CertificateStore(FileSystem, _passwordReader);
+            _certificateStore = new CertificateStore(FileSystem, _passwordManager);
         }
 
         private void Ensure_no_certificate_file_exists()
@@ -69,19 +69,18 @@ namespace Catalyst.Common.UnitTests.Cryptography
         private void Create_a_certificate_file_with_password()
         {
             _fileWithPassName = "test-with-pass.pfx";
-            _passwordReader.ReadSecurePassword(Arg.Any<PasswordRegistryTypes>(), Arg.Any<string>()).Returns(TestPasswordReader.BuildSecureStringPassword("password"));
+            _passwordManager.RetrieveOrPromptAndAddPasswordToRegistry(Arg.Is(PasswordRegistryTypes.CertificatePassword)).Returns(TestPasswordReader.BuildSecureStringPassword("password"));
             _createdCertificate = _certificateStore.ReadOrCreateCertificateFile(_fileWithPassName);
         }
 
         private void The_store_should_have_asked_for_a_password_on_creation_and_loading()
         {
-            _passwordReader.ReceivedWithAnyArgs(2).ReadSecurePassword(default);
+            _passwordManager.ReceivedWithAnyArgs(2).RetrieveOrPromptAndAddPasswordToRegistry(default);
         }
 
         private void Read_the_certificate_file_with_password()
         {
-            _passwordReader.ReadSecurePassword(PasswordRegistryTypes.CertificatePassword, Arg.Any<string>())
-               .Returns(TestPasswordReader.BuildSecureStringPassword("password"));
+            _passwordManager.RetrieveOrPromptAndAddPasswordToRegistry(Arg.Is(PasswordRegistryTypes.CertificatePassword)).Returns(TestPasswordReader.BuildSecureStringPassword("password"));
             _retrievedCertificate = _certificateStore.ReadOrCreateCertificateFile(_fileWithPassName);
         }
 
