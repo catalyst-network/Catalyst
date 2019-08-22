@@ -163,19 +163,24 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Observers
         {
             _fakeContext.Channel.RemoteAddress.Returns(EndpointBuilder.BuildNewEndPoint("192.0.0.1", 42042));
 
-            var sendPeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("sender");
+            var senderPeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("sender");
+            var dtoFactory = new DtoFactory();
+            var getPeerInfoRequest = new GetPeerInfoRequest {PublicKey = peerId.PublicKey, Ip = peerId.Ip};
 
-            var messageFactory = new DtoFactory();
-            var request = new GetPeerInfoRequest {PublicKey = peerId.PublicKey, Ip = peerId.Ip};
+            var protocolMessage =
+                getPeerInfoRequest.ToProtocolMessage(senderPeerIdentifier.PeerId);
 
-            var requestMessage = messageFactory.GetDto(
-                request.ToProtocolMessage(sendPeerIdentifier.PeerId),
+            var messageDto =
+                new DtoFactory().GetDto(protocolMessage, PeerIdentifierHelper.GetPeerIdentifier("recipient"));
+
+            var requestMessage = dtoFactory.GetDto(
+                protocolMessage,
                 PeerIdentifierHelper.GetPeerIdentifier("recipient")
             );
 
-            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, requestMessage.Content.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId));
+            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, protocolMessage);
 
-            var handler = new GetPeerInfoRequestObserver(sendPeerIdentifier, _logger, _peerRepository);
+            var handler = new GetPeerInfoRequestObserver(senderPeerIdentifier, _logger, _peerRepository);
             handler.StartObserving(messageStream);
 
             await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();

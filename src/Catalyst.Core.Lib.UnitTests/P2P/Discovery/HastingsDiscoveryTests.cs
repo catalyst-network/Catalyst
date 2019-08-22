@@ -38,6 +38,7 @@ using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.Discovery;
 using Catalyst.Common.Interfaces.P2P.IO.Messaging.Dto;
 using Catalyst.Common.IO.Messaging.Correlation;
+using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.P2P;
 using Catalyst.Common.P2P.Discovery;
 using Catalyst.Common.P2P.Models;
@@ -45,6 +46,7 @@ using Catalyst.Common.Types;
 using Catalyst.Common.Util;
 using Catalyst.Core.Lib.P2P.Discovery;
 using Catalyst.Core.Lib.P2P.IO.Observers;
+using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
 using Catalyst.TestUtils;
 using FluentAssertions;
@@ -565,13 +567,13 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
                     walker.DtoFactory
                        .Received(Constants.AngryPirate)
                        .GetDto(
-                            Arg.Is(new PingRequest().ToProtocolMessage(Arg.Any<IPeerIdentifier>().PeerId)),
+                            Arg.Any<ProtocolMessage>(),
                             Arg.Any<IPeerIdentifier>()
                         );
                     
                     walker.PeerClient
                        .Received(Constants.AngryPirate)
-                       .SendMessage(Arg.Any<IMessageDto<PingRequest>>());
+                       .SendMessage(Arg.Any<MessageDto>());
                     
                     walker.StepProposal.Neighbours
                        .Where(n => n.StateTypes == NeighbourStateTypes.Contacted)

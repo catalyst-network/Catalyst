@@ -180,8 +180,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.Rpc.IO.Observers
                     PublicKey = RLP.EncodeElement(signResponseMessage.PublicKey.ToByteArray()).ToByteString(),
                     Signature = RLP.EncodeElement(signResponseMessage.Signature.ToByteArray()).ToByteString(),
                     SigningContext = signingContext
-                },
-                PeerIdentifierHelper.GetPeerIdentifier("sender_key"),
+                }.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender_key").PeerId),
                 PeerIdentifierHelper.GetPeerIdentifier("recipient_key")
             );
             

@@ -70,21 +70,17 @@ namespace Catalyst.Core.Lib.IntegrationTests.Rpc.IO.Observers
         [Fact]
         public async Task GetInfoMessageRequest_UsingValidRequest_ShouldSendGetInfoResponse()
         {
-            var messageFactory = new DtoFactory();
-            var request = messageFactory.GetDto(
-                new GetInfoRequest
-                {
-                    Query = true
-                }.ToProtocolMessage( PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId),
-                PeerIdentifierHelper.GetPeerIdentifier("recipient")
-            );
+            var protocolMessage = new GetInfoRequest
+            {
+                Query = true
+            }.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId);
 
             var expectedResponseContent = JsonConvert
                .SerializeObject(_config.GetSection("CatalystNodeConfiguration").AsEnumerable(),
                     Formatting.Indented);
 
-            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, 
-                request.Content.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId)
+            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext,
+                protocolMessage
             );
             
             var handler = new GetInfoRequestObserver(
