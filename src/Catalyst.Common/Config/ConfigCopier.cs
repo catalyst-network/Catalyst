@@ -28,17 +28,16 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using Catalyst.Common.Interfaces.Config;
 using Dawn;
+using Catalyst.Protocol.Common;
 
 namespace Catalyst.Common.Config
 {
     public class ConfigCopier : IConfigCopier
     {
         /// <inheritdoc />
-        public void RunConfigStartUp(string dataDir, Types.NetworkTypes networkTypesParam = null, string sourceFolder = null, bool overwrite = false)
+        public void RunConfigStartUp(string dataDir, Protocol.Common.Network network = Protocol.Common.Network.Devnet, string sourceFolder = null, bool overwrite = false)
         {
             Guard.Argument(dataDir, nameof(dataDir)).NotNull().NotEmpty().NotWhiteSpace();
-
-            var network = networkTypesParam == null ? Types.NetworkTypes.Dev : networkTypesParam;
 
             var dataDirInfo = new DirectoryInfo(dataDir);
             if (!dataDirInfo.Exists)
@@ -81,11 +80,11 @@ namespace Catalyst.Common.Config
             }
         }
 
-        protected virtual IEnumerable<string> RequiredConfigFiles(Types.NetworkTypes networkTypes)
+        protected virtual IEnumerable<string> RequiredConfigFiles(Protocol.Common.Network network)
         {
             var requiredConfigFiles = new[]
             {
-                Constants.NetworkConfigFile(networkTypes),
+                Constants.NetworkConfigFile(network),
                 Constants.ComponentsJsonConfigFile,
                 Constants.SerilogJsonConfigFile,
                 Constants.MessageHandlersConfigFile,

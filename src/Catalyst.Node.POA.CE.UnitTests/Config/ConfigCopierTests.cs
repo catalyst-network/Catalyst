@@ -26,6 +26,7 @@ using System.IO;
 using System.Linq;
 using Catalyst.Common.Config;
 using Catalyst.Common.Types;
+using Catalyst.Protocol.Common;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Xunit;
@@ -37,16 +38,16 @@ namespace Catalyst.Node.POA.CE.UnitTests.Config
     {
         public ConfigCopierTests(ITestOutputHelper output) : base(output) { }
 
-        private sealed class ConfigFilesOverwriteTestData : TheoryData<string, NetworkTypes>
+        private sealed class ConfigFilesOverwriteTestData : TheoryData<string, Network>
         {
             public ConfigFilesOverwriteTestData()
             {
-                Add(Constants.NetworkConfigFile(NetworkTypes.Main), NetworkTypes.Main);
-                Add(Constants.NetworkConfigFile(NetworkTypes.Test), NetworkTypes.Test);
-                Add(Constants.NetworkConfigFile(NetworkTypes.Dev), NetworkTypes.Dev);
-                Add(Constants.SerilogJsonConfigFile, NetworkTypes.Dev);
-                Add(Constants.ComponentsJsonConfigFile, NetworkTypes.Dev);
-                Add(Constants.MessageHandlersConfigFile, NetworkTypes.Dev);
+                Add(Constants.NetworkConfigFile(Network.Mainet), Network.Mainet);
+                Add(Constants.NetworkConfigFile(Network.Testnet), Network.Testnet);
+                Add(Constants.NetworkConfigFile(Network.Devnet), Network.Devnet);
+                Add(Constants.SerilogJsonConfigFile, Network.Devnet);
+                Add(Constants.ComponentsJsonConfigFile, Network.Devnet);
+                Add(Constants.MessageHandlersConfigFile, Network.Devnet);
             }
         }
 
@@ -54,14 +55,13 @@ namespace Catalyst.Node.POA.CE.UnitTests.Config
         [ClassData(typeof(ConfigFilesOverwriteTestData))]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void RunConfigStartUp_Should_Not_Overwrite_An_Existing_Config_File(string moduleFileName,
-            NetworkTypes networkTypes)
+            Network network)
         {
-            RunConfigStartUp_Should_Not_Overwrite_Existing_Files(moduleFileName, networkTypes);
+            RunConfigStartUp_Should_Not_Overwrite_Existing_Files(moduleFileName, network);
         }
 
-        private void RunConfigStartUp_Should_Not_Overwrite_Existing_Files(string fileName, NetworkTypes networkTypes)
+        private void RunConfigStartUp_Should_Not_Overwrite_Existing_Files(string fileName, Network network = Network.Devnet)
         {
-            networkTypes = networkTypes ?? NetworkTypes.Dev;
             var currentDirectory = FileSystem.GetCatalystDataDir();
             currentDirectory.Create();
             currentDirectory.Refresh();
@@ -80,9 +80,9 @@ namespace Catalyst.Node.POA.CE.UnitTests.Config
             currentDirectory.Exists.Should().BeTrue("otherwise the test is not relevant");
             existingFileInfo.Exists.Should().BeTrue("otherwise the test is not relevant");
 
-            new ConfigCopier().RunConfigStartUp(currentDirectory.FullName, networkTypes);
+            new ConfigCopier().RunConfigStartUp(currentDirectory.FullName, network);
 
-            var expectedFileList = GetExpectedFileList(networkTypes).ToList();
+            var expectedFileList = GetExpectedFileList(network).ToList();
             var configFiles = EnumerateConfigFiles(currentDirectory, modulesDirectory);
 
             configFiles.Should().BeEquivalentTo(expectedFileList);
@@ -101,11 +101,11 @@ namespace Catalyst.Node.POA.CE.UnitTests.Config
             return filesOnDisk;
         }
 
-        private IEnumerable<string> GetExpectedFileList(NetworkTypes networkTypes)
+        private IEnumerable<string> GetExpectedFileList(Network network)
         {
             var requiredConfigFiles = new[]
             {
-                Constants.NetworkConfigFile(networkTypes),
+                Constants.NetworkConfigFile(network),
                 Constants.ComponentsJsonConfigFile,
                 Constants.SerilogJsonConfigFile,
                 Constants.MessageHandlersConfigFile,
@@ -124,7 +124,7 @@ namespace Catalyst.Node.POA.CE.UnitTests.Config
             var modulesDirectory =
                 new DirectoryInfo(Path.Combine(currentDirectory.FullName, Constants.ModulesSubFolder));
 
-            var network = NetworkTypes.Dev;
+            var network = Network.Devnet;
             new ConfigCopier().RunConfigStartUp(currentDirectory.FullName, network);
 
             var expectedFileList = GetExpectedFileList(network);

@@ -31,6 +31,7 @@ using Catalyst.Common.Config;
 using Catalyst.Common.Enumerator;
 using Catalyst.Common.Types;
 using Catalyst.Core.Lib.P2P;
+using Catalyst.Protocol.Common;
 using FluentAssertions;
 using Microsoft.Extensions.Configuration;
 using SharpRepository.Repository;
@@ -44,7 +45,7 @@ namespace Catalyst.Node.POA.CE.UnitTests.Config
 
         static NetworkConfigTests()
         {
-            NetworkFiles = Enumeration.GetAll<NetworkTypes>()
+            NetworkFiles = new List<Network> {Network.Devnet, Network.Mainet, Network.Testnet}
                .Select(n => new[]
                 {
                     Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(n)) as object
