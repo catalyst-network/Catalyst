@@ -126,7 +126,10 @@ namespace Catalyst.Core.Lib.Modules.Consensus.Deltas
 
         private async Task BroadcastNewDfsFileAddressAsync(string dfsFileAddress, ByteString previousDeltaHash)
         {
-            if (dfsFileAddress == null) {return;}
+            if (dfsFileAddress == null)
+            {
+                return;
+            }
 
             try
             {
