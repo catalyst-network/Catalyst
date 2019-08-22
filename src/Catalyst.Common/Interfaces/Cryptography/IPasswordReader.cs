@@ -22,17 +22,20 @@
 #endregion
 
 using System.Security;
-using Catalyst.Common.Config;
-using Catalyst.Common.Types;
 
 namespace Catalyst.Common.Interfaces.Cryptography
 {
     public interface IPasswordReader
     {
-        SecureString ReadSecurePassword(PasswordRegistryTypes passwordIdentifier, string prompt = "Please enter your password");
-
-        SecureString ReadSecurePasswordAndAddToRegistry(PasswordRegistryTypes passwordIdentifier, string prompt = "Please enter your password");
-
-        bool AddPasswordToRegistry(PasswordRegistryTypes passwordIdentifier, SecureString password);
+        /// <summary>
+        /// Prompt user for a password.
+        /// </summary>
+        /// <param name="prompt">A message providing some context to the user,
+        /// for instance which password is being requested.</param>
+        /// <returns>The password read and stored as a <c>SecureString</c></returns>
+        /// <remarks>Once the password has been use, it is recommended to dispose of it.
+        /// <seealso cref="https://docs.microsoft.com/en-us/dotnet/api/system.security.securestring?view=netcore-2.2"/>
+        /// </remarks>
+        SecureString ReadSecurePassword(string prompt = "Please enter your password");
     }
 }

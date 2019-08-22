@@ -44,14 +44,14 @@ namespace Catalyst.Common.Cryptography
         private static int MaxTries => 5;
         private const string LocalHost = "localhost";
         private readonly DirectoryInfo _storageFolder;
-        private readonly IPasswordReader _passwordReader;
+        private readonly IPasswordManager _passwordManager;
         private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
         private int PasswordTries { get; set; }
 
-        public CertificateStore(IFileSystem fileSystem, IPasswordReader passwordReader)
+        public CertificateStore(IFileSystem fileSystem, IPasswordManager passwordManager)
         {
             _storageFolder = fileSystem.GetCatalystDataDir();
-            _passwordReader = passwordReader;
+            _passwordManager = passwordManager;
         }
 
         public X509Certificate2 ReadOrCreateCertificateFile(string pfxFilePath)
@@ -82,7 +82,7 @@ namespace Catalyst.Common.Cryptography
             const string promptMessage = "Catalyst Node needs to create an SSL certificate." +
                 " Please enter a password to encrypt the certificate on disk:";
 
-            using (var password = _passwordReader.ReadSecurePassword(_certificatePasswordIdentifier, promptMessage))
+            using (var password = _passwordManager.RetrieveOrPromptAndAddPasswordToRegistry(_certificatePasswordIdentifier, promptMessage))
             {
                 var certificate = BuildSelfSignedServerCertificate(password, commonName);
                 Save(certificate, filePath, password);
@@ -131,10 +131,9 @@ namespace Catalyst.Common.Cryptography
                     try
                     {
                         passwordFromConsole =
-                            _passwordReader.ReadSecurePassword(_certificatePasswordIdentifier, passwordPromptMessage);
+                            _passwordManager.RetrieveOrPromptAndAddPasswordToRegistry(_certificatePasswordIdentifier, passwordPromptMessage);
                         certificate = new X509Certificate2(fileInBytes, passwordFromConsole);
-                        _passwordReader.AddPasswordToRegistry(_certificatePasswordIdentifier,
-                            passwordFromConsole);
+
                         break;
                     }
                     catch (CryptographicException ex)

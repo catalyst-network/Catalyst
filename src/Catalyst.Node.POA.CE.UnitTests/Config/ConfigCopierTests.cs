@@ -131,5 +131,16 @@ namespace Catalyst.Node.POA.CE.UnitTests.Config
             var configFiles = EnumerateConfigFiles(currentDirectory, modulesDirectory);
             configFiles.Should().BeEquivalentTo(expectedFileList);
         }
+
+        [Fact]
+        public void Can_Copy_Overridden_Network_File()
+        {
+            var overrideFile = "TestOverride.json";
+            var currentDirectory = FileSystem.GetCatalystDataDir();
+            FileSystem.WriteTextFileToCddAsync(overrideFile,
+                File.ReadAllText(Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(NetworkTypes.Dev))));
+            new ConfigCopier().RunConfigStartUp(currentDirectory.FullName, null, null, true, overrideFile);
+            File.Exists(Path.Combine(currentDirectory.FullName, overrideFile)).Should().BeTrue();
+        }
     }
 }

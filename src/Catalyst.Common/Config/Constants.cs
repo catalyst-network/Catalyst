@@ -128,7 +128,7 @@ namespace Catalyst.Common.Config
             Enumeration.GetAll<ModuleName>()
                .Select(m => Path.Combine(ModulesSubFolder, string.Format(JsonFilePattern, m.Name.ToLower())));
 
-        public static string NetworkConfigFile(Protocol.Common.Network network)
+        public static string NetworkConfigFile(Protocol.Common.Network network, string overrideNetworkFile = null)
         {
             var networkConfigFile = string.Format(JsonFilePattern, network.ToString());
             return networkConfigFile;

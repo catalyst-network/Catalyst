@@ -21,18 +21,12 @@
 
 #endregion
 
-namespace Catalyst.Common.Interfaces.Config
+using System;
+
+namespace Catalyst.Common.Interfaces.Cli
 {
-    public interface IConfigCopier
+    public interface IUserInput
     {
-        /// <summary>
-        ///     Finds out which config files are missing from the catalyst home directory and
-        ///     copies them over if needed.
-        /// </summary>
-        /// <param name="dataDir">Home catalyst directory</param>
-        /// <param name="network">Network on which to run the node</param>
-        /// <param name="sourceFolder"></param>
-        /// <param name="overwrite">Should config existing config files be overwritten by default?</param>
-        void RunConfigStartUp(string dataDir, Protocol.Common.Network network = Protocol.Common.Network.Devnet, string sourceFolder = null, bool overwrite = false, string overrideNetworkFile = null);
+        ConsoleKeyInfo ReadKey();
     }
 }

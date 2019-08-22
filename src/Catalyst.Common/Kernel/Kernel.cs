@@ -92,10 +92,10 @@ namespace Catalyst.Common.Kernel
             _configurationBuilder = new ConfigurationBuilder();
         }
 
-        public Kernel BuildKernel(bool overwrite = false)
+        public Kernel BuildKernel(bool overwrite = false, string overrideNetworkFile = null)
         {
             _overwrite = overwrite;
-            _configCopier.RunConfigStartUp(_targetConfigFolder, _network, null, _overwrite);
+            _configCopier.RunConfigStartUp(_targetConfigFolder, _network, null, _overwrite, overrideNetworkFile);
             
             var config = _configurationBuilder.Build();
             var configurationModule = new ConfigurationModule(config);
@@ -131,9 +131,9 @@ namespace Catalyst.Common.Kernel
             return this;
         }
         
-        public Kernel WithNetworksConfigFile(Protocol.Common.Network network = Protocol.Common.Network.Devnet)
+        public Kernel WithNetworksConfigFile(Protocol.Common.Network network = Protocol.Common.Network.Devnet, string overrideNetworkFile = null)
         {
-            var fileName = Constants.NetworkConfigFile(network);
+            var fileName = Constants.NetworkConfigFile(network, overrideNetworkFile);
 
             _configurationBuilder
                .AddJsonFile(

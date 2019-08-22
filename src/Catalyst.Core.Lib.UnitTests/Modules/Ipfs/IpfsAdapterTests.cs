@@ -40,13 +40,15 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Ipfs
 {
     public sealed class IpfsAdapterTests : FileSystemBasedTest
     {
-        private readonly IPasswordReader _passwordReader;
+        private readonly IPasswordManager _passwordManager;
         private readonly ILogger _logger;
 
         public IpfsAdapterTests(ITestOutputHelper output) : base(output)
         {
-            _passwordReader = Substitute.For<IPasswordReader>();
-            _passwordReader.ReadSecurePasswordAndAddToRegistry(PasswordRegistryTypes.IpfsPassword, Arg.Any<string>()).ReturnsForAnyArgs(TestPasswordReader.BuildSecureStringPassword("abcd"));
+            _passwordManager = Substitute.For<IPasswordManager>();
+            _passwordManager.RetrieveOrPromptAndAddPasswordToRegistry(PasswordRegistryTypes.IpfsPassword,
+                Arg.Any<string>()).ReturnsForAnyArgs(
+                TestPasswordReader.BuildSecureStringPassword("abcd"));
 
             _logger = Substitute.For<ILogger>();
         }
@@ -54,7 +56,7 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Ipfs
         [Fact]
         public void Constructor_should_read_seed_servers_addresses_from_peerSettings()
         {
-            using (var ipfs = new IpfsAdapter(_passwordReader, FileSystem, _logger))
+            using (var ipfs = new IpfsAdapter(_passwordManager, FileSystem, _logger))
             {
                 ipfs.Options.Discovery.BootstrapPeers.Count().Should().Be(8);
             }
@@ -63,16 +65,17 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Ipfs
         [Fact]
         public void Constructor_should_read_a_password()
         {
-            using (new IpfsAdapter(_passwordReader, FileSystem, _logger))
+            using (new IpfsAdapter(_passwordManager, FileSystem, _logger))
             {
-                _passwordReader.ReceivedWithAnyArgs(1).ReadSecurePasswordAndAddToRegistry(PasswordRegistryTypes.IpfsPassword);
+                _passwordManager.ReceivedWithAnyArgs(1)
+                   .RetrieveOrPromptAndAddPasswordToRegistry(PasswordRegistryTypes.IpfsPassword);
             }
         }
 
         [Fact]
         public void Constructor_should_use_ipfs_subfolder()
         {
-            using (var ipfs = new IpfsAdapter(_passwordReader, FileSystem, _logger))
+            using (var ipfs = new IpfsAdapter(_passwordManager, FileSystem, _logger))
             {
                 ipfs.Options.Repository.Folder.Should()
                    .Be(Path.Combine(FileSystem.GetCatalystDataDir().FullName, Constants.DfsDataSubDir));
@@ -82,7 +85,7 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Ipfs
         [Fact]
         public void Constructor_should_use_ipfs_private_network()
         {
-            using (var ipfs = new IpfsAdapter(_passwordReader, FileSystem, _logger))
+            using (var ipfs = new IpfsAdapter(_passwordManager, FileSystem, _logger))
             {
                 ipfs.Options.Swarm.PrivateNetworkKey.Should().NotBeNull();
             }

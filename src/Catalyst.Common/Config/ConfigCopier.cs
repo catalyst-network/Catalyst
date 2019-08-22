@@ -35,7 +35,7 @@ namespace Catalyst.Common.Config
     public class ConfigCopier : IConfigCopier
     {
         /// <inheritdoc />
-        public void RunConfigStartUp(string dataDir, Protocol.Common.Network network = Protocol.Common.Network.Devnet, string sourceFolder = null, bool overwrite = false)
+        public void RunConfigStartUp(string dataDir, Protocol.Common.Network network = Protocol.Common.Network.Devnet, string sourceFolder = null, bool overwrite = false, string overrideNetworkFile = null)
         {
             Guard.Argument(dataDir, nameof(dataDir)).NotNull().NotEmpty().NotWhiteSpace();
 
@@ -80,11 +80,19 @@ namespace Catalyst.Common.Config
             }
         }
 
+<<<<<<< HEAD
         protected virtual IEnumerable<string> RequiredConfigFiles(Protocol.Common.Network network)
         {
             var requiredConfigFiles = new[]
             {
                 Constants.NetworkConfigFile(network),
+=======
+        protected virtual IEnumerable<string> RequiredConfigFiles(Types.NetworkTypes networkTypes, string overrideNetworkFile = null)
+        {
+            var requiredConfigFiles = new[]
+            {
+                Constants.NetworkConfigFile(networkTypes, overrideNetworkFile),
+>>>>>>> d09377df39d3e5d94b1fe993c589da45da057342
                 Constants.ComponentsJsonConfigFile,
                 Constants.SerilogJsonConfigFile,
                 Constants.MessageHandlersConfigFile,

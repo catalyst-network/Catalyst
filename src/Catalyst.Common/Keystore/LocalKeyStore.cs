@@ -44,20 +44,20 @@ namespace Catalyst.Common.Keystore
         private readonly IAddressHelper _addressHelper;
         private readonly IFileSystem _fileSystem;
         private readonly ICryptoContext _cryptoContext;
-        private readonly IPasswordReader _passwordReader;
+        private readonly IPasswordManager _passwordManager;
         private readonly IKeyStoreService _keyStoreService;
         private readonly PasswordRegistryTypes _defaultNodePassword = PasswordRegistryTypes.DefaultNodePassword;
 
         private static int MaxTries => 5;
 
-        public LocalKeyStore(IPasswordReader passwordReader,
+        public LocalKeyStore(IPasswordManager passwordManager,
             ICryptoContext cryptoContext,
             IKeyStoreService keyStoreService,
             IFileSystem fileSystem,
             ILogger logger,
             IAddressHelper addressHelper)
         {
-            _passwordReader = passwordReader;
+            _passwordManager = passwordManager;
             _cryptoContext = cryptoContext;
             _keyStoreService = keyStoreService;
             _fileSystem = fileSystem;
@@ -94,7 +94,7 @@ namespace Catalyst.Common.Keystore
 
             while (tries < MaxTries)
             {
-                var securePassword = _passwordReader.ReadSecurePassword(passwordIdentifier, "Please provide your node password");
+                var securePassword = _passwordManager.RetrieveOrPromptPassword(passwordIdentifier, "Please provide your node password");
                 var password = StringFromSecureString(securePassword);
                 
                 try
@@ -103,7 +103,7 @@ namespace Catalyst.Common.Keystore
                     
                     if (keyBytes != null && keyBytes.Length > 0)
                     {
-                        _passwordReader.AddPasswordToRegistry(passwordIdentifier, securePassword);
+                        _passwordManager.AddPasswordToRegistry(passwordIdentifier, securePassword);
                         return keyBytes;
                     }
                 }
@@ -133,7 +133,7 @@ namespace Catalyst.Common.Keystore
             try
             {
                 var address = _addressHelper.GenerateAddress(privateKey.GetPublicKey());        
-                var securePassword = _passwordReader.ReadSecurePassword(_defaultNodePassword, "Please create a password for this node");
+                var securePassword = _passwordManager.RetrieveOrPromptPassword(_defaultNodePassword, "Please create a password for this node");
     
                 var password = StringFromSecureString(securePassword);
     
@@ -142,7 +142,7 @@ namespace Catalyst.Common.Keystore
                     key: _cryptoContext.ExportPrivateKey(privateKey),
                     address: address);
 
-                _passwordReader.AddPasswordToRegistry(_defaultNodePassword, securePassword);
+                _passwordManager.AddPasswordToRegistry(_defaultNodePassword, securePassword);
 
                 await _fileSystem.WriteTextFileToCddSubDirectoryAsync(keyIdentifier.Name, Constants.KeyStoreDataSubDir, json);
             }
