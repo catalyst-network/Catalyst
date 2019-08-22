@@ -20,6 +20,7 @@
 */
 
 #endregion
+
 using Catalyst.Common.Cryptography;
 using Catalyst.Common.Interfaces.Registry;
 using Catalyst.Common.Types;
