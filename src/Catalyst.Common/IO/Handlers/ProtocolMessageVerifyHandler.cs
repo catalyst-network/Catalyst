@@ -23,6 +23,7 @@
 
 using System.Reflection;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
+using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Protocol;
 using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;
@@ -36,13 +37,13 @@ namespace Catalyst.Common.IO.Handlers
         private readonly IKeySigner _keySigner;
         private readonly SigningContext _signingContext;
 
-        public ProtocolMessageVerifyHandler(IKeySigner keySigner)
+        public ProtocolMessageVerifyHandler(IKeySigner keySigner, IPeerSettings peerSettings)
             : base(Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType))
         {
             _keySigner = keySigner;
             _signingContext = new SigningContext
             {
-                Network = Protocol.Common.Network.Devnet,
+                Network = peerSettings.Network,
                 SignatureType = SignatureType.ProtocolPeer
             };
         }

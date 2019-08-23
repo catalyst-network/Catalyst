@@ -33,6 +33,10 @@ namespace Catalyst.Common.Interfaces.Config
         /// <param name="network">Network on which to run the node</param>
         /// <param name="sourceFolder"></param>
         /// <param name="overwrite">Should config existing config files be overwritten by default?</param>
-        void RunConfigStartUp(string dataDir, Protocol.Common.Network network = Protocol.Common.Network.Devnet, string sourceFolder = null, bool overwrite = false, string overrideNetworkFile = null);
+        void RunConfigStartUp(string dataDir, 
+            Protocol.Common.Network network = Protocol.Common.Network.Devnet, 
+            string sourceFolder = null, 
+            bool overwrite = false, 
+            string overrideNetworkFile = null);
     }
 }

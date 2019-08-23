@@ -40,12 +40,16 @@ namespace Catalyst.Common.IO.Handlers
         private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
 
         private readonly IKeySigner _keySigner;
-        private readonly IPeerSettings _peerSettings;
+        private readonly SigningContext _signingContext;
 
         public ProtocolMessageSignHandler(IKeySigner keySigner, IPeerSettings peerSettings)
         {
             _keySigner = keySigner;
-            _peerSettings = peerSettings;
+            _signingContext = new SigningContext
+            {
+                Network = peerSettings.Network,
+                SignatureType = SignatureType.ProtocolPeer
+            };
         }
 
         /// <summary>
@@ -57,12 +61,8 @@ namespace Catalyst.Common.IO.Handlers
         protected override Task WriteAsync0(IChannelHandlerContext context, IMessageDto<ProtocolMessage> message)
         {
             Logger.Verbose("Signing message {message}", message);
-            var signingContext = new SigningContext
-            {
-                Network = _peerSettings.Network,
-                SignatureType = SignatureType.ProtocolPeer
-            };
-            var sig = _keySigner.Sign(message.Content.ToByteArray(), signingContext);
+            
+            var sig = _keySigner.Sign(message.Content.ToByteArray(), _signingContext);
             
             var protocolMessageSigned = new ProtocolMessageSigned
             {

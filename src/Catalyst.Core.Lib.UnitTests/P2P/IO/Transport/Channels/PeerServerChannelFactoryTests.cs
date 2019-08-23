@@ -75,7 +75,6 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Transport.Channels
         private readonly PeerId _senderId;
         private readonly ICorrelationId _correlationId;
         private readonly byte[] _signature;
-        private readonly IPeerSettings _peerSettings;
 
         public PeerServerChannelFactoryTests()
         {
@@ -96,7 +95,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Transport.Channels
                 _gossipManager,
                 _keySigner,
                 peerValidator,
-                _peerSettings);
+                peerSettings);
 
             _senderId = PeerIdHelper.GetPeerId("sender");
             _correlationId = CorrelationId.GenerateCorrelationId();
