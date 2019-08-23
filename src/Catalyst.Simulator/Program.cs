@@ -53,8 +53,9 @@ namespace Catalyst.Simulator
             Parser.Default.ParseArguments<Options>(args).WithParsed(options => passwordRegistry.SetFromOptions(options));
 
             var fileSystem = new FileSystem();
-            var consolePasswordReader = new ConsolePasswordReader(userOutput, passwordRegistry);
-            var certificateStore = new CertificateStore(fileSystem, consolePasswordReader);
+            var userInput = new ConsoleUserInput();
+            var consolePasswordReader = new ConsolePasswordReader(userOutput, userInput);
+            var certificateStore = new CertificateStore(fileSystem, new PasswordManager(consolePasswordReader, passwordRegistry));
             var certificate = certificateStore.ReadOrCreateCertificateFile("mycert.pfx");
 
             var clientRpcInfoList =

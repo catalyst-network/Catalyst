@@ -309,10 +309,26 @@
             ]
         },
         {
+            "type": "Catalyst.Common.Shell.ConsoleUserInput, Catalyst.Common",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.Cli.IUserInput, Catalyst.Common"
+                }
+            ]
+        },
+        {
             "type": "Catalyst.Common.Cryptography.ConsolePasswordReader, Catalyst.Common",
             "services": [
                 {
                     "type": "Catalyst.Common.Interfaces.Cryptography.IPasswordReader, Catalyst.Common"
+                }
+            ]
+        },
+        {
+            "type": "Catalyst.Common.Cryptography.PasswordManager, Catalyst.Common",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.Cryptography.IPasswordManager, Catalyst.Common"
                 }
             ]
         },

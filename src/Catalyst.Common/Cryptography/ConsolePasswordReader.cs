@@ -23,103 +23,72 @@
 
 using System;
 using System.Security;
-using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.Cryptography;
-using Catalyst.Common.Interfaces.Registry;
-using Catalyst.Common.Types;
 
 namespace Catalyst.Common.Cryptography
 {
     public class ConsolePasswordReader : IPasswordReader
     {
-        private const int MaxLength = 255;
+        public static readonly int MaxLength = 255;
 
         private readonly IUserOutput _userOutput;
-        private readonly IPasswordRegistry _passwordRegistry;
+        private readonly IUserInput _userInput;
         
-        public ConsolePasswordReader(IUserOutput userOutput, IPasswordRegistry passwordRegistry) 
-        { 
+        public ConsolePasswordReader(IUserOutput userOutput, IUserInput userInput)
+        {
             _userOutput = userOutput;
-            _passwordRegistry = passwordRegistry;
-        }
-        
-        public SecureString ReadSecurePasswordAndAddToRegistry(PasswordRegistryTypes passwordIdentifier, string prompt = "Please enter your password")
-        {
-            var password = ReadSecurePassword(passwordIdentifier, prompt);
-            if (password != null)
-            {
-                AddPasswordToRegistry(passwordIdentifier, password);
-            }
-
-            return password;
+            _userInput = userInput;
         }
 
-        public SecureString ReadSecurePassword(PasswordRegistryTypes passwordIdentifier, string prompt = "Please enter your password")
-        {
-            var password = _passwordRegistry.GetItemFromRegistry(passwordIdentifier) ??
-                ReadSecurePasswordFromConsole(prompt);
-
-            return password;
-        }
-                   
-        private SecureString ReadSecurePasswordFromConsole(string prompt)
+        public SecureString ReadSecurePassword(string prompt)
         {
             var pwd = new SecureString();
-            ReadCharsFromConsole(_userOutput, prompt, (c, i) => pwd.AppendChar(c), i => pwd.RemoveAt(i));
+            ReadCharsFromConsole(prompt, (c, i) => pwd.AppendChar(c), i => pwd.RemoveAt(i));
             pwd.MakeReadOnly();
             return pwd;
         }
 
-        public bool AddPasswordToRegistry(PasswordRegistryTypes passwordIdentifier, SecureString password)
-        {
-            return _passwordRegistry.AddItemToRegistry(passwordIdentifier, password);
-        }
-
-        private static void ReadCharsFromConsole(IUserOutput userOutput,
-            string passwordContext,
+        private void ReadCharsFromConsole(string passwordContext,
             Action<char, int> appendChar,
-            Action<int> removeChar,
-            int maxLength = MaxLength)
+            Action<int> removeChar)
         {
-            Console.WriteLine(passwordContext);
-            var waitForInput = true;
+            _userOutput.WriteLine(passwordContext);
+
             var inputLength = 0;
-            while (waitForInput)
+            while (true)
             {
-                var keyInfo = Console.ReadKey(true);
-                if (keyInfo.Key != ConsoleKey.Enter)
+                var keyInfo = _userInput.ReadKey();
+                if (keyInfo.Key == ConsoleKey.Enter)
                 {
-                    if (keyInfo.Key != ConsoleKey.Backspace)
-                    {
-                        appendChar(keyInfo.KeyChar, inputLength);
-                        inputLength++;
-                        userOutput.Write(@"*");
-                        if (inputLength != maxLength)
-                        {
-                            continue;
-                        }
-
-                        userOutput.WriteLine($"Max password length reached ({maxLength})");
-                        waitForInput = false;
-                    }
-                    else
-                    {
-                        if (inputLength == 0)
-                        {
-                            continue;
-                        }
-
-                        removeChar(inputLength - 1);
-                        inputLength--;
-                        userOutput.Write(@" ");
-                    }
+                    _userOutput.WriteLine(string.Empty);
+                    break;
                 }
-                else
+
+                if (keyInfo.Key == ConsoleKey.Backspace)
                 {
-                    userOutput.WriteLine(string.Empty);
-                    waitForInput = false;
+                    if (inputLength == 0)
+                    {
+                        continue;
+                    }
+
+                    removeChar(inputLength - 1);
+                    inputLength--;
+                    _userOutput.Write(@" ");
+                    continue;
                 }
+
+                appendChar(keyInfo.KeyChar, inputLength);
+                inputLength++;
+                _userOutput.Write(@"*");
+
+                if (inputLength != MaxLength)
+                {
+                    continue;
+                }
+
+                _userOutput.WriteLine($"Max password length reached ({MaxLength})");
+                break;
             }
         }
     }

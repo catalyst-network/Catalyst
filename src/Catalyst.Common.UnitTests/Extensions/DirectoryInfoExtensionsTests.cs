@@ -65,6 +65,5 @@ namespace Catalyst.Common.UnitTests.Extensions
 
             subDirInfo.Parent.FullName.Should().BeEquivalentTo(parentDirInfo.FullName);
         }
-
     }
 }
