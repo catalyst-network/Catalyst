@@ -195,11 +195,14 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
                 var peersToGossip = GetRandomPeers(fanOut);
                 var correlationId = message.Message.CorrelationId.ToCorrelationId();
 
+                //CLEAN UP
                 foreach (var peerIdentifier in peersToGossip)
                 {
                     _logger.Verbose("Broadcasting message {message}", message);
+                    var protocolMessage = message.Message;
+                    protocolMessage.PeerId = peerIdentifier.PeerId;
                     _peerClient.SendMessage(_dtoFactory.GetDto(
-                        message.ToProtocolMessage(peerIdentifier.PeerId, correlationId),
+                        protocolMessage,
                         peerIdentifier)
                     );
                 }

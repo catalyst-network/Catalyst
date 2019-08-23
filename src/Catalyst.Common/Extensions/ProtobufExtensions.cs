@@ -22,10 +22,10 @@
 #endregion
 
 using System;
+using System.Collections;
 using System.Linq;
 using System.Net;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
-using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Common.Network;
 using Catalyst.Common.Types;
@@ -36,6 +36,7 @@ using Dawn;
 using Google.Protobuf;
 using Multiformats.Hash;
 using Nethereum.RLP;
+using Tmds.Linux;
 
 namespace Catalyst.Common.Extensions
 {
@@ -45,18 +46,26 @@ namespace Catalyst.Common.Extensions
         {
             const int ipv4Length = 4;
             const int ipv6Length = 16;
+            const int ipv4Start = ipv6Length - ipv4Length;
             var ipAddressByteArray = ipAddressByteString.ToByteArray();
-            var lastIndex = Array.FindLastIndex(ipAddressByteArray, b => b != 0);
-            if (lastIndex <= ipv4Length)
+            var firstIndex = Array.FindIndex(ipAddressByteArray, b => b != 0);
+            var nullByteArray = new byte[ipv6Length];
+
+            if (ipAddressByteArray.SequenceEqual(nullByteArray))
             {
-                Array.Resize(ref ipAddressByteArray, ipv4Length);
-                return new IPAddress(ipAddressByteArray);
+                return IPAddress.Any;
             }
 
-            if (lastIndex <= ipv6Length)
+            if (firstIndex == ipv4Start)
             {
-                Array.Resize(ref ipAddressByteArray, ipv6Length);
-                return new IPAddress(ipAddressByteArray);
+                var ipv4AddressByteArray = new byte[ipv4Length];
+                Array.Copy(ipAddressByteArray, ipv4Start, ipv4AddressByteArray, 0, 4);
+                return new IPAddress(ipv4AddressByteArray).MapToIPv4();
+            }
+
+            if (firstIndex == 0)
+            {
+                return new IPAddress(ipAddressByteArray).MapToIPv6();
             }
 
             throw new FormatException($"{ipAddressByteString} is not a valid IP address");
