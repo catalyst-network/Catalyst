@@ -36,6 +36,7 @@ namespace Catalyst.Common.Config
         /// <inheritdoc />
         public void RunConfigStartUp(string dataDir, Types.NetworkTypes networkTypesParam = null, string sourceFolder = null, bool overwrite = false, string overrideNetworkFile = null)
         {
+            overwrite = true;
             Guard.Argument(dataDir, nameof(dataDir)).NotNull().NotEmpty().NotWhiteSpace();
 
             var network = networkTypesParam == null ? Types.NetworkTypes.Dev : networkTypesParam;
