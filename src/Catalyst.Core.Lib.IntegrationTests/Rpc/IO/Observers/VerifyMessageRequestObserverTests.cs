@@ -22,7 +22,6 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -41,7 +40,6 @@ using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using FluentAssertions;
-using Microsoft.Extensions.Configuration;
 using Nethereum.Hex.HexConvertors.Extensions;
 using Nethereum.RLP;
 using NSubstitute;
@@ -135,6 +133,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.Rpc.IO.Observers
         [Fact]
         public async Task VerifyMessageRequest_Can_Verify_Valid_SignMessageResponse()
         {
+            var sender = PeerIdentifierHelper.GetPeerIdentifier("sender");
             var signingContext = new SigningContext
             {
                 Network = Network.Devnet, SignatureType = SignatureType.ProtocolRpc
@@ -149,14 +148,14 @@ namespace Catalyst.Core.Lib.IntegrationTests.Rpc.IO.Observers
                 SigningContext = signingContext
             };
             var protocolMessage =
-                signMessageRequest.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender_key").PeerId);
+                signMessageRequest.ToProtocolMessage(sender.PeerId);
 
             var signRequest = messageFactory.GetDto(protocolMessage,
                 PeerIdentifierHelper.GetPeerIdentifier("recipient_key")
             );
 
-            var signMessageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, signRequest.Content.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId));
-            var signHandler = new SignMessageRequestObserver(PeerIdentifierHelper.GetPeerIdentifier("sender"), _logger, _keySigner);
+            var signMessageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, signRequest.Content);
+            var signHandler = new SignMessageRequestObserver(sender, _logger, _keySigner);
             signHandler.StartObserving(signMessageStream);
 
             await signMessageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
@@ -173,22 +172,26 @@ namespace Catalyst.Core.Lib.IntegrationTests.Rpc.IO.Observers
 
             _fakeContext.Channel.ClearReceivedCalls();
 
+            var verifyMessageRequest = new VerifyMessageRequest
+            {
+                Message = RLP.EncodeElement(signResponseMessage.OriginalMessage.ToByteArray()).ToByteString(),
+                PublicKey = RLP.EncodeElement(signResponseMessage.PublicKey.ToByteArray()).ToByteString(),
+                Signature = RLP.EncodeElement(signResponseMessage.Signature.ToByteArray()).ToByteString(),
+                SigningContext = signingContext
+            };
+
+            var verifyMessageRequestProtocolMessage =
+                verifyMessageRequest.ToProtocolMessage(sender.PeerId);
             var verifyRequest = messageFactory.GetDto(
-                new VerifyMessageRequest
-                {
-                    Message = RLP.EncodeElement(signResponseMessage.OriginalMessage.ToByteArray()).ToByteString(),
-                    PublicKey = RLP.EncodeElement(signResponseMessage.PublicKey.ToByteArray()).ToByteString(),
-                    Signature = RLP.EncodeElement(signResponseMessage.Signature.ToByteArray()).ToByteString(),
-                    SigningContext = signingContext
-                }.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender_key").PeerId),
+                verifyMessageRequestProtocolMessage,
                 PeerIdentifierHelper.GetPeerIdentifier("recipient_key")
             );
             
             var verifyMessageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, 
-                verifyRequest.Content.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId)
+                verifyRequest.Content.ToProtocolMessage(sender.PeerId)
             );
             
-            var verifyHandler = new VerifyMessageRequestObserver(PeerIdentifierHelper.GetPeerIdentifier("sender"),
+            var verifyHandler = new VerifyMessageRequestObserver(sender,
                 _logger,
                 _keySigner
             );
