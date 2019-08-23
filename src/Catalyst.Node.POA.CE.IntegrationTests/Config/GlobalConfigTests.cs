@@ -40,7 +40,7 @@ namespace Catalyst.Node.POA.CE.IntegrationTests.Config
     public class GlobalConfigTests : FileSystemBasedTest
     {
         public static readonly List<object[]> Networks = 
-            new List<Network> {Network.Devnet, Network.Mainet, Network.Testnet}.Select(n => new object[] {n}).ToList();
+            new List<Network> {Network.Devnet, Network.Mainnet, Network.Testnet}.Select(n => new object[] {n}).ToList();
 
         private IEnumerable<string> _configFilesUsed;
         private ContainerProvider _containerProvider;

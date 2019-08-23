@@ -39,7 +39,7 @@ namespace Catalyst.Cli.IntegrationTests.Config
     public sealed class GlobalConfigTests : FileSystemBasedTest
     {
         public static readonly List<object[]> Networks = 
-            new List<Network> {Network.Devnet, Network.Mainet, Network.Testnet}.Select(n => new object[] {n}).ToList();
+            new List<Network> {Network.Devnet, Network.Mainnet, Network.Testnet}.Select(n => new object[] {n}).ToList();
 
         public GlobalConfigTests(ITestOutputHelper output) : base(output) { }
 

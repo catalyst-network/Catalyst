@@ -45,7 +45,7 @@ namespace Catalyst.Node.POA.CE.UnitTests.Config
 
         static NetworkConfigTests()
         {
-            NetworkFiles = new List<Network> {Network.Devnet, Network.Mainet, Network.Testnet}
+            NetworkFiles = new List<Network> {Network.Devnet, Network.Mainnet, Network.Testnet}
                .Select(n => new[]
                 {
                     Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(n)) as object

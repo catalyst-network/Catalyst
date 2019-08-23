@@ -81,9 +81,7 @@ namespace Catalyst.Core.Lib.P2P
         {
             Guard.Argument(rootSection, nameof(rootSection)).NotNull();
             var section = rootSection.GetSection("CatalystNodeConfiguration").GetSection("Peer");
-            //_network = Enumeration.Parse<Network>(section.GetSection("Network").Value);
-            Network.TryParse(section.GetSection("Network").Value, out _network);
-            
+            Network.TryParse(section.GetSection("Network").Value, out _network);            
             _publicKey = section.GetSection("PublicKey").Value;
             _port = int.Parse(section.GetSection("Port").Value);
             _payoutAddress = section.GetSection("PayoutAddress").Value;
