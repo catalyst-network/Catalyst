@@ -66,8 +66,6 @@ namespace Catalyst.Common.IO.Messaging.Dto
         private IMessageDto<ProtocolMessage> BuildResponseMessage(ProtocolMessage message,
             IPeerIdentifier recipientPeerIdentifier)
         {
-            //Guard.Argument(correlationId.Id, nameof(correlationId)).NotDefault();
-            
             return new MessageDto(message,
                 recipientPeerIdentifier
             );
