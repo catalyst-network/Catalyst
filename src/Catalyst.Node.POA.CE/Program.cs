@@ -41,17 +41,21 @@ namespace Catalyst.Node.POA.CE
         
         [Option('o', "overwrite-config", HelpText = "Overwrite the data directory configs.")]
         public bool OverwriteConfig { get; set; }
+
+        [Option("network-file", HelpText = "The name of the network file")]
+        public string OverrideNetworkFile { get; set; }
     }
     
     internal static class Program
     {
-        private static readonly Kernel Kernel;
+        private static readonly Kernel _kernel;
 
         static Program()
         {
-            Kernel = Kernel.Initramfs();
-            AppDomain.CurrentDomain.UnhandledException += Kernel.LogUnhandledException;
-            AppDomain.CurrentDomain.ProcessExit += Kernel.CurrentDomain_ProcessExit;
+            _kernel = Kernel.Initramfs();
+
+            AppDomain.CurrentDomain.UnhandledException += _kernel.LogUnhandledException;
+            AppDomain.CurrentDomain.ProcessExit += _kernel.CurrentDomain_ProcessExit;
         }
 
         /// <summary>
@@ -81,14 +85,14 @@ namespace Catalyst.Node.POA.CE
         
         private static void Run(Options options)
         {
-            Kernel.Logger.Information("Catalyst.Node started with process id {0}",
+            _kernel.Logger.Information("Catalyst.Node started with process id {0}",
                 System.Diagnostics.Process.GetCurrentProcess().Id.ToString());
             
             try
             {
-                Kernel
+                _kernel
                    .WithDataDirectory()
-                   .WithNetworksConfigFile()
+                   .WithNetworksConfigFile(default, options.OverrideNetworkFile)
                    .WithComponentsConfigFile()
                    .WithSerilogConfigFile()
                    .WithConfigCopier()
@@ -105,7 +109,7 @@ namespace Catalyst.Node.POA.CE
             }
             catch (Exception e)
             {
-                Kernel.Logger.Fatal(e, "Catalyst.Node stopped unexpectedly");
+                _kernel.Logger.Fatal(e, "Catalyst.Node stopped unexpectedly");
                 Environment.ExitCode = 1;
             }
         }

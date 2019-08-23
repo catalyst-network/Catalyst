@@ -24,6 +24,7 @@
 using System.Text;
 using Catalyst.Common.Config;
 using Catalyst.Common.Cryptography;
+using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Keystore;
 using Catalyst.Common.Registry;
@@ -51,13 +52,13 @@ namespace Catalyst.Common.IntegrationTests.Modules.KeySigner
 
             var logger = Substitute.For<ILogger>();
 
-            var testPasswordReader = new TestPasswordReader();
+            var passwordManager = Substitute.For<IPasswordManager>(); 
 
             var cryptoContext = new CryptoContext(new CryptoWrapper());
 
             var keyStoreService = new KeyStoreServiceWrapped(cryptoContext);
 
-            var keystore = new LocalKeyStore(testPasswordReader, cryptoContext, keyStoreService, FileSystem, logger, addressHelper);
+            var keystore = new LocalKeyStore(passwordManager, cryptoContext, keyStoreService, FileSystem, logger, addressHelper);
 
             var keyRegistry = new KeyRegistry();
 

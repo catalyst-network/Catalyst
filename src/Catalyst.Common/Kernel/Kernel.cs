@@ -45,16 +45,17 @@ namespace Catalyst.Common.Kernel
 {
     public sealed class Kernel : IDisposable
     {
-        public ILogger Logger { get; private set; }
         private string _withPersistence;
         private Types.NetworkTypes _networkTypes;
         private bool _overwrite;
         private readonly string _fileName;
         private string _targetConfigFolder;
         private IConfigCopier _configCopier;
-        public ContainerBuilder ContainerBuilder { get; set; }
         private readonly ConfigurationBuilder _configurationBuilder;
         private ILifetimeScope _instance;
+
+        public ILogger Logger { get; private set; }
+        public ContainerBuilder ContainerBuilder { get; set; }
         public ICancellationTokenProvider CancellationTokenProvider { get; }
 
         public delegate void CustomBootLogic(Kernel kernel);
@@ -91,10 +92,10 @@ namespace Catalyst.Common.Kernel
             _configurationBuilder = new ConfigurationBuilder();
         }
 
-        public Kernel BuildKernel(bool overwrite = false)
+        public Kernel BuildKernel(bool overwrite = false, string overrideNetworkFile = null)
         {
             _overwrite = overwrite;
-            _configCopier.RunConfigStartUp(_targetConfigFolder, _networkTypes, null, _overwrite);
+            _configCopier.RunConfigStartUp(_targetConfigFolder, _networkTypes, null, _overwrite, overrideNetworkFile);
             
             var config = _configurationBuilder.Build();
             var configurationModule = new ConfigurationModule(config);
@@ -108,7 +109,7 @@ namespace Catalyst.Common.Kernel
             }
             
             ContainerBuilder.RegisterModule(configurationModule);
-            
+
             Logger = new LoggerConfiguration()
                .ReadFrom
                .Configuration(configurationModule.Configuration).WriteTo
@@ -123,17 +124,17 @@ namespace Catalyst.Common.Kernel
             
             return this;
         }
-
+        
         public Kernel WithDataDirectory()
         {
             _targetConfigFolder = new FileSystem.FileSystem().GetCatalystDataDir().FullName;
             return this;
         }
-
-        public Kernel WithNetworksConfigFile(NetworkTypes networkTypes = default)
+        
+        public Kernel WithNetworksConfigFile(NetworkTypes networkTypes = default, string overrideNetworkFile = null)
         {
-            _networkTypes = networkTypes ?? Types.NetworkTypes.Dev;
-            var fileName = Constants.NetworkConfigFile(_networkTypes);
+            _networkTypes = networkTypes ?? NetworkTypes.Dev;
+            var fileName = Constants.NetworkConfigFile(_networkTypes, overrideNetworkFile);
 
             _configurationBuilder
                .AddJsonFile(
@@ -198,20 +199,14 @@ namespace Catalyst.Common.Kernel
         /// <summary>
         ///     Default container resolution for Catalyst.Node
         /// </summary>
-        public void StartNode()
+        public Kernel StartNode()
         {
-            if (_instance == null)
-            {
-                var container = ContainerBuilder.Build();
-                _instance = container
-                   .BeginLifetimeScope(MethodBase.GetCurrentMethod().DeclaringType.AssemblyQualifiedName);
-            }
-
+            StartContainer();
             BsonSerializationProviders.Init();
-
             _instance.Resolve<ICatalystNode>()
                .RunAsync(CancellationTokenProvider.CancellationTokenSource.Token)
                .Wait(CancellationTokenProvider.CancellationTokenSource.Token);
+            return this;
         }
 
         public void Dispose()
@@ -232,12 +227,8 @@ namespace Catalyst.Common.Kernel
                     Console.InputEncoding, false, bufferSize
                 )
             );
-            
-            if (_instance == null)
-            {
-                _instance = ContainerBuilder.Build()
-                   .BeginLifetimeScope(MethodBase.GetCurrentMethod().DeclaringType.AssemblyQualifiedName);
-            }
+
+            StartContainer();
 
             _instance.Resolve<ICatalystCli>()
                .RunConsole(CancellationTokenProvider.CancellationTokenSource.Token);
@@ -250,22 +241,25 @@ namespace Catalyst.Common.Kernel
                 return this;
             }
 
-            if (_instance == null)
+            ContainerBuilder.RegisterBuildCallback(buildCallback =>
             {
-                _instance = ContainerBuilder.Build()
-                   .BeginLifetimeScope(MethodBase.GetCurrentMethod().DeclaringType.AssemblyQualifiedName);
-            }
+                var passwordRegistry = buildCallback.Resolve<IPasswordRegistry>();
+                var ss = new SecureString();
+                foreach (var c in password)
+                {
+                    ss.AppendChar(c);
+                }
 
-            var passwordRegistry = _instance.Resolve<IPasswordRegistry>();
-            var ss = new SecureString();
-            foreach (var c in password)
-            {
-                ss.AppendChar(c);
-            }
-
-            passwordRegistry.AddItemToRegistry(types, ss);
-
+                passwordRegistry.AddItemToRegistry(types, ss);
+            });
+            
             return this;
+        }
+
+        private void StartContainer()
+        {
+            _instance = ContainerBuilder.Build()
+               .BeginLifetimeScope(MethodBase.GetCurrentMethod().DeclaringType.AssemblyQualifiedName);
         }
     }
 }

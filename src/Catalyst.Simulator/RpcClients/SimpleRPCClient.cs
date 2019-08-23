@@ -42,6 +42,7 @@ using Catalyst.Common.Modules.KeySigner;
 using Catalyst.Common.P2P;
 using Catalyst.Common.Registry;
 using Catalyst.Common.Rpc.IO.Messaging.Correlation;
+using Catalyst.Common.Shell;
 using Catalyst.Common.Types;
 using Catalyst.Common.Util;
 using Catalyst.Cryptography.BulletProofs.Wrapper;
@@ -76,7 +77,8 @@ namespace Catalyst.Simulator.RpcClients
 
             var fileSystem = new FileSystem();
 
-            var consolePasswordReader = new ConsolePasswordReader(userOutput, passwordRegistry);
+            var consolePasswordReader = new ConsolePasswordReader(userOutput, new ConsoleUserInput());
+            var passwordManager = new PasswordManager(consolePasswordReader, passwordRegistry);
 
             var wrapper = new CryptoWrapper();
             var cryptoContext = new CryptoContext(wrapper);
@@ -85,7 +87,7 @@ namespace Catalyst.Simulator.RpcClients
 
             var multiHashAlgorithm = new BLAKE2B_256();
             var addressHelper = new AddressHelper(multiHashAlgorithm);
-            var localKeyStore = new LocalKeyStore(consolePasswordReader, cryptoContext, keyServiceStore, fileSystem,
+            var localKeyStore = new LocalKeyStore(passwordManager, cryptoContext, keyServiceStore, fileSystem,
                 _logger, addressHelper);
 
             var keyRegistry = new KeyRegistry();

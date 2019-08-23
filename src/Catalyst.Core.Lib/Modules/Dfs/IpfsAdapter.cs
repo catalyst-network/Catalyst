@@ -61,7 +61,7 @@ namespace Catalyst.Core.Lib.Modules.Dfs
             global::Common.Logging.LogManager.Adapter = new SerilogFactoryAdapter(Log.Logger);
         }
 
-        public IpfsAdapter(IPasswordReader passwordReader,
+        public IpfsAdapter(IPasswordManager passwordReader,
             IFileSystem fileSystem,
             ILogger logger,
             string swarmKey = "07a8e9d0c43400927ab274b7fa443596b71e609bacae47bd958e5cd9f59d6ca3",
@@ -84,9 +84,9 @@ namespace Catalyst.Core.Lib.Modules.Dfs
             
             _logger = logger;
 
-            // The passphrase is used to access the private keys.
-            var passphrase = passwordReader.ReadSecurePasswordAndAddToRegistry(PasswordRegistryTypes.IpfsPassword, "Please provide your IPFS password");
-            _ipfs = new IpfsEngine(passphrase);
+            // The password is used to access the private keys.
+            var password = passwordReader.RetrieveOrPromptAndAddPasswordToRegistry(PasswordRegistryTypes.IpfsPassword, "Please provide your IPFS password");
+            _ipfs = new IpfsEngine(password);
             _ipfs.Options.KeyChain.DefaultKeyType = Constants.KeyChainDefaultKeyType;
 
             // The IPFS repository is inside the catalyst home folder.

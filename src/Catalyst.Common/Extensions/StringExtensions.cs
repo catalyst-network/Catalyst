@@ -50,7 +50,11 @@ namespace Catalyst.Common.Extensions
         public static Multihash FromBase32Address(this string address)
         {
             var success = Multihash.TryParse(address, MultibaseEncoding.Base32Lower, out var multihash);
-            if (!success) { throw new InvalidDataException($"{address} is not valid"); }
+            if (!success)
+            {
+                throw new InvalidDataException($"{address} is not valid");
+            }
+            
             return multihash;
         }
     }
