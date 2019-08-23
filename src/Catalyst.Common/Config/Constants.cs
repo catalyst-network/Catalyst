@@ -130,7 +130,7 @@ namespace Catalyst.Common.Config
 
         public static string NetworkConfigFile(Protocol.Common.Network network, string overrideNetworkFile = null)
         {
-            return overrideNetworkFile ?? string.Format(JsonFilePattern, network.ToString());
+            return overrideNetworkFile ?? string.Format(JsonFilePattern, network.ToString().ToLowerInvariant());
         }
     }
 }
