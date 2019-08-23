@@ -22,15 +22,10 @@
 #endregion
 
 using System;
-using Catalyst.Common.Config;
-using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Common.Types;
 using Catalyst.Protocol.Common;
-using Dawn;
-using Google.Protobuf;
 
 namespace Catalyst.Common.IO.Messaging.Dto
 {

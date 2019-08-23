@@ -29,7 +29,6 @@ using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.IO.Messaging.Dto;
 using Catalyst.Common.IO.Messaging.Correlation;
-using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Core.Lib.P2P.IO.Observers;
 using Catalyst.Protocol.IPPN;
 using Catalyst.TestUtils;
@@ -57,10 +56,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Observers
             var pingResponse = new PingResponse();
             var protocolMessage =
                 pingResponse.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId, CorrelationId.GenerateCorrelationId());
-            var response = new DtoFactory().GetDto(protocolMessage,
-                PeerIdentifierHelper.GetPeerIdentifier("recipient")
-            );
-            
+
             var pingResponseObserver = Substitute.For<IObserver<IPeerClientMessageDto>>();
 
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext,

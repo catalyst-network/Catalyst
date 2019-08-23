@@ -164,19 +164,10 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Observers
             _fakeContext.Channel.RemoteAddress.Returns(EndpointBuilder.BuildNewEndPoint("192.0.0.1", 42042));
 
             var senderPeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("sender");
-            var dtoFactory = new DtoFactory();
             var getPeerInfoRequest = new GetPeerInfoRequest {PublicKey = peerId.PublicKey, Ip = peerId.Ip};
 
             var protocolMessage =
                 getPeerInfoRequest.ToProtocolMessage(senderPeerIdentifier.PeerId);
-
-            var messageDto =
-                new DtoFactory().GetDto(protocolMessage, PeerIdentifierHelper.GetPeerIdentifier("recipient"));
-
-            var requestMessage = dtoFactory.GetDto(
-                protocolMessage,
-                PeerIdentifierHelper.GetPeerIdentifier("recipient")
-            );
 
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, protocolMessage);
 

@@ -63,9 +63,6 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Observers
             var protocolMessage =
                 versionRequest.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId);
 
-            var messageDto =
-                new DtoFactory().GetDto(protocolMessage, PeerIdentifierHelper.GetPeerIdentifier("recipient"));
-
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext,
                 protocolMessage
             );

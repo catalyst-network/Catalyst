@@ -25,6 +25,7 @@ using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Messaging.Dto;
+using Catalyst.Protocol;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
 using Catalyst.TestUtils;
@@ -46,14 +47,13 @@ namespace Catalyst.Common.UnitTests.IO.Messaging.Dto
             );
         }
 
-        //CHECK
         [Fact]
         public void CanInitMessageDtoCorrectly()
         {
             Assert.NotNull(_messageDto);
 
             _messageDto.Should().BeOfType<MessageDto>();
-            //_messageDto.Content.Should().NotBeNull().And.BeAssignableTo(typeof(PingRequest));
+            _messageDto.Content.Should().NotBeNull().And.BeAssignableTo(typeof(ProtocolMessage));
             _messageDto.RecipientPeerIdentifier.Should().NotBeNull().And.BeAssignableTo(typeof(IPeerIdentifier));
             _messageDto.SenderPeerIdentifier.Should().NotBeNull().And.BeAssignableTo(typeof(IPeerIdentifier));
         }
