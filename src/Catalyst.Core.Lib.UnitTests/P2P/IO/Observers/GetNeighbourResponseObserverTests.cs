@@ -61,22 +61,21 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Observers
                 PeerIdHelper.GetPeerId(),
                 PeerIdHelper.GetPeerId()
             };
-                
-            var response = new DtoFactory().GetDto(new PeerNeighborsResponse
+
+            var peerNeighborsResponse = new PeerNeighborsResponse
+            {
+                Peers =
                 {
-                    Peers =
-                    {
-                        peers
-                    }
-                }.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId),
-                PeerIdentifierHelper.GetPeerIdentifier("recipient")
-            );
-            
+                    peers
+                }
+            };
+            var protocolMessage =
+                peerNeighborsResponse.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId, CorrelationId.GenerateCorrelationId());
+
             var peerNeighborsResponseObserver = Substitute.For<IObserver<IPeerClientMessageDto>>();
 
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext,
-                response.Content.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId,
-                    response.CorrelationId));
+                protocolMessage);
                 
             _observer.StartObserving(messageStream);
             await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();

@@ -181,13 +181,9 @@ namespace Catalyst.Core.Lib.IntegrationTests.Rpc.IO.Observers
 
             var verifyMessageRequestProtocolMessage =
                 verifyMessageRequest.ToProtocolMessage(sender.PeerId);
-            var verifyRequest = messageFactory.GetDto(
-                verifyMessageRequestProtocolMessage,
-                PeerIdentifierHelper.GetPeerIdentifier("recipient_key")
-            );
-            
-            var verifyMessageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, 
-                verifyRequest.Content.ToProtocolMessage(sender.PeerId)
+
+            var verifyMessageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext,
+                verifyMessageRequestProtocolMessage
             );
             
             var verifyHandler = new VerifyMessageRequestObserver(sender,

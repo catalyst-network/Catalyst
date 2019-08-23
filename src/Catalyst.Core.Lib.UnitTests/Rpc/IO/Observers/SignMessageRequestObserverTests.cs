@@ -70,26 +70,26 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Observers
         [InlineData("Hello&?!1253Catalyst")]
         public async Task SignMessageRequestObserver_Can_Return_SignMessageResponse(string message)
         {
-            var messageFactory = new DtoFactory();
+            var signMessageRequest = new SignMessageRequest
+            {
+                Message = message.ToUtf8ByteString(),
+                SigningContext = new SigningContext()
+            };
 
-            var request = messageFactory.GetDto(
-                new SignMessageRequest
-                {
-                    Message = message.ToUtf8ByteString(),
-                    SigningContext = new SigningContext()
-                }.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender_key").PeerId),
-                PeerIdentifierHelper.GetPeerIdentifier("recipient_key")
-            );
-            
-            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, request.Content.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId));
-            var handler = new SignMessageRequestObserver(PeerIdentifierHelper.GetPeerIdentifier("sender"), _logger, _keySigner);
+            var protocolMessage =
+                signMessageRequest.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId);
+
+            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, protocolMessage);
+
+            var handler =
+                new SignMessageRequestObserver(PeerIdentifierHelper.GetPeerIdentifier("sender"), _logger, _keySigner);
             handler.StartObserving(messageStream);
 
             await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
 
             var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();
             receivedCalls.Count.Should().Be(1);
-            
+
             var sentResponseDto = (IMessageDto<ProtocolMessage>) receivedCalls.Single().GetArguments().Single();
             var signResponseMessage = sentResponseDto.Content.FromProtocolMessage<SignMessageResponse>();
 

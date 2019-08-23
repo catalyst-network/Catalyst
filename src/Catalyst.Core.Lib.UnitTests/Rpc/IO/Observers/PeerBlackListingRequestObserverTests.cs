@@ -137,7 +137,6 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Observers
 
             var sendPeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("sender");
 
-            var messageFactory = new DtoFactory();
             var request = new SetPeerBlackListRequest
             {
                 PublicKey = publicKey.ToBytesForRLPEncoding().ToByteString(),
@@ -145,13 +144,10 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Observers
                 Blacklist = Convert.ToBoolean(blacklist)
             };
 
-            var requestMessage = messageFactory.GetDto(
-                request.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId),
-                PeerIdentifierHelper.GetPeerIdentifier("recipient")
-            );
+            var protocolMessage = request.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId);
             
-            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, 
-                requestMessage.Content.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId)
+            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext,
+                protocolMessage
             );
 
             var handler = new PeerBlackListingRequestObserver(sendPeerIdentifier, _logger, peerRepository);

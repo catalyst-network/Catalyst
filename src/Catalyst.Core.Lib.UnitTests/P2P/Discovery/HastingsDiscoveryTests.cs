@@ -573,7 +573,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
                     
                     walker.PeerClient
                        .Received(Constants.AngryPirate)
-                       .SendMessage(Arg.Any<MessageDto>());
+                       .SendMessage(Arg.Any<IMessageDto<ProtocolMessage>>());
                     
                     walker.StepProposal.Neighbours
                        .Where(n => n.StateTypes == NeighbourStateTypes.Contacted)

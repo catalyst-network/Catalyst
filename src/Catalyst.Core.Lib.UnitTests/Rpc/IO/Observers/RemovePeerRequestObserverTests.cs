@@ -119,7 +119,6 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Observers
             // Build a fake remote endpoint
             _fakeContext.Channel.RemoteAddress.Returns(EndpointBuilder.BuildNewEndPoint("192.0.0.1", 42042));
 
-            var messageFactory = new DtoFactory();
             var sendPeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("sender");
 
             var removePeerRequest = new RemovePeerRequest
@@ -128,12 +127,9 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Observers
                 PublicKey = withPublicKey ? targetPeerToDelete.PeerIdentifier.PeerId.PublicKey : ByteString.Empty
             };
 
-            var requestMessage = messageFactory.GetDto(
-                removePeerRequest.ToProtocolMessage(sendPeerIdentifier.PeerId),
-                PeerIdentifierHelper.GetPeerIdentifier("recipient")
-            );
+            var protocolMessage = removePeerRequest.ToProtocolMessage(sendPeerIdentifier.PeerId);
 
-            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, requestMessage.Content.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId));
+            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, protocolMessage);
 
             var handler = new RemovePeerRequestObserver(sendPeerIdentifier, peerRepository, _logger);
             handler.StartObserving(messageStream);

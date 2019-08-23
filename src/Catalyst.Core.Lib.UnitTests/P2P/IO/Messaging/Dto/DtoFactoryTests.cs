@@ -59,7 +59,10 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Messaging.Dto
         [Fact]
         public void Can_Produce_a_Valid_Response_Dto()
         {
-            var pingResponseDto = new DtoFactory().GetDto(new PingResponse().ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("im_a_sender").PeerId),
+            var pingResponse = new PingResponse();
+            var protocolMessage =
+                pingResponse.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("im_a_sender").PeerId, CorrelationId.GenerateCorrelationId());
+            var pingResponseDto = new DtoFactory().GetDto(protocolMessage,
                 PeerIdentifierHelper.GetPeerIdentifier("im_a_recipient")
             );
 

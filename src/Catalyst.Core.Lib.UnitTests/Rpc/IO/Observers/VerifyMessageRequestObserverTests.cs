@@ -72,19 +72,19 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Observers
 
             var messageFactory = new DtoFactory();
 
-            var request = messageFactory.GetDto(
-                new VerifyMessageRequest
-                {
-                    Message = _message.ToUtf8ByteString(),
-                    PublicKey = RLP.EncodeElement(_publicKeyBytes).ToByteString(),
-                    Signature = RLP.EncodeElement(_signatureBytes).ToByteString(),
-                    SigningContext = _signingContext
-                }.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender_key").PeerId),
-                PeerIdentifierHelper.GetPeerIdentifier("recipient_key")
-            );
-            
-            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, 
-                request.Content.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId)
+            var verifyMessageRequest = new VerifyMessageRequest
+            {
+                Message = _message.ToUtf8ByteString(),
+                PublicKey = RLP.EncodeElement(_publicKeyBytes).ToByteString(),
+                Signature = RLP.EncodeElement(_signatureBytes).ToByteString(),
+                SigningContext = _signingContext
+            };
+
+            var protocolMessage =
+                verifyMessageRequest.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender_key").PeerId);
+
+            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext,
+                protocolMessage
             );
             
             var handler = new VerifyMessageRequestObserver(PeerIdentifierHelper.GetPeerIdentifier("sender"),
