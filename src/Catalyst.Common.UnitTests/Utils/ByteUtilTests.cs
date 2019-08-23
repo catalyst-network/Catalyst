@@ -22,7 +22,6 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using Catalyst.Common.Util;
 using FluentAssertions;
@@ -50,8 +49,6 @@ namespace Catalyst.Common.UnitTests.Utils
         public void Convert_ByteArray_To_ByteString_Should_Fail()
         {
             var testBytes = new byte[500];
-
-            var fal = ByteUtil.ToByteString(testBytes);
 
             ByteUtil.ToByteString(testBytes).Should().Equal(ByteString.CopyFrom(testBytes));
         }
@@ -86,62 +83,32 @@ namespace Catalyst.Common.UnitTests.Utils
             byteResult.Length.Should().Be(51);
         }
 
-        [Fact]
-        public void Slice_Byte_To_ByteArrays_Should_Fail()
+        [Theory]
+        [InlineData(2, 5)]
+        [InlineData(78, 90)]
+        [InlineData(10, 35)]
+        public void Slice_Byte_To_ByteArrays_Should_Succeed(int st, int ed)
         {
-            var firstBytesArray = GeneratePopulatedBytesArray(10);
-            var secondBytesArray = GeneratePopulatedBytesArray(1);
+            var firstBytesArray = GeneratePopulatedBytesArray(100);
 
-            var byteResult = ByteUtil.Slice(firstBytesArray, 2, 5);
+            var byteResult = ByteUtil.Slice(firstBytesArray, st, ed);
 
-            byteResult.Take(50).Should().Contain(firstBytesArray);
-
-            byteResult.TakeLast(1).Should().Contain(secondBytesArray.FirstOrDefault());
-
-            byteResult.Length.Should().Be(51);
+            for (int i = st, k = 0; i <= ed && k < (ed - st); i++, k++)
+            {
+                firstBytesArray[i].Should().Be(byteResult[k]);
+            }
         }
 
         [Theory]
-        [InlineData("15241576832799933607683.3208352565279684")]
-        [InlineData("152415768327999.3208352565279684")]
-        [InlineData("0.0152415765279684")]
-        [InlineData("65.9905500565279684")]
-        [InlineData("6103.2744992565279684")]
-        [InlineData("459851.4226352565279684")]
-        [InlineData("32241085.9904352565279684")]
-        [InlineData("2086490962.5328352565279684")]
-        [InlineData("119493365036.6008352565279684")]
-        [InlineData("5502205858863.7208352565279684")]
-        [InlineData("100")]
-        [InlineData("0.00022")]
-        public void ShouldParse(string value)
+        [InlineData(78)]
+        [InlineData(10)]
+        public void Initialise_Empty_ByteArray_Should_Succeed(int arraySize)
         {
-            Assert.Equal(value, BigDecimal.Parse(value).ToString());
-        }
+            var byteResult = ByteUtil.InitialiseEmptyByteArray(arraySize);
 
-        [Fact]
-        public void ShouldCastToDecimal()
-        {
-            Assert.Equal(200.002m, (decimal) (BigDecimal) 200.002m);
-            Assert.Equal(15241576832799933607683.320835m,
-                (decimal) BigDecimal.Parse("15241576832799933607683.3208352565279684"));
-            Assert.Equal(152415768327999.32083525652797m,
-                (decimal) BigDecimal.Parse("152415768327999.3208352565279684"));
-        }
+            var testBytes = new byte[arraySize];
 
-        [Fact]
-        public void ShouldCastToDouble()
-        {
-            Assert.Equal(200.002, (double) (BigDecimal) 200.002m);
-            Assert.Equal(15241576832799933607683.320835,
-                (double) BigDecimal.Parse("15241576832799933607683.3208352565279684"));
-            Assert.Equal(152415768327999.320835, (double) BigDecimal.Parse("152415768327999.3208352565279684"));
-        }
-
-        [Fact]
-        public void ShouldCastToInt()
-        {
-            Assert.Equal(200, (int) (BigDecimal) 200.002m);
+            byteResult.Should().Equal(testBytes);
         }
 
         private byte[] GeneratePopulatedBytesArray(int arraySize)
