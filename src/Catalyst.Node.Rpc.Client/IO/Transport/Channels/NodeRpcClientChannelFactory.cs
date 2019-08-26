@@ -50,6 +50,7 @@ namespace Catalyst.Node.Rpc.Client.IO.Transport.Channels
         private readonly IRpcMessageCorrelationManager _messageCorrelationCache;
         private readonly IPeerIdValidator _peerIdValidator;
         private readonly IObservableServiceHandler _observableServiceHandler;
+        private readonly IPeerSettings _peerSettings;
 
         /// <summary>
         /// 
@@ -61,11 +62,13 @@ namespace Catalyst.Node.Rpc.Client.IO.Transport.Channels
         public NodeRpcClientChannelFactory(IKeySigner keySigner,
             IRpcMessageCorrelationManager messageCorrelationCache,
             IPeerIdValidator peerIdValidator,
+            IPeerSettings peerSettings,
             int backLogValue = 100) : base(backLogValue)
         {
             _keySigner = keySigner;
             _messageCorrelationCache = messageCorrelationCache;
             _peerIdValidator = peerIdValidator;
+            _peerSettings = peerSettings;
             _observableServiceHandler = new ObservableServiceHandler();
         }
 
@@ -83,8 +86,8 @@ namespace Catalyst.Node.Rpc.Client.IO.Transport.Channels
                     new PeerIdValidationHandler(_peerIdValidator),
                     new AddressedEnvelopeToIMessageEncoder(),
                     new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
-                        new ProtocolMessageVerifyHandler(_keySigner), 
-                        new ProtocolMessageSignHandler(_keySigner)),
+                        new ProtocolMessageVerifyHandler(_keySigner, _peerSettings), 
+                        new ProtocolMessageSignHandler(_keySigner, _peerSettings)),
                     new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
                         new CorrelationHandler<IRpcMessageCorrelationManager>(_messageCorrelationCache),
                         new CorrelatableHandler<IRpcMessageCorrelationManager>(_messageCorrelationCache)),

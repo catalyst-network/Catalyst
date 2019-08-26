@@ -34,7 +34,7 @@ namespace Catalyst.Common.Interfaces.P2P
         string PayoutAddress { get; }
         IPAddress BindAddress { get; }
         IList<string> SeedServers { get; }
-        Types.NetworkTypes NetworkTypes { get; }
+        Protocol.Common.Network Network { get; }
     }
 }
 

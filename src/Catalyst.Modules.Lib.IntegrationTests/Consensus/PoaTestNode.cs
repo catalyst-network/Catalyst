@@ -49,6 +49,7 @@ using Catalyst.Common.P2P.Models;
 using Catalyst.Common.Types;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
 using Catalyst.Modules.Lib.Dfs;
+using Catalyst.Protocol.Common;
 using Catalyst.TestUtils;
 using Ipfs.Registry;
 using NSubstitute;
@@ -103,7 +104,7 @@ namespace Catalyst.Modules.Lib.IntegrationTests.Consensus
 
             _containerProvider = new ContainerProvider(new[]
                 {
-                    Constants.NetworkConfigFile(NetworkTypes.Dev),
+                    Constants.NetworkConfigFile(Network.Devnet),
                     Constants.ComponentsJsonConfigFile,
                     Constants.SerilogJsonConfigFile
                 }

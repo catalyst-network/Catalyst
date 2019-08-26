@@ -30,10 +30,13 @@ namespace Catalyst.Common.Interfaces.Config
         ///     copies them over if needed.
         /// </summary>
         /// <param name="dataDir">Home catalyst directory</param>
-        /// <param name="networkTypes">Network on which to run the node</param>
+        /// <param name="network">Network on which to run the node</param>
         /// <param name="sourceFolder"></param>
         /// <param name="overwrite">Should config existing config files be overwritten by default?</param>
-        /// <param name="overrideNetworkFile">The path to load the network file from</param>
-        void RunConfigStartUp(string dataDir, Types.NetworkTypes networkTypes, string sourceFolder = null, bool overwrite = false, string overrideNetworkFile = null);
+        void RunConfigStartUp(string dataDir, 
+            Protocol.Common.Network network = Protocol.Common.Network.Devnet, 
+            string sourceFolder = null, 
+            bool overwrite = false, 
+            string overrideNetworkFile = null);
     }
 }

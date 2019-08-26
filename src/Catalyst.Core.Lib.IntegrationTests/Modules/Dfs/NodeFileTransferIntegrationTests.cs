@@ -63,7 +63,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.Modules.Dfs
             var configurationRoot = new ConfigurationBuilder()
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile))
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile))
-               .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(NetworkTypes.Dev)))
+               .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Network.Devnet)))
                .Build();
 
             SocketPortHelper.AlterConfigurationToGetUniquePort(configurationRoot, "NodeFileTransferIntegrationTest");
