@@ -29,6 +29,7 @@ using Catalyst.Common.Config;
 using Catalyst.Common.Enumerator;
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Types;
+using Catalyst.Protocol.Common;
 using Catalyst.TestUtils;
 using Xunit;
 using Xunit.Abstractions;
@@ -37,19 +38,19 @@ namespace Catalyst.Cli.IntegrationTests.Config
 {
     public sealed class GlobalConfigTests : FileSystemBasedTest
     {
-        public static readonly List<object[]> Networks =
-            Enumeration.GetAll<NetworkTypes>().Select(n => new object[] {n}).ToList();
+        public static readonly List<object[]> Networks = 
+            new List<Network> {Network.Devnet, Network.Mainnet, Network.Testnet}.Select(n => new object[] {n}).ToList();
 
         public GlobalConfigTests(ITestOutputHelper output) : base(output) { }
 
         [Theory]
         [MemberData(nameof(Networks))]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
-        public void Registering_All_Configs_Should_Allow_Resolving_ICatalystCli(NetworkTypes networkTypes)
+        public void Registering_All_Configs_Should_Allow_Resolving_ICatalystCli(Network network)
         {
             var configFilesUsed = new[]
                 {
-                    Constants.NetworkConfigFile(networkTypes),
+                    Constants.NetworkConfigFile(network),
                     Constants.ShellComponentsJsonConfigFile,
                     Constants.SerilogJsonConfigFile,
                     Constants.ShellNodesConfigFile,
@@ -61,7 +62,7 @@ namespace Catalyst.Cli.IntegrationTests.Config
             {
                 containerProvider.ConfigureContainerBuilder();
 
-                using (var scope = containerProvider.Container.BeginLifetimeScope(CurrentTestName + networkTypes.Name))
+                using (var scope = containerProvider.Container.BeginLifetimeScope(CurrentTestName + network))
                 {
                     scope.Resolve<ICatalystCli>();
                 }

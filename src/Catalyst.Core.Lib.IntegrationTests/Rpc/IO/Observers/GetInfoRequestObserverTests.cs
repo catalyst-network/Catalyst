@@ -56,7 +56,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.Rpc.IO.Observers
         {
             _config = new ConfigurationBuilder()
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ShellNodesConfigFile))
-               .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(NetworkTypes.Dev)))
+               .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Network.Devnet)))
                .Build();
             
             _logger = Substitute.For<ILogger>();

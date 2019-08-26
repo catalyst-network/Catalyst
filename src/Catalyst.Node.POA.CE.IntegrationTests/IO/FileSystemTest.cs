@@ -24,6 +24,7 @@
 using System.Globalization;
 using Catalyst.Common.Config;
 using Catalyst.Common.Types;
+using Catalyst.Protocol.Common;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Xunit;
@@ -54,7 +55,7 @@ namespace Catalyst.Node.POA.CE.IntegrationTests.IO
         {
             var currentDirectory = FileSystem.GetCatalystDataDir();
 
-            var network = NetworkTypes.Dev;
+            var network = Network.Devnet;
             new ConfigCopier().RunConfigStartUp(currentDirectory.FullName, network);
 
             return currentDirectory.FullName;
