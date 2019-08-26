@@ -22,7 +22,6 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -41,7 +40,6 @@ using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using FluentAssertions;
-using Microsoft.Extensions.Configuration;
 using Nethereum.Hex.HexConvertors.Extensions;
 using Nethereum.RLP;
 using NSubstitute;
@@ -63,7 +61,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.Rpc.IO.Observers
         {
             Path.Combine(Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile),
             Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile),
-            Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Common.Types.NetworkTypes.Dev)),
+            Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Network.Devnet)),
             Path.Combine(Constants.ConfigSubFolder, Constants.ShellNodesConfigFile),
         }, output)
         {

@@ -54,6 +54,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Messaging.Broadcast
         private readonly BroadcastHandler _broadcastHandler;
         private readonly IKeySigner _keySigner;
         private readonly ProtocolMessageSigned _broadcastMessageSigned;
+        private readonly IPeerSettings _peerSettings;
 
         public BroadcastHandlerTests()
         {
@@ -77,6 +78,8 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Messaging.Broadcast
                     }.ToProtocolMessage(peerIdentifier.PeerId, CorrelationId.GenerateCorrelationId()),
                     Signature = fakeSignature.SignatureBytes.ToByteString()
                 };
+            _peerSettings = Substitute.For<IPeerSettings>();
+            _peerSettings.Network.Returns(Network.Devnet);
         }
 
         [Fact]
@@ -89,7 +92,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Messaging.Broadcast
             recipientIdentifier.IpEndPoint.Returns(new IPEndPoint(fakeIp, 10));
             
             EmbeddedChannel channel = new EmbeddedChannel(
-                new ProtocolMessageVerifyHandler(_keySigner),
+                new ProtocolMessageVerifyHandler(_keySigner, _peerSettings),
                 _broadcastHandler,
                 new ObservableServiceHandler()
             );
@@ -108,7 +111,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Messaging.Broadcast
             var protoDatagramChannelHandler = new ObservableServiceHandler();
             handler.StartObserving(protoDatagramChannelHandler.MessageStream);
 
-            var channel = new EmbeddedChannel(new ProtocolMessageVerifyHandler(_keySigner), _broadcastHandler, protoDatagramChannelHandler);
+            var channel = new EmbeddedChannel(new ProtocolMessageVerifyHandler(_keySigner, _peerSettings), _broadcastHandler, protoDatagramChannelHandler);
             channel.WriteInbound(_broadcastMessageSigned);
 
             var result = await TaskHelper.WaitForAsync(() =>

@@ -31,6 +31,7 @@ using Catalyst.Common.Interfaces.P2P.ReputationSystem;
 using Catalyst.Common.P2P;
 using Catalyst.Common.P2P.Models;
 using Catalyst.Common.Types;
+using Catalyst.Protocol.Common;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Microsoft.Extensions.Configuration;
@@ -49,7 +50,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.ReputationSystem
         {
             Path.Combine(Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile),
             Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile),
-            Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(NetworkTypes.Dev)),
+            Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Network.Devnet)),
         }, output)
         {
             ContainerProvider.ConfigureContainerBuilder();

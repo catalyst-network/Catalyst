@@ -46,7 +46,6 @@ namespace Catalyst.Common.Kernel
     public sealed class Kernel : IDisposable
     {
         private string _withPersistence;
-        private Types.NetworkTypes _networkTypes;
         private bool _overwrite;
         private readonly string _fileName;
         private string _targetConfigFolder;
@@ -95,7 +94,7 @@ namespace Catalyst.Common.Kernel
         public Kernel BuildKernel(bool overwrite = false, string overrideNetworkFile = null)
         {
             _overwrite = overwrite;
-            _configCopier.RunConfigStartUp(_targetConfigFolder, _networkTypes, null, _overwrite, overrideNetworkFile);
+            _configCopier.RunConfigStartUp(_targetConfigFolder, Protocol.Common.Network.Devnet, null, _overwrite, overrideNetworkFile);
             
             var config = _configurationBuilder.Build();
             var configurationModule = new ConfigurationModule(config);
@@ -131,10 +130,9 @@ namespace Catalyst.Common.Kernel
             return this;
         }
         
-        public Kernel WithNetworksConfigFile(NetworkTypes networkTypes = default, string overrideNetworkFile = null)
+        public Kernel WithNetworksConfigFile(Protocol.Common.Network network = Protocol.Common.Network.Devnet, string overrideNetworkFile = null)
         {
-            _networkTypes = networkTypes ?? NetworkTypes.Dev;
-            var fileName = Constants.NetworkConfigFile(_networkTypes, overrideNetworkFile);
+            var fileName = Constants.NetworkConfigFile(network, overrideNetworkFile);
 
             _configurationBuilder
                .AddJsonFile(
