@@ -31,7 +31,7 @@ using Google.Protobuf;
 
 namespace Catalyst.Common.IO.Messaging.Dto
 {
-    public abstract class BaseMessageDto<T> : DefaultAddressedEnvelope<T>, IMessageDto<T>
+    public class BaseMessageDto<T> : DefaultAddressedEnvelope<T>, IMessageDto<T>
         where T : IMessage<T>
     {
         public ICorrelationId CorrelationId { get; }

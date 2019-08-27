@@ -57,8 +57,9 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Transport.Channels
             public TestNodeRpcServerChannelFactory(IRpcMessageCorrelationManager correlationManager,
                 IKeySigner keySigner,
                 IAuthenticationStrategy authenticationStrategy,
-                IPeerIdValidator peerIdValidator)
-                : base(correlationManager, keySigner, authenticationStrategy, peerIdValidator)
+                IPeerIdValidator peerIdValidator,
+                IPeerSettings peerSettings)
+                : base(correlationManager, keySigner, authenticationStrategy, peerIdValidator, peerSettings)
             {
                 _handlers = HandlerGenerationFunction();
             }
@@ -78,6 +79,7 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Transport.Channels
             var peerSettings = Substitute.For<IPeerSettings>();
 
             peerSettings.BindAddress.Returns(IPAddress.Parse("127.0.0.1"));
+            peerSettings.Network.Returns(Network.Devnet);
             
             var authenticationStrategy = Substitute.For<IAuthenticationStrategy>();
             authenticationStrategy.Authenticate(Arg.Any<IPeerIdentifier>()).Returns(true);
@@ -90,7 +92,8 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Transport.Channels
                 _correlationManager,
                 _keySigner,
                 authenticationStrategy,
-                peerIdValidator);
+                peerIdValidator,
+                peerSettings);
         }
 
         [Fact]

@@ -56,7 +56,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.Rpc.IO.Observers
         {
             Path.Combine(Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile),
             Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile),
-            Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(NetworkTypes.Dev)),
+            Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Network.Devnet)),
             Path.Combine(Constants.ConfigSubFolder, Constants.ShellNodesConfigFile)
         }, output)
         {

@@ -26,6 +26,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Security.Cryptography.X509Certificates;
 using Catalyst.Common.Interfaces.Cli;
+using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Registry;
 using Catalyst.Simulator.RpcClients;
 using Newtonsoft.Json;
@@ -38,7 +39,8 @@ namespace Catalyst.Simulator.Helpers
         public static IEnumerable<ClientRpcInfo> GenerateClientRpcInfoFromConfig(IUserOutput userOutput,
             IPasswordRegistry passwordRegistry,
             X509Certificate2 certificate,
-            ILogger logger)
+            ILogger logger,
+            IPeerSettings peerSettings)
         {
             var simulationNodesFile =
                 Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Config", "simulation.nodes.json");
@@ -46,7 +48,7 @@ namespace Catalyst.Simulator.Helpers
                 JsonConvert.DeserializeObject<List<SimulationNode>>(File.ReadAllText(simulationNodesFile));
             foreach (var simulationNode in simulationNodes)
             {
-                var simpleRpcClient = new SimpleRpcClient(userOutput, passwordRegistry, certificate, logger);
+                var simpleRpcClient = new SimpleRpcClient(userOutput, passwordRegistry, certificate, logger, peerSettings);
                 var clientRpcInfo = new ClientRpcInfo(simulationNode.ToPeerIdentifier(), simpleRpcClient);
                 yield return clientRpcInfo;
             }

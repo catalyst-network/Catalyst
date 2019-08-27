@@ -182,7 +182,6 @@
             ],
             "instanceScope": "singleinstance"
         },
-
         {
             "type": "Catalyst.Core.Lib.Rpc.Authentication.RepositoryAuthenticationStrategy",
             "services": [

@@ -22,6 +22,7 @@
 #endregion
 
 using Catalyst.Common.Interfaces.Modules.KeySigner;
+using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Handlers;
 using Catalyst.Common.Util;
 using Catalyst.Cryptography.BulletProofs.Wrapper;
@@ -39,11 +40,13 @@ namespace Catalyst.Common.UnitTests.IO.Handlers
         private readonly IChannelHandlerContext _fakeContext;
         private readonly ProtocolMessageSigned _protocolMessageSigned;
         private readonly IKeySigner _keySigner;
+        private readonly IPeerSettings _peerSettings;
 
         public ProtocolMessageVerifyHandlerTests()
         {
             _fakeContext = Substitute.For<IChannelHandlerContext>();
             _keySigner = Substitute.For<IKeySigner>();
+            _peerSettings = Substitute.For<IPeerSettings>();
 
             var signatureBytes = ByteUtil.GenerateRandomByteArray(FFI.SignatureLength);
             var publicKeyBytes = ByteUtil.GenerateRandomByteArray(FFI.PublicKeyLength);
@@ -56,6 +59,8 @@ namespace Catalyst.Common.UnitTests.IO.Handlers
                     PeerId = PeerIdentifierHelper.GetPeerIdentifier(publicKeyBytes.ToString()).PeerId
                 }
             };
+
+            _peerSettings.Network.Returns(Protocol.Common.Network.Devnet);
         }
 
         [Fact]
@@ -64,7 +69,7 @@ namespace Catalyst.Common.UnitTests.IO.Handlers
             _keySigner.Verify(Arg.Any<ISignature>(), Arg.Any<byte[]>(), default)
                .ReturnsForAnyArgs(true);
 
-            var signatureHandler = new ProtocolMessageVerifyHandler(_keySigner);
+            var signatureHandler = new ProtocolMessageVerifyHandler(_keySigner, _peerSettings);
 
             signatureHandler.ChannelRead(_fakeContext, _protocolMessageSigned);
 
@@ -77,7 +82,7 @@ namespace Catalyst.Common.UnitTests.IO.Handlers
             _keySigner.Verify(Arg.Any<ISignature>(), Arg.Any<byte[]>(), default)
                .ReturnsForAnyArgs(false);
 
-            var signatureHandler = new ProtocolMessageVerifyHandler(_keySigner);
+            var signatureHandler = new ProtocolMessageVerifyHandler(_keySigner, _peerSettings);
 
             signatureHandler.ChannelRead(_fakeContext, _protocolMessageSigned);
             

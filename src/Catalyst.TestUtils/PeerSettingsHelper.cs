@@ -32,6 +32,7 @@ using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.Types;
 using Catalyst.Common.Util;
 using Catalyst.Cryptography.BulletProofs.Wrapper;
+using Catalyst.Protocol.Common;
 using Multiformats.Hash.Algorithms;
 using NSubstitute;
 
@@ -42,7 +43,7 @@ namespace Catalyst.TestUtils
         public static IPeerSettings TestPeerSettings(byte[] publicKey = default, int port = 42069)
         {
             var peerSettings = Substitute.For<IPeerSettings>();
-            peerSettings.NetworkTypes.Returns(NetworkTypes.Dev);
+            peerSettings.Network.Returns(Network.Devnet);
             peerSettings.PublicKey.Returns(
                 publicKey?.KeyToString() ?? TestKeyRegistry.TestPublicKey);
             peerSettings.Port.Returns(port);

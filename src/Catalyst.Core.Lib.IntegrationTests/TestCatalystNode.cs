@@ -31,6 +31,7 @@ using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces;
 using Catalyst.Common.Interfaces.Modules.Consensus;
 using Catalyst.Common.Types;
+using Catalyst.Protocol.Common;
 using Catalyst.TestUtils;
 using Xunit.Abstractions;
 
@@ -44,7 +45,7 @@ namespace Catalyst.Core.Lib.IntegrationTests
 
         private readonly IEnumerable<string> _configFilesUsed = new[]
         {
-            Constants.NetworkConfigFile(NetworkTypes.Dev),
+            Constants.NetworkConfigFile(Network.Devnet),
             Constants.ComponentsJsonConfigFile,
             Constants.SerilogJsonConfigFile
         }.Select(f => Path.Combine(Constants.ConfigSubFolder, f));
@@ -54,7 +55,7 @@ namespace Catalyst.Core.Lib.IntegrationTests
         public TestCatalystNode(string name, ITestOutputHelper output) 
             : base(new[]
             {
-                Constants.NetworkConfigFile(NetworkTypes.Dev),
+                Constants.NetworkConfigFile(Network.Devnet),
                 Constants.ComponentsJsonConfigFile,
                 Constants.SerilogJsonConfigFile
             }.Select(f => Path.Combine(Constants.ConfigSubFolder, f)), output)

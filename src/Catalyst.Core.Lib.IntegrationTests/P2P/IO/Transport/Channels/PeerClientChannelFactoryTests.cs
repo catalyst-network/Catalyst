@@ -66,6 +66,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.IO.Transport.Channels
             var peerSettings = Substitute.For<IPeerSettings>();
             peerSettings.BindAddress.Returns(IPAddress.Parse("127.0.0.1"));
             peerSettings.Port.Returns(1234);
+            peerSettings.Network.Returns(Network.Devnet);
             
             _peerIdValidator = Substitute.For<IPeerIdValidator>();
 
@@ -73,7 +74,8 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.IO.Transport.Channels
                 _serverCorrelationManager,
                 broadcastManager,
                 _serverKeySigner,
-                _peerIdValidator);
+                _peerIdValidator,
+                peerSettings);
 
             _signature = Substitute.For<ISignature>();
 
@@ -83,7 +85,8 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.IO.Transport.Channels
             _clientFactory = new UnitTests.P2P.IO.Transport.Channels.PeerClientChannelFactoryTests.TestPeerClientChannelFactory(
                 _clientKeySigner, 
                 _clientCorrelationManager,
-                _peerIdValidator);
+                _peerIdValidator,
+                peerSettings);
 
             _serverChannel =
                 new EmbeddedChannel("server".ToChannelId(), true, serverFactory.InheritedHandlers.ToArray());

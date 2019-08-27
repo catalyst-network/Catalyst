@@ -66,6 +66,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.Rpc.IO.Transport.Channels
             var peerSettings = Substitute.For<IPeerSettings>();
             peerSettings.BindAddress.Returns(IPAddress.Parse("127.0.0.1"));
             peerSettings.Port.Returns(1234);
+            peerSettings.Network.Returns(Network.Devnet);
 
             _authenticationStrategy = Substitute.For<IAuthenticationStrategy>();
 
@@ -75,7 +76,8 @@ namespace Catalyst.Core.Lib.IntegrationTests.Rpc.IO.Transport.Channels
                 _serverCorrelationManager,
                 _serverKeySigner,
                 _authenticationStrategy,
-                _peerIdValidator);
+                _peerIdValidator,
+                peerSettings);
 
             _clientCorrelationManager = Substitute.For<IRpcMessageCorrelationManager>();
             _clientKeySigner = Substitute.For<IKeySigner>();
@@ -83,7 +85,8 @@ namespace Catalyst.Core.Lib.IntegrationTests.Rpc.IO.Transport.Channels
             _clientFactory = new NodeRpcClientChannelFactoryTests.TestNodeRpcClientChannelFactory(
                 _clientKeySigner, 
                 _clientCorrelationManager,
-                _peerIdValidator);
+                _peerIdValidator,
+                peerSettings);
 
             _serverChannel =
                 new EmbeddedChannel("server".ToChannelId(), true, serverFactory.InheritedHandlers.ToArray());
