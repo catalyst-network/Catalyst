@@ -21,25 +21,15 @@
 
 #endregion
 
-using System.Net;
-using Catalyst.Common.Extensions;
-using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
-using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Common.P2P;
 using Catalyst.Protocol.Common;
-using Dawn;
-using DotNetty.Transport.Channels;
 
 namespace Catalyst.Common.IO.Messaging.Dto
 {
-    public sealed class SignedMessageDto : DefaultAddressedEnvelope<ProtocolMessageSigned>, IMessageDto<ProtocolMessageSigned>
+    public sealed class SignedMessageDto : BaseMessageDto<ProtocolMessageSigned>
     {
-        public ICorrelationId CorrelationId { get; }
-        public IPeerIdentifier RecipientPeerIdentifier { get; }
-        public IPeerIdentifier SenderPeerIdentifier { get; }
-
         /// <summary>
         ///     Data transfer object to wrap up all parameters for sending protocol messages into a MessageFactors.
         /// </summary>
@@ -47,15 +37,7 @@ namespace Catalyst.Common.IO.Messaging.Dto
         /// <param name="recipientPeerIdentifier"></param>
         public SignedMessageDto(ProtocolMessageSigned content,
             IPeerIdentifier recipientPeerIdentifier)
-            : base(content, content.Message.PeerId.ToIpEndPoint(), recipientPeerIdentifier.IpEndPoint)
-        {
-            var senderIpEndPoint = (IPEndPoint) Sender;
-            Guard.Argument(recipientPeerIdentifier.IpEndPoint.Address, nameof(recipientPeerIdentifier.IpEndPoint.Address)).NotNull();
-            Guard.Argument(senderIpEndPoint.Address, nameof(senderIpEndPoint.Address)).NotNull();
-
-            CorrelationId = new CorrelationId(content.Message.CorrelationId);
-            RecipientPeerIdentifier = recipientPeerIdentifier;
-            SenderPeerIdentifier = new PeerIdentifier(content.Message.PeerId);
-        }
+            : base(content, new PeerIdentifier(content.Message.PeerId), recipientPeerIdentifier,
+                new CorrelationId(content.Message.CorrelationId)) { }
     }
 }

@@ -22,7 +22,6 @@
 #endregion
 
 using System;
-using System.Collections;
 using System.Linq;
 using System.Net;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
@@ -36,53 +35,11 @@ using Dawn;
 using Google.Protobuf;
 using Multiformats.Hash;
 using Nethereum.RLP;
-using Tmds.Linux;
 
 namespace Catalyst.Common.Extensions
 {
     public static class ProtobufExtensions
     {
-        public static IPAddress ToIpAddress(this ByteString ipAddressByteString)
-        {
-            const int ipv4Length = 4;
-            const int ipv6Length = 16;
-            const int ipv4Start = ipv6Length - ipv4Length;
-            var ipAddressByteArray = ipAddressByteString.ToByteArray();
-            var firstIndex = Array.FindIndex(ipAddressByteArray, b => b != 0);
-            var nullByteArray = new byte[ipv6Length];
-
-            if (ipAddressByteArray.SequenceEqual(nullByteArray))
-            {
-                return IPAddress.Any;
-            }
-
-            if (firstIndex == ipv4Start)
-            {
-                var ipv4AddressByteArray = new byte[ipv4Length];
-                Array.Copy(ipAddressByteArray, ipv4Start, ipv4AddressByteArray, 0, 4);
-                return new IPAddress(ipv4AddressByteArray).MapToIPv4();
-            }
-
-            if (firstIndex == 0)
-            {
-                return new IPAddress(ipAddressByteArray).MapToIPv6();
-            }
-
-            throw new FormatException($"{ipAddressByteString} is not a valid IP address");
-        }
-
-        public static ushort ToPort(this ByteString portByteString)
-        {
-            return BitConverter.ToUInt16(portByteString.ToByteArray());
-        }
-
-        public static IPEndPoint ToIpEndPoint(this PeerId peerId)
-        {
-            var ipAddress = peerId.Ip.ToIpAddress();
-            var port = peerId.Port.ToPort();
-            return new IPEndPoint(ipAddress, port);
-        }
-
         public static ProtocolMessage ToProtocolMessage(this IMessage protobufObject,
             PeerId senderId,
             ICorrelationId correlationId = default)
