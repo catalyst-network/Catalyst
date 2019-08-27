@@ -26,6 +26,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Catalyst.Common.Extensions;
+using Catalyst.Common.Interfaces.Keystore;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Rpc.IO.Messaging.Correlation;
@@ -53,8 +54,11 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Transport.Channels
         {
             private readonly List<IChannelHandler> _handlers;
 
-            public TestNodeRpcClientChannelFactory(IKeySigner keySigner, IRpcMessageCorrelationManager correlationManager, IPeerIdValidator peerIdValidator, IPeerSettings peerSettings)
-                : base(keySigner, correlationManager, peerIdValidator, peerSettings)
+            public TestNodeRpcClientChannelFactory(IKeySigner keySigner, 
+                IRpcMessageCorrelationManager correlationManager, 
+                IPeerIdValidator peerIdValidator,
+                ISigningContextProvider signatureContextProvider)
+                : base(keySigner, correlationManager, peerIdValidator, signatureContextProvider)
             {
                 _handlers = HandlerGenerationFunction();
             }
@@ -70,15 +74,15 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Transport.Channels
         {
             _correlationManager = Substitute.For<IRpcMessageCorrelationManager>();
             _keySigner = Substitute.For<IKeySigner>();
-            var peerSettings = Substitute.For<IPeerSettings>();
+            var contextProvider = Substitute.For<ISigningContextProvider>();
 
-            peerSettings.BindAddress.Returns(IPAddress.Parse("127.0.0.1"));
-            peerSettings.Port.Returns(1234);
+            contextProvider.Network.Returns(Network.Devnet);
+            contextProvider.SignatureType.Returns(SignatureType.ProtocolPeer);
 
             var peerIdValidator = Substitute.For<IPeerIdValidator>();
             peerIdValidator.ValidatePeerIdFormat(Arg.Any<PeerId>()).Returns(true);
 
-            _factory = new TestNodeRpcClientChannelFactory(_keySigner, _correlationManager, peerIdValidator, peerSettings);
+            _factory = new TestNodeRpcClientChannelFactory(_keySigner, _correlationManager, peerIdValidator, contextProvider);
         }
 
         [Fact]
