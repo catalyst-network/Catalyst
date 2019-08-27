@@ -30,6 +30,7 @@ using Xunit.Abstractions;
 using System.IO;
 using System.Threading.Tasks;
 using Catalyst.Common.Interfaces.FileSystem;
+using Catalyst.Common.Interfaces.P2P;
 using Catalyst.TestUtils;
 using Catalyst.Core.Lib.IntegrationTests;
 using Constants = Catalyst.Common.Config.Constants;
@@ -52,6 +53,8 @@ namespace Catalyst.Cli.IntegrationTests.Connection
             ContainerProvider.ConfigureContainerBuilder();
 
             ContainerProvider.ContainerBuilder.RegisterInstance(FileSystem).As<IFileSystem>();
+            ContainerProvider.ContainerBuilder.RegisterInstance(PeerSettingsHelper.TestPeerSettings())
+               .As<IPeerSettings>();
         }
 
         [Fact]

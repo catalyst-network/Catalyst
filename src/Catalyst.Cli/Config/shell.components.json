@@ -227,6 +227,14 @@
             ]
         },
         {
+            "type": "Catalyst.Core.Lib.P2P.PeerSettings, Catalyst.Core.Lib",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.P2P.IPeerSettings, Catalyst.Common"
+                }
+            ]
+        },
+        {
             "type": "Catalyst.Common.Util.AddressHelper, Catalyst.Common",
             "services": [
                 {
