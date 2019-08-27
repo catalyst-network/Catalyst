@@ -47,6 +47,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using Catalyst.Common.Interfaces.Keystore;
 using Catalyst.Common.Types;
 using Catalyst.Protocol.Common;
 using Xunit;
@@ -110,7 +111,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P
                     ContainerProvider.Container.Resolve<IBroadcastManager>(),
                     keySigner,
                     ContainerProvider.Container.Resolve<IPeerIdValidator>(),
-                    ContainerProvider.Container.Resolve<IPeerSettings>()), 
+                    ContainerProvider.Container.Resolve<ISigningContextProvider>()), 
                 ContainerProvider.Container.Resolve<IPeerDiscovery>(),
                 ContainerProvider.Container.Resolve<IEnumerable<IP2PMessageObserver>>(),
                 _peerSettings,
