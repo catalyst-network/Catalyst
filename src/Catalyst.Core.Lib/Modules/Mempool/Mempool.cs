@@ -24,6 +24,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Catalyst.Common.Interfaces.IO.Events;
 using Catalyst.Common.Interfaces.Modules.Mempool;
 using Catalyst.Common.Interfaces.Repository;
 using Catalyst.Common.Modules.Mempool.Models;
@@ -102,9 +103,6 @@ namespace Catalyst.Core.Lib.Modules.Mempool
         {
             Guard.Argument(mempoolDocument, nameof(mempoolDocument)).NotNull();
 
-            var transaction = mempoolDocument.Transaction;
-            Guard.Argument(transaction, nameof(transaction)).NotNull();
-            Guard.Argument(transaction.Signature, nameof(transaction.Signature)).NotNull();
             try
             {
                 if (_transactionStore.TryGet(mempoolDocument.DocumentId, out _))

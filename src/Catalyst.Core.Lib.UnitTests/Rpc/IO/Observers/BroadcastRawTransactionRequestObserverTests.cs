@@ -22,6 +22,7 @@
 #endregion
 
 using Catalyst.Common.Extensions;
+using Catalyst.Common.Interfaces.IO.Events;
 using Catalyst.Common.Interfaces.Modules.Mempool;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.IO.Messaging.Broadcast;
@@ -53,12 +54,10 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Observers
             _fakePeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("test");
             _mempool = Substitute.For<IMempool>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
-            var broadcastManager = Substitute.For<IBroadcastManager>();
             _broadcastRawTransactionRequestObserver = new BroadcastRawTransactionRequestObserver(
                 logger,
                 _fakePeerIdentifier,
-                _mempool,
-                broadcastManager);
+                Substitute.For<ITransactionReceivedEvent>());
         }
 
         [Fact]

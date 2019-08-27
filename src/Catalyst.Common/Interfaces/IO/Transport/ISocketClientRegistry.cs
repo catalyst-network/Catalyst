@@ -21,10 +21,10 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.IO.Observables;
 using System;
 using System.Collections.Generic;
 using System.Net;
+using Catalyst.Common.Interfaces.IO.Events;
 
 namespace Catalyst.Common.Interfaces.IO.Transport
 {
