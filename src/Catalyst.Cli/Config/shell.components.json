@@ -227,12 +227,16 @@
             ]
         },
         {
-            "type": "Catalyst.Core.Lib.P2P.PeerSettings, Catalyst.Core.Lib",
+            "type": "Catalyst.Common.Keystore.SigningContextProvider, Catalyst.Common",
             "services": [
                 {
-                    "type": "Catalyst.Common.Interfaces.P2P.IPeerSettings, Catalyst.Common"
+                    "type": "Catalyst.Common.Interfaces.Keystore.ISigningContextProvider, Catalyst.Common"
                 }
-            ]
+            ],
+            "properties": {
+                "Network": "Mainnet",
+                "SignatureType": "ProtocolPeer"
+            } 
         },
         {
             "type": "Catalyst.Common.Util.AddressHelper, Catalyst.Common",
