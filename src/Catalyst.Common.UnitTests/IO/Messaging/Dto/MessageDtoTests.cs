@@ -53,7 +53,7 @@ namespace Catalyst.Common.UnitTests.IO.Messaging.Dto
             Assert.NotNull(_messageDto);
 
             _messageDto.Should().BeOfType<MessageDto>();
-            _messageDto.Content.Should().NotBeNull().And.BeAssignableTo(typeof(ProtocolMessage));
+            _messageDto.Content.Should().NotBeNull().And.BeAssignableTo(typeof(IMessage<ProtocolMessage>));
             _messageDto.RecipientPeerIdentifier.Should().NotBeNull().And.BeAssignableTo(typeof(IPeerIdentifier));
             _messageDto.SenderPeerIdentifier.Should().NotBeNull().And.BeAssignableTo(typeof(IPeerIdentifier));
         }
