@@ -71,12 +71,12 @@ namespace Catalyst.Core.Lib.P2P.IO.Transport.Channels
             ISigningContextProvider signingContextProvider,
             IScheduler scheduler = null)
         {
+            _scheduler = scheduler ?? Scheduler.Default;
             _messageCorrelationManager = messageCorrelationManager;
             _broadcastManager = broadcastManager;
             _keySigner = keySigner;
             _peerIdValidator = peerIdValidator;
             _signingContextProvider = signingContextProvider;
-            _scheduler = scheduler ?? Scheduler.Default;
         }
 
         protected override Func<List<IChannelHandler>> HandlerGenerationFunction

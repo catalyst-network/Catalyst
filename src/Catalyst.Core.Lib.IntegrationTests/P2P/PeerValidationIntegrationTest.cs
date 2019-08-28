@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Reactive.Concurrency;
 using System.Threading.Tasks;
 using Autofac;
 using Catalyst.Common.Config;
@@ -56,7 +57,6 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P
 {
     public sealed class PeerValidationIntegrationTest : ConfigFileBasedTest
     {
-        private readonly TestScheduler _testScheduler;
         private IPeerService _peerService;
         private IPeerChallenger _peerChallenger;
         private readonly PeerSettings _peerSettings;
@@ -68,7 +68,6 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P
             Constants.NetworkConfigFile(Network.Testnet)
         }.Select(f => Path.Combine(Constants.ConfigSubFolder, f)), output)
         {
-            _testScheduler = new TestScheduler();
             ContainerProvider.ConfigureContainerBuilder(true, true);
             _peerSettings = new PeerSettings(ContainerProvider.ConfigurationRoot);
 
@@ -111,8 +110,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P
                     ContainerProvider.Container.Resolve<IBroadcastManager>(),
                     keySigner,
                     ContainerProvider.Container.Resolve<IPeerIdValidator>(),
-                    ContainerProvider.Container.Resolve<ISigningContextProvider>(),
-                    _testScheduler),
+                    ContainerProvider.Container.Resolve<ISigningContextProvider>()),
                 ContainerProvider.Container.Resolve<IPeerDiscovery>(),
                 ContainerProvider.Container.Resolve<IEnumerable<IP2PMessageObserver>>(),
                 _peerSettings,
