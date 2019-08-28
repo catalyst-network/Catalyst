@@ -83,21 +83,23 @@ namespace Catalyst.Modules.Lib.IntegrationTests.Consensus
         }
         
         [Fact]
-        public async Task Run_Consensus()
+        public void Run_Consensus()
         {
+            var autoResetEvent = new AutoResetEvent(false);
             _nodes.AsParallel()
                .ForAll(async n =>
                 {
-                    n.RunAsync(_endOfTestCancellationSource.Token);
+                    await n.RunAsync(_endOfTestCancellationSource.Token);
                     n.Consensus.StartProducing();
                 });
-            
-            await Task.Delay(Debugger.IsAttached
-                    ? TimeSpan.FromHours(3)
-                    : CycleConfiguration.Default.CycleDuration.Multiply(1.3))
-               .ConfigureAwait(false);
 
             var dfsDir = Path.Combine(FileSystem.GetCatalystDataDir().FullName, "dfs");
+
+            var fileSystemWatcher = new FileSystemWatcher {Path = dfsDir, EnableRaisingEvents = true};
+            fileSystemWatcher.Created += (sender, args) => autoResetEvent.Set();
+
+            autoResetEvent.WaitOne();
+
             Directory.GetFiles(dfsDir).Length.Should().Be(1);
 
             _endOfTestCancellationSource.CancelAfter(TimeSpan.FromMinutes(3));

@@ -21,9 +21,15 @@
 
 #endregion
 
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Net;
+using System.Threading.Tasks;
 using Autofac;
 using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.IO.Observers;
+using Catalyst.Common.Interfaces.Keystore;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.Discovery;
@@ -37,28 +43,20 @@ using Catalyst.Common.Util;
 using Catalyst.Core.Lib.P2P;
 using Catalyst.Core.Lib.P2P.IO.Transport.Channels;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
+using Catalyst.Protocol.Common;
 using Catalyst.TestUtils;
 using FluentAssertions;
-using Microsoft.Extensions.Configuration;
+using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
-using Catalyst.Common.Interfaces.Keystore;
-using Catalyst.Common.Types;
-using Catalyst.Protocol.Common;
 using Xunit;
 using Xunit.Abstractions;
-using Constants = Catalyst.Common.Config.Constants;
-using IContainer = Autofac.IContainer;
 
 namespace Catalyst.Core.Lib.IntegrationTests.P2P
 {
     public sealed class PeerValidationIntegrationTest : ConfigFileBasedTest
     {
+        private readonly TestScheduler _testScheduler;
         private IPeerService _peerService;
         private IPeerChallenger _peerChallenger;
         private readonly PeerSettings _peerSettings;
@@ -70,10 +68,12 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P
             Constants.NetworkConfigFile(Network.Testnet)
         }.Select(f => Path.Combine(Constants.ConfigSubFolder, f)), output)
         {
+            _testScheduler = new TestScheduler();
             ContainerProvider.ConfigureContainerBuilder(true, true);
             _peerSettings = new PeerSettings(ContainerProvider.ConfigurationRoot);
 
-            var sender = PeerIdentifierHelper.GetPeerIdentifier("sender", _peerSettings.BindAddress, _peerSettings.Port);
+            var sender =
+                PeerIdentifierHelper.GetPeerIdentifier("sender", _peerSettings.BindAddress, _peerSettings.Port);
             var logger = Substitute.For<ILogger>();
             var keyRegistry = TestKeyRegistry.MockKeyRegistry();
 
@@ -111,7 +111,8 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P
                     ContainerProvider.Container.Resolve<IBroadcastManager>(),
                     keySigner,
                     ContainerProvider.Container.Resolve<IPeerIdValidator>(),
-                    ContainerProvider.Container.Resolve<ISigningContextProvider>()), 
+                    ContainerProvider.Container.Resolve<ISigningContextProvider>(),
+                    _testScheduler),
                 ContainerProvider.Container.Resolve<IPeerDiscovery>(),
                 ContainerProvider.Container.Resolve<IEnumerable<IP2PMessageObserver>>(),
                 _peerSettings,
@@ -126,7 +127,8 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P
         public async Task PeerChallenge_PeerIdentifiers_Expect_To_Succeed_Valid_IP_Port_PublicKey()
         {
             await Setup().ConfigureAwait(false);
-            var valid = await RunPeerChallengeTask(_peerSettings.PublicKey, _peerSettings.BindAddress, _peerSettings.Port).ConfigureAwait(false);
+            var valid = await RunPeerChallengeTask(_peerSettings.PublicKey, _peerSettings.BindAddress,
+                _peerSettings.Port).ConfigureAwait(false);
 
             valid.Should().BeTrue();
         }
@@ -135,7 +137,9 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         [InlineData("Fr2a300k06032b657793", "92.207.178.198", 1574)]
         [InlineData("pp2a300k55032b657791", "198.51.100.3", 2524)]
-        public async Task PeerChallenge_PeerIdentifiers_Expect_To_Fail_IP_Port_PublicKey(string publicKey, string ip, int port)
+        public async Task PeerChallenge_PeerIdentifiers_Expect_To_Fail_IP_Port_PublicKey(string publicKey,
+            string ip,
+            int port)
         {
             await Setup().ConfigureAwait(false);
             var valid = await RunPeerChallengeTask(publicKey, IPAddress.Parse(ip), port).ConfigureAwait(false);
