@@ -24,6 +24,7 @@
 using System.Reflection;
 using System.Threading.Tasks;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
+using Catalyst.Common.Interfaces.Keystore;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Messaging.Dto;
@@ -42,13 +43,13 @@ namespace Catalyst.Common.IO.Handlers
         private readonly IKeySigner _keySigner;
         private readonly SigningContext _signingContext;
 
-        public ProtocolMessageSignHandler(IKeySigner keySigner, IPeerSettings peerSettings)
+        public ProtocolMessageSignHandler(IKeySigner keySigner, ISigningContextProvider signingContextProvider)
         {
             _keySigner = keySigner;
             _signingContext = new SigningContext
             {
-                Network = peerSettings.Network,
-                SignatureType = SignatureType.ProtocolPeer
+                Network = signingContextProvider.Network,
+                SignatureType = signingContextProvider.SignatureType
             };
         }
 

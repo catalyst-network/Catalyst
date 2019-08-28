@@ -29,6 +29,7 @@ using Autofac;
 using Autofac.Configuration;
 using Catalyst.Common.Config;
 using Catalyst.Common.Enumerator;
+using Catalyst.Common.P2P;
 using Catalyst.Common.Types;
 using Catalyst.Core.Lib.P2P;
 using Catalyst.Protocol.Common;
