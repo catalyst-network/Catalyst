@@ -24,7 +24,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Cryptography;
 using Catalyst.Common.Interfaces.Modules.Consensus;

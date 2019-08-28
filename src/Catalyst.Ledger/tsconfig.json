@@ -1,0 +1,31 @@
+{
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "target": "es6",
+    "noImplicitAny": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "outDir": "dist",
+    "baseUrl": "./scripts",
+    "paths": {
+      "*": [
+        "node_modules/*",
+      ]
+    },
+    "typeRoots": [
+      "node_modules/@types",
+      "index.d.ts",
+    ],
+    "strict": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    // "strictBindCallApply": true,
+    "lib": [
+      "es6"
+    ]
+  },
+  "include": [
+    "scripts/**/*", "index.d.ts"
+  ]
+}

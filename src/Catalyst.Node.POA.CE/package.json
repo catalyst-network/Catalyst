@@ -1,0 +1,28 @@
+{
+    "name": "orbit-db-controller",
+    "version": "0.0.1",
+    "description": "interface to the orbit-db javascript library",
+    "main": "index.js",
+    "scripts": {
+        "test": "test"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/catalyst-network/Catalyst.Node.git"
+    },
+    "keywords": [
+        "catalyst",
+        "ipfs",
+        "orbit-db"
+    ],
+    "author": "AtlasCity.io",
+    "license": "SEE LICENSE AT https://github.com/catalyst-network/Catalyst.Node/blob/master/README.md",
+    "bugs": {
+        "url": "https://github.com/catalyst-network/Catalyst.Node/issues"
+    },
+    "homepage": "https://github.com/catalyst-network/Catalyst.Node#readme",
+    "dependencies": {
+        "ipfs": "^0.37.0",
+        "orbit-db": "^0.21.4"
+    }
+}

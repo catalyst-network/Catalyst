@@ -101,6 +101,8 @@ namespace Catalyst.Core.Lib.Modules.Api
                 });
             }
 
+            services.AddNodeServices();
+
             containerBuilder.Populate(services);
         }
 

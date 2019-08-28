@@ -28,12 +28,24 @@
         <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
         <PackageReference Include="Microsoft.AspNetCore.Mvc.Formatters.Json" Version="2.2.0" />
         <PackageReference Include="Microsoft.AspNetCore.Mvc.ViewFeatures" Version="2.2.0" />
+        <PackageReference Include="Microsoft.AspNetCore.NodeServices" Version="2.2.0" />
         <PackageReference Include="Serilog.AspNetCore" Version="2.1.1" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="4.0.1" />
         <PackageReference Include="System.Reactive" Version="4.1.6" />
         <PackageReference Include="System.Reactive.Core" Version="4.1.6" />
         <PackageReference Include="System.Reactive.Interfaces" Version="4.1.6" />
         <PackageReference Include="System.Reactive.Linq" Version="4.1.6" />
+    </ItemGroup>
+    <ItemGroup>
+      <Folder Include="Api\OrbitDb\" />
+    </ItemGroup>
+    <ItemGroup>
+      <None Update="Api\node\index.js">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="node\index.js">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
     </ItemGroup>
     <Import Project="../Common.Projects.props" />
 </Project>
