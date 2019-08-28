@@ -90,7 +90,8 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.IO.Transport.Channels
                 _clientKeySigner, 
                 _clientCorrelationManager,
                 _peerIdValidator,
-                peerSettings);
+                peerSettings,
+                _testScheduler);
 
             _serverChannel =
                 new EmbeddedChannel("server".ToChannelId(), true, serverFactory.InheritedHandlers.ToArray());

@@ -22,13 +22,9 @@
 #endregion
 
 using System;
+using System.Diagnostics;
 using Catalyst.Common.Config;
-using Catalyst.Common.Extensions;
 using Catalyst.Common.Kernel;
-using Catalyst.Common.P2P;
-using Catalyst.Protocol.Rpc.Node;
-using Catalyst.TestUtils;
-using Google.Protobuf;
 
 namespace Catalyst.Cli
 {
@@ -38,17 +34,6 @@ namespace Catalyst.Cli
 
         static Program()
         {
-            var versionRequest = new VersionRequest();
-            var versionRequestIMessage = (IMessage) versionRequest;
-            var protocolMessage = versionRequest.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("responder").PeerId);
-            var protocolMessageIMessage = (IMessage) protocolMessage;
-
-            var versionName = versionRequestIMessage.Descriptor.Name;
-            var protocolMessageName = protocolMessageIMessage.Descriptor.Name;
-
-            Console.WriteLine($"versionName.Descriptor.Name: {versionName}");
-            Console.WriteLine($"protocolMessageName.Descriptor.Name: {protocolMessageName}");
-
             _kernel = Kernel.Initramfs(false, "Catalyst.Cli..log");
 
             AppDomain.CurrentDomain.UnhandledException += _kernel.LogUnhandledException;
@@ -61,8 +46,8 @@ namespace Catalyst.Cli
         public static int Main()
         {
             _kernel.Logger.Information("Catalyst.Cli started with process id {0}",
-                System.Diagnostics.Process.GetCurrentProcess().Id.ToString());
-            
+                Process.GetCurrentProcess().Id.ToString());
+
             try
             {
                 _kernel.WithDataDirectory()
