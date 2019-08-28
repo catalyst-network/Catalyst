@@ -23,10 +23,10 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
+using Catalyst.Common.Interfaces.Keystore;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.IO.Messaging.Broadcast;
@@ -35,6 +35,7 @@ using Catalyst.Common.IO.Handlers;
 using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Common.Util;
 using Catalyst.Core.Lib.P2P.IO.Transport.Channels;
+using Catalyst.Cryptography.BulletProofs.Wrapper;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
@@ -59,9 +60,10 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Transport.Channels
                 IBroadcastManager broadcastManager,
                 IKeySigner keySigner,
                 IPeerIdValidator peerIdValidator,
-                IPeerSettings peerSettings,
+                ISigningContextProvider signingContextProvider,
                 TestScheduler testScheduler)
-                : base(correlationManager, broadcastManager, keySigner, peerIdValidator, peerSettings, testScheduler)
+                : base(correlationManager, broadcastManager, keySigner, peerIdValidator, signingContextProvider,
+                    testScheduler)
             {
                 _handlers = HandlerGenerationFunction();
             }
@@ -85,10 +87,9 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Transport.Channels
             _gossipManager = Substitute.For<IBroadcastManager>();
             _keySigner = Substitute.For<IKeySigner>();
 
-            var peerSettings = Substitute.For<IPeerSettings>();
-            peerSettings.BindAddress.Returns(IPAddress.Parse("127.0.0.1"));
-            peerSettings.Port.Returns(1234);
-            peerSettings.Network.Returns(Network.Devnet);
+            var signatureContext = Substitute.For<ISigningContextProvider>();
+            signatureContext.Network.Returns(Network.Devnet);
+            signatureContext.SignatureType.Returns(SignatureType.ProtocolPeer);
 
             var peerValidator = Substitute.For<IPeerIdValidator>();
             peerValidator.ValidatePeerIdFormat(Arg.Any<PeerId>()).Returns(true);
@@ -98,12 +99,11 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Transport.Channels
                 _gossipManager,
                 _keySigner,
                 peerValidator,
-                peerSettings,
+                signatureContext,
                 _testScheduler);
-
             _senderId = PeerIdHelper.GetPeerId("sender");
             _correlationId = CorrelationId.GenerateCorrelationId();
-            _signature = ByteUtil.GenerateRandomByteArray(Cryptography.BulletProofs.Wrapper.FFI.SignatureLength);
+            _signature = ByteUtil.GenerateRandomByteArray(FFI.SignatureLength);
             _keySigner.Verify(Arg.Any<ISignature>(), Arg.Any<byte[]>(), default)
                .ReturnsForAnyArgs(true);
         }
@@ -137,9 +137,9 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Transport.Channels
             };
 
             var observer = new ProtocolMessageObserver(0, Substitute.For<ILogger>());
-           
+
             var messageStream = GetObservableServiceHandler().MessageStream;
-            
+
             using (messageStream.Subscribe(observer))
             {
                 testingChannel.WriteInbound(signedMessage);
@@ -154,13 +154,13 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Transport.Channels
                 observer.Received.Single().Payload.CorrelationId.ToCorrelationId().Id.Should().Be(_correlationId.Id);
             }
         }
-         
+
         [Fact]
         public void Observer_Exception_Should_Not_Stop_Correct_Messages_Reception()
         {
             var testingChannel = new EmbeddedChannel("testWithExceptions".ToChannelId(),
                 true, _factory.InheritedHandlers.ToArray());
-            
+
             var serverIdentifier = PeerIdentifierHelper.GetPeerIdentifier("server");
             using (var badHandler = new FailingRequestObserver(Substitute.For<ILogger>(), serverIdentifier))
             {

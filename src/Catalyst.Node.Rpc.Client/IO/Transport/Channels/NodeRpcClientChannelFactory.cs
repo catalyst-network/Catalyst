@@ -32,6 +32,7 @@ using Catalyst.Common.Interfaces.IO.EventLoop;
 using Catalyst.Common.Interfaces.IO.Handlers;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Transport.Channels;
+using Catalyst.Common.Interfaces.Keystore;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Rpc.IO.Messaging.Correlation;
@@ -52,20 +53,19 @@ namespace Catalyst.Node.Rpc.Client.IO.Transport.Channels
         private readonly IRpcMessageCorrelationManager _messageCorrelationCache;
         private readonly IPeerIdValidator _peerIdValidator;
         private readonly IObservableServiceHandler _observableServiceHandler;
-        private readonly IPeerSettings _peerSettings;
+        private readonly ISigningContextProvider _signingContextProvider;
 
         /// <summary>
         /// </summary>
         /// <param name="keySigner"></param>
         /// <param name="messageCorrelationCache"></param>
         /// <param name="peerIdValidator"></param>
-        /// <param name="peerSettings"></param>
         /// <param name="backLogValue"></param>
         /// <param name="scheduler"></param>
         public NodeRpcClientChannelFactory(IKeySigner keySigner,
             IRpcMessageCorrelationManager messageCorrelationCache,
             IPeerIdValidator peerIdValidator,
-            IPeerSettings peerSettings,
+            ISigningContextProvider signingContextProvider,
             int backLogValue = 100,
             IScheduler scheduler = null) : base(backLogValue)
         {
@@ -73,7 +73,7 @@ namespace Catalyst.Node.Rpc.Client.IO.Transport.Channels
             _keySigner = keySigner;
             _messageCorrelationCache = messageCorrelationCache;
             _peerIdValidator = peerIdValidator;
-            _peerSettings = peerSettings;
+            _signingContextProvider = signingContextProvider;
             _observableServiceHandler = new ObservableServiceHandler(_scheduler);
         }
 
@@ -91,8 +91,8 @@ namespace Catalyst.Node.Rpc.Client.IO.Transport.Channels
                     new PeerIdValidationHandler(_peerIdValidator),
                     new AddressedEnvelopeToIMessageEncoder(),
                     new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
-                        new ProtocolMessageVerifyHandler(_keySigner, _peerSettings),
-                        new ProtocolMessageSignHandler(_keySigner, _peerSettings)),
+                        new ProtocolMessageVerifyHandler(_keySigner, _signingContextProvider),
+                        new ProtocolMessageSignHandler(_keySigner, _signingContextProvider)),
                     new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
                         new CorrelationHandler<IRpcMessageCorrelationManager>(_messageCorrelationCache),
                         new CorrelatableHandler<IRpcMessageCorrelationManager>(_messageCorrelationCache)),

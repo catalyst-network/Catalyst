@@ -25,6 +25,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Catalyst.Common.Extensions;
+using Catalyst.Common.Interfaces.Keystore;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.IO.Messaging.Broadcast;
@@ -66,10 +67,9 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.IO.Transport.Channels
             _serverKeySigner = Substitute.For<IKeySigner>();
             var broadcastManager = Substitute.For<IBroadcastManager>();
 
-            var peerSettings = Substitute.For<IPeerSettings>();
-            peerSettings.BindAddress.Returns(IPAddress.Parse("127.0.0.1"));
-            peerSettings.Port.Returns(1234);
-            peerSettings.Network.Returns(Network.Devnet);
+            var signingContextProvider = Substitute.For<ISigningContextProvider>();
+            signingContextProvider.SignatureType.Returns(SignatureType.ProtocolPeer);
+            signingContextProvider.Network.Returns(Network.Devnet);
             
             _peerIdValidator = Substitute.For<IPeerIdValidator>();
 
@@ -78,7 +78,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.IO.Transport.Channels
                 broadcastManager,
                 _serverKeySigner,
                 _peerIdValidator,
-                peerSettings,
+                signingContextProvider,
                 _testScheduler);
 
             _signature = Substitute.For<ISignature>();
@@ -90,7 +90,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.IO.Transport.Channels
                 _clientKeySigner, 
                 _clientCorrelationManager,
                 _peerIdValidator,
-                peerSettings,
+                signingContextProvider,
                 _testScheduler);
 
             _serverChannel =

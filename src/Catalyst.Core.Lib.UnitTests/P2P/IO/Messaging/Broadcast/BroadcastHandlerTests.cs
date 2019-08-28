@@ -27,6 +27,7 @@ using System.Threading.Tasks;
 using Catalyst.Common.Cryptography;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Cryptography;
+using Catalyst.Common.Interfaces.Keystore;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.IO.Messaging.Broadcast;
@@ -54,7 +55,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Messaging.Broadcast
         private readonly BroadcastHandler _broadcastHandler;
         private readonly IKeySigner _keySigner;
         private readonly ProtocolMessageSigned _broadcastMessageSigned;
-        private readonly IPeerSettings _peerSettings;
+        private readonly ISigningContextProvider _signingContextProvider;
 
         public BroadcastHandlerTests()
         {
@@ -78,8 +79,9 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Messaging.Broadcast
                     }.ToProtocolMessage(peerIdentifier.PeerId, CorrelationId.GenerateCorrelationId()),
                     Signature = fakeSignature.SignatureBytes.ToByteString()
                 };
-            _peerSettings = Substitute.For<IPeerSettings>();
-            _peerSettings.Network.Returns(Network.Devnet);
+            _signingContextProvider = Substitute.For<ISigningContextProvider>();
+            _signingContextProvider.Network.Returns(Network.Devnet);
+            _signingContextProvider.SignatureType.Returns(SignatureType.ProtocolPeer);
         }
 
         [Fact]
@@ -92,7 +94,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Messaging.Broadcast
             recipientIdentifier.IpEndPoint.Returns(new IPEndPoint(fakeIp, 10));
             
             EmbeddedChannel channel = new EmbeddedChannel(
-                new ProtocolMessageVerifyHandler(_keySigner, _peerSettings),
+                new ProtocolMessageVerifyHandler(_keySigner, _signingContextProvider),
                 _broadcastHandler,
                 new ObservableServiceHandler()
             );
@@ -111,7 +113,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Messaging.Broadcast
             var protoDatagramChannelHandler = new ObservableServiceHandler();
             handler.StartObserving(protoDatagramChannelHandler.MessageStream);
 
-            var channel = new EmbeddedChannel(new ProtocolMessageVerifyHandler(_keySigner, _peerSettings), _broadcastHandler, protoDatagramChannelHandler);
+            var channel = new EmbeddedChannel(new ProtocolMessageVerifyHandler(_keySigner, _signingContextProvider), _broadcastHandler, protoDatagramChannelHandler);
             channel.WriteInbound(_broadcastMessageSigned);
 
             var result = await TaskHelper.WaitForAsync(() =>

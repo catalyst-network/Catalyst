@@ -32,6 +32,7 @@ using Catalyst.Common.Interfaces.IO.EventLoop;
 using Catalyst.Common.Interfaces.IO.Handlers;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Transport.Channels;
+using Catalyst.Common.Interfaces.Keystore;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Rpc.Authentication;
@@ -53,7 +54,7 @@ namespace Catalyst.Core.Lib.Rpc.IO.Transport.Channels
         private readonly IKeySigner _keySigner;
         private readonly IPeerIdValidator _peerIdValidator;
         private readonly IObservableServiceHandler _observableServiceHandler;
-        private readonly IPeerSettings _peerSettings;
+        private readonly ISigningContextProvider _signingContextProvider;
 
         protected override Func<List<IChannelHandler>> HandlerGenerationFunction
         {
@@ -69,8 +70,8 @@ namespace Catalyst.Core.Lib.Rpc.IO.Transport.Channels
                     new PeerIdValidationHandler(_peerIdValidator),
                     new AddressedEnvelopeToIMessageEncoder(),
                     new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
-                        new ProtocolMessageVerifyHandler(_keySigner, _peerSettings),
-                        new ProtocolMessageSignHandler(_keySigner, _peerSettings)
+                        new ProtocolMessageVerifyHandler(_keySigner, _signingContextProvider),
+                        new ProtocolMessageSignHandler(_keySigner, _signingContextProvider)
                     ),
                     new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
                         new CorrelationHandler<IRpcMessageCorrelationManager>(_correlationManger),
@@ -87,13 +88,11 @@ namespace Catalyst.Core.Lib.Rpc.IO.Transport.Channels
         /// <param name="keySigner"></param>
         /// <param name="authenticationStrategy"></param>
         /// <param name="peerIdValidator"></param>
-        /// <param name="peerSettings"></param>
-        /// <param name="scheduler"></param>
         public NodeRpcServerChannelFactory(IRpcMessageCorrelationManager correlationManger,
             IKeySigner keySigner,
             IAuthenticationStrategy authenticationStrategy,
             IPeerIdValidator peerIdValidator,
-            IPeerSettings peerSettings,
+            ISigningContextProvider signingContextProvider,
             IScheduler scheduler = null)
         {
             _scheduler = scheduler ?? Scheduler.Default;
@@ -101,7 +100,7 @@ namespace Catalyst.Core.Lib.Rpc.IO.Transport.Channels
             _authenticationStrategy = authenticationStrategy;
             _keySigner = keySigner;
             _peerIdValidator = peerIdValidator;
-            _peerSettings = peerSettings;
+            _signingContextProvider = signingContextProvider;
             _observableServiceHandler = new ObservableServiceHandler(_scheduler);
         }
 

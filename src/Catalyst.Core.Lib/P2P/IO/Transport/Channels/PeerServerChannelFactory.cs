@@ -32,6 +32,7 @@ using Catalyst.Common.Interfaces.IO.EventLoop;
 using Catalyst.Common.Interfaces.IO.Handlers;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Transport.Channels;
+using Catalyst.Common.Interfaces.Keystore;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.IO.Messaging.Broadcast;
@@ -53,7 +54,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Transport.Channels
         private readonly IBroadcastManager _broadcastManager;
         private readonly IKeySigner _keySigner;
         private readonly IPeerIdValidator _peerIdValidator;
-        private readonly IPeerSettings _peerSettings;
+        private readonly ISigningContextProvider _signingContextProvider;
 
         /// <summary>
         /// 
@@ -62,18 +63,19 @@ namespace Catalyst.Core.Lib.P2P.IO.Transport.Channels
         /// <param name="broadcastManager"></param>
         /// <param name="keySigner"></param>
         /// <param name="peerIdValidator"></param>
+        /// <param name="signingContextProvider"></param>
         public PeerServerChannelFactory(IPeerMessageCorrelationManager messageCorrelationManager,
             IBroadcastManager broadcastManager,
             IKeySigner keySigner,
             IPeerIdValidator peerIdValidator,
-            IPeerSettings peerSettings,
+            ISigningContextProvider signingContextProvider,
             IScheduler scheduler = null)
         {
             _messageCorrelationManager = messageCorrelationManager;
             _broadcastManager = broadcastManager;
             _keySigner = keySigner;
             _peerIdValidator = peerIdValidator;
-            _peerSettings = peerSettings;
+            _signingContextProvider = signingContextProvider;
             _scheduler = scheduler ?? Scheduler.Default;
         }
 
@@ -91,8 +93,8 @@ namespace Catalyst.Core.Lib.P2P.IO.Transport.Channels
                         ),
                         new PeerIdValidationHandler(_peerIdValidator),
                         new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
-                            new ProtocolMessageVerifyHandler(_keySigner, _peerSettings),
-                            new ProtocolMessageSignHandler(_keySigner, _peerSettings)
+                            new ProtocolMessageVerifyHandler(_keySigner, _signingContextProvider),
+                            new ProtocolMessageSignHandler(_keySigner, _signingContextProvider)
                         ),
                         new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
                             new CorrelationHandler<IPeerMessageCorrelationManager>(_messageCorrelationManager),

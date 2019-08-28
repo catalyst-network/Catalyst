@@ -26,6 +26,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Catalyst.Common.Extensions;
+using Catalyst.Common.Interfaces.Keystore;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Rpc.IO.Messaging.Correlation;
@@ -54,8 +55,8 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Transport.Channels
         {
             private readonly List<IChannelHandler> _handlers;
 
-            public TestNodeRpcClientChannelFactory(IKeySigner keySigner, IRpcMessageCorrelationManager correlationManager, IPeerIdValidator peerIdValidator, IPeerSettings peerSettings, TestScheduler testScheduler)
-                : base(keySigner, correlationManager, peerIdValidator, peerSettings, 100, testScheduler)
+            public TestNodeRpcClientChannelFactory(IKeySigner keySigner, IRpcMessageCorrelationManager correlationManager, IPeerIdValidator peerIdValidator, ISigningContextProvider signatureContextProvider, TestScheduler testScheduler)
+                : base(keySigner, correlationManager, peerIdValidator, signatureContextProvider, 100, testScheduler)
             {
                 _handlers = HandlerGenerationFunction();
             }
@@ -73,15 +74,15 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Transport.Channels
             _testScheduler = new TestScheduler();
             _correlationManager = Substitute.For<IRpcMessageCorrelationManager>();
             _keySigner = Substitute.For<IKeySigner>();
-            var peerSettings = Substitute.For<IPeerSettings>();
+            var contextProvider = Substitute.For<ISigningContextProvider>();
 
-            peerSettings.BindAddress.Returns(IPAddress.Parse("127.0.0.1"));
-            peerSettings.Port.Returns(1234);
+            contextProvider.Network.Returns(Network.Devnet);
+            contextProvider.SignatureType.Returns(SignatureType.ProtocolPeer);
 
             var peerIdValidator = Substitute.For<IPeerIdValidator>();
             peerIdValidator.ValidatePeerIdFormat(Arg.Any<PeerId>()).Returns(true);
 
-            _factory = new TestNodeRpcClientChannelFactory(_keySigner, _correlationManager, peerIdValidator, peerSettings, _testScheduler);
+            _factory = new TestNodeRpcClientChannelFactory(_keySigner, _correlationManager, peerIdValidator, contextProvider, _testScheduler);
         }
 
         [Fact]
@@ -126,7 +127,6 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Transport.Channels
                 _keySigner.DidNotReceiveWithAnyArgs().Verify(null, null, null);
 
                 _testScheduler.Start();
-                //await messageStream.WaitForItemsOnDelayedStreamOnTaskPoolSchedulerAsync();
 
                 observer.Received.Count.Should().Be(1);
                 observer.Received.Single().Payload.CorrelationId.ToCorrelationId().Id.Should().Be(correlationId.Id);

@@ -23,10 +23,10 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Reactive.Concurrency;
 using System.Threading.Tasks;
 using Catalyst.Common.Extensions;
+using Catalyst.Common.Interfaces.Keystore;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.IO.Messaging.Broadcast;
@@ -61,9 +61,9 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Transport.Channels
             public TestPeerClientChannelFactory(IKeySigner keySigner,
                 IPeerMessageCorrelationManager correlationManager,
                 IPeerIdValidator peerIdValidator,
-                IPeerSettings peerSettings,
+                ISigningContextProvider signingContextProvider,
                 IScheduler scheduler)
-                : base(keySigner, correlationManager, peerIdValidator, peerSettings)
+                : base(keySigner, correlationManager, peerIdValidator, signingContextProvider)
             {
                 _scheduler = scheduler ?? Scheduler.Default;
                 _handlers = HandlerGenerationFunction();
@@ -85,10 +85,9 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Transport.Channels
             _gossipManager = Substitute.For<IBroadcastManager>();
             _keySigner = Substitute.For<IKeySigner>();
 
-            var peerSettings = Substitute.For<IPeerSettings>();
-            peerSettings.BindAddress.Returns(IPAddress.Parse("127.0.0.1"));
-            peerSettings.Port.Returns(1234);
-            peerSettings.Network.Returns(Network.Devnet);
+            var signingContext = Substitute.For<ISigningContextProvider>();
+            signingContext.Network.Returns(Network.Devnet);
+            signingContext.SignatureType.Returns(SignatureType.ProtocolPeer);
 
             var peerValidator = Substitute.For<IPeerIdValidator>();
             peerValidator.ValidatePeerIdFormat(Arg.Any<PeerId>()).Returns(true);
@@ -97,7 +96,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Transport.Channels
                 _keySigner,
                 _correlationManager,
                 peerValidator,
-                peerSettings,
+                signingContext,
                 _testScheduler);
         }
 
@@ -147,7 +146,6 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Transport.Channels
                 _keySigner.ReceivedWithAnyArgs(1).Verify(null, null, null);
 
                 _testScheduler.Start();
-                //await messageStream.WaitForItemsOnDelayedStreamOnTaskPoolSchedulerAsync();
 
                 observer.Received.Count.Should().Be(1);
                 observer.Received.Single().Payload.CorrelationId.ToCorrelationId().Id.Should().Be(correlationId.Id);
