@@ -1,4 +1,3 @@
-
 #region LICENSE
 
 /**
@@ -22,7 +21,6 @@
 
 #endregion
 
-using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.FileTransfer;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
@@ -41,6 +39,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Catalyst.Common.Types;
 using Catalyst.Core.Lib.Rpc.IO.Observers;
+using Microsoft.Reactive.Testing;
 using Xunit;
 
 namespace Catalyst.Common.UnitTests.IO.Observers
@@ -83,17 +82,19 @@ namespace Catalyst.Common.UnitTests.IO.Observers
         [Fact]
         public async Task HandlerCanSendErrorOnException()
         {
+            var testScheduler = new TestScheduler();
+
             _downloadFileTransferFactory.DownloadChunk(Arg.Any<TransferFileBytesRequest>()).Returns(FileTransferResponseCodeTypes.Error);
 
             var sender = PeerIdentifierHelper.GetPeerIdentifier("sender");
             var requestDto = new DtoFactory().GetDto(new TransferFileBytesRequest().ToProtocolMessage(sender.PeerId)
               , sender, PeerIdentifierHelper.GetPeerIdentifier("recipient"));
 
-            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_context, requestDto.Content);
+            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_context, testScheduler, requestDto.Content);
 
             _observer.StartObserving(messageStream);
 
-            await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
+            testScheduler.Start();
 
             var receivedCalls = _context.Channel.ReceivedCalls().ToList();
             receivedCalls.Count.Should().Be(1);

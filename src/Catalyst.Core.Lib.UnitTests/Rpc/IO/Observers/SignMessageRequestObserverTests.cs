@@ -37,6 +37,7 @@ using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using FluentAssertions;
+using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
 using Xunit;
@@ -70,6 +71,7 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Observers
         [InlineData("Hello&?!1253Catalyst")]
         public async Task SignMessageRequestObserver_Can_Return_SignMessageResponse(string message)
         {
+            var testScheduler = new TestScheduler();
             var messageFactory = new DtoFactory();
 
             var request = messageFactory.GetDto(
@@ -82,11 +84,12 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Observers
                 PeerIdentifierHelper.GetPeerIdentifier("recipient_key")
             );
             
-            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, request.Content.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId));
+            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, testScheduler, request.Content.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId));
             var handler = new SignMessageRequestObserver(PeerIdentifierHelper.GetPeerIdentifier("sender"), _logger, _keySigner);
             handler.StartObserving(messageStream);
 
-            await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
+            testScheduler.Start();
+            //await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
 
             var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();
             receivedCalls.Count.Should().Be(1);

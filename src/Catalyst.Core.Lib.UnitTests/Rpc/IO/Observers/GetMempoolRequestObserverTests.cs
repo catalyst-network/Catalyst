@@ -37,6 +37,7 @@ using Catalyst.Protocol.Transaction;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using FluentAssertions;
+using Microsoft.Reactive.Testing;
 using Nethereum.RLP;
 using NSubstitute;
 using Serilog;
@@ -80,6 +81,7 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Observers
         [MemberData(nameof(MempoolTransactions))]
         public async Task GetMempool_UsingFilledMempool_ShouldSendGetMempoolResponse(List<TransactionBroadcast> mempoolTransactions)
         {
+            var testScheduler = new TestScheduler();
             var mempool = Substitute.For<IMempool>();
             mempool.GetMemPoolContentAsTransactions().Returns(mempoolTransactions);
 
@@ -89,12 +91,14 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Observers
                 PeerIdentifierHelper.GetPeerIdentifier("sender_key")
             );
             
-            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, request.Content.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId));
+            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, testScheduler, request.Content.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId));
             var handler = new GetMempoolRequestObserver(PeerIdentifierHelper.GetPeerIdentifier("sender"), mempool, _logger);
             
             handler.StartObserving(messageStream);
 
-            await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
+            testScheduler.Start();
+
+            //await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
 
             var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();
             receivedCalls.Count.Should().Be(1);

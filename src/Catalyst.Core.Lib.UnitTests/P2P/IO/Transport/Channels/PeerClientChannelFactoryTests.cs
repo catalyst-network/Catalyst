@@ -137,7 +137,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Transport.Channels
                 await _gossipManager.DidNotReceiveWithAnyArgs().BroadcastAsync(null);
                 _keySigner.ReceivedWithAnyArgs(1).Verify(null, null, null);
 
-                await messageStream.WaitForItemsOnDelayedStreamOnTaskPoolSchedulerAsync();
+                //await messageStream.WaitForItemsOnDelayedStreamOnTaskPoolSchedulerAsync();
 
                 observer.Received.Count.Should().Be(1);
                 observer.Received.Single().Payload.CorrelationId.ToCorrelationId().Id.Should().Be(correlationId.Id);

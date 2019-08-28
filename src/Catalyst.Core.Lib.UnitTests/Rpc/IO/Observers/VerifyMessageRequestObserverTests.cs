@@ -36,6 +36,7 @@ using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using FluentAssertions;
+using Microsoft.Reactive.Testing;
 using Nethereum.RLP;
 using NSubstitute;
 using Serilog;
@@ -68,6 +69,7 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Observers
         [InlineData(false)]
         public async Task VerifyMessageRequest_Can_Send_VerifyMessageResponse(bool expectedResponse)
         {
+            var testScheduler = new TestScheduler();
             _keySigner.Verify(default, default, default).ReturnsForAnyArgs(expectedResponse);
 
             var messageFactory = new DtoFactory();
@@ -84,7 +86,7 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Observers
                 PeerIdentifierHelper.GetPeerIdentifier("recipient_key")
             );
             
-            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, 
+            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, testScheduler,
                 request.Content.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId)
             );
             
@@ -95,7 +97,8 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Observers
 
             handler.StartObserving(messageStream);
 
-            await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
+            testScheduler.Start();
+            //await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
 
             var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();
             receivedCalls.Count.Should().Be(1);

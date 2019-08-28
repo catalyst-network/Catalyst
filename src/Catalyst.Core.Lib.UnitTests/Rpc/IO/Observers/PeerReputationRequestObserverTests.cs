@@ -39,6 +39,7 @@ using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using FluentAssertions;
+using Microsoft.Reactive.Testing;
 using Nethereum.RLP;
 using NSubstitute;
 using Serilog;
@@ -106,6 +107,7 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Observers
 
         private async Task<GetPeerReputationResponse> GetPeerReputationTest(string publicKey, string ipAddress)
         {
+            var testScheduler = new TestScheduler();
             var peerRepository = Substitute.For<IPeerRepository>();
 
             var fakePeers = Enumerable.Range(0, 5).Select(i => new Peer
@@ -142,12 +144,13 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Observers
                 PeerIdentifierHelper.GetPeerIdentifier("recipient")
             );
 
-            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, requestMessage.Content.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId));
+            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, testScheduler, requestMessage.Content.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId));
 
             var handler = new PeerReputationRequestObserver(sendPeerIdentifier, _logger, peerRepository);
             handler.StartObserving(messageStream);
 
-            await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
+            testScheduler.Start();
+            //await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
 
             var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();
             receivedCalls.Count.Should().Be(1);

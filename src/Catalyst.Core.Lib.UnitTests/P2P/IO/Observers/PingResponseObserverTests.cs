@@ -34,6 +34,7 @@ using Catalyst.Core.Lib.P2P.IO.Observers;
 using Catalyst.Protocol.IPPN;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
+using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
 using Xunit;
@@ -54,6 +55,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Observers
         [Fact]
         public async void Observer_Can_Process_PingResponse_Correctly()
         {
+            var testScheduler = new TestScheduler();
             var response = new DtoFactory().GetDto(new PingResponse(),
                 PeerIdentifierHelper.GetPeerIdentifier("sender"),
                 PeerIdentifierHelper.GetPeerIdentifier("recipient"),
@@ -62,12 +64,15 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Observers
             
             var pingResponseObserver = Substitute.For<IObserver<IPeerClientMessageDto>>();
 
-            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext,
+            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, testScheduler,
                 response.Content.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId,
                     response.CorrelationId));
                 
             _observer.StartObserving(messageStream);
-            await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
+
+            testScheduler.Start();
+
+            //await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
 
             using (_observer.MessageStream.SubscribeOn(ImmediateScheduler.Instance)
                .Subscribe(pingResponseObserver.OnNext))

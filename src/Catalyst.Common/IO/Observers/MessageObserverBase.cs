@@ -26,7 +26,6 @@ using Catalyst.Common.Interfaces.IO.Observers;
 using Catalyst.Protocol.Common;
 using Serilog;
 using System;
-using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 
 namespace Catalyst.Common.IO.Observers
@@ -53,7 +52,6 @@ namespace Catalyst.Common.IO.Observers
             MessageSubscription = messageStream
                .Where(m => m.Payload?.TypeUrl != null
                  && m.Payload.TypeUrl == _filterMessageType)
-               .SubscribeOn(NewThreadScheduler.Default)
                .Subscribe(this);
         }
 

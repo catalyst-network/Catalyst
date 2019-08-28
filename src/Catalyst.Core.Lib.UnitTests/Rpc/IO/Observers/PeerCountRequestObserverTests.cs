@@ -39,6 +39,7 @@ using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using FluentAssertions;
+using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
 using Xunit;
@@ -50,6 +51,8 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Observers
     /// </summary>
     public sealed class PeerCountRequestObserverTests
     {
+        private readonly TestScheduler _testScheduler;
+
         /// <summary>The logger</summary>
         private readonly ILogger _logger;
 
@@ -64,6 +67,7 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Observers
         /// </summary>
         public PeerCountRequestObserverTests()
         {
+            _testScheduler = new TestScheduler();
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
             var fakeChannel = Substitute.For<IChannel>();
@@ -105,12 +109,13 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Observers
                 PeerIdentifierHelper.GetPeerIdentifier("recipient")
             );
 
-            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, requestMessage.Content.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId));
+            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, _testScheduler, requestMessage.Content.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId));
 
             var handler = new PeerCountRequestObserver(sendPeerIdentifier, peerRepository, _logger);
             handler.StartObserving(messageStream);
 
-            await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
+            _testScheduler.Start();
+            //await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
 
             var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();
             receivedCalls.Count.Should().Be(1);

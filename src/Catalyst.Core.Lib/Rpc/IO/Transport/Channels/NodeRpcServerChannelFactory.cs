@@ -24,6 +24,7 @@
 using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
@@ -46,6 +47,7 @@ namespace Catalyst.Core.Lib.Rpc.IO.Transport.Channels
 {
     public class NodeRpcServerChannelFactory : TcpServerChannelFactory
     {
+        private readonly IScheduler _scheduler;
         private readonly IRpcMessageCorrelationManager _correlationManger;
         private readonly IAuthenticationStrategy _authenticationStrategy;
         private readonly IKeySigner _keySigner;
@@ -80,24 +82,27 @@ namespace Catalyst.Core.Lib.Rpc.IO.Transport.Channels
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="correlationManger"></param>
         /// <param name="keySigner"></param>
         /// <param name="authenticationStrategy"></param>
         /// <param name="peerIdValidator"></param>
+        /// <param name="peerSettings"></param>
+        /// <param name="scheduler"></param>
         public NodeRpcServerChannelFactory(IRpcMessageCorrelationManager correlationManger,
             IKeySigner keySigner,
             IAuthenticationStrategy authenticationStrategy,
             IPeerIdValidator peerIdValidator,
-            IPeerSettings peerSettings)
+            IPeerSettings peerSettings,
+            IScheduler scheduler)
         {
+            _scheduler = scheduler ?? Scheduler.Default;
             _correlationManger = correlationManger;
             _authenticationStrategy = authenticationStrategy;
             _keySigner = keySigner;
             _peerIdValidator = peerIdValidator;
             _peerSettings = peerSettings;
-            _observableServiceHandler = new ObservableServiceHandler();
+            _observableServiceHandler = new ObservableServiceHandler(_scheduler);
         }
 
         /// <param name="handlerEventLoopGroupFactory"></param>
@@ -110,7 +115,7 @@ namespace Catalyst.Core.Lib.Rpc.IO.Transport.Channels
             X509Certificate2 certificate = null)
         {
             var channel = await Bootstrap(handlerEventLoopGroupFactory, targetAddress, targetPort, certificate);
-            
+
             var messageStream = _observableServiceHandler.MessageStream;
 
             return new ObservableChannel(messageStream

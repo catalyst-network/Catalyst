@@ -39,6 +39,7 @@
     <ItemGroup>
         <ProjectReference Include="..\Catalyst.Common\Catalyst.Common.csproj" />
         <ProjectReference Include="..\Catalyst.Node.Rpc.Client\Catalyst.Node.Rpc.Client.csproj" />
+        <ProjectReference Include="..\Catalyst.TestUtils\Catalyst.TestUtils.csproj" />
     </ItemGroup>
     <ItemGroup>
         <None Update="Config\*.json">

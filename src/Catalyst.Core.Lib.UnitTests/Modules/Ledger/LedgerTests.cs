@@ -30,6 +30,7 @@ using Catalyst.Common.Interfaces.Modules.Mempool;
 using Catalyst.Common.Interfaces.Repository;
 using Catalyst.Common.Modules.Ledger.Models;
 using Catalyst.TestUtils;
+using Microsoft.Reactive.Testing;
 using Multiformats.Hash.Algorithms;
 using NSubstitute;
 using Serilog;
@@ -40,6 +41,7 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Ledger
 {
     public sealed class LedgerTests : IDisposable
     {
+        private readonly TestScheduler _testScheduler;
         private LedgerService _ledger;
         private readonly IAccountRepository _fakeRepository;
         private readonly IDeltaHashProvider _deltaHashProvider;
@@ -48,6 +50,7 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Ledger
 
         public LedgerTests()
         {
+            _testScheduler = new TestScheduler();
             _fakeRepository = Substitute.For<IAccountRepository>();
 
             _logger = Substitute.For<ILogger>();
@@ -77,11 +80,12 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Ledger
             var hash2 = "update again".ComputeUtf8Multihash(blake2B256);
             var updates = new[] {hash1, hash2};
 
-            _deltaHashProvider.DeltaHashUpdates.Returns(updates.ToObservable());
+            _deltaHashProvider.DeltaHashUpdates.Returns(updates.ToObservable(_testScheduler));
 
             _ledger = new LedgerService(_fakeRepository, _deltaHashProvider, _mempool, _logger);
 
-            await _deltaHashProvider.DeltaHashUpdates.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
+            _testScheduler.Start();
+            //await _deltaHashProvider.DeltaHashUpdates.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
 
             _mempool.ReceivedWithAnyArgs(updates.Length).Delete(default);
         }

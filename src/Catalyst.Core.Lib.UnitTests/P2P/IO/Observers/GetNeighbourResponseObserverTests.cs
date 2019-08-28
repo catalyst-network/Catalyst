@@ -35,6 +35,7 @@ using Catalyst.Protocol.IPPN;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using Google.Protobuf;
+using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
 using Xunit;
@@ -55,6 +56,8 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Observers
         [Fact]
         public async void Observer_Can_Process_GetNeighbourResponse_Correctly()
         {
+            var testScheduler = new TestScheduler();
+
             var peers = new[]
             {
                 PeerIdHelper.GetPeerId(),
@@ -76,12 +79,14 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Observers
             
             var peerNeighborsResponseObserver = Substitute.For<IObserver<IPeerClientMessageDto>>();
 
-            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext,
+            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, testScheduler,
                 response.Content.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId,
                     response.CorrelationId));
                 
             _observer.StartObserving(messageStream);
-            await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
+
+            testScheduler.Start();
+            //await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
 
             using (_observer.MessageStream.SubscribeOn(TaskPoolScheduler.Default)
                .Subscribe(peerNeighborsResponseObserver.OnNext))
