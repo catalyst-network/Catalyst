@@ -55,7 +55,6 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Transport.Channels
     {
         public sealed class TestPeerClientChannelFactory : PeerClientChannelFactory
         {
-            private readonly IScheduler _scheduler;
             private readonly List<IChannelHandler> _handlers;
 
             public TestPeerClientChannelFactory(IKeySigner keySigner,
@@ -63,9 +62,8 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Transport.Channels
                 IPeerIdValidator peerIdValidator,
                 ISigningContextProvider signingContextProvider,
                 IScheduler scheduler)
-                : base(keySigner, correlationManager, peerIdValidator, signingContextProvider)
+                : base(keySigner, correlationManager, peerIdValidator, signingContextProvider, scheduler)
             {
-                _scheduler = scheduler ?? Scheduler.Default;
                 _handlers = HandlerGenerationFunction();
             }
 
