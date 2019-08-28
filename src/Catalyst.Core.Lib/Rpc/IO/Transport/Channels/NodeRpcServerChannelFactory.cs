@@ -94,7 +94,7 @@ namespace Catalyst.Core.Lib.Rpc.IO.Transport.Channels
             IAuthenticationStrategy authenticationStrategy,
             IPeerIdValidator peerIdValidator,
             IPeerSettings peerSettings,
-            IScheduler scheduler)
+            IScheduler scheduler = null)
         {
             _scheduler = scheduler ?? Scheduler.Default;
             _correlationManger = correlationManger;

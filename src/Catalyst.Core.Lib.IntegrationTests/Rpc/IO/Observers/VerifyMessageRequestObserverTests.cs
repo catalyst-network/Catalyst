@@ -40,6 +40,7 @@ using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using FluentAssertions;
+using Microsoft.Reactive.Testing;
 using Nethereum.Hex.HexConvertors.Extensions;
 using Nethereum.RLP;
 using NSubstitute;
@@ -52,6 +53,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.Rpc.IO.Observers
 {
     public sealed class VerifyMessageRequestObserverTests : ConfigFileBasedTest
     {
+        private readonly TestScheduler _testScheduler;
         private readonly ILifetimeScope _scope;
         private readonly ILogger _logger;
         private readonly IKeySigner _keySigner;
@@ -65,6 +67,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.Rpc.IO.Observers
             Path.Combine(Constants.ConfigSubFolder, Constants.ShellNodesConfigFile),
         }, output)
         {
+            _testScheduler = new TestScheduler();
             ContainerProvider.ConfigureContainerBuilder();
 
             SocketPortHelper.AlterConfigurationToGetUniquePort(ContainerProvider.ConfigurationRoot, CurrentTestName);
@@ -110,7 +113,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.Rpc.IO.Observers
                 PeerIdentifierHelper.GetPeerIdentifier("recipient_key")
             );
             
-            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, 
+            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, _testScheduler,
                 request.Content.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId)
             );
             
@@ -121,7 +124,8 @@ namespace Catalyst.Core.Lib.IntegrationTests.Rpc.IO.Observers
 
             handler.StartObserving(messageStream);
 
-            await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
+            _testScheduler.Start();
+            //await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
 
             var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();
             receivedCalls.Count.Should().Be(1);
@@ -154,11 +158,12 @@ namespace Catalyst.Core.Lib.IntegrationTests.Rpc.IO.Observers
                 PeerIdentifierHelper.GetPeerIdentifier("recipient_key")
             );
 
-            var signMessageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, signRequest.Content.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId));
+            var signMessageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, _testScheduler, signRequest.Content.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId));
             var signHandler = new SignMessageRequestObserver(PeerIdentifierHelper.GetPeerIdentifier("sender"), _logger, _keySigner);
             signHandler.StartObserving(signMessageStream);
 
-            await signMessageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
+            _testScheduler.Start();
+            //await signMessageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
 
             var receivedCallsSign = _fakeContext.Channel.ReceivedCalls().ToList();
             receivedCallsSign.Count.Should().Be(1);
@@ -184,7 +189,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.Rpc.IO.Observers
                 PeerIdentifierHelper.GetPeerIdentifier("recipient_key")
             );
             
-            var verifyMessageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, 
+            var verifyMessageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, _testScheduler,
                 verifyRequest.Content.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId)
             );
             
@@ -195,7 +200,8 @@ namespace Catalyst.Core.Lib.IntegrationTests.Rpc.IO.Observers
 
             verifyHandler.StartObserving(verifyMessageStream);
 
-            await verifyMessageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
+            _testScheduler.Start();
+            //await verifyMessageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
 
             var receivedCallsVerify = _fakeContext.Channel.ReceivedCalls().ToList();
 
