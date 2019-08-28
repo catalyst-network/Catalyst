@@ -102,6 +102,7 @@ namespace Catalyst.Core.Lib.Modules.Mempool
         public bool SaveMempoolDocument(IMempoolDocument mempoolDocument)
         {
             Guard.Argument(mempoolDocument, nameof(mempoolDocument)).NotNull();
+            Guard.Argument(mempoolDocument.Transaction, nameof(mempoolDocument.Transaction)).NotNull();
 
             try
             {
