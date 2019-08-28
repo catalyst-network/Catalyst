@@ -26,7 +26,6 @@ using Catalyst.Cli.Commands;
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.Cli.Commands;
 using Catalyst.Common.Interfaces.Cryptography;
-using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.Registry;
 using Catalyst.Common.Interfaces.Rpc;
 using FluentAssertions;
@@ -44,7 +43,6 @@ namespace Catalyst.Cli.UnitTests
             var configRoot = Substitute.For<IConfigurationRoot>();
             var logger = Substitute.For<ILogger>();
             var userOutput = Substitute.For<IUserOutput>();
-            var dtoFactory = Substitute.For<IDtoFactory>();
             var nodeRpcClientFactory = Substitute.For<INodeRpcClientFactory>();
             var certificateStore = Substitute.For<ICertificateStore>();
             var keyRegistry = Substitute.For<IKeyRegistry>();
@@ -55,7 +53,7 @@ namespace Catalyst.Cli.UnitTests
             cliSettings.GetSection("BindAddress").Value.Returns("127.0.0.1");
             cliSettings.GetSection("Port").Value.Returns("5632");
 
-            _commandContext = new CommandContext(configRoot, logger, userOutput, dtoFactory,
+            _commandContext = new CommandContext(configRoot, logger, userOutput,
                 nodeRpcClientFactory, certificateStore, keyRegistry);
         }
 

@@ -84,14 +84,6 @@
             "instanceScope": "singleinstance"
         },
         {
-            "type": "Catalyst.Common.IO.Messaging.Dto.DtoFactory, Catalyst.Common",
-            "services": [
-                {
-                    "type": "Catalyst.Common.Interfaces.IO.Messaging.Dto.IDtoFactory, Catalyst.Common"
-                }
-            ]
-        },
-        {
             "type": "Catalyst.Node.Rpc.Client.IO.Transport.Channels.NodeRpcClientChannelFactory, Catalyst.Node.Rpc.Client",
             "services": [
                 {
@@ -386,6 +378,18 @@
             "parameters": {
                 "timeToLiveInMs": 8000
             }
+        },
+        {
+            "type": "Catalyst.Common.Keystore.SigningContextProvider, Catalyst.Common",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.Keystore.ISigningContextProvider, Catalyst.Common"
+                }
+            ],
+            "properties": {
+                "Network": "Mainnet",
+                "SignatureType": "ProtocolPeer"
+            }
         }
     ],
     "modules": [
@@ -403,7 +407,7 @@
             "parameters": {
                 "apiBindingAddress": "http://*:5005",
                 "controllerModules": [ "Catalyst.Modules.Lib" ],
-                "addSwagger":  true 
+                "addSwagger": true
             }
         },
         {

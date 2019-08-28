@@ -563,14 +563,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
                     });
 
                     await walker.DiscoveryStream.WaitForItemsOnDelayedStreamOnTaskPoolSchedulerAsync();
-                    
-                    walker.DtoFactory
-                       .Received(Constants.AngryPirate)
-                       .GetDto(
-                            Arg.Any<ProtocolMessage>(),
-                            Arg.Any<IPeerIdentifier>()
-                        );
-                    
+
                     walker.PeerClient
                        .Received(Constants.AngryPirate)
                        .SendMessage(Arg.Any<IMessageDto<ProtocolMessage>>());

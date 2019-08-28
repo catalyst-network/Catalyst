@@ -45,7 +45,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Messaging.Dto
             var pingRequest = new PingRequest();
             var protocolMessage =
                 pingRequest.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("im_a_sender").PeerId);
-            var pingRequestDto = new DtoFactory().GetDto(protocolMessage,
+            var pingRequestDto = new MessageDto(protocolMessage,
                 PeerIdentifierHelper.GetPeerIdentifier("im_a_recipient")
             );
             
@@ -62,7 +62,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Messaging.Dto
             var pingResponse = new PingResponse();
             var protocolMessage =
                 pingResponse.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("im_a_sender").PeerId, CorrelationId.GenerateCorrelationId());
-            var pingResponseDto = new DtoFactory().GetDto(protocolMessage,
+            var pingResponseDto = new MessageDto(protocolMessage,
                 PeerIdentifierHelper.GetPeerIdentifier("im_a_recipient")
             );
 
@@ -76,7 +76,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Messaging.Dto
         [Fact]
         public void Can_Produce_a_Valid_Broadcast_Dto()
         {
-            var transactionDto = new DtoFactory().GetDto(
+            var transactionDto = new MessageDto(
                 new TransactionBroadcast().ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("im_a_sender").PeerId),
                 PeerIdentifierHelper.GetPeerIdentifier("im_a_recipient")
             );

@@ -21,10 +21,8 @@
 
 #endregion
 
-using System;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.Types;
 using Catalyst.Protocol.Common;
 
 namespace Catalyst.Common.IO.Messaging.Dto
@@ -32,67 +30,18 @@ namespace Catalyst.Common.IO.Messaging.Dto
     /// <summary>
     /// The base class to handle building of ProtocolMessage messages
     /// </summary>
-    public sealed class DtoFactory : IDtoFactory
-    {
-        /// <summary>Gets the message.</summary>
-        /// <param name="message">Should be an IMessage with type.</param>
-        /// <param name="recipientPeerIdentifier">The recipients PeerIdentifier</param>
-        /// <returns>IMessageDto</returns>
-        public IMessageDto<ProtocolMessage> GetDto(ProtocolMessage message,
-            IPeerIdentifier recipientPeerIdentifier)
-        {
-            if (message.TypeUrl.EndsWith(MessageTypes.Request.Name))
-            {
-                return BuildRequestMessage(message, recipientPeerIdentifier);
-            }
-            
-            if (message.TypeUrl.EndsWith(MessageTypes.Response.Name))
-            {
-                return BuildResponseMessage(message, recipientPeerIdentifier);   
-            }
-
-            if (message.TypeUrl.EndsWith(MessageTypes.Broadcast.Name))
-            {
-                return BuildBroadcastMessage(message, recipientPeerIdentifier);
-            }
-
-            throw new ArgumentException("Cannot resolve message type");
-        }
-
-        /// <summary>Builds the tell message.</summary>
-        /// <param name="message">The dto.</param>
-        /// <param name="recipientPeerIdentifier"></param>
-        /// <returns>ProtocolMessage message</returns>
-        private IMessageDto<ProtocolMessage> BuildResponseMessage(ProtocolMessage message,
-            IPeerIdentifier recipientPeerIdentifier)
-        {
-            return new MessageDto(message,
-                recipientPeerIdentifier
-            );
-        }
-
-        /// <summary>Builds the ask message.</summary>
-        /// <param name="message">The dto.</param>
-        /// <param name="recipientPeerIdentifier"></param>
-        /// <returns>ProtocolMessage message</returns>
-        private IMessageDto<ProtocolMessage> BuildRequestMessage(ProtocolMessage message,
-            IPeerIdentifier recipientPeerIdentifier)
-        {
-            return new MessageDto(message,
-                recipientPeerIdentifier
-            );
-        }
-
-        /// <summary>Builds the gossip message.</summary>
-        /// <param name="message">The dto.</param>
-        /// <param name="recipientPeerIdentifier"></param>
-        /// <returns>ProtocolMessage message</returns>
-        private IMessageDto<ProtocolMessage> BuildBroadcastMessage(ProtocolMessage message,
-            IPeerIdentifier recipientPeerIdentifier)
-        {
-            return new MessageDto(message,
-                recipientPeerIdentifier
-            );
-        }
-    }
+    //public sealed class DtoFactory : IDtoFactory
+    //{
+    //    /// <summary>Gets the message.</summary>
+    //    /// <param name="message">Should be an IMessage with type.</param>
+    //    /// <param name="recipientPeerIdentifier">The recipients PeerIdentifier</param>
+    //    /// <returns>IMessageDto</returns>
+    //    public IMessageDto<ProtocolMessage> GetDto(ProtocolMessage message,
+    //        IPeerIdentifier recipientPeerIdentifier)
+    //    {
+    //        return new MessageDto(message,
+    //            recipientPeerIdentifier
+    //        );
+    //    }
+    //}
 }

@@ -39,6 +39,7 @@ using Catalyst.Common.Interfaces.P2P.IO;
 using Catalyst.Common.Interfaces.P2P.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.P2P.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.Util;
+using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.P2P;
 using Catalyst.Common.P2P.Discovery;
 using Catalyst.Common.P2P.Models;
@@ -73,7 +74,6 @@ namespace Catalyst.Core.Lib.P2P.Discovery
             IDns dns,
             IPeerSettings peerSettings,
             IPeerClient peerClient,
-            IDtoFactory dtoFactory,
             IPeerMessageCorrelationManager peerMessageCorrelationManager,
             ICancellationTokenProvider cancellationTokenProvider,
             IEnumerable<IPeerClientObservable> peerClientObservables,
@@ -88,7 +88,6 @@ namespace Catalyst.Core.Lib.P2P.Discovery
             _cancellationTokenProvider = cancellationTokenProvider;
 
             PeerClient = peerClient;
-            DtoFactory = dtoFactory;
             PeerRepository = peerRepository;
             PeerDiscoveryBurnIn = peerDiscoveryBurnIn;
             _millisecondsTimeout = millisecondsTimeout;
@@ -166,7 +165,6 @@ namespace Catalyst.Core.Lib.P2P.Discovery
         public IHastingsCareTaker HastingsCareTaker { get; }
 
         public IPeerClient PeerClient { get; }
-        public IDtoFactory DtoFactory { get; }
         public IObservable<IPeerClientMessageDto> DiscoveryStream { get; private set; }
 
         public void Dispose() { Dispose(true); }
@@ -277,7 +275,7 @@ namespace Catalyst.Core.Lib.P2P.Discovery
 
             StepProposal.RestoreMemento(new HastingsMemento(newCandidate, new Neighbours()));
 
-            var peerNeighbourRequestDto = DtoFactory.GetDto(new PeerNeighborsRequest().ToProtocolMessage(_ownNode.PeerId),
+            var peerNeighbourRequestDto = new MessageDto(new PeerNeighborsRequest().ToProtocolMessage(_ownNode.PeerId),
                 StepProposal.Peer
             );
 
@@ -317,7 +315,7 @@ namespace Catalyst.Core.Lib.P2P.Discovery
 
             StepProposal.RestoreMemento(new HastingsMemento(newCandidate, new Neighbours()));
 
-            var peerNeighbourRequestDto = DtoFactory.GetDto(new PeerNeighborsRequest().ToProtocolMessage(_ownNode.PeerId, StepProposal.PnrCorrelationId),
+            var peerNeighbourRequestDto = new MessageDto(new PeerNeighborsRequest().ToProtocolMessage(_ownNode.PeerId, StepProposal.PnrCorrelationId),
                 StepProposal.Peer
             );
 
@@ -422,7 +420,7 @@ namespace Catalyst.Core.Lib.P2P.Discovery
                 {
                     try
                     {
-                        var pingRequestDto = DtoFactory.GetDto(new PingRequest().ToProtocolMessage(_ownNode.PeerId, n.DiscoveryPingCorrelationId),
+                        var pingRequestDto = new MessageDto(new PingRequest().ToProtocolMessage(_ownNode.PeerId, n.DiscoveryPingCorrelationId),
                             n.PeerIdentifier);
 
                         PeerClient.SendMessage(pingRequestDto);

@@ -70,8 +70,6 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Observers
         {
             _keySigner.Verify(default, default, default).ReturnsForAnyArgs(expectedResponse);
 
-            var messageFactory = new DtoFactory();
-
             var verifyMessageRequest = new VerifyMessageRequest
             {
                 Message = _message.ToUtf8ByteString(),

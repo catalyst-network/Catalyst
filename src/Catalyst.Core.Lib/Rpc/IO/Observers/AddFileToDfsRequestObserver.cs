@@ -161,7 +161,7 @@ namespace Catalyst.Core.Lib.Rpc.IO.Observers
             var message = ReturnResponse(fileTransferInformation, await addFileResponseCode);
 
             // Send Response
-            var responseMessage = new DtoFactory().GetDto(
+            var responseMessage = new MessageDto(
                 message.ToProtocolMessage(PeerIdentifier.PeerId, fileTransferInformation.CorrelationId),
                 fileTransferInformation.RecipientIdentifier
             );

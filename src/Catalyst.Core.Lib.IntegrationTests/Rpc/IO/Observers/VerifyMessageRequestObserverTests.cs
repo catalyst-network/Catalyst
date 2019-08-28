@@ -140,7 +140,6 @@ namespace Catalyst.Core.Lib.IntegrationTests.Rpc.IO.Observers
 
             var message = "something something something";
 
-            var messageFactory = new DtoFactory();
             var signMessageRequest = new SignMessageRequest
             {
                 Message = message.ToUtf8ByteString(),
@@ -149,7 +148,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.Rpc.IO.Observers
             var protocolMessage =
                 signMessageRequest.ToProtocolMessage(sender.PeerId);
 
-            var signRequest = messageFactory.GetDto(protocolMessage,
+            var signRequest = new MessageDto(protocolMessage,
                 PeerIdentifierHelper.GetPeerIdentifier("recipient_key")
             );
 

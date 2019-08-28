@@ -53,9 +53,6 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
     /// <seealso cref="IBroadcastManager" />
     public sealed class BroadcastManager : IBroadcastManager
     {
-        /// <summary>The message factory</summary>
-        private readonly IDtoFactory _dtoFactory;
-
         /// <summary>The peers</summary>
         private readonly IPeerRepository _peers;
 
@@ -106,7 +103,6 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
             _peerClient = peerClient;
             _signer = signer;
             _incomingBroadcastSignatureDictionary = new ConcurrentDictionary<ICorrelationId, ProtocolMessageSigned>();
-            _dtoFactory = new DtoFactory();
             _entryOptions = () => new MemoryCacheEntryOptions()
                .AddExpirationToken(new CancellationChangeToken(new CancellationTokenSource(TimeSpan.FromMinutes(10)).Token));
         }
@@ -201,7 +197,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
                     _logger.Verbose("Broadcasting message {message}", message);
                     var protocolMessage = message.Message;
                     protocolMessage.PeerId = peerIdentifier.PeerId;
-                    _peerClient.SendMessage(_dtoFactory.GetDto(
+                    _peerClient.SendMessage(new MessageDto(
                         protocolMessage,
                         peerIdentifier)
                     );

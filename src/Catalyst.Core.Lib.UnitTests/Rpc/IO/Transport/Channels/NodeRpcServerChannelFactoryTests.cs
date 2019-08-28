@@ -26,6 +26,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Catalyst.Common.Extensions;
+using Catalyst.Common.Interfaces.Keystore;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Rpc.Authentication;
@@ -58,8 +59,8 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Transport.Channels
                 IKeySigner keySigner,
                 IAuthenticationStrategy authenticationStrategy,
                 IPeerIdValidator peerIdValidator,
-                IPeerSettings peerSettings)
-                : base(correlationManager, keySigner, authenticationStrategy, peerIdValidator, peerSettings)
+                ISigningContextProvider signingContextProvider)
+                : base(correlationManager, keySigner, authenticationStrategy, peerIdValidator, signingContextProvider)
             {
                 _handlers = HandlerGenerationFunction();
             }
@@ -76,16 +77,13 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Transport.Channels
             _correlationManager = Substitute.For<IRpcMessageCorrelationManager>();
             _keySigner = Substitute.For<IKeySigner>();
 
-            var peerSettings = Substitute.For<IPeerSettings>();
-
-            peerSettings.BindAddress.Returns(IPAddress.Parse("127.0.0.1"));
+            var peerSettings = Substitute.For<ISigningContextProvider>();
             peerSettings.Network.Returns(Network.Devnet);
-            
+            peerSettings.SignatureType.Returns(SignatureType.ProtocolPeer);
+
             var authenticationStrategy = Substitute.For<IAuthenticationStrategy>();
             authenticationStrategy.Authenticate(Arg.Any<IPeerIdentifier>()).Returns(true);
-
-            peerSettings.Port.Returns(1234);
-
+            
             var peerIdValidator = Substitute.For<IPeerIdValidator>();
             peerIdValidator.ValidatePeerIdFormat(Arg.Any<PeerId>()).Returns(true);
             _factory = new TestNodeRpcServerChannelFactory(

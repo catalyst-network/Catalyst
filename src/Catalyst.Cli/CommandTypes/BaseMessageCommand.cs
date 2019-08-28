@@ -31,6 +31,7 @@ using Catalyst.Common.Interfaces.Cli.Options;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Rpc;
 using Catalyst.Common.IO.Events;
+using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.P2P;
 using Catalyst.Protocol;
 using Google.Protobuf;
@@ -77,7 +78,7 @@ namespace Catalyst.Cli.CommandTypes
                 return;
             }
 
-            var messageDto = CommandContext.DtoFactory.GetDto(
+            var messageDto = new MessageDto(
                 message.ToProtocolMessage(SenderPeerIdentifier.PeerId),
                 RecipientPeerIdentifier);
             Target.SendMessage(messageDto);

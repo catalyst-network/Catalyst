@@ -21,18 +21,14 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Protocol.Common;
 
-namespace Catalyst.Common.Interfaces.IO.Messaging.Dto
+namespace Catalyst.Common.Interfaces.Keystore
 {
-    //public interface IDtoFactory
-    //{
-    //    /// <summary>Gets the message.</summary>
-    //    /// <param name="messageDto">The message.</param>
-    //    /// <param name="recipientPeerIdentifier"></param>
-    //    /// <returns>ProtocolMessage message</returns>
-    //    IMessageDto<ProtocolMessage> GetDto(ProtocolMessage messageDto,
-    //        IPeerIdentifier recipientPeerIdentifier);
-    //}
+    public interface ISigningContextProvider
+    {
+        Protocol.Common.Network Network { get; set; }
+
+        SignatureType SignatureType { get; set; }
+    }
 }

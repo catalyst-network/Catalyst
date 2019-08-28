@@ -86,7 +86,7 @@ namespace Catalyst.Common.UnitTests.IO.Observers
             _downloadFileTransferFactory.DownloadChunk(Arg.Any<TransferFileBytesRequest>()).Returns(FileTransferResponseCodeTypes.Error);
 
             var sender = PeerIdentifierHelper.GetPeerIdentifier("sender");
-            var requestDto = new DtoFactory().GetDto(new TransferFileBytesRequest().ToProtocolMessage(sender.PeerId)
+            var requestDto = new MessageDto(new TransferFileBytesRequest().ToProtocolMessage(sender.PeerId)
               , PeerIdentifierHelper.GetPeerIdentifier("recipient"));
 
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_context, requestDto.Content);

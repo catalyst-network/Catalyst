@@ -23,6 +23,7 @@
 
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
+using Catalyst.Common.Interfaces.Keystore;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Handlers;
@@ -45,7 +46,7 @@ namespace Catalyst.Common.UnitTests.IO.Handlers
         private readonly IMessageDto<ProtocolMessage> _dto;
         private readonly IKeySigner _keySigner;
         private readonly ISignature _signature;
-        private readonly SigningContext _signingContext;
+        private readonly ISigningContextProvider _signatureContextProvider;
         private readonly IPeerSettings _peerSettings;
 
         public ProtocolMessageSignHandlerTests()
@@ -54,12 +55,16 @@ namespace Catalyst.Common.UnitTests.IO.Handlers
             _keySigner = Substitute.For<IKeySigner>();
             _signature = Substitute.For<ISignature>();
             _peerSettings = Substitute.For<IPeerSettings>();
-            
+            _signatureContextProvider = Substitute.For<ISigningContextProvider>();
+
             _signature.SignatureBytes.Returns(ByteUtil.GenerateRandomByteArray(FFI.SignatureLength));
             _signature.PublicKeyBytes.Returns(ByteUtil.GenerateRandomByteArray(FFI.PublicKeyLength));
 
             _peerSettings.Network.Returns(Protocol.Common.Network.Devnet);
-            _dto = new DtoFactory().GetDto(new PingRequest().ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId),
+            _signatureContextProvider.Network.Returns(Protocol.Common.Network.Devnet);
+            _signatureContextProvider.SignatureType.Returns(SignatureType.ProtocolPeer);
+
+            _dto = new MessageDto(new PingRequest().ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId),
                 PeerIdentifierHelper.GetPeerIdentifier("recipient")
             );
         }
@@ -67,7 +72,7 @@ namespace Catalyst.Common.UnitTests.IO.Handlers
         [Fact]
         public void CantSignMessage()
         {
-            var protocolMessageSignHandler = new ProtocolMessageSignHandler(_keySigner, _peerSettings);
+            var protocolMessageSignHandler = new ProtocolMessageSignHandler(_keySigner, _signatureContextProvider);
 
             protocolMessageSignHandler.WriteAsync(_fakeContext, new object());
 
@@ -80,7 +85,7 @@ namespace Catalyst.Common.UnitTests.IO.Handlers
         {
             _keySigner.Sign(Arg.Any<byte[]>(), default).ReturnsForAnyArgs(_signature);
 
-            var protocolMessageSignHandler = new ProtocolMessageSignHandler(_keySigner, _peerSettings);
+            var protocolMessageSignHandler = new ProtocolMessageSignHandler(_keySigner, _signatureContextProvider);
 
             protocolMessageSignHandler.WriteAsync(_fakeContext, _dto);
             
