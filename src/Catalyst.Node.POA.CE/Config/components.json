@@ -399,24 +399,6 @@
                 "Network": "Mainnet",
                 "SignatureType": "ProtocolPeer"
             }
-        },
-        {
-            "type": "Catalyst.Common.IO.Events.TransactionReceivedEvent, Catalyst.Common",
-            "service": [
-                {
-                    "type": "Catalyst.Common.Interfaces.IO.Events.ITransactionReceivedEvent, Catalyst.Common"
-                }
-            ],
-            "instanceScope": "singleinstance"
-        },
-        {
-            "type": "Catalyst.Protocol.Validators.TransactionValidator, Catalyst.Protocol",
-            "service": [
-                {
-                    "type": "Catalyst.Protocol.Interfaces.Validators.ITransactionValidator, Catalyst.Protocol"
-                }
-            ],
-            "instanceScope": "singleinstance"
         }
     ],
     "modules": [
