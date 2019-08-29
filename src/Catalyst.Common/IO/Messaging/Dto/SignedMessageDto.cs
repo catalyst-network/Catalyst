@@ -28,16 +28,16 @@ using Catalyst.Protocol.Common;
 
 namespace Catalyst.Common.IO.Messaging.Dto
 {
-    public sealed class MessageDto : BaseMessageDto<ProtocolMessage>
+    public sealed class SignedMessageDto : BaseMessageDto<ProtocolMessageSigned>
     {
         /// <summary>
         ///     Data transfer object to wrap up all parameters for sending protocol messages into a MessageFactors.
         /// </summary>
         /// <param name="content"></param>
         /// <param name="recipientPeerIdentifier"></param>
-        public MessageDto(ProtocolMessage content,
+        public SignedMessageDto(ProtocolMessageSigned content,
             IPeerIdentifier recipientPeerIdentifier)
-            : base(content, new PeerIdentifier(content.PeerId), recipientPeerIdentifier,
-                new CorrelationId(content.CorrelationId)) { }
+            : base(content, new PeerIdentifier(content.Message.PeerId), recipientPeerIdentifier,
+                new CorrelationId(content.Message.CorrelationId)) { }
     }
 }

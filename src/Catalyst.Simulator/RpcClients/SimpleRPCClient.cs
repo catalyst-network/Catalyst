@@ -31,6 +31,7 @@ using Catalyst.Common.Extensions;
 using Catalyst.Common.FileSystem;
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.IO.Observers;
+using Catalyst.Common.Interfaces.Keystore;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Registry;
 using Catalyst.Common.Interfaces.Rpc;
@@ -71,7 +72,7 @@ namespace Catalyst.Simulator.RpcClients
             IPasswordRegistry passwordRegistry,
             X509Certificate2 certificate,
             ILogger logger,
-            IPeerSettings peerSettings)
+            ISigningContextProvider signingContextProvider)
         {
             _logger = logger;
             _certificate = certificate;
@@ -100,7 +101,7 @@ namespace Catalyst.Simulator.RpcClients
             var messageCorrelationManager = new RpcMessageCorrelationManager(memoryCache, _logger, changeTokenProvider);
             var peerIdValidator = new PeerIdValidator(cryptoContext);
             var nodeRpcClientChannelFactory =
-                new NodeRpcClientChannelFactory(keySigner, messageCorrelationManager, peerIdValidator, peerSettings);
+                new NodeRpcClientChannelFactory(keySigner, messageCorrelationManager, peerIdValidator, signingContextProvider);
 
             var eventLoopGroupFactoryConfiguration = new EventLoopGroupFactoryConfiguration
             {
@@ -182,11 +183,10 @@ namespace Catalyst.Simulator.RpcClients
 
         public void SendMessage<T>(T message) where T : IMessage
         {
-            var dtoFactory = new DtoFactory();
             var protocolMessage =
                 message.ToProtocolMessage(_senderPeerIdentifier.PeerId, CorrelationId.GenerateCorrelationId());
-            var messageDto = dtoFactory.GetDto(
-                protocolMessage, _senderPeerIdentifier,
+            var messageDto = new MessageDto(
+                protocolMessage,
                 _recipientPeerIdentifier);
 
             _nodeRpcClient.SendMessage(messageDto);

@@ -21,23 +21,14 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.IO.Messaging.Correlation;
-using Catalyst.Common.P2P;
 using Catalyst.Protocol.Common;
 
-namespace Catalyst.Common.IO.Messaging.Dto
+namespace Catalyst.Common.Interfaces.Keystore
 {
-    public sealed class MessageDto : BaseMessageDto<ProtocolMessage>
+    public interface ISigningContextProvider
     {
-        /// <summary>
-        ///     Data transfer object to wrap up all parameters for sending protocol messages into a MessageFactors.
-        /// </summary>
-        /// <param name="content"></param>
-        /// <param name="recipientPeerIdentifier"></param>
-        public MessageDto(ProtocolMessage content,
-            IPeerIdentifier recipientPeerIdentifier)
-            : base(content, new PeerIdentifier(content.PeerId), recipientPeerIdentifier,
-                new CorrelationId(content.CorrelationId)) { }
+        Protocol.Common.Network Network { get; set; }
+
+        SignatureType SignatureType { get; set; }
     }
 }

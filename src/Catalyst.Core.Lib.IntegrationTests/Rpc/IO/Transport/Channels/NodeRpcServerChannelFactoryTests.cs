@@ -25,6 +25,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Catalyst.Common.Extensions;
+using Catalyst.Common.Interfaces.Keystore;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Rpc.Authentication;
@@ -63,10 +64,9 @@ namespace Catalyst.Core.Lib.IntegrationTests.Rpc.IO.Transport.Channels
             _serverCorrelationManager = Substitute.For<IRpcMessageCorrelationManager>();
             _serverKeySigner = Substitute.For<IKeySigner>();
 
-            var peerSettings = Substitute.For<IPeerSettings>();
-            peerSettings.BindAddress.Returns(IPAddress.Parse("127.0.0.1"));
-            peerSettings.Port.Returns(1234);
-            peerSettings.Network.Returns(Network.Devnet);
+            var signatureContextProvider = Substitute.For<ISigningContextProvider>();
+            signatureContextProvider.SignatureType.Returns(SignatureType.ProtocolPeer);
+            signatureContextProvider.Network.Returns(Network.Devnet);
 
             _authenticationStrategy = Substitute.For<IAuthenticationStrategy>();
 
@@ -77,7 +77,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.Rpc.IO.Transport.Channels
                 _serverKeySigner,
                 _authenticationStrategy,
                 _peerIdValidator,
-                peerSettings);
+                signatureContextProvider);
 
             _clientCorrelationManager = Substitute.For<IRpcMessageCorrelationManager>();
             _clientKeySigner = Substitute.For<IKeySigner>();
@@ -86,7 +86,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.Rpc.IO.Transport.Channels
                 _clientKeySigner, 
                 _clientCorrelationManager,
                 _peerIdValidator,
-                peerSettings);
+                signatureContextProvider);
 
             _serverChannel =
                 new EmbeddedChannel("server".ToChannelId(), true, serverFactory.InheritedHandlers.ToArray());
@@ -109,11 +109,9 @@ namespace Catalyst.Core.Lib.IntegrationTests.Rpc.IO.Transport.Channels
             var correlationId = CorrelationId.GenerateCorrelationId();
 
             var protocolMessage = new GetPeerCountResponse().ToProtocolMessage(sender.PeerId, correlationId);
-            var dto = new MessageDto<ProtocolMessage>(
+            var dto = new MessageDto(
                 protocolMessage,
-                sender,
-                recipient,
-                CorrelationId.GenerateCorrelationId()
+                recipient
             );
 
             _clientCorrelationManager.TryMatchResponse(Arg.Any<ProtocolMessage>()).Returns(true);
