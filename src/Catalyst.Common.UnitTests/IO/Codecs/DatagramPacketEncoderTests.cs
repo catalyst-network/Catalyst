@@ -76,20 +76,15 @@ namespace Catalyst.Common.UnitTests.IO.Codecs
                 _recipientPid.IpEndPoint
             );
         }
-        
+
         [Fact]
         public void DatagramPacketEncoder_Can_Encode_IMessage_With_ProtobufEncoder()
         {
-            Assert.True(_channel.WriteOutbound(new MessageDto<ProtocolMessageSigned>(
-                _protocolMessageSigned,
-                _senderPid,
-                _recipientPid,
-                CorrelationId.GenerateCorrelationId()
-            )));
+            Assert.True(_channel.WriteOutbound(new SignedMessageDto(_protocolMessageSigned, _recipientPid)));
 
             var datagramPacket = _channel.ReadOutbound<DatagramPacket>();
             Assert.NotNull(datagramPacket);
-            
+
             Assert.Equal(_datagramPacket.Content, datagramPacket.Content);
             Assert.Equal(_datagramPacket.Sender, datagramPacket.Sender);
             Assert.Equal(_datagramPacket.Recipient, datagramPacket.Recipient);

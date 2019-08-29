@@ -22,20 +22,17 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
-using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.FileTransfer;
 using Catalyst.Common.Interfaces.FileTransfer;
 using Catalyst.Common.Interfaces.Modules.Dfs;
-using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Messaging.Correlation;
-using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.P2P;
 using Catalyst.Common.Types;
 using Catalyst.Core.Lib.Rpc.IO.Observers;
+using Catalyst.Node.Rpc.Client.IO.Observers;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
@@ -71,7 +68,7 @@ namespace Catalyst.Node.Rpc.Client.IntegrationTests.IO.Observers
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public async Task Get_File_Rpc(long byteSize)
         {
-            string addedIpfsHash = AddFileToDfs(byteSize, out var crcValue, out var stream);
+            var addedIpfsHash = AddFileToDfs(byteSize, out var crcValue, out var stream);
             Stream fileStream = null;
 
             try
@@ -86,10 +83,10 @@ namespace Catalyst.Node.Rpc.Client.IntegrationTests.IO.Observers
                     nodePeer,
                     _fakeContext.Channel, correlationId, fakeFileOutputPath, 0);
                 var getFileFromDfsResponseHandler =
-                    new Client.IO.Observers.GetFileFromDfsResponseObserver(_logger, _fileDownloadFactory);
+                    new GetFileFromDfsResponseObserver(_logger, _fileDownloadFactory);
                 var transferBytesHandler =
                     new TransferFileBytesRequestObserver(_fileDownloadFactory, rpcPeer, _logger);
-                
+
                 _fileDownloadFactory.RegisterTransfer(fileDownloadInformation);
 
                 var getFileResponse = new GetFileFromDfsResponse
@@ -106,8 +103,7 @@ namespace Catalyst.Node.Rpc.Client.IntegrationTests.IO.Observers
                     rpcPeer,
                     nodePeer,
                     _fakeContext.Channel,
-                    correlationId,
-                    new DtoFactory());
+                    correlationId);
 
                 for (uint i = 0; i < fileUploadInformation.MaxChunk; i++)
                 {

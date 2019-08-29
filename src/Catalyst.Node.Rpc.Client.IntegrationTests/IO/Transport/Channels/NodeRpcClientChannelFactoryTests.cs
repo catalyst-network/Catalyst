@@ -113,14 +113,13 @@ namespace Catalyst.Node.Rpc.Client.IntegrationTests.IO.Transport.Channels
             var correlationId = CorrelationId.GenerateCorrelationId();
 
             var protocolMessage = new GetPeerCountRequest().ToProtocolMessage(sender.PeerId, correlationId);
-            var dto = new MessageDto<ProtocolMessage>(
+            var dto = new MessageDto(
                 protocolMessage,
-                sender,
-                recipient,
-                CorrelationId.GenerateCorrelationId()
+                recipient
             );
             
             _clientChannel.WriteOutbound(dto);
+
             var sentBytes = _clientChannel.ReadOutbound<IByteBuffer>();
 
             // obviously

@@ -99,13 +99,9 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Observers
 
             var sendPeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("sender");
 
-            var requestMessage = new DtoFactory().GetDto(
-                new GetPeerCountRequest(),
-                PeerIdentifierHelper.GetPeerIdentifier("sender"),
-                PeerIdentifierHelper.GetPeerIdentifier("recipient")
-            );
+            var protocolMessage = new GetPeerCountRequest().ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId);
 
-            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, requestMessage.Content.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId));
+            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, protocolMessage);
 
             var handler = new PeerCountRequestObserver(sendPeerIdentifier, peerRepository, _logger);
             handler.StartObserving(messageStream);
@@ -117,7 +113,7 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Observers
 
             var sentResponseDto = (IMessageDto<ProtocolMessage>) receivedCalls[0].GetArguments().Single();
             
-            var responseContent = sentResponseDto.FromIMessageDto().FromProtocolMessage<GetPeerCountResponse>();
+            var responseContent = sentResponseDto.Content.FromProtocolMessage<GetPeerCountResponse>();
 
             responseContent.PeerCount.Should().Be(fakePeers);
         }

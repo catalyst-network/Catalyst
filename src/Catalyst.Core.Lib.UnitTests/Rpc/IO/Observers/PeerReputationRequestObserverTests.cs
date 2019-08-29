@@ -129,20 +129,15 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Observers
 
             var sendPeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("sender");
 
-            var messageFactory = new DtoFactory();
             var request = new GetPeerReputationRequest
             {
                 PublicKey = publicKey.ToBytesForRLPEncoding().ToByteString(),
                 Ip = ipAddress.ToBytesForRLPEncoding().ToByteString()
             };
 
-            var requestMessage = messageFactory.GetDto(
-                request,
-                sendPeerIdentifier,
-                PeerIdentifierHelper.GetPeerIdentifier("recipient")
-            );
+            var protocolMessage = request.ToProtocolMessage(sendPeerIdentifier.PeerId);
 
-            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, requestMessage.Content.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId));
+            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, protocolMessage);
 
             var handler = new PeerReputationRequestObserver(sendPeerIdentifier, _logger, peerRepository);
             handler.StartObserving(messageStream);
@@ -154,7 +149,7 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Observers
 
             var sentResponseDto = (IMessageDto<ProtocolMessage>) receivedCalls[0].GetArguments().Single();
             
-            return sentResponseDto.FromIMessageDto().FromProtocolMessage<GetPeerReputationResponse>();
+            return sentResponseDto.Content.FromProtocolMessage<GetPeerReputationResponse>();
         }
     }
 }
