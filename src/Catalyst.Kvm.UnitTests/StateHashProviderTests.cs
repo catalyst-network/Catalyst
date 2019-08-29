@@ -21,14 +21,20 @@
 
 #endregion
 
-using System;
+using Nethermind.Evm;
 using Xunit;
 
 namespace Catalyst.Kvm.UnitTests
 {
-    public class UnitTest1
+    public sealed class StateHashProviderTests
     {
-        [Fact]
-        public void Test1() { }
+        [Fact(Skip = "Not implemented yet")]
+        public void Can_provide_a_latest_state_update_hash()
+        {
+            StateUpdate stateUpdate = new StateUpdate();
+            
+            StateUpdateHashProvider stateUpdateHashProvider = new StateUpdateHashProvider();
+            stateUpdateHashProvider.GetHash(stateUpdate, 1);
+        }
     }
 }

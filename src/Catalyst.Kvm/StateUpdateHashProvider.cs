@@ -21,14 +21,12 @@
 
 #endregion
 
-using System;
-using Xunit;
+using Nethermind.Evm;
 
-namespace Catalyst.Kvm.IntegrationTests
+namespace Catalyst.Kvm
 {
-    public class UnitTest1
+    public sealed class StateUpdateHashProvider : IStateUpdateHashProvider
     {
-        [Fact]
-        public void Test1() { }
+        public byte[] GetHash(StateUpdate stateUpdate, in long number) { throw new System.NotImplementedException(); }
     }
 }
