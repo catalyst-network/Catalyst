@@ -21,6 +21,7 @@
 
 #endregion
 
+using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.Keystore;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
@@ -42,7 +43,7 @@ namespace Catalyst.Common.UnitTests.IO.Handlers
     public sealed class ProtocolMessageSignHandlerTests
     {
         private readonly IChannelHandlerContext _fakeContext;
-        private readonly IMessageDto<PingRequest> _dto;
+        private readonly IMessageDto<ProtocolMessage> _dto;
         private readonly IKeySigner _keySigner;
         private readonly ISignature _signature;
         private readonly ISigningContextProvider _signatureContextProvider;
@@ -63,9 +64,8 @@ namespace Catalyst.Common.UnitTests.IO.Handlers
             _signatureContextProvider.Network.Returns(Protocol.Common.Network.Devnet);
             _signatureContextProvider.SignatureType.Returns(SignatureType.ProtocolPeer);
 
-            _dto = new DtoFactory().GetDto(new PingRequest(),
-                PeerIdentifierHelper.GetPeerIdentifier("recipient"), 
-                PeerIdentifierHelper.GetPeerIdentifier("sender")
+            _dto = new MessageDto(new PingRequest().ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId),
+                PeerIdentifierHelper.GetPeerIdentifier("recipient")
             );
         }
 

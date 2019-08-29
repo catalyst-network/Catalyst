@@ -21,23 +21,23 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.P2P;
-using Google.Protobuf;
+using Catalyst.Common.IO.Messaging.Correlation;
+using Catalyst.Common.P2P;
+using Catalyst.Protocol.Common;
 
-namespace Catalyst.Common.Interfaces.IO.Messaging.Dto
+namespace Catalyst.Common.IO.Messaging.Dto
 {
-    public interface IDtoFactory
+    public sealed class SignedMessageDto : BaseMessageDto<ProtocolMessageSigned>
     {
-        /// <summary>Gets the message.</summary>
-        /// <param name="messageDto">The message.</param>
-        /// <param name="senderPeerIdentifier"></param>
+        /// <summary>
+        ///     Data transfer object to wrap up all parameters for sending protocol messages into a MessageFactors.
+        /// </summary>
+        /// <param name="content"></param>
         /// <param name="recipientPeerIdentifier"></param>
-        /// <param name="correlationId">The correlation identifier.</param>
-        /// <returns>ProtocolMessage message</returns>
-        IMessageDto<T> GetDto<T>(T messageDto,
-            IPeerIdentifier senderPeerIdentifier,
-            IPeerIdentifier recipientPeerIdentifier,
-            ICorrelationId correlationId = default) where T : IMessage<T>;
+        public SignedMessageDto(ProtocolMessageSigned content,
+            IPeerIdentifier recipientPeerIdentifier)
+            : base(content, new PeerIdentifier(content.Message.PeerId), recipientPeerIdentifier,
+                new CorrelationId(content.Message.CorrelationId)) { }
     }
 }

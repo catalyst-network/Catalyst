@@ -83,13 +83,9 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Observers
             var mempool = Substitute.For<IMempool>();
             mempool.GetMemPoolContentAsTransactions().Returns(mempoolTransactions);
 
-            var request = new DtoFactory().GetDto(
-                new GetMempoolRequest(),
-                PeerIdentifierHelper.GetPeerIdentifier("recipient_key"),
-                PeerIdentifierHelper.GetPeerIdentifier("sender_key")
-            );
+            var protocolMessage = new GetMempoolRequest().ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender_key").PeerId);
             
-            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, request.Content.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId));
+            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, protocolMessage);
             var handler = new GetMempoolRequestObserver(PeerIdentifierHelper.GetPeerIdentifier("sender"), mempool, _logger);
             
             handler.StartObserving(messageStream);
@@ -101,7 +97,7 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Observers
             
             var sentResponseDto = (IMessageDto<ProtocolMessage>) receivedCalls.Single().GetArguments().Single();
             
-            var responseContent = sentResponseDto.FromIMessageDto().FromProtocolMessage<GetMempoolResponse>();
+            var responseContent = sentResponseDto.Content.FromProtocolMessage<GetMempoolResponse>();
 
             responseContent.Transactions.Should().BeEquivalentTo(mempoolTransactions);
         }

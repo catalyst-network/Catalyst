@@ -21,40 +21,23 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
-using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.P2P;
-using Dawn;
-using DotNetty.Transport.Channels;
-using Google.Protobuf;
+using Catalyst.Common.IO.Messaging.Correlation;
+using Catalyst.Common.P2P;
+using Catalyst.Protocol.Common;
 
 namespace Catalyst.Common.IO.Messaging.Dto
 {
-    public sealed class MessageDto<T> : DefaultAddressedEnvelope<T>, IMessageDto<T> where T : IMessage<T>
+    public sealed class MessageDto : BaseMessageDto<ProtocolMessage>
     {
-        public ICorrelationId CorrelationId { get; }
-        public IPeerIdentifier RecipientPeerIdentifier { get; }
-        public IPeerIdentifier SenderPeerIdentifier { get; }
-
         /// <summary>
         ///     Data transfer object to wrap up all parameters for sending protocol messages into a MessageFactors.
         /// </summary>
         /// <param name="content"></param>
-        /// <param name="correlationId"></param>
         /// <param name="recipientPeerIdentifier"></param>
-        /// <param name="senderPeerIdentifier"></param>
-        public MessageDto(T content,
-            IPeerIdentifier senderPeerIdentifier,
-            IPeerIdentifier recipientPeerIdentifier,
-            ICorrelationId correlationId = default)
-            : base(content, senderPeerIdentifier.IpEndPoint, recipientPeerIdentifier.IpEndPoint)
-        {
-            Guard.Argument(recipientPeerIdentifier.IpEndPoint.Address, nameof(recipientPeerIdentifier.IpEndPoint.Address)).NotNull();
-            Guard.Argument(senderPeerIdentifier.IpEndPoint.Address, nameof(senderPeerIdentifier.IpEndPoint.Address)).NotNull();
-
-            CorrelationId = correlationId;
-            RecipientPeerIdentifier = recipientPeerIdentifier;
-            SenderPeerIdentifier = senderPeerIdentifier;
-        }
+        public MessageDto(ProtocolMessage content,
+            IPeerIdentifier recipientPeerIdentifier)
+            : base(content, new PeerIdentifier(content.PeerId), recipientPeerIdentifier,
+                new CorrelationId(content.CorrelationId)) { }
     }
 }

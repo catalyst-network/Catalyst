@@ -22,7 +22,6 @@
 #endregion
 
 using Catalyst.Common.Interfaces.Cryptography;
-using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Transport;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Rpc;
@@ -46,10 +45,6 @@ namespace Catalyst.Common.Interfaces.Cli.Commands
         /// <summary>Gets the socket client registry.</summary>
         /// <value>The socket client registry.</value>
         ISocketClientRegistry<INodeRpcClient> SocketClientRegistry { get; }
-        
-        /// <summary>Gets the dto factory.</summary>
-        /// <value>The dto factory.</value>
-        IDtoFactory DtoFactory { get; }
 
         /// <summary>Gets the peer identifier.</summary>
         /// <value>The peer identifier.</value>
