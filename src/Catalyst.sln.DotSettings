@@ -5,6 +5,7 @@
 // $MESSAGE$ -- string literal in the form of "$NAME$ != null"
 Guard.Argument($EXPR$, $NAME$).NotNull()</s:String>
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=3EF81EDA_002DCA6C_002D46EB_002DA561_002DDEE52B4DD168_002Fd_003ARLP/@EntryIndexedValue">ExplicitlyExcluded</s:String>
+	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=6074E807_002DFBBC_002D41D0_002D9205_002DC7B79513D683/@EntryIndexedValue">ExplicitlyExcluded</s:String>
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=8E7033A3_002DC758_002D460F_002DA551_002DE58BC7DE464D_002Fd_003ARLP/@EntryIndexedValue"></s:String>
 	<s:Boolean x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=8E7033A3_002DC758_002D460F_002DA551_002DE58BC7DE464D_002Fd_003ARLP/@EntryIndexRemoved">True</s:Boolean>
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=E03E56AF_002D8B05_002D41D1_002DAA57_002DA4FE965B794E_002Fd_003AHex/@EntryIndexedValue">ExplicitlyExcluded</s:String>
@@ -112,6 +113,7 @@ Guard.Argument($EXPR$, $NAME$).NotNull()</s:String>
 	<s:String x:Key="/Default/CodeStyle/Naming/CSharpNaming/Abbreviations/=UTC/@EntryIndexedValue">UTC</s:String>
 	<s:Boolean x:Key="/Default/CodeStyle/Naming/CSharpNaming/ApplyAutoDetectedRules/@EntryValue">False</s:Boolean>
 	<s:String x:Key="/Default/CodeStyle/Naming/CSharpNaming/PredefinedNamingRules/=Method/@EntryIndexedValue">&lt;Policy Inspect="True" Prefix="" Suffix="" Style="AaBb_AaBb" /&gt;</s:String>
+	<s:String x:Key="/Default/CustomTools/CustomToolsData/@EntryValue"></s:String>
 	<s:String x:Key="/Default/Environment/Hierarchy/Build/SolutionBuilderNext/FileVerbosityLevel/@EntryValue">Detailed</s:String>
 	<s:Boolean x:Key="/Default/Environment/Hierarchy/Build/SolutionBuilderNext/LogMessagesToOutput/@EntryValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/Environment/SettingsMigration/IsMigratorApplied/=JetBrains_002EReSharper_002EPsi_002ECSharp_002ECodeStyle_002ECSharpAttributeForSingleLineMethodUpgrade/@EntryIndexedValue">True</s:Boolean>
