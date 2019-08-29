@@ -81,6 +81,7 @@ namespace Catalyst.Kvm.IntegrationTests
             VmState vmState = new VmState(1_000_000L, env, ExecutionType.Transaction, false, true, false);
             
             VirtualMachine virtualMachine = new VirtualMachine(stateProvider, storageProvider, stateUpdateHashProvider, specProvider, LimboLogs.Instance);
+
             virtualMachine.Run(vmState, txTracer);
         }
     }
