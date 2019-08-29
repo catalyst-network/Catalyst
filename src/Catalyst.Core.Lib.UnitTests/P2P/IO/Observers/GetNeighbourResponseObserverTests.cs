@@ -64,7 +64,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Observers
                 PeerIdHelper.GetPeerId(),
                 PeerIdHelper.GetPeerId()
             };
-                
+
             var response = new DtoFactory().GetDto(new PeerNeighborsResponse
                 {
                     Peers =
@@ -76,27 +76,29 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Observers
                 PeerIdentifierHelper.GetPeerIdentifier("recipient"),
                 CorrelationId.GenerateCorrelationId()
             );
-            
+
             var peerNeighborsResponseObserver = Substitute.For<IObserver<IPeerClientMessageDto>>();
 
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, testScheduler,
                 response.Content.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId,
                     response.CorrelationId));
-                
+
             _observer.StartObserving(messageStream);
 
             testScheduler.Start();
-            //await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
 
             using (_observer.MessageStream.SubscribeOn(TaskPoolScheduler.Default)
                .Subscribe(peerNeighborsResponseObserver.OnNext))
             {
                 await TaskHelper.WaitForAsync(() => peerNeighborsResponseObserver.ReceivedCalls().Any(),
                     TimeSpan.FromMilliseconds(1000));
-                
-                peerNeighborsResponseObserver.Received(1).OnNext(Arg.Is<IPeerClientMessageDto>(p => test(p.Message, peers[0])));
-                peerNeighborsResponseObserver.Received(1).OnNext(Arg.Is<IPeerClientMessageDto>(p => test(p.Message, peers[1])));
-                peerNeighborsResponseObserver.Received(1).OnNext(Arg.Is<IPeerClientMessageDto>(p => test(p.Message, peers[2])));
+
+                peerNeighborsResponseObserver.Received(1)
+                   .OnNext(Arg.Is<IPeerClientMessageDto>(p => test(p.Message, peers[0])));
+                peerNeighborsResponseObserver.Received(1)
+                   .OnNext(Arg.Is<IPeerClientMessageDto>(p => test(p.Message, peers[1])));
+                peerNeighborsResponseObserver.Received(1)
+                   .OnNext(Arg.Is<IPeerClientMessageDto>(p => test(p.Message, peers[2])));
             }
         }
 
@@ -106,9 +108,6 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Observers
             return x.Peers.Contains(peerId);
         }
 
-        public void Dispose()
-        {
-            _observer?.Dispose();
-        }
+        public void Dispose() { _observer?.Dispose(); }
     }
 }

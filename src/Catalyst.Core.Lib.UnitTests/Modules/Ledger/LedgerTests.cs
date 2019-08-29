@@ -85,7 +85,6 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Ledger
             _ledger = new LedgerService(_fakeRepository, _deltaHashProvider, _mempool, _logger);
 
             _testScheduler.Start();
-            //await _deltaHashProvider.DeltaHashUpdates.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
 
             _mempool.ReceivedWithAnyArgs(updates.Length).Delete(default);
         }

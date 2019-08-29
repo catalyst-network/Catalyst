@@ -41,7 +41,6 @@ namespace Catalyst.Core.Lib.P2P
 {
     public sealed class PeerChallenger : IPeerChallenger, IDisposable
     {
-        private readonly IScheduler _scheduler;
         private readonly ILogger _logger;
         private readonly IPeerIdentifier _senderIdentifier;
         private readonly IPeerClient _peerClient;
@@ -55,8 +54,8 @@ namespace Catalyst.Core.Lib.P2P
             int peerChallengeWaitTimeSeconds,
             IScheduler scheduler = null)
         {
-            _scheduler = scheduler ?? Scheduler.Default;
-            ChallengeResponseMessageStreamer = new ReplaySubject<IPeerChallengeResponse>(1, _scheduler);
+            var observableScheduler = scheduler ?? Scheduler.Default;
+            ChallengeResponseMessageStreamer = new ReplaySubject<IPeerChallengeResponse>(1, observableScheduler);
             _senderIdentifier = senderIdentifier;
             _logger = logger;
             _peerClient = peerClient;

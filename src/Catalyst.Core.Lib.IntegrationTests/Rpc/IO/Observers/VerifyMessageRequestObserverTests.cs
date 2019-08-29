@@ -125,7 +125,6 @@ namespace Catalyst.Core.Lib.IntegrationTests.Rpc.IO.Observers
             handler.StartObserving(messageStream);
 
             _testScheduler.Start();
-            //await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
 
             var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();
             receivedCalls.Count.Should().Be(1);
@@ -163,7 +162,6 @@ namespace Catalyst.Core.Lib.IntegrationTests.Rpc.IO.Observers
             signHandler.StartObserving(signMessageStream);
 
             _testScheduler.Start();
-            //await signMessageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
 
             var receivedCallsSign = _fakeContext.Channel.ReceivedCalls().ToList();
             receivedCallsSign.Count.Should().Be(1);
@@ -201,7 +199,6 @@ namespace Catalyst.Core.Lib.IntegrationTests.Rpc.IO.Observers
             verifyHandler.StartObserving(verifyMessageStream);
 
             _testScheduler.Start();
-            //await verifyMessageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
 
             var receivedCallsVerify = _fakeContext.Channel.ReceivedCalls().ToList();
 

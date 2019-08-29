@@ -98,7 +98,6 @@ namespace Catalyst.Core.Lib.IntegrationTests.Rpc.IO.Observers
             handler.StartObserving(messageStream);
 
             _testScheduler.Start();
-            //await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
 
             var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();
             receivedCalls.Count.Should().Be(1);

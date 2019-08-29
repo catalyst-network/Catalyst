@@ -30,7 +30,6 @@ using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.Repository;
 using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.Network;
-using Catalyst.Common.P2P;
 using Catalyst.Common.P2P.Models;
 using Catalyst.Core.Lib.Rpc.IO.Observers;
 using Catalyst.Protocol;
@@ -47,7 +46,7 @@ using Xunit;
 namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Observers
 {
     /// <summary>
-    /// Tests the peer count CLI and RPC calls
+    ///     Tests the peer count CLI and RPC calls
     /// </summary>
     public sealed class PeerCountRequestObserverTests
     {
@@ -60,10 +59,11 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Observers
         private readonly IChannelHandlerContext _fakeContext;
 
         /// <summary>
-        /// Initializes a new instance of the <see>
-        ///     <cref>PeerListRequestObserverTest</cref>
-        /// </see>
-        /// class.
+        ///     Initializes a new instance of the
+        ///     <see>
+        ///         <cref>PeerListRequestObserverTest</cref>
+        ///     </see>
+        ///     class.
         /// </summary>
         public PeerCountRequestObserverTests()
         {
@@ -75,7 +75,7 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Observers
         }
 
         /// <summary>
-        /// Tests the peer count request and response.
+        ///     Tests the peer count request and response.
         /// </summary>
         /// <param name="fakePeers">The peer count.</param>
         [Theory]
@@ -95,7 +95,7 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Observers
                     PeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier(i.ToString())
                 });
             }
-            
+
             // Build a fake remote endpoint
             _fakeContext.Channel.RemoteAddress.Returns(EndpointBuilder.BuildNewEndPoint("192.0.0.1", 42042));
 
@@ -109,19 +109,19 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Observers
                 PeerIdentifierHelper.GetPeerIdentifier("recipient")
             );
 
-            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, _testScheduler, requestMessage.Content.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId));
+            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, _testScheduler,
+                requestMessage.Content.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId));
 
             var handler = new PeerCountRequestObserver(sendPeerIdentifier, peerRepository, _logger);
             handler.StartObserving(messageStream);
 
             _testScheduler.Start();
-            //await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
 
             var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();
             receivedCalls.Count.Should().Be(1);
 
             var sentResponseDto = (IMessageDto<ProtocolMessage>) receivedCalls[0].GetArguments().Single();
-            
+
             var responseContent = sentResponseDto.FromIMessageDto().FromProtocolMessage<GetPeerCountResponse>();
 
             responseContent.PeerCount.Should().Be(fakePeers);

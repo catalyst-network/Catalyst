@@ -104,7 +104,6 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Observers
             }
 
             _testScheduler.Start();
-            //await observableStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
 
             await fakeContext.Channel.ReceivedWithAnyArgs(1)
                .WriteAndFlushAsync(peerNeighborsResponseMessage.ToProtocolMessage(_peerIdentifier.PeerId, CorrelationId.GenerateCorrelationId()));

@@ -72,8 +72,6 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Observers
 
             testScheduler.Start();
 
-            //await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
-
             using (_observer.MessageStream.SubscribeOn(ImmediateScheduler.Instance)
                .Subscribe(pingResponseObserver.OnNext))
             {

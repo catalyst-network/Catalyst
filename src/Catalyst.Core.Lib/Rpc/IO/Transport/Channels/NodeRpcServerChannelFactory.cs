@@ -48,7 +48,6 @@ namespace Catalyst.Core.Lib.Rpc.IO.Transport.Channels
 {
     public class NodeRpcServerChannelFactory : TcpServerChannelFactory
     {
-        private readonly IScheduler _scheduler;
         private readonly IRpcMessageCorrelationManager _correlationManger;
         private readonly IAuthenticationStrategy _authenticationStrategy;
         private readonly IKeySigner _keySigner;
@@ -95,13 +94,13 @@ namespace Catalyst.Core.Lib.Rpc.IO.Transport.Channels
             ISigningContextProvider signingContextProvider,
             IScheduler scheduler = null)
         {
-            _scheduler = scheduler ?? Scheduler.Default;
+            var observableScheduler = scheduler ?? Scheduler.Default;
             _correlationManger = correlationManger;
             _authenticationStrategy = authenticationStrategy;
             _keySigner = keySigner;
             _peerIdValidator = peerIdValidator;
             _signingContextProvider = signingContextProvider;
-            _observableServiceHandler = new ObservableServiceHandler(_scheduler);
+            _observableServiceHandler = new ObservableServiceHandler(observableScheduler);
         }
 
         /// <param name="handlerEventLoopGroupFactory"></param>

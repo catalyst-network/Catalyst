@@ -97,7 +97,6 @@ namespace Catalyst.Core.Lib.IntegrationTests.Rpc.IO.Observers
             handler.StartObserving(messageStream);
 
             _testScheduler.Start();
-            //await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
 
             await _fakeContext.Channel.Received(1).WriteAndFlushAsync(Arg.Any<object>());
 
