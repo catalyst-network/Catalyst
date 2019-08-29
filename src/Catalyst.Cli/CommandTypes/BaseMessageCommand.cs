@@ -24,14 +24,14 @@
 using System;
 using System.Collections.Concurrent;
 using System.Reactive.Linq;
-using Catalyst.Common.Extensions;
-using Catalyst.Common.Interfaces.Cli.Commands;
-using Catalyst.Common.Interfaces.Cli.CommandTypes;
-using Catalyst.Common.Interfaces.Cli.Options;
-using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.Interfaces.Rpc;
-using Catalyst.Common.IO.Events;
-using Catalyst.Common.P2P;
+using Catalyst.Abstractions.Cli.Commands;
+using Catalyst.Abstractions.Cli.CommandTypes;
+using Catalyst.Abstractions.Cli.Options;
+using Catalyst.Abstractions.P2P;
+using Catalyst.Abstractions.Rpc;
+using Catalyst.Core.Extensions;
+using Catalyst.Core.IO.Events;
+using Catalyst.Core.P2P;
 using Catalyst.Protocol;
 using Google.Protobuf;
 

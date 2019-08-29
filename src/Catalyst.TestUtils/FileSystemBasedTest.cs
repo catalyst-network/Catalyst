@@ -33,8 +33,8 @@ using NSubstitute;
 using Serilog;
 using Xunit;
 using Xunit.Abstractions;
-using FileSystem = Catalyst.Common.FileSystem.FileSystem;
-using IFileSystem = Catalyst.Common.Interfaces.FileSystem.IFileSystem;
+using FileSystem = Catalyst.Core.FileSystem.FileSystem;
+using IFileSystem = Catalyst.Abstractions.FileSystem.IFileSystem;
 
 namespace Catalyst.TestUtils
 {

@@ -24,20 +24,20 @@
 using System;
 using System.IO;
 using Autofac;
-using Catalyst.Common.Config;
-using Catalyst.Common.Interfaces.Modules.Consensus;
-using Catalyst.Common.Interfaces.Modules.Contract;
-using Catalyst.Common.Interfaces.Modules.Dfs;
-using Catalyst.Common.Interfaces.Modules.Ledger;
-using Catalyst.Common.Interfaces.Modules.Mempool;
-using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Core.Lib.Modules.Contract;
-using Catalyst.Modules.Lib.Dfs;
+using Catalyst.Abstractions.Consensus;
+using Catalyst.Abstractions.Dfs;
+using Catalyst.Abstractions.Mempool;
+using Catalyst.Abstractions.Mempool.Models;
+using Catalyst.Abstractions.P2P;
+using Catalyst.Core.Config;
+using Catalyst.Core.Dfs;
+using Catalyst.Core.Ledger;
+using Catalyst.Core.Mempool;
+using Catalyst.Core.Mempool.Documents;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Xunit;
 using Xunit.Abstractions;
-using LedgerService = Catalyst.Core.Lib.Modules.Ledger.Ledger;
 
 namespace Catalyst.Node.POA.CE.UnitTests.Config
 {
@@ -60,11 +60,10 @@ namespace Catalyst.Node.POA.CE.UnitTests.Config
         }
 
         [Theory]
-        [InlineData(typeof(IConsensus), typeof(Core.Lib.Modules.Consensus.Consensus))]
-        [InlineData(typeof(IContract), typeof(Contract))]
-        [InlineData(typeof(IDfs), typeof(FileSystemDfs))]
-        [InlineData(typeof(ILedger), typeof(LedgerService))]
-        [InlineData(typeof(IMempool), typeof(Catalyst.Core.Lib.Modules.Mempool.Mempool))]
+        [InlineData(typeof(IConsensus), typeof(Core.Consensus.Consensus))]
+        [InlineData(typeof(IDfs), typeof(DevDfs))]
+        [InlineData(typeof(ILedger), typeof(Ledger))]
+        [InlineData(typeof(IMempool<MempoolDocument>), typeof(Mempool<MempoolDocument>))]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         private void ComponentsJsonFile_should_configure_modules(Type interfaceType, Type resolutionType)
         {

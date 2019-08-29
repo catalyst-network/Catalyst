@@ -21,8 +21,8 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.Cli;
-using Catalyst.Common.Interfaces.Cli.CommandTypes;
+using Catalyst.Abstractions.Cli;
+using Catalyst.Abstractions.Cli.CommandTypes;
 using CommandLine;
 using System;
 using System.Collections.Generic;

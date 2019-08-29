@@ -22,21 +22,21 @@
 #endregion
 
 using System;
-using Catalyst.Common.Config;
-using Catalyst.Common.Kernel;
+using Catalyst.Core.Config;
+using Catalyst.Core.Kernel;
 
 namespace Catalyst.Cli
 {
     internal static class Program
     {
-        private static readonly Kernel _kernel;
+        private static readonly Kernel Kernel;
 
         static Program()
         {
-            _kernel = Kernel.Initramfs(false, "Catalyst.Cli..log");
+            Kernel = Kernel.Initramfs(false, "Catalyst.Cli..log");
 
-            AppDomain.CurrentDomain.UnhandledException += _kernel.LogUnhandledException;
-            AppDomain.CurrentDomain.ProcessExit += _kernel.CurrentDomain_ProcessExit;
+            AppDomain.CurrentDomain.UnhandledException += Kernel.LogUnhandledException;
+            AppDomain.CurrentDomain.ProcessExit += Kernel.CurrentDomain_ProcessExit;
         }
 
         /// <summary>
@@ -44,12 +44,12 @@ namespace Catalyst.Cli
         /// </summary>
         public static int Main()
         {
-            _kernel.Logger.Information("Catalyst.Cli started with process id {0}",
+            Kernel.Logger.Information("Catalyst.Cli started with process id {0}",
                 System.Diagnostics.Process.GetCurrentProcess().Id.ToString());
             
             try
             {
-                _kernel.WithDataDirectory()
+                Kernel.WithDataDirectory()
                    .WithComponentsConfigFile(Constants.ShellComponentsJsonConfigFile)
                    .WithSerilogConfigFile()
                    .WithConfigCopier(new CliConfigCopier())
@@ -64,7 +64,7 @@ namespace Catalyst.Cli
             }
             catch (Exception e)
             {
-                _kernel.Logger.Fatal(e, "Catalyst.Cli stopped unexpectedly");
+                Kernel.Logger.Fatal(e, "Catalyst.Cli stopped unexpectedly");
                 Environment.ExitCode = 1;
             }
 

@@ -24,8 +24,8 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using Catalyst.Common.Interfaces.IO.Messaging.Dto;
-using Catalyst.Common.Util;
+using Catalyst.Abstractions.IO.Messaging.Dto;
+using Catalyst.Core.Util;
 using Catalyst.Protocol.Common;
 using Serilog;
 

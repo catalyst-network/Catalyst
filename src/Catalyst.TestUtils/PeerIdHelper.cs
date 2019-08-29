@@ -25,8 +25,8 @@ using System;
 using System.Linq;
 using System.Net;
 using System.Text;
-using Catalyst.Common.Network;
-using Catalyst.Common.Util;
+using Catalyst.Core.Network;
+using Catalyst.Core.Util;
 using Catalyst.Protocol;
 using Catalyst.Protocol.Common;
 

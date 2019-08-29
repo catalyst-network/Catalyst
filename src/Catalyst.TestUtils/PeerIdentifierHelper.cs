@@ -24,8 +24,8 @@
 using System.Linq;
 using System.Net;
 using System.Text;
-using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.P2P;
+using Catalyst.Abstractions.P2P;
+using Catalyst.Core.P2P;
 
 namespace Catalyst.TestUtils
 {

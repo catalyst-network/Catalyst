@@ -24,8 +24,8 @@
 using System.Text;
 using Catalyst.Cli.Commands;
 using Catalyst.Cli.UnitTests.Helpers;
-using Catalyst.Common.Config;
-using Catalyst.Common.Extensions;
+using Catalyst.Core.Config;
+using Catalyst.Core.Extensions;
 using Catalyst.Protocol.Rpc.Node;
 using FluentAssertions;
 using NSubstitute;

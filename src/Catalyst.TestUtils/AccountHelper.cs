@@ -21,11 +21,11 @@
 
 #endregion
 
-using Catalyst.Common.Config;
-using Catalyst.Common.Enumerator;
-using Catalyst.Common.Modules.Ledger.Models;
-using Catalyst.Common.Types;
-using Catalyst.Common.Util;
+using Catalyst.Abstractions.Enumerator;
+using Catalyst.Abstractions.Types;
+using Catalyst.Abstractions.Types;
+using Catalyst.Core.Ledger.Models;
+using Catalyst.Core.Util;
 
 namespace Catalyst.TestUtils
 {

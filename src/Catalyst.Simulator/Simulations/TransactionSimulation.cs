@@ -25,7 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Catalyst.Common.Interfaces.Cli;
+using Catalyst.Abstractions.Cli;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.Simulator.Helpers;
 using Catalyst.Simulator.Interfaces;

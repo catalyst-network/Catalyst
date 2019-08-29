@@ -21,7 +21,7 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Abstractions.P2P;
 using Catalyst.Simulator.Interfaces;
 
 namespace Catalyst.Simulator

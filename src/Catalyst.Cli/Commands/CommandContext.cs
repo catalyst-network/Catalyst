@@ -24,17 +24,17 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Catalyst.Common.Interfaces.Cli;
-using Catalyst.Common.Interfaces.Cli.Commands;
-using Catalyst.Common.Interfaces.Cryptography;
-using Catalyst.Common.Interfaces.IO.Messaging.Dto;
-using Catalyst.Common.Interfaces.IO.Transport;
-using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.Interfaces.Registry;
-using Catalyst.Common.Interfaces.Rpc;
-using Catalyst.Common.IO.Transport;
-using Catalyst.Common.Network;
-using Catalyst.Node.Rpc.Client;
+using Catalyst.Abstractions.Cli;
+using Catalyst.Abstractions.Cli.Commands;
+using Catalyst.Abstractions.Cryptography;
+using Catalyst.Abstractions.IO.Messaging.Dto;
+using Catalyst.Abstractions.IO.Transport;
+using Catalyst.Abstractions.P2P;
+using Catalyst.Abstractions.Registry;
+using Catalyst.Abstractions.Rpc;
+using Catalyst.Core.IO.Transport;
+using Catalyst.Core.Network;
+using Catalyst.Core.Rpc;
 using Dawn;
 using Microsoft.Extensions.Configuration;
 using Serilog;
@@ -61,7 +61,7 @@ namespace Catalyst.Cli.Commands
 
             SocketClientRegistry = new SocketClientRegistry<INodeRpcClient>();
             DtoFactory = dtoFactory;
-            PeerIdentifier = Common.P2P.PeerIdentifier.BuildPeerIdFromConfig(config, userOutput, keyRegistry);
+            PeerIdentifier = Core.P2P.PeerIdentifier.BuildPeerIdFromConfig(config, userOutput, keyRegistry);
             NodeRpcClientFactory = nodeRpcClientFactory;
             CertificateStore = certificateStore;
             UserOutput = userOutput;

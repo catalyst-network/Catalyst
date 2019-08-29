@@ -21,12 +21,12 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.Interfaces.Rpc.Authentication;
-using Catalyst.Common.Rpc.Authentication;
-using Catalyst.Common.Util;
-using Catalyst.Core.Lib.Repository;
-using Catalyst.Core.Lib.Rpc.Authentication;
+using Catalyst.Abstractions.P2P;
+using Catalyst.Abstractions.Rpc.Authentication;
+using Catalyst.Core.Rpc.Authentication;
+using Catalyst.Core.Rpc.Authentication.Models;
+using Catalyst.Core.Rpc.Authentication.Repository;
+using Catalyst.Core.Util;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using SharpRepository.InMemoryRepository;
@@ -44,7 +44,7 @@ namespace Catalyst.Node.POA.CE.UnitTests.Repository
             _trustedPeer = PeerIdentifierHelper.GetPeerIdentifier("Trusted");
             var whiteListRepo = new AuthCredentialRepository(new InMemoryRepository<AuthCredentials, string>());
 
-            whiteListRepo.Add(new AuthCredentials()
+            whiteListRepo.Add(new AuthCredentials
             {
                 PublicKey = _trustedPeer.PublicKey.KeyToString(),
                 IpAddress = _trustedPeer.Ip.ToString(),

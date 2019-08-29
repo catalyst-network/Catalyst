@@ -22,9 +22,9 @@
 #endregion
 
 using System;
-using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
-using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Node.Rpc.Client.IO;
+using Catalyst.Abstractions.IO.Messaging.Correlation;
+using Catalyst.Abstractions.P2P;
+using Catalyst.Core.Rpc.IO;
 using Catalyst.Protocol.Rpc.Node;
 using DotNetty.Transport.Channels;
 using Serilog;

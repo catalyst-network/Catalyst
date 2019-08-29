@@ -23,7 +23,7 @@
 
 using System;
 using System.IO;
-using Catalyst.Common.Config;
+using Catalyst.Core.Config;
 using Catalyst.Protocol.Rpc.Node;
 using FluentAssertions;
 using Xunit;

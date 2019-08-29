@@ -24,11 +24,11 @@
 using System.Threading;
 using Catalyst.Cli.CommandTypes;
 using Catalyst.Cli.Options;
-using Catalyst.Common.Extensions;
-using Catalyst.Common.FileTransfer;
-using Catalyst.Common.Interfaces.Cli;
-using Catalyst.Common.Interfaces.Cli.Commands;
-using Catalyst.Common.Interfaces.FileTransfer;
+using Catalyst.Abstractions.Cli;
+using Catalyst.Abstractions.Cli.Commands;
+using Catalyst.Abstractions.FileTransfer;
+using Catalyst.Core.Extensions;
+using Catalyst.Core.FileTransfer;
 using Catalyst.Protocol.Rpc.Node;
 
 namespace Catalyst.Cli.Commands

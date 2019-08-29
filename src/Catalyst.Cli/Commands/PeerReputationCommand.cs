@@ -23,9 +23,9 @@
 
 using Catalyst.Cli.CommandTypes;
 using Catalyst.Cli.Options;
-using Catalyst.Common.Extensions;
-using Catalyst.Common.Interfaces.Cli;
-using Catalyst.Common.Interfaces.Cli.Commands;
+using Catalyst.Abstractions.Cli;
+using Catalyst.Abstractions.Cli.Commands;
+using Catalyst.Core.Extensions;
 using Catalyst.Protocol.Rpc.Node;
 
 namespace Catalyst.Cli.Commands

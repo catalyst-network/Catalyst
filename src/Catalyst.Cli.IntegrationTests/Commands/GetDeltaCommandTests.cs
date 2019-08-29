@@ -22,7 +22,8 @@
 #endregion
 
 using System.Text;
-using Catalyst.Common.Extensions;
+using Catalyst.Core.Config;
+using Catalyst.Core.Extensions;
 using Catalyst.Protocol.Rpc.Node;
 using FluentAssertions;
 using Xunit;
@@ -37,7 +38,7 @@ namespace Catalyst.Cli.IntegrationTests.Commands
         [Fact]
         public void Cli_Can_Request_Node_Info()
         {
-            var hashingAlgorithm = Common.Config.Constants.HashAlgorithm;
+            var hashingAlgorithm = Constants.HashAlgorithm;
             var hash = Encoding.UTF8.GetBytes("hello").ComputeMultihash(hashingAlgorithm);
 
             var result = Shell.ParseCommand("getdelta", "-h", hash, NodeArgumentPrefix, ServerNodeName);

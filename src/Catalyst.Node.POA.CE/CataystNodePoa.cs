@@ -24,16 +24,18 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Catalyst.Common.Interfaces;
-using Catalyst.Common.Interfaces.Modules.Consensus;
-using Catalyst.Common.Interfaces.Modules.Contract;
-using Catalyst.Common.Interfaces.Modules.Dfs;
-using Catalyst.Common.Interfaces.Modules.KeySigner;
-using Catalyst.Common.Interfaces.Modules.Ledger;
-using Catalyst.Common.Interfaces.Modules.Mempool;
-using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.Interfaces.Rpc;
-using Catalyst.Common.P2P;
+using Catalyst.Abstractions;
+using Catalyst.Abstractions.Consensus;
+using Catalyst.Abstractions.Contract;
+using Catalyst.Abstractions.Dfs;
+using Catalyst.Abstractions.KeySigner;
+using Catalyst.Abstractions.Mempool;
+using Catalyst.Abstractions.Mempool.Models;
+using Catalyst.Abstractions.P2P;
+using Catalyst.Abstractions.Rpc;
+using Catalyst.Core.Ledger;
+using Catalyst.Core.Mempool.Documents;
+using Catalyst.Core.P2P;
 using Serilog;
 
 namespace Catalyst.Node.POA.CE
@@ -46,7 +48,7 @@ namespace Catalyst.Node.POA.CE
         private readonly ILedger _ledger;
         private readonly IKeySigner _keySigner;
         private readonly ILogger _logger;
-        private readonly IMempool _mempool;
+        private readonly IMempool<MempoolDocument> _mempool;
         private readonly IPeerService _peer;
         private readonly INodeRpcServer _nodeRpcServer;
         private readonly IPeerClient _peerClient;
@@ -61,7 +63,7 @@ namespace Catalyst.Node.POA.CE
             INodeRpcServer nodeRpcServer,
             IPeerClient peerClient,
             IPeerSettings peerSettings,
-            IMempool mempool,
+            IMempool<MempoolDocument> mempool,
             IContract contract = null)
         {
             _peer = peer;

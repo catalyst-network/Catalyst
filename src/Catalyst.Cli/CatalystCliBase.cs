@@ -27,7 +27,7 @@ using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
-using Catalyst.Common.Interfaces.Cli;
+using Catalyst.Abstractions.Cli;
 
 namespace Catalyst.Cli
 {

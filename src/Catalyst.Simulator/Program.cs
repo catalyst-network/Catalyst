@@ -23,11 +23,11 @@
 
 using System;
 using System.Linq;
-using Catalyst.Common.Cryptography;
-using Catalyst.Common.FileSystem;
-using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.Registry;
-using Catalyst.Common.Shell;
+using Catalyst.Abstractions.P2P;
+using Catalyst.Core.Cli;
+using Catalyst.Core.Cryptography;
+using Catalyst.Core.FileSystem;
+using Catalyst.Core.Registry;
 using Catalyst.Simulator.Extensions;
 using Catalyst.Simulator.Helpers;
 using Catalyst.Simulator.Simulations;

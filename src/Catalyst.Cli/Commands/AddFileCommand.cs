@@ -22,16 +22,14 @@
 #endregion
 
 using Catalyst.Cli.Options;
-using Catalyst.Common.FileTransfer;
-using Catalyst.Common.Interfaces.Cli;
-using Catalyst.Common.Interfaces.FileTransfer;
 using Catalyst.Protocol.Rpc.Node;
 using System.IO;
+using Catalyst.Abstractions.Cli.Commands;
+using Catalyst.Abstractions.FileTransfer;
+using Catalyst.Abstractions.Types;
 using Catalyst.Cli.CommandTypes;
-using Catalyst.Common.Config;
-using Catalyst.Common.Extensions;
-using Catalyst.Common.Interfaces.Cli.Commands;
-using Catalyst.Common.Types;
+using Catalyst.Core.Extensions;
+using Catalyst.Core.FileTransfer;
 
 namespace Catalyst.Cli.Commands
 {

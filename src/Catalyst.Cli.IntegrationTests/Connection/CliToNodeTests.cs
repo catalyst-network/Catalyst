@@ -23,17 +23,19 @@
 
 using System.Collections.Generic;
 using Autofac;
-using Catalyst.Common.Interfaces.Cli;
+using Catalyst.Abstractions.Cli;
 using FluentAssertions;
 using Xunit;
 using Xunit.Abstractions;
 using System.IO;
+using System.IO.Abstractions;
 using System.Threading.Tasks;
-using Catalyst.Common.Interfaces.FileSystem;
-using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Abstractions.FileSystem;
+using Catalyst.Abstractions.P2P;
+using Catalyst.Core.IntegrationTests;
 using Catalyst.TestUtils;
-using Catalyst.Core.Lib.IntegrationTests;
-using Constants = Catalyst.Common.Config.Constants;
+using Constants = Catalyst.Core.Config.Constants;
+using IFileSystem = Catalyst.Abstractions.FileSystem.IFileSystem;
 
 namespace Catalyst.Cli.IntegrationTests.Connection
 {

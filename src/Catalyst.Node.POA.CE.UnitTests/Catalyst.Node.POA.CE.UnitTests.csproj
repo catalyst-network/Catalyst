@@ -16,7 +16,7 @@
         <PackageReference Include="SharpRepository.XmlRepository" Version="2.0.1-alpha3" />
     </ItemGroup>
     <ItemGroup>
-        <ProjectReference Include="..\Catalyst.Common.UnitTests\Catalyst.Common.UnitTests.csproj" />
+        <ProjectReference Include="..\Catalyst.Core.UnitTests\Catalyst.Core.UnitTests.csproj" />
         <ProjectReference Include="..\Catalyst.Node.POA.CE\Catalyst.Node.POA.CE.csproj" />
         <ProjectReference Include="..\Catalyst.TestUtils\Catalyst.TestUtils.csproj" />
     </ItemGroup>

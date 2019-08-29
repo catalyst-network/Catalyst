@@ -22,8 +22,8 @@
 #endregion
 
 using System.Collections.Generic;
-using Catalyst.Common.Config;
-using Catalyst.Common.Types;
+using Catalyst.Abstractions.Types;
+using Catalyst.Core.Config;
 using Catalyst.Protocol.Common;
 
 namespace Catalyst.Cli

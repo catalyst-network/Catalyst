@@ -22,8 +22,9 @@
 #endregion
 
 using System.Security;
-using Catalyst.Common.Registry;
-using Catalyst.Common.Types;
+using Catalyst.Abstractions.Types;
+using Catalyst.Abstractions.Types;
+using Catalyst.Core.Registry;
 
 namespace Catalyst.Simulator.Helpers
 {

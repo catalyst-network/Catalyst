@@ -23,8 +23,8 @@
 
 using Catalyst.Cli.CommandTypes;
 using Catalyst.Cli.Options;
-using Catalyst.Common.Interfaces.Cli.Commands;
-using Catalyst.Common.Network;
+using Catalyst.Abstractions.Cli.Commands;
+using Catalyst.Core.Network;
 using Dawn;
 using Serilog;
 

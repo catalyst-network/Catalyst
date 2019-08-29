@@ -24,8 +24,8 @@
 using System.Linq;
 using Catalyst.Cli.Commands;
 using Catalyst.Cli.UnitTests.Helpers;
-using Catalyst.Common.Interfaces.IO.Messaging.Dto;
-using Catalyst.Common.Interfaces.Rpc;
+using Catalyst.Abstractions.IO.Messaging.Dto;
+using Catalyst.Abstractions.Rpc;
 using Catalyst.Protocol;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;

@@ -23,10 +23,10 @@
 
 using Catalyst.Cli.CommandTypes;
 using Catalyst.Cli.Options;
-using Catalyst.Common.Extensions;
-using Catalyst.Common.Interfaces.Cli;
-using Catalyst.Common.Interfaces.Cli.Commands;
-using Catalyst.Common.Util;
+using Catalyst.Abstractions.Cli;
+using Catalyst.Abstractions.Cli.Commands;
+using Catalyst.Core.Extensions;
+using Catalyst.Core.Util;
 using Catalyst.Protocol.Rpc.Node;
 using Nethereum.RLP;
 

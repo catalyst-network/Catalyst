@@ -22,7 +22,7 @@
 #endregion
 
 using Catalyst.Cli.Options;
-using Catalyst.Common.Interfaces.Cli.Commands;
+using Catalyst.Abstractions.Cli.Commands;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.Cli.CommandTypes;
 using Catalyst.Protocol;
