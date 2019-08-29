@@ -29,7 +29,7 @@ using Xunit;
 
 namespace Catalyst.Common.UnitTests.Utils
 {
-    public class TtlChangeTokenProviderTests : IDisposable
+    public sealed class TtlChangeTokenProviderTests : IDisposable
     {
         private readonly ManualResetEvent _manualResetEvent;
 
