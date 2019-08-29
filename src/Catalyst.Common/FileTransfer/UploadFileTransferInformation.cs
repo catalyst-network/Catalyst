@@ -28,6 +28,7 @@ using Catalyst.Common.Interfaces.FileTransfer;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using DotNetty.Transport.Channels;
@@ -37,9 +38,6 @@ namespace Catalyst.Common.FileTransfer
 {
     public sealed class UploadFileTransferInformation : BaseFileTransferInformation, IUploadFileInformation
     {
-        /// <summary>The upload message factory</summary>
-        private readonly IDtoFactory _uploadDtoFactory;
-        
         /// <summary>Initializes a new instance of the <see cref="UploadFileTransferInformation"/> class.</summary>
         /// <param name="stream">The stream.</param>
         /// <param name="peerIdentifier">The peer identifier.</param>
@@ -51,13 +49,11 @@ namespace Catalyst.Common.FileTransfer
             IPeerIdentifier peerIdentifier,
             IPeerIdentifier recipientIdentifier,
             IChannel recipientChannel,
-            ICorrelationId correlationGuid,
-            IDtoFactory uploadDtoFactory) :
+            ICorrelationId correlationGuid) :
             base(peerIdentifier, recipientIdentifier, recipientChannel,
                 correlationGuid, string.Empty, (ulong) stream.Length)
         {
             RandomAccessStream = stream;
-            _uploadDtoFactory = uploadDtoFactory;
             RetryCount = 0;
         }
 
@@ -96,9 +92,8 @@ namespace Catalyst.Common.FileTransfer
                 ChunkId = chunkId,
                 CorrelationFileName = CorrelationId.Id.ToByteString()
             }.ToProtocolMessage(PeerIdentifier.PeerId);
-            
-            return _uploadDtoFactory.GetDto(transferMessage,
-                PeerIdentifier,
+
+            return new MessageDto(transferMessage,
                 RecipientIdentifier
             );
         }

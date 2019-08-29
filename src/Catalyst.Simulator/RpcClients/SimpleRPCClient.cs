@@ -183,11 +183,10 @@ namespace Catalyst.Simulator.RpcClients
 
         public void SendMessage<T>(T message) where T : IMessage
         {
-            var dtoFactory = new DtoFactory();
             var protocolMessage =
                 message.ToProtocolMessage(_senderPeerIdentifier.PeerId, CorrelationId.GenerateCorrelationId());
-            var messageDto = dtoFactory.GetDto(
-                protocolMessage, _senderPeerIdentifier,
+            var messageDto = new MessageDto(
+                protocolMessage,
                 _recipientPeerIdentifier);
 
             _nodeRpcClient.SendMessage(messageDto);

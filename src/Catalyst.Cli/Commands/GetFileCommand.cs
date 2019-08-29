@@ -29,6 +29,7 @@ using Catalyst.Common.FileTransfer;
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.Cli.Commands;
 using Catalyst.Common.Interfaces.FileTransfer;
+using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Protocol.Rpc.Node;
 
 namespace Catalyst.Cli.Commands
@@ -58,11 +59,9 @@ namespace Catalyst.Cli.Commands
             var protocolMessage = message.ToProtocolMessage(SenderPeerIdentifier.PeerId);
             var correlationId = protocolMessage.CorrelationId.ToCorrelationId();
 
-            var messageDto = CommandContext.DtoFactory.GetDto(
+            var messageDto = new MessageDto(
                 protocolMessage,
-                SenderPeerIdentifier,
-                RecipientPeerIdentifier,
-                correlationId);
+                RecipientPeerIdentifier);
 
             var fileTransfer = new DownloadFileTransferInformation(
                 SenderPeerIdentifier,

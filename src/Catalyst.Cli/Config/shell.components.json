@@ -271,14 +271,6 @@
             ]
         },
         {
-            "type": "Catalyst.Common.IO.Messaging.Dto.DtoFactory, Catalyst.Common",
-            "services": [
-                {
-                    "type": "Catalyst.Common.Interfaces.IO.Messaging.Dto.IDtoFactory, Catalyst.Common"
-                }
-            ]
-        },
-        {
             "type": "Catalyst.Common.Rpc.IO.Messaging.Correlation.RpcMessageCorrelationManager, Catalyst.Common",
             "services": [
                 {
