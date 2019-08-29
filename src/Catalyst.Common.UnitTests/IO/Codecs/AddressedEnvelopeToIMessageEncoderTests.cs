@@ -43,7 +43,7 @@ namespace Catalyst.Common.UnitTests.IO.Codecs
         }
 
         [Fact]
-        public void Can_Encode_Message_Dto_To_Protocol_Message_Signed()
+        public void Can_Encode_Signed_Message_Dto_To_Protocol_Message_Signed()
         {
             var messageDto = new SignedMessageDto(new ProtocolMessageSigned
                 {
