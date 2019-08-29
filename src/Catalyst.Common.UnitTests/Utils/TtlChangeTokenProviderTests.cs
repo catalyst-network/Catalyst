@@ -39,9 +39,8 @@ namespace Catalyst.Common.UnitTests.Utils
         }
 
         [Theory]
-        [InlineData(100)]
-        [InlineData(200)]
-        [InlineData(300)]
+        [InlineData(500)]
+        [InlineData(1000)]
         public void Can_Hit_Callback_When_Expired(int timeInMs)
         {
             var changeProvider = new TtlChangeTokenProvider(timeInMs);
