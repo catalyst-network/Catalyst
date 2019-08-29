@@ -40,6 +40,7 @@ namespace Catalyst.Common.UnitTests.Utils
         [Fact]
         public void Has_Token_Cancelled_Should_Be_True_When_Cancelled()
         {
+            _cancellationTokenProvider.HasTokenCancelled().Should().BeFalse();
             _cancellationTokenProvider.CancellationTokenSource.Cancel();
             _cancellationTokenProvider.HasTokenCancelled().Should().BeTrue();
         }
