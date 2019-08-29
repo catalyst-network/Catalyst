@@ -21,7 +21,6 @@
 
 #endregion
 
-using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
@@ -69,11 +68,9 @@ namespace Catalyst.Common.IO.Observers
                     recipientPeerIdentifier,
                     correlationId);
 
-                var responseDto = new DtoFactory().GetDto(
+                var responseDto = new MessageDto(
                     response.ToProtocolMessage(PeerIdentifier.PeerId, correlationId),
-                    PeerIdentifier,
-                    recipientPeerIdentifier,
-                    correlationId);
+                    recipientPeerIdentifier);
 
                 messageDto.Context.Channel.WriteAndFlushAsync(responseDto);
             }

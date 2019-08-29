@@ -26,7 +26,6 @@ using System.Threading.Tasks;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.Keystore;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
-using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.Util;
 using Catalyst.Protocol.Common;
@@ -71,11 +70,8 @@ namespace Catalyst.Common.IO.Handlers
                 Message = message.Content
             };
 
-            var signedDto = new MessageDto<ProtocolMessageSigned>(protocolMessageSigned,
-                message.SenderPeerIdentifier,
-                message.RecipientPeerIdentifier,
-                message.CorrelationId);
-            
+            var signedDto = new SignedMessageDto(protocolMessageSigned, message.RecipientPeerIdentifier);
+
             return context.WriteAsync(signedDto);
         }
     }
