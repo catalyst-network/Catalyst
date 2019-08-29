@@ -25,7 +25,6 @@ using System.IO;
 using Autofac;
 using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.Types;
 using Catalyst.Protocol.Common;
 using Catalyst.TestUtils;
 using FluentAssertions;
@@ -51,7 +50,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P
             using (var scope = ContainerProvider.Container.BeginLifetimeScope(CurrentTestName))
             {
                 var peerDiscovery = scope.Resolve<IPeerSettings>();
-                peerDiscovery.Network.Should().Equals("Devnet");
+                peerDiscovery.Network.Should().Be(Network.Testnet);
             }
         }
     }
