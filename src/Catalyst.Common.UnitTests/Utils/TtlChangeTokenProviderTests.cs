@@ -40,7 +40,7 @@ namespace Catalyst.Common.UnitTests.Utils
             var changeProvider = new TtlChangeTokenProvider(timeInMs);
             var changeToken = changeProvider.GetChangeToken();
             changeToken.RegisterChangeCallback(o => { hitCallback = true; }, new object());
-            await Task.Delay(timeInMs + 100);
+            await Task.Delay(timeInMs + 1000).ConfigureAwait(false);
             hitCallback.Should().BeTrue();
         }
     }
