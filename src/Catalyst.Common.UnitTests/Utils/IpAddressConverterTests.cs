@@ -33,7 +33,7 @@ namespace Catalyst.Common.UnitTests.Utils
 {
     public class IpAddressConverterTests
     {
-        private IpAddressConverter _ipAddressConverter;
+        private readonly IpAddressConverter _ipAddressConverter;
 
         private class JsonIpTester
         {
