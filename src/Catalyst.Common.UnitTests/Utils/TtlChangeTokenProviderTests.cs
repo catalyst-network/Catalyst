@@ -21,27 +21,39 @@
 
 #endregion
 
-using System.Threading.Tasks;
+using System;
+using System.Threading;
 using Catalyst.Common.Util;
 using FluentAssertions;
 using Xunit;
 
 namespace Catalyst.Common.UnitTests.Utils
 {
-    public class TtlChangeTokenProviderTests
+    public class TtlChangeTokenProviderTests : IDisposable
     {
+        private readonly ManualResetEvent _manualResetEvent;
+
+        public TtlChangeTokenProviderTests()
+        {
+            _manualResetEvent = new ManualResetEvent(false);
+        }
+
         [Theory]
         [InlineData(100)]
         [InlineData(200)]
         [InlineData(300)]
-        public async Task Can_Hit_Callback_When_Expired(int timeInMs)
+        public void Can_Hit_Callback_When_Expired(int timeInMs)
         {
-            bool hitCallback = false;
             var changeProvider = new TtlChangeTokenProvider(timeInMs);
             var changeToken = changeProvider.GetChangeToken();
-            changeToken.RegisterChangeCallback(o => { hitCallback = true; }, new object());
-            await Task.Delay(timeInMs + 1000).ConfigureAwait(false);
-            hitCallback.Should().BeTrue();
+            changeToken.RegisterChangeCallback(o => { _manualResetEvent.Set(); }, new object());
+            var signaled = _manualResetEvent.WaitOne(TimeSpan.FromMilliseconds(timeInMs + 1000));
+            signaled.Should().BeTrue();
+        }
+
+        public void Dispose()
+        {
+            _manualResetEvent.Dispose();
         }
     }
 }
