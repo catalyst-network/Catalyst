@@ -386,7 +386,6 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
                         });
 
                     _testScheduler.Start();
-                    //await walker.DiscoveryStream.WaitForItemsOnDelayedStreamOnTaskPoolSchedulerAsync();
 
                     streamObserver.Received(1).OnNext(Arg.Any<IPeerClientMessageDto>());
                 }
@@ -424,7 +423,6 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
                     discoveryTestBuilder.PeerClientObservables.ToList().ForEach(o => o.ResponseMessageSubject.OnNext(subbedDto1));
 
                     _testScheduler.Start();
-                    //await walker.DiscoveryStream.WaitForItemsOnDelayedStreamOnTaskPoolSchedulerAsync(1);
 
                     streamObserver.Received(1).OnNext(Arg.Any<IPeerClientMessageDto>());
                     
@@ -579,8 +577,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
                     });
 
                     _testScheduler.Start();
-                    //await walker.DiscoveryStream.WaitForItemsOnDelayedStreamOnTaskPoolSchedulerAsync();
-                    
+
                     walker.DtoFactory
                        .Received(Constants.AngryPirate)
                        .GetDto(

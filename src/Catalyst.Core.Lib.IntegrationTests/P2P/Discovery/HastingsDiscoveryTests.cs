@@ -298,7 +298,6 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
                        .ForEach(o => { o.ResponseMessageSubject.OnNext(pingDto); });
 
                     _testScheduler.Start();
-                    //await walker.DiscoveryStream.WaitForItemsOnDelayedStreamOnTaskPoolSchedulerAsync();
 
                     streamObserver.Received(1).OnNext(Arg.Is(pingDto));
 

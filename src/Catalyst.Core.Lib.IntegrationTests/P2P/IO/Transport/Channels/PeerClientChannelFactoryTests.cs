@@ -149,7 +149,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.IO.Transport.Channels
                 _clientKeySigner.ReceivedWithAnyArgs(1).Verify(null, null, null);
 
                 _testScheduler.Start();
-                //await messageStream.WaitForItemsOnDelayedStreamOnTaskPoolSchedulerAsync();
+
                 observer.Received.Count.Should().Be(1);
                 observer.Received.Single().Payload.CorrelationId.ToCorrelationId().Id.Should().Be(correlationId.Id);
             }
