@@ -140,23 +140,39 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Observers
 
             Handler_Can_Initialize_Download_File_Transfer();
 
-            var success = await TaskHelper.WaitForAsync(() =>
+            //var success = await TaskHelper.WaitForAsync(() =>
+            //{
+            //    try
+            //    {
+            //        fileTransferInformation.RecipientChannel.Received(1).WriteAndFlushAsync(
+            //            Arg.Is<DefaultAddressedEnvelope<AddFileToDfsResponse>>(
+            //                dto =>
+            //                    dto.Content.ResponseCode[0] == expectedResponse.Id &&
+            //                    dto.Content.DfsHash.Equals(expectedHash)
+            //            ));
+            //        return true;
+            //    }
+            //    catch (Exception)
+            //    {
+            //        return false;
+            //    }
+            //}, TimeSpan.FromSeconds(5));
+
+            bool success;
+            try
             {
-                try
-                {
-                    fileTransferInformation.RecipientChannel.Received(1).WriteAndFlushAsync(
-                        Arg.Is<DefaultAddressedEnvelope<AddFileToDfsResponse>>(
-                            dto =>
-                                dto.Content.ResponseCode[0] == expectedResponse.Id &&
-                                dto.Content.DfsHash.Equals(expectedHash)
-                        ));
-                    return true;
-                }
-                catch (Exception)
-                {
-                    return false;
-                }
-            }, TimeSpan.FromSeconds(5));
+                await fileTransferInformation.RecipientChannel.Received(1).WriteAndFlushAsync(
+                    Arg.Is<DefaultAddressedEnvelope<AddFileToDfsResponse>>(
+                        dto =>
+                            dto.Content.ResponseCode[0] == expectedResponse.Id &&
+                            dto.Content.DfsHash.Equals(expectedHash)
+                    ));
+                success = true;
+            }
+            catch (Exception)
+            {
+                success = false;
+            }
 
             success.Should().BeTrue();
         }

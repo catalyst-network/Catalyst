@@ -65,7 +65,6 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Observers
             _pingRequestObserver.StartObserving(observableStream);
 
             _testScheduler.Start();
-            //await observableStream.WaitForItemsOnDelayedStreamOnTaskPoolSchedulerAsync(1);
 
             await fakeContext.Channel.ReceivedWithAnyArgs(1)
                .WriteAndFlushAsync(new PingResponse().ToProtocolMessage(PeerIdHelper.GetPeerId(), CorrelationId.GenerateCorrelationId()));

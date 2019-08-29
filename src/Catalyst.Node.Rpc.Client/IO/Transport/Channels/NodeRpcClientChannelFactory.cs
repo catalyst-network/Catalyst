@@ -48,7 +48,6 @@ namespace Catalyst.Node.Rpc.Client.IO.Transport.Channels
 {
     public class NodeRpcClientChannelFactory : TcpClientChannelFactory
     {
-        private readonly IScheduler _scheduler;
         private readonly IKeySigner _keySigner;
         private readonly IRpcMessageCorrelationManager _messageCorrelationCache;
         private readonly IPeerIdValidator _peerIdValidator;
@@ -69,12 +68,12 @@ namespace Catalyst.Node.Rpc.Client.IO.Transport.Channels
             int backLogValue = 100,
             IScheduler scheduler = null) : base(backLogValue)
         {
-            _scheduler = scheduler ?? Scheduler.Default;
+            var observableScheduler = scheduler ?? Scheduler.Default;
             _keySigner = keySigner;
             _messageCorrelationCache = messageCorrelationCache;
             _peerIdValidator = peerIdValidator;
             _signingContextProvider = signingContextProvider;
-            _observableServiceHandler = new ObservableServiceHandler(_scheduler);
+            _observableServiceHandler = new ObservableServiceHandler(observableScheduler);
         }
 
         protected override Func<List<IChannelHandler>> HandlerGenerationFunction
