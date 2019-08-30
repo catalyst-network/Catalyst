@@ -24,6 +24,7 @@
 using System;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.IO.Codecs;
+using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Protocol.Common;
 using Catalyst.TestUtils;
@@ -50,7 +51,7 @@ namespace Catalyst.Common.UnitTests.IO.Codecs
                     Message = new ProtocolMessage
                     {
                         PeerId = PeerIdHelper.GetPeerId("TestSender"),
-                        CorrelationId = Guid.NewGuid().ToByteString(),
+                        CorrelationId = CorrelationId.GenerateCorrelationId().Id.ToByteString(),
                     }
                 },
                 PeerIdentifierHelper.GetPeerIdentifier("Test"));
