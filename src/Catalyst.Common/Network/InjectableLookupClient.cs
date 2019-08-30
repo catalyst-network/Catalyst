@@ -21,17 +21,13 @@
 
 #endregion
 
-using Catalyst.Common.Config;
+using Catalyst.Common.Interfaces.P2P;
 using DnsClient;
-using Microsoft.Extensions.Configuration;
 
 namespace Catalyst.Common.Network
 {
     public class InjectableLookupClient : LookupClient
     {
-        public InjectableLookupClient(IConfigurationRoot configurationRoot) : base
-        (
-            ConfigValueParser.GetIpEndpointArrValues(configurationRoot, "DnsServers")
-        ) { }
+        public InjectableLookupClient(IPeerSettings peerSettings) : base(peerSettings.DnsServers) { }
     }
 }
