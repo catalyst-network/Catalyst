@@ -39,7 +39,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P
         {
             Path.Combine(Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile),
             Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile),
-            Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Network.Testnet))
+            Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Network.Devnet))
         }, output) { }
 
         [Fact]
@@ -50,7 +50,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P
             using (var scope = ContainerProvider.Container.BeginLifetimeScope(CurrentTestName))
             {
                 var peerDiscovery = scope.Resolve<IPeerSettings>();
-                peerDiscovery.Network.Should().Be(Network.Testnet);
+                peerDiscovery.Network.Should().Be(Network.Devnet);
             }
         }
     }
