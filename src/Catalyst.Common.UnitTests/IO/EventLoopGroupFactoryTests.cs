@@ -23,7 +23,6 @@
 
 using Catalyst.Common.Interfaces.IO.EventLoop;
 using Catalyst.Common.IO.EventLoop;
-using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using FluentAssertions;
 using System;
@@ -98,8 +97,6 @@ namespace Catalyst.Common.UnitTests.IO
             };
 
             _eventFactory.Dispose();
-
-            //await TaskHelper.WaitForAsync(() => eventLoops.All(eventLoop => eventLoop.IsShutdown), TimeSpan.FromSeconds(5));
 
             eventLoops.ToList().ForEach(eventLoop => eventLoop.IsShutdown.Should().BeTrue());
         }

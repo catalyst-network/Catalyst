@@ -61,20 +61,19 @@ namespace Catalyst.Common.UnitTests.FileTransfer
 
                 cancellationTokenSource.Cancel();
 
-                //TODO
-                //var cancelled = await TaskHelper.WaitForAsync(() =>
-                //{
-                //    try
-                //    {
-                //        _downloadFileTransferFactory.GetFileTransferInformation(correlationId).Should().BeNull();
-                //        return true;
-                //    }
-                //    catch (Exception)
-                //    {
-                //        return false;
-                //    }
-                //}, TimeSpan.FromSeconds(5));
-                //cancelled.Should().BeTrue();
+                var cancelled = await TaskHelper.WaitForAsync(() =>
+                {
+                    try
+                    {
+                        _downloadFileTransferFactory.GetFileTransferInformation(correlationId).Should().BeNull();
+                        return true;
+                    }
+                    catch (Exception)
+                    {
+                        return false;
+                    }
+                }, TimeSpan.FromSeconds(5));
+                cancelled.Should().BeTrue();
             }
         }
 
