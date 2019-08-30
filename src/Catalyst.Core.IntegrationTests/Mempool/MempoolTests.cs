@@ -79,7 +79,7 @@ namespace Catalyst.Core.IntegrationTests.Mempool
         {
             var originalContent = await File.ReadAllTextAsync(mempoolConfigFile.FullName);
             var newContent =
-                originalContent.Replace("\"Config/Modules/mempool.json\"",
+                originalContent.Replace("\"Config.mempool.json\"",
                     JsonConvert.ToString(mempoolConfigFile.FullName));
             var newJsonPath = Path.Combine(FileSystem.GetCatalystDataDir().FullName,
                 $"components.{mempoolConfigFile.Name}");

@@ -53,10 +53,13 @@
         <ProjectReference Include="..\Catalyst.Core\Catalyst.Core.csproj" />
     </ItemGroup>
     <ItemGroup>
+        <None Update="Config\**\*.json">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
         <None Update="Config\*.json">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
-        <None Update="Config\Modules\*.json">
+        <None Update="Config.*.json">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
     </ItemGroup>

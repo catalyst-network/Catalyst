@@ -22,6 +22,7 @@
 #endregion
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Concurrency;
@@ -29,20 +30,30 @@ using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Threading;
 using System.Threading.Tasks;
+using Catalyst.Core.Config;
+using Catalyst.Core.Extensions;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.Discovery;
 using Catalyst.Abstractions.P2P.IO.Messaging.Dto;
 using Catalyst.Abstractions.Types;
-using Catalyst.Core.Config;
+using Catalyst.Core.IO.Messaging.Correlation;
+using Catalyst.Core.IO.Messaging.Dto;
+using Catalyst.Core.P2P;
+using Catalyst.Core.P2P.Discovery;
+using Catalyst.Core.P2P.Models;
+using Catalyst.Abstractions.Types;
+using Catalyst.Core.Util;
 using Catalyst.Core.Extensions;
 using Catalyst.Core.IO.Messaging.Correlation;
 using Catalyst.Core.P2P.Discovery;
+using Catalyst.Core.P2P.IO.Observers;
+using Catalyst.Core.P2P.Discovery;
 using Catalyst.Core.P2P.Discovery.Hastings;
 using Catalyst.Core.P2P.IO.Observers;
-using Catalyst.Core.P2P.Models;
 using Catalyst.Core.Util;
+using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
 using Catalyst.TestUtils;
 using FluentAssertions;
@@ -559,18 +570,10 @@ namespace Catalyst.Core.UnitTests.P2P.Discovery
                     });
 
                     await walker.DiscoveryStream.WaitForItemsOnDelayedStreamOnTaskPoolSchedulerAsync();
-                    
-                    walker.DtoFactory
-                       .Received(Constants.AngryPirate)
-                       .GetDto(
-                            Arg.Is(new PingRequest()),
-                            Arg.Any<IPeerIdentifier>(),
-                            Arg.Any<IPeerIdentifier>()
-                        );
-                    
+
                     walker.PeerClient
                        .Received(Constants.AngryPirate)
-                       .SendMessage(Arg.Any<IMessageDto<PingRequest>>());
+                       .SendMessage(Arg.Any<IMessageDto<ProtocolMessage>>());
                     
                     walker.StepProposal.Neighbours
                        .Where(n => n.StateTypes == NeighbourStateTypes.Contacted)

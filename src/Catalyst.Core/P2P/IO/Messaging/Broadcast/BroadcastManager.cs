@@ -21,26 +21,30 @@
 
 #endregion
 
+using Catalyst.Core.Config;
+using Catalyst.Core.Extensions;
+using Catalyst.Abstractions.IO.Messaging.Correlation;
+using Catalyst.Abstractions.IO.Messaging.Dto;
+using Catalyst.Abstractions.P2P;
+using Catalyst.Abstractions.P2P.IO.Messaging.Broadcast;
+using Catalyst.Core.IO.Messaging.Dto;
+using Catalyst.Protocol;
+using Catalyst.Protocol.Common;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Primitives;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Catalyst.Abstractions.IO.Messaging.Correlation;
-using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.KeySigner;
-using Catalyst.Abstractions.P2P;
-using Catalyst.Abstractions.P2P.IO.Messaging.Broadcast;
+using Catalyst.Core.Util;
 using Catalyst.Core.Extensions;
-using Catalyst.Core.IO.Messaging.Dto;
+using Catalyst.Core.P2P.IO.Messaging.Broadcast;
 using Catalyst.Core.P2P.Repository;
 using Catalyst.Core.Util;
-using Catalyst.Protocol;
-using Catalyst.Protocol.Common;
 using Google.Protobuf;
-using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Primitives;
 using Serilog;
 
 namespace Catalyst.Core.P2P.IO.Messaging.Broadcast
@@ -51,9 +55,6 @@ namespace Catalyst.Core.P2P.IO.Messaging.Broadcast
     /// <seealso cref="IBroadcastManager" />
     public sealed class BroadcastManager : IBroadcastManager
     {
-        /// <summary>The message factory</summary>
-        private readonly IDtoFactory _dtoFactory;
-
         /// <summary>The peers</summary>
         private readonly IPeerRepository _peers;
 
@@ -104,7 +105,6 @@ namespace Catalyst.Core.P2P.IO.Messaging.Broadcast
             _peerClient = peerClient;
             _signer = signer;
             _incomingBroadcastSignatureDictionary = new ConcurrentDictionary<ICorrelationId, ProtocolMessageSigned>();
-            _dtoFactory = new DtoFactory();
             _entryOptions = () => new MemoryCacheEntryOptions()
                .AddExpirationToken(new CancellationChangeToken(new CancellationTokenSource(TimeSpan.FromMinutes(10)).Token));
         }
@@ -193,14 +193,15 @@ namespace Catalyst.Core.P2P.IO.Messaging.Broadcast
                 var peersToGossip = GetRandomPeers(fanOut);
                 var correlationId = message.Message.CorrelationId.ToCorrelationId();
 
+                //CLEAN UP
                 foreach (var peerIdentifier in peersToGossip)
                 {
                     _logger.Verbose("Broadcasting message {message}", message);
-                    _peerClient.SendMessage(_dtoFactory.GetDto(
-                        message.ToProtocolMessage(peerIdentifier.PeerId, correlationId),
-                        _peerIdentifier,
-                        peerIdentifier,
-                        correlationId)
+                    var protocolMessage = message.Message;
+                    protocolMessage.PeerId = peerIdentifier.PeerId;
+                    _peerClient.SendMessage(new MessageDto(
+                        protocolMessage,
+                        peerIdentifier)
                     );
                 }
 

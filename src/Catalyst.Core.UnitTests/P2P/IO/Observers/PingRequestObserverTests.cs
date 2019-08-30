@@ -25,6 +25,7 @@ using System;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Catalyst.Core.Extensions;
+using Catalyst.Core.Extensions;
 using Catalyst.Core.IO.Messaging.Correlation;
 using Catalyst.Core.IO.Messaging.Dto;
 using Catalyst.Core.P2P.IO.Observers;

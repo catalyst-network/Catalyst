@@ -25,6 +25,7 @@ using System;
 using Catalyst.Abstractions.Types;
 using Catalyst.Abstractions.Types;
 using Catalyst.Core.Kernel;
+using Catalyst.Protocol.Common;
 using CommandLine;
 
 namespace Catalyst.Node.POA.CE
@@ -93,7 +94,7 @@ namespace Catalyst.Node.POA.CE
             {
                 Kernel
                    .WithDataDirectory()
-                   .WithNetworksConfigFile(default, options.OverrideNetworkFile)
+                   .WithNetworksConfigFile(Network.Devnet, options.OverrideNetworkFile)
                    .WithComponentsConfigFile()
                    .WithSerilogConfigFile()
                    .WithConfigCopier()

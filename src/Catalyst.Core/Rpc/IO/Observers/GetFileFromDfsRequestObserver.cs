@@ -24,17 +24,18 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Catalyst.Abstractions.Dfs;
-using Catalyst.Abstractions.Enumerator;
+using Catalyst.Core.Extensions;
+using Catalyst.Core.FileTransfer;
 using Catalyst.Abstractions.FileTransfer;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.IO.Observers;
+using Catalyst.Abstractions.Dfs;
+using Catalyst.Abstractions.Enumerator;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.Types;
-using Catalyst.Core.Extensions;
-using Catalyst.Core.FileTransfer;
 using Catalyst.Core.IO.Observers;
+using Catalyst.Abstractions.Types;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
@@ -52,9 +53,6 @@ namespace Catalyst.Core.Rpc.IO.Observers
         : RequestObserverBase<GetFileFromDfsRequest, GetFileFromDfsResponse>,
             IRpcRequestObserver
     {
-        /// <summary>The RPC message factory</summary>
-        private readonly IDtoFactory _dtoFactory;
-
         /// <summary>The upload file transfer factory</summary>
         private readonly IUploadFileTransferFactory _fileTransferFactory;
 
@@ -65,15 +63,12 @@ namespace Catalyst.Core.Rpc.IO.Observers
         /// <param name="dfs">The DFS.</param>
         /// <param name="peerIdentifier">The peer identifier.</param>
         /// <param name="fileTransferFactory">The upload file transfer factory.</param>
-        /// <param name="dtoFactory"></param>
         /// <param name="logger">The logger.</param>
         public GetFileFromDfsRequestObserver(IDfs dfs,
             IPeerIdentifier peerIdentifier,
             IUploadFileTransferFactory fileTransferFactory,
-            IDtoFactory dtoFactory,
             ILogger logger) : base(logger, peerIdentifier)
         {
-            _dtoFactory = dtoFactory;
             _fileTransferFactory = fileTransferFactory;
             _dfs = dfs;
         }
@@ -112,8 +107,7 @@ namespace Catalyst.Core.Rpc.IO.Observers
                             senderPeerIdentifier,
                             PeerIdentifier,
                             channelHandlerContext.Channel,
-                            correlationId,
-                            _dtoFactory
+                            correlationId
                         ))
                         {
                             return _fileTransferFactory.RegisterTransfer(fileTransferInformation);

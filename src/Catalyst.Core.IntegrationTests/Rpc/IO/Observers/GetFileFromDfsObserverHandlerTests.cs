@@ -30,7 +30,6 @@ using Catalyst.Abstractions.Types;
 using Catalyst.Core.Extensions;
 using Catalyst.Core.FileTransfer;
 using Catalyst.Core.IO.Messaging.Correlation;
-using Catalyst.Core.IO.Messaging.Dto;
 using Catalyst.Core.P2P;
 using Catalyst.Core.Rpc.IO.Observers;
 using Catalyst.Protocol.Rpc.Node;
@@ -68,7 +67,7 @@ namespace Catalyst.Core.IntegrationTests.Rpc.IO.Observers
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public async Task Get_File_Rpc(long byteSize)
         {
-            string addedIpfsHash = AddFileToDfs(byteSize, out var crcValue, out var stream);
+            var addedIpfsHash = AddFileToDfs(byteSize, out var crcValue, out var stream);
             Stream fileStream = null;
 
             try
@@ -86,7 +85,7 @@ namespace Catalyst.Core.IntegrationTests.Rpc.IO.Observers
                     new GetFileFromDfsResponseObserver(_logger, _fileDownloadFactory);
                 var transferBytesHandler =
                     new TransferFileBytesRequestObserver(_fileDownloadFactory, rpcPeer, _logger);
-                
+
                 _fileDownloadFactory.RegisterTransfer(fileDownloadInformation);
 
                 var getFileResponse = new GetFileFromDfsResponse
@@ -103,8 +102,7 @@ namespace Catalyst.Core.IntegrationTests.Rpc.IO.Observers
                     rpcPeer,
                     nodePeer,
                     _fakeContext.Channel,
-                    correlationId,
-                    new DtoFactory());
+                    correlationId);
 
                 for (uint i = 0; i < fileUploadInformation.MaxChunk; i++)
                 {

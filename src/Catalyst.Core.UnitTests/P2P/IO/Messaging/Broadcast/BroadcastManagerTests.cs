@@ -25,16 +25,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Catalyst.Core.Extensions;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.KeySigner;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.IO.Messaging.Broadcast;
-using Catalyst.Abstractions.Repository;
-using Catalyst.Core.Extensions;
-using Catalyst.Core.IO.Messaging.Correlation;
 using Catalyst.Core.IO.Messaging.Dto;
-using Catalyst.Core.P2P.IO.Messaging.Broadcast;
 using Catalyst.Core.P2P.Models;
+using Catalyst.Core.P2P.IO.Messaging.Broadcast;
 using Catalyst.Core.P2P.Repository;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
 using Catalyst.Protocol.Common;
@@ -107,7 +105,6 @@ namespace Catalyst.Core.UnitTests.P2P.IO.Messaging.Broadcast
 
             var peerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("1");
             var senderIdentifier = PeerIdentifierHelper.GetPeerIdentifier("sender");
-            var messageFactory = new DtoFactory();
 
             IBroadcastManager broadcastMessageHandler = new BroadcastManager(
                 peerIdentifier, 
@@ -117,11 +114,9 @@ namespace Catalyst.Core.UnitTests.P2P.IO.Messaging.Broadcast
                 _keySigner,
                 Substitute.For<ILogger>());
 
-            var messageDto = messageFactory.GetDto(
-                TransactionHelper.GetTransaction(),
-                peerIdentifier,
-                senderIdentifier,
-                CorrelationId.GenerateCorrelationId()
+            var messageDto = new MessageDto(
+                TransactionHelper.GetTransaction().ToProtocolMessage(senderIdentifier.PeerId),
+                peerIdentifier
             );
 
             var gossipDto =

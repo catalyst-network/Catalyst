@@ -13,7 +13,7 @@
             "type": "Catalyst.Core.Mempool.Repositories.MempoolDocumentRepository",
             "services": [
                 {
-                    "type": "Catalyst.Abstractions.Mempool.Repository.IMempoolRepository, Catalyst.Abstractions"
+                    "type": "Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository, Catalyst.Abstractions"
                 }
             ]
         },

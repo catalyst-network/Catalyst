@@ -36,9 +36,13 @@ using Catalyst.Abstractions.P2P.IO.Messaging.Correlation;
 using Catalyst.Abstractions.P2P.ReputationSystem;
 using Catalyst.Abstractions.Util;
 using Catalyst.Core.IO.Messaging.Correlation;
+using Catalyst.Core.P2P.Models;
+using Catalyst.Core.Util;
+using Catalyst.Core.IO.Messaging.Correlation;
+using Catalyst.Core.P2P.Discovery;
 using Catalyst.Core.P2P.Discovery.Hastings;
 using Catalyst.Core.P2P.IO.Observers;
-using Catalyst.Core.P2P.Models;
+using Catalyst.Core.P2P.IO.Observers;
 using Catalyst.Core.P2P.ReputationSystem;
 using Catalyst.Core.Util;
 using Catalyst.TestUtils;
@@ -273,7 +277,6 @@ namespace Catalyst.Core.UnitTests.P2P.Discovery
                     dns ?? DiscoveryHelper.MockDnsClient(peerSettings),
                     peerSettings ?? PeerSettingsHelper.TestPeerSettings(),
                     peerClient ?? Substitute.For<IPeerClient>(),
-                    Substitute.For<IDtoFactory>(),
                     peerMessageCorrelationManager ?? DiscoveryHelper.MockCorrelationManager(scheduler),
                     cancellationTokenProvider ?? new CancellationTokenProvider(),
                     peerClientObservables,

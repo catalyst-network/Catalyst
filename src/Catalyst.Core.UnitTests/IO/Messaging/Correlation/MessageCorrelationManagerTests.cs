@@ -30,6 +30,7 @@ using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.Util;
 using Catalyst.Core.Extensions;
+using Catalyst.Core.Extensions;
 using Catalyst.Core.IO.Handlers;
 using Catalyst.Core.IO.Messaging.Correlation;
 using Catalyst.Protocol;

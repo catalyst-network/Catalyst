@@ -25,16 +25,19 @@ using System;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using Catalyst.Abstractions.Dfs;
-using Catalyst.Abstractions.Enumerator;
+using Catalyst.Core.Extensions;
+using Catalyst.Core.FileTransfer;
 using Catalyst.Abstractions.FileTransfer;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.IO.Observers;
+using Catalyst.Abstractions.Dfs;
+using Catalyst.Abstractions.Enumerator;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.Types;
-using Catalyst.Core.FileTransfer;
 using Catalyst.Core.IO.Messaging.Dto;
 using Catalyst.Core.IO.Observers;
+using Catalyst.Abstractions.Types;
+using Catalyst.Core.FileTransfer;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using DotNetty.Transport.Channels;
@@ -159,11 +162,9 @@ namespace Catalyst.Core.Rpc.IO.Observers
             var message = ReturnResponse(fileTransferInformation, await addFileResponseCode);
 
             // Send Response
-            var responseMessage = new DtoFactory().GetDto(
-                message,
-                PeerIdentifier,
-                fileTransferInformation.RecipientIdentifier,
-                fileTransferInformation.CorrelationId
+            var responseMessage = new MessageDto(
+                message.ToProtocolMessage(PeerIdentifier.PeerId, fileTransferInformation.CorrelationId),
+                fileTransferInformation.RecipientIdentifier
             );
 
             await fileTransferInformation.RecipientChannel.WriteAndFlushAsync(responseMessage).ConfigureAwait(false);

@@ -21,25 +21,25 @@
 
 #endregion
 
-using System.Collections.Generic;
-using Catalyst.Abstractions.Types;
-using Catalyst.Core.Config;
-using Catalyst.Core.Config;
+using Catalyst.Abstractions.P2P;
+using Catalyst.Core.IO.Messaging.Correlation;
+using Catalyst.Core.P2P;
+using Catalyst.Core.IO.Messaging.Correlation;
+using Catalyst.Core.P2P;
 using Catalyst.Protocol.Common;
 
-namespace Catalyst.Cli
+namespace Catalyst.Core.IO.Messaging.Dto
 {
-    internal sealed class CliConfigCopier : ConfigCopier
+    public sealed class SignedMessageDto : BaseMessageDto<ProtocolMessageSigned>
     {
-        protected override IEnumerable<string> RequiredConfigFiles(Network network, string overrideNetworkFile = null)
-        {
-            return new[]
-            {
-                Constants.ShellNodesConfigFile,
-                Constants.ShellComponentsJsonConfigFile,
-                Constants.SerilogJsonConfigFile,
-                Constants.ShellConfigFile
-            };
-        }
+        /// <summary>
+        ///     Data transfer object to wrap up all parameters for sending protocol messages into a MessageFactors.
+        /// </summary>
+        /// <param name="content"></param>
+        /// <param name="recipientPeerIdentifier"></param>
+        public SignedMessageDto(ProtocolMessageSigned content,
+            IPeerIdentifier recipientPeerIdentifier)
+            : base(content, new PeerIdentifier(content.Message.PeerId), recipientPeerIdentifier,
+                new CorrelationId(content.Message.CorrelationId)) { }
     }
 }

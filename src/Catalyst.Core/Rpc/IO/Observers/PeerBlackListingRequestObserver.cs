@@ -28,6 +28,7 @@ using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.Repository;
 using Catalyst.Core.IO.Observers;
+using Catalyst.Core.IO.Observers;
 using Catalyst.Core.P2P.Repository;
 using Catalyst.Protocol;
 using Catalyst.Protocol.Rpc.Node;

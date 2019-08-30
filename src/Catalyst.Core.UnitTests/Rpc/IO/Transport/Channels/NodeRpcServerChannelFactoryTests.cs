@@ -25,11 +25,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using Catalyst.Core.Extensions;
+using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.KeySigner;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.Rpc.Authentication;
 using Catalyst.Abstractions.Rpc.IO.Messaging.Correlation;
-using Catalyst.Core.Extensions;
+using Catalyst.Core.IO.Codecs;
+using Catalyst.Core.IO.Handlers;
+using Catalyst.Core.IO.Messaging.Correlation;
 using Catalyst.Core.IO.Codecs;
 using Catalyst.Core.IO.Handlers;
 using Catalyst.Core.IO.Messaging.Correlation;
@@ -58,8 +62,8 @@ namespace Catalyst.Core.UnitTests.Rpc.IO.Transport.Channels
                 IKeySigner keySigner,
                 IAuthenticationStrategy authenticationStrategy,
                 IPeerIdValidator peerIdValidator,
-                IPeerSettings peerSettings)
-                : base(correlationManager, keySigner, authenticationStrategy, peerIdValidator, peerSettings)
+                ISigningContextProvider signingContextProvider)
+                : base(correlationManager, keySigner, authenticationStrategy, peerIdValidator, signingContextProvider)
             {
                 _handlers = HandlerGenerationFunction();
             }
@@ -76,16 +80,13 @@ namespace Catalyst.Core.UnitTests.Rpc.IO.Transport.Channels
             _correlationManager = Substitute.For<IRpcMessageCorrelationManager>();
             _keySigner = Substitute.For<IKeySigner>();
 
-            var peerSettings = Substitute.For<IPeerSettings>();
-
-            peerSettings.BindAddress.Returns(IPAddress.Parse("127.0.0.1"));
+            var peerSettings = Substitute.For<ISigningContextProvider>();
             peerSettings.Network.Returns(Protocol.Common.Network.Devnet);
-            
+            peerSettings.SignatureType.Returns(SignatureType.ProtocolPeer);
+
             var authenticationStrategy = Substitute.For<IAuthenticationStrategy>();
             authenticationStrategy.Authenticate(Arg.Any<IPeerIdentifier>()).Returns(true);
-
-            peerSettings.Port.Returns(1234);
-
+            
             var peerIdValidator = Substitute.For<IPeerIdValidator>();
             peerIdValidator.ValidatePeerIdFormat(Arg.Any<PeerId>()).Returns(true);
             _factory = new TestNodeRpcServerChannelFactory(

@@ -24,9 +24,11 @@
 using System.Reflection;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.IO.Messaging.Dto;
+using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.KeySigner;
-using Catalyst.Abstractions.P2P;
 using Catalyst.Core.IO.Messaging.Dto;
+using Catalyst.Core.Util;
+using Catalyst.Core.IO.Handlers;
 using Catalyst.Core.Util;
 using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;
@@ -42,13 +44,13 @@ namespace Catalyst.Core.IO.Handlers
         private readonly IKeySigner _keySigner;
         private readonly SigningContext _signingContext;
 
-        public ProtocolMessageSignHandler(IKeySigner keySigner, IPeerSettings peerSettings)
+        public ProtocolMessageSignHandler(IKeySigner keySigner, ISigningContextProvider signingContextProvider)
         {
             _keySigner = keySigner;
             _signingContext = new SigningContext
             {
-                Network = peerSettings.Network,
-                SignatureType = SignatureType.ProtocolPeer
+                Network = signingContextProvider.Network,
+                SignatureType = signingContextProvider.SignatureType
             };
         }
 
@@ -70,11 +72,8 @@ namespace Catalyst.Core.IO.Handlers
                 Message = message.Content
             };
 
-            var signedDto = new MessageDto<ProtocolMessageSigned>(protocolMessageSigned,
-                message.SenderPeerIdentifier,
-                message.RecipientPeerIdentifier,
-                message.CorrelationId);
-            
+            var signedDto = new SignedMessageDto(protocolMessageSigned, message.RecipientPeerIdentifier);
+
             return context.WriteAsync(signedDto);
         }
     }

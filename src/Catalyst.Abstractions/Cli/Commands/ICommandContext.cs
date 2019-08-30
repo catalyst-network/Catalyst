@@ -22,7 +22,6 @@
 #endregion
 
 using Catalyst.Abstractions.Cryptography;
-using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.IO.Transport;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.Rpc;
@@ -46,10 +45,6 @@ namespace Catalyst.Abstractions.Cli.Commands
         /// <summary>Gets the socket client registry.</summary>
         /// <value>The socket client registry.</value>
         ISocketClientRegistry<INodeRpcClient> SocketClientRegistry { get; }
-        
-        /// <summary>Gets the dto factory.</summary>
-        /// <value>The dto factory.</value>
-        IDtoFactory DtoFactory { get; }
 
         /// <summary>Gets the peer identifier.</summary>
         /// <value>The peer identifier.</value>

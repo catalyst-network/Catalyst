@@ -25,14 +25,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Catalyst.Abstractions.IO.Messaging.Dto;
-using Catalyst.Abstractions.P2P;
-using Catalyst.Abstractions.P2P.Models;
-using Catalyst.Abstractions.Repository;
 using Catalyst.Core.Extensions;
+using Catalyst.Abstractions.IO.Messaging.Dto;
+using Catalyst.Abstractions.Repository;
 using Catalyst.Core.IO.Messaging.Dto;
 using Catalyst.Core.Network;
+using Catalyst.Core.P2P;
 using Catalyst.Core.P2P.Models;
+using Catalyst.Core.Rpc.IO.Observers;
+using Catalyst.Core.Network;
 using Catalyst.Core.P2P.Repository;
 using Catalyst.Core.Rpc.IO.Observers;
 using Catalyst.Protocol;
@@ -116,12 +117,11 @@ namespace Catalyst.Core.UnitTests.Rpc.IO.Observers
                 return peer;
             }).ToList();
 
-            peerRepository.FindAll(Arg.Any<ISpecification<Peer>>()).Returns(withPublicKey ? (IEnumerable<Peer>) new List<Peer> {targetPeerToDelete} : fakePeerList);
+            peerRepository.FindAll(Arg.Any<ISpecification<Peer>>()).Returns(withPublicKey ? new List<Peer> {targetPeerToDelete} : fakePeerList);
             
             // Build a fake remote endpoint
             _fakeContext.Channel.RemoteAddress.Returns(EndpointBuilder.BuildNewEndPoint("192.0.0.1", 42042));
 
-            var messageFactory = new DtoFactory();
             var sendPeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("sender");
 
             var removePeerRequest = new RemovePeerRequest
@@ -130,13 +130,9 @@ namespace Catalyst.Core.UnitTests.Rpc.IO.Observers
                 PublicKey = withPublicKey ? targetPeerToDelete.PeerIdentifier.PeerId.PublicKey : ByteString.Empty
             };
 
-            var requestMessage = messageFactory.GetDto(
-                removePeerRequest,
-                sendPeerIdentifier,
-                PeerIdentifierHelper.GetPeerIdentifier("recipient")
-            );
+            var protocolMessage = removePeerRequest.ToProtocolMessage(sendPeerIdentifier.PeerId);
 
-            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, requestMessage.Content.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId));
+            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, protocolMessage);
 
             var handler = new RemovePeerRequestObserver(sendPeerIdentifier, peerRepository, _logger);
             handler.StartObserving(messageStream);

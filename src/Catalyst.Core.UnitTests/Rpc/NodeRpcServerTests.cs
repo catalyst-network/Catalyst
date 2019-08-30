@@ -36,6 +36,7 @@ using Catalyst.Abstractions.IO.Transport.Channels;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.Rpc;
 using Catalyst.Core.Extensions;
+using Catalyst.Core.Extensions;
 using Catalyst.Core.IO.Messaging.Correlation;
 using Catalyst.Core.IO.Messaging.Dto;
 using Catalyst.Core.Rpc;

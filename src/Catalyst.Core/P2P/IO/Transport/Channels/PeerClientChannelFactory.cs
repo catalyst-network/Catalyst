@@ -30,9 +30,12 @@ using System.Threading.Tasks;
 using Catalyst.Abstractions.IO.EventLoop;
 using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.IO.Transport.Channels;
+using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.KeySigner;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.IO.Messaging.Correlation;
+using Catalyst.Core.IO.Handlers;
+using Catalyst.Core.IO.Transport.Channels;
 using Catalyst.Core.IO.Handlers;
 using Catalyst.Core.IO.Transport.Channels;
 using Catalyst.Protocol.Common;
@@ -49,7 +52,7 @@ namespace Catalyst.Core.P2P.IO.Transport.Channels
         private readonly IKeySigner _keySigner;
         private readonly IPeerMessageCorrelationManager _correlationManager;
         private readonly IPeerIdValidator _peerIdValidator;
-        private readonly IPeerSettings _peerSettings;
+        private readonly ISigningContextProvider _signingContextProvider;
 
         protected override Func<List<IChannelHandler>> HandlerGenerationFunction
         {
@@ -66,8 +69,8 @@ namespace Catalyst.Core.P2P.IO.Transport.Channels
                         ),
                         new PeerIdValidationHandler(_peerIdValidator),
                         new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
-                            new ProtocolMessageVerifyHandler(_keySigner, _peerSettings),
-                            new ProtocolMessageSignHandler(_keySigner, _peerSettings)
+                            new ProtocolMessageVerifyHandler(_keySigner, _signingContextProvider),
+                            new ProtocolMessageSignHandler(_keySigner, _signingContextProvider)
                         ),
                         new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
                             new CorrelationHandler<IPeerMessageCorrelationManager>(_correlationManager),
@@ -88,12 +91,12 @@ namespace Catalyst.Core.P2P.IO.Transport.Channels
         public PeerClientChannelFactory(IKeySigner keySigner,
             IPeerMessageCorrelationManager correlationManager,
             IPeerIdValidator peerIdValidator,
-            IPeerSettings peerSettings)
+            ISigningContextProvider signingContextProvider)
         {
             _keySigner = keySigner;
             _correlationManager = correlationManager;
             _peerIdValidator = peerIdValidator;
-            _peerSettings = peerSettings;
+            _signingContextProvider = signingContextProvider;
         }
 
         /// <param name="handlerEventLoopGroupFactory"></param>

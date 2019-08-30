@@ -26,6 +26,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.IO.Messaging.Dto;
+using Catalyst.Core.Extensions;
 using Catalyst.Core.Config;
 using Catalyst.Core.Extensions;
 using Catalyst.Core.Rpc.IO.Observers;

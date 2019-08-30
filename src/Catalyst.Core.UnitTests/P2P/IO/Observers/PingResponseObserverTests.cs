@@ -25,11 +25,12 @@ using System;
 using System.Linq;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
+using Catalyst.Core.Extensions;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.IO.Messaging.Dto;
-using Catalyst.Core.Extensions;
 using Catalyst.Core.IO.Messaging.Correlation;
-using Catalyst.Core.IO.Messaging.Dto;
+using Catalyst.Core.IO.Messaging.Correlation;
+using Catalyst.Core.P2P.IO.Observers;
 using Catalyst.Core.P2P.IO.Observers;
 using Catalyst.Protocol.IPPN;
 using Catalyst.TestUtils;
@@ -54,17 +55,14 @@ namespace Catalyst.Core.UnitTests.P2P.IO.Observers
         [Fact]
         public async void Observer_Can_Process_PingResponse_Correctly()
         {
-            var response = new DtoFactory().GetDto(new PingResponse(),
-                PeerIdentifierHelper.GetPeerIdentifier("sender"),
-                PeerIdentifierHelper.GetPeerIdentifier("recipient"),
-                CorrelationId.GenerateCorrelationId()
-            );
-            
+            var pingResponse = new PingResponse();
+            var protocolMessage =
+                pingResponse.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId, CorrelationId.GenerateCorrelationId());
+
             var pingResponseObserver = Substitute.For<IObserver<IPeerClientMessageDto>>();
 
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext,
-                response.Content.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId,
-                    response.CorrelationId));
+                protocolMessage);
                 
             _observer.StartObserving(messageStream);
             await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();

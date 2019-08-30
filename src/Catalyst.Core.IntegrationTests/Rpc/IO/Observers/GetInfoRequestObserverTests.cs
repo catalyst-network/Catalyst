@@ -25,10 +25,13 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Core.Config;
 using Catalyst.Core.Extensions;
+using Catalyst.Abstractions.IO.Messaging.Dto;
+using Catalyst.Abstractions.Rpc;
 using Catalyst.Core.IO.Messaging.Dto;
+using Catalyst.Abstractions.Types;
+using Catalyst.Core.Rpc.IO.Observers;
 using Catalyst.Core.Rpc.IO.Observers;
 using Catalyst.Protocol;
 using Catalyst.Protocol.Common;
@@ -68,22 +71,17 @@ namespace Catalyst.Core.IntegrationTests.Rpc.IO.Observers
         [Fact]
         public async Task GetInfoMessageRequest_UsingValidRequest_ShouldSendGetInfoResponse()
         {
-            var messageFactory = new DtoFactory();
-            var request = messageFactory.GetDto(
-                new GetInfoRequest
-                {
-                    Query = true
-                },
-                PeerIdentifierHelper.GetPeerIdentifier("recipient"),
-                PeerIdentifierHelper.GetPeerIdentifier("sender")
-            );
+            var protocolMessage = new GetInfoRequest
+            {
+                Query = true
+            }.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId);
 
             var expectedResponseContent = JsonConvert
                .SerializeObject(_config.GetSection("CatalystNodeConfiguration").AsEnumerable(),
                     Formatting.Indented);
 
-            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, 
-                request.Content.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId)
+            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext,
+                protocolMessage
             );
             
             var handler = new GetInfoRequestObserver(
@@ -100,7 +98,7 @@ namespace Catalyst.Core.IntegrationTests.Rpc.IO.Observers
                 "the only call should be the one we checked above");
 
             var response = ((IMessageDto<ProtocolMessage>) receivedCalls.Single().GetArguments()[0])
-               .FromIMessageDto().FromProtocolMessage<GetInfoResponse>();
+               .Content.FromProtocolMessage<GetInfoResponse>();
             response.Query.Should().Match(expectedResponseContent,
                 "the expected response should contain config information");
         }

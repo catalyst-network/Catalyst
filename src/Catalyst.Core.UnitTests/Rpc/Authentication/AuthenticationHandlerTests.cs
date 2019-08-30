@@ -25,6 +25,7 @@ using Catalyst.Abstractions.IO.Handlers;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.Rpc.Authentication;
 using Catalyst.Core.Extensions;
+using Catalyst.Core.Extensions;
 using Catalyst.Core.IO.Handlers;
 using Catalyst.Core.IO.Messaging.Correlation;
 using Catalyst.Protocol.Common;

@@ -25,8 +25,12 @@ using System;
 using System.Linq;
 using System.Net;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
-using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.Types;
+using Catalyst.Core.IO.Messaging.Correlation;
+using Catalyst.Core.Network;
+using Catalyst.Abstractions.Types;
+using Catalyst.Core.Util;
+using Catalyst.Core.Extensions;
 using Catalyst.Core.IO.Messaging.Correlation;
 using Catalyst.Core.Network;
 using Catalyst.Core.Util;
@@ -47,12 +51,12 @@ namespace Catalyst.Core.Extensions
         {
             var typeUrl = protobufObject.Descriptor.ShortenedFullName();
             Guard.Argument(senderId, nameof(senderId)).NotNull();
-            
+
             if (typeUrl.EndsWith(MessageTypes.Response.Name))
             {
                 Guard.Argument(correlationId, nameof(correlationId)).NotNull();
             }
-            
+
             return new ProtocolMessage
             {
                 PeerId = senderId,
@@ -62,29 +66,20 @@ namespace Catalyst.Core.Extensions
                 Value = protobufObject.ToByteString()
             };
         }
-        
-        public static T FromIMessageDto<T>(this IMessageDto<T> message) where T : IMessage<T>
-        {
-            var empty = (T) Activator.CreateInstance(typeof(T));
-            var typed = (T) empty.Descriptor.Parser.ParseFrom(message.Content.ToByteString());
-            return typed;
-        }
 
         public static ICorrelationId ToCorrelationId(this ByteString guidBytes)
         {
             var bytes = guidBytes?.ToByteArray();
-            
+
             var validBytes = bytes?.Length == CorrelationId.GuidByteLength
                 ? bytes
-                : (bytes ?? new byte[0]).Concat(Enumerable.Repeat((byte) 0, CorrelationId.GuidByteLength)).Take(CorrelationId.GuidByteLength).ToArray();
+                : (bytes ?? new byte[0]).Concat(Enumerable.Repeat((byte) 0, CorrelationId.GuidByteLength))
+               .Take(CorrelationId.GuidByteLength).ToArray();
 
             return new CorrelationId(new Guid(validBytes));
         }
 
-        public static ByteString ToByteString(this Guid guid)
-        {
-            return guid.ToByteArray().ToByteString();
-        }
+        public static ByteString ToByteString(this Guid guid) { return guid.ToByteArray().ToByteString(); }
 
         public static Multihash AsMultihash(this ByteString byteString)
         {

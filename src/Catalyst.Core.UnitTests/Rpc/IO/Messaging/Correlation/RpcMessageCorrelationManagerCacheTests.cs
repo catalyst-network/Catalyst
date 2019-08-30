@@ -25,8 +25,10 @@ using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Catalyst.Abstractions.Util;
 using Catalyst.Core.Extensions;
+using Catalyst.Abstractions.Util;
+using Catalyst.Core.IO.Messaging.Correlation;
+using Catalyst.Core.Rpc.IO.Messaging.Correlation;
 using Catalyst.Core.IO.Messaging.Correlation;
 using Catalyst.Core.Rpc.IO.Messaging.Correlation;
 using Catalyst.Protocol.Common;
@@ -115,13 +117,13 @@ namespace Catalyst.Core.UnitTests.Rpc.IO.Messaging.Correlation
 
             //To prevent cache eviction multi threading delay
             const int milliseconds = 100;
-            while (evictedEvents <= 0)
+            while (evictedEvents < pendingRequests.Count)
             {
                 _testScheduler.AdvanceBy(milliseconds);
                 await Task.Delay(milliseconds).ConfigureAwait(false);
             }
 
-            evictedEvents.Should().Be(3);
+            evictedEvents.Should().Be(pendingRequests.Count);
         }
 
         public void Dispose()

@@ -28,6 +28,7 @@ using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.Types;
 using Catalyst.Core.Extensions;
+using Catalyst.Core.Extensions;
 using Catalyst.Core.P2P;
 using Catalyst.Protocol;
 using Catalyst.Protocol.Common;

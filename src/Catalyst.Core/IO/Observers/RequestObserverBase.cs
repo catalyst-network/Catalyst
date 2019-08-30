@@ -21,13 +21,11 @@
 
 #endregion
 
-using System;
+using Catalyst.Core.Extensions;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.P2P;
-using Catalyst.Abstractions.Types;
-using Catalyst.Core.Extensions;
 using Catalyst.Core.IO.Messaging.Dto;
 using Catalyst.Core.P2P;
 using Catalyst.Protocol;
@@ -36,6 +34,11 @@ using Dawn;
 using DotNetty.Transport.Channels;
 using Google.Protobuf;
 using Serilog;
+using System;
+using Catalyst.Abstractions.Types;
+using Catalyst.Abstractions.Types;
+using Catalyst.Core.IO.Observers;
+using Catalyst.Core.P2P;
 
 namespace Catalyst.Core.IO.Observers
 {
@@ -68,11 +71,9 @@ namespace Catalyst.Core.IO.Observers
                     recipientPeerIdentifier,
                     correlationId);
 
-                var responseDto = new DtoFactory().GetDto(
+                var responseDto = new MessageDto(
                     response.ToProtocolMessage(PeerIdentifier.PeerId, correlationId),
-                    PeerIdentifier,
-                    recipientPeerIdentifier,
-                    correlationId);
+                    recipientPeerIdentifier);
 
                 messageDto.Context.Channel.WriteAndFlushAsync(responseDto);
             }

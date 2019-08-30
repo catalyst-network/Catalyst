@@ -26,6 +26,7 @@ using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.Models;
+using Catalyst.Core.IO.Observers;
 using Catalyst.Core.Config;
 using Catalyst.Core.Extensions;
 using Catalyst.Core.IO.Observers;

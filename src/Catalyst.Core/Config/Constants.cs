@@ -21,11 +21,12 @@
 
 #endregion
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Catalyst.Abstractions.Enumerator;
 using Catalyst.Abstractions.Types;
+using Catalyst.Abstractions.Enumerator;
 using Catalyst.Core.Util;
 using Multiformats.Base;
 using Multiformats.Hash;

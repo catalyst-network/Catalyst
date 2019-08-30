@@ -10,10 +10,10 @@
             ]
         },
         {
-            "type": "Catalyst.Core.Mempool.Repositories.MempoolDocumentRepository`1[[Catalyst.Core.Mempool.Documents.MempoolDocument, Catalyst.Core]]",
+            "type": "Catalyst.Core.Mempool.Repositories.MempoolDocumentRepository`1[[Catalyst.Core.Mempool.Documents.MempoolDocument, Catalyst.Core]], Catalyst.Core",
             "services": [
                 {
-                    "type": "Catalyst.Abstractions.Mempool.Repository.IMempoolRepository`1[[Catalyst.Core.Mempool.Documents.MempoolDocument, Catalyst.Core]], Catalyst.Abstractions"
+                    "type": "Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository`1[[Catalyst.Core.Mempool.Documents.MempoolDocument, Catalyst.Core]], Catalyst.Abstractions"
                 }
             ]
         },

@@ -25,11 +25,13 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Autofac;
-using Catalyst.Abstractions.IO.Messaging.Dto;
-using Catalyst.Abstractions.KeySigner;
 using Catalyst.Core.Config;
 using Catalyst.Core.Extensions;
+using Catalyst.Abstractions.IO.Messaging.Dto;
+using Catalyst.Abstractions.KeySigner;
 using Catalyst.Core.IO.Messaging.Dto;
+using Catalyst.Abstractions.Types;
+using Catalyst.Core.Rpc.IO.Observers;
 using Catalyst.Core.Rpc.IO.Observers;
 using Catalyst.Protocol;
 using Catalyst.Protocol.Common;
@@ -56,7 +58,7 @@ namespace Catalyst.Core.IntegrationTests.Rpc.IO.Observers
             Path.Combine(Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile),
             Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile),
             Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Protocol.Common.Network.Devnet)),
-            Path.Combine(Constants.ConfigSubFolder, Constants.ShellNodesConfigFile),
+            Path.Combine(Constants.ConfigSubFolder, Constants.ShellNodesConfigFile)
         }, output)
         {
             ContainerProvider.ConfigureContainerBuilder();
@@ -76,29 +78,27 @@ namespace Catalyst.Core.IntegrationTests.Rpc.IO.Observers
         [InlineData("Hello&?!1253Catalyst")]
         public async Task RpcServer_Can_Handle_SignMessageRequest(string message)
         {
-            var messageFactory = new DtoFactory();
+            var sender = PeerIdentifierHelper.GetPeerIdentifier("sender");
+            var signMessageRequest = new SignMessageRequest
+            {
+                Message = message.ToUtf8ByteString(),
+                SigningContext = new SigningContext()
+            };
+            var protocolMessage =
+                signMessageRequest.ToProtocolMessage(sender.PeerId);
 
-            var request = messageFactory.GetDto(
-                new SignMessageRequest
-                {
-                    Message = message.ToUtf8ByteString(),
-                    SigningContext = new SigningContext()
-                },
-                PeerIdentifierHelper.GetPeerIdentifier("sender_key"),
-                PeerIdentifierHelper.GetPeerIdentifier("recipient_key")
-            );
-            
-            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, request.Content.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId));
-            var handler = new SignMessageRequestObserver(PeerIdentifierHelper.GetPeerIdentifier("sender"), _logger, _keySigner);
+            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, protocolMessage);
+            var handler =
+                new SignMessageRequestObserver(sender, _logger, _keySigner);
             handler.StartObserving(messageStream);
 
             await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
 
             var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();
             receivedCalls.Count.Should().Be(1);
-            
+
             var sentResponseDto = (IMessageDto<ProtocolMessage>) receivedCalls.Single().GetArguments().Single();
-            var signResponseMessage = sentResponseDto.FromIMessageDto().FromProtocolMessage<SignMessageResponse>();
+            var signResponseMessage = sentResponseDto.Content.FromProtocolMessage<SignMessageResponse>();
 
             signResponseMessage.OriginalMessage.Should().Equal(message);
             signResponseMessage.Signature.Should().NotBeEmpty();

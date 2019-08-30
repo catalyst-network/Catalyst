@@ -28,6 +28,7 @@ using System.Threading.Tasks;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.Repository;
 using Catalyst.Core.P2P;
+using Catalyst.Core.P2P;
 using Catalyst.Core.P2P.Models;
 using Catalyst.Core.P2P.Repository;
 using Catalyst.Node.POA.CE.P2P;

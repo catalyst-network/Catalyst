@@ -27,14 +27,15 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Net;
 using System.Threading.Tasks;
-using Catalyst.Abstractions.IO.Messaging.Dto;
-using Catalyst.Abstractions.P2P;
-using Catalyst.Abstractions.P2P.Models;
-using Catalyst.Abstractions.Repository;
 using Catalyst.Core.Extensions;
+using Catalyst.Abstractions.IO.Messaging.Dto;
+using Catalyst.Abstractions.Repository;
 using Catalyst.Core.IO.Messaging.Dto;
 using Catalyst.Core.Network;
+using Catalyst.Core.P2P;
 using Catalyst.Core.P2P.Models;
+using Catalyst.Core.Rpc.IO.Observers;
+using Catalyst.Core.Network;
 using Catalyst.Core.P2P.Repository;
 using Catalyst.Core.Rpc.IO.Observers;
 using Catalyst.Protocol;
@@ -165,20 +166,15 @@ namespace Catalyst.Core.UnitTests.Rpc.IO.Observers
         {
             _fakeContext.Channel.RemoteAddress.Returns(EndpointBuilder.BuildNewEndPoint("192.0.0.1", 42042));
 
-            var sendPeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("sender");
+            var senderPeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("sender");
+            var getPeerInfoRequest = new GetPeerInfoRequest {PublicKey = peerId.PublicKey, Ip = peerId.Ip};
 
-            var messageFactory = new DtoFactory();
-            var request = new GetPeerInfoRequest {PublicKey = peerId.PublicKey, Ip = peerId.Ip};
+            var protocolMessage =
+                getPeerInfoRequest.ToProtocolMessage(senderPeerIdentifier.PeerId);
 
-            var requestMessage = messageFactory.GetDto(
-                request,
-                sendPeerIdentifier,
-                PeerIdentifierHelper.GetPeerIdentifier("recipient")
-            );
+            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, protocolMessage);
 
-            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, requestMessage.Content.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId));
-
-            var handler = new GetPeerInfoRequestObserver(sendPeerIdentifier, _logger, _peerRepository);
+            var handler = new GetPeerInfoRequestObserver(senderPeerIdentifier, _logger, _peerRepository);
             handler.StartObserving(messageStream);
 
             await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
@@ -188,7 +184,7 @@ namespace Catalyst.Core.UnitTests.Rpc.IO.Observers
 
             var sentResponseDto = (IMessageDto<ProtocolMessage>) receivedCalls[0].GetArguments().Single();
 
-            return sentResponseDto.FromIMessageDto().FromProtocolMessage<GetPeerInfoResponse>();
+            return sentResponseDto.Content.FromProtocolMessage<GetPeerInfoResponse>();
         }
     }
 }

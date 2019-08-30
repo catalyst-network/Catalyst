@@ -25,7 +25,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Catalyst.Abstractions.P2P;
-using Catalyst.Abstractions.Repository;
 using Catalyst.Core.Extensions;
 using Catalyst.Core.P2P.Repository;
 using Catalyst.Core.Util;

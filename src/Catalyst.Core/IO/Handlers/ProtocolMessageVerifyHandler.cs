@@ -22,8 +22,10 @@
 #endregion
 
 using System.Reflection;
+using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.KeySigner;
 using Catalyst.Abstractions.P2P;
+using Catalyst.Core.IO.Handlers;
 using Catalyst.Protocol;
 using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;
@@ -37,14 +39,14 @@ namespace Catalyst.Core.IO.Handlers
         private readonly IKeySigner _keySigner;
         private readonly SigningContext _signingContext;
 
-        public ProtocolMessageVerifyHandler(IKeySigner keySigner, IPeerSettings peerSettings)
+        public ProtocolMessageVerifyHandler(IKeySigner keySigner, ISigningContextProvider signingContextProvider)
             : base(Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType))
         {
             _keySigner = keySigner;
             _signingContext = new SigningContext
             {
-                Network = peerSettings.Network,
-                SignatureType = SignatureType.ProtocolPeer
+                Network = signingContextProvider.Network,
+                SignatureType = signingContextProvider.SignatureType 
             };
         }
 

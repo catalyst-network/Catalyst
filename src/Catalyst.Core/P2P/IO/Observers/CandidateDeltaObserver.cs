@@ -26,6 +26,7 @@ using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Core.Extensions;
+using Catalyst.Core.Extensions;
 using Catalyst.Core.IO.Observers;
 using Catalyst.Protocol;
 using Catalyst.Protocol.Common;

@@ -23,6 +23,7 @@
 
 using Catalyst.Abstractions.P2P.IO.Messaging.Broadcast;
 using Catalyst.Core.Extensions;
+using Catalyst.Core.Extensions;
 using Catalyst.Core.IO.Handlers;
 using Catalyst.Core.IO.Messaging.Correlation;
 using Catalyst.Protocol.Transaction;

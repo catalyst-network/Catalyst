@@ -22,12 +22,14 @@
 #endregion
 
 using System.IO;
+using Catalyst.Core.Config;
+using Catalyst.Core.Extensions;
 using Catalyst.Abstractions.FileTransfer;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.P2P;
-using Catalyst.Core.Config;
-using Catalyst.Core.Extensions;
+using Catalyst.Core.IO.Messaging.Dto;
+using Catalyst.Core.FileTransfer;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using DotNetty.Transport.Channels;
@@ -37,9 +39,6 @@ namespace Catalyst.Core.FileTransfer
 {
     public sealed class UploadFileTransferInformation : BaseFileTransferInformation, IUploadFileInformation
     {
-        /// <summary>The upload message factory</summary>
-        private readonly IDtoFactory _uploadDtoFactory;
-        
         /// <summary>Initializes a new instance of the <see cref="UploadFileTransferInformation"/> class.</summary>
         /// <param name="stream">The stream.</param>
         /// <param name="peerIdentifier">The peer identifier.</param>
@@ -51,13 +50,11 @@ namespace Catalyst.Core.FileTransfer
             IPeerIdentifier peerIdentifier,
             IPeerIdentifier recipientIdentifier,
             IChannel recipientChannel,
-            ICorrelationId correlationGuid,
-            IDtoFactory uploadDtoFactory) :
+            ICorrelationId correlationGuid) :
             base(peerIdentifier, recipientIdentifier, recipientChannel,
                 correlationGuid, string.Empty, (ulong) stream.Length)
         {
             RandomAccessStream = stream;
-            _uploadDtoFactory = uploadDtoFactory;
             RetryCount = 0;
         }
 
@@ -96,9 +93,8 @@ namespace Catalyst.Core.FileTransfer
                 ChunkId = chunkId,
                 CorrelationFileName = CorrelationId.Id.ToByteString()
             }.ToProtocolMessage(PeerIdentifier.PeerId);
-            
-            return _uploadDtoFactory.GetDto(transferMessage,
-                PeerIdentifier,
+
+            return new MessageDto(transferMessage,
                 RecipientIdentifier
             );
         }

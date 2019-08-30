@@ -83,7 +83,8 @@ namespace Catalyst.Core.Config
             }
         }
 
-        protected virtual IEnumerable<string> RequiredConfigFiles(Protocol.Common.Network network, string overrideNetworkFile = null)
+        protected virtual IEnumerable<string> RequiredConfigFiles(Protocol.Common.Network network,
+            string overrideNetworkFile = null)
         {
             var requiredConfigFiles = new[]
             {
@@ -102,7 +103,9 @@ namespace Catalyst.Core.Config
             bool overwrite = false)
         {
             var combinedSourceFolder = Path.Combine(sourceFolder, Constants.ConfigSubFolder);
-            var sourceFile = new DirectoryInfo(combinedSourceFolder).Exists ? Path.Combine(combinedSourceFolder, fileName) : Path.Combine(sourceFolder, fileName);
+            var sourceFile = new DirectoryInfo(combinedSourceFolder).Exists
+                ? Path.Combine(combinedSourceFolder, fileName)
+                : Path.Combine(sourceFolder, fileName);
 
             var targetFile = Path.Combine(targetFolder, fileName);
             if (!overwrite && File.Exists(targetFile))

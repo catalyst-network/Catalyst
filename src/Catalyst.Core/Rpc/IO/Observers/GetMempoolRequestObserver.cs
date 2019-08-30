@@ -27,6 +27,7 @@ using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.Mempool;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Core.IO.Observers;
+using Catalyst.Core.IO.Observers;
 using Catalyst.Core.Mempool.Documents;
 using Catalyst.Core.Mempool.Models;
 using Catalyst.Protocol.Rpc.Node;

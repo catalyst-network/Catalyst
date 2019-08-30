@@ -25,12 +25,16 @@ using System;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using Catalyst.Core.Extensions;
 using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.Repository;
-using Catalyst.Core.Extensions;
 using Catalyst.Core.IO.Messaging.Dto;
 using Catalyst.Core.Network;
+using Catalyst.Core.P2P;
 using Catalyst.Core.P2P.Models;
+using Catalyst.Core.Util;
+using Catalyst.Core.Rpc.IO.Observers;
+using Catalyst.Core.Network;
 using Catalyst.Core.P2P.Repository;
 using Catalyst.Core.Rpc.IO.Observers;
 using Catalyst.Core.Util;
@@ -137,7 +141,6 @@ namespace Catalyst.Core.UnitTests.Rpc.IO.Observers
 
             var sendPeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("sender");
 
-            var messageFactory = new DtoFactory();
             var request = new SetPeerBlackListRequest
             {
                 PublicKey = publicKey.ToBytesForRLPEncoding().ToByteString(),
@@ -145,14 +148,10 @@ namespace Catalyst.Core.UnitTests.Rpc.IO.Observers
                 Blacklist = Convert.ToBoolean(blacklist)
             };
 
-            var requestMessage = messageFactory.GetDto(
-                request,
-                PeerIdentifierHelper.GetPeerIdentifier("recipient"),
-                PeerIdentifierHelper.GetPeerIdentifier("sender")
-            );
+            var protocolMessage = request.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId);
             
-            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, 
-                requestMessage.Content.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId)
+            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext,
+                protocolMessage
             );
 
             var handler = new PeerBlackListingRequestObserver(sendPeerIdentifier, _logger, peerRepository);
@@ -165,7 +164,7 @@ namespace Catalyst.Core.UnitTests.Rpc.IO.Observers
             
             var sentResponseDto = (IMessageDto<ProtocolMessage>) receivedCalls.Single().GetArguments().Single();
             
-            return sentResponseDto.FromIMessageDto().FromProtocolMessage<SetPeerBlackListResponse>();
+            return sentResponseDto.Content.FromProtocolMessage<SetPeerBlackListResponse>();
         }
     }
 }

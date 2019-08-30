@@ -30,6 +30,9 @@ using Catalyst.Abstractions.Types;
 using Catalyst.Cli.CommandTypes;
 using Catalyst.Core.Extensions;
 using Catalyst.Core.FileTransfer;
+using Catalyst.Core.IO.Messaging.Dto;
+using Catalyst.Core.Extensions;
+using Catalyst.Core.FileTransfer;
 
 namespace Catalyst.Cli.Commands
 {
@@ -67,11 +70,9 @@ namespace Catalyst.Cli.Commands
             }
 
             var protocolMessage = request.ToProtocolMessage(SenderPeerIdentifier.PeerId);
-            var requestMessage = CommandContext.DtoFactory.GetDto(
+            var requestMessage = new MessageDto(
                 protocolMessage,
-                SenderPeerIdentifier,
-                RecipientPeerIdentifier,
-                protocolMessage.CorrelationId.ToCorrelationId()
+                RecipientPeerIdentifier
             );
 
             IUploadFileInformation fileTransfer = new UploadFileTransferInformation(
@@ -79,8 +80,7 @@ namespace Catalyst.Cli.Commands
                 SenderPeerIdentifier,
                 RecipientPeerIdentifier,
                 Target.Channel,
-                requestMessage.CorrelationId,
-                CommandContext.DtoFactory);
+                requestMessage.CorrelationId);
 
             _uploadFileTransferFactory.RegisterTransfer(fileTransfer);
 

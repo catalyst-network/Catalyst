@@ -21,12 +21,8 @@
 
 #endregion
 
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
 using Autofac;
+using Catalyst.Core.Config;
 using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.KeySigner;
 using Catalyst.Abstractions.P2P;
@@ -35,17 +31,32 @@ using Catalyst.Abstractions.P2P.IO.Messaging.Broadcast;
 using Catalyst.Abstractions.P2P.IO.Messaging.Correlation;
 using Catalyst.Abstractions.Registry;
 using Catalyst.Core.IO.EventLoop;
+using Catalyst.Core.KeySigner;
+using Catalyst.Core.P2P;
+using Catalyst.Core.Util;
 using Catalyst.Core.P2P;
 using Catalyst.Core.P2P.IO.Transport.Channels;
-using Catalyst.Core.Util;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
 using Catalyst.TestUtils;
 using FluentAssertions;
+using Microsoft.Extensions.Configuration;
 using NSubstitute;
 using Serilog;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Net;
+using System.Threading.Tasks;
+using Catalyst.Abstractions.Keystore;
+using Catalyst.Abstractions.Types;
+using Catalyst.Core.IO.EventLoop;
+using Catalyst.Core.P2P;
+using Catalyst.Core.Util;
+using Catalyst.Protocol.Common;
 using Xunit;
 using Xunit.Abstractions;
 using Constants = Catalyst.Core.Config.Constants;
+using IContainer = Autofac.IContainer;
 
 namespace Catalyst.Core.IntegrationTests.P2P
 {
@@ -59,7 +70,7 @@ namespace Catalyst.Core.IntegrationTests.P2P
         {
             Constants.ComponentsJsonConfigFile,
             Constants.SerilogJsonConfigFile,
-            Constants.NetworkConfigFile(Protocol.Common.Network.Testnet)
+            Constants.NetworkConfigFile(Protocol.Common.Network.Devnet)
         }.Select(f => Path.Combine(Constants.ConfigSubFolder, f)), output)
         {
             ContainerProvider.ConfigureContainerBuilder(true, true);
@@ -103,7 +114,7 @@ namespace Catalyst.Core.IntegrationTests.P2P
                     ContainerProvider.Container.Resolve<IBroadcastManager>(),
                     keySigner,
                     ContainerProvider.Container.Resolve<IPeerIdValidator>(),
-                    ContainerProvider.Container.Resolve<IPeerSettings>()), 
+                    ContainerProvider.Container.Resolve<ISigningContextProvider>()), 
                 ContainerProvider.Container.Resolve<IPeerDiscovery>(),
                 ContainerProvider.Container.Resolve<IEnumerable<IP2PMessageObserver>>(),
                 _peerSettings,

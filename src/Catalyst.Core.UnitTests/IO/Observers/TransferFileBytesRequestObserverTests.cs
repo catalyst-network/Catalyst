@@ -22,15 +22,12 @@
 
 #endregion
 
-using System.Linq;
-using System.Threading.Tasks;
+using Catalyst.Core.Config;
+using Catalyst.Core.Extensions;
 using Catalyst.Abstractions.FileTransfer;
 using Catalyst.Abstractions.IO.Messaging.Dto;
-using Catalyst.Abstractions.Types;
-using Catalyst.Core.Extensions;
 using Catalyst.Core.IO.Messaging.Correlation;
 using Catalyst.Core.IO.Messaging.Dto;
-using Catalyst.Core.Rpc.IO.Observers;
 using Catalyst.Protocol;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
@@ -40,6 +37,13 @@ using FluentAssertions;
 using Google.Protobuf;
 using NSubstitute;
 using Serilog;
+using System.Linq;
+using System.Threading.Tasks;
+using Catalyst.Abstractions.Types;
+using Catalyst.Abstractions.Types;
+using Catalyst.Core.IO.Messaging.Correlation;
+using Catalyst.Core.Rpc.IO.Observers;
+using Catalyst.Core.Rpc.IO.Observers;
 using Xunit;
 
 namespace Catalyst.Core.UnitTests.IO.Observers
@@ -85,8 +89,8 @@ namespace Catalyst.Core.UnitTests.IO.Observers
             _downloadFileTransferFactory.DownloadChunk(Arg.Any<TransferFileBytesRequest>()).Returns(FileTransferResponseCodeTypes.Error);
 
             var sender = PeerIdentifierHelper.GetPeerIdentifier("sender");
-            var requestDto = new DtoFactory().GetDto(new TransferFileBytesRequest().ToProtocolMessage(sender.PeerId)
-              , sender, PeerIdentifierHelper.GetPeerIdentifier("recipient"));
+            var requestDto = new MessageDto(new TransferFileBytesRequest().ToProtocolMessage(sender.PeerId)
+              , PeerIdentifierHelper.GetPeerIdentifier("recipient"));
 
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_context, requestDto.Content);
 

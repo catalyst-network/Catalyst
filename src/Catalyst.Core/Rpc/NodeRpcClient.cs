@@ -34,6 +34,7 @@ using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.IO.Transport.Channels;
 using Catalyst.Abstractions.Rpc;
 using Catalyst.Core.Extensions;
+using Catalyst.Core.Extensions;
 using Catalyst.Core.IO.Transport;
 using Catalyst.Core.P2P;
 using Catalyst.Core.Rpc.IO.Exceptions;

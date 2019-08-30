@@ -23,10 +23,10 @@
 
 using System.IO;
 using System.Linq;
+using Catalyst.Core.FileTransfer;
 using Catalyst.Core.Config;
 using Catalyst.Core.FileTransfer;
 using Catalyst.Core.IO.Messaging.Correlation;
-using Catalyst.Core.IO.Messaging.Dto;
 using Catalyst.Core.Util;
 using Catalyst.Protocol;
 using Catalyst.Protocol.Rpc.Node;
@@ -54,8 +54,7 @@ namespace Catalyst.Core.UnitTests.FileTransfer
                     PeerIdentifierHelper.GetPeerIdentifier("test1"),
                     PeerIdentifierHelper.GetPeerIdentifier("test2"),
                     null,
-                    CorrelationId.GenerateCorrelationId(),
-                    new DtoFactory());
+                    CorrelationId.GenerateCorrelationId());
 
                 for (uint chunkToTest = 0; chunkToTest < chunks; chunkToTest++)
                 {
@@ -81,8 +80,7 @@ namespace Catalyst.Core.UnitTests.FileTransfer
                     PeerIdentifierHelper.GetPeerIdentifier("test1"),
                     PeerIdentifierHelper.GetPeerIdentifier("test2"),
                     null,
-                    CorrelationId.GenerateCorrelationId(),
-                    new DtoFactory());
+                    CorrelationId.GenerateCorrelationId());
                 uploadFileInformation.RetryCount += Constants.FileTransferMaxChunkRetryCount + 1;
                 uploadFileInformation.CanRetry().Should().BeFalse();
             }

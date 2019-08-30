@@ -24,12 +24,16 @@
 using System;
 using System.IO;
 using System.Threading;
-using Catalyst.Abstractions.Dfs;
+using Catalyst.Core.Config;
+using Catalyst.Core.Extensions;
 using Catalyst.Abstractions.FileTransfer;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.IO.Messaging.Dto;
+using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.Types;
-using Catalyst.Core.Extensions;
+using Catalyst.Core.IO.Messaging.Correlation;
+using Catalyst.Core.IO.Messaging.Dto;
+using Catalyst.Abstractions.Types;
 using Catalyst.Core.IO.Messaging.Correlation;
 using Catalyst.Core.IO.Messaging.Dto;
 using Catalyst.Core.Rpc.IO.Observers;
@@ -51,11 +55,10 @@ namespace Catalyst.Core.UnitTests.Rpc.IO.Observers
 
         public GetFileFromDfsRequestObserverTests()
         {
-            var messageFactory = Substitute.For<IDtoFactory>();
             _fileTransferFactory = Substitute.For<IUploadFileTransferFactory>();
             _dfs = Substitute.For<IDfs>();
             var peerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("test");
-            _observer = new GetFileFromDfsRequestObserver(_dfs, peerIdentifier, _fileTransferFactory, messageFactory, Substitute.For<ILogger>());
+            _observer = new GetFileFromDfsRequestObserver(_dfs, peerIdentifier, _fileTransferFactory, Substitute.For<ILogger>());
         }
 
         [Fact]

@@ -25,10 +25,12 @@ using System;
 using System.Linq;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
-using Catalyst.Abstractions.P2P.IO.Messaging.Dto;
 using Catalyst.Core.Extensions;
+using Catalyst.Abstractions.P2P.IO.Messaging.Dto;
 using Catalyst.Core.IO.Messaging.Correlation;
 using Catalyst.Core.IO.Messaging.Dto;
+using Catalyst.Core.IO.Messaging.Correlation;
+using Catalyst.Core.P2P.IO.Observers;
 using Catalyst.Core.P2P.IO.Observers;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
@@ -61,24 +63,21 @@ namespace Catalyst.Core.UnitTests.P2P.IO.Observers
                 PeerIdHelper.GetPeerId(),
                 PeerIdHelper.GetPeerId()
             };
-                
-            var response = new DtoFactory().GetDto(new PeerNeighborsResponse
+
+            var peerNeighborsResponse = new PeerNeighborsResponse
+            {
+                Peers =
                 {
-                    Peers =
-                    {
-                        peers
-                    }
-                },
-                PeerIdentifierHelper.GetPeerIdentifier("sender"),
-                PeerIdentifierHelper.GetPeerIdentifier("recipient"),
-                CorrelationId.GenerateCorrelationId()
-            );
-            
+                    peers
+                }
+            };
+            var protocolMessage =
+                peerNeighborsResponse.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId, CorrelationId.GenerateCorrelationId());
+
             var peerNeighborsResponseObserver = Substitute.For<IObserver<IPeerClientMessageDto>>();
 
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext,
-                response.Content.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId,
-                    response.CorrelationId));
+                protocolMessage);
                 
             _observer.StartObserving(messageStream);
             await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();

@@ -21,27 +21,14 @@
 
 #endregion
 
-using Catalyst.Cli.CommandTypes;
-using Catalyst.Cli.Options;
-using Catalyst.Abstractions.Cli;
-using Catalyst.Abstractions.Cli.Commands;
-using Catalyst.Core.Extensions;
-using Catalyst.Core.Extensions;
-using Catalyst.Protocol.Rpc.Node;
+using Catalyst.Abstractions.Keystore;
+using Catalyst.Protocol.Common;
 
-namespace Catalyst.Cli.Commands
+namespace Catalyst.Core.Keystore
 {
-    public sealed class GetPeerInfoCommand : BaseMessageCommand<GetPeerInfoRequest, GetPeerInfoResponse, GetPeerInfoOptions>
+    public class SigningContextProvider : ISigningContextProvider
     {
-        public GetPeerInfoCommand(ICommandContext commandContext) : base(commandContext) { }
-
-        protected override GetPeerInfoRequest GetMessage(GetPeerInfoOptions option)
-        {
-            return new GetPeerInfoRequest
-            {
-                PublicKey = option.PublicKey.PublicKeyToProtobuf(),
-                Ip = option.IpAddress.IpAddressToProtobuf(),
-            };
-        }
+        public Protocol.Common.Network Network { get; set; }
+        public SignatureType SignatureType { get; set; }
     }
 }

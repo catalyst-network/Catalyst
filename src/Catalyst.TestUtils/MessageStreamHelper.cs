@@ -28,6 +28,7 @@ using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Core.Extensions;
+using Catalyst.Core.Extensions;
 using Catalyst.Core.IO.Messaging.Correlation;
 using Catalyst.Core.IO.Messaging.Dto;
 using Catalyst.Core.IO.Observers;

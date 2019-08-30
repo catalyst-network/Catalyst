@@ -28,18 +28,19 @@ using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Cli;
 using Catalyst.Abstractions.IO.Observers;
+using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.Registry;
 using Catalyst.Abstractions.Rpc;
 using Catalyst.Abstractions.Types;
 using Catalyst.Abstractions.Types;
+using Catalyst.Core.Extensions;
+using Catalyst.Core.IO.Messaging.Dto;
 using Catalyst.Core.Cli;
 using Catalyst.Core.Cryptography;
-using Catalyst.Core.Extensions;
 using Catalyst.Core.FileSystem;
 using Catalyst.Core.IO.EventLoop;
 using Catalyst.Core.IO.Messaging.Correlation;
-using Catalyst.Core.IO.Messaging.Dto;
 using Catalyst.Core.KeySigner;
 using Catalyst.Core.Keystore;
 using Catalyst.Core.P2P;
@@ -72,7 +73,7 @@ namespace Catalyst.Simulator.RpcClients
             IPasswordRegistry passwordRegistry,
             X509Certificate2 certificate,
             ILogger logger,
-            IPeerSettings peerSettings)
+            ISigningContextProvider signingContextProvider)
         {
             _logger = logger;
             _certificate = certificate;
@@ -101,7 +102,7 @@ namespace Catalyst.Simulator.RpcClients
             var messageCorrelationManager = new RpcMessageCorrelationManager(memoryCache, _logger, changeTokenProvider);
             var peerIdValidator = new PeerIdValidator(cryptoContext);
             var nodeRpcClientChannelFactory =
-                new NodeRpcClientChannelFactory(keySigner, messageCorrelationManager, peerIdValidator, peerSettings);
+                new NodeRpcClientChannelFactory(keySigner, messageCorrelationManager, peerIdValidator, signingContextProvider);
 
             var eventLoopGroupFactoryConfiguration = new EventLoopGroupFactoryConfiguration
             {
@@ -183,11 +184,10 @@ namespace Catalyst.Simulator.RpcClients
 
         public void SendMessage<T>(T message) where T : IMessage
         {
-            var dtoFactory = new DtoFactory();
             var protocolMessage =
                 message.ToProtocolMessage(_senderPeerIdentifier.PeerId, CorrelationId.GenerateCorrelationId());
-            var messageDto = dtoFactory.GetDto(
-                protocolMessage, _senderPeerIdentifier,
+            var messageDto = new MessageDto(
+                protocolMessage,
                 _recipientPeerIdentifier);
 
             _nodeRpcClient.SendMessage(messageDto);

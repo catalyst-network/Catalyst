@@ -227,12 +227,16 @@
             ]
         },
         {
-            "type": "Catalyst.Core.P2P.PeerSettings, Catalyst.Core",
+            "type": "Catalyst.Core.Keystore.SigningContextProvider, Catalyst.Core",
             "services": [
                 {
-                    "type": "Catalyst.Abstractions.P2P.IPeerSettings, Catalyst.Abstractions"
+                    "type": "Catalyst.Abstractions.Keystore.ISigningContextProvider, Catalyst.Abstractions"
                 }
-            ]
+            ],
+            "properties": {
+                "Network": "Mainnet",
+                "SignatureType": "ProtocolPeer"
+            } 
         },
         {
             "type": "Catalyst.Core.Util.AddressHelper, Catalyst.Core",
@@ -263,14 +267,6 @@
             "services": [
                 {
                     "type": "Catalyst.Abstractions.Keystore.IKeyStoreService, Catalyst.Abstractions"
-                }
-            ]
-        },
-        {
-            "type": "Catalyst.Core.IO.Messaging.Dto.DtoFactory, Catalyst.Core",
-            "services": [
-                {
-                    "type": "Catalyst.Abstractions.IO.Messaging.Dto.IDtoFactory, Catalyst.Abstractions"
                 }
             ]
         },

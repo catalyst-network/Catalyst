@@ -30,6 +30,7 @@ using Catalyst.Abstractions.P2P.IO.Messaging.Correlation;
 using Catalyst.Abstractions.P2P.ReputationSystem;
 using Catalyst.Abstractions.Types;
 using Catalyst.Core.Extensions;
+using Catalyst.Core.Extensions;
 using Catalyst.Core.IO.Messaging.Correlation;
 using Catalyst.Core.P2P.IO.Messaging.Correlation;
 using Catalyst.Core.P2P.ReputationSystem;

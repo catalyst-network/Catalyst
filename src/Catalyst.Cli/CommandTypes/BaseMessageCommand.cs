@@ -30,6 +30,8 @@ using Catalyst.Abstractions.Cli.Options;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.Rpc;
 using Catalyst.Core.Extensions;
+using Catalyst.Core.IO.Messaging.Dto;
+using Catalyst.Core.Extensions;
 using Catalyst.Core.IO.Events;
 using Catalyst.Core.P2P;
 using Catalyst.Protocol;
@@ -77,9 +79,8 @@ namespace Catalyst.Cli.CommandTypes
                 return;
             }
 
-            var messageDto = CommandContext.DtoFactory.GetDto(
+            var messageDto = new MessageDto(
                 message.ToProtocolMessage(SenderPeerIdentifier.PeerId),
-                SenderPeerIdentifier,
                 RecipientPeerIdentifier);
             Target.SendMessage(messageDto);
         }

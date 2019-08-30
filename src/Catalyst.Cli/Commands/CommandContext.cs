@@ -51,7 +51,6 @@ namespace Catalyst.Cli.Commands
         public CommandContext(IConfigurationRoot config,
             ILogger logger,
             IUserOutput userOutput,
-            IDtoFactory dtoFactory,
             INodeRpcClientFactory nodeRpcClientFactory,
             ICertificateStore certificateStore,
             IKeyRegistry keyRegistry)
@@ -60,14 +59,11 @@ namespace Catalyst.Cli.Commands
             _rpcNodeConfigs = NodeRpcConfig.BuildRpcNodeSettingList(config);
 
             SocketClientRegistry = new SocketClientRegistry<INodeRpcClient>();
-            DtoFactory = dtoFactory;
             PeerIdentifier = Core.P2P.PeerIdentifier.BuildPeerIdFromConfig(config, userOutput, keyRegistry);
             NodeRpcClientFactory = nodeRpcClientFactory;
             CertificateStore = certificateStore;
             UserOutput = userOutput;
         }
-
-        public IDtoFactory DtoFactory { get; }
 
         public IPeerIdentifier PeerIdentifier { get; }
 

@@ -58,13 +58,11 @@ namespace Catalyst.Cli.UnitTests.Helpers
         public static ICommandContext GenerateCliFullCommandContext()
         {
             var userOutput = Substitute.For<IUserOutput>();
-            var dtoFactory = new DtoFactory();
             var nodeRpcClientFactory = Substitute.For<INodeRpcClientFactory>();
             var certificateStore = Substitute.For<ICertificateStore>();
 
             var commandContext = Substitute.For<ICommandContext>();
             commandContext.UserOutput.Returns(userOutput);
-            commandContext.DtoFactory.Returns(dtoFactory);
             commandContext.NodeRpcClientFactory.Returns(nodeRpcClientFactory);
             commandContext.CertificateStore.Returns(certificateStore);
 
@@ -82,13 +80,11 @@ namespace Catalyst.Cli.UnitTests.Helpers
         public static ICommandContext GenerateCliCommandContext()
         {
             var userOutput = Substitute.For<IUserOutput>();
-            var dtoFactory = new DtoFactory();
             var nodeRpcClientFactory = Substitute.For<INodeRpcClientFactory>();
             var certificateStore = Substitute.For<ICertificateStore>();
 
             var commandContext = Substitute.For<ICommandContext>();
             commandContext.UserOutput.Returns(userOutput);
-            commandContext.DtoFactory.Returns(dtoFactory);
             commandContext.NodeRpcClientFactory.Returns(nodeRpcClientFactory);
             commandContext.CertificateStore.Returns(certificateStore);
 

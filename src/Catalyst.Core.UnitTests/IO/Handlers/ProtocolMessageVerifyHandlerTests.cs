@@ -21,9 +21,10 @@
 
 #endregion
 
+using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.KeySigner;
-using Catalyst.Abstractions.P2P;
 using Catalyst.Core.IO.Handlers;
+using Catalyst.Core.Util;
 using Catalyst.Core.Util;
 using Catalyst.Cryptography.BulletProofs.Wrapper;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
@@ -40,13 +41,13 @@ namespace Catalyst.Core.UnitTests.IO.Handlers
         private readonly IChannelHandlerContext _fakeContext;
         private readonly ProtocolMessageSigned _protocolMessageSigned;
         private readonly IKeySigner _keySigner;
-        private readonly IPeerSettings _peerSettings;
+        private readonly ISigningContextProvider _signingContextProvider;
 
         public ProtocolMessageVerifyHandlerTests()
         {
             _fakeContext = Substitute.For<IChannelHandlerContext>();
             _keySigner = Substitute.For<IKeySigner>();
-            _peerSettings = Substitute.For<IPeerSettings>();
+            _signingContextProvider = Substitute.For<ISigningContextProvider>();
 
             var signatureBytes = ByteUtil.GenerateRandomByteArray(FFI.SignatureLength);
             var publicKeyBytes = ByteUtil.GenerateRandomByteArray(FFI.PublicKeyLength);
@@ -60,7 +61,8 @@ namespace Catalyst.Core.UnitTests.IO.Handlers
                 }
             };
 
-            _peerSettings.Network.Returns(Protocol.Common.Network.Devnet);
+            _signingContextProvider.Network.Returns(Protocol.Common.Network.Devnet);
+            _signingContextProvider.SignatureType.Returns(SignatureType.ProtocolPeer);
         }
 
         [Fact]
@@ -69,7 +71,7 @@ namespace Catalyst.Core.UnitTests.IO.Handlers
             _keySigner.Verify(Arg.Any<ISignature>(), Arg.Any<byte[]>(), default)
                .ReturnsForAnyArgs(true);
 
-            var signatureHandler = new ProtocolMessageVerifyHandler(_keySigner, _peerSettings);
+            var signatureHandler = new ProtocolMessageVerifyHandler(_keySigner, _signingContextProvider);
 
             signatureHandler.ChannelRead(_fakeContext, _protocolMessageSigned);
 
@@ -82,7 +84,7 @@ namespace Catalyst.Core.UnitTests.IO.Handlers
             _keySigner.Verify(Arg.Any<ISignature>(), Arg.Any<byte[]>(), default)
                .ReturnsForAnyArgs(false);
 
-            var signatureHandler = new ProtocolMessageVerifyHandler(_keySigner, _peerSettings);
+            var signatureHandler = new ProtocolMessageVerifyHandler(_keySigner, _signingContextProvider);
 
             signatureHandler.ChannelRead(_fakeContext, _protocolMessageSigned);
             

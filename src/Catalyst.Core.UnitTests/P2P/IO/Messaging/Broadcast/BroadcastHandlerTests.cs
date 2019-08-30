@@ -24,12 +24,17 @@
 using System;
 using System.Net;
 using System.Threading.Tasks;
+using Catalyst.Core.Cryptography;
+using Catalyst.Core.Extensions;
 using Catalyst.Abstractions.Cryptography;
+using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.KeySigner;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.IO.Messaging.Broadcast;
+using Catalyst.Core.IO.Handlers;
+using Catalyst.Core.IO.Messaging.Correlation;
+using Catalyst.Core.Util;
 using Catalyst.Core.Cryptography;
-using Catalyst.Core.Extensions;
 using Catalyst.Core.IO.Handlers;
 using Catalyst.Core.IO.Messaging.Correlation;
 using Catalyst.Core.Util;
@@ -42,6 +47,7 @@ using DotNetty.Transport.Channels.Embedded;
 using FluentAssertions;
 using NSubstitute;
 using NSubstitute.Exceptions;
+using NSubstitute.ReceivedExtensions;
 using Serilog;
 using Xunit;
 
@@ -53,7 +59,7 @@ namespace Catalyst.Core.UnitTests.P2P.IO.Messaging.Broadcast
         private readonly BroadcastHandler _broadcastHandler;
         private readonly IKeySigner _keySigner;
         private readonly ProtocolMessageSigned _broadcastMessageSigned;
-        private readonly IPeerSettings _peerSettings;
+        private readonly ISigningContextProvider _signingContextProvider;
 
         public BroadcastHandlerTests()
         {
@@ -77,8 +83,9 @@ namespace Catalyst.Core.UnitTests.P2P.IO.Messaging.Broadcast
                     }.ToProtocolMessage(peerIdentifier.PeerId, CorrelationId.GenerateCorrelationId()),
                     Signature = fakeSignature.SignatureBytes.ToByteString()
                 };
-            _peerSettings = Substitute.For<IPeerSettings>();
-            _peerSettings.Network.Returns(Protocol.Common.Network.Devnet);
+            _signingContextProvider = Substitute.For<ISigningContextProvider>();
+            _signingContextProvider.Network.Returns(Protocol.Common.Network.Devnet);
+            _signingContextProvider.SignatureType.Returns(SignatureType.ProtocolPeer);
         }
 
         [Fact]
@@ -91,14 +98,14 @@ namespace Catalyst.Core.UnitTests.P2P.IO.Messaging.Broadcast
             recipientIdentifier.IpEndPoint.Returns(new IPEndPoint(fakeIp, 10));
             
             EmbeddedChannel channel = new EmbeddedChannel(
-                new ProtocolMessageVerifyHandler(_keySigner, _peerSettings),
+                new ProtocolMessageVerifyHandler(_keySigner, _signingContextProvider),
                 _broadcastHandler,
                 new ObservableServiceHandler()
             );
 
             channel.WriteInbound(_broadcastMessageSigned);
 
-            await SubstituteExtensions.Received(_fakeBroadcastManager, 1)
+            await _fakeBroadcastManager.Received(Quantity.Exactly(1))
                .ReceiveAsync(Arg.Any<ProtocolMessageSigned>());
         }
 
@@ -110,7 +117,7 @@ namespace Catalyst.Core.UnitTests.P2P.IO.Messaging.Broadcast
             var protoDatagramChannelHandler = new ObservableServiceHandler();
             handler.StartObserving(protoDatagramChannelHandler.MessageStream);
 
-            var channel = new EmbeddedChannel(new ProtocolMessageVerifyHandler(_keySigner, _peerSettings), _broadcastHandler, protoDatagramChannelHandler);
+            var channel = new EmbeddedChannel(new ProtocolMessageVerifyHandler(_keySigner, _signingContextProvider), _broadcastHandler, protoDatagramChannelHandler);
             channel.WriteInbound(_broadcastMessageSigned);
 
             var result = await TaskHelper.WaitForAsync(() =>

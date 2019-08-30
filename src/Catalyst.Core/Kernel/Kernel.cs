@@ -35,6 +35,7 @@ using Catalyst.Abstractions.Registry;
 using Catalyst.Abstractions.Types;
 using Catalyst.Abstractions.Util;
 using Catalyst.Core.Config;
+using Catalyst.Core.Config;
 using Catalyst.Core.Util;
 using Microsoft.Extensions.Configuration;
 using Serilog;

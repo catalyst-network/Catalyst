@@ -24,10 +24,12 @@
 using System;
 using System.Linq;
 using Catalyst.Abstractions.P2P;
+using Catalyst.Core.Keystore;
 using Catalyst.Core.Cli;
 using Catalyst.Core.Cryptography;
 using Catalyst.Core.FileSystem;
 using Catalyst.Core.Registry;
+using Catalyst.Protocol.Common;
 using Catalyst.Simulator.Extensions;
 using Catalyst.Simulator.Helpers;
 using Catalyst.Simulator.Simulations;
@@ -54,10 +56,10 @@ namespace Catalyst.Simulator
             var consolePasswordReader = new ConsolePasswordReader(userOutput, userInput);
             var certificateStore = new CertificateStore(fileSystem, new PasswordManager(consolePasswordReader, passwordRegistry));
             var certificate = certificateStore.ReadOrCreateCertificateFile("mycert.pfx");
-            var peerSettings = Substitute.For<IPeerSettings>();
+            var signingContext = new SigningContextProvider {Network = Network.Devnet, SignatureType = SignatureType.ProtocolPeer};
 
             var clientRpcInfoList =
-                ConfigHelper.GenerateClientRpcInfoFromConfig(userOutput, passwordRegistry, certificate, logger, peerSettings
+                ConfigHelper.GenerateClientRpcInfoFromConfig(userOutput, passwordRegistry, certificate, logger, signingContext
                 ).ToList();
 
             var simulation = new TransactionSimulation(userOutput);

@@ -22,10 +22,12 @@
 #endregion
 
 using System.Net;
-using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Extensions;
+using Catalyst.Abstractions.P2P;
 using Catalyst.Core.IO.Messaging.Correlation;
 using Catalyst.Core.IO.Messaging.Dto;
+using Catalyst.Core.Util;
+using Catalyst.Core.IO.Messaging.Correlation;
 using Catalyst.Core.Util;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
@@ -76,20 +78,15 @@ namespace Catalyst.Core.UnitTests.IO.Codecs
                 _recipientPid.IpEndPoint
             );
         }
-        
+
         [Fact]
         public void DatagramPacketEncoder_Can_Encode_IMessage_With_ProtobufEncoder()
         {
-            Assert.True(_channel.WriteOutbound(new MessageDto<ProtocolMessageSigned>(
-                _protocolMessageSigned,
-                _senderPid,
-                _recipientPid,
-                CorrelationId.GenerateCorrelationId()
-            )));
+            Assert.True(_channel.WriteOutbound(new SignedMessageDto(_protocolMessageSigned, _recipientPid)));
 
             var datagramPacket = _channel.ReadOutbound<DatagramPacket>();
             Assert.NotNull(datagramPacket);
-            
+
             Assert.Equal(_datagramPacket.Content, datagramPacket.Content);
             Assert.Equal(_datagramPacket.Sender, datagramPacket.Sender);
             Assert.Equal(_datagramPacket.Recipient, datagramPacket.Recipient);

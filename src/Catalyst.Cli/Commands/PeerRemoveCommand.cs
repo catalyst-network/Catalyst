@@ -28,6 +28,7 @@ using Google.Protobuf;
 using Catalyst.Cli.CommandTypes;
 using Catalyst.Abstractions.Cli.Commands;
 using Catalyst.Core.Extensions;
+using Catalyst.Core.Extensions;
 
 namespace Catalyst.Cli.Commands
 {

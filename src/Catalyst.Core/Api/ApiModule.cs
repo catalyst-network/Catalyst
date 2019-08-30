@@ -36,7 +36,7 @@ using Module = Autofac.Module;
 
 namespace Catalyst.Core.Api
 {
-    public class ApiModule : Module
+    public sealed class ApiModule : Module
     {
         private readonly string _apiBindingAddress;
         private readonly string[] _controllerModules;

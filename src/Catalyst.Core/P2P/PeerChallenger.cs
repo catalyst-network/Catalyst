@@ -23,18 +23,19 @@
 
 using System;
 using System.Linq;
+using Catalyst.Abstractions.P2P;
+using Catalyst.Protocol.Common;
+using Catalyst.Protocol.IPPN;
+using Catalyst.Core.IO.Messaging.Correlation;
+using Catalyst.Core.IO.Messaging.Dto;
+using Catalyst.Core.Extensions;
+using Serilog;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Reactive.Threading.Tasks;
-using System.Threading;
 using System.Threading.Tasks;
-using Catalyst.Abstractions.P2P;
-using Catalyst.Core.Extensions;
+using System.Threading;
 using Catalyst.Core.IO.Messaging.Correlation;
-using Catalyst.Core.IO.Messaging.Dto;
-using Catalyst.Protocol.Common;
-using Catalyst.Protocol.IPPN;
-using Serilog;
 
 namespace Catalyst.Core.P2P
 {
@@ -65,11 +66,9 @@ namespace Catalyst.Core.P2P
             {
                 var correlationId = CorrelationId.GenerateCorrelationId();
                 var protocolMessage = new PingRequest().ToProtocolMessage(_senderIdentifier.PeerId, correlationId);
-                var messageDto = new MessageDto<ProtocolMessage>(
+                var messageDto = new MessageDto(
                     protocolMessage,
-                    _senderIdentifier,
-                    recipientPeerIdentifier,
-                    correlationId
+                    recipientPeerIdentifier
                 );
 
                 _logger.Verbose($"Sending peer challenge request to IP: {recipientPeerIdentifier}");
@@ -79,8 +78,8 @@ namespace Catalyst.Core.P2P
                 {
                     await ChallengeResponseMessageStreamer
                        .FirstAsync(a => a != null 
-                         && Enumerable.SequenceEqual(a.PeerId.PublicKey, recipientPeerIdentifier.PeerId.PublicKey) 
-                         && Enumerable.SequenceEqual(a.PeerId.Ip, recipientPeerIdentifier.PeerId.Ip))
+                         && a.PeerId.PublicKey.SequenceEqual(recipientPeerIdentifier.PeerId.PublicKey) 
+                         && a.PeerId.Ip.SequenceEqual(recipientPeerIdentifier.PeerId.Ip))
                        .ToTask(cancellationTokenSource.Token)
                        .ConfigureAwait(false);
                 }
