@@ -65,14 +65,10 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Observers
 
             _observer.StartObserving(messageStream);
 
-            //testScheduler.Start();
-
             using (_observer.MessageStream.Subscribe(pingResponseObserver.OnNext))
             {
                 testScheduler.Start();
 
-                //await TaskHelper.WaitForAsync(() => pingResponseObserver.ReceivedCalls().Any(),
-                //    TimeSpan.FromMilliseconds(5000));
                 pingResponseObserver.Received(1).OnNext(Arg.Any<IPeerClientMessageDto>());
             }
         }

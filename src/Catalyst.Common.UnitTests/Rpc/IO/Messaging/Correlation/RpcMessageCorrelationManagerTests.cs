@@ -22,7 +22,6 @@
 #endregion
 
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.Rpc.IO.Messaging.Correlation;
@@ -30,16 +29,16 @@ using Catalyst.Common.Rpc.IO.Messaging.Correlation;
 using Catalyst.Common.UnitTests.IO.Messaging.Correlation;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
-using Catalyst.TestUtils;
 using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Xunit;
 
 namespace Catalyst.Common.UnitTests.Rpc.IO.Messaging.Correlation
 {
-    public sealed class RpcMessageCorrelationManagerTests : MessageCorrelationManagerTests<IRpcMessageCorrelationManager>
+    public sealed class
+        RpcMessageCorrelationManagerTests : MessageCorrelationManagerTests<IRpcMessageCorrelationManager>
     {
-        private TestScheduler _testScheduler = new TestScheduler();
+        private readonly TestScheduler _testScheduler = new TestScheduler();
 
         public RpcMessageCorrelationManagerTests()
         {

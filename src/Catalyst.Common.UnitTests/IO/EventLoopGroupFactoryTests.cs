@@ -101,7 +101,7 @@ namespace Catalyst.Common.UnitTests.IO
 
             while (!eventLoops.All(x => x.IsShutdown))
             {
-                await Task.Delay(100);
+                await Task.Delay(100).ConfigureAwait(false);
             }
 
             eventLoops.ToList().ForEach(eventLoop => eventLoop.IsShutdown.Should().BeTrue());

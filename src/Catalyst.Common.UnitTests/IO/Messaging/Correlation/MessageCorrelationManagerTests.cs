@@ -23,6 +23,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Catalyst.Common.Extensions;
@@ -31,6 +32,7 @@ using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Util;
 using Catalyst.Common.IO.Handlers;
 using Catalyst.Common.IO.Messaging.Correlation;
+using Catalyst.Protocol;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
 using Catalyst.TestUtils;
@@ -41,18 +43,15 @@ using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Primitives;
 using NSubstitute;
 using Serilog;
-using System.IO;
-using Catalyst.Protocol;
-using Microsoft.Reactive.Testing;
 using Xunit;
-using PendingRequest = Catalyst.Common.IO.Messaging.Correlation.CorrelatableMessage<Catalyst.Protocol.Common.ProtocolMessage>;
+using PendingRequest =
+    Catalyst.Common.IO.Messaging.Correlation.CorrelatableMessage<Catalyst.Protocol.Common.ProtocolMessage>;
 
 namespace Catalyst.Common.UnitTests.IO.Messaging.Correlation
 {
-    public abstract class MessageCorrelationManagerTests<T> 
+    public abstract class MessageCorrelationManagerTests<T>
         where T : IMessageCorrelationManager
     {
-        private readonly TestScheduler _testScheduler;
         protected readonly IPeerIdentifier[] PeerIds;
         protected List<PendingRequest> PendingRequests;
 
@@ -62,12 +61,11 @@ namespace Catalyst.Common.UnitTests.IO.Messaging.Correlation
         protected readonly IMemoryCache Cache;
         private readonly PeerId _senderPeerId;
 
-        protected readonly Dictionary<ByteString, ICacheEntry> CacheEntriesByRequest 
+        protected readonly Dictionary<ByteString, ICacheEntry> CacheEntriesByRequest
             = new Dictionary<ByteString, ICacheEntry>();
-        
+
         protected MessageCorrelationManagerTests()
         {
-            _testScheduler = new TestScheduler();
             SubbedLogger = Substitute.For<ILogger>();
             ChangeTokenProvider = Substitute.For<IChangeTokenProvider>();
             var changeToken = Substitute.For<IChangeToken>();
@@ -79,7 +77,7 @@ namespace Catalyst.Common.UnitTests.IO.Messaging.Correlation
             {
                 PeerIdentifierHelper.GetPeerIdentifier("peer1"),
                 PeerIdentifierHelper.GetPeerIdentifier("peer2"),
-                PeerIdentifierHelper.GetPeerIdentifier("peer3"),
+                PeerIdentifierHelper.GetPeerIdentifier("peer3")
             };
         }
 
@@ -175,11 +173,12 @@ namespace Catalyst.Common.UnitTests.IO.Messaging.Correlation
             request.Should().BeTrue();
         }
 
-        public void TryMatchResponseAsync_Should_Not_Match_Existing_Records_With_Non_Matching_Correlation_Id<T>() where T : IMessage, new()
+        public void TryMatchResponseAsync_Should_Not_Match_Existing_Records_With_Non_Matching_Correlation_Id<T>()
+            where T : IMessage, new()
         {
+            var responseMatchingNothing =
+                new T().ToProtocolMessage(PeerIds[1].PeerId, CorrelationId.GenerateCorrelationId());
 
-            var responseMatchingNothing = new T().ToProtocolMessage(PeerIds[1].PeerId, CorrelationId.GenerateCorrelationId());
-         
             var request = CorrelationManager.TryMatchResponse(responseMatchingNothing);
             request.Should().BeFalse();
         }
@@ -192,18 +191,20 @@ namespace Catalyst.Common.UnitTests.IO.Messaging.Correlation
 
             var correlationHandler = new CorrelationHandler<IMessageCorrelationManager>(correlationManager);
             var channelHandlerContext = Substitute.For<IChannelHandlerContext>();
-            var nonCorrelatedMessage = new PingResponse().ToProtocolMessage(PeerIds[0].PeerId, CorrelationId.GenerateCorrelationId());
+            var nonCorrelatedMessage =
+                new PingResponse().ToProtocolMessage(PeerIds[0].PeerId, CorrelationId.GenerateCorrelationId());
             correlationHandler.ChannelRead(channelHandlerContext, nonCorrelatedMessage);
 
             channelHandlerContext.DidNotReceive().FireChannelRead(nonCorrelatedMessage);
         }
 
-        [Fact] 
+        [Fact]
         public void TryMatchResponseAsync_Should_Not_Match_On_Wrong_Response_Type()
         {
             var matchingRequest = PendingRequests[2].Content;
             var matchingRequestWithWrongType =
-                new PeerNeighborsResponse().ToProtocolMessage(matchingRequest.PeerId, matchingRequest.CorrelationId.ToCorrelationId());
+                new PeerNeighborsResponse().ToProtocolMessage(matchingRequest.PeerId,
+                    matchingRequest.CorrelationId.ToCorrelationId());
 
             new Action(() => CorrelationManager.TryMatchResponse(matchingRequestWithWrongType))
                .Should().Throw<InvalidDataException>()
@@ -216,14 +217,11 @@ namespace Catalyst.Common.UnitTests.IO.Messaging.Correlation
             {
                 return;
             }
-            
+
             Cache?.Dispose();
             CorrelationManager?.Dispose();
         }
-        
-        public void Dispose()
-        {
-            Dispose(true);
-        }
+
+        public void Dispose() { Dispose(true); }
     }
 }

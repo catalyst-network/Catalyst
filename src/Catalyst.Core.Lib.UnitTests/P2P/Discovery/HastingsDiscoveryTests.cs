@@ -652,10 +652,6 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
 
                     _testScheduler.Start();
 
-                    //await TaskHelper.WaitForAsync(
-                    //    () => walker.StepProposal.Neighbours.All(n => n.StateTypes == NeighbourStateTypes.Responsive),
-                    //    TimeSpan.FromSeconds(5)).ConfigureAwait(false);
-
                     walker.StepProposal.Neighbours.Count(n => n.StateTypes == NeighbourStateTypes.Responsive).Should().Be(neighbours.Count);
                 }
             }
