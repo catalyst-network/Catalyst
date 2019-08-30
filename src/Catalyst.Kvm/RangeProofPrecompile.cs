@@ -27,7 +27,7 @@ using Nethermind.Evm.Precompiles;
 
 namespace Catalyst.Kvm
 {
-    internal class RangeProofPrecompile : IPrecompiledContract
+    public sealed class RangeProofPrecompile : IPrecompiledContract
     {
         private const int EthereumPrecompilesAddressingSpace = 0xffff;
         

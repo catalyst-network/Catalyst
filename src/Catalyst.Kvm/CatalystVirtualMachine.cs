@@ -31,11 +31,14 @@ using Nethermind.Store;
 
 namespace Catalyst.Kvm
 {
-    public class CatalystVirtualMachine : VirtualMachine
+    public sealed class CatalystVirtualMachine : VirtualMachine
     {
-        public CatalystVirtualMachine(IStateProvider stateProvider, IStorageProvider storageProvider, IStateUpdateHashProvider blockhashProvider, ISpecProvider specProvider, ILogManager logManager) : base(stateProvider, storageProvider, blockhashProvider, specProvider, logManager)
+        public CatalystVirtualMachine(IStateProvider stateProvider, IStorageProvider storageProvider, IStateUpdateHashProvider blockhashProvider, ISpecProvider specProvider, ILogManager logManager) : base(stateProvider, storageProvider, blockhashProvider, specProvider, logManager) { }
+
+        protected override void InitializePrecompiledContracts()
         {
-            RegisterPrecompile(RangeProofPrecompile.AddressInKvm, new RangeProofPrecompile());
+            base.InitializePrecompiledContracts();
+            Precompiles[RangeProofPrecompile.AddressInKvm] = new RangeProofPrecompile();
         }
 
         private static BigInteger _rangeProofAddressAsInt = RangeProofPrecompile.AddressInKvm.Bytes.ToUnsignedBigInteger();
