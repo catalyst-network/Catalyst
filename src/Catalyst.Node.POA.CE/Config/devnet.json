@@ -1,7 +1,7 @@
 {
     "CatalystNodeConfiguration": {
         "Peer": {
-            "Network": "devnet",
+            "Network": "Devnet",
             "PublicKey": "qnb9bw3b2yj4hpjcmsvgp12bkwff313v9gaqb18atvwfpevrmmf0",
             "Port": 42076,
             "BindAddress": "127.0.0.1",
