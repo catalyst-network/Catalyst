@@ -35,6 +35,7 @@ namespace Catalyst.Common.Interfaces.P2P
         IPAddress BindAddress { get; }
         IList<string> SeedServers { get; }
         Protocol.Common.Network Network { get; }
+        IPEndPoint[] DnsServers { get; }
     }
 }
 
