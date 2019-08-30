@@ -22,9 +22,6 @@
 #endregion
 
 using System;
-using System.Linq;
-using System.Reactive.Concurrency;
-using System.Reactive.Linq;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.IO.Messaging.Dto;
@@ -68,13 +65,14 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Observers
 
             _observer.StartObserving(messageStream);
 
-            testScheduler.Start();
+            //testScheduler.Start();
 
-            using (_observer.MessageStream.SubscribeOn(ImmediateScheduler.Instance)
-               .Subscribe(pingResponseObserver.OnNext))
+            using (_observer.MessageStream.Subscribe(pingResponseObserver.OnNext))
             {
-                await TaskHelper.WaitForAsync(() => pingResponseObserver.ReceivedCalls().Any(),
-                    TimeSpan.FromMilliseconds(5000));
+                testScheduler.Start();
+
+                //await TaskHelper.WaitForAsync(() => pingResponseObserver.ReceivedCalls().Any(),
+                //    TimeSpan.FromMilliseconds(5000));
                 pingResponseObserver.Received(1).OnNext(Arg.Any<IPeerClientMessageDto>());
             }
         }

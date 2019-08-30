@@ -99,7 +99,7 @@ namespace Catalyst.Common.UnitTests.IO
 
             _eventFactory.Dispose();
 
-            await TaskHelper.WaitForAsync(() => eventLoops.All(eventLoop => eventLoop.IsShutdown), TimeSpan.FromSeconds(5));
+            //await TaskHelper.WaitForAsync(() => eventLoops.All(eventLoop => eventLoop.IsShutdown), TimeSpan.FromSeconds(5));
 
             eventLoops.ToList().ForEach(eventLoop => eventLoop.IsShutdown.Should().BeTrue());
         }

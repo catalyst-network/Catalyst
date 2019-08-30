@@ -82,13 +82,9 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Observers
 
             _observer.StartObserving(messageStream);
 
-            testScheduler.Start();
-
-            using (_observer.MessageStream.SubscribeOn(TaskPoolScheduler.Default)
-               .Subscribe(peerNeighborsResponseObserver.OnNext))
+            using (_observer.MessageStream.Subscribe(peerNeighborsResponseObserver.OnNext))
             {
-                await TaskHelper.WaitForAsync(() => peerNeighborsResponseObserver.ReceivedCalls().Any(),
-                    TimeSpan.FromMilliseconds(1000));
+                testScheduler.Start();
 
                 peerNeighborsResponseObserver.Received(1)
                    .OnNext(Arg.Is<IPeerClientMessageDto>(p => test(p.Message, peers[0])));

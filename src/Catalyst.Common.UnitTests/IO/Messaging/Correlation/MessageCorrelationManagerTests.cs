@@ -52,6 +52,7 @@ namespace Catalyst.Common.UnitTests.IO.Messaging.Correlation
     public abstract class MessageCorrelationManagerTests<T> 
         where T : IMessageCorrelationManager
     {
+        private readonly TestScheduler _testScheduler;
         protected readonly IPeerIdentifier[] PeerIds;
         protected List<PendingRequest> PendingRequests;
 
@@ -66,6 +67,7 @@ namespace Catalyst.Common.UnitTests.IO.Messaging.Correlation
         
         protected MessageCorrelationManagerTests()
         {
+            _testScheduler = new TestScheduler();
             SubbedLogger = Substitute.For<ILogger>();
             ChangeTokenProvider = Substitute.For<IChangeTokenProvider>();
             var changeToken = Substitute.For<IChangeToken>();
@@ -175,6 +177,7 @@ namespace Catalyst.Common.UnitTests.IO.Messaging.Correlation
 
         public void TryMatchResponseAsync_Should_Not_Match_Existing_Records_With_Non_Matching_Correlation_Id<T>() where T : IMessage, new()
         {
+
             var responseMatchingNothing = new T().ToProtocolMessage(PeerIds[1].PeerId, CorrelationId.GenerateCorrelationId());
          
             var request = CorrelationManager.TryMatchResponse(responseMatchingNothing);
