@@ -29,7 +29,6 @@ using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.IO.Messaging.Dto;
 using Catalyst.Common.IO.Messaging.Correlation;
-using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Core.Lib.P2P.IO.Observers;
 using Catalyst.Protocol.IPPN;
 using Catalyst.TestUtils;
@@ -56,18 +55,17 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Observers
         public async void Observer_Can_Process_PingResponse_Correctly()
         {
             var testScheduler = new TestScheduler();
-            var response = new DtoFactory().GetDto(new PingResponse(),
-                PeerIdentifierHelper.GetPeerIdentifier("sender"),
-                PeerIdentifierHelper.GetPeerIdentifier("recipient"),
-                CorrelationId.GenerateCorrelationId()
-            );
-            
+
+            var pingResponse = new PingResponse();
+            var protocolMessage =
+                pingResponse.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId,
+                    CorrelationId.GenerateCorrelationId());
+
             var pingResponseObserver = Substitute.For<IObserver<IPeerClientMessageDto>>();
 
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, testScheduler,
-                response.Content.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId,
-                    response.CorrelationId));
-                
+                protocolMessage);
+
             _observer.StartObserving(messageStream);
 
             testScheduler.Start();
@@ -81,9 +79,6 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Observers
             }
         }
 
-        public void Dispose()
-        {
-            _observer?.Dispose();
-        }
+        public void Dispose() { _observer?.Dispose(); }
     }
 }

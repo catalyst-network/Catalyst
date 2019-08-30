@@ -88,6 +88,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.Rpc.IO.Observers
         [InlineData("616263", "98a70222f0b8121aa9d30f813d683f809e462b469c7ff87639499bb94e6dae4131f85042463c2a355a2003d062adf5aaa10b8c61e636062aaad11c2a26083403", "ec172b93ad5e563bf4932c70e1245034c35467ef2efd4d64ebf819683467e2bf", false)]
         public async Task VerifyMessageRequestObserver_Should_Send_Correct_Response(string message, string signatureAndMessage, string publicKey, bool expectedResult)
         {
+            var sender = PeerIdentifierHelper.GetPeerIdentifier("sender");
             var signatureMessageBytes = signatureAndMessage.HexToByteArray();
             ArraySegment<byte> signatureBytes = new ArraySegment<byte>(signatureMessageBytes, 0, FFI.SignatureLength);
             var publicKeyBytes = publicKey.HexToByteArray();
@@ -99,25 +100,21 @@ namespace Catalyst.Core.Lib.IntegrationTests.Rpc.IO.Observers
                 Network = Network.Unknown, SignatureType = SignatureType.Unknown
             };
 
-            var messageFactory = new DtoFactory();
+            var verifyMessageRequest = new VerifyMessageRequest
+            {
+                Message = RLP.EncodeElement(messageBytes).ToByteString(),
+                PublicKey = RLP.EncodeElement(publicKeyBytes).ToByteString(),
+                Signature = RLP.EncodeElement(signatureBytes.ToArray()).ToByteString(),
+                SigningContext = signingContext
+            };
+            var protocolMessage =
+                verifyMessageRequest.ToProtocolMessage(sender.PeerId);
 
-            var request = messageFactory.GetDto(
-                new VerifyMessageRequest
-                {
-                    Message = RLP.EncodeElement(messageBytes).ToByteString(),
-                    PublicKey = RLP.EncodeElement(publicKeyBytes).ToByteString(),
-                    Signature = RLP.EncodeElement(signatureBytes.ToArray()).ToByteString(),
-                    SigningContext = signingContext
-                },
-                PeerIdentifierHelper.GetPeerIdentifier("sender_key"),
-                PeerIdentifierHelper.GetPeerIdentifier("recipient_key")
-            );
-            
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, _testScheduler,
-                request.Content.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId)
+                protocolMessage
             );
             
-            var handler = new VerifyMessageRequestObserver(PeerIdentifierHelper.GetPeerIdentifier("sender"),
+            var handler = new VerifyMessageRequestObserver(sender,
                 _logger,
                 _keySigner
             );
@@ -130,7 +127,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.Rpc.IO.Observers
             receivedCalls.Count.Should().Be(1);
 
             var sentResponseDto = (IMessageDto<ProtocolMessage>) receivedCalls.Single().GetArguments().Single();
-            var verifyResponseMessage = sentResponseDto.FromIMessageDto().FromProtocolMessage<VerifyMessageResponse>();
+            var verifyResponseMessage = sentResponseDto.Content.FromProtocolMessage<VerifyMessageResponse>();
 
             verifyResponseMessage.IsSignedByKey.Should().Be(expectedResult);
         }
@@ -138,6 +135,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.Rpc.IO.Observers
         [Fact]
         public async Task VerifyMessageRequest_Can_Verify_Valid_SignMessageResponse()
         {
+            var sender = PeerIdentifierHelper.GetPeerIdentifier("sender");
             var signingContext = new SigningContext
             {
                 Network = Network.Devnet, SignatureType = SignatureType.ProtocolRpc
@@ -145,20 +143,21 @@ namespace Catalyst.Core.Lib.IntegrationTests.Rpc.IO.Observers
 
             var message = "something something something";
 
-            var messageFactory = new DtoFactory();
+            var signMessageRequest = new SignMessageRequest
+            {
+                Message = message.ToUtf8ByteString(),
+                SigningContext = signingContext
+            };
+            var protocolMessage =
+                signMessageRequest.ToProtocolMessage(sender.PeerId);
 
-            var signRequest = messageFactory.GetDto(
-                new SignMessageRequest
-                {
-                    Message = message.ToUtf8ByteString(),
-                    SigningContext = signingContext
-                },
-                PeerIdentifierHelper.GetPeerIdentifier("sender_key"),
+            var signRequest = new MessageDto(protocolMessage,
                 PeerIdentifierHelper.GetPeerIdentifier("recipient_key")
             );
 
-            var signMessageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, _testScheduler, signRequest.Content.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId));
-            var signHandler = new SignMessageRequestObserver(PeerIdentifierHelper.GetPeerIdentifier("sender"), _logger, _keySigner);
+            var signMessageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, _testScheduler, signRequest.Content);
+            var signHandler = new SignMessageRequestObserver(sender, _logger, _keySigner);
+
             signHandler.StartObserving(signMessageStream);
 
             _testScheduler.Start();
@@ -167,7 +166,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.Rpc.IO.Observers
             receivedCallsSign.Count.Should().Be(1);
             
             var sentSignResponseDto = (IMessageDto<ProtocolMessage>) receivedCallsSign.Single().GetArguments().Single();
-            var signResponseMessage = sentSignResponseDto.FromIMessageDto().FromProtocolMessage<SignMessageResponse>();
+            var signResponseMessage = sentSignResponseDto.Content.FromProtocolMessage<SignMessageResponse>();
 
             signResponseMessage.OriginalMessage.Should().Equal(message);
             signResponseMessage.Signature.Should().NotBeEmpty();
@@ -175,23 +174,22 @@ namespace Catalyst.Core.Lib.IntegrationTests.Rpc.IO.Observers
 
             _fakeContext.Channel.ClearReceivedCalls();
 
-            var verifyRequest = messageFactory.GetDto(
-                new VerifyMessageRequest
-                {
-                    Message = RLP.EncodeElement(signResponseMessage.OriginalMessage.ToByteArray()).ToByteString(),
-                    PublicKey = RLP.EncodeElement(signResponseMessage.PublicKey.ToByteArray()).ToByteString(),
-                    Signature = RLP.EncodeElement(signResponseMessage.Signature.ToByteArray()).ToByteString(),
-                    SigningContext = signingContext
-                },
-                PeerIdentifierHelper.GetPeerIdentifier("sender_key"),
-                PeerIdentifierHelper.GetPeerIdentifier("recipient_key")
-            );
-            
+            var verifyMessageRequest = new VerifyMessageRequest
+            {
+                Message = RLP.EncodeElement(signResponseMessage.OriginalMessage.ToByteArray()).ToByteString(),
+                PublicKey = RLP.EncodeElement(signResponseMessage.PublicKey.ToByteArray()).ToByteString(),
+                Signature = RLP.EncodeElement(signResponseMessage.Signature.ToByteArray()).ToByteString(),
+                SigningContext = signingContext
+            };
+
+            var verifyMessageRequestProtocolMessage =
+                verifyMessageRequest.ToProtocolMessage(sender.PeerId);
+
             var verifyMessageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, _testScheduler,
-                verifyRequest.Content.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId)
+                verifyMessageRequestProtocolMessage
             );
             
-            var verifyHandler = new VerifyMessageRequestObserver(PeerIdentifierHelper.GetPeerIdentifier("sender"),
+            var verifyHandler = new VerifyMessageRequestObserver(sender,
                 _logger,
                 _keySigner
             );
@@ -203,7 +201,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.Rpc.IO.Observers
             var receivedCallsVerify = _fakeContext.Channel.ReceivedCalls().ToList();
 
             var sentVerifyResponseDto = (IMessageDto<ProtocolMessage>) receivedCallsVerify.Single().GetArguments().Single();
-            var verifyResponseMessage = sentVerifyResponseDto.FromIMessageDto().FromProtocolMessage<VerifyMessageResponse>();
+            var verifyResponseMessage = sentVerifyResponseDto.Content.FromProtocolMessage<VerifyMessageResponse>();
 
             verifyResponseMessage.IsSignedByKey.Should().Be(true);
         }

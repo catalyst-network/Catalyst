@@ -26,7 +26,6 @@ using System.Net;
 using System.Threading.Tasks;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
-using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.Util;
 using Catalyst.Core.Lib.Rpc.IO.Observers;
 using Catalyst.Protocol;
@@ -61,17 +60,17 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Observers
         public async Task Valid_GetVersion_Request_Should_Send_VersionResponse()
         {
             var testScheduler = new TestScheduler();
-            var versionRequest = new DtoFactory().GetDto(new VersionRequest(), 
-                PeerIdentifierHelper.GetPeerIdentifier("sender"), 
-                PeerIdentifierHelper.GetPeerIdentifier("recipient")
-            );
-            
+
+            var versionRequest = new VersionRequest();
+            var protocolMessage =
+                versionRequest.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId);
+
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, testScheduler,
-                versionRequest.Content.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId)
+                protocolMessage
             );
-            
+
             var handler = new GetVersionRequestObserver(PeerIdentifierHelper.GetPeerIdentifier("sender"), _logger);
-            
+
             handler.StartObserving(messageStream);
 
             testScheduler.Start();
@@ -80,7 +79,7 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Observers
             receivedCalls.Count.Should().Be(1);
 
             var sentResponseDto = (IMessageDto<ProtocolMessage>) receivedCalls.Single().GetArguments().Single();
-            var versionResponseMessage = sentResponseDto.FromIMessageDto().FromProtocolMessage<VersionResponse>();
+            var versionResponseMessage = sentResponseDto.Content.FromProtocolMessage<VersionResponse>();
             versionResponseMessage.Version.Should().Be(NodeUtil.GetVersion());
         }
     }

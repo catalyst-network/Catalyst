@@ -23,9 +23,7 @@
 
 using System;
 using System.Linq;
-using System.Reactive.Concurrency;
 using System.Reactive.Linq;
-using System.Threading.Tasks;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.IO.Messaging.Correlation;
@@ -37,24 +35,31 @@ using Google.Protobuf;
 using Microsoft.Reactive.Testing;
 using NSubstitute;
 
-namespace Catalyst.TestUtils 
+namespace Catalyst.TestUtils
 {
     public static class MessageStreamHelper
     {
-        public static void SendToHandler(this ProtocolMessage messages, IChannelHandlerContext fakeContext, MessageObserverBase handler)
+        public static void SendToHandler(this ProtocolMessage messages,
+            IChannelHandlerContext fakeContext,
+            MessageObserverBase handler)
         {
             handler.OnNext(CreateChanneledMessage(fakeContext, messages));
         }
 
         //Force test scheduler for testing streams
-        public static IObservable<IObserverDto<ProtocolMessage>> CreateStreamWithMessage(IChannelHandlerContext fakeContext, TestScheduler testScheduler, ProtocolMessage response)
-        {   
+        public static IObservable<IObserverDto<ProtocolMessage>> CreateStreamWithMessage(
+            IChannelHandlerContext fakeContext,
+            TestScheduler testScheduler,
+            ProtocolMessage response)
+        {
             var channeledAny = new ObserverDto(fakeContext, response);
             var messageStream = new[] {channeledAny}.ToObservable(testScheduler);
             return messageStream;
         }
 
-        public static IObservable<IObserverDto<ProtocolMessage>> CreateStreamWithMessages<T>(TestScheduler testScheduler, params T[] messages)
+        public static IObservable<IObserverDto<ProtocolMessage>> CreateStreamWithMessages<T>(
+            TestScheduler testScheduler,
+            params T[] messages)
             where T : IMessage<T>, IMessage
         {
             var protoMessages = messages.Select(m =>
@@ -65,7 +70,10 @@ namespace Catalyst.TestUtils
             return CreateStreamWithMessages(context, testScheduler, protoMessages.ToArray());
         }
 
-        public static IObservable<IObserverDto<ProtocolMessage>> CreateStreamWithMessages(IChannelHandlerContext fakeContext, TestScheduler testScheduler, params ProtocolMessage[] responseMessages)
+        public static IObservable<IObserverDto<ProtocolMessage>> CreateStreamWithMessages(
+            IChannelHandlerContext fakeContext,
+            TestScheduler testScheduler,
+            params ProtocolMessage[] responseMessages)
         {
             var stream = responseMessages
                .Select(message => new ObserverDto(fakeContext, message));
@@ -74,7 +82,8 @@ namespace Catalyst.TestUtils
             return messageStream;
         }
 
-        private static ObserverDto CreateChanneledMessage(IChannelHandlerContext fakeContext, ProtocolMessage responseMessage)
+        private static ObserverDto CreateChanneledMessage(IChannelHandlerContext fakeContext,
+            ProtocolMessage responseMessage)
         {
             return new ObserverDto(fakeContext, responseMessage);
         }

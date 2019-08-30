@@ -108,7 +108,6 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Messaging.Broadcast
 
             var peerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("1");
             var senderIdentifier = PeerIdentifierHelper.GetPeerIdentifier("sender");
-            var messageFactory = new DtoFactory();
 
             IBroadcastManager broadcastMessageHandler = new BroadcastManager(
                 peerIdentifier, 
@@ -118,11 +117,9 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Messaging.Broadcast
                 _keySigner,
                 Substitute.For<ILogger>());
 
-            var messageDto = messageFactory.GetDto(
-                TransactionHelper.GetTransaction(),
-                peerIdentifier,
-                senderIdentifier,
-                CorrelationId.GenerateCorrelationId()
+            var messageDto = new MessageDto(
+                TransactionHelper.GetTransaction().ToProtocolMessage(senderIdentifier.PeerId),
+                peerIdentifier
             );
 
             var gossipDto =

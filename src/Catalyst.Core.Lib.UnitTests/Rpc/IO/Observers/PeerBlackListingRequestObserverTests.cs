@@ -139,7 +139,6 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Observers
 
             var sendPeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("sender");
 
-            var messageFactory = new DtoFactory();
             var request = new SetPeerBlackListRequest
             {
                 PublicKey = publicKey.ToBytesForRLPEncoding().ToByteString(),
@@ -147,14 +146,9 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Observers
                 Blacklist = Convert.ToBoolean(blacklist)
             };
 
-            var requestMessage = messageFactory.GetDto(
-                request,
-                PeerIdentifierHelper.GetPeerIdentifier("recipient"),
-                PeerIdentifierHelper.GetPeerIdentifier("sender")
-            );
-            
+            var protocolMessage = request.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId);
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, testScheduler,
-                requestMessage.Content.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId)
+                protocolMessage
             );
 
             var handler = new PeerBlackListingRequestObserver(sendPeerIdentifier, _logger, peerRepository);
@@ -167,7 +161,7 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Observers
             
             var sentResponseDto = (IMessageDto<ProtocolMessage>) receivedCalls.Single().GetArguments().Single();
             
-            return sentResponseDto.FromIMessageDto().FromProtocolMessage<SetPeerBlackListResponse>();
+            return sentResponseDto.Content.FromProtocolMessage<SetPeerBlackListResponse>();
         }
     }
 }

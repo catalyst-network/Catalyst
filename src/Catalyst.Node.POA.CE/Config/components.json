@@ -84,14 +84,6 @@
             "instanceScope": "singleinstance"
         },
         {
-            "type": "Catalyst.Common.IO.Messaging.Dto.DtoFactory, Catalyst.Common",
-            "services": [
-                {
-                    "type": "Catalyst.Common.Interfaces.IO.Messaging.Dto.IDtoFactory, Catalyst.Common"
-                }
-            ]
-        },
-        {
             "type": "Catalyst.Node.Rpc.Client.IO.Transport.Channels.NodeRpcClientChannelFactory, Catalyst.Node.Rpc.Client",
             "services": [
                 {
@@ -182,7 +174,6 @@
             ],
             "instanceScope": "singleinstance"
         },
-
         {
             "type": "Catalyst.Core.Lib.Rpc.Authentication.RepositoryAuthenticationStrategy",
             "services": [

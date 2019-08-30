@@ -54,8 +54,7 @@ namespace Catalyst.Common.UnitTests.FileTransfer
                     PeerIdentifierHelper.GetPeerIdentifier("test1"),
                     PeerIdentifierHelper.GetPeerIdentifier("test2"),
                     null,
-                    CorrelationId.GenerateCorrelationId(),
-                    new DtoFactory());
+                    CorrelationId.GenerateCorrelationId());
 
                 for (uint chunkToTest = 0; chunkToTest < chunks; chunkToTest++)
                 {
@@ -81,8 +80,7 @@ namespace Catalyst.Common.UnitTests.FileTransfer
                     PeerIdentifierHelper.GetPeerIdentifier("test1"),
                     PeerIdentifierHelper.GetPeerIdentifier("test2"),
                     null,
-                    CorrelationId.GenerateCorrelationId(),
-                    new DtoFactory());
+                    CorrelationId.GenerateCorrelationId());
                 uploadFileInformation.RetryCount += Constants.FileTransferMaxChunkRetryCount + 1;
                 uploadFileInformation.CanRetry().Should().BeFalse();
             }

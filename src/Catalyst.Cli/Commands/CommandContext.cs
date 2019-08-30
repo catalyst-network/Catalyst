@@ -27,7 +27,6 @@ using System.Linq;
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.Cli.Commands;
 using Catalyst.Common.Interfaces.Cryptography;
-using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Transport;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Registry;
@@ -51,7 +50,6 @@ namespace Catalyst.Cli.Commands
         public CommandContext(IConfigurationRoot config,
             ILogger logger,
             IUserOutput userOutput,
-            IDtoFactory dtoFactory,
             INodeRpcClientFactory nodeRpcClientFactory,
             ICertificateStore certificateStore,
             IKeyRegistry keyRegistry)
@@ -60,14 +58,11 @@ namespace Catalyst.Cli.Commands
             _rpcNodeConfigs = NodeRpcConfig.BuildRpcNodeSettingList(config);
 
             SocketClientRegistry = new SocketClientRegistry<INodeRpcClient>();
-            DtoFactory = dtoFactory;
             PeerIdentifier = Common.P2P.PeerIdentifier.BuildPeerIdFromConfig(config, userOutput, keyRegistry);
             NodeRpcClientFactory = nodeRpcClientFactory;
             CertificateStore = certificateStore;
             UserOutput = userOutput;
         }
-
-        public IDtoFactory DtoFactory { get; }
 
         public IPeerIdentifier PeerIdentifier { get; }
 

@@ -21,12 +21,17 @@
 
 #endregion
 
-using Catalyst.Common.Config;
+using System;
+using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.FileTransfer;
 using Catalyst.Common.Interfaces.Modules.Dfs;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Messaging.Correlation;
+using Catalyst.Common.IO.Messaging.Dto;
+using Catalyst.Common.Types;
 using Catalyst.Core.Lib.Rpc.IO.Observers;
 using Catalyst.Protocol;
 using Catalyst.Protocol.Common;
@@ -37,16 +42,13 @@ using FluentAssertions;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 using Serilog;
-using System;
-using System.IO;
-using System.Threading.Tasks;
-using Catalyst.Common.Types;
 using Xunit;
 
 namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Observers
 {
     public sealed class AddFileToDfsRequestObserverTests
     {
+        private readonly ManualResetEvent _manualResetEvent;
         private readonly IChannelHandlerContext _fakeContext;
         private readonly IDownloadFileTransferFactory _nodeFileTransferFactory;
         private readonly AddFileToDfsRequestObserver _addFileToDfsRequestObserver;
@@ -55,6 +57,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Observers
 
         public AddFileToDfsRequestObserverTests()
         {
+            _manualResetEvent = new ManualResetEvent(false);
             _senderIdentifier = PeerIdentifierHelper.GetPeerIdentifier("sender");
             _fakeDfs = Substitute.For<IDfs>();
             var logger = Substitute.For<ILogger>();
@@ -69,7 +72,8 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Observers
         [Fact]
         public void Handler_Can_Initialize_Download_File_Transfer()
         {
-            _nodeFileTransferFactory.RegisterTransfer(Arg.Any<IDownloadFileInformation>()).Returns(FileTransferResponseCodeTypes.Successful);
+            _nodeFileTransferFactory.RegisterTransfer(Arg.Any<IDownloadFileInformation>())
+               .Returns(FileTransferResponseCodeTypes.Successful);
 
             var correlationId = CorrelationId.GenerateCorrelationId();
 
@@ -106,75 +110,71 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Observers
         [Fact]
         public async Task Successful_Add_File_Can_Respond_With_Finished_Code()
         {
-            await Setup_File_Transfer_Response_Test(FileTransferResponseCodeTypes.Finished).ConfigureAwait(false);
+            _nodeFileTransferFactory.RegisterTransfer(Arg.Any<IDownloadFileInformation>())
+               .Returns(FileTransferResponseCodeTypes.Successful);
+
+            var expectedHash = "expectedHash";
+            _fakeDfs.AddAsync(Arg.Any<Stream>(), Arg.Any<string>()).Returns(expectedHash);
+
+            var protocolMessage = new AddFileToDfsRequest
+            {
+                Node = "node1",
+                FileName = "Test.dat",
+                FileSize = 10000
+            }.ToProtocolMessage(_senderIdentifier.PeerId, CorrelationId.GenerateCorrelationId());
+
+            AddFileToDfsResponse addFileToDfsResponse = null;
+            _nodeFileTransferFactory.RegisterTransfer(Arg.Do<IDownloadFileInformation>(async information =>
+            {
+                information.RecipientChannel = Substitute.For<IChannel>();
+                information.UpdateChunkIndicator(0, true);
+                information.Dispose();
+                await information.RecipientChannel.WriteAndFlushAsync(Arg.Do<MessageDto>(x =>
+                {
+                    addFileToDfsResponse = x.Content.FromProtocolMessage<AddFileToDfsResponse>();
+                    _manualResetEvent.Set();
+                }));
+            }));
+
+            protocolMessage.SendToHandler(_fakeContext, _addFileToDfsRequestObserver);
+            _manualResetEvent.WaitOne();
+
+            addFileToDfsResponse.ResponseCode[0].Should().Be((byte) FileTransferResponseCodeTypes.Finished.Id);
+            addFileToDfsResponse.DfsHash.Should().Be(expectedHash);
         }
 
         [Fact]
         public async Task Dfs_Failure_Can_Respond_With_Failed_Code()
         {
-            await Setup_File_Transfer_Response_Test(FileTransferResponseCodeTypes.Failed).ConfigureAwait(false);
-        }
+            _nodeFileTransferFactory.RegisterTransfer(Arg.Any<IDownloadFileInformation>())
+               .Returns(FileTransferResponseCodeTypes.Successful);
 
-        private async Task Setup_File_Transfer_Response_Test(FileTransferResponseCodeTypes expectedResponse)
-        {
-            IDownloadFileInformation fileTransferInformation = null;
-            var expectedHash = string.Empty;
+            _fakeDfs.AddAsync(Arg.Any<Stream>(), Arg.Any<string>()).Throws(new Exception());
 
-            if (expectedResponse == FileTransferResponseCodeTypes.Finished)
+            var protocolMessage = new AddFileToDfsRequest
             {
-                expectedHash = "expectedHash";
-                _fakeDfs.AddAsync(Arg.Any<Stream>(), Arg.Any<string>()).Returns(expectedHash);
-            }
-            else
+                Node = "node1",
+                FileName = "Test.dat",
+                FileSize = 10000
+            }.ToProtocolMessage(_senderIdentifier.PeerId, CorrelationId.GenerateCorrelationId());
+
+            AddFileToDfsResponse addFileToDfsResponse = null;
+            _nodeFileTransferFactory.RegisterTransfer(Arg.Do<IDownloadFileInformation>(async information =>
             {
-                _fakeDfs.AddAsync(Arg.Any<Stream>(), Arg.Any<string>()).Throws(new Exception());
-            }
+                information.RecipientChannel = Substitute.For<IChannel>();
+                information.UpdateChunkIndicator(0, true);
+                information.Dispose();
+                await information.RecipientChannel.WriteAndFlushAsync(Arg.Do<MessageDto>(x =>
+                {
+                    addFileToDfsResponse = x.Content.FromProtocolMessage<AddFileToDfsResponse>();
+                    _manualResetEvent.Set();
+                }));
+            }));
 
-            _nodeFileTransferFactory.RegisterTransfer(Arg.Do<IDownloadFileInformation>((information =>
-            {
-                fileTransferInformation = information;
-                fileTransferInformation.RecipientChannel = Substitute.For<IChannel>();
-                fileTransferInformation.UpdateChunkIndicator(0, true);
-                fileTransferInformation.Dispose();
-            })));
+            protocolMessage.SendToHandler(_fakeContext, _addFileToDfsRequestObserver);
+            _manualResetEvent.WaitOne();
 
-            Handler_Can_Initialize_Download_File_Transfer();
-
-            //var success = await TaskHelper.WaitForAsync(() =>
-            //{
-            //    try
-            //    {
-            //        fileTransferInformation.RecipientChannel.Received(1).WriteAndFlushAsync(
-            //            Arg.Is<DefaultAddressedEnvelope<AddFileToDfsResponse>>(
-            //                dto =>
-            //                    dto.Content.ResponseCode[0] == expectedResponse.Id &&
-            //                    dto.Content.DfsHash.Equals(expectedHash)
-            //            ));
-            //        return true;
-            //    }
-            //    catch (Exception)
-            //    {
-            //        return false;
-            //    }
-            //}, TimeSpan.FromSeconds(5));
-
-            bool success;
-            try
-            {
-                await fileTransferInformation.RecipientChannel.Received(1).WriteAndFlushAsync(
-                    Arg.Is<DefaultAddressedEnvelope<AddFileToDfsResponse>>(
-                        dto =>
-                            dto.Content.ResponseCode[0] == expectedResponse.Id &&
-                            dto.Content.DfsHash.Equals(expectedHash)
-                    ));
-                success = true;
-            }
-            catch (Exception)
-            {
-                success = false;
-            }
-
-            success.Should().BeTrue();
+            addFileToDfsResponse.ResponseCode[0].Should().Be((byte) FileTransferResponseCodeTypes.Failed.Id);
         }
 
         private void AssertResponse(FileTransferResponseCodeTypes sentResponse)

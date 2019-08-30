@@ -28,7 +28,6 @@ using System.Reactive.Linq;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.P2P.IO.Messaging.Dto;
 using Catalyst.Common.IO.Messaging.Correlation;
-using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Core.Lib.P2P.IO.Observers;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
@@ -65,23 +64,21 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Observers
                 PeerIdHelper.GetPeerId()
             };
 
-            var response = new DtoFactory().GetDto(new PeerNeighborsResponse
+            var peerNeighborsResponse = new PeerNeighborsResponse
+            {
+                Peers =
                 {
-                    Peers =
-                    {
-                        peers
-                    }
-                },
-                PeerIdentifierHelper.GetPeerIdentifier("sender"),
-                PeerIdentifierHelper.GetPeerIdentifier("recipient"),
-                CorrelationId.GenerateCorrelationId()
-            );
+                    peers
+                }
+            };
+            var protocolMessage =
+                peerNeighborsResponse.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId,
+                    CorrelationId.GenerateCorrelationId());
 
             var peerNeighborsResponseObserver = Substitute.For<IObserver<IPeerClientMessageDto>>();
 
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, testScheduler,
-                response.Content.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId,
-                    response.CorrelationId));
+                protocolMessage);
 
             _observer.StartObserving(messageStream);
 

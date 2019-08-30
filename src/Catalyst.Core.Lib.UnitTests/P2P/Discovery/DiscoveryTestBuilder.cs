@@ -272,7 +272,6 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
                     dns ?? DiscoveryHelper.MockDnsClient(peerSettings),
                     peerSettings ?? PeerSettingsHelper.TestPeerSettings(),
                     peerClient ?? Substitute.For<IPeerClient>(),
-                    Substitute.For<IDtoFactory>(),
                     peerMessageCorrelationManager ?? DiscoveryHelper.MockCorrelationManager(scheduler),
                     cancellationTokenProvider ?? new CancellationTokenProvider(),
                     peerClientObservables,

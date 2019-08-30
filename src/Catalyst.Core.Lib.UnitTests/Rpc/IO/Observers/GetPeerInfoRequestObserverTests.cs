@@ -170,21 +170,15 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Observers
 
             _fakeContext.Channel.RemoteAddress.Returns(EndpointBuilder.BuildNewEndPoint("192.0.0.1", 42042));
 
-            var sendPeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("sender");
+            var senderPeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("sender");
+            var getPeerInfoRequest = new GetPeerInfoRequest {PublicKey = peerId.PublicKey, Ip = peerId.Ip};
 
-            var messageFactory = new DtoFactory();
-            var request = new GetPeerInfoRequest {PublicKey = peerId.PublicKey, Ip = peerId.Ip};
+            var protocolMessage =
+                getPeerInfoRequest.ToProtocolMessage(senderPeerIdentifier.PeerId);
 
-            var requestMessage = messageFactory.GetDto(
-                request,
-                sendPeerIdentifier,
-                PeerIdentifierHelper.GetPeerIdentifier("recipient")
-            );
+            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, testScheduler, protocolMessage);
+            var handler = new GetPeerInfoRequestObserver(senderPeerIdentifier, _logger, _peerRepository);
 
-            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, testScheduler,
-                requestMessage.Content.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId));
-
-            var handler = new GetPeerInfoRequestObserver(sendPeerIdentifier, _logger, _peerRepository);
             handler.StartObserving(messageStream);
 
             testScheduler.Start();
@@ -194,7 +188,7 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Observers
 
             var sentResponseDto = (IMessageDto<ProtocolMessage>) receivedCalls[0].GetArguments().Single();
 
-            return sentResponseDto.FromIMessageDto().FromProtocolMessage<GetPeerInfoResponse>();
+            return sentResponseDto.Content.FromProtocolMessage<GetPeerInfoResponse>();
         }
     }
 }
