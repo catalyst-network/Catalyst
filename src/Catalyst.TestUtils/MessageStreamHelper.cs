@@ -87,21 +87,5 @@ namespace Catalyst.TestUtils
         {
             return new ObserverDto(fakeContext, responseMessage);
         }
-
-        //public static IObservable<T> DelayAndSubscribeOnTaskPool<T>(this IObservable<T> messageStream, TimeSpan customDelay = default)
-        //{
-        //    var delay = customDelay == default ? TimeSpan.FromMilliseconds(30) : customDelay;
-        //    return messageStream.Delay(delay).SubscribeOn(TaskPoolScheduler.Default);
-        //}
-
-        //public static async Task<T> WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync<T>(this IObservable<T> messageStream, TimeSpan customDelay = default)
-        //{
-        //    return await messageStream.DelayAndSubscribeOnTaskPool(customDelay).LastAsync();
-        //}
-
-        //public static async Task<T> WaitForItemsOnDelayedStreamOnTaskPoolSchedulerAsync<T>(this IObservable<T> messageStream, int numberOfItemsToWaitFor = 1, TimeSpan customDelay = default)
-        //{
-        //    return await messageStream.Take(numberOfItemsToWaitFor).DelayAndSubscribeOnTaskPool(customDelay).LastAsync();
-        //}
     }
 }

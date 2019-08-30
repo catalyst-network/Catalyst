@@ -27,6 +27,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.FileTransfer;
+using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.Modules.Dfs;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.IO.Messaging.Correlation;
@@ -70,45 +71,53 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Observers
         }
 
         [Fact]
-        public void Handler_Can_Initialize_Download_File_Transfer()
+        public void Handler_Uses_Correct_CorrelationId()
         {
             _nodeFileTransferFactory.RegisterTransfer(Arg.Any<IDownloadFileInformation>())
                .Returns(FileTransferResponseCodeTypes.Successful);
 
             var correlationId = CorrelationId.GenerateCorrelationId();
 
-            //Create a response object and set its return value
-            var request = new AddFileToDfsRequest
-            {
-                Node = "node1",
-                FileName = "Test.dat",
-                FileSize = 10000
-            }.ToProtocolMessage(_senderIdentifier.PeerId, correlationId);
-            request.SendToHandler(_fakeContext, _addFileToDfsRequestObserver);
+            var protocolMessage = GenerateProtocolMessage(correlationId);
+
+            protocolMessage.SendToHandler(_fakeContext, _addFileToDfsRequestObserver);
 
             _nodeFileTransferFactory.RegisterTransfer(
                 Arg.Is<IDownloadFileInformation>(
                     info => info.CorrelationId.Id.Equals(correlationId.Id)));
-            AssertResponse(FileTransferResponseCodeTypes.Successful);
+        }
+
+        [Fact]
+        public void Handler_Can_Initialize_Download_File_Transfer()
+        {
+            _nodeFileTransferFactory.RegisterTransfer(Arg.Any<IDownloadFileInformation>())
+               .Returns(FileTransferResponseCodeTypes.Successful);
+
+            var protocolMessage = GenerateProtocolMessage();
+
+            protocolMessage.SendToHandler(_fakeContext, _addFileToDfsRequestObserver);
+
+            _fakeContext.Channel.Received(1).WriteAndFlushAsync(
+                Arg.Is<DefaultAddressedEnvelope<ProtocolMessage>>(
+                    t => t.Content.FromProtocolMessage<AddFileToDfsResponse>().ResponseCode[0] == FileTransferResponseCodeTypes.Successful.Id));
         }
 
         [Fact]
         public void Handler_Sends_Error_On_Invalid_Message()
         {
             _nodeFileTransferFactory.RegisterTransfer(Arg.Any<IDownloadFileInformation>()).Throws(new Exception());
-            var request = new AddFileToDfsRequest
-            {
-                Node = "node1",
-                FileName = string.Empty,
-                FileSize = 1
-            }.ToProtocolMessage(_senderIdentifier.PeerId, CorrelationId.GenerateCorrelationId());
 
-            request.SendToHandler(_fakeContext, _addFileToDfsRequestObserver);
-            AssertResponse(FileTransferResponseCodeTypes.Error);
+            var protocolMessage = GenerateProtocolMessage();
+
+            protocolMessage.SendToHandler(_fakeContext, _addFileToDfsRequestObserver);
+
+            _fakeContext.Channel.Received(1).WriteAndFlushAsync(
+                Arg.Is<DefaultAddressedEnvelope<ProtocolMessage>>(
+                    t => t.Content.FromProtocolMessage<AddFileToDfsResponse>().ResponseCode[0] == FileTransferResponseCodeTypes.Error.Id));
         }
 
         [Fact]
-        public async Task Successful_Add_File_Can_Respond_With_Finished_Code()
+        public void Successful_Add_File_Can_Respond_With_Finished_Code()
         {
             _nodeFileTransferFactory.RegisterTransfer(Arg.Any<IDownloadFileInformation>())
                .Returns(FileTransferResponseCodeTypes.Successful);
@@ -116,12 +125,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Observers
             var expectedHash = "expectedHash";
             _fakeDfs.AddAsync(Arg.Any<Stream>(), Arg.Any<string>()).Returns(expectedHash);
 
-            var protocolMessage = new AddFileToDfsRequest
-            {
-                Node = "node1",
-                FileName = "Test.dat",
-                FileSize = 10000
-            }.ToProtocolMessage(_senderIdentifier.PeerId, CorrelationId.GenerateCorrelationId());
+            var protocolMessage = GenerateProtocolMessage();
 
             AddFileToDfsResponse addFileToDfsResponse = null;
             _nodeFileTransferFactory.RegisterTransfer(Arg.Do<IDownloadFileInformation>(async information =>
@@ -144,19 +148,14 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Observers
         }
 
         [Fact]
-        public async Task Dfs_Failure_Can_Respond_With_Failed_Code()
+        public void Dfs_Failure_Can_Respond_With_Failed_Code()
         {
             _nodeFileTransferFactory.RegisterTransfer(Arg.Any<IDownloadFileInformation>())
                .Returns(FileTransferResponseCodeTypes.Successful);
 
             _fakeDfs.AddAsync(Arg.Any<Stream>(), Arg.Any<string>()).Throws(new Exception());
 
-            var protocolMessage = new AddFileToDfsRequest
-            {
-                Node = "node1",
-                FileName = "Test.dat",
-                FileSize = 10000
-            }.ToProtocolMessage(_senderIdentifier.PeerId, CorrelationId.GenerateCorrelationId());
+            var protocolMessage = GenerateProtocolMessage();
 
             AddFileToDfsResponse addFileToDfsResponse = null;
             _nodeFileTransferFactory.RegisterTransfer(Arg.Do<IDownloadFileInformation>(async information =>
@@ -177,11 +176,14 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Observers
             addFileToDfsResponse.ResponseCode[0].Should().Be((byte) FileTransferResponseCodeTypes.Failed.Id);
         }
 
-        private void AssertResponse(FileTransferResponseCodeTypes sentResponse)
+        private ProtocolMessage GenerateProtocolMessage(ICorrelationId correlationId = null)
         {
-            _fakeContext.Channel.Received(1).WriteAndFlushAsync(
-                Arg.Is<DefaultAddressedEnvelope<ProtocolMessage>>(
-                    t => t.Content.FromProtocolMessage<AddFileToDfsResponse>().ResponseCode[0] == sentResponse.Id));
+            return new AddFileToDfsRequest
+            {
+                Node = "node1",
+                FileName = "Test.dat",
+                FileSize = 10000
+            }.ToProtocolMessage(_senderIdentifier.PeerId, correlationId);
         }
     }
 }
