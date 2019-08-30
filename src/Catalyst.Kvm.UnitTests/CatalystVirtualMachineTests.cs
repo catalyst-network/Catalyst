@@ -40,6 +40,7 @@ namespace Catalyst.Kvm.UnitTests
                 Substitute.For<IStateUpdateHashProvider>(),
                 new CatalystSpecProvider(), 
                 LimboLogs.Instance);
+            Assert.NotNull(virtualMachine);
         }
     }
 }

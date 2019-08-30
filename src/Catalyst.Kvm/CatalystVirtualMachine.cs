@@ -33,7 +33,8 @@ namespace Catalyst.Kvm
 {
     public sealed class CatalystVirtualMachine : VirtualMachine
     {
-        public CatalystVirtualMachine(IStateProvider stateProvider, IStorageProvider storageProvider, IStateUpdateHashProvider blockhashProvider, ISpecProvider specProvider, ILogManager logManager) : base(stateProvider, storageProvider, blockhashProvider, specProvider, logManager) { }
+        public CatalystVirtualMachine(IStateProvider stateProvider, IStorageProvider storageProvider, IStateUpdateHashProvider blockhashProvider, ISpecProvider specProvider, ILogManager logManager)
+            : base(stateProvider, storageProvider, blockhashProvider, specProvider, logManager) { }
 
         protected override void InitializePrecompiledContracts()
         {

@@ -46,7 +46,10 @@ namespace Catalyst.Kvm.IntegrationTests
         public void Can_Run_Smoke_test()
         {
             var code = Bytes.FromHexString("0x600060000100");
-            ITxTracer txTracer = RunVirtualMachine(code);
+            GethLikeTxTracer txTracer = RunVirtualMachine(code);
+            EthereumJsonSerializer serializer = new EthereumJsonSerializer();
+            var trace = txTracer.BuildResult();
+            _testOutputHelper.WriteLine(serializer.Serialize(trace, true));
         }
         
         [Fact]

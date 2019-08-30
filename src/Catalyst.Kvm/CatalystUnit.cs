@@ -27,9 +27,9 @@ namespace Catalyst.Kvm
 {
     public static class CatalystUnit
     {
-        public static UInt256 Fulhame = 1;
-        public static UInt256 GFulhame = 1_000_000_000;
-        public static UInt256 Kat = 1_000_000_000_000;
-        public const string KatSymbol = "KAT";
+        public static readonly UInt256 Fulhame = 1;
+        public static readonly UInt256 GFulhame = 1_000_000_000;
+        public static readonly UInt256 Kat = 1_000_000_000_000;
+        public static readonly string KatSymbol = "KAT";
     }
 }
