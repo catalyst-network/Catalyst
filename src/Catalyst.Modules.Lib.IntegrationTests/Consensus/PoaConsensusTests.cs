@@ -23,14 +23,17 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using Autofac;
 using Catalyst.Common.Config;
 using Catalyst.Common.Cryptography;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.P2P;
+using Catalyst.Core.Lib.Modules.Consensus.Cycle;
 using Catalyst.Cryptography.BulletProofs.Wrapper;
 using Catalyst.TestUtils;
 using FluentAssertions;
@@ -80,14 +83,8 @@ namespace Catalyst.Modules.Lib.IntegrationTests.Consensus
         }
 
         [Fact]
-        public void Run_Consensus()
+        public async Task Run_Consensus()
         {
-            var manualResetEvent = new ManualResetEvent(false);
-            var dfsDir = Path.Combine(FileSystem.GetCatalystDataDir().FullName, "dfs");
-
-            var fileSystemWatcher = new FileSystemWatcher {Path = dfsDir, EnableRaisingEvents = true};
-            fileSystemWatcher.Created += (sender, args) => manualResetEvent.Set();
-
             _nodes.AsParallel()
                .ForAll(async n =>
                 {
@@ -95,9 +92,15 @@ namespace Catalyst.Modules.Lib.IntegrationTests.Consensus
                     n.Consensus.StartProducing();
                 });
 
-            manualResetEvent.WaitOne();
+            await Task.Delay(Debugger.IsAttached
+                    ? TimeSpan.FromHours(3)
+                    : CycleConfiguration.Default.CycleDuration.Multiply(1.3))
+               .ConfigureAwait(false);
 
+            var dfsDir = Path.Combine(FileSystem.GetCatalystDataDir().FullName, "dfs");
             Directory.GetFiles(dfsDir).Length.Should().Be(1);
+
+            _endOfTestCancellationSource.CancelAfter(TimeSpan.FromMinutes(3));
         }
 
         protected override void Dispose(bool disposing)
