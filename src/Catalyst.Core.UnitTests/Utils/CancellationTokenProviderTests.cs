@@ -21,21 +21,31 @@
 
 #endregion
 
-using System.Collections.Generic;
-using System.Net;
+using System;
+using Xunit;
 
-namespace Catalyst.Abstractions.P2P
+namespace Catalyst.Core.UnitTests.Utils
 {
-    public interface IPeerSettings
+    public sealed class CancellationTokenProviderTests : IDisposable
     {
-        IPAddress PublicIpAddress { get; }
-        int Port { get; }
-        string PublicKey { get; }
-        string PayoutAddress { get; }
-        IPAddress BindAddress { get; }
-        IList<string> SeedServers { get; }
-        Protocol.Common.Network Network { get; }
-        IPEndPoint[] DnsServers { get; }
+        private readonly CancellationTokenProvider _cancellationTokenProvider;
+
+        public CancellationTokenProviderTests()
+        {
+            _cancellationTokenProvider = new CancellationTokenProvider();
+        }
+
+        [Fact]
+        public void Has_Token_Cancelled_Should_Be_True_When_Cancelled()
+        {
+            _cancellationTokenProvider.HasTokenCancelled().Should().BeFalse();
+            _cancellationTokenProvider.CancellationTokenSource.Cancel();
+            _cancellationTokenProvider.HasTokenCancelled().Should().BeTrue();
+        }
+
+        public void Dispose()
+        {
+            _cancellationTokenProvider.Dispose();
+        }
     }
 }
-

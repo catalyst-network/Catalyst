@@ -21,21 +21,13 @@
 
 #endregion
 
-using System.Collections.Generic;
-using System.Net;
+using Catalyst.Abstractions.P2P;
+using DnsClient;
 
-namespace Catalyst.Abstractions.P2P
+namespace Catalyst.Abstractions.Network
 {
-    public interface IPeerSettings
+    public class InjectableLookupClient : LookupClient
     {
-        IPAddress PublicIpAddress { get; }
-        int Port { get; }
-        string PublicKey { get; }
-        string PayoutAddress { get; }
-        IPAddress BindAddress { get; }
-        IList<string> SeedServers { get; }
-        Protocol.Common.Network Network { get; }
-        IPEndPoint[] DnsServers { get; }
+        public InjectableLookupClient(IPeerSettings peerSettings) : base(peerSettings.DnsServers) { }
     }
 }
-
