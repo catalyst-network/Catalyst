@@ -32,10 +32,14 @@ using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces;
 using Catalyst.Common.Interfaces.Cli;
 using Catalyst.Common.Interfaces.Config;
+using Catalyst.Common.Interfaces.IO.Events;
 using Catalyst.Common.Interfaces.Registry;
 using Catalyst.Common.Interfaces.Util;
+using Catalyst.Common.IO.Events;
 using Catalyst.Common.Types;
 using Catalyst.Common.Util;
+using Catalyst.Protocol.Interfaces.Validators;
+using Catalyst.Protocol.Validators;
 using Microsoft.Extensions.Configuration;
 using Serilog;
 using SharpRepository.Ioc.Autofac;
@@ -199,6 +203,9 @@ namespace Catalyst.Common.Kernel
         /// </summary>
         public Kernel StartNode()
         {
+            ContainerBuilder.RegisterType<TransactionValidator>().As<ITransactionValidator>();
+            ContainerBuilder.RegisterType<TransactionReceivedEvent>().As<ITransactionReceivedEvent>();
+
             StartContainer();
             BsonSerializationProviders.Init();
             _instance.Resolve<ICatalystNode>()

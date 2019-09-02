@@ -21,15 +21,11 @@
 
 #endregion
 
-using Catalyst.Common.Extensions;
+using Catalyst.Common.Interfaces.IO.Events;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.IO.Observers;
-using Catalyst.Common.Interfaces.Modules.Mempool;
 using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.Interfaces.P2P.IO.Messaging.Broadcast;
-using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Common.IO.Observers;
-using Catalyst.Common.Modules.Mempool.Models;
 using Catalyst.Protocol.Rpc.Node;
 using DotNetty.Transport.Channels;
 using Serilog;
@@ -39,19 +35,14 @@ namespace Catalyst.Core.Lib.Rpc.IO.Observers
     public class BroadcastRawTransactionRequestObserver
         : RequestObserverBase<BroadcastRawTransactionRequest, BroadcastRawTransactionResponse>, IRpcRequestObserver
     {
-        private readonly ILogger _logger;
-        private readonly IMempool _mempool;
-        private readonly IBroadcastManager _broadcastManager;
+        private readonly ITransactionReceivedEvent _transactionReceivedEvent;
 
         public BroadcastRawTransactionRequestObserver(ILogger logger,
             IPeerIdentifier peerIdentifier,
-            IMempool mempool,
-            IBroadcastManager broadcastManager)
+            ITransactionReceivedEvent transactionReceivedEvent)
             : base(logger, peerIdentifier)
         {
-            _logger = logger;
-            _mempool = mempool;
-            _broadcastManager = broadcastManager;
+            _transactionReceivedEvent = transactionReceivedEvent;
         }
 
         protected override BroadcastRawTransactionResponse HandleRequest(BroadcastRawTransactionRequest messageDto,
@@ -59,39 +50,7 @@ namespace Catalyst.Core.Lib.Rpc.IO.Observers
             IPeerIdentifier senderPeerIdentifier,
             ICorrelationId correlationId)
         {
-            // TODO: Signature Check
-            var signatureValid = true;
-            var responseCode = ResponseCode.Successful;
-
-            var transactionSignature = messageDto.Transaction.Signature;
-            _logger.Verbose("Adding transaction {signature} to mempool", transactionSignature);
-            if (signatureValid)
-            {
-                // TODO: Check ledger to see if ledger already contains transaction, if so we need to send Successful/Fail response
-                if (_mempool.ContainsDocument(transactionSignature))
-                {
-                    _logger.Information("Transaction {signature} already exists in mempool", transactionSignature);
-                    responseCode = ResponseCode.Error;
-                    return new BroadcastRawTransactionResponse {ResponseCode = responseCode};
-                }
-
-                _mempool.SaveMempoolDocument(new MempoolDocument
-                {
-                    Transaction = messageDto.Transaction
-                });
-
-                _logger.Information("Broadcasting {signature} transaction", transactionSignature);
-                var transactionToBroadcast = messageDto.Transaction.ToProtocolMessage(PeerIdentifier.PeerId,
-                    CorrelationId.GenerateCorrelationId());
-                _broadcastManager.BroadcastAsync(transactionToBroadcast);
-            }
-            else
-            {
-                _logger.Information(
-                    "Transaction {signature} doesn't have a valid signature and was not added to the mempool.",
-                    transactionSignature);
-                responseCode = ResponseCode.Error;
-            }
+            var responseCode = _transactionReceivedEvent.OnTransactionReceived(messageDto.Transaction);
 
             return new BroadcastRawTransactionResponse {ResponseCode = responseCode};
         }

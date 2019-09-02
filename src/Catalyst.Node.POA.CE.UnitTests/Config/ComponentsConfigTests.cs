@@ -28,13 +28,17 @@ using Autofac;
 using Autofac.Configuration;
 using Catalyst.Common.Config;
 using Catalyst.Common.Interfaces.Cryptography;
+using Catalyst.Common.Interfaces.IO.Events;
 using Catalyst.Common.Interfaces.IO.Observers;
 using Catalyst.Common.Interfaces.Keystore;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Registry;
+using Catalyst.Common.IO.Events;
 using Catalyst.Common.Types;
 using Catalyst.Common.Util;
 using Catalyst.Core.Lib.P2P.IO.Observers;
+using Catalyst.Protocol.Interfaces.Validators;
+using Catalyst.Protocol.Validators;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Microsoft.Extensions.Configuration;
@@ -79,6 +83,9 @@ namespace Catalyst.Node.POA.CE.UnitTests.Config
             var keyStore = Substitute.For<IKeyStore>();
             containerBuilder.RegisterInstance(keyStore).As<IKeyStore>();
 
+            containerBuilder.RegisterType<TransactionValidator>().As<ITransactionValidator>();
+            containerBuilder.RegisterType<TransactionReceivedEvent>().As<ITransactionReceivedEvent>();
+            
             var container = containerBuilder.Build();
             return container;
         }
