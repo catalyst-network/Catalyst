@@ -21,14 +21,13 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.Interfaces.Repository;
 using System;
 using System.Collections.Concurrent;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
-using Dawn;
+using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.Interfaces.Repository;
 using Serilog;
 
 namespace Catalyst.Core.Lib.P2P
@@ -43,7 +42,11 @@ namespace Catalyst.Core.Lib.P2P
         private readonly ILogger _logger;
         private IDisposable _subscription;
 
-        public PeerHeartbeatChecker(ILogger logger, IPeerRepository peerRepository, IPeerChallenger peerChallenger, int checkHeartbeatIntervalSeconds, int maxNonResponsiveCounter)
+        public PeerHeartbeatChecker(ILogger logger,
+            IPeerRepository peerRepository,
+            IPeerChallenger peerChallenger,
+            int checkHeartbeatIntervalSeconds,
+            int maxNonResponsiveCounter)
         {
             _logger = logger;
             _nonResponsivePeerMap = new ConcurrentDictionary<string, int>();
@@ -57,7 +60,6 @@ namespace Catalyst.Core.Lib.P2P
         {
             _subscription = Observable
                .Interval(_checkHeartbeatInterval)
-               .SubscribeOn(NewThreadScheduler.Default)
                .StartWith(-1L)
                .Subscribe(interval => CheckHeartbeat());
         }
@@ -70,7 +72,8 @@ namespace Catalyst.Core.Lib.P2P
                 {
                     var result = await _peerChallenger.ChallengePeerAsync(peer.PeerIdentifier).ConfigureAwait(false);
                     var counterValue = _nonResponsivePeerMap.GetOrAdd(peer.DocumentId, 0);
-                    _logger.Verbose($"Heartbeat result: {result} Peer: {peer.PeerIdentifier} Non-Responsive Counter: {counterValue}");
+                    _logger.Verbose(
+                        $"Heartbeat result: {result} Peer: {peer.PeerIdentifier} Non-Responsive Counter: {counterValue}");
                     if (!result)
                     {
                         _nonResponsivePeerMap[peer.DocumentId] += 1;
@@ -80,7 +83,8 @@ namespace Catalyst.Core.Lib.P2P
                         {
                             _peerRepository.Delete(peer.DocumentId);
                             _nonResponsivePeerMap.TryRemove(peer.DocumentId, out _);
-                            _logger.Verbose($"Peer reached maximum non-responsive count: {peer.PeerIdentifier}. Evicted from repository");
+                            _logger.Verbose(
+                                $"Peer reached maximum non-responsive count: {peer.PeerIdentifier}. Evicted from repository");
                         }
                     }
                     else
@@ -91,9 +95,6 @@ namespace Catalyst.Core.Lib.P2P
             }
         }
 
-        void IDisposable.Dispose()
-        {
-            _subscription?.Dispose();
-        }
+        void IDisposable.Dispose() { _subscription?.Dispose(); }
     }
 }

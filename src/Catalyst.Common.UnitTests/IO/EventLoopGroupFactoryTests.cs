@@ -21,15 +21,14 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.IO.EventLoop;
-using Catalyst.Common.IO.EventLoop;
-using Catalyst.TestUtils;
-using DotNetty.Transport.Channels;
-using FluentAssertions;
 using System;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using Catalyst.Common.Interfaces.IO.EventLoop;
+using Catalyst.Common.IO.EventLoop;
+using DotNetty.Transport.Channels;
+using FluentAssertions;
 using Xunit;
 
 namespace Catalyst.Common.UnitTests.IO
@@ -94,12 +93,16 @@ namespace Catalyst.Common.UnitTests.IO
             _eventFactory = new TcpClientEventLoopGroupFactory(_eventLoopGroupFactoryConfiguration);
             IEventLoopGroup[] eventLoops =
             {
-                _eventFactory.GetOrCreateHandlerWorkerEventLoopGroup(), _eventFactory.GetOrCreateSocketIoEventLoopGroup()
+                _eventFactory.GetOrCreateHandlerWorkerEventLoopGroup(),
+                _eventFactory.GetOrCreateSocketIoEventLoopGroup()
             };
 
             _eventFactory.Dispose();
 
-            await TaskHelper.WaitForAsync(() => eventLoops.All(eventLoop => eventLoop.IsShutdown), TimeSpan.FromSeconds(5));
+            while (!eventLoops.All(x => x.IsShutdown))
+            {
+                await Task.Delay(100).ConfigureAwait(false);
+            }
 
             eventLoops.ToList().ForEach(eventLoop => eventLoop.IsShutdown.Should().BeTrue());
         }
@@ -107,15 +110,12 @@ namespace Catalyst.Common.UnitTests.IO
         private void AssertEventLoopSize(IEventLoopGroup eventLoopGroup, int expectedEventLoops)
         {
             eventLoopGroup.Should().NotBeNull();
-            IEventLoop[] eventLoops =
+            var eventLoops =
                 (IEventLoop[]) eventLoopGroup.GetType().GetField("eventLoops",
                     BindingFlags.Instance | BindingFlags.NonPublic).GetValue(eventLoopGroup);
             eventLoops.Length.Should().Be(expectedEventLoops);
         }
 
-        public void Dispose()
-        {
-            _eventFactory?.Dispose();
-        }
+        public void Dispose() { _eventFactory?.Dispose(); }
     }
 }

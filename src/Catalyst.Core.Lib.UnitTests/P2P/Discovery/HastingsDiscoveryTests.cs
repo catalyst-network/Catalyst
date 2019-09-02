@@ -50,6 +50,7 @@ using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
 using Catalyst.TestUtils;
 using FluentAssertions;
+using Microsoft.Reactive.Testing;
 using Nethereum.Hex.HexConvertors.Extensions;
 using NSubstitute;
 using Xunit;
@@ -59,11 +60,13 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
 {
     public sealed class HastingsDiscoveryTests
     {
+        private readonly TestScheduler _testScheduler;
         private readonly IPeerSettings _settings;
         private readonly IPeerIdentifier _ownNode;
 
         public HastingsDiscoveryTests()
         {
+            _testScheduler = new TestScheduler();
             _settings = PeerSettingsHelper.TestPeerSettings();
             _ownNode = PeerIdentifierHelper.GetPeerIdentifier("ownNode");
         }
@@ -73,6 +76,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
         {
             var discoveryTestBuilder = new DiscoveryTestBuilder()
                .WithLogger()
+               .WithScheduler(_testScheduler)
                .WithPeerRepository()
                .WithDns()
                .WithPeerSettings()
@@ -115,6 +119,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
         {
             var discoveryTestBuilder = new DiscoveryTestBuilder()
                .WithLogger()
+               .WithScheduler(_testScheduler)
                .WithPeerRepository()
                .WithDns()
                .WithPeerSettings()
@@ -150,6 +155,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
 
             var discoveryTestBuilder = new DiscoveryTestBuilder()
                .WithLogger()
+               .WithScheduler(_testScheduler)
                .WithPeerRepository()
                .WithDns()
                .WithPeerSettings()
@@ -195,6 +201,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
 
             var discoveryTestBuilder = new DiscoveryTestBuilder()
                .WithLogger()
+               .WithScheduler(_testScheduler)
                .WithPeerRepository()
                .WithDns()
                .WithPeerClient()
@@ -225,6 +232,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
         {
             var discoveryTestBuilder = new DiscoveryTestBuilder()
                .WithLogger()
+               .WithScheduler(_testScheduler)
                .WithPeerRepository()
                .WithDns()
                .WithPeerSettings()
@@ -250,6 +258,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
         {
             var discoveryTestBuilder = new DiscoveryTestBuilder()
                .WithLogger()
+               .WithScheduler(_testScheduler)
                .WithPeerRepository()
                .WithDns()
                .WithPeerSettings()
@@ -276,6 +285,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
             var ctp = new CancellationTokenProvider();
             var discoveryTestBuilder = new DiscoveryTestBuilder()
                .WithLogger()
+               .WithScheduler(_testScheduler)
                .WithPeerRepository()
                .WithDns(default, false)
                .WithPeerSettings()
@@ -303,6 +313,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
         {
             var discoveryTestBuilder = new DiscoveryTestBuilder()
                .WithLogger()
+               .WithScheduler(_testScheduler)
                .WithPeerRepository()
                .WithDns(default, false)
                .WithPeerSettings()
@@ -325,6 +336,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
         {
             var discoveryTestBuilder = new DiscoveryTestBuilder()
                .WithLogger()
+               .WithScheduler(_testScheduler)
                .WithPeerRepository()
                .WithDns(default, true)
                .WithPeerSettings()
@@ -354,6 +366,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
             var discoveryTestBuilder = new DiscoveryTestBuilder();
             var subSeedOriginator = DiscoveryHelper.SubSeedOriginator(_ownNode, _settings);
             discoveryTestBuilder
+               .WithScheduler(_testScheduler)
                .WithDns()
                .WithPeerClientObservables(observer)
                .WithCurrentStep(subSeedOriginator.CreateMemento())
@@ -363,8 +376,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
             {
                 var streamObserver = Substitute.For<IObserver<IPeerClientMessageDto>>();
 
-                using (walker.DiscoveryStream.SubscribeOn(TaskPoolScheduler.Default)
-                   .Subscribe(streamObserver.OnNext))
+                using (walker.DiscoveryStream.Subscribe(streamObserver.OnNext))
                 {
                     var subbedDto = DiscoveryHelper.SubDto(discoveryMessage, walker.StepProposal.PnrCorrelationId, walker.StepProposal.Peer);
 
@@ -375,7 +387,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
                             o.ResponseMessageSubject.OnNext(subbedDto);
                         });
 
-                    await walker.DiscoveryStream.WaitForItemsOnDelayedStreamOnTaskPoolSchedulerAsync();
+                    _testScheduler.Start();
 
                     streamObserver.Received(1).OnNext(Arg.Any<IPeerClientMessageDto>());
                 }
@@ -387,6 +399,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
         {
             var discoveryTestBuilder = new DiscoveryTestBuilder()
                .WithLogger()
+               .WithScheduler(_testScheduler)
                .WithPeerRepository()
                .WithDns(default, true)
                .WithPeerSettings()
@@ -402,8 +415,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
             {
                 var streamObserver = Substitute.For<IObserver<IPeerClientMessageDto>>();
 
-                using (walker.DiscoveryStream.SubscribeOn(TaskPoolScheduler.Default)
-                   .Subscribe(streamObserver.OnNext))
+                using (walker.DiscoveryStream.Subscribe(streamObserver.OnNext))
                 {
                     var subbedDto1 = Substitute.For<IPeerClientMessageDto>();
                     subbedDto1.Sender.Returns(Substitute.For<IPeerIdentifier>());
@@ -412,7 +424,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
 
                     discoveryTestBuilder.PeerClientObservables.ToList().ForEach(o => o.ResponseMessageSubject.OnNext(subbedDto1));
 
-                    await walker.DiscoveryStream.WaitForItemsOnDelayedStreamOnTaskPoolSchedulerAsync(1);
+                    _testScheduler.Start();
 
                     streamObserver.Received(1).OnNext(Arg.Any<IPeerClientMessageDto>());
                     
@@ -429,6 +441,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
 
             var discoveryTestBuilder = new DiscoveryTestBuilder()
                .WithLogger()
+               .WithScheduler(_testScheduler)
                .WithPeerRepository()
                .WithDns()
                .WithPeerSettings()
@@ -468,6 +481,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
 
             var discoveryTestBuilder = new DiscoveryTestBuilder()
                .WithLogger()
+               .WithScheduler(_testScheduler)
                .WithPeerRepository()
                .WithDns()
                .WithPeerSettings()
@@ -499,6 +513,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
         {
             var discoveryTestBuilder = new DiscoveryTestBuilder()
                .WithLogger()
+               .WithScheduler(_testScheduler)
                .WithPeerRepository()
                .WithDns(default, true)
                .WithPeerSettings()
@@ -537,6 +552,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
         {
             var discoveryTestBuilder = new DiscoveryTestBuilder()
                .WithLogger()
+               .WithScheduler(_testScheduler)
                .WithPeerRepository()
                .WithDns(default, true)
                .WithPeerSettings()
@@ -562,7 +578,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
                         o.ResponseMessageSubject.OnNext(subbedDto);
                     });
 
-                    await walker.DiscoveryStream.WaitForItemsOnDelayedStreamOnTaskPoolSchedulerAsync();
+                    _testScheduler.Start();
 
                     walker.PeerClient
                        .Received(Constants.AngryPirate)
@@ -602,6 +618,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
 
             var discoveryTestBuilder = new DiscoveryTestBuilder()
                .WithLogger()
+               .WithScheduler(_testScheduler)
                .WithPeerRepository()
                .WithDns(default, true)
                .WithPeerSettings()
@@ -633,9 +650,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
                         });
                     });
 
-                    await TaskHelper.WaitForAsync(
-                        () => walker.StepProposal.Neighbours.All(n => n.StateTypes == NeighbourStateTypes.Responsive),
-                        TimeSpan.FromSeconds(5)).ConfigureAwait(false);
+                    _testScheduler.Start();
 
                     walker.StepProposal.Neighbours.Count(n => n.StateTypes == NeighbourStateTypes.Responsive).Should().Be(neighbours.Count);
                 }
@@ -670,6 +685,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.Discovery
 
             var discoveryTestBuilder = new DiscoveryTestBuilder()
                .WithLogger()
+               .WithScheduler(_testScheduler)
                .WithPeerRepository()
                .WithDns(default, true)
                .WithPeerSettings()

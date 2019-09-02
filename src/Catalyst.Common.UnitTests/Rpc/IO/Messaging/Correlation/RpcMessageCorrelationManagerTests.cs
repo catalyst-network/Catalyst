@@ -22,7 +22,6 @@
 #endregion
 
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.Rpc.IO.Messaging.Correlation;
@@ -30,19 +29,23 @@ using Catalyst.Common.Rpc.IO.Messaging.Correlation;
 using Catalyst.Common.UnitTests.IO.Messaging.Correlation;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
-using Catalyst.TestUtils;
+using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Xunit;
 
 namespace Catalyst.Common.UnitTests.Rpc.IO.Messaging.Correlation
 {
-    public sealed class RpcMessageCorrelationManagerTests : MessageCorrelationManagerTests<IRpcMessageCorrelationManager>
+    public sealed class
+        RpcMessageCorrelationManagerTests : MessageCorrelationManagerTests<IRpcMessageCorrelationManager>
     {
+        private readonly TestScheduler _testScheduler = new TestScheduler();
+
         public RpcMessageCorrelationManagerTests()
         {
             CorrelationManager = new RpcMessageCorrelationManager(Cache,
                 SubbedLogger,
-                ChangeTokenProvider
+                ChangeTokenProvider,
+                _testScheduler
             );
 
             PrepareCacheWithPendingRequests<GetInfoRequest>();
@@ -68,7 +71,7 @@ namespace Catalyst.Common.UnitTests.Rpc.IO.Messaging.Correlation
                 var firstCorrelationId = PendingRequests[0].Content.CorrelationId;
                 FireEvictionCallBackByCorrelationId(firstCorrelationId);
 
-                await TaskHelper.WaitForAsync(() => observer.ReceivedCalls().Any(), TimeSpan.FromSeconds(2));
+                _testScheduler.Start();
 
                 observer.Received(1).OnNext(Arg.Is<ICacheEvictionEvent<ProtocolMessage>>(p =>
                     p.EvictedContent.CorrelationId == firstCorrelationId

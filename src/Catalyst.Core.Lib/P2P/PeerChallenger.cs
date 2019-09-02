@@ -23,6 +23,7 @@
 
 using System;
 using System.Linq;
+using System.Reactive.Concurrency;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
@@ -50,9 +51,11 @@ namespace Catalyst.Core.Lib.P2P
         public PeerChallenger(ILogger logger,
             IPeerClient peerClient,
             IPeerIdentifier senderIdentifier,
-            int peerChallengeWaitTimeSeconds)
+            int peerChallengeWaitTimeSeconds,
+            IScheduler scheduler = null)
         {
-            ChallengeResponseMessageStreamer = new ReplaySubject<IPeerChallengeResponse>(1);
+            var observableScheduler = scheduler ?? Scheduler.Default;
+            ChallengeResponseMessageStreamer = new ReplaySubject<IPeerChallengeResponse>(1, observableScheduler);
             _senderIdentifier = senderIdentifier;
             _logger = logger;
             _peerClient = peerClient;

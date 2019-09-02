@@ -23,7 +23,6 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Keystore;
@@ -42,6 +41,7 @@ using DotNetty.Codecs.Protobuf;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Embedded;
 using FluentAssertions;
+using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
 using Xunit;
@@ -54,11 +54,12 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Transport.Channels
         {
             private readonly List<IChannelHandler> _handlers;
 
-            public TestNodeRpcClientChannelFactory(IKeySigner keySigner, 
-                IRpcMessageCorrelationManager correlationManager, 
+            public TestNodeRpcClientChannelFactory(IKeySigner keySigner,
+                IRpcMessageCorrelationManager correlationManager,
                 IPeerIdValidator peerIdValidator,
-                ISigningContextProvider signatureContextProvider)
-                : base(keySigner, correlationManager, peerIdValidator, signatureContextProvider)
+                ISigningContextProvider signatureContextProvider,
+                TestScheduler testScheduler)
+                : base(keySigner, correlationManager, peerIdValidator, signatureContextProvider, 100, testScheduler)
             {
                 _handlers = HandlerGenerationFunction();
             }
@@ -66,12 +67,14 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Transport.Channels
             public IReadOnlyCollection<IChannelHandler> InheritedHandlers => _handlers;
         }
 
+        private readonly TestScheduler _testScheduler;
         private readonly IRpcMessageCorrelationManager _correlationManager;
         private readonly TestNodeRpcClientChannelFactory _factory;
         private readonly IKeySigner _keySigner;
 
         public NodeRpcClientChannelFactoryTests()
         {
+            _testScheduler = new TestScheduler();
             _correlationManager = Substitute.For<IRpcMessageCorrelationManager>();
             _keySigner = Substitute.For<IKeySigner>();
             var contextProvider = Substitute.For<ISigningContextProvider>();
@@ -82,7 +85,8 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Transport.Channels
             var peerIdValidator = Substitute.For<IPeerIdValidator>();
             peerIdValidator.ValidatePeerIdFormat(Arg.Any<PeerId>()).Returns(true);
 
-            _factory = new TestNodeRpcClientChannelFactory(_keySigner, _correlationManager, peerIdValidator, contextProvider);
+            _factory = new TestNodeRpcClientChannelFactory(_keySigner, _correlationManager, peerIdValidator,
+                contextProvider, _testScheduler);
         }
 
         [Fact]
@@ -110,12 +114,12 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Transport.Channels
 
             var senderId = PeerIdHelper.GetPeerId("sender");
             var correlationId = CorrelationId.GenerateCorrelationId();
-            
+
             var protocolMessage = new PingResponse().ToProtocolMessage(senderId, correlationId);
             _correlationManager.TryMatchResponse(protocolMessage).Returns(true);
 
             var observer = new ProtocolMessageObserver(0, Substitute.For<ILogger>());
-           
+
             var messageStream = _factory.InheritedHandlers.OfType<ObservableServiceHandler>().Single().MessageStream;
 
             using (messageStream.Subscribe(observer))
@@ -126,7 +130,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Transport.Channels
 
                 _keySigner.DidNotReceiveWithAnyArgs().Verify(null, null, null);
 
-                await messageStream.WaitForItemsOnDelayedStreamOnTaskPoolSchedulerAsync();
+                _testScheduler.Start();
 
                 observer.Received.Count.Should().Be(1);
                 observer.Received.Single().Payload.CorrelationId.ToCorrelationId().Id.Should().Be(correlationId.Id);
@@ -153,7 +157,7 @@ namespace Catalyst.Node.Rpc.Client.UnitTests.IO.Transport.Channels
             _keySigner.DidNotReceiveWithAnyArgs().Sign(Arg.Any<byte[]>(), default);
 
             var outboundMessageBytes = testingChannel.ReadOutbound<IByteBuffer>();
-            
+
             //var outboundMessage = ProtocolMessageSigned.Parser.ParseFrom(outboundMessageBytes.Array);
             //outboundMessage.Should().BeNull();
 
