@@ -22,21 +22,16 @@
 #endregion
 
 using System;
-using System.Linq;
-using System.Reactive.Concurrency;
-using System.Reactive.Linq;
-using Catalyst.Core.Extensions;
 using Catalyst.Abstractions.P2P.IO.Messaging.Dto;
+using Catalyst.Core.Extensions;
 using Catalyst.Core.IO.Messaging.Correlation;
-using Catalyst.Core.IO.Messaging.Dto;
-using Catalyst.Core.IO.Messaging.Correlation;
-using Catalyst.Core.P2P.IO.Observers;
 using Catalyst.Core.P2P.IO.Observers;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using Google.Protobuf;
+using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
 using Xunit;
@@ -57,6 +52,8 @@ namespace Catalyst.Core.UnitTests.P2P.IO.Observers
         [Fact]
         public async void Observer_Can_Process_GetNeighbourResponse_Correctly()
         {
+            var testScheduler = new TestScheduler();
+
             var peers = new[]
             {
                 PeerIdHelper.GetPeerId(),
@@ -72,25 +69,26 @@ namespace Catalyst.Core.UnitTests.P2P.IO.Observers
                 }
             };
             var protocolMessage =
-                peerNeighborsResponse.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId, CorrelationId.GenerateCorrelationId());
+                peerNeighborsResponse.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId,
+                    CorrelationId.GenerateCorrelationId());
 
             var peerNeighborsResponseObserver = Substitute.For<IObserver<IPeerClientMessageDto>>();
 
-            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext,
+            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, testScheduler,
                 protocolMessage);
-                
-            _observer.StartObserving(messageStream);
-            await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
 
-            using (_observer.MessageStream.SubscribeOn(TaskPoolScheduler.Default)
-               .Subscribe(peerNeighborsResponseObserver.OnNext))
+            _observer.StartObserving(messageStream);
+
+            using (_observer.MessageStream.Subscribe(peerNeighborsResponseObserver.OnNext))
             {
-                await TaskHelper.WaitForAsync(() => peerNeighborsResponseObserver.ReceivedCalls().Any(),
-                    TimeSpan.FromMilliseconds(1000));
-                
-                peerNeighborsResponseObserver.Received(1).OnNext(Arg.Is<IPeerClientMessageDto>(p => test(p.Message, peers[0])));
-                peerNeighborsResponseObserver.Received(1).OnNext(Arg.Is<IPeerClientMessageDto>(p => test(p.Message, peers[1])));
-                peerNeighborsResponseObserver.Received(1).OnNext(Arg.Is<IPeerClientMessageDto>(p => test(p.Message, peers[2])));
+                testScheduler.Start();
+
+                peerNeighborsResponseObserver.Received(1)
+                   .OnNext(Arg.Is<IPeerClientMessageDto>(p => test(p.Message, peers[0])));
+                peerNeighborsResponseObserver.Received(1)
+                   .OnNext(Arg.Is<IPeerClientMessageDto>(p => test(p.Message, peers[1])));
+                peerNeighborsResponseObserver.Received(1)
+                   .OnNext(Arg.Is<IPeerClientMessageDto>(p => test(p.Message, peers[2])));
             }
         }
 
@@ -100,9 +98,6 @@ namespace Catalyst.Core.UnitTests.P2P.IO.Observers
             return x.Peers.Contains(peerId);
         }
 
-        public void Dispose()
-        {
-            _observer?.Dispose();
-        }
+        public void Dispose() { _observer?.Dispose(); }
     }
 }

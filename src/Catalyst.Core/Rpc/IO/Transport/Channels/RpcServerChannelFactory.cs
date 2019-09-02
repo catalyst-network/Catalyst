@@ -24,6 +24,7 @@
 using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
@@ -31,14 +32,11 @@ using Catalyst.Abstractions.IO.EventLoop;
 using Catalyst.Abstractions.IO.Handlers;
 using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.IO.Transport.Channels;
-using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.KeySigner;
+using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.Rpc.Authentication;
 using Catalyst.Abstractions.Rpc.IO.Messaging.Correlation;
-using Catalyst.Core.IO.Codecs;
-using Catalyst.Core.IO.Handlers;
-using Catalyst.Core.IO.Transport.Channels;
 using Catalyst.Core.IO.Codecs;
 using Catalyst.Core.IO.Handlers;
 using Catalyst.Core.IO.Transport.Channels;
@@ -84,25 +82,25 @@ namespace Catalyst.Core.Rpc.IO.Transport.Channels
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="correlationManger"></param>
         /// <param name="keySigner"></param>
         /// <param name="authenticationStrategy"></param>
         /// <param name="peerIdValidator"></param>
-        /// <param name="signingContextProvider"></param>
         public RpcServerChannelFactory(IRpcMessageCorrelationManager correlationManger,
             IKeySigner keySigner,
             IAuthenticationStrategy authenticationStrategy,
             IPeerIdValidator peerIdValidator,
-            ISigningContextProvider signingContextProvider)
+            ISigningContextProvider signingContextProvider,
+            IScheduler scheduler = null)
         {
+            var observableScheduler = scheduler ?? Scheduler.Default;
             _correlationManger = correlationManger;
             _authenticationStrategy = authenticationStrategy;
             _keySigner = keySigner;
             _peerIdValidator = peerIdValidator;
             _signingContextProvider = signingContextProvider;
-            _observableServiceHandler = new ObservableServiceHandler();
+            _observableServiceHandler = new ObservableServiceHandler(observableScheduler);
         }
 
         /// <param name="handlerEventLoopGroupFactory"></param>
@@ -115,7 +113,7 @@ namespace Catalyst.Core.Rpc.IO.Transport.Channels
             X509Certificate2 certificate = null)
         {
             var channel = await Bootstrap(handlerEventLoopGroupFactory, targetAddress, targetPort, certificate);
-            
+
             var messageStream = _observableServiceHandler.MessageStream;
 
             return new ObservableChannel(messageStream

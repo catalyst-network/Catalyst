@@ -40,10 +40,10 @@ namespace Catalyst.Core.Dfs
             RawLeaves = true
         };
 
-        private readonly IIpfsAdapter _ipfs;
+        private readonly ICoreApi _ipfs;
         private readonly ILogger _logger;
 
-        public Dfs(IIpfsAdapter ipfsAdapter, ILogger logger)
+        public Dfs(ICoreApi ipfsAdapter, ILogger logger)
         {
             _ipfs = ipfsAdapter;
             _logger = logger;

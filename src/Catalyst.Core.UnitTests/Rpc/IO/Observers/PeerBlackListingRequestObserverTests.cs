@@ -25,16 +25,10 @@ using System;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using Catalyst.Core.Extensions;
 using Catalyst.Abstractions.IO.Messaging.Dto;
-using Catalyst.Abstractions.Repository;
-using Catalyst.Core.IO.Messaging.Dto;
+using Catalyst.Core.Extensions;
 using Catalyst.Core.Network;
-using Catalyst.Core.P2P;
 using Catalyst.Core.P2P.Models;
-using Catalyst.Core.Util;
-using Catalyst.Core.Rpc.IO.Observers;
-using Catalyst.Core.Network;
 using Catalyst.Core.P2P.Repository;
 using Catalyst.Core.Rpc.IO.Observers;
 using Catalyst.Core.Util;
@@ -44,6 +38,7 @@ using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using FluentAssertions;
+using Microsoft.Reactive.Testing;
 using Nethereum.RLP;
 using NSubstitute;
 using Serilog;
@@ -117,6 +112,7 @@ namespace Catalyst.Core.UnitTests.Rpc.IO.Observers
 
         private async Task<SetPeerBlackListResponse> ApplyBlackListingToPeerTest(string publicKey, string ipAddress, string blacklist)
         {
+            var testScheduler = new TestScheduler();
             var peerRepository = Substitute.For<IPeerRepository>();
 
             var fakePeers = Enumerable.Range(0, 5).Select(i => new Peer
@@ -149,15 +145,14 @@ namespace Catalyst.Core.UnitTests.Rpc.IO.Observers
             };
 
             var protocolMessage = request.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId);
-            
-            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext,
+            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, testScheduler,
                 protocolMessage
             );
 
             var handler = new PeerBlackListingRequestObserver(sendPeerIdentifier, _logger, peerRepository);
             handler.StartObserving(messageStream);
 
-            await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
+            testScheduler.Start();
 
             var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();
             receivedCalls.Count.Should().Be(1);

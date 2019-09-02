@@ -24,7 +24,6 @@
 using System;
 using System.Threading;
 using Catalyst.Core.Util;
-using Catalyst.Core.Util;
 using FluentAssertions;
 using Xunit;
 
@@ -46,8 +45,8 @@ namespace Catalyst.Core.UnitTests.Utils
         {
             var changeProvider = new TtlChangeTokenProvider(timeInMs);
             var changeToken = changeProvider.GetChangeToken();
-            changeToken.RegisterChangeCallback(o => { _manualResetEvent.Set(); }, new object());
-            var signaled = _manualResetEvent.WaitOne(TimeSpan.FromMilliseconds(timeInMs + 1000));
+            changeToken.RegisterChangeCallback(o => { _manualResetEvent.Set(); }, null);
+            var signaled = _manualResetEvent.WaitOne();
             signaled.Should().BeTrue();
         }
 

@@ -29,6 +29,7 @@ using Catalyst.Core.IO.Handlers;
 using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Embedded;
+using Microsoft.Reactive.Testing;
 using NSubstitute;
 
 namespace Catalyst.TestUtils
@@ -46,13 +47,15 @@ namespace Catalyst.TestUtils
 
     public sealed class EmbeddedObservableChannel : IObservableChannel
     {
+        private readonly TestScheduler _testScheduler;
         private readonly EmbeddedChannel _channel;
 
         public EmbeddedObservableChannel(string channelName)
         {
+            _testScheduler = new TestScheduler();
             var channelId = channelName.ToChannelId();
 
-            var observableServiceHandler = new ObservableServiceHandler();
+            var observableServiceHandler = new ObservableServiceHandler(_testScheduler);
             var embeddedChannel = new EmbeddedChannel(channelId, false, true, observableServiceHandler);
             _channel = embeddedChannel;
             MessageStream = observableServiceHandler.MessageStream;
@@ -60,8 +63,8 @@ namespace Catalyst.TestUtils
 
         public async Task SimulateReceivingMessagesAsync(params object[] messages)
         {
-            await Task.Run(() => _channel.WriteInbound(messages)).ConfigureAwait(false);
-            await MessageStream.WaitForItemsOnDelayedStreamOnTaskPoolSchedulerAsync();
+            _channel.WriteInbound(messages);
+            _testScheduler.Start();
         }
 
         public IChannel Channel => _channel;

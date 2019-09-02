@@ -22,19 +22,15 @@
 #endregion
 
 using System;
-using System.Linq;
-using System.Reactive.Concurrency;
-using System.Reactive.Linq;
-using Catalyst.Core.Extensions;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.IO.Messaging.Dto;
+using Catalyst.Core.Extensions;
 using Catalyst.Core.IO.Messaging.Correlation;
-using Catalyst.Core.IO.Messaging.Correlation;
-using Catalyst.Core.P2P.IO.Observers;
 using Catalyst.Core.P2P.IO.Observers;
 using Catalyst.Protocol.IPPN;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
+using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
 using Xunit;
@@ -55,30 +51,28 @@ namespace Catalyst.Core.UnitTests.P2P.IO.Observers
         [Fact]
         public async void Observer_Can_Process_PingResponse_Correctly()
         {
+            var testScheduler = new TestScheduler();
+
             var pingResponse = new PingResponse();
             var protocolMessage =
-                pingResponse.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId, CorrelationId.GenerateCorrelationId());
+                pingResponse.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId,
+                    CorrelationId.GenerateCorrelationId());
 
             var pingResponseObserver = Substitute.For<IObserver<IPeerClientMessageDto>>();
 
-            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext,
+            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, testScheduler,
                 protocolMessage);
-                
-            _observer.StartObserving(messageStream);
-            await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
 
-            using (_observer.MessageStream.SubscribeOn(ImmediateScheduler.Instance)
-               .Subscribe(pingResponseObserver.OnNext))
+            _observer.StartObserving(messageStream);
+
+            using (_observer.MessageStream.Subscribe(pingResponseObserver.OnNext))
             {
-                await TaskHelper.WaitForAsync(() => pingResponseObserver.ReceivedCalls().Any(),
-                    TimeSpan.FromMilliseconds(5000));
+                testScheduler.Start();
+
                 pingResponseObserver.Received(1).OnNext(Arg.Any<IPeerClientMessageDto>());
             }
         }
 
-        public void Dispose()
-        {
-            _observer?.Dispose();
-        }
+        public void Dispose() { _observer?.Dispose(); }
     }
 }

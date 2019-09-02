@@ -33,11 +33,9 @@ using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.Discovery;
 using Catalyst.Abstractions.P2P.IO.Messaging.Dto;
 using Catalyst.Abstractions.Types;
-using Catalyst.Core.Extensions;
 using Catalyst.Core.Config;
 using Catalyst.Core.Extensions;
 using Catalyst.Core.IO.Messaging.Correlation;
-using Catalyst.Core.UnitTests.P2P.Discovery;
 using Catalyst.Core.P2P.Discovery.Hastings;
 using Catalyst.Core.P2P.IO.Messaging.Dto;
 using Catalyst.Core.P2P.IO.Observers;
@@ -47,12 +45,12 @@ using Catalyst.Protocol.IPPN;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Google.Protobuf;
-using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
 using Xunit;
 using Xunit.Abstractions;
+using EvictionReason = Microsoft.Extensions.Caching.Memory.EvictionReason;
 using ICacheEntry = Microsoft.Extensions.Caching.Memory.ICacheEntry;
 using IMemoryCache = Microsoft.Extensions.Caching.Memory.IMemoryCache;
 
@@ -288,8 +286,7 @@ namespace Catalyst.Core.IntegrationTests.P2P.Discovery
             {
                 var streamObserver = Substitute.For<IObserver<IPeerClientMessageDto>>();
 
-                using (walker.DiscoveryStream.SubscribeOn(TaskPoolScheduler.Default)
-                   .Subscribe(streamObserver.OnNext))
+                using (walker.DiscoveryStream.Subscribe(streamObserver.OnNext))
                 {
                     var pingDto = new PeerClientMessageDto(new PingResponse(),
                         stateCandidate.Neighbours.FirstOrDefault()?.PeerIdentifier,
@@ -300,7 +297,7 @@ namespace Catalyst.Core.IntegrationTests.P2P.Discovery
                        .ToList()
                        .ForEach(o => { o.ResponseMessageSubject.OnNext(pingDto); });
 
-                    await walker.DiscoveryStream.WaitForItemsOnDelayedStreamOnTaskPoolSchedulerAsync();
+                    _testScheduler.Start();
 
                     streamObserver.Received(1).OnNext(Arg.Is(pingDto));
 

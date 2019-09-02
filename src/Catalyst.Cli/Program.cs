@@ -22,6 +22,7 @@
 #endregion
 
 using System;
+using System.Diagnostics;
 using Catalyst.Core.Config;
 using Catalyst.Core.Kernel;
 
@@ -45,8 +46,8 @@ namespace Catalyst.Cli
         public static int Main()
         {
             Kernel.Logger.Information("Catalyst.Cli started with process id {0}",
-                System.Diagnostics.Process.GetCurrentProcess().Id.ToString());
-            
+                Process.GetCurrentProcess().Id.ToString());
+
             try
             {
                 Kernel.WithDataDirectory()

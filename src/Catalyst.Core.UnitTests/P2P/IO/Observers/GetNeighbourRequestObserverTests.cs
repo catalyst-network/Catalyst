@@ -26,9 +26,6 @@ using System.Collections.Generic;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.P2P;
-using Catalyst.Abstractions.P2P.Models;
-using Catalyst.Abstractions.Repository;
-using Catalyst.Core.Extensions;
 using Catalyst.Core.Extensions;
 using Catalyst.Core.IO.Messaging.Correlation;
 using Catalyst.Core.IO.Messaging.Dto;
@@ -38,6 +35,7 @@ using Catalyst.Core.P2P.Repository;
 using Catalyst.Protocol.IPPN;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
+using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
 using SharpRepository.Repository.Specifications;
@@ -47,12 +45,14 @@ namespace Catalyst.Core.UnitTests.P2P.IO.Observers
 {
     public sealed class GetNeighbourRequestObserverTests : IDisposable
     {
+        private readonly TestScheduler _testScheduler;
         private readonly ILogger _subbedLogger;
         private readonly IPeerIdentifier _peerIdentifier;
         private readonly IPeerRepository _subbedPeerRepository;
 
         public GetNeighbourRequestObserverTests()
         {
+            _testScheduler = new TestScheduler();
             _subbedLogger = Substitute.For<ILogger>();
             _subbedPeerRepository = Substitute.For<IPeerRepository>();
             _peerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("testPeer");
@@ -91,7 +91,7 @@ namespace Catalyst.Core.UnitTests.P2P.IO.Observers
             
             var fakeContext = Substitute.For<IChannelHandlerContext>();
             var channeledAny = new ObserverDto(fakeContext, peerNeighbourRequestMessage.ToProtocolMessage(PeerIdHelper.GetPeerId(), CorrelationId.GenerateCorrelationId()));
-            var observableStream = new[] {channeledAny}.ToObservable();
+            var observableStream = new[] {channeledAny}.ToObservable(_testScheduler);
             
             neighbourRequestHandler.StartObserving(observableStream);
             
@@ -102,7 +102,7 @@ namespace Catalyst.Core.UnitTests.P2P.IO.Observers
                 peerNeighborsResponseMessage.Peers.Add(PeerIdHelper.GetPeerId());
             }
 
-            await observableStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
+            _testScheduler.Start();
 
             await fakeContext.Channel.ReceivedWithAnyArgs(1)
                .WriteAndFlushAsync(peerNeighborsResponseMessage.ToProtocolMessage(_peerIdentifier.PeerId, CorrelationId.GenerateCorrelationId()));

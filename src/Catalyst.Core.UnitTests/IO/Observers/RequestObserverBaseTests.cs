@@ -21,12 +21,12 @@
 
 #endregion
 
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Catalyst.Protocol.IPPN;
 using Catalyst.TestUtils;
 using FluentAssertions;
+using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
 using Xunit;
@@ -38,14 +38,17 @@ namespace Catalyst.Core.UnitTests.IO.Observers
         [Fact]
         public async Task OnNext_Should_Still_Get_Called_After_HandleBroadcast_Failure()
         {
+            var testScheduler = new TestScheduler();
             var candidateDeltaMessages = Enumerable.Repeat(new PeerNeighborsRequest(), 10).ToArray();
 
-            var messageStream = MessageStreamHelper.CreateStreamWithMessages(candidateDeltaMessages);
+            var messageStream = MessageStreamHelper.CreateStreamWithMessages(testScheduler, candidateDeltaMessages);
             using (var observer = new FailingRequestObserver(Substitute.For<ILogger>(), 
                 PeerIdentifierHelper.GetPeerIdentifier("server")))
             {
                 observer.StartObserving(messageStream);
-                await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync(TimeSpan.FromSeconds(1));
+
+                testScheduler.Start();
+
                 observer.Counter.Should().Be(10);
             }
         }

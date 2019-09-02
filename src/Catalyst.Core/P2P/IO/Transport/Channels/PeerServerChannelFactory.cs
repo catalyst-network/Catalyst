@@ -24,6 +24,7 @@
 using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
@@ -31,13 +32,11 @@ using Catalyst.Abstractions.IO.EventLoop;
 using Catalyst.Abstractions.IO.Handlers;
 using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.IO.Transport.Channels;
-using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.KeySigner;
+using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.IO.Messaging.Broadcast;
 using Catalyst.Abstractions.P2P.IO.Messaging.Correlation;
-using Catalyst.Core.IO.Handlers;
-using Catalyst.Core.IO.Transport.Channels;
 using Catalyst.Core.IO.Handlers;
 using Catalyst.Core.IO.Transport.Channels;
 using Catalyst.Protocol.Common;
@@ -50,6 +49,7 @@ namespace Catalyst.Core.P2P.IO.Transport.Channels
 {
     public class PeerServerChannelFactory : UdpServerChannelFactory
     {
+        private readonly IScheduler _scheduler;
         private readonly IPeerMessageCorrelationManager _messageCorrelationManager;
         private readonly IBroadcastManager _broadcastManager;
         private readonly IKeySigner _keySigner;
@@ -68,8 +68,10 @@ namespace Catalyst.Core.P2P.IO.Transport.Channels
             IBroadcastManager broadcastManager,
             IKeySigner keySigner,
             IPeerIdValidator peerIdValidator,
-            ISigningContextProvider signingContextProvider)
+            ISigningContextProvider signingContextProvider,
+            IScheduler scheduler = null)
         {
+            _scheduler = scheduler ?? Scheduler.Default;
             _messageCorrelationManager = messageCorrelationManager;
             _broadcastManager = broadcastManager;
             _keySigner = keySigner;
@@ -99,7 +101,7 @@ namespace Catalyst.Core.P2P.IO.Transport.Channels
                             new CorrelatableHandler<IPeerMessageCorrelationManager>(_messageCorrelationManager)
                         ),
                         new BroadcastHandler(_broadcastManager),
-                        new ObservableServiceHandler(),
+                        new ObservableServiceHandler(_scheduler),
                         new BroadcastCleanupHandler(_broadcastManager)
                     };
                 };

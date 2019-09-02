@@ -25,19 +25,17 @@ using System;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using Catalyst.Core.Extensions;
-using Catalyst.Core.FileTransfer;
+using Catalyst.Abstractions.Dfs;
+using Catalyst.Abstractions.Enumerator;
 using Catalyst.Abstractions.FileTransfer;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.IO.Observers;
-using Catalyst.Abstractions.Dfs;
-using Catalyst.Abstractions.Enumerator;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.Types;
+using Catalyst.Core.Extensions;
+using Catalyst.Core.FileTransfer;
 using Catalyst.Core.IO.Messaging.Dto;
 using Catalyst.Core.IO.Observers;
-using Catalyst.Abstractions.Types;
-using Catalyst.Core.FileTransfer;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using DotNetty.Transport.Channels;
@@ -107,7 +105,7 @@ namespace Catalyst.Core.Rpc.IO.Observers
                 responseCodeType = FileTransferResponseCodeTypes.Error;
             }
 
-            var message = ReturnResponse(fileTransferInformation, responseCodeType);
+            var message = GetResponse(fileTransferInformation, responseCodeType);
 
             if (responseCodeType == FileTransferResponseCodeTypes.Successful)
             {
@@ -115,7 +113,7 @@ namespace Catalyst.Core.Rpc.IO.Observers
                 {
                     if (fileTransferInformation.ChunkIndicatorsTrue())
                     {
-                        OnSuccessAsync(fileTransferInformation).GetAwaiter().GetResult();
+                        OnSuccessAsync(fileTransferInformation).Wait();
                     }
 
                     fileTransferInformation.Dispose();
@@ -125,45 +123,49 @@ namespace Catalyst.Core.Rpc.IO.Observers
             return message;
         }
 
+        private async Task<FileTransferResponseCodeTypes> AddFileToDfs(IFileTransferInformation fileTransferInformation)
+        {
+            var responseCode = FileTransferResponseCodeTypes.Finished;
+
+            try
+            {
+                string fileHash;
+
+                using (var fileStream = File.Open(fileTransferInformation.TempPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                {
+                    fileHash = await _dfs.AddAsync(fileStream, fileTransferInformation.FileOutputPath).ConfigureAwait(false);
+                }
+
+                fileTransferInformation.DfsHash = fileHash;
+
+                Logger.Information($"Added File Name {fileTransferInformation.FileOutputPath} to DFS, Hash: {fileHash}");
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e, "Failed to handle file download OnSuccess {0}", fileTransferInformation.CorrelationId.Id);
+                responseCode = FileTransferResponseCodeTypes.Failed;
+            }
+            finally
+            {
+                fileTransferInformation.Delete();
+            }
+
+            return responseCode;
+        }
+
         /// <summary>Called when [success] on file transfer.</summary>
         /// <param name="fileTransferInformation">The file transfer information.</param>
         private async Task OnSuccessAsync(IFileTransferInformation fileTransferInformation)
         {
-            var addFileResponseCode = Task.Run(async () =>
-            {
-                var responseCode = FileTransferResponseCodeTypes.Finished;
+            var addFileResponseCode = AddFileToDfs(fileTransferInformation).ConfigureAwait(false);
 
-                try
-                {
-                    string fileHash;
-
-                    using (var fileStream = File.Open(fileTransferInformation.TempPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-                    {
-                        fileHash = await _dfs.AddAsync(fileStream, fileTransferInformation.FileOutputPath).ConfigureAwait(false);
-                    }
-
-                    fileTransferInformation.DfsHash = fileHash;
-
-                    Logger.Information($"Added File Name {fileTransferInformation.FileOutputPath} to DFS, Hash: {fileHash}");
-                }
-                catch (Exception e)
-                {
-                    Logger.Error(e, "Failed to handle file download OnSuccess {0}", fileTransferInformation.CorrelationId.Id);
-                    responseCode = FileTransferResponseCodeTypes.Failed;
-                }
-                finally
-                {
-                    fileTransferInformation.Delete();
-                }
-
-                return responseCode;
-            }).ConfigureAwait(false);
-
-            var message = ReturnResponse(fileTransferInformation, await addFileResponseCode);
+            var message = GetResponse(fileTransferInformation, await addFileResponseCode);
+            var protocolMessage =
+                message.ToProtocolMessage(PeerIdentifier.PeerId, fileTransferInformation.CorrelationId);
 
             // Send Response
             var responseMessage = new MessageDto(
-                message.ToProtocolMessage(PeerIdentifier.PeerId, fileTransferInformation.CorrelationId),
+                protocolMessage,
                 fileTransferInformation.RecipientIdentifier
             );
 
@@ -172,7 +174,7 @@ namespace Catalyst.Core.Rpc.IO.Observers
 
         /// <param name="fileTransferInformation">The file transfer information.</param>
         /// <param name="responseCode">The response code.</param>
-        private AddFileToDfsResponse ReturnResponse(IFileTransferInformation fileTransferInformation, Enumeration responseCode)
+        private AddFileToDfsResponse GetResponse(IFileTransferInformation fileTransferInformation, Enumeration responseCode)
         {
             Logger.Information("File transfer response code: " + responseCode);
             if (responseCode == FileTransferResponseCodeTypes.Successful)

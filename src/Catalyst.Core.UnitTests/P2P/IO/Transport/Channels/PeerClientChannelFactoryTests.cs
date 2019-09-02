@@ -23,17 +23,14 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
+using System.Reactive.Concurrency;
 using System.Threading.Tasks;
-using Catalyst.Core.Extensions;
-using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.KeySigner;
+using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.IO.Messaging.Broadcast;
 using Catalyst.Abstractions.P2P.IO.Messaging.Correlation;
-using Catalyst.Core.IO.Handlers;
-using Catalyst.Core.IO.Messaging.Correlation;
-using Catalyst.Core.Util;
+using Catalyst.Core.Extensions;
 using Catalyst.Core.IO.Handlers;
 using Catalyst.Core.IO.Messaging.Correlation;
 using Catalyst.Core.P2P.IO.Transport.Channels;
@@ -47,6 +44,7 @@ using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Embedded;
 using DotNetty.Transport.Channels.Sockets;
 using FluentAssertions;
+using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
 using Xunit;
@@ -62,8 +60,9 @@ namespace Catalyst.Core.UnitTests.P2P.IO.Transport.Channels
             public TestPeerClientChannelFactory(IKeySigner keySigner,
                 IPeerMessageCorrelationManager correlationManager,
                 IPeerIdValidator peerIdValidator,
-                ISigningContextProvider signingContextProvider)
-                : base(keySigner, correlationManager, peerIdValidator, signingContextProvider)
+                ISigningContextProvider signingContextProvider,
+                IScheduler scheduler)
+                : base(keySigner, correlationManager, peerIdValidator, signingContextProvider, scheduler)
             {
                 _handlers = HandlerGenerationFunction();
             }
@@ -71,6 +70,7 @@ namespace Catalyst.Core.UnitTests.P2P.IO.Transport.Channels
             public IReadOnlyCollection<IChannelHandler> InheritedHandlers => _handlers;
         }
 
+        private readonly TestScheduler _testScheduler;
         private readonly IPeerMessageCorrelationManager _correlationManager;
         private readonly IBroadcastManager _gossipManager;
         private readonly IKeySigner _keySigner;
@@ -78,6 +78,7 @@ namespace Catalyst.Core.UnitTests.P2P.IO.Transport.Channels
 
         public PeerClientChannelFactoryTests()
         {
+            _testScheduler = new TestScheduler();
             _correlationManager = Substitute.For<IPeerMessageCorrelationManager>();
             _gossipManager = Substitute.For<IBroadcastManager>();
             _keySigner = Substitute.For<IKeySigner>();
@@ -93,7 +94,8 @@ namespace Catalyst.Core.UnitTests.P2P.IO.Transport.Channels
                 _keySigner,
                 _correlationManager,
                 peerValidator,
-                signingContext);
+                signingContext,
+                _testScheduler);
         }
 
         [Fact]
@@ -126,13 +128,14 @@ namespace Catalyst.Core.UnitTests.P2P.IO.Transport.Channels
                 Signature = signature.ToByteString()
             };
 
-            _keySigner.Verify(Arg.Is<ISignature>(s => s.SignatureBytes.SequenceEqual(signature)), Arg.Any<byte[]>(), default)
+            _keySigner.Verify(Arg.Is<ISignature>(s => s.SignatureBytes.SequenceEqual(signature)), Arg.Any<byte[]>(),
+                    default)
                .ReturnsForAnyArgs(true);
 
             var observer = new ProtocolMessageObserver(0, Substitute.For<ILogger>());
-           
+
             var messageStream = ((ObservableServiceHandler) _factory.InheritedHandlers.Last()).MessageStream;
-            
+
             using (messageStream.Subscribe(observer))
             {
                 testingChannel.WriteInbound(signedMessage);
@@ -140,7 +143,7 @@ namespace Catalyst.Core.UnitTests.P2P.IO.Transport.Channels
                 await _gossipManager.DidNotReceiveWithAnyArgs().BroadcastAsync(null);
                 _keySigner.ReceivedWithAnyArgs(1).Verify(null, null, null);
 
-                await messageStream.WaitForItemsOnDelayedStreamOnTaskPoolSchedulerAsync();
+                _testScheduler.Start();
 
                 observer.Received.Count.Should().Be(1);
                 observer.Received.Single().Payload.CorrelationId.ToCorrelationId().Id.Should().Be(correlationId.Id);

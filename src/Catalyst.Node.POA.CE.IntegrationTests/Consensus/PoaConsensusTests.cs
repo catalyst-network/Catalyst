@@ -53,7 +53,7 @@ namespace Catalyst.Node.POA.CE.IntegrationTests.Consensus
             Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile)
         }, output)
         {
-            ContainerProvider.ConfigureContainerBuilder(true, true, false);
+            ContainerProvider.ConfigureContainerBuilder(true, true);
             _scope = ContainerProvider.Container.BeginLifetimeScope(CurrentTestName);
 
             var context = new CryptoContext(new CryptoWrapper());
@@ -64,7 +64,7 @@ namespace Catalyst.Node.POA.CE.IntegrationTests.Consensus
                 {
                     var privateKey = context.GeneratePrivateKey();
                     var publicKey = privateKey.GetPublicKey();
-                    var nodeSettings = PeerSettingsHelper.TestPeerSettings(publicKey.Bytes, port: 2000 + i);
+                    var nodeSettings = PeerSettingsHelper.TestPeerSettings(publicKey.Bytes, 2000 + i);
                     var peerIdentifier = new PeerIdentifier(nodeSettings) as IPeerIdentifier;
                     var name = $"producer{i}";
                     return new {index = i, name, privateKey, nodeSettings, peerIdentifier};
@@ -77,11 +77,11 @@ namespace Catalyst.Node.POA.CE.IntegrationTests.Consensus
                 p => new PoaTestNode($"producer{p.index}",
                     p.privateKey,
                     p.nodeSettings,
-                    peerIdentifiers.Except(new[] {p.peerIdentifier}), 
-                    FileSystem, 
+                    peerIdentifiers.Except(new[] {p.peerIdentifier}),
+                    FileSystem,
                     output)).ToList();
         }
-        
+
         [Fact]
         public async Task Run_Consensus()
         {
@@ -91,7 +91,7 @@ namespace Catalyst.Node.POA.CE.IntegrationTests.Consensus
                     n.RunAsync(_endOfTestCancellationSource.Token);
                     n.Consensus.StartProducing();
                 });
-            
+
             await Task.Delay(Debugger.IsAttached
                     ? TimeSpan.FromHours(3)
                     : CycleConfiguration.Default.CycleDuration.Multiply(1.3))
@@ -124,4 +124,3 @@ namespace Catalyst.Node.POA.CE.IntegrationTests.Consensus
         }
     }
 }
-

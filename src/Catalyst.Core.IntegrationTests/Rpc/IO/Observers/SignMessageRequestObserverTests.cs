@@ -25,13 +25,10 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Autofac;
-using Catalyst.Core.Config;
-using Catalyst.Core.Extensions;
 using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.KeySigner;
-using Catalyst.Core.IO.Messaging.Dto;
-using Catalyst.Abstractions.Types;
-using Catalyst.Core.Rpc.IO.Observers;
+using Catalyst.Core.Config;
+using Catalyst.Core.Extensions;
 using Catalyst.Core.Rpc.IO.Observers;
 using Catalyst.Protocol;
 using Catalyst.Protocol.Common;
@@ -39,6 +36,7 @@ using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using FluentAssertions;
+using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
 using Xunit;
@@ -48,6 +46,7 @@ namespace Catalyst.Core.IntegrationTests.Rpc.IO.Observers
 {
     public sealed class SignMessageRequestObserverTests : ConfigFileBasedTest
     {
+        private readonly TestScheduler _testScheduler;
         private readonly ILifetimeScope _scope;
         private readonly ILogger _logger;
         private readonly IKeySigner _keySigner;
@@ -61,6 +60,7 @@ namespace Catalyst.Core.IntegrationTests.Rpc.IO.Observers
             Path.Combine(Constants.ConfigSubFolder, Constants.ShellNodesConfigFile)
         }, output)
         {
+            _testScheduler = new TestScheduler();
             ContainerProvider.ConfigureContainerBuilder();
             SocketPortHelper.AlterConfigurationToGetUniquePort(ContainerProvider.ConfigurationRoot, CurrentTestName);
 
@@ -87,12 +87,14 @@ namespace Catalyst.Core.IntegrationTests.Rpc.IO.Observers
             var protocolMessage =
                 signMessageRequest.ToProtocolMessage(sender.PeerId);
 
-            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, protocolMessage);
+            var messageStream =
+                MessageStreamHelper.CreateStreamWithMessage(_fakeContext, _testScheduler, protocolMessage);
             var handler =
                 new SignMessageRequestObserver(sender, _logger, _keySigner);
+
             handler.StartObserving(messageStream);
 
-            await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
+            _testScheduler.Start();
 
             var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();
             receivedCalls.Count.Should().Be(1);

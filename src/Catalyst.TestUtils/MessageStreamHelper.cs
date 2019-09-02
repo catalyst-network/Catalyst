@@ -23,7 +23,6 @@
 
 using System;
 using System.Linq;
-using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.IO.Messaging.Dto;
@@ -35,25 +34,32 @@ using Catalyst.Core.IO.Observers;
 using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;
 using Google.Protobuf;
+using Microsoft.Reactive.Testing;
 using NSubstitute;
 
-namespace Catalyst.TestUtils 
+namespace Catalyst.TestUtils
 {
     public static class MessageStreamHelper
     {
-        public static void SendToHandler(this ProtocolMessage messages, IChannelHandlerContext fakeContext, MessageObserverBase handler)
+        public static void SendToHandler(this ProtocolMessage messages,
+            IChannelHandlerContext fakeContext,
+            MessageObserverBase handler)
         {
             handler.OnNext(CreateChanneledMessage(fakeContext, messages));
         }
 
-        public static IObservable<IObserverDto<ProtocolMessage>> CreateStreamWithMessage(IChannelHandlerContext fakeContext, ProtocolMessage response)
-        {   
+        //Force test scheduler for testing streams
+        public static IObservable<IObserverDto<ProtocolMessage>> CreateStreamWithMessage(IChannelHandlerContext fakeContext,
+            TestScheduler testScheduler,
+            ProtocolMessage response)
+        {
             var channeledAny = new ObserverDto(fakeContext, response);
-            var messageStream = new[] {channeledAny}.ToObservable();
+            var messageStream = new[] {channeledAny}.ToObservable(testScheduler);
             return messageStream;
         }
 
-        public static IObservable<IObserverDto<ProtocolMessage>> CreateStreamWithMessages<T>(params T[] messages)
+        public static IObservable<IObserverDto<ProtocolMessage>> CreateStreamWithMessages<T>(TestScheduler testScheduler,
+            params T[] messages)
             where T : IMessage<T>, IMessage
         {
             var protoMessages = messages.Select(m =>
@@ -61,37 +67,24 @@ namespace Catalyst.TestUtils
 
             var context = Substitute.For<IChannelHandlerContext>();
 
-            return CreateStreamWithMessages(context, protoMessages.ToArray());
+            return CreateStreamWithMessages(context, testScheduler, protoMessages.ToArray());
         }
 
-        public static IObservable<IObserverDto<ProtocolMessage>> CreateStreamWithMessages(IChannelHandlerContext fakeContext, params ProtocolMessage[] responseMessages)
+        public static IObservable<IObserverDto<ProtocolMessage>> CreateStreamWithMessages(IChannelHandlerContext fakeContext,
+            TestScheduler testScheduler,
+            params ProtocolMessage[] responseMessages)
         {
             var stream = responseMessages
                .Select(message => new ObserverDto(fakeContext, message));
 
-            var messageStream = stream.ToObservable();
+            var messageStream = stream.ToObservable(testScheduler);
             return messageStream;
         }
 
-        private static ObserverDto CreateChanneledMessage(IChannelHandlerContext fakeContext, ProtocolMessage responseMessage)
+        private static ObserverDto CreateChanneledMessage(IChannelHandlerContext fakeContext,
+            ProtocolMessage responseMessage)
         {
             return new ObserverDto(fakeContext, responseMessage);
-        }
-
-        public static IObservable<T> DelayAndSubscribeOnTaskPool<T>(this IObservable<T> messageStream, TimeSpan customDelay = default)
-        {
-            var delay = customDelay == default ? TimeSpan.FromMilliseconds(30) : customDelay;
-            return messageStream.Delay(delay).SubscribeOn(TaskPoolScheduler.Default);
-        }
-
-        public static async Task<T> WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync<T>(this IObservable<T> messageStream, TimeSpan customDelay = default)
-        {
-            return await messageStream.DelayAndSubscribeOnTaskPool(customDelay).LastAsync();
-        }
-
-        public static async Task<T> WaitForItemsOnDelayedStreamOnTaskPoolSchedulerAsync<T>(this IObservable<T> messageStream, int numberOfItemsToWaitFor = 1, TimeSpan customDelay = default)
-        {
-            return await messageStream.Take(numberOfItemsToWaitFor).DelayAndSubscribeOnTaskPool(customDelay).LastAsync();
         }
     }
 }

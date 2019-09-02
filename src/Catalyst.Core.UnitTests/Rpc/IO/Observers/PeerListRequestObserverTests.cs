@@ -25,15 +25,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Catalyst.Core.Extensions;
 using Catalyst.Abstractions.IO.Messaging.Dto;
-using Catalyst.Abstractions.Repository;
-using Catalyst.Core.IO.Messaging.Dto;
+using Catalyst.Core.Extensions;
 using Catalyst.Core.Network;
-using Catalyst.Core.P2P;
 using Catalyst.Core.P2P.Models;
-using Catalyst.Core.Rpc.IO.Observers;
-using Catalyst.Core.Network;
 using Catalyst.Core.P2P.Repository;
 using Catalyst.Core.Rpc.IO.Observers;
 using Catalyst.Protocol;
@@ -42,6 +37,7 @@ using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using FluentAssertions;
+using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
 using Xunit;
@@ -82,6 +78,7 @@ namespace Catalyst.Core.UnitTests.Rpc.IO.Observers
         [InlineData("FakePeer1002", "FakePeer6000", "FakePeerSataoshi")]
         public async Task TestPeerListRequestResponse(params string[] fakePeers)
         {
+            var testScheduler = new TestScheduler();
             var peerRepository = Substitute.For<IPeerRepository>();
             var peerList = new List<Peer>();
 
@@ -102,13 +99,12 @@ namespace Catalyst.Core.UnitTests.Rpc.IO.Observers
             _fakeContext.Channel.RemoteAddress.Returns(EndpointBuilder.BuildNewEndPoint("192.0.0.1", 42042));
             
             var protocolMessage = new GetPeerListRequest().ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId);
-            
-            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, protocolMessage);
+            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, testScheduler, protocolMessage);
 
             var handler = new PeerListRequestObserver(PeerIdentifierHelper.GetPeerIdentifier("sender"), _logger, peerRepository);
             handler.StartObserving(messageStream);
 
-            await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
+            testScheduler.Start();
 
             var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();
             receivedCalls.Count.Should().Be(1);

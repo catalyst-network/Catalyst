@@ -25,15 +25,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Catalyst.Core.Extensions;
 using Catalyst.Abstractions.IO.Messaging.Dto;
-using Catalyst.Abstractions.Repository;
-using Catalyst.Core.IO.Messaging.Dto;
+using Catalyst.Core.Extensions;
 using Catalyst.Core.Network;
-using Catalyst.Core.P2P;
 using Catalyst.Core.P2P.Models;
-using Catalyst.Core.Rpc.IO.Observers;
-using Catalyst.Core.Network;
 using Catalyst.Core.P2P.Repository;
 using Catalyst.Core.Rpc.IO.Observers;
 using Catalyst.Protocol;
@@ -42,6 +37,7 @@ using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using FluentAssertions;
+using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
 using Xunit;
@@ -49,10 +45,12 @@ using Xunit;
 namespace Catalyst.Core.UnitTests.Rpc.IO.Observers
 {
     /// <summary>
-    /// Tests the peer count CLI and RPC calls
+    ///     Tests the peer count CLI and RPC calls
     /// </summary>
     public sealed class PeerCountRequestObserverTests
     {
+        private readonly TestScheduler _testScheduler;
+
         /// <summary>The logger</summary>
         private readonly ILogger _logger;
 
@@ -60,13 +58,15 @@ namespace Catalyst.Core.UnitTests.Rpc.IO.Observers
         private readonly IChannelHandlerContext _fakeContext;
 
         /// <summary>
-        /// Initializes a new instance of the <see>
-        ///     <cref>PeerListRequestObserverTest</cref>
-        /// </see>
-        /// class.
+        ///     Initializes a new instance of the
+        ///     <see>
+        ///         <cref>PeerListRequestObserverTest</cref>
+        ///     </see>
+        ///     class.
         /// </summary>
         public PeerCountRequestObserverTests()
         {
+            _testScheduler = new TestScheduler();
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
             var fakeChannel = Substitute.For<IChannel>();
@@ -74,7 +74,7 @@ namespace Catalyst.Core.UnitTests.Rpc.IO.Observers
         }
 
         /// <summary>
-        /// Tests the peer count request and response.
+        ///     Tests the peer count request and response.
         /// </summary>
         /// <param name="fakePeers">The peer count.</param>
         [Theory]
@@ -94,7 +94,7 @@ namespace Catalyst.Core.UnitTests.Rpc.IO.Observers
                     PeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier(i.ToString())
                 });
             }
-            
+
             // Build a fake remote endpoint
             _fakeContext.Channel.RemoteAddress.Returns(EndpointBuilder.BuildNewEndPoint("192.0.0.1", 42042));
 
@@ -102,20 +102,21 @@ namespace Catalyst.Core.UnitTests.Rpc.IO.Observers
 
             var sendPeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("sender");
 
-            var protocolMessage = new GetPeerCountRequest().ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId);
-
-            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, protocolMessage);
+            var protocolMessage =
+                new GetPeerCountRequest().ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId);
+            var messageStream =
+                MessageStreamHelper.CreateStreamWithMessage(_fakeContext, _testScheduler, protocolMessage);
 
             var handler = new PeerCountRequestObserver(sendPeerIdentifier, peerRepository, _logger);
             handler.StartObserving(messageStream);
 
-            await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
+            _testScheduler.Start();
 
             var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();
             receivedCalls.Count.Should().Be(1);
 
             var sentResponseDto = (IMessageDto<ProtocolMessage>) receivedCalls[0].GetArguments().Single();
-            
+
             var responseContent = sentResponseDto.Content.FromProtocolMessage<GetPeerCountResponse>();
 
             responseContent.PeerCount.Should().Be(fakePeers);

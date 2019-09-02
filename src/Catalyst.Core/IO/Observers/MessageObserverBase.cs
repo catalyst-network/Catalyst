@@ -22,7 +22,6 @@
 #endregion
 
 using System;
-using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.IO.Observers;
@@ -53,7 +52,6 @@ namespace Catalyst.Core.IO.Observers
             MessageSubscription = messageStream
                .Where(m => m.Payload?.TypeUrl != null
                  && m.Payload.TypeUrl == _filterMessageType)
-               .SubscribeOn(NewThreadScheduler.Default)
                .Subscribe(this);
         }
 

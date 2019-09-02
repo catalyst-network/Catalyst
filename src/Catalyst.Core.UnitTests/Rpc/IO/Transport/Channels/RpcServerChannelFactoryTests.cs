@@ -23,17 +23,13 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
-using Catalyst.Core.Extensions;
-using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.KeySigner;
+using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.Rpc.Authentication;
 using Catalyst.Abstractions.Rpc.IO.Messaging.Correlation;
-using Catalyst.Core.IO.Codecs;
-using Catalyst.Core.IO.Handlers;
-using Catalyst.Core.IO.Messaging.Correlation;
+using Catalyst.Core.Extensions;
 using Catalyst.Core.IO.Codecs;
 using Catalyst.Core.IO.Handlers;
 using Catalyst.Core.IO.Messaging.Correlation;
@@ -46,24 +42,26 @@ using DotNetty.Codecs.Protobuf;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Embedded;
 using FluentAssertions;
+using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
 using Xunit;
 
 namespace Catalyst.Core.UnitTests.Rpc.IO.Transport.Channels
 {
-    public sealed class RpcServerChannelFactoryTests
+    public sealed class NodeRpcServerChannelFactoryTests
     {
-        public sealed class TestRpcServerChannelFactory : RpcServerChannelFactory
+        public sealed class TestNodeRpcServerChannelFactory : RpcServerChannelFactory
         {
             private readonly List<IChannelHandler> _handlers;
 
-            public TestRpcServerChannelFactory(IRpcMessageCorrelationManager correlationManager,
+            public TestNodeRpcServerChannelFactory(IRpcMessageCorrelationManager correlationManager,
                 IKeySigner keySigner,
                 IAuthenticationStrategy authenticationStrategy,
                 IPeerIdValidator peerIdValidator,
-                ISigningContextProvider signingContextProvider)
-                : base(correlationManager, keySigner, authenticationStrategy, peerIdValidator, signingContextProvider)
+                ISigningContextProvider signingContextProvider,
+                TestScheduler testScheduler)
+                : base(correlationManager, keySigner, authenticationStrategy, peerIdValidator, signingContextProvider, testScheduler)
             {
                 _handlers = HandlerGenerationFunction();
             }
@@ -71,12 +69,14 @@ namespace Catalyst.Core.UnitTests.Rpc.IO.Transport.Channels
             public IReadOnlyCollection<IChannelHandler> InheritedHandlers => _handlers;
         }
 
+        private readonly TestScheduler _testScheduler;
         private readonly IRpcMessageCorrelationManager _correlationManager;
-        private readonly TestRpcServerChannelFactory _factory;
+        private readonly TestNodeRpcServerChannelFactory _factory;
         private readonly IKeySigner _keySigner;
 
-        public RpcServerChannelFactoryTests()
+        public NodeRpcServerChannelFactoryTests()
         {
+            _testScheduler = new TestScheduler();
             _correlationManager = Substitute.For<IRpcMessageCorrelationManager>();
             _keySigner = Substitute.For<IKeySigner>();
 
@@ -89,16 +89,17 @@ namespace Catalyst.Core.UnitTests.Rpc.IO.Transport.Channels
             
             var peerIdValidator = Substitute.For<IPeerIdValidator>();
             peerIdValidator.ValidatePeerIdFormat(Arg.Any<PeerId>()).Returns(true);
-            _factory = new TestRpcServerChannelFactory(
+            _factory = new TestNodeRpcServerChannelFactory(
                 _correlationManager,
                 _keySigner,
                 authenticationStrategy,
                 peerIdValidator,
-                peerSettings);
+                peerSettings,
+                _testScheduler);
         }
 
         [Fact]
-        public void RpcServerChannelFactory_should_have_correct_handlers()
+        public void NodeRpcServerChannelFactory_should_have_correct_handlers()
         {
             _factory.InheritedHandlers.Count(h => h != null).Should().Be(10);
             var handlers = _factory.InheritedHandlers.ToArray();
@@ -115,7 +116,7 @@ namespace Catalyst.Core.UnitTests.Rpc.IO.Transport.Channels
         }
 
         [Fact]
-        public async Task RpcServerChannelFactory_should_put_the_correct_inbound_handlers_on_the_pipeline()
+        public async Task NodeRpcServerChannelFactory_should_put_the_correct_inbound_handlers_on_the_pipeline()
         {
             var testingChannel = new EmbeddedChannel("test".ToChannelId(),
                 true, _factory.InheritedHandlers.ToArray());
@@ -133,14 +134,14 @@ namespace Catalyst.Core.UnitTests.Rpc.IO.Transport.Channels
                 testingChannel.WriteInbound(protocolMessage);
                 _correlationManager.DidNotReceiveWithAnyArgs().TryMatchResponse(protocolMessage);
                 _keySigner.DidNotReceiveWithAnyArgs().Verify(null, null, null);
-                await messageStream.WaitForItemsOnDelayedStreamOnTaskPoolSchedulerAsync();
+                _testScheduler.Start();
                 observer.Received.Count.Should().Be(1);
                 observer.Received.Single().Payload.CorrelationId.ToCorrelationId().Id.Should().Be(correlationId.Id);
             }
         }
 
         [Fact]
-        public async Task RpcServerChannelFactory_should_put_the_correct_outbound_handlers_on_the_pipeline()
+        public async Task NodeRpcServerChannelFactory_should_put_the_correct_outbound_handlers_on_the_pipeline()
         {
             var testingChannel = new EmbeddedChannel("test".ToChannelId(),
                 true, _factory.InheritedHandlers.ToArray());

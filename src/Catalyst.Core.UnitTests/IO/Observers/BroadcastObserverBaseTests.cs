@@ -31,6 +31,7 @@ using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Deltas;
 using Catalyst.TestUtils;
 using FluentAssertions;
+using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
 using Xunit;
@@ -59,13 +60,16 @@ namespace Catalyst.Core.UnitTests.IO.Observers
         [Fact]
         public async Task OnNext_Should_Still_Get_Called_After_HandleBroadcast_Failure()
         {
+            var testScheduler = new TestScheduler();
             var candidateDeltaMessages = Enumerable.Repeat(DeltaHelper.GetCandidateDelta(), 10).ToArray();
 
-            var messageStream = MessageStreamHelper.CreateStreamWithMessages(candidateDeltaMessages);
+            var messageStream = MessageStreamHelper.CreateStreamWithMessages(testScheduler, candidateDeltaMessages);
             using (var observer = new FailingBroadCastObserver(Substitute.For<ILogger>()))
             {
                 observer.StartObserving(messageStream);
-                await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync(TimeSpan.FromSeconds(1));
+
+                testScheduler.Start();
+
                 observer.Counter.Should().Be(10);
             }
         }

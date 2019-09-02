@@ -23,17 +23,15 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using Catalyst.Abstractions.Config;
 using Catalyst.Abstractions.P2P.ReputationSystem;
-using Catalyst.Abstractions.Repository;
 using Catalyst.Core.P2P.Models;
 using Catalyst.Core.P2P.Repository;
 using Catalyst.Core.P2P.ReputationSystem;
 using Catalyst.TestUtils;
+using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
 using Xunit;
@@ -42,11 +40,13 @@ namespace Catalyst.Core.UnitTests.P2P.ReputationSystem
 {
     public sealed class ReputationManagerTests
     {
+        private readonly TestScheduler _testScheduler;
         private readonly ILogger _subbedLogger;
         private readonly IPeerRepository _subbedPeerRepository;
 
         public ReputationManagerTests()
         {
+            _testScheduler = new TestScheduler();
             _subbedLogger = Substitute.For<ILogger>();
             _subbedPeerRepository = Substitute.For<IPeerRepository>();
         }
@@ -130,7 +130,7 @@ namespace Catalyst.Core.UnitTests.P2P.ReputationSystem
         }
 
         [Fact]
-        public async void Can_Merge_Streams_And_Read_Items_Pushed_On_Separate_Streams()
+        public void Can_Merge_Streams_And_Read_Items_Pushed_On_Separate_Streams()
         {
             var pid1 = PeerIdentifierHelper.GetPeerIdentifier("peer1");
             var pid2 = PeerIdentifierHelper.GetPeerIdentifier("peer2");
@@ -162,23 +162,22 @@ namespace Catalyst.Core.UnitTests.P2P.ReputationSystem
 
             var reputationManager = new ReputationManager(_subbedPeerRepository, _subbedLogger);
         
-            var secondStreamSubject = new ReplaySubject<IPeerReputationChange>(1);
+            var secondStreamSubject = new ReplaySubject<IPeerReputationChange>(1, _testScheduler);
             var messageStream = secondStreamSubject.AsObservable();
 
-            messageStream.SubscribeOn(ImmediateScheduler.Instance).Subscribe((reputationChange) => Substitute.For<ILogger>());
+            messageStream.Subscribe((reputationChange) => Substitute.For<ILogger>());
             
             reputationManager.MergeReputationStream(messageStream);
 
-            var streamObserver = Substitute.For<System.IObserver<IPeerReputationChange>>();
+            var streamObserver = Substitute.For<IObserver<IPeerReputationChange>>();
             
-            using (reputationManager.MergedEventStream.SubscribeOn(ImmediateScheduler.Instance).Subscribe(streamObserver.OnNext))
+            using (reputationManager.MergedEventStream.Subscribe(streamObserver.OnNext))
             {
                 reputationManager.ReputationEvent.OnNext(peerReputationChangeEvent1);
                 secondStreamSubject.OnNext(peerReputationChangeEvent2);
 
-                await TaskHelper.WaitForAsync(() => streamObserver.ReceivedCalls().Count() >= 2,
-                    TimeSpan.FromMilliseconds(1000));
-                
+                _testScheduler.Start();
+
                 streamObserver.Received(1).OnNext(Arg.Is<IPeerReputationChange>(r => r.PeerIdentifier.Equals(pid1)));
                 streamObserver.Received(1).OnNext(Arg.Is<IPeerReputationChange>(r => r.PeerIdentifier.Equals(pid2)));
             }

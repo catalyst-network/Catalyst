@@ -7,7 +7,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		..\.dockerignore = ..\.dockerignore
 		..\.gitignore = ..\.gitignore
-		..\addLicenseHeader.sh = ..\addLicenseHeader.sh
 		Catalyst.sln.DotSettings = Catalyst.sln.DotSettings
 		Common.IntegrationTests.props = Common.IntegrationTests.props
 		Common.Projects.props = Common.Projects.props
@@ -15,12 +14,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Common.UnitTests.props = Common.UnitTests.props
 		..\CONTRIBUTING.md = ..\CONTRIBUTING.md
 		..\COPYING = ..\COPYING
-		..\dns-docker-compose.yml = ..\dns-docker-compose.yml
 		..\Dockerfile = ..\Dockerfile
-		..\entrypoint.sh = ..\entrypoint.sh
 		..\GUIDELINES.md = ..\GUIDELINES.md
 		..\README.md = ..\README.md
-		..\testnet-docker-compose.yml = ..\testnet-docker-compose.yml
+		..\scripts\addLicenseHeader.sh = ..\scripts\addLicenseHeader.sh
+		..\scripts\run-node.sh = ..\scripts\run-node.sh
+		..\devnet-docker-compose.yml = ..\devnet-docker-compose.yml
+		..\azure-pipelines.yml = ..\azure-pipelines.yml
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Core", "Catalyst.Core\Catalyst.Core.csproj", "{70A9269E-666A-4F38-8FCB-BCF96B03FD15}"

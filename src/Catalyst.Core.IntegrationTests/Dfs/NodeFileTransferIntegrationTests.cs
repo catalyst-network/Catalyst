@@ -25,25 +25,18 @@ using System;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using Catalyst.Core.Config;
-using Catalyst.Core.Extensions;
-using Catalyst.Core.FileTransfer;
 using Catalyst.Abstractions.Cryptography;
-using Catalyst.Abstractions.FileTransfer;
 using Catalyst.Abstractions.Dfs;
+using Catalyst.Abstractions.FileTransfer;
 using Catalyst.Abstractions.Rpc;
 using Catalyst.Abstractions.Types;
-using Catalyst.Core.IO.Messaging.Correlation;
-using Catalyst.Core.P2P;
-using Catalyst.Abstractions.Types;
+using Catalyst.Core.Config;
 using Catalyst.Core.Dfs;
+using Catalyst.Core.Extensions;
 using Catalyst.Core.FileTransfer;
 using Catalyst.Core.IO.Messaging.Correlation;
-using Catalyst.Core.Dfs;
-using Catalyst.Core.Rpc.IO.Observers;
 using Catalyst.Core.P2P;
 using Catalyst.Core.Rpc.IO.Observers;
-using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
@@ -171,6 +164,7 @@ namespace Catalyst.Core.IntegrationTests.Dfs
             }
 
             Assert.True(fileTransferInformation.ChunkIndicatorsTrue());
+
             await TaskHelper.WaitForAsync(() => fileTransferInformation.DfsHash != null, TimeSpan.FromSeconds(15));
             Assert.NotNull(fileTransferInformation.DfsHash);
 

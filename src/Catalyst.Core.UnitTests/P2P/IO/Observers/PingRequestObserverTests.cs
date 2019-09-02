@@ -25,13 +25,13 @@ using System;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Catalyst.Core.Extensions;
-using Catalyst.Core.Extensions;
 using Catalyst.Core.IO.Messaging.Correlation;
 using Catalyst.Core.IO.Messaging.Dto;
 using Catalyst.Core.P2P.IO.Observers;
 using Catalyst.Protocol.IPPN;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
+using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
 using Xunit;
@@ -40,11 +40,13 @@ namespace Catalyst.Core.UnitTests.P2P.IO.Observers
 {
     public sealed class PingRequestObserverTests : IDisposable
     {
+        private readonly TestScheduler _testScheduler;
         private readonly ILogger _subbedLogger;
         private readonly PingRequestObserver _pingRequestObserver;
 
         public PingRequestObserverTests()
         {
+            _testScheduler = new TestScheduler();
             _subbedLogger = Substitute.For<ILogger>();
             _pingRequestObserver = new PingRequestObserver(PeerIdentifierHelper.GetPeerIdentifier("sender"),
                 _subbedLogger
@@ -58,11 +60,11 @@ namespace Catalyst.Core.UnitTests.P2P.IO.Observers
             
             var fakeContext = Substitute.For<IChannelHandlerContext>();
             var channeledAny = new ObserverDto(fakeContext, pingRequestMessage.ToProtocolMessage(PeerIdHelper.GetPeerId(), CorrelationId.GenerateCorrelationId()));
-            var observableStream = new[] {channeledAny}.ToObservable();
+            var observableStream = new[] {channeledAny}.ToObservable(_testScheduler);
             
             _pingRequestObserver.StartObserving(observableStream);
 
-            await observableStream.WaitForItemsOnDelayedStreamOnTaskPoolSchedulerAsync(1);
+            _testScheduler.Start();
 
             await fakeContext.Channel.ReceivedWithAnyArgs(1)
                .WriteAndFlushAsync(new PingResponse().ToProtocolMessage(PeerIdHelper.GetPeerId(), CorrelationId.GenerateCorrelationId()));

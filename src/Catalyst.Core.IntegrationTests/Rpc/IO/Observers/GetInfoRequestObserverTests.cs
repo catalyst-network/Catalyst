@@ -25,13 +25,9 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Core.Config;
 using Catalyst.Core.Extensions;
-using Catalyst.Abstractions.IO.Messaging.Dto;
-using Catalyst.Abstractions.Rpc;
-using Catalyst.Core.IO.Messaging.Dto;
-using Catalyst.Abstractions.Types;
-using Catalyst.Core.Rpc.IO.Observers;
 using Catalyst.Core.Rpc.IO.Observers;
 using Catalyst.Protocol;
 using Catalyst.Protocol.Common;
@@ -40,6 +36,7 @@ using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using FluentAssertions;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Reactive.Testing;
 using Newtonsoft.Json;
 using NSubstitute;
 using Serilog;
@@ -49,12 +46,14 @@ namespace Catalyst.Core.IntegrationTests.Rpc.IO.Observers
 {
     public sealed class GetInfoRequestObserverTests
     {
+        private readonly TestScheduler _testScheduler;
         private readonly ILogger _logger;
         private readonly IChannelHandlerContext _fakeContext;
         private readonly IConfigurationRoot _config;
 
         public GetInfoRequestObserverTests()
         {
+            _testScheduler = new TestScheduler();
             _config = new ConfigurationBuilder()
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ShellNodesConfigFile))
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Protocol.Common.Network.Devnet)))
@@ -80,7 +79,7 @@ namespace Catalyst.Core.IntegrationTests.Rpc.IO.Observers
                .SerializeObject(_config.GetSection("CatalystNodeConfiguration").AsEnumerable(),
                     Formatting.Indented);
 
-            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext,
+            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, _testScheduler,
                 protocolMessage
             );
             
@@ -89,7 +88,7 @@ namespace Catalyst.Core.IntegrationTests.Rpc.IO.Observers
 
             handler.StartObserving(messageStream);
 
-            await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
+            _testScheduler.Start();
 
             await _fakeContext.Channel.Received(1).WriteAndFlushAsync(Arg.Any<object>());
 

@@ -24,18 +24,17 @@
 using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.IO.EventLoop;
 using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.IO.Transport.Channels;
-using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.KeySigner;
+using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.IO.Messaging.Correlation;
-using Catalyst.Core.IO.Handlers;
-using Catalyst.Core.IO.Transport.Channels;
 using Catalyst.Core.IO.Handlers;
 using Catalyst.Core.IO.Transport.Channels;
 using Catalyst.Protocol.Common;
@@ -49,6 +48,7 @@ namespace Catalyst.Core.P2P.IO.Transport.Channels
 {
     public class PeerClientChannelFactory : UdpClientChannelFactory
     {
+        private readonly IScheduler _scheduler;
         private readonly IKeySigner _keySigner;
         private readonly IPeerMessageCorrelationManager _correlationManager;
         private readonly IPeerIdValidator _peerIdValidator;
@@ -58,41 +58,41 @@ namespace Catalyst.Core.P2P.IO.Transport.Channels
         {
             get
             {
-                return () =>
+                return () => new List<IChannelHandler>
                 {
-                    return new List<IChannelHandler>
-                    {
-                        new FlushPipelineHandler<DatagramPacket>(),
-                        new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
-                            new DatagramPacketDecoder(new ProtobufDecoder(ProtocolMessageSigned.Parser)),
-                            new DatagramPacketEncoder<IMessage>(new ProtobufEncoder())
-                        ),
-                        new PeerIdValidationHandler(_peerIdValidator),
-                        new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
-                            new ProtocolMessageVerifyHandler(_keySigner, _signingContextProvider),
-                            new ProtocolMessageSignHandler(_keySigner, _signingContextProvider)
-                        ),
-                        new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
-                            new CorrelationHandler<IPeerMessageCorrelationManager>(_correlationManager),
-                            new CorrelatableHandler<IPeerMessageCorrelationManager>(_correlationManager)
-                        ),
-                        new ObservableServiceHandler()
-                    };
+                    new FlushPipelineHandler<DatagramPacket>(),
+                    new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
+                        new DatagramPacketDecoder(new ProtobufDecoder(ProtocolMessageSigned.Parser)),
+                        new DatagramPacketEncoder<IMessage>(new ProtobufEncoder())
+                    ),
+                    new PeerIdValidationHandler(_peerIdValidator),
+                    new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
+                        new ProtocolMessageVerifyHandler(_keySigner, _signingContextProvider),
+                        new ProtocolMessageSignHandler(_keySigner, _signingContextProvider)
+                    ),
+                    new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
+                        new CorrelationHandler<IPeerMessageCorrelationManager>(_correlationManager),
+                        new CorrelatableHandler<IPeerMessageCorrelationManager>(_correlationManager)
+                    ),
+                    new ObservableServiceHandler(_scheduler)
                 };
             }
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="keySigner"></param>
         /// <param name="correlationManager"></param>
         /// <param name="peerIdValidator"></param>
+        /// <param name="signingContextProvider"></param>
+        /// <param name="scheduler"></param>
         public PeerClientChannelFactory(IKeySigner keySigner,
             IPeerMessageCorrelationManager correlationManager,
             IPeerIdValidator peerIdValidator,
-            ISigningContextProvider signingContextProvider)
+            ISigningContextProvider signingContextProvider,
+            IScheduler scheduler = null)
         {
+            _scheduler = scheduler ?? Scheduler.Default;
             _keySigner = keySigner;
             _correlationManager = correlationManager;
             _peerIdValidator = peerIdValidator;

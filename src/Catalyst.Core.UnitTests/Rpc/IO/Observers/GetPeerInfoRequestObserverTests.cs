@@ -27,15 +27,10 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Net;
 using System.Threading.Tasks;
-using Catalyst.Core.Extensions;
 using Catalyst.Abstractions.IO.Messaging.Dto;
-using Catalyst.Abstractions.Repository;
-using Catalyst.Core.IO.Messaging.Dto;
+using Catalyst.Core.Extensions;
 using Catalyst.Core.Network;
-using Catalyst.Core.P2P;
 using Catalyst.Core.P2P.Models;
-using Catalyst.Core.Rpc.IO.Observers;
-using Catalyst.Core.Network;
 using Catalyst.Core.P2P.Repository;
 using Catalyst.Core.Rpc.IO.Observers;
 using Catalyst.Protocol;
@@ -44,6 +39,7 @@ using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using FluentAssertions;
+using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
 using Xunit;
@@ -51,7 +47,7 @@ using Xunit;
 namespace Catalyst.Core.UnitTests.Rpc.IO.Observers
 {
     /// <summary>
-    /// Tests the get peer info calls
+    ///     Tests the get peer info calls
     /// </summary>
     public sealed class GetPeerInfoRequestObserverTests
     {
@@ -71,35 +67,40 @@ namespace Catalyst.Core.UnitTests.Rpc.IO.Observers
 
             _peerRepository = Substitute.For<IPeerRepository>();
             _peerRepository.FindAll(Arg.Any<Expression<Func<Peer, bool>>>())
-               .Returns(ci =>
-                {
-                    return peers.Where(p => ((Expression<Func<Peer, bool>>) ci[0]).Compile()(p));
-                });
+               .Returns(ci => { return peers.Where(p => ((Expression<Func<Peer, bool>>) ci[0]).Compile()(p)); });
         }
 
         public IEnumerable<Peer> GetPeerTestData()
         {
-            yield return new Peer 
+            yield return new Peer
             {
-                PeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier($"publickey-1", IPAddress.Parse($"172.0.0.1"), 9090), LastSeen = DateTime.UtcNow, Created = DateTime.UtcNow
+                PeerIdentifier =
+                    PeerIdentifierHelper.GetPeerIdentifier("publickey-1", IPAddress.Parse("172.0.0.1"), 9090),
+                LastSeen = DateTime.UtcNow, Created = DateTime.UtcNow
             };
             yield return new Peer
             {
-                PeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier($"publickey-2", IPAddress.Parse($"172.0.0.2"), 9090), LastSeen = DateTime.UtcNow, Created = DateTime.UtcNow
+                PeerIdentifier =
+                    PeerIdentifierHelper.GetPeerIdentifier("publickey-2", IPAddress.Parse("172.0.0.2"), 9090),
+                LastSeen = DateTime.UtcNow, Created = DateTime.UtcNow
             };
             yield return new Peer
             {
-                PeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier($"publickey-3", IPAddress.Parse($"172.0.0.3"), 9090), LastSeen = DateTime.UtcNow, Created = DateTime.UtcNow
+                PeerIdentifier =
+                    PeerIdentifierHelper.GetPeerIdentifier("publickey-3", IPAddress.Parse("172.0.0.3"), 9090),
+                LastSeen = DateTime.UtcNow, Created = DateTime.UtcNow
             };
             yield return new Peer
             {
-                PeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier($"publickey-3", IPAddress.Parse($"172.0.0.3"), 9090), LastSeen = DateTime.UtcNow, Created = DateTime.UtcNow
+                PeerIdentifier =
+                    PeerIdentifierHelper.GetPeerIdentifier("publickey-3", IPAddress.Parse("172.0.0.3"), 9090),
+                LastSeen = DateTime.UtcNow, Created = DateTime.UtcNow
             };
         }
 
         /// <summary>
-        /// Tests the get peer info request and response via RPC.
-        /// Peer is expected to be found in this case
+        ///     Tests the get peer info request and response via RPC.
+        ///     Peer is expected to be found in this case
         /// </summary>
         /// <param name="publicKey">Public key of the peer whose reputation is of interest</param>
         /// <param name="ipAddress">Ip address of the peer whose reputation is of interest</param>
@@ -120,8 +121,8 @@ namespace Catalyst.Core.UnitTests.Rpc.IO.Observers
         }
 
         /// <summary>
-        /// Tests the get peer info request and response via RPC.
-        /// Peer is expected to be found in this case
+        ///     Tests the get peer info request and response via RPC.
+        ///     Peer is expected to be found in this case
         /// </summary>
         /// <param name="publicKey">Public key of the peer whose reputation is of interest</param>
         /// <param name="ipAddress">Ip address of the peer whose reputation is of interest</param>
@@ -141,8 +142,8 @@ namespace Catalyst.Core.UnitTests.Rpc.IO.Observers
         }
 
         /// <summary>
-        /// Tests the get peer info request and response via RPC.
-        /// Peer is NOT expected to be found in this case, as they do not exist
+        ///     Tests the get peer info request and response via RPC.
+        ///     Peer is NOT expected to be found in this case, as they do not exist
         /// </summary>
         /// <param name="publicKey">Public key of the peer whose reputation is of interest</param>
         /// <param name="ipAddress">Ip address of the peer whose reputation is of interest</param>
@@ -159,11 +160,13 @@ namespace Catalyst.Core.UnitTests.Rpc.IO.Observers
         }
 
         /// <summary>
-        /// Tests the data/communication through protobuf
+        ///     Tests the data/communication through protobuf
         /// </summary>
         /// <returns></returns>
         private async Task<GetPeerInfoResponse> GetPeerInfoTest(PeerId peerId)
         {
+            var testScheduler = new TestScheduler();
+
             _fakeContext.Channel.RemoteAddress.Returns(EndpointBuilder.BuildNewEndPoint("192.0.0.1", 42042));
 
             var senderPeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("sender");
@@ -172,12 +175,12 @@ namespace Catalyst.Core.UnitTests.Rpc.IO.Observers
             var protocolMessage =
                 getPeerInfoRequest.ToProtocolMessage(senderPeerIdentifier.PeerId);
 
-            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, protocolMessage);
-
+            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, testScheduler, protocolMessage);
             var handler = new GetPeerInfoRequestObserver(senderPeerIdentifier, _logger, _peerRepository);
+
             handler.StartObserving(messageStream);
 
-            await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
+            testScheduler.Start();
 
             var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();
             receivedCalls.Count.Should().Be(1);
