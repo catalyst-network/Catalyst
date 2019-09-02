@@ -107,12 +107,12 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Messaging.Broadcast
         }
 
         [Fact]
-        public async Task Broadcast_Can_Execute_Proto_Handler()
+        public void Broadcast_Can_Execute_Proto_Handler()
         {
             var testScheduler = new TestScheduler();
             var handler = new TestMessageObserver<TransactionBroadcast>(Substitute.For<ILogger>());
 
-            var protoDatagramChannelHandler = new ObservableServiceHandler();
+            var protoDatagramChannelHandler = new ObservableServiceHandler(testScheduler);
             handler.StartObserving(protoDatagramChannelHandler.MessageStream);
 
             var channel = new EmbeddedChannel(new ProtocolMessageVerifyHandler(_keySigner, _signingContextProvider), _broadcastHandler, protoDatagramChannelHandler);
