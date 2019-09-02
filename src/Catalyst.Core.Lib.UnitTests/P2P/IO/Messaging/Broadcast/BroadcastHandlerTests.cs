@@ -41,6 +41,7 @@ using Catalyst.Protocol.Transaction;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels.Embedded;
 using FluentAssertions;
+using Microsoft.Reactive.Testing;
 using NSubstitute;
 using NSubstitute.Exceptions;
 using NSubstitute.ReceivedExtensions;
@@ -106,28 +107,20 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Messaging.Broadcast
         }
 
         [Fact]
-        public async Task Broadcast_Can_Execute_Proto_Handler()
+        public void Broadcast_Can_Execute_Proto_Handler()
         {
+            var testScheduler = new TestScheduler();
             var handler = new TestMessageObserver<TransactionBroadcast>(Substitute.For<ILogger>());
 
-            var protoDatagramChannelHandler = new ObservableServiceHandler();
+            var protoDatagramChannelHandler = new ObservableServiceHandler(testScheduler);
             handler.StartObserving(protoDatagramChannelHandler.MessageStream);
 
             var channel = new EmbeddedChannel(new ProtocolMessageVerifyHandler(_keySigner, _signingContextProvider), _broadcastHandler, protoDatagramChannelHandler);
             channel.WriteInbound(_broadcastMessageSigned);
 
-            var result = await TaskHelper.WaitForAsync(() =>
-            {
-                try
-                {
-                    handler.SubstituteObserver.Received(1).OnNext(Arg.Any<TransactionBroadcast>());
-                    return true;
-                }
-                catch (ReceivedCallsException) { }
+            testScheduler.Start();
 
-                return false;
-            }, TimeSpan.FromSeconds(5));
-            result.Should().BeTrue();
+            handler.SubstituteObserver.Received(1).OnNext(Arg.Any<TransactionBroadcast>());
         }
     }
 }

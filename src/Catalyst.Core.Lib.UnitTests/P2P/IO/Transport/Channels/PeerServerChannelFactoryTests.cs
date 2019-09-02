@@ -21,10 +21,8 @@
 
 #endregion
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
@@ -37,6 +35,7 @@ using Catalyst.Common.IO.Handlers;
 using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Common.Util;
 using Catalyst.Core.Lib.P2P.IO.Transport.Channels;
+using Catalyst.Cryptography.BulletProofs.Wrapper;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
@@ -44,6 +43,7 @@ using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Embedded;
 using FluentAssertions;
+using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
 using Xunit;
@@ -60,8 +60,10 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Transport.Channels
                 IBroadcastManager broadcastManager,
                 IKeySigner keySigner,
                 IPeerIdValidator peerIdValidator,
-                ISigningContextProvider signingContextProvider)
-                : base(correlationManager, broadcastManager, keySigner, peerIdValidator, signingContextProvider)
+                ISigningContextProvider signingContextProvider,
+                TestScheduler testScheduler)
+                : base(correlationManager, broadcastManager, keySigner, peerIdValidator, signingContextProvider,
+                    testScheduler)
             {
                 _handlers = HandlerGenerationFunction();
             }
@@ -69,6 +71,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Transport.Channels
             public IReadOnlyCollection<IChannelHandler> InheritedHandlers => _handlers;
         }
 
+        private readonly TestScheduler _testScheduler;
         private readonly IPeerMessageCorrelationManager _correlationManager;
         private readonly IBroadcastManager _gossipManager;
         private readonly IKeySigner _keySigner;
@@ -79,6 +82,7 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Transport.Channels
 
         public PeerServerChannelFactoryTests()
         {
+            _testScheduler = new TestScheduler();
             _correlationManager = Substitute.For<IPeerMessageCorrelationManager>();
             _gossipManager = Substitute.For<IBroadcastManager>();
             _keySigner = Substitute.For<IKeySigner>();
@@ -95,11 +99,11 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Transport.Channels
                 _gossipManager,
                 _keySigner,
                 peerValidator,
-                signatureContext);
-
+                signatureContext,
+                _testScheduler);
             _senderId = PeerIdHelper.GetPeerId("sender");
             _correlationId = CorrelationId.GenerateCorrelationId();
-            _signature = ByteUtil.GenerateRandomByteArray(Cryptography.BulletProofs.Wrapper.FFI.SignatureLength);
+            _signature = ByteUtil.GenerateRandomByteArray(FFI.SignatureLength);
             _keySigner.Verify(Arg.Any<ISignature>(), Arg.Any<byte[]>(), default)
                .ReturnsForAnyArgs(true);
         }
@@ -133,9 +137,9 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Transport.Channels
             };
 
             var observer = new ProtocolMessageObserver(0, Substitute.For<ILogger>());
-           
+
             var messageStream = GetObservableServiceHandler().MessageStream;
-            
+
             using (messageStream.Subscribe(observer))
             {
                 testingChannel.WriteInbound(signedMessage);
@@ -144,32 +148,28 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Transport.Channels
 
                 _keySigner.ReceivedWithAnyArgs(1).Verify(null, null, null);
 
-                await messageStream.WaitForItemsOnDelayedStreamOnTaskPoolSchedulerAsync();
+                _testScheduler.Start();
 
                 observer.Received.Count.Should().Be(1);
                 observer.Received.Single().Payload.CorrelationId.ToCorrelationId().Id.Should().Be(_correlationId.Id);
             }
         }
-         
+
         [Fact]
-        public async Task Observer_Exception_Should_Not_Stop_Correct_Messages_Reception()
+        public void Observer_Exception_Should_Not_Stop_Correct_Messages_Reception()
         {
             var testingChannel = new EmbeddedChannel("testWithExceptions".ToChannelId(),
                 true, _factory.InheritedHandlers.ToArray());
-            
+
             var serverIdentifier = PeerIdentifierHelper.GetPeerIdentifier("server");
             using (var badHandler = new FailingRequestObserver(Substitute.For<ILogger>(), serverIdentifier))
             {
                 var messageStream = GetObservableServiceHandler().MessageStream;
                 badHandler.StartObserving(messageStream);
 
-                Enumerable.Range(0, 10).AsParallel().ForAll(i => testingChannel.WriteInbound(GetSignedMessage()));
+                Enumerable.Range(0, 10).ToList().ForEach(i => testingChannel.WriteInbound(GetSignedMessage()));
 
-                await TaskHelper.WaitForAsync(
-                    () => testingChannel.OutboundMessages.Count >= 5, 
-                    TimeSpan.FromSeconds(5));
-
-                await messageStream.WaitForItemsOnDelayedStreamOnTaskPoolSchedulerAsync().ConfigureAwait(false);
+                _testScheduler.Start();
 
                 badHandler.Counter.Should().Be(10);
             }

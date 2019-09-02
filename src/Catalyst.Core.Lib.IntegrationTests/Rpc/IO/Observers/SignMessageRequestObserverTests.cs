@@ -29,8 +29,6 @@ using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
-using Catalyst.Common.IO.Messaging.Dto;
-using Catalyst.Common.Types;
 using Catalyst.Core.Lib.Rpc.IO.Observers;
 using Catalyst.Protocol;
 using Catalyst.Protocol.Common;
@@ -38,6 +36,7 @@ using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using FluentAssertions;
+using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
 using Xunit;
@@ -47,6 +46,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.Rpc.IO.Observers
 {
     public sealed class SignMessageRequestObserverTests : ConfigFileBasedTest
     {
+        private readonly TestScheduler _testScheduler;
         private readonly ILifetimeScope _scope;
         private readonly ILogger _logger;
         private readonly IKeySigner _keySigner;
@@ -60,6 +60,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.Rpc.IO.Observers
             Path.Combine(Constants.ConfigSubFolder, Constants.ShellNodesConfigFile)
         }, output)
         {
+            _testScheduler = new TestScheduler();
             ContainerProvider.ConfigureContainerBuilder();
             SocketPortHelper.AlterConfigurationToGetUniquePort(ContainerProvider.ConfigurationRoot, CurrentTestName);
 
@@ -86,12 +87,14 @@ namespace Catalyst.Core.Lib.IntegrationTests.Rpc.IO.Observers
             var protocolMessage =
                 signMessageRequest.ToProtocolMessage(sender.PeerId);
 
-            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, protocolMessage);
+            var messageStream =
+                MessageStreamHelper.CreateStreamWithMessage(_fakeContext, _testScheduler, protocolMessage);
             var handler =
                 new SignMessageRequestObserver(sender, _logger, _keySigner);
+
             handler.StartObserving(messageStream);
 
-            await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
+            _testScheduler.Start();
 
             var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();
             receivedCalls.Count.Should().Be(1);

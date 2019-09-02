@@ -21,13 +21,16 @@
 
 #endregion
 
+using System.Threading.Tasks;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.IO.Handlers;
 using Catalyst.Common.IO.Messaging.Correlation;
+using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
+using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using Google.Protobuf;
@@ -48,25 +51,22 @@ namespace Catalyst.Common.UnitTests.IO.Handlers
         }
 
         [Fact]
-        public void Does_Process_IMessageDto_Types()
+        public async Task Does_Process_IMessageDto_Types()
         {
-            var fakeRequestMessageDto = Substitute.For<IMessageDto<ProtocolMessage>>();
-            fakeRequestMessageDto.Content.Returns(new PingRequest().ToProtocolMessage(
-                PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId
-            ));
-            
-            fakeRequestMessageDto.SenderPeerIdentifier.Returns(PeerIdentifierHelper.GetPeerIdentifier("sender"));
+            var protocolMessage =
+                new PingRequest().ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId);
+            var messageDto = new MessageDto(protocolMessage, PeerIdentifierHelper.GetPeerIdentifier("recipient"));
 
             var correlatableHandler = new CorrelatableHandler<IMessageCorrelationManager>(_fakeMessageCorrelationManager);
 
-            correlatableHandler.WriteAsync(_fakeContext, fakeRequestMessageDto);
+            await correlatableHandler.WriteAsync(_fakeContext, messageDto);
             
             _fakeMessageCorrelationManager
                .ReceivedWithAnyArgs()
                .AddPendingRequest(Arg.Any<CorrelatableMessage<ProtocolMessage>>()
                 );
 
-            _fakeContext.ReceivedWithAnyArgs(1).WriteAsync(Arg.Any<IMessageDto<ProtocolMessage>>());
+            await _fakeContext.ReceivedWithAnyArgs(1).WriteAsync(Arg.Any<IMessageDto<ProtocolMessage>>());
         }
 
         [Fact]

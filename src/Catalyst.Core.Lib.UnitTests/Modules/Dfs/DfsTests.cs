@@ -29,7 +29,6 @@ using System.Threading.Tasks;
 using Catalyst.Common.Config;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.IO.Messaging.Correlation;
-using Catalyst.TestUtils;
 using FluentAssertions;
 using Ipfs;
 using Ipfs.CoreApi;
@@ -61,7 +60,8 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Dfs
             _expectedCid = new Cid
             {
                 Encoding = Constants.EncodingAlgorithm.ToString().ToLowerInvariant(),
-                Hash = new MultiHash(MultiHash.GetHashAlgorithmName(Constants.HashAlgorithmType.GetHashCode()), hashBits)
+                Hash = new MultiHash(MultiHash.GetHashAlgorithmName(Constants.HashAlgorithmType.GetHashCode()),
+                    hashBits)
             };
 
             _addedRecord = Substitute.For<IFileSystemNode>();
@@ -84,7 +84,8 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Dfs
         [Fact]
         public async Task AddAsync_Should_Rely_On_IpfsEngine_And_Return_Record_Id()
         {
-            _ipfsEngine.FileSystem.AddAsync(Stream.Null, Arg.Any<string>(), Arg.Any<AddFileOptions>(), Arg.Any<CancellationToken>())
+            _ipfsEngine.FileSystem.AddAsync(Stream.Null, Arg.Any<string>(), Arg.Any<AddFileOptions>(),
+                    Arg.Any<CancellationToken>())
                .Returns(c => Task.FromResult(_addedRecord));
 
             var record = await _dfs.AddAsync(Stream.Null);
@@ -115,64 +116,13 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Dfs
             text.Should().Be("the other content");
         }
 
-        [Fact]
-        public void AddTextAsync_Should_Be_Cancellable()
-        {
-            _ipfsEngine.FileSystem.AddTextAsync(default, default, default)
-               .ReturnsForAnyArgs(ci => SimulateTaskLongerThanCancellation(ci, 2, _addedRecord));
-
-            AssertAsyncCallGotCancelled(_dfs.AddTextAsync("this is taking too long", _cancellationTokenSource.Token));
-        }
-
-        [Fact]
-        public void AddAsync_Should_Be_Cancellable()
-        {
-            _ipfsEngine.FileSystem.AddAsync(default, default, default, default)
-               .ReturnsForAnyArgs(ci => SimulateTaskLongerThanCancellation(ci, 3, _addedRecord));
-
-            AssertAsyncCallGotCancelled(_dfs.AddAsync(Stream.Null, "this is taking too long", _cancellationTokenSource.Token));
-        }
-
-        [Fact]
-        public void ReadTextAsync_Should_Be_Cancellable()
-        {
-            _ipfsEngine.FileSystem.ReadAllTextAsync(default, default)
-               .ReturnsForAnyArgs(ci => SimulateTaskLongerThanCancellation(ci, 1, "some result"));
-
-            AssertAsyncCallGotCancelled(_dfs.ReadTextAsync("path", _cancellationTokenSource.Token));
-        }
-
-        [Fact]
-        public void ReadAsync_Should_Be_Cancellable()
-        {
-            _ipfsEngine.FileSystem.ReadFileAsync(default, default)
-               .ReturnsForAnyArgs(ci => SimulateTaskLongerThanCancellation(ci, 1, Stream.Null));
-
-            AssertAsyncCallGotCancelled(_dfs.ReadAsync("path", _cancellationTokenSource.Token));
-        }
-
-        private void AssertAsyncCallGotCancelled<T>(Task<T> asyncCall)
-        {
-            new Action(() => asyncCall.GetAwaiter().GetResult()).Should().Throw<TaskCanceledException>()
-               .And.CancellationToken.Should().Be(_cancellationTokenSource.Token);
-        }
-
-        private async Task<T> SimulateTaskLongerThanCancellation<T>(CallInfo callInfo, int cancellationTokenArgPosition, T returnValue)
-        {
-            var cancellationToken = (CancellationToken) callInfo[cancellationTokenArgPosition];
-            await TaskHelper.WaitForAsync(() => cancellationToken.IsCancellationRequested,
-                TimeSpan.FromMilliseconds(DelayInMs * DelayMultiplier)).ConfigureAwait(false);
-            await Task.Delay(DelayInMs, cancellationToken).ConfigureAwait(false);
-            return returnValue;
-        }
-
         private void Dispose(bool disposing)
         {
             if (!disposing)
             {
                 return;
             }
-            
+
             _cancellationTokenSource?.Dispose();
         }
 

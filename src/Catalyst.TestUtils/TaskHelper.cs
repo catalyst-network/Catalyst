@@ -61,7 +61,9 @@ namespace Catalyst.TestUtils
             }
         }
 
-        public static async Task WaitForAsyncOrThrow(Expression<Func<bool>> condition, TimeSpan timeout = default, TimeSpan waitPeriod = default)
+        public static async Task WaitForAsyncOrThrow(Expression<Func<bool>> condition,
+            TimeSpan timeout = default,
+            TimeSpan waitPeriod = default)
         {
             var timeoutDefaulted = timeout == default ? TimeSpan.FromSeconds(2) : timeout;
             var delay = waitPeriod == default ? TimeSpan.FromMilliseconds(100) : waitPeriod;
@@ -87,7 +89,7 @@ namespace Catalyst.TestUtils
         [Fact]
         public async Task WaitFor_Should_Throw_Descriptive_Message_After_Timeout()
         {
-            int attempts = 0;
+            var attempts = 0;
 
             var waitDelay = TimeSpan.FromMilliseconds(100);
             var timeout = TimeSpan.FromMilliseconds(500);
@@ -95,7 +97,8 @@ namespace Catalyst.TestUtils
             var watch = new Stopwatch();
             watch.Start();
             var success = await TaskHelper.WaitForAsync(
-                    () => IncreaseAndCheckIfAboveLimit(ref attempts, (int) (timeout.TotalMilliseconds / waitDelay.TotalMilliseconds) + 1), timeout)
+                    () => IncreaseAndCheckIfAboveLimit(ref attempts,
+                        (int) (timeout.TotalMilliseconds / waitDelay.TotalMilliseconds) + 1), timeout)
                .ConfigureAwait(false);
             watch.Stop();
 
@@ -113,7 +116,7 @@ namespace Catalyst.TestUtils
         [Fact]
         public async Task WaitFor_Should_Return_As_Soon_As_Possible()
         {
-            int attempts = 0;
+            var attempts = 0;
 
             var timeout = TimeSpan.FromSeconds(1);
 
@@ -132,7 +135,7 @@ namespace Catalyst.TestUtils
         [Fact]
         public async Task WaitForAsyncOrThrow_Should_Throw_Descriptive_Message_After_Timeout()
         {
-            int attempts = 0;
+            var attempts = 0;
 
             var waitDelay = TimeSpan.FromMilliseconds(50);
             var timeout = TimeSpan.FromMilliseconds(500);
@@ -140,7 +143,8 @@ namespace Catalyst.TestUtils
             var watch = new Stopwatch();
             watch.Start();
             new Func<Task>(async () => await TaskHelper.WaitForAsyncOrThrow(
-                        () => IncreaseAndCheckIfAboveLimit(ref attempts, (int) (timeout.TotalMilliseconds / waitDelay.TotalMilliseconds) + 1), timeout, waitDelay)
+                        () => IncreaseAndCheckIfAboveLimit(ref attempts,
+                            (int) (timeout.TotalMilliseconds / waitDelay.TotalMilliseconds) + 1), timeout, waitDelay)
                    .ConfigureAwait(false)).Should().Throw<XunitException>()
                .And.Message.Should().Contain(nameof(IncreaseAndCheckIfAboveLimit));
             watch.Stop();
@@ -152,7 +156,7 @@ namespace Catalyst.TestUtils
         [Fact]
         public async Task WaitForAsyncOrThrow_Should_Return_As_Soon_As_Possible()
         {
-            int attempts = 0;
+            var attempts = 0;
 
             var timeout = TimeSpan.FromSeconds(1);
             var waitDelay = TimeSpan.FromMilliseconds(50);
