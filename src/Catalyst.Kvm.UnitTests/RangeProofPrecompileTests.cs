@@ -40,7 +40,7 @@ namespace Catalyst.Kvm.UnitTests
         }
         
         [Fact]
-        public void Base_Gas_Cost_Should_Return_0()
+        public void Base_Data_Gas_Cost_Should_Return_0()
         {
             RangeProofPrecompile precompile = new RangeProofPrecompile();
             var dataCost = precompile.DataGasCost(new byte[32], CatalystGenesisSpec.Instance);
