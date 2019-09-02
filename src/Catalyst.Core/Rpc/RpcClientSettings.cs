@@ -29,13 +29,13 @@ using Microsoft.Extensions.Configuration;
 
 namespace Catalyst.Core.Rpc
 {
-    public sealed class NodeRpcConfig : IRpcNodeConfig
+    public sealed class RpcClientSettings : IRpcNodeConfig
     {
         public static IList<IRpcNodeConfig> BuildRpcNodeSettingList(IConfigurationRoot config)
         {
             var section = config.GetSection("CatalystCliRpcNodes").GetSection("nodes");
 
-            var nodeList = section.GetChildren().Select(child => new NodeRpcConfig
+            var nodeList = section.GetChildren().Select(child => new RpcClientSettings
             {
                 NodeId = child.GetSection("nodeId").Value,
                 HostAddress = IPAddress.Parse(child.GetSection("host").Value),

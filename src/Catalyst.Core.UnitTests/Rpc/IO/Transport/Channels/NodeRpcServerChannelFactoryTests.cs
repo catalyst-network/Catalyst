@@ -52,13 +52,13 @@ using Xunit;
 
 namespace Catalyst.Core.UnitTests.Rpc.IO.Transport.Channels
 {
-    public sealed class NodeRpcServerChannelFactoryTests
+    public sealed class RpcServerChannelFactoryTests
     {
-        public sealed class TestNodeRpcServerChannelFactory : NodeRpcServerChannelFactory
+        public sealed class TestRpcServerChannelFactory : RpcServerChannelFactory
         {
             private readonly List<IChannelHandler> _handlers;
 
-            public TestNodeRpcServerChannelFactory(IRpcMessageCorrelationManager correlationManager,
+            public TestRpcServerChannelFactory(IRpcMessageCorrelationManager correlationManager,
                 IKeySigner keySigner,
                 IAuthenticationStrategy authenticationStrategy,
                 IPeerIdValidator peerIdValidator,
@@ -72,10 +72,10 @@ namespace Catalyst.Core.UnitTests.Rpc.IO.Transport.Channels
         }
 
         private readonly IRpcMessageCorrelationManager _correlationManager;
-        private readonly TestNodeRpcServerChannelFactory _factory;
+        private readonly TestRpcServerChannelFactory _factory;
         private readonly IKeySigner _keySigner;
 
-        public NodeRpcServerChannelFactoryTests()
+        public RpcServerChannelFactoryTests()
         {
             _correlationManager = Substitute.For<IRpcMessageCorrelationManager>();
             _keySigner = Substitute.For<IKeySigner>();
@@ -89,7 +89,7 @@ namespace Catalyst.Core.UnitTests.Rpc.IO.Transport.Channels
             
             var peerIdValidator = Substitute.For<IPeerIdValidator>();
             peerIdValidator.ValidatePeerIdFormat(Arg.Any<PeerId>()).Returns(true);
-            _factory = new TestNodeRpcServerChannelFactory(
+            _factory = new TestRpcServerChannelFactory(
                 _correlationManager,
                 _keySigner,
                 authenticationStrategy,
@@ -98,7 +98,7 @@ namespace Catalyst.Core.UnitTests.Rpc.IO.Transport.Channels
         }
 
         [Fact]
-        public void NodeRpcServerChannelFactory_should_have_correct_handlers()
+        public void RpcServerChannelFactory_should_have_correct_handlers()
         {
             _factory.InheritedHandlers.Count(h => h != null).Should().Be(10);
             var handlers = _factory.InheritedHandlers.ToArray();
@@ -115,7 +115,7 @@ namespace Catalyst.Core.UnitTests.Rpc.IO.Transport.Channels
         }
 
         [Fact]
-        public async Task NodeRpcServerChannelFactory_should_put_the_correct_inbound_handlers_on_the_pipeline()
+        public async Task RpcServerChannelFactory_should_put_the_correct_inbound_handlers_on_the_pipeline()
         {
             var testingChannel = new EmbeddedChannel("test".ToChannelId(),
                 true, _factory.InheritedHandlers.ToArray());
@@ -140,7 +140,7 @@ namespace Catalyst.Core.UnitTests.Rpc.IO.Transport.Channels
         }
 
         [Fact]
-        public async Task NodeRpcServerChannelFactory_should_put_the_correct_outbound_handlers_on_the_pipeline()
+        public async Task RpcServerChannelFactory_should_put_the_correct_outbound_handlers_on_the_pipeline()
         {
             var testingChannel = new EmbeddedChannel("test".ToChannelId(),
                 true, _factory.InheritedHandlers.ToArray());

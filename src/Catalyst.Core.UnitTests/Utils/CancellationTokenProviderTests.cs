@@ -22,6 +22,8 @@
 #endregion
 
 using System;
+using Catalyst.Core.Util;
+using FluentAssertions;
 using Xunit;
 
 namespace Catalyst.Core.UnitTests.Utils

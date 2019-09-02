@@ -33,6 +33,7 @@ using IFileSystem = Catalyst.Abstractions.FileSystem.IFileSystem;
 
 namespace Catalyst.Core.FileSystem
 {
+    // ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
     public class FileSystem
         : System.IO.Abstractions.FileSystem,
             IFileSystem
@@ -49,6 +50,10 @@ namespace Catalyst.Core.FileSystem
                 : Path.Combine(GetUserHomeDir(), Constants.CatalystDataDir); 
         }
 
+        /// <summary>
+        ///     Must stay virtual as we Substitute.PartOf this class in testing.
+        /// </summary>
+        /// <returns></returns>
         public virtual DirectoryInfo GetCatalystDataDir()
         {
             return new DirectoryInfo(_dataDir);

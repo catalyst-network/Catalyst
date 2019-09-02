@@ -41,11 +41,11 @@ namespace Catalyst.Core.UnitTests.Rpc
         {
             var channelFactory = Substitute.For<ITcpClientChannelFactory>();
             var clientEventLoopGroupFactory = Substitute.For<ITcpClientEventLoopGroupFactory>();
-            _nodeRpcClientFactory = new NodeRpcClientFactory(channelFactory, clientEventLoopGroupFactory,
+            _rpcClientFactory = new RpcClientFactory(channelFactory, clientEventLoopGroupFactory,
                 new List<IRpcResponseObserver>());
         }
 
-        private readonly NodeRpcClientFactory _nodeRpcClientFactory;
+        private readonly RpcClientFactory _rpcClientFactory;
 
         [Fact]
         public async Task GetClient_Should_Return_NodeRpcClient()
@@ -55,7 +55,7 @@ namespace Catalyst.Core.UnitTests.Rpc
             nodeRpcConfig.NodeId = "0";
             nodeRpcConfig.PfxFileName = "pfx";
             nodeRpcConfig.Port = 9000;
-            var rpcClient = await _nodeRpcClientFactory.GetClient(null, nodeRpcConfig);
+            var rpcClient = await _rpcClientFactory.GetClient(null, nodeRpcConfig);
 
             rpcClient.Should().BeAssignableTo<INodeRpcClient>();
         }

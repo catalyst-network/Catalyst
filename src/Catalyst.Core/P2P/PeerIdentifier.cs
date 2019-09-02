@@ -26,6 +26,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using Catalyst.Abstractions.Cli;
+using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.Registry;
 using Catalyst.Abstractions.Rpc;

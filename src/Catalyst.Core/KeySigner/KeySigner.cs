@@ -34,7 +34,7 @@ using Google.Protobuf;
 
 namespace Catalyst.Core.KeySigner
 {
-    public class KeySigner : IKeySigner
+    public sealed class KeySigner : IKeySigner
     {
         private readonly IKeyStore _keyStore;
         private readonly ICryptoContext _cryptoContext;

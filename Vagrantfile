@@ -29,7 +29,7 @@ config.vm.define "poa-1" do |config|
         override.vm.box = 'digital_ocean'
         override.vm.box_url = "https://github.com/devopsgroup-io/vagrant-digitalocean/raw/master/box/digital_ocean.box"
         override.nfs.functional = false
-        provider.token = '5f505d82eed629c3b4d1b0ec8b41a570b9cf069260d75f0c4033b826445fe131'
+        provider.token = 'SOME_SECURE_KEY_IN_HERE_PROBS_WANT_TO_USE_ENV_VARS'
         provider.image = 'ubuntu-18-04-x64'
         provider.region = 'tor1'
         provider.size = 's-1vcpu-1gb'
@@ -49,7 +49,7 @@ config.vm.define "poa-1" do |config|
         override.vm.box = 'digital_ocean'
         override.vm.box_url = "https://github.com/devopsgroup-io/vagrant-digitalocean/raw/master/box/digital_ocean.box"
         override.nfs.functional = false
-        provider.token = '5f505d82eed629c3b4d1b0ec8b41a570b9cf069260d75f0c4033b826445fe131'
+        provider.token = 'SOME_SECURE_KEY_IN_HERE_PROBS_WANT_TO_USE_ENV_VARS'
         provider.image = 'ubuntu-18-04-x64'
         provider.region = 'sfo2'
         provider.size = 's-1vcpu-1gb'
@@ -69,7 +69,7 @@ config.vm.define "poa-1" do |config|
         override.vm.box = 'digital_ocean'
         override.vm.box_url = "https://github.com/devopsgroup-io/vagrant-digitalocean/raw/master/box/digital_ocean.box"
         override.nfs.functional = false
-        provider.token = '5f505d82eed629c3b4d1b0ec8b41a570b9cf069260d75f0c4033b826445fe131'
+        provider.token = 'SOME_SECURE_KEY_IN_HERE_PROBS_WANT_TO_USE_ENV_VARS'
         provider.image = 'ubuntu-18-04-x64'
         provider.region = 'blr1'
         provider.size = 's-1vcpu-1gb'
@@ -89,7 +89,7 @@ config.vm.define "poa-1" do |config|
         override.vm.box = 'digital_ocean'
         override.vm.box_url = "https://github.com/devopsgroup-io/vagrant-digitalocean/raw/master/box/digital_ocean.box"
         override.nfs.functional = false
-        provider.token = '5f505d82eed629c3b4d1b0ec8b41a570b9cf069260d75f0c4033b826445fe131'
+        provider.token = 'SOME_SECURE_KEY_IN_HERE_PROBS_WANT_TO_USE_ENV_VARS'
         provider.image = 'ubuntu-18-04-x64'
         provider.region = 'lon1'
         provider.size = 's-1vcpu-1gb'
@@ -109,7 +109,7 @@ config.vm.define "poa-1" do |config|
         override.vm.box = 'digital_ocean'
         override.vm.box_url = "https://github.com/devopsgroup-io/vagrant-digitalocean/raw/master/box/digital_ocean.box"
         override.nfs.functional = false
-        provider.token = '5f505d82eed629c3b4d1b0ec8b41a570b9cf069260d75f0c4033b826445fe131'
+        provider.token = 'SOME_SECURE_KEY_IN_HERE_PROBS_WANT_TO_USE_ENV_VARS'
         provider.image = 'ubuntu-18-04-x64'
         provider.region = 'ams3'
         provider.size = 's-1vcpu-1gb'

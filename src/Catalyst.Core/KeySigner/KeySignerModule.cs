@@ -21,24 +21,22 @@
 
 #endregion
 
-using System.Security;
-using Catalyst.Abstractions.Types;
-using Catalyst.Abstractions.Types;
-using Catalyst.Core.Cryptography;
+using Autofac;
+using Catalyst.Abstractions.Cryptography;
+using Catalyst.Abstractions.KeySigner;
+using Catalyst.Abstractions.Keystore;
 
-namespace Catalyst.Simulator.Helpers
+namespace Catalyst.Core.KeySigner
 {
-    public static class PasswordRegistryHelper
+    public class KeySignerModule : Module
     {
-        public static void AddPassword(PasswordRegistry passwordRegistry, PasswordRegistryTypes passwordRegistryTypes, string password)
+        protected override void Load(ContainerBuilder builder)
         {
-            var secureString = new SecureString();
-            foreach (var character in password)
-            {
-                secureString.AppendChar(character);
-            }
-
-            passwordRegistry.AddItemToRegistry(passwordRegistryTypes, secureString);
-        }
+            builder.Register(c => new KeySigner(c.Resolve<IKeyStore>(),
+                    c.Resolve<ICryptoContext>(),
+                    c.Resolve<IKeyRegistry>()))
+               .As<IKeySigner>()
+               .SingleInstance();
+        }  
     }
 }

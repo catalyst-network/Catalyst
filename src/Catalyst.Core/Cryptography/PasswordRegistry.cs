@@ -22,23 +22,15 @@
 #endregion
 
 using System.Collections.Generic;
-using System.Linq;
+using System.Security;
+using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Registry;
 using Catalyst.Abstractions.Types;
-using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
 
-namespace Catalyst.Core.Registry
+namespace Catalyst.Core.Cryptography
 {
-    public class KeyRegistry : RegistryBase<KeyRegistryTypes, IPrivateKey>, IKeyRegistry
+    public sealed class PasswordRegistry : RegistryBase<PasswordRegistryTypes, SecureString>, IPasswordRegistry
     {
-        public KeyRegistry()
-        {
-            Registry = new Dictionary<KeyRegistryTypes, IPrivateKey>();
-        }
-        
-        public bool Contains(byte[] publicKeyBytes)
-        {
-            return Registry.Values.Any(privateKey => privateKey.GetPublicKey().Bytes.SequenceEqual(publicKeyBytes));
-        }
-    };
+        public PasswordRegistry() { Registry = new Dictionary<PasswordRegistryTypes, SecureString>(); }
+    }
 }

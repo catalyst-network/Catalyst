@@ -21,14 +21,17 @@
 
 #endregion
 
-using Catalyst.Abstractions.IO.Observers;
-using Catalyst.Abstractions.IO.Transport;
-using Catalyst.Protocol.Common;
+using Autofac;
+using Catalyst.Abstractions.FileSystem;
 
-namespace Catalyst.Abstractions.Rpc
+namespace Catalyst.Core.FileSystem
 {
-    public interface INodeRpcServer : IObservableMessageStreamer<ProtocolMessage>, ISocket
+    public class FileSystemModule : Module
     {
-        IRpcServerSettings Settings { get; }
+        protected override void Load(ContainerBuilder builder)
+        {
+            builder.Register(c => new FileSystem())
+               .As<IFileSystem>();
+        }  
     }
 }

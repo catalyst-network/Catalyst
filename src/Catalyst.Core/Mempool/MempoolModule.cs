@@ -21,24 +21,22 @@
 
 #endregion
 
-using System.Security;
-using Catalyst.Abstractions.Types;
-using Catalyst.Abstractions.Types;
-using Catalyst.Core.Cryptography;
+using Autofac;
+using Catalyst.Abstractions.Mempool;
+using Catalyst.Abstractions.Mempool.Repositories;
+using Catalyst.Core.Mempool.Documents;
+using Serilog;
 
-namespace Catalyst.Simulator.Helpers
+namespace Catalyst.Core.Mempool
 {
-    public static class PasswordRegistryHelper
+    public class MempoolModule : Module
     {
-        public static void AddPassword(PasswordRegistry passwordRegistry, PasswordRegistryTypes passwordRegistryTypes, string password)
+        protected override void Load(ContainerBuilder builder)
         {
-            var secureString = new SecureString();
-            foreach (var character in password)
-            {
-                secureString.AppendChar(character);
-            }
-
-            passwordRegistry.AddItemToRegistry(passwordRegistryTypes, secureString);
-        }
+            builder.Register(c => new Mempool<MempoolDocument>(c.Resolve<IMempoolRepository<MempoolDocument>>(),
+                    c.Resolve<ILogger>()
+                ))
+               .As<IMempool<MempoolDocument>>();
+        }  
     }
 }

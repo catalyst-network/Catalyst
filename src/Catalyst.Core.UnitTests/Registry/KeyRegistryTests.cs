@@ -23,7 +23,7 @@
 
 using System;
 using Catalyst.Abstractions.Types;
-using Catalyst.Core.Registry;
+using Catalyst.Core.Keystore;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
 using FluentAssertions;
 using NSubstitute;

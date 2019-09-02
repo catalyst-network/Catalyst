@@ -24,16 +24,14 @@
 using System;
 using System.Collections.Generic;
 using Catalyst.Abstractions.Enumerator;
-using Catalyst.Abstractions.Registry;
 using Dawn;
 
-namespace Catalyst.Core.Registry
+namespace Catalyst.Abstractions.Registry
 {
-    public class RegistryBase<TKey, TValue> : IRegistryBase<TKey, TValue>
+    public abstract class RegistryBase<TKey, TValue> : IRegistryBase<TKey, TValue>
         where TKey : Enumeration
         where TValue : class
     {
-        protected RegistryBase() { }
         protected IDictionary<TKey, TValue> Registry { get; set; }
 
         public bool AddItemToRegistry(TKey identifier, TValue item)

@@ -21,15 +21,25 @@
 
 #endregion
 
-using Catalyst.Abstractions.Types;
-using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
+using Autofac;
+using Catalyst.Abstractions.Consensus.Deltas;
+using Catalyst.Abstractions.Mempool;
+using Catalyst.Core.Ledger.Repository;
+using Catalyst.Core.Mempool.Documents;
+using Serilog;
 
-namespace Catalyst.Abstractions.Registry
+namespace Catalyst.Core.Ledger
 {
-    public interface IKeyRegistry : IRegistryBase<KeyRegistryTypes, IPrivateKey>
+    public class LedgerModule : Module
     {
-        /// <summary>Determines whether this instance contains the public key.</summary>
-        /// <returns><c>true</c> if [contains] [the specified public key]; otherwise, <c>false</c>.</returns>
-        bool Contains(byte[] publicKeyBytes);
+        protected override void Load(ContainerBuilder builder)
+        {
+            builder.Register(c => new Ledger(c.Resolve<IAccountRepository>(),
+                    c.Resolve<IDeltaHashProvider>(),
+                    c.Resolve<IMempool<MempoolDocument>>(),
+                    c.Resolve<ILogger>()
+                ))
+               .As<ILedger>();
+        }  
     }
 }

@@ -30,6 +30,7 @@ using Autofac.Configuration;
 using AutofacSerilogIntegration;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.FileSystem;
+using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.Registry;
 using Microsoft.Extensions.Configuration;
 using Serilog;

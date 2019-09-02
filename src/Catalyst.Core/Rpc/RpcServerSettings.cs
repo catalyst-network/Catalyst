@@ -31,7 +31,7 @@ namespace Catalyst.Core.Rpc
     /// <summary>
     ///     This class provides the settings for the RpcServer class.
     /// </summary>
-    public class RpcServerSettings
+    public sealed class RpcServerSettings
         : IRpcServerSettings
     {
         /// <summary>

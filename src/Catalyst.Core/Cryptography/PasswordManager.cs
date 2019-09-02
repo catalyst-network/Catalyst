@@ -30,7 +30,7 @@ using Humanizer;
 namespace Catalyst.Core.Cryptography
 {
     /// <inheritdoc />
-    public class PasswordManager : IPasswordManager
+    public sealed class PasswordManager : IPasswordManager
     {
         private readonly IPasswordReader _passwordReader;
         private readonly IPasswordRegistry _passwordRegistry;

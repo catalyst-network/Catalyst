@@ -10,19 +10,19 @@
             ]
         },
         {
-            "type": "Catalyst.Core.Registry.KeyRegistry, Catalyst.Core",
+            "type": "Catalyst.Core.Keystore.KeyRegistry, Catalyst.Core",
             "services": [
                 {
-                    "type": "Catalyst.Abstractions.Registry.IKeyRegistry, Catalyst.Abstractions"
+                    "type": "Catalyst.Abstractions.Keystore.IKeyRegistry, Catalyst.Abstractions"
                 }
             ],
             "instanceScope": "singleinstance"
         },
         {
-            "type": "Catalyst.Core.Registry.PasswordRegistry, Catalyst.Core",
+            "type": "Catalyst.Core.Cryptography.PasswordRegistry, Catalyst.Core",
             "services": [
                 {
-                    "type": "Catalyst.Abstractions.Registry.IPasswordRegistry, Catalyst.Abstractions"
+                    "type": "Catalyst.Abstractions.Cryptography.IPasswordRegistry, Catalyst.Abstractions"
                 }
             ],
             "instanceScope": "singleinstance"
@@ -186,7 +186,7 @@
             "instanceScope": "singleinstance"
         },
         {
-            "type": "Catalyst.Core.Rpc.NodeRpcClientFactory, Catalyst.Core",
+            "type": "Catalyst.Core.Rpc.RpcClientFactory, Catalyst.Core",
             "services": [
                 {
                     "type": "Catalyst.Abstractions.Rpc.INodeRpcClientFactory, Catalyst.Abstractions"
@@ -194,7 +194,7 @@
             ]
         },
         {
-            "type": "Catalyst.Core.Rpc.IO.Transport.Channels.NodeRpcClientChannelFactory, Catalyst.Core",
+            "type": "Catalyst.Core.Rpc.IO.Transport.Channels.RpcClientChannelFactory, Catalyst.Core",
             "services": [
                 {
                     "type": "Catalyst.Abstractions.IO.Transport.Channels.ITcpClientChannelFactory, Catalyst.Abstractions"

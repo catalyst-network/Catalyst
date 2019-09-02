@@ -22,9 +22,10 @@
 #endregion
 
 using System.Security;
+using Catalyst.Abstractions.Registry;
 using Catalyst.Abstractions.Types;
 
-namespace Catalyst.Abstractions.Registry
+namespace Catalyst.Abstractions.Cryptography
 {
     public interface IPasswordRegistry : IRegistryBase<PasswordRegistryTypes, SecureString> { }
 }

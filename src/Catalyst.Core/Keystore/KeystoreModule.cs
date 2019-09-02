@@ -21,24 +21,27 @@
 
 #endregion
 
-using System.Security;
-using Catalyst.Abstractions.Types;
-using Catalyst.Abstractions.Types;
-using Catalyst.Core.Cryptography;
+using Autofac;
+using Catalyst.Abstractions.Cryptography;
+using Catalyst.Abstractions.FileSystem;
+using Catalyst.Abstractions.Keystore;
+using Catalyst.Abstractions.Util;
+using Serilog;
 
-namespace Catalyst.Simulator.Helpers
+namespace Catalyst.Core.Keystore
 {
-    public static class PasswordRegistryHelper
+    public class KeystoreModule : Module
     {
-        public static void AddPassword(PasswordRegistry passwordRegistry, PasswordRegistryTypes passwordRegistryTypes, string password)
+        protected override void Load(ContainerBuilder builder)
         {
-            var secureString = new SecureString();
-            foreach (var character in password)
-            {
-                secureString.AppendChar(character);
-            }
-
-            passwordRegistry.AddItemToRegistry(passwordRegistryTypes, secureString);
-        }
+            builder.Register(c => new LocalKeyStore(c.Resolve<IPasswordManager>(),
+                    c.Resolve<ICryptoContext>(),
+                    c.Resolve<IKeyStoreService>(),
+                    c.Resolve<IFileSystem>(),
+                    c.Resolve<ILogger>(),
+                    c.Resolve<IAddressHelper>())
+                )
+               .As<IKeyStore>();
+        }  
     }
 }

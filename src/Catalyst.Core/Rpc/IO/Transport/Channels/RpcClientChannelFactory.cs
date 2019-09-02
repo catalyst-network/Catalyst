@@ -31,31 +31,48 @@ using Catalyst.Abstractions.IO.EventLoop;
 using Catalyst.Abstractions.IO.Handlers;
 using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.IO.Transport.Channels;
-using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.KeySigner;
+using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.P2P;
-using Catalyst.Abstractions.Rpc.Authentication;
 using Catalyst.Abstractions.Rpc.IO.Messaging.Correlation;
 using Catalyst.Core.IO.Codecs;
 using Catalyst.Core.IO.Handlers;
 using Catalyst.Core.IO.Transport.Channels;
-using Catalyst.Core.IO.Codecs;
-using Catalyst.Core.IO.Handlers;
-using Catalyst.Core.IO.Transport.Channels;
 using Catalyst.Protocol.Common;
+using DotNetty.Buffers;
 using DotNetty.Codecs.Protobuf;
 using DotNetty.Transport.Channels;
 
 namespace Catalyst.Core.Rpc.IO.Transport.Channels
 {
-    public class NodeRpcServerChannelFactory : TcpServerChannelFactory
+    public class RpcClientChannelFactory : TcpClientChannelFactory
     {
-        private readonly IRpcMessageCorrelationManager _correlationManger;
-        private readonly IAuthenticationStrategy _authenticationStrategy;
         private readonly IKeySigner _keySigner;
+        private readonly IRpcMessageCorrelationManager _messageCorrelationCache;
         private readonly IPeerIdValidator _peerIdValidator;
         private readonly IObservableServiceHandler _observableServiceHandler;
         private readonly ISigningContextProvider _signingContextProvider;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="keySigner"></param>
+        /// <param name="messageCorrelationCache"></param>
+        /// <param name="peerIdValidator"></param>
+        /// <param name="signingContextProvider"></param>
+        /// <param name="backLogValue"></param>
+        public RpcClientChannelFactory(IKeySigner keySigner,
+            IRpcMessageCorrelationManager messageCorrelationCache,
+            IPeerIdValidator peerIdValidator,
+            ISigningContextProvider signingContextProvider,
+            int backLogValue = 100) : base(backLogValue)
+        {
+            _keySigner = keySigner;
+            _messageCorrelationCache = messageCorrelationCache;
+            _peerIdValidator = peerIdValidator;
+            _signingContextProvider = signingContextProvider;
+            _observableServiceHandler = new ObservableServiceHandler();
+        }
 
         protected override Func<List<IChannelHandler>> HandlerGenerationFunction
         {
@@ -63,59 +80,35 @@ namespace Catalyst.Core.Rpc.IO.Transport.Channels
             {
                 return () => new List<IChannelHandler>
                 {
-                    new ProtobufVarint32FrameDecoder(),
-                    new ProtobufDecoder(ProtocolMessageSigned.Parser),
+                    new FlushPipelineHandler<IByteBuffer>(),
                     new ProtobufVarint32LengthFieldPrepender(),
                     new ProtobufEncoder(),
-                    new AuthenticationHandler(_authenticationStrategy),
+                    new ProtobufVarint32FrameDecoder(),
+                    new ProtobufDecoder(ProtocolMessageSigned.Parser),
                     new PeerIdValidationHandler(_peerIdValidator),
                     new AddressedEnvelopeToIMessageEncoder(),
                     new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
-                        new ProtocolMessageVerifyHandler(_keySigner, _signingContextProvider),
-                        new ProtocolMessageSignHandler(_keySigner, _signingContextProvider)
-                    ),
+                        new ProtocolMessageVerifyHandler(_keySigner, _signingContextProvider), 
+                        new ProtocolMessageSignHandler(_keySigner, _signingContextProvider)),
                     new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
-                        new CorrelationHandler<IRpcMessageCorrelationManager>(_correlationManger),
-                        new CorrelatableHandler<IRpcMessageCorrelationManager>(_correlationManger)
-                    ),
+                        new CorrelationHandler<IRpcMessageCorrelationManager>(_messageCorrelationCache),
+                        new CorrelatableHandler<IRpcMessageCorrelationManager>(_messageCorrelationCache)),
                     _observableServiceHandler
                 };
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="correlationManger"></param>
-        /// <param name="keySigner"></param>
-        /// <param name="authenticationStrategy"></param>
-        /// <param name="peerIdValidator"></param>
-        /// <param name="signingContextProvider"></param>
-        public NodeRpcServerChannelFactory(IRpcMessageCorrelationManager correlationManger,
-            IKeySigner keySigner,
-            IAuthenticationStrategy authenticationStrategy,
-            IPeerIdValidator peerIdValidator,
-            ISigningContextProvider signingContextProvider)
-        {
-            _correlationManger = correlationManger;
-            _authenticationStrategy = authenticationStrategy;
-            _keySigner = keySigner;
-            _peerIdValidator = peerIdValidator;
-            _signingContextProvider = signingContextProvider;
-            _observableServiceHandler = new ObservableServiceHandler();
-        }
-
-        /// <param name="handlerEventLoopGroupFactory"></param>
-        /// <param name="targetPort"></param>
+        /// <param name="eventLoopGroupFactory"></param>
+        /// <param name="targetAddress">Ignored</param>
+        /// <param name="targetPort">Ignored</param>
         /// <param name="certificate">Local TLS certificate</param>
-        /// <param name="targetAddress"></param>
-        public override async Task<IObservableChannel> BuildChannel(IEventLoopGroupFactory handlerEventLoopGroupFactory,
+        public override async Task<IObservableChannel> BuildChannel(IEventLoopGroupFactory eventLoopGroupFactory,
             IPAddress targetAddress,
             int targetPort,
             X509Certificate2 certificate = null)
         {
-            var channel = await Bootstrap(handlerEventLoopGroupFactory, targetAddress, targetPort, certificate);
-            
+            var channel = await Bootstrap(eventLoopGroupFactory, targetAddress, targetPort, certificate);
+
             var messageStream = _observableServiceHandler.MessageStream;
 
             return new ObservableChannel(messageStream

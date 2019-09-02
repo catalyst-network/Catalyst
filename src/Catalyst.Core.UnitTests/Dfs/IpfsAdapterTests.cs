@@ -47,7 +47,7 @@ namespace Catalyst.Core.UnitTests.Dfs
             _passwordManager.RetrieveOrPromptAndAddPasswordToRegistry(PasswordRegistryTypes.IpfsPassword,
                 Arg.Any<string>()).ReturnsForAnyArgs(
                 TestPasswordReader.BuildSecureStringPassword("abcd"));
-
+            
             _logger = Substitute.For<ILogger>();
         }
 

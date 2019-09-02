@@ -99,7 +99,7 @@ namespace Catalyst.Core.UnitTests.Rpc
         [Fact]
         public async Task SubscribeToResponse_Should_Not_Return_Invalid_Response()
         {
-            var nodeRpcClientFactory = new NodeRpcClientFactory(_channelFactory, _clientEventLoopGroupFactory,
+            var nodeRpcClientFactory = new RpcClientFactory(_channelFactory, _clientEventLoopGroupFactory,
                 new List<IRpcResponseObserver> {new GetVersionResponseObserver(_logger)});
             var nodeRpcClient = await nodeRpcClientFactory.GetClient(null, _rpcNodeConfig);
             var receivedResponse = false;
@@ -118,7 +118,7 @@ namespace Catalyst.Core.UnitTests.Rpc
         [Fact]
         public async Task SubscribeToResponse_Should_Return_Response()
         {
-            var nodeRpcClientFactory = new NodeRpcClientFactory(_channelFactory, _clientEventLoopGroupFactory,
+            var nodeRpcClientFactory = new RpcClientFactory(_channelFactory, _clientEventLoopGroupFactory,
                 new List<IRpcResponseObserver> {new GetVersionResponseObserver(_logger)});
             var nodeRpcClient = await nodeRpcClientFactory.GetClient(null, _rpcNodeConfig);
             VersionResponse returnedVersionResponse = null;
@@ -137,7 +137,7 @@ namespace Catalyst.Core.UnitTests.Rpc
         [Fact]
         public async Task SubscribeToResponse_Without_Response_Handler_Should_Throw_Exception()
         {
-            var nodeRpcClientFactory = new NodeRpcClientFactory(_channelFactory, _clientEventLoopGroupFactory,
+            var nodeRpcClientFactory = new RpcClientFactory(_channelFactory, _clientEventLoopGroupFactory,
                 new List<IRpcResponseObserver>());
             var nodeRpcClient = await nodeRpcClientFactory.GetClient(null, _rpcNodeConfig);
             var targetVersionResponse = new VersionResponse {Version = "1.2.3.4"};

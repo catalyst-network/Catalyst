@@ -50,7 +50,7 @@ namespace Catalyst.Node.POA.CE
         private readonly ILogger _logger;
         private readonly IMempool<MempoolDocument> _mempool;
         private readonly IPeerService _peer;
-        private readonly INodeRpcServer _nodeRpcServer;
+        private readonly IRpcServer _rpcServer;
         private readonly IPeerClient _peerClient;
         private readonly IPeerSettings _peerSettings;
 
@@ -60,7 +60,7 @@ namespace Catalyst.Node.POA.CE
             IDfs dfs,
             ILedger ledger,
             ILogger logger,
-            INodeRpcServer nodeRpcServer,
+            IRpcServer rpcServer,
             IPeerClient peerClient,
             IPeerSettings peerSettings,
             IMempool<MempoolDocument> mempool,
@@ -74,14 +74,14 @@ namespace Catalyst.Node.POA.CE
             _ledger = ledger;
             _keySigner = keySigner;
             _logger = logger;
-            _nodeRpcServer = nodeRpcServer;
+            _rpcServer = rpcServer;
             _mempool = mempool;
             _contract = contract;
         }
 
         public async Task StartSockets()
         {
-            await _nodeRpcServer.StartAsync().ConfigureAwait(false);
+            await _rpcServer.StartAsync().ConfigureAwait(false);
             await _peerClient.StartAsync().ConfigureAwait(false);
             await _peer.StartAsync().ConfigureAwait(false);
         }

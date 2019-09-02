@@ -53,14 +53,14 @@ using Xunit;
 
 namespace Catalyst.Core.UnitTests.Rpc
 {
-    public sealed class NodeRpcServerTests
+    public sealed class RpcServerTests
     {
-        public NodeRpcServerTests()
+        public RpcServerTests()
         {
             var logger = Substitute.For<ILogger>();
             _testScheduler = new TestScheduler();
             _rpcServerSettings = Substitute.For<IRpcServerSettings>();
-            _peerIdentifier = PeerIdentifierHelper.GetPeerIdentifier(nameof(NodeRpcServerTests));
+            _peerIdentifier = PeerIdentifierHelper.GetPeerIdentifier(nameof(RpcServerTests));
             _channelHandlerContext = Substitute.For<IChannelHandlerContext>();
             _mockSocketReplySubject = new ReplaySubject<IObserverDto<ProtocolMessage>>(1, _testScheduler);
 
@@ -72,27 +72,27 @@ namespace Catalyst.Core.UnitTests.Rpc
             var certificateStore = Substitute.For<ICertificateStore>();
             var requestHandlers = new List<IRpcRequestObserver>();
 
-            _nodeRpcServer = new NodeRpcServer(_rpcServerSettings, logger, tcpServerChannelFactory, certificateStore,
+            _rpcServer = new RpcServer(_rpcServerSettings, logger, tcpServerChannelFactory, certificateStore,
                 requestHandlers, tcpServerEventLoopGroupFactory);
         }
 
         private readonly ReplaySubject<IObserverDto<ProtocolMessage>> _mockSocketReplySubject;
         private readonly TestScheduler _testScheduler;
         private readonly IPeerIdentifier _peerIdentifier;
-        private readonly NodeRpcServer _nodeRpcServer;
+        private readonly RpcServer _rpcServer;
         private readonly IRpcServerSettings _rpcServerSettings;
         private readonly IChannelHandlerContext _channelHandlerContext;
 
         [Fact]
-        public void Get_Settings_From_NodeRpcServer_Should_Return_Settings()
+        public void Get_Settings_From_RpcServer_Should_Return_Settings()
         {
-            _nodeRpcServer.Settings.Should().Be(_rpcServerSettings);
+            _rpcServer.Settings.Should().Be(_rpcServerSettings);
         }
 
         [Fact]
         public async Task Subscribe_To_Message_Stream_Should_Return_VersionRequest()
         {
-            await _nodeRpcServer.StartAsync();
+            await _rpcServer.StartAsync();
 
             VersionRequest returnedVersionRequest = null;
             var targetVersionRequest = new VersionRequest {Query = true};
@@ -102,7 +102,7 @@ namespace Catalyst.Core.UnitTests.Rpc
 
             var observerDto = new ObserverDto(_channelHandlerContext, protocolMessage);
 
-            _nodeRpcServer.MessageStream
+            _rpcServer.MessageStream
                .Where(x => x.Payload != null && x.Payload.TypeUrl == typeof(VersionRequest).ShortenedProtoFullName())
                .SubscribeOn(_testScheduler)
                .Subscribe(request => returnedVersionRequest = request.Payload.FromProtocolMessage<VersionRequest>());

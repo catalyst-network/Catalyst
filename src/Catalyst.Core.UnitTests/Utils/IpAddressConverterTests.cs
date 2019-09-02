@@ -24,6 +24,7 @@
 using System;
 using System.Net;
 using System.Text;
+using Catalyst.Core.Util;
 using FluentAssertions;
 using Newtonsoft.Json;
 using Xunit;

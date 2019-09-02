@@ -21,24 +21,16 @@
 
 #endregion
 
-using System.Security;
+using Catalyst.Abstractions.Registry;
 using Catalyst.Abstractions.Types;
-using Catalyst.Abstractions.Types;
-using Catalyst.Core.Cryptography;
+using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
 
-namespace Catalyst.Simulator.Helpers
+namespace Catalyst.Abstractions.Keystore
 {
-    public static class PasswordRegistryHelper
+    public interface IKeyRegistry : IRegistryBase<KeyRegistryTypes, IPrivateKey>
     {
-        public static void AddPassword(PasswordRegistry passwordRegistry, PasswordRegistryTypes passwordRegistryTypes, string password)
-        {
-            var secureString = new SecureString();
-            foreach (var character in password)
-            {
-                secureString.AppendChar(character);
-            }
-
-            passwordRegistry.AddItemToRegistry(passwordRegistryTypes, secureString);
-        }
+        /// <summary>Determines whether this instance contains the public key.</summary>
+        /// <returns><c>true</c> if [contains] [the specified public key]; otherwise, <c>false</c>.</returns>
+        bool Contains(byte[] publicKeyBytes);
     }
 }

@@ -31,6 +31,7 @@ using AutofacSerilogIntegration;
 using Catalyst.Abstractions;
 using Catalyst.Abstractions.Cli;
 using Catalyst.Abstractions.Config;
+using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Registry;
 using Catalyst.Abstractions.Types;
 using Catalyst.Abstractions.Util;

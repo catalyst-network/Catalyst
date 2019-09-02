@@ -28,7 +28,6 @@ using Catalyst.Core.Keystore;
 using Catalyst.Core.Cli;
 using Catalyst.Core.Cryptography;
 using Catalyst.Core.FileSystem;
-using Catalyst.Core.Registry;
 using Catalyst.Protocol.Common;
 using Catalyst.Simulator.Extensions;
 using Catalyst.Simulator.Helpers;

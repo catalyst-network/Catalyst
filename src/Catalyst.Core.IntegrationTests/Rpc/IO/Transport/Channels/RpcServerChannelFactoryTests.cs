@@ -48,9 +48,9 @@ using Xunit;
 
 namespace Catalyst.Core.IntegrationTests.Rpc.IO.Transport.Channels
 {
-    public sealed class NodeRpcServerChannelFactoryTests
+    public sealed class RpcServerChannelFactoryTests
     {
-        private readonly NodeRpcClientChannelFactoryTests.TestNodeRpcClientChannelFactory _clientFactory;
+        private readonly RpcClientChannelFactoryTests.TestRpcClientChannelFactory _clientFactory;
         private readonly EmbeddedChannel _serverChannel;
         private readonly EmbeddedChannel _clientChannel;
         private readonly IRpcMessageCorrelationManager _clientCorrelationManager;
@@ -60,7 +60,7 @@ namespace Catalyst.Core.IntegrationTests.Rpc.IO.Transport.Channels
         private readonly IKeySigner _serverKeySigner;
         private readonly IRpcMessageCorrelationManager _serverCorrelationManager;
 
-        public NodeRpcServerChannelFactoryTests()
+        public RpcServerChannelFactoryTests()
         {
             _serverCorrelationManager = Substitute.For<IRpcMessageCorrelationManager>();
             _serverKeySigner = Substitute.For<IKeySigner>();
@@ -73,7 +73,7 @@ namespace Catalyst.Core.IntegrationTests.Rpc.IO.Transport.Channels
 
             _peerIdValidator = Substitute.For<IPeerIdValidator>();
 
-            var serverFactory = new UnitTests.Rpc.IO.Transport.Channels.NodeRpcServerChannelFactoryTests.TestNodeRpcServerChannelFactory(
+            var serverFactory = new UnitTests.Rpc.IO.Transport.Channels.RpcServerChannelFactoryTests.TestRpcServerChannelFactory(
                 _serverCorrelationManager,
                 _serverKeySigner,
                 _authenticationStrategy,
@@ -83,7 +83,7 @@ namespace Catalyst.Core.IntegrationTests.Rpc.IO.Transport.Channels
             _clientCorrelationManager = Substitute.For<IRpcMessageCorrelationManager>();
             _clientKeySigner = Substitute.For<IKeySigner>();
            
-            _clientFactory = new NodeRpcClientChannelFactoryTests.TestNodeRpcClientChannelFactory(
+            _clientFactory = new RpcClientChannelFactoryTests.TestRpcClientChannelFactory(
                 _clientKeySigner, 
                 _clientCorrelationManager,
                 _peerIdValidator,
@@ -98,7 +98,7 @@ namespace Catalyst.Core.IntegrationTests.Rpc.IO.Transport.Channels
 
         [Fact]
         public async Task
-            NodeRpcServerChannelFactory_Pipeline_Should_Produce_Response_Object_NodeRpcClientChannelFactory_Can_Process()
+            RpcServerChannelFactory_Pipeline_Should_Produce_Response_Object_RpcClientChannelFactory_Can_Process()
         {
             var recipient = PeerIdentifierHelper.GetPeerIdentifier("recipient");
             var sender = PeerIdentifierHelper.GetPeerIdentifier("sender");

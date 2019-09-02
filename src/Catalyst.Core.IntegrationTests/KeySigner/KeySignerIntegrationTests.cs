@@ -28,7 +28,6 @@ using Catalyst.Abstractions.Types;
 using Catalyst.Core.Config;
 using Catalyst.Core.Cryptography;
 using Catalyst.Core.Keystore;
-using Catalyst.Core.Registry;
 using Catalyst.Core.Util;
 using Catalyst.Cryptography.BulletProofs.Wrapper;
 using Catalyst.Protocol.Common;

@@ -27,6 +27,7 @@ using System.Net;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Cli;
+using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.P2P;
@@ -44,7 +45,6 @@ using Catalyst.Core.IO.Messaging.Correlation;
 using Catalyst.Core.KeySigner;
 using Catalyst.Core.Keystore;
 using Catalyst.Core.P2P;
-using Catalyst.Core.Registry;
 using Catalyst.Core.Rpc;
 using Catalyst.Core.Rpc.IO.Messaging.Correlation;
 using Catalyst.Core.Rpc.IO.Observers;
@@ -67,7 +67,7 @@ namespace Catalyst.Simulator.RpcClients
         private IPeerIdentifier _recipientPeerIdentifier;
         private INodeRpcClient _nodeRpcClient;
         private readonly X509Certificate2 _certificate;
-        private readonly NodeRpcClientFactory _nodeRpcClientFactory;
+        private readonly RpcClientFactory _rpcClientFactory;
 
         public SimpleRpcClient(IUserOutput userOutput,
             IPasswordRegistry passwordRegistry,
@@ -102,7 +102,7 @@ namespace Catalyst.Simulator.RpcClients
             var messageCorrelationManager = new RpcMessageCorrelationManager(memoryCache, _logger, changeTokenProvider);
             var peerIdValidator = new PeerIdValidator(cryptoContext);
             var nodeRpcClientChannelFactory =
-                new NodeRpcClientChannelFactory(keySigner, messageCorrelationManager, peerIdValidator, signingContextProvider);
+                new RpcClientChannelFactory(keySigner, messageCorrelationManager, peerIdValidator, signingContextProvider);
 
             var eventLoopGroupFactoryConfiguration = new EventLoopGroupFactoryConfiguration
             {
@@ -117,8 +117,8 @@ namespace Catalyst.Simulator.RpcClients
                 new GetVersionResponseObserver(_logger)
             };
 
-            _nodeRpcClientFactory =
-                new NodeRpcClientFactory(nodeRpcClientChannelFactory, tcpClientEventLoopGroupFactory, handlers);
+            _rpcClientFactory =
+                new RpcClientFactory(nodeRpcClientChannelFactory, tcpClientEventLoopGroupFactory, handlers);
 
             //PeerIdentifier for RPC/TCP is currently redundant.
             _senderPeerIdentifier =
@@ -153,7 +153,7 @@ namespace Catalyst.Simulator.RpcClients
         {
             _recipientPeerIdentifier = peerIdentifier;
 
-            var peerRpcConfig = new NodeRpcConfig
+            var peerRpcConfig = new RpcClientSettings
             {
                 HostAddress = _recipientPeerIdentifier.Ip,
                 Port = _recipientPeerIdentifier.Port,
@@ -165,7 +165,7 @@ namespace Catalyst.Simulator.RpcClients
             try
             {
                 _nodeRpcClient =
-                    await _nodeRpcClientFactory.GetClient(_certificate, peerRpcConfig).ConfigureAwait(false);
+                    await _rpcClientFactory.GetClient(_certificate, peerRpcConfig).ConfigureAwait(false);
                 return _nodeRpcClient.Channel.Open;
             }
             catch (ConnectException connectionException)

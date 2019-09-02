@@ -84,7 +84,7 @@
             "instanceScope": "singleinstance"
         },
         {
-            "type": "Catalyst.Core.Rpc.IO.Transport.Channels.NodeRpcClientChannelFactory, Catalyst.Core",
+            "type": "Catalyst.Core.Rpc.IO.Transport.Channels.RpcClientChannelFactory, Catalyst.Core",
             "services": [
                 {
                     "type": "Catalyst.Abstractions.IO.Transport.Channels.ITcpClientChannelFactory, Catalyst.Abstractions"
@@ -92,7 +92,7 @@
             ]
         },
         {
-            "type": "Catalyst.Core.Rpc.IO.Transport.Channels.NodeRpcServerChannelFactory, Catalyst.Core",
+            "type": "Catalyst.Core.Rpc.IO.Transport.Channels.RpcServerChannelFactory, Catalyst.Core",
             "services": [
                 {
                     "type": "Catalyst.Abstractions.IO.Transport.Channels.ITcpServerChannelFactory, Catalyst.Abstractions"
@@ -116,10 +116,10 @@
             ]
         },
         {
-            "type": "Catalyst.Core.Rpc.NodeRpcServer, Catalyst.Core",
+            "type": "Catalyst.Core.Rpc.RpcServer, Catalyst.Core",
             "services": [
                 {
-                    "type": "Catalyst.Abstractions.Rpc.INodeRpcServer, Catalyst.Abstractions"
+                    "type": "Catalyst.Abstractions.Rpc.IRpcServer, Catalyst.Abstractions"
                 }
             ]
         },

@@ -21,24 +21,20 @@
 
 #endregion
 
-using System.Security;
-using Catalyst.Abstractions.Types;
-using Catalyst.Abstractions.Types;
-using Catalyst.Core.Cryptography;
+using Autofac;
+using Catalyst.Abstractions.Dfs;
+using Serilog;
 
-namespace Catalyst.Simulator.Helpers
+namespace Catalyst.Core.Dfs
 {
-    public static class PasswordRegistryHelper
+    public class DfsModule : Module
     {
-        public static void AddPassword(PasswordRegistry passwordRegistry, PasswordRegistryTypes passwordRegistryTypes, string password)
+        protected override void Load(ContainerBuilder builder)
         {
-            var secureString = new SecureString();
-            foreach (var character in password)
-            {
-                secureString.AppendChar(character);
-            }
-
-            passwordRegistry.AddItemToRegistry(passwordRegistryTypes, secureString);
-        }
+            builder.Register(c => new Dfs(c.Resolve<IIpfsAdapter>(),
+                    c.Resolve<ILogger>()
+                ))
+               .As<IDfs>();
+        }  
     }
 }

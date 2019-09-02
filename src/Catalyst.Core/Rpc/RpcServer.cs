@@ -39,7 +39,7 @@ using Serilog;
 
 namespace Catalyst.Core.Rpc
 {
-    public class NodeRpcServer : TcpServer, INodeRpcServer
+    public sealed class RpcServer : TcpServer, IRpcServer
     {
         private readonly IEnumerable<IRpcRequestObserver> _requestHandlers;
         private readonly CancellationTokenSource _cancellationSource;
@@ -48,7 +48,7 @@ namespace Catalyst.Core.Rpc
         public IRpcServerSettings Settings { get; }
         public IObservable<IObserverDto<ProtocolMessage>> MessageStream { get; private set; }
 
-        public NodeRpcServer(IRpcServerSettings settings,
+        public RpcServer(IRpcServerSettings settings,
             ILogger logger,
             ITcpServerChannelFactory channelFactory,
             ICertificateStore certificateStore,

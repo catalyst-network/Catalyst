@@ -21,30 +21,25 @@
 
 #endregion
 
+using System.Collections.Generic;
+using System.Linq;
+using Catalyst.Abstractions.Keystore;
+using Catalyst.Abstractions.Registry;
 using Catalyst.Abstractions.Types;
-using Catalyst.Abstractions.Types;
-using Catalyst.Core.Cryptography;
-using Catalyst.Simulator.Helpers;
+using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
 
-namespace Catalyst.Simulator.Extensions
+namespace Catalyst.Core.Keystore
 {
-    public static class PasswordRegistryExtensions
+    public sealed class KeyRegistry : RegistryBase<KeyRegistryTypes, IPrivateKey>, IKeyRegistry
     {
-        public static PasswordRegistry SetFromOptions(this PasswordRegistry passwordRegistry, Options options)
+        public KeyRegistry()
         {
-            if (!string.IsNullOrEmpty(options.NodePassword))
-            {
-                PasswordRegistryHelper.AddPassword(passwordRegistry, PasswordRegistryTypes.DefaultNodePassword,
-                    options.NodePassword);
-            }
-
-            if (!string.IsNullOrEmpty(options.SslCertPassword))
-            {
-                PasswordRegistryHelper.AddPassword(passwordRegistry, PasswordRegistryTypes.CertificatePassword,
-                    options.SslCertPassword);
-            }
-
-            return passwordRegistry;
+            Registry = new Dictionary<KeyRegistryTypes, IPrivateKey>();
         }
-    }
+        
+        public bool Contains(byte[] publicKeyBytes)
+        {
+            return Registry.Values.Any(privateKey => privateKey.GetPublicKey().Bytes.SequenceEqual(publicKeyBytes));
+        }
+    };
 }

@@ -29,6 +29,7 @@ using Catalyst.Abstractions.Cli.Commands;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.IO.Transport;
+using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.Registry;
 using Catalyst.Abstractions.Rpc;
@@ -56,7 +57,7 @@ namespace Catalyst.Cli.Commands
             IKeyRegistry keyRegistry)
         {
             _logger = logger;
-            _rpcNodeConfigs = NodeRpcConfig.BuildRpcNodeSettingList(config);
+            _rpcNodeConfigs = RpcClientSettings.BuildRpcNodeSettingList(config);
 
             SocketClientRegistry = new SocketClientRegistry<INodeRpcClient>();
             PeerIdentifier = Core.P2P.PeerIdentifier.BuildPeerIdFromConfig(config, userOutput, keyRegistry);

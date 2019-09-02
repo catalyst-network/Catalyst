@@ -21,15 +21,14 @@
 
 #endregion
 
-using System.Collections.Generic;
-using System.Security;
-using Catalyst.Abstractions.Registry;
-using Catalyst.Abstractions.Types;
+using Catalyst.Abstractions.IO.Observers;
+using Catalyst.Abstractions.IO.Transport;
+using Catalyst.Protocol.Common;
 
-namespace Catalyst.Core.Registry
+namespace Catalyst.Abstractions.Rpc
 {
-    public class PasswordRegistry : RegistryBase<PasswordRegistryTypes, SecureString>, IPasswordRegistry
+    public interface IRpcServer : IObservableMessageStreamer<ProtocolMessage>, ISocket
     {
-        public PasswordRegistry() { Registry = new Dictionary<PasswordRegistryTypes, SecureString>(); }
+        IRpcServerSettings Settings { get; }
     }
 }

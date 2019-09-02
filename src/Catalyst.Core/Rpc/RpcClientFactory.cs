@@ -31,13 +31,13 @@ using Catalyst.Abstractions.Rpc;
 
 namespace Catalyst.Core.Rpc
 {
-    public sealed class NodeRpcClientFactory : INodeRpcClientFactory
+    public sealed class RpcClientFactory : INodeRpcClientFactory
     {
         private readonly ITcpClientChannelFactory _channelFactory;
         private readonly IEnumerable<IRpcResponseObserver> _handlers;
         private readonly ITcpClientEventLoopGroupFactory _clientEventLoopGroupFactory;
 
-        public NodeRpcClientFactory(ITcpClientChannelFactory channelFactory,
+        public RpcClientFactory(ITcpClientChannelFactory channelFactory,
             ITcpClientEventLoopGroupFactory clientEventLoopGroupFactory,
             IEnumerable<IRpcResponseObserver> handlers)
         {
@@ -48,7 +48,7 @@ namespace Catalyst.Core.Rpc
 
         public async Task<INodeRpcClient> GetClient(X509Certificate2 certificate, IRpcNodeConfig nodeConfig)
         {
-            var nodeRpcClient = new NodeRpcClient(_channelFactory, certificate, nodeConfig, _handlers, _clientEventLoopGroupFactory);
+            var nodeRpcClient = new RpcClient(_channelFactory, certificate, nodeConfig, _handlers, _clientEventLoopGroupFactory);
 
             await nodeRpcClient.StartAsync();
             return nodeRpcClient;

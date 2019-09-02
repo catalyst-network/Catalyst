@@ -36,6 +36,7 @@ using NSubstitute;
 using Serilog;
 using Xunit;
 using Catalyst.Abstractions.Cli.CommandTypes;
+using Catalyst.Abstractions.Keystore;
 
 namespace Catalyst.Cli.UnitTests
 {

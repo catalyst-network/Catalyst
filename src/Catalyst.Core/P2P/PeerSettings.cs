@@ -21,10 +21,12 @@
 
 #endregion
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using Catalyst.Abstractions.P2P;
+using Catalyst.Core.Network;
 using Dawn;
 using Microsoft.Extensions.Configuration;
 
@@ -36,8 +38,8 @@ namespace Catalyst.Core.P2P
     public sealed class PeerSettings
         : IPeerSettings
     {
-        private readonly Network _network;
-        public Network Network => _network;
+        private readonly Protocol.Common.Network _network;
+        public Protocol.Common.Network Network => _network;
         public string PublicKey { get; }
         public int Port { get; }
         public string PayoutAddress { get; }
@@ -55,7 +57,7 @@ namespace Catalyst.Core.P2P
             Guard.Argument(rootSection, nameof(rootSection)).NotNull();
 
             var section = rootSection.GetSection("CatalystNodeConfiguration").GetSection("Peer");
-            Network.TryParse(section.GetSection("Network").Value, out _network);
+            Enum.TryParse(section.GetSection("Network").Value, out _network);
             PublicKey = section.GetSection("PublicKey").Value;
             Port = int.Parse(section.GetSection("Port").Value);
             PayoutAddress = section.GetSection("PayoutAddress").Value;

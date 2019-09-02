@@ -27,6 +27,7 @@ using Catalyst.Abstractions.Cli;
 using Catalyst.Abstractions.Cli.Commands;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.IO.Messaging.Dto;
+using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.Registry;
 using Catalyst.Abstractions.Rpc;
 using FluentAssertions;

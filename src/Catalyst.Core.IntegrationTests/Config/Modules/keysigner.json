@@ -11,10 +11,10 @@
             "instanceScope": "singleinstance"
         },
         {
-            "type": "Catalyst.Core.Registry.PasswordRegistry, Catalyst.Core",
+            "type": "Catalyst.Core.Cryptography.PasswordRegistry, Catalyst.Core",
             "services": [
                 {
-                    "type": "Catalyst.Abstractions.Registry.IPasswordRegistry, Catalyst.Abstractions"
+                    "type": "Catalyst.Abstractions.Cryptography.IPasswordRegistry, Catalyst.Abstractions"
                 }
             ],
             "instanceScope": "singleinstance"
@@ -85,10 +85,10 @@
             ]
         },
         {
-            "type": "Catalyst.Core.Registry.KeyRegistry, Catalyst.Core",
+            "type": "Catalyst.Core.Keystore.KeyRegistry, Catalyst.Core",
             "services": [
                 {
-                    "type": "Catalyst.Abstractions.Registry.IKeyRegistry, Catalyst.Abstractions"
+                    "type": "Catalyst.Abstractions.Keystore.IKeyRegistry, Catalyst.Abstractions"
                 }
             ],
             "instanceScope": "singleinstance"
