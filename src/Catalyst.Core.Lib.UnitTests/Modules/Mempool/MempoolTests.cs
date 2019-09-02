@@ -170,7 +170,7 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Mempool
         [Fact]
         public void SaveMempoolDocument_Should_Throw_On_Document_With_Null_Transaction()
         {
-            _mempoolDocument.Transaction.Signature = null;
+            _mempoolDocument.Transaction = null;
             new Action(() => _memPool.SaveMempoolDocument(_mempoolDocument))
                .Should().Throw<ArgumentNullException>()
                .And.Message.Should().Contain("cannot be null");

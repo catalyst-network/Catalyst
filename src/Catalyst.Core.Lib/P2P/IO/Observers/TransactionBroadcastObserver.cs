@@ -21,6 +21,7 @@
 
 #endregion
 
+using Catalyst.Common.Interfaces.IO.Events;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Observers;
 using Catalyst.Common.IO.Observers;
@@ -35,13 +36,21 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
         : BroadcastObserverBase<TransactionBroadcast>,
             IP2PMessageObserver
     {
-        public TransactionBroadcastObserver(ILogger logger)
-            : base(logger) { }
+        private readonly ITransactionReceivedEvent _transactionReceivedEvent;
+
+        public TransactionBroadcastObserver(ILogger logger, ITransactionReceivedEvent transactionReceivedEvent)
+            : base(logger)
+        {
+            _transactionReceivedEvent = transactionReceivedEvent;
+        }
 
         public override void HandleBroadcast(IObserverDto<ProtocolMessage> messageDto)
         {
             Logger.Debug("received broadcast");
+
             var deserialised = messageDto.Payload.FromProtocolMessage<TransactionBroadcast>();
+            _transactionReceivedEvent.OnTransactionReceived(deserialised);
+
             Logger.Debug("transaction signature is {0}", deserialised.Signature);
         }
     }
