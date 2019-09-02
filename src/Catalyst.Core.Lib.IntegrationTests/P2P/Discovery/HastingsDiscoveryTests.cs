@@ -286,8 +286,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
             {
                 var streamObserver = Substitute.For<IObserver<IPeerClientMessageDto>>();
 
-                using (walker.DiscoveryStream.SubscribeOn(TaskPoolScheduler.Default)
-                   .Subscribe(streamObserver.OnNext))
+                using (walker.DiscoveryStream.Subscribe(streamObserver.OnNext))
                 {
                     var pingDto = new PeerClientMessageDto(new PingResponse(),
                         stateCandidate.Neighbours.FirstOrDefault()?.PeerIdentifier,
@@ -298,7 +297,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P.Discovery
                        .ToList()
                        .ForEach(o => { o.ResponseMessageSubject.OnNext(pingDto); });
 
-                    await walker.DiscoveryStream.WaitForItemsOnDelayedStreamOnTaskPoolSchedulerAsync();
+                    _testScheduler.Start();
 
                     streamObserver.Received(1).OnNext(Arg.Is(pingDto));
 

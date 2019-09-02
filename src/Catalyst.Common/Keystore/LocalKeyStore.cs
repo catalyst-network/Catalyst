@@ -68,7 +68,7 @@ namespace Catalyst.Common.Keystore
         public IPrivateKey KeyStoreDecrypt(KeyRegistryTypes keyIdentifier)
         {
             var json = GetJsonFromKeyStore(keyIdentifier);
-            if (json == null)
+            if (string.IsNullOrEmpty(json))
             {
                 _logger.Error("No keystore exists for the given key");
                 return null;

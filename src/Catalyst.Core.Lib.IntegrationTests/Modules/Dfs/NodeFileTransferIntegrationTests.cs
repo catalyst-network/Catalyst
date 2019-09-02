@@ -165,6 +165,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.Modules.Dfs
             }
 
             Assert.True(fileTransferInformation.ChunkIndicatorsTrue());
+
             await TaskHelper.WaitForAsync(() => fileTransferInformation.DfsHash != null, TimeSpan.FromSeconds(15));
             Assert.NotNull(fileTransferInformation.DfsHash);
 

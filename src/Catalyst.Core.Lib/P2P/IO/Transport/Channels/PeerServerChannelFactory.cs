@@ -24,6 +24,7 @@
 using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
@@ -48,6 +49,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Transport.Channels
 {
     public class PeerServerChannelFactory : UdpServerChannelFactory
     {
+        private readonly IScheduler _scheduler;
         private readonly IPeerMessageCorrelationManager _messageCorrelationManager;
         private readonly IBroadcastManager _broadcastManager;
         private readonly IKeySigner _keySigner;
@@ -66,8 +68,10 @@ namespace Catalyst.Core.Lib.P2P.IO.Transport.Channels
             IBroadcastManager broadcastManager,
             IKeySigner keySigner,
             IPeerIdValidator peerIdValidator,
-            ISigningContextProvider signingContextProvider)
+            ISigningContextProvider signingContextProvider,
+            IScheduler scheduler = null)
         {
+            _scheduler = scheduler ?? Scheduler.Default;
             _messageCorrelationManager = messageCorrelationManager;
             _broadcastManager = broadcastManager;
             _keySigner = keySigner;
@@ -97,7 +101,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Transport.Channels
                             new CorrelatableHandler<IPeerMessageCorrelationManager>(_messageCorrelationManager)
                         ),
                         new BroadcastHandler(_broadcastManager),
-                        new ObservableServiceHandler(),
+                        new ObservableServiceHandler(_scheduler),
                         new BroadcastCleanupHandler(_broadcastManager)
                     };
                 };

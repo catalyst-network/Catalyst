@@ -29,7 +29,6 @@ using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.Repository;
 using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.Network;
-using Catalyst.Common.P2P;
 using Catalyst.Common.P2P.Models;
 using Catalyst.Common.Util;
 using Catalyst.Core.Lib.Rpc.IO.Observers;
@@ -39,6 +38,7 @@ using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using FluentAssertions;
+using Microsoft.Reactive.Testing;
 using Nethereum.RLP;
 using NSubstitute;
 using Serilog;
@@ -47,7 +47,7 @@ using Xunit;
 namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Observers
 {
     /// <summary>
-    /// Tests the peer reputation calls
+    ///     Tests the peer reputation calls
     /// </summary>
     public sealed class PeerReputationRequestObserverTests
     {
@@ -58,23 +58,24 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Observers
         private readonly IChannelHandlerContext _fakeContext;
 
         /// <summary>
-        /// Initializes a new instance of the <see>
-        ///     <cref>PeerListRequestObserverTest</cref>
-        /// </see>
-        /// class.
+        ///     Initializes a new instance of the
+        ///     <see>
+        ///         <cref>PeerListRequestObserverTest</cref>
+        ///     </see>
+        ///     class.
         /// </summary>
         public PeerReputationRequestObserverTests()
         {
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
-            
+
             var fakeChannel = Substitute.For<IChannel>();
             _fakeContext.Channel.Returns(fakeChannel);
         }
 
         /// <summary>
-        /// Tests the peer reputation request and response via RPC.
-        /// Peer is expected to be found in this case
+        ///     Tests the peer reputation request and response via RPC.
+        ///     Peer is expected to be found in this case
         /// </summary>
         /// <param name="publicKey">Public key of the peer whose reputation is of interest</param>
         /// <param name="ipAddress">Ip address of the peer whose reputation is of interest</param>
@@ -89,14 +90,15 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Observers
         }
 
         /// <summary>
-        /// Tests the peer reputation request and response via RPC.
-        /// Peer is NOT expected to be found in this case, as they do not exist
+        ///     Tests the peer reputation request and response via RPC.
+        ///     Peer is NOT expected to be found in this case, as they do not exist
         /// </summary>
         /// <param name="publicKey">Public key of the peer whose reputation is of interest</param>
         /// <param name="ipAddress">Ip address of the peer whose reputation is of interest</param>
         [Theory]
         [InlineData("cne2+eRandomValuebeingusedherefprtestingIOp", "192.200.200.22")]
-        [InlineData("cne2+e5gIfEdfhDWUxkUfr886YuiZnhEj3om5AXmWVXJK7d47/ESkjhbkJsrbzIbuWm8EPSjJ2YicTIcXvfzIOp", "192.111.100.26")]
+        [InlineData("cne2+e5gIfEdfhDWUxkUfr886YuiZnhEj3om5AXmWVXJK7d47/ESkjhbkJsrbzIbuWm8EPSjJ2YicTIcXvfzIOp",
+            "192.111.100.26")]
         public async Task Test_PeerReputationRequestResponse_For_NonExistant_Peers(string publicKey, string ipAddress)
         {
             var responseContent = await GetPeerReputationTest(publicKey, ipAddress);
@@ -106,6 +108,7 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Observers
 
         private async Task<GetPeerReputationResponse> GetPeerReputationTest(string publicKey, string ipAddress)
         {
+            var testScheduler = new TestScheduler();
             var peerRepository = Substitute.For<IPeerRepository>();
 
             var fakePeers = Enumerable.Range(0, 5).Select(i => new Peer
@@ -118,7 +121,8 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Observers
             fakePeers.AddRange(Enumerable.Range(125, 2).Select(i => new Peer
             {
                 Reputation = 125,
-                PeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier($"highscored-{i}", IPAddress.Parse("192.168.0." + i))
+                PeerIdentifier =
+                    PeerIdentifierHelper.GetPeerIdentifier($"highscored-{i}", IPAddress.Parse("192.168.0." + i))
             }));
 
             // Let peerRepository return the fake peer list
@@ -137,18 +141,18 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Observers
 
             var protocolMessage = request.ToProtocolMessage(sendPeerIdentifier.PeerId);
 
-            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, protocolMessage);
+            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, testScheduler, protocolMessage);
 
             var handler = new PeerReputationRequestObserver(sendPeerIdentifier, _logger, peerRepository);
             handler.StartObserving(messageStream);
 
-            await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
+            testScheduler.Start();
 
             var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();
             receivedCalls.Count.Should().Be(1);
 
             var sentResponseDto = (IMessageDto<ProtocolMessage>) receivedCalls[0].GetArguments().Single();
-            
+
             return sentResponseDto.Content.FromProtocolMessage<GetPeerReputationResponse>();
         }
     }

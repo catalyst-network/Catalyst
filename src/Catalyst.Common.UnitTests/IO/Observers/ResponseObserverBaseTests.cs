@@ -32,6 +32,7 @@ using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using FluentAssertions;
+using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
 using Xunit;
@@ -63,14 +64,18 @@ namespace Catalyst.Common.UnitTests.IO.Observers
         [Fact]
         public async Task OnNext_Should_Still_Get_Called_After_HandleBroadcast_Failure()
         {
+            var testScheduler = new TestScheduler();
+
             var candidateDeltaMessages = Enumerable.Range(0, 10)
                .Select(i => new GetPeerCountResponse {PeerCount = i}).ToArray();
 
-            var messageStream = MessageStreamHelper.CreateStreamWithMessages(candidateDeltaMessages);
+            var messageStream = MessageStreamHelper.CreateStreamWithMessages(testScheduler, candidateDeltaMessages);
             using (var observer = new FailingResponseObserver(Substitute.For<ILogger>()))
             {
                 observer.StartObserving(messageStream);
-                await messageStream.WaitForItemsOnDelayedStreamOnTaskPoolSchedulerAsync();
+
+                testScheduler.Start();
+
                 observer.Counter.Should().Be(10);
             }
         }
