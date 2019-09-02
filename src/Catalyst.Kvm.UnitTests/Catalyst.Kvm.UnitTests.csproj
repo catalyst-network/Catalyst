@@ -2,18 +2,11 @@
 
     <PropertyGroup>
         <TargetFramework>netcoreapp2.2</TargetFramework>
-
         <IsPackable>false</IsPackable>
+        <SignAssembly>true</SignAssembly>
+        <AssemblyOriginatorKeyFile>Catalyst.Kvm.UnitTests.snk</AssemblyOriginatorKeyFile>
     </PropertyGroup>
-
-    <ItemGroup>
-        <PackageReference Include="FluentAssertions" Version="5.9.0" />
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.0.1" />
-        <PackageReference Include="NSubstitute" Version="4.2.1" />
-        <PackageReference Include="xunit" Version="2.4.0" />
-        <PackageReference Include="xunit.runner.visualstudio" Version="2.4.0" />
-    </ItemGroup>
-
+    <Import Project="../Common.UnitTests.props" />
     <ItemGroup>
       <ProjectReference Include="..\Catalyst.Kvm\Catalyst.Kvm.csproj" />
     </ItemGroup>
