@@ -28,7 +28,7 @@ using System.Net;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
-using Catalyst.Common.Interfaces.IO.Observables;
+using Catalyst.Common.Interfaces.IO.Events;
 using Catalyst.Common.Interfaces.IO.Transport;
 using Catalyst.Common.IO.Events;
 using Dawn;

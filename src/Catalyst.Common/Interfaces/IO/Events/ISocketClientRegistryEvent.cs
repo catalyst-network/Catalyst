@@ -21,7 +21,7 @@
 
 #endregion
 
-namespace Catalyst.Common.Interfaces.IO.Observables
+namespace Catalyst.Common.Interfaces.IO.Events
 {
     public interface ISocketClientRegistryEvent
     {

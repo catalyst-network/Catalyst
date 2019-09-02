@@ -7,7 +7,8 @@
                 {
                     "type": "SharpRepository.Repository.IRepository`2[[Catalyst.Common.Modules.Mempool.Models.MempoolDocument, Catalyst.Common], [System.String, mscorlib]], SharpRepository.Repository"
                 }
-            ]
+            ],
+            "instanceScope": "singleinstance"
         },
         {
             "type": "Catalyst.Core.Lib.Repository.MempoolRepository, Catalyst.Core.Lib",
@@ -15,7 +16,8 @@
                 {
                     "type": "Catalyst.Common.Interfaces.Repository.IMempoolRepository, Catalyst.Common"
                 }
-            ]
+            ],
+            "instanceScope": "singleinstance"
         },
         {
             "type": "Catalyst.Core.Lib.Modules.Mempool.Mempool",
@@ -23,7 +25,8 @@
                 {
                     "type": "Catalyst.Common.Interfaces.Modules.Mempool.IMempool, Catalyst.Common"
                 }
-            ]
+            ],
+            "instanceScope": "singleinstance"
         }
     ]
 }
