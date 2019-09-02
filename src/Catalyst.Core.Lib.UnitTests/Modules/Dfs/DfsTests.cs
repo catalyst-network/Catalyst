@@ -115,7 +115,6 @@ namespace Catalyst.Core.Lib.UnitTests.Modules.Dfs
             text.Should().Be("the other content");
         }
 
-        //TODO
         [Fact]
         public void AddTextAsync_Should_Be_Cancellable()
         {
