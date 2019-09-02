@@ -24,6 +24,7 @@
 using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
@@ -54,24 +55,25 @@ namespace Catalyst.Node.Rpc.Client.IO.Transport.Channels
         private readonly ISigningContextProvider _signingContextProvider;
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="keySigner"></param>
         /// <param name="messageCorrelationCache"></param>
         /// <param name="peerIdValidator"></param>
-        /// <param name="signingContextProvider"></param>
         /// <param name="backLogValue"></param>
+        /// <param name="scheduler"></param>
         public NodeRpcClientChannelFactory(IKeySigner keySigner,
             IRpcMessageCorrelationManager messageCorrelationCache,
             IPeerIdValidator peerIdValidator,
             ISigningContextProvider signingContextProvider,
-            int backLogValue = 100) : base(backLogValue)
+            int backLogValue = 100,
+            IScheduler scheduler = null) : base(backLogValue)
         {
+            var observableScheduler = scheduler ?? Scheduler.Default;
             _keySigner = keySigner;
             _messageCorrelationCache = messageCorrelationCache;
             _peerIdValidator = peerIdValidator;
             _signingContextProvider = signingContextProvider;
-            _observableServiceHandler = new ObservableServiceHandler();
+            _observableServiceHandler = new ObservableServiceHandler(observableScheduler);
         }
 
         protected override Func<List<IChannelHandler>> HandlerGenerationFunction
@@ -88,7 +90,7 @@ namespace Catalyst.Node.Rpc.Client.IO.Transport.Channels
                     new PeerIdValidationHandler(_peerIdValidator),
                     new AddressedEnvelopeToIMessageEncoder(),
                     new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
-                        new ProtocolMessageVerifyHandler(_keySigner, _signingContextProvider), 
+                        new ProtocolMessageVerifyHandler(_keySigner, _signingContextProvider),
                         new ProtocolMessageSignHandler(_keySigner, _signingContextProvider)),
                     new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
                         new CorrelationHandler<IRpcMessageCorrelationManager>(_messageCorrelationCache),

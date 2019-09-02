@@ -24,6 +24,7 @@
 using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
@@ -81,25 +82,25 @@ namespace Catalyst.Core.Lib.Rpc.IO.Transport.Channels
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="correlationManger"></param>
         /// <param name="keySigner"></param>
         /// <param name="authenticationStrategy"></param>
         /// <param name="peerIdValidator"></param>
-        /// <param name="signingContextProvider"></param>
         public NodeRpcServerChannelFactory(IRpcMessageCorrelationManager correlationManger,
             IKeySigner keySigner,
             IAuthenticationStrategy authenticationStrategy,
             IPeerIdValidator peerIdValidator,
-            ISigningContextProvider signingContextProvider)
+            ISigningContextProvider signingContextProvider,
+            IScheduler scheduler = null)
         {
+            var observableScheduler = scheduler ?? Scheduler.Default;
             _correlationManger = correlationManger;
             _authenticationStrategy = authenticationStrategy;
             _keySigner = keySigner;
             _peerIdValidator = peerIdValidator;
             _signingContextProvider = signingContextProvider;
-            _observableServiceHandler = new ObservableServiceHandler();
+            _observableServiceHandler = new ObservableServiceHandler(observableScheduler);
         }
 
         /// <param name="handlerEventLoopGroupFactory"></param>
@@ -112,7 +113,7 @@ namespace Catalyst.Core.Lib.Rpc.IO.Transport.Channels
             X509Certificate2 certificate = null)
         {
             var channel = await Bootstrap(handlerEventLoopGroupFactory, targetAddress, targetPort, certificate);
-            
+
             var messageStream = _observableServiceHandler.MessageStream;
 
             return new ObservableChannel(messageStream

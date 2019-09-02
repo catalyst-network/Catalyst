@@ -26,7 +26,6 @@ using System.Net;
 using System.Threading.Tasks;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
-using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.Util;
 using Catalyst.Core.Lib.Rpc.IO.Observers;
 using Catalyst.Protocol;
@@ -35,6 +34,7 @@ using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using FluentAssertions;
+using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
 using Xunit;
@@ -59,11 +59,13 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Observers
         [Fact]
         public async Task Valid_GetVersion_Request_Should_Send_VersionResponse()
         {
+            var testScheduler = new TestScheduler();
+
             var versionRequest = new VersionRequest();
             var protocolMessage =
                 versionRequest.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId);
 
-            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext,
+            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, testScheduler,
                 protocolMessage
             );
 
@@ -71,7 +73,7 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Observers
 
             handler.StartObserving(messageStream);
 
-            await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
+            testScheduler.Start();
 
             var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();
             receivedCalls.Count.Should().Be(1);

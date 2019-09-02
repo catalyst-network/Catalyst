@@ -40,6 +40,7 @@ using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using FluentAssertions;
 using Google.Protobuf;
+using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
 using SharpRepository.Repository.Specifications;
@@ -95,6 +96,7 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Observers
         /// <param name="withPublicKey">if set to <c>true</c> [send message to handler with the public key].</param>
         private async Task ExecuteTestCase(IReadOnlyCollection<string> fakePeers, bool withPublicKey)
         {
+            var testScheduler = new TestScheduler();
             IPeerRepository peerRepository = Substitute.For<IPeerRepository>();
             Peer targetPeerToDelete = null;
             var fakePeerList = fakePeers.ToList().Select(fakePeer =>
@@ -129,12 +131,12 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Observers
 
             var protocolMessage = removePeerRequest.ToProtocolMessage(sendPeerIdentifier.PeerId);
 
-            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, protocolMessage);
+            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, testScheduler, protocolMessage);
 
             var handler = new RemovePeerRequestObserver(sendPeerIdentifier, peerRepository, _logger);
             handler.StartObserving(messageStream);
 
-            await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
+            testScheduler.Start();
 
             var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();
             receivedCalls.Count().Should().Be(1);

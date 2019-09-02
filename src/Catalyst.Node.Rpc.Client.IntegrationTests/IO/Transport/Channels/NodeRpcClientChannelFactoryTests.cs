@@ -22,7 +22,6 @@
 #endregion
 
 using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.Keystore;
@@ -34,6 +33,7 @@ using Catalyst.Common.IO.Handlers;
 using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Common.IO.Messaging.Dto;
 using Catalyst.Common.Util;
+using Catalyst.Core.Lib.UnitTests.Rpc.IO.Transport.Channels;
 using Catalyst.Cryptography.BulletProofs.Wrapper;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
 using Catalyst.Protocol.Common;
@@ -42,15 +42,16 @@ using Catalyst.TestUtils;
 using DotNetty.Buffers;
 using DotNetty.Transport.Channels.Embedded;
 using FluentAssertions;
+using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
 using Xunit;
-using NodeRpcServerChannelFactoryTests = Catalyst.Core.Lib.UnitTests.Rpc.IO.Transport.Channels.NodeRpcServerChannelFactoryTests;
 
 namespace Catalyst.Node.Rpc.Client.IntegrationTests.IO.Transport.Channels
 {
     public sealed class NodeRpcClientChannelFactoryTests
     {
+        private readonly TestScheduler _testScheduler;
         private readonly NodeRpcServerChannelFactoryTests.TestNodeRpcServerChannelFactory _serverFactory;
         private readonly EmbeddedChannel _serverChannel;
         private readonly EmbeddedChannel _clientChannel;
@@ -63,6 +64,7 @@ namespace Catalyst.Node.Rpc.Client.IntegrationTests.IO.Transport.Channels
 
         public NodeRpcClientChannelFactoryTests()
         {
+            _testScheduler = new TestScheduler();
             _serverCorrelationManager = Substitute.For<IRpcMessageCorrelationManager>();
             _serverKeySigner = Substitute.For<IKeySigner>();
 
@@ -79,24 +81,27 @@ namespace Catalyst.Node.Rpc.Client.IntegrationTests.IO.Transport.Channels
                 _serverKeySigner,
                 _authenticationStrategy,
                 _peerIdValidator,
-                signatureContextProvider);
+                signatureContextProvider,
+                _testScheduler);
 
             _clientCorrelationManager = Substitute.For<IRpcMessageCorrelationManager>();
             _clientKeySigner = Substitute.For<IKeySigner>();
-           
-            var clientFactory = new UnitTests.IO.Transport.Channels.NodeRpcClientChannelFactoryTests.TestNodeRpcClientChannelFactory(
-                _clientKeySigner, 
-                _clientCorrelationManager,
-                _peerIdValidator,
-                signatureContextProvider);
+
+            var clientFactory =
+                new UnitTests.IO.Transport.Channels.NodeRpcClientChannelFactoryTests.TestNodeRpcClientChannelFactory(
+                    _clientKeySigner,
+                    _clientCorrelationManager,
+                    _peerIdValidator,
+                    signatureContextProvider,
+                    _testScheduler);
 
             _serverChannel =
                 new EmbeddedChannel("server".ToChannelId(), true, _serverFactory.InheritedHandlers.ToArray());
-            
+
             _clientChannel =
                 new EmbeddedChannel("client".ToChannelId(), true, clientFactory.InheritedHandlers.ToArray());
         }
-        
+
         [Fact]
         public async Task
             NodeRpcClientChannelFactory_Pipeline_Should_Produce_Request_Object_NodeRpcServerChannelFactory_Can_Process_Into_Observable()
@@ -109,7 +114,7 @@ namespace Catalyst.Node.Rpc.Client.IntegrationTests.IO.Transport.Channels
             _peerIdValidator.ValidatePeerIdFormat(Arg.Any<PeerId>()).Returns(true);
 
             _clientKeySigner.Sign(Arg.Any<byte[]>(), default).ReturnsForAnyArgs(signature);
-            
+
             var correlationId = CorrelationId.GenerateCorrelationId();
 
             var protocolMessage = new GetPeerCountRequest().ToProtocolMessage(sender.PeerId, correlationId);
@@ -117,43 +122,47 @@ namespace Catalyst.Node.Rpc.Client.IntegrationTests.IO.Transport.Channels
                 protocolMessage,
                 recipient
             );
-            
+
             _clientChannel.WriteOutbound(dto);
 
             var sentBytes = _clientChannel.ReadOutbound<IByteBuffer>();
 
             // obviously
             sentBytes.Should().BeAssignableTo<IByteBuffer>();
-            
-            _clientCorrelationManager.ReceivedWithAnyArgs(1).AddPendingRequest(Arg.Is<CorrelatableMessage<ProtocolMessage>>(c => c.Content.CorrelationId.ToCorrelationId().Equals(correlationId)));
-            
+
+            _clientCorrelationManager.ReceivedWithAnyArgs(1).AddPendingRequest(
+                Arg.Is<CorrelatableMessage<ProtocolMessage>>(c =>
+                    c.Content.CorrelationId.ToCorrelationId().Equals(correlationId)));
+
             _clientKeySigner.ReceivedWithAnyArgs(1).Sign(Arg.Is(signature.SignatureBytes), default);
-            
+
             _serverKeySigner.Verify(
                     Arg.Any<ISignature>(),
                     Arg.Any<byte[]>(),
                     default
                 )
                .ReturnsForAnyArgs(true);
-            
+
             _authenticationStrategy.Authenticate(Arg.Any<IPeerIdentifier>()).Returns(true);
-            
+
             var observer = new ProtocolMessageObserver(0, Substitute.For<ILogger>());
 
-            var messageStream = _serverFactory.InheritedHandlers.OfType<ObservableServiceHandler>().Single().MessageStream;
-            
+            var messageStream = _serverFactory.InheritedHandlers.OfType<ObservableServiceHandler>().Single()
+               .MessageStream;
+
             using (messageStream.Subscribe(observer))
             {
                 _serverChannel.WriteInbound(sentBytes);
                 _serverCorrelationManager.DidNotReceiveWithAnyArgs().TryMatchResponse(protocolMessage);
-               
+
                 _serverKeySigner.ReceivedWithAnyArgs(1).Verify(null, null, null);
 
-                await messageStream.WaitForItemsOnDelayedStreamOnTaskPoolSchedulerAsync();
+                _testScheduler.Start();
+
                 observer.Received.Count.Should().Be(1);
                 observer.Received.Single().Payload.CorrelationId.ToCorrelationId().Id.Should().Be(correlationId.Id);
             }
-            
+
             await _serverChannel.DisconnectAsync();
             await _clientChannel.DisconnectAsync();
         }

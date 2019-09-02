@@ -39,6 +39,7 @@ using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using FluentAssertions;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Reactive.Testing;
 using Newtonsoft.Json;
 using NSubstitute;
 using Serilog;
@@ -48,12 +49,14 @@ namespace Catalyst.Core.Lib.IntegrationTests.Rpc.IO.Observers
 {
     public sealed class GetInfoRequestObserverTests
     {
+        private readonly TestScheduler _testScheduler;
         private readonly ILogger _logger;
         private readonly IChannelHandlerContext _fakeContext;
         private readonly IConfigurationRoot _config;
 
         public GetInfoRequestObserverTests()
         {
+            _testScheduler = new TestScheduler();
             _config = new ConfigurationBuilder()
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ShellNodesConfigFile))
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Network.Devnet)))
@@ -79,7 +82,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.Rpc.IO.Observers
                .SerializeObject(_config.GetSection("CatalystNodeConfiguration").AsEnumerable(),
                     Formatting.Indented);
 
-            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext,
+            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, _testScheduler,
                 protocolMessage
             );
             
@@ -88,7 +91,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.Rpc.IO.Observers
 
             handler.StartObserving(messageStream);
 
-            await messageStream.WaitForEndOfDelayedStreamOnTaskPoolSchedulerAsync();
+            _testScheduler.Start();
 
             await _fakeContext.Channel.Received(1).WriteAndFlushAsync(Arg.Any<object>());
 

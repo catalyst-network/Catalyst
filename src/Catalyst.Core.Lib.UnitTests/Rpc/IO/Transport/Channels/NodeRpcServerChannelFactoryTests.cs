@@ -43,6 +43,7 @@ using DotNetty.Codecs.Protobuf;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Embedded;
 using FluentAssertions;
+using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
 using Xunit;
@@ -59,8 +60,9 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Transport.Channels
                 IKeySigner keySigner,
                 IAuthenticationStrategy authenticationStrategy,
                 IPeerIdValidator peerIdValidator,
-                ISigningContextProvider signingContextProvider)
-                : base(correlationManager, keySigner, authenticationStrategy, peerIdValidator, signingContextProvider)
+                ISigningContextProvider signingContextProvider,
+                TestScheduler testScheduler)
+                : base(correlationManager, keySigner, authenticationStrategy, peerIdValidator, signingContextProvider, testScheduler)
             {
                 _handlers = HandlerGenerationFunction();
             }
@@ -68,12 +70,14 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Transport.Channels
             public IReadOnlyCollection<IChannelHandler> InheritedHandlers => _handlers;
         }
 
+        private readonly TestScheduler _testScheduler;
         private readonly IRpcMessageCorrelationManager _correlationManager;
         private readonly TestNodeRpcServerChannelFactory _factory;
         private readonly IKeySigner _keySigner;
 
         public NodeRpcServerChannelFactoryTests()
         {
+            _testScheduler = new TestScheduler();
             _correlationManager = Substitute.For<IRpcMessageCorrelationManager>();
             _keySigner = Substitute.For<IKeySigner>();
 
@@ -91,7 +95,8 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Transport.Channels
                 _keySigner,
                 authenticationStrategy,
                 peerIdValidator,
-                peerSettings);
+                peerSettings,
+                _testScheduler);
         }
 
         [Fact]
@@ -130,7 +135,7 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Transport.Channels
                 testingChannel.WriteInbound(protocolMessage);
                 _correlationManager.DidNotReceiveWithAnyArgs().TryMatchResponse(protocolMessage);
                 _keySigner.DidNotReceiveWithAnyArgs().Verify(null, null, null);
-                await messageStream.WaitForItemsOnDelayedStreamOnTaskPoolSchedulerAsync();
+                _testScheduler.Start();
                 observer.Received.Count.Should().Be(1);
                 observer.Received.Single().Payload.CorrelationId.ToCorrelationId().Id.Should().Be(correlationId.Id);
             }
