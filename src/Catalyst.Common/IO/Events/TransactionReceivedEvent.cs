@@ -63,7 +63,7 @@ namespace Catalyst.Common.IO.Events
             var transactionSignature = transaction.Signature;
             _logger.Verbose("Adding transaction {signature} to mempool", transactionSignature);
 
-            // TODO: Check ledger to see if ledger already contains transaction, if so we need to send Successful/Fail response
+            // https://github.com/catalyst-network/Catalyst.Node/issues/910 - should we fail or succeed if we already have the transaction in the ledger?
             if (_mempool.ContainsDocument(transactionSignature))
             {
                 _logger.Information("Transaction {signature} already exists in mempool", transactionSignature);
