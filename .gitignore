@@ -361,4 +361,3 @@ Icon?
 Thumbs.db
 
 *.lock
-/src/Catalyst.Ledger/ipfs-repo
