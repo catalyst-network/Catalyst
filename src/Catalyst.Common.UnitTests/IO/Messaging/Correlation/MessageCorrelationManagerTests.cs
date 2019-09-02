@@ -221,7 +221,9 @@ namespace Catalyst.Common.UnitTests.IO.Messaging.Correlation
             Cache?.Dispose();
             CorrelationManager?.Dispose();
         }
-
-        public void Dispose() { Dispose(true); }
+        public void Dispose()
+        {
+            Dispose(true);
+        }
     }
 }
