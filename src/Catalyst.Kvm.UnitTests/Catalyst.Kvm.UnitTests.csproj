@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp2.2</TargetFramework>
+        <IsPackable>false</IsPackable>
+        <SignAssembly>true</SignAssembly>
+        <AssemblyOriginatorKeyFile>Catalyst.Kvm.UnitTests.snk</AssemblyOriginatorKeyFile>
+    </PropertyGroup>
+    <Import Project="../Common.UnitTests.props" />
+    <ItemGroup>
+      <ProjectReference Include="..\Catalyst.Kvm\Catalyst.Kvm.csproj" />
+    </ItemGroup>
+
+</Project>
