@@ -21,12 +21,16 @@
 
 #endregion
 
-using Catalyst.Abstractions.IO.Events;
+using Catalyst.Abstractions.Types;
+using Nethermind.Core.Specs;
 
-namespace Catalyst.Core.IO.Events
+namespace Catalyst.Kvm
 {
-    public class SocketClientRegistryEvent : ISocketClientRegistryEvent
+    public sealed class CatalystSpecProvider : ISpecProvider
     {
-        public int SocketHashCode { set; get; }
+        public IReleaseSpec GenesisSpec => CatalystGenesisSpec.Instance;
+        public IReleaseSpec GetSpec(long blockNumber) => GenesisSpec;
+        public long? DaoBlockNumber => null;
+        public int ChainId => NetworkTypes.Dev.Id; // @TODO should we not be using protocol.common.network?
     }
 }

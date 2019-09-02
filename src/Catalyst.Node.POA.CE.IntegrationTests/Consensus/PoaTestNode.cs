@@ -96,7 +96,7 @@ namespace Catalyst.Node.POA.CE.IntegrationTests.Consensus
             var hashingAlgorithm = HashingAlgorithm.All.First(x => x.Name == "blake2b-256");
             _dfs = new DevDfs(parentTestFileSystem, hashingAlgorithm, baseDfsFolder);
 
-            _mempool = new Mempool<MempoolDocument>(new TestMempoolDocumentRepository(new InMemoryRepository<MempoolDocument, string>(null)), Substitute.For<ILogger>());
+            _mempool = new Mempool(new TestMempoolDocumentRepository(new InMemoryRepository<MempoolDocument, string>(null)), Substitute.For<ILogger>());
             _peerRepository = Substitute.For<IPeerRepository>();
             var peersInRepo = knownPeerIds.Select(p => new Peer {PeerIdentifier = p}).ToList();
             _peerRepository.AsQueryable().Returns(peersInRepo.AsQueryable());

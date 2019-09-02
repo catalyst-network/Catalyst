@@ -1,0 +1,3 @@
+[submodule "submodules/nethermind"]
+	path = submodules/nethermind
+	url = https://github.com/catalyst-network/nethermind.git

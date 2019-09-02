@@ -21,12 +21,22 @@
 
 #endregion
 
-using Catalyst.Abstractions.IO.Events;
+using Nethermind.Dirichlet.Numerics;
 
-namespace Catalyst.Core.IO.Events
+namespace Catalyst.Kvm
 {
-    public class SocketClientRegistryEvent : ISocketClientRegistryEvent
+    public static class KvmIntExtensions
     {
-        public int SocketHashCode { set; get; }
+        public static ulong GB(this int @this) { return (ulong) @this * 1024UL * 1024UL * 1024UL; }
+
+        public static ulong MB(this int @this) { return (ulong) @this * 1024UL * 1024UL; }
+
+        public static ulong KB(this int @this) { return (ulong) @this * 1024UL; }
+
+        public static UInt256 Kat(this int @this) { return (uint) @this * CatalystUnit.Kat; }
+
+        public static UInt256 Ful(this int @this) { return (uint) @this * CatalystUnit.Fulhame; }
+
+        public static UInt256 GFul(this int @this) { return (uint) @this * CatalystUnit.GFulhame; }
     }
 }

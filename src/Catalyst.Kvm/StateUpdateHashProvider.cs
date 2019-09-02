@@ -21,12 +21,14 @@
 
 #endregion
 
-using Catalyst.Abstractions.IO.Events;
+using Nethermind.Evm;
 
-namespace Catalyst.Core.IO.Events
+namespace Catalyst.Kvm
 {
-    public class SocketClientRegistryEvent : ISocketClientRegistryEvent
+    /// <inheritdoc />
+    public sealed class StateUpdateHashProvider : IStateUpdateHashProvider
     {
-        public int SocketHashCode { set; get; }
+        /// <inheritdoc />
+        public byte[] GetHash(StateUpdate stateUpdate, in long number) { throw new System.NotImplementedException(); }
     }
 }

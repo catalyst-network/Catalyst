@@ -21,10 +21,16 @@
 
 #endregion
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using Catalyst.Abstractions.Mempool;
-using Catalyst.Abstractions.Mempool.Models;
+using Catalyst.Abstractions.Mempool.Documents;
 using Catalyst.Abstractions.Mempool.Repositories;
+using Catalyst.Core.Mempool.Documents;
+using Catalyst.Protocol.Transaction;
 using Dawn;
+using Google.Protobuf;
 using Serilog;
 
 namespace Catalyst.Core.Mempool
@@ -32,17 +38,87 @@ namespace Catalyst.Core.Mempool
     /// <summary>
     ///     Mempool class wraps around a IKeyValueStore
     /// </summary>
-    public sealed class Mempool<T> : IMempool<T> where T : class, IMempoolItem
+    public sealed class Mempool : IMempool<MempoolDocument>
     {
         private readonly ILogger _logger;
-        public IMempoolRepository<T> Repository { get; }
+        public IMempoolRepository<MempoolDocument> Repository { get; }
 
         /// <inheritdoc />
-        public Mempool(IMempoolRepository<T> repository, ILogger logger)
+        public Mempool(IMempoolRepository<MempoolDocument> transactionStore, ILogger logger)
         {
-            Guard.Argument(repository, nameof(repository)).NotNull();
-            Repository = repository;
+            Guard.Argument(transactionStore, nameof(transactionStore)).NotNull();
+            Repository = transactionStore;
             _logger = logger;
+        }
+
+        /// <inheritdoc />
+        public IEnumerable<TransactionBroadcast> GetMemPoolContent()
+        {
+            var memPoolContent = Repository.GetAll();
+            return memPoolContent;
+        }
+
+        /// <inheritdoc />
+        public bool ContainsDocument(TransactionSignature key)
+        {
+            return Repository.TryGet(key.ToByteString().ToBase64(), out _);
+        }
+
+        /// <inheritdoc />
+        public List<TransactionBroadcast> GetMemPoolContentAsTransactions()
+        {
+            var memPoolContent = GetMemPoolContent();
+
+            var encodedTxs = memPoolContent
+               .Select(tx => tx)
+               .ToList();
+
+            return encodedTxs;
+        }
+
+        /// <inheritdoc />
+        public IMempoolDocument GetMempoolDocument(TransactionSignature key)
+        {
+            Guard.Argument(key, nameof(key)).NotNull();
+            var found = Repository.Get(key.ToByteString().ToBase64());
+            return found;
+        }
+
+        /// <inheritdoc />
+        public void Delete(params string[] transactionSignatures)
+        {
+            try
+            {
+                Repository.Delete(transactionSignatures);
+            }
+            catch (Exception exception)
+            {
+                _logger.Error(exception, "Failed to delete transactions from the mempool {transactionSignatures}",
+                    transactionSignatures);
+            }
+        }
+
+        /// <inheritdoc />
+        public bool SaveMempoolDocument(IMempoolDocument mempoolDocument)
+        {
+            Guard.Argument(mempoolDocument, nameof(mempoolDocument)).NotNull();
+            Guard.Argument(mempoolDocument.Transaction, nameof(mempoolDocument.Transaction)).NotNull();
+
+            try
+            {
+                if (Repository.TryGet(mempoolDocument.DocumentId, out _))
+                {
+                    return false;
+                }
+
+                Repository.Add((MempoolDocument) mempoolDocument);
+                return true;
+            }
+            catch (Exception e)
+            {
+                _logger.Error(e, "Failed to add standard transaction to mempool");
+                return false;
+            }
         }
     }
 }

@@ -21,12 +21,26 @@
 
 #endregion
 
-using Catalyst.Abstractions.IO.Events;
+using Nethermind.Evm;
+using Nethermind.Logging;
+using Nethermind.Store;
+using NSubstitute;
+using Xunit;
 
-namespace Catalyst.Core.IO.Events
+namespace Catalyst.Kvm.UnitTests
 {
-    public class SocketClientRegistryEvent : ISocketClientRegistryEvent
+    public sealed class CatalystVirtualMachineTests
     {
-        public int SocketHashCode { set; get; }
+        [Fact]
+        public void Catalyst_virtual_machine_can_be_initialized()
+        {
+            CatalystVirtualMachine virtualMachine = new CatalystVirtualMachine(
+                Substitute.For<IStateProvider>(),
+                Substitute.For<IStorageProvider>(),
+                Substitute.For<IStateUpdateHashProvider>(),
+                new CatalystSpecProvider(), 
+                LimboLogs.Instance);
+            Assert.NotNull(virtualMachine);
+        }
     }
 }

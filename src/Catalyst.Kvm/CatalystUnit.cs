@@ -21,12 +21,15 @@
 
 #endregion
 
-using Catalyst.Abstractions.IO.Events;
+using Nethermind.Dirichlet.Numerics;
 
-namespace Catalyst.Core.IO.Events
+namespace Catalyst.Kvm
 {
-    public class SocketClientRegistryEvent : ISocketClientRegistryEvent
+    public static class CatalystUnit
     {
-        public int SocketHashCode { set; get; }
+        public static readonly UInt256 Fulhame = 1;
+        public static readonly UInt256 GFulhame = 1_000_000_000;
+        public static readonly UInt256 Kat = 1_000_000_000_000;
+        public static readonly string KatSymbol = "KAT";
     }
 }

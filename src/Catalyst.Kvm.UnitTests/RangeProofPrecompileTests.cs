@@ -21,12 +21,30 @@
 
 #endregion
 
-using Catalyst.Abstractions.IO.Events;
+using Xunit;
+using FluentAssertions;
 
-namespace Catalyst.Core.IO.Events
+namespace Catalyst.Kvm.UnitTests
 {
-    public class SocketClientRegistryEvent : ISocketClientRegistryEvent
+    /// <summary>
+    /// This is just a placeholder for the actual tests later.
+    /// </summary>
+    public sealed class RangeProofPrecompileTests
     {
-        public int SocketHashCode { set; get; }
+        [Fact]
+        public void Base_Gas_Cost_Should_Return_200000()
+        {
+            RangeProofPrecompile precompile = new RangeProofPrecompile();
+            var baseCost = precompile.BaseGasCost(CatalystGenesisSpec.Instance);
+            baseCost.Should().Be(200000);
+        }
+        
+        [Fact]
+        public void Base_Data_Gas_Cost_Should_Return_0()
+        {
+            RangeProofPrecompile precompile = new RangeProofPrecompile();
+            var dataCost = precompile.DataGasCost(new byte[32], CatalystGenesisSpec.Instance);
+            dataCost.Should().Be(0);
+        }
     }
 }

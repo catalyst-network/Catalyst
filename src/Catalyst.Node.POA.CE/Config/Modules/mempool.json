@@ -7,7 +7,8 @@
                 {
                     "type": "Catalyst.Abstractions.Mempool.IMempool`1[[Catalyst.Core.Mempool.Documents.MempoolDocument, Catalyst.Core]], Catalyst.Abstractions"
                 }
-            ]
+            ],
+            "instanceScope": "singleinstance"
         },
         {
             "type": "Catalyst.Core.Mempool.Repositories.MempoolDocumentRepository",
@@ -15,7 +16,8 @@
                 {
                     "type": "Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository`1[[Catalyst.Core.Mempool.Documents.MempoolDocument, Catalyst.Core]], Catalyst.Abstractions"
                 }
-            ]
+            ],
+            "instanceScope": "singleinstance"
         },
         {
             "type": "SharpRepository.InMemoryRepository.InMemoryRepository`2[[Catalyst.Core.Mempool.Documents.MempoolDocument, Catalyst.Core], [System.String, mscorlib]], SharpRepository.InMemoryRepository",
@@ -23,7 +25,8 @@
                 {
                     "type": "SharpRepository.Repository.IRepository`2[[Catalyst.Core.Mempool.Documents.MempoolDocument, Catalyst.Core], [System.String, mscorlib]], SharpRepository.Repository"
                 }
-            ]
+            ],
+            "instanceScope": "singleinstance"
         }
     ]
 }

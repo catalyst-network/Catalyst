@@ -21,12 +21,13 @@
 
 #endregion
 
-using Catalyst.Abstractions.IO.Events;
+using Catalyst.Protocol.Rpc.Node;
+using Catalyst.Protocol.Transaction;
 
-namespace Catalyst.Core.IO.Events
+namespace Catalyst.Abstractions.IO.Events
 {
-    public class SocketClientRegistryEvent : ISocketClientRegistryEvent
+    public interface ITransactionReceivedEvent
     {
-        public int SocketHashCode { set; get; }
+        ResponseCode OnTransactionReceived(TransactionBroadcast broadcast);
     }
 }

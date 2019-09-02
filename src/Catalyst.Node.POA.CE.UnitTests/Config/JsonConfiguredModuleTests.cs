@@ -63,7 +63,7 @@ namespace Catalyst.Node.POA.CE.UnitTests.Config
         [InlineData(typeof(IConsensus), typeof(Core.Consensus.Consensus))]
         [InlineData(typeof(IDfs), typeof(DevDfs))]
         [InlineData(typeof(ILedger), typeof(Ledger))]
-        [InlineData(typeof(IMempool<MempoolDocument>), typeof(Mempool<MempoolDocument>))]
+        [InlineData(typeof(IMempool<MempoolDocument>), typeof(Mempool))]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         private void ComponentsJsonFile_should_configure_modules(Type interfaceType, Type resolutionType)
         {

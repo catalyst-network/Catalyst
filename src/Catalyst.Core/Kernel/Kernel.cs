@@ -32,12 +32,14 @@ using Catalyst.Abstractions;
 using Catalyst.Abstractions.Cli;
 using Catalyst.Abstractions.Config;
 using Catalyst.Abstractions.Cryptography;
-using Catalyst.Abstractions.Registry;
+using Catalyst.Abstractions.IO.Events;
 using Catalyst.Abstractions.Types;
 using Catalyst.Abstractions.Util;
 using Catalyst.Core.Config;
-using Catalyst.Core.Config;
+using Catalyst.Core.IO.Events;
 using Catalyst.Core.Util;
+using Catalyst.Protocol.Interfaces.Validators;
+using Catalyst.Protocol.Validators;
 using Microsoft.Extensions.Configuration;
 using Serilog;
 using SharpRepository.Ioc.Autofac;
@@ -201,6 +203,9 @@ namespace Catalyst.Core.Kernel
         /// </summary>
         public Kernel StartNode()
         {
+            ContainerBuilder.RegisterType<TransactionValidator>().As<ITransactionValidator>();
+            ContainerBuilder.RegisterType<TransactionReceivedEvent>().As<ITransactionReceivedEvent>();
+
             StartContainer();
             BsonSerializationProviders.Init();
             _instance.Resolve<ICatalystNode>()

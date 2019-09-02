@@ -21,12 +21,10 @@
 
 #endregion
 
-using Catalyst.Abstractions.IO.Events;
-
-namespace Catalyst.Core.IO.Events
+namespace Catalyst.Abstractions.IO.Events
 {
-    public class SocketClientRegistryEvent : ISocketClientRegistryEvent
+    public interface ISocketClientRegistryEvent
     {
-        public int SocketHashCode { set; get; }
+        int SocketHashCode { set; get; }
     }
 }

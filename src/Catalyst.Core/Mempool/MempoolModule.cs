@@ -33,7 +33,7 @@ namespace Catalyst.Core.Mempool
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.Register(c => new Mempool<MempoolDocument>(c.Resolve<IMempoolRepository<MempoolDocument>>(),
+            builder.Register(c => new Mempool(c.Resolve<IMempoolRepository<MempoolDocument>>(),
                     c.Resolve<ILogger>()
                 ))
                .As<IMempool<MempoolDocument>>();

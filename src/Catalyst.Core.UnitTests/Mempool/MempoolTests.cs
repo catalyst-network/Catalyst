@@ -24,8 +24,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Catalyst.Abstractions.Mempool.Documents;
 using Catalyst.Abstractions.Mempool.Repositories;
-using Catalyst.Core.Mempool;
 using Catalyst.Core.Mempool.Documents;
 using Catalyst.Protocol.Transaction;
 using Catalyst.TestUtils;
@@ -40,17 +40,14 @@ namespace Catalyst.Core.UnitTests.Mempool
 {
     public sealed class MempoolTests
     {
-        private readonly Mempool<MempoolDocument> _memPool;
-
-        // private readonly IMempoolDocument _mempoolDocument;
-        
-        private readonly ILogger _logger;
+        private readonly Core.Mempool.Mempool _memPool;
         private readonly TransactionBroadcast _transactionBroadcast;
+        private readonly ILogger _logger;
 
         public MempoolTests()
         {
             _logger = Substitute.For<ILogger>();
-            _memPool = new Mempool<MempoolDocument>(Substitute.For<IMempoolRepository<MempoolDocument>>(), _logger);
+            _memPool = new Core.Mempool.Mempool(Substitute.For<IMempoolRepository<MempoolDocument>>(), _logger);
 
             // _mempoolDocument = new MempoolDocument
             // {
@@ -103,7 +100,7 @@ namespace Catalyst.Core.UnitTests.Mempool
             for (var i = 0; i < numTx; i++)
             {
                 var signature = TransactionHelper.GetTransactionSignature(signature: $"key{i}");
-                var mempoolDocument = _memPool.Repository.ReadItem(signature);
+                var mempoolDocument = _memPool.GetMempoolDocument(signature);
                 mempoolDocument.Transaction.STEntries.Single().Amount.Should().Be((uint) i);
             }
         }
@@ -116,7 +113,7 @@ namespace Catalyst.Core.UnitTests.Mempool
             _memPool.Repository.Received(1).DeleteItem(Arg.Is<string[]>(s => s.SequenceEqual(keys)));
         }
 
-        [Fact(Skip = "don't like testing we hit a logger")]
+        [Fact]
         public void Delete_should_log_deletion_errors()
         {
             var keys = Enumerable.Range(0, 3).Select(i => i.ToString()).ToArray();
@@ -124,68 +121,58 @@ namespace Catalyst.Core.UnitTests.Mempool
             _memPool.Repository.WhenForAnyArgs(t => t.DeleteItem(keys))
                .Throw(connectTimeoutException);
 
-            var result = _memPool.Repository.DeleteItem(keys);
+            _memPool.Delete(keys);
 
-            result.Should().BeFalse();
+            _logger.Received(1).Error(Arg.Any<Exception>(),
+                Arg.Any<string>(),
+                Arg.Any<string[]>());
         }
 
         [Fact]
         public void Get_When_Key_Not_In_Store_Should_Throw()
         {
             _memPool.Repository.ReadItem(Arg.Any<TransactionSignature>()).ThrowsForAnyArgs(new KeyNotFoundException());
-            new Action(() => _memPool.Repository.ReadItem(TransactionHelper.GetTransactionSignature("signature that doesn't exist")))
+            new Action(() => _memPool.GetMempoolDocument(TransactionHelper.GetTransactionSignature("signature that doesn't exist")))
                .Should().Throw<KeyNotFoundException>();
         }
 
         [Fact]
         public void SaveMempoolDocument_Should_Not_Override_Existing_Record()
         {
-            // this test seems pointless like this
-            
             var expectedAmount = _transactionBroadcast.STEntries.Single().Amount;
 
-            _memPool.Repository.CreateItem(Arg.Is<TransactionBroadcast>(_transactionBroadcast))
-               .Returns(true);
-            
-            var saved = _memPool.Repository.CreateItem(_transactionBroadcast);
+            var saved = _memPool.SaveMempoolDocument(_transactionBroadcast);
+            AddKeyValueStoreEntryExpectation(_transactionBroadcast);
             saved.Should().BeTrue();
-            
+
             var overridingTransaction = _transactionBroadcast.Clone();
             overridingTransaction.STEntries.Single().Amount = expectedAmount + 100;
-            
-            _memPool.Repository.CreateItem(Arg.Is<TransactionBroadcast>(overridingTransaction))
-               .Returns(false);
-            var overriden = _memPool.Repository.CreateItem(overridingTransaction);
+            var overriden = _memPool.SaveMempoolDocument(overridingTransaction);
 
             overriden.Should().BeFalse();
 
-            _memPool.Repository.TryReadItem(Arg.Is<TransactionSignature>(_transactionBroadcast.Signature))
-               .Returns(true);
-            
-            var retrievedTransaction = _memPool.Repository.TryReadItem(_transactionBroadcast.Signature);
-            retrievedTransaction.Should().BeTrue();
+            var retrievedTransaction = _memPool.GetMempoolDocument(_mempoolDocument.Transaction.Signature);
+            retrievedTransaction.Transaction.STEntries.Single().Amount.Should().Be(expectedAmount);
         }
 
         [Fact]
         public void SaveMempoolDocument_Should_Return_False_And_Log_On_Store_Exception()
         {
             var exception = new TimeoutException("underlying store is not connected");
-            _memPool.Repository.TryReadItem(default)
+            _transactionStore.TryGet(default, out Arg.Any<MempoolDocument>())
                .ThrowsForAnyArgs(exception);
-
-            var saved = _memPool.Repository.CreateItem(_transactionBroadcast);
+            var saved = _memPool.SaveMempoolDocument(_mempoolDocument);
 
             saved.Should().BeFalse();
+
+            _logger.Received(1).Error(exception, Arg.Any<string>());
         }
         
         [Fact]
         public void SaveMempoolDocument_Should_Throw_On_Document_With_Null_Transaction()
         {
-            _transactionBroadcast.Signature = null;
-            
-            _memPool.Repository.CreateItem(_transactionBroadcast).Throws<ArgumentNullException>();
-            
-            new Action(() => _memPool.Repository.CreateItem(_transactionBroadcast))
+            _mempoolDocument.Transaction = null;
+            new Action(() => _memPool.SaveMempoolDocument(_mempoolDocument))
                .Should().Throw<ArgumentNullException>()
                .And.Message.Should().Contain("cannot be null");
         }
@@ -193,9 +180,7 @@ namespace Catalyst.Core.UnitTests.Mempool
         [Fact]
         public void SaveMempoolDocument_Should_Throw_On_Null_Document()
         {
-            _memPool.Repository.CreateItem(null).Throws<ArgumentNullException>();
-
-            new Action(() => _memPool.Repository.CreateItem(null))
+            new Action(() => _memPool.SaveMempoolDocument(null))
                .Should().Throw<ArgumentNullException>()
                .And.Message.Should().Contain("cannot be null"); // transaction is null so do not insert
         }
@@ -206,21 +191,21 @@ namespace Catalyst.Core.UnitTests.Mempool
             var documentCount = 13;
             var mempoolDocs = GetTestingMempoolDocuments(documentCount);
 
-            _memPool.Repository.GetAll().Returns(mempoolDocs);
+            _transactionStore.Repository.GetAll().Returns(mempoolDocs);
 
-            var content = _memPool.Repository.GetAll().ToList();
+            var content = _memPool.GetMemPoolContent().ToList();
 
-            _memPool.Repository.ReceivedWithAnyArgs(1).GetAll();
+            _transactionStore.ReceivedWithAnyArgs(1).GetAll();
 
             content.Count.Should().Be(documentCount);
             content.Select(d => d.ToByteString()).Should()
-               .BeEquivalentTo(mempoolDocs.Select(d => d.ToByteString()));
+               .BeEquivalentTo(mempoolDocs.Select(d => d.Transaction.ToByteString()));
         }
 
-        private static List<TransactionBroadcast> GetTestingMempoolDocuments(int documentCount)
+        private static List<MempoolDocument> GetTestingMempoolDocuments(int documentCount)
         {
             return Enumerable.Range(0, documentCount).Select(i =>
-                    TransactionHelper.GetTransaction((uint) i, signature: $"key{i}"))
+                    new MempoolDocument {Transaction = TransactionHelper.GetTransaction((uint) i, signature: $"key{i.ToString()}")})
                .ToList();
         }
 
@@ -230,29 +215,29 @@ namespace Catalyst.Core.UnitTests.Mempool
             var documentCount = 7;
             var mempoolDocs = GetTestingMempoolDocuments(documentCount);
 
-            _memPool.Repository.GetAll().Returns(mempoolDocs);
+            _transactionStore.GetAll().Returns(mempoolDocs);
 
-            var content = _memPool.Repository.GetAll().ToList();
+            var content = _memPool.GetMemPoolContentAsTransactions().ToList();
 
-            _memPool.Repository.ReceivedWithAnyArgs(1).GetAll();
+            _transactionStore.ReceivedWithAnyArgs(1).GetAll();
 
             content.Count.Should().Be(documentCount);
             content.Select(d => d.ToByteString()).Should()
-               .BeEquivalentTo(mempoolDocs.Select(d => d.ToByteString()));
+               .BeEquivalentTo(mempoolDocs.Select(d => d.Transaction.ToByteString()));
         }
 
         [Fact]
         public void ContainsDocument_Should_Return_True_On_Known_DocumentId()
         {
-            AddKeyValueStoreEntryExpectation(_transactionBroadcast);
-            _memPool.Repository.TryReadItem(_transactionBroadcast.Signature).Should().BeTrue();
+            AddKeyValueStoreEntryExpectation(_mempoolDocument);
+            _memPool.ContainsDocument(_mempoolDocument.Transaction.Signature).Should().BeTrue();
         }
 
         [Fact]
         public void ContainsDocument_Should_Return_False_On_Unknown_DocumentId()
         {
             var unknownTransaction = TransactionHelper.GetTransactionSignature("key not in the mempool");
-            _memPool.Repository.TryReadItem(unknownTransaction).Should().BeFalse();
+            _memPool.ContainsDocument(unknownTransaction).Should().BeFalse();
         }
     }
 }

@@ -30,8 +30,11 @@ using Autofac.Configuration;
 using AutofacSerilogIntegration;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.FileSystem;
+using Catalyst.Abstractions.IO.Events;
 using Catalyst.Abstractions.Keystore;
-using Catalyst.Abstractions.Registry;
+using Catalyst.Core.IO.Events;
+using Catalyst.Protocol.Interfaces.Validators;
+using Catalyst.Protocol.Validators;
 using Microsoft.Extensions.Configuration;
 using Serilog;
 using Serilog.Core;
@@ -105,6 +108,9 @@ namespace Catalyst.TestUtils
 
             var keyRegistry = TestKeyRegistry.MockKeyRegistry();
             ContainerBuilder.RegisterInstance(keyRegistry).As<IKeyRegistry>();
+
+            ContainerBuilder.RegisterType<TransactionValidator>().As<ITransactionValidator>();
+            ContainerBuilder.RegisterType<TransactionReceivedEvent>().As<ITransactionReceivedEvent>();
 
             ConfigureLogging(writeLogsToTestOutput, writeLogsToFile, logDotNettyTraffic);
         }

@@ -24,7 +24,7 @@
 using System;
 using System.Collections.Generic;
 using System.Net;
-using Catalyst.Abstractions.IO.Observables;
+using Catalyst.Abstractions.IO.Events;
 
 namespace Catalyst.Abstractions.IO.Transport
 {

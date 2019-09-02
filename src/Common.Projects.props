@@ -30,6 +30,6 @@
         <None Include="$(MSBuildThisFileDirectory)../LICENSE" PackagePath="" Pack="true" />
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="Catalyst.Protocol" Version="0.0.1.11345-beta" />
+        <PackageReference Include="Catalyst.Protocol" Version="0.0.1.11355-beta" />
     </ItemGroup>
 </Project>

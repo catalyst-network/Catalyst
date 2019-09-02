@@ -21,12 +21,20 @@
 
 #endregion
 
-using Catalyst.Abstractions.IO.Events;
+using Nethermind.Evm;
+using Xunit;
 
-namespace Catalyst.Core.IO.Events
+namespace Catalyst.Kvm.UnitTests
 {
-    public class SocketClientRegistryEvent : ISocketClientRegistryEvent
+    public sealed class StateHashProviderTests
     {
-        public int SocketHashCode { set; get; }
+        [Fact(Skip = "Not implemented yet")]
+        public void Can_provide_a_latest_state_update_hash()
+        {
+            StateUpdate stateUpdate = new StateUpdate();
+            
+            StateUpdateHashProvider stateUpdateHashProvider = new StateUpdateHashProvider();
+            stateUpdateHashProvider.GetHash(stateUpdate, 1);
+        }
     }
 }
