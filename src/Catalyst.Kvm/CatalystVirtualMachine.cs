@@ -47,9 +47,6 @@ namespace Catalyst.Kvm
         /// <summary>
         /// This will probably be removed
         /// </summary>
-        /// <param name="address"></param>
-        /// <param name="releaseSpec"></param>
-        /// <returns></returns>
         protected override bool IsPrecompiled(Address address, IReleaseSpec releaseSpec)
         {
             // this will be optimized
