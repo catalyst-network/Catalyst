@@ -27,10 +27,12 @@ using Nethermind.Evm.Precompiles;
 
 namespace Catalyst.Kvm
 {
+    /// <inheritdoc />
     public sealed class RangeProofPrecompile : IPrecompiledContract
     {
         private const int EthereumPrecompilesAddressingSpace = 0xffff;
-        
+
+        /// <inheritdoc />
         /// <summary>
         /// https: //github.com/ethereum/EIPs/blob/master/EIPS/eip-1352.md
         /// 65535 (0xffff) will be registered for Ethereum, so we can start after that
@@ -38,10 +40,14 @@ namespace Catalyst.Kvm
         public Address Address => AddressInKvm;
         
         public static Address AddressInKvm { get; } = Address.FromNumber(1 + EthereumPrecompilesAddressingSpace);
-        
+
+        /// <inheritdoc />
         public long BaseGasCost(IReleaseSpec releaseSpec) { return 200000; } // numbers need to be benchmarked
+
+        /// <inheritdoc />
         public long DataGasCost(byte[] inputData, IReleaseSpec releaseSpec) { return 0; } // numbers need to be benchmarked
 
+        /// <inheritdoc />
         public (byte[], bool) Run(byte[] inputData) { return (new byte[32], true); }
     }
 }
