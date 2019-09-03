@@ -35,12 +35,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Cli.IntegrationTes
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Cli.UnitTests", "Catalyst.Cli.UnitTests\Catalyst.Cli.UnitTests.csproj", "{3E239CE8-A45A-4DD9-ADE3-4DB337F50B44}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Node.POA.CE", "Catalyst.Node.POA.CE\Catalyst.Node.POA.CE.csproj", "{D3CCB18E-2C8C-4D69-B090-F39C8420ED54}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Node.POA.CE.UnitTests", "Catalyst.Node.POA.CE.UnitTests\Catalyst.Node.POA.CE.UnitTests.csproj", "{4B03A2FD-8898-44A1-89E0-C386E17F1909}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Node.POA.CE.IntegrationTests", "Catalyst.Node.POA.CE.IntegrationTests\Catalyst.Node.POA.CE.IntegrationTests.csproj", "{C1F2BB90-BEF9-463D-85AF-95A27069C2AB}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Simulator", "Catalyst.Simulator\Catalyst.Simulator.csproj", "{EC74EF99-CF2A-4F19-9BE1-0D0639F76C36}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Abstractions", "Catalyst.Abstractions\Catalyst.Abstractions.csproj", "{91A5F73C-5FE6-4BF3-B437-10FA9DF785E9}"
@@ -99,18 +93,6 @@ Global
 		{3E239CE8-A45A-4DD9-ADE3-4DB337F50B44}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3E239CE8-A45A-4DD9-ADE3-4DB337F50B44}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3E239CE8-A45A-4DD9-ADE3-4DB337F50B44}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D3CCB18E-2C8C-4D69-B090-F39C8420ED54}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D3CCB18E-2C8C-4D69-B090-F39C8420ED54}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D3CCB18E-2C8C-4D69-B090-F39C8420ED54}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D3CCB18E-2C8C-4D69-B090-F39C8420ED54}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4B03A2FD-8898-44A1-89E0-C386E17F1909}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4B03A2FD-8898-44A1-89E0-C386E17F1909}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4B03A2FD-8898-44A1-89E0-C386E17F1909}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4B03A2FD-8898-44A1-89E0-C386E17F1909}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C1F2BB90-BEF9-463D-85AF-95A27069C2AB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C1F2BB90-BEF9-463D-85AF-95A27069C2AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C1F2BB90-BEF9-463D-85AF-95A27069C2AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C1F2BB90-BEF9-463D-85AF-95A27069C2AB}.Release|Any CPU.Build.0 = Release|Any CPU
 		{EC74EF99-CF2A-4F19-9BE1-0D0639F76C36}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{EC74EF99-CF2A-4F19-9BE1-0D0639F76C36}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EC74EF99-CF2A-4F19-9BE1-0D0639F76C36}.Release|Any CPU.ActiveCfg = Release|Any CPU
