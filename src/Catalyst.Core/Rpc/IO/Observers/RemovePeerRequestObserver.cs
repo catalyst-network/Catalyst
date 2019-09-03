@@ -25,17 +25,14 @@ using System.Linq;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.P2P;
-using Catalyst.Abstractions.P2P.Models;
-using Catalyst.Abstractions.Repository;
-using Catalyst.Core.IO.Observers;
 using Catalyst.Core.IO.Observers;
 using Catalyst.Core.P2P.Models;
 using Catalyst.Core.P2P.Repository;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using DotNetty.Transport.Channels;
+using Serilog;
 using SharpRepository.Repository.Specifications;
-using ILogger = Serilog.ILogger;
 
 namespace Catalyst.Core.Rpc.IO.Observers
 {

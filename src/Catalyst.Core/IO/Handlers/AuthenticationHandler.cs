@@ -34,7 +34,7 @@ namespace Catalyst.Core.IO.Handlers
     /// <summary>
     /// DotNetty Handler in-charge of blocking RPC messages if the node operator is not trusted
     /// </summary>
-    /// <seealso cref="SimpleChannelInboundHandler{ProtocolMessageSigned}" />
+    /// <seealso cref="SimpleChannelInboundHandler{I}" />
     public sealed class AuthenticationHandler : InboundChannelHandlerBase<ProtocolMessageSigned>
     {
         /// <summary>The authentication strategy</summary>

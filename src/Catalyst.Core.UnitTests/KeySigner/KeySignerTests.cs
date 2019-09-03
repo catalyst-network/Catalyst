@@ -23,7 +23,6 @@
 
 using System.Text;
 using Catalyst.Abstractions.Keystore;
-using Catalyst.Abstractions.Registry;
 using Catalyst.Abstractions.Types;
 using Catalyst.Core.Cryptography;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;

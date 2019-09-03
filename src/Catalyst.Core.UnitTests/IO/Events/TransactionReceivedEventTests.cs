@@ -23,7 +23,6 @@
 
 using System.Linq;
 using Catalyst.Abstractions.Mempool;
-using Catalyst.Abstractions.Mempool.Documents;
 using Catalyst.Abstractions.P2P.IO.Messaging.Broadcast;
 using Catalyst.Core.IO.Events;
 using Catalyst.Core.Mempool.Documents;

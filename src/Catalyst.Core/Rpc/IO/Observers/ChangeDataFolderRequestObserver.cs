@@ -25,13 +25,11 @@ using Catalyst.Abstractions.FileSystem;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.P2P;
-using Catalyst.Abstractions.Rpc;
-using Catalyst.Core.IO.Observers;
 using Catalyst.Core.IO.Observers;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using DotNetty.Transport.Channels;
-using ILogger = Serilog.ILogger;
+using Serilog;
 
 namespace Catalyst.Core.Rpc.IO.Observers
 {
@@ -41,8 +39,7 @@ namespace Catalyst.Core.Rpc.IO.Observers
     {
         private readonly IFileSystem _fileSystem;
 
-        public ChangeDataFolderRequestObserver(IPeerIdentifier peerIdentifier,
-            IRpcServerSettings config, 
+        public ChangeDataFolderRequestObserver(IPeerIdentifier peerIdentifier, 
             IFileSystem fileSystem,
             ILogger logger) : base(logger, peerIdentifier)
         {

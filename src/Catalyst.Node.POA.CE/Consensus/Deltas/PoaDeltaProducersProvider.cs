@@ -25,7 +25,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Consensus.Deltas;
 using Catalyst.Core.Extensions;

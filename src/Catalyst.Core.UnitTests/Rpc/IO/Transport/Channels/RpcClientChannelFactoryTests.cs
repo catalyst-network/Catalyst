@@ -107,7 +107,9 @@ namespace Catalyst.Core.UnitTests.Rpc.IO.Transport.Channels
         }
 
         [Fact]
+#pragma warning disable 1998
         public async Task NodeRpcClientChannelFactory_should_put_the_correct_inbound_handlers_on_the_pipeline()
+#pragma warning restore 1998
         {
             var testingChannel = new EmbeddedChannel("test".ToChannelId(),
                 true, _factory.InheritedHandlers.ToArray());
@@ -149,21 +151,11 @@ namespace Catalyst.Core.UnitTests.Rpc.IO.Transport.Channels
 
             testingChannel.WriteOutbound(protocolMessage);
 
-            // _correlationManager.Received(1).TryMatchResponse(protocolMessage); // @TODO in bound server shouldn't try and correlate a request, lets do another test to check this logic
             _correlationManager.DidNotReceiveWithAnyArgs().TryMatchResponse(default);
-
-            //commented is the expected behaviour.
-            //_keySigner.ReceivedWithAnyArgs(1).Sign(Arg.Any<byte[]>());
+            
             _keySigner.DidNotReceiveWithAnyArgs().Sign(Arg.Any<byte[]>(), default);
 
-            var outboundMessageBytes = testingChannel.ReadOutbound<IByteBuffer>();
-
-            //var outboundMessage = ProtocolMessageSigned.Parser.ParseFrom(outboundMessageBytes.Array);
-            //outboundMessage.Should().BeNull();
-
-            //Expected behaviour is commented below
-            //outboundMessage.Should().NotBeNull();
-            //outboundMessage.Message.CorrelationId.Should().Equal(correlationId);
+            testingChannel.ReadOutbound<IByteBuffer>();
         }
     }
 }

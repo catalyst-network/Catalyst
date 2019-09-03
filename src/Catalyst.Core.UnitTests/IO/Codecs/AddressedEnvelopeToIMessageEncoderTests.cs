@@ -50,7 +50,7 @@ namespace Catalyst.Core.UnitTests.IO.Codecs
                     Message = new ProtocolMessage
                     {
                         PeerId = PeerIdHelper.GetPeerId("TestSender"),
-                        CorrelationId = CorrelationId.GenerateCorrelationId().Id.ToByteString(),
+                        CorrelationId = CorrelationId.GenerateCorrelationId().Id.ToByteString()
                     }
                 },
                 PeerIdentifierHelper.GetPeerIdentifier("Test"));

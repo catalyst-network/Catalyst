@@ -23,7 +23,6 @@
 
 using Catalyst.Abstractions.Enumerator;
 using Catalyst.Abstractions.Types;
-using Catalyst.Abstractions.Types;
 using Catalyst.Core.Ledger.Models;
 using Catalyst.Core.Util;
 

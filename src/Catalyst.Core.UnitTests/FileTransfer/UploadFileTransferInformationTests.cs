@@ -23,7 +23,6 @@
 
 using System.IO;
 using System.Linq;
-using Catalyst.Core.FileTransfer;
 using Catalyst.Core.Config;
 using Catalyst.Core.FileTransfer;
 using Catalyst.Core.IO.Messaging.Correlation;
@@ -36,7 +35,7 @@ using Xunit;
 
 namespace Catalyst.Core.UnitTests.FileTransfer
 {
-    public class UploadFileTransferInformationTests
+    public sealed class UploadFileTransferInformationTests
     {
         [Theory]
         [InlineData(2)]

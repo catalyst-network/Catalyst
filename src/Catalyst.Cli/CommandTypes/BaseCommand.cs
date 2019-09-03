@@ -21,13 +21,12 @@
 
 #endregion
 
-using Catalyst.Abstractions.Cli.Options;
-using CommandLine;
 using System;
 using System.Reflection;
-using Catalyst.Abstractions.Cli;
 using Catalyst.Abstractions.Cli.Commands;
 using Catalyst.Abstractions.Cli.CommandTypes;
+using Catalyst.Abstractions.Cli.Options;
+using CommandLine;
 
 namespace Catalyst.Cli.CommandTypes
 {

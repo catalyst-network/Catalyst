@@ -159,16 +159,20 @@ namespace Catalyst.Core.UnitTests.Dfs
         }
 
         [Fact]
+#pragma warning disable 1998
         public async Task Constructor_Should_Throw_On_Hash_Default_Size_Above_159()
+#pragma warning restore 1998
         {
             HashingAlgorithm.Register("TooLong", 0x9999, 160);
 
             var toLongHashingAlgorithm = HashingAlgorithm.All.First(x => x.DigestSize > 159);
             var longEnoughHashingAlgorithm = HashingAlgorithm.All.First(x => x.DigestSize <= 159);
 
+            // ReSharper disable once ObjectCreationAsStatement
             new Action(() => new DevDfs(_fileSystem, toLongHashingAlgorithm)).Should().Throw<ArgumentException>()
                .And.Message.Should().Contain(nameof(HashingAlgorithm));
 
+            // ReSharper disable once ObjectCreationAsStatement
             new Action(() => new DevDfs(_fileSystem, longEnoughHashingAlgorithm)).Should()
                .NotThrow<ArgumentException>();
         }

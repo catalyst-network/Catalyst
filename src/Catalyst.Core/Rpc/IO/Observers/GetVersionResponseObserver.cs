@@ -26,7 +26,7 @@ using Catalyst.Abstractions.P2P;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using DotNetty.Transport.Channels;
-using ILogger = Serilog.ILogger;
+using Serilog;
 
 namespace Catalyst.Core.Rpc.IO.Observers
 {

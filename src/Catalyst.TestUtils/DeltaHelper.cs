@@ -90,7 +90,7 @@ namespace Catalyst.TestUtils
             PeerId producerId = null,
             PeerId voterId = null)
         {
-            var candidate = DeltaHelper.GetCandidateDelta(previousDeltaHash, hash, producerId, hashAlgorithm);
+            var candidate = GetCandidateDelta(previousDeltaHash, hash, producerId, hashAlgorithm);
             var voter = voterId ?? PeerIdHelper.GetPeerId();
 
             return new FavouriteDeltaBroadcast

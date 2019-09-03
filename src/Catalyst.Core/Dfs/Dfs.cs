@@ -57,7 +57,7 @@ namespace Catalyst.Core.Dfs
                 options: AddFileOptions,
                 cancel: cancellationToken);
             var id = node.Id.Encode();
-            _logger.Debug<string>("Text added to IPFS with id {0}", id);
+            _logger.Debug("Text added to IPFS with id {0}", id);
             return id;
         }
 
@@ -77,7 +77,7 @@ namespace Catalyst.Core.Dfs
             var node = await _ipfs.FileSystem
                .AddAsync(content, name, AddFileOptions, cancellationToken);
             var id = node.Id.Encode();
-            _logger.Debug<string, string>("Content {1}added to IPFS with id {0}",
+            _logger.Debug("Content {1}added to IPFS with id {0}",
                 id, name + " ");
             return id;
         }

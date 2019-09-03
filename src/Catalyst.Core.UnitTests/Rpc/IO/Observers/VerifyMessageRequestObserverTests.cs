@@ -66,7 +66,9 @@ namespace Catalyst.Core.UnitTests.Rpc.IO.Observers
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
+#pragma warning disable 1998
         public async Task VerifyMessageRequest_Can_Send_VerifyMessageResponse(bool expectedResponse)
+#pragma warning restore 1998
         {
             var testScheduler = new TestScheduler();
             _keySigner.Verify(default, default, default).ReturnsForAnyArgs(expectedResponse);

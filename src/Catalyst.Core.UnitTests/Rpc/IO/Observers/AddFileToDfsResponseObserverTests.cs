@@ -65,7 +65,7 @@ namespace Catalyst.Core.UnitTests.Rpc.IO.Observers
             );
             addFileToDfsResponseObserver.HandleResponseObserver(addFileResponse, channelHandlerContext,
                 senderPeerIdentifier, correlationId);
-            SubstituteExtensions.Received(_uploadFileTransferFactory, 1).Remove(Arg.Any<IUploadFileInformation>(), true);
+            _uploadFileTransferFactory.Received(1).Remove(Arg.Any<IUploadFileInformation>(), true);
         }
 
         [Fact]
@@ -88,7 +88,7 @@ namespace Catalyst.Core.UnitTests.Rpc.IO.Observers
 
             addFileToDfsResponseObserver.HandleResponseObserver(addFileResponse, channelHandlerContext,
                 senderPeerIdentifier, correlationId);
-            SubstituteExtensions.Received(_uploadFileTransferFactory, 1)
+            _uploadFileTransferFactory.Received(1)
                .FileTransferAsync(Arg.Any<ICorrelationId>(), Arg.Any<CancellationToken>());
         }
     }

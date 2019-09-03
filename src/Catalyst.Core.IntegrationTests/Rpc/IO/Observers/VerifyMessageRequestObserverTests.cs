@@ -44,7 +44,6 @@ using Microsoft.Reactive.Testing;
 using Nethereum.Hex.HexConvertors.Extensions;
 using Nethereum.RLP;
 using NSubstitute;
-using Polly.Caching;
 using Serilog;
 using Xunit;
 using Xunit.Abstractions;
@@ -64,7 +63,7 @@ namespace Catalyst.Core.IntegrationTests.Rpc.IO.Observers
             Path.Combine(Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile),
             Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile),
             Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Protocol.Common.Network.Devnet)),
-            Path.Combine(Constants.ConfigSubFolder, Constants.ShellNodesConfigFile),
+            Path.Combine(Constants.ConfigSubFolder, Constants.ShellNodesConfigFile)
         }, output)
         {
             _testScheduler = new TestScheduler();
@@ -86,7 +85,10 @@ namespace Catalyst.Core.IntegrationTests.Rpc.IO.Observers
         [Theory]
         [InlineData("616263", "98a70222f0b8121aa9d30f813d683f809e462b469c7ff87639499bb94e6dae4131f85042463c2a355a2003d062adf5aaa10b8c61e636062aaad11c2a26083406", "ec172b93ad5e563bf4932c70e1245034c35467ef2efd4d64ebf819683467e2bf", true)]
         [InlineData("616263", "98a70222f0b8121aa9d30f813d683f809e462b469c7ff87639499bb94e6dae4131f85042463c2a355a2003d062adf5aaa10b8c61e636062aaad11c2a26083403", "ec172b93ad5e563bf4932c70e1245034c35467ef2efd4d64ebf819683467e2bf", false)]
-        public async Task VerifyMessageRequestObserver_Should_Send_Correct_Response(string message, string signatureAndMessage, string publicKey, bool expectedResult)
+#pragma warning disable 1998
+        public 
+            async Task VerifyMessageRequestObserver_Should_Send_Correct_Response(string message, string signatureAndMessage, string publicKey, bool expectedResult)
+#pragma warning restore 1998
         {
             var sender = PeerIdentifierHelper.GetPeerIdentifier("sender");
             var signatureMessageBytes = signatureAndMessage.HexToByteArray();
@@ -133,7 +135,9 @@ namespace Catalyst.Core.IntegrationTests.Rpc.IO.Observers
         }
 
         [Fact]
+#pragma warning disable 1998
         public async Task VerifyMessageRequest_Can_Verify_Valid_SignMessageResponse()
+#pragma warning restore 1998
         {
             var sender = PeerIdentifierHelper.GetPeerIdentifier("sender");
             var signingContext = new SigningContext

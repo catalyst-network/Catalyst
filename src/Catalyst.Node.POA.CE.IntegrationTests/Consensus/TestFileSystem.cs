@@ -21,6 +21,7 @@
 
 #endregion
 
+using System;
 using System.IO;
 using System.IO.Abstractions;
 using System.Threading.Tasks;
@@ -71,6 +72,6 @@ namespace Catalyst.Node.POA.CE.IntegrationTests.Consensus
         public bool DataFileExistsInSubDirectory(string fileName, string subDirectory) { return _fileSystem.DataFileExistsInSubDirectory(fileName, subDirectory); }
         public string ReadTextFromCddFile(string fileName) { return _fileSystem.ReadTextFromCddFile(fileName); }
         public string ReadTextFromCddSubDirectoryFile(string fileName, string subDirectory) { return _fileSystem.ReadTextFromCddSubDirectoryFile(fileName, subDirectory); }
-        public bool SetCurrentPath(string path) { throw new System.NotImplementedException(); }
+        public bool SetCurrentPath(string path) { throw new NotImplementedException(); }
     }
 }

@@ -53,11 +53,10 @@ namespace Catalyst.Core.UnitTests.IO.Handlers
         {
             var channelHandlerContext = Substitute.For<IChannelHandlerContext>();
             var exception = new NotImplementedException("X.X");
-            Exception exceptionResponse = null;
 
             _observableServiceHandler.MessageStream.Subscribe(
                 nextResponse => { },
-                response => exceptionResponse = response);
+                response => { });
 
             _observableServiceHandler.ExceptionCaught(channelHandlerContext, exception);
 

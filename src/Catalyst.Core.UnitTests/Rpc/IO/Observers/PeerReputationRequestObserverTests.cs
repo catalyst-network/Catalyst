@@ -105,7 +105,9 @@ namespace Catalyst.Core.UnitTests.Rpc.IO.Observers
             responseContent.Reputation.Should().Be(int.MinValue);
         }
 
+#pragma warning disable 1998
         private async Task<GetPeerReputationResponse> GetPeerReputationTest(string publicKey, string ipAddress)
+#pragma warning restore 1998
         {
             var testScheduler = new TestScheduler();
             var peerRepository = Substitute.For<IPeerRepository>();

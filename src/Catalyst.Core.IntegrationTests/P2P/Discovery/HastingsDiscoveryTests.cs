@@ -45,14 +45,12 @@ using Catalyst.Protocol.IPPN;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Google.Protobuf;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
 using Xunit;
 using Xunit.Abstractions;
-using EvictionReason = Microsoft.Extensions.Caching.Memory.EvictionReason;
-using ICacheEntry = Microsoft.Extensions.Caching.Memory.ICacheEntry;
-using IMemoryCache = Microsoft.Extensions.Caching.Memory.IMemoryCache;
 
 namespace Catalyst.Core.IntegrationTests.P2P.Discovery
 {
@@ -77,7 +75,9 @@ namespace Catalyst.Core.IntegrationTests.P2P.Discovery
         private readonly ILogger _logger;
 
         [Fact]
+#pragma warning disable 1998
         public async Task Evicted_Known_Ping_Message_Sets_Contacted_Neighbour_As_UnReachable_And_Can_RollBack_State()
+#pragma warning restore 1998
         {
             var cacheEntriesByRequest = new Dictionary<ByteString, ICacheEntry>();
 
@@ -187,7 +187,9 @@ namespace Catalyst.Core.IntegrationTests.P2P.Discovery
         }
 
         [Fact]
+#pragma warning disable 1998
         public async Task Expected_Ping_Response_From_All_Contacted_Nodes_Produces_Valid_State_Candidate()
+#pragma warning restore 1998
         {
             var seedState = DiscoveryHelper.SubSeedState(_ownNode, _settings);
 
@@ -251,7 +253,9 @@ namespace Catalyst.Core.IntegrationTests.P2P.Discovery
         }
 
         [Fact]
+#pragma warning disable 1998
         public async Task Expected_Ping_Response_Sets_Neighbour_As_Reachable()
+#pragma warning restore 1998
         {
             var seedState = DiscoveryHelper.SubSeedState(_ownNode, _settings);
             var seedOrigin = HastingsOriginator.Default;

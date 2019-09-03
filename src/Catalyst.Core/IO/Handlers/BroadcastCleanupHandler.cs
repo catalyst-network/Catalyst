@@ -24,7 +24,6 @@
 using System.Reflection;
 using Catalyst.Abstractions.P2P.IO.Messaging.Broadcast;
 using Catalyst.Core.Extensions;
-using Catalyst.Core.Extensions;
 using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;
 using Serilog;

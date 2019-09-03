@@ -30,6 +30,7 @@ namespace Catalyst.Core.IO.Handlers
 {
     public sealed class FlushPipelineHandler<T> : OutboundChannelHandlerBase<T>
     {
+        // ReSharper disable once StaticMemberInGenericType
         private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
 
         protected override Task WriteAsync0(IChannelHandlerContext ctx, T msg)

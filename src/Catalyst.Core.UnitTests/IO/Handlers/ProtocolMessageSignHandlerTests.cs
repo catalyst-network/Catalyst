@@ -21,14 +21,13 @@
 
 #endregion
 
-using Catalyst.Core.Extensions;
 using Catalyst.Abstractions.IO.Messaging.Dto;
-using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.KeySigner;
+using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.P2P;
+using Catalyst.Core.Extensions;
 using Catalyst.Core.IO.Handlers;
 using Catalyst.Core.IO.Messaging.Dto;
-using Catalyst.Core.Util;
 using Catalyst.Core.Util;
 using Catalyst.Cryptography.BulletProofs.Wrapper;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
@@ -48,20 +47,19 @@ namespace Catalyst.Core.UnitTests.IO.Handlers
         private readonly IKeySigner _keySigner;
         private readonly ISignature _signature;
         private readonly ISigningContextProvider _signatureContextProvider;
-        private readonly IPeerSettings _peerSettings;
 
         public ProtocolMessageSignHandlerTests()
         {
             _fakeContext = Substitute.For<IChannelHandlerContext>();
             _keySigner = Substitute.For<IKeySigner>();
             _signature = Substitute.For<ISignature>();
-            _peerSettings = Substitute.For<IPeerSettings>();
+            var peerSettings = Substitute.For<IPeerSettings>();
             _signatureContextProvider = Substitute.For<ISigningContextProvider>();
 
             _signature.SignatureBytes.Returns(ByteUtil.GenerateRandomByteArray(FFI.SignatureLength));
             _signature.PublicKeyBytes.Returns(ByteUtil.GenerateRandomByteArray(FFI.PublicKeyLength));
 
-            _peerSettings.Network.Returns(Protocol.Common.Network.Devnet);
+            peerSettings.Network.Returns(Protocol.Common.Network.Devnet);
             _signatureContextProvider.Network.Returns(Protocol.Common.Network.Devnet);
             _signatureContextProvider.SignatureType.Returns(SignatureType.ProtocolPeer);
 

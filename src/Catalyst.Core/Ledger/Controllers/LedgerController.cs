@@ -69,7 +69,7 @@ namespace Catalyst.Core.Ledger.Controllers
             return Json(new
             {
                 DeltaHash = dfsTarget,
-                Base64UrlDfsContent = (dfsContent ?? new byte[0]).ToBase64Url(),
+                Base64UrlDfsContent = (dfsContent ?? new byte[0]).ToBase64Url()
             });
         }
     }

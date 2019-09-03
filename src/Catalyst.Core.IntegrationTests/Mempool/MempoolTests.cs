@@ -25,7 +25,6 @@ using System.IO;
 using System.Threading.Tasks;
 using Autofac;
 using Catalyst.Abstractions.Mempool;
-using Catalyst.Abstractions.Mempool.Models;
 using Catalyst.Core.Config;
 using Catalyst.Core.IO.Messaging.Correlation;
 using Catalyst.Core.Mempool.Documents;

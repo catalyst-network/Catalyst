@@ -61,7 +61,9 @@ namespace Catalyst.TestUtils
             MessageStream = observableServiceHandler.MessageStream;
         }
 
+#pragma warning disable 1998
         public async Task SimulateReceivingMessagesAsync(params object[] messages)
+#pragma warning restore 1998
         {
             _channel.WriteInbound(messages);
             _testScheduler.Start();

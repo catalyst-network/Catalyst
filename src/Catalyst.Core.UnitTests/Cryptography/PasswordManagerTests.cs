@@ -24,7 +24,6 @@
 using System;
 using System.Security;
 using Catalyst.Abstractions.Cryptography;
-using Catalyst.Abstractions.Registry;
 using Catalyst.Abstractions.Types;
 using Catalyst.Core.Cryptography;
 using FluentAssertions;

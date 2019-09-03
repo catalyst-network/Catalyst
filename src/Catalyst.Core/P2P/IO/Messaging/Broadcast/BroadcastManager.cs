@@ -21,30 +21,25 @@
 
 #endregion
 
-using Catalyst.Core.Config;
-using Catalyst.Core.Extensions;
-using Catalyst.Abstractions.IO.Messaging.Correlation;
-using Catalyst.Abstractions.IO.Messaging.Dto;
-using Catalyst.Abstractions.P2P;
-using Catalyst.Abstractions.P2P.IO.Messaging.Broadcast;
-using Catalyst.Core.IO.Messaging.Dto;
-using Catalyst.Protocol;
-using Catalyst.Protocol.Common;
-using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Primitives;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.KeySigner;
-using Catalyst.Core.Util;
+using Catalyst.Abstractions.P2P;
+using Catalyst.Abstractions.P2P.IO.Messaging.Broadcast;
 using Catalyst.Core.Extensions;
-using Catalyst.Core.P2P.IO.Messaging.Broadcast;
+using Catalyst.Core.IO.Messaging.Dto;
 using Catalyst.Core.P2P.Repository;
 using Catalyst.Core.Util;
+using Catalyst.Protocol;
+using Catalyst.Protocol.Common;
 using Google.Protobuf;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Primitives;
 using Serilog;
 
 namespace Catalyst.Core.P2P.IO.Messaging.Broadcast

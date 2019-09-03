@@ -23,7 +23,7 @@
 
 using System;
 using System.Threading.Tasks;
-using IChannel = DotNetty.Transport.Channels.IChannel;
+using DotNetty.Transport.Channels;
 
 namespace Catalyst.Abstractions.IO.Transport
 {

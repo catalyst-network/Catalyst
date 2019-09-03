@@ -22,7 +22,6 @@
 #endregion
 
 using Catalyst.Abstractions.Types;
-using Catalyst.Abstractions.Types;
 using Catalyst.Core.Cryptography;
 using Catalyst.Simulator.Helpers;
 

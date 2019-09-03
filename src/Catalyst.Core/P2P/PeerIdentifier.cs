@@ -28,7 +28,6 @@ using System.Net;
 using Catalyst.Abstractions.Cli;
 using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.P2P;
-using Catalyst.Abstractions.Registry;
 using Catalyst.Abstractions.Rpc;
 using Catalyst.Abstractions.Types;
 using Catalyst.Core.Network;
@@ -55,7 +54,7 @@ namespace Catalyst.Core.P2P
     public sealed class PeerIdentifier : IPeerIdentifier
     {
         public static char PidDelimiter => '|';
-        public PeerId PeerId { get; set; }
+        public PeerId PeerId { get; }
         public IPAddress Ip => new IPAddress(PeerId.Ip.ToByteArray()).MapToIPv4();
         public int Port => BitConverter.ToUInt16(PeerId.Port.ToByteArray());
         public byte[] PublicKey => PeerId.PublicKey.ToByteArray();

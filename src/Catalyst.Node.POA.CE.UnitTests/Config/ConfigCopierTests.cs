@@ -24,8 +24,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Catalyst.Abstractions.Types;
-using Catalyst.Core.Config;
 using Catalyst.Core.Config;
 using Catalyst.Protocol.Common;
 using Catalyst.TestUtils;
@@ -45,7 +43,7 @@ namespace Catalyst.Node.POA.CE.UnitTests.Config
             {
                 Add(Constants.NetworkConfigFile(Network.Mainnet), Network.Mainnet);
                 Add(Constants.NetworkConfigFile(Network.Testnet), Network.Testnet);
-                Add(Constants.NetworkConfigFile(Protocol.Common.Network.Devnet), Network.Devnet);
+                Add(Constants.NetworkConfigFile(Network.Devnet), Network.Devnet);
                 Add(Constants.SerilogJsonConfigFile, Network.Devnet);
                 Add(Constants.ComponentsJsonConfigFile, Network.Devnet);
                 Add(Constants.MessageHandlersConfigFile, Network.Devnet);
@@ -139,7 +137,7 @@ namespace Catalyst.Node.POA.CE.UnitTests.Config
             var overrideFile = "TestOverride.json";
             var currentDirectory = FileSystem.GetCatalystDataDir();
             FileSystem.WriteTextFileToCddAsync(overrideFile,
-                File.ReadAllText(Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Protocol.Common.Network.Devnet))));
+                File.ReadAllText(Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Network.Devnet))));
             new ConfigCopier().RunConfigStartUp(currentDirectory.FullName, Network.Devnet, null, true, overrideFile);
             File.Exists(Path.Combine(currentDirectory.FullName, overrideFile)).Should().BeTrue();
         }

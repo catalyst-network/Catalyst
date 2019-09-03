@@ -21,13 +21,13 @@
 
 #endregion
 
+using Catalyst.Abstractions.Cli.Commands;
 using Catalyst.Cli.CommandTypes;
 using Catalyst.Cli.Options;
-using Catalyst.Abstractions.Cli;
-using Catalyst.Abstractions.Cli.Commands;
 using Catalyst.Core.Util;
 using Catalyst.Protocol;
 using Catalyst.Protocol.Rpc.Node;
+using Multiformats.Hash;
 using Serilog;
 
 namespace Catalyst.Cli.Commands
@@ -40,7 +40,7 @@ namespace Catalyst.Cli.Commands
 
         protected override GetDeltaRequest GetMessage(GetDeltaOptions option)
         {
-            if (!Multiformats.Hash.Multihash.TryParse(option.Hash, out var hash))
+            if (!Multihash.TryParse(option.Hash, out var hash))
             {
                 Log.Warning("Unable to parse hash {0} as a Multihash", option.Hash);
                 CommandContext.UserOutput.WriteLine($"Unable to parse hash {option.Hash} as a Multihash");

@@ -18,7 +18,7 @@
             ]
         },
         {
-            "type": "Catalyst.Core.Mempool.Mempool`1[[Catalyst.Core.Mempool.Documents.MempoolDocument, Catalyst.Core]]",
+            "type": "Catalyst.Core.Mempool.Mempool",
             "services": [
                 {
                     "type": "Catalyst.Abstractions.Mempool.IMempool`1[[Catalyst.Core.Mempool.Documents.MempoolDocument, Catalyst.Core]], Catalyst.Abstractions"

@@ -31,7 +31,7 @@ namespace Catalyst.Abstractions.Keystore
     {
         IPrivateKey KeyStoreDecrypt(KeyRegistryTypes keyIdentifier);
 
-        IPrivateKey KeyStoreGenerate(KeyRegistryTypes keyIdentifier);
+        Task<IPrivateKey> KeyStoreGenerate(KeyRegistryTypes keyIdentifier);
 
         Task KeyStoreEncryptAsync(IPrivateKey privateKey, KeyRegistryTypes keyIdentifier);
     }

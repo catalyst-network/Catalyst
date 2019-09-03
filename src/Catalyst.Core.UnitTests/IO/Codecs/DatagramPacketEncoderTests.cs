@@ -22,12 +22,10 @@
 #endregion
 
 using System.Net;
-using Catalyst.Core.Extensions;
 using Catalyst.Abstractions.P2P;
+using Catalyst.Core.Extensions;
 using Catalyst.Core.IO.Messaging.Correlation;
 using Catalyst.Core.IO.Messaging.Dto;
-using Catalyst.Core.Util;
-using Catalyst.Core.IO.Messaging.Correlation;
 using Catalyst.Core.Util;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.IPPN;
@@ -46,7 +44,6 @@ namespace Catalyst.Core.UnitTests.IO.Codecs
     {
         private readonly EmbeddedChannel _channel;
         private readonly IPeerIdentifier _recipientPid;
-        private readonly IPeerIdentifier _senderPid;
         private readonly DatagramPacket _datagramPacket;
         private readonly ProtocolMessageSigned _protocolMessageSigned;
         
@@ -56,7 +53,7 @@ namespace Catalyst.Core.UnitTests.IO.Codecs
                 new DatagramPacketEncoder<IMessage>(new ProtobufEncoder())
             );
 
-            _senderPid = PeerIdentifierHelper.GetPeerIdentifier("sender",
+            var senderPid = PeerIdentifierHelper.GetPeerIdentifier("sender",
                 IPAddress.Loopback,
                 10000
             );
@@ -68,13 +65,13 @@ namespace Catalyst.Core.UnitTests.IO.Codecs
 
             _protocolMessageSigned = new ProtocolMessageSigned
             {
-                Message = new PingRequest().ToProtocolMessage(_senderPid.PeerId, CorrelationId.GenerateCorrelationId()),
+                Message = new PingRequest().ToProtocolMessage(senderPid.PeerId, CorrelationId.GenerateCorrelationId()),
                 Signature = ByteUtil.GenerateRandomByteArray(64).ToByteString()
             };
             
             _datagramPacket = new DatagramPacket(
                 Unpooled.WrappedBuffer(_protocolMessageSigned.ToByteArray()),
-                _senderPid.IpEndPoint,
+                senderPid.IpEndPoint,
                 _recipientPid.IpEndPoint
             );
         }

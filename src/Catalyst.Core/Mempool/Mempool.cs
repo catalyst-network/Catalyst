@@ -52,7 +52,7 @@ namespace Catalyst.Core.Mempool
         }
 
         /// <inheritdoc />
-        public IEnumerable<TransactionBroadcast> GetMemPoolContent()
+        private IEnumerable<TransactionBroadcast> GetMemPoolContent()
         {
             var memPoolContent = Repository.GetAll();
             return memPoolContent;

@@ -27,7 +27,6 @@ using System.Linq;
 using System.Net;
 using Autofac;
 using Autofac.Configuration;
-using Catalyst.Abstractions.Types;
 using Catalyst.Core.Config;
 using Catalyst.Core.P2P;
 using Catalyst.Protocol.Common;

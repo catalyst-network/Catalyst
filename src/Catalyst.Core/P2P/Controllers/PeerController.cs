@@ -22,7 +22,6 @@
 #endregion
 
 using System.Linq;
-using Catalyst.Abstractions.Repository;
 using Catalyst.Core.P2P.Repository;
 using Catalyst.Core.Util;
 using Microsoft.AspNetCore.Mvc;

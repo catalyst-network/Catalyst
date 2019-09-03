@@ -60,7 +60,9 @@ namespace Catalyst.TestUtils
         /// <param name="targetAddress">Ignored</param>
         /// <param name="targetPort">Ignored</param>
         /// <param name="certificate">Local TLS certificate</param>
+#pragma warning disable 1998
         public override async Task<IObservableChannel> BuildChannel(IEventLoopGroupFactory eventLoopGroupFactory,
+#pragma warning restore 1998
             IPAddress targetAddress,
             int targetPort,
             X509Certificate2 certificate = null)

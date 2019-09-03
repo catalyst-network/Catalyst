@@ -23,6 +23,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
@@ -119,7 +120,7 @@ namespace Catalyst.Core.UnitTests.Consensus.Cycle
 
             foreach (var phaseName in Enumeration.GetAll<PhaseName>())
             {
-                var received = receivedPhases.Where(p => p.Name == phaseName).ToList();
+                var received = receivedPhases.Where(p => p.Name.Equals(phaseName)).ToList();
                 CheckStatusChangesHappenedInOrder(received, receivedPhases[0].UtcStartTime);
             }
         }
@@ -141,16 +142,16 @@ namespace Catalyst.Core.UnitTests.Consensus.Cycle
                 var phaseTimings = CycleConfiguration.Default.TimingsByName[phases[i].Name];
                 var fullCycleOffset = CycleConfiguration.Default.CycleDuration.Multiply(i / 3);
 
-                var expectedDiff = phases[i].Status == PhaseStatus.Producing
+                var expectedDiff = phases[i].Status.Equals(PhaseStatus.Producing)
                     ? fullCycleOffset + phaseTimings.Offset
-                    : phases[i].Status == PhaseStatus.Collecting
+                    : phases[i].Status.Equals(PhaseStatus.Collecting)
                         ? fullCycleOffset + phaseTimings.Offset + phaseTimings.ProductionTime
                         : fullCycleOffset + phaseTimings.Offset + phaseTimings.TotalTime;
 
                 var nl = Environment.NewLine;
                 timeDiff.TotalSeconds.Should()
                    .BeApproximately(expectedDiff.TotalSeconds, 0.0001d,
-                        $"phase details are " +
+                        "phase details are " +
                         $"{nl}{phases[i]}" +
                         $"{nl}{nameof(timeDiff)}: {timeDiff.ToString()}" +
                         $"{nl}{nameof(fullCycleOffset)}: {fullCycleOffset.ToString()}" +
@@ -173,11 +174,11 @@ namespace Catalyst.Core.UnitTests.Consensus.Cycle
             using (cycleProvider2.PhaseChanges.Take(50 - PhaseCountPerCycle)
                .Subscribe(p =>
                 {
-                    _output.WriteLine($"{_stopWatch.Elapsed.TotalSeconds.ToString()} % 2 -- {p}");
+                    _output.WriteLine($"{_stopWatch.Elapsed.TotalSeconds.ToString(CultureInfo.InvariantCulture)} % 2 -- {p}");
                     spy2.OnNext(p);
                 }, () =>
                 {
-                    _output.WriteLine($"% 2 -- completed after {_stopWatch.Elapsed.TotalSeconds.ToString():g}");
+                    _output.WriteLine($"% 2 -- completed after {_stopWatch.Elapsed.TotalSeconds.ToString(CultureInfo.InvariantCulture):g}");
                     spy2.OnCompleted();
                 }))
             {

@@ -35,6 +35,7 @@ namespace Catalyst.Core.IO.Handlers
     /// <typeparam name="T"></typeparam>
     public abstract class OutboundChannelHandlerBase<T> : ChannelHandlerAdapter
     {
+        // ReSharper disable once StaticMemberInGenericType
         private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
         
         /// <summary>

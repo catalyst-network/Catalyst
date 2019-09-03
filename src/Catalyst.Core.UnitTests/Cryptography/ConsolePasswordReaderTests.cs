@@ -58,7 +58,7 @@ namespace Catalyst.Core.UnitTests.Cryptography
                 new ConsoleKeyInfo('@', ConsoleKey.A, false, false, false),
                 new ConsoleKeyInfo('s', ConsoleKey.S, false, false, false),
                 new ConsoleKeyInfo('s', ConsoleKey.S, false, false, false),
-                new ConsoleKeyInfo('?', ConsoleKey.Enter, false, false, false),
+                new ConsoleKeyInfo('?', ConsoleKey.Enter, false, false, false)
             };
             _userInput.ReadKey().Returns(keysPressed.First(), keysPressed.Skip(1).ToArray());
 

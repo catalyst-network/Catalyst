@@ -41,7 +41,6 @@ namespace Catalyst.Core.UnitTests.Dfs
     public sealed class DfsTests : IDisposable
     {
         private const int DelayInMs = 300;
-        private const int DelayMultiplier = 6;
         private readonly ICoreApi _ipfsEngine;
         private readonly Cid _expectedCid;
         private readonly IFileSystemNode _addedRecord;

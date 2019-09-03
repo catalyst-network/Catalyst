@@ -21,11 +21,13 @@
 
 #endregion
 
-using Catalyst.Core.Extensions;
+using System;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.P2P;
+using Catalyst.Abstractions.Types;
+using Catalyst.Core.Extensions;
 using Catalyst.Core.IO.Messaging.Dto;
 using Catalyst.Core.P2P;
 using Catalyst.Protocol;
@@ -34,15 +36,10 @@ using Dawn;
 using DotNetty.Transport.Channels;
 using Google.Protobuf;
 using Serilog;
-using System;
-using Catalyst.Abstractions.Types;
-using Catalyst.Abstractions.Types;
-using Catalyst.Core.IO.Observers;
-using Catalyst.Core.P2P;
 
 namespace Catalyst.Core.IO.Observers
 {
-    public abstract class RequestObserverBase<TProtoReq, TProtoRes> : MessageObserverBase, IRequestMessageObserver<TProtoRes>
+    public abstract class RequestObserverBase<TProtoReq, TProtoRes> : MessageObserverBase, IRequestMessageObserver
         where TProtoReq : IMessage<TProtoReq> where TProtoRes : IMessage<TProtoRes>
     {
         public IPeerIdentifier PeerIdentifier { get; }
@@ -52,7 +49,7 @@ namespace Catalyst.Core.IO.Observers
             Guard.Argument(typeof(TProtoReq), nameof(TProtoReq)).Require(t => t.IsRequestType(),
                 t => $"{nameof(TProtoReq)} is not of type {MessageTypes.Request.Name}");
             PeerIdentifier = peerIdentifier;
-            logger.Verbose("{interface} instantiated", nameof(IRequestMessageObserver<TProtoRes>));
+            logger.Verbose("{interface} instantiated", nameof(IRequestMessageObserver));
         }
 
         protected abstract TProtoRes HandleRequest(TProtoReq messageDto, IChannelHandlerContext channelHandlerContext, IPeerIdentifier senderPeerIdentifier, ICorrelationId correlationId);

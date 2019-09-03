@@ -26,7 +26,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.FileTransfer;
 using Catalyst.Abstractions.Types;
-using Catalyst.Core.Extensions;
 using Catalyst.Core.Config;
 using Catalyst.Core.Extensions;
 using Catalyst.Core.FileTransfer;

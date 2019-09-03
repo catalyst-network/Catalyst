@@ -35,6 +35,7 @@ using Catalyst.Abstractions.Keystore;
 using Catalyst.Core.IO.Events;
 using Catalyst.Protocol.Interfaces.Validators;
 using Catalyst.Protocol.Validators;
+using DotNetty.Common.Internal.Logging;
 using Microsoft.Extensions.Configuration;
 using Serilog;
 using Serilog.Core;
@@ -148,7 +149,7 @@ namespace Catalyst.TestUtils
 
             if (logDotNettyTraffic)
             {
-                DotNetty.Common.Internal.Logging.InternalLoggerFactory.DefaultFactory.AddProvider(new SerilogLoggerProvider(logger));
+                InternalLoggerFactory.DefaultFactory.AddProvider(new SerilogLoggerProvider(logger));
             }
 
             if (writeLogsToFile)

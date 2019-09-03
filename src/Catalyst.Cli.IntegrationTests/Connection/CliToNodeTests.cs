@@ -21,21 +21,18 @@
 
 #endregion
 
-using System.Collections.Generic;
+using System.IO;
+using System.Threading.Tasks;
 using Autofac;
 using Catalyst.Abstractions.Cli;
+using Catalyst.Abstractions.FileSystem;
+using Catalyst.Abstractions.P2P;
+using Catalyst.Core.Config;
+using Catalyst.Core.IntegrationTests;
+using Catalyst.TestUtils;
 using FluentAssertions;
 using Xunit;
 using Xunit.Abstractions;
-using System.IO;
-using System.IO.Abstractions;
-using System.Threading.Tasks;
-using Catalyst.Abstractions.FileSystem;
-using Catalyst.Abstractions.P2P;
-using Catalyst.Core.IntegrationTests;
-using Catalyst.TestUtils;
-using Constants = Catalyst.Core.Config.Constants;
-using IFileSystem = Catalyst.Abstractions.FileSystem.IFileSystem;
 
 namespace Catalyst.Cli.IntegrationTests.Connection
 {

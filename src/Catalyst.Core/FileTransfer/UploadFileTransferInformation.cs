@@ -22,14 +22,13 @@
 #endregion
 
 using System.IO;
-using Catalyst.Core.Config;
-using Catalyst.Core.Extensions;
 using Catalyst.Abstractions.FileTransfer;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.P2P;
+using Catalyst.Core.Config;
+using Catalyst.Core.Extensions;
 using Catalyst.Core.IO.Messaging.Dto;
-using Catalyst.Core.FileTransfer;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using DotNetty.Transport.Channels;

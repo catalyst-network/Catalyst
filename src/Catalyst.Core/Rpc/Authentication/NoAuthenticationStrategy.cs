@@ -23,7 +23,6 @@
 
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.Rpc.Authentication;
-using Catalyst.Core.Rpc.Authentication.Repository;
 
 namespace Catalyst.Core.Rpc.Authentication
 {
@@ -33,15 +32,6 @@ namespace Catalyst.Core.Rpc.Authentication
     /// <seealso cref="IAuthenticationStrategy" />
     public class NoAuthenticationStrategy : IAuthenticationStrategy
     {
-        /// <summary>The trusted peers</summary>
-        private readonly IAuthCredentialRepository _trustedPeers;
-
-        /// <param name="trustedPeers">The trusted peers.</param>
-        public NoAuthenticationStrategy(IAuthCredentialRepository trustedPeers)
-        {
-            _trustedPeers = trustedPeers;
-        }
-
         /// <inheritdoc cref="IAuthenticationStrategy"/>
         public bool Authenticate(IPeerIdentifier peerIdentifier) { return true; }
     }

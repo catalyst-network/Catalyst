@@ -23,10 +23,10 @@
 
 using System;
 using System.Collections.Generic;
-using Catalyst.Cli.Commands;
-using Catalyst.Cli.UnitTests.Helpers;
 using Catalyst.Abstractions.Cli.CommandTypes;
 using Catalyst.Abstractions.Rpc;
+using Catalyst.Cli.Commands;
+using Catalyst.Cli.UnitTests.Helpers;
 using FluentAssertions;
 using Microsoft.Reactive.Testing;
 using NSubstitute;
@@ -46,7 +46,7 @@ namespace Catalyst.Cli.UnitTests.Commands
             var commandContext = TestCommandHelpers.GenerateCliCommandContext();
             commandContext.GetNodeConfig(Arg.Any<string>()).Returns((IRpcNodeConfig) null);
 
-            var commands = new List<ICommand> {new ConnectCommand(logger, commandContext)};
+            var commands = new List<ICommand> {new ConnectCommand(commandContext)};
             var console = new CatalystCli(commandContext.UserOutput, commands);
 
             var exception = Record.Exception(() => console.ParseCommand("connect", "-n", "node1"));
@@ -60,7 +60,7 @@ namespace Catalyst.Cli.UnitTests.Commands
             var commandContext = TestCommandHelpers.GenerateCliCommandContext();
             TestCommandHelpers.MockRpcNodeConfig(commandContext);
 
-            var commands = new List<ICommand> {new ConnectCommand(logger, commandContext)};
+            var commands = new List<ICommand> {new ConnectCommand(commandContext)};
             var console = new CatalystCli(commandContext.UserOutput, commands);
 
             var isCommandParsed = console.ParseCommand("connect", "-n", "test");
@@ -76,7 +76,7 @@ namespace Catalyst.Cli.UnitTests.Commands
             var commandContext = TestCommandHelpers.GenerateCliFullCommandContext();
             TestCommandHelpers.AddClientSocketRegistry(commandContext, _testScheduler);
 
-            var commands = new List<ICommand> {new ConnectCommand(logger, commandContext)};
+            var commands = new List<ICommand> {new ConnectCommand(commandContext)};
             var console = new CatalystCli(commandContext.UserOutput, commands);
 
             var isCommandParsed = console.ParseCommand("connect", "-n", "test");

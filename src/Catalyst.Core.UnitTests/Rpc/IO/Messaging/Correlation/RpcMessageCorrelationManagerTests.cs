@@ -63,7 +63,9 @@ namespace Catalyst.Core.UnitTests.Rpc.IO.Messaging.Correlation
             TryMatchResponseAsync_Should_Not_Match_Existing_Records_With_Non_Matching_Correlation_Id<GetInfoResponse>();
         }
 
+#pragma warning disable 1998
         protected override async Task CheckCacheEntriesCallback()
+#pragma warning restore 1998
         {
             var observer = Substitute.For<IObserver<ICacheEvictionEvent<ProtocolMessage>>>();
             using (CorrelationManager.EvictionEvents.Subscribe(observer))

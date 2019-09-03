@@ -56,6 +56,7 @@ namespace Catalyst.Core.UnitTests.P2P.IO.Messaging.Dto
 
             Assert.Throws<ArgumentException>(() =>
             {
+                // ReSharper disable once ObjectCreationAsStatement
                 new PeerClientMessageDto(rpcMessage,
                     PeerIdentifierHelper.GetPeerIdentifier("sender"),
                     Substitute.For<ICorrelationId>()

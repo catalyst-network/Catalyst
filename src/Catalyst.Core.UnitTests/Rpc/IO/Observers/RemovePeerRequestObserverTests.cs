@@ -92,7 +92,9 @@ namespace Catalyst.Core.UnitTests.Rpc.IO.Observers
         /// <summary>Executes the test case.</summary>
         /// <param name="fakePeers">The fake peers.</param>
         /// <param name="withPublicKey">if set to <c>true</c> [send message to handler with the public key].</param>
+#pragma warning disable 1998
         private async Task ExecuteTestCase(IReadOnlyCollection<string> fakePeers, bool withPublicKey)
+#pragma warning restore 1998
         {
             var testScheduler = new TestScheduler();
             IPeerRepository peerRepository = Substitute.For<IPeerRepository>();

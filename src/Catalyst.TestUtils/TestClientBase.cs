@@ -21,6 +21,7 @@
 
 #endregion
 
+using System;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.IO.EventLoop;
 using Catalyst.Abstractions.IO.Transport.Channels;
@@ -41,6 +42,6 @@ namespace Catalyst.TestUtils
             Channel = Substitute.For<IChannel>();
         }
 
-        public override Task StartAsync() { throw new System.NotImplementedException(); }
+        public override Task StartAsync() { throw new NotImplementedException(); }
     }
 }

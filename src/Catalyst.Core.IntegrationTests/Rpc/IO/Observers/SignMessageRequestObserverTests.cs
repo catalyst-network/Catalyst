@@ -76,7 +76,9 @@ namespace Catalyst.Core.IntegrationTests.Rpc.IO.Observers
         [InlineData("Hello Catalyst")]
         [InlineData("")]
         [InlineData("Hello&?!1253Catalyst")]
+#pragma warning disable 1998
         public async Task RpcServer_Can_Handle_SignMessageRequest(string message)
+#pragma warning restore 1998
         {
             var sender = PeerIdentifierHelper.GetPeerIdentifier("sender");
             var signMessageRequest = new SignMessageRequest

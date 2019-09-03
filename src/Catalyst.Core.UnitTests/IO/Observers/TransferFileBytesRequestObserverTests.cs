@@ -80,7 +80,9 @@ namespace Catalyst.Core.UnitTests.IO.Observers
         }
 
         [Fact]
+#pragma warning disable 1998
         public async Task HandlerCanSendErrorOnException()
+#pragma warning restore 1998
         {
             var testScheduler = new TestScheduler();
 

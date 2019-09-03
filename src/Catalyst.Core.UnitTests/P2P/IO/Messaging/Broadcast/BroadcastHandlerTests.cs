@@ -23,7 +23,6 @@
 
 using System.Net;
 using System.Threading.Tasks;
-using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.KeySigner;
 using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.P2P;
@@ -47,7 +46,7 @@ using Xunit;
 
 namespace Catalyst.Core.UnitTests.P2P.IO.Messaging.Broadcast
 {
-    public class BroadcastHandlerTests
+    public sealed class BroadcastHandlerTests
     {
         private readonly IBroadcastManager _fakeBroadcastManager;
         private readonly BroadcastHandler _broadcastHandler;
@@ -57,7 +56,6 @@ namespace Catalyst.Core.UnitTests.P2P.IO.Messaging.Broadcast
 
         public BroadcastHandlerTests()
         {
-            ICryptoContext cryptoContext = new CryptoContext(new CryptoWrapper());
             _keySigner = Substitute.For<IKeySigner>();
             _keySigner.Verify(Arg.Any<ISignature>(), Arg.Any<byte[]>(), default).ReturnsForAnyArgs(true);
             _fakeBroadcastManager = Substitute.For<IBroadcastManager>();

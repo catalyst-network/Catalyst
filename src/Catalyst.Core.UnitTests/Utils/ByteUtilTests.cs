@@ -24,7 +24,6 @@
 using System;
 using System.Linq;
 using Catalyst.Core.Util;
-using Catalyst.Core.Util;
 using FluentAssertions;
 using Google.Protobuf;
 using Xunit;
@@ -43,7 +42,7 @@ namespace Catalyst.Core.UnitTests.Utils
         {
             var testBytes = GeneratePopulatedBytesArray(arraySize);
 
-            ByteUtil.ToByteString(testBytes).Should().Equal(ByteString.CopyFrom(testBytes));
+            testBytes.ToByteString().Should().Equal(ByteString.CopyFrom(testBytes));
         }
 
         [Fact]
@@ -51,7 +50,7 @@ namespace Catalyst.Core.UnitTests.Utils
         {
             var testBytes = new byte[500];
 
-            ByteUtil.ToByteString(testBytes).Should().Equal(ByteString.CopyFrom(testBytes));
+            testBytes.ToByteString().Should().Equal(ByteString.CopyFrom(testBytes));
         }
 
         [Fact]
@@ -92,7 +91,7 @@ namespace Catalyst.Core.UnitTests.Utils
         {
             var firstBytesArray = GeneratePopulatedBytesArray(100);
 
-            var byteResult = ByteUtil.Slice(firstBytesArray, st, ed);
+            var byteResult = firstBytesArray.Slice(st, ed);
 
             for (int i = st, k = 0; i <= ed && k < (ed - st); i++, k++)
             {

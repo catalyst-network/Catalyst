@@ -21,14 +21,13 @@
 
 #endregion
 
+using System.Text;
+using Catalyst.Abstractions.Cli.Commands;
+using Catalyst.Cli.CommandTypes;
 using Catalyst.Cli.Options;
-using Catalyst.Abstractions.Cli;
+using Catalyst.Core.Util;
 using Catalyst.Protocol.Rpc.Node;
 using Google.Protobuf;
-using System.Text;
-using Catalyst.Cli.CommandTypes;
-using Catalyst.Abstractions.Cli.Commands;
-using Catalyst.Core.Util;
 
 namespace Catalyst.Cli.Commands
 {

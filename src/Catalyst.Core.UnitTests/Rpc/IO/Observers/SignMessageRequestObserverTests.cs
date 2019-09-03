@@ -68,7 +68,9 @@ namespace Catalyst.Core.UnitTests.Rpc.IO.Observers
         [InlineData("Hello Catalyst")]
         [InlineData("")]
         [InlineData("Hello&?!1253Catalyst")]
+#pragma warning disable 1998
         public async Task SignMessageRequestObserver_Can_Return_SignMessageResponse(string message)
+#pragma warning restore 1998
         {
             var testScheduler = new TestScheduler();
 

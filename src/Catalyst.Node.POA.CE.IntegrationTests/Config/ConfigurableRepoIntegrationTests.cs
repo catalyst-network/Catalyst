@@ -27,6 +27,7 @@ using System.Threading.Tasks;
 using Autofac;
 using Catalyst.Core.Config;
 using Catalyst.Core.IO.Messaging.Correlation;
+using Catalyst.Protocol.Common;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Newtonsoft.Json;
@@ -71,7 +72,7 @@ namespace Catalyst.Node.POA.CE.IntegrationTests.Config
             _configFilesUsed = new[]
             {
                 alteredComponentsFile,
-                Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Protocol.Common.Network.Devnet))
+                Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Network.Devnet))
             };
 
             _containerProvider = new ContainerProvider(_configFilesUsed, FileSystem, Output);

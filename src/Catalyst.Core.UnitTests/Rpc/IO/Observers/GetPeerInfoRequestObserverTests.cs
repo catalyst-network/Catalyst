@@ -163,7 +163,9 @@ namespace Catalyst.Core.UnitTests.Rpc.IO.Observers
         ///     Tests the data/communication through protobuf
         /// </summary>
         /// <returns></returns>
+#pragma warning disable 1998
         private async Task<GetPeerInfoResponse> GetPeerInfoTest(PeerId peerId)
+#pragma warning restore 1998
         {
             var testScheduler = new TestScheduler();
 

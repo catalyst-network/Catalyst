@@ -22,9 +22,9 @@
 #endregion
 
 using System.Collections.Generic;
+using Catalyst.Abstractions.Cli.CommandTypes;
 using Catalyst.Cli.Commands;
 using Catalyst.Cli.UnitTests.Helpers;
-using Catalyst.Abstractions.Cli.CommandTypes;
 using Catalyst.Core.Network;
 using FluentAssertions;
 using Microsoft.Reactive.Testing;

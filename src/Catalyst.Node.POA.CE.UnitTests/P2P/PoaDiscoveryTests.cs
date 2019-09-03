@@ -50,7 +50,7 @@ namespace Catalyst.Node.POA.CE.UnitTests.P2P
             var peers = new[]
             {
                 new PoaPeer {Ip = "92.207.178.198", Port = 42069, PublicKey = pubkey},
-                new PoaPeer {Ip = "127.0.0.1", Port = 42069, PublicKey = pubkey},
+                new PoaPeer {Ip = "127.0.0.1", Port = 42069, PublicKey = pubkey}
             };
 
             await FileSystem.WriteTextFileToCddAsync(PoaDiscovery.PoaPeerFile, JsonConvert.SerializeObject(peers));

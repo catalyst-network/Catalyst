@@ -22,8 +22,6 @@
 #endregion
 
 using System.Collections.Generic;
-using Catalyst.Abstractions.Types;
-using Catalyst.Core.Config;
 using Catalyst.Core.Config;
 using Catalyst.Protocol.Common;
 

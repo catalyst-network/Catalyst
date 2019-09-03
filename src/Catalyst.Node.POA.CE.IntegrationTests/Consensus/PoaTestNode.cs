@@ -33,32 +33,30 @@ using Catalyst.Abstractions.Consensus;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.FileSystem;
-using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.KeySigner;
+using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.Mempool;
-using Catalyst.Abstractions.Mempool.Models;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.Discovery;
-using Catalyst.Abstractions.Registry;
 using Catalyst.Abstractions.Rpc;
 using Catalyst.Abstractions.Types;
 using Catalyst.Core.Config;
 using Catalyst.Core.Dfs;
 using Catalyst.Core.Extensions;
+using Catalyst.Core.FileSystem;
 using Catalyst.Core.Mempool;
 using Catalyst.Core.Mempool.Documents;
 using Catalyst.Core.P2P;
 using Catalyst.Core.P2P.Models;
 using Catalyst.Core.P2P.Repository;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
+using Catalyst.Protocol.Common;
 using Catalyst.TestUtils;
 using Ipfs.Registry;
 using NSubstitute;
 using Serilog;
 using SharpRepository.InMemoryRepository;
 using Xunit.Abstractions;
-using ContainerProvider = Catalyst.TestUtils.ContainerProvider;
-using FileSystem = Catalyst.Core.FileSystem.FileSystem;
 
 namespace Catalyst.Node.POA.CE.IntegrationTests.Consensus
 {
@@ -96,7 +94,7 @@ namespace Catalyst.Node.POA.CE.IntegrationTests.Consensus
             var hashingAlgorithm = HashingAlgorithm.All.First(x => x.Name == "blake2b-256");
             _dfs = new DevDfs(parentTestFileSystem, hashingAlgorithm, baseDfsFolder);
 
-            _mempool = new Mempool(new TestMempoolDocumentRepository(new InMemoryRepository<MempoolDocument, string>(null)), Substitute.For<ILogger>());
+            _mempool = new Mempool(new TestMempoolDocumentRepository(new InMemoryRepository<MempoolDocument, string>()), Substitute.For<ILogger>());
             _peerRepository = Substitute.For<IPeerRepository>();
             var peersInRepo = knownPeerIds.Select(p => new Peer {PeerIdentifier = p}).ToList();
             _peerRepository.AsQueryable().Returns(peersInRepo.AsQueryable());
@@ -108,7 +106,7 @@ namespace Catalyst.Node.POA.CE.IntegrationTests.Consensus
 
             _containerProvider = new ContainerProvider(new[]
                 {
-                    Constants.NetworkConfigFile(Protocol.Common.Network.Devnet),
+                    Constants.NetworkConfigFile(Network.Devnet),
                     Constants.ComponentsJsonConfigFile,
                     Constants.SerilogJsonConfigFile
                 }

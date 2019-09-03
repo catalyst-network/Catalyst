@@ -33,7 +33,6 @@ using Catalyst.Abstractions.IO.Transport.Channels;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.Discovery;
 using Catalyst.Core.Extensions;
-using Catalyst.Core.Extensions;
 using Catalyst.Core.IO.EventLoop;
 using Catalyst.Core.IO.Messaging.Correlation;
 using Catalyst.Core.P2P;

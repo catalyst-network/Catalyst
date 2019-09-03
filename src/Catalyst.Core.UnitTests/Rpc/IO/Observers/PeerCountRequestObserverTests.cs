@@ -80,7 +80,9 @@ namespace Catalyst.Core.UnitTests.Rpc.IO.Observers
         [Theory]
         [InlineData(40)]
         [InlineData(20)]
+#pragma warning disable 1998
         public async Task TestPeerListRequestResponse(int fakePeers)
+#pragma warning restore 1998
         {
             var peerRepository = Substitute.For<IPeerRepository>();
             var peerList = new List<Peer>();

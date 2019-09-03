@@ -36,7 +36,6 @@ using Catalyst.Abstractions.IO.Transport.Channels;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.Rpc;
 using Catalyst.Core.Extensions;
-using Catalyst.Core.Extensions;
 using Catalyst.Core.IO.Messaging.Correlation;
 using Catalyst.Core.IO.Messaging.Dto;
 using Catalyst.Core.Rpc;
@@ -70,6 +69,8 @@ namespace Catalyst.Core.UnitTests.Rpc
                 Arg.Any<X509Certificate2>()).Returns(ObservableHelpers.MockObservableChannel(_mockSocketReplySubject));
 
             var certificateStore = Substitute.For<ICertificateStore>();
+
+            // ReSharper disable once CollectionNeverUpdated.Local
             var requestHandlers = new List<IRpcRequestObserver>();
 
             _rpcServer = new RpcServer(_rpcServerSettings, logger, tcpServerChannelFactory, certificateStore,

@@ -86,9 +86,11 @@ namespace Catalyst.Node.POA.CE.IntegrationTests.Consensus
         public async Task Run_Consensus()
         {
             _nodes.AsParallel()
-               .ForAll(async n =>
+               .ForAll(n =>
                 {
+#pragma warning disable 4014
                     n.RunAsync(_endOfTestCancellationSource.Token);
+#pragma warning restore 4014
                     n.Consensus.StartProducing();
                 });
 

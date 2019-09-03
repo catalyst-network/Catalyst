@@ -50,7 +50,7 @@ namespace Catalyst.Core.UnitTests.P2P.IO.Observers
         }
 
         [Fact]
-        public async void Observer_Can_Process_GetNeighbourResponse_Correctly()
+        public void Observer_Can_Process_GetNeighbourResponse_Correctly()
         {
             var testScheduler = new TestScheduler();
 

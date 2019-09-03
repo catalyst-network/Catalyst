@@ -40,7 +40,7 @@ namespace Catalyst.Cli.UnitTests
                 new object[] {Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "forward", "Path", "Allocation")},
                 new object[] {Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Data", "Concept")},
                 new object[] {Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Azure", "CloudTechnology")},
-                new object[] {Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "PencilCamera", "FolderFriend")},
+                new object[] {Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "PencilCamera", "FolderFriend")}
             };
 
         public CatalystCliOptionsTest()

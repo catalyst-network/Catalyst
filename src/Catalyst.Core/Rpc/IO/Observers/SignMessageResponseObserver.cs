@@ -30,7 +30,7 @@ using Dawn;
 using DotNetty.Transport.Channels;
 using Multiformats.Base;
 using Nethereum.RLP;
-using ILogger = Serilog.ILogger;
+using Serilog;
 
 namespace Catalyst.Core.Rpc.IO.Observers
 {
@@ -69,7 +69,7 @@ namespace Catalyst.Core.Rpc.IO.Observers
             Guard.Argument(signMessageRequest, nameof(signMessageRequest)).NotNull();
             Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
             Guard.Argument(senderPeerIdentifier, nameof(senderPeerIdentifier)).NotNull();
-            Logger.Debug($@"sign message response");
+            Logger.Debug(@"sign message response");
             
             try
             {

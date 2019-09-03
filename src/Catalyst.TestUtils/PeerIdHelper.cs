@@ -27,7 +27,7 @@ using System.Net;
 using System.Text;
 using Catalyst.Core.Network;
 using Catalyst.Core.Util;
-using Catalyst.Protocol;
+using Catalyst.Cryptography.BulletProofs.Wrapper;
 using Catalyst.Protocol.Common;
 
 namespace Catalyst.TestUtils
@@ -52,8 +52,8 @@ namespace Catalyst.TestUtils
             int port = 12345)
         {
             var publicKeyBytes = Encoding.UTF8.GetBytes(publicKeySeed)
-               .Concat(Enumerable.Repeat(default(byte), Cryptography.BulletProofs.Wrapper.FFI.PublicKeyLength))
-               .Take(Cryptography.BulletProofs.Wrapper.FFI.PublicKeyLength).ToArray();
+               .Concat(Enumerable.Repeat(default(byte), FFI.PublicKeyLength))
+               .Take(FFI.PublicKeyLength).ToArray();
             return GetPeerId(publicKeyBytes, ipAddress, port);
         }
 

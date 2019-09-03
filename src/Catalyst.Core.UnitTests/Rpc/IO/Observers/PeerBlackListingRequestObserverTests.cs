@@ -110,7 +110,9 @@ namespace Catalyst.Core.UnitTests.Rpc.IO.Observers
             responseContent.PublicKey.Should().BeNullOrEmpty();
         }
 
+#pragma warning disable 1998
         private async Task<SetPeerBlackListResponse> ApplyBlackListingToPeerTest(string publicKey, string ipAddress, string blacklist)
+#pragma warning restore 1998
         {
             var testScheduler = new TestScheduler();
             var peerRepository = Substitute.For<IPeerRepository>();

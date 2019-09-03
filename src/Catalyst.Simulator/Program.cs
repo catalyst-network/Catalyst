@@ -23,17 +23,15 @@
 
 using System;
 using System.Linq;
-using Catalyst.Abstractions.P2P;
-using Catalyst.Core.Keystore;
 using Catalyst.Core.Cli;
 using Catalyst.Core.Cryptography;
 using Catalyst.Core.FileSystem;
+using Catalyst.Core.Keystore;
 using Catalyst.Protocol.Common;
 using Catalyst.Simulator.Extensions;
 using Catalyst.Simulator.Helpers;
 using Catalyst.Simulator.Simulations;
 using CommandLine;
-using NSubstitute;
 using Serilog;
 
 namespace Catalyst.Simulator

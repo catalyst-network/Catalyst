@@ -23,7 +23,6 @@
 
 using Catalyst.Abstractions.P2P.IO.Messaging.Broadcast;
 using Catalyst.Core.Extensions;
-using Catalyst.Core.Extensions;
 using Catalyst.Core.IO.Handlers;
 using Catalyst.Core.IO.Messaging.Correlation;
 using Catalyst.Protocol.Transaction;
@@ -34,7 +33,7 @@ using Xunit;
 
 namespace Catalyst.Core.UnitTests.P2P.IO.Messaging.Broadcast
 {
-    public class BroadcastCleanupHandlerTests
+    public sealed class BroadcastCleanupHandlerTests
     {
         private readonly IBroadcastManager _broadcastManager;
         private readonly EmbeddedChannel _fakeChannel;

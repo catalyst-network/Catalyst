@@ -73,7 +73,7 @@ namespace Catalyst.Core.Mempool.Repositories
         {      
             if (transactionBroadcast.Signature.Equals(null))
             {
-                throw new ArgumentNullException("cannot be null");
+                throw new ArgumentNullException(nameof(transactionBroadcast));
             }
             
             try

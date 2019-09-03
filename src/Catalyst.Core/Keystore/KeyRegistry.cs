@@ -41,5 +41,5 @@ namespace Catalyst.Core.Keystore
         {
             return Registry.Values.Any(privateKey => privateKey.GetPublicKey().Bytes.SequenceEqual(publicKeyBytes));
         }
-    };
+    }
 }

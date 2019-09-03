@@ -83,7 +83,7 @@ namespace Catalyst.Core.UnitTests.Consensus.Deltas
                         PreviousDeltaDfsHash = ByteUtil.GenerateRandomByteArray(32).ToByteString(),
                         ProducerId = PeerIdHelper.GetPeerId("unknown_producer")
                     }
-                },
+                }
             };
         }
 

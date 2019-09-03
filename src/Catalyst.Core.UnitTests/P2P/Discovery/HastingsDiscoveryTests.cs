@@ -51,7 +51,6 @@ using Microsoft.Reactive.Testing;
 using Nethereum.Hex.HexConvertors.Extensions;
 using NSubstitute;
 using Xunit;
-using Type = System.Type;
 
 namespace Catalyst.Core.UnitTests.P2P.Discovery
 {
@@ -284,15 +283,15 @@ namespace Catalyst.Core.UnitTests.P2P.Discovery
                .WithLogger()
                .WithScheduler(_testScheduler)
                .WithPeerRepository()
-               .WithDns(default, false)
+               .WithDns()
                .WithPeerSettings()
                .WithPeerClient()
                .WithCancellationProvider(ctp)
                .WithPeerClientObservables()
                .WithCurrentStep()
                .WithStepProposal()
-               .WithAutoStart(false)
-               .WithBurn(0);
+               .WithAutoStart()
+               .WithBurn();
 
             using (var walker = discoveryTestBuilder.Build())
             {
@@ -312,13 +311,13 @@ namespace Catalyst.Core.UnitTests.P2P.Discovery
                .WithLogger()
                .WithScheduler(_testScheduler)
                .WithPeerRepository()
-               .WithDns(default, false)
+               .WithDns()
                .WithPeerSettings()
                .WithPeerClient()
                .WithCancellationProvider()
                .WithPeerClientObservables()
-               .WithAutoStart(false)
-               .WithBurn(0)
+               .WithAutoStart()
+               .WithBurn()
                .WithCareTaker();
 
             using (var walker = discoveryTestBuilder.Build())
@@ -340,14 +339,16 @@ namespace Catalyst.Core.UnitTests.P2P.Discovery
                .WithPeerClient()
                .WithCancellationProvider()
                .WithPeerClientObservables()
-               .WithAutoStart(false)
-               .WithBurn(0)
+               .WithAutoStart()
+               .WithBurn()
                .WithCareTaker();
 
             using (var walker = discoveryTestBuilder.Build())
             {
                 walker.CurrentStep.Peer.PublicKey.ToHex()
-                   .Equals("33326b7373683569666c676b336a666d636a7330336c646a346866677338676e");
+                    
+                    // ReSharper disable once ReturnValueOfPureMethodIsNotUsed
+                  ?.Equals("33326b7373683569666c676b336a666d636a7330336c646a346866677338676e");
 
                 walker.StepProposal.Neighbours
                    .Should()
@@ -358,7 +359,9 @@ namespace Catalyst.Core.UnitTests.P2P.Discovery
         [Theory]
         [InlineData(typeof(PingResponse), typeof(PingResponseObserver), "OnPingResponse")]
         [InlineData(typeof(PeerNeighborsResponse), typeof(GetNeighbourResponseObserver), "OnPeerNeighbourResponse")]
+#pragma warning disable 1998
         public async Task Can_Merge_PeerClientObservable_Stream_And_Read_Items_Pushed_On_Separate_Streams(Type discoveryMessage, Type observer, string logMsg)
+#pragma warning restore 1998
         {
             var discoveryTestBuilder = new DiscoveryTestBuilder();
             var subSeedOriginator = DiscoveryHelper.SubSeedOriginator(_ownNode, _settings);
@@ -392,7 +395,9 @@ namespace Catalyst.Core.UnitTests.P2P.Discovery
         }
 
         [Fact]
+#pragma warning disable 1998
         public async Task Can_Discard_UnKnown_PingResponse()
+#pragma warning restore 1998
         {
             var discoveryTestBuilder = new DiscoveryTestBuilder()
                .WithLogger()
@@ -403,8 +408,8 @@ namespace Catalyst.Core.UnitTests.P2P.Discovery
                .WithPeerClient()
                .WithCancellationProvider()
                .WithPeerClientObservables(typeof(PingResponseObserver))
-               .WithAutoStart(false)
-               .WithBurn(0)
+               .WithAutoStart()
+               .WithBurn()
                .WithCareTaker()
                .WithStepProposal(default, false, _ownNode, default, CorrelationId.GenerateCorrelationId());
             
@@ -445,11 +450,11 @@ namespace Catalyst.Core.UnitTests.P2P.Discovery
                .WithPeerClient()
                .WithCancellationProvider()
                .WithPeerClientObservables(typeof(GetNeighbourResponseObserver))
-               .WithAutoStart(false)
-               .WithBurn(0)
+               .WithAutoStart()
+               .WithBurn()
                .WithCareTaker()
                .WithCurrentStep(default, true, currentPid)
-               .WithStepProposal(default, false, candidatePid, default);
+               .WithStepProposal(default, false, candidatePid);
 
             using (var walker = discoveryTestBuilder.Build())
             {
@@ -485,10 +490,10 @@ namespace Catalyst.Core.UnitTests.P2P.Discovery
                .WithPeerClient()
                .WithCancellationProvider()
                .WithPeerClientObservables(typeof(GetNeighbourResponseObserver))
-               .WithAutoStart(false)
-               .WithBurn(0)
+               .WithAutoStart()
+               .WithBurn()
                .WithCareTaker(default, history)
-               .WithStepProposal(default, true, currentPid, default);
+               .WithStepProposal(default, true, currentPid);
 
             using (var walker = discoveryTestBuilder.Build())
             {
@@ -517,8 +522,8 @@ namespace Catalyst.Core.UnitTests.P2P.Discovery
                .WithPeerClient()
                .WithCancellationProvider()
                .WithPeerClientObservables(typeof(GetNeighbourResponseObserver))
-               .WithAutoStart(false)
-               .WithBurn(0)
+               .WithAutoStart()
+               .WithBurn()
                .WithCurrentStep()
                .WithStepProposal(default, false, _ownNode, default, CorrelationId.GenerateCorrelationId());
             
@@ -545,7 +550,9 @@ namespace Catalyst.Core.UnitTests.P2P.Discovery
         }
 
         [Fact]
+#pragma warning disable 1998
         public async Task Can_Process_Valid_PeerNeighbourResponse_Message_And_Ping_Provided_Neighbours()
+#pragma warning restore 1998
         {
             var discoveryTestBuilder = new DiscoveryTestBuilder()
                .WithLogger()
@@ -609,7 +616,9 @@ namespace Catalyst.Core.UnitTests.P2P.Discovery
         }
 
         [Fact]
+#pragma warning disable 1998
         public async Task Can_Correlate_Known_Ping_And_Update_Neighbour_State()
+#pragma warning restore 1998
         {
             var neighbours = DiscoveryHelper.MockNeighbours(Constants.AngryPirate, NeighbourStateTypes.Contacted, CorrelationId.GenerateCorrelationId());
 
@@ -689,14 +698,15 @@ namespace Catalyst.Core.UnitTests.P2P.Discovery
                .WithPeerClient()
                .WithCancellationProvider()
                .WithPeerClientObservables(typeof(GetNeighbourResponseObserver))
-               .WithAutoStart(false)
-               .WithBurn(0)
+               .WithAutoStart()
+               .WithBurn()
                .WithCurrentStep(initialMemento)
                .WithStepProposal(initialStateCandidate);
             
             using (var walker = discoveryTestBuilder.Build())
             {
-                walker.StepProposal.ReceivedWithAnyArgs(1).Neighbours.Count();
+                // ReSharper disable once ReturnValueOfPureMethodIsNotUsed
+                walker.StepProposal.ReceivedWithAnyArgs(1).Neighbours?.Count();
             }
         }
     }

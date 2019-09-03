@@ -27,6 +27,8 @@ using System.Security;
 using System.Security.Authentication;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Cryptography;
+using Catalyst.Abstractions.Enumerator;
+using Catalyst.Abstractions.FileSystem;
 using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.Types;
 using Catalyst.Abstractions.Util;
@@ -34,7 +36,6 @@ using Catalyst.Core.Config;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
 using Nethereum.KeyStore.Crypto;
 using Serilog;
-using IFileSystem = Catalyst.Abstractions.FileSystem.IFileSystem;
 
 namespace Catalyst.Core.Keystore
 {
@@ -119,11 +120,11 @@ namespace Catalyst.Core.Keystore
             throw new AuthenticationException("Password incorrect for keystore.");
         }
 
-        public IPrivateKey KeyStoreGenerate(KeyRegistryTypes keyIdentifier)
+        public async Task<IPrivateKey> KeyStoreGenerate(KeyRegistryTypes keyIdentifier)
         {
             var privateKey = _cryptoContext.GeneratePrivateKey();
 
-            KeyStoreEncryptAsync(privateKey, keyIdentifier);
+            await KeyStoreEncryptAsync(privateKey, keyIdentifier);
 
             return privateKey;
         }
@@ -138,9 +139,9 @@ namespace Catalyst.Core.Keystore
                 var password = StringFromSecureString(securePassword);
     
                 var json = _keyStoreService.EncryptAndGenerateDefaultKeyStoreAsJson(
-                    password: password, 
-                    key: _cryptoContext.ExportPrivateKey(privateKey),
-                    address: address);
+                    password, 
+                    _cryptoContext.ExportPrivateKey(privateKey),
+                    address);
 
                 _passwordManager.AddPasswordToRegistry(_defaultNodePassword, securePassword);
 
@@ -152,7 +153,7 @@ namespace Catalyst.Core.Keystore
             }
         }
 
-        private string GetJsonFromKeyStore(KeyRegistryTypes keyIdentifier)
+        private string GetJsonFromKeyStore(IEnumeration keyIdentifier)
         {
             return _fileSystem.ReadTextFromCddSubDirectoryFile(keyIdentifier.Name, Constants.KeyStoreDataSubDir);
         }

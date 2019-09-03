@@ -22,8 +22,6 @@
 #endregion
 
 using Catalyst.Abstractions.Keystore;
-using Catalyst.Abstractions.Registry;
-using Catalyst.Abstractions.Types;
 using Catalyst.Abstractions.Types;
 using Catalyst.Core.Cryptography;
 using Catalyst.Core.Util;

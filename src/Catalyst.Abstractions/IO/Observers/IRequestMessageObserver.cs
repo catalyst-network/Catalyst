@@ -22,11 +22,10 @@
 #endregion
 
 using Catalyst.Abstractions.P2P;
-using Google.Protobuf;
 
 namespace Catalyst.Abstractions.IO.Observers
 {
-    public interface IRequestMessageObserver<in T> : IMessageObserver where T : IMessage
+    public interface IRequestMessageObserver : IMessageObserver
     {
         IPeerIdentifier PeerIdentifier { get; }
     }

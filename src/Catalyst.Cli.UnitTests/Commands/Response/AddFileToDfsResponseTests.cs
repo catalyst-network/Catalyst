@@ -24,7 +24,6 @@
 using Catalyst.Abstractions.Types;
 using Catalyst.Cli.Commands;
 using Catalyst.Cli.UnitTests.Helpers;
-using Catalyst.Abstractions.Types;
 using Catalyst.Protocol.Rpc.Node;
 using Google.Protobuf;
 using Microsoft.Reactive.Testing;

@@ -26,8 +26,6 @@ using System.Linq;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.P2P;
-using Catalyst.Abstractions.Repository;
-using Catalyst.Core.IO.Observers;
 using Catalyst.Core.IO.Observers;
 using Catalyst.Core.P2P.Repository;
 using Catalyst.Protocol;
@@ -36,7 +34,7 @@ using Dawn;
 using DotNetty.Transport.Channels;
 using Google.Protobuf;
 using Nethereum.RLP;
-using ILogger = Serilog.ILogger;
+using Serilog;
 
 namespace Catalyst.Core.Rpc.IO.Observers
 {
@@ -76,7 +74,7 @@ namespace Catalyst.Core.Rpc.IO.Observers
             Logger.Information("received message of type PeerBlackListingRequest");
             
             var peerItem = _peerRepository.GetAll().FirstOrDefault(m => m.PeerIdentifier.Ip.ToString() == setPeerBlackListRequest.Ip.ToStringUtf8() 
-             && ConvertorForRLPEncodingExtensions.ToStringFromRLPDecoded(m.PeerIdentifier.PublicKey) == setPeerBlackListRequest.PublicKey.ToStringUtf8());
+             && m.PeerIdentifier.PublicKey.ToStringFromRLPDecoded() == setPeerBlackListRequest.PublicKey.ToStringUtf8());
 
             return peerItem == null
                 ? ReturnResponse(false, string.Empty.ToUtf8ByteString(), string.Empty.ToUtf8ByteString()) 

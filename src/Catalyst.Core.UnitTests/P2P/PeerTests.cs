@@ -39,8 +39,11 @@ namespace Catalyst.Core.UnitTests.P2P
             var peer = new Peer {PeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("Test")};
             repo.Add(peer);
             var retrievedPeer = repo.Get(peer.DocumentId);
-            DateTime now = DateTime.UtcNow.Date;
+            var now = DateTime.UtcNow.Date;
             var datecomparer = retrievedPeer.Created.Date.ToString("MM/dd/yyyy");
+
+            // ReSharper disable once SuspiciousTypeConversion.Global
+            // ReSharper disable once ReturnValueOfPureMethodIsNotUsed
             datecomparer.Should().Equals(now.ToString("MM/dd/yyyy"));
             retrievedPeer.Modified.Should().BeNull();
         }
@@ -56,12 +59,17 @@ namespace Catalyst.Core.UnitTests.P2P
             repo.Update(retrievedPeer);
             var retrievedmodified = repo.Get(peer.DocumentId);
             var now = DateTime.UtcNow.Date;
-            
-            if (retrievedmodified.Modified != null) 
+
+            if (retrievedmodified.Modified == null)
             {
-                var dateComparer = retrievedmodified.Modified.Value.Date.ToString("MM/dd/yyyy");
-                dateComparer.Should().Equals(now.ToString("MM/dd/yyyy"));
+                return;
             }
+            
+            var dateComparer = retrievedmodified.Modified.Value.Date.ToString("MM/dd/yyyy");
+
+            // ReSharper disable once SuspiciousTypeConversion.Global
+            // ReSharper disable once ReturnValueOfPureMethodIsNotUsed
+            dateComparer.Should().Equals(now.ToString("MM/dd/yyyy"));
         }
     }
 }

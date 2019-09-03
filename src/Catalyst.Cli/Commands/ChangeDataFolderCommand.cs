@@ -21,11 +21,10 @@
 
 #endregion
 
-using Catalyst.Cli.Options;
 using Catalyst.Abstractions.Cli.Commands;
-using Catalyst.Protocol.Rpc.Node;
 using Catalyst.Cli.CommandTypes;
-using Catalyst.Protocol;
+using Catalyst.Cli.Options;
+using Catalyst.Protocol.Rpc.Node;
 
 namespace Catalyst.Cli.Commands
 {

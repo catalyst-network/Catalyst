@@ -78,7 +78,9 @@ namespace Catalyst.Core.UnitTests.Rpc.IO.Observers
 
         [Theory]
         [MemberData(nameof(MempoolTransactions))]
+#pragma warning disable 1998
         public async Task GetMempool_UsingFilledMempool_ShouldSendGetMempoolResponse(List<TransactionBroadcast> mempoolTransactions)
+#pragma warning restore 1998
         {
             var testScheduler = new TestScheduler();
             var mempool = Substitute.For<IMempool<MempoolDocument>>();

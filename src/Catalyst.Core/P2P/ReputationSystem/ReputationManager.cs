@@ -28,7 +28,6 @@ using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Threading;
 using Catalyst.Abstractions.P2P.ReputationSystem;
-using Catalyst.Abstractions.Repository;
 using Catalyst.Core.P2P.Repository;
 using Dawn;
 using Serilog;

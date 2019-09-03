@@ -21,16 +21,16 @@
 
 #endregion
 
-using Autofac;
-using Catalyst.Abstractions.FileTransfer;
-using Catalyst.Protocol.Rpc.Node;
-using Catalyst.TestUtils;
-using FluentAssertions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Autofac;
+using Catalyst.Abstractions.FileTransfer;
 using Catalyst.Core.IO.Messaging.Correlation;
+using Catalyst.Protocol.Rpc.Node;
+using Catalyst.TestUtils;
+using FluentAssertions;
 using Xunit;
 using Xunit.Abstractions;
 

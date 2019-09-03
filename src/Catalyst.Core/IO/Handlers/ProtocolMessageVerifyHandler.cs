@@ -22,10 +22,8 @@
 #endregion
 
 using System.Reflection;
-using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.KeySigner;
-using Catalyst.Abstractions.P2P;
-using Catalyst.Core.IO.Handlers;
+using Catalyst.Abstractions.Keystore;
 using Catalyst.Protocol;
 using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;

@@ -27,7 +27,6 @@ using Autofac;
 using Catalyst.Abstractions.Consensus;
 using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.Mempool;
-using Catalyst.Abstractions.Mempool.Models;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Config;
 using Catalyst.Core.Dfs;

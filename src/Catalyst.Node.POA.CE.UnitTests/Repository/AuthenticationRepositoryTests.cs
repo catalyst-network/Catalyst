@@ -47,7 +47,7 @@ namespace Catalyst.Node.POA.CE.UnitTests.Repository
             whiteListRepo.Add(new AuthCredentials
             {
                 PublicKey = _trustedPeer.PublicKey.KeyToString(),
-                IpAddress = _trustedPeer.Ip.ToString(),
+                IpAddress = _trustedPeer.Ip.ToString()
             });
 
             _repositoryAuthenticationStrategy = new RepositoryAuthenticationStrategy(whiteListRepo);

@@ -23,9 +23,8 @@
 
 using System;
 using Catalyst.Abstractions.Cryptography;
-using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.KeySigner;
-using Catalyst.Abstractions.Registry;
+using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.Types;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Exceptions;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
@@ -61,9 +60,9 @@ namespace Catalyst.Core.KeySigner
             }   
         }
 
-        private void GenerateKeyAndPopulateRegistryWithDefault()
+        private async void GenerateKeyAndPopulateRegistryWithDefault()
         {
-            var privateKey = _keyStore.KeyStoreGenerate(_defaultKey);
+            var privateKey = await _keyStore.KeyStoreGenerate(_defaultKey);
             if (privateKey != null)
             { 
                 _keyRegistry.AddItemToRegistry(_defaultKey, privateKey);

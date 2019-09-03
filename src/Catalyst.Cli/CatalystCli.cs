@@ -21,12 +21,12 @@
 
 #endregion
 
-using Catalyst.Abstractions.Cli;
-using Catalyst.Abstractions.Cli.CommandTypes;
-using CommandLine;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Catalyst.Abstractions.Cli;
+using Catalyst.Abstractions.Cli.CommandTypes;
+using CommandLine;
 
 namespace Catalyst.Cli
 {
@@ -51,11 +51,9 @@ namespace Catalyst.Cli
             {
                 return parsedCommand.Parse(args);
             }
-            else
-            {
-                var types = _commands.Select(command => command.OptionType).ToArray();
-                Parser.Default.ParseArguments(args, types);
-            }
+
+            var types = _commands.Select(command => command.OptionType).ToArray();
+            Parser.Default.ParseArguments(args, types);
 
             return false;
         }

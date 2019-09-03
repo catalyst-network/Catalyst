@@ -49,7 +49,7 @@ namespace Catalyst.Core.UnitTests.P2P.IO.Observers
         }
 
         [Fact]
-        public async void Observer_Can_Process_PingResponse_Correctly()
+        public void Observer_Can_Process_PingResponse_Correctly()
         {
             var testScheduler = new TestScheduler();
 

@@ -23,20 +23,18 @@
 
 using System.Collections.Generic;
 using System.Threading;
-using Catalyst.Cli.Commands;
 using Catalyst.Abstractions.Cli;
 using Catalyst.Abstractions.Cli.Commands;
+using Catalyst.Abstractions.Cli.CommandTypes;
 using Catalyst.Abstractions.Cryptography;
-using Catalyst.Abstractions.IO.Messaging.Dto;
-using Catalyst.Abstractions.Registry;
+using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.Rpc;
+using Catalyst.Cli.Commands;
 using FluentAssertions;
 using Microsoft.Extensions.Configuration;
 using NSubstitute;
 using Serilog;
 using Xunit;
-using Catalyst.Abstractions.Cli.CommandTypes;
-using Catalyst.Abstractions.Keystore;
 
 namespace Catalyst.Cli.UnitTests
 {

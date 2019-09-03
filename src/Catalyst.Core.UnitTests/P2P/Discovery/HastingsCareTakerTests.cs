@@ -61,7 +61,8 @@ namespace Catalyst.Core.UnitTests.P2P.Discovery
             
             careTaker.Add(subbedMemento);
 
-            careTaker.HastingMementoList.Contains(subbedMemento);
+            // ReSharper disable once ReturnValueOfPureMethodIsNotUsed
+            careTaker.HastingMementoList?.Contains(subbedMemento);
             careTaker.HastingMementoList.Should().HaveCount(1);
         }
         

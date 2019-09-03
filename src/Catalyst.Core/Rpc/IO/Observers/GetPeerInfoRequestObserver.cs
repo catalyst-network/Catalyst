@@ -25,8 +25,6 @@ using System.Linq;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.P2P;
-using Catalyst.Abstractions.Repository;
-using Catalyst.Core.IO.Observers;
 using Catalyst.Core.IO.Observers;
 using Catalyst.Core.P2P.Repository;
 using Catalyst.Protocol.Common;
@@ -34,7 +32,7 @@ using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using DotNetty.Transport.Channels;
 using Google.Protobuf.WellKnownTypes;
-using ILogger = Serilog.ILogger;
+using Serilog;
 
 namespace Catalyst.Core.Rpc.IO.Observers
 {

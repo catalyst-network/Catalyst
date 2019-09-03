@@ -57,7 +57,9 @@ namespace Catalyst.Core.UnitTests.Rpc.IO.Observers
         }
 
         [Fact]
+#pragma warning disable 1998
         public async Task Valid_GetVersion_Request_Should_Send_VersionResponse()
+#pragma warning restore 1998
         {
             var testScheduler = new TestScheduler();
 

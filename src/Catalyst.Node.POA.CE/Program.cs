@@ -22,7 +22,7 @@
 #endregion
 
 using System;
-using Catalyst.Abstractions.Types;
+using System.Diagnostics;
 using Catalyst.Abstractions.Types;
 using Catalyst.Core.Kernel;
 using Catalyst.Protocol.Common;
@@ -88,7 +88,7 @@ namespace Catalyst.Node.POA.CE
         private static void Run(Options options)
         {
             Kernel.Logger.Information("Catalyst.Node started with process id {0}",
-                System.Diagnostics.Process.GetCurrentProcess().Id.ToString());
+                Process.GetCurrentProcess().Id.ToString());
             
             try
             {

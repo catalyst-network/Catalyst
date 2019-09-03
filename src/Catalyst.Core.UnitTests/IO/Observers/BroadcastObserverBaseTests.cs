@@ -58,7 +58,9 @@ namespace Catalyst.Core.UnitTests.IO.Observers
         }
 
         [Fact]
+#pragma warning disable 1998
         public async Task OnNext_Should_Still_Get_Called_After_HandleBroadcast_Failure()
+#pragma warning restore 1998
         {
             var testScheduler = new TestScheduler();
             var candidateDeltaMessages = Enumerable.Repeat(DeltaHelper.GetCandidateDelta(), 10).ToArray();

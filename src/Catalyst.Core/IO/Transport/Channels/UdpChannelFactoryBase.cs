@@ -31,7 +31,6 @@ using Catalyst.Core.IO.Transport.Bootstrapping;
 using DotNetty.Handlers.Logging;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Sockets;
-using IChannel = DotNetty.Transport.Channels.IChannel;
 
 namespace Catalyst.Core.IO.Transport.Channels
 {

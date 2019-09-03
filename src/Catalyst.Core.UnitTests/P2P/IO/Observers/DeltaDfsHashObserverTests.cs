@@ -25,7 +25,6 @@ using System.Text;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Core.Extensions;
-using Catalyst.Core.Extensions;
 using Catalyst.Core.IO.Messaging.Dto;
 using Catalyst.Core.P2P.IO.Observers;
 using Catalyst.Core.Util;
@@ -40,7 +39,7 @@ using Xunit;
 
 namespace Catalyst.Core.UnitTests.P2P.IO.Observers
 {
-    public class DeltaDfsHashObserverTests
+    public sealed class DeltaDfsHashObserverTests
     {
         private readonly IDeltaHashProvider _deltaHashProvider;
         private readonly IChannelHandlerContext _fakeChannelContext;

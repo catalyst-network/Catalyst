@@ -46,7 +46,7 @@ namespace Catalyst.Core.UnitTests.Extensions
         public static void RandomElementReturnsCorrectTypeOfBool()
         {
             var randomList = new List<bool> {false};
-            var returnedElement = RandomElementExtension.RandomElement(randomList);
+            var returnedElement = randomList.RandomElement();
 
             returnedElement.Should().BeFalse();
         }

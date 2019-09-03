@@ -28,8 +28,6 @@ using System.Security.Cryptography.X509Certificates;
 using Catalyst.Abstractions.Cli;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Keystore;
-using Catalyst.Abstractions.P2P;
-using Catalyst.Abstractions.Registry;
 using Catalyst.Simulator.RpcClients;
 using Newtonsoft.Json;
 using Serilog;

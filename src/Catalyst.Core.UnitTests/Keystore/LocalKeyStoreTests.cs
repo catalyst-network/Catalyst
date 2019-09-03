@@ -80,7 +80,9 @@ namespace Catalyst.Core.UnitTests.Keystore
         }
 
         [Fact]
+#pragma warning disable 1998
         public async Task KeyStore_Throws_Exception_On_Invalid_KeyStore_File()
+#pragma warning restore 1998
         {
             _fileSystem.ReadTextFromCddSubDirectoryFile(Arg.Any<string>(), Arg.Any<string>())
                .Returns("bad contents");
@@ -110,7 +112,7 @@ namespace Catalyst.Core.UnitTests.Keystore
             await _fileSystem.WriteTextFileToCddSubDirectoryAsync(Arg.Any<string>(), Arg.Any<string>(),
                 Arg.Do<string>(x => jsonKeyStore = x));
 
-            var privateKey = _keystore.KeyStoreGenerate(KeyRegistryTypes.DefaultKey);
+            var privateKey = await _keystore.KeyStoreGenerate(KeyRegistryTypes.DefaultKey);
             await _fileSystem.Received(1)
                .WriteTextFileToCddSubDirectoryAsync(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>());
 

@@ -21,7 +21,6 @@
 
 #endregion
 
-using System.Net;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.P2P;

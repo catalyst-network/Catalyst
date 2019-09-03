@@ -24,11 +24,9 @@
 using System.Reflection;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.IO.Messaging.Dto;
-using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.KeySigner;
+using Catalyst.Abstractions.Keystore;
 using Catalyst.Core.IO.Messaging.Dto;
-using Catalyst.Core.Util;
-using Catalyst.Core.IO.Handlers;
 using Catalyst.Core.Util;
 using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;

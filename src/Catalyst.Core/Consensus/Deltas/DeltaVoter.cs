@@ -183,7 +183,7 @@ namespace Catalyst.Core.Consensus.Deltas
             {
                 throw new KeyNotFoundException(
                     $"Producer {candidate.ProducerId} " +
-                    $"should not be sending candidate deltas with previous hash " +
+                    "should not be sending candidate deltas with previous hash " +
                     $"{candidate.PreviousDeltaDfsHash.AsBase32Address()}");
             }
 

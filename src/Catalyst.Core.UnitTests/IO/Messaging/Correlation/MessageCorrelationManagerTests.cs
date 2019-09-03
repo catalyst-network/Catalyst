@@ -44,8 +44,7 @@ using Microsoft.Extensions.Primitives;
 using NSubstitute;
 using Serilog;
 using Xunit;
-using PendingRequest =
-    Catalyst.Core.IO.Messaging.Correlation.CorrelatableMessage<Catalyst.Protocol.Common.ProtocolMessage>;
+using PendingRequest = Catalyst.Core.IO.Messaging.Correlation.CorrelatableMessage<Catalyst.Protocol.Common.ProtocolMessage>;
 
 namespace Catalyst.Core.UnitTests.IO.Messaging.Correlation
 {
@@ -81,7 +80,9 @@ namespace Catalyst.Core.UnitTests.IO.Messaging.Correlation
             };
         }
 
+#pragma warning disable 693
         protected void PrepareCacheWithPendingRequests<T>()
+#pragma warning restore 693
             where T : IMessage, new()
         {
             PendingRequests = PeerIds.Select((p, i) => new PendingRequest
@@ -162,7 +163,9 @@ namespace Catalyst.Core.UnitTests.IO.Messaging.Correlation
                .Invoke(null, pendingRequest, EvictionReason.Expired, null);
         }
 
+#pragma warning disable 693
         protected void TryMatchResponseAsync_Should_Match_Existing_Records_With_Matching_Correlation_Id<T>()
+#pragma warning restore 693
             where T : IMessage, new()
         {
             var responseMatchingIndex1 = new T().ToProtocolMessage(
@@ -173,7 +176,9 @@ namespace Catalyst.Core.UnitTests.IO.Messaging.Correlation
             request.Should().BeTrue();
         }
 
-        public void TryMatchResponseAsync_Should_Not_Match_Existing_Records_With_Non_Matching_Correlation_Id<T>()
+#pragma warning disable 693
+        protected void TryMatchResponseAsync_Should_Not_Match_Existing_Records_With_Non_Matching_Correlation_Id<T>()
+#pragma warning restore 693
             where T : IMessage, new()
         {
             var responseMatchingNothing =

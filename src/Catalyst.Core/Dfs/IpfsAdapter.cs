@@ -29,10 +29,12 @@ using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.FileSystem;
 using Catalyst.Abstractions.Types;
 using Catalyst.Core.Config;
+using Common.Logging;
 using Common.Logging.Serilog;
 using Ipfs;
 using Ipfs.CoreApi;
 using Ipfs.Engine;
+using PeerTalk.Cryptography;
 using Serilog;
 
 namespace Catalyst.Core.Dfs
@@ -56,7 +58,7 @@ namespace Catalyst.Core.Dfs
 
         static IpfsAdapter()
         {
-            global::Common.Logging.LogManager.Adapter = new SerilogFactoryAdapter(Log.Logger);
+            LogManager.Adapter = new SerilogFactoryAdapter(Log.Logger);
         }
 
         public IpfsAdapter(IPasswordManager passwordReader,
@@ -97,7 +99,7 @@ namespace Catalyst.Core.Dfs
 
             // Do not use the public IPFS network, use a private network
             // of catalyst only nodes.
-            _ipfs.Options.Swarm.PrivateNetworkKey = new PeerTalk.Cryptography.PreSharedKey
+            _ipfs.Options.Swarm.PrivateNetworkKey = new PreSharedKey
             {
                 Value = swarmKey.ToHexBuffer()
             };
@@ -113,17 +115,21 @@ namespace Catalyst.Core.Dfs
         /// </returns>
         private IpfsEngine Start()
         {
-            if (!_isStarted)
+            if (_isStarted)
             {
-                lock (_startingLock)
+                return _ipfs;
+            }
+            
+            lock (_startingLock)
+            {
+                if (_isStarted)
                 {
-                    if (!_isStarted)
-                    {
-                        _ipfs.Start();
-                        _isStarted = true;
-                        _logger.Information("IPFS started.");
-                    }
+                    return _ipfs;
                 }
+                
+                _ipfs.Start();
+                _isStarted = true;
+                _logger.Information("IPFS started.");
             }
 
             return _ipfs;

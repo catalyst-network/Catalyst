@@ -31,11 +31,11 @@ using Xunit;
 
 namespace Catalyst.Core.UnitTests.Utils
 {
-    public class IpAddressConverterTests
+    public sealed class IpAddressConverterTests
     {
         private readonly IpAddressConverter _ipAddressConverter;
 
-        private class JsonIpTester
+        private sealed class JsonIpTester
         {
             public IPAddress Ip { get; set; }
         }

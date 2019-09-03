@@ -27,7 +27,6 @@ using System.Linq;
 using Autofac;
 using Catalyst.Abstractions;
 using Catalyst.Abstractions.Cryptography;
-using Catalyst.Abstractions.Types;
 using Catalyst.Core.Config;
 using Catalyst.Protocol.Common;
 using Catalyst.TestUtils;

@@ -31,8 +31,6 @@ using Catalyst.Abstractions.IO.Events;
 using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.P2P;
-using Catalyst.Abstractions.Registry;
-using Catalyst.Abstractions.Types;
 using Catalyst.Abstractions.Types;
 using Catalyst.Core.Config;
 using Catalyst.Core.IO.Events;

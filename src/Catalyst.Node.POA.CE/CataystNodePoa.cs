@@ -30,7 +30,6 @@ using Catalyst.Abstractions.Contract;
 using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.KeySigner;
 using Catalyst.Abstractions.Mempool;
-using Catalyst.Abstractions.Mempool.Models;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.Rpc;
 using Catalyst.Core.Ledger;

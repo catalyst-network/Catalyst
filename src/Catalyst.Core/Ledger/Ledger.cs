@@ -25,7 +25,6 @@ using System;
 using System.Linq;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Mempool;
-using Catalyst.Abstractions.Mempool.Models;
 using Catalyst.Core.Ledger.Models;
 using Catalyst.Core.Ledger.Repository;
 using Catalyst.Core.Mempool.Documents;
@@ -39,9 +38,9 @@ namespace Catalyst.Core.Ledger
     ///  This class represents a ledger and is a collection of accounts and data store.
     /// </summary>
     /// <seealso cref="ILedger" />
-    public class Ledger : ILedger, IDisposable
+    public sealed class Ledger : ILedger, IDisposable
     {
-        public IAccountRepository Accounts { get; }
+        private IAccountRepository Accounts { get; }
         private readonly IMempool<MempoolDocument> _mempool;
         private readonly ILogger _logger;
         private readonly IDisposable _deltaUpdatesSubscription;
@@ -67,7 +66,7 @@ namespace Catalyst.Core.Ledger
 
             try
             {
-                Accounts.Add((Account) account);
+                Accounts.Add(account);
                 return true;
             }
             catch (Exception e)
@@ -77,7 +76,7 @@ namespace Catalyst.Core.Ledger
             }
         }
 
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (!disposing)
             {

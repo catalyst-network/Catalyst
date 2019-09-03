@@ -30,7 +30,6 @@ using Catalyst.Abstractions.P2P.IO.Messaging.Correlation;
 using Catalyst.Abstractions.P2P.ReputationSystem;
 using Catalyst.Abstractions.Types;
 using Catalyst.Core.Extensions;
-using Catalyst.Core.Extensions;
 using Catalyst.Core.IO.Messaging.Correlation;
 using Catalyst.Core.P2P.IO.Messaging.Correlation;
 using Catalyst.Core.P2P.ReputationSystem;
@@ -127,7 +126,9 @@ namespace Catalyst.Core.UnitTests.P2P.IO.Messaging.Correlation
             reputationAfter.Should().BeLessThan(reputationBefore);
         }
 
+#pragma warning disable 1998
         protected override async Task CheckCacheEntriesCallback()
+#pragma warning restore 1998
         {
             var observer = Substitute.For<IObserver<IPeerReputationChange>>();
             using (CorrelationManager.ReputationEventStream.Subscribe(observer))

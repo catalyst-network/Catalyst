@@ -75,7 +75,7 @@ namespace Catalyst.Core.FileSystem
 
                 _dataDir = path;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 //Exception Logging ignored
                 return false;

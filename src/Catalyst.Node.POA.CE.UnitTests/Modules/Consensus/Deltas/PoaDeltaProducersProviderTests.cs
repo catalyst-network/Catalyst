@@ -26,6 +26,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Extensions;
+using Catalyst.Core.P2P.Models;
 using Catalyst.Core.P2P.Repository;
 using Catalyst.Core.Util;
 using Catalyst.Node.POA.CE.Consensus.Deltas;
@@ -37,7 +38,6 @@ using Multiformats.Hash.Algorithms;
 using NSubstitute;
 using Serilog;
 using Xunit;
-using Peer = Catalyst.Core.P2P.Models.Peer;
 
 namespace Catalyst.Node.POA.CE.UnitTests.Modules.Consensus.Deltas
 {
