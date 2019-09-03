@@ -139,7 +139,7 @@ namespace Catalyst.Core.UnitTests.P2P
                 _p2PMessageHandlers,
                 _peerSettings,
                 _logger,
-                Substitute.For<IPeerHeartbeatChecker>());
+                Substitute.For<IHealthChecker>());
 
             await _peerService.StartAsync();
             await _serverChannel.SimulateReceivingMessagesAsync(message).ConfigureAwait(false);

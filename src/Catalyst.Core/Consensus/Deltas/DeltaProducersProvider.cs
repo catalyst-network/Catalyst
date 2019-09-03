@@ -21,12 +21,15 @@
 
 #endregion
 
-using System;
+using System.Collections.Generic;
+using Catalyst.Abstractions.P2P;
+using Catalyst.Core.P2P.Repository;
 
-namespace Catalyst.Abstractions.P2P
+namespace Catalyst.Core.Consensus.Deltas
 {
-    public interface IPeerHeartbeatChecker : IDisposable
+    public class DeltaProducersProvider : IDeltaProducersProvider
     {
-        void Run();
+        public IList<IPeerIdentifier> GetDeltaProducersFromPreviousDelta(byte[] previousDeltaHash) { throw new System.NotImplementedException(); }
+        public IPeerRepository PeerRepository { get; }
     }
 }

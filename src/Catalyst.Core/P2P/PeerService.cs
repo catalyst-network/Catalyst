@@ -41,7 +41,7 @@ namespace Catalyst.Core.P2P
     {
         private readonly IEnumerable<IP2PMessageObserver> _messageHandlers;
         private readonly IPeerSettings _peerSettings;
-        private readonly IPeerHeartbeatChecker _heartbeatChecker;
+        private readonly IHealthChecker _healthChecker;
         public IPeerDiscovery Discovery { get; }
         public IObservable<IObserverDto<ProtocolMessage>> MessageStream { get; private set; }
 
@@ -51,12 +51,12 @@ namespace Catalyst.Core.P2P
             IEnumerable<IP2PMessageObserver> messageHandlers,
             IPeerSettings peerSettings,
             ILogger logger,
-            IPeerHeartbeatChecker heartbeatChecker)
+            IHealthChecker healthChecker)
             : base(serverChannelFactory, logger, udpServerEventLoopGroupFactory)
         {
             _messageHandlers = messageHandlers;
             _peerSettings = peerSettings;
-            _heartbeatChecker = heartbeatChecker;
+            _healthChecker = healthChecker;
             Discovery = peerDiscovery;
         }
 
@@ -69,7 +69,7 @@ namespace Catalyst.Core.P2P
             _messageHandlers.ToList()
                .ForEach(h => h.StartObserving(MessageStream));
             Discovery?.DiscoveryAsync();
-            _heartbeatChecker.Run();
+            _healthChecker.Run();
         }
     }
 }

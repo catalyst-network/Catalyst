@@ -37,10 +37,10 @@
             "instanceScope": "singleinstance"
         },
         {
-            "type": "Catalyst.Node.POA.CE.Consensus.Deltas.PoaDeltaProducersProvider, Catalyst.Node.POA.CE",
+            "type": "Catalyst.Core.Consensus.Deltas.DeltaProducersProvider",
             "services": [
                 {
-                    "type": "Catalyst.Core.Consensus.Deltas.IDeltaProducersProvider, Catalyst.Core"
+                    "type": "Catalyst.Core.Consensus.Deltas.IDeltaProducersProvider"
                 }
             ],
             "instanceScope": "singleinstance"
