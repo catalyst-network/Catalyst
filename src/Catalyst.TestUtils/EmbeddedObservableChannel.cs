@@ -23,9 +23,9 @@
 
 using System;
 using System.Threading.Tasks;
-using Catalyst.Common.Interfaces.IO.Messaging.Dto;
-using Catalyst.Common.Interfaces.IO.Transport.Channels;
-using Catalyst.Common.IO.Handlers;
+using Catalyst.Abstractions.IO.Messaging.Dto;
+using Catalyst.Abstractions.IO.Transport.Channels;
+using Catalyst.Core.IO.Handlers;
 using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Embedded;
@@ -61,7 +61,9 @@ namespace Catalyst.TestUtils
             MessageStream = observableServiceHandler.MessageStream;
         }
 
+#pragma warning disable 1998
         public async Task SimulateReceivingMessagesAsync(params object[] messages)
+#pragma warning restore 1998
         {
             _channel.WriteInbound(messages);
             _testScheduler.Start();

@@ -22,8 +22,8 @@
 #endregion
 
 using System;
-using Catalyst.Common.Extensions;
-using Catalyst.Common.Util;
+using Catalyst.Core.Extensions;
+using Catalyst.Core.Util;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Deltas;
 using Google.Protobuf.WellKnownTypes;
@@ -90,7 +90,7 @@ namespace Catalyst.TestUtils
             PeerId producerId = null,
             PeerId voterId = null)
         {
-            var candidate = DeltaHelper.GetCandidateDelta(previousDeltaHash, hash, producerId, hashAlgorithm);
+            var candidate = GetCandidateDelta(previousDeltaHash, hash, producerId, hashAlgorithm);
             var voter = voterId ?? PeerIdHelper.GetPeerId();
 
             return new FavouriteDeltaBroadcast

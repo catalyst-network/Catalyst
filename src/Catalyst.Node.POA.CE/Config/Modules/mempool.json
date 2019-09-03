@@ -1,29 +1,29 @@
 {
-    "defaultAssembly": "Catalyst.Core.Lib",
+    "defaultAssembly": "Catalyst.Core",
     "components": [
         {
-            "type": "SharpRepository.InMemoryRepository.InMemoryRepository`2[[Catalyst.Common.Modules.Mempool.Models.MempoolDocument, Catalyst.Common], [System.String, mscorlib]], SharpRepository.InMemoryRepository",
+            "type": "Catalyst.Core.Mempool.Mempool",
             "services": [
                 {
-                    "type": "SharpRepository.Repository.IRepository`2[[Catalyst.Common.Modules.Mempool.Models.MempoolDocument, Catalyst.Common], [System.String, mscorlib]], SharpRepository.Repository"
+                    "type": "Catalyst.Abstractions.Mempool.IMempool`1[[Catalyst.Core.Mempool.Documents.MempoolDocument, Catalyst.Core]], Catalyst.Abstractions"
                 }
             ],
             "instanceScope": "singleinstance"
         },
         {
-            "type": "Catalyst.Core.Lib.Repository.MempoolRepository, Catalyst.Core.Lib",
+            "type": "Catalyst.Core.Mempool.Repositories.MempoolDocumentRepository",
             "services": [
                 {
-                    "type": "Catalyst.Common.Interfaces.Repository.IMempoolRepository, Catalyst.Common"
+                    "type": "Catalyst.Abstractions.Mempool.Repositories.IMempoolRepository`1[[Catalyst.Core.Mempool.Documents.MempoolDocument, Catalyst.Core]], Catalyst.Abstractions"
                 }
             ],
             "instanceScope": "singleinstance"
         },
         {
-            "type": "Catalyst.Core.Lib.Modules.Mempool.Mempool",
+            "type": "SharpRepository.InMemoryRepository.InMemoryRepository`2[[Catalyst.Core.Mempool.Documents.MempoolDocument, Catalyst.Core], [System.String, mscorlib]], SharpRepository.InMemoryRepository",
             "services": [
                 {
-                    "type": "Catalyst.Common.Interfaces.Modules.Mempool.IMempool, Catalyst.Common"
+                    "type": "SharpRepository.Repository.IRepository`2[[Catalyst.Core.Mempool.Documents.MempoolDocument, Catalyst.Core], [System.String, mscorlib]], SharpRepository.Repository"
                 }
             ],
             "instanceScope": "singleinstance"

@@ -22,11 +22,11 @@
 #endregion
 
 using System;
-using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
-using Catalyst.Common.Interfaces.IO.Messaging.Dto;
-using Catalyst.Common.Interfaces.IO.Observers;
-using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.IO.Observers;
+using Catalyst.Abstractions.IO.Messaging.Correlation;
+using Catalyst.Abstractions.IO.Messaging.Dto;
+using Catalyst.Abstractions.IO.Observers;
+using Catalyst.Abstractions.P2P;
+using Catalyst.Core.IO.Observers;
 using Catalyst.Protocol;
 using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;

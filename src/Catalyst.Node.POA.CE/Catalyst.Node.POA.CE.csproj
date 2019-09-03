@@ -50,16 +50,16 @@
         <PackageReference Include="SharpRepository.Repository" Version="2.0.4.6" />
     </ItemGroup>
     <ItemGroup>
-        <ProjectReference Include="..\Catalyst.Core.Lib.UnitTests\Catalyst.Core.Lib.UnitTests.csproj" />
-        <ProjectReference Include="..\Catalyst.Common\Catalyst.Common.csproj" />
-        <ProjectReference Include="..\Catalyst.Modules.Lib\Catalyst.Modules.Lib.csproj" />
-        <ProjectReference Include="..\Catalyst.Node.Rpc.Client\Catalyst.Node.Rpc.Client.csproj" />
+        <ProjectReference Include="..\Catalyst.Core\Catalyst.Core.csproj" />
     </ItemGroup>
     <ItemGroup>
+        <None Update="Config\**\*.json">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
         <None Update="Config\*.json">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
-        <None Update="Config\Modules\*.json">
+        <None Update="Config.*.json">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
     </ItemGroup>
@@ -67,5 +67,8 @@
       <None Update="Config\AuthCredentials.xml">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
+    </ItemGroup>
+    <ItemGroup>
+      <Folder Include="Consensus" />
     </ItemGroup>
 </Project>

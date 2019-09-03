@@ -1,0 +1,33 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp2.2</TargetFramework>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <RootNamespace>Catalyst.Abstractions</RootNamespace>
+        <Authors>James Kirby (nshcore@protonmail.com)</Authors>
+        <SignAssembly>true</SignAssembly>
+        <AssemblyOriginatorKeyFile>Catalyst.Abstractions.snk</AssemblyOriginatorKeyFile>
+        <PublicSign>true</PublicSign>
+    </PropertyGroup>
+
+    <Import Project="../Common.Projects.props" />
+
+    <ItemGroup>
+      <PackageReference Include="Catalyst.Cryptography.BulletProofs.Wrapper" Version="0.0.1.10324-beta" />
+      <PackageReference Include="DnsClient" Version="1.2.0" />
+      <PackageReference Include="DotNetty.Transport" Version="0.6.0" />
+      <PackageReference Include="Google.Protobuf" Version="3.9.1" />
+      <PackageReference Include="Ipfs.HttpGateway" Version="0.4.0" />
+      <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="2.2.0" />
+      <PackageReference Include="Multiformats.Hash" Version="1.5.0" />
+      <PackageReference Include="SharpRepository.Repository" Version="2.0.4.6" />
+      <PackageReference Include="System.IO.Abstractions" Version="6.0.3" />
+      <PackageReference Include="System.Reactive" Version="4.1.6" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Ledger\Models" />
+      <Folder Include="Ledger\Repository" />
+    </ItemGroup>
+
+</Project>

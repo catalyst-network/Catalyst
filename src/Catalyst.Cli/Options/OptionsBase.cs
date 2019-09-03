@@ -21,7 +21,7 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.Cli.Options;
+using Catalyst.Abstractions.Cli.Options;
 using CommandLine;
 
 namespace Catalyst.Cli.Options

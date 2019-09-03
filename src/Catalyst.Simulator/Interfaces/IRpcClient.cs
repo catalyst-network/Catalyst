@@ -23,7 +23,7 @@
 
 using System;
 using System.Threading.Tasks;
-using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Abstractions.P2P;
 using Google.Protobuf;
 
 namespace Catalyst.Simulator.Interfaces

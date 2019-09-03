@@ -23,10 +23,10 @@
 
 using System;
 using System.Threading;
-using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
-using Catalyst.Common.Interfaces.IO.Observers;
-using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.IO.Observers;
+using Catalyst.Abstractions.IO.Messaging.Correlation;
+using Catalyst.Abstractions.IO.Observers;
+using Catalyst.Abstractions.P2P;
+using Catalyst.Core.IO.Observers;
 using Catalyst.Protocol.IPPN;
 using DotNetty.Transport.Channels;
 using Serilog;

@@ -7,8 +7,9 @@
     </PropertyGroup>
     <Import Project="../Common.Projects.props" />
     <ItemGroup>
+      <ProjectReference Include="..\..\submodules\nethermind\src\Nethermind\Nethermind.Core\Nethermind.Core.csproj" />
       <ProjectReference Include="..\..\submodules\nethermind\src\Nethermind\Nethermind.Evm\Nethermind.Evm.csproj" />
-      <ProjectReference Include="..\Catalyst.Common\Catalyst.Common.csproj" />
+      <ProjectReference Include="..\Catalyst.Core\Catalyst.Core.csproj" />
     </ItemGroup>
 
 </Project>

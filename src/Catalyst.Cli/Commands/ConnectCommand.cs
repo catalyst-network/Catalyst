@@ -21,23 +21,17 @@
 
 #endregion
 
+using Catalyst.Abstractions.Cli.Commands;
 using Catalyst.Cli.CommandTypes;
 using Catalyst.Cli.Options;
-using Catalyst.Common.Interfaces.Cli.Commands;
-using Catalyst.Common.Network;
+using Catalyst.Core.Network;
 using Dawn;
-using Serilog;
 
 namespace Catalyst.Cli.Commands
 {
-    public class ConnectCommand : BaseCommand<ConnectOptions>
+    public sealed class ConnectCommand : BaseCommand<ConnectOptions>
     {
-        private readonly ILogger _logger;
-
-        public ConnectCommand(ILogger logger, ICommandContext commandContext) : base(commandContext)
-        {
-            _logger = logger;
-        }
+        public ConnectCommand(ICommandContext commandContext) : base(commandContext) { }
 
         public static string InvalidSocketChannel => "Inactive socket channel.";
 

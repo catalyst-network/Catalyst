@@ -21,8 +21,8 @@
 
 #endregion
 
-using Xunit;
 using FluentAssertions;
+using Xunit;
 
 namespace Catalyst.Kvm.UnitTests
 {

@@ -1,0 +1,92 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>netcoreapp2.2</TargetFramework>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <RootNamespace>Catalyst.Core</RootNamespace>
+        <Authors>James Kirby (nshcore@protonmail.com)</Authors>
+        <SignAssembly>true</SignAssembly>
+        <AssemblyOriginatorKeyFile>Catalyst.Core.snk</AssemblyOriginatorKeyFile>
+        <PublicSign>true</PublicSign>
+    </PropertyGroup>
+    <Import Project="../Common.Projects.props" />
+    <ItemGroup>
+        <PackageReference Include="Autofac" Version="4.8.1" />
+        <PackageReference Include="Autofac.Configuration" Version="4.1.0" />
+        <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="4.3.1" />
+        <PackageReference Include="AutofacSerilogIntegration" Version="2.0.0" />
+        <PackageReference Include="Catalyst.Cryptography.BulletProofs.Wrapper" Version="0.0.1.10324-beta" />
+        <PackageReference Include="Common.Logging.Serilog" Version="4.3.6" />
+        <PackageReference Include="DotNetty.Codecs.Protobuf" Version="0.6.0" />
+        <PackageReference Include="GraphQL" Version="2.4.0" />
+        <PackageReference Include="Humanizer" Version="2.6.2" />
+        <PackageReference Include="Ipfs.Api" Version="0.23.6" />
+        <PackageReference Include="Ipfs.Core" Version="0.53.1" />
+        <PackageReference Include="Ipfs.Engine" Version="0.11.3" />
+        <PackageReference Include="Ipfs.HttpGateway" Version="0.4.0" />
+        <PackageReference Include="Microsoft.AspNetCore" Version="2.2.0" />
+        <PackageReference Include="Microsoft.AspNetCore.App" />
+        <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.Abstractions" Version="2.2.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.ViewFeatures" Version="2.2.0" />
+        <PackageReference Include="Multiformats.Hash" Version="1.5.0" />
+        <PackageReference Include="Nethereum.KeyStore" Version="3.3.0" />
+        <PackageReference Include="Nethereum.RLP" Version="3.3.0" />
+        <PackageReference Include="Newtonsoft.Json.Bson" Version="1.0.2" />
+        <PackageReference Include="Nito.Comparers" Version="6.0.0" />
+        <PackageReference Include="Polly" Version="7.1.0" />
+        <PackageReference Include="Portable.BouncyCastle" Version="1.8.5" />
+        <PackageReference Include="Dawn.Guard" Version="1.8.0" />
+        <PackageReference Include="DnsClient" Version="1.2.0" />
+        <PackageReference Include="DotNetty.Transport" Version="0.6.0" />
+        <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
+        <PackageReference Include="Serilog" Version="2.8.0" />
+        <PackageReference Include="Serilog.AspNetCore" Version="2.1.1" />
+        <PackageReference Include="Serilog.Extensions.Logging" Version="2.0.4" />
+        <PackageReference Include="Serilog.Enrichers.Environment" Version="2.1.3" />
+        <PackageReference Include="Serilog.Enrichers.Thread" Version="3.1.0" />
+        <PackageReference Include="Serilog.Settings.Configuration" Version="3.1.0" />
+        <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
+        <PackageReference Include="Serilog.Sinks.File" Version="4.0.0" />
+        <PackageReference Include="McMaster.Extensions.CommandLineUtils" Version="2.3.4" />
+        <PackageReference Include="SharpRepository.AzureDocumentDbRepository" Version="2.0.2-alpha4" />
+        <PackageReference Include="SharpRepository.InMemoryRepository" Version="2.0.3.1" />
+        <PackageReference Include="SharpRepository.Ioc.Autofac" Version="2.0.4.2" />
+        <PackageReference Include="SharpRepository.MongoDbRepository" Version="2.0.7.3" />
+        <PackageReference Include="SharpRepository.Repository" Version="2.0.4.6" />
+        <PackageReference Include="SharpRepository.XmlRepository" Version="2.0.1-alpha3" />
+        <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="4.0.1" />
+        <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="4.0.1" />
+        <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="4.0.1" />
+        <PackageReference Include="System.IO.Abstractions" Version="6.0.3" />
+        <PackageReference Include="System.IO.Abstractions.TestingHelpers" Version="6.0.3" />
+        <PackageReference Include="System.Memory" Version="4.5.3" />
+        <PackageReference Include="System.Reactive" Version="4.1.6" />
+        <PackageReference Include="System.Reactive.Core" Version="4.1.6" />
+        <PackageReference Include="System.Reactive.Interfaces" Version="4.1.6" />
+        <PackageReference Include="System.Reactive.Linq" Version="4.1.6" />
+        <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="4.5.2" />
+        <PackageReference Include="DotNetty.Handlers" Version="0.6.0" />
+    </ItemGroup>
+    <ItemGroup>
+        <None Include="..\Build\libs\advapi32.dll">
+            <Link>advapi32.dll</Link>
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+        <None Include="..\Build\libs\kernel32.dll">
+            <Link>kernel32.dll</Link>
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+        <None Include="..\Build\libs\ucrtbase.dll">
+            <Link>ucrtbase.dll</Link>
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+        <None Include="..\Build\libs\vcruntime140.dll">
+            <Link>vcruntime140.dll</Link>
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
+    <ItemGroup>
+      <ProjectReference Include="..\Catalyst.Abstractions\Catalyst.Abstractions.csproj" />
+    </ItemGroup>
+</Project>

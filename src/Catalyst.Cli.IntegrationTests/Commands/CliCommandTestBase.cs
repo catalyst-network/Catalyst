@@ -21,25 +21,23 @@
 
 #endregion
 
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Security.Cryptography.X509Certificates;
 using Autofac;
-using Catalyst.Common.Interfaces.Cli;
-using Catalyst.Common.Interfaces.IO.Messaging.Dto;
-using Catalyst.Common.Interfaces.Rpc;
+using Catalyst.Abstractions.Cli;
+using Catalyst.Abstractions.IO.Messaging.Dto;
+using Catalyst.Abstractions.Rpc;
+using Catalyst.Core.Config;
 using Catalyst.Protocol;
 using Catalyst.Protocol.Common;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using FluentAssertions;
 using Google.Protobuf;
-using Microsoft.Extensions.Configuration;
 using NSubstitute;
 using Xunit.Abstractions;
-using Constants = Catalyst.Common.Config.Constants;
 
 namespace Catalyst.Cli.IntegrationTests.Commands
 {

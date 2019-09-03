@@ -23,10 +23,10 @@
 
 using System;
 using System.Collections.Generic;
+using Catalyst.Abstractions.Cli.CommandTypes;
+using Catalyst.Abstractions.Rpc;
 using Catalyst.Cli.Commands;
 using Catalyst.Cli.UnitTests.Helpers;
-using Catalyst.Common.Interfaces.Cli.CommandTypes;
-using Catalyst.Common.Interfaces.Rpc;
 using FluentAssertions;
 using Microsoft.Reactive.Testing;
 using NSubstitute;
@@ -42,11 +42,10 @@ namespace Catalyst.Cli.UnitTests.Commands
         [Fact]
         public void Cannot_Connect_With_Invalid_Config()
         {
-            var logger = Substitute.For<ILogger>();
             var commandContext = TestCommandHelpers.GenerateCliCommandContext();
             commandContext.GetNodeConfig(Arg.Any<string>()).Returns((IRpcNodeConfig) null);
 
-            var commands = new List<ICommand> {new ConnectCommand(logger, commandContext)};
+            var commands = new List<ICommand> {new ConnectCommand(commandContext)};
             var console = new CatalystCli(commandContext.UserOutput, commands);
 
             var exception = Record.Exception(() => console.ParseCommand("connect", "-n", "node1"));
@@ -56,11 +55,10 @@ namespace Catalyst.Cli.UnitTests.Commands
         [Fact]
         public void Cannot_Connect_With_Invalid_SocketChannel()
         {
-            var logger = Substitute.For<ILogger>();
             var commandContext = TestCommandHelpers.GenerateCliCommandContext();
             TestCommandHelpers.MockRpcNodeConfig(commandContext);
 
-            var commands = new List<ICommand> {new ConnectCommand(logger, commandContext)};
+            var commands = new List<ICommand> {new ConnectCommand(commandContext)};
             var console = new CatalystCli(commandContext.UserOutput, commands);
 
             var isCommandParsed = console.ParseCommand("connect", "-n", "test");
@@ -72,11 +70,10 @@ namespace Catalyst.Cli.UnitTests.Commands
         [Fact]
         public void Connect_Should_Connect_To_Node()
         {
-            var logger = Substitute.For<ILogger>();
             var commandContext = TestCommandHelpers.GenerateCliFullCommandContext();
             TestCommandHelpers.AddClientSocketRegistry(commandContext, _testScheduler);
 
-            var commands = new List<ICommand> {new ConnectCommand(logger, commandContext)};
+            var commands = new List<ICommand> {new ConnectCommand(commandContext)};
             var console = new CatalystCli(commandContext.UserOutput, commands);
 
             var isCommandParsed = console.ParseCommand("connect", "-n", "test");

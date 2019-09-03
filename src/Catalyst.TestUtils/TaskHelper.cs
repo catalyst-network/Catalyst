@@ -133,7 +133,9 @@ namespace Catalyst.TestUtils
         }
 
         [Fact]
+#pragma warning disable 1998
         public async Task WaitForAsyncOrThrow_Should_Throw_Descriptive_Message_After_Timeout()
+#pragma warning restore 1998
         {
             var attempts = 0;
 

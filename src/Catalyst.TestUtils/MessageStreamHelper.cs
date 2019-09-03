@@ -24,11 +24,11 @@
 using System;
 using System.Linq;
 using System.Reactive.Linq;
-using Catalyst.Common.Extensions;
-using Catalyst.Common.Interfaces.IO.Messaging.Dto;
-using Catalyst.Common.IO.Messaging.Correlation;
-using Catalyst.Common.IO.Messaging.Dto;
-using Catalyst.Common.IO.Observers;
+using Catalyst.Abstractions.IO.Messaging.Dto;
+using Catalyst.Core.Extensions;
+using Catalyst.Core.IO.Messaging.Correlation;
+using Catalyst.Core.IO.Messaging.Dto;
+using Catalyst.Core.IO.Observers;
 using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;
 using Google.Protobuf;
@@ -47,8 +47,7 @@ namespace Catalyst.TestUtils
         }
 
         //Force test scheduler for testing streams
-        public static IObservable<IObserverDto<ProtocolMessage>> CreateStreamWithMessage(
-            IChannelHandlerContext fakeContext,
+        public static IObservable<IObserverDto<ProtocolMessage>> CreateStreamWithMessage(IChannelHandlerContext fakeContext,
             TestScheduler testScheduler,
             ProtocolMessage response)
         {
@@ -57,8 +56,7 @@ namespace Catalyst.TestUtils
             return messageStream;
         }
 
-        public static IObservable<IObserverDto<ProtocolMessage>> CreateStreamWithMessages<T>(
-            TestScheduler testScheduler,
+        public static IObservable<IObserverDto<ProtocolMessage>> CreateStreamWithMessages<T>(TestScheduler testScheduler,
             params T[] messages)
             where T : IMessage<T>, IMessage
         {
@@ -70,8 +68,7 @@ namespace Catalyst.TestUtils
             return CreateStreamWithMessages(context, testScheduler, protoMessages.ToArray());
         }
 
-        public static IObservable<IObserverDto<ProtocolMessage>> CreateStreamWithMessages(
-            IChannelHandlerContext fakeContext,
+        public static IObservable<IObserverDto<ProtocolMessage>> CreateStreamWithMessages(IChannelHandlerContext fakeContext,
             TestScheduler testScheduler,
             params ProtocolMessage[] responseMessages)
         {

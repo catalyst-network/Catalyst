@@ -21,7 +21,7 @@
 
 #endregion
 
-using Catalyst.Common.Types;
+using Catalyst.Abstractions.Types;
 using Nethermind.Core.Specs;
 
 namespace Catalyst.Kvm
@@ -31,6 +31,6 @@ namespace Catalyst.Kvm
         public IReleaseSpec GenesisSpec => CatalystGenesisSpec.Instance;
         public IReleaseSpec GetSpec(long blockNumber) => GenesisSpec;
         public long? DaoBlockNumber => null;
-        public int ChainId => NetworkTypes.Dev.Id;
+        public int ChainId => NetworkTypes.Dev.Id; // @TODO should we not be using protocol.common.network?
     }
 }
