@@ -29,6 +29,5 @@ namespace Catalyst.Abstractions.Consensus.Cycle
     {
         string Name { get; }
         int Id { get; }
-        bool Equals(IEnumeration other);
     }
 }

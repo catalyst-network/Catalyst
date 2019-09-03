@@ -25,7 +25,7 @@ using System;
 
 namespace Catalyst.Abstractions.Enumerator
 {
-    public interface IEnumeration : IEquatable<IEnumeration>
+    public interface IEnumeration : IEquatable<Enumeration>
     {
         string Name { get; }
         int Id { get; }

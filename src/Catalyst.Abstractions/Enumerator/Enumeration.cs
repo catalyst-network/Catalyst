@@ -125,7 +125,7 @@ namespace Catalyst.Abstractions.Enumerator
 
         #region Equality members
 
-        public bool Equals(IEnumeration other) { throw new NotImplementedException(); }
+        public bool Equals(Enumeration other) { throw new NotImplementedException(); }
 
         public override bool Equals(object obj)
         {

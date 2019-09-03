@@ -26,7 +26,7 @@ using Catalyst.Abstractions.Enumerator;
 
 namespace Catalyst.Abstractions.Config
 {
-    internal interface IEnumerableMessageType : IEquatable<IEnumeration>
+    internal interface IEnumerableMessageType : IEquatable<Enumeration>
     {
         string Name { get; }        
     }

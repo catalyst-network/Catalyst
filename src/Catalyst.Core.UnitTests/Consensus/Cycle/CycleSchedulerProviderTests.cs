@@ -22,13 +22,13 @@
 #endregion
 
 using System.Reactive.Concurrency;
-using Catalyst.Core.Lib.Modules.Consensus.Cycle;
+using Catalyst.Core.Consensus.Cycle;
 using FluentAssertions;
 using Xunit;
 
-namespace Catalyst.Core.Lib.UnitTests.Modules.Consensus.Cycle
+namespace Catalyst.Core.UnitTests.Consensus.Cycle
 {
-    public class CycleSchedulerProviderTests
+    public sealed class CycleSchedulerProviderTests
     {
         [Fact]
         public void Scheduler_Should_Be_The_Default_TaskPoolScheduler()
