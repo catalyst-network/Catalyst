@@ -109,7 +109,7 @@ namespace Catalyst.Core.IntegrationTests.P2P
                 ContainerProvider.Container.Resolve<IEnumerable<IP2PMessageObserver>>(),
                 _peerSettings,
                 ContainerProvider.Container.Resolve<ILogger>(),
-                ContainerProvider.Container.Resolve<IPeerHeartbeatChecker>());
+                ContainerProvider.Container.Resolve<IHealthChecker>());
 
             await _peerService.StartAsync();
         }

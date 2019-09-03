@@ -40,6 +40,7 @@ using Catalyst.Core.P2P.Discovery;
 using Catalyst.Core.P2P.Discovery.Hastings;
 using Catalyst.Core.P2P.IO.Messaging.Correlation;
 using Catalyst.Core.P2P.Models;
+using Catalyst.Core.P2P.Repository;
 using Catalyst.Core.P2P.ReputationSystem;
 using Catalyst.Core.Util;
 using DnsClient;
@@ -186,7 +187,10 @@ namespace Catalyst.TestUtils
             return new DevDnsClient(settings);
         }
 
-        public static IRepository<Peer> MockPeerRepository() { return new InMemoryRepository<Peer>(); }
+        public static IPeerRepository MockPeerRepository()
+        {
+            return new PeerRepository(new InMemoryRepository<Peer, string>());
+        }
 
         public static IPeerClientMessageDto SubDto(Type discoveryMessage,
             ICorrelationId correlationId = default,

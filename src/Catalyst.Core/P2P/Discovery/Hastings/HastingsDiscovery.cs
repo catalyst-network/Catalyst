@@ -39,6 +39,7 @@ using Catalyst.Abstractions.Util;
 using Catalyst.Core.Extensions;
 using Catalyst.Core.IO.Messaging.Dto;
 using Catalyst.Core.P2P.Models;
+using Catalyst.Core.P2P.Repository;
 using Catalyst.Protocol;
 using Catalyst.Protocol.IPPN;
 using Serilog;
@@ -59,13 +60,13 @@ namespace Catalyst.Core.P2P.Discovery.Hastings
         private readonly IPeerIdentifier _ownNode;
         private readonly IDisposable _pingResponseSubscriptions;
         protected readonly int PeerDiscoveryBurnIn;
-        public readonly IRepository<Peer> PeerRepository;
+        public readonly IPeerRepository PeerRepository;
         private int _discoveredPeerInCurrentWalk;
 
-        protected bool IsDiscovering;
+        private bool _isDiscovering;
 
-        protected HastingsDiscovery(ILogger logger,
-            IRepository<Peer> peerRepository,
+        public HastingsDiscovery(ILogger logger,
+            IPeerRepository peerRepository,
             IDns dns,
             IPeerSettings peerSettings,
             IPeerClient peerClient,
@@ -181,7 +182,7 @@ namespace Catalyst.Core.P2P.Discovery.Hastings
         /// <returns></returns>
         public async Task DiscoveryAsync()
         {
-            if (IsDiscovering)
+            if (_isDiscovering)
             {
                 return;
             }
@@ -191,7 +192,7 @@ namespace Catalyst.Core.P2P.Discovery.Hastings
                 // only let one thread in at a time.
                 await SemaphoreSlim.WaitAsync().ConfigureAwait(false);
 
-                IsDiscovering = true;
+                _isDiscovering = true;
 
                 try
                 {
@@ -199,19 +200,16 @@ namespace Catalyst.Core.P2P.Discovery.Hastings
                     await WaitUntil(StepProposal.HasValidCandidate, _hasValidCandidatesCheckMillisecondsFrequency,
                         _millisecondsTimeout).ConfigureAwait(false);
 
-                    //lock (StepProposal)
+                    if (StepProposal.Neighbours.Any())
                     {
-                        if (StepProposal.Neighbours.Any())
-                        {
-                            // have a walkable next step, so continue walk.
-                            WalkForward();
-                        }
-                        else
-                        {
-                            // we've received enough matching events but no StepProposal.CurrentPeersNeighbours
-                            // Assume all neighbours provided are un-reachable.
-                            WalkBack();
-                        }
+                        // have a walkable next step, so continue walk.
+                        WalkForward();
+                    }
+                    else
+                    {
+                        // we've received enough matching events but no StepProposal.CurrentPeersNeighbours
+                        // Assume all neighbours provided are un-reachable.
+                        WalkBack();
                     }
                 }
                 catch (Exception e
@@ -321,9 +319,6 @@ namespace Catalyst.Core.P2P.Discovery.Hastings
         ///     OnNext method for _evictionSubscription
         ///     handles the discovery messages to see if there of interest to us.
         /// </summary
-        /// /
-        /// /
-        /// /
         /// <param name="requestCorrelationId">Correlation Id for the request getting evicted.</param>
         protected void EvictionCallback(ICorrelationId requestCorrelationId)
         {
