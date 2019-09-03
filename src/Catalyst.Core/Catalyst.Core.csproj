@@ -69,24 +69,6 @@
         <PackageReference Include="DotNetty.Handlers" Version="0.6.0" />
     </ItemGroup>
     <ItemGroup>
-        <None Include="..\Build\libs\advapi32.dll">
-            <Link>advapi32.dll</Link>
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
-        <None Include="..\Build\libs\kernel32.dll">
-            <Link>kernel32.dll</Link>
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
-        <None Include="..\Build\libs\ucrtbase.dll">
-            <Link>ucrtbase.dll</Link>
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
-        <None Include="..\Build\libs\vcruntime140.dll">
-            <Link>vcruntime140.dll</Link>
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
-    </ItemGroup>
-    <ItemGroup>
       <ProjectReference Include="..\Catalyst.Abstractions\Catalyst.Abstractions.csproj" />
     </ItemGroup>
 </Project>
