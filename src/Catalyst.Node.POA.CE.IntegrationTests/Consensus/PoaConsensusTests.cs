@@ -42,7 +42,7 @@ using Xunit.Abstractions;
 
 namespace Catalyst.Node.POA.CE.IntegrationTests.Consensus
 {
-    public class PoaConsensusTests : ConfigFileBasedTest
+    public sealed class PoaConsensusTests : ConfigFileBasedTest
     {
         private readonly CancellationTokenSource _endOfTestCancellationSource;
         private readonly ILifetimeScope _scope;
@@ -66,7 +66,7 @@ namespace Catalyst.Node.POA.CE.IntegrationTests.Consensus
                     var publicKey = privateKey.GetPublicKey();
                     var nodeSettings = PeerSettingsHelper.TestPeerSettings(publicKey.Bytes, 2000 + i);
                     var peerIdentifier = new PeerIdentifier(nodeSettings) as IPeerIdentifier;
-                    var name = $"producer{i}";
+                    var name = $"producer{i.ToString()}";
                     return new {index = i, name, privateKey, nodeSettings, peerIdentifier};
                 }
             ).ToList();
@@ -74,7 +74,7 @@ namespace Catalyst.Node.POA.CE.IntegrationTests.Consensus
             var peerIdentifiers = poaNodeDetails.Select(n => n.peerIdentifier).ToList();
 
             _nodes = poaNodeDetails.Select(
-                p => new PoaTestNode($"producer{p.index}",
+                p => new PoaTestNode($"producer{p.index.ToString()}",
                     p.privateKey,
                     p.nodeSettings,
                     peerIdentifiers.Except(new[] {p.peerIdentifier}),
@@ -88,9 +88,7 @@ namespace Catalyst.Node.POA.CE.IntegrationTests.Consensus
             _nodes.AsParallel()
                .ForAll(n =>
                 {
-#pragma warning disable 4014
                     n.RunAsync(_endOfTestCancellationSource.Token);
-#pragma warning restore 4014
                     n.Consensus.StartProducing();
                 });
 

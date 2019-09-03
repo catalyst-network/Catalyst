@@ -89,7 +89,4 @@
     <ItemGroup>
       <ProjectReference Include="..\Catalyst.Abstractions\Catalyst.Abstractions.csproj" />
     </ItemGroup>
-    <ItemGroup>
-      <Folder Include="P2P\IO" />
-    </ItemGroup>
 </Project>

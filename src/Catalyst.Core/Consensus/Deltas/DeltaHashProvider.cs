@@ -55,11 +55,11 @@ namespace Catalyst.Core.Consensus.Deltas
             _deltaCache = deltaCache;
             _logger = logger;
             _deltaHashUpdatesSubject = new ReplaySubject<Multihash>(0);
-            var comparer = ComparerBuilder.For<Timestamp>().OrderBy(u => u, descending: true);
+            var comparer = ComparerBuilder.For<Timestamp>().OrderBy(u => u, @descending: true);
             _capacity = capacity;
             _hashesByTimeDescending = new SortedList<Timestamp, Multihash>(comparer)
             {
-                Capacity = _capacity
+                Capacity = _capacity,
             };
 
             _hashesByTimeDescending.Add(Timestamp.FromDateTime(DateTime.MinValue.ToUniversalTime()),
@@ -109,7 +109,6 @@ namespace Catalyst.Core.Consensus.Deltas
             _logger.Verbose("Trying to retrieve latest delta as of {asOf}", asOf);
             if (!asOf.HasValue)
             {
-                // ReSharper disable once InconsistentlySynchronizedField
                 return _hashesByTimeDescending.FirstOrDefault().Value;
             }
 

@@ -137,7 +137,7 @@ namespace Catalyst.Core.UnitTests.Consensus
                     return true;
                 });
 
-            _deltaHub.PublishDeltaToDfsAndBroadcastAddressAsync(default)
+            _deltaHub.PublishDeltaToDfsAndBroadcastAddressAsync(default, default)
                .ReturnsForAnyArgs(ByteUtil.GenerateRandomByteArray(1000).ComputeMultihash(new BLAKE2B_256())
                    .AsBase32Address());
 

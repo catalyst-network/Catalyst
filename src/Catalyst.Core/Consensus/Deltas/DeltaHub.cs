@@ -77,7 +77,7 @@ namespace Catalyst.Core.Consensus.Deltas
             if (!candidate.ProducerId.Equals(_peerIdentifier.PeerId))
             {
                 _logger.Warning($"{nameof(BroadcastCandidate)} " +
-                    "should only be called by the producer of a candidate.");
+                    $"should only be called by the producer of a candidate.");
                 return;
             }
 

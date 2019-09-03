@@ -89,7 +89,7 @@ namespace Catalyst.Core.UnitTests.Consensus.Deltas
             _dfs.ReadAsync(goodHash, CancellationToken.None)
                .Returns(matchingDelta.ToByteArray().ToMemoryStream());
 
-            _dfsReader.TryReadDeltaFromDfs(goodHash, out _, CancellationToken.None);
+            _dfsReader.TryReadDeltaFromDfs(goodHash, out var delta, CancellationToken.None);
 
             _dfs.Received(1).ReadAsync(Arg.Is(goodHash), Arg.Is(cancellationToken));
         }

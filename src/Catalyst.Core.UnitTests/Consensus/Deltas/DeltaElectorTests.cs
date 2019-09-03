@@ -26,6 +26,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reactive.Linq;
+using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Consensus.Deltas;
 using Catalyst.Core.Extensions;
@@ -43,7 +44,7 @@ using Xunit;
 
 namespace Catalyst.Core.UnitTests.Consensus.Deltas
 {
-    internal sealed class BadFavouritesData : TheoryData<FavouriteDeltaBroadcast, Type>
+    public class BadFavouritesData : TheoryData<FavouriteDeltaBroadcast, Type>
     {
         public BadFavouritesData()
         {

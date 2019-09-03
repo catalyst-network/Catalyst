@@ -47,8 +47,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Abstractions", "Ca
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Core.IntegrationTests", "Catalyst.Core.IntegrationTests\Catalyst.Core.IntegrationTests.csproj", "{86B317E2-3A1E-426D-A20B-C270EBC14CE1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Simulator", "Catalyst.Simulator\Catalyst.Simulator.csproj", "{EC74EF99-CF2A-4F19-9BE1-0D0639F76C36}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "nethermind", "nethermind", "{6074E807-FBBC-41D0-9205-C7B79513D683}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nethermind.Evm", "..\submodules\nethermind\src\Nethermind\Nethermind.Evm\Nethermind.Evm.csproj", "{ACD92B72-7D6C-4E61-A72F-3F86B1D81486}"
