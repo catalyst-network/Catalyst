@@ -37,6 +37,7 @@ using Catalyst.Core.IO.Messaging.Correlation;
 using Catalyst.Core.P2P.Discovery.Hastings;
 using Catalyst.Core.P2P.IO.Observers;
 using Catalyst.Core.P2P.Models;
+using Catalyst.Core.P2P.Repository;
 using Catalyst.Core.P2P.ReputationSystem;
 using Catalyst.Core.Util;
 using Catalyst.TestUtils;
@@ -59,7 +60,7 @@ namespace Catalyst.Core.UnitTests.P2P.Discovery
         private ILogger _logger;
         private IPeerClient _peerClient;
         private IPeerMessageCorrelationManager _peerCorrelationManager;
-        private IRepository<Peer> _peerRepository;
+        private IPeerRepository _peerRepository;
         private IPeerSettings _peerSettings;
         private IScheduler _scheduler;
         private int _timeout;
@@ -103,10 +104,10 @@ namespace Catalyst.Core.UnitTests.P2P.Discovery
             return this;
         }
 
-        public DiscoveryTestBuilder WithPeerRepository(IRepository<Peer> peerRepository = default, bool mock = false)
+        public DiscoveryTestBuilder WithPeerRepository(IPeerRepository peerRepository = default, bool mock = false)
         {
             _peerRepository = peerRepository == default && mock == false
-                ? Substitute.For<IRepository<Peer>>()
+                ? Substitute.For<IPeerRepository>()
                 : peerRepository == default
                     ? _peerRepository = DiscoveryHelper.MockPeerRepository()
                     : _peerRepository = peerRepository;
@@ -252,7 +253,7 @@ namespace Catalyst.Core.UnitTests.P2P.Discovery
         public sealed class HastingDiscoveryTest : HastingsDiscovery
         {
             private HastingDiscoveryTest(ILogger logger = default,
-                IRepository<Peer> peerRepository = default,
+                IPeerRepository peerRepository = default,
                 IPeerSettings peerSettings = default,
                 IDns dns = default,
                 IPeerClient peerClient = default,
@@ -267,7 +268,7 @@ namespace Catalyst.Core.UnitTests.P2P.Discovery
                 int hasValidCandidatesCheckMillisecondsFrequency = 1_000,
                 IScheduler scheduler = null)
                 : base(logger ?? Substitute.For<ILogger>(),
-                    peerRepository ?? Substitute.For<IRepository<Peer>>(),
+                    peerRepository ?? Substitute.For<IPeerRepository>(),
                     dns ?? DiscoveryHelper.MockDnsClient(peerSettings),
                     peerSettings ?? PeerSettingsHelper.TestPeerSettings(),
                     peerClient ?? Substitute.For<IPeerClient>(),
@@ -282,7 +283,7 @@ namespace Catalyst.Core.UnitTests.P2P.Discovery
                     hasValidCandidatesCheckMillisecondsFrequency) { }
 
             internal static HastingDiscoveryTest GetTestInstanceOfDiscovery(ILogger logger,
-                IRepository<Peer> peerRepository,
+                IPeerRepository peerRepository,
                 IDns dns,
                 IPeerSettings peerSettings,
                 IPeerClient peerClient,

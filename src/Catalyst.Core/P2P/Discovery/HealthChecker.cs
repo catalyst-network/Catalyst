@@ -21,17 +21,26 @@
 
 #endregion
 
-using Catalyst.Abstractions.Cli.Commands;
-using Catalyst.Cli.CommandTypes;
-using Catalyst.Cli.Options;
-using Catalyst.Protocol.Rpc.Node;
+using System;
+using System.Reactive.Linq;
+using Catalyst.Abstractions.P2P.Discovery;
 
-namespace Catalyst.Cli.Commands
+namespace Catalyst.Core.P2P.Discovery
 {
-    public sealed class PeerListCommand : BaseMessageCommand<GetPeerListRequest, GetPeerListResponse, PeerListOptions>
+    public class HealthChecker : IHealthChecker
     {
-        public PeerListCommand(ICommandContext commandContext) : base(commandContext) { }
+        private IDisposable _subscription;
+        
+        void IDisposable.Dispose() { _subscription?.Dispose(); }
 
-        protected override GetPeerListRequest GetMessage(PeerListOptions option) { return new GetPeerListRequest(); }
+        public void Run()
+        {
+            _subscription = Observable
+               .Interval(TimeSpan.FromSeconds(10))
+               .StartWith(-1L)
+               .Subscribe(interval => PingNode());
+        }
+
+        private static void PingNode() { }
     }
 }

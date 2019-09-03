@@ -42,7 +42,7 @@ namespace Catalyst.Core.P2P
                     c.Resolve<IEnumerable<IP2PMessageObserver>>(),
                     c.Resolve<IPeerSettings>(),
                     c.Resolve<ILogger>(),
-                    c.Resolve<IPeerHeartbeatChecker>()
+                    c.Resolve<IHealthChecker>()
                 ))
                .As<IPeerService>();
         }  

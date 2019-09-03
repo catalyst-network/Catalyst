@@ -21,27 +21,15 @@
 
 #endregion
 
-using System.Text;
-using Catalyst.Abstractions.Cli.Commands;
-using Catalyst.Cli.CommandTypes;
-using Catalyst.Cli.Options;
-using Catalyst.Core.Util;
-using Catalyst.Protocol.Rpc.Node;
-using Google.Protobuf;
+using System.Collections.Generic;
+using Catalyst.Abstractions.P2P;
+using Catalyst.Core.P2P.Repository;
 
-namespace Catalyst.Cli.Commands
+namespace Catalyst.Core.Consensus.Deltas
 {
-    public sealed class MessageSignCommand : BaseMessageCommand<SignMessageRequest, SignMessageResponse, SignOptions>
+    public class DeltaProducersProvider : IDeltaProducersProvider
     {
-        public MessageSignCommand(ICommandContext commandContext) : base(commandContext) { }
-
-        protected override SignMessageRequest GetMessage(SignOptions option)
-        {
-            return new SignMessageRequest
-            {
-                Message = ByteString.CopyFrom(option.Message.Trim('\"'), Encoding.UTF8)
-                   .ToByteString()
-            };
-        }
+        public IList<IPeerIdentifier> GetDeltaProducersFromPreviousDelta(byte[] previousDeltaHash) { throw new System.NotImplementedException(); }
+        public IPeerRepository PeerRepository { get; }
     }
 }
