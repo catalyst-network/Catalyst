@@ -65,7 +65,7 @@ namespace Catalyst.Core.UnitTests.Consensus.Deltas
         }
 
         [Fact]
-        public void TryReadDeltaFromDfs_Should_Return_True_When_Hash_Found_On_Dfs()
+        public void TryReadDeltaFromDfs_Should_Return_True_When_Hash_Found_On_Dfs_And_Delta_Is_Valid()
         {
             var goodHash = "good hash";
             var matchingDelta = DeltaHelper.GetDelta();
@@ -77,6 +77,24 @@ namespace Catalyst.Core.UnitTests.Consensus.Deltas
 
             found.Should().BeTrue();
             delta.Should().Be(matchingDelta);
+        }
+
+        [Fact]
+        public void TryReadDeltaFromDfs_Should_Return_False_When_Hash_Found_On_Dfs_And_Delta_Is_Not_Valid()
+        {
+            var goodHash = "good hash";
+            var matchingDelta = DeltaHelper.GetDelta();
+            matchingDelta.PreviousDeltaDfsHash = ByteString.Empty;
+
+            matchingDelta.IsValid().Should().BeTrue("otherwise this test is useless");
+
+            _dfs.ReadAsync(goodHash, CancellationToken.None)
+               .Returns(matchingDelta.ToByteArray().ToMemoryStream());
+
+            var found = _dfsReader.TryReadDeltaFromDfs(goodHash, out var delta, CancellationToken.None);
+
+            found.Should().BeFalse();
+            delta.Should().BeNull();
         }
 
         [Fact]
