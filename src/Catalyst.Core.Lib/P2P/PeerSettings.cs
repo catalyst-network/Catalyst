@@ -21,16 +21,14 @@
 
 #endregion
 
+using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.Network;
+using Catalyst.Protocol.Common;
+using Dawn;
+using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using Catalyst.Common.Config;
-using Catalyst.Common.Enumerator;
-using Catalyst.Common.Network;
-using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.Types;
-using Dawn;
-using Microsoft.Extensions.Configuration;
 
 namespace Catalyst.Core.Lib.P2P
 {
@@ -40,38 +38,16 @@ namespace Catalyst.Core.Lib.P2P
     public sealed class PeerSettings
         : IPeerSettings
     {
-        private readonly NetworkTypes _networkTypes;
-        public NetworkTypes NetworkTypes => _networkTypes;
-        private readonly string _publicKey;
-        public string PublicKey => _publicKey;
-        private readonly int _port;
-        public int Port => _port;
-        private readonly string _payoutAddress;
-        public string PayoutAddress => _payoutAddress;
-        private readonly IPAddress _bindAddress;
-        public IPAddress BindAddress => _bindAddress;
-        private readonly IList<string> _seedServers;
-        public IList<string> SeedServers => _seedServers;
-        
+        private readonly Network _network;
+        public Network Network => _network;
+        public string PublicKey { get; }
+        public int Port { get; }
+        public string PayoutAddress { get; }
+        public IPAddress BindAddress { get; }
+        public IList<string> SeedServers { get; }
         public IPAddress PublicIpAddress { get; }
+        public IPEndPoint[] DnsServers { get; }
 
-        public PeerSettings(NetworkTypes networkTypes,
-            string publicKey,
-            int port,
-            string payoutAddress,
-            IPAddress bindAddress,
-            IPAddress publicAddress,
-            IList<string> seedServers)
-        {
-            _networkTypes = networkTypes;
-            _publicKey = publicKey;
-            _port = port;
-            _payoutAddress = payoutAddress;
-            _bindAddress = bindAddress;
-            PublicIpAddress = publicAddress;
-            _seedServers = seedServers;
-        }
-            
         /// <summary>
         ///     Set attributes
         /// </summary>
@@ -79,14 +55,18 @@ namespace Catalyst.Core.Lib.P2P
         public PeerSettings(IConfigurationRoot rootSection)
         {
             Guard.Argument(rootSection, nameof(rootSection)).NotNull();
+
             var section = rootSection.GetSection("CatalystNodeConfiguration").GetSection("Peer");
-            _networkTypes = Enumeration.Parse<NetworkTypes>(section.GetSection("Network").Value);
-            _publicKey = section.GetSection("PublicKey").Value;
-            _port = int.Parse(section.GetSection("Port").Value);
-            _payoutAddress = section.GetSection("PayoutAddress").Value;
-            _bindAddress = IPAddress.Parse(section.GetSection("BindAddress").Value);
+            Network.TryParse(section.GetSection("Network").Value, out _network);
+            PublicKey = section.GetSection("PublicKey").Value;
+            Port = int.Parse(section.GetSection("Port").Value);
+            PayoutAddress = section.GetSection("PayoutAddress").Value;
+            BindAddress = IPAddress.Parse(section.GetSection("BindAddress").Value);
             PublicIpAddress = IPAddress.Parse(section.GetSection("PublicIpAddress").Value);
-            _seedServers = section.GetSection("SeedServers").GetChildren().Select(p => p.Value).ToList();
+            SeedServers = section.GetSection("SeedServers").GetChildren().Select(p => p.Value).ToList();
+            DnsServers = section.GetSection("DnsServers")
+               .GetChildren()
+               .Select(p => EndpointBuilder.BuildNewEndPoint(p.Value)).ToArray();
         }
     }
 }

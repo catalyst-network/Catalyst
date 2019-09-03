@@ -30,6 +30,7 @@ using Catalyst.Common.IO.Messaging.Correlation;
 using Catalyst.Common.Modules.Mempool.Models;
 using Catalyst.Common.Types;
 using Catalyst.Protocol;
+using Catalyst.Protocol.Common;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Newtonsoft.Json;
@@ -51,7 +52,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.Modules.Mempool
             {
                 alteredComponentsFile,
                 Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile),
-                Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(NetworkTypes.Dev))
+                Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Network.Devnet))
             };
 
             _containerProvider = new ContainerProvider(configFilesUsed, FileSystem, Output);

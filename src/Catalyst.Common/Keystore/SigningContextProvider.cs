@@ -21,23 +21,14 @@
 
 #endregion
 
-using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
-using Catalyst.Common.Interfaces.P2P;
-using Google.Protobuf;
+using Catalyst.Common.Interfaces.Keystore;
+using Catalyst.Protocol.Common;
 
-namespace Catalyst.Common.Interfaces.IO.Messaging.Dto
+namespace Catalyst.Common.Keystore
 {
-    public interface IDtoFactory
+    public class SigningContextProvider : ISigningContextProvider
     {
-        /// <summary>Gets the message.</summary>
-        /// <param name="messageDto">The message.</param>
-        /// <param name="senderPeerIdentifier"></param>
-        /// <param name="recipientPeerIdentifier"></param>
-        /// <param name="correlationId">The correlation identifier.</param>
-        /// <returns>ProtocolMessage message</returns>
-        IMessageDto<T> GetDto<T>(T messageDto,
-            IPeerIdentifier senderPeerIdentifier,
-            IPeerIdentifier recipientPeerIdentifier,
-            ICorrelationId correlationId = default) where T : IMessage<T>;
+        public Protocol.Common.Network Network { get; set; }
+        public SignatureType SignatureType { get; set; }
     }
 }

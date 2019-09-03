@@ -30,6 +30,7 @@ using System.Threading.Tasks;
 using Catalyst.Common.Interfaces.IO.EventLoop;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Transport.Channels;
+using Catalyst.Common.Interfaces.Keystore;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.IO.Messaging.Correlation;
@@ -49,6 +50,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Transport.Channels
         private readonly IKeySigner _keySigner;
         private readonly IPeerMessageCorrelationManager _correlationManager;
         private readonly IPeerIdValidator _peerIdValidator;
+        private readonly ISigningContextProvider _signingContextProvider;
 
         protected override Func<List<IChannelHandler>> HandlerGenerationFunction
         {
@@ -65,8 +67,8 @@ namespace Catalyst.Core.Lib.P2P.IO.Transport.Channels
                         ),
                         new PeerIdValidationHandler(_peerIdValidator),
                         new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
-                            new ProtocolMessageVerifyHandler(_keySigner),
-                            new ProtocolMessageSignHandler(_keySigner)
+                            new ProtocolMessageVerifyHandler(_keySigner, _signingContextProvider),
+                            new ProtocolMessageSignHandler(_keySigner, _signingContextProvider)
                         ),
                         new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
                             new CorrelationHandler<IPeerMessageCorrelationManager>(_correlationManager),
@@ -86,11 +88,13 @@ namespace Catalyst.Core.Lib.P2P.IO.Transport.Channels
         /// <param name="peerIdValidator"></param>
         public PeerClientChannelFactory(IKeySigner keySigner,
             IPeerMessageCorrelationManager correlationManager,
-            IPeerIdValidator peerIdValidator)
+            IPeerIdValidator peerIdValidator,
+            ISigningContextProvider signingContextProvider)
         {
             _keySigner = keySigner;
             _correlationManager = correlationManager;
             _peerIdValidator = peerIdValidator;
+            _signingContextProvider = signingContextProvider;
         }
 
         /// <param name="handlerEventLoopGroupFactory"></param>

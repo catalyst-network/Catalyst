@@ -28,6 +28,7 @@ using System.Net;
 using System.Threading.Tasks;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
+using Catalyst.Common.Interfaces.Keystore;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.P2P.IO.Messaging.Broadcast;
@@ -58,8 +59,9 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Transport.Channels
             public TestPeerServerChannelFactory(IPeerMessageCorrelationManager correlationManager,
                 IBroadcastManager broadcastManager,
                 IKeySigner keySigner,
-                IPeerIdValidator peerIdValidator)
-                : base(correlationManager, broadcastManager, keySigner, peerIdValidator)
+                IPeerIdValidator peerIdValidator,
+                ISigningContextProvider signingContextProvider)
+                : base(correlationManager, broadcastManager, keySigner, peerIdValidator, signingContextProvider)
             {
                 _handlers = HandlerGenerationFunction();
             }
@@ -81,9 +83,9 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Transport.Channels
             _gossipManager = Substitute.For<IBroadcastManager>();
             _keySigner = Substitute.For<IKeySigner>();
 
-            var peerSettings = Substitute.For<IPeerSettings>();
-            peerSettings.BindAddress.Returns(IPAddress.Parse("127.0.0.1"));
-            peerSettings.Port.Returns(1234);
+            var signatureContext = Substitute.For<ISigningContextProvider>();
+            signatureContext.Network.Returns(Network.Devnet);
+            signatureContext.SignatureType.Returns(SignatureType.ProtocolPeer);
 
             var peerValidator = Substitute.For<IPeerIdValidator>();
             peerValidator.ValidatePeerIdFormat(Arg.Any<PeerId>()).Returns(true);
@@ -92,7 +94,8 @@ namespace Catalyst.Core.Lib.UnitTests.P2P.IO.Transport.Channels
                 _correlationManager,
                 _gossipManager,
                 _keySigner,
-                peerValidator);
+                peerValidator,
+                signatureContext);
 
             _senderId = PeerIdHelper.GetPeerId("sender");
             _correlationId = CorrelationId.GenerateCorrelationId();

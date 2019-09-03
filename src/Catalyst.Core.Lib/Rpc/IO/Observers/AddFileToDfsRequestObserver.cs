@@ -27,6 +27,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Common.Config;
 using Catalyst.Common.Enumerator;
+using Catalyst.Common.Extensions;
 using Catalyst.Common.FileTransfer;
 using Catalyst.Common.Interfaces.FileTransfer;
 using Catalyst.Common.Interfaces.IO.Messaging.Correlation;
@@ -160,11 +161,9 @@ namespace Catalyst.Core.Lib.Rpc.IO.Observers
             var message = ReturnResponse(fileTransferInformation, await addFileResponseCode);
 
             // Send Response
-            var responseMessage = new DtoFactory().GetDto(
-                message,
-                PeerIdentifier,
-                fileTransferInformation.RecipientIdentifier,
-                fileTransferInformation.CorrelationId
+            var responseMessage = new MessageDto(
+                message.ToProtocolMessage(PeerIdentifier.PeerId, fileTransferInformation.CorrelationId),
+                fileTransferInformation.RecipientIdentifier
             );
 
             await fileTransferInformation.RecipientChannel.WriteAndFlushAsync(responseMessage).ConfigureAwait(false);

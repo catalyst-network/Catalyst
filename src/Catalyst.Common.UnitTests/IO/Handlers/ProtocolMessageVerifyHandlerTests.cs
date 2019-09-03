@@ -21,6 +21,7 @@
 
 #endregion
 
+using Catalyst.Common.Interfaces.Keystore;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.IO.Handlers;
 using Catalyst.Common.Util;
@@ -39,11 +40,13 @@ namespace Catalyst.Common.UnitTests.IO.Handlers
         private readonly IChannelHandlerContext _fakeContext;
         private readonly ProtocolMessageSigned _protocolMessageSigned;
         private readonly IKeySigner _keySigner;
+        private readonly ISigningContextProvider _signingContextProvider;
 
         public ProtocolMessageVerifyHandlerTests()
         {
             _fakeContext = Substitute.For<IChannelHandlerContext>();
             _keySigner = Substitute.For<IKeySigner>();
+            _signingContextProvider = Substitute.For<ISigningContextProvider>();
 
             var signatureBytes = ByteUtil.GenerateRandomByteArray(FFI.SignatureLength);
             var publicKeyBytes = ByteUtil.GenerateRandomByteArray(FFI.PublicKeyLength);
@@ -56,6 +59,9 @@ namespace Catalyst.Common.UnitTests.IO.Handlers
                     PeerId = PeerIdentifierHelper.GetPeerIdentifier(publicKeyBytes.ToString()).PeerId
                 }
             };
+
+            _signingContextProvider.Network.Returns(Protocol.Common.Network.Devnet);
+            _signingContextProvider.SignatureType.Returns(SignatureType.ProtocolPeer);
         }
 
         [Fact]
@@ -64,7 +70,7 @@ namespace Catalyst.Common.UnitTests.IO.Handlers
             _keySigner.Verify(Arg.Any<ISignature>(), Arg.Any<byte[]>(), default)
                .ReturnsForAnyArgs(true);
 
-            var signatureHandler = new ProtocolMessageVerifyHandler(_keySigner);
+            var signatureHandler = new ProtocolMessageVerifyHandler(_keySigner, _signingContextProvider);
 
             signatureHandler.ChannelRead(_fakeContext, _protocolMessageSigned);
 
@@ -77,7 +83,7 @@ namespace Catalyst.Common.UnitTests.IO.Handlers
             _keySigner.Verify(Arg.Any<ISignature>(), Arg.Any<byte[]>(), default)
                .ReturnsForAnyArgs(false);
 
-            var signatureHandler = new ProtocolMessageVerifyHandler(_keySigner);
+            var signatureHandler = new ProtocolMessageVerifyHandler(_keySigner, _signingContextProvider);
 
             signatureHandler.ChannelRead(_fakeContext, _protocolMessageSigned);
             

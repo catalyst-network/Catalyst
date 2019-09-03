@@ -115,13 +115,13 @@ namespace Catalyst.Common.UnitTests.Rpc.IO.Messaging.Correlation
 
             //To prevent cache eviction multi threading delay
             const int milliseconds = 100;
-            while (evictedEvents <= 0)
+            while (evictedEvents < pendingRequests.Count)
             {
                 _testScheduler.AdvanceBy(milliseconds);
                 await Task.Delay(milliseconds).ConfigureAwait(false);
             }
 
-            evictedEvents.Should().Be(3);
+            evictedEvents.Should().Be(pendingRequests.Count);
         }
 
         public void Dispose()

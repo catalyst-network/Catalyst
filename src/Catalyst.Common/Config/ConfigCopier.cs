@@ -34,11 +34,13 @@ namespace Catalyst.Common.Config
     public class ConfigCopier : IConfigCopier
     {
         /// <inheritdoc />
-        public void RunConfigStartUp(string dataDir, Types.NetworkTypes networkTypesParam = null, string sourceFolder = null, bool overwrite = false, string overrideNetworkFile = null)
+        public void RunConfigStartUp(string dataDir,
+            Protocol.Common.Network network = Protocol.Common.Network.Devnet,
+            string sourceFolder = null,
+            bool overwrite = false,
+            string overrideNetworkFile = null)
         {
             Guard.Argument(dataDir, nameof(dataDir)).NotNull().NotEmpty().NotWhiteSpace();
-
-            var network = networkTypesParam == null ? Types.NetworkTypes.Dev : networkTypesParam;
 
             var dataDirInfo = new DirectoryInfo(dataDir);
             if (!dataDirInfo.Exists)
@@ -81,11 +83,12 @@ namespace Catalyst.Common.Config
             }
         }
 
-        protected virtual IEnumerable<string> RequiredConfigFiles(Types.NetworkTypes networkTypes, string overrideNetworkFile = null)
+        protected virtual IEnumerable<string> RequiredConfigFiles(Protocol.Common.Network network,
+            string overrideNetworkFile = null)
         {
             var requiredConfigFiles = new[]
             {
-                Constants.NetworkConfigFile(networkTypes, overrideNetworkFile),
+                Constants.NetworkConfigFile(network, overrideNetworkFile),
                 Constants.ComponentsJsonConfigFile,
                 Constants.SerilogJsonConfigFile,
                 Constants.MessageHandlersConfigFile,
@@ -100,7 +103,9 @@ namespace Catalyst.Common.Config
             bool overwrite = false)
         {
             var combinedSourceFolder = Path.Combine(sourceFolder, Constants.ConfigSubFolder);
-            var sourceFile = new DirectoryInfo(combinedSourceFolder).Exists ? Path.Combine(combinedSourceFolder, fileName) : Path.Combine(sourceFolder, fileName);
+            var sourceFile = new DirectoryInfo(combinedSourceFolder).Exists
+                ? Path.Combine(combinedSourceFolder, fileName)
+                : Path.Combine(sourceFolder, fileName);
 
             var targetFile = Path.Combine(targetFolder, fileName);
             if (!overwrite && File.Exists(targetFile))

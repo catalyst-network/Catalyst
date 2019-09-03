@@ -98,15 +98,9 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Observers
             // Build a fake remote endpoint
             _fakeContext.Channel.RemoteAddress.Returns(EndpointBuilder.BuildNewEndPoint("192.0.0.1", 42042));
             
-            var messageFactory = new DtoFactory();
-
-            var requestMessage = messageFactory.GetDto(
-                new GetPeerListRequest(),
-                PeerIdentifierHelper.GetPeerIdentifier("sender"),
-                PeerIdentifierHelper.GetPeerIdentifier("recipient")
-            );
+            var protocolMessage = new GetPeerListRequest().ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId);
             
-            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, requestMessage.Content.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId));
+            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, protocolMessage);
 
             var handler = new PeerListRequestObserver(PeerIdentifierHelper.GetPeerIdentifier("sender"), _logger, peerRepository);
             handler.StartObserving(messageStream);
@@ -118,7 +112,7 @@ namespace Catalyst.Core.Lib.UnitTests.Rpc.IO.Observers
 
             var sentResponseDto = (IMessageDto<ProtocolMessage>) receivedCalls[0].GetArguments().Single();
             
-            var responseContent = sentResponseDto.FromIMessageDto().FromProtocolMessage<GetPeerListResponse>();
+            var responseContent = sentResponseDto.Content.FromProtocolMessage<GetPeerListResponse>();
 
             responseContent.Peers.Count.Should().Be(fakePeers.Length);
         }

@@ -227,6 +227,18 @@
             ]
         },
         {
+            "type": "Catalyst.Common.Keystore.SigningContextProvider, Catalyst.Common",
+            "services": [
+                {
+                    "type": "Catalyst.Common.Interfaces.Keystore.ISigningContextProvider, Catalyst.Common"
+                }
+            ],
+            "properties": {
+                "Network": "Mainnet",
+                "SignatureType": "ProtocolPeer"
+            } 
+        },
+        {
             "type": "Catalyst.Common.Util.AddressHelper, Catalyst.Common",
             "services": [
                 {
@@ -255,14 +267,6 @@
             "services": [
                 {
                     "type": "Catalyst.Common.Interfaces.Keystore.IKeyStoreService, Catalyst.Common"
-                }
-            ]
-        },
-        {
-            "type": "Catalyst.Common.IO.Messaging.Dto.DtoFactory, Catalyst.Common",
-            "services": [
-                {
-                    "type": "Catalyst.Common.Interfaces.IO.Messaging.Dto.IDtoFactory, Catalyst.Common"
                 }
             ]
         },

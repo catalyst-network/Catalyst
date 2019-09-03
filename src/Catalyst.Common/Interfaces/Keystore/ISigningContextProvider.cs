@@ -21,22 +21,14 @@
 
 #endregion
 
-namespace Catalyst.Common.Interfaces.Config
+using Catalyst.Protocol.Common;
+
+namespace Catalyst.Common.Interfaces.Keystore
 {
-    public interface IConfigCopier
+    public interface ISigningContextProvider
     {
-        /// <summary>
-        ///     Finds out which config files are missing from the catalyst home directory and
-        ///     copies them over if needed.
-        /// </summary>
-        /// <param name="dataDir">Home catalyst directory</param>
-        /// <param name="network">Network on which to run the node</param>
-        /// <param name="sourceFolder"></param>
-        /// <param name="overwrite">Should config existing config files be overwritten by default?</param>
-        void RunConfigStartUp(string dataDir, 
-            Protocol.Common.Network network = Protocol.Common.Network.Devnet, 
-            string sourceFolder = null, 
-            bool overwrite = false, 
-            string overrideNetworkFile = null);
+        Protocol.Common.Network Network { get; set; }
+
+        SignatureType SignatureType { get; set; }
     }
 }

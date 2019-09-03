@@ -61,7 +61,7 @@ namespace Catalyst.Node.POA.CE
             INodeRpcServer nodeRpcServer,
             IPeerClient peerClient,
             IPeerSettings peerSettings,
-            IMempool mempool = null,
+            IMempool mempool,
             IContract contract = null)
         {
             _peer = peer;

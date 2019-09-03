@@ -21,22 +21,23 @@
 
 #endregion
 
-namespace Catalyst.Common.Interfaces.Config
+using Catalyst.Common.Interfaces.P2P;
+using Catalyst.Common.IO.Messaging.Correlation;
+using Catalyst.Common.P2P;
+using Catalyst.Protocol.Common;
+
+namespace Catalyst.Common.IO.Messaging.Dto
 {
-    public interface IConfigCopier
+    public sealed class SignedMessageDto : BaseMessageDto<ProtocolMessageSigned>
     {
         /// <summary>
-        ///     Finds out which config files are missing from the catalyst home directory and
-        ///     copies them over if needed.
+        ///     Data transfer object to wrap up all parameters for sending protocol messages into a MessageFactors.
         /// </summary>
-        /// <param name="dataDir">Home catalyst directory</param>
-        /// <param name="network">Network on which to run the node</param>
-        /// <param name="sourceFolder"></param>
-        /// <param name="overwrite">Should config existing config files be overwritten by default?</param>
-        void RunConfigStartUp(string dataDir, 
-            Protocol.Common.Network network = Protocol.Common.Network.Devnet, 
-            string sourceFolder = null, 
-            bool overwrite = false, 
-            string overrideNetworkFile = null);
+        /// <param name="content"></param>
+        /// <param name="recipientPeerIdentifier"></param>
+        public SignedMessageDto(ProtocolMessageSigned content,
+            IPeerIdentifier recipientPeerIdentifier)
+            : base(content, new PeerIdentifier(content.Message.PeerId), recipientPeerIdentifier,
+                new CorrelationId(content.Message.CorrelationId)) { }
     }
 }

@@ -31,6 +31,7 @@ using Catalyst.Common.Interfaces.IO.EventLoop;
 using Catalyst.Common.Interfaces.IO.Handlers;
 using Catalyst.Common.Interfaces.IO.Messaging.Dto;
 using Catalyst.Common.Interfaces.IO.Transport.Channels;
+using Catalyst.Common.Interfaces.Keystore;
 using Catalyst.Common.Interfaces.Modules.KeySigner;
 using Catalyst.Common.Interfaces.P2P;
 using Catalyst.Common.Interfaces.Rpc.IO.Messaging.Correlation;
@@ -50,6 +51,7 @@ namespace Catalyst.Node.Rpc.Client.IO.Transport.Channels
         private readonly IRpcMessageCorrelationManager _messageCorrelationCache;
         private readonly IPeerIdValidator _peerIdValidator;
         private readonly IObservableServiceHandler _observableServiceHandler;
+        private readonly ISigningContextProvider _signingContextProvider;
 
         /// <summary>
         /// 
@@ -57,15 +59,18 @@ namespace Catalyst.Node.Rpc.Client.IO.Transport.Channels
         /// <param name="keySigner"></param>
         /// <param name="messageCorrelationCache"></param>
         /// <param name="peerIdValidator"></param>
+        /// <param name="signingContextProvider"></param>
         /// <param name="backLogValue"></param>
         public NodeRpcClientChannelFactory(IKeySigner keySigner,
             IRpcMessageCorrelationManager messageCorrelationCache,
             IPeerIdValidator peerIdValidator,
+            ISigningContextProvider signingContextProvider,
             int backLogValue = 100) : base(backLogValue)
         {
             _keySigner = keySigner;
             _messageCorrelationCache = messageCorrelationCache;
             _peerIdValidator = peerIdValidator;
+            _signingContextProvider = signingContextProvider;
             _observableServiceHandler = new ObservableServiceHandler();
         }
 
@@ -83,8 +88,8 @@ namespace Catalyst.Node.Rpc.Client.IO.Transport.Channels
                     new PeerIdValidationHandler(_peerIdValidator),
                     new AddressedEnvelopeToIMessageEncoder(),
                     new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
-                        new ProtocolMessageVerifyHandler(_keySigner), 
-                        new ProtocolMessageSignHandler(_keySigner)),
+                        new ProtocolMessageVerifyHandler(_keySigner, _signingContextProvider), 
+                        new ProtocolMessageSignHandler(_keySigner, _signingContextProvider)),
                     new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
                         new CorrelationHandler<IRpcMessageCorrelationManager>(_messageCorrelationCache),
                         new CorrelatableHandler<IRpcMessageCorrelationManager>(_messageCorrelationCache)),

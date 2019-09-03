@@ -47,7 +47,9 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using Catalyst.Common.Interfaces.Keystore;
 using Catalyst.Common.Types;
+using Catalyst.Protocol.Common;
 using Xunit;
 using Xunit.Abstractions;
 using Constants = Catalyst.Common.Config.Constants;
@@ -65,7 +67,7 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P
         {
             Constants.ComponentsJsonConfigFile,
             Constants.SerilogJsonConfigFile,
-            Constants.NetworkConfigFile(NetworkTypes.Test)
+            Constants.NetworkConfigFile(Network.Testnet)
         }.Select(f => Path.Combine(Constants.ConfigSubFolder, f)), output)
         {
             ContainerProvider.ConfigureContainerBuilder(true, true);
@@ -108,7 +110,8 @@ namespace Catalyst.Core.Lib.IntegrationTests.P2P
                 new PeerServerChannelFactory(ContainerProvider.Container.Resolve<IPeerMessageCorrelationManager>(),
                     ContainerProvider.Container.Resolve<IBroadcastManager>(),
                     keySigner,
-                    ContainerProvider.Container.Resolve<IPeerIdValidator>()), 
+                    ContainerProvider.Container.Resolve<IPeerIdValidator>(),
+                    ContainerProvider.Container.Resolve<ISigningContextProvider>()), 
                 ContainerProvider.Container.Resolve<IPeerDiscovery>(),
                 ContainerProvider.Container.Resolve<IEnumerable<IP2PMessageObserver>>(),
                 _peerSettings,

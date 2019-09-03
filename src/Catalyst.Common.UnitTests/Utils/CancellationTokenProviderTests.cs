@@ -21,24 +21,33 @@
 
 #endregion
 
-using System.Collections.Generic;
-using Catalyst.Common.Config;
-using Catalyst.Common.Types;
-using Catalyst.Protocol.Common;
+using System;
+using Catalyst.Common.Util;
+using FluentAssertions;
+using Xunit;
 
-namespace Catalyst.Cli
+namespace Catalyst.Common.UnitTests.Utils
 {
-    internal sealed class CliConfigCopier : ConfigCopier
+    public sealed class CancellationTokenProviderTests : IDisposable
     {
-        protected override IEnumerable<string> RequiredConfigFiles(Network network, string overrideNetworkFile = null)
+        private readonly CancellationTokenProvider _cancellationTokenProvider;
+
+        public CancellationTokenProviderTests()
         {
-            return new[]
-            {
-                Constants.ShellNodesConfigFile,
-                Constants.ShellComponentsJsonConfigFile,
-                Constants.SerilogJsonConfigFile,
-                Constants.ShellConfigFile
-            };
+            _cancellationTokenProvider = new CancellationTokenProvider();
+        }
+
+        [Fact]
+        public void Has_Token_Cancelled_Should_Be_True_When_Cancelled()
+        {
+            _cancellationTokenProvider.HasTokenCancelled().Should().BeFalse();
+            _cancellationTokenProvider.CancellationTokenSource.Cancel();
+            _cancellationTokenProvider.HasTokenCancelled().Should().BeTrue();
+        }
+
+        public void Dispose()
+        {
+            _cancellationTokenProvider.Dispose();
         }
     }
 }
