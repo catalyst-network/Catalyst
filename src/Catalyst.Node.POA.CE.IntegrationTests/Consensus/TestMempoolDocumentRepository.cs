@@ -33,16 +33,16 @@ using SharpRepository.Repository;
 
 namespace Catalyst.Node.POA.CE.IntegrationTests.Consensus
 {
-    public class TestMempoolDocumentRepository : RepositoryWrapper<MempoolDocument>, IMempoolRepository<MempoolDocument>
+    internal sealed class TestMempoolDocumentRepository : RepositoryWrapper<MempoolDocument>, IMempoolRepository<MempoolDocument>
     {
-        public TestMempoolDocumentRepository(IRepository<MempoolDocument, string> repository) : base(repository) { }
+        internal TestMempoolDocumentRepository(IRepository<MempoolDocument, string> repository) : base(repository) { }
 
         public bool TryReadItem(TransactionSignature key) { throw new NotImplementedException(); }
         public MempoolDocument ReadItem(TransactionSignature key) { throw new NotImplementedException(); }
         public bool DeleteItem(params string[] transactionSignatures) { throw new NotImplementedException(); }
         public bool CreateItem(TransactionBroadcast transactionBroadcast) { throw new NotImplementedException(); }
 
-        public IEnumerable<TransactionBroadcast> GetAll()
+        public new IEnumerable<TransactionBroadcast> GetAll()
         {
             var utcNow = DateTime.UtcNow;
             var tenSecondSlot = 1 + utcNow.Second / 10;

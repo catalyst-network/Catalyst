@@ -42,7 +42,6 @@ namespace Catalyst.Cli.UnitTests.Commands
         [Fact]
         public void Cannot_Connect_With_Invalid_Config()
         {
-            var logger = Substitute.For<ILogger>();
             var commandContext = TestCommandHelpers.GenerateCliCommandContext();
             commandContext.GetNodeConfig(Arg.Any<string>()).Returns((IRpcNodeConfig) null);
 
@@ -56,7 +55,6 @@ namespace Catalyst.Cli.UnitTests.Commands
         [Fact]
         public void Cannot_Connect_With_Invalid_SocketChannel()
         {
-            var logger = Substitute.For<ILogger>();
             var commandContext = TestCommandHelpers.GenerateCliCommandContext();
             TestCommandHelpers.MockRpcNodeConfig(commandContext);
 
@@ -72,7 +70,6 @@ namespace Catalyst.Cli.UnitTests.Commands
         [Fact]
         public void Connect_Should_Connect_To_Node()
         {
-            var logger = Substitute.For<ILogger>();
             var commandContext = TestCommandHelpers.GenerateCliFullCommandContext();
             TestCommandHelpers.AddClientSocketRegistry(commandContext, _testScheduler);
 
