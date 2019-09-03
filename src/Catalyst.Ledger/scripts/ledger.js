@@ -3,6 +3,7 @@ class LedgerApi {
 
         this.OrbitDB = OrbitDB
         this.node = new Ipfs({
+            start: true,
             preload: { enabled: false },
             repo: './ipfs-data',
             EXPERIMENTAL: { pubsub: true },
@@ -17,22 +18,31 @@ class LedgerApi {
     }
 
     async _init() {
-        this.orbitDb = await this.OrbitDB.createInstance(this.node)
-        this.onReady()
-
-        this.ledgerOptions = { accessController: { 
-            //write: [this.orbitdb.identity.id] } 
-            write: ['*'] } 
+        try {
+            this.orbitDb = await this.OrbitDB.createInstance(this.node)
+            this.onReady()
+    
+            this.ledgerOptions = {
+                accessController: {
+                    //write: [this.orbitdb.identity.id] } 
+                    write: ['*']
+                },
+                overwrite : true
+            }
+    
+            this.ledger = await this.orbitDb.kvstore('ledger')
+            this.ledger.load();
+            this.onLedgerCreated();
+    
+            // const owner = 'matthieu'
+            // await this.ledger.put(owner, '10000');
+            // const balance = await this.ledger.get(owner);
+            // this.onBalanceRetrieved(owner, balance);
+            
+        } catch (error) {
+            console.error(error)
         }
 
-        //await this.orbitDB.create('ledger', )
-        this.ledger = await this.orbitDb.keyvalue('ledger', this.ledgerOptions)
-        this.onLedgerCreated();
-
-        // const owner = 'matthieu'
-        // await this.ledger.put(owner, '10000');
-        // const balance = await this.ledger.get(owner);
-        // this.onBalanceRetrieved(owner, balance);
     }
 }
 
