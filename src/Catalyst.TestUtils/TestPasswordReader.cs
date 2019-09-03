@@ -23,7 +23,7 @@
 
 using System.Linq;
 using System.Security;
-using Catalyst.Common.Interfaces.Cryptography;
+using Catalyst.Abstractions.Cryptography;
 
 namespace Catalyst.TestUtils
 {

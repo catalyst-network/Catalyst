@@ -23,8 +23,8 @@
 
 using System.Security;
 using System.Security.Cryptography.X509Certificates;
-using Catalyst.Common.Cryptography;
-using Catalyst.Common.Interfaces.Cryptography;
+using Catalyst.Abstractions.Cryptography;
+using Catalyst.Core.Cryptography;
 
 namespace Catalyst.TestUtils
 {

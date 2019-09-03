@@ -21,16 +21,17 @@
 
 #endregion
 
-using Catalyst.Cli.Options;
-using Catalyst.Common.FileTransfer;
-using Catalyst.Common.Interfaces.FileTransfer;
-using Catalyst.Protocol.Rpc.Node;
 using System.IO;
+using System.Threading;
+using Catalyst.Abstractions.Cli.Commands;
+using Catalyst.Abstractions.FileTransfer;
+using Catalyst.Abstractions.Types;
 using Catalyst.Cli.CommandTypes;
-using Catalyst.Common.Extensions;
-using Catalyst.Common.Interfaces.Cli.Commands;
-using Catalyst.Common.IO.Messaging.Dto;
-using Catalyst.Common.Types;
+using Catalyst.Cli.Options;
+using Catalyst.Core.Extensions;
+using Catalyst.Core.FileTransfer;
+using Catalyst.Core.IO.Messaging.Dto;
+using Catalyst.Protocol.Rpc.Node;
 
 namespace Catalyst.Cli.Commands
 {
@@ -87,7 +88,7 @@ namespace Catalyst.Cli.Commands
             while (!fileTransfer.ChunkIndicatorsTrue() && !fileTransfer.IsExpired())
             {
                 CommandContext.UserOutput.Write($"\rUploaded: {fileTransfer.GetPercentage().ToString()}%");
-                System.Threading.Thread.Sleep(500);
+                Thread.Sleep(500);
             }
 
             if (fileTransfer.ChunkIndicatorsTrue())

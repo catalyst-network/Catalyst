@@ -21,11 +21,10 @@
 
 #endregion
 
+using Catalyst.Abstractions.Cli.Commands;
 using Catalyst.Cli.CommandTypes;
 using Catalyst.Cli.Options;
-using Catalyst.Common.Interfaces.Cli;
-using Catalyst.Common.Interfaces.Cli.Commands;
-using Catalyst.Common.Network;
+using Catalyst.Core.Network;
 using Dawn;
 
 namespace Catalyst.Cli.Commands

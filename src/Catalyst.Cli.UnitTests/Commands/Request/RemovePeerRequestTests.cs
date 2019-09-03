@@ -21,16 +21,10 @@
 
 #endregion
 
-using System.Linq;
 using Catalyst.Cli.Commands;
 using Catalyst.Cli.UnitTests.Helpers;
-using Catalyst.Common.Interfaces.IO.Messaging.Dto;
-using Catalyst.Common.Interfaces.Rpc;
-using Catalyst.Protocol;
-using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using FluentAssertions;
-using NSubstitute;
 using Xunit;
 
 namespace Catalyst.Cli.UnitTests.Commands.Request

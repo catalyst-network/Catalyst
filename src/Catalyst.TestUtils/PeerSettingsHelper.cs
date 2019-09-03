@@ -22,18 +22,11 @@
 #endregion
 
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Net;
-using Catalyst.Common.Config;
-using Catalyst.Common.Extensions;
-using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.Interfaces.Rpc;
-using Catalyst.Common.Types;
-using Catalyst.Common.Util;
-using Catalyst.Cryptography.BulletProofs.Wrapper;
+using Catalyst.Abstractions.P2P;
+using Catalyst.Abstractions.Rpc;
+using Catalyst.Core.Util;
 using Catalyst.Protocol.Common;
-using Multiformats.Hash.Algorithms;
 using NSubstitute;
 
 namespace Catalyst.TestUtils

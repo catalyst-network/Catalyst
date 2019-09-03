@@ -11,7 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Catalyst.Node.Rpc.Client\Catalyst.Node.Rpc.Client.csproj" />
+    <ProjectReference Include="..\Catalyst.Core\Catalyst.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -12,8 +12,9 @@
     </PropertyGroup>
     <Import Project="../Common.TestProjects.props" />
     <ItemGroup>
-        <ProjectReference Include="..\Catalyst.Common\Catalyst.Common.csproj" />
-        <ProjectReference Include="..\Catalyst.Core.Lib\Catalyst.Core.Lib.csproj" />
-        <ProjectReference Include="..\Catalyst.Node.Rpc.Client\Catalyst.Node.Rpc.Client.csproj" />
+        <ProjectReference Include="..\Catalyst.Core\Catalyst.Core.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+      <PackageReference Include="Microsoft.Reactive.Testing" Version="4.1.5" />
     </ItemGroup>
 </Project>

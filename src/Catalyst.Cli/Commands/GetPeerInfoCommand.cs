@@ -21,11 +21,10 @@
 
 #endregion
 
+using Catalyst.Abstractions.Cli.Commands;
 using Catalyst.Cli.CommandTypes;
 using Catalyst.Cli.Options;
-using Catalyst.Common.Extensions;
-using Catalyst.Common.Interfaces.Cli;
-using Catalyst.Common.Interfaces.Cli.Commands;
+using Catalyst.Core.Extensions;
 using Catalyst.Protocol.Rpc.Node;
 
 namespace Catalyst.Cli.Commands
@@ -39,7 +38,7 @@ namespace Catalyst.Cli.Commands
             return new GetPeerInfoRequest
             {
                 PublicKey = option.PublicKey.PublicKeyToProtobuf(),
-                Ip = option.IpAddress.IpAddressToProtobuf(),
+                Ip = option.IpAddress.IpAddressToProtobuf()
             };
         }
     }

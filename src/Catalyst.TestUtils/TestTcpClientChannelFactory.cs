@@ -26,11 +26,11 @@ using System.Collections.Generic;
 using System.Net;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
-using Catalyst.Common.Interfaces.IO.EventLoop;
-using Catalyst.Common.Interfaces.IO.Handlers;
-using Catalyst.Common.Interfaces.IO.Transport.Channels;
-using Catalyst.Common.IO.Handlers;
-using Catalyst.Common.IO.Transport.Channels;
+using Catalyst.Abstractions.IO.EventLoop;
+using Catalyst.Abstractions.IO.Handlers;
+using Catalyst.Abstractions.IO.Transport.Channels;
+using Catalyst.Core.IO.Handlers;
+using Catalyst.Core.IO.Transport.Channels;
 using DotNetty.Transport.Channels;
 using NSubstitute;
 
@@ -60,7 +60,9 @@ namespace Catalyst.TestUtils
         /// <param name="targetAddress">Ignored</param>
         /// <param name="targetPort">Ignored</param>
         /// <param name="certificate">Local TLS certificate</param>
+#pragma warning disable 1998
         public override async Task<IObservableChannel> BuildChannel(IEventLoopGroupFactory eventLoopGroupFactory,
+#pragma warning restore 1998
             IPAddress targetAddress,
             int targetPort,
             X509Certificate2 certificate = null)

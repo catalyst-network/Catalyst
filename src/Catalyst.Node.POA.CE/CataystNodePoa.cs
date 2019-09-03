@@ -24,16 +24,17 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Catalyst.Common.Interfaces;
-using Catalyst.Common.Interfaces.Modules.Consensus;
-using Catalyst.Common.Interfaces.Modules.Contract;
-using Catalyst.Common.Interfaces.Modules.Dfs;
-using Catalyst.Common.Interfaces.Modules.KeySigner;
-using Catalyst.Common.Interfaces.Modules.Ledger;
-using Catalyst.Common.Interfaces.Modules.Mempool;
-using Catalyst.Common.Interfaces.P2P;
-using Catalyst.Common.Interfaces.Rpc;
-using Catalyst.Common.P2P;
+using Catalyst.Abstractions;
+using Catalyst.Abstractions.Consensus;
+using Catalyst.Abstractions.Contract;
+using Catalyst.Abstractions.Dfs;
+using Catalyst.Abstractions.KeySigner;
+using Catalyst.Abstractions.Mempool;
+using Catalyst.Abstractions.P2P;
+using Catalyst.Abstractions.Rpc;
+using Catalyst.Core.Ledger;
+using Catalyst.Core.Mempool.Documents;
+using Catalyst.Core.P2P;
 using Serilog;
 
 namespace Catalyst.Node.POA.CE
@@ -46,9 +47,9 @@ namespace Catalyst.Node.POA.CE
         private readonly ILedger _ledger;
         private readonly IKeySigner _keySigner;
         private readonly ILogger _logger;
-        private readonly IMempool _mempool;
+        private readonly IMempool<MempoolDocument> _mempool;
         private readonly IPeerService _peer;
-        private readonly INodeRpcServer _nodeRpcServer;
+        private readonly IRpcServer _rpcServer;
         private readonly IPeerClient _peerClient;
         private readonly IPeerSettings _peerSettings;
 
@@ -58,10 +59,10 @@ namespace Catalyst.Node.POA.CE
             IDfs dfs,
             ILedger ledger,
             ILogger logger,
-            INodeRpcServer nodeRpcServer,
+            IRpcServer rpcServer,
             IPeerClient peerClient,
             IPeerSettings peerSettings,
-            IMempool mempool,
+            IMempool<MempoolDocument> mempool,
             IContract contract = null)
         {
             _peer = peer;
@@ -72,14 +73,14 @@ namespace Catalyst.Node.POA.CE
             _ledger = ledger;
             _keySigner = keySigner;
             _logger = logger;
-            _nodeRpcServer = nodeRpcServer;
+            _rpcServer = rpcServer;
             _mempool = mempool;
             _contract = contract;
         }
 
         public async Task StartSockets()
         {
-            await _nodeRpcServer.StartAsync().ConfigureAwait(false);
+            await _rpcServer.StartAsync().ConfigureAwait(false);
             await _peerClient.StartAsync().ConfigureAwait(false);
             await _peer.StartAsync().ConfigureAwait(false);
         }

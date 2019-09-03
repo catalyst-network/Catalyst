@@ -21,6 +21,7 @@
 
 #endregion
 
+using System;
 using Nethermind.Evm;
 
 namespace Catalyst.Kvm
@@ -29,6 +30,6 @@ namespace Catalyst.Kvm
     public sealed class StateUpdateHashProvider : IStateUpdateHashProvider
     {
         /// <inheritdoc />
-        public byte[] GetHash(StateUpdate stateUpdate, in long number) { throw new System.NotImplementedException(); }
+        public byte[] GetHash(StateUpdate stateUpdate, in long number) { throw new NotImplementedException(); }
     }
 }

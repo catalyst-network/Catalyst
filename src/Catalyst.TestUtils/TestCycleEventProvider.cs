@@ -22,11 +22,10 @@
 #endregion
 
 using System;
-using Catalyst.Common.Interfaces.Modules.Consensus;
-using Catalyst.Common.Interfaces.Modules.Consensus.Cycle;
-using Catalyst.Common.Interfaces.Modules.Consensus.Deltas;
-using Catalyst.Common.Modules.Consensus.Cycle;
-using Catalyst.Core.Lib.Modules.Consensus.Cycle;
+using Catalyst.Abstractions.Consensus;
+using Catalyst.Abstractions.Consensus.Cycle;
+using Catalyst.Abstractions.Consensus.Deltas;
+using Catalyst.Core.Consensus.Cycle;
 using Microsoft.Reactive.Testing;
 using Multiformats.Hash;
 using NSubstitute;

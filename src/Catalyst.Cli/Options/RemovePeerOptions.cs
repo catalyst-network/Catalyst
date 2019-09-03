@@ -22,7 +22,7 @@
 #endregion
 
 using System.Collections.Generic;
-using Catalyst.Common.Interfaces.Cli.Options;
+using Catalyst.Abstractions.Cli.Options;
 using CommandLine;
 using CommandLine.Text;
 

@@ -28,13 +28,14 @@ using System.Linq;
 using Autofac;
 using Autofac.Configuration;
 using AutofacSerilogIntegration;
-using Catalyst.Common.Interfaces.Cryptography;
-using Catalyst.Common.Interfaces.FileSystem;
-using Catalyst.Common.Interfaces.IO.Events;
-using Catalyst.Common.Interfaces.Registry;
-using Catalyst.Common.IO.Events;
+using Catalyst.Abstractions.Cryptography;
+using Catalyst.Abstractions.FileSystem;
+using Catalyst.Abstractions.IO.Events;
+using Catalyst.Abstractions.Keystore;
+using Catalyst.Core.IO.Events;
 using Catalyst.Protocol.Interfaces.Validators;
 using Catalyst.Protocol.Validators;
+using DotNetty.Common.Internal.Logging;
 using Microsoft.Extensions.Configuration;
 using Serilog;
 using Serilog.Core;
@@ -148,7 +149,7 @@ namespace Catalyst.TestUtils
 
             if (logDotNettyTraffic)
             {
-                DotNetty.Common.Internal.Logging.InternalLoggerFactory.DefaultFactory.AddProvider(new SerilogLoggerProvider(logger));
+                InternalLoggerFactory.DefaultFactory.AddProvider(new SerilogLoggerProvider(logger));
             }
 
             if (writeLogsToFile)

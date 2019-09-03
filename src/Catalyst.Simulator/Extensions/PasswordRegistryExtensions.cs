@@ -21,8 +21,8 @@
 
 #endregion
 
-using Catalyst.Common.Registry;
-using Catalyst.Common.Types;
+using Catalyst.Abstractions.Types;
+using Catalyst.Core.Cryptography;
 using Catalyst.Simulator.Helpers;
 
 namespace Catalyst.Simulator.Extensions

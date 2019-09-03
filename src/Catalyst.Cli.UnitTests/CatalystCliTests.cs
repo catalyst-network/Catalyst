@@ -23,13 +23,13 @@
 
 using System.Collections.Generic;
 using System.Threading;
+using Catalyst.Abstractions.Cli;
+using Catalyst.Abstractions.Cli.Commands;
+using Catalyst.Abstractions.Cli.CommandTypes;
+using Catalyst.Abstractions.Cryptography;
+using Catalyst.Abstractions.Keystore;
+using Catalyst.Abstractions.Rpc;
 using Catalyst.Cli.Commands;
-using Catalyst.Common.Interfaces.Cli;
-using Catalyst.Common.Interfaces.Cli.Commands;
-using Catalyst.Common.Interfaces.Cli.CommandTypes;
-using Catalyst.Common.Interfaces.Cryptography;
-using Catalyst.Common.Interfaces.Registry;
-using Catalyst.Common.Interfaces.Rpc;
 using FluentAssertions;
 using Microsoft.Extensions.Configuration;
 using NSubstitute;

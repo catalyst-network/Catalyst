@@ -23,18 +23,16 @@
 
 using System;
 using System.IO;
-using System.IO.Abstractions;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using Catalyst.Abstractions.FileSystem;
+using Catalyst.Core.FileSystem;
 using Dawn;
 using FluentAssertions;
 using NSubstitute;
-using Serilog;
 using Xunit;
 using Xunit.Abstractions;
-using FileSystem = Catalyst.Common.FileSystem.FileSystem;
-using IFileSystem = Catalyst.Common.Interfaces.FileSystem.IFileSystem;
 
 namespace Catalyst.TestUtils
 {
