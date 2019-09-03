@@ -22,14 +22,14 @@
 #endregion
 
 using System.IO;
-using Catalyst.Common.Interfaces.FileSystem;
-using Catalyst.Common.Repository;
+using Catalyst.Abstractions.FileSystem;
+using Catalyst.Core.Repository;
 using NSubstitute;
 using Xunit;
 
-namespace Catalyst.Common.UnitTests.Repository
+namespace Catalyst.Core.UnitTests.Repository
 {
-    public class FileSystemAwareXmlRepositoryTests
+    public sealed class FileSystemAwareXmlRepositoryTests
     {
         [Fact]
         public void MyTestedMethod_Should_Be_Producing_This_Result_When_Some_Conditions_Are_Met()
@@ -43,5 +43,4 @@ namespace Catalyst.Common.UnitTests.Repository
             fileSystem.Received(1).GetCatalystDataDir();
         }
     }
-
 }
