@@ -31,11 +31,16 @@ using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.IO.Transport.Channels;
 using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.KeySigner;
+using Catalyst.Abstractions.Network;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.Discovery;
+using Catalyst.Abstractions.P2P.IO;
 using Catalyst.Abstractions.P2P.IO.Messaging.Broadcast;
 using Catalyst.Abstractions.P2P.IO.Messaging.Correlation;
+using Catalyst.Abstractions.P2P.Models;
 using Catalyst.Abstractions.Util;
+using Catalyst.Core.P2P.Discovery;
+using Catalyst.Core.P2P.Discovery.Hastings;
 using Catalyst.Core.P2P.IO.Messaging.Broadcast;
 using Catalyst.Core.P2P.IO.Messaging.Correlation;
 using Catalyst.Core.P2P.IO.Transport.Channels;
@@ -53,6 +58,20 @@ namespace Catalyst.Core.P2P
     {
         protected override void Load(ContainerBuilder builder)
         {
+            builder.Register(c => new HastingsDiscovery(
+                c.Resolve<ILogger>(),
+                c.Resolve<IPeerRepository>(),
+                c.Resolve<IDns>(),
+                c.Resolve<IPeerSettings>(),
+                c.Resolve<IPeerClient>(),
+                c.Resolve<IPeerMessageCorrelationManager>(),
+                c.Resolve<ICancellationTokenProvider>(),
+                c.Resolve<IEnumerable<IPeerClientObservable>>()
+            )).As<IHastingsDiscovery>();
+            
+            builder.Register(c => new HealthChecker()).As<IHealthChecker>();
+            builder.RegisterType<Peer>().As<IPeer>();
+
             builder.Register(c => new BroadcastManager(
                 c.Resolve<IPeerIdentifier>(),
                 c.Resolve<IPeerRepository>(),
@@ -67,7 +86,7 @@ namespace Catalyst.Core.P2P
                 c.Resolve<IMemoryCache>(),
                 c.Resolve<ILogger>(),
                 c.Resolve<IChangeTokenProvider>(),
-                c.Resolve<IScheduler>()
+                c.ResolveOptional<IScheduler>()
             )).As<IPeerMessageCorrelationManager>();
             
             builder.Register(c => new PeerServerChannelFactory(
@@ -76,7 +95,7 @@ namespace Catalyst.Core.P2P
                 c.Resolve<IKeySigner>(),
                 c.Resolve<IPeerIdValidator>(),
                 c.Resolve<ISigningContextProvider>(),
-                c.Resolve<IScheduler>()
+                c.ResolveOptional<IScheduler>()
             )).As<IUdpServerChannelFactory>();
             
             builder.Register(c => new PeerClientChannelFactory(
@@ -84,7 +103,7 @@ namespace Catalyst.Core.P2P
                 c.Resolve<IPeerMessageCorrelationManager>(),
                 c.Resolve<IPeerIdValidator>(),
                 c.Resolve<ISigningContextProvider>(),
-                c.Resolve<IScheduler>()                
+                c.ResolveOptional<IScheduler>()                
             )).As<IUdpClientChannelFactory>();
             
             builder.Register(c => new PeerRepository(
@@ -128,7 +147,7 @@ namespace Catalyst.Core.P2P
                     c.Resolve<IPeerClient>(),
                     c.Resolve<IPeerIdentifier>(),
                     10,
-                    c.Resolve<IScheduler>()
+                    c.ResolveOptional<IScheduler>()
                     ))
                 .As<IPeerChallenger>();
             
