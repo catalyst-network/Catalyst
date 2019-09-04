@@ -22,6 +22,7 @@
 #endregion
 
 using System.Collections.Generic;
+using System.Reactive.Concurrency;
 using Autofac;
 using Catalyst.Abstractions.IO.EventLoop;
 using Catalyst.Abstractions.IO.Observers;
@@ -36,6 +37,24 @@ namespace Catalyst.Core.P2P
     {
         protected override void Load(ContainerBuilder builder)
         {
+            builder.Register(c => new PeerClient(
+                c.Resolve<IUdpClientChannelFactory>(),
+                c.Resolve<IUdpClientEventLoopGroupFactory>(),
+                c.Resolve<IPeerSettings>()
+            ));
+            
+            builder.RegisterType<PeerChallengerResponse>()
+                .As<IPeerChallengeResponse>();
+            
+            builder.Register(c => new PeerChallenger(
+                    c.Resolve<ILogger>(),
+                    c.Resolve<IPeerClient>(),
+                    c.Resolve<IPeerIdentifier>(),
+                    10,
+                    c.Resolve<IScheduler>()
+                    ))
+                .As<IPeerChallenger>();
+            
             builder.Register(c => new PeerService(c.Resolve<IUdpServerEventLoopGroupFactory>(),
                     c.Resolve<IUdpServerChannelFactory>(),
                     c.Resolve<IPeerDiscovery>(),
