@@ -1,0 +1,24 @@
+{
+  "defaultAssembly": "Catalyst.TestUtils",
+  "components": [
+    {
+        "type": "SharpRepository.XmlRepository.XmlRepository`1[[Catalyst.TestUtils.StoredItem]], SharpRepository.XmlRepository",
+        "services": [
+            {
+                "type": "SharpRepository.Repository.IRepository`1[[Catalyst.TestUtils.StoredItem]], SharpRepository.Repository"
+            }
+        ],
+        "parameters": {
+            "storagePath": "[@replace-this@]"
+        }
+    },
+    {
+      "type": "Catalyst.TestUtils.ComponentWithRepository",
+      "services": [
+          {
+              "type": "Catalyst.TestUtils.IComponentWithRepository"
+          }
+      ]
+    }
+  ]
+}

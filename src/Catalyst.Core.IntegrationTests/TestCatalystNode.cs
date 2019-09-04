@@ -51,12 +51,12 @@ namespace Catalyst.Core.IntegrationTests
         private readonly ContainerProvider _configProvider;
 
         public TestCatalystNode(string name, ITestOutputHelper output) 
-            : base(new[]
+            : base(output, new[]
             {
                 Constants.NetworkConfigFile(Protocol.Common.Network.Devnet),
                 Constants.ComponentsJsonConfigFile,
                 Constants.SerilogJsonConfigFile
-            }.Select(f => Path.Combine(Constants.ConfigSubFolder, f)), output)
+            }.Select(f => Path.Combine(Constants.ConfigSubFolder, f)))
         {
             Name = name;
             _configProvider = new ContainerProvider(_configFilesUsed, FileSystem, output);
