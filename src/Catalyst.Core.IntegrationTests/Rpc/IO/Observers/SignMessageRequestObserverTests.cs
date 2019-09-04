@@ -52,13 +52,13 @@ namespace Catalyst.Core.IntegrationTests.Rpc.IO.Observers
         private readonly IKeySigner _keySigner;
         private readonly IChannelHandlerContext _fakeContext;
 
-        public SignMessageRequestObserverTests(ITestOutputHelper output) : base(new[]
+        public SignMessageRequestObserverTests(ITestOutputHelper output) : base(output, new[]
         {
             Path.Combine(Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile),
             Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile),
             Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Protocol.Common.Network.Devnet)),
             Path.Combine(Constants.ConfigSubFolder, Constants.ShellNodesConfigFile)
-        }, output)
+        })
         {
             _testScheduler = new TestScheduler();
             ContainerProvider.ConfigureContainerBuilder();
