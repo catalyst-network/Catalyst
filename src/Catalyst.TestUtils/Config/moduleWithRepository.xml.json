@@ -1,11 +1,11 @@
 {
-  "defaultAssembly": "Catalyst.Core",
+  "defaultAssembly": "Catalyst.TestUtils",
   "components": [
     {
-        "type": "SharpRepository.XmlRepository.XmlRepository`1[[Catalyst.Node.POA.CE.Tests.IntegrationTests.Config.StoredItem, Catalyst.Node.POA.CE.Tests]], SharpRepository.XmlRepository",
+        "type": "SharpRepository.XmlRepository.XmlRepository`1[[Catalyst.TestUtils.StoredItem]], SharpRepository.XmlRepository",
         "services": [
             {
-                "type": "SharpRepository.Repository.IRepository`1[[Catalyst.Node.POA.CE.Tests.IntegrationTests.Config.StoredItem, Catalyst.Node.POA.CE.Tests]], SharpRepository.Repository"
+                "type": "SharpRepository.Repository.IRepository`1[[Catalyst.TestUtils.StoredItem]], SharpRepository.Repository"
             }
         ],
         "parameters": {
@@ -13,10 +13,10 @@
         }
     },
     {
-      "type": "Catalyst.Node.POA.CE.Tests.IntegrationTests.Config.ComponentWithRepository, Catalyst.Node.POA.CE.Tests",
+      "type": "Catalyst.TestUtils.ComponentWithRepository",
       "services": [
           {
-              "type": "Catalyst.Node.POA.CE.Tests.IntegrationTests.Config.IComponentWithRepository, Catalyst.Node.POA.CE.Tests"
+              "type": "Catalyst.TestUtils.IComponentWithRepository"
           }
       ]
     }
