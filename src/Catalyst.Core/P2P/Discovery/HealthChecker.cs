@@ -21,30 +21,26 @@
 
 #endregion
 
-using System.Collections.Generic;
-using Autofac;
-using Catalyst.Abstractions.IO.EventLoop;
-using Catalyst.Abstractions.IO.Observers;
-using Catalyst.Abstractions.IO.Transport.Channels;
-using Catalyst.Abstractions.P2P;
+using System;
+using System.Reactive.Linq;
 using Catalyst.Abstractions.P2P.Discovery;
-using Serilog;
 
-namespace Catalyst.Core.P2P
+namespace Catalyst.Core.P2P.Discovery
 {
-    public class P2PModule : Module
+    public class HealthChecker : IHealthChecker
     {
-        protected override void Load(ContainerBuilder builder)
+        private IDisposable _subscription;
+        
+        void IDisposable.Dispose() { _subscription?.Dispose(); }
+
+        public void Run()
         {
-            builder.Register(c => new PeerService(c.Resolve<IUdpServerEventLoopGroupFactory>(),
-                    c.Resolve<IUdpServerChannelFactory>(),
-                    c.Resolve<IPeerDiscovery>(),
-                    c.Resolve<IEnumerable<IP2PMessageObserver>>(),
-                    c.Resolve<IPeerSettings>(),
-                    c.Resolve<ILogger>(),
-                    c.Resolve<IHealthChecker>()
-                ))
-               .As<IPeerService>();
-        }  
+            _subscription = Observable
+               .Interval(TimeSpan.FromSeconds(10))
+               .StartWith(-1L)
+               .Subscribe(interval => PingNode());
+        }
+
+        private static void PingNode() { }
     }
 }

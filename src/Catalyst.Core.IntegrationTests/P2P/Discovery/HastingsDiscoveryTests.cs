@@ -56,10 +56,10 @@ namespace Catalyst.Core.IntegrationTests.P2P.Discovery
 {
     public sealed class HastingsDiscoveryTests : ConfigFileBasedTest
     {
-        public HastingsDiscoveryTests(ITestOutputHelper output) : base(new[]
+        public HastingsDiscoveryTests(ITestOutputHelper output) : base(output, new[]
         {
             Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Protocol.Common.Network.Devnet))
-        }, output)
+        })
         {
             _testScheduler = new TestScheduler();
             _settings = PeerSettingsHelper.TestPeerSettings();
