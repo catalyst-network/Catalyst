@@ -30,11 +30,19 @@ using Catalyst.Abstractions.IO.EventLoop;
 using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.IO.Transport.Channels;
 using Catalyst.Abstractions.Keystore;
+using Catalyst.Abstractions.KeySigner;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.Discovery;
+using Catalyst.Abstractions.P2P.IO.Messaging.Broadcast;
+using Catalyst.Abstractions.P2P.IO.Messaging.Correlation;
+using Catalyst.Abstractions.Util;
+using Catalyst.Core.P2P.IO.Messaging.Broadcast;
+using Catalyst.Core.P2P.IO.Messaging.Correlation;
+using Catalyst.Core.P2P.IO.Transport.Channels;
 using Catalyst.Core.P2P.Models;
 using Catalyst.Core.P2P.Repository;
 using Catalyst.Core.P2P.ReputationSystem;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Serilog;
 using SharpRepository.Repository;
@@ -45,6 +53,40 @@ namespace Catalyst.Core.P2P
     {
         protected override void Load(ContainerBuilder builder)
         {
+            builder.Register(c => new BroadcastManager(
+                c.Resolve<IPeerIdentifier>(),
+                c.Resolve<IPeerRepository>(),
+                c.Resolve<IMemoryCache>(),
+                c.Resolve<IPeerClient>(),
+                c.Resolve<IKeySigner>(),
+                c.Resolve<ILogger>()
+            )).As<IBroadcastManager>();
+            
+            builder.Register(c => new PeerMessageCorrelationManager(
+                c.Resolve<IReputationManager>(),
+                c.Resolve<IMemoryCache>(),
+                c.Resolve<ILogger>(),
+                c.Resolve<IChangeTokenProvider>(),
+                c.Resolve<IScheduler>()
+            )).As<IPeerMessageCorrelationManager>();
+            
+            builder.Register(c => new PeerServerChannelFactory(
+                c.Resolve<IPeerMessageCorrelationManager>(),
+                c.Resolve<IBroadcastManager>(),
+                c.Resolve<IKeySigner>(),
+                c.Resolve<IPeerIdValidator>(),
+                c.Resolve<ISigningContextProvider>(),
+                c.Resolve<IScheduler>()
+            )).As<IUdpServerChannelFactory>();
+            
+            builder.Register(c => new PeerClientChannelFactory(
+                c.Resolve<IKeySigner>(),
+                c.Resolve<IPeerMessageCorrelationManager>(),
+                c.Resolve<IPeerIdValidator>(),
+                c.Resolve<ISigningContextProvider>(),
+                c.Resolve<IScheduler>()                
+            )).As<IUdpClientChannelFactory>();
+            
             builder.Register(c => new PeerRepository(
                 c.Resolve<IRepository<Peer, string>>()
             )).As<IPeerRepository>();
