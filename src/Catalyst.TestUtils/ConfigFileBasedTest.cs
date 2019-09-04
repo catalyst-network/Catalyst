@@ -21,8 +21,11 @@
 
 #endregion
 
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using Catalyst.Core.Config;
 using Xunit.Abstractions;
 
 namespace Catalyst.TestUtils
@@ -31,11 +34,20 @@ namespace Catalyst.TestUtils
     {
         protected List<string> ConfigFilesUsed { get; }
 
-        protected ContainerProvider ContainerProvider;
+        protected readonly ContainerProvider ContainerProvider;
 
-        protected ConfigFileBasedTest(IEnumerable<string> configFilesUsed, ITestOutputHelper output) : base(output)
+        protected ConfigFileBasedTest(ITestOutputHelper output, IEnumerable<string> configFilesUsed = default) : base(output)
         {
-            ConfigFilesUsed = configFilesUsed as List<string> ?? configFilesUsed?.ToList() ?? new List<string>();
+            ConfigFilesUsed = new List<string>
+            {
+                Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile)
+            };
+
+            configFilesUsed?.ToList().ForEach(config =>
+            {
+                ConfigFilesUsed.Add(config);                    
+            });
+
             ContainerProvider = new ContainerProvider(ConfigFilesUsed, FileSystem, Output);
         }
 

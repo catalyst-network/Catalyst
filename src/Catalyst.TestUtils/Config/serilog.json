@@ -1,0 +1,17 @@
+{
+  "Serilog": {
+    "Using": [ "Serilog.Sinks.Console", "Serilog.Sinks.File" ],
+    "MinimumLevel": "Verbose",
+    "WriteTo": [
+      {
+        "Name": "Console",
+        "Args": { "outputTemplate": "{Timestamp:HH:mm:ss} [{Level:u3}] ({ThreadId}) {Message} ({SourceContext}){NewLine}{Exception}" } 
+      },
+      { "Name": "File" }
+    ],
+    "Enrich": [ "FromLogContext", "WithMachineName", "WithThreadId", "SourceContext" ],
+    "Properties": {
+      "Application": "Catalyst.Node.POA.CE"
+    }
+  }
+}

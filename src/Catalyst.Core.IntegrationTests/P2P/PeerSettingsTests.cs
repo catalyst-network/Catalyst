@@ -34,12 +34,12 @@ namespace Catalyst.Core.IntegrationTests.P2P
 {
     public sealed class PeerSettingsTests : ConfigFileBasedTest
     {
-        public PeerSettingsTests(ITestOutputHelper output) : base(new[]
+        public PeerSettingsTests(ITestOutputHelper output) : base(output, new[]
         {
             Path.Combine(Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile),
             Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile),
             Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Protocol.Common.Network.Devnet))
-        }, output) { }
+        }) { }
 
         [Fact]
         private void CanResolveIPeerSettings()
