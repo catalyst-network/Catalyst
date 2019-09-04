@@ -73,8 +73,8 @@ namespace Catalyst.Core.Consensus.Deltas
             var previousAddress = previousHash.AsBase32Address();
             _logger.Debug("New hash {hash} received for previous hash {previousHash}", 
                 newAddress, previousAddress);
-            var foundNewDelta = _deltaCache.TryGetConfirmedDelta(newAddress, out var newDelta);
-            var foundPreviousDelta = _deltaCache.TryGetConfirmedDelta(previousAddress, out var previousDelta);
+            var foundNewDelta = _deltaCache.GetOrAddConfirmedDelta(newAddress, out var newDelta);
+            var foundPreviousDelta = _deltaCache.GetOrAddConfirmedDelta(previousAddress, out var previousDelta);
 
             if (!foundNewDelta 
              || !foundPreviousDelta

@@ -33,12 +33,13 @@ namespace Catalyst.Abstractions.Consensus.Deltas
         /// <summary>
         /// Attempts to retrieve a delta which has already been confirmed by other producers
         /// from the local cache first, then, if the delta was not found there,
-        /// the retrieval is done from the Dfs.
+        /// the retrieval is done from the Dfs and the delta is added to the local cache for
+        /// later use.
         /// </summary>
         /// <param name="hash">The hash or address of the delta on the Dfs.</param>
         /// <param name="delta">The delta retrieved on the Dfs.</param>
         /// <returns><c>true</c> if the retrieval was successful, <c>false</c> otherwise.</returns>
-        bool TryGetConfirmedDelta(string hash, out Delta delta);
+        bool GetOrAddConfirmedDelta(string hash, out Delta delta);
 
         /// <summary>
         /// Attempts to retrieve a local delta which was locally produced and stored in

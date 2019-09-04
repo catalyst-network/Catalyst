@@ -23,8 +23,6 @@
 
 using System.Text;
 using Catalyst.Abstractions.Types;
-using Catalyst.Abstractions.Util;
-using Catalyst.Core.Config;
 using Catalyst.Core.Util;
 using Newtonsoft.Json;
 using SharpRepository.Repository;
@@ -34,25 +32,28 @@ namespace Catalyst.Core.Ledger.Models
     /// <inheritdoc />
     public sealed class Account : IAccount
     {
-        /// <inheritdoc />
-        public string PublicAddress { get; set; }
+        public Account(string publicAddress, 
+            AccountTypes accountType, 
+            BigDecimal balance = default)
+        {
+            PublicAddress = publicAddress;
+            AccountType = accountType;
+            Balance = balance == default ? 0 : balance;
+        }
 
         /// <inheritdoc />
-        public uint CoinType { get; set; }
+        public string PublicAddress { get; }
 
         /// <inheritdoc />
-        public AccountTypes AccountType { get; set; }
+        public AccountTypes AccountType { get; }
 
         /// <inheritdoc />
-        public IBigDecimal Balance { get; set; }
-
-        /// <inheritdoc />
-        public byte[] StateRoot { get; set; } = Constants.EmptyTrieHash;
+        public BigDecimal Balance { get; set; }
 
         [RepositoryPrimaryKey(Order = 1)]
         [JsonProperty("id")]
         public string DocumentId =>
-            Encoding.UTF8.GetBytes($"{PublicAddress}-{CoinType}-{AccountType?.Name}")
+            Encoding.UTF8.GetBytes($"{PublicAddress}-{AccountType?.Name}")
               ?.ToByteString()?.ToBase64();
     }
 }

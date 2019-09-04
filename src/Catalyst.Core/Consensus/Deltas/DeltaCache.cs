@@ -75,7 +75,7 @@ namespace Catalyst.Core.Consensus.Deltas
         }
 
         /// <inheritdoc />
-        public bool TryGetConfirmedDelta(string hash, out Delta delta)
+        public bool GetOrAddConfirmedDelta(string hash, out Delta delta)
         {
             //this calls for a TryGetOrCreate IMemoryCache extension function
             if (_memoryCache.TryGetValue(hash, out delta))

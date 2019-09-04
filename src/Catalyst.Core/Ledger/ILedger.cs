@@ -45,7 +45,8 @@ namespace Catalyst.Core.Ledger
 
         /// <summary>
         /// Digests the information contained in a Delta object and uses it to update the various accounts involved
-        /// in the transactions it contains.
+        /// in the transactions it contains. An update will trigger a potentially long running synchronisation if
+        /// the delta received is not immediately following the current <seealso cref="LatestKnownDelta"/>.
         /// </summary>
         /// <param name="deltaHash">The address of the delta used to update the ledger on the Dfs.</param>
         void Update(Multihash deltaHash);
@@ -56,10 +57,8 @@ namespace Catalyst.Core.Ledger
         Multihash LatestKnownDelta { get; }
 
         /// <summary>
-        /// Starts a synchronisation process that will try to walk back from the <seealso cref="targetHash"/> and up to
-        /// <seealso cref="LatestKnownDelta"/> applying all the updates it encounters between these 2 states.
+        /// A boolean indicating whether a synchronisation of the ledger is in currently in process. 
         /// </summary>
-        /// <param name="targetHash">The hash up to which the ledger should be synchronise.</param>
-        //Task SynchroniseAsync(Multihash targetHash);
+        bool IsSynchonising { get; }
     }
 }

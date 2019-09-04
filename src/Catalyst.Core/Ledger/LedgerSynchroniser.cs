@@ -31,17 +31,19 @@ namespace Catalyst.Core.Ledger
     /// <inheritdoc />
     public class LedgerSynchroniser : ILedgerSynchroniser
     {
-        private readonly IDeltaCache _deltaCache;
         private readonly ILogger _logger;
 
         public LedgerSynchroniser(IDeltaCache deltaCache, ILogger logger)
         {
-            _deltaCache = deltaCache;
+            DeltaCache = deltaCache;
             _logger = logger;
         }
 
         /// <inheritdoc />
-        public IEnumerable<ChainedDeltaHashes> RetrieveDeltasBetween(Multihash latestKnownDeltaHash,
+        public IDeltaCache DeltaCache { get; }
+
+        /// <inheritdoc />
+        public IEnumerable<Multihash> CacheDeltasBetween(Multihash latestKnownDeltaHash,
             Multihash targetDeltaHash,
             CancellationToken cancellationToken)
         {
@@ -54,16 +56,14 @@ namespace Catalyst.Core.Ledger
                  != latestKnownDeltaHash.AsBase32Address())
              && !cancellationToken.IsCancellationRequested)
             {
-                if (_deltaCache.TryGetConfirmedDelta(thisHash, out retrievedDelta))
+                if (DeltaCache.GetOrAddConfirmedDelta(thisHash, out retrievedDelta))
                 {
                     var previousDfsHash = retrievedDelta.PreviousDeltaDfsHash.AsMultihash();
 
-                    var chainedDelta = new ChainedDeltaHashes(previousDfsHash,
-                        thisHash, nextHash);
+                    _logger.Debug("Retrieved delta {previous} as predecessor of {current}", 
+                        previousDfsHash, thisHash);
 
-                    _logger.Debug("Retrieved new chained delta {chainedDelta}", chainedDelta);
-
-                    yield return chainedDelta;
+                    yield return previousDfsHash;
 
                     nextHash = thisHash;
                     thisHash = previousDfsHash;

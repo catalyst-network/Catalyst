@@ -29,9 +29,9 @@ namespace Catalyst.Core.Ledger
     /// A delta which is linked both ways, to its predecessor (like all normal deltas), but also to its
     /// successor. This is meant to be used during re-synchronisation of the ledger.
     /// </summary>
-    public class ChainedDeltaHashes
+    public class ChainedDeltaHash
     {
-        public ChainedDeltaHashes(Multihash previousDfsHash, Multihash dfsHash, Multihash nextDeltaDfsHash)
+        public ChainedDeltaHash(Multihash previousDfsHash, Multihash dfsHash, Multihash nextDeltaDfsHash)
         {
             PreviousDfsHash = previousDfsHash;
             DfsHash = dfsHash;

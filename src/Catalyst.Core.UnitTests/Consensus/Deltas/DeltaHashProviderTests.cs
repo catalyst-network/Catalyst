@@ -180,7 +180,7 @@ namespace Catalyst.Core.UnitTests.Consensus.Deltas
 
         private void ExpectTryGetDelta(string hash, Delta delta)
         {
-            _deltaCache.TryGetConfirmedDelta(hash, out Arg.Any<Delta>())
+            _deltaCache.GetOrAddConfirmedDelta(hash, out Arg.Any<Delta>())
                .Returns(ci =>
                 {
                     ci[1] = delta;
