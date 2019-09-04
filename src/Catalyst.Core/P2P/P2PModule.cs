@@ -43,23 +43,7 @@ namespace Catalyst.Core.P2P
     {
         protected override void Load(ContainerBuilder builder)
         {
-            $ git filter-branch --env-filter '
-            WRONG_EMAIL="jkirkby@protonmail.ch"
-            NEW_NAME="nshCore"
-            NEW_EMAIL="nshcore@protonmail.com"
-
-            if [ "$GIT_COMMITTER_EMAIL" = "$WRONG_EMAIL" ]
-            then
-            export GIT_COMMITTER_NAME="$NEW_NAME"
-            export GIT_COMMITTER_EMAIL="$NEW_EMAIL"
-            fi
-            if [ "$GIT_AUTHOR_EMAIL" = "$WRONG_EMAIL" ]
-            then
-            export GIT_AUTHOR_NAME="$NEW_NAME"
-            export GIT_AUTHOR_EMAIL="$NEW_EMAIL"
-            fi
-            ' --tag-name-filter cat -- --branches --tags
-                
+               
             builder.Register(c => new ReputationManager(
                 c.Resolve<IPeerRepository>(),
                 c.Resolve<ILogger>()
