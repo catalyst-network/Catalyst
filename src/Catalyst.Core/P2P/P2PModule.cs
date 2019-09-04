@@ -24,9 +24,12 @@
 using System.Collections.Generic;
 using System.Reactive.Concurrency;
 using Autofac;
+using Catalyst.Abstractions.Cli;
+using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.IO.EventLoop;
 using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.IO.Transport.Channels;
+using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.Discovery;
 using Serilog;
@@ -37,11 +40,25 @@ namespace Catalyst.Core.P2P
     {
         protected override void Load(ContainerBuilder builder)
         {
+            builder.Register(c => new PeerIdValidator(
+                c.Resolve<ICryptoContext>()
+            )).As<IPeerIdValidator>();
+            
+            builder.Register(c => new PeerIdentifier(
+                c.Resolve<IPeerSettings>(),
+                c.Resolve<IKeyRegistry>(),
+                c.Resolve<IUserOutput>()
+            )).As<IPeerIdentifier>();
+            
+            builder.Register(c => new PeerIdentifier(
+                c.Resolve<IPeerSettings>()
+            )).As<IPeerIdentifier>();
+            
             builder.Register(c => new PeerClient(
                 c.Resolve<IUdpClientChannelFactory>(),
                 c.Resolve<IUdpClientEventLoopGroupFactory>(),
                 c.Resolve<IPeerSettings>()
-            ));
+            )).As<IPeerClient>();
             
             builder.RegisterType<PeerChallengerResponse>()
                 .As<IPeerChallengeResponse>();
