@@ -32,10 +32,12 @@ using Catalyst.Abstractions.IO.Transport.Channels;
 using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.Discovery;
+using Catalyst.Core.P2P.Models;
 using Catalyst.Core.P2P.Repository;
 using Catalyst.Core.P2P.ReputationSystem;
 using Microsoft.Extensions.Configuration;
 using Serilog;
+using SharpRepository.Repository;
 
 namespace Catalyst.Core.P2P
 {
@@ -43,6 +45,9 @@ namespace Catalyst.Core.P2P
     {
         protected override void Load(ContainerBuilder builder)
         {
+            builder.Register(c => new PeerRepository(
+                c.Resolve<IRepository<Peer, string>>()
+            )).As<IPeerRepository>();
                
             builder.Register(c => new ReputationManager(
                 c.Resolve<IPeerRepository>(),
