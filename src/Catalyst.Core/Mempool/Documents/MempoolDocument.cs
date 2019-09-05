@@ -35,6 +35,6 @@ namespace Catalyst.Core.Mempool.Documents
         [RepositoryPrimaryKey(Order = 1)]
         [JsonProperty("id")]
         [BsonId]
-        public string DocumentId => Transaction?.Signature?.ToByteString()?.ToBase64();
+        public string DocumentId => Transaction?.Signature?.ToBase64();
     }
 }

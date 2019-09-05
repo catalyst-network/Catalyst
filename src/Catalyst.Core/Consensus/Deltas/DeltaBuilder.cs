@@ -55,7 +55,7 @@ namespace Catalyst.Core.Consensus.Deltas
             IDeterministicRandomFactory randomFactory,
             IMultihashAlgorithm hashAlgorithm,
             IPeerIdentifier producerUniqueId,
-            IDeltaCache deltaCache, 
+            IDeltaCache deltaCache,
             IDateTimeProvider dateTimeProvider,
             ILogger logger)
         {
@@ -170,7 +170,8 @@ namespace Catalyst.Core.Consensus.Deltas
             //lock time equals 0 or less than ledger cycle time
             //we assume all transactions are of type non-confidential for now
 
-            var validTransactionsForDelta = allTransactions.Where(m => m.LockTime <= 0 && m.Version == 1).ToList();
+            var validTransactionsForDelta = allTransactions.Where(m => m.LockTime <= 0 
+             && m.TransactionType == TransactionType.Normal).ToList();
             var rejectedTransactions = allTransactions.Except(validTransactionsForDelta);
             _logger.Debug("Delta builder rejected the following transactions {rejectedTransactions}", rejectedTransactions);
             return validTransactionsForDelta;

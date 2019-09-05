@@ -23,9 +23,11 @@
 
 using System.Linq;
 using Catalyst.Abstractions.Mempool;
+using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.IO.Messaging.Broadcast;
 using Catalyst.Core.IO.Events;
 using Catalyst.Core.Mempool.Documents;
+using Catalyst.Core.Util;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Interfaces.Validators;
 using Catalyst.Protocol.Rpc.Node;
@@ -45,9 +47,13 @@ namespace Catalyst.Core.UnitTests.IO.Events
         private readonly ITransactionValidator _transactionValidator;
         private readonly IBroadcastManager _broadcastManager;
         private readonly TransactionReceivedEvent _transactionReceivedEvent;
+        private readonly IPeerSettings _peerSettings;
 
         public TransactionReceivedEventTests()
         {
+            _peerSettings = Substitute.For<IPeerSettings>();
+            _peerSettings.Network.Returns(Protocol.Common.Network.Devnet);
+
             _mempool = Substitute.For<IMempool<MempoolDocument>>();
             _transactionValidator = Substitute.For<ITransactionValidator>();
             _broadcastManager = Substitute.For<IBroadcastManager>();
@@ -55,13 +61,14 @@ namespace Catalyst.Core.UnitTests.IO.Events
                 _mempool, 
                 _broadcastManager, 
                 PeerIdentifierHelper.GetPeerIdentifier("Test"), 
+                _peerSettings,
                 Substitute.For<ILogger>());
         }
 
         [Fact]
         public void Can_Send_Error_To_Invalid_Transaction()
         {
-            _transactionValidator.ValidateTransaction(Arg.Any<TransactionBroadcast>()).Returns(false);
+            _transactionValidator.ValidateTransaction(Arg.Any<TransactionBroadcast>(), _peerSettings.Network).Returns(false);
             _transactionReceivedEvent.OnTransactionReceived(new TransactionBroadcast()).Should()
                .Be(ResponseCode.Error);
             _broadcastManager.DidNotReceiveWithAnyArgs().BroadcastAsync(default);
@@ -70,13 +77,13 @@ namespace Catalyst.Core.UnitTests.IO.Events
         [Fact]
         public void Can_Send_Error_If_Mempool_Contains_Transaction()
         {
-            var sig = new TransactionSignature();
+            var sig = new byte[64].ToByteString();
             var transaction = new TransactionBroadcast
             {
                 Signature = sig
             };
 
-            _transactionValidator.ValidateTransaction(Arg.Any<TransactionBroadcast>()).Returns(true);
+            _transactionValidator.ValidateTransaction(Arg.Any<TransactionBroadcast>(), _peerSettings.Network).Returns(true);
             _mempool.Repository.TryReadItem(sig).Returns(true);
 
             _transactionReceivedEvent.OnTransactionReceived(transaction).Should().Be(ResponseCode.Error);
@@ -87,12 +94,13 @@ namespace Catalyst.Core.UnitTests.IO.Events
         [Fact]
         public void Can_Broadcast_And_Save_Valid_Transaction()
         {
+            var sig = new byte[64].ToByteString();
             var transaction = new TransactionBroadcast
             {
-                Signature = new TransactionSignature()
+                Signature = sig
             };
 
-            _transactionValidator.ValidateTransaction(Arg.Any<TransactionBroadcast>()).Returns(true);
+            _transactionValidator.ValidateTransaction(Arg.Any<TransactionBroadcast>(), _peerSettings.Network).Returns(true);
             _transactionReceivedEvent.OnTransactionReceived(transaction).Should().Be(ResponseCode.Successful);
 
             _mempool.Repository.Received(1).CreateItem(Arg.Is<TransactionBroadcast>(

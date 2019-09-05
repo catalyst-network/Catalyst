@@ -59,9 +59,9 @@ namespace Catalyst.Core.Mempool
         }
 
         /// <inheritdoc />
-        public bool ContainsDocument(TransactionSignature key)
+        public bool ContainsDocument(ByteString signature)
         {
-            return Repository.TryGet(key.ToByteString().ToBase64(), out _);
+            return Repository.TryGet(signature.ToBase64(), out _);
         }
 
         /// <inheritdoc />
@@ -77,10 +77,9 @@ namespace Catalyst.Core.Mempool
         }
 
         /// <inheritdoc />
-        public IMempoolDocument GetMempoolDocument(TransactionSignature key)
+        public IMempoolDocument GetMempoolDocument(ByteString signature)
         {
-            Guard.Argument(key, nameof(key)).NotNull();
-            var found = Repository.Get(key.ToByteString().ToBase64());
+            var found = Repository.Get(signature.ToBase64());
             return found;
         }
 

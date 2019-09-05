@@ -42,9 +42,16 @@ namespace Catalyst.Core.IO.Events
         private readonly IMempool<MempoolDocument> _mempool;
         private readonly IPeerIdentifier _peerIdentifier;
         private readonly IBroadcastManager _broadcastManager;
+        private readonly IPeerSettings _peerSettings;
 
-        public TransactionReceivedEvent(ITransactionValidator validator, IMempool<MempoolDocument> mempool, IBroadcastManager broadcastManager, IPeerIdentifier peerIdentifier, ILogger logger)
+        public TransactionReceivedEvent(ITransactionValidator validator, 
+            IMempool<MempoolDocument> mempool, 
+            IBroadcastManager broadcastManager, 
+            IPeerIdentifier peerIdentifier, 
+            IPeerSettings peerSettings,
+            ILogger logger)
         {
+            _peerSettings = peerSettings;
             _broadcastManager = broadcastManager;
             _peerIdentifier = peerIdentifier;
             _mempool = mempool;
@@ -54,7 +61,7 @@ namespace Catalyst.Core.IO.Events
 
         public ResponseCode OnTransactionReceived(TransactionBroadcast transaction)
         {
-            var transactionValid = _validator.ValidateTransaction(transaction);
+            var transactionValid = _validator.ValidateTransaction(transaction, _peerSettings.Network);
             if (!transactionValid)
             {
                 return ResponseCode.Error;
