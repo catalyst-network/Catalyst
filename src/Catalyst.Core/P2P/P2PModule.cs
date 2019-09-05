@@ -79,15 +79,17 @@ namespace Catalyst.Core.P2P
                 c.Resolve<IPeerClient>(),
                 c.Resolve<IKeySigner>(),
                 c.Resolve<ILogger>()
-            )).As<IBroadcastManager>();
-            
+            )).As<IBroadcastManager>()
+                .SingleInstance();
+
             builder.Register(c => new PeerMessageCorrelationManager(
                 c.Resolve<IReputationManager>(),
                 c.Resolve<IMemoryCache>(),
                 c.Resolve<ILogger>(),
                 c.Resolve<IChangeTokenProvider>(),
                 c.ResolveOptional<IScheduler>()
-            )).As<IPeerMessageCorrelationManager>();
+            )).As<IPeerMessageCorrelationManager>()
+                .SingleInstance();
             
             builder.Register(c => new PeerServerChannelFactory(
                 c.Resolve<IPeerMessageCorrelationManager>(),
@@ -108,13 +110,15 @@ namespace Catalyst.Core.P2P
             
             builder.Register(c => new PeerRepository(
                 c.Resolve<IRepository<Peer, string>>()
-            )).As<IPeerRepository>();
+            )).As<IPeerRepository>()
+                .SingleInstance();
                
             builder.Register(c => new ReputationManager(
                 c.Resolve<IPeerRepository>(),
                 c.Resolve<ILogger>()
-            )).As<IReputationManager>();
-            
+            )).As<IReputationManager>()
+                .SingleInstance();
+
             builder.Register(c => new PeerSettings(
                 c.Resolve<IConfigurationRoot>()
             )).As<IPeerSettings>();
@@ -127,17 +131,20 @@ namespace Catalyst.Core.P2P
                 c.Resolve<IPeerSettings>(),
                 c.Resolve<IKeyRegistry>(),
                 c.Resolve<IUserOutput>()
-            )).As<IPeerIdentifier>();
+            )).As<IPeerIdentifier>()
+                .SingleInstance();
             
             builder.Register(c => new PeerIdentifier(
                 c.Resolve<IPeerSettings>()
-            )).As<IPeerIdentifier>();
-            
+            )).As<IPeerIdentifier>()
+                .SingleInstance();
+
             builder.Register(c => new PeerClient(
                 c.Resolve<IUdpClientChannelFactory>(),
                 c.Resolve<IUdpClientEventLoopGroupFactory>(),
                 c.Resolve<IPeerSettings>()
-            )).As<IPeerClient>();
+            )).As<IPeerClient>()
+                .SingleInstance();
             
             builder.RegisterType<PeerChallengerResponse>()
                 .As<IPeerChallengeResponse>();
@@ -146,10 +153,11 @@ namespace Catalyst.Core.P2P
                     c.Resolve<ILogger>(),
                     c.Resolve<IPeerClient>(),
                     c.Resolve<IPeerIdentifier>(),
-                    10,
+                    12,
                     c.ResolveOptional<IScheduler>()
                     ))
-                .As<IPeerChallenger>();
+                .As<IPeerChallenger>()
+                .SingleInstance();
             
             builder.Register(c => new PeerService(c.Resolve<IUdpServerEventLoopGroupFactory>(),
                     c.Resolve<IUdpServerChannelFactory>(),
