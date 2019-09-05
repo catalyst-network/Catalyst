@@ -80,9 +80,7 @@ namespace Catalyst.Core.UnitTests.Keystore
         }
 
         [Fact]
-#pragma warning disable 1998
-        public async Task KeyStore_Throws_Exception_On_Invalid_KeyStore_File()
-#pragma warning restore 1998
+        public void KeyStore_Throws_Exception_On_Invalid_KeyStore_File()
         {
             _fileSystem.ReadTextFromCddSubDirectoryFile(Arg.Any<string>(), Arg.Any<string>())
                .Returns("bad contents");

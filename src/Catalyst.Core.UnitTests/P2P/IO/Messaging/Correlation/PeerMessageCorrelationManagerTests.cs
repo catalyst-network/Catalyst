@@ -24,7 +24,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.IO.Messaging.Correlation;
 using Catalyst.Abstractions.P2P.ReputationSystem;
@@ -126,9 +125,7 @@ namespace Catalyst.Core.UnitTests.P2P.IO.Messaging.Correlation
             reputationAfter.Should().BeLessThan(reputationBefore);
         }
 
-#pragma warning disable 1998
-        protected override async Task CheckCacheEntriesCallback()
-#pragma warning restore 1998
+        protected override void CheckCacheEntriesCallback()
         {
             var observer = Substitute.For<IObserver<IPeerReputationChange>>();
             using (CorrelationManager.ReputationEventStream.Subscribe(observer))
@@ -141,14 +138,6 @@ namespace Catalyst.Core.UnitTests.P2P.IO.Messaging.Correlation
                 observer.Received(1).OnNext(Arg.Is<IPeerReputationChange>(c => c.PeerIdentifier.PeerId.Equals(PendingRequests[0].Content.PeerId) 
                  && c.ReputationEvent.Equals(ReputationEventType.NoResponseReceived)));
             }
-        }
-
-        private ByteString FireEvictionCallBackByPendingRequestIndex()
-        {
-            var contentCorrelationId = PendingRequests[0].Content.CorrelationId;
-            CacheEntriesByRequest[contentCorrelationId].PostEvictionCallbacks[0].EvictionCallback
-               .Invoke(null, PendingRequests[0], EvictionReason.Expired, null);
-            return contentCorrelationId;
         }
     }
 }

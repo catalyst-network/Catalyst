@@ -26,7 +26,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Net;
-using System.Threading.Tasks;
 using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Core.Extensions;
 using Catalyst.Core.Network;
@@ -107,10 +106,10 @@ namespace Catalyst.Core.UnitTests.Rpc.IO.Observers
         [Theory]
         [InlineData("publickey-1", "172.0.0.1")]
         [InlineData("publickey-2", "172.0.0.2")]
-        public async Task TestGetPeerInfoRequestSingularResponse(string publicKey, string ipAddress)
+        public void TestGetPeerInfoRequestSingularResponse(string publicKey, string ipAddress)
         {
             var peerId = PeerIdHelper.GetPeerId(publicKey, ipAddress, 12345);
-            var responseContent = await GetPeerInfoTest(peerId);
+            var responseContent = GetPeerInfoTest(peerId);
             responseContent.PeerInfo.Count().Should().Be(1);
 
             foreach (var peerInfo in responseContent.PeerInfo)
@@ -128,10 +127,10 @@ namespace Catalyst.Core.UnitTests.Rpc.IO.Observers
         /// <param name="ipAddress">Ip address of the peer whose reputation is of interest</param>
         [Theory]
         [InlineData("publickey-3", "172.0.0.3")]
-        public async Task TestGetPeerInfoRequestRepeatedResponse(string publicKey, string ipAddress)
+        public void TestGetPeerInfoRequestRepeatedResponse(string publicKey, string ipAddress)
         {
             var peerId = PeerIdHelper.GetPeerId(publicKey, ipAddress, 12345);
-            var responseContent = await GetPeerInfoTest(peerId);
+            var responseContent = GetPeerInfoTest(peerId);
             responseContent.PeerInfo.Count().Should().Be(2);
 
             foreach (var peerInfo in responseContent.PeerInfo)
@@ -152,10 +151,10 @@ namespace Catalyst.Core.UnitTests.Rpc.IO.Observers
         [InlineData("this-pk-should-not-exist", "172.0.0.3")]
         [InlineData("publickey-1", "0.0.0.0")]
         [InlineData("publickey-3", "0.0.0.0")]
-        public async Task TestGetPeerInfoRequestResponseForNonExistantPeers(string publicKey, string ipAddress)
+        public void TestGetPeerInfoRequestResponseForNonExistantPeers(string publicKey, string ipAddress)
         {
             var peerId = PeerIdHelper.GetPeerId(publicKey, ipAddress, 12345);
-            var responseContent = await GetPeerInfoTest(peerId);
+            var responseContent = GetPeerInfoTest(peerId);
             responseContent.PeerInfo.Count.Should().Be(0);
         }
 
@@ -163,9 +162,7 @@ namespace Catalyst.Core.UnitTests.Rpc.IO.Observers
         ///     Tests the data/communication through protobuf
         /// </summary>
         /// <returns></returns>
-#pragma warning disable 1998
-        private async Task<GetPeerInfoResponse> GetPeerInfoTest(PeerId peerId)
-#pragma warning restore 1998
+        private GetPeerInfoResponse GetPeerInfoTest(PeerId peerId)
         {
             var testScheduler = new TestScheduler();
 
