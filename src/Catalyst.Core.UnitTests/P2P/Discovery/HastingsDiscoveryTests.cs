@@ -28,7 +28,6 @@ using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Threading;
-using System.Threading.Tasks;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.P2P;
@@ -359,9 +358,7 @@ namespace Catalyst.Core.UnitTests.P2P.Discovery
         [Theory]
         [InlineData(typeof(PingResponse), typeof(PingResponseObserver), "OnPingResponse")]
         [InlineData(typeof(PeerNeighborsResponse), typeof(GetNeighbourResponseObserver), "OnPeerNeighbourResponse")]
-#pragma warning disable 1998
-        public async Task Can_Merge_PeerClientObservable_Stream_And_Read_Items_Pushed_On_Separate_Streams(Type discoveryMessage, Type observer, string logMsg)
-#pragma warning restore 1998
+        public void Can_Merge_PeerClientObservable_Stream_And_Read_Items_Pushed_On_Separate_Streams(Type discoveryMessage, Type observer, string logMsg)
         {
             var discoveryTestBuilder = new DiscoveryTestBuilder();
             var subSeedOriginator = DiscoveryHelper.SubSeedOriginator(_ownNode, _settings);
@@ -395,9 +392,7 @@ namespace Catalyst.Core.UnitTests.P2P.Discovery
         }
 
         [Fact]
-#pragma warning disable 1998
-        public async Task Can_Discard_UnKnown_PingResponse()
-#pragma warning restore 1998
+        public void Can_Discard_UnKnown_PingResponse()
         {
             var discoveryTestBuilder = new DiscoveryTestBuilder()
                .WithLogger()
@@ -550,9 +545,7 @@ namespace Catalyst.Core.UnitTests.P2P.Discovery
         }
 
         [Fact]
-#pragma warning disable 1998
-        public async Task Can_Process_Valid_PeerNeighbourResponse_Message_And_Ping_Provided_Neighbours()
-#pragma warning restore 1998
+        public void Can_Process_Valid_PeerNeighbourResponse_Message_And_Ping_Provided_Neighbours()
         {
             var discoveryTestBuilder = new DiscoveryTestBuilder()
                .WithLogger()
@@ -616,9 +609,7 @@ namespace Catalyst.Core.UnitTests.P2P.Discovery
         }
 
         [Fact]
-#pragma warning disable 1998
-        public async Task Can_Correlate_Known_Ping_And_Update_Neighbour_State()
-#pragma warning restore 1998
+        public void Can_Correlate_Known_Ping_And_Update_Neighbour_State()
         {
             var neighbours = DiscoveryHelper.MockNeighbours(Constants.AngryPirate, NeighbourStateTypes.Contacted, CorrelationId.GenerateCorrelationId());
 

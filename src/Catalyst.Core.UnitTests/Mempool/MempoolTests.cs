@@ -26,6 +26,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Catalyst.Abstractions.Mempool.Repositories;
 using Catalyst.Core.Mempool.Documents;
+using Catalyst.Protocol;
 using Catalyst.Protocol.Transaction;
 using Catalyst.TestUtils;
 using FluentAssertions;
@@ -58,10 +59,10 @@ namespace Catalyst.Core.UnitTests.Mempool
                 Transaction = transaction
             };
             
-            _memPool.Repository.ReadItem(Arg.Is<TransactionSignature>(k => k.Equals(transaction.Signature)))
+            _memPool.Repository.ReadItem(Arg.Is<ByteString>(k => k.SequenceEqual(transaction.Signature)))
                .Returns(mempoolDoc);
             
-            _memPool.Repository.TryReadItem(Arg.Is<TransactionSignature>(k => k.Equals(transaction.Signature)))
+            _memPool.Repository.TryReadItem(Arg.Is<ByteString>(k => k.SequenceEqual(transaction.Signature)))
                .Returns(true);
         }
 
@@ -77,8 +78,8 @@ namespace Catalyst.Core.UnitTests.Mempool
 
             transactionFromMemPool.STEntries.Single().Amount.Should().Be(expectedTransaction.STEntries.Single().Amount);
             transactionFromMemPool.CFEntries.Single().PedersenCommit.Should().BeEquivalentTo(expectedTransaction.CFEntries.Single().PedersenCommit);
-            transactionFromMemPool.Signature.Should().Be(expectedTransaction.Signature);
-            transactionFromMemPool.Version.Should().Be(expectedTransaction.Version);
+            transactionFromMemPool.Signature.SequenceEqual(expectedTransaction.Signature).Should().BeTrue();
+            transactionFromMemPool.TransactionType.Should().Be(expectedTransaction.TransactionType);
             transactionFromMemPool.LockTime.Should().Be(expectedTransaction.LockTime);
             transactionFromMemPool.TimeStamp.Should().Be(expectedTransaction.TimeStamp);
             transactionFromMemPool.TransactionFees.Should().Be(expectedTransaction.TransactionFees);
@@ -93,7 +94,7 @@ namespace Catalyst.Core.UnitTests.Mempool
 
             for (var i = 0; i < numTx; i++)
             {
-                var signature = TransactionHelper.GetTransactionSignature(signature: $"key{i}");
+                var signature = $"key{i}".ToUtf8ByteString();
                 var mempoolDocument = _memPool.Repository.ReadItem(signature);
                 mempoolDocument.Transaction.STEntries.Single().Amount.Should().Be((uint) i);
             }
@@ -123,8 +124,8 @@ namespace Catalyst.Core.UnitTests.Mempool
         [Fact]
         public void Get_When_Key_Not_In_Store_Should_Throw()
         {
-            _memPool.Repository.ReadItem(Arg.Any<TransactionSignature>()).ThrowsForAnyArgs(new KeyNotFoundException());
-            new Action(() => _memPool.Repository.ReadItem(TransactionHelper.GetTransactionSignature("signature that doesn't exist")))
+            _memPool.Repository.ReadItem(Arg.Any<ByteString>()).ThrowsForAnyArgs(new KeyNotFoundException());
+            new Action(() => _memPool.Repository.ReadItem(ByteString.CopyFromUtf8("Signature that doesn't exist")))
                .Should().Throw<KeyNotFoundException>();
         }
 
@@ -172,7 +173,7 @@ namespace Catalyst.Core.UnitTests.Mempool
         [Fact]
         public void SaveMempoolDocument_Should_Throw_On_Document_With_Null_Transaction()
         {
-            _transactionBroadcast.Signature = null;
+            _transactionBroadcast.Signature = ByteString.Empty;
             
             _memPool.Repository.CreateItem(_transactionBroadcast).Throws<ArgumentNullException>();
             
@@ -242,7 +243,7 @@ namespace Catalyst.Core.UnitTests.Mempool
         [Fact]
         public void ContainsDocument_Should_Return_False_On_Unknown_DocumentId()
         {
-            var unknownTransaction = TransactionHelper.GetTransactionSignature("key not in the mempool");
+            var unknownTransaction = "key not in the mempool".ToUtf8ByteString();
             _memPool.Repository.TryReadItem(unknownTransaction).Should().BeFalse();
         }
     }

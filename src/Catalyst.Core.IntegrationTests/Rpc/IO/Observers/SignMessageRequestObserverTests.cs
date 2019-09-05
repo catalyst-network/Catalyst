@@ -23,7 +23,6 @@
 
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using Autofac;
 using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.KeySigner;
@@ -76,9 +75,7 @@ namespace Catalyst.Core.IntegrationTests.Rpc.IO.Observers
         [InlineData("Hello Catalyst")]
         [InlineData("")]
         [InlineData("Hello&?!1253Catalyst")]
-#pragma warning disable 1998
-        public async Task RpcServer_Can_Handle_SignMessageRequest(string message)
-#pragma warning restore 1998
+        public void RpcServer_Can_Handle_SignMessageRequest(string message)
         {
             var sender = PeerIdentifierHelper.GetPeerIdentifier("sender");
             var signMessageRequest = new SignMessageRequest

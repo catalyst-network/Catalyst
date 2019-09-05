@@ -27,7 +27,6 @@ using System.IO;
 using System.Linq;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
-using System.Threading.Tasks;
 using Autofac;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.Discovery;
@@ -75,9 +74,7 @@ namespace Catalyst.Core.IntegrationTests.P2P.Discovery
         private readonly ILogger _logger;
 
         [Fact]
-#pragma warning disable 1998
-        public async Task Evicted_Known_Ping_Message_Sets_Contacted_Neighbour_As_UnReachable_And_Can_RollBack_State()
-#pragma warning restore 1998
+        public void Evicted_Known_Ping_Message_Sets_Contacted_Neighbour_As_UnReachable_And_Can_RollBack_State()
         {
             var cacheEntriesByRequest = new Dictionary<ByteString, ICacheEntry>();
 
@@ -187,9 +184,7 @@ namespace Catalyst.Core.IntegrationTests.P2P.Discovery
         }
 
         [Fact]
-#pragma warning disable 1998
-        public async Task Expected_Ping_Response_From_All_Contacted_Nodes_Produces_Valid_State_Candidate()
-#pragma warning restore 1998
+        public void Expected_Ping_Response_From_All_Contacted_Nodes_Produces_Valid_State_Candidate()
         {
             var seedState = DiscoveryHelper.SubSeedState(_ownNode, _settings);
 
@@ -253,9 +248,7 @@ namespace Catalyst.Core.IntegrationTests.P2P.Discovery
         }
 
         [Fact]
-#pragma warning disable 1998
-        public async Task Expected_Ping_Response_Sets_Neighbour_As_Reachable()
-#pragma warning restore 1998
+        public void Expected_Ping_Response_Sets_Neighbour_As_Reachable()
         {
             var seedState = DiscoveryHelper.SubSeedState(_ownNode, _settings);
             var seedOrigin = HastingsOriginator.Default;

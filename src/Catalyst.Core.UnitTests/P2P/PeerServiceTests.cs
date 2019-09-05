@@ -56,8 +56,8 @@ namespace Catalyst.Core.UnitTests.P2P
         private readonly IPeerDiscovery _peerDiscovery;
         private readonly List<IP2PMessageObserver> _p2PMessageHandlers;
         private readonly EmbeddedObservableChannel _serverChannel;
+        private readonly IPeerSettings _peerSettings;
         private IPeerService _peerService;
-        private IPeerSettings _peerSettings;
 
         public PeerServiceTests(ITestOutputHelper output) : base(output)
         {
@@ -142,7 +142,7 @@ namespace Catalyst.Core.UnitTests.P2P
                 Substitute.For<IHealthChecker>());
 
             await _peerService.StartAsync();
-            await _serverChannel.SimulateReceivingMessagesAsync(message).ConfigureAwait(false);
+            _serverChannel.SimulateReceivingMessagesAsync(message);
         }
 
         private void Dispose(bool disposing)

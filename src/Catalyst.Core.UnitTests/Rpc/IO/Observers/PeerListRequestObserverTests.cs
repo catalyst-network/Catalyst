@@ -24,7 +24,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Core.Extensions;
 using Catalyst.Core.Network;
@@ -76,9 +75,7 @@ namespace Catalyst.Core.UnitTests.Rpc.IO.Observers
         [Theory]
         [InlineData("FakePeer1", "FakePeer2")]
         [InlineData("FakePeer1002", "FakePeer6000", "FakePeerSataoshi")]
-#pragma warning disable 1998
-        public async Task TestPeerListRequestResponse(params string[] fakePeers)
-#pragma warning restore 1998
+        public void TestPeerListRequestResponse(params string[] fakePeers)
         {
             var testScheduler = new TestScheduler();
             var peerRepository = Substitute.For<IPeerRepository>();
