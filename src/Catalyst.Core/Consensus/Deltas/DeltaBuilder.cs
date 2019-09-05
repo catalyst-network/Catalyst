@@ -130,8 +130,8 @@ namespace Catalyst.Core.Consensus.Deltas
             {
                 PreviousDeltaDfsHash = previousDeltaHash.ToByteString(),
                 MerkleRoot = candidate.Hash,
-                CBEntries = { coinbaseEntry },
-                STEntries = { includedTransactions.SelectMany(t => t.STEntries) },
+                CBEntries = {coinbaseEntry},
+                STEntries = {includedTransactions.SelectMany(t => t.STEntries)},
                 Version = 1,
                 TimeStamp = Timestamp.FromDateTime(_dateTimeProvider.UtcNow)
             };
