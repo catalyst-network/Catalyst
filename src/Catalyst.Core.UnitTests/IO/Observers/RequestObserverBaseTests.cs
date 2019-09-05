@@ -22,7 +22,6 @@
 #endregion
 
 using System.Linq;
-using System.Threading.Tasks;
 using Catalyst.Protocol.IPPN;
 using Catalyst.TestUtils;
 using FluentAssertions;
@@ -36,9 +35,7 @@ namespace Catalyst.Core.UnitTests.IO.Observers
     public sealed class RequestObserverBaseTests
     {
         [Fact]
-#pragma warning disable 1998
-        public async Task OnNext_Should_Still_Get_Called_After_HandleBroadcast_Failure()
-#pragma warning restore 1998
+        public void OnNext_Should_Still_Get_Called_After_HandleBroadcast_Failure()
         {
             var testScheduler = new TestScheduler();
             var candidateDeltaMessages = Enumerable.Repeat(new PeerNeighborsRequest(), 10).ToArray();

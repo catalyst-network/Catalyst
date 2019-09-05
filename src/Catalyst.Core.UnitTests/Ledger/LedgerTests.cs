@@ -74,9 +74,7 @@ namespace Catalyst.Core.UnitTests.Ledger
         }
 
         [Fact]
-#pragma warning disable 1998
-        public async Task Should_Reconcile_On_New_Delta_Hash()
-#pragma warning restore 1998
+        public void Should_Reconcile_On_New_Delta_Hash()
         {
             var blake2B256 = new BLAKE2B_256();
             var hash1 = "update".ComputeUtf8Multihash(blake2B256);

@@ -22,7 +22,6 @@
 #endregion
 
 using System;
-using System.Threading.Tasks;
 using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.IO.Transport.Channels;
 using Catalyst.Core.IO.Handlers;
@@ -61,16 +60,13 @@ namespace Catalyst.TestUtils
             MessageStream = observableServiceHandler.MessageStream;
         }
 
-#pragma warning disable 1998
-        public async Task SimulateReceivingMessagesAsync(params object[] messages)
-#pragma warning restore 1998
+        public void SimulateReceivingMessagesAsync(params object[] messages)
         {
             _channel.WriteInbound(messages);
             _testScheduler.Start();
         }
 
         public IChannel Channel => _channel;
-        public Task StartAsync() { return Task.CompletedTask; }
         public IObservable<IObserverDto<ProtocolMessage>> MessageStream { get; }
     }
 }
