@@ -22,6 +22,7 @@
 #endregion
 
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Autofac;
 using Catalyst.Abstractions.Mempool;
@@ -70,7 +71,7 @@ namespace Catalyst.Core.IntegrationTests.Mempool
                 var retrievedTransaction = mempool.Repository.ReadItem(TransactionHelper.GetTransaction(signature: guid).Signature);
 
                 retrievedTransaction.Transaction.Should().Be(TransactionHelper.GetTransaction(signature: guid));
-                retrievedTransaction.Transaction.Signature.SchnorrSignature.Should().BeEquivalentTo(guid.ToUtf8ByteString());
+                retrievedTransaction.Transaction.Signature.SequenceEqual(guid.ToUtf8ByteString()).Should().BeTrue();
             }
         }
 

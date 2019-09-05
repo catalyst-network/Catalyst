@@ -23,7 +23,6 @@
 
 using System.Linq;
 using System.Net;
-using System.Threading.Tasks;
 using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Core.Extensions;
 using Catalyst.Core.Network;
@@ -81,9 +80,9 @@ namespace Catalyst.Core.UnitTests.Rpc.IO.Observers
         [Theory]
         [InlineData("highscored-125\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0", "192.168.0.125")]
         [InlineData("highscored-126\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0", "192.168.0.126")]
-        public async Task TestPeerReputationRequestResponse(string publicKey, string ipAddress)
+        public void TestPeerReputationRequestResponse(string publicKey, string ipAddress)
         {
-            var responseContent = await GetPeerReputationTest(publicKey, ipAddress);
+            var responseContent = GetPeerReputationTest(publicKey, ipAddress);
 
             responseContent.Reputation.Should().Be(125);
         }
@@ -98,16 +97,14 @@ namespace Catalyst.Core.UnitTests.Rpc.IO.Observers
         [InlineData("cne2+eRandomValuebeingusedherefprtestingIOp", "192.200.200.22")]
         [InlineData("cne2+e5gIfEdfhDWUxkUfr886YuiZnhEj3om5AXmWVXJK7d47/ESkjhbkJsrbzIbuWm8EPSjJ2YicTIcXvfzIOp",
             "192.111.100.26")]
-        public async Task Test_PeerReputationRequestResponse_For_NonExistant_Peers(string publicKey, string ipAddress)
+        public void Test_PeerReputationRequestResponse_For_NonExistant_Peers(string publicKey, string ipAddress)
         {
-            var responseContent = await GetPeerReputationTest(publicKey, ipAddress);
+            var responseContent = GetPeerReputationTest(publicKey, ipAddress);
 
             responseContent.Reputation.Should().Be(int.MinValue);
         }
 
-#pragma warning disable 1998
-        private async Task<GetPeerReputationResponse> GetPeerReputationTest(string publicKey, string ipAddress)
-#pragma warning restore 1998
+        private GetPeerReputationResponse GetPeerReputationTest(string publicKey, string ipAddress)
         {
             var testScheduler = new TestScheduler();
             var peerRepository = Substitute.For<IPeerRepository>();

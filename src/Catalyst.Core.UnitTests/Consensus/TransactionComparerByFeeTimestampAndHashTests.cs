@@ -62,7 +62,7 @@ namespace Catalyst.Core.UnitTests.Consensus
 
             ordered.Should().BeInDescendingOrder(t => t.TransactionFees);
             ordered.Select(t => t.TimeStamp.ToDateTime()).Should().NotBeAscendingInOrder();
-            ordered.Should().NotBeInDescendingOrder(t => t.Signature, SignatureComparer.Default);
+            ordered.Should().NotBeInDescendingOrder(t => t.Signature.ToByteArray(), ByteUtil.ByteListMinSizeComparer.Default);
         }
 
         [Fact]
@@ -86,7 +86,7 @@ namespace Catalyst.Core.UnitTests.Consensus
                 ordered.Where(t => t.TransactionFees == (ulong) i)
                    .Select(t => t.TimeStamp.ToDateTime()).Should().BeInAscendingOrder());
             
-            ordered.Should().NotBeInAscendingOrder(t => t.Signature, SignatureComparer.Default);
+            ordered.Should().NotBeInAscendingOrder(t => t.Signature.ToByteArray(), ByteUtil.ByteListMinSizeComparer.Default);
         }
 
         [Fact]
@@ -105,7 +105,7 @@ namespace Catalyst.Core.UnitTests.Consensus
 
             ordered.Select(s =>
                     s.TransactionFees.ToString() + "|" + s.TimeStamp.ToString() + "|" +
-                    s.Signature.SchnorrSignature.ToBase64() + s.Signature.SchnorrComponent.ToBase64())
+                    s.Signature.ToBase64())
                .ToList().ForEach(x => _output.WriteLine(x));
 
             ordered.Should().BeInDescendingOrder(t => t.TransactionFees);
@@ -121,37 +121,17 @@ namespace Catalyst.Core.UnitTests.Consensus
                 Enumerable.Range(0, 3).ToList().ForEach(j =>
                     ordered.Where(t => t.TransactionFees == (ulong) i
                          && t.TimeStamp.ToDateTime() == DateTime.FromOADate(j)).ToArray()
-                       .Should().BeInAscendingOrder(t => t.Signature, SignatureComparer.Default));
+                       .Select(t => t.Signature.ToByteArray())
+                       .Should().BeInAscendingOrder(t => t, ByteUtil.ByteListMinSizeComparer.Default));
             });
             
             ordered.Select(s => 
                     s.TransactionFees.ToString() + "|" + s.TimeStamp.ToString() + "|" +
-                    s.Signature.SchnorrSignature.ToBase64() + s.Signature.SchnorrComponent.ToBase64())
+                    s.Signature.ToBase64())
                .ToList().ForEach(x => _output.WriteLine(x));
 
             ordered.Should()
-               .NotBeInAscendingOrder(t => t.Signature, SignatureComparer.Default);
-        }
-
-        [Fact]
-        public void SignatureComparer_should_compare_on_SchnorrSignature_and_SchnorrComponent()
-        {
-            var signatures = Enumerable.Range(0, 30).Select(x =>
-            {
-                var signature = TransactionHelper.GetTransactionSignature((x % 3).ToString(), x.ToString());
-                return signature;
-            }).ToArray();
-
-            var ordered = signatures.OrderBy(s => s, SignatureComparer.Default).ToArray();
-
-            ordered.Should().BeInAscendingOrder(s => s.SchnorrSignature, ByteStringComparer.Default);
-            ordered.Should().NotBeInAscendingOrder(s => s.SchnorrComponent, ByteStringComparer.Default);
-
-            Enumerable.Range(0, 3).ToList().ForEach(i =>
-            {
-                ordered.Where(s => s.SchnorrSignature == i.ToString().ToUtf8ByteString()).ToArray()
-                   .Should().BeInAscendingOrder(s => s.SchnorrComponent, ByteStringComparer.Default);
-            }); 
+               .NotBeInAscendingOrder(t => t.Signature.ToByteArray(), ByteUtil.ByteListMinSizeComparer.Default);
         }
     }
 
