@@ -105,7 +105,7 @@ namespace Catalyst.Core.UnitTests.Consensus.Deltas
             var invalidTransactionList = Enumerable.Range(0, 20).Select(i =>
             {
                 var transaction = TransactionHelper.GetTransaction(
-                    version: (uint) i,
+                    transactionType: TransactionType.Normal,
                     transactionFees: 954,
                     timeStamp: 157,
                     signature: i.ToString(),
@@ -132,7 +132,7 @@ namespace Catalyst.Core.UnitTests.Consensus.Deltas
                 var transaction = TransactionHelper.GetTransaction(
                     standardAmount: (uint) i,
                     standardPubKey: i.ToString(),
-                    version: (uint) i % 2,
+                    transactionType: TransactionType.Normal,
                     transactionFees: (ulong) _random.Next(),
                     timeStamp: _random.Next(),
                     signature: i.ToString(),
@@ -143,7 +143,7 @@ namespace Catalyst.Core.UnitTests.Consensus.Deltas
             var transactionRetriever = Substitute.For<IDeltaTransactionRetriever>();
             transactionRetriever.GetMempoolTransactionsByPriority().Returns(transactions);
 
-            var selectedTransactions = transactions.Where(t => t.Version == 1).ToArray();
+            var selectedTransactions = transactions.Where(t => t.TransactionType == TransactionType.Normal).ToArray();
 
             var expectedCoinBase = new CoinbaseEntry
             {

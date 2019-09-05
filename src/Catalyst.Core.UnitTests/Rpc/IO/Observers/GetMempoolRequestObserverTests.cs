@@ -24,7 +24,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Threading.Tasks;
 using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.Mempool;
 using Catalyst.Core.Extensions;
@@ -78,9 +77,7 @@ namespace Catalyst.Core.UnitTests.Rpc.IO.Observers
 
         [Theory]
         [MemberData(nameof(MempoolTransactions))]
-#pragma warning disable 1998
-        public async Task GetMempool_UsingFilledMempool_ShouldSendGetMempoolResponse(List<TransactionBroadcast> mempoolTransactions)
-#pragma warning restore 1998
+        public void GetMempool_UsingFilledMempool_ShouldSendGetMempoolResponse(List<TransactionBroadcast> mempoolTransactions)
         {
             var testScheduler = new TestScheduler();
             var mempool = Substitute.For<IMempool<MempoolDocument>>();

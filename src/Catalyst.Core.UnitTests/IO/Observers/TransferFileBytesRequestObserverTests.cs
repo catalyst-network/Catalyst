@@ -22,7 +22,6 @@
 #endregion
 
 using System.Linq;
-using System.Threading.Tasks;
 using Catalyst.Abstractions.FileTransfer;
 using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.Types;
@@ -80,9 +79,7 @@ namespace Catalyst.Core.UnitTests.IO.Observers
         }
 
         [Fact]
-#pragma warning disable 1998
-        public async Task HandlerCanSendErrorOnException()
-#pragma warning restore 1998
+        public void HandlerCanSendErrorOnException()
         {
             var testScheduler = new TestScheduler();
 

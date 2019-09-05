@@ -25,14 +25,15 @@ using System.Collections.Generic;
 using Catalyst.Abstractions.Mempool.Models;
 using Catalyst.Abstractions.Repository;
 using Catalyst.Protocol.Transaction;
+using Google.Protobuf;
 
 namespace Catalyst.Abstractions.Mempool.Repositories
 {
     public interface IMempoolRepository<T> : IRepositoryWrapper<T> where T : class, IMempoolItem
     {
-        bool TryReadItem(TransactionSignature key);
+        bool TryReadItem(ByteString signature);
 
-        T ReadItem(TransactionSignature key);
+        T ReadItem(ByteString signature);
 
         /// <inheritdoc />
         bool DeleteItem(params string[] transactionSignatures);
