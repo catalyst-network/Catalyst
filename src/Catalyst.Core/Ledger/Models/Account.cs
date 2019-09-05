@@ -32,6 +32,12 @@ namespace Catalyst.Core.Ledger.Models
     /// <inheritdoc />
     public sealed class Account : IAccount
     {
+        public Account()
+        {
+            // this constructor only exists to allow SharpRepository
+            // to store instances of this class
+        }
+
         public Account(string publicAddress, 
             AccountTypes accountType, 
             BigDecimal balance = default)
