@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFramework>netcoreapp2.2</TargetFramework>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -29,6 +29,7 @@
         <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
         <PackageReference Include="Microsoft.AspNetCore.Mvc.Abstractions" Version="2.2.0" />
         <PackageReference Include="Microsoft.AspNetCore.Mvc.ViewFeatures" Version="2.2.0" />
+        <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.2.0" />
         <PackageReference Include="Multiformats.Hash" Version="1.5.0" />
         <PackageReference Include="Nethereum.KeyStore" Version="3.3.0" />
         <PackageReference Include="Nethereum.RLP" Version="3.3.0" />
