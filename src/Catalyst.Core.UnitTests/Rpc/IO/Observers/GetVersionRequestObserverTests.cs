@@ -23,7 +23,6 @@
 
 using System.Linq;
 using System.Net;
-using System.Threading.Tasks;
 using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Core.Extensions;
 using Catalyst.Core.Rpc.IO.Observers;
@@ -57,9 +56,7 @@ namespace Catalyst.Core.UnitTests.Rpc.IO.Observers
         }
 
         [Fact]
-#pragma warning disable 1998
-        public async Task Valid_GetVersion_Request_Should_Send_VersionResponse()
-#pragma warning restore 1998
+        public void Valid_GetVersion_Request_Should_Send_VersionResponse()
         {
             var testScheduler = new TestScheduler();
 

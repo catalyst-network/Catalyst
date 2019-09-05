@@ -22,7 +22,6 @@
 #endregion
 
 using System.Linq;
-using System.Threading.Tasks;
 using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.KeySigner;
 using Catalyst.Core.Extensions;
@@ -68,9 +67,7 @@ namespace Catalyst.Core.UnitTests.Rpc.IO.Observers
         [InlineData("Hello Catalyst")]
         [InlineData("")]
         [InlineData("Hello&?!1253Catalyst")]
-#pragma warning disable 1998
-        public async Task SignMessageRequestObserver_Can_Return_SignMessageResponse(string message)
-#pragma warning restore 1998
+        public void SignMessageRequestObserver_Can_Return_SignMessageResponse(string message)
         {
             var testScheduler = new TestScheduler();
 

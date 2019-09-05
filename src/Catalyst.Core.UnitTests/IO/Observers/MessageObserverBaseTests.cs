@@ -24,7 +24,6 @@
 using System;
 using System.Linq;
 using System.Reactive.Subjects;
-using System.Threading.Tasks;
 using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Core.Extensions;
 using Catalyst.Core.IO.Messaging.Correlation;
@@ -70,9 +69,7 @@ namespace Catalyst.Core.UnitTests.IO.Observers
         }
 
         [Fact]
-#pragma warning disable 1998
-        public async Task MessageHandler_should_subscribe_to_next_and_complete()
-#pragma warning restore 1998
+        public void MessageHandler_should_subscribe_to_next_and_complete()
         {
             var completingStream = MessageStreamHelper.CreateStreamWithMessages(_fakeContext, _testScheduler, _responseMessages);
 
@@ -86,9 +83,7 @@ namespace Catalyst.Core.UnitTests.IO.Observers
         }
 
         [Fact]
-#pragma warning disable 1998
-        public async Task MessageHandler_should_subscribe_to_next_and_error()
-#pragma warning restore 1998
+        public void MessageHandler_should_subscribe_to_next_and_error()
         {
             var erroringStream = new ReplaySubject<IObserverDto<ProtocolMessage>>(10, _testScheduler);
             
@@ -112,9 +107,7 @@ namespace Catalyst.Core.UnitTests.IO.Observers
         }
 
         [Fact]
-#pragma warning disable 1998
-        public async Task MessageHandler_should_not_receive_messages_of_the_wrong_type()
-#pragma warning restore 1998
+        public void MessageHandler_should_not_receive_messages_of_the_wrong_type()
         {
             _responseMessages[3] = new PingResponse().ToProtocolMessage(
                 _responseMessages[3].PeerId, 
@@ -136,9 +129,7 @@ namespace Catalyst.Core.UnitTests.IO.Observers
         }
 
         [Fact]
-#pragma warning disable 1998
-        public async Task MessageHandler_should_not_receive_null_or_untyped_messages()
-#pragma warning restore 1998
+        public void MessageHandler_should_not_receive_null_or_untyped_messages()
         {
             _responseMessages[2].TypeUrl = "";
             _responseMessages[5] = NullObjects.ProtocolMessage;

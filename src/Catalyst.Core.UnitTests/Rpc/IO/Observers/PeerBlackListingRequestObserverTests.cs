@@ -24,7 +24,6 @@
 using System;
 using System.Linq;
 using System.Net;
-using System.Threading.Tasks;
 using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Core.Extensions;
 using Catalyst.Core.Network;
@@ -82,9 +81,9 @@ namespace Catalyst.Core.UnitTests.Rpc.IO.Observers
         [Theory]
         [InlineData("highscored-14\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0", "198.51.100.14", "true")]
         [InlineData("highscored-22\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0", "198.51.100.22", "true")]
-        public async Task TestPeerBlackListingRequestResponse(string publicKey, string ipAddress, string blackList)
+        public void TestPeerBlackListingRequestResponse(string publicKey, string ipAddress, string blackList)
         {
-            var responseContent = await ApplyBlackListingToPeerTest(publicKey, ipAddress, blackList);
+            var responseContent = ApplyBlackListingToPeerTest(publicKey, ipAddress, blackList);
 
             responseContent.Blacklist.Should().BeTrue();
             responseContent.Ip.ToStringUtf8().Should().Be(ipAddress);
@@ -101,18 +100,16 @@ namespace Catalyst.Core.UnitTests.Rpc.IO.Observers
         [Theory]
         [InlineData("cne2+eRandomValuebeingusedherefprtestingIOp", "198.51.100.11", "false")]
         [InlineData("cne2+e5gIfEdfhDWUxkUfr886YuiZnhEj3om5AXmWVXJK7d47/ESkjhbkJsrbzIbuWm8EPSjJ2YicTIcXvfzIOp", "198.51.100.5", "false")]
-        public async Task TestPeerBlackListingRequestResponseForNonExistantPeers(string publicKey, string ipAddress, string blackList)
+        public void TestPeerBlackListingRequestResponseForNonExistantPeers(string publicKey, string ipAddress, string blackList)
         {
-            var responseContent = await ApplyBlackListingToPeerTest(publicKey, ipAddress, blackList);
+            var responseContent = ApplyBlackListingToPeerTest(publicKey, ipAddress, blackList);
 
             responseContent.Blacklist.Should().Be(false);
             responseContent.Ip.Should().BeNullOrEmpty();
             responseContent.PublicKey.Should().BeNullOrEmpty();
         }
 
-#pragma warning disable 1998
-        private async Task<SetPeerBlackListResponse> ApplyBlackListingToPeerTest(string publicKey, string ipAddress, string blacklist)
-#pragma warning restore 1998
+        private SetPeerBlackListResponse ApplyBlackListingToPeerTest(string publicKey, string ipAddress, string blacklist)
         {
             var testScheduler = new TestScheduler();
             var peerRepository = Substitute.For<IPeerRepository>();

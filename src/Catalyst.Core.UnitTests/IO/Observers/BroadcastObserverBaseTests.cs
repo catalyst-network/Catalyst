@@ -24,7 +24,6 @@
 using System;
 using System.Linq;
 using System.Threading;
-using System.Threading.Tasks;
 using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Core.IO.Observers;
 using Catalyst.Protocol.Common;
@@ -58,9 +57,7 @@ namespace Catalyst.Core.UnitTests.IO.Observers
         }
 
         [Fact]
-#pragma warning disable 1998
-        public async Task OnNext_Should_Still_Get_Called_After_HandleBroadcast_Failure()
-#pragma warning restore 1998
+        public void OnNext_Should_Still_Get_Called_After_HandleBroadcast_Failure()
         {
             var testScheduler = new TestScheduler();
             var candidateDeltaMessages = Enumerable.Repeat(DeltaHelper.GetCandidateDelta(), 10).ToArray();

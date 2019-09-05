@@ -159,9 +159,7 @@ namespace Catalyst.Core.UnitTests.Dfs
         }
 
         [Fact]
-#pragma warning disable 1998
-        public async Task Constructor_Should_Throw_On_Hash_Default_Size_Above_159()
-#pragma warning restore 1998
+        public void Constructor_Should_Throw_On_Hash_Default_Size_Above_159()
         {
             HashingAlgorithm.Register("TooLong", 0x9999, 160);
 

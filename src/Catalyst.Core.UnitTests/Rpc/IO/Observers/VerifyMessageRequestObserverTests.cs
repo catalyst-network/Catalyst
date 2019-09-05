@@ -22,7 +22,6 @@
 #endregion
 
 using System.Linq;
-using System.Threading.Tasks;
 using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.KeySigner;
 using Catalyst.Core.Extensions;
@@ -66,9 +65,7 @@ namespace Catalyst.Core.UnitTests.Rpc.IO.Observers
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-#pragma warning disable 1998
-        public async Task VerifyMessageRequest_Can_Send_VerifyMessageResponse(bool expectedResponse)
-#pragma warning restore 1998
+        public void VerifyMessageRequest_Can_Send_VerifyMessageResponse(bool expectedResponse)
         {
             var testScheduler = new TestScheduler();
             _keySigner.Verify(default, default, default).ReturnsForAnyArgs(expectedResponse);

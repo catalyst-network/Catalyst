@@ -25,7 +25,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.Util;
@@ -119,7 +118,7 @@ namespace Catalyst.Core.UnitTests.IO.Messaging.Correlation
         }
 
         [Fact]
-        public virtual async Task New_Entries_Should_Be_Added_With_Individual_Entry_Options()
+        public virtual void New_Entries_Should_Be_Added_With_Individual_Entry_Options()
         {
             PendingRequests.ForEach(p => AddCreateEntryExpectation(p.Content.CorrelationId));
             PendingRequests.ForEach(CorrelationManager.AddPendingRequest);
@@ -141,7 +140,7 @@ namespace Catalyst.Core.UnitTests.IO.Messaging.Correlation
 
             CheckExpirationTokensAreDifferentForEachEntry();
 
-            await CheckCacheEntriesCallback().ConfigureAwait(false);
+            CheckCacheEntriesCallback();
         }
 
         private void CheckExpirationTokensAreDifferentForEachEntry()
@@ -154,7 +153,7 @@ namespace Catalyst.Core.UnitTests.IO.Messaging.Correlation
             }
         }
 
-        protected abstract Task CheckCacheEntriesCallback();
+        protected abstract void CheckCacheEntriesCallback();
 
         protected void FireEvictionCallBackByCorrelationId(ByteString correlationId)
         {
