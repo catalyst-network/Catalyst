@@ -81,10 +81,7 @@ namespace Catalyst.Core.Api
 
         public void ConfigureServices(IServiceCollection services, ContainerBuilder containerBuilder)
         {
-            services.AddCors(c =>
-            {
-                c.AddPolicy("AllowOrigin", options => options.AllowAnyOrigin());
-            });
+            services.AddCors(c => { c.AddPolicy("AllowOrigin", options => options.AllowAnyOrigin()); });
 
             var mvcBuilder = services.AddMvc();
 
@@ -108,19 +105,17 @@ namespace Catalyst.Core.Api
 
         public void Configure(IApplicationBuilder app)
         {
+            var webDirectory = Directory.CreateDirectory(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot"));
+
             app.ApplicationServices = new AutofacServiceProvider(_container);
             app.UseDeveloperExceptionPage();
             app.UseCors(options => options.AllowAnyOrigin());
             app.UseDefaultFiles();
             app.UseStaticFiles(new StaticFileOptions
             {
-                FileProvider = new PhysicalFileProvider(
-                    Path.Combine(Directory.GetCurrentDirectory(), "wwwroot"))
+                FileProvider = new PhysicalFileProvider(webDirectory.FullName)
             });
-            app.UseMvc(routes =>
-            {
-                routes.MapRoute(name: "CatalystApi", template: "api/{controller}/{action}/{id}");
-            });
+            app.UseMvc(routes => { routes.MapRoute("CatalystApi", "api/{controller}/{action}/{id}"); });
 
             if (_addSwagger)
             {
