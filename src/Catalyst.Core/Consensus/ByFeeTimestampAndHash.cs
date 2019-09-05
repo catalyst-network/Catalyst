@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using Catalyst.Abstractions.Consensus;
 using Catalyst.Core.Util;
 using Catalyst.Protocol.Transaction;
+using Google.Protobuf;
 
 namespace Catalyst.Core.Consensus
 {
@@ -60,45 +61,9 @@ namespace Catalyst.Core.Consensus
                 return timeStampComparison;
             }
 
-            return SignatureComparer.Default.Compare(y.Signature, x.Signature);
+            return ByteUtil.ByteListMinSizeComparer.Default.Compare(x.ToByteArray(), y.ToByteArray());
         }
 
         public static ITransactionComparer Default { get; } = new TransactionComparerByFeeTimestampAndHash();
-    }
-
-    public class SignatureComparer : IComparer<TransactionSignature>
-    {
-        public int Compare(TransactionSignature x, TransactionSignature y)
-        {
-            if (ReferenceEquals(x, y))
-            {
-                return 0;
-            }
-
-            if (ReferenceEquals(null, y))
-            {
-                return 1;
-            }
-
-            if (ReferenceEquals(null, x))
-            {
-                return -1;
-            }
-
-            var xSignature = x.SchnorrSignature.ToByteArray();
-            var ySignature = y.SchnorrSignature.ToByteArray();
-
-            var signatureComparison = ByteUtil.ByteListMinSizeComparer.Default.Compare(xSignature, ySignature);
-            if (signatureComparison != 0)
-            {
-                return signatureComparison;
-            }
-
-            var xComponent = x.SchnorrComponent.ToByteArray();
-            var yComponent = y.SchnorrComponent.ToByteArray();
-            return ByteUtil.ByteListMinSizeComparer.Default.Compare(xComponent, yComponent);
-        }
-
-        public static IComparer<TransactionSignature> Default { get; } = new SignatureComparer();
     }
 }

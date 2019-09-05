@@ -21,8 +21,11 @@
 
 #endregion
 
+using System.Linq;
+using Catalyst.Core.Util;
 using Catalyst.Protocol;
 using Catalyst.Protocol.Transaction;
+using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
 
 namespace Catalyst.TestUtils
@@ -32,10 +35,9 @@ namespace Catalyst.TestUtils
         public static TransactionBroadcast GetTransaction(uint standardAmount = 123,
             string standardPubKey = "standardPubKey",
             string signature = "signature",
-            string challenge = "challenge",
             string confidentialCommitment = "confidentialCommitment",
             string confidentialPubKey = "confidentialPubKey",
-            uint version = 1,
+            TransactionType transactionType = TransactionType.Normal,
             long timeStamp = 12345,
             ulong transactionFees = 2,
             ulong lockTime = 9876)
@@ -58,8 +60,8 @@ namespace Catalyst.TestUtils
                         PubKey = confidentialPubKey.ToUtf8ByteString()
                     }
                 },
-                Signature = GetTransactionSignature(signature, challenge),
-                Version = version,
+                Signature = signature.ToUtf8ByteString(),
+                TransactionType = transactionType,
 
                 TimeStamp = new Timestamp
                 {
@@ -70,16 +72,6 @@ namespace Catalyst.TestUtils
                 LockTime = lockTime
             };
             return transaction;
-        }
-
-        public static TransactionSignature GetTransactionSignature(string signature = "signature",
-            string challenge = "challenge")
-        {
-            return new TransactionSignature
-            {
-                SchnorrComponent = challenge.ToUtf8ByteString(),
-                SchnorrSignature = signature.ToUtf8ByteString()
-            };
         }
     }
 }

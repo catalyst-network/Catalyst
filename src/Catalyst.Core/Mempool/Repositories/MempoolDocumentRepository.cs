@@ -40,16 +40,14 @@ namespace Catalyst.Core.Mempool.Repositories
         public MempoolDocumentRepository(IRepository<MempoolDocument, string> repository) : base(repository) { }
 
         /// <inheritdoc />
-        public bool TryReadItem(TransactionSignature key)
+        public bool TryReadItem(ByteString signature)
         {
-            Guard.Argument(key, nameof(key)).NotNull();
-            return Repository.TryGet(key.ToByteString().ToBase64(), out _);
+            return Repository.TryGet(signature.ToBase64(), out _);
         }
         
-        public MempoolDocument ReadItem(TransactionSignature key)
+        public MempoolDocument ReadItem(ByteString signature)
         {
-            Guard.Argument(key, nameof(key)).NotNull();
-            return Repository.Get(key.ToByteString().ToBase64());
+            return Repository.Get(signature.ToBase64());
         }
 
         /// <inheritdoc />
@@ -71,7 +69,7 @@ namespace Catalyst.Core.Mempool.Repositories
         
         public bool CreateItem(TransactionBroadcast transactionBroadcast)
         {      
-            if (transactionBroadcast.Signature.Equals(null))
+            if (transactionBroadcast.Signature.Equals(null) || transactionBroadcast.Signature.Equals(ByteString.Empty))
             {
                 throw new ArgumentNullException(nameof(transactionBroadcast));
             }
