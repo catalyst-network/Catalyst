@@ -26,6 +26,7 @@ using Catalyst.Abstractions.Types;
 using Catalyst.Abstractions.Util;
 using Catalyst.Core.Config;
 using Catalyst.Core.Util;
+using Nethermind.Dirichlet.Numerics;
 using Newtonsoft.Json;
 using SharpRepository.Repository;
 
@@ -44,7 +45,7 @@ namespace Catalyst.Core.Ledger.Models
         public AccountTypes AccountType { get; set; }
 
         /// <inheritdoc />
-        public IBigDecimal Balance { get; set; }
+        public UInt256 Balance { get; set; }
 
         /// <inheritdoc />
         public byte[] StateRoot { get; set; } = Constants.EmptyTrieHash;

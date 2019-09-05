@@ -42,7 +42,7 @@ namespace Catalyst.Kvm
             Precompiles[RangeProofPrecompile.AddressInKvm] = new RangeProofPrecompile();
         }
 
-        private static BigInteger _rangeProofAddressAsInt = RangeProofPrecompile.AddressInKvm.Bytes.ToUnsignedBigInteger();
+        private static readonly BigInteger RangeProofAddressAsInt = RangeProofPrecompile.AddressInKvm.Bytes.ToUnsignedBigInteger();
         
         /// <summary>
         /// This will probably be removed
@@ -51,7 +51,7 @@ namespace Catalyst.Kvm
         {
             // this will be optimized
             BigInteger asInt = address.Bytes.ToUnsignedBigInteger();
-            return base.IsPrecompiled(address, releaseSpec) || asInt == _rangeProofAddressAsInt;
+            return base.IsPrecompiled(address, releaseSpec) || asInt == RangeProofAddressAsInt;
         }
     }
 }

@@ -24,13 +24,13 @@
 using Catalyst.Abstractions.Enumerator;
 using Catalyst.Abstractions.Types;
 using Catalyst.Core.Ledger.Models;
-using Catalyst.Core.Util;
+using Nethermind.Dirichlet.Numerics;
 
 namespace Catalyst.TestUtils
 {
     public static class AccountHelper
     {
-        public static Account GetAccount(BigDecimal balance,
+        public static Account GetAccount(UInt256 balance,
             uint coinType = 0,
             string accountType = "NonConfidentialAccount",
             string publicAddress = "0x32Be343B94f860124dC4fEe278FDCBD38C102D88")

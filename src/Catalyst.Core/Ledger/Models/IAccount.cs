@@ -24,6 +24,7 @@
 using Catalyst.Abstractions.Repository;
 using Catalyst.Abstractions.Types;
 using Catalyst.Abstractions.Util;
+using Nethermind.Dirichlet.Numerics;
 
 namespace Catalyst.Core.Ledger.Models
 {
@@ -60,7 +61,7 @@ namespace Catalyst.Core.Ledger.Models
         /// <summary>
         /// The balance of an account
         /// </summary>
-        IBigDecimal Balance { get; set; }
+        UInt256 Balance { get; set; }
         
         /// <summary>
         /// Gets or sets the state root.
