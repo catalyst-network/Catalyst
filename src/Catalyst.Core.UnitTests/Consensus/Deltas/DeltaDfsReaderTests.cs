@@ -21,6 +21,7 @@
 
 #endregion
 
+using System;
 using System.IO;
 using System.Threading;
 using Catalyst.Abstractions.Dfs;
@@ -86,7 +87,8 @@ namespace Catalyst.Core.UnitTests.Consensus.Deltas
             var matchingDelta = DeltaHelper.GetDelta();
             matchingDelta.PreviousDeltaDfsHash = ByteString.Empty;
 
-            matchingDelta.IsValid().Should().BeTrue("otherwise this test is useless");
+            new Action(() => matchingDelta.IsValid()).Should()
+               .Throw<InvalidDataException>("otherwise this test is useless");
 
             _dfs.ReadAsync(goodHash, CancellationToken.None)
                .Returns(matchingDelta.ToByteArray().ToMemoryStream());

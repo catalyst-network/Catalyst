@@ -22,6 +22,7 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Consensus.Deltas;
@@ -33,6 +34,7 @@ using Catalyst.Core.Ledger.Repository;
 using Catalyst.Core.Mempool.Documents;
 using Catalyst.TestUtils;
 using Microsoft.Reactive.Testing;
+using Multiformats.Hash;
 using Multiformats.Hash.Algorithms;
 using NSubstitute;
 using Serilog;
@@ -50,16 +52,22 @@ namespace Catalyst.Core.UnitTests.Ledger
         private readonly IMempool<MempoolDocument> _mempool;
         private readonly ILogger _logger;
         private readonly ILedgerSynchroniser _ledgerSynchroniser;
+        private readonly IMultihashAlgorithm _hashingAlgorithm;
+        private readonly Multihash _genesisHash;
 
         public LedgerTests()
         {
             _testScheduler = new TestScheduler();
             _fakeRepository = Substitute.For<IAccountRepository>();
+            _hashingAlgorithm = new BLAKE2B_16();
 
             _logger = Substitute.For<ILogger>();
             _mempool = Substitute.For<IMempool<MempoolDocument>>();
             _deltaHashProvider = Substitute.For<IDeltaHashProvider>();
             _ledgerSynchroniser = Substitute.For<ILedgerSynchroniser>();
+            _genesisHash = "genesis".ComputeUtf8Multihash(_hashingAlgorithm);
+            _ledgerSynchroniser.DeltaCache.GenesisAddress
+               .Returns(_genesisHash.AsBase32Address());
         }
 
         [Fact]
@@ -77,14 +85,14 @@ namespace Catalyst.Core.UnitTests.Ledger
         }
 
         [Fact]
-#pragma warning disable 1998
-        public async Task Should_Reconcile_On_New_Delta_Hash()
-#pragma warning restore 1998
+        public void Should_Reconcile_On_New_Delta_Hash()
         {
-            var blake2B256 = new BLAKE2B_256();
-            var hash1 = "update".ComputeUtf8Multihash(blake2B256);
-            var hash2 = "update again".ComputeUtf8Multihash(blake2B256);
+            var hash1 = "update".ComputeUtf8Multihash(_hashingAlgorithm);
+            var hash2 = "update again".ComputeUtf8Multihash(_hashingAlgorithm);
             var updates = new[] {hash1, hash2};
+
+            _ledgerSynchroniser.CacheDeltasBetween(default, default, default)
+               .ReturnsForAnyArgs(new[] {hash2, hash1, _genesisHash});
 
             _deltaHashProvider.DeltaHashUpdates.Returns(updates.ToObservable(_testScheduler));
 

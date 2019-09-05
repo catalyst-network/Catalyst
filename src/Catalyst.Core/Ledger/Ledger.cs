@@ -106,7 +106,7 @@ namespace Catalyst.Core.Ledger
                        .Reverse()
                        .ToList();
 
-                    if (chainedDeltaHashes.First() != LatestKnownDelta)
+                    if (!Equals(chainedDeltaHashes.First(), LatestKnownDelta))
                     {
                         _logger.Warning(
                             "Failed to walk back the delta chain to {LatestKnownDelta}, giving up ledger update.", LatestKnownDelta);
@@ -118,6 +118,9 @@ namespace Catalyst.Core.Ledger
                         UpdateLedgerFromDelta(chainedDeltaHash);
                     }
                 }
+
+                //https://github.com/catalyst-network/Catalyst.Node/issues/871
+                FlushTransactionsFromDelta(default);
             }
             catch (Exception exception)
             {
