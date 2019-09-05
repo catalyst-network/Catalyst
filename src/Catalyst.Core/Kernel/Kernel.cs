@@ -37,6 +37,7 @@ using Catalyst.Abstractions.Types;
 using Catalyst.Abstractions.Util;
 using Catalyst.Core.Config;
 using Catalyst.Core.IO.Events;
+using Catalyst.Core.P2P;
 using Catalyst.Core.Util;
 using Catalyst.Protocol.Interfaces.Validators;
 using Catalyst.Protocol.Validators;
@@ -55,7 +56,7 @@ namespace Catalyst.Core.Kernel
         private string _targetConfigFolder;
         private IConfigCopier _configCopier;
         private readonly ConfigurationBuilder _configurationBuilder;
-        private ILifetimeScope _instance;
+        public ILifetimeScope _instance;
 
         public ILogger Logger { get; private set; }
         public ContainerBuilder ContainerBuilder { get; set; }
@@ -112,6 +113,7 @@ namespace Catalyst.Core.Kernel
             }
             
             ContainerBuilder.RegisterModule(configurationModule);
+//            ContainerBuilder.RegisterModule(new P2PModule());
 
             Logger = new LoggerConfiguration()
                .ReadFrom
@@ -195,6 +197,9 @@ namespace Catalyst.Core.Kernel
         /// <param name="customBootLogic"></param>
         public void StartCustom(CustomBootLogic customBootLogic)
         {
+            ContainerBuilder.RegisterType<TransactionValidator>().As<ITransactionValidator>();
+            ContainerBuilder.RegisterType<TransactionReceivedEvent>().As<ITransactionReceivedEvent>();
+            
             customBootLogic.Invoke(this);
         }
 
@@ -261,7 +266,7 @@ namespace Catalyst.Core.Kernel
             return this;
         }
 
-        private void StartContainer()
+        public void StartContainer()
         {
             _instance = ContainerBuilder.Build()
                .BeginLifetimeScope(MethodBase.GetCurrentMethod().DeclaringType.AssemblyQualifiedName);
