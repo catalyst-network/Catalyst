@@ -1,0 +1,87 @@
+/**
+* Copyright (c) 2019 Catalyst Network
+*
+* This file is part of Catalyst.Network.Protocol.Protobuffs <https://github.com/catalyst-network/protocol-protobuffs>
+*
+* Catalyst.Network.Protocol.Protobuffs is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 2 of the License, or
+* (at your option) any later version.
+* 
+* Catalyst.Network.Protocol.Protobuffs is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU General Public License
+* along with Catalyst.Network.Protocol.Protobuffs If not, see <https://www.gnu.org/licenses/>.
+*/
+
+syntax = "proto3";
+
+option java_multiple_files = true;
+
+import "Transaction.proto";
+import "Common.proto";
+import "google/protobuf/timestamp.proto";
+
+package Catalyst.Protocol.Deltas;
+
+/**
+ * Delta
+ *
+ * version:
+ * PreviousDeltaDfsHash: address for the content of the previous delta on the DFS
+ * MerkleRoot:
+ * MerklePoda: proof of delegated authority for active wokers
+ * TimeStamp:
+ * STEntries:
+ * CFEntries:
+ * CBEntries: one per active worker
+ */
+ message Delta {
+	uint32 Version = 1; 
+	bytes PreviousDeltaDfsHash = 2;
+	bytes MerkleRoot = 3;
+	bytes MerklePoda = 4;
+	google.protobuf.Timestamp TimeStamp = 5;
+	repeated Transaction.STTransactionEntry STEntries = 6;
+	repeated Transaction.CFTransactionEntry CFEntries = 7;
+	repeated Transaction.CoinbaseEntry CBEntries = 8;
+}
+
+/**
+ * CandidateDeltaBroadcast
+ *
+ * DeltaHash: The hash computed for the current delta produced by ProducerId.
+ *	This is meant to be used when voting for most popular hashes.
+ * PreviousDeltaDfsHash: The DFS address for the content of the delta preceding this candidate.
+ * ProducerId: Identifier of the producer of the candidate.
+ */
+message CandidateDeltaBroadcast {
+	bytes Hash = 1;
+	Common.PeerId ProducerId = 2;
+	bytes PreviousDeltaDfsHash = 3;
+}
+
+/**
+ * FavouriteDeltaBroadcast
+ *
+ * CandidateDeltaBroadcast: The candidate favoured by the voter broadcasting this message.
+ * VoterId: The PeerId of the participant submitting its vote to the network.
+ */
+message FavouriteDeltaBroadcast {
+	CandidateDeltaBroadcast Candidate = 1;
+	Common.PeerId VoterId = 2;
+}
+
+/**
+ * DeltaDfsHashBroadcast
+ *
+ * DeltaDfsHash: The DFS address at which the full content of the delta can be retrieved.
+ * PreviousDeltaDfsHash: The DFS address for the content of the delta preceding this candidate.
+ */
+ message DeltaDfsHashBroadcast {
+	bytes DeltaDfsHash = 1;
+	bytes PreviousDeltaDfsHash = 2;
+}

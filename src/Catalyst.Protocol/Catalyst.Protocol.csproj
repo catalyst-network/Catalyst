@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+  </PropertyGroup>
+  <Import Project="../Common.Projects.props" />
+  <ItemGroup>
+    <PackageReference Include="Catalyst.Cryptography.BulletProofs.Wrapper" Version="0.0.1.10324-beta" />
+    <PackageReference Include="Dawn.Guard" Version="1.8.0" />
+    <PackageReference Include="Google.Protobuf" Version="3.8.0" />
+    <PackageReference Include="Grpc.Tools" Version="1.22.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Serilog" Version="2.8.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProtoBuf Include="..\..\protocol-protobuffs\src\Common.proto" Link="Protobuffs\Common.proto" />
+    <ProtoBuf Include="..\..\protocol-protobuffs\src\Deltas.proto" Link="Protobuffs\Deltas.proto" />
+    <ProtoBuf Include="..\..\protocol-protobuffs\src\IPPN.proto" Link="Protobuffs\IPPN.proto" />
+    <ProtoBuf Include="..\..\protocol-protobuffs\src\Rpc.proto" Link="Protobuffs\Rpc.proto" />
+    <ProtoBuf Include="..\..\protocol-protobuffs\src\Transaction.proto" Link="Protobuffs\Transaction.proto" />
+    <ProtoBuf Include="..\..\protocol-protobuffs\src\DfsMarketplace.proto" Link="Protobuffs\DfsMarketplace.proto" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System">
+      <HintPath>System</HintPath>
+    </Reference>
+  </ItemGroup>
+</Project>

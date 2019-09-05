@@ -1,0 +1,119 @@
+/**
+* Copyright (c) 2019 Catalyst Network
+*
+* This file is part of Catalyst.Network.Protocol.Protobuffs <https://github.com/catalyst-network/protocol-protobuffs>
+*
+* Catalyst.Network.Protocol.Protobuffs is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 2 of the License, or
+* (at your option) any later version.
+* 
+* Catalyst.Network.Protocol.Protobuffs is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU General Public License
+* along with Catalyst.Network.Protocol.Protobuffs If not, see <https://www.gnu.org/licenses/>.
+*/
+
+syntax = "proto3";
+
+package Catalyst.Protocol.Common;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/duration.proto";
+
+/**
+* Aggregated size of the fields in PeerId should be 42 bytes as specified in
+* https://github.com/catalyst-network/protocol-blueprint/blob/master/PeerProtocol.md
+*/
+message PeerId {
+    bytes clientId = 1; //2 bytes
+    bytes protocolVersion = 2; //2 bytes
+    bytes ip = 3; //16 bytes
+    bytes port = 4; //2 bytes
+    bytes publicKey = 5; //20 bytes
+}
+
+/**
+* Provides a network error message, for when a node cant send/ build a valid response
+*/
+message ProtocolErrorMessageSigned {
+    bytes signature = 1;
+    PeerId peerId = 2;
+    bytes correlationId = 3;
+    int32 code = 4;
+}
+
+/**
+* A wrapper around the service message, the contents of service message should be signed by the sender to avoid tampering mid-transit.
+* To verify use message.peerId.publicKey
+*/
+message ProtocolMessageSigned {
+    bytes signature = 1;
+    ProtocolMessage message = 2;
+}
+
+/**
+* Core protocol messages to be sent across the network.
+* - peerId is the sender's peerId
+* - correlationId is a 16 bytes guid used to match responses to their original requests
+* - type_url is the shortened protocol name of the message type being encoded in the value field (cf Any from protobuf WellKnownTypes)
+* - value is the actual value of the message being wrapped (cf Any from protobuf WellKnownTypes)
+*/
+message ProtocolMessage {
+    PeerId peerId = 1;
+    bytes correlationId = 2;
+    string type_url = 3;
+    bytes value = 4;
+}
+
+/**
+* Information about a peer
+* - peerId is the peerId
+* - pkId is the primary key of the peer in storage
+* - reputation of peer
+* - blackListed is to check if the peer is blackListed
+* - isAwolPeer is when the peer cannot be reached on the network
+* - inactiveFor is how long the peer has beekn inactive for
+* - lastSeen is when the peer was last seen
+* - modified is when the peer was last modified
+* - created is when the peer was created
+*/
+message PeerInfo {
+    PeerId peerId = 1;
+    int32 reputation = 2;
+    bool blackListed = 3;
+    bool isAwolPeer = 4;
+    google.protobuf.Duration inactiveFor = 5;
+    google.protobuf.Timestamp lastSeen = 6;
+    google.protobuf.Timestamp modified = 7;
+    google.protobuf.Timestamp created = 8;
+}
+
+enum Network {
+    NETWORK_UNKNOWN = 0;
+    MAINNET = 1;
+    DEVNET = 2;
+    TESTNET = 3;
+}
+
+enum SignatureType {
+    SIGNATURE_TYPE_UNKNOWN = 0;
+    TRANSACTION_PUBLIC = 1;
+    TRANSACTION_CONFIDENTIAL = 2;
+    PROTOCOL_RPC = 3;
+    PROTOCOL_PEER = 4;
+}
+
+/**
+* Context in which a signature takes place.
+* - peerId is the peerId
+* - Network is the network (mainet / devnet etc)
+* - SignatureType contains info on whether the signature is for a protocol message or a transaction.
+*/
+message SigningContext {
+    Network network = 1;
+    SignatureType signatureType = 2;
+}

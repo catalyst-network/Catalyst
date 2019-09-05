@@ -7,6 +7,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		..\.dockerignore = ..\.dockerignore
 		..\.gitignore = ..\.gitignore
+		..\scripts\addLicenseHeader.sh = ..\scripts\addLicenseHeader.sh
+		..\azure-pipelines.yml = ..\azure-pipelines.yml
 		Catalyst.sln.DotSettings = Catalyst.sln.DotSettings
 		Common.IntegrationTests.props = Common.IntegrationTests.props
 		Common.Projects.props = Common.Projects.props
@@ -14,13 +16,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Common.UnitTests.props = Common.UnitTests.props
 		..\CONTRIBUTING.md = ..\CONTRIBUTING.md
 		..\COPYING = ..\COPYING
+		..\devnet-docker-compose.yml = ..\devnet-docker-compose.yml
 		..\Dockerfile = ..\Dockerfile
 		..\GUIDELINES.md = ..\GUIDELINES.md
 		..\README.md = ..\README.md
-		..\scripts\addLicenseHeader.sh = ..\scripts\addLicenseHeader.sh
 		..\scripts\run-node.sh = ..\scripts\run-node.sh
-		..\devnet-docker-compose.yml = ..\devnet-docker-compose.yml
-		..\azure-pipelines.yml = ..\azure-pipelines.yml
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Core", "Catalyst.Core\Catalyst.Core.csproj", "{70A9269E-666A-4F38-8FCB-BCF96B03FD15}"
@@ -29,11 +29,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Core.UnitTests", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.TestUtils", "Catalyst.TestUtils\Catalyst.TestUtils.csproj", "{B276137D-FB34-48DB-80CF-ADA34A2D2F96}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Simulator", "Catalyst.Simulator\Catalyst.Simulator.csproj", "{EC74EF99-CF2A-4F19-9BE1-0D0639F76C36}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Simulator", "Catalyst.Simulator\Catalyst.Simulator.csproj", "{EC74EF99-CF2A-4F19-9BE1-0D0639F76C36}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Abstractions", "Catalyst.Abstractions\Catalyst.Abstractions.csproj", "{91A5F73C-5FE6-4BF3-B437-10FA9DF785E9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Abstractions", "Catalyst.Abstractions\Catalyst.Abstractions.csproj", "{91A5F73C-5FE6-4BF3-B437-10FA9DF785E9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Core.IntegrationTests", "Catalyst.Core.IntegrationTests\Catalyst.Core.IntegrationTests.csproj", "{86B317E2-3A1E-426D-A20B-C270EBC14CE1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Core.IntegrationTests", "Catalyst.Core.IntegrationTests\Catalyst.Core.IntegrationTests.csproj", "{86B317E2-3A1E-426D-A20B-C270EBC14CE1}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "nethermind", "nethermind", "{6074E807-FBBC-41D0-9205-C7B79513D683}"
 EndProject
@@ -51,11 +51,15 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nethermind.Logging", "..\su
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nethermind.Store", "..\submodules\nethermind\src\Nethermind\Nethermind.Store\Nethermind.Store.csproj", "{F5BA5ECB-3C48-4379-9204-5BA30705D801}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Kvm", "Catalyst.Kvm\Catalyst.Kvm.csproj", "{6A2D2F12-3E0F-4784-A688-56DBB50AB955}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Kvm", "Catalyst.Kvm\Catalyst.Kvm.csproj", "{6A2D2F12-3E0F-4784-A688-56DBB50AB955}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Kvm.UnitTests", "Catalyst.Kvm.UnitTests\Catalyst.Kvm.UnitTests.csproj", "{6A7861F0-91CF-4BF5-B764-274E69443A11}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Kvm.UnitTests", "Catalyst.Kvm.UnitTests\Catalyst.Kvm.UnitTests.csproj", "{6A7861F0-91CF-4BF5-B764-274E69443A11}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Kvm.IntegrationTests", "Catalyst.Kvm.IntegrationTests\Catalyst.Kvm.IntegrationTests.csproj", "{A0634729-DDE3-47AB-A89D-9AFC2829CEE4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Kvm.IntegrationTests", "Catalyst.Kvm.IntegrationTests\Catalyst.Kvm.IntegrationTests.csproj", "{A0634729-DDE3-47AB-A89D-9AFC2829CEE4}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Protocol", "Catalyst.Protocol\Catalyst.Protocol.csproj", "{E8534E32-59C1-4231-98AF-E2AD114F991A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Protocol.UnitTests", "Catalyst.Protocol.UnitTests\Catalyst.Protocol.UnitTests.csproj", "{A21B2A16-122E-4E72-AA74-B4FE37FC9F9E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -79,6 +83,14 @@ Global
 		{EC74EF99-CF2A-4F19-9BE1-0D0639F76C36}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EC74EF99-CF2A-4F19-9BE1-0D0639F76C36}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EC74EF99-CF2A-4F19-9BE1-0D0639F76C36}.Release|Any CPU.Build.0 = Release|Any CPU
+		{91A5F73C-5FE6-4BF3-B437-10FA9DF785E9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{91A5F73C-5FE6-4BF3-B437-10FA9DF785E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{91A5F73C-5FE6-4BF3-B437-10FA9DF785E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{91A5F73C-5FE6-4BF3-B437-10FA9DF785E9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{86B317E2-3A1E-426D-A20B-C270EBC14CE1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{86B317E2-3A1E-426D-A20B-C270EBC14CE1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{86B317E2-3A1E-426D-A20B-C270EBC14CE1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{86B317E2-3A1E-426D-A20B-C270EBC14CE1}.Release|Any CPU.Build.0 = Release|Any CPU
 		{ACD92B72-7D6C-4E61-A72F-3F86B1D81486}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{ACD92B72-7D6C-4E61-A72F-3F86B1D81486}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ACD92B72-7D6C-4E61-A72F-3F86B1D81486}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -119,20 +131,17 @@ Global
 		{A0634729-DDE3-47AB-A89D-9AFC2829CEE4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A0634729-DDE3-47AB-A89D-9AFC2829CEE4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A0634729-DDE3-47AB-A89D-9AFC2829CEE4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{91A5F73C-5FE6-4BF3-B437-10FA9DF785E9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{91A5F73C-5FE6-4BF3-B437-10FA9DF785E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{91A5F73C-5FE6-4BF3-B437-10FA9DF785E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{91A5F73C-5FE6-4BF3-B437-10FA9DF785E9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{86B317E2-3A1E-426D-A20B-C270EBC14CE1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{86B317E2-3A1E-426D-A20B-C270EBC14CE1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{86B317E2-3A1E-426D-A20B-C270EBC14CE1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{86B317E2-3A1E-426D-A20B-C270EBC14CE1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E8534E32-59C1-4231-98AF-E2AD114F991A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E8534E32-59C1-4231-98AF-E2AD114F991A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E8534E32-59C1-4231-98AF-E2AD114F991A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E8534E32-59C1-4231-98AF-E2AD114F991A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A21B2A16-122E-4E72-AA74-B4FE37FC9F9E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A21B2A16-122E-4E72-AA74-B4FE37FC9F9E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A21B2A16-122E-4E72-AA74-B4FE37FC9F9E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A21B2A16-122E-4E72-AA74-B4FE37FC9F9E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {34F221DE-645E-4697-BCC2-818F1F10FE8A}
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{ACD92B72-7D6C-4E61-A72F-3F86B1D81486} = {6074E807-FBBC-41D0-9205-C7B79513D683}
@@ -142,5 +151,8 @@ Global
 		{9EED8D3C-F0EC-4D07-9021-5B1D8D7F11C2} = {6074E807-FBBC-41D0-9205-C7B79513D683}
 		{A3386257-A47B-407B-AB5A-A2CBAF2CEDF9} = {6074E807-FBBC-41D0-9205-C7B79513D683}
 		{F5BA5ECB-3C48-4379-9204-5BA30705D801} = {6074E807-FBBC-41D0-9205-C7B79513D683}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {34F221DE-645E-4697-BCC2-818F1F10FE8A}
 	EndGlobalSection
 EndGlobal
