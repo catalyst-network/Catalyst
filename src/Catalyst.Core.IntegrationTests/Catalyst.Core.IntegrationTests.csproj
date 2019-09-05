@@ -11,17 +11,16 @@
     </PropertyGroup>
     <Import Project="../Common.IntegrationTests.props" />
     <ItemGroup>
-        <None Update="Config\*.json">
+        <None Update="Config\**\*.json">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
-        <None Update="Config.*.json">
+        <None Update="Config\**\*.*.json">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\Catalyst.Core.UnitTests\Catalyst.Core.UnitTests.csproj" />
         <ProjectReference Include="..\Catalyst.Core\Catalyst.Core.csproj" />
-        <ProjectReference Include="..\Catalyst.Node.POA.CE\Catalyst.Node.POA.CE.csproj" />
         <ProjectReference Include="..\Catalyst.TestUtils\Catalyst.TestUtils.csproj" />
     </ItemGroup>
     <ItemGroup>

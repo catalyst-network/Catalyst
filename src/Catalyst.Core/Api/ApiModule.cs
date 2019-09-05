@@ -23,6 +23,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Reflection;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
@@ -30,6 +31,7 @@ using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Serilog;
 using Swashbuckle.AspNetCore.Swagger;
 using Module = Autofac.Module;
@@ -109,6 +111,12 @@ namespace Catalyst.Core.Api
             app.ApplicationServices = new AutofacServiceProvider(_container);
             app.UseDeveloperExceptionPage();
             app.UseCors(options => options.AllowAnyOrigin());
+            app.UseDefaultFiles();
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(
+                    Path.Combine(Directory.GetCurrentDirectory(), "wwwroot"))
+            });
             app.UseMvc(routes =>
             {
                 routes.MapRoute(name: "CatalystApi", template: "api/{controller}/{action}/{id}");

@@ -55,12 +55,12 @@ namespace Catalyst.Core.IntegrationTests.P2P
         private IPeerChallenger _peerChallenger;
         private readonly PeerSettings _peerSettings;
 
-        public PeerValidationIntegrationTest(ITestOutputHelper output) : base(new[]
+        public PeerValidationIntegrationTest(ITestOutputHelper output) : base(output, new[]
         {
             Constants.ComponentsJsonConfigFile,
             Constants.SerilogJsonConfigFile,
             Constants.NetworkConfigFile(Protocol.Common.Network.Devnet)
-        }.Select(f => Path.Combine(Constants.ConfigSubFolder, f)), output)
+        }.Select(f => Path.Combine(Constants.ConfigSubFolder, f)))
         {
             ContainerProvider.ConfigureContainerBuilder(true, true);
             _peerSettings = new PeerSettings(ContainerProvider.ConfigurationRoot);
@@ -109,7 +109,7 @@ namespace Catalyst.Core.IntegrationTests.P2P
                 ContainerProvider.Container.Resolve<IEnumerable<IP2PMessageObserver>>(),
                 _peerSettings,
                 ContainerProvider.Container.Resolve<ILogger>(),
-                ContainerProvider.Container.Resolve<IPeerHeartbeatChecker>());
+                ContainerProvider.Container.Resolve<IHealthChecker>());
 
             await _peerService.StartAsync();
         }

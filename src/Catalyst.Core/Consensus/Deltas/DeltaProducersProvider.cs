@@ -22,29 +22,14 @@
 #endregion
 
 using System.Collections.Generic;
-using Autofac;
-using Catalyst.Abstractions.IO.EventLoop;
-using Catalyst.Abstractions.IO.Observers;
-using Catalyst.Abstractions.IO.Transport.Channels;
 using Catalyst.Abstractions.P2P;
-using Catalyst.Abstractions.P2P.Discovery;
-using Serilog;
+using Catalyst.Core.P2P.Repository;
 
-namespace Catalyst.Core.P2P
+namespace Catalyst.Core.Consensus.Deltas
 {
-    public class P2PModule : Module
+    public class DeltaProducersProvider : IDeltaProducersProvider
     {
-        protected override void Load(ContainerBuilder builder)
-        {
-            builder.Register(c => new PeerService(c.Resolve<IUdpServerEventLoopGroupFactory>(),
-                    c.Resolve<IUdpServerChannelFactory>(),
-                    c.Resolve<IPeerDiscovery>(),
-                    c.Resolve<IEnumerable<IP2PMessageObserver>>(),
-                    c.Resolve<IPeerSettings>(),
-                    c.Resolve<ILogger>(),
-                    c.Resolve<IHealthChecker>()
-                ))
-               .As<IPeerService>();
-        }  
+        public IList<IPeerIdentifier> GetDeltaProducersFromPreviousDelta(byte[] previousDeltaHash) { throw new System.NotImplementedException(); }
+        public IPeerRepository PeerRepository { get; }
     }
 }

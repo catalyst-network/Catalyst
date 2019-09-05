@@ -42,12 +42,12 @@ namespace Catalyst.Core.IntegrationTests.P2P.ReputationSystem
         private readonly IReputationManager _reputationManager;
         private ILifetimeScope _scope;
 
-        public ReputationManagerTests(ITestOutputHelper output) : base(new[]
+        public ReputationManagerTests(ITestOutputHelper output) : base(output, new[]
         {
             Path.Combine(Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile),
             Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile),
             Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Protocol.Common.Network.Devnet))
-        }, output)
+        })
         {
             ContainerProvider.ConfigureContainerBuilder();
 

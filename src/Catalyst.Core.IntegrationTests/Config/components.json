@@ -1,8 +1,8 @@
 {
-    "defaultAssembly": "Catalyst.Node.POA.CE",
+    "defaultAssembly": "Catalyst.Core",
     "components": [
         {
-            "type": "Catalyst.Node.POA.CE.CatalystNodePoa",
+            "type": "Catalyst.Core.IntegrationTests.TestCatalystNode, Catalyst.Core.IntegrationTests",
             "services": [
                 {
                     "type": "Catalyst.Abstractions.ICatalystNode, Catalyst.Abstractions"
@@ -10,32 +10,32 @@
             ]
         },
         {
-            "type": "Catalyst.Core.P2P.Repository.PeerRepository, Catalyst.Core",
+            "type": "Catalyst.Core.P2P.Repository.PeerRepository",
             "services": [
                 {
-                    "type": "Catalyst.Core.P2P.Repository.IPeerRepository, Catalyst.Core"
+                    "type": "Catalyst.Core.P2P.Repository.IPeerRepository"
                 }
             ],
             "instanceScope": "singleinstance"
         },
         {
-            "type": "Catalyst.Core.Rpc.Authentication.Repository.AuthCredentialRepository, Catalyst.Core",
+            "type": "Catalyst.Core.Rpc.Authentication.Repository.AuthCredentialRepository",
             "services": [
                 {
-                    "type": "Catalyst.Core.Rpc.Authentication.Repository.IAuthCredentialRepository, Catalyst.Core"
+                    "type": "Catalyst.Core.Rpc.Authentication.Repository.IAuthCredentialRepository"
                 }
             ]
         },
         {
-            "type": "Catalyst.Core.Ledger.Repository.AccountRepository, Catalyst.Core",
+            "type": "Catalyst.Core.Ledger.Repository.AccountRepository",
             "services": [
                 {
-                    "type": "Catalyst.Core.Ledger.Repository.IAccountRepository, Catalyst.Core"
+                    "type": "Catalyst.Core.Ledger.Repository.IAccountRepository"
                 }
             ]
         },
         {
-            "type": "Catalyst.Core.IO.EventLoop.EventLoopGroupFactoryConfiguration, Catalyst.Core",
+            "type": "Catalyst.Core.IO.EventLoop.EventLoopGroupFactoryConfiguration",
             "services": [
                 {
                     "type": "Catalyst.Abstractions.IO.EventLoop.IEventLoopGroupFactoryConfiguration, Catalyst.Abstractions"
@@ -48,7 +48,7 @@
             }
         },
         {
-            "type": "Catalyst.Core.IO.EventLoop.TcpServerEventLoopGroupFactory, Catalyst.Core",
+            "type": "Catalyst.Core.IO.EventLoop.TcpServerEventLoopGroupFactory",
             "services": [
                 {
                     "type": "Catalyst.Abstractions.IO.EventLoop.ITcpServerEventLoopGroupFactory, Catalyst.Abstractions"
@@ -57,7 +57,7 @@
             "instanceScope": "singleinstance"
         },
         {
-            "type": "Catalyst.Core.IO.EventLoop.UdpClientEventLoopGroupFactory, Catalyst.Core",
+            "type": "Catalyst.Core.IO.EventLoop.UdpClientEventLoopGroupFactory",
             "services": [
                 {
                     "type": "Catalyst.Abstractions.IO.EventLoop.IUdpClientEventLoopGroupFactory, Catalyst.Abstractions"
@@ -66,7 +66,7 @@
             "instanceScope": "singleinstance"
         },
         {
-            "type": "Catalyst.Core.IO.EventLoop.UdpServerEventLoopGroupFactory, Catalyst.Core",
+            "type": "Catalyst.Core.IO.EventLoop.UdpServerEventLoopGroupFactory",
             "services": [
                 {
                     "type": "Catalyst.Abstractions.IO.EventLoop.IUdpServerEventLoopGroupFactory, Catalyst.Abstractions"
@@ -75,7 +75,7 @@
             "instanceScope": "singleinstance"
         },
         {
-            "type": "Catalyst.Core.P2P.PeerClient, Catalyst.Core",
+            "type": "Catalyst.Core.P2P.PeerClient",
             "services": [
                 {
                     "type": "Catalyst.Abstractions.P2P.IPeerClient, Catalyst.Abstractions"
@@ -84,7 +84,16 @@
             "instanceScope": "singleinstance"
         },
         {
-            "type": "Catalyst.Core.Rpc.IO.Transport.Channels.RpcClientChannelFactory, Catalyst.Core",
+            "type": "Catalyst.Core.P2P.Discovery.HealthChecker",
+            "services": [
+                {
+                    "type": "Catalyst.Abstractions.P2P.Discovery.IHealthChecker, Catalyst.Abstractions"
+                }
+            ],
+            "instanceScope": "singleinstance"
+        },
+        {
+            "type": "Catalyst.Core.Rpc.IO.Transport.Channels.RpcClientChannelFactory",
             "services": [
                 {
                     "type": "Catalyst.Abstractions.IO.Transport.Channels.ITcpClientChannelFactory, Catalyst.Abstractions"
@@ -92,7 +101,7 @@
             ]
         },
         {
-            "type": "Catalyst.Core.Rpc.IO.Transport.Channels.RpcServerChannelFactory, Catalyst.Core",
+            "type": "Catalyst.Core.Rpc.IO.Transport.Channels.RpcServerChannelFactory",
             "services": [
                 {
                     "type": "Catalyst.Abstractions.IO.Transport.Channels.ITcpServerChannelFactory, Catalyst.Abstractions"
@@ -100,7 +109,7 @@
             ]
         },
         {
-            "type": "Catalyst.Core.P2P.IO.Transport.Channels.PeerClientChannelFactory, Catalyst.Core",
+            "type": "Catalyst.Core.P2P.IO.Transport.Channels.PeerClientChannelFactory",
             "services": [
                 {
                     "type": "Catalyst.Abstractions.IO.Transport.Channels.IUdpClientChannelFactory, Catalyst.Abstractions"
@@ -108,7 +117,7 @@
             ]
         },
         {
-            "type": "Catalyst.Core.P2P.IO.Transport.Channels.PeerServerChannelFactory, Catalyst.Core",
+            "type": "Catalyst.Core.P2P.IO.Transport.Channels.PeerServerChannelFactory",
             "services": [
                 {
                     "type": "Catalyst.Abstractions.IO.Transport.Channels.IUdpServerChannelFactory, Catalyst.Abstractions"
@@ -116,7 +125,7 @@
             ]
         },
         {
-            "type": "Catalyst.Core.Rpc.RpcServer, Catalyst.Core",
+            "type": "Catalyst.Core.Rpc.RpcServer",
             "services": [
                 {
                     "type": "Catalyst.Abstractions.Rpc.IRpcServer, Catalyst.Abstractions"
@@ -124,7 +133,7 @@
             ]
         },
         {
-            "type": "Catalyst.Core.IO.Handlers.ObservableServiceHandler, Catalyst.Core",
+            "type": "Catalyst.Core.IO.Handlers.ObservableServiceHandler",
             "services": [
                 {
                     "type": "Catalyst.Abstractions.IO.Handlers.IObservableServiceHandler, Catalyst.Abstractions"
@@ -132,7 +141,7 @@
             ]
         },
         {
-            "type": "Catalyst.Core.Rpc.RpcServerSettings, Catalyst.Core",
+            "type": "Catalyst.Core.Rpc.RpcServerSettings",
             "services": [
                 {
                     "type": "Catalyst.Abstractions.Rpc.IRpcServerSettings, Catalyst.Abstractions"
@@ -140,7 +149,7 @@
             ]
         },
         {
-            "type": "Catalyst.Core.Rpc.IO.Messaging.Correlation.RpcMessageCorrelationManager, Catalyst.Core",
+            "type": "Catalyst.Core.Rpc.IO.Messaging.Correlation.RpcMessageCorrelationManager",
             "services": [
                 {
                     "type": "Catalyst.Abstractions.Rpc.IO.Messaging.Correlation.IRpcMessageCorrelationManager, Catalyst.Abstractions"
@@ -149,7 +158,7 @@
             "instanceScope": "singleinstance"
         },
         {
-            "type": "Catalyst.Core.P2P.IO.Messaging.Correlation.PeerMessageCorrelationManager, Catalyst.Core",
+            "type": "Catalyst.Core.P2P.IO.Messaging.Correlation.PeerMessageCorrelationManager",
             "services": [
                 {
                     "type": "Catalyst.Abstractions.P2P.IO.Messaging.Correlation.IPeerMessageCorrelationManager, Catalyst.Abstractions"
@@ -158,7 +167,7 @@
             "instanceScope": "singleinstance"
         },
         {
-            "type": "Catalyst.Core.P2P.PeerSettings, Catalyst.Core",
+            "type": "Catalyst.Core.P2P.PeerSettings",
             "services": [
                 {
                     "type": "Catalyst.Abstractions.P2P.IPeerSettings, Catalyst.Abstractions"
@@ -166,7 +175,7 @@
             ]
         },
         {
-            "type": "Catalyst.Core.P2P.PeerIdentifier, Catalyst.Core",
+            "type": "Catalyst.Core.P2P.PeerIdentifier",
             "services": [
                 {
                     "type": "Catalyst.Abstractions.P2P.IPeerIdentifier, Catalyst.Abstractions"
@@ -176,7 +185,7 @@
         },
 
         {
-            "type": "Catalyst.Core.Rpc.Authentication.RepositoryAuthenticationStrategy, Catalyst.Core",
+            "type": "Catalyst.Core.Rpc.Authentication.RepositoryAuthenticationStrategy",
             "services": [
                 {
                     "type": "Catalyst.Abstractions.Rpc.Authentication.IAuthenticationStrategy, Catalyst.Abstractions"
@@ -200,7 +209,7 @@
             ]
         },
         {
-            "type": "Catalyst.Core.Repository.FileSystemAwareXmlRepository`1[[Catalyst.Core.Rpc.Authentication.Models.AuthCredentials, Catalyst.Core]], Catalyst.Core",
+            "type": "Catalyst.Core.Repository.FileSystemAwareXmlRepository`1[[Catalyst.Core.Rpc.Authentication.Models.AuthCredentials, Catalyst.Core]]",
             "services": [
                 {
                     "type": "SharpRepository.Repository.IRepository`2[[Catalyst.Core.Rpc.Authentication.Models.AuthCredentials, Catalyst.Core], [System.String, mscorlib]], SharpRepository.Repository"
@@ -217,7 +226,7 @@
             "instanceScope": "singleinstance"
         },
         {
-            "type": "Catalyst.Core.P2P.Models.Peer, Catalyst.Core",
+            "type": "Catalyst.Core.P2P.Models.Peer",
             "services": [
                 {
                     "type": "Catalyst.Abstractions.P2P.Models.IPeer, Catalyst.Abstractions"
@@ -225,7 +234,7 @@
             ]
         },
         {
-            "type": "Catalyst.Node.POA.CE.P2P.PoaDiscovery, Catalyst.Node.POA.CE",
+            "type": "Catalyst.Core.P2P.Discovery.Hastings.HastingsDiscovery",
             "services": [
                 {
                     "type": "Catalyst.Abstractions.P2P.Discovery.IPeerDiscovery, Catalyst.Abstractions"
@@ -233,7 +242,7 @@
             ]
         },
         {
-            "type": "Catalyst.Core.Network.DevDnsClient, Catalyst.Core",
+            "type": "Catalyst.Core.Network.DevDnsClient",
             "services": [
                 {
                     "type": "Catalyst.Abstractions.Network.IDns, Catalyst.Abstractions"
@@ -241,7 +250,7 @@
             ]
         },
         {
-            "type": "Catalyst.Core.Network.InjectableLookupClient, Catalyst.Core",
+            "type": "Catalyst.Core.Network.InjectableLookupClient",
             "services": [
                 {
                     "type": "DnsClient.ILookupClient, DnsClient"
@@ -249,7 +258,15 @@
             ]
         },
         {
-            "type": "Catalyst.Core.P2P.PeerService, Catalyst.Core",
+            "type": "Catalyst.Core.Util.CancellationTokenProvider",
+            "services": [
+                {
+                    "type": "Catalyst.Abstractions.Util.ICancellationTokenProvider, Catalyst.Abstractions"
+                }
+            ]
+        },
+        {
+            "type": "Catalyst.Core.P2P.PeerService",
             "services": [
                 {
                     "type": "Catalyst.Abstractions.P2P.IPeerService, Catalyst.Abstractions"
@@ -257,7 +274,7 @@
             ]
         },
         {
-            "type": "Catalyst.Core.P2P.PeerChallenger, Catalyst.Core",
+            "type": "Catalyst.Core.P2P.PeerChallenger",
             "services": [
                 {
                     "type": "Catalyst.Abstractions.P2P.IPeerChallenger, Catalyst.Abstractions"
@@ -269,19 +286,7 @@
             "instanceScope": "singleinstance"
         },
         {
-            "type": "Catalyst.Node.POA.CE.P2P.PeerHeartbeatChecker, Catalyst.Node.POA.CE",
-            "services": [
-                {
-                    "type": "Catalyst.Abstractions.P2P.IPeerHeartbeatChecker, Catalyst.Abstractions"
-                }
-            ],
-            "parameters": {
-                "checkHeartbeatIntervalSeconds": 10,
-                "maxNonResponsiveCounter": 3
-            }
-        },
-        {
-            "type": "Catalyst.Core.Cryptography.CertificateStore, Catalyst.Core",
+            "type": "Catalyst.Core.Cryptography.CertificateStore",
             "services": [
                 {
                     "type": "Catalyst.Abstractions.Cryptography.ICertificateStore, Catalyst.Abstractions"
@@ -289,7 +294,7 @@
             ]
         },
         {
-            "type": "Catalyst.Core.Cryptography.IsaacRandom, Catalyst.Core",
+            "type": "Catalyst.Core.Cryptography.IsaacRandom",
             "services": [
                 {
                     "type": "Catalyst.Abstractions.Cryptography.IDeterministicRandom, Catalyst.Abstractions"
@@ -298,7 +303,7 @@
         },
         // WHY USE CLI BASED CLASS AND NOT IN COMMON???
         {
-            "type": "Catalyst.Core.Cli.ConsoleUserOutput, Catalyst.Core",
+            "type": "Catalyst.Core.Cli.ConsoleUserOutput",
             "services": [
                 {
                     "type": "Catalyst.Abstractions.Cli.IUserOutput, Catalyst.Abstractions"
@@ -307,7 +312,7 @@
         },
         // WHY USE CLI BASED CLASS AND NOT IN COMMON???
         {
-            "type": "Catalyst.Core.Cli.ConsoleUserInput, Catalyst.Core",
+            "type": "Catalyst.Core.Cli.ConsoleUserInput",
             "services": [
                 {
                     "type": "Catalyst.Abstractions.Cli.IUserInput, Catalyst.Abstractions"
@@ -315,7 +320,7 @@
             ]
         },
         {
-            "type": "Catalyst.Core.FileSystem.FileSystem, Catalyst.Core",
+            "type": "Catalyst.Core.FileSystem.FileSystem",
             "services": [
                 {
                     "type": "Catalyst.Abstractions.FileSystem.IFileSystem, Catalyst.Abstractions"
@@ -326,7 +331,7 @@
             }
         },
         {
-            "type": "Catalyst.Core.FileTransfer.UploadFileTransferFactory, Catalyst.Core",
+            "type": "Catalyst.Core.FileTransfer.UploadFileTransferFactory",
             "services": [
                 {
                     "type": "Catalyst.Abstractions.FileTransfer.IUploadFileTransferFactory, Catalyst.Abstractions"
@@ -335,7 +340,7 @@
             "instanceScope": "singleinstance"
         },
         {
-            "type": "Catalyst.Core.FileTransfer.DownloadFileTransferFactory, Catalyst.Core",
+            "type": "Catalyst.Core.FileTransfer.DownloadFileTransferFactory",
             "services": [
                 {
                     "type": "Catalyst.Abstractions.FileTransfer.IDownloadFileTransferFactory, Catalyst.Abstractions"
@@ -344,16 +349,16 @@
             "instanceScope": "singleinstance"
         },
         {
-            "type": "Catalyst.Core.P2P.ReputationSystem.ReputationManager, Catalyst.Core",
+            "type": "Catalyst.Core.P2P.ReputationSystem.ReputationManager",
             "services": [
                 {
-                    "type": "Catalyst.Core.P2P.ReputationSystem.IReputationManager, Catalyst.Core"
+                    "type": "Catalyst.Core.P2P.ReputationSystem.IReputationManager"
                 }
             ],
             "instanceScope": "singleinstance"
         },
         {
-            "type": "Catalyst.Core.P2P.IO.Messaging.Broadcast.BroadcastManager, Catalyst.Core",
+            "type": "Catalyst.Core.P2P.IO.Messaging.Broadcast.BroadcastManager",
             "services": [
                 {
                     "type": "Catalyst.Abstractions.P2P.IO.Messaging.Broadcast.IBroadcastManager, Catalyst.Abstractions"
@@ -362,7 +367,7 @@
             "instanceScope": "singleinstance"
         },
         {
-            "type": "Catalyst.Core.P2P.PeerIdValidator, Catalyst.Core",
+            "type": "Catalyst.Core.P2P.PeerIdValidator",
             "services": [
                 {
                     "type": "Catalyst.Abstractions.P2P.IPeerIdValidator, Catalyst.Abstractions"
@@ -370,7 +375,7 @@
             ]
         },
         {
-            "type": "Catalyst.Core.Util.TtlChangeTokenProvider, Catalyst.Core",
+            "type": "Catalyst.Core.Util.TtlChangeTokenProvider",
             "services": [
                 {
                     "type": "Catalyst.Abstractions.Util.IChangeTokenProvider, Catalyst.Abstractions"
@@ -381,21 +386,21 @@
             }
         },
         {
-            "type": "Catalyst.Core.Keystore.SigningContextProvider, Catalyst.Core",
+            "type": "Catalyst.Core.Keystore.SigningContextProvider",
             "services": [
                 {
                     "type": "Catalyst.Abstractions.Keystore.ISigningContextProvider, Catalyst.Abstractions"
                 }
             ],
             "properties": {
-                "Network": "Mainnet",
+                "Network": "Devnet",
                 "SignatureType": "ProtocolPeer"
             }
         }
     ],
     "modules": [
         {
-            "type": "Catalyst.Core.JsonConfiguredModule, Catalyst.Core",
+            "type": "Catalyst.Core.JsonConfiguredModule",
             "parameters": {
                 "configFilePath": "Config/messageHandlers.json"
             }
@@ -404,7 +409,7 @@
         // but also in the sense of the catalyst node architecture, i.e. swappable
         // components that can customized for different use cases.
         {
-            "type": "Catalyst.Core.Api.ApiModule, Catalyst.Core",
+            "type": "Catalyst.Core.Api.ApiModule",
             "parameters": {
                 "apiBindingAddress": "http://*:5005",
                 "controllerModules": [ "Catalyst.Core" ],
@@ -412,31 +417,31 @@
             }
         },
         {
-            "type": "Catalyst.Core.JsonConfiguredModule, Catalyst.Core",
+            "type": "Catalyst.Core.JsonConfiguredModule",
             "parameters": {
                 "configFilePath": "Config/Modules/dfs.json"
             }
         },
         {
-            "type": "Catalyst.Core.Consensus.ConsensusModule, Catalyst.Core",
+            "type": "Catalyst.Core.Consensus.ConsensusModule",
             "parameters": {
                 "configFilePath": "Config/Modules/consensus.json"
             }
         },
         {
-            "type": "Catalyst.Core.JsonConfiguredModule, Catalyst.Core",
+            "type": "Catalyst.Core.JsonConfiguredModule",
             "parameters": {
                 "configFilePath": "Config/Modules/ledger.json"
             }
         },
         {
-            "type": "Catalyst.Core.JsonConfiguredModule, Catalyst.Core",
+            "type": "Catalyst.Core.JsonConfiguredModule",
             "parameters": {
                 "configFilePath": "Config/Modules/keysigner.json"
             }
         },
         {
-            "type": "Catalyst.Core.JsonConfiguredModule, Catalyst.Core",
+            "type": "Catalyst.Core.JsonConfiguredModule",
             "parameters": {
                 "configFilePath": "Config/Modules/mempool.json"
             }
