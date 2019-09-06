@@ -30,6 +30,7 @@ using Catalyst.Core.Config;
 using Catalyst.Core.Extensions;
 using Catalyst.Core.IO.Messaging.Dto;
 using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Extensions;
 using Catalyst.Protocol.Rpc.Node;
 using DotNetty.Transport.Channels;
 using Google.Protobuf;

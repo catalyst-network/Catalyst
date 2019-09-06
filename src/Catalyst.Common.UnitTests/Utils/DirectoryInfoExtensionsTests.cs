@@ -22,13 +22,13 @@
 #endregion
 
 using System.IO;
-using Catalyst.Core.Extensions;
+using Catalyst.Common.Extensions;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Catalyst.Core.UnitTests.Extensions
+namespace Catalyst.Common.UnitTests.Utils
 {
     public sealed class DirectoryInfoExtensionsTests : FileSystemBasedTest
     {

@@ -24,6 +24,7 @@
 using System;
 using System.Threading;
 using Catalyst.Abstractions.Consensus.Deltas;
+using Catalyst.Common.Extensions;
 using Catalyst.Core.Config;
 using Catalyst.Core.Extensions;
 using Catalyst.Protocol.Deltas;
