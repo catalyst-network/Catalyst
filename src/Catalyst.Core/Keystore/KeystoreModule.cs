@@ -34,6 +34,21 @@ namespace Catalyst.Core.Keystore
     {
         protected override void Load(ContainerBuilder builder)
         {
+            builder.Register(c => new ()).As<>();
+
+            builder.Register(c => new LocalKeyStore(
+                c.Resolve<IPasswordManager>(),
+                c.Resolve<ICryptoContext>(),
+                c.Resolve<IKeyStoreService>(),
+                c.Resolve<IFileSystem>(),
+                c.Resolve<ILogger>(),
+                c.Resolve<IAddressHelper>()
+            )).As<IKeyStore>();
+
+            builder.Register(c => new KeyStoreServiceWrapped(c.Resolve<ICryptoContext>())).As<IKeyStoreService>();
+
+            builder.Register(c => new KeyRegistry()).As<IKeyRegistry>().SingleInstance();
+            
             builder.Register(c => new LocalKeyStore(c.Resolve<IPasswordManager>(),
                     c.Resolve<ICryptoContext>(),
                     c.Resolve<IKeyStoreService>(),
