@@ -23,7 +23,7 @@
 
 using System.Linq;
 using Catalyst.Abstractions.Util;
-using Catalyst.Core.Extensions;
+using Catalyst.Common.Extensions;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
 using Multiformats.Hash.Algorithms;
 using Nethereum.Hex.HexConvertors.Extensions;

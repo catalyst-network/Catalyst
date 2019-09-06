@@ -28,6 +28,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Catalyst.Common.Extensions;
 using Catalyst.Core.Config;
 using Catalyst.Core.Dfs;
 using Catalyst.Core.Extensions;

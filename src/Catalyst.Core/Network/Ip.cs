@@ -31,7 +31,7 @@ using System.Net.Sockets;
 using System.Reactive.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using Catalyst.Core.Util;
+using Catalyst.Common.Utils;
 using Serilog;
 
 namespace Catalyst.Core.Network

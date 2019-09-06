@@ -26,6 +26,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Dfs;
+using Catalyst.Common.Extensions;
 using Catalyst.Core.Dfs;
 using Catalyst.Core.Extensions;
 using Catalyst.TestUtils;

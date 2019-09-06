@@ -21,17 +21,18 @@
 
 #endregion
 
-using Multiformats.Hash;
-using SimpleBase;
+using System.Collections.Generic;
+using System.Linq;
+using Google.Protobuf;
 
-namespace Catalyst.Core.Extensions
+namespace Catalyst.Protocol.Extensions
 {
-    public static class MultihashExtensions
+    public static class BytesExtensions
     {
-        public static string AsBase32Address(this Multihash multihash)
+        public static ByteString ToByteString(this IEnumerable<byte> bytes)
         {
-            var result = Base32.Rfc4648.Encode(multihash.ToBytes(), false).ToLowerInvariant();
-            return result;
+            var enumerable = bytes as byte[] ?? bytes.ToArray();
+            return ByteString.CopyFrom(enumerable);
         }
     }
 }

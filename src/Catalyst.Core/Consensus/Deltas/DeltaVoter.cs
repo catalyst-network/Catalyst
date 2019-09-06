@@ -28,6 +28,8 @@ using System.Linq;
 using System.Threading;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.P2P;
+using Catalyst.Common.Extensions;
+using Catalyst.Common.Utils;
 using Catalyst.Core.Extensions;
 using Catalyst.Core.P2P;
 using Catalyst.Core.Util;
