@@ -26,7 +26,6 @@ using System.Linq;
 using Catalyst.Core.Config;
 using Catalyst.Core.FileTransfer;
 using Catalyst.Core.IO.Messaging.Correlation;
-using Catalyst.Core.Util;
 using Catalyst.Protocol;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;

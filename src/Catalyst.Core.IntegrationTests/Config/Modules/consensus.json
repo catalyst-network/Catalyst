@@ -103,7 +103,7 @@
             "instanceScope": "singleinstance"
         },
         {
-            "type": "Catalyst.Core.P2P.IO.Observers.DeltaDfsHashObserver, Catalyst.Core",
+            "type": "Catalyst.Core.Consensus.IO.Observers.DeltaDfsHashObserver, Catalyst.Core",
             "services": [
                 {
                     "type": "Catalyst.Abstractions.IO.Observers.IP2PMessageObserver, Catalyst.Abstractions"
@@ -111,7 +111,7 @@
             ]
         },
         {
-            "type": "Catalyst.Core.P2P.IO.Observers.CandidateDeltaObserver, Catalyst.Core",
+            "type": "Catalyst.Core.Consensus.IO.Observers.CandidateDeltaObserver, Catalyst.Core",
             "services": [
                 {
                     "type": "Catalyst.Abstractions.IO.Observers.IP2PMessageObserver, Catalyst.Abstractions"
@@ -119,7 +119,7 @@
             ]
         },
         {
-            "type": "Catalyst.Core.P2P.IO.Observers.FavouriteDeltaObserver, Catalyst.Core",
+            "type": "Catalyst.Core.Consensus.IO.Observers.FavouriteDeltaObserver, Catalyst.Core",
             "services": [
                 {
                     "type": "Catalyst.Abstractions.IO.Observers.IP2PMessageObserver, Catalyst.Abstractions"

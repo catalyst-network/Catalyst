@@ -36,7 +36,6 @@ using Catalyst.Abstractions.Util;
 using Catalyst.Core.IO.Messaging.Correlation;
 using Catalyst.Core.P2P.Discovery.Hastings;
 using Catalyst.Core.P2P.IO.Observers;
-using Catalyst.Core.P2P.Models;
 using Catalyst.Core.P2P.Repository;
 using Catalyst.Core.P2P.ReputationSystem;
 using Catalyst.Core.Util;
@@ -44,7 +43,6 @@ using Catalyst.TestUtils;
 using Microsoft.Extensions.Caching.Memory;
 using NSubstitute;
 using Serilog;
-using SharpRepository.Repository;
 
 namespace Catalyst.Core.UnitTests.P2P.Discovery
 {

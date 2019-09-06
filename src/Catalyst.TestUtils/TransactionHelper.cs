@@ -21,11 +21,8 @@
 
 #endregion
 
-using System.Linq;
-using Catalyst.Core.Util;
 using Catalyst.Protocol;
 using Catalyst.Protocol.Transaction;
-using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
 
 namespace Catalyst.TestUtils

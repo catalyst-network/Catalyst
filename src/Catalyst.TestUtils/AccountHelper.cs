@@ -21,7 +21,6 @@
 
 #endregion
 
-using Catalyst.Abstractions.Enumerator;
 using Catalyst.Abstractions.Types;
 using Catalyst.Core.Ledger.Models;
 using Nethermind.Dirichlet.Numerics;
