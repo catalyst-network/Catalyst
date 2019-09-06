@@ -27,7 +27,7 @@ using Multiformats.Base;
 using Multiformats.Hash;
 using Multiformats.Hash.Algorithms;
 
-namespace Catalyst.Core.Extensions
+namespace Catalyst.Common.Extensions
 {
     public static class StringExtensions
     {

@@ -21,6 +21,7 @@
 
 #endregion
 
+using Catalyst.Common.Utils;
 using Catalyst.Core.IO.Messaging.Correlation;
 using Catalyst.Core.Util;
 using FluentAssertions;

@@ -25,6 +25,7 @@ using System;
 using System.Linq;
 using System.Reflection;
 using Catalyst.Abstractions.Consensus.Deltas;
+using Catalyst.Common.Extensions;
 using Catalyst.Core.Consensus.Deltas;
 using Catalyst.Core.Extensions;
 using Catalyst.Protocol.Deltas;
