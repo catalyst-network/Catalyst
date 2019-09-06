@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <SignAssembly>true</SignAssembly>
@@ -16,12 +16,12 @@
     <PackageReference Include="Serilog" Version="2.8.0" />
   </ItemGroup>
   <ItemGroup>
-    <ProtoBuf Include="..\..\protocol-protobuffs\src\Common.proto" Link="Protobuffs\Common.proto" />
-    <ProtoBuf Include="..\..\protocol-protobuffs\src\Deltas.proto" Link="Protobuffs\Deltas.proto" />
-    <ProtoBuf Include="..\..\protocol-protobuffs\src\IPPN.proto" Link="Protobuffs\IPPN.proto" />
-    <ProtoBuf Include="..\..\protocol-protobuffs\src\Rpc.proto" Link="Protobuffs\Rpc.proto" />
-    <ProtoBuf Include="..\..\protocol-protobuffs\src\Transaction.proto" Link="Protobuffs\Transaction.proto" />
-    <ProtoBuf Include="..\..\protocol-protobuffs\src\DfsMarketplace.proto" Link="Protobuffs\DfsMarketplace.proto" />
+    <ProtoBuf Include="..\..\submodules\protocol-protobuffs\src\Common.proto" Link="Protobuffs\Common.proto" />
+    <ProtoBuf Include="..\..\submodules\protocol-protobuffs\src\Deltas.proto" Link="Protobuffs\Deltas.proto" />
+    <ProtoBuf Include="..\..\submodules\protocol-protobuffs\src\IPPN.proto" Link="Protobuffs\IPPN.proto" />
+    <ProtoBuf Include="..\..\submodules\protocol-protobuffs\src\Rpc.proto" Link="Protobuffs\Rpc.proto" />
+    <ProtoBuf Include="..\..\submodules\protocol-protobuffs\src\Transaction.proto" Link="Protobuffs\Transaction.proto" />
+    <ProtoBuf Include="..\..\submodules\protocol-protobuffs\src\DfsMarketplace.proto" Link="Protobuffs\DfsMarketplace.proto" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System">
