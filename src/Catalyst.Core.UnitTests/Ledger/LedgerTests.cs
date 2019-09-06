@@ -22,15 +22,18 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.Reactive.Linq;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Mempool;
 using Catalyst.Core.Extensions;
+using Catalyst.Core.Ledger;
 using Catalyst.Core.Ledger.Models;
 using Catalyst.Core.Ledger.Repository;
 using Catalyst.Core.Mempool.Documents;
 using Catalyst.TestUtils;
 using Microsoft.Reactive.Testing;
+using Multiformats.Hash;
 using Multiformats.Hash.Algorithms;
 using Nethermind.Dirichlet.Numerics;
 using NSubstitute;
@@ -48,21 +51,29 @@ namespace Catalyst.Core.UnitTests.Ledger
         private readonly IDeltaHashProvider _deltaHashProvider;
         private readonly IMempool<MempoolDocument> _mempool;
         private readonly ILogger _logger;
+        private readonly ILedgerSynchroniser _ledgerSynchroniser;
+        private readonly IMultihashAlgorithm _hashingAlgorithm;
+        private readonly Multihash _genesisHash;
 
         public LedgerTests()
         {
             _testScheduler = new TestScheduler();
             _fakeRepository = Substitute.For<IAccountRepository>();
+            _hashingAlgorithm = new BLAKE2B_16();
 
             _logger = Substitute.For<ILogger>();
             _mempool = Substitute.For<IMempool<MempoolDocument>>();
             _deltaHashProvider = Substitute.For<IDeltaHashProvider>();
+            _ledgerSynchroniser = Substitute.For<ILedgerSynchroniser>();
+            _genesisHash = "genesis".ComputeUtf8Multihash(_hashingAlgorithm);
+            _ledgerSynchroniser.DeltaCache.GenesisAddress
+               .Returns(_genesisHash.AsBase32Address());
         }
 
         [Fact]
         public void Save_Account_State_To_Ledger_Repository()
         {
-            _ledger = new LedgerService(_fakeRepository, _deltaHashProvider, _mempool, _logger);
+            _ledger = new LedgerService(_fakeRepository, _deltaHashProvider, _ledgerSynchroniser, _mempool, _logger);
             const int numAccounts = 10;
             for (var i = 0; i < numAccounts; i++)
             {
@@ -76,14 +87,16 @@ namespace Catalyst.Core.UnitTests.Ledger
         [Fact]
         public void Should_Reconcile_On_New_Delta_Hash()
         {
-            var blake2B256 = new BLAKE2B_256();
-            var hash1 = "update".ComputeUtf8Multihash(blake2B256);
-            var hash2 = "update again".ComputeUtf8Multihash(blake2B256);
+            var hash1 = "update".ComputeUtf8Multihash(_hashingAlgorithm);
+            var hash2 = "update again".ComputeUtf8Multihash(_hashingAlgorithm);
             var updates = new[] {hash1, hash2};
+
+            _ledgerSynchroniser.CacheDeltasBetween(default, default, default)
+               .ReturnsForAnyArgs(new[] {hash2, hash1, _genesisHash});
 
             _deltaHashProvider.DeltaHashUpdates.Returns(updates.ToObservable(_testScheduler));
 
-            _ledger = new LedgerService(_fakeRepository, _deltaHashProvider, _mempool, _logger);
+            _ledger = new LedgerService(_fakeRepository, _deltaHashProvider, _ledgerSynchroniser, _mempool, _logger);
 
             _testScheduler.Start();
 

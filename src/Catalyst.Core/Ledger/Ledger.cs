@@ -23,13 +23,22 @@
 
 using System;
 using System.Linq;
+using System.Numerics;
+using System.Threading;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Mempool;
+using Catalyst.Core.Cryptography;
+using Catalyst.Core.Extensions;
 using Catalyst.Core.Ledger.Models;
 using Catalyst.Core.Ledger.Repository;
 using Catalyst.Core.Mempool.Documents;
+using Catalyst.Core.Util;
+using Catalyst.Cryptography.BulletProofs.Wrapper;
+using Catalyst.Protocol.Transaction;
 using Dawn;
+using Google.Protobuf;
 using Multiformats.Hash;
+using Nethermind.Dirichlet.Numerics;
 using Serilog;
 
 namespace Catalyst.Core.Ledger
@@ -37,29 +46,42 @@ namespace Catalyst.Core.Ledger
     /// <summary>
     ///  This class represents a ledger and is a collection of accounts and data store.
     /// </summary>
-    /// <seealso cref="ILedger" />
-    public sealed class Ledger : ILedger, IDisposable
+    /// <inheritdoc cref="ILedger" />
+    /// <inheritdoc cref="IDisposable" />
+    public class Ledger : ILedger, IDisposable
     {
-        private IAccountRepository Accounts { get; }
+        public IAccountRepository Accounts { get; }
+        private readonly ILedgerSynchroniser _synchroniser;
         private readonly IMempool<MempoolDocument> _mempool;
         private readonly ILogger _logger;
         private readonly IDisposable _deltaUpdatesSubscription;
 
-        public Ledger(IAccountRepository accounts, IDeltaHashProvider deltaHashProvider, IMempool<MempoolDocument> mempool, ILogger logger)
+        private readonly object _synchronisationLock = new object();
+        private readonly CryptoContext _cryptoContext;
+
+        public Ledger(IAccountRepository accounts, 
+            IDeltaHashProvider deltaHashProvider,
+            ILedgerSynchroniser synchroniser,
+            IMempool<MempoolDocument> mempool, 
+            ILogger logger)
         {
             Accounts = accounts;
+            _synchroniser = synchroniser;
             _mempool = mempool;
             _logger = logger;
 
-            _deltaUpdatesSubscription = deltaHashProvider.DeltaHashUpdates.Subscribe(FlushTransactionsFromDelta);
+            _deltaUpdatesSubscription = deltaHashProvider.DeltaHashUpdates.Subscribe(Update);
+            LatestKnownDelta = _synchroniser.DeltaCache.GenesisAddress;
+            _cryptoContext = new CryptoContext(new CryptoWrapper());
         }
 
-        private void FlushTransactionsFromDelta(Multihash confirmedDelta)
+        private void FlushTransactionsFromDelta(ByteString confirmedDelta)
         {
             var transactionsToFlush = _mempool.Repository.GetAll().Select(d => d.ToString()); //LOL
             _mempool.Repository.DeleteItem(transactionsToFlush.ToArray());
         }
 
+        /// <inheritdoc />
         public bool SaveAccountState(Account account)
         {
             Guard.Argument(account, nameof(account)).NotNull();
@@ -76,7 +98,73 @@ namespace Catalyst.Core.Ledger
             }
         }
 
-        private void Dispose(bool disposing)
+        /// <inheritdoc />
+        public void Update(Multihash deltaHash)
+        {
+            try
+            {
+                lock (_synchronisationLock)
+                {
+                    var chainedDeltaHashes = _synchroniser
+                       .CacheDeltasBetween(LatestKnownDelta, deltaHash, CancellationToken.None)
+                       .Reverse()
+                       .ToList();
+
+                    if (!Equals(chainedDeltaHashes.First(), LatestKnownDelta))
+                    {
+                        _logger.Warning(
+                            "Failed to walk back the delta chain to {LatestKnownDelta}, giving up ledger update.", LatestKnownDelta);
+                        return;
+                    }
+
+                    foreach (var chainedDeltaHash in chainedDeltaHashes)
+                    {
+                        UpdateLedgerFromDelta(chainedDeltaHash);
+                    }
+                }
+
+                //https://github.com/catalyst-network/Catalyst.Node/issues/871
+                FlushTransactionsFromDelta(default);
+            }
+            catch (Exception exception)
+            {
+                _logger.Error(exception, "Failed to update the ledger using the delta with hash {deltaHash}", deltaHash);
+            }
+        }
+
+        private void UpdateLedgerFromDelta(Multihash deltaHash)
+        {
+            if (!_synchroniser.DeltaCache.TryGetOrAddConfirmedDelta(deltaHash, out var nextDeltaInChain))
+            {
+                _logger.Warning(
+                    "Failed to retrieve Delta with hash {hash} from the Dfs, ledger has not been updated.", deltaHash);
+                return;
+            }
+
+            foreach (var entry in nextDeltaInChain.STEntries)
+            {
+                UpdateLedgerAccountFromEntry(entry);
+            }
+
+            LatestKnownDelta = deltaHash;
+        }
+
+        private void UpdateLedgerAccountFromEntry(STTransactionEntry entry)
+        {
+            var pubKey = _cryptoContext.PublicKeyFromBytes(entry.PubKey.ToByteArray());
+
+            //todo: get an address from the key using the Account class from Common lib
+            var account = Accounts.Get(pubKey.Bytes.AsBase32Address());
+
+            //todo: a different logic for to and from entries
+            account.Balance += entry.Amount;
+        }
+
+        public Multihash LatestKnownDelta { get; private set; }
+
+        public bool IsSynchonising => Monitor.IsEntered(_synchronisationLock);
+
+        protected virtual void Dispose(bool disposing)
         {
             if (!disposing)
             {
@@ -90,6 +178,7 @@ namespace Catalyst.Core.Ledger
         public void Dispose()
         {
             Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 }
