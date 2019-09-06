@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp2.2</TargetFramework>
+        <SignAssembly>true</SignAssembly>
+        <AssemblyOriginatorKeyFile>Catalyst.Common.UnitTests.snk</AssemblyOriginatorKeyFile>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Catalyst.Common\Catalyst.Common.csproj" />
+      <ProjectReference Include="..\Catalyst.TestUtils\Catalyst.TestUtils.csproj" />
+    </ItemGroup>
+    <Import Project="../Common.UnitTests.props" />
+    <ItemGroup>
+      <PackageReference Update="Microsoft.Reactive.Testing" Version="4.1.6" />
+    </ItemGroup>
+
+</Project>

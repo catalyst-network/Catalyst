@@ -28,7 +28,7 @@ using Catalyst.Core.IO.Messaging.Correlation;
 using FluentAssertions;
 using Xunit;
 
-namespace Catalyst.Core.UnitTests.Extensions
+namespace Catalyst.Common.UnitTests.Utils
 {
     public static class EnumerableExtensionTests
     {

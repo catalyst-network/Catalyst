@@ -21,15 +21,17 @@
 
 #endregion
 
-using System.IO;
+using Multiformats.Hash;
+using SimpleBase;
 
-namespace Catalyst.Core.Extensions
+namespace Catalyst.Common.Extensions
 {
-    public static class DirectoryInfoExtensions
+    public static class MultihashExtensions
     {
-        public static DirectoryInfo SubDirectoryInfo(this DirectoryInfo parentDirectory, string subDirectoryName)
+        public static string AsBase32Address(this Multihash multihash)
         {
-            return new DirectoryInfo(Path.Combine(parentDirectory.FullName, subDirectoryName));
+            var result = Base32.Rfc4648.Encode(multihash.ToBytes(), false).ToLowerInvariant();
+            return result;
         }
     }
 }

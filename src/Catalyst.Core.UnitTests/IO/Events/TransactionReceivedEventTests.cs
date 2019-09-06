@@ -29,6 +29,7 @@ using Catalyst.Core.IO.Events;
 using Catalyst.Core.Mempool.Documents;
 using Catalyst.Core.Util;
 using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Extensions;
 using Catalyst.Protocol.Interfaces.Validators;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.Protocol.Transaction;
