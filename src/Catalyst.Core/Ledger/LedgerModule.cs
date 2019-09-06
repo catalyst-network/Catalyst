@@ -24,6 +24,7 @@
 using Autofac;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Mempool;
+using Catalyst.Core.Ledger.Models;
 using Catalyst.Core.Ledger.Repository;
 using Catalyst.Core.Mempool.Documents;
 using Serilog;
@@ -34,13 +35,20 @@ namespace Catalyst.Core.Ledger
     {
         protected override void Load(ContainerBuilder builder)
         {
+            builder.Register(c => new ())
+                .As<>();
+            
+            builder.Register(c => new Account())
+                .As<IAccount>();
+            
             builder.Register(c => new Ledger(c.Resolve<IAccountRepository>(),
                     c.Resolve<IDeltaHashProvider>(),
                     c.Resolve<ILedgerSynchroniser>(),
                     c.Resolve<IMempool<MempoolDocument>>(),
                     c.Resolve<ILogger>()
                 ))
-               .As<ILedger>();
+               .As<ILedger>()
+               .SingleInstance();
         }  
     }
 }
