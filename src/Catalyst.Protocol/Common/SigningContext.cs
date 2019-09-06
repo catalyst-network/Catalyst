@@ -21,9 +21,6 @@
 
 #endregion
 
-using System.Net.NetworkInformation;
-using System.Reflection.Metadata;
-
 namespace Catalyst.Protocol.Common
 {
     public partial class SigningContext

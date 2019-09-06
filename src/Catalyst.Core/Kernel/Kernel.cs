@@ -37,7 +37,6 @@ using Catalyst.Abstractions.Types;
 using Catalyst.Abstractions.Util;
 using Catalyst.Core.Config;
 using Catalyst.Core.IO.Events;
-using Catalyst.Core.P2P;
 using Catalyst.Core.Util;
 using Catalyst.Protocol.Interfaces.Validators;
 using Catalyst.Protocol.Validators;

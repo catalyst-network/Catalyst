@@ -132,7 +132,7 @@ namespace Catalyst.Core.IntegrationTests.Rpc.IO.Observers
         }
 
         [Fact]
-        public async Task VerifyMessageRequest_Can_Verify_Valid_SignMessageResponse()
+        public void VerifyMessageRequest_Can_Verify_Valid_SignMessageResponse()
         {
             var sender = PeerIdentifierHelper.GetPeerIdentifier("sender");
             var signingContext = new SigningContext

@@ -21,7 +21,6 @@
 
 #endregion
 
-using System.Collections.Generic;
 using Catalyst.Abstractions.Consensus;
 using Catalyst.Core.Util;
 using Catalyst.Protocol.Transaction;
