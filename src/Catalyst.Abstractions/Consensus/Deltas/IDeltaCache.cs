@@ -41,7 +41,7 @@ namespace Catalyst.Abstractions.Consensus.Deltas
         /// <param name="delta">The delta retrieved on the Dfs.</param>
         /// <param name="cancellationToken">A token allowing to cancel the task before it ends.</param>
         /// <returns><c>true</c> if the retrieval was successful, <c>false</c> otherwise.</returns>
-        bool GetOrAddConfirmedDelta(string hash,
+        bool TryGetOrAddConfirmedDelta(string hash,
             out Delta delta, 
             CancellationToken cancellationToken = default);
 

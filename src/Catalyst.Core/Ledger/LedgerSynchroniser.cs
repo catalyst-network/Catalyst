@@ -53,7 +53,7 @@ namespace Catalyst.Core.Ledger
 
             do
             {
-                if (!DeltaCache.GetOrAddConfirmedDelta(thisHash, out var retrievedDelta, cancellationToken))
+                if (!DeltaCache.TryGetOrAddConfirmedDelta(thisHash, out var retrievedDelta, cancellationToken))
                 {
                     yield break;
                 }

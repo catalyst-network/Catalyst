@@ -69,7 +69,7 @@ namespace Catalyst.Core.UnitTests.Consensus.Deltas
                     return true;
                 });
 
-            var found = _deltaCache.GetOrAddConfirmedDelta(deltaHash, out var delta);
+            var found = _deltaCache.TryGetOrAddConfirmedDelta(deltaHash, out var delta);
 
             delta.Should().Be(deltaFromCache);
             found.Should().BeTrue();
@@ -89,7 +89,7 @@ namespace Catalyst.Core.UnitTests.Consensus.Deltas
             var cacheEntry = Substitute.For<ICacheEntry>();
             _memoryCache.CreateEntry(hash).Returns(cacheEntry);
 
-            var found = _deltaCache.GetOrAddConfirmedDelta(hash, out var delta);
+            var found = _deltaCache.TryGetOrAddConfirmedDelta(hash, out var delta);
 
             delta.Should().Be(deltaFromDfs);
             found.Should().BeTrue();
@@ -113,7 +113,7 @@ namespace Catalyst.Core.UnitTests.Consensus.Deltas
 
             _memoryCache.CreateEntry(hash).Returns(cacheEntry);
 
-            _deltaCache.GetOrAddConfirmedDelta(hash, out _);
+            _deltaCache.TryGetOrAddConfirmedDelta(hash, out _);
 
             _memoryCache.Received(1).CreateEntry(hash);
             cacheEntry.Value.Should().Be(deltaFromDfs);
