@@ -7,5 +7,6 @@
   <Import Project="../Common.UnitTests.props" />
   <ItemGroup>
     <ProjectReference Include="..\Catalyst.Protocol\Catalyst.Protocol.csproj" />
+    <ProjectReference Include="..\Catalyst.TestUtils\Catalyst.TestUtils.csproj" />
   </ItemGroup>
 </Project>
