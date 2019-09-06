@@ -38,6 +38,7 @@ using Catalyst.Protocol.Transaction;
 using Dawn;
 using Google.Protobuf;
 using Multiformats.Hash;
+using Nethermind.Dirichlet.Numerics;
 using Serilog;
 
 namespace Catalyst.Core.Ledger
@@ -156,7 +157,7 @@ namespace Catalyst.Core.Ledger
             var account = Accounts.Get(pubKey.Bytes.AsBase32Address());
 
             //todo: a different logic for to and from entries
-            account.Balance = account.Balance + new BigDecimal(new BigInteger(entry.Amount), 0);
+            account.Balance += entry.Amount;
         }
 
         public Multihash LatestKnownDelta { get; private set; }
