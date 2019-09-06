@@ -37,12 +37,12 @@ namespace Catalyst.Core.Dfs
                 c.Resolve<IPasswordManager>(),
                 c.Resolve<IFileSystem>(),
                 c.Resolve<ILogger>()
-                )).As<IIpfsAdapter>();
+                )).As<IIpfsAdapter>().SingleInstance();
             
             builder.Register(c => new Dfs(c.Resolve<IIpfsAdapter>(),
                     c.Resolve<ILogger>()
                 ))
-               .As<IDfs>();
+               .As<IDfs>().SingleInstance();
         }  
     }
 }
