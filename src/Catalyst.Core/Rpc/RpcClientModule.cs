@@ -21,29 +21,30 @@
 
 #endregion
 
-using System.Collections.Generic;
+using System.Reactive.Concurrency;
 using Autofac;
-using Catalyst.Abstractions.Cryptography;
-using Catalyst.Abstractions.IO.EventLoop;
-using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.IO.Transport.Channels;
-using Catalyst.Abstractions.Rpc;
-using Serilog;
+using Catalyst.Abstractions.KeySigner;
+using Catalyst.Abstractions.Keystore;
+using Catalyst.Abstractions.P2P;
+using Catalyst.Abstractions.Rpc.IO.Messaging.Correlation;
+using Catalyst.Core.Rpc.IO.Transport.Channels;
 
 namespace Catalyst.Core.Rpc
 {
-    public class RpcModule : Module
+    public class RpcClientModule : Module
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.Register(c => new RpcServer(c.Resolve<IRpcServerSettings>(),
-                    c.Resolve<ILogger>(),
-                    c.Resolve<ITcpServerChannelFactory>(),
-                    c.Resolve<ICertificateStore>(),
-                    c.Resolve<IEnumerable<IRpcRequestObserver>>(),
-                    c.Resolve<ITcpServerEventLoopGroupFactory>()
+            builder.Register(c => new RpcClientChannelFactory(
+                    c.Resolve<IKeySigner>(),
+                    c.Resolve<IRpcMessageCorrelationManager>(),
+                    c.Resolve<IPeerIdValidator>(),
+                    c.Resolve<ISigningContextProvider>(),
+                    100,
+                    c.ResolveOptional<IScheduler>()
                 ))
-               .As<IRpcServer>().SingleInstance();
-        }  
+                .As<ITcpClientChannelFactory>();
+        }
     }
 }

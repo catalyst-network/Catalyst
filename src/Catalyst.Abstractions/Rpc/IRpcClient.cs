@@ -27,7 +27,7 @@ using Google.Protobuf;
 
 namespace Catalyst.Abstractions.Rpc
 {
-    public interface INodeRpcClient : ISocketClient
+    public interface IRpcClient : ISocketClient
     {
         IDisposable SubscribeToResponse<T>(Action<T> onNext) where T : IMessage<T>;
     }

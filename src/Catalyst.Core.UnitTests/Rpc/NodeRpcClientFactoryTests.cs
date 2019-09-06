@@ -57,7 +57,7 @@ namespace Catalyst.Core.UnitTests.Rpc
             nodeRpcConfig.Port = 9000;
             var rpcClient = await _rpcClientFactory.GetClient(null, nodeRpcConfig);
 
-            rpcClient.Should().BeAssignableTo<INodeRpcClient>();
+            rpcClient.Should().BeAssignableTo<IRpcClient>();
         }
     }
 }

@@ -141,8 +141,8 @@ namespace Catalyst.Core.UnitTests.IO.Transport
         [Fact]
         public void Can_init_rcp_client_registry()
         {
-            var socketRegistry = new SocketClientRegistry<INodeRpcClient>();
-            Assert.Equal(socketRegistry.GetRegistryType(), typeof(INodeRpcClient).Name);
+            var socketRegistry = new SocketClientRegistry<IRpcClient>();
+            Assert.Equal(socketRegistry.GetRegistryType(), typeof(IRpcClient).Name);
         }
 
         [Fact]

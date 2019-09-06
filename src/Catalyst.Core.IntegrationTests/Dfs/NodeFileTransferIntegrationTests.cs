@@ -123,7 +123,7 @@ namespace Catalyst.Core.IntegrationTests.Dfs
 
         private async Task AddFileToDfs(long byteSize)
         {
-            var fakeNode = Substitute.For<INodeRpcClient>();
+            var fakeNode = Substitute.For<IRpcClient>();
             var sender = PeerIdHelper.GetPeerId("sender");
             var recipient = PeerIdHelper.GetPeerId("recipient");
             var senderPeerId = new PeerIdentifier(sender);

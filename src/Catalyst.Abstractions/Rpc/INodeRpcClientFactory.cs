@@ -28,6 +28,6 @@ namespace Catalyst.Abstractions.Rpc
 {
     public interface INodeRpcClientFactory
     {
-        Task<INodeRpcClient> GetClient(X509Certificate2 certificate, IRpcNodeConfig nodeConfig);
+        Task<IRpcClient> GetClient(X509Certificate2 certificate, IRpcNodeConfig nodeConfig);
     }
 }

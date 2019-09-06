@@ -48,7 +48,7 @@ namespace Catalyst.Core.Rpc
     ///     This class provides a command line interface (CLI) application to connect to Catalyst Node.
     ///     Through the CLI the node operator will be able to connect to any number of running nodes and run commands.
     /// </summary>
-    public sealed class RpcClient : TcpClient, INodeRpcClient
+    public sealed class RpcClient : TcpClient, IRpcClient
     {
         private readonly ITcpClientChannelFactory _channelFactory;
         private readonly IEnumerable<IRpcResponseObserver> _rpcResponseObservers;

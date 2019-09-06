@@ -46,7 +46,7 @@ namespace Catalyst.Core.Rpc
             _handlers = handlers;
         }
 
-        public async Task<INodeRpcClient> GetClient(X509Certificate2 certificate, IRpcNodeConfig nodeConfig)
+        public async Task<IRpcClient> GetClient(X509Certificate2 certificate, IRpcNodeConfig nodeConfig)
         {
             var nodeRpcClient = new RpcClient(_channelFactory, certificate, nodeConfig, _handlers, _clientEventLoopGroupFactory);
 
