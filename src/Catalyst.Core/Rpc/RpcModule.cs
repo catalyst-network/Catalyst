@@ -43,7 +43,7 @@ namespace Catalyst.Core.Rpc
                     c.Resolve<IEnumerable<IRpcRequestObserver>>(),
                     c.Resolve<ITcpServerEventLoopGroupFactory>()
                 ))
-               .As<IRpcServer>();
+               .As<IRpcServer>().SingleInstance();
         }  
     }
 }
