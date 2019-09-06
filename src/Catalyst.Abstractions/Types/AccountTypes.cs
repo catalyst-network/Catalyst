@@ -29,24 +29,18 @@ namespace Catalyst.Abstractions.Types
         : Enumeration
     {
         public static readonly AccountTypes Confidential = new ConfidentialAccount();
-        public static readonly AccountTypes NonConfidential = new NonConfidentialAccount();
-        public static readonly AccountTypes Contract = new SmartContractAccount();
+        public static readonly AccountTypes Public = new PublicAccount();
 
         private AccountTypes(int id, string name) : base(id, name) { }
 
         private sealed class ConfidentialAccount : AccountTypes
         {
-            public ConfidentialAccount() : base(1, "ConfidentialAccounts") { }
+            public ConfidentialAccount() : base(1, "ConfidentialAccount") { }
         }
 
-        private sealed class NonConfidentialAccount : AccountTypes
+        private sealed class PublicAccount : AccountTypes
         {
-            public NonConfidentialAccount() : base(2, "NonConfidentialAccount") { }
-        }
-        
-        private sealed class SmartContractAccount : AccountTypes
-        {
-            public SmartContractAccount() : base(3, "SmartContractAccount") { }
+            public PublicAccount() : base(2, "PublicAccount") { }
         }
     }
 }

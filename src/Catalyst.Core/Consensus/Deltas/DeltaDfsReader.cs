@@ -51,7 +51,16 @@ namespace Catalyst.Core.Consensus.Deltas
             {
                 using (var responseStream = _dfs.ReadAsync(hash, cancellationToken).GetAwaiter().GetResult())
                 {
-                    delta = Delta.Parser.ParseFrom(responseStream);
+                    var uncheckedDelta = Delta.Parser.ParseFrom(responseStream);
+                    var isValid = uncheckedDelta.IsValid();
+                    if (!isValid)
+                    {
+                        _logger.Warning("Retrieved an invalid delta from the Dfs at address {hash}");
+                        delta = default;
+                        return false;
+                    }
+
+                    delta = uncheckedDelta;
                     return true;
                 }
             }

@@ -31,17 +31,10 @@ namespace Catalyst.TestUtils
     public static class AccountHelper
     {
         public static Account GetAccount(BigDecimal balance,
-            uint coinType = 0,
-            string accountType = "NonConfidentialAccount",
+            AccountTypes accountType = default,
             string publicAddress = "0x32Be343B94f860124dC4fEe278FDCBD38C102D88")
         {
-            var account = new Account
-            {
-                CoinType = coinType,
-                AccountType = Enumeration.Parse<AccountTypes>(accountType),
-                PublicAddress = publicAddress,
-                Balance = balance
-            };
+            var account = new Account(publicAddress, accountType ?? AccountTypes.Public, balance);
             return account;
         }
     }
