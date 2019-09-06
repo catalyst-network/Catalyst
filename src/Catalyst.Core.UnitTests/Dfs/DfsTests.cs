@@ -26,6 +26,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Catalyst.Common.Extensions;
 using Catalyst.Core.Config;
 using Catalyst.Core.Extensions;
 using Catalyst.Core.IO.Messaging.Correlation;

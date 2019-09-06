@@ -28,6 +28,7 @@ using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.Rpc.Authentication;
 using Catalyst.Abstractions.Rpc.IO.Messaging.Correlation;
+using Catalyst.Common.Utils;
 using Catalyst.Core.Extensions;
 using Catalyst.Core.IO.Handlers;
 using Catalyst.Core.IO.Messaging.Correlation;

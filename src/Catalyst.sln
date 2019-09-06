@@ -37,19 +37,19 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Core.IntegrationTe
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "nethermind", "nethermind", "{6074E807-FBBC-41D0-9205-C7B79513D683}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nethermind.Evm", "..\submodules\nethermind\src\Nethermind\Nethermind.Evm\Nethermind.Evm.csproj", "{ACD92B72-7D6C-4E61-A72F-3F86B1D81486}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nethermind.Evm", "..\submodules\nethermind\src\Nethermind\Nethermind.Evm\Nethermind.Evm.csproj", "{ACD92B72-7D6C-4E61-A72F-3F86B1D81486}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nethermind.Core", "..\submodules\nethermind\src\Nethermind\Nethermind.Core\Nethermind.Core.csproj", "{A1B92EBC-D4FF-4E5A-BAE4-6DD8AABAA3C0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nethermind.Core", "..\submodules\nethermind\src\Nethermind\Nethermind.Core\Nethermind.Core.csproj", "{A1B92EBC-D4FF-4E5A-BAE4-6DD8AABAA3C0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nethermind.Secp256k1", "..\submodules\nethermind\src\Nethermind\Nethermind.Secp256k1\Nethermind.Secp256k1.csproj", "{CEC977D9-D46F-4523-9941-99BCF6B93EFE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nethermind.Secp256k1", "..\submodules\nethermind\src\Nethermind\Nethermind.Secp256k1\Nethermind.Secp256k1.csproj", "{CEC977D9-D46F-4523-9941-99BCF6B93EFE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nethermind.Dirichlet.Numerics", "..\submodules\nethermind\src\Dirichlet\Nethermind.Dirichlet.Numerics\Nethermind.Dirichlet.Numerics.csproj", "{AF1AAF8E-77C9-4B86-9093-D54338E5FE5B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nethermind.Dirichlet.Numerics", "..\submodules\nethermind\src\Dirichlet\Nethermind.Dirichlet.Numerics\Nethermind.Dirichlet.Numerics.csproj", "{AF1AAF8E-77C9-4B86-9093-D54338E5FE5B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nethermind.HashLib", "..\submodules\nethermind\src\Nethermind\Nethermind.HashLib\Nethermind.HashLib.csproj", "{9EED8D3C-F0EC-4D07-9021-5B1D8D7F11C2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nethermind.HashLib", "..\submodules\nethermind\src\Nethermind\Nethermind.HashLib\Nethermind.HashLib.csproj", "{9EED8D3C-F0EC-4D07-9021-5B1D8D7F11C2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nethermind.Logging", "..\submodules\nethermind\src\Nethermind\Nethermind.Logging\Nethermind.Logging.csproj", "{A3386257-A47B-407B-AB5A-A2CBAF2CEDF9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nethermind.Logging", "..\submodules\nethermind\src\Nethermind\Nethermind.Logging\Nethermind.Logging.csproj", "{A3386257-A47B-407B-AB5A-A2CBAF2CEDF9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nethermind.Store", "..\submodules\nethermind\src\Nethermind\Nethermind.Store\Nethermind.Store.csproj", "{F5BA5ECB-3C48-4379-9204-5BA30705D801}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nethermind.Store", "..\submodules\nethermind\src\Nethermind\Nethermind.Store\Nethermind.Store.csproj", "{F5BA5ECB-3C48-4379-9204-5BA30705D801}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Kvm", "Catalyst.Kvm\Catalyst.Kvm.csproj", "{6A2D2F12-3E0F-4784-A688-56DBB50AB955}"
 EndProject
@@ -60,6 +60,10 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Protocol", "Catalyst.Protocol\Catalyst.Protocol.csproj", "{E8534E32-59C1-4231-98AF-E2AD114F991A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Protocol.UnitTests", "Catalyst.Protocol.UnitTests\Catalyst.Protocol.UnitTests.csproj", "{A21B2A16-122E-4E72-AA74-B4FE37FC9F9E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Common", "Catalyst.Common\Catalyst.Common.csproj", "{8327FED8-4237-44AF-85F6-0B4772FDAAA5}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Common.UnitTests", "Catalyst.Common.UnitTests\Catalyst.Common.UnitTests.csproj", "{16DA760A-6364-4FD7-8AB9-89E0613266AD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -139,6 +143,14 @@ Global
 		{A21B2A16-122E-4E72-AA74-B4FE37FC9F9E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A21B2A16-122E-4E72-AA74-B4FE37FC9F9E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A21B2A16-122E-4E72-AA74-B4FE37FC9F9E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8327FED8-4237-44AF-85F6-0B4772FDAAA5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8327FED8-4237-44AF-85F6-0B4772FDAAA5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8327FED8-4237-44AF-85F6-0B4772FDAAA5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8327FED8-4237-44AF-85F6-0B4772FDAAA5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{16DA760A-6364-4FD7-8AB9-89E0613266AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{16DA760A-6364-4FD7-8AB9-89E0613266AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{16DA760A-6364-4FD7-8AB9-89E0613266AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{16DA760A-6364-4FD7-8AB9-89E0613266AD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
