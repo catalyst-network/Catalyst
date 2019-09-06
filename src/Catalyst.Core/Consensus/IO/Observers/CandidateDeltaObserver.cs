@@ -25,37 +25,42 @@ using System;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.IO.Observers;
+using Catalyst.Core.Extensions;
 using Catalyst.Core.IO.Observers;
 using Catalyst.Protocol;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Deltas;
-using Multiformats.Hash;
 using Serilog;
 
-namespace Catalyst.Core.P2P.IO.Observers
+namespace Catalyst.Core.Consensus.IO.Observers
 {
-    public class DeltaDfsHashObserver : BroadcastObserverBase<DeltaDfsHashBroadcast>, IP2PMessageObserver
+    public class CandidateDeltaObserver : BroadcastObserverBase<CandidateDeltaBroadcast>, IP2PMessageObserver
     {
-        private readonly IDeltaHashProvider _deltaHashProvider;
+        private readonly IDeltaVoter _deltaVoter;
 
-        public DeltaDfsHashObserver(IDeltaHashProvider deltaHashProvider, ILogger logger) 
+        public CandidateDeltaObserver(IDeltaVoter deltaVoter, ILogger logger) 
             : base(logger)
         {
-            _deltaHashProvider = deltaHashProvider;
+            _deltaVoter = deltaVoter;
         }
 
         public override void HandleBroadcast(IObserverDto<ProtocolMessage> messageDto)
         {
             try
             {
-                var deserialised = messageDto.Payload.FromProtocolMessage<DeltaDfsHashBroadcast>();
-                var previousHash = Multihash.Cast(deserialised.PreviousDeltaDfsHash.ToByteArray());
-                var newHash = Multihash.Cast(deserialised.DeltaDfsHash.ToByteArray());
-                _deltaHashProvider.TryUpdateLatestHash(previousHash, newHash);
+                Logger.Verbose("received {message} from {port}", messageDto.Payload.CorrelationId.ToCorrelationId(), 
+                    BitConverter.ToInt16(messageDto.Payload.PeerId.Port.ToByteArray()));
+                var deserialised = messageDto.Payload.FromProtocolMessage<CandidateDeltaBroadcast>();
+
+                _ = deserialised.PreviousDeltaDfsHash.ToByteArray().AsMultihash();
+                _ = deserialised.Hash.ToByteArray().AsMultihash();
+                deserialised.IsValid();
+                
+                _deltaVoter.OnNext(deserialised);
             }
             catch (Exception exception)
             {
-                Logger.Error(exception, "Failed to update latest delta hash from incoming broadcast message.");
+                Logger.Error(exception, $"Failed to process candidate delta broadcast {messageDto.Payload.ToJsonString()}.");
             }
         }
     }
