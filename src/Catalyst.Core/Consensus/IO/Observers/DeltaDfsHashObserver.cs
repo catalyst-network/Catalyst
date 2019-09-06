@@ -25,40 +25,37 @@ using System;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.IO.Observers;
-using Catalyst.Core.Extensions;
 using Catalyst.Core.IO.Observers;
 using Catalyst.Protocol;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Deltas;
+using Multiformats.Hash;
 using Serilog;
 
-namespace Catalyst.Core.P2P.IO.Observers
+namespace Catalyst.Core.Consensus.IO.Observers
 {
-    public class FavouriteDeltaObserver : BroadcastObserverBase<FavouriteDeltaBroadcast>, IP2PMessageObserver
+    public class DeltaDfsHashObserver : BroadcastObserverBase<DeltaDfsHashBroadcast>, IP2PMessageObserver
     {
-        private readonly IDeltaElector _deltaElector;
+        private readonly IDeltaHashProvider _deltaHashProvider;
 
-        public FavouriteDeltaObserver(IDeltaElector deltaElector, ILogger logger) 
+        public DeltaDfsHashObserver(IDeltaHashProvider deltaHashProvider, ILogger logger) 
             : base(logger)
         {
-            _deltaElector = deltaElector;
+            _deltaHashProvider = deltaHashProvider;
         }
 
         public override void HandleBroadcast(IObserverDto<ProtocolMessage> messageDto)
         {
             try
             {
-                var deserialised = messageDto.Payload.FromProtocolMessage<FavouriteDeltaBroadcast>();
-
-                _ = deserialised.Candidate.PreviousDeltaDfsHash.ToByteArray().AsMultihash();
-                _ = deserialised.Candidate.Hash.ToByteArray().AsMultihash();
-                deserialised.IsValid();
-                
-                _deltaElector.OnNext(deserialised);
+                var deserialised = messageDto.Payload.FromProtocolMessage<DeltaDfsHashBroadcast>();
+                var previousHash = Multihash.Cast(deserialised.PreviousDeltaDfsHash.ToByteArray());
+                var newHash = Multihash.Cast(deserialised.DeltaDfsHash.ToByteArray());
+                _deltaHashProvider.TryUpdateLatestHash(previousHash, newHash);
             }
             catch (Exception exception)
             {
-                Logger.Error(exception, $"Failed to process favourite delta broadcast {messageDto.Payload.ToJsonString()}.");
+                Logger.Error(exception, "Failed to update latest delta hash from incoming broadcast message.");
             }
         }
     }
