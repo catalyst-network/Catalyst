@@ -52,7 +52,7 @@ namespace Catalyst.Protocol.UnitTests.Shared
         {
             var wrongNetwork = (byte) 255;
             var isSmartContract = (byte) 1;
-            var fullAddress = new [] {wrongNetwork, isSmartContract}.Concat(_noPrefixBytes).ToArray();
+            var fullAddress = new[] {wrongNetwork, isSmartContract}.Concat(_noPrefixBytes).ToArray();
 
             new Action(() => new Address(fullAddress)).Should().Throw<ArgumentException>();
         }
@@ -60,9 +60,12 @@ namespace Catalyst.Protocol.UnitTests.Shared
         [Fact]
         public void Address_Constructor_From_Raw_Bytes_Should_Throw_On_Bad_SmartContract_Byte()
         {
-            var network = (byte)1;
-            var isSmartContract = (byte)8;
-            var fullAddress = new [] { network, isSmartContract }.Concat(_noPrefixBytes).ToArray();
+            var network = (byte) 1;
+            var isSmartContract = (byte) 8;
+            var fullAddress = new[]
+            {
+                network, isSmartContract
+            }.Concat(_noPrefixBytes).ToArray();
 
             new Action(() => new Address(fullAddress)).Should().Throw<ArgumentException>();
         }
@@ -70,23 +73,28 @@ namespace Catalyst.Protocol.UnitTests.Shared
         [Fact]
         public void Address_Constructor_From_Raw_Bytes_Should_Throw_On_Bad_Byte_Length()
         {
-            var network = (byte)1;
-            var isSmartContract = (byte)8;
-            var fullAddress = new[] { network, isSmartContract, (byte)123 }.Concat(_noPrefixBytes).ToArray();
+            var network = (byte) 1;
+            var isSmartContract = (byte) 8;
+            var fullAddress = new[]
+            {
+                network, isSmartContract, (byte) 123
+            }.Concat(_noPrefixBytes).ToArray();
 
             fullAddress.Length.Should()
-                .BeGreaterThan(Address.ByteLength, "otherwise the test is not useful");
+               .BeGreaterThan(Address.ByteLength, "otherwise the test is not useful");
 
             new Action(() => new Address(fullAddress)).Should().Throw<ArgumentException>();
         }
-
-
+        
         [Fact]
         public void Address_Constructor_From_Raw_Bytes_Should_Work_On_Correct_Bytes()
         {
-            var network = (byte)(int)Network.Devnet;
-            var isSmartContract = (byte)1;
-            var fullAddress = new[] { network, isSmartContract }.Concat(_noPrefixBytes).ToArray();
+            var network = (byte) (int) Network.Devnet;
+            var isSmartContract = (byte) 1;
+            var fullAddress = new[]
+            {
+                network, isSmartContract
+            }.Concat(_noPrefixBytes).ToArray();
 
             var address = new Address(fullAddress);
             address.Network.Should().Be(Network.Devnet);

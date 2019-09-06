@@ -113,7 +113,8 @@ namespace Catalyst.Core.Kernel
             }
             
             ContainerBuilder.RegisterModule(configurationModule);
-//            ContainerBuilder.RegisterModule(new P2PModule());
+
+            //ContainerBuilder.RegisterModule(new P2PModule());
 
             Logger = new LoggerConfiguration()
                .ReadFrom

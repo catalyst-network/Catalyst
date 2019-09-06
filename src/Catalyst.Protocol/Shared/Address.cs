@@ -21,7 +21,6 @@
 
 #endregion
 
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -58,14 +57,14 @@ namespace Catalyst.Protocol.Shared
         public Address(IList<byte> rawBytes)
         {
             Guard.Argument(rawBytes, nameof(rawBytes)).NotNull()
-                .Require(b => b.Count == ByteLength,
+               .Require(b => b.Count == ByteLength,
                     b => $"{nameof(rawBytes)} is {rawBytes.Count} long but should be {ByteLength} instead.")
-                .Require(b => Enum.IsDefined(typeof(Network), (int)b[0]),
+               .Require(b => Enum.IsDefined(typeof(Network), (int) b[0]),
                     b => $"Invalid byte at position 0, byte does not map to a known Network.")
-                .Require(b => b[1] == 0 || b[1] == 1,
+               .Require(b => b[1] == 0 || b[1] == 1,
                     b => $"Invalid byte at position 1, byte should be either 0 or 1 but was {b[1]}.");
 
-            Network = (Network)rawBytes[0];
+            Network = (Network) rawBytes[0];
 
             IsSmartContract = rawBytes[1] == 1;
             _nonPrefixedContent = rawBytes.TakeLast(ByteLength - 2).ToArray();
@@ -78,13 +77,14 @@ namespace Catalyst.Protocol.Shared
         public bool IsSmartContract { get; }
 
         /// <inheritdoc />
-        public byte[] RawBytes => _rawBytes ?? (_rawBytes = new[]
-            {
-                (byte) Network,
-                (byte) (IsSmartContract ? 1 : 0),
-            }
-            .Concat(_nonPrefixedContent)
-            .ToArray());
+        public byte[] RawBytes =>
+            _rawBytes ?? (_rawBytes = new[]
+                {
+                    (byte) Network,
+                    (byte) (IsSmartContract ? 1 : 0),
+                }
+               .Concat(_nonPrefixedContent)
+               .ToArray());
 
         /// <inheritdoc />
         public string AsBase32Crockford => Encoding.UTF8.GetString(RawBytes.Take(20).ToArray());
