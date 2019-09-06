@@ -40,6 +40,7 @@ using Catalyst.Core.P2P.IO.Messaging.Dto;
 using Catalyst.Core.P2P.IO.Observers;
 using Catalyst.Core.UnitTests.P2P.Discovery;
 using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Extensions;
 using Catalyst.Protocol.IPPN;
 using Catalyst.TestUtils;
 using FluentAssertions;

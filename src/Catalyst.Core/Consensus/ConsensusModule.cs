@@ -59,7 +59,7 @@ namespace Catalyst.Core.Consensus
             )).As<ICycleEventsProvider>();
             
             builder.Register(c => new DeltaCacheChangeTokenProvider(600000))
-                .As<IDeltaCacheChangeTokenProvider>();
+               .As<IDeltaCacheChangeTokenProvider>();
             
             builder.Register(c => new FavouriteDeltaObserver(
                 c.Resolve<IDeltaElector>(),
@@ -72,29 +72,32 @@ namespace Catalyst.Core.Consensus
             )).As<IP2PMessageObserver>();
             
             builder.Register(c => new CandidateDeltaObserver(
-                    c.Resolve<IDeltaVoter>(),
-                    c.Resolve<ILogger>()
-                )).As<IP2PMessageObserver>();
-            
+                c.Resolve<IDeltaVoter>(),
+                c.Resolve<ILogger>()
+            )).As<IP2PMessageObserver>();
+
+            builder.Register(c => new DeltaProducersProvider())
+               .As<IDeltaProducersProvider>();
+
             builder.Register(c => new DeltaDfsReader(
                     c.Resolve<IDfs>(),
                     c.Resolve<ILogger>()
                 ))
-                .As<IDeltaDfsReader>().SingleInstance();
+               .As<IDeltaDfsReader>().SingleInstance();
 
             builder.Register(c => new DeltaElector(
                     c.Resolve<IMemoryCache>(),
                     c.Resolve<IDeltaProducersProvider>(),
                     c.Resolve<ILogger>()
                 ))
-                .As<IDeltaElector>().SingleInstance();
+               .As<IDeltaElector>().SingleInstance();
             
             builder.Register(c => new DeltaHashProvider(
                     c.Resolve<IDeltaCache>(),
                     c.Resolve<ILogger>(),
                     10_000
                 ))
-                .As<IDeltaHashProvider>().SingleInstance();
+               .As<IDeltaHashProvider>().SingleInstance();
             
             builder.Register(c => new DeltaCache(
                     c.Resolve<IMemoryCache>(),
@@ -102,7 +105,7 @@ namespace Catalyst.Core.Consensus
                     c.Resolve<IDeltaCacheChangeTokenProvider>(),
                     c.Resolve<ILogger>()
                 ))
-                .As<IDeltaCache>().SingleInstance();
+               .As<IDeltaCache>().SingleInstance();
             
             builder.Register(c => new DeltaVoter(
                     c.Resolve<IMemoryCache>(),
@@ -110,18 +113,18 @@ namespace Catalyst.Core.Consensus
                     c.Resolve<IPeerIdentifier>(),
                     c.Resolve<ILogger>()
                 ))
-                .As<IDeltaVoter>().SingleInstance();
+               .As<IDeltaVoter>().SingleInstance();
             
             builder.Register(c => new DeltaVoter(
                     c.Resolve<IMemoryCache>(),
                     c.Resolve<IDeltaProducersProvider>(),
                     c.Resolve<IPeerIdentifier>(),
                     c.Resolve<ILogger>()
-                    ))
-                .As<IDeltaVoter>().SingleInstance();
+                ))
+               .As<IDeltaVoter>().SingleInstance();
             
             builder.Register(c => new TransactionComparerByFeeTimestampAndHash())
-                .As<ITransactionComparer>();
+               .As<ITransactionComparer>();
             
             builder.Register(c => new DeltaHub(
                     c.Resolve<IBroadcastManager>(),
@@ -129,13 +132,13 @@ namespace Catalyst.Core.Consensus
                     c.Resolve<IDfs>(),
                     c.Resolve<ILogger>()
                 ))
-                .As<IDeltaHub>().SingleInstance();
+               .As<IDeltaHub>().SingleInstance();
             
             builder.Register(c => new DeltaTransactionRetriever(
                     c.Resolve<IMempool<MempoolDocument>>(),
                     c.Resolve<ITransactionComparer>()
-                    ))
-                .As<IDeltaTransactionRetriever>().SingleInstance();
+                ))
+               .As<IDeltaTransactionRetriever>().SingleInstance();
             
             builder.Register(c => new DeltaBuilder(
                     c.Resolve<IDeltaTransactionRetriever>(),
@@ -146,10 +149,10 @@ namespace Catalyst.Core.Consensus
                     c.Resolve<IDateTimeProvider>(),
                     c.Resolve<ILogger>()
                 ))
-                .As<IDeltaBuilder>().SingleInstance();
+               .As<IDeltaBuilder>().SingleInstance();
 
             builder.Register(c => new CycleSchedulerProvider())
-                .As<ICycleSchedulerProvider>();
+               .As<ICycleSchedulerProvider>();
             
             builder.Register(c => new CycleEventsProvider(
                 c.Resolve<ICycleConfiguration>(),
@@ -162,12 +165,12 @@ namespace Catalyst.Core.Consensus
             builder.Register(c => new Consensus(
                 c.Resolve<IDeltaBuilder>(),
                 c.Resolve<IDeltaVoter>(),
-            c.Resolve<IDeltaElector>(),
-            c.Resolve<IDeltaCache>(),
-            c.Resolve<IDeltaHub>(),
-            c.Resolve<ICycleEventsProvider>(),
-            c.Resolve<IDeltaHashProvider>(),
-            c.Resolve<ILogger>()
+                c.Resolve<IDeltaElector>(),
+                c.Resolve<IDeltaCache>(),
+                c.Resolve<IDeltaHub>(),
+                c.Resolve<ICycleEventsProvider>(),
+                c.Resolve<IDeltaHashProvider>(),
+                c.Resolve<ILogger>()
             )).As<IConsensus>().SingleInstance();
             
             base.Load(builder);
