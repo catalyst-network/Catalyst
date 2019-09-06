@@ -51,29 +51,15 @@ namespace Catalyst.Core.Mempool
             _logger = logger;
         }
 
-        /// <inheritdoc />
         private IEnumerable<TransactionBroadcast> GetMemPoolContent()
         {
             var memPoolContent = Repository.GetAll();
             return memPoolContent;
         }
 
-        /// <inheritdoc />
         public bool ContainsDocument(ByteString signature)
         {
             return Repository.TryGet(signature.ToBase64(), out _);
-        }
-
-        /// <inheritdoc />
-        public List<TransactionBroadcast> GetMemPoolContentAsTransactions()
-        {
-            var memPoolContent = GetMemPoolContent();
-
-            var encodedTxs = memPoolContent
-               .Select(tx => tx)
-               .ToList();
-
-            return encodedTxs;
         }
 
         /// <inheritdoc />
@@ -82,8 +68,7 @@ namespace Catalyst.Core.Mempool
             var found = Repository.Get(signature.ToBase64());
             return found;
         }
-
-        /// <inheritdoc />
+        
         public void Delete(params string[] transactionSignatures)
         {
             try
@@ -97,7 +82,6 @@ namespace Catalyst.Core.Mempool
             }
         }
 
-        /// <inheritdoc />
         public bool SaveMempoolDocument(IMempoolDocument mempoolDocument)
         {
             Guard.Argument(mempoolDocument, nameof(mempoolDocument)).NotNull();
