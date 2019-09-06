@@ -26,7 +26,6 @@ using System.Linq;
 using Catalyst.Abstractions.Consensus;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Mempool;
-using Catalyst.Abstractions.Mempool.Models;
 using Catalyst.Core.Mempool.Documents;
 using Catalyst.Protocol.Transaction;
 using Dawn;

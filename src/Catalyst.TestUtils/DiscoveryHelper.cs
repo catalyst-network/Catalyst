@@ -49,7 +49,6 @@ using Nethereum.Hex.HexConvertors.Extensions;
 using NSubstitute;
 using Serilog;
 using SharpRepository.InMemoryRepository;
-using SharpRepository.Repository;
 
 namespace Catalyst.TestUtils
 {

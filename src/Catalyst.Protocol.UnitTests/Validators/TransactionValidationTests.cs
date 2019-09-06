@@ -269,6 +269,5 @@ namespace Catalyst.Protocol.UnitTests.Validators
                 }.ToByteArray()).SignatureBytes;
             _transactionBroadcast.Signature = ByteString.CopyFrom(signatureBytes);
         }
-
     }
 }

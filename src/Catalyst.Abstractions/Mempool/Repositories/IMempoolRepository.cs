@@ -34,8 +34,7 @@ namespace Catalyst.Abstractions.Mempool.Repositories
         bool TryReadItem(ByteString signature);
 
         T ReadItem(ByteString signature);
-
-        /// <inheritdoc />
+        
         bool DeleteItem(params string[] transactionSignatures);
 
         bool CreateItem(TransactionBroadcast transactionBroadcast);

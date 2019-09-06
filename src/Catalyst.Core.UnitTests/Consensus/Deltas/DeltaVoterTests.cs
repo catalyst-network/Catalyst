@@ -32,7 +32,6 @@ using Catalyst.Common.Extensions;
 using Catalyst.Common.Utils;
 using Catalyst.Core.Consensus.Deltas;
 using Catalyst.Core.Extensions;
-using Catalyst.Core.Util;
 using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Extensions;
 using Catalyst.TestUtils;
