@@ -85,7 +85,7 @@ namespace Catalyst.Simulator.Simulations
                 foreach (var clientRpcInfo in clientRpcInfoList)
                 {
                     _userOutput.WriteLine("Sending transaction");
-                    var transaction = TransactionHelper.GenerateTransaction(_random.Next(100), _random.Next(2));
+                    var transaction = TransactionHelper.GenerateTransaction((uint) _random.Next(1, 100), _random.Next(2));
                     clientRpcInfo.RpcClient.SendMessage(transaction);
                 }
 

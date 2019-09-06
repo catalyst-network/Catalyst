@@ -23,7 +23,7 @@
 
 using Catalyst.Abstractions.Repository;
 using Catalyst.Abstractions.Types;
-using Catalyst.Abstractions.Util;
+using Catalyst.Core.Util;
 
 namespace Catalyst.Core.Ledger.Models
 {
@@ -34,41 +34,18 @@ namespace Catalyst.Core.Ledger.Models
     public interface IAccount : IDocument
     {
         /// <summary>
-        /// Gets or sets the public address.
+        /// The address used to identify the account.
         /// </summary>
-        /// <value>
-        /// The public address.
-        /// </value>
-        string PublicAddress { get; set; }
+        string PublicAddress { get; }
 
         /// <summary>
-        /// Gets or sets the type of the coin.
+        /// Type of the account: public or confidential.
         /// </summary>
-        /// <value>
-        /// The type of the coin.
-        /// </value>
-        uint CoinType { get; set; }
+        AccountTypes AccountType { get; }
 
         /// <summary>
-        /// Gets or sets the type of the account.
+        /// The balance of the account.
         /// </summary>
-        /// <value>
-        /// The type of the account.
-        /// </value>
-        AccountTypes AccountType { get; set; }
-
-        /// <summary>
-        /// The balance of an account
-        /// </summary>
-        IBigDecimal Balance { get; set; }
-        
-        /// <summary>
-        /// Gets or sets the state root.
-        /// Encodes the storage contents of the account.
-        /// </summary>
-        /// <value>
-        /// The state root.
-        /// </value>
-        byte[] StateRoot { get; set; }
+        BigDecimal Balance { get; set; }
     }
 }

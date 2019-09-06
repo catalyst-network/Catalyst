@@ -30,12 +30,13 @@ using Serilog;
 
 namespace Catalyst.Core.Ledger
 {
-    public class LedgerModule : Module
+    public class LedgerModule : Module 
     {
         protected override void Load(ContainerBuilder builder)
         {
             builder.Register(c => new Ledger(c.Resolve<IAccountRepository>(),
                     c.Resolve<IDeltaHashProvider>(),
+                    c.Resolve<ILedgerSynchroniser>(),
                     c.Resolve<IMempool<MempoolDocument>>(),
                     c.Resolve<ILogger>()
                 ))

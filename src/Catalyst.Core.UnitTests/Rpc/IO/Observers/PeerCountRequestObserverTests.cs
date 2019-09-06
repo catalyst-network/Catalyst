@@ -24,7 +24,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Core.Extensions;
 using Catalyst.Core.Network;
@@ -80,9 +79,7 @@ namespace Catalyst.Core.UnitTests.Rpc.IO.Observers
         [Theory]
         [InlineData(40)]
         [InlineData(20)]
-#pragma warning disable 1998
-        public async Task TestPeerListRequestResponse(int fakePeers)
-#pragma warning restore 1998
+        public void TestPeerListRequestResponse(int fakePeers)
         {
             var peerRepository = Substitute.For<IPeerRepository>();
             var peerList = new List<Peer>();

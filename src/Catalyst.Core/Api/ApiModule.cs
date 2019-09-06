@@ -23,6 +23,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Reflection;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
@@ -30,6 +31,7 @@ using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Serilog;
 using Swashbuckle.AspNetCore.Swagger;
 using Module = Autofac.Module;
@@ -79,10 +81,7 @@ namespace Catalyst.Core.Api
 
         public void ConfigureServices(IServiceCollection services, ContainerBuilder containerBuilder)
         {
-            services.AddCors(c =>
-            {
-                c.AddPolicy("AllowOrigin", options => options.AllowAnyOrigin());
-            });
+            services.AddCors(c => { c.AddPolicy("AllowOrigin", options => options.AllowAnyOrigin()); });
 
             var mvcBuilder = services.AddMvc();
 
@@ -106,13 +105,17 @@ namespace Catalyst.Core.Api
 
         public void Configure(IApplicationBuilder app)
         {
+            var webDirectory = Directory.CreateDirectory(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot"));
+
             app.ApplicationServices = new AutofacServiceProvider(_container);
             app.UseDeveloperExceptionPage();
             app.UseCors(options => options.AllowAnyOrigin());
-            app.UseMvc(routes =>
+            app.UseDefaultFiles();
+            app.UseStaticFiles(new StaticFileOptions
             {
-                routes.MapRoute(name: "CatalystApi", template: "api/{controller}/{action}/{id}");
+                FileProvider = new PhysicalFileProvider(webDirectory.FullName)
             });
+            app.UseMvc(routes => { routes.MapRoute("CatalystApi", "api/{controller}/{action}/{id}"); });
 
             if (_addSwagger)
             {

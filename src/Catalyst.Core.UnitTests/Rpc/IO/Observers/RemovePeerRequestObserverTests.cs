@@ -24,7 +24,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Core.Extensions;
 using Catalyst.Core.Network;
@@ -78,7 +77,7 @@ namespace Catalyst.Core.UnitTests.Rpc.IO.Observers
         [Theory]
         [InlineData("FakePeer1", "FakePeer2")]
         [InlineData("FakePeer1002", "FakePeer6000", "FakePeerSataoshi")]
-        public async Task TestRemovePeer(params string[] fakePeers) { await ExecuteTestCase(fakePeers, true); }
+        public void TestRemovePeer(params string[] fakePeers) { ExecuteTestCase(fakePeers, true); }
 
         /// <summary>
         /// Tests peer removal via IP only.
@@ -87,14 +86,12 @@ namespace Catalyst.Core.UnitTests.Rpc.IO.Observers
         [Theory]
         [InlineData("Fake1Peer1", "Fake2Peer2")]
         [InlineData("Fake1Peer1002", "Fake2Peer6000", "FakePeer3Sataoshi")]
-        public async Task TestRemovePeerWithoutPublicKey(params string[] fakePeers) { await ExecuteTestCase(fakePeers, false); }
+        public void TestRemovePeerWithoutPublicKey(params string[] fakePeers) { ExecuteTestCase(fakePeers, false); }
 
         /// <summary>Executes the test case.</summary>
         /// <param name="fakePeers">The fake peers.</param>
         /// <param name="withPublicKey">if set to <c>true</c> [send message to handler with the public key].</param>
-#pragma warning disable 1998
-        private async Task ExecuteTestCase(IReadOnlyCollection<string> fakePeers, bool withPublicKey)
-#pragma warning restore 1998
+        private void ExecuteTestCase(IReadOnlyCollection<string> fakePeers, bool withPublicKey)
         {
             var testScheduler = new TestScheduler();
             IPeerRepository peerRepository = Substitute.For<IPeerRepository>();

@@ -24,6 +24,7 @@
 using System.Linq;
 using Catalyst.Abstractions.Mempool.Models;
 using Catalyst.Abstractions.Mempool.Repositories;
+using Catalyst.Core.Extensions;
 using Catalyst.Core.Util;
 using Google.Protobuf;
 using Microsoft.AspNetCore.Mvc;

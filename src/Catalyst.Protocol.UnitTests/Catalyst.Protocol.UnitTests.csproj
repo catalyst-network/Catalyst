@@ -1,0 +1,11 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>Catalyst.Protocol.UnitTests.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <Import Project="../Common.UnitTests.props" />
+  <ItemGroup>
+    <ProjectReference Include="..\Catalyst.Protocol\Catalyst.Protocol.csproj" />
+  </ItemGroup>
+</Project>

@@ -30,4 +30,8 @@
       <Folder Include="Ledger\Repository" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\Catalyst.Protocol\Catalyst.Protocol.csproj" />
+    </ItemGroup>
+
 </Project>

@@ -1,4 +1,4 @@
-#region LICENSE
+﻿#region LICENSE
 
 /**
 * Copyright (c) 2019 Catalyst Network
@@ -21,7 +21,30 @@
 
 #endregion
 
-namespace Catalyst.Abstractions.Util
+using System.IO;
+
+namespace Catalyst.Protocol.Deltas
 {
-    public interface IBigDecimal { }
+    public sealed partial class CandidateDeltaBroadcast
+    {
+        public bool IsValid()
+        {
+            if (ProducerId == null)
+            {
+                throw new InvalidDataException($"{nameof(ProducerId)} cannot be null");
+            }
+
+            if (PreviousDeltaDfsHash == null || PreviousDeltaDfsHash.IsEmpty)
+            {
+                throw new InvalidDataException($"{nameof(PreviousDeltaDfsHash)} cannot be null or empty");
+            }
+
+            if (Hash == null || Hash.IsEmpty)
+            {
+                throw new InvalidDataException($"{nameof(Hash)} cannot be null or empty");
+            }
+
+            return true;
+        }
+    }
 }

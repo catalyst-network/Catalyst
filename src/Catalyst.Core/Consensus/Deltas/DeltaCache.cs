@@ -75,7 +75,7 @@ namespace Catalyst.Core.Consensus.Deltas
         }
 
         /// <inheritdoc />
-        public bool TryGetConfirmedDelta(string hash, out Delta delta)
+        public bool TryGetOrAddConfirmedDelta(string hash, out Delta delta, CancellationToken cancellationToken = default)
         {
             //this calls for a TryGetOrCreate IMemoryCache extension function
             if (_memoryCache.TryGetValue(hash, out delta))
@@ -83,7 +83,7 @@ namespace Catalyst.Core.Consensus.Deltas
                 return true;
             }
 
-            if (!_dfsReader.TryReadDeltaFromDfs(hash, out delta, CancellationToken.None))
+            if (!_dfsReader.TryReadDeltaFromDfs(hash, out delta, cancellationToken))
             {
                 return false;
             }

@@ -23,7 +23,6 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Catalyst.Abstractions.KeySigner;
 using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.P2P;
@@ -116,9 +115,7 @@ namespace Catalyst.Core.UnitTests.Rpc.IO.Transport.Channels
         }
 
         [Fact]
-#pragma warning disable 1998
-        public async Task NodeRpcServerChannelFactory_should_put_the_correct_inbound_handlers_on_the_pipeline()
-#pragma warning restore 1998
+        public void NodeRpcServerChannelFactory_should_put_the_correct_inbound_handlers_on_the_pipeline()
         {
             var testingChannel = new EmbeddedChannel("test".ToChannelId(),
                 true, _factory.InheritedHandlers.ToArray());
@@ -143,9 +140,7 @@ namespace Catalyst.Core.UnitTests.Rpc.IO.Transport.Channels
         }
 
         [Fact]
-#pragma warning disable 1998
-        public async Task NodeRpcServerChannelFactory_should_put_the_correct_outbound_handlers_on_the_pipeline()
-#pragma warning restore 1998
+        public void NodeRpcServerChannelFactory_should_put_the_correct_outbound_handlers_on_the_pipeline()
         {
             var testingChannel = new EmbeddedChannel("test".ToChannelId(),
                 true, _factory.InheritedHandlers.ToArray());

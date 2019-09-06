@@ -48,7 +48,7 @@ namespace Catalyst.Core.UnitTests.Consensus.Deltas
 
             var mempool = Substitute.For<IMempool<MempoolDocument>>();
             _transactions = Enumerable.Range(0, 20).Select(i => TransactionHelper.GetTransaction(
-                version: (uint) i,
+                transactionType: TransactionType.Normal,
                 transactionFees: (ulong) random.Next(),
                 timeStamp: random.Next(),
                 signature: i.ToString())
@@ -103,12 +103,12 @@ namespace Catalyst.Core.UnitTests.Consensus.Deltas
                .Take(excludedTransactionCount).ToList();
 
             unexpectedTransactions
-               .ForEach(t => retrievedTransactions.Any(r => t.Version == r.Version).Should()
+               .ForEach(t => retrievedTransactions.Any(r => t.Signature == r.Signature).Should()
                    .BeFalse("No unexpected transactions should have been retrieved"));
 
             for (var i = 0; i < maxCount; i++)
             {
-                retrievedTransactions[i].Version.Should().Be(expectedTransactions[i].Version);
+                retrievedTransactions[i].TransactionType.Should().Be(expectedTransactions[i].TransactionType);
                 if (i == 0)
                 {
                     continue;
