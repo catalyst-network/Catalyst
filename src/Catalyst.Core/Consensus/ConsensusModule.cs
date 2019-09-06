@@ -75,7 +75,10 @@ namespace Catalyst.Core.Consensus
                 c.Resolve<IDeltaVoter>(),
                 c.Resolve<ILogger>()
             )).As<IP2PMessageObserver>();
-            
+
+            builder.Register(c => new DeltaProducersProvider())
+               .As<IDeltaProducersProvider>();
+
             builder.Register(c => new DeltaDfsReader(
                     c.Resolve<IDfs>(),
                     c.Resolve<ILogger>()

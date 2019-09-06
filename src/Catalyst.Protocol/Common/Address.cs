@@ -1,4 +1,4 @@
-﻿#region LICENSE
+#region LICENSE
 
 /**
 * Copyright (c) 2019 Catalyst Network
@@ -24,12 +24,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using Catalyst.Common.Extensions;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
-using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Shared;
 using Dawn;
+using Multiformats.Hash.Algorithms;
 
-namespace Catalyst.Protocol.Shared
+namespace Catalyst.Protocol.Common
 {
     //https://github.com/catalyst-network/protobuffs-protocol-sdk-csharp/issues/41
     //move that to the Utils project after Dennis' project gets created.
@@ -44,14 +45,17 @@ namespace Catalyst.Protocol.Shared
 
         public Address(IPublicKey publicKey,
             Network network, 
+            IMultihashAlgorithm hashingAlgorithm, 
             bool isSmartContract)
         {
             Guard.Argument(publicKey, nameof(publicKey)).NotNull();
             Network = network;
             IsSmartContract = isSmartContract;
 
-            // https://github.com/catalyst-network/protobuffs-protocol-sdk-csharp/issues/43
-            _nonPrefixedContent = publicKey.Bytes.TakeLast(ByteLength - 2).ToArray();
+            _nonPrefixedContent = publicKey.Bytes
+               .ComputeRawHash(hashingAlgorithm)
+               .TakeLast(ByteLength - 2)
+               .ToArray();
         }
 
         public Address(IList<byte> rawBytes)
@@ -87,6 +91,6 @@ namespace Catalyst.Protocol.Shared
                .ToArray());
 
         /// <inheritdoc />
-        public string AsBase32Crockford => Encoding.UTF8.GetString(RawBytes.Take(20).ToArray());
+        public string AsBase32Crockford => RawBytes.Take(20).AsBase32Address();
     }
 }

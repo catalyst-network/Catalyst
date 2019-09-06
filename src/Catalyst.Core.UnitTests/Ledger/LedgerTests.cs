@@ -25,6 +25,7 @@ using System;
 using System.Reactive.Linq;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Mempool;
+using Catalyst.Common.Extensions;
 using Catalyst.Core.Extensions;
 using Catalyst.Core.Ledger;
 using Catalyst.Core.Ledger.Models;

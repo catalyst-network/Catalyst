@@ -25,6 +25,7 @@ using System;
 using System.IO;
 using System.Threading;
 using Catalyst.Abstractions.Dfs;
+using Catalyst.Common.Extensions;
 using Catalyst.Core.Consensus.Deltas;
 using Catalyst.Core.Extensions;
 using Catalyst.TestUtils;

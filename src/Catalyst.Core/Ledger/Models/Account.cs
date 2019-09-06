@@ -24,6 +24,7 @@
 using System.Text;
 using Catalyst.Abstractions.Types;
 using Catalyst.Core.Util;
+using Catalyst.Protocol.Extensions;
 using Nethermind.Dirichlet.Numerics;
 using Newtonsoft.Json;
 using SharpRepository.Repository;

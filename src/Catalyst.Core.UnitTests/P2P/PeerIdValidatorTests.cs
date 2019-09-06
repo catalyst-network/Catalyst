@@ -29,6 +29,7 @@ using Catalyst.Core.P2P;
 using Catalyst.Core.Util;
 using Catalyst.Cryptography.BulletProofs.Wrapper;
 using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Extensions;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Google.Protobuf;

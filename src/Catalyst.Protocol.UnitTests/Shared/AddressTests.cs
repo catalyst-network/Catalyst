@@ -1,4 +1,4 @@
-﻿#region LICENSE
+#region LICENSE
 
 /**
 * Copyright (c) 2019 Catalyst Network
@@ -24,8 +24,9 @@
 using System;
 using System.Linq;
 using Catalyst.Protocol.Common;
-using Catalyst.Protocol.Shared;
 using FluentAssertions;
+using Multiformats.Hash.Algorithms;
+using NSubstitute;
 using Xunit;
 
 namespace Catalyst.Protocol.UnitTests.Shared
@@ -62,10 +63,7 @@ namespace Catalyst.Protocol.UnitTests.Shared
         {
             var network = (byte) 1;
             var isSmartContract = (byte) 8;
-            var fullAddress = new[]
-            {
-                network, isSmartContract
-            }.Concat(_noPrefixBytes).ToArray();
+            var fullAddress = new[] {network, isSmartContract}.Concat(_noPrefixBytes).ToArray();
 
             new Action(() => new Address(fullAddress)).Should().Throw<ArgumentException>();
         }
@@ -75,10 +73,7 @@ namespace Catalyst.Protocol.UnitTests.Shared
         {
             var network = (byte) 1;
             var isSmartContract = (byte) 8;
-            var fullAddress = new[]
-            {
-                network, isSmartContract, (byte) 123
-            }.Concat(_noPrefixBytes).ToArray();
+            var fullAddress = new[] {network, isSmartContract, (byte) 123}.Concat(_noPrefixBytes).ToArray();
 
             fullAddress.Length.Should()
                .BeGreaterThan(Address.ByteLength, "otherwise the test is not useful");
@@ -91,10 +86,7 @@ namespace Catalyst.Protocol.UnitTests.Shared
         {
             var network = (byte) (int) Network.Devnet;
             var isSmartContract = (byte) 1;
-            var fullAddress = new[]
-            {
-                network, isSmartContract
-            }.Concat(_noPrefixBytes).ToArray();
+            var fullAddress = new[] {network, isSmartContract}.Concat(_noPrefixBytes).ToArray();
 
             var address = new Address(fullAddress);
             address.Network.Should().Be(Network.Devnet);
@@ -105,7 +97,11 @@ namespace Catalyst.Protocol.UnitTests.Shared
         [Fact]
         public void Address_Constructor_From_IPublicKey_Should_Fail_On_Null_Public_Key()
         {
-            new Action(() => new Address(null, Network.Devnet, true)).Should().Throw<ArgumentException>();
+            new Action(() => new Address(null,
+                    Network.Devnet, 
+                    Substitute.For<IMultihashAlgorithm>(), 
+                    false))
+               .Should().Throw<ArgumentException>();
         }
 
         [Fact(Skip = "placeholder until the common lib comes in")]
