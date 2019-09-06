@@ -27,11 +27,13 @@ using Catalyst.Abstractions.Consensus.Cycle;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Dfs;
+using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.Mempool;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.IO.Messaging.Broadcast;
 using Catalyst.Core.Consensus.Cycle;
 using Catalyst.Core.Consensus.Deltas;
+using Catalyst.Core.Consensus.IO.Observers;
 using Catalyst.Core.Mempool.Documents;
 using Microsoft.Extensions.Caching.Memory;
 using Multiformats.Hash.Algorithms;
@@ -43,6 +45,45 @@ namespace Catalyst.Core.Consensus
     {
         protected override void Load(ContainerBuilder builder)
         {
+            builder.Register(c => new CycleEventsProvider(
+                c.Resolve<ICycleConfiguration>(),
+                c.Resolve<IDateTimeProvider>(),
+                c.Resolve<ICycleSchedulerProvider>(),
+                c.Resolve<IDeltaHashProvider>(),
+                c.Resolve<ILogger>()
+            )).As<ICycleEventsProvider>();
+            
+            builder.Register(c => new CycleEventsProvider(
+                c.Resolve<ICycleConfiguration>(),
+                c.Resolve<IDateTimeProvider>(),
+                c.Resolve<ICycleSchedulerProvider>(),
+                c.Resolve<IDeltaHashProvider>(),
+                c.Resolve<ILogger>()
+            )).As<ICycleEventsProvider>();
+            
+            builder.Register(c => new DeltaCacheChangeTokenProvider(600000))
+                .As<IDeltaCacheChangeTokenProvider>();
+            
+            builder.Register(c => new FavouriteDeltaObserver(
+                c.Resolve<IDeltaElector>(),
+                c.Resolve<ILogger>()
+            )).As<IP2PMessageObserver>();
+
+            builder.Register(c => new DeltaDfsHashObserver(
+                c.Resolve<IDeltaHashProvider>(),
+                c.Resolve<ILogger>()
+            )).As<IP2PMessageObserver>();
+            
+            builder.Register(c => new CandidateDeltaObserver(
+                    c.Resolve<IDeltaVoter>(),
+                    c.Resolve<ILogger>()
+                )).As<IP2PMessageObserver>();
+            
+            builder.Register(c => new DeltaDfsReader(
+                    c.Resolve<IDfs>(),
+                    c.Resolve<ILogger>()
+                ))
+                .As<IDeltaDfsReader>().SingleInstance();
 
             builder.Register(c => new DeltaElector(
                     c.Resolve<IMemoryCache>(),
