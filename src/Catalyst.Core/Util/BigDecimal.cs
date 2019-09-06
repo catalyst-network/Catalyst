@@ -24,7 +24,6 @@
 using System;
 using System.Globalization;
 using System.Numerics;
-using Catalyst.Abstractions.Util;
 using Catalyst.Core.Extensions;
 
 namespace Catalyst.Core.Util
@@ -38,7 +37,7 @@ namespace Catalyst.Core.Util
     ///     All operations are exact, except for division.
     ///     Division never determines more digits than the given precision of 50.
     /// </summary>
-    public struct BigDecimal : IBigDecimal, IComparable, IComparable<BigDecimal>
+    public struct BigDecimal : IComparable, IComparable<BigDecimal>
     {
         internal static int Precision { get; } = 50;
 
@@ -229,6 +228,11 @@ namespace Catalyst.Core.Util
             return new BigDecimal(value, 0);
         }
 
+        public static implicit operator BigDecimal(long value)
+        {
+            return new BigDecimal(value, 0);
+        }
+
         public static implicit operator BigDecimal(double value)
         {
             var mantissa = (BigInteger) value;
@@ -284,6 +288,16 @@ namespace Catalyst.Core.Util
         public static explicit operator uint(BigDecimal value)
         {
             return Convert.ToUInt32((decimal) value);
+        }
+
+        public static explicit operator long(BigDecimal value)
+        {
+            return Convert.ToInt64((decimal) value);
+        }
+
+        public static explicit operator ulong(BigDecimal value)
+        {
+            return Convert.ToUInt64((decimal) value);
         }
 
         public static BigDecimal operator +(BigDecimal value)

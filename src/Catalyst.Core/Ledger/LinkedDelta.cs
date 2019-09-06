@@ -21,31 +21,36 @@
 
 #endregion
 
-using Catalyst.Abstractions.Repository;
-using Catalyst.Abstractions.Types;
-using Catalyst.Core.Util;
+using Multiformats.Hash;
 
-namespace Catalyst.Core.Ledger.Models
+namespace Catalyst.Core.Ledger
 {
     /// <summary>
-    /// This class represent a user account of which there can be the following types:
-    /// confidential account, non-confidential account and smart contract account
+    /// A delta which is linked both ways, to its predecessor (like all normal deltas), but also to its
+    /// successor. This is meant to be used during re-synchronisation of the ledger.
     /// </summary>
-    public interface IAccount : IDocument
+    public class ChainedDeltaHash
     {
-        /// <summary>
-        /// The address used to identify the account.
-        /// </summary>
-        string PublicAddress { get; }
+        public ChainedDeltaHash(Multihash previousDfsHash, Multihash dfsHash, Multihash nextDeltaDfsHash)
+        {
+            PreviousDfsHash = previousDfsHash;
+            DfsHash = dfsHash;
+            NextDeltaDfsHash = nextDeltaDfsHash;
+        }
 
         /// <summary>
-        /// Type of the account: public or confidential.
+        /// The hash or address of the predecessor of this delta on the Dfs.
         /// </summary>
-        AccountTypes AccountType { get; }
+        public Multihash PreviousDfsHash { get; }
 
         /// <summary>
-        /// The balance of the account.
+        /// The hash or address of this delta on the Dfs.
         /// </summary>
-        BigDecimal Balance { get; set; }
+        public Multihash DfsHash { get; }
+
+        /// <summary>
+        /// The hash or address of the successor of this delta on the Dfs. 
+        /// </summary>
+        private Multihash NextDeltaDfsHash { get; }
     }
 }
