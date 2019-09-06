@@ -37,6 +37,7 @@ using Catalyst.Core.P2P.Repository;
 using Catalyst.Core.Util;
 using Catalyst.Protocol;
 using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Extensions;
 using Google.Protobuf;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Primitives;

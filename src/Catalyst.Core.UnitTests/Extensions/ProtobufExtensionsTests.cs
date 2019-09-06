@@ -24,11 +24,13 @@
 using System;
 using System.Linq;
 using System.Text;
+using Catalyst.Common.Utils;
 using Catalyst.Core.Extensions;
 using Catalyst.Core.IO.Messaging.Correlation;
 using Catalyst.Core.Util;
 using Catalyst.Protocol;
 using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Extensions;
 using Catalyst.Protocol.IPPN;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
@@ -95,16 +97,6 @@ namespace Catalyst.Core.UnitTests.Extensions
             var convertedHash = byteString.AsMultihash();
 
             convertedHash.Should().Be(initialHash);
-        }
-
-        [Fact]
-        public void ToMultihashString_Can_Convert_Valid_ByteString_To_String()
-        {
-            var initialHash = Multihash.Encode("hello", HashType.BLAKE2B_256);
-            var byteString = initialHash.ToBytes().ToByteString();
-
-            var multihash = byteString.AsMultihashString();
-            multihash.Should().NotBe(null);
         }
 
         [Fact]

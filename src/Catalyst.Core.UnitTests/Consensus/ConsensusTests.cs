@@ -24,6 +24,8 @@
 using System;
 using System.Linq;
 using Catalyst.Abstractions.Consensus.Deltas;
+using Catalyst.Common.Extensions;
+using Catalyst.Common.Utils;
 using Catalyst.Core.Consensus.Cycle;
 using Catalyst.Core.Extensions;
 using Catalyst.Core.Util;

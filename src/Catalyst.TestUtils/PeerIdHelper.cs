@@ -29,6 +29,7 @@ using Catalyst.Core.Network;
 using Catalyst.Core.Util;
 using Catalyst.Cryptography.BulletProofs.Wrapper;
 using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Extensions;
 
 namespace Catalyst.TestUtils
 {

@@ -30,6 +30,7 @@ using Catalyst.Core.IO.Messaging.Dto;
 using Catalyst.Core.Util;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Deltas;
+using Catalyst.Protocol.Extensions;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using Multiformats.Hash;

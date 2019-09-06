@@ -22,14 +22,14 @@
 #endregion
 
 using System;
-using Catalyst.Core.Extensions;
-using Catalyst.Core.Util;
+using Catalyst.Common.Extensions;
+using Catalyst.Common.Utils;
 using FluentAssertions;
 using Multiformats.Base;
 using Multiformats.Hash;
 using Xunit;
 
-namespace Catalyst.Core.UnitTests.Extensions
+namespace Catalyst.Common.UnitTests.Extensions
 {
     public class MultihashExtensionTests
     {
