@@ -23,7 +23,6 @@
 
 using Catalyst.Abstractions.Mempool.Documents;
 using Catalyst.Core.Mempool.Models;
-using Google.Protobuf;
 using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
 using SharpRepository.Repository;

@@ -21,8 +21,6 @@
 
 #endregion
 
-using Catalyst.Abstractions.Enumerator;
-
 namespace Catalyst.Abstractions.Consensus.Cycle
 {
     public interface IPhaseName 

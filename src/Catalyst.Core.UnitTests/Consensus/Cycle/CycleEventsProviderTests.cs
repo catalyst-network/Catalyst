@@ -33,7 +33,6 @@ using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Enumerator;
 using Catalyst.Common.Utils;
 using Catalyst.Core.Consensus.Cycle;
-using Catalyst.Core.Util;
 using FluentAssertions;
 using Microsoft.Reactive.Testing;
 using Multiformats.Hash;

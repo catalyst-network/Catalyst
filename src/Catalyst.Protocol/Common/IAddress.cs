@@ -41,7 +41,7 @@ namespace Catalyst.Protocol.Shared
         /// <summary>
         /// Is the address an externally owned address or a smart contract address.
         /// </summary>
-        bool IsSmartContract { get;}
+        bool IsSmartContract { get; }
 
         /// <summary>
         /// The full address in bytes

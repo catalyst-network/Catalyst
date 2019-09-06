@@ -27,7 +27,6 @@ using Catalyst.Abstractions.Consensus;
 using Catalyst.Abstractions.Consensus.Cycle;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Core.Consensus.Cycle;
-using Catalyst.Core.Extensions;
 using Catalyst.Protocol.Extensions;
 using Multiformats.Hash;
 using Serilog;
