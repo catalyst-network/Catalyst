@@ -45,13 +45,10 @@ namespace Catalyst.Core.Consensus
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.Register(c => new CycleEventsProvider(
-                c.Resolve<ICycleConfiguration>(),
-                c.Resolve<IDateTimeProvider>(),
-                c.Resolve<ICycleSchedulerProvider>(),
-                c.Resolve<IDeltaHashProvider>(),
-                c.Resolve<ILogger>()
-            )).As<ICycleEventsProvider>();
+            // we will put this in its own module eventually
+            builder.Register(c => new DateTimeProvider()).As<IDateTimeProvider>();
+
+            builder.Register(c => new CycleSchedulerProvider()).As<ICycleSchedulerProvider>();
             
             builder.Register(c => new CycleEventsProvider(
                 c.Resolve<ICycleConfiguration>(),
