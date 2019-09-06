@@ -23,23 +23,19 @@
 
 using System;
 using System.Linq;
-using System.Numerics;
 using System.Threading;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Mempool;
 using Catalyst.Common.Extensions;
 using Catalyst.Core.Cryptography;
-using Catalyst.Core.Extensions;
 using Catalyst.Core.Ledger.Models;
 using Catalyst.Core.Ledger.Repository;
 using Catalyst.Core.Mempool.Documents;
-using Catalyst.Core.Util;
 using Catalyst.Cryptography.BulletProofs.Wrapper;
 using Catalyst.Protocol.Transaction;
 using Dawn;
 using Google.Protobuf;
 using Multiformats.Hash;
-using Nethermind.Dirichlet.Numerics;
 using Serilog;
 
 namespace Catalyst.Core.Ledger

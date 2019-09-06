@@ -27,7 +27,6 @@ using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.KeySigner;
 using Catalyst.Abstractions.Keystore;
 using Catalyst.Core.IO.Messaging.Dto;
-using Catalyst.Core.Util;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Extensions;
 using DotNetty.Transport.Channels;

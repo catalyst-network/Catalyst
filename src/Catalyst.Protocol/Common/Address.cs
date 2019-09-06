@@ -63,7 +63,7 @@ namespace Catalyst.Protocol.Common
             Guard.Argument(rawBytes, nameof(rawBytes)).NotNull()
                .Require(b => b.Count == ByteLength,
                     b => $"{nameof(rawBytes)} is {rawBytes.Count} long but should be {ByteLength} instead.")
-               .Require(b => Enum.IsDefined(typeof(Network), (int)b[0]),
+               .Require(b => Enum.IsDefined(typeof(Network), (int) b[0]),
                     b => $"Invalid byte at position 0, byte does not map to a known Network.")
                .Require(b => b[1] == 0 || b[1] == 1,
                     b => $"Invalid byte at position 1, byte should be either 0 or 1 but was {b[1]}.");

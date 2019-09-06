@@ -29,7 +29,6 @@ using Catalyst.Common.Extensions;
 using Catalyst.Core.Consensus.IO.Observers;
 using Catalyst.Core.Extensions;
 using Catalyst.Core.IO.Messaging.Dto;
-using Catalyst.Core.Util;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Extensions;

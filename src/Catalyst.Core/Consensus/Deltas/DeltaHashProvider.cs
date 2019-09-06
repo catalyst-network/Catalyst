@@ -28,8 +28,6 @@ using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Common.Extensions;
-using Catalyst.Core.Extensions;
-using Catalyst.Core.Util;
 using Catalyst.Protocol.Extensions;
 using Google.Protobuf.WellKnownTypes;
 using Multiformats.Hash;

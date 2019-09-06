@@ -29,8 +29,6 @@ using System.Threading;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Common.Extensions;
 using Catalyst.Common.Utils;
-using Catalyst.Core.Extensions;
-using Catalyst.Core.Util;
 using Catalyst.Protocol.Deltas;
 using Dawn;
 using Microsoft.Extensions.Caching.Memory;

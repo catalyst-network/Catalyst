@@ -41,13 +41,19 @@ namespace Catalyst.Protocol.UnitTests.Deltas
                 {
                     PreviousDeltaDfsHash = ByteString.Empty,
                     MerkleRoot = ByteString.CopyFromUtf8("abc"),
-                    TimeStamp = new Timestamp { Nanos = 21, Seconds = 30 }
+                    TimeStamp = new Timestamp
+                    {
+                        Nanos = 21, Seconds = 30
+                    }
                 });
                 AddRow(new Delta
                 {
                     PreviousDeltaDfsHash = ByteString.CopyFromUtf8("abc"),
                     MerkleRoot = ByteString.Empty,
-                    TimeStamp = new Timestamp { Nanos = 21, Seconds = 30 }
+                    TimeStamp = new Timestamp
+                    {
+                        Nanos = 21, Seconds = 30
+                    }
                 });
                 AddRow(new Delta
                 {
@@ -72,7 +78,10 @@ namespace Catalyst.Protocol.UnitTests.Deltas
             {
                 PreviousDeltaDfsHash = ByteString.CopyFromUtf8("good"),
                 MerkleRoot = ByteString.CopyFromUtf8("valid"),
-                TimeStamp = new Timestamp { Nanos = 21, Seconds = 30 }
+                TimeStamp = new Timestamp
+                {
+                    Nanos = 21, Seconds = 30
+                }
             };
             delta.IsValid().Should().BeTrue();
         }

@@ -21,7 +21,6 @@
 
 #endregion
 
-using System.Threading.Tasks;
 using Catalyst.Core.Ledger.Models;
 using Multiformats.Hash;
 
