@@ -74,7 +74,7 @@ namespace Catalyst.Core.UnitTests.P2P.IO.Observers
 
             _testScheduler.Start();
 
-            _deltaCache.DidNotReceiveWithAnyArgs().TryGetConfirmedDelta(default, out _);
+            _deltaCache.DidNotReceiveWithAnyArgs().TryGetOrAddConfirmedDelta(default, out _);
             await _fakeContext.Channel.DidNotReceiveWithAnyArgs().WriteAndFlushAsync(default);
         }
 
@@ -91,7 +91,7 @@ namespace Catalyst.Core.UnitTests.P2P.IO.Observers
 
             _testScheduler.Start();
 
-            _deltaCache.Received(1).TryGetConfirmedDelta(Arg.Is<string>(
+            _deltaCache.Received(1).TryGetOrAddConfirmedDelta(Arg.Is<string>(
                 s => s.Equals(multiHash.AsBase32Address())), out Arg.Any<Delta>());
 
             await _fakeContext.Channel.ReceivedWithAnyArgs(1)
@@ -110,7 +110,7 @@ namespace Catalyst.Core.UnitTests.P2P.IO.Observers
 
             _testScheduler.Start();
 
-            _deltaCache.Received(1).TryGetConfirmedDelta(Arg.Is<string>(
+            _deltaCache.Received(1).TryGetOrAddConfirmedDelta(Arg.Is<string>(
                 s => s.Equals(multiHash.AsBase32Address())), out Arg.Any<Delta>());
 
             await _fakeContext.Channel.ReceivedWithAnyArgs(1)
@@ -138,7 +138,7 @@ namespace Catalyst.Core.UnitTests.P2P.IO.Observers
         {
             var delta = DeltaHelper.GetDelta();
 
-            _deltaCache.TryGetConfirmedDelta(Arg.Is(hash), out Arg.Any<Delta>())
+            _deltaCache.TryGetOrAddConfirmedDelta(Arg.Is(hash), out Arg.Any<Delta>())
                .Returns(ci =>
                 {
                     ci[1] = delta;
