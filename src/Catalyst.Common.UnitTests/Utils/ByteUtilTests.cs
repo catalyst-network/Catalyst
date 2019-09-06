@@ -62,22 +62,6 @@ namespace Catalyst.Common.UnitTests.Utils
         }
 
         [Theory]
-        [InlineData(2, 5)]
-        [InlineData(78, 90)]
-        [InlineData(10, 35)]
-        public void Slice_Byte_To_ByteArrays_Should_Succeed(int st, int ed)
-        {
-            var firstBytesArray = GeneratePopulatedBytesArray(100);
-
-            var byteResult = firstBytesArray.Slice(st, ed);
-
-            for (int i = st, k = 0; i <= ed && k < (ed - st); i++, k++)
-            {
-                firstBytesArray[i].Should().Be(byteResult[k]);
-            }
-        }
-
-        [Theory]
         [InlineData(78)]
         [InlineData(10)]
         public void Initialise_Empty_ByteArray_Should_Succeed(int arraySize)

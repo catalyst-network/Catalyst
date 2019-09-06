@@ -59,22 +59,6 @@ namespace Catalyst.Common.Utils
         }
 
         /// <summary>
-        ///     Slice a section from byte array
-        /// </summary>
-        /// <param name="array"></param>
-        /// <param name="start"></param>
-        /// <param name="end"></param>
-        /// <returns></returns>
-        public static byte[] Slice(this byte[] array, int start, int end = int.MaxValue)
-        {
-            Guard.Argument(array, nameof(array)).NotNull().NotEmpty();
-            Guard.Argument(start, nameof(start)).NotNegative();
-            Guard.Argument(end, nameof(end)).InRange(start, int.MaxValue);
-
-            return array.Skip(start).Take(end - start).ToArray();
-        }
-
-        /// <summary>
         ///
         /// </summary>
         /// <param name="length"></param>
