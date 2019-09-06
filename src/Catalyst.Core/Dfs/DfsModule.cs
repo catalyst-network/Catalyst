@@ -22,7 +22,9 @@
 #endregion
 
 using Autofac;
+using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Dfs;
+using Catalyst.Abstractions.FileSystem;
 using Serilog;
 
 namespace Catalyst.Core.Dfs
@@ -31,6 +33,12 @@ namespace Catalyst.Core.Dfs
     {
         protected override void Load(ContainerBuilder builder)
         {
+            builder.Register(c => new IpfsAdapter(
+                c.Resolve<IPasswordManager>(),
+                c.Resolve<IFileSystem>(),
+                c.Resolve<ILogger>()
+                )).As<IIpfsAdapter>();
+            
             builder.Register(c => new Dfs(c.Resolve<IIpfsAdapter>(),
                     c.Resolve<ILogger>()
                 ))
