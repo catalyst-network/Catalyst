@@ -32,6 +32,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\submodules\nethermind\src\Dirichlet\Nethermind.Dirichlet.Numerics\Nethermind.Dirichlet.Numerics.csproj" />
+      <ProjectReference Include="..\Catalyst.Protocol\Catalyst.Protocol.csproj" />
     </ItemGroup>
 
 </Project>
