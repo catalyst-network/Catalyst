@@ -25,7 +25,6 @@ using Catalyst.Common.Utils;
 using Catalyst.Protocol.Extensions;
 using FluentAssertions;
 using Google.Protobuf;
-using NSubstitute;
 using Xunit;
 
 namespace Catalyst.Protocol.UnitTests.Extensions

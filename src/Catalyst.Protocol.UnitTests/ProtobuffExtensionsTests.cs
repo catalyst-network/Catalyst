@@ -26,7 +26,6 @@ using Catalyst.Protocol.IPPN;
 using Catalyst.Protocol.Transaction;
 using FluentAssertions;
 using Google.Protobuf;
-using System;
 using Xunit;
 
 namespace Catalyst.Protocol.UnitTests

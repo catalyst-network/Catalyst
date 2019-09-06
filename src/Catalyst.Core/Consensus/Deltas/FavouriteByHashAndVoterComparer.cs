@@ -23,7 +23,6 @@
 
 using System.Collections.Generic;
 using Catalyst.Common.Utils;
-using Catalyst.Core.Util;
 using Catalyst.Protocol.Deltas;
 using Google.Protobuf;
 

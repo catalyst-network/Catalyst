@@ -26,7 +26,6 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using Catalyst.Core.Network;
-using Catalyst.Core.Util;
 using Catalyst.Cryptography.BulletProofs.Wrapper;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Extensions;
