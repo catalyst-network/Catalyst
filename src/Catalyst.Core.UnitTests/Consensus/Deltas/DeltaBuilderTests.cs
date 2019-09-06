@@ -35,7 +35,6 @@ using Catalyst.Core.Consensus;
 using Catalyst.Core.Consensus.Deltas;
 using Catalyst.Core.Cryptography;
 using Catalyst.Core.Extensions;
-using Catalyst.Core.Util;
 using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Extensions;
 using Catalyst.Protocol.Transaction;

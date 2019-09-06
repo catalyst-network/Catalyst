@@ -23,7 +23,6 @@
 
 using Catalyst.Abstractions.Consensus;
 using Catalyst.Common.Utils;
-using Catalyst.Core.Util;
 using Catalyst.Protocol.Transaction;
 using Google.Protobuf;
 

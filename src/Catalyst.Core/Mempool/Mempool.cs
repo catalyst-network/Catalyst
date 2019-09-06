@@ -23,7 +23,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Catalyst.Abstractions.Mempool;
 using Catalyst.Abstractions.Mempool.Documents;
 using Catalyst.Abstractions.Mempool.Repositories;

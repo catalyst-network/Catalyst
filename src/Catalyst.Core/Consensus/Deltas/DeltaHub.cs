@@ -31,7 +31,6 @@ using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.IO.Messaging.Broadcast;
 using Catalyst.Core.Extensions;
 using Catalyst.Core.IO.Messaging.Correlation;
-using Catalyst.Core.Util;
 using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Extensions;
 using Dawn;
