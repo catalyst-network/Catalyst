@@ -43,7 +43,6 @@ using Catalyst.Core.P2P.Repository;
 using Catalyst.Protocol;
 using Catalyst.Protocol.IPPN;
 using Serilog;
-using SharpRepository.Repository;
 
 namespace Catalyst.Core.P2P.Discovery.Hastings
 {

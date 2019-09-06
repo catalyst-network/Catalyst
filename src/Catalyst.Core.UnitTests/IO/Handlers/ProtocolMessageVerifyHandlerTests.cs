@@ -25,7 +25,6 @@ using Catalyst.Abstractions.KeySigner;
 using Catalyst.Abstractions.Keystore;
 using Catalyst.Common.Utils;
 using Catalyst.Core.IO.Handlers;
-using Catalyst.Core.Util;
 using Catalyst.Cryptography.BulletProofs.Wrapper;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
 using Catalyst.Protocol.Common;

@@ -32,7 +32,7 @@ using Serilog;
 
 namespace Catalyst.TestUtils
 {
-    public class TestSocketBase : SocketBase
+    public sealed class TestSocketBase : SocketBase
     {
         public TestSocketBase(IChannelFactory channelFactory,
             ILogger logger,
@@ -42,8 +42,6 @@ namespace Catalyst.TestUtils
         }
 
         public void DisposeProxy(bool disposing) => Dispose(disposing);
-
-        protected override void Dispose(bool disposing) { base.Dispose(disposing); }
 
         public override Task StartAsync() { throw new NotImplementedException(); }
     }

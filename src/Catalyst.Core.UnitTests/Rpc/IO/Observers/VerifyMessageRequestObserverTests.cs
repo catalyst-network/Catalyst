@@ -27,7 +27,6 @@ using Catalyst.Abstractions.KeySigner;
 using Catalyst.Common.Utils;
 using Catalyst.Core.Extensions;
 using Catalyst.Core.Rpc.IO.Observers;
-using Catalyst.Core.Util;
 using Catalyst.Cryptography.BulletProofs.Wrapper;
 using Catalyst.Protocol;
 using Catalyst.Protocol.Common;

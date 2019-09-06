@@ -25,7 +25,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Catalyst.Abstractions.Mempool;
-using Catalyst.Abstractions.Mempool.Models;
 using Catalyst.Core.Consensus;
 using Catalyst.Core.Consensus.Deltas;
 using Catalyst.Core.Mempool.Documents;

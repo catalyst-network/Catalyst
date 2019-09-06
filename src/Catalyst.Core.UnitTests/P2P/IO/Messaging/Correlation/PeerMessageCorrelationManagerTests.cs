@@ -35,8 +35,6 @@ using Catalyst.Core.P2P.ReputationSystem;
 using Catalyst.Core.UnitTests.IO.Messaging.Correlation;
 using Catalyst.Protocol.IPPN;
 using FluentAssertions;
-using Google.Protobuf;
-using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Xunit;

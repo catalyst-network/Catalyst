@@ -37,7 +37,6 @@ using Catalyst.Abstractions.Types;
 using Catalyst.Abstractions.Util;
 using Catalyst.Core.Config;
 using Catalyst.Core.IO.Events;
-using Catalyst.Core.P2P;
 using Catalyst.Core.Util;
 using Catalyst.Protocol.Interfaces.Validators;
 using Catalyst.Protocol.Validators;
@@ -113,7 +112,8 @@ namespace Catalyst.Core.Kernel
             }
             
             ContainerBuilder.RegisterModule(configurationModule);
-//            ContainerBuilder.RegisterModule(new P2PModule());
+
+            //ContainerBuilder.RegisterModule(new P2PModule());
 
             Logger = new LoggerConfiguration()
                .ReadFrom
