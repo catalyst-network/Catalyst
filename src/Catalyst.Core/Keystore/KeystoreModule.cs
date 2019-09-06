@@ -34,7 +34,10 @@ namespace Catalyst.Core.Keystore
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.Register(c => new ()).As<>();
+            builder.Register(c => new SigningContextProvider())
+                .OnActivated(e => e.Instance.Network = Protocol.Common.Network.Mainnet)
+                .OnActivated(e => e.Instance.SignatureType = Protocol.Common.SignatureType.ProtocolPeer)
+                .As<ISigningContextProvider>();
 
             builder.Register(c => new LocalKeyStore(
                 c.Resolve<IPasswordManager>(),
