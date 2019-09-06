@@ -29,9 +29,8 @@ namespace Catalyst.Protocol.UnitTests.Common
 {
     public class SigningContextTests
     {
-
         [Fact]
-        public static void Signing_Context_Should_Contain_Default_Values()
+        public void Signing_Context_Should_Contain_Default_Values()
         {
             var signingContext = new SigningContext();
             signingContext.Network.Should().BeEquivalentTo(Network.Devnet);
@@ -39,7 +38,7 @@ namespace Catalyst.Protocol.UnitTests.Common
         }
 
         [Fact]
-        public static void Can_Create_Signing_Context_With_Non_Default_Values()
+        public void Can_Create_Signing_Context_With_Non_Default_Values()
         {
             var signingContext = new SigningContext
             {

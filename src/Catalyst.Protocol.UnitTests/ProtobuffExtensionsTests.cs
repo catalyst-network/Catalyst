@@ -1,4 +1,4 @@
-﻿#region LICENSE
+#region LICENSE
 
 /**
 * Copyright (c) 2019 Catalyst Network
@@ -33,7 +33,8 @@ namespace Catalyst.Protocol.UnitTests
 {
     public class ProtobufExtensionsTests
     {
-        public static void Can_Identify_Broadcast_Message()
+        [Fact]
+        public void Can_Identify_Broadcast_Message()
         {
             var protocolMessageSigned = new ProtocolMessageSigned
             {
@@ -54,14 +55,14 @@ namespace Catalyst.Protocol.UnitTests
         }
 
         [Fact]
-        public static void ShortenedFullName_should_remove_namespace_start()
+        public void ShortenedFullName_should_remove_namespace_start()
         {
             TransactionBroadcast.Descriptor.FullName.Should().Be("Catalyst.Protocol.Transaction.TransactionBroadcast");
             TransactionBroadcast.Descriptor.ShortenedFullName().Should().Be("Transaction.TransactionBroadcast");
         }
 
         [Fact]
-        public static void ShortenedProtoFullName_should_remove_namespace_start()
+        public void ShortenedProtoFullName_should_remove_namespace_start()
         {
             PingRequest.Descriptor.FullName.Should().Be("Catalyst.Protocol.IPPN.PingRequest");
             typeof(PingRequest).ShortenedProtoFullName().Should().Be("IPPN.PingRequest");
@@ -71,7 +72,7 @@ namespace Catalyst.Protocol.UnitTests
         [InlineData("MyFunnyRequest", "MyFunnyResponse")]
         [InlineData("Request", "Response")]
         [InlineData("Some.Namespace.ClassRequest", "Some.Namespace.ClassResponse")]
-        public static void GetResponseType_should_swap_request_suffix_for_response_suffix(string requestType, string responseType)
+        public void GetResponseType_should_swap_request_suffix_for_response_suffix(string requestType, string responseType)
         {
             requestType.GetResponseType().Should().Be(responseType);
         }
@@ -80,7 +81,7 @@ namespace Catalyst.Protocol.UnitTests
         [InlineData("MyFunnyResponse", "MyFunnyRequest")]
         [InlineData("Response", "Request")]
         [InlineData("Some.Namespace.ClassResponse", "Some.Namespace.ClassRequest")]
-        public static void GetRequestType_should_swap_request_suffix_for_response_suffix(string responseType, string requestType)
+        public void GetRequestType_should_swap_request_suffix_for_response_suffix(string responseType, string requestType)
         {
             responseType.GetRequestType().Should().Be(requestType);
         }

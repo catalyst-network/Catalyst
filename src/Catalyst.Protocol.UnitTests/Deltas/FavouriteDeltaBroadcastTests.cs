@@ -1,4 +1,4 @@
-﻿#region LICENSE
+#region LICENSE
 
 /**
 * Copyright (c) 2019 Catalyst Network
@@ -33,7 +33,7 @@ namespace Catalyst.Protocol.UnitTests.Deltas
 {
     public class FavouriteDeltaBroadcastTests
     {
-        private class InvalidFavouriteDeltaBroadcasts : TheoryData<FavouriteDeltaBroadcast>
+        private sealed class InvalidFavouriteDeltaBroadcasts : TheoryData<FavouriteDeltaBroadcast>
         {
             public InvalidFavouriteDeltaBroadcasts()
             {
@@ -79,7 +79,6 @@ namespace Catalyst.Protocol.UnitTests.Deltas
                 });
             }
         }
-
 
         [Theory]
         [ClassData(typeof(InvalidFavouriteDeltaBroadcasts))]

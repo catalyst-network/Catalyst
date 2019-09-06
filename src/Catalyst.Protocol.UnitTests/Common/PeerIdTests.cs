@@ -1,4 +1,4 @@
-﻿#region LICENSE
+#region LICENSE
 
 /**
 * Copyright (c) 2019 Catalyst Network
@@ -32,7 +32,7 @@ namespace Catalyst.Protocol.UnitTests.Common
     public class PeerIdTests
     {
         [Fact]
-        public static void PeerId_should_contain_default_values()
+        public void PeerId_should_contain_default_values()
         {
             var protocolVersion = ByteString.CopyFrom(BitConverter.GetBytes((short) 1));
 

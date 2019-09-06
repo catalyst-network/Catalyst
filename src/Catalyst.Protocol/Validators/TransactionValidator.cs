@@ -1,4 +1,4 @@
-﻿#region LICENSE
+#region LICENSE
 
 /**
 * Copyright (c) 2019 Catalyst Network
@@ -46,10 +46,10 @@ namespace Catalyst.Protocol.Validators
         public bool ValidateTransaction(TransactionBroadcast transactionBroadcast, Network network)
         {
             return ValidateTransactionFields(transactionBroadcast)
-                   && CheckContractInputFields(transactionBroadcast)
-                   && CheckCfEntries(transactionBroadcast)
-                   && CheckStEntries(transactionBroadcast)
-                   && ValidateTransactionSignature(transactionBroadcast, network);
+             && CheckContractInputFields(transactionBroadcast)
+             && CheckCfEntries(transactionBroadcast)
+             && CheckStEntries(transactionBroadcast)
+             && ValidateTransactionSignature(transactionBroadcast, network);
         }
 
         private bool CheckContractInputFields(TransactionBroadcast transactionBroadcast)
@@ -60,14 +60,13 @@ namespace Catalyst.Protocol.Validators
                 return false;
             }
 
-            if (transactionBroadcast.Init != ByteString.Empty)
+            if (transactionBroadcast.Init != ByteString.Empty
+             && (transactionBroadcast.STEntries.Any() || transactionBroadcast.CFEntries.Any()))
             {
-                if (transactionBroadcast.STEntries.Any() || transactionBroadcast.CFEntries.Any())
-                {
-                    _logger.Error("Contract deployment cannot contain any entries.");
-                    return false;
-                }
+                _logger.Error("Contract deployment cannot contain any entries.");
+                return false;
             }
+
             return true;
         }
 
@@ -85,16 +84,17 @@ namespace Catalyst.Protocol.Validators
                 return false;
             }
 
-            if (transactionBroadcast.Init == ByteString.Empty)
+            var isEmptyPublicTransaction = transactionBroadcast.TransactionType == TransactionType.Normal &&
+                transactionBroadcast.STEntries.Count == 0;
+            var isEmptyConfidentialTransaction = transactionBroadcast.TransactionType == TransactionType.Confidential &&
+                transactionBroadcast.CFEntries.Count == 0;
+            var isEmptySmartContractDeployment = transactionBroadcast.Init == ByteString.Empty;
+
+            if (isEmptySmartContractDeployment 
+             && (isEmptyPublicTransaction || isEmptyConfidentialTransaction))
             {
-                if ((transactionBroadcast.TransactionType == TransactionType.Normal &&
-                     transactionBroadcast.STEntries.Count == 0)
-                    || (transactionBroadcast.TransactionType == TransactionType.Confidential &&
-                        transactionBroadcast.CFEntries.Count == 0))
-                {
-                    _logger.Error("No Entries exist in the transaction");
-                    return false;
-                }
+                _logger.Error("No Entries exist in the transaction");
+                return false;
             }
 
             if (transactionBroadcast.TransactionType == TransactionType.Normal && transactionBroadcast.CFEntries.Any())
@@ -128,8 +128,9 @@ namespace Catalyst.Protocol.Validators
 
             var signingContext = new SigningContext
             {
-                SignatureType = transactionBroadcast.TransactionType == TransactionType.Normal ?
-                    SignatureType.TransactionPublic : SignatureType.TransactionConfidential,
+                SignatureType = transactionBroadcast.TransactionType == TransactionType.Normal 
+                    ? SignatureType.TransactionPublic 
+                    : SignatureType.TransactionConfidential,
                 Network = network
             };
 
@@ -184,14 +185,11 @@ namespace Catalyst.Protocol.Validators
                     return false;
                 }
 
-                if (transactionBroadcast.Data == ByteString.Empty)
+                if (transactionBroadcast.Data == ByteString.Empty && stTransactionEntry.Amount <= 0)
                 {
-                    if (stTransactionEntry.Amount <= 0)
-                    {
-                        _logger.Error(
-                            $"Invalid amount on field {nameof(stTransactionEntry.Amount)}, Amount: {stTransactionEntry.Amount}");
-                        return false;
-                    }
+                    _logger.Error(
+                        $"Invalid amount on field {nameof(stTransactionEntry.Amount)}, Amount: {stTransactionEntry.Amount}");
+                    return false;
                 }
             }
 

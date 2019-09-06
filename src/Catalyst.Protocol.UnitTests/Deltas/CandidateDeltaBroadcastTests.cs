@@ -1,4 +1,4 @@
-﻿#region LICENSE
+#region LICENSE
 
 /**
 * Copyright (c) 2019 Catalyst Network
@@ -33,7 +33,7 @@ namespace Catalyst.Protocol.UnitTests.Deltas
 {
     public class CandidateDeltaTests
     {
-        private class InvalidCandidateDeltaBroadCasts : TheoryData<CandidateDeltaBroadcast>
+        private sealed class InvalidCandidateDeltaBroadCasts : TheoryData<CandidateDeltaBroadcast>
         {
             public InvalidCandidateDeltaBroadCasts()
             {
