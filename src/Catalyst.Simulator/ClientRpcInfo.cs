@@ -28,13 +28,13 @@ namespace Catalyst.Simulator
 {
     public class ClientRpcInfo
     {
-        public ClientRpcInfo(IPeerIdentifier peerIdentifier, IRpcClient rpcClient)
+        public ClientRpcInfo(IPeerIdentifier peerIdentifier, ISimulatorRpcClient simulatorRpcClient)
         {
             PeerIdentifier = peerIdentifier;
-            RpcClient = rpcClient;
+            SimulatorRpcClient = simulatorRpcClient;
         }
 
         public IPeerIdentifier PeerIdentifier { get; }
-        public IRpcClient RpcClient { get; }
+        public ISimulatorRpcClient SimulatorRpcClient { get; }
     }
 }

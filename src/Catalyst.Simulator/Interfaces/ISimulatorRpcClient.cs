@@ -28,7 +28,7 @@ using Google.Protobuf;
 
 namespace Catalyst.Simulator.Interfaces
 {
-    public interface IRpcClient
+    public interface ISimulatorRpcClient
     {
         Task<bool> ConnectRetryAsync(IPeerIdentifier peerIdentifier, int retryAttempts = 5);
         Task<bool> ConnectAsync(IPeerIdentifier peerIdentifier);

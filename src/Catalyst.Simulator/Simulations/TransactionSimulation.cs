@@ -45,7 +45,7 @@ namespace Catalyst.Simulator.Simulations
 
         private async Task<bool> ConnectAsync(ClientRpcInfo clientRpcInfo)
         {
-            var isConnectionSuccessful = await clientRpcInfo.RpcClient
+            var isConnectionSuccessful = await clientRpcInfo.SimulatorRpcClient
                .ConnectRetryAsync(clientRpcInfo.PeerIdentifier).ConfigureAwait(false);
             if (!isConnectionSuccessful)
             {
@@ -53,7 +53,7 @@ namespace Catalyst.Simulator.Simulations
                 return false;
             }
 
-            clientRpcInfo.RpcClient.ReceiveMessage<BroadcastRawTransactionResponse>(ReceiveTransactionResponse);
+            clientRpcInfo.SimulatorRpcClient.ReceiveMessage<BroadcastRawTransactionResponse>(ReceiveTransactionResponse);
             return true;
         }
 
@@ -80,13 +80,13 @@ namespace Catalyst.Simulator.Simulations
                 return;
             }
 
-            while (clientRpcInfoList.All(x => x.RpcClient.IsConnected()))
+            while (clientRpcInfoList.All(x => x.SimulatorRpcClient.IsConnected()))
             {
                 foreach (var clientRpcInfo in clientRpcInfoList)
                 {
                     _userOutput.WriteLine("Sending transaction");
                     var transaction = TransactionHelper.GenerateTransaction((uint) _random.Next(1, 100), _random.Next(2));
-                    clientRpcInfo.RpcClient.SendMessage(transaction);
+                    clientRpcInfo.SimulatorRpcClient.SendMessage(transaction);
                 }
 
                 var randomDelay = _random.Next(10, 200);
