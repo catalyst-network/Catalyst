@@ -23,7 +23,7 @@
 
 using Catalyst.Abstractions.Repository;
 using Catalyst.Abstractions.Types;
-using Catalyst.Core.Util;
+using Nethermind.Dirichlet.Numerics;
 
 namespace Catalyst.Core.Ledger.Models
 {
@@ -46,6 +46,6 @@ namespace Catalyst.Core.Ledger.Models
         /// <summary>
         /// The balance of the account.
         /// </summary>
-        BigDecimal Balance { get; set; }
+        UInt256 Balance { get; set; }
     }
 }

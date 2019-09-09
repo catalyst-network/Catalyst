@@ -21,11 +21,11 @@
 
 #endregion
 
-using Catalyst.Core.Extensions;
 using Catalyst.Core.IO.Codecs;
 using Catalyst.Core.IO.Messaging.Correlation;
 using Catalyst.Core.IO.Messaging.Dto;
 using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Extensions;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels.Embedded;
 using FluentAssertions;

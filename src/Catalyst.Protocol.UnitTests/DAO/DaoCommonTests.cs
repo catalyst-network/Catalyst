@@ -27,6 +27,7 @@ using Catalyst.Core.Extensions;
 using Catalyst.Core.Util;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.DAO;
+using Catalyst.Protocol.Extensions;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Xunit;

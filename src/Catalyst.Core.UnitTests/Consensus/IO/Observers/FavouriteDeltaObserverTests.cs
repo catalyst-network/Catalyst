@@ -25,12 +25,13 @@ using System.Linq;
 using System.Text;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.IO.Messaging.Dto;
+using Catalyst.Common.Extensions;
+using Catalyst.Core.Consensus.IO.Observers;
 using Catalyst.Core.Extensions;
 using Catalyst.Core.IO.Messaging.Dto;
-using Catalyst.Core.P2P.IO.Observers;
-using Catalyst.Core.Util;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Deltas;
+using Catalyst.Protocol.Extensions;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using Multiformats.Hash.Algorithms;
@@ -38,7 +39,7 @@ using NSubstitute;
 using Serilog;
 using Xunit;
 
-namespace Catalyst.Core.UnitTests.P2P.IO.Observers
+namespace Catalyst.Core.UnitTests.Consensus.IO.Observers
 {
     public sealed class FavouriteDeltaObserverTests
     {

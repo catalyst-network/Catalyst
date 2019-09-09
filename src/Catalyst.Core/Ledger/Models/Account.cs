@@ -23,7 +23,8 @@
 
 using System.Text;
 using Catalyst.Abstractions.Types;
-using Catalyst.Core.Util;
+using Catalyst.Protocol.Extensions;
+using Nethermind.Dirichlet.Numerics;
 using Newtonsoft.Json;
 using SharpRepository.Repository;
 
@@ -39,8 +40,8 @@ namespace Catalyst.Core.Ledger.Models
         }
 
         public Account(string publicAddress, 
-            AccountTypes accountType, 
-            BigDecimal balance = default)
+            AccountTypes accountType,
+            UInt256 balance = default)
         {
             PublicAddress = publicAddress;
             AccountType = accountType;
@@ -54,7 +55,7 @@ namespace Catalyst.Core.Ledger.Models
         public AccountTypes AccountType { get; }
 
         /// <inheritdoc />
-        public BigDecimal Balance { get; set; }
+        public UInt256 Balance { get; set; }
 
         [RepositoryPrimaryKey(Order = 1)]
         [JsonProperty("id")]

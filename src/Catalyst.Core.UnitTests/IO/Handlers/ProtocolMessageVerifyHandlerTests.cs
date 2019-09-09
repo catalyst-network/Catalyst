@@ -23,11 +23,12 @@
 
 using Catalyst.Abstractions.KeySigner;
 using Catalyst.Abstractions.Keystore;
+using Catalyst.Common.Utils;
 using Catalyst.Core.IO.Handlers;
-using Catalyst.Core.Util;
 using Catalyst.Cryptography.BulletProofs.Wrapper;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
 using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Extensions;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using NSubstitute;

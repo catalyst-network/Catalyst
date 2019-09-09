@@ -24,7 +24,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using Catalyst.Abstractions.Consensus.Deltas;
-using Catalyst.Core.Extensions;
+using Catalyst.Common.Extensions;
 using Multiformats.Hash;
 using Serilog;
 

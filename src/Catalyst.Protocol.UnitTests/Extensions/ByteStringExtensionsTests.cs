@@ -21,17 +21,36 @@
 
 #endregion
 
-using Multiformats.Hash;
-using SimpleBase;
+using Catalyst.Common.Utils;
+using Catalyst.Protocol.Extensions;
+using FluentAssertions;
+using Google.Protobuf;
+using Xunit;
 
-namespace Catalyst.Core.Extensions
+namespace Catalyst.Protocol.UnitTests.Extensions
 {
-    public static class MultihashExtensions
+    public class ByteStringExtensionsTests
     {
-        public static string AsBase32Address(this Multihash multihash)
+        [Theory]
+        [InlineData(2)]
+        [InlineData(10)]
+        [InlineData(100)]
+        [InlineData(10000)]
+        [InlineData(5000000)]
+        public void Convert_ByteArray_To_ByteString_Should_Succeed(int arraySize)
         {
-            var result = Base32.Rfc4648.Encode(multihash.ToBytes(), false).ToLowerInvariant();
-            return result;
+            var testBytes = ByteUtil.GenerateRandomByteArray(arraySize);
+
+            testBytes.ToByteString().Should().Equal(ByteString.CopyFrom(testBytes));
+        }
+
+        [Fact]
+        public void Convert_ByteArray_To_ByteString_Should_Fail()
+        {
+            var testBytes = new byte[500];
+
+            testBytes.ToByteString().Should().Equal(ByteString.CopyFrom(testBytes));
         }
     }
 }
+

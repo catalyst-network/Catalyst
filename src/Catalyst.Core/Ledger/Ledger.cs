@@ -23,16 +23,14 @@
 
 using System;
 using System.Linq;
-using System.Numerics;
 using System.Threading;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Mempool;
+using Catalyst.Common.Extensions;
 using Catalyst.Core.Cryptography;
-using Catalyst.Core.Extensions;
 using Catalyst.Core.Ledger.Models;
 using Catalyst.Core.Ledger.Repository;
 using Catalyst.Core.Mempool.Documents;
-using Catalyst.Core.Util;
 using Catalyst.Cryptography.BulletProofs.Wrapper;
 using Catalyst.Protocol.Transaction;
 using Dawn;
@@ -156,7 +154,7 @@ namespace Catalyst.Core.Ledger
             var account = Accounts.Get(pubKey.Bytes.AsBase32Address());
 
             //todo: a different logic for to and from entries
-            account.Balance = account.Balance + new BigDecimal(new BigInteger(entry.Amount), 0);
+            account.Balance += entry.Amount;
         }
 
         public Multihash LatestKnownDelta { get; private set; }

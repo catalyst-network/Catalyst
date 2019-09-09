@@ -26,7 +26,7 @@ using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.KeySigner;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Core.IO.Observers;
-using Catalyst.Core.Util;
+using Catalyst.Protocol.Extensions;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using DotNetty.Transport.Channels;

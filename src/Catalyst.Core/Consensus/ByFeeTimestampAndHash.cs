@@ -21,9 +21,8 @@
 
 #endregion
 
-using System.Collections.Generic;
 using Catalyst.Abstractions.Consensus;
-using Catalyst.Core.Util;
+using Catalyst.Common.Utils;
 using Catalyst.Protocol.Transaction;
 using Google.Protobuf;
 

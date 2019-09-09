@@ -42,6 +42,9 @@ namespace Catalyst.Protocol.DAO
         public IEnumerable<EntryRangeProofDao> EntryRangeProofs { get; set; }
         public TransactionType TransactionType { get; set; }
         public DateTime TimeStamp { get; set; }
+        public string Data { get; set; }
+        public string From { get; set; }
+        public string Init { get; set; }
 
         public TransactionBroadcastDao()
         {
@@ -52,6 +55,14 @@ namespace Catalyst.Protocol.DAO
                 cfg.CreateMap<CFTransactionEntry, CFTransactionEntryDao>().ReverseMap();
 
                 cfg.CreateMap<EntryRangeProof, EntryRangeProofDao>().ReverseMap();
+
+                cfg.CreateMap<EntryRangeProof, string>().ReverseMap();
+
+
+                //cfg.CreateMap<TransactionBroadcast, TransactionBroadcastDao>().
+                //    ForMember(dest => dest.From).ConvertUsing(s => s);
+
+
 
                 cfg.CreateMap<DateTime, Timestamp>().ConvertUsing(s => s.ToTimestamp());
                 cfg.CreateMap<Timestamp, DateTime>().ConvertUsing(s => s.ToDateTime());

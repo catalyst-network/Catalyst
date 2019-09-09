@@ -24,9 +24,9 @@
 using System;
 using System.Linq;
 using Catalyst.Abstractions.Consensus.Deltas;
+using Catalyst.Common.Extensions;
+using Catalyst.Common.Utils;
 using Catalyst.Core.Consensus.Cycle;
-using Catalyst.Core.Extensions;
-using Catalyst.Core.Util;
 using Catalyst.Protocol.Deltas;
 using Catalyst.TestUtils;
 using Multiformats.Hash.Algorithms;
@@ -137,7 +137,7 @@ namespace Catalyst.Core.UnitTests.Consensus
                     return true;
                 });
 
-            _deltaHub.PublishDeltaToDfsAndBroadcastAddressAsync(default, default)
+            _deltaHub.PublishDeltaToDfsAndBroadcastAddressAsync(default)
                .ReturnsForAnyArgs(ByteUtil.GenerateRandomByteArray(1000).ComputeMultihash(new BLAKE2B_256())
                    .AsBase32Address());
 

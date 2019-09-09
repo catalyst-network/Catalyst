@@ -22,7 +22,7 @@
 #endregion
 
 using System.Collections.Generic;
-using Catalyst.Core.Util;
+using Catalyst.Common.Utils;
 using Catalyst.Protocol.Deltas;
 using Google.Protobuf;
 

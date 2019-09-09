@@ -23,36 +23,14 @@
 
 using System;
 using System.Linq;
-using Catalyst.Core.Util;
+using Catalyst.Common.Utils;
 using FluentAssertions;
-using Google.Protobuf;
 using Xunit;
 
-namespace Catalyst.Core.UnitTests.Utils
+namespace Catalyst.Common.UnitTests.Utils
 {
     public sealed class ByteUtilTests
     {
-        [Theory]
-        [InlineData(2)]
-        [InlineData(10)]
-        [InlineData(100)]
-        [InlineData(10000)]
-        [InlineData(5000000)]
-        public void Convert_ByteArray_To_ByteString_Should_Succeed(int arraySize)
-        {
-            var testBytes = GeneratePopulatedBytesArray(arraySize);
-
-            testBytes.ToByteString().Should().Equal(ByteString.CopyFrom(testBytes));
-        }
-
-        [Fact]
-        public void Convert_ByteArray_To_ByteString_Should_Fail()
-        {
-            var testBytes = new byte[500];
-
-            testBytes.ToByteString().Should().Equal(ByteString.CopyFrom(testBytes));
-        }
-
         [Fact]
         public void Merge_ByteArrays_To_Single_Byte_Collection_Should_Succeed()
         {
@@ -81,22 +59,6 @@ namespace Catalyst.Core.UnitTests.Utils
             byteResult.TakeLast(1).Should().Contain(secondBytesArray.FirstOrDefault());
 
             byteResult.Length.Should().Be(51);
-        }
-
-        [Theory]
-        [InlineData(2, 5)]
-        [InlineData(78, 90)]
-        [InlineData(10, 35)]
-        public void Slice_Byte_To_ByteArrays_Should_Succeed(int st, int ed)
-        {
-            var firstBytesArray = GeneratePopulatedBytesArray(100);
-
-            var byteResult = firstBytesArray.Slice(st, ed);
-
-            for (int i = st, k = 0; i <= ed && k < (ed - st); i++, k++)
-            {
-                firstBytesArray[i].Should().Be(byteResult[k]);
-            }
         }
 
         [Theory]

@@ -8,8 +8,8 @@
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="9.0.0" />
     <PackageReference Include="Catalyst.Cryptography.BulletProofs.Wrapper" Version="0.0.1.10324-beta" />
-    <PackageReference Include="Dawn.Guard" Version="1.8.0" />
-    <PackageReference Include="Google.Protobuf" Version="3.8.0" />
+    <PackageReference Include="Dawn.Guard" Version="1.9.0" />
+    <PackageReference Include="Google.Protobuf" Version="3.9.1" />
     <PackageReference Include="Grpc.Tools" Version="1.22.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -29,5 +29,8 @@
     <Reference Include="System">
       <HintPath>System</HintPath>
     </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Catalyst.Common\Catalyst.Common.csproj" />
   </ItemGroup>
 </Project>

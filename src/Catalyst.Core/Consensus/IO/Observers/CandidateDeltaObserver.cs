@@ -25,6 +25,7 @@ using System;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.IO.Observers;
+using Catalyst.Common.Extensions;
 using Catalyst.Core.Extensions;
 using Catalyst.Core.IO.Observers;
 using Catalyst.Protocol;
@@ -32,7 +33,7 @@ using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Deltas;
 using Serilog;
 
-namespace Catalyst.Core.P2P.IO.Observers
+namespace Catalyst.Core.Consensus.IO.Observers
 {
     public class CandidateDeltaObserver : BroadcastObserverBase<CandidateDeltaBroadcast>, IP2PMessageObserver
     {

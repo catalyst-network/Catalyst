@@ -24,9 +24,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Catalyst.Common.Utils;
 using Catalyst.Core.Consensus;
-using Catalyst.Core.Util;
-using Catalyst.Protocol;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Google.Protobuf;

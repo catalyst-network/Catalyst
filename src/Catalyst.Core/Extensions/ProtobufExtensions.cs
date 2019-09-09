@@ -28,13 +28,11 @@ using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.Types;
 using Catalyst.Core.IO.Messaging.Correlation;
 using Catalyst.Core.Network;
-using Catalyst.Core.Util;
 using Catalyst.Protocol;
 using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Extensions;
 using Dawn;
 using Google.Protobuf;
-using Multiformats.Hash;
-using Nethereum.RLP;
 
 namespace Catalyst.Core.Extensions
 {
@@ -73,37 +71,10 @@ namespace Catalyst.Core.Extensions
 
             return new CorrelationId(new Guid(validBytes));
         }
-
-        public static ByteString ToByteString(this Guid guid) { return guid.ToByteArray().ToByteString(); }
-
-        public static Multihash AsMultihash(this ByteString byteString)
-        {
-            return Multihash.Decode(byteString.ToByteArray());
-        }
-
-        public static string AsMultihashString(this ByteString byteString)
-        {
-            return AsMultihash(byteString).ToString();
-        }
-
-        public static string AsBase32Address(this ByteString byteString)
-        {
-            return AsMultihash(byteString).AsBase32Address();
-        }
-
-        public static ByteString PublicKeyToProtobuf(this string publicKey)
-        {
-            return publicKey.ToBytesForRLPEncoding().ToByteString();
-        }
-
+        
         public static ByteString IpAddressToProtobuf(this IPAddress ipAddress)
         {
             return ByteString.CopyFrom(ipAddress.To16Bytes());
-        }
-
-        public static ByteString IpAddressToProtobuf(this string ipAddress)
-        {
-            return IPAddress.Parse(ipAddress).IpAddressToProtobuf();
         }
     }
 }

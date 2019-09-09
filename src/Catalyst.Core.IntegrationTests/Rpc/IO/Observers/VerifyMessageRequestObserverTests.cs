@@ -24,7 +24,6 @@
 using System;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using Autofac;
 using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.KeySigner;
@@ -32,10 +31,10 @@ using Catalyst.Core.Config;
 using Catalyst.Core.Extensions;
 using Catalyst.Core.IO.Messaging.Dto;
 using Catalyst.Core.Rpc.IO.Observers;
-using Catalyst.Core.Util;
 using Catalyst.Cryptography.BulletProofs.Wrapper;
 using Catalyst.Protocol;
 using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Extensions;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
@@ -132,7 +131,7 @@ namespace Catalyst.Core.IntegrationTests.Rpc.IO.Observers
         }
 
         [Fact]
-        public async Task VerifyMessageRequest_Can_Verify_Valid_SignMessageResponse()
+        public void VerifyMessageRequest_Can_Verify_Valid_SignMessageResponse()
         {
             var sender = PeerIdentifierHelper.GetPeerIdentifier("sender");
             var signingContext = new SigningContext

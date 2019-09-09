@@ -26,7 +26,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using Catalyst.Abstractions.Consensus.Deltas;
-using Catalyst.Core.Extensions;
+using Catalyst.Common.Extensions;
 using Catalyst.Core.Ledger;
 using Catalyst.Protocol.Deltas;
 using Catalyst.TestUtils;

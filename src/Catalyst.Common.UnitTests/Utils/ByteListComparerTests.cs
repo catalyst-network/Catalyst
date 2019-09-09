@@ -23,11 +23,11 @@
 
 using System.Linq;
 using System.Text;
-using Catalyst.Core.Util;
+using Catalyst.Common.Utils;
 using FluentAssertions;
 using Xunit;
 
-namespace Catalyst.Core.UnitTests.Utils
+namespace Catalyst.Common.UnitTests.Utils
 {
     public class ByteListComparerTests
     {

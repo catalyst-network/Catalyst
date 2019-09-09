@@ -32,7 +32,7 @@ using Catalyst.Protocol.Deltas;
 using Multiformats.Hash;
 using Serilog;
 
-namespace Catalyst.Core.P2P.IO.Observers
+namespace Catalyst.Core.Consensus.IO.Observers
 {
     public class DeltaDfsHashObserver : BroadcastObserverBase<DeltaDfsHashBroadcast>, IP2PMessageObserver
     {

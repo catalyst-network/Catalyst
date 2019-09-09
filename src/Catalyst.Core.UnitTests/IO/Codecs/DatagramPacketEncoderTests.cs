@@ -23,11 +23,12 @@
 
 using System.Net;
 using Catalyst.Abstractions.P2P;
+using Catalyst.Common.Utils;
 using Catalyst.Core.Extensions;
 using Catalyst.Core.IO.Messaging.Correlation;
 using Catalyst.Core.IO.Messaging.Dto;
-using Catalyst.Core.Util;
 using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Extensions;
 using Catalyst.Protocol.IPPN;
 using Catalyst.TestUtils;
 using DotNetty.Buffers;

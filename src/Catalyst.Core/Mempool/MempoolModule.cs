@@ -25,7 +25,11 @@ using Autofac;
 using Catalyst.Abstractions.Mempool;
 using Catalyst.Abstractions.Mempool.Repositories;
 using Catalyst.Core.Mempool.Documents;
+using Catalyst.Core.Mempool.Repositories;
+using Catalyst.Core.Repository;
 using Serilog;
+using SharpRepository.Repository;
+using SharpRepository.Repository.Caching;
 
 namespace Catalyst.Core.Mempool
 {
@@ -33,10 +37,17 @@ namespace Catalyst.Core.Mempool
     {
         protected override void Load(ContainerBuilder builder)
         {
+            builder.Register(c => new MongoDbRepository<MempoolDocument>(
+                    c.ResolveOptional<ICachingStrategy<MempoolDocument, string>>()
+                    )).As<IRepository<MempoolDocument, string>>().SingleInstance();
+            
+            builder.Register(c => new MempoolDocumentRepository(
+                    c.Resolve<IRepository<MempoolDocument, string>>()
+                )).As<IMempoolRepository<MempoolDocument>>().SingleInstance();
+            
             builder.Register(c => new Mempool(c.Resolve<IMempoolRepository<MempoolDocument>>(),
                     c.Resolve<ILogger>()
-                ))
-               .As<IMempool<MempoolDocument>>();
+                )).As<IMempool<MempoolDocument>>().SingleInstance();
         }  
     }
 }

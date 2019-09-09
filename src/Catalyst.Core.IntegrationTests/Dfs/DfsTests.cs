@@ -22,6 +22,7 @@
 #endregion
 
 using System;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -113,7 +114,7 @@ namespace Catalyst.Core.IntegrationTests.Dfs
                 await Task.Delay(100).ConfigureAwait(false);
             }
 
-            _output.WriteLine($"Found in {(DateTime.Now - start).TotalSeconds.ToString()} seconds.");
+            _output.WriteLine($"Found in {(DateTime.Now - start).TotalSeconds.ToString(CultureInfo.InvariantCulture)} seconds.");
         }
 
         protected override void Dispose(bool disposing)

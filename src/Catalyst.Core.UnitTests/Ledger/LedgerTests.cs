@@ -22,12 +22,10 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
 using System.Reactive.Linq;
-using System.Threading.Tasks;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Mempool;
-using Catalyst.Core.Extensions;
+using Catalyst.Common.Extensions;
 using Catalyst.Core.Ledger;
 using Catalyst.Core.Ledger.Models;
 using Catalyst.Core.Ledger.Repository;
@@ -36,6 +34,7 @@ using Catalyst.TestUtils;
 using Microsoft.Reactive.Testing;
 using Multiformats.Hash;
 using Multiformats.Hash.Algorithms;
+using Nethermind.Dirichlet.Numerics;
 using NSubstitute;
 using Serilog;
 using Xunit;
@@ -77,7 +76,7 @@ namespace Catalyst.Core.UnitTests.Ledger
             const int numAccounts = 10;
             for (var i = 0; i < numAccounts; i++)
             {
-                var account = AccountHelper.GetAccount(balance: i * 5);
+                var account = AccountHelper.GetAccount(balance: (UInt256) i * 5);
                 _ledger.SaveAccountState(account);
             }
 

@@ -24,6 +24,7 @@
 using System;
 using Catalyst.Core.Util;
 using Catalyst.Protocol.DAO;
+using Catalyst.Protocol.Extensions;
 using Catalyst.Protocol.Transaction;
 using Catalyst.TestUtils;
 using FluentAssertions;

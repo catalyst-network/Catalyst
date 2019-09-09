@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <SignAssembly>true</SignAssembly>
@@ -8,5 +8,8 @@
   <ItemGroup>
     <ProjectReference Include="..\Catalyst.Protocol\Catalyst.Protocol.csproj" />
     <ProjectReference Include="..\Catalyst.TestUtils\Catalyst.TestUtils.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Update="Microsoft.Reactive.Testing" Version="4.1.6" />
   </ItemGroup>
 </Project>

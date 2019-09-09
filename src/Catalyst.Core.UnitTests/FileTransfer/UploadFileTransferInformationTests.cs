@@ -26,7 +26,6 @@ using System.Linq;
 using Catalyst.Core.Config;
 using Catalyst.Core.FileTransfer;
 using Catalyst.Core.IO.Messaging.Correlation;
-using Catalyst.Core.Util;
 using Catalyst.Protocol;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
@@ -57,9 +56,8 @@ namespace Catalyst.Core.UnitTests.FileTransfer
 
                 for (uint chunkToTest = 0; chunkToTest < chunks; chunkToTest++)
                 {
-                    var startIdx = chunkToTest * Constants.FileTransferChunkSize;
-                    var endIdx = startIdx + Constants.FileTransferChunkSize;
-                    var expectedChunk = expectedBytes.Slice((int) startIdx, (int) endIdx);
+                    var startIdx = (int) chunkToTest * Constants.FileTransferChunkSize;
+                    var expectedChunk = expectedBytes.Skip(startIdx).Take(Constants.FileTransferChunkSize);
 
                     var uploadDto = uploadFileInformation.GetUploadMessageDto(chunkToTest);
                     var transferRequest = uploadDto.Content.FromProtocolMessage<TransferFileBytesRequest>();

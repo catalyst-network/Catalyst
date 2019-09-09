@@ -21,15 +21,18 @@
 
 #endregion
 
-using System.Numerics;
+using System.Collections.Generic;
+using System.Linq;
+using Google.Protobuf;
 
-namespace Catalyst.Core.Extensions
+namespace Catalyst.Protocol.Extensions
 {
-    public static class BigIntegerExtensions
+    public static class BytesExtensions
     {
-        public static int NumberOfDigits(this BigInteger value)
+        public static ByteString ToByteString(this IEnumerable<byte> bytes)
         {
-            return (value * value.Sign).ToString().Length;
+            var enumerable = bytes as byte[] ?? bytes.ToArray();
+            return ByteString.CopyFrom(enumerable);
         }
     }
 }
