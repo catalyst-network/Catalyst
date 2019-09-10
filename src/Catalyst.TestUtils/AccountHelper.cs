@@ -22,7 +22,7 @@
 #endregion
 
 using Catalyst.Abstractions.Types;
-using Catalyst.Core.Ledger.Models;
+using Catalyst.Core.Modules.Ledger.Models;
 using Nethermind.Dirichlet.Numerics;
 
 namespace Catalyst.TestUtils

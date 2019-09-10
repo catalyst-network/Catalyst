@@ -21,7 +21,7 @@
 
 #endregion
 
-using Catalyst.Protocol;
+using Catalyst.Core.Lib.Extensions;
 using Catalyst.Protocol.Transaction;
 using Google.Protobuf.WellKnownTypes;
 

@@ -31,6 +31,6 @@ namespace Catalyst.Abstractions.Cli.CommandTypes
     {
         /// <summary>The node to send the message to.</summary>
         /// <value>The target node.</value>
-        INodeRpcClient Target { get; }
+        IRpcClient Target { get; }
     }
 }

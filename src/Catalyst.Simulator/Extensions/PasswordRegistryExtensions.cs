@@ -22,7 +22,7 @@
 #endregion
 
 using Catalyst.Abstractions.Types;
-using Catalyst.Core.Cryptography;
+using Catalyst.Core.Lib.Registry;
 using Catalyst.Simulator.Helpers;
 
 namespace Catalyst.Simulator.Extensions

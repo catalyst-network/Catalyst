@@ -24,7 +24,7 @@
 using System;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.P2P;
-using Catalyst.Core.Rpc.IO;
+using Catalyst.Core.Lib.Rpc.IO;
 using Catalyst.Protocol.Rpc.Node;
 using DotNetty.Transport.Channels;
 using Serilog;
