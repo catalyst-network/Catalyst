@@ -21,11 +21,8 @@
 
 #endregion
 
-using System;
-using System.Linq;
 using Catalyst.Abstractions.KeySigner;
 using Catalyst.Abstractions.P2P;
-using Catalyst.Abstractions.Types;
 using Catalyst.Core.Cryptography;
 using Catalyst.Core.Extensions;
 using Catalyst.Core.IO.Messaging.Dto;
@@ -41,6 +38,7 @@ using FluentAssertions;
 using Google.Protobuf;
 using NSubstitute;
 using Serilog;
+using System.Linq;
 using Xunit;
 
 namespace Catalyst.Core.UnitTests.Rpc.IO.Observers
@@ -110,7 +108,7 @@ namespace Catalyst.Core.UnitTests.Rpc.IO.Observers
             var privateKey = _keySigner.CryptoContext.GeneratePrivateKey();
             var publicKey = privateKey.GetPublicKey();
             var messageToSign = ByteString.CopyFromUtf8("A Message to Sign");
-            
+
             var verifyMessageRequest = new VerifyMessageRequest
             {
                 Message = messageToSign,
@@ -118,6 +116,7 @@ namespace Catalyst.Core.UnitTests.Rpc.IO.Observers
                 Signature = _keySigner.CryptoContext.Sign(privateKey, messageToSign.ToByteArray(), _signingContext.ToByteArray()).SignatureBytes.ToByteString(),
                 SigningContext = _signingContext
             };
+
             return verifyMessageRequest;
         }
 
