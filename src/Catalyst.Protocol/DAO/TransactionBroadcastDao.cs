@@ -31,6 +31,7 @@ using Google.Protobuf.Collections;
 using Google.Protobuf.WellKnownTypes;
 using Catalyst.Common;
 using Catalyst.Common.Util;
+using Catalyst.Protocol.Converters;
 using Catalyst.Protocol.Extensions;
 
 namespace Catalyst.Protocol.DAO
@@ -59,8 +60,6 @@ namespace Catalyst.Protocol.DAO
                 cfg.CreateMap<CFTransactionEntry, CFTransactionEntryDao>().ReverseMap();
 
                 cfg.CreateMap<EntryRangeProof, EntryRangeProofDao>().ReverseMap();
-
-               // cfg.CreateMap<EntryRangeProof, string>().ReverseMap();
 
                 cfg.CreateMap<TransactionBroadcast, TransactionBroadcastDao>()
                    .ForMember(d => d.From, opt => opt.ConvertUsing(new KeyUtilsFormatter(), s => s.From.ToByteArray())).ReverseMap();

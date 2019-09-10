@@ -38,7 +38,7 @@ namespace Catalyst.Protocol.DAO.Deltas
         public string PreviousDeltaDfsHash { get; set; }
         public string MerkleRoot { get; set; }
         public string MerklePoda { get; set; }
-       // public DateTime TimeStamp { get; set; }
+        public DateTime TimeStamp { get; set; }
         public IEnumerable<STTransactionEntryDao> STEntries { get; set; }
         public IEnumerable<CFTransactionEntryDao> CFEntries { get; set; }
         public IEnumerable<CoinbaseEntryDao> CBEntries { get; set; }

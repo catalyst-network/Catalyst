@@ -38,14 +38,13 @@ namespace Catalyst.Protocol.UnitTests.DAO
         [Fact]
         public static void DeltasDao_Deltas_Should_Be_Convertible()
         {
-            var deltaeDao = new DeltaDao();
+            var deltaDao = new DeltaDao();
 
             var previousHash = "previousHash".ComputeUtf8Multihash(new ID()).ToBytes();
 
             var message = DeltaHelper.GetDelta(previousHash);
-            message.TimeStamp = null;
 
-            var messageDao = deltaeDao.ToDao(message);
+            var messageDao = deltaDao.ToDao(message);
             var protoBuff = messageDao.ToProtoBuff();
             message.Should().Be(protoBuff);
         }
@@ -95,10 +94,8 @@ namespace Catalyst.Protocol.UnitTests.DAO
         public static void FavouriteDeltaBroadcastDao_FavouriteDeltaBroadcast_Should_Be_Convertible()
         {
             var favouriteDeltaBroadcastDao = new FavouriteDeltaBroadcastDao();
-            var byteRn = new byte[30];
-            new Random().NextBytes(byteRn);
 
-             var message = new FavouriteDeltaBroadcast
+            var message = new FavouriteDeltaBroadcast
             {
                 Candidate = DeltaHelper.GetCandidateDelta(producerId: PeerIdHelper.GetPeerId("not me")),
                 VoterId = PeerIdentifierHelper.GetPeerIdentifier("test").PeerId

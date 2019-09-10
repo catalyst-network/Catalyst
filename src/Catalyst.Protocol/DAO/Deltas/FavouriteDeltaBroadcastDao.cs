@@ -23,6 +23,7 @@
 
 using AutoMapper;
 using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Converters;
 using Catalyst.Protocol.Deltas;
 using Google.Protobuf;
 

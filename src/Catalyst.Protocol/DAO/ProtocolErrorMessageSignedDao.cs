@@ -24,7 +24,7 @@
 using AutoMapper;
 using Catalyst.Protocol.Common;
 using Google.Protobuf;
-
+using Catalyst.Protocol.Converters;
 namespace Catalyst.Protocol.DAO
 {
     public class ProtocolErrorMessageSignedDao : DaoBase
@@ -46,8 +46,6 @@ namespace Catalyst.Protocol.DAO
 
                 cfg.CreateMap<PeerIdDao, PeerId>()
                    .ForMember(d => d.Port, opt => opt.ConvertUsing(new UShortToByteStringFormatter(), s => s.Port));
-
-
 
                 cfg.CreateMap<ByteString, string>().ConvertUsing(s => s.ToBase64());
                 cfg.CreateMap<string, ByteString>().ConvertUsing(s => ByteString.FromBase64(s));
