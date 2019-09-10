@@ -59,8 +59,7 @@ namespace Catalyst.Core.IntegrationTests.Rpc.IO.Observers
         {
             Path.Combine(Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile),
             Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile),
-            Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Protocol.Common.Network.Devnet)),
-            Path.Combine(Constants.ConfigSubFolder, Constants.ShellNodesConfigFile)
+            Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Protocol.Common.Network.Devnet))
         })
         {
             _testMessageToSign = ByteString.CopyFromUtf8("TestMsg");
