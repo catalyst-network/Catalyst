@@ -41,7 +41,6 @@ namespace Catalyst.Core.IntegrationTests.Dfs
         private readonly IpfsAdapter _ipfs;
         private readonly Core.Dfs.Dfs _dfs;
         private readonly DfsGateway _dfsGateway;
-        private const string ExpectedText = "good afternoon from IPFS!";
 
         public DfsHttpTests(ITestOutputHelper output) : base(output)
         {
@@ -53,25 +52,29 @@ namespace Catalyst.Core.IntegrationTests.Dfs
             _dfsGateway = new DfsGateway(_ipfs);
         }
 
-        [Fact]
+        [Theory]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
-        public async Task Should_have_a_URL_for_content()
+        [InlineData("Expected content str")]
+        [InlineData("Expected @!£:!$!%(")]
+        public async Task Should_have_a_URL_for_content(string expectedText)
         {
-            var id = await _dfs.AddTextAsync(ExpectedText).ConfigureAwait(false);
+            var id = await _dfs.AddTextAsync(expectedText).ConfigureAwait(false);
             string url = _dfsGateway.ContentUrl(id);
             url.Should().StartWith("http");
         }
 
-        [Fact]
+        [Theory]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
-        public async Task Should_serve_the_content()
+        [InlineData("Expected content str")]
+        [InlineData("Expected @!£:!$!%(")]
+        public async Task Should_serve_the_content(string expectedText)
         {
-            var id = await _dfs.AddTextAsync(ExpectedText);
+            var id = await _dfs.AddTextAsync(expectedText);
             string url = _dfsGateway.ContentUrl(id);
             using (var httpClient = new HttpClient())
             {
                 string content = await httpClient.GetStringAsync(url);
-                content.Should().Be(ExpectedText);
+                content.Should().Be(expectedText);
             }
         }
 
