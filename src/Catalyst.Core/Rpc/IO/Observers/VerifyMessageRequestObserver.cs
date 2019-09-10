@@ -51,7 +51,7 @@ namespace Catalyst.Core.Rpc.IO.Observers
         {
             _keySigner = keySigner;
         }
-        
+
         /// <param name="verifyMessageRequest"></param>
         /// <param name="channelHandlerContext"></param>
         /// <param name="senderPeerIdentifier"></param>
@@ -67,41 +67,41 @@ namespace Catalyst.Core.Rpc.IO.Observers
             Guard.Argument(senderPeerIdentifier, nameof(senderPeerIdentifier)).NotNull();
             Logger.Debug("received message of type VerifyMessageRequest");
 
-            var decodedMessage = RLP.Decode(verifyMessageRequest.Message.ToByteArray()).RLPData;
-            var decodedPublicKey = RLP.Decode(verifyMessageRequest.PublicKey.ToByteArray()).RLPData;
-            var decodedSignature = RLP.Decode(verifyMessageRequest.Signature.ToByteArray()).RLPData;
+            var decodedMessage = verifyMessageRequest.Message.ToByteArray();
+            var decodedPublicKey = verifyMessageRequest.PublicKey.ToByteArray();
+            var decodedSignature = verifyMessageRequest.Signature.ToByteArray();
             var signatureContext = verifyMessageRequest.SigningContext;
 
-            IPublicKey publicKey = null;
-            try
+            if (decodedPublicKey.Length != _keySigner.CryptoContext.PublicKeyLength)
             {
-                publicKey = _keySigner.CryptoContext.PublicKeyFromBytes(decodedPublicKey);
-
-                Guard.Argument(publicKey).HasValue();
+                Logger.Error("{0} {1}", PublicKeyInvalid, verifyMessageRequest);
+                return ReturnResponse(false);
             }
-            catch (Exception ex)
+
+            if (decodedSignature.Length != _keySigner.CryptoContext.SignatureLength)
             {
-                Logger.Error(ex, "{0} {1}", PublicKeyInvalid, verifyMessageRequest);
+                Logger.Error("{0} {1}", SignatureInvalid, verifyMessageRequest);
+                return ReturnResponse(false);
             }
 
             ISignature signature = null;
             try
             {
                 signature = _keySigner.CryptoContext.SignatureFromBytes(decodedSignature, decodedPublicKey);
-                Guard.Argument(signature).HasValue();
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                Logger.Error(ex, "{0} {1}", SignatureInvalid, verifyMessageRequest);
+                Logger.Error(e, "{0} {1}", SignatureInvalid, verifyMessageRequest);
+                return ReturnResponse(false);
             }
 
             var result = _keySigner.Verify(signature, decodedMessage, signatureContext);
 
             Logger.Debug("message content is {0}", verifyMessageRequest.Message);
-            
+
             return ReturnResponse(result);
         }
-        
+
         private VerifyMessageResponse ReturnResponse(bool result)
         {
             return new VerifyMessageResponse

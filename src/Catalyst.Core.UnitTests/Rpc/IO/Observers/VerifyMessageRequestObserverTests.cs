@@ -21,11 +21,14 @@
 
 #endregion
 
+using System;
 using System.Linq;
-using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.KeySigner;
-using Catalyst.Common.Utils;
+using Catalyst.Abstractions.P2P;
+using Catalyst.Abstractions.Types;
+using Catalyst.Core.Cryptography;
 using Catalyst.Core.Extensions;
+using Catalyst.Core.IO.Messaging.Dto;
 using Catalyst.Core.Rpc.IO.Observers;
 using Catalyst.Cryptography.BulletProofs.Wrapper;
 using Catalyst.Protocol;
@@ -35,8 +38,7 @@ using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using FluentAssertions;
-using Microsoft.Reactive.Testing;
-using Nethereum.RLP;
+using Google.Protobuf;
 using NSubstitute;
 using Serilog;
 using Xunit;
@@ -45,63 +47,88 @@ namespace Catalyst.Core.UnitTests.Rpc.IO.Observers
 {
     public sealed class VerifyMessageRequestObserverTests
     {
-        private readonly ILogger _logger;
         private readonly IKeySigner _keySigner;
+        private readonly VerifyMessageRequestObserver _verifyMessageRequestObserver;
         private readonly IChannelHandlerContext _fakeContext;
-        private readonly byte[] _signatureBytes = ByteUtil.GenerateRandomByteArray(FFI.SignatureLength);
-        private readonly byte[] _publicKeyBytes = ByteUtil.GenerateRandomByteArray(FFI.PublicKeyLength);
-        private readonly SigningContext _signingContext = new SigningContext();
-        private readonly string _message = "Any old message";
+        private readonly IPeerIdentifier _testPeerIdentifier;
+        private readonly VerifyMessageRequest _verifyMessageRequest;
+        private readonly SigningContext _signingContext;
 
         public VerifyMessageRequestObserverTests()
-        {            
-            _keySigner = Substitute.For<IKeySigner>();
-            _logger = Substitute.For<ILogger>();
-            _fakeContext = Substitute.For<IChannelHandlerContext>();
-            
-            var fakeChannel = Substitute.For<IChannel>();
-            _fakeContext.Channel.Returns(fakeChannel);
-        }
-
-        [Theory]
-        [InlineData(true)]
-        [InlineData(false)]
-        public void VerifyMessageRequest_Can_Send_VerifyMessageResponse(bool expectedResponse)
         {
-            var testScheduler = new TestScheduler();
-            _keySigner.Verify(default, default, default).ReturnsForAnyArgs(expectedResponse);
-
-            var verifyMessageRequest = new VerifyMessageRequest
+            _signingContext = new SigningContext
             {
-                Message = _message.ToUtf8ByteString(),
-                PublicKey = RLP.EncodeElement(_publicKeyBytes).ToByteString(),
-                Signature = RLP.EncodeElement(_signatureBytes).ToByteString(),
-                SigningContext = _signingContext
+                Network = Protocol.Common.Network.Devnet,
+                SignatureType = SignatureType.ProtocolRpc
             };
 
-            var protocolMessage =
-                verifyMessageRequest.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender_key").PeerId);
+            _testPeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("TestPeerIdentifier");
 
-            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, testScheduler,
-                protocolMessage
-            );
+            _keySigner = Substitute.For<IKeySigner>();
+            _keySigner.CryptoContext.Returns(new CryptoContext(new CryptoWrapper()));
+
+            var logger = Substitute.For<ILogger>();
+            _fakeContext = Substitute.For<IChannelHandlerContext>();
+
+            var fakeChannel = Substitute.For<IChannel>();
+            _fakeContext.Channel.Returns(fakeChannel);
+            _verifyMessageRequestObserver = new VerifyMessageRequestObserver(_testPeerIdentifier, logger, _keySigner);
+
+            _verifyMessageRequest = GetValidVerifyMessageRequest();
+        }
+
+        [Fact]
+        public void VerifyMessageRequestObserver_Can_Reject_Invalid_Public_Key_Length()
+        {
+            _verifyMessageRequest.PublicKey = ByteString.CopyFromUtf8("InvalidPublicKey");
+            AssertVerifyResponse(false);
+        }
+
+        [Fact]
+        public void VerifyMessageRequestObserver_Can_Reject_Invalid_Signature_Length()
+        {
+            _verifyMessageRequest.Signature = ByteString.CopyFrom(new byte[24]);
+            AssertVerifyResponse(false);
+        }
+
+        [Fact]
+        public void VerifyMessageRequestObserver_Can_Send_True_If_Valid_Signature()
+        {
+            _keySigner.Verify(default, default, default).ReturnsForAnyArgs(true);
+            AssertVerifyResponse(true);
+        }
+
+        [Fact]
+        public void VerifyMessageRequestObserver_Can_Send_False_Response_If_Verify_Fails()
+        {
+            _keySigner.Verify(default, default, default).ReturnsForAnyArgs(false);
+            AssertVerifyResponse(false);
+        }
+
+        private VerifyMessageRequest GetValidVerifyMessageRequest()
+        {
+            var privateKey = _keySigner.CryptoContext.GeneratePrivateKey();
+            var publicKey = privateKey.GetPublicKey();
+            var messageToSign = ByteString.CopyFromUtf8("A Message to Sign");
             
-            var handler = new VerifyMessageRequestObserver(PeerIdentifierHelper.GetPeerIdentifier("sender"),
-                _logger,
-                _keySigner
-            );
+            var verifyMessageRequest = new VerifyMessageRequest
+            {
+                Message = messageToSign,
+                PublicKey = publicKey.Bytes.ToByteString(),
+                Signature = _keySigner.CryptoContext.Sign(privateKey, messageToSign.ToByteArray(), _signingContext.ToByteArray()).SignatureBytes.ToByteString(),
+                SigningContext = _signingContext
+            };
+            return verifyMessageRequest;
+        }
 
-            handler.StartObserving(messageStream);
+        private void AssertVerifyResponse(bool valid)
+        {
+            _verifyMessageRequestObserver.OnNext(new ObserverDto(_fakeContext, _verifyMessageRequest.ToProtocolMessage(_testPeerIdentifier.PeerId)));
 
-            testScheduler.Start();
-
-            var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();
-            receivedCalls.Count.Should().Be(1);
-
-            var sentResponseDto = (IMessageDto<ProtocolMessage>) receivedCalls.Single().GetArguments().Single();
-            var verifyResponseMessage = sentResponseDto.Content.FromProtocolMessage<VerifyMessageResponse>();
-
-            verifyResponseMessage.IsSignedByKey.Should().Be(expectedResponse);
+            var responseList = _fakeContext.Channel.ReceivedCalls().ToList();
+            var response = ((MessageDto) responseList[0].GetArguments()[0]).Content
+               .FromProtocolMessage<VerifyMessageResponse>();
+            response.IsSignedByKey.Should().Be(valid);
         }
     }
 }
