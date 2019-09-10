@@ -1,4 +1,4 @@
-﻿#region LICENSE
+#region LICENSE
 
 /**
 * Copyright (c) 2019 Catalyst Network
@@ -25,7 +25,7 @@ using AutoMapper;
 using Catalyst.Protocol.Deltas;
 using Google.Protobuf;
 
-namespace Catalyst.Protocol.DAO
+namespace Catalyst.Protocol.DAO.Deltas
 {
     public class DeltaDfsHashBroadcastDao : DaoBase
     {
@@ -36,6 +36,7 @@ namespace Catalyst.Protocol.DAO
         {
             var config = new MapperConfiguration(cfg =>
             {
+                cfg.CreateMap<DeltaDfsHashBroadcast, DeltaDfsHashBroadcastDao>().ReverseMap();
                 cfg.CreateMap<ByteString, string>().ConvertUsing(s => s.ToBase64());
                 cfg.CreateMap<string, ByteString>().ConvertUsing(s => ByteString.FromBase64(s));
             });
@@ -45,7 +46,7 @@ namespace Catalyst.Protocol.DAO
 
         public override IMessage ToProtoBuff()
         {
-            return (IMessage)Mapper.Map<DeltaDfsHashBroadcast>(this);
+            return (IMessage) Mapper.Map<DeltaDfsHashBroadcast>(this);
         }
 
         public override DaoBase ToDao(IMessage protoBuff)

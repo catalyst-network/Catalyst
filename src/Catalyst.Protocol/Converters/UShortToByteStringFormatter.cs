@@ -21,25 +21,15 @@
 
 #endregion
 
-using System.Net;
-using Catalyst.Abstractions.P2P;
-using Catalyst.Common.Util;
-using Catalyst.Core.P2P;
-using Catalyst.Core.Util;
+using System;
+using AutoMapper;
+using Catalyst.Protocol.Extensions;
+using Google.Protobuf;
 
-namespace Catalyst.Simulator
+namespace Catalyst.Protocol.Converters
 {
-    public sealed class SimulationNode
+    public class UShortToByteStringFormatter : IValueConverter<ushort, ByteString>
     {
-        public string Ip { get; set; }
-
-        public int Port { get; set; }
-
-        public string PublicKey { get; set; }
-
-        public IPeerIdentifier ToPeerIdentifier()
-        {
-            return new PeerIdentifier(PublicKey.KeyToBytes(), IPAddress.Parse(Ip), Port);
-        }
+        public ByteString Convert(ushort sourceMember, ResolutionContext context) { return BitConverter.GetBytes(sourceMember).ToByteString(); }
     }
 }

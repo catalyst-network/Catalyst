@@ -34,6 +34,7 @@ using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.Discovery;
 using Catalyst.Abstractions.P2P.IO.Messaging.Broadcast;
 using Catalyst.Abstractions.P2P.IO.Messaging.Correlation;
+using Catalyst.Common.Util;
 using Catalyst.Core.Config;
 using Catalyst.Core.IO.EventLoop;
 using Catalyst.Core.P2P;

@@ -23,7 +23,7 @@
 
 using SimpleBase;
 
-namespace Catalyst.Core.Util
+namespace Catalyst.Common.Util
 {
     // https://github.com/catalyst-network/Catalyst.Node/issues/847
     public static class KeyUtil

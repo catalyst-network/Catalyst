@@ -1,4 +1,4 @@
-﻿#region LICENSE
+#region LICENSE
 
 /**
 * Copyright (c) 2019 Catalyst Network
@@ -33,7 +33,9 @@ namespace Catalyst.Protocol.DAO
         [RepositoryPrimaryKey(Order = 1)]
         [Key]
         public string Id { get; set; }
+
         protected IMapper Mapper { get; set; }
+
         public abstract IMessage ToProtoBuff();
         public abstract DaoBase ToDao(IMessage protoBuff);
     }

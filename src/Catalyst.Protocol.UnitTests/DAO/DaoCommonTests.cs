@@ -22,9 +22,6 @@
 #endregion
 
 using System;
-using System.Net;
-using Catalyst.Core.Extensions;
-using Catalyst.Core.Util;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.DAO;
 using Catalyst.Protocol.Extensions;
@@ -71,6 +68,18 @@ namespace Catalyst.Protocol.UnitTests.DAO
 
             var errorMessageSignedDao = protocolErrorMessageSignedDao.ToDao(message);
             var protoBuff = errorMessageSignedDao.ToProtoBuff();
+            message.Should().Be(protoBuff);
+        }
+
+        [Fact]
+        public static void PeerIdDao_PeerId_Should_Be_Convertible()
+        {
+            var peerIdDao = new PeerIdDao();
+
+            var message = PeerIdentifierHelper.GetPeerIdentifier("MyPeerId_Testing").PeerId;
+
+            var peer = peerIdDao.ToDao(message);
+            var protoBuff = peer.ToProtoBuff();
             message.Should().Be(protoBuff);
         }
 

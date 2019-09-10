@@ -1,4 +1,4 @@
-﻿#region LICENSE
+#region LICENSE
 
 /**
 * Copyright (c) 2019 Catalyst Network
@@ -26,7 +26,7 @@ using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Deltas;
 using Google.Protobuf;
 
-namespace Catalyst.Protocol.DAO
+namespace Catalyst.Protocol.DAO.Deltas
 {
     public class CandidateDeltaBroadcastDao : DaoBase
     {
@@ -38,7 +38,14 @@ namespace Catalyst.Protocol.DAO
         {
             var config = new MapperConfiguration(cfg =>
             {
+                cfg.CreateMap<CandidateDeltaBroadcast, CandidateDeltaBroadcastDao>().ReverseMap();
                 cfg.CreateMap<PeerId, PeerIdDao>().ReverseMap();
+
+                cfg.CreateMap<PeerId, PeerIdDao>()
+                   .ForMember(d => d.Port, opt => opt.ConvertUsing(new ByteStringToUShortFormatter(), s => s.Port));
+
+                cfg.CreateMap<PeerIdDao, PeerId>()
+                   .ForMember(d => d.Port, opt => opt.ConvertUsing(new UShortToByteStringFormatter(), s => s.Port));
 
                 cfg.CreateMap<ByteString, string>().ConvertUsing(s => s.ToBase64());
                 cfg.CreateMap<string, ByteString>().ConvertUsing(s => ByteString.FromBase64(s));
@@ -49,12 +56,12 @@ namespace Catalyst.Protocol.DAO
 
         public override IMessage ToProtoBuff()
         {
-            return (IMessage)Mapper.Map<DeltaDfsHashBroadcast>(this);
+            return (IMessage) Mapper.Map<CandidateDeltaBroadcast>(this);
         }
 
         public override DaoBase ToDao(IMessage protoBuff)
         {
-            return Mapper.Map<DeltaDfsHashBroadcastDao>((DeltaDfsHashBroadcast)protoBuff);
+            return Mapper.Map<CandidateDeltaBroadcastDao>((CandidateDeltaBroadcast)protoBuff);
         }
     }
 }

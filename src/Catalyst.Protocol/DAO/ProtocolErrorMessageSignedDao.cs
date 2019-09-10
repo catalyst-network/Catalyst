@@ -1,4 +1,4 @@
-﻿#region LICENSE
+#region LICENSE
 
 /**
 * Copyright (c) 2019 Catalyst Network
@@ -40,6 +40,15 @@ namespace Catalyst.Protocol.DAO
             {
                 cfg.CreateMap<ProtocolErrorMessageSigned, ProtocolErrorMessageSignedDao>().ReverseMap();
                 cfg.CreateMap<PeerId, PeerIdDao>().ReverseMap();
+
+                cfg.CreateMap<PeerId, PeerIdDao>()
+                   .ForMember(d => d.Port, opt => opt.ConvertUsing(new ByteStringToUShortFormatter(), s => s.Port));
+
+                cfg.CreateMap<PeerIdDao, PeerId>()
+                   .ForMember(d => d.Port, opt => opt.ConvertUsing(new UShortToByteStringFormatter(), s => s.Port));
+
+
+
                 cfg.CreateMap<ByteString, string>().ConvertUsing(s => s.ToBase64());
                 cfg.CreateMap<string, ByteString>().ConvertUsing(s => ByteString.FromBase64(s));
             });
@@ -49,7 +58,7 @@ namespace Catalyst.Protocol.DAO
 
         public override IMessage ToProtoBuff()
         {
-            return (IMessage)Mapper.Map<ProtocolErrorMessageSigned>(this);
+            return (IMessage) Mapper.Map<ProtocolErrorMessageSigned>(this);
         }
 
         public override DaoBase ToDao(IMessage protoBuff)

@@ -1,4 +1,4 @@
-﻿#region LICENSE
+#region LICENSE
 
 /**
 * Copyright (c) 2019 Catalyst Network
@@ -21,11 +21,8 @@
 
 #endregion
 
-using System.Collections.Generic;
-using System.Linq;
 using AutoMapper;
 using Catalyst.Protocol.Common;
-using Catalyst.Protocol.Transaction;
 using Google.Protobuf;
 
 namespace Catalyst.Protocol.DAO
@@ -43,6 +40,13 @@ namespace Catalyst.Protocol.DAO
             {
                 cfg.CreateMap<ProtocolMessage, ProtocolMessageDao>().ReverseMap();
                 cfg.CreateMap<PeerId, PeerIdDao>().ReverseMap();
+
+                cfg.CreateMap<PeerId, PeerIdDao>()
+                   .ForMember(d => d.Port, opt => opt.ConvertUsing(new ByteStringToUShortFormatter(), s => s.Port));
+
+                cfg.CreateMap<PeerIdDao, PeerId>()
+                   .ForMember(d => d.Port, opt => opt.ConvertUsing(new UShortToByteStringFormatter(), s => s.Port));
+
                 cfg.CreateMap<ByteString, string>().ConvertUsing(s => s.ToBase64());
                 cfg.CreateMap<string, ByteString>().ConvertUsing(s => ByteString.FromBase64(s));
             });

@@ -23,11 +23,15 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using AutoMapper;
 using Catalyst.Protocol.Transaction;
 using Google.Protobuf;
 using Google.Protobuf.Collections;
 using Google.Protobuf.WellKnownTypes;
+using Catalyst.Common;
+using Catalyst.Common.Util;
+using Catalyst.Protocol.Extensions;
 
 namespace Catalyst.Protocol.DAO
 {
@@ -56,15 +60,13 @@ namespace Catalyst.Protocol.DAO
 
                 cfg.CreateMap<EntryRangeProof, EntryRangeProofDao>().ReverseMap();
 
-                cfg.CreateMap<EntryRangeProof, string>().ReverseMap();
+               // cfg.CreateMap<EntryRangeProof, string>().ReverseMap();
 
-
-                //cfg.CreateMap<TransactionBroadcast, TransactionBroadcastDao>().
-                //    ForMember(dest => dest.From).ConvertUsing(s => s);
-
-
-
+                cfg.CreateMap<TransactionBroadcast, TransactionBroadcastDao>()
+                   .ForMember(d => d.From, opt => opt.ConvertUsing(new KeyUtilsFormatter(), s => s.From.ToByteArray())).ReverseMap();
+                
                 cfg.CreateMap<DateTime, Timestamp>().ConvertUsing(s => s.ToTimestamp());
+
                 cfg.CreateMap<Timestamp, DateTime>().ConvertUsing(s => s.ToDateTime());
 
                 cfg.CreateMap<ByteString, string>().ConvertUsing(s => s.ToBase64());

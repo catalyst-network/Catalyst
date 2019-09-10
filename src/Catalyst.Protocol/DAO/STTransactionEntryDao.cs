@@ -1,4 +1,4 @@
-﻿#region LICENSE
+#region LICENSE
 
 /**
 * Copyright (c) 2019 Catalyst Network
@@ -47,7 +47,7 @@ namespace Catalyst.Protocol.DAO
 
         public override IMessage ToProtoBuff()
         {
-            return (IMessage)Mapper.Map<STTransactionEntry>(this);
+            return (IMessage) Mapper.Map<STTransactionEntry>(this);
         }
 
         public override DaoBase ToDao(IMessage protoBuff)

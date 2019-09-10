@@ -23,6 +23,7 @@
 
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.Rpc.Authentication;
+using Catalyst.Common.Util;
 using Catalyst.Core.Rpc.Authentication;
 using Catalyst.Core.Rpc.Authentication.Models;
 using Catalyst.Core.Rpc.Authentication.Repository;

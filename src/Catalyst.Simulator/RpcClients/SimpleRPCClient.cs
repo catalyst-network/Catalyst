@@ -33,6 +33,7 @@ using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.Rpc;
 using Catalyst.Abstractions.Types;
+using Catalyst.Common.Util;
 using Catalyst.Core.Cli;
 using Catalyst.Core.Cryptography;
 using Catalyst.Core.Extensions;

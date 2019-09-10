@@ -1,4 +1,4 @@
-﻿#region LICENSE
+#region LICENSE
 
 /**
 * Copyright (c) 2019 Catalyst Network
@@ -24,37 +24,40 @@
 using System;
 using System.Collections.Generic;
 using AutoMapper;
-using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Transaction;
 using Google.Protobuf;
 using Google.Protobuf.Collections;
+using Google.Protobuf.WellKnownTypes;
 
-namespace Catalyst.Protocol.DAO
+namespace Catalyst.Protocol.DAO.Deltas
 {
-    public class Delta : DaoBase
+    public class DeltaDao : DaoBase
     {
         public UInt32 Version { get; set; }
         public string PreviousDeltaDfsHash { get; set; }
         public string MerkleRoot { get; set; }
         public string MerklePoda { get; set; }
-
-        //how does entitframework store timestamps?
-        public DateTime TimeStamp { get; set; }
+       // public DateTime TimeStamp { get; set; }
         public IEnumerable<STTransactionEntryDao> STEntries { get; set; }
         public IEnumerable<CFTransactionEntryDao> CFEntries { get; set; }
         public IEnumerable<CoinbaseEntryDao> CBEntries { get; set; }
 
-        public Delta()
+        public DeltaDao()
         {
             var config = new MapperConfiguration(cfg =>
             {
+                cfg.CreateMap<Delta, DeltaDao>().ReverseMap();
+
                 cfg.CreateMap<CoinbaseEntry, CoinbaseEntryDao>().ReverseMap();
                 cfg.CreateMap<STTransactionEntry, STTransactionEntryDao>().ReverseMap();
                 cfg.CreateMap<Transaction.CFTransactionEntry, CFTransactionEntryDao>().ReverseMap();
 
-                //cfg.CreateMap<ByteString, string>().ConvertUsing(s => s.ToBase64());
-                //cfg.CreateMap<string, ByteString>().ConvertUsing(s => ByteString.FromBase64(s));
+                cfg.CreateMap<DateTime, Timestamp>().ConvertUsing(s => s.ToTimestamp());
+                cfg.CreateMap<Timestamp, DateTime>().ConvertUsing(s => s.ToDateTime());
+
+                cfg.CreateMap<ByteString, string>().ConvertUsing(s => s.ToBase64());
+                cfg.CreateMap<string, ByteString>().ConvertUsing(s => ByteString.FromBase64(s));
 
                 bool IsToRepeatedField(PropertyMap pm)
                 {
@@ -63,8 +66,10 @@ namespace Catalyst.Protocol.DAO
                         var destGenericBase = pm.DestinationType.GetGenericTypeDefinition();
                         return destGenericBase == typeof(RepeatedField<>);
                     }
+
                     return false;
                 }
+
                 cfg.ForAllPropertyMaps(IsToRepeatedField, (propertyMap, opts) => opts.UseDestinationValue());
             });
 
@@ -73,12 +78,12 @@ namespace Catalyst.Protocol.DAO
 
         public override IMessage ToProtoBuff()
         {
-            return (IMessage)Mapper.Map<DeltaDfsHashBroadcast>(this);
+            return (IMessage) Mapper.Map<Delta>(this);
         }
 
         public override DaoBase ToDao(IMessage protoBuff)
         {
-            return Mapper.Map<DeltaDfsHashBroadcastDao>((DeltaDfsHashBroadcast)protoBuff);
+            return Mapper.Map<DeltaDao>((Delta) protoBuff);
         }
     }
 }
