@@ -95,8 +95,8 @@ EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Ci", "Ci", "{29C2F736-A644-427E-B72C-FD1EE1024E27}"
 ProjectSection(SolutionItems) = preProject
-	..\azure-pipelines.yml = ..\azure-pipelines.yml
 	..\nuget-preview-azure-pipelines.yml = ..\nuget-preview-azure-pipelines.yml
+	..\dev-test-suite-azure-pipelines.yml = ..\dev-test-suite-azure-pipelines.yml
 EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{AC999877-034E-4711-AB8D-716B1CC2C4B9}"
@@ -116,6 +116,10 @@ ProjectSection(SolutionItems) = preProject
 	..\README.md = ..\README.md
 	..\SECURITY.md = ..\SECURITY.md
 EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Core.Modules.Cryptography.BulletProofs", "Catalyst.Core.Modules.Cryptography.BulletProofs\Catalyst.Core.Modules.Cryptography.BulletProofs.csproj", "{E72CF774-9A2F-475C-ADA0-C061C35CEA91}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Core.Modules.Cryptography.BulletProofs.Tests", "Catalyst.Cryptography.BulletProofs.Wrapper.Tests\Catalyst.Core.Modules.Cryptography.BulletProofs.Tests.csproj", "{F17A64F1-E2FB-4B3F-A7B9-803685D47038}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

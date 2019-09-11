@@ -22,9 +22,9 @@
 #endregion
 
 using System;
+using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib.Registry;
-using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
 using FluentAssertions;
 using NSubstitute;
 using Xunit;

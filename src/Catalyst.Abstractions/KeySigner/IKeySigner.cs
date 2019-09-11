@@ -23,8 +23,8 @@
 
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Keystore;
-using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
 using Catalyst.Protocol.Common;
+using ISignature = Catalyst.Abstractions.Cryptography.ISignature;
 
 namespace Catalyst.Abstractions.KeySigner
 {

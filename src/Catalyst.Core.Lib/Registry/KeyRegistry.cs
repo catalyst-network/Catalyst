@@ -23,10 +23,10 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.Registry;
 using Catalyst.Abstractions.Types;
-using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
 
 namespace Catalyst.Core.Lib.Registry
 {

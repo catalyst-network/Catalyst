@@ -33,7 +33,7 @@ using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Network;
 using Catalyst.Core.Lib.Util;
-using Catalyst.Cryptography.BulletProofs.Wrapper;
+using Catalyst.Core.Modules.Cryptography.BulletProofs;
 using Catalyst.Protocol.Common;
 using Dawn;
 using Google.Protobuf;

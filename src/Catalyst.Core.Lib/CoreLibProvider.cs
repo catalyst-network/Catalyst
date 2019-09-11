@@ -47,8 +47,6 @@ using Catalyst.Core.Lib.P2P.ReputationSystem;
 using Catalyst.Core.Lib.Registry;
 using Catalyst.Core.Lib.Rpc.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.Util;
-using Catalyst.Cryptography.BulletProofs.Wrapper;
-using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
 using Multiformats.Hash.Algorithms;
@@ -113,9 +111,6 @@ namespace Catalyst.Core.Lib
             builder.RegisterType<ConsolePasswordReader>().As<IPasswordReader>().SingleInstance();
             builder.RegisterType<CertificateStore>().As<ICertificateStore>().SingleInstance();
             builder.RegisterType<PasswordManager>().As<IPasswordManager>().SingleInstance();
-            
-            // Register Native cryptography wrapper
-            builder.RegisterType<CryptoWrapper>().As<IWrapper>();
 
             // Register FileSystem
             builder.RegisterType<FileSystem.FileSystem>().As<IFileSystem>();

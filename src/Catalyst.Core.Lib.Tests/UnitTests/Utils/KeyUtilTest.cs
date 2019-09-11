@@ -23,7 +23,7 @@
 
 using Catalyst.Core.Lib.Cryptography;
 using Catalyst.Core.Lib.Util;
-using Catalyst.Cryptography.BulletProofs.Wrapper;
+using Catalyst.Core.Modules.Cryptography.BulletProofs;
 using FluentAssertions;
 using Xunit;
 

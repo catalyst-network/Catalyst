@@ -25,13 +25,11 @@ using System.IO;
 using System.Linq;
 using Autofac;
 using Catalyst.Abstractions.Mempool;
-using Catalyst.Core.Lib.Config;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.Mempool.Documents;
 using Catalyst.TestUtils;
 using FluentAssertions;
-using Xunit;
 using Xunit.Abstractions;
 
 namespace Catalyst.Core.Modules.Mempool.Tests.IntegrationTests

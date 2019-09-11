@@ -1,0 +1,225 @@
+{
+  "version": 3,
+  "targets": {
+    ".NETCoreApp,Version=v2.2": {
+      "Catalyst.Cryptography.BulletProofs.Natives/0.0.1.9649-beta": {
+        "type": "package",
+        "runtimeTargets": {
+          "runtimes/linux-x64/native/libcatalystffi.d": {
+            "assetType": "native",
+            "rid": "linux-x64"
+          },
+          "runtimes/linux-x64/native/libcatalystffi.so": {
+            "assetType": "native",
+            "rid": "linux-x64"
+          },
+          "runtimes/osx-x64/native/libcatalystffi.d": {
+            "assetType": "native",
+            "rid": "osx-x64"
+          },
+          "runtimes/osx-x64/native/libcatalystffi.dylib": {
+            "assetType": "native",
+            "rid": "osx-x64"
+          },
+          "runtimes/win-x64/native/catalystffi.d": {
+            "assetType": "native",
+            "rid": "win-x64"
+          },
+          "runtimes/win-x64/native/catalystffi.dll": {
+            "assetType": "native",
+            "rid": "win-x64"
+          },
+          "runtimes/win-x64/native/catalystffi.dll.d": {
+            "assetType": "native",
+            "rid": "win-x64"
+          },
+          "runtimes/win-x64/native/catalystffi.dll.lib": {
+            "assetType": "native",
+            "rid": "win-x64"
+          }
+        }
+      },
+      "Nethereum.Hex/3.3.0": {
+        "type": "package",
+        "dependencies": {
+          "Newtonsoft.Json": "[10.0.3, 13.0.0)",
+          "Portable.BouncyCastle": "1.8.2"
+        },
+        "compile": {
+          "lib/netcoreapp2.1/Nethereum.Hex.dll": {}
+        },
+        "runtime": {
+          "lib/netcoreapp2.1/Nethereum.Hex.dll": {}
+        }
+      },
+      "Newtonsoft.Json/12.0.2": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.0/Newtonsoft.Json.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/Newtonsoft.Json.dll": {}
+        }
+      },
+      "Portable.BouncyCastle/1.8.2": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.0/BouncyCastle.Crypto.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/BouncyCastle.Crypto.dll": {}
+        }
+      },
+      "Catalyst.Core.Modules.Cryptography.BulletProofs/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v2.2",
+        "dependencies": {
+          "Catalyst.Cryptography.BulletProofs.Natives": "[0.0.1.9649-beta]",
+          "Nethereum.Hex": "3.3.0",
+          "Newtonsoft.Json": "12.0.2"
+        },
+        "compile": {
+          "bin/placeholder/Catalyst.Core.Modules.Cryptography.BulletProofs.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Catalyst.Core.Modules.Cryptography.BulletProofs.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "Catalyst.Cryptography.BulletProofs.Natives/0.0.1.9649-beta": {
+      "sha512": "mm71fb94hZ7FNjJa2pPLh/fip9loeSaPo26XJ73d3n6ca9Mcl111qForZzCZzLnNcenj+8z8pSOsgTGqdkvMbA==",
+      "type": "package",
+      "path": "catalyst.cryptography.bulletproofs.natives/0.0.1.9649-beta",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE",
+        "catalyst.cryptography.bulletproofs.natives.0.0.1.9649-beta.nupkg.sha512",
+        "catalyst.cryptography.bulletproofs.natives.nuspec",
+        "runtimes/linux-x64/native/libcatalystffi.d",
+        "runtimes/linux-x64/native/libcatalystffi.so",
+        "runtimes/osx-x64/native/libcatalystffi.d",
+        "runtimes/osx-x64/native/libcatalystffi.dylib",
+        "runtimes/win-x64/native/catalystffi.d",
+        "runtimes/win-x64/native/catalystffi.dll",
+        "runtimes/win-x64/native/catalystffi.dll.d",
+        "runtimes/win-x64/native/catalystffi.dll.lib"
+      ]
+    },
+    "Nethereum.Hex/3.3.0": {
+      "sha512": "N5RP4U901vUvRj74DMAwFm1gxXrrfVgKcObtcPczvY2yczP7gIhMCuYQWIzBzau43UwgUAn1ZjvgsWZjWxdotg==",
+      "type": "package",
+      "path": "nethereum.hex/3.3.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE.md",
+        "lib/net451/Nethereum.Hex.dll",
+        "lib/netcoreapp2.1/Nethereum.Hex.dll",
+        "lib/netstandard1.1/Nethereum.Hex.dll",
+        "lib/netstandard2.0/Nethereum.Hex.dll",
+        "nethereum.hex.3.3.0.nupkg.sha512",
+        "nethereum.hex.nuspec"
+      ]
+    },
+    "Newtonsoft.Json/12.0.2": {
+      "sha512": "rTK0s2EKlfHsQsH6Yx2smvcTCeyoDNgCW7FEYyV01drPlh2T243PR2DiDXqtC5N4GDm4Ma/lkxfW5a/4793vbA==",
+      "type": "package",
+      "path": "newtonsoft.json/12.0.2",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE.md",
+        "lib/net20/Newtonsoft.Json.dll",
+        "lib/net20/Newtonsoft.Json.xml",
+        "lib/net35/Newtonsoft.Json.dll",
+        "lib/net35/Newtonsoft.Json.xml",
+        "lib/net40/Newtonsoft.Json.dll",
+        "lib/net40/Newtonsoft.Json.xml",
+        "lib/net45/Newtonsoft.Json.dll",
+        "lib/net45/Newtonsoft.Json.xml",
+        "lib/netstandard1.0/Newtonsoft.Json.dll",
+        "lib/netstandard1.0/Newtonsoft.Json.xml",
+        "lib/netstandard1.3/Newtonsoft.Json.dll",
+        "lib/netstandard1.3/Newtonsoft.Json.xml",
+        "lib/netstandard2.0/Newtonsoft.Json.dll",
+        "lib/netstandard2.0/Newtonsoft.Json.xml",
+        "lib/portable-net40+sl5+win8+wp8+wpa81/Newtonsoft.Json.dll",
+        "lib/portable-net40+sl5+win8+wp8+wpa81/Newtonsoft.Json.xml",
+        "lib/portable-net45+win8+wp8+wpa81/Newtonsoft.Json.dll",
+        "lib/portable-net45+win8+wp8+wpa81/Newtonsoft.Json.xml",
+        "newtonsoft.json.12.0.2.nupkg.sha512",
+        "newtonsoft.json.nuspec"
+      ]
+    },
+    "Portable.BouncyCastle/1.8.2": {
+      "sha512": "XpJVIhjPiO0o+DU36eeIzqnRilDmE8Z7Kfhm9V9o1yNqM3ikgleD94Z5W/LeEu3t63LaZl2CNJexaix+I6AUMg==",
+      "type": "package",
+      "path": "portable.bouncycastle/1.8.2",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net40/BouncyCastle.Crypto.dll",
+        "lib/net40/BouncyCastle.Crypto.xml",
+        "lib/netstandard1.0/BouncyCastle.Crypto.dll",
+        "lib/netstandard1.0/BouncyCastle.Crypto.xml",
+        "lib/netstandard1.3/BouncyCastle.Crypto.dll",
+        "lib/netstandard1.3/BouncyCastle.Crypto.xml",
+        "lib/netstandard2.0/BouncyCastle.Crypto.dll",
+        "lib/netstandard2.0/BouncyCastle.Crypto.xml",
+        "lib/portable-net40+sl5+win8+wp8+wpa81/BouncyCastle.Crypto.dll",
+        "lib/portable-net40+sl5+win8+wp8+wpa81/BouncyCastle.Crypto.xml",
+        "portable.bouncycastle.1.8.2.nupkg.sha512",
+        "portable.bouncycastle.nuspec"
+      ]
+    },
+    "Catalyst.Core.Modules.Cryptography.BulletProofs/1.0.0": {
+      "type": "project",
+      "path": "../Catalyst.Core.Modules.Cryptography.BulletProofs/Catalyst.Core.Modules.Cryptography.BulletProofs.csproj",
+      "msbuildProject": "../Catalyst.Core.Modules.Cryptography.BulletProofs/Catalyst.Core.Modules.Cryptography.BulletProofs.csproj"
+    }
+  },
+  "projectFileDependencyGroups": {
+    ".NETCoreApp,Version=v2.2": [
+      "Catalyst.Core.Modules.Cryptography.BulletProofs >= 1.0.0"
+    ]
+  },
+  "packageFolders": {
+    "/home/nsh/.nuget/packages/": {}
+  },
+  "project": {
+    "version": "1.0.0",
+    "restore": {
+      "projectUniqueName": "/home/nsh/RiderProjects/Catalyst.Node/src/Catalyst.Cryptography.BulletProofs.Wrapper.Tests/Catalyst.Cryptography.BulletProofs.Wrapper.UnitTests.csproj",
+      "projectName": "Catalyst.Cryptography.BulletProofs.Wrapper.UnitTests",
+      "projectPath": "/home/nsh/RiderProjects/Catalyst.Node/src/Catalyst.Cryptography.BulletProofs.Wrapper.Tests/Catalyst.Cryptography.BulletProofs.Wrapper.UnitTests.csproj",
+      "packagesPath": "/home/nsh/.nuget/packages/",
+      "outputPath": "/home/nsh/RiderProjects/Catalyst.Node/src/Catalyst.Cryptography.BulletProofs.Wrapper.Tests/",
+      "projectStyle": "PackageReference",
+      "configFilePaths": [
+        "/home/nsh/RiderProjects/Catalyst.Node/src/nuget.config",
+        "/home/nsh/.config/NuGet/NuGet.Config"
+      ],
+      "originalTargetFrameworks": [
+        "netcoreapp2.2"
+      ],
+      "sources": {
+        "https://api.nuget.org/v3/index.json": {}
+      },
+      "frameworks": {
+        "netcoreapp2.2": {
+          "projectReferences": {
+            "/home/nsh/RiderProjects/Catalyst.Node/src/Catalyst.Core.Modules.Cryptography.BulletProofs/Catalyst.Core.Modules.Cryptography.BulletProofs.csproj": {
+              "projectPath": "/home/nsh/RiderProjects/Catalyst.Node/src/Catalyst.Core.Modules.Cryptography.BulletProofs/Catalyst.Core.Modules.Cryptography.BulletProofs.csproj"
+            }
+          }
+        }
+      }
+    },
+    "frameworks": {
+      "netcoreapp2.2": {}
+    }
+  }
+}

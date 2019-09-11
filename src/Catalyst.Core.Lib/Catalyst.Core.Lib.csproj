@@ -1,7 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFramework>netcoreapp2.2</TargetFramework>
-
         <RootNamespace>Catalyst.Core.Lib</RootNamespace>
         <Authors>James Kirby (nshcore@protonmail.com)</Authors>
         <SignAssembly>true</SignAssembly>
@@ -33,9 +32,7 @@
         <PackageReference Include="Serilog.Sinks.File" Version="4.0.0" />
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="Catalyst.Cryptography.BulletProofs.Wrapper" Version="0.0.1.10324-beta" />
-    </ItemGroup>
-    <ItemGroup>
         <ProjectReference Include="..\Catalyst.Abstractions\Catalyst.Abstractions.csproj" />
+        <ProjectReference Include="..\Catalyst.Core.Modules.Cryptography.BulletProofs\Catalyst.Core.Modules.Cryptography.BulletProofs.csproj" />
     </ItemGroup>
 </Project>

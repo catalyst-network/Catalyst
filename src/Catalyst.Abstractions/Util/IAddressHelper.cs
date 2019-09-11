@@ -21,7 +21,7 @@
 
 #endregion
 
-using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
+using IPublicKey = Catalyst.Abstractions.Cryptography.IPublicKey;
 
 namespace Catalyst.Abstractions.Util
 {

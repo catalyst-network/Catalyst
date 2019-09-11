@@ -23,9 +23,7 @@
 
 using Autofac;
 using Catalyst.Abstractions.Mempool;
-using Catalyst.Abstractions.Mempool.Repositories;
 using Catalyst.Core.Lib.Mempool.Documents;
-using Catalyst.Core.Modules.Mempool.Repositories;
 using SharpRepository.InMemoryRepository;
 using SharpRepository.Repository;
 

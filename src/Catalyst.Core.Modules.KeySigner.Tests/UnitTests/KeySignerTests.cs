@@ -22,10 +22,10 @@
 #endregion
 
 using System.Text;
+using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib.Cryptography;
-using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
 using Catalyst.Protocol.Common;
 using FluentAssertions;
 using NSubstitute;

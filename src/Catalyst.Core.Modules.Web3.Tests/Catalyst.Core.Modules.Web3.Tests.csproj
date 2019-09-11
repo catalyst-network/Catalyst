@@ -8,7 +8,6 @@
         <PublicSign>true</PublicSign>
     </PropertyGroup>
     <Import Project="../Common.UnitTests.props" />
-
     <ItemGroup>
         <ProjectReference Include="..\Catalyst.Core.Modules.Web3\Catalyst.Core.Modules.Web3.csproj" />
     </ItemGroup>

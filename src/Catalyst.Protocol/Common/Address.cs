@@ -25,7 +25,7 @@
 // using System;
 // using System.Collections.Generic;
 // using System.Linq;
-// using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
+// using Catalyst.Core.Modules.Cryptography.BulletProofs.Interfaces;
 // using Dawn;
 //
 // namespace Catalyst.Protocol.Common
