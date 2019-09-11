@@ -19,8 +19,8 @@ steps:
   - task: DotNetCoreCLI@2
     displayName: 'Build solution'
     inputs:
-      projects: '$(Parameters.RestoreBuildProjects)'
-      arguments: '--configuration $(BuildConfiguration)'
+      projects: 'src/**/*.csproj'
+      arguments: '--configuration Debug'
 
   - script: 'dotnet tool install --global dotnet-reportgenerator-globaltool'
     displayName: 'install tools'
