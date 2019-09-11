@@ -32,7 +32,7 @@ using NSubstitute;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Catalyst.Core.Lib.Tests.UnitTests.Cryptography
+namespace Catalyst.Core.Lib.Tests.IntegrationTests.Cryptography
 {
     public sealed class CertificateStoreTests : FileSystemBasedTest
     {

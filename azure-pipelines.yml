@@ -1,46 +1,87 @@
 strategy:
   matrix:
-    windows-stable:
+    Windows-VS2017:
       imageName: 'vs2017-win2016'
-    mac-stable:
+      netcore_sdk: 2.2.104
+    Windows-VS2019:
+      imageName: 'windows-2019'
+      netcore_sdk: 2.2.104
+    Windows-Core:
+      imageName: 'win1803'
+      netcore_sdk: 2.2.104
+    Osx-Sierra:
       imageName: 'macos-10.13'
-    linux-stable:
+      netcore_sdk: 2.2.104
+    Osx-Mojave:
+      imageName: 'macos-10.14'
+      netcore_sdk: 2.2.104
+    Ubuntu-1604:
       imageName: 'ubuntu-16.04'
+      netcore_sdk: 2.2.104
+  maxParallel: 6
 
+variables:
+  release.type: '-beta'
+  BuildPlatform: 'any cpu'
+  BuildConfiguration: 'Debug'
+  
 pool:
   vmImage: $(imageName)
 
+trigger:
+  batch: true
+  branches:
+    include:
+      - develop
+
+pr:
+  autoCancel: true
+  branches:
+    include:
+      - develop
+      - master
+      - releases/*
+
+schedules:
+  - cron: "0 0 * * *"
+    displayName: Daily midnight build
+    branches:
+      include:
+        - master
+        - develop
+        - releases/*
+      exclude:
+        - feature/*
+    always: true
+    
 steps:
   - task: DotNetCoreInstaller@0
-    displayName: 'Use .NET Core sdk 2.2.103'
+    displayName: 'Install .NetCore SDK'
     inputs:
-      version: 2.2.103
+      version: 2.2.104
+
+  - bash: |
+      git submodule update --init --force --recursive
+    displayName: 'Clone submodules'
       
   - task: DotNetCoreCLI@2
     displayName: 'Build solution'
     inputs:
       projects: 'src/**/*.csproj'
-      arguments: '--configuration Debug'
+      arguments: '--configuration $(BuildConfiguration)'
+      failOnStandardError: 'true'
 
   - script: 'dotnet tool install --global dotnet-reportgenerator-globaltool'
-    displayName: 'install tools'
+    displayName: 'Install coverage tools'
     condition: eq( variables['Agent.OS'], 'Windows_NT' )
 
   - task: DotNetCoreCLI@2
     displayName: 'Run unit tests'
     inputs:
       command: test
-      projects: 'src/**/*.csproj'
+      projects: 'src/*[Tt]ests/*.csproj'
       arguments: '--filter TestType!=IntegrationTest --configuration $(BuildConfiguration)'
-    timeoutInMinutes: 10
-    condition: ne( variables['Agent.OS'], 'Windows_NT' )
-
-  - task: DotNetCoreCLI@2
-    displayName: 'Run integration tests'
-    inputs:
-      command: test
-      projects: 'src/**/*.csproj'
-      arguments: '--filter TestType=IntegrationTest --configuration $(BuildConfiguration)'
+      failOnStandardError: 'true'
     timeoutInMinutes: 10
     condition: ne( variables['Agent.OS'], 'Windows_NT' )
 
@@ -48,10 +89,20 @@ steps:
     displayName: 'Run unit tests with coverage'
     inputs:
       command: test
-      projects: '$(Parameters.TestProjects)'
-      arguments: '--configuration Debug /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:UseSourceLink=true /p:Include="\"[Catalyst.Core.Lib*][Catalyst.Core.Modules.Kvm*]\"" /p:Threshold=0 /p:ThresholdType=line /p:ThresholdStat=total'
+      projects: 'src/*[Tt]ests/*.csproj'
+      arguments: '--filter TestType!=IntegrationTest --configuration $(BuildConfiguration) /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:UseSourceLink=true /p:Include="\"[Catalyst.Core.Lib*][Catalyst.Core.Modules.Kvm*]\"" /p:Threshold=0 /p:ThresholdType=line /p:ThresholdStat=total'
+      failOnStandardError: 'true'
     timeoutInMinutes: 10
     condition: eq( variables['Agent.OS'], 'Windows_NT' )
+    
+  - task: DotNetCoreCLI@2
+    displayName: 'Run integration tests'
+    inputs:
+      command: test
+      projects: 'src/*[Tt]ests/*.csproj'
+      arguments: '--filter TestType=IntegrationTest --configuration $(BuildConfiguration)'
+      failOnStandardError: 'true'
+    timeoutInMinutes: 10
     
   - script: |
       reportgenerator "-reports:src/**/coverage.cobertura.xml" "-targetdir:$(Build.ArtifactStagingDirectory)" -reporttypes:HtmlInline_AzurePipelines;Cobertura;SonarQube;Badges "-assemblyfilters:+Catalyst.Core.Lib*;+Catalyst.Core.Modules.Kvm*;"
@@ -61,7 +112,8 @@ steps:
   - task: PublishBuildArtifacts@1
     displayName: 'Store coverage report'
     inputs:
-      ArtifactName: artifacts
+      ArtifactName: 'coverage-report'
+      failOnStandardError: 'true'
     condition: eq( variables['Agent.OS'], 'Windows_NT' )
     
   - task: PublishCodeCoverageResults@1
@@ -70,4 +122,5 @@ steps:
       codeCoverageTool: Cobertura
       summaryFileLocation: '$(Build.ArtifactStagingDirectory)/Cobertura.xml'
       reportDirectory: '$(Build.ArtifactStagingDirectory)'
+      failOnStandardError: 'true'
     condition: eq( variables['Agent.OS'], 'Windows_NT' )

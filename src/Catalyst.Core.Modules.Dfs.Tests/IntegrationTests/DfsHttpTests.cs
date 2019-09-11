@@ -21,7 +21,6 @@
 
 #endregion
 
-using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Cryptography;
@@ -38,7 +37,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
     public sealed class DfsHttpTests : FileSystemBasedTest
     {
         private readonly IpfsAdapter _ipfs;
-        private readonly Modules.Dfs.Dfs _dfs;
+        private readonly Dfs _dfs;
         private readonly DfsGateway _dfsGateway;
 
         public DfsHttpTests(ITestOutputHelper output) : base(output)
@@ -47,7 +46,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
             passwordReader.RetrieveOrPromptAndAddPasswordToRegistry(Arg.Any<PasswordRegistryTypes>(), Arg.Any<string>()).ReturnsForAnyArgs(TestPasswordReader.BuildSecureStringPassword("abcd"));
             var logger = Substitute.For<ILogger>();
             _ipfs = new IpfsAdapter(passwordReader, FileSystem, logger);
-            _dfs = new Modules.Dfs.Dfs(_ipfs, logger);
+            _dfs = new Dfs(_ipfs, logger);
             _dfsGateway = new DfsGateway(_ipfs);
         }
 
