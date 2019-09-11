@@ -85,7 +85,7 @@ namespace Catalyst.Core.UnitTests.Rpc.IO.Observers
         [Fact]
         public void VerifyMessageRequestObserver_Can_Reject_Invalid_Signature_Length()
         {
-            _verifyMessageRequest.Signature = ByteString.CopyFrom(new byte[24]);
+            _verifyMessageRequest.Signature = ByteString.CopyFrom(new byte[FFI.SignatureLength + 1]);
             AssertVerifyResponse(false);
         }
 
