@@ -25,7 +25,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using Catalyst.Abstractions.IO.Messaging.Dto;
-using Catalyst.Core.Util;
+using Catalyst.Core.Lib.Util;
 using Catalyst.Protocol.Common;
 using Serilog;
 

@@ -32,7 +32,7 @@ namespace Catalyst.Abstractions.Cli.Commands
     {
         /// <summary>Gets the node RPC client factory.</summary>
         /// <value>The node RPC client factory.</value>
-        INodeRpcClientFactory NodeRpcClientFactory { get; }
+        IRpcClientFactory RpcClientFactory { get; }
 
         /// <summary>Gets the certificate store.</summary>
         /// <value>The certificate store.</value>
@@ -44,7 +44,7 @@ namespace Catalyst.Abstractions.Cli.Commands
 
         /// <summary>Gets the socket client registry.</summary>
         /// <value>The socket client registry.</value>
-        ISocketClientRegistry<INodeRpcClient> SocketClientRegistry { get; }
+        ISocketClientRegistry<IRpcClient> SocketClientRegistry { get; }
 
         /// <summary>Gets the peer identifier.</summary>
         /// <value>The peer identifier.</value>
@@ -53,12 +53,12 @@ namespace Catalyst.Abstractions.Cli.Commands
         /// <summary>Gets the connected node.</summary>
         /// <param name="nodeId">The node identifier located in configuration.</param>
         /// <returns></returns>
-        INodeRpcClient GetConnectedNode(string nodeId);
+        IRpcClient GetConnectedNode(string nodeId);
 
         /// <summary>Gets the node configuration.</summary>
         /// <param name="nodeId">The node identifier located in configuration.</param>
         /// <returns></returns>
-        IRpcNodeConfig GetNodeConfig(string nodeId);
+        IRpcClientConfig GetNodeConfig(string nodeId);
 
         /// <summary>Determines whether [is socket channel active] [the specified node].</summary>
         /// <param name="node">A <see>
@@ -67,6 +67,6 @@ namespace Catalyst.Abstractions.Cli.Commands
         ///     object including node required information.</param>
         /// <returns><c>true</c> if [is socket channel active] [the specified node]; otherwise,
         /// <c>false</c> A "Channel inactive ..." message is returned to the console.</returns>
-        bool IsSocketChannelActive(INodeRpcClient node);
+        bool IsSocketChannelActive(IRpcClient node);
     }
 }

@@ -29,8 +29,8 @@ using System.Threading.Tasks;
 using Catalyst.Abstractions.IO.EventLoop;
 using Catalyst.Abstractions.IO.Handlers;
 using Catalyst.Abstractions.IO.Transport.Channels;
-using Catalyst.Core.IO.Handlers;
-using Catalyst.Core.IO.Transport.Channels;
+using Catalyst.Core.Lib.IO.Handlers;
+using Catalyst.Core.Lib.IO.Transport.Channels;
 using DotNetty.Transport.Channels;
 using NSubstitute;
 

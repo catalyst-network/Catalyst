@@ -31,39 +31,39 @@ using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.P2P;
-using Catalyst.Abstractions.Rpc;
 using Catalyst.Abstractions.Types;
-using Catalyst.Core.Cli;
-using Catalyst.Core.Cryptography;
-using Catalyst.Core.Extensions;
-using Catalyst.Core.FileSystem;
-using Catalyst.Core.IO.EventLoop;
-using Catalyst.Core.IO.Messaging.Correlation;
-using Catalyst.Core.IO.Messaging.Dto;
-using Catalyst.Core.KeySigner;
-using Catalyst.Core.Keystore;
-using Catalyst.Core.P2P;
-using Catalyst.Core.Rpc;
-using Catalyst.Core.Rpc.IO.Messaging.Correlation;
-using Catalyst.Core.Rpc.IO.Observers;
-using Catalyst.Core.Rpc.IO.Transport.Channels;
-using Catalyst.Core.Util;
+using Catalyst.Core.Lib.Cli;
+using Catalyst.Core.Lib.Cryptography;
+using Catalyst.Core.Lib.Extensions;
+using Catalyst.Core.Lib.FileSystem;
+using Catalyst.Core.Lib.IO.EventLoop;
+using Catalyst.Core.Lib.IO.Messaging.Correlation;
+using Catalyst.Core.Lib.IO.Messaging.Dto;
+using Catalyst.Core.Lib.P2P;
+using Catalyst.Core.Lib.Registry;
+using Catalyst.Core.Lib.Rpc.IO.Messaging.Correlation;
+using Catalyst.Core.Lib.Util;
+using Catalyst.Core.Modules.KeySigner;
+using Catalyst.Core.Modules.Keystore;
+using Catalyst.Core.Modules.Rpc.Client;
+using Catalyst.Core.Modules.Rpc.Client.IO.Observers;
+using Catalyst.Core.Modules.Rpc.Client.IO.Transport.Channels;
 using Catalyst.Cryptography.BulletProofs.Wrapper;
-using Catalyst.Simulator.Interfaces;
 using DotNetty.Transport.Channels;
 using Google.Protobuf;
 using Microsoft.Extensions.Caching.Memory;
 using Multiformats.Hash.Algorithms;
 using Serilog;
+using IRpcClient = Catalyst.Abstractions.Rpc.IRpcClient;
 
 namespace Catalyst.Simulator.RpcClients
 {
-    public class SimpleRpcClient : IRpcClient
+    public class SimpleRpcClient : Interfaces.IRpcClient
     {
         private readonly ILogger _logger;
         private readonly IPeerIdentifier _senderPeerIdentifier;
         private IPeerIdentifier _recipientPeerIdentifier;
-        private INodeRpcClient _nodeRpcClient;
+        private IRpcClient _rpcClient;
         private readonly X509Certificate2 _certificate;
         private readonly RpcClientFactory _rpcClientFactory;
 
@@ -162,9 +162,9 @@ namespace Catalyst.Simulator.RpcClients
 
             try
             {
-                _nodeRpcClient =
+                _rpcClient =
                     await _rpcClientFactory.GetClient(_certificate, peerRpcConfig).ConfigureAwait(false);
-                return _nodeRpcClient.Channel.Open;
+                return _rpcClient.Channel.Open;
             }
             catch (ConnectException connectionException)
             {
@@ -178,7 +178,7 @@ namespace Catalyst.Simulator.RpcClients
             return false;
         }
 
-        public bool IsConnected() { return _nodeRpcClient.Channel.Active; }
+        public bool IsConnected() { return _rpcClient.Channel.Active; }
 
         public void SendMessage<T>(T message) where T : IMessage
         {
@@ -188,12 +188,12 @@ namespace Catalyst.Simulator.RpcClients
                 protocolMessage,
                 _recipientPeerIdentifier);
 
-            _nodeRpcClient.SendMessage(messageDto);
+            _rpcClient.SendMessage(messageDto);
         }
 
         public void ReceiveMessage<T>(Action<T> message) where T : IMessage<T>
         {
-            _nodeRpcClient.SubscribeToResponse<T>(message.Invoke);
+            _rpcClient.SubscribeToResponse<T>(message.Invoke);
         }
     }
 }
