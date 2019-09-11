@@ -70,7 +70,7 @@ namespace Catalyst.Core.Lib.FileTransfer
         /// <inheritdoc />
         /// <summary>Registers the transfer.</summary>
         /// <param name="fileTransferInformation">The file transfer information.</param>
-        /// <returns>Initialization response code</returns>
+        /// <returns>Initialization response code.</returns>
         /// <exception cref="System.InvalidOperationException">This instance cannot be registered to the factory due to IsDownload flag.</exception>
         public FileTransferResponseCodeTypes RegisterTransfer(T fileTransferInformation)
         {
