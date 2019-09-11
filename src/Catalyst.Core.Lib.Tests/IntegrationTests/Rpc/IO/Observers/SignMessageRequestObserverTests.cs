@@ -29,6 +29,7 @@ using Catalyst.Abstractions.KeySigner;
 using Catalyst.Abstractions.Keystore;
 using Catalyst.Core.Lib.Config;
 using Catalyst.Core.Lib.Extensions;
+using Catalyst.Core.Modules.Cryptography.BulletProofs;
 using Catalyst.Core.Modules.KeySigner;
 using Catalyst.Core.Modules.Keystore;
 using Catalyst.Core.Modules.Rpc.Server.IO.Observers;
@@ -62,6 +63,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
             ContainerProvider.ContainerBuilder.RegisterInstance(TestKeyRegistry.MockKeyRegistry()).As<IKeyRegistry>();
             ContainerProvider.ContainerBuilder.RegisterModule(new KeystoreModule());
             ContainerProvider.ContainerBuilder.RegisterModule(new KeySignerModule());
+            ContainerProvider.ContainerBuilder.RegisterModule(new BulletProofsModule());
             ContainerProvider.ConfigureContainerBuilder();
 
             _scope = ContainerProvider.Container.BeginLifetimeScope(CurrentTestName);

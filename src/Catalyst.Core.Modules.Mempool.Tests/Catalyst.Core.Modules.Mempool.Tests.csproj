@@ -8,7 +8,7 @@
         <AssemblyOriginatorKeyFile>Catalyst.Core.Modules.Mempool.Tests.snk</AssemblyOriginatorKeyFile>
         <PublicSign>true</PublicSign>
     </PropertyGroup>
-    <Import Project="../Common.UnitTests.props" />
+    <Import Project="../Common.TestProjects.props" />
     <ItemGroup>
       <ProjectReference Include="..\Catalyst.Core.Modules.Mempool\Catalyst.Core.Modules.Mempool.csproj" />
       <ProjectReference Include="..\Catalyst.TestUtils\Catalyst.TestUtils.csproj" />

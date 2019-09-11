@@ -23,7 +23,6 @@
 
 using System;
 using Catalyst.Abstractions.Cryptography;
-using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
 
 namespace Catalyst.Core.Lib.Cryptography
 {

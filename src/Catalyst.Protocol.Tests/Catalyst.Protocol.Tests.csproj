@@ -7,9 +7,10 @@
         <AssemblyOriginatorKeyFile>Catalyst.Protocol.Tests.snk</AssemblyOriginatorKeyFile>
         <PublicSign>true</PublicSign>
     </PropertyGroup>
-  <Import Project="../Common.UnitTests.props" />
+  <Import Project="../Common.TestProjects.props" />
   <ItemGroup>
     <ProjectReference Include="..\Catalyst.Core.Lib\Catalyst.Core.Lib.csproj" />
+    <ProjectReference Include="..\Catalyst.Core.Modules.Cryptography.BulletProofs\Catalyst.Core.Modules.Cryptography.BulletProofs.csproj" />
     <ProjectReference Include="..\Catalyst.Protocol\Catalyst.Protocol.csproj" />
   </ItemGroup>
   <ItemGroup>

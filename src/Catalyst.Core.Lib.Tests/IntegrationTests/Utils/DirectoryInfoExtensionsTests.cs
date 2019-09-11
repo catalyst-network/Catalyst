@@ -28,7 +28,7 @@ using FluentAssertions;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Catalyst.Core.Lib.Tests.UnitTests.Utils
+namespace Catalyst.Core.Lib.Tests.IntegrationTests.Utils
 {
     public sealed class DirectoryInfoExtensionsTests : FileSystemBasedTest
     {

@@ -25,7 +25,7 @@ using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib.Cryptography;
 using Catalyst.Core.Lib.Util;
-using Catalyst.Cryptography.BulletProofs.Wrapper;
+using Catalyst.Core.Modules.Cryptography.BulletProofs;
 using NSubstitute;
 
 namespace Catalyst.TestUtils

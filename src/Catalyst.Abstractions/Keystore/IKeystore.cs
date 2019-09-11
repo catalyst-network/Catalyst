@@ -23,7 +23,7 @@
 
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Types;
-using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
+using IPrivateKey = Catalyst.Abstractions.Cryptography.IPrivateKey;
 
 namespace Catalyst.Abstractions.Keystore
 {

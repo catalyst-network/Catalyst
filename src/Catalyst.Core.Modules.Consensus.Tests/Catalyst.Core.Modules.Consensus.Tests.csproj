@@ -7,7 +7,7 @@
         <AssemblyOriginatorKeyFile>Catalyst.Core.Modules.Consensus.Tests.snk</AssemblyOriginatorKeyFile>
         <PublicSign>true</PublicSign>
     </PropertyGroup>
-    <Import Project="../Common.UnitTests.props" />
+    <Import Project="../Common.TestProjects.props" />
     <ItemGroup>
       <ProjectReference Include="..\Catalyst.Abstractions\Catalyst.Abstractions.csproj" />
       <ProjectReference Include="..\Catalyst.Core.Modules.Consensus\Catalyst.Core.Modules.Consensus.csproj" />

@@ -33,7 +33,6 @@ using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.Types;
 using Catalyst.Abstractions.Util;
 using Catalyst.Core.Lib.Config;
-using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
 using Nethereum.KeyStore.Crypto;
 using Serilog;
 

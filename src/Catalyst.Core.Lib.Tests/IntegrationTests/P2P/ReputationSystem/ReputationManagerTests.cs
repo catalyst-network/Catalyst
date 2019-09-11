@@ -21,12 +21,10 @@
 
 #endregion
 
-using System.IO;
 using Autofac;
 using Catalyst.Abstractions.Config;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.ReputationSystem;
-using Catalyst.Core.Lib.Config;
 using Catalyst.Core.Lib.P2P.Models;
 using Catalyst.Core.Lib.P2P.ReputationSystem;
 using Catalyst.TestUtils;
