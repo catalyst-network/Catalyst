@@ -28,18 +28,18 @@ using Catalyst.Protocol.Transaction;
 
 namespace Catalyst.Core.Lib.DAO
 {
-    public class STTransactionEntryDao : DaoBase<STTransactionEntry, STTransactionEntryDao>
+    public class StTransactionEntryDao : DaoBase<STTransactionEntry, StTransactionEntryDao>
     {
         public string PubKey { get; set; }
         public Int64 Amount { get; set; }
        
         public override void InitMappers(IMapperConfigurationExpression cfg)
         {
-            cfg.CreateMap<STTransactionEntry, STTransactionEntryDao>().ReverseMap();
+            cfg.CreateMap<STTransactionEntry, StTransactionEntryDao>().ReverseMap();
 
-            cfg.CreateMap<STTransactionEntry, STTransactionEntryDao>()
+            cfg.CreateMap<STTransactionEntry, StTransactionEntryDao>()
                .ForMember(d => d.PubKey, opt => opt.ConvertUsing(new ByteStringKeyUtilsToStringFormatter(), s => s.PubKey.ToByteArray()));
-            cfg.CreateMap<STTransactionEntryDao, STTransactionEntry>()
+            cfg.CreateMap<StTransactionEntryDao, STTransactionEntry>()
                .ForMember(d => d.PubKey, opt => opt.ConvertUsing(new StringKeyUtilsToByteStringFormatter(), s => s.PubKey));
         }
     }

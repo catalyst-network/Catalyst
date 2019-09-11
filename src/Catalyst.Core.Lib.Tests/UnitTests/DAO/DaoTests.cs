@@ -43,7 +43,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
             var map = new MapperProvider(new IMapperInitializer[]
             {
                 new ProtocolMessageDao(),
-                new CFTransactionEntryDao(),
+                new CfTransactionEntryDao(),
                 new CandidateDeltaBroadcastDao(),
                 new ProtocolErrorMessageSignedDao(), 
                 new PeerIdDao(), 
@@ -53,8 +53,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
                 new DeltaDfsHashBroadcastDao(),
                 new FavouriteDeltaBroadcastDao(),
                 new CoinbaseEntryDao(),
-                new STTransactionEntryDao(),
-                new CFTransactionEntryDao(),
+                new StTransactionEntryDao(),
+                new CfTransactionEntryDao(),
                 new TransactionBroadcastDao()
             });
             map.Start();
@@ -221,7 +221,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
         [Fact]
         public void STTransactionEntryDao_STTransactionEntry_Should_Be_Convertible()
         {
-            var stTransactionEntryDao = new STTransactionEntryDao();
+            var stTransactionEntryDao = new StTransactionEntryDao();
             var byteRn = new byte[30];
             new Random().NextBytes(byteRn);
 
@@ -239,7 +239,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
         [Fact]
         public void CFTransactionEntryDao_CFTransactionEntry_Should_Be_Convertible()
         {
-            var cfTransactionEntryDao = new CFTransactionEntryDao();
+            var cfTransactionEntryDao = new CfTransactionEntryDao();
             var byteRn = new byte[30];
             var pedersenCommitBytes = new byte[50];
 

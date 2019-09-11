@@ -39,17 +39,17 @@ namespace Catalyst.Core.Lib.DAO.Deltas
         public string MerkleRoot { get; set; }
         public string MerklePoda { get; set; }
         public DateTime TimeStamp { get; set; }
-        public IEnumerable<STTransactionEntryDao> STEntries { get; set; }
-        public IEnumerable<CFTransactionEntryDao> CFEntries { get; set; }
-        public IEnumerable<CoinbaseEntryDao> CBEntries { get; set; }
+        public IEnumerable<StTransactionEntryDao> StEntries { get; set; }
+        public IEnumerable<CfTransactionEntryDao> CfEntries { get; set; }
+        public IEnumerable<CoinbaseEntryDao> CbEntries { get; set; }
 
         public override void InitMappers(IMapperConfigurationExpression cfg)
         {
             cfg.CreateMap<Delta, DeltaDao>().ReverseMap();
 
             cfg.CreateMap<CoinbaseEntry, CoinbaseEntryDao>().ReverseMap();
-            cfg.CreateMap<STTransactionEntry, STTransactionEntryDao>().ReverseMap();
-            cfg.CreateMap<CFTransactionEntry, CFTransactionEntryDao>().ReverseMap();
+            cfg.CreateMap<STTransactionEntry, StTransactionEntryDao>().ReverseMap();
+            cfg.CreateMap<CFTransactionEntry, CfTransactionEntryDao>().ReverseMap();
 
             cfg.CreateMap<DateTime, Timestamp>().ConvertUsing(s => s.ToTimestamp());
             cfg.CreateMap<Timestamp, DateTime>().ConvertUsing(s => s.ToDateTime());

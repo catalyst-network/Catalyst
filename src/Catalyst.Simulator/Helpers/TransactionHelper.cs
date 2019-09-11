@@ -22,8 +22,8 @@
 #endregion
 
 using System;
-using Catalyst.Cryptography.BulletProofs.Wrapper;
-using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
+using Catalyst.Abstractions.Cryptography;
+using Catalyst.Core.Modules.Cryptography.BulletProofs;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.Protocol.Transaction;

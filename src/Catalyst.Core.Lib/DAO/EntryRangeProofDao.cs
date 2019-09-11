@@ -36,13 +36,13 @@ namespace Catalyst.Core.Lib.DAO
         public string S { get; set; }
         public string T1 { get; set; }
         public string T2 { get; set; }
-        public string TAU { get; set; }
-        public string MU { get; set; }
+        public string Tau { get; set; }
+        public string Mu { get; set; }
         public IEnumerable<string> L { get; set; }
         public IEnumerable<string> R { get; set; }
         public string APrime0 { get; set; }
         public string BPrime0 { get; set; }
-        public string t { get; set; }
+        public string T { get; set; }
 
         public override void InitMappers(IMapperConfigurationExpression cfg)
         {

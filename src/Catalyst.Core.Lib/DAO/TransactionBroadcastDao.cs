@@ -36,8 +36,8 @@ namespace Catalyst.Core.Lib.DAO
         public UInt32 Version { get; set; }
         public UInt64 TransactionFees { get; set; }
         public UInt64 LockTime { get; set; }
-        public IEnumerable<STTransactionEntryDao> STEntries { get; set; }
-        public IEnumerable<CFTransactionEntryDao> CFEntries { get; set; }
+        public IEnumerable<StTransactionEntryDao> StEntries { get; set; }
+        public IEnumerable<CfTransactionEntryDao> CfEntries { get; set; }
         public string Signature { get; set; }
         public IEnumerable<EntryRangeProofDao> EntryRangeProofs { get; set; }
         public TransactionType TransactionType { get; set; }
@@ -49,8 +49,8 @@ namespace Catalyst.Core.Lib.DAO
         public override void InitMappers(IMapperConfigurationExpression cfg)
         {
             cfg.CreateMap<TransactionBroadcast, TransactionBroadcastDao>().ReverseMap();
-            cfg.CreateMap<STTransactionEntry, STTransactionEntryDao>().ReverseMap();
-            cfg.CreateMap<CFTransactionEntry, CFTransactionEntryDao>().ReverseMap();
+            cfg.CreateMap<STTransactionEntry, StTransactionEntryDao>().ReverseMap();
+            cfg.CreateMap<CFTransactionEntry, CfTransactionEntryDao>().ReverseMap();
 
             cfg.CreateMap<EntryRangeProof, EntryRangeProofDao>().ReverseMap();
 

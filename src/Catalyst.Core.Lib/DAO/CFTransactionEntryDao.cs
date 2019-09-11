@@ -27,14 +27,14 @@ using Google.Protobuf;
 
 namespace Catalyst.Core.Lib.DAO
 {
-    public class CFTransactionEntryDao : DaoBase<CFTransactionEntry, CFTransactionEntryDao>
+    public class CfTransactionEntryDao : DaoBase<CFTransactionEntry, CfTransactionEntryDao>
     {
         public string PubKey { get; set; }
         public string PedersenCommit { get; set; }
 
         public override void InitMappers(IMapperConfigurationExpression cfg)
         {
-            cfg.CreateMap<CFTransactionEntry, CFTransactionEntryDao>().ReverseMap();
+            cfg.CreateMap<CFTransactionEntry, CfTransactionEntryDao>().ReverseMap();
             cfg.CreateMap<ByteString, string>().ConvertUsing(s => s.ToBase64());
             cfg.CreateMap<string, ByteString>().ConvertUsing(s => ByteString.FromBase64(s));
         }
