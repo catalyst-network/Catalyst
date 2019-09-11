@@ -53,7 +53,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
         [Theory]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         [InlineData("Expected content str")]
-        [InlineData("Expected @!£:!$!%(")]
+        [InlineData("Expected @!�:!$!%(")]
         public async Task Should_have_a_URL_for_content(string expectedText)
         {
             var id = await _dfs.AddTextAsync(expectedText).ConfigureAwait(false);
@@ -64,7 +64,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
         [Theory]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         [InlineData("Expected content str")]
-        [InlineData("Expected @!£:!$!%(")]
+        [InlineData("Expected @!�:!$!%(")]
         public async Task Should_serve_the_content(string expectedText)
         {
             var id = await _dfs.AddTextAsync(expectedText);

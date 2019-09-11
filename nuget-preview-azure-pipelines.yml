@@ -19,7 +19,10 @@ steps:
       version: 2.2.104
       failOnStandardError: 'true'
     timeoutInMinutes: 10
-    
+
+  - bash: |
+      git submodule update --init --force --recursive
+    displayName: 'Clone submodules'
   - task: DotNetCoreCLI@2
     displayName: 'Build solution'
     inputs:
@@ -79,6 +82,6 @@ steps:
     inputs:
       command: push
       nuGetFeedType: external
-      publishFeedCredentials: 'Nuget Server'
+      publishFeedCredentials: 'NuGet'
       failOnStandardError: 'true'
     timeoutInMinutes: 10
