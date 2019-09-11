@@ -28,41 +28,26 @@ using Google.Protobuf;
 
 namespace Catalyst.Protocol.DAO
 {
-    public class ProtocolMessageDao : DaoBase
+    public class ProtocolMessageDao : DaoBase<ProtocolMessage, ProtocolMessageDao>
     {
         public PeerIdDao PeerId { get; set; }
         public string CorrelationId { get; set; }
         public string TypeUrl { get; set; }
         public string Value { get; set; }
 
-        public ProtocolMessageDao()
+        public override void InitMappers(IMapperConfigurationExpression cfg)
         {
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.CreateMap<ProtocolMessage, ProtocolMessageDao>().ReverseMap();
-                cfg.CreateMap<PeerId, PeerIdDao>().ReverseMap();
+            cfg.CreateMap<ProtocolMessage, ProtocolMessageDao>().ReverseMap();
+            cfg.CreateMap<PeerId, PeerIdDao>().ReverseMap();
 
-                cfg.CreateMap<PeerId, PeerIdDao>()
-                   .ForMember(d => d.Port, opt => opt.ConvertUsing(new ByteStringToUShortFormatter(), s => s.Port));
+            cfg.CreateMap<PeerId, PeerIdDao>()
+               .ForMember(d => d.Port, opt => opt.ConvertUsing(new ByteStringToUShortFormatter(), s => s.Port));
 
-                cfg.CreateMap<PeerIdDao, PeerId>()
-                   .ForMember(d => d.Port, opt => opt.ConvertUsing(new UShortToByteStringFormatter(), s => s.Port));
+            cfg.CreateMap<PeerIdDao, PeerId>()
+               .ForMember(d => d.Port, opt => opt.ConvertUsing(new UShortToByteStringFormatter(), s => s.Port));
 
-                cfg.CreateMap<ByteString, string>().ConvertUsing(s => s.ToBase64());
-                cfg.CreateMap<string, ByteString>().ConvertUsing(s => ByteString.FromBase64(s));
-            });
-
-            Mapper = config.CreateMapper();
-        }
-
-        public override IMessage ToProtoBuff()
-        {
-            return (ProtocolMessage) Mapper.Map<ProtocolMessage>(this);
-        }
-
-        public override DaoBase ToDao(IMessage protoBuff)
-        {
-            return Mapper.Map<ProtocolMessageDao>((ProtocolMessage)protoBuff);
+            cfg.CreateMap<ByteString, string>().ConvertUsing(s => s.ToBase64());
+            cfg.CreateMap<string, ByteString>().ConvertUsing(s => ByteString.FromBase64(s));
         }
     }
 }

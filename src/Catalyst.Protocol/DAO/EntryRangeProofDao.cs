@@ -1,4 +1,4 @@
-﻿#region LICENSE
+#region LICENSE
 
 /**
 * Copyright (c) 2019 Catalyst Network
@@ -29,7 +29,7 @@ using Google.Protobuf.Collections;
 
 namespace Catalyst.Protocol.DAO
 {
-    public class EntryRangeProofDao : DaoBase
+    public class EntryRangeProofDao : DaoBase<EntryRangeProof, EntryRangeProofDao>
     {
         public IEnumerable<string> V { get; set; }
         public string A { get; set; }
@@ -44,37 +44,25 @@ namespace Catalyst.Protocol.DAO
         public string BPrime0 { get; set; }
         public string t { get; set; }
 
-        public EntryRangeProofDao()
+        public override void InitMappers(IMapperConfigurationExpression cfg)
         {
-            var config = new MapperConfiguration(cfg =>
+            cfg.CreateMap<EntryRangeProof, EntryRangeProofDao>().ReverseMap();
+
+            cfg.CreateMap<ByteString, string>().ConvertUsing(s => s.ToBase64());
+            cfg.CreateMap<string, ByteString>().ConvertUsing(s => ByteString.FromBase64(s));
+
+            bool IsToRepeatedField(PropertyMap pm)
             {
-                cfg.CreateMap<EntryRangeProof, EntryRangeProofDao>().ReverseMap();
-                cfg.CreateMap<ByteString, string>().ConvertUsing(s => s.ToBase64());
-                cfg.CreateMap<string, ByteString>().ConvertUsing(s => ByteString.FromBase64(s));
-
-                bool IsToRepeatedField(PropertyMap pm)
+                if (pm.DestinationType.IsConstructedGenericType)
                 {
-                    if (pm.DestinationType.IsConstructedGenericType)
-                    {
-                        var destGenericBase = pm.DestinationType.GetGenericTypeDefinition();
-                        return destGenericBase == typeof(RepeatedField<>);
-                    }
-                    return false;
+                    var destGenericBase = pm.DestinationType.GetGenericTypeDefinition();
+                    return destGenericBase == typeof(RepeatedField<>);
                 }
-                cfg.ForAllPropertyMaps(IsToRepeatedField, (propertyMap, opts) => opts.UseDestinationValue());
-            });
 
-            Mapper = config.CreateMapper();
-        }
+                return false;
+            }
 
-        public override IMessage ToProtoBuff()
-        {
-            return (IMessage)Mapper.Map<EntryRangeProof>(this);
-        }
-
-        public override DaoBase ToDao(IMessage protoBuff)
-        {
-            return Mapper.Map<EntryRangeProofDao>((EntryRangeProof)protoBuff);
+            cfg.ForAllPropertyMaps(IsToRepeatedField, (propertyMap, opts) => opts.UseDestinationValue());
         }
     }
 }

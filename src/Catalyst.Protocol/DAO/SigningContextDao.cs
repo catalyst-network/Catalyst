@@ -1,4 +1,4 @@
-﻿#region LICENSE
+#region LICENSE
 
 /**
 * Copyright (c) 2019 Catalyst Network
@@ -23,33 +23,17 @@
 
 using AutoMapper;
 using Catalyst.Protocol.Common;
-using Google.Protobuf;
 
 namespace Catalyst.Protocol.DAO
 {
-    public class SigningContextDao : DaoBase
+    public class SigningContextDao : DaoBase<SigningContext, SigningContextDao>
     {
         public Network Network { get; set; }
         public SignatureType SignatureType { get; set; }
 
-        public SigningContextDao()
+        public override void InitMappers(IMapperConfigurationExpression cfg)
         {
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.CreateMap<SigningContext, SigningContextDao>().ReverseMap();
-            });
-
-            Mapper = config.CreateMapper();
-        }
-
-        public override IMessage ToProtoBuff()
-        {
-            return (IMessage)Mapper.Map<SigningContext>(this);
-        }
-
-        public override DaoBase ToDao(IMessage protoBuff)
-        {
-            return Mapper.Map<SigningContextDao>((SigningContext)protoBuff);
+            cfg.CreateMap<SigningContext, SigningContextDao>().ReverseMap();
         }
     }
 }

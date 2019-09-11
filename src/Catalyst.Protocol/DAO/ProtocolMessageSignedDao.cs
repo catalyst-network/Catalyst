@@ -1,4 +1,4 @@
-﻿#region LICENSE
+#region LICENSE
 
 /**
 * Copyright (c) 2019 Catalyst Network
@@ -23,37 +23,24 @@
 
 using AutoMapper;
 using Catalyst.Protocol.Common;
-using Google.Protobuf;
+using Catalyst.Protocol.Converters;
 
 namespace Catalyst.Protocol.DAO
 {
-    public class ProtocolMessageSignedDao : DaoBase
+    public class ProtocolMessageSignedDao : DaoBase<ProtocolMessageSigned, ProtocolMessageSignedDao>
     {
         public string Signature { get; set; }
         public PeerIdDao PeerId { get; set; }
-        public string CorrelationId { get; set; }
 
-        public ProtocolMessageSignedDao()
+        public override void InitMappers(IMapperConfigurationExpression cfg)
         {
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.CreateMap<ProtocolMessageSigned, ProtocolMessageSignedDao>().ReverseMap();
-                cfg.CreateMap<PeerId, PeerIdDao>().ReverseMap();
-                cfg.CreateMap<ByteString, string>().ConvertUsing(s => s.ToBase64());
-                cfg.CreateMap<string, ByteString>().ConvertUsing(s => ByteString.FromBase64(s));
-            });
-
-            Mapper = config.CreateMapper();
-        }
-
-        public override IMessage ToProtoBuff()
-        {
-            return (IMessage)Mapper.Map<ProtocolMessageSigned>(this);
-        }
-
-        public override DaoBase ToDao(IMessage protoBuff)
-        {
-            return Mapper.Map<ProtocolMessageSignedDao>((ProtocolMessageSigned)protoBuff);
+            cfg.CreateMap<ProtocolMessageSigned, ProtocolMessageSignedDao>().ReverseMap();
+            cfg.CreateMap<PeerId, PeerIdDao>().ReverseMap();
+            
+            cfg.CreateMap<ProtocolMessageSigned, ProtocolMessageSignedDao>()
+               .ForMember(d => d.Signature, opt => opt.ConvertUsing(new ByteStringToStringBase64Formatter(), s => s.Signature));
+            cfg.CreateMap<ProtocolMessageSignedDao, ProtocolMessageSigned>()
+               .ForMember(d => d.Signature, opt => opt.ConvertUsing(new StringBase64ToByteStringFormatter(), s => s.Signature));
         }
     }
 }

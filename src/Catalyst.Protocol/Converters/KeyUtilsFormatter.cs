@@ -23,11 +23,18 @@
 
 using AutoMapper;
 using Catalyst.Common.Util;
+using Catalyst.Protocol.Extensions;
+using Google.Protobuf;
 
 namespace Catalyst.Protocol.Converters
 {
-    public class KeyUtilsFormatter : IValueConverter<byte[], string>
+    public class ByteStringKeyUtilsToStringFormatter : IValueConverter<byte[], string>
     {
         public string Convert(byte[] sourceMember, ResolutionContext context) { return sourceMember.KeyToString(); }
+    }
+
+    public class StringKeyUtilsToByteStringFormatter : IValueConverter<string, ByteString>
+    {
+        public ByteString Convert(string sourceMember, ResolutionContext context) { return sourceMember.KeyToBytes().ToByteString(); }
     }
 }

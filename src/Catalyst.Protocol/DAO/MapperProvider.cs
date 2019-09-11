@@ -21,26 +21,34 @@
 
 #endregion
 
-using System;
+using System.Collections.Generic;
+using Autofac;
 using AutoMapper;
-using Catalyst.Protocol.Converters;
-using Catalyst.Protocol.Transaction;
+using Catalyst.Protocol.Interfaces.DAO;
 
 namespace Catalyst.Protocol.DAO
 {
-    public class STTransactionEntryDao : DaoBase<STTransactionEntry, STTransactionEntryDao>
+    public class MapperProvider : IStartable
     {
-        public string PubKey { get; set; }
-        public Int64 Amount { get; set; }
-       
-        public override void InitMappers(IMapperConfigurationExpression cfg)
-        {
-            cfg.CreateMap<STTransactionEntry, STTransactionEntryDao>().ReverseMap();
+        private readonly IEnumerable<IMapperInitializer> _mapperConfigurations;
+        public static IMapper MasterMapper { get; set; }
 
-            cfg.CreateMap<STTransactionEntry, STTransactionEntryDao>()
-               .ForMember(d => d.PubKey, opt => opt.ConvertUsing(new ByteStringKeyUtilsToStringFormatter(), s => s.PubKey.ToByteArray()));
-            cfg.CreateMap<STTransactionEntryDao, STTransactionEntry>()
-               .ForMember(d => d.PubKey, opt => opt.ConvertUsing(new StringKeyUtilsToByteStringFormatter(), s => s.PubKey));
+        public MapperProvider(IEnumerable<IMapperInitializer> mapperConfigurations)
+        {
+            _mapperConfigurations = mapperConfigurations;
+        }
+
+        public void Start()
+        {
+            var config = new MapperConfiguration(cfg =>
+            {
+                foreach (var init in _mapperConfigurations)
+                {
+                    init.InitMappers(cfg);
+                }
+            });
+
+            MasterMapper = config.CreateMapper();
         }
     }
 }

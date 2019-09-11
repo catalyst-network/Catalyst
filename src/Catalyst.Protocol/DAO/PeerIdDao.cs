@@ -28,7 +28,7 @@ using Google.Protobuf;
 
 namespace Catalyst.Protocol.DAO
 {
-    public class PeerIdDao : DaoBase
+    public class PeerIdDao : DaoBase<PeerId, PeerIdDao>
     {
         public string ClientId { get; set; }
         public string ProtocolVersion { get; set; }
@@ -36,37 +36,24 @@ namespace Catalyst.Protocol.DAO
         public ushort Port { get; set; }
         public string PublicKey { get; set; }
 
-        public PeerIdDao()
+        public override void InitMappers(IMapperConfigurationExpression cfg)
         {
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.CreateMap<PeerId, PeerIdDao>().ReverseMap();
+            cfg.CreateMap<PeerId, PeerIdDao>().ReverseMap();
 
-                cfg.CreateMap<PeerId, PeerIdDao>()
-                   .ForMember(d => d.PublicKey, opt => opt.ConvertUsing(new KeyUtilsFormatter(), s => s.PublicKey.ToByteArray()));
+            cfg.CreateMap<PeerId, PeerIdDao>()
+               .ForMember(d => d.PublicKey, opt => opt.ConvertUsing(new ByteStringKeyUtilsToStringFormatter(), s => s.PublicKey.ToByteArray()));
+            cfg.CreateMap<PeerIdDao, PeerId>()
+               .ForMember(d => d.PublicKey, opt => opt.ConvertUsing(new StringKeyUtilsToByteStringFormatter(), s => s.PublicKey));
 
-                cfg.CreateMap<PeerId, PeerIdDao>()
-                   .ForMember(d => d.Port, opt => opt.ConvertUsing(new ByteStringToUShortFormatter(), s => s.Port));
+            cfg.CreateMap<PeerId, PeerIdDao>()
+               .ForMember(d => d.Port, opt => opt.ConvertUsing(new ByteStringToUShortFormatter(), s => s.Port));
 
-                cfg.CreateMap<PeerIdDao, PeerId>()
-                   .ForMember(d => d.Port, opt => opt.ConvertUsing(new UShortToByteStringFormatter(), s => s.Port));
-                
-                cfg.CreateMap<ByteString, string>().ConvertUsing(s => s.ToBase64());
+            cfg.CreateMap<PeerIdDao, PeerId>()
+               .ForMember(d => d.Port, opt => opt.ConvertUsing(new UShortToByteStringFormatter(), s => s.Port));
 
-                cfg.CreateMap<string, ByteString>().ConvertUsing(s => ByteString.FromBase64(s));
-            });
+            cfg.CreateMap<ByteString, string>().ConvertUsing(s => s.ToBase64());
 
-            Mapper = config.CreateMapper();
-        }
-
-        public override IMessage ToProtoBuff()
-        {
-            return (PeerId) Mapper.Map<PeerId>(this);
-        }
-
-        public override DaoBase ToDao(IMessage protoBuff)
-        {
-            return Mapper.Map<PeerIdDao>((PeerId) protoBuff);
+            cfg.CreateMap<string, ByteString>().ConvertUsing(s => ByteString.FromBase64(s));
         }
     }
 }

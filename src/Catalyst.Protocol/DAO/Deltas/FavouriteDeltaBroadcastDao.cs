@@ -29,41 +29,23 @@ using Google.Protobuf;
 
 namespace Catalyst.Protocol.DAO.Deltas
 {
-    public class FavouriteDeltaBroadcastDao : DaoBase
+    public class FavouriteDeltaBroadcastDao : DaoBase<FavouriteDeltaBroadcast, FavouriteDeltaBroadcastDao>
     {
         public CandidateDeltaBroadcastDao Candidate { get; set; }
         public PeerIdDao VoterId { get; set; }
 
-        public FavouriteDeltaBroadcastDao()
+        public override void InitMappers(IMapperConfigurationExpression cfg)
         {
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.CreateMap<FavouriteDeltaBroadcast, FavouriteDeltaBroadcastDao>().ReverseMap();
-                cfg.CreateMap<CandidateDeltaBroadcast, CandidateDeltaBroadcastDao>().ReverseMap();
+            cfg.CreateMap<FavouriteDeltaBroadcast, FavouriteDeltaBroadcastDao>().ReverseMap();
+            cfg.CreateMap<CandidateDeltaBroadcast, CandidateDeltaBroadcastDao>().ReverseMap();
 
-                cfg.CreateMap<PeerId, PeerIdDao>().ReverseMap();
+            cfg.CreateMap<PeerId, PeerIdDao>().ReverseMap();
 
-                cfg.CreateMap<PeerId, PeerIdDao>()
-                   .ForMember(d => d.Port, opt => opt.ConvertUsing(new ByteStringToUShortFormatter(), s => s.Port));
+            cfg.CreateMap<PeerId, PeerIdDao>()
+               .ForMember(d => d.Port, opt => opt.ConvertUsing(new ByteStringToUShortFormatter(), s => s.Port));
 
-                cfg.CreateMap<PeerIdDao, PeerId>()
-                   .ForMember(d => d.Port, opt => opt.ConvertUsing(new UShortToByteStringFormatter(), s => s.Port));
-
-                cfg.CreateMap<ByteString, string>().ConvertUsing(s => s.ToBase64());
-                cfg.CreateMap<string, ByteString>().ConvertUsing(s => ByteString.FromBase64(s));
-            });
-
-            Mapper = config.CreateMapper();
-        }
-
-        public override IMessage ToProtoBuff()
-        {
-            return (IMessage) Mapper.Map<FavouriteDeltaBroadcast>(this);
-        }
-
-        public override DaoBase ToDao(IMessage protoBuff)
-        {
-            return Mapper.Map<FavouriteDeltaBroadcastDao>((FavouriteDeltaBroadcast) protoBuff);
+            cfg.CreateMap<PeerIdDao, PeerId>()
+               .ForMember(d => d.Port, opt => opt.ConvertUsing(new UShortToByteStringFormatter(), s => s.Port));
         }
     }
 }

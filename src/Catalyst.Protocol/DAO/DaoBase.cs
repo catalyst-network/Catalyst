@@ -21,22 +21,30 @@
 
 #endregion
 
-using System.ComponentModel.DataAnnotations;
-using AutoMapper;
 using Google.Protobuf;
 using SharpRepository.Repository;
+using System.ComponentModel.DataAnnotations;
+using AutoMapper;
+using Catalyst.Protocol.Interfaces.DAO;
 
 namespace Catalyst.Protocol.DAO
 {
-    public abstract class DaoBase
+    public abstract class DaoBase<TOriginal, TDao> : IMapperInitializer
     {
         [RepositoryPrimaryKey(Order = 1)]
         [Key]
         public string Id { get; set; }
 
-        protected IMapper Mapper { get; set; }
+        public TOriginal ToProtoBuff()
+        {
+            return MapperProvider.MasterMapper.Map<TOriginal>(this);
+        }
 
-        public abstract IMessage ToProtoBuff();
-        public abstract DaoBase ToDao(IMessage protoBuff);
+        public TDao ToDao(IMessage protoBuff)
+        {
+            return MapperProvider.MasterMapper.Map<TDao>(protoBuff);
+        }
+
+        public abstract void InitMappers(IMapperConfigurationExpression cfg);
     }
 }

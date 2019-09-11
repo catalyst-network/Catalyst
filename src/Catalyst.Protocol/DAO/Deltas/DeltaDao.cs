@@ -24,6 +24,7 @@
 using System;
 using System.Collections.Generic;
 using AutoMapper;
+using Catalyst.Protocol.Converters;
 using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Transaction;
 using Google.Protobuf;
@@ -32,7 +33,7 @@ using Google.Protobuf.WellKnownTypes;
 
 namespace Catalyst.Protocol.DAO.Deltas
 {
-    public class DeltaDao : DaoBase
+    public class DeltaDao : DaoBase<Delta, DeltaDao>
     {
         public UInt32 Version { get; set; }
         public string PreviousDeltaDfsHash { get; set; }
@@ -43,47 +44,44 @@ namespace Catalyst.Protocol.DAO.Deltas
         public IEnumerable<CFTransactionEntryDao> CFEntries { get; set; }
         public IEnumerable<CoinbaseEntryDao> CBEntries { get; set; }
 
-        public DeltaDao()
+        public override void InitMappers(IMapperConfigurationExpression cfg)
         {
-            var config = new MapperConfiguration(cfg =>
+            cfg.CreateMap<Delta, DeltaDao>().ReverseMap();
+
+            cfg.CreateMap<CoinbaseEntry, CoinbaseEntryDao>().ReverseMap();
+            cfg.CreateMap<STTransactionEntry, STTransactionEntryDao>().ReverseMap();
+            cfg.CreateMap<Transaction.CFTransactionEntry, CFTransactionEntryDao>().ReverseMap();
+
+            cfg.CreateMap<DateTime, Timestamp>().ConvertUsing(s => s.ToTimestamp());
+            cfg.CreateMap<Timestamp, DateTime>().ConvertUsing(s => s.ToDateTime());
+
+            cfg.CreateMap<Delta, DeltaDao>()
+               .ForMember(d => d.PreviousDeltaDfsHash, opt => opt.ConvertUsing(new ByteStringToStringBase64Formatter(), s => s.PreviousDeltaDfsHash));
+            cfg.CreateMap<DeltaDao, Delta>()
+               .ForMember(d => d.PreviousDeltaDfsHash, opt => opt.ConvertUsing(new StringBase64ToByteStringFormatter(), s => s.PreviousDeltaDfsHash));
+
+            cfg.CreateMap<Delta, DeltaDao>()
+               .ForMember(d => d.MerkleRoot, opt => opt.ConvertUsing(new ByteStringToStringBase64Formatter(), s => s.MerkleRoot));
+            cfg.CreateMap<DeltaDao, Delta>()
+               .ForMember(d => d.MerkleRoot, opt => opt.ConvertUsing(new StringBase64ToByteStringFormatter(), s => s.MerkleRoot));
+
+            cfg.CreateMap<Delta, DeltaDao>()
+               .ForMember(d => d.MerklePoda, opt => opt.ConvertUsing(new ByteStringToStringBase64Formatter(), s => s.MerklePoda));
+            cfg.CreateMap<DeltaDao, Delta>()
+               .ForMember(d => d.MerklePoda, opt => opt.ConvertUsing(new StringBase64ToByteStringFormatter(), s => s.MerklePoda));
+
+            bool IsToRepeatedField(PropertyMap pm)
             {
-                cfg.CreateMap<Delta, DeltaDao>().ReverseMap();
-
-                cfg.CreateMap<CoinbaseEntry, CoinbaseEntryDao>().ReverseMap();
-                cfg.CreateMap<STTransactionEntry, STTransactionEntryDao>().ReverseMap();
-                cfg.CreateMap<Transaction.CFTransactionEntry, CFTransactionEntryDao>().ReverseMap();
-
-                cfg.CreateMap<DateTime, Timestamp>().ConvertUsing(s => s.ToTimestamp());
-                cfg.CreateMap<Timestamp, DateTime>().ConvertUsing(s => s.ToDateTime());
-
-                cfg.CreateMap<ByteString, string>().ConvertUsing(s => s.ToBase64());
-                cfg.CreateMap<string, ByteString>().ConvertUsing(s => ByteString.FromBase64(s));
-
-                bool IsToRepeatedField(PropertyMap pm)
+                if (pm.DestinationType.IsConstructedGenericType)
                 {
-                    if (pm.DestinationType.IsConstructedGenericType)
-                    {
-                        var destGenericBase = pm.DestinationType.GetGenericTypeDefinition();
-                        return destGenericBase == typeof(RepeatedField<>);
-                    }
-
-                    return false;
+                    var destGenericBase = pm.DestinationType.GetGenericTypeDefinition();
+                    return destGenericBase == typeof(RepeatedField<>);
                 }
 
-                cfg.ForAllPropertyMaps(IsToRepeatedField, (propertyMap, opts) => opts.UseDestinationValue());
-            });
+                return false;
+            }
 
-            Mapper = config.CreateMapper();
-        }
-
-        public override IMessage ToProtoBuff()
-        {
-            return (IMessage) Mapper.Map<Delta>(this);
-        }
-
-        public override DaoBase ToDao(IMessage protoBuff)
-        {
-            return Mapper.Map<DeltaDao>((Delta) protoBuff);
+            cfg.ForAllPropertyMaps(IsToRepeatedField, (propertyMap, opts) => opts.UseDestinationValue());
         }
     }
 }

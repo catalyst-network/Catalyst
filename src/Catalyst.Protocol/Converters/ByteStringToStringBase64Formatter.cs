@@ -22,22 +22,12 @@
 #endregion
 
 using AutoMapper;
-using Catalyst.Protocol.Interfaces.DAO;
-using Catalyst.Protocol.Transaction;
 using Google.Protobuf;
 
-namespace Catalyst.Protocol.DAO
+namespace Catalyst.Protocol.Converters
 {
-    public class CFTransactionEntryDao : DaoBase<CFTransactionEntry, CFTransactionEntryDao>
+    public class ByteStringToStringBase64Formatter : IValueConverter<ByteString, string>
     {
-        public string PubKey { get; set; }
-        public string PedersenCommit { get; set; }
-
-        public override void InitMappers(IMapperConfigurationExpression cfg)
-        {
-            cfg.CreateMap<CFTransactionEntry, CFTransactionEntryDao>().ReverseMap();
-            cfg.CreateMap<ByteString, string>().ConvertUsing(s => s.ToBase64());
-            cfg.CreateMap<string, ByteString>().ConvertUsing(s => ByteString.FromBase64(s));
-        }
+        public string Convert(ByteString sourceMember, ResolutionContext context) { return sourceMember.ToBase64(); }
     }
 }

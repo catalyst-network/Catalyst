@@ -1,4 +1,4 @@
-﻿#region LICENSE
+#region LICENSE
 
 /**
 * Copyright (c) 2019 Catalyst Network
@@ -23,37 +23,25 @@
 
 using System;
 using AutoMapper;
+using Catalyst.Protocol.Converters;
 using Catalyst.Protocol.Transaction;
-using Google.Protobuf;
 
 namespace Catalyst.Protocol.DAO
 {
-    public class CoinbaseEntryDao : DaoBase
+    public class CoinbaseEntryDao : DaoBase<CoinbaseEntry, CoinbaseEntryDao>
     {
         public uint Version { get; set; }
         public string PubKey { get; set; }
         public UInt64 Amount { get; set; }
-
-        public CoinbaseEntryDao()
+        
+        public override void InitMappers(IMapperConfigurationExpression cfg)
         {
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.CreateMap<CoinbaseEntry, CoinbaseEntryDao>().ReverseMap();
-                cfg.CreateMap<ByteString, string>().ConvertUsing(s => s.ToBase64());
-                cfg.CreateMap<string, ByteString>().ConvertUsing(s => ByteString.FromBase64(s));
-            });
+            cfg.CreateMap<CoinbaseEntry, CoinbaseEntryDao>().ReverseMap();
 
-            Mapper = config.CreateMapper();
-        }
-
-        public override IMessage ToProtoBuff()
-        {
-            return (IMessage)Mapper.Map<CoinbaseEntry>(this);
-        }
-
-        public override DaoBase ToDao(IMessage protoBuff)
-        {
-            return Mapper.Map<CoinbaseEntryDao>((CoinbaseEntry)protoBuff);
+            cfg.CreateMap<CoinbaseEntry, CoinbaseEntryDao>()
+               .ForMember(d => d.PubKey, opt => opt.ConvertUsing(new ByteStringKeyUtilsToStringFormatter(), s => s.PubKey.ToByteArray()));
+            cfg.CreateMap<CoinbaseEntryDao, CoinbaseEntry>()
+               .ForMember(d => d.PubKey, opt => opt.ConvertUsing(new StringKeyUtilsToByteStringFormatter(), s => s.PubKey));
         }
     }
 }

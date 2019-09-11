@@ -6,6 +6,7 @@
   </PropertyGroup>
   <Import Project="../Common.Projects.props" />
   <ItemGroup>
+    <PackageReference Include="Autofac" Version="4.8.1" />
     <PackageReference Include="AutoMapper" Version="9.0.0" />
     <PackageReference Include="Catalyst.Cryptography.BulletProofs.Wrapper" Version="0.0.1.10324-beta" />
     <PackageReference Include="Dawn.Guard" Version="1.9.0" />

@@ -22,36 +22,31 @@
 #endregion
 
 using AutoMapper;
+using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Converters;
 using Catalyst.Protocol.Deltas;
 using Google.Protobuf;
 
 namespace Catalyst.Protocol.DAO.Deltas
 {
-    public class DeltaDfsHashBroadcastDao : DaoBase
+    public class DeltaDfsHashBroadcastDao : DaoBase<DeltaDfsHashBroadcast, DeltaDfsHashBroadcastDao>
     {
         public string DeltaDfsHash { get; set; }
         public string PreviousDeltaDfsHash { get; set; }
 
-        public DeltaDfsHashBroadcastDao()
+        public override void InitMappers(IMapperConfigurationExpression cfg)
         {
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.CreateMap<DeltaDfsHashBroadcast, DeltaDfsHashBroadcastDao>().ReverseMap();
-                cfg.CreateMap<ByteString, string>().ConvertUsing(s => s.ToBase64());
-                cfg.CreateMap<string, ByteString>().ConvertUsing(s => ByteString.FromBase64(s));
-            });
+            cfg.CreateMap<DeltaDfsHashBroadcast, DeltaDfsHashBroadcastDao>().ReverseMap();
 
-            Mapper = config.CreateMapper();
-        }
+            cfg.CreateMap<DeltaDfsHashBroadcast, DeltaDfsHashBroadcastDao>()
+               .ForMember(d => d.DeltaDfsHash, opt => opt.ConvertUsing(new ByteStringToStringBase64Formatter(), s => s.DeltaDfsHash));
+            cfg.CreateMap<DeltaDfsHashBroadcastDao, DeltaDfsHashBroadcast>()
+               .ForMember(d => d.DeltaDfsHash, opt => opt.ConvertUsing(new StringBase64ToByteStringFormatter(), s => s.DeltaDfsHash));
 
-        public override IMessage ToProtoBuff()
-        {
-            return (IMessage) Mapper.Map<DeltaDfsHashBroadcast>(this);
-        }
-
-        public override DaoBase ToDao(IMessage protoBuff)
-        {
-            return Mapper.Map<DeltaDfsHashBroadcastDao>((DeltaDfsHashBroadcast)protoBuff);
+            cfg.CreateMap<DeltaDfsHashBroadcast, DeltaDfsHashBroadcastDao>()
+               .ForMember(d => d.PreviousDeltaDfsHash, opt => opt.ConvertUsing(new ByteStringToStringBase64Formatter(), s => s.PreviousDeltaDfsHash));
+            cfg.CreateMap<DeltaDfsHashBroadcastDao, DeltaDfsHashBroadcast>()
+               .ForMember(d => d.PreviousDeltaDfsHash, opt => opt.ConvertUsing(new StringBase64ToByteStringFormatter(), s => s.PreviousDeltaDfsHash));
         }
     }
 }

@@ -25,43 +25,35 @@ using AutoMapper;
 using Catalyst.Protocol.Common;
 using Google.Protobuf;
 using Catalyst.Protocol.Converters;
+
 namespace Catalyst.Protocol.DAO
 {
-    public class ProtocolErrorMessageSignedDao : DaoBase
+    public class ProtocolErrorMessageSignedDao : DaoBase<ProtocolErrorMessageSigned, ProtocolErrorMessageSignedDao>
     {
         public string Signature { get; set; }
         public PeerIdDao PeerId { get; set; }
         public string CorrelationId { get; set; }
         public int Code { get; set; }
 
-        public ProtocolErrorMessageSignedDao()
+        public override void InitMappers(IMapperConfigurationExpression cfg)
         {
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.CreateMap<ProtocolErrorMessageSigned, ProtocolErrorMessageSignedDao>().ReverseMap();
-                cfg.CreateMap<PeerId, PeerIdDao>().ReverseMap();
+            cfg.CreateMap<ProtocolErrorMessageSigned, ProtocolErrorMessageSignedDao>().ReverseMap();
+            cfg.CreateMap<PeerId, PeerIdDao>().ReverseMap();
 
-                cfg.CreateMap<PeerId, PeerIdDao>()
-                   .ForMember(d => d.Port, opt => opt.ConvertUsing(new ByteStringToUShortFormatter(), s => s.Port));
+            cfg.CreateMap<PeerId, PeerIdDao>()
+               .ForMember(d => d.Port, opt => opt.ConvertUsing(new ByteStringToUShortFormatter(), s => s.Port));
+            cfg.CreateMap<PeerIdDao, PeerId>()
+               .ForMember(d => d.Port, opt => opt.ConvertUsing(new UShortToByteStringFormatter(), s => s.Port));
 
-                cfg.CreateMap<PeerIdDao, PeerId>()
-                   .ForMember(d => d.Port, opt => opt.ConvertUsing(new UShortToByteStringFormatter(), s => s.Port));
+            cfg.CreateMap<ProtocolErrorMessageSigned, ProtocolErrorMessageSignedDao>()
+               .ForMember(d => d.Signature, opt => opt.ConvertUsing(new ByteStringToStringBase64Formatter(), s => s.Signature));
+            cfg.CreateMap<ProtocolErrorMessageSignedDao, ProtocolErrorMessageSigned>()
+               .ForMember(d => d.Signature, opt => opt.ConvertUsing(new StringBase64ToByteStringFormatter(), s => s.Signature));
 
-                cfg.CreateMap<ByteString, string>().ConvertUsing(s => s.ToBase64());
-                cfg.CreateMap<string, ByteString>().ConvertUsing(s => ByteString.FromBase64(s));
-            });
-
-            Mapper = config.CreateMapper();
-        }
-
-        public override IMessage ToProtoBuff()
-        {
-            return (IMessage) Mapper.Map<ProtocolErrorMessageSigned>(this);
-        }
-
-        public override DaoBase ToDao(IMessage protoBuff)
-        {
-            return Mapper.Map<ProtocolErrorMessageSignedDao>((ProtocolErrorMessageSigned)protoBuff);
+            cfg.CreateMap<ProtocolErrorMessageSigned, ProtocolErrorMessageSignedDao>()
+               .ForMember(d => d.CorrelationId, opt => opt.ConvertUsing(new ByteStringToStringBase64Formatter(), s => s.CorrelationId));
+            cfg.CreateMap<ProtocolErrorMessageSignedDao, ProtocolErrorMessageSigned>()
+               .ForMember(d => d.CorrelationId, opt => opt.ConvertUsing(new StringBase64ToByteStringFormatter(), s => s.CorrelationId));
         }
     }
 }
