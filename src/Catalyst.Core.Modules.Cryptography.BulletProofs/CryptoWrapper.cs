@@ -90,12 +90,12 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs
             throw new System.NotImplementedException();
         }
 
-        public ISignature CTSign(List<Byte64> cTransactionEntries, IPrivateKey privateKey, Byte32 blinding)
+        public ISignature CtSign(List<Byte64> cTransactionEntries, IPrivateKey privateKey, Byte32 blinding)
         {
             throw new System.NotImplementedException();
         }
 
-        public bool CTVerify(List<Byte64> cTransactionEntries, ISignature cTSignature)
+        public bool CtVerify(List<Byte64> cTransactionEntries, ISignature cTSignature)
         {
             throw new System.NotImplementedException();
         }

@@ -67,6 +67,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
             ContainerProvider.ContainerBuilder.RegisterInstance(TestKeyRegistry.MockKeyRegistry()).As<IKeyRegistry>();
             ContainerProvider.ContainerBuilder.RegisterModule(new KeystoreModule());
             ContainerProvider.ContainerBuilder.RegisterModule(new KeySignerModule());
+            ContainerProvider.ContainerBuilder.RegisterModule(new BulletProofsModule());
             ContainerProvider.ConfigureContainerBuilder();
             
             _scope = ContainerProvider.Container.BeginLifetimeScope(CurrentTestName);

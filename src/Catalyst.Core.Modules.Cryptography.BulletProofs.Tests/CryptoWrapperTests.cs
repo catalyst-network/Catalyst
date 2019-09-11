@@ -36,7 +36,7 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs.Tests
         public CryptoWrapperTests() { _wrapper = new CryptoWrapper(); }
 
         private readonly IWrapper _wrapper;
-        private static readonly Random _random = new Random();
+        private static readonly Random Random = new Random();
 
         [Fact]
         public void TestGenerateKey()
@@ -91,7 +91,7 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs.Tests
         [InlineData("616261", "98a70222f0b8121aa9d30f813d683f809e462b469c7ff87639499bb94e6dae4131f85042463c2a355a2003d062adf5aaa10b8c61e636062aaad11c2a26083406", "ec172b93ad5e563bf4932c70e1245034c35467ef2efd4d64ebf819683467e2bf", "", false)]
         [InlineData("616263", "98a70222f0b8121aa9d30f813d683f809e462b469c7ff87639499bb94e6dae4131f85042463c2a355a2003d062adf5aaa10b8c61e636062aaad11c2a26083406", "0f1d1274943b91415889152e893d80e93275a1fc0b65fd71b4b0dda10ad7d772", "", false)]
         [InlineData("616263", "98a70222f0b8121aa9d30f813d683f809e462b469c7ff87639499bb94e6dae4131f85042463c2a355a2003d062adf5aaa10b8c61e636062aaad11c2a26083405", "ec172b93ad5e563bf4932c70e1245034c35467ef2efd4d64ebf819683467e2bf", "", false)]
-        public void Ed25519phTestVectors(string message, string signature, string publicKey, string context, bool expectedResult)
+        public void Ed25519PhTestVectors(string message, string signature, string publicKey, string context, bool expectedResult)
         {
             var signatureAndMessage = signature.HexToByteArray();
             byte[] signatureBytes = new ArraySegment<byte>(signatureAndMessage, 0, _wrapper.SignatureLength).ToArray();
@@ -237,7 +237,7 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs.Tests
         private static byte[] GenerateRandomByteArray(int length)
         {
             var buf = new byte[length];
-            _random.NextBytes(buf);
+            Random.NextBytes(buf);
             return buf;
         }
     }

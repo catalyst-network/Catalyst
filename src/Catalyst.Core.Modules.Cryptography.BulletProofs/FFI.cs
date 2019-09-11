@@ -27,9 +27,9 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs
 {
     public static class FFI
     {
-        private const string library = "catalystffi";
+        private const string Library = "catalystffi";
 
-        [DllImport(library, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Library, CallingConvention = CallingConvention.Cdecl)]
         private static extern int generate_key(byte[] bytes);
 
         internal static byte[] GeneratePrivateKey()
@@ -44,7 +44,7 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs
             return key;
         }
 
-        [DllImport(library, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Library, CallingConvention = CallingConvention.Cdecl)]
         private static extern int std_sign(byte[] signature, byte[] private_key, byte[] message, int message_length, byte[] context, int context_length);
 
         internal static byte[] StdSign(byte[] privateKey, byte[] message, byte[] context)
@@ -64,7 +64,7 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs
             return signature;
         }
         
-        [DllImport(library, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Library, CallingConvention = CallingConvention.Cdecl)]
         private static extern int std_verify(byte[] signature, byte[] public_key, byte[] message, int message_length, byte[] context, int context_length, byte[] b);
 
         internal static bool StdVerify(byte[] signature, byte[] publicKey, byte[] message, byte[] context)
@@ -92,7 +92,7 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs
             return isVerified[0] == 1;
         }
 
-        [DllImport(library, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Library, CallingConvention = CallingConvention.Cdecl)]
         private static extern int validate_public_key(byte[] publicKey);
 
         internal static void ValidatePublicKeyOrThrow(byte[] publicKey)
@@ -110,7 +110,7 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs
             }
         }
 
-        [DllImport(library, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Library, CallingConvention = CallingConvention.Cdecl)]
         private static extern void publickey_from_private(byte[] public_key, byte[] private_key);
 
         internal static byte[] GetPublicKeyFromPrivate(byte[] privateKey)
@@ -134,22 +134,22 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs
             return last_error_message(readInto, errorLength) > 0 ? System.Text.Encoding.UTF8.GetString(readInto) : "";
         }
 
-        [DllImport(library, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Library, CallingConvention = CallingConvention.Cdecl)]
         private static extern int last_error_length();
 
-        [DllImport(library, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Library, CallingConvention = CallingConvention.Cdecl)]
         private static extern int last_error_message(byte[] error_buffer, int message_length);
 
-        [DllImport(library, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Library, CallingConvention = CallingConvention.Cdecl)]
         private static extern int get_private_key_length();
 
-        [DllImport(library, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Library, CallingConvention = CallingConvention.Cdecl)]
         private static extern int get_public_key_length();
 
-        [DllImport(library, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Library, CallingConvention = CallingConvention.Cdecl)]
         private static extern int get_signature_length();
 
-        [DllImport(library, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Library, CallingConvention = CallingConvention.Cdecl)]
         private static extern int get_max_context_length();
 
         private static int _privateKeyLength;

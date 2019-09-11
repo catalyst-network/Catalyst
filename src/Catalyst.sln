@@ -104,6 +104,7 @@ ProjectSection(SolutionItems) = preProject
 	..\devnet-docker-compose.yml = ..\devnet-docker-compose.yml
 	..\Vagrantfile = ..\Vagrantfile
 	..\dev-test-suite-azure-pipelines.yml = ..\dev-test-suite-azure-pipelines.yml
+	..\nuget-preview-azure-pipelines.yml = ..\nuget-preview-azure-pipelines.yml
 EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{8FEB1C8E-EA58-451D-A8FE-2A5189D46A0E}"
