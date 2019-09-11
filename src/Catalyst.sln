@@ -3,26 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.28902.138
 MinimumVisualStudioVersion = 15.0.26124.0
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{0C509045-8F0C-4864-9FC2-4ABD4AABCB08}"
-	ProjectSection(SolutionItems) = preProject
-		..\.dockerignore = ..\.dockerignore
-		..\.gitignore = ..\.gitignore
-		..\scripts\addLicenseHeader.sh = ..\scripts\addLicenseHeader.sh
-		..\azure-pipelines.yml = ..\azure-pipelines.yml
-		Catalyst.sln.DotSettings = Catalyst.sln.DotSettings
-		Common.IntegrationTests.props = Common.IntegrationTests.props
-		Common.Projects.props = Common.Projects.props
-		Common.TestProjects.props = Common.TestProjects.props
-		Common.UnitTests.props = Common.UnitTests.props
-		..\CONTRIBUTING.md = ..\CONTRIBUTING.md
-		..\COPYING = ..\COPYING
-		..\devnet-docker-compose.yml = ..\devnet-docker-compose.yml
-		..\Dockerfile = ..\Dockerfile
-		..\GUIDELINES.md = ..\GUIDELINES.md
-		..\README.md = ..\README.md
-		..\scripts\run-node.sh = ..\scripts\run-node.sh
-	EndProjectSection
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.TestUtils", "Catalyst.TestUtils\Catalyst.TestUtils.csproj", "{B276137D-FB34-48DB-80CF-ADA34A2D2F96}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Simulator", "Catalyst.Simulator\Catalyst.Simulator.csproj", "{EC74EF99-CF2A-4F19-9BE1-0D0639F76C36}"
@@ -104,6 +84,37 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Core.Modules.Authentication.Tests", "Catalyst.Core.Modules.Authentication.Tests\Catalyst.Core.Modules.Authentication.Tests.csproj", "{4E9C90D9-081D-4992-8C21-E93C44EB427C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Modules.Respository.MongoDb", "Catalyst.Modules.Respository.MongoDb\Catalyst.Modules.Respository.MongoDb.csproj", "{A84C4347-5892-49B0-8568-354E830B3D9D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Props", "Props", "{45EAC687-ABC9-496B-B507-68AEDD4B91D5}"
+ProjectSection(SolutionItems) = preProject
+	Common.IntegrationTests.props = Common.IntegrationTests.props
+	Common.UnitTests.props = Common.UnitTests.props
+	Common.TestProjects.props = Common.TestProjects.props
+	Common.Projects.props = Common.Projects.props
+EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Ci", "Ci", "{29C2F736-A644-427E-B72C-FD1EE1024E27}"
+ProjectSection(SolutionItems) = preProject
+	..\azure-pipelines.yml = ..\azure-pipelines.yml
+EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{AC999877-034E-4711-AB8D-716B1CC2C4B9}"
+ProjectSection(SolutionItems) = preProject
+	..\scripts\addLicenseHeader.sh = ..\scripts\addLicenseHeader.sh
+	..\Dockerfile = ..\Dockerfile
+	..\devnet-docker-compose.yml = ..\devnet-docker-compose.yml
+	..\Vagrantfile = ..\Vagrantfile
+EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{8FEB1C8E-EA58-451D-A8FE-2A5189D46A0E}"
+ProjectSection(SolutionItems) = preProject
+	..\CONTRIBUTING.md = ..\CONTRIBUTING.md
+	..\COPYING = ..\COPYING
+	..\GUIDELINES.md = ..\GUIDELINES.md
+	..\LICENSE = ..\LICENSE
+	..\README.md = ..\README.md
+	..\SECURITY.md = ..\SECURITY.md
+EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
