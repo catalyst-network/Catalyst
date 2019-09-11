@@ -18,7 +18,7 @@ strategy:
     Ubuntu-1604:
       imageName: 'ubuntu-16.04'
       netcore_sdk: 2.2.104
-  maxParallel: 6
+  maxParallel: 3
 
 variables:
   release.type: '-beta'
