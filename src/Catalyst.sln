@@ -87,8 +87,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Modules.Respositor
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Props", "Props", "{45EAC687-ABC9-496B-B507-68AEDD4B91D5}"
 ProjectSection(SolutionItems) = preProject
-	Common.IntegrationTests.props = Common.IntegrationTests.props
-	Common.UnitTests.props = Common.UnitTests.props
 	Common.TestProjects.props = Common.TestProjects.props
 	Common.Projects.props = Common.Projects.props
 EndProjectSection
@@ -120,7 +118,7 @@ EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Core.Modules.Cryptography.BulletProofs", "Catalyst.Core.Modules.Cryptography.BulletProofs\Catalyst.Core.Modules.Cryptography.BulletProofs.csproj", "{E72CF774-9A2F-475C-ADA0-C061C35CEA91}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Core.Modules.Cryptography.BulletProofs.Tests", "Catalyst.Cryptography.BulletProofs.Wrapper.Tests\Catalyst.Core.Modules.Cryptography.BulletProofs.Tests.csproj", "{F17A64F1-E2FB-4B3F-A7B9-803685D47038}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Core.Modules.Cryptography.BulletProofs.Tests", "Catalyst.Core.Modules.Cryptography.BulletProofs.Tests\Catalyst.Core.Modules.Cryptography.BulletProofs.Tests.csproj", "{410FCEA3-1BEC-4BF3-A12C-34EB13FAF34B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -288,6 +286,10 @@ Global
 		{A84C4347-5892-49B0-8568-354E830B3D9D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A84C4347-5892-49B0-8568-354E830B3D9D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A84C4347-5892-49B0-8568-354E830B3D9D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{410FCEA3-1BEC-4BF3-A12C-34EB13FAF34B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{410FCEA3-1BEC-4BF3-A12C-34EB13FAF34B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{410FCEA3-1BEC-4BF3-A12C-34EB13FAF34B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{410FCEA3-1BEC-4BF3-A12C-34EB13FAF34B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -25,19 +25,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using Catalyst.Abstractions.Cli;
-using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.P2P;
-using Catalyst.Abstractions.Rpc;
-using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Network;
 using Catalyst.Core.Lib.Util;
-using Catalyst.Core.Modules.Cryptography.BulletProofs;
 using Catalyst.Protocol.Common;
 using Dawn;
 using Google.Protobuf;
-using Microsoft.Extensions.Configuration;
 using Nethereum.RLP;
 
 namespace Catalyst.Core.Lib.P2P
@@ -63,44 +57,14 @@ namespace Catalyst.Core.Lib.P2P
         
         public PeerIdentifier(PeerId peerId)
         {
-            var keyLength = FFI.PublicKeyLength;
+            // hard coding this for now as this class should be replaced by dao,
+            // requiring bullet proof FFI violates DIP and creates circular dep between Core.Lib and Cryptography.BulletProof
+            // due to nature of FFI not sure we can inject it here
+            // var keyLength = FFI.PublicKeyLength;
+            
+            var keyLength = 32;
             Guard.Argument(peerId.PublicKey, nameof(peerId.PublicKey)).MinCount(keyLength).MaxCount(keyLength);
             PeerId = peerId;
-        }
-
-        public static IPeerIdentifier BuildPeerIdFromConfig(IRpcClientConfig clientConfig)
-        {
-            return new PeerIdentifier(clientConfig.PublicKey.KeyToBytes(),
-                clientConfig.HostAddress, clientConfig.Port);
-        }
-        
-        public static IPeerIdentifier BuildPeerIdFromConfig(IConfigurationRoot config, IUserOutput userOutput, IKeyRegistry registry)
-        {
-            //TODO: Handle different scenarios to get the IPAddress and Port depending
-            //on you whether you are connecting to a local node, or a remote one.
-            //https://github.com/catalyst-network/Catalyst.Node/issues/307
-
-            var catalystCliConfig = config.GetSection("CatalystCliConfig");
-            var publicKeyStr = catalystCliConfig.GetSection("PublicKey").Value;
-            var bindIp = catalystCliConfig.GetSection("BindAddress").Value;
-            var port = catalystCliConfig.GetSection("Port").Value;
-
-            var publicKey = GetIfRegistryContainsPublicKey(publicKeyStr.KeyToBytes(), registry, userOutput);
-
-            return new PeerIdentifier(publicKey,
-                IPAddress.Parse(bindIp), int.Parse(port));
-        }
-
-        internal static byte[] GetIfRegistryContainsPublicKey(byte[] publicKeyBytes, IKeyRegistry registry, IUserOutput userOutput)
-        {
-            if (registry.Contains(publicKeyBytes))
-            {
-                return publicKeyBytes;
-            }
-
-            var defaultKeyBytes = registry.GetItemFromRegistry(KeyRegistryTypes.DefaultKey).GetPublicKey().Bytes;
-            userOutput.WriteLine($"Public key {publicKeyBytes.KeyToString()} not found. Using the default key: {defaultKeyBytes.KeyToString()}");
-            return defaultKeyBytes;
         }
 
         /// <summary>
@@ -124,11 +88,6 @@ namespace Catalyst.Core.Lib.P2P
 
         public PeerIdentifier(IPeerSettings settings) : this(settings.PublicKey.KeyToBytes(), 
             new IPEndPoint(settings.PublicIpAddress, settings.Port)) { }
-
-        public PeerIdentifier(IPeerSettings settings, IKeyRegistry registry, IUserOutput userOutput)
-            : this(
-                GetIfRegistryContainsPublicKey(settings.PublicKey.KeyToBytes(), registry, userOutput), 
-                new IPEndPoint(settings.PublicIpAddress.MapToIPv4(), settings.Port)) { }
 
         public PeerIdentifier(IEnumerable<byte> publicKey, IPAddress ipAddress, int port)
             : this(publicKey, EndpointBuilder.BuildNewEndPoint(ipAddress, port)) { }
