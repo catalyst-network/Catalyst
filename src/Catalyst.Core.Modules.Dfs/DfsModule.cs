@@ -23,6 +23,7 @@
 
 using Autofac;
 using Catalyst.Abstractions.Dfs;
+using Ipfs.CoreApi;
 
 namespace Catalyst.Core.Modules.Dfs
 {
@@ -30,7 +31,7 @@ namespace Catalyst.Core.Modules.Dfs
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterType<IpfsAdapter>().As<IIpfsAdapter>().SingleInstance();
+            builder.RegisterType<IpfsAdapter>().As<IIpfsAdapter>().As<ICoreApi>().SingleInstance();
             builder.RegisterType<Dfs>().As<IDfs>().SingleInstance();
         }  
     }

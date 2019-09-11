@@ -24,7 +24,9 @@
 using Autofac;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.FileSystem;
+using Catalyst.Abstractions.FileTransfer;
 using Catalyst.Abstractions.IO.EventLoop;
+using Catalyst.Abstractions.IO.Events;
 using Catalyst.Abstractions.IO.Transport.Channels;
 using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.P2P;
@@ -34,8 +36,11 @@ using Catalyst.Abstractions.P2P.IO.Messaging.Correlation;
 using Catalyst.Abstractions.P2P.Models;
 using Catalyst.Abstractions.Rpc.IO.Messaging.Correlation;
 using Catalyst.Abstractions.Util;
+using Catalyst.Abstractions.Validators;
 using Catalyst.Core.Lib.Cryptography;
+using Catalyst.Core.Lib.FileTransfer;
 using Catalyst.Core.Lib.IO.EventLoop;
+using Catalyst.Core.Lib.IO.Events;
 using Catalyst.Core.Lib.P2P;
 using Catalyst.Core.Lib.P2P.Discovery;
 using Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast;
@@ -47,6 +52,7 @@ using Catalyst.Core.Lib.P2P.ReputationSystem;
 using Catalyst.Core.Lib.Registry;
 using Catalyst.Core.Lib.Rpc.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.Util;
+using Catalyst.Core.Lib.Validators;
 using Catalyst.Cryptography.BulletProofs.Wrapper;
 using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
 using Microsoft.Extensions.Caching.Memory;
@@ -137,7 +143,15 @@ namespace Catalyst.Core.Lib
             // @TODO encapsulate to own module
             // Register hashlib
             builder.RegisterType<BLAKE2B_256>().As<IMultihashAlgorithm>();
-     
+
+            // Register file transfer
+            builder.RegisterType<DownloadFileTransferFactory>().As<IDownloadFileTransferFactory>().SingleInstance();
+            builder.RegisterType<UploadFileTransferFactory>().As<IUploadFileTransferFactory>().SingleInstance();
+
+            // Transaction validators
+            builder.RegisterType<TransactionValidator>().As<ITransactionValidator>().SingleInstance();
+            builder.RegisterType<TransactionReceivedEvent>().As<ITransactionReceivedEvent>().SingleInstance();
+
             base.Load(builder);
         }
     }

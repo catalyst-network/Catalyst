@@ -25,13 +25,8 @@ using Autofac;
 using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.KeySigner;
 using Catalyst.Abstractions.Types;
-using Catalyst.Core.Config;
-using Catalyst.Core.Extensions;
-using Catalyst.Core.IO.Messaging.Dto;
-using Catalyst.Core.Rpc.IO.Observers;
 using Catalyst.Protocol;
 using Catalyst.Protocol.Common;
-using Catalyst.Protocol.Extensions;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
@@ -40,13 +35,24 @@ using Google.Protobuf;
 using NSubstitute;
 using System.IO;
 using System.Linq;
+using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.P2P;
+using Catalyst.Core.Lib.Config;
+using Catalyst.Core.Lib.Extensions;
+using Catalyst.Core.Lib.IO.Messaging.Dto;
+using Catalyst.Core.Modules.Consensus;
+using Catalyst.Core.Modules.Dfs;
+using Catalyst.Core.Modules.KeySigner;
+using Catalyst.Core.Modules.Keystore;
+using Catalyst.Core.Modules.Rpc.Server;
+using Catalyst.Core.Modules.Rpc.Server.IO.Observers;
 using Xunit;
 using Xunit.Abstractions;
+using Catalyst.Core.Modules.Mempool;
 
-namespace Catalyst.Core.IntegrationTests.Rpc.IO.Observers
+namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
 {
-    public class VerifyMessageRequestObserverIntegrationTests : ConfigFileBasedTest
+    public class VerifyMessageRequestObserverIntegrationTests : FileSystemBasedTest
     {
         private readonly IKeySigner _keySigner;
         private readonly IChannelHandlerContext _fakeContext;
@@ -57,15 +63,25 @@ namespace Catalyst.Core.IntegrationTests.Rpc.IO.Observers
         
         public VerifyMessageRequestObserverIntegrationTests(ITestOutputHelper output) : base(output, new[]
         {
-            Path.Combine(Constants.ConfigSubFolder, Constants.ComponentsJsonConfigFile),
+            Path.Combine(Constants.ConfigSubFolder, Constants.ShellNodesConfigFile),
             Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile),
             Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Protocol.Common.Network.Devnet))
         })
         {
             _testMessageToSign = ByteString.CopyFromUtf8("TestMsg");
 
+            ContainerProvider.ContainerBuilder.RegisterInstance(TestKeyRegistry.MockKeyRegistry()).As<IKeyRegistry>();
+            ContainerProvider.ContainerBuilder.RegisterModule(new KeystoreModule());
+            ContainerProvider.ContainerBuilder.RegisterModule(new KeySignerModule());
+            ContainerProvider.ContainerBuilder.RegisterModule(new RpcServerModule());
+            ContainerProvider.ContainerBuilder.RegisterModule(new DfsModule());
+            ContainerProvider.ContainerBuilder.RegisterModule(new MempoolModule());
+            ContainerProvider.ContainerBuilder.RegisterModule(new ConsensusModule());
+
+            ContainerProvider.ContainerBuilder.RegisterInstance(PeerIdentifierHelper.GetPeerIdentifier("Test"))
+               .As<IPeerIdentifier>();
+
             ContainerProvider.ConfigureContainerBuilder();
-            SocketPortHelper.AlterConfigurationToGetUniquePort(ContainerProvider.ConfigurationRoot, CurrentTestName);
 
             _scope = ContainerProvider.Container.BeginLifetimeScope(CurrentTestName);
             _keySigner = ContainerProvider.Container.Resolve<IKeySigner>();

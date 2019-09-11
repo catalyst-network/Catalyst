@@ -21,7 +21,6 @@
 
 #endregion
 
-using System;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.KeySigner;
@@ -31,8 +30,8 @@ using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using DotNetty.Transport.Channels;
-using Nethereum.RLP;
 using Serilog;
+using System;
 
 namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
 {
