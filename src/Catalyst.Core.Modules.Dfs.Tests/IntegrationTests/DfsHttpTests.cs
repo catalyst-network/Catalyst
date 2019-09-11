@@ -21,12 +21,10 @@
 
 #endregion
 
-using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Types;
-using Catalyst.Core.Dfs;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using NSubstitute;
@@ -34,12 +32,12 @@ using Serilog;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Catalyst.Core.IntegrationTests.Dfs
+namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
 {
     public sealed class DfsHttpTests : FileSystemBasedTest
     {
         private readonly IpfsAdapter _ipfs;
-        private readonly Core.Dfs.Dfs _dfs;
+        private readonly Dfs _dfs;
         private readonly DfsGateway _dfsGateway;
 
         public DfsHttpTests(ITestOutputHelper output) : base(output)
@@ -48,14 +46,14 @@ namespace Catalyst.Core.IntegrationTests.Dfs
             passwordReader.RetrieveOrPromptAndAddPasswordToRegistry(Arg.Any<PasswordRegistryTypes>(), Arg.Any<string>()).ReturnsForAnyArgs(TestPasswordReader.BuildSecureStringPassword("abcd"));
             var logger = Substitute.For<ILogger>();
             _ipfs = new IpfsAdapter(passwordReader, FileSystem, logger);
-            _dfs = new Core.Dfs.Dfs(_ipfs, logger);
+            _dfs = new Dfs(_ipfs, logger);
             _dfsGateway = new DfsGateway(_ipfs);
         }
 
         [Theory]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         [InlineData("Expected content str")]
-        [InlineData("Expected @!£:!$!%(")]
+        [InlineData("Expected @!ï¿½:!$!%(")]
         public async Task Should_have_a_URL_for_content(string expectedText)
         {
             var id = await _dfs.AddTextAsync(expectedText).ConfigureAwait(false);
@@ -66,7 +64,7 @@ namespace Catalyst.Core.IntegrationTests.Dfs
         [Theory]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         [InlineData("Expected content str")]
-        [InlineData("Expected @!£:!$!%(")]
+        [InlineData("Expected @!ï¿½:!$!%(")]
         public async Task Should_serve_the_content(string expectedText)
         {
             var id = await _dfs.AddTextAsync(expectedText);

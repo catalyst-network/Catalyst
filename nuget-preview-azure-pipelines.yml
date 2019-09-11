@@ -1,0 +1,61 @@
+pool:
+  name: Hosted Windows Container
+
+variables:
+  release.type: '-beta'
+  BuildPlatform: 'any cpu'
+  BuildConfiguration: 'Debug'
+
+trigger:
+  batch: true
+  branches:
+    include:
+      - develop
+
+steps:
+  - task: DotNetCoreInstaller@0
+    displayName: 'Install .NetCore SDK'
+    inputs:
+      version: 2.2.104
+      failOnStandardError: 'true'
+    timeoutInMinutes: 10
+
+  - bash: |
+      git submodule update --init --force --recursive
+    displayName: 'Clone submodules'
+
+  - task: DotNetCoreCLI@2
+    displayName: 'Build solution'
+    inputs:
+      projects: 'src/**/*.csproj'
+      arguments: '--configuration=$(BuildConfiguration)'
+      failOnStandardError: 'true'
+    timeoutInMinutes: 10
+
+  - task: DotNetCoreCLI@2
+    displayName: Pack
+    inputs:
+      command: custom
+      projects: '$(Parameters.RestoreBuildProjects)'
+      custom: pack
+      arguments: '--configuration=$(BuildConfiguration) --output=$(Build.ArtifactStagingDirectory) --version-suffix=$(Build.BuildId)$(release.type) --include-source --include-symbols'
+      failOnStandardError: 'true'
+    timeoutInMinutes: 10
+    
+  - task: PublishBuildArtifacts@1
+    displayName: 'Publish Artifact'
+    inputs:
+      PathtoPublish: '$(build.artifactstagingdirectory)'
+      ArtifactName: 'Catalyst.Core Nuget Packages'
+      failOnStandardError: 'true'
+    timeoutInMinutes: 10
+    condition: succeededOrFailed()
+
+  - task: NuGetCommand@2
+    displayName: 'NuGet push'
+    inputs:
+      command: push
+      nuGetFeedType: external
+      publishFeedCredentials: 'NuGet'
+      failOnStandardError: 'true'
+    timeoutInMinutes: 10
