@@ -10,6 +10,7 @@
     </PropertyGroup>
     <Import Project="../Common.Projects.props" />
     <ItemGroup>
+      <PackageReference Include="AutoMapper" Version="9.0.0" />
       <PackageReference Include="Catalyst.Cryptography.BulletProofs.Wrapper" Version="0.0.1.10324-beta" />
       <PackageReference Include="DnsClient" Version="1.2.0" />
       <PackageReference Include="DotNetty.Transport" Version="0.6.0" />
