@@ -23,8 +23,8 @@
 
 using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.Types;
-using Catalyst.Core.Cryptography;
-using Catalyst.Core.Util;
+using Catalyst.Core.Lib.Cryptography;
+using Catalyst.Core.Lib.Util;
 using Catalyst.Cryptography.BulletProofs.Wrapper;
 using NSubstitute;
 

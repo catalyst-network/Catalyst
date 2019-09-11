@@ -22,12 +22,15 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using Catalyst.Abstractions.FileSystem;
-using Catalyst.Core.FileSystem;
+using Catalyst.Core.Lib.Config;
+using Catalyst.Core.Lib.FileSystem;
+using Catalyst.Protocol.Common;
 using Dawn;
 using FluentAssertions;
 using NSubstitute;
@@ -48,8 +51,10 @@ namespace Catalyst.TestUtils
         protected IFileSystem FileSystem;
         protected readonly ITestOutputHelper Output;
         private DirectoryInfo _testDirectory;
+        protected List<string> ConfigFilesUsed { get; }
+        protected readonly ContainerProvider ContainerProvider;
 
-        protected FileSystemBasedTest(ITestOutputHelper output)
+        protected FileSystemBasedTest(ITestOutputHelper output, IEnumerable<string> configFilesUsed = default, Network network = default)
         {
             Guard.Argument(output, nameof(output)).NotNull();
             Output = output;
@@ -65,6 +70,20 @@ namespace Catalyst.TestUtils
             CurrentTestName = currentTest.TestCase.TestMethod.Method.Name;
 
             GenerateConfigFilesDirectory();
+            
+            ConfigFilesUsed = new List<string>
+            {
+                Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile),
+                Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(network == default ? Network.Devnet : network))
+            };
+
+            configFilesUsed?.ToList().ForEach(config =>
+            {
+                ConfigFilesUsed.Add(config);                    
+            });
+
+            ContainerProvider = new ContainerProvider(ConfigFilesUsed, FileSystem, Output);
+            ContainerProvider.ConfigureContainerBuilder(true, true);
 
             Output.WriteLine("test running in folder {0}", _testDirectory.FullName);
         }
@@ -106,6 +125,8 @@ namespace Catalyst.TestUtils
                  && string.CompareOrdinal(d.Name, _testDirectory.Name) == -1)
                .ToList();
             oldDirectories.ForEach(TryDeleteFolder);
+            
+            ContainerProvider?.Dispose();
         }
 
         private static void TryDeleteFolder(DirectoryInfo d)

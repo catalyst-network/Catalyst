@@ -23,19 +23,28 @@
 
 using System;
 using System.Linq;
+using System.Security.Cryptography;
 using Microsoft.Extensions.Configuration;
 
 namespace Catalyst.TestUtils
 {
-    public static class SocketPortHelper
+    internal static class SocketPortHelper
     {
-        public static void AlterConfigurationToGetUniquePort(IConfigurationRoot config, string currentTestName)
+        internal static void AlterConfigurationToGetUniquePort(IConfigurationRoot config)
         {
             var serverSection = config.GetSection("CatalystNodeConfiguration").GetSection("Rpc");
             var peerSection = config.GetSection("CatalystNodeConfiguration").GetSection("Peer");
 
+            int randomValue;
+            using (var rg = new RNGCryptoServiceProvider()) 
+            { 
+                byte[] rno = new byte[5];    
+                rg.GetBytes(rno);    
+                randomValue = BitConverter.ToInt32(rno, 0); 
+            }
+            
             var randomPort = int.Parse(serverSection.GetSection("Port").Value) +
-                new Random(currentTestName.GetHashCode()).Next(0, 500);
+                new Random(randomValue).Next(0, 500);
 
             serverSection.GetSection("Port").Value = randomPort.ToString();
             peerSection.GetSection("Port").Value = (randomPort + 1).ToString();
