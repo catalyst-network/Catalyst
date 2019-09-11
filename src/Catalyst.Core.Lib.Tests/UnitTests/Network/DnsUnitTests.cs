@@ -28,7 +28,7 @@ using System.Threading.Tasks;
 using Catalyst.Abstractions.Network;
 using Catalyst.Core.Lib.Cryptography;
 using Catalyst.Core.Lib.P2P;
-using Catalyst.Cryptography.BulletProofs.Wrapper;
+using Catalyst.Core.Modules.Cryptography.BulletProofs;
 using Catalyst.TestUtils;
 using DnsClient;
 using DnsClient.Protocol;

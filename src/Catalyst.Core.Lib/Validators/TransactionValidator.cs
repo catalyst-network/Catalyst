@@ -22,8 +22,8 @@
 #endregion
 
 using System.Linq;
+using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Validators;
-using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Transaction;
 using Google.Protobuf;

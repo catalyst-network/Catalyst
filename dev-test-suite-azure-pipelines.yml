@@ -1,24 +1,24 @@
 strategy:
   matrix:
-    Windows-VS2017:
-      imageName: 'vs2017-win2016'
-      netcore_sdk: 2.2.104
+#    Windows-VS2017:
+#      imageName: 'vs2017-win2016'
+#      netcore_sdk: 2.2.104
     Windows-VS2019:
       imageName: 'windows-2019'
       netcore_sdk: 2.2.104
-    Windows-Core:
-      imageName: 'win1803'
-      netcore_sdk: 2.2.104
-    Osx-Sierra:
-      imageName: 'macos-10.13'
-      netcore_sdk: 2.2.104
+#    Windows-Core:
+#      imageName: 'win1803'
+#      netcore_sdk: 2.2.104
+#    Osx-Sierra:
+#      imageName: 'macos-10.13'
+#      netcore_sdk: 2.2.104
     Osx-Mojave:
       imageName: 'macos-10.14'
       netcore_sdk: 2.2.104
     Ubuntu-1604:
       imageName: 'ubuntu-16.04'
       netcore_sdk: 2.2.104
-  maxParallel: 6
+  maxParallel: 3
 
 variables:
   release.type: '-beta'
@@ -33,15 +33,20 @@ trigger:
   branches:
     include:
       - develop
+    exclude:
+      - master/*
+      - release/*
 
 pr:
   autoCancel: true
   branches:
     include:
       - develop
-      - master
-      - releases/*
-
+      - feature/*
+    exclude:
+      - master/*
+      - release/*
+      
 schedules:
   - cron: "0 0 * * *"
     displayName: Daily midnight build
@@ -50,7 +55,6 @@ schedules:
         - master
         - develop
         - releases/*
-      exclude:
         - feature/*
     always: true
     

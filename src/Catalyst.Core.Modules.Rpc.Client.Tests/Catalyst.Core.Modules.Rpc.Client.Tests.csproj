@@ -8,7 +8,7 @@
         <AssemblyOriginatorKeyFile>Catalyst.Core.Modules.Rpc.Client.Tests.snk</AssemblyOriginatorKeyFile>
         <PublicSign>true</PublicSign>
     </PropertyGroup>
-    <Import Project="../Common.UnitTests.props" />
+    <Import Project="../Common.TestProjects.props" />
     
     <ItemGroup>
       <ProjectReference Include="..\Catalyst.Core.Modules.Rpc.Client\Catalyst.Core.Modules.Rpc.Client.csproj" />

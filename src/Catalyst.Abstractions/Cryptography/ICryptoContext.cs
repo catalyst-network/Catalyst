@@ -22,7 +22,6 @@
 #endregion
 
 using System;
-using Catalyst.Cryptography.BulletProofs.Wrapper.Interfaces;
 
 namespace Catalyst.Abstractions.Cryptography
 {

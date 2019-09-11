@@ -36,7 +36,7 @@ steps:
     displayName: Pack
     inputs:
       command: custom
-      projects: '$(Parameters.RestoreBuildProjects)'
+      projects: 'src/**/*.csproj'
       custom: pack
       arguments: '--configuration=$(BuildConfiguration) --output=$(Build.ArtifactStagingDirectory) --version-suffix=$(Build.BuildId)$(release.type) --include-source --include-symbols'
       failOnStandardError: 'true'
