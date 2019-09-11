@@ -187,9 +187,6 @@ namespace Catalyst.Core.Lib.Kernel
         /// <param name="customBootLogic"></param>
         public void StartCustom(CustomBootLogic customBootLogic)
         {
-            ContainerBuilder.RegisterType<TransactionValidator>().As<ITransactionValidator>();
-            ContainerBuilder.RegisterType<TransactionReceivedEvent>().As<ITransactionReceivedEvent>();
-            
             customBootLogic.Invoke(this);
         }
 
@@ -198,9 +195,6 @@ namespace Catalyst.Core.Lib.Kernel
         /// </summary>
         public Kernel StartNode()
         {
-            ContainerBuilder.RegisterType<TransactionValidator>().As<ITransactionValidator>();
-            ContainerBuilder.RegisterType<TransactionReceivedEvent>().As<ITransactionReceivedEvent>();
-
             StartContainer();
 
             // BsonSerializationProviders.Init();

@@ -36,7 +36,7 @@ namespace Catalyst.Core.Modules.Mempool
             builder.Register(c => new InMemoryRepository<MempoolDocument, string>())
                .As<IRepository<MempoolDocument, string>>()
                .SingleInstance();
-            
+            builder.RegisterType<MempoolDocumentRepository>().As<IMempoolRepository<MempoolDocument>>().SingleInstance();
             builder.RegisterType<Mempool>().As<IMempool<MempoolDocument>>().SingleInstance();
         }  
     }

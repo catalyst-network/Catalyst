@@ -81,7 +81,11 @@ namespace Catalyst.Core.Modules.Web3
 
         public void ConfigureServices(IServiceCollection services, ContainerBuilder containerBuilder)
         {
-            services.AddCors(c => { c.AddPolicy("AllowOrigin", options => options.AllowAnyOrigin()); });
+            services.AddCors(c =>
+            {
+                c.AddPolicy("AllowOrigin", options => options.AllowAnyOrigin().AllowAnyMethod()
+                   .AllowAnyHeader());
+            });
 
             var mvcBuilder = services.AddMvc();
 
@@ -109,7 +113,7 @@ namespace Catalyst.Core.Modules.Web3
 
             app.ApplicationServices = new AutofacServiceProvider(_container);
             app.UseDeveloperExceptionPage();
-            app.UseCors(options => options.AllowAnyOrigin());
+            app.UseCors("AllowOrigin");
             app.UseDefaultFiles();
             app.UseStaticFiles(new StaticFileOptions
             {
