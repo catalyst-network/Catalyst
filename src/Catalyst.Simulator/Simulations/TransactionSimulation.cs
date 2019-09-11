@@ -90,7 +90,7 @@ namespace Catalyst.Simulator.Simulations
                 }
 
                 var randomDelay = _random.Next(10, 200);
-                await Task.Delay(randomDelay).ConfigureAwait(false);
+                await Task.Delay(1000).ConfigureAwait(false);
             }
         }
 
