@@ -23,38 +23,12 @@ steps:
   - bash: |
       git submodule update --init --force --recursive
     displayName: 'Clone submodules'
+
   - task: DotNetCoreCLI@2
     displayName: 'Build solution'
     inputs:
       projects: 'src/**/*.csproj'
       arguments: '--configuration=$(BuildConfiguration)'
-      failOnStandardError: 'true'
-    timeoutInMinutes: 10
-    
-  - task: DotNetCoreCLI@2
-    displayName: 'Run unit tests'
-    inputs:
-      command: test
-      projects: 'src/*[Tt]ests/*.csproj'
-      arguments: '--filter TestType!=IntegrationTest --configuration $(BuildConfiguration)'
-      failOnStandardError: 'true'
-    timeoutInMinutes: 10
-    
-  - task: DotNetCoreCLI@2
-    displayName: 'Run unit tests'
-    inputs:
-      command: test
-      projects: 'src/*[Tt]ests/*.csproj'
-      arguments: '--filter TestType!=IntegrationTest --configuration $(BuildConfiguration)'
-      failOnStandardError: 'true'
-    timeoutInMinutes: 10
-    
-  - task: DotNetCoreCLI@2
-    displayName: 'Run integration tests'
-    inputs:
-      command: test
-      projects: 'src/*[Tt]ests/*.csproj'
-      arguments: '--filter TestType=IntegrationTest --configuration $(BuildConfiguration)'
       failOnStandardError: 'true'
     timeoutInMinutes: 10
 
