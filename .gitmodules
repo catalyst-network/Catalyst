@@ -4,6 +4,3 @@
 [submodule "submodules/protocol-protobuffs"]
 	path = submodules/protocol-protobuffs
 	url = https://github.com/catalyst-network/protocol-protobuffs.git
-[submodule "submodules/Catalyst.Cryptography.BulletProofs.Wrapper "]
-	path = "submodules/Catalyst.Cryptography.BulletProofs.Wrapper "
-	url = git@github.com:catalyst-network/Catalyst.Cryptography.BulletProofs.Wrapper.git
