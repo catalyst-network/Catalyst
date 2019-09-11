@@ -26,7 +26,7 @@ using System.Threading;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.P2P;
-using Catalyst.Core.IO.Observers;
+using Catalyst.Core.Lib.IO.Observers;
 using Catalyst.Protocol.IPPN;
 using DotNetty.Transport.Channels;
 using Serilog;

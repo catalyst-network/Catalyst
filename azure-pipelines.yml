@@ -1,6 +1,73 @@
-schedules:
-- cron: '0 * * * *'
-  displayName: Hourly dev build
-  branches:
-    include:
-    - develop
+strategy:
+  matrix:
+    windows-stable:
+      imageName: 'vs2017-win2016'
+    mac-stable:
+      imageName: 'macos-10.13'
+    linux-stable:
+      imageName: 'ubuntu-16.04'
+
+pool:
+  vmImage: $(imageName)
+
+steps:
+  - task: DotNetCoreInstaller@0
+    displayName: 'Use .NET Core sdk 2.2.103'
+    inputs:
+      version: 2.2.103
+      
+  - task: DotNetCoreCLI@2
+    displayName: 'Build solution'
+    inputs:
+      projects: 'src/**/*.csproj'
+      arguments: '--configuration Debug'
+
+  - script: 'dotnet tool install --global dotnet-reportgenerator-globaltool'
+    displayName: 'install tools'
+    condition: eq( variables['Agent.OS'], 'Windows_NT' )
+
+  - task: DotNetCoreCLI@2
+    displayName: 'Run unit tests'
+    inputs:
+      command: test
+      projects: 'src/**/*.csproj'
+      arguments: '--filter TestType!=IntegrationTest --configuration $(BuildConfiguration)'
+    timeoutInMinutes: 10
+    condition: ne( variables['Agent.OS'], 'Windows_NT' )
+
+  - task: DotNetCoreCLI@2
+    displayName: 'Run integration tests'
+    inputs:
+      command: test
+      projects: 'src/**/*.csproj'
+      arguments: '--filter TestType=IntegrationTest --configuration $(BuildConfiguration)'
+    timeoutInMinutes: 10
+    condition: ne( variables['Agent.OS'], 'Windows_NT' )
+
+  - task: DotNetCoreCLI@2
+    displayName: 'Run unit tests with coverage'
+    inputs:
+      command: test
+      projects: '$(Parameters.TestProjects)'
+      arguments: '--configuration Debug /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:UseSourceLink=true /p:Include="\"[Catalyst.Core.Lib*][Catalyst.Core.Modules.Kvm*]\"" /p:Threshold=0 /p:ThresholdType=line /p:ThresholdStat=total'
+    timeoutInMinutes: 10
+    condition: eq( variables['Agent.OS'], 'Windows_NT' )
+    
+  - script: |
+      reportgenerator "-reports:src/**/coverage.cobertura.xml" "-targetdir:$(Build.ArtifactStagingDirectory)" -reporttypes:HtmlInline_AzurePipelines;Cobertura;SonarQube;Badges "-assemblyfilters:+Catalyst.Core.Lib*;+Catalyst.Core.Modules.Kvm*;"
+    displayName: 'Generate unit test coverage'
+    condition: eq( variables['Agent.OS'], 'Windows_NT' )
+
+  - task: PublishBuildArtifacts@1
+    displayName: 'Store coverage report'
+    inputs:
+      ArtifactName: artifacts
+    condition: eq( variables['Agent.OS'], 'Windows_NT' )
+    
+  - task: PublishCodeCoverageResults@1
+    displayName: 'Publish coverage report'
+    inputs:
+      codeCoverageTool: Cobertura
+      summaryFileLocation: '$(Build.ArtifactStagingDirectory)/Cobertura.xml'
+      reportDirectory: '$(Build.ArtifactStagingDirectory)'
+    condition: eq( variables['Agent.OS'], 'Windows_NT' )

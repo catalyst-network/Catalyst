@@ -24,7 +24,7 @@
 using System.Security;
 using System.Security.Cryptography.X509Certificates;
 using Catalyst.Abstractions.Cryptography;
-using Catalyst.Core.Cryptography;
+using Catalyst.Core.Lib.Cryptography;
 
 namespace Catalyst.TestUtils
 {

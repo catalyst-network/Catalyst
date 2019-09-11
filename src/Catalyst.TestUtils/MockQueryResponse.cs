@@ -22,7 +22,7 @@
 #endregion
 
 using System.Threading.Tasks;
-using Catalyst.Core.Network;
+using Catalyst.Core.Lib.Network;
 using DnsClient;
 using NSubstitute;
 

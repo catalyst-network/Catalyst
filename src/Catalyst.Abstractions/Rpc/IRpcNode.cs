@@ -27,7 +27,7 @@ namespace Catalyst.Abstractions.Rpc
 {
     public interface IRpcNode
     {
-        IRpcNodeConfig Config { get; }
+        IRpcClientConfig Config { get; }
         ISocketClient SocketClient { get; }
     }
 }

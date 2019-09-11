@@ -34,7 +34,7 @@ namespace Catalyst.Protocol.Deltas
                 throw new InvalidDataException($"{nameof(Candidate)} is not valid");
             }
 
-            if (this.VoterId == null)
+            if (VoterId == null)
             {
                 throw new InvalidDataException($"{nameof(VoterId)} cannot be null");
             }

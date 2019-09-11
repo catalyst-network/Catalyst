@@ -1,0 +1,41 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>netcoreapp2.2</TargetFramework>
+
+        <RootNamespace>Catalyst.Core.Lib</RootNamespace>
+        <Authors>James Kirby (nshcore@protonmail.com)</Authors>
+        <SignAssembly>true</SignAssembly>
+        <AssemblyOriginatorKeyFile>Catalyst.Core.Lib.snk</AssemblyOriginatorKeyFile>
+        <PublicSign>true</PublicSign>
+    </PropertyGroup>
+    <Import Project="../Common.Projects.props" />
+    <ItemGroup>
+        <PackageReference Include="Autofac" Version="4.8.1" />
+        <PackageReference Include="Autofac.Configuration" Version="4.1.0" />
+        <PackageReference Include="AutofacSerilogIntegration" Version="2.0.0" />
+        <PackageReference Include="Dawn.Guard" Version="1.9.0" />
+        <PackageReference Include="DotNetty.Codecs" Version="0.6.0" />
+        <PackageReference Include="DotNetty.Codecs.Protobuf" Version="0.6.0" />
+        <PackageReference Include="DotNetty.Handlers" Version="0.6.0" />
+        <PackageReference Include="Google.Protobuf" Version="3.9.1" />
+        <PackageReference Include="MongoDB.Bson" Version="2.7.0" />
+        <PackageReference Include="Multiformats.Hash" Version="1.5.0" />
+        <PackageReference Include="Nethereum.RLP" Version="3.3.0" />
+        <PackageReference Include="Polly" Version="7.1.0" />
+        <PackageReference Include="SharpRepository.Ioc.Autofac" Version="2.0.4.2" />
+        <PackageReference Include="SharpRepository.XmlRepository" Version="2.0.1-alpha3" />
+        <PackageReference Include="SimpleBase" Version="1.3.1" />
+        <PackageReference Include="Serilog.Extensions.Logging" Version="2.0.4" />
+        <PackageReference Include="Serilog.Enrichers.Environment" Version="2.1.3" />
+        <PackageReference Include="Serilog.Enrichers.Thread" Version="3.1.0" />
+        <PackageReference Include="Serilog.Settings.Configuration" Version="3.1.0" />
+        <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
+        <PackageReference Include="Serilog.Sinks.File" Version="4.0.0" />
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Catalyst.Cryptography.BulletProofs.Wrapper" Version="0.0.1.10324-beta" />
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\Catalyst.Abstractions\Catalyst.Abstractions.csproj" />
+    </ItemGroup>
+</Project>

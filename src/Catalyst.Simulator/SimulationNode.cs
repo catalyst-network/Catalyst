@@ -23,8 +23,8 @@
 
 using System.Net;
 using Catalyst.Abstractions.P2P;
-using Catalyst.Core.P2P;
-using Catalyst.Core.Util;
+using Catalyst.Core.Lib.P2P;
+using Catalyst.Core.Lib.Util;
 
 namespace Catalyst.Simulator
 {

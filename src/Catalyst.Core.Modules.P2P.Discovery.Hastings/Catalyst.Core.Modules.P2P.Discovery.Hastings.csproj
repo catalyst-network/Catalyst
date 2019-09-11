@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp2.2</TargetFramework>
+
+        <RootNamespace>Catalyst.Core.Modules.P2P.Discovery.Hastings</RootNamespace>
+        <Authors>James Kirby (nshcore@protonmail.com)</Authors>
+        <SignAssembly>true</SignAssembly>
+        <AssemblyOriginatorKeyFile>Catalyst.Core.Modules.P2P.Discovery.Hastings.snk</AssemblyOriginatorKeyFile>
+        <PublicSign>true</PublicSign>
+    </PropertyGroup>
+    <Import Project="../Common.Projects.props" />
+
+    <ItemGroup>
+      <ProjectReference Include="..\Catalyst.Abstractions\Catalyst.Abstractions.csproj" />
+      <ProjectReference Include="..\Catalyst.Core.Lib\Catalyst.Core.Lib.csproj" />
+    </ItemGroup>
+
+</Project>

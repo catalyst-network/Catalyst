@@ -27,6 +27,6 @@ namespace Catalyst.Abstractions.Rpc
 {
     public interface IRpcNodesSettings
     {
-        List<IRpcNodeConfig> NodesList { get; }
+        List<IRpcClientConfig> NodesList { get; }
     }
 }
