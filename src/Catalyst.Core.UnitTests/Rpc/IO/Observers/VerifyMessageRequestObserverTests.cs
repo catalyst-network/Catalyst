@@ -78,7 +78,8 @@ namespace Catalyst.Core.UnitTests.Rpc.IO.Observers
         [Fact]
         public void VerifyMessageRequestObserver_Can_Reject_Invalid_Public_Key_Length()
         {
-            _verifyMessageRequest.PublicKey = ByteString.CopyFromUtf8("InvalidPublicKey");
+            _verifyMessageRequest.PublicKey = ByteString.CopyFrom(new byte[FFI.PublicKeyLength + 1]);
+
             AssertVerifyResponse(false);
         }
 
