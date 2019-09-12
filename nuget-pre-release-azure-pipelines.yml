@@ -36,7 +36,7 @@ stages:
               TargetFolder: '$(Build.ArtifactStagingDirectory)/build'
 
           - publish: '$(Build.ArtifactStagingDirectory)/build'
-            artifact: 'packages'
+            artifact: 'build'
 
   - stage: 'PackAndPublishCoreModules'
     dependsOn: 'BuildCatalystCoreSolutions'
