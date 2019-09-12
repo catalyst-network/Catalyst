@@ -1,17 +1,80 @@
-pool:
-  name: Hosted Windows Container
+strategy:
+  matrix:
+    abstractions:
+      imageName: 'macos-10.14'
+      package_name: 'Catalyst.Abstractions'
+      project: 'src/Catalyst.Abstractions/Catalyst.Abstractions.csproj'
+    protocol:
+      imageName: 'macos-10.14'
+      package_name: 'Catalyst.Protocol'
+      project: 'src/Catalyst.Protocol/Catalyst.Protocol.csproj'
+    core-lib:
+      imageName: 'macos-10.14'
+      package_name: 'Catalyst.Core.Lib'
+      project: 'src/Catalyst.Core.Lib/Catalyst.Core.Lib.csproj'
+    core-modules-consensus:
+      imageName: 'macos-10.14'
+      package_name: 'Catalyst.Core.Modules.Consensus'
+      project: 'src/Catalyst.Core.Modules.Consensus/Catalyst.Core.Modules.Consensus.csproj'
+    core-modules-dfs:
+      imageName: 'macos-10.14'
+      package_name: 'Catalyst.Core.Modules.Dfs'
+      project: 'src/Catalyst.Core.Modules.Dfs/Catalyst.Core.Modules.Dfs.csproj'
+    core-modules-KeySigner:
+      imageName: 'macos-10.14'
+      package_name: 'Catalyst.Core.Modules.KeySigner'
+      project: 'src/Catalyst.Core.Modules.KeySigner/Catalyst.Core.Modules.KeySigner.csproj'
+    core-modules-Keystore:
+      imageName: 'macos-10.14'
+      package_name: 'Catalyst.Core.Modules.Keystore'
+      project: 'src/Catalyst.Core.Modules.Keystore/Catalyst.Core.Modules.Keystore.csproj'
+    core-modules-Kvm:
+      imageName: 'macos-10.14'
+      package_name: 'Catalyst.Core.Modules.Kvm'
+      project: 'src/Catalyst.Core.Modules.Kvm/Catalyst.Core.Modules.Kvm.csproj'
+    core-modules-Ledger:
+      imageName: 'macos-10.14'
+      package_name: 'Catalyst.Core.Modules.Ledger'
+      project: 'src/Catalyst.Core.Modules.Ledger/Catalyst.Core.Modules.Ledger.csproj'
+    core-modules-Mempool:
+      imageName: 'macos-10.14'
+      package_name: 'Catalyst.Core.Modules.Mempool'
+      project: 'src/Catalyst.Core.Modules.Mempool/Catalyst.Core.Modules.Mempool.csproj'
+    core-modules-web3:
+      imageName: 'macos-10.14'
+      package_name: 'Catalyst.Core.Modules.Web3'
+      project: 'src/Catalyst.Core.Modules.Web3/Catalyst.Core.Modules.Web3.csproj'      
+    core-modules-cryptography-bulletproofs:
+      imageName: 'macos-10.14'
+      package_name: 'Catalyst.Core.Modules.Cryptography.BulletProofs'
+      project: 'src/Catalyst.Core.Modules.Cryptography.BulletProofs/Catalyst.Core.Modules.Cryptography.BulletProofs.csproj'      
+    core-modules-Rpc-Client:
+      imageName: 'macos-10.14'
+      package_name: 'Catalyst.Core.Modules.Rpc.Client'
+      project: 'src/Catalyst.Core.Modules.Rpc.Client/Catalyst.Core.Modules.Rpc.Client.csproj'
+    core-modules-Rpc-Server:
+      imageName: 'macos-10.14'
+      package_name: 'Catalyst.Core.Modules.Rpc.Server'
+      project: 'src/Catalyst.Core.Modules.Rpc.Server/Catalyst.Core.Modules.Rpc.Server.csproj'
+    core-modules-P2P-Discovery-hastings:
+      imageName: 'macos-10.14'
+      package_name: 'Catalyst.Core.Modules.P2P.Discovery.Hastings'
+      project: 'src/Catalyst.Core.Modules.P2P.Discovery.Hastings/Catalyst.Core.Modules.P2P.Discovery.Hastings.csproj'
+    modules-Repository-CosmosDb:
+      imageName: 'macos-10.14'
+      package_name: 'Catalyst.Modules.Repository.CosmosDb'
+      project: 'src/Catalyst.Modules.Repository.CosmosDb/Catalyst.Core.Modules.Repository.CosmosDb.csproj'
+    modules-Repository-MongoDb:
+      imageName: 'macos-10.14'
+      package_name: 'Catalyst.Modules.Repository.MongoDb'
+      project: 'src/Catalyst.Modules.Repository.MongoDb/Catalyst.Core.Modules.Repository.MongoDb.csproj'
+  maxParallel: 3
 
 variables:
   release.type: '-beta'
   BuildPlatform: 'any cpu'
   BuildConfiguration: 'Debug'
-
-trigger:
-  batch: true
-  branches:
-    include:
-      - develop
-
+  
 steps:
   - task: DotNetCoreInstaller@0
     displayName: 'Install .NetCore SDK'
@@ -35,10 +98,10 @@ steps:
   - task: DotNetCoreCLI@2
     displayName: Pack
     inputs:
-      command: custom
-      projects: 'src/**/*.csproj'
-      custom: pack
+      command: pack
       arguments: '--configuration=$(BuildConfiguration) --output=$(Build.ArtifactStagingDirectory) --version-suffix=$(Build.BuildId)$(release.type) --include-source --include-symbols'
+      packagesToPack: $(PROJECT)
+      nobuild: true
       failOnStandardError: 'true'
     timeoutInMinutes: 10
     
@@ -46,7 +109,7 @@ steps:
     displayName: 'Publish Artifact'
     inputs:
       PathtoPublish: '$(build.artifactstagingdirectory)'
-      ArtifactName: 'Catalyst.Core Nuget Packages'
+      ArtifactName: $(PACKAGE_NAME)
       failOnStandardError: 'true'
     timeoutInMinutes: 10
     condition: succeededOrFailed()

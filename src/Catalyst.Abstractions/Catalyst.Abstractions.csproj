@@ -8,6 +8,7 @@
         <PublicSign>true</PublicSign>
         <LangVersion>latest</LangVersion>
     </PropertyGroup>
+    <Import Project="../Common.Packable.props" />
     <Import Project="../Common.Projects.props" />
     <ItemGroup>
       <PackageReference Include="DnsClient" Version="1.2.0" />
