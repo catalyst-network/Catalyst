@@ -1,0 +1,28 @@
+steps:
+  - task: DotNetCoreCLI@2
+    displayName: Pack
+    inputs:
+      command: pack
+      arguments: '--configuration=$(BuildConfiguration) --output=$(Build.ArtifactStagingDirectory) --version-suffix=$(Build.BuildId)$(release.type) --include-source --include-symbols'
+      packagesToPack: $(PROJECT)
+      nobuild: true
+      failOnStandardError: 'true'
+    timeoutInMinutes: 10
+
+  - task: PublishBuildArtifacts@1
+    displayName: 'Publish Artifact'
+    inputs:
+      PathtoPublish: '$(build.artifactstagingdirectory)'
+      ArtifactName: $(PACKAGE_NAME)
+      failOnStandardError: 'true'
+    timeoutInMinutes: 10
+    condition: succeededOrFailed()
+
+  - task: NuGetCommand@2
+    displayName: 'NuGet push'
+    inputs:
+      command: push
+      nuGetFeedType: external
+      publishFeedCredentials: 'NuGet'
+      failOnStandardError: 'true'
+    timeoutInMinutes: 10

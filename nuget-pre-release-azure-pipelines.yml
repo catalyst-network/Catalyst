@@ -1,0 +1,114 @@
+variables:
+  release.type: '-beta'
+  BuildPlatform: 'any cpu'
+  BuildConfiguration: 'Debug'
+  
+stages:
+  - stage: stage1
+    jobs:
+      - job: A1
+        steps:
+          - task: DotNetCoreInstaller@0
+            displayName: 'Install .NetCore SDK'
+            inputs:
+              version: 2.2.104
+              failOnStandardError: 'true'
+            timeoutInMinutes: 10
+      - job: A2
+          - bash: |
+              git submodule update --init --force --recursive
+            displayName: 'Clone submodules'
+      - job: A3
+          - task: DotNetCoreCLI@2
+            displayName: 'Build solution'
+            inputs:
+              projects: 'src/**/*.csproj'
+              arguments: '--configuration=$(BuildConfiguration)'
+              failOnStandardError: 'true'
+            timeoutInMinutes: 10
+
+  - stage: stage2
+    jobs:
+      - job: b1
+        strategy:
+          matrix:
+            abstractions:
+              imageName: 'macos-10.14'
+              package_name: 'Catalyst.Abstractions'
+              project: 'src/Catalyst.Abstractions/Catalyst.Abstractions.csproj'
+            protocol:
+              imageName: 'macos-10.14'
+              package_name: 'Catalyst.Protocol'
+              project: 'src/Catalyst.Protocol/Catalyst.Protocol.csproj'
+            core-lib:
+              imageName: 'macos-10.14'
+              package_name: 'Catalyst.Core.Lib'
+              project: 'src/Catalyst.Core.Lib/Catalyst.Core.Lib.csproj'
+        steps:
+          - template: nuget-pack-steps-azure-pipelines.yml
+
+      - job: b2
+        strategy:
+          matrix:
+            core-modules-consensus:
+              imageName: 'macos-10.14'
+              package_name: 'Catalyst.Core.Modules.Consensus'
+              project: 'src/Catalyst.Core.Modules.Consensus/Catalyst.Core.Modules.Consensus.csproj'
+            core-modules-dfs:
+              imageName: 'macos-10.14'
+              package_name: 'Catalyst.Core.Modules.Dfs'
+              project: 'src/Catalyst.Core.Modules.Dfs/Catalyst.Core.Modules.Dfs.csproj'
+            core-modules-KeySigner:
+              imageName: 'macos-10.14'
+              package_name: 'Catalyst.Core.Modules.KeySigner'
+              project: 'src/Catalyst.Core.Modules.KeySigner/Catalyst.Core.Modules.KeySigner.csproj'
+            core-modules-Keystore:
+              imageName: 'macos-10.14'
+              package_name: 'Catalyst.Core.Modules.Keystore'
+              project: 'src/Catalyst.Core.Modules.Keystore/Catalyst.Core.Modules.Keystore.csproj'
+            core-modules-Kvm:
+              imageName: 'macos-10.14'
+              package_name: 'Catalyst.Core.Modules.Kvm'
+              project: 'src/Catalyst.Core.Modules.Kvm/Catalyst.Core.Modules.Kvm.csproj'
+            core-modules-Ledger:
+              imageName: 'macos-10.14'
+              package_name: 'Catalyst.Core.Modules.Ledger'
+              project: 'src/Catalyst.Core.Modules.Ledger/Catalyst.Core.Modules.Ledger.csproj'
+            core-modules-Mempool:
+              imageName: 'macos-10.14'
+              package_name: 'Catalyst.Core.Modules.Mempool'
+              project: 'src/Catalyst.Core.Modules.Mempool/Catalyst.Core.Modules.Mempool.csproj'
+            core-modules-web3:
+              imageName: 'macos-10.14'
+              package_name: 'Catalyst.Core.Modules.Web3'
+              project: 'src/Catalyst.Core.Modules.Web3/Catalyst.Core.Modules.Web3.csproj'    
+            core-modules-Rpc-Client:
+              imageName: 'macos-10.14'
+              package_name: 'Catalyst.Core.Modules.Rpc.Client'
+              project: 'src/Catalyst.Core.Modules.Rpc.Client/Catalyst.Core.Modules.Rpc.Client.csproj'
+            core-modules-Rpc-Server:
+              imageName: 'macos-10.14'
+              package_name: 'Catalyst.Core.Modules.Rpc.Server'
+              project: 'src/Catalyst.Core.Modules.Rpc.Server/Catalyst.Core.Modules.Rpc.Server.csproj'
+            core-modules-P2P-Discovery-hastings:
+              imageName: 'macos-10.14'
+              package_name: 'Catalyst.Core.Modules.P2P.Discovery.Hastings'
+              project: 'src/Catalyst.Core.Modules.P2P.Discovery.Hastings/Catalyst.Core.Modules.P2P.Discovery.Hastings.csproj'
+        steps:
+          - template: nuget-pack-steps-azure-pipelines.yml
+
+      - job: b3
+        strategy:
+          matrix:
+            modules-Repository-CosmosDb:
+              imageName: 'macos-10.14'
+              package_name: 'Catalyst.Modules.Repository.CosmosDb'
+              project: 'src/Catalyst.Modules.Repository.CosmosDb/Catalyst.Core.Modules.Repository.CosmosDb.csproj'
+            modules-Repository-MongoDb:
+              imageName: 'macos-10.14'
+              package_name: 'Catalyst.Modules.Repository.MongoDb'
+              project: 'src/Catalyst.Modules.Repository.MongoDb/Catalyst.Core.Modules.Repository.MongoDb.csproj'
+          maxParallel: 3
+        steps:
+          - template: nuget-pack-steps-azure-pipelines.yml 
+        

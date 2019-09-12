@@ -94,17 +94,16 @@ EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Ci", "Ci", "{29C2F736-A644-427E-B72C-FD1EE1024E27}"
 	ProjectSection(SolutionItems) = preProject
-		..\dev-test-suite-azure-pipelines.yml = ..\dev-test-suite-azure-pipelines.yml
-		..\nuget-preview-azure-pipelines.yml = ..\nuget-preview-azure-pipelines.yml
+		..\nuget-pack-steps-azure-pipelines.yml = ..\nuget-pack-steps-azure-pipelines.yml
+		..\nuget-pre-release-azure-pipelines.yml = ..\nuget-pre-release-azure-pipelines.yml
+		..\pr-test-suite-azure-pipelines.yml = ..\pr-test-suite-azure-pipelines.yml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{AC999877-034E-4711-AB8D-716B1CC2C4B9}"
 	ProjectSection(SolutionItems) = preProject
 		..\scripts\addLicenseHeader.sh = ..\scripts\addLicenseHeader.sh
-		..\dev-test-suite-azure-pipelines.yml = ..\dev-test-suite-azure-pipelines.yml
 		..\devnet-docker-compose.yml = ..\devnet-docker-compose.yml
 		..\Dockerfile = ..\Dockerfile
-		..\nuget-preview-azure-pipelines.yml = ..\nuget-preview-azure-pipelines.yml
 		..\Vagrantfile = ..\Vagrantfile
 	EndProjectSection
 EndProject
