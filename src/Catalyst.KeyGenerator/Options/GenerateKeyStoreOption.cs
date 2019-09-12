@@ -31,7 +31,7 @@ namespace Catalyst.Tools.KeyGenerator.Options
         [Option("path", HelpText = "Path to generate keystore", Required = true)]
         public string Path { get; set; }
 
-        [Option("password", HelpText = "Generation Password", Required = false)]
+        [Option("password", HelpText = "Keystore password", Required = false)]
         public string Password { get; set; }
     }
 }
