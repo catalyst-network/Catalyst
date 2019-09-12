@@ -36,7 +36,6 @@ namespace Catalyst.Core.Lib.DAO.Deltas
         {
             cfg.CreateMap<FavouriteDeltaBroadcast, FavouriteDeltaBroadcastDao>().ReverseMap();
             cfg.CreateMap<CandidateDeltaBroadcast, CandidateDeltaBroadcastDao>().ReverseMap();
-            cfg.CreateMap<PeerId, PeerIdDao>().ReverseMap();
         }
     }
 }
