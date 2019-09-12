@@ -65,17 +65,6 @@ namespace Catalyst.Core.Lib.DAO.Deltas
                .ForMember(d => d.MerklePoda,
                     opt => opt.ConvertUsing(new StringBase64ToByteStringConverter(), s => s.MerklePoda));
 
-            bool IsToRepeatedField(PropertyMap pm)
-            {
-                if (pm.DestinationType.IsConstructedGenericType)
-                {
-                    var destGenericBase = pm.DestinationType.GetGenericTypeDefinition();
-                    return destGenericBase == typeof(RepeatedField<>);
-                }
-
-                return false;
-            }
-
             cfg.ForAllPropertyMaps(IsToRepeatedField, (propertyMap, opts) => opts.UseDestinationValue());
         }
     }

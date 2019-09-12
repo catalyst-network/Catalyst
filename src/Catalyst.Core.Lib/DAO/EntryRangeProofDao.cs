@@ -23,6 +23,7 @@
 
 using System.Collections.Generic;
 using AutoMapper;
+using AutoMapper.Configuration.Annotations;
 using Catalyst.Core.Lib.DAO.Converters;
 using Catalyst.Protocol.Transaction;
 using Google.Protobuf;
@@ -47,82 +48,17 @@ namespace Catalyst.Core.Lib.DAO
 
         public override void InitMappers(IMapperConfigurationExpression cfg)
         {
-            cfg.CreateMap<EntryRangeProof, EntryRangeProofDao>()
-               .ForMember(e => e.A,
-                    opt => opt.ConvertUsing<ByteStringToStringBase64Converter, ByteString>());
-            
-            cfg.CreateMap<EntryRangeProofDao, EntryRangeProof>()
-               .ForMember(e => e.A,
-                    opt => opt.ConvertUsing<StringBase64ToByteStringConverter, string>());
+            cfg.CreateMap<EntryRangeProof, EntryRangeProofDao>().ReverseMap();
 
             cfg.CreateMap<EntryRangeProof, EntryRangeProofDao>()
-               .ForMember(e => e.S,
-                    opt => opt.ConvertUsing<ByteStringToStringBase64Converter, ByteString>());
+               .ForMember(e => e.Id, opt => opt.Ignore())
+               .ForAllOtherMembers(opt => opt.ConvertUsing<ByteStringToStringBase64Converter, ByteString>());
+
             cfg.CreateMap<EntryRangeProofDao, EntryRangeProof>()
-               .ForMember(e => e.S,
-                    opt => opt.ConvertUsing<StringBase64ToByteStringConverter, string>());
+               .ForAllMembers(opt => opt.ConvertUsing<StringBase64ToByteStringConverter, string>());
 
-            cfg.CreateMap<EntryRangeProof, EntryRangeProofDao>()
-               .ForMember(e => e.T1,
-                    opt => opt.ConvertUsing<ByteStringToStringBase64Converter, ByteString>());
-            cfg.CreateMap<EntryRangeProofDao, EntryRangeProof>()
-               .ForMember(e => e.T1,
-                    opt => opt.ConvertUsing<StringBase64ToByteStringConverter, string>());
-
-            cfg.CreateMap<EntryRangeProof, EntryRangeProofDao>()
-               .ForMember(e => e.T2,
-                    opt => opt.ConvertUsing<ByteStringToStringBase64Converter, ByteString>());
-            cfg.CreateMap<EntryRangeProofDao, EntryRangeProof>()
-               .ForMember(e => e.T2,
-                    opt => opt.ConvertUsing<StringBase64ToByteStringConverter, string>());
-
-            cfg.CreateMap<EntryRangeProof, EntryRangeProofDao>()
-               .ForMember(e => e.Tau,
-                    opt => opt.ConvertUsing<ByteStringToStringBase64Converter, ByteString>());
-            cfg.CreateMap<EntryRangeProofDao, EntryRangeProof>()
-               .ForMember(e => e.TAU,
-                    opt => opt.ConvertUsing<StringBase64ToByteStringConverter, string>());
-
-            cfg.CreateMap<EntryRangeProof, EntryRangeProofDao>()
-               .ForMember(e => e.Mu,
-                    opt => opt.ConvertUsing<ByteStringToStringBase64Converter, ByteString>());
-            cfg.CreateMap<EntryRangeProofDao, EntryRangeProof>()
-               .ForMember(e => e.MU,
-                    opt => opt.ConvertUsing<StringBase64ToByteStringConverter, string>());
-
-            cfg.CreateMap<EntryRangeProof, EntryRangeProofDao>()
-               .ForMember(e => e.APrime0,
-                    opt => opt.ConvertUsing<ByteStringToStringBase64Converter, ByteString>());
-            cfg.CreateMap<EntryRangeProofDao, EntryRangeProof>()
-               .ForMember(e => e.APrime0,
-                    opt => opt.ConvertUsing<StringBase64ToByteStringConverter, string>());
-
-            cfg.CreateMap<EntryRangeProof, EntryRangeProofDao>()
-               .ForMember(e => e.BPrime0,
-                    opt => opt.ConvertUsing<ByteStringToStringBase64Converter, ByteString>());
-            cfg.CreateMap<EntryRangeProofDao, EntryRangeProof>()
-               .ForMember(e => e.BPrime0,
-                    opt => opt.ConvertUsing<StringBase64ToByteStringConverter, string>());
-
-            cfg.CreateMap<EntryRangeProof, EntryRangeProofDao>()
-               .ForMember(e => e.T,
-                    opt => opt.ConvertUsing<ByteStringToStringBase64Converter, ByteString>());
-            cfg.CreateMap<EntryRangeProofDao, EntryRangeProof>()
-               .ForMember(e => e.T,
-                    opt => opt.ConvertUsing<StringBase64ToByteStringConverter, string>());
-
-            bool IsToRepeatedField(PropertyMap pm)
-            {
-                if (pm.DestinationType.IsConstructedGenericType)
-                {
-                    var destGenericBase = pm.DestinationType.GetGenericTypeDefinition();
-                    return destGenericBase == typeof(RepeatedField<>);
-                }
-
-                return false;
-            }
-
-            //cfg.ForAllPropertyMaps(IsToRepeatedField, (propertyMap, opts) => opts.UseDestinationValue());
+            cfg.ForAllPropertyMaps(IsToRepeatedField, 
+                (propertyMap, opts) => opts.UseDestinationValue());
         }
     }
 }
