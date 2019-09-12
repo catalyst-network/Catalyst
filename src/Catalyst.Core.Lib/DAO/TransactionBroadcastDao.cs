@@ -49,6 +49,9 @@ namespace Catalyst.Core.Lib.DAO
         public override void InitMappers(IMapperConfigurationExpression cfg)
         {
             cfg.CreateMap<TransactionBroadcast, TransactionBroadcastDao>().ReverseMap();
+            cfg.CreateMap<STTransactionEntry, StTransactionEntryDao>().ReverseMap();
+            cfg.CreateMap<CFTransactionEntry, CfTransactionEntryDao>().ReverseMap();
+            cfg.CreateMap<EntryRangeProof, EntryRangeProofDao>().ReverseMap();
 
             cfg.CreateMap<TransactionBroadcast, TransactionBroadcastDao>()
                .ForMember(d => d.From, opt => opt.ConvertUsing(new ByteStringToStringPubKeyConverter(), s => s.From));

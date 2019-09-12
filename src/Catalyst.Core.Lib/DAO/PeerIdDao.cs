@@ -41,15 +41,19 @@ namespace Catalyst.Core.Lib.DAO
             cfg.CreateMap<PeerId, PeerIdDao>().ReverseMap();
 
             cfg.CreateMap<PeerId, PeerIdDao>()
-               .ForMember(d => d.PublicKey, opt => opt.ConvertUsing(new ByteStringToStringPubKeyConverter(), s => s.PublicKey));
+               .ForMember(e => e.PublicKey,
+                    opt => opt.ConvertUsing<ByteStringToStringPubKeyConverter, ByteString>());
             cfg.CreateMap<PeerIdDao, PeerId>()
-               .ForMember(d => d.PublicKey, opt => opt.ConvertUsing(new StringKeyUtilsToByteStringFormatter(), s => s.PublicKey));
+               .ForMember(e => e.PublicKey,
+                    opt => opt.ConvertUsing<StringKeyUtilsToByteStringFormatter, string>());
 
             cfg.CreateMap<PeerId, PeerIdDao>()
-               .ForMember(d => d.Port, opt => opt.ConvertUsing(new ByteStringToUShortFormatter(), s => s.Port));
+               .ForMember(d => d.Port, 
+                    opt => opt.ConvertUsing(new ByteStringToUShortFormatter(), s => s.Port));
 
             cfg.CreateMap<PeerIdDao, PeerId>()
-               .ForMember(d => d.Port, opt => opt.ConvertUsing(new UShortToByteStringFormatter(), s => s.Port));
+               .ForMember(d => d.Port, 
+                    opt => opt.ConvertUsing(new UShortToByteStringFormatter(), s => s.Port));
 
             cfg.CreateMap<PeerId, PeerIdDao>()
                .ForMember(e => e.ClientId,

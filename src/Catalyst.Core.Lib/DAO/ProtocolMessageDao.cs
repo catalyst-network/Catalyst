@@ -38,6 +38,7 @@ namespace Catalyst.Core.Lib.DAO
         public override void InitMappers(IMapperConfigurationExpression cfg)
         {
             cfg.CreateMap<ProtocolMessage, ProtocolMessageDao>().ReverseMap();
+            cfg.CreateMap<PeerId, PeerIdDao>().ReverseMap();
 
             cfg.CreateMap<ProtocolMessage, ProtocolMessageDao>()
                .ForMember(d => d.Value, opt => opt.ConvertUsing(new ByteStringToStringBase64Converter(), s => s.Value));
