@@ -36,19 +36,15 @@ namespace Catalyst.Core.Lib.DAO
 
         public override void InitMappers(IMapperConfigurationExpression cfg)
         {
-            cfg.CreateMap<CFTransactionEntry, CfTransactionEntryDao>().ReverseMap();
-
             cfg.CreateMap<CFTransactionEntry, CfTransactionEntryDao>()
                .ForMember(e => e.PedersenCommit,
-                    opt => opt.ConvertUsing<ByteStringToStringBase64Converter, ByteString>());
-            cfg.CreateMap<CfTransactionEntryDao, CFTransactionEntry>()
-               .ForMember(e => e.PedersenCommit,
-                    opt => opt.ConvertUsing<StringBase64ToByteStringConverter, string>());
-
-            cfg.CreateMap<CFTransactionEntry, CfTransactionEntryDao>()
-               .ForMember(e => e.PubKey, 
+                    opt => opt.ConvertUsing<ByteStringToStringBase64Converter, ByteString>())
+               .ForMember(e => e.PubKey,
                     opt => opt.ConvertUsing<ByteStringToStringPubKeyConverter, ByteString>());
+
             cfg.CreateMap<CfTransactionEntryDao, CFTransactionEntry>()
+               .ForMember(e => e.PedersenCommit,
+                    opt => opt.ConvertUsing<StringBase64ToByteStringConverter, string>())
                .ForMember(e => e.PubKey,
                     opt => opt.ConvertUsing<StringKeyUtilsToByteStringFormatter, string>());
         }

@@ -35,19 +35,15 @@ namespace Catalyst.Core.Lib.DAO.Deltas
 
         public override void InitMappers(IMapperConfigurationExpression cfg)
         {
-            cfg.CreateMap<DeltaDfsHashBroadcast, DeltaDfsHashBroadcastDao>().ReverseMap();
-
             cfg.CreateMap<DeltaDfsHashBroadcast, DeltaDfsHashBroadcastDao>()
                .ForMember(e => e.DeltaDfsHash,
-                    opt => opt.ConvertUsing<ByteStringToDfsHashConverter, ByteString>());
-            cfg.CreateMap<DeltaDfsHashBroadcastDao, DeltaDfsHashBroadcast>()
-               .ForMember(e => e.DeltaDfsHash,
-                    opt => opt.ConvertUsing<DfsHashToByteStringConverter, string>());
-
-            cfg.CreateMap<DeltaDfsHashBroadcast, DeltaDfsHashBroadcastDao>()
+                    opt => opt.ConvertUsing<ByteStringToDfsHashConverter, ByteString>())
                .ForMember(e => e.PreviousDeltaDfsHash,
                     opt => opt.ConvertUsing<ByteStringToDfsHashConverter, ByteString>());
+
             cfg.CreateMap<DeltaDfsHashBroadcastDao, DeltaDfsHashBroadcast>()
+               .ForMember(e => e.DeltaDfsHash,
+                    opt => opt.ConvertUsing<DfsHashToByteStringConverter, string>())
                .ForMember(e => e.PreviousDeltaDfsHash,
                     opt => opt.ConvertUsing<DfsHashToByteStringConverter, string>());
         }

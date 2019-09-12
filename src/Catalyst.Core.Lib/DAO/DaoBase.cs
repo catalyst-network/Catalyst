@@ -40,7 +40,7 @@ namespace Catalyst.Core.Lib.DAO
             return MapperProvider.MasterMapper.Map<TOriginal>(this);
         }
 
-        public TDao ToDao(IMessage protoBuff)
+        public TDao ToDao(TOriginal protoBuff)
         {
             return MapperProvider.MasterMapper.Map<TDao>(protoBuff);
         }
