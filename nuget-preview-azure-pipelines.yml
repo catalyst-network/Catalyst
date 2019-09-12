@@ -4,7 +4,7 @@ variables:
   BuildConfiguration: 'Debug'
   
 stages:
-  - stage: 'Build solution'
+  - stage: stage1
     jobs:
       - job: A1
         steps:
