@@ -50,13 +50,13 @@ stages:
           matrix:
             abstractions:
               package_name: 'Catalyst.Abstractions'
-              project: 'build/src/Catalyst.Abstractions/Catalyst.Abstractions.csproj'
+              project: '$(Pipeline.Workspace)/build/src/Catalyst.Abstractions/Catalyst.Abstractions.csproj'
             protocol:
               package_name: 'Catalyst.Protocol'
-              project: 'build/src/Catalyst.Protocol/Catalyst.Protocol.csproj'
+              project: '$(Pipeline.Workspace)/build/src/Catalyst.Protocol/Catalyst.Protocol.csproj'
             core-lib:
               package_name: 'Catalyst.Core.Lib'
-              project: 'build/src/Catalyst.Core.Lib/Catalyst.Core.Lib.csproj'
+              project: '$(Pipeline.Workspace)/build/src/Catalyst.Core.Lib/Catalyst.Core.Lib.csproj'
         steps:
           - checkout: none
           - download: current
@@ -64,7 +64,7 @@ stages:
           - task: Bash@3
             inputs:
               targetType: 'inline'
-              script: 'ls -la'
+              script: 'ls -la $(Pipeline.Workspace)'
           - template: nuget-pack-steps-azure-pipelines.yml
 
       - job: 'BuildCoreModules'
