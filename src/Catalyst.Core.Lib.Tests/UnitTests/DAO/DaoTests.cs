@@ -64,7 +64,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
                 new CoinbaseEntryDao(),
                 new StTransactionEntryDao(),
                 new CfTransactionEntryDao(),
-                new TransactionBroadcastDao()
+                new TransactionBroadcastDao(),
+                new EntryRangeProofDao(), 
             };
 
             var map = new MapperProvider(_mappers);
