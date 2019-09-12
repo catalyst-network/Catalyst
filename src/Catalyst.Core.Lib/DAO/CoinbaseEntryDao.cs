@@ -41,6 +41,7 @@ namespace Catalyst.Core.Lib.DAO
             cfg.CreateMap<CoinbaseEntry, CoinbaseEntryDao>()
                .ForMember(d => d.PubKey, 
                     opt => opt.ConvertUsing(new ByteStringToStringPubKeyConverter(), s => s.PubKey));
+
             cfg.CreateMap<CoinbaseEntryDao, CoinbaseEntry>()
                .ForMember(d => d.PubKey, 
                     opt => opt.ConvertUsing(new StringKeyUtilsToByteStringFormatter(), s => s.PubKey));
