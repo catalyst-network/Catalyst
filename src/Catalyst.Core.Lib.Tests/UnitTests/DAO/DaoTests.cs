@@ -134,6 +134,29 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
         }
 
         [Fact]
+        public void RangeProofDao_RangeProof_Should_Be_Convertible()
+        {
+            var peerIdDao = StartMappingProvider<EntryRangeProofDao>();
+
+            var rangeProof = new EntryRangeProof
+            {
+                A = "a".ToUtf8ByteString(),
+                APrime0 = "a prime 0".ToUtf8ByteString(),
+                BPrime0 = "b prime 0".ToUtf8ByteString(),
+                MU = "mu".ToUtf8ByteString(),
+                S = "s".ToUtf8ByteString(),
+                T = "t".ToUtf8ByteString(),
+                T1 = "t1".ToUtf8ByteString(),
+                T2 = "t2".ToUtf8ByteString(),
+                TAU = "tau".ToUtf8ByteString()
+            };
+
+            var peer = peerIdDao.ToDao(rangeProof);
+            var protoBuff = peer.ToProtoBuff();
+            rangeProof.Should().Be(protoBuff);
+        }
+
+        [Fact]
         public void SigningContextDao_SigningContext_Should_Be_Convertible()
         {
             var signingContextDao = StartMappingProvider<SigningContextDao>();
