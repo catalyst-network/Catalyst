@@ -28,7 +28,7 @@ using Google.Protobuf;
 
 namespace Catalyst.Core.Lib.DAO.Converters
 {
-    public class CorrelationIdToByteStringConverter : IValueConverter<ByteString, string>
+    public class ByteStringToCorrelationIdConverter : IValueConverter<ByteString, string>
     {
         public string Convert(ByteString sourceMember, ResolutionContext context)
         {
@@ -36,7 +36,7 @@ namespace Catalyst.Core.Lib.DAO.Converters
         }
     }
 
-    public class ByteStringToCorrelationIdConverter : IValueConverter<string, ByteString>
+    public class CorrelationIdToByteStringConverter : IValueConverter<string, ByteString>
     {
         public ByteString Convert(string sourceMember, ResolutionContext context)
         {
