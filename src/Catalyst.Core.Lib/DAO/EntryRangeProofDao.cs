@@ -57,8 +57,10 @@ namespace Catalyst.Core.Lib.DAO
             cfg.CreateMap<EntryRangeProofDao, EntryRangeProof>()
                .ForAllMembers(opt => opt.ConvertUsing<StringBase64ToByteStringConverter, string>());
 
-            cfg.ForAllPropertyMaps(IsToRepeatedField, 
-                (propertyMap, opts) => opts.UseDestinationValue());
+            cfg.CreateMap(typeof(LinkedList<>), typeof(RepeatedField<>))
+               .ConstructUsingServiceLocator();
+            cfg.CreateMap(typeof(RepeatedField<>), typeof(LinkedList<>))
+               .ConstructUsingServiceLocator();
         }
     }
 }

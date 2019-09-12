@@ -23,6 +23,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using AutoMapper;
 using Catalyst.Core.Lib.DAO.Converters;
 using Catalyst.Protocol.Deltas;
@@ -53,7 +54,7 @@ namespace Catalyst.Core.Lib.DAO.Deltas
                .ForMember(e => e.PreviousDeltaDfsHash,
                     opt => opt.ConvertUsing<ByteStringToDfsHashConverter, ByteString>())
                .ForMember(d => d.MerkleRoot,
-                    opt => opt.ConvertUsing(new ByteStringToStringBase64Converter(), s => s.MerkleRoot))
+                    opt => opt.ConvertUsing<ByteStringToStringBase64Converter, ByteString>())
                .ForMember(d => d.MerklePoda,
                     opt => opt.ConvertUsing(new ByteStringToStringBase64Converter(), s => s.MerklePoda));
 
@@ -65,7 +66,12 @@ namespace Catalyst.Core.Lib.DAO.Deltas
                .ForMember(d => d.MerklePoda,
                     opt => opt.ConvertUsing(new StringBase64ToByteStringConverter(), s => s.MerklePoda));
 
-            cfg.ForAllPropertyMaps(IsToRepeatedField, (propertyMap, opts) => opts.UseDestinationValue());
+            //cfg.ForAllPropertyMaps(m => m.SourceType.Equals(typeof(RepeatedField<ByteString>)), 
+            //    (p, opt) => opt.(c =>
+            //    {
+            //        var result = new List<string>();
+            //        c.
+            //    } ));
         }
     }
 }
