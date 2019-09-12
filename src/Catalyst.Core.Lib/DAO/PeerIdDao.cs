@@ -38,41 +38,27 @@ namespace Catalyst.Core.Lib.DAO
 
         public override void InitMappers(IMapperConfigurationExpression cfg)
         {
-            cfg.CreateMap<PeerId, PeerIdDao>().ReverseMap();
-
             cfg.CreateMap<PeerId, PeerIdDao>()
                .ForMember(e => e.PublicKey,
-                    opt => opt.ConvertUsing<ByteStringToStringPubKeyConverter, ByteString>());
-            cfg.CreateMap<PeerIdDao, PeerId>()
-               .ForMember(e => e.PublicKey,
-                    opt => opt.ConvertUsing<StringKeyUtilsToByteStringFormatter, string>());
-
-            cfg.CreateMap<PeerId, PeerIdDao>()
+                    opt => opt.ConvertUsing<ByteStringToStringPubKeyConverter, ByteString>())
                .ForMember(d => d.Port, 
-                    opt => opt.ConvertUsing(new ByteStringToUShortFormatter(), s => s.Port));
-
-            cfg.CreateMap<PeerIdDao, PeerId>()
-               .ForMember(d => d.Port, 
-                    opt => opt.ConvertUsing(new UShortToByteStringFormatter(), s => s.Port));
-
-            cfg.CreateMap<PeerId, PeerIdDao>()
+                    opt => opt.ConvertUsing(new ByteStringToUShortFormatter(), s => s.Port))
                .ForMember(e => e.ClientId,
-                    opt => opt.ConvertUsing<ByteStringToStringBase64Converter, ByteString>());
-            cfg.CreateMap<PeerIdDao, PeerId>()
-               .ForMember(e => e.ClientId,
-                    opt => opt.ConvertUsing<StringBase64ToByteStringConverter, string>());
-
-            cfg.CreateMap<PeerId, PeerIdDao>()
+                    opt => opt.ConvertUsing<ByteStringToStringBase64Converter, ByteString>())
                .ForMember(e => e.ProtocolVersion,
-                    opt => opt.ConvertUsing<ByteStringToStringBase64Converter, ByteString>());
-            cfg.CreateMap<PeerIdDao, PeerId>()
-               .ForMember(e => e.ProtocolVersion,
-                    opt => opt.ConvertUsing<StringBase64ToByteStringConverter, string>());
-            
-            cfg.CreateMap<PeerId, PeerIdDao>()
+                    opt => opt.ConvertUsing<ByteStringToStringBase64Converter, ByteString>())
                .ForMember(e => e.Ip,
                     opt => opt.ConvertUsing<ByteStringToIpAddressConverter, ByteString>());
+
             cfg.CreateMap<PeerIdDao, PeerId>()
+               .ForMember(e => e.PublicKey,
+                    opt => opt.ConvertUsing<StringKeyUtilsToByteStringFormatter, string>())
+               .ForMember(d => d.Port, 
+                    opt => opt.ConvertUsing(new UShortToByteStringFormatter(), s => s.Port))
+               .ForMember(e => e.ClientId,
+                    opt => opt.ConvertUsing<StringBase64ToByteStringConverter, string>())
+               .ForMember(e => e.ProtocolVersion,
+                    opt => opt.ConvertUsing<StringBase64ToByteStringConverter, string>())
                .ForMember(e => e.Ip,
                     opt => opt.ConvertUsing<IpAddressToByteStringConverter, string>());
         }
