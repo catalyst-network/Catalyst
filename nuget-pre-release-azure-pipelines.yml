@@ -14,11 +14,11 @@ stages:
               version: 2.2.104
               failOnStandardError: 'true'
             timeoutInMinutes: 10
-
+      - job: A2
           - bash: |
               git submodule update --init --force --recursive
             displayName: 'Clone submodules'
-
+      - job: A3
           - task: DotNetCoreCLI@2
             displayName: 'Build solution'
             inputs:
@@ -26,7 +26,10 @@ stages:
               arguments: '--configuration=$(BuildConfiguration)'
               failOnStandardError: 'true'
             timeoutInMinutes: 10
-      - job: A2
+
+  - stage: stage2
+    jobs:
+      - job: b1
         strategy:
           matrix:
             abstractions:
@@ -41,6 +44,12 @@ stages:
               imageName: 'macos-10.14'
               package_name: 'Catalyst.Core.Lib'
               project: 'src/Catalyst.Core.Lib/Catalyst.Core.Lib.csproj'
+        steps:
+          - template: nuget-pack-steps-azure-pipelines.yml
+
+      - job: b2
+        strategy:
+          matrix:
             core-modules-consensus:
               imageName: 'macos-10.14'
               package_name: 'Catalyst.Core.Modules.Consensus'
@@ -72,11 +81,7 @@ stages:
             core-modules-web3:
               imageName: 'macos-10.14'
               package_name: 'Catalyst.Core.Modules.Web3'
-              project: 'src/Catalyst.Core.Modules.Web3/Catalyst.Core.Modules.Web3.csproj'
-            #    core-modules-cryptography-bulletproofs:
-            #      imageName: 'macos-10.14'
-            #      package_name: 'Catalyst.Core.Modules.Cryptography.BulletProofs'
-            #      project: 'src/Catalyst.Core.Modules.Cryptography.BulletProofs/Catalyst.Core.Modules.Cryptography.BulletProofs.csproj'      
+              project: 'src/Catalyst.Core.Modules.Web3/Catalyst.Core.Modules.Web3.csproj'    
             core-modules-Rpc-Client:
               imageName: 'macos-10.14'
               package_name: 'Catalyst.Core.Modules.Rpc.Client'
@@ -89,6 +94,12 @@ stages:
               imageName: 'macos-10.14'
               package_name: 'Catalyst.Core.Modules.P2P.Discovery.Hastings'
               project: 'src/Catalyst.Core.Modules.P2P.Discovery.Hastings/Catalyst.Core.Modules.P2P.Discovery.Hastings.csproj'
+        steps:
+          - template: nuget-pack-steps-azure-pipelines.yml
+
+      - job: b3
+        strategy:
+          matrix:
             modules-Repository-CosmosDb:
               imageName: 'macos-10.14'
               package_name: 'Catalyst.Modules.Repository.CosmosDb'
@@ -99,31 +110,5 @@ stages:
               project: 'src/Catalyst.Modules.Repository.MongoDb/Catalyst.Core.Modules.Repository.MongoDb.csproj'
           maxParallel: 3
         steps:
-
-          - task: DotNetCoreCLI@2
-            displayName: Pack
-            inputs:
-              command: pack
-              arguments: '--configuration=$(BuildConfiguration) --output=$(Build.ArtifactStagingDirectory) --version-suffix=$(Build.BuildId)$(release.type) --include-source --include-symbols'
-              packagesToPack: $(PROJECT)
-              nobuild: true
-              failOnStandardError: 'true'
-            timeoutInMinutes: 10
-
-          - task: PublishBuildArtifacts@1
-            displayName: 'Publish Artifact'
-            inputs:
-              PathtoPublish: '$(build.artifactstagingdirectory)'
-              ArtifactName: $(PACKAGE_NAME)
-              failOnStandardError: 'true'
-            timeoutInMinutes: 10
-            condition: succeededOrFailed()
-
-          - task: NuGetCommand@2
-            displayName: 'NuGet push'
-            inputs:
-              command: push
-              nuGetFeedType: external
-              publishFeedCredentials: 'NuGet'
-              failOnStandardError: 'true'
-            timeoutInMinutes: 10
+          - template: nuget-pack-steps-azure-pipelines.yml 
+        

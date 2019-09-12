@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project>
     <PropertyGroup>
         <TargetFramework>netcoreapp2.2</TargetFramework>
         <RootNamespace>Catalyst.Core.Modules.Cryptography.BulletProofs</RootNamespace>
@@ -18,7 +18,44 @@
         <PackageReference Include="Nethereum.Hex" Version="3.3.0" />
         <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
     </ItemGroup>
-    <ItemGroup>
-        <PackageReference Include="Catalyst.Cryptography.BulletProofs.Natives" Version="[0.0.1.9649-beta]" />
+
+    <!-- build tasks for Catalyst.Cryptography.FFI.Rust -->
+    <!-- build tasks for unix -->
+    <Target Condition="'@(OS)'=='Unix'" Name="CompileNativeRuntimes" BeforeTargets="BeforeBuild">
+        <Exec Command="cargo build --manifest-path ../../submodules/Cryptography.FFI.Rust/Cargo.toml --target-dir bin/Debug/netcoreapp2.2/Runtimes/linux-x64"
+              ConsoleToMSBuild="true"
+        />
+    </Target>
+    <ItemGroup Condition="'@(OS)'=='Unix'">
+        <None Include="./bin/Debug/netcoreapp2.2/Runtimes/linux-x64/debug/libcatalystffi.so" Link="libcatalystffi.so">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
     </ItemGroup>
+    <!-- end unix tasks -->
+
+    <!-- build tasks for osx -->
+    <Target Condition="'@(OS)'=='OSX'" Name="CompileNativeRuntimes" BeforeTargets="BeforeBuild">
+        <Exec Command="cargo build --manifest-path ../../submodules/Cryptography.FFI.Rust/Cargo.toml --target-dir bin/Debug/netcoreapp2.2/Runtimes/osx-x64"
+              ConsoleToMSBuild="true"
+        />
+    </Target>
+    <ItemGroup Condition="'@(OS)'=='OSX'">
+        <None Include="./bin/Debug/netcoreapp2.2/Runtimes/osx-x64/debug/libcatalystffi.dylib" Link="libcatalystffi.dylib">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
+    <!-- end osx tasks -->
+
+    <!-- build tasks for windows -->
+    <Target Condition="'@(OS)'=='Windows_NT'" Name="CompileNativeRuntimes" BeforeTargets="BeforeBuild">
+        <Exec Command="cargo build --manifest-path ../../submodules/Cryptography.FFI.Rust/Cargo.toml --target-dir bin/Debug/netcoreapp2.2/Runtimes/win-x64"
+              ConsoleToMSBuild="true"
+        />
+    </Target>
+    <ItemGroup Condition="'@(OS)'=='Windows_NT'">
+        <None Include="./bin/Debug/netcoreapp2.2/Runtimes/win-x64/debug/libcatalystffi.dll" Link="libcatalystffi.dll">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
+    <!-- end win tasks -->
 </Project>
