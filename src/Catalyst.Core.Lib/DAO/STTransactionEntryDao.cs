@@ -23,7 +23,7 @@
 
 using System;
 using AutoMapper;
-using Catalyst.Core.Lib.Converters;
+using Catalyst.Core.Lib.DAO.Converters;
 using Catalyst.Protocol.Transaction;
 
 namespace Catalyst.Core.Lib.DAO
@@ -38,7 +38,7 @@ namespace Catalyst.Core.Lib.DAO
             cfg.CreateMap<STTransactionEntry, StTransactionEntryDao>().ReverseMap();
 
             cfg.CreateMap<STTransactionEntry, StTransactionEntryDao>()
-               .ForMember(d => d.PubKey, opt => opt.ConvertUsing(new ByteStringKeyUtilsToStringFormatter(), s => s.PubKey.ToByteArray()));
+               .ForMember(d => d.PubKey, opt => opt.ConvertUsing(new ByteStringToStringPubKeyConverter(), s => s.PubKey));
             cfg.CreateMap<StTransactionEntryDao, STTransactionEntry>()
                .ForMember(d => d.PubKey, opt => opt.ConvertUsing(new StringKeyUtilsToByteStringFormatter(), s => s.PubKey));
         }

@@ -24,10 +24,21 @@
 using AutoMapper;
 using Google.Protobuf;
 
-namespace Catalyst.Core.Lib.Converters
+namespace Catalyst.Core.Lib.DAO.Converters
 {
-    public class ByteStringToStringBase64Formatter : IValueConverter<ByteString, string>
+    public class ByteStringToStringBase64Converter : IValueConverter<ByteString, string>
     {
-        public string Convert(ByteString sourceMember, ResolutionContext context) { return sourceMember.ToBase64(); }
+        public string Convert(ByteString sourceMember, ResolutionContext context)
+        {
+            return sourceMember.ToBase64();
+        }
+    }
+
+    public class StringBase64ToByteStringConverter : IValueConverter<string, ByteString>
+    {
+        public ByteString Convert(string sourceMember, ResolutionContext context)
+        {
+            return ByteString.FromBase64(sourceMember);
+        }
     }
 }

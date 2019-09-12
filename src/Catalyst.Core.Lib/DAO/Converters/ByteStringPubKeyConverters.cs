@@ -22,22 +22,25 @@
 #endregion
 
 using AutoMapper;
-using Catalyst.Core.Lib.DAO.Converters;
-using Catalyst.Protocol.Common;
-using Catalyst.Protocol.Deltas;
+using Catalyst.Core.Lib.Extensions;
+using Catalyst.Core.Lib.Util;
+using Google.Protobuf;
 
-namespace Catalyst.Core.Lib.DAO.Deltas
+namespace Catalyst.Core.Lib.DAO.Converters
 {
-    public class FavouriteDeltaBroadcastDao : DaoBase<FavouriteDeltaBroadcast, FavouriteDeltaBroadcastDao>
+    public class ByteStringToStringPubKeyConverter : IValueConverter<ByteString, string>
     {
-        public CandidateDeltaBroadcastDao Candidate { get; set; }
-        public PeerIdDao VoterId { get; set; }
-
-        public override void InitMappers(IMapperConfigurationExpression cfg)
+        public string Convert(ByteString sourceMember, ResolutionContext context)
         {
-            cfg.CreateMap<FavouriteDeltaBroadcast, FavouriteDeltaBroadcastDao>().ReverseMap();
-            cfg.CreateMap<CandidateDeltaBroadcast, CandidateDeltaBroadcastDao>().ReverseMap();
-            cfg.CreateMap<PeerId, PeerIdDao>().ReverseMap();
+            return sourceMember.ToByteArray().KeyToString();
+        }
+    }
+
+    public class StringKeyUtilsToByteStringFormatter : IValueConverter<string, ByteString>
+    {
+        public ByteString Convert(string sourceMember, ResolutionContext context)
+        {
+            return sourceMember.KeyToBytes().ToByteString();
         }
     }
 }

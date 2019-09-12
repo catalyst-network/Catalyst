@@ -22,15 +22,18 @@
 #endregion
 
 using System;
+using System.Net;
 using Catalyst.Abstractions.DAO;
 using Catalyst.Core.Lib.DAO;
 using Catalyst.Core.Lib.DAO.Deltas;
 using Catalyst.Core.Lib.Extensions;
+using Catalyst.Core.Lib.Util;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Transaction;
 using Catalyst.TestUtils;
 using FluentAssertions;
+using Multiformats.Hash;
 using Multiformats.Hash.Algorithms;
 using Xunit;
 
@@ -38,6 +41,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
 {
     public class DaoTests
     {
+        private IMultihashAlgorithm _hashingAlgorithm = new BLAKE2B_256();
+
         public DaoTests()
         {
             var map = new MapperProvider(new IMapperInitializer[]
@@ -65,15 +70,23 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
         {
             var protocolMessageDao = new ProtocolMessageDao();
 
+            var newGuid = Guid.NewGuid();
+            var peerId = PeerIdentifierHelper.GetPeerIdentifier("testcontent").PeerId;
             var message = new ProtocolMessage
             {
-                CorrelationId = Guid.NewGuid().ToByteString(),
+                CorrelationId = newGuid.ToByteString(),
                 TypeUrl = "cleanurl",
                 Value = "somecontent".ToUtf8ByteString(),
-                PeerId = PeerIdentifierHelper.GetPeerIdentifier("testcontent").PeerId
+                PeerId = peerId
             };
 
             var messageDao = protocolMessageDao.ToDao(message);
+
+            messageDao.TypeUrl.Should().Be("cleanurl");
+            messageDao.CorrelationId.Should().Be(newGuid.ToString());
+            messageDao.PeerId.Port.Should().Be(BitConverter.ToUInt16(peerId.Port.ToByteArray()));
+            messageDao.PeerId.Ip.Should().Be(new IPAddress(peerId.Ip.ToByteArray()).MapToIPv6().ToString());
+
             var protoBuff = messageDao.ToProtoBuff();
             message.Should().Be(protoBuff);
         }
@@ -167,14 +180,13 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
         public void DeltaDfsHashBroadcastDao_DeltaDfsHashBroadcast_Should_Be_Convertible()
         {
             var deltaDfsHashBroadcastDao = new DeltaDfsHashBroadcastDao();
-            var byteRn = new byte[30];
-            new Random().NextBytes(byteRn);
 
-            var previousDfsHash = "previousDfsHash".ComputeUtf8Multihash(new ID()).ToBytes();
+            var hash = "this hash".ComputeUtf8Multihash(_hashingAlgorithm).ToBytes();
+            var previousDfsHash = "previousDfsHash".ComputeUtf8Multihash(_hashingAlgorithm).ToBytes();
 
             var message = new DeltaDfsHashBroadcast
             {
-                DeltaDfsHash = byteRn.ToByteString(),
+                DeltaDfsHash = hash.ToByteString(),
                 PreviousDeltaDfsHash = previousDfsHash.ToByteString()
             };
 
@@ -203,17 +215,19 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
         public void CoinbaseEntryDao_CoinbaseEntry_Should_Be_Convertible()
         {
             var coinbaseEntryDao = new CoinbaseEntryDao();
-            var byteRn = new byte[30];
-            new Random().NextBytes(byteRn);
+            var pubKeyBytes = new byte[30];
+            new Random().NextBytes(pubKeyBytes);
 
             var message = new CoinbaseEntry
             {
                 Version = 415,
-                PubKey = byteRn.ToByteString(),
+                PubKey = pubKeyBytes.ToByteString(),
                 Amount = 271314
             };
 
             var messageDao = coinbaseEntryDao.ToDao(message);
+            messageDao.PubKey.Should().Be(pubKeyBytes.KeyToString());
+
             var protoBuff = messageDao.ToProtoBuff();
             message.Should().Be(protoBuff);
         }
@@ -222,16 +236,20 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
         public void STTransactionEntryDao_STTransactionEntry_Should_Be_Convertible()
         {
             var stTransactionEntryDao = new StTransactionEntryDao();
-            var byteRn = new byte[30];
-            new Random().NextBytes(byteRn);
+            var pubKeyBytes = new byte[30];
+            new Random().NextBytes(pubKeyBytes);
 
             var message = new STTransactionEntry
             {
-                PubKey = byteRn.ToByteString(),
+                PubKey = pubKeyBytes.ToByteString(),
                 Amount = 8855274
             };
 
             var transactionEntryDao = stTransactionEntryDao.ToDao(message);
+
+            transactionEntryDao.PubKey.Should().Be(pubKeyBytes.KeyToString());
+            transactionEntryDao.Amount.Should().Be(8855274);
+
             var protoBuff = transactionEntryDao.ToProtoBuff();
             message.Should().Be(protoBuff);
         }
@@ -240,20 +258,24 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
         public void CFTransactionEntryDao_CFTransactionEntry_Should_Be_Convertible()
         {
             var cfTransactionEntryDao = new CfTransactionEntryDao();
-            var byteRn = new byte[30];
+            var pubKeyBytes = new byte[30];
             var pedersenCommitBytes = new byte[50];
 
             var rnd = new Random();
-            rnd.NextBytes(byteRn);
+            rnd.NextBytes(pubKeyBytes);
             rnd.NextBytes(pedersenCommitBytes);
 
             var message = new CFTransactionEntry
             {
-                PubKey = byteRn.ToByteString(),
+                PubKey = pubKeyBytes.ToByteString(),
                 PedersenCommit = pedersenCommitBytes.ToByteString()
             };
 
             var transactionEntryDao = cfTransactionEntryDao.ToDao(message);
+
+            transactionEntryDao.PubKey.Should().Be(pubKeyBytes.KeyToString());
+            transactionEntryDao.PedersenCommit.Should().Be(pedersenCommitBytes.ToByteString().ToBase64());
+
             var protoBuff = transactionEntryDao.ToProtoBuff();
             message.Should().Be(protoBuff);
         }

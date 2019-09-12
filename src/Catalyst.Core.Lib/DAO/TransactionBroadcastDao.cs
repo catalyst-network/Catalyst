@@ -24,7 +24,7 @@
 using System;
 using System.Collections.Generic;
 using AutoMapper;
-using Catalyst.Core.Lib.Converters;
+using Catalyst.Core.Lib.DAO.Converters;
 using Catalyst.Protocol.Transaction;
 using Google.Protobuf.Collections;
 using Google.Protobuf.WellKnownTypes;
@@ -49,13 +49,9 @@ namespace Catalyst.Core.Lib.DAO
         public override void InitMappers(IMapperConfigurationExpression cfg)
         {
             cfg.CreateMap<TransactionBroadcast, TransactionBroadcastDao>().ReverseMap();
-            cfg.CreateMap<STTransactionEntry, StTransactionEntryDao>().ReverseMap();
-            cfg.CreateMap<CFTransactionEntry, CfTransactionEntryDao>().ReverseMap();
-
-            cfg.CreateMap<EntryRangeProof, EntryRangeProofDao>().ReverseMap();
 
             cfg.CreateMap<TransactionBroadcast, TransactionBroadcastDao>()
-               .ForMember(d => d.From, opt => opt.ConvertUsing(new ByteStringKeyUtilsToStringFormatter(), s => s.From.ToByteArray()));
+               .ForMember(d => d.From, opt => opt.ConvertUsing(new ByteStringToStringPubKeyConverter(), s => s.From));
             cfg.CreateMap<TransactionBroadcastDao, TransactionBroadcast>()
                .ForMember(d => d.From, opt => opt.ConvertUsing(new StringKeyUtilsToByteStringFormatter(), s => s.From));
 
@@ -63,19 +59,19 @@ namespace Catalyst.Core.Lib.DAO
             cfg.CreateMap<Timestamp, DateTime>().ConvertUsing(s => s.ToDateTime());
 
             cfg.CreateMap<TransactionBroadcast, TransactionBroadcastDao>()
-               .ForMember(d => d.Data, opt => opt.ConvertUsing(new ByteStringToStringBase64Formatter(), s => s.Data));
+               .ForMember(d => d.Data, opt => opt.ConvertUsing(new ByteStringToStringBase64Converter(), s => s.Data));
             cfg.CreateMap<TransactionBroadcastDao, TransactionBroadcast>()
-               .ForMember(d => d.Data, opt => opt.ConvertUsing(new StringBase64ToByteStringFormatter(), s => s.Data));
+               .ForMember(d => d.Data, opt => opt.ConvertUsing(new StringBase64ToByteStringConverter(), s => s.Data));
 
             cfg.CreateMap<TransactionBroadcast, TransactionBroadcastDao>()
-               .ForMember(d => d.From, opt => opt.ConvertUsing(new ByteStringToStringBase64Formatter(), s => s.From));
+               .ForMember(d => d.From, opt => opt.ConvertUsing(new ByteStringToStringBase64Converter(), s => s.From));
             cfg.CreateMap<TransactionBroadcastDao, TransactionBroadcast>()
-               .ForMember(d => d.From, opt => opt.ConvertUsing(new StringBase64ToByteStringFormatter(), s => s.From));
+               .ForMember(d => d.From, opt => opt.ConvertUsing(new StringBase64ToByteStringConverter(), s => s.From));
 
             cfg.CreateMap<TransactionBroadcast, TransactionBroadcastDao>()
-               .ForMember(d => d.Init, opt => opt.ConvertUsing(new ByteStringToStringBase64Formatter(), s => s.Init));
+               .ForMember(d => d.Init, opt => opt.ConvertUsing(new ByteStringToStringBase64Converter(), s => s.Init));
             cfg.CreateMap<TransactionBroadcastDao, TransactionBroadcast>()
-               .ForMember(d => d.Init, opt => opt.ConvertUsing(new StringBase64ToByteStringFormatter(), s => s.Init));
+               .ForMember(d => d.Init, opt => opt.ConvertUsing(new StringBase64ToByteStringConverter(), s => s.Init));
 
             bool IsToRepeatedField(PropertyMap pm)
             {

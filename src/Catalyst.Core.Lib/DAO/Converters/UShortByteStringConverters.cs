@@ -21,20 +21,26 @@
 
 #endregion
 
+using System;
 using AutoMapper;
 using Catalyst.Core.Lib.Extensions;
-using Catalyst.Core.Lib.Util;
 using Google.Protobuf;
 
-namespace Catalyst.Core.Lib.Converters
+namespace Catalyst.Core.Lib.DAO.Converters
 {
-    public class ByteStringKeyUtilsToStringFormatter : IValueConverter<byte[], string>
+    public class ByteStringToUShortFormatter : IValueConverter<ByteString, ushort>
     {
-        public string Convert(byte[] sourceMember, ResolutionContext context) { return sourceMember.KeyToString(); }
+        public ushort Convert(ByteString sourceMember, ResolutionContext context)
+        {
+            return BitConverter.ToUInt16(sourceMember.ToByteArray());
+        }
     }
 
-    public class StringKeyUtilsToByteStringFormatter : IValueConverter<string, ByteString>
+    public class UShortToByteStringFormatter : IValueConverter<ushort, ByteString>
     {
-        public ByteString Convert(string sourceMember, ResolutionContext context) { return sourceMember.KeyToBytes().ToByteString(); }
+        public ByteString Convert(ushort sourceMember, ResolutionContext context)
+        {
+            return BitConverter.GetBytes(sourceMember).ToByteString();
+        }
     }
 }

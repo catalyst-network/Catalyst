@@ -22,7 +22,7 @@
 #endregion
 
 using AutoMapper;
-using Catalyst.Core.Lib.Converters;
+using Catalyst.Core.Lib.DAO.Converters;
 using Catalyst.Protocol.Common;
 using Google.Protobuf;
 
@@ -41,7 +41,7 @@ namespace Catalyst.Core.Lib.DAO
             cfg.CreateMap<PeerId, PeerIdDao>().ReverseMap();
 
             cfg.CreateMap<PeerId, PeerIdDao>()
-               .ForMember(d => d.PublicKey, opt => opt.ConvertUsing(new ByteStringKeyUtilsToStringFormatter(), s => s.PublicKey.ToByteArray()));
+               .ForMember(d => d.PublicKey, opt => opt.ConvertUsing(new ByteStringToStringPubKeyConverter(), s => s.PublicKey));
             cfg.CreateMap<PeerIdDao, PeerId>()
                .ForMember(d => d.PublicKey, opt => opt.ConvertUsing(new StringKeyUtilsToByteStringFormatter(), s => s.PublicKey));
 
@@ -51,9 +51,26 @@ namespace Catalyst.Core.Lib.DAO
             cfg.CreateMap<PeerIdDao, PeerId>()
                .ForMember(d => d.Port, opt => opt.ConvertUsing(new UShortToByteStringFormatter(), s => s.Port));
 
-            cfg.CreateMap<ByteString, string>().ConvertUsing(s => s.ToBase64());
+            cfg.CreateMap<PeerId, PeerIdDao>()
+               .ForMember(e => e.ClientId,
+                    opt => opt.ConvertUsing<ByteStringToStringBase64Converter, ByteString>());
+            cfg.CreateMap<PeerIdDao, PeerId>()
+               .ForMember(e => e.ClientId,
+                    opt => opt.ConvertUsing<StringBase64ToByteStringConverter, string>());
 
-            cfg.CreateMap<string, ByteString>().ConvertUsing(s => ByteString.FromBase64(s));
+            cfg.CreateMap<PeerId, PeerIdDao>()
+               .ForMember(e => e.ProtocolVersion,
+                    opt => opt.ConvertUsing<ByteStringToStringBase64Converter, ByteString>());
+            cfg.CreateMap<PeerIdDao, PeerId>()
+               .ForMember(e => e.ProtocolVersion,
+                    opt => opt.ConvertUsing<StringBase64ToByteStringConverter, string>());
+            
+            cfg.CreateMap<PeerId, PeerIdDao>()
+               .ForMember(e => e.Ip,
+                    opt => opt.ConvertUsing<ByteStringToIpAddressConverter, ByteString>());
+            cfg.CreateMap<PeerIdDao, PeerId>()
+               .ForMember(e => e.Ip,
+                    opt => opt.ConvertUsing<IpAddressToByteStringConverter, string>());
         }
     }
 }

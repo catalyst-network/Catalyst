@@ -22,7 +22,7 @@
 #endregion
 
 using AutoMapper;
-using Catalyst.Core.Lib.Converters;
+using Catalyst.Core.Lib.DAO.Converters;
 using Catalyst.Protocol.Common;
 
 namespace Catalyst.Core.Lib.DAO
@@ -35,12 +35,11 @@ namespace Catalyst.Core.Lib.DAO
         public override void InitMappers(IMapperConfigurationExpression cfg)
         {
             cfg.CreateMap<ProtocolMessageSigned, ProtocolMessageSignedDao>().ReverseMap();
-            cfg.CreateMap<PeerId, PeerIdDao>().ReverseMap();
-            
+
             cfg.CreateMap<ProtocolMessageSigned, ProtocolMessageSignedDao>()
-               .ForMember(d => d.Signature, opt => opt.ConvertUsing(new ByteStringToStringBase64Formatter(), s => s.Signature));
+               .ForMember(d => d.Signature, opt => opt.ConvertUsing(new ByteStringToStringBase64Converter(), s => s.Signature));
             cfg.CreateMap<ProtocolMessageSignedDao, ProtocolMessageSigned>()
-               .ForMember(d => d.Signature, opt => opt.ConvertUsing(new StringBase64ToByteStringFormatter(), s => s.Signature));
+               .ForMember(d => d.Signature, opt => opt.ConvertUsing(new StringBase64ToByteStringConverter(), s => s.Signature));
         }
     }
 }

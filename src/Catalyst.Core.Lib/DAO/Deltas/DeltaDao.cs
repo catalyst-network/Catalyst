@@ -24,9 +24,10 @@
 using System;
 using System.Collections.Generic;
 using AutoMapper;
-using Catalyst.Core.Lib.Converters;
+using Catalyst.Core.Lib.DAO.Converters;
 using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Transaction;
+using Google.Protobuf;
 using Google.Protobuf.Collections;
 using Google.Protobuf.WellKnownTypes;
 
@@ -55,19 +56,21 @@ namespace Catalyst.Core.Lib.DAO.Deltas
             cfg.CreateMap<Timestamp, DateTime>().ConvertUsing(s => s.ToDateTime());
 
             cfg.CreateMap<Delta, DeltaDao>()
-               .ForMember(d => d.PreviousDeltaDfsHash, opt => opt.ConvertUsing(new ByteStringToStringBase64Formatter(), s => s.PreviousDeltaDfsHash));
+               .ForMember(e => e.PreviousDeltaDfsHash,
+                    opt => opt.ConvertUsing<ByteStringToDfsHashConverter, ByteString>());
             cfg.CreateMap<DeltaDao, Delta>()
-               .ForMember(d => d.PreviousDeltaDfsHash, opt => opt.ConvertUsing(new StringBase64ToByteStringFormatter(), s => s.PreviousDeltaDfsHash));
+               .ForMember(e => e.PreviousDeltaDfsHash,
+                    opt => opt.ConvertUsing<DfsHashToByteStringConverter, string>());
 
             cfg.CreateMap<Delta, DeltaDao>()
-               .ForMember(d => d.MerkleRoot, opt => opt.ConvertUsing(new ByteStringToStringBase64Formatter(), s => s.MerkleRoot));
+               .ForMember(d => d.MerkleRoot, opt => opt.ConvertUsing(new ByteStringToStringBase64Converter(), s => s.MerkleRoot));
             cfg.CreateMap<DeltaDao, Delta>()
-               .ForMember(d => d.MerkleRoot, opt => opt.ConvertUsing(new StringBase64ToByteStringFormatter(), s => s.MerkleRoot));
+               .ForMember(d => d.MerkleRoot, opt => opt.ConvertUsing(new StringBase64ToByteStringConverter(), s => s.MerkleRoot));
 
             cfg.CreateMap<Delta, DeltaDao>()
-               .ForMember(d => d.MerklePoda, opt => opt.ConvertUsing(new ByteStringToStringBase64Formatter(), s => s.MerklePoda));
+               .ForMember(d => d.MerklePoda, opt => opt.ConvertUsing(new ByteStringToStringBase64Converter(), s => s.MerklePoda));
             cfg.CreateMap<DeltaDao, Delta>()
-               .ForMember(d => d.MerklePoda, opt => opt.ConvertUsing(new StringBase64ToByteStringFormatter(), s => s.MerklePoda));
+               .ForMember(d => d.MerklePoda, opt => opt.ConvertUsing(new StringBase64ToByteStringConverter(), s => s.MerklePoda));
 
             bool IsToRepeatedField(PropertyMap pm)
             {

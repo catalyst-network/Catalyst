@@ -26,10 +26,21 @@ using AutoMapper;
 using Catalyst.Core.Lib.Extensions;
 using Google.Protobuf;
 
-namespace Catalyst.Core.Lib.Converters
+namespace Catalyst.Core.Lib.DAO.Converters
 {
-    public class UShortToByteStringFormatter : IValueConverter<ushort, ByteString>
+    public class CorrelationIdToByteStringConverter : IValueConverter<ByteString, string>
     {
-        public ByteString Convert(ushort sourceMember, ResolutionContext context) { return BitConverter.GetBytes(sourceMember).ToByteString(); }
+        public string Convert(ByteString sourceMember, ResolutionContext context)
+        {
+            return new Guid(sourceMember.ToByteArray()).ToString();
+        }
+    }
+
+    public class ByteStringToCorrelationIdConverter : IValueConverter<string, ByteString>
+    {
+        public ByteString Convert(string sourceMember, ResolutionContext context)
+        {
+            return Guid.Parse(sourceMember).ToByteString();
+        }
     }
 }

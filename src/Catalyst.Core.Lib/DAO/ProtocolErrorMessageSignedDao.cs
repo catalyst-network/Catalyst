@@ -22,8 +22,9 @@
 #endregion
 
 using AutoMapper;
-using Catalyst.Core.Lib.Converters;
+using Catalyst.Core.Lib.DAO.Converters;
 using Catalyst.Protocol.Common;
+using Google.Protobuf;
 
 namespace Catalyst.Core.Lib.DAO
 {
@@ -37,22 +38,18 @@ namespace Catalyst.Core.Lib.DAO
         public override void InitMappers(IMapperConfigurationExpression cfg)
         {
             cfg.CreateMap<ProtocolErrorMessageSigned, ProtocolErrorMessageSignedDao>().ReverseMap();
-            cfg.CreateMap<PeerId, PeerIdDao>().ReverseMap();
-
-            cfg.CreateMap<PeerId, PeerIdDao>()
-               .ForMember(d => d.Port, opt => opt.ConvertUsing(new ByteStringToUShortFormatter(), s => s.Port));
-            cfg.CreateMap<PeerIdDao, PeerId>()
-               .ForMember(d => d.Port, opt => opt.ConvertUsing(new UShortToByteStringFormatter(), s => s.Port));
+            
+            cfg.CreateMap<ProtocolErrorMessageSigned, ProtocolErrorMessageSignedDao>()
+               .ForMember(d => d.Signature, opt => opt.ConvertUsing(new ByteStringToStringBase64Converter(), s => s.Signature));
+            cfg.CreateMap<ProtocolErrorMessageSignedDao, ProtocolErrorMessageSigned>()
+               .ForMember(d => d.Signature, opt => opt.ConvertUsing(new StringBase64ToByteStringConverter(), s => s.Signature));
 
             cfg.CreateMap<ProtocolErrorMessageSigned, ProtocolErrorMessageSignedDao>()
-               .ForMember(d => d.Signature, opt => opt.ConvertUsing(new ByteStringToStringBase64Formatter(), s => s.Signature));
+               .ForMember(e => e.CorrelationId,
+                    opt => opt.ConvertUsing<ByteStringToStringBase64Converter, ByteString>());
             cfg.CreateMap<ProtocolErrorMessageSignedDao, ProtocolErrorMessageSigned>()
-               .ForMember(d => d.Signature, opt => opt.ConvertUsing(new StringBase64ToByteStringFormatter(), s => s.Signature));
-
-            cfg.CreateMap<ProtocolErrorMessageSigned, ProtocolErrorMessageSignedDao>()
-               .ForMember(d => d.CorrelationId, opt => opt.ConvertUsing(new ByteStringToStringBase64Formatter(), s => s.CorrelationId));
-            cfg.CreateMap<ProtocolErrorMessageSignedDao, ProtocolErrorMessageSigned>()
-               .ForMember(d => d.CorrelationId, opt => opt.ConvertUsing(new StringBase64ToByteStringFormatter(), s => s.CorrelationId));
+               .ForMember(e => e.CorrelationId,
+                    opt => opt.ConvertUsing<StringBase64ToByteStringConverter, string>());
         }
     }
 }

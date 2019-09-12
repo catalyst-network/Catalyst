@@ -22,8 +22,9 @@
 #endregion
 
 using AutoMapper;
-using Catalyst.Core.Lib.Converters;
+using Catalyst.Core.Lib.DAO.Converters;
 using Catalyst.Protocol.Deltas;
+using Google.Protobuf;
 
 namespace Catalyst.Core.Lib.DAO.Deltas
 {
@@ -37,14 +38,18 @@ namespace Catalyst.Core.Lib.DAO.Deltas
             cfg.CreateMap<DeltaDfsHashBroadcast, DeltaDfsHashBroadcastDao>().ReverseMap();
 
             cfg.CreateMap<DeltaDfsHashBroadcast, DeltaDfsHashBroadcastDao>()
-               .ForMember(d => d.DeltaDfsHash, opt => opt.ConvertUsing(new ByteStringToStringBase64Formatter(), s => s.DeltaDfsHash));
+               .ForMember(e => e.DeltaDfsHash,
+                    opt => opt.ConvertUsing<ByteStringToDfsHashConverter, ByteString>());
             cfg.CreateMap<DeltaDfsHashBroadcastDao, DeltaDfsHashBroadcast>()
-               .ForMember(d => d.DeltaDfsHash, opt => opt.ConvertUsing(new StringBase64ToByteStringFormatter(), s => s.DeltaDfsHash));
+               .ForMember(e => e.DeltaDfsHash,
+                    opt => opt.ConvertUsing<DfsHashToByteStringConverter, string>());
 
             cfg.CreateMap<DeltaDfsHashBroadcast, DeltaDfsHashBroadcastDao>()
-               .ForMember(d => d.PreviousDeltaDfsHash, opt => opt.ConvertUsing(new ByteStringToStringBase64Formatter(), s => s.PreviousDeltaDfsHash));
+               .ForMember(e => e.PreviousDeltaDfsHash,
+                    opt => opt.ConvertUsing<ByteStringToDfsHashConverter, ByteString>());
             cfg.CreateMap<DeltaDfsHashBroadcastDao, DeltaDfsHashBroadcast>()
-               .ForMember(d => d.PreviousDeltaDfsHash, opt => opt.ConvertUsing(new StringBase64ToByteStringFormatter(), s => s.PreviousDeltaDfsHash));
+               .ForMember(e => e.PreviousDeltaDfsHash,
+                    opt => opt.ConvertUsing<DfsHashToByteStringConverter, string>());
         }
     }
 }

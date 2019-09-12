@@ -21,14 +21,27 @@
 
 #endregion
 
-using System;
+using System.Net;
 using AutoMapper;
+using Catalyst.Core.Lib.Extensions;
+using Catalyst.Core.Lib.Network;
 using Google.Protobuf;
 
-namespace Catalyst.Core.Lib.Converters
+namespace Catalyst.Core.Lib.DAO.Converters
 {
-    public class ByteStringToUShortFormatter : IValueConverter<ByteString, ushort>
+    public class ByteStringToIpAddressConverter : IValueConverter<ByteString, string>
     {
-        public ushort Convert(ByteString sourceMember, ResolutionContext context) { return BitConverter.ToUInt16(sourceMember.ToByteArray()); }
+        public string Convert(ByteString sourceMember, ResolutionContext context)
+        {
+            return new IPAddress(sourceMember.ToByteArray()).MapToIPv6().ToString();
+        }
+    }
+
+    public class IpAddressToByteStringConverter : IValueConverter<string, ByteString>
+    {
+        public ByteString Convert(string sourceMember, ResolutionContext context)
+        {
+            return IPAddress.Parse(sourceMember).To16Bytes().ToByteString();
+        }
     }
 }

@@ -22,7 +22,7 @@
 #endregion
 
 using AutoMapper;
-using Catalyst.Core.Lib.Converters;
+using Catalyst.Core.Lib.DAO.Converters;
 using Catalyst.Protocol.Common;
 using Google.Protobuf;
 
@@ -38,16 +38,18 @@ namespace Catalyst.Core.Lib.DAO
         public override void InitMappers(IMapperConfigurationExpression cfg)
         {
             cfg.CreateMap<ProtocolMessage, ProtocolMessageDao>().ReverseMap();
-            cfg.CreateMap<PeerId, PeerIdDao>().ReverseMap();
 
-            cfg.CreateMap<PeerId, PeerIdDao>()
-               .ForMember(d => d.Port, opt => opt.ConvertUsing(new ByteStringToUShortFormatter(), s => s.Port));
+            cfg.CreateMap<ProtocolMessage, ProtocolMessageDao>()
+               .ForMember(d => d.Value, opt => opt.ConvertUsing(new ByteStringToStringBase64Converter(), s => s.Value));
+            cfg.CreateMap<ProtocolMessageDao, ProtocolMessage>()
+               .ForMember(d => d.Value, opt => opt.ConvertUsing(new StringBase64ToByteStringConverter(), s => s.Value));
 
-            cfg.CreateMap<PeerIdDao, PeerId>()
-               .ForMember(d => d.Port, opt => opt.ConvertUsing(new UShortToByteStringFormatter(), s => s.Port));
-
-            cfg.CreateMap<ByteString, string>().ConvertUsing(s => s.ToBase64());
-            cfg.CreateMap<string, ByteString>().ConvertUsing(s => ByteString.FromBase64(s));
+            cfg.CreateMap<ProtocolMessage, ProtocolMessageDao>()
+               .ForMember(e => e.CorrelationId,
+                    opt => opt.ConvertUsing<ByteStringToStringBase64Converter, ByteString>());
+            cfg.CreateMap<ProtocolMessageDao, ProtocolMessage>()
+               .ForMember(e => e.CorrelationId,
+                    opt => opt.ConvertUsing<StringBase64ToByteStringConverter, string>());
         }
     }
 }
