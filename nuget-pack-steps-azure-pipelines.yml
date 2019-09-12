@@ -3,6 +3,7 @@ steps:
     displayName: Pack
     inputs:
       command: pack
+      packDirectory: '$(Build.ArtifactStagingDirectory)/packages/pre-releases'
       arguments: '--configuration=$(BuildConfiguration) --output=$(Build.ArtifactStagingDirectory) --version-suffix=$(Build.BuildId)$(release.type) --include-source --include-symbols'
       packagesToPack: $(PROJECT)
       nobuild: true
@@ -12,7 +13,7 @@ steps:
   - task: PublishBuildArtifacts@1
     displayName: 'Publish Artifact'
     inputs:
-      PathtoPublish: '$(build.artifactstagingdirectory)'
+      PathtoPublish: '$(Build.ArtifactStagingDirectory)/packages/pre-releases'
       ArtifactName: $(PACKAGE_NAME)
       failOnStandardError: 'true'
     timeoutInMinutes: 10
