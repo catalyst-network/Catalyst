@@ -53,7 +53,7 @@ namespace Catalyst.Tools.KeyGenerator.Commands
 
         public void ParseOption(object option)
         {
-            var loadKeyStoreOptions = (LoadKeyStoreOption)option;
+            var loadKeyStoreOptions = (LoadKeyStoreOption) option;
 
             if (!_fileSystem.SetCurrentPath(loadKeyStoreOptions.Path))
             {
