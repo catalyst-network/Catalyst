@@ -48,46 +48,33 @@ namespace Catalyst.Core.Lib.DAO
 
         public override void InitMappers(IMapperConfigurationExpression cfg)
         {
-            cfg.CreateMap<TransactionBroadcast, TransactionBroadcastDao>().ReverseMap();
-            cfg.CreateMap<STTransactionEntry, StTransactionEntryDao>().ReverseMap();
-            cfg.CreateMap<CFTransactionEntry, CfTransactionEntryDao>().ReverseMap();
-            cfg.CreateMap<EntryRangeProof, EntryRangeProofDao>().ReverseMap();
-
             cfg.CreateMap<TransactionBroadcast, TransactionBroadcastDao>()
-               .ForMember(d => d.From, opt => opt.ConvertUsing(new ByteStringToStringPubKeyConverter(), s => s.From));
+               .ForMember(d => d.From, opt => opt.ConvertUsing(new ByteStringToStringPubKeyConverter(), s => s.From))
+               .ForMember(d => d.Data, opt => opt.ConvertUsing(new ByteStringToStringBase64Converter(), s => s.Data))
+               .ForMember(d => d.From, opt => opt.ConvertUsing(new ByteStringToStringBase64Converter(), s => s.From))
+               .ForMember(d => d.Init, opt => opt.ConvertUsing(new ByteStringToStringBase64Converter(), s => s.Init));
+
             cfg.CreateMap<TransactionBroadcastDao, TransactionBroadcast>()
-               .ForMember(d => d.From, opt => opt.ConvertUsing(new StringKeyUtilsToByteStringFormatter(), s => s.From));
+               .ForMember(d => d.From, opt => opt.ConvertUsing(new StringKeyUtilsToByteStringFormatter(), s => s.From))
+               .ForMember(d => d.Data, opt => opt.ConvertUsing(new StringBase64ToByteStringConverter(), s => s.Data))
+               .ForMember(d => d.From, opt => opt.ConvertUsing(new StringBase64ToByteStringConverter(), s => s.From))
+               .ForMember(d => d.Init, opt => opt.ConvertUsing(new StringBase64ToByteStringConverter(), s => s.Init));
 
             cfg.CreateMap<DateTime, Timestamp>().ConvertUsing(s => s.ToTimestamp());
             cfg.CreateMap<Timestamp, DateTime>().ConvertUsing(s => s.ToDateTime());
+            
+            //bool IsToRepeatedField(PropertyMap pm)
+            //{
+            //    if (pm.DestinationType.IsConstructedGenericType)
+            //    {
+            //        var destGenericBase = pm.DestinationType.GetGenericTypeDefinition();
+            //        return destGenericBase == typeof(RepeatedField<>);
+            //    }
 
-            cfg.CreateMap<TransactionBroadcast, TransactionBroadcastDao>()
-               .ForMember(d => d.Data, opt => opt.ConvertUsing(new ByteStringToStringBase64Converter(), s => s.Data));
-            cfg.CreateMap<TransactionBroadcastDao, TransactionBroadcast>()
-               .ForMember(d => d.Data, opt => opt.ConvertUsing(new StringBase64ToByteStringConverter(), s => s.Data));
+            //    return false;
+            //}
 
-            cfg.CreateMap<TransactionBroadcast, TransactionBroadcastDao>()
-               .ForMember(d => d.From, opt => opt.ConvertUsing(new ByteStringToStringBase64Converter(), s => s.From));
-            cfg.CreateMap<TransactionBroadcastDao, TransactionBroadcast>()
-               .ForMember(d => d.From, opt => opt.ConvertUsing(new StringBase64ToByteStringConverter(), s => s.From));
-
-            cfg.CreateMap<TransactionBroadcast, TransactionBroadcastDao>()
-               .ForMember(d => d.Init, opt => opt.ConvertUsing(new ByteStringToStringBase64Converter(), s => s.Init));
-            cfg.CreateMap<TransactionBroadcastDao, TransactionBroadcast>()
-               .ForMember(d => d.Init, opt => opt.ConvertUsing(new StringBase64ToByteStringConverter(), s => s.Init));
-
-            bool IsToRepeatedField(PropertyMap pm)
-            {
-                if (pm.DestinationType.IsConstructedGenericType)
-                {
-                    var destGenericBase = pm.DestinationType.GetGenericTypeDefinition();
-                    return destGenericBase == typeof(RepeatedField<>);
-                }
-
-                return false;
-            }
-
-            cfg.ForAllPropertyMaps(IsToRepeatedField, (propertyMap, opts) => opts.UseDestinationValue());
+            //cfg.ForAllPropertyMaps(IsToRepeatedField, (propertyMap, opts) => opts.UseDestinationValue());
         }
     }
 }
