@@ -36,6 +36,7 @@ namespace Catalyst.Core.Lib.DAO
         {
             cfg.CreateMap<ProtocolMessageSigned, ProtocolMessageSignedDao>()
                .ForMember(d => d.Signature, opt => opt.ConvertUsing(new ByteStringToStringBase64Converter(), s => s.Signature));
+
             cfg.CreateMap<ProtocolMessageSignedDao, ProtocolMessageSigned>()
                .ForMember(d => d.Signature, opt => opt.ConvertUsing(new StringBase64ToByteStringConverter(), s => s.Signature));
         }

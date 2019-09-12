@@ -62,19 +62,6 @@ namespace Catalyst.Core.Lib.DAO
 
             cfg.CreateMap<DateTime, Timestamp>().ConvertUsing(s => s.ToTimestamp());
             cfg.CreateMap<Timestamp, DateTime>().ConvertUsing(s => s.ToDateTime());
-            
-            //bool IsToRepeatedField(PropertyMap pm)
-            //{
-            //    if (pm.DestinationType.IsConstructedGenericType)
-            //    {
-            //        var destGenericBase = pm.DestinationType.GetGenericTypeDefinition();
-            //        return destGenericBase == typeof(RepeatedField<>);
-            //    }
-
-            //    return false;
-            //}
-
-            //cfg.ForAllPropertyMaps(IsToRepeatedField, (propertyMap, opts) => opts.UseDestinationValue());
         }
     }
 }
