@@ -26,6 +26,7 @@ using Catalyst.Core.Lib.DAO.Converters;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Deltas;
 using Google.Protobuf;
+using Ipfs;
 
 namespace Catalyst.Core.Lib.DAO.Deltas
 {
@@ -38,19 +39,16 @@ namespace Catalyst.Core.Lib.DAO.Deltas
         public override void InitMappers(IMapperConfigurationExpression cfg)
         {
             cfg.CreateMap<CandidateDeltaBroadcast, CandidateDeltaBroadcastDao>().ReverseMap();
-            cfg.CreateMap<PeerId, PeerIdDao>().ReverseMap();
 
             cfg.CreateMap<CandidateDeltaBroadcast, CandidateDeltaBroadcastDao>()
                .ForMember(e => e.Hash,
-                    opt => opt.ConvertUsing<ByteStringToDfsHashConverter, ByteString>());
-            cfg.CreateMap<CandidateDeltaBroadcastDao, CandidateDeltaBroadcast>()
-               .ForMember(e => e.Hash,
-                    opt => opt.ConvertUsing<DfsHashToByteStringConverter, string>());
-
-            cfg.CreateMap<CandidateDeltaBroadcast, CandidateDeltaBroadcastDao>()
+                    opt => opt.ConvertUsing<ByteStringToDfsHashConverter, ByteString>())
                .ForMember(e => e.PreviousDeltaDfsHash,
                     opt => opt.ConvertUsing<ByteStringToDfsHashConverter, ByteString>());
+
             cfg.CreateMap<CandidateDeltaBroadcastDao, CandidateDeltaBroadcast>()
+               .ForMember(e => e.Hash,
+                    opt => opt.ConvertUsing<DfsHashToByteStringConverter, string>())
                .ForMember(e => e.PreviousDeltaDfsHash,
                     opt => opt.ConvertUsing<DfsHashToByteStringConverter, string>());
         }

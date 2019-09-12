@@ -47,11 +47,10 @@ namespace Catalyst.Core.Lib.DAO
 
         public override void InitMappers(IMapperConfigurationExpression cfg)
         {
-            cfg.CreateMap<EntryRangeProof, EntryRangeProofDao>().ReverseMap();
-
             cfg.CreateMap<EntryRangeProof, EntryRangeProofDao>()
                .ForMember(e => e.A,
                     opt => opt.ConvertUsing<ByteStringToStringBase64Converter, ByteString>());
+            
             cfg.CreateMap<EntryRangeProofDao, EntryRangeProof>()
                .ForMember(e => e.A,
                     opt => opt.ConvertUsing<StringBase64ToByteStringConverter, string>());
@@ -123,7 +122,7 @@ namespace Catalyst.Core.Lib.DAO
                 return false;
             }
 
-            cfg.ForAllPropertyMaps(IsToRepeatedField, (propertyMap, opts) => opts.UseDestinationValue());
+            //cfg.ForAllPropertyMaps(IsToRepeatedField, (propertyMap, opts) => opts.UseDestinationValue());
         }
     }
 }
