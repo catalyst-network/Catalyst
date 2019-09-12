@@ -7,12 +7,12 @@
         <AssemblyOriginatorKeyFile>Catalyst.Core.Modules.Cryptography.BulletProofs.snk</AssemblyOriginatorKeyFile>
         <PublicSign>true</PublicSign>
     </PropertyGroup>
+    <Import Project="../Common.Packable.props" />
     <Import Project="../Common.Projects.props" />
     <ItemGroup>
         <ProjectReference Include="..\Catalyst.Abstractions\Catalyst.Abstractions.csproj" />
         <ProjectReference Include="..\Catalyst.Core.Lib\Catalyst.Core.Lib.csproj" />
     </ItemGroup>
-
     <ItemGroup>
         <PackageReference Include="Autofac" Version="4.8.1" />
         <PackageReference Include="Nethereum.Hex" Version="3.3.0" />

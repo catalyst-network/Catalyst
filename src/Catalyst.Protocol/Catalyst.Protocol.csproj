@@ -7,14 +7,12 @@
         <AssemblyOriginatorKeyFile>Catalyst.Protocol.snk</AssemblyOriginatorKeyFile>
         <PublicSign>true</PublicSign>
     </PropertyGroup>
+    <Import Project="../Common.Packable.props" />
     <Import Project="../Common.Projects.props" />
     <ItemGroup>
         <PackageReference Include="Dawn.Guard" Version="1.9.0" />
         <PackageReference Include="Google.Protobuf" Version="3.9.1" />
-        <PackageReference Include="Grpc.Tools" Version="1.22.0">
-            <PrivateAssets>all</PrivateAssets>
-            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
+        <PackageReference Include="Grpc.Tools" Version="1.22.0" PrivateAssets="all" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive" />
     </ItemGroup>
     <ItemGroup>
         <ProtoBuf Include="..\..\submodules\protocol-protobuffs\src\Common.proto" Link="Protobuffs\Common.proto" />
@@ -23,8 +21,5 @@
         <ProtoBuf Include="..\..\submodules\protocol-protobuffs\src\Rpc.proto" Link="Protobuffs\Rpc.proto" />
         <ProtoBuf Include="..\..\submodules\protocol-protobuffs\src\Transaction.proto" Link="Protobuffs\Transaction.proto" />
         <ProtoBuf Include="..\..\submodules\protocol-protobuffs\src\DfsMarketplace.proto" Link="Protobuffs\DfsMarketplace.proto" />
-    </ItemGroup>
-    <ItemGroup>
-        <ProjectReference Include="..\..\submodules\nethermind\src\Nethermind\Nethermind.HashLib\Nethermind.HashLib.csproj" />
     </ItemGroup>
 </Project>

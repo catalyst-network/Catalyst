@@ -1,21 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
     <PropertyGroup>
         <TargetFramework>netcoreapp2.2</TargetFramework>
-
         <RootNamespace>Catalyst.Core.Modules.Web3</RootNamespace>
         <Authors>James Kirby (nshcore@protonmail.com)</Authors>
         <SignAssembly>true</SignAssembly>
         <AssemblyOriginatorKeyFile>Catalyst.Core.Modules.Web3.snk</AssemblyOriginatorKeyFile>
         <PublicSign>true</PublicSign>
     </PropertyGroup>
+    <Import Project="../Common.Packable.props" />
     <Import Project="../Common.Projects.props" />
-    
     <ItemGroup>
       <ProjectReference Include="..\Catalyst.Abstractions\Catalyst.Abstractions.csproj" />
       <ProjectReference Include="..\Catalyst.Core.Lib\Catalyst.Core.Lib.csproj" />
     </ItemGroup>
-
     <ItemGroup>
         <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="4.3.1" />
         <PackageReference Include="Google.Protobuf" Version="3.9.1" />
@@ -32,5 +29,4 @@
         <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="4.0.1" />
         <PackageReference Include="AutofacSerilogIntegration" Version="2.0.0" />
     </ItemGroup>
-
 </Project>

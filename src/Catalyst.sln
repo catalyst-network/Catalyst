@@ -86,10 +86,11 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Modules.Respository.MongoDb", "Catalyst.Modules.Respository.MongoDb\Catalyst.Modules.Respository.MongoDb.csproj", "{A84C4347-5892-49B0-8568-354E830B3D9D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Props", "Props", "{45EAC687-ABC9-496B-B507-68AEDD4B91D5}"
-	ProjectSection(SolutionItems) = preProject
-		Common.Projects.props = Common.Projects.props
-		Common.TestProjects.props = Common.TestProjects.props
-	EndProjectSection
+ProjectSection(SolutionItems) = preProject
+	Common.TestProjects.props = Common.TestProjects.props
+	Common.Projects.props = Common.Projects.props
+	Common.Packable.props = Common.Packable.props
+EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Ci", "Ci", "{29C2F736-A644-427E-B72C-FD1EE1024E27}"
 	ProjectSection(SolutionItems) = preProject
