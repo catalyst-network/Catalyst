@@ -26,6 +26,7 @@ using SharpRepository.Repository;
 using System.ComponentModel.DataAnnotations;
 using AutoMapper;
 using Catalyst.Abstractions.DAO;
+using Google.Protobuf.Collections;
 
 namespace Catalyst.Core.Lib.DAO
 {
@@ -46,5 +47,16 @@ namespace Catalyst.Core.Lib.DAO
         }
 
         public abstract void InitMappers(IMapperConfigurationExpression cfg);
+
+        protected bool IsToRepeatedField(PropertyMap pm)
+        {
+            if (pm.DestinationType.IsConstructedGenericType)
+            {
+                var destGenericBase = pm.DestinationType.GetGenericTypeDefinition();
+                return destGenericBase == typeof(RepeatedField<>);
+            }
+
+            return false;
+        }
     }
 }
