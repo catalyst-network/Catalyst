@@ -35,7 +35,6 @@ namespace Catalyst.Core.Lib.DAO.Deltas
         public override void InitMappers(IMapperConfigurationExpression cfg)
         {
             cfg.CreateMap<FavouriteDeltaBroadcast, FavouriteDeltaBroadcastDao>().ReverseMap();
-            cfg.CreateMap<CandidateDeltaBroadcast, CandidateDeltaBroadcastDao>().ReverseMap();
         }
     }
 }

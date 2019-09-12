@@ -190,16 +190,14 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
         public void CandidateDeltaBroadcastDao_CandidateDeltaBroadcast_Should_Be_Convertible()
         {
             var candidateDeltaBroadcastDao = GetMapper<CandidateDeltaBroadcastDao>();
-            var byteRn = new byte[30];
-            new Random().NextBytes(byteRn);
-
             var previousHash = "previousHash".ComputeUtf8Multihash(_hashingAlgorithm).ToBytes();
+            var hash = "anotherHash".ComputeUtf8Multihash(_hashingAlgorithm).ToBytes();
 
             var message = new CandidateDeltaBroadcast
             {
-                Hash = previousHash.ToByteString(),
+                Hash = hash.ToByteString(),
                 ProducerId = PeerIdentifierHelper.GetPeerIdentifier("test").PeerId,
-                PreviousDeltaDfsHash = byteRn.ToByteString()
+                PreviousDeltaDfsHash = previousHash.ToByteString()
             };
 
             var candidateDeltaBroadcast = candidateDeltaBroadcastDao.ToDao(message);

@@ -38,8 +38,6 @@ namespace Catalyst.Core.Lib.DAO.Deltas
 
         public override void InitMappers(IMapperConfigurationExpression cfg)
         {
-            cfg.CreateMap<CandidateDeltaBroadcast, CandidateDeltaBroadcastDao>().ReverseMap();
-
             cfg.CreateMap<CandidateDeltaBroadcast, CandidateDeltaBroadcastDao>()
                .ForMember(e => e.Hash,
                     opt => opt.ConvertUsing<ByteStringToDfsHashConverter, ByteString>())
