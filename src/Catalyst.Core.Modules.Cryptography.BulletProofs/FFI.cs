@@ -27,7 +27,7 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs
 {
     public static class FFI
     {
-        private const string Library = "libcatalystffi";
+        private const string Library = "catalystffi";
 
         [DllImport(Library, CallingConvention = CallingConvention.Cdecl)]
         private static extern int generate_key(byte[] bytes);
