@@ -122,6 +122,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Core.Modules.Crypt
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Core.Modules.Cryptography.BulletProofs.Tests", "Catalyst.Core.Modules.Cryptography.BulletProofs.Tests\Catalyst.Core.Modules.Cryptography.BulletProofs.Tests.csproj", "{410FCEA3-1BEC-4BF3-A12C-34EB13FAF34B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Cryptography.BulletProofs.Natives", "..\submodules\Cryptography.FFI.Rust\Catalyst.Cryptography.BulletProofs.Natives.csproj", "{163581C0-9998-49A1-9F8A-C74DC1E51261}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -294,6 +296,10 @@ Global
 		{410FCEA3-1BEC-4BF3-A12C-34EB13FAF34B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E72CF774-9A2F-475C-ADA0-C061C35CEA91}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{E72CF774-9A2F-475C-ADA0-C061C35CEA91}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{163581C0-9998-49A1-9F8A-C74DC1E51261}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{163581C0-9998-49A1-9F8A-C74DC1E51261}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{163581C0-9998-49A1-9F8A-C74DC1E51261}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{163581C0-9998-49A1-9F8A-C74DC1E51261}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

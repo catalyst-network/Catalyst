@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project>
     <PropertyGroup>
         <TargetFramework>netcoreapp2.2</TargetFramework>
         <RootNamespace>Catalyst.Core.Modules.Cryptography.BulletProofs</RootNamespace>
@@ -18,7 +18,25 @@
         <PackageReference Include="Nethereum.Hex" Version="3.3.0" />
         <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
     </ItemGroup>
+    <Target Name="CompileNativeRuntimes" BeforeTargets="BeforeBuild">
+        <Exec Condition="'@(OS)'!='Unix'"
+              Command="cargo build --manifest-path ../../submodules/Cryptography.FFI.Rust/Cargo.toml --target-dir bin/Debug/netcoreapp2.2/Runtimes/linux-x64"
+              ConsoleToMSBuild="true"
+        />
+    </Target>
+    <!--    <Target Name="CompileNativeRuntimes" BeforeTargets="BeforeBuild">-->
+    <!--        <Exec Condition="'@(OS)'!='OSX'"-->
+    <!--              Command="cargo build &#45;&#45;manifest-path ../../submodules/Cryptography.FFI.Rust/Cargo.toml &#45;&#45;target-dir bin/Debug/netcoreapp2.2/Runtimes/linux-x64"-->
+    <!--              ConsoleToMSBuild="true"-->
+    <!--        />-->
+    <!--    </Target>-->
+    <!--    <Target Name="CompileNativeRuntimes" BeforeTargets="BeforeBuild">-->
+    <!--        <Exec Condition="'@(OS)'!='Windows_NT'"-->
+    <!--              Command="cargo build &#45;&#45;manifest-path ../../submodules/Cryptography.FFI.Rust/Cargo.toml &#45;&#45;target-dir bin/Debug/netcoreapp2.2/Runtimes/linux-x64"-->
+    <!--              ConsoleToMSBuild="true"-->
+    <!--        />-->
+    <!--    </Target>-->
     <ItemGroup>
-        <PackageReference Include="Catalyst.Cryptography.BulletProofs.Natives" Version="[0.0.1.9649-beta]" />
+        <None Include="Runtimes\**\*.*" PackagePath="runtimes\" Pack="true" />
     </ItemGroup>
 </Project>
