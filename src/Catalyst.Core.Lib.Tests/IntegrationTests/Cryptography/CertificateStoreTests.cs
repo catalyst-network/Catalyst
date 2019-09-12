@@ -56,13 +56,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Cryptography
         private void Ensure_no_certificate_file_exists()
         {
             var directoryInfo = FileSystem.GetCatalystDataDir();
-            if (directoryInfo.Exists)
-            {
-                directoryInfo.Delete(true);
-            }
-
-            directoryInfo.Create();
-            directoryInfo.EnumerateFiles().Should().BeEmpty();
+            directoryInfo.GetFiles("*.pfx").Should().BeEmpty();
         }
 
         private void Create_a_certificate_file_with_password()
