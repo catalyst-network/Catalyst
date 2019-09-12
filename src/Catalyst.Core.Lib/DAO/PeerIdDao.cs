@@ -21,6 +21,7 @@
 
 #endregion
 
+using System;
 using AutoMapper;
 using Catalyst.Core.Lib.DAO.Converters;
 using Catalyst.Protocol.Common;
@@ -42,7 +43,7 @@ namespace Catalyst.Core.Lib.DAO
                .ForMember(e => e.PublicKey,
                     opt => opt.ConvertUsing<ByteStringToStringPubKeyConverter, ByteString>())
                .ForMember(d => d.Port, 
-                    opt => opt.ConvertUsing(new ByteStringToUShortFormatter(), s => s.Port))
+                    opt => opt.ConvertUsing<ByteStringToUShortFormatter, ByteString>())
                .ForMember(e => e.ClientId,
                     opt => opt.ConvertUsing<ByteStringToStringBase64Converter, ByteString>())
                .ForMember(e => e.ProtocolVersion,
@@ -54,7 +55,7 @@ namespace Catalyst.Core.Lib.DAO
                .ForMember(e => e.PublicKey,
                     opt => opt.ConvertUsing<StringKeyUtilsToByteStringFormatter, string>())
                .ForMember(d => d.Port, 
-                    opt => opt.ConvertUsing(new UShortToByteStringFormatter(), s => s.Port))
+                    opt => opt.ConvertUsing<UShortToByteStringFormatter, ushort>())
                .ForMember(e => e.ClientId,
                     opt => opt.ConvertUsing<StringBase64ToByteStringConverter, string>())
                .ForMember(e => e.ProtocolVersion,
