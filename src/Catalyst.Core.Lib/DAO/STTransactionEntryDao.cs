@@ -35,10 +35,9 @@ namespace Catalyst.Core.Lib.DAO
        
         public override void InitMappers(IMapperConfigurationExpression cfg)
         {
-            cfg.CreateMap<STTransactionEntry, StTransactionEntryDao>().ReverseMap();
-
             cfg.CreateMap<STTransactionEntry, StTransactionEntryDao>()
                .ForMember(d => d.PubKey, opt => opt.ConvertUsing(new ByteStringToStringPubKeyConverter(), s => s.PubKey));
+
             cfg.CreateMap<StTransactionEntryDao, STTransactionEntry>()
                .ForMember(d => d.PubKey, opt => opt.ConvertUsing(new StringKeyUtilsToByteStringFormatter(), s => s.PubKey));
         }
