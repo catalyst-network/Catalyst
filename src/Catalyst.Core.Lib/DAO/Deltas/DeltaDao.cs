@@ -40,9 +40,9 @@ namespace Catalyst.Core.Lib.DAO.Deltas
         public string MerkleRoot { get; set; }
         public string MerklePoda { get; set; }
         public DateTime TimeStamp { get; set; }
-        public IEnumerable<StTransactionEntryDao> StEntries { get; set; }
-        public IEnumerable<CfTransactionEntryDao> CfEntries { get; set; }
-        public IEnumerable<CoinbaseEntryDao> CbEntries { get; set; }
+        public RepeatedField<StTransactionEntryDao> StEntries { get; set; }
+        public RepeatedField<CfTransactionEntryDao> CfEntries { get; set; }
+        public RepeatedField<CoinbaseEntryDao> CbEntries { get; set; }
 
         public override void InitMappers(IMapperConfigurationExpression cfg)
         {

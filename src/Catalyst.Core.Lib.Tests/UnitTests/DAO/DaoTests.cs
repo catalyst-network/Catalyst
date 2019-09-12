@@ -35,6 +35,8 @@ using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Transaction;
 using Catalyst.TestUtils;
 using FluentAssertions;
+using Google.Protobuf;
+using Google.Protobuf.Collections;
 using ICSharpCode.SharpZipLib.Tar;
 using Multiformats.Hash;
 using Multiformats.Hash.Algorithms;
@@ -147,7 +149,10 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
                 T = "t".ToUtf8ByteString(),
                 T1 = "t1".ToUtf8ByteString(),
                 T2 = "t2".ToUtf8ByteString(),
-                TAU = "tau".ToUtf8ByteString()
+                TAU = "tau".ToUtf8ByteString(),
+                L = {"L".ToUtf8ByteString()},
+                R = {"R".ToUtf8ByteString()},
+                V = {"V".ToUtf8ByteString()},
             };
 
             var peer = peerIdDao.ToDao(rangeProof);

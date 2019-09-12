@@ -36,10 +36,9 @@ namespace Catalyst.Core.Lib.DAO
         public UInt32 Version { get; set; }
         public UInt64 TransactionFees { get; set; }
         public UInt64 LockTime { get; set; }
-        public IEnumerable<StTransactionEntryDao> StEntries { get; set; }
-        public IEnumerable<CfTransactionEntryDao> CfEntries { get; set; }
+        public RepeatedField<StTransactionEntryDao> StEntries { get; set; }
+        public RepeatedField<CfTransactionEntryDao> CfEntries { get; set; }
         public string Signature { get; set; }
-        public IEnumerable<EntryRangeProofDao> EntryRangeProofs { get; set; }
         public TransactionType TransactionType { get; set; }
         public DateTime TimeStamp { get; set; }
         public string Data { get; set; }
