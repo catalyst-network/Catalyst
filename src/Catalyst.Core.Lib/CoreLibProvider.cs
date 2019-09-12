@@ -52,6 +52,7 @@ using Catalyst.Core.Lib.P2P.ReputationSystem;
 using Catalyst.Core.Lib.Registry;
 using Catalyst.Core.Lib.Rpc.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.Util;
+using Catalyst.Core.Lib.Validators;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
 using Multiformats.Hash.Algorithms;
