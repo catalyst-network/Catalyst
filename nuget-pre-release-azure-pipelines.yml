@@ -22,13 +22,13 @@ stages:
               git submodule update --init --force --recursive
             displayName: 'Clone submodules'
 
-          - task: DotNetCoreCLI@2
-            displayName: 'Build solution'
-            inputs:
-              projects: 'src/**/*.csproj'
-              arguments: '--configuration=$(BuildConfiguration)'
-              failOnStandardError: 'true'
-            timeoutInMinutes: 10
+#          - task: DotNetCoreCLI@2
+#            displayName: 'Build solution'
+#            inputs:
+#              projects: 'src/**/*.csproj'
+#              arguments: '--configuration=$(BuildConfiguration)'
+#              failOnStandardError: 'true'
+#            timeoutInMinutes: 10
   
           - task: CopyFiles@2
             inputs:
@@ -61,6 +61,10 @@ stages:
           - checkout: none
           - download: current
             artifact: 'build'
+          - task: Bash@3
+            inputs:
+              targetType: 'inline'
+              script: 'ls -la'
           - template: nuget-pack-steps-azure-pipelines.yml
 
       - job: 'BuildCoreModules'
