@@ -28,7 +28,6 @@ using System.Numerics;
 using Google.Protobuf;
 using Multiformats.Hash;
 using Multiformats.Hash.Algorithms;
-using Nethermind.Core.Extensions;
 using Nethermind.Dirichlet.Numerics;
 
 namespace Catalyst.Core.Lib.Extensions

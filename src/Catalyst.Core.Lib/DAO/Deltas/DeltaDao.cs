@@ -23,12 +23,10 @@
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using AutoMapper;
 using Catalyst.Core.Lib.DAO.Converters;
 using Catalyst.Protocol.Deltas;
 using Google.Protobuf;
-using Google.Protobuf.Collections;
 using Google.Protobuf.WellKnownTypes;
 
 namespace Catalyst.Core.Lib.DAO.Deltas
@@ -40,8 +38,8 @@ namespace Catalyst.Core.Lib.DAO.Deltas
         public string MerkleRoot { get; set; }
         public string MerklePoda { get; set; }
         public DateTime TimeStamp { get; set; }
-        public List<StTransactionEntryDao> StEntries { get; set; }
-        public List<CfTransactionEntryDao> CfEntries { get; set; }
+        public List<PublicEntryDao> StEntries { get; set; }
+        public List<ConfidentialEntryDao> CfEntries { get; set; }
         public List<CoinbaseEntryDao> CbEntries { get; set; }
 
         public override void InitMappers(IMapperConfigurationExpression cfg)

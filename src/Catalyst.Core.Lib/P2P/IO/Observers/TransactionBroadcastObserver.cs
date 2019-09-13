@@ -27,7 +27,6 @@ using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Observers;
 using Catalyst.Protocol.Wire;
-using Catalyst.Protocol.Transaction;
 using Serilog;
 
 namespace Catalyst.Core.Lib.P2P.IO.Observers

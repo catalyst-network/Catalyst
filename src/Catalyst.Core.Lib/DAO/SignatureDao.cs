@@ -23,30 +23,22 @@
 
 using AutoMapper;
 using Catalyst.Core.Lib.DAO.Converters;
-using Catalyst.Protocol.Transaction;
-using Google.Protobuf;
+using Catalyst.Protocol.Cryptography;
 
 namespace Catalyst.Core.Lib.DAO
 {
-    public class CfTransactionEntryDao : DaoBase<CFTransactionEntry, CfTransactionEntryDao>
+    public class SignatureDao : DaoBase<Signature, SignatureDao>
     {
-        public string PubKey { get; set; }
-        public string PedersenCommit { get; set; }
-        public EntryRangeProofDao EntryRangeProofs { get; set; }
+        public SigningContext SigningContext { get; set; }
+        public string RawBytes { get; set; }
 
         public override void InitMappers(IMapperConfigurationExpression cfg)
         {
-            cfg.CreateMap<CFTransactionEntry, CfTransactionEntryDao>()
-               .ForMember(e => e.PedersenCommit,
-                    opt => opt.ConvertUsing<ByteStringToStringBase64Converter, ByteString>())
-               .ForMember(e => e.PubKey,
-                    opt => opt.ConvertUsing<ByteStringToStringPubKeyConverter, ByteString>());
+            cfg.CreateMap<Signature, SignatureDao>()
+               .ForMember(d => d.RawBytes, opt => opt.ConvertUsing(new ByteStringToStringPubKeyConverter(), s => s.ReceiverPublicKey));
 
-            cfg.CreateMap<CfTransactionEntryDao, CFTransactionEntry>()
-               .ForMember(e => e.PedersenCommit,
-                    opt => opt.ConvertUsing<StringBase64ToByteStringConverter, string>())
-               .ForMember(e => e.PubKey,
-                    opt => opt.ConvertUsing<StringKeyUtilsToByteStringFormatter, string>());
+            cfg.CreateMap<SignatureDao, Signature>()
+               .ForMember(d => d.RawBytes, opt => opt.ConvertUsing(new StringKeyUtilsToByteStringFormatter(), s => s.ReceiverPublicKey));
         }
     }
 }

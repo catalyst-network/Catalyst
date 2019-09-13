@@ -23,28 +23,27 @@
 
 using AutoMapper;
 using Catalyst.Core.Lib.DAO.Converters;
-using Catalyst.Protocol.Cryptography;
-using Catalyst.Protocol.Wire;
+using Catalyst.Protocol.Transaction;
 using Google.Protobuf;
 
 namespace Catalyst.Core.Lib.DAO
 {
-    public class ProtocolErrorMessageSignedDao : DaoBase<ProtocolErrorMessage, ProtocolErrorMessageSignedDao>
+    public class ConfidentialEntryDao : DaoBase<ConfidentialEntry, ConfidentialEntryDao>
     {
-        public Signature Signature { get; set; }
-        public PeerIdDao PeerId { get; set; }
-        public string CorrelationId { get; set; }
-        public int Code { get; set; }
+        public BaseEntryDao Base { get; set; }
+        public string PedersenCommit { get; set; }
+        public RangeProofDao RangeProof { get; set; }
 
         public override void InitMappers(IMapperConfigurationExpression cfg)
         {
-            cfg.CreateMap<ProtocolErrorMessage, ProtocolErrorMessageSignedDao>()
-               .ForMember(e => e.CorrelationId,
-                    opt => opt.ConvertUsing<ByteStringToStringBase64Converter, ByteString>())
-               .ReverseMap();
-            
-            cfg.CreateMap<ProtocolErrorMessageSignedDao, ProtocolErrorMessage>()
-               .ForMember(e => e.CorrelationId,
+            cfg.CreateMap<ConfidentialEntry, ConfidentialEntryDao>().ReverseMap();
+
+            cfg.CreateMap<ConfidentialEntry, ConfidentialEntryDao>()
+               .ForMember(e => e.PedersenCommit,
+                    opt => opt.ConvertUsing<ByteStringToStringBase64Converter, ByteString>());
+
+            cfg.CreateMap<ConfidentialEntryDao, ConfidentialEntry>()
+               .ForMember(e => e.PedersenCommitment,
                     opt => opt.ConvertUsing<StringBase64ToByteStringConverter, string>());
         }
     }

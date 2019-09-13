@@ -30,7 +30,6 @@ using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.Mempool.Documents;
 using Catalyst.Protocol.Rpc.Node;
-using Catalyst.Protocol.Transaction;
 using Catalyst.Protocol.Wire;
 using Serilog;
 

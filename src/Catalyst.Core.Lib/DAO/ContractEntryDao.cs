@@ -21,25 +21,31 @@
 
 #endregion
 
-using System;
 using AutoMapper;
 using Catalyst.Core.Lib.DAO.Converters;
 using Catalyst.Protocol.Transaction;
+using Google.Protobuf;
+using Nethermind.Dirichlet.Numerics;
 
 namespace Catalyst.Core.Lib.DAO
 {
-    public class StTransactionEntryDao : DaoBase<STTransactionEntry, StTransactionEntryDao>
+    public class ContractEntryDao : DaoBase<ContractEntry, ContractEntryDao>
     {
-        public string PubKey { get; set; }
-        public Int64 Amount { get; set; }
-       
+        public BaseEntryDao Base { get; set; }
+        public string Data { get; set; }
+        public UInt256 Amount { get; set; }
+
         public override void InitMappers(IMapperConfigurationExpression cfg)
         {
-            cfg.CreateMap<STTransactionEntry, StTransactionEntryDao>()
-               .ForMember(d => d.PubKey, opt => opt.ConvertUsing(new ByteStringToStringPubKeyConverter(), s => s.PubKey));
+            cfg.CreateMap<ContractEntry, ContractEntryDao>().ReverseMap();
 
-            cfg.CreateMap<StTransactionEntryDao, STTransactionEntry>()
-               .ForMember(d => d.PubKey, opt => opt.ConvertUsing(new StringKeyUtilsToByteStringFormatter(), s => s.PubKey));
+            cfg.CreateMap<ContractEntry, ContractEntryDao>()
+               .ForMember(d => d.Amount, opt => opt.ConvertUsing(new ByteStringToUInt256Converter(), s => s.Amount))
+               .ForMember(e => e.Data, opt => opt.ConvertUsing<ByteStringToStringBase64Converter, ByteString>());
+
+            cfg.CreateMap<ContractEntryDao, ContractEntry>()
+               .ForMember(d => d.Amount, opt => opt.ConvertUsing(new UInt256ToByteStringConverter(), s => s.Amount))
+               .ForMember(e => e.Data, opt => opt.ConvertUsing<StringBase64ToByteStringConverter, string>());
         }
     }
 }

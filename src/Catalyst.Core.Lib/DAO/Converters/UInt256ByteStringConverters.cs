@@ -21,26 +21,26 @@
 
 #endregion
 
-using System;
 using AutoMapper;
 using Catalyst.Core.Lib.Extensions;
 using Google.Protobuf;
+using Nethermind.Dirichlet.Numerics;
 
 namespace Catalyst.Core.Lib.DAO.Converters
 {
-    public class ByteStringToUShortFormatter : IValueConverter<ByteString, ushort>
+    public class ByteStringToUInt256Converter : IValueConverter<ByteString, UInt256>
     {
-        public ushort Convert(ByteString sourceMember, ResolutionContext context)
+        public UInt256 Convert(ByteString sourceMember, ResolutionContext context)
         {
-            return BitConverter.ToUInt16(sourceMember.ToByteArray());
+            return sourceMember.ToUInt256();
         }
     }
 
-    public class UShortToByteStringFormatter : IValueConverter<ushort, ByteString>
+    public class UInt256ToByteStringConverter : IValueConverter<UInt256, ByteString>
     {
-        public ByteString Convert(ushort sourceMember, ResolutionContext context)
+        public ByteString Convert(UInt256 sourceMember, ResolutionContext context)
         {
-            return BitConverter.GetBytes(sourceMember).ToByteString();
+            return sourceMember.ToUint256ByteString();
         }
     }
 }

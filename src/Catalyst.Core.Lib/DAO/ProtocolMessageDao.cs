@@ -34,6 +34,7 @@ namespace Catalyst.Core.Lib.DAO
         public string CorrelationId { get; set; }
         public string TypeUrl { get; set; }
         public string Value { get; set; }
+        public SignatureDao Signature { get; set; }
 
         public override void InitMappers(IMapperConfigurationExpression cfg)
         {

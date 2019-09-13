@@ -21,7 +21,6 @@
 
 #endregion
 
-using System.Linq;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Validators;
 using Catalyst.Protocol.Cryptography;

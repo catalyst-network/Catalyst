@@ -24,7 +24,6 @@
 using AutoMapper;
 using Catalyst.Protocol.Cryptography;
 using Catalyst.Protocol.Network;
-using Catalyst.Protocol.Wire;
 
 namespace Catalyst.Core.Lib.DAO
 {

@@ -37,7 +37,7 @@ namespace Catalyst.Core.Lib.Util
             new IpAddressConverter(),
             new JsonProtoObjectConverter<STTransactionEntry>(),
             new JsonProtoObjectConverter<CFTransactionEntry>(),
-            new JsonProtoObjectConverter<EntryRangeProof>()
+            new JsonProtoObjectConverter<RangeProof>()
         }.AsReadOnly();
     }
 }

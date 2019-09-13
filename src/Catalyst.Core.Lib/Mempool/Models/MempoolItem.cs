@@ -22,7 +22,6 @@
 #endregion
 
 using Catalyst.Abstractions.Mempool.Models;
-using Catalyst.Protocol.Transaction;
 using Catalyst.Protocol.Wire;
 
 namespace Catalyst.Core.Lib.Mempool.Models

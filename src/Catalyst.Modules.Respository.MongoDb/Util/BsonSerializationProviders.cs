@@ -39,7 +39,7 @@ namespace Catalyst.Modules.Repository.MongoDb.Util
             AddSerializer<PeerId>();
             AddSerializer<STTransactionEntry>();
             AddSerializer<CFTransactionEntry>();
-            AddSerializer<EntryRangeProof>();
+            AddSerializer<RangeProof>();
         }
         
         static void AddSerializer<TType>() where TType : IMessage, new()

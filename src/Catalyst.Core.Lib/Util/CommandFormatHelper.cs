@@ -22,7 +22,7 @@
 #endregion
 
 using System.Text;
-using Catalyst.Protocol.Wire;
+using Catalyst.Protocol.Peer;
 using Google.Protobuf.Collections;
 
 namespace Catalyst.Core.Lib.Util
@@ -35,26 +35,26 @@ namespace Catalyst.Core.Lib.Util
         /// <summary>
         /// Format the repeated peer info response
         /// </summary>
-        /// <param name="repeatedPeerInfo">The repeuated peer info to write out</param>
+        /// <param name="repeatedPeerInfo">The repeated peer info to write out</param>
         /// <returns>String of the formatted response</returns>
         public static string FormatRepeatedPeerInfoResponse(RepeatedField<PeerInfo> repeatedPeerInfo)
         {
             var stringBuilder = new StringBuilder();
             foreach (var peerInfo in repeatedPeerInfo)
             {
-                stringBuilder.AppendLine($"BlackListed={peerInfo.BlackListed}");
+                stringBuilder.AppendLine($"BlackListed={peerInfo.IsBlacklisted}");
                 stringBuilder.AppendLine($"Reputation={peerInfo.Reputation}");
-                stringBuilder.AppendLine($"IsAwolPeer={peerInfo.IsAwolPeer}");
-                stringBuilder.AppendLine($"InactiveFor={peerInfo.InactiveFor.ToTimeSpan().ToString("c")}");
-                stringBuilder.AppendLine($"LastSeen={peerInfo.LastSeen.ToDateTime().ToString("MM/dd/yyyy HH:mm:ss")}");
+                stringBuilder.AppendLine($"IsAwolPeer={peerInfo.IsUnreachable}");
+                stringBuilder.AppendLine($"InactiveFor={peerInfo.InactiveFor.ToTimeSpan():c}");
+                stringBuilder.AppendLine($"LastSeen={peerInfo.LastSeen.ToDateTime():MM/dd/yyyy HH:mm:ss}");
 
-                //Modified can be optional, the null check is incase it is.
+                //Modified can be optional, the null check is in case it is.
                 if (peerInfo.Modified != null)
                 {
-                    stringBuilder.AppendLine($"Modified={peerInfo.Modified.ToDateTime().ToString("MM/dd/yyyy HH:mm:ss")}");
+                    stringBuilder.AppendLine($"Modified={peerInfo.Modified.ToDateTime():MM/dd/yyyy HH:mm:ss}");
                 }
 
-                stringBuilder.AppendLine($"Created={peerInfo.Created.ToDateTime().ToString("MM/dd/yyyy HH:mm:ss")}");
+                stringBuilder.AppendLine($"Created={peerInfo.Created.ToDateTime():MM/dd/yyyy HH:mm:ss}");
                 stringBuilder.AppendLine();
             }
 

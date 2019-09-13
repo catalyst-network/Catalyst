@@ -23,22 +23,23 @@
 
 using AutoMapper;
 using Catalyst.Core.Lib.DAO.Converters;
-using Catalyst.Protocol.Wire;
+using Catalyst.Protocol.Transaction;
+using Nethermind.Dirichlet.Numerics;
 
 namespace Catalyst.Core.Lib.DAO
 {
-    public class ProtocolMessageSignedDao : DaoBase<ProtocolMessage, ProtocolMessageSignedDao>
+    public class PublicEntryDao : DaoBase<PublicEntry, PublicEntryDao>
     {
-        public string Signature { get; set; }
-        public PeerIdDao PeerId { get; set; }
-
+        public BaseEntryDao Base { get; set; }
+        public UInt256 Amount { get; set; }
+       
         public override void InitMappers(IMapperConfigurationExpression cfg)
         {
-            cfg.CreateMap<ProtocolMessage, ProtocolMessageSignedDao>()
-               .ForMember(d => d.Signature, opt => opt.ConvertUsing(new ByteStringToStringBase64Converter(), s => s.Signature));
+            cfg.CreateMap<PublicEntry, PublicEntryDao>()
+               .ForMember(d => d.Amount, opt => opt.ConvertUsing(new ByteStringToUInt256Converter(), s => s.Amount));
 
-            cfg.CreateMap<ProtocolMessageSignedDao, ProtocolMessage>()
-               .ForMember(d => d.Signature, opt => opt.ConvertUsing(new StringBase64ToByteStringConverter(), s => s.Signature));
+            cfg.CreateMap<PublicEntryDao, PublicEntry>()
+               .ForMember(d => d.Amount, opt => opt.ConvertUsing(new UInt256ToByteStringConverter(), s => s.Amount));
         }
     }
 }

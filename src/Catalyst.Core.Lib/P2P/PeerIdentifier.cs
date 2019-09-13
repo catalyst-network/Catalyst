@@ -30,7 +30,6 @@ using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Network;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Protocol.Peer;
-using Catalyst.Protocol.Wire;
 using Dawn;
 using Google.Protobuf;
 using Nethereum.RLP;

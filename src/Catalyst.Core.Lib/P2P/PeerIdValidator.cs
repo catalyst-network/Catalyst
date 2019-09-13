@@ -28,7 +28,6 @@ using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.Network;
 using Catalyst.Protocol.Peer;
-using Catalyst.Protocol.Wire;
 using Dawn;
 
 namespace Catalyst.Core.Lib.P2P

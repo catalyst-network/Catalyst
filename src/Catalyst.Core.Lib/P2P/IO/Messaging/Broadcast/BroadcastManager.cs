@@ -37,8 +37,6 @@ using Catalyst.Core.Lib.P2P.Repository;
 using Catalyst.Protocol.Cryptography;
 using Catalyst.Protocol.Network;
 using Catalyst.Protocol.Wire;
-using DotNetty.Codecs;
-using Google.Protobuf;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Primitives;
 using Serilog;
