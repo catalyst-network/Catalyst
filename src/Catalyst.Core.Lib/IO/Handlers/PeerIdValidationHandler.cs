@@ -39,7 +39,7 @@ namespace Catalyst.Core.Lib.IO.Handlers
         protected override void ChannelRead0(IChannelHandlerContext ctx, ProtocolMessage msg)
         {
             Logger.Verbose("Received {msg}", msg);
-            if (_peerIdValidator.ValidatePeerIdFormat(msg.Message.PeerId))
+            if (_peerIdValidator.ValidatePeerIdFormat(msg.PeerId))
             {
                 ctx.FireChannelRead(msg);
             }

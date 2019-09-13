@@ -66,6 +66,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
                 new ConfidentialEntryDao(),
                 new TransactionBroadcastDao(),
                 new RangeProofDao(), 
+                new ContractEntryDao(),
+                new SignatureDao(),
             };
 
             var map = new MapperProvider(_mappers);
@@ -267,7 +269,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
             };
 
             var messageDao = coinbaseEntryDao.ToDao(original);
-            messageDao.PubKey.Should().Be(pubKeyBytes.KeyToString());
+            messageDao.ReceiverPublicKey.Should().Be(pubKeyBytes.KeyToString());
 
             var reconverted = messageDao.ToProtoBuff();
             reconverted.Should().Be(original);
@@ -288,7 +290,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
 
             var transactionEntryDao = stTransactionEntryDao.ToDao(original);
 
-            transactionEntryDao.PubKey.Should().Be(pubKeyBytes.KeyToString());
+            transactionEntryDao.Base.SenderPublicKey.Should().Be(pubKeyBytes.KeyToString());
             transactionEntryDao.Amount.Should().Be(8855274);
 
             var reconverted = transactionEntryDao.ToProtoBuff();
@@ -316,7 +318,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
 
             var transactionEntryDao = cfTransactionEntryDao.ToDao(original);
 
-            transactionEntryDao.PubKey.Should().Be(pubKeyBytes.KeyToString());
+            transactionEntryDao.Base.SenderPublicKey.Should().Be(pubKeyBytes.KeyToString());
             transactionEntryDao.PedersenCommit.Should().Be(pedersenCommitBytes.ToByteString().ToBase64());
 
             var reconverted = transactionEntryDao.ToProtoBuff();

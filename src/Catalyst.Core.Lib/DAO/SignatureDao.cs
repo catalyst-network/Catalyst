@@ -35,10 +35,12 @@ namespace Catalyst.Core.Lib.DAO
         public override void InitMappers(IMapperConfigurationExpression cfg)
         {
             cfg.CreateMap<Signature, SignatureDao>()
-               .ForMember(d => d.RawBytes, opt => opt.ConvertUsing(new ByteStringToStringPubKeyConverter(), s => s.ReceiverPublicKey));
+               .ForMember(d => d.RawBytes, 
+                    opt => opt.ConvertUsing(new ByteStringToStringPubKeyConverter(), s => s.RawBytes));
 
             cfg.CreateMap<SignatureDao, Signature>()
-               .ForMember(d => d.RawBytes, opt => opt.ConvertUsing(new StringKeyUtilsToByteStringFormatter(), s => s.ReceiverPublicKey));
+               .ForMember(d => d.RawBytes,
+                    opt => opt.ConvertUsing(new StringKeyUtilsToByteStringFormatter(), s => s.RawBytes));
         }
     }
 }

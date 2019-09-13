@@ -64,7 +64,7 @@ namespace Catalyst.Core.Lib.IO.Handlers
                 _broadcastManager.ReceiveAsync(innerGossipMessageSigned)
                    .ConfigureAwait(false).GetAwaiter().GetResult();
 
-                ctx.FireChannelRead(innerGossipMessageSigned.Message);
+                ctx.FireChannelRead(innerGossipMessageSigned);
                 return;
             }
 

@@ -62,7 +62,6 @@ namespace Catalyst.Core.Lib.P2P
             // requiring bullet proof FFI violates DIP and creates circular dep between Core.Lib and Cryptography.BulletProof
             // due to nature of FFI not sure we can inject it here
             // var keyLength = FFI.PublicKeyLength;
-            
             var keyLength = 32;
             Guard.Argument(peerId.PublicKey, nameof(peerId.PublicKey)).MinCount(keyLength).MaxCount(keyLength);
             PeerId = peerId;
@@ -80,9 +79,8 @@ namespace Catalyst.Core.Lib.P2P
 
             return new PeerIdentifier(new PeerId
             {
-                ProtocolVersion = peerByteChunks[1],
                 Ip = IPAddress.Parse(rawPidChunks[2]).MapToIPv4().To16Bytes().ToByteString(),
-                Port = peerByteChunks[3],
+                Port = uint.Parse(rawPidChunks[3]),
                 PublicKey = peerByteChunks[4]
             });
         }
@@ -98,14 +96,14 @@ namespace Catalyst.Core.Lib.P2P
             PeerId = new PeerId
             {
                 PublicKey = publicKey.ToByteString(),
-                Port = BitConverter.GetBytes(endPoint.Port).ToByteString(),
+                Port = (uint) endPoint.Port,
                 Ip = endPoint.Address.To16Bytes().ToByteString()
             };
         }
 
         public override string ToString()
         {
-            return $"V:{BitConverter.ToInt16(PeerId.ProtocolVersion.ToByteArray())}@{Ip}:{Port.ToString()}" + $"|{PublicKey.KeyToString()}";
+            return $"{Ip}:{Port.ToString()}" + $"|{PublicKey.KeyToString()}";
         }
 
         public bool Equals(IPeerIdentifier other)
