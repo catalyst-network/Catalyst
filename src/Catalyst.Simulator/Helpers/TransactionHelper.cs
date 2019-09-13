@@ -52,13 +52,13 @@ namespace Catalyst.Simulator.Helpers
                 From = publicKey
             };
 
-            var stTransactionEntry = new STTransactionEntry
+            var stTransactionEntry = new PublicEntry
             {
                 PubKey = publicKey,
                 Amount = amount
             };
 
-            transaction.STEntries.Add(stTransactionEntry);
+            transaction.PublicEntries.Add(stTransactionEntry);
 
             transaction.Signature = GenerateSignature(cryptoWrapper, privateKey, transaction);
 

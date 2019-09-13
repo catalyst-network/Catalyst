@@ -22,6 +22,7 @@
 #endregion
 
 using Catalyst.Core.Lib.P2P;
+using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.Transaction;
 using Google.Protobuf;
@@ -37,8 +38,9 @@ namespace Catalyst.Modules.Repository.MongoDb.Util
             
             AddSerializer<TransactionBroadcast>();
             AddSerializer<PeerId>();
-            AddSerializer<STTransactionEntry>();
-            AddSerializer<CFTransactionEntry>();
+            AddSerializer<PublicEntry>();
+            AddSerializer<ConfidentialEntry>();
+            AddSerializer<ContractEntry>();
             AddSerializer<RangeProof>();
         }
         

@@ -157,7 +157,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
                 _randomFactory.GetDeterministicRandomFromSeed(_previousDeltaHash).NextInt());
 
             var rawAndSaltedEntriesBySignature = selectedTransactions.SelectMany(
-                t => t.STEntries.Select(e => new
+                t => t.PublicEntries.Select(e => new
                 {
                     RawEntry = e,
                     SaltedAndHashedEntry = e.ToByteArray().Concat(salt).ComputeRawHash(_hashAlgorithm)

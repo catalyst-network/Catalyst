@@ -137,7 +137,7 @@ namespace Catalyst.Core.Modules.Ledger
                 return;
             }
 
-            foreach (var entry in nextDeltaInChain.STEntries)
+            foreach (var entry in nextDeltaInChain.PublicEntries)
             {
                 UpdateLedgerAccountFromEntry(entry);
             }
@@ -145,7 +145,7 @@ namespace Catalyst.Core.Modules.Ledger
             LatestKnownDelta = deltaHash;
         }
 
-        private void UpdateLedgerAccountFromEntry(STTransactionEntry entry)
+        private void UpdateLedgerAccountFromEntry(PublicEntry entry)
         {
             var pubKey = _cryptoContext.PublicKeyFromBytes(entry.PubKey.ToByteArray());
 

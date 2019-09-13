@@ -42,9 +42,9 @@ namespace Catalyst.TestUtils
         {
             var transaction = new TransactionBroadcast
             {
-                STEntries =
+                PublicEntries =
                 {
-                    new STTransactionEntry
+                    new PublicEntry
                     {
                         Amount = standardAmount,
                         PubKey = standardPubKey.ToUtf8ByteString()
@@ -52,7 +52,7 @@ namespace Catalyst.TestUtils
                 },
                 CFEntries =
                 {
-                    new CFTransactionEntry
+                    new ConfidentialEntry
                     {
                         PedersenCommit = confidentialCommitment.ToUtf8ByteString(),
                         PubKey = confidentialPubKey.ToUtf8ByteString()

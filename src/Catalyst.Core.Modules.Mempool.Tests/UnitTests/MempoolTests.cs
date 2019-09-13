@@ -77,7 +77,7 @@ namespace Catalyst.Core.Modules.Mempool.Tests.UnitTests
             var expectedTransaction = _transactionBroadcast;
             var transactionFromMemPool = mempoolDocument.Transaction;
 
-            transactionFromMemPool.STEntries.Single().Amount.Should().Be(expectedTransaction.STEntries.Single().Amount);
+            transactionFromMemPool.PublicEntries.Single().Amount.Should().Be(expectedTransaction.PublicEntries.Single().Amount);
             transactionFromMemPool.CFEntries.Single().PedersenCommit.Should().BeEquivalentTo(expectedTransaction.CFEntries.Single().PedersenCommit);
             transactionFromMemPool.Signature.SequenceEqual(expectedTransaction.Signature).Should().BeTrue();
             transactionFromMemPool.TransactionType.Should().Be(expectedTransaction.TransactionType);
@@ -97,7 +97,7 @@ namespace Catalyst.Core.Modules.Mempool.Tests.UnitTests
             {
                 var signature = $"key{i}".ToUtf8ByteString();
                 var mempoolDocument = _memPool.Repository.ReadItem(signature);
-                mempoolDocument.Transaction.STEntries.Single().Amount.Should().Be((uint) i);
+                mempoolDocument.Transaction.PublicEntries.Single().Amount.Should().Be((uint) i);
             }
         }
 
@@ -135,7 +135,7 @@ namespace Catalyst.Core.Modules.Mempool.Tests.UnitTests
         {
             // this test seems pointless like this
             
-            var expectedAmount = _transactionBroadcast.STEntries.Single().Amount;
+            var expectedAmount = _transactionBroadcast.PublicEntries.Single().Amount;
 
             _memPool.Repository.CreateItem(Arg.Is(_transactionBroadcast))
                .Returns(true);
@@ -144,7 +144,7 @@ namespace Catalyst.Core.Modules.Mempool.Tests.UnitTests
             saved.Should().BeTrue();
             
             var overridingTransaction = _transactionBroadcast.Clone();
-            overridingTransaction.STEntries.Single().Amount = expectedAmount + 100;
+            overridingTransaction.PublicEntries.Single().Amount = expectedAmount + 100;
             
             _memPool.Repository.CreateItem(Arg.Is(overridingTransaction))
                .Returns(false);
