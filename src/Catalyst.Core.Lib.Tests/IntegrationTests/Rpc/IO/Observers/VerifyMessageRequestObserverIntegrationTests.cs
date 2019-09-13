@@ -41,6 +41,7 @@ using Catalyst.Core.Lib.Config;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
 using Catalyst.Core.Modules.Consensus;
+using Catalyst.Core.Modules.Cryptography.BulletProofs;
 using Catalyst.Core.Modules.Dfs;
 using Catalyst.Core.Modules.KeySigner;
 using Catalyst.Core.Modules.Keystore;
@@ -61,12 +62,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
         private readonly IPeerIdentifier _peerIdentifier;
         private readonly ByteString _testMessageToSign;
         
-        public VerifyMessageRequestObserverIntegrationTests(ITestOutputHelper output) : base(output, new[]
-        {
-            Path.Combine(Constants.ConfigSubFolder, Constants.ShellNodesConfigFile),
-            Path.Combine(Constants.ConfigSubFolder, Constants.SerilogJsonConfigFile),
-            Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(Protocol.Common.Network.Devnet))
-        })
+        public VerifyMessageRequestObserverIntegrationTests(ITestOutputHelper output) : base(output)
         {
             _testMessageToSign = ByteString.CopyFromUtf8("TestMsg");
 
@@ -77,6 +73,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
             ContainerProvider.ContainerBuilder.RegisterModule(new DfsModule());
             ContainerProvider.ContainerBuilder.RegisterModule(new MempoolModule());
             ContainerProvider.ContainerBuilder.RegisterModule(new ConsensusModule());
+            ContainerProvider.ContainerBuilder.RegisterModule(new BulletProofsModule());
 
             ContainerProvider.ContainerBuilder.RegisterInstance(PeerIdentifierHelper.GetPeerIdentifier("Test"))
                .As<IPeerIdentifier>();
