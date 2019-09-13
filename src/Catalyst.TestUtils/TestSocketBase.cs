@@ -25,7 +25,7 @@ using System;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.IO.EventLoop;
 using Catalyst.Abstractions.IO.Transport.Channels;
-using Catalyst.Core.IO.Transport;
+using Catalyst.Core.Lib.IO.Transport;
 using DotNetty.Transport.Channels;
 using NSubstitute;
 using Serilog;

@@ -28,7 +28,8 @@ namespace Catalyst.Protocol.Common
 {
     public partial class PeerId
     {
-        partial void OnConstruction()
+        partial void 
+            OnConstruction()
         {
             short protocolVersion = 1;
             ProtocolVersion = ByteString.CopyFrom(BitConverter.GetBytes(protocolVersion));

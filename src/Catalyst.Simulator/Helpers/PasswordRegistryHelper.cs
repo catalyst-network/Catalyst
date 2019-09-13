@@ -23,7 +23,7 @@
 
 using System.Security;
 using Catalyst.Abstractions.Types;
-using Catalyst.Core.Cryptography;
+using Catalyst.Core.Lib.Registry;
 
 namespace Catalyst.Simulator.Helpers
 {

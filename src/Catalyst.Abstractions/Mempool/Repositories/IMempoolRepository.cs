@@ -38,6 +38,6 @@ namespace Catalyst.Abstractions.Mempool.Repositories
         bool DeleteItem(params string[] transactionSignatures);
 
         bool CreateItem(TransactionBroadcast transactionBroadcast);
-        IEnumerable<TransactionBroadcast> GetAll();
+        new IEnumerable<TransactionBroadcast> GetAll();
     }
 }

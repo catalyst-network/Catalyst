@@ -30,11 +30,8 @@ using Autofac.Configuration;
 using AutofacSerilogIntegration;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.FileSystem;
-using Catalyst.Abstractions.IO.Events;
 using Catalyst.Abstractions.Keystore;
-using Catalyst.Core.IO.Events;
-using Catalyst.Protocol.Interfaces.Validators;
-using Catalyst.Protocol.Validators;
+using Catalyst.Core.Lib;
 using DotNetty.Common.Internal.Logging;
 using Microsoft.Extensions.Configuration;
 using Serilog;
@@ -54,7 +51,6 @@ namespace Catalyst.TestUtils
         private readonly ITestOutputHelper _output;
         private IConfigurationRoot _configRoot;
         public ContainerBuilder ContainerBuilder { get; } = new ContainerBuilder();
-    
         private IContainer _container;
 
         public ContainerProvider(IEnumerable<string> configFilesUsed,
@@ -82,7 +78,7 @@ namespace Catalyst.TestUtils
 
                 var configBuilder = new ConfigurationBuilder();
                 _configFilesUsed.ToList().ForEach(f => configBuilder.AddJsonFile(f));
-
+                
                 _configRoot = configBuilder.Build();
                 return _configRoot;
             }
@@ -92,8 +88,11 @@ namespace Catalyst.TestUtils
 
         public void ConfigureContainerBuilder(bool writeLogsToTestOutput = false, bool writeLogsToFile = false, bool logDotNettyTraffic = false)
         {
+            SocketPortHelper.AlterConfigurationToGetUniquePort(ConfigurationRoot);
+
             var configurationModule = new ConfigurationModule(ConfigurationRoot);
             ContainerBuilder.RegisterModule(configurationModule);
+            ContainerBuilder.RegisterModule(new CoreLibProvider());
             ContainerBuilder.RegisterInstance(ConfigurationRoot).As<IConfigurationRoot>();
 
             var repoFactory =
@@ -109,9 +108,6 @@ namespace Catalyst.TestUtils
 
             var keyRegistry = TestKeyRegistry.MockKeyRegistry();
             ContainerBuilder.RegisterInstance(keyRegistry).As<IKeyRegistry>();
-
-            ContainerBuilder.RegisterType<TransactionValidator>().As<ITransactionValidator>();
-            ContainerBuilder.RegisterType<TransactionReceivedEvent>().As<ITransactionReceivedEvent>();
 
             ConfigureLogging(writeLogsToTestOutput, writeLogsToFile, logDotNettyTraffic);
         }

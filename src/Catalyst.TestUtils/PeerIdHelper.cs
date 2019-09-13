@@ -25,10 +25,10 @@ using System;
 using System.Linq;
 using System.Net;
 using System.Text;
-using Catalyst.Core.Network;
-using Catalyst.Cryptography.BulletProofs.Wrapper;
+using Catalyst.Core.Lib.Extensions;
+using Catalyst.Core.Lib.Network;
+using Catalyst.Core.Modules.Cryptography.BulletProofs;
 using Catalyst.Protocol.Common;
-using Catalyst.Protocol.Extensions;
 
 namespace Catalyst.TestUtils
 {

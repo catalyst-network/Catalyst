@@ -25,7 +25,7 @@ using System;
 using System.Reactive.Linq;
 using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.IO.Transport.Channels;
-using Catalyst.Core.IO.Transport.Channels;
+using Catalyst.Core.Lib.IO.Transport.Channels;
 using Catalyst.Protocol.Common;
 using DotNetty.Transport.Channels;
 using NSubstitute;

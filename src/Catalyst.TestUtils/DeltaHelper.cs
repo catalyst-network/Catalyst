@@ -22,11 +22,10 @@
 #endregion
 
 using System;
-using Catalyst.Common.Extensions;
-using Catalyst.Common.Utils;
+using Catalyst.Core.Lib.Extensions;
+using Catalyst.Core.Lib.Util;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Deltas;
-using Catalyst.Protocol.Extensions;
 using Google.Protobuf.WellKnownTypes;
 using Multiformats.Hash;
 using Multiformats.Hash.Algorithms;

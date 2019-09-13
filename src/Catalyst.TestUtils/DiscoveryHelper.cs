@@ -25,6 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Concurrency;
+using System.Threading.Tasks;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.Network;
 using Catalyst.Abstractions.P2P;
@@ -33,16 +34,16 @@ using Catalyst.Abstractions.P2P.IO.Messaging.Correlation;
 using Catalyst.Abstractions.P2P.IO.Messaging.Dto;
 using Catalyst.Abstractions.Types;
 using Catalyst.Abstractions.Util;
-using Catalyst.Core.Extensions;
-using Catalyst.Core.IO.Messaging.Correlation;
-using Catalyst.Core.Network;
-using Catalyst.Core.P2P.Discovery;
-using Catalyst.Core.P2P.Discovery.Hastings;
-using Catalyst.Core.P2P.IO.Messaging.Correlation;
-using Catalyst.Core.P2P.Models;
-using Catalyst.Core.P2P.Repository;
-using Catalyst.Core.P2P.ReputationSystem;
-using Catalyst.Core.Util;
+using Catalyst.Core.Lib.Extensions;
+using Catalyst.Core.Lib.IO.Messaging.Correlation;
+using Catalyst.Core.Lib.Network;
+using Catalyst.Core.Lib.P2P.Discovery;
+using Catalyst.Core.Lib.P2P.IO.Messaging.Correlation;
+using Catalyst.Core.Lib.P2P.Models;
+using Catalyst.Core.Lib.P2P.Repository;
+using Catalyst.Core.Lib.P2P.ReputationSystem;
+using Catalyst.Core.Lib.Util;
+using Catalyst.Core.Modules.P2P.Discovery.Hastings;
 using DnsClient;
 using Microsoft.Extensions.Caching.Memory;
 using Nethereum.Hex.HexConvertors.Extensions;
@@ -54,6 +55,21 @@ namespace Catalyst.TestUtils
 {
     public static class DiscoveryHelper
     {
+        public class DevDiscover : BaseDiscovery
+        {
+            public override Task DiscoveryAsync()
+            {
+                return Task.Run(async () =>
+                {
+                    while (true)
+                    {
+                        // don't run again for at least 200 milliseconds
+                        await Task.Delay(200);
+                    }
+                });
+            }
+        }
+
         public static IHastingsOriginator MockOriginator(IPeerIdentifier peer = default,
             INeighbours neighbours = default)
         {

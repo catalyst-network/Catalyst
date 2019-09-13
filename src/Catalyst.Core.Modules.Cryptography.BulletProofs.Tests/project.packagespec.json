@@ -1,0 +1,28 @@
+﻿{
+  "version": "1.0.0",
+  "restore": {
+    "projectUniqueName": "/home/nsh/RiderProjects/Catalyst.Node/src/Catalyst.Cryptography.BulletProofs.Wrapper.Tests/Catalyst.Cryptography.BulletProofs.Wrapper.UnitTests.csproj",
+    "projectName": "Catalyst.Cryptography.BulletProofs.Wrapper.UnitTests",
+    "projectPath": "/home/nsh/RiderProjects/Catalyst.Node/src/Catalyst.Cryptography.BulletProofs.Wrapper.Tests/Catalyst.Cryptography.BulletProofs.Wrapper.UnitTests.csproj",
+    "outputPath": "/home/nsh/RiderProjects/Catalyst.Node/src/Catalyst.Cryptography.BulletProofs.Wrapper.Tests/",
+    "projectStyle": "PackageReference",
+    "originalTargetFrameworks": [
+      "netcoreapp2.2"
+    ],
+    "sources": {
+      "https://api.nuget.org/v3/index.json": {}
+    },
+    "frameworks": {
+      "netcoreapp2.2": {
+        "projectReferences": {
+          "/home/nsh/RiderProjects/Catalyst.Node/src/Catalyst.Core.Modules.Cryptography.BulletProofs/Catalyst.Core.Modules.Cryptography.BulletProofs.csproj": {
+            "projectPath": "/home/nsh/RiderProjects/Catalyst.Node/src/Catalyst.Core.Modules.Cryptography.BulletProofs/Catalyst.Core.Modules.Cryptography.BulletProofs.csproj"
+          }
+        }
+      }
+    }
+  },
+  "frameworks": {
+    "netcoreapp2.2": {}
+  }
+}

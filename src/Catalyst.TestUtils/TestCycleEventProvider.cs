@@ -25,7 +25,7 @@ using System;
 using Catalyst.Abstractions.Consensus;
 using Catalyst.Abstractions.Consensus.Cycle;
 using Catalyst.Abstractions.Consensus.Deltas;
-using Catalyst.Core.Consensus.Cycle;
+using Catalyst.Core.Modules.Consensus.Cycle;
 using Microsoft.Reactive.Testing;
 using Multiformats.Hash;
 using NSubstitute;

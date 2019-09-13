@@ -41,9 +41,7 @@ Is coming (don't you hate it when they say that). For now you can read through t
 
 `cd Catalyst.Node`
 
-`git submodule init`
-
-`git submodule update`
+`git submodule update --init --force --recursive`
 
 `cd src`
 

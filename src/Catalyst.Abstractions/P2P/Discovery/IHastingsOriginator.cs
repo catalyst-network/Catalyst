@@ -33,7 +33,7 @@ namespace Catalyst.Abstractions.P2P.Discovery
 
         /// <summary>
         /// Every time you the walk moves forward with a new Peer, it will ask that peer for
-        /// its neighbours sending a new <see cref="Protocol.IPPN.PeerNeighborsRequest"/>.
+        /// its neighbours sending a new <see cref="PeerNeighborsRequest"/>.
         /// This field stores the details for that request. 
         /// </summary>
         ICorrelationId PnrCorrelationId { get; }

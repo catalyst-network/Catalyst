@@ -22,6 +22,9 @@
 #endregion
 
 using System;
+using Catalyst.Abstractions.Cryptography;
+using Catalyst.Core.Modules.Cryptography.BulletProofs;
+using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.Protocol.Transaction;
 using Google.Protobuf;
@@ -33,29 +36,49 @@ namespace Catalyst.Simulator.Helpers
     {
         public static BroadcastRawTransactionRequest GenerateTransaction(uint amount, int fee)
         {
-            var guid = Guid.NewGuid();
+            var cryptoWrapper = new CryptoWrapper();
+            var privateKey = cryptoWrapper.GeneratePrivateKey();
+            var publicKey = ByteString.CopyFrom(privateKey.GetPublicKey().Bytes);
+
             var broadcastRawTransactionRequest = new BroadcastRawTransactionRequest();
             var transaction = new TransactionBroadcast
             {
                 TransactionFees = (ulong) fee,
                 TimeStamp = Timestamp.FromDateTime(DateTime.UtcNow),
                 LockTime = 0,
-                TransactionType = TransactionType.Normal
+                TransactionType = TransactionType.Normal,
+                Data = ByteString.CopyFromUtf8("tw:Hello world"),
+                Init = ByteString.Empty,
+                From = publicKey
             };
 
             var stTransactionEntry = new STTransactionEntry
             {
-                PubKey = ByteString.FromBase64("VkC84TBQOVjrcX81NYV5swPVrE4RN+nKGzIjxNT2AY0="),
+                PubKey = publicKey,
                 Amount = amount
             };
 
             transaction.STEntries.Add(stTransactionEntry);
 
-            transaction.Signature = ByteString.CopyFromUtf8(guid.ToString());
+            transaction.Signature = GenerateSignature(cryptoWrapper, privateKey, transaction);
 
             broadcastRawTransactionRequest.Transaction = transaction;
 
             return broadcastRawTransactionRequest;
+        }
+
+        private static ByteString GenerateSignature(IWrapper cryptoWrapper, IPrivateKey privateKey, TransactionBroadcast transactionBroadcast)
+        {
+            var transactionWithoutSig = transactionBroadcast.Clone();
+            transactionWithoutSig.Signature = ByteString.Empty;
+
+            byte[] signatureBytes = cryptoWrapper.StdSign(privateKey, transactionWithoutSig.ToByteArray(),
+                new SigningContext
+                {
+                    Network = Network.Devnet,
+                    SignatureType = SignatureType.TransactionPublic
+                }.ToByteArray()).SignatureBytes;
+            return ByteString.CopyFrom(signatureBytes);
         }
     }
 }
