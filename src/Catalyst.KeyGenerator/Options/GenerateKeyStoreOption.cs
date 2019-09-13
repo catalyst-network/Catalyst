@@ -1,4 +1,4 @@
-﻿#region LICENSE
+#region LICENSE
 
 /**
 * Copyright (c) 2019 Catalyst Network
@@ -21,18 +21,17 @@
 
 #endregion
 
-using Google.Protobuf;
-using System;
+using CommandLine;
 
-namespace Catalyst.Protocol.Common
+namespace Catalyst.Tools.KeyGenerator.Options
 {
-    public partial class PeerId
+    [Verb("generate", HelpText = "Generate a key store")]
+    public class GenerateKeyStoreOption
     {
-        partial void 
-            OnConstruction()
-        {
-            short protocolVersion = 1;
-            ProtocolVersion = ByteString.CopyFrom(BitConverter.GetBytes(protocolVersion));
-        }
+        [Option("path", HelpText = "Path to generate keystore", Required = true)]
+        public string Path { get; set; }
+
+        [Option("password", HelpText = "Keystore password", Required = false)]
+        public string Password { get; set; }
     }
 }

@@ -1,4 +1,4 @@
-﻿#region LICENSE
+#region LICENSE
 
 /**
 * Copyright (c) 2019 Catalyst Network
@@ -21,18 +21,12 @@
 
 #endregion
 
-using Google.Protobuf;
-using System;
+using Catalyst.Abstractions.Cli.CommandTypes;
 
-namespace Catalyst.Protocol.Common
+namespace Catalyst.Tools.KeyGenerator.Interfaces
 {
-    public partial class PeerId
+    public interface IKeyGeneratorCommand : ICommand
     {
-        partial void 
-            OnConstruction()
-        {
-            short protocolVersion = 1;
-            ProtocolVersion = ByteString.CopyFrom(BitConverter.GetBytes(protocolVersion));
-        }
+        void ParseOption(object option);
     }
 }

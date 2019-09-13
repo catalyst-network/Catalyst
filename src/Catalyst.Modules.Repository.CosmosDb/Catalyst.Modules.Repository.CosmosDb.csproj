@@ -7,6 +7,7 @@
         <AssemblyOriginatorKeyFile>Catalyst.Modules.Repository.CosmosDb.snk</AssemblyOriginatorKeyFile>
         <PublicSign>true</PublicSign>
     </PropertyGroup>
+    <Import Project="../Common.Packable.props" />
     <Import Project="../Common.Projects.props" />
     <ItemGroup>
         <ProjectReference Include="..\Catalyst.Abstractions\Catalyst.Abstractions.csproj" />
@@ -15,5 +16,4 @@
     <ItemGroup>
       <PackageReference Include="SharpRepository.AzureDocumentDbRepository" Version="2.0.2-alpha4" />
     </ItemGroup>
-
 </Project>
