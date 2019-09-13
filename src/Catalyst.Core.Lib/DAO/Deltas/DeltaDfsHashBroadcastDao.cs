@@ -46,9 +46,6 @@ namespace Catalyst.Core.Lib.DAO.Deltas
                     opt => opt.ConvertUsing<DfsHashToByteStringConverter, string>())
                .ForMember(e => e.PreviousDeltaDfsHash,
                     opt => opt.ConvertUsing<DfsHashToByteStringConverter, string>());
-
-            cfg.ForAllPropertyMaps(IsToRepeatedField,
-                (propertyMap, opts) => opts.UseDestinationValue());
         }
     }
 }

@@ -33,9 +33,11 @@ namespace Catalyst.Core.Lib.DAO
     {
         public string PubKey { get; set; }
         public string PedersenCommit { get; set; }
+        public EntryRangeProofDao EntryRangeProofs { get; set; }
 
         public override void InitMappers(IMapperConfigurationExpression cfg)
         {
+            cfg.CreateMap<EntryRangeProof, EntryRangeProofDao>().ReverseMap();
             cfg.CreateMap<CFTransactionEntry, CfTransactionEntryDao>()
                .ForMember(e => e.PedersenCommit,
                     opt => opt.ConvertUsing<ByteStringToStringBase64Converter, ByteString>())

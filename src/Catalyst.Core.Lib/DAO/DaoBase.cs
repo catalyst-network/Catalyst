@@ -24,39 +24,40 @@
 using Google.Protobuf;
 using SharpRepository.Repository;
 using System.ComponentModel.DataAnnotations;
+using System.Runtime.CompilerServices;
 using AutoMapper;
 using Catalyst.Abstractions.DAO;
 using Google.Protobuf.Collections;
 
 namespace Catalyst.Core.Lib.DAO
 {
-    public abstract class DaoBase<TOriginal, TDao> : IMapperInitializer
+    public abstract class DaoBase<TProto, TDao> : IMapperInitializer, 
+        IValueConverter<TProto, TDao>
     {
         [RepositoryPrimaryKey(Order = 1)]
         [Key]
         public string Id { get; set; }
 
-        public TOriginal ToProtoBuff()
+        public TProto ToProtoBuff()
         {
-            return MapperProvider.MasterMapper.Map<TOriginal>(this);
+            return MapperProvider.MasterMapper.Map<TProto>(this);
         }
 
-        public TDao ToDao(TOriginal protoBuff)
+        public TDao ToDao(TProto protoBuff)
         {
             return MapperProvider.MasterMapper.Map<TDao>(protoBuff);
         }
 
         public abstract void InitMappers(IMapperConfigurationExpression cfg);
 
-        protected bool IsToRepeatedField(PropertyMap pm)
+        public TDao Convert(TProto sourceMember, ResolutionContext context)
         {
-            if (pm.DestinationType.IsConstructedGenericType)
-            {
-                var destGenericBase = pm.DestinationType.GetGenericTypeDefinition();
-                return destGenericBase == typeof(RepeatedField<>);
-            }
+            return ToDao(sourceMember);
+        }
 
-            return false;
+        public TProto Convert(TDao sourceMember, ResolutionContext context)
+        {
+            return MapperProvider.MasterMapper.Map<TProto>(sourceMember);
         }
     }
 }

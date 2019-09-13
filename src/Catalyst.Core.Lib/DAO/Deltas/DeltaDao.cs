@@ -40,9 +40,9 @@ namespace Catalyst.Core.Lib.DAO.Deltas
         public string MerkleRoot { get; set; }
         public string MerklePoda { get; set; }
         public DateTime TimeStamp { get; set; }
-        public RepeatedField<StTransactionEntryDao> StEntries { get; set; }
-        public RepeatedField<CfTransactionEntryDao> CfEntries { get; set; }
-        public RepeatedField<CoinbaseEntryDao> CbEntries { get; set; }
+        public List<StTransactionEntryDao> StEntries { get; set; }
+        public List<CfTransactionEntryDao> CfEntries { get; set; }
+        public List<CoinbaseEntryDao> CbEntries { get; set; }
 
         public override void InitMappers(IMapperConfigurationExpression cfg)
         {
@@ -65,13 +65,6 @@ namespace Catalyst.Core.Lib.DAO.Deltas
                     opt => opt.ConvertUsing(new StringBase64ToByteStringConverter(), s => s.MerkleRoot))
                .ForMember(d => d.MerklePoda,
                     opt => opt.ConvertUsing(new StringBase64ToByteStringConverter(), s => s.MerklePoda));
-
-            //cfg.ForAllPropertyMaps(m => m.SourceType.Equals(typeof(RepeatedField<ByteString>)), 
-            //    (p, opt) => opt.(c =>
-            //    {
-            //        var result = new List<string>();
-            //        c.
-            //    } ));
         }
     }
 }

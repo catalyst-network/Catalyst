@@ -26,6 +26,7 @@ using System.Collections.Generic;
 using AutoMapper;
 using Catalyst.Core.Lib.DAO.Converters;
 using Catalyst.Protocol.Transaction;
+using Google.Protobuf;
 using Google.Protobuf.Collections;
 using Google.Protobuf.WellKnownTypes;
 
@@ -36,8 +37,8 @@ namespace Catalyst.Core.Lib.DAO
         public UInt32 Version { get; set; }
         public UInt64 TransactionFees { get; set; }
         public UInt64 LockTime { get; set; }
-        public RepeatedField<StTransactionEntryDao> StEntries { get; set; }
-        public RepeatedField<CfTransactionEntryDao> CfEntries { get; set; }
+        public List<StTransactionEntryDao> StEntries { get; set; }
+        public List<CfTransactionEntryDao> CfEntries { get; set; }
         public string Signature { get; set; }
         public TransactionType TransactionType { get; set; }
         public DateTime TimeStamp { get; set; }
@@ -50,14 +51,19 @@ namespace Catalyst.Core.Lib.DAO
             cfg.CreateMap<TransactionBroadcast, TransactionBroadcastDao>()
                .ForMember(d => d.From, opt => opt.ConvertUsing(new ByteStringToStringPubKeyConverter(), s => s.From))
                .ForMember(d => d.Data, opt => opt.ConvertUsing(new ByteStringToStringBase64Converter(), s => s.Data))
-               .ForMember(d => d.From, opt => opt.ConvertUsing(new ByteStringToStringBase64Converter(), s => s.From))
-               .ForMember(d => d.Init, opt => opt.ConvertUsing(new ByteStringToStringBase64Converter(), s => s.Init));
+               .ForMember(d => d.Signature, opt => opt.ConvertUsing(new ByteStringToStringBase64Converter(), s => s.Signature))
+               .ForMember(d => d.Init, opt => opt.ConvertUsing(new ByteStringToStringBase64Converter(), s => s.Init))
+               //.ForMember(e => e.StEntries, opt => opt.ConvertUsing<RepeatedFieldToListConverter<>, List<>>())
+                ;
 
             cfg.CreateMap<TransactionBroadcastDao, TransactionBroadcast>()
                .ForMember(d => d.From, opt => opt.ConvertUsing(new StringKeyUtilsToByteStringFormatter(), s => s.From))
                .ForMember(d => d.Data, opt => opt.ConvertUsing(new StringBase64ToByteStringConverter(), s => s.Data))
-               .ForMember(d => d.From, opt => opt.ConvertUsing(new StringBase64ToByteStringConverter(), s => s.From))
-               .ForMember(d => d.Init, opt => opt.ConvertUsing(new StringBase64ToByteStringConverter(), s => s.Init));
+               .ForMember(d => d.Signature, opt => opt.ConvertUsing(new StringBase64ToByteStringConverter(), s => s.Signature))
+               .ForMember(d => d.Init, opt => opt.ConvertUsing(new StringBase64ToByteStringConverter(), s => s.Init))
+               //.ForMember(e => e.R, opt => opt.ConvertUsing<ListToRepeatedFieldConverter<string, ByteString, StringBase64ToByteStringConverter>, List<string>>())
+               //.ForMember(e => e.R, opt => opt.ConvertUsing<ListToRepeatedFieldConverter<string, ByteString, StringBase64ToByteStringConverter>, List<string>>())
+                ;
 
             cfg.CreateMap<DateTime, Timestamp>().ConvertUsing(s => s.ToTimestamp());
             cfg.CreateMap<Timestamp, DateTime>().ConvertUsing(s => s.ToDateTime());
