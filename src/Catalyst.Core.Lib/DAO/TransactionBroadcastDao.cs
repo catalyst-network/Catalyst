@@ -37,8 +37,8 @@ namespace Catalyst.Core.Lib.DAO
         public UInt32 Version { get; set; }
         public UInt64 TransactionFees { get; set; }
         public UInt64 LockTime { get; set; }
-        public List<StTransactionEntryDao> StEntries { get; set; }
-        public List<CfTransactionEntryDao> CfEntries { get; set; }
+        public IEnumerable<StTransactionEntryDao> StEntries { get; set; }
+        public IEnumerable<CfTransactionEntryDao> CfEntries { get; set; }
         public string Signature { get; set; }
         public TransactionType TransactionType { get; set; }
         public DateTime TimeStamp { get; set; }
@@ -53,17 +53,18 @@ namespace Catalyst.Core.Lib.DAO
                .ForMember(d => d.Data, opt => opt.ConvertUsing(new ByteStringToStringBase64Converter(), s => s.Data))
                .ForMember(d => d.Signature, opt => opt.ConvertUsing(new ByteStringToStringBase64Converter(), s => s.Signature))
                .ForMember(d => d.Init, opt => opt.ConvertUsing(new ByteStringToStringBase64Converter(), s => s.Init))
-               //.ForMember(e => e.StEntries, opt => opt.ConvertUsing<RepeatedFieldToListConverter<>, List<>>())
-                ;
+               .ForMember(e => e.CfEntries, opt => opt.UseDestinationValue())
+               .ForMember(e => e.StEntries, opt => opt.UseDestinationValue());
+
+            cfg.AllowNullDestinationValues = true;
 
             cfg.CreateMap<TransactionBroadcastDao, TransactionBroadcast>()
                .ForMember(d => d.From, opt => opt.ConvertUsing(new StringKeyUtilsToByteStringFormatter(), s => s.From))
                .ForMember(d => d.Data, opt => opt.ConvertUsing(new StringBase64ToByteStringConverter(), s => s.Data))
                .ForMember(d => d.Signature, opt => opt.ConvertUsing(new StringBase64ToByteStringConverter(), s => s.Signature))
                .ForMember(d => d.Init, opt => opt.ConvertUsing(new StringBase64ToByteStringConverter(), s => s.Init))
-               //.ForMember(e => e.R, opt => opt.ConvertUsing<ListToRepeatedFieldConverter<string, ByteString, StringBase64ToByteStringConverter>, List<string>>())
-               //.ForMember(e => e.R, opt => opt.ConvertUsing<ListToRepeatedFieldConverter<string, ByteString, StringBase64ToByteStringConverter>, List<string>>())
-                ;
+               .ForMember(e => e.CFEntries, opt => opt.UseDestinationValue())
+               .ForMember(e => e.STEntries, opt => opt.UseDestinationValue());
 
             cfg.CreateMap<DateTime, Timestamp>().ConvertUsing(s => s.ToTimestamp());
             cfg.CreateMap<Timestamp, DateTime>().ConvertUsing(s => s.ToDateTime());

@@ -24,7 +24,6 @@
 using Google.Protobuf;
 using SharpRepository.Repository;
 using System.ComponentModel.DataAnnotations;
-using System.Runtime.CompilerServices;
 using AutoMapper;
 using Catalyst.Abstractions.DAO;
 using Google.Protobuf.Collections;

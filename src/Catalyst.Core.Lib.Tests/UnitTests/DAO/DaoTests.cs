@@ -186,15 +186,15 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
         [Fact]
         public void DeltasDao_Deltas_Should_Be_Convertible()
         {
-            //var deltaDao = GetMapper<CandidateDeltaBroadcastDao>();
+            var deltaDao = GetMapper<DeltaDao>();
 
-            //var previousHash = "previousHash".ComputeUtf8Multihash(_hashingAlgorithm).ToBytes();
+            var previousHash = "previousHash".ComputeUtf8Multihash(_hashingAlgorithm).ToBytes();
 
-            //var original = DeltaHelper.GetDelta(previousHash);
+            var original = DeltaHelper.GetDelta(previousHash);
 
-            //var messageDao = deltaDao.ToDao(original);
-            //var reconverted = messageDao.ToProtoBuff();
-            //original.Should().Be(reconverted);
+            var messageDao = deltaDao.ToDao(original);
+            var reconverted = messageDao.ToProtoBuff();
+            original.Should().Be(reconverted);
         }
 
         [Fact]
