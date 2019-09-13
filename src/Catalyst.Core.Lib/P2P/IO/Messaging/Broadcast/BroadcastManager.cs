@@ -51,6 +51,8 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
         /// <summary>The peers</summary>
         private readonly IPeerRepository _peers;
 
+        private readonly IPeerSettings _peerSettings;
+
         /// <summary>The pending requests</summary>
         private readonly IMemoryCache _pendingRequests;
 
@@ -80,12 +82,14 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
         /// <summary>Initializes a new instance of the <see cref="BroadcastManager"/> class.</summary>
         /// <param name="peerIdentifier">The peer identifier.</param>
         /// <param name="peers">The peers.</param>
+        /// <param name="peerSettings">Peer settings</param>
         /// <param name="memoryCache">The memory cache.</param>
         /// <param name="peerClient">The peer client.</param>
         /// <param name="signer">The signature writer</param>
         /// <param name="logger"></param>
         public BroadcastManager(IPeerIdentifier peerIdentifier,
             IPeerRepository peers, 
+            IPeerSettings peerSettings,
             IMemoryCache memoryCache, 
             IPeerClient peerClient,
             IKeySigner signer, 
@@ -95,6 +99,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
             _peerIdentifier = peerIdentifier;
             _pendingRequests = memoryCache;
             _peers = peers;
+            _peerSettings = peerSettings;
             _peerClient = peerClient;
             _signer = signer;
             _incomingBroadcastSignatureDictionary = new ConcurrentDictionary<ICorrelationId, ProtocolMessageSigned>();
@@ -141,7 +146,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
                 // Required to wrap his own message in a signature
                 var signingContext = new SigningContext
                 {
-                    Network = Protocol.Common.Network.Devnet,
+                    Network = _peerSettings.Network,
                     SignatureType = SignatureType.ProtocolPeer
                 };
 
