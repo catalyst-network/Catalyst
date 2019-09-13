@@ -22,7 +22,6 @@
 #endregion
 
 using AutoMapper;
-using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Deltas;
 
 namespace Catalyst.Core.Lib.DAO.Deltas

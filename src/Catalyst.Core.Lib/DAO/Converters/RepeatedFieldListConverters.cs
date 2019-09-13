@@ -25,7 +25,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
-using Google.Protobuf;
 using Google.Protobuf.Collections;
 
 namespace Catalyst.Core.Lib.DAO.Converters
@@ -42,18 +41,6 @@ namespace Catalyst.Core.Lib.DAO.Converters
         }
     }
 
-    //public class RepeatedFieldToListConverter<TIn, TOut>
-    //    : IValueConverter<RepeatedField<TIn>, List<TOut>>
-    //{
-    //    public List<TOut> Convert(RepeatedField<TIn> sourceMember, ResolutionContext context)
-    //    {
-    //        var innerMapper = context.ConfigurationProvider.ResolveTypeMap(typeof(TIn), typeof(TOut));
-    //        var innerMapper = context.
-    //        return sourceMember.Select(i => innerMapper. (i, context)).ToList();
-    //    }
-    //}
-
-
     public class ListToRepeatedFieldConverter<TIn, TOut, TInnerConverter>
         : IValueConverter<List<TIn>, RepeatedField<TOut>>
         where TInnerConverter : IValueConverter<TIn, TOut>
@@ -67,6 +54,4 @@ namespace Catalyst.Core.Lib.DAO.Converters
             return result;
         }
     }
-
-    //public class ListOfStringsToRepeatedFieldOfByteString
 }

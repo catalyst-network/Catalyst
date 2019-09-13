@@ -26,8 +26,6 @@ using System.Collections.Generic;
 using AutoMapper;
 using Catalyst.Core.Lib.DAO.Converters;
 using Catalyst.Protocol.Transaction;
-using Google.Protobuf;
-using Google.Protobuf.Collections;
 using Google.Protobuf.WellKnownTypes;
 
 namespace Catalyst.Core.Lib.DAO
@@ -52,9 +50,7 @@ namespace Catalyst.Core.Lib.DAO
                .ForMember(d => d.From, opt => opt.ConvertUsing(new ByteStringToStringPubKeyConverter(), s => s.From))
                .ForMember(d => d.Data, opt => opt.ConvertUsing(new ByteStringToStringBase64Converter(), s => s.Data))
                .ForMember(d => d.Signature, opt => opt.ConvertUsing(new ByteStringToStringBase64Converter(), s => s.Signature))
-               .ForMember(d => d.Init, opt => opt.ConvertUsing(new ByteStringToStringBase64Converter(), s => s.Init))
-               .ForMember(e => e.CfEntries, opt => opt.UseDestinationValue())
-               .ForMember(e => e.StEntries, opt => opt.UseDestinationValue());
+               .ForMember(d => d.Init, opt => opt.ConvertUsing(new ByteStringToStringBase64Converter(), s => s.Init));
 
             cfg.AllowNullDestinationValues = true;
 

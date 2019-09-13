@@ -21,7 +21,6 @@
 
 #endregion
 
-using System;
 using System.Collections.Generic;
 using AutoMapper;
 using Catalyst.Core.Lib.DAO.Converters;

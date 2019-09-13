@@ -23,7 +23,6 @@
 
 using AutoMapper;
 using Catalyst.Core.Lib.DAO.Converters;
-using Catalyst.Core.Lib.Util;
 using Catalyst.Protocol.Transaction;
 using Google.Protobuf;
 
@@ -37,7 +36,6 @@ namespace Catalyst.Core.Lib.DAO
 
         public override void InitMappers(IMapperConfigurationExpression cfg)
         {
-            cfg.CreateMap<EntryRangeProof, EntryRangeProofDao>().ReverseMap();
             cfg.CreateMap<CFTransactionEntry, CfTransactionEntryDao>()
                .ForMember(e => e.PedersenCommit,
                     opt => opt.ConvertUsing<ByteStringToStringBase64Converter, ByteString>())

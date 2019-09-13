@@ -21,12 +21,10 @@
 
 #endregion
 
-using Google.Protobuf;
 using SharpRepository.Repository;
 using System.ComponentModel.DataAnnotations;
 using AutoMapper;
 using Catalyst.Abstractions.DAO;
-using Google.Protobuf.Collections;
 
 namespace Catalyst.Core.Lib.DAO
 {
