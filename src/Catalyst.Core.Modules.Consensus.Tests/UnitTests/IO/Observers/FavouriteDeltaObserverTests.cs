@@ -28,14 +28,15 @@ using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
 using Catalyst.Core.Modules.Consensus.IO.Observers;
-using Catalyst.Protocol.Common;
-using Catalyst.Protocol.Deltas;
+using Catalyst.Protocol.Wire;
+using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using Multiformats.Hash.Algorithms;
 using NSubstitute;
 using Serilog;
 using Xunit;
+using CandidateDeltaBroadcast = Catalyst.Protocol.Wire.CandidateDeltaBroadcast;
 
 namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
 {

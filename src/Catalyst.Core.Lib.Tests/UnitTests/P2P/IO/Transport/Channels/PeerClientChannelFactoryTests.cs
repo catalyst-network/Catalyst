@@ -37,7 +37,7 @@ using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.P2P.IO.Transport.Channels;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
-using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.IPPN;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;

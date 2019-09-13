@@ -23,7 +23,7 @@
 
 using System;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
-using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Wire;
 
 namespace Catalyst.Abstractions.Rpc.IO.Messaging.Correlation
 {

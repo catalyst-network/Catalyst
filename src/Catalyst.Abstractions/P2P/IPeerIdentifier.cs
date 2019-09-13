@@ -23,7 +23,7 @@
 
 using System;
 using System.Net;
-using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Wire;
 
 namespace Catalyst.Abstractions.P2P
 {

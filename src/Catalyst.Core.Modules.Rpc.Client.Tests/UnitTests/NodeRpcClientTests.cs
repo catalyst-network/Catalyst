@@ -39,7 +39,7 @@ using Catalyst.Core.Lib.IO.Messaging.Dto;
 using Catalyst.Core.Lib.IO.Transport.Channels;
 using Catalyst.Core.Lib.Rpc.IO.Exceptions;
 using Catalyst.Core.Modules.Rpc.Client.IO.Observers;
-using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;

@@ -34,7 +34,7 @@ using Catalyst.Abstractions.P2P.IO.Messaging.Broadcast;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
 using Catalyst.Core.Lib.P2P.Repository;
-using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Wire;
 using Google.Protobuf;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Primitives;

@@ -29,7 +29,7 @@ using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.Config;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
-using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.Rpc.Node;
 using DotNetty.Transport.Channels;
 using Google.Protobuf;

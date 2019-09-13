@@ -23,7 +23,7 @@
 
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Keystore;
-using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Wire;
 using ISignature = Catalyst.Abstractions.Cryptography.ISignature;
 
 namespace Catalyst.Abstractions.KeySigner

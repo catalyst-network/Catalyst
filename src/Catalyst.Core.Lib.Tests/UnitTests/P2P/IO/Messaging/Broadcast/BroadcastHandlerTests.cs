@@ -33,7 +33,7 @@ using Catalyst.Core.Lib.IO.Handlers;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
-using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.Transaction;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels.Embedded;

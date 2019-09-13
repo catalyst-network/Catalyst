@@ -1,4 +1,4 @@
-﻿#region LICENSE
+#region LICENSE
 
 /**
 * Copyright (c) 2019 Catalyst Network
@@ -21,18 +21,25 @@
 
 #endregion
 
-using Google.Protobuf;
-using System;
+using System.IO;
 
-namespace Catalyst.Protocol.Common
+namespace Catalyst.Protocol.Wire
 {
-    public partial class PeerId
+    public sealed partial class FavouriteDeltaBroadcast
     {
-        partial void 
-            OnConstruction()
+        public bool IsValid()
         {
-            short protocolVersion = 1;
-            ProtocolVersion = ByteString.CopyFrom(BitConverter.GetBytes(protocolVersion));
+            if (Candidate == null || !Candidate.IsValid())
+            {
+                throw new InvalidDataException($"{nameof(Candidate)} is not valid");
+            }
+
+            if (VoterId == null)
+            {
+                throw new InvalidDataException($"{nameof(VoterId)} cannot be null");
+            }
+
+            return true;
         }
     }
 }

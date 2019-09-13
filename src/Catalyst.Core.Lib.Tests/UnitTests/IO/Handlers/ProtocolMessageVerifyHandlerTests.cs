@@ -28,7 +28,7 @@ using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Handlers;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
-using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using NSubstitute;

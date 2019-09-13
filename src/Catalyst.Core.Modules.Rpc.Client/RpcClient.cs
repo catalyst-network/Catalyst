@@ -37,7 +37,7 @@ using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Transport;
 using Catalyst.Core.Lib.P2P;
 using Catalyst.Core.Lib.Rpc.IO.Exceptions;
-using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Wire;
 using Google.Protobuf;
 using Serilog;
 

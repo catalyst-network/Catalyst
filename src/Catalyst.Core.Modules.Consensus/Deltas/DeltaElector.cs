@@ -29,13 +29,14 @@ using System.Threading;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Util;
-using Catalyst.Protocol.Deltas;
+using Catalyst.Protocol.Wire;
 using Dawn;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Primitives;
 using Nethereum.Hex.HexConvertors.Extensions;
 using Newtonsoft.Json;
 using Serilog;
+using CandidateDeltaBroadcast = Catalyst.Protocol.Wire.CandidateDeltaBroadcast;
 
 namespace Catalyst.Core.Modules.Consensus.Deltas
 {

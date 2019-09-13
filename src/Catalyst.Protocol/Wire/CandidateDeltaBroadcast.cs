@@ -1,4 +1,4 @@
-﻿#region LICENSE
+#region LICENSE
 
 /**
 * Copyright (c) 2019 Catalyst Network
@@ -23,7 +23,7 @@
 
 using System.IO;
 
-namespace Catalyst.Protocol.Deltas
+namespace Catalyst.Protocol.Wire
 {
     public sealed partial class CandidateDeltaBroadcast
     {

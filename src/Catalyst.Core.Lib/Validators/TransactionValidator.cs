@@ -24,7 +24,7 @@
 using System.Linq;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Validators;
-using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.Transaction;
 using Google.Protobuf;
 using Serilog;

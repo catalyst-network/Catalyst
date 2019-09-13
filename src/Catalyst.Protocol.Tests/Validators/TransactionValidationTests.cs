@@ -26,7 +26,7 @@ using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Validators;
 using Catalyst.Core.Lib.Validators;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
-using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.Transaction;
 using FluentAssertions;
 using Google.Protobuf;

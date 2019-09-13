@@ -24,7 +24,7 @@
 using System.Threading.Tasks;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.IO.Observers;
-using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Wire;
 
 namespace Catalyst.Abstractions.P2P.IO.Messaging.Broadcast
 {

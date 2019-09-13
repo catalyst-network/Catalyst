@@ -37,7 +37,7 @@ using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.IO.Handlers;
 using Catalyst.Core.Lib.IO.Transport.Channels;
-using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Wire;
 using DotNetty.Codecs;
 using DotNetty.Codecs.Protobuf;
 using DotNetty.Transport.Channels;

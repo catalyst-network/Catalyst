@@ -29,7 +29,7 @@ using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Network;
 using Catalyst.Core.Lib.Util;
-using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Wire;
 using Dawn;
 using Google.Protobuf;
 using Nethereum.RLP;

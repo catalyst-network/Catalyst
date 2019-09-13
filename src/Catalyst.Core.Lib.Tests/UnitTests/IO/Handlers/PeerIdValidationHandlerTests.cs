@@ -23,7 +23,7 @@
 
 using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.IO.Handlers;
-using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using NSubstitute;

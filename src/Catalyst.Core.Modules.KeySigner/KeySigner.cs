@@ -26,7 +26,7 @@ using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.KeySigner;
 using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.Types;
-using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Wire;
 using Google.Protobuf;
 using Org.BouncyCastle.Security;
 

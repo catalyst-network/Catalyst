@@ -29,7 +29,7 @@ using Catalyst.Abstractions.Mempool;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Mempool.Documents;
 using Catalyst.Core.Modules.Rpc.Server.IO.Observers;
-using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.Protocol.Transaction;
 using Catalyst.TestUtils;

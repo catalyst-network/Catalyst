@@ -22,7 +22,7 @@
 #endregion
 
 using Catalyst.Core.Lib.Extensions;
-using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.IPPN;
 using Catalyst.Protocol.Transaction;
 using FluentAssertions;

@@ -30,9 +30,9 @@ using Catalyst.Core.Lib.DAO;
 using Catalyst.Core.Lib.DAO.Deltas;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Util;
-using Catalyst.Protocol.Common;
-using Catalyst.Protocol.Deltas;
+using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.Transaction;
+using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Google.Protobuf;
@@ -41,6 +41,7 @@ using ICSharpCode.SharpZipLib.Tar;
 using Multiformats.Hash;
 using Multiformats.Hash.Algorithms;
 using Xunit;
+using CandidateDeltaBroadcast = Catalyst.Protocol.Wire.CandidateDeltaBroadcast;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
 {

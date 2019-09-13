@@ -23,7 +23,7 @@
 
 // using System;
 // using System.Linq;
-// using Catalyst.Protocol.Common;
+// using Catalyst.Protocol.Wire;
 // using FluentAssertions;
 // using Multiformats.Hash.Algorithms;
 // using NSubstitute;

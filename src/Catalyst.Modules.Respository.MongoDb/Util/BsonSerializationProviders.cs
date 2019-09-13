@@ -22,7 +22,7 @@
 #endregion
 
 using Catalyst.Core.Lib.P2P;
-using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.Transaction;
 using Google.Protobuf;
 using MongoDB.Bson.Serialization;

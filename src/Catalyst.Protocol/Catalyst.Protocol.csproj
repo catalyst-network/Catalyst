@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFramework>netcoreapp2.2</TargetFramework>
         <RootNamespace>Catalyst.Protocol</RootNamespace>
@@ -15,11 +15,9 @@
         <PackageReference Include="Grpc.Tools" Version="1.22.0" PrivateAssets="all" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive" />
     </ItemGroup>
     <ItemGroup>
-        <ProtoBuf Include="..\..\submodules\protocol-protobuffs\src\Common.proto" Link="Protobuffs\Common.proto" />
-        <ProtoBuf Include="..\..\submodules\protocol-protobuffs\src\Deltas.proto" Link="Protobuffs\Deltas.proto" />
-        <ProtoBuf Include="..\..\submodules\protocol-protobuffs\src\IPPN.proto" Link="Protobuffs\IPPN.proto" />
-        <ProtoBuf Include="..\..\submodules\protocol-protobuffs\src\Rpc.proto" Link="Protobuffs\Rpc.proto" />
-        <ProtoBuf Include="..\..\submodules\protocol-protobuffs\src\Transaction.proto" Link="Protobuffs\Transaction.proto" />
-        <ProtoBuf Include="..\..\submodules\protocol-protobuffs\src\DfsMarketplace.proto" Link="Protobuffs\DfsMarketplace.proto" />
+        <ProtoBuf Include="..\..\submodules\protocol-protobuffs\src\*.proto" Link="Protobuffs\%(Filename)%(Extension)" />
+    </ItemGroup>
+    <ItemGroup>
+      <Folder Include="Peer\" />
     </ItemGroup>
 </Project>

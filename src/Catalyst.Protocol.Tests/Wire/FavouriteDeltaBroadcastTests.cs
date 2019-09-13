@@ -23,13 +23,14 @@
 
 using System;
 using System.IO;
-using Catalyst.Protocol.Common;
-using Catalyst.Protocol.Deltas;
+using Catalyst.Protocol.Wire;
+using Catalyst.Protocol.Wire;
 using FluentAssertions;
 using Google.Protobuf;
 using Xunit;
+using CandidateDeltaBroadcast = Catalyst.Protocol.Wire.CandidateDeltaBroadcast;
 
-namespace Catalyst.Protocol.Tests.Deltas
+namespace Catalyst.Protocol.Tests.Wire
 {
     public class FavouriteDeltaBroadcastTests
     {

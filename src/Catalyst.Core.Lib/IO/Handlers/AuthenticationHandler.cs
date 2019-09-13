@@ -25,7 +25,7 @@ using System.Reflection;
 using System.Security.Authentication;
 using Catalyst.Abstractions.Rpc.Authentication;
 using Catalyst.Core.Lib.P2P;
-using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Wire;
 using DotNetty.Transport.Channels;
 using Serilog;
 

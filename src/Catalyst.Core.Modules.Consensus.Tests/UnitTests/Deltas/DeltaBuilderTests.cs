@@ -43,7 +43,7 @@ using Nethereum.Hex.HexConvertors.Extensions;
 using NSubstitute;
 using Serilog;
 using Xunit;
-using CandidateDeltaBroadcast = Catalyst.Protocol.Deltas.CandidateDeltaBroadcast;
+using CandidateDeltaBroadcast = Catalyst.Protocol.Wire.CandidateDeltaBroadcast;
 
 namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 {

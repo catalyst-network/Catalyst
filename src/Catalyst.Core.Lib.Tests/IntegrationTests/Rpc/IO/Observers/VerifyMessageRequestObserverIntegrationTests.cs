@@ -26,7 +26,7 @@ using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.KeySigner;
 using Catalyst.Abstractions.Types;
 using Catalyst.Protocol;
-using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;

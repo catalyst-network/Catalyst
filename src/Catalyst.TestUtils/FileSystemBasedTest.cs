@@ -30,7 +30,7 @@ using System.Text.RegularExpressions;
 using Catalyst.Abstractions.FileSystem;
 using Catalyst.Core.Lib.Config;
 using Catalyst.Core.Lib.FileSystem;
-using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Wire;
 using Dawn;
 using FluentAssertions;
 using NSubstitute;

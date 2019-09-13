@@ -28,7 +28,7 @@ using System.Text;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Network;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
-using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Wire;
 
 namespace Catalyst.TestUtils
 {

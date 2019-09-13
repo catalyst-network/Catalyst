@@ -27,7 +27,7 @@ using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
-using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Wire;
 using DotNetty.Transport.Channels;
 
 namespace Catalyst.Core.Lib.IO.Handlers

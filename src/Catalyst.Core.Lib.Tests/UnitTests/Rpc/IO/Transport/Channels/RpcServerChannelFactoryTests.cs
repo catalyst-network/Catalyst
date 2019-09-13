@@ -33,7 +33,7 @@ using Catalyst.Core.Lib.IO.Codecs;
 using Catalyst.Core.Lib.IO.Handlers;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using Catalyst.Core.Modules.Rpc.Server.Transport.Channels;
-using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.IPPN;
 using Catalyst.TestUtils;
 using DotNetty.Buffers;

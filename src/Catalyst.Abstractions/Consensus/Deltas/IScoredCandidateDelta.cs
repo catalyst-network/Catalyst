@@ -22,6 +22,7 @@
 #endregion
 
 using Catalyst.Protocol.Deltas;
+using Catalyst.Protocol.Wire;
 
 namespace Catalyst.Abstractions.Consensus.Deltas
 {

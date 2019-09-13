@@ -30,7 +30,7 @@ using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.Network;
-using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Wire;
 using Dawn;
 using Google.Protobuf;
 using Google.Protobuf.Reflection;

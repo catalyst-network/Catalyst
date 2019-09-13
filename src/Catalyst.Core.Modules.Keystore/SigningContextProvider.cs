@@ -22,7 +22,7 @@
 #endregion
 
 using Catalyst.Abstractions.Keystore;
-using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Wire;
 
 namespace Catalyst.Core.Modules.Keystore
 {

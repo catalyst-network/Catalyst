@@ -24,7 +24,7 @@
 using System;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
-using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.Protocol.Transaction;
 using Google.Protobuf;
