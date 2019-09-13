@@ -26,6 +26,7 @@ using System.Net;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.Rpc;
 using Catalyst.Core.Lib.Util;
+using Catalyst.Protocol.Network;
 using Catalyst.Protocol.Wire;
 using NSubstitute;
 
@@ -36,7 +37,7 @@ namespace Catalyst.TestUtils
         public static IPeerSettings TestPeerSettings(byte[] publicKey = default, int port = 42069)
         {
             var peerSettings = Substitute.For<IPeerSettings>();
-            peerSettings.Network.Returns(Network.Devnet);
+            peerSettings.NetworkType.Returns(NetworkType.Devnet);
             peerSettings.PublicKey.Returns(
                 publicKey?.KeyToString() ?? TestKeyRegistry.TestPublicKey);
             peerSettings.Port.Returns(port);

@@ -41,7 +41,7 @@ namespace Catalyst.Protocol.Tests.Validators
     {
         private readonly ITransactionValidator _transactionValidator;
         private readonly IWrapper _cryptoWrapper;
-        private readonly Network _network = Network.Devnet;
+        private readonly Network _NetworkType = Network.Devnet;
         private TransactionBroadcast _transactionBroadcast;
         private IPrivateKey _privateKey;
 
@@ -262,7 +262,7 @@ namespace Catalyst.Protocol.Tests.Validators
             byte[] signatureBytes = _cryptoWrapper.StdSign(_privateKey, transactionWithoutSig.ToByteArray(),
                 new SigningContext
                 {
-                    Network = _network,
+                    NetworkType = _network,
                     SignatureType = transactionWithoutSig.TransactionType == TransactionType.Normal
                         ? SignatureType.TransactionPublic
                         : SignatureType.TransactionConfidential

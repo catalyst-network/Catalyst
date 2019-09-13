@@ -29,6 +29,7 @@ using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Network;
 using Catalyst.Core.Lib.Util;
+using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Wire;
 using Dawn;
 using Google.Protobuf;
@@ -46,12 +47,13 @@ namespace Catalyst.Core.Lib.P2P
     /// <summary>
     ///     @TODO move to SDK
     /// </summary>
+    [Obsolete("Please try to use the PeerId directly")]
     public sealed class PeerIdentifier : IPeerIdentifier
     {
         public static char PidDelimiter => '|';
         public PeerId PeerId { get; }
         public IPAddress Ip => new IPAddress(PeerId.Ip.ToByteArray()).MapToIPv4();
-        public int Port => BitConverter.ToUInt16(PeerId.Port.ToByteArray());
+        public int Port => (int) PeerId.Port;
         public byte[] PublicKey => PeerId.PublicKey.ToByteArray();
         public IPEndPoint IpEndPoint => EndpointBuilder.BuildNewEndPoint(Ip, Port);
         

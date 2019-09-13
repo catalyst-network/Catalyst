@@ -86,7 +86,7 @@ namespace Catalyst.Core.Modules.Rpc.Client.IO.Transport.Channels
                     new ProtobufVarint32LengthFieldPrepender(),
                     new ProtobufEncoder(),
                     new ProtobufVarint32FrameDecoder(),
-                    new ProtobufDecoder(ProtocolMessageSigned.Parser),
+                    new ProtobufDecoder(ProtocolMessage.Parser),
                     new PeerIdValidationHandler(_peerIdValidator),
                     new AddressedEnvelopeToIMessageEncoder(),
                     new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(

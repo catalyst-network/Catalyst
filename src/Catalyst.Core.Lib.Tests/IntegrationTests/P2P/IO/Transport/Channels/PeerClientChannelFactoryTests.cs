@@ -33,9 +33,13 @@ using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Handlers;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
+using Catalyst.Protocol.Cryptography;
 using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.IPPN;
+using Catalyst.Protocol.Network;
+using Catalyst.Protocol.Peer;
 using Catalyst.TestUtils;
+using Catalyst.TestUtils.Protocol;
 using DotNetty.Transport.Channels.Embedded;
 using DotNetty.Transport.Channels.Sockets;
 using FluentAssertions;
@@ -66,10 +70,6 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P.IO.Transport.Channels
             _serverKeySigner = Substitute.For<IKeySigner>();
             var broadcastManager = Substitute.For<IBroadcastManager>();
 
-            var signingContextProvider = Substitute.For<ISigningContextProvider>();
-            signingContextProvider.SignatureType.Returns(SignatureType.ProtocolPeer);
-            signingContextProvider.Network.Returns(Protocol.Common.Network.Devnet);
-            
             _peerIdValidator = Substitute.For<IPeerIdValidator>();
 
             var serverFactory = new UnitTests.P2P.IO.Transport.Channels.PeerServerChannelFactoryTests.TestPeerServerChannelFactory(
@@ -77,7 +77,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P.IO.Transport.Channels
                 broadcastManager,
                 _serverKeySigner,
                 _peerIdValidator,
-                signingContextProvider,
+                DevNetPeerSigningContextProvider.Instance,
                 _testScheduler);
 
             _signature = Substitute.For<ISignature>();
@@ -89,7 +89,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P.IO.Transport.Channels
                 _clientKeySigner, 
                 _clientCorrelationManager,
                 _peerIdValidator,
-                signingContextProvider,
+                DevNetPeerSigningContextProvider.Instance,
                 _testScheduler);
 
             _serverChannel =

@@ -35,6 +35,7 @@ using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Consensus.Deltas;
 using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Transaction;
+using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Google.Protobuf;
@@ -73,7 +74,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             _producerId = PeerIdentifierHelper.GetPeerIdentifier("producer");
 
             _previousDeltaHash = Encoding.UTF8.GetBytes("previousDelta");
-            _zeroCoinbaseEntry = new CoinbaseEntry {Amount = 0, PubKey = _producerId.PublicKey.ToByteString(), Version = 1};
+            _zeroCoinbaseEntry = new CoinbaseEntry {Amount = 0, ReceiverPublicKey = _producerId.PublicKey.ToByteString()};
 
             _logger = Substitute.For<ILogger>();
 

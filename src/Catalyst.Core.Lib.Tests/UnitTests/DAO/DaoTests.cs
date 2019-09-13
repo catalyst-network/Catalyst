@@ -22,7 +22,6 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using Catalyst.Abstractions.DAO;
@@ -30,15 +29,11 @@ using Catalyst.Core.Lib.DAO;
 using Catalyst.Core.Lib.DAO.Deltas;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Util;
+using Catalyst.Protocol.Cryptography;
 using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.Transaction;
-using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using FluentAssertions;
-using Google.Protobuf;
-using Google.Protobuf.Collections;
-using ICSharpCode.SharpZipLib.Tar;
-using Multiformats.Hash;
 using Multiformats.Hash.Algorithms;
 using Xunit;
 using CandidateDeltaBroadcast = Catalyst.Protocol.Wire.CandidateDeltaBroadcast;
@@ -96,7 +91,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
 
             messageDao.TypeUrl.Should().Be("cleanurl");
             messageDao.CorrelationId.Should().Be(newGuid.ToString());
-            messageDao.PeerId.Port.Should().Be(BitConverter.ToUInt16(peerId.Port.ToByteArray()));
+            messageDao.PeerId.Port.Should().Be((ushort) peerId.Port);
             messageDao.PeerId.Ip.Should().Be(new IPAddress(peerId.Ip.ToByteArray()).MapToIPv6().ToString());
 
             var reconverted = messageDao.ToProtoBuff();
@@ -110,7 +105,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
             var byteRn = new byte[30];
             new Random().NextBytes(byteRn);
 
-            var original = new ProtocolErrorMessageSigned
+            var original = new ProtocolErrorMessage
             {
                 CorrelationId = Guid.NewGuid().ToByteString(),
                 Signature = byteRn.ToByteString(),
@@ -175,7 +170,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
 
             var original = new SigningContext
             {
-                Network = Protocol.Common.Network.Devnet,
+                NetworkType = NetworkType.Devnet,
                 SignatureType = SignatureType.TransactionPublic
             };
 
@@ -261,8 +256,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
 
             var original = new CoinbaseEntry
             {
-                Version = 415,
-                PubKey = pubKeyBytes.ToByteString(),
+                ReceiverPublicKey = pubKeyBytes.ToByteString(),
                 Amount = 271314
             };
 
@@ -282,7 +276,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
 
             var original = new STTransactionEntry
             {
-                PubKey = pubKeyBytes.ToByteString(),
+                SenderPublicKey = pubKeyBytes.ToByteString(),
                 Amount = 8855274
             };
 

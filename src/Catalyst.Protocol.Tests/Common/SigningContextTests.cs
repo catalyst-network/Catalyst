@@ -42,7 +42,7 @@ namespace Catalyst.Protocol.Tests.Common
         {
             var signingContext = new SigningContext
             {
-                Network = Network.Mainnet,
+                NetworkType = Network.Mainnet,
                 SignatureType = SignatureType.ProtocolRpc
             };
 

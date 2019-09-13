@@ -24,6 +24,7 @@
 using Catalyst.Abstractions.Consensus;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Protocol.Transaction;
+using Catalyst.Protocol.Wire;
 using Google.Protobuf;
 
 namespace Catalyst.Core.Modules.Consensus

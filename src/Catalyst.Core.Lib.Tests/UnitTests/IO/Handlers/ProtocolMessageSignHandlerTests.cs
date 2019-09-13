@@ -31,9 +31,12 @@ using Catalyst.Core.Lib.IO.Handlers;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
+using Catalyst.Protocol.Cryptography;
 using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.IPPN;
+using Catalyst.Protocol.Network;
 using Catalyst.TestUtils;
+using Catalyst.TestUtils.Protocol;
 using DotNetty.Transport.Channels;
 using NSubstitute;
 using Xunit;
@@ -54,14 +57,12 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Handlers
             _keySigner = Substitute.For<IKeySigner>();
             _signature = Substitute.For<ISignature>();
             var peerSettings = Substitute.For<IPeerSettings>();
-            _signatureContextProvider = Substitute.For<ISigningContextProvider>();
+            _signatureContextProvider = DevNetPeerSigningContextProvider.Instance;
 
             _signature.SignatureBytes.Returns(ByteUtil.GenerateRandomByteArray(FFI.SignatureLength));
             _signature.PublicKeyBytes.Returns(ByteUtil.GenerateRandomByteArray(FFI.PublicKeyLength));
 
-            peerSettings.Network.Returns(Protocol.Common.Network.Devnet);
-            _signatureContextProvider.Network.Returns(Protocol.Common.Network.Devnet);
-            _signatureContextProvider.SignatureType.Returns(SignatureType.ProtocolPeer);
+            peerSettings.NetworkType.Returns(NetworkType.Devnet);
 
             _dto = new MessageDto(new PingRequest().ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId),
                 PeerIdentifierHelper.GetPeerIdentifier("recipient")

@@ -23,6 +23,7 @@
 
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Protocol.Transaction;
+using Catalyst.Protocol.Wire;
 using Google.Protobuf.WellKnownTypes;
 
 namespace Catalyst.TestUtils

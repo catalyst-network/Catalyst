@@ -38,7 +38,8 @@ using Serilog;
 using System.Linq;
 using Catalyst.Core.Lib.Cryptography;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
-using Catalyst.Core.Modules.Rpc.Server.IO.Observers;
+using Catalyst.Protocol.Cryptography;
+using Catalyst.Protocol.Network;
 using Xunit;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
@@ -56,7 +57,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         {
             _signingContext = new SigningContext
             {
-                Network = Protocol.Common.Network.Devnet,
+                NetworkType = NetworkType.Devnet,
                 SignatureType = SignatureType.ProtocolRpc
             };
 

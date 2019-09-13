@@ -88,7 +88,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Transport.Channels
                     return new List<IChannelHandler>
                     {
                         new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
-                            new DatagramPacketDecoder(new ProtobufDecoder(ProtocolMessageSigned.Parser)),
+                            new DatagramPacketDecoder(new ProtobufDecoder(ProtocolMessage.Parser)),
                             new DatagramPacketEncoder<IMessage>(new ProtobufEncoder())
                         ),
                         new PeerIdValidationHandler(_peerIdValidator),

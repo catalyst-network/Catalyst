@@ -29,6 +29,7 @@ using Catalyst.Abstractions.Validators;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Events;
 using Catalyst.Core.Lib.Mempool.Documents;
+using Catalyst.Protocol.Network;
 using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.Protocol.Transaction;
@@ -52,7 +53,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Events
         public TransactionReceivedEventTests()
         {
             _peerSettings = Substitute.For<IPeerSettings>();
-            _peerSettings.Network.Returns(Protocol.Common.Network.Devnet);
+            _peerSettings.NetworkType.Returns(NetworkType.Devnet);
 
             _mempool = Substitute.For<IMempool<MempoolDocument>>();
             _transactionValidator = Substitute.For<ITransactionValidator>();
@@ -68,7 +69,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Events
         [Fact]
         public void Can_Send_Error_To_Invalid_Transaction()
         {
-            _transactionValidator.ValidateTransaction(Arg.Any<TransactionBroadcast>(), _peerSettings.Network).Returns(false);
+            _transactionValidator.ValidateTransaction(Arg.Any<TransactionBroadcast>(), _peerSettings.NetworkType).Returns(false);
             _transactionReceivedEvent.OnTransactionReceived(new TransactionBroadcast()).Should()
                .Be(ResponseCode.Error);
             _broadcastManager.DidNotReceiveWithAnyArgs().BroadcastAsync(default);
@@ -83,7 +84,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Events
                 Signature = sig
             };
 
-            _transactionValidator.ValidateTransaction(Arg.Any<TransactionBroadcast>(), _peerSettings.Network).Returns(true);
+            _transactionValidator.ValidateTransaction(Arg.Any<TransactionBroadcast>(), _peerSettings.NetworkType).Returns(true);
             _mempool.Repository.TryReadItem(sig).Returns(true);
 
             _transactionReceivedEvent.OnTransactionReceived(transaction).Should().Be(ResponseCode.Error);
@@ -100,7 +101,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Events
                 Signature = sig
             };
 
-            _transactionValidator.ValidateTransaction(Arg.Any<TransactionBroadcast>(), _peerSettings.Network).Returns(true);
+            _transactionValidator.ValidateTransaction(Arg.Any<TransactionBroadcast>(), _peerSettings.NetworkType).Returns(true);
             _transactionReceivedEvent.OnTransactionReceived(transaction).Should().Be(ResponseCode.Successful);
 
             _mempool.Repository.Received(1).CreateItem(Arg.Is<TransactionBroadcast>(

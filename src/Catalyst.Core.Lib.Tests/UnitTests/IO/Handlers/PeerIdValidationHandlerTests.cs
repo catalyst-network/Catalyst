@@ -36,14 +36,14 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Handlers
         private readonly IPeerIdValidator _peerIdValidator;
         private readonly PeerIdValidationHandler _peerIdValidationHandler;
         private readonly IChannelHandlerContext _fakeContext;
-        private readonly ProtocolMessageSigned _message;
+        private readonly ProtocolMessage _message;
 
         public PeerIdValidationHandlerTests()
         {
             _fakeContext = Substitute.For<IChannelHandlerContext>();
             _peerIdValidator = Substitute.For<IPeerIdValidator>();
             _peerIdValidationHandler = new PeerIdValidationHandler(_peerIdValidator);
-            _message = new ProtocolMessageSigned
+            _message = new ProtocolMessage
             {
                 Message = new ProtocolMessage {PeerId = PeerIdHelper.GetPeerId("Test")}
             };

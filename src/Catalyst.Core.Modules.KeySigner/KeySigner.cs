@@ -26,9 +26,13 @@ using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.KeySigner;
 using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.Types;
+using Catalyst.Core.Lib.Extensions;
+using Catalyst.Protocol.Cryptography;
 using Catalyst.Protocol.Wire;
 using Google.Protobuf;
+using Microsoft.Extensions.FileProviders;
 using Org.BouncyCastle.Security;
+using Serilog.Core;
 
 namespace Catalyst.Core.Modules.KeySigner
 {
@@ -43,7 +47,9 @@ namespace Catalyst.Core.Modules.KeySigner
         /// <param name="keyStore">The key store.</param>
         /// <param name="cryptoContext">The crypto context.</param>
         /// /// <param name="keyRegistry">The key registry.</param>
-        public KeySigner(IKeyStore keyStore, ICryptoContext cryptoContext, IKeyRegistry keyRegistry)
+        public KeySigner(IKeyStore keyStore, 
+            ICryptoContext cryptoContext, 
+            IKeyRegistry keyRegistry)
         {
             _keyStore = keyStore;
             _cryptoContext = cryptoContext;
@@ -107,6 +113,25 @@ namespace Catalyst.Core.Modules.KeySigner
             throw new NotImplementedException();
         }
 
+        public ProtocolMessage SignMessage(ProtocolMessage protocolMessage, SigningContext signingContext)
+        {
+            if (protocolMessage.Signature.RawBytes.Length == _cryptoContext.SignatureLength)
+            {
+                return protocolMessage;
+            }
+
+            protocolMessage.Signature = null;
+            var signatureBytes = Sign(protocolMessage.ToByteArray(), 
+                signingContext).SignatureBytes;
+            var signature = new Signature
+            {
+                SigningContext = signingContext,
+                RawBytes = signatureBytes.ToByteString()
+            };
+            protocolMessage.Signature = signature;
+            return protocolMessage;
+        }
+
         private bool TryPopulateRegistryFromKeyStore(KeyRegistryTypes keyIdentifier, out IPrivateKey key)
         {
             key = _keyStore.KeyStoreDecrypt(keyIdentifier);
@@ -120,4 +145,3 @@ namespace Catalyst.Core.Modules.KeySigner
         }   
     }
 }
-                                         

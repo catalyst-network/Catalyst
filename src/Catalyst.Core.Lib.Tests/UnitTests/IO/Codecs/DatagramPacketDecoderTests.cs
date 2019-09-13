@@ -45,11 +45,11 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Codecs
         {
             var channel = new EmbeddedChannel(
                 new DatagramPacketDecoder(
-                    new ProtobufDecoder(ProtocolMessageSigned.Parser)
+                    new ProtobufDecoder(ProtocolMessage.Parser)
                 )
             );
             
-            var protocolMessageSigned = new ProtocolMessageSigned
+            var protocolMessageSigned = new ProtocolMessage
             {
                 Message = new PingRequest().ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId, 
                     CorrelationId.GenerateCorrelationId()
@@ -65,7 +65,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Codecs
             );
 
             Assert.True(channel.WriteInbound(datagramPacket));
-            var content = channel.ReadInbound<ProtocolMessageSigned>();
+            var content = channel.ReadInbound<ProtocolMessage>();
             Assert.Equal(protocolMessageSigned, content);
             Assert.False(channel.Finish());
         }

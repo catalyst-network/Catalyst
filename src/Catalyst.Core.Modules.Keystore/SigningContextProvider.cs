@@ -22,13 +22,20 @@
 #endregion
 
 using Catalyst.Abstractions.Keystore;
-using Catalyst.Protocol.Wire;
+using Catalyst.Protocol.Cryptography;
+using Catalyst.Protocol.Network;
 
 namespace Catalyst.Core.Modules.Keystore
 {
     public class SigningContextProvider : ISigningContextProvider
     {
-        public Network Network { get; set; }
-        public SignatureType SignatureType { get; set; }
+        public SigningContextProvider(NetworkType networkType, SignatureType signatureType)
+        {
+            SigningContext = new SigningContext {NetworkType = networkType, SignatureType = signatureType};
+        }
+
+        public SigningContextProvider(SigningContext signingContext) { SigningContext = signingContext; }
+
+        public SigningContext SigningContext { get; }
     }
 }

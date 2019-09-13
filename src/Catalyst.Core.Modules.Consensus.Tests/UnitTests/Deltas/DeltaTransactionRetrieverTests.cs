@@ -28,6 +28,7 @@ using Catalyst.Abstractions.Mempool;
 using Catalyst.Core.Lib.Mempool.Documents;
 using Catalyst.Core.Modules.Consensus.Deltas;
 using Catalyst.Protocol.Transaction;
+using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using NSubstitute;

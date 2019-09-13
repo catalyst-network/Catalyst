@@ -62,7 +62,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.Transport.Channels
                 return () => new List<IChannelHandler>
                 {
                     new ProtobufVarint32FrameDecoder(),
-                    new ProtobufDecoder(ProtocolMessageSigned.Parser),
+                    new ProtobufDecoder(ProtocolMessage.Parser),
                     new ProtobufVarint32LengthFieldPrepender(),
                     new ProtobufEncoder(),
                     new AuthenticationHandler(_authenticationStrategy),

@@ -28,6 +28,7 @@ using Catalyst.Abstractions.Mempool.Repositories;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Mempool.Documents;
 using Catalyst.Protocol.Transaction;
+using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Google.Protobuf;

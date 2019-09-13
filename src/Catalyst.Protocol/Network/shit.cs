@@ -21,12 +21,10 @@
 
 #endregion
 
-using Catalyst.Protocol.Peer;
-
-namespace Catalyst.Abstractions.P2P
+namespace Catalyst.Protocol.Network
 {
-    public interface IPeerChallengeResponse
+    public enum NetworkTypex
     {
-        PeerId PeerId { get; }
+        
     }
 }

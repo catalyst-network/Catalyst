@@ -50,6 +50,8 @@ using Catalyst.Core.Modules.Rpc.Server.IO.Observers;
 using Xunit;
 using Xunit.Abstractions;
 using Catalyst.Core.Modules.Mempool;
+using Catalyst.Protocol.Cryptography;
+using Catalyst.Protocol.Network;
 
 namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
 {
@@ -99,7 +101,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
 
             var signingContext = new SigningContext
             {
-                Network = Protocol.Common.Network.Devnet,
+                NetworkType = NetworkType.Devnet,
                 SignatureType = SignatureType.TransactionPublic
             };
 

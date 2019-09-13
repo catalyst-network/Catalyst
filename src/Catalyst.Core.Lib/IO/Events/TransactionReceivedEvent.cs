@@ -31,6 +31,7 @@ using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.Mempool.Documents;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.Protocol.Transaction;
+using Catalyst.Protocol.Wire;
 using Serilog;
 
 namespace Catalyst.Core.Lib.IO.Events
@@ -61,7 +62,7 @@ namespace Catalyst.Core.Lib.IO.Events
 
         public ResponseCode OnTransactionReceived(TransactionBroadcast transaction)
         {
-            var transactionValid = _validator.ValidateTransaction(transaction, _peerSettings.Network);
+            var transactionValid = _validator.ValidateTransaction(transaction, _peerSettings.NetworkType);
             if (!transactionValid)
             {
                 return ResponseCode.Error;

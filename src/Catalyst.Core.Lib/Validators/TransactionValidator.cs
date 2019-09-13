@@ -24,6 +24,8 @@
 using System.Linq;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Validators;
+using Catalyst.Protocol.Cryptography;
+using Catalyst.Protocol.Network;
 using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.Transaction;
 using Google.Protobuf;
@@ -43,13 +45,13 @@ namespace Catalyst.Core.Lib.Validators
             _logger = logger;
         }
 
-        public bool ValidateTransaction(TransactionBroadcast transactionBroadcast, Protocol.Common.Network network)
+        public bool ValidateTransaction(TransactionBroadcast transactionBroadcast, NetworkType networkType)
         {
             return ValidateTransactionFields(transactionBroadcast)
              && CheckContractInputFields(transactionBroadcast)
              && CheckCfEntries(transactionBroadcast)
              && CheckStEntries(transactionBroadcast)
-             && ValidateTransactionSignature(transactionBroadcast, network);
+             && ValidateTransactionSignature(transactionBroadcast, networkType);
         }
 
         private bool CheckContractInputFields(TransactionBroadcast transactionBroadcast)
@@ -113,7 +115,7 @@ namespace Catalyst.Core.Lib.Validators
             return true;
         }
 
-        private bool ValidateTransactionSignature(TransactionBroadcast transactionBroadcast, Protocol.Common.Network network)
+        private bool ValidateTransactionSignature(TransactionBroadcast transactionBroadcast, NetworkType networkType)
         {
             if (transactionBroadcast.Signature == ByteString.Empty)
             {
@@ -131,7 +133,7 @@ namespace Catalyst.Core.Lib.Validators
                 SignatureType = transactionBroadcast.TransactionType == TransactionType.Normal 
                     ? SignatureType.TransactionPublic 
                     : SignatureType.TransactionConfidential,
-                Network = network
+                NetworkType = networkType
             };
 
             if (!_cryptoContext.StdVerify(transactionSignature, transactionWithoutSig.ToByteArray(), signingContext.ToByteArray()))

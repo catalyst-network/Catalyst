@@ -35,9 +35,13 @@ using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
+using Catalyst.Protocol.Cryptography;
+using Catalyst.Protocol.Network;
+using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
+using Catalyst.TestUtils.Protocol;
 using DotNetty.Buffers;
 using DotNetty.Transport.Channels.Embedded;
 using FluentAssertions;
@@ -67,10 +71,6 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Transport.Channels
             _serverCorrelationManager = Substitute.For<IRpcMessageCorrelationManager>();
             _serverKeySigner = Substitute.For<IKeySigner>();
 
-            var signatureContextProvider = Substitute.For<ISigningContextProvider>();
-            signatureContextProvider.SignatureType.Returns(SignatureType.ProtocolPeer);
-            signatureContextProvider.Network.Returns(Protocol.Common.Network.Devnet);
-
             _authenticationStrategy = Substitute.For<IAuthenticationStrategy>();
 
             _peerIdValidator = Substitute.For<IPeerIdValidator>();
@@ -80,7 +80,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Transport.Channels
                 _serverKeySigner,
                 _authenticationStrategy,
                 _peerIdValidator,
-                signatureContextProvider,
+                DevNetPeerSigningContextProvider.Instance,
                 _testScheduler);
 
             _clientCorrelationManager = Substitute.For<IRpcMessageCorrelationManager>();
@@ -91,7 +91,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Transport.Channels
                     _clientKeySigner,
                     _clientCorrelationManager,
                     _peerIdValidator,
-                    signatureContextProvider,
+                    DevNetPeerSigningContextProvider.Instance,
                     _testScheduler);
 
             _serverChannel =

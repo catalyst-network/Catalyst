@@ -27,17 +27,17 @@ using Catalyst.Protocol.Wire;
 
 namespace Catalyst.Core.Lib.DAO
 {
-    public class ProtocolMessageSignedDao : DaoBase<ProtocolMessageSigned, ProtocolMessageSignedDao>
+    public class ProtocolMessageSignedDao : DaoBase<ProtocolMessage, ProtocolMessageSignedDao>
     {
         public string Signature { get; set; }
         public PeerIdDao PeerId { get; set; }
 
         public override void InitMappers(IMapperConfigurationExpression cfg)
         {
-            cfg.CreateMap<ProtocolMessageSigned, ProtocolMessageSignedDao>()
+            cfg.CreateMap<ProtocolMessage, ProtocolMessageSignedDao>()
                .ForMember(d => d.Signature, opt => opt.ConvertUsing(new ByteStringToStringBase64Converter(), s => s.Signature));
 
-            cfg.CreateMap<ProtocolMessageSignedDao, ProtocolMessageSigned>()
+            cfg.CreateMap<ProtocolMessageSignedDao, ProtocolMessage>()
                .ForMember(d => d.Signature, opt => opt.ConvertUsing(new StringBase64ToByteStringConverter(), s => s.Signature));
         }
     }

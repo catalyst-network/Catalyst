@@ -54,7 +54,7 @@ namespace Catalyst.Simulator
             var consolePasswordReader = new ConsolePasswordReader(userOutput, userInput);
             var certificateStore = new CertificateStore(fileSystem, new PasswordManager(consolePasswordReader, passwordRegistry));
             var certificate = certificateStore.ReadOrCreateCertificateFile("mycert.pfx");
-            var signingContext = new SigningContextProvider {Network = Network.Devnet, SignatureType = SignatureType.ProtocolPeer};
+            var signingContext = new SigningContextProvider {NetworkType = Network.Devnet, SignatureType = SignatureType.ProtocolPeer};
 
             var clientRpcInfoList =
                 ConfigHelper.GenerateClientRpcInfoFromConfig(userOutput, passwordRegistry, certificate, logger, signingContext

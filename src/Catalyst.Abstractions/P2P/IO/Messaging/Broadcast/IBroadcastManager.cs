@@ -36,7 +36,7 @@ namespace Catalyst.Abstractions.P2P.IO.Messaging.Broadcast
 
         /// <summary>Handles Incoming gossip.</summary>
         /// <param name="anySigned">Any signed message.</param>
-        Task ReceiveAsync(ProtocolMessageSigned anySigned);
+        Task ReceiveAsync(ProtocolMessage anySigned);
 
         /// <summary>
         /// Removes the temporary original signed broadcast message data once <see cref="IBroadcastObserver"/>

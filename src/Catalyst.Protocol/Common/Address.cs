@@ -47,7 +47,7 @@
 //             bool isSmartContract)
 //         {
 //             Guard.Argument(publicKey, nameof(publicKey)).NotNull();
-//             Network = network;
+//             NetworkType = network;
 //             IsSmartContract = isSmartContract;
 //
 //             _nonPrefixedContent = publicKey.Bytes
@@ -66,7 +66,7 @@
 //                .Require(b => b[1] == 0 || b[1] == 1,
 //                     b => $"Invalid byte at position 1, byte should be either 0 or 1 but was {b[1]}.");
 //
-//             Network = (Network) rawBytes[0];
+//             NetworkType = (Network) rawBytes[0];
 //
 //             IsSmartContract = rawBytes[1] == 1;
 //             _nonPrefixedContent = rawBytes.TakeLast(ByteLength - 2).ToArray();

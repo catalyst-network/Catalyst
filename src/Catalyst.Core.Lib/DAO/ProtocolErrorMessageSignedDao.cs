@@ -28,7 +28,7 @@ using Google.Protobuf;
 
 namespace Catalyst.Core.Lib.DAO
 {
-    public class ProtocolErrorMessageSignedDao : DaoBase<ProtocolErrorMessageSigned, ProtocolErrorMessageSignedDao>
+    public class ProtocolErrorMessageSignedDao : DaoBase<ProtocolErrorMessage, ProtocolErrorMessageSignedDao>
     {
         public string Signature { get; set; }
         public PeerIdDao PeerId { get; set; }
@@ -37,13 +37,13 @@ namespace Catalyst.Core.Lib.DAO
 
         public override void InitMappers(IMapperConfigurationExpression cfg)
         {
-            cfg.CreateMap<ProtocolErrorMessageSigned, ProtocolErrorMessageSignedDao>()
+            cfg.CreateMap<ProtocolErrorMessage, ProtocolErrorMessageSignedDao>()
                .ForMember(d => d.Signature, opt => opt.ConvertUsing(new ByteStringToStringBase64Converter(), s => s.Signature))
                .ForMember(e => e.CorrelationId,
                     opt => opt.ConvertUsing<ByteStringToStringBase64Converter, ByteString>())
                .ReverseMap();
             
-            cfg.CreateMap<ProtocolErrorMessageSignedDao, ProtocolErrorMessageSigned>()
+            cfg.CreateMap<ProtocolErrorMessageSignedDao, ProtocolErrorMessage>()
                .ForMember(d => d.Signature, opt => opt.ConvertUsing(new StringBase64ToByteStringConverter(), s => s.Signature))
                .ForMember(e => e.CorrelationId,
                     opt => opt.ConvertUsing<StringBase64ToByteStringConverter, string>());

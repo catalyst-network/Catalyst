@@ -30,10 +30,10 @@ using DotNetty.Transport.Channels;
 namespace Catalyst.Core.Lib.IO.Codecs
 {
     public sealed class AddressedEnvelopeToIMessageEncoder 
-        : MessageToMessageEncoder<IMessageDto<ProtocolMessageSigned>>
+        : MessageToMessageEncoder<IMessageDto<ProtocolMessage>>
     {
         protected override void Encode(IChannelHandlerContext context,
-            IMessageDto<ProtocolMessageSigned> message,
+            IMessageDto<ProtocolMessage> message,
             List<object> output)
         {
             output.Add(message.Content);

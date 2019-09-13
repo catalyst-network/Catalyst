@@ -23,7 +23,7 @@
 
 using System;
 using System.IO;
-using Catalyst.Protocol.Wire;
+using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Wire;
 using FluentAssertions;
 using Google.Protobuf;

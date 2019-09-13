@@ -110,7 +110,7 @@ namespace Catalyst.Core.Modules.KeySigner.Tests.IntegrationTests
             var signature = _keySigner.Sign(toSign, new SigningContext());
             var signingContext = new SigningContext
             {
-                Network = Network.Mainnet,
+                NetworkType = Network.Mainnet,
                 SignatureType = SignatureType.ProtocolRpc
             };
 
@@ -125,7 +125,7 @@ namespace Catalyst.Core.Modules.KeySigner.Tests.IntegrationTests
 
             var signingContext = new SigningContext
             {
-                Network = Network.Mainnet,
+                NetworkType = Network.Mainnet,
                 SignatureType = SignatureType.ProtocolRpc
             };
             var signature = _keySigner.Sign(toSign, signingContext);

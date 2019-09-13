@@ -23,6 +23,7 @@
 
 using System.Collections.Generic;
 using Catalyst.Protocol.Transaction;
+using Catalyst.Protocol.Wire;
 using Newtonsoft.Json;
 
 namespace Catalyst.Core.Lib.Util

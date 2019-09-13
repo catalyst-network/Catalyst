@@ -32,9 +32,13 @@ using Catalyst.Core.Lib.IO.Codecs;
 using Catalyst.Core.Lib.IO.Handlers;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using Catalyst.Core.Modules.Rpc.Client.IO.Transport.Channels;
+using Catalyst.Protocol.Cryptography;
 using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.IPPN;
+using Catalyst.Protocol.Network;
+using Catalyst.Protocol.Peer;
 using Catalyst.TestUtils;
+using Catalyst.TestUtils.Protocol;
 using DotNetty.Buffers;
 using DotNetty.Codecs.Protobuf;
 using DotNetty.Transport.Channels;
@@ -76,16 +80,12 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Transport.Channels
             _testScheduler = new TestScheduler();
             _correlationManager = Substitute.For<IRpcMessageCorrelationManager>();
             _keySigner = Substitute.For<IKeySigner>();
-            var contextProvider = Substitute.For<ISigningContextProvider>();
-
-            contextProvider.Network.Returns(Protocol.Common.Network.Devnet);
-            contextProvider.SignatureType.Returns(SignatureType.ProtocolPeer);
 
             var peerIdValidator = Substitute.For<IPeerIdValidator>();
             peerIdValidator.ValidatePeerIdFormat(Arg.Any<PeerId>()).Returns(true);
 
             _factory = new TestNodeRpcClientChannelFactory(_keySigner, _correlationManager, peerIdValidator,
-                contextProvider, _testScheduler);
+                DevNetPeerSigningContextProvider.Instance, _testScheduler);
         }
 
         [Fact]

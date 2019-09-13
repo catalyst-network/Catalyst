@@ -45,7 +45,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Codecs
         private readonly EmbeddedChannel _channel;
         private readonly IPeerIdentifier _recipientPid;
         private readonly DatagramPacket _datagramPacket;
-        private readonly ProtocolMessageSigned _protocolMessageSigned;
+        private readonly ProtocolMessage _protocolMessageSigned;
         
         public DatagramPacketEncoderTests()
         {
@@ -63,7 +63,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Codecs
                 20000
             );
 
-            _protocolMessageSigned = new ProtocolMessageSigned
+            _protocolMessageSigned = new ProtocolMessage
             {
                 Message = new PingRequest().ToProtocolMessage(senderPid.PeerId, CorrelationId.GenerateCorrelationId()),
                 Signature = ByteUtil.GenerateRandomByteArray(64).ToByteString()
@@ -96,7 +96,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Codecs
         {
             Assert.True(_channel.WriteOutbound(_protocolMessageSigned));
         
-            var protocolMessageSigned = _channel.ReadOutbound<ProtocolMessageSigned>();
+            var protocolMessageSigned = _channel.ReadOutbound<ProtocolMessage>();
             Assert.NotNull(protocolMessageSigned);
             Assert.Same(_protocolMessageSigned, protocolMessageSigned);
             Assert.False(_channel.Finish());

@@ -28,7 +28,6 @@ using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Core.Lib.IO.Observers;
 using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.Deltas;
-using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Microsoft.Reactive.Testing;

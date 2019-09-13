@@ -28,6 +28,7 @@ using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Mempool;
 using Catalyst.Core.Lib.Mempool.Documents;
 using Catalyst.Protocol.Transaction;
+using Catalyst.Protocol.Wire;
 using Dawn;
 
 namespace Catalyst.Core.Modules.Consensus.Deltas

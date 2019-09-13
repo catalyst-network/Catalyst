@@ -33,9 +33,13 @@ using Catalyst.Core.Lib.IO.Codecs;
 using Catalyst.Core.Lib.IO.Handlers;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using Catalyst.Core.Modules.Rpc.Server.Transport.Channels;
+using Catalyst.Protocol.Cryptography;
 using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.IPPN;
+using Catalyst.Protocol.Network;
+using Catalyst.Protocol.Peer;
 using Catalyst.TestUtils;
+using Catalyst.TestUtils.Protocol;
 using DotNetty.Buffers;
 using DotNetty.Codecs.Protobuf;
 using DotNetty.Transport.Channels;
@@ -79,10 +83,6 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Transport.Channels
             _correlationManager = Substitute.For<IRpcMessageCorrelationManager>();
             _keySigner = Substitute.For<IKeySigner>();
 
-            var peerSettings = Substitute.For<ISigningContextProvider>();
-            peerSettings.Network.Returns(Protocol.Common.Network.Devnet);
-            peerSettings.SignatureType.Returns(SignatureType.ProtocolPeer);
-
             var authenticationStrategy = Substitute.For<IAuthenticationStrategy>();
             authenticationStrategy.Authenticate(Arg.Any<IPeerIdentifier>()).Returns(true);
             
@@ -93,7 +93,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Transport.Channels
                 _keySigner,
                 authenticationStrategy,
                 peerIdValidator,
-                peerSettings,
+                DevNetPeerSigningContextProvider.Instance,
                 _testScheduler);
         }
 

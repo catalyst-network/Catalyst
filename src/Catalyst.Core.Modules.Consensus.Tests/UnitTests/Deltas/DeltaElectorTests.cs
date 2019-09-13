@@ -31,7 +31,7 @@ using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.P2P;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Consensus.Deltas;
-using Catalyst.Protocol.Wire;
+using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using FluentAssertions;

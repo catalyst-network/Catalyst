@@ -75,7 +75,7 @@ namespace Catalyst.Simulator.Helpers
             byte[] signatureBytes = cryptoWrapper.StdSign(privateKey, transactionWithoutSig.ToByteArray(),
                 new SigningContext
                 {
-                    Network = Network.Devnet,
+                    NetworkType = Network.Devnet,
                     SignatureType = SignatureType.TransactionPublic
                 }.ToByteArray()).SignatureBytes;
             return ByteString.CopyFrom(signatureBytes);

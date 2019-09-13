@@ -120,7 +120,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Broadcast
             );
 
             var gossipDto =
-                new ProtocolMessageSigned
+                new ProtocolMessage
                 {
                     Message = messageDto.Content.ToProtocolMessage(senderIdentifier.PeerId, messageDto.CorrelationId)
                 };

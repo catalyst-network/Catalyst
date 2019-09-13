@@ -32,6 +32,7 @@ using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Transaction;
+using Catalyst.Protocol.Wire;
 using Dawn;
 using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
@@ -106,8 +107,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             var coinbaseEntry = new CoinbaseEntry
             {
                 Amount = summedFees,
-                PubKey = _producerUniqueId.PublicKey.ToByteString(),
-                Version = 1
+                ReceiverPublicKey = _producerUniqueId.PublicKey.ToByteString()
             };
             var globalLedgerStateUpdate = shuffledEntriesBytes
                .Concat(signaturesInOrder)

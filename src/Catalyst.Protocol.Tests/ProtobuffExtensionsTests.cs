@@ -36,7 +36,7 @@ namespace Catalyst.Protocol.Tests
         [Fact]
         public void Can_Identify_Broadcast_Message()
         {
-            var protocolMessageSigned = new ProtocolMessageSigned
+            var protocolMessageSigned = new ProtocolMessage
             {
                 Message = new ProtocolMessage
                 {
@@ -48,7 +48,7 @@ namespace Catalyst.Protocol.Tests
             var protocolMessage = new ProtocolMessage
             {
                 Value = protocolMessageSigned.ToByteString(),
-                TypeUrl = ProtocolMessageSigned.Descriptor.ShortenedFullName()
+                TypeUrl = ProtocolMessage.Descriptor.ShortenedFullName()
             };
 
             protocolMessage.IsBroadCastMessage().Should().BeTrue();

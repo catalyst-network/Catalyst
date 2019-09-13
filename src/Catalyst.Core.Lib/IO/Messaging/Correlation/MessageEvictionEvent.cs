@@ -24,7 +24,7 @@
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.P2P;
-using Catalyst.Protocol.Wire;
+using Catalyst.Protocol.Peer;
 using Google.Protobuf;
 
 namespace Catalyst.Core.Lib.IO.Messaging.Correlation

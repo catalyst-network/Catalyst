@@ -33,9 +33,13 @@ using Catalyst.Core.Lib.IO.Handlers;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
+using Catalyst.Core.Modules.Keystore;
+using Catalyst.Protocol.Cryptography;
+using Catalyst.Protocol.Network;
 using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.Transaction;
 using Catalyst.TestUtils;
+using Catalyst.TestUtils.Protocol;
 using DotNetty.Transport.Channels.Embedded;
 using Microsoft.Reactive.Testing;
 using NSubstitute;
@@ -50,7 +54,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Broadcast
         private readonly IBroadcastManager _fakeBroadcastManager;
         private readonly BroadcastHandler _broadcastHandler;
         private readonly IKeySigner _keySigner;
-        private readonly ProtocolMessageSigned _broadcastMessageSigned;
+        private readonly ProtocolMessage _broadcastMessageSigned;
         private readonly ISigningContextProvider _signingContextProvider;
 
         public BroadcastHandlerTests()
@@ -63,20 +67,13 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Broadcast
             var fakeSignature = Substitute.For<ISignature>();
             fakeSignature.SignatureBytes.Returns(ByteUtil.GenerateRandomByteArray(FFI.SignatureLength));
 
+            _signingContextProvider = DevNetPeerSigningContextProvider.Instance;
+
             var peerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("Test");
-            _broadcastMessageSigned =
-                new ProtocolMessageSigned
-                {
-                    Message = new ProtocolMessageSigned
-                    {
-                        Message = new TransactionBroadcast().ToProtocolMessage(peerIdentifier.PeerId, CorrelationId.GenerateCorrelationId()),
-                        Signature = fakeSignature.SignatureBytes.ToByteString()
-                    }.ToProtocolMessage(peerIdentifier.PeerId, CorrelationId.GenerateCorrelationId()),
-                    Signature = fakeSignature.SignatureBytes.ToByteString()
-                };
-            _signingContextProvider = Substitute.For<ISigningContextProvider>();
-            _signingContextProvider.Network.Returns(Protocol.Common.Network.Devnet);
-            _signingContextProvider.SignatureType.Returns(SignatureType.ProtocolPeer);
+            var innerMessage = new TransactionBroadcast();
+            _broadcastMessageSigned = innerMessage
+               .ToSignedProtocolMessage(fakeSignature, peerIdentifier.PeerId, DevNetPeerSigningContext.Instance)
+               .ToSignedProtocolMessage(fakeSignature, peerIdentifier.PeerId, DevNetPeerSigningContext.Instance);
         }
 
         [Fact]
@@ -97,7 +94,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Broadcast
             channel.WriteInbound(_broadcastMessageSigned);
 
             await _fakeBroadcastManager.Received(Quantity.Exactly(1))
-               .ReceiveAsync(Arg.Any<ProtocolMessageSigned>());
+               .ReceiveAsync(Arg.Any<ProtocolMessage>());
         }
 
         [Fact]

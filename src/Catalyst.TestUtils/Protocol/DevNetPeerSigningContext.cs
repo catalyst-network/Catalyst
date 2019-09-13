@@ -21,12 +21,21 @@
 
 #endregion
 
-using Catalyst.Protocol.Peer;
+using Catalyst.Abstractions.Keystore;
+using Catalyst.Core.Modules.Keystore;
+using Catalyst.Protocol.Cryptography;
+using Catalyst.Protocol.Network;
 
-namespace Catalyst.Abstractions.P2P
+namespace Catalyst.TestUtils.Protocol
 {
-    public interface IPeerChallengeResponse
+    public static class DevNetPeerSigningContext
     {
-        PeerId PeerId { get; }
+        public static readonly SigningContext Instance = 
+            new SigningContext {NetworkType = NetworkType.Devnet, SignatureType = SignatureType.ProtocolPeer};
+    }
+
+    public static class DevNetPeerSigningContextProvider
+    {
+        public static ISigningContextProvider Instance = new SigningContextProvider(DevNetPeerSigningContext.Instance);
     }
 }

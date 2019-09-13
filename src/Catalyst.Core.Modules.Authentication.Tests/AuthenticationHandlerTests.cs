@@ -57,7 +57,7 @@ namespace Catalyst.Core.Modules.Authentication.Tests
 
             var request = new GetPeerListRequest().ToProtocolMessage(PeerIdHelper.GetPeerId("Test"),
                 CorrelationId.GenerateCorrelationId());
-            var signedMessage = new ProtocolMessageSigned
+            var signedMessage = new ProtocolMessage
             {
                 Message = request,
                 Signature = ByteString.CopyFrom(new byte[64])
@@ -75,7 +75,7 @@ namespace Catalyst.Core.Modules.Authentication.Tests
 
             var request = new GetPeerListRequest().ToProtocolMessage(PeerIdHelper.GetPeerId("Test"),
                 CorrelationId.GenerateCorrelationId());
-            var signedMessage = new ProtocolMessageSigned
+            var signedMessage = new ProtocolMessage
             {
                 Message = request,
                 Signature = ByteString.CopyFrom(new byte[64])

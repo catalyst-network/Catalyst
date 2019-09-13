@@ -26,7 +26,7 @@ using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.Deltas;
-using Catalyst.Protocol.Wire;
+using Catalyst.Protocol.Peer;
 using Google.Protobuf.WellKnownTypes;
 using Multiformats.Hash;
 using Multiformats.Hash.Algorithms;

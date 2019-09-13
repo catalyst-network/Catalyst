@@ -35,7 +35,7 @@ namespace Catalyst.Core.Lib.IO.Handlers
     /// DotNetty Handler in-charge of blocking RPC messages if the node operator is not trusted
     /// </summary>
     /// <seealso cref="DotNetty.Transport.Channels.SimpleChannelInboundHandler{I}" />
-    public sealed class AuthenticationHandler : InboundChannelHandlerBase<ProtocolMessageSigned>
+    public sealed class AuthenticationHandler : InboundChannelHandlerBase<ProtocolMessage>
     {
         /// <summary>The authentication strategy</summary>
         private readonly IAuthenticationStrategy _authenticationStrategy;
@@ -49,7 +49,7 @@ namespace Catalyst.Core.Lib.IO.Handlers
         }
 
         /// <inheritdoc cref="DotNetty.Transport.Channels.SimpleChannelInboundHandler{I}"/>>
-        protected override void ChannelRead0(IChannelHandlerContext ctx, ProtocolMessageSigned msg)
+        protected override void ChannelRead0(IChannelHandlerContext ctx, ProtocolMessage msg)
         {
             if (_authenticationStrategy.Authenticate(new PeerIdentifier(msg.Message.PeerId)))
             {

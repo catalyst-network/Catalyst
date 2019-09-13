@@ -37,8 +37,11 @@ using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.P2P.IO.Transport.Channels;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
+using Catalyst.Protocol.Cryptography;
 using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.IPPN;
+using Catalyst.Protocol.Network;
+using Catalyst.Protocol.Peer;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Embedded;
@@ -84,7 +87,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Transport.Channels
             _keySigner = Substitute.For<IKeySigner>();
 
             var signingContext = Substitute.For<ISigningContextProvider>();
-            signingContext.Network.Returns(Protocol.Common.Network.Devnet);
+            signingContext.NetworkType.Returns(NetworkType.Devnet);
             signingContext.SignatureType.Returns(SignatureType.ProtocolPeer);
 
             var peerValidator = Substitute.For<IPeerIdValidator>();
@@ -122,7 +125,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Transport.Channels
             var protocolMessage = new PingRequest().ToProtocolMessage(senderId, correlationId);
             var signature = ByteUtil.GenerateRandomByteArray(FFI.SignatureLength);
 
-            var signedMessage = new ProtocolMessageSigned
+            var signedMessage = new ProtocolMessage
             {
                 Message = protocolMessage,
                 Signature = signature.ToByteString()

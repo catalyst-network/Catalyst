@@ -23,6 +23,7 @@
 
 using System.Collections.Generic;
 using System.Net;
+using Catalyst.Protocol.Network;
 
 namespace Catalyst.Abstractions.P2P
 {
@@ -34,7 +35,7 @@ namespace Catalyst.Abstractions.P2P
         string PayoutAddress { get; }
         IPAddress BindAddress { get; }
         IList<string> SeedServers { get; }
-        Protocol.Common.Network Network { get; }
+        NetworkType NetworkType { get; }
         IPEndPoint[] DnsServers { get; }
     }
 }

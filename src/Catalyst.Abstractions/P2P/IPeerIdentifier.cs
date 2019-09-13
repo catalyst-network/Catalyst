@@ -23,10 +23,11 @@
 
 using System;
 using System.Net;
-using Catalyst.Protocol.Wire;
+using Catalyst.Protocol.Peer;
 
 namespace Catalyst.Abstractions.P2P
 {
+    [Obsolete("Use the PeerId directly instead")]
     public interface IPeerIdentifier : IEquatable<IPeerIdentifier>
     {
         PeerId PeerId { get; }
