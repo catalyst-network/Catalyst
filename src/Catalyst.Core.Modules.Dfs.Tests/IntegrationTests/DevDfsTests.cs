@@ -47,7 +47,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
             _dfs = new DevDfs(FileSystem, hashingAlgorithm);
         }
 
-        [Fact]
+        [Fact(Skip = "https://github.com/catalyst-network/Catalyst.Node/issues/986")]
         public async Task AddTextAsync_Can_Be_Retrieved_With_ReadTextAsync()
         {
             var content = "Lorem Ipsum or something";
