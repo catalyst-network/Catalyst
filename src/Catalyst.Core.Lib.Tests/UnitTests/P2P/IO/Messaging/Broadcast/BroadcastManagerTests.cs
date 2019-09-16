@@ -58,6 +58,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Broadcast
             _keySigner = Substitute.For<IKeySigner>();
             var fakeSignature = Substitute.For<ISignature>();
             _keySigner.Sign(Arg.Any<byte[]>(), default).ReturnsForAnyArgs(fakeSignature);
+            _keySigner.CryptoContext.SignatureLength.Returns(64);
             _peers = Substitute.For<IPeerRepository>();
             _cache = new MemoryCache(new MemoryCacheOptions());
         }
@@ -146,7 +147,9 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Broadcast
                     _keySigner, 
                     Substitute.For<ILogger>());
 
-            var gossipMessage = TransactionHelper.GetPublicTransaction().ToProtocolMessage(broadcaster.PeerId);
+            var gossipMessage = TransactionHelper.GetPublicTransaction()
+               .ToProtocolMessage(broadcaster.PeerId)
+               .ToProtocolMessage(broadcaster.PeerId);
 
             await gossipMessageHandler.BroadcastAsync(gossipMessage);
             return gossipMessage.CorrelationId.ToCorrelationId();

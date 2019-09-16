@@ -41,7 +41,7 @@ namespace Catalyst.TestUtils
             var peerIdentifier = new PeerId
             {
                 PublicKey = (publicKey ?? new byte[32]).ToByteString(),
-                Ip = (ipAddress ?? IPAddress.Parse("127.0.0.1")).To16Bytes().ToByteString(),
+                Ip = (ipAddress ?? IPAddress.Loopback).To16Bytes().ToByteString(),
                 Port = (ushort) port
             };
             return peerIdentifier;
