@@ -93,7 +93,8 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         public void BuildDeltaEmptyPoolContent()
         {
             var transactionRetriever = Substitute.For<IDeltaTransactionRetriever>();
-            transactionRetriever.GetMempoolTransactionsByPriority().Returns(new List<TransactionBroadcast>());
+            transactionRetriever.GetMempoolTransactionsByPriority()
+               .Returns(new List<TransactionBroadcast>());
             
             var deltaBuilder = new DeltaBuilder(transactionRetriever, _randomFactory, _hashAlgorithm, _producerId, _cache, _dateTimeProvider, _logger);
 
@@ -115,6 +116,13 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
                     transactionFees: 954,
                     timestamp: 157,
                     signature: i.ToString());
+                transaction.ConfidentialEntries.Add(new ConfidentialEntry
+                {
+                    Base = new BaseEntry
+                    {
+                        ReceiverPublicKey = "this entry makes the transaction invalid".ToUtf8ByteString()
+                    }
+                });
                 return transaction;
             }).ToList();
 
@@ -146,7 +154,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             var transactionRetriever = Substitute.For<IDeltaTransactionRetriever>();
             transactionRetriever.GetMempoolTransactionsByPriority().Returns(transactions);
 
-            var selectedTransactions = transactions.Where(t => t.IsPublicTransaction).ToArray();
+            var selectedTransactions = transactions.Where(t => t.IsPublicTransaction && t.HasValidEntries).ToArray();
 
             var expectedCoinBase = new CoinbaseEntry
             {

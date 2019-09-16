@@ -124,7 +124,8 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Transport.Channels
 
             _serverCorrelationManager.DidNotReceiveWithAnyArgs().AddPendingRequest(Arg.Any<CorrelatableMessage<ProtocolMessage>>());
             
-            _serverKeySigner.ReceivedWithAnyArgs(1).Sign(Arg.Any<byte[]>(), default);
+            _serverKeySigner.ReceivedWithAnyArgs(1)
+               .Sign(Arg.Any<byte[]>(), default);
             
             _clientKeySigner.Verify(
                     Arg.Any<ISignature>(),
