@@ -22,30 +22,19 @@
 #endregion
 
 using System;
+using Catalyst.Abstractions.Hashing;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Deltas;
 using Google.Protobuf.WellKnownTypes;
-using Multiformats.Hash;
-using Multiformats.Hash.Algorithms;
 
 namespace Catalyst.TestUtils
 {
     public static class DeltaHelper
     {
-        public static Delta GetDelta(byte[] previousDeltaHash = default, 
-            byte[] merkleRoot = default,
-            byte[] merklePoda = default,
-            IMultihashAlgorithm hashAlgorithm = null,
-            DateTime? timestamp = default)
-        {
-            var previousHash = previousDeltaHash ?? ByteUtil.GenerateRandomByteArray(32)
-               .ComputeMultihash(hashAlgorithm ?? new BLAKE2B_256());
-            return GetDelta(previousHash, merkleRoot, merklePoda, timestamp);
-        }
-
-        public static Delta GetDelta(Multihash previousDeltaHash,
+        public static Delta GetDelta(IHashProvider hashProvider,
+            string previousDeltaHash = "", 
             byte[] merkleRoot = default,
             byte[] merklePoda = default,
             DateTime? timestamp = default)
@@ -57,7 +46,7 @@ namespace Catalyst.TestUtils
 
             var delta = new Delta
             {
-                PreviousDeltaDfsHash = previousHash.ToBytes().ToByteString(),
+                PreviousDeltaDfsHash = hashProvider.GetBase32HashBytes(previousDeltaHash).ToByteString(),
                 MerkleRoot = root.ToByteString(),
                 MerklePoda = poda.ToByteString(),
                 TimeStamp = nonNullTimestamp
@@ -66,13 +55,13 @@ namespace Catalyst.TestUtils
             return delta;
         }
 
-        public static CandidateDeltaBroadcast GetCandidateDelta(byte[] previousDeltaHash = null, 
+        public static CandidateDeltaBroadcast GetCandidateDelta(IHashProvider hashProvider,
+            byte[] previousDeltaHash = null, 
             byte[] hash = null,
-            PeerId producerId = null,
-            IMultihashAlgorithm hashAlgorithm = null)
+            PeerId producerId = null)
         {
-            var candidateHash = hash ?? ByteUtil.GenerateRandomByteArray(32).ComputeMultihash(hashAlgorithm ?? new BLAKE2B_256());
-            var previousHash = previousDeltaHash ?? ByteUtil.GenerateRandomByteArray(32).ComputeMultihash(hashAlgorithm ?? new BLAKE2B_256());
+            var candidateHash = hash ?? hashProvider.GetBase32HashBytes(hashProvider.AsBase32(ByteUtil.GenerateRandomByteArray(32)));
+            var previousHash = previousDeltaHash ?? hashProvider.GetBase32HashBytes(hashProvider.AsBase32(ByteUtil.GenerateRandomByteArray(32)));
             var producer = producerId 
              ?? PeerIdHelper.GetPeerId(publicKey: ByteUtil.GenerateRandomByteArray(32));
 
@@ -84,13 +73,13 @@ namespace Catalyst.TestUtils
             };
         }
 
-        public static FavouriteDeltaBroadcast GetFavouriteDelta(byte[] previousDeltaHash = null,
+        public static FavouriteDeltaBroadcast GetFavouriteDelta(IHashProvider hashProvider,
+            byte[] previousDeltaHash = null,
             byte[] hash = null,
-            IMultihashAlgorithm hashAlgorithm = null,
             PeerId producerId = null,
             PeerId voterId = null)
         {
-            var candidate = GetCandidateDelta(previousDeltaHash, hash, producerId, hashAlgorithm);
+            var candidate = GetCandidateDelta(hashProvider, previousDeltaHash, hash, producerId);
             var voter = voterId ?? PeerIdHelper.GetPeerId();
 
             return new FavouriteDeltaBroadcast

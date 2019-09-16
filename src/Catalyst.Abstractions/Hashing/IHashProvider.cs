@@ -10,6 +10,8 @@ namespace Catalyst.Abstractions.Hashing
 
         string AsBase32(IEnumerable<byte> content);
 
-        byte[] GetHashBytes(string hash);
+        byte[] ComputeToBase32(IEnumerable<byte> content);
+
+        byte[] GetBase32HashBytes(string hash);
     }
 }

@@ -50,7 +50,7 @@ namespace Catalyst.Core.Modules.Hashing
             var result = multiHash.ToString(MultibaseEncoding.Base32Lower);
             return result;
         }
-
+        
         public byte[] ComputeHash(IEnumerable<byte> content)
         {
             return Multihash.Sum(_multihashAlgorithm.Code, content.ToArray()).ToBytes();
