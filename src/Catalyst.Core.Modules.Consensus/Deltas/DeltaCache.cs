@@ -24,13 +24,12 @@
 using System;
 using System.Threading;
 using Catalyst.Abstractions.Consensus.Deltas;
-using Catalyst.Core.Lib.Config;
+using Catalyst.Abstractions.Hashing;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Protocol.Deltas;
 using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
 using Microsoft.Extensions.Caching.Memory;
-using Multiformats.Hash;
 using Serilog;
 
 namespace Catalyst.Core.Modules.Consensus.Deltas
@@ -39,26 +38,29 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
     /// <inheritdoc cref="IDisposable"/>
     public class DeltaCache : IDeltaCache, IDisposable
     {
+        private readonly IHashProvider _hashProvider;
         private readonly IMemoryCache _memoryCache;
         private readonly IDeltaDfsReader _dfsReader;
         private readonly ILogger _logger;
         private readonly Func<MemoryCacheEntryOptions> _entryOptions;
+        public string GenesisHash { get; set; }
 
-        public static readonly Multihash GenesisHash 
-            = new Delta().ToByteArray().ComputeMultihash(Constants.HashAlgorithm);
+        public string GenesisAddress { get; set; }
 
-        public string GenesisAddress => GenesisHash.AsBase32Address();
+        public string GetLocalDeltaCacheKey(CandidateDeltaBroadcast candidate) =>
+            nameof(DeltaCache) + "-LocalDelta-" + _hashProvider.AsBase32(candidate.Hash);
 
-        public static string GetLocalDeltaCacheKey(CandidateDeltaBroadcast candidate) =>
-            nameof(DeltaCache) + "-LocalDelta-" + candidate.Hash.AsBase32Address();
-
-        public DeltaCache(IMemoryCache memoryCache,
+        public DeltaCache(IHashProvider hashProvider,
+            IMemoryCache memoryCache,
             IDeltaDfsReader dfsReader,
             IDeltaCacheChangeTokenProvider changeTokenProvider,
             ILogger logger)
         {
-            var genesisDelta = new Delta {TimeStamp = Timestamp.FromDateTime(DateTime.MinValue.ToUniversalTime())};
+            GenesisHash = _hashProvider.AsBase32(new Delta().ToByteArray());
+            GenesisAddress = GenesisHash;
 
+            var genesisDelta = new Delta {TimeStamp = Timestamp.FromDateTime(DateTime.MinValue.ToUniversalTime())};
+            _hashProvider = hashProvider;
             _memoryCache = memoryCache;
             _memoryCache.Set(GenesisHash, genesisDelta);
 

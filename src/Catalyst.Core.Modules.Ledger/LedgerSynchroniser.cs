@@ -24,8 +24,8 @@
 using System.Collections.Generic;
 using System.Threading;
 using Catalyst.Abstractions.Consensus.Deltas;
+using Catalyst.Abstractions.Hashing;
 using Catalyst.Core.Lib.Extensions;
-using Multiformats.Hash;
 using Serilog;
 
 namespace Catalyst.Core.Modules.Ledger
@@ -34,19 +34,21 @@ namespace Catalyst.Core.Modules.Ledger
     public class LedgerSynchroniser : ILedgerSynchroniser
     {
         private readonly ILogger _logger;
+        private readonly IHashProvider _hashProvider;
 
-        public LedgerSynchroniser(IDeltaCache deltaCache, ILogger logger)
+        public LedgerSynchroniser(IDeltaCache deltaCache, ILogger logger, IHashProvider hashProvider)
         {
             DeltaCache = deltaCache;
             _logger = logger;
+            _hashProvider = hashProvider;
         }
 
         /// <inheritdoc />
         public IDeltaCache DeltaCache { get; }
 
         /// <inheritdoc />
-        public IEnumerable<Multihash> CacheDeltasBetween(Multihash latestKnownDeltaHash,
-            Multihash targetDeltaHash,
+        public IEnumerable<string> CacheDeltasBetween(string latestKnownDeltaHash,
+            string targetDeltaHash,
             CancellationToken cancellationToken)
         {
             var thisHash = targetDeltaHash;
@@ -58,7 +60,7 @@ namespace Catalyst.Core.Modules.Ledger
                     yield break;
                 }
 
-                var previousDfsHash = retrievedDelta.PreviousDeltaDfsHash.AsMultihash();
+                var previousDfsHash = _hashProvider.AsBase32(retrievedDelta.PreviousDeltaDfsHash);
 
                 _logger.Debug("Retrieved delta {previous} as predecessor of {current}",
                     previousDfsHash, thisHash);
@@ -66,7 +68,7 @@ namespace Catalyst.Core.Modules.Ledger
                 yield return thisHash;
 
                 thisHash = previousDfsHash;
-            } while ((thisHash.AsBase32Address() != latestKnownDeltaHash.AsBase32Address())
+            } while (!thisHash.Equals(latestKnownDeltaHash)
              && !cancellationToken.IsCancellationRequested);
 
             yield return thisHash;

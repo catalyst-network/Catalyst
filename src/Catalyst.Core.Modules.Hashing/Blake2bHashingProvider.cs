@@ -11,6 +11,8 @@ using SimpleBase;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Multiformats.Base;
+
 /**
 * Copyright (c) 2019 Catalyst Network
 *
@@ -42,14 +44,21 @@ namespace Catalyst.Core.Modules.Hashing
 
         public string AsBase32(IEnumerable<byte> content)
         {
-            var hash = AsMultihash(content);
-            var result = Base32.Rfc4648.Encode(hash.ToBytes(), false).ToLowerInvariant();
+            var contentList = content.ToList();
+            var hash = ComputeHash(contentList);
+            var multiHash = AsMultihash(hash);
+            var result = multiHash.ToString(MultibaseEncoding.Base32Lower);
             return result;
         }
 
         public byte[] ComputeHash(IEnumerable<byte> content)
         {
-            return Multihash.Sum(_multihashAlgorithm.Code, content.ToArray());
+            return Multihash.Sum(_multihashAlgorithm.Code, content.ToArray()).ToBytes();
+        }
+
+        public byte[] GetBase32HashBytes(string hash)
+        {
+            return Multihash.Parse(hash, MultibaseEncoding.Base32Lower).ToBytes();
         }
 
         public bool IsValidHash(IEnumerable<byte> content)
@@ -57,7 +66,8 @@ namespace Catalyst.Core.Modules.Hashing
             try
             {
                 _ = AsMultihash(content);
-            } catch(Exception)
+            }
+            catch (Exception)
             {
                 return false;
             }
@@ -65,6 +75,13 @@ namespace Catalyst.Core.Modules.Hashing
             return true;
         }
 
+        /// <summary>
+        /// Simply takes some bytes, and use the <see cref="_multihashAlgorithm"/> to compute the hash
+        /// for this content. The hash is returned raw, <see cref="ComputeHash"/> to get the bytes
+        /// wrapped in a Multihash envelope.
+        /// </summary>
+        /// <param name="bytes">The content for which the hash will be calculated.</param>
+        /// <returns>The raw result of the hashing operation, as a byte array.</returns>
         private Multihash AsMultihash(IEnumerable<byte> bytes)
         {
             var array = bytes as byte[] ?? bytes.ToArray();

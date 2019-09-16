@@ -24,7 +24,6 @@
 using System.Collections.Generic;
 using System.Threading;
 using Catalyst.Abstractions.Consensus.Deltas;
-using Multiformats.Hash;
 
 namespace Catalyst.Core.Modules.Ledger
 {
@@ -38,7 +37,7 @@ namespace Catalyst.Core.Modules.Ledger
         /// from the point of view of this node.</param>
         /// <param name="targetDeltaHash">The hash of the delta up to which we want to synchronise the ledger.</param>
         /// <param name="cancellationToken">Provides a way to cancel the synchronisation task before it ends.</param>
-        IEnumerable<Multihash> CacheDeltasBetween(Multihash latestKnownDeltaHash, Multihash targetDeltaHash, CancellationToken cancellationToken);
+        IEnumerable<string> CacheDeltasBetween(string latestKnownDeltaHash, string targetDeltaHash, CancellationToken cancellationToken);
 
         /// <summary>
         /// A cache used to store the full Delta object when a synchronisation is triggered.

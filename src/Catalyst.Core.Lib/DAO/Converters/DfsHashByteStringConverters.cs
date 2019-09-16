@@ -22,25 +22,39 @@
 #endregion
 
 using AutoMapper;
+using Catalyst.Abstractions.Hashing;
 using Catalyst.Core.Lib.Extensions;
 using Google.Protobuf;
-using Multiformats.Hash;
 
 namespace Catalyst.Core.Lib.DAO.Converters
 {
     public class ByteStringToDfsHashConverter : IValueConverter<ByteString, string>
     {
+        private readonly IHashProvider _hashProvider;
+
+        public ByteStringToDfsHashConverter(IHashProvider hashProvider)
+        {
+            _hashProvider = hashProvider;
+        }
+
         public string Convert(ByteString sourceMember, ResolutionContext context)
         {
-            return sourceMember.AsMultihash().AsBase32Address();
+            return _hashProvider.AsBase32(sourceMember);
         }
     }
 
     public class DfsHashToByteStringConverter : IValueConverter<string, ByteString>
     {
+        private readonly IHashProvider _hashProvider;
+
+        public DfsHashToByteStringConverter(IHashProvider hashProvider)
+        {
+            _hashProvider = hashProvider;
+        }
+
         public ByteString Convert(string sourceMember, ResolutionContext context)
         {
-            return Multihash.Parse(sourceMember).ToBytes().ToByteString();
+            return _hashProvider.GetHashBytes(sourceMember).ToByteString();
         }
     }
 }

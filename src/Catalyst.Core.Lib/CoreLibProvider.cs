@@ -134,11 +134,7 @@ namespace Catalyst.Core.Lib
             // Register Cache
             builder.RegisterType<MemoryCache>().As<IMemoryCache>().SingleInstance();
             builder.RegisterType<MemoryCacheOptions>().As<IOptions<MemoryCacheOptions>>();
-
-            // @TODO encapsulate to own module
-            // Register hashlib
-            builder.RegisterType<BLAKE2B_256>().As<IMultihashAlgorithm>();
-
+            
             // Register file transfer
             builder.RegisterType<DownloadFileTransferFactory>().As<IDownloadFileTransferFactory>().SingleInstance();
             builder.RegisterType<UploadFileTransferFactory>().As<IUploadFileTransferFactory>().SingleInstance();

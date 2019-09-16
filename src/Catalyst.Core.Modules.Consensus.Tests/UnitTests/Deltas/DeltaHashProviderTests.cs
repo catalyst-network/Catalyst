@@ -25,8 +25,10 @@ using System;
 using System.Linq;
 using System.Reflection;
 using Catalyst.Abstractions.Consensus.Deltas;
+using Catalyst.Abstractions.Hashing;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Modules.Consensus.Deltas;
+using Catalyst.Core.Modules.Hashing;
 using Catalyst.Protocol.Deltas;
 using Catalyst.TestUtils;
 using FluentAssertions;
@@ -46,6 +48,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         private const int Offset = 100;
         private readonly IDeltaCache _deltaCache;
         private readonly ILogger _logger;
+        private readonly IHashProvider _hashProvider;
 
         public DeltaHashProviderTests(ITestOutputHelper output) : base(output)
         {
@@ -55,8 +58,9 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
                .WriteTo.TestOutput(output)
                .CreateLogger()
                .ForContext(MethodBase.GetCurrentMethod().DeclaringType);
+            _hashProvider = new Blake2bHashingProvider(new BLAKE2B_256());
 
-            _deltaCache.GenesisAddress.Returns(DeltaCache.GenesisHash.AsBase32Address());
+            _deltaCache.GenesisAddress.Returns(_hashProvider.AsBase32(new Delta().ToByteArray()));
         }
 
         [Fact]

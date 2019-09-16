@@ -20,7 +20,6 @@
         <PackageReference Include="DotNetty.Handlers" Version="0.6.0" />
         <PackageReference Include="Google.Protobuf" Version="3.9.1" />
         <PackageReference Include="MongoDB.Bson" Version="2.7.0" />
-        <PackageReference Include="Multiformats.Hash" Version="1.5.0" />
         <PackageReference Include="Nethereum.RLP" Version="3.3.0" />
         <PackageReference Include="Polly" Version="7.1.0" />
         <PackageReference Include="SharpRepository.Ioc.Autofac" Version="2.0.4.2" />

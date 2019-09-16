@@ -23,6 +23,7 @@
 
 using System;
 using Catalyst.Abstractions.Consensus.Deltas;
+using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Core.Lib.Extensions;
@@ -36,11 +37,13 @@ namespace Catalyst.Core.Modules.Consensus.IO.Observers
     public class CandidateDeltaObserver : BroadcastObserverBase<CandidateDeltaBroadcast>, IP2PMessageObserver
     {
         private readonly IDeltaVoter _deltaVoter;
+        private readonly IHashProvider _hashProvider;
 
-        public CandidateDeltaObserver(IDeltaVoter deltaVoter, ILogger logger) 
+        public CandidateDeltaObserver(IDeltaVoter deltaVoter, IHashProvider provider, ILogger logger)
             : base(logger)
         {
             _deltaVoter = deltaVoter;
+            _hashProvider = provider;
         }
 
         public override void HandleBroadcast(IObserverDto<ProtocolMessage> messageDto)
@@ -51,8 +54,8 @@ namespace Catalyst.Core.Modules.Consensus.IO.Observers
                     BitConverter.ToInt16(messageDto.Payload.PeerId.Port.ToByteArray()));
                 var deserialised = messageDto.Payload.FromProtocolMessage<CandidateDeltaBroadcast>();
 
-                _ = deserialised.PreviousDeltaDfsHash.ToByteArray().AsMultihash();
-                _ = deserialised.Hash.ToByteArray().AsMultihash();
+                _hashProvider.IsValidHash(deserialised.PreviousDeltaDfsHash.ToByteArray());
+                _hashProvider.IsValidHash(deserialised.Hash.ToByteArray());
                 deserialised.IsValid();
                 
                 _deltaVoter.OnNext(deserialised);

@@ -9,5 +9,7 @@ namespace Catalyst.Abstractions.Hashing
         bool IsValidHash(IEnumerable<byte> content);
 
         string AsBase32(IEnumerable<byte> content);
+
+        byte[] GetHashBytes(string hash);
     }
 }
