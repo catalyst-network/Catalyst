@@ -24,6 +24,7 @@
 using Multiformats.Base;
 using Multiformats.Hash;
 using Multiformats.Hash.Algorithms;
+using System;
 
 namespace Catalyst.Core.Lib.Config
 {
@@ -72,11 +73,14 @@ namespace Catalyst.Core.Lib.Config
         public static string KeyChainDefaultKeyType => "ed25519";
 
         /// <summary> Hashing algorithm </summary>
+        [Obsolete]
         public static IMultihashAlgorithm HashAlgorithm { get; } = new BLAKE2B_256();
 
         /// <summary> Hashing algorithm type </summary>
+        [Obsolete]
         public static HashType HashAlgorithmType => HashAlgorithm.Code;
 
+        [Obsolete]
         public static MultibaseEncoding EncodingAlgorithm => MultibaseEncoding.Base58Btc;
 
         /// <summary> Number of random peers to provide when processing a GetNeighbourRequest</summary>
