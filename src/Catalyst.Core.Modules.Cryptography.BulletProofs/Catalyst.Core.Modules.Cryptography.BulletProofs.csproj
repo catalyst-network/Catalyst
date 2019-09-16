@@ -19,7 +19,7 @@
         <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
     </ItemGroup>
     <ItemGroup>
-        <None Include="runtimes\**\*.*" PackagePath="runtimes\" Pack="true">
+        <None Include="Runtimes\**\*.*" PackagePath="Runtimes\" Pack="true">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
     </ItemGroup>
