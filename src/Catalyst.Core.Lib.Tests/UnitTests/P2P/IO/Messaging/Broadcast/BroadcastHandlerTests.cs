@@ -61,7 +61,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Broadcast
             _broadcastHandler = new BroadcastHandler(_fakeBroadcastManager);
 
             var fakeSignature = Substitute.For<ISignature>();
-            fakeSignature.SignatureBytes.Returns(ByteUtil.GenerateRandomByteArray(FFI.SignatureLength));
+            fakeSignature.SignatureBytes.Returns(ByteUtil.GenerateRandomByteArray(Ffi.SignatureLength));
 
             var peerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("Test");
             _broadcastMessageSigned =

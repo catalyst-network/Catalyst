@@ -21,23 +21,22 @@
 
 #endregion
 
-using Catalyst.Abstractions.Cryptography;
+using Autofac;
+using Catalyst.Abstractions.P2P;
+using Catalyst.Core.Lib.P2P.Repository;
+using Catalyst.Core.Modules.Consensus.Deltas;
+using Catalyst.Modules.POA.Consensus.Deltas;
+using Microsoft.Extensions.Caching.Memory;
+using Multiformats.Hash.Algorithms;
+using Serilog;
 
-namespace Catalyst.Core.Modules.Cryptography.BulletProofs.Types
+namespace Catalyst.Modules.POA.Consensus
 {
-    public class PublicKey : IPublicKey
+    public class PoaConsensusModule : Module
     {
-        public byte[] Bytes { get; }
-
-        internal PublicKey(byte[] publicKey)
+        protected override void Load(ContainerBuilder builder)
         {
-            var requiredLength = Ffi.PublicKeyLength;
-            if (publicKey.Length != requiredLength)
-            {
-                Error.ThrowArgumentExceptionPublicKeyLength(requiredLength);
-            }
-
-            Bytes = publicKey;
+            builder.RegisterType<PoaDeltaProducersProvider>().As<IDeltaProducersProvider>();
         }
     }
 }

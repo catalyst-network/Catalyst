@@ -21,23 +21,24 @@
 
 #endregion
 
-using Catalyst.Abstractions.Cryptography;
+using System.Net;
+using Catalyst.Abstractions.P2P;
+using Catalyst.Core.Lib.P2P;
+using Catalyst.Core.Lib.Util;
 
-namespace Catalyst.Core.Modules.Cryptography.BulletProofs.Types
+namespace Catalyst.Modules.POA.P2P
 {
-    public class PublicKey : IPublicKey
+    public sealed class PoaPeer
     {
-        public byte[] Bytes { get; }
+        public string Ip { get; set; }
 
-        internal PublicKey(byte[] publicKey)
+        public int Port { get; set; }
+
+        public string PublicKey { get; set; }
+
+        public IPeerIdentifier ToPeerIdentifier()
         {
-            var requiredLength = Ffi.PublicKeyLength;
-            if (publicKey.Length != requiredLength)
-            {
-                Error.ThrowArgumentExceptionPublicKeyLength(requiredLength);
-            }
-
-            Bytes = publicKey;
+            return new PeerIdentifier(PublicKey.KeyToBytes(), IPAddress.Parse(Ip), Port);
         }
     }
 }

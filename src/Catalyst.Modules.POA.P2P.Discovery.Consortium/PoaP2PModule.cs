@@ -21,23 +21,23 @@
 
 #endregion
 
-using Catalyst.Abstractions.Cryptography;
+using Autofac;
+using Catalyst.Abstractions.FileSystem;
+using Catalyst.Abstractions.P2P;
+using Catalyst.Abstractions.P2P.Discovery;
+using Catalyst.Core.Lib.P2P.Repository;
+using Catalyst.Modules.POA.P2P.Discovery;
+using Serilog;
 
-namespace Catalyst.Core.Modules.Cryptography.BulletProofs.Types
+namespace Catalyst.Modules.POA.P2P
 {
-    public class PublicKey : IPublicKey
+    public class PoaP2PModule : Module
     {
-        public byte[] Bytes { get; }
-
-        internal PublicKey(byte[] publicKey)
+        protected override void Load(ContainerBuilder builder)
         {
-            var requiredLength = Ffi.PublicKeyLength;
-            if (publicKey.Length != requiredLength)
-            {
-                Error.ThrowArgumentExceptionPublicKeyLength(requiredLength);
-            }
-
-            Bytes = publicKey;
+            builder.RegisterType<PoaPeer>();
+            builder.RegisterType<PoaDiscovery>().As<IPeerDiscovery>().SingleInstance();
+            builder.RegisterType<PeerHeartbeatChecker>().As<IHealthChecker>().SingleInstance();
         }
     }
 }
