@@ -48,8 +48,8 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
         public static string GetCandidateListCacheKey(CandidateDeltaBroadcast candidate) => 
             nameof(DeltaVoter) + "-" + candidate.PreviousDeltaDfsHash.AsBase32Address();
 
-        public static string GetCandidateListCacheKey(byte[] previousDeltaHash) => 
-            nameof(DeltaVoter) + "-" + previousDeltaHash.AsBase32Address();
+        public static string GetCandidateListCacheKey(string previousDeltaHash) => 
+            nameof(DeltaVoter) + "-" + previousDeltaHash;
 
         /// <summary>
         /// This cache is used to maintain the candidates with their scores, and for each previous delta hash we found,
@@ -134,11 +134,11 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
                 candidate.PreviousDeltaDfsHash.AsBase32Address(), candidatesForPreviousHash);
         }
 
-        public bool TryGetFavouriteDelta(byte[] previousDeltaDfsHash, out FavouriteDeltaBroadcast favourite)
+        public bool TryGetFavouriteDelta(string previousDeltaDfsHash, out FavouriteDeltaBroadcast favourite)
         {
             Guard.Argument(previousDeltaDfsHash, nameof(previousDeltaDfsHash)).NotNull().NotEmpty();
             _logger.Debug("Retrieving favourite candidate delta for the successor of delta {0}", 
-                previousDeltaDfsHash.AsBase32Address());
+                previousDeltaDfsHash);
 
             var cacheKey = GetCandidateListCacheKey(previousDeltaDfsHash);
             if (!_candidatesCache.TryGetValue(cacheKey, out ConcurrentBag<string> candidates))

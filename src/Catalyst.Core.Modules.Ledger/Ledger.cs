@@ -25,16 +25,15 @@ using System;
 using System.Linq;
 using System.Threading;
 using Catalyst.Abstractions.Consensus.Deltas;
+using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.Mempool;
 using Catalyst.Core.Lib.Cryptography;
-using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Mempool.Documents;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
 using Catalyst.Core.Modules.Ledger.Models;
 using Catalyst.Core.Modules.Ledger.Repository;
 using Catalyst.Protocol.Transaction;
 using Dawn;
-using Multiformats.Hash;
 using Serilog;
 
 namespace Catalyst.Core.Modules.Ledger
@@ -47,6 +46,7 @@ namespace Catalyst.Core.Modules.Ledger
     public class Ledger : ILedger, IDisposable
     {
         public IAccountRepository Accounts { get; }
+        private readonly IHashProvider _hashProvider;
         private readonly ILedgerSynchroniser _synchroniser;
         private readonly IMempool<MempoolDocument> _mempool;
         private readonly ILogger _logger;
@@ -55,13 +55,15 @@ namespace Catalyst.Core.Modules.Ledger
         private readonly object _synchronisationLock = new object();
         private readonly CryptoContext _cryptoContext;
 
-        public Ledger(IAccountRepository accounts, 
+        public Ledger(IHashProvider hashProvider,
+            IAccountRepository accounts, 
             IDeltaHashProvider deltaHashProvider,
             ILedgerSynchroniser synchroniser,
             IMempool<MempoolDocument> mempool, 
             ILogger logger)
         {
             Accounts = accounts;
+            _hashProvider = hashProvider;
             _synchroniser = synchroniser;
             _mempool = mempool;
             _logger = logger;
@@ -95,7 +97,7 @@ namespace Catalyst.Core.Modules.Ledger
         }
 
         /// <inheritdoc />
-        public void Update(Multihash deltaHash)
+        public void Update(string deltaHash)
         {
             try
             {
@@ -128,7 +130,7 @@ namespace Catalyst.Core.Modules.Ledger
             }
         }
 
-        private void UpdateLedgerFromDelta(Multihash deltaHash)
+        private void UpdateLedgerFromDelta(string deltaHash)
         {
             if (!_synchroniser.DeltaCache.TryGetOrAddConfirmedDelta(deltaHash, out var nextDeltaInChain))
             {
@@ -150,13 +152,13 @@ namespace Catalyst.Core.Modules.Ledger
             var pubKey = _cryptoContext.PublicKeyFromBytes(entry.PubKey.ToByteArray());
 
             //todo: get an address from the key using the Account class from Common lib
-            var account = Accounts.Get(pubKey.Bytes.AsBase32Address());
+            var account = Accounts.Get(_hashProvider.ComputeBase32(pubKey.Bytes));
 
             //todo: a different logic for to and from entries
             account.Balance += entry.Amount;
         }
 
-        public Multihash LatestKnownDelta { get; private set; }
+        public string LatestKnownDelta { get; private set; }
 
         public bool IsSynchonising => Monitor.IsEntered(_synchronisationLock);
 

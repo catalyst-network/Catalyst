@@ -27,6 +27,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using Catalyst.Abstractions.Consensus.Deltas;
+using Catalyst.Abstractions.Hashing;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Protocol.Deltas;
@@ -44,19 +45,24 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
     {
         private readonly IMemoryCache _candidatesCache;
         private readonly IDeltaProducersProvider _deltaProducersProvider;
+        private readonly IHashProvider _hashProvider;
         private readonly ILogger _logger;
         private readonly Func<MemoryCacheEntryOptions> _cacheEntryOptions;
 
-        public static string GetCandidateListCacheKey(FavouriteDeltaBroadcast candidate) =>
-            nameof(DeltaElector) + "-" + candidate.Candidate.PreviousDeltaDfsHash.AsBase32Address();
+        public string GetCandidateListCacheKey(FavouriteDeltaBroadcast candidate) =>
+            nameof(DeltaElector) + "-" + _hashProvider.ComputeBase32(candidate.Candidate.PreviousDeltaDfsHash);
 
-        public static string GetCandidateListCacheKey(byte[] previousDeltaHash) =>
-            nameof(DeltaElector) + "-" + previousDeltaHash.AsBase32Address();
+        public string GetCandidateListCacheKey(string previousDeltaHash) =>
+            nameof(DeltaElector) + "-" + previousDeltaHash;
         
-        public DeltaElector(IMemoryCache candidatesCache, IDeltaProducersProvider deltaProducersProvider, ILogger logger)
+        public DeltaElector(IMemoryCache candidatesCache, 
+            IDeltaProducersProvider deltaProducersProvider,
+            IHashProvider hashProvider,
+            ILogger logger)
         {
             _candidatesCache = candidatesCache;
             _deltaProducersProvider = deltaProducersProvider;
+            _hashProvider = hashProvider;
             _cacheEntryOptions = () => new MemoryCacheEntryOptions()
                .AddExpirationToken(new CancellationChangeToken(new CancellationTokenSource(TimeSpan.FromMinutes(3)).Token));
 
@@ -108,14 +114,14 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
         }
 
         /// <inheritdoc />
-        public CandidateDeltaBroadcast GetMostPopularCandidateDelta(byte[] previousDeltaDfsHash)
+        public CandidateDeltaBroadcast GetMostPopularCandidateDelta(string previousDeltaDfsHash)
         {
             var candidateListCacheKey = GetCandidateListCacheKey(previousDeltaDfsHash);
             if (!_candidatesCache.TryGetValue(candidateListCacheKey,
                 out ConcurrentDictionary<FavouriteDeltaBroadcast, bool> retrieved))
             {
                 _logger.Debug("Failed to retrieve any favourite candidate with previous delta {0}",
-                    previousDeltaDfsHash.ToHex());
+                    _hashProvider.GetBase32EncodedBytes(previousDeltaDfsHash).ToHex());
                 return null;
             }
 

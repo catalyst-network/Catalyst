@@ -29,7 +29,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
 {
     public sealed class DeltaProducersProvider : IDeltaProducersProvider
     {
-        public IList<IPeerIdentifier> GetDeltaProducersFromPreviousDelta(byte[] previousDeltaHash) { throw new System.NotImplementedException(); }
+        public IList<IPeerIdentifier> GetDeltaProducersFromPreviousDelta(string previousDeltaHash) { throw new System.NotImplementedException(); }
         public IPeerRepository PeerRepository { get; }
     }
 }

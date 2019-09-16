@@ -37,6 +37,6 @@ namespace Catalyst.Abstractions.Consensus.Deltas
         /// <param name="previousDeltaDfsHash">The DFS hash of the delta for which we are
         /// trying to produce a successor.</param>
         /// <returns>The most popular candidate for a given cycle.</returns>
-        CandidateDeltaBroadcast GetMostPopularCandidateDelta(byte[] previousDeltaDfsHash);
+        CandidateDeltaBroadcast GetMostPopularCandidateDelta(string previousDeltaDfsHash);
     }
 }

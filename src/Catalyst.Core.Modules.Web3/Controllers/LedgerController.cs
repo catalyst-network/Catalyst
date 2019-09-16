@@ -26,6 +26,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Dfs;
+using Catalyst.Abstractions.Hashing;
 using Catalyst.Core.Lib.Extensions;
 using Ipfs;
 using Microsoft.AspNetCore.Mvc;
@@ -37,12 +38,14 @@ namespace Catalyst.Core.Modules.Web3.Controllers
     [Route("api/[controller]/[action]")]
     public sealed class LedgerController : Controller
     {
-        private readonly IDeltaHashProvider _hashProvider;
+        private readonly IDeltaHashProvider _deltaHashProvider;
+        private readonly IHashProvider _hashProvider;
         private readonly IDfs _dfs;
         private readonly ILogger _logger;
 
-        public LedgerController(IDeltaHashProvider hashProvider, IDfs dfs, ILogger logger)
+        public LedgerController(IDeltaHashProvider deltaHashProvider, IHashProvider hashProvider, IDfs dfs, ILogger logger)
         {
+            _deltaHashProvider = deltaHashProvider;
             _hashProvider = hashProvider;
             _dfs = dfs;
             _logger = logger;
@@ -51,8 +54,8 @@ namespace Catalyst.Core.Modules.Web3.Controllers
         [HttpGet]
         public async Task<JsonResult> GetLatestDelta(DateTime? asOf)
         {
-            var latest = _hashProvider.GetLatestDeltaHash(asOf?.ToUniversalTime());
-            var dfsTarget = latest.ToBytes().ToBase32();
+            var latest = _deltaHashProvider.GetLatestDeltaHash(asOf?.ToUniversalTime());
+            var dfsTarget = _hashProvider.GetBase32EncodedBytes(latest).ToBase32();
             byte[] dfsContent = null;
             try
             {
