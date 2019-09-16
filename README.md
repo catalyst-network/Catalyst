@@ -35,6 +35,21 @@ Is coming (don't you hate it when they say that). For now you can read through t
 - Fast new and novel consensus Probabalistic BFT
 - Flexible modula design
 
+## Install Rust Toolchain
+
+Catalyst.Core uses our native [Rust BulletProof library](https://github.com/catalyst-network/Cryptography.FFI.Rust)
+
+To build the solution will require installing Rust, msbuild prebuild tasks will then compile the Bulletproof library when you try to build the project.
+
+
+#####Install Rust via the Rustup tool:
+
+```curl https://sh.rustup.rs -sSf | sh```
+
+If ```rustc --version``` fails, restart your console to ensure changes to ```PATH``` have taken effect.
+
+Refer to the Rust Bulletproof library [repository](https://github.com/catalyst-network/Cryptography.FFI.Rust) for docs and issue
+
 ## Real Quick Start Guide
 
 `git clone git@github.com:catalyst-network/Catalyst.Node.git `
