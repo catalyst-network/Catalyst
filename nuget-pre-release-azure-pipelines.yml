@@ -207,6 +207,16 @@ stages:
               downloadType: 'single'
               itemPattern: '$(ArtifactName)-Runtimes/**'
               downloadPath: '$(Pipeline.Workspace)/$(ArtifactName)/src/Catalyst.Core.Modules.Cryptography.BulletProofs/Runtimes'
+          - task: CopyFiles@2
+            inputs:
+              sourceFolder: '$(Pipeline.Workspace)/$(ArtifactName)/src/Catalyst.Core.Modules.Cryptography.BulletProofs/Runtimes/$(ArtifactName)-Runtimes'
+              contents: '**'
+              TargetFolder: '$(Pipeline.Workspace)/$(ArtifactName)/src/Catalyst.Core.Modules.Cryptography.BulletProofs/Runtimes'
+          - task: DeleteFiles@1
+            inputs:
+              sourceFolder: '$(Pipeline.Workspace)/$(ArtifactName)/src/Catalyst.Core.Modules.Cryptography.BulletProofs/Runtimes/$(ArtifactName)-Runtimes'
+              contents: '**' 
+              removeSourceFolder: true
           - task: DotNetCoreCLI@2
             displayName: 'Build project'
             inputs:
