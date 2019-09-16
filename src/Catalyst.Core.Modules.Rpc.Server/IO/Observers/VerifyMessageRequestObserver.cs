@@ -32,7 +32,6 @@ using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using DotNetty.Transport.Channels;
 using Serilog;
-using System;
 
 namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
 {
