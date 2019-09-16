@@ -28,7 +28,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Catalyst.Core.Lib.Config;
 using Microsoft.Extensions.Configuration;
-using Newtonsoft.Json;
 using IFileSystem = Catalyst.Abstractions.FileSystem.IFileSystem;
 
 namespace Catalyst.Core.Lib.FileSystem
@@ -152,18 +151,6 @@ namespace Catalyst.Core.Lib.FileSystem
         private string ReadTextFromFile(string filePath)
         {
             return File.Exists(filePath) ? File.ReadAllText(filePath) : null;
-        }
-
-        private void SaveConfigPointerFile(string configDirLocation, string configFilePointer)
-        {
-            var configDataDir = GetCurrentDataDir(configFilePointer);
-
-            var configDataDirJson = JsonConvert.SerializeObject(configDataDir);
-            var configDirLocationJson = JsonConvert.SerializeObject(configDirLocation);
-
-            var text = System.IO.File.ReadAllText(configFilePointer);
-            text = text.Replace(configDataDirJson, configDirLocationJson);
-            System.IO.File.WriteAllText(configFilePointer, text);
         }
     }
 }

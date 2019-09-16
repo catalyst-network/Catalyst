@@ -108,7 +108,7 @@ stages:
               PathtoPublish: '$(Build.ArtifactStagingDirectory)/runtimes/'
               ArtifactName: '$(ArtifactName)-runtimes'
   - stage: 'PackCore'
-  dependsOn: 'BuildNativeFFI'
+    dependsOn: 'BuildNativeFFI'
     condition: succeeded()
     jobs:
       - job: 'BuildCoreLibsProtocolAndAbstractions'
@@ -205,7 +205,7 @@ stages:
               artifactName: '$(ArtifactName)-runtimes'
               buildType: 'current'
               downloadType: 'single'
-              itemPattern: '**'
+              itemPattern: '$(ArtifactName)-runtimes/**'
               downloadPath: '$(Pipeline.Workspace)/$(ArtifactName)/src/Catalyst.Core.Modules.Cryptography.BulletProofs/Runtimes'
           - task: DotNetCoreCLI@2
             displayName: 'Build project'
