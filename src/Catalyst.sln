@@ -17,8 +17,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nethermind.Core", "..\submo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nethermind.Secp256k1", "..\submodules\nethermind\src\Nethermind\Nethermind.Secp256k1\Nethermind.Secp256k1.csproj", "{CEC977D9-D46F-4523-9941-99BCF6B93EFE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nethermind.Dirichlet.Numerics", "..\submodules\nethermind\src\Dirichlet\Nethermind.Dirichlet.Numerics\Nethermind.Dirichlet.Numerics.csproj", "{AF1AAF8E-77C9-4B86-9093-D54338E5FE5B}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nethermind.HashLib", "..\submodules\nethermind\src\Nethermind\Nethermind.HashLib\Nethermind.HashLib.csproj", "{9EED8D3C-F0EC-4D07-9021-5B1D8D7F11C2}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nethermind.Logging", "..\submodules\nethermind\src\Nethermind\Nethermind.Logging\Nethermind.Logging.csproj", "{A3386257-A47B-407B-AB5A-A2CBAF2CEDF9}"
@@ -83,7 +81,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Core.Modules.Authe
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Core.Modules.Authentication.Tests", "Catalyst.Core.Modules.Authentication.Tests\Catalyst.Core.Modules.Authentication.Tests.csproj", "{4E9C90D9-081D-4992-8C21-E93C44EB427C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Modules.Respository.MongoDb", "Catalyst.Modules.Respository.MongoDb\Catalyst.Modules.Respository.MongoDb.csproj", "{A84C4347-5892-49B0-8568-354E830B3D9D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Modules.Repository.MongoDb", "Catalyst.Modules.Repository.MongoDb\Catalyst.Modules.Repository.MongoDb.csproj", "{A84C4347-5892-49B0-8568-354E830B3D9D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Props", "Props", "{45EAC687-ABC9-496B-B507-68AEDD4B91D5}"
 ProjectSection(SolutionItems) = preProject
@@ -94,17 +92,15 @@ EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Ci", "Ci", "{29C2F736-A644-427E-B72C-FD1EE1024E27}"
 	ProjectSection(SolutionItems) = preProject
-		..\dev-test-suite-azure-pipelines.yml = ..\dev-test-suite-azure-pipelines.yml
-		..\nuget-preview-azure-pipelines.yml = ..\nuget-preview-azure-pipelines.yml
+		..\nuget-pre-release-azure-pipelines.yml = ..\nuget-pre-release-azure-pipelines.yml
+		..\pr-test-suite-azure-pipelines.yml = ..\pr-test-suite-azure-pipelines.yml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{AC999877-034E-4711-AB8D-716B1CC2C4B9}"
 	ProjectSection(SolutionItems) = preProject
 		..\scripts\addLicenseHeader.sh = ..\scripts\addLicenseHeader.sh
-		..\dev-test-suite-azure-pipelines.yml = ..\dev-test-suite-azure-pipelines.yml
 		..\devnet-docker-compose.yml = ..\devnet-docker-compose.yml
 		..\Dockerfile = ..\Dockerfile
-		..\nuget-preview-azure-pipelines.yml = ..\nuget-preview-azure-pipelines.yml
 		..\Vagrantfile = ..\Vagrantfile
 	EndProjectSection
 EndProject
@@ -123,6 +119,38 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Core.Modules.Cryptography.BulletProofs.Tests", "Catalyst.Core.Modules.Cryptography.BulletProofs.Tests\Catalyst.Core.Modules.Cryptography.BulletProofs.Tests.csproj", "{410FCEA3-1BEC-4BF3-A12C-34EB13FAF34B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Tools.KeyGenerator", "Catalyst.KeyGenerator\Catalyst.Tools.KeyGenerator.csproj", "{B475A679-4B9C-46F9-A6BC-627A28573C0A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Cryptography.FFI.Rust", "Cryptography.FFI.Rust", "{3339A04C-D933-4712-A556-F8F1B74B9753}"
+ProjectSection(SolutionItems) = preProject
+	..\submodules\Cryptography.FFI.Rust\README.md = ..\submodules\Cryptography.FFI.Rust\README.md
+	..\submodules\Cryptography.FFI.Rust\LICENSE = ..\submodules\Cryptography.FFI.Rust\LICENSE
+	..\submodules\Cryptography.FFI.Rust\Cargo.toml = ..\submodules\Cryptography.FFI.Rust\Cargo.toml
+	..\submodules\Cryptography.FFI.Rust\Cargo.lock = ..\submodules\Cryptography.FFI.Rust\Cargo.lock
+	..\submodules\Cryptography.FFI.Rust\azure-pipelines.yml = ..\submodules\Cryptography.FFI.Rust\azure-pipelines.yml
+EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{AA88D78E-377B-4452-864A-C1D5DFB06854}"
+ProjectSection(SolutionItems) = preProject
+	..\submodules\Cryptography.FFI.Rust\src\std_signature.rs = ..\submodules\Cryptography.FFI.Rust\src\std_signature.rs
+	..\submodules\Cryptography.FFI.Rust\src\lib.rs = ..\submodules\Cryptography.FFI.Rust\src\lib.rs
+	..\submodules\Cryptography.FFI.Rust\src\keys.rs = ..\submodules\Cryptography.FFI.Rust\src\keys.rs
+	..\submodules\Cryptography.FFI.Rust\src\helpers.rs = ..\submodules\Cryptography.FFI.Rust\src\helpers.rs
+	..\submodules\Cryptography.FFI.Rust\src\ffi.rs = ..\submodules\Cryptography.FFI.Rust\src\ffi.rs
+	..\submodules\Cryptography.FFI.Rust\src\errors.rs = ..\submodules\Cryptography.FFI.Rust\src\errors.rs
+	..\submodules\Cryptography.FFI.Rust\src\constants.rs = ..\submodules\Cryptography.FFI.Rust\src\constants.rs
+EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{46B22170-3D54-43F4-9474-C9F02DEF3A14}"
+ProjectSection(SolutionItems) = preProject
+	..\submodules\Cryptography.FFI.Rust\tests\integration_test.rs = ..\submodules\Cryptography.FFI.Rust\tests\integration_test.rs
+EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nethermind.Dirichlet.Numerics", "..\submodules\nethermind\src\Dirichlet\Nethermind.Dirichlet.Numerics\Nethermind.Dirichlet.Numerics.csproj", "{70AF0C8D-A405-48A1-9914-7B6AAC66F1E2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{BAB02934-9818-4691-91AF-8B56980C82C7}"
+ProjectSection(SolutionItems) = preProject
+	..\submodules\Cryptography.FFI.Rust\build\job-compile-native.yml = ..\submodules\Cryptography.FFI.Rust\build\job-compile-native.yml
+EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -154,10 +182,6 @@ Global
 		{CEC977D9-D46F-4523-9941-99BCF6B93EFE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CEC977D9-D46F-4523-9941-99BCF6B93EFE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CEC977D9-D46F-4523-9941-99BCF6B93EFE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{AF1AAF8E-77C9-4B86-9093-D54338E5FE5B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AF1AAF8E-77C9-4B86-9093-D54338E5FE5B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AF1AAF8E-77C9-4B86-9093-D54338E5FE5B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{AF1AAF8E-77C9-4B86-9093-D54338E5FE5B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{9EED8D3C-F0EC-4D07-9021-5B1D8D7F11C2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{9EED8D3C-F0EC-4D07-9021-5B1D8D7F11C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9EED8D3C-F0EC-4D07-9021-5B1D8D7F11C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -302,6 +326,12 @@ Global
 		{B475A679-4B9C-46F9-A6BC-627A28573C0A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B475A679-4B9C-46F9-A6BC-627A28573C0A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B475A679-4B9C-46F9-A6BC-627A28573C0A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E72CF774-9A2F-475C-ADA0-C061C35CEA91}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E72CF774-9A2F-475C-ADA0-C061C35CEA91}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{70AF0C8D-A405-48A1-9914-7B6AAC66F1E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{70AF0C8D-A405-48A1-9914-7B6AAC66F1E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{70AF0C8D-A405-48A1-9914-7B6AAC66F1E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{70AF0C8D-A405-48A1-9914-7B6AAC66F1E2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -310,10 +340,13 @@ Global
 		{ACD92B72-7D6C-4E61-A72F-3F86B1D81486} = {6074E807-FBBC-41D0-9205-C7B79513D683}
 		{A1B92EBC-D4FF-4E5A-BAE4-6DD8AABAA3C0} = {6074E807-FBBC-41D0-9205-C7B79513D683}
 		{CEC977D9-D46F-4523-9941-99BCF6B93EFE} = {6074E807-FBBC-41D0-9205-C7B79513D683}
-		{AF1AAF8E-77C9-4B86-9093-D54338E5FE5B} = {6074E807-FBBC-41D0-9205-C7B79513D683}
 		{9EED8D3C-F0EC-4D07-9021-5B1D8D7F11C2} = {6074E807-FBBC-41D0-9205-C7B79513D683}
 		{A3386257-A47B-407B-AB5A-A2CBAF2CEDF9} = {6074E807-FBBC-41D0-9205-C7B79513D683}
 		{F5BA5ECB-3C48-4379-9204-5BA30705D801} = {6074E807-FBBC-41D0-9205-C7B79513D683}
+		{AA88D78E-377B-4452-864A-C1D5DFB06854} = {3339A04C-D933-4712-A556-F8F1B74B9753}
+		{46B22170-3D54-43F4-9474-C9F02DEF3A14} = {3339A04C-D933-4712-A556-F8F1B74B9753}
+		{70AF0C8D-A405-48A1-9914-7B6AAC66F1E2} = {6074E807-FBBC-41D0-9205-C7B79513D683}
+		{BAB02934-9818-4691-91AF-8B56980C82C7} = {3339A04C-D933-4712-A556-F8F1B74B9753}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {34F221DE-645E-4697-BCC2-818F1F10FE8A}

@@ -1,30 +1,24 @@
 strategy:
   matrix:
-#    Windows-VS2019:
-#      imageName: 'windows-2019'
-#      netcore_sdk: 2.2.104
-    Windows-vs2017:
-      imageName: 'vs2017-win2016'
+    Windows-VS2019:
+      imageName: 'windows-2019'
       netcore_sdk: 2.2.104
-#    Windows-Core:
-#      imageName: 'win1803'
-#      netcore_sdk: 2.2.104
-#    Osx-Sierra:
-#      imageName: 'macos-10.13'
-#      netcore_sdk: 2.2.104
+      rustup_toolchain: stable
     Osx-Mojave:
       imageName: 'macos-10.14'
       netcore_sdk: 2.2.104
+      rustup_toolchain: stable
     Ubuntu-1604:
       imageName: 'ubuntu-16.04'
       netcore_sdk: 2.2.104
+      rustup_toolchain: stable
   maxParallel: 3
 
 variables:
   release.type: '-beta'
   BuildPlatform: 'any cpu'
   BuildConfiguration: 'Debug'
-  
+
 pool:
   vmImage: $(imageName)
 
@@ -46,7 +40,7 @@ pr:
     exclude:
       - master/*
       - release/*
-      
+
 schedules:
   - cron: "0 0 * * *"
     displayName: Daily midnight build
@@ -57,7 +51,7 @@ schedules:
         - releases/*
         - feature/*
     always: true
-    
+
 steps:
   - task: DotNetCoreInstaller@0
     displayName: 'Install .NetCore SDK'
@@ -67,7 +61,19 @@ steps:
   - bash: |
       git submodule update --init --force --recursive
     displayName: 'Clone submodules'
-      
+
+  - script: |
+      curl https://sh.rustup.rs -sSf | sh -s -- -y --default-toolchain $RUSTUP_TOOLCHAIN
+      echo "##vso[task.setvariable variable=PATH;]$PATH:$HOME/.cargo/bin"
+    displayName: Install rust
+    condition: ne( variables['Agent.OS'], 'Windows_NT' )
+  - script: |
+      curl -sSf -o rustup-init.exe https://win.rustup.rs
+      rustup-init.exe -y --default-toolchain %RUSTUP_TOOLCHAIN%
+      echo "##vso[task.setvariable variable=PATH;]%PATH%;%USERPROFILE%\.cargo\bin"
+    displayName: Windows install rust
+    condition: eq( variables['Agent.OS'], 'Windows_NT' )
+        
   - task: DotNetCoreCLI@2
     displayName: 'Build solution'
     inputs:
@@ -93,13 +99,12 @@ steps:
     displayName: 'Run unit tests with coverage'
     inputs:
       command: test
-      arguments: '--filter TestType!=IntegrationTest --configuration Debug /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:UseSourceLink=true /p:Exclude="\"[Catalyst.Protocol*]Catalyst.Protocol*,[Catalyst.Simulator*]Catalyst.Simulator*,[Catalyst.TestUtils*]Catalyst.TestUtils*\"" /p:Include="\"[Catalyst.Core.Lib*]Catalyst.Core.Lib*,[Catalyst.Core.Modules*]Catalyst.Core.Modules*\"" /p:Threshold=0 /p:ThresholdType=line /p:ThresholdStat=total'
       projects: 'src/*[Tt]ests/*.csproj'
-      nobuild: true
+      arguments: '--filter TestType!=IntegrationTest --configuration $(BuildConfiguration) /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:UseSourceLink=true /p:Include="\"[Catalyst.Core.Lib*]Catalyst.Core.Lib*\"" /p:Threshold=0 /p:ThresholdType=line /p:ThresholdStat=total'
       failOnStandardError: 'true'
     timeoutInMinutes: 10
     condition: eq( variables['Agent.OS'], 'Windows_NT' )
-    
+
   - task: DotNetCoreCLI@2
     displayName: 'Run integration tests'
     inputs:
@@ -108,23 +113,23 @@ steps:
       arguments: '--filter TestType=IntegrationTest --configuration $(BuildConfiguration)'
       failOnStandardError: 'true'
     timeoutInMinutes: 10
-    
-  - script: |
-      reportgenerator "-reports:src/**/coverage.cobertura.xml" "-targetdir:$(Build.ArtifactStagingDirectory)" -reporttypes:HtmlInline_AzurePipelines;Cobertura;SonarQube;Badges "-assemblyfilters:+Catalyst.Core.Lib*;+Catalyst.Core.Modules*;"
-    displayName: 'run report generator'
-    condition: eq( variables['Agent.OS'], 'Windows_NT' )
 
+  - script: |
+      reportgenerator "-reports:src/**/coverage.cobertura.xml" "-targetdir:$(Build.ArtifactStagingDirectory)" -reporttypes:HtmlInline_AzurePipelines;Cobertura;SonarQube;Badges "-assemblyfilters:+Catalyst.Core.Lib*;+Catalyst.Core.Modules.Kvm*;"
+    displayName: 'Generate unit test coverage'
+    condition: eq( variables['Agent.OS'], 'Windows_NT' )
   - task: PublishBuildArtifacts@1
     displayName: 'Store coverage report'
     inputs:
       ArtifactName: 'coverage-report'
       failOnStandardError: 'true'
     condition: eq( variables['Agent.OS'], 'Windows_NT' )
-    
+
   - task: PublishCodeCoverageResults@1
     displayName: 'Publish coverage report'
     inputs:
       codeCoverageTool: Cobertura
-      summaryFileLocation: '$(Build.SourcesDirectory)/CodeCoverage/Cobertura.xml'
-      reportDirectory: '$(Build.SourcesDirectory)/CodeCoverage'
+      summaryFileLocation: '$(Build.ArtifactStagingDirectory)/Cobertura.xml'
+      reportDirectory: '$(Build.ArtifactStagingDirectory)'
+      failOnStandardError: 'true'
     condition: eq( variables['Agent.OS'], 'Windows_NT' )

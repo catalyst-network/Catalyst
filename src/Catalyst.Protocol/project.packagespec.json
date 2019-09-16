@@ -1,0 +1,41 @@
+﻿{
+  "version": "1.0.0",
+  "restore": {
+    "projectUniqueName": "/home/nsh/RiderProjects/Catalyst.Node/src/Catalyst.Protocol/Catalyst.Protocol.csproj",
+    "projectName": "Catalyst.Protocol",
+    "projectPath": "/home/nsh/RiderProjects/Catalyst.Node/src/Catalyst.Protocol/Catalyst.Protocol.csproj",
+    "outputPath": "/home/nsh/RiderProjects/Catalyst.Node/src/Catalyst.Protocol/",
+    "projectStyle": "PackageReference",
+    "originalTargetFrameworks": [
+      "netcoreapp2.2"
+    ],
+    "sources": {
+      "https://api.nuget.org/v3/index.json": {}
+    },
+    "frameworks": {
+      "netcoreapp2.2": {
+        "projectReferences": {}
+      }
+    }
+  },
+  "frameworks": {
+    "netcoreapp2.2": {
+      "dependencies": {
+        "Dawn.Guard": {
+          "target": "Package",
+          "version": "[1.9.0, )"
+        },
+        "Google.Protobuf": {
+          "target": "Package",
+          "version": "[3.9.1, )"
+        },
+        "Grpc.Tools": {
+          "include": "Runtime, Build, Native, ContentFiles, Analyzers",
+          "suppressParent": "All",
+          "target": "Package",
+          "version": "[1.22.0, )"
+        }
+      }
+    }
+  }
+}
