@@ -18,7 +18,4 @@
     <ItemGroup>
         <ProtoBuf Include="..\..\submodules\protocol-protobuffs\src\*.proto" Link="Protobuffs\%(Filename)%(Extension)" />
     </ItemGroup>
-    <ItemGroup>
-      <Folder Include="Common\" />
-    </ItemGroup>
 </Project>
