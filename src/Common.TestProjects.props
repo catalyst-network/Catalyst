@@ -18,6 +18,11 @@
         <PackageReference Update="Microsoft.NET.Test.Sdk" Version="16.0.1" />
         <PackageReference Include="Microsoft.Reactive.Testing" Version="4.1.6" />
         <PackageReference Include="Nethereum.RLP" Version="3.3.0" />
-        <PackageReference Include="coverlet.msbuild" Version="2.6.2" />
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="coverlet.msbuild" Version="2.6.2">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+        </PackageReference>
     </ItemGroup>
 </Project>

@@ -108,7 +108,7 @@ stages:
               PathtoPublish: '$(Build.ArtifactStagingDirectory)/runtimes/'
               ArtifactName: '$(ArtifactName)-runtimes'
   - stage: 'PackCore'
-#    dependsOn: 'BuildNativeFFI'
+  dependsOn: 'BuildNativeFFI'
     condition: succeeded()
     jobs:
       - job: 'BuildCoreLibsProtocolAndAbstractions'

@@ -1,17 +1,17 @@
 strategy:
   matrix:
-#    Windows-VS2017:
-#      imageName: 'vs2017-win2016'
-#      netcore_sdk: 2.2.104
+    #    Windows-VS2017:
+    #      imageName: 'vs2017-win2016'
+    #      netcore_sdk: 2.2.104
     Windows-VS2019:
       imageName: 'windows-2019'
       netcore_sdk: 2.2.104
-#    Windows-Core:
-#      imageName: 'win1803'
-#      netcore_sdk: 2.2.104
-#    Osx-Sierra:
-#      imageName: 'macos-10.13'
-#      netcore_sdk: 2.2.104
+    #    Windows-Core:
+    #      imageName: 'win1803'
+    #      netcore_sdk: 2.2.104
+    #    Osx-Sierra:
+    #      imageName: 'macos-10.13'
+    #      netcore_sdk: 2.2.104
     Osx-Mojave:
       imageName: 'macos-10.14'
       netcore_sdk: 2.2.104
@@ -24,7 +24,7 @@ variables:
   release.type: '-beta'
   BuildPlatform: 'any cpu'
   BuildConfiguration: 'Debug'
-  
+
 pool:
   vmImage: $(imageName)
 
@@ -46,7 +46,7 @@ pr:
     exclude:
       - master/*
       - release/*
-      
+
 schedules:
   - cron: "0 0 * * *"
     displayName: Daily midnight build
@@ -57,7 +57,7 @@ schedules:
         - releases/*
         - feature/*
     always: true
-    
+
 steps:
   - task: DotNetCoreInstaller@0
     displayName: 'Install .NetCore SDK'
@@ -67,7 +67,7 @@ steps:
   - bash: |
       git submodule update --init --force --recursive
     displayName: 'Clone submodules'
-      
+
   - task: DotNetCoreCLI@2
     displayName: 'Build solution'
     inputs:
@@ -98,7 +98,7 @@ steps:
       failOnStandardError: 'true'
     timeoutInMinutes: 10
     condition: eq( variables['Agent.OS'], 'Windows_NT' )
-    
+
   - task: DotNetCoreCLI@2
     displayName: 'Run integration tests'
     inputs:
@@ -107,19 +107,18 @@ steps:
       arguments: '--filter TestType=IntegrationTest --configuration $(BuildConfiguration)'
       failOnStandardError: 'true'
     timeoutInMinutes: 10
-    
+
   - script: |
       reportgenerator "-reports:src/**/coverage.cobertura.xml" "-targetdir:$(Build.ArtifactStagingDirectory)" -reporttypes:HtmlInline_AzurePipelines;Cobertura;SonarQube;Badges "-assemblyfilters:+Catalyst.Core.Lib*;+Catalyst.Core.Modules.Kvm*;"
     displayName: 'Generate unit test coverage'
     condition: eq( variables['Agent.OS'], 'Windows_NT' )
-
   - task: PublishBuildArtifacts@1
     displayName: 'Store coverage report'
     inputs:
       ArtifactName: 'coverage-report'
       failOnStandardError: 'true'
     condition: eq( variables['Agent.OS'], 'Windows_NT' )
-    
+
   - task: PublishCodeCoverageResults@1
     displayName: 'Publish coverage report'
     inputs:
