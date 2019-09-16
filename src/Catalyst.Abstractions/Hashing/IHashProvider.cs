@@ -1,11 +1,13 @@
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Catalyst.Abstractions.Hashing
 {
     public interface IHashProvider
     {
-        string ComputeHash(byte[] content);
+        byte[] ComputeHash(IEnumerable<byte> content);
+
+        bool IsValidHash(IEnumerable<byte> content);
+
+        string AsBase32(IEnumerable<byte> content);
     }
 }

@@ -4,7 +4,13 @@
 
 #endregion
 
+using Catalyst.Abstractions.Hashing;
+using Multiformats.Hash;
 using Multiformats.Hash.Algorithms;
+using SimpleBase;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 /**
 * Copyright (c) 2019 Catalyst Network
 *
@@ -25,13 +31,44 @@ using Multiformats.Hash.Algorithms;
 */
 namespace Catalyst.Core.Modules.Hashing
 {
-    public class Blake2bHashingProvider
+    public class Blake2bHashingProvider : IHashProvider
     {
         private readonly IMultihashAlgorithm _multihashAlgorithm;
 
         public Blake2bHashingProvider(IMultihashAlgorithm multihashAlgorithm)
         {
-            this._multihashAlgorithm = multihashAlgorithm;
+            _multihashAlgorithm = multihashAlgorithm;
+        }
+
+        public string AsBase32(IEnumerable<byte> content)
+        {
+            var hash = AsMultihash(content);
+            var result = Base32.Rfc4648.Encode(hash.ToBytes(), false).ToLowerInvariant();
+            return result;
+        }
+
+        public byte[] ComputeHash(IEnumerable<byte> content)
+        {
+            return Multihash.Sum(_multihashAlgorithm.Code, content.ToArray());
+        }
+
+        public bool IsValidHash(IEnumerable<byte> content)
+        {
+            try
+            {
+                _ = AsMultihash(content);
+            } catch(Exception)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        private Multihash AsMultihash(IEnumerable<byte> bytes)
+        {
+            var array = bytes as byte[] ?? bytes.ToArray();
+            return Multihash.Decode(array);
         }
     }
 }
