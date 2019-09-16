@@ -110,7 +110,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P.IO.Transport.Channels
 
             var signature = Substitute.For<ISignature>();
             _peerIdValidator.ValidatePeerIdFormat(Arg.Any<PeerId>()).Returns(true);
-
+            _serverKeySigner.CryptoContext.SignatureLength.Returns(64);
             _serverKeySigner.Sign(Arg.Any<byte[]>(), default).ReturnsForAnyArgs(signature);
 
             var correlationId = CorrelationId.GenerateCorrelationId();

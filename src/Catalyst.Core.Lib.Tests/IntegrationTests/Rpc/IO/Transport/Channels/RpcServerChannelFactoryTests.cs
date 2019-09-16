@@ -68,6 +68,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Transport.Channels
             _testScheduler = new TestScheduler();
             _serverCorrelationManager = Substitute.For<IRpcMessageCorrelationManager>();
             _serverKeySigner = Substitute.For<IKeySigner>();
+            _serverKeySigner.CryptoContext.SignatureLength.Returns(64);
 
             _authenticationStrategy = Substitute.For<IAuthenticationStrategy>();
 
@@ -83,7 +84,8 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Transport.Channels
 
             _clientCorrelationManager = Substitute.For<IRpcMessageCorrelationManager>();
             _clientKeySigner = Substitute.For<IKeySigner>();
-           
+            _clientKeySigner.CryptoContext.SignatureLength.Returns(64);
+
             _clientFactory = new UnitTests.Rpc.IO.Transport.Channels.NodeRpcClientChannelFactoryTests.TestNodeRpcClientChannelFactory(
                 _clientKeySigner, 
                 _clientCorrelationManager,
@@ -106,7 +108,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Transport.Channels
             var sender = PeerIdentifierHelper.GetPeerIdentifier("sender");
             var signature = Substitute.For<ISignature>();
             _peerIdValidator.ValidatePeerIdFormat(Arg.Any<PeerId>()).Returns(true);
-
+            
             _serverKeySigner.Sign(Arg.Any<byte[]>(), default).ReturnsForAnyArgs(signature);
             
             var correlationId = CorrelationId.GenerateCorrelationId();

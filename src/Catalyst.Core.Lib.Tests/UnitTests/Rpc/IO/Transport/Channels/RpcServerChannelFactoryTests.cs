@@ -82,6 +82,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Transport.Channels
             _testScheduler = new TestScheduler();
             _correlationManager = Substitute.For<IRpcMessageCorrelationManager>();
             _keySigner = Substitute.For<IKeySigner>();
+            _keySigner.CryptoContext.SignatureLength.Returns(64);
 
             var authenticationStrategy = Substitute.For<IAuthenticationStrategy>();
             authenticationStrategy.Authenticate(Arg.Any<IPeerIdentifier>()).Returns(true);
