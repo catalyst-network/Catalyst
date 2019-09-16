@@ -60,7 +60,7 @@ namespace Catalyst.Core.Modules.Ledger
                     yield break;
                 }
 
-                var previousDfsHash = _hashProvider.AsBase32(retrievedDelta.PreviousDeltaDfsHash);
+                var previousDfsHash = _hashProvider.ComputeBase32(retrievedDelta.PreviousDeltaDfsHash);
 
                 _logger.Debug("Retrieved delta {previous} as predecessor of {current}",
                     previousDfsHash, thisHash);

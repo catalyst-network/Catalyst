@@ -23,18 +23,17 @@
 
 using System.Linq;
 using Catalyst.Abstractions.Cryptography;
+using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.Util;
-using Catalyst.Core.Lib.Extensions;
-using Multiformats.Hash.Algorithms;
 using Nethereum.Hex.HexConvertors.Extensions;
 
 namespace Catalyst.Core.Lib.Util
 {
     public sealed class AddressHelper : IAddressHelper
     {
-        private readonly IMultihashAlgorithm _hashAlgorithm;
+        private readonly IHashProvider _hashAlgorithm;
 
-        public AddressHelper(IMultihashAlgorithm hashAlgorithm)
+        public AddressHelper(IHashProvider hashAlgorithm)
         {
             _hashAlgorithm = hashAlgorithm;
         }
@@ -46,7 +45,7 @@ namespace Catalyst.Core.Lib.Util
         /// <returns>The Hex encoded bytes corresponding to the address.</returns>
         public string GenerateAddress(IPublicKey publicKey)
         {
-            var addressHashBytes = publicKey.Bytes.ComputeRawHash(_hashAlgorithm);
+            var addressHashBytes = _hashAlgorithm.ComputeRawHash(publicKey.Bytes);
             var lastTwentyBytes = addressHashBytes.TakeLast(20).ToArray();
             return lastTwentyBytes.ToHex();
         }

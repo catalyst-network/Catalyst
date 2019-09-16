@@ -80,7 +80,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
 
             if (!foundNewDelta 
              || !foundPreviousDelta
-             || newDelta.PreviousDeltaDfsHash != _hashProvider.GetBase32HashBytes(previousHash).ToByteString()
+             || newDelta.PreviousDeltaDfsHash != _hashProvider.GetBase32EncodedBytes(previousHash).ToByteString()
              || previousDelta.TimeStamp >= newDelta.TimeStamp)
             {
                 _logger.Warning("Failed to update latest hash from {previousHash} to {newHash}",

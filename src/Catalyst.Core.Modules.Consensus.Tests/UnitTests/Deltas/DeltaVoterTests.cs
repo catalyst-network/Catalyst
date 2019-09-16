@@ -95,7 +95,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             _hashProvider = new Blake2bHashingProvider(new BLAKE2B_256());
             _cache = Substitute.For<IMemoryCache>();
 
-            _previousDeltaHash = _hashProvider.GetBase32HashBytes(_hashProvider.AsBase32(ByteUtil.GenerateRandomByteArray(32)));
+            _previousDeltaHash = _hashProvider.GetBase32EncodedBytes(_hashProvider.ComputeBase32(ByteUtil.GenerateRandomByteArray(32)));
 
             _producerIds = "1234"
                .Select((c, i) => PeerIdentifierHelper.GetPeerIdentifier(c.ToString()))
@@ -145,7 +145,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
                 _previousDeltaHash,
                 producerId: _producerIds.First().PeerId);
 
-            var candidateHashAsString = _hashProvider.AsBase32(candidate.Hash);
+            var candidateHashAsString = _hashProvider.ComputeBase32(candidate.Hash);
 
             var addedEntry = Substitute.For<ICacheEntry>();
             _cache.CreateEntry(Arg.Is<string>(s => s.EndsWith(candidateHashAsString)))
@@ -170,12 +170,12 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             _voter = new DeltaVoter(_cache, _producersProvider, _localIdentifier, _logger);
 
             var initialScore = 10;
-            var cacheCandidate = ScoredCandidateDeltaHelper.GetScoredCandidateDelta(
+            var cacheCandidate = ScoredCandidateDeltaHelper.GetScoredCandidateDelta(_hashProvider,
                 producerId: _producerIds.First().PeerId,
                 previousDeltaHash: _previousDeltaHash,
                 score: initialScore);
 
-            var candidateHashAsString = _hashProvider.AsBase32(cacheCandidate.Candidate.Hash);
+            var candidateHashAsString = _hashProvider.ComputeBase32(cacheCandidate.Candidate.Hash);
 
             _cache.TryGetValue(Arg.Any<string>(), out Arg.Any<object>()).Returns(ci =>
             {
@@ -312,7 +312,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 
                 AddCandidatesToCacheAndVote(10, 500, realCache);
 
-                var found = _voter.TryGetFavouriteDelta(_hashProvider.GetBase32HashBytes(_hashProvider.AsBase32(ByteUtil.GenerateRandomByteArray(32))), out var favouriteCandidate);
+                var found = _voter.TryGetFavouriteDelta(_hashProvider.GetBase32EncodedBytes(_hashProvider.ComputeBase32(ByteUtil.GenerateRandomByteArray(32))), out var favouriteCandidate);
 
                 found.Should().BeFalse();
                 favouriteCandidate.Should().BeNull();

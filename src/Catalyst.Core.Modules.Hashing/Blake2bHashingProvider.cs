@@ -42,21 +42,21 @@ namespace Catalyst.Core.Modules.Hashing
             _multihashAlgorithm = multihashAlgorithm;
         }
 
-        public string AsBase32(IEnumerable<byte> content)
+        public string ComputeBase32(IEnumerable<byte> content)
         {
             var contentList = content.ToList();
-            var hash = ComputeHash(contentList);
+            var hash = ComputeRawHash(contentList);
             var multiHash = AsMultihash(hash);
             var result = multiHash.ToString(MultibaseEncoding.Base32Lower);
             return result;
         }
         
-        public byte[] ComputeHash(IEnumerable<byte> content)
+        public byte[] ComputeRawHash(IEnumerable<byte> content)
         {
             return Multihash.Sum(_multihashAlgorithm.Code, content.ToArray()).ToBytes();
         }
 
-        public byte[] GetBase32HashBytes(string hash)
+        public byte[] GetBase32EncodedBytes(string hash)
         {
             return Multihash.Parse(hash, MultibaseEncoding.Base32Lower).ToBytes();
         }
@@ -77,7 +77,7 @@ namespace Catalyst.Core.Modules.Hashing
 
         /// <summary>
         /// Simply takes some bytes, and use the <see cref="_multihashAlgorithm"/> to compute the hash
-        /// for this content. The hash is returned raw, <see cref="ComputeHash"/> to get the bytes
+        /// for this content. The hash is returned raw, <see cref="ComputeRawHash"/> to get the bytes
         /// wrapped in a Multihash envelope.
         /// </summary>
         /// <param name="bytes">The content for which the hash will be calculated.</param>

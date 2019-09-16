@@ -4,14 +4,12 @@ namespace Catalyst.Abstractions.Hashing
 {
     public interface IHashProvider
     {
-        byte[] ComputeHash(IEnumerable<byte> content);
+        byte[] ComputeRawHash(IEnumerable<byte> content);
 
         bool IsValidHash(IEnumerable<byte> content);
 
-        string AsBase32(IEnumerable<byte> content);
-
-        byte[] ComputeToBase32(IEnumerable<byte> content);
-
-        byte[] GetBase32HashBytes(string hash);
+        string ComputeBase32(IEnumerable<byte> content);
+        
+        byte[] GetBase32EncodedBytes(string hash);
     }
 }

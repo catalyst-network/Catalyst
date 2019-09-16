@@ -27,6 +27,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Dfs;
+using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.IO.Messaging.Broadcast;
 using Catalyst.Core.Lib.Extensions;
@@ -34,7 +35,6 @@ using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using Catalyst.Protocol.Deltas;
 using Dawn;
 using Google.Protobuf;
-using Multiformats.Hash;
 using Polly;
 using Polly.Retry;
 using Serilog;
@@ -49,6 +49,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
         private readonly IBroadcastManager _broadcastManager;
         private readonly IPeerIdentifier _peerIdentifier;
         private readonly IDfs _dfs;
+        private readonly IHashProvider _hashProvider;
         private readonly ILogger _logger;
 
         protected virtual AsyncRetryPolicy<string> DfsRetryPolicy { get; }
@@ -56,11 +57,13 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
         public DeltaHub(IBroadcastManager broadcastManager,
             IPeerIdentifier peerIdentifier,
             IDfs dfs,
+            IHashProvider hashProvider,
             ILogger logger)
         {
             _broadcastManager = broadcastManager;
             _peerIdentifier = peerIdentifier;
             _dfs = dfs;
+            _hashProvider = hashProvider;
             _logger = logger;
 
             DfsRetryPolicy = Policy<string>.Handle<Exception>()
@@ -134,11 +137,11 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             try
             {
                 _logger.Verbose("Broadcasting new delta dfs address {dfsAddress} for delta with previous delta hash {previousDeltaHash}",
-                    dfsFileAddress, previousDeltaHash.AsBase32Address());
+                    dfsFileAddress, _hashProvider.ComputeBase32(previousDeltaHash));
 
                 var newDeltaHashOnDfs = new DeltaDfsHashBroadcast
                 {
-                    DeltaDfsHash = Multihash.Parse(dfsFileAddress).ToBytes().ToByteString(),
+                    DeltaDfsHash = _hashProvider.GetBase32EncodedBytes(dfsFileAddress).ToByteString(),
                     PreviousDeltaDfsHash = previousDeltaHash
                 }.ToProtocolMessage(_peerIdentifier.PeerId, CorrelationId.GenerateCorrelationId());
 

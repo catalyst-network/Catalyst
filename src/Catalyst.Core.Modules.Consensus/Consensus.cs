@@ -114,7 +114,7 @@ namespace Catalyst.Core.Modules.Consensus
 
                     var newHash = _deltaHub.PublishDeltaToDfsAndBroadcastAddressAsync(d)
                        .ConfigureAwait(false).GetAwaiter().GetResult();
-                    var previousHash = _hashProvider.AsBase32(d.PreviousDeltaDfsHash);
+                    var previousHash = _hashProvider.ComputeBase32(d.PreviousDeltaDfsHash);
 
                     _deltaHashProvider.TryUpdateLatestHash(previousHash, newHash);
                 });

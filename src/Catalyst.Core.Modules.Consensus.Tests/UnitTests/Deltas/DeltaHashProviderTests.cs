@@ -60,14 +60,14 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
                .ForContext(MethodBase.GetCurrentMethod().DeclaringType);
             _hashProvider = new Blake2bHashingProvider(new BLAKE2B_256());
 
-            _deltaCache.GenesisAddress.Returns(_hashProvider.AsBase32(new Delta().ToByteArray()));
+            _deltaCache.GenesisAddress.Returns(_hashProvider.ComputeBase32(new Delta().ToByteArray()));
         }
 
         [Fact]
         public void Generate_Genesis_Hash()
         {
             var emptyDelta = new Delta();
-            var hash = _hashProvider.AsBase32(emptyDelta.ToByteArray());
+            var hash = _hashProvider.ComputeBase32(emptyDelta.ToByteArray());
 
             Output.WriteLine(hash);
         }
@@ -159,7 +159,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 
         private string GetHash(int i)
         {
-            var hash = _hashProvider.AsBase32(BitConverter.GetBytes(i));
+            var hash = _hashProvider.ComputeBase32(BitConverter.GetBytes(i));
             return hash;
         }
 

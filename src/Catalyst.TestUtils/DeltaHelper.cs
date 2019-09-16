@@ -39,14 +39,13 @@ namespace Catalyst.TestUtils
             byte[] merklePoda = default,
             DateTime? timestamp = default)
         {
-            var previousHash = previousDeltaHash;
             var root = merkleRoot ?? ByteUtil.GenerateRandomByteArray(32);
             var poda = merklePoda ?? ByteUtil.GenerateRandomByteArray(32);
             var nonNullTimestamp = Timestamp.FromDateTime(timestamp?.ToUniversalTime() ?? DateTime.Now.ToUniversalTime());
 
             var delta = new Delta
             {
-                PreviousDeltaDfsHash = hashProvider.GetBase32HashBytes(previousDeltaHash).ToByteString(),
+                PreviousDeltaDfsHash = hashProvider.GetBase32EncodedBytes(previousDeltaHash).ToByteString(),
                 MerkleRoot = root.ToByteString(),
                 MerklePoda = poda.ToByteString(),
                 TimeStamp = nonNullTimestamp
@@ -60,8 +59,8 @@ namespace Catalyst.TestUtils
             byte[] hash = null,
             PeerId producerId = null)
         {
-            var candidateHash = hash ?? hashProvider.GetBase32HashBytes(hashProvider.AsBase32(ByteUtil.GenerateRandomByteArray(32)));
-            var previousHash = previousDeltaHash ?? hashProvider.GetBase32HashBytes(hashProvider.AsBase32(ByteUtil.GenerateRandomByteArray(32)));
+            var candidateHash = hash ?? hashProvider.GetBase32EncodedBytes(hashProvider.ComputeBase32(ByteUtil.GenerateRandomByteArray(32)));
+            var previousHash = previousDeltaHash ?? hashProvider.GetBase32EncodedBytes(hashProvider.ComputeBase32(ByteUtil.GenerateRandomByteArray(32)));
             var producer = producerId 
              ?? PeerIdHelper.GetPeerId(publicKey: ByteUtil.GenerateRandomByteArray(32));
 

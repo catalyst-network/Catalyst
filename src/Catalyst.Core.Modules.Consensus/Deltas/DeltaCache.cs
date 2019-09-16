@@ -48,7 +48,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
         public string GenesisAddress { get; set; }
 
         public string GetLocalDeltaCacheKey(CandidateDeltaBroadcast candidate) =>
-            nameof(DeltaCache) + "-LocalDelta-" + _hashProvider.AsBase32(candidate.Hash);
+            nameof(DeltaCache) + "-LocalDelta-" + _hashProvider.ComputeBase32(candidate.Hash);
 
         public DeltaCache(IHashProvider hashProvider,
             IMemoryCache memoryCache,
@@ -56,7 +56,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             IDeltaCacheChangeTokenProvider changeTokenProvider,
             ILogger logger)
         {
-            GenesisHash = _hashProvider.AsBase32(new Delta().ToByteArray());
+            GenesisHash = _hashProvider.ComputeBase32(new Delta().ToByteArray());
             GenesisAddress = GenesisHash;
 
             var genesisDelta = new Delta {TimeStamp = Timestamp.FromDateTime(DateTime.MinValue.ToUniversalTime())};

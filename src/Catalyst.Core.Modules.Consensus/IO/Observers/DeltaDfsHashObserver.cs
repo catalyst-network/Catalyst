@@ -23,13 +23,13 @@
 
 using System;
 using Catalyst.Abstractions.Consensus.Deltas;
+using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Observers;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Deltas;
-using Multiformats.Hash;
 using Serilog;
 
 namespace Catalyst.Core.Modules.Consensus.IO.Observers
@@ -37,11 +37,13 @@ namespace Catalyst.Core.Modules.Consensus.IO.Observers
     public class DeltaDfsHashObserver : BroadcastObserverBase<DeltaDfsHashBroadcast>, IP2PMessageObserver
     {
         private readonly IDeltaHashProvider _deltaHashProvider;
+        private readonly IHashProvider _hashProvider;
 
-        public DeltaDfsHashObserver(IDeltaHashProvider deltaHashProvider, ILogger logger) 
+        public DeltaDfsHashObserver(IDeltaHashProvider deltaHashProvider, IHashProvider hashProvider, ILogger logger) 
             : base(logger)
         {
             _deltaHashProvider = deltaHashProvider;
+            _hashProvider = hashProvider;
         }
 
         public override void HandleBroadcast(IObserverDto<ProtocolMessage> messageDto)
@@ -49,8 +51,8 @@ namespace Catalyst.Core.Modules.Consensus.IO.Observers
             try
             {
                 var deserialised = messageDto.Payload.FromProtocolMessage<DeltaDfsHashBroadcast>();
-                var previousHash = Multihash.Cast(deserialised.PreviousDeltaDfsHash.ToByteArray());
-                var newHash = Multihash.Cast(deserialised.DeltaDfsHash.ToByteArray());
+                var previousHash = _hashProvider.ComputeBase32(deserialised.PreviousDeltaDfsHash.ToByteArray());
+                var newHash = _hashProvider.ComputeBase32(deserialised.DeltaDfsHash.ToByteArray());
                 _deltaHashProvider.TryUpdateLatestHash(previousHash, newHash);
             }
             catch (Exception exception)

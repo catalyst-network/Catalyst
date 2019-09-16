@@ -55,7 +55,6 @@ using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Lib.Validators;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
-using Multiformats.Hash.Algorithms;
 
 namespace Catalyst.Core.Lib
 {

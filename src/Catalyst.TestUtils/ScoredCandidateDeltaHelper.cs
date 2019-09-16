@@ -21,30 +21,30 @@
 
 #endregion
 
+using Catalyst.Abstractions.Hashing;
 using Catalyst.Core.Modules.Consensus.Deltas;
 using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Deltas;
-using Multiformats.Hash.Algorithms;
 
 namespace Catalyst.TestUtils
 {
     public static class ScoredCandidateDeltaHelper
     {
-        public static ScoredCandidateDelta GetScoredCandidateDelta(CandidateDeltaBroadcast candidate = default,
-            IMultihashAlgorithm hashAlgorithm = null,
+        public static ScoredCandidateDelta GetScoredCandidateDelta(IHashProvider hashProvider,
+            CandidateDeltaBroadcast candidate = default,
             int score = 0)
         {
-            var candidateDelta = candidate ?? DeltaHelper.GetCandidateDelta(hashAlgorithm: hashAlgorithm);
+            var candidateDelta = candidate ?? DeltaHelper.GetCandidateDelta(hashProvider);
             return new ScoredCandidateDelta(candidateDelta, score);
         }
 
-        public static ScoredCandidateDelta GetScoredCandidateDelta(byte[] previousDeltaHash = null,
-            IMultihashAlgorithm hashAlgorithm = null,
+        public static ScoredCandidateDelta GetScoredCandidateDelta(IHashProvider hashProvider,
+            byte[] previousDeltaHash = null,
             byte[] hash = null,
             PeerId producerId = null,
             int score = 0)
         {
-            var candidateDelta = DeltaHelper.GetCandidateDelta(previousDeltaHash, hash, producerId, hashAlgorithm);
+            var candidateDelta = DeltaHelper.GetCandidateDelta(hashProvider, hash: hash, producerId: producerId, previousDeltaHash: previousDeltaHash);
             return new ScoredCandidateDelta(candidateDelta, score);
         }
     }

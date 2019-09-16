@@ -23,15 +23,16 @@
 
 using System;
 using System.Reactive.Linq;
+using System.Text;
 using Catalyst.Abstractions.Consensus.Deltas;
+using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.Mempool;
-using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Mempool.Documents;
+using Catalyst.Core.Modules.Hashing;
 using Catalyst.Core.Modules.Ledger.Models;
 using Catalyst.Core.Modules.Ledger.Repository;
 using Catalyst.TestUtils;
 using Microsoft.Reactive.Testing;
-using Multiformats.Hash;
 using Multiformats.Hash.Algorithms;
 using Nethermind.Dirichlet.Numerics;
 using NSubstitute;
@@ -50,22 +51,22 @@ namespace Catalyst.Core.Modules.Ledger.Tests.UnitTests
         private readonly IMempool<MempoolDocument> _mempool;
         private readonly ILogger _logger;
         private readonly ILedgerSynchroniser _ledgerSynchroniser;
-        private readonly IMultihashAlgorithm _hashingAlgorithm;
-        private readonly Multihash _genesisHash;
+        private readonly IHashProvider _hashProvider;
+        private readonly string _genesisHash;
 
         public LedgerTests()
         {
             _testScheduler = new TestScheduler();
             _fakeRepository = Substitute.For<IAccountRepository>();
-            _hashingAlgorithm = new BLAKE2B_16();
+            _hashProvider = new Blake2bHashingProvider(new BLAKE2B_16());
 
             _logger = Substitute.For<ILogger>();
             _mempool = Substitute.For<IMempool<MempoolDocument>>();
             _deltaHashProvider = Substitute.For<IDeltaHashProvider>();
             _ledgerSynchroniser = Substitute.For<ILedgerSynchroniser>();
-            _genesisHash = "genesis".ComputeUtf8Multihash(_hashingAlgorithm);
+            _genesisHash = _hashProvider.ComputeBase32(Encoding.UTF8.GetBytes("genesis"));
             _ledgerSynchroniser.DeltaCache.GenesisAddress
-               .Returns(_genesisHash.AsBase32Address());
+               .Returns(_genesisHash);
         }
 
         [Fact]
@@ -85,8 +86,8 @@ namespace Catalyst.Core.Modules.Ledger.Tests.UnitTests
         [Fact]
         public void Should_Reconcile_On_New_Delta_Hash()
         {
-            var hash1 = "update".ComputeUtf8Multihash(_hashingAlgorithm);
-            var hash2 = "update again".ComputeUtf8Multihash(_hashingAlgorithm);
+            var hash1 = _hashProvider.ComputeBase32(Encoding.UTF8.GetBytes("update"));
+            var hash2 = _hashProvider.ComputeBase32(Encoding.UTF8.GetBytes("update again"));
             var updates = new[] {hash1, hash2};
 
             _ledgerSynchroniser.CacheDeltasBetween(default, default, default)
