@@ -54,7 +54,7 @@ namespace Catalyst.Core.Lib.DAO.Converters
 
         public ByteString Convert(string sourceMember, ResolutionContext context)
         {
-            return _hashProvider.GetHashBytes(sourceMember).ToByteString();
+            return _hashProvider.GetBase32HashBytes(sourceMember).ToByteString();
         }
     }
 }
