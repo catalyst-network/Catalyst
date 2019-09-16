@@ -24,7 +24,6 @@
 using Catalyst.Abstractions.KeySigner;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.Extensions;
-using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
 using Catalyst.Core.Modules.Rpc.Server.IO.Observers;
 using Catalyst.Protocol.Common;
@@ -38,7 +37,6 @@ using Serilog;
 using System.Linq;
 using Catalyst.Core.Lib.Cryptography;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
-using Catalyst.Core.Modules.Rpc.Server.IO.Observers;
 using Xunit;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
