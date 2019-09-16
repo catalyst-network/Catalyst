@@ -22,7 +22,6 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using Catalyst.Abstractions.DAO;
@@ -35,10 +34,6 @@ using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Transaction;
 using Catalyst.TestUtils;
 using FluentAssertions;
-using Google.Protobuf;
-using Google.Protobuf.Collections;
-using ICSharpCode.SharpZipLib.Tar;
-using Multiformats.Hash;
 using Multiformats.Hash.Algorithms;
 using Xunit;
 

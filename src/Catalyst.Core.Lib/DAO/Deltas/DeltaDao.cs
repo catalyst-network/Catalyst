@@ -23,12 +23,10 @@
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using AutoMapper;
 using Catalyst.Core.Lib.DAO.Converters;
 using Catalyst.Protocol.Deltas;
 using Google.Protobuf;
-using Google.Protobuf.Collections;
 using Google.Protobuf.WellKnownTypes;
 
 namespace Catalyst.Core.Lib.DAO.Deltas
