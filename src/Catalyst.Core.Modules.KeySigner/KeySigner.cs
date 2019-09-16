@@ -113,25 +113,6 @@ namespace Catalyst.Core.Modules.KeySigner
             throw new NotImplementedException();
         }
 
-        public ProtocolMessage SignMessage(ProtocolMessage protocolMessage, SigningContext signingContext)
-        {
-            if (protocolMessage.Signature.RawBytes.Length == _cryptoContext.SignatureLength)
-            {
-                return protocolMessage;
-            }
-
-            protocolMessage.Signature = null;
-            var signatureBytes = Sign(protocolMessage.ToByteArray(), 
-                signingContext).SignatureBytes;
-            var signature = new Signature
-            {
-                SigningContext = signingContext,
-                RawBytes = signatureBytes.ToByteString()
-            };
-            protocolMessage.Signature = signature;
-            return protocolMessage;
-        }
-
         private bool TryPopulateRegistryFromKeyStore(KeyRegistryTypes keyIdentifier, out IPrivateKey key)
         {
             key = _keyStore.KeyStoreDecrypt(keyIdentifier);

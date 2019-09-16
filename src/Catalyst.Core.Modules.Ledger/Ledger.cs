@@ -35,6 +35,7 @@ using Catalyst.Core.Modules.Ledger.Repository;
 using Catalyst.Protocol.Transaction;
 using Dawn;
 using Multiformats.Hash;
+using Nethermind.Dirichlet.Numerics;
 using Serilog;
 
 namespace Catalyst.Core.Modules.Ledger
@@ -147,13 +148,13 @@ namespace Catalyst.Core.Modules.Ledger
 
         private void UpdateLedgerAccountFromEntry(PublicEntry entry)
         {
-            var pubKey = _cryptoContext.PublicKeyFromBytes(entry.PubKey.ToByteArray());
+            var pubKey = _cryptoContext.PublicKeyFromBytes(entry.Base.ReceiverPublicKey.ToByteArray());
 
             //todo: get an address from the key using the Account class from Common lib
             var account = Accounts.Get(pubKey.Bytes.AsBase32Address());
 
             //todo: a different logic for to and from entries
-            account.Balance += entry.Amount;
+            account.Balance += entry.Amount.ToUInt256();
         }
 
         public Multihash LatestKnownDelta { get; private set; }

@@ -36,4 +36,7 @@
     <ItemGroup>
         <ProjectReference Include="..\Catalyst.Abstractions\Catalyst.Abstractions.csproj" />
     </ItemGroup>
+    <ItemGroup>
+      <Folder Include="Extensions\Protocol\Transaction\" />
+    </ItemGroup>
 </Project>

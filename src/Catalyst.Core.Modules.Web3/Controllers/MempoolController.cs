@@ -50,9 +50,9 @@ namespace Catalyst.Core.Modules.Web3.Controllers
             return Ok(_mempoolRepository.GetAll().Where(t =>
                     t.PublicEntries != null
                  && t.PublicEntries.Count > 0
-                 && t.PublicEntries.Any(stEntries => stEntries.PubKey.ToByteArray()
+                 && t.PublicEntries.Any(stEntries => stEntries.Base.ReceiverPublicKey.ToByteArray()
                        .SequenceEqual(ByteString.FromBase64(publicKey).ToByteArray())))
-               .Sum(t => t.PublicEntries.Sum(entries => entries.Amount)));
+               .Sum(t => t.PublicEntries.Sum(entries => entries.Amount.ToUInt256())));
         }
 
         [HttpGet]
@@ -61,7 +61,7 @@ namespace Catalyst.Core.Modules.Web3.Controllers
             var result = _mempoolRepository.GetAll().Where(t =>
                 t.PublicEntries != null
              && t.PublicEntries.Count > 0
-             && t.PublicEntries.Any(stEntries => stEntries.PubKey.ToByteArray()
+             && t.PublicEntries.Any(stEntries => stEntries.Base.ReceiverPublicKey.ToByteArray()
                    .SequenceEqual(ByteString.FromBase64(publicKey).ToByteArray())));
 
             return Json(result, new JsonSerializerSettings

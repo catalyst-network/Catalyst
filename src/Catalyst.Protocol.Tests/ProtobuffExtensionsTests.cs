@@ -21,12 +21,15 @@
 
 #endregion
 
+using Catalyst.Abstractions.Cryptography;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.IPPN;
 using Catalyst.Protocol.Transaction;
+using Catalyst.TestUtils;
 using FluentAssertions;
 using Google.Protobuf;
+using NSubstitute;
 using Xunit;
 
 namespace Catalyst.Protocol.Tests
@@ -36,22 +39,12 @@ namespace Catalyst.Protocol.Tests
         [Fact]
         public void Can_Identify_Broadcast_Message()
         {
-            var protocolMessageSigned = new ProtocolMessage
-            {
-                Message = new ProtocolMessage
-                {
-                    Value = new TransactionBroadcast().ToByteString(),
-                    TypeUrl = TransactionBroadcast.Descriptor.ShortenedFullName()
-                }
-            };
+            var signature = Substitute.For<ISignature>();
+            var message = new TransactionBroadcast()
+               .ToSignedProtocolMessage()
+               .ToSignedProtocolMessage();
 
-            var protocolMessage = new ProtocolMessage
-            {
-                Value = protocolMessageSigned.ToByteString(),
-                TypeUrl = ProtocolMessage.Descriptor.ShortenedFullName()
-            };
-
-            protocolMessage.IsBroadCastMessage().Should().BeTrue();
+            message.IsBroadCastMessage().Should().BeTrue();
         }
 
         [Fact]

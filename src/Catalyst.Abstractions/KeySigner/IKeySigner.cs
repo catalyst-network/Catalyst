@@ -24,7 +24,6 @@
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Keystore;
 using Catalyst.Protocol.Cryptography;
-using Catalyst.Protocol.Wire;
 using ISignature = Catalyst.Abstractions.Cryptography.ISignature;
 
 namespace Catalyst.Abstractions.KeySigner
@@ -49,11 +48,5 @@ namespace Catalyst.Abstractions.KeySigner
 
         /// <summary>Exports the key.</summary>
         void ExportKey();
-
-        ///<summary>Use this to sign a <see cref="ProtocolMessage"/> before sending it.
-        /// If a signature was found on the message, this will error.</summary>
-        /// <param name="protocolMessage">The message that needs to be signed.</param>
-        /// <param name="signingContext">The context used to sign the message.</param>
-        ProtocolMessage SignMessage(ProtocolMessage protocolMessage, SigningContext signingContext);
     }
 }

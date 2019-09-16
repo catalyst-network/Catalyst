@@ -32,6 +32,7 @@ using Catalyst.Abstractions.KeySigner;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.IO.Messaging.Broadcast;
 using Catalyst.Core.Lib.Extensions;
+using Catalyst.Core.Lib.Extensions.Protocol.Wire;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
 using Catalyst.Core.Lib.P2P.Repository;
 using Catalyst.Protocol.Cryptography;
@@ -149,7 +150,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
             else
             {
                 var wrappedMessage = innerMessage.ToProtocolMessage(_peerIdentifier.PeerId);
-                var signedMessage = _signer.SignMessage(wrappedMessage, SigningContext);
+                var signedMessage = wrappedMessage.Sign(_signer, SigningContext);
                 await BroadcastSignedAsync(signedMessage).ConfigureAwait(false);
             }
         }

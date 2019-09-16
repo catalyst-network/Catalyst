@@ -21,40 +21,46 @@
 
 #endregion
 
+using System.Reflection;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
+using Catalyst.Core.Lib.Util;
+using Catalyst.Core.Modules.Cryptography.BulletProofs;
 using Catalyst.Protocol.Cryptography;
 using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Wire;
+using Catalyst.TestUtils.Protocol;
 using Google.Protobuf;
+using Serilog;
 
 namespace Catalyst.TestUtils
 {
     public static class ProtocolMessageExtensions
     {
         public static ProtocolMessage ToSignedProtocolMessage(this IMessage proto,
-            ISignature signature,
             PeerId senderId,
-            SigningContext signingContext,
+            ISignature signature = default,
+            SigningContext signingContext = default,
             ICorrelationId correlationId = default)
         {
-            return ToSignedProtocolMessage(proto, signature.SignatureBytes, senderId, signingContext, correlationId);
+            return ToSignedProtocolMessage(proto, senderId, signature?.SignatureBytes, signingContext, correlationId);
         }
 
         public static ProtocolMessage ToSignedProtocolMessage(this IMessage proto,
-            byte[] signature,
-            PeerId senderId,
-            SigningContext signingContext,
+            PeerId senderId = default,
+            byte[] signature = default,
+            SigningContext signingContext = default,
             ICorrelationId correlationId = default)
         {
-            var protocolMessage = proto.ToProtocolMessage(senderId, correlationId
-             ?? CorrelationId.GenerateCorrelationId());
+            var peerId = senderId ?? PeerIdHelper.GetPeerId("sender");
+            var protocolMessage = proto.ToProtocolMessage(peerId, 
+                correlationId ?? CorrelationId.GenerateCorrelationId());
             var newSignature = new Signature
             {
-                RawBytes = signature.ToByteString(),
-                SigningContext = signingContext
+                RawBytes = signature?.ToByteString() ?? ByteUtil.GenerateRandomByteArray(FFI.SignatureLength).ToByteString(),
+                SigningContext = signingContext ?? DevNetPeerSigningContext.Instance
             };
             protocolMessage.Signature = newSignature;
 

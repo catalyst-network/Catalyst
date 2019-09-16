@@ -26,6 +26,7 @@ using System.Threading.Tasks;
 using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.KeySigner;
 using Catalyst.Abstractions.Keystore;
+using Catalyst.Core.Lib.Extensions.Protocol.Wire;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
 using Catalyst.Protocol.Cryptography;
 using Catalyst.Protocol.Wire;
@@ -57,7 +58,7 @@ namespace Catalyst.Core.Lib.IO.Handlers
         {
             Logger.Verbose("Signing message {message}", message);
 
-            var protocolMessageSigned = _keySigner.SignMessage(message.Content, _signingContext);
+            var protocolMessageSigned = message.Content.Sign(_keySigner, _signingContext);
 
             var signedDto = new SignedMessageDto(protocolMessageSigned, message.RecipientPeerIdentifier);
 
