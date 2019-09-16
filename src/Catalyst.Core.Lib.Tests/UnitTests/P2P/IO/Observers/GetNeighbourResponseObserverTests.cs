@@ -28,6 +28,7 @@ using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.P2P.IO.Observers;
 using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.IPPN;
+using Catalyst.Protocol.Peer;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using Google.Protobuf;

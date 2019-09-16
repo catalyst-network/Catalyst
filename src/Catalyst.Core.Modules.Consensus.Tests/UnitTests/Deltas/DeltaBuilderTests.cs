@@ -31,6 +31,7 @@ using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.Cryptography;
 using Catalyst.Core.Lib.Extensions;
+using Catalyst.Core.Lib.Extensions.Protocol.Wire;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Consensus.Deltas;
 using Catalyst.Protocol.Deltas;
@@ -41,6 +42,7 @@ using FluentAssertions;
 using Google.Protobuf;
 using Multiformats.Hash.Algorithms;
 using Nethereum.Hex.HexConvertors.Extensions;
+using Nethermind.Dirichlet.Numerics;
 using NSubstitute;
 using Serilog;
 using Xunit;
@@ -74,7 +76,11 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             _producerId = PeerIdentifierHelper.GetPeerIdentifier("producer");
 
             _previousDeltaHash = Encoding.UTF8.GetBytes("previousDelta");
-            _zeroCoinbaseEntry = new CoinbaseEntry {Amount = 0, ReceiverPublicKey = _producerId.PublicKey.ToByteString()};
+            _zeroCoinbaseEntry = new CoinbaseEntry
+            {
+                Amount = UInt256.Zero.ToUint256ByteString(),
+                ReceiverPublicKey = _producerId.PublicKey.ToByteString()
+            };
 
             _logger = Substitute.For<ILogger>();
 
@@ -105,12 +111,10 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 
             var invalidTransactionList = Enumerable.Range(0, 20).Select(i =>
             {
-                var transaction = TransactionHelper.GetTransaction(
-                    transactionType: TransactionType.Normal,
+                var transaction = TransactionHelper.GetPublicTransaction(
                     transactionFees: 954,
-                    timeStamp: 157,
-                    signature: i.ToString(),
-                    lockTime: (ulong) random.Next() + 475);
+                    timestamp: 157,
+                    signature: i.ToString());
                 return transaction;
             }).ToList();
 
@@ -130,27 +134,24 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         {
             var transactions = Enumerable.Range(0, 20).Select(i =>
             {
-                var transaction = TransactionHelper.GetTransaction(
-                    standardAmount: (uint) i,
-                    standardPubKey: i.ToString(),
-                    transactionType: TransactionType.Normal,
+                var transaction = TransactionHelper.GetPublicTransaction(
+                    amount: (uint) i,
+                    receiverPublicKey: i.ToString(),
                     transactionFees: (ulong) _random.Next(),
-                    timeStamp: _random.Next(),
-                    signature: i.ToString(),
-                    lockTime: 0);
+                    timestamp: _random.Next(),
+                    signature: i.ToString());
                 return transaction;
             }).ToList();
 
             var transactionRetriever = Substitute.For<IDeltaTransactionRetriever>();
             transactionRetriever.GetMempoolTransactionsByPriority().Returns(transactions);
 
-            var selectedTransactions = transactions.Where(t => t.TransactionType == TransactionType.Normal).ToArray();
+            var selectedTransactions = transactions.Where(t => t.IsPublicTransaction).ToArray();
 
             var expectedCoinBase = new CoinbaseEntry
             {
-                Amount = selectedTransactions.Sum(t => t.TransactionFees),
-                Version = 1,
-                PubKey = _producerId.PublicKey.ToByteString()
+                Amount = selectedTransactions.Sum(t => t.SummedEntryFees()).ToUint256ByteString(),
+                ReceiverPublicKey = _producerId.PublicKey.ToByteString()
             };
 
             var salt = BitConverter.GetBytes(

@@ -48,14 +48,14 @@ namespace Catalyst.Core.Modules.Mempool.Tests.IntegrationTests
 
                 var guid = CorrelationId.GenerateCorrelationId().ToString();
                 
-                // var mempoolDocument = new MempoolDocument {Transaction = TransactionHelper.GetTransaction(signature: guid)};
+                // var mempoolDocument = new MempoolDocument {Transaction = TransactionHelper.GetPublicTransaction(signature: guid)};
 
-                mempool.Repository.CreateItem(TransactionHelper.GetTransaction(signature: guid));
+                mempool.Repository.CreateItem(TransactionHelper.GetPublicTransaction(signature: guid));
 
-                var retrievedTransaction = mempool.Repository.ReadItem(TransactionHelper.GetTransaction(signature: guid).Signature);
+                var retrievedTransaction = mempool.Repository.ReadItem(TransactionHelper.GetPublicTransaction(signature: guid).Signature.RawBytes);
 
-                retrievedTransaction.Transaction.Should().Be(TransactionHelper.GetTransaction(signature: guid));
-                retrievedTransaction.Transaction.Signature.SequenceEqual(guid.ToUtf8ByteString()).Should().BeTrue();
+                retrievedTransaction.Transaction.Should().Be(TransactionHelper.GetPublicTransaction(signature: guid));
+                retrievedTransaction.Transaction.Signature.RawBytes.SequenceEqual(guid.ToUtf8ByteString()).Should().BeTrue();
             }
         }
 

@@ -330,7 +330,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
         {
             var transactionBroadcastDao = GetMapper<TransactionBroadcastDao>();
 
-            var original = TransactionHelper.GetTransaction();
+            var original = TransactionHelper.GetPublicTransaction();
 
             var transactionEntryDao = transactionBroadcastDao.ToDao(original);
             var reconverted = transactionEntryDao.ToProtoBuff();

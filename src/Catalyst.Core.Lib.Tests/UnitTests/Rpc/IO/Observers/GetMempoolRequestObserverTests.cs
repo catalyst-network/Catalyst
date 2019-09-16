@@ -67,8 +67,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         {
             var txLst = new List<TransactionBroadcast>
             {
-                TransactionHelper.GetTransaction(234, "standardPubKey", "sign1"),
-                TransactionHelper.GetTransaction(567, "standardPubKey", "sign2")
+                TransactionHelper.GetPublicTransaction(234, "standardPubKey", "sign1"),
+                TransactionHelper.GetPublicTransaction(567, "standardPubKey", "sign2")
             };
 
             return txLst;

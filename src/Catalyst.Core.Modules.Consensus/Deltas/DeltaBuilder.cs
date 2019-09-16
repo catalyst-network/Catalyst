@@ -29,6 +29,7 @@ using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.Extensions;
+using Catalyst.Core.Lib.Extensions.Protocol.Wire;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Transaction;
@@ -100,13 +101,12 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
                .ToArray();
 
             // xf
-            var summedFees = includedTransactions
-               .Sum(t => t.PublicEntries.SelectMany(s => s.Base.TransactionFees.ToUInt256()));
+            var summedFees = includedTransactions.Sum(t => t.SummedEntryFees());
 
             //∆Ln,j = L(f/E) + dn + E(xf, j)
             var coinbaseEntry = new CoinbaseEntry
             {
-                Amount = summedFees,
+                Amount = summedFees.ToUint256ByteString(),
                 ReceiverPublicKey = _producerUniqueId.PublicKey.ToByteString()
             };
             var globalLedgerStateUpdate = shuffledEntriesBytes

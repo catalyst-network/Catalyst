@@ -50,7 +50,7 @@ namespace Catalyst.Core.Modules.Mempool.Tests.UnitTests
             var logger = Substitute.For<ILogger>();
             _memPool = new Mempool(Substitute.For<IMempoolRepository<MempoolDocument>>(), logger);
 
-            _transactionBroadcast = TransactionHelper.GetTransaction();
+            _transactionBroadcast = TransactionHelper.GetPublicTransaction();
         }
 
         private void AddKeyValueStoreEntryExpectation(TransactionBroadcast transaction)
@@ -213,7 +213,7 @@ namespace Catalyst.Core.Modules.Mempool.Tests.UnitTests
         private static List<TransactionBroadcast> GetTestingMempoolDocuments(int documentCount)
         {
             return Enumerable.Range(0, documentCount).Select(i =>
-                    TransactionHelper.GetTransaction((uint) i, signature: $"key{i}"))
+                    TransactionHelper.GetPublicTransaction((uint) i, signature: $"key{i}"))
                .ToList();
         }
 

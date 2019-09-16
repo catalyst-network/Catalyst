@@ -115,15 +115,12 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Broadcast
                 Substitute.For<ILogger>());
 
             var messageDto = new MessageDto(
-                TransactionHelper.GetTransaction().ToProtocolMessage(senderIdentifier.PeerId),
+                TransactionHelper.GetPublicTransaction().ToProtocolMessage(senderIdentifier.PeerId),
                 peerIdentifier
             );
 
-            var gossipDto =
-                new ProtocolMessage
-                {
-                    Message = messageDto.Content.ToProtocolMessage(senderIdentifier.PeerId, messageDto.CorrelationId)
-                };
+            var gossipDto = messageDto.Content.ToProtocolMessage(senderIdentifier.PeerId, messageDto.CorrelationId)
+               .ToSignedProtocolMessage();
 
             await broadcastMessageHandler.ReceiveAsync(gossipDto);
 
@@ -149,7 +146,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Broadcast
                     _keySigner, 
                     Substitute.For<ILogger>());
 
-            var gossipMessage = TransactionHelper.GetTransaction().ToProtocolMessage(broadcaster.PeerId);
+            var gossipMessage = TransactionHelper.GetPublicTransaction().ToProtocolMessage(broadcaster.PeerId);
 
             await gossipMessageHandler.BroadcastAsync(gossipMessage);
             return gossipMessage.CorrelationId.ToCorrelationId();

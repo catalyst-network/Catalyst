@@ -33,6 +33,7 @@ using Catalyst.Core.Lib.IO.Handlers;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.IPPN;
+using Catalyst.Protocol.Peer;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using FluentAssertions;
