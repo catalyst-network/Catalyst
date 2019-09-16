@@ -63,11 +63,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Codecs
                 20000
             );
 
-            _protocolMessageSigned = new ProtocolMessage
-            {
-                Message = new PingRequest().ToProtocolMessage(senderPid.PeerId, CorrelationId.GenerateCorrelationId()),
-                Signature = ByteUtil.GenerateRandomByteArray(64).ToByteString()
-            };
+            _protocolMessageSigned = new PingRequest().ToSignedProtocolMessage(senderPid.PeerId, (byte[]) default);
             
             _datagramPacket = new DatagramPacket(
                 Unpooled.WrappedBuffer(_protocolMessageSigned.ToByteArray()),

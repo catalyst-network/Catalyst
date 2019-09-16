@@ -43,6 +43,7 @@ using Catalyst.Protocol.IPPN;
 using Catalyst.Protocol.Network;
 using Catalyst.Protocol.Peer;
 using Catalyst.TestUtils;
+using Catalyst.TestUtils.Protocol;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Embedded;
 using DotNetty.Transport.Channels.Sockets;
@@ -86,9 +87,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Transport.Channels
             _gossipManager = Substitute.For<IBroadcastManager>();
             _keySigner = Substitute.For<IKeySigner>();
 
-            var signingContext = Substitute.For<ISigningContextProvider>();
-            signingContext.NetworkType.Returns(NetworkType.Devnet);
-            signingContext.SignatureType.Returns(SignatureType.ProtocolPeer);
+            var signingContext = DevNetPeerSigningContextProvider.Instance;
 
             var peerValidator = Substitute.For<IPeerIdValidator>();
             peerValidator.ValidatePeerIdFormat(Arg.Any<PeerId>()).Returns(true);
@@ -125,11 +124,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Transport.Channels
             var protocolMessage = new PingRequest().ToProtocolMessage(senderId, correlationId);
             var signature = ByteUtil.GenerateRandomByteArray(FFI.SignatureLength);
 
-            var signedMessage = new ProtocolMessage
-            {
-                Message = protocolMessage,
-                Signature = signature.ToByteString()
-            };
+            var signedMessage = protocolMessage.Sign(signature);
 
             _keySigner.Verify(Arg.Is<ISignature>(s => s.SignatureBytes.SequenceEqual(signature)), Arg.Any<byte[]>(),
                     default)

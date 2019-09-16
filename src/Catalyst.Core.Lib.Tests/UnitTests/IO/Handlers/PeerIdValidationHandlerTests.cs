@@ -22,7 +22,10 @@
 #endregion
 
 using Catalyst.Abstractions.P2P;
+using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Handlers;
+using Catalyst.Protocol.IPPN;
+using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
@@ -43,10 +46,9 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Handlers
             _fakeContext = Substitute.For<IChannelHandlerContext>();
             _peerIdValidator = Substitute.For<IPeerIdValidator>();
             _peerIdValidationHandler = new PeerIdValidationHandler(_peerIdValidator);
-            _message = new ProtocolMessage
-            {
-                Message = new ProtocolMessage {PeerId = PeerIdHelper.GetPeerId("Test")}
-            };
+
+            _message = new PingRequest().ToProtocolMessage(PeerIdHelper.GetPeerId("Test"))
+               .ToProtocolMessage(PeerIdHelper.GetPeerId("Test"));
         }
 
         [Fact]

@@ -27,7 +27,6 @@ using Catalyst.Protocol.Cryptography;
 using Catalyst.Protocol.Wire;
 using Google.Protobuf;
 using Serilog;
-using Serilog.Core;
 
 namespace Catalyst.Core.Lib.Extensions.Protocol.Wire
 {

@@ -27,6 +27,7 @@ using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.IO.Messaging.Broadcast;
 using Catalyst.Abstractions.Validators;
 using Catalyst.Core.Lib.Extensions;
+using Catalyst.Core.Lib.Extensions.Protocol.Wire;
 using Catalyst.Core.Lib.IO.Events;
 using Catalyst.Core.Lib.Mempool.Documents;
 using Catalyst.Protocol.Network;
@@ -78,11 +79,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Events
         [Fact]
         public void Can_Send_Error_If_Mempool_Contains_Transaction()
         {
-            var sig = new byte[64].ToByteString();
-            var transaction = new TransactionBroadcast
-            {
-                Signature = sig
-            };
+            var transaction = TransactionHelper.GetPublicTransaction();
+            var sig = transaction.Signature.RawBytes;
 
             _transactionValidator.ValidateTransaction(Arg.Any<TransactionBroadcast>(), _peerSettings.NetworkType).Returns(true);
             _mempool.Repository.TryReadItem(sig).Returns(true);
@@ -95,11 +93,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Events
         [Fact]
         public void Can_Broadcast_And_Save_Valid_Transaction()
         {
-            var sig = new byte[64].ToByteString();
-            var transaction = new TransactionBroadcast
-            {
-                Signature = sig
-            };
+            var transaction = TransactionHelper.GetPublicTransaction();
+            var sig = transaction.Signature.RawBytes;
 
             _transactionValidator.ValidateTransaction(Arg.Any<TransactionBroadcast>(), _peerSettings.NetworkType).Returns(true);
             _transactionReceivedEvent.OnTransactionReceived(transaction).Should().Be(ResponseCode.Successful);

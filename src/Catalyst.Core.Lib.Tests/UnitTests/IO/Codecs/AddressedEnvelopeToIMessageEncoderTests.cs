@@ -25,6 +25,7 @@ using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Codecs;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
+using Catalyst.Protocol.IPPN;
 using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels.Embedded;
@@ -45,15 +46,10 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Codecs
         [Fact]
         public void Can_Encode_Signed_Message_Dto_To_Protocol_Message_Signed()
         {
-            var messageDto = new SignedMessageDto(new ProtocolMessage
-                {
-                    Message = new ProtocolMessage
-                    {
-                        PeerId = PeerIdHelper.GetPeerId("TestSender"),
-                        CorrelationId = CorrelationId.GenerateCorrelationId().Id.ToByteString()
-                    }
-                },
+            var messageDto = new SignedMessageDto(
+                new PingRequest().ToProtocolMessage(PeerIdHelper.GetPeerId("TestSender")),
                 PeerIdentifierHelper.GetPeerIdentifier("Test"));
+
             _testChannel.WriteOutbound(messageDto);
             var outboundMessages = _testChannel.OutboundMessages.ToArray();
             outboundMessages.Length.Should().Be(1);

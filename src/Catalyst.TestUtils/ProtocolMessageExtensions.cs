@@ -22,6 +22,7 @@
 #endregion
 
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.Extensions;
@@ -57,14 +58,19 @@ namespace Catalyst.TestUtils
             var peerId = senderId ?? PeerIdHelper.GetPeerId("sender");
             var protocolMessage = proto.ToProtocolMessage(peerId, 
                 correlationId ?? CorrelationId.GenerateCorrelationId());
-            var newSignature = new Signature
-            {
-                RawBytes = signature?.ToByteString() ?? ByteUtil.GenerateRandomByteArray(FFI.SignatureLength).ToByteString(),
-                SigningContext = signingContext ?? DevNetPeerSigningContext.Instance
-            };
+            var newSignature = SignatureHelper.GetSignature(signature, signingContext);
             protocolMessage.Signature = newSignature;
 
             return protocolMessage;
+        }
+
+        public static ProtocolMessage Sign(this ProtocolMessage protocolMessage,
+            byte[] signature = default,
+            SigningContext signingContext = default)
+        {
+            var clone = protocolMessage.Clone();
+            clone.Signature = SignatureHelper.GetSignature(signature, signingContext);
+            return clone;
         }
     }
 }

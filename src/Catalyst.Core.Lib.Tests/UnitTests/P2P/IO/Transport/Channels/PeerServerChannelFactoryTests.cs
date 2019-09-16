@@ -32,6 +32,7 @@ using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.IO.Messaging.Broadcast;
 using Catalyst.Abstractions.P2P.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.Extensions;
+using Catalyst.Core.Lib.Extensions.Protocol.Wire;
 using Catalyst.Core.Lib.IO.Handlers;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.P2P.IO.Transport.Channels;
@@ -130,11 +131,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Transport.Channels
 
             var protocolMessage = new PingRequest().ToProtocolMessage(_senderId, _correlationId);
 
-            var signedMessage = new ProtocolMessage
-            {
-                Message = protocolMessage,
-                Signature = _signature.ToByteString()
-            };
+            var signedMessage = protocolMessage.ToSignedProtocolMessage(signature: _signature);
 
             var observer = new ProtocolMessageObserver(0, Substitute.For<ILogger>());
 
@@ -180,11 +177,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Transport.Channels
             var protocolMessage = new PeerNeighborsRequest()
                .ToProtocolMessage(_senderId, CorrelationId.GenerateCorrelationId());
 
-            var signedMessage = new ProtocolMessage
-            {
-                Message = protocolMessage,
-                Signature = _signature.ToByteString()
-            };
+            var signedMessage = protocolMessage.Sign();
             return signedMessage;
         }
 

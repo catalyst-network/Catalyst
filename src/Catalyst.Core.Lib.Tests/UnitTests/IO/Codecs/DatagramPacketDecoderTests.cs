@@ -48,15 +48,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Codecs
                     new ProtobufDecoder(ProtocolMessage.Parser)
                 )
             );
-            
-            var protocolMessageSigned = new ProtocolMessage
-            {
-                Message = new PingRequest().ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId, 
-                    CorrelationId.GenerateCorrelationId()
-                ),
-                
-                Signature = ByteUtil.GenerateRandomByteArray(64).ToByteString()
-            };
+
+            var protocolMessageSigned = new PingRequest().ToSignedProtocolMessage();
             
             var datagramPacket = new DatagramPacket(
                 Unpooled.WrappedBuffer(protocolMessageSigned.ToByteArray()),

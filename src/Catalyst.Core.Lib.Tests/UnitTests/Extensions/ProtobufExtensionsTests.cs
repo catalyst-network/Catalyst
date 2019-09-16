@@ -29,6 +29,7 @@ using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.IPPN;
+using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using FluentAssertions;
@@ -53,16 +54,11 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Extensions
         {
             var guid = CorrelationId.GenerateCorrelationId();
             var peerId = PeerIdHelper.GetPeerId("blablabla");
-            var expectedContent = "content";
-            var wrapped = new PeerId
-            {
-                ProtocolVersion = expectedContent.ToUtf8ByteString()
-            }.ToProtocolMessage(peerId, guid);
+            var wrapped = new PeerId().ToProtocolMessage(peerId, guid);
 
             wrapped.CorrelationId.ToCorrelationId().Id.Should().Be(guid.Id);
             wrapped.PeerId.Should().Be(peerId);
             wrapped.TypeUrl.Should().Be(PeerId.Descriptor.ShortenedFullName());
-            wrapped.FromProtocolMessage<PeerId>().ProtocolVersion.Should().Equal(expectedContent.ToUtf8ByteString());
         }
 
         [Fact]
