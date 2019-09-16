@@ -18,6 +18,11 @@
         <PackageReference Include="Nethereum.Hex" Version="3.3.0" />
         <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
     </ItemGroup>
+    <ItemGroup>
+        <None Include="runtimes\**\*.*" PackagePath="runtimes\" Pack="true">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
     <!-- build tasks for Catalyst.Cryptography.FFI.Rust -->
     <!-- @TODO at moment this only assumes debug target for rust build, we should pass $(configuration) rust build command-->
         <Target Name="CompileNativeRuntimes" BeforeTargets="BeforeBuild">
