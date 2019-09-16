@@ -37,6 +37,7 @@ using Catalyst.TestUtils;
 using Catalyst.TestUtils.Protocol;
 using FluentAssertions;
 using Multiformats.Hash.Algorithms;
+using Nethermind.Dirichlet.Numerics;
 using Xunit;
 using CandidateDeltaBroadcast = Catalyst.Protocol.Wire.CandidateDeltaBroadcast;
 
@@ -68,6 +69,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
                 new RangeProofDao(), 
                 new ContractEntryDao(),
                 new SignatureDao(),
+                new BaseEntryDao(), 
             };
 
             var map = new MapperProvider(_mappers);
@@ -188,6 +190,25 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
         }
 
         [Fact]
+        public void BaseEntryDao_And_BaseEntry_Should_Be_Convertible()
+        {
+            var baseEntryDao = GetMapper<BaseEntryDao>();
+            var byteRn = new byte[30];
+            new Random().NextBytes(byteRn);
+
+            var original = new BaseEntry    
+            {
+                ReceiverPublicKey = "hello".ToUtf8ByteString(),
+                SenderPublicKey = "bye bye".ToUtf8ByteString(),
+                TransactionFees = UInt256.MaxValue.ToUint256ByteString()
+            };
+
+            var contextDao = baseEntryDao.ToDao(original);
+            var reconverted = contextDao.ToProtoBuff();
+            reconverted.Should().Be(original);
+        }
+
+        [Fact]
         public void DeltasDao_Deltas_Should_Be_Convertible()
         {
             var deltaDao = GetMapper<DeltaDao>();
@@ -285,7 +306,11 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
             var original = new PublicEntry
             {
                 Amount = 8855274.ToUint256ByteString(),
-                Base = new BaseEntry {SenderPublicKey = pubKeyBytes.ToByteString()}
+                Base = new BaseEntry
+                {
+                    SenderPublicKey = pubKeyBytes.ToByteString(),
+                    TransactionFees = UInt256.Zero.ToUint256ByteString()
+                }
             };
 
             var transactionEntryDao = stTransactionEntryDao.ToDao(original);
@@ -294,11 +319,12 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
             transactionEntryDao.Amount.Should().Be(8855274);
 
             var reconverted = transactionEntryDao.ToProtoBuff();
+            reconverted.Base.TransactionFees.ToUInt256().Should().Be(UInt256.Zero);
             reconverted.Should().Be(original);
         }
 
         [Fact]
-        public void CFTransactionEntryDao_CFTransactionEntry_Should_Be_Convertible()
+        public void ConfidentialEntry_And_ConfidentialEntryDao_Should_Be_Convertible()
         {
             var cfTransactionEntryDao = GetMapper<ConfidentialEntryDao>();
 
@@ -311,7 +337,11 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
 
             var original = new ConfidentialEntry
             {
-                Base = new BaseEntry {SenderPublicKey = pubKeyBytes.ToByteString()},
+                Base = new BaseEntry
+                {
+                    SenderPublicKey = pubKeyBytes.ToByteString(),
+                    TransactionFees = UInt256.Zero.ToUint256ByteString()
+                },
                 PedersenCommitment = pedersenCommitBytes.ToByteString(),
                 RangeProof = GetEntryRangeProof()
             };

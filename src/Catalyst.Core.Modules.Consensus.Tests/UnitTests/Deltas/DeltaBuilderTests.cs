@@ -193,7 +193,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             candidate.PreviousDeltaDfsHash.ToByteArray().SequenceEqual(_previousDeltaHash).Should().BeTrue();
 
             var expectedHash = expectedBytesToHash.ComputeMultihash(_hashAlgorithm);
-            candidate.Hash.ToByteArray().SequenceEqual(expectedHash.ToBytes()).Should().BeTrue();
+            candidate.Hash.ToByteArray().Should().BeEquivalentTo(expectedHash.ToBytes());
         }
     }
 }

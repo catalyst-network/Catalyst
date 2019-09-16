@@ -92,7 +92,7 @@ namespace Catalyst.Core.Lib.Extensions
 
         public static UInt256 ToUInt256(this ByteString byteString)
         {
-            var bytes = byteString.Take(32).ToArray();
+            var bytes = byteString.ToArray();
             return new UInt256(new BigInteger(bytes));
         }
 

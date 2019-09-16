@@ -45,7 +45,6 @@ namespace Catalyst.Core.Lib.DAO
                .ForMember(d => d.ReceiverPublicKey, opt => opt.ConvertUsing(new StringKeyUtilsToByteStringFormatter(), s => s.ReceiverPublicKey))
                .ForMember(d => d.SenderPublicKey, opt => opt.ConvertUsing(new StringKeyUtilsToByteStringFormatter(), s => s.SenderPublicKey))
                .ForMember(d => d.TransactionFees, opt => opt.ConvertUsing(new UInt256ToByteStringConverter(), s => s.TransactionFees));
-
         }
     }
 }
