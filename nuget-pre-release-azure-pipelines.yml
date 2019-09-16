@@ -86,27 +86,27 @@ stages:
             condition: eq( variables['Agent.OS'], 'Windows_NT' )
             inputs:
               SourceFolder: '$(Pipeline.Workspace)/$(ArtifactName)/src/$(PACKAGE_NAME)/Runtimes/$(RUNTIMENAME)/debug'
-              TargetFolder: '$(Build.ArtifactStagingDirectory)/runtimes/win-x64/native'
+              TargetFolder: '$(Build.ArtifactStagingDirectory)/Runtimes/win-x64/native'
               Contents: 'catalystffi.*'
           - task: CopyFiles@2
             displayName: copy macos runtime
             condition: eq( variables['Agent.OS'], 'Darwin' )
             inputs:
               SourceFolder: '$(Pipeline.Workspace)/$(ArtifactName)/src/$(PACKAGE_NAME)/Runtimes/$(RUNTIMENAME)/debug'
-              TargetFolder: '$(Build.ArtifactStagingDirectory)/runtimes/osx-x64/native'
+              TargetFolder: '$(Build.ArtifactStagingDirectory)/Runtimes/osx-x64/native'
               Contents: 'libcatalystffi.*'
           - task: CopyFiles@2
             displayName: copy linux runtime
             condition: eq( variables['Agent.OS'], 'Linux' )
             inputs:
               SourceFolder: '$(Pipeline.Workspace)/$(ArtifactName)/src/$(PACKAGE_NAME)/Runtimes/$(RUNTIMENAME)/debug'
-              TargetFolder: '$(Build.ArtifactStagingDirectory)/runtimes/linux-x64/native'
+              TargetFolder: '$(Build.ArtifactStagingDirectory)/Runtimes/linux-x64/native'
               Contents: 'libcatalystffi.*'
           - task: PublishBuildArtifacts@1
             displayName: Publish Artifacts
             inputs:
-              PathtoPublish: '$(Build.ArtifactStagingDirectory)/runtimes/'
-              ArtifactName: '$(ArtifactName)-runtimes'
+              PathtoPublish: '$(Build.ArtifactStagingDirectory)/Runtimes/'
+              ArtifactName: '$(ArtifactName)-Runtimes'
   - stage: 'PackCore'
     dependsOn: 'BuildNativeFFI'
     condition: succeeded()
@@ -202,10 +202,10 @@ stages:
             condition: eq( variables['Agent.OS'], 'Windows_NT' )
           - task: DownloadBuildArtifacts@0
             inputs:
-              artifactName: '$(ArtifactName)-runtimes'
+              artifactName: '$(ArtifactName)-Runtimes'
               buildType: 'current'
               downloadType: 'single'
-              itemPattern: '**'
+              itemPattern: '$(ArtifactName)-Runtimes/**'
               downloadPath: '$(Pipeline.Workspace)/$(ArtifactName)/src/Catalyst.Core.Modules.Cryptography.BulletProofs/Runtimes'
           - task: DotNetCoreCLI@2
             displayName: 'Build project'
