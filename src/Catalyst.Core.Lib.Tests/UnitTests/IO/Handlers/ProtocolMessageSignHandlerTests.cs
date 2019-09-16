@@ -56,8 +56,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Handlers
             var peerSettings = Substitute.For<IPeerSettings>();
             _signatureContextProvider = Substitute.For<ISigningContextProvider>();
 
-            _signature.SignatureBytes.Returns(ByteUtil.GenerateRandomByteArray(FFI.SignatureLength));
-            _signature.PublicKeyBytes.Returns(ByteUtil.GenerateRandomByteArray(FFI.PublicKeyLength));
+            _signature.SignatureBytes.Returns(ByteUtil.GenerateRandomByteArray(Ffi.SignatureLength));
+            _signature.PublicKeyBytes.Returns(ByteUtil.GenerateRandomByteArray(Ffi.PublicKeyLength));
 
             peerSettings.Network.Returns(Protocol.Common.Network.Devnet);
             _signatureContextProvider.Network.Returns(Protocol.Common.Network.Devnet);

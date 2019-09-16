@@ -49,8 +49,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Handlers
             _keySigner = Substitute.For<IKeySigner>();
             _signingContextProvider = Substitute.For<ISigningContextProvider>();
 
-            var signatureBytes = ByteUtil.GenerateRandomByteArray(FFI.SignatureLength);
-            var publicKeyBytes = ByteUtil.GenerateRandomByteArray(FFI.PublicKeyLength);
+            var signatureBytes = ByteUtil.GenerateRandomByteArray(Ffi.SignatureLength);
+            var publicKeyBytes = ByteUtil.GenerateRandomByteArray(Ffi.PublicKeyLength);
 
             _protocolMessageSigned = new ProtocolMessageSigned
             {
