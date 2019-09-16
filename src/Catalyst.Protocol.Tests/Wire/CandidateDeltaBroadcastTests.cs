@@ -21,9 +21,6 @@
 
 #endregion
 
-using System;
-using System.IO;
-using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using FluentAssertions;

@@ -59,7 +59,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests
                .OrderByDescending(t => t, TransactionComparerByFeeTimestampAndHash.Default)
                .ToArray();
 
-            ordered.Should().BeInDescendingOrder(t => t.SummedEntryFees());
+            ordered.Select(o => o.SummedEntryFees()).Should().BeInDescendingOrder(t => t);
             ordered.Select(t => t.Timestamp.ToDateTime()).Should().NotBeAscendingInOrder();
             ordered.Should().NotBeInDescendingOrder(t => t.Signature.ToByteArray(), ByteUtil.ByteListMinSizeComparer.Default);
         }
@@ -78,7 +78,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests
                .OrderByDescending(t => t, TransactionComparerByFeeTimestampAndHash.Default)
                .ToArray();
 
-            ordered.Should().BeInDescendingOrder(t => t.SummedEntryFees());
+            ordered.Select(o => o.SummedEntryFees()).Should().BeInDescendingOrder(t => t);
             ordered.Select(t => t.Timestamp.ToDateTime()).Should().NotBeDescendingInOrder();
 
             Enumerable.Range(0, 3).ToList().ForEach(i =>
@@ -107,7 +107,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests
                     s.Signature.RawBytes.ToBase64())
                .ToList().ForEach(x => _output.WriteLine(x));
 
-            ordered.Should().BeInDescendingOrder(t => t.SummedEntryFees());
+            ordered.Select(o => o.SummedEntryFees()).Should().BeInDescendingOrder(t => t);
 
             Enumerable.Range(0, 2).ToList().ForEach(i =>
             {
