@@ -37,8 +37,6 @@ namespace Catalyst.Core.Lib.DAO
 
         public override void InitMappers(IMapperConfigurationExpression cfg)
         {
-            cfg.CreateMap<ContractEntry, ContractEntryDao>().ReverseMap();
-
             cfg.CreateMap<ContractEntry, ContractEntryDao>()
                .ForMember(d => d.Amount, opt => opt.ConvertUsing(new ByteStringToUInt256Converter(), s => s.Amount))
                .ForMember(e => e.Data, opt => opt.ConvertUsing<ByteStringToStringBase64Converter, ByteString>());

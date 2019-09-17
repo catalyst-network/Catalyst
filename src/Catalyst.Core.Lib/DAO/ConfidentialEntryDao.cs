@@ -36,8 +36,6 @@ namespace Catalyst.Core.Lib.DAO
 
         public override void InitMappers(IMapperConfigurationExpression cfg)
         {
-            cfg.CreateMap<ConfidentialEntry, ConfidentialEntryDao>().ReverseMap();
-
             cfg.CreateMap<ConfidentialEntry, ConfidentialEntryDao>()
                .ForMember(e => e.PedersenCommitment,
                     opt => opt.ConvertUsing<ByteStringToStringBase64Converter, ByteString>());
