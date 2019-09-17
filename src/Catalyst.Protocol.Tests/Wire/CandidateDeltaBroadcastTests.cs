@@ -21,15 +21,13 @@
 
 #endregion
 
-using System;
-using System.IO;
-using Catalyst.Protocol.Common;
-using Catalyst.Protocol.Deltas;
+using Catalyst.Protocol.Wire;
+using Catalyst.TestUtils;
 using FluentAssertions;
 using Google.Protobuf;
 using Xunit;
 
-namespace Catalyst.Protocol.Tests.Deltas
+namespace Catalyst.Protocol.Tests.Wire
 {
     public class CandidateDeltaTests
     {
@@ -45,13 +43,13 @@ namespace Catalyst.Protocol.Tests.Deltas
                 });
                 AddRow(new CandidateDeltaBroadcast
                 {
-                    ProducerId = new PeerId(),
+                    ProducerId = PeerIdHelper.GetPeerId("hello"),
                     Hash = ByteString.Empty,
                     PreviousDeltaDfsHash = ByteString.CopyFromUtf8("yes")
                 });
                 AddRow(new CandidateDeltaBroadcast
                 {
-                    ProducerId = new PeerId(),
+                    ProducerId = PeerIdHelper.GetPeerId("hello"),
                     Hash = ByteString.CopyFromUtf8("yes"),
                     PreviousDeltaDfsHash = ByteString.Empty
                 });
@@ -60,9 +58,9 @@ namespace Catalyst.Protocol.Tests.Deltas
 
         [Theory]
         [ClassData(typeof(InvalidCandidateDeltaBroadCasts))]
-        public void CandidateDeltaBroadcast_IsValid_Should_Throw_On_Invalid_CandidateDeltaBroadcast(CandidateDeltaBroadcast candidate)
+        public void CandidateDeltaBroadcast_IsValid_Should_Return_False_On_Invalid_CandidateDeltaBroadcast(CandidateDeltaBroadcast candidate)
         {
-            new Action(() => candidate.IsValid()).Should().Throw<InvalidDataException>();
+            candidate.IsValid().Should().BeFalse();
         }
 
         [Fact]
@@ -70,11 +68,11 @@ namespace Catalyst.Protocol.Tests.Deltas
         {
             var candidate = new CandidateDeltaBroadcast
             {
-                ProducerId = new PeerId(),
+                ProducerId = PeerIdHelper.GetPeerId("hello"),
                 Hash = ByteString.CopyFromUtf8("yes"),
                 PreviousDeltaDfsHash = ByteString.CopyFromUtf8("bla")
             };
-            AssertionExtensions.Should((bool) candidate.IsValid()).BeTrue();
+            candidate.IsValid().Should().BeTrue();
         }
     }
 }

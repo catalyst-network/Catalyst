@@ -24,9 +24,11 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Numerics;
 using Google.Protobuf;
 using Multiformats.Hash;
 using Multiformats.Hash.Algorithms;
+using Nethermind.Dirichlet.Numerics;
 
 namespace Catalyst.Core.Lib.Extensions
 {
@@ -86,6 +88,32 @@ namespace Catalyst.Core.Lib.Extensions
             var hash = AsMultihash(bytes);
             var trimmedString = hash.AsBase32Address();
             return trimmedString;
+        }
+
+        public static UInt256 ToUInt256(this ByteString byteString)
+        {
+            var bytes = byteString.ToArray();
+            return new UInt256(new BigInteger(bytes));
+        }
+
+        public static ByteString ToUint256ByteString(this UInt256 uInt256)
+        {
+            return ((BigInteger) uInt256).ToByteArray().ToByteString();
+        }
+
+        public static ByteString ToUint256ByteString(this ulong uLong)
+        {
+            return ((BigInteger) uLong).ToByteArray().ToByteString();
+        }
+
+        public static ByteString ToUint256ByteString(this uint uInt)
+        {
+            return ((BigInteger) uInt).ToByteArray().ToByteString();
+        }
+
+        public static ByteString ToUint256ByteString(this int @int)
+        {
+            return ((BigInteger) @int).ToByteArray().ToByteString();
         }
     }
 }

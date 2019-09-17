@@ -1,4 +1,4 @@
-﻿#region LICENSE
+#region LICENSE
 
 /**
 * Copyright (c) 2019 Catalyst Network
@@ -21,25 +21,26 @@
 
 #endregion
 
-using System.IO;
+using AutoMapper;
+using Catalyst.Core.Lib.Extensions;
+using Google.Protobuf;
+using Nethermind.Dirichlet.Numerics;
 
-namespace Catalyst.Protocol.Deltas
+namespace Catalyst.Core.Lib.DAO.Converters
 {
-    public sealed partial class FavouriteDeltaBroadcast
+    public class ByteStringToUInt256Converter : IValueConverter<ByteString, UInt256>
     {
-        public bool IsValid()
+        public UInt256 Convert(ByteString sourceMember, ResolutionContext context)
         {
-            if (Candidate == null || !Candidate.IsValid())
-            {
-                throw new InvalidDataException($"{nameof(Candidate)} is not valid");
-            }
+            return sourceMember.ToUInt256();
+        }
+    }
 
-            if (VoterId == null)
-            {
-                throw new InvalidDataException($"{nameof(VoterId)} cannot be null");
-            }
-
-            return true;
+    public class UInt256ToByteStringConverter : IValueConverter<UInt256, ByteString>
+    {
+        public ByteString Convert(UInt256 sourceMember, ResolutionContext context)
+        {
+            return sourceMember.ToUint256ByteString();
         }
     }
 }

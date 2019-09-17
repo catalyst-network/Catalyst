@@ -28,11 +28,13 @@ using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Consensus.Cycle;
 using Catalyst.Protocol.Deltas;
+using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using Multiformats.Hash.Algorithms;
 using NSubstitute;
 using Serilog;
 using Xunit;
+using CandidateDeltaBroadcast = Catalyst.Protocol.Wire.CandidateDeltaBroadcast;
 
 namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests
 {

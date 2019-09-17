@@ -1,4 +1,4 @@
-﻿#region LICENSE
+#region LICENSE
 
 /**
 * Copyright (c) 2019 Catalyst Network
@@ -30,7 +30,8 @@ using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.Network;
-using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Peer;
+using Catalyst.Protocol.Wire;
 using Dawn;
 using Google.Protobuf;
 using Google.Protobuf.Reflection;
@@ -98,8 +99,8 @@ namespace Catalyst.Core.Lib.Extensions
 
         public static bool IsBroadCastMessage(this ProtocolMessage message)
         {
-            return message.TypeUrl.EndsWith(nameof(ProtocolMessageSigned)) &&
-                ProtoBroadcastAllowedMessages.Contains(ProtocolMessageSigned.Parser.ParseFrom(message.Value).Message.TypeUrl);
+            return message.TypeUrl.EndsWith(nameof(ProtocolMessage)) &&
+                ProtoBroadcastAllowedMessages.Contains(ProtocolMessage.Parser.ParseFrom(message.Value).TypeUrl);
         }
 
         public static T FromProtocolMessage<T>(this ProtocolMessage message) where T : IMessage<T>
@@ -154,7 +155,6 @@ namespace Catalyst.Core.Lib.Extensions
             {
                 PeerId = senderId,
                 CorrelationId = (correlationId?.Id ?? CorrelationId.GenerateCorrelationId().Id).ToByteString(),
-
                 TypeUrl = typeUrl,
                 Value = protobufObject.ToByteString()
             };

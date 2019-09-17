@@ -23,28 +23,27 @@
 
 using AutoMapper;
 using Catalyst.Core.Lib.DAO.Converters;
-using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Cryptography;
+using Catalyst.Protocol.Wire;
 using Google.Protobuf;
 
 namespace Catalyst.Core.Lib.DAO
 {
-    public class ProtocolErrorMessageSignedDao : DaoBase<ProtocolErrorMessageSigned, ProtocolErrorMessageSignedDao>
+    public class ProtocolErrorMessageSignedDao : DaoBase<ProtocolErrorMessage, ProtocolErrorMessageSignedDao>
     {
-        public string Signature { get; set; }
+        public Signature Signature { get; set; }
         public PeerIdDao PeerId { get; set; }
         public string CorrelationId { get; set; }
         public int Code { get; set; }
 
         public override void InitMappers(IMapperConfigurationExpression cfg)
         {
-            cfg.CreateMap<ProtocolErrorMessageSigned, ProtocolErrorMessageSignedDao>()
-               .ForMember(d => d.Signature, opt => opt.ConvertUsing(new ByteStringToStringBase64Converter(), s => s.Signature))
+            cfg.CreateMap<ProtocolErrorMessage, ProtocolErrorMessageSignedDao>()
                .ForMember(e => e.CorrelationId,
                     opt => opt.ConvertUsing<ByteStringToStringBase64Converter, ByteString>())
                .ReverseMap();
             
-            cfg.CreateMap<ProtocolErrorMessageSignedDao, ProtocolErrorMessageSigned>()
-               .ForMember(d => d.Signature, opt => opt.ConvertUsing(new StringBase64ToByteStringConverter(), s => s.Signature))
+            cfg.CreateMap<ProtocolErrorMessageSignedDao, ProtocolErrorMessage>()
                .ForMember(e => e.CorrelationId,
                     opt => opt.ConvertUsing<StringBase64ToByteStringConverter, string>());
         }

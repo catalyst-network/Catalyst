@@ -30,7 +30,7 @@ using Catalyst.Abstractions.Rpc.IO.Messaging.Correlation;
 using Catalyst.Abstractions.Util;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
-using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Wire;
 using Google.Protobuf;
 using Microsoft.Extensions.Caching.Memory;
 using Serilog;

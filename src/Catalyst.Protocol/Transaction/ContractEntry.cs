@@ -21,24 +21,23 @@
 
 #endregion
 
-using AutoMapper;
-using Catalyst.Core.Lib.DAO.Converters;
-using Catalyst.Protocol.Common;
+using System.Reflection;
+using Serilog;
 
-namespace Catalyst.Core.Lib.DAO
+namespace Catalyst.Protocol.Transaction
 {
-    public class ProtocolMessageSignedDao : DaoBase<ProtocolMessageSigned, ProtocolMessageSignedDao>
+    public partial class ContractEntry
     {
-        public string Signature { get; set; }
-        public PeerIdDao PeerId { get; set; }
+        private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
 
-        public override void InitMappers(IMapperConfigurationExpression cfg)
+        public bool IsValid()
         {
-            cfg.CreateMap<ProtocolMessageSigned, ProtocolMessageSignedDao>()
-               .ForMember(d => d.Signature, opt => opt.ConvertUsing(new ByteStringToStringBase64Converter(), s => s.Signature));
-
-            cfg.CreateMap<ProtocolMessageSignedDao, ProtocolMessageSigned>()
-               .ForMember(d => d.Signature, opt => opt.ConvertUsing(new StringBase64ToByteStringConverter(), s => s.Signature));
+            if (!Data.IsEmpty) {return true;}
+            Logger.Debug("{field} cannot be Empty", nameof(Data));
+            return false;
         }
+
+        public bool IsValidDeploymentEntry => IsValid() && !Base.ReceiverPublicKey.IsEmpty;
+        public bool IsValidCallEntry => IsValid() && Base.ReceiverPublicKey.IsEmpty;
     }
 }

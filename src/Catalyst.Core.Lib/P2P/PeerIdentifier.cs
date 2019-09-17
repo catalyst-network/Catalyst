@@ -29,7 +29,7 @@ using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Network;
 using Catalyst.Core.Lib.Util;
-using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Peer;
 using Dawn;
 using Google.Protobuf;
 using Nethereum.RLP;
@@ -46,12 +46,13 @@ namespace Catalyst.Core.Lib.P2P
     /// <summary>
     ///     @TODO move to SDK
     /// </summary>
+    [Obsolete("Please try to use the PeerId directly")]
     public sealed class PeerIdentifier : IPeerIdentifier
     {
         public static char PidDelimiter => '|';
         public PeerId PeerId { get; }
         public IPAddress Ip => new IPAddress(PeerId.Ip.ToByteArray()).MapToIPv4();
-        public int Port => BitConverter.ToUInt16(PeerId.Port.ToByteArray());
+        public int Port => (int) PeerId.Port;
         public byte[] PublicKey => PeerId.PublicKey.ToByteArray();
         public IPEndPoint IpEndPoint => EndpointBuilder.BuildNewEndPoint(Ip, Port);
         
@@ -61,7 +62,6 @@ namespace Catalyst.Core.Lib.P2P
             // requiring bullet proof FFI violates DIP and creates circular dep between Core.Lib and Cryptography.BulletProof
             // due to nature of FFI not sure we can inject it here
             // var keyLength = FFI.PublicKeyLength;
-            
             var keyLength = 32;
             Guard.Argument(peerId.PublicKey, nameof(peerId.PublicKey)).MinCount(keyLength).MaxCount(keyLength);
             PeerId = peerId;
@@ -79,9 +79,8 @@ namespace Catalyst.Core.Lib.P2P
 
             return new PeerIdentifier(new PeerId
             {
-                ProtocolVersion = peerByteChunks[1],
                 Ip = IPAddress.Parse(rawPidChunks[2]).MapToIPv4().To16Bytes().ToByteString(),
-                Port = peerByteChunks[3],
+                Port = uint.Parse(rawPidChunks[3]),
                 PublicKey = peerByteChunks[4]
             });
         }
@@ -97,14 +96,14 @@ namespace Catalyst.Core.Lib.P2P
             PeerId = new PeerId
             {
                 PublicKey = publicKey.ToByteString(),
-                Port = BitConverter.GetBytes(endPoint.Port).ToByteString(),
+                Port = (uint) endPoint.Port,
                 Ip = endPoint.Address.To16Bytes().ToByteString()
             };
         }
 
         public override string ToString()
         {
-            return $"V:{BitConverter.ToInt16(PeerId.ProtocolVersion.ToByteArray())}@{Ip}:{Port.ToString()}" + $"|{PublicKey.KeyToString()}";
+            return $"{Ip}:{Port.ToString()}" + $"|{PublicKey.KeyToString()}";
         }
 
         public bool Equals(IPeerIdentifier other)

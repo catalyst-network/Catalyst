@@ -37,7 +37,7 @@ using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.P2P.IO.Messaging.Dto;
 using Catalyst.Core.Lib.P2P.IO.Observers;
 using Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.UnitTests;
-using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.IPPN;
 using Catalyst.TestUtils;
 using FluentAssertions;

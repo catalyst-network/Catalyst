@@ -21,14 +21,12 @@
 
 #endregion
 
-using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Cryptography;
 
 namespace Catalyst.Abstractions.Keystore
 {
     public interface ISigningContextProvider
     {
-        Protocol.Common.Network Network { get; set; }
-
-        SignatureType SignatureType { get; set; }
+        SigningContext SigningContext { get; }
     }
 }

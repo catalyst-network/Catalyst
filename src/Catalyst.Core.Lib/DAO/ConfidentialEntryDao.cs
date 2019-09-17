@@ -21,25 +21,28 @@
 
 #endregion
 
-using System;
 using AutoMapper;
 using Catalyst.Core.Lib.DAO.Converters;
 using Catalyst.Protocol.Transaction;
+using Google.Protobuf;
 
 namespace Catalyst.Core.Lib.DAO
 {
-    public class StTransactionEntryDao : DaoBase<STTransactionEntry, StTransactionEntryDao>
+    public class ConfidentialEntryDao : DaoBase<ConfidentialEntry, ConfidentialEntryDao>
     {
-        public string PubKey { get; set; }
-        public Int64 Amount { get; set; }
-       
+        public BaseEntryDao Base { get; set; }
+        public string PedersenCommitment { get; set; }
+        public RangeProofDao RangeProof { get; set; }
+
         public override void InitMappers(IMapperConfigurationExpression cfg)
         {
-            cfg.CreateMap<STTransactionEntry, StTransactionEntryDao>()
-               .ForMember(d => d.PubKey, opt => opt.ConvertUsing(new ByteStringToStringPubKeyConverter(), s => s.PubKey));
+            cfg.CreateMap<ConfidentialEntry, ConfidentialEntryDao>()
+               .ForMember(e => e.PedersenCommitment,
+                    opt => opt.ConvertUsing<ByteStringToStringBase64Converter, ByteString>());
 
-            cfg.CreateMap<StTransactionEntryDao, STTransactionEntry>()
-               .ForMember(d => d.PubKey, opt => opt.ConvertUsing(new StringKeyUtilsToByteStringFormatter(), s => s.PubKey));
+            cfg.CreateMap<ConfidentialEntryDao, ConfidentialEntry>()
+               .ForMember(e => e.PedersenCommitment,
+                    opt => opt.ConvertUsing<StringBase64ToByteStringConverter, string>());
         }
     }
 }

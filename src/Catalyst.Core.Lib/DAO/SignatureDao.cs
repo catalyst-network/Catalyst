@@ -1,4 +1,4 @@
-﻿#region LICENSE
+#region LICENSE
 
 /**
 * Copyright (c) 2019 Catalyst Network
@@ -21,30 +21,26 @@
 
 #endregion
 
-using System.IO;
+using AutoMapper;
+using Catalyst.Core.Lib.DAO.Converters;
+using Catalyst.Protocol.Cryptography;
 
-namespace Catalyst.Protocol.Deltas
+namespace Catalyst.Core.Lib.DAO
 {
-    public sealed partial class CandidateDeltaBroadcast
+    public class SignatureDao : DaoBase<Signature, SignatureDao>
     {
-        public bool IsValid()
+        public SigningContext SigningContext { get; set; }
+        public string RawBytes { get; set; }
+
+        public override void InitMappers(IMapperConfigurationExpression cfg)
         {
-            if (ProducerId == null)
-            {
-                throw new InvalidDataException($"{nameof(ProducerId)} cannot be null");
-            }
+            cfg.CreateMap<Signature, SignatureDao>()
+               .ForMember(d => d.RawBytes, 
+                    opt => opt.ConvertUsing(new ByteStringToStringPubKeyConverter(), s => s.RawBytes));
 
-            if (PreviousDeltaDfsHash == null || PreviousDeltaDfsHash.IsEmpty)
-            {
-                throw new InvalidDataException($"{nameof(PreviousDeltaDfsHash)} cannot be null or empty");
-            }
-
-            if (Hash == null || Hash.IsEmpty)
-            {
-                throw new InvalidDataException($"{nameof(Hash)} cannot be null or empty");
-            }
-
-            return true;
+            cfg.CreateMap<SignatureDao, Signature>()
+               .ForMember(d => d.RawBytes,
+                    opt => opt.ConvertUsing(new StringKeyUtilsToByteStringFormatter(), s => s.RawBytes));
         }
     }
 }

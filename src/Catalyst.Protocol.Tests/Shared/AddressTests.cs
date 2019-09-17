@@ -23,7 +23,7 @@
 
 // using System;
 // using System.Linq;
-// using Catalyst.Protocol.Common;
+// using Catalyst.Protocol.Wire;
 // using FluentAssertions;
 // using Multiformats.Hash.Algorithms;
 // using NSubstitute;
@@ -51,7 +51,7 @@
 //         [Fact]
 //         public void Address_Constructor_From_Raw_Bytes_Should_Throw_On_Bad_Network()
 //         {
-//             var wrongNetwork = (byte) 255;
+//             var wrongNetworkType = (byte) 255;
 //             var isSmartContract = (byte) 1;
 //             var fullAddress = new[] {wrongNetwork, isSmartContract}.Concat(_noPrefixBytes).ToArray();
 //
@@ -61,7 +61,7 @@
 //         [Fact]
 //         public void Address_Constructor_From_Raw_Bytes_Should_Throw_On_Bad_SmartContract_Byte()
 //         {
-//             var network = (byte) 1;
+//             var NetworkType = (byte) 1;
 //             var isSmartContract = (byte) 8;
 //             var fullAddress = new[] {network, isSmartContract}.Concat(_noPrefixBytes).ToArray();
 //
@@ -71,7 +71,7 @@
 //         [Fact]
 //         public void Address_Constructor_From_Raw_Bytes_Should_Throw_On_Bad_Byte_Length()
 //         {
-//             var network = (byte) 1;
+//             var NetworkType = (byte) 1;
 //             var isSmartContract = (byte) 8;
 //             var fullAddress = new[] {network, isSmartContract, (byte) 123}.Concat(_noPrefixBytes).ToArray();
 //
@@ -84,7 +84,7 @@
 //         [Fact]
 //         public void Address_Constructor_From_Raw_Bytes_Should_Work_On_Correct_Bytes()
 //         {
-//             var network = (byte) (int) Network.Devnet;
+//             var NetworkType = (byte) (int) Network.Devnet;
 //             var isSmartContract = (byte) 1;
 //             var fullAddress = new[] {network, isSmartContract}.Concat(_noPrefixBytes).ToArray();
 //

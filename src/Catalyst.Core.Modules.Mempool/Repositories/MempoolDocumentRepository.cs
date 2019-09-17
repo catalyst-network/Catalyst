@@ -27,7 +27,7 @@ using System.Linq;
 using Catalyst.Abstractions.Mempool.Repositories;
 using Catalyst.Core.Lib.Mempool.Documents;
 using Catalyst.Core.Lib.Repository;
-using Catalyst.Protocol.Transaction;
+using Catalyst.Protocol.Wire;
 using Google.Protobuf;
 using Serilog;
 using SharpRepository.Repository;

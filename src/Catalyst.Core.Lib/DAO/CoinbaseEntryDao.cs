@@ -21,30 +21,34 @@
 
 #endregion
 
-using System;
 using AutoMapper;
 using Catalyst.Core.Lib.DAO.Converters;
 using Catalyst.Protocol.Transaction;
+using Nethermind.Dirichlet.Numerics;
 
 namespace Catalyst.Core.Lib.DAO
 {
     public class CoinbaseEntryDao : DaoBase<CoinbaseEntry, CoinbaseEntryDao>
     {
         public uint Version { get; set; }
-        public string PubKey { get; set; }
-        public UInt64 Amount { get; set; }
+        public string ReceiverPublicKey { get; set; }
+        public UInt256 Amount { get; set; }
         
         public override void InitMappers(IMapperConfigurationExpression cfg)
         {
             cfg.CreateMap<CoinbaseEntry, CoinbaseEntryDao>().ReverseMap();
 
             cfg.CreateMap<CoinbaseEntry, CoinbaseEntryDao>()
-               .ForMember(d => d.PubKey, 
-                    opt => opt.ConvertUsing(new ByteStringToStringPubKeyConverter(), s => s.PubKey));
+               .ForMember(d => d.ReceiverPublicKey, 
+                    opt => opt.ConvertUsing(new ByteStringToStringPubKeyConverter(), s => s.ReceiverPublicKey))
+               .ForMember(d => d.Amount,
+                    opt => opt.ConvertUsing(new ByteStringToUInt256Converter(), s => s.Amount));
 
             cfg.CreateMap<CoinbaseEntryDao, CoinbaseEntry>()
-               .ForMember(d => d.PubKey, 
-                    opt => opt.ConvertUsing(new StringKeyUtilsToByteStringFormatter(), s => s.PubKey));
+               .ForMember(d => d.ReceiverPublicKey, 
+                    opt => opt.ConvertUsing(new StringKeyUtilsToByteStringFormatter(), s => s.ReceiverPublicKey))
+               .ForMember(d => d.Amount,
+                    opt => opt.ConvertUsing(new UInt256ToByteStringConverter(), s => s.Amount));
         }
     }
 }

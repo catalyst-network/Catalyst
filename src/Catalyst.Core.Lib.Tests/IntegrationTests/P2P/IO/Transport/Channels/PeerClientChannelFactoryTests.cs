@@ -25,7 +25,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.KeySigner;
-using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.IO.Messaging.Broadcast;
 using Catalyst.Abstractions.P2P.IO.Messaging.Correlation;
@@ -33,8 +32,10 @@ using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Handlers;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
-using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.IPPN;
+using Catalyst.Protocol.Network;
+using Catalyst.Protocol.Peer;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels.Embedded;
 using DotNetty.Transport.Channels.Sockets;
@@ -64,32 +65,33 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P.IO.Transport.Channels
             _testScheduler = new TestScheduler();
             _serverCorrelationManager = Substitute.For<IPeerMessageCorrelationManager>();
             _serverKeySigner = Substitute.For<IKeySigner>();
+            _serverKeySigner.CryptoContext.SignatureLength.Returns(64);
             var broadcastManager = Substitute.For<IBroadcastManager>();
 
-            var signingContextProvider = Substitute.For<ISigningContextProvider>();
-            signingContextProvider.SignatureType.Returns(SignatureType.ProtocolPeer);
-            signingContextProvider.Network.Returns(Protocol.Common.Network.Devnet);
-            
             _peerIdValidator = Substitute.For<IPeerIdValidator>();
 
+            var peerSettings = Substitute.For<IPeerSettings>();
+            peerSettings.NetworkType.Returns(NetworkType.Devnet);
+            
             var serverFactory = new UnitTests.P2P.IO.Transport.Channels.PeerServerChannelFactoryTests.TestPeerServerChannelFactory(
                 _serverCorrelationManager,
                 broadcastManager,
                 _serverKeySigner,
                 _peerIdValidator,
-                signingContextProvider,
+                peerSettings,
                 _testScheduler);
 
             _signature = Substitute.For<ISignature>();
 
             _clientCorrelationManager = Substitute.For<IPeerMessageCorrelationManager>();
             _clientKeySigner = Substitute.For<IKeySigner>();
-           
+            _clientKeySigner.CryptoContext.SignatureLength.Returns(64);
+
             _clientFactory = new UnitTests.P2P.IO.Transport.Channels.PeerClientChannelFactoryTests.TestPeerClientChannelFactory(
                 _clientKeySigner, 
                 _clientCorrelationManager,
                 _peerIdValidator,
-                signingContextProvider,
+                peerSettings,
                 _testScheduler);
 
             _serverChannel =
@@ -122,7 +124,8 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P.IO.Transport.Channels
             _serverChannel.WriteOutbound(dto);
             var sentBytes = _serverChannel.ReadOutbound<DatagramPacket>();
 
-            _serverCorrelationManager.ReceivedWithAnyArgs(1).AddPendingRequest(Arg.Any<CorrelatableMessage<ProtocolMessage>>());
+            _serverCorrelationManager.ReceivedWithAnyArgs(1)
+               .AddPendingRequest(Arg.Any<CorrelatableMessage<ProtocolMessage>>());
             
             _serverKeySigner.ReceivedWithAnyArgs(1).Sign(Arg.Any<byte[]>(), default);
             

@@ -22,13 +22,8 @@
 #endregion
 
 using Autofac;
-using Catalyst.Abstractions.P2P;
-using Catalyst.Core.Lib.P2P.Repository;
 using Catalyst.Core.Modules.Consensus.Deltas;
 using Catalyst.Modules.POA.Consensus.Deltas;
-using Microsoft.Extensions.Caching.Memory;
-using Multiformats.Hash.Algorithms;
-using Serilog;
 
 namespace Catalyst.Modules.POA.Consensus
 {

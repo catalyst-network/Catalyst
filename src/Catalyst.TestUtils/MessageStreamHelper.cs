@@ -29,7 +29,7 @@ using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
 using Catalyst.Core.Lib.IO.Observers;
-using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Wire;
 using DotNetty.Transport.Channels;
 using Google.Protobuf;
 using Microsoft.Reactive.Testing;

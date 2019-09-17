@@ -31,12 +31,12 @@ using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.P2P;
 using Catalyst.Core.Lib.Util;
-using Catalyst.Protocol.Deltas;
+using Catalyst.Protocol.Wire;
 using Dawn;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Primitives;
-using Newtonsoft.Json;
 using Serilog;
+using CandidateDeltaBroadcast = Catalyst.Protocol.Wire.CandidateDeltaBroadcast;
 
 namespace Catalyst.Core.Modules.Consensus.Deltas
 {
@@ -104,7 +104,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             }
             catch (Exception e)
             {
-                _logger.Error(e, "Failed to Vote on the candidate delta {0}", JsonConvert.SerializeObject(candidate));
+                _logger.Error(e, "Failed to Vote on the candidate delta {0}", candidate);
             }
         }
 

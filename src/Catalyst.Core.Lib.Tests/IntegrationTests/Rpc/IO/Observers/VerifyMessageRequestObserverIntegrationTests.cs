@@ -25,7 +25,6 @@ using Autofac;
 using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.KeySigner;
 using Catalyst.Abstractions.Types;
-using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
@@ -47,6 +46,8 @@ using Catalyst.Core.Modules.Rpc.Server.IO.Observers;
 using Xunit;
 using Xunit.Abstractions;
 using Catalyst.Core.Modules.Mempool;
+using Catalyst.Protocol.Cryptography;
+using Catalyst.Protocol.Network;
 
 namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
 {
@@ -96,7 +97,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
 
             var signingContext = new SigningContext
             {
-                Network = Protocol.Common.Network.Devnet,
+                NetworkType = NetworkType.Devnet,
                 SignatureType = SignatureType.TransactionPublic
             };
 

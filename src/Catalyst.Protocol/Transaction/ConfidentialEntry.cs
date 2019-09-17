@@ -21,26 +21,25 @@
 
 #endregion
 
-using System;
-using AutoMapper;
-using Catalyst.Core.Lib.Extensions;
-using Google.Protobuf;
+using System.Reflection;
+using Serilog;
 
-namespace Catalyst.Core.Lib.DAO.Converters
+namespace Catalyst.Protocol.Transaction
 {
-    public class ByteStringToUShortFormatter : IValueConverter<ByteString, ushort>
+    public partial class ConfidentialEntry
     {
-        public ushort Convert(ByteString sourceMember, ResolutionContext context)
-        {
-            return BitConverter.ToUInt16(sourceMember.ToByteArray());
-        }
-    }
+        private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
 
-    public class UShortToByteStringFormatter : IValueConverter<ushort, ByteString>
-    {
-        public ByteString Convert(ushort sourceMember, ResolutionContext context)
+        public bool IsValid()
         {
-            return BitConverter.GetBytes(sourceMember).ToByteString();
+            var emptyPedersenCommitment = PedersenCommitment.IsEmpty;
+            if (emptyPedersenCommitment)
+            {
+                Logger.Debug("{field} cannot be empty", nameof(PedersenCommitment));
+                return false;
+            }
+
+            return RangeProof.IsValid();
         }
     }
 }

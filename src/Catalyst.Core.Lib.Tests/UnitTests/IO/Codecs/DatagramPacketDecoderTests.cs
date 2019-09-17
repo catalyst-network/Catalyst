@@ -22,10 +22,7 @@
 #endregion
 
 using System.Net;
-using Catalyst.Core.Lib.Extensions;
-using Catalyst.Core.Lib.IO.Messaging.Correlation;
-using Catalyst.Core.Lib.Util;
-using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.IPPN;
 using Catalyst.TestUtils;
 using DotNetty.Buffers;
@@ -45,18 +42,11 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Codecs
         {
             var channel = new EmbeddedChannel(
                 new DatagramPacketDecoder(
-                    new ProtobufDecoder(ProtocolMessageSigned.Parser)
+                    new ProtobufDecoder(ProtocolMessage.Parser)
                 )
             );
-            
-            var protocolMessageSigned = new ProtocolMessageSigned
-            {
-                Message = new PingRequest().ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId, 
-                    CorrelationId.GenerateCorrelationId()
-                ),
-                
-                Signature = ByteUtil.GenerateRandomByteArray(64).ToByteString()
-            };
+
+            var protocolMessageSigned = new PingRequest().ToSignedProtocolMessage();
             
             var datagramPacket = new DatagramPacket(
                 Unpooled.WrappedBuffer(protocolMessageSigned.ToByteArray()),
@@ -65,7 +55,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Codecs
             );
 
             Assert.True(channel.WriteInbound(datagramPacket));
-            var content = channel.ReadInbound<ProtocolMessageSigned>();
+            var content = channel.ReadInbound<ProtocolMessage>();
             Assert.Equal(protocolMessageSigned, content);
             Assert.False(channel.Finish());
         }

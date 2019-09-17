@@ -22,7 +22,8 @@
 #endregion
 
 using System;
-using Catalyst.Protocol.Deltas;
+using Catalyst.Protocol.Wire;
+using CandidateDeltaBroadcast = Catalyst.Protocol.Wire.CandidateDeltaBroadcast;
 
 namespace Catalyst.Abstractions.Consensus.Deltas
 {

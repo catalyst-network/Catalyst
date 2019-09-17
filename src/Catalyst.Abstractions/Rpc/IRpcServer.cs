@@ -23,7 +23,7 @@
 
 using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.IO.Transport;
-using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Wire;
 
 namespace Catalyst.Abstractions.Rpc
 {
