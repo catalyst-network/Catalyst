@@ -33,9 +33,9 @@ using SharpRepository.Repository;
 
 namespace Catalyst.TestUtils
 {
-    internal sealed class TestMempoolDocumentRepository : RepositoryWrapper<MempoolDocument>, IMempoolRepository<MempoolDocument>
+    public sealed class TestMempoolDocumentRepository : RepositoryWrapper<MempoolDocument>, IMempoolRepository<MempoolDocument>
     {
-        internal TestMempoolDocumentRepository(IRepository<MempoolDocument, string> repository) : base(repository) { }
+        public TestMempoolDocumentRepository(IRepository<MempoolDocument, string> repository) : base(repository) { }
 
         public bool TryReadItem(ByteString key) { throw new NotImplementedException(); }
         public MempoolDocument ReadItem(ByteString key) { throw new NotImplementedException(); }
