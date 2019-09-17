@@ -54,7 +54,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
         {
             _testScheduler = new TestScheduler();
             _config = new ConfigurationBuilder()
-               .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, Constants.ShellNodesConfigFile))
+               .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, TestConstants.TestShellNodesConfigFile))
                .Build();
             
             _logger = Substitute.For<ILogger>();

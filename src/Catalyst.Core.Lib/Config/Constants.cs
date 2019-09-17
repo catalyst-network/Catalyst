@@ -46,22 +46,7 @@ namespace Catalyst.Core.Lib.Config
 
         // <summary> Default keystore data directory inside the Catalyst data directory </summary>
         public static string KeyStoreDataSubDir => "keystore";
-
-        // <summary> Config file to initialize rpc client peer id </summary>
-        public static string ShellConfigFile => "shell.config.json";
-
-        // <summary> Config file with nodes for use in rpc client </summary>
-        public static string ShellNodesConfigFile => "nodes.json";
         
-        // <summary> RPC message handlers </summary>
-        public static string RpcMessageHandlerConfigFile => "p2p.message.handlers.json";
-
-        // <summary> P2P message handlers </summary>
-        public static string P2PMessageHandlerConfigFile => "rpc.message.handlers.json";
-
-        /// <summary>The allowed RPC node operators default XML configuration.</summary>
-        public static string RpcAuthenticationCredentialsFile => "AuthCredentials.xml";
-
         /// <summary>The expiry minutes of initialization </summary>
         public static int FileTransferExpirySeconds => 60;
 

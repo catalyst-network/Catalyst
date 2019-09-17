@@ -28,8 +28,6 @@ using System.Security;
 using Autofac;
 using Autofac.Configuration;
 using AutofacSerilogIntegration;
-using Catalyst.Abstractions;
-using Catalyst.Abstractions.Cli;
 using Catalyst.Abstractions.Config;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Types;
@@ -110,8 +108,6 @@ namespace Catalyst.Core.Lib.Kernel
             
             ContainerBuilder.RegisterModule(configurationModule);
 
-            //ContainerBuilder.RegisterModule(new P2PModule());
-
             Logger = new LoggerConfiguration()
                .ReadFrom
                .Configuration(configurationModule.Configuration).WriteTo
@@ -165,9 +161,9 @@ namespace Catalyst.Core.Lib.Kernel
             return this;
         }
 
-        public Kernel WithConfigCopier(IConfigCopier configCopier = default)
+        public Kernel WithConfigCopier(IConfigCopier configCopier)
         {
-            _configCopier = configCopier ?? new ConfigCopier();
+            _configCopier = configCopier;
             return this;
         }
 
@@ -187,45 +183,11 @@ namespace Catalyst.Core.Lib.Kernel
             customBootLogic.Invoke(this);
         }
 
-        /// <summary>
-        ///     Default container resolution for Catalyst.Node
-        /// </summary>
-        public Kernel StartNode()
-        {
-            StartContainer();
-
-            // BsonSerializationProviders.Init();
-            Instance.Resolve<ICatalystNode>()
-               .RunAsync(CancellationTokenProvider.CancellationTokenSource.Token)
-               .Wait(CancellationTokenProvider.CancellationTokenSource.Token);
-            return this;
-        }
-
         public void Dispose()
         {
             Instance?.Dispose();
         }
-
-        /// <summary>
-        ///     Default container resolution for advanced CLI.
-        /// </summary>
-        public void StartCli()
-        {
-            const int bufferSize = 1024 * 67 + 128;
-
-            Console.SetIn(
-                new StreamReader(
-                    Console.OpenStandardInput(bufferSize),
-                    Console.InputEncoding, false, bufferSize
-                )
-            );
-
-            StartContainer();
-
-            Instance.Resolve<ICatalystCli>()
-               .RunConsole(CancellationTokenProvider.CancellationTokenSource.Token);
-        }
-        
+                
         public Kernel WithPassword(PasswordRegistryTypes types, string password)
         {
             if (password == null)

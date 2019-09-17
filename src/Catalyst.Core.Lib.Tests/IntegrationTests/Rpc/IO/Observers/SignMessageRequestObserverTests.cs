@@ -56,7 +56,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
 
         public SignMessageRequestObserverTests(ITestOutputHelper output) : base(output, new[]
         {
-            Path.Combine(Constants.ConfigSubFolder, Constants.ShellNodesConfigFile)
+            Path.Combine(Constants.ConfigSubFolder, TestConstants.TestShellNodesConfigFile)
         })
         {
             _testScheduler = new TestScheduler();
