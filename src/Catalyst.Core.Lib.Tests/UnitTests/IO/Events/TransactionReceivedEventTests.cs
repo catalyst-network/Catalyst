@@ -91,7 +91,6 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Events
         public void Can_Broadcast_And_Save_Valid_Transaction()
         {
             var transaction = TransactionHelper.GetPublicTransaction();
-            var sig = transaction.Signature.RawBytes;
 
             _transactionValidator.ValidateTransaction(Arg.Any<TransactionBroadcast>(), _peerSettings.NetworkType).Returns(true);
             _transactionReceivedEvent.OnTransactionReceived(transaction).Should().Be(ResponseCode.Successful);

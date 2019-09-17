@@ -21,13 +21,11 @@
 
 #endregion
 
-using Catalyst.Abstractions.Cryptography;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.IPPN;
 using Catalyst.TestUtils;
 using FluentAssertions;
-using NSubstitute;
 using Xunit;
 
 namespace Catalyst.Protocol.Tests
@@ -37,7 +35,6 @@ namespace Catalyst.Protocol.Tests
         [Fact]
         public void Can_Identify_Broadcast_Message()
         {
-            var signature = Substitute.For<ISignature>();
             var message = new TransactionBroadcast()
                .ToSignedProtocolMessage()
                .ToSignedProtocolMessage();

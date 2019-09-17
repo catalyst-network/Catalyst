@@ -28,7 +28,7 @@ namespace Catalyst.Protocol.Transaction
 {
     public partial class RangeProof
     {
-        public static RangeProof None = new RangeProof();
+        public static readonly RangeProof None = new RangeProof();
         private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
 
         public bool IsValid()

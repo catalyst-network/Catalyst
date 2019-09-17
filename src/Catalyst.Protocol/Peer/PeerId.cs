@@ -33,7 +33,7 @@ namespace Catalyst.Protocol.Peer
 
         partial void OnConstruction()
         {
-            if(Ip == null || Ip.IsEmpty) Ip = ByteString.CopyFrom(new byte[4]);
+            if (Ip == null || Ip.IsEmpty) {Ip = ByteString.CopyFrom(new byte[4]);}
             IpAddress = new IPAddress(Ip.ToByteArray()).MapToIPv4();
             IpEndPoint = new IPEndPoint(IpAddress, (int) Port);
         }
