@@ -49,20 +49,15 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Handlers
         private readonly IMessageDto<ProtocolMessage> _dto;
         private readonly IKeySigner _keySigner;
         private readonly ISignature _signature;
-        private readonly ISigningContextProvider _signatureContextProvider;
 
         public ProtocolMessageSignHandlerTests()
         {
             _fakeContext = Substitute.For<IChannelHandlerContext>();
             _keySigner = Substitute.For<IKeySigner>();
             _signature = Substitute.For<ISignature>();
-            var peerSettings = Substitute.For<IPeerSettings>();
-            _signatureContextProvider = DevNetPeerSigningContextProvider.Instance;
 
             _signature.SignatureBytes.Returns(ByteUtil.GenerateRandomByteArray(FFI.SignatureLength));
             _signature.PublicKeyBytes.Returns(ByteUtil.GenerateRandomByteArray(FFI.PublicKeyLength));
-
-            peerSettings.NetworkType.Returns(NetworkType.Devnet);
 
             _dto = new MessageDto(new PingRequest().ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId),
                 PeerIdentifierHelper.GetPeerIdentifier("recipient")
@@ -72,7 +67,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Handlers
         [Fact]
         public void CantSignMessage()
         {
-            var protocolMessageSignHandler = new ProtocolMessageSignHandler(_keySigner, _signatureContextProvider);
+            var protocolMessageSignHandler = new ProtocolMessageSignHandler(_keySigner, DevNetPeerSigningContext.Instance);
 
             protocolMessageSignHandler.WriteAsync(_fakeContext, new object());
 
@@ -85,7 +80,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Handlers
         {
             _keySigner.Sign(Arg.Any<byte[]>(), default).ReturnsForAnyArgs(_signature);
 
-            var protocolMessageSignHandler = new ProtocolMessageSignHandler(_keySigner, _signatureContextProvider);
+            var protocolMessageSignHandler = new ProtocolMessageSignHandler(_keySigner, DevNetPeerSigningContext.Instance);
 
             protocolMessageSignHandler.WriteAsync(_fakeContext, _dto);
             

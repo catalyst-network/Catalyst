@@ -21,7 +21,10 @@
 
 #endregion
 
+using Catalyst.Abstractions.IO.Transport.Channels;
 using Catalyst.Abstractions.Keystore;
+using Catalyst.Core.Lib.P2P;
+using Catalyst.Core.Lib.P2P.IO.Transport.Channels;
 using Catalyst.Core.Modules.Keystore;
 using Catalyst.Protocol.Cryptography;
 using Catalyst.Protocol.Network;
@@ -36,6 +39,6 @@ namespace Catalyst.TestUtils.Protocol
 
     public static class DevNetPeerSigningContextProvider
     {
-        public static ISigningContextProvider Instance = new SigningContextProvider(DevNetPeerSigningContext.Instance);
+        public static ISigningContextProvider Instance = new SigningContextProvider(NetworkType.Devnet, SignatureType.ProtocolPeer);
     }
 }

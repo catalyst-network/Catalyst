@@ -33,7 +33,6 @@ using Catalyst.Core.Lib.IO.Handlers;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using Catalyst.Core.Modules.Rpc.Client.IO.Transport.Channels;
 using Catalyst.Protocol.Cryptography;
-using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.IPPN;
 using Catalyst.Protocol.Network;
 using Catalyst.Protocol.Peer;
@@ -60,9 +59,9 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Transport.Channels
             public TestNodeRpcClientChannelFactory(IKeySigner keySigner,
                 IRpcMessageCorrelationManager correlationManager,
                 IPeerIdValidator peerIdValidator,
-                ISigningContextProvider signatureContextProvider,
+                IPeerSettings peerSettings,
                 TestScheduler testScheduler)
-                : base(keySigner, correlationManager, peerIdValidator, signatureContextProvider, 100, testScheduler)
+                : base(keySigner, correlationManager, peerIdValidator, peerSettings, 100, testScheduler)
             {
                 _handlers = HandlerGenerationFunction();
             }
@@ -84,8 +83,11 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Transport.Channels
             var peerIdValidator = Substitute.For<IPeerIdValidator>();
             peerIdValidator.ValidatePeerIdFormat(Arg.Any<PeerId>()).Returns(true);
 
+            var peerSettings = Substitute.For<IPeerSettings>();
+            peerSettings.NetworkType.Returns(NetworkType.Devnet);
+
             _factory = new TestNodeRpcClientChannelFactory(_keySigner, _correlationManager, peerIdValidator,
-                DevNetPeerSigningContextProvider.Instance, _testScheduler);
+                peerSettings, _testScheduler);
         }
 
         [Fact]

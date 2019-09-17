@@ -55,7 +55,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Broadcast
         private readonly BroadcastHandler _broadcastHandler;
         private readonly IKeySigner _keySigner;
         private readonly ProtocolMessage _broadcastMessageSigned;
-        private readonly ISigningContextProvider _signingContextProvider;
+        private readonly SigningContext _signingContext;
 
         public BroadcastHandlerTests()
         {
@@ -67,13 +67,13 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Broadcast
             var fakeSignature = Substitute.For<ISignature>();
             fakeSignature.SignatureBytes.Returns(ByteUtil.GenerateRandomByteArray(FFI.SignatureLength));
 
-            _signingContextProvider = DevNetPeerSigningContextProvider.Instance;
+            _signingContext = DevNetPeerSigningContext.Instance;
 
             var peerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("Test");
             var innerMessage = new TransactionBroadcast();
             _broadcastMessageSigned = innerMessage
-               .ToSignedProtocolMessage(peerIdentifier.PeerId, fakeSignature, DevNetPeerSigningContext.Instance)
-               .ToSignedProtocolMessage(peerIdentifier.PeerId, fakeSignature, DevNetPeerSigningContext.Instance);
+               .ToSignedProtocolMessage(peerIdentifier.PeerId, fakeSignature, _signingContext)
+               .ToSignedProtocolMessage(peerIdentifier.PeerId, fakeSignature, _signingContext);
         }
 
         [Fact]
@@ -86,7 +86,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Broadcast
             recipientIdentifier.IpEndPoint.Returns(new IPEndPoint(fakeIp, 10));
             
             EmbeddedChannel channel = new EmbeddedChannel(
-                new ProtocolMessageVerifyHandler(_keySigner, _signingContextProvider),
+                new ProtocolMessageVerifyHandler(_keySigner, _signingContext),
                 _broadcastHandler,
                 new ObservableServiceHandler()
             );
@@ -106,7 +106,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Broadcast
             var protoDatagramChannelHandler = new ObservableServiceHandler(testScheduler);
             handler.StartObserving(protoDatagramChannelHandler.MessageStream);
 
-            var channel = new EmbeddedChannel(new ProtocolMessageVerifyHandler(_keySigner, _signingContextProvider), _broadcastHandler, protoDatagramChannelHandler);
+            var channel = new EmbeddedChannel(new ProtocolMessageVerifyHandler(_keySigner, _signingContext), _broadcastHandler, protoDatagramChannelHandler);
             channel.WriteInbound(_broadcastMessageSigned);
 
             testScheduler.Start();

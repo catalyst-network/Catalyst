@@ -27,12 +27,14 @@ using System.Threading.Tasks;
 using Autofac;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.IO.Observers;
+using Catalyst.Abstractions.IO.Transport.Channels;
 using Catalyst.Abstractions.KeySigner;
 using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.Discovery;
 using Catalyst.Abstractions.P2P.IO.Messaging.Broadcast;
 using Catalyst.Abstractions.P2P.IO.Messaging.Correlation;
+using Catalyst.Abstractions.P2P.Models;
 using Catalyst.Core.Lib.IO.EventLoop;
 using Catalyst.Core.Lib.P2P;
 using Catalyst.Core.Lib.P2P.IO.Transport.Channels;
@@ -98,7 +100,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
                     ContainerProvider.Container.Resolve<IBroadcastManager>(),
                     keySigner,
                     ContainerProvider.Container.Resolve<IPeerIdValidator>(),
-                    ContainerProvider.Container.Resolve<ISigningContextProvider>()),
+                    ContainerProvider.Container.Resolve<IPeerSettings>()),
                 new DiscoveryHelper.DevDiscover(), 
                 ContainerProvider.Container.Resolve<IEnumerable<IP2PMessageObserver>>(),
                 _peerSettings,

@@ -26,6 +26,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
+using Catalyst.Abstractions.IO.Transport.Channels;
 using Catalyst.Abstractions.KeySigner;
 using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.P2P;
@@ -65,7 +66,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Transport.Channels
                 IBroadcastManager broadcastManager,
                 IKeySigner keySigner,
                 IPeerIdValidator peerIdValidator,
-                ISigningContextProvider signingContextProvider,
+                IPeerSettings signingContextProvider,
                 TestScheduler testScheduler)
                 : base(correlationManager, broadcastManager, keySigner, peerIdValidator, signingContextProvider,
                     testScheduler)
@@ -92,6 +93,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Transport.Channels
             _gossipManager = Substitute.For<IBroadcastManager>();
             _keySigner = Substitute.For<IKeySigner>();
 
+            var peerSettings = Substitute.For<IPeerSettings>();
+            peerSettings.NetworkType.Returns(NetworkType.Devnet);
             var peerValidator = Substitute.For<IPeerIdValidator>();
             peerValidator.ValidatePeerIdFormat(Arg.Any<PeerId>()).Returns(true);
 
@@ -100,7 +103,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Transport.Channels
                 _gossipManager,
                 _keySigner,
                 peerValidator,
-                DevNetPeerSigningContextProvider.Instance,
+                peerSettings,
                 _testScheduler);
             _senderId = PeerIdHelper.GetPeerId("sender");
             _correlationId = CorrelationId.GenerateCorrelationId();

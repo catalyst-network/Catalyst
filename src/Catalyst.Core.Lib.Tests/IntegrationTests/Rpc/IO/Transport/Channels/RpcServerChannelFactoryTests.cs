@@ -73,13 +73,15 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Transport.Channels
             _authenticationStrategy = Substitute.For<IAuthenticationStrategy>();
 
             _peerIdValidator = Substitute.For<IPeerIdValidator>();
+            var peerSettings = Substitute.For<IPeerSettings>();
+            peerSettings.NetworkType.Returns(NetworkType.Devnet);
 
             var serverFactory = new UnitTests.Rpc.IO.Transport.Channels.NodeRpcServerChannelFactoryTests.TestNodeRpcServerChannelFactory(
                 _serverCorrelationManager,
                 _serverKeySigner,
                 _authenticationStrategy,
                 _peerIdValidator,
-                DevNetPeerSigningContextProvider.Instance,
+                peerSettings,
                 _testScheduler);
 
             _clientCorrelationManager = Substitute.For<IRpcMessageCorrelationManager>();
@@ -90,7 +92,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Transport.Channels
                 _clientKeySigner, 
                 _clientCorrelationManager,
                 _peerIdValidator,
-                DevNetPeerSigningContextProvider.Instance,
+                peerSettings,
                 _testScheduler);
 
             _serverChannel =

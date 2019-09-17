@@ -64,9 +64,9 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Transport.Channels
             public TestPeerClientChannelFactory(IKeySigner keySigner,
                 IPeerMessageCorrelationManager correlationManager,
                 IPeerIdValidator peerIdValidator,
-                ISigningContextProvider signingContextProvider,
+                IPeerSettings peerSettings,
                 IScheduler scheduler)
-                : base(keySigner, correlationManager, peerIdValidator, signingContextProvider, scheduler)
+                : base(keySigner, correlationManager, peerIdValidator, peerSettings, scheduler)
             {
                 _handlers = HandlerGenerationFunction();
             }
@@ -87,7 +87,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Transport.Channels
             _gossipManager = Substitute.For<IBroadcastManager>();
             _keySigner = Substitute.For<IKeySigner>();
 
-            var signingContext = DevNetPeerSigningContextProvider.Instance;
+            var peerSettings = Substitute.For<IPeerSettings>();
+            peerSettings.NetworkType.Returns(NetworkType.Devnet);
 
             var peerValidator = Substitute.For<IPeerIdValidator>();
             peerValidator.ValidatePeerIdFormat(Arg.Any<PeerId>()).Returns(true);
@@ -96,7 +97,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Transport.Channels
                 _keySigner,
                 _correlationManager,
                 peerValidator,
-                signingContext,
+                peerSettings,
                 _testScheduler);
         }
 

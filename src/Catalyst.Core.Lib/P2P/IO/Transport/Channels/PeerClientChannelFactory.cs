@@ -37,6 +37,7 @@ using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.IO.Handlers;
 using Catalyst.Core.Lib.IO.Transport.Channels;
+using Catalyst.Protocol.Cryptography;
 using Catalyst.Protocol.Wire;
 using DotNetty.Codecs;
 using DotNetty.Codecs.Protobuf;
@@ -52,7 +53,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Transport.Channels
         private readonly IKeySigner _keySigner;
         private readonly IPeerMessageCorrelationManager _correlationManager;
         private readonly IPeerIdValidator _peerIdValidator;
-        private readonly ISigningContextProvider _signingContextProvider;
+        private readonly SigningContext _signingContext;
 
         protected override Func<List<IChannelHandler>> HandlerGenerationFunction
         {
@@ -67,8 +68,8 @@ namespace Catalyst.Core.Lib.P2P.IO.Transport.Channels
                     ),
                     new PeerIdValidationHandler(_peerIdValidator),
                     new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
-                        new ProtocolMessageVerifyHandler(_keySigner, _signingContextProvider),
-                        new ProtocolMessageSignHandler(_keySigner, _signingContextProvider)
+                        new ProtocolMessageVerifyHandler(_keySigner, _signingContext),
+                        new ProtocolMessageSignHandler(_keySigner, _signingContext)
                     ),
                     new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
                         new CorrelationHandler<IPeerMessageCorrelationManager>(_correlationManager),
@@ -79,24 +80,17 @@ namespace Catalyst.Core.Lib.P2P.IO.Transport.Channels
             }
         }
 
-        /// <summary>
-        /// </summary>
-        /// <param name="keySigner"></param>
-        /// <param name="correlationManager"></param>
-        /// <param name="peerIdValidator"></param>
-        /// <param name="signingContextProvider"></param>
-        /// <param name="scheduler"></param>
         public PeerClientChannelFactory(IKeySigner keySigner,
             IPeerMessageCorrelationManager correlationManager,
             IPeerIdValidator peerIdValidator,
-            ISigningContextProvider signingContextProvider,
+            IPeerSettings peerSettings,
             IScheduler scheduler = null)
         {
             _scheduler = scheduler ?? Scheduler.Default;
             _keySigner = keySigner;
             _correlationManager = correlationManager;
             _peerIdValidator = peerIdValidator;
-            _signingContextProvider = signingContextProvider;
+            _signingContext = new SigningContext {NetworkType = peerSettings.NetworkType, SignatureType = SignatureType.ProtocolPeer};
         }
 
         /// <param name="handlerEventLoopGroupFactory"></param>

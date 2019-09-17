@@ -23,7 +23,6 @@
 
 using System.Reflection;
 using Catalyst.Abstractions.KeySigner;
-using Catalyst.Abstractions.Keystore;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Protocol.Cryptography;
 using Catalyst.Protocol.Wire;
@@ -38,11 +37,11 @@ namespace Catalyst.Core.Lib.IO.Handlers
         private readonly IKeySigner _keySigner;
         private readonly SigningContext _signingContext;
 
-        public ProtocolMessageVerifyHandler(IKeySigner keySigner, ISigningContextProvider signingContextProvider)
+        public ProtocolMessageVerifyHandler(IKeySigner keySigner, SigningContext signingContext)
             : base(Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType))
         {
             _keySigner = keySigner;
-            _signingContext = signingContextProvider.SigningContext;
+            _signingContext = signingContext;
         }
 
         protected override void ChannelRead0(IChannelHandlerContext ctx, ProtocolMessage signedMessage)

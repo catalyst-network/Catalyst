@@ -25,7 +25,6 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.KeySigner;
-using Catalyst.Abstractions.Keystore;
 using Catalyst.Core.Lib.Extensions.Protocol.Wire;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
 using Catalyst.Protocol.Cryptography;
@@ -42,10 +41,10 @@ namespace Catalyst.Core.Lib.IO.Handlers
         private readonly IKeySigner _keySigner;
         private readonly SigningContext _signingContext;
 
-        public ProtocolMessageSignHandler(IKeySigner keySigner, ISigningContextProvider signingContextProvider)
+        public ProtocolMessageSignHandler(IKeySigner keySigner, SigningContext signingContext)
         {
             _keySigner = keySigner;
-            _signingContext = signingContextProvider.SigningContext;
+            _signingContext = signingContext;
         }
 
         /// <summary>

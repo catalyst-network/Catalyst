@@ -62,9 +62,9 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Transport.Channels
                 IKeySigner keySigner,
                 IAuthenticationStrategy authenticationStrategy,
                 IPeerIdValidator peerIdValidator,
-                ISigningContextProvider signingContextProvider,
+                IPeerSettings peerSettings,
                 TestScheduler testScheduler)
-                : base(correlationManager, keySigner, authenticationStrategy, peerIdValidator, signingContextProvider, testScheduler)
+                : base(correlationManager, keySigner, authenticationStrategy, peerIdValidator, peerSettings, testScheduler)
             {
                 _handlers = HandlerGenerationFunction();
             }
@@ -86,7 +86,10 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Transport.Channels
 
             var authenticationStrategy = Substitute.For<IAuthenticationStrategy>();
             authenticationStrategy.Authenticate(Arg.Any<IPeerIdentifier>()).Returns(true);
-            
+
+            var peerSettings = Substitute.For<IPeerSettings>();
+            peerSettings.NetworkType.Returns(NetworkType.Devnet);
+
             var peerIdValidator = Substitute.For<IPeerIdValidator>();
             peerIdValidator.ValidatePeerIdFormat(Arg.Any<PeerId>()).Returns(true);
             _factory = new TestNodeRpcServerChannelFactory(
@@ -94,7 +97,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Transport.Channels
                 _keySigner,
                 authenticationStrategy,
                 peerIdValidator,
-                DevNetPeerSigningContextProvider.Instance,
+                peerSettings,
                 _testScheduler);
         }
 

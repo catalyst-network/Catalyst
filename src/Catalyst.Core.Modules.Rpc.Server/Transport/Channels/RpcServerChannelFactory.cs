@@ -40,6 +40,7 @@ using Catalyst.Abstractions.Rpc.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.IO.Codecs;
 using Catalyst.Core.Lib.IO.Handlers;
 using Catalyst.Core.Lib.IO.Transport.Channels;
+using Catalyst.Protocol.Cryptography;
 using Catalyst.Protocol.Wire;
 using DotNetty.Codecs.Protobuf;
 using DotNetty.Transport.Channels;
@@ -53,7 +54,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.Transport.Channels
         private readonly IKeySigner _keySigner;
         private readonly IPeerIdValidator _peerIdValidator;
         private readonly IObservableServiceHandler _observableServiceHandler;
-        private readonly ISigningContextProvider _signingContextProvider;
+        private readonly SigningContext _signingContext;
 
         protected override Func<List<IChannelHandler>> HandlerGenerationFunction
         {
@@ -69,8 +70,8 @@ namespace Catalyst.Core.Modules.Rpc.Server.Transport.Channels
                     new PeerIdValidationHandler(_peerIdValidator),
                     new AddressedEnvelopeToIMessageEncoder(),
                     new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
-                        new ProtocolMessageVerifyHandler(_keySigner, _signingContextProvider),
-                        new ProtocolMessageSignHandler(_keySigner, _signingContextProvider)
+                        new ProtocolMessageVerifyHandler(_keySigner, _signingContext),
+                        new ProtocolMessageSignHandler(_keySigner, _signingContext)
                     ),
                     new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
                         new CorrelationHandler<IRpcMessageCorrelationManager>(_correlationManger),
@@ -91,7 +92,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.Transport.Channels
             IKeySigner keySigner,
             IAuthenticationStrategy authenticationStrategy,
             IPeerIdValidator peerIdValidator,
-            ISigningContextProvider signingContextProvider,
+            IPeerSettings peerSettings,
             IScheduler scheduler = null)
         {
             var observableScheduler = scheduler ?? Scheduler.Default;
@@ -99,7 +100,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.Transport.Channels
             _authenticationStrategy = authenticationStrategy;
             _keySigner = keySigner;
             _peerIdValidator = peerIdValidator;
-            _signingContextProvider = signingContextProvider;
+            _signingContext = new SigningContext {NetworkType = peerSettings.NetworkType, SignatureType = SignatureType.ProtocolRpc};
             _observableServiceHandler = new ObservableServiceHandler(observableScheduler);
         }
 

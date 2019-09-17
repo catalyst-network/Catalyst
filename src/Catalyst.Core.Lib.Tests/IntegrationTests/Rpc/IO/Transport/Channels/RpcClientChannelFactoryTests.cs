@@ -34,6 +34,7 @@ using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
+using Catalyst.Protocol.Network;
 using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.Rpc.Node;
@@ -72,13 +73,15 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Transport.Channels
             _authenticationStrategy = Substitute.For<IAuthenticationStrategy>();
 
             _peerIdValidator = Substitute.For<IPeerIdValidator>();
+            var peerSettings = Substitute.For<IPeerSettings>();
+            peerSettings.NetworkType.Returns(NetworkType.Devnet);
 
             _serverFactory = new UnitTests.Rpc.IO.Transport.Channels.NodeRpcServerChannelFactoryTests.TestNodeRpcServerChannelFactory(
                 _serverCorrelationManager,
                 _serverKeySigner,
                 _authenticationStrategy,
                 _peerIdValidator,
-                DevNetPeerSigningContextProvider.Instance,
+                peerSettings,
                 _testScheduler);
 
             _clientCorrelationManager = Substitute.For<IRpcMessageCorrelationManager>();
@@ -89,7 +92,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Transport.Channels
                     _clientKeySigner,
                     _clientCorrelationManager,
                     _peerIdValidator,
-                    DevNetPeerSigningContextProvider.Instance,
+                    peerSettings,
                     _testScheduler);
 
             _serverChannel =

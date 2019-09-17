@@ -74,13 +74,16 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P.IO.Transport.Channels
 
             _peerIdValidator = Substitute.For<IPeerIdValidator>();
 
+            var peerSettings = Substitute.For<IPeerSettings>();
+            peerSettings.NetworkType.Returns(NetworkType.Devnet);
+
             var serverFactory =
                 new UnitTests.P2P.IO.Transport.Channels.PeerServerChannelFactoryTests.TestPeerServerChannelFactory(
                     _serverCorrelationManager,
                     broadcastManager,
                     _serverKeySigner,
                     _peerIdValidator,
-                    DevNetPeerSigningContextProvider.Instance,
+                    peerSettings,
                     _testScheduler);
 
             _clientCorrelationManager = Substitute.For<IPeerMessageCorrelationManager>();
@@ -91,7 +94,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P.IO.Transport.Channels
                     _clientKeySigner,
                     _clientCorrelationManager,
                     _peerIdValidator,
-                    DevNetPeerSigningContextProvider.Instance,
+                    peerSettings,
                     _testScheduler);
 
             _serverChannel =
