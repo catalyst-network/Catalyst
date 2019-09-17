@@ -30,13 +30,13 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs
 {
     public class CryptoWrapper : IWrapper
     {
-        public int PrivateKeyLength => FFI.PrivateKeyLength;
+        public int PrivateKeyLength => Ffi.PrivateKeyLength;
 
-        public int PublicKeyLength => FFI.PublicKeyLength;
+        public int PublicKeyLength => Ffi.PublicKeyLength;
         
-        public int SignatureLength => FFI.SignatureLength;
+        public int SignatureLength => Ffi.SignatureLength;
 
-        public int SignatureContextMaxLength => FFI.SignatureContextMaxLength;
+        public int SignatureContextMaxLength => Ffi.SignatureContextMaxLength;
 
         public Byte32 GeneratePedersenCommitment(Byte32 value, Byte32 blinding)
         {
@@ -60,29 +60,29 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs
 
         public IPrivateKey GeneratePrivateKey()
         {           
-            var privateKeyBytes = FFI.GeneratePrivateKey();
+            var privateKeyBytes = Ffi.GeneratePrivateKey();
             return new PrivateKey(privateKeyBytes);
         }
         
         public IPublicKey GetPublicKeyFromPrivate(IPrivateKey privateKey)
         {
-            var publicKeyBytes = FFI.GetPublicKeyFromPrivate(privateKey.Bytes);
+            var publicKeyBytes = Ffi.GetPublicKeyFromPrivate(privateKey.Bytes);
 
             return new PublicKey(publicKeyBytes);
         }
 
         public ISignature StdSign(IPrivateKey privateKey, byte[] messageBytes, byte[] contextBytes)
         {
-            var signatureBytes = FFI.StdSign(privateKey.Bytes, messageBytes, contextBytes);
-            var publicKeyBytes = FFI.GetPublicKeyFromPrivate(privateKey.Bytes);
-            FFI.ValidatePublicKeyOrThrow(publicKeyBytes);
+            var signatureBytes = Ffi.StdSign(privateKey.Bytes, messageBytes, contextBytes);
+            var publicKeyBytes = Ffi.GetPublicKeyFromPrivate(privateKey.Bytes);
+            Ffi.ValidatePublicKeyOrThrow(publicKeyBytes);
 
             return new Signature(signatureBytes, publicKeyBytes);            
         }
 
         public bool StdVerify(ISignature signature, byte[] message, byte[] context)
         {
-            return FFI.StdVerify(signature.SignatureBytes, signature.PublicKeyBytes, message, context);
+            return Ffi.StdVerify(signature.SignatureBytes, signature.PublicKeyBytes, message, context);
         }
 
         public Byte64 CTransactionEntry(IPublicKey publicKey, Byte32 value, Byte32 blinding, Byte32 totalFees, int noParticipants)
@@ -107,13 +107,13 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs
 
         public IPublicKey PublicKeyFromBytes(byte[] publicKeyBytes)
         {
-            FFI.ValidatePublicKeyOrThrow(publicKeyBytes);
+            Ffi.ValidatePublicKeyOrThrow(publicKeyBytes);
             return new PublicKey(publicKeyBytes);
         }
 
         public ISignature SignatureFromBytes(byte[] signatureBytes, byte[] publicKeyBytes)
         {
-            FFI.ValidatePublicKeyOrThrow(publicKeyBytes);
+            Ffi.ValidatePublicKeyOrThrow(publicKeyBytes);
             return new Signature(signatureBytes, publicKeyBytes); 
         }
     }

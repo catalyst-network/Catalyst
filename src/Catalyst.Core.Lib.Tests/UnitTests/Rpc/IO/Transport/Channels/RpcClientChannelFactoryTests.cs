@@ -118,7 +118,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Transport.Channels
 
             var senderId = PeerIdHelper.GetPeerId("sender");
             var correlationId = CorrelationId.GenerateCorrelationId();
-            var signatureBytes = ByteUtil.GenerateRandomByteArray(FFI.SignatureLength);
+            var signatureBytes = ByteUtil.GenerateRandomByteArray(Ffi.SignatureLength);
 
             var protocolMessage = new PingResponse()
                .ToSignedProtocolMessage(senderId, signatureBytes, correlationId: correlationId);

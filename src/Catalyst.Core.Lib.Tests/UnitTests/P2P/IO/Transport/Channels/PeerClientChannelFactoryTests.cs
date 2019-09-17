@@ -123,7 +123,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Transport.Channels
             var senderId = PeerIdHelper.GetPeerId("sender");
             var correlationId = CorrelationId.GenerateCorrelationId();
             var protocolMessage = new PingRequest().ToProtocolMessage(senderId, correlationId);
-            var signature = ByteUtil.GenerateRandomByteArray(FFI.SignatureLength);
+            var signature = ByteUtil.GenerateRandomByteArray(Ffi.SignatureLength);
 
             var signedMessage = protocolMessage.Sign(signature);
 

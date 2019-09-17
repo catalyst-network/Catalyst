@@ -111,7 +111,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Broadcast
 
             IBroadcastManager broadcastMessageHandler = new BroadcastManager(
                 peerIdentifier, 
-                _peers, 
+                _peers,
+                Substitute.For<IPeerSettings>(),
                 _cache, 
                 Substitute.For<IPeerClient>(), 
                 _keySigner,
@@ -144,6 +145,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Broadcast
             var gossipMessageHandler = new
                 BroadcastManager(_senderPeerIdentifier, 
                     _peers,
+                    Substitute.For<IPeerSettings>(),
                     _cache, 
                     Substitute.For<IPeerClient>(), 
                     _keySigner, 

@@ -34,7 +34,7 @@ namespace Catalyst.TestUtils.Protocol
         {
             var defaultedSignature = new Signature
             {
-                RawBytes = signature?.ToByteString() ?? ByteUtil.GenerateRandomByteArray(FFI.SignatureLength).ToByteString(),
+                RawBytes = signature?.ToByteString() ?? ByteUtil.GenerateRandomByteArray(Ffi.SignatureLength).ToByteString(),
                 SigningContext = signingContext ?? DevNetPeerSigningContext.Instance
             };
             return defaultedSignature;
