@@ -23,6 +23,8 @@
 
 using System.Linq;
 using System.Reflection;
+using Catalyst.Protocol.Cryptography;
+using Google.Protobuf.WellKnownTypes;
 using Serilog;
 
 namespace Catalyst.Protocol.Wire
@@ -37,7 +39,7 @@ namespace Catalyst.Protocol.Wire
             IsContractCall = ContractEntries.Any(c => c.IsValidCallEntry);
             IsPublicTransaction = PublicEntries.Any() && PublicEntries.All(e => e.IsValid());
             IsConfidentialTransaction = ConfidentialEntries.Any()
-             && ConfidentialEntries.All(e => e.IsValid);
+             && ConfidentialEntries.All(e => e.IsValid());
         }
 
         public bool IsContractDeployment { get; private set; }
@@ -45,15 +47,28 @@ namespace Catalyst.Protocol.Wire
         public bool IsPublicTransaction { get; private set; }
         public bool IsConfidentialTransaction { get; private set; }
 
-        public bool HasValidEntries
+        public bool HasValidEntries()
         {
-            get
+            var hasSingleType = IsContractDeployment ^ IsContractCall ^ IsPublicTransaction ^ IsConfidentialTransaction;
+            if (hasSingleType) {return true;}
+            Logger.Debug("{instance} can only be of a single type", nameof(TransactionBroadcast));
+            return false;
+        }
+
+        public bool IsValid()
+        {
+            var isTimestampValid = Timestamp != default(Timestamp) && Timestamp != new Timestamp();
+            if (!isTimestampValid)
             {
-                var hasSingleType = IsContractDeployment ^ IsContractCall ^ IsPublicTransaction ^ IsConfidentialTransaction;
-                if (hasSingleType) {return true;}
-                Logger.Debug("{instance} can only be of a single type", nameof(TransactionBroadcast));
+                Logger.Debug("{timestamp} cannot be null or 0.");
                 return false;
             }
+
+            var hasValidSignature = Signature.IsValid(IsConfidentialTransaction 
+                ? SignatureType.TransactionConfidential 
+                : SignatureType.TransactionPublic);
+
+            return hasValidSignature && HasValidEntries();
         }
     }
 }

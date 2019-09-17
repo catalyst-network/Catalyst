@@ -170,7 +170,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             //lock time equals 0 or less than ledger cycle time
             //we assume all transactions are of type non-confidential for now
 
-            var validTransactionsForDelta = allTransactions.Where(m => m.IsPublicTransaction && m.HasValidEntries).ToList();
+            var validTransactionsForDelta = allTransactions.Where(m => m.IsPublicTransaction && m.HasValidEntries()).ToList();
             var rejectedTransactions = allTransactions.Except(validTransactionsForDelta);
             _logger.Debug("Delta builder rejected the following transactions {rejectedTransactions}", rejectedTransactions);
             return validTransactionsForDelta;

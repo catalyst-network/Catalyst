@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFramework>netcoreapp2.2</TargetFramework>
         <RootNamespace>Catalyst.Protocol</RootNamespace>
@@ -17,5 +17,8 @@
     </ItemGroup>
     <ItemGroup>
         <ProtoBuf Include="..\..\submodules\protocol-protobuffs\src\*.proto" Link="Protobuffs\%(Filename)%(Extension)" />
+    </ItemGroup>
+    <ItemGroup>
+      <Folder Include="Network\" />
     </ItemGroup>
 </Project>

@@ -22,29 +22,40 @@
 #endregion
 
 using System.Reflection;
+using Catalyst.Protocol.Network;
 using Serilog;
 
-namespace Catalyst.Protocol.Wire
+namespace Catalyst.Protocol.Cryptography
 {
-    public sealed partial class FavouriteDeltaBroadcast
+    public partial class SigningContext
     {
         private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
 
-        public bool IsValid()
+        /// <summary>
+        /// Checks if the signing context is usable.
+        /// </summary>
+        /// <param name="expectedSignatureType">If provided, the signature type will be checked
+        /// against the expected type. Otherwise, we simply check the type is not unknown.</param>
+        public bool IsValid(SignatureType expectedSignatureType = SignatureType.Unknown)
         {
-            if (Candidate == null)
+            if (NetworkType == NetworkType.Unknown)
             {
-                Logger.Debug("{field} cannot be null", nameof(Candidate));
+                Logger.Debug("{field} cannot be {value}", nameof(NetworkType), NetworkType.Unknown);
                 return false;
             }
 
-            if (VoterId == null)
+            if (SignatureType == SignatureType.Unknown)
             {
-                Logger.Debug("{field} cannot be null", nameof(VoterId));
+                Log.Debug("{field} cannot be {value}", nameof(SignatureType), SignatureType.Unknown);
                 return false;
             }
 
-            return Candidate.IsValid() && VoterId.IsValid();
+            if (expectedSignatureType != SignatureType.Unknown && SignatureType != expectedSignatureType)
+            {
+                Log.Debug("{field} is expected to have value {value}", nameof(SignatureType), expectedSignatureType);
+            }
+
+            return true;
         }
     }
 }

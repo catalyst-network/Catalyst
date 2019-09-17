@@ -30,19 +30,16 @@ namespace Catalyst.Protocol.Transaction
     {
         private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
 
-        public bool IsValid
+        public bool IsValid()
         {
-            get
+            var emptyPedersenCommitment = PedersenCommitment.IsEmpty;
+            if (emptyPedersenCommitment)
             {
-                var emptyPedersenCommitment = PedersenCommitment.IsEmpty;
-                if (emptyPedersenCommitment)
-                {
-                    Logger.Debug("{field} cannot be empty", nameof(PedersenCommitment));
-                    return false;
-                }
-
-                return RangeProof.IsValid();
+                Logger.Debug("{field} cannot be empty", nameof(PedersenCommitment));
+                return false;
             }
+
+            return RangeProof.IsValid();
         }
     }
 }

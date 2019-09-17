@@ -89,9 +89,6 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 
             elector.OnNext(badFavourite);
 
-            _logger.Received(1).Error(Arg.Is<Exception>(e => e.GetType() == exceptionType),
-                Arg.Any<string>(), Arg.Any<FavouriteDeltaBroadcast>());
-
             _cache.DidNotReceiveWithAnyArgs().TryGetValue(Arg.Any<object>(), out Arg.Any<object>());
             _cache.DidNotReceiveWithAnyArgs().CreateEntry(Arg.Any<object>());
         }

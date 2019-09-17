@@ -29,7 +29,6 @@
 //using Catalyst.Protocol.Network;
 //using Catalyst.Protocol.Wire;
 //using Catalyst.Protocol.Transaction;
-//using FluentAssertions;
 //using Google.Protobuf;
 //using Google.Protobuf.WellKnownTypes;
 //using NSubstitute;
@@ -38,15 +37,14 @@
 
 //namespace Catalyst.Protocol.Tests.Validators
 //{
-//    public class TransactionValidationTests
+//    public class TransactionBroadcastTests
 //    {
-//        private readonly ITransactionValidator _transactionValidator;
 //        private readonly IWrapper _cryptoWrapper;
 //        private readonly NetworkType _NetworkType = NetworkType.Devnet;
 //        private TransactionBroadcast _transactionBroadcast;
 //        private IPrivateKey _privateKey;
 
-//        public TransactionValidationTests()
+//        public TransactionBroadcastTests()
 //        {
 //            var logger = Substitute.For<ILogger>();
 //            _cryptoWrapper = new CryptoWrapper();

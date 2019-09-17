@@ -154,7 +154,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             var transactionRetriever = Substitute.For<IDeltaTransactionRetriever>();
             transactionRetriever.GetMempoolTransactionsByPriority().Returns(transactions);
 
-            var selectedTransactions = transactions.Where(t => t.IsPublicTransaction && t.HasValidEntries).ToArray();
+            var selectedTransactions = transactions.Where(t => t.IsPublicTransaction && t.HasValidEntries()).ToArray();
 
             var expectedCoinBase = new CoinbaseEntry
             {

@@ -24,27 +24,31 @@
 using System.Reflection;
 using Serilog;
 
-namespace Catalyst.Protocol.Wire
+namespace Catalyst.Protocol.Cryptography
 {
-    public sealed partial class FavouriteDeltaBroadcast
+    public partial class Signature
     {
         private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
 
-        public bool IsValid()
+        /// <summary>
+        /// Checks if the signature seems valid.
+        /// </summary>
+        /// <remarks>
+        /// The validation, using a public key, of the actual signature against a content it signs,
+        /// is outside the scope of this method. In the Core implementation of the protocol, this
+        /// is performed in the Cryptography module.
+        /// </remarks>
+        /// <param name="expectedSignatureType">If provided, the signature type will be checked
+        /// against the expected type. Otherwise, we simply check the type is not unknown.</param>
+        public bool IsValid(SignatureType expectedSignatureType = SignatureType.Unknown)
         {
-            if (Candidate == null)
+            if (RawBytes == null || RawBytes.IsEmpty)
             {
-                Logger.Debug("{field} cannot be null", nameof(Candidate));
+                Logger.Debug("{field} cannot be null or empty", nameof(RawBytes));
                 return false;
             }
 
-            if (VoterId == null)
-            {
-                Logger.Debug("{field} cannot be null", nameof(VoterId));
-                return false;
-            }
-
-            return Candidate.IsValid() && VoterId.IsValid();
+            return SigningContext.IsValid(expectedSignatureType);
         }
     }
 }

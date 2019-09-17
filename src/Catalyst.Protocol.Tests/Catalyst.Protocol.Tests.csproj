@@ -9,6 +9,11 @@
     </PropertyGroup>
   <Import Project="../Common.TestProjects.props" />
   <ItemGroup>
+    <Compile Remove="Common\**" />
+    <EmbeddedResource Remove="Common\**" />
+    <None Remove="Common\**" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\Catalyst.Core.Lib\Catalyst.Core.Lib.csproj" />
     <ProjectReference Include="..\Catalyst.Core.Modules.Cryptography.BulletProofs\Catalyst.Core.Modules.Cryptography.BulletProofs.csproj" />
     <ProjectReference Include="..\Catalyst.Protocol\Catalyst.Protocol.csproj" />
@@ -16,8 +21,5 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Multiformats.Hash" Version="1.5.0" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Common\" />
   </ItemGroup>
 </Project>

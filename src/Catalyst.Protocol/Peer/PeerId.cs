@@ -22,12 +22,17 @@
 #endregion
 
 using System.Net;
+using System.Reflection;
+using Catalyst.Protocol.Transaction;
 using Google.Protobuf;
+using Serilog;
 
 namespace Catalyst.Protocol.Peer
 {
     public partial class PeerId
     {
+        private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
+
         public IPAddress IpAddress { get; private set; }
         public IPEndPoint IpEndPoint { get; private set; }
 
@@ -36,6 +41,23 @@ namespace Catalyst.Protocol.Peer
             if (Ip == null || Ip.IsEmpty) {Ip = ByteString.CopyFrom(new byte[4]);}
             IpAddress = new IPAddress(Ip.ToByteArray()).MapToIPv4();
             IpEndPoint = new IPEndPoint(IpAddress, (int) Port);
+        }
+
+        public bool IsValid()
+        {
+            if (PublicKey == null || PublicKey.IsEmpty)
+            {
+                Logger.Debug("{field} cannot be null or empty", nameof(PublicKey));
+                return false;
+            }
+
+            if (Port > ushort.MaxValue)
+            {
+                Logger.Debug("{field} should have a value between 0 and {maxValue}", nameof(Port), ushort.MaxValue);
+                return false;
+            }
+
+            return true;
         }
     }
 }
