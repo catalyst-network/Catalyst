@@ -105,7 +105,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             }
             catch (Exception e)
             {
-                _logger.Error(e, "Failed to Vote on the candidate delta {0}", JsonConvert.SerializeObject(candidate));
+                _logger.Error(e, "Failed to Vote on the candidate delta {0}", candidate);
             }
         }
 

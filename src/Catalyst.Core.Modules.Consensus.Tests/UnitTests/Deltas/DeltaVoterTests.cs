@@ -127,7 +127,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             _voter.OnNext(candidateFromUnknownProducer);
 
             _logger.Received(1).Error(Arg.Is<Exception>(e => e is KeyNotFoundException),
-                Arg.Any<string>(), Arg.Any<string>());
+                Arg.Any<string>(), Arg.Any<CandidateDeltaBroadcast>());
 
             _cache.DidNotReceiveWithAnyArgs().TryGetValue(Arg.Any<object>(), out Arg.Any<object>());
             _cache.DidNotReceiveWithAnyArgs().CreateEntry(Arg.Any<object>());
