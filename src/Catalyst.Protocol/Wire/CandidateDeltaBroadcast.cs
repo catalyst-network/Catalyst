@@ -22,26 +22,33 @@
 #endregion
 
 using System.IO;
+using System.Reflection;
+using Serilog;
 
 namespace Catalyst.Protocol.Wire
 {
     public sealed partial class CandidateDeltaBroadcast
     {
+        private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
+
         public bool IsValid()
         {
             if (ProducerId == null)
             {
-                throw new InvalidDataException($"{nameof(ProducerId)} cannot be null");
+                Logger.Debug("{field} cannot be null", nameof(ProducerId));
+                return false;
             }
 
             if (PreviousDeltaDfsHash == null || PreviousDeltaDfsHash.IsEmpty)
             {
-                throw new InvalidDataException($"{nameof(PreviousDeltaDfsHash)} cannot be null or empty");
+                Logger.Debug("{field} cannot be null or empty", nameof(PreviousDeltaDfsHash));
+                return false;
             }
 
             if (Hash == null || Hash.IsEmpty)
             {
-                throw new InvalidDataException($"{nameof(Hash)} cannot be null or empty");
+                Logger.Debug("{field} cannot be null or empty", nameof(Hash));
+                return false;
             }
 
             return true;

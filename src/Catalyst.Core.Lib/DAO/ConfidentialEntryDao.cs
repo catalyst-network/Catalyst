@@ -31,7 +31,7 @@ namespace Catalyst.Core.Lib.DAO
     public class ConfidentialEntryDao : DaoBase<ConfidentialEntry, ConfidentialEntryDao>
     {
         public BaseEntryDao Base { get; set; }
-        public string PedersenCommit { get; set; }
+        public string PedersenCommitment { get; set; }
         public RangeProofDao RangeProof { get; set; }
 
         public override void InitMappers(IMapperConfigurationExpression cfg)
@@ -39,7 +39,7 @@ namespace Catalyst.Core.Lib.DAO
             cfg.CreateMap<ConfidentialEntry, ConfidentialEntryDao>().ReverseMap();
 
             cfg.CreateMap<ConfidentialEntry, ConfidentialEntryDao>()
-               .ForMember(e => e.PedersenCommit,
+               .ForMember(e => e.PedersenCommitment,
                     opt => opt.ConvertUsing<ByteStringToStringBase64Converter, ByteString>());
 
             cfg.CreateMap<ConfidentialEntryDao, ConfidentialEntry>()

@@ -23,6 +23,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.KeySigner;
 using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.P2P;
@@ -31,6 +32,8 @@ using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Codecs;
 using Catalyst.Core.Lib.IO.Handlers;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
+using Catalyst.Core.Lib.Util;
+using Catalyst.Core.Modules.Cryptography.BulletProofs;
 using Catalyst.Core.Modules.Rpc.Client.IO.Transport.Channels;
 using Catalyst.Protocol.Cryptography;
 using Catalyst.Protocol.IPPN;
@@ -115,8 +118,14 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Transport.Channels
 
             var senderId = PeerIdHelper.GetPeerId("sender");
             var correlationId = CorrelationId.GenerateCorrelationId();
+            var signatureBytes = ByteUtil.GenerateRandomByteArray(FFI.SignatureLength);
 
-            var protocolMessage = new PingResponse().ToProtocolMessage(senderId, correlationId);
+            var protocolMessage = new PingResponse()
+               .ToSignedProtocolMessage(senderId, signatureBytes, correlationId: correlationId);
+
+            _keySigner.Verify(Arg.Any<ISignature>(), Arg.Any<byte[]>(), Arg.Any<SigningContext>())
+               .Returns(true);
+
             _correlationManager.TryMatchResponse(protocolMessage).Returns(true);
 
             var observer = new ProtocolMessageObserver(0, Substitute.For<ILogger>());
@@ -129,7 +138,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Transport.Channels
 
                 _correlationManager.Received(1).TryMatchResponse(protocolMessage);
 
-                _keySigner.DidNotReceiveWithAnyArgs().Verify(null, null, null);
+                _keySigner.ReceivedWithAnyArgs(1).Verify(null, null, null);
 
                 _testScheduler.Start();
 

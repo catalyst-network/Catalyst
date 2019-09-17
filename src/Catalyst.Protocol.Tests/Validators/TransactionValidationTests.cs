@@ -185,7 +185,7 @@
 //        public void Can_Reject_Invalid_Pedersen_Commit_On_CF_Entries()
 //        {
 //            GenerateTransaction(TransactionType.Confidential);
-//            _transactionBroadcast.CFEntries[0].PedersenCommit = ByteString.Empty;
+//            _transactionBroadcast.CFEntries[0].PedersenCommitment = ByteString.Empty;
 //            GenerateSignature();
 
 //            AssertTransaction(false);
@@ -247,7 +247,7 @@
 //            {
 //                _transactionBroadcast.CFEntries.Add(new ConfidentialEntry
 //                {
-//                    PedersenCommit = ByteString.CopyFromUtf8("FakeCommit"),
+//                    PedersenCommitment = ByteString.CopyFromUtf8("FakeCommit"),
 //                    PubKey = publicKey
 //                });
 //            }

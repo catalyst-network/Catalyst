@@ -23,6 +23,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.KeySigner;
 using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.P2P;
@@ -32,6 +33,8 @@ using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Codecs;
 using Catalyst.Core.Lib.IO.Handlers;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
+using Catalyst.Core.Lib.Util;
+using Catalyst.Core.Modules.Cryptography.BulletProofs;
 using Catalyst.Core.Modules.Rpc.Server.Transport.Channels;
 using Catalyst.Protocol.Cryptography;
 using Catalyst.Protocol.Wire;
@@ -126,17 +129,21 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Transport.Channels
 
             var senderId = PeerIdHelper.GetPeerId("sender");
             var correlationId = CorrelationId.GenerateCorrelationId();
-            var protocolMessage = new PingRequest().ToProtocolMessage(senderId, correlationId);
+            var signatureBytes = ByteUtil.GenerateRandomByteArray(FFI.SignatureLength);
+            _keySigner.Verify(Arg.Any<ISignature>(), Arg.Any<byte[]>(), Arg.Any<SigningContext>())
+               .Returns(true);
+            var protocolMessage = new PingRequest().ToSignedProtocolMessage(senderId, signatureBytes, correlationId: correlationId);
 
             var observer = new ProtocolMessageObserver(0, Substitute.For<ILogger>());
-           
-            var messageStream = _factory.InheritedHandlers.OfType<ObservableServiceHandler>().Single().MessageStream;
+
+            var messageStream = _factory.InheritedHandlers.OfType<ObservableServiceHandler>()
+               .Single().MessageStream;
             
             using (messageStream.Subscribe(observer))
             {
                 testingChannel.WriteInbound(protocolMessage);
                 _correlationManager.DidNotReceiveWithAnyArgs().TryMatchResponse(protocolMessage);
-                _keySigner.DidNotReceiveWithAnyArgs().Verify(null, null, null);
+                _keySigner.ReceivedWithAnyArgs(1).Verify(null, null, null);
                 _testScheduler.Start();
                 observer.Received.Count.Should().Be(1);
                 observer.Received.Single().Payload.CorrelationId.ToCorrelationId().Id.Should().Be(correlationId.Id);

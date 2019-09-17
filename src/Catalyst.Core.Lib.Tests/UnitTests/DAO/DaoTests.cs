@@ -349,7 +349,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
             var transactionEntryDao = cfTransactionEntryDao.ToDao(original);
 
             transactionEntryDao.Base.SenderPublicKey.Should().Be(pubKeyBytes.KeyToString());
-            transactionEntryDao.PedersenCommit.Should().Be(pedersenCommitBytes.ToByteString().ToBase64());
+            transactionEntryDao.PedersenCommitment.Should().Be(pedersenCommitBytes.ToByteString().ToBase64());
 
             var reconverted = transactionEntryDao.ToProtoBuff();
             reconverted.Should().Be(original);
