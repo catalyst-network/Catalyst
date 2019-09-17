@@ -91,7 +91,8 @@ namespace Catalyst.Core.Lib.Config
             {
                 Constants.NetworkConfigFile(network, overrideNetworkFile),
                 Constants.SerilogJsonConfigFile,
-                Constants.MessageHandlersConfigFile,
+                Constants.RpcMessageHandlerConfigFile,
+                Constants.P2PMessageHandlerConfigFile,
                 Constants.RpcAuthenticationCredentialsFile
             };
             return requiredConfigFiles;

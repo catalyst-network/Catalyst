@@ -29,6 +29,7 @@ using Catalyst.Abstractions.IO.EventLoop;
 using Catalyst.Abstractions.IO.Events;
 using Catalyst.Abstractions.IO.Transport.Channels;
 using Catalyst.Abstractions.Keystore;
+using Catalyst.Abstractions.Network;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.Discovery;
 using Catalyst.Abstractions.P2P.IO.Messaging.Broadcast;
@@ -53,6 +54,7 @@ using Catalyst.Core.Lib.Registry;
 using Catalyst.Core.Lib.Rpc.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Lib.Validators;
+using DnsClient;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
 using Multiformats.Hash.Algorithms;
@@ -86,7 +88,10 @@ namespace Catalyst.Core.Lib
             builder.RegisterType<PeerChallengerResponse>().As<IPeerChallengeResponse>();
             builder.RegisterType<PeerIdentifier>().As<IPeerIdentifier>().SingleInstance();
             builder.RegisterType<PeerClient>().As<IPeerClient>().SingleInstance();
-            builder.RegisterType<PeerChallenger>().As<IPeerChallenger>().SingleInstance();
+
+            builder.RegisterType<PeerChallenger>().As<IPeerChallenger>()
+                .WithParameter("peerChallengeWaitTimeSeconds", 5)
+                .SingleInstance();
 
             // Register P2P.Discovery
             builder.RegisterType<HealthChecker>().As<IHealthChecker>();
@@ -147,6 +152,13 @@ namespace Catalyst.Core.Lib
             builder.RegisterType<TransactionValidator>().As<ITransactionValidator>().SingleInstance();
             builder.RegisterType<TransactionReceivedEvent>().As<ITransactionReceivedEvent>().SingleInstance();
 
+            // Register PRNG
+            builder.RegisterType<IsaacRandomFactory>().As<IDeterministicRandomFactory>();
+
+            // Dns Client
+            builder.RegisterType<Network.DnsClient>().As<IDns>();
+            builder.RegisterType<LookupClient>().As<ILookupClient>().UsingConstructor();
+            
             base.Load(builder);
         }
     }

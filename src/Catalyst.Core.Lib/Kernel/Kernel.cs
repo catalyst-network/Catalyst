@@ -100,6 +100,7 @@ namespace Catalyst.Core.Lib.Kernel
             var configurationModule = new ConfigurationModule(config);
 
             ContainerBuilder.RegisterInstance(config);
+            ContainerBuilder.RegisterModule(configurationModule);
             
             if (!string.IsNullOrEmpty(_withPersistence))
             {

@@ -48,7 +48,7 @@ using Serilog;
 namespace Catalyst.Core.Modules.P2P.Discovery.Hastings
 {
     public class HastingsDiscovery
-        : IHastingsDiscovery, IDisposable
+        : IPeerDiscovery, IDisposable
     {
         private static readonly SemaphoreSlim SemaphoreSlim = new SemaphoreSlim(1, 1);
         private readonly ICancellationTokenProvider _cancellationTokenProvider;
