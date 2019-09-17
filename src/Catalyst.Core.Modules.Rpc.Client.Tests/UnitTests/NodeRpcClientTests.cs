@@ -51,9 +51,9 @@ using Xunit;
 
 namespace Catalyst.Core.Modules.Rpc.Client.Tests.UnitTests
 {
-    public sealed class NodeRpcClientTests
+    public sealed class RpcClientTests
     {
-        public NodeRpcClientTests()
+        public RpcClientTests()
         {
             _testScheduler = new TestScheduler();
             _logger = Substitute.For<ILogger>();
