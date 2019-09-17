@@ -47,7 +47,7 @@ namespace Catalyst.Core.Lib.Config
         // <summary> Default keystore data directory inside the Catalyst data directory </summary>
         public static string KeyStoreDataSubDir => "keystore";
 
-        // <summary> Config file with nodes for use in rpc client </summary>
+        // <summary> Config file to initialize rpc client peer id </summary>
         public static string ShellConfigFile => "shell.config.json";
 
         // <summary> Config file with nodes for use in rpc client </summary>
