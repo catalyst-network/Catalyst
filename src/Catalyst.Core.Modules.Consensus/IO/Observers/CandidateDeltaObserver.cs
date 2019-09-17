@@ -28,7 +28,6 @@ using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Observers;
 using Catalyst.Protocol.Wire;
-using Catalyst.Protocol.Deltas;
 using Serilog;
 
 namespace Catalyst.Core.Modules.Consensus.IO.Observers

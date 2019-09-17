@@ -21,7 +21,6 @@
 
 #endregion
 
-using System.IO;
 using System.Reflection;
 using Serilog;
 

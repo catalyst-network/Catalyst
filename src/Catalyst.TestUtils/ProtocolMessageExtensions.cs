@@ -21,20 +21,15 @@
 
 #endregion
 
-using System.Reflection;
-using System.Runtime.CompilerServices;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
-using Catalyst.Core.Lib.Util;
-using Catalyst.Core.Modules.Cryptography.BulletProofs;
 using Catalyst.Protocol.Cryptography;
 using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils.Protocol;
 using Google.Protobuf;
-using Serilog;
 
 namespace Catalyst.TestUtils
 {

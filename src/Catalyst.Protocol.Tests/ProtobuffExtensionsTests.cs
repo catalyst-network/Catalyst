@@ -25,10 +25,8 @@ using Catalyst.Abstractions.Cryptography;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.IPPN;
-using Catalyst.Protocol.Transaction;
 using Catalyst.TestUtils;
 using FluentAssertions;
-using Google.Protobuf;
 using NSubstitute;
 using Xunit;
 

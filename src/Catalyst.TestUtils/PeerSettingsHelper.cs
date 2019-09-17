@@ -27,7 +27,6 @@ using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.Rpc;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Protocol.Network;
-using Catalyst.Protocol.Wire;
 using NSubstitute;
 
 namespace Catalyst.TestUtils

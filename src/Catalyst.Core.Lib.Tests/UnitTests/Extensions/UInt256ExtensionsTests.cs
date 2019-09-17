@@ -21,9 +21,6 @@
 
 #endregion
 
-using System;
-using System.Collections.Generic;
-using System.Numerics;
 using Catalyst.Core.Lib.Extensions;
 using FluentAssertions;
 using Nethermind.Dirichlet.Numerics;

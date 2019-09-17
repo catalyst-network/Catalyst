@@ -23,7 +23,6 @@
 
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.KeySigner;
-using Catalyst.Abstractions.Keystore;
 using Catalyst.Core.Lib.IO.Handlers;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;

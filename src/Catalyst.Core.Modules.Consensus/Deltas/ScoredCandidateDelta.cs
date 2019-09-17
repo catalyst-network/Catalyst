@@ -23,7 +23,6 @@
 
 using System.Threading;
 using Catalyst.Abstractions.Consensus.Deltas;
-using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Wire;
 
 namespace Catalyst.Core.Modules.Consensus.Deltas

@@ -33,7 +33,6 @@ using Catalyst.Abstractions.IO.Handlers;
 using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.IO.Transport.Channels;
 using Catalyst.Abstractions.KeySigner;
-using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.Rpc.Authentication;
 using Catalyst.Abstractions.Rpc.IO.Messaging.Correlation;

@@ -34,7 +34,6 @@ using Dawn;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Primitives;
 using Nethereum.Hex.HexConvertors.Extensions;
-using Newtonsoft.Json;
 using Serilog;
 using CandidateDeltaBroadcast = Catalyst.Protocol.Wire.CandidateDeltaBroadcast;
 

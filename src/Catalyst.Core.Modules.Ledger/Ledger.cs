@@ -35,7 +35,6 @@ using Catalyst.Core.Modules.Ledger.Repository;
 using Catalyst.Protocol.Transaction;
 using Dawn;
 using Multiformats.Hash;
-using Nethermind.Dirichlet.Numerics;
 using Serilog;
 
 namespace Catalyst.Core.Modules.Ledger

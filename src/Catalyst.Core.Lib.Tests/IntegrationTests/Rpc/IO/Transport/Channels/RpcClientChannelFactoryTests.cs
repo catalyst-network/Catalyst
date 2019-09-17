@@ -39,7 +39,6 @@ using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
-using Catalyst.TestUtils.Protocol;
 using DotNetty.Buffers;
 using DotNetty.Transport.Channels.Embedded;
 using FluentAssertions;

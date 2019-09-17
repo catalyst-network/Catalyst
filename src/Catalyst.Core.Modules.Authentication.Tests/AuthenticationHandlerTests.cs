@@ -26,13 +26,11 @@ using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.Rpc.Authentication;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Handlers;
-using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
 using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels.Embedded;
-using Google.Protobuf;
 using NSubstitute;
 using Xunit;
 

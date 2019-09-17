@@ -27,7 +27,6 @@ using System.IO.Abstractions;
 using System.Threading.Tasks;
 using NSubstitute;
 using Polly;
-using Polly.Retry;
 using FileSystem = Catalyst.Core.Lib.FileSystem.FileSystem;
 using IFileSystem = Catalyst.Abstractions.FileSystem.IFileSystem;
 

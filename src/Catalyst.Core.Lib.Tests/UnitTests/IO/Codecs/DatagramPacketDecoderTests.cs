@@ -22,9 +22,6 @@
 #endregion
 
 using System.Net;
-using Catalyst.Core.Lib.Extensions;
-using Catalyst.Core.Lib.IO.Messaging.Correlation;
-using Catalyst.Core.Lib.Util;
 using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.IPPN;
 using Catalyst.TestUtils;

@@ -22,7 +22,6 @@
 #endregion
 
 using System;
-using Catalyst.Abstractions.Cryptography;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Extensions.Protocol.Wire;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;

@@ -24,17 +24,13 @@
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.KeySigner;
-using Catalyst.Abstractions.Keystore;
-using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Handlers;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
-using Catalyst.Protocol.Cryptography;
 using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.IPPN;
-using Catalyst.Protocol.Network;
 using Catalyst.TestUtils;
 using Catalyst.TestUtils.Protocol;
 using DotNetty.Transport.Channels;

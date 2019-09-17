@@ -27,7 +27,6 @@ using System.IO;
 using System.Security.Cryptography.X509Certificates;
 using Catalyst.Abstractions.Cli;
 using Catalyst.Abstractions.Cryptography;
-using Catalyst.Abstractions.Keystore;
 using Catalyst.Protocol.Cryptography;
 using Catalyst.Simulator.RpcClients;
 using Newtonsoft.Json;

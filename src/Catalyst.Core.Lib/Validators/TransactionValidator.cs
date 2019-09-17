@@ -27,7 +27,6 @@ using Catalyst.Abstractions.Validators;
 using Catalyst.Protocol.Cryptography;
 using Catalyst.Protocol.Network;
 using Catalyst.Protocol.Wire;
-using Catalyst.Protocol.Transaction;
 using Google.Protobuf;
 using Serilog;
 

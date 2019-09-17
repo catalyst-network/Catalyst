@@ -28,7 +28,6 @@ using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.IO.Observers;
 using Catalyst.Core.Lib.P2P.Repository;
 using Catalyst.Protocol.Peer;
-using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using DotNetty.Transport.Channels;

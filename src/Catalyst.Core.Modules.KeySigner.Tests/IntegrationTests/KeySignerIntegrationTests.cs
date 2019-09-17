@@ -33,7 +33,6 @@ using Catalyst.Core.Modules.Cryptography.BulletProofs;
 using Catalyst.Core.Modules.Keystore;
 using Catalyst.Protocol.Cryptography;
 using Catalyst.Protocol.Network;
-using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Multiformats.Hash.Algorithms;

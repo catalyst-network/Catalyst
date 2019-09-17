@@ -32,7 +32,6 @@ using Catalyst.Abstractions.IO.EventLoop;
 using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.IO.Transport.Channels;
 using Catalyst.Abstractions.KeySigner;
-using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.IO.Handlers;

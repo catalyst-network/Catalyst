@@ -24,8 +24,6 @@
 using System;
 using System.Collections.Generic;
 using AutoMapper;
-using Catalyst.Core.Lib.DAO.Converters;
-using Catalyst.Protocol.Transaction;
 using Catalyst.Protocol.Wire;
 using Google.Protobuf.WellKnownTypes;
 

@@ -26,13 +26,9 @@ using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.KeySigner;
 using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.Types;
-using Catalyst.Core.Lib.Extensions;
 using Catalyst.Protocol.Cryptography;
-using Catalyst.Protocol.Wire;
 using Google.Protobuf;
-using Microsoft.Extensions.FileProviders;
 using Org.BouncyCastle.Security;
-using Serilog.Core;
 
 namespace Catalyst.Core.Modules.KeySigner
 {

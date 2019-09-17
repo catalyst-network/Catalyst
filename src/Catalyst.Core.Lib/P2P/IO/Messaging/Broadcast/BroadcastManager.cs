@@ -36,7 +36,6 @@ using Catalyst.Core.Lib.Extensions.Protocol.Wire;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
 using Catalyst.Core.Lib.P2P.Repository;
 using Catalyst.Protocol.Cryptography;
-using Catalyst.Protocol.Network;
 using Catalyst.Protocol.Wire;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Primitives;

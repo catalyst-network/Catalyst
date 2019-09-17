@@ -23,7 +23,6 @@
 
 using Catalyst.Core.Modules.Consensus.Deltas;
 using Catalyst.Protocol.Wire;
-using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Peer;
 using Multiformats.Hash.Algorithms;
 

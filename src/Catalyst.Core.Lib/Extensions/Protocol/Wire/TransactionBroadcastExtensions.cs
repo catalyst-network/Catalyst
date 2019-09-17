@@ -24,12 +24,10 @@
 using System.Reflection;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Protocol.Cryptography;
-using Catalyst.Protocol.Network;
 using Catalyst.Protocol.Wire;
 using Google.Protobuf;
 using Nethermind.Dirichlet.Numerics;
 using Serilog;
-using Serilog.Core;
 
 namespace Catalyst.Core.Lib.Extensions.Protocol.Wire
 {

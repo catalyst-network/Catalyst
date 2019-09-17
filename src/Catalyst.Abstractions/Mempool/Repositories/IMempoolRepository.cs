@@ -24,7 +24,6 @@
 using System.Collections.Generic;
 using Catalyst.Abstractions.Mempool.Models;
 using Catalyst.Abstractions.Repository;
-using Catalyst.Protocol.Transaction;
 using Catalyst.Protocol.Wire;
 using Google.Protobuf;
 

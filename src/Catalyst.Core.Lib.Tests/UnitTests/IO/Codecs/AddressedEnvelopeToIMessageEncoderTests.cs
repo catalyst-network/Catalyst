@@ -23,7 +23,6 @@
 
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Codecs;
-using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
 using Catalyst.Protocol.IPPN;
 using Catalyst.Protocol.Wire;
