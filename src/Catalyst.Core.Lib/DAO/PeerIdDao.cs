@@ -23,17 +23,15 @@
 
 using AutoMapper;
 using Catalyst.Core.Lib.DAO.Converters;
-using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Peer;
 using Google.Protobuf;
 
 namespace Catalyst.Core.Lib.DAO
 {
     public class PeerIdDao : DaoBase<PeerId, PeerIdDao>
     {
-        public string ClientId { get; set; }
-        public string ProtocolVersion { get; set; }
         public string Ip { get; set; }
-        public ushort Port { get; set; }
+        public int Port { get; set; }
         public string PublicKey { get; set; }
 
         public override void InitMappers(IMapperConfigurationExpression cfg)
@@ -41,24 +39,12 @@ namespace Catalyst.Core.Lib.DAO
             cfg.CreateMap<PeerId, PeerIdDao>()
                .ForMember(e => e.PublicKey,
                     opt => opt.ConvertUsing<ByteStringToStringPubKeyConverter, ByteString>())
-               .ForMember(d => d.Port, 
-                    opt => opt.ConvertUsing<ByteStringToUShortFormatter, ByteString>())
-               .ForMember(e => e.ClientId,
-                    opt => opt.ConvertUsing<ByteStringToStringBase64Converter, ByteString>())
-               .ForMember(e => e.ProtocolVersion,
-                    opt => opt.ConvertUsing<ByteStringToStringBase64Converter, ByteString>())
                .ForMember(e => e.Ip,
                     opt => opt.ConvertUsing<ByteStringToIpAddressConverter, ByteString>());
 
             cfg.CreateMap<PeerIdDao, PeerId>()
                .ForMember(e => e.PublicKey,
                     opt => opt.ConvertUsing<StringKeyUtilsToByteStringFormatter, string>())
-               .ForMember(d => d.Port, 
-                    opt => opt.ConvertUsing<UShortToByteStringFormatter, ushort>())
-               .ForMember(e => e.ClientId,
-                    opt => opt.ConvertUsing<StringBase64ToByteStringConverter, string>())
-               .ForMember(e => e.ProtocolVersion,
-                    opt => opt.ConvertUsing<StringBase64ToByteStringConverter, string>())
                .ForMember(e => e.Ip,
                     opt => opt.ConvertUsing<IpAddressToByteStringConverter, string>());
         }

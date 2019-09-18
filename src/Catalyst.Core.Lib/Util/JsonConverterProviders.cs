@@ -23,6 +23,7 @@
 
 using System.Collections.Generic;
 using Catalyst.Protocol.Transaction;
+using Catalyst.Protocol.Wire;
 using Newtonsoft.Json;
 
 namespace Catalyst.Core.Lib.Util
@@ -34,9 +35,10 @@ namespace Catalyst.Core.Lib.Util
             new JsonProtoObjectConverter<TransactionBroadcast>(),
             new IpEndPointConverter(),
             new IpAddressConverter(),
-            new JsonProtoObjectConverter<STTransactionEntry>(),
-            new JsonProtoObjectConverter<CFTransactionEntry>(),
-            new JsonProtoObjectConverter<EntryRangeProof>()
+            new JsonProtoObjectConverter<PublicEntry>(),
+            new JsonProtoObjectConverter<ConfidentialEntry>(),
+            new JsonProtoObjectConverter<ContractEntry>(),
+            new JsonProtoObjectConverter<RangeProof>()
         }.AsReadOnly();
     }
 }

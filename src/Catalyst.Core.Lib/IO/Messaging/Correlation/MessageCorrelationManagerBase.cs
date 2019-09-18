@@ -26,7 +26,7 @@ using System.IO;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.Util;
 using Catalyst.Core.Lib.Extensions;
-using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Wire;
 using Dawn;
 using Microsoft.Extensions.Caching.Memory;
 using Serilog;

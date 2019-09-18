@@ -25,12 +25,11 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.KeySigner;
-using Catalyst.Abstractions.Keystore;
-using Catalyst.Core.Lib.Extensions;
+using Catalyst.Core.Lib.Extensions.Protocol.Wire;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
-using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Cryptography;
+using Catalyst.Protocol.Wire;
 using DotNetty.Transport.Channels;
-using Google.Protobuf;
 using Serilog;
 
 namespace Catalyst.Core.Lib.IO.Handlers
@@ -42,14 +41,10 @@ namespace Catalyst.Core.Lib.IO.Handlers
         private readonly IKeySigner _keySigner;
         private readonly SigningContext _signingContext;
 
-        public ProtocolMessageSignHandler(IKeySigner keySigner, ISigningContextProvider signingContextProvider)
+        public ProtocolMessageSignHandler(IKeySigner keySigner, SigningContext signingContext)
         {
             _keySigner = keySigner;
-            _signingContext = new SigningContext
-            {
-                Network = signingContextProvider.Network,
-                SignatureType = signingContextProvider.SignatureType
-            };
+            _signingContext = signingContext;
         }
 
         /// <summary>
@@ -61,14 +56,8 @@ namespace Catalyst.Core.Lib.IO.Handlers
         protected override Task WriteAsync0(IChannelHandlerContext context, IMessageDto<ProtocolMessage> message)
         {
             Logger.Verbose("Signing message {message}", message);
-            
-            var sig = _keySigner.Sign(message.Content.ToByteArray(), _signingContext);
-            
-            var protocolMessageSigned = new ProtocolMessageSigned
-            {
-                Signature = sig.SignatureBytes.ToByteString(),
-                Message = message.Content
-            };
+
+            var protocolMessageSigned = message.Content.Sign(_keySigner, _signingContext);
 
             var signedDto = new SignedMessageDto(protocolMessageSigned, message.RecipientPeerIdentifier);
 

@@ -25,7 +25,7 @@ using System;
 using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.IO.Transport.Channels;
 using Catalyst.Core.Lib.IO.Handlers;
-using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Wire;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Embedded;
 using Microsoft.Reactive.Testing;

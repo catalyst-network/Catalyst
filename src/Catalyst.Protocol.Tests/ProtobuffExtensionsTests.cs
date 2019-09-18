@@ -22,11 +22,10 @@
 #endregion
 
 using Catalyst.Core.Lib.Extensions;
-using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.IPPN;
-using Catalyst.Protocol.Transaction;
+using Catalyst.TestUtils;
 using FluentAssertions;
-using Google.Protobuf;
 using Xunit;
 
 namespace Catalyst.Protocol.Tests
@@ -36,29 +35,18 @@ namespace Catalyst.Protocol.Tests
         [Fact]
         public void Can_Identify_Broadcast_Message()
         {
-            var protocolMessageSigned = new ProtocolMessageSigned
-            {
-                Message = new ProtocolMessage
-                {
-                    Value = new TransactionBroadcast().ToByteString(),
-                    TypeUrl = TransactionBroadcast.Descriptor.ShortenedFullName()
-                }
-            };
+            var message = new TransactionBroadcast()
+               .ToSignedProtocolMessage()
+               .ToSignedProtocolMessage();
 
-            var protocolMessage = new ProtocolMessage
-            {
-                Value = protocolMessageSigned.ToByteString(),
-                TypeUrl = ProtocolMessageSigned.Descriptor.ShortenedFullName()
-            };
-
-            protocolMessage.IsBroadCastMessage().Should().BeTrue();
+            message.IsBroadCastMessage().Should().BeTrue();
         }
 
         [Fact]
         public void ShortenedFullName_should_remove_namespace_start()
         {
-            TransactionBroadcast.Descriptor.FullName.Should().Be("Catalyst.Protocol.Transaction.TransactionBroadcast");
-            TransactionBroadcast.Descriptor.ShortenedFullName().Should().Be("Transaction.TransactionBroadcast");
+            TransactionBroadcast.Descriptor.FullName.Should().Be("Catalyst.Protocol.Wire.TransactionBroadcast");
+            TransactionBroadcast.Descriptor.ShortenedFullName().Should().Be("Wire.TransactionBroadcast");
         }
 
         [Fact]

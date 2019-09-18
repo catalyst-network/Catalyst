@@ -21,14 +21,13 @@
 
 #endregion
 
-using System;
 using System.Linq;
 using System.Net;
 using System.Text;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Network;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
-using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Peer;
 
 namespace Catalyst.TestUtils
 {
@@ -41,8 +40,8 @@ namespace Catalyst.TestUtils
             var peerIdentifier = new PeerId
             {
                 PublicKey = (publicKey ?? new byte[32]).ToByteString(),
-                Ip = (ipAddress ?? IPAddress.Parse("127.0.0.1")).To16Bytes().ToByteString(),
-                Port = BitConverter.GetBytes((ushort) port).ToByteString()
+                Ip = (ipAddress ?? IPAddress.Loopback).To16Bytes().ToByteString(),
+                Port = (ushort) port
             };
             return peerIdentifier;
         }
@@ -52,8 +51,8 @@ namespace Catalyst.TestUtils
             int port = 12345)
         {
             var publicKeyBytes = Encoding.UTF8.GetBytes(publicKeySeed)
-               .Concat(Enumerable.Repeat(default(byte), FFI.PublicKeyLength))
-               .Take(FFI.PublicKeyLength).ToArray();
+               .Concat(Enumerable.Repeat(default(byte), Ffi.PublicKeyLength))
+               .Take(Ffi.PublicKeyLength).ToArray();
             return GetPeerId(publicKeyBytes, ipAddress, port);
         }
 

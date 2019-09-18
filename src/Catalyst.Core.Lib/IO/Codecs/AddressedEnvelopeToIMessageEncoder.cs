@@ -23,17 +23,17 @@
 
 using System.Collections.Generic;
 using Catalyst.Abstractions.IO.Messaging.Dto;
-using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Wire;
 using DotNetty.Codecs;
 using DotNetty.Transport.Channels;
 
 namespace Catalyst.Core.Lib.IO.Codecs
 {
     public sealed class AddressedEnvelopeToIMessageEncoder 
-        : MessageToMessageEncoder<IMessageDto<ProtocolMessageSigned>>
+        : MessageToMessageEncoder<IMessageDto<ProtocolMessage>>
     {
         protected override void Encode(IChannelHandlerContext context,
-            IMessageDto<ProtocolMessageSigned> message,
+            IMessageDto<ProtocolMessage> message,
             List<object> output)
         {
             output.Add(message.Content);

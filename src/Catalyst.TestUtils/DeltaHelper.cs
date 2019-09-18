@@ -24,11 +24,13 @@
 using System;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Util;
-using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.Deltas;
+using Catalyst.Protocol.Peer;
 using Google.Protobuf.WellKnownTypes;
 using Multiformats.Hash;
 using Multiformats.Hash.Algorithms;
+using CandidateDeltaBroadcast = Catalyst.Protocol.Wire.CandidateDeltaBroadcast;
 
 namespace Catalyst.TestUtils
 {

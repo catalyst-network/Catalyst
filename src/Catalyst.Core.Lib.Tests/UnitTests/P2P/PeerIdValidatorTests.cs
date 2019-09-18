@@ -28,7 +28,7 @@ using Catalyst.Core.Lib.Cryptography;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.P2P;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
-using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Peer;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Google.Protobuf;
@@ -58,7 +58,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P
             _output.WriteLine(string.Join(" ", _validPeerId.ToByteArray()));
             var fieldsInBytes = new[]
             {
-                _validPeerId.Ip.ToByteArray(), _validPeerId.Port.ToByteArray(),
+                _validPeerId.Ip.ToByteArray(), BitConverter.GetBytes(_validPeerId.Port),
                 _validPeerId.PublicKey.ToByteArray()
             };
             _output.WriteLine(string.Join(" ", fieldsInBytes.SelectMany(b => b)));
@@ -108,21 +108,6 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P
         }
 
         [Theory]
-        [InlineData(200)]
-        [InlineData(201)]
-        [InlineData(-55)]
-        public void Can_Throw_Argument_Exception_On_Wrong_Client_Version(int version)
-        {
-            var invalidPeer = new PeerId(_validPeerId)
-            {
-                ProtocolVersion = BitConverter.GetBytes(version).ToByteString()
-            };
-
-            new Action(() => _peerIdValidator.ValidatePeerIdFormat(invalidPeer))
-               .Should().Throw<ArgumentException>().WithMessage("*clientVersion*");
-        }
-
-        [Theory]
         [InlineData(0)]
         [InlineData(1)]
         [InlineData(1024)]
@@ -130,7 +115,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P
         {
             var invalidPeer = new PeerId(_validPeerId)
             {
-                Port = BitConverter.GetBytes(port).ToByteString()
+                Port = port
             };
 
             new Action(() => _peerIdValidator.ValidatePeerIdFormat(invalidPeer))

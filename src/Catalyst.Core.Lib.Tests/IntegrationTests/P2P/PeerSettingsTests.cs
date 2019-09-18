@@ -23,6 +23,7 @@
 
 using Autofac;
 using Catalyst.Abstractions.P2P;
+using Catalyst.Protocol.Network;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Xunit;
@@ -42,7 +43,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
             using (var scope = ContainerProvider.Container.BeginLifetimeScope(CurrentTestName))
             {
                 var peerDiscovery = scope.Resolve<IPeerSettings>();
-                peerDiscovery.Network.Should().Be(Protocol.Common.Network.Devnet);
+                peerDiscovery.NetworkType.Should().Be(NetworkType.Devnet);
             }
         }
     }

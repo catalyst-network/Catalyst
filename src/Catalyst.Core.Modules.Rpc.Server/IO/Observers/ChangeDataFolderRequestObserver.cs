@@ -59,7 +59,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
 
             return new SetPeerDataFolderResponse
             {
-                Query = _fileSystem.SetCurrentPath(setDataFolderRequest.Datafolder)
+                Query = _fileSystem.SetCurrentPath(setDataFolderRequest.DataFolder)
             };
         }
     }

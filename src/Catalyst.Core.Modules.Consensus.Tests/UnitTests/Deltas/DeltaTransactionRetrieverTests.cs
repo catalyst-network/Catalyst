@@ -25,9 +25,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Catalyst.Abstractions.Mempool;
+using Catalyst.Core.Lib.Extensions.Protocol.Wire;
 using Catalyst.Core.Lib.Mempool.Documents;
 using Catalyst.Core.Modules.Consensus.Deltas;
-using Catalyst.Protocol.Transaction;
+using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using NSubstitute;
@@ -45,10 +46,9 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             var random = new Random();
 
             var mempool = Substitute.For<IMempool<MempoolDocument>>();
-            _transactions = Enumerable.Range(0, 20).Select(i => TransactionHelper.GetTransaction(
-                transactionType: TransactionType.Normal,
+            _transactions = Enumerable.Range(0, 20).Select(i => TransactionHelper.GetPublicTransaction(
                 transactionFees: (ulong) random.Next(),
-                timeStamp: random.Next(),
+                timestamp: random.Next(),
                 signature: i.ToString())
             ).ToList();
 
@@ -106,7 +106,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 
             for (var i = 0; i < maxCount; i++)
             {
-                retrievedTransactions[i].TransactionType.Should().Be(expectedTransactions[i].TransactionType);
+                retrievedTransactions[i].IsPublicTransaction.Should().Be(expectedTransactions[i].IsPublicTransaction);
                 if (i == 0)
                 {
                     continue;
@@ -114,8 +114,8 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 
                 // just a sanity check to make sure that the order is not opposite of what was intended in
                 // TransactionComparerByFeeTimestampAndHash
-                retrievedTransactions[i - 1].TransactionFees.Should()
-                   .BeGreaterOrEqualTo(retrievedTransactions[i].TransactionFees);
+                retrievedTransactions[i - 1].SummedEntryFees().Should()
+                   .BeGreaterOrEqualTo(retrievedTransactions[i].SummedEntryFees());
             }
         }
     }
