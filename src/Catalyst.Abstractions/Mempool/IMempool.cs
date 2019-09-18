@@ -26,7 +26,7 @@ using Catalyst.Abstractions.Mempool.Repositories;
 
 namespace Catalyst.Abstractions.Mempool
 {
-    public interface IMempool<T> where T : class, IMempoolItem
+    public interface IMempool<T> where T : class
     {
         IMempoolRepository<T> Repository { get; }
     }

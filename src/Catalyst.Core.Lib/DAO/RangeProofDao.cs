@@ -51,7 +51,7 @@ namespace Catalyst.Core.Lib.DAO
                .ForMember(e => e.ValueCommitment, opt => opt.ConvertUsing<RepeatedFieldToListConverter<ByteString, string, ByteStringToStringBase64Converter>, RepeatedField<ByteString>>())
                .ForMember(e => e.AggregatedVectorPolynomialL, opt => opt.ConvertUsing<RepeatedFieldToListConverter<ByteString, string, ByteStringToStringBase64Converter>, RepeatedField<ByteString>>())
                .ForMember(e => e.AggregatedVectorPolynomialR, opt => opt.ConvertUsing<RepeatedFieldToListConverter<ByteString, string, ByteStringToStringBase64Converter>, RepeatedField<ByteString>>())
-               .ForMember(e => e.Id, opt => opt.Ignore())
+               .ForMember(e => e.DocumentId, opt => opt.Ignore())
                .ForAllOtherMembers(opt => opt.ConvertUsing<ByteStringToStringBase64Converter, ByteString>());
 
             cfg.CreateMap<RangeProofDao, RangeProof>()

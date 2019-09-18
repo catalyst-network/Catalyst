@@ -27,6 +27,7 @@ using System.Threading;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Mempool;
 using Catalyst.Core.Lib.Cryptography;
+using Catalyst.Core.Lib.DAO;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Mempool.Documents;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
@@ -48,7 +49,7 @@ namespace Catalyst.Core.Modules.Ledger
     {
         public IAccountRepository Accounts { get; }
         private readonly ILedgerSynchroniser _synchroniser;
-        private readonly IMempool<MempoolDocument> _mempool;
+        private readonly IMempool<TransactionBroadcastDao> _mempool;
         private readonly ILogger _logger;
         private readonly IDisposable _deltaUpdatesSubscription;
 
@@ -58,7 +59,7 @@ namespace Catalyst.Core.Modules.Ledger
         public Ledger(IAccountRepository accounts, 
             IDeltaHashProvider deltaHashProvider,
             ILedgerSynchroniser synchroniser,
-            IMempool<MempoolDocument> mempool, 
+            IMempool<TransactionBroadcastDao> mempool, 
             ILogger logger)
         {
             Accounts = accounts;

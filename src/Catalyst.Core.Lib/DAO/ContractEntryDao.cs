@@ -33,7 +33,7 @@ namespace Catalyst.Core.Lib.DAO
     {
         public BaseEntryDao Base { get; set; }
         public string Data { get; set; }
-        public UInt256 Amount { get; set; }
+        public ulong Amount { get; set; }
 
         public override void InitMappers(IMapperConfigurationExpression cfg)
         {

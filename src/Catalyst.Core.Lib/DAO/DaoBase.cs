@@ -25,15 +25,19 @@ using SharpRepository.Repository;
 using System.ComponentModel.DataAnnotations;
 using AutoMapper;
 using Catalyst.Abstractions.DAO;
+using Catalyst.Abstractions.Repository;
+using MongoDB.Bson.Serialization.Attributes;
+using Newtonsoft.Json;
 
 namespace Catalyst.Core.Lib.DAO
 {
     public abstract class DaoBase<TProto, TDao> : IMapperInitializer, 
-        IValueConverter<TProto, TDao>
+        IValueConverter<TProto, TDao>, IDocument
     {
-        [RepositoryPrimaryKey(Order = 1)]
         [Key]
-        public string Id { get; set; }
+        [RepositoryPrimaryKey(Order = 1)]
+        [JsonProperty("_id")]
+        public string DocumentId { get; set; }
 
         public TProto ToProtoBuff()
         {
