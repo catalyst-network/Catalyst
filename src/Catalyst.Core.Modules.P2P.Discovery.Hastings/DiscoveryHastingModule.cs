@@ -23,6 +23,7 @@
 
 using Autofac;
 using Catalyst.Abstractions.P2P.Discovery;
+using Catalyst.Core.Lib.P2P.Discovery;
 
 namespace Catalyst.Core.Modules.P2P.Discovery.Hastings
 {
@@ -30,10 +31,11 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterType<HastingsDiscovery>().As<IHastingsDiscovery>();
+            builder.RegisterType<HastingsDiscovery>().As<IPeerDiscovery>();
             builder.RegisterType<HastingsCareTaker>().As<IHastingsCareTaker>();
             builder.RegisterType<HastingsMemento>().As<IHastingsMemento>();
             builder.RegisterType<HastingsOriginator>().As<IHastingsOriginator>();
+            builder.RegisterType<Neighbours>().As<INeighbours>();
         }
     }
 }

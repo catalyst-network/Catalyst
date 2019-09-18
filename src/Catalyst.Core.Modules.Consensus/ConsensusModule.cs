@@ -40,14 +40,14 @@ namespace Catalyst.Core.Modules.Consensus
             builder.RegisterType<DateTimeProvider>().As<IDateTimeProvider>();
             builder.RegisterType<CycleSchedulerProvider>().As<ICycleSchedulerProvider>();
             builder.RegisterType<CycleEventsProvider>().As<ICycleEventsProvider>();
-            builder.RegisterType<DeltaCacheChangeTokenProvider>().As<IDeltaCacheChangeTokenProvider>().WithParameter("timeToLiveInMs", "600000");
+            builder.RegisterType<DeltaCacheChangeTokenProvider>().As<IDeltaCacheChangeTokenProvider>().WithParameter("timeToLiveInMs", 600000);
             builder.RegisterType<FavouriteDeltaObserver>().As<IP2PMessageObserver>();
             builder.RegisterType<DeltaDfsHashObserver>().As<IP2PMessageObserver>();
             builder.RegisterType<CandidateDeltaObserver>().As<IP2PMessageObserver>();
             builder.RegisterType<DeltaProducersProvider>().As<IDeltaProducersProvider>();
             builder.RegisterType<DeltaDfsReader>().As<IDeltaDfsReader>().SingleInstance();
             builder.RegisterType<DeltaElector>().As<IDeltaElector>().SingleInstance();
-            builder.RegisterType<DeltaHashProvider>().As<IDeltaHashProvider>().SingleInstance().WithParameter("capacity", "10_000");
+            builder.RegisterType<DeltaHashProvider>().As<IDeltaHashProvider>().SingleInstance().WithParameter("capacity", 10_000);
             builder.RegisterType<DeltaCache>().As<IDeltaCache>().SingleInstance();
             builder.RegisterType<DeltaVoter>().As<IDeltaVoter>().SingleInstance();
             builder.RegisterType<TransactionComparerByFeeTimestampAndHash>().As<ITransactionComparer>();
@@ -55,8 +55,8 @@ namespace Catalyst.Core.Modules.Consensus
             builder.RegisterType<DeltaTransactionRetriever>().As<IDeltaTransactionRetriever>().SingleInstance();
             builder.RegisterType<DeltaBuilder>().As<IDeltaBuilder>().SingleInstance();
             builder.RegisterType<CycleSchedulerProvider>().As<ICycleSchedulerProvider>();
-            builder.RegisterType<CycleEventsProvider>().As<ICycleEventsProvider>();
             builder.RegisterType<Consensus>().As<IConsensus>().SingleInstance();
+            builder.RegisterInstance(CycleConfiguration.Default).As<ICycleConfiguration>();
 
             base.Load(builder);
         }

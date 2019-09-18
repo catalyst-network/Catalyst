@@ -32,7 +32,7 @@ using Dawn;
 
 namespace Catalyst.Core.Lib.Config
 {
-    public class ConfigCopier : IConfigCopier
+    public abstract class ConfigCopier : IConfigCopier
     {
         /// <inheritdoc />
         public void RunConfigStartUp(string dataDir,
@@ -85,19 +85,9 @@ namespace Catalyst.Core.Lib.Config
             }
         }
 
-        protected virtual IEnumerable<string> RequiredConfigFiles(NetworkType networkType,
-            string overrideNetworkFile = null)
-        {
-            var requiredConfigFiles = new[]
-            {
-                Constants.NetworkConfigFile(networkType, overrideNetworkFile),
-                Constants.SerilogJsonConfigFile,
-                Constants.MessageHandlersConfigFile,
-                Constants.RpcAuthenticationCredentialsFile
-            };
-            return requiredConfigFiles;
-        }
-
+        protected abstract IEnumerable<string> RequiredConfigFiles(NetworkType network,
+            string overrideNetworkFile = null);
+        
         private static void CopyConfigFileToFolder(string targetFolder,
             string fileName,
             string sourceFolder,

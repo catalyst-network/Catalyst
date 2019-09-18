@@ -21,10 +21,10 @@
 
 #endregion
 
-namespace Catalyst.Abstractions.P2P.Discovery
+namespace Catalyst.TestUtils
 {
-    /// <summary>
-    /// A service used to discover peers on the network using the delayed Hastings-Metropolis algorithm.
-    /// </summary>
-    public interface IHastingsDiscovery : IPeerDiscovery { }
+    public static class TestConstants
+    {
+        public static string TestShellNodesConfigFile => "nodes.json";
+    }
 }
