@@ -22,17 +22,16 @@
 #endregion
 
 using Catalyst.Abstractions.Cryptography;
+using Catalyst.Core.Lib.Util;
 using Catalyst.Protocol.Account;
 using Catalyst.Protocol.Network;
-using Multiformats.Hash.Algorithms;
+using Multiformats.Hash;
 
 namespace Catalyst.Core.Lib.Extensions.Protocol.Account
 {
     public static class AddressExtensions
     {
-        public static readonly BLAKE2B_152 Blake2B152 = new BLAKE2B_152();
-
-        public static Address ToAddress(this IPublicKey publicKey,
+        public static Address ToAddress(this byte[] publicKey,
             NetworkType networkType,
             AccountType accountType)
         {
@@ -40,14 +39,33 @@ namespace Catalyst.Core.Lib.Extensions.Protocol.Account
             {
                 AccountType = accountType,
                 NetworkType = networkType,
-                PublicKeyHash = publicKey.Bytes
-                   .ComputeRawHash(Blake2B152)
+                PublicKeyHash = publicKey
+                   .ComputeMultihash(AddressHelper.HashAlgorithm)
+                   .Digest
                    .ToByteString()
             };
             return result;
         }
 
-        public static string AsBase32Crockford(this Address address) => 
-            address.RawBytes.AsBase32Address();
+        public static Address ToAddress(this IPublicKey publicKey,
+            NetworkType networkType,
+            AccountType accountType)
+        {
+            return ToAddress(publicKey.Bytes, networkType, accountType);
+        }
+
+        public static string AsBase32Crockford(this Address address) =>
+            SimpleBase.Base32.Crockford.Encode(address.RawBytes, false);
+
+        /// <summary>
+        /// Returns the 19 byte digest of the public key hash as a self
+        /// describing multihash, ie including a description prefix
+        /// </summary>
+        /// <returns>Multihash compatible version of the PublicKeyHash for the address</returns>
+        public static Multihash PublicKeyHashAsMultihash(this Address address)
+        {
+            return Multihash.Encode(address.PublicKeyHash.ToByteArray(), 
+                AddressHelper.HashAlgorithm.Code);
+        }
     }
 }

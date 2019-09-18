@@ -33,6 +33,8 @@ using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.Types;
 using Catalyst.Abstractions.Util;
 using Catalyst.Core.Lib.Config;
+using Catalyst.Core.Lib.Extensions.Protocol.Account;
+using Catalyst.Protocol.Account;
 using Nethereum.KeyStore.Crypto;
 using Serilog;
 
@@ -132,7 +134,7 @@ namespace Catalyst.Core.Modules.Keystore
         {
             try
             {
-                var address = _addressHelper.GenerateAddress(privateKey.GetPublicKey());        
+                var address = _addressHelper.GenerateAddress(privateKey.GetPublicKey(), AccountType.PublicAccount);        
                 var securePassword = _passwordManager.RetrieveOrPromptPassword(_defaultNodePassword, "Please create a password for this node");
     
                 var password = StringFromSecureString(securePassword);
@@ -140,7 +142,7 @@ namespace Catalyst.Core.Modules.Keystore
                 var json = _keyStoreService.EncryptAndGenerateDefaultKeyStoreAsJson(
                     password, 
                     _cryptoContext.ExportPrivateKey(privateKey),
-                    address);
+                    address.AsBase32Crockford());
 
                 _passwordManager.AddPasswordToRegistry(_defaultNodePassword, securePassword);
 

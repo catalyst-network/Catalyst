@@ -88,7 +88,7 @@ namespace Catalyst.Simulator.RpcClients
             var keyServiceStore = new KeyStoreServiceWrapped(cryptoContext);
 
             var multiHashAlgorithm = new BLAKE2B_256();
-            var addressHelper = new AddressHelper(multiHashAlgorithm);
+            var addressHelper = new AddressHelper(signingContextProvider.NetworkType);
             var localKeyStore = new LocalKeyStore(passwordManager, cryptoContext, keyServiceStore, fileSystem,
                 _logger, addressHelper);
 
