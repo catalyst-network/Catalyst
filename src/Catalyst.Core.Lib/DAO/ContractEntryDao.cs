@@ -25,28 +25,25 @@ using AutoMapper;
 using Catalyst.Core.Lib.DAO.Converters;
 using Catalyst.Protocol.Transaction;
 using Google.Protobuf;
+using Nethermind.Dirichlet.Numerics;
 
 namespace Catalyst.Core.Lib.DAO
 {
-    public class CfTransactionEntryDao : DaoBase<CFTransactionEntry, CfTransactionEntryDao>
+    public class ContractEntryDao : DaoBase<ContractEntry, ContractEntryDao>
     {
-        public string PubKey { get; set; }
-        public string PedersenCommit { get; set; }
-        public EntryRangeProofDao EntryRangeProofs { get; set; }
+        public BaseEntryDao Base { get; set; }
+        public string Data { get; set; }
+        public UInt256 Amount { get; set; }
 
         public override void InitMappers(IMapperConfigurationExpression cfg)
         {
-            cfg.CreateMap<CFTransactionEntry, CfTransactionEntryDao>()
-               .ForMember(e => e.PedersenCommit,
-                    opt => opt.ConvertUsing<ByteStringToStringBase64Converter, ByteString>())
-               .ForMember(e => e.PubKey,
-                    opt => opt.ConvertUsing<ByteStringToStringPubKeyConverter, ByteString>());
+            cfg.CreateMap<ContractEntry, ContractEntryDao>()
+               .ForMember(d => d.Amount, opt => opt.ConvertUsing(new ByteStringToUInt256Converter(), s => s.Amount))
+               .ForMember(e => e.Data, opt => opt.ConvertUsing<ByteStringToStringBase64Converter, ByteString>());
 
-            cfg.CreateMap<CfTransactionEntryDao, CFTransactionEntry>()
-               .ForMember(e => e.PedersenCommit,
-                    opt => opt.ConvertUsing<StringBase64ToByteStringConverter, string>())
-               .ForMember(e => e.PubKey,
-                    opt => opt.ConvertUsing<StringKeyUtilsToByteStringFormatter, string>());
+            cfg.CreateMap<ContractEntryDao, ContractEntry>()
+               .ForMember(d => d.Amount, opt => opt.ConvertUsing(new UInt256ToByteStringConverter(), s => s.Amount))
+               .ForMember(e => e.Data, opt => opt.ConvertUsing<StringBase64ToByteStringConverter, string>());
         }
     }
 }

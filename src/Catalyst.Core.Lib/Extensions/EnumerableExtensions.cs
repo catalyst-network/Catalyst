@@ -24,6 +24,7 @@
 using System;
 using System.Collections.Generic;
 using Dawn;
+using Nethermind.Dirichlet.Numerics;
 
 namespace Catalyst.Core.Lib.Extensions
 {
@@ -34,6 +35,21 @@ namespace Catalyst.Core.Lib.Extensions
             Guard.Argument(enumerable, nameof(enumerable)).NotNull();
 
             var sum = 0ul;
+
+            // ReSharper disable once LoopCanBeConvertedToQuery
+            foreach (var item in enumerable)
+            {
+                sum += selector(item);
+            }
+
+            return sum;
+        }
+
+        public static UInt256 Sum<T>(this IEnumerable<T> enumerable, Func<T, UInt256> selector)
+        {
+            Guard.Argument(enumerable, nameof(enumerable)).NotNull();
+
+            var sum = new UInt256();
 
             // ReSharper disable once LoopCanBeConvertedToQuery
             foreach (var item in enumerable)

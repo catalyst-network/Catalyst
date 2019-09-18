@@ -26,7 +26,6 @@ using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
 using Catalyst.Core.Modules.Rpc.Server.IO.Observers;
-using Catalyst.Protocol.Common;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
@@ -37,6 +36,8 @@ using Serilog;
 using System.Linq;
 using Catalyst.Core.Lib.Cryptography;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
+using Catalyst.Protocol.Cryptography;
+using Catalyst.Protocol.Network;
 using Xunit;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
@@ -54,7 +55,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         {
             _signingContext = new SigningContext
             {
-                Network = Protocol.Common.Network.Devnet,
+                NetworkType = NetworkType.Devnet,
                 SignatureType = SignatureType.ProtocolRpc
             };
 

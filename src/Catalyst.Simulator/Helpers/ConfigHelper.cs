@@ -27,7 +27,7 @@ using System.IO;
 using System.Security.Cryptography.X509Certificates;
 using Catalyst.Abstractions.Cli;
 using Catalyst.Abstractions.Cryptography;
-using Catalyst.Abstractions.Keystore;
+using Catalyst.Protocol.Cryptography;
 using Catalyst.Simulator.RpcClients;
 using Newtonsoft.Json;
 using Serilog;
@@ -40,7 +40,7 @@ namespace Catalyst.Simulator.Helpers
             IPasswordRegistry passwordRegistry,
             X509Certificate2 certificate,
             ILogger logger,
-            ISigningContextProvider signingContextProvider)
+            SigningContext signingContext)
         {
             var simulationNodesFile =
                 Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Config", "simulation.nodes.json");
@@ -48,7 +48,7 @@ namespace Catalyst.Simulator.Helpers
                 JsonConvert.DeserializeObject<List<SimulationNode>>(File.ReadAllText(simulationNodesFile));
             foreach (var simulationNode in simulationNodes)
             {
-                var simpleRpcClient = new SimpleRpcClient(userOutput, passwordRegistry, certificate, logger, signingContextProvider);
+                var simpleRpcClient = new SimpleRpcClient(userOutput, passwordRegistry, certificate, logger, signingContext);
                 var clientRpcInfo = new ClientRpcInfo(simulationNode.ToPeerIdentifier(), simpleRpcClient);
                 yield return clientRpcInfo;
             }

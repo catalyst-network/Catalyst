@@ -29,7 +29,6 @@ using System.Threading.Tasks;
 using Catalyst.Abstractions.Cli;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.IO.Observers;
-using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib.Cli;
@@ -49,10 +48,12 @@ using Catalyst.Core.Modules.Keystore;
 using Catalyst.Core.Modules.Rpc.Client;
 using Catalyst.Core.Modules.Rpc.Client.IO.Observers;
 using Catalyst.Core.Modules.Rpc.Client.IO.Transport.Channels;
+using Catalyst.Protocol.Cryptography;
 using DotNetty.Transport.Channels;
 using Google.Protobuf;
 using Microsoft.Extensions.Caching.Memory;
 using Multiformats.Hash.Algorithms;
+using NSubstitute;
 using Serilog;
 using IRpcClient = Catalyst.Abstractions.Rpc.IRpcClient;
 
@@ -71,7 +72,7 @@ namespace Catalyst.Simulator.RpcClients
             IPasswordRegistry passwordRegistry,
             X509Certificate2 certificate,
             ILogger logger,
-            ISigningContextProvider signingContextProvider)
+            SigningContext signingContextProvider)
         {
             _logger = logger;
             _certificate = certificate;
@@ -99,8 +100,12 @@ namespace Catalyst.Simulator.RpcClients
             var changeTokenProvider = new TtlChangeTokenProvider(10000);
             var messageCorrelationManager = new RpcMessageCorrelationManager(memoryCache, _logger, changeTokenProvider);
             var peerIdValidator = new PeerIdValidator(cryptoContext);
+
+            var peerSettings = Substitute.For<IPeerSettings>();
+            peerSettings.NetworkType.Returns(signingContextProvider.NetworkType);
+
             var nodeRpcClientChannelFactory =
-                new RpcClientChannelFactory(keySigner, messageCorrelationManager, peerIdValidator, signingContextProvider);
+                new RpcClientChannelFactory(keySigner, messageCorrelationManager, peerIdValidator, peerSettings);
 
             var eventLoopGroupFactoryConfiguration = new EventLoopGroupFactoryConfiguration
             {

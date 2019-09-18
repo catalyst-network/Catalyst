@@ -21,6 +21,7 @@
 
 #endregion
 
+using Catalyst.Protocol.Network;
 using Multiformats.Base;
 using Multiformats.Hash;
 using Multiformats.Hash.Algorithms;
@@ -82,9 +83,9 @@ namespace Catalyst.Core.Lib.Config
         /// <summary> Number of random peers to provide when processing a GetNeighbourRequest</summary>
         public static int NumberOfRandomPeers => 5;
 
-        public static string NetworkConfigFile(Protocol.Common.Network network, string overrideNetworkFile = null)
+        public static string NetworkConfigFile(NetworkType networkType, string overrideNetworkFile = null)
         {
-            return overrideNetworkFile ?? string.Format(JsonFilePattern, network.ToString().ToLowerInvariant());
+            return overrideNetworkFile ?? string.Format(JsonFilePattern, networkType.ToString().ToLowerInvariant());
         }
     }
 }

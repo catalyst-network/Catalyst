@@ -21,23 +21,25 @@
 
 #endregion
 
-using System;
-using Catalyst.Protocol.Common;
-using FluentAssertions;
-using Google.Protobuf;
-using Xunit;
+using System.Linq;
+using System.Reflection;
+using Serilog;
 
-namespace Catalyst.Protocol.Tests.Common
+namespace Catalyst.Protocol.Transaction
 {
-    public class PeerIdTests
+    public partial class PublicEntry
     {
-        [Fact]
-        public void PeerId_should_contain_default_values()
-        {
-            var protocolVersion = ByteString.CopyFrom(BitConverter.GetBytes((short) 1));
+        private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
 
-            var peerId = new PeerId();
-            peerId.ProtocolVersion.Should().BeEquivalentTo(protocolVersion);
+        public bool IsValid()
+        {
+            if (Amount == null || Amount.IsEmpty || Amount.All(b => b == default))
+            {
+                Logger.Debug("{field} cannot be 0", nameof(Amount));
+                return false;
+            }
+
+            return true;
         }
     }
 }

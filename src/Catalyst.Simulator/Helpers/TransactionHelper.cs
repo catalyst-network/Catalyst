@@ -22,63 +22,59 @@
 #endregion
 
 using System;
-using Catalyst.Abstractions.Cryptography;
+using Catalyst.Core.Lib.Extensions;
+using Catalyst.Core.Lib.Extensions.Protocol.Wire;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
-using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Cryptography;
+using Catalyst.Protocol.Network;
+using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.Protocol.Transaction;
 using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
+using Nethermind.Dirichlet.Numerics;
 
 namespace Catalyst.Simulator.Helpers
 {
     public static class TransactionHelper
     {
+        private static readonly SigningContext DevNetPublicTransactionContext = new SigningContext
+        {
+            NetworkType = NetworkType.Devnet,
+            SignatureType = SignatureType.TransactionPublic
+        };
+
         public static BroadcastRawTransactionRequest GenerateTransaction(uint amount, int fee)
         {
             var cryptoWrapper = new CryptoWrapper();
             var privateKey = cryptoWrapper.GeneratePrivateKey();
             var publicKey = ByteString.CopyFrom(privateKey.GetPublicKey().Bytes);
-
-            var broadcastRawTransactionRequest = new BroadcastRawTransactionRequest();
+            
             var transaction = new TransactionBroadcast
             {
-                TransactionFees = (ulong) fee,
-                TimeStamp = Timestamp.FromDateTime(DateTime.UtcNow),
-                LockTime = 0,
-                TransactionType = TransactionType.Normal,
-                Data = ByteString.CopyFromUtf8("tw:Hello world"),
-                Init = ByteString.Empty,
-                From = publicKey
+                PublicEntries =
+                {
+                    new PublicEntry
+                    {
+                        Amount = ((UInt256) amount).ToUint256ByteString(),
+                        Base = new BaseEntry
+                        {
+                            SenderPublicKey = privateKey.GetPublicKey().Bytes.ToByteString(),
+                            ReceiverPublicKey = publicKey,
+                            TransactionFees = ((UInt256) fee).ToUint256ByteString()
+                        }
+                    }
+                },
+                Timestamp = Timestamp.FromDateTime(DateTime.UtcNow),
             };
 
-            var stTransactionEntry = new STTransactionEntry
+            var signedTransaction = transaction.Sign(cryptoWrapper, privateKey, DevNetPublicTransactionContext);
+            var broadcastRawTransactionRequest = new BroadcastRawTransactionRequest
             {
-                PubKey = publicKey,
-                Amount = amount
+                Transaction = signedTransaction
             };
-
-            transaction.STEntries.Add(stTransactionEntry);
-
-            transaction.Signature = GenerateSignature(cryptoWrapper, privateKey, transaction);
-
-            broadcastRawTransactionRequest.Transaction = transaction;
 
             return broadcastRawTransactionRequest;
-        }
-
-        private static ByteString GenerateSignature(IWrapper cryptoWrapper, IPrivateKey privateKey, TransactionBroadcast transactionBroadcast)
-        {
-            var transactionWithoutSig = transactionBroadcast.Clone();
-            transactionWithoutSig.Signature = ByteString.Empty;
-
-            byte[] signatureBytes = cryptoWrapper.StdSign(privateKey, transactionWithoutSig.ToByteArray(),
-                new SigningContext
-                {
-                    Network = Network.Devnet,
-                    SignatureType = SignatureType.TransactionPublic
-                }.ToByteArray()).SignatureBytes;
-            return ByteString.CopyFrom(signatureBytes);
         }
     }
 }

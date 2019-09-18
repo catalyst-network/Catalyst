@@ -34,7 +34,7 @@ using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.IO.Transport.Channels;
 using Catalyst.Abstractions.Rpc;
 using Catalyst.Core.Lib.IO.Transport;
-using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Wire;
 using Serilog;
 
 namespace Catalyst.Core.Modules.Rpc.Server

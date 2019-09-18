@@ -32,13 +32,14 @@ using Catalyst.Abstractions.P2P.IO.Messaging.Broadcast;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using Catalyst.Protocol.Deltas;
+using Catalyst.Protocol.Wire;
 using Dawn;
 using Google.Protobuf;
 using Multiformats.Hash;
 using Polly;
 using Polly.Retry;
 using Serilog;
-using CandidateDeltaBroadcast = Catalyst.Protocol.Deltas.CandidateDeltaBroadcast;
+using CandidateDeltaBroadcast = Catalyst.Protocol.Wire.CandidateDeltaBroadcast;
 
 namespace Catalyst.Core.Modules.Consensus.Deltas
 {

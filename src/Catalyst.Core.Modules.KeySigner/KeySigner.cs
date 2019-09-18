@@ -26,7 +26,7 @@ using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.KeySigner;
 using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.Types;
-using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Cryptography;
 using Google.Protobuf;
 using Org.BouncyCastle.Security;
 
@@ -43,7 +43,9 @@ namespace Catalyst.Core.Modules.KeySigner
         /// <param name="keyStore">The key store.</param>
         /// <param name="cryptoContext">The crypto context.</param>
         /// /// <param name="keyRegistry">The key registry.</param>
-        public KeySigner(IKeyStore keyStore, ICryptoContext cryptoContext, IKeyRegistry keyRegistry)
+        public KeySigner(IKeyStore keyStore, 
+            ICryptoContext cryptoContext, 
+            IKeyRegistry keyRegistry)
         {
             _keyStore = keyStore;
             _cryptoContext = cryptoContext;
@@ -120,4 +122,3 @@ namespace Catalyst.Core.Modules.KeySigner
         }   
     }
 }
-                                         

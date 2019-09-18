@@ -23,13 +23,15 @@
 
 using System;
 using System.IO;
-using Catalyst.Protocol.Common;
-using Catalyst.Protocol.Deltas;
+using Catalyst.Core.Lib.Extensions;
+using Catalyst.Protocol.Peer;
+using Catalyst.Protocol.Wire;
 using FluentAssertions;
 using Google.Protobuf;
 using Xunit;
+using CandidateDeltaBroadcast = Catalyst.Protocol.Wire.CandidateDeltaBroadcast;
 
-namespace Catalyst.Protocol.Tests.Deltas
+namespace Catalyst.Protocol.Tests.Wire
 {
     public class FavouriteDeltaBroadcastTests
     {
@@ -84,7 +86,7 @@ namespace Catalyst.Protocol.Tests.Deltas
         [ClassData(typeof(InvalidFavouriteDeltaBroadcasts))]
         public void FavouriteDeltaBroadcast_IsValid_Should_Throw_On_Invalid_FavouriteDeltaBroadcast(FavouriteDeltaBroadcast favourite)
         {
-            new Action(() => favourite.IsValid()).Should().Throw<InvalidDataException>();
+            favourite.IsValid().Should().BeFalse();
         }
 
         [Fact]
@@ -94,13 +96,13 @@ namespace Catalyst.Protocol.Tests.Deltas
             {
                 Candidate = new CandidateDeltaBroadcast
                 {
-                    ProducerId = new PeerId(),
+                    ProducerId = new PeerId {PublicKey = "producer".ToUtf8ByteString()},
                     Hash = ByteString.CopyFromUtf8("hash"),
                     PreviousDeltaDfsHash = ByteString.CopyFromUtf8("ok")
                 },
-                VoterId = new PeerId()
+                VoterId = new PeerId {PublicKey = "voter".ToUtf8ByteString()},
             };
-            AssertionExtensions.Should((bool) candidate.IsValid()).BeTrue();
+            candidate.IsValid().Should().BeTrue();
         }
     }
 }

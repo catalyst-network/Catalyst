@@ -26,6 +26,7 @@ using System.IO;
 using System.IO.Abstractions;
 using System.Threading.Tasks;
 using NSubstitute;
+using Polly;
 using FileSystem = Catalyst.Core.Lib.FileSystem.FileSystem;
 using IFileSystem = Catalyst.Abstractions.FileSystem.IFileSystem;
 
@@ -71,7 +72,15 @@ namespace Catalyst.TestUtils
         public bool DataFileExists(string fileName) { return _fileSystem.DataFileExists(fileName); }
         public bool DataFileExistsInSubDirectory(string fileName, string subDirectory) { return _fileSystem.DataFileExistsInSubDirectory(fileName, subDirectory); }
         public string ReadTextFromCddFile(string fileName) { return _fileSystem.ReadTextFromCddFile(fileName); }
-        public string ReadTextFromCddSubDirectoryFile(string fileName, string subDirectory) { return _fileSystem.ReadTextFromCddSubDirectoryFile(fileName, subDirectory); }
+
+        public string ReadTextFromCddSubDirectoryFile(string fileName, string subDirectory)
+        {
+            var retryPolicy = Policy.Handle<IOException>()
+               .WaitAndRetry(5, i => TimeSpan.FromMilliseconds(500).Multiply(i));
+            var content = retryPolicy.Execute(() => _fileSystem.ReadTextFromCddSubDirectoryFile(fileName, subDirectory));
+            return content;
+        }
+
         public bool SetCurrentPath(string path) { throw new NotImplementedException(); }
     }
 }

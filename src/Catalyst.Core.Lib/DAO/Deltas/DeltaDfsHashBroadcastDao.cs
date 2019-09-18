@@ -23,7 +23,7 @@
 
 using AutoMapper;
 using Catalyst.Core.Lib.DAO.Converters;
-using Catalyst.Protocol.Deltas;
+using Catalyst.Protocol.Wire;
 using Google.Protobuf;
 
 namespace Catalyst.Core.Lib.DAO.Deltas

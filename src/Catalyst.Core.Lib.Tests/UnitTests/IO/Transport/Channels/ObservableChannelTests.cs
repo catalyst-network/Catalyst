@@ -27,7 +27,7 @@ using System.Reactive.Subjects;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Core.Lib.IO.Transport.Channels;
-using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Wire;
 using DotNetty.Transport.Channels;
 using FluentAssertions;
 using NSubstitute;

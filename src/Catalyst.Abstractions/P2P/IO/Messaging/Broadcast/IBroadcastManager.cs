@@ -24,7 +24,7 @@
 using System.Threading.Tasks;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.IO.Observers;
-using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Wire;
 
 namespace Catalyst.Abstractions.P2P.IO.Messaging.Broadcast
 {
@@ -36,7 +36,7 @@ namespace Catalyst.Abstractions.P2P.IO.Messaging.Broadcast
 
         /// <summary>Handles Incoming gossip.</summary>
         /// <param name="anySigned">Any signed message.</param>
-        Task ReceiveAsync(ProtocolMessageSigned anySigned);
+        Task ReceiveAsync(ProtocolMessage anySigned);
 
         /// <summary>
         /// Removes the temporary original signed broadcast message data once <see cref="IBroadcastObserver"/>
