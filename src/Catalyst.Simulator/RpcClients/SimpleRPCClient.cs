@@ -123,7 +123,7 @@ namespace Catalyst.Simulator.RpcClients
             _rpcClientFactory =
                 new RpcClientFactory(nodeRpcClientChannelFactory, tcpClientEventLoopGroupFactory, handlers);
 
-            //PeerIdentifier for RPC/TCP is currently redundant.
+            //PeerId for RPC/TCP is currently redundant.
             _senderPeerIdentifier =
                 new PeerIdentifier(keyRegistry.GetItemFromRegistry(KeyRegistryTypes.DefaultKey).GetPublicKey().Bytes,
                     IPAddress.Any, 1026);

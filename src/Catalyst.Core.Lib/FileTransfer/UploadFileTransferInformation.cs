@@ -29,6 +29,7 @@ using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.Config;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
+using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.Rpc.Node;
 using DotNetty.Transport.Channels;
@@ -40,17 +41,17 @@ namespace Catalyst.Core.Lib.FileTransfer
     {
         /// <summary>Initializes a new instance of the <see cref="UploadFileTransferInformation"/> class.</summary>
         /// <param name="stream">The stream.</param>
-        /// <param name="peerIdentifier">The peer identifier.</param>
-        /// <param name="recipientIdentifier">The recipient identifier.</param>
+        /// <param name="peerId">The peer identifier.</param>
+        /// <param name="recipientId">The recipient identifier.</param>
         /// <param name="recipientChannel">The recipient channel.</param>
         /// <param name="correlationGuid">The correlation unique identifier.</param>
         /// <param name="uploadDtoFactory">The upload message factory.</param>
         public UploadFileTransferInformation(Stream stream,
-            IPeerIdentifier peerIdentifier,
-            IPeerIdentifier recipientIdentifier,
+            PeerId peerId,
+            PeerId recipientId,
             IChannel recipientChannel,
             ICorrelationId correlationGuid) :
-            base(peerIdentifier, recipientIdentifier, recipientChannel,
+            base(peerId, recipientId, recipientChannel,
                 correlationGuid, string.Empty, (ulong) stream.Length)
         {
             RandomAccessStream = stream;
@@ -91,10 +92,10 @@ namespace Catalyst.Core.Lib.FileTransfer
                 ChunkBytes = ByteString.CopyFrom(chunk),
                 ChunkId = chunkId,
                 CorrelationFileName = CorrelationId.Id.ToByteString()
-            }.ToProtocolMessage(PeerIdentifier.PeerId);
+            }.ToProtocolMessage(PeerId);
 
             return new MessageDto(transferMessage,
-                RecipientIdentifier
+                RecipientId
             );
         }
 

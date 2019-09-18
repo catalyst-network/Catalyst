@@ -39,6 +39,7 @@ using Catalyst.Core.Lib.P2P.IO.Observers;
 using Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.UnitTests;
 using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.IPPN;
+using Catalyst.Protocol.Peer;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Google.Protobuf;
@@ -57,7 +58,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.IntegrationTests
         {
             _testScheduler = new TestScheduler();
             _settings = PeerSettingsHelper.TestPeerSettings();
-            _ownNode = PeerIdentifierHelper.GetPeerIdentifier("ownNode");
+            _ownNode = PeerIdHelper.GetPeerId("ownNode");
 
             ContainerProvider.ConfigureContainerBuilder(true, true);
             _logger = ContainerProvider.Container.Resolve<ILogger>();
@@ -65,7 +66,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.IntegrationTests
 
         private readonly TestScheduler _testScheduler;
         private readonly IPeerSettings _settings;
-        private readonly IPeerIdentifier _ownNode;
+        private readonly PeerId _ownNode;
         private readonly ILogger _logger;
 
         [Fact]
@@ -95,8 +96,8 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.IntegrationTests
             var peerMessageCorrelationManager =
                 DiscoveryHelper.MockCorrelationManager(_testScheduler, default, memoryCache, logger: _logger);
 
-            _logger.Debug("Seed StepProposal has peerId {peerIdentifier}", _ownNode);
-            _logger.Debug("StepProposal has peerId {peerIdentifier}", stateCandidate.Peer);
+            _logger.Debug("Seed StepProposal has peerId {peerId}", _ownNode);
+            _logger.Debug("StepProposal has peerId {peerId}", stateCandidate.Peer);
 
             stateCandidate.Neighbours.ToList().ForEach(n =>
             {
@@ -114,7 +115,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.IntegrationTests
                 var msg = new CorrelatableMessage<ProtocolMessage>
 
                 {
-                    Content = new PingRequest().ToProtocolMessage(_ownNode.PeerId, n.DiscoveryPingCorrelationId),
+                    Content = new PingRequest().ToProtocolMessage(_ownNode, n.DiscoveryPingCorrelationId),
                     Recipient = n.PeerIdentifier
                 };
 
@@ -148,7 +149,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.IntegrationTests
                        .Invoke(
                             n.PeerIdentifier,
                             correlatableMessages.Single(i =>
-                                i.Recipient.PeerId.Equals(n.PeerIdentifier.PeerId)),
+                                i.Recipient.Equals(n.PeerIdentifier.PeerId)),
                             EvictionReason.Expired,
                             new object()
                         );

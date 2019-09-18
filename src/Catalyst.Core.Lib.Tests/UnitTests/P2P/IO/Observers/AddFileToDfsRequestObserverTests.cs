@@ -33,6 +33,7 @@ using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
 using Catalyst.Core.Modules.Rpc.Server.IO.Observers;
+using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
@@ -51,13 +52,13 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
         private readonly IChannelHandlerContext _fakeContext;
         private readonly IDownloadFileTransferFactory _nodeFileTransferFactory;
         private readonly AddFileToDfsRequestObserver _addFileToDfsRequestObserver;
-        private readonly IPeerIdentifier _senderIdentifier;
+        private readonly PeerId _senderIdentifier;
         private readonly IDfs _fakeDfs;
 
         public AddFileToDfsRequestObserverTests()
         {
             _manualResetEvent = new ManualResetEvent(false);
-            _senderIdentifier = PeerIdentifierHelper.GetPeerIdentifier("sender");
+            _senderIdentifier = PeerIdHelper.GetPeerId("sender");
             _fakeDfs = Substitute.For<IDfs>();
             var logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
@@ -181,7 +182,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
                 Node = "node1",
                 FileName = "Test.dat",
                 FileSize = 10000
-            }.ToProtocolMessage(_senderIdentifier.PeerId, correlationId);
+            }.ToProtocolMessage(_senderIdentifier, correlationId);
         }
     }
 }

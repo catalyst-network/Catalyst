@@ -35,7 +35,7 @@ namespace Catalyst.Abstractions.P2P
         /// Used to challenge a peer for a response based on the provided public key, ip and port chunks 
         /// </summary>
         /// <param name="recipientPeerIdentifier">The recipient peer identifier.
-        /// PeerIdentifier holds the chunks we want to validate.</param>
+        /// PeerId holds the chunks we want to validate.</param>
         /// <returns>bool true means valid and false means not valid</returns>
         Task<bool> ChallengePeerAsync(IPeerIdentifier recipientPeerIdentifier);
 

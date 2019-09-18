@@ -26,6 +26,7 @@ using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.IO.Observers;
 using Catalyst.Protocol.IPPN;
+using Catalyst.Protocol.Peer;
 using Dawn;
 using DotNetty.Transport.Channels;
 using Serilog;
@@ -36,25 +37,25 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
         : RequestObserverBase<PingRequest, PingResponse>,
             IP2PMessageObserver
     {
-        public PingRequestObserver(IPeerIdentifier peerIdentifier,
+        public PingRequestObserver(PeerId peerId,
             ILogger logger)
-            : base(logger, peerIdentifier) { }
+            : base(logger, peerId) { }
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="pingRequest"></param>
         /// <param name="channelHandlerContext"></param>
-        /// <param name="senderPeerIdentifier"></param>
+        /// <param name="senderPeerId"></param>
         /// <param name="correlationId"></param>
         /// <returns></returns>
-        protected override PingResponse HandleRequest(PingRequest pingRequest, IChannelHandlerContext channelHandlerContext, IPeerIdentifier senderPeerIdentifier, ICorrelationId correlationId)
+        protected override PingResponse HandleRequest(PingRequest pingRequest, IChannelHandlerContext channelHandlerContext, PeerId senderPeerId, ICorrelationId correlationId)
         {
             Guard.Argument(pingRequest, nameof(pingRequest)).NotNull();
             Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
-            Guard.Argument(senderPeerIdentifier, nameof(senderPeerIdentifier)).NotNull();
+            Guard.Argument(senderPeerId, nameof(senderPeerId)).NotNull();
             
-            Logger.Debug("message content is {0} IP: {1} PeerId: {2}", pingRequest, senderPeerIdentifier.Ip, senderPeerIdentifier.PeerId);
+            Logger.Debug("message content is {0} IP: {1} PeerId: {2}", pingRequest, senderPeerId.Ip, senderPeerId);
 
             return new PingResponse();
         }

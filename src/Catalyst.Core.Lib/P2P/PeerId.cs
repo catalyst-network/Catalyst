@@ -68,7 +68,7 @@ namespace Catalyst.Core.Lib.P2P
         }
 
         /// <summary>
-        ///     Parses a hex string containing the chunks that make up a valid PeerIdentifier that are delimited by '|'
+        ///     Parses a hex string containing the chunks that make up a valid PeerId that are delimited by '|'
         /// </summary>
         /// <param name="rawPidChunks"></param>
         /// <returns></returns>

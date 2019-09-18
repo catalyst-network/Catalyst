@@ -27,6 +27,7 @@ using Catalyst.Abstractions.FileTransfer;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.Config;
+using Catalyst.Protocol.Peer;
 using DotNetty.Transport.Channels;
 
 namespace Catalyst.Core.Lib.FileTransfer
@@ -42,19 +43,19 @@ namespace Catalyst.Core.Lib.FileTransfer
         private readonly object _fileLock;
 
         /// <summary>Initializes a new instance of the <see cref="DownloadFileTransferInformation"/> class.</summary>
-        /// <param name="peerIdentifier">The peer identifier.</param>
-        /// <param name="recipientIdentifier">The recipient identifier.</param>
+        /// <param name="peerId">The peer identifier.</param>
+        /// <param name="recipientId">The recipient identifier.</param>
         /// <param name="recipientChannel">The recipient channel.</param>
         /// <param name="correlationGuid">The correlation unique identifier.</param>
         /// <param name="fileOutputPath">The file output path.</param>
         /// <param name="fileSize">Size of the file.</param>
-        public DownloadFileTransferInformation(IPeerIdentifier peerIdentifier,
-            IPeerIdentifier recipientIdentifier,
+        public DownloadFileTransferInformation(PeerId peerId,
+            PeerId recipientId,
             IChannel recipientChannel,
             ICorrelationId correlationGuid,
             string fileOutputPath,
             ulong fileSize) :
-            base(peerIdentifier, recipientIdentifier, recipientChannel,
+            base(peerId, recipientId, recipientChannel,
                 correlationGuid, fileOutputPath, fileSize)
         {
             _fileLock = new object();

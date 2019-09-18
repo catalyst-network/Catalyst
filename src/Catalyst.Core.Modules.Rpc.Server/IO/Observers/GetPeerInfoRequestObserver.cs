@@ -45,10 +45,10 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
     {
         private readonly IPeerRepository _peerRepository;
 
-        public GetPeerInfoRequestObserver(IPeerIdentifier peerIdentifier,
+        public GetPeerInfoRequestObserver(PeerId peerId,
             ILogger logger,
             IPeerRepository peerRepository)
-            : base(logger, peerIdentifier)
+            : base(logger, peerId)
         {
             _peerRepository = peerRepository;
         }
@@ -58,17 +58,17 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
         /// </summary>
         /// <param name="getPeerInfoRequest">The request</param>
         /// <param name="channelHandlerContext">The channel handler context</param>
-        /// <param name="senderPeerIdentifier">The sender peer identifier</param>
+        /// <param name="senderPeerId">The sender peer identifier</param>
         /// <param name="correlationId">The correlationId</param>
         /// <returns>The GetPeerInfoResponse</returns>
         protected override GetPeerInfoResponse HandleRequest(GetPeerInfoRequest getPeerInfoRequest,
             IChannelHandlerContext channelHandlerContext,
-            IPeerIdentifier senderPeerIdentifier,
+            PeerId senderPeerId,
             ICorrelationId correlationId)
         {
             Guard.Argument(getPeerInfoRequest, nameof(getPeerInfoRequest)).NotNull();
             Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
-            Guard.Argument(senderPeerIdentifier, nameof(senderPeerIdentifier)).NotNull();
+            Guard.Argument(senderPeerId, nameof(senderPeerId)).NotNull();
             Logger.Debug("received message of type GetPeerInfoRequest");
 
             var ip = getPeerInfoRequest.Ip;

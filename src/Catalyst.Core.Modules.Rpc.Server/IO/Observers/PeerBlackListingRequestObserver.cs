@@ -25,10 +25,10 @@
 using System.Linq;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.IO.Observers;
-using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Observers;
 using Catalyst.Core.Lib.P2P.Repository;
+using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using DotNetty.Transport.Channels;
@@ -47,10 +47,10 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
         /// </summary>
         private readonly IPeerRepository _peerRepository;
         
-        public PeerBlackListingRequestObserver(IPeerIdentifier peerIdentifier,
+        public PeerBlackListingRequestObserver(PeerId peerId,
             ILogger logger,
             IPeerRepository peerRepository)
-            : base(logger, peerIdentifier)
+            : base(logger, peerId)
         {
             _peerRepository = peerRepository;
         }
@@ -60,17 +60,17 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
         /// </summary>
         /// <param name="setPeerBlackListRequest"></param>
         /// <param name="channelHandlerContext"></param>
-        /// <param name="senderPeerIdentifier"></param>
+        /// <param name="senderPeerId"></param>
         /// <param name="correlationId"></param>
         /// <returns></returns>
         protected override SetPeerBlacklistResponse HandleRequest(SetPeerBlacklistRequest setPeerBlackListRequest,
             IChannelHandlerContext channelHandlerContext,
-            IPeerIdentifier senderPeerIdentifier,
+            PeerId senderPeerId,
             ICorrelationId correlationId)
         {
             Guard.Argument(setPeerBlackListRequest, nameof(setPeerBlackListRequest)).NotNull();
             Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
-            Guard.Argument(senderPeerIdentifier, nameof(senderPeerIdentifier)).NotNull();
+            Guard.Argument(senderPeerId, nameof(senderPeerId)).NotNull();
             Logger.Information("received message of type PeerBlackListingRequest");
             
             var peerItem = _peerRepository.GetAll().FirstOrDefault(m => m.PeerIdentifier.Ip.ToString() == setPeerBlackListRequest.Ip.ToStringUtf8() 

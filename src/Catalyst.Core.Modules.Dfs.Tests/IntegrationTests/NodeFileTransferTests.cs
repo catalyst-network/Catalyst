@@ -73,7 +73,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public async Task Cancel_File_Transfer()
         {
-            var sender = new PeerIdentifier(PeerIdHelper.GetPeerId("sender"));
+            var sender = PeerIdHelper.GetPeerId("sender");
 
             IDownloadFileInformation fileTransferInformation = new DownloadFileTransferInformation(
                 sender,

@@ -75,8 +75,8 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
             {
                 var nodePeerId = PeerIdHelper.GetPeerId("sender");
                 var rpcPeerId = PeerIdHelper.GetPeerId("recipient");
-                var nodePeer = new PeerIdentifier(nodePeerId);
-                var rpcPeer = new PeerIdentifier(rpcPeerId);
+                var nodePeer = nodePeerId;
+                var rpcPeer = rpcPeerId;
                 var correlationId = CorrelationId.GenerateCorrelationId();
                 var fakeFileOutputPath = Path.GetTempFileName();
                 IDownloadFileInformation fileDownloadInformation = new DownloadFileTransferInformation(rpcPeer,
@@ -93,7 +93,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
                 {
                     FileSize = (ulong) byteSize,
                     ResponseCode = ByteString.CopyFrom((byte) FileTransferResponseCodeTypes.Successful.Id)
-                }.ToProtocolMessage(nodePeer.PeerId, correlationId);
+                }.ToProtocolMessage(nodePeer, correlationId);
 
                 getFileResponse.SendToHandler(_fakeContext, getFileFromDfsResponseHandler);
 

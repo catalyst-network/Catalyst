@@ -329,7 +329,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings
                 if (StepProposal.PnrCorrelationId.Equals(requestCorrelationId))
                 {
                     // state candidate didn't give any neighbours so go back a step.
-                    _logger.Verbose("StepProposal {n.PeerIdentifier} unresponsive.");
+                    _logger.Verbose("StepProposal {n.PeerId} unresponsive.");
                     WalkBack();
                 }
 
@@ -344,7 +344,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings
                     return;
                 }
 
-                _logger.Verbose("Neighbour {peerIdentifier} unresponsive.", neighbour.PeerIdentifier);
+                _logger.Verbose("Neighbour {peerId} unresponsive.", neighbour.PeerIdentifier);
                 neighbour.StateTypes = NeighbourStateTypes.UnResponsive;
             }
             catch (Exception e)

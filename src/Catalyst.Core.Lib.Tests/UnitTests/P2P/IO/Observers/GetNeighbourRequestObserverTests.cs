@@ -71,12 +71,12 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
             // mock a random set of peers
             var randomPeers = new List<Peer>
             {
-                new Peer {PeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("peer1"), LastSeen = DateTime.Now},
-                new Peer {PeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("peer2"), LastSeen = DateTime.Now},
-                new Peer {PeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("peer3"), LastSeen = DateTime.Now},
-                new Peer {PeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("peer4"), LastSeen = DateTime.Now},
-                new Peer {PeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("peer5"), LastSeen = DateTime.Now},
-                new Peer {PeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("peer6")}
+                new Peer {PeerIdentifier = PeerIdHelper.GetPeerId("peer1"), LastSeen = DateTime.Now},
+                new Peer {PeerIdentifier = PeerIdHelper.GetPeerId("peer2"), LastSeen = DateTime.Now},
+                new Peer {PeerIdentifier = PeerIdHelper.GetPeerId("peer3"), LastSeen = DateTime.Now},
+                new Peer {PeerIdentifier = PeerIdHelper.GetPeerId("peer4"), LastSeen = DateTime.Now},
+                new Peer {PeerIdentifier = PeerIdHelper.GetPeerId("peer5"), LastSeen = DateTime.Now},
+                new Peer {PeerIdentifier = PeerIdHelper.GetPeerId("peer6")}
             };
 
             // add them to the mocked repository, and set return expectation

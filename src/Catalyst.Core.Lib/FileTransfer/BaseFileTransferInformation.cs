@@ -29,6 +29,7 @@ using Catalyst.Abstractions.FileTransfer;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.Config;
+using Catalyst.Protocol.Peer;
 using DotNetty.Transport.Channels;
 
 namespace Catalyst.Core.Lib.FileTransfer
@@ -54,10 +55,10 @@ namespace Catalyst.Core.Lib.FileTransfer
         public IChannel RecipientChannel { get; set; }
 
         /// <inheritdoc />
-        public IPeerIdentifier RecipientIdentifier { get; set; }
+        public PeerId RecipientId { get; set; }
 
         /// <inheritdoc />
-        public IPeerIdentifier PeerIdentifier { get; set; }
+        public PeerId PeerId { get; set; }
 
         /// <inheritdoc />
         public CancellationToken CancellationToken { get; set; }
@@ -79,14 +80,14 @@ namespace Catalyst.Core.Lib.FileTransfer
         private bool _expired;
         
         /// <summary>Initializes a new instance of the <see cref="BaseFileTransferInformation"/> class.</summary>
-        /// <param name="peerIdentifier">The peer identifier</param>
-        /// <param name="recipientIdentifier">The recipient identifier.</param>
+        /// <param name="peerId">The peer identifier</param>
+        /// <param name="recipientId">The recipient identifier.</param>
         /// <param name="recipientChannel">The recipient channel.</param>
         /// <param name="correlationId">The correlation unique identifier.</param>
         /// <param name="fileName">Name of the file.</param>
         /// <param name="fileSize">Size of the file.</param>
-        protected BaseFileTransferInformation(IPeerIdentifier peerIdentifier,
-            IPeerIdentifier recipientIdentifier,
+        protected BaseFileTransferInformation(PeerId peerId,
+            PeerId recipientId,
             IChannel recipientChannel,
             ICorrelationId correlationId,
             string fileName,
@@ -95,8 +96,8 @@ namespace Catalyst.Core.Lib.FileTransfer
             TempPath = Path.GetTempPath() + correlationId.Id + ".tmp";
             MaxChunk = (uint) Math.Max(1, (int) Math.Ceiling((double) fileSize / Constants.FileTransferChunkSize));
             RecipientChannel = recipientChannel;
-            RecipientIdentifier = recipientIdentifier;
-            PeerIdentifier = peerIdentifier;
+            RecipientId = recipientId;
+            PeerId = peerId;
             CorrelationId = correlationId;
             FileOutputPath = fileName;
             ChunkIndicators = new bool[MaxChunk];

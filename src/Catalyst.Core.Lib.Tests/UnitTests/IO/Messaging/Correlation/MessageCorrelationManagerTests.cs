@@ -49,7 +49,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Messaging.Correlation
     public abstract class MessageCorrelationManagerTests<T>
         where T : IMessageCorrelationManager
     {
-        protected readonly IPeerIdentifier[] PeerIds;
+        protected readonly PeerId[] PeerIds;
         protected List<CorrelatableMessage<ProtocolMessage>> PendingRequests;
 
         protected T CorrelationManager;
@@ -72,9 +72,9 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Messaging.Correlation
             _senderPeerId = PeerIdHelper.GetPeerId("sender");
             PeerIds = new[]
             {
-                PeerIdentifierHelper.GetPeerIdentifier("peer1"),
-                PeerIdentifierHelper.GetPeerIdentifier("peer2"),
-                PeerIdentifierHelper.GetPeerIdentifier("peer3")
+                PeerIdHelper.GetPeerId("peer1"),
+                PeerIdHelper.GetPeerId("peer2"),
+                PeerIdHelper.GetPeerId("peer3")
             };
         }
 
@@ -167,7 +167,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Messaging.Correlation
             where T : IMessage, new()
         {
             var responseMatchingIndex1 = new T().ToProtocolMessage(
-                PeerIds[1].PeerId,
+                PeerIds[1],
                 PendingRequests[1].Content.CorrelationId.ToCorrelationId());
 
             var request = CorrelationManager.TryMatchResponse(responseMatchingIndex1);
@@ -180,7 +180,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Messaging.Correlation
             where T : IMessage, new()
         {
             var responseMatchingNothing =
-                new T().ToProtocolMessage(PeerIds[1].PeerId, CorrelationId.GenerateCorrelationId());
+                new T().ToProtocolMessage(PeerIds[1], CorrelationId.GenerateCorrelationId());
 
             var request = CorrelationManager.TryMatchResponse(responseMatchingNothing);
             request.Should().BeFalse();
@@ -195,7 +195,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Messaging.Correlation
             var correlationHandler = new CorrelationHandler<IMessageCorrelationManager>(correlationManager);
             var channelHandlerContext = Substitute.For<IChannelHandlerContext>();
             var nonCorrelatedMessage =
-                new PingResponse().ToProtocolMessage(PeerIds[0].PeerId, CorrelationId.GenerateCorrelationId());
+                new PingResponse().ToProtocolMessage(PeerIds[0], CorrelationId.GenerateCorrelationId());
             correlationHandler.ChannelRead(channelHandlerContext, nonCorrelatedMessage);
 
             channelHandlerContext.DidNotReceive().FireChannelRead(nonCorrelatedMessage);
