@@ -27,7 +27,6 @@ using System.Threading.Tasks;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.KeySigner;
-using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.IO.Messaging.Broadcast;
 using Catalyst.Abstractions.P2P.IO.Messaging.Correlation;
@@ -37,8 +36,10 @@ using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.P2P.IO.Transport.Channels;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
-using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.IPPN;
+using Catalyst.Protocol.Network;
+using Catalyst.Protocol.Peer;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Embedded;
@@ -60,7 +61,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Transport.Channels
                 IBroadcastManager broadcastManager,
                 IKeySigner keySigner,
                 IPeerIdValidator peerIdValidator,
-                ISigningContextProvider signingContextProvider,
+                IPeerSettings signingContextProvider,
                 TestScheduler testScheduler)
                 : base(correlationManager, broadcastManager, keySigner, peerIdValidator, signingContextProvider,
                     testScheduler)
@@ -87,10 +88,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Transport.Channels
             _gossipManager = Substitute.For<IBroadcastManager>();
             _keySigner = Substitute.For<IKeySigner>();
 
-            var signatureContext = Substitute.For<ISigningContextProvider>();
-            signatureContext.Network.Returns(Protocol.Common.Network.Devnet);
-            signatureContext.SignatureType.Returns(SignatureType.ProtocolPeer);
-
+            var peerSettings = Substitute.For<IPeerSettings>();
+            peerSettings.NetworkType.Returns(NetworkType.Devnet);
             var peerValidator = Substitute.For<IPeerIdValidator>();
             peerValidator.ValidatePeerIdFormat(Arg.Any<PeerId>()).Returns(true);
 
@@ -99,7 +98,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Transport.Channels
                 _gossipManager,
                 _keySigner,
                 peerValidator,
-                signatureContext,
+                peerSettings,
                 _testScheduler);
             _senderId = PeerIdHelper.GetPeerId("sender");
             _correlationId = CorrelationId.GenerateCorrelationId();
@@ -130,11 +129,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Transport.Channels
 
             var protocolMessage = new PingRequest().ToProtocolMessage(_senderId, _correlationId);
 
-            var signedMessage = new ProtocolMessageSigned
-            {
-                Message = protocolMessage,
-                Signature = _signature.ToByteString()
-            };
+            var signedMessage = protocolMessage.ToSignedProtocolMessage(signature: _signature);
 
             var observer = new ProtocolMessageObserver(0, Substitute.For<ILogger>());
 
@@ -151,7 +146,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Transport.Channels
                 _testScheduler.Start();
 
                 observer.Received.Count.Should().Be(1);
-                observer.Received.Single().Payload.CorrelationId.ToCorrelationId().Id.Should().Be(_correlationId.Id);
+                observer.Received.Single().Payload.CorrelationId.ToCorrelationId().Id.Should().Be(signedMessage.CorrelationId.ToCorrelationId().Id);
             }
         }
 
@@ -175,16 +170,12 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Transport.Channels
             }
         }
 
-        private ProtocolMessageSigned GetSignedMessage()
+        private ProtocolMessage GetSignedMessage()
         {
             var protocolMessage = new PeerNeighborsRequest()
                .ToProtocolMessage(_senderId, CorrelationId.GenerateCorrelationId());
 
-            var signedMessage = new ProtocolMessageSigned
-            {
-                Message = protocolMessage,
-                Signature = _signature.ToByteString()
-            };
+            var signedMessage = protocolMessage.Sign();
             return signedMessage;
         }
 

@@ -137,7 +137,7 @@ namespace Catalyst.Core.Modules.Ledger
                 return;
             }
 
-            foreach (var entry in nextDeltaInChain.STEntries)
+            foreach (var entry in nextDeltaInChain.PublicEntries)
             {
                 UpdateLedgerAccountFromEntry(entry);
             }
@@ -145,15 +145,15 @@ namespace Catalyst.Core.Modules.Ledger
             LatestKnownDelta = deltaHash;
         }
 
-        private void UpdateLedgerAccountFromEntry(STTransactionEntry entry)
+        private void UpdateLedgerAccountFromEntry(PublicEntry entry)
         {
-            var pubKey = _cryptoContext.PublicKeyFromBytes(entry.PubKey.ToByteArray());
+            var pubKey = _cryptoContext.PublicKeyFromBytes(entry.Base.ReceiverPublicKey.ToByteArray());
 
             //todo: get an address from the key using the Account class from Common lib
             var account = Accounts.Get(pubKey.Bytes.AsBase32Address());
 
             //todo: a different logic for to and from entries
-            account.Balance += entry.Amount;
+            account.Balance += entry.Amount.ToUInt256();
         }
 
         public Multihash LatestKnownDelta { get; private set; }

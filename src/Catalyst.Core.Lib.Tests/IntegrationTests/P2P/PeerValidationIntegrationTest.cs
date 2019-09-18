@@ -98,7 +98,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
                     ContainerProvider.Container.Resolve<IBroadcastManager>(),
                     keySigner,
                     ContainerProvider.Container.Resolve<IPeerIdValidator>(),
-                    ContainerProvider.Container.Resolve<ISigningContextProvider>()),
+                    ContainerProvider.Container.Resolve<IPeerSettings>()),
                 new DiscoveryHelper.DevDiscover(), 
                 ContainerProvider.Container.Resolve<IEnumerable<IP2PMessageObserver>>(),
                 _peerSettings,

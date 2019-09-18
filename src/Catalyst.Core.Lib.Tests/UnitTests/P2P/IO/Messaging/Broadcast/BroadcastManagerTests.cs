@@ -35,7 +35,6 @@ using Catalyst.Core.Lib.IO.Messaging.Dto;
 using Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast;
 using Catalyst.Core.Lib.P2P.Models;
 using Catalyst.Core.Lib.P2P.Repository;
-using Catalyst.Protocol.Common;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Microsoft.Extensions.Caching.Memory;
@@ -58,6 +57,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Broadcast
             _keySigner = Substitute.For<IKeySigner>();
             var fakeSignature = Substitute.For<ISignature>();
             _keySigner.Sign(Arg.Any<byte[]>(), default).ReturnsForAnyArgs(fakeSignature);
+            _keySigner.CryptoContext.SignatureLength.Returns(64);
             _peers = Substitute.For<IPeerRepository>();
             _cache = new MemoryCache(new MemoryCacheOptions());
         }
@@ -72,7 +72,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Broadcast
         [Fact]
         public async Task Can_Increase_Broadcast_Count_When_Broadcasting()
         {
-            await TestBroadcast(100, PeerIdentifierHelper.GetPeerIdentifier("AnotherBroadcaster"),
+            await TestBroadcast(100, 
+                PeerIdentifierHelper.GetPeerIdentifier("AnotherBroadcaster"),
                 BroadcastManager.MaxGossipPeersPerRound).ConfigureAwait(false);
         }
 
@@ -87,7 +88,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Broadcast
         private async Task TestBroadcast(int peerCount, IPeerIdentifier broadcaster, int expectedBroadcastCount)
         {
             PopulatePeers(peerCount);
-            var correlationId = await BroadcastMessage(broadcaster).ConfigureAwait(false);
+            var correlationId = await BroadcastMessage(broadcaster)
+               .ConfigureAwait(false);
 
             _cache.TryGetValue(correlationId.Id, out BroadcastMessage value);
 
@@ -116,15 +118,12 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Broadcast
                 Substitute.For<ILogger>());
 
             var messageDto = new MessageDto(
-                TransactionHelper.GetTransaction().ToProtocolMessage(senderIdentifier.PeerId),
+                TransactionHelper.GetPublicTransaction().ToProtocolMessage(senderIdentifier.PeerId),
                 peerIdentifier
             );
 
-            var gossipDto =
-                new ProtocolMessageSigned
-                {
-                    Message = messageDto.Content.ToProtocolMessage(senderIdentifier.PeerId, messageDto.CorrelationId)
-                };
+            var gossipDto = messageDto.Content
+               .ToProtocolMessage(senderIdentifier.PeerId, messageDto.CorrelationId);
 
             await broadcastMessageHandler.ReceiveAsync(gossipDto);
 
@@ -151,10 +150,13 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Broadcast
                     _keySigner, 
                     Substitute.For<ILogger>());
 
-            var gossipMessage = TransactionHelper.GetTransaction().ToProtocolMessage(broadcaster.PeerId);
+            var innerMessage = TransactionHelper.GetPublicTransaction()
+               .ToProtocolMessage(broadcaster.PeerId);
+            var gossipMessage = innerMessage
+               .ToProtocolMessage(broadcaster.PeerId);
 
             await gossipMessageHandler.BroadcastAsync(gossipMessage);
-            return gossipMessage.CorrelationId.ToCorrelationId();
+            return innerMessage.CorrelationId.ToCorrelationId();
         }
 
         private void PopulatePeers(int count)

@@ -22,12 +22,8 @@
 #endregion
 
 using Autofac;
-using Catalyst.Abstractions.FileSystem;
-using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.Discovery;
-using Catalyst.Core.Lib.P2P.Repository;
 using Catalyst.Modules.POA.P2P.Discovery;
-using Serilog;
 
 namespace Catalyst.Modules.POA.P2P
 {

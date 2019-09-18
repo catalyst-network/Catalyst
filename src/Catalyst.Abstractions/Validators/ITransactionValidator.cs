@@ -1,4 +1,4 @@
-﻿#region LICENSE
+#region LICENSE
 
 /**
 * Copyright (c) 2019 Catalyst Network
@@ -21,12 +21,13 @@
 
 #endregion
 
-using Catalyst.Protocol.Transaction;
+using Catalyst.Protocol.Network;
+using Catalyst.Protocol.Wire;
 
 namespace Catalyst.Abstractions.Validators
 {
     public interface ITransactionValidator
     {
-        bool ValidateTransaction(TransactionBroadcast transactionBroadcast, Protocol.Common.Network network);
+        bool ValidateTransaction(TransactionBroadcast transactionBroadcast, NetworkType networkType);
     }
 }

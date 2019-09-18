@@ -29,15 +29,17 @@ using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.Extensions;
+using Catalyst.Core.Lib.Extensions.Protocol.Wire;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Transaction;
+using Catalyst.Protocol.Wire;
 using Dawn;
 using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
 using Multiformats.Hash.Algorithms;
 using Serilog;
-using CandidateDeltaBroadcast = Catalyst.Protocol.Deltas.CandidateDeltaBroadcast;
+using CandidateDeltaBroadcast = Catalyst.Protocol.Wire.CandidateDeltaBroadcast;
 
 namespace Catalyst.Core.Modules.Consensus.Deltas
 {
@@ -83,7 +85,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             var salt = GetSaltFromPreviousDelta(previousDeltaHash);
 
             var rawAndSaltedEntriesBySignature = includedTransactions.SelectMany(
-                t => t.STEntries.Select(e => new RawEntryWithSaltedAndHashedEntry(e, salt, _hashAlgorithm)));
+                t => t.PublicEntries.Select(e => new RawEntryWithSaltedAndHashedEntry(e, salt, _hashAlgorithm)));
 
             // (Eα;Oα)
             var shuffledEntriesBytes = rawAndSaltedEntriesBySignature
@@ -99,15 +101,13 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
                .ToArray();
 
             // xf
-            var summedFees = includedTransactions
-               .Sum(t => t.TransactionFees);
+            var summedFees = includedTransactions.Sum(t => t.SummedEntryFees());
 
             //∆Ln,j = L(f/E) + dn + E(xf, j)
             var coinbaseEntry = new CoinbaseEntry
             {
-                Amount = summedFees,
-                PubKey = _producerUniqueId.PublicKey.ToByteString(),
-                Version = 1
+                Amount = summedFees.ToUint256ByteString(),
+                ReceiverPublicKey = _producerUniqueId.PublicKey.ToByteString()
             };
             var globalLedgerStateUpdate = shuffledEntriesBytes
                .Concat(signaturesInOrder)
@@ -131,9 +131,8 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             {
                 PreviousDeltaDfsHash = previousDeltaHash.ToByteString(),
                 MerkleRoot = candidate.Hash,
-                CBEntries = {coinbaseEntry},
-                STEntries = {includedTransactions.SelectMany(t => t.STEntries)},
-                Version = 1,
+                CoinbaseEntries = {coinbaseEntry},
+                PublicEntries = {includedTransactions.SelectMany(t => t.PublicEntries)},
                 TimeStamp = Timestamp.FromDateTime(_dateTimeProvider.UtcNow)
             };
 
@@ -152,10 +151,10 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
 
         private sealed class RawEntryWithSaltedAndHashedEntry
         {
-            public STTransactionEntry RawEntry { get; }
+            public PublicEntry RawEntry { get; }
             public byte[] SaltedAndHashedEntry { get; }
 
-            public RawEntryWithSaltedAndHashedEntry(STTransactionEntry rawEntry, IEnumerable<byte> salt, IMultihashAlgorithm hashAlgorithm)
+            public RawEntryWithSaltedAndHashedEntry(PublicEntry rawEntry, IEnumerable<byte> salt, IMultihashAlgorithm hashAlgorithm)
             {
                 RawEntry = rawEntry;
                 SaltedAndHashedEntry = rawEntry.ToByteArray().Concat(salt).ComputeRawHash(hashAlgorithm);
@@ -171,8 +170,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             //lock time equals 0 or less than ledger cycle time
             //we assume all transactions are of type non-confidential for now
 
-            var validTransactionsForDelta = allTransactions.Where(m => m.LockTime <= 0 
-             && m.TransactionType == TransactionType.Normal).ToList();
+            var validTransactionsForDelta = allTransactions.Where(m => m.IsPublicTransaction && m.HasValidEntries()).ToList();
             var rejectedTransactions = allTransactions.Except(validTransactionsForDelta);
             _logger.Debug("Delta builder rejected the following transactions {rejectedTransactions}", rejectedTransactions);
             return validTransactionsForDelta;

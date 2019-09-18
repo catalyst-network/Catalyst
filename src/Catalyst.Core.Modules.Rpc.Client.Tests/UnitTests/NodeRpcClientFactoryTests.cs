@@ -34,9 +34,9 @@ using Xunit;
 
 namespace Catalyst.Core.Modules.Rpc.Client.Tests.UnitTests
 {
-    public sealed class NodeRpcClientFactoryTests
+    public sealed class RpcClientFactoryTests
     {
-        public NodeRpcClientFactoryTests()
+        public RpcClientFactoryTests()
         {
             var channelFactory = Substitute.For<ITcpClientChannelFactory>();
             var clientEventLoopGroupFactory = Substitute.For<ITcpClientEventLoopGroupFactory>();
@@ -47,7 +47,7 @@ namespace Catalyst.Core.Modules.Rpc.Client.Tests.UnitTests
         private readonly RpcClientFactory _rpcClientFactory;
 
         [Fact]
-        public async Task GetClient_Should_Return_NodeRpcClient()
+        public async Task GetClient_Should_Return_RpcClient()
         {
             var nodeRpcConfig = Substitute.For<IRpcClientConfig>();
             nodeRpcConfig.HostAddress = IPAddress.Any;

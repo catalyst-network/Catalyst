@@ -1,4 +1,4 @@
-﻿#region LICENSE
+#region LICENSE
 
 /**
 * Copyright (c) 2019 Catalyst Network
@@ -21,18 +21,30 @@
 
 #endregion
 
-using Google.Protobuf;
-using System;
+using System.Reflection;
+using Serilog;
 
-namespace Catalyst.Protocol.Common
+namespace Catalyst.Protocol.Wire
 {
-    public partial class PeerId
+    public sealed partial class FavouriteDeltaBroadcast
     {
-        partial void 
-            OnConstruction()
+        private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
+
+        public bool IsValid()
         {
-            short protocolVersion = 1;
-            ProtocolVersion = ByteString.CopyFrom(BitConverter.GetBytes(protocolVersion));
+            if (Candidate == null)
+            {
+                Logger.Debug("{field} cannot be null", nameof(Candidate));
+                return false;
+            }
+
+            if (VoterId == null)
+            {
+                Logger.Debug("{field} cannot be null", nameof(VoterId));
+                return false;
+            }
+
+            return Candidate.IsValid() && VoterId.IsValid();
         }
     }
 }

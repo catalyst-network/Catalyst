@@ -31,7 +31,7 @@ using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Consensus.Deltas;
-using Catalyst.Protocol.Deltas;
+using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Microsoft.Extensions.Caching.Memory;
@@ -126,7 +126,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             _voter.OnNext(candidateFromUnknownProducer);
 
             _logger.Received(1).Error(Arg.Is<Exception>(e => e is KeyNotFoundException),
-                Arg.Any<string>(), Arg.Any<string>());
+                Arg.Any<string>(), Arg.Any<CandidateDeltaBroadcast>());
 
             _cache.DidNotReceiveWithAnyArgs().TryGetValue(Arg.Any<object>(), out Arg.Any<object>());
             _cache.DidNotReceiveWithAnyArgs().CreateEntry(Arg.Any<object>());

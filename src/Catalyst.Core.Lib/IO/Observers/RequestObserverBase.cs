@@ -30,7 +30,7 @@ using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
 using Catalyst.Core.Lib.P2P;
-using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Wire;
 using Dawn;
 using DotNetty.Transport.Channels;
 using Google.Protobuf;

@@ -21,14 +21,23 @@
 
 #endregion
 
-namespace Catalyst.Protocol.Common
+using Catalyst.Core.Lib.Extensions;
+using Catalyst.Core.Lib.Util;
+using Catalyst.Core.Modules.Cryptography.BulletProofs;
+using Catalyst.Protocol.Cryptography;
+
+namespace Catalyst.TestUtils.Protocol
 {
-    public partial class SigningContext
+    public static class SignatureHelper
     {
-        partial void OnConstruction()
+        public static Signature GetSignature(byte[] signature = default, SigningContext signingContext = default)
         {
-            Network = Network.Devnet;
-            SignatureType = SignatureType.TransactionPublic;
+            var defaultedSignature = new Signature
+            {
+                RawBytes = signature?.ToByteString() ?? ByteUtil.GenerateRandomByteArray(Ffi.SignatureLength).ToByteString(),
+                SigningContext = signingContext ?? DevNetPeerSigningContext.Instance
+            };
+            return defaultedSignature;
         }
     }
 }

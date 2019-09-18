@@ -23,32 +23,28 @@
 
 using System.Reflection;
 using Catalyst.Abstractions.KeySigner;
-using Catalyst.Abstractions.Keystore;
 using Catalyst.Core.Lib.Extensions;
-using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Cryptography;
+using Catalyst.Protocol.Wire;
 using DotNetty.Transport.Channels;
 using Google.Protobuf;
 using Serilog;
 
 namespace Catalyst.Core.Lib.IO.Handlers
 {
-    public sealed class ProtocolMessageVerifyHandler : InboundChannelHandlerBase<ProtocolMessageSigned>
+    public sealed class ProtocolMessageVerifyHandler : InboundChannelHandlerBase<ProtocolMessage>
     {
         private readonly IKeySigner _keySigner;
         private readonly SigningContext _signingContext;
 
-        public ProtocolMessageVerifyHandler(IKeySigner keySigner, ISigningContextProvider signingContextProvider)
+        public ProtocolMessageVerifyHandler(IKeySigner keySigner, SigningContext signingContext)
             : base(Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType))
         {
             _keySigner = keySigner;
-            _signingContext = new SigningContext
-            {
-                Network = signingContextProvider.Network,
-                SignatureType = signingContextProvider.SignatureType 
-            };
+            _signingContext = signingContext;
         }
 
-        protected override void ChannelRead0(IChannelHandlerContext ctx, ProtocolMessageSigned signedMessage)
+        protected override void ChannelRead0(IChannelHandlerContext ctx, ProtocolMessage signedMessage)
         {
             Logger.Verbose("Received {msg}", signedMessage);
             if (!Verify(signedMessage))
@@ -57,9 +53,9 @@ namespace Catalyst.Core.Lib.IO.Handlers
                 return;
             }
 
-            if (signedMessage.Message.IsBroadCastMessage())
+            if (signedMessage.IsBroadCastMessage())
             {
-                var innerSignedMessage = ProtocolMessageSigned.Parser.ParseFrom(signedMessage.Message.Value);
+                var innerSignedMessage = ProtocolMessage.Parser.ParseFrom(signedMessage.Value);
                 if (!Verify(innerSignedMessage))
                 {
                     Logger.Warning("Failed to verify inner signature in broadcast message {msg}.", innerSignedMessage);
@@ -67,15 +63,16 @@ namespace Catalyst.Core.Lib.IO.Handlers
                 }
             }
 
-            ctx.FireChannelRead(signedMessage.Message);
+            ctx.FireChannelRead(signedMessage);
         }
 
-        private bool Verify(ProtocolMessageSigned signedMessage)
+        private bool Verify(ProtocolMessage signedMessage)
         {
+            if (signedMessage.Signature == null) {return false;}
             var sig = signedMessage.Signature.ToByteArray();
-            var pub = signedMessage.Message.PeerId.PublicKey.ToByteArray();
+            var pub = signedMessage.PeerId.PublicKey.ToByteArray();
             var signature = _keySigner.CryptoContext.SignatureFromBytes(sig, pub);
-            return _keySigner.Verify(signature, signedMessage.Message.ToByteArray(), _signingContext);
+            return _keySigner.Verify(signature, signedMessage.ToByteArray(), _signingContext);
         }
     }
 }

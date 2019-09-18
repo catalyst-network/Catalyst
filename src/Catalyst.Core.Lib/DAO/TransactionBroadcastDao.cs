@@ -24,43 +24,28 @@
 using System;
 using System.Collections.Generic;
 using AutoMapper;
-using Catalyst.Core.Lib.DAO.Converters;
-using Catalyst.Protocol.Transaction;
+using Catalyst.Protocol.Wire;
 using Google.Protobuf.WellKnownTypes;
 
 namespace Catalyst.Core.Lib.DAO
 {
     public class TransactionBroadcastDao : DaoBase<TransactionBroadcast, TransactionBroadcastDao>
     {
-        public UInt32 Version { get; set; }
-        public UInt64 TransactionFees { get; set; }
-        public UInt64 LockTime { get; set; }
-        public IEnumerable<StTransactionEntryDao> StEntries { get; set; }
-        public IEnumerable<CfTransactionEntryDao> CfEntries { get; set; }
-        public string Signature { get; set; }
-        public TransactionType TransactionType { get; set; }
+        public SignatureDao Signature { get; set; }
         public DateTime TimeStamp { get; set; }
-        public string Data { get; set; }
-        public string From { get; set; }
-        public string Init { get; set; }
+        public IEnumerable<PublicEntryDao> PublicEntries { get; set; }
+        public IEnumerable<ConfidentialEntryDao> ConfidentialEntries { get; set; }
+        public IEnumerable<ContractEntryDao> ContractEntries { get; set; }
 
         public override void InitMappers(IMapperConfigurationExpression cfg)
         {
-            cfg.CreateMap<TransactionBroadcast, TransactionBroadcastDao>()
-               .ForMember(d => d.From, opt => opt.ConvertUsing(new ByteStringToStringPubKeyConverter(), s => s.From))
-               .ForMember(d => d.Data, opt => opt.ConvertUsing(new ByteStringToStringBase64Converter(), s => s.Data))
-               .ForMember(d => d.Signature, opt => opt.ConvertUsing(new ByteStringToStringBase64Converter(), s => s.Signature))
-               .ForMember(d => d.Init, opt => opt.ConvertUsing(new ByteStringToStringBase64Converter(), s => s.Init));
-
+            cfg.CreateMap<TransactionBroadcast, TransactionBroadcastDao>();
             cfg.AllowNullDestinationValues = true;
 
             cfg.CreateMap<TransactionBroadcastDao, TransactionBroadcast>()
-               .ForMember(d => d.From, opt => opt.ConvertUsing(new StringKeyUtilsToByteStringFormatter(), s => s.From))
-               .ForMember(d => d.Data, opt => opt.ConvertUsing(new StringBase64ToByteStringConverter(), s => s.Data))
-               .ForMember(d => d.Signature, opt => opt.ConvertUsing(new StringBase64ToByteStringConverter(), s => s.Signature))
-               .ForMember(d => d.Init, opt => opt.ConvertUsing(new StringBase64ToByteStringConverter(), s => s.Init))
-               .ForMember(e => e.CFEntries, opt => opt.UseDestinationValue())
-               .ForMember(e => e.STEntries, opt => opt.UseDestinationValue());
+               .ForMember(e => e.PublicEntries, opt => opt.UseDestinationValue())
+               .ForMember(e => e.ContractEntries, opt => opt.UseDestinationValue())
+               .ForMember(e => e.ConfidentialEntries, opt => opt.UseDestinationValue());
 
             cfg.CreateMap<DateTime, Timestamp>().ConvertUsing(s => s.ToTimestamp());
             cfg.CreateMap<Timestamp, DateTime>().ConvertUsing(s => s.ToDateTime());

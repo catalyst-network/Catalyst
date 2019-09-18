@@ -25,7 +25,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.KeySigner;
-using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.Rpc.Authentication;
 using Catalyst.Abstractions.Rpc.IO.Messaging.Correlation;
@@ -33,7 +32,9 @@ using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Handlers;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
-using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Network;
+using Catalyst.Protocol.Peer;
+using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using DotNetty.Buffers;
@@ -46,10 +47,10 @@ using Xunit;
 
 namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Transport.Channels
 {
-    public sealed class NodeRpcServerChannelFactoryTests
+    public sealed class RpcServerChannelFactoryTests
     {
         private readonly TestScheduler _testScheduler;
-        private readonly UnitTests.Rpc.IO.Transport.Channels.NodeRpcClientChannelFactoryTests.TestNodeRpcClientChannelFactory _clientFactory;
+        private readonly UnitTests.Rpc.IO.Transport.Channels.RpcClientChannelFactoryTests.TestRpcClientChannelFactory _clientFactory;
         private readonly EmbeddedChannel _serverChannel;
         private readonly EmbeddedChannel _clientChannel;
         private readonly IRpcMessageCorrelationManager _clientCorrelationManager;
@@ -59,36 +60,36 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Transport.Channels
         private readonly IKeySigner _serverKeySigner;
         private readonly IRpcMessageCorrelationManager _serverCorrelationManager;
 
-        public NodeRpcServerChannelFactoryTests()
+        public RpcServerChannelFactoryTests()
         {
             _testScheduler = new TestScheduler();
             _serverCorrelationManager = Substitute.For<IRpcMessageCorrelationManager>();
             _serverKeySigner = Substitute.For<IKeySigner>();
+            _serverKeySigner.CryptoContext.SignatureLength.Returns(64);
 
-            var signatureContextProvider = Substitute.For<ISigningContextProvider>();
-            signatureContextProvider.SignatureType.Returns(SignatureType.ProtocolPeer);
-
-            signatureContextProvider.Network.Returns(Protocol.Common.Network.Devnet);
             _authenticationStrategy = Substitute.For<IAuthenticationStrategy>();
 
             _peerIdValidator = Substitute.For<IPeerIdValidator>();
+            var peerSettings = Substitute.For<IPeerSettings>();
+            peerSettings.NetworkType.Returns(NetworkType.Devnet);
 
-            var serverFactory = new UnitTests.Rpc.IO.Transport.Channels.NodeRpcServerChannelFactoryTests.TestNodeRpcServerChannelFactory(
+            var serverFactory = new UnitTests.Rpc.IO.Transport.Channels.RpcServerChannelFactoryTests.TestRpcServerChannelFactory(
                 _serverCorrelationManager,
                 _serverKeySigner,
                 _authenticationStrategy,
                 _peerIdValidator,
-                signatureContextProvider,
+                peerSettings,
                 _testScheduler);
 
             _clientCorrelationManager = Substitute.For<IRpcMessageCorrelationManager>();
             _clientKeySigner = Substitute.For<IKeySigner>();
-           
-            _clientFactory = new UnitTests.Rpc.IO.Transport.Channels.NodeRpcClientChannelFactoryTests.TestNodeRpcClientChannelFactory(
+            _clientKeySigner.CryptoContext.SignatureLength.Returns(64);
+
+            _clientFactory = new UnitTests.Rpc.IO.Transport.Channels.RpcClientChannelFactoryTests.TestRpcClientChannelFactory(
                 _clientKeySigner, 
                 _clientCorrelationManager,
                 _peerIdValidator,
-                signatureContextProvider,
+                peerSettings,
                 _testScheduler);
 
             _serverChannel =
@@ -100,13 +101,13 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Transport.Channels
 
         [Fact]
         public async Task
-            NodeRpcServerChannelFactory_Pipeline_Should_Produce_Response_Object_NodeRpcClientChannelFactory_Can_Process()
+            RpcServerChannelFactory_Pipeline_Should_Produce_Response_Object_RpcClientChannelFactory_Can_Process()
         {
             var recipient = PeerIdentifierHelper.GetPeerIdentifier("recipient");
             var sender = PeerIdentifierHelper.GetPeerIdentifier("sender");
             var signature = Substitute.For<ISignature>();
             _peerIdValidator.ValidatePeerIdFormat(Arg.Any<PeerId>()).Returns(true);
-
+            
             _serverKeySigner.Sign(Arg.Any<byte[]>(), default).ReturnsForAnyArgs(signature);
             
             var correlationId = CorrelationId.GenerateCorrelationId();
@@ -124,7 +125,8 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Transport.Channels
 
             _serverCorrelationManager.DidNotReceiveWithAnyArgs().AddPendingRequest(Arg.Any<CorrelatableMessage<ProtocolMessage>>());
             
-            _serverKeySigner.ReceivedWithAnyArgs(1).Sign(Arg.Any<byte[]>(), default);
+            _serverKeySigner.ReceivedWithAnyArgs(1)
+               .Sign(Arg.Any<byte[]>(), default);
             
             _clientKeySigner.Verify(
                     Arg.Any<ISignature>(),

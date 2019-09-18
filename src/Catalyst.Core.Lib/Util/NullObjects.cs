@@ -22,7 +22,7 @@
 #endregion
 
 using Catalyst.Core.Lib.IO.Messaging.Dto;
-using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Wire;
 
 namespace Catalyst.Core.Lib.Util
 {
