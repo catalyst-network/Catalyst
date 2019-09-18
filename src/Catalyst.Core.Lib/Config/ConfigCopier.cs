@@ -85,9 +85,9 @@ namespace Catalyst.Core.Lib.Config
             }
         }
 
-        protected abstract IEnumerable<string> RequiredConfigFiles(Protocol.Common.Network network,
+        protected abstract IEnumerable<string> RequiredConfigFiles(NetworkType network,
             string overrideNetworkFile = null);
-
+        
         private static void CopyConfigFileToFolder(string targetFolder,
             string fileName,
             string sourceFolder,
