@@ -44,6 +44,7 @@ namespace Catalyst.Core.Lib.IO.Handlers
             _signingContext = signingContext;
         }
 
+        //todo
         protected override void ChannelRead0(IChannelHandlerContext ctx, ProtocolMessage signedMessage)
         {
             Logger.Verbose("Received {msg}", signedMessage);
@@ -69,7 +70,7 @@ namespace Catalyst.Core.Lib.IO.Handlers
         private bool Verify(ProtocolMessage signedMessage)
         {
             if (signedMessage.Signature == null) {return false;}
-            var sig = signedMessage.Signature.ToByteArray();
+            var sig = signedMessage.Signature.RawBytes.ToByteArray();
             var pub = signedMessage.PeerId.PublicKey.ToByteArray();
             var signature = _keySigner.CryptoContext.SignatureFromBytes(sig, pub);
             return _keySigner.Verify(signature, signedMessage.ToByteArray(), _signingContext);
