@@ -21,34 +21,102 @@
 
 #endregion
 
-using System.IO;
+using System.Collections.Generic;
 using System.Linq;
 using Autofac;
 using Catalyst.Abstractions.Mempool;
+using Catalyst.Abstractions.Mempool.Repositories;
+using Catalyst.Abstractions.P2P;
+using Catalyst.Core.Lib.DAO;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.Mempool.Documents;
+using Catalyst.Core.Modules.Mempool.Repositories;
+using Catalyst.Protocol.Deltas;
 using Catalyst.TestUtils;
+using Catalyst.Modules.Repository.CosmosDb;
+using Catalyst.Modules.Repository.MongoDb;
 using FluentAssertions;
+using NSubstitute;
+using SharpRepository.EfCoreRepository;
+using SharpRepository.InMemoryRepository;
+using SharpRepository.Repository;
+using SharpRepository.Repository.Caching;
+using Xunit;
 using Xunit.Abstractions;
 
 namespace Catalyst.Core.Modules.Mempool.Tests.IntegrationTests
 {
     public sealed class MempoolTests : FileSystemBasedTest
     {
+        public static IEnumerable<object[]> ModulesList =>
+            new List<object[]>
+            {
+                new object[] {new MempoolModuleAzureSqlTypes()}
+               //,
+               // new object[] {new MempoolModuleCosmosDb()},
+               // new object[] {new MempoolModuleMongoDb()}
+            };
+
+        private class MempoolModuleInMemory : Module
+        {
+            protected override void Load(ContainerBuilder builder)
+            {
+                builder.Register(c => new InMemoryRepository<MempoolDocument, string>())
+                   .As<IRepository<MempoolDocument, string>>()
+                   .SingleInstance();
+                builder.RegisterType<MempoolDocumentRepository>().As<IMempoolRepository<MempoolDocument>>().SingleInstance();
+                builder.RegisterType<Mempool>().As<IMempool<MempoolDocument>>().SingleInstance();
+            }
+        }
+
+        private sealed class MempoolModuleMongoDb : Module
+        {
+            protected override void Load(ContainerBuilder builder)
+            {
+                builder.Register(c => new MongoDbRepository<MempoolDocument>(
+                    c.ResolveOptional<ICachingStrategy<MempoolDocument, string>>()
+                )).As<IRepository<MempoolDocument, string>>().SingleInstance();
+            }
+        }
+
+        private sealed class MempoolModuleCosmosDb : Module
+        {
+            protected override void Load(ContainerBuilder builder)
+            {
+                builder.Register(c => 
+                        new CosmosDbRepository<MempoolDocument>("", "", "", true))
+                   .As<IRepository<MempoolDocument, string>>()
+                   .SingleInstance();
+                builder.RegisterType<MempoolDocumentRepository>().As<IMempoolRepository<MempoolDocument>>().SingleInstance();
+                builder.RegisterType<Mempool>().As<IMempool<MempoolDocument>>().SingleInstance();
+            }
+        }
+
+        private sealed class MempoolModuleAzureSqlTypes : Module
+        {
+            protected override void Load(ContainerBuilder builder)
+            {
+                builder.Register(c => new InMemoryRepository<MempoolDocument, string>())
+                   .As<IRepository<MempoolDocument, string>>()
+                   .SingleInstance();
+                builder.RegisterType<MempoolDocumentRepository>().As<IMempoolRepository<MempoolDocument>>().SingleInstance();
+                builder.RegisterType<Mempool>().As<IMempool<MempoolDocument>>().SingleInstance();
+            }
+        }
+
         public MempoolTests(ITestOutputHelper output) : base(output) { }
 
-        private void Mempool_can_save_and_retrieve(FileInfo mempoolModuleFile)
+        private void Mempool_Can_Save_And_Retrieve(Module mempoolModule)
         {
             ContainerProvider.ConfigureContainerBuilder();
+            ContainerProvider.ContainerBuilder.RegisterModule(mempoolModule);
 
-            using (var scope = ContainerProvider.Container.BeginLifetimeScope(mempoolModuleFile))
+            using (var scope = ContainerProvider.Container.BeginLifetimeScope(CurrentTestName))
             {
                 var mempool = scope.Resolve<IMempool<MempoolDocument>>();
 
                 var guid = CorrelationId.GenerateCorrelationId().ToString();
-                
-                // var mempoolDocument = new MempoolDocument {Transaction = TransactionHelper.GetTransaction(signature: guid)};
 
                 mempool.Repository.CreateItem(TransactionHelper.GetTransaction(signature: guid));
 
@@ -58,15 +126,22 @@ namespace Catalyst.Core.Modules.Mempool.Tests.IntegrationTests
                 retrievedTransaction.Transaction.Signature.SequenceEqual(guid.ToUtf8ByteString()).Should().BeTrue();
             }
         }
+        
+        [Fact]
+        [Trait(Traits.TestType, Traits.IntegrationTest)]
+        public void Mempool_with_InMemoryRepo_Can_Save_And_Retrieve()
+        {
+            Mempool_Can_Save_And_Retrieve(new MempoolModuleInMemory());
+        }
 
-        // [Fact]
-        // [Trait(Traits.TestType, Traits.IntegrationTest)]
-        // public void Mempool_with_InMemoryRepo_can_save_and_retrieve()
-        // {
-        //     var fi = new FileInfo(Path.Combine(Constants.ConfigSubFolder, Constants.ModulesSubFolder,
-        //         "mempool.inmemory.json"));
-        //     Mempool_can_save_and_retrieve(fi);
-        // }
+        //[Theory(Skip = "To be run in the pipeline only")]
+        [Theory]
+        [Trait(Traits.TestType, Traits.IntegrationTest)]
+        [MemberData(nameof(ModulesList))]
+        public void Mempool_ExternalDbs_Can_Save_And_Retrieve(Module dbModule)
+        {
+            Mempool_Can_Save_And_Retrieve(dbModule);
+        }
 
         protected override void Dispose(bool disposing)
         {
