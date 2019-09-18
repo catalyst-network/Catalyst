@@ -57,7 +57,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.Tests.UnitTests
             var logger = Substitute.For<ILogger>();
             _testScheduler = new TestScheduler();
             _rpcServerSettings = Substitute.For<IRpcServerSettings>();
-            _peerIdentifier = PeerIdentifierHelper.GetPeerIdentifier(nameof(RpcServerTests));
+            _peerIdentifier = PeerIdHelper.GetPeerId(nameof(RpcServerTests));
             _channelHandlerContext = Substitute.For<IChannelHandlerContext>();
             _mockSocketReplySubject = new ReplaySubject<IObserverDto<ProtocolMessage>>(1, _testScheduler);
 

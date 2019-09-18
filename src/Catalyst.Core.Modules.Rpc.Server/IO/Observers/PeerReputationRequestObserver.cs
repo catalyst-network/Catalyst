@@ -26,6 +26,7 @@ using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Core.Lib.IO.Observers;
 using Catalyst.Core.Lib.P2P.Repository;
+using Catalyst.Core.Lib.Util;
 using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
@@ -74,8 +75,8 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
 
             return new GetPeerReputationResponse
             {
-                Reputation = _peerRepository.GetAll().Where(m => m.PeerIdentifier.Ip.ToString() == ip.ToString()
-                     && m.PeerIdentifier.PublicKey.ToStringFromRLPDecoded() == getPeerReputationRequest.PublicKey.ToStringUtf8())
+                Reputation = _peerRepository.GetAll().Where(m => m.PeerId.Ip.ToString() == ip.ToString()
+                     && m.PeerId.PublicKey.ToByteArray().KeyToString() == getPeerReputationRequest.PublicKey.ToByteArray().KeyToString())
                    .Select(x => x.Reputation).DefaultIfEmpty(int.MinValue).First()
             };
         }

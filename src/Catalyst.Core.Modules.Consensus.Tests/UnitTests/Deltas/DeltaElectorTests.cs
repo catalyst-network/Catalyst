@@ -147,7 +147,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 
             _deltaProducersProvider
                .GetDeltaProducersFromPreviousDelta(Arg.Any<byte[]>())
-               .Returns(new List<IPeerIdentifier> {PeerIdentifierHelper.GetPeerIdentifier("the only known producer")});
+               .Returns(new List<IPeerIdentifier> {PeerIdHelper.GetPeerId("the only known producer")});
 
             var elector = new DeltaElector(_cache, _deltaProducersProvider, _logger);
 

@@ -83,7 +83,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
             
             for (var i = 0; i < Constants.NumberOfRandomPeers; i++)
             {
-                peerNeighborsResponseMessage.Peers.Add(activePeersList.RandomElement().PeerIdentifier.PeerId);
+                peerNeighborsResponseMessage.Peers.Add(activePeersList.RandomElement().PeerId);
             }
 
             return peerNeighborsResponseMessage;

@@ -56,10 +56,9 @@ namespace Catalyst.Modules.POA.Consensus.Tests.UnitTests.Deltas
             _peers = Enumerable.Range(0, 5)
                .Select(_ =>
                 {
-                    var peerIdentifier = PeerIdentifierHelper
-                       .GetPeerIdentifier(rand.Next().ToString());
+                    var peerIdentifier = PeerIdHelper.GetPeerId(rand.Next().ToString());
 
-                    var peer = new Peer {PeerIdentifier = peerIdentifier};
+                    var peer = new Peer {PeerId = peerIdentifier};
 
                     return peer;
                 }).ToList();
@@ -77,7 +76,7 @@ namespace Catalyst.Modules.POA.Consensus.Tests.UnitTests.Deltas
 
             _producersByPreviousDelta = Substitute.For<IMemoryCache>();
 
-            _poaDeltaProducerProvider = new PoaDeltaProducersProvider(peerRepository, PeerIdentifierHelper.GetPeerIdentifier("TEST"), _producersByPreviousDelta, _hashAlgorithm, logger);
+            _poaDeltaProducerProvider = new PoaDeltaProducersProvider(peerRepository, PeerIdHelper.GetPeerId("TEST"), _producersByPreviousDelta, _hashAlgorithm, logger);
         }
 
         [Fact]
@@ -87,12 +86,12 @@ namespace Catalyst.Modules.POA.Consensus.Tests.UnitTests.Deltas
 
             var expectedProducers = _peers.Select(p =>
                 {
-                    var bytesToHash = p.PeerIdentifier.PeerId.ToByteArray()
+                    var bytesToHash = p.PeerId.ToByteArray()
                        .Concat(_previousDeltaHash).ToArray();
                     var ranking = bytesToHash;
                     return new
                     {
-                        p.PeerIdentifier,
+                        PeerIdentifier = p.PeerId,
                         ranking
                     };
                 })
@@ -113,8 +112,8 @@ namespace Catalyst.Modules.POA.Consensus.Tests.UnitTests.Deltas
 
             for (var i = 0; i < expectedProducers.Count; i++)
             {
-                producers[i].PeerId.ToByteArray()
-                   .Should().BeEquivalentTo(expectedProducers[i].PeerId.ToByteArray());
+                producers[i].ToByteArray()
+                   .Should().BeEquivalentTo(expectedProducers[i].ToByteArray());
             }
         }
 

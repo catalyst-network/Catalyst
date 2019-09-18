@@ -28,6 +28,7 @@ using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Observers;
 using Catalyst.Core.Lib.P2P.Repository;
+using Catalyst.Core.Lib.Util;
 using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
@@ -73,8 +74,8 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
             Guard.Argument(senderPeerId, nameof(senderPeerId)).NotNull();
             Logger.Information("received message of type PeerBlackListingRequest");
             
-            var peerItem = _peerRepository.GetAll().FirstOrDefault(m => m.PeerIdentifier.Ip.ToString() == setPeerBlackListRequest.Ip.ToStringUtf8() 
-             && m.PeerIdentifier.PublicKey.ToStringFromRLPDecoded() == setPeerBlackListRequest.PublicKey.ToStringUtf8());
+            var peerItem = _peerRepository.GetAll().FirstOrDefault(m => m.PeerId.Ip.ToString() == setPeerBlackListRequest.Ip.ToStringUtf8() 
+             && m.PeerId.PublicKey.ToByteArray().KeyToString() == setPeerBlackListRequest.PublicKey.ToByteArray().KeyToString());
 
             return peerItem == null
                 ? ReturnResponse(false, string.Empty.ToUtf8ByteString(), string.Empty.ToUtf8ByteString()) 

@@ -114,14 +114,14 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
 
             var fakePeers = Enumerable.Range(0, 5).Select(i => new Peer
             {
-                Reputation = 0, PeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier($"iamgroot-{i}"),
+                Reputation = 0, PeerId = PeerIdHelper.GetPeerId($"iamgroot-{i}"),
                 BlackListed = Convert.ToBoolean(blacklist)
             }).ToList();
 
             //peers we are interested in
             fakePeers.AddRange(Enumerable.Range(0, 23).Select(i => new Peer
             {
-                Reputation = 125, PeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier($"highscored-{i}",
+                Reputation = 125, PeerId = PeerIdHelper.GetPeerId($"highscored-{i}",
                     IPAddress.Parse("198.51.100." + i)
                 )
             }));
@@ -132,7 +132,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             // Build a fake remote endpoint
             _fakeContext.Channel.RemoteAddress.Returns(EndpointBuilder.BuildNewEndPoint("192.0.0.1", 42042));
 
-            var sendPeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("sender");
+            var sendPeerIdentifier = PeerIdHelper.GetPeerId("sender");
 
             var request = new SetPeerBlacklistRequest
             {
@@ -141,7 +141,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
                 Blacklist = Convert.ToBoolean(blacklist)
             };
 
-            var protocolMessage = request.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId);
+            var protocolMessage = request.ToProtocolMessage(PeerIdHelper.GetPeerId("sender").PeerId);
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, testScheduler,
                 protocolMessage
             );

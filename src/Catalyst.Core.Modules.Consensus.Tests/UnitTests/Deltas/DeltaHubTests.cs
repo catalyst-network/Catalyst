@@ -48,19 +48,19 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
     public sealed class DeltaHubTests
     {
         private readonly IBroadcastManager _broadcastManager;
-        private readonly IPeerIdentifier _peerIdentifier;
+        private readonly PeerId _peerId;
         private readonly DeltaHub _hub;
         private readonly IDfs _dfs;
 
         internal sealed class DeltaHubWithFastRetryPolicy : DeltaHub
         {
             public DeltaHubWithFastRetryPolicy(IBroadcastManager broadcastManager,
-                IPeerIdentifier peerIdentifier,
+                PeerId peerId,
                 IDeltaVoter deltaVoter,
                 IDeltaElector deltaElector,
                 IDfs dfs,
                 IDeltaHashProvider hashProvider,
-                ILogger logger) : base(broadcastManager, peerIdentifier, dfs, logger) { }
+                ILogger logger) : base(broadcastManager, peerId, dfs, logger) { }
 
             protected override AsyncRetryPolicy<string> DfsRetryPolicy => 
                 Policy<string>.Handle<Exception>()
@@ -72,13 +72,13 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         {
             _broadcastManager = Substitute.For<IBroadcastManager>();
             var logger = Substitute.For<ILogger>();
-            _peerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("me");
+            _peerId = PeerIdHelper.GetPeerId("me");
             var deltaVoter = Substitute.For<IDeltaVoter>();
             var deltaElector = Substitute.For<IDeltaElector>();
             var dfs = Substitute.For<IDfs>();
             var hashProvider = Substitute.For<IDeltaHashProvider>();
             _dfs = dfs;
-            _hub = new DeltaHubWithFastRetryPolicy(_broadcastManager, _peerIdentifier, deltaVoter, deltaElector, _dfs, hashProvider, logger);
+            _hub = new DeltaHubWithFastRetryPolicy(_broadcastManager, _peerId, deltaVoter, deltaElector, _dfs, hashProvider, logger);
         }
 
         [Fact]
@@ -95,11 +95,11 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         public void BroadcastCandidate_should_allow_broadcasting_candidate_from_this_node()
         {
             var myCandidate = DeltaHelper.GetCandidateDelta(
-                producerId: _peerIdentifier.PeerId);
+                producerId: _peerId.PeerId);
 
             _hub.BroadcastCandidate(myCandidate);
             _broadcastManager.Received(1).BroadcastAsync(Arg.Is<ProtocolMessage>(
-                m => IsExpectedCandidateMessage(m, myCandidate, _peerIdentifier.PeerId)));
+                m => IsExpectedCandidateMessage(m, myCandidate, _peerId.PeerId)));
         }
         
         [Fact]
@@ -108,12 +108,12 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             var favourite = new FavouriteDeltaBroadcast
             {
                 Candidate = DeltaHelper.GetCandidateDelta(),
-                VoterId = _peerIdentifier.PeerId
+                VoterId = _peerId.PeerId
             };
 
             _hub.BroadcastFavouriteCandidateDelta(favourite);
             _broadcastManager.Received(1).BroadcastAsync(Arg.Is<ProtocolMessage>(
-                c => IsExpectedCandidateMessage(c, favourite, _peerIdentifier.PeerId)));
+                c => IsExpectedCandidateMessage(c, favourite, _peerId.PeerId)));
         }
 
         [Fact]

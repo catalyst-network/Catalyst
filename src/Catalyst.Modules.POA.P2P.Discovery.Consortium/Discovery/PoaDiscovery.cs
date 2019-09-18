@@ -76,7 +76,7 @@ namespace Catalyst.Modules.POA.P2P.Discovery
                 var peerIdentifier = pid.ToPeerIdentifier();
                 var poaPeer = new Peer
                 {
-                    PeerIdentifier = peerIdentifier
+                    PeerId = peerIdentifier
                 };
 
                 _logger.Information(

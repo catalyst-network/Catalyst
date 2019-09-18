@@ -62,7 +62,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.UnitTests
         {
             _testScheduler = new TestScheduler();
             _settings = PeerSettingsHelper.TestPeerSettings();
-            _ownNode = PeerIdentifierHelper.GetPeerIdentifier("ownNode");
+            _ownNode = PeerIdHelper.GetPeerId("ownNode");
         }
 
         [Fact]
@@ -143,9 +143,9 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.UnitTests
         public void Can_WalkForward_With_Valid_Candidate()
         {
             var knownStepPid =
-                PeerIdentifierHelper.GetPeerIdentifier("hey_its_jimmys_brother_the_guy_with_the_beautiful_voice");
+                PeerIdHelper.GetPeerId("hey_its_jimmys_brother_the_guy_with_the_beautiful_voice");
             var knownNextCandidate =
-                PeerIdentifierHelper.GetPeerIdentifier("these_eyes....");
+                PeerIdHelper.GetPeerId("these_eyes....");
 
             var discoveryTestBuilder = new DiscoveryTestBuilder()
                .WithLogger()
@@ -181,10 +181,10 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.UnitTests
         [Fact]
         public void Can_Not_WalkForward_With_InValid_Candidate()
         {
-            var proposalCandidateId = PeerIdentifierHelper.GetPeerIdentifier("these_eyes....");
+            var proposalCandidateId = PeerIdHelper.GetPeerId("these_eyes....");
 
             var knownStepPid =
-                PeerIdentifierHelper.GetPeerIdentifier("hey_its_jimmys_brother_the_guy_with_the_beautiful_voice");
+                PeerIdHelper.GetPeerId("hey_its_jimmys_brother_the_guy_with_the_beautiful_voice");
             var knownStepNeighbours = new Neighbours(new[] {new Neighbour(proposalCandidateId)});
             var latestStep = new HastingsMemento(knownStepPid, knownStepNeighbours);
 
@@ -432,8 +432,8 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.UnitTests
         [Fact]
         public void Unknown_Pnr_Message_Does_Not_Walk_Back()
         {
-            var candidatePid = PeerIdentifierHelper.GetPeerIdentifier("candidate");
-            var currentPid = PeerIdentifierHelper.GetPeerIdentifier("current");
+            var candidatePid = PeerIdHelper.GetPeerId("candidate");
+            var currentPid = PeerIdHelper.GetPeerId("current");
 
             var discoveryTestBuilder = new DiscoveryTestBuilder()
                .WithLogger()
@@ -467,8 +467,8 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.UnitTests
         [Fact]
         public void Evicted_Known_Pnr_Message_Does_Walk_Back()
         {
-            var currentPid = PeerIdentifierHelper.GetPeerIdentifier("current");
-            var lastPid = PeerIdentifierHelper.GetPeerIdentifier("last");
+            var currentPid = PeerIdHelper.GetPeerId("current");
+            var lastPid = PeerIdHelper.GetPeerId("last");
             var mockNeighbours = DiscoveryHelper.MockNeighbours(4, NeighbourStateTypes.Responsive)
                .Concat(new[] {new Neighbour(currentPid, NeighbourStateTypes.Contacted, CorrelationId.GenerateEmptyCorrelationId())});
             var previousState = DiscoveryHelper.SubMemento(lastPid, new Neighbours(mockNeighbours));

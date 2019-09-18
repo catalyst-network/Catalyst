@@ -103,8 +103,8 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Transport.Channels
         public async Task
             RpcServerChannelFactory_Pipeline_Should_Produce_Response_Object_RpcClientChannelFactory_Can_Process()
         {
-            var recipient = PeerIdentifierHelper.GetPeerIdentifier("recipient");
-            var sender = PeerIdentifierHelper.GetPeerIdentifier("sender");
+            var recipient = PeerIdHelper.GetPeerId("recipient");
+            var sender = PeerIdHelper.GetPeerId("sender");
             var signature = Substitute.For<ISignature>();
             _peerIdValidator.ValidatePeerIdFormat(Arg.Any<PeerId>()).Returns(true);
             

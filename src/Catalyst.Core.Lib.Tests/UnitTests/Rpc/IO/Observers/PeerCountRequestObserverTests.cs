@@ -89,7 +89,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
                 {
                     Reputation = 0,
                     LastSeen = DateTime.Now,
-                    PeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier(i.ToString())
+                    PeerId = PeerIdHelper.GetPeerId(i.ToString())
                 });
             }
 
@@ -98,10 +98,10 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
 
             peerRepository.GetAll().Returns(peerList);
 
-            var sendPeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("sender");
+            var sendPeerIdentifier = PeerIdHelper.GetPeerId("sender");
 
             var protocolMessage =
-                new GetPeerCountRequest().ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId);
+                new GetPeerCountRequest().ToProtocolMessage(PeerIdHelper.GetPeerId("sender").PeerId);
             var messageStream =
                 MessageStreamHelper.CreateStreamWithMessage(_fakeContext, _testScheduler, protocolMessage);
 

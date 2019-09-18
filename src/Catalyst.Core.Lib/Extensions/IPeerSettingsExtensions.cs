@@ -1,4 +1,4 @@
-#region LICENSE
+﻿#region LICENSE
 
 /**
 * Copyright (c) 2019 Catalyst Network
@@ -21,16 +21,10 @@
 
 #endregion
 
-using Catalyst.Abstractions.IO.Messaging.Correlation;
-using Catalyst.Abstractions.Types;
-using Catalyst.Protocol.Peer;
-
-namespace Catalyst.Abstractions.P2P.Discovery
+namespace Catalyst.Abstractions.Extensions
 {
-    public interface INeighbour
+    public class IPeerSettingsExtensions
     {
-        NeighbourStateTypes StateTypes { get; set; }
-        PeerId PeerIdentifier { get; }
-        ICorrelationId DiscoveryPingCorrelationId { get; }
+        
     }
 }

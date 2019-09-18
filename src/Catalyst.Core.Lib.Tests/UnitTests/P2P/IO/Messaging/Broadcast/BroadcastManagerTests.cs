@@ -53,7 +53,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Broadcast
 
         public BroadcastManagerTests()
         {
-            _senderPeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("Test");
+            _senderPeerIdentifier = PeerIdHelper.GetPeerId("Test");
             _keySigner = Substitute.For<IKeySigner>();
             var fakeSignature = Substitute.For<ISignature>();
             _keySigner.Sign(Arg.Any<byte[]>(), default).ReturnsForAnyArgs(fakeSignature);
@@ -73,7 +73,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Broadcast
         public async Task Can_Increase_Broadcast_Count_When_Broadcasting()
         {
             await TestBroadcast(100, 
-                PeerIdentifierHelper.GetPeerIdentifier("AnotherBroadcaster"),
+                PeerIdHelper.GetPeerId("AnotherBroadcaster"),
                 BroadcastManager.MaxGossipPeersPerRound).ConfigureAwait(false);
         }
 
@@ -105,8 +105,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Broadcast
         {
             PopulatePeers(100);
 
-            var peerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("1");
-            var senderIdentifier = PeerIdentifierHelper.GetPeerIdentifier("sender");
+            var peerIdentifier = PeerIdHelper.GetPeerId("1");
+            var senderIdentifier = PeerIdHelper.GetPeerId("sender");
 
             IBroadcastManager broadcastMessageHandler = new BroadcastManager(
                 peerIdentifier, 
@@ -166,7 +166,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Broadcast
             {
                 var peer = new Peer
                 {
-                    PeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier(i.ToString())
+                    PeerId = PeerIdHelper.GetPeerId(i.ToString())
                 };
                 peerList.Add(peer);
                 _peers.Get(peer.DocumentId).Returns(peer);

@@ -73,26 +73,26 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         {
             yield return new Peer
             {
-                PeerIdentifier =
-                    PeerIdentifierHelper.GetPeerIdentifier("publickey-1", IPAddress.Parse("172.0.0.1"), 9090),
+                PeerId =
+                    PeerIdHelper.GetPeerId("publickey-1", IPAddress.Parse("172.0.0.1"), 9090),
                 LastSeen = DateTime.UtcNow, Created = DateTime.UtcNow
             };
             yield return new Peer
             {
-                PeerIdentifier =
-                    PeerIdentifierHelper.GetPeerIdentifier("publickey-2", IPAddress.Parse("172.0.0.2"), 9090),
+                PeerId =
+                    PeerIdHelper.GetPeerId("publickey-2", IPAddress.Parse("172.0.0.2"), 9090),
                 LastSeen = DateTime.UtcNow, Created = DateTime.UtcNow
             };
             yield return new Peer
             {
-                PeerIdentifier =
-                    PeerIdentifierHelper.GetPeerIdentifier("publickey-3", IPAddress.Parse("172.0.0.3"), 9090),
+                PeerId =
+                    PeerIdHelper.GetPeerId("publickey-3", IPAddress.Parse("172.0.0.3"), 9090),
                 LastSeen = DateTime.UtcNow, Created = DateTime.UtcNow
             };
             yield return new Peer
             {
-                PeerIdentifier =
-                    PeerIdentifierHelper.GetPeerIdentifier("publickey-3", IPAddress.Parse("172.0.0.3"), 9090),
+                PeerId =
+                    PeerIdHelper.GetPeerId("publickey-3", IPAddress.Parse("172.0.0.3"), 9090),
                 LastSeen = DateTime.UtcNow, Created = DateTime.UtcNow
             };
         }
@@ -168,7 +168,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
 
             _fakeContext.Channel.RemoteAddress.Returns(EndpointBuilder.BuildNewEndPoint("192.0.0.1", 42042));
 
-            var senderPeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("sender");
+            var senderPeerIdentifier = PeerIdHelper.GetPeerId("sender");
             var getPeerInfoRequest = new GetPeerInfoRequest {PublicKey = peerId.PublicKey, Ip = peerId.Ip};
 
             var protocolMessage =

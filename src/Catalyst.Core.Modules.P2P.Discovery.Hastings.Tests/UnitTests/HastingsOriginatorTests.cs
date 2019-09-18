@@ -22,6 +22,7 @@
 #endregion
 
 using Catalyst.Abstractions.P2P;
+using Catalyst.Protocol.Peer;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Xunit;
@@ -30,11 +31,11 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.UnitTests
 {
     public sealed class HastingsOriginatorTests
     {
-        private readonly IPeerIdentifier _peer;
+        private readonly PeerId _peer;
 
         public HastingsOriginatorTests()
         {
-            _peer = PeerIdentifierHelper.GetPeerIdentifier("current_peer");
+            _peer = PeerIdHelper.GetPeerId("current_peer");
         }
 
         [Fact]

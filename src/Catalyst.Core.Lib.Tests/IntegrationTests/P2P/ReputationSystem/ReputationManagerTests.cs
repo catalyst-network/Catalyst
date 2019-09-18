@@ -27,6 +27,7 @@ using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.ReputationSystem;
 using Catalyst.Core.Lib.P2P.Models;
 using Catalyst.Core.Lib.P2P.ReputationSystem;
+using Catalyst.Protocol.Peer;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using NSubstitute;
@@ -48,11 +49,11 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P.ReputationSystem
             _reputationManager = _scope.Resolve<IReputationManager>();
         }
 
-        private Peer SavePeerInRepo(IPeerIdentifier pid, int initialRep = 100)
+        private Peer SavePeerInRepo(PeerId pid, int initialRep = 100)
         {
             var subbedPeer = new Peer
             {
-                PeerIdentifier = pid,
+                PeerId = pid,
                 Reputation = initialRep
             };
             _reputationManager.PeerRepository.Add(subbedPeer);
@@ -62,7 +63,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P.ReputationSystem
         [Fact]
         public void Can_Save_Increased_Peer()
         {
-            var pid = PeerIdentifierHelper.GetPeerIdentifier("some_peer");
+            var pid = PeerIdHelper.GetPeerId("some_peer");
 
             var savedPeer = SavePeerInRepo(pid);
             var peerReputationChange = Substitute.For<IPeerReputationChange>();
@@ -77,7 +78,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P.ReputationSystem
         [Fact]
         public void Can_Save_Decreased_Peer()
         {
-            var pid = PeerIdentifierHelper.GetPeerIdentifier("some_peer");
+            var pid = PeerIdHelper.GetPeerId("some_peer");
 
             var savedPeer = SavePeerInRepo(pid);
             var peerReputationChange = Substitute.For<IPeerReputationChange>();
@@ -92,7 +93,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P.ReputationSystem
         [Fact]
         public void Can_Save_Decreased_Peer_To_Negative_Number()
         {
-            var pid = PeerIdentifierHelper.GetPeerIdentifier("some_peer");
+            var pid = PeerIdHelper.GetPeerId("some_peer");
 
             var savedPeer = SavePeerInRepo(pid);
             var peerReputationChange = Substitute.For<IPeerReputationChange>();
@@ -107,7 +108,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P.ReputationSystem
         [Fact]
         public void Can_Save_Increased_Peer_From_Negative_Number_To_Positive_Number()
         {
-            var pid = PeerIdentifierHelper.GetPeerIdentifier("some_peer");
+            var pid = PeerIdHelper.GetPeerId("some_peer");
 
             var savedPeer = SavePeerInRepo(pid, -100);
             var peerReputationChange = Substitute.For<IPeerReputationChange>();

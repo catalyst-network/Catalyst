@@ -74,7 +74,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
             ContainerProvider.ContainerBuilder.RegisterModule(new BulletProofsModule());
             ContainerProvider.ContainerBuilder.RegisterType<VerifyMessageRequestObserver>().As<IRpcRequestObserver>();
 
-            ContainerProvider.ContainerBuilder.RegisterInstance(PeerIdentifierHelper.GetPeerIdentifier("Test"))
+            ContainerProvider.ContainerBuilder.RegisterInstance(PeerIdHelper.GetPeerId("Test"))
                .As<IPeerIdentifier>();
 
             ContainerProvider.ConfigureContainerBuilder();

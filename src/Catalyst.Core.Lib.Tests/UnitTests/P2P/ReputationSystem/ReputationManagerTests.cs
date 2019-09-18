@@ -55,7 +55,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.ReputationSystem
         public void Receiving_IPeerReputationChange_Can_Find_And_Update_Peer()
         {
             var peerReputationChange = Substitute.For<IPeerReputationChange>();
-            var pid = PeerIdentifierHelper.GetPeerIdentifier("some_peer");
+            var pid = PeerIdHelper.GetPeerId("some_peer");
             peerReputationChange.PeerIdentifier.Returns(pid);
             peerReputationChange.ReputationEvent.Returns(Substitute.For<IReputationEvents>());
             peerReputationChange.ReputationEvent.Amount.Returns(100);
@@ -63,7 +63,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.ReputationSystem
             var results = new List<Peer>();
             var subbedPeer = new Peer
             {
-                PeerIdentifier = pid
+                PeerId = pid
             };
             results.Add(subbedPeer);
             SetRepoReturnValue(results);
@@ -80,7 +80,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.ReputationSystem
         public void Receiving_IPeerReputationChange_Can_Increase_Rep()
         {
             var peerReputationChange = Substitute.For<IPeerReputationChange>();
-            var pid = PeerIdentifierHelper.GetPeerIdentifier("some_peer");
+            var pid = PeerIdHelper.GetPeerId("some_peer");
             peerReputationChange.PeerIdentifier.Returns(pid);
             peerReputationChange.ReputationEvent.Returns(Substitute.For<IReputationEvents>());
             peerReputationChange.ReputationEvent.Amount.Returns(100);
@@ -88,7 +88,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.ReputationSystem
             var results = new List<Peer>();
             var subbedPeer = new Peer
             {
-                PeerIdentifier = pid,
+                PeerId = pid,
                 Reputation = 100
             };
             results.Add(subbedPeer);
@@ -106,7 +106,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.ReputationSystem
         public void Receiving_IPeerReputationChange_Can_Decrease_Rep()
         {
             var peerReputationChange = Substitute.For<IPeerReputationChange>();
-            var pid = PeerIdentifierHelper.GetPeerIdentifier("some_peer");
+            var pid = PeerIdHelper.GetPeerId("some_peer");
             peerReputationChange.PeerIdentifier.Returns(pid);
             peerReputationChange.ReputationEvent.Returns(Substitute.For<IReputationEvents>());
             peerReputationChange.ReputationEvent.Amount.Returns(-100);
@@ -114,7 +114,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.ReputationSystem
             var results = new List<Peer>();
             var subbedPeer = new Peer
             {
-                PeerIdentifier = pid,
+                PeerId = pid,
                 Reputation = 100
             };
             results.Add(subbedPeer);
@@ -132,14 +132,14 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.ReputationSystem
         [Fact]
         public void Can_Merge_Streams_And_Read_Items_Pushed_On_Separate_Streams()
         {
-            var pid1 = PeerIdentifierHelper.GetPeerIdentifier("peer1");
-            var pid2 = PeerIdentifierHelper.GetPeerIdentifier("peer2");
+            var pid1 = PeerIdHelper.GetPeerId("peer1");
+            var pid2 = PeerIdHelper.GetPeerId("peer2");
             
             var results = new List<Peer>();
             
             var subbedPeer1 = new Peer
             {
-                PeerIdentifier = pid1,
+                PeerId = pid1,
                 Reputation = 100
             };
             
@@ -148,7 +148,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.ReputationSystem
             
             var subbedPeer2 = new Peer
             {
-                PeerIdentifier = pid2,
+                PeerId = pid2,
                 Reputation = 200
             };
             

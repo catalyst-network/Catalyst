@@ -53,7 +53,7 @@ namespace Catalyst.Modules.POA.P2P.Tests.UnitTests
             _peerClient = Substitute.For<IPeerClient>();
             _testPeer = new Peer
             {
-                PeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("TestPeer")
+                PeerId = PeerIdHelper.GetPeerId("TestPeer")
             };
         }
 
@@ -85,12 +85,12 @@ namespace Catalyst.Modules.POA.P2P.Tests.UnitTests
             var peerChallenger = new PeerChallenger(
                 Substitute.For<ILogger>(), 
                 _peerClient, 
-                _testPeer.PeerIdentifier, 
+                _testPeer.PeerId, 
                 _peerChallengeTimeoutSeconds);
 
             if (sendResponse)
             {
-                peerChallenger.ChallengeResponseMessageStreamer.OnNext(new PeerChallengerResponse(_testPeer.PeerIdentifier.PeerId));
+                peerChallenger.ChallengeResponseMessageStreamer.OnNext(new PeerChallengerResponse(_testPeer.PeerId));
             }
 
             _peerRepository.GetAll().Returns(peers);

@@ -25,7 +25,6 @@ using System;
 using System.Collections.Generic;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
-using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
@@ -33,6 +32,7 @@ using Catalyst.Core.Lib.P2P.IO.Observers;
 using Catalyst.Core.Lib.P2P.Models;
 using Catalyst.Core.Lib.P2P.Repository;
 using Catalyst.Protocol.IPPN;
+using Catalyst.Protocol.Peer;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using Microsoft.Reactive.Testing;
@@ -47,7 +47,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
     {
         private readonly TestScheduler _testScheduler;
         private readonly ILogger _subbedLogger;
-        private readonly IPeerIdentifier _peerIdentifier;
+        private readonly PeerId _peerId;
         private readonly IPeerRepository _subbedPeerRepository;
 
         public GetNeighbourRequestObserverTests()
@@ -55,7 +55,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
             _testScheduler = new TestScheduler();
             _subbedLogger = Substitute.For<ILogger>();
             _subbedPeerRepository = Substitute.For<IPeerRepository>();
-            _peerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("testPeer");
+            _peerId = PeerIdHelper.GetPeerId("testPeer");
         }
         
         private static void AddMockPeerToDbAndSetReturnExpectation(IReadOnlyList<Peer> peer,
@@ -71,18 +71,18 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
             // mock a random set of peers
             var randomPeers = new List<Peer>
             {
-                new Peer {PeerIdentifier = PeerIdHelper.GetPeerId("peer1"), LastSeen = DateTime.Now},
-                new Peer {PeerIdentifier = PeerIdHelper.GetPeerId("peer2"), LastSeen = DateTime.Now},
-                new Peer {PeerIdentifier = PeerIdHelper.GetPeerId("peer3"), LastSeen = DateTime.Now},
-                new Peer {PeerIdentifier = PeerIdHelper.GetPeerId("peer4"), LastSeen = DateTime.Now},
-                new Peer {PeerIdentifier = PeerIdHelper.GetPeerId("peer5"), LastSeen = DateTime.Now},
-                new Peer {PeerIdentifier = PeerIdHelper.GetPeerId("peer6")}
+                new Peer {PeerId = PeerIdHelper.GetPeerId("peer1"), LastSeen = DateTime.Now},
+                new Peer {PeerId = PeerIdHelper.GetPeerId("peer2"), LastSeen = DateTime.Now},
+                new Peer {PeerId = PeerIdHelper.GetPeerId("peer3"), LastSeen = DateTime.Now},
+                new Peer {PeerId = PeerIdHelper.GetPeerId("peer4"), LastSeen = DateTime.Now},
+                new Peer {PeerId = PeerIdHelper.GetPeerId("peer5"), LastSeen = DateTime.Now},
+                new Peer {PeerId = PeerIdHelper.GetPeerId("peer6")}
             };
 
             // add them to the mocked repository, and set return expectation
             AddMockPeerToDbAndSetReturnExpectation(randomPeers, _subbedPeerRepository);
 
-            var neighbourRequestHandler = new GetNeighbourRequestObserver(_peerIdentifier,
+            var neighbourRequestHandler = new GetNeighbourRequestObserver(_peerId,
                 _subbedPeerRepository,
                 _subbedLogger
             );
@@ -105,7 +105,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
             _testScheduler.Start();
 
             await fakeContext.Channel.ReceivedWithAnyArgs(1)
-               .WriteAndFlushAsync(peerNeighborsResponseMessage.ToProtocolMessage(_peerIdentifier.PeerId, CorrelationId.GenerateCorrelationId()));
+               .WriteAndFlushAsync(peerNeighborsResponseMessage.ToProtocolMessage(_peerId, CorrelationId.GenerateCorrelationId()));
         }
 
         public void Dispose()

@@ -115,8 +115,8 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
             var fakeNode = Substitute.For<IRpcClient>();
             var sender = PeerIdHelper.GetPeerId("sender");
             var recipient = PeerIdHelper.GetPeerId("recipient");
-            var senderPeerId = new PeerIdentifier(sender);
-            var recipientPeerId = new PeerIdentifier(recipient);
+            var senderPeerId = sender;
+            var recipientPeerId = recipient;
             var fileToTransfer = FileHelper.CreateRandomTempFile(byteSize);
             var addFileToDfsRequestHandler =
                 new AddFileToDfsRequestObserver(_dfs, senderPeerId, _nodeFileTransferFactory, _logger);

@@ -73,12 +73,12 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
 
             var ip = getPeerInfoRequest.Ip;
 
-            var peerInfo = _peerRepository.FindAll(m => m.PeerIdentifier.PeerId.Ip == ip
-                 && m.PeerIdentifier.PeerId.PublicKey == getPeerInfoRequest.PublicKey)
+            var peerInfo = _peerRepository.FindAll(m => m.PeerId.Ip == ip
+                 && m.PeerId.PublicKey == getPeerInfoRequest.PublicKey)
                .Select(x =>
                     new PeerInfo
                     {
-                        PeerId = x.PeerIdentifier.PeerId,
+                        PeerId = x.PeerId,
                         Reputation = x.Reputation,
                         IsBlacklisted = x.BlackListed,
                         IsUnreachable = x.IsAwolPeer,

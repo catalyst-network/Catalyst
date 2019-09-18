@@ -36,6 +36,7 @@ using Catalyst.Core.Lib.Extensions.Protocol.Wire;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
 using Catalyst.Core.Lib.P2P.Repository;
 using Catalyst.Protocol.Cryptography;
+using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Wire;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Primitives;
@@ -212,10 +213,10 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
         /// <summary>Gets the random peers.</summary>
         /// <param name="count">The count.</param>
         /// <returns></returns>
-        private List<IPeerIdentifier> GetRandomPeers(int count)
+        private List<PeerId> GetRandomPeers(int count)
         {
             return _peers
-               .AsQueryable().Select(c => c.DocumentId).Shuffle().Take(count).Select(_peers.Get).Select(p => p.PeerIdentifier).ToList();
+               .AsQueryable().Select(c => c.DocumentId).Shuffle().Take(count).Select(_peers.Get).Select(p => p.PeerId).ToList();
         }
 
         /// <summary>Determines whether this instance can gossip the specified correlation identifier.</summary>

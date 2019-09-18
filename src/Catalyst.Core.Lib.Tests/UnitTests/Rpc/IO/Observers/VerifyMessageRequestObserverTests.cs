@@ -38,6 +38,7 @@ using Catalyst.Core.Lib.Cryptography;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
 using Catalyst.Protocol.Cryptography;
 using Catalyst.Protocol.Network;
+using Catalyst.Protocol.Peer;
 using Xunit;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
@@ -47,7 +48,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         private readonly IKeySigner _keySigner;
         private readonly VerifyMessageRequestObserver _verifyMessageRequestObserver;
         private readonly IChannelHandlerContext _fakeContext;
-        private readonly IPeerIdentifier _testPeerIdentifier;
+        private readonly PeerId _testPeerIdentifier;
         private readonly VerifyMessageRequest _verifyMessageRequest;
         private readonly SigningContext _signingContext;
 
@@ -59,7 +60,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
                 SignatureType = SignatureType.ProtocolRpc
             };
 
-            _testPeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("TestPeerIdentifier");
+            _testPeerIdentifier = PeerIdHelper.GetPeerId("TestPeerIdentifier");
 
             _keySigner = Substitute.For<IKeySigner>();
             _keySigner.CryptoContext.Returns(new CryptoContext(new CryptoWrapper()));
@@ -122,7 +123,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
 
         private void AssertVerifyResponse(bool valid)
         {
-            _verifyMessageRequestObserver.OnNext(new ObserverDto(_fakeContext, _verifyMessageRequest.ToProtocolMessage(_testPeerIdentifier.PeerId)));
+            _verifyMessageRequestObserver.OnNext(new ObserverDto(_fakeContext, _verifyMessageRequest.ToProtocolMessage(_testPeerIdentifier)));
 
             var responseList = _fakeContext.Channel.ReceivedCalls().ToList();
             var response = ((MessageDto) responseList[0].GetArguments()[0]).Content

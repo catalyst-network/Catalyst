@@ -73,7 +73,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             _randomFactory.GetDeterministicRandomFromSeed(Arg.Any<byte[]>())
                .Returns(ci => new IsaacRandom(((byte[]) ci[0]).ToHex()));
 
-            _producerId = PeerIdentifierHelper.GetPeerIdentifier("producer");
+            _producerId = PeerIdHelper.GetPeerId("producer");
 
             _previousDeltaHash = Encoding.UTF8.GetBytes("previousDelta");
             _zeroCoinbaseEntry = new CoinbaseEntry

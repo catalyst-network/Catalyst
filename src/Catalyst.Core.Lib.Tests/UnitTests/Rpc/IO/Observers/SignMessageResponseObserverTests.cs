@@ -86,8 +86,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
     //                     Signature = signedResponse.Signature
     //                 },
     //                 MessageTypes.Tell,
-    //                 PeerIdentifierHelper.GetPeerIdentifier("recipient_key"),
-    //                 PeerIdentifierHelper.GetPeerIdentifier("sender_key")),                
+    //                 PeerIdHelper.GetPeerId("recipient_key"),
+    //                 PeerIdHelper.GetPeerId("sender_key")),                
     //             CorrelationId.GenerateCorrelationId());
     //
     //         var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, response);

@@ -22,12 +22,13 @@
 #endregion
 
 using Catalyst.Abstractions.Config;
+using Catalyst.Protocol.Peer;
 
 namespace Catalyst.Abstractions.P2P.ReputationSystem
 {
     public interface IPeerReputationChange
     {
-        IPeerIdentifier PeerIdentifier { get; }
+        PeerId PeerIdentifier { get; }
         IReputationEvents ReputationEvent { get; }
     }
 }

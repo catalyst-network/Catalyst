@@ -35,7 +35,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.UnitTests
 
         public HastingsMementoTests()
         {
-            _peer = PeerIdentifierHelper.GetPeerIdentifier("current_peer");
+            _peer = PeerIdHelper.GetPeerId("current_peer");
         }
         
         [Fact]

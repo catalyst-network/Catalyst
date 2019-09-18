@@ -23,6 +23,7 @@
 
 using System.Reactive.Subjects;
 using System.Threading.Tasks;
+using Catalyst.Protocol.Peer;
 
 namespace Catalyst.Abstractions.P2P
 {
@@ -37,7 +38,7 @@ namespace Catalyst.Abstractions.P2P
         /// <param name="recipientPeerIdentifier">The recipient peer identifier.
         /// PeerId holds the chunks we want to validate.</param>
         /// <returns>bool true means valid and false means not valid</returns>
-        Task<bool> ChallengePeerAsync(IPeerIdentifier recipientPeerIdentifier);
+        Task<bool> ChallengePeerAsync(PeerId recipientPeerIdentifier);
 
         ReplaySubject<IPeerChallengeResponse> ChallengeResponseMessageStreamer { get; }
     }

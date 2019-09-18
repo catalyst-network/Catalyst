@@ -46,7 +46,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
 
             _broadcastRawTransactionRequestObserver = new BroadcastRawTransactionRequestObserver(
                 Substitute.For<ILogger>(),
-                PeerIdentifierHelper.GetPeerIdentifier("Test"),
+                PeerIdHelper.GetPeerId("Test"),
                 _transactionReceivedEvent);
         }
 

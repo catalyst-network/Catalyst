@@ -21,16 +21,12 @@
 
 #endregion
 
-using Catalyst.Abstractions.IO.Messaging.Correlation;
-using Catalyst.Abstractions.Types;
+using Catalyst.Abstractions.P2P;
+using Catalyst.Core.Lib.Network;
+using Catalyst.Core.Lib.Util;
 using Catalyst.Protocol.Peer;
 
-namespace Catalyst.Abstractions.P2P.Discovery
+namespace Catalyst.Core.Lib.Extensions.Protocol.Peer
 {
-    public interface INeighbour
-    {
-        NeighbourStateTypes StateTypes { get; set; }
-        PeerId PeerIdentifier { get; }
-        ICorrelationId DiscoveryPingCorrelationId { get; }
-    }
+
 }

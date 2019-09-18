@@ -86,7 +86,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
                 {
                     Reputation = 0,
                     LastSeen = DateTime.Now,
-                    PeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier(fakePeer)
+                    PeerId = PeerIdHelper.GetPeerId(fakePeer)
                 });
             });
 
@@ -96,10 +96,10 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             // Build a fake remote endpoint
             _fakeContext.Channel.RemoteAddress.Returns(EndpointBuilder.BuildNewEndPoint("192.0.0.1", 42042));
             
-            var protocolMessage = new GetPeerListRequest().ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId);
+            var protocolMessage = new GetPeerListRequest().ToProtocolMessage(PeerIdHelper.GetPeerId("sender"));
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, testScheduler, protocolMessage);
 
-            var handler = new PeerListRequestObserver(PeerIdentifierHelper.GetPeerIdentifier("sender"), _logger, peerRepository);
+            var handler = new PeerListRequestObserver(PeerIdHelper.GetPeerId("sender"), _logger, peerRepository);
             handler.StartObserving(messageStream);
 
             testScheduler.Start();

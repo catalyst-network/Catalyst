@@ -78,12 +78,12 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             };
 
             var protocolMessage =
-                signMessageRequest.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId);
+                signMessageRequest.ToProtocolMessage(PeerIdHelper.GetPeerId("sender").PeerId);
 
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, testScheduler, protocolMessage);
 
             var handler =
-                new SignMessageRequestObserver(PeerIdentifierHelper.GetPeerIdentifier("sender"), _logger, _keySigner);
+                new SignMessageRequestObserver(PeerIdHelper.GetPeerId("sender"), _logger, _keySigner);
 
             handler.StartObserving(messageStream);
 
