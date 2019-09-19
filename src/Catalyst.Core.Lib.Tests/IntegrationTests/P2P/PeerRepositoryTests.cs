@@ -76,7 +76,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
                 builder.Register(c => new EfCoreContext(_connectionString)).AsImplementedInterfaces().AsSelf()
                    .InstancePerLifetimeScope();
 
-                builder.RegisterType<EnhancedEfCoreRepository>().As<IRepository<PeerDao, string>>().SingleInstance();
+                builder.RegisterType<PeerEfCoreRepository>().As<IRepository<PeerDao, string>>().SingleInstance();
             }
         }
 
