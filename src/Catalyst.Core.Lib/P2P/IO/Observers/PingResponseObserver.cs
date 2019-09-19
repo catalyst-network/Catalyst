@@ -58,7 +58,8 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
             ICorrelationId correlationId)
         {
             ResponseMessageSubject.OnNext(new PeerClientMessageDto(pingResponse, senderPeerIdentifier, correlationId));
-            _peerChallenger.ChallengeResponseMessageStreamer.OnNext(new PeerChallengerResponse(senderPeerIdentifier.PeerId));
+            var peerChallengeResponse = new PeerChallengerResponse(senderPeerIdentifier.PeerId);
+            _peerChallenger.ChallengeResponseMessageStreamer.OnNext(peerChallengeResponse);
         }
     }
 }
