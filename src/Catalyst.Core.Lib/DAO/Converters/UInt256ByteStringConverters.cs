@@ -21,13 +21,69 @@
 
 #endregion
 
+using System.Numerics;
 using AutoMapper;
 using Catalyst.Core.Lib.Extensions;
 using Google.Protobuf;
 using Nethermind.Dirichlet.Numerics;
+using System;
 
 namespace Catalyst.Core.Lib.DAO.Converters
 {
+    public class ByteStringToUInt256StringStringConverter : IValueConverter<ByteString, string>
+    {
+        public string Convert(ByteString sourceMember, ResolutionContext context)
+        {
+            return sourceMember.ToUInt256().ToString();
+        }
+    }
+
+    public class UInt256StringToByteStringConverter : IValueConverter<string, ByteString>
+    {
+        public ByteString Convert(string sourceMember, ResolutionContext context)
+        {
+            var sourceValue = System.Convert.ToUInt64(sourceMember).ToUint256ByteString();
+            return sourceValue; //is this correct
+        }
+    }
+
+    //================================//
+
+    public class ByteStringToULongStringStringConverter : IValueConverter<ByteString, ulong>
+    {
+        public ulong Convert(ByteString sourceMember, ResolutionContext context)
+        {
+            return System.Convert.ToUInt64(sourceMember.ToUInt256());
+        }
+    }
+
+    public class UlongStringToByteStringConverter : IValueConverter<ulong, ByteString>
+    {
+        public ByteString Convert(ulong sourceMember, ResolutionContext context)
+        {
+            var sourceValue = sourceMember.ToUint256ByteString();
+            return sourceValue; //is this correct
+        }
+    }
+
+
+    //public class ByteStringToUInt356StringStringConverter : IValueConverter<ByteString, string>
+    //{
+    //    public string Convert(ByteString sourceMember, ResolutionContext context)
+    //    {
+    //        return sourceMember.ToUInt256().ToString();
+    //    }
+    //}
+
+    //public class UInt256StringToByteStringConverter : IValueConverter<string, ByteString>
+    //{
+    //    public ByteString Convert(string sourceMember, ResolutionContext context)
+    //    {
+    //        var sourceValue = System.Convert.ToUInt64(sourceMember).ToUint256ByteString();
+    //        return sourceValue; //is this correct
+    //    }
+    //}
+
     public class ByteStringToUInt256Converter : IValueConverter<ByteString, UInt256>
     {
         public UInt256 Convert(ByteString sourceMember, ResolutionContext context)
