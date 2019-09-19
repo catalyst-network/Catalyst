@@ -58,6 +58,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Utils
 
             var pubKeyBytes = ByteUtil.GenerateRandomByteArray(Ffi.PublicKeyLength);
             var expectedHash = pubKeyBytes.ComputeMultihash(_hashAlgorithm).Digest;
+            _publicKey.Bytes.Returns(pubKeyBytes);
             
             var addressHelper = new AddressHelper(_peerSettings);
 
