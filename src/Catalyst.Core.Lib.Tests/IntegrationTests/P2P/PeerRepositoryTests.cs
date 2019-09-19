@@ -23,93 +23,46 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Transactions;
 using Autofac;
 using Catalyst.Abstractions.DAO;
-using Catalyst.Abstractions.Mempool;
-using Catalyst.Abstractions.Mempool.Repositories;
-using Catalyst.Abstractions.P2P.Discovery;
-using Catalyst.Abstractions.Repository;
-using Catalyst.Abstractions.Types;
 using Catalyst.TestUtils;
-using Newtonsoft.Json;
 using Xunit;
 using Xunit.Abstractions;
-using SharpRepository.EfCoreRepository;
 using Catalyst.Core.Lib.DAO;
-using Catalyst.Core.Lib.DAO.Deltas;
-using Catalyst.Core.Lib.Extensions;
-using Catalyst.Core.Lib.IO.Messaging.Correlation;
-using Catalyst.Core.Lib.Mempool.Documents;
 using Catalyst.Core.Lib.P2P.Models;
-using Catalyst.Core.Lib.P2P.Repository;
 using Catalyst.Core.Lib.Repository;
-using Catalyst.Core.Modules.Mempool.Repositories;
-using Microsoft.EntityFrameworkCore.Storage;
-using Microsoft.EntityFrameworkCore.Infrastructure;
 using SharpRepository.InMemoryRepository;
 using SharpRepository.Repository;
-using SharpRepository.Repository.Caching;
-using Catalyst.Modules.Repository.CosmosDb;
-//using Catalyst.Modules.Repository.MongoDb;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-
+using SharpRepository.MongoDbRepository;
 
 namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
 {
     public sealed class PeerRepositoryIntegrationTests : FileSystemBasedTest
     {
-        public static string _connectionString;
-
-        private Microsoft.EntityFrameworkCore.DbContext context;
-
         private readonly IMapperInitializer[] _mappers;
 
         public static IEnumerable<object[]> ModulesList => 
             new List<object[]>
             {
-                //new object[] {new ModuleAzureSqlTypes()},
-                new object[] {new MempoolModuleCosmosDb()},
-                new object[] {new MempoolModuleMongoDb()}
+                new object[] {new InMemoryModule()},
+                new object[] {new MongoDbModule()}
             };
 
-        private class PeerRepositoryModuleInMemory : Module
+        private sealed class MongoDbModule : Module
         {
             protected override void Load(ContainerBuilder builder)
             {
-                builder.Register(c => new InMemoryRepository<MempoolDocument, string>())
-                   .As<IRepository<MempoolDocument, string>>()
-                   .SingleInstance();
-                builder.RegisterType<MempoolDocumentRepository>().As<IMempoolRepository<MempoolDocument>>().SingleInstance();
-                builder.RegisterType<Modules.Mempool.Mempool>().As<IMempool<MempoolDocument>>().SingleInstance();
+                builder.RegisterType<MongoDbRepository<PeerDao>>().As<IRepository<PeerDao, string>>().SingleInstance();
             }
         }
 
-        private sealed class MempoolModuleMongoDb : Module
+        private sealed class InMemoryModule : Module
         {
             protected override void Load(ContainerBuilder builder)
             {
-                //builder.Register(c => new MongoDbRepository<PeerIdDao>(
-                //    c.ResolveOptional<ICachingStrategy<PeerIdDao, string>>()
-                //)).As<IRepository<MempoolDocument, string>>().SingleInstance();
-            }
-        }
-
-        private sealed class MempoolModuleCosmosDb : Module
-        {
-            protected override void Load(ContainerBuilder builder)
-            {
-                builder.Register(c =>
-                        new CosmosDbRepository<PeerIdDao>("", "", "", true))
-                   .As<IRepository<MempoolDocument, string>>()
-                   .SingleInstance();
-                builder.RegisterType<MempoolDocumentRepository>().As<IMempoolRepository<MempoolDocument>>().SingleInstance();
-                builder.RegisterType<Modules.Mempool.Mempool>().As<IMempool<MempoolDocument>>().SingleInstance();
+                builder.RegisterType<InMemoryRepository<PeerDao, string>>().As<IRepository<PeerDao, string>>().SingleInstance();
             }
         }
 
@@ -120,190 +73,142 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
 
             protected override void Load(ContainerBuilder builder)
             {
-                builder.Register(c => new EfCoreContext(_connectionString)).As<IDbContext>();
+                builder.Register(c => new EfCoreContext(_connectionString)).AsImplementedInterfaces().AsSelf()
+                   .InstancePerLifetimeScope();
 
-                builder.RegisterType<EnhancedEfCoreRepository>().As<IRepository<Peer, string>>().SingleInstance();
-
-                builder.RegisterType<PeerRepository>().As<IPeerRepository>().SingleInstance();
-            }
-        }
-
-        public void Setup()
-        {
-            var connectionStr =
-                "Server = databasemachine.traderiser.com\\SQL2012, 49175; Database = AtlasCity; User Id = developer; Password = d3v3lop3rhous3;";
-
-            // Run the test against one instance of the context
-            context = new EfCoreContext(connectionStr);
-
-            if (!context.GetService<IRelationalDatabaseCreator>().Exists())
-            {
-                var databaseCreator = context.GetService<IRelationalDatabaseCreator>();
-                databaseCreator.CreateTables();
+                builder.RegisterType<EnhancedEfCoreRepository>().As<IRepository<PeerDao, string>>().SingleInstance();
             }
         }
 
         public PeerRepositoryIntegrationTests(ITestOutputHelper output) : base(output)
         {
-            //_connectionString = ContainerProvider.ConfigurationRoot
-            //   .GetSection("CatalystNodeConfiguration:PersistenceConfiguration:repositories:efCore:connectionString").Value;
-
-            //Setup();
-
             _mappers = new IMapperInitializer[]
             {
-                new ProtocolMessageDao(),
-                //new CfTransactionEntryDao(),
-                new CandidateDeltaBroadcastDao(),
-                new ProtocolErrorMessageSignedDao(),
-                new PeerIdDao(),
-                new SigningContextDao(),
-                new DeltaDao(),
-                new CandidateDeltaBroadcastDao(),
-                new DeltaDfsHashBroadcastDao(),
-                new FavouriteDeltaBroadcastDao(),
-                new CoinbaseEntryDao(),
-                //new StTransactionEntryDao(),
-                //new CfTransactionEntryDao(),
-                new TransactionBroadcastDao(),
-                //new EntryRangeProofDao(),
+                new PeerIdDao()
             };
 
             var map = new MapperProvider(_mappers);
             map.Start();
         }
 
-        [Fact]
-        [Trait(Traits.TestType, Traits.IntegrationTest)]
-        public void Save_And_Retrieve_Peer_From_Repository()
+        private void PeerRepo_Can_Save_And_Retrieve()
         {
-            try
-            {
-                var peerIdDao = new PeerIdDao();
-                var original = PeerIdentifierHelper.GetPeerIdentifier("MyPeerId_Testing").PeerId;
-
-                var peer = peerIdDao.ToDao(original);
-
-                var repositoryEf = new EfCoreRepository<PeerIdDao, string>(context);
-                //var repositoryEf = new EnhancedEfCoreRepository((EfCoreContext) context);
-
-                var beforeAdd = repositoryEf.GetAll();
-
-                using (var trans = new TransactionScope())
-                {
-                    repositoryEf.Add(peer);
-                    trans.Complete();
-                }
-            }
-            catch (Exception e)
-            {
-                //Console.WriteLine(e);
-            }
-
-            //var reconverted = transactionEntryDao.ToProtoBuff();
-            //reconverted.Should().Be(original);
-        }
-
-        private void PeerRepo_Can_Save_And_Retrieve_M(Module mempoolModule)
-        {
-            ContainerProvider.ConfigureContainerBuilder();
-            ContainerProvider.ContainerBuilder.RegisterModule(mempoolModule);
-
             using (var scope = ContainerProvider.Container.BeginLifetimeScope(CurrentTestName))
             {
-                var mempool = scope.Resolve<IMempool<MempoolDocument>>();
+                var criteriaId = string.Empty;
+                var peerRepo = PopulatePeerRepo(scope, out criteriaId);
 
-                var guid = CorrelationId.GenerateCorrelationId().ToString();
-
-                //mempool.Repository.CreateItem(TransactionHelper.GetTransaction(signature: guid));
-
-                //var retrievedTransaction = mempool.Repository.ReadItem(TransactionHelper.GetTransaction(signature: guid).Signature);
-
-                //retrievedTransaction.Transaction.Should().Be(TransactionHelper.GetTransaction(signature: guid));
-                //retrievedTransaction.Transaction.Signature.SequenceEqual(guid.ToUtf8ByteString()).Should().BeTrue();
+                peerRepo.Get(criteriaId).Id.Should().Be(criteriaId);
+                peerRepo.Get(criteriaId).PeerIdentifier.PublicKey.Should().Be(peerRepo.Get(criteriaId).PeerIdentifier.PublicKey);
+                peerRepo.Get(criteriaId).PeerIdentifier.Ip.Should().Be(peerRepo.Get(criteriaId).PeerIdentifier.Ip);
             }
         }
-        
-        private void PeerRepo_Can_Save_And_Retrieve(Module mempoolModule)
+
+        private void PeerRepo_Can_Update_And_Retrieve()
         {
-            ContainerProvider.ConfigureContainerBuilder();
-            ContainerProvider.ContainerBuilder.RegisterModule(mempoolModule);
-
-            try
+            using (var scope = ContainerProvider.Container.BeginLifetimeScope(CurrentTestName))
             {
-                using (var scope = ContainerProvider.Container.BeginLifetimeScope(CurrentTestName))
+                var criteriaId = string.Empty;
+
+                var peerRepo = PopulatePeerRepo(scope, out criteriaId);
+
+                var retrievedPeer = peerRepo.Get(criteriaId);
+                retrievedPeer.Touch();
+                peerRepo.Update(retrievedPeer);
+
+                var retrievedPeerModified = peerRepo.Get(criteriaId);
+                var now = DateTime.UtcNow.Date;
+
+                if (retrievedPeerModified.Modified == null)
                 {
-                    //var res = scope.Resolve<IRepository<PeerIdDao, string>>();
-
-                    //var res = new EnhancedEfCoreRepository(scope.Resolve<IDbContext>());
-
-                    var peerRepo = scope.Resolve<IPeerRepository>();
-
-                    var contextDb = scope.Resolve<IDbContext>();
-
-                    if (!((DbContext) contextDb).GetService<IRelationalDatabaseCreator>().Exists())
-                    {
-                        var databaseCreator = context.GetService<IRelationalDatabaseCreator>();
-                        databaseCreator.CreateTables();
-                    }
-
-                    var peer = new Peer {PeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("Test")};
-
-                    peerRepo.Add(peer);
-
-                    //var peerIdDao = new PeerIdDao();
-                    //var original = PeerIdentifierHelper.GetPeerIdentifier("MyPeerId_Testing");
-                    //var peer = peerIdDao.ToDao(original);
-
-                    //using (var trans = new TransactionScope())
-                    //{
-                    //    peerRepo.Add(peer);
-                    //    trans.Complete();
-                    //}
-
-                    //var temp = scope.Resolve<IPeerRepository>();
-                    //temp.Add();
-
-                    //var lop = new PeerRepository(new EfCoreRepository<PeerIdDao, string>());
-
-                    //var mempool = scope.Resolve<IMempool<MempoolDocument>>();
-
-                    //var guid = CorrelationId.GenerateCorrelationId().ToString();
-
-                    //mempool.Repository.CreateItem(TransactionHelper.GetTransaction(signature: guid));
-
-                    //var retrievedTransaction = mempool.Repository.ReadItem(TransactionHelper.GetTransaction(signature: guid).Signature);
-
-                    //retrievedTransaction.Transaction.Should().Be(TransactionHelper.GetTransaction(signature: guid));
-                    //retrievedTransaction.Transaction.Signature.SequenceEqual(guid.ToUtf8ByteString()).Should().BeTrue();
-
-                    //var mempool = scope.Resolve<IMempool<MempoolDocument>>();
+                    return;
                 }
+
+                var dateComparer = retrievedPeerModified.Modified.Value.Date.ToString("MM/dd/yyyy");
+                dateComparer.Should().Equals(now.ToString("MM/dd/yyyy"));
             }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                throw;
-            }
+        }
+
+        private IRepository<PeerDao, string> PopulatePeerRepo(ILifetimeScope scope, out string Id)
+        {
+            var peerRepo = scope.Resolve<IRepository<PeerDao, string>>();
+
+            var peerDao = new PeerDao().ToPeerDao(new Peer {PeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier(new Random().Next().ToString()) });
+            peerDao.Id = Guid.NewGuid().ToString();
+            Id = peerDao.Id;
+
+            peerDao.PeerIdentifier = new PeerIdDao().ToDao(PeerIdentifierHelper.GetPeerIdentifier(new Random().Next().ToString()).PeerId);
+            peerDao.PeerIdentifier.Id = Guid.NewGuid().ToString();
+
+            peerRepo.Add(peerDao);
+
+            return peerRepo;
+        }
+
+        [Theory]
+        [Trait(Traits.TestType, Traits.IntegrationTest)]
+        [MemberData(nameof(ModulesList))]
+        public void PeerRepo_All_Dbs_Can_Update_And_Retrieve(Module dbModule)
+        {
+            RegisterModules(dbModule);
+
+            PeerRepo_Can_Update_And_Retrieve();
         }
 
         //[Theory(Skip = "To be run in the pipeline only")]
         [Theory]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         [MemberData(nameof(ModulesList))]
-        public void PeerRepo_ExternalDbs_Can_Save_And_Retrieve(Module dbModule)
+        public void PeerRepo_All_Dbs_Can_Save_And_Retrieve(Module dbModule)
         {
-            PeerRepo_Can_Save_And_Retrieve(dbModule);
+            RegisterModules(dbModule);
+
+            PeerRepo_Can_Save_And_Retrieve();
         }
 
         [Fact]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
-        public void PeerRepo_AzureSQLTypes_Dbs_Can_Save_And_Retrieve()
+        public void PeerRepo_Microsoft_SQLTypes_Dbs_Update_And_Retrieve()
         {
             var connectionStr = ContainerProvider.ConfigurationRoot
                .GetSection("CatalystNodeConfiguration:PersistenceConfiguration:repositories:efCore:connectionString").Value;
 
-            PeerRepo_Can_Save_And_Retrieve(new ModuleAzureSqlTypes(connectionStr));
+            RegisterModules(new ModuleAzureSqlTypes(connectionStr));
+
+            CheckForDatabaseCreation();
+
+            PeerRepo_Can_Update_And_Retrieve();
+        }
+
+        [Fact]
+        [Trait(Traits.TestType, Traits.IntegrationTest)]
+        public void PeerRepo_Microsoft_SQLTypes_Dbs_Can_Save_And_Retrieve()
+        {
+            var connectionStr = ContainerProvider.ConfigurationRoot
+               .GetSection("CatalystNodeConfiguration:PersistenceConfiguration:repositories:efCore:connectionString").Value;
+
+            RegisterModules(new ModuleAzureSqlTypes(connectionStr));
+
+            CheckForDatabaseCreation();
+
+            PeerRepo_Can_Save_And_Retrieve();
+        }
+
+        private void CheckForDatabaseCreation()
+        {
+            using (var scope = ContainerProvider.Container.BeginLifetimeScope(CurrentTestName))
+            {
+                var contextDb = scope.Resolve<IDbContext>();
+
+                ((DbContext) contextDb).Database.EnsureCreated();
+            }
+        }
+
+        private void RegisterModules(Module module)
+        {
+            ContainerProvider.ConfigureContainerBuilder();
+
+            ContainerProvider.ContainerBuilder.RegisterModule(module);
         }
 
         protected override void Dispose(bool disposing)
@@ -313,8 +218,6 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
             {
                 return;
             }
-
-            //_containerProvider?.Dispose();
         }
     }
 }

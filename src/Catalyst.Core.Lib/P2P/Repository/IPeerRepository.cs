@@ -27,4 +27,6 @@ using Catalyst.Core.Lib.P2P.Models;
 namespace Catalyst.Core.Lib.P2P.Repository
 {
     public interface IPeerRepository : IRepositoryWrapper<Peer> { }
+
+    public interface IPeerRepositoryDao : IRepositoryWrapper<PeerDao> { }
 }

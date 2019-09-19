@@ -28,19 +28,21 @@ using Catalyst.Core.Lib.P2P.Models;
 using Microsoft.EntityFrameworkCore;
 using SharpRepository.EfCoreRepository;
 using SharpRepository.Repository.Caching;
+using DbContext = Microsoft.EntityFrameworkCore.DbContext;
 
 namespace Catalyst.Core.Lib.Repository
 {
-    public class EnhancedEfCoreRepository : EfCoreRepository<Peer, string>
+    public interface IPeerRepositoryDao { }
+
+    public class EnhancedEfCoreRepository : EfCoreRepository<PeerDao, string>
     {
-        public EnhancedEfCoreRepository(IDbContext dbContext, ICachingStrategy<Peer, string> cachingStrategy = null) :
-            base((Microsoft.EntityFrameworkCore.DbContext) dbContext, cachingStrategy)
-        { }
+        public EnhancedEfCoreRepository(IDbContext dbContext, ICachingStrategy<PeerDao, string> cachingStrategy = null) :
+            base((Microsoft.EntityFrameworkCore.DbContext) dbContext, cachingStrategy) { }
     }
 
     public interface IDbContext : IDisposable
     {
-        DbSet<TEntity> Set<TEntity>() where TEntity : class;
+        Microsoft.EntityFrameworkCore.DbSet<TEntity> Set<TEntity>() where TEntity : class;
     }
 
     public class EfCoreContext : DbContext, IDbContext
@@ -49,14 +51,35 @@ namespace Catalyst.Core.Lib.Repository
             : base(new DbContextOptionsBuilder<EfCoreContext>()
                .UseSqlServer(connectionString).Options) { }
         
-        public DbSet<PeerIdDao> PeerIdDao { get; set; }
-        public DbSet<Peer> Peer { get; set; }
-        public DbSet<PeerIdentifier> PeerIdentifier { get; set; }
-
+        public Microsoft.EntityFrameworkCore.DbSet<PeerIdDao> PeerIdDaoStore { get; set; }
+        public Microsoft.EntityFrameworkCore.DbSet<PeerDao> PeerDaoStore { get; set; }
 
         //public DbSet<TransactionBroadcastDao> TransactionBroadcastDao { get; set; }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder) { }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            //modelBuilder.Entity<PeerIdDao>()
+            //   .ToTable("PeerIdDaoStore");
+
+            //modelBuilder.Entity<PeerDao>()
+            //   .ToTable("PeerDao")
+            //   .Ignore(o => o.PeerIdentifier); 
+
+
+
+            //modelBuilder.Entity<PeerDao>().
+
+            //modelBuilder.Entity<PeerDao>().Map(m =>
+            //{
+            //    m.Properties(p => new { p.StudentId, p.StudentName });
+            //    m.ToTable("StudentInfo");
+            //}).Map(m => {
+            //    m.Properties(p => new { p.StudentId, p.Height, p.Weight, p.Photo, p.DateOfBirth });
+            //    m.ToTable("StudentInfoDetail");
+            //});
+
+            //modelBuilder.Entity<Standard>().ToTable("StandardInfo");
+        }
     }
 }
 

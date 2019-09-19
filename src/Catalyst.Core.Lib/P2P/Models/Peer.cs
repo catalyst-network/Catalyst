@@ -22,8 +22,12 @@
 #endregion
 
 using System;
+using System.ComponentModel.DataAnnotations;
+using AutoMapper;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.Models;
+using Catalyst.Core.Lib.DAO;
+using Catalyst.Core.Lib.DAO.Converters;
 using Catalyst.Core.Lib.Repository.Attributes;
 using Catalyst.Core.Lib.Util;
 using Google.Protobuf;
@@ -70,5 +74,103 @@ namespace Catalyst.Core.Lib.P2P.Models
 
         /// <inheritdoc />
         public void Touch() { LastSeen = DateTimeUtil.UtcNow; }
+    }
+
+    [Audit]
+    public class PeerDao 
+    {
+        [RepositoryPrimaryKey(Order = 1)]
+        [Key]
+        public string Id { get; set; }
+
+        /// <inheritdoc />
+        public PeerIdDao PeerIdentifier { get; set; }
+
+        /// <inheritdoc />
+        public int Reputation { get; set; }
+
+        /// <inheritdoc />
+        public bool BlackListed { get; set; }
+
+        /// <inheritdoc />
+        /// <summary>
+        ///     When peer was first seen by the peer.
+        /// </summary>
+        public DateTime Created { get; set; }
+
+        /// <inheritdoc />
+        public DateTime? Modified { get; set; }
+
+        /// <inheritdoc />
+        public DateTime LastSeen { get; set; }
+
+        /// <inheritdoc />
+        public bool IsAwolPeer => InactiveFor > TimeSpan.FromMinutes(30);
+
+        /// <inheritdoc />
+        public TimeSpan InactiveFor => DateTimeUtil.UtcNow - LastSeen;
+
+        /// <inheritdoc />
+        public void Touch() { LastSeen = DateTimeUtil.UtcNow; }
+
+        private static IMapper masterMapper;
+
+        public PeerDao ToPeerDao(Peer peer)
+        {
+            //PeerIdentifier = new PeerIdDao()
+            //{
+            //    Ip = peer.PeerIdentifier.Ip.ToString(),
+            //    Port = peer.PeerIdentifier.Port,
+            //    PublicKey = peer.PeerIdentifier.PublicKey.KeyToString()
+            //};
+            //Reputation = peer.Reputation;
+            //BlackListed = peer.BlackListed;
+            //Created = peer.Created;
+            //Modified = peer.Modified;
+            //LastSeen = peer.LastSeen;
+
+            var tempPeerDao = new PeerIdDao()
+            {
+                Ip = peer.PeerIdentifier.Ip.ToString(),
+                Port = peer.PeerIdentifier.Port,
+                PublicKey = peer.PeerIdentifier.PublicKey.KeyToString()
+            };
+
+            return new PeerDao()
+            {
+                //PeerIdentifier = tempPeerDao,
+                Reputation = peer.Reputation,
+                BlackListed = peer.BlackListed,
+                Created = peer.Created,
+                Modified = peer.Modified,
+                LastSeen = peer.LastSeen,
+            };
+        }
+
+        //public PeerDao(Peer peer)
+        //{
+        //    PeerIdentifier = new PeerIdDao()
+        //    {
+        //        Ip = peer.PeerIdentifier.Ip.ToString(),
+        //        Port = peer.PeerIdentifier.Port,
+        //        PublicKey = peer.PeerIdentifier.PublicKey.KeyToString()
+        //    };
+
+        //    Reputation = peer.Reputation;
+        //    BlackListed = peer.BlackListed;
+        //    Created = peer.Created;
+        //    Modified = peer.Modified;
+        //    LastSeen = peer.LastSeen;
+        //}
+
+        //private static void Init()
+        //{
+        //    var config = new MapperConfiguration(cfg =>
+        //    {
+        //        cfg.CreateMap<Peer, PeerDao>().ReverseMap();
+        //    });
+
+        //    masterMapper = config.CreateMapper();
+        //}
     }
 }
