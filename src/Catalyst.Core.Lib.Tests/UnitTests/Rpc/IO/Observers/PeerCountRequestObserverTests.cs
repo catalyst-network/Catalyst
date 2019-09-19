@@ -101,7 +101,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             var sendPeerIdentifier = PeerIdHelper.GetPeerId("sender");
 
             var protocolMessage =
-                new GetPeerCountRequest().ToProtocolMessage(PeerIdHelper.GetPeerId("sender").PeerId);
+                new GetPeerCountRequest().ToProtocolMessage(PeerIdHelper.GetPeerId("sender"));
             var messageStream =
                 MessageStreamHelper.CreateStreamWithMessage(_fakeContext, _testScheduler, protocolMessage);
 

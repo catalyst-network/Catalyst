@@ -31,7 +31,6 @@ using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using DotNetty.Transport.Channels;
-using Nethereum.RLP;
 using Serilog;
 
 namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
@@ -76,7 +75,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
             return new GetPeerReputationResponse
             {
                 Reputation = _peerRepository.GetAll().Where(m => m.PeerId.Ip.ToString() == ip.ToString()
-                     && m.PeerId.PublicKey.ToByteArray().KeyToString() == getPeerReputationRequest.PublicKey.ToByteArray().KeyToString())
+                     && m.PeerId.PublicKey.KeyToString() == getPeerReputationRequest.PublicKey.KeyToString())
                    .Select(x => x.Reputation).DefaultIfEmpty(int.MinValue).First()
             };
         }

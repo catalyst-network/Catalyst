@@ -48,7 +48,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         private readonly IKeySigner _keySigner;
         private readonly VerifyMessageRequestObserver _verifyMessageRequestObserver;
         private readonly IChannelHandlerContext _fakeContext;
-        private readonly PeerId _testPeerIdentifier;
+        private readonly PeerId _testPeerId;
         private readonly VerifyMessageRequest _verifyMessageRequest;
         private readonly SigningContext _signingContext;
 
@@ -60,7 +60,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
                 SignatureType = SignatureType.ProtocolRpc
             };
 
-            _testPeerIdentifier = PeerIdHelper.GetPeerId("TestPeerIdentifier");
+            _testPeerId = PeerIdHelper.GetPeerId("TestPeerIdentifier");
 
             _keySigner = Substitute.For<IKeySigner>();
             _keySigner.CryptoContext.Returns(new CryptoContext(new CryptoWrapper()));
@@ -70,7 +70,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
 
             var fakeChannel = Substitute.For<IChannel>();
             _fakeContext.Channel.Returns(fakeChannel);
-            _verifyMessageRequestObserver = new VerifyMessageRequestObserver(_testPeerIdentifier, logger, _keySigner);
+            _verifyMessageRequestObserver = new VerifyMessageRequestObserver(_testPeerId, logger, _keySigner);
 
             _verifyMessageRequest = GetValidVerifyMessageRequest();
         }
@@ -123,7 +123,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
 
         private void AssertVerifyResponse(bool valid)
         {
-            _verifyMessageRequestObserver.OnNext(new ObserverDto(_fakeContext, _verifyMessageRequest.ToProtocolMessage(_testPeerIdentifier)));
+            _verifyMessageRequestObserver.OnNext(new ObserverDto(_fakeContext, _verifyMessageRequest.ToProtocolMessage(_testPeerId)));
 
             var responseList = _fakeContext.Channel.ReceivedCalls().ToList();
             var response = ((MessageDto) responseList[0].GetArguments()[0]).Content

@@ -40,7 +40,7 @@ namespace Catalyst.Core.Lib.P2P.Models
         [RepositoryPrimaryKey(Order = 1)]
         [JsonProperty("id")]
         [BsonId]
-        public string DocumentId => PeerId.PeerId?.ToByteString().ToBase64();
+        public string DocumentId => PeerId?.ToByteString().ToBase64();
         
         /// <inheritdoc />
         public PeerId PeerId { get; set; }

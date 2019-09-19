@@ -28,7 +28,7 @@ namespace Catalyst.Abstractions.P2P.ReputationSystem
 {
     public interface IPeerReputationChange
     {
-        PeerId PeerIdentifier { get; }
+        PeerId PeerId { get; }
         IReputationEvents ReputationEvent { get; }
     }
 }

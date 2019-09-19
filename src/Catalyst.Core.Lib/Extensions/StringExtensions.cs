@@ -22,7 +22,11 @@
 #endregion
 
 using System.IO;
+using System.Net;
 using System.Text;
+using Catalyst.Core.Lib.Network;
+using Catalyst.Core.Lib.Util;
+using Catalyst.Protocol.Peer;
 using Multiformats.Base;
 using Multiformats.Hash;
 using Multiformats.Hash.Algorithms;
@@ -56,6 +60,16 @@ namespace Catalyst.Core.Lib.Extensions
             }
             
             return multihash;
+        }
+
+        public static PeerId BuildPeerIdFromBase32CrockfordKey(this string base32CrockfordKey, IPEndPoint ipEndPoint)
+        {
+            return BuildPeerIdFromBase32CrockfordKey(base32CrockfordKey, ipEndPoint.Address, ipEndPoint.Port);
+        }
+
+        public static PeerId BuildPeerIdFromBase32CrockfordKey(this string base32CrockfordKey, IPAddress ipAddress, int port)
+        {
+            return base32CrockfordKey.KeyToBytes().BuildPeerIdFromPublicKey(ipAddress, port);
         }
     }
 }

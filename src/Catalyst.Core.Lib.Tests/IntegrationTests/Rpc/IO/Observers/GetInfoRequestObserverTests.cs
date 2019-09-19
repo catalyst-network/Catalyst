@@ -71,7 +71,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
             var protocolMessage = new GetInfoRequest
             {
                 Query = true
-            }.ToProtocolMessage(PeerIdHelper.GetPeerId("sender").PeerId);
+            }.ToProtocolMessage(PeerIdHelper.GetPeerId("sender"));
 
             var expectedResponseContent = JsonConvert
                .SerializeObject(_config.GetSection("CatalystNodeConfiguration").AsEnumerable(),

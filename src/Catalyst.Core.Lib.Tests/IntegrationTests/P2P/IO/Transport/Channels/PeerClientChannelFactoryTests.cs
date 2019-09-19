@@ -113,11 +113,8 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P.IO.Transport.Channels
             
             var correlationId = CorrelationId.GenerateCorrelationId();
 
-            var protocolMessage = new PingRequest().ToProtocolMessage(sender.PeerId, correlationId);
-            var dto = new MessageDto(
-                protocolMessage,
-                recipient
-            );
+            var protocolMessage = new PingRequest().ToProtocolMessage(sender, correlationId);
+            var dto = new MessageDto(protocolMessage, recipient);
 
             _clientCorrelationManager.TryMatchResponse(Arg.Any<ProtocolMessage>()).Returns(true);
             

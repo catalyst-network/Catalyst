@@ -23,7 +23,6 @@
 
 using System.Net;
 using System.Reflection;
-using Catalyst.Protocol.Transaction;
 using Google.Protobuf;
 using Serilog;
 

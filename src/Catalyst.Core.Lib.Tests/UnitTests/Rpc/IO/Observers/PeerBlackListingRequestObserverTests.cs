@@ -141,7 +141,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
                 Blacklist = Convert.ToBoolean(blacklist)
             };
 
-            var protocolMessage = request.ToProtocolMessage(PeerIdHelper.GetPeerId("sender").PeerId);
+            var protocolMessage = request.ToProtocolMessage(PeerIdHelper.GetPeerId("sender"));
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, testScheduler,
                 protocolMessage
             );

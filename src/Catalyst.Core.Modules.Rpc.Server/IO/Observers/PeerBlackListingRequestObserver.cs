@@ -34,7 +34,6 @@ using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using DotNetty.Transport.Channels;
 using Google.Protobuf;
-using Nethereum.RLP;
 using Serilog;
 
 namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
@@ -75,7 +74,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
             Logger.Information("received message of type PeerBlackListingRequest");
             
             var peerItem = _peerRepository.GetAll().FirstOrDefault(m => m.PeerId.Ip.ToString() == setPeerBlackListRequest.Ip.ToStringUtf8() 
-             && m.PeerId.PublicKey.ToByteArray().KeyToString() == setPeerBlackListRequest.PublicKey.ToByteArray().KeyToString());
+             && m.PeerId.PublicKey.KeyToString() == setPeerBlackListRequest.PublicKey.KeyToString());
 
             return peerItem == null
                 ? ReturnResponse(false, string.Empty.ToUtf8ByteString(), string.Empty.ToUtf8ByteString()) 

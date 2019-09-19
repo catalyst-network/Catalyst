@@ -71,20 +71,19 @@ namespace Catalyst.Modules.POA.P2P.Discovery
             var copiedPath = CopyPoaFile();
             var poaPeers = JsonConvert.DeserializeObject<List<PoaPeer>>(File.ReadAllText(copiedPath));
 
-            foreach (var pid in poaPeers)
+            foreach (var poaPeer in poaPeers)
             {
-                var peerIdentifier = pid.ToPeerIdentifier();
-                var poaPeer = new Peer
+                var peer = new Peer
                 {
-                    PeerId = peerIdentifier
+                    PeerId = poaPeer.ToPeerId()
                 };
 
                 _logger.Information(
-                    $"Adding POA Peer: {peerIdentifier.Ip} Public Key: {peerIdentifier.PublicKey.KeyToString()}");
+                    $"Adding POA Peer: {peer.PeerId.IpAddress} Public Key: {peer.PeerId.PublicKey.KeyToString()}");
 
-                if (!_peerRepository.Exists(poaPeer.DocumentId))
+                if (!_peerRepository.Exists(peer.DocumentId))
                 {
-                    _peerRepository.Add(poaPeer);
+                    _peerRepository.Add(peer);
                 }
             }
 

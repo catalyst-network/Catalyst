@@ -49,6 +49,7 @@ using Catalyst.Core.Modules.Rpc.Client;
 using Catalyst.Core.Modules.Rpc.Client.IO.Observers;
 using Catalyst.Core.Modules.Rpc.Client.IO.Transport.Channels;
 using Catalyst.Protocol.Cryptography;
+using Catalyst.Protocol.Peer;
 using DotNetty.Transport.Channels;
 using Google.Protobuf;
 using Microsoft.Extensions.Caching.Memory;
@@ -62,8 +63,8 @@ namespace Catalyst.Simulator.RpcClients
     public class SimpleRpcClient : Interfaces.IRpcClient
     {
         private readonly ILogger _logger;
-        private readonly IPeerIdentifier _senderPeerIdentifier;
-        private IPeerIdentifier _recipientPeerIdentifier;
+        private readonly PeerId _senderPeerId;
+        private PeerId _recipientPeerId;
         private IRpcClient _rpcClient;
         private readonly X509Certificate2 _certificate;
         private readonly RpcClientFactory _rpcClientFactory;
@@ -124,12 +125,11 @@ namespace Catalyst.Simulator.RpcClients
                 new RpcClientFactory(nodeRpcClientChannelFactory, tcpClientEventLoopGroupFactory, handlers);
 
             //PeerId for RPC/TCP is currently redundant.
-            _senderPeerIdentifier =
-                new PeerIdentifier(keyRegistry.GetItemFromRegistry(KeyRegistryTypes.DefaultKey).GetPublicKey().Bytes,
-                    IPAddress.Any, 1026);
+            var publicKey = keyRegistry.GetItemFromRegistry(KeyRegistryTypes.DefaultKey).GetPublicKey().Bytes;
+            _senderPeerId = publicKey.BuildPeerIdFromPublicKey(IPAddress.Any, 1026);
         }
 
-        public async Task<bool> ConnectRetryAsync(IPeerIdentifier peerIdentifier, int retryAttempts = 5)
+        public async Task<bool> ConnectRetryAsync(PeerId peerIdentifier, int retryAttempts = 5)
         {
             var retryCountDown = retryAttempts;
             while (retryCountDown > 0)
@@ -152,18 +152,18 @@ namespace Catalyst.Simulator.RpcClients
             return false;
         }
 
-        public async Task<bool> ConnectAsync(IPeerIdentifier peerIdentifier)
+        public async Task<bool> ConnectAsync(PeerId peerIdentifier)
         {
-            _recipientPeerIdentifier = peerIdentifier;
+            _recipientPeerId = peerIdentifier;
 
             var peerRpcConfig = new RpcClientSettings
             {
-                HostAddress = _recipientPeerIdentifier.Ip,
-                Port = _recipientPeerIdentifier.Port,
-                PublicKey = _recipientPeerIdentifier.PublicKey.KeyToString()
+                HostAddress = _recipientPeerId.IpAddress,
+                Port = (int) _recipientPeerId.Port,
+                PublicKey = _recipientPeerId.PublicKey.KeyToString()
             };
 
-            _logger.Information($"Connecting to {_recipientPeerIdentifier.Ip}:{_recipientPeerIdentifier.Port}");
+            _logger.Information($"Connecting to {_recipientPeerId.Ip}:{_recipientPeerId.Port}");
 
             try
             {
@@ -188,10 +188,10 @@ namespace Catalyst.Simulator.RpcClients
         public void SendMessage<T>(T message) where T : IMessage
         {
             var protocolMessage =
-                message.ToProtocolMessage(_senderPeerIdentifier.PeerId, CorrelationId.GenerateCorrelationId());
+                message.ToProtocolMessage(_senderPeerId, CorrelationId.GenerateCorrelationId());
             var messageDto = new MessageDto(
                 protocolMessage,
-                _recipientPeerIdentifier);
+                _recipientPeerId);
 
             _rpcClient.SendMessage(messageDto);
         }

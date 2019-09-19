@@ -41,7 +41,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Messaging.Dto
         public MessageDtoTests()
         {
             var pingRequest = new PingRequest();
-            _messageDto = new MessageDto(pingRequest.ToProtocolMessage(PeerIdHelper.GetPeerId("Sender_Key").PeerId),
+            _messageDto = new MessageDto(pingRequest.ToProtocolMessage(PeerIdHelper.GetPeerId("Sender_Key")),
                 PeerIdHelper.GetPeerId("Recipient_Key")
             );
         }

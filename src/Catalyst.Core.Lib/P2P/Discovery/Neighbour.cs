@@ -25,20 +25,21 @@ using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.Discovery;
 using Catalyst.Abstractions.Types;
+using Catalyst.Protocol.Peer;
 
 namespace Catalyst.Core.Lib.P2P.Discovery
 {
     public sealed class Neighbour : INeighbour
     {
         public NeighbourStateTypes StateTypes { get; set; }
-        public IPeerIdentifier PeerIdentifier { get; }
+        public PeerId PeerId { get; }
         public ICorrelationId DiscoveryPingCorrelationId { get; }
 
-        public Neighbour(IPeerIdentifier peerIdentifier,
+        public Neighbour(PeerId peerId,
             NeighbourStateTypes stateTypes = default,
             ICorrelationId discoveryPingCorrelationId = default)
         {
-            PeerIdentifier = peerIdentifier;
+            PeerId = peerId;
             StateTypes = stateTypes ?? NeighbourStateTypes.NotContacted;
             DiscoveryPingCorrelationId = discoveryPingCorrelationId;
         }

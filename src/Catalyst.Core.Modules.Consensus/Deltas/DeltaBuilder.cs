@@ -32,6 +32,7 @@ using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Extensions.Protocol.Wire;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Protocol.Deltas;
+using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Transaction;
 using Catalyst.Protocol.Wire;
 using Dawn;
@@ -49,7 +50,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
         private readonly IDeltaTransactionRetriever _transactionRetriever;
         private readonly IDeterministicRandomFactory _randomFactory;
         private readonly IMultihashAlgorithm _hashAlgorithm;
-        private readonly IPeerIdentifier _producerUniqueId;
+        private readonly PeerId _producerUniqueId;
         private readonly IDeltaCache _deltaCache;
         private readonly IDateTimeProvider _dateTimeProvider;
         private readonly ILogger _logger;
@@ -57,7 +58,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
         public DeltaBuilder(IDeltaTransactionRetriever transactionRetriever,
             IDeterministicRandomFactory randomFactory,
             IMultihashAlgorithm hashAlgorithm,
-            IPeerIdentifier producerUniqueId,
+            PeerId producerUniqueId,
             IDeltaCache deltaCache,
             IDateTimeProvider dateTimeProvider,
             ILogger logger)
@@ -121,7 +122,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
                 Hash = globalLedgerStateUpdate.ComputeMultihash(_hashAlgorithm).ToBytes().ToByteString(),
 
                 // Idj
-                ProducerId = _producerUniqueId.PeerId,
+                ProducerId = _producerUniqueId,
                 PreviousDeltaDfsHash = previousDeltaHash.ToByteString()
             };
 

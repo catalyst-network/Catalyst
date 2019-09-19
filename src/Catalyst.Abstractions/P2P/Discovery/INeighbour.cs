@@ -30,7 +30,7 @@ namespace Catalyst.Abstractions.P2P.Discovery
     public interface INeighbour
     {
         NeighbourStateTypes StateTypes { get; set; }
-        PeerId PeerIdentifier { get; }
+        PeerId PeerId { get; }
         ICorrelationId DiscoveryPingCorrelationId { get; }
     }
 }

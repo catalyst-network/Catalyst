@@ -81,7 +81,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             var mempool = Substitute.For<IMempool<MempoolDocument>>();
             mempool.Repository.GetAll().Returns(mempoolTransactions);
 
-            var protocolMessage = new GetMempoolRequest().ToProtocolMessage(PeerIdHelper.GetPeerId("sender_key").PeerId);
+            var protocolMessage = new GetMempoolRequest().ToProtocolMessage(PeerIdHelper.GetPeerId("sender_key"));
             
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, testScheduler, protocolMessage);
 

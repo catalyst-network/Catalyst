@@ -66,12 +66,12 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Correlation
 
             CorrelationManager.ReputationEventStream.Subscribe(change =>
             {
-                if (!_reputationByPeerIdentifier.ContainsKey(change.PeerIdentifier))
+                if (!_reputationByPeerIdentifier.ContainsKey(change.PeerId))
                 {
                     return;
                 }
                 
-                _reputationByPeerIdentifier[change.PeerIdentifier] += change.ReputationEvent.Amount;
+                _reputationByPeerIdentifier[change.PeerId] += change.ReputationEvent.Amount;
             });
         }
 
@@ -134,7 +134,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Correlation
 
                 _testScheduler.Start();
 
-                observer.Received(1).OnNext(Arg.Is<IPeerReputationChange>(c => c.PeerIdentifier.PeerId.Equals(PendingRequests[0].Content.PeerId) 
+                observer.Received(1).OnNext(Arg.Is<IPeerReputationChange>(c => c.PeerId.Equals(PendingRequests[0].Content.PeerId) 
                  && c.ReputationEvent.Equals(ReputationEventType.NoResponseReceived)));
             }
         }

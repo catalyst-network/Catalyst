@@ -40,8 +40,8 @@ namespace Catalyst.Modules.POA.P2P.Tests.UnitTests
 {
     public sealed class PeerHeartbeatCheckerTests : IDisposable
     {
-        private readonly int _peerHeartbeatCheckSeconds = 3;
-        private readonly int _peerChallengeTimeoutSeconds = 1;
+        private const int PeerHeartbeatCheckSeconds = 3;
+        private const int PeerChallengeTimeoutSeconds = 1;
         private IHealthChecker _peerHeartbeatChecker;
         private readonly IPeerClient _peerClient;
         private readonly IPeerRepository _peerRepository;
@@ -86,7 +86,7 @@ namespace Catalyst.Modules.POA.P2P.Tests.UnitTests
                 Substitute.For<ILogger>(), 
                 _peerClient, 
                 _testPeer.PeerId, 
-                _peerChallengeTimeoutSeconds);
+                PeerChallengeTimeoutSeconds);
 
             if (sendResponse)
             {
@@ -99,11 +99,11 @@ namespace Catalyst.Modules.POA.P2P.Tests.UnitTests
                 Substitute.For<ILogger>(),
                 _peerRepository,
                 peerChallenger,
-                _peerHeartbeatCheckSeconds,
+                PeerHeartbeatCheckSeconds,
                 maxNonResponsiveCounter);
 
             _peerHeartbeatChecker.Run();
-            await Task.Delay(TimeSpan.FromSeconds(_peerHeartbeatCheckSeconds * (maxNonResponsiveCounter + 1)).Add(TimeSpan.FromSeconds(1))).ConfigureAwait(false);
+            await Task.Delay(TimeSpan.FromSeconds(PeerHeartbeatCheckSeconds * (maxNonResponsiveCounter + 1)).Add(TimeSpan.FromSeconds(1))).ConfigureAwait(false);
         }
 
         void IDisposable.Dispose()

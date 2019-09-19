@@ -164,7 +164,7 @@ namespace Catalyst.TestUtils
                         state.Last()
                            .Neighbours
                            .RandomElement()
-                           .PeerIdentifier,
+                           .PeerId,
                         MockNeighbours()
                     )
                 );

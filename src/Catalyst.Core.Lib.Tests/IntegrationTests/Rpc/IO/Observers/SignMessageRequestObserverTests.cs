@@ -88,7 +88,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
                 SigningContext = new SigningContext()
             };
             var protocolMessage =
-                signMessageRequest.ToProtocolMessage(sender.PeerId);
+                signMessageRequest.ToProtocolMessage(sender);
 
             var messageStream =
                 MessageStreamHelper.CreateStreamWithMessage(_fakeContext, _testScheduler, protocolMessage);

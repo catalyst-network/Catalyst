@@ -35,6 +35,7 @@ using Catalyst.Core.Lib.Extensions.Protocol.Wire;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Consensus.Deltas;
 using Catalyst.Protocol.Deltas;
+using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Transaction;
 using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
@@ -55,7 +56,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         private readonly IDeterministicRandomFactory _randomFactory;
         private readonly IMultihashAlgorithm _hashAlgorithm;
         private readonly Random _random;
-        private readonly IPeerIdentifier _producerId;
+        private readonly PeerId _producerId;
         private readonly byte[] _previousDeltaHash;
         private readonly CoinbaseEntry _zeroCoinbaseEntry;
         private readonly IDeltaCache _cache;
@@ -197,7 +198,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         private void ValidateDeltaCandidate(CandidateDeltaBroadcast candidate, byte[] expectedBytesToHash)
         {
             candidate.Should().NotBeNull();
-            candidate.ProducerId.Should().Be(_producerId.PeerId);
+            candidate.ProducerId.Should().Be(_producerId);
             candidate.PreviousDeltaDfsHash.ToByteArray().SequenceEqual(_previousDeltaHash).Should().BeTrue();
 
             var expectedHash = expectedBytesToHash.ComputeMultihash(_hashAlgorithm);

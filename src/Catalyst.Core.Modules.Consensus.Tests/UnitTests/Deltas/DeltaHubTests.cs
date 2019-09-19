@@ -95,11 +95,11 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         public void BroadcastCandidate_should_allow_broadcasting_candidate_from_this_node()
         {
             var myCandidate = DeltaHelper.GetCandidateDelta(
-                producerId: _peerId.PeerId);
+                producerId: _peerId);
 
             _hub.BroadcastCandidate(myCandidate);
             _broadcastManager.Received(1).BroadcastAsync(Arg.Is<ProtocolMessage>(
-                m => IsExpectedCandidateMessage(m, myCandidate, _peerId.PeerId)));
+                m => IsExpectedCandidateMessage(m, myCandidate, _peerId)));
         }
         
         [Fact]
@@ -108,12 +108,12 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             var favourite = new FavouriteDeltaBroadcast
             {
                 Candidate = DeltaHelper.GetCandidateDelta(),
-                VoterId = _peerId.PeerId
+                VoterId = _peerId
             };
 
             _hub.BroadcastFavouriteCandidateDelta(favourite);
             _broadcastManager.Received(1).BroadcastAsync(Arg.Is<ProtocolMessage>(
-                c => IsExpectedCandidateMessage(c, favourite, _peerId.PeerId)));
+                c => IsExpectedCandidateMessage(c, favourite, _peerId)));
         }
 
         [Fact]

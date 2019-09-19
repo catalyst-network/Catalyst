@@ -24,6 +24,7 @@
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.IO.Messaging.Dto;
+using Catalyst.Protocol.Peer;
 using Dawn;
 using Google.Protobuf;
 
@@ -32,10 +33,10 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Dto
     public sealed class PeerClientMessageDto : IPeerClientMessageDto
     {
         public ICorrelationId CorrelationId { get; set; }
-        public IPeerIdentifier Sender { get; set; }
+        public PeerId Sender { get; set; }
         public IMessage Message { get; set; }
 
-        public PeerClientMessageDto(IMessage message, IPeerIdentifier sender, ICorrelationId correlationId)
+        public PeerClientMessageDto(IMessage message, PeerId sender, ICorrelationId correlationId)
         {
             Guard.Argument(message, nameof(message))
                .Require(message.GetType().Namespace.Contains("IPPN"));

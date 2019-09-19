@@ -26,6 +26,7 @@ using Catalyst.Abstractions.Rpc.Authentication;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Authentication.Models;
 using Catalyst.Core.Modules.Authentication.Repository;
+using Catalyst.Protocol.Peer;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using SharpRepository.InMemoryRepository;
@@ -36,7 +37,7 @@ namespace Catalyst.Core.Modules.Authentication.Tests.Repository
     public sealed class AuthenticationRepositoryTests
     {
         private readonly IAuthenticationStrategy _repositoryAuthenticationStrategy;
-        private readonly IPeerIdentifier _trustedPeer;
+        private readonly PeerId _trustedPeer;
 
         public AuthenticationRepositoryTests()
         {

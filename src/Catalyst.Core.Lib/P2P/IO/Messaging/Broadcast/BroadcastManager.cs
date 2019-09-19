@@ -62,7 +62,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
         private readonly Func<MemoryCacheEntryOptions> _entryOptions;
 
         /// <summary>The peer identifier</summary>
-        private readonly IPeerIdentifier _peerIdentifier;
+        private readonly PeerId _peerId;
 
         /// <summary>The peer client</summary>
         private readonly IPeerClient _peerClient;
@@ -82,14 +82,14 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
         public static int BroadcastOwnerMaximumGossipPeersPerRound => 10;
 
         /// <summary>Initializes a new instance of the <see cref="BroadcastManager"/> class.</summary>
-        /// <param name="peerIdentifier">The peer identifier.</param>
+        /// <param name="peerId">The peer identifier.</param>
         /// <param name="peers">The peers.</param>
         /// <param name="peerSettings">Peer settings</param>
         /// <param name="memoryCache">The memory cache.</param>
         /// <param name="peerClient">The peer client.</param>
         /// <param name="signer">The signature writer</param>
         /// <param name="logger"></param>
-        public BroadcastManager(IPeerIdentifier peerIdentifier,
+        public BroadcastManager(PeerId peerId,
             IPeerRepository peers, 
             IPeerSettings peerSettings,
             IMemoryCache memoryCache, 
@@ -98,7 +98,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
             ILogger logger)
         {
             _logger = logger;
-            _peerIdentifier = peerIdentifier;
+            _peerId = peerId;
             _pendingRequests = memoryCache;
             _peers = peers;
             _signingContext = new SigningContext {NetworkType = peerSettings.NetworkType, SignatureType = SignatureType.ProtocolPeer};
@@ -145,7 +145,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
             }
             else
             {
-                var wrappedMessage = innerMessage.ToProtocolMessage(_peerIdentifier.PeerId);
+                var wrappedMessage = innerMessage.ToProtocolMessage(_peerId);
                 var signedMessage = wrappedMessage.Sign(_signer, _signingContext);
                 await BroadcastSignedAsync(signedMessage).ConfigureAwait(false);
             }
@@ -173,7 +173,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
             try
             {
                 var innerMessage = message.FromProtocolMessage<ProtocolMessage>();
-                var isOwnerOfBroadcast = innerMessage.PeerId.Equals(_peerIdentifier.PeerId);
+                var isOwnerOfBroadcast = innerMessage.PeerId.Equals(_peerId);
                 
                 // The fan out is how many peers to broadcast to
                 var fanOut = isOwnerOfBroadcast 
@@ -188,7 +188,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
                 {
                     _logger.Verbose("Broadcasting message {message}", message);
                     var protocolMessage = message.Clone();
-                    protocolMessage.PeerId = peerIdentifier.PeerId;
+                    protocolMessage.PeerId = peerIdentifier;
                     _peerClient.SendMessage(new MessageDto(
                         protocolMessage,
                         peerIdentifier)

@@ -39,7 +39,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P.ReputationSystem
     public sealed class ReputationManagerTests : FileSystemBasedTest
     {
         private readonly IReputationManager _reputationManager;
-        private ILifetimeScope _scope;
+        private readonly ILifetimeScope _scope;
 
         public ReputationManagerTests(ITestOutputHelper output) : base(output)
         {
@@ -67,7 +67,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P.ReputationSystem
 
             var savedPeer = SavePeerInRepo(pid);
             var peerReputationChange = Substitute.For<IPeerReputationChange>();
-            peerReputationChange.PeerIdentifier.Returns(pid);
+            peerReputationChange.PeerId.Returns(pid);
             peerReputationChange.ReputationEvent.Returns(Substitute.For<IReputationEvents>());
             peerReputationChange.ReputationEvent.Amount.Returns(100);
             _reputationManager.OnNext(peerReputationChange);
@@ -82,7 +82,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P.ReputationSystem
 
             var savedPeer = SavePeerInRepo(pid);
             var peerReputationChange = Substitute.For<IPeerReputationChange>();
-            peerReputationChange.PeerIdentifier.Returns(pid);
+            peerReputationChange.PeerId.Returns(pid);
             peerReputationChange.ReputationEvent.Returns(Substitute.For<IReputationEvents>());
             peerReputationChange.ReputationEvent.Amount.Returns(-100);
             _reputationManager.OnNext(peerReputationChange);
@@ -97,7 +97,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P.ReputationSystem
 
             var savedPeer = SavePeerInRepo(pid);
             var peerReputationChange = Substitute.For<IPeerReputationChange>();
-            peerReputationChange.PeerIdentifier.Returns(pid);
+            peerReputationChange.PeerId.Returns(pid);
             peerReputationChange.ReputationEvent.Returns(Substitute.For<IReputationEvents>());
             peerReputationChange.ReputationEvent.Amount.Returns(-200);
             _reputationManager.OnNext(peerReputationChange);
@@ -112,7 +112,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P.ReputationSystem
 
             var savedPeer = SavePeerInRepo(pid, -100);
             var peerReputationChange = Substitute.For<IPeerReputationChange>();
-            peerReputationChange.PeerIdentifier.Returns(pid);
+            peerReputationChange.PeerId.Returns(pid);
             peerReputationChange.ReputationEvent.Returns(Substitute.For<IReputationEvents>());
             peerReputationChange.ReputationEvent.Amount.Returns(200);
             _reputationManager.OnNext(peerReputationChange);

@@ -28,7 +28,6 @@ using System.Threading.Tasks;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.Discovery;
 using Catalyst.Core.Lib.P2P.Repository;
-using Catalyst.Protocol.Peer;
 using Serilog;
 
 namespace Catalyst.Modules.POA.P2P.Discovery

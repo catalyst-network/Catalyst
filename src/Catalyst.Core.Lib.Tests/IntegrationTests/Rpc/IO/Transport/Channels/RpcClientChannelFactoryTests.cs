@@ -28,6 +28,7 @@ using Catalyst.Abstractions.KeySigner;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.Rpc.Authentication;
 using Catalyst.Abstractions.Rpc.IO.Messaging.Correlation;
+using Catalyst.Core.Lib.DAO;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Handlers;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
@@ -116,7 +117,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Transport.Channels
 
             var correlationId = CorrelationId.GenerateCorrelationId();
 
-            var protocolMessage = new GetPeerCountRequest().ToProtocolMessage(sender.PeerId, correlationId);
+            var protocolMessage = new GetPeerCountRequest().ToProtocolMessage(sender, correlationId);
             var dto = new MessageDto(
                 protocolMessage,
                 recipient
@@ -142,7 +143,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Transport.Channels
                 )
                .ReturnsForAnyArgs(true);
 
-            _authenticationStrategy.Authenticate(Arg.Any<IPeerIdentifier>()).Returns(true);
+            _authenticationStrategy.Authenticate(Arg.Any<PeerId>()).Returns(true);
 
             var observer = new ProtocolMessageObserver(0, Substitute.For<ILogger>());
 

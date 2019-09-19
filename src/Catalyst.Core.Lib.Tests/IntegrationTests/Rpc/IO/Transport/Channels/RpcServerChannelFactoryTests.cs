@@ -112,7 +112,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Transport.Channels
             
             var correlationId = CorrelationId.GenerateCorrelationId();
 
-            var protocolMessage = new GetPeerCountResponse().ToProtocolMessage(sender.PeerId, correlationId);
+            var protocolMessage = new GetPeerCountResponse().ToProtocolMessage(sender, correlationId);
             var dto = new MessageDto(
                 protocolMessage,
                 recipient
@@ -134,7 +134,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Transport.Channels
                     default)
                .ReturnsForAnyArgs(true);
             
-            _authenticationStrategy.Authenticate(Arg.Any<IPeerIdentifier>()).Returns(true);
+            _authenticationStrategy.Authenticate(Arg.Any<PeerId>()).Returns(true);
             
             var observer = new ProtocolMessageObserver(0, Substitute.For<ILogger>());
 

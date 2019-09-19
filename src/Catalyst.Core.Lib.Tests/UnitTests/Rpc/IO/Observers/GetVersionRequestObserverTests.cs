@@ -61,7 +61,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
 
             var versionRequest = new VersionRequest();
             var protocolMessage =
-                versionRequest.ToProtocolMessage(PeerIdHelper.GetPeerId("sender").PeerId);
+                versionRequest.ToProtocolMessage(PeerIdHelper.GetPeerId("sender"));
 
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, testScheduler,
                 protocolMessage

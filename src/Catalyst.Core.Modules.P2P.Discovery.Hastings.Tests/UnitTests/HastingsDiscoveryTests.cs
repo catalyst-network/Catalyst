@@ -43,10 +43,10 @@ using Catalyst.Core.Lib.P2P.Models;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.IPPN;
+using Catalyst.Protocol.Peer;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Microsoft.Reactive.Testing;
-using Nethereum.Hex.HexConvertors.Extensions;
 using NSubstitute;
 using Xunit;
 
@@ -56,7 +56,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.UnitTests
     {
         private readonly TestScheduler _testScheduler;
         private readonly IPeerSettings _settings;
-        private readonly IPeerIdentifier _ownNode;
+        private readonly PeerId _ownNode;
 
         public HastingsDiscoveryTests()
         {
@@ -343,7 +343,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.UnitTests
 
             using (var walker = discoveryTestBuilder.Build())
             {
-                walker.CurrentStep.Peer.PublicKey.ToHex()
+                walker.CurrentStep.Peer.PublicKey.KeyToString()
                     
                     // ReSharper disable once ReturnValueOfPureMethodIsNotUsed
                   ?.Equals("33326b7373683569666c676b336a666d636a7330336c646a346866677338676e");
@@ -414,7 +414,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.UnitTests
                 using (walker.DiscoveryStream.Subscribe(streamObserver.OnNext))
                 {
                     var subbedDto1 = Substitute.For<IPeerClientMessageDto>();
-                    subbedDto1.Sender.Returns(Substitute.For<IPeerIdentifier>());
+                    subbedDto1.Sender.Returns(PeerIdHelper.GetPeerId());
                     subbedDto1.CorrelationId.Returns(Substitute.For<ICorrelationId>());
                     subbedDto1.Message.Returns(new PingResponse());
 
@@ -498,9 +498,9 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.UnitTests
                    .Be(lastPid);
 
                 previousState.Neighbours
-                   .Select(n => n.PeerIdentifier.PeerId)
+                   .Select(n => n.PeerId)
                    .Should()
-                   .Contain(walker.StepProposal.Peer.PeerId);
+                   .Contain(walker.StepProposal.Peer);
             }
         }
 
@@ -600,7 +600,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.UnitTests
             var peerNeighborsResponse = new PeerNeighborsResponse();
 
             peerNeighborsResponse.Peers.Add(neighbours
-               .Select(i => i.PeerIdentifier.PeerId)
+               .Select(i => i.PeerId)
             );
 
             subbedDto.Message.Returns(peerNeighborsResponse);
@@ -636,7 +636,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.UnitTests
                 {
                     neighbours.AsParallel().ForAll(n =>
                     {
-                        var subbedDto = DiscoveryHelper.SubDto(typeof(PingResponse), n.DiscoveryPingCorrelationId, n.PeerIdentifier);
+                        var subbedDto = DiscoveryHelper.SubDto(typeof(PingResponse), n.DiscoveryPingCorrelationId, n.PeerId);
                         var peerNeighborsResponse = new PingResponse();
                         subbedDto.Message.Returns(peerNeighborsResponse);    
                         

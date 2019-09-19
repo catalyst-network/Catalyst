@@ -93,10 +93,8 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings
             _discoveredPeerInCurrentWalk = 0;
 
             // build the initial step proposal for the walk, which is our node and seed nodes
-            _ownNode = new PeerId
-            {
-                Ip = 
-            }; // this needs to be changed
+            _ownNode = peerSettings.PublicKey.BuildPeerIdFromBase32CrockfordKey(peerSettings.PublicIpAddress,
+                peerSettings.Port);
 
             var neighbours = dns.GetSeedNodesFromDns(peerSettings.SeedServers).ToNeighbours();
 
@@ -268,7 +266,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings
             // continue walk by proposing next degree.
             var newCandidate = CurrentStep.Neighbours
                .Where(n => n.StateTypes == NeighbourStateTypes.Responsive)
-               .RandomElement().PeerIdentifier;
+               .RandomElement().PeerId;
 
             StepProposal.RestoreMemento(new HastingsMemento(newCandidate, new Neighbours()));
 
@@ -290,7 +288,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings
             do
             {
                 responsiveNeighbours = CurrentStep.Neighbours
-                   .Where(n => !n.PeerIdentifier.Equals(unresponsiveNeighbour)
+                   .Where(n => !n.PeerId.Equals(unresponsiveNeighbour)
                      && n.StateTypes == NeighbourStateTypes.Responsive)
                    .ToList();
 
@@ -308,11 +306,11 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings
                     "Peer discovery walked failed reaching its starting point with no responsive neighbours.");
             }
 
-            var newCandidate = responsiveNeighbours.RandomElement().PeerIdentifier;
+            var newCandidate = responsiveNeighbours.RandomElement().PeerId;
 
             StepProposal.RestoreMemento(new HastingsMemento(newCandidate, new Neighbours()));
 
-            var peerNeighbourRequestDto = new MessageDto(new PeerNeighborsRequest().ToProtocolMessage(_ownNode.PeerId, StepProposal.PnrCorrelationId),
+            var peerNeighbourRequestDto = new MessageDto(new PeerNeighborsRequest().ToProtocolMessage(_ownNode, StepProposal.PnrCorrelationId),
                 StepProposal.Peer
             );
 
@@ -348,7 +346,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings
                     return;
                 }
 
-                _logger.Verbose("Neighbour {peerId} unresponsive.", neighbour.PeerIdentifier);
+                _logger.Verbose("Neighbour {peerId} unresponsive.", neighbour.PeerId);
                 neighbour.StateTypes = NeighbourStateTypes.UnResponsive;
             }
             catch (Exception e)
@@ -378,7 +376,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings
                     return;
                 }
 
-                StepProposal.Neighbours.First(n => n.PeerIdentifier.Equals(obj.Sender)).StateTypes =
+                StepProposal.Neighbours.First(n => n.PeerId.Equals(obj.Sender)).StateTypes =
                     NeighbourStateTypes.Responsive;
             }
             catch (Exception e)
@@ -407,15 +405,15 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings
                     return;
                 }
 
-                var newNeighbours = peerNeighbours.Peers.Select(p => new Neighbour(new PeerIdentifier(p))).ToList();
+                var newNeighbours = peerNeighbours.Peers.Select(p => new Neighbour(p)).ToList();
 
                 // state candidate provided us a list of neighbours, so now check they are reachable.
                 newNeighbours.ForEach(n =>
                 {
                     try
                     {
-                        var pingRequestDto = new MessageDto(new PingRequest().ToProtocolMessage(_ownNode.PeerId, n.DiscoveryPingCorrelationId),
-                            n.PeerIdentifier);
+                        var pingRequestDto = new MessageDto(new PingRequest().ToProtocolMessage(_ownNode, n.DiscoveryPingCorrelationId),
+                            n.PeerId);
 
                         PeerClient.SendMessage(pingRequestDto);
 
@@ -482,7 +480,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings
             {
                 Reputation = 0,
                 LastSeen = DateTime.UtcNow,
-                PeerId = neighbour.PeerIdentifier
+                PeerId = neighbour.PeerId
             });
 
             Interlocked.Add(ref _discoveredPeerInCurrentWalk, 1);

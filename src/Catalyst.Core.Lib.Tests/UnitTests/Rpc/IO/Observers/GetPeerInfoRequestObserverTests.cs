@@ -172,7 +172,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             var getPeerInfoRequest = new GetPeerInfoRequest {PublicKey = peerId.PublicKey, Ip = peerId.Ip};
 
             var protocolMessage =
-                getPeerInfoRequest.ToProtocolMessage(senderPeerIdentifier.PeerId);
+                getPeerInfoRequest.ToProtocolMessage(senderPeerIdentifier);
 
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, testScheduler, protocolMessage);
             var handler = new GetPeerInfoRequestObserver(senderPeerIdentifier, _logger, _peerRepository);

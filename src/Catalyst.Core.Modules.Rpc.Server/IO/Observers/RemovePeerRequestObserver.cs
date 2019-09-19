@@ -82,7 +82,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
             var publicKeyIsEmpty = removePeerRequest.PublicKey.IsEmpty;
             
             var peersToDelete = _peerRepository.FindAll(new Specification<Peer>(peer =>
-                peer.PeerId.PeerId.Ip.SequenceEqual(removePeerRequest.PeerIp) &&
+                peer.PeerId.Ip.SequenceEqual(removePeerRequest.PeerIp) &&
                 (publicKeyIsEmpty || peer.PeerId.PublicKey.SequenceEqual(removePeerRequest.PublicKey.ToByteArray())))).ToArray();
 
             foreach (var peerToDelete in peersToDelete)

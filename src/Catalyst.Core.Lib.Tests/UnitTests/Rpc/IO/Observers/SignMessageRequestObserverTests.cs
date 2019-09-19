@@ -78,7 +78,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             };
 
             var protocolMessage =
-                signMessageRequest.ToProtocolMessage(PeerIdHelper.GetPeerId("sender").PeerId);
+                signMessageRequest.ToProtocolMessage(PeerIdHelper.GetPeerId("sender"));
 
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, testScheduler, protocolMessage);
 

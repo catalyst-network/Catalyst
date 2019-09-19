@@ -39,6 +39,7 @@ using Catalyst.Core.Lib.IO.Messaging.Dto;
 using Catalyst.Core.Lib.IO.Transport.Channels;
 using Catalyst.Core.Lib.Rpc.IO.Exceptions;
 using Catalyst.Core.Modules.Rpc.Client.IO.Observers;
+using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
@@ -82,7 +83,7 @@ namespace Catalyst.Core.Modules.Rpc.Client.Tests.UnitTests
 
         private readonly TestScheduler _testScheduler;
 
-        private readonly IPeerIdentifier _peerIdentifier;
+        private readonly PeerId _peerIdentifier;
 
         private readonly ITcpClientChannelFactory _channelFactory;
 
@@ -103,7 +104,7 @@ namespace Catalyst.Core.Modules.Rpc.Client.Tests.UnitTests
             var receivedResponse = false;
             var targetVersionResponse = new VersionResponse {Version = "1.2.3.4"};
             var protocolMessage =
-                targetVersionResponse.ToProtocolMessage(_peerIdentifier.PeerId, CorrelationId.GenerateCorrelationId());
+                targetVersionResponse.ToProtocolMessage(_peerIdentifier, CorrelationId.GenerateCorrelationId());
             var observerDto = new ObserverDto(_channelHandlerContext, protocolMessage);
 
             _mockSocketReplySubject.OnNext(observerDto);
@@ -122,7 +123,7 @@ namespace Catalyst.Core.Modules.Rpc.Client.Tests.UnitTests
             VersionResponse returnedVersionResponse = null;
             var targetVersionResponse = new VersionResponse {Version = "1.2.3.4"};
             var protocolMessage =
-                targetVersionResponse.ToProtocolMessage(_peerIdentifier.PeerId, CorrelationId.GenerateCorrelationId());
+                targetVersionResponse.ToProtocolMessage(_peerIdentifier, CorrelationId.GenerateCorrelationId());
             var observerDto = new ObserverDto(_channelHandlerContext, protocolMessage);
 
             _mockSocketReplySubject.OnNext(observerDto);
@@ -140,7 +141,7 @@ namespace Catalyst.Core.Modules.Rpc.Client.Tests.UnitTests
             var nodeRpcClient = await nodeRpcClientFactory.GetClient(null, _rpcClientConfig);
             var targetVersionResponse = new VersionResponse {Version = "1.2.3.4"};
             var protocolMessage =
-                targetVersionResponse.ToProtocolMessage(_peerIdentifier.PeerId, CorrelationId.GenerateCorrelationId());
+                targetVersionResponse.ToProtocolMessage(_peerIdentifier, CorrelationId.GenerateCorrelationId());
             var observerDto = new ObserverDto(_channelHandlerContext, protocolMessage);
 
             var exception = Record.Exception(() =>
