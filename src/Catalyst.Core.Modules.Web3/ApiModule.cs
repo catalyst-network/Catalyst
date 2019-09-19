@@ -54,10 +54,15 @@ namespace Catalyst.Core.Modules.Web3
 
         protected override void Load(ContainerBuilder builder)
         {
+            var executingAssembly = Assembly.GetExecutingAssembly().Location;
+            var buildPath = Path.GetDirectoryName(executingAssembly);
+            var webDirectory = Directory.CreateDirectory(Path.Combine(buildPath, "wwwroot"));
+
             var host = WebHost.CreateDefaultBuilder()
                .ConfigureServices(serviceCollection => ConfigureServices(serviceCollection, builder))
                .Configure(Configure)
                .UseUrls(_apiBindingAddress)
+               .UseWebRoot(webDirectory.FullName)
                .UseSerilog()
                .Build();
 
@@ -117,10 +122,11 @@ namespace Catalyst.Core.Modules.Web3
             app.UseDeveloperExceptionPage();
             app.UseCors("AllowOrigin");
             app.UseDefaultFiles();
-            app.UseStaticFiles(new StaticFileOptions
-            {
-                FileProvider = new PhysicalFileProvider(webDirectory.FullName)
-            });
+            app.UseStaticFiles();
+            //app.UseStaticFiles(new StaticFileOptions
+            //{
+            //    FileProvider = new PhysicalFileProvider(webDirectory.FullName)
+            //});
             app.UseMvc(routes => { routes.MapRoute("CatalystApi", "api/{controller}/{action}/{id}"); });
 
             if (_addSwagger)
