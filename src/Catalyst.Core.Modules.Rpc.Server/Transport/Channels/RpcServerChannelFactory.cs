@@ -69,7 +69,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.Transport.Channels
                     new PeerIdValidationHandler(_peerIdValidator),
                     new AddressedEnvelopeToIMessageEncoder(),
                     new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
-                        new ProtocolMessageVerifyHandler(_keySigner, _signingContext),
+                        new ProtocolMessageVerifyHandler(_keySigner),
                         new ProtocolMessageSignHandler(_keySigner, _signingContext)
                     ),
                     new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
