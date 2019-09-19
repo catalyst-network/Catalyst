@@ -98,14 +98,14 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
 
             peerRepository.GetAll().Returns(peerList);
 
-            var sendPeerIdentifier = PeerIdHelper.GetPeerId("sender");
+            var sendPeerId = PeerIdHelper.GetPeerId("sender");
 
             var protocolMessage =
                 new GetPeerCountRequest().ToProtocolMessage(PeerIdHelper.GetPeerId("sender"));
             var messageStream =
                 MessageStreamHelper.CreateStreamWithMessage(_fakeContext, _testScheduler, protocolMessage);
 
-            var handler = new PeerCountRequestObserver(sendPeerIdentifier, peerRepository, _logger);
+            var handler = new PeerCountRequestObserver(sendPeerId, peerRepository, _logger);
             handler.StartObserving(messageStream);
 
             _testScheduler.Start();

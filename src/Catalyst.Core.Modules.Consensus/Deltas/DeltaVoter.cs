@@ -175,7 +175,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             var ranking = preferredProducers.ToList()
                .FindIndex(p => p.Equals(candidate.ProducerId));
 
-            var identifier = new PeerIdentifier(candidate.ProducerId);
+            var identifier = candidate.ProducerId;
             _logger.Verbose("ranking for block produced by {producerId} = {ranking}",
                 identifier, ranking);
 

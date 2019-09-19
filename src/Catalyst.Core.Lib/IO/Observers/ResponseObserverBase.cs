@@ -29,6 +29,7 @@ using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.P2P;
+using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Wire;
 using Dawn;
 using DotNetty.Transport.Channels;
@@ -48,7 +49,7 @@ namespace Catalyst.Core.Lib.IO.Observers
             }
         }
 
-        protected abstract void HandleResponse(TProto messageDto, IChannelHandlerContext channelHandlerContext, IPeerIdentifier senderPeerIdentifier, ICorrelationId correlationId);
+        protected abstract void HandleResponse(TProto messageDto, IChannelHandlerContext channelHandlerContext, PeerId senderPeerId, ICorrelationId correlationId);
 
         public override void OnNext(IObserverDto<ProtocolMessage> messageDto)
         {
@@ -56,7 +57,7 @@ namespace Catalyst.Core.Lib.IO.Observers
             try
             {
                 HandleResponse(messageDto.Payload.FromProtocolMessage<TProto>(), messageDto.Context,
-                    new PeerIdentifier(messageDto.Payload.PeerId), messageDto.Payload.CorrelationId.ToCorrelationId());
+                    messageDto.Payload.PeerId, messageDto.Payload.CorrelationId.ToCorrelationId());
             }
             catch (Exception exception)
             {

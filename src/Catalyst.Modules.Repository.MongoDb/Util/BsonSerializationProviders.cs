@@ -34,8 +34,6 @@ namespace Catalyst.Modules.Repository.MongoDb.Util
     {
         public static void Init()
         {
-            BsonClassMap.RegisterClassMap<PeerIdentifier>();
-            
             AddSerializer<TransactionBroadcast>();
             AddSerializer<PeerId>();
             AddSerializer<PublicEntry>();

@@ -22,6 +22,7 @@
 #endregion
 
 using Catalyst.Abstractions.P2P;
+using Catalyst.Protocol.Peer;
 using Google.Protobuf;
 
 namespace Catalyst.Abstractions.Rpc.IO.Messaging.Dto
@@ -32,7 +33,7 @@ namespace Catalyst.Abstractions.Rpc.IO.Messaging.Dto
     /// <typeparam name="T"></typeparam>
     public interface IRpcClientMessageDto<T> where T : IMessage
     {
-        IPeerIdentifier Sender { get; set; }
+        PeerId Sender { get; set; }
         T Message { get; set; }
     }
 }

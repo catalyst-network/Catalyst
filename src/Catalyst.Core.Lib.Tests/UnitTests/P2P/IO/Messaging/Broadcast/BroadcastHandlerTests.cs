@@ -27,7 +27,9 @@ using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.KeySigner;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.IO.Messaging.Broadcast;
+using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Handlers;
+using Catalyst.Core.Lib.Network;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
 using Catalyst.Protocol.Cryptography;
@@ -73,10 +75,10 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Broadcast
         [Fact]
         public async Task Broadcast_Handler_Can_Notify_Manager_On_Incoming_Broadcast()
         {
-            var recipientIdentifier = Substitute.For<IPeerIdentifier>();
+            var recipientIdentifier = PeerIdHelper.GetPeerId();
             var fakeIp = IPAddress.Any;
 
-            recipientIdentifier.Ip.Returns(fakeIp);
+            recipientIdentifier.Ip.Returns(fakeIp.To16Bytes().ToByteString());
             recipientIdentifier.IpEndPoint.Returns(new IPEndPoint(fakeIp, 10));
             
             EmbeddedChannel channel = new EmbeddedChannel(

@@ -27,6 +27,7 @@ using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
 using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.IPPN;
+using Catalyst.Protocol.Peer;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Google.Protobuf;
@@ -53,8 +54,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Messaging.Dto
 
             _messageDto.Should().BeOfType<MessageDto>();
             _messageDto.Content.Should().NotBeNull().And.BeAssignableTo(typeof(IMessage<ProtocolMessage>));
-            _messageDto.RecipientPeerIdentifier.Should().NotBeNull().And.BeAssignableTo(typeof(IPeerIdentifier));
-            _messageDto.SenderPeerIdentifier.Should().NotBeNull().And.BeAssignableTo(typeof(IPeerIdentifier));
+            _messageDto.RecipientPeerIdentifier.Should().NotBeNull();
+            _messageDto.SenderPeerIdentifier.Should().NotBeNull();
         }
     }
 }

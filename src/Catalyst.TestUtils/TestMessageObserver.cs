@@ -28,6 +28,7 @@ using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Observers;
+using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Wire;
 using DotNetty.Transport.Channels;
 using Google.Protobuf;
@@ -41,12 +42,12 @@ namespace Catalyst.TestUtils
         where TProto : IMessage, IMessage<TProto>
     {
         public IObserver<TProto> SubstituteObserver { get; }
-        public IPeerIdentifier PeerIdentifier { get; }
+        public PeerId PeerId { get; }
         
         public TestMessageObserver(ILogger logger) : base(logger, typeof(TProto).ShortenedProtoFullName())
         {
             SubstituteObserver = Substitute.For<IObserver<TProto>>();
-            PeerIdentifier = Substitute.For<IPeerIdentifier>();
+            PeerId = PeerIdHelper.GetPeerId();
         }
 
         public override void OnError(Exception exception) { SubstituteObserver.OnError(exception); }
@@ -63,7 +64,7 @@ namespace Catalyst.TestUtils
 
         public void HandleResponseObserver(IMessage messageDto,
             IChannelHandlerContext channelHandlerContext,
-            IPeerIdentifier senderPeerIdentifier,
+            PeerId senderPeerIdentifier,
             ICorrelationId correlationId)
         {
             throw new NotImplementedException();

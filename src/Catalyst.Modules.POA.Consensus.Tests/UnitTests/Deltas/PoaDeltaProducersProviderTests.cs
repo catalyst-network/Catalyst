@@ -30,6 +30,7 @@ using Catalyst.Core.Lib.P2P.Models;
 using Catalyst.Core.Lib.P2P.Repository;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Modules.POA.Consensus.Deltas;
+using Catalyst.Protocol.Peer;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Google.Protobuf;
@@ -123,7 +124,7 @@ namespace Catalyst.Modules.POA.Consensus.Tests.UnitTests.Deltas
             _producersByPreviousDelta.TryGetValue(Arg.Is<string>(s => s.EndsWith(_previousDeltaHashString)), out Arg.Any<object>())
                .Returns(ci =>
                 {
-                    ci[1] = new List<IPeerIdentifier>();
+                    ci[1] = new List<PeerId>();
                     return true;
                 });
 

@@ -321,7 +321,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.UnitTests
             using (var walker = discoveryTestBuilder.Build())
             {
                 var lastState = walker.HastingsCareTaker.Get();
-                lastState.Peer.Should().BeAssignableTo<IPeerIdentifier>();
+                lastState.Peer.Should().NotBeNull();
             }
         }
 

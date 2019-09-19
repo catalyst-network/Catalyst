@@ -31,15 +31,17 @@ namespace Catalyst.Protocol.Peer
     public partial class PeerId
     {
         private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
+        private IPAddress _ipAddress;
+        private IPEndPoint _ipEndPoint;
 
-        public IPAddress IpAddress { get; private set; }
-        public IPEndPoint IpEndPoint { get; private set; }
+        public IPAddress IpAddress => _ipAddress;
+        public IPEndPoint IpEndPoint => _ipEndPoint;
 
         partial void OnConstruction()
         {
             if (Ip == null || Ip.IsEmpty) {Ip = ByteString.CopyFrom(new byte[4]);}
-            IpAddress = new IPAddress(Ip.ToByteArray()).MapToIPv4();
-            IpEndPoint = new IPEndPoint(IpAddress, (int) Port);
+            _ipAddress = new IPAddress(Ip.ToByteArray()).MapToIPv4();
+            _ipEndPoint = new IPEndPoint(IpAddress, (int) Port);
         }
 
         public bool IsValid()

@@ -94,7 +94,7 @@ namespace Catalyst.Core.Modules.Rpc.Client
             }
 
             var handler = _handlers[observer.Payload.TypeUrl];
-            handler.HandleResponseObserver(message, observer.Context, new PeerIdentifier(observer.Payload.PeerId),
+            handler.HandleResponseObserver(message, observer.Context, observer.Payload.PeerId,
                 observer.Payload.CorrelationId.ToCorrelationId());
 
             return message;

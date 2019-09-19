@@ -26,6 +26,7 @@ using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using Catalyst.Core.Modules.Rpc.Client.IO.Observers;
 using Catalyst.Protocol.Rpc.Node;
+using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using NSubstitute;
 using Serilog;
@@ -39,7 +40,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         public void Null_Version_Throws_Exception()
         {
             var channelHandlerContext = Substitute.For<IChannelHandlerContext>();
-            var senderPeerIdentifier = Substitute.For<IPeerIdentifier>();
+            var senderPeerIdentifier = PeerIdHelper.GetPeerId();
             var correlationId = CorrelationId.GenerateCorrelationId();
 
             var logger = Substitute.For<ILogger>();

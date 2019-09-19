@@ -27,7 +27,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Network;
 using Catalyst.Abstractions.P2P;
+using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.P2P;
+using Catalyst.Protocol.Peer;
 using DnsClient;
 using Nethereum.Hex.HexConvertors.Extensions;
 
@@ -69,16 +71,16 @@ namespace Catalyst.Core.Lib.Network
         }
         
         /// <inheritdoc />
-        public IEnumerable<IPeerIdentifier> GetSeedNodesFromDns(IEnumerable<string> seedServers)
+        public IEnumerable<PeerId> GetSeedNodesFromDns(IEnumerable<string> seedServers)
         {
-            var peers = new List<IPeerIdentifier>();
-            var peerChunks = "0x41437c30317c39322e3230372e3137382e3139387c34323036397c3031323334353637383930313233343536373839323232323232323232323232".HexToUTF8String().Split(PeerIdentifier.PidDelimiter);
+            var peers = new List<PeerId>();
+            var peerChunks = "0x41437c30317c39322e3230372e3137382e3139387c34323036397c3031323334353637383930313233343536373839323232323232323232323232";
 
-            peers.Add(PeerIdentifier.ParseHexPeerIdentifier(peerChunks));
-            peers.Add(PeerIdentifier.ParseHexPeerIdentifier(peerChunks));
-            peers.Add(PeerIdentifier.ParseHexPeerIdentifier(peerChunks));
-            peers.Add(PeerIdentifier.ParseHexPeerIdentifier(peerChunks));
-            peers.Add(PeerIdentifier.ParseHexPeerIdentifier(peerChunks));
+            peers.Add(peerChunks.ParseHexStringTo<PeerId>());
+            peers.Add(peerChunks.ParseHexStringTo<PeerId>());
+            peers.Add(peerChunks.ParseHexStringTo<PeerId>());
+            peers.Add(peerChunks.ParseHexStringTo<PeerId>());
+            peers.Add(peerChunks.ParseHexStringTo<PeerId>());
 
             return peers;
         }

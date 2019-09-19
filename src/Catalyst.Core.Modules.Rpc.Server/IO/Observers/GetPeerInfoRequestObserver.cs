@@ -84,7 +84,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
                         IsUnreachable = x.IsAwolPeer,
                         InactiveFor = x.InactiveFor.ToDuration(),
                         LastSeen = x.LastSeen.ToTimestamp(),
-                        Modified = x.Modified.HasValue ? x.Modified.Value.ToTimestamp() : null,
+                        Modified = x.Modified?.ToTimestamp(),
                         Created = x.Created.ToTimestamp()
                     }).ToList();
 

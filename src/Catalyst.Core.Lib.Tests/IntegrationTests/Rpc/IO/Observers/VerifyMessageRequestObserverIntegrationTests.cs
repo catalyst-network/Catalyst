@@ -48,6 +48,7 @@ using Xunit.Abstractions;
 using Catalyst.Core.Modules.Mempool;
 using Catalyst.Protocol.Cryptography;
 using Catalyst.Protocol.Network;
+using Catalyst.Protocol.Peer;
 
 namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
 {
@@ -57,7 +58,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
         private readonly IChannelHandlerContext _fakeContext;
         private readonly IRpcRequestObserver _verifyMessageRequestObserver;
         private readonly ILifetimeScope _scope;
-        private readonly IPeerIdentifier _peerIdentifier;
+        private readonly PeerId _peerId;
         private readonly ByteString _testMessageToSign;
         
         public VerifyMessageRequestObserverIntegrationTests(ITestOutputHelper output) : base(output)
@@ -75,13 +76,13 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
             ContainerProvider.ContainerBuilder.RegisterType<VerifyMessageRequestObserver>().As<IRpcRequestObserver>();
 
             ContainerProvider.ContainerBuilder.RegisterInstance(PeerIdHelper.GetPeerId("Test"))
-               .As<IPeerIdentifier>();
+               .As<PeerId>();
 
             ContainerProvider.ConfigureContainerBuilder();
 
             _scope = ContainerProvider.Container.BeginLifetimeScope(CurrentTestName);
             _keySigner = ContainerProvider.Container.Resolve<IKeySigner>();
-            _peerIdentifier = ContainerProvider.Container.Resolve<IPeerIdentifier>();
+            _peerId = ContainerProvider.Container.Resolve<PeerId>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
             
             var fakeChannel = Substitute.For<IChannel>();
@@ -110,7 +111,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
 
             _verifyMessageRequestObserver
                .OnNext(new ObserverDto(_fakeContext,
-                    requestMessage.ToProtocolMessage(_peerIdentifier.PeerId)));
+                    requestMessage.ToProtocolMessage(_peerId)));
             AssertVerifyResponse(true);
         }
 
@@ -127,7 +128,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
 
             _verifyMessageRequestObserver
                .OnNext(new ObserverDto(_fakeContext,
-                    requestMessage.ToProtocolMessage(_peerIdentifier.PeerId)));
+                    requestMessage.ToProtocolMessage(_peerId)));
             AssertVerifyResponse(false);
         }
 

@@ -27,6 +27,7 @@ using System.Text;
 using Catalyst.Core.Lib.Network;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Protocol.Peer;
+using Google.Protobuf;
 using Multiformats.Base;
 using Multiformats.Hash;
 using Multiformats.Hash.Algorithms;
@@ -70,6 +71,12 @@ namespace Catalyst.Core.Lib.Extensions
         public static PeerId BuildPeerIdFromBase32CrockfordKey(this string base32CrockfordKey, IPAddress ipAddress, int port)
         {
             return base32CrockfordKey.KeyToBytes().BuildPeerIdFromPublicKey(ipAddress, port);
+        }
+
+        public static T ParseHexStringTo<T>(this string hex16Pid) where T : IMessage<T>, new()
+        {
+            var parser = new MessageParser<T>(() => new T());
+            return parser.ParseFrom((SimpleBase.Base16.Decode(hex16Pid)));
         }
     }
 }

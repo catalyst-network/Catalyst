@@ -25,6 +25,7 @@ using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.IO.Observers;
+using Catalyst.Protocol.Peer;
 using Dawn;
 using DotNetty.Transport.Channels;
 using Google.Protobuf;
@@ -38,18 +39,18 @@ namespace Catalyst.Core.Lib.Rpc.IO
         protected RpcResponseObserver(ILogger logger, bool assertMessageNameCheck = true) : base(logger,
             assertMessageNameCheck) { }
 
-        protected abstract override void HandleResponse(TProto messageDto, IChannelHandlerContext channelHandlerContext, IPeerIdentifier senderPeerIdentifier, ICorrelationId correlationId);
+        protected abstract override void HandleResponse(TProto messageDto, IChannelHandlerContext channelHandlerContext, PeerId senderPeerId, ICorrelationId correlationId);
 
         public void HandleResponseObserver(IMessage message,
             IChannelHandlerContext channelHandlerContext,
-            IPeerIdentifier senderPeerIdentifier,
+            PeerId senderPeerId,
             ICorrelationId correlationId)
         {
             Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
-            Guard.Argument(senderPeerIdentifier, nameof(senderPeerIdentifier)).NotNull();
+            Guard.Argument(senderPeerId, nameof(senderPeerId)).NotNull();
             Guard.Argument(message, nameof(message)).NotNull("The message cannot be null");
 
-            HandleResponse((TProto) message, channelHandlerContext, senderPeerIdentifier, correlationId);
+            HandleResponse((TProto) message, channelHandlerContext, senderPeerId, correlationId);
         }
     }
 }
