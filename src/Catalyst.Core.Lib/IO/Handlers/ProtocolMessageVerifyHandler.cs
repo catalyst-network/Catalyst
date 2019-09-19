@@ -41,7 +41,6 @@ namespace Catalyst.Core.Lib.IO.Handlers
             _keySigner = keySigner;
         }
 
-        //todo
         protected override void ChannelRead0(IChannelHandlerContext ctx, ProtocolMessage signedMessage)
         {
             Logger.Verbose("Received {msg}", signedMessage);
