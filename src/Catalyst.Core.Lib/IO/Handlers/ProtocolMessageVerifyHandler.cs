@@ -24,7 +24,6 @@
 using System.Reflection;
 using Catalyst.Abstractions.KeySigner;
 using Catalyst.Core.Lib.Extensions;
-using Catalyst.Protocol.Cryptography;
 using Catalyst.Protocol.Wire;
 using DotNetty.Transport.Channels;
 using Google.Protobuf;
@@ -35,13 +34,11 @@ namespace Catalyst.Core.Lib.IO.Handlers
     public sealed class ProtocolMessageVerifyHandler : InboundChannelHandlerBase<ProtocolMessage>
     {
         private readonly IKeySigner _keySigner;
-        private readonly SigningContext _signingContext;
 
-        public ProtocolMessageVerifyHandler(IKeySigner keySigner, SigningContext signingContext)
+        public ProtocolMessageVerifyHandler(IKeySigner keySigner)
             : base(Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType))
         {
             _keySigner = keySigner;
-            _signingContext = signingContext;
         }
 
         protected override void ChannelRead0(IChannelHandlerContext ctx, ProtocolMessage signedMessage)
@@ -68,11 +65,14 @@ namespace Catalyst.Core.Lib.IO.Handlers
 
         private bool Verify(ProtocolMessage signedMessage)
         {
-            if (signedMessage.Signature == null) {return false;}
-            var sig = signedMessage.Signature.ToByteArray();
+            if (signedMessage.Signature == null) { return false; }
+            var sig = signedMessage.Signature.RawBytes.ToByteArray();
             var pub = signedMessage.PeerId.PublicKey.ToByteArray();
             var signature = _keySigner.CryptoContext.SignatureFromBytes(sig, pub);
-            return _keySigner.Verify(signature, signedMessage.ToByteArray(), _signingContext);
+            var messageWithoutSig = signedMessage.Clone();
+            messageWithoutSig.Signature = null;
+
+            return _keySigner.Verify(signature, messageWithoutSig.ToByteArray(), signedMessage.Signature.SigningContext);
         }
     }
 }
