@@ -73,7 +73,9 @@ namespace Catalyst.Core.Lib.IO.Handlers
             var sig = signedMessage.Signature.RawBytes.ToByteArray();
             var pub = signedMessage.PeerId.PublicKey.ToByteArray();
             var signature = _keySigner.CryptoContext.SignatureFromBytes(sig, pub);
-            return _keySigner.Verify(signature, signedMessage.ToByteArray(), _signingContext);
+            var signedMessageWithoutSignature = signedMessage.Clone();
+            signedMessageWithoutSignature.Signature = null;
+            return _keySigner.Verify(signature, signedMessageWithoutSignature.ToByteArray(), signedMessage.Signature.SigningContext);
         }
     }
 }
