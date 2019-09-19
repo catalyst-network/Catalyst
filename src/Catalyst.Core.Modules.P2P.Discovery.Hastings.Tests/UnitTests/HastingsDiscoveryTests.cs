@@ -343,11 +343,6 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.UnitTests
 
             using (var walker = discoveryTestBuilder.Build())
             {
-                walker.CurrentStep.Peer.PublicKey.KeyToString()
-                    
-                    // ReSharper disable once ReturnValueOfPureMethodIsNotUsed
-                  ?.Equals("33326b7373683569666c676b336a666d636a7330336c646a346866677338676e");
-
                 walker.StepProposal.Neighbours
                    .Should()
                    .HaveCount(Constants.NumberOfRandomPeers); // http://giphygifs.s3.amazonaws.com/media/9MFsKQ8A6HCN2/giphy.gif

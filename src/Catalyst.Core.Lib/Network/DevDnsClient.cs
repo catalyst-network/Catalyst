@@ -24,14 +24,17 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Network;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.Extensions;
-using Catalyst.Core.Lib.P2P;
+using Catalyst.Core.Lib.Util;
 using Catalyst.Protocol.Peer;
 using DnsClient;
-using Nethereum.Hex.HexConvertors.Extensions;
+using Google.Protobuf;
+using Org.BouncyCastle.Math.Field;
+using SimpleBase;
 
 namespace Catalyst.Core.Lib.Network
 {
@@ -39,18 +42,16 @@ namespace Catalyst.Core.Lib.Network
     {
         private readonly IList<string> _seedServers;
         private readonly IList<string> _dnsQueryAnswerValues;
+        private readonly IEnumerable<PeerId> _peerIds;
 
         public DevDnsClient(IPeerSettings peerSettings)
         {
             _seedServers = peerSettings.SeedServers;
-            _dnsQueryAnswerValues = new[]
-            {
-                "0x41437c30317c39322e3230372e3137382e3139387c34323036397c3031323334353637383930313233343536373839",
-                "0x41437c30317c39322e3230372e3137382e3139387c34323036397c3031323334353637383930313233343536373839",
-                "0x41437c30317c39322e3230372e3137382e3139387c34323036397c3031323334353637383930313233343536373839",
-                "0x41437c30317c39322e3230372e3137382e3139387c34323036397c3031323334353637383930313233343536373839",
-                "0x41437c30317c39322e3230372e3137382e3139387c34323036397c3031323334353637383930313233343536373839"
-            };
+
+            _peerIds = Enumerable.Range(0, 5)
+               .Select(i => ByteUtil.GenerateRandomByteArray(32).BuildPeerIdFromPublicKey(IPAddress.Any, 1234));
+            var peerIdsAsStrings = _peerIds.Select(p => Base16.EncodeLower(p.ToByteArray()));
+            _dnsQueryAnswerValues = peerIdsAsStrings.ToArray();
         }
 
         public async Task<IList<IDnsQueryResponse>> GetTxtRecordsAsync(IList<string> hostnames = null)
@@ -73,16 +74,7 @@ namespace Catalyst.Core.Lib.Network
         /// <inheritdoc />
         public IEnumerable<PeerId> GetSeedNodesFromDns(IEnumerable<string> seedServers)
         {
-            var peers = new List<PeerId>();
-            var peerChunks = "0x41437c30317c39322e3230372e3137382e3139387c34323036397c3031323334353637383930313233343536373839323232323232323232323232";
-
-            peers.Add(peerChunks.ParseHexStringTo<PeerId>());
-            peers.Add(peerChunks.ParseHexStringTo<PeerId>());
-            peers.Add(peerChunks.ParseHexStringTo<PeerId>());
-            peers.Add(peerChunks.ParseHexStringTo<PeerId>());
-            peers.Add(peerChunks.ParseHexStringTo<PeerId>());
-
-            return peers;
+            return _peerIds;
         }
     }
 }
