@@ -1,30 +1,31 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-    <PropertyGroup>
-        <TargetFramework>netcoreapp2.2</TargetFramework>
-        <RootNamespace>Catalyst.Abstractions</RootNamespace>
-        <Authors>James Kirby (nshcore@protonmail.com)</Authors>
-        <SignAssembly>true</SignAssembly>
-        <AssemblyOriginatorKeyFile>Catalyst.Abstractions.snk</AssemblyOriginatorKeyFile>
-        <PublicSign>true</PublicSign>
-        <LangVersion>latest</LangVersion>
-    </PropertyGroup>
-    <Import Project="../Common.Packable.props" />
-    <Import Project="../Common.Projects.props" />
-    <ItemGroup>
-        <PackageReference Include="AutoMapper" Version="9.0.0" />
-        <PackageReference Include="DnsClient" Version="1.2.0" />
-        <PackageReference Include="DotNetty.Transport" Version="0.6.0" />
-        <PackageReference Include="Google.Protobuf" Version="3.9.1" />
-        <PackageReference Include="Ipfs.HttpGateway" Version="0.4.0" />
-        <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="2.2.0" />
-        <PackageReference Include="Multiformats.Hash" Version="1.5.0" />
-        <PackageReference Include="SharpRepository.Repository" Version="2.0.4.6" />
-        <PackageReference Include="System.IO.Abstractions" Version="6.0.3" />
-        <PackageReference Include="System.Reactive" Version="4.1.6" />
-    </ItemGroup>
-    <ItemGroup>
-        <ProjectReference Include="..\..\submodules\nethermind\src\Dirichlet\Nethermind.Dirichlet.Numerics\Nethermind.Dirichlet.Numerics.csproj" />
-        <ProjectReference Include="..\..\submodules\nethermind\src\Nethermind\Nethermind.Evm\Nethermind.Evm.csproj" />
-        <ProjectReference Include="..\Catalyst.Protocol\Catalyst.Protocol.csproj" />
-    </ItemGroup>
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <RootNamespace>Catalyst.Abstractions</RootNamespace>
+    <Authors>James Kirby (nshcore@protonmail.com)</Authors>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>Catalyst.Abstractions.snk</AssemblyOriginatorKeyFile>
+    <PublicSign>true</PublicSign>
+    <LangVersion>latest</LangVersion>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+  </PropertyGroup>
+  <Import Project="../Common.Packable.props" />
+  <Import Project="../Common.Projects.props" />
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="5.1.1" />
+    <PackageReference Include="DnsClient" Version="1.2.0" />
+    <PackageReference Include="DotNetty.Transport" Version="0.6.0" />
+    <PackageReference Include="Google.Protobuf" Version="3.9.1" />
+    <PackageReference Include="Ipfs.HttpGateway" Version="0.4.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="2.2.0" />
+    <PackageReference Include="Multiformats.Hash" Version="1.5.0" />
+    <PackageReference Include="SharpRepository.Repository" Version="2.0.4.6" />
+    <PackageReference Include="System.IO.Abstractions" Version="6.0.3" />
+    <PackageReference Include="System.Reactive" Version="4.1.6" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\submodules\nethermind\src\Dirichlet\Nethermind.Dirichlet.Numerics\Nethermind.Dirichlet.Numerics.csproj" />
+    <ProjectReference Include="..\..\submodules\nethermind\src\Nethermind\Nethermind.Evm\Nethermind.Evm.csproj" />
+    <ProjectReference Include="..\Catalyst.Protocol\Catalyst.Protocol.csproj" />
+  </ItemGroup>
 </Project>

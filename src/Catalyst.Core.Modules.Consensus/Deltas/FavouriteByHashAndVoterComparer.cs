@@ -23,8 +23,9 @@
 
 using System.Collections.Generic;
 using Catalyst.Core.Lib.Util;
-using Catalyst.Protocol.Deltas;
+using Catalyst.Protocol.Wire;
 using Google.Protobuf;
+using CandidateDeltaBroadcast = Catalyst.Protocol.Wire.CandidateDeltaBroadcast;
 
 namespace Catalyst.Core.Modules.Consensus.Deltas
 {

@@ -23,7 +23,7 @@
 
 using AutoMapper;
 using Catalyst.Core.Lib.DAO.Converters;
-using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Wire;
 using Google.Protobuf;
 
 namespace Catalyst.Core.Lib.DAO
@@ -34,6 +34,7 @@ namespace Catalyst.Core.Lib.DAO
         public string CorrelationId { get; set; }
         public string TypeUrl { get; set; }
         public string Value { get; set; }
+        public SignatureDao Signature { get; set; }
 
         public override void InitMappers(IMapperConfigurationExpression cfg)
         {

@@ -28,9 +28,9 @@ using Microsoft.Extensions.Configuration;
 
 namespace Catalyst.TestUtils
 {
-    internal static class SocketPortHelper
+    public static class SocketPortHelper
     {
-        internal static void AlterConfigurationToGetUniquePort(IConfigurationRoot config)
+        public static void AlterConfigurationToGetUniquePort(IConfigurationRoot config)
         {
             var serverSection = config.GetSection("CatalystNodeConfiguration").GetSection("Rpc");
             var peerSection = config.GetSection("CatalystNodeConfiguration").GetSection("Peer");

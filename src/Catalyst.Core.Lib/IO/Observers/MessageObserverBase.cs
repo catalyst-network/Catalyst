@@ -25,7 +25,7 @@ using System;
 using System.Reactive.Linq;
 using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.IO.Observers;
-using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Wire;
 using Serilog;
 
 namespace Catalyst.Core.Lib.IO.Observers

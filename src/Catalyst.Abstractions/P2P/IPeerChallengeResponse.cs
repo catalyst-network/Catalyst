@@ -21,7 +21,7 @@
 
 #endregion
 
-using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Peer;
 
 namespace Catalyst.Abstractions.P2P
 {

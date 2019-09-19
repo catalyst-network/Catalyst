@@ -1,0 +1,90 @@
+﻿{
+  "version": "1.0.0",
+  "restore": {
+    "projectUniqueName": "/home/nsh/RiderProjects/Catalyst.Node/src/Catalyst.Core.Modules.Web3/Catalyst.Core.Modules.Web3.csproj",
+    "projectName": "Catalyst.Core.Modules.Web3",
+    "projectPath": "/home/nsh/RiderProjects/Catalyst.Node/src/Catalyst.Core.Modules.Web3/Catalyst.Core.Modules.Web3.csproj",
+    "outputPath": "/home/nsh/RiderProjects/Catalyst.Node/src/Catalyst.Core.Modules.Web3/",
+    "projectStyle": "PackageReference",
+    "originalTargetFrameworks": [
+      "netcoreapp2.2"
+    ],
+    "sources": {
+      "https://api.nuget.org/v3/index.json": {}
+    },
+    "frameworks": {
+      "netcoreapp2.2": {
+        "projectReferences": {
+          "/home/nsh/RiderProjects/Catalyst.Node/src/Catalyst.Abstractions/Catalyst.Abstractions.csproj": {
+            "projectPath": "/home/nsh/RiderProjects/Catalyst.Node/src/Catalyst.Abstractions/Catalyst.Abstractions.csproj"
+          },
+          "/home/nsh/RiderProjects/Catalyst.Node/src/Catalyst.Core.Lib/Catalyst.Core.Lib.csproj": {
+            "projectPath": "/home/nsh/RiderProjects/Catalyst.Node/src/Catalyst.Core.Lib/Catalyst.Core.Lib.csproj"
+          }
+        }
+      }
+    }
+  },
+  "frameworks": {
+    "netcoreapp2.2": {
+      "dependencies": {
+        "Autofac.Extensions.DependencyInjection": {
+          "target": "Package",
+          "version": "[4.3.1, )"
+        },
+        "AutofacSerilogIntegration": {
+          "target": "Package",
+          "version": "[2.0.0, )"
+        },
+        "Google.Protobuf": {
+          "target": "Package",
+          "version": "[3.9.1, )"
+        },
+        "Microsoft.AspNetCore": {
+          "target": "Package",
+          "version": "[2.2.0, )"
+        },
+        "Microsoft.AspNetCore.App": {
+          "target": "Package",
+          "version": "(, )"
+        },
+        "Microsoft.AspNetCore.Mvc": {
+          "target": "Package",
+          "version": "[2.2.0, )"
+        },
+        "Microsoft.AspNetCore.Mvc.Abstractions": {
+          "target": "Package",
+          "version": "[2.2.0, )"
+        },
+        "Microsoft.AspNetCore.Mvc.Core": {
+          "target": "Package",
+          "version": "[2.2.5, )"
+        },
+        "Microsoft.AspNetCore.Mvc.ViewFeatures": {
+          "target": "Package",
+          "version": "[2.2.0, )"
+        },
+        "Microsoft.AspNetCore.StaticFiles": {
+          "target": "Package",
+          "version": "[2.2.0, )"
+        },
+        "Serilog.AspNetCore": {
+          "target": "Package",
+          "version": "[2.1.1, )"
+        },
+        "Swashbuckle.AspNetCore.Swagger": {
+          "target": "Package",
+          "version": "[4.0.1, )"
+        },
+        "Swashbuckle.AspNetCore.SwaggerGen": {
+          "target": "Package",
+          "version": "[4.0.1, )"
+        },
+        "Swashbuckle.AspNetCore.SwaggerUI": {
+          "target": "Package",
+          "version": "[4.0.1, )"
+        }
+      }
+    }
+  }
+}

@@ -22,7 +22,7 @@
 #endregion
 
 using System;
-using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Wire;
 
 namespace Catalyst.Abstractions.IO.Messaging.Correlation
 {

@@ -21,6 +21,7 @@
 
 #endregion
 
+using Catalyst.Protocol.Network;
 using Multiformats.Base;
 using Multiformats.Hash;
 using Multiformats.Hash.Algorithms;
@@ -47,15 +48,6 @@ namespace Catalyst.Core.Lib.Config
         // <summary> Default keystore data directory inside the Catalyst data directory </summary>
         public static string KeyStoreDataSubDir => "keystore";
         
-        // <summary> Config file with nodes for use in rpc client </summary>
-        public static string ShellNodesConfigFile => "nodes.json";
-        
-        // <summary> Registration of message handlers for autofac </summary>
-        public static string MessageHandlersConfigFile => "messageHandlers.json";
-
-        /// <summary>The allowed RPC node operators default XML configuration.</summary>
-        public static string RpcAuthenticationCredentialsFile => "AuthCredentials.xml";
-
         /// <summary>The expiry minutes of initialization </summary>
         public static int FileTransferExpirySeconds => 60;
 
@@ -82,9 +74,9 @@ namespace Catalyst.Core.Lib.Config
         /// <summary> Number of random peers to provide when processing a GetNeighbourRequest</summary>
         public static int NumberOfRandomPeers => 5;
 
-        public static string NetworkConfigFile(Protocol.Common.Network network, string overrideNetworkFile = null)
+        public static string NetworkConfigFile(NetworkType networkType, string overrideNetworkFile = null)
         {
-            return overrideNetworkFile ?? string.Format(JsonFilePattern, network.ToString().ToLowerInvariant());
+            return overrideNetworkFile ?? string.Format(JsonFilePattern, networkType.ToString().ToLowerInvariant());
         }
     }
 }

@@ -24,7 +24,7 @@
 using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.IO.Transport;
 using Catalyst.Abstractions.P2P.Discovery;
-using Catalyst.Protocol.Common;
+using Catalyst.Protocol.Wire;
 
 namespace Catalyst.Abstractions.P2P
 {

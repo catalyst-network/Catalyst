@@ -22,12 +22,12 @@
         </None>
     </ItemGroup>
     <ItemGroup>
-      <PackageReference Include="Microsoft.Reactive.Testing" Version="4.1.6" />
-      <PackageReference Include="Serilog" Version="2.8.0" />
-    </ItemGroup>
-    <ItemGroup>
       <ProjectReference Include="..\Catalyst.Core.Modules.Consensus\Catalyst.Core.Modules.Consensus.csproj" />
+      <ProjectReference Include="..\Catalyst.Core.Modules.Keystore\Catalyst.Core.Modules.Keystore.csproj" />
       <ProjectReference Include="..\Catalyst.Core.Modules.Ledger\Catalyst.Core.Modules.Ledger.csproj" />
       <ProjectReference Include="..\Catalyst.Core.Modules.P2P.Discovery.Hastings\Catalyst.Core.Modules.P2P.Discovery.Hastings.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+      <PackageReference Include="Serilog" Version="2.8.0" />
     </ItemGroup>
 </Project>

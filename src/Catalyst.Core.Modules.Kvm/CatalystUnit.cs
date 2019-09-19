@@ -25,11 +25,24 @@ using Nethermind.Dirichlet.Numerics;
 
 namespace Catalyst.Core.Modules.Kvm
 {
+    // | International System | Si Name    | Si Symbol | Usual name |
+    // |----------------------|------------|-----------|------------|
+    // | 10-^18               | attokatal  | akat      | mol        |
+    // | 10-^15               | femtokatal | fkat      | kmol       |
+    // | 10-^12               | picokatal  | pkat      | mmol       |
+    // | 10-^9                | nanokatal  | nkat      | gmol       |
+    // | 10-^6                | microkatal | µkat      | bernstein  |
+    // | 10-^3                | millikatal | mkat      | kitte      |
+    // | 1                    | Katal      | KAT       | Katal      |
+    // | 10^3                 | kilokatal  | kkat      | KitKat     |
+    // | 10^6                 | megakatal  | Mkat      | mkata      |
+    // | 10^9                 | gigakatal  | Gkat      | gkata      |
+    // | 10^12                | terakatal  | Tkat      | tkata      |
     public static class CatalystUnit
     {
-        public static readonly UInt256 Fulhame = 1;
-        public static readonly UInt256 GFulhame = 1_000_000_000;
-        public static readonly UInt256 Kat = 1_000_000_000_000;
-        public static readonly string KatSymbol = "KAT";
+        public static readonly UInt256 Mol = 1;
+        public static readonly UInt256 Gmol = 1_000_000_000;
+        public static readonly UInt256 Katal = 1_000_000_000_000;
+        public static readonly string KatalSymbol = "KAT";
     }
 }

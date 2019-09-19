@@ -27,15 +27,16 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using Catalyst.Abstractions.Config;
+using Catalyst.Protocol.Network;
 using Dawn;
 
 namespace Catalyst.Core.Lib.Config
 {
-    public class ConfigCopier : IConfigCopier
+    public abstract class ConfigCopier : IConfigCopier
     {
         /// <inheritdoc />
         public void RunConfigStartUp(string dataDir,
-            Protocol.Common.Network network = Protocol.Common.Network.Devnet,
+            NetworkType networkType = NetworkType.Devnet,
             string sourceFolder = null,
             bool overwrite = false,
             string overrideNetworkFile = null)
@@ -65,7 +66,7 @@ namespace Catalyst.Core.Lib.Config
                 // .Concat(modulesFolderInfo.EnumerateFiles(searchPattern)
                 //     .Select(m => Path.Combine(Constants.ModulesSubFolder, m.Name)));
 
-                var requiredConfigFiles = RequiredConfigFiles(network);
+                var requiredConfigFiles = RequiredConfigFiles(networkType);
 
                 //TODO: think about case sensitivity of the environment we are in, this is oversimplified
                 var filenameComparer = RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
@@ -84,19 +85,9 @@ namespace Catalyst.Core.Lib.Config
             }
         }
 
-        protected virtual IEnumerable<string> RequiredConfigFiles(Protocol.Common.Network network,
-            string overrideNetworkFile = null)
-        {
-            var requiredConfigFiles = new[]
-            {
-                Constants.NetworkConfigFile(network, overrideNetworkFile),
-                Constants.SerilogJsonConfigFile,
-                Constants.MessageHandlersConfigFile,
-                Constants.RpcAuthenticationCredentialsFile
-            };
-            return requiredConfigFiles;
-        }
-
+        protected abstract IEnumerable<string> RequiredConfigFiles(NetworkType network,
+            string overrideNetworkFile = null);
+        
         private static void CopyConfigFileToFolder(string targetFolder,
             string fileName,
             string sourceFolder,
