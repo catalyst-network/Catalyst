@@ -109,7 +109,9 @@ namespace Catalyst.Core.Modules.Web3
 
         public void Configure(IApplicationBuilder app)
         {
-            var webDirectory = Directory.CreateDirectory(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot"));
+            var executingAssembly = Assembly.GetExecutingAssembly().Location;
+            var buildPath = Path.GetDirectoryName(executingAssembly);
+            var webDirectory = Directory.CreateDirectory(Path.Combine(buildPath, "wwwroot"));
 
             app.ApplicationServices = new AutofacServiceProvider(_container);
             app.UseDeveloperExceptionPage();

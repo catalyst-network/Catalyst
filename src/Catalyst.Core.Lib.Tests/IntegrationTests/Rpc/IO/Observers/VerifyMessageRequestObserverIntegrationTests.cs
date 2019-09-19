@@ -72,6 +72,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
             ContainerProvider.ContainerBuilder.RegisterModule(new MempoolModule());
             ContainerProvider.ContainerBuilder.RegisterModule(new ConsensusModule());
             ContainerProvider.ContainerBuilder.RegisterModule(new BulletProofsModule());
+            ContainerProvider.ContainerBuilder.RegisterType<VerifyMessageRequestObserver>().As<IRpcRequestObserver>();
 
             ContainerProvider.ContainerBuilder.RegisterInstance(PeerIdentifierHelper.GetPeerIdentifier("Test"))
                .As<IPeerIdentifier>();
@@ -85,9 +86,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
             
             var fakeChannel = Substitute.For<IChannel>();
             _fakeContext.Channel.Returns(fakeChannel);
-
-            var observer = _scope.Resolve<IRpcRequestObserver[]>();
-            _verifyMessageRequestObserver = observer.Single(t => t is VerifyMessageRequestObserver);
+            _verifyMessageRequestObserver = _scope.Resolve<IRpcRequestObserver>();
         }
 
         [Fact]
