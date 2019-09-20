@@ -27,6 +27,7 @@ using System.IO.Abstractions;
 using System.Threading.Tasks;
 using NSubstitute;
 using Polly;
+using Polly.Retry;
 using FileSystem = Catalyst.Core.Lib.FileSystem.FileSystem;
 using IFileSystem = Catalyst.Abstractions.FileSystem.IFileSystem;
 
@@ -35,12 +36,15 @@ namespace Catalyst.TestUtils
     public class TestFileSystem : IFileSystem
     {
         private readonly IFileSystem _fileSystem;
+        private readonly RetryPolicy _retryPolicy;
 
         public TestFileSystem(string rootPath)
         {
             var rootDirectory = new DirectoryInfo(rootPath);
             _fileSystem = Substitute.ForPartsOf<FileSystem>();
             _fileSystem.GetCatalystDataDir().Returns(rootDirectory);
+            _retryPolicy = Policy.Handle<IOException>()
+               .WaitAndRetry(5, i => TimeSpan.FromMilliseconds(500).Multiply(i));
         }
 
         public IFile File => _fileSystem.File;
@@ -75,9 +79,7 @@ namespace Catalyst.TestUtils
 
         public string ReadTextFromCddSubDirectoryFile(string fileName, string subDirectory)
         {
-            var retryPolicy = Policy.Handle<IOException>()
-               .WaitAndRetry(5, i => TimeSpan.FromMilliseconds(500).Multiply(i));
-            var content = retryPolicy.Execute(() => _fileSystem.ReadTextFromCddSubDirectoryFile(fileName, subDirectory));
+            var content = _retryPolicy.Execute(() => _fileSystem.ReadTextFromCddSubDirectoryFile(fileName, subDirectory));
             return content;
         }
 
