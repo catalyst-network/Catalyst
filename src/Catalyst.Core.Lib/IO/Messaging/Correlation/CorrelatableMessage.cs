@@ -23,7 +23,7 @@
 
 using System;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
-using Catalyst.Abstractions.P2P;
+using Catalyst.Protocol.Peer;
 using Google.Protobuf;
 
 namespace Catalyst.Core.Lib.IO.Messaging.Correlation
@@ -31,7 +31,7 @@ namespace Catalyst.Core.Lib.IO.Messaging.Correlation
     public sealed class CorrelatableMessage<T> : ICorrelatableMessage<T> where T : IMessage
     {
         public T Content { get; set; }
-        public IPeerIdentifier Recipient { get; set; }
+        public PeerId Recipient { get; set; }
         public DateTimeOffset SentAt { get; set; }
     }
 }

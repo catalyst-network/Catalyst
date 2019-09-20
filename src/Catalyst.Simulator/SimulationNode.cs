@@ -22,9 +22,8 @@
 #endregion
 
 using System.Net;
-using Catalyst.Abstractions.P2P;
-using Catalyst.Core.Lib.P2P;
-using Catalyst.Core.Lib.Util;
+using Catalyst.Core.Lib.Extensions;
+using Catalyst.Protocol.Peer;
 
 namespace Catalyst.Simulator
 {
@@ -36,9 +35,9 @@ namespace Catalyst.Simulator
 
         public string PublicKey { get; set; }
 
-        public IPeerIdentifier ToPeerIdentifier()
+        public PeerId ToPeerIdentifier()
         {
-            return new PeerIdentifier(PublicKey.KeyToBytes(), IPAddress.Parse(Ip), Port);
+            return PublicKey.BuildPeerIdFromBase32CrockfordKey(IPAddress.Parse(Ip), Port);
         }
     }
 }

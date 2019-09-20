@@ -22,6 +22,7 @@
 #endregion
 
 using Catalyst.Protocol.IPPN;
+using Catalyst.Protocol.Peer;
 
 namespace Catalyst.Abstractions.P2P.Discovery
 {
@@ -34,7 +35,7 @@ namespace Catalyst.Abstractions.P2P.Discovery
         /// <summary>
         /// The peer identifier of the node used to discover new nodes.
         /// </summary>
-        IPeerIdentifier Peer { get; }
+        PeerId Peer { get; }
 
         /// <summary>
         /// A list of neighbours, provided by <see cref="Peer"/> through a <see cref="PeerNeighborsResponse"/>

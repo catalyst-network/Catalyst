@@ -33,7 +33,6 @@ using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.FileTransfer;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
-using Catalyst.Core.Lib.P2P;
 using Catalyst.Core.Modules.Rpc.Server.IO.Observers;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
@@ -73,7 +72,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public async Task Cancel_File_Transfer()
         {
-            var sender = new PeerIdentifier(PeerIdHelper.GetPeerId("sender"));
+            var sender = PeerIdHelper.GetPeerId("sender");
 
             IDownloadFileInformation fileTransferInformation = new DownloadFileTransferInformation(
                 sender,
@@ -115,8 +114,8 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
             var fakeNode = Substitute.For<IRpcClient>();
             var sender = PeerIdHelper.GetPeerId("sender");
             var recipient = PeerIdHelper.GetPeerId("recipient");
-            var senderPeerId = new PeerIdentifier(sender);
-            var recipientPeerId = new PeerIdentifier(recipient);
+            var senderPeerId = sender;
+            var recipientPeerId = recipient;
             var fileToTransfer = FileHelper.CreateRandomTempFile(byteSize);
             var addFileToDfsRequestHandler =
                 new AddFileToDfsRequestObserver(_dfs, senderPeerId, _nodeFileTransferFactory, _logger);

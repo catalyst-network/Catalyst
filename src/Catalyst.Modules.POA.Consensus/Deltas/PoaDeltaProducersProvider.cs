@@ -25,12 +25,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.P2P.Models;
 using Catalyst.Core.Lib.P2P.Repository;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Consensus.Deltas;
+using Catalyst.Protocol.Peer;
 using Google.Protobuf;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Primitives;
@@ -54,13 +54,13 @@ namespace Catalyst.Modules.POA.Consensus.Deltas
         public IPeerRepository PeerRepository { get; }
 
         public PoaDeltaProducersProvider(IPeerRepository peerRepository,
-            IPeerIdentifier peerIdentifier,
+            PeerId peerId,
             IMemoryCache producersByPreviousDelta,
             IMultihashAlgorithm hashAlgorithm,
             ILogger logger)
         {
             _logger = logger;
-            _selfAsPeer = new Peer {PeerIdentifier = peerIdentifier};
+            _selfAsPeer = new Peer {PeerId = peerId};
             PeerRepository = peerRepository;
             HashAlgorithm = hashAlgorithm;
             _cacheEntryOptions = new MemoryCacheEntryOptions()
@@ -68,14 +68,14 @@ namespace Catalyst.Modules.POA.Consensus.Deltas
             _producersByPreviousDelta = producersByPreviousDelta;
         }
 
-        public IList<IPeerIdentifier> GetDeltaProducersFromPreviousDelta(byte[] previousDeltaHash)
+        public IList<PeerId> GetDeltaProducersFromPreviousDelta(byte[] previousDeltaHash)
         {
             //Guard.Argument(previousDeltaHash, nameof(previousDeltaHash)).NotNull();
 
             var previousDeltaHashAsString = previousDeltaHash.AsBase32Address();
 
             if (_producersByPreviousDelta.TryGetValue(GetCacheKey(previousDeltaHashAsString),
-                out IList<IPeerIdentifier> cachedPeerIdsInPriorityOrder))
+                out IList<PeerId> cachedPeerIdsInPriorityOrder))
             {
                 _logger.Information("Retrieved favourite delta producers for successor of {0} from cache.", previousDeltaHashAsString);
                 return cachedPeerIdsInPriorityOrder;
@@ -87,16 +87,16 @@ namespace Catalyst.Modules.POA.Consensus.Deltas
 
             var peerIdsInPriorityOrder = allPeers.Select(p =>
                 {
-                    var array = p.PeerIdentifier.PeerId.ToByteArray().Concat(previousDeltaHash).ToArray();
+                    var array = p.PeerId.ToByteArray().Concat(previousDeltaHash).ToArray();
                     var ranking = array.ComputeRawHash(HashAlgorithm);
                     return new
                     {
-                        p.PeerIdentifier,
+                        p.PeerId,
                         ranking
                     };
                 })
                .OrderBy(h => h.ranking, ByteUtil.ByteListMinSizeComparer.Default)
-               .Select(h => h.PeerIdentifier)
+               .Select(h => h.PeerId)
                .ToList();
 
             _logger.Information("Adding favourite delta producers for the successor of {0} to cache.", previousDeltaHashAsString);

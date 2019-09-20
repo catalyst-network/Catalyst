@@ -29,6 +29,7 @@ using Catalyst.Abstractions.Validators;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.Mempool.Documents;
+using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.Protocol.Wire;
 using Serilog;
@@ -40,20 +41,20 @@ namespace Catalyst.Core.Lib.IO.Events
         private readonly ITransactionValidator _validator;
         private readonly ILogger _logger;
         private readonly IMempool<MempoolDocument> _mempool;
-        private readonly IPeerIdentifier _peerIdentifier;
+        private readonly PeerId _peerId;
         private readonly IBroadcastManager _broadcastManager;
         private readonly IPeerSettings _peerSettings;
 
         public TransactionReceivedEvent(ITransactionValidator validator, 
             IMempool<MempoolDocument> mempool, 
-            IBroadcastManager broadcastManager, 
-            IPeerIdentifier peerIdentifier, 
+            IBroadcastManager broadcastManager,
+            PeerId peerId, 
             IPeerSettings peerSettings,
             ILogger logger)
         {
             _peerSettings = peerSettings;
             _broadcastManager = broadcastManager;
-            _peerIdentifier = peerIdentifier;
+            _peerId = peerId;
             _mempool = mempool;
             _validator = validator;
             _logger = logger;
@@ -80,7 +81,7 @@ namespace Catalyst.Core.Lib.IO.Events
             _mempool.Repository.CreateItem(transaction);
 
             _logger.Information("Broadcasting {signature} transaction", transactionSignature);
-            var transactionToBroadcast = transaction.ToProtocolMessage(_peerIdentifier.PeerId,
+            var transactionToBroadcast = transaction.ToProtocolMessage(_peerId,
                 CorrelationId.GenerateCorrelationId());
             _broadcastManager.BroadcastAsync(transactionToBroadcast);
             return ResponseCode.Successful;

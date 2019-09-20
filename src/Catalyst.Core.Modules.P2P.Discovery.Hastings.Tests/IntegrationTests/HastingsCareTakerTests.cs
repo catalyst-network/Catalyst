@@ -23,8 +23,8 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.Discovery;
+using Catalyst.Protocol.Peer;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Xunit;
@@ -33,11 +33,11 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.IntegrationTests
 {
     public sealed class HastingsCareTakerTests
     {
-        private readonly IPeerIdentifier _ownNode;
+        private readonly PeerId _ownNode;
 
         public HastingsCareTakerTests()
         {
-            _ownNode = PeerIdentifierHelper.GetPeerIdentifier("own_node");
+            _ownNode = PeerIdHelper.GetPeerId("own_node");
         }
         
         [Fact]

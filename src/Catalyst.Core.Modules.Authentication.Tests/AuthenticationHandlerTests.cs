@@ -22,11 +22,11 @@
 #endregion
 
 using Catalyst.Abstractions.IO.Handlers;
-using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.Rpc.Authentication;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Handlers;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
+using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
@@ -58,7 +58,7 @@ namespace Catalyst.Core.Modules.Authentication.Tests
         [Fact]
         public void Can_Block_Pipeline_Non_Authorized_Node_Operator()
         {
-            _authenticationStrategy.Authenticate(Arg.Any<IPeerIdentifier>()).Returns(false);
+            _authenticationStrategy.Authenticate(Arg.Any<PeerId>()).Returns(false);
 
             _serverChannel.WriteInbound(_signedMessage);
             _authenticationStrategy.ReceivedWithAnyArgs(1).Authenticate(null);
@@ -68,7 +68,7 @@ namespace Catalyst.Core.Modules.Authentication.Tests
         [Fact]
         public void Can_Continue_Pipeline_On_Authorized_Node_Operator()
         {
-            _authenticationStrategy.Authenticate(Arg.Any<IPeerIdentifier>()).Returns(true);
+            _authenticationStrategy.Authenticate(Arg.Any<PeerId>()).Returns(true);
 
             _serverChannel.WriteInbound(_signedMessage);
             _authenticationStrategy.ReceivedWithAnyArgs(1).Authenticate(null);

@@ -24,13 +24,13 @@
 using System.Linq;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.IO.Observers;
-using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.Config;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Observers;
 using Catalyst.Core.Lib.P2P.Models;
 using Catalyst.Core.Lib.P2P.Repository;
 using Catalyst.Protocol.IPPN;
+using Catalyst.Protocol.Peer;
 using Dawn;
 using DotNetty.Transport.Channels;
 using Serilog;
@@ -44,10 +44,10 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
     {
         private readonly IPeerRepository _repository;
 
-        public GetNeighbourRequestObserver(IPeerIdentifier peerIdentifier,
+        public GetNeighbourRequestObserver(PeerId peerId,
             IPeerRepository repository,
             ILogger logger)
-            : base(logger, peerIdentifier)
+            : base(logger, peerId)
         { 
             _repository = repository;
         }
@@ -57,17 +57,17 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
         /// </summary>
         /// <param name="peerNeighborsRequest"></param>
         /// <param name="channelHandlerContext"></param>
-        /// <param name="senderPeerIdentifier"></param>
+        /// <param name="senderPeerId"></param>
         /// <param name="correlationId"></param>
         /// <returns></returns>
         protected override PeerNeighborsResponse HandleRequest(PeerNeighborsRequest peerNeighborsRequest,
             IChannelHandlerContext channelHandlerContext,
-            IPeerIdentifier senderPeerIdentifier,
+            PeerId senderPeerId,
             ICorrelationId correlationId)
         {
             Guard.Argument(peerNeighborsRequest, nameof(peerNeighborsRequest)).NotNull();
             Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
-            Guard.Argument(senderPeerIdentifier, nameof(senderPeerIdentifier)).NotNull();
+            Guard.Argument(senderPeerId, nameof(senderPeerId)).NotNull();
             
             Logger.Debug("PeerNeighborsRequest Message Received");
 
@@ -82,7 +82,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
             
             for (var i = 0; i < Constants.NumberOfRandomPeers; i++)
             {
-                peerNeighborsResponseMessage.Peers.Add(activePeersList.RandomElement().PeerIdentifier.PeerId);
+                peerNeighborsResponseMessage.Peers.Add(activePeersList.RandomElement().PeerId);
             }
 
             return peerNeighborsResponseMessage;

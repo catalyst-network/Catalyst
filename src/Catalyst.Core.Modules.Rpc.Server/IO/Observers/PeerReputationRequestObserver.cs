@@ -24,13 +24,13 @@
 using System.Linq;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.IO.Observers;
-using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.IO.Observers;
 using Catalyst.Core.Lib.P2P.Repository;
+using Catalyst.Core.Lib.Util;
+using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using DotNetty.Transport.Channels;
-using Nethereum.RLP;
 using Serilog;
 
 namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
@@ -44,10 +44,10 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
         /// </summary>
         private readonly IPeerRepository _peerRepository;
 
-        public PeerReputationRequestObserver(IPeerIdentifier peerIdentifier,
+        public PeerReputationRequestObserver(PeerId peerId,
             ILogger logger,
             IPeerRepository peerRepository)
-            : base(logger, peerIdentifier)
+            : base(logger, peerId)
         {
             _peerRepository = peerRepository;
         }
@@ -57,25 +57,23 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
         /// </summary>
         /// <param name="getPeerReputationRequest"></param>
         /// <param name="channelHandlerContext"></param>
-        /// <param name="senderPeerIdentifier"></param>
+        /// <param name="senderPeerId"></param>
         /// <param name="correlationId"></param>
         /// <returns></returns>
         protected override GetPeerReputationResponse HandleRequest(GetPeerReputationRequest getPeerReputationRequest,
             IChannelHandlerContext channelHandlerContext,
-            IPeerIdentifier senderPeerIdentifier,
+            PeerId senderPeerId,
             ICorrelationId correlationId)
         {
             Guard.Argument(getPeerReputationRequest, nameof(getPeerReputationRequest)).NotNull();
             Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
-            Guard.Argument(senderPeerIdentifier, nameof(senderPeerIdentifier)).NotNull();
+            Guard.Argument(senderPeerId, nameof(senderPeerId)).NotNull();
             Logger.Debug("received message of type PeerReputationRequest");
-            
-            var ip = getPeerReputationRequest.Ip.ToStringUtf8();
 
             return new GetPeerReputationResponse
             {
-                Reputation = _peerRepository.GetAll().Where(m => m.PeerIdentifier.Ip.ToString() == ip.ToString()
-                     && m.PeerIdentifier.PublicKey.ToStringFromRLPDecoded() == getPeerReputationRequest.PublicKey.ToStringUtf8())
+                Reputation = _peerRepository.GetAll().Where(m => m.PeerId.Ip == getPeerReputationRequest.Ip
+                     && m.PeerId.PublicKey.KeyToString() == getPeerReputationRequest.PublicKey.KeyToString())
                    .Select(x => x.Reputation).DefaultIfEmpty(int.MinValue).First()
             };
         }

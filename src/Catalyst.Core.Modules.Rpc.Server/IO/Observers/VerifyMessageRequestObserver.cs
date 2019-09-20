@@ -26,8 +26,8 @@ using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.KeySigner;
-using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.IO.Observers;
+using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using DotNetty.Transport.Channels;
@@ -43,27 +43,27 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
         private const string PublicKeyInvalid = "Invalid PublicKey";
         private const string SignatureInvalid = "Invalid Signature";
 
-        public VerifyMessageRequestObserver(IPeerIdentifier peerIdentifier,
+        public VerifyMessageRequestObserver(PeerId peerId,
             ILogger logger,
             IKeySigner keySigner)
-            : base(logger, peerIdentifier)
+            : base(logger, peerId)
         {
             _keySigner = keySigner;
         }
 
         /// <param name="verifyMessageRequest"></param>
         /// <param name="channelHandlerContext"></param>
-        /// <param name="senderPeerIdentifier"></param>
+        /// <param name="senderPeerId"></param>
         /// <param name="correlationId"></param>
         /// <returns></returns>
         protected override VerifyMessageResponse HandleRequest(VerifyMessageRequest verifyMessageRequest,
             IChannelHandlerContext channelHandlerContext,
-            IPeerIdentifier senderPeerIdentifier,
+            PeerId senderPeerId,
             ICorrelationId correlationId)
         {
             Guard.Argument(verifyMessageRequest, nameof(verifyMessageRequest)).NotNull();
             Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
-            Guard.Argument(senderPeerIdentifier, nameof(senderPeerIdentifier)).NotNull();
+            Guard.Argument(senderPeerId, nameof(senderPeerId)).NotNull();
             Logger.Debug("received message of type VerifyMessageRequest");
 
             var decodedMessage = verifyMessageRequest.Message.ToByteArray();

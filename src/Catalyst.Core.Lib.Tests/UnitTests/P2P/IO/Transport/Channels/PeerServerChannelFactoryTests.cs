@@ -156,7 +156,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Transport.Channels
             var testingChannel = new EmbeddedChannel("testWithExceptions".ToChannelId(),
                 true, _factory.InheritedHandlers.ToArray());
 
-            var serverIdentifier = PeerIdentifierHelper.GetPeerIdentifier("server");
+            var serverIdentifier = PeerIdHelper.GetPeerId("server");
             using (var badHandler = new FailingRequestObserver(Substitute.For<ILogger>(), serverIdentifier))
             {
                 var messageStream = GetObservableServiceHandler().MessageStream;

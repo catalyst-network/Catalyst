@@ -84,9 +84,9 @@ namespace Catalyst.Core.Lib
             builder.RegisterType<PeerService>().As<IPeerService>().SingleInstance();
             builder.RegisterType<PeerSettings>().As<IPeerSettings>();
             builder.RegisterType<Peer>().As<IPeer>();
+
             builder.RegisterType<PeerIdValidator>().As<IPeerIdValidator>();
             builder.RegisterType<PeerChallengerResponse>().As<IPeerChallengeResponse>();
-            builder.RegisterType<PeerIdentifier>().As<IPeerIdentifier>().SingleInstance();
             builder.RegisterType<PeerClient>().As<IPeerClient>().SingleInstance();
 
             builder.RegisterType<PeerChallenger>().As<IPeerChallenger>()

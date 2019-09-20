@@ -23,8 +23,8 @@
 
 using Catalyst.Abstractions.FileTransfer;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
-using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.Rpc.IO;
+using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Rpc.Node;
 using DotNetty.Transport.Channels;
 using Serilog;
@@ -47,7 +47,10 @@ namespace Catalyst.Core.Modules.Rpc.Client.IO.Observers
             _fileTransferFactory = fileTransferFactory;
         }
 
-        protected override void HandleResponse(TransferFileBytesRequest message, IChannelHandlerContext channelHandlerContext, IPeerIdentifier senderPeerIdentifier, ICorrelationId correlationId)
+        protected override void HandleResponse(TransferFileBytesRequest message, 
+            IChannelHandlerContext channelHandlerContext, 
+            PeerId senderPeerIdentifier, 
+            ICorrelationId correlationId)
         {
             _ = _fileTransferFactory.DownloadChunk(message);
         }

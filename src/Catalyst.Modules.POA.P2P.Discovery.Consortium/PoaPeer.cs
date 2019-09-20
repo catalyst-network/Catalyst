@@ -21,13 +21,16 @@
 
 #endregion
 
+using System;
 using System.Net;
-using Catalyst.Abstractions.P2P;
-using Catalyst.Core.Lib.P2P;
+using Catalyst.Core.Lib.Extensions;
+using Catalyst.Core.Lib.Network;
 using Catalyst.Core.Lib.Util;
+using Catalyst.Protocol.Peer;
 
 namespace Catalyst.Modules.POA.P2P
 {
+    [Obsolete("Please use the PeerIdDao instead")]
     public sealed class PoaPeer
     {
         public string Ip { get; set; }
@@ -36,9 +39,14 @@ namespace Catalyst.Modules.POA.P2P
 
         public string PublicKey { get; set; }
 
-        public IPeerIdentifier ToPeerIdentifier()
+        public PeerId ToPeerId()
         {
-            return new PeerIdentifier(PublicKey.KeyToBytes(), IPAddress.Parse(Ip), Port);
+            return new PeerId
+            {
+                PublicKey = PublicKey.KeyToByteString(),
+                Ip = IPAddress.Parse(Ip).To16Bytes().ToByteString(),
+                Port = (uint) Port
+            };
         }
     }
 }

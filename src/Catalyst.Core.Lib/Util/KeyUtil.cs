@@ -21,6 +21,8 @@
 
 #endregion
 
+using Catalyst.Core.Lib.Extensions;
+using Google.Protobuf;
 using SimpleBase;
 
 namespace Catalyst.Core.Lib.Util
@@ -36,6 +38,16 @@ namespace Catalyst.Core.Lib.Util
         public static byte[] KeyToBytes(this string keyAsString)
         {
             return Base32.Crockford.Decode(keyAsString);
+        }
+
+        public static ByteString KeyToByteString(this string keyAsString)
+        {
+            return KeyToBytes(keyAsString).ToByteString();
+        }
+
+        public static string KeyToString(this ByteString keyAsString)
+        {
+            return KeyToString(keyAsString.ToByteArray());
         }
     }
 }

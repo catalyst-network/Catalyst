@@ -43,10 +43,10 @@ using Catalyst.Core.Lib.P2P.Models;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.IPPN;
+using Catalyst.Protocol.Peer;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Microsoft.Reactive.Testing;
-using Nethereum.Hex.HexConvertors.Extensions;
 using NSubstitute;
 using Xunit;
 
@@ -56,13 +56,13 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.UnitTests
     {
         private readonly TestScheduler _testScheduler;
         private readonly IPeerSettings _settings;
-        private readonly IPeerIdentifier _ownNode;
+        private readonly PeerId _ownNode;
 
         public HastingsDiscoveryTests()
         {
             _testScheduler = new TestScheduler();
             _settings = PeerSettingsHelper.TestPeerSettings();
-            _ownNode = PeerIdentifierHelper.GetPeerIdentifier("ownNode");
+            _ownNode = PeerIdHelper.GetPeerId("ownNode");
         }
 
         [Fact]
@@ -143,9 +143,9 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.UnitTests
         public void Can_WalkForward_With_Valid_Candidate()
         {
             var knownStepPid =
-                PeerIdentifierHelper.GetPeerIdentifier("hey_its_jimmys_brother_the_guy_with_the_beautiful_voice");
+                PeerIdHelper.GetPeerId("hey_its_jimmys_brother_the_guy_with_the_beautiful_voice");
             var knownNextCandidate =
-                PeerIdentifierHelper.GetPeerIdentifier("these_eyes....");
+                PeerIdHelper.GetPeerId("these_eyes....");
 
             var discoveryTestBuilder = new DiscoveryTestBuilder()
                .WithLogger()
@@ -181,10 +181,10 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.UnitTests
         [Fact]
         public void Can_Not_WalkForward_With_InValid_Candidate()
         {
-            var proposalCandidateId = PeerIdentifierHelper.GetPeerIdentifier("these_eyes....");
+            var proposalCandidateId = PeerIdHelper.GetPeerId("these_eyes....");
 
             var knownStepPid =
-                PeerIdentifierHelper.GetPeerIdentifier("hey_its_jimmys_brother_the_guy_with_the_beautiful_voice");
+                PeerIdHelper.GetPeerId("hey_its_jimmys_brother_the_guy_with_the_beautiful_voice");
             var knownStepNeighbours = new Neighbours(new[] {new Neighbour(proposalCandidateId)});
             var latestStep = new HastingsMemento(knownStepPid, knownStepNeighbours);
 
@@ -321,7 +321,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.UnitTests
             using (var walker = discoveryTestBuilder.Build())
             {
                 var lastState = walker.HastingsCareTaker.Get();
-                lastState.Peer.Should().BeAssignableTo<IPeerIdentifier>();
+                lastState.Peer.Should().NotBeNull();
             }
         }
 
@@ -343,11 +343,6 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.UnitTests
 
             using (var walker = discoveryTestBuilder.Build())
             {
-                walker.CurrentStep.Peer.PublicKey.ToHex()
-                    
-                    // ReSharper disable once ReturnValueOfPureMethodIsNotUsed
-                  ?.Equals("33326b7373683569666c676b336a666d636a7330336c646a346866677338676e");
-
                 walker.StepProposal.Neighbours
                    .Should()
                    .HaveCount(Constants.NumberOfRandomPeers); // http://giphygifs.s3.amazonaws.com/media/9MFsKQ8A6HCN2/giphy.gif
@@ -414,7 +409,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.UnitTests
                 using (walker.DiscoveryStream.Subscribe(streamObserver.OnNext))
                 {
                     var subbedDto1 = Substitute.For<IPeerClientMessageDto>();
-                    subbedDto1.Sender.Returns(Substitute.For<IPeerIdentifier>());
+                    subbedDto1.Sender.Returns(PeerIdHelper.GetPeerId());
                     subbedDto1.CorrelationId.Returns(Substitute.For<ICorrelationId>());
                     subbedDto1.Message.Returns(new PingResponse());
 
@@ -432,8 +427,8 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.UnitTests
         [Fact]
         public void Unknown_Pnr_Message_Does_Not_Walk_Back()
         {
-            var candidatePid = PeerIdentifierHelper.GetPeerIdentifier("candidate");
-            var currentPid = PeerIdentifierHelper.GetPeerIdentifier("current");
+            var candidatePid = PeerIdHelper.GetPeerId("candidate");
+            var currentPid = PeerIdHelper.GetPeerId("current");
 
             var discoveryTestBuilder = new DiscoveryTestBuilder()
                .WithLogger()
@@ -467,8 +462,8 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.UnitTests
         [Fact]
         public void Evicted_Known_Pnr_Message_Does_Walk_Back()
         {
-            var currentPid = PeerIdentifierHelper.GetPeerIdentifier("current");
-            var lastPid = PeerIdentifierHelper.GetPeerIdentifier("last");
+            var currentPid = PeerIdHelper.GetPeerId("current");
+            var lastPid = PeerIdHelper.GetPeerId("last");
             var mockNeighbours = DiscoveryHelper.MockNeighbours(4, NeighbourStateTypes.Responsive)
                .Concat(new[] {new Neighbour(currentPid, NeighbourStateTypes.Contacted, CorrelationId.GenerateEmptyCorrelationId())});
             var previousState = DiscoveryHelper.SubMemento(lastPid, new Neighbours(mockNeighbours));
@@ -498,9 +493,9 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.UnitTests
                    .Be(lastPid);
 
                 previousState.Neighbours
-                   .Select(n => n.PeerIdentifier.PeerId)
+                   .Select(n => n.PeerId)
                    .Should()
-                   .Contain(walker.StepProposal.Peer.PeerId);
+                   .Contain(walker.StepProposal.Peer);
             }
         }
 
@@ -600,7 +595,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.UnitTests
             var peerNeighborsResponse = new PeerNeighborsResponse();
 
             peerNeighborsResponse.Peers.Add(neighbours
-               .Select(i => i.PeerIdentifier.PeerId)
+               .Select(i => i.PeerId)
             );
 
             subbedDto.Message.Returns(peerNeighborsResponse);
@@ -636,7 +631,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.UnitTests
                 {
                     neighbours.AsParallel().ForAll(n =>
                     {
-                        var subbedDto = DiscoveryHelper.SubDto(typeof(PingResponse), n.DiscoveryPingCorrelationId, n.PeerIdentifier);
+                        var subbedDto = DiscoveryHelper.SubDto(typeof(PingResponse), n.DiscoveryPingCorrelationId, n.PeerId);
                         var peerNeighborsResponse = new PingResponse();
                         subbedDto.Message.Returns(peerNeighborsResponse);    
                         

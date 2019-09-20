@@ -61,13 +61,13 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
 
             var versionRequest = new VersionRequest();
             var protocolMessage =
-                versionRequest.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId);
+                versionRequest.ToProtocolMessage(PeerIdHelper.GetPeerId("sender"));
 
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, testScheduler,
                 protocolMessage
             );
 
-            var handler = new GetVersionRequestObserver(PeerIdentifierHelper.GetPeerIdentifier("sender"), _logger);
+            var handler = new GetVersionRequestObserver(PeerIdHelper.GetPeerId("sender"), _logger);
 
             handler.StartObserving(messageStream);
 

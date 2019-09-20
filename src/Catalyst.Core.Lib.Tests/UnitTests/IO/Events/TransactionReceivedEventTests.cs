@@ -59,7 +59,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Events
             _transactionReceivedEvent = new TransactionReceivedEvent(_transactionValidator, 
                 _mempool, 
                 _broadcastManager, 
-                PeerIdentifierHelper.GetPeerIdentifier("Test"), 
+                PeerIdHelper.GetPeerId("Test"), 
                 _peerSettings,
                 Substitute.For<ILogger>());
         }

@@ -24,7 +24,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.IO.Messaging.Correlation;
 using Catalyst.Abstractions.P2P.ReputationSystem;
 using Catalyst.Abstractions.Types;
@@ -34,6 +33,7 @@ using Catalyst.Core.Lib.P2P.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.P2P.ReputationSystem;
 using Catalyst.Core.Lib.Tests.UnitTests.IO.Messaging.Correlation;
 using Catalyst.Protocol.IPPN;
+using Catalyst.Protocol.Peer;
 using FluentAssertions;
 using Microsoft.Reactive.Testing;
 using NSubstitute;
@@ -44,7 +44,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Correlation
     public sealed class PeerMessageCorrelationManagerTests : MessageCorrelationManagerTests<IPeerMessageCorrelationManager>
     {
         private readonly TestScheduler _testScheduler;
-        private readonly Dictionary<IPeerIdentifier, int> _reputationByPeerIdentifier;
+        private readonly Dictionary<PeerId, int> _reputationByPeerIdentifier;
 
         public PeerMessageCorrelationManagerTests()
         {
@@ -65,12 +65,12 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Correlation
 
             CorrelationManager.ReputationEventStream.Subscribe(change =>
             {
-                if (!_reputationByPeerIdentifier.ContainsKey(change.PeerIdentifier))
+                if (!_reputationByPeerIdentifier.ContainsKey(change.PeerId))
                 {
                     return;
                 }
                 
-                _reputationByPeerIdentifier[change.PeerIdentifier] += change.ReputationEvent.Amount;
+                _reputationByPeerIdentifier[change.PeerId] += change.ReputationEvent.Amount;
             });
         }
 
@@ -92,7 +92,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Correlation
             var reputationBefore = _reputationByPeerIdentifier[PeerIds[1]];
 
             var responseMatchingIndex1 = new PingResponse().ToProtocolMessage(
-                PeerIds[1].PeerId,
+                PeerIds[1],
                 PendingRequests[1].Content.CorrelationId.ToCorrelationId());
 
             var request = CorrelationManager.TryMatchResponse(responseMatchingIndex1);
@@ -112,7 +112,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Correlation
         {
             var reputationBefore = _reputationByPeerIdentifier[PeerIds[1]];
             var responseMatchingIndex1 = new PingResponse().ToProtocolMessage(
-                PeerIds[1].PeerId,
+                PeerIds[1],
                 CorrelationId.GenerateCorrelationId());
 
             CorrelationManager.TryMatchResponse(responseMatchingIndex1);
@@ -133,7 +133,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Correlation
 
                 _testScheduler.Start();
 
-                observer.Received(1).OnNext(Arg.Is<IPeerReputationChange>(c => c.PeerIdentifier.PeerId.Equals(PendingRequests[0].Content.PeerId) 
+                observer.Received(1).OnNext(Arg.Is<IPeerReputationChange>(c => c.PeerId.Equals(PendingRequests[0].Content.PeerId) 
                  && c.ReputationEvent.Equals(ReputationEventType.NoResponseReceived)));
             }
         }

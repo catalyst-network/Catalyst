@@ -74,7 +74,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Messaging.Correlation
 
                 observer.Received(1).OnNext(Arg.Is<ICacheEvictionEvent<ProtocolMessage>>(p =>
                     p.EvictedContent.CorrelationId == firstCorrelationId
-                 && p.PeerIdentifier.PeerId.Equals(PendingRequests[0].Content.PeerId)));
+                 && p.PeerId.Equals(PendingRequests[0].Content.PeerId)));
             }
         }
     }
