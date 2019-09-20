@@ -200,7 +200,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
             {
                 ReceiverPublicKey = "hello".ToUtf8ByteString(),
                 SenderPublicKey = "bye bye".ToUtf8ByteString(),
-                TransactionFees = UInt256.MaxValue.ToUint256ByteString()
+                TransactionFees = UInt64.MaxValue.ToUint256ByteString()
             };
 
             var contextDao = baseEntryDao.ToDao(original);
@@ -316,7 +316,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
             var transactionEntryDao = stTransactionEntryDao.ToDao(original);
 
             transactionEntryDao.Base.SenderPublicKey.Should().Be(pubKeyBytes.KeyToString());
-            transactionEntryDao.Amount.Should().Be(8855274);
+            transactionEntryDao.Amount.Should().Be(8855274.ToString());
 
             var reconverted = transactionEntryDao.ToProtoBuff();
             reconverted.Base.TransactionFees.ToUInt256().Should().Be(UInt256.Zero);

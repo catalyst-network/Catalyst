@@ -57,6 +57,7 @@ namespace Catalyst.Core.Lib.Repository
         public Microsoft.EntityFrameworkCore.DbSet<PeerIdDao> PeerIdDaoStore { get; set; }
         public Microsoft.EntityFrameworkCore.DbSet<PeerDao> PeerDaoStore { get; set; }
         public Microsoft.EntityFrameworkCore.DbSet<TransactionBroadcastDao> TransactionBroadcastStore { get; set; }
+        public Microsoft.EntityFrameworkCore.DbSet<RangeProofDao> RangeProofDaoStore { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder) { }
     }

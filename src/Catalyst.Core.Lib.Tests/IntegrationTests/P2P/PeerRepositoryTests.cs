@@ -166,7 +166,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
             PeerRepo_Can_Save_And_Retrieve();
         }
 
-        [Fact]
+        [Fact(Skip = "Microsoft DBs yet to be completed")]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void PeerRepo_Microsoft_SQLTypes_Dbs_Update_And_Retrieve()
         {
@@ -180,7 +180,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
             PeerRepo_Can_Update_And_Retrieve();
         }
 
-        [Fact]
+        [Fact(Skip = "Microsoft DBs yet to be completed")]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void PeerRepo_Microsoft_SQLTypes_Dbs_Can_Save_And_Retrieve()
         {
