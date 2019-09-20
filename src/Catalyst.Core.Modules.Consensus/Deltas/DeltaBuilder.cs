@@ -27,6 +27,7 @@ using System.Linq;
 using Catalyst.Abstractions.Consensus;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Cryptography;
+using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Extensions.Protocol.Wire;
 using Catalyst.Core.Lib.Util;
@@ -57,7 +58,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
         public DeltaBuilder(IDeltaTransactionRetriever transactionRetriever,
             IDeterministicRandomFactory randomFactory,
             IMultihashAlgorithm hashAlgorithm,
-            PeerId producerUniqueId,
+            IPeerSettings peerSettings,
             IDeltaCache deltaCache,
             IDateTimeProvider dateTimeProvider,
             ILogger logger)
@@ -65,7 +66,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             _transactionRetriever = transactionRetriever;
             _randomFactory = randomFactory;
             _hashAlgorithm = hashAlgorithm;
-            _producerUniqueId = producerUniqueId;
+            _producerUniqueId = peerSettings.PeerId;
             _deltaCache = deltaCache;
             _dateTimeProvider = dateTimeProvider;
             _logger = logger;
