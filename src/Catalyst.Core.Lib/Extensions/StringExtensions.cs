@@ -44,10 +44,12 @@ namespace Catalyst.Core.Lib.Extensions
             stream.Position = 0;
             return stream;
         }
+        
+        public static byte[] ToUtf8Bytes(this string @string) => Encoding.UTF8.GetBytes(@string);
 
         public static Multihash ComputeUtf8Multihash(this string content, IMultihashAlgorithm algorithm)
         {
-            var multihash = Encoding.UTF8.GetBytes(content).ComputeMultihash(algorithm);
+            var multihash = content.ToUtf8Bytes().ComputeMultihash(algorithm);
             return multihash;
         }
 
