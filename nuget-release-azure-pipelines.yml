@@ -1,0 +1,273 @@
+variables:
+  BuildPlatform: 'x64'
+  BuildConfiguration: 'Release'
+  ArtifactName: 'Catalyst.Core-$(Build.BuildId)'
+stages:
+  - stage: 'GetSaurce'
+    jobs:
+      - job: 'CloneSaurce'
+        continueOnError: false
+        pool:
+          vmImage: 'macos-10.14'
+        steps:
+          - task: DotNetCoreInstaller@0
+            displayName: 'Install .NetCore SDK'
+            inputs:
+              version: 2.2.104
+              failOnStandardError: 'true'
+            timeoutInMinutes: 10
+          - bash: |
+              git submodule update --init --force --recursive
+            displayName: 'Clone submodules'
+          - task: CopyFiles@2
+            inputs:
+              Contents: '**'
+              TargetFolder: '$(Build.ArtifactStagingDirectory)/$(ArtifactName)'
+          - task: CopyFiles@2
+            inputs:
+              sourceFolder: './submodules/Cryptography.FFI.Rust'
+              Contents: '**'
+              TargetFolder: '$(Build.ArtifactStagingDirectory)/$(ArtifactName)/submodules/Cryptography.FFI.Rust'
+          - publish: '$(Build.ArtifactStagingDirectory)/$(ArtifactName)'
+            artifact: $(ArtifactName)
+  - stage: 'BuildNativeFFI'
+    dependsOn: 'GetSaurce'
+    condition: succeeded()
+    jobs:
+      - job: 'BuildBulletProofsFFI'
+        continueOnError: false
+        strategy:
+          matrix:
+            win2016:
+              imageName: 'vs2017-win2016'
+              runtimeName: 'win-x64'
+              package_name: 'Catalyst.Core.Modules.Cryptography.BulletProofs'
+              project: 'src/Catalyst.Core.Modules.Cryptography.BulletProofs/Catalyst.Core.Modules.Cryptography.BulletProofs.csproj'
+              rustup_toolchain: stable
+            osx1013:
+              imageName: 'macos-10.13'
+              runtimeName: 'osx-x64'
+              package_name: 'Catalyst.Core.Modules.Cryptography.BulletProofs'
+              project: 'src/Catalyst.Core.Modules.Cryptography.BulletProofs/Catalyst.Core.Modules.Cryptography.BulletProofs.csproj'
+              rustup_toolchain: stable
+            nix1604:
+              imageName: 'ubuntu-16.04'
+              runtimeName: 'linux-x64'
+              package_name: 'Catalyst.Core.Modules.Cryptography.BulletProofs'
+              project: 'src/Catalyst.Core.Modules.Cryptography.BulletProofs/Catalyst.Core.Modules.Cryptography.BulletProofs.csproj'
+              rustup_toolchain: stable
+        pool:
+          vmImage: $(imageName)
+        steps:
+          - checkout: none
+          - download: current
+            artifact: $(ArtifactName)
+          - script: |
+              curl https://sh.rustup.rs -sSf | sh -s -- -y --default-toolchain $RUSTUP_TOOLCHAIN
+              echo "##vso[task.setvariable variable=PATH;]$PATH:$HOME/.cargo/bin"
+            displayName: Install rust
+            condition: ne( variables['Agent.OS'], 'Windows_NT' )
+          - script: |
+              curl -sSf -o rustup-init.exe https://win.rustup.rs
+              rustup-init.exe -y --default-toolchain %RUSTUP_TOOLCHAIN%
+              echo "##vso[task.setvariable variable=PATH;]%PATH%;%USERPROFILE%\.cargo\bin"
+            displayName: Windows install rust
+            condition: eq( variables['Agent.OS'], 'Windows_NT' )
+          - task: DotNetCoreCLI@2
+            displayName: 'Build project'
+            inputs:
+              projects: '$(Pipeline.Workspace)/$(ArtifactName)/$(PROJECT)'
+              arguments: '--configuration=$(BuildConfiguration) --version-suffix="$(Build.BuildId)"'
+              failOnStandardError: 'true'
+              timeoutInMinutes: 10
+          - task: CopyFiles@2
+            displayName: copy windows runtime
+            condition: eq( variables['Agent.OS'], 'Windows_NT' )
+            inputs:
+              SourceFolder: '$(Pipeline.Workspace)/$(ArtifactName)/src/$(PACKAGE_NAME)/Runtimes/$(RUNTIMENAME)/debug'
+              TargetFolder: '$(Build.ArtifactStagingDirectory)/Runtimes/win-x64/native'
+              Contents: 'catalystffi.*'
+          - task: CopyFiles@2
+            displayName: copy macos runtime
+            condition: eq( variables['Agent.OS'], 'Darwin' )
+            inputs:
+              SourceFolder: '$(Pipeline.Workspace)/$(ArtifactName)/src/$(PACKAGE_NAME)/Runtimes/$(RUNTIMENAME)/debug'
+              TargetFolder: '$(Build.ArtifactStagingDirectory)/Runtimes/osx-x64/native'
+              Contents: 'libcatalystffi.*'
+          - task: CopyFiles@2
+            displayName: copy linux runtime
+            condition: eq( variables['Agent.OS'], 'Linux' )
+            inputs:
+              SourceFolder: '$(Pipeline.Workspace)/$(ArtifactName)/src/$(PACKAGE_NAME)/Runtimes/$(RUNTIMENAME)/debug'
+              TargetFolder: '$(Build.ArtifactStagingDirectory)/Runtimes/linux-x64/native'
+              Contents: 'libcatalystffi.*'
+          - task: PublishBuildArtifacts@1
+            displayName: Publish Artifacts
+            inputs:
+              PathtoPublish: '$(Build.ArtifactStagingDirectory)/Runtimes/'
+              ArtifactName: '$(ArtifactName)-Runtimes'
+  - stage: 'PackCore'
+    dependsOn: 'BuildNativeFFI'
+    condition: succeeded()
+    jobs:
+      - job: 'BuildCoreLibsProtocolAndAbstractions'
+        continueOnError: false
+        pool:
+          vmImage: 'macos-10.14'
+        strategy:
+          matrix:
+            abstractions:
+              package_name: 'Catalyst.Abstractions'
+              project: 'src/Catalyst.Abstractions/Catalyst.Abstractions.csproj'
+              rustup_toolchain: stable
+            protocol:
+              package_name: 'Catalyst.Protocol'
+              project: 'src/Catalyst.Protocol/Catalyst.Protocol.csproj'
+              rustup_toolchain: stable
+            core-lib:
+              package_name: 'Catalyst.Core.Lib'
+              project: 'src/Catalyst.Core.Lib/Catalyst.Core.Lib.csproj'
+              rustup_toolchain: stable
+            core-modules-bulletproof-ffi:
+              package_name: 'Catalyst.Core.Modules.Cryptography.BulletProofs'
+              project: 'src/Catalyst.Core.Modules.Cryptography.BulletProofs/Catalyst.Core.Modules.Cryptography.BulletProofs.csproj'
+              rustup_toolchain: stable
+            core-modules-consensus:
+              package_name: 'Catalyst.Core.Modules.Consensus'
+              project: 'src/Catalyst.Core.Modules.Consensus/Catalyst.Core.Modules.Consensus.csproj'
+              rustup_toolchain: stable
+            core-modules-dfs:
+              package_name: 'Catalyst.Core.Modules.Dfs'
+              project: 'src/Catalyst.Core.Modules.Dfs/Catalyst.Core.Modules.Dfs.csproj'
+              rustup_toolchain: stable
+            core-modules-KeySigner:
+              package_name: 'Catalyst.Core.Modules.KeySigner'
+              project: 'src/Catalyst.Core.Modules.KeySigner/Catalyst.Core.Modules.KeySigner.csproj'
+              rustup_toolchain: stable
+            core-modules-Keystore:
+              package_name: 'Catalyst.Core.Modules.Keystore'
+              project: 'src/Catalyst.Core.Modules.Keystore/Catalyst.Core.Modules.Keystore.csproj'
+              rustup_toolchain: stable
+            core-modules-Kvm:
+              package_name: 'Catalyst.Core.Modules.Kvm'
+              project: 'src/Catalyst.Core.Modules.Kvm/Catalyst.Core.Modules.Kvm.csproj'
+              rustup_toolchain: stable
+            core-modules-Ledger:
+              package_name: 'Catalyst.Core.Modules.Ledger'
+              project: 'src/Catalyst.Core.Modules.Ledger/Catalyst.Core.Modules.Ledger.csproj'
+              rustup_toolchain: stable
+            core-modules-Mempool:
+              package_name: 'Catalyst.Core.Modules.Mempool'
+              project: 'src/Catalyst.Core.Modules.Mempool/Catalyst.Core.Modules.Mempool.csproj'
+              rustup_toolchain: stable
+            core-modules-web3:
+              package_name: 'Catalyst.Core.Modules.Web3'
+              project: 'src/Catalyst.Core.Modules.Web3/Catalyst.Core.Modules.Web3.csproj'
+              rustup_toolchain: stable
+            core-modules-Rpc-Client:
+              package_name: 'Catalyst.Core.Modules.Rpc.Client'
+              project: 'src/Catalyst.Core.Modules.Rpc.Client/Catalyst.Core.Modules.Rpc.Client.csproj'
+              rustup_toolchain: stable
+            core-modules-Rpc-Server:
+              package_name: 'Catalyst.Core.Modules.Rpc.Server'
+              project: 'src/Catalyst.Core.Modules.Rpc.Server/Catalyst.Core.Modules.Rpc.Server.csproj'
+              rustup_toolchain: stable
+            core-modules-P2P-Discovery-hastings:
+              package_name: 'Catalyst.Core.Modules.P2P.Discovery.Hastings'
+              project: 'src/Catalyst.Core.Modules.P2P.Discovery.Hastings/Catalyst.Core.Modules.P2P.Discovery.Hastings.csproj'
+              rustup_toolchain: stable
+            modules-Repository-CosmosDb:
+              package_name: 'Catalyst.Modules.Repository.CosmosDb'
+              project: 'src/Catalyst.Modules.Repository.CosmosDb/Catalyst.Modules.Repository.CosmosDb.csproj'
+              rustup_toolchain: stable
+            modules-Repository-MongoDb:
+              package_name: 'Catalyst.Modules.Repository.MongoDb'
+              project: 'src/Catalyst.Modules.Repository.MongoDb/Catalyst.Modules.Repository.MongoDb.csproj'
+              rustup_toolchain: stable
+        steps:
+          - checkout: none
+          - download: current
+            artifact: $(ArtifactName)
+          - script: |
+              curl https://sh.rustup.rs -sSf | sh -s -- -y --default-toolchain $RUSTUP_TOOLCHAIN
+              echo "##vso[task.setvariable variable=PATH;]$PATH:$HOME/.cargo/bin"
+            displayName: Install rust
+            condition: ne( variables['Agent.OS'], 'Windows_NT' )
+          - script: |
+              curl -sSf -o rustup-init.exe https://win.rustup.rs
+              rustup-init.exe -y --default-toolchain %RUSTUP_TOOLCHAIN%
+              echo "##vso[task.setvariable variable=PATH;]%PATH%;%USERPROFILE%\.cargo\bin"
+            displayName: Windows install rust
+            condition: eq( variables['Agent.OS'], 'Windows_NT' )
+          - task: DownloadBuildArtifacts@0
+            inputs:
+              artifactName: '$(ArtifactName)-Runtimes'
+              buildType: 'current'
+              downloadType: 'single'
+              itemPattern: '$(ArtifactName)-Runtimes/**'
+              downloadPath: '$(Pipeline.Workspace)/$(ArtifactName)/src/Catalyst.Core.Modules.Cryptography.BulletProofs/Runtimes'
+          - task: CopyFiles@2
+            inputs:
+              sourceFolder: '$(Pipeline.Workspace)/$(ArtifactName)/src/Catalyst.Core.Modules.Cryptography.BulletProofs/Runtimes/$(ArtifactName)-Runtimes'
+              contents: '**'
+              TargetFolder: '$(Pipeline.Workspace)/$(ArtifactName)/src/Catalyst.Core.Modules.Cryptography.BulletProofs/Runtimes'
+          - task: DeleteFiles@1
+            inputs:
+              sourceFolder: '$(Pipeline.Workspace)/$(ArtifactName)/src/Catalyst.Core.Modules.Cryptography.BulletProofs/Runtimes/$(ArtifactName)-Runtimes'
+              contents: '**'
+              removeSourceFolder: true
+          - task: DotNetCoreCLI@2
+            displayName: 'Build project'
+            inputs:
+              projects: '$(Pipeline.Workspace)/$(ArtifactName)/$(PROJECT)'
+              arguments: '--configuration=$(BuildConfiguration) --version-suffix="$(Build.BuildId)"'
+              failOnStandardError: 'true'
+            timeoutInMinutes: 10
+          - task: DotNetCoreCLI@2
+            displayName: Pack
+            inputs:
+              command: pack
+              packDirectory: '$(Build.ArtifactStagingDirectory)/packages/releases/$(ArtifactName)'
+              arguments: '--configuration=$(BuildConfiguration) --output=$(Build.ArtifactStagingDirectory)/packages/releases/$(ArtifactName)) --version-suffix=$(Build.BuildId)'
+              arguments: '--configuration=$(BuildConfiguration) --output=$(Build.ArtifactStagingDirectory)/packages/releases/$(ArtifactName)) --version-suffix=$(Build.BuildId)'
+              packagesToPack: '$(Pipeline.Workspace)/$(ArtifactName)/$(PROJECT)'
+              nobuild: true
+              includesymbols: false
+              includesource: false
+              verbosityPack: 'Diagnostic'
+              failOnStandardError: 'true'
+              buildProperties: 'VersionSuffix=$(Build.BuildId)'
+            timeoutInMinutes: 10
+            condition: succeeded()
+          - task: PublishBuildArtifacts@1
+            displayName: Publish Artifacts
+            inputs:
+              PathtoPublish: '$(Build.ArtifactStagingDirectory)/packages/releases/$(ArtifactName)'
+              ArtifactName: '$(ArtifactName)-nugets'
+  - stage: 'PushToNuget'
+    dependsOn: 'PackCore'
+    condition: succeeded()
+    jobs:
+      - job: 'PushPackagesToNuget'
+        continueOnError: false
+        pool:
+          vmImage: 'macos-10.14'
+        steps:
+          - checkout: none
+          - task: DownloadBuildArtifacts@0
+            inputs:
+              artifactName: '$(ArtifactName)-nugets'
+              buildType: 'current'
+              downloadType: 'single'
+              itemPattern: '**'
+              downloadPath: '$(Pipeline.Workspace)/$(ArtifactName)-nugets'
+          - task: NuGetCommand@2
+            displayName: 'NuGet push'
+            inputs:
+              command: push
+              packagesToPush: '$(Pipeline.Workspace)/$(ArtifactName)-nugets/**/*.nupkg'
+              nuGetFeedType: external
+              publishFeedCredentials: 'NuGet'
+              failOnStandardError: 'true'
+            timeoutInMinutes: 10
+            condition: succeeded()
