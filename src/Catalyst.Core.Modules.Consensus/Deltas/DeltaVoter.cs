@@ -27,6 +27,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using Catalyst.Abstractions.Consensus.Deltas;
+using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Protocol.Peer;
@@ -63,12 +64,12 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
 
         public DeltaVoter(IMemoryCache candidatesCache,
             IDeltaProducersProvider deltaProducersProvider,
-            PeerId localPeerIdentifier,
+            IPeerSettings peerSettings,
             ILogger logger)
         {
             _candidatesCache = candidatesCache;
             _deltaProducersProvider = deltaProducersProvider;
-            _localPeerIdentifier = localPeerIdentifier;
+            _localPeerIdentifier = peerSettings.PeerId;
             _cacheEntryOptions = () => new MemoryCacheEntryOptions()
                .AddExpirationToken(new CancellationChangeToken(new CancellationTokenSource(TimeSpan.FromMinutes(3)).Token));
             _logger = logger;
