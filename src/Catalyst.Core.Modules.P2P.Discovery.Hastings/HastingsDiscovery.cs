@@ -38,7 +38,6 @@ using Catalyst.Abstractions.Types;
 using Catalyst.Abstractions.Util;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
-using Catalyst.Core.Lib.P2P;
 using Catalyst.Core.Lib.P2P.Discovery;
 using Catalyst.Core.Lib.P2P.Models;
 using Catalyst.Core.Lib.P2P.Repository;

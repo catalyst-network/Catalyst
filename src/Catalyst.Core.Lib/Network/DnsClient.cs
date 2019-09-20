@@ -24,17 +24,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Network;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.Extensions;
-using Catalyst.Core.Lib.P2P;
 using Catalyst.Protocol.Peer;
 using Dawn;
 using DnsClient;
 using DnsClient.Protocol;
-using Nethereum.Hex.HexConvertors.Extensions;
 
 namespace Catalyst.Core.Lib.Network
 {

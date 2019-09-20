@@ -22,7 +22,6 @@
 #endregion
 
 using System.Linq;
-using System.Net;
 using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Network;
@@ -36,7 +35,6 @@ using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using FluentAssertions;
 using Microsoft.Reactive.Testing;
-using Nethereum.RLP;
 using NSubstitute;
 using Serilog;
 using Xunit;

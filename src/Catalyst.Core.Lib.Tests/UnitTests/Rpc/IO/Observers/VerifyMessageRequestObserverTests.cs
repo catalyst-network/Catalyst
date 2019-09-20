@@ -22,7 +22,6 @@
 #endregion
 
 using Catalyst.Abstractions.KeySigner;
-using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
 using Catalyst.Core.Modules.Rpc.Server.IO.Observers;

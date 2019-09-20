@@ -30,7 +30,6 @@ using Catalyst.Abstractions.FileTransfer;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.IO.Observers;
-using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.FileTransfer;

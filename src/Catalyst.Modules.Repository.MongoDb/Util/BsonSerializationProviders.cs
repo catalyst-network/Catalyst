@@ -21,7 +21,6 @@
 
 #endregion
 
-using Catalyst.Core.Lib.P2P;
 using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.Transaction;

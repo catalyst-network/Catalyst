@@ -22,7 +22,6 @@
 #endregion
 
 using System.Net;
-using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
 using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.IPPN;

@@ -33,7 +33,6 @@ using Catalyst.Abstractions.IO.EventLoop;
 using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.IO.Transport.Channels;
-using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.Rpc;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;

@@ -21,7 +21,6 @@
 
 #endregion
 
-using Catalyst.Abstractions.P2P;
 using Catalyst.Protocol.Peer;
 using Google.Protobuf;
 

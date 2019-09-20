@@ -23,7 +23,6 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.Discovery;
 using Catalyst.Protocol.Peer;
 using Catalyst.TestUtils;

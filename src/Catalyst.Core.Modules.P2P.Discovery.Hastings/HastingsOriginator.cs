@@ -24,7 +24,6 @@
 using System.Linq;
 using System.Reflection;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
-using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.Discovery;
 using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib.Config;

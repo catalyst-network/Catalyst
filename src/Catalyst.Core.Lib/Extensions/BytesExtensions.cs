@@ -33,7 +33,6 @@ using Google.Protobuf;
 using Multiformats.Hash;
 using Multiformats.Hash.Algorithms;
 using Nethermind.Dirichlet.Numerics;
-using Org.BouncyCastle.Math.Field;
 
 namespace Catalyst.Core.Lib.Extensions
 {

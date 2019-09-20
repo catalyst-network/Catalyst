@@ -26,7 +26,6 @@ using System.Threading;
 using Catalyst.Abstractions.FileTransfer;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.IO.Observers;
-using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib.Rpc.IO;
 using Catalyst.Protocol.Peer;

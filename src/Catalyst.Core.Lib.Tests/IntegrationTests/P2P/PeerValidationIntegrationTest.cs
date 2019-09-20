@@ -37,7 +37,6 @@ using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.EventLoop;
 using Catalyst.Core.Lib.P2P;
 using Catalyst.Core.Lib.P2P.IO.Transport.Channels;
-using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
 using Catalyst.Core.Modules.KeySigner;
 using Catalyst.Core.Modules.Keystore;

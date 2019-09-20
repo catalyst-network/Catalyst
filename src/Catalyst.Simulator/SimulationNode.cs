@@ -22,10 +22,7 @@
 #endregion
 
 using System.Net;
-using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.Extensions;
-using Catalyst.Core.Lib.P2P;
-using Catalyst.Core.Lib.Util;
 using Catalyst.Protocol.Peer;
 
 namespace Catalyst.Simulator

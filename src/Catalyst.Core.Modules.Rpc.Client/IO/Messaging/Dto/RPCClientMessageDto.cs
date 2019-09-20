@@ -21,7 +21,6 @@
 
 #endregion
 
-using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.Rpc.IO.Messaging.Dto;
 using Catalyst.Protocol.Peer;
 using Dawn;

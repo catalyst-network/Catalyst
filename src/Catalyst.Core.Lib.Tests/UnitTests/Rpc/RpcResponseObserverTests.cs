@@ -22,7 +22,6 @@
 #endregion
 
 using System;
-using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;

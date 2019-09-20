@@ -28,7 +28,6 @@ using System.Linq;
 using System.Threading;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Core.Lib.Extensions;
-using Catalyst.Core.Lib.P2P;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Wire;

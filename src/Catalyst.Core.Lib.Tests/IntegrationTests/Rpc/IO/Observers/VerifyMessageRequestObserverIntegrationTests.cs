@@ -33,7 +33,6 @@ using Google.Protobuf;
 using NSubstitute;
 using System.Linq;
 using Catalyst.Abstractions.Keystore;
-using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
 using Catalyst.Core.Modules.Consensus;

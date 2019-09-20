@@ -26,7 +26,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
-using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.Util;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Handlers;

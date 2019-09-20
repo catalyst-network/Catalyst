@@ -24,7 +24,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.IO.Messaging.Correlation;
 using Catalyst.Abstractions.P2P.ReputationSystem;
 using Catalyst.Abstractions.Types;

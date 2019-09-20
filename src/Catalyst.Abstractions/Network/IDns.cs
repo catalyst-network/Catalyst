@@ -23,7 +23,6 @@
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Catalyst.Abstractions.P2P;
 using Catalyst.Protocol.Peer;
 using DnsClient;
 

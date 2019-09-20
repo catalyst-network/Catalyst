@@ -28,7 +28,6 @@ using Catalyst.Abstractions.KeySigner;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.Rpc.Authentication;
 using Catalyst.Abstractions.Rpc.IO.Messaging.Correlation;
-using Catalyst.Core.Lib.DAO;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Handlers;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;

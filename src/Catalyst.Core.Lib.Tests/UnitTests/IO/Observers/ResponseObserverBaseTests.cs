@@ -25,7 +25,6 @@ using System;
 using System.Linq;
 using System.Threading;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
-using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.IO.Observers;
 using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Rpc.Node;

@@ -24,7 +24,6 @@
 using System.Linq;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.IO.Observers;
-using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.IO.Observers;
 using Catalyst.Core.Lib.P2P.Models;
 using Catalyst.Core.Lib.P2P.Repository;

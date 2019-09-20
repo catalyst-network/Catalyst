@@ -23,7 +23,6 @@
 
 using System;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
-using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.Rpc.IO;
 using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Rpc.Node;

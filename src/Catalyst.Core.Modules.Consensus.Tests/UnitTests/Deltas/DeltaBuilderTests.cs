@@ -28,7 +28,6 @@ using System.Text;
 using Catalyst.Abstractions.Consensus;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Cryptography;
-using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.Cryptography;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Extensions.Protocol.Wire;

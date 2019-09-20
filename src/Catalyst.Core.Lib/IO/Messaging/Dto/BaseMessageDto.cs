@@ -23,7 +23,6 @@
 
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.IO.Messaging.Dto;
-using Catalyst.Abstractions.P2P;
 using Catalyst.Protocol.Peer;
 using Dawn;
 using DotNetty.Transport.Channels;

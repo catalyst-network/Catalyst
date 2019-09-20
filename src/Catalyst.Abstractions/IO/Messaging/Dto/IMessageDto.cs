@@ -22,7 +22,6 @@
 #endregion
 
 using Catalyst.Abstractions.IO.Messaging.Correlation;
-using Catalyst.Abstractions.P2P;
 using Catalyst.Protocol.Peer;
 using DotNetty.Transport.Channels;
 using Google.Protobuf;

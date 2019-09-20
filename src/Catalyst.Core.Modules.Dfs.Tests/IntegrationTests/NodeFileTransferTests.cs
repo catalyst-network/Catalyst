@@ -33,7 +33,6 @@ using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.FileTransfer;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
-using Catalyst.Core.Lib.P2P;
 using Catalyst.Core.Modules.Rpc.Server.IO.Observers;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;

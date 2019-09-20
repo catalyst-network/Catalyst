@@ -24,7 +24,6 @@
 using System.IO;
 using System.Net;
 using System.Text;
-using Catalyst.Core.Lib.Network;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Protocol.Peer;
 using Google.Protobuf;

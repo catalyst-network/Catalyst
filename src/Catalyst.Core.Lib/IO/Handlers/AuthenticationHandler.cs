@@ -22,7 +22,6 @@
 #endregion
 
 using Catalyst.Abstractions.Rpc.Authentication;
-using Catalyst.Core.Lib.P2P;
 using Catalyst.Protocol.Wire;
 using DotNetty.Transport.Channels;
 using Serilog;

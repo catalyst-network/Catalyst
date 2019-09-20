@@ -35,7 +35,6 @@ using Catalyst.Abstractions.IO.Transport.Channels;
 using Catalyst.Abstractions.Rpc;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Transport;
-using Catalyst.Core.Lib.P2P;
 using Catalyst.Core.Lib.Rpc.IO.Exceptions;
 using Catalyst.Protocol.Wire;
 using Google.Protobuf;

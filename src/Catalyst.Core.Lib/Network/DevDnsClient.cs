@@ -33,7 +33,6 @@ using Catalyst.Core.Lib.Util;
 using Catalyst.Protocol.Peer;
 using DnsClient;
 using Google.Protobuf;
-using Org.BouncyCastle.Math.Field;
 using SimpleBase;
 
 namespace Catalyst.Core.Lib.Network
