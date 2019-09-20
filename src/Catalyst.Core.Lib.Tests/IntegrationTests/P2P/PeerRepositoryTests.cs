@@ -145,7 +145,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
             return peerRepo;
         }
 
-        [Theory]
+        [Theory(Skip = "To be run in the pipeline only")]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         [MemberData(nameof(ModulesList))]
         public void PeerRepo_All_Dbs_Can_Update_And_Retrieve(Module dbModule)
@@ -155,8 +155,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
             PeerRepo_Can_Update_And_Retrieve();
         }
 
-        //[Theory(Skip = "To be run in the pipeline only")]
-        [Theory]
+        [Theory(Skip = "To be run in the pipeline only")]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         [MemberData(nameof(ModulesList))]
         public void PeerRepo_All_Dbs_Can_Save_And_Retrieve(Module dbModule)

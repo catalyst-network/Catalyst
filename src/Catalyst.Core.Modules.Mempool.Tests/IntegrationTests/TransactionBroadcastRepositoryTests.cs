@@ -23,16 +23,13 @@
 
 using System;
 using System.Collections.Generic;
-using System.Transactions;
 using Autofac;
 using Catalyst.Abstractions.DAO;
 using Catalyst.TestUtils;
 using Xunit;
 using Xunit.Abstractions;
 using Catalyst.Core.Lib.DAO;
-using Catalyst.Core.Lib.P2P.Models;
 using Catalyst.Core.Lib.Repository;
-using Catalyst.Protocol.Wire;
 using SharpRepository.InMemoryRepository;
 using SharpRepository.Repository;
 using FluentAssertions;
@@ -85,12 +82,6 @@ namespace Catalyst.Core.Modules.Mempool.Tests.IntegrationTests
         {
             _mappers = new IMapperInitializer[]
             {
-                //new TransactionBroadcastDao(),
-                //new SignatureDao(),
-                //new PublicEntryDao(),
-                //new ConfidentialEntryDao(),
-                //new ContractEntryDao()
-
                 new ProtocolMessageDao(),
                 new ConfidentialEntryDao(),
                 new ProtocolErrorMessageSignedDao(),
@@ -104,7 +95,6 @@ namespace Catalyst.Core.Modules.Mempool.Tests.IntegrationTests
                 new ContractEntryDao(),
                 new SignatureDao(),
                 new BaseEntryDao(),
-
             };
 
             var map = new MapperProvider(_mappers);
@@ -119,35 +109,8 @@ namespace Catalyst.Core.Modules.Mempool.Tests.IntegrationTests
                 var peerRepo = PopulateTransactBroadcastRepo(scope, out criteriaId);
 
                 peerRepo.Get(criteriaId).Id.Should().Be(criteriaId);
-                //peerRepo.Get(criteriaId).PeerIdentifier.PublicKey.Should().Be(peerRepo.Get(criteriaId).PeerIdentifier.PublicKey);
-                //peerRepo.Get(criteriaId).PeerIdentifier.Ip.Should().Be(peerRepo.Get(criteriaId).PeerIdentifier.Ip);
             }
         }
-
-        //private void PeerRepo_Can_Update_And_Retrieve()
-        //{
-        //    using (var scope = ContainerProvider.Container.BeginLifetimeScope(CurrentTestName))
-        //    {
-        //        var criteriaId = string.Empty;
-
-        //        var peerRepo = PopulateTransactBroadcastRepo(scope, out criteriaId);
-
-        //        var retrievedPeer = peerRepo.Get(criteriaId);
-        //        retrievedPeer.Touch();
-        //        peerRepo.Update(retrievedPeer);
-
-        //        var retrievedPeerModified = peerRepo.Get(criteriaId);
-        //        var now = DateTime.UtcNow.Date;
-
-        //        if (retrievedPeerModified.Modified == null)
-        //        {
-        //            return;
-        //        }
-
-        //        var dateComparer = retrievedPeerModified.Modified.Value.Date.ToString("MM/dd/yyyy");
-        //        dateComparer.Should().Equals(now.ToString("MM/dd/yyyy"));
-        //    }
-        //}
 
         private IRepository<TransactionBroadcastDao, string> PopulateTransactBroadcastRepo(ILifetimeScope scope, out string Id)
         {
@@ -157,26 +120,20 @@ namespace Catalyst.Core.Modules.Mempool.Tests.IntegrationTests
             transactionBroadcastDao.Id = Guid.NewGuid().ToString();
             Id = transactionBroadcastDao.Id;
 
-            //peerDao.PeerIdentifier = new PeerIdDao().ToDao(PeerIdentifierHelper.GetPeerIdentifier(new Random().Next().ToString()).PeerId);
-            //peerDao.PeerIdentifier.Id = Guid.NewGuid().ToString();
-
             transactBroadcastRepo.Add(transactionBroadcastDao);
 
             return transactBroadcastRepo;
         }
 
-        [Theory]
+        [Theory(Skip = "To be run in the pipeline only")]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         [MemberData(nameof(ModulesList))]
         public void TransactionBroadcastRepo_All_Dbs_Can_Update_And_Retrieve(Module dbModule)
         {
             RegisterModules(dbModule);
-
-            //PeerRepo_Can_Update_And_Retrieve();
         }
 
-        //[Theory(Skip = "To be run in the pipeline only")]
-        [Theory]
+        [Theory(Skip = "To be run in the pipeline only")]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         [MemberData(nameof(ModulesList))]
         public void TransactionBroadcastRepo_All_Dbs_Can_Save_And_Retrieve(Module dbModule)

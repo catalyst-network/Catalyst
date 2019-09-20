@@ -23,8 +23,10 @@
 
 using Autofac;
 using Catalyst.Abstractions.IO.Observers;
+using Catalyst.Abstractions.IO.Transport.Channels;
 using Catalyst.Abstractions.Rpc;
 using Catalyst.Core.Modules.Rpc.Server.IO.Observers;
+using Catalyst.Core.Modules.Rpc.Server.Transport.Channels;
 
 namespace Catalyst.Core.Modules.Rpc.Server
 {
@@ -32,29 +34,9 @@ namespace Catalyst.Core.Modules.Rpc.Server
     {
         protected override void Load(ContainerBuilder builder)
         {
+            builder.RegisterType<RpcServerChannelFactory>().As<ITcpServerChannelFactory>().SingleInstance();
             builder.RegisterType<RpcServer>().As<IRpcServer>().SingleInstance();
             builder.RegisterType<RpcServerSettings>().As<IRpcServerSettings>();
-
-            /**
-             * Rpc Server Observers
-             **/
-            builder.RegisterType<AddFileToDfsRequestObserver>().As<IRpcRequestObserver>().SingleInstance();
-            builder.RegisterType<BroadcastRawTransactionRequestObserver>().As<IRpcRequestObserver>().SingleInstance();
-            builder.RegisterType<ChangeDataFolderRequestObserver>().As<IRpcRequestObserver>().SingleInstance();
-            builder.RegisterType<GetDeltaRequestObserver>().As<IRpcRequestObserver>().SingleInstance();
-            builder.RegisterType<GetFileFromDfsRequestObserver>().As<IRpcRequestObserver>().SingleInstance();
-            builder.RegisterType<GetInfoRequestObserver>().As<IRpcRequestObserver>().SingleInstance();
-            builder.RegisterType<GetMempoolRequestObserver>().As<IRpcRequestObserver>().SingleInstance();
-            builder.RegisterType<GetPeerInfoRequestObserver>().As<IRpcRequestObserver>().SingleInstance();
-            builder.RegisterType<GetVersionRequestObserver>().As<IRpcRequestObserver>().SingleInstance();
-            builder.RegisterType<PeerBlackListingRequestObserver>().As<IRpcRequestObserver>().SingleInstance();
-            builder.RegisterType<PeerCountRequestObserver>().As<IRpcRequestObserver>().SingleInstance();
-            builder.RegisterType<PeerListRequestObserver>().As<IRpcRequestObserver>().SingleInstance();
-            builder.RegisterType<PeerReputationRequestObserver>().As<IRpcRequestObserver>().SingleInstance();
-            builder.RegisterType<RemovePeerRequestObserver>().As<IRpcRequestObserver>().SingleInstance();
-            builder.RegisterType<SignMessageRequestObserver>().As<IRpcRequestObserver>().SingleInstance();
-            builder.RegisterType<TransferFileBytesRequestObserver>().As<IRpcRequestObserver>().SingleInstance();
-            builder.RegisterType<VerifyMessageRequestObserver>().As<IRpcRequestObserver>().SingleInstance();
         }  
     }
 }
