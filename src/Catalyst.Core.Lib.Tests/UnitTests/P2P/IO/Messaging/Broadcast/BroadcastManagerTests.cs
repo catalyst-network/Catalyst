@@ -62,8 +62,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Broadcast
             _keySigner.CryptoContext.SignatureLength.Returns(64);
             _peers = Substitute.For<IPeerRepository>();
             _cache = new MemoryCache(new MemoryCacheOptions());
-            _peerSettings = Substitute.For<IPeerSettings>();
-            _peerSettings.PeerId.Returns(_senderPeerId);
+            _peerSettings = _senderPeerId.ToSubstitutedPeerSettings();
         }
 
         [Fact]

@@ -76,7 +76,11 @@ namespace Catalyst.Modules.POA.Consensus.Tests.UnitTests.Deltas
 
             _producersByPreviousDelta = Substitute.For<IMemoryCache>();
 
-            _poaDeltaProducerProvider = new PoaDeltaProducersProvider(peerRepository, PeerIdHelper.GetPeerId("TEST"), _producersByPreviousDelta, _hashAlgorithm, logger);
+            _poaDeltaProducerProvider = new PoaDeltaProducersProvider(peerRepository, 
+                PeerIdHelper.GetPeerId("TEST").ToSubstitutedPeerSettings(), 
+                _producersByPreviousDelta, 
+                _hashAlgorithm, 
+                logger);
         }
 
         [Fact]

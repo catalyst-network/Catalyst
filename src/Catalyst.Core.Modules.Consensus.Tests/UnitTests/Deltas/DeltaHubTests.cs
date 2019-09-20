@@ -27,6 +27,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Dfs;
+using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.IO.Messaging.Broadcast;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Modules.Consensus.Deltas;
@@ -54,12 +55,12 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         internal sealed class DeltaHubWithFastRetryPolicy : DeltaHub
         {
             public DeltaHubWithFastRetryPolicy(IBroadcastManager broadcastManager,
-                PeerId peerId,
+                IPeerSettings peerSettings,
                 IDeltaVoter deltaVoter,
                 IDeltaElector deltaElector,
                 IDfs dfs,
                 IDeltaHashProvider hashProvider,
-                ILogger logger) : base(broadcastManager, peerId, dfs, logger) { }
+                ILogger logger) : base(broadcastManager, peerSettings, dfs, logger) { }
 
             protected override AsyncRetryPolicy<string> DfsRetryPolicy => 
                 Policy<string>.Handle<Exception>()
@@ -77,7 +78,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             var dfs = Substitute.For<IDfs>();
             var hashProvider = Substitute.For<IDeltaHashProvider>();
             _dfs = dfs;
-            _hub = new DeltaHubWithFastRetryPolicy(_broadcastManager, _peerId, deltaVoter, deltaElector, _dfs, hashProvider, logger);
+            _hub = new DeltaHubWithFastRetryPolicy(_broadcastManager, _peerId.ToSubstitutedPeerSettings(), deltaVoter, deltaElector, _dfs, hashProvider, logger);
         }
 
         [Fact]
