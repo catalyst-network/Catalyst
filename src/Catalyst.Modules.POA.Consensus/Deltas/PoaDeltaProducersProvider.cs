@@ -25,6 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.P2P.Models;
 using Catalyst.Core.Lib.P2P.Repository;
@@ -54,13 +55,13 @@ namespace Catalyst.Modules.POA.Consensus.Deltas
         public IPeerRepository PeerRepository { get; }
 
         public PoaDeltaProducersProvider(IPeerRepository peerRepository,
-            PeerId peerId,
+            IPeerSettings peerSettings,
             IMemoryCache producersByPreviousDelta,
             IMultihashAlgorithm hashAlgorithm,
             ILogger logger)
         {
             _logger = logger;
-            _selfAsPeer = new Peer {PeerId = peerId};
+            _selfAsPeer = new Peer {PeerId = peerSettings.PeerId};
             PeerRepository = peerRepository;
             HashAlgorithm = hashAlgorithm;
             _cacheEntryOptions = new MemoryCacheEntryOptions()

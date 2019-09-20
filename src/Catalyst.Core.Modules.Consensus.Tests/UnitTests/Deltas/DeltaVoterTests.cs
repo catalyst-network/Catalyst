@@ -27,6 +27,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Linq;
 using Catalyst.Abstractions.Consensus.Deltas;
+using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Consensus.Deltas;
@@ -53,6 +54,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         private readonly IList<PeerId> _producerIds;
         private readonly PeerId _localIdentifier;
         private readonly ILogger _logger;
+        private readonly IPeerSettings _peerSettings;
 
         static DeltaVoterTests()
         {
@@ -101,6 +103,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
                .Returns(_producerIds);
 
             _localIdentifier = PeerIdHelper.GetPeerId("myself, a producer");
+            _peerSettings = _localIdentifier.ToSubstitutedPeerSettings();
             _logger = Substitute.For<ILogger>();
         }
 
@@ -108,7 +111,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         [MemberData(nameof(DodgyCandidates))]
         public void When_candidate_is_dodgy_should_log_and_return_without_hitting_the_cache(CandidateDeltaBroadcast dodgyCandidate)
         {
-            _voter = new DeltaVoter(_cache, _producersProvider, _localIdentifier, _logger);
+            _voter = new DeltaVoter(_cache, _producersProvider, _peerSettings, _logger);
 
             _voter.OnNext(dodgyCandidate);
 
@@ -122,7 +125,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             var candidateFromUnknownProducer = DeltaHelper.GetCandidateDelta(
                 producerId: PeerIdHelper.GetPeerId("unknown_producer"));
 
-            _voter = new DeltaVoter(_cache, _producersProvider, _localIdentifier, _logger);
+            _voter = new DeltaVoter(_cache, _producersProvider, _peerSettings, _logger);
             _voter.OnNext(candidateFromUnknownProducer);
 
             _logger.Received(1).Error(Arg.Is<Exception>(e => e is KeyNotFoundException),
@@ -135,7 +138,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         [Fact]
         public void When_candidate_not_in_cache_should_build_ScoredCandidate_with_ranking_and_store_it()
         {
-            _voter = new DeltaVoter(_cache, _producersProvider, _localIdentifier, _logger);
+            _voter = new DeltaVoter(_cache, _producersProvider, _peerSettings, _logger);
 
             var candidate = DeltaHelper.GetCandidateDelta(
                 _previousDeltaHash,
@@ -163,7 +166,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         [Fact]
         public void When_candidate_in_cache_should_retrieve_ScoredCandidate()
         {
-            _voter = new DeltaVoter(_cache, _producersProvider, _localIdentifier, _logger);
+            _voter = new DeltaVoter(_cache, _producersProvider, _peerSettings, _logger);
 
             var initialScore = 10;
             var cacheCandidate = ScoredCandidateDeltaHelper.GetScoredCandidateDelta(
@@ -192,7 +195,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         {
             using (var realCache = new MemoryCache(new MemoryCacheOptions()))
             {
-                _voter = new DeltaVoter(realCache, _producersProvider, _localIdentifier, _logger);
+                _voter = new DeltaVoter(realCache, _producersProvider, _peerSettings, _logger);
 
                 var firstVotesCount = 10;
                 var secondVotesCount = 100 + 100 / 2;
@@ -238,7 +241,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         {
             using (var realCache = new MemoryCache(new MemoryCacheOptions()))
             {
-                _voter = new DeltaVoter(realCache, _producersProvider, _localIdentifier, _logger);
+                _voter = new DeltaVoter(realCache, _producersProvider, _peerSettings, _logger);
 
                 var candidate1 = DeltaHelper.GetCandidateDelta(
                     _previousDeltaHash,
@@ -279,7 +282,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         {
             using (var realCache = new MemoryCache(new MemoryCacheOptions()))
             {
-                _voter = new DeltaVoter(realCache, _producersProvider, _localIdentifier, _logger);
+                _voter = new DeltaVoter(realCache, _producersProvider, _peerSettings, _logger);
 
                 var scoredCandidates = AddCandidatesToCacheAndVote(10, 500, realCache);
 
@@ -302,7 +305,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         {
             using (var realCache = new MemoryCache(new MemoryCacheOptions()))
             {
-                _voter = new DeltaVoter(realCache, _producersProvider, _localIdentifier, _logger);
+                _voter = new DeltaVoter(realCache, _producersProvider, _peerSettings, _logger);
 
                 AddCandidatesToCacheAndVote(10, 500, realCache);
 
@@ -319,7 +322,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         {
             using (var realCache = new MemoryCache(new MemoryCacheOptions()))
             {
-                _voter = new DeltaVoter(realCache, _producersProvider, _localIdentifier, _logger);
+                _voter = new DeltaVoter(realCache, _producersProvider, _peerSettings, _logger);
 
                 var scoredCandidates = AddCandidatesToCacheAndVote(10, 110, realCache);
 

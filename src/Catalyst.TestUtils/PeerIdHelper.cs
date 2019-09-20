@@ -24,10 +24,13 @@
 using System.Linq;
 using System.Net;
 using System.Text;
+using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Network;
+using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
 using Catalyst.Protocol.Peer;
+using NSubstitute;
 
 namespace Catalyst.TestUtils
 {
@@ -59,6 +62,16 @@ namespace Catalyst.TestUtils
         public static PeerId GetPeerId(string publicKey, string ipAddress, int port)
         {
             return GetPeerId(publicKey, IPAddress.Parse(ipAddress), port);
+        }
+
+        public static IPeerSettings ToSubstitutedPeerSettings(this PeerId peerId)
+        {
+            var peerSettings = Substitute.For<IPeerSettings>();
+            peerSettings.PeerId.Returns(peerId);
+            peerSettings.PublicIpAddress.Returns(peerId.IpAddress);
+            peerSettings.Port.Returns((int) peerId.Port);
+            peerSettings.PublicKey.Returns(peerId.PublicKey.KeyToString());
+            return peerSettings;
         }
     }
 }
