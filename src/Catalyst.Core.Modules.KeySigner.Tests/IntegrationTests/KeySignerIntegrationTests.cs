@@ -47,9 +47,7 @@ namespace Catalyst.Core.Modules.KeySigner.Tests.IntegrationTests
     {
         public KeySignerIntegrationTests(ITestOutputHelper output) : base(output)
         {
-            var multiAlgo = Substitute.For<IMultihashAlgorithm>();
-            multiAlgo.ComputeHash(Arg.Any<byte[]>()).Returns(new byte[32]);
-            var addressHelper = new AddressHelper(multiAlgo);
+            var addressHelper = new AddressHelper(NetworkType.Devnet);
 
             var logger = Substitute.For<ILogger>();
 
