@@ -23,13 +23,14 @@
 
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.Types;
+using Catalyst.Protocol.Peer;
 
 namespace Catalyst.Abstractions.P2P.Discovery
 {
     public interface INeighbour
     {
         NeighbourStateTypes StateTypes { get; set; }
-        IPeerIdentifier PeerIdentifier { get; }
+        PeerId PeerId { get; }
         ICorrelationId DiscoveryPingCorrelationId { get; }
     }
 }

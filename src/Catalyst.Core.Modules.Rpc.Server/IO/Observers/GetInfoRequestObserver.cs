@@ -23,8 +23,8 @@
 
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.IO.Observers;
-using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.IO.Observers;
+using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using DotNetty.Transport.Channels;
@@ -40,21 +40,21 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
     {
         private readonly IConfigurationRoot _config;
 
-        public GetInfoRequestObserver(IPeerIdentifier peerIdentifier,
+        public GetInfoRequestObserver(PeerId peerId,
             IConfigurationRoot config,
-            ILogger logger) : base(logger, peerIdentifier)
+            ILogger logger) : base(logger, peerId)
         {
             _config = config;
         }
 
         protected override GetInfoResponse HandleRequest(GetInfoRequest getInfoRequest,
             IChannelHandlerContext channelHandlerContext,
-            IPeerIdentifier senderPeerIdentifier,
+            PeerId senderPeerId,
             ICorrelationId correlationId)
         {
             Guard.Argument(getInfoRequest, nameof(getInfoRequest)).NotNull();
             Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
-            Guard.Argument(senderPeerIdentifier, nameof(senderPeerIdentifier)).NotNull();
+            Guard.Argument(senderPeerId, nameof(senderPeerId)).NotNull();
             Logger.Debug("received message of type GetInfoRequest");
 
             Logger.Debug("message content is {0}", getInfoRequest);

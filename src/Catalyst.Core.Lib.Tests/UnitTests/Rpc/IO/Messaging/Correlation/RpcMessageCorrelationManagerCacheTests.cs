@@ -76,9 +76,9 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Messaging.Correlation
         {
             var peerIds = new[]
             {
-                PeerIdentifierHelper.GetPeerIdentifier("peer1"),
-                PeerIdentifierHelper.GetPeerIdentifier("peer2"),
-                PeerIdentifierHelper.GetPeerIdentifier("peer3")
+                PeerIdHelper.GetPeerId("peer1"),
+                PeerIdHelper.GetPeerId("peer2"),
+                PeerIdHelper.GetPeerId("peer3")
             };
 
             var pendingRequests = peerIds.Select(peerId => new CorrelatableMessage<ProtocolMessage>

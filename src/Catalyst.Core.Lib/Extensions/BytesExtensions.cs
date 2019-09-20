@@ -24,7 +24,11 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Numerics;
+using Catalyst.Core.Lib.Network;
+using Catalyst.Protocol.Peer;
+using Dawn;
 using Google.Protobuf;
 using Multiformats.Hash;
 using Multiformats.Hash.Algorithms;
@@ -114,6 +118,22 @@ namespace Catalyst.Core.Lib.Extensions
         public static ByteString ToUint256ByteString(this int @int)
         {
             return ((BigInteger) @int).ToByteArray().ToByteString();
+        }
+
+        public static PeerId BuildPeerIdFromPublicKey(this byte[] publicKey, IPEndPoint ipEndPoint)
+        {
+            return BuildPeerIdFromPublicKey(publicKey, ipEndPoint.Address, ipEndPoint.Port);
+        }
+
+        public static PeerId BuildPeerIdFromPublicKey(this byte[] publicKey, IPAddress ipAddress, int port)
+        {
+            Guard.Argument(publicKey, nameof(publicKey)).NotNull().NotEmpty();
+            return new PeerId
+            {
+                PublicKey = publicKey.ToByteString(),
+                Ip = ipAddress.To16Bytes().ToByteString(),
+                Port = (uint) port
+            };
         }
     }
 }

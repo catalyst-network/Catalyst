@@ -31,7 +31,6 @@ using Catalyst.Abstractions.IO.EventLoop;
 using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.IO.Transport.Channels;
-using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.Rpc;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
@@ -39,6 +38,7 @@ using Catalyst.Core.Lib.IO.Messaging.Dto;
 using Catalyst.Core.Lib.IO.Transport.Channels;
 using Catalyst.Core.Lib.Rpc.IO.Exceptions;
 using Catalyst.Core.Modules.Rpc.Client.IO.Observers;
+using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
@@ -57,7 +57,7 @@ namespace Catalyst.Core.Modules.Rpc.Client.Tests.UnitTests
         {
             _testScheduler = new TestScheduler();
             _logger = Substitute.For<ILogger>();
-            _peerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("Test");
+            _peerIdentifier = PeerIdHelper.GetPeerId("Test");
             _channelHandlerContext = Substitute.For<IChannelHandlerContext>();
 
             _channelFactory = Substitute.For<ITcpClientChannelFactory>();
@@ -82,7 +82,7 @@ namespace Catalyst.Core.Modules.Rpc.Client.Tests.UnitTests
 
         private readonly TestScheduler _testScheduler;
 
-        private readonly IPeerIdentifier _peerIdentifier;
+        private readonly PeerId _peerIdentifier;
 
         private readonly ITcpClientChannelFactory _channelFactory;
 
@@ -103,7 +103,7 @@ namespace Catalyst.Core.Modules.Rpc.Client.Tests.UnitTests
             var receivedResponse = false;
             var targetVersionResponse = new VersionResponse {Version = "1.2.3.4"};
             var protocolMessage =
-                targetVersionResponse.ToProtocolMessage(_peerIdentifier.PeerId, CorrelationId.GenerateCorrelationId());
+                targetVersionResponse.ToProtocolMessage(_peerIdentifier, CorrelationId.GenerateCorrelationId());
             var observerDto = new ObserverDto(_channelHandlerContext, protocolMessage);
 
             _mockSocketReplySubject.OnNext(observerDto);
@@ -122,7 +122,7 @@ namespace Catalyst.Core.Modules.Rpc.Client.Tests.UnitTests
             VersionResponse returnedVersionResponse = null;
             var targetVersionResponse = new VersionResponse {Version = "1.2.3.4"};
             var protocolMessage =
-                targetVersionResponse.ToProtocolMessage(_peerIdentifier.PeerId, CorrelationId.GenerateCorrelationId());
+                targetVersionResponse.ToProtocolMessage(_peerIdentifier, CorrelationId.GenerateCorrelationId());
             var observerDto = new ObserverDto(_channelHandlerContext, protocolMessage);
 
             _mockSocketReplySubject.OnNext(observerDto);
@@ -140,7 +140,7 @@ namespace Catalyst.Core.Modules.Rpc.Client.Tests.UnitTests
             var nodeRpcClient = await nodeRpcClientFactory.GetClient(null, _rpcClientConfig);
             var targetVersionResponse = new VersionResponse {Version = "1.2.3.4"};
             var protocolMessage =
-                targetVersionResponse.ToProtocolMessage(_peerIdentifier.PeerId, CorrelationId.GenerateCorrelationId());
+                targetVersionResponse.ToProtocolMessage(_peerIdentifier, CorrelationId.GenerateCorrelationId());
             var observerDto = new ObserverDto(_channelHandlerContext, protocolMessage);
 
             var exception = Record.Exception(() =>

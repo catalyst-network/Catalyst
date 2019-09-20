@@ -22,7 +22,6 @@
 #endregion
 
 using System;
-using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
@@ -40,7 +39,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc
         public void Null_Message_Throws_Exception()
         {
             var channelHandlerContext = Substitute.For<IChannelHandlerContext>();
-            var senderPeerIdentifier = Substitute.For<IPeerIdentifier>();
+            var senderPeerId = PeerIdHelper.GetPeerId();
             var correlationId = CorrelationId.GenerateCorrelationId();
 
             var logger = Substitute.For<ILogger>();
@@ -48,13 +47,13 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc
 
             Assert.Throws<ArgumentNullException>(() => responseObserver
                .HandleResponseObserver(null, channelHandlerContext,
-                    senderPeerIdentifier, correlationId));
+                    senderPeerId, correlationId));
         }
 
         [Fact]
         public void Null_ChannelHandlerContext_Throws_Exception()
         {
-            var senderPeerIdentifier = Substitute.For<IPeerIdentifier>();
+            var senderPeerIdentifier = PeerIdHelper.GetPeerId();
             var correlationId = CorrelationId.GenerateCorrelationId();
 
             var logger = Substitute.For<ILogger>();

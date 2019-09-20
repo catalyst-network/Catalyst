@@ -33,10 +33,10 @@ using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.Discovery;
 using Catalyst.Abstractions.P2P.IO.Messaging.Broadcast;
 using Catalyst.Abstractions.P2P.IO.Messaging.Correlation;
+using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.EventLoop;
 using Catalyst.Core.Lib.P2P;
 using Catalyst.Core.Lib.P2P.IO.Transport.Channels;
-using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
 using Catalyst.Core.Modules.KeySigner;
 using Catalyst.Core.Modules.Keystore;
@@ -60,7 +60,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
             _peerSettings = new PeerSettings(ContainerProvider.ConfigurationRoot);
 
             var sender =
-                PeerIdentifierHelper.GetPeerIdentifier("sender", _peerSettings.BindAddress, _peerSettings.Port);
+                PeerIdHelper.GetPeerId("sender", _peerSettings.BindAddress, _peerSettings.Port);
             var logger = Substitute.For<ILogger>();
             var keyRegistry = TestKeyRegistry.MockKeyRegistry();
             
@@ -138,9 +138,8 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
             Output.WriteLine(publicKey);
             Output.WriteLine(ip.ToString());
             Output.WriteLine(port.ToString());
-            
-            var recipient = new PeerIdentifier(publicKey.KeyToBytes(), ip,
-                port);
+
+            var recipient = publicKey.BuildPeerIdFromBase32CrockfordKey(ip, port);
             
             return await _peerChallenger.ChallengePeerAsync(recipient);
         }

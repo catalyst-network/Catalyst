@@ -21,13 +21,12 @@
 
 #endregion
 
-using System.Reflection;
-using System.Security.Authentication;
 using Catalyst.Abstractions.Rpc.Authentication;
-using Catalyst.Core.Lib.P2P;
 using Catalyst.Protocol.Wire;
 using DotNetty.Transport.Channels;
 using Serilog;
+using System.Reflection;
+using System.Security.Authentication;
 
 namespace Catalyst.Core.Lib.IO.Handlers
 {
@@ -51,7 +50,7 @@ namespace Catalyst.Core.Lib.IO.Handlers
         /// <inheritdoc cref="DotNetty.Transport.Channels.SimpleChannelInboundHandler{I}"/>>
         protected override void ChannelRead0(IChannelHandlerContext ctx, ProtocolMessage msg)
         {
-            if (_authenticationStrategy.Authenticate(new PeerIdentifier(msg.PeerId)))
+            if (_authenticationStrategy.Authenticate(msg.PeerId))
             {
                 ctx.FireChannelRead(msg);
             }

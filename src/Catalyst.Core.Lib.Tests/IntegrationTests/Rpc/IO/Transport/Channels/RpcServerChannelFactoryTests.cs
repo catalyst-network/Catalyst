@@ -103,8 +103,8 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Transport.Channels
         public async Task
             RpcServerChannelFactory_Pipeline_Should_Produce_Response_Object_RpcClientChannelFactory_Can_Process()
         {
-            var recipient = PeerIdentifierHelper.GetPeerIdentifier("recipient");
-            var sender = PeerIdentifierHelper.GetPeerIdentifier("sender");
+            var recipient = PeerIdHelper.GetPeerId("recipient");
+            var sender = PeerIdHelper.GetPeerId("sender");
             var signature = Substitute.For<ISignature>();
             _peerIdValidator.ValidatePeerIdFormat(Arg.Any<PeerId>()).Returns(true);
             
@@ -112,7 +112,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Transport.Channels
             
             var correlationId = CorrelationId.GenerateCorrelationId();
 
-            var protocolMessage = new GetPeerCountResponse().ToProtocolMessage(sender.PeerId, correlationId);
+            var protocolMessage = new GetPeerCountResponse().ToProtocolMessage(sender, correlationId);
             var dto = new MessageDto(
                 protocolMessage,
                 recipient
@@ -134,7 +134,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Transport.Channels
                     default)
                .ReturnsForAnyArgs(true);
             
-            _authenticationStrategy.Authenticate(Arg.Any<IPeerIdentifier>()).Returns(true);
+            _authenticationStrategy.Authenticate(Arg.Any<PeerId>()).Returns(true);
             
             var observer = new ProtocolMessageObserver(0, Substitute.For<ILogger>());
 

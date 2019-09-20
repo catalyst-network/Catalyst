@@ -21,7 +21,6 @@
 
 #endregion
 
-using Catalyst.Core.Lib.P2P;
 using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.Transaction;
@@ -34,8 +33,6 @@ namespace Catalyst.Modules.Repository.MongoDb.Util
     {
         public static void Init()
         {
-            BsonClassMap.RegisterClassMap<PeerIdentifier>();
-            
             AddSerializer<TransactionBroadcast>();
             AddSerializer<PeerId>();
             AddSerializer<PublicEntry>();

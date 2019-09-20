@@ -24,9 +24,9 @@
 using System.Linq;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.IO.Observers;
-using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.IO.Observers;
 using Catalyst.Core.Lib.P2P.Repository;
+using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using DotNetty.Transport.Channels;
@@ -50,13 +50,13 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
         /// <summary>
         ///     Initializes a new instance of the <see cref="PeerListRequestObserver"/> class.
         /// </summary>
-        /// <param name="peerIdentifier">The peer identifier.</param>
+        /// <param name="peerId">The peer identifier.</param>
         /// <param name="logger">The logger.</param>
         /// <param name="peerRepository"></param>
-        public PeerListRequestObserver(IPeerIdentifier peerIdentifier,
+        public PeerListRequestObserver(PeerId peerId,
             ILogger logger,
             IPeerRepository peerRepository)
-            : base(logger, peerIdentifier)
+            : base(logger, peerId)
         {
             _peerRepository = peerRepository;
         }
@@ -66,20 +66,20 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
         /// </summary>
         /// <param name="getPeerListRequest"></param>
         /// <param name="channelHandlerContext"></param>
-        /// <param name="senderPeerIdentifier"></param>
+        /// <param name="senderPeerId"></param>
         /// <param name="correlationId"></param>
         /// <returns></returns>
         protected override GetPeerListResponse HandleRequest(GetPeerListRequest getPeerListRequest,
             IChannelHandlerContext channelHandlerContext,
-            IPeerIdentifier senderPeerIdentifier,
+            PeerId senderPeerId,
             ICorrelationId correlationId)
         {
             Guard.Argument(getPeerListRequest, nameof(getPeerListRequest)).NotNull();
             Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
-            Guard.Argument(senderPeerIdentifier, nameof(senderPeerIdentifier)).NotNull();
+            Guard.Argument(senderPeerId, nameof(senderPeerId)).NotNull();
             Logger.Debug("received message of type PeerListRequest");
 
-            var peers = _peerRepository.GetAll().Select(x => x.PeerIdentifier.PeerId);
+            var peers = _peerRepository.GetAll().Select(x => x.PeerId);
 
             var response = new GetPeerListResponse();
             response.Peers.AddRange(peers);

@@ -53,7 +53,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
         {
             _testScheduler = new TestScheduler();
             var logger = Substitute.For<ILogger>();
-            var peerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("responder");
+            var peerIdentifier = PeerIdHelper.GetPeerId("responder");
             _deltaCache = Substitute.For<IDeltaCache>();
             _observer = new GetDeltaRequestObserver(_deltaCache, peerIdentifier, logger);
             _fakeContext = Substitute.For<IChannelHandlerContext>();

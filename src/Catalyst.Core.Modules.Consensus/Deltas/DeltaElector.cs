@@ -81,7 +81,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
                 Guard.Argument(candidate, nameof(candidate)).NotNull().Require(f => f.IsValid());
                 if (!_deltaProducersProvider
                    .GetDeltaProducersFromPreviousDelta(candidate.Candidate.PreviousDeltaDfsHash.ToByteArray())
-                   .Any(p => p.PeerId.Equals(candidate.VoterId)))
+                   .Any(p => p.Equals(candidate.VoterId)))
                 {
                     //https://github.com/catalyst-network/Catalyst.Node/issues/827
                     _logger.Debug("Voter {voter} is not a producer for this cycle succeeding {deltaHash} and its vote has been discarded.",

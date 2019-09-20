@@ -85,7 +85,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Transport.Channels
             _keySigner.CryptoContext.SignatureLength.Returns(64);
 
             var authenticationStrategy = Substitute.For<IAuthenticationStrategy>();
-            authenticationStrategy.Authenticate(Arg.Any<IPeerIdentifier>()).Returns(true);
+            authenticationStrategy.Authenticate(Arg.Any<PeerId>()).Returns(true);
 
             var peerSettings = Substitute.For<IPeerSettings>();
             peerSettings.NetworkType.Returns(NetworkType.Devnet);

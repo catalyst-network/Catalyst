@@ -24,12 +24,12 @@
 using System.Linq;
 using System.Reflection;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
-using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.Discovery;
 using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib.Config;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.P2P.Discovery;
+using Catalyst.Protocol.Peer;
 using Serilog;
 
 namespace Catalyst.Core.Modules.P2P.Discovery.Hastings
@@ -41,7 +41,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings
         public INeighbours Neighbours { get; private set; }
         public ICorrelationId PnrCorrelationId { get; private set; }
 
-        public IPeerIdentifier Peer { get; private set; }
+        public PeerId Peer { get; private set; }
 
         public static readonly HastingsOriginator Default = new HastingsOriginator(default);
 

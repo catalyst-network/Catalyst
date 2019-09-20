@@ -24,12 +24,13 @@
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.Types;
 using Catalyst.Protocol.IPPN;
+using Catalyst.Protocol.Peer;
 
 namespace Catalyst.Abstractions.P2P.Discovery
 {
     public interface IHastingsOriginator
     {
-        IPeerIdentifier Peer { get; }
+        PeerId Peer { get; }
 
         /// <summary>
         /// Every time you the walk moves forward with a new Peer, it will ask that peer for

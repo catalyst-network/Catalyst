@@ -36,7 +36,7 @@ namespace Catalyst.Core.Lib.P2P.Discovery
         {
             return string.Join(", ",
                 this.Select(n =>
-                    n.PeerIdentifier + "|" + n.DiscoveryPingCorrelationId + "|" + n.StateTypes.Name));
+                    n.PeerId + "|" + n.DiscoveryPingCorrelationId + "|" + n.StateTypes.Name));
         }
     }
 }

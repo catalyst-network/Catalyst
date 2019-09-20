@@ -22,10 +22,8 @@
 #endregion
 
 using Autofac;
-using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.IO.Transport.Channels;
 using Catalyst.Abstractions.Rpc;
-using Catalyst.Core.Modules.Rpc.Server.IO.Observers;
 using Catalyst.Core.Modules.Rpc.Server.Transport.Channels;
 
 namespace Catalyst.Core.Modules.Rpc.Server

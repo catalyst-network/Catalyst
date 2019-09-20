@@ -21,11 +21,9 @@
 
 #endregion
 
-using System.Net;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.KeySigner;
-using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.IO.Messaging.Broadcast;
 using Catalyst.Core.Lib.IO.Handlers;
 using Catalyst.Core.Lib.Util;
@@ -63,22 +61,16 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Broadcast
 
             _signingContext = DevNetPeerSigningContext.Instance;
 
-            var peerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("Test");
+            var peerId = PeerIdHelper.GetPeerId("Test");
             var innerMessage = new TransactionBroadcast();
             _broadcastMessageSigned = innerMessage
-               .ToSignedProtocolMessage(peerIdentifier.PeerId, fakeSignature, _signingContext)
-               .ToSignedProtocolMessage(peerIdentifier.PeerId, fakeSignature, _signingContext);
+               .ToSignedProtocolMessage(peerId, fakeSignature, _signingContext)
+               .ToSignedProtocolMessage(peerId, fakeSignature, _signingContext);
         }
 
         [Fact]
         public async Task Broadcast_Handler_Can_Notify_Manager_On_Incoming_Broadcast()
         {
-            var recipientIdentifier = Substitute.For<IPeerIdentifier>();
-            var fakeIp = IPAddress.Any;
-
-            recipientIdentifier.Ip.Returns(fakeIp);
-            recipientIdentifier.IpEndPoint.Returns(new IPEndPoint(fakeIp, 10));
-            
             EmbeddedChannel channel = new EmbeddedChannel(
                 new ProtocolMessageVerifyHandler(_keySigner),
                 _broadcastHandler,

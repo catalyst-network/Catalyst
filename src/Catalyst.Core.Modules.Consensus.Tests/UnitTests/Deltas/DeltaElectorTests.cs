@@ -26,9 +26,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reactive.Linq;
-using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.Extensions;
-using Catalyst.Core.Lib.P2P;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Consensus.Deltas;
 using Catalyst.Protocol.Peer;
@@ -147,7 +145,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 
             _deltaProducersProvider
                .GetDeltaProducersFromPreviousDelta(Arg.Any<byte[]>())
-               .Returns(new List<IPeerIdentifier> {PeerIdentifierHelper.GetPeerIdentifier("the only known producer")});
+               .Returns(new List<PeerId> {PeerIdHelper.GetPeerId("the only known producer")});
 
             var elector = new DeltaElector(_cache, _deltaProducersProvider, _logger);
 
@@ -261,7 +259,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         {
             _deltaProducersProvider
                .GetDeltaProducersFromPreviousDelta(Arg.Any<byte[]>())
-               .Returns(producers.Select(p => new PeerIdentifier(p) as IPeerIdentifier).ToList());
+               .Returns(producers.ToList());
         }
     }
 }
