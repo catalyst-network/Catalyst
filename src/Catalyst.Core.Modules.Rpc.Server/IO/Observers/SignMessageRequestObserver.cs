@@ -24,9 +24,9 @@
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.KeySigner;
-using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Observers;
+using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using DotNetty.Transport.Channels;
@@ -40,10 +40,10 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
     {
         private readonly IKeySigner _keySigner;
 
-        public SignMessageRequestObserver(IPeerIdentifier peerIdentifier,
+        public SignMessageRequestObserver(PeerId peerId,
             ILogger logger,
             IKeySigner keySigner)
-            : base(logger, peerIdentifier)
+            : base(logger, peerId)
         {
             _keySigner = keySigner;
         }
@@ -53,17 +53,17 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
         /// </summary>
         /// <param name="signMessageRequest"></param>
         /// <param name="channelHandlerContext"></param>
-        /// <param name="senderPeerIdentifier"></param>
+        /// <param name="senderPeerId"></param>
         /// <param name="correlationId"></param>
         /// <returns></returns>
         protected override SignMessageResponse HandleRequest(SignMessageRequest signMessageRequest,
             IChannelHandlerContext channelHandlerContext,
-            IPeerIdentifier senderPeerIdentifier,
+            PeerId senderPeerId,
             ICorrelationId correlationId)
         {
             Guard.Argument(signMessageRequest, nameof(signMessageRequest)).NotNull();
             Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
-            Guard.Argument(senderPeerIdentifier, nameof(senderPeerIdentifier)).NotNull();
+            Guard.Argument(senderPeerId, nameof(senderPeerId)).NotNull();
             Logger.Debug("received message of type SignMessageRequest");
 
             var decodedMessage = signMessageRequest.Message.ToByteArray();

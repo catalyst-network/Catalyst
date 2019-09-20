@@ -105,8 +105,8 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Transport.Channels
         public async Task
             RpcClientChannelFactory_Pipeline_Should_Produce_Request_Object_RpcServerChannelFactory_Can_Process_Into_Observable()
         {
-            var recipient = PeerIdentifierHelper.GetPeerIdentifier("recipient");
-            var sender = PeerIdentifierHelper.GetPeerIdentifier("sender");
+            var recipient = PeerIdHelper.GetPeerId("recipient");
+            var sender = PeerIdHelper.GetPeerId("sender");
             var signature = Substitute.For<ISignature>();
             signature.SignatureBytes.Returns(ByteUtil.GenerateRandomByteArray(Ffi.SignatureLength));
 
@@ -116,7 +116,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Transport.Channels
 
             var correlationId = CorrelationId.GenerateCorrelationId();
 
-            var protocolMessage = new GetPeerCountRequest().ToProtocolMessage(sender.PeerId, correlationId);
+            var protocolMessage = new GetPeerCountRequest().ToProtocolMessage(sender, correlationId);
             var dto = new MessageDto(
                 protocolMessage,
                 recipient
@@ -142,7 +142,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Transport.Channels
                 )
                .ReturnsForAnyArgs(true);
 
-            _authenticationStrategy.Authenticate(Arg.Any<IPeerIdentifier>()).Returns(true);
+            _authenticationStrategy.Authenticate(Arg.Any<PeerId>()).Returns(true);
 
             var observer = new ProtocolMessageObserver(0, Substitute.For<ILogger>());
 

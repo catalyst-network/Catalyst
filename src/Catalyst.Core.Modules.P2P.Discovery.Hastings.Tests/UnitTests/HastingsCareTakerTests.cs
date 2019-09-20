@@ -108,15 +108,15 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.UnitTests
             var careTaker = new HastingsCareTaker();
 
             var subbedMemento1 = Substitute.For<IHastingsMemento>();
-            subbedMemento1.Peer.Returns(PeerIdentifierHelper.GetPeerIdentifier("step1"));
+            subbedMemento1.Peer.Returns(PeerIdHelper.GetPeerId("step1"));
             careTaker.Add(subbedMemento1);
 
             var subbedMemento2 = Substitute.For<IHastingsMemento>();
-            subbedMemento2.Peer.Returns(PeerIdentifierHelper.GetPeerIdentifier("step2"));
+            subbedMemento2.Peer.Returns(PeerIdHelper.GetPeerId("step2"));
             careTaker.Add(subbedMemento2);
             
             var subbedMemento3 = Substitute.For<IHastingsMemento>();
-            subbedMemento3.Peer.Returns(PeerIdentifierHelper.GetPeerIdentifier("step3"));
+            subbedMemento3.Peer.Returns(PeerIdHelper.GetPeerId("step3"));
             careTaker.Add(subbedMemento3);
             
             var lastState1 = careTaker.Get();

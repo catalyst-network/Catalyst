@@ -62,7 +62,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Observers
             {
                 var message = new GetInfoResponse {Query = i.ToString()};
                 return message.ToProtocolMessage(
-                    PeerIdentifierHelper.GetPeerIdentifier(i.ToString()).PeerId,
+                    PeerIdHelper.GetPeerId(i.ToString()),
                     CorrelationId.GenerateCorrelationId());
             }).ToArray();
         }

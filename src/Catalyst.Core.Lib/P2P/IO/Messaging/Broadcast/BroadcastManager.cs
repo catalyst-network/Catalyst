@@ -36,6 +36,7 @@ using Catalyst.Core.Lib.Extensions.Protocol.Wire;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
 using Catalyst.Core.Lib.P2P.Repository;
 using Catalyst.Protocol.Cryptography;
+using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Wire;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Primitives;
@@ -61,7 +62,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
         private readonly Func<MemoryCacheEntryOptions> _entryOptions;
 
         /// <summary>The peer identifier</summary>
-        private readonly IPeerIdentifier _peerIdentifier;
+        private readonly PeerId _peerId;
 
         /// <summary>The peer client</summary>
         private readonly IPeerClient _peerClient;
@@ -81,15 +82,14 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
         public static int BroadcastOwnerMaximumGossipPeersPerRound => 10;
 
         /// <summary>Initializes a new instance of the <see cref="BroadcastManager"/> class.</summary>
-        /// <param name="peerIdentifier">The peer identifier.</param>
+        /// <param name="peerId">The peer identifier.</param>
         /// <param name="peers">The peers.</param>
         /// <param name="peerSettings">Peer settings</param>
         /// <param name="memoryCache">The memory cache.</param>
         /// <param name="peerClient">The peer client.</param>
         /// <param name="signer">The signature writer</param>
         /// <param name="logger"></param>
-        public BroadcastManager(IPeerIdentifier peerIdentifier,
-            IPeerRepository peers, 
+        public BroadcastManager(IPeerRepository peers, 
             IPeerSettings peerSettings,
             IMemoryCache memoryCache, 
             IPeerClient peerClient,
@@ -97,7 +97,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
             ILogger logger)
         {
             _logger = logger;
-            _peerIdentifier = peerIdentifier;
+            _peerId = peerSettings.PeerId;
             _pendingRequests = memoryCache;
             _peers = peers;
             _signingContext = new SigningContext {NetworkType = peerSettings.NetworkType, SignatureType = SignatureType.ProtocolPeer};
@@ -144,7 +144,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
             }
             else
             {
-                var wrappedMessage = innerMessage.ToProtocolMessage(_peerIdentifier.PeerId);
+                var wrappedMessage = innerMessage.ToProtocolMessage(_peerId);
                 var signedMessage = wrappedMessage.Sign(_signer, _signingContext);
                 await BroadcastSignedAsync(signedMessage).ConfigureAwait(false);
             }
@@ -172,7 +172,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
             try
             {
                 var innerMessage = message.FromProtocolMessage<ProtocolMessage>();
-                var isOwnerOfBroadcast = innerMessage.PeerId.Equals(_peerIdentifier.PeerId);
+                var isOwnerOfBroadcast = innerMessage.PeerId.Equals(_peerId);
                 
                 // The fan out is how many peers to broadcast to
                 var fanOut = isOwnerOfBroadcast 
@@ -187,7 +187,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
                 {
                     _logger.Verbose("Broadcasting message {message}", message);
                     var protocolMessage = message.Clone();
-                    protocolMessage.PeerId = peerIdentifier.PeerId;
+                    protocolMessage.PeerId = peerIdentifier;
                     _peerClient.SendMessage(new MessageDto(
                         protocolMessage,
                         peerIdentifier)
@@ -212,10 +212,10 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
         /// <summary>Gets the random peers.</summary>
         /// <param name="count">The count.</param>
         /// <returns></returns>
-        private List<IPeerIdentifier> GetRandomPeers(int count)
+        private List<PeerId> GetRandomPeers(int count)
         {
             return _peers
-               .AsQueryable().Select(c => c.DocumentId).Shuffle().Take(count).Select(_peers.Get).Select(p => p.PeerIdentifier).ToList();
+               .AsQueryable().Select(c => c.DocumentId).Shuffle().Take(count).Select(_peers.Get).Select(p => p.PeerId).ToList();
         }
 
         /// <summary>Determines whether this instance can gossip the specified correlation identifier.</summary>

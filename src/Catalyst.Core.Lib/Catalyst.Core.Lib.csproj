@@ -10,6 +10,11 @@
     <Import Project="../Common.Packable.props" />
     <Import Project="../Common.Projects.props" />
     <ItemGroup>
+      <Compile Remove="Extensions\Protocol\Transaction\**" />
+      <EmbeddedResource Remove="Extensions\Protocol\Transaction\**" />
+      <None Remove="Extensions\Protocol\Transaction\**" />
+    </ItemGroup>
+    <ItemGroup>
         <PackageReference Include="Autofac" Version="4.8.1" />
         <PackageReference Include="Autofac.Configuration" Version="4.1.0" />
         <PackageReference Include="AutofacSerilogIntegration" Version="2.0.0" />
@@ -40,8 +45,5 @@
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\Catalyst.Abstractions\Catalyst.Abstractions.csproj" />
-    </ItemGroup>
-    <ItemGroup>
-      <Folder Include="Extensions\Protocol\Transaction\" />
     </ItemGroup>
 </Project>

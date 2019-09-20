@@ -24,11 +24,11 @@
 using System.Threading;
 using Catalyst.Abstractions.FileTransfer;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
-using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using Catalyst.Core.Modules.Rpc.Client.IO.Observers;
 using Catalyst.Protocol.Rpc.Node;
+using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using Google.Protobuf;
 using NSubstitute;
@@ -50,7 +50,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         public void HandlerRemovesFileTransferOnError()
         {
             var channelHandlerContext = Substitute.For<IChannelHandlerContext>();
-            var senderPeerIdentifier = Substitute.For<IPeerIdentifier>();
+            var senderPeerIdentifier = PeerIdHelper.GetPeerId();
             var correlationId = CorrelationId.GenerateCorrelationId();
 
             var addFileResponse = new AddFileToDfsResponse
@@ -72,7 +72,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         public void InitializesFileTransferOnSuccessResponse()
         {
             var channelHandlerContext = Substitute.For<IChannelHandlerContext>();
-            var senderPeerIdentifier = Substitute.For<IPeerIdentifier>();
+            var senderPeerId = PeerIdHelper.GetPeerId();
             var correlationId = CorrelationId.GenerateCorrelationId();
 
             var addFileResponse = new AddFileToDfsResponse
@@ -87,7 +87,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             );
 
             addFileToDfsResponseObserver.HandleResponseObserver(addFileResponse, channelHandlerContext,
-                senderPeerIdentifier, correlationId);
+                senderPeerId, correlationId);
             _uploadFileTransferFactory.Received(1)
                .FileTransferAsync(Arg.Any<ICorrelationId>(), Arg.Any<CancellationToken>());
         }

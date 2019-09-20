@@ -42,7 +42,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Observers
 
             var messageStream = MessageStreamHelper.CreateStreamWithMessages(testScheduler, candidateDeltaMessages);
             using (var observer = new FailingRequestObserver(Substitute.For<ILogger>(), 
-                PeerIdentifierHelper.GetPeerIdentifier("server")))
+                PeerIdHelper.GetPeerId("server")))
             {
                 observer.StartObserving(messageStream);
 

@@ -22,7 +22,7 @@
 #endregion
 
 using System;
-using Catalyst.Abstractions.P2P;
+using Catalyst.Protocol.Peer;
 using Google.Protobuf;
 
 namespace Catalyst.Abstractions.IO.Messaging.Correlation
@@ -30,7 +30,7 @@ namespace Catalyst.Abstractions.IO.Messaging.Correlation
     public interface ICorrelatableMessage<T> where T : IMessage 
     {
         T Content { get; set; }
-        IPeerIdentifier Recipient { get; set; }
+        PeerId Recipient { get; set; }
         DateTimeOffset SentAt { get; set; }
     }
 }

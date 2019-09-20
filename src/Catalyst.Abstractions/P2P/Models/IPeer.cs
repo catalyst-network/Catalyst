@@ -24,6 +24,7 @@
 using System;
 using Catalyst.Abstractions.Attributes;
 using Catalyst.Abstractions.Repository;
+using Catalyst.Protocol.Peer;
 
 namespace Catalyst.Abstractions.P2P.Models
 {
@@ -43,7 +44,7 @@ namespace Catalyst.Abstractions.P2P.Models
 
         /// <summary>Gets the peer identifier.</summary>
         /// <value>The peer identifier.</value>
-        IPeerIdentifier PeerIdentifier { get; }
+        PeerId PeerId { get; }
 
         /// <summary>Gets a value indicating whether this instance is awol peer.</summary>
         /// <value><c>true</c> if this instance is awol peer; otherwise, <c>false</c>.</value>

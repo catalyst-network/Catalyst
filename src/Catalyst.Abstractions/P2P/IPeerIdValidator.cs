@@ -21,7 +21,6 @@
 
 #endregion
 
-using System.Collections.Generic;
 using Catalyst.Protocol.Peer;
 
 namespace Catalyst.Abstractions.P2P
@@ -35,9 +34,5 @@ namespace Catalyst.Abstractions.P2P
         /// <param name="peerId">The Peer Id <see cref="PeerId"/></param>
         /// <returns>[true] if valid [false] if invalid</returns>
         bool ValidatePeerIdFormat(PeerId peerId);
-
-        /// <summary>Validates the raw pid chunks.</summary>
-        /// <param name="peerIdChunks">The peer identifier chunks.</param>
-        void ValidateRawPidChunks(IReadOnlyList<string> peerIdChunks);
     }
 }

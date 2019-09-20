@@ -23,12 +23,11 @@
 
 using System;
 using System.ComponentModel.DataAnnotations;
-using AutoMapper;
-using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.Models;
 using Catalyst.Core.Lib.DAO;
 using Catalyst.Core.Lib.Repository.Attributes;
 using Catalyst.Core.Lib.Util;
+using Catalyst.Protocol.Peer;
 using Google.Protobuf;
 using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
@@ -42,10 +41,10 @@ namespace Catalyst.Core.Lib.P2P.Models
         [RepositoryPrimaryKey(Order = 1)]
         [JsonProperty("id")]
         [BsonId]
-        public string DocumentId => PeerIdentifier.PeerId?.ToByteString().ToBase64();
+        public string DocumentId => PeerId?.ToByteString().ToBase64();
         
         /// <inheritdoc />
-        public IPeerIdentifier PeerIdentifier { get; set; }
+        public PeerId PeerId { get; set; }
             
         /// <inheritdoc />
         public int Reputation { get; set; }
@@ -116,9 +115,9 @@ namespace Catalyst.Core.Lib.P2P.Models
         {
             var tempPeerDao = new PeerIdDao()
             {
-                Ip = peer.PeerIdentifier.Ip.ToString(),
-                Port = peer.PeerIdentifier.Port,
-                PublicKey = peer.PeerIdentifier.PublicKey.KeyToString()
+                Ip = peer.PeerId.ToString(),
+                Port = (int) peer.PeerId.Port,
+                PublicKey = peer.PeerId.PublicKey.KeyToString()
             };
 
             return new PeerDao()

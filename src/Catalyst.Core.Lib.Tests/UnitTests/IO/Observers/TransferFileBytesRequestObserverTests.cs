@@ -53,7 +53,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Observers
             _context = Substitute.For<IChannelHandlerContext>();
             _context.Channel.Returns(Substitute.For<IChannel>());
             _downloadFileTransferFactory = Substitute.For<IDownloadFileTransferFactory>();
-            var peerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("Test");
+            var peerIdentifier = PeerIdHelper.GetPeerId("Test");
             _observer = new TransferFileBytesRequestObserver(_downloadFileTransferFactory,
                 peerIdentifier,
                 Substitute.For<ILogger>());
@@ -84,9 +84,9 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Observers
 
             _downloadFileTransferFactory.DownloadChunk(Arg.Any<TransferFileBytesRequest>()).Returns(FileTransferResponseCodeTypes.Error);
 
-            var sender = PeerIdentifierHelper.GetPeerIdentifier("sender");
-            var requestDto = new MessageDto(new TransferFileBytesRequest().ToProtocolMessage(sender.PeerId)
-              , PeerIdentifierHelper.GetPeerIdentifier("recipient"));
+            var sender = PeerIdHelper.GetPeerId("sender");
+            var requestDto = new MessageDto(new TransferFileBytesRequest().ToProtocolMessage(sender)
+              , PeerIdHelper.GetPeerId("recipient"));
 
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_context, testScheduler, requestDto.Content);
 

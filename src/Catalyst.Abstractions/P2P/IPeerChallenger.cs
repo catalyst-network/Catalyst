@@ -23,6 +23,7 @@
 
 using System.Reactive.Subjects;
 using System.Threading.Tasks;
+using Catalyst.Protocol.Peer;
 
 namespace Catalyst.Abstractions.P2P
 {
@@ -35,9 +36,9 @@ namespace Catalyst.Abstractions.P2P
         /// Used to challenge a peer for a response based on the provided public key, ip and port chunks 
         /// </summary>
         /// <param name="recipientPeerIdentifier">The recipient peer identifier.
-        /// PeerIdentifier holds the chunks we want to validate.</param>
+        /// PeerId holds the chunks we want to validate.</param>
         /// <returns>bool true means valid and false means not valid</returns>
-        Task<bool> ChallengePeerAsync(IPeerIdentifier recipientPeerIdentifier);
+        Task<bool> ChallengePeerAsync(PeerId recipientPeerIdentifier);
 
         ReplaySubject<IPeerChallengeResponse> ChallengeResponseMessageStreamer { get; }
     }

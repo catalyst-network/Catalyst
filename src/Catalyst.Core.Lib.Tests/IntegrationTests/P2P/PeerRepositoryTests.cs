@@ -133,11 +133,11 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
         {
             var peerRepo = scope.Resolve<IRepository<PeerDao, string>>();
 
-            var peerDao = new PeerDao().ToPeerDao(new Peer {PeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier(new Random().Next().ToString()) });
+            var peerDao = new PeerDao().ToPeerDao(new Peer {PeerId = PeerIdHelper.GetPeerId(new Random().Next().ToString())});
             peerDao.Id = Guid.NewGuid().ToString();
             Id = peerDao.Id;
 
-            peerDao.PeerIdentifier = new PeerIdDao().ToDao(PeerIdentifierHelper.GetPeerIdentifier(new Random().Next().ToString()).PeerId);
+            peerDao.PeerIdentifier = new PeerIdDao().ToDao(PeerIdHelper.GetPeerId(new Random().Next().ToString()));
             peerDao.PeerIdentifier.Id = Guid.NewGuid().ToString();
 
             peerRepo.Add(peerDao);

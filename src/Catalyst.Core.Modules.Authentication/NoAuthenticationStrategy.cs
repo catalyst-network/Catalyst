@@ -21,8 +21,8 @@
 
 #endregion
 
-using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.Rpc.Authentication;
+using Catalyst.Protocol.Peer;
 
 namespace Catalyst.Core.Modules.Authentication
 {
@@ -33,6 +33,6 @@ namespace Catalyst.Core.Modules.Authentication
     public class NoAuthenticationStrategy : IAuthenticationStrategy
     {
         /// <inheritdoc cref="IAuthenticationStrategy"/>
-        public bool Authenticate(IPeerIdentifier peerIdentifier) { return true; }
+        public bool Authenticate(PeerId peerIdentifier) { return true; }
     }
 }

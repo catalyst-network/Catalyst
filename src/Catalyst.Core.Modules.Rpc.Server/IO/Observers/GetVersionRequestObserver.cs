@@ -23,9 +23,9 @@
 
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.IO.Observers;
-using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.IO.Observers;
 using Catalyst.Core.Lib.Util;
+using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using DotNetty.Transport.Channels;
@@ -37,26 +37,26 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
         : RequestObserverBase<VersionRequest, VersionResponse>,
             IRpcRequestObserver
     {
-        public GetVersionRequestObserver(IPeerIdentifier peerIdentifier,
+        public GetVersionRequestObserver(PeerId peerId,
             ILogger logger)
-            : base(logger, peerIdentifier) { }
+            : base(logger, peerId) { }
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="versionRequest"></param>
         /// <param name="channelHandlerContext"></param>
-        /// <param name="senderPeerIdentifier"></param>
+        /// <param name="senderPeerId"></param>
         /// <param name="correlationId"></param>
         /// <returns></returns>
         protected override VersionResponse HandleRequest(VersionRequest versionRequest,
             IChannelHandlerContext channelHandlerContext,
-            IPeerIdentifier senderPeerIdentifier,
+            PeerId senderPeerId,
             ICorrelationId correlationId)
         {
             Guard.Argument(versionRequest, nameof(versionRequest)).NotNull();
             Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
-            Guard.Argument(senderPeerIdentifier, nameof(senderPeerIdentifier)).NotNull();
+            Guard.Argument(senderPeerId, nameof(senderPeerId)).NotNull();
 
             Logger.Debug("received message of type VersionRequest");
 

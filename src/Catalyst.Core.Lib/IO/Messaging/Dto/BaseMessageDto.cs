@@ -23,7 +23,7 @@
 
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.IO.Messaging.Dto;
-using Catalyst.Abstractions.P2P;
+using Catalyst.Protocol.Peer;
 using Dawn;
 using DotNetty.Transport.Channels;
 using Google.Protobuf;
@@ -34,8 +34,8 @@ namespace Catalyst.Core.Lib.IO.Messaging.Dto
         where T : IMessage<T>
     {
         public ICorrelationId CorrelationId { get; }
-        public IPeerIdentifier RecipientPeerIdentifier { get; }
-        public IPeerIdentifier SenderPeerIdentifier { get; }
+        public PeerId RecipientPeerIdentifier { get; }
+        public PeerId SenderPeerIdentifier { get; }
 
         /// <summary>
         ///     Data transfer object to wrap up all parameters for sending protocol messages into a MessageFactors.
@@ -45,8 +45,8 @@ namespace Catalyst.Core.Lib.IO.Messaging.Dto
         /// <param name="recipientPeerIdentifier"></param>
         /// <param name="correlationId"></param>
         protected BaseMessageDto(T content,
-            IPeerIdentifier senderPeerIdentifier,
-            IPeerIdentifier recipientPeerIdentifier,
+            PeerId senderPeerIdentifier,
+            PeerId recipientPeerIdentifier,
             ICorrelationId correlationId)
             : base(content, senderPeerIdentifier.IpEndPoint, recipientPeerIdentifier.IpEndPoint)
         {

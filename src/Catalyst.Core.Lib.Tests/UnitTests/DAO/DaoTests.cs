@@ -84,7 +84,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
             var protocolMessageDao = GetMapper<ProtocolMessageDao>();
 
             var newGuid = Guid.NewGuid();
-            var peerId = PeerIdentifierHelper.GetPeerIdentifier("testcontent").PeerId;
+            var peerId = PeerIdHelper.GetPeerId("testcontent");
             var original = new ProtocolMessage
             {
                 CorrelationId = newGuid.ToByteString(),
@@ -119,7 +119,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
                     RawBytes = byteRn.ToByteString(),
                     SigningContext = DevNetPeerSigningContext.Instance
                 },
-                PeerId = PeerIdentifierHelper.GetPeerIdentifier("test").PeerId,
+                PeerId = PeerIdHelper.GetPeerId("test"),
                 Code = 74
             };
 
@@ -133,7 +133,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
         {
             var peerIdDao = GetMapper<PeerIdDao>();
 
-            var original = PeerIdentifierHelper.GetPeerIdentifier("MyPeerId_Testing").PeerId;
+            var original = PeerIdHelper.GetPeerId("MyPeerId_Testing");
 
             var peer = peerIdDao.ToDao(original);
             var reconverted = peer.ToProtoBuff();
@@ -232,7 +232,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
             var original = new CandidateDeltaBroadcast
             {
                 Hash = hash.ToByteString(),
-                ProducerId = PeerIdentifierHelper.GetPeerIdentifier("test").PeerId,
+                ProducerId = PeerIdHelper.GetPeerId("test"),
                 PreviousDeltaDfsHash = previousHash.ToByteString()
             };
 
@@ -268,7 +268,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
             var original = new FavouriteDeltaBroadcast
             {
                 Candidate = DeltaHelper.GetCandidateDelta(producerId: PeerIdHelper.GetPeerId("not me")),
-                VoterId = PeerIdentifierHelper.GetPeerIdentifier("test").PeerId
+                VoterId = PeerIdHelper.GetPeerId("test")
             };
 
             var contextDao = favouriteDeltaBroadcastDao.ToDao(original);

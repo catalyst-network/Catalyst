@@ -81,14 +81,14 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
         [InlineData("Hello&?!1253Catalyst")]
         public void RpcServer_Can_Handle_SignMessageRequest(string message)
         {
-            var sender = PeerIdentifierHelper.GetPeerIdentifier("sender");
+            var sender = PeerIdHelper.GetPeerId("sender");
             var signMessageRequest = new SignMessageRequest
             {
                 Message = message.ToUtf8ByteString(),
                 SigningContext = new SigningContext()
             };
             var protocolMessage =
-                signMessageRequest.ToProtocolMessage(sender.PeerId);
+                signMessageRequest.ToProtocolMessage(sender);
 
             var messageStream =
                 MessageStreamHelper.CreateStreamWithMessage(_fakeContext, _testScheduler, protocolMessage);

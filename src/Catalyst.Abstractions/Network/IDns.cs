@@ -23,7 +23,7 @@
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Catalyst.Abstractions.P2P;
+using Catalyst.Protocol.Peer;
 using DnsClient;
 
 namespace Catalyst.Abstractions.Network
@@ -47,6 +47,6 @@ namespace Catalyst.Abstractions.Network
         /// </summary>
         /// <param name="urls"></param>
         /// <returns></returns>
-        IEnumerable<IPeerIdentifier> GetSeedNodesFromDns(IEnumerable<string> urls);
+        IEnumerable<PeerId> GetSeedNodesFromDns(IEnumerable<string> urls);
     }
 }
