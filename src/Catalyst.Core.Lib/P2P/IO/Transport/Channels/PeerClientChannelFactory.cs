@@ -67,7 +67,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Transport.Channels
                     ),
                     new PeerIdValidationHandler(_peerIdValidator),
                     new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
-                        new ProtocolMessageVerifyHandler(_keySigner, _signingContext),
+                        new ProtocolMessageVerifyHandler(_keySigner),
                         new ProtocolMessageSignHandler(_keySigner, _signingContext)
                     ),
                     new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
