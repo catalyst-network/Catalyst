@@ -38,6 +38,7 @@ using Catalyst.Core.Lib.P2P.Repository;
 using Catalyst.Protocol.Cryptography;
 using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Wire;
+using Google.Protobuf;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Primitives;
 using Serilog;
@@ -144,8 +145,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
             else
             {
                 var wrappedMessage = message.ToProtocolMessage(_peerId);
-                var signedMessage = wrappedMessage.Sign(_signer, _signingContext);
-                await BroadcastSignedAsync(signedMessage).ConfigureAwait(false);
+                await BroadcastSignedAsync(wrappedMessage).ConfigureAwait(false);
             }
         }
 
@@ -172,7 +172,13 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
             {
                 var innerMessage = message.FromProtocolMessage<ProtocolMessage>();
                 var isOwnerOfBroadcast = innerMessage.PeerId.Equals(_peerId);
-                
+
+                if (isOwnerOfBroadcast)
+                {
+                    innerMessage = innerMessage.Sign(_signer, _signingContext);
+                    message.Value = innerMessage.ToByteString();
+                }
+
                 // The fan out is how many peers to broadcast to
                 var fanOut = isOwnerOfBroadcast
                     ? BroadcastOwnerMaximumGossipPeersPerRound
@@ -186,7 +192,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
                 {
                     _logger.Verbose("Broadcasting message {message}", message);
                     var protocolMessage = message.Clone();
-                    protocolMessage.PeerId = peerIdentifier;
+                    protocolMessage.PeerId = _peerId;
                     _peerClient.SendMessage(new MessageDto(
                         protocolMessage,
                         peerIdentifier)
