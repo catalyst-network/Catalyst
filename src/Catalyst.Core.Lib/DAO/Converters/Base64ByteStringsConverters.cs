@@ -26,6 +26,28 @@ using Google.Protobuf;
 
 namespace Catalyst.Core.Lib.DAO.Converters
 {
+    public class ByteStringToValueCommitmentBase64Converter : IValueConverter<ByteString, ValueCommitmentEntity>
+    {
+        public ValueCommitmentEntity Convert(ByteString sourceMember, ResolutionContext context)
+        {
+            var store = sourceMember.ToBase64();
+
+            var valueCom = new ValueCommitmentEntity();
+            valueCom.Value = store;
+            return valueCom;
+        }
+    }
+
+    public class ValueCommitmentToByteStringConverter : IValueConverter<ValueCommitmentEntity, ByteString>
+    {
+        public ByteString Convert(ValueCommitmentEntity sourceMember, ResolutionContext context)
+        {
+            return ByteString.FromBase64(sourceMember.Value);
+        }
+    }
+
+    //=========================================//
+
     public class ByteStringToStringBase64Converter : IValueConverter<ByteString, string>
     {
         public string Convert(ByteString sourceMember, ResolutionContext context)

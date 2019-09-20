@@ -33,6 +33,7 @@ namespace Catalyst.Core.Lib.DAO
         public BaseEntryDao Base { get; set; }
         public string PedersenCommitment { get; set; }
         public RangeProofDao RangeProof { get; set; }
+        private TransactionBroadcastDao TransactionBroadcastDao { get; set; }
 
         public override void InitMappers(IMapperConfigurationExpression cfg)
         {
