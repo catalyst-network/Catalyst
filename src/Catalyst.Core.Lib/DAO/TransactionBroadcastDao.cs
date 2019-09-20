@@ -24,11 +24,17 @@
 using System;
 using System.Collections.Generic;
 using AutoMapper;
+using Catalyst.Abstractions.Repository;
 using Catalyst.Protocol.Wire;
 using Google.Protobuf.WellKnownTypes;
+using Ipfs;
+using MongoDB.Bson.Serialization.Attributes;
+using Newtonsoft.Json;
+using SharpRepository.Repository;
 
 namespace Catalyst.Core.Lib.DAO
 {
+    [BsonIgnoreExtraElements]
     public class TransactionBroadcastDao : DaoBase<TransactionBroadcast, TransactionBroadcastDao>
     {
         public SignatureDao Signature { get; set; }

@@ -22,10 +22,12 @@
 #endregion
 
 using System;
+using System.Linq;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.Mempool;
 using Catalyst.Abstractions.P2P;
+using Catalyst.Core.Lib.DAO;
 using Catalyst.Core.Lib.IO.Observers;
 using Catalyst.Core.Lib.Mempool.Documents;
 using Catalyst.Protocol.Rpc.Node;
@@ -39,10 +41,10 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
         : RequestObserverBase<GetMempoolRequest, GetMempoolResponse>,
             IRpcRequestObserver
     {
-        private readonly IMempool<MempoolDocument> _mempool;
+        private readonly IMempool<TransactionBroadcastDao> _mempool;
 
         public GetMempoolRequestObserver(IPeerIdentifier peerIdentifier,
-            IMempool<MempoolDocument> mempool,
+            IMempool<TransactionBroadcastDao> mempool,
             ILogger logger)
             : base(logger, peerIdentifier)
         {
@@ -71,7 +73,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
             {
                 Logger.Debug("Received GetMempoolRequest message with content {0}", getMempoolRequest);
 
-                var mempoolTransactions = _mempool.Repository.GetAll();
+                var mempoolTransactions = _mempool.Repository.GetAll().Select(x=>x.ToProtoBuff());
 
                 return new GetMempoolResponse
                 {

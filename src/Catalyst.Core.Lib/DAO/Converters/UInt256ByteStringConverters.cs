@@ -21,6 +21,7 @@
 
 #endregion
 
+using System;
 using AutoMapper;
 using Catalyst.Core.Lib.Extensions;
 using Google.Protobuf;
@@ -28,19 +29,21 @@ using Nethermind.Dirichlet.Numerics;
 
 namespace Catalyst.Core.Lib.DAO.Converters
 {
-    public class ByteStringToUInt256Converter : IValueConverter<ByteString, UInt256>
+    public class ByteStringToUInt256Converter : IValueConverter<ByteString, ulong>
     {
-        public UInt256 Convert(ByteString sourceMember, ResolutionContext context)
+        public ulong Convert(ByteString sourceMember, ResolutionContext context)
         {
-            return sourceMember.ToUInt256();
+            return 0;
+            //return sourceMember.ToUInt256();
         }
     }
 
-    public class UInt256ToByteStringConverter : IValueConverter<UInt256, ByteString>
+    public class UInt256ToByteStringConverter : IValueConverter<ulong, ByteString>
     {
-        public ByteString Convert(UInt256 sourceMember, ResolutionContext context)
+        public ByteString Convert(ulong sourceMember, ResolutionContext context)
         {
-            return sourceMember.ToUint256ByteString();
+            return ByteString.CopyFrom(0x0);
+            //return sourceMember.ToUint256ByteString();
         }
     }
 }

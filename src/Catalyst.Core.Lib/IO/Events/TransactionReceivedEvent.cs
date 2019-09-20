@@ -26,10 +26,10 @@ using Catalyst.Abstractions.Mempool;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.IO.Messaging.Broadcast;
 using Catalyst.Abstractions.Validators;
+using Catalyst.Core.Lib.DAO;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
-using Catalyst.Core.Lib.Mempool.Documents;
 using Catalyst.Core.Lib.P2P.Repository;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.Protocol.Wire;
@@ -41,17 +41,17 @@ namespace Catalyst.Core.Lib.IO.Events
     {
         private readonly ITransactionValidator _validator;
         private readonly ILogger _logger;
-        private readonly IMempool<MempoolDocument> _mempool;
+        private readonly IMempool<TransactionBroadcastDao> _mempool;
         private readonly IPeerIdentifier _peerIdentifier;
         private readonly IBroadcastManager _broadcastManager;
         private readonly IPeerSettings _peerSettings;
         private readonly IPeerClient _peerClient;
         private readonly IPeerRepository _peers;
 
-        public TransactionReceivedEvent(ITransactionValidator validator, 
-            IMempool<MempoolDocument> mempool, 
-            IBroadcastManager broadcastManager, 
-            IPeerIdentifier peerIdentifier, 
+        public TransactionReceivedEvent(ITransactionValidator validator,
+            IMempool<TransactionBroadcastDao> mempool,
+            IBroadcastManager broadcastManager,
+            IPeerIdentifier peerIdentifier,
             IPeerSettings peerSettings,
             IPeerRepository peers,
             IPeerClient peerClient,
@@ -78,14 +78,16 @@ namespace Catalyst.Core.Lib.IO.Events
             var transactionSignature = transaction.Signature;
             _logger.Verbose("Adding transaction {signature} to mempool", transactionSignature);
 
+            var transactionBroadcastDao = new TransactionBroadcastDao().ToDao(transaction);
+
             // https://github.com/catalyst-network/Catalyst.Node/issues/910 - should we fail or succeed if we already have the transaction in the ledger?
-            if (_mempool.Repository.TryReadItem(transactionSignature.RawBytes))
+            if (_mempool.Repository.Exists(x => x.Signature.RawBytes == transactionBroadcastDao.Signature.RawBytes))
             {
                 _logger.Information("Transaction {signature} already exists in mempool", transactionSignature);
                 return ResponseCode.Error;
             }
 
-            _mempool.Repository.CreateItem(transaction);
+            _mempool.Repository.Add(transactionBroadcastDao);
 
             _logger.Information("Broadcasting {signature} transaction", transactionSignature);
             foreach (var recptPeerIdentifier in _peers.GetAll())
@@ -96,6 +98,7 @@ namespace Catalyst.Core.Lib.IO.Events
                     recptPeerIdentifier.PeerIdentifier)
                 );
             }
+
             //var transactionToBroadcast = transaction.ToProtocolMessage(_peerIdentifier.PeerId,
             //    CorrelationId.GenerateCorrelationId());
             //_broadcastManager.BroadcastAsync(transactionToBroadcast);

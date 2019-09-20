@@ -29,7 +29,7 @@ using Google.Protobuf;
 
 namespace Catalyst.Abstractions.Mempool.Repositories
 {
-    public interface IMempoolRepository<T> : IRepositoryWrapper<T> where T : class, IMempoolItem
+    public interface IMempoolRepository<T> : IRepositoryWrapper<T> where T : class
     {
         bool TryReadItem(ByteString signature);
 
@@ -37,7 +37,7 @@ namespace Catalyst.Abstractions.Mempool.Repositories
         
         bool DeleteItem(params string[] transactionSignatures);
 
-        bool CreateItem(TransactionBroadcast transactionBroadcast);
-        new IEnumerable<TransactionBroadcast> GetAll();
+        bool CreateItem(T transactionBroadcast);
+        new IEnumerable<T> GetAll();
     }
 }

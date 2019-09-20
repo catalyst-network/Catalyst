@@ -31,7 +31,7 @@ namespace Catalyst.Core.Lib.DAO
     public class PublicEntryDao : DaoBase<PublicEntry, PublicEntryDao>
     {
         public BaseEntryDao Base { get; set; }
-        public UInt256 Amount { get; set; }
+        public ulong Amount { get; set; }
        
         public override void InitMappers(IMapperConfigurationExpression cfg)
         {

@@ -43,6 +43,7 @@ namespace Catalyst.Core.Lib.IO.Handlers
             _keySigner = keySigner;
         }
 
+        //todo
         protected override void ChannelRead0(IChannelHandlerContext ctx, ProtocolMessage signedMessage)
         {
             var pub = signedMessage.PeerId.PublicKey;
