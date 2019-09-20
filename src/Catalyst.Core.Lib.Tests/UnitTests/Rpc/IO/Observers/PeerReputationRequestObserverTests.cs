@@ -29,6 +29,7 @@ using Catalyst.Core.Lib.Network;
 using Catalyst.Core.Lib.P2P.Models;
 using Catalyst.Core.Lib.P2P.Repository;
 using Catalyst.Core.Modules.Rpc.Server.IO.Observers;
+using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
@@ -42,24 +43,14 @@ using Xunit;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
 {
-    /// <summary>
-    ///     Tests the peer reputation calls
-    /// </summary>
     public sealed class PeerReputationRequestObserverTests
     {
-        /// <summary>The logger</summary>
         private readonly ILogger _logger;
-
-        /// <summary>The fake channel context</summary>
         private readonly IChannelHandlerContext _fakeContext;
+        private readonly TestScheduler _testScheduler;
+        private readonly IPeerRepository _peerRepository;
+        private readonly PeerId _senderId;
 
-        /// <summary>
-        ///     Initializes a new instance of the
-        ///     <see>
-        ///         <cref>PeerListRequestObserverTest</cref>
-        ///     </see>
-        ///     class.
-        /// </summary>
         public PeerReputationRequestObserverTests()
         {
             _logger = Substitute.For<ILogger>();
@@ -67,87 +58,58 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
 
             var fakeChannel = Substitute.For<IChannel>();
             _fakeContext.Channel.Returns(fakeChannel);
-        }
-
-        /// <summary>
-        ///     Tests the peer reputation request and response via RPC.
-        ///     Peer is expected to be found in this case
-        /// </summary>
-        /// <param name="publicKey">Public key of the peer whose reputation is of interest</param>
-        /// <param name="ipAddress">Ip address of the peer whose reputation is of interest</param>
-        [Theory]
-        [InlineData("highscored-125\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0", "192.168.0.125")]
-        [InlineData("highscored-126\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0", "192.168.0.126")]
-        public void TestPeerReputationRequestResponse(string publicKey, string ipAddress)
-        {
-            var responseContent = GetPeerReputationTest(publicKey, ipAddress);
-
-            responseContent.Reputation.Should().Be(125);
-        }
-
-        /// <summary>
-        ///     Tests the peer reputation request and response via RPC.
-        ///     Peer is NOT expected to be found in this case, as they do not exist
-        /// </summary>
-        /// <param name="publicKey">Public key of the peer whose reputation is of interest</param>
-        /// <param name="ipAddress">Ip address of the peer whose reputation is of interest</param>
-        [Theory]
-        [InlineData("cne2+eRandomValuebeingusedherefprtestingIOp", "192.200.200.22")]
-        [InlineData("cne2+e5gIfEdfhDWUxkUfr886YuiZnhEj3om5AXmWVXJK7d47/ESkjhbkJsrbzIbuWm8EPSjJ2YicTIcXvfzIOp",
-            "192.111.100.26")]
-        public void Test_PeerReputationRequestResponse_For_NonExistant_Peers(string publicKey, string ipAddress)
-        {
-            var responseContent = GetPeerReputationTest(publicKey, ipAddress);
-
-            responseContent.Reputation.Should().Be(int.MinValue);
-        }
-
-        private GetPeerReputationResponse GetPeerReputationTest(string publicKey, string ipAddress)
-        {
-            var testScheduler = new TestScheduler();
-            var peerRepository = Substitute.For<IPeerRepository>();
-
-            var fakePeers = Enumerable.Range(0, 5).Select(i => new Peer
-            {
-                Reputation = 0,
-                PeerId = PeerIdHelper.GetPeerId($"iamgroot-{i}")
-            }).ToList();
-
-            //peers we are interested in
-            fakePeers.AddRange(Enumerable.Range(125, 2).Select(i => new Peer
-            {
-                Reputation = 125,
-                PeerId =
-                    PeerIdHelper.GetPeerId($"highscored-{i}", IPAddress.Parse("192.168.0." + i))
-            }));
-
-            // Let peerRepository return the fake peer list
-            peerRepository.GetAll().Returns(fakePeers.ToArray());
-
-            // Build a fake remote endpoint
             _fakeContext.Channel.RemoteAddress.Returns(EndpointBuilder.BuildNewEndPoint("192.0.0.1", 42042));
 
-            var sendPeerIdentifier = PeerIdHelper.GetPeerId("sender");
+            _testScheduler = new TestScheduler();
+            _peerRepository = Substitute.For<IPeerRepository>();
 
-            var request = new GetPeerReputationRequest
+            var fakePeers = PreparePeerRepositoryContent();
+            _peerRepository.GetAll().Returns(fakePeers);
+
+            _senderId = PeerIdHelper.GetPeerId("sender");
+        }
+
+        private static Peer[] PreparePeerRepositoryContent()
+        {
+            var knownPeers = Enumerable.Range(0, 23).Select(i => new Peer
             {
-                PublicKey = publicKey.ToBytesForRLPEncoding().ToByteString(),
-                Ip = ipAddress.ToBytesForRLPEncoding().ToByteString()
-            };
+                Reputation = i,
+                PeerId = PeerIdHelper.GetPeerId($"peer-{i}")
+            });
 
-            var protocolMessage = request.ToProtocolMessage(sendPeerIdentifier);
+            var fakePeers = knownPeers.ToArray();
+            return fakePeers;
+        }
 
-            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, testScheduler, protocolMessage);
+        [Theory]
+        [InlineData("peer-14", 14)]
+        [InlineData("peer-10", 10)]
+        [InlineData("unknown", int.MinValue)]
+        public void TestPeerReputationRequestResponse(string publicKeySeed, int expectedReputations)
+        {
+            var peerId = PeerIdHelper.GetPeerId(publicKeySeed);
 
-            var handler = new PeerReputationRequestObserver(sendPeerIdentifier, _logger, peerRepository);
+            var request = new GetPeerReputationRequest{Ip = peerId.Ip, PublicKey = peerId.PublicKey};
+
+            var responseContent = GetGetPeerReputationResponse(request);
+
+            responseContent.Reputation.Should().Be(expectedReputations);
+        }
+
+        private GetPeerReputationResponse GetGetPeerReputationResponse(GetPeerReputationRequest request)
+        {
+            var protocolMessage = request.ToProtocolMessage(_senderId);
+            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, _testScheduler, protocolMessage);
+
+            var handler = new PeerReputationRequestObserver(_senderId, _logger, _peerRepository);
             handler.StartObserving(messageStream);
 
-            testScheduler.Start();
+            _testScheduler.Start();
 
             var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();
             receivedCalls.Count.Should().Be(1);
 
-            var sentResponseDto = (IMessageDto<ProtocolMessage>) receivedCalls[0].GetArguments().Single();
+            var sentResponseDto = (IMessageDto<ProtocolMessage>) receivedCalls.Single().GetArguments().Single();
 
             return sentResponseDto.Content.FromProtocolMessage<GetPeerReputationResponse>();
         }

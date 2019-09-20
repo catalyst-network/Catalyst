@@ -24,6 +24,7 @@
 using System.Collections.Generic;
 using System.Net;
 using Catalyst.Protocol.Network;
+using Catalyst.Protocol.Peer;
 
 namespace Catalyst.Abstractions.P2P
 {
@@ -37,6 +38,7 @@ namespace Catalyst.Abstractions.P2P
         IList<string> SeedServers { get; }
         NetworkType NetworkType { get; }
         IPEndPoint[] DnsServers { get; }
+        PeerId PeerId { get; }
     }
 }
 

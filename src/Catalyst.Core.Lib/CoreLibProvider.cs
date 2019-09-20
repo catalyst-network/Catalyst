@@ -21,6 +21,7 @@
 
 #endregion
 
+using System;
 using Autofac;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.FileSystem;
@@ -39,6 +40,7 @@ using Catalyst.Abstractions.Rpc.IO.Messaging.Correlation;
 using Catalyst.Abstractions.Util;
 using Catalyst.Abstractions.Validators;
 using Catalyst.Core.Lib.Cryptography;
+using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.FileTransfer;
 using Catalyst.Core.Lib.IO.EventLoop;
 using Catalyst.Core.Lib.IO.Events;
@@ -54,6 +56,7 @@ using Catalyst.Core.Lib.Registry;
 using Catalyst.Core.Lib.Rpc.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Lib.Validators;
+using Catalyst.Protocol.Peer;
 using DnsClient;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
@@ -84,6 +87,7 @@ namespace Catalyst.Core.Lib
             builder.RegisterType<PeerService>().As<IPeerService>().SingleInstance();
             builder.RegisterType<PeerSettings>().As<IPeerSettings>();
             builder.RegisterType<Peer>().As<IPeer>();
+
             builder.RegisterType<PeerIdValidator>().As<IPeerIdValidator>();
             builder.RegisterType<PeerChallengerResponse>().As<IPeerChallengeResponse>();
             builder.RegisterType<PeerClient>().As<IPeerClient>().SingleInstance();

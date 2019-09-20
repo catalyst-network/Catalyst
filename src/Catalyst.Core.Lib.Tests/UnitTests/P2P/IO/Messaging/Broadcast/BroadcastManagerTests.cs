@@ -51,16 +51,19 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Broadcast
         private readonly IMemoryCache _cache;
         private readonly IKeySigner _keySigner;
         private readonly PeerId _senderPeerId;
+        private readonly IPeerSettings _peerSettings;
 
         public BroadcastManagerTests()
         {
-            _senderPeerId = PeerIdHelper.GetPeerId("Test");
+            _senderPeerId = PeerIdHelper.GetPeerId("sender");
             _keySigner = Substitute.For<IKeySigner>();
             var fakeSignature = Substitute.For<ISignature>();
             _keySigner.Sign(Arg.Any<byte[]>(), default).ReturnsForAnyArgs(fakeSignature);
             _keySigner.CryptoContext.SignatureLength.Returns(64);
             _peers = Substitute.For<IPeerRepository>();
             _cache = new MemoryCache(new MemoryCacheOptions());
+            _peerSettings = Substitute.For<IPeerSettings>();
+            _peerSettings.PeerId.Returns(_senderPeerId);
         }
 
         [Fact]
@@ -110,9 +113,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Broadcast
             var senderIdentifier = PeerIdHelper.GetPeerId("sender");
 
             IBroadcastManager broadcastMessageHandler = new BroadcastManager(
-                peerId, 
                 _peers,
-                Substitute.For<IPeerSettings>(),
+                _peerSettings,
                 _cache, 
                 Substitute.For<IPeerClient>(), 
                 _keySigner,
@@ -143,9 +145,9 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Broadcast
         private async Task<ICorrelationId> BroadcastMessage(PeerId broadcaster)
         {
             var gossipMessageHandler = new
-                BroadcastManager(_senderPeerId, 
+                BroadcastManager( 
                     _peers,
-                    Substitute.For<IPeerSettings>(),
+                    _peerSettings,
                     _cache, 
                     Substitute.For<IPeerClient>(), 
                     _keySigner, 

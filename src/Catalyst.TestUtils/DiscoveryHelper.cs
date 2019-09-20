@@ -133,7 +133,7 @@ namespace Catalyst.TestUtils
         public static IDictionary<PeerId, ICorrelationId> SubContactedNeighbours(int amount = 5)
         {
             return Enumerable.Range(0, amount)
-               .Select(i => Substitute.For<PeerId>())
+               .Select(i => PeerIdHelper.GetPeerId())
                .ToDictionary(v => v, k => Substitute.For<ICorrelationId>());
         }
 
@@ -141,7 +141,7 @@ namespace Catalyst.TestUtils
             INeighbours neighbours = default)
         {
             var subbedMemento = Substitute.For<IHastingsMemento>();
-            subbedMemento.Peer.Returns(identifier ?? Substitute.For<PeerId>());
+            subbedMemento.Peer.Returns(identifier ?? PeerIdHelper.GetPeerId());
             subbedMemento.Neighbours.Returns(neighbours ?? MockNeighbours());
 
             return subbedMemento;

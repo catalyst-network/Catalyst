@@ -75,12 +75,6 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Broadcast
         [Fact]
         public async Task Broadcast_Handler_Can_Notify_Manager_On_Incoming_Broadcast()
         {
-            var recipientIdentifier = PeerIdHelper.GetPeerId();
-            var fakeIp = IPAddress.Any;
-
-            recipientIdentifier.Ip.Returns(fakeIp.To16Bytes().ToByteString());
-            recipientIdentifier.IpEndPoint.Returns(new IPEndPoint(fakeIp, 10));
-            
             EmbeddedChannel channel = new EmbeddedChannel(
                 new ProtocolMessageVerifyHandler(_keySigner, _signingContext),
                 _broadcastHandler,

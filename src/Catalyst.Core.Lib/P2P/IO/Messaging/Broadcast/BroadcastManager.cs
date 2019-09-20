@@ -89,8 +89,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
         /// <param name="peerClient">The peer client.</param>
         /// <param name="signer">The signature writer</param>
         /// <param name="logger"></param>
-        public BroadcastManager(PeerId peerId,
-            IPeerRepository peers, 
+        public BroadcastManager(IPeerRepository peers, 
             IPeerSettings peerSettings,
             IMemoryCache memoryCache, 
             IPeerClient peerClient,
@@ -98,7 +97,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
             ILogger logger)
         {
             _logger = logger;
-            _peerId = peerId;
+            _peerId = peerSettings.PeerId;
             _pendingRequests = memoryCache;
             _peers = peers;
             _signingContext = new SigningContext {NetworkType = peerSettings.NetworkType, SignatureType = SignatureType.ProtocolPeer};

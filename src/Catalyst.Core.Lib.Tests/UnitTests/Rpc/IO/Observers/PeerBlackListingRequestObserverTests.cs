@@ -49,22 +49,14 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
     /// </summary>
     public sealed class PeerBlackListingRequestObserverTests
     {
-        /// <summary>The logger</summary>
         private readonly ILogger _logger;
 
-        /// <summary>The fake channel context</summary>
         private readonly IChannelHandlerContext _fakeContext;
 
         private readonly TestScheduler _testScheduler;
         private readonly PeerId _senderId;
         private readonly IPeerRepository _peerRepository;
 
-        /// <summary>
-        /// Initializes a new instance of the <see>
-        ///     <cref>PeerBlackListingRequestObserverTest</cref>
-        /// </see>
-        /// class.
-        /// </summary>
         public PeerBlackListingRequestObserverTests()
         {
             _logger = Substitute.For<ILogger>();
@@ -106,9 +98,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         [InlineData("good-22", false)]
         [InlineData("blacklisted-1", true)]
         [InlineData("blacklisted-3", false)]
-        [InlineData("unknown-1", false)]
-        [InlineData("unknown-2", false)]
-        public void PeerBlackListingRequestObserver_should_set_Blacklist_flag_on_targeted_peers(string publicKeySeed, bool blacklist)
+        public void PeerBlackListingRequestObserver_should_set_Blacklist_flag_on_known_peers(string publicKeySeed, bool blacklist)
         {
             var targetedId = PeerIdHelper.GetPeerId(publicKeySeed);
             var request = new SetPeerBlacklistRequest
@@ -121,17 +111,27 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             var responseContent = GetSetPeerBlacklistRequest(request);
 
             responseContent.Blacklist.Should().Be(blacklist);
-            if (publicKeySeed.StartsWith("unknown"))
+            responseContent.Ip.Should().BeEquivalentTo(targetedId.Ip);
+            responseContent.PublicKey.Should().BeEquivalentTo(targetedId.PublicKey);
+        }
+
+        [Theory]
+        [InlineData("unknown-1", false)]
+        [InlineData("unknown-2", false)]
+        public void PeerBlackListingRequestObserver_should_not_set_Blacklist_flag_on_unknown_peers(string publicKeySeed, bool blacklist)
+        {
+            var targetedId = PeerIdHelper.GetPeerId(publicKeySeed);
+            var request = new SetPeerBlacklistRequest
             {
-                responseContent.Ip.Should().BeNullOrEmpty();
-                responseContent.PublicKey.Should().BeNullOrEmpty();
-            }
-            else
-            {
-                responseContent.Ip.Should().BeEquivalentTo(targetedId.Ip);
-                responseContent.PublicKey.Should().BeEquivalentTo(targetedId.PublicKey);
-                responseContent.PublicKey.Should().BeEquivalentTo(targetedId.PublicKey);
-            }
+                PublicKey = targetedId.PublicKey,
+                Ip = targetedId.Ip,
+                Blacklist = blacklist
+            };
+
+            var responseContent = GetSetPeerBlacklistRequest(request);
+
+            responseContent.Ip.Should().BeNullOrEmpty();
+            responseContent.PublicKey.Should().BeNullOrEmpty();
         }
 
         private SetPeerBlacklistResponse GetSetPeerBlacklistRequest(SetPeerBlacklistRequest request)
