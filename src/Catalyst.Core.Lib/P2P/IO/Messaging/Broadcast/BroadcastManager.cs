@@ -91,9 +91,9 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
         /// <param name="logger"></param>
         public BroadcastManager(IPeerRepository peers, 
             IPeerSettings peerSettings,
-            IMemoryCache memoryCache, 
+            IMemoryCache memoryCache,
             IPeerClient peerClient,
-            IKeySigner signer, 
+            IKeySigner signer,
             ILogger logger)
         {
             _logger = logger;
@@ -131,8 +131,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
         /// <inheritdoc/>
         public async Task BroadcastAsync(ProtocolMessage message)
         {
-            var innerMessage = message.FromProtocolMessage<ProtocolMessage>();
-            var correlationId = innerMessage.CorrelationId.ToCorrelationId();
+            var correlationId = message.CorrelationId.ToCorrelationId();
             bool containsOriginalMessage =
                 _incomingBroadcastSignatureDictionary.ContainsKey(correlationId);
 
@@ -144,7 +143,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
             }
             else
             {
-                var wrappedMessage = innerMessage.ToProtocolMessage(_peerId);
+                var wrappedMessage = message.ToProtocolMessage(_peerId);
                 var signedMessage = wrappedMessage.Sign(_signer, _signingContext);
                 await BroadcastSignedAsync(signedMessage).ConfigureAwait(false);
             }
@@ -175,7 +174,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
                 var isOwnerOfBroadcast = innerMessage.PeerId.Equals(_peerId);
                 
                 // The fan out is how many peers to broadcast to
-                var fanOut = isOwnerOfBroadcast 
+                var fanOut = isOwnerOfBroadcast
                     ? BroadcastOwnerMaximumGossipPeersPerRound
                     : (int) Math.Max(GetMaxGossipCycles(broadcastMessage), MaxGossipPeersPerRound);
 
