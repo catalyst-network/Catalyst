@@ -69,7 +69,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
 
         private static Peer[] PreparePeerRepositoryContent()
         {
-            var knownPeers = Enumerable.Range(0, 23).Select(i => new Peer
+            var knownPeers = Enumerable.Range(0, 5).Select(i => new Peer
             {
                 Reputation = i,
                 PeerId = PeerIdHelper.GetPeerId($"peer-{i}")
@@ -80,14 +80,14 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         }
 
         [Theory]
-        [InlineData("peer-14", 14)]
-        [InlineData("peer-10", 10)]
+        [InlineData("peer-1", 1)]
+        [InlineData("peer-4", 4)]
         [InlineData("unknown", int.MinValue)]
         public void TestPeerReputationRequestResponse(string publicKeySeed, int expectedReputations)
         {
             var peerId = PeerIdHelper.GetPeerId(publicKeySeed);
 
-            var request = new GetPeerReputationRequest{Ip = peerId.Ip, PublicKey = peerId.PublicKey};
+            var request = new GetPeerReputationRequest {Ip = peerId.Ip, PublicKey = peerId.PublicKey};
 
             var responseContent = GetGetPeerReputationResponse(request);
 

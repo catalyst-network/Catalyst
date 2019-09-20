@@ -69,12 +69,10 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
             Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
             Guard.Argument(senderPeerId, nameof(senderPeerId)).NotNull();
             Logger.Debug("received message of type PeerReputationRequest");
-            
-            var ip = getPeerReputationRequest.Ip.ToStringUtf8();
 
             return new GetPeerReputationResponse
             {
-                Reputation = _peerRepository.GetAll().Where(m => m.PeerId.Ip.ToString() == ip.ToString()
+                Reputation = _peerRepository.GetAll().Where(m => m.PeerId.Ip == getPeerReputationRequest.Ip
                      && m.PeerId.PublicKey.KeyToString() == getPeerReputationRequest.PublicKey.KeyToString())
                    .Select(x => x.Reputation).DefaultIfEmpty(int.MinValue).First()
             };
