@@ -28,7 +28,9 @@ using Catalyst.Abstractions.P2P.IO.Messaging.Broadcast;
 using Catalyst.Abstractions.Validators;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
+using Catalyst.Core.Lib.IO.Messaging.Dto;
 using Catalyst.Core.Lib.Mempool.Documents;
+using Catalyst.Core.Lib.P2P.Repository;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.Protocol.Wire;
 using Serilog;
@@ -43,12 +45,16 @@ namespace Catalyst.Core.Lib.IO.Events
         private readonly IPeerIdentifier _peerIdentifier;
         private readonly IBroadcastManager _broadcastManager;
         private readonly IPeerSettings _peerSettings;
+        private readonly IPeerClient _peerClient;
+        private readonly IPeerRepository _peers;
 
         public TransactionReceivedEvent(ITransactionValidator validator, 
             IMempool<MempoolDocument> mempool, 
             IBroadcastManager broadcastManager, 
             IPeerIdentifier peerIdentifier, 
             IPeerSettings peerSettings,
+            IPeerRepository peers,
+            IPeerClient peerClient,
             ILogger logger)
         {
             _peerSettings = peerSettings;
@@ -57,6 +63,8 @@ namespace Catalyst.Core.Lib.IO.Events
             _mempool = mempool;
             _validator = validator;
             _logger = logger;
+            _peers = peers;
+            _peerClient = peerClient;
         }
 
         public ResponseCode OnTransactionReceived(TransactionBroadcast transaction)
@@ -80,9 +88,17 @@ namespace Catalyst.Core.Lib.IO.Events
             _mempool.Repository.CreateItem(transaction);
 
             _logger.Information("Broadcasting {signature} transaction", transactionSignature);
-            var transactionToBroadcast = transaction.ToProtocolMessage(_peerIdentifier.PeerId,
-                CorrelationId.GenerateCorrelationId());
-            _broadcastManager.BroadcastAsync(transactionToBroadcast);
+            foreach (var recptPeerIdentifier in _peers.GetAll())
+            {
+                //protocolMessage.PeerId = peerIdentifier.PeerId;
+                _peerClient.SendMessage(new MessageDto(
+                    transaction.ToProtocolMessage(_peerIdentifier.PeerId, CorrelationId.GenerateCorrelationId()),
+                    recptPeerIdentifier.PeerIdentifier)
+                );
+            }
+            //var transactionToBroadcast = transaction.ToProtocolMessage(_peerIdentifier.PeerId,
+            //    CorrelationId.GenerateCorrelationId());
+            //_broadcastManager.BroadcastAsync(transactionToBroadcast);
             return ResponseCode.Successful;
         }
     }

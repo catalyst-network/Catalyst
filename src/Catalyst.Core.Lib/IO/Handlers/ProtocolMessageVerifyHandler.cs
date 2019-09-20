@@ -21,6 +21,7 @@
 
 #endregion
 
+using System;
 using System.Reflection;
 using Catalyst.Abstractions.KeySigner;
 using Catalyst.Core.Lib.Extensions;
@@ -28,6 +29,7 @@ using Catalyst.Protocol.Wire;
 using DotNetty.Transport.Channels;
 using Google.Protobuf;
 using Serilog;
+using SimpleBase;
 
 namespace Catalyst.Core.Lib.IO.Handlers
 {
@@ -43,6 +45,8 @@ namespace Catalyst.Core.Lib.IO.Handlers
 
         protected override void ChannelRead0(IChannelHandlerContext ctx, ProtocolMessage signedMessage)
         {
+            var pub = signedMessage.PeerId.PublicKey;
+            var base32 = Base32.Crockford.Encode(Convert.FromBase64String(pub.ToBase64()), false).ToLower();
             Logger.Verbose("Received {msg}", signedMessage);
             if (!Verify(signedMessage))
             {
