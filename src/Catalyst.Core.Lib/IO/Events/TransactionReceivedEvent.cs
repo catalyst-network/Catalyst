@@ -60,8 +60,9 @@ namespace Catalyst.Core.Lib.IO.Events
             _logger = logger;
         }
 
-        public ResponseCode OnTransactionReceived(TransactionBroadcast transaction)
+        public ResponseCode OnTransactionReceived(ProtocolMessage protocolMessage)
         {
+            var transaction = protocolMessage.FromProtocolMessage<TransactionBroadcast>();
             var transactionValid = _validator.ValidateTransaction(transaction, _peerSettings.NetworkType);
             if (!transactionValid)
             {
@@ -80,9 +81,8 @@ namespace Catalyst.Core.Lib.IO.Events
 
             _mempool.Repository.CreateItem(transaction);
 
-            _logger.Information("Broadcasting {signature} transaction", transactionSignature);
-            var transactionToBroadcast = transaction.ToProtocolMessage(_peerId);
-            _broadcastManager.BroadcastAsync(transactionToBroadcast);
+            _logger.Information("Broadcasting {signature} transaction", protocolMessage);
+            _broadcastManager.BroadcastAsync(protocolMessage);
             return ResponseCode.Successful;
         }
     }
