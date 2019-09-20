@@ -27,6 +27,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Dfs;
+using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.IO.Messaging.Broadcast;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
@@ -55,12 +56,12 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
         protected virtual AsyncRetryPolicy<string> DfsRetryPolicy { get; }
 
         public DeltaHub(IBroadcastManager broadcastManager,
-            PeerId peerId,
+            IPeerSettings peerSettings,
             IDfs dfs,
             ILogger logger)
         {
             _broadcastManager = broadcastManager;
-            _peerId = peerId;
+            _peerId = peerSettings.PeerId;
             _dfs = dfs;
             _logger = logger;
 
