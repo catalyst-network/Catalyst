@@ -209,15 +209,6 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
 
             ContainerProvider.ContainerBuilder.RegisterModule(module);
         }
-
-        protected override void Dispose(bool disposing)
-        {
-            base.Dispose(disposing);
-            if (!disposing)
-            {
-                return;
-            }
-        }
     }
 }
 

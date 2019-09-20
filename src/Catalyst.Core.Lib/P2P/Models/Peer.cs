@@ -112,8 +112,6 @@ namespace Catalyst.Core.Lib.P2P.Models
         /// <inheritdoc />
         public void Touch() { LastSeen = DateTimeUtil.UtcNow; }
 
-        private static IMapper masterMapper;
-
         public PeerDao ToPeerDao(Peer peer)
         {
             var tempPeerDao = new PeerIdDao()
@@ -125,6 +123,7 @@ namespace Catalyst.Core.Lib.P2P.Models
 
             return new PeerDao()
             {
+                PeerIdentifier = tempPeerDao,
                 Reputation = peer.Reputation,
                 BlackListed = peer.BlackListed,
                 Created = peer.Created,

@@ -39,7 +39,8 @@ namespace Catalyst.Core.Lib.Repository
 
     public class MempoolEfCoreRepository : EfCoreRepository<TransactionBroadcastDao, string>
     {
-        public MempoolEfCoreRepository(IDbContext dbContext, ICachingStrategy<TransactionBroadcastDao, string> cachingStrategy = null) :
+        public MempoolEfCoreRepository(IDbContext dbContext,
+            ICachingStrategy<TransactionBroadcastDao, string> cachingStrategy = null) :
             base((Microsoft.EntityFrameworkCore.DbContext) dbContext, cachingStrategy) { }
     }
 
@@ -53,13 +54,16 @@ namespace Catalyst.Core.Lib.Repository
         public EfCoreContext(string connectionString)
             : base(new DbContextOptionsBuilder<EfCoreContext>()
                .UseSqlServer(connectionString).Options) { }
-        
+
         public Microsoft.EntityFrameworkCore.DbSet<PeerIdDao> PeerIdDaoStore { get; set; }
         public Microsoft.EntityFrameworkCore.DbSet<PeerDao> PeerDaoStore { get; set; }
         public Microsoft.EntityFrameworkCore.DbSet<TransactionBroadcastDao> TransactionBroadcastStore { get; set; }
         public Microsoft.EntityFrameworkCore.DbSet<RangeProofDao> RangeProofDaoStore { get; set; }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder) { }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            // Required code stub
+        }
     }
 }
 
