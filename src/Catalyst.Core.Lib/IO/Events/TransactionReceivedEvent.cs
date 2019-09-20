@@ -81,8 +81,7 @@ namespace Catalyst.Core.Lib.IO.Events
             _mempool.Repository.CreateItem(transaction);
 
             _logger.Information("Broadcasting {signature} transaction", transactionSignature);
-            var transactionToBroadcast = transaction.ToProtocolMessage(_peerId,
-                CorrelationId.GenerateCorrelationId());
+            var transactionToBroadcast = transaction.ToProtocolMessage(_peerId);
             _broadcastManager.BroadcastAsync(transactionToBroadcast);
             return ResponseCode.Successful;
         }
