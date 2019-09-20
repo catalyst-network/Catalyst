@@ -229,7 +229,6 @@ stages:
               command: pack
               packDirectory: '$(Build.ArtifactStagingDirectory)/packages/releases/$(ArtifactName)'
               arguments: '--configuration=$(BuildConfiguration) --output=$(Build.ArtifactStagingDirectory)/packages/releases/$(ArtifactName)) --version-suffix=$(Build.BuildId)'
-              arguments: '--configuration=$(BuildConfiguration) --output=$(Build.ArtifactStagingDirectory)/packages/releases/$(ArtifactName)) --version-suffix=$(Build.BuildId)'
               packagesToPack: '$(Pipeline.Workspace)/$(ArtifactName)/$(PROJECT)'
               nobuild: true
               includesymbols: false
