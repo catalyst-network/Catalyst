@@ -120,7 +120,7 @@ namespace Catalyst.Core.Lib.P2P.Models
                 PublicKey = peer.PeerId.PublicKey.KeyToString()
             };
 
-            return new PeerDao()
+            return new PeerDao
             {
                 PeerIdentifier = tempPeerDao,
                 Reputation = peer.Reputation,

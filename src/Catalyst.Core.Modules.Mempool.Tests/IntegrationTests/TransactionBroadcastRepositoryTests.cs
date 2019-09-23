@@ -21,26 +21,24 @@
 
 #endregion
 
-using System;
-using System.Collections.Generic;
 using Autofac;
 using Catalyst.Abstractions.DAO;
-using Catalyst.TestUtils;
-using Xunit;
-using Xunit.Abstractions;
 using Catalyst.Core.Lib.DAO;
 using Catalyst.Core.Lib.Repository;
-using SharpRepository.InMemoryRepository;
-using SharpRepository.Repository;
+using Catalyst.TestUtils;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
+using SharpRepository.InMemoryRepository;
 using SharpRepository.MongoDbRepository;
+using SharpRepository.Repository;
+using System;
+using System.Collections.Generic;
+using Xunit;
+using Xunit.Abstractions;
 namespace Catalyst.Core.Modules.Mempool.Tests.IntegrationTests
 {
     public sealed class TransactionBroadcastRepositoryTests : FileSystemBasedTest
     {
-        private readonly IMapperInitializer[] _mappers;
-
         public static IEnumerable<object[]> ModulesList =>
             new List<object[]>
             {
@@ -80,7 +78,7 @@ namespace Catalyst.Core.Modules.Mempool.Tests.IntegrationTests
 
         public TransactionBroadcastRepositoryTests(ITestOutputHelper output) : base(output)
         {
-            _mappers = new IMapperInitializer[]
+            var mappers = new IMapperInitializer[]
             {
                 new ProtocolMessageDao(),
                 new ConfidentialEntryDao(),
@@ -97,7 +95,7 @@ namespace Catalyst.Core.Modules.Mempool.Tests.IntegrationTests
                 new BaseEntryDao(),
             };
 
-            var map = new MapperProvider(_mappers);
+            var map = new MapperProvider(mappers);
             map.Start();
         }
 
@@ -184,15 +182,6 @@ namespace Catalyst.Core.Modules.Mempool.Tests.IntegrationTests
             ContainerProvider.ConfigureContainerBuilder();
 
             ContainerProvider.ContainerBuilder.RegisterModule(module);
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            base.Dispose(disposing);
-            if (!disposing)
-            {
-                return;
-            }
         }
     }
 }
