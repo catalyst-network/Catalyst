@@ -113,7 +113,7 @@ namespace Catalyst.Core.Lib.P2P.Models
 
         public PeerDao ToPeerDao(Peer peer)
         {
-            var tempPeerDao = new PeerIdDao()
+            var tempPeerDao = new PeerIdDao
             {
                 Ip = peer.PeerId.ToString(),
                 Port = (int) peer.PeerId.Port,

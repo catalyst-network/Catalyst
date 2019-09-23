@@ -41,8 +41,6 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
 {
     public sealed class PeerRepositoryTests : FileSystemBasedTest
     {
-        private readonly IMapperInitializer[] _mappers;
-
         public static IEnumerable<object[]> ModulesList => 
             new List<object[]>
             {
@@ -82,12 +80,12 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
 
         public PeerRepositoryTests(ITestOutputHelper output) : base(output)
         {
-            _mappers = new IMapperInitializer[]
+            var mappers = new IMapperInitializer[]
             {
                 new PeerIdDao()
             };
 
-            var map = new MapperProvider(_mappers);
+            var map = new MapperProvider(mappers);
             map.Start();
         }
 
