@@ -143,7 +143,8 @@ namespace Catalyst.Core.Modules.Mempool.Tests.IntegrationTests
             TransactionBroadcastRepo_Can_Save_And_Retrieve();
         }
 
-        [Fact(Skip = "Microsoft DBs yet to be completed")]
+        //[Fact(Skip = "Microsoft DBs yet to be completed")]
+        [Fact]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void TransactionBroadcastRepo_Microsoft_SQLTypes_Dbs_Update_And_Retrieve()
         {
@@ -155,7 +156,8 @@ namespace Catalyst.Core.Modules.Mempool.Tests.IntegrationTests
             CheckForDatabaseCreation();
         }
 
-        [Fact(Skip = "Microsoft DBs yet to be completed")]
+//        [Fact(Skip = "Microsoft DBs yet to be completed")]
+        [Fact]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void TransactionBroadcastRepo_Microsoft_SQLTypes_Dbs_Can_Save_And_Retrieve()
         {

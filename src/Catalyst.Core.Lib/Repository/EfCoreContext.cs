@@ -55,10 +55,11 @@ namespace Catalyst.Core.Lib.Repository
             : base(new DbContextOptionsBuilder<EfCoreContext>()
                .UseSqlServer(connectionString).Options) { }
 
-        public Microsoft.EntityFrameworkCore.DbSet<PeerIdDao> PeerIdDaoStore { get; set; }
-        public Microsoft.EntityFrameworkCore.DbSet<PeerDao> PeerDaoStore { get; set; }
+        //public Microsoft.EntityFrameworkCore.DbSet<PeerIdDao> PeerIdDaoStore { get; set; }
+        //public Microsoft.EntityFrameworkCore.DbSet<PeerDao> PeerDaoStore { get; set; }
         public Microsoft.EntityFrameworkCore.DbSet<TransactionBroadcastDao> TransactionBroadcastStore { get; set; }
-        public Microsoft.EntityFrameworkCore.DbSet<RangeProofDao> RangeProofDaoStore { get; set; }
+        //public Microsoft.EntityFrameworkCore.DbSet<RangeProofDao> RangeProofDaoStore { get; set; }
+        public Microsoft.EntityFrameworkCore.DbSet<BaseEntryDao> BaseEntryDaostore { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

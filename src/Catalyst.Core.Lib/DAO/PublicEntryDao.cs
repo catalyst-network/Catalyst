@@ -32,6 +32,7 @@ namespace Catalyst.Core.Lib.DAO
     {
         public BaseEntryDao Base { get; set; }
         public string Amount { get; set; }
+        private TransactionBroadcastDao TransactionBroadcastDao { get; set; }
 
         public override void InitMappers(IMapperConfigurationExpression cfg)
         {

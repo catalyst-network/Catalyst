@@ -34,9 +34,12 @@ namespace Catalyst.Core.Lib.DAO
         public string ReceiverPublicKey { get; set; }
         public string SenderPublicKey { get; set; }
         public string TransactionFees { get; set; }
+        private TransactionBroadcastDao TransactionBroadcastDao { get; set; }
 
         public override void InitMappers(IMapperConfigurationExpression cfg)
         {
+            cfg.CreateMap<BaseEntry, BaseEntryDao>().ReverseMap();
+
             cfg.CreateMap<BaseEntry, BaseEntryDao>()
                .ForMember(d => d.ReceiverPublicKey, opt => opt.ConvertUsing(new ByteStringToStringPubKeyConverter(), s => s.ReceiverPublicKey))
                .ForMember(d => d.SenderPublicKey, opt => opt.ConvertUsing(new ByteStringToStringPubKeyConverter(), s => s.SenderPublicKey))
