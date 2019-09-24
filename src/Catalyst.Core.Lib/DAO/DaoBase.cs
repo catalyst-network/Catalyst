@@ -35,6 +35,7 @@ namespace Catalyst.Core.Lib.DAO
         IValueConverter<TProto, TDao>, IDocument
     {
         [Key]
+        [JsonIgnore]
         [RepositoryPrimaryKey(Order = 1)]
         [JsonProperty("_id")]
         public string DocumentId { get; set; }
