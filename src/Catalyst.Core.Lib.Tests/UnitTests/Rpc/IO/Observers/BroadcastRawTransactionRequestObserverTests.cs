@@ -62,7 +62,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             var channel = Substitute.For<IChannel>();
             channelContext.Channel.Returns(channel);
 
-            _transactionReceivedEvent.OnTransactionReceived(Arg.Any<TransactionBroadcast>())
+            _transactionReceivedEvent.OnTransactionReceived(Arg.Any<ProtocolMessage>())
                .Returns(expectedResponse);
             _broadcastRawTransactionRequestObserver
                .OnNext(new ObserverDto(channelContext,

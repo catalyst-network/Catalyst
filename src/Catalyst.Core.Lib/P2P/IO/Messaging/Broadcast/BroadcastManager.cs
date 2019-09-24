@@ -38,6 +38,7 @@ using Catalyst.Core.Lib.P2P.Repository;
 using Catalyst.Protocol.Cryptography;
 using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Wire;
+using Google.Protobuf;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Primitives;
 using Serilog;
@@ -91,9 +92,9 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
         /// <param name="logger"></param>
         public BroadcastManager(IPeerRepository peers, 
             IPeerSettings peerSettings,
-            IMemoryCache memoryCache, 
+            IMemoryCache memoryCache,
             IPeerClient peerClient,
-            IKeySigner signer, 
+            IKeySigner signer,
             ILogger logger)
         {
             _logger = logger;
@@ -108,7 +109,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
                .AddExpirationToken(new CancellationChangeToken(new CancellationTokenSource(TimeSpan.FromMinutes(10)).Token));
         }
 
-        private async Task BroadcastSignedAsync(ProtocolMessage signedMessage)
+        private async Task BroadcastInner(ProtocolMessage signedMessage)
         {
             var innerMessage = signedMessage.FromProtocolMessage<ProtocolMessage>();
 
@@ -131,8 +132,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
         /// <inheritdoc/>
         public async Task BroadcastAsync(ProtocolMessage message)
         {
-            var innerMessage = message.FromProtocolMessage<ProtocolMessage>();
-            var correlationId = innerMessage.CorrelationId.ToCorrelationId();
+            var correlationId = message.CorrelationId.ToCorrelationId();
             bool containsOriginalMessage =
                 _incomingBroadcastSignatureDictionary.ContainsKey(correlationId);
 
@@ -140,13 +140,12 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
             {
                 var originalSignedMessage =
                     _incomingBroadcastSignatureDictionary[correlationId];
-                await BroadcastSignedAsync(originalSignedMessage).ConfigureAwait(false);
+                await BroadcastInner(originalSignedMessage).ConfigureAwait(false);
             }
             else
             {
-                var wrappedMessage = innerMessage.ToProtocolMessage(_peerId);
-                var signedMessage = wrappedMessage.Sign(_signer, _signingContext);
-                await BroadcastSignedAsync(signedMessage).ConfigureAwait(false);
+                var wrappedMessage = message.ToProtocolMessage(_peerId);
+                await BroadcastInner(wrappedMessage).ConfigureAwait(false);
             }
         }
 
@@ -173,9 +172,15 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
             {
                 var innerMessage = message.FromProtocolMessage<ProtocolMessage>();
                 var isOwnerOfBroadcast = innerMessage.PeerId.Equals(_peerId);
-                
+
+                if (isOwnerOfBroadcast)
+                {
+                    innerMessage = innerMessage.Sign(_signer, _signingContext);
+                    message.Value = innerMessage.ToByteString();
+                }
+
                 // The fan out is how many peers to broadcast to
-                var fanOut = isOwnerOfBroadcast 
+                var fanOut = isOwnerOfBroadcast
                     ? BroadcastOwnerMaximumGossipPeersPerRound
                     : (int) Math.Max(GetMaxGossipCycles(broadcastMessage), MaxGossipPeersPerRound);
 
@@ -187,7 +192,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
                 {
                     _logger.Verbose("Broadcasting message {message}", message);
                     var protocolMessage = message.Clone();
-                    protocolMessage.PeerId = peerIdentifier;
+                    protocolMessage.PeerId = _peerId;
                     _peerClient.SendMessage(new MessageDto(
                         protocolMessage,
                         peerIdentifier)
