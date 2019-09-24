@@ -31,6 +31,7 @@ using Catalyst.Core.Modules.Mempool.Repositories;
 using Google.Protobuf;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using SimpleBase;
 using BaseController = Microsoft.AspNetCore.Mvc.Controller;
 
 namespace Catalyst.Core.Modules.Web3.Controllers
@@ -49,7 +50,16 @@ namespace Catalyst.Core.Modules.Web3.Controllers
         [HttpGet]
         public JsonResult GetMempool()
         {
-            return Json(_mempoolRepository.GetAll(), new JsonSerializerSettings
+            var mempool = _mempoolRepository.GetAll().ToList();
+            mempool.ForEach(x =>
+            {
+                x.Signature.RawBytes = Base58.Bitcoin.Encode(Base32.Crockford.Decode(x.Signature.RawBytes));
+                x.PublicEntries.First().Base.SenderPublicKey =
+                    Base58.Bitcoin.Encode(Base32.Crockford.Decode(x.PublicEntries.First().Base.SenderPublicKey));
+                x.ContractEntries.First().Base.SenderPublicKey =
+                    Base58.Bitcoin.Encode(Base32.Crockford.Decode(x.ContractEntries.First().Base.SenderPublicKey));
+            });
+            return Json(mempool, new JsonSerializerSettings
             {
                 Converters = JsonConverterProviders.Converters.ToList()
             });
@@ -58,19 +68,11 @@ namespace Catalyst.Core.Modules.Web3.Controllers
         //[HttpGet]
         //public JsonResult GetMempool()
         //{
-        //    var mempool = _mempoolRepository.GetAll().ToList();
-        //    mempool.ForEach(x =>
-        //    {
-        //        x.Signature.RawBytes = Base58.Bitcoin.Encode(Base32.Crockford.Decode(x.Signature.RawBytes));
-        //        x.PublicEntries.First().Base.SenderPublicKey =
-        //            Base58.Bitcoin.Encode(Base32.Crockford.Decode(x.PublicEntries.First().Base.SenderPublicKey));
-        //        x.ContractEntries.First().Base.SenderPublicKey =
-        //            Base58.Bitcoin.Encode(Base32.Crockford.Decode(x.PublicEntries.First().Base.SenderPublicKey));
-        //    });
-        //    return Json(mempool, new JsonSerializerSettings
+        //    return Json(_mempoolRepository.GetAll(), new JsonSerializerSettings
         //    {
         //        Converters = JsonConverterProviders.Converters.ToList()
         //    });
         //}
+
     }
 }
