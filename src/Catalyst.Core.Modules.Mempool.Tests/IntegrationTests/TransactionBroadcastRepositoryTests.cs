@@ -28,13 +28,14 @@ using Catalyst.Core.Lib.Repository;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
-using SharpRepository.InMemoryRepository;
-using SharpRepository.MongoDbRepository;
 using SharpRepository.Repository;
 using System;
 using System.Collections.Generic;
+using Catalyst.Protocol.Wire;
 using Xunit;
 using Xunit.Abstractions;
+using Catalyst.Modules.Repository.MongoDb;
+
 namespace Catalyst.Core.Modules.Mempool.Tests.IntegrationTests
 {
     public sealed class TransactionBroadcastRepositoryTests : FileSystemBasedTest
@@ -42,25 +43,9 @@ namespace Catalyst.Core.Modules.Mempool.Tests.IntegrationTests
         public static IEnumerable<object[]> ModulesList =>
             new List<object[]>
             {
-                new object[] {new InMemoryModule()},
-                new object[] {new MongoDbModule()}
+                new object[] {new InMemoryTestModule<TransactionBroadcast, TransactionBroadcastDao>()},
+                new object[] {new MongoDbModule<TransactionBroadcast, TransactionBroadcastDao>()}
             };
-
-        private sealed class MongoDbModule : Module
-        {
-            protected override void Load(ContainerBuilder builder)
-            {
-                builder.RegisterType<MongoDbRepository<TransactionBroadcastDao>>().As<IRepository<TransactionBroadcastDao, string>>().SingleInstance();
-            }
-        }
-
-        private sealed class InMemoryModule : Module
-        {
-            protected override void Load(ContainerBuilder builder)
-            {
-                builder.RegisterType<InMemoryRepository<TransactionBroadcastDao, string>>().As<IRepository<TransactionBroadcastDao, string>>().SingleInstance();
-            }
-        }
 
         private sealed class ModuleAzureSqlTypes : Module
         {
@@ -123,7 +108,7 @@ namespace Catalyst.Core.Modules.Mempool.Tests.IntegrationTests
             return transactBroadcastRepo;
         }
 
-        [Theory(Skip = "To be run in the pipeline only")]
+        [Theory]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         [MemberData(nameof(ModulesList))]
         public void TransactionBroadcastRepo_All_Dbs_Can_Update_And_Retrieve(Module dbModule)
@@ -131,7 +116,7 @@ namespace Catalyst.Core.Modules.Mempool.Tests.IntegrationTests
             RegisterModules(dbModule);
         }
 
-        [Theory(Skip = "To be run in the pipeline only")]
+        [Theory]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         [MemberData(nameof(ModulesList))]
         public void TransactionBroadcastRepo_All_Dbs_Can_Save_And_Retrieve(Module dbModule)

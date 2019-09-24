@@ -31,11 +31,10 @@ using Xunit.Abstractions;
 using Catalyst.Core.Lib.DAO;
 using Catalyst.Core.Lib.P2P.Models;
 using Catalyst.Core.Lib.Repository;
-using SharpRepository.InMemoryRepository;
+using Catalyst.Modules.Repository.MongoDb;
 using SharpRepository.Repository;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
-using SharpRepository.MongoDbRepository;
 
 namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
 {
@@ -44,25 +43,9 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
         public static IEnumerable<object[]> ModulesList => 
             new List<object[]>
             {
-                new object[] {new InMemoryModule()},
-                new object[] {new MongoDbModule()}
+                new object[] {new InMemoryTestModule<Peer, PeerDao>()},
+                new object[] {new MongoDbModule<Peer, PeerDao>()}
             };
-
-        private sealed class MongoDbModule : Module
-        {
-            protected override void Load(ContainerBuilder builder)
-            {
-                builder.RegisterType<MongoDbRepository<PeerDao>>().As<IRepository<PeerDao, string>>().SingleInstance();
-            }
-        }
-
-        private sealed class InMemoryModule : Module
-        {
-            protected override void Load(ContainerBuilder builder)
-            {
-                builder.RegisterType<InMemoryRepository<PeerDao, string>>().As<IRepository<PeerDao, string>>().SingleInstance();
-            }
-        }
 
         private sealed class ModuleAzureSqlTypes : Module
         {
@@ -82,7 +65,8 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
         {
             var mappers = new IMapperInitializer[]
             {
-                new PeerIdDao()
+                new PeerIdDao(),
+                new PeerDao()
             };
 
             var map = new MapperProvider(mappers);
@@ -131,7 +115,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
         {
             var peerRepo = scope.Resolve<IRepository<PeerDao, string>>();
 
-            var peerDao = new PeerDao().ToPeerDao(new Peer {PeerId = PeerIdHelper.GetPeerId(new Random().Next().ToString())});
+            var peerDao = new PeerDao().ToDao(new Peer {PeerId = PeerIdHelper.GetPeerId(new Random().Next().ToString()) });
             peerDao.Id = Guid.NewGuid().ToString();
             Id = peerDao.Id;
 
@@ -142,8 +126,8 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
 
             return peerRepo;
         }
-
-        [Theory(Skip = "To be run in the pipeline only")]
+        
+        [Theory]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         [MemberData(nameof(ModulesList))]
         public void PeerRepo_All_Dbs_Can_Update_And_Retrieve(Module dbModule)
@@ -153,7 +137,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
             PeerRepo_Can_Update_And_Retrieve();
         }
 
-        [Theory(Skip = "To be run in the pipeline only")]
+        [Theory]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         [MemberData(nameof(ModulesList))]
         public void PeerRepo_All_Dbs_Can_Save_And_Retrieve(Module dbModule)

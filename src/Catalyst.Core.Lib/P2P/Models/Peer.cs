@@ -22,15 +22,13 @@
 #endregion
 
 using System;
-using System.ComponentModel.DataAnnotations;
+using AutoMapper;
 using Catalyst.Abstractions.P2P.Models;
 using Catalyst.Core.Lib.DAO;
 using Catalyst.Core.Lib.Repository.Attributes;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Protocol.Peer;
 using Google.Protobuf;
-using MongoDB.Bson.Serialization.Attributes;
-using Newtonsoft.Json;
 using SharpRepository.Repository;
 
 namespace Catalyst.Core.Lib.P2P.Models
@@ -39,8 +37,6 @@ namespace Catalyst.Core.Lib.P2P.Models
     public sealed class Peer : IPeer
     {
         [RepositoryPrimaryKey(Order = 1)]
-        [JsonProperty("id")]
-        [BsonId]
         public string DocumentId => PeerId?.ToByteString().ToBase64();
         
         /// <inheritdoc />
@@ -75,12 +71,8 @@ namespace Catalyst.Core.Lib.P2P.Models
     }
 
     [Audit]
-    public class PeerDao 
+    public class PeerDao : DaoBase<Peer, PeerDao>
     {
-        [RepositoryPrimaryKey(Order = 1)]
-        [Key]
-        public string Id { get; set; }
-
         /// <inheritdoc />
         public PeerIdDao PeerIdentifier { get; set; }
 
@@ -111,24 +103,18 @@ namespace Catalyst.Core.Lib.P2P.Models
         /// <inheritdoc />
         public void Touch() { LastSeen = DateTimeUtil.UtcNow; }
 
-        public PeerDao ToPeerDao(Peer peer)
+        public override void InitMappers(IMapperConfigurationExpression cfg)
         {
-            var tempPeerDao = new PeerIdDao
-            {
-                Ip = peer.PeerId.ToString(),
-                Port = (int) peer.PeerId.Port,
-                PublicKey = peer.PeerId.PublicKey.KeyToString()
-            };
+            cfg.CreateMap<Peer, PeerDao>();
+            cfg.AllowNullDestinationValues = true;
 
-            return new PeerDao
-            {
-                PeerIdentifier = tempPeerDao,
-                Reputation = peer.Reputation,
-                BlackListed = peer.BlackListed,
-                Created = peer.Created,
-                Modified = peer.Modified,
-                LastSeen = peer.LastSeen,
-            };
+            cfg.CreateMap<PeerDao, Peer>()
+               .ForMember(e => e.Reputation, opt => opt.UseDestinationValue())
+               .ForMember(e => e.BlackListed, opt => opt.UseDestinationValue())
+               .ForMember(e => e.Created, opt => opt.UseDestinationValue())
+               .ForMember(e => e.Modified, opt => opt.UseDestinationValue())
+               .ForMember(e => e.LastSeen, opt => opt.UseDestinationValue())
+               .ForMember(e => e.PeerId, opt => opt.UseDestinationValue());
         }
     }
 }
