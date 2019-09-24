@@ -108,7 +108,7 @@ namespace Catalyst.Core.Modules.Mempool.Tests.IntegrationTests
             return transactBroadcastRepo;
         }
 
-        [Theory]
+        [Theory(Skip = "Setup to run in pipeline only")]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         [MemberData(nameof(ModulesList))]
         public void TransactionBroadcastRepo_All_Dbs_Can_Update_And_Retrieve(Module dbModule)
@@ -116,7 +116,7 @@ namespace Catalyst.Core.Modules.Mempool.Tests.IntegrationTests
             RegisterModules(dbModule);
         }
 
-        [Theory]
+        [Theory(Skip = "Setup to run in pipeline only")]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         [MemberData(nameof(ModulesList))]
         public void TransactionBroadcastRepo_All_Dbs_Can_Save_And_Retrieve(Module dbModule)
