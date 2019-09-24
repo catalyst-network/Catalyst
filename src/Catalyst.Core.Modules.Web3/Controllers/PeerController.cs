@@ -21,14 +21,33 @@
 
 #endregion
 
+using System;
 using System.Linq;
 using Catalyst.Core.Lib.P2P.Repository;
 using Catalyst.Core.Lib.Util;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using NLog.StructuredLogging.Json.Helpers;
+using SimpleBase;
 
 namespace Catalyst.Core.Modules.Web3.Controllers
 {
+    public class ByteArrayHexConverter : JsonConverter
+    {
+        public override bool CanConvert(Type objectType) => objectType == typeof(byte[]);
+
+        public override bool CanRead => false;
+        public override bool CanWrite => true;
+
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer) => throw new NotImplementedException();
+
+        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        {
+            var base58String = Base58.Bitcoin.Encode((byte[]) value);
+            writer.WriteValue(base58String);
+        }
+    }
+
     [ApiController]
     [Route("api/[controller]/[action]")]
     public sealed class PeerController : Controller
@@ -44,9 +63,23 @@ namespace Catalyst.Core.Modules.Web3.Controllers
         [HttpGet]
         public JsonResult GetAllPeers()
         {
+            var peers = _peerRepository.GetAll().ToList();
+            //peers.ForEach(x =>
+            //{
+            //    x.PeerIdentifier.PublicKey = Base58.Bitcoin.Encode(x.PeerIdentifier.PublicKey);
+            //});
+
+            //var jsonResult = Json(_peerRepository.GetAll(), new JsonSerializerSettings
+            //{
+            //    Converters = JsonConverterProviders.Converters.ToList()
+            //});
+
+            var converters = JsonConverterProviders.Converters.ToList();
+            converters.Add(new ByteArrayHexConverter());
+
             return Json(_peerRepository.GetAll(), new JsonSerializerSettings
             {
-                Converters = JsonConverterProviders.Converters.ToList()
+                Converters = converters
             });
         }
     }
