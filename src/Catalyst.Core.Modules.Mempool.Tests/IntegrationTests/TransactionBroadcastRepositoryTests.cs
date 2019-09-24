@@ -89,9 +89,9 @@ namespace Catalyst.Core.Modules.Mempool.Tests.IntegrationTests
             using (var scope = ContainerProvider.Container.BeginLifetimeScope(CurrentTestName))
             {
                 var criteriaId = string.Empty;
-                var peerRepo = PopulateTransactBroadcastRepo(scope, out criteriaId);
+                var transactBroadcastRepoRepo = PopulateTransactBroadcastRepo(scope, out criteriaId);
 
-                peerRepo.Get(criteriaId).Id.Should().Be(criteriaId);
+                transactBroadcastRepoRepo.Get(criteriaId).Id.Should().Be(criteriaId);
             }
         }
 

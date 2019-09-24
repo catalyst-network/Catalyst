@@ -77,12 +77,12 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
         {
             using (var scope = ContainerProvider.Container.BeginLifetimeScope(CurrentTestName))
             {
-                var criteriaId = string.Empty;
-                var peerRepo = PopulatePeerRepo(scope, out criteriaId);
+                var peerDao = new PeerDao();
+                var peerRepo = PopulatePeerRepo(scope, out peerDao);
 
-                peerRepo.Get(criteriaId).Id.Should().Be(criteriaId);
-                peerRepo.Get(criteriaId).PeerIdentifier.PublicKey.Should().Be(peerRepo.Get(criteriaId).PeerIdentifier.PublicKey);
-                peerRepo.Get(criteriaId).PeerIdentifier.Ip.Should().Be(peerRepo.Get(criteriaId).PeerIdentifier.Ip);
+                peerRepo.Get(peerDao.Id).Id.Should().Be(peerDao.Id);
+                peerRepo.Get(peerDao.Id).PeerIdentifier.PublicKey.Should().Be(peerDao.PeerIdentifier.PublicKey);
+                peerRepo.Get(peerDao.Id).PeerIdentifier.Ip.Should().Be(peerDao.PeerIdentifier.Ip);
             }
         }
 
@@ -90,15 +90,14 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
         {
             using (var scope = ContainerProvider.Container.BeginLifetimeScope(CurrentTestName))
             {
-                var criteriaId = string.Empty;
+                var peerDao = new PeerDao();
+                var peerRepo = PopulatePeerRepo(scope, out peerDao);
 
-                var peerRepo = PopulatePeerRepo(scope, out criteriaId);
-
-                var retrievedPeer = peerRepo.Get(criteriaId);
+                var retrievedPeer = peerRepo.Get(peerDao.Id);
                 retrievedPeer.Touch();
                 peerRepo.Update(retrievedPeer);
 
-                var retrievedPeerModified = peerRepo.Get(criteriaId);
+                var retrievedPeerModified = peerRepo.Get(peerDao.Id);
                 var now = DateTime.UtcNow.Date;
 
                 if (retrievedPeerModified.Modified == null)
@@ -111,18 +110,18 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
             }
         }
 
-        private IRepository<PeerDao, string> PopulatePeerRepo(ILifetimeScope scope, out string Id)
+        private IRepository<PeerDao, string> PopulatePeerRepo(ILifetimeScope scope, out PeerDao peerDaoOutput)
         {
             var peerRepo = scope.Resolve<IRepository<PeerDao, string>>();
 
-            var peerDao = new PeerDao().ToDao(new Peer {PeerId = PeerIdHelper.GetPeerId(new Random().Next().ToString()) });
+            var peerDao = new PeerDao().ToDao(new Peer {PeerId = PeerIdHelper.GetPeerId(new Random().Next().ToString())});
             peerDao.Id = Guid.NewGuid().ToString();
-            Id = peerDao.Id;
 
             peerDao.PeerIdentifier = new PeerIdDao().ToDao(PeerIdHelper.GetPeerId(new Random().Next().ToString()));
             peerDao.PeerIdentifier.Id = Guid.NewGuid().ToString();
 
             peerRepo.Add(peerDao);
+            peerDaoOutput = peerDao;
 
             return peerRepo;
         }
