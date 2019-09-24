@@ -37,6 +37,8 @@ using Google.Protobuf;
 using NSubstitute;
 using Serilog;
 using Xunit;
+using Catalyst.Core.Lib.Extensions;
+using Catalyst.Core.Lib.IO.Messaging.Correlation;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Events
 {
@@ -68,7 +70,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Events
         public void Can_Send_Error_To_Invalid_Transaction()
         {
             _transactionValidator.ValidateTransaction(Arg.Any<TransactionBroadcast>(), _peerSettings.NetworkType).Returns(false);
-            _transactionReceivedEvent.OnTransactionReceived(new TransactionBroadcast()).Should()
+            _transactionReceivedEvent.OnTransactionReceived(new TransactionBroadcast()
+                .ToProtocolMessage(PeerIdHelper.GetPeerId(), CorrelationId.GenerateCorrelationId())).Should()
                .Be(ResponseCode.Error);
             _broadcastManager.DidNotReceiveWithAnyArgs().BroadcastAsync(default);
         }
@@ -82,7 +85,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Events
             _transactionValidator.ValidateTransaction(Arg.Any<TransactionBroadcast>(), _peerSettings.NetworkType).Returns(true);
             _mempool.Repository.TryReadItem(sig).Returns(true);
 
-            _transactionReceivedEvent.OnTransactionReceived(transaction).Should().Be(ResponseCode.Error);
+            _transactionReceivedEvent.OnTransactionReceived(transaction.ToProtocolMessage(PeerIdHelper.GetPeerId(), CorrelationId.GenerateCorrelationId()))
+                .Should().Be(ResponseCode.Error);
             _broadcastManager.DidNotReceiveWithAnyArgs().BroadcastAsync(default);
             _mempool.Repository.DidNotReceiveWithAnyArgs().CreateItem(default);
         }
@@ -93,7 +97,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Events
             var transaction = TransactionHelper.GetPublicTransaction();
 
             _transactionValidator.ValidateTransaction(Arg.Any<TransactionBroadcast>(), _peerSettings.NetworkType).Returns(true);
-            _transactionReceivedEvent.OnTransactionReceived(transaction).Should().Be(ResponseCode.Successful);
+            _transactionReceivedEvent.OnTransactionReceived(transaction.ToProtocolMessage(PeerIdHelper.GetPeerId(), CorrelationId.GenerateCorrelationId()))
+                .Should().Be(ResponseCode.Successful);
 
             _mempool.Repository.Received(1).CreateItem(Arg.Is<TransactionBroadcast>(
                 savedDoc => savedDoc.Equals(transaction)));

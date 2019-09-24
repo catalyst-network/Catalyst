@@ -154,10 +154,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Broadcast
 
             var innerMessage = TransactionHelper.GetPublicTransaction()
                .ToProtocolMessage(broadcaster);
-            var gossipMessage = innerMessage
-               .ToProtocolMessage(broadcaster);
 
-            await gossipMessageHandler.BroadcastAsync(gossipMessage);
+            await gossipMessageHandler.BroadcastAsync(innerMessage);
             return innerMessage.CorrelationId.ToCorrelationId();
         }
 

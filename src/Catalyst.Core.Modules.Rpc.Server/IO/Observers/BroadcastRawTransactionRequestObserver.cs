@@ -24,6 +24,7 @@
 using Catalyst.Abstractions.IO.Events;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.IO.Observers;
+using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Observers;
 using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Rpc.Node;
@@ -50,7 +51,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
             PeerId senderPeerId,
             ICorrelationId correlationId)
         {
-            var responseCode = _transactionReceivedEvent.OnTransactionReceived(messageDto.Transaction);
+            var responseCode = _transactionReceivedEvent.OnTransactionReceived(messageDto.ToProtocolMessage(senderPeerId, correlationId));
 
             return new BroadcastRawTransactionResponse {ResponseCode = responseCode};
         }

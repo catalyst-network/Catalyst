@@ -28,6 +28,6 @@ namespace Catalyst.Abstractions.IO.Events
 {
     public interface ITransactionReceivedEvent
     {
-        ResponseCode OnTransactionReceived(TransactionBroadcast broadcast);
+        ResponseCode OnTransactionReceived(ProtocolMessage broadcast);
     }
 }
