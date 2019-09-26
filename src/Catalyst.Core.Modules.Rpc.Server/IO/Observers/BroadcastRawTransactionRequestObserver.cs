@@ -24,6 +24,7 @@
 using Catalyst.Abstractions.IO.Events;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.IO.Observers;
+using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Observers;
 using Catalyst.Protocol.Peer;
@@ -39,9 +40,9 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
         private readonly ITransactionReceivedEvent _transactionReceivedEvent;
 
         public BroadcastRawTransactionRequestObserver(ILogger logger,
-            PeerId peerId,
+            IPeerSettings peerSettings,
             ITransactionReceivedEvent transactionReceivedEvent)
-            : base(logger, peerId)
+            : base(logger, peerSettings)
         {
             _transactionReceivedEvent = transactionReceivedEvent;
         }

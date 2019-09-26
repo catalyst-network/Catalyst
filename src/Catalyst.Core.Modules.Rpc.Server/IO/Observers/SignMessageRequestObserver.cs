@@ -24,6 +24,7 @@
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.KeySigner;
+using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Observers;
 using Catalyst.Protocol.Peer;
@@ -40,10 +41,10 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
     {
         private readonly IKeySigner _keySigner;
 
-        public SignMessageRequestObserver(PeerId peerId,
+        public SignMessageRequestObserver(IPeerSettings peerSettings,
             ILogger logger,
             IKeySigner keySigner)
-            : base(logger, peerId)
+            : base(logger, peerSettings)
         {
             _keySigner = keySigner;
         }

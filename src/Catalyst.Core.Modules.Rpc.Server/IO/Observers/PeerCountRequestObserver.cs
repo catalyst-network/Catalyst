@@ -24,6 +24,7 @@
 using System.Linq;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.IO.Observers;
+using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.IO.Observers;
 using Catalyst.Core.Lib.P2P.Repository;
 using Catalyst.Protocol.Peer;
@@ -46,13 +47,13 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
         private readonly IPeerRepository _peerRepository;
 
         /// <summary>Initializes a new instance of the <see cref="PeerCountRequestObserver"/> class.</summary>
-        /// <param name="peerId">The peer identifier.</param>
+        /// <param name="peerSettings"></param>
         /// <param name="peerRepository">The peer discovery.</param>
         /// <param name="logger">The logger.</param>
-        public PeerCountRequestObserver(PeerId peerId,
+        public PeerCountRequestObserver(IPeerSettings peerSettings,
             IPeerRepository peerRepository,
             ILogger logger) :
-            base(logger, peerId)
+            base(logger, peerSettings)
         {
             _peerRepository = peerRepository;
         }

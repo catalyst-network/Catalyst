@@ -23,6 +23,7 @@
 
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.IO.Observers;
+using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.IO.Observers;
 using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Rpc.Node;
@@ -40,9 +41,9 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
     {
         private readonly IConfigurationRoot _config;
 
-        public GetInfoRequestObserver(PeerId peerId,
+        public GetInfoRequestObserver(IPeerSettings peerSettings,
             IConfigurationRoot config,
-            ILogger logger) : base(logger, peerId)
+            ILogger logger) : base(logger, peerSettings)
         {
             _config = config;
         }

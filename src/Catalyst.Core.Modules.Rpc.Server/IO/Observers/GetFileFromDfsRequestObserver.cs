@@ -30,6 +30,7 @@ using Catalyst.Abstractions.FileTransfer;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.IO.Observers;
+using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.FileTransfer;
@@ -60,13 +61,13 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
 
         /// <summary>Initializes a new instance of the <see cref="AddFileToDfsRequestObserver"/> class.</summary>
         /// <param name="dfs">The DFS.</param>
-        /// <param name="peerId">The peer identifier.</param>
+        /// <param name="peerSettings"></param>
         /// <param name="fileTransferFactory">The upload file transfer factory.</param>
         /// <param name="logger">The logger.</param>
         public GetFileFromDfsRequestObserver(IDfs dfs,
-            PeerId peerId,
+            IPeerSettings peerSettings,
             IUploadFileTransferFactory fileTransferFactory,
-            ILogger logger) : base(logger, peerId)
+            ILogger logger) : base(logger, peerSettings)
         {
             _fileTransferFactory = fileTransferFactory;
             _dfs = dfs;
@@ -104,7 +105,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
                         using (var fileTransferInformation = new UploadFileTransferInformation(
                             stream,
                             senderPeerId,
-                            PeerId,
+                            PeerSettings.PeerId,
                             channelHandlerContext.Channel,
                             correlationId
                         ))

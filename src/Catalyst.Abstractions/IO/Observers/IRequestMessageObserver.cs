@@ -21,12 +21,12 @@
 
 #endregion
 
-using Catalyst.Protocol.Peer;
+using Catalyst.Abstractions.P2P;
 
 namespace Catalyst.Abstractions.IO.Observers
 {
     public interface IRequestMessageObserver : IMessageObserver
     {
-        PeerId PeerId { get; }
+        IPeerSettings PeerSettings { get; }
     }
 }

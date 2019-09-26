@@ -50,19 +50,19 @@ namespace Catalyst.Core.Lib.P2P
 
         public PeerChallenger(ILogger logger,
             IPeerClient peerClient,
-            PeerId senderIdentifier,
+            IPeerSettings peerSettings,
             int peerChallengeWaitTimeSeconds,
             IScheduler scheduler = null)
         {
             var observableScheduler = scheduler ?? Scheduler.Default;
             ChallengeResponseMessageStreamer = new ReplaySubject<IPeerChallengeResponse>(1, observableScheduler);
-            _senderIdentifier = senderIdentifier;
+            _senderIdentifier = peerSettings.PeerId;
             _logger = logger;
             _peerClient = peerClient;
             _peerChallengeWaitTimeSeconds = peerChallengeWaitTimeSeconds;
         }
 
-        public async Task<bool> ChallengePeerAsync(PeerId recipientPeerIdentifier)
+        public async Task<bool> ChallengePeerAsync(PeerId recipientPeerId)
         {
             try
             {
@@ -70,18 +70,18 @@ namespace Catalyst.Core.Lib.P2P
                 var protocolMessage = new PingRequest().ToProtocolMessage(_senderIdentifier, correlationId);
                 var messageDto = new MessageDto(
                     protocolMessage,
-                    recipientPeerIdentifier
+                    recipientPeerId
                 );
 
-                _logger.Verbose($"Sending peer challenge request to IP: {recipientPeerIdentifier}");
+                _logger.Verbose($"Sending peer challenge request to IP: {recipientPeerId}");
                 _peerClient.SendMessage(messageDto);
                 using (var cancellationTokenSource =
                     new CancellationTokenSource(TimeSpan.FromSeconds(_peerChallengeWaitTimeSeconds)))
                 {
                     await ChallengeResponseMessageStreamer
                        .FirstAsync(a => a != null 
-                         && a.PeerId.PublicKey.SequenceEqual(recipientPeerIdentifier.PublicKey) 
-                         && a.PeerId.Ip.SequenceEqual(recipientPeerIdentifier.Ip))
+                         && a.PeerId.PublicKey.SequenceEqual(recipientPeerId.PublicKey) 
+                         && a.PeerId.Ip.SequenceEqual(recipientPeerId.Ip))
                        .ToTask(cancellationTokenSource.Token)
                        .ConfigureAwait(false);
                 }
