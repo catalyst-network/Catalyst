@@ -27,9 +27,7 @@ using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.IO.Messaging.Broadcast;
 using Catalyst.Abstractions.Validators;
 using Catalyst.Core.Lib.Extensions;
-using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.Mempool.Documents;
-using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.Protocol.Wire;
 using Serilog;
@@ -41,20 +39,17 @@ namespace Catalyst.Core.Lib.IO.Events
         private readonly ITransactionValidator _validator;
         private readonly ILogger _logger;
         private readonly IMempool<MempoolDocument> _mempool;
-        private readonly PeerId _peerId;
         private readonly IBroadcastManager _broadcastManager;
         private readonly IPeerSettings _peerSettings;
 
-        public TransactionReceivedEvent(ITransactionValidator validator, 
-            IMempool<MempoolDocument> mempool, 
+        public TransactionReceivedEvent(ITransactionValidator validator,
+            IMempool<MempoolDocument> mempool,
             IBroadcastManager broadcastManager,
-            PeerId peerId, 
             IPeerSettings peerSettings,
             ILogger logger)
         {
             _peerSettings = peerSettings;
             _broadcastManager = broadcastManager;
-            _peerId = peerId;
             _mempool = mempool;
             _validator = validator;
             _logger = logger;

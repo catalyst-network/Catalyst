@@ -26,6 +26,7 @@ using System.IO;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.FileTransfer;
+using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.FileTransfer;
@@ -74,6 +75,8 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
             {
                 var nodePeerId = PeerIdHelper.GetPeerId("sender");
                 var rpcPeerId = PeerIdHelper.GetPeerId("recipient");
+                var peerSettings = Substitute.For<IPeerSettings>();
+                peerSettings.PeerId.Returns(rpcPeerId);
                 var nodePeer = nodePeerId;
                 var rpcPeer = rpcPeerId;
                 var correlationId = CorrelationId.GenerateCorrelationId();
@@ -84,7 +87,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
                 var getFileFromDfsResponseHandler =
                     new GetFileFromDfsResponseObserver(_logger, _fileDownloadFactory);
                 var transferBytesHandler =
-                    new TransferFileBytesRequestObserver(_fileDownloadFactory, rpcPeer, _logger);
+                    new TransferFileBytesRequestObserver(_fileDownloadFactory, peerSettings, _logger);
 
                 _fileDownloadFactory.RegisterTransfer(fileDownloadInformation);
 

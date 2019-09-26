@@ -54,8 +54,10 @@ using Catalyst.Core.Lib.Registry;
 using Catalyst.Core.Lib.Rpc.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Lib.Validators;
+using Catalyst.Protocol.Peer;
 using DnsClient;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Multiformats.Hash.Algorithms;
 
@@ -79,7 +81,7 @@ namespace Catalyst.Core.Lib
                .WithProperty("TcpClientHandlerWorkerThreads", 4)
                .WithProperty("UdpServerHandlerWorkerThreads", 8)
                .WithProperty("UdpClientHandlerWorkerThreads", 2);
-            
+
             // Register P2P
             builder.RegisterType<PeerService>().As<IPeerService>().SingleInstance();
             builder.RegisterType<PeerSettings>().As<IPeerSettings>();

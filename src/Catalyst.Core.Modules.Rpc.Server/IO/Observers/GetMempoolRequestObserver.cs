@@ -25,6 +25,7 @@ using System;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.Mempool;
+using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.IO.Observers;
 using Catalyst.Core.Lib.Mempool.Documents;
 using Catalyst.Protocol.Peer;
@@ -41,10 +42,10 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
     {
         private readonly IMempool<MempoolDocument> _mempool;
 
-        public GetMempoolRequestObserver(PeerId peerId,
+        public GetMempoolRequestObserver(IPeerSettings peerSettings,
             IMempool<MempoolDocument> mempool,
             ILogger logger)
-            : base(logger, peerId)
+            : base(logger, peerSettings)
         {
             _mempool = mempool;
         }

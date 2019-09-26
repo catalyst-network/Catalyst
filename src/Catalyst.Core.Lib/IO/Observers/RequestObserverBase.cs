@@ -25,6 +25,7 @@ using System;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.IO.Observers;
+using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
@@ -40,13 +41,13 @@ namespace Catalyst.Core.Lib.IO.Observers
     public abstract class RequestObserverBase<TProtoReq, TProtoRes> : MessageObserverBase, IRequestMessageObserver
         where TProtoReq : IMessage<TProtoReq> where TProtoRes : IMessage<TProtoRes>
     {
-        public PeerId PeerId { get; }
+        public IPeerSettings PeerSettings { get; }
 
-        protected RequestObserverBase(ILogger logger, PeerId peerId) : base(logger, typeof(TProtoReq).ShortenedProtoFullName())
+        protected RequestObserverBase(ILogger logger, IPeerSettings peerSettings) : base(logger, typeof(TProtoReq).ShortenedProtoFullName())
         {
             Guard.Argument(typeof(TProtoReq), nameof(TProtoReq)).Require(t => t.IsRequestType(),
                 t => $"{nameof(TProtoReq)} is not of type {MessageTypes.Request.Name}");
-            PeerId = peerId;
+            PeerSettings = peerSettings;
             logger.Verbose("{interface} instantiated", nameof(IRequestMessageObserver));
         }
 
@@ -67,7 +68,7 @@ namespace Catalyst.Core.Lib.IO.Observers
                     correlationId);
 
                 var responseDto = new MessageDto(
-                    response.ToProtocolMessage(PeerId, correlationId),
+                    response.ToProtocolMessage(PeerSettings.PeerId, correlationId),
                     recipientPeerId);
 
                 messageDto.Context.Channel.WriteAndFlushAsync(responseDto);

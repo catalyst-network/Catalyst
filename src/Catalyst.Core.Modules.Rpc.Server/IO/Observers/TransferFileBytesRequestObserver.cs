@@ -24,6 +24,7 @@
 using Catalyst.Abstractions.FileTransfer;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.IO.Observers;
+using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib.IO.Observers;
 using Catalyst.Protocol.Peer;
@@ -44,12 +45,12 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
 
         /// <summary>Initializes a new instance of the <see cref="TransferFileBytesRequestObserver"/> class.</summary>
         /// <param name="fileTransferFactory">The download transfer factory.</param>
-        /// <param name="peerId">The peer identifier.</param>
+        /// <param name="peerSettings"></param>
         /// <param name="logger">The logger.</param>
         public TransferFileBytesRequestObserver(IDownloadFileTransferFactory fileTransferFactory,
-            PeerId peerId,
+            IPeerSettings peerSettings,
             ILogger logger)
-            : base(logger, peerId)
+            : base(logger, peerSettings)
         {
             _fileTransferFactory = fileTransferFactory;
         }

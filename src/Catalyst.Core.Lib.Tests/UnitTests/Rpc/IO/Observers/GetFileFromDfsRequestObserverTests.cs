@@ -28,6 +28,7 @@ using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.FileTransfer;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.IO.Messaging.Dto;
+using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
@@ -54,7 +55,9 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             _fileTransferFactory = Substitute.For<IUploadFileTransferFactory>();
             _dfs = Substitute.For<IDfs>();
             var peerId = PeerIdHelper.GetPeerId("test");
-            _observer = new GetFileFromDfsRequestObserver(_dfs, peerId, _fileTransferFactory, Substitute.For<ILogger>());
+            var peerSettings = Substitute.For<IPeerSettings>();
+            peerSettings.PeerId.Returns(peerId);
+            _observer = new GetFileFromDfsRequestObserver(_dfs, peerSettings, _fileTransferFactory, Substitute.For<ILogger>());
         }
 
         [Fact]

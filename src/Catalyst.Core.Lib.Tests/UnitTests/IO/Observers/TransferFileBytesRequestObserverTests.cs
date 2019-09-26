@@ -24,6 +24,7 @@
 using System.Linq;
 using Catalyst.Abstractions.FileTransfer;
 using Catalyst.Abstractions.IO.Messaging.Dto;
+using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
@@ -54,8 +55,10 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Observers
             _context.Channel.Returns(Substitute.For<IChannel>());
             _downloadFileTransferFactory = Substitute.For<IDownloadFileTransferFactory>();
             var peerIdentifier = PeerIdHelper.GetPeerId("Test");
+            var peerSettings = Substitute.For<IPeerSettings>();
+            peerSettings.PeerId.Returns(peerIdentifier);
             _observer = new TransferFileBytesRequestObserver(_downloadFileTransferFactory,
-                peerIdentifier,
+                peerSettings,
                 Substitute.For<ILogger>());
         }
 
