@@ -24,6 +24,7 @@
 using System;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
+using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
@@ -48,7 +49,9 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
         {
             _testScheduler = new TestScheduler();
             _subbedLogger = Substitute.For<ILogger>();
-            _pingRequestObserver = new PingRequestObserver(PeerIdHelper.GetPeerId("sender"),
+            var peerSettings = Substitute.For<IPeerSettings>();
+            peerSettings.PeerId.Returns(PeerIdHelper.GetPeerId("sender"));
+            _pingRequestObserver = new PingRequestObserver(peerSettings,
                 _subbedLogger
             );
         }

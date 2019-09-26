@@ -22,6 +22,7 @@
 #endregion
 
 using Catalyst.Abstractions.IO.Events;
+using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
 using Catalyst.Core.Modules.Rpc.Server.IO.Observers;
@@ -43,10 +44,12 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         public BroadcastRawTransactionRequestObserverTests()
         {
             _transactionReceivedEvent = Substitute.For<ITransactionReceivedEvent>();
+            var peerSettings = Substitute.For<IPeerSettings>();
+            peerSettings.PeerId.Returns(PeerIdHelper.GetPeerId("Test"));
 
             _broadcastRawTransactionRequestObserver = new BroadcastRawTransactionRequestObserver(
                 Substitute.For<ILogger>(),
-                PeerIdHelper.GetPeerId("Test"),
+                peerSettings,
                 _transactionReceivedEvent);
         }
 

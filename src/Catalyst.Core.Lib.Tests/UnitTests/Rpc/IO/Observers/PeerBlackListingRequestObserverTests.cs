@@ -23,6 +23,7 @@
 
 using System.Linq;
 using Catalyst.Abstractions.IO.Messaging.Dto;
+using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Network;
 using Catalyst.Core.Lib.P2P.Models;
@@ -136,7 +137,9 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             var protocolMessage = request.ToProtocolMessage(_senderId);
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, _testScheduler, protocolMessage);
 
-            var handler = new PeerBlackListingRequestObserver(_senderId, _logger, _peerRepository);
+            var peerSettings = Substitute.For<IPeerSettings>();
+            peerSettings.PeerId.Returns(_senderId);
+            var handler = new PeerBlackListingRequestObserver(peerSettings, _logger, _peerRepository);
             handler.StartObserving(messageStream);
 
             _testScheduler.Start();
