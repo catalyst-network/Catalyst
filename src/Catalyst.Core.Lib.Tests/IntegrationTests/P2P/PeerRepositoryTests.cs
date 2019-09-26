@@ -31,10 +31,10 @@ using Xunit.Abstractions;
 using Catalyst.Core.Lib.DAO;
 using Catalyst.Core.Lib.P2P.Models;
 using Catalyst.Core.Lib.Repository;
-using Catalyst.Modules.Repository.MongoDb;
 using SharpRepository.Repository;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
+using Catalyst.TestUtils.Repository;
 
 namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
 {
@@ -44,22 +44,8 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
             new List<object[]>
             {
                 new object[] {new InMemoryTestModule<Peer, PeerDao>()},
-                new object[] {new MongoDbModule<Peer, PeerDao>()}
+                new object[] {new MongoDbTestModule<Peer, PeerDao>()}
             };
-
-        private sealed class ModuleAzureSqlTypes : Module
-        {
-            private readonly string _connectionString;
-            public ModuleAzureSqlTypes(string connectionString) { _connectionString = connectionString; }
-
-            protected override void Load(ContainerBuilder builder)
-            {
-                builder.Register(c => new EfCoreContext(_connectionString)).AsImplementedInterfaces().AsSelf()
-                   .InstancePerLifetimeScope();
-
-                builder.RegisterType<PeerEfCoreRepository>().As<IRepository<PeerDao, string>>().SingleInstance();
-            }
-        }
 
         public PeerRepositoryTests(ITestOutputHelper output) : base(output)
         {
@@ -148,12 +134,12 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
 
         [Fact(Skip = "Microsoft DBs yet to be completed")]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
-        public void PeerRepo_Microsoft_SQLTypes_Dbs_Update_And_Retrieve()
+        public void PeerRepo_EfCore_Dbs_Update_And_Retrieve()
         {
             var connectionStr = ContainerProvider.ConfigurationRoot
                .GetSection("CatalystNodeConfiguration:PersistenceConfiguration:repositories:efCore:connectionString").Value;
 
-            RegisterModules(new ModuleAzureSqlTypes(connectionStr));
+            RegisterModules(new EfCoreDbTestModule<Peer, PeerDao>(connectionStr));
 
             CheckForDatabaseCreation();
 
@@ -162,12 +148,12 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
 
         [Fact(Skip = "Microsoft DBs yet to be completed")]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
-        public void PeerRepo_Microsoft_SQLTypes_Dbs_Can_Save_And_Retrieve()
+        public void PeerRepo_EfCore_Dbs_Can_Save_And_Retrieve()
         {
             var connectionStr = ContainerProvider.ConfigurationRoot
                .GetSection("CatalystNodeConfiguration:PersistenceConfiguration:repositories:efCore:connectionString").Value;
 
-            RegisterModules(new ModuleAzureSqlTypes(connectionStr));
+            RegisterModules(new EfCoreDbTestModule<Peer, PeerDao>(connectionStr));
 
             CheckForDatabaseCreation();
 

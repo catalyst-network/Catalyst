@@ -23,17 +23,17 @@
 
 using Autofac;
 using Catalyst.Core.Lib.DAO;
-using SharpRepository.InMemoryRepository;
-using SharpRepository.Repository;
+using SharpRepository.MongoDbRepository;
 
-namespace Catalyst.TestUtils
+namespace Catalyst.TestUtils.Repository
 {
-    public sealed class InMemoryTestModule<TProto, TDao> : Module
+    public sealed class MongoDbTestModule<TProto, TDao> : Module
         where TDao : DaoBase<TProto, TDao>, new()
-    { 
+
+    {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterType<InMemoryRepository<TDao, string>>().As<IRepository<TDao, string>>().SingleInstance();
+            builder.RegisterType<MongoDbRepository<TDao, string>>().As<SharpRepository.Repository.IRepository<TDao, string>>().SingleInstance();
         }
     }
 }

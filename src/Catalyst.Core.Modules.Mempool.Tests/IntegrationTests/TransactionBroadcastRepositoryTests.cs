@@ -34,7 +34,7 @@ using System.Collections.Generic;
 using Catalyst.Protocol.Wire;
 using Xunit;
 using Xunit.Abstractions;
-using Catalyst.Modules.Repository.MongoDb;
+using Catalyst.TestUtils.Repository;
 
 namespace Catalyst.Core.Modules.Mempool.Tests.IntegrationTests
 {
@@ -44,22 +44,8 @@ namespace Catalyst.Core.Modules.Mempool.Tests.IntegrationTests
             new List<object[]>
             {
                 new object[] {new InMemoryTestModule<TransactionBroadcast, TransactionBroadcastDao>()},
-                new object[] {new MongoDbModule<TransactionBroadcast, TransactionBroadcastDao>()}
+                new object[] {new MongoDbTestModule<TransactionBroadcast, TransactionBroadcastDao>()}
             };
-
-        private sealed class ModuleAzureSqlTypes : Module
-        {
-            private readonly string _connectionString;
-            public ModuleAzureSqlTypes(string connectionString) { _connectionString = connectionString; }
-
-            protected override void Load(ContainerBuilder builder)
-            {
-                builder.Register(c => new EfCoreContext(_connectionString)).AsImplementedInterfaces().AsSelf()
-                   .InstancePerLifetimeScope();
-
-                builder.RegisterType<MempoolEfCoreRepository>().As<IRepository<TransactionBroadcastDao, string>>().SingleInstance();
-            }
-        }
 
         public TransactionBroadcastRepositoryTests(ITestOutputHelper output) : base(output)
         {
@@ -133,7 +119,7 @@ namespace Catalyst.Core.Modules.Mempool.Tests.IntegrationTests
             var connectionStr = ContainerProvider.ConfigurationRoot
                .GetSection("CatalystNodeConfiguration:PersistenceConfiguration:repositories:efCore:connectionString").Value;
 
-            RegisterModules(new ModuleAzureSqlTypes(connectionStr));
+            RegisterModules(new EfCoreDbTestModule<TransactionBroadcast, TransactionBroadcastDao>(connectionStr));
 
             CheckForDatabaseCreation();
         }
@@ -145,7 +131,7 @@ namespace Catalyst.Core.Modules.Mempool.Tests.IntegrationTests
             var connectionStr = ContainerProvider.ConfigurationRoot
                .GetSection("CatalystNodeConfiguration:PersistenceConfiguration:repositories:efCore:connectionString").Value;
 
-            RegisterModules(new ModuleAzureSqlTypes(connectionStr));
+            RegisterModules(new EfCoreDbTestModule<TransactionBroadcast, TransactionBroadcastDao>(connectionStr));
 
             CheckForDatabaseCreation();
 
