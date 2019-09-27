@@ -54,9 +54,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         {
             _fileTransferFactory = Substitute.For<IUploadFileTransferFactory>();
             _dfs = Substitute.For<IDfs>();
-            var peerId = PeerIdHelper.GetPeerId("test");
-            var peerSettings = Substitute.For<IPeerSettings>();
-            peerSettings.PeerId.Returns(peerId);
+            var peerSettings = PeerIdHelper.GetPeerId("test").ToSubstitutedPeerSettings();
             _observer = new GetFileFromDfsRequestObserver(_dfs, peerSettings, _fileTransferFactory, Substitute.For<ILogger>());
         }
 
@@ -90,7 +88,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             _fileTransferFactory.RegisterTransfer(Arg.Any<IUploadFileInformation>()).Returns(fakeResponse);
             return fakeStream;
         }
-
+        
         private IObserverDto<ProtocolMessage> GetFileFromDfsRequestMessage()
         {
             var getFileFromDfsRequestMessage = new GetFileFromDfsRequest
