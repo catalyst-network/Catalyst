@@ -21,13 +21,27 @@
 
 #endregion
 
-using Catalyst.Abstractions.Repository;
+using Autofac;
 using Catalyst.Core.Lib.DAO;
 using Catalyst.Core.Lib.P2P.Models;
+using Catalyst.Core.Lib.Repository;
+using SharpRepository.Repository;
 
-namespace Catalyst.Core.Lib.P2P.Repository
+namespace Catalyst.TestUtils.Repository
 {
-    public interface IPeerRepository : IRepositoryWrapper<Peer> { }
+    public sealed class EfCoreDbTestModule<TProto, TDao> : Module
+        where TDao : DaoBase<TProto, TDao>, new()
 
-    public interface IPeerRepositoryDao : IRepositoryWrapper<PeerDao> { }
+    {
+        private readonly string _connectionString;
+        public EfCoreDbTestModule(string connectionString) { _connectionString = connectionString; }
+
+        protected override void Load(ContainerBuilder builder)
+        {
+            builder.Register(c => new EfCoreContext(_connectionString)).AsImplementedInterfaces().AsSelf()
+               .InstancePerLifetimeScope();
+
+            builder.RegisterType<PeerEfCoreRepository>().As<IRepository<PeerDao, string>>().SingleInstance();
+        }
+    }
 }

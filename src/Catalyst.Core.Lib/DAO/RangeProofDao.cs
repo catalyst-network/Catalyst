@@ -21,29 +21,26 @@
 
 #endregion
 
-using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using AutoMapper;
 using Catalyst.Core.Lib.DAO.Converters;
 using Catalyst.Protocol.Transaction;
 using Google.Protobuf;
 using Google.Protobuf.Collections;
-using SharpRepository.Repository;
 
 namespace Catalyst.Core.Lib.DAO
 {
     public class RangeProofDao : DaoBase<RangeProof, RangeProofDao>
     {
-        public IEnumerable<ValueCommitmentEntity> ValueCommitment { get; set; }
+        public IEnumerable<string> ValueCommitment { get; set; }
         public string BitCommitment { get; set; }
         public string PerBitBlindingFactorCommitment { get; set; }
         public string PolyCommitmentT1 { get; set; }
         public string PolyCommitmentT2 { get; set; }
         public string ProofOfShareTau { get; set; }
         public string ProofOfShareMu { get; set; }
-        //public List<string> AggregatedVectorPolynomialL { get; set; }
-        //public List<string> AggregatedVectorPolynomialR { get; set; }
+        public List<string> AggregatedVectorPolynomialL { get; set; }
+        public List<string> AggregatedVectorPolynomialR { get; set; }
         public string APrime0 { get; set; }
         public string BPrime0 { get; set; }
         public string T { get; set; }
@@ -51,43 +48,19 @@ namespace Catalyst.Core.Lib.DAO
         public override void InitMappers(IMapperConfigurationExpression cfg)
         {
             cfg.CreateMap<RangeProof, RangeProofDao>()
-               .ForMember(e => e.ValueCommitment, opt => opt.ConvertUsing<RepeatedFieldExtendedToListConverter<ByteString, ValueCommitmentEntity, ByteStringToValueCommitmentBase64Converter>, RepeatedField<ByteString>>())
-               //.ForMember(e => e.AggregatedVectorPolynomialL, opt => opt.ConvertUsing<RepeatedFieldToListConverter<ByteString, string, ByteStringToStringBase64Converter>, RepeatedField<ByteString>>())
-               //.ForMember(e => e.AggregatedVectorPolynomialR, opt => opt.ConvertUsing<RepeatedFieldToListConverter<ByteString, string, ByteStringToStringBase64Converter>, RepeatedField<ByteString>>())
+               .ForMember(e => e.ValueCommitment, opt => opt.ConvertUsing<RepeatedFieldToListConverter<ByteString, string, ByteStringToStringBase64Converter>, RepeatedField<ByteString>>())
+               .ForMember(e => e.AggregatedVectorPolynomialL, opt => opt.ConvertUsing<RepeatedFieldToListConverter<ByteString, string, ByteStringToStringBase64Converter>, RepeatedField<ByteString>>())
+               .ForMember(e => e.AggregatedVectorPolynomialR, opt => opt.ConvertUsing<RepeatedFieldToListConverter<ByteString, string, ByteStringToStringBase64Converter>, RepeatedField<ByteString>>())
                .ForMember(e => e.Id, opt => opt.Ignore())
                .ForAllOtherMembers(opt => opt.ConvertUsing<ByteStringToStringBase64Converter, ByteString>());
 
             cfg.CreateMap<RangeProofDao, RangeProof>()
-               .ForMember(e => e.ValueCommitment, opt => opt.ConvertUsing<ListToRepeatedFieldConverter<ValueCommitmentEntity, ByteString, ValueCommitmentToByteStringConverter>, List<ValueCommitmentEntity>>())
-               //.ForMember(e => e.AggregatedVectorPolynomialL, opt => opt.ConvertUsing<ListToRepeatedFieldConverter<string, ByteString, StringBase64ToByteStringConverter>, List<string>>())
-               //.ForMember(e => e.AggregatedVectorPolynomialR, opt => opt.ConvertUsing<ListToRepeatedFieldConverter<string, ByteString, StringBase64ToByteStringConverter>, List<string>>())
+               .ForMember(e => e.ValueCommitment, opt => opt.ConvertUsing<ListToRepeatedFieldConverter<string, ByteString, StringBase64ToByteStringConverter>, List<string>>())
+               .ForMember(e => e.AggregatedVectorPolynomialL, opt => opt.ConvertUsing<ListToRepeatedFieldConverter<string, ByteString, StringBase64ToByteStringConverter>, List<string>>())
+               .ForMember(e => e.AggregatedVectorPolynomialR, opt => opt.ConvertUsing<ListToRepeatedFieldConverter<string, ByteString, StringBase64ToByteStringConverter>, List<string>>())
                .ForAllOtherMembers(opt => opt.ConvertUsing<StringBase64ToByteStringConverter, string>());
 
             cfg.AllowNullCollections = true;
         }
-    }
-
-    public class BaseEntity 
-    {
-        [RepositoryPrimaryKey(Order = 1)]
-        [Key]
-        public string Id { get; set; }
-
-        public virtual string Value { get; set; }
-    }
-
-    public class ValueCommitmentEntity : BaseEntity
-    {
-        public override string Value { get; set; }
-    }
-
-    public class AggregatedVectorPolynomialLEntity : BaseEntity
-    {
-        public override string Value { get; set; }
-    }
-
-    public class AggregatedVectorPolynomialREntity : BaseEntity
-    {
-        public override string Value { get; set; }
     }
 }

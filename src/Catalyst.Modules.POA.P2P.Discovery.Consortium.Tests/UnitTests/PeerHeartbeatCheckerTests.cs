@@ -81,11 +81,11 @@ namespace Catalyst.Modules.POA.P2P.Tests.UnitTests
         private async Task RunHeartbeatChecker(bool sendResponse = false, int maxNonResponsiveCounter = 1)
         {
             var peers = new List<Peer> {_testPeer};
-
+            var peerSettings = _testPeer.PeerId.ToSubstitutedPeerSettings();
             var peerChallenger = new PeerChallenger(
                 Substitute.For<ILogger>(), 
-                _peerClient, 
-                _testPeer.PeerId, 
+                _peerClient,
+                peerSettings, 
                 PeerChallengeTimeoutSeconds);
 
             if (sendResponse)

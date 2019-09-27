@@ -21,13 +21,19 @@
 
 #endregion
 
-using Catalyst.Abstractions.Repository;
+using Autofac;
 using Catalyst.Core.Lib.DAO;
-using Catalyst.Core.Lib.P2P.Models;
+using SharpRepository.MongoDbRepository;
 
-namespace Catalyst.Core.Lib.P2P.Repository
+namespace Catalyst.TestUtils.Repository
 {
-    public interface IPeerRepository : IRepositoryWrapper<Peer> { }
+    public sealed class MongoDbTestModule<TProto, TDao> : Module
+        where TDao : DaoBase<TProto, TDao>, new()
 
-    public interface IPeerRepositoryDao : IRepositoryWrapper<PeerDao> { }
+    {
+        protected override void Load(ContainerBuilder builder)
+        {
+            builder.RegisterType<MongoDbRepository<TDao, string>>().As<SharpRepository.Repository.IRepository<TDao, string>>().SingleInstance();
+        }
+    }
 }

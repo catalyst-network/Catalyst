@@ -31,63 +31,31 @@ using Xunit.Abstractions;
 using Catalyst.Core.Lib.DAO;
 using Catalyst.Core.Lib.P2P.Models;
 using Catalyst.Core.Lib.Repository;
-using SharpRepository.InMemoryRepository;
 using SharpRepository.Repository;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
-using SharpRepository.MongoDbRepository;
+using Catalyst.TestUtils.Repository;
 
 namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
 {
     public sealed class PeerRepositoryTests : FileSystemBasedTest
     {
-        private readonly IMapperInitializer[] _mappers;
-
         public static IEnumerable<object[]> ModulesList => 
             new List<object[]>
             {
-                new object[] {new InMemoryModule()},
-                new object[] {new MongoDbModule()}
+                new object[] {new InMemoryTestModule<Peer, PeerDao>()},
+                new object[] {new MongoDbTestModule<Peer, PeerDao>()}
             };
-
-        private sealed class MongoDbModule : Module
-        {
-            protected override void Load(ContainerBuilder builder)
-            {
-                builder.RegisterType<MongoDbRepository<PeerDao>>().As<IRepository<PeerDao, string>>().SingleInstance();
-            }
-        }
-
-        private sealed class InMemoryModule : Module
-        {
-            protected override void Load(ContainerBuilder builder)
-            {
-                builder.RegisterType<InMemoryRepository<PeerDao, string>>().As<IRepository<PeerDao, string>>().SingleInstance();
-            }
-        }
-
-        private sealed class ModuleAzureSqlTypes : Module
-        {
-            private readonly string _connectionString;
-            public ModuleAzureSqlTypes(string connectionString) { _connectionString = connectionString; }
-
-            protected override void Load(ContainerBuilder builder)
-            {
-                builder.Register(c => new EfCoreContext(_connectionString)).AsImplementedInterfaces().AsSelf()
-                   .InstancePerLifetimeScope();
-
-                builder.RegisterType<PeerEfCoreRepository>().As<IRepository<PeerDao, string>>().SingleInstance();
-            }
-        }
 
         public PeerRepositoryTests(ITestOutputHelper output) : base(output)
         {
-            _mappers = new IMapperInitializer[]
+            var mappers = new IMapperInitializer[]
             {
-                new PeerIdDao()
+                new PeerIdDao(),
+                new PeerDao()
             };
 
-            var map = new MapperProvider(_mappers);
+            var map = new MapperProvider(mappers);
             map.Start();
         }
 
@@ -95,12 +63,12 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
         {
             using (var scope = ContainerProvider.Container.BeginLifetimeScope(CurrentTestName))
             {
-                var criteriaId = string.Empty;
-                var peerRepo = PopulatePeerRepo(scope, out criteriaId);
+                var peerDao = new PeerDao();
+                var peerRepo = PopulatePeerRepo(scope, out peerDao);
 
-                peerRepo.Get(criteriaId).Id.Should().Be(criteriaId);
-                peerRepo.Get(criteriaId).PeerIdentifier.PublicKey.Should().Be(peerRepo.Get(criteriaId).PeerIdentifier.PublicKey);
-                peerRepo.Get(criteriaId).PeerIdentifier.Ip.Should().Be(peerRepo.Get(criteriaId).PeerIdentifier.Ip);
+                peerRepo.Get(peerDao.Id).Id.Should().Be(peerDao.Id);
+                peerRepo.Get(peerDao.Id).PeerIdentifier.PublicKey.Should().Be(peerDao.PeerIdentifier.PublicKey);
+                peerRepo.Get(peerDao.Id).PeerIdentifier.Ip.Should().Be(peerDao.PeerIdentifier.Ip);
             }
         }
 
@@ -108,15 +76,14 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
         {
             using (var scope = ContainerProvider.Container.BeginLifetimeScope(CurrentTestName))
             {
-                var criteriaId = string.Empty;
+                var peerDao = new PeerDao();
+                var peerRepo = PopulatePeerRepo(scope, out peerDao);
 
-                var peerRepo = PopulatePeerRepo(scope, out criteriaId);
-
-                var retrievedPeer = peerRepo.Get(criteriaId);
+                var retrievedPeer = peerRepo.Get(peerDao.Id);
                 retrievedPeer.Touch();
                 peerRepo.Update(retrievedPeer);
 
-                var retrievedPeerModified = peerRepo.Get(criteriaId);
+                var retrievedPeerModified = peerRepo.Get(peerDao.Id);
                 var now = DateTime.UtcNow.Date;
 
                 if (retrievedPeerModified.Modified == null)
@@ -129,23 +96,23 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
             }
         }
 
-        private IRepository<PeerDao, string> PopulatePeerRepo(ILifetimeScope scope, out string Id)
+        private IRepository<PeerDao, string> PopulatePeerRepo(ILifetimeScope scope, out PeerDao peerDaoOutput)
         {
             var peerRepo = scope.Resolve<IRepository<PeerDao, string>>();
 
-            var peerDao = new PeerDao().ToPeerDao(new Peer {PeerId = PeerIdHelper.GetPeerId(new Random().Next().ToString())});
+            var peerDao = new PeerDao().ToDao(new Peer {PeerId = PeerIdHelper.GetPeerId(new Random().Next().ToString())});
             peerDao.Id = Guid.NewGuid().ToString();
-            Id = peerDao.Id;
 
             peerDao.PeerIdentifier = new PeerIdDao().ToDao(PeerIdHelper.GetPeerId(new Random().Next().ToString()));
             peerDao.PeerIdentifier.Id = Guid.NewGuid().ToString();
 
             peerRepo.Add(peerDao);
+            peerDaoOutput = peerDao;
 
             return peerRepo;
         }
-
-        [Theory(Skip = "To be run in the pipeline only")]
+        
+        [Theory(Skip = "Setup to run in pipeline only")]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         [MemberData(nameof(ModulesList))]
         public void PeerRepo_All_Dbs_Can_Update_And_Retrieve(Module dbModule)
@@ -155,7 +122,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
             PeerRepo_Can_Update_And_Retrieve();
         }
 
-        [Theory(Skip = "To be run in the pipeline only")]
+        [Theory(Skip = "Setup to run in pipeline only")]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         [MemberData(nameof(ModulesList))]
         public void PeerRepo_All_Dbs_Can_Save_And_Retrieve(Module dbModule)
@@ -167,12 +134,12 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
 
         [Fact(Skip = "Microsoft DBs yet to be completed")]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
-        public void PeerRepo_Microsoft_SQLTypes_Dbs_Update_And_Retrieve()
+        public void PeerRepo_EfCore_Dbs_Update_And_Retrieve()
         {
             var connectionStr = ContainerProvider.ConfigurationRoot
                .GetSection("CatalystNodeConfiguration:PersistenceConfiguration:repositories:efCore:connectionString").Value;
 
-            RegisterModules(new ModuleAzureSqlTypes(connectionStr));
+            RegisterModules(new EfCoreDbTestModule<Peer, PeerDao>(connectionStr));
 
             CheckForDatabaseCreation();
 
@@ -181,12 +148,12 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
 
         [Fact(Skip = "Microsoft DBs yet to be completed")]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
-        public void PeerRepo_Microsoft_SQLTypes_Dbs_Can_Save_And_Retrieve()
+        public void PeerRepo_EfCore_Dbs_Can_Save_And_Retrieve()
         {
             var connectionStr = ContainerProvider.ConfigurationRoot
                .GetSection("CatalystNodeConfiguration:PersistenceConfiguration:repositories:efCore:connectionString").Value;
 
-            RegisterModules(new ModuleAzureSqlTypes(connectionStr));
+            RegisterModules(new EfCoreDbTestModule<Peer, PeerDao>(connectionStr));
 
             CheckForDatabaseCreation();
 

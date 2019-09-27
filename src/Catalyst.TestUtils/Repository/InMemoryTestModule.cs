@@ -21,13 +21,19 @@
 
 #endregion
 
-using Catalyst.Abstractions.Repository;
+using Autofac;
 using Catalyst.Core.Lib.DAO;
-using Catalyst.Core.Lib.P2P.Models;
+using SharpRepository.InMemoryRepository;
+using SharpRepository.Repository;
 
-namespace Catalyst.Core.Lib.P2P.Repository
+namespace Catalyst.TestUtils.Repository
 {
-    public interface IPeerRepository : IRepositoryWrapper<Peer> { }
-
-    public interface IPeerRepositoryDao : IRepositoryWrapper<PeerDao> { }
+    public sealed class InMemoryTestModule<TProto, TDao> : Module
+        where TDao : DaoBase<TProto, TDao>, new()
+    { 
+        protected override void Load(ContainerBuilder builder)
+        {
+            builder.RegisterType<InMemoryRepository<TDao, string>>().As<IRepository<TDao, string>>().SingleInstance();
+        }
+    }
 }

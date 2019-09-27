@@ -24,6 +24,7 @@
 using System.Linq;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.IO.Observers;
+using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.IO.Observers;
 using Catalyst.Core.Lib.P2P.Repository;
 using Catalyst.Protocol.Peer;
@@ -44,10 +45,10 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
     {
         private readonly IPeerRepository _peerRepository;
 
-        public GetPeerInfoRequestObserver(PeerId peerId,
+        public GetPeerInfoRequestObserver(IPeerSettings peerSettings,
             ILogger logger,
             IPeerRepository peerRepository)
-            : base(logger, peerId)
+            : base(logger, peerSettings)
         {
             _peerRepository = peerRepository;
         }

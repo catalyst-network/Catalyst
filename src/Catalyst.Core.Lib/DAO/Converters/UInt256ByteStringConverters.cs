@@ -40,7 +40,7 @@ namespace Catalyst.Core.Lib.DAO.Converters
     {
         public ByteString Convert(string sourceMember, ResolutionContext context)
         {
-            var sourceValue = System.Convert.ToUInt64(sourceMember).ToUint256ByteString();
+            var sourceValue = UInt256.Parse(sourceMember).ToUint256ByteString();
             return sourceValue; 
         }
     }

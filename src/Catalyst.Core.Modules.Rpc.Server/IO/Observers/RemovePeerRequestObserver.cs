@@ -24,6 +24,7 @@
 using System.Linq;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.IO.Observers;
+using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.IO.Observers;
 using Catalyst.Core.Lib.P2P.Models;
 using Catalyst.Core.Lib.P2P.Repository;
@@ -51,9 +52,9 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
         /// <param name="peerId">The peer identifier.</param>
         /// <param name="peerRepository">The peer discovery.</param>
         /// <param name="logger">The logger.</param>
-        public RemovePeerRequestObserver(PeerId peerId,
+        public RemovePeerRequestObserver(IPeerSettings peerSettings,
             IPeerRepository peerRepository,
-            ILogger logger) : base(logger, peerId)
+            ILogger logger) : base(logger, peerSettings)
         {
             _peerRepository = peerRepository;
         }

@@ -22,30 +22,19 @@
 #endregion
 
 using System;
-using System.ComponentModel.DataAnnotations;
-using Catalyst.Abstractions.P2P.Models;
-using Catalyst.Core.Lib.DAO;
+using AutoMapper;
+using Catalyst.Core.Lib.P2P.Models;
 using Catalyst.Core.Lib.Repository.Attributes;
 using Catalyst.Core.Lib.Util;
-using Catalyst.Protocol.Peer;
-using Google.Protobuf;
-using MongoDB.Bson.Serialization.Attributes;
-using Newtonsoft.Json;
-using SharpRepository.Repository;
 
-namespace Catalyst.Core.Lib.P2P.Models
+namespace Catalyst.Core.Lib.DAO
 {
     [Audit]
-    public sealed class Peer : IPeer
+    public class PeerDao : DaoBase<Peer, PeerDao>
     {
-        [RepositoryPrimaryKey(Order = 1)]
-        [JsonProperty("id")]
-        [BsonId]
-        public string DocumentId => PeerId?.ToByteString().ToBase64();
-        
         /// <inheritdoc />
-        public PeerId PeerId { get; set; }
-            
+        public PeerIdDao PeerIdentifier { get; set; }
+
         /// <inheritdoc />
         public int Reputation { get; set; }
 
@@ -72,5 +61,19 @@ namespace Catalyst.Core.Lib.P2P.Models
 
         /// <inheritdoc />
         public void Touch() { LastSeen = DateTimeUtil.UtcNow; }
+
+        public override void InitMappers(IMapperConfigurationExpression cfg)
+        {
+            cfg.CreateMap<Peer, PeerDao>();
+            cfg.AllowNullDestinationValues = true;
+
+            cfg.CreateMap<PeerDao, Peer>()
+               .ForMember(e => e.Reputation, opt => opt.UseDestinationValue())
+               .ForMember(e => e.BlackListed, opt => opt.UseDestinationValue())
+               .ForMember(e => e.Created, opt => opt.UseDestinationValue())
+               .ForMember(e => e.Modified, opt => opt.UseDestinationValue())
+               .ForMember(e => e.LastSeen, opt => opt.UseDestinationValue())
+               .ForMember(e => e.PeerId, opt => opt.UseDestinationValue());
+        }
     }
 }

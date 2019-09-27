@@ -26,6 +26,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.IO.Messaging.Dto;
+using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.Config;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Modules.Rpc.Server.IO.Observers;
@@ -80,9 +81,10 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, _testScheduler,
                 protocolMessage
             );
-            
+
+            var peerSettings = PeerIdHelper.GetPeerId("sender").ToSubstitutedPeerSettings();
             var handler = new GetInfoRequestObserver(
-                PeerIdHelper.GetPeerId("sender"), _config, _logger);
+                peerSettings, _config, _logger);
 
             handler.StartObserving(messageStream);
 

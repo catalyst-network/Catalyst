@@ -22,6 +22,7 @@
 #endregion
 
 using System.Linq;
+using Catalyst.Abstractions.P2P;
 using Catalyst.Protocol.IPPN;
 using Catalyst.TestUtils;
 using FluentAssertions;
@@ -39,10 +40,10 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Observers
         {
             var testScheduler = new TestScheduler();
             var candidateDeltaMessages = Enumerable.Repeat(new PeerNeighborsRequest(), 10).ToArray();
-
+            var peerSettings = PeerIdHelper.GetPeerId("server").ToSubstitutedPeerSettings();
             var messageStream = MessageStreamHelper.CreateStreamWithMessages(testScheduler, candidateDeltaMessages);
-            using (var observer = new FailingRequestObserver(Substitute.For<ILogger>(), 
-                PeerIdHelper.GetPeerId("server")))
+            using (var observer = new FailingRequestObserver(Substitute.For<ILogger>(),
+                peerSettings))
             {
                 observer.StartObserving(messageStream);
 

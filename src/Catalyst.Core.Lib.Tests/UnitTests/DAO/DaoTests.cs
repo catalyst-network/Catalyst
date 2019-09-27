@@ -193,14 +193,12 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
         public void BaseEntryDao_And_BaseEntry_Should_Be_Convertible()
         {
             var baseEntryDao = GetMapper<BaseEntryDao>();
-            var byteRn = new byte[30];
-            new Random().NextBytes(byteRn);
 
             var original = new BaseEntry    
             {
                 ReceiverPublicKey = "hello".ToUtf8ByteString(),
                 SenderPublicKey = "bye bye".ToUtf8ByteString(),
-                TransactionFees = UInt64.MaxValue.ToUint256ByteString()
+                TransactionFees = UInt256.MaxValue.ToUint256ByteString()
             };
 
             var contextDao = baseEntryDao.ToDao(original);
