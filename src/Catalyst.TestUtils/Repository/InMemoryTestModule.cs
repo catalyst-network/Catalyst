@@ -22,20 +22,18 @@
 #endregion
 
 using Autofac;
-using Catalyst.Core.Lib.Mempool.Documents;
-using SharpRepository.MongoDbRepository;
+using Catalyst.Core.Lib.DAO;
+using SharpRepository.InMemoryRepository;
 using SharpRepository.Repository;
-using SharpRepository.Repository.Caching;
 
-namespace Catalyst.Modules.Repository.MongoDb
+namespace Catalyst.TestUtils.Repository
 {
-    public class MempoolModule : Module
-    {
+    public sealed class InMemoryTestModule<TProto, TDao> : Module
+        where TDao : DaoBase<TProto, TDao>, new()
+    { 
         protected override void Load(ContainerBuilder builder)
         {
-            builder.Register(c => new MongoDbRepository<MempoolDocument>(
-                c.ResolveOptional<ICachingStrategy<MempoolDocument, string>>()
-            )).As<IRepository<MempoolDocument, string>>().SingleInstance();
-        }  
+            builder.RegisterType<InMemoryRepository<TDao, string>>().As<IRepository<TDao, string>>().SingleInstance();
+        }
     }
 }

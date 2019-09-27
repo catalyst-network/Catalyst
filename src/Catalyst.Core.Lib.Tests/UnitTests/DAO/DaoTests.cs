@@ -193,8 +193,6 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
         public void BaseEntryDao_And_BaseEntry_Should_Be_Convertible()
         {
             var baseEntryDao = GetMapper<BaseEntryDao>();
-            var byteRn = new byte[30];
-            new Random().NextBytes(byteRn);
 
             var original = new BaseEntry    
             {
@@ -316,7 +314,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
             var transactionEntryDao = stTransactionEntryDao.ToDao(original);
 
             transactionEntryDao.Base.SenderPublicKey.Should().Be(pubKeyBytes.KeyToString());
-            transactionEntryDao.Amount.Should().Be(8855274);
+            transactionEntryDao.Amount.Should().Be(8855274.ToString());
 
             var reconverted = transactionEntryDao.ToProtoBuff();
             reconverted.Base.TransactionFees.ToUInt256().Should().Be(UInt256.Zero);
