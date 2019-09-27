@@ -27,6 +27,7 @@ using System.Threading;
 using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.FileTransfer;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
+using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
@@ -58,12 +59,13 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
         {
             _manualResetEvent = new ManualResetEvent(false);
             _senderIdentifier = PeerIdHelper.GetPeerId("sender");
+            var peerSettings = _senderIdentifier.ToSubstitutedPeerSettings();
             _fakeDfs = Substitute.For<IDfs>();
             var logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
             _nodeFileTransferFactory = Substitute.For<IDownloadFileTransferFactory>();
             _addFileToDfsRequestObserver = new AddFileToDfsRequestObserver(_fakeDfs,
-                _senderIdentifier,
+                peerSettings,
                 _nodeFileTransferFactory,
                 logger);
         }

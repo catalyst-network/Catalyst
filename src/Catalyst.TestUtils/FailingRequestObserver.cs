@@ -25,6 +25,7 @@ using System;
 using System.Threading;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.IO.Observers;
+using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.IO.Observers;
 using Catalyst.Protocol.IPPN;
 using Catalyst.Protocol.Peer;
@@ -40,7 +41,7 @@ namespace Catalyst.TestUtils
         private int _counter;
         public int Counter => _counter;
 
-        public FailingRequestObserver(ILogger logger, PeerId peerId) : base(logger, peerId) { }
+        public FailingRequestObserver(ILogger logger, IPeerSettings peerSettings) : base(logger, peerSettings) { }
 
         protected override PeerNeighborsResponse HandleRequest(PeerNeighborsRequest messageDto,
             IChannelHandlerContext channelHandlerContext,

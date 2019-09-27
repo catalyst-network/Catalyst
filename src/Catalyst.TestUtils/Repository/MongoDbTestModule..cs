@@ -21,15 +21,19 @@
 
 #endregion
 
+using Autofac;
+using Catalyst.Core.Lib.DAO;
 using SharpRepository.MongoDbRepository;
-using SharpRepository.Repository.Caching;
 
-namespace Catalyst.Modules.Repository.MongoDb
+namespace Catalyst.TestUtils.Repository
 {
-    public sealed class MongoDbRepository<T> : MongoDbRepository<T, string>
-        where T : class, new()
+    public sealed class MongoDbTestModule<TProto, TDao> : Module
+        where TDao : DaoBase<TProto, TDao>, new()
+
     {
-        public MongoDbRepository(ICachingStrategy<T, string> cachingStrategy = null)
-            : base(cachingStrategy) { }
+        protected override void Load(ContainerBuilder builder)
+        {
+            builder.RegisterType<MongoDbRepository<TDao, string>>().As<SharpRepository.Repository.IRepository<TDao, string>>().SingleInstance();
+        }
     }
 }

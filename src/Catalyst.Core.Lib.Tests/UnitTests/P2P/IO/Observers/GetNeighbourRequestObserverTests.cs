@@ -25,6 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
+using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
@@ -82,7 +83,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
             // add them to the mocked repository, and set return expectation
             AddMockPeerToDbAndSetReturnExpectation(randomPeers, _subbedPeerRepository);
 
-            var neighbourRequestHandler = new GetNeighbourRequestObserver(_peerId,
+            var peerSettings = _peerId.ToSubstitutedPeerSettings();
+            var neighbourRequestHandler = new GetNeighbourRequestObserver(peerSettings,
                 _subbedPeerRepository,
                 _subbedLogger
             );

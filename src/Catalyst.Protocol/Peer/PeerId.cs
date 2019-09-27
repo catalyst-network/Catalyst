@@ -21,6 +21,7 @@
 
 #endregion
 
+using System;
 using System.Net;
 using System.Reflection;
 using Google.Protobuf;
@@ -31,17 +32,17 @@ namespace Catalyst.Protocol.Peer
     public partial class PeerId
     {
         private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
-        private IPAddress _ipAddress;
-        private IPEndPoint _ipEndPoint;
 
-        public IPAddress IpAddress => _ipAddress;
-        public IPEndPoint IpEndPoint => _ipEndPoint;
+        public IPAddress IpAddress => GenerateIpFromByteString(Ip);
+        public IPEndPoint IpEndPoint => new IPEndPoint(IpAddress, (int) Port);
 
-        partial void OnConstruction()
+        //Add support for IPv6
+        private IPAddress GenerateIpFromByteString(ByteString ipAddressByteString)
         {
-            if (Ip == null || Ip.IsEmpty) {Ip = ByteString.CopyFrom(new byte[4]);}
-            _ipAddress = new IPAddress(Ip.ToByteArray()).MapToIPv4();
-            _ipEndPoint = new IPEndPoint(IpAddress, (int) Port);
+            var ipv4Buffer = new byte[4];
+            var ipAddressBytes = ipAddressByteString.ToByteArray();
+            Buffer.BlockCopy(ipAddressBytes, 12, ipv4Buffer, 0, 4);
+            return new IPAddress(ipAddressBytes).MapToIPv4();
         }
 
         public bool IsValid()

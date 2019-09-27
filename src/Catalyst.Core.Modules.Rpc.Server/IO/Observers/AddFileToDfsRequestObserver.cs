@@ -30,6 +30,7 @@ using Catalyst.Abstractions.Enumerator;
 using Catalyst.Abstractions.FileTransfer;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.IO.Observers;
+using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.FileTransfer;
@@ -64,9 +65,9 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
         /// <param name="fileTransferFactory">The download file transfer factory.</param>
         /// <param name="logger">The logger.</param>
         public AddFileToDfsRequestObserver(IDfs dfs,
-            PeerId peerId,
+            IPeerSettings peerSettings,
             IDownloadFileTransferFactory fileTransferFactory,
-            ILogger logger) : base(logger, peerId)
+            ILogger logger) : base(logger, peerSettings)
         {
             _fileTransferFactory = fileTransferFactory;
             _dfs = dfs;
@@ -89,7 +90,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
             Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
             Guard.Argument(senderPeerId, nameof(senderPeerId)).NotNull();
             
-            var fileTransferInformation = new DownloadFileTransferInformation(PeerId,
+            var fileTransferInformation = new DownloadFileTransferInformation(PeerSettings.PeerId,
                 senderPeerId, channelHandlerContext.Channel,
                 correlationId, addFileToDfsRequest.FileName, addFileToDfsRequest.FileSize);
 
@@ -161,7 +162,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
 
             var message = GetResponse(fileTransferInformation, await addFileResponseCode);
             var protocolMessage =
-                message.ToProtocolMessage(PeerId, fileTransferInformation.CorrelationId);
+                message.ToProtocolMessage(PeerSettings.PeerId, fileTransferInformation.CorrelationId);
 
             // Send Response
             var responseMessage = new MessageDto(

@@ -33,6 +33,7 @@ using Google.Protobuf;
 using NSubstitute;
 using Serilog;
 using System.Linq;
+using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.Cryptography;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
 using Catalyst.Protocol.Cryptography;
@@ -61,6 +62,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
 
             _testPeerId = PeerIdHelper.GetPeerId("TestPeerIdentifier");
 
+            var peerSettings = _testPeerId.ToSubstitutedPeerSettings();
+
             _keySigner = Substitute.For<IKeySigner>();
             _keySigner.CryptoContext.Returns(new CryptoContext(new CryptoWrapper()));
 
@@ -69,7 +72,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
 
             var fakeChannel = Substitute.For<IChannel>();
             _fakeContext.Channel.Returns(fakeChannel);
-            _verifyMessageRequestObserver = new VerifyMessageRequestObserver(_testPeerId, logger, _keySigner);
+            _verifyMessageRequestObserver = new VerifyMessageRequestObserver(peerSettings, logger, _keySigner);
 
             _verifyMessageRequest = GetValidVerifyMessageRequest();
         }

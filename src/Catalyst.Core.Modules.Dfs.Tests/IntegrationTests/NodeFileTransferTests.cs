@@ -28,6 +28,7 @@ using System.Threading.Tasks;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.FileTransfer;
+using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.Rpc;
 using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib.Extensions;
@@ -115,12 +116,13 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
             var sender = PeerIdHelper.GetPeerId("sender");
             var recipient = PeerIdHelper.GetPeerId("recipient");
             var senderPeerId = sender;
+            var peerSettings = senderPeerId.ToSubstitutedPeerSettings();
             var recipientPeerId = recipient;
             var fileToTransfer = FileHelper.CreateRandomTempFile(byteSize);
             var addFileToDfsRequestHandler =
-                new AddFileToDfsRequestObserver(_dfs, senderPeerId, _nodeFileTransferFactory, _logger);
+                new AddFileToDfsRequestObserver(_dfs, peerSettings, _nodeFileTransferFactory, _logger);
             var transferBytesRequestHandler =
-                new TransferFileBytesRequestObserver(_nodeFileTransferFactory, senderPeerId, _logger);
+                new TransferFileBytesRequestObserver(_nodeFileTransferFactory, peerSettings, _logger);
 
             var uniqueFileKey = CorrelationId.GenerateCorrelationId();
             var crcValue = FileHelper.GetCrcValue(fileToTransfer);
