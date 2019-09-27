@@ -24,10 +24,8 @@
 using Autofac;
 using Catalyst.Abstractions.DAO;
 using Catalyst.Core.Lib.DAO;
-using Catalyst.Core.Lib.Repository;
 using Catalyst.TestUtils;
 using FluentAssertions;
-using Microsoft.EntityFrameworkCore;
 using SharpRepository.Repository;
 using System;
 using System.Collections.Generic;
@@ -110,42 +108,6 @@ namespace Catalyst.Core.Modules.Mempool.Tests.IntegrationTests
             RegisterModules(dbModule);
 
             TransactionBroadcastRepo_Can_Save_And_Retrieve();
-        }
-
-        [Fact(Skip = "Microsoft DBs yet to be completed")]
-        [Trait(Traits.TestType, Traits.IntegrationTest)]
-        public void TransactionBroadcastRepo_Microsoft_SQLTypes_Dbs_Update_And_Retrieve()
-        {
-            var connectionStr = ContainerProvider.ConfigurationRoot
-               .GetSection("CatalystNodeConfiguration:PersistenceConfiguration:repositories:efCore:connectionString").Value;
-
-            RegisterModules(new EfCoreDbTestModule<TransactionBroadcast, TransactionBroadcastDao>(connectionStr));
-
-            CheckForDatabaseCreation();
-        }
-
-        [Fact(Skip = "Microsoft DBs yet to be completed")]
-        [Trait(Traits.TestType, Traits.IntegrationTest)]
-        public void TransactionBroadcastRepo_Microsoft_SQLTypes_Dbs_Can_Save_And_Retrieve()
-        {
-            var connectionStr = ContainerProvider.ConfigurationRoot
-               .GetSection("CatalystNodeConfiguration:PersistenceConfiguration:repositories:efCore:connectionString").Value;
-
-            RegisterModules(new EfCoreDbTestModule<TransactionBroadcast, TransactionBroadcastDao>(connectionStr));
-
-            CheckForDatabaseCreation();
-
-            TransactionBroadcastRepo_Can_Save_And_Retrieve();
-        }
-
-        private void CheckForDatabaseCreation()
-        {
-            using (var scope = ContainerProvider.Container.BeginLifetimeScope(CurrentTestName))
-            {
-                var contextDb = scope.Resolve<IDbContext>();
-
-                ((DbContext) contextDb).Database.EnsureCreated();
-            }
         }
 
         private void RegisterModules(Module module)
