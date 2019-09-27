@@ -31,10 +31,10 @@ namespace Catalyst.Core.Lib.DAO
 {
     public class TransactionBroadcastDao : DaoBase<TransactionBroadcast, TransactionBroadcastDao>
     {
-       // public SignatureDao Signature { get; set; }
+        public SignatureDao Signature { get; set; }
         public DateTime TimeStamp { get; set; }
         public IEnumerable<PublicEntryDao> PublicEntries { get; set; }
-        //public IEnumerable<ConfidentialEntryDao> ConfidentialEntries { get; set; }
+        public IEnumerable<ConfidentialEntryDao> ConfidentialEntries { get; set; }
         public IEnumerable<ContractEntryDao> ContractEntries { get; set; }
 
         public override void InitMappers(IMapperConfigurationExpression cfg)
@@ -44,8 +44,8 @@ namespace Catalyst.Core.Lib.DAO
 
             cfg.CreateMap<TransactionBroadcastDao, TransactionBroadcast>()
                .ForMember(e => e.PublicEntries, opt => opt.UseDestinationValue())
-               .ForMember(e => e.ContractEntries, opt => opt.UseDestinationValue());
-               //.ForMember(e => e.ConfidentialEntries, opt => opt.UseDestinationValue());
+               .ForMember(e => e.ContractEntries, opt => opt.UseDestinationValue())
+               .ForMember(e => e.ConfidentialEntries, opt => opt.UseDestinationValue());
 
             cfg.CreateMap<DateTime, Timestamp>().ConvertUsing(s => s.ToTimestamp());
             cfg.CreateMap<Timestamp, DateTime>().ConvertUsing(s => s.ToDateTime());

@@ -96,6 +96,9 @@ namespace Catalyst.Core.Modules.Mempool.Tests.IntegrationTests
             Id = transactionBroadcastDao.Id;
 
             //Data creation put into a helper function
+            //Todo - create helpers and more data for rangeproof, signaturedao
+            //ensure signaturedao is update and has daotest to match
+            //put efcore files into seperate files
             var contractList = new List<ContractEntryDao>();
             Enumerable.Range(0, 5).ToList().ForEach(i =>
             {
@@ -112,6 +115,15 @@ namespace Catalyst.Core.Modules.Mempool.Tests.IntegrationTests
             transactionBroadcastDao.PublicEntries = publicList;
             publicEntryDaoList = publicList;
 
+            var confidentialEntryDaoList = new List<ConfidentialEntryDao>();
+            Enumerable.Range(0, 5).ToList().ForEach(i =>
+            {
+                confidentialEntryDaoList.Add(new ConfidentialEntryDao() {PedersenCommitment = "Pedersent" + i, RangeProof = new RangeProofDao()});
+            });
+            transactionBroadcastDao.ConfidentialEntries = confidentialEntryDaoList;
+
+            transactionBroadcastDao.Signature = new SignatureDao() {RawBytes = "mplwifwfjfw", SigningContext = new SigningContextDao()};
+            //---------------------------------//
             transactBroadcastRepo.Add(transactionBroadcastDao);
 
             return transactBroadcastRepo;

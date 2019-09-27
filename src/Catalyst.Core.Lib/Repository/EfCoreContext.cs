@@ -63,6 +63,7 @@ namespace Catalyst.Core.Lib.Repository
         public Microsoft.EntityFrameworkCore.DbSet<ConfidentialEntryDao> ConfidentialEntryDaoStore { get; set; }
         public Microsoft.EntityFrameworkCore.DbSet<ContractEntryDao> ContractEntryDaoStore { get; set; }
         public Microsoft.EntityFrameworkCore.DbSet<BaseEntryDao> BaseEntryDaoStore { get; set; }
+        public Microsoft.EntityFrameworkCore.DbSet<SignatureDao> SignatureDaoStore { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
