@@ -114,7 +114,7 @@ namespace Catalyst.Core.Modules.Mempool.Tests.IntegrationTests
 
         [Fact(Skip = "Microsoft DBs yet to be completed")]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
-        public void TransactionBroadcastRepo_Microsoft_SQLTypes_Dbs_Update_And_Retrieve()
+        public void TransactionBroadcastRepo_EfCore_Dbs_Update_And_Retrieve()
         {
             var connectionStr = ContainerProvider.ConfigurationRoot
                .GetSection("CatalystNodeConfiguration:PersistenceConfiguration:repositories:efCore:connectionString").Value;
@@ -126,7 +126,7 @@ namespace Catalyst.Core.Modules.Mempool.Tests.IntegrationTests
 
         [Fact(Skip = "Microsoft DBs yet to be completed")]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
-        public void TransactionBroadcastRepo_Microsoft_SQLTypes_Dbs_Can_Save_And_Retrieve()
+        public void TransactionBroadcastRepo_EfCore_Dbs_Can_Save_And_Retrieve()
         {
             var connectionStr = ContainerProvider.ConfigurationRoot
                .GetSection("CatalystNodeConfiguration:PersistenceConfiguration:repositories:efCore:connectionString").Value;
