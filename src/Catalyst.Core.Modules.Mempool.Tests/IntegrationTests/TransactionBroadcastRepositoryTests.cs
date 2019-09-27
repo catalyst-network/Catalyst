@@ -31,6 +31,7 @@ using Microsoft.EntityFrameworkCore;
 using SharpRepository.Repository;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Catalyst.Protocol.Wire;
 using Xunit;
 using Xunit.Abstractions;
@@ -74,20 +75,42 @@ namespace Catalyst.Core.Modules.Mempool.Tests.IntegrationTests
         {
             using (var scope = ContainerProvider.Container.BeginLifetimeScope(CurrentTestName))
             {
-                var criteriaId = string.Empty;
-                var transactBroadcastRepoRepo = PopulateTransactBroadcastRepo(scope, out criteriaId);
+                var transactBroadcastRepoRepo = PopulateTransactBroadcastRepo(scope, out var criteriaId, out var contractEntryDaoList, out var publicEntryDaoList);
 
                 transactBroadcastRepoRepo.Get(criteriaId).Id.Should().Be(criteriaId);
+
+                transactBroadcastRepoRepo.Get(criteriaId).ContractEntries.FirstOrDefault().Data
+                   .Should().Be(contractEntryDaoList.FirstOrDefault().Data);
+
+                transactBroadcastRepoRepo.Get(criteriaId).PublicEntries.FirstOrDefault().Amount
+                   .Should().Be(publicEntryDaoList.FirstOrDefault().Amount);
             }
         }
 
-        private IRepository<TransactionBroadcastDao, string> PopulateTransactBroadcastRepo(ILifetimeScope scope, out string Id)
+        private IRepository<TransactionBroadcastDao, string> PopulateTransactBroadcastRepo(ILifetimeScope scope, out string Id, out IList<ContractEntryDao> contractEntryDaoList, out IList<PublicEntryDao> publicEntryDaoList)
         {
             var transactBroadcastRepo = scope.Resolve<IRepository<TransactionBroadcastDao, string>>();
 
             var transactionBroadcastDao = new TransactionBroadcastDao().ToDao(TransactionHelper.GetPublicTransaction());
             transactionBroadcastDao.Id = Guid.NewGuid().ToString();
             Id = transactionBroadcastDao.Id;
+
+            //Data creation put into a helper function
+            var contractList = new List<ContractEntryDao>();
+            Enumerable.Range(0, 5).ToList().ForEach(i =>
+            {
+                contractList.Add(new ContractEntryDao() {Amount = "1585.2" + i, Data = "data gre" + Guid.NewGuid()});
+            });
+            transactionBroadcastDao.ContractEntries = contractList;
+            contractEntryDaoList = contractList;
+
+            var publicList = new List<PublicEntryDao>();
+            Enumerable.Range(0, 5).ToList().ForEach(i =>
+            {
+                publicList.Add(new PublicEntryDao() {Amount = new Random().Next(2597563).ToString()});
+            });
+            transactionBroadcastDao.PublicEntries = publicList;
+            publicEntryDaoList = publicList;
 
             transactBroadcastRepo.Add(transactionBroadcastDao);
 
@@ -124,7 +147,8 @@ namespace Catalyst.Core.Modules.Mempool.Tests.IntegrationTests
             CheckForDatabaseCreation();
         }
 
-        [Fact(Skip = "Microsoft DBs yet to be completed")]
+        //[Fact(Skip = "Microsoft DBs yet to be completed")]
+        [Fact]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void TransactionBroadcastRepo_EfCore_Dbs_Can_Save_And_Retrieve()
         {
@@ -140,11 +164,18 @@ namespace Catalyst.Core.Modules.Mempool.Tests.IntegrationTests
 
         private void CheckForDatabaseCreation()
         {
-            using (var scope = ContainerProvider.Container.BeginLifetimeScope(CurrentTestName))
+            try
             {
-                var contextDb = scope.Resolve<IDbContext>();
+                using (var scope = ContainerProvider.Container.BeginLifetimeScope(CurrentTestName))
+                {
+                    var contextDb = scope.Resolve<IDbContext>();
 
-                ((DbContext) contextDb).Database.EnsureCreated();
+                    ((DbContext) contextDb).Database.EnsureCreated();
+                }
+            }
+            catch (Exception ex)
+            {
+                ex.ToString();
             }
         }
 

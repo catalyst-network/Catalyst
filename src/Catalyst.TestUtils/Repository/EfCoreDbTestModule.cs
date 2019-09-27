@@ -42,6 +42,7 @@ namespace Catalyst.TestUtils.Repository
                .InstancePerLifetimeScope();
 
             builder.RegisterType<PeerEfCoreRepository>().As<IRepository<PeerDao, string>>().SingleInstance();
+            builder.RegisterType<MempoolEfCoreRepository>().As<IRepository<TransactionBroadcastDao, string>>().SingleInstance();
         }
     }
 }

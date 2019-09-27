@@ -32,15 +32,15 @@ namespace Catalyst.Core.Lib.DAO
 {
     public class RangeProofDao : DaoBase<RangeProof, RangeProofDao>
     {
-        public IEnumerable<string> ValueCommitment { get; set; }
+        //public IEnumerable<string> ValueCommitment { get; set; }
         public string BitCommitment { get; set; }
         public string PerBitBlindingFactorCommitment { get; set; }
         public string PolyCommitmentT1 { get; set; }
         public string PolyCommitmentT2 { get; set; }
         public string ProofOfShareTau { get; set; }
         public string ProofOfShareMu { get; set; }
-        public List<string> AggregatedVectorPolynomialL { get; set; }
-        public List<string> AggregatedVectorPolynomialR { get; set; }
+        //public List<string> AggregatedVectorPolynomialL { get; set; }
+        //public List<string> AggregatedVectorPolynomialR { get; set; }
         public string APrime0 { get; set; }
         public string BPrime0 { get; set; }
         public string T { get; set; }
@@ -48,9 +48,9 @@ namespace Catalyst.Core.Lib.DAO
         public override void InitMappers(IMapperConfigurationExpression cfg)
         {
             cfg.CreateMap<RangeProof, RangeProofDao>()
-               .ForMember(e => e.ValueCommitment, opt => opt.ConvertUsing<RepeatedFieldToListConverter<ByteString, string, ByteStringToStringBase64Converter>, RepeatedField<ByteString>>())
-               .ForMember(e => e.AggregatedVectorPolynomialL, opt => opt.ConvertUsing<RepeatedFieldToListConverter<ByteString, string, ByteStringToStringBase64Converter>, RepeatedField<ByteString>>())
-               .ForMember(e => e.AggregatedVectorPolynomialR, opt => opt.ConvertUsing<RepeatedFieldToListConverter<ByteString, string, ByteStringToStringBase64Converter>, RepeatedField<ByteString>>())
+               //.ForMember(e => e.ValueCommitment, opt => opt.ConvertUsing<RepeatedFieldToListConverter<ByteString, string, ByteStringToStringBase64Converter>, RepeatedField<ByteString>>())
+               //.ForMember(e => e.AggregatedVectorPolynomialL, opt => opt.ConvertUsing<RepeatedFieldToListConverter<ByteString, string, ByteStringToStringBase64Converter>, RepeatedField<ByteString>>())
+               //.ForMember(e => e.AggregatedVectorPolynomialR, opt => opt.ConvertUsing<RepeatedFieldToListConverter<ByteString, string, ByteStringToStringBase64Converter>, RepeatedField<ByteString>>())
                .ForMember(e => e.Id, opt => opt.Ignore())
                .ForAllOtherMembers(opt => opt.ConvertUsing<ByteStringToStringBase64Converter, ByteString>());
 
