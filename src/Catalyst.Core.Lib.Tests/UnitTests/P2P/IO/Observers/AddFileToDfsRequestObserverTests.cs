@@ -59,8 +59,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
         {
             _manualResetEvent = new ManualResetEvent(false);
             _senderIdentifier = PeerIdHelper.GetPeerId("sender");
-            var peerSettings = Substitute.For<IPeerSettings>();
-            peerSettings.PeerId.Returns(_senderIdentifier);
+            var peerSettings = _senderIdentifier.ToSubstitutedPeerSettings();
             _fakeDfs = Substitute.For<IDfs>();
             var logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();

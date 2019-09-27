@@ -83,8 +83,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
             // add them to the mocked repository, and set return expectation
             AddMockPeerToDbAndSetReturnExpectation(randomPeers, _subbedPeerRepository);
 
-            var peerSettings = Substitute.For<IPeerSettings>();
-            peerSettings.PeerId.Returns(_peerId);
+            var peerSettings = _peerId.ToSubstitutedPeerSettings();
             var neighbourRequestHandler = new GetNeighbourRequestObserver(peerSettings,
                 _subbedPeerRepository,
                 _subbedLogger

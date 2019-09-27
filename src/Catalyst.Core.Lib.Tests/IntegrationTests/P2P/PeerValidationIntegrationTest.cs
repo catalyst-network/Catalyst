@@ -59,10 +59,8 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
         {
             _peerSettings = new PeerSettings(ContainerProvider.ConfigurationRoot);
 
-            var sender =
-                PeerIdHelper.GetPeerId("sender", _peerSettings.BindAddress, _peerSettings.Port);
-            var peerSettings = Substitute.For<IPeerSettings>();
-            peerSettings.PeerId.Returns(sender);
+            var peerSettings =
+                PeerIdHelper.GetPeerId("sender", _peerSettings.BindAddress, _peerSettings.Port).ToSubstitutedPeerSettings();
 
             var logger = Substitute.For<ILogger>();
             var keyRegistry = TestKeyRegistry.MockKeyRegistry();

@@ -100,8 +100,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             var protocolMessage = request.ToProtocolMessage(_senderId);
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, _testScheduler, protocolMessage);
 
-            var peerSettings = Substitute.For<IPeerSettings>();
-            peerSettings.PeerId.Returns(_senderId);
+            var peerSettings = _senderId.ToSubstitutedPeerSettings();
             var handler = new PeerReputationRequestObserver(peerSettings, _logger, _peerRepository);
             handler.StartObserving(messageStream);
 

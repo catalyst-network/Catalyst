@@ -116,8 +116,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
             var sender = PeerIdHelper.GetPeerId("sender");
             var recipient = PeerIdHelper.GetPeerId("recipient");
             var senderPeerId = sender;
-            var peerSettings = Substitute.For<IPeerSettings>();
-            peerSettings.PeerId.Returns(senderPeerId);
+            var peerSettings = senderPeerId.ToSubstitutedPeerSettings();
             var recipientPeerId = recipient;
             var fileToTransfer = FileHelper.CreateRandomTempFile(byteSize);
             var addFileToDfsRequestHandler =

@@ -68,8 +68,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
                 protocolMessage
             );
 
-            var peerSettings = Substitute.For<IPeerSettings>();
-            peerSettings.PeerId.Returns(PeerIdHelper.GetPeerId("sender"));
+            var peerSettings = PeerIdHelper.GetPeerId("sender").ToSubstitutedPeerSettings();
             var handler = new GetVersionRequestObserver(peerSettings, _logger);
 
             handler.StartObserving(messageStream);
