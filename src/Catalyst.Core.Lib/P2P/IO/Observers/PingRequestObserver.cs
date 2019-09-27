@@ -23,6 +23,7 @@
 
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.IO.Observers;
+using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.IO.Observers;
 using Catalyst.Protocol.IPPN;
 using Catalyst.Protocol.Peer;
@@ -36,9 +37,9 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
         : RequestObserverBase<PingRequest, PingResponse>,
             IP2PMessageObserver
     {
-        public PingRequestObserver(PeerId peerId,
+        public PingRequestObserver(IPeerSettings peerSettings,
             ILogger logger)
-            : base(logger, peerId) { }
+            : base(logger, peerSettings) { }
 
         /// <summary>
         /// 

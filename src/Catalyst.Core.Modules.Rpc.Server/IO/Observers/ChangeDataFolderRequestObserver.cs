@@ -24,6 +24,7 @@
 using Catalyst.Abstractions.FileSystem;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.IO.Observers;
+using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.IO.Observers;
 using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Rpc.Node;
@@ -39,9 +40,9 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
     {
         private readonly IFileSystem _fileSystem;
 
-        public ChangeDataFolderRequestObserver(PeerId peerId, 
+        public ChangeDataFolderRequestObserver(IPeerSettings peerSettings, 
             IFileSystem fileSystem,
-            ILogger logger) : base(logger, peerId)
+            ILogger logger) : base(logger, peerSettings)
         {
             _fileSystem = fileSystem;
         }
