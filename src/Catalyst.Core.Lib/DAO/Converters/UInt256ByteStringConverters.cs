@@ -28,6 +28,23 @@ using Nethermind.Dirichlet.Numerics;
 
 namespace Catalyst.Core.Lib.DAO.Converters
 {
+    public class ByteStringToUInt256StringConverter : IValueConverter<ByteString, string>
+    {
+        public string Convert(ByteString sourceMember, ResolutionContext context)
+        {
+            return sourceMember.ToUInt256().ToString();
+        }
+    }
+
+    public class UInt256StringToByteStringConverter : IValueConverter<string, ByteString>
+    {
+        public ByteString Convert(string sourceMember, ResolutionContext context)
+        {
+            var sourceValue = UInt256.Parse(sourceMember).ToUint256ByteString();
+            return sourceValue; 
+        }
+    }
+    
     public class ByteStringToUInt256Converter : IValueConverter<ByteString, UInt256>
     {
         public UInt256 Convert(ByteString sourceMember, ResolutionContext context)
