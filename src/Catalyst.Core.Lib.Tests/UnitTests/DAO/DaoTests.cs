@@ -200,7 +200,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
             {
                 ReceiverPublicKey = "hello".ToUtf8ByteString(),
                 SenderPublicKey = "bye bye".ToUtf8ByteString(),
-                TransactionFees = UInt64.MaxValue.ToUint256ByteString()
+                TransactionFees = UInt256.MaxValue.ToUint256ByteString()
             };
 
             var contextDao = baseEntryDao.ToDao(original);
