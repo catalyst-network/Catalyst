@@ -82,8 +82,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
                 protocolMessage
             );
 
-            var peerSettings = Substitute.For<IPeerSettings>();
-            peerSettings.PeerId.Returns(PeerIdHelper.GetPeerId("sender"));
+            var peerSettings = PeerIdHelper.GetPeerId("sender").ToSubstitutedPeerSettings();
             var handler = new GetInfoRequestObserver(
                 peerSettings, _config, _logger);
 

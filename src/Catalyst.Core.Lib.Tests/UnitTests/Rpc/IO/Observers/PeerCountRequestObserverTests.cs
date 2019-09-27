@@ -106,8 +106,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             var messageStream =
                 MessageStreamHelper.CreateStreamWithMessage(_fakeContext, _testScheduler, protocolMessage);
 
-            var peerSettings = Substitute.For<IPeerSettings>();
-            peerSettings.PeerId.Returns(sendPeerId);
+            var peerSettings = sendPeerId.ToSubstitutedPeerSettings();
             var handler = new PeerCountRequestObserver(peerSettings, peerRepository, _logger);
             handler.StartObserving(messageStream);
 

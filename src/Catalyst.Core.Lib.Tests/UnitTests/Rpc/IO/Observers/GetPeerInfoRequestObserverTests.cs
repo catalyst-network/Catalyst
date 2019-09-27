@@ -177,8 +177,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
 
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, testScheduler, protocolMessage);
 
-            var peerSettings = Substitute.For<IPeerSettings>();
-            peerSettings.PeerId.Returns(senderPeerIdentifier);
+            var peerSettings = senderPeerIdentifier.ToSubstitutedPeerSettings();
             var handler = new GetPeerInfoRequestObserver(peerSettings, _logger, _peerRepository);
 
             handler.StartObserving(messageStream);

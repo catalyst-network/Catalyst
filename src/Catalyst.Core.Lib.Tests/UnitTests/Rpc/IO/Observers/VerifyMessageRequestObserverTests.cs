@@ -61,8 +61,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             };
 
             _testPeerId = PeerIdHelper.GetPeerId("TestPeerIdentifier");
-            var peerSettings = Substitute.For<IPeerSettings>();
-            peerSettings.PeerId.Returns(_testPeerId);
+            var peerSettings = _testPeerId.ToSubstitutedPeerSettings();
 
             _keySigner = Substitute.For<IKeySigner>();
             _keySigner.CryptoContext.Returns(new CryptoContext(new CryptoWrapper()));

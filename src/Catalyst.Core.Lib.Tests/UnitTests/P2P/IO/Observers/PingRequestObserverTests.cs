@@ -49,8 +49,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
         {
             _testScheduler = new TestScheduler();
             _subbedLogger = Substitute.For<ILogger>();
-            var peerSettings = Substitute.For<IPeerSettings>();
-            peerSettings.PeerId.Returns(PeerIdHelper.GetPeerId("sender"));
+            var peerSettings = PeerIdHelper.GetPeerId("sender").ToSubstitutedPeerSettings();
             _pingRequestObserver = new PingRequestObserver(peerSettings,
                 _subbedLogger
             );

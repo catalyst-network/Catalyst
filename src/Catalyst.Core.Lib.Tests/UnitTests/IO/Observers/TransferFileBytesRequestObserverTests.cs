@@ -54,9 +54,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Observers
             _context = Substitute.For<IChannelHandlerContext>();
             _context.Channel.Returns(Substitute.For<IChannel>());
             _downloadFileTransferFactory = Substitute.For<IDownloadFileTransferFactory>();
-            var peerIdentifier = PeerIdHelper.GetPeerId("Test");
-            var peerSettings = Substitute.For<IPeerSettings>();
-            peerSettings.PeerId.Returns(peerIdentifier);
+            var peerSettings = PeerIdHelper.GetPeerId("Test").ToSubstitutedPeerSettings();
             _observer = new TransferFileBytesRequestObserver(_downloadFileTransferFactory,
                 peerSettings,
                 Substitute.For<ILogger>());
