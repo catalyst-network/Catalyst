@@ -193,8 +193,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
         public void BaseEntryDao_And_BaseEntry_Should_Be_Convertible()
         {
             var baseEntryDao = GetMapper<BaseEntryDao>();
-            var byteRn = new byte[30];
-            new Random().NextBytes(byteRn);
+            //var byteRn = new byte[30];
+            //new Random().NextBytes(byteRn);
 
             var original = new BaseEntry    
             {
