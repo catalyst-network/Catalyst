@@ -61,6 +61,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             };
 
             _testPeerId = PeerIdHelper.GetPeerId("TestPeerIdentifier");
+
             var peerSettings = _testPeerId.ToSubstitutedPeerSettings();
 
             _keySigner = Substitute.For<IKeySigner>();

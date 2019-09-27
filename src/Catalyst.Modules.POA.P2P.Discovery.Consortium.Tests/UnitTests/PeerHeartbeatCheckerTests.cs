@@ -82,7 +82,6 @@ namespace Catalyst.Modules.POA.P2P.Tests.UnitTests
         {
             var peers = new List<Peer> {_testPeer};
             var peerSettings = _testPeer.PeerId.ToSubstitutedPeerSettings();
-
             var peerChallenger = new PeerChallenger(
                 Substitute.For<ILogger>(), 
                 _peerClient,
