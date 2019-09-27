@@ -83,8 +83,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
 
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, testScheduler, protocolMessage);
 
-            var peerSettings = Substitute.For<IPeerSettings>();
-            peerSettings.PeerId.Returns(PeerIdHelper.GetPeerId("sender"));
+            var peerSettings = PeerIdHelper.GetPeerId("sender").ToSubstitutedPeerSettings();
             var handler =
                 new SignMessageRequestObserver(peerSettings, _logger, _keySigner);
 
