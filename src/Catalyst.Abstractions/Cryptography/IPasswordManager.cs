@@ -40,7 +40,9 @@ namespace Catalyst.Abstractions.Cryptography
         /// for instance which password is being requested.</param>
         /// <returns>The password read and stored as a <c>SecureString</c></returns>
         /// <remarks>Once the password has been use, it is recommended to dispose of it.
-        /// <seealso cref="https://docs.microsoft.com/en-us/dotnet/api/system.security.securestring?view=netcore-2.2"/>
+        /// <seealso>
+        ///     <cref>https://docs.microsoft.com/en-us/dotnet/api/system.security.securestring?view=netcore-2.2</cref>
+        /// </seealso>
         /// </remarks>
         SecureString RetrieveOrPromptPassword(PasswordRegistryTypes passwordType,
             string promptMessage = null);
@@ -50,19 +52,22 @@ namespace Catalyst.Abstractions.Cryptography
         /// requiring a new input from the user.
         /// </summary>
         /// <param name="passwordType">The type of password to be retrieved.</param>
-        /// <param name="promptMessage"></param>
-        /// <returns></returns>
+        /// <param name="securePassword"></param>
+        /// <returns>bools</returns>
         bool AddPasswordToRegistry(PasswordRegistryTypes passwordType, SecureString securePassword);
 
         /// <summary>
         /// Adds a password to the registry in order to make it reusable later without
         /// requiring a new input from the user.
         /// </summary>
+        /// <param name="passwordType"></param>
         /// <param name="promptMessage">A message providing some context to the user,
         /// for instance which password is being requested.</param>
         /// <returns>The password read and stored as a <c>SecureString</c></returns>
         /// <remarks>Once the password has been use, it is recommended to dispose of it.
-        /// <seealso cref="https://docs.microsoft.com/en-us/dotnet/api/system.security.securestring?view=netcore-2.2"/>
+        /// <seealso>
+        ///     <cref>https://docs.microsoft.com/en-us/dotnet/api/system.security.securestring?view=netcore-2.2</cref>
+        /// </seealso>
         /// </remarks>
         SecureString RetrieveOrPromptAndAddPasswordToRegistry(PasswordRegistryTypes passwordType, 
             string promptMessage = null);

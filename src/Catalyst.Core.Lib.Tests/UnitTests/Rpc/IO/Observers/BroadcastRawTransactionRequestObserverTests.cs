@@ -22,7 +22,6 @@
 #endregion
 
 using Catalyst.Abstractions.IO.Events;
-using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
 using Catalyst.Core.Modules.Rpc.Server.IO.Observers;

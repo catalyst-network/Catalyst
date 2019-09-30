@@ -21,7 +21,6 @@
 
 #endregion
 
-using System;
 using System.Collections.Generic;
 using System.Net;
 using Catalyst.Abstractions.Cryptography;
@@ -67,18 +66,6 @@ namespace Catalyst.Core.Lib.P2P
             Guard.Argument(peerIdChunks[2]).Length(14);
             Guard.Argument(peerIdChunks[3]).MinLength(4).MaxLength(5);
             Guard.Argument(peerIdChunks[4]).Length(_cryptoContext.PublicKeyLength);
-        }
-
-        /// <summary>
-        /// </summary>
-        /// <param name="clientVersion"></param>
-        /// <exception cref="System.ArgumentException"></exception>
-        private bool ValidateProtocolVersion(byte[] clientVersion)
-        {
-            Guard.Argument(clientVersion, nameof(clientVersion))
-               .NotNull().NotEmpty().Count(2);
-            var shortVersion = BitConverter.ToUInt16(clientVersion);
-            return shortVersion <= 99;
         }
 
         /// <summary>

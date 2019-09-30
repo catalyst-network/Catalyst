@@ -38,7 +38,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Repository
             var catalystDir = "catalystDir";
             fileSystem.GetCatalystDataDir().Returns(new DirectoryInfo(catalystDir));
 
-            _ = new FileSystemAwareXmlRepository<object>(fileSystem);
+            var unused = new FileSystemAwareXmlRepository<object>(fileSystem);
 
             fileSystem.Received(1).GetCatalystDataDir();
         }

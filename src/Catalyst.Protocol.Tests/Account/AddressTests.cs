@@ -27,7 +27,6 @@ using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
 using Catalyst.Protocol.Account;
-using Catalyst.Protocol.Network;
 using FluentAssertions;
 using Xunit;
 using Xunit.Abstractions;

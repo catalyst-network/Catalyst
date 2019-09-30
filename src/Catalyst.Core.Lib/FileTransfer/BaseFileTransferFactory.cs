@@ -129,7 +129,7 @@ namespace Catalyst.Core.Lib.FileTransfer
         }
 
         /// <summary>Removes the specified unique identifier.</summary>
-        /// <param name="guid">The unique identifier.</param>
+        /// <param name="key">The unique identifier.</param>
         private void Remove(ICorrelationId key)
         {
             lock (_lockObject)

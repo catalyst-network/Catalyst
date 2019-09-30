@@ -28,7 +28,9 @@ namespace Catalyst.Abstractions.P2P.Discovery
 {
     /// <summary>
     /// A memento object used to store and restore the valid states of the Hastings walk.
-    /// More information on <seealso cref="https://en.wikipedia.org/wiki/Memento_pattern"/>
+    /// More information on <seealso>
+    ///     <cref>https://en.wikipedia.org/wiki/Memento_pattern</cref>
+    /// </seealso>
     /// </summary>
     public interface IHastingsMemento
     {

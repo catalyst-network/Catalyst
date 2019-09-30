@@ -83,7 +83,6 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
         public static int BroadcastOwnerMaximumGossipPeersPerRound => 10;
 
         /// <summary>Initializes a new instance of the <see cref="BroadcastManager"/> class.</summary>
-        /// <param name="peerId">The peer identifier.</param>
         /// <param name="peers">The peers.</param>
         /// <param name="peerSettings">Peer settings</param>
         /// <param name="memoryCache">The memory cache.</param>

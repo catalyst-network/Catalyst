@@ -75,7 +75,6 @@ namespace Catalyst.Abstractions.Cryptography
         /// <param name="privateKey"></param>
         /// <param name="message"></param>
         /// <param name="context"></param>
-        /// <param name=""></param>
         /// <returns></returns>
         ISignature Sign(IPrivateKey privateKey, ReadOnlySpan<byte> message, ReadOnlySpan<byte> context);
 

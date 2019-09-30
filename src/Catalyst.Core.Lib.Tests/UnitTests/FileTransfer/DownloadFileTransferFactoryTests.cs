@@ -120,7 +120,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.FileTransfer
             _downloadFileInformation.CorrelationId.Returns(correlationId);
             _downloadFileInformation.MaxChunk.Returns((uint) 1);
             _downloadFileTransferFactory.RegisterTransfer(_downloadFileInformation);
-            _ = _downloadFileTransferFactory.FileTransferAsync(correlationId, token).ConfigureAwait(false);
+            _downloadFileTransferFactory.FileTransferAsync(correlationId, token).ConfigureAwait(false);
         }
 
         public void Dispose()

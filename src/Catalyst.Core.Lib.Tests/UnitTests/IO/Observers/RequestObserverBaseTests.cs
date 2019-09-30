@@ -22,7 +22,6 @@
 #endregion
 
 using System.Linq;
-using Catalyst.Abstractions.P2P;
 using Catalyst.Protocol.IPPN;
 using Catalyst.TestUtils;
 using FluentAssertions;

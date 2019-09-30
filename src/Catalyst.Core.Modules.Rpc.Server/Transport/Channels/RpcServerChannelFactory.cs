@@ -87,6 +87,8 @@ namespace Catalyst.Core.Modules.Rpc.Server.Transport.Channels
         /// <param name="keySigner"></param>
         /// <param name="authenticationStrategy"></param>
         /// <param name="peerIdValidator"></param>
+        /// <param name="peerSettings"></param>
+        /// <param name="scheduler"></param>
         public RpcServerChannelFactory(IRpcMessageCorrelationManager correlationManger,
             IKeySigner keySigner,
             IAuthenticationStrategy authenticationStrategy,
