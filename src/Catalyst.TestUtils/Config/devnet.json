@@ -34,7 +34,7 @@
                 //},
                 "efCore": {
                     "factory": "SharpRepository.EfCoreRepository.EfCoreConfigRepositoryFactory, SharpRepository.EfCoreRepository",
-                    "connectionString": "Server=databasemachine.traderiser.com\\SQL2012, 49175; Database = AtlasCity; User Id = developer; Password = d3v3lop3rhous3;", // optional, you can configure it with dependency resolver
+                    "connectionString": "", // optional, you can configure it with dependency resolver
                     "dbContextType": "EfCoreContext, Catalyst.Core.Lib.Repository" // optional, you can configure it with dependency resolver
                 },
                 "inMemoryNoCaching": {

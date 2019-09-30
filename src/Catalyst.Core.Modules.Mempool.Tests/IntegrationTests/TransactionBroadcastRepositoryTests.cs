@@ -136,8 +136,7 @@ namespace Catalyst.Core.Modules.Mempool.Tests.IntegrationTests
             }
         }
 
-       // [Theory(Skip = "Setup to run in pipeline only")]
-        [Theory]
+        [Theory(Skip = "Setup to run in pipeline only")]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         [MemberData(nameof(ModulesList))]
         public void TransactionBroadcastRepo_All_Dbs_Can_Update_And_Retrieve(Module dbModule)
@@ -147,8 +146,7 @@ namespace Catalyst.Core.Modules.Mempool.Tests.IntegrationTests
             TransactionBroadcast_Update_And_Retrieve();
         }
 
-        //[Theory(Skip = "Setup to run in pipeline only")]
-        [Theory]
+        [Theory(Skip = "Setup to run in pipeline only")]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         [MemberData(nameof(ModulesList))]
         public void TransactionBroadcastRepo_All_Dbs_Can_Save_And_Retrieve(Module dbModule)
@@ -158,8 +156,7 @@ namespace Catalyst.Core.Modules.Mempool.Tests.IntegrationTests
             TransactionBroadcastRepo_Can_Save_And_Retrieve();
         }
 
-       // [Fact(Skip = "Microsoft DBs yet to be completed")]
-        [Fact]
+        [Fact(Skip = "Microsoft DBs yet to be completed")]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void TransactionBroadcastRepo_EfCore_Dbs_Update_And_Retrieve()
         {
@@ -173,8 +170,7 @@ namespace Catalyst.Core.Modules.Mempool.Tests.IntegrationTests
             TransactionBroadcast_Update_And_Retrieve();
         }
 
-        //[Fact(Skip = "Microsoft DBs yet to be completed")]
-        [Fact]
+        [Fact(Skip = "Microsoft DBs yet to be completed")]
         [Trait(Traits.TestType, Traits.IntegrationTest)]
         public void TransactionBroadcastRepo_EfCore_Dbs_Can_Save_And_Retrieve()
         {
