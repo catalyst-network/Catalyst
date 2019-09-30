@@ -89,7 +89,7 @@ namespace Catalyst.Simulator.Simulations
                     clientRpcInfo.RpcClient.SendMessage(transaction);
                 }
 
-                await Task.Delay(1000).ConfigureAwait(false);
+                await Task.Delay(2000).ConfigureAwait(false);
             }
         }
 

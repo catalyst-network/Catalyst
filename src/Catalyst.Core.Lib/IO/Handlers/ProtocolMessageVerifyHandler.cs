@@ -24,6 +24,7 @@
 using System.Reflection;
 using Catalyst.Abstractions.KeySigner;
 using Catalyst.Core.Lib.Extensions;
+using Catalyst.Protocol.Rpc.Node;
 using Catalyst.Protocol.Wire;
 using DotNetty.Transport.Channels;
 using Google.Protobuf;
