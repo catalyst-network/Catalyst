@@ -34,6 +34,24 @@ namespace Catalyst.TestUtils.ProtocolHelpers
         {
             return new RangeProof
             {
+                ValueCommitment =
+                {
+                    ByteUtil.GenerateRandomByteArray(16).ToByteString(),
+                    ByteUtil.GenerateRandomByteArray(16).ToByteString(),
+                    ByteUtil.GenerateRandomByteArray(16).ToByteString()
+                },
+                AggregatedVectorPolynomialL =
+                {
+                    ByteUtil.GenerateRandomByteArray(8).ToByteString(),
+                    ByteUtil.GenerateRandomByteArray(8).ToByteString(),
+                    ByteUtil.GenerateRandomByteArray(8).ToByteString()
+                },
+                AggregatedVectorPolynomialR =
+                {
+                    ByteUtil.GenerateRandomByteArray(8).ToByteString(),
+                    ByteUtil.GenerateRandomByteArray(8).ToByteString(),
+                    ByteUtil.GenerateRandomByteArray(8).ToByteString()
+                },
                 ProofOfShareMu = ByteUtil.GenerateRandomByteArray(32).ToByteString(),
                 BitCommitment = ByteUtil.GenerateRandomByteArray(32).ToByteString(),
                 PerBitBlindingFactorCommitment = ByteUtil.GenerateRandomByteArray(32).ToByteString(),

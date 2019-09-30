@@ -49,6 +49,9 @@ namespace Catalyst.Core.Lib.Repository
         public Microsoft.EntityFrameworkCore.DbSet<BaseEntryDao> BaseEntryDaoStore { get; set; }
         public Microsoft.EntityFrameworkCore.DbSet<SignatureDao> SignatureDaoStore { get; set; }
         public Microsoft.EntityFrameworkCore.DbSet<SigningContextDao> SigningContextDaoStore { get; set; }
+        public Microsoft.EntityFrameworkCore.DbSet<ValueCommitmentDao> ValueCommitmentStore { get; set; }
+        public Microsoft.EntityFrameworkCore.DbSet<AggregatedVectorPolynomialLDao> AggregatedVectorPolynomialLStore { get; set; }
+        public Microsoft.EntityFrameworkCore.DbSet<AggregatedVectorPolynomialRDao> AggregatedVectorPolynomialRStore { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

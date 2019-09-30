@@ -26,27 +26,68 @@ using Google.Protobuf;
 
 namespace Catalyst.Core.Lib.DAO.Converters
 {
-    //public class ByteStringToValueCommitmentBase64Converter : IValueConverter<ByteString, ValueCommitmentEntity>
-    //{
-    //    public ValueCommitmentEntity Convert(ByteString sourceMember, ResolutionContext context)
-    //    {
-    //        var store = sourceMember.ToBase64();
+    public class ByteStringToValueCommitmentBase64Converter : IValueConverter<ByteString, ValueCommitmentDao>
+    {
+        public ValueCommitmentDao Convert(ByteString sourceMember, ResolutionContext context)
+        {
+            var store = sourceMember.ToBase64();
 
-    //        var valueCom = new ValueCommitmentEntity();
-    //        valueCom.Value = store;
-    //        return valueCom;
-    //    }
-    //}
+            return new ValueCommitmentDao
+            {
+                Value = store
+            };
+        }
+    }
 
-    //public class ValueCommitmentToByteStringConverter : IValueConverter<ValueCommitmentEntity, ByteString>
-    //{
-    //    public ByteString Convert(ValueCommitmentEntity sourceMember, ResolutionContext context)
-    //    {
-    //        return ByteString.FromBase64(sourceMember.Value);
-    //    }
-    //}
+    public class ValueCommitmentDaoToByteStringConverter : IValueConverter<ValueCommitmentDao, ByteString>
+    {
+        public ByteString Convert(ValueCommitmentDao sourceMember, ResolutionContext context)
+        {
+            return ByteString.FromBase64(sourceMember.Value);
+        }
+    }
+    
+    public class ByteStringToAggregatedVectorPolynomialLBase64Converter : IValueConverter<ByteString, AggregatedVectorPolynomialLDao>
+    {
+        public AggregatedVectorPolynomialLDao Convert(ByteString sourceMember, ResolutionContext context)
+        {
+            var store = sourceMember.ToBase64();
 
-    ////=========================================//
+            return new AggregatedVectorPolynomialLDao
+            {
+                Value = store
+            };
+        }
+    }
+
+    public class AggregatedVectorPolynomialLDaoToByteStringConverter : IValueConverter<AggregatedVectorPolynomialLDao, ByteString>
+    {
+        public ByteString Convert(AggregatedVectorPolynomialLDao sourceMember, ResolutionContext context)
+        {
+            return ByteString.FromBase64(sourceMember.Value);
+        }
+    }
+
+    public class ByteStringToAggregatedVectorPolynomialRBase64Converter : IValueConverter<ByteString, AggregatedVectorPolynomialRDao>
+    {
+        public AggregatedVectorPolynomialRDao Convert(ByteString sourceMember, ResolutionContext context)
+        {
+            var store = sourceMember.ToBase64();
+
+            return new AggregatedVectorPolynomialRDao
+            {
+                Value = store
+            };
+        }
+    }
+
+    public class AggregatedVectorPolynomialRDaoToByteStringConverter : IValueConverter<AggregatedVectorPolynomialRDao, ByteString>
+    {
+        public ByteString Convert(AggregatedVectorPolynomialRDao sourceMember, ResolutionContext context)
+        {
+            return ByteString.FromBase64(sourceMember.Value);
+        }
+    }
 
     public class ByteStringToStringBase64Converter : IValueConverter<ByteString, string>
     {

@@ -54,6 +54,7 @@ namespace Catalyst.Core.Lib.DAO.Converters
             return result;
         }
     }
+
     public class RepeatedFieldToListConverter<TIn, TOut, TInnerConverter>
         : IValueConverter<RepeatedField<TIn>, List<TOut>>
         where TInnerConverter : IValueConverter<TIn, TOut>
