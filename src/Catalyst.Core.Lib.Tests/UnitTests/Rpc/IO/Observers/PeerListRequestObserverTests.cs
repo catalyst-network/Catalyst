@@ -25,6 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Catalyst.Abstractions.IO.Messaging.Dto;
+using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Network;
 using Catalyst.Core.Lib.P2P.Models;
@@ -86,7 +87,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
                 {
                     Reputation = 0,
                     LastSeen = DateTime.Now,
-                    PeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier(fakePeer)
+                    PeerId = PeerIdHelper.GetPeerId(fakePeer)
                 });
             });
 
@@ -96,10 +97,11 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             // Build a fake remote endpoint
             _fakeContext.Channel.RemoteAddress.Returns(EndpointBuilder.BuildNewEndPoint("192.0.0.1", 42042));
             
-            var protocolMessage = new GetPeerListRequest().ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId);
+            var protocolMessage = new GetPeerListRequest().ToProtocolMessage(PeerIdHelper.GetPeerId("sender"));
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, testScheduler, protocolMessage);
 
-            var handler = new PeerListRequestObserver(PeerIdentifierHelper.GetPeerIdentifier("sender"), _logger, peerRepository);
+            var peerSettings = PeerIdHelper.GetPeerId("sender").ToSubstitutedPeerSettings();
+            var handler = new PeerListRequestObserver(peerSettings, _logger, peerRepository);
             handler.StartObserving(messageStream);
 
             testScheduler.Start();

@@ -27,10 +27,12 @@ using System.Threading.Tasks;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.FileSystem;
 using Catalyst.Abstractions.Keystore;
+using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib.Cryptography;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
+using Catalyst.Protocol.Network;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Multiformats.Hash.Algorithms;
@@ -58,10 +60,10 @@ namespace Catalyst.Core.Modules.Keystore.Tests.IntegrationTests
             _passwordManager.RetrieveOrPromptPassword(default)
                .ReturnsForAnyArgs(TestPasswordReader.BuildSecureStringPassword("test password"));
 
-            var multiAlgo = Substitute.For<IMultihashAlgorithm>();
-            multiAlgo.ComputeHash(Arg.Any<byte[]>()).Returns(new byte[32]);
+            var peerSettings = Substitute.For<IPeerSettings>();
+            peerSettings.NetworkType.Returns(NetworkType.Devnet);
 
-            var addressHelper = new AddressHelper(multiAlgo);
+            var addressHelper = new AddressHelper(peerSettings);
 
             _keystore = new LocalKeyStore(_passwordManager,
                 _context,

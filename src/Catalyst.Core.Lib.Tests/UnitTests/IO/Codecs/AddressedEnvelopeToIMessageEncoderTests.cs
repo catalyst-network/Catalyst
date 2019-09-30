@@ -47,7 +47,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Codecs
         {
             var messageDto = new SignedMessageDto(
                 new PingRequest().ToProtocolMessage(PeerIdHelper.GetPeerId("TestSender")),
-                PeerIdentifierHelper.GetPeerIdentifier("Test"));
+                PeerIdHelper.GetPeerId("Test"));
 
             _testChannel.WriteOutbound(messageDto);
             var outboundMessages = _testChannel.OutboundMessages.ToArray();

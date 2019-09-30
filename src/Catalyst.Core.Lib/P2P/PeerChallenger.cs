@@ -34,6 +34,7 @@ using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
 using Catalyst.Protocol.IPPN;
+using Catalyst.Protocol.Peer;
 using Serilog;
 
 namespace Catalyst.Core.Lib.P2P
@@ -41,7 +42,7 @@ namespace Catalyst.Core.Lib.P2P
     public sealed class PeerChallenger : IPeerChallenger, IDisposable
     {
         private readonly ILogger _logger;
-        private readonly IPeerIdentifier _senderIdentifier;
+        private readonly PeerId _senderIdentifier;
         private readonly IPeerClient _peerClient;
         private readonly int _peerChallengeWaitTimeSeconds;
 
@@ -49,38 +50,38 @@ namespace Catalyst.Core.Lib.P2P
 
         public PeerChallenger(ILogger logger,
             IPeerClient peerClient,
-            IPeerIdentifier senderIdentifier,
+            IPeerSettings peerSettings,
             int peerChallengeWaitTimeSeconds,
             IScheduler scheduler = null)
         {
             var observableScheduler = scheduler ?? Scheduler.Default;
             ChallengeResponseMessageStreamer = new ReplaySubject<IPeerChallengeResponse>(1, observableScheduler);
-            _senderIdentifier = senderIdentifier;
+            _senderIdentifier = peerSettings.PeerId;
             _logger = logger;
             _peerClient = peerClient;
             _peerChallengeWaitTimeSeconds = peerChallengeWaitTimeSeconds;
         }
 
-        public async Task<bool> ChallengePeerAsync(IPeerIdentifier recipientPeerIdentifier)
+        public async Task<bool> ChallengePeerAsync(PeerId recipientPeerId)
         {
             try
             {
                 var correlationId = CorrelationId.GenerateCorrelationId();
-                var protocolMessage = new PingRequest().ToProtocolMessage(_senderIdentifier.PeerId, correlationId);
+                var protocolMessage = new PingRequest().ToProtocolMessage(_senderIdentifier, correlationId);
                 var messageDto = new MessageDto(
                     protocolMessage,
-                    recipientPeerIdentifier
+                    recipientPeerId
                 );
 
-                _logger.Verbose($"Sending peer challenge request to IP: {recipientPeerIdentifier}");
+                _logger.Verbose($"Sending peer challenge request to IP: {recipientPeerId}");
                 _peerClient.SendMessage(messageDto);
                 using (var cancellationTokenSource =
                     new CancellationTokenSource(TimeSpan.FromSeconds(_peerChallengeWaitTimeSeconds)))
                 {
                     await ChallengeResponseMessageStreamer
                        .FirstAsync(a => a != null 
-                         && a.PeerId.PublicKey.SequenceEqual(recipientPeerIdentifier.PeerId.PublicKey) 
-                         && a.PeerId.Ip.SequenceEqual(recipientPeerIdentifier.PeerId.Ip))
+                         && a.PeerId.PublicKey.SequenceEqual(recipientPeerId.PublicKey) 
+                         && a.PeerId.Ip.SequenceEqual(recipientPeerId.Ip))
                        .ToTask(cancellationTokenSource.Token)
                        .ConfigureAwait(false);
                 }

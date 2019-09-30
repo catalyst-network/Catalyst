@@ -21,23 +21,19 @@
 
 #endregion
 
-using Catalyst.Abstractions.IO.Messaging.Correlation;
-using Catalyst.Abstractions.P2P;
-using Google.Protobuf;
+using Autofac;
+using Catalyst.Core.Lib.DAO;
+using SharpRepository.MongoDbRepository;
 
-namespace Catalyst.Abstractions.IO.Messaging.Dto
+namespace Catalyst.TestUtils.Repository
 {
-    public interface IDtoFactory
+    public sealed class MongoDbTestModule<TProto, TDao> : Module
+        where TDao : DaoBase<TProto, TDao>, new()
+
     {
-        /// <summary>Gets the message.</summary>
-        /// <param name="messageDto">The message.</param>
-        /// <param name="senderPeerIdentifier"></param>
-        /// <param name="recipientPeerIdentifier"></param>
-        /// <param name="correlationId">The correlation identifier.</param>
-        /// <returns>ProtocolMessage message</returns>
-        IMessageDto<T> GetDto<T>(T messageDto,
-            IPeerIdentifier senderPeerIdentifier,
-            IPeerIdentifier recipientPeerIdentifier,
-            ICorrelationId correlationId = default) where T : IMessage<T>;
+        protected override void Load(ContainerBuilder builder)
+        {
+            builder.RegisterType<MongoDbRepository<TDao, string>>().As<SharpRepository.Repository.IRepository<TDao, string>>().SingleInstance();
+        }
     }
 }

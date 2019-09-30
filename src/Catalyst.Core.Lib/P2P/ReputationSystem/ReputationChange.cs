@@ -22,20 +22,20 @@
 #endregion
 
 using Catalyst.Abstractions.Config;
-using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.ReputationSystem;
+using Catalyst.Protocol.Peer;
 
 namespace Catalyst.Core.Lib.P2P.ReputationSystem
 {
     internal sealed class ReputationChange
         : IPeerReputationChange
     {
-        public IPeerIdentifier PeerIdentifier { get; }
+        public PeerId PeerId { get; }
         public IReputationEvents ReputationEvent { get; }
 
-        public ReputationChange(IPeerIdentifier peerIdentifier, IReputationEvents reputationEvent)
+        public ReputationChange(PeerId peerIdentifier, IReputationEvents reputationEvent)
         {
-            PeerIdentifier = peerIdentifier;
+            PeerId = peerIdentifier;
             ReputationEvent = reputationEvent;
         }
     }

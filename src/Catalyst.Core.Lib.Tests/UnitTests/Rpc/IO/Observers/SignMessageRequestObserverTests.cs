@@ -25,6 +25,7 @@ using System.Linq;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.KeySigner;
+using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
@@ -78,12 +79,13 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             };
 
             var protocolMessage =
-                signMessageRequest.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId);
+                signMessageRequest.ToProtocolMessage(PeerIdHelper.GetPeerId("sender"));
 
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, testScheduler, protocolMessage);
 
+            var peerSettings = PeerIdHelper.GetPeerId("sender").ToSubstitutedPeerSettings();
             var handler =
-                new SignMessageRequestObserver(PeerIdentifierHelper.GetPeerIdentifier("sender"), _logger, _keySigner);
+                new SignMessageRequestObserver(peerSettings, _logger, _keySigner);
 
             handler.StartObserving(messageStream);
 

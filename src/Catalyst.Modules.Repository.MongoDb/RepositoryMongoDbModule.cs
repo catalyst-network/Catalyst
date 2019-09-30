@@ -23,6 +23,7 @@
 
 using Autofac;
 using Catalyst.Core.Lib.Mempool.Documents;
+using SharpRepository.MongoDbRepository;
 using SharpRepository.Repository;
 using SharpRepository.Repository.Caching;
 

@@ -22,10 +22,10 @@
 #endregion
 
 using System.Net;
-using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
 using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.IPPN;
+using Catalyst.Protocol.Peer;
 using Catalyst.TestUtils;
 using DotNetty.Buffers;
 using DotNetty.Codecs;
@@ -40,7 +40,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Codecs
     public sealed class DatagramPacketEncoderTests
     {
         private readonly EmbeddedChannel _channel;
-        private readonly IPeerIdentifier _recipientPid;
+        private readonly PeerId _recipientPid;
         private readonly DatagramPacket _datagramPacket;
         private readonly ProtocolMessage _protocolMessageSigned;
         
@@ -50,17 +50,17 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Codecs
                 new DatagramPacketEncoder<IMessage>(new ProtobufEncoder())
             );
 
-            var senderPid = PeerIdentifierHelper.GetPeerIdentifier("sender",
+            var senderPid = PeerIdHelper.GetPeerId("sender",
                 IPAddress.Loopback,
                 10000
             );
             
-            _recipientPid = PeerIdentifierHelper.GetPeerIdentifier("sender",
+            _recipientPid = PeerIdHelper.GetPeerId("sender",
                 IPAddress.Loopback,
                 20000
             );
 
-            _protocolMessageSigned = new PingRequest().ToSignedProtocolMessage(senderPid.PeerId, (byte[]) default);
+            _protocolMessageSigned = new PingRequest().ToSignedProtocolMessage(senderPid, (byte[]) default);
             
             _datagramPacket = new DatagramPacket(
                 Unpooled.WrappedBuffer(_protocolMessageSigned.ToByteArray()),

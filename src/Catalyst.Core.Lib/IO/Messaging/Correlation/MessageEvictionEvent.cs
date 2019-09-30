@@ -22,8 +22,6 @@
 #endregion
 
 using Catalyst.Abstractions.IO.Messaging.Correlation;
-using Catalyst.Abstractions.P2P;
-using Catalyst.Core.Lib.P2P;
 using Catalyst.Protocol.Peer;
 using Google.Protobuf;
 
@@ -32,12 +30,12 @@ namespace Catalyst.Core.Lib.IO.Messaging.Correlation
     public sealed class MessageEvictionEvent<T> : ICacheEvictionEvent<T> where T : IMessage
     {
         public T EvictedContent { get; }
-        public IPeerIdentifier PeerIdentifier { get; }
+        public PeerId PeerId { get; }
         
         public MessageEvictionEvent(CorrelatableMessage<T> correlatableMessage, PeerId sender)
         {
             EvictedContent = correlatableMessage.Content;
-            PeerIdentifier = new PeerIdentifier(sender);
+            PeerId = sender;
         }
     }
 }

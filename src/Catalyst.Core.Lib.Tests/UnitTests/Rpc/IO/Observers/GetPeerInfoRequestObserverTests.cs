@@ -27,6 +27,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Net;
 using Catalyst.Abstractions.IO.Messaging.Dto;
+using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Network;
 using Catalyst.Core.Lib.P2P.Models;
@@ -73,26 +74,26 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         {
             yield return new Peer
             {
-                PeerIdentifier =
-                    PeerIdentifierHelper.GetPeerIdentifier("publickey-1", IPAddress.Parse("172.0.0.1"), 9090),
+                PeerId =
+                    PeerIdHelper.GetPeerId("publickey-1", IPAddress.Parse("172.0.0.1"), 9090),
                 LastSeen = DateTime.UtcNow, Created = DateTime.UtcNow
             };
             yield return new Peer
             {
-                PeerIdentifier =
-                    PeerIdentifierHelper.GetPeerIdentifier("publickey-2", IPAddress.Parse("172.0.0.2"), 9090),
+                PeerId =
+                    PeerIdHelper.GetPeerId("publickey-2", IPAddress.Parse("172.0.0.2"), 9090),
                 LastSeen = DateTime.UtcNow, Created = DateTime.UtcNow
             };
             yield return new Peer
             {
-                PeerIdentifier =
-                    PeerIdentifierHelper.GetPeerIdentifier("publickey-3", IPAddress.Parse("172.0.0.3"), 9090),
+                PeerId =
+                    PeerIdHelper.GetPeerId("publickey-3", IPAddress.Parse("172.0.0.3"), 9090),
                 LastSeen = DateTime.UtcNow, Created = DateTime.UtcNow
             };
             yield return new Peer
             {
-                PeerIdentifier =
-                    PeerIdentifierHelper.GetPeerIdentifier("publickey-3", IPAddress.Parse("172.0.0.3"), 9090),
+                PeerId =
+                    PeerIdHelper.GetPeerId("publickey-3", IPAddress.Parse("172.0.0.3"), 9090),
                 LastSeen = DateTime.UtcNow, Created = DateTime.UtcNow
             };
         }
@@ -168,14 +169,16 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
 
             _fakeContext.Channel.RemoteAddress.Returns(EndpointBuilder.BuildNewEndPoint("192.0.0.1", 42042));
 
-            var senderPeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("sender");
+            var senderPeerIdentifier = PeerIdHelper.GetPeerId("sender");
             var getPeerInfoRequest = new GetPeerInfoRequest {PublicKey = peerId.PublicKey, Ip = peerId.Ip};
 
             var protocolMessage =
-                getPeerInfoRequest.ToProtocolMessage(senderPeerIdentifier.PeerId);
+                getPeerInfoRequest.ToProtocolMessage(senderPeerIdentifier);
 
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, testScheduler, protocolMessage);
-            var handler = new GetPeerInfoRequestObserver(senderPeerIdentifier, _logger, _peerRepository);
+
+            var peerSettings = senderPeerIdentifier.ToSubstitutedPeerSettings();
+            var handler = new GetPeerInfoRequestObserver(peerSettings, _logger, _peerRepository);
 
             handler.StartObserving(messageStream);
 

@@ -70,10 +70,10 @@ namespace Catalyst.Modules.POA.P2P.Discovery
             {
                 Task.Run(async () =>
                 {
-                    var result = await _peerChallenger.ChallengePeerAsync(peer.PeerIdentifier).ConfigureAwait(false);
+                    var result = await _peerChallenger.ChallengePeerAsync(peer.PeerId).ConfigureAwait(false);
                     var counterValue = _nonResponsivePeerMap.GetOrAdd(peer.DocumentId, 0);
                     _logger.Verbose(
-                        $"Heartbeat result: {result.ToString()} Peer: {peer.PeerIdentifier} Non-Responsive Counter: {counterValue}");
+                        $"Heartbeat result: {result.ToString()} Peer: {peer.PeerId} Non-Responsive Counter: {counterValue}");
                     if (!result)
                     {
                         _nonResponsivePeerMap[peer.DocumentId] += 1;
@@ -84,7 +84,7 @@ namespace Catalyst.Modules.POA.P2P.Discovery
                             _peerRepository.Delete(peer.DocumentId);
                             _nonResponsivePeerMap.TryRemove(peer.DocumentId, out _);
                             _logger.Verbose(
-                                $"Peer reached maximum non-responsive count: {peer.PeerIdentifier}. Evicted from repository");
+                                $"Peer reached maximum non-responsive count: {peer.PeerId}. Evicted from repository");
                         }
                     }
                     else

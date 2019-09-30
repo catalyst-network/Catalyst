@@ -24,22 +24,23 @@
 using AutoMapper;
 using Catalyst.Core.Lib.DAO.Converters;
 using Catalyst.Protocol.Transaction;
-using Nethermind.Dirichlet.Numerics;
 
 namespace Catalyst.Core.Lib.DAO
 {
     public class PublicEntryDao : DaoBase<PublicEntry, PublicEntryDao>
     {
         public BaseEntryDao Base { get; set; }
-        public ulong Amount { get; set; }
-       
+        public string Amount { get; set; }
+
         public override void InitMappers(IMapperConfigurationExpression cfg)
         {
             cfg.CreateMap<PublicEntry, PublicEntryDao>()
-               .ForMember(d => d.Amount, opt => opt.ConvertUsing(new ByteStringToUInt256Converter(), s => s.Amount));
+               .ForMember(d => d.Amount,
+                    opt => opt.ConvertUsing(new ByteStringToUInt256StringConverter(), s => s.Amount));
 
             cfg.CreateMap<PublicEntryDao, PublicEntry>()
-               .ForMember(d => d.Amount, opt => opt.ConvertUsing(new UInt256ToByteStringConverter(), s => s.Amount));
+               .ForMember(d => d.Amount,
+                    opt => opt.ConvertUsing(new UInt256StringToByteStringConverter(), s => s.Amount));
         }
     }
 }

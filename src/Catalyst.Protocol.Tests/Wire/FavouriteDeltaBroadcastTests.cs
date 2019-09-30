@@ -21,8 +21,6 @@
 
 #endregion
 
-using System;
-using System.IO;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Wire;

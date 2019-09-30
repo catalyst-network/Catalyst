@@ -105,8 +105,8 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P.IO.Transport.Channels
         public async Task
             PeerServerChannelFactory_Pipeline_Should_Produce_Response_Object_PeerClientChannelFactory_Can_Process()
         {
-            var recipient = PeerIdentifierHelper.GetPeerIdentifier("recipient");
-            var sender = PeerIdentifierHelper.GetPeerIdentifier("sender");
+            var recipient = PeerIdHelper.GetPeerId("recipient");
+            var sender = PeerIdHelper.GetPeerId("sender");
 
             var signature = Substitute.For<ISignature>();
             _peerIdValidator.ValidatePeerIdFormat(Arg.Any<PeerId>()).Returns(true);
@@ -115,7 +115,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P.IO.Transport.Channels
 
             var correlationId = CorrelationId.GenerateCorrelationId();
 
-            var protocolMessage = new PingResponse().ToProtocolMessage(sender.PeerId, correlationId);
+            var protocolMessage = new PingResponse().ToProtocolMessage(sender, correlationId);
             var dto = new MessageDto(
                 protocolMessage,
                 recipient

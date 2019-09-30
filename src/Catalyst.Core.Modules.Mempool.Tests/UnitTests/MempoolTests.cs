@@ -25,9 +25,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Catalyst.Abstractions.Mempool.Repositories;
+using Catalyst.Core.Lib.DAO;
 using Catalyst.Core.Lib.Extensions;
-using Catalyst.Core.Lib.Extensions.Protocol.Wire;
-using Catalyst.Core.Lib.Mempool.Documents;
 using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using FluentAssertions;
@@ -44,26 +43,21 @@ namespace Catalyst.Core.Modules.Mempool.Tests.UnitTests
     {
         private readonly Mempool _memPool;
 
-        private readonly TransactionBroadcast _transactionBroadcast;
+        private readonly TransactionBroadcastDao _transactionBroadcast;
 
         public MempoolTests()
         {
             var logger = Substitute.For<ILogger>();
-            _memPool = new Mempool(Substitute.For<IMempoolRepository<MempoolDocument>>(), logger);
+            _memPool = new Mempool(Substitute.For<IMempoolRepository<TransactionBroadcastDao>>(), logger);
 
-            _transactionBroadcast = TransactionHelper.GetPublicTransaction();
+            _transactionBroadcast = new TransactionBroadcastDao().ToDao(TransactionHelper.GetPublicTransaction());
         }
 
-        private void AddKeyValueStoreEntryExpectation(TransactionBroadcast transaction)
+        private void AddKeyValueStoreEntryExpectation(TransactionBroadcastDao transaction)
         {
-            var mempoolDoc = new MempoolDocument
-            {
-                Transaction = transaction
-            };
-            
             _memPool.Repository.ReadItem(Arg.Is<ByteString>(k => k.SequenceEqual(transaction.Signature.RawBytes)))
                .Returns(mempoolDoc);
-            
+
             _memPool.Repository.TryReadItem(Arg.Is<ByteString>(k => k.SequenceEqual(transaction.Signature.RawBytes)))
                .Returns(true);
         }
@@ -78,8 +72,10 @@ namespace Catalyst.Core.Modules.Mempool.Tests.UnitTests
             var expectedTransaction = _transactionBroadcast;
             var transactionFromMemPool = mempoolDocument.Transaction;
 
-            transactionFromMemPool.PublicEntries.Single().Amount.ToUInt256().Should().Be(expectedTransaction.PublicEntries.Single().Amount.ToUInt256());
-            transactionFromMemPool.Signature.RawBytes.SequenceEqual(expectedTransaction.Signature.RawBytes).Should().BeTrue();
+            transactionFromMemPool.PublicEntries.Single().Amount.ToUInt256().Should()
+               .Be(expectedTransaction.PublicEntries.Single().Amount.ToUInt256());
+            transactionFromMemPool.Signature.RawBytes.SequenceEqual(expectedTransaction.Signature.RawBytes).Should()
+               .BeTrue();
             transactionFromMemPool.Timestamp.Should().Be(expectedTransaction.Timestamp);
             transactionFromMemPool.SummedEntryFees().Should().Be(expectedTransaction.SummedEntryFees());
         }
@@ -111,7 +107,7 @@ namespace Catalyst.Core.Modules.Mempool.Tests.UnitTests
         public void Delete_should_log_deletion_errors()
         {
             var keys = Enumerable.Range(0, 3).Select(i => i.ToString()).ToArray();
-            var connectTimeoutException = new TimeoutException("that mempool connection was too slow");  
+            var connectTimeoutException = new TimeoutException("that mempool connection was too slow");
             _memPool.Repository.WhenForAnyArgs(t => t.DeleteItem(keys))
                .Throw(connectTimeoutException);
 
@@ -132,18 +128,19 @@ namespace Catalyst.Core.Modules.Mempool.Tests.UnitTests
         public void SaveMempoolDocument_Should_Not_Override_Existing_Record()
         {
             // this test seems pointless like this
-            
+
             var expectedAmount = _transactionBroadcast.PublicEntries.Single().Amount;
 
             _memPool.Repository.CreateItem(Arg.Is(_transactionBroadcast))
                .Returns(true);
-            
+
             var saved = _memPool.Repository.CreateItem(_transactionBroadcast);
             saved.Should().BeTrue();
-            
+
             var overridingTransaction = _transactionBroadcast.Clone();
-            overridingTransaction.PublicEntries.Single().Amount = (expectedAmount.ToUInt256() + (UInt256) 100).ToUint256ByteString();
-            
+            overridingTransaction.PublicEntries.Single().Amount =
+                (expectedAmount.ToUInt256() + (UInt256) 100).ToUint256ByteString();
+
             _memPool.Repository.CreateItem(Arg.Is(overridingTransaction))
                .Returns(false);
             var overriden = _memPool.Repository.CreateItem(overridingTransaction);
@@ -152,7 +149,7 @@ namespace Catalyst.Core.Modules.Mempool.Tests.UnitTests
 
             _memPool.Repository.TryReadItem(Arg.Is(_transactionBroadcast.Signature.RawBytes))
                .Returns(true);
-            
+
             var retrievedTransaction = _memPool.Repository.TryReadItem(_transactionBroadcast.Signature.RawBytes);
             retrievedTransaction.Should().BeTrue();
         }
@@ -168,14 +165,14 @@ namespace Catalyst.Core.Modules.Mempool.Tests.UnitTests
 
             saved.Should().BeFalse();
         }
-        
+
         [Fact]
         public void SaveMempoolDocument_Should_Throw_On_Document_With_Null_Transaction()
         {
             _transactionBroadcast.Signature.RawBytes = ByteString.Empty;
-            
+
             _memPool.Repository.CreateItem(_transactionBroadcast).Throws<ArgumentNullException>();
-            
+
             new Action(() => _memPool.Repository.CreateItem(_transactionBroadcast))
                .Should().Throw<ArgumentNullException>()
                .And.Message.Should().Contain("cannot be null");

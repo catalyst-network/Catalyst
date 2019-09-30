@@ -22,7 +22,11 @@
 #endregion
 
 using System.IO;
+using System.Net;
 using System.Text;
+using Catalyst.Core.Lib.Util;
+using Catalyst.Protocol.Peer;
+using Google.Protobuf;
 using Multiformats.Base;
 using Multiformats.Hash;
 using Multiformats.Hash.Algorithms;
@@ -40,10 +44,12 @@ namespace Catalyst.Core.Lib.Extensions
             stream.Position = 0;
             return stream;
         }
+        
+        public static byte[] ToUtf8Bytes(this string @string) => Encoding.UTF8.GetBytes(@string);
 
         public static Multihash ComputeUtf8Multihash(this string content, IMultihashAlgorithm algorithm)
         {
-            var multihash = Encoding.UTF8.GetBytes(content).ComputeMultihash(algorithm);
+            var multihash = content.ToUtf8Bytes().ComputeMultihash(algorithm);
             return multihash;
         }
 
@@ -56,6 +62,22 @@ namespace Catalyst.Core.Lib.Extensions
             }
             
             return multihash;
+        }
+
+        public static PeerId BuildPeerIdFromBase32CrockfordKey(this string base32CrockfordKey, IPEndPoint ipEndPoint)
+        {
+            return BuildPeerIdFromBase32CrockfordKey(base32CrockfordKey, ipEndPoint.Address, ipEndPoint.Port);
+        }
+
+        public static PeerId BuildPeerIdFromBase32CrockfordKey(this string base32CrockfordKey, IPAddress ipAddress, int port)
+        {
+            return base32CrockfordKey.KeyToBytes().BuildPeerIdFromPublicKey(ipAddress, port);
+        }
+
+        public static T ParseHexStringTo<T>(this string hex16Pid) where T : IMessage<T>, new()
+        {
+            var parser = new MessageParser<T>(() => new T());
+            return parser.ParseFrom((SimpleBase.Base16.Decode(hex16Pid)));
         }
     }
 }

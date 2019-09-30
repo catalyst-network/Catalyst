@@ -45,10 +45,10 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
     {
         private readonly IPeerRepository _peerRepository;
 
-        public GetPeerInfoRequestObserver(IPeerIdentifier peerIdentifier,
+        public GetPeerInfoRequestObserver(IPeerSettings peerSettings,
             ILogger logger,
             IPeerRepository peerRepository)
-            : base(logger, peerIdentifier)
+            : base(logger, peerSettings)
         {
             _peerRepository = peerRepository;
         }
@@ -58,33 +58,33 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
         /// </summary>
         /// <param name="getPeerInfoRequest">The request</param>
         /// <param name="channelHandlerContext">The channel handler context</param>
-        /// <param name="senderPeerIdentifier">The sender peer identifier</param>
+        /// <param name="senderPeerId">The sender peer identifier</param>
         /// <param name="correlationId">The correlationId</param>
         /// <returns>The GetPeerInfoResponse</returns>
         protected override GetPeerInfoResponse HandleRequest(GetPeerInfoRequest getPeerInfoRequest,
             IChannelHandlerContext channelHandlerContext,
-            IPeerIdentifier senderPeerIdentifier,
+            PeerId senderPeerId,
             ICorrelationId correlationId)
         {
             Guard.Argument(getPeerInfoRequest, nameof(getPeerInfoRequest)).NotNull();
             Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
-            Guard.Argument(senderPeerIdentifier, nameof(senderPeerIdentifier)).NotNull();
+            Guard.Argument(senderPeerId, nameof(senderPeerId)).NotNull();
             Logger.Debug("received message of type GetPeerInfoRequest");
 
             var ip = getPeerInfoRequest.Ip;
 
-            var peerInfo = _peerRepository.FindAll(m => m.PeerIdentifier.PeerId.Ip == ip
-                 && m.PeerIdentifier.PeerId.PublicKey == getPeerInfoRequest.PublicKey)
+            var peerInfo = _peerRepository.FindAll(m => m.PeerId.Ip == ip
+                 && m.PeerId.PublicKey == getPeerInfoRequest.PublicKey)
                .Select(x =>
                     new PeerInfo
                     {
-                        PeerId = x.PeerIdentifier.PeerId,
+                        PeerId = x.PeerId,
                         Reputation = x.Reputation,
                         IsBlacklisted = x.BlackListed,
                         IsUnreachable = x.IsAwolPeer,
                         InactiveFor = x.InactiveFor.ToDuration(),
                         LastSeen = x.LastSeen.ToTimestamp(),
-                        Modified = x.Modified.HasValue ? x.Modified.Value.ToTimestamp() : null,
+                        Modified = x.Modified?.ToTimestamp(),
                         Created = x.Created.ToTimestamp()
                     }).ToList();
 

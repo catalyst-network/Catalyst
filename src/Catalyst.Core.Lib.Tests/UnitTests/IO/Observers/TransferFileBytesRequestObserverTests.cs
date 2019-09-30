@@ -24,6 +24,7 @@
 using System.Linq;
 using Catalyst.Abstractions.FileTransfer;
 using Catalyst.Abstractions.IO.Messaging.Dto;
+using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
@@ -53,9 +54,9 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Observers
             _context = Substitute.For<IChannelHandlerContext>();
             _context.Channel.Returns(Substitute.For<IChannel>());
             _downloadFileTransferFactory = Substitute.For<IDownloadFileTransferFactory>();
-            var peerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("Test");
+            var peerSettings = PeerIdHelper.GetPeerId("Test").ToSubstitutedPeerSettings();
             _observer = new TransferFileBytesRequestObserver(_downloadFileTransferFactory,
-                peerIdentifier,
+                peerSettings,
                 Substitute.For<ILogger>());
         }
 
@@ -84,9 +85,9 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Observers
 
             _downloadFileTransferFactory.DownloadChunk(Arg.Any<TransferFileBytesRequest>()).Returns(FileTransferResponseCodeTypes.Error);
 
-            var sender = PeerIdentifierHelper.GetPeerIdentifier("sender");
-            var requestDto = new MessageDto(new TransferFileBytesRequest().ToProtocolMessage(sender.PeerId)
-              , PeerIdentifierHelper.GetPeerIdentifier("recipient"));
+            var sender = PeerIdHelper.GetPeerId("sender");
+            var requestDto = new MessageDto(new TransferFileBytesRequest().ToProtocolMessage(sender)
+              , PeerIdHelper.GetPeerId("recipient"));
 
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_context, testScheduler, requestDto.Content);
 

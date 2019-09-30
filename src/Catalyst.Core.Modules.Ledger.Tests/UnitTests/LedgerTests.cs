@@ -25,8 +25,8 @@ using System;
 using System.Reactive.Linq;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Mempool;
+using Catalyst.Core.Lib.DAO;
 using Catalyst.Core.Lib.Extensions;
-using Catalyst.Core.Lib.Mempool.Documents;
 using Catalyst.Core.Modules.Ledger.Models;
 using Catalyst.Core.Modules.Ledger.Repository;
 using Catalyst.TestUtils;
@@ -47,7 +47,7 @@ namespace Catalyst.Core.Modules.Ledger.Tests.UnitTests
         private LedgerService _ledger;
         private readonly IAccountRepository _fakeRepository;
         private readonly IDeltaHashProvider _deltaHashProvider;
-        private readonly IMempool<MempoolDocument> _mempool;
+        private readonly IMempool<TransactionBroadcastDao> _mempool;
         private readonly ILogger _logger;
         private readonly ILedgerSynchroniser _ledgerSynchroniser;
         private readonly IMultihashAlgorithm _hashingAlgorithm;
@@ -60,7 +60,7 @@ namespace Catalyst.Core.Modules.Ledger.Tests.UnitTests
             _hashingAlgorithm = new BLAKE2B_16();
 
             _logger = Substitute.For<ILogger>();
-            _mempool = Substitute.For<IMempool<MempoolDocument>>();
+            _mempool = Substitute.For<IMempool<TransactionBroadcastDao>>();
             _deltaHashProvider = Substitute.For<IDeltaHashProvider>();
             _ledgerSynchroniser = Substitute.For<ILedgerSynchroniser>();
             _genesisHash = "genesis".ComputeUtf8Multihash(_hashingAlgorithm);
@@ -75,7 +75,7 @@ namespace Catalyst.Core.Modules.Ledger.Tests.UnitTests
             const int numAccounts = 10;
             for (var i = 0; i < numAccounts; i++)
             {
-                var account = AccountHelper.GetAccount(balance: (UInt256) i * 5);
+                var account = AccountHelper.GetAccount((UInt256) i * 5);
                 _ledger.SaveAccountState(account);
             }
 

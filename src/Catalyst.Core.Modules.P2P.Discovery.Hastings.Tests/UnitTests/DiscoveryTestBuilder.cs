@@ -38,6 +38,7 @@ using Catalyst.Core.Lib.P2P.IO.Observers;
 using Catalyst.Core.Lib.P2P.Repository;
 using Catalyst.Core.Lib.P2P.ReputationSystem;
 using Catalyst.Core.Lib.Util;
+using Catalyst.Protocol.Peer;
 using Catalyst.TestUtils;
 using Microsoft.Extensions.Caching.Memory;
 using NSubstitute;
@@ -208,7 +209,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.UnitTests
 
         public DiscoveryTestBuilder WithCurrentStep(IHastingsMemento currentStep = default,
             bool mock = false,
-            IPeerIdentifier peer = default,
+            PeerId peer = default,
             INeighbours neighbours = default)
         {
             if (_careTaker == null)
@@ -227,7 +228,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.UnitTests
 
         public DiscoveryTestBuilder WithStepProposal(IHastingsOriginator stateCandidate = default,
             bool mock = false,
-            IPeerIdentifier peer = default,
+            PeerId peer = default,
             INeighbours neighbours = default,
             ICorrelationId expectedPnr = default)
         {

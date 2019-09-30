@@ -25,6 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Catalyst.Abstractions.IO.Messaging.Dto;
+using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Network;
 using Catalyst.Core.Lib.P2P.Models;
@@ -89,7 +90,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
                 {
                     Reputation = 0,
                     LastSeen = DateTime.Now,
-                    PeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier(i.ToString())
+                    PeerId = PeerIdHelper.GetPeerId(i.ToString())
                 });
             }
 
@@ -98,14 +99,15 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
 
             peerRepository.GetAll().Returns(peerList);
 
-            var sendPeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("sender");
+            var sendPeerId = PeerIdHelper.GetPeerId("sender");
 
             var protocolMessage =
-                new GetPeerCountRequest().ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId);
+                new GetPeerCountRequest().ToProtocolMessage(PeerIdHelper.GetPeerId("sender"));
             var messageStream =
                 MessageStreamHelper.CreateStreamWithMessage(_fakeContext, _testScheduler, protocolMessage);
 
-            var handler = new PeerCountRequestObserver(sendPeerIdentifier, peerRepository, _logger);
+            var peerSettings = sendPeerId.ToSubstitutedPeerSettings();
+            var handler = new PeerCountRequestObserver(peerSettings, peerRepository, _logger);
             handler.StartObserving(messageStream);
 
             _testScheduler.Start();

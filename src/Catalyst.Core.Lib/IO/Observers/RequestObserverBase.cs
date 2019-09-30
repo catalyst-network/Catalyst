@@ -29,7 +29,7 @@ using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
-using Catalyst.Core.Lib.P2P;
+using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Wire;
 using Dawn;
 using DotNetty.Transport.Channels;
@@ -41,17 +41,17 @@ namespace Catalyst.Core.Lib.IO.Observers
     public abstract class RequestObserverBase<TProtoReq, TProtoRes> : MessageObserverBase, IRequestMessageObserver
         where TProtoReq : IMessage<TProtoReq> where TProtoRes : IMessage<TProtoRes>
     {
-        public IPeerIdentifier PeerIdentifier { get; }
+        public IPeerSettings PeerSettings { get; }
 
-        protected RequestObserverBase(ILogger logger, IPeerIdentifier peerIdentifier) : base(logger, typeof(TProtoReq).ShortenedProtoFullName())
+        protected RequestObserverBase(ILogger logger, IPeerSettings peerSettings) : base(logger, typeof(TProtoReq).ShortenedProtoFullName())
         {
             Guard.Argument(typeof(TProtoReq), nameof(TProtoReq)).Require(t => t.IsRequestType(),
                 t => $"{nameof(TProtoReq)} is not of type {MessageTypes.Request.Name}");
-            PeerIdentifier = peerIdentifier;
+            PeerSettings = peerSettings;
             logger.Verbose("{interface} instantiated", nameof(IRequestMessageObserver));
         }
 
-        protected abstract TProtoRes HandleRequest(TProtoReq messageDto, IChannelHandlerContext channelHandlerContext, IPeerIdentifier senderPeerIdentifier, ICorrelationId correlationId);
+        protected abstract TProtoRes HandleRequest(TProtoReq messageDto, IChannelHandlerContext channelHandlerContext, PeerId senderPeerId, ICorrelationId correlationId);
 
         public override void OnNext(IObserverDto<ProtocolMessage> messageDto)
         {
@@ -60,16 +60,16 @@ namespace Catalyst.Core.Lib.IO.Observers
             try
             {
                 var correlationId = messageDto.Payload.CorrelationId.ToCorrelationId();
-                var recipientPeerIdentifier = new PeerIdentifier(messageDto.Payload.PeerId);
+                var recipientPeerId = messageDto.Payload.PeerId;
 
                 var response = HandleRequest(messageDto.Payload.FromProtocolMessage<TProtoReq>(),
                     messageDto.Context,
-                    recipientPeerIdentifier,
+                    recipientPeerId,
                     correlationId);
 
                 var responseDto = new MessageDto(
-                    response.ToProtocolMessage(PeerIdentifier.PeerId, correlationId),
-                    recipientPeerIdentifier);
+                    response.ToProtocolMessage(PeerSettings.PeerId, correlationId),
+                    recipientPeerId);
 
                 messageDto.Context.Channel.WriteAndFlushAsync(responseDto);
             }

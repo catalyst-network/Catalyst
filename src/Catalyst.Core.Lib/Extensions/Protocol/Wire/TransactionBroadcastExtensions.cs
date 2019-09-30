@@ -49,6 +49,7 @@ namespace Catalyst.Core.Lib.Extensions.Protocol.Wire
             SigningContext context)
         {
             var clone = transaction.Clone();
+
             if (transaction.Signature.RawBytes.Length == cryptoWrapper.SignatureLength)
             {
                 Logger.Debug("The transaction was already signed, returning a clone.");

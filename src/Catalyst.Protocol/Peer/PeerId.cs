@@ -21,9 +21,9 @@
 
 #endregion
 
+using System;
 using System.Net;
 using System.Reflection;
-using Catalyst.Protocol.Transaction;
 using Google.Protobuf;
 using Serilog;
 
@@ -33,14 +33,16 @@ namespace Catalyst.Protocol.Peer
     {
         private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
 
-        public IPAddress IpAddress { get; private set; }
-        public IPEndPoint IpEndPoint { get; private set; }
+        public IPAddress IpAddress => GenerateIpFromByteString(Ip);
+        public IPEndPoint IpEndPoint => new IPEndPoint(IpAddress, (int) Port);
 
-        partial void OnConstruction()
+        //Add support for IPv6
+        private IPAddress GenerateIpFromByteString(ByteString ipAddressByteString)
         {
-            if (Ip == null || Ip.IsEmpty) {Ip = ByteString.CopyFrom(new byte[4]);}
-            IpAddress = new IPAddress(Ip.ToByteArray()).MapToIPv4();
-            IpEndPoint = new IPEndPoint(IpAddress, (int) Port);
+            var ipv4Buffer = new byte[4];
+            var ipAddressBytes = ipAddressByteString.ToByteArray();
+            Buffer.BlockCopy(ipAddressBytes, 12, ipv4Buffer, 0, 4);
+            return new IPAddress(ipAddressBytes).MapToIPv4();
         }
 
         public bool IsValid()

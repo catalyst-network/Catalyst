@@ -29,7 +29,7 @@ using Catalyst.Abstractions.Mempool;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.DAO;
 using Catalyst.Core.Lib.IO.Observers;
-using Catalyst.Core.Lib.Mempool.Documents;
+using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using DotNetty.Transport.Channels;
@@ -43,37 +43,36 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
     {
         private readonly IMempool<TransactionBroadcastDao> _mempool;
 
-        public GetMempoolRequestObserver(IPeerIdentifier peerIdentifier,
+        public GetMempoolRequestObserver(IPeerSettings peerSettings,
             IMempool<TransactionBroadcastDao> mempool,
             ILogger logger)
-            : base(logger, peerIdentifier)
+            : base(logger, peerSettings)
         {
             _mempool = mempool;
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="getMempoolRequest"></param>
         /// <param name="channelHandlerContext"></param>
-        /// <param name="senderPeerIdentifier"></param>
+        /// <param name="senderPeerId"></param>
         /// <param name="correlationId"></param>
         /// <returns></returns>
         protected override GetMempoolResponse HandleRequest(GetMempoolRequest getMempoolRequest,
             IChannelHandlerContext channelHandlerContext,
-            IPeerIdentifier senderPeerIdentifier,
+            PeerId senderPeerId,
             ICorrelationId correlationId)
         {
             Guard.Argument(getMempoolRequest, nameof(getMempoolRequest)).NotNull();
             Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
-            Guard.Argument(senderPeerIdentifier, nameof(senderPeerIdentifier)).NotNull();
+            Guard.Argument(senderPeerId, nameof(senderPeerId)).NotNull();
             Logger.Debug("GetMempoolRequestHandler starting ...");
 
             try
             {
                 Logger.Debug("Received GetMempoolRequest message with content {0}", getMempoolRequest);
 
-                var mempoolTransactions = _mempool.Repository.GetAll().Select(x=>x.ToProtoBuff());
+                var mempoolTransactions = _mempool.Repository.GetAll().Select(x => x.ToProtoBuff());
 
                 return new GetMempoolResponse
                 {

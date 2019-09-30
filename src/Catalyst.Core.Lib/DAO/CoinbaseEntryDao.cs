@@ -32,23 +32,23 @@ namespace Catalyst.Core.Lib.DAO
     {
         public uint Version { get; set; }
         public string ReceiverPublicKey { get; set; }
-        public UInt256 Amount { get; set; }
+        public string Amount { get; set; }
         
         public override void InitMappers(IMapperConfigurationExpression cfg)
         {
             cfg.CreateMap<CoinbaseEntry, CoinbaseEntryDao>().ReverseMap();
 
-            //cfg.CreateMap<CoinbaseEntry, CoinbaseEntryDao>()
-            //   .ForMember(d => d.ReceiverPublicKey, 
-            //        opt => opt.ConvertUsing(new ByteStringToStringPubKeyConverter(), s => s.ReceiverPublicKey))
-            //   .ForMember(d => d.Amount,
-            //        opt => opt.ConvertUsing(new ByteStringToUInt256Converter(), s => s.Amount));
+            cfg.CreateMap<CoinbaseEntry, CoinbaseEntryDao>()
+               .ForMember(d => d.ReceiverPublicKey, 
+                    opt => opt.ConvertUsing(new ByteStringToStringPubKeyConverter(), s => s.ReceiverPublicKey))
+               .ForMember(d => d.Amount,
+                    opt => opt.ConvertUsing(new ByteStringToUInt256StringConverter(), s => s.Amount));
 
-            //cfg.CreateMap<CoinbaseEntryDao, CoinbaseEntry>()
-            //   .ForMember(d => d.ReceiverPublicKey, 
-            //        opt => opt.ConvertUsing(new StringKeyUtilsToByteStringFormatter(), s => s.ReceiverPublicKey))
-            //   .ForMember(d => d.Amount,
-            //        opt => opt.ConvertUsing(new UInt256ToByteStringConverter(), s => s.Amount));
+            cfg.CreateMap<CoinbaseEntryDao, CoinbaseEntry>()
+               .ForMember(d => d.ReceiverPublicKey, 
+                    opt => opt.ConvertUsing(new StringKeyUtilsToByteStringFormatter(), s => s.ReceiverPublicKey))
+               .ForMember(d => d.Amount,
+                    opt => opt.ConvertUsing(new UInt256StringToByteStringConverter(), s => s.Amount));
         }
     }
 }

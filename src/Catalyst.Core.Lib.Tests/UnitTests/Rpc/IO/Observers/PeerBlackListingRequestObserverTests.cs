@@ -21,22 +21,21 @@
 
 #endregion
 
-using System;
 using System.Linq;
-using System.Net;
 using Catalyst.Abstractions.IO.Messaging.Dto;
+using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Network;
 using Catalyst.Core.Lib.P2P.Models;
 using Catalyst.Core.Lib.P2P.Repository;
 using Catalyst.Core.Modules.Rpc.Server.IO.Observers;
+using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using FluentAssertions;
 using Microsoft.Reactive.Testing;
-using Nethereum.RLP;
 using NSubstitute;
 using Serilog;
 using Xunit;
@@ -48,18 +47,14 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
     /// </summary>
     public sealed class PeerBlackListingRequestObserverTests
     {
-        /// <summary>The logger</summary>
         private readonly ILogger _logger;
 
-        /// <summary>The fake channel context</summary>
         private readonly IChannelHandlerContext _fakeContext;
 
-        /// <summary>
-        /// Initializes a new instance of the <see>
-        ///     <cref>PeerBlackListingRequestObserverTest</cref>
-        /// </see>
-        /// class.
-        /// </summary>
+        private readonly TestScheduler _testScheduler;
+        private readonly PeerId _senderId;
+        private readonly IPeerRepository _peerRepository;
+
         public PeerBlackListingRequestObserverTests()
         {
             _logger = Substitute.For<ILogger>();
@@ -67,95 +62,92 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             
             var fakeChannel = Substitute.For<IChannel>();
             _fakeContext.Channel.Returns(fakeChannel);
+            _fakeContext.Channel.RemoteAddress.Returns(EndpointBuilder.BuildNewEndPoint("192.0.0.1", 42042));
+
+            _testScheduler = new TestScheduler();
+            _peerRepository = Substitute.For<IPeerRepository>();
+
+            var fakePeers = PreparePeerRepositoryContent();
+            _peerRepository.GetAll().Returns(fakePeers);
+
+            _senderId = PeerIdHelper.GetPeerId("sender");
         }
 
-        /// <summary>
-        /// Tests the peer black listing request and response via RPC.
-        /// Peer is expected to be found in this case
-        /// </summary>
-        /// <param name="publicKey">Public key of the peer whose black listing flag we wish to adjust</param>
-        /// <param name="ipAddress">Ip address of the peer whose black listing flag we wish to adjust</param>
-        /// <param name="blackList">Black listing flag</param>
-        [Theory]
-        [InlineData("highscored-14\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0", "198.51.100.14", "true")]
-        [InlineData("highscored-22\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0", "198.51.100.22", "true")]
-        public void TestPeerBlackListingRequestResponse(string publicKey, string ipAddress, string blackList)
+        private static Peer[] PreparePeerRepositoryContent()
         {
-            var responseContent = ApplyBlackListingToPeerTest(publicKey, ipAddress, blackList);
+            var blacklistedPeers = Enumerable.Range(0, 5).Select(i => new Peer
+            {
+                Reputation = 0,
+                PeerId = PeerIdHelper.GetPeerId($"blacklisted-{i}"),
+                BlackListed = true
+            });
+            var goodPeers = Enumerable.Range(0, 23).Select(i => new Peer
+            {
+                Reputation = 125,
+                PeerId = PeerIdHelper.GetPeerId($"good-{i}")
+            });
 
-            responseContent.Blacklist.Should().BeTrue();
-            responseContent.Ip.ToStringUtf8().Should().Be(ipAddress);
-            responseContent.PublicKey.ToStringUtf8().Should().Be(publicKey);
+            var fakePeers = blacklistedPeers.Concat(goodPeers).ToArray();
+            return fakePeers;
         }
 
-        /// <summary>
-        /// Tests the peer black listing request and response via RPC.
-        /// Peer is NOT expected to be found in this case, as they do not exist
-        /// </summary>
-        /// <param name="publicKey">Public key of the peer whose black listing flag we wish to adjust</param>
-        /// <param name="ipAddress">Ip address of the peer whose black listing flag we wish to adjust</param>
-        /// <param name="blackList">Black listing flag</param>
         [Theory]
-        [InlineData("cne2+eRandomValuebeingusedherefprtestingIOp", "198.51.100.11", "false")]
-        [InlineData("cne2+e5gIfEdfhDWUxkUfr886YuiZnhEj3om5AXmWVXJK7d47/ESkjhbkJsrbzIbuWm8EPSjJ2YicTIcXvfzIOp", "198.51.100.5", "false")]
-        public void TestPeerBlackListingRequestResponseForNonExistantPeers(string publicKey, string ipAddress, string blackList)
+        [InlineData("good-14", true)]
+        [InlineData("good-22", false)]
+        [InlineData("blacklisted-1", true)]
+        [InlineData("blacklisted-3", false)]
+        public void PeerBlackListingRequestObserver_should_set_Blacklist_flag_on_known_peers(string publicKeySeed, bool blacklist)
         {
-            var responseContent = ApplyBlackListingToPeerTest(publicKey, ipAddress, blackList);
+            var targetedId = PeerIdHelper.GetPeerId(publicKeySeed);
+            var request = new SetPeerBlacklistRequest
+            {
+                PublicKey = targetedId.PublicKey,
+                Ip = targetedId.Ip,
+                Blacklist = blacklist
+            };
 
-            responseContent.Blacklist.Should().Be(false);
+            var responseContent = GetSetPeerBlacklistRequest(request);
+
+            responseContent.Blacklist.Should().Be(blacklist);
+            responseContent.Ip.Should().BeEquivalentTo(targetedId.Ip);
+            responseContent.PublicKey.Should().BeEquivalentTo(targetedId.PublicKey);
+        }
+
+        [Theory]
+        [InlineData("unknown-1", false)]
+        [InlineData("unknown-2", false)]
+        public void PeerBlackListingRequestObserver_should_not_set_Blacklist_flag_on_unknown_peers(string publicKeySeed, bool blacklist)
+        {
+            var targetedId = PeerIdHelper.GetPeerId(publicKeySeed);
+            var request = new SetPeerBlacklistRequest
+            {
+                PublicKey = targetedId.PublicKey,
+                Ip = targetedId.Ip,
+                Blacklist = blacklist
+            };
+
+            var responseContent = GetSetPeerBlacklistRequest(request);
+
             responseContent.Ip.Should().BeNullOrEmpty();
             responseContent.PublicKey.Should().BeNullOrEmpty();
         }
 
-        private SetPeerBlacklistResponse ApplyBlackListingToPeerTest(string publicKey, string ipAddress, string blacklist)
+        private SetPeerBlacklistResponse GetSetPeerBlacklistRequest(SetPeerBlacklistRequest request)
         {
-            var testScheduler = new TestScheduler();
-            var peerRepository = Substitute.For<IPeerRepository>();
+            var protocolMessage = request.ToProtocolMessage(_senderId);
+            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, _testScheduler, protocolMessage);
 
-            var fakePeers = Enumerable.Range(0, 5).Select(i => new Peer
-            {
-                Reputation = 0, PeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier($"iamgroot-{i}"),
-                BlackListed = Convert.ToBoolean(blacklist)
-            }).ToList();
-
-            //peers we are interested in
-            fakePeers.AddRange(Enumerable.Range(0, 23).Select(i => new Peer
-            {
-                Reputation = 125, PeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier($"highscored-{i}",
-                    IPAddress.Parse("198.51.100." + i)
-                )
-            }));
-
-            // Let peerRepository return the fake peer list
-            peerRepository.GetAll().Returns(fakePeers.ToArray());
-
-            // Build a fake remote endpoint
-            _fakeContext.Channel.RemoteAddress.Returns(EndpointBuilder.BuildNewEndPoint("192.0.0.1", 42042));
-
-            var sendPeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("sender");
-
-            var request = new SetPeerBlacklistRequest
-            {
-                PublicKey = publicKey.ToBytesForRLPEncoding().ToByteString(),
-                Ip = ipAddress.ToBytesForRLPEncoding().ToByteString(),
-                Blacklist = Convert.ToBoolean(blacklist)
-            };
-
-            var protocolMessage = request.ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender").PeerId);
-            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, testScheduler,
-                protocolMessage
-            );
-
-            var handler = new PeerBlackListingRequestObserver(sendPeerIdentifier, _logger, peerRepository);
+            var peerSettings = _senderId.ToSubstitutedPeerSettings();
+            var handler = new PeerBlackListingRequestObserver(peerSettings, _logger, _peerRepository);
             handler.StartObserving(messageStream);
 
-            testScheduler.Start();
+            _testScheduler.Start();
 
             var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();
             receivedCalls.Count.Should().Be(1);
-            
+
             var sentResponseDto = (IMessageDto<ProtocolMessage>) receivedCalls.Single().GetArguments().Single();
-            
+
             return sentResponseDto.Content.FromProtocolMessage<SetPeerBlacklistResponse>();
         }
     }

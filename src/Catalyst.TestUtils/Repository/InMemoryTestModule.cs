@@ -21,25 +21,19 @@
 
 #endregion
 
-using System.Linq;
-using System.Net;
-using System.Text;
-using Catalyst.Abstractions.P2P;
-using Catalyst.Core.Lib.P2P;
+using Autofac;
+using Catalyst.Core.Lib.DAO;
+using SharpRepository.InMemoryRepository;
+using SharpRepository.Repository;
 
-namespace Catalyst.TestUtils
+namespace Catalyst.TestUtils.Repository
 {
-    public static class PeerIdentifierHelper
-    {
-        public static IPeerIdentifier GetPeerIdentifier(string publicKeySeed,
-            IPAddress ipAddress = null,
-            int port = 12345)
+    public sealed class InMemoryTestModule<TProto, TDao> : Module
+        where TDao : DaoBase<TProto, TDao>, new()
+    { 
+        protected override void Load(ContainerBuilder builder)
         {
-            var publicKeyBytes = Encoding.UTF8.GetBytes(publicKeySeed)
-               .Concat(Enumerable.Repeat(default(byte), 32))
-               .Take(32).ToArray();
-            var peerIdentifier = PeerIdHelper.GetPeerId(publicKeyBytes, ipAddress, port);
-            return new PeerIdentifier(peerIdentifier);
+            builder.RegisterType<InMemoryRepository<TDao, string>>().As<IRepository<TDao, string>>().SingleInstance();
         }
     }
 }

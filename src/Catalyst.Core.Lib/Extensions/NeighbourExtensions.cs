@@ -23,15 +23,15 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.Discovery;
 using Catalyst.Core.Lib.P2P.Discovery;
+using Catalyst.Protocol.Peer;
 
 namespace Catalyst.Core.Lib.Extensions
 {
     public static class NeighbourExtensions
     {
-        public static INeighbours ToNeighbours(this IEnumerable<IPeerIdentifier> peerIdentifier)
+        public static INeighbours ToNeighbours(this IEnumerable<PeerId> peerIdentifier)
         {
             return new Neighbours(peerIdentifier.Select(p => new Neighbour(p) as INeighbour));
         }

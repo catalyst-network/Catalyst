@@ -29,21 +29,20 @@ using Nethermind.Dirichlet.Numerics;
 
 namespace Catalyst.Core.Lib.DAO.Converters
 {
-    public class ByteStringToUInt256Converter : IValueConverter<ByteString, ulong>
+    public class ByteStringToUInt256StringConverter : IValueConverter<ByteString, string>
     {
-        public ulong Convert(ByteString sourceMember, ResolutionContext context)
+        public string Convert(ByteString sourceMember, ResolutionContext context)
         {
-            return 0;
-            //return sourceMember.ToUInt256();
+            return sourceMember.ToUInt256().ToString();
         }
     }
 
-    public class UInt256ToByteStringConverter : IValueConverter<ulong, ByteString>
+    public class UInt256StringToByteStringConverter : IValueConverter<string, ByteString>
     {
-        public ByteString Convert(ulong sourceMember, ResolutionContext context)
+        public ByteString Convert(string sourceMember, ResolutionContext context)
         {
-            return ByteString.CopyFrom(0x0);
-            //return sourceMember.ToUint256ByteString();
+            var sourceValue = UInt256.Parse(sourceMember).ToUint256ByteString();
+            return sourceValue; 
         }
     }
 }

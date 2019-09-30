@@ -25,8 +25,8 @@ using System;
 using System.Linq;
 using System.Threading;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
-using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.IO.Observers;
+using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
@@ -49,7 +49,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Observers
 
             protected override void HandleResponse(GetPeerCountResponse messageDto,
                 IChannelHandlerContext channelHandlerContext,
-                IPeerIdentifier senderPeerIdentifier,
+                PeerId senderPeerIdentifier,
                 ICorrelationId correlationId)
             {
                 var count = Interlocked.Increment(ref _counter);

@@ -21,20 +21,20 @@
 
 #endregion
 
-using Catalyst.Abstractions.P2P;
+using Catalyst.Protocol.Peer;
 using Catalyst.Simulator.Interfaces;
 
 namespace Catalyst.Simulator
 {
     public class ClientRpcInfo
     {
-        public ClientRpcInfo(IPeerIdentifier peerIdentifier, IRpcClient rpcClient)
+        public ClientRpcInfo(PeerId peerIdentifier, IRpcClient rpcClient)
         {
-            PeerIdentifier = peerIdentifier;
+            PeerId = peerIdentifier;
             RpcClient = rpcClient;
         }
 
-        public IPeerIdentifier PeerIdentifier { get; }
+        public PeerId PeerId { get; }
         public IRpcClient RpcClient { get; }
     }
 }

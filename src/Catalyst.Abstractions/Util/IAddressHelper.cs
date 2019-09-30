@@ -21,6 +21,7 @@
 
 #endregion
 
+using Catalyst.Protocol.Account;
 using IPublicKey = Catalyst.Abstractions.Cryptography.IPublicKey;
 
 namespace Catalyst.Abstractions.Util
@@ -28,10 +29,11 @@ namespace Catalyst.Abstractions.Util
     public interface IAddressHelper
     {
         /// <summary>
-        ///     returns a 20byte
+        ///     Generates an address from the 20 last bytes of the hashed public key.
         /// </summary>
-        /// <param name="publicKey"></param>
-        /// <returns></returns>
-        string GenerateAddress(IPublicKey publicKey);
+        /// <param name="publicKey">The public key from which the address is derived.</param>
+        /// <param name="accountType">Account type represented by this address.</param>
+        /// <returns>The Hex encoded bytes corresponding to the address.</returns>
+        Address GenerateAddress(IPublicKey publicKey, AccountType accountType);
     }
 }

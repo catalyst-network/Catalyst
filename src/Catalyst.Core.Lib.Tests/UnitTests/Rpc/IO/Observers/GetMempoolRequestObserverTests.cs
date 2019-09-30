@@ -26,6 +26,7 @@ using System.Linq;
 using System.Net;
 using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.Mempool;
+using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Mempool.Documents;
 using Catalyst.Core.Modules.Rpc.Server.IO.Observers;
@@ -81,11 +82,12 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             var mempool = Substitute.For<IMempool<MempoolDocument>>();
             mempool.Repository.GetAll().Returns(mempoolTransactions);
 
-            var protocolMessage = new GetMempoolRequest().ToProtocolMessage(PeerIdentifierHelper.GetPeerIdentifier("sender_key").PeerId);
+            var protocolMessage = new GetMempoolRequest().ToProtocolMessage(PeerIdHelper.GetPeerId("sender_key"));
             
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, testScheduler, protocolMessage);
 
-            var handler = new GetMempoolRequestObserver(PeerIdentifierHelper.GetPeerIdentifier("sender"), mempool, _logger);
+            var peerSettings = PeerIdHelper.GetPeerId("sender").ToSubstitutedPeerSettings();
+            var handler = new GetMempoolRequestObserver(peerSettings, mempool, _logger);
             
             handler.StartObserving(messageStream);
 

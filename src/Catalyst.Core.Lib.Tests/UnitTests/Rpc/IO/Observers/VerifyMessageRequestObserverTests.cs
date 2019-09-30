@@ -22,7 +22,6 @@
 #endregion
 
 using Catalyst.Abstractions.KeySigner;
-using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
 using Catalyst.Core.Modules.Rpc.Server.IO.Observers;
@@ -34,10 +33,12 @@ using Google.Protobuf;
 using NSubstitute;
 using Serilog;
 using System.Linq;
+using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.Cryptography;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
 using Catalyst.Protocol.Cryptography;
 using Catalyst.Protocol.Network;
+using Catalyst.Protocol.Peer;
 using Xunit;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
@@ -47,7 +48,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         private readonly IKeySigner _keySigner;
         private readonly VerifyMessageRequestObserver _verifyMessageRequestObserver;
         private readonly IChannelHandlerContext _fakeContext;
-        private readonly IPeerIdentifier _testPeerIdentifier;
+        private readonly PeerId _testPeerId;
         private readonly VerifyMessageRequest _verifyMessageRequest;
         private readonly SigningContext _signingContext;
 
@@ -59,7 +60,9 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
                 SignatureType = SignatureType.ProtocolRpc
             };
 
-            _testPeerIdentifier = PeerIdentifierHelper.GetPeerIdentifier("TestPeerIdentifier");
+            _testPeerId = PeerIdHelper.GetPeerId("TestPeerIdentifier");
+
+            var peerSettings = _testPeerId.ToSubstitutedPeerSettings();
 
             _keySigner = Substitute.For<IKeySigner>();
             _keySigner.CryptoContext.Returns(new CryptoContext(new CryptoWrapper()));
@@ -69,7 +72,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
 
             var fakeChannel = Substitute.For<IChannel>();
             _fakeContext.Channel.Returns(fakeChannel);
-            _verifyMessageRequestObserver = new VerifyMessageRequestObserver(_testPeerIdentifier, logger, _keySigner);
+            _verifyMessageRequestObserver = new VerifyMessageRequestObserver(peerSettings, logger, _keySigner);
 
             _verifyMessageRequest = GetValidVerifyMessageRequest();
         }
@@ -122,7 +125,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
 
         private void AssertVerifyResponse(bool valid)
         {
-            _verifyMessageRequestObserver.OnNext(new ObserverDto(_fakeContext, _verifyMessageRequest.ToProtocolMessage(_testPeerIdentifier.PeerId)));
+            _verifyMessageRequestObserver.OnNext(new ObserverDto(_fakeContext, _verifyMessageRequest.ToProtocolMessage(_testPeerId)));
 
             var responseList = _fakeContext.Channel.ReceivedCalls().ToList();
             var response = ((MessageDto) responseList[0].GetArguments()[0]).Content

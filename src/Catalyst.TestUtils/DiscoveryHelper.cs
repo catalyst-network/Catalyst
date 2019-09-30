@@ -44,6 +44,7 @@ using Catalyst.Core.Lib.P2P.Repository;
 using Catalyst.Core.Lib.P2P.ReputationSystem;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.P2P.Discovery.Hastings;
+using Catalyst.Protocol.Peer;
 using DnsClient;
 using Microsoft.Extensions.Caching.Memory;
 using Nethereum.Hex.HexConvertors.Extensions;
@@ -70,28 +71,28 @@ namespace Catalyst.TestUtils
             }
         }
 
-        public static IHastingsOriginator MockOriginator(IPeerIdentifier peer = default,
+        public static IHastingsOriginator MockOriginator(PeerId peer = default,
             INeighbours neighbours = default)
         {
             var memento = new HastingsMemento(peer, neighbours);
             return new HastingsOriginator(memento);
         }
 
-        public static IHastingsOriginator SubOriginator(IPeerIdentifier peer = default,
+        public static IHastingsOriginator SubOriginator(PeerId peer = default,
             INeighbours neighbours = default,
             ICorrelationId expectedPnr = default)
         {
             var subbedOriginator = Substitute.For<IHastingsOriginator>();
 
             subbedOriginator.Neighbours.Count.Returns(5);
-            subbedOriginator.Peer.Returns(peer ?? Substitute.For<IPeerIdentifier>());
+            subbedOriginator.Peer.Returns(peer ?? new PeerId());
             subbedOriginator.Neighbours.Returns(neighbours ?? Substitute.For<INeighbours>());
             subbedOriginator.PnrCorrelationId.Returns(expectedPnr ?? CorrelationId.GenerateCorrelationId());
 
             return subbedOriginator;
         }
 
-        public static IHastingsMemento MockSeedState(IPeerIdentifier ownNode, IPeerSettings peerSettings)
+        public static IHastingsMemento MockSeedState(PeerId ownNode, IPeerSettings peerSettings)
         {
             return MockMemento(ownNode, MockDnsClient(peerSettings)
                .GetSeedNodesFromDns(peerSettings.SeedServers)
@@ -99,13 +100,13 @@ namespace Catalyst.TestUtils
             );
         }
 
-        public static IHastingsOriginator SubSeedOriginator(IPeerIdentifier ownNode, IPeerSettings peerSettings)
+        public static IHastingsOriginator SubSeedOriginator(PeerId ownNode, IPeerSettings peerSettings)
         {
             var m = SubSeedState(ownNode, peerSettings);
             return SubOriginator(m.Peer, m.Neighbours);
         }
 
-        public static IHastingsMemento SubSeedState(IPeerIdentifier ownNode, IPeerSettings peerSettings)
+        public static IHastingsMemento SubSeedState(PeerId ownNode, IPeerSettings peerSettings)
         {
             var neighbours = MockDnsClient(peerSettings)
                .GetSeedNodesFromDns(peerSettings.SeedServers)
@@ -120,7 +121,7 @@ namespace Catalyst.TestUtils
         {
             var neighbours = Enumerable.Range(0, amount).Select(i =>
                 new Neighbour(
-                    PeerIdentifierHelper.GetPeerIdentifier(
+                    PeerIdHelper.GetPeerId(
                         StringHelper.RandomString()
                     ),
                     stateTypes ?? NeighbourStateTypes.NotContacted,
@@ -129,27 +130,27 @@ namespace Catalyst.TestUtils
             return new Neighbours(neighbours);
         }
 
-        public static IDictionary<IPeerIdentifier, ICorrelationId> SubContactedNeighbours(int amount = 5)
+        public static IDictionary<PeerId, ICorrelationId> SubContactedNeighbours(int amount = 5)
         {
             return Enumerable.Range(0, amount)
-               .Select(i => Substitute.For<IPeerIdentifier>())
+               .Select(i => PeerIdHelper.GetPeerId())
                .ToDictionary(v => v, k => Substitute.For<ICorrelationId>());
         }
 
-        public static IHastingsMemento SubMemento(IPeerIdentifier identifier = default,
+        public static IHastingsMemento SubMemento(PeerId identifier = default,
             INeighbours neighbours = default)
         {
             var subbedMemento = Substitute.For<IHastingsMemento>();
-            subbedMemento.Peer.Returns(identifier ?? Substitute.For<IPeerIdentifier>());
+            subbedMemento.Peer.Returns(identifier ?? PeerIdHelper.GetPeerId());
             subbedMemento.Neighbours.Returns(neighbours ?? MockNeighbours());
 
             return subbedMemento;
         }
 
-        public static IHastingsMemento MockMemento(IPeerIdentifier identifier = default,
+        public static IHastingsMemento MockMemento(PeerId identifier = default,
             INeighbours neighbours = default)
         {
-            var peerParam = identifier ?? PeerIdentifierHelper.GetPeerIdentifier(StringHelper.RandomString());
+            var peerParam = identifier ?? PeerIdHelper.GetPeerId(StringHelper.RandomString());
             var neighbourParam = neighbours ?? MockNeighbours();
             return new HastingsMemento(peerParam, neighbourParam);
         }
@@ -163,7 +164,7 @@ namespace Catalyst.TestUtils
                         state.Last()
                            .Neighbours
                            .RandomElement()
-                           .PeerIdentifier,
+                           .PeerId,
                         MockNeighbours()
                     )
                 );
@@ -193,7 +194,7 @@ namespace Catalyst.TestUtils
             peerSetting.SeedServers.ToList().ForEach(domain =>
             {
                 MockQueryResponse.CreateFakeLookupResult(domain,
-                    "0x" + PeerIdentifierHelper.GetPeerIdentifier(
+                    "0x" + PeerIdHelper.GetPeerId(
                         StringHelper.RandomString(32)).ToString().ToHexUTF8(),
                     lookupClient ?? Substitute.For<ILookupClient>()
                 );
@@ -209,10 +210,10 @@ namespace Catalyst.TestUtils
 
         public static IPeerClientMessageDto SubDto(Type discoveryMessage,
             ICorrelationId correlationId = default,
-            IPeerIdentifier sender = default)
+            PeerId sender = default)
         {
             var dto = Substitute.For<IPeerClientMessageDto>();
-            dto.Sender.Returns(sender ?? Substitute.For<IPeerIdentifier>());
+            dto.Sender.Returns(sender ?? new PeerId());
             dto.CorrelationId.Returns(correlationId ?? Substitute.For<ICorrelationId>());
             dto.Message.Returns(Activator.CreateInstance(discoveryMessage));
 

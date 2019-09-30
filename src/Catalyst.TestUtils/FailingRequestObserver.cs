@@ -28,6 +28,7 @@ using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.IO.Observers;
 using Catalyst.Protocol.IPPN;
+using Catalyst.Protocol.Peer;
 using DotNetty.Transport.Channels;
 using Serilog;
 
@@ -40,11 +41,11 @@ namespace Catalyst.TestUtils
         private int _counter;
         public int Counter => _counter;
 
-        public FailingRequestObserver(ILogger logger, IPeerIdentifier peerIdentifier) : base(logger, peerIdentifier) { }
+        public FailingRequestObserver(ILogger logger, IPeerSettings peerSettings) : base(logger, peerSettings) { }
 
         protected override PeerNeighborsResponse HandleRequest(PeerNeighborsRequest messageDto,
             IChannelHandlerContext channelHandlerContext,
-            IPeerIdentifier senderPeerIdentifier,
+            PeerId senderPeerId,
             ICorrelationId correlationId)
         {
             var count = Interlocked.Increment(ref _counter);

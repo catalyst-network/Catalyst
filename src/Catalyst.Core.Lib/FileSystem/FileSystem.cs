@@ -28,23 +28,24 @@ using System.Linq;
 using System.Threading.Tasks;
 using Catalyst.Core.Lib.Config;
 using Microsoft.Extensions.Configuration;
+using Polly;
+using Polly.Retry;
 using IFileSystem = Catalyst.Abstractions.FileSystem.IFileSystem;
 
 namespace Catalyst.Core.Lib.FileSystem
 {
     // ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
-    public class FileSystem
-        : System.IO.Abstractions.FileSystem,
-            IFileSystem
+    public class FileSystem : System.IO.Abstractions.FileSystem, IFileSystem
     {
         // private readonly string _currentDataDirPointer;
         private string _dataDir;
+        private readonly RetryPolicy _retryPolicy;
 
         public FileSystem()
         {
-            // _currentDataDirPointer = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, Constants.ConfigSubFolder, Constants.NetworkConfigFile(Protocol.Common.Network.Devnet));
-
-            _dataDir = Path.Combine(GetUserHomeDir(), Constants.CatalystDataDir); 
+            _dataDir = Path.Combine(GetUserHomeDir(), Constants.CatalystDataDir);
+            _retryPolicy = Policy.Handle<IOException>()
+               .WaitAndRetry(5, i => TimeSpan.FromMilliseconds(500).Multiply(i));
         }
 
         /// <summary>
@@ -67,8 +68,6 @@ namespace Catalyst.Core.Lib.FileSystem
                 {
                     dirInfo.Create();
                 }
-
-                // SaveConfigPointerFile(path, _currentDataDirPointer);
 
                 _dataDir = path;
             }
@@ -150,7 +149,7 @@ namespace Catalyst.Core.Lib.FileSystem
 
         private string ReadTextFromFile(string filePath)
         {
-            return File.Exists(filePath) ? File.ReadAllText(filePath) : null;
+            return _retryPolicy.Execute(() => File.Exists(filePath) ? File.ReadAllText(filePath) : null);
         }
     }
 }

@@ -29,8 +29,8 @@ using System.Threading;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.Extensions;
-using Catalyst.Core.Lib.P2P;
 using Catalyst.Core.Lib.Util;
+using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Wire;
 using Dawn;
 using Microsoft.Extensions.Caching.Memory;
@@ -58,18 +58,18 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
         private readonly IMemoryCache _candidatesCache;
 
         private readonly IDeltaProducersProvider _deltaProducersProvider;
-        private readonly IPeerIdentifier _localPeerIdentifier;
+        private readonly PeerId _localPeerIdentifier;
         private readonly ILogger _logger;
         private readonly Func<MemoryCacheEntryOptions> _cacheEntryOptions;
 
         public DeltaVoter(IMemoryCache candidatesCache,
             IDeltaProducersProvider deltaProducersProvider,
-            IPeerIdentifier localPeerIdentifier,
+            IPeerSettings peerSettings,
             ILogger logger)
         {
             _candidatesCache = candidatesCache;
             _deltaProducersProvider = deltaProducersProvider;
-            _localPeerIdentifier = localPeerIdentifier;
+            _localPeerIdentifier = peerSettings.PeerId;
             _cacheEntryOptions = () => new MemoryCacheEntryOptions()
                .AddExpirationToken(new CancellationChangeToken(new CancellationTokenSource(TimeSpan.FromMinutes(3)).Token));
             _logger = logger;
@@ -158,7 +158,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             favourite = new FavouriteDeltaBroadcast
             {
                 Candidate = bestCandidate,
-                VoterId = _localPeerIdentifier.PeerId
+                VoterId = _localPeerIdentifier
             };
 
             _logger.Debug("Retrieved favourite candidate delta {candidate} for the successor of delta {previousDelta}",
@@ -173,9 +173,9 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             var preferredProducers = _deltaProducersProvider
                .GetDeltaProducersFromPreviousDelta(candidate.PreviousDeltaDfsHash.ToByteArray());
             var ranking = preferredProducers.ToList()
-               .FindIndex(p => p.PeerId.Equals(candidate.ProducerId));
+               .FindIndex(p => p.Equals(candidate.ProducerId));
 
-            var identifier = new PeerIdentifier(candidate.ProducerId);
+            var identifier = candidate.ProducerId;
             _logger.Verbose("ranking for block produced by {producerId} = {ranking}",
                 identifier, ranking);
 

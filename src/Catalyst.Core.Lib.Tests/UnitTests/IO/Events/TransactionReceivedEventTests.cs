@@ -26,11 +26,13 @@ using Catalyst.Abstractions.Mempool;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.IO.Messaging.Broadcast;
 using Catalyst.Abstractions.Validators;
+using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Events;
+using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.Mempool.Documents;
 using Catalyst.Protocol.Network;
-using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.Rpc.Node;
+using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Google.Protobuf;
@@ -56,10 +58,9 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Events
             _mempool = Substitute.For<IMempool<MempoolDocument>>();
             _transactionValidator = Substitute.For<ITransactionValidator>();
             _broadcastManager = Substitute.For<IBroadcastManager>();
-            _transactionReceivedEvent = new TransactionReceivedEvent(_transactionValidator, 
-                _mempool, 
-                _broadcastManager, 
-                PeerIdentifierHelper.GetPeerIdentifier("Test"), 
+            _transactionReceivedEvent = new TransactionReceivedEvent(_transactionValidator,
+                _mempool,
+                _broadcastManager,
                 _peerSettings,
                 Substitute.For<ILogger>());
         }
@@ -67,8 +68,10 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Events
         [Fact]
         public void Can_Send_Error_To_Invalid_Transaction()
         {
-            _transactionValidator.ValidateTransaction(Arg.Any<TransactionBroadcast>(), _peerSettings.NetworkType).Returns(false);
-            _transactionReceivedEvent.OnTransactionReceived(new TransactionBroadcast()).Should()
+            _transactionValidator.ValidateTransaction(Arg.Any<TransactionBroadcast>(), _peerSettings.NetworkType)
+               .Returns(false);
+            _transactionReceivedEvent.OnTransactionReceived(new TransactionBroadcast()
+                   .ToProtocolMessage(PeerIdHelper.GetPeerId(), CorrelationId.GenerateCorrelationId())).Should()
                .Be(ResponseCode.Error);
             _broadcastManager.DidNotReceiveWithAnyArgs().BroadcastAsync(default);
         }
@@ -79,10 +82,14 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Events
             var transaction = TransactionHelper.GetPublicTransaction();
             var sig = transaction.Signature.RawBytes;
 
-            _transactionValidator.ValidateTransaction(Arg.Any<TransactionBroadcast>(), _peerSettings.NetworkType).Returns(true);
+            _transactionValidator.ValidateTransaction(Arg.Any<TransactionBroadcast>(), _peerSettings.NetworkType)
+               .Returns(true);
             _mempool.Repository.TryReadItem(sig).Returns(true);
 
-            _transactionReceivedEvent.OnTransactionReceived(transaction).Should().Be(ResponseCode.Error);
+            _transactionReceivedEvent
+               .OnTransactionReceived(transaction.ToProtocolMessage(PeerIdHelper.GetPeerId(),
+                    CorrelationId.GenerateCorrelationId()))
+               .Should().Be(ResponseCode.Error);
             _broadcastManager.DidNotReceiveWithAnyArgs().BroadcastAsync(default);
             _mempool.Repository.DidNotReceiveWithAnyArgs().CreateItem(default);
         }
@@ -92,8 +99,12 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Events
         {
             var transaction = TransactionHelper.GetPublicTransaction();
 
-            _transactionValidator.ValidateTransaction(Arg.Any<TransactionBroadcast>(), _peerSettings.NetworkType).Returns(true);
-            _transactionReceivedEvent.OnTransactionReceived(transaction).Should().Be(ResponseCode.Successful);
+            _transactionValidator.ValidateTransaction(Arg.Any<TransactionBroadcast>(), _peerSettings.NetworkType)
+               .Returns(true);
+            _transactionReceivedEvent
+               .OnTransactionReceived(transaction.ToProtocolMessage(PeerIdHelper.GetPeerId(),
+                    CorrelationId.GenerateCorrelationId()))
+               .Should().Be(ResponseCode.Successful);
 
             _mempool.Repository.Received(1).CreateItem(Arg.Is<TransactionBroadcast>(
                 savedDoc => savedDoc.Equals(transaction)));
