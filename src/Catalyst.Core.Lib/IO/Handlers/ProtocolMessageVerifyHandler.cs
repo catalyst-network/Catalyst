@@ -66,14 +66,19 @@ namespace Catalyst.Core.Lib.IO.Handlers
 
         private bool Verify(ProtocolMessage signedMessage)
         {
-            if (signedMessage.Signature == null) { return false; }
+            if (signedMessage.Signature == null)
+            {
+                return false;
+            }
+
             var sig = signedMessage.Signature.RawBytes.ToByteArray();
             var pub = signedMessage.PeerId.PublicKey.ToByteArray();
             var signature = _keySigner.CryptoContext.SignatureFromBytes(sig, pub);
             var messageWithoutSig = signedMessage.Clone();
             messageWithoutSig.Signature = null;
 
-            return _keySigner.Verify(signature, messageWithoutSig.ToByteArray(), signedMessage.Signature.SigningContext);
+            return _keySigner.Verify(signature, messageWithoutSig.ToByteArray(),
+                signedMessage.Signature.SigningContext);
         }
     }
 }
