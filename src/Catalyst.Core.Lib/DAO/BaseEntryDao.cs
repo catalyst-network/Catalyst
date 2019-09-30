@@ -21,6 +21,7 @@
 
 #endregion
 
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Numerics;
 using AutoMapper;
 using Catalyst.Core.Lib.DAO.Converters;
@@ -34,6 +35,8 @@ namespace Catalyst.Core.Lib.DAO
         public string ReceiverPublicKey { get; set; }
         public string SenderPublicKey { get; set; }
         public string TransactionFees { get; set; }
+
+        [Column]
         private TransactionBroadcastDao TransactionBroadcastDao { get; set; }
 
         public override void InitMappers(IMapperConfigurationExpression cfg)

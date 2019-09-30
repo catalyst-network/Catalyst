@@ -63,8 +63,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
         {
             using (var scope = ContainerProvider.Container.BeginLifetimeScope(CurrentTestName))
             {
-                var peerDao = new PeerDao();
-                var peerRepo = PopulatePeerRepo(scope, out peerDao);
+                var peerRepo = PopulatePeerRepo(scope, out var peerDao);
 
                 peerRepo.Get(peerDao.Id).Id.Should().Be(peerDao.Id);
                 peerRepo.Get(peerDao.Id).PeerIdentifier.PublicKey.Should().Be(peerDao.PeerIdentifier.PublicKey);
@@ -76,8 +75,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
         {
             using (var scope = ContainerProvider.Container.BeginLifetimeScope(CurrentTestName))
             {
-                var peerDao = new PeerDao();
-                var peerRepo = PopulatePeerRepo(scope, out peerDao);
+                var peerRepo = PopulatePeerRepo(scope, out var peerDao);
 
                 var retrievedPeer = peerRepo.Get(peerDao.Id);
                 retrievedPeer.Touch();
