@@ -54,10 +54,8 @@ using Catalyst.Core.Lib.Registry;
 using Catalyst.Core.Lib.Rpc.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Lib.Validators;
-using Catalyst.Protocol.Peer;
 using DnsClient;
 using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Multiformats.Hash.Algorithms;
 
@@ -92,8 +90,8 @@ namespace Catalyst.Core.Lib
             builder.RegisterType<PeerClient>().As<IPeerClient>().SingleInstance();
 
             builder.RegisterType<PeerChallenger>().As<IPeerChallenger>()
-                .WithParameter("peerChallengeWaitTimeSeconds", 5)
-                .SingleInstance();
+               .WithParameter("peerChallengeWaitTimeSeconds", 5)
+               .SingleInstance();
 
             // Register P2P.Discovery
             builder.RegisterType<HealthChecker>().As<IHealthChecker>();

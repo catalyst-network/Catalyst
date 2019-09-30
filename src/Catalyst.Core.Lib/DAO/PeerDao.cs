@@ -30,7 +30,7 @@ using Catalyst.Core.Lib.Util;
 namespace Catalyst.Core.Lib.DAO
 {
     [Audit]
-    public class PeerDao : DaoBase<Peer, PeerDao>
+    public sealed class PeerDao : DaoBase<Peer, PeerDao>
     {
         /// <inheritdoc />
         public PeerIdDao PeerIdentifier { get; set; }

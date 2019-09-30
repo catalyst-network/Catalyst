@@ -35,7 +35,6 @@ using Catalyst.Core.Modules.Cryptography.BulletProofs;
 using Catalyst.Protocol.Network;
 using Catalyst.TestUtils;
 using FluentAssertions;
-using Multiformats.Hash.Algorithms;
 using NSubstitute;
 using Serilog;
 using Xunit;

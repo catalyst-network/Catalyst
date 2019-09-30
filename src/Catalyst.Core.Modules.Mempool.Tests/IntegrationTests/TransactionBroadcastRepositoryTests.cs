@@ -79,13 +79,13 @@ namespace Catalyst.Core.Modules.Mempool.Tests.IntegrationTests
             }
         }
 
-        private IRepository<TransactionBroadcastDao, string> PopulateTransactBroadcastRepo(ILifetimeScope scope, out string Id)
+        private IRepository<TransactionBroadcastDao, string> PopulateTransactBroadcastRepo(ILifetimeScope scope, out string id)
         {
             var transactBroadcastRepo = scope.Resolve<IRepository<TransactionBroadcastDao, string>>();
 
             var transactionBroadcastDao = new TransactionBroadcastDao().ToDao(TransactionHelper.GetPublicTransaction());
             transactionBroadcastDao.Id = Guid.NewGuid().ToString();
-            Id = transactionBroadcastDao.Id;
+            id = transactionBroadcastDao.Id;
 
             transactBroadcastRepo.Add(transactionBroadcastDao);
 

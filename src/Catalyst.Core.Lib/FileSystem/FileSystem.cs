@@ -24,10 +24,8 @@
 using System;
 using System.IO;
 using System.IO.Abstractions;
-using System.Linq;
 using System.Threading.Tasks;
 using Catalyst.Core.Lib.Config;
-using Microsoft.Extensions.Configuration;
 using Polly;
 using Polly.Retry;
 using IFileSystem = Catalyst.Abstractions.FileSystem.IFileSystem;
@@ -119,15 +117,6 @@ namespace Catalyst.Core.Lib.FileSystem
         public bool DataFileExistsInSubDirectory(string fileName, string subDirectory)
         {
             return File.Exists(Path.Combine(GetCatalystDataDir().FullName, subDirectory, fileName));
-        }
-
-        private string GetCurrentDataDir(string configFilePointer)
-        {
-            var configurationRoot = new ConfigurationBuilder().AddJsonFile(configFilePointer).Build();
-
-            var path = configurationRoot.GetSection("components").GetChildren().Select(p => p.GetSection("parameters:configDataDir").Value).ToArray().Single(m => !string.IsNullOrEmpty(m));
-
-            return path;
         }
 
         private static string GetUserHomeDir()

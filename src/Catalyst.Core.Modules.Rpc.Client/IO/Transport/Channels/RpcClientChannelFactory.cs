@@ -59,6 +59,7 @@ namespace Catalyst.Core.Modules.Rpc.Client.IO.Transport.Channels
         /// <param name="keySigner"></param>
         /// <param name="messageCorrelationCache"></param>
         /// <param name="peerIdValidator"></param>
+        /// <param name="peerSettings"></param>
         /// <param name="backLogValue"></param>
         /// <param name="scheduler"></param>
         public RpcClientChannelFactory(IKeySigner keySigner,

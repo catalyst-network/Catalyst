@@ -28,24 +28,27 @@ using Catalyst.Abstractions.Mempool.Repositories;
 using Catalyst.Core.Lib.Mempool.Documents;
 using Catalyst.Core.Lib.Repository;
 using Catalyst.Protocol.Wire;
+using Dawn;
 using Google.Protobuf;
 using Serilog;
 using SharpRepository.Repository;
 
 namespace Catalyst.Core.Modules.Mempool.Repositories
 {
-    public class MempoolDocumentRepository : RepositoryWrapper<MempoolDocument>, IMempoolRepository<MempoolDocument>
+    public sealed class MempoolDocumentRepository : RepositoryWrapper<MempoolDocument>, IMempoolRepository<MempoolDocument>
     {
         public MempoolDocumentRepository(IRepository<MempoolDocument, string> repository) : base(repository) { }
 
         /// <inheritdoc />
         public bool TryReadItem(ByteString signature)
         {
+            Guard.Argument(signature, nameof(signature)).NotNull();
             return Repository.TryGet(signature.ToBase64(), out _);
         }
         
         public MempoolDocument ReadItem(ByteString signature)
         {
+            Guard.Argument(signature, nameof(signature)).NotNull();
             return Repository.Get(signature.ToBase64());
         }
 
@@ -67,12 +70,9 @@ namespace Catalyst.Core.Modules.Mempool.Repositories
         }
         
         public bool CreateItem(TransactionBroadcast transactionBroadcast)
-        {      
-            if (transactionBroadcast.Signature.Equals(null) || transactionBroadcast.Signature.Equals(ByteString.Empty))
-            {
-                throw new ArgumentNullException(nameof(transactionBroadcast));
-            }
-            
+        {
+            Guard.Argument(transactionBroadcast.Signature, nameof(transactionBroadcast.Signature)).NotNull();
+
             try
             {
                 Repository.Add(new MempoolDocument {Transaction = transactionBroadcast});

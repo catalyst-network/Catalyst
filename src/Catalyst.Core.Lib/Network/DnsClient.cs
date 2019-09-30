@@ -26,7 +26,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Network;
-using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Protocol.Peer;
 using Dawn;
@@ -38,17 +37,14 @@ namespace Catalyst.Core.Lib.Network
     public sealed class DnsClient : IDns
     {
         private readonly ILookupClient _client;
-        private readonly IPeerIdValidator _peerIdValidator;
 
         /// <summary>
         /// </summary>
         /// <param name="client"></param>
-        /// <param name="peerIdValidator"></param>
-        public DnsClient(ILookupClient client, IPeerIdValidator peerIdValidator)
+        public DnsClient(ILookupClient client)
         {
             Guard.Argument(client, nameof(client)).NotNull();
             _client = client;
-            _peerIdValidator = peerIdValidator;
         }
 
         public async Task<IList<IDnsQueryResponse>> GetTxtRecordsAsync(IList<string> hostnames)

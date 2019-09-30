@@ -56,7 +56,7 @@ namespace Catalyst.TestUtils
 {
     public static class DiscoveryHelper
     {
-        public class DevDiscover : BaseDiscovery
+        public sealed class DevDiscover : BaseDiscovery
         {
             public override Task DiscoveryAsync()
             {
